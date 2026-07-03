@@ -431,6 +431,14 @@ def test_closing_issue_numbers_ignores_same_line_negated_closing_refs() -> None:
     assert got == [1, 3, 4]
 
 
+def test_closing_issue_numbers_filters_negated_github_refs() -> None:
+    got = cd._closing_issue_numbers(
+        "Closes #1052 but does not close #1056",
+        [{"number": 1052}, {"number": 1056}],
+    )
+    assert got == [1052]
+
+
 def test_resolve_continue_pr_refuses_closed_pr(
     tmp_path: Path, _hermetic_env: Path
 ) -> None:

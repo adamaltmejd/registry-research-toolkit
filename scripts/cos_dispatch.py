@@ -128,6 +128,7 @@ _NEGATED_CLOSING_CLAUSE_RE = re.compile(
     r"(?:[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+)?#\d+)*",
     re.IGNORECASE,
 )
+_ISSUE_REF_RE = re.compile(r"(?:[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+)?#(\d+)")
 # The blessed launch profiles, kept in ONE place so surface + model/effort/advisor stay
 # together as a validated set (never composed ad hoc at a call site). Each value is
 # (surface, extra_flags): `surface` is the tier's implied dispatch surface; the flags are
@@ -298,6 +299,14 @@ def _ref_matches_repository(ref: dict, repository_name_with_owner: str | None) -
     )
 
 
+def _negated_closing_numbers(body: str) -> set[int]:
+    numbers: set[int] = set()
+    for match in _NEGATED_CLOSING_CLAUSE_RE.finditer(body):
+        for ref_match in _ISSUE_REF_RE.finditer(match.group(0)):
+            numbers.add(int(ref_match.group(1)))
+    return numbers
+
+
 def _closing_issue_numbers(
     body: str,
     refs: list[dict] | None,
@@ -307,6 +316,7 @@ def _closing_issue_numbers(
     """Closing issue refs from local body clauses plus same-repo GitHub refs."""
     seen: set[int] = set()
     issues: list[int] = []
+    negated = _negated_closing_numbers(body)
     closing_body = _NEGATED_CLOSING_CLAUSE_RE.sub("", body)
     for number in sorted(
         _plan_sequence.closing_issue_numbers_from_body(
@@ -322,7 +332,7 @@ def _closing_issue_numbers(
             ):
                 continue
             number = ref.get("number")
-            if isinstance(number, int) and number not in seen:
+            if isinstance(number, int) and number not in seen and number not in negated:
                 seen.add(number)
                 issues.append(number)
     return issues
