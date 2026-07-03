@@ -87,7 +87,9 @@ def parse_frontmatter(text: str) -> tuple[dict[str, object], str]:
     """Parse YAML frontmatter from markdown text.
 
     Returns (metadata_dict, body) where body is the text after frontmatter.
-    Only handles the subset we generate: scalar values and simple lists.
+    Only handles the subset we generate: scalar values, simple lists, and the
+    folded/literal block scalars panache reflows long scalars into
+    (``key: >``/``>-``/``>+`` folded, ``key: |``/``|-``/``|+`` literal).
     """
     lines = text.split("\n")
     if not lines or not _FM_DELIM.match(lines[0]):
@@ -105,12 +107,16 @@ def parse_frontmatter(text: str) -> tuple[dict[str, object], str]:
     current_key: str | None = None
     current_list: list[str] | None = None
 
-    for line in lines[1:end]:
+    i = 1
+    while i < end:
+        line = lines[i]
+
         # List item: "  - value"
         if line.startswith("  - ") and current_key:
             if current_list is None:
                 current_list = []
             current_list.append(line[4:].strip())
+            i += 1
             continue
 
         # Save accumulated list
@@ -121,20 +127,71 @@ def parse_frontmatter(text: str) -> tuple[dict[str, object], str]:
         # Key-value: "key: value"
         if ":" in line:
             key, _, val = line.partition(":")
+            key_indent = len(line) - len(line.lstrip(" "))
             key = key.strip()
-            val = val.strip().strip('"').strip("'")
+            val = val.strip()
             current_key = key
+
+            fold = _block_scalar_style(val)
+            if fold is not None:
+                value, i = _read_block_scalar(lines, i + 1, end, key_indent, fold)
+                meta[key] = value
+                continue
+
+            val = val.strip('"').strip("'")
             if val:
                 meta[key] = val
             # If val is empty, next lines might be a list
         else:
             current_key = None
+        i += 1
 
     if current_list is not None and current_key:
         meta[current_key] = current_list
 
     body = "\n".join(lines[end + 1 :]).lstrip("\n")
     return meta, body
+
+
+def _block_scalar_style(val: str) -> str | None:
+    """Return "folded"/"literal" if ``val`` is a block-scalar indicator, else None.
+
+    Recognizes ``>``/``>-``/``>+`` (folded) and ``|``/``|-``/``|+`` (literal),
+    i.e. the ``key:`` value being an indicator char plus an optional chomping
+    modifier and nothing else.
+    """
+    if val in {">", ">-", ">+"}:
+        return "folded"
+    if val in {"|", "|-", "|+"}:
+        return "literal"
+    return None
+
+
+def _read_block_scalar(
+    lines: list[str], start: int, end: int, key_indent: int, style: str
+) -> tuple[str, int]:
+    """Read a block-scalar body starting at ``lines[start]``.
+
+    The body is the run of lines indented more than ``key_indent``; it ends at
+    the first line dedented to ``key_indent`` or less. Returns the joined,
+    trimmed value and the index of the first line past the body.
+    """
+    body: list[str] = []
+    i = start
+    while i < end:
+        line = lines[i]
+        if line.strip() and (len(line) - len(line.lstrip(" "))) <= key_indent:
+            break
+        body.append(line)
+        i += 1
+
+    # Strip the common leading indentation from non-blank body lines.
+    indents = [len(line) - len(line.lstrip(" ")) for line in body if line.strip()]
+    common = min(indents) if indents else 0
+    stripped = [line[common:] if line.strip() else "" for line in body]
+
+    joiner = " " if style == "folded" else "\n"
+    return joiner.join(stripped).strip(), i
 
 
 # ---------------------------------------------------------------------------

@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 import pytest
 import reg_meta_build.doc_db as doc_db
 from reg_meta.errors import RegMetaError
-from reg_meta_build.doc_db import RelatedDocument, build_doc_db
+from reg_meta_build.doc_db import RelatedDocument, build_doc_db, parse_frontmatter
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -41,6 +41,57 @@ def _related_doc(
         byte_size=len(content),
         required=required,
     )
+
+
+def test_parse_frontmatter_folded_block_scalar() -> None:
+    """A ``>-`` folded scalar joins continuation lines with single spaces."""
+    text = (
+        "---\n"
+        "variable: KU2AstSNI2002B\n"
+        "display_name: >-\n"
+        "  Summa inkomst föranledd av\n"
+        "  förtidspension/sjukbidrag/sjukersättning/aktivitetsersättning\n"
+        "tags:\n"
+        "  - type/variable\n"
+        'source: "lisa-bakgrundsfakta-1990-2017"\n'
+        "---\n\nBody.\n"
+    )
+    meta, body = parse_frontmatter(text)
+    assert meta["display_name"] == (
+        "Summa inkomst föranledd av "
+        "förtidspension/sjukbidrag/sjukersättning/aktivitetsersättning"
+    )
+    # Keys after the block scalar and existing behavior must still parse.
+    assert meta["variable"] == "KU2AstSNI2002B"
+    assert meta["tags"] == ["type/variable"]
+    assert meta["source"] == "lisa-bakgrundsfakta-1990-2017"
+    assert body == "Body.\n"
+
+
+def test_parse_frontmatter_literal_block_scalar() -> None:
+    """A ``|-`` literal scalar joins continuation lines with newlines."""
+    text = "---\nvariable: Test\nnotes: |-\n  line one\n  line two\n---\n\nBody.\n"
+    meta, _ = parse_frontmatter(text)
+    assert meta["notes"] == "line one\nline two"
+    assert meta["variable"] == "Test"
+
+
+def test_parse_frontmatter_same_line_scalars_and_list_unchanged() -> None:
+    """Same-line quoted/unquoted scalars and simple lists parse as before."""
+    text = (
+        "---\n"
+        "variable: Test\n"
+        'display_name: "Quoted name"\n'
+        "tags:\n"
+        "  - topic/identifier\n"
+        "  - type/variable\n"
+        "---\n\nBody.\n"
+    )
+    meta, body = parse_frontmatter(text)
+    assert meta["variable"] == "Test"
+    assert meta["display_name"] == "Quoted name"
+    assert meta["tags"] == ["topic/identifier", "type/variable"]
+    assert body == "Body.\n"
 
 
 def test_build_doc_db_stores_related_document_binary(
