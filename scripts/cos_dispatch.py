@@ -697,6 +697,51 @@ def ensure_existing_continue_worktree(worktree: Path, branch: str) -> None:
     ensure_clean_worktree(worktree)
 
 
+def try_ff_only_merge(worktree: Path, ref: str) -> str | None:
+    proc = subprocess.run(
+        ["git", "merge", "--ff-only", ref],
+        cwd=str(worktree),
+        env=_scrubbed_env(),
+        capture_output=True,
+        text=True,
+    )
+    if proc.returncode == 0:
+        return None
+    return (
+        proc.stderr.strip()
+        or proc.stdout.strip()
+        or f"git merge --ff-only {ref} failed"
+    )
+
+
+def _cherry_has_unique_patch(
+    worktree: Path, upstream: str, head: str, limit: str
+) -> bool:
+    proc = subprocess.run(
+        ["git", "cherry", upstream, head, limit],
+        cwd=str(worktree),
+        env=_scrubbed_env(),
+        capture_output=True,
+        text=True,
+    )
+    if proc.returncode != 0:
+        return True
+    return any(line.startswith("+") for line in proc.stdout.splitlines())
+
+
+def rebased_branch_matches_remote_patches(
+    worktree: Path, remote_branch_ref: str, base_ref: str
+) -> bool:
+    remote_base = git_output(worktree, ["merge-base", base_ref, remote_branch_ref])
+    local_has_extra = _cherry_has_unique_patch(
+        worktree, remote_branch_ref, "HEAD", base_ref
+    )
+    remote_has_extra = _cherry_has_unique_patch(
+        worktree, "HEAD", remote_branch_ref, remote_base
+    )
+    return not local_has_extra and not remote_has_extra
+
+
 def rebase_onto(worktree: Path, base_ref: str) -> None:
     proc = subprocess.run(
         ["git", "rebase", base_ref],
@@ -757,16 +802,25 @@ def prepare_continue_worktree(
             ],
         )
     ensure_clean_worktree(worktree)
-    run_git(worktree, ["merge", "--ff-only", f"refs/remotes/origin/{branch}"])
-    remote_tip = git_output(worktree, ["rev-parse", f"refs/remotes/origin/{branch}"])
+    remote_branch_ref = f"refs/remotes/origin/{branch}"
+    base_ref = f"refs/remotes/origin/{base_branch}"
+    merge_error = try_ff_only_merge(worktree, remote_branch_ref)
+    remote_tip = git_output(worktree, ["rev-parse", remote_branch_ref])
     head = git_output(worktree, ["rev-parse", "HEAD"])
-    if head != remote_tip:
+    rebased_equivalent = (
+        head != remote_tip
+        and rebase
+        and rebased_branch_matches_remote_patches(worktree, remote_branch_ref, base_ref)
+    )
+    if head != remote_tip and not rebased_equivalent:
+        detail = f": {merge_error}" if merge_error else ""
         raise SystemExit(
-            f"worktree {worktree} is not at origin/{branch}; refusing to continue "
-            "without manual reconciliation"
+            f"worktree {worktree} is not at origin/{branch}{detail}; "
+            "refusing to continue without manual reconciliation"
         )
     if rebase:
-        rebase_onto(worktree, f"refs/remotes/origin/{base_branch}")
+        if head == remote_tip:
+            rebase_onto(worktree, base_ref)
         ensure_clean_worktree(worktree)
 
 

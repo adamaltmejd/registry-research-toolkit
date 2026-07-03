@@ -382,7 +382,10 @@ def lane_is_plain(surface: str | None, log_path: Path) -> bool:
     if surface == "claude":
         return True
     try:
+        offset = current_run_offset(log_path)
         with log_path.open("rb") as fh:
+            if offset:
+                fh.seek(offset)
             head = fh.read(16384)
     except OSError:
         return False

@@ -321,6 +321,18 @@ def test_lane_is_plain_uses_codex_run_sentinel_without_slot(tmp_path: Path) -> N
     assert ct.lane_is_plain(None, codex_log) is False
 
 
+def test_lane_is_plain_sniffs_current_reused_run_surface(tmp_path: Path) -> None:
+    reused_log = tmp_path / "reused.log"
+    reused_log.write_text(
+        '{"type":"thread.started","thread_id":"old-codex"}\n'
+        '{"type":"item.completed","item":{"type":"agent_message","text":"old"}}\n'
+        '{"type":"cos.run.started","slug":"reused","surface":"claude"}\n'
+        "plain claude output\n",
+        encoding="utf-8",
+    )
+    assert ct.lane_is_plain(None, reused_log) is True
+
+
 def test_follow_from_run_start_skips_prior_runs(tmp_path: Path, capsys) -> None:
     logs_root = tmp_path / "dispatch-logs"
     logs_root.mkdir(parents=True)
