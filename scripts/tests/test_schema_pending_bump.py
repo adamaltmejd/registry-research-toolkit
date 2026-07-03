@@ -7,20 +7,16 @@ smoke test of the stdout contract the workflow captures.
 
 from __future__ import annotations
 
-import importlib.util
 import subprocess
 import sys
 from pathlib import Path
 
 import pytest
 
-_SCRIPTS = Path(__file__).resolve().parents[1]
-_MODULE = _SCRIPTS / "schema_pending_bump.py"
-_SPEC = importlib.util.spec_from_file_location("schema_pending_bump", _MODULE)
-assert _SPEC and _SPEC.loader
-spb = importlib.util.module_from_spec(_SPEC)
-sys.modules[_SPEC.name] = spb
-_SPEC.loader.exec_module(spb)
+from conftest import load_scripts_module
+
+_MODULE = Path(__file__).resolve().parents[1] / "schema_pending_bump.py"
+spb = load_scripts_module("schema_pending_bump")
 
 
 def _verdict(code_db: str, code_doc: str, asset_db: str, asset_doc: str) -> str:

@@ -12,24 +12,20 @@ main()-path test exercises the --gate-dir CLI flag end to end.
 
 from __future__ import annotations
 
-import importlib.util
 import json
 import os
 import subprocess
-import sys
 import time
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 import pytest
 
-_SCRIPTS = Path(__file__).resolve().parents[1]
-_SPEC = importlib.util.spec_from_file_location(
-    "cos_preflight", _SCRIPTS / "cos_preflight.py"
-)
-assert _SPEC and _SPEC.loader
-cpf = importlib.util.module_from_spec(_SPEC)
-sys.modules[_SPEC.name] = cpf
-_SPEC.loader.exec_module(cpf)
+from conftest import load_scripts_module
+
+if TYPE_CHECKING:
+    from pathlib import Path
+
+cpf = load_scripts_module("cos_preflight")
 
 HEAD = "abcdef1234567890"
 

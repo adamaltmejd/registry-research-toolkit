@@ -8,22 +8,16 @@ These tests pin that behaviour and the per-issue checks. The `gh`/`git`-calling 
 
 from __future__ import annotations
 
-import importlib.util
 import json
-import sys
 from pathlib import Path
 
 import pytest
 
+from conftest import load_scripts_module
+
 _SCRIPTS = Path(__file__).resolve().parents[1]
 _ROOT = _SCRIPTS.parent
-_SPEC = importlib.util.spec_from_file_location(
-    "check_issue_hygiene", _SCRIPTS / "check_issue_hygiene.py"
-)
-assert _SPEC and _SPEC.loader
-h = importlib.util.module_from_spec(_SPEC)
-sys.modules[_SPEC.name] = h
-_SPEC.loader.exec_module(h)
+h = load_scripts_module("check_issue_hygiene")
 
 _AGENTS = (_ROOT / "AGENTS.md").read_text(encoding="utf-8")
 
