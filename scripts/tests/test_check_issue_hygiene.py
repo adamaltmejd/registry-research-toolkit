@@ -260,6 +260,109 @@ def test_touches_missing_file_warns() -> None:
     assert _has(items, "WARN", "matches no files")
 
 
+# --- non-maintainer redaction (public-repo untrusted-text gate) ----------------------
+
+_MAINT = "adamaltmejd"
+
+
+def _gated(
+    *,
+    author_login: str | None,
+    body: str = "",
+    labels: tuple[str, ...] = (),
+    known: set[int] = frozenset(),  # type: ignore[assignment]
+    open_numbers: set[int] = frozenset(),  # type: ignore[assignment]
+    parent_of: dict[int, int] | None = None,
+    num: int = 1,
+) -> list[tuple[str, int | None, str]]:
+    out = h.Findings()
+    issue = {
+        "number": num,
+        "labels": [{"name": label} for label in labels],
+        "body": body,
+        "author": {"login": author_login} if author_login is not None else None,
+    }
+    h.check_issue_gated(
+        issue,
+        set(known),
+        set(open_numbers),
+        dict(parent_of or {}),
+        _ROOT,
+        out,
+        _MAINT,
+    )
+    return out.items
+
+
+def test_non_maintainer_issue_messages_are_number_only() -> None:
+    # A stranger's issue that fails several checks with body-derived detail (a bogus
+    # touches pattern, a dangling relationship, a title-laden label problem) must NOT leak
+    # any of that text — only the number and a code-authored check-name.
+    items = _gated(
+        author_login="stranger",
+        labels=(),  # missing area + type labels
+        body="Depends on #999\n```touches\n/etc/passwd\n```",
+        known={1},
+    )
+    assert items, "a failing stranger issue should still be flagged"
+    for _lvl, _num, msg in items:
+        assert "(non-maintainer)" in msg
+        assert "inspect manually" in msg
+        # none of the body-derived strings leak
+        assert "#999" not in msg
+        assert "/etc/passwd" not in msg
+        assert "area label (has:" not in msg  # the verbose derived form is gone
+
+
+def test_non_maintainer_blocked_drift_is_non_actionable() -> None:
+    # A stranger issue with an open blocker but no `blocked` label would, for a maintainer,
+    # emit the verbose "no 'blocked' label" line /issue-pulse pattern-matches to auto-add
+    # the label. Redacted, it must NOT carry that actionable phrasing.
+    items = _gated(
+        author_login="stranger",
+        labels=("reg_meta", "bug"),
+        body="Blocked by #2",
+        known={1, 2},
+        open_numbers={2},
+    )
+    assert _has(items, "WARN", "blocked-label-drift")
+    assert not _has(items, "WARN", "no 'blocked' label")
+    assert not _has(items, "WARN", "remove it if unblocked")
+
+
+def test_non_maintainer_null_author_is_redacted() -> None:
+    # A missing/null author is not the maintainer → fail-closed to the redacted path.
+    items = _gated(author_login=None, labels=(), known={1})
+    assert items
+    assert all("(non-maintainer)" in msg for _, _, msg in items)
+
+
+def test_maintainer_issue_messages_unchanged() -> None:
+    # The maintainer's own issue keeps the full verbose messages — no redaction.
+    items = _gated(
+        author_login=_MAINT,
+        labels=(),
+        body="Depends on #999",
+        known={1},
+    )
+    assert _has(items, "ERROR", "needs exactly one area label")
+    assert _has(items, "ERROR", "#999")
+    assert not any("(non-maintainer)" in msg for _, _, msg in items)
+
+
+def test_maintainer_case_insensitive_match_stays_verbose() -> None:
+    # Authorship match is case-insensitive (mirrors the gate) → still verbose.
+    items = _gated(author_login=_MAINT.upper(), labels=())
+    assert _has(items, "ERROR", "needs exactly one area label")
+    assert not any("(non-maintainer)" in msg for _, _, msg in items)
+
+
+def test_maintainer_clean_issue_no_findings() -> None:
+    # A clean maintainer issue produces nothing (redaction must not manufacture findings).
+    items = _gated(author_login=_MAINT, labels=("reg_meta", "bug"))
+    assert items == []
+
+
 # --- doc <-> code agreement ----------------------------------------------------------
 
 

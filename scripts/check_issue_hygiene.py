@@ -3,6 +3,16 @@
 
 Read-only validator over the GitHub issue corpus. It reports; it never edits.
 
+This repo is PUBLIC and /issue-pulse model-reads this output (and auto-applies the
+`blocked`-label drift fixes from it). The checker still validates EVERY open issue,
+including strangers' — but a NON-maintainer-authored issue's findings are redacted to
+number-only, code-authored check-names (via `redact_for_non_maintainer`): no title,
+label text, relationship/touches strings, or any body-derived text is quoted, and the
+actionable `blocked`-label drift phrasing is replaced by a non-actionable notice so a
+stranger issue can't drive an auto-applied label edit. Maintainer-authored issues keep
+the full verbose messages unchanged. Authorship is decided by the shared gate
+(`scripts/gh_issue.py`), never re-implemented here.
+
 Checks (per open issue):
   - exactly one area label + one type label;
   - every `Relationships` target (`Depends on`/`Blocked by`/`Part of`/… #N) resolves
@@ -59,6 +69,23 @@ repo_owner_name = _gh.repo_owner_name
 # (plan_sequence.py) keep resolving unchanged.
 FETCH_CAP = _gh.FETCH_CAP
 _warn_if_truncated = _gh._warn_if_truncated
+
+# The maintainer-author trust gate (scripts/gh_issue.py). This checker reads the WHOLE
+# tracker ungated by design (it validates every open issue), but /issue-pulse model-reads
+# its output and downstream auto-applies the blocked-label drift fixes — so a stranger's
+# issue must not leak body-derived text into a message or trigger an actionable drift fix.
+# Reuse the gate's authorship check rather than re-implementing it (same spec-load idiom
+# plan_sequence.py uses). `_is_maintainer` is private, but this is intra-tooling reuse of
+# the single source of truth for "is this the trusted author", not an external API.
+_GISPEC = importlib.util.spec_from_file_location(
+    "gh_issue", Path(__file__).with_name("gh_issue.py")
+)
+assert _GISPEC and _GISPEC.loader
+gh_issue = importlib.util.module_from_spec(_GISPEC)
+_GISPEC.loader.exec_module(gh_issue)
+
+maintainer_login = gh_issue.maintainer_login
+_is_maintainer = gh_issue._is_maintainer
 
 AREA_LABELS = {
     "reg_meta",
@@ -156,8 +183,12 @@ def parse_touches(body: str) -> list[str]:
 
 
 def fetch_open_issues() -> list[dict]:
+    # `author` is fetched so per-issue authorship can gate message redaction (a
+    # non-maintainer issue's findings must be reported number-only). Unlike gh_issue's
+    # ingestion fetch this is NOT `--author`-filtered: the checker validates the WHOLE
+    # tracker, including stranger issues — it just redacts their messages.
     rows = gh_json(["issue", "list", "--state", "open", "--limit", str(FETCH_CAP),
-                    "--json", "number,title,labels,body"])  # fmt: skip
+                    "--json", "number,title,labels,body,author"])  # fmt: skip
     _warn_if_truncated(rows, "open issues")
     return rows
 
@@ -170,7 +201,7 @@ def fetch_one_open_issue(number: int) -> dict | None:
     `gh issue view` resolves a PR number too. Shares _gh's non-zero-tolerant view
     primitive; keeps its own `state == "OPEN"` post-filter and field set.
     """
-    data = _gh.gh_issue_view_or_none(number, "number,title,labels,body,state")
+    data = _gh.gh_issue_view_or_none(number, "number,title,labels,body,state,author")
     if data is None:  # not an issue (a PR, or it doesn't exist)
         return None
     return data if data.get("state") == "OPEN" else None
@@ -221,6 +252,65 @@ def fetch_parents(owner: str, name: str) -> dict[int, int]:
             cursor = conn["pageInfo"]["endCursor"]
         else:
             return parent_of
+
+
+# Classifier for the redacted (non-maintainer) path. Each entry maps a stable,
+# CODE-AUTHORED message prefix (never a body-derived string) to a terse check-name, so a
+# non-maintainer issue's findings can be reported number-only — the failing check named,
+# but no title/label/relationship/touches text quoted. Ordered longest-first isn't needed
+# because the prefixes are mutually exclusive; any unmatched message falls back to a
+# generic "check" name.
+_CHECK_NAMES: tuple[tuple[str, str], ...] = (
+    ("needs exactly one area label", "area-label"),
+    ("needs exactly one type label", "type-label"),
+    ("has multiple priority labels", "priority-label"),
+    ("points to a non-existent issue/PR", "dangling-relationship"),
+    ("has both 'blocked' and 'parked'", "status-label-conflict"),
+    ("has 'blocked' label but no open", "blocked-label-drift"),
+    ("but no 'blocked' label", "blocked-label-drift"),
+    ("says 'Part of", "sub-issue-wiring"),
+    ("native sub-issue of", "sub-issue-wiring"),
+    ("is not a repo-relative path", "touches-path"),
+    ("is not a valid glob", "touches-path"),
+    ("matches no files", "touches-path"),
+)
+
+
+def _check_name(msg: str) -> str:
+    for prefix, name in _CHECK_NAMES:
+        if prefix in msg:
+            return name
+    return "check"
+
+
+def redact_for_non_maintainer(raw: Findings, out: Findings) -> None:
+    """Fold a non-maintainer issue's per-issue findings into number-only messages.
+
+    This repo is public: a stranger's issue body/labels/title are untrusted, and
+    /issue-pulse model-reads this hygiene output. So for an issue NOT authored by the
+    maintainer, no hygiene message may quote body-derived text (title, label text,
+    relationship/touches strings) — only the issue number and a code-authored check-name.
+    This also keeps stranger issues out of the auto-applied `blocked`-label drift-fix
+    surface: the redacted `blocked-label-drift` line is a non-actionable notice, never the
+    verbose "remove it if unblocked" / "no 'blocked' label" phrasing that /issue-pulse
+    pattern-matches to run `gh issue edit … --add-label/--remove-label blocked`.
+
+    Findings are collapsed to one message per (level, check-name) so a flood of derived
+    detail can't leak via repetition. `raw` is the scratch sink `check_issue` wrote into;
+    `out` is the real report sink.
+    """
+    seen: set[tuple[str, str]] = set()
+    for level, num, msg in raw.items:
+        name = _check_name(msg)
+        key = (level, name)
+        if key in seen:
+            continue
+        seen.add(key)
+        text = f"(non-maintainer) {name} flagged — inspect manually"
+        if level == "ERROR":
+            out.error(num, text)
+        else:
+            out.warn(num, text)
 
 
 def check_issue(
@@ -290,6 +380,29 @@ def check_issue(
             out.warn(
                 num, f"touches '{pattern}' matches no files (ok if it's a new file)"
             )
+
+
+def check_issue_gated(
+    issue: dict,
+    known: set[int],
+    open_numbers: set[int],
+    parent_of: dict[int, int],
+    repo_root: Path,
+    out: Findings,
+    maintainer: str,
+) -> None:
+    """Run the per-issue checks, redacting the output for non-maintainer-authored issues.
+
+    A maintainer issue's findings go straight to `out` (verbose, unchanged). A stranger's
+    go through a scratch sink and `redact_for_non_maintainer` so `out` only ever sees
+    number-only, non-body-derived messages for it (see `redact_for_non_maintainer`).
+    """
+    if _is_maintainer(issue, maintainer):
+        check_issue(issue, known, open_numbers, parent_of, repo_root, out)
+        return
+    scratch = Findings()
+    check_issue(issue, known, open_numbers, parent_of, repo_root, scratch)
+    redact_for_non_maintainer(scratch, out)
 
 
 def check_done_but_open(issue_state: dict[int, str], out: Findings) -> None:
@@ -429,6 +542,7 @@ def main() -> int:
 
     repo_root = Path(run(["git", "rev-parse", "--show-toplevel"]).strip())
     owner, name = repo_owner_name()
+    maintainer = maintainer_login()
     known, issue_state, open_numbers = fetch_number_states()
     parent_of = fetch_parents(owner, name)
     out = Findings()
@@ -441,12 +555,16 @@ def main() -> int:
         if issue is None:
             print(f"#{args.issue} is not an open issue; skipping.")
             return 0
-        check_issue(issue, known, open_numbers, parent_of, repo_root, out)
+        check_issue_gated(
+            issue, known, open_numbers, parent_of, repo_root, out, maintainer
+        )
         emit(out, f"#{args.issue}")
         return 1 if out.errors else 0
 
     for issue in fetch_open_issues():
-        check_issue(issue, known, open_numbers, parent_of, repo_root, out)
+        check_issue_gated(
+            issue, known, open_numbers, parent_of, repo_root, out, maintainer
+        )
     check_done_but_open(issue_state, out)
     check_unreleased_build_debt(repo_root, out)
     check_steward_catalog_staleness(repo_root, out)
