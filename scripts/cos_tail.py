@@ -307,6 +307,16 @@ class LogFollower:
         self.poll()
         self._buf = b""
 
+    def drain_tail(self) -> str | None:
+        """The buffered unterminated final line, once the writer is known to be done.
+
+        A child that exits after a write with no trailing newline leaves its last
+        line in the buffer; poll() rightly withholds it while the writer might still
+        be mid-line, so the lane-ended path must flush it explicitly.
+        """
+        tail, self._buf = self._buf, b""
+        return tail.decode("utf-8", errors="replace") if tail.strip() else None
+
 
 def follow_one(
     slug: str,
@@ -339,23 +349,28 @@ def follow_one(
                 )
             )
             break
+
+    def emit(lines: list[str]) -> None:
+        for line in lines:
+            rendered = line if raw else renderer.render(line)
+            if rendered is not None:
+                print(rendered, flush=True)
+
     follower = LogFollower(log_path)
     if not from_start:
         follower.skip_to_end()
     while True:
-        for line in follower.poll():
-            rendered = line if raw else renderer.render(line)
-            if rendered is not None:
-                print(rendered, flush=True)
+        emit(follower.poll())
         if slug not in _cos_preflight.scan_slots(slots_root):
-            # Lane over: drain what the poll above may have raced, then EXIT — a
-            # follower that lingers would hold a process per done lane and, on slug
-            # reuse (dispatch logs are per-slug, append-only), print the NEXT run's
-            # log into a pane titled done:. remain-on-exit keeps the scrollback.
-            for line in follower.poll():
-                rendered = line if raw else renderer.render(line)
-                if rendered is not None:
-                    print(rendered, flush=True)
+            # Lane over: drain what the poll above may have raced (including an
+            # unterminated final line), then EXIT — a follower that lingers would
+            # hold a process per done lane and, on slug reuse (dispatch logs are
+            # per-slug, append-only), print the NEXT run's log into a pane titled
+            # done:. remain-on-exit keeps the scrollback.
+            emit(follower.poll())
+            tail = follower.drain_tail()
+            if tail is not None:
+                emit([tail])
             print(renderer._c(_DIM, f"— slot {slug} released (lane ended)"), flush=True)
             return 0
         time.sleep(interval)
@@ -371,27 +386,74 @@ def follow_all(
     interval: float,
 ) -> int:
     followers: dict[str, LogFollower] = {}
+    resume_pos: dict[str, int] = {}
     first_scan = True
     while True:
-        for slug in sorted(_cos_preflight.scan_slots(slots_root)):
-            if slug not in followers:
-                follower = LogFollower(logs_root / f"{slug}.log")
-                # A lane discovered mid-watch has a just-started log: always replay it
-                # in full. --from-start only governs lanes already live at startup.
-                if first_scan and not from_start:
-                    follower.skip_to_end()
-                followers[slug] = follower
-                print(renderer._c(_BOLD, f"== following {slug} =="), flush=True)
+        _follow_all_tick(
+            slots_root,
+            logs_root,
+            renderer,
+            followers,
+            resume_pos,
+            raw=raw,
+            hot_join=first_scan and not from_start,
+        )
         first_scan = False
-        for slug, follower in followers.items():
-            prefix = renderer._c(_DIM, f"[{short_slug(slug)}]")
-            for line in follower.poll():
-                rendered = line if raw else renderer.render(line)
-                if rendered is None:
-                    continue
-                for out_line in rendered.splitlines():
-                    print(f"{prefix} {out_line}", flush=True)
         time.sleep(interval)
+
+
+def _follow_all_tick(
+    slots_root: Path,
+    logs_root: Path,
+    renderer: Renderer,
+    followers: dict[str, LogFollower],
+    resume_pos: dict[str, int],
+    *,
+    raw: bool,
+    hot_join: bool,
+) -> None:
+    """One discovery/emit/prune pass of follow --all (split out for testability)."""
+
+    def emit(slug: str, lines: list[str]) -> None:
+        prefix = renderer._c(_DIM, f"[{short_slug(slug)}]")
+        for line in lines:
+            rendered = line if raw else renderer.render(line)
+            if rendered is None:
+                continue
+            for out_line in rendered.splitlines():
+                print(f"{prefix} {out_line}", flush=True)
+
+    live = _cos_preflight.scan_slots(slots_root)
+    for slug in sorted(live):
+        if slug not in followers:
+            follower = LogFollower(logs_root / f"{slug}.log")
+            if slug in resume_pos:
+                # Slug reuse: the per-slug log is append-only, so resume past the
+                # prior run's bytes instead of replaying or skipping the new run.
+                follower.pos = resume_pos[slug]
+            elif hot_join:
+                follower.skip_to_end()
+            # A lane discovered mid-watch has a just-started log: replay it in full
+            # (hot_join only covers lanes already live at startup without
+            # --from-start).
+            followers[slug] = follower
+            print(renderer._c(_BOLD, f"== following {slug} =="), flush=True)
+    for slug, follower in list(followers.items()):
+        emit(slug, follower.poll())
+        if slug not in live:
+            # Lane over: flush the racing tail (including an unterminated final
+            # line), note the release, and prune — a released lane polled forever
+            # otherwise, and on slug reuse would swallow the next run's opening.
+            emit(slug, follower.poll())
+            tail = follower.drain_tail()
+            if tail is not None:
+                emit(slug, [tail])
+            print(
+                renderer._c(_DIM, f"[{short_slug(slug)}] — slot released (lane ended)"),
+                flush=True,
+            )
+            resume_pos[slug] = follower.pos
+            del followers[slug]
 
 
 # ---------------------------------------------------------------------------

@@ -206,6 +206,19 @@ def test_follower_skip_to_end_discards_history(tmp_path: Path) -> None:
     assert follower.poll() == ["-tail", "new"]
 
 
+def test_follower_drain_tail_flushes_unterminated_line(tmp_path: Path) -> None:
+    log = tmp_path / "lane.log"
+    log.write_bytes(b"complete\nno-newline-final")
+    follower = ct.LogFollower(log)
+    assert follower.poll() == ["complete"]
+    assert follower.drain_tail() == "no-newline-final"
+    assert follower.drain_tail() is None  # flushed exactly once
+    (tmp_path / "empty.log").write_bytes(b"line\n   ")
+    follower = ct.LogFollower(tmp_path / "empty.log")
+    follower.poll()
+    assert follower.drain_tail() is None  # whitespace-only tail is not a line
+
+
 def test_follower_resets_on_truncation(tmp_path: Path) -> None:
     log = tmp_path / "lane.log"
     log.write_bytes(b"one\ntwo\n")
@@ -317,7 +330,8 @@ def test_follow_exits_after_lane_release(tmp_path: Path, capsys) -> None:
     logs_root = tmp_path / "dispatch-logs"
     logs_root.mkdir(parents=True)
     (logs_root / "gone-lane.log").write_text(
-        '{"type":"item.completed","item":{"type":"agent_message","text":"done"}}\n',
+        '{"type":"item.completed","item":{"type":"agent_message","text":"done"}}\n'
+        "final stderr without newline",
         encoding="utf-8",
     )
     rc = ct.main(
@@ -327,7 +341,51 @@ def test_follow_exits_after_lane_release(tmp_path: Path, capsys) -> None:
     assert rc == 0
     out = capsys.readouterr().out
     assert "done" in out
+    assert "final stderr without newline" in out  # unterminated tail is flushed
     assert "released (lane ended)" in out
+
+
+def test_follow_all_tick_prunes_and_resumes_reused_slug(tmp_path: Path, capsys) -> None:
+    # A released lane is drained (incl. unterminated tail) and pruned; when its
+    # slug is reused, the new follower resumes past the prior run's bytes in the
+    # append-only per-slug log (Codex P2s on #1047).
+    slots_root = tmp_path / "pipeline-slots"
+    logs_root = tmp_path / "dispatch-logs"
+    logs_root.mkdir(parents=True)
+    renderer = ct.Renderer(color=False)
+    followers: dict[str, ct.LogFollower] = {}
+    resume_pos: dict[str, int] = {}
+
+    def tick() -> str:
+        ct._follow_all_tick(
+            slots_root,
+            logs_root,
+            renderer,
+            followers,
+            resume_pos,
+            raw=True,
+            hot_join=False,
+        )
+        return capsys.readouterr().out
+
+    _write_slot(slots_root, "lane-a")
+    log = logs_root / "lane-a.log"
+    log.write_text("run1-line\nrun1-tail-no-newline", encoding="utf-8")
+    out = tick()
+    assert "== following lane-a ==" in out and "run1-line" in out
+
+    (slots_root / "lane-a.json").unlink()  # slot released
+    out = tick()
+    assert "run1-tail-no-newline" in out
+    assert "slot released (lane ended)" in out
+    assert followers == {}
+
+    _write_slot(slots_root, "lane-a")  # slug reused by a later dispatch
+    with log.open("a", encoding="utf-8") as fh:
+        fh.write("\nrun2-line\n")
+    out = tick()
+    assert "run2-line" in out
+    assert "run1-line" not in out  # prior run's bytes are not replayed
 
 
 def test_status_command_smoke(tmp_path: Path, capsys) -> None:
