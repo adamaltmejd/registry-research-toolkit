@@ -347,10 +347,7 @@ autonomous. With `/chief-of-staff auto` (opt-in per session) it may also auto-di
 pr-pipeline lanes into free slots via `scripts/cos_dispatch.py`, gated by the
 `<state-root>/auto-dispatch.off` kill switch (present ⇒ fall back to recommending), at
 one of two launch tiers — `easy` (Sonnet 5 with an Opus advisor, for small low-risk
-lanes) or `hard` (Codex gpt-5.5 xhigh, the default); a lane needing the rendered-UI
-visual gate (touching `reg_webapp/frontend/**`) is claude-surface only, since codex's
-seatbelt cannot run the browser that gate requires (`cos_dispatch` refuses it). Merges in
-the maintainer-approval
+lanes) or `hard` (Codex gpt-5.5 xhigh, the default). Merges in the maintainer-approval
 classes — a schema/DDL change, a build-affecting PR whose dbdiff delta exceeds what the
 PR/issue states, a change to the COS/merge-gate machinery itself, or deploy/infra work
 or a major release — always wait for the maintainer.

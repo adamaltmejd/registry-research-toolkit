@@ -345,63 +345,6 @@ def test_is_maintainer_authored_true_for_maintainer_pr(
     assert gi.is_maintainer_authored(1024) is True
 
 
-# --- maintainer_body (public accessor, fail-closed) ----------------------------------
-
-
-def test_maintainer_body_returns_body_for_maintainer(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    _stub_view(
-        monkeypatch,
-        {
-            "number": 328,
-            "title": "epic",
-            "body": "the plan",
-            "author": {"login": MAINT},
-        },
-    )
-    assert gi.maintainer_body(328) == "the plan"
-
-
-def test_maintainer_body_none_for_stranger(monkeypatch: pytest.MonkeyPatch) -> None:
-    # Untrusted content is never surfaced: a stranger's body drops to None, not the text.
-    _stub_view(
-        monkeypatch,
-        {"number": 9, "title": "x", "body": "INJECT", "author": {"login": "stranger"}},
-    )
-    assert gi.maintainer_body(9) is None
-
-
-def test_maintainer_body_none_for_missing_number(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    _stub_view(monkeypatch, None)  # non-zero exit → _fetch_issue None → None
-    assert gi.maintainer_body(1) is None
-
-
-def test_maintainer_body_none_for_null_author(monkeypatch: pytest.MonkeyPatch) -> None:
-    _stub_view(monkeypatch, {"number": 7, "title": "t", "body": "b", "author": None})
-    assert gi.maintainer_body(7) is None
-
-
-def test_maintainer_body_none_for_null_body(monkeypatch: pytest.MonkeyPatch) -> None:
-    # A maintainer issue with a null body yields None (no text), not a crash.
-    _stub_view(
-        monkeypatch,
-        {"number": 5, "title": "t", "body": None, "author": {"login": MAINT}},
-    )
-    assert gi.maintainer_body(5) is None
-
-
-def test_maintainer_body_trusts_maintainer_pr(monkeypatch: pytest.MonkeyPatch) -> None:
-    # `gh issue view` resolves a PR number; a maintainer-authored PR's body passes.
-    _stub_view(
-        monkeypatch,
-        {"number": 1024, "title": "pr", "body": "pr body", "author": {"login": MAINT}},
-    )
-    assert gi.maintainer_body(1024) == "pr body"
-
-
 # --- maintainer-login subcommand -----------------------------------------------------
 
 

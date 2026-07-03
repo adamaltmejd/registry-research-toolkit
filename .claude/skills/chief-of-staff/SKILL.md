@@ -628,13 +628,6 @@ one-coordinator rule in Scheduling is what excludes that.
   (no model/effort/advisor pins). The chosen `tier` is recorded in both the slot file
   and the dispatch result JSON.
 
-  A lane touching `reg_webapp/frontend/**` (or otherwise needing the rendered-UI visual
-  merge gate) MUST launch on a **claude surface** (`--tier easy`, or
-  `--surface claude`): codex's seatbelt cannot launch the browser that gate requires, so
-  the lane would be unmergeable there. `cos_dispatch` enforces this — it REFUSES a
-  codex-surface launch (exit `2`) when any lane issue's `touches` block hits that
-  surface, naming the issue and directing you to claude.
-
 - **Launch each lane** from the canonical checkout with:
 
   ```sh

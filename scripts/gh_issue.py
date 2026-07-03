@@ -178,25 +178,6 @@ def is_maintainer_authored(number: int) -> bool:
     return data is not None and _is_maintainer(data, maintainer_login())
 
 
-def maintainer_body(number: int) -> str | None:
-    """The trusted BODY of issue/PR #number, or None when it must not be surfaced.
-
-    Returns the body string only when the number exists AND is maintainer-authored;
-    otherwise None (missing number, missing/None/non-maintainer author, or a null body).
-    Fail-closed like the rest of this module — a caller that needs an issue's text (e.g.
-    cos_dispatch's visual-lane guard scanning `touches`) gets the untrusted content
-    dropped to None rather than surfaced, and reuses this accessor instead of composing
-    the private `_fetch_issue` + `_is_maintainer` itself. Inherits `_fetch_issue`'s caveat
-    that `gh issue view` resolves a PR number too: a maintainer-authored PR's body passes
-    exactly like a maintainer issue's (authorship, not issue-ness, is the trust boundary).
-    """
-    data = _fetch_issue(number, comments=False)
-    if data is None or not _is_maintainer(data, maintainer_login()):
-        return None
-    body = data.get("body")
-    return body if isinstance(body, str) else None
-
-
 def view(number: int, comments: bool) -> tuple[int, str]:
     """Gate a single `issue view` read. Returns (exit_code, stdout_text).
 

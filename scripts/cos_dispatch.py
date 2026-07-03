@@ -22,13 +22,6 @@ parse_issues, resolve_profile, slug validation — all exit 2):
   3b. author check — each --issues number must be maintainer-authored
                     (gh_issue.is_maintainer_authored); refuse (exit 2) before any side
                     effect. Skipped under --dry-run (its no-network contract).
-  3c. visual-lane — codex surface only: refuse (exit 2) when any --issues number's
-                    `touches` block hits the rendered UI surface (reg_webapp/frontend/**).
-                    codex's seatbelt cannot launch the browser the visual merge gate needs
-                    (#1049), so that lane is unmergeable on codex — the fix is routing it to
-                    a claude surface, and the refusal names the issue(s) and says so. Reads
-                    each issue's trusted body (gh_issue.maintainer_body) — network — so like
-                    3b it runs AFTER the --dry-run return and before any side effect.
   4. worktree     — `git fetch origin main` then `git worktree add -b wt/<slug> …
                     origin/main`, run in the canonical checkout. `wt/<slug>` is only the
                     placeholder branch git requires; the pipeline skill creates its real
@@ -204,104 +197,6 @@ def _load_gh() -> ModuleType:
 _gh = _load_gh()
 _cos_preflight = _gh.load_sibling("cos_preflight")
 _gh_issue = _gh.load_sibling("gh_issue")
-# check_issue_hygiene SOLELY to reuse its `parse_touches` fenced-block parser — the
-# visual-lane guard must read a `touches` block exactly as the tracker/sequencer do, and
-# re-pasting that parser is this repo's named leaf-duplication anti-pattern.
-_check_issue_hygiene = _gh.load_sibling("check_issue_hygiene")
-
-# The rendered-UI surface whose visual merge gate needs a real browser. codex's seatbelt
-# has a fixed mach-lookup allowlist with no mach-register grant and no config knob, so
-# Chromium cannot launch under it (bootstrap_check_in … Permission denied) and children
-# can't escape the sandbox — the visual gate is UNRUNNABLE on codex, period (#1049). A
-# lane touching this surface must therefore route to a claude launch.
-_VISUAL_SURFACE_PREFIX = "reg_webapp/frontend"
-
-
-def _touches_visual_surface(touches: list[str]) -> bool:
-    """Whether any `touches` entry could edit a file under reg_webapp/frontend/**.
-
-    NOT reused from plan_sequence.touches_overlap despite the cheap sys.modules-guarded
-    load: touches_overlap's fnmatch semantics UNDER-detect entries whose wildcard completes
-    a partial path component — `_pair_overlap("reg_webapp/fronten[dt]/x.svelte",
-    "reg_webapp/frontend")` is False, since fnmatch literal-matches pattern-against-string
-    and never expands the char-class to finish `fronten` into `frontend`. That's tolerable
-    for its lane-conflict use (a miss merely fails to serialize two lanes) but WRONG here:
-    a missed hit silently dispatches a lane whose visual merge gate codex cannot run, while
-    a false hit only costs relaunching the dispatch on claude. The failure asymmetry demands
-    OVER-detection, so this guard deliberately diverges — it is a policy fork, not a
-    load-cost convenience fork. The LITERAL and GLOB cases need different prefix relations:
-      - a LITERAL entry hits on the exact path-boundary relation — it IS the surface or
-        nests under it (surface/…) OR the surface nests under it (an ancestor dir). The
-        boundary is strict on purpose: a plain-string prefix would mis-hit look-alikes
-        like `reg_webapp/frontend_notes.md` (not a child), so literals keep the `== / +"/"`
-        component tests unchanged.
-      - a GLOB entry tests its FIXED (pre-wildcard) prefix with PLAIN string-prefix
-        relations, because the wildcard can complete a partial path component: e.g.
-        `reg_webapp/fronten[dt]/x.svelte` has fixed prefix `reg_webapp/fronten`, which the
-        char-class can expand to `reg_webapp/frontend/…`. So a glob hits if the surface
-        string-starts-with the fixed prefix (covers the empty / leading-wildcard prefix
-        too — everything starts with ""), or the fixed prefix equals the surface, or the
-        fixed prefix roots deeper inside the surface (`surface/…`). This DELIBERATELY
-        over-detects a glob whose fixed prefix stops mid-component before the surface (e.g.
-        `reg_webapp/fronten*` matches even though the wildcard need not land in `frontend`)
-        — acceptable per the over-rather-than-under-detect stance.
-    """
-    for raw in touches:
-        entry = raw.rstrip("/")
-        cut = min((entry.find(c) for c in "*?[" if c in entry), default=len(entry))
-        prefix = entry[:cut].rstrip("/")
-        if cut < len(entry):
-            # GLOB entry: the wildcard can complete a partial path component, so compare its
-            # fixed prefix to the surface with plain string-prefix relations (not the strict
-            # path-boundary test). `startswith(prefix)` on the surface covers the empty /
-            # leading-wildcard prefix too — every string starts with "". Over-detects a glob
-            # whose fixed prefix stops mid-component (per the conservative stance above).
-            if (
-                _VISUAL_SURFACE_PREFIX.startswith(prefix)
-                or prefix == _VISUAL_SURFACE_PREFIX
-                or prefix.startswith(_VISUAL_SURFACE_PREFIX + "/")
-            ):
-                return True
-        elif (
-            # LITERAL entry: strict path-boundary relation so a prefix look-alike
-            # (reg_webapp/frontend_notes.md) can't mis-hit.
-            prefix == _VISUAL_SURFACE_PREFIX
-            or prefix.startswith(_VISUAL_SURFACE_PREFIX + "/")
-            or _VISUAL_SURFACE_PREFIX.startswith(prefix + "/")
-        ):
-            return True
-    return False
-
-
-def require_no_visual_lane_on_codex(issues: list[int]) -> None:
-    """Refuse (SystemExit) a codex-surface launch when any issue touches the visual surface.
-
-    The rendered-UI merge gate runs a real Chromium, which codex's seatbelt cannot launch
-    (#1049); so a lane touching `reg_webapp/frontend/**` is unverifiable — and therefore
-    unmergeable — on codex, no matter the sandbox flags. This is deterministic ROUTING, not
-    a sandbox tweak: refuse here and point the dispatcher at a claude surface. Reads each
-    issue's trusted body via gh_issue.maintainer_body (fail-closed; a non-maintainer/missing
-    issue already refused by the author check, and a None body yields no touches signal) and
-    reuses check_issue_hygiene.parse_touches for the fenced block. Issues with no `touches`
-    block produce no signal (matching the tracker convention that discussion-only issues
-    omit it). Read-only network I/O, run before any side effect and only on the codex surface.
-    """
-    hit: list[int] = []
-    for number in issues:
-        body = _gh_issue.maintainer_body(number)
-        if body is None:
-            continue
-        if _touches_visual_surface(_check_issue_hygiene.parse_touches(body)):
-            hit.append(number)
-    if hit:
-        names = ", ".join(f"#{n}" for n in hit)
-        raise SystemExit(
-            f"issue(s) {names} touch the rendered UI surface "
-            f"({_VISUAL_SURFACE_PREFIX}/**), whose visual merge gate needs a browser "
-            "codex's seatbelt cannot launch — refusing a codex-surface dispatch. "
-            "Relaunch on the claude surface (--tier easy for a small low-risk lane, "
-            "or --surface claude)."
-        )
 
 
 def require_maintainer_authored(issues: list[int]) -> None:
@@ -824,15 +719,6 @@ def dispatch(
     # there would break that contract. Dry-run still surfaces the resolved argv/slot; the
     # author gate is a launch-path guard, so gating it here loses nothing for the preview.
     require_maintainer_authored(issues)
-
-    # 3c. Visual-lane routing guard — a codex-surface launch is refused when any issue
-    # touches the rendered UI surface (reg_webapp/frontend/**), whose visual merge gate
-    # needs a browser codex's seatbelt cannot launch (#1049). Same placement rationale as
-    # the author check: it fetches issue bodies (network), so like 3b it runs AFTER the
-    # --dry-run return (dry-run's no-network contract) and BEFORE the first side effect.
-    # Only the codex surface is gated; claude is unblocked (it can run the visual gate).
-    if surface == "codex":
-        require_no_visual_lane_on_codex(issues)
 
     # 4. Worktree — placeholder wt/<slug> branch off a freshly fetched origin/main.
     canonical_repo: Path = args.canonical
