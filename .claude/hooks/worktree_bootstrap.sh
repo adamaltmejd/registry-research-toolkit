@@ -32,6 +32,7 @@ self=${BASH_SOURCE[0]}
 # skip (no uv/bun churn on every session).
 VENV_MARKER=".venv/.wt-provisioned"
 NODE_MARKER="reg_webapp/frontend/node_modules/.wt-provisioned"
+HOOK_SHIM_MARKER="registry-research-toolkit linked-worktree GIT_WORK_TREE shim"
 
 fingerprint() { # $1 = lockfile; stable digest, or 'none' if absent (cksum is POSIX)
 	if [ -f "$1" ]; then cksum <"$1" | cut -d' ' -f1; else echo none; fi
@@ -47,6 +48,57 @@ node_ok() { # $1 = root; vacuously ok when there is no frontend
 
 needs_provision() { # $1 = root; 0 if anything is missing/stale
 	! venv_ok "$1" || ! node_ok "$1"
+}
+
+# pre-commit config is too late for this: the generated Git hook launcher starts
+# pre-commit, and pre-commit may run Git before any repo-local hook entry.
+repair_pre_commit_hooks() { # $1 = root; idempotently patch generated hooks for linked worktrees
+	local root=$1 common_dir hooks_dir hook path tmp
+	common_dir=$(env -u GIT_DIR -u GIT_WORK_TREE git -C "$root" rev-parse --git-common-dir 2>/dev/null) || return 0
+	case "$common_dir" in
+	/*) ;;
+	*) common_dir=$(cd "$root/$common_dir" 2>/dev/null && pwd -P) || return 0 ;;
+	esac
+	hooks_dir="$common_dir/hooks"
+	[ -d "$hooks_dir" ] || return 0
+
+	for hook in pre-commit pre-push post-checkout; do
+		path="$hooks_dir/$hook"
+		[ -f "$path" ] || continue
+		grep -q 'ID: 138fd403232d2ddd5efb44317e38bf03' "$path" 2>/dev/null || continue
+		grep -q "$HOOK_SHIM_MARKER" "$path" 2>/dev/null && continue
+
+		tmp="${path}.regmeta.$$"
+		awk -v marker="$HOOK_SHIM_MARKER" '
+			{ print }
+			$0 == "# end templated" {
+				print ""
+				print "# " marker
+				print "if [ -n \"${GIT_DIR:-}\" ] && [ -z \"${GIT_WORK_TREE:-}\" ]; then"
+				print "    _rtt_git_dir=$GIT_DIR"
+				print "    case \"$_rtt_git_dir\" in"
+				print "        /*) ;;"
+				print "        *) _rtt_git_dir=$PWD/$_rtt_git_dir ;;"
+				print "    esac"
+				print "    if [ -f \"$_rtt_git_dir/gitdir\" ]; then"
+				print "        _rtt_git_file=$(cat \"$_rtt_git_dir/gitdir\" 2>/dev/null || true)"
+				print "        _rtt_work_tree="
+				print "        case \"$_rtt_git_file\" in"
+				print "            /*/.git) _rtt_work_tree=${_rtt_git_file%/.git} ;;"
+				print "            */.git) _rtt_work_tree=$(cd \"$(dirname \"$_rtt_git_dir/$_rtt_git_file\")\" 2>/dev/null && pwd -P || true) ;;"
+				print "        esac"
+				print "        [ -n \"$_rtt_work_tree\" ] && [ -d \"$_rtt_work_tree\" ] && export GIT_WORK_TREE=$_rtt_work_tree"
+				print "    fi"
+				print "    unset _rtt_git_dir _rtt_git_file _rtt_work_tree"
+				print "fi"
+			}
+		' "$path" >"$tmp" || {
+			rm -f "$tmp"
+			continue
+		}
+		chmod +x "$tmp"
+		mv "$tmp" "$path" || rm -f "$tmp"
+	done
 }
 
 provision() { # $1 = root; synchronous; idempotent; stamps the fingerprint on success
@@ -80,7 +132,9 @@ provision() { # $1 = root; synchronous; idempotent; stamps the fingerprint on su
 # dev.sh, and by the pre-commit `post-checkout` hook (which runs in the freshly
 # checked-out / worktree-added tree): `… --provision [root]`.
 if [ "${1:-}" = "--provision" ]; then
-	provision "${2:-$(git rev-parse --show-toplevel 2>/dev/null || echo "$PWD")}"
+	root="${2:-$(env -u GIT_DIR -u GIT_WORK_TREE git rev-parse --show-toplevel 2>/dev/null || echo "$PWD")}"
+	repair_pre_commit_hooks "$root"
+	provision "$root"
 	exit 0
 fi
 
@@ -98,7 +152,8 @@ except Exception:
 
 # Provision the checkout the hook runs in. SessionStart runs in the session cwd
 # (the worktree); fall back to CLAUDE_PROJECT_DIR, then cwd.
-root=$(git rev-parse --show-toplevel 2>/dev/null || echo "${CLAUDE_PROJECT_DIR:-$PWD}")
+root=$(env -u GIT_DIR -u GIT_WORK_TREE git rev-parse --show-toplevel 2>/dev/null || echo "${CLAUDE_PROJECT_DIR:-$PWD}")
+repair_pre_commit_hooks "$root"
 
 needs_provision "$root" || exit 0 # fast path: already provisioned + in sync
 
