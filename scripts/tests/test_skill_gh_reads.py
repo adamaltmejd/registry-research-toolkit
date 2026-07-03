@@ -79,9 +79,13 @@ def _issue_list_arg_span(line: str, start: int) -> str:
 
 
 def _is_forbidden(line: str) -> bool:
-    m = _ISSUE_LIST_RE.search(line)
-    if m and not _SEARCH_RE.search(_issue_list_arg_span(line, m.end())):
-        return True
+    # Check EVERY `gh issue list` invocation on the line, not just the first: an allowed
+    # `--search` form before a raw one (`gh issue list --search foo; gh issue list
+    # --state open`) must not mask the raw one. Each span cut is start-relative, so
+    # per-match spans terminate correctly at the next separator.
+    for m in _ISSUE_LIST_RE.finditer(line):
+        if not _SEARCH_RE.search(_issue_list_arg_span(line, m.end())):
+            return True
     return any(rx.search(line) for rx in _FORBIDDEN_RES)
 
 
@@ -125,6 +129,9 @@ def test_allowlisted_reads_do_not_trip() -> None:
         'gh issue list --state all --search "<keywords>"',
         # `--search` inside the invocation's own arg span before a pipe still exempts it.
         'gh issue list --search "x" | head',
+        # TWO invocations, both carrying --search — the second match's span is
+        # start-relative, so both are exempt and the line stays allowed.
+        'gh issue list --search "a" && gh issue list --search "b"',
         "gh issue edit <n> --parent <epic>",
         "gh issue create --title ...",
         "gh issue comment <n> --body ...",
@@ -149,6 +156,9 @@ def test_allowlisted_reads_do_not_trip() -> None:
         "gh issue list --limit 5000",
         "gh issue list",
         "gh issue list --state all --json number",  # non-search filters don't exempt it
+        # an allowed --search invocation before a raw one must not mask the raw one:
+        # _is_forbidden iterates ALL matches, not just the first.
+        'gh issue list --search "a"; gh issue list --state open',
         # a trailing comment mentioning --search must NOT exempt the bare command — the
         # exemption is scoped to the invocation's own arg span (closes the suffix bypass)
         "gh issue list --state open  # use --search instead",
