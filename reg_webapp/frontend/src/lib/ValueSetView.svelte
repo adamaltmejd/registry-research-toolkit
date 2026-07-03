@@ -26,8 +26,8 @@ import TechnicalDetails from "./TechnicalDetails.svelte";
 // `focusColumn` + `focusVariant`) on the (variant, column) a deep-link points at.
 //
 // DELIBERATELY STANDALONE: kept as its own component (not folded back into the
-// leaf) so a future HistoryGraph convergence (#666) can move this viewer cleanly —
-// the unified subject view will host the same coding display next to the graph.
+// leaf) so the graph/picker surface can host the same coding display next to selected
+// representations without duplicating value-set rendering.
 //
 //   length === 1 → single-state DETAIL (variant, validity, type/length, column,
 //                  value-set version + the (code, label) table in a

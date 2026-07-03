@@ -1867,6 +1867,8 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
             valid_to: "2015-12-31",
           }),
           gstate({
+            state_id: 2,
+            representation_run_id: 2,
             variant: "individer",
             delivery_column_name: "IncExtra",
             valid_from: "2010-01-01",
@@ -1898,6 +1900,142 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     expect(
       document.querySelectorAll('.col-list input[type="checkbox"]'),
     ).toHaveLength(1);
+  });
+
+  it("falls back instead of leaking filtered non-member states as graph cells", async () => {
+    vi.mocked(getConceptGroup).mockResolvedValue(
+      node({
+        members: [
+          {
+            fqid: "scb/rams/ink",
+            name: "Inkomst",
+            delivery_column: "IncA",
+            facets: [{ axis: "month", value: "01", label: "januari" }],
+            coverage: null,
+          },
+        ],
+      } as unknown as Partial<ConceptGroupNodeData>),
+    );
+    vi.mocked(getConceptGroupGraph).mockResolvedValue({
+      nodes: [
+        vnode("scb/rams/ink", [
+          gstate({
+            variant: "individer",
+            delivery_column_name: "IncA",
+            valid_from: "2010-01-01",
+            valid_to: "2015-12-31",
+          }),
+          gstate({
+            state_id: 2,
+            representation_run_id: 2,
+            variant: "individer",
+            delivery_column_name: "IncExtra",
+            valid_from: "2010-01-01",
+            valid_to: "2015-12-31",
+          }),
+        ]),
+        vnode("scb/rams/ink-next", [
+          gstate({
+            variant: "individer",
+            delivery_column_name: "IncNext",
+            valid_from: "2016-01-01",
+            valid_to: "2020-12-31",
+          }),
+        ]),
+      ],
+      edges: [
+        {
+          id: "succession:scb/rams/ink->scb/rams/ink-next",
+          kind: "succession",
+          source: "scb/rams/ink",
+          target: "scb/rams/ink-next",
+          label: null,
+          effective_year: 2016,
+        },
+      ],
+      focus_id: null,
+    });
+
+    renderGroup();
+
+    await vi.waitFor(() => {
+      if (!document.querySelector(".col-list")) {
+        throw new Error("list fallback not rendered");
+      }
+    });
+    expect(document.querySelector(".graph-picker")).toBeNull();
+    await expect
+      .element(page.getByRole("checkbox", { name: /IncA/ }))
+      .toBeVisible();
+    expect(document.body.textContent).not.toContain("IncExtra");
+    expect(
+      document.querySelectorAll('.col-list input[type="checkbox"]'),
+    ).toHaveLength(1);
+  });
+
+  it("list fallback renders a disabled row for a member with no graph state", async () => {
+    vi.mocked(getConceptGroup).mockResolvedValue(
+      node({
+        members: [
+          {
+            fqid: "scb/rams/empty",
+            name: "Empty member",
+            delivery_column: "EmptyCol",
+            facets: [{ axis: "month", value: "00", label: "empty" }],
+            coverage: {
+              state_count: 0,
+              coverage_from: null,
+              coverage_to: null,
+              open_ended: false,
+            },
+          },
+          {
+            fqid: "scb/rams/live",
+            name: "Live member",
+            delivery_column: "LiveCol",
+            facets: [{ axis: "month", value: "01", label: "live" }],
+            coverage: null,
+          },
+        ],
+      } as unknown as Partial<ConceptGroupNodeData>),
+    );
+    vi.mocked(getConceptGroupGraph).mockResolvedValue({
+      nodes: [
+        vnode("scb/rams/empty", []),
+        vnode("scb/rams/live", [
+          gstate({
+            variant: "individer",
+            delivery_column_name: "LiveCol",
+            valid_from: "2010-01-01",
+            valid_to: "2020-12-31",
+          }),
+        ]),
+      ],
+      edges: [
+        {
+          id: "succession:scb/rams/empty->scb/rams/live",
+          kind: "succession",
+          source: "scb/rams/empty",
+          target: "scb/rams/live",
+          label: null,
+          effective_year: 2010,
+        },
+      ],
+      focus_id: null,
+    });
+
+    renderGroup();
+
+    expect(document.querySelector(".graph-picker")).toBeNull();
+    const emptyRow = page.getByRole("checkbox", { name: /EmptyCol/ });
+    await expect.element(emptyRow).toBeVisible();
+    await expect.element(emptyRow).toBeDisabled();
+    await expect
+      .element(page.getByText("not delivered", { exact: true }))
+      .toBeVisible();
+    await expect
+      .element(page.getByRole("checkbox", { name: /LiveCol/ }))
+      .toBeVisible();
   });
 
   it("a WHOLE-VARIABLE member (null delivery_column) exposes ALL the variable's columns", async () => {
@@ -2305,6 +2443,76 @@ describe("ConceptGroupView ?member= focus highlight (#678 finding 5)", () => {
     });
     expect(document.querySelectorAll(".focused")).toHaveLength(0);
   });
+
+  it("keeps a focused member navigable from the list fallback", async () => {
+    vi.mocked(getConceptGroup).mockResolvedValue(node({ member: "inkfeb" }));
+    vi.mocked(getConceptGroupGraph).mockResolvedValue({
+      ...twoSingleColGraph(),
+      edges: [
+        {
+          id: "succession:scb/rams/inkjan->scb/rams/inkfeb",
+          kind: "succession",
+          source: "scb/rams/inkjan",
+          target: "scb/rams/inkfeb",
+          label: null,
+          effective_year: 2018,
+        },
+      ],
+    });
+    router.navigate("/catalog/group/scb/rams/ink?member=inkfeb");
+
+    renderGroup();
+
+    const focusedLink = await vi.waitFor(() => {
+      const el = document.querySelector<HTMLAnchorElement>(
+        '.col-row.single.focused a.col-chip.link[href="/catalog/scb/rams/inkfeb"]',
+      );
+      if (!el) {
+        throw new Error("focused member link not yet rendered");
+      }
+      return el;
+    });
+    expect(focusedLink.getAttribute("href")).toBe("/catalog/scb/rams/inkfeb");
+    expect(document.querySelector(".graph-picker")).toBeNull();
+  });
+
+  it("falls back when the focused member is absent from a partial graph payload", async () => {
+    vi.mocked(getConceptGroup).mockResolvedValue(node({ member: "inkfeb" }));
+    vi.mocked(getConceptGroupGraph).mockResolvedValue({
+      nodes: [
+        vnode("scb/rams/inkjan", [
+          gstate({
+            variant: "individer",
+            delivery_column_name: "Inkjan",
+            valid_from: "2010-01-01",
+            valid_to: "2015-12-31",
+          }),
+        ]),
+        vnode("scb/rams/side", []),
+      ],
+      edges: [
+        {
+          id: "succession:scb/rams/inkjan->scb/rams/side",
+          kind: "succession",
+          source: "scb/rams/inkjan",
+          target: "scb/rams/side",
+          label: null,
+          effective_year: 2018,
+        },
+      ],
+      focus_id: null,
+    });
+    router.navigate("/catalog/group/scb/rams/ink?member=inkfeb");
+
+    renderGroup();
+
+    await vi.waitFor(() => {
+      if (!document.querySelector(".col-list")) {
+        throw new Error("list fallback not rendered");
+      }
+    });
+    expect(document.querySelector(".graph-picker")).toBeNull();
+  });
 });
 
 describe("ConceptGroupView inter-variable succession fold (#902)", () => {
@@ -2394,10 +2602,21 @@ describe("ConceptGroupView inter-variable succession fold (#902)", () => {
       .toBeVisible();
     // …but the superseded predecessor's column is NOT a co-equal selectable band.
     expect(document.querySelector('input[aria-label*="DINFold"]')).toBeNull();
-    // Exactly ONE selectable row remains (the predecessor folded away).
-    const rows = document.querySelectorAll(".col-row");
-    expect(rows).toHaveLength(1);
-    expect(rows[0].textContent).toContain("DINFnew");
+    // Graph mode is strictly additive now; folded predecessor cells fall back to the
+    // list, with the predecessor reachable through the history disclosure.
+    expect(document.querySelector(".graph-picker")).toBeNull();
+    expect(
+      document.querySelectorAll(".col-list .row-btn input.cbox"),
+    ).toHaveLength(1);
+    const historyText =
+      document.querySelector("details.history")?.textContent ?? "";
+    expect(historyText).toContain("supersedes 1");
+    expect(historyText).toContain("edition");
+    expect(
+      document.querySelector<HTMLAnchorElement>(
+        'a.history-link[href="/catalog/scb/iot/dispink-old"]',
+      )?.textContent,
+    ).toContain("Disponibel inkomst familj");
   });
 
   it("keeps faceted succession predecessors selectable while still showing history", async () => {
@@ -2437,10 +2656,14 @@ describe("ConceptGroupView inter-variable succession fold (#902)", () => {
     await expect
       .element(page.getByRole("checkbox", { name: /DINFnew/ }))
       .toBeVisible();
-    await expect.element(page.getByText("supersedes 1 edition")).toBeVisible();
+    expect(document.querySelector(".graph-picker")).toBeNull();
+    const historyText =
+      document.querySelector("details.history")?.textContent ?? "";
+    expect(historyText).toContain("supersedes 1");
+    expect(historyText).toContain("edition");
   });
 
-  it("surfaces the superseded predecessor as reachable HISTORY (a 'supersedes' disclosure)", async () => {
+  it("surfaces the superseded predecessor as reachable list history", async () => {
     vi.mocked(getConceptGroup).mockResolvedValue(successionNode());
     vi.mocked(getConceptGroupGraph).mockResolvedValue(successionGraph());
     router.navigate("/catalog/group/scb/iot/disponibel-inkomst");
@@ -2451,27 +2674,48 @@ describe("ConceptGroupView inter-variable succession fold (#902)", () => {
       key: "disponibel-inkomst",
     });
 
-    // The chain head carries a "supersedes 1 edition" disclosure…
-    const summary = await vi.waitFor(() => {
-      const el = document.querySelector("details.history > summary");
-      if (!el) {
+    // The predecessor stays reachable as list history, with its supersession year, and
+    // is NOT a co-equal selection target.
+    await vi.waitFor(() => {
+      if (!document.querySelector("details.history")) {
         throw new Error("history disclosure not yet rendered");
       }
-      return el;
     });
-    expect(summary.textContent?.replace(/\s+/g, " ").trim()).toContain(
-      "supersedes 1 edition",
-    );
-    // …whose entry links to the predecessor's own leaf page (still reachable), with its
-    // supersession year, and is NOT a co-equal selection target.
     const link = document.querySelector<HTMLAnchorElement>(
-      "details.history a.history-link",
+      'a.history-link[href="/catalog/scb/iot/dispink-old"]',
     );
     expect(link?.getAttribute("href")).toBe("/catalog/scb/iot/dispink-old");
     expect(link?.textContent).toContain("Disponibel inkomst familj");
-    expect(
-      document.querySelector(".history .history-until")?.textContent,
-    ).toContain("2005");
+    expect(document.querySelector(".history-until")?.textContent).toContain(
+      "2005",
+    );
+  });
+
+  it("preserves ?period on folded predecessor history links", async () => {
+    vi.mocked(getConceptGroup).mockResolvedValue(successionNode());
+    vi.mocked(getConceptGroupGraph).mockResolvedValue(successionGraph());
+    router.navigate(
+      "/catalog/group/scb/iot/disponibel-inkomst?period=2010..2012",
+    );
+
+    renderGroup({
+      provider: "scb",
+      register: "iot",
+      key: "disponibel-inkomst",
+    });
+
+    const link = await vi.waitFor(() => {
+      const el = document.querySelector<HTMLAnchorElement>(
+        'a.history-link[href="/catalog/scb/iot/dispink-old?period=2010..2012"]',
+      );
+      if (!el) {
+        throw new Error("period-carrying predecessor link not yet rendered");
+      }
+      return el;
+    });
+    expect(link.getAttribute("href")).toBe(
+      "/catalog/scb/iot/dispink-old?period=2010..2012",
+    );
   });
 
   it("does NOT fold when the successor is OUTSIDE the group (partial chain)", async () => {
@@ -2625,25 +2869,29 @@ describe("ConceptGroupView inter-variable succession fold (#902)", () => {
       key: "disponibel-inkomst",
     });
 
-    // Exactly ONE selectable band remains — the chain head C (A and B folded away).
+    // Exactly ONE selectable list row remains — the chain head C (A and B folded away).
     await expect
       .element(page.getByRole("checkbox", { name: /DINC/ }))
       .toBeVisible();
-    const rows = document.querySelectorAll(".col-row");
-    expect(rows).toHaveLength(1);
-    expect(rows[0].textContent).toContain("DINC");
+    expect(document.querySelector(".graph-picker")).toBeNull();
+    expect(
+      document.querySelectorAll(".col-list .row-btn input.cbox"),
+    ).toHaveLength(1);
+    expect(document.querySelector('input[aria-label*="DINA"]')).toBeNull();
+    expect(document.querySelector('input[aria-label*="DINB"]')).toBeNull();
 
-    // The disclosure surfaces BOTH predecessors transitively…
-    const summary = document.querySelector("details.history > summary");
-    expect(summary?.textContent?.replace(/\s+/g, " ").trim()).toContain(
-      "supersedes 2 editions",
-    );
-    // …oldest-first: A before B.
-    const links = [
-      ...document.querySelectorAll<HTMLAnchorElement>(
-        "details.history a.history-link",
-      ),
-    ];
+    // The history disclosure surfaces BOTH predecessors transitively, oldest-first.
+    const links = await vi.waitFor(() => {
+      const found = ["dispink-a", "dispink-b"].map((slug) =>
+        document.querySelector<HTMLAnchorElement>(
+          `a.history-link[href="/catalog/scb/iot/${slug}"]`,
+        ),
+      );
+      if (found.some((link) => link === null)) {
+        throw new Error("predecessor history links not yet rendered");
+      }
+      return found as HTMLAnchorElement[];
+    });
     expect(links.map((a) => a.getAttribute("href"))).toEqual([
       "/catalog/scb/iot/dispink-a",
       "/catalog/scb/iot/dispink-b",
@@ -2665,19 +2913,18 @@ describe("ConceptGroupView inter-variable succession fold (#902)", () => {
       key: "disponibel-inkomst",
     });
 
-    // The disclosure still renders (the predecessor is still folded as history)…
+    // The predecessor still renders as list history…
     const link = await vi.waitFor(() => {
-      const el = document.querySelector("details.history a.history-link");
+      const el = document.querySelector<HTMLAnchorElement>(
+        'a.history-link[href="/catalog/scb/iot/dispink-old"]',
+      );
       if (!el) {
-        throw new Error("history disclosure not yet rendered");
+        throw new Error("history link not yet rendered");
       }
       return el;
     });
     expect(link.getAttribute("href")).toBe("/catalog/scb/iot/dispink-old");
-    // …but with NO "until <year>" marker (no ".history-until", no "until" text).
-    expect(document.querySelector(".history .history-until")).toBeNull();
-    expect(
-      document.querySelector("details.history")?.textContent,
-    ).not.toContain("until");
+    // …but with NO year label when the edge carries no effective year.
+    expect(document.querySelector(".history-until")).toBeNull();
   });
 });

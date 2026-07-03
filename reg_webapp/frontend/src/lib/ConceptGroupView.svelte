@@ -120,6 +120,9 @@ const nodesByFqid = $derived.by(() => {
   for (const n of graph?.nodes ?? []) {
     if (n.kind === "variable" && n.fqid != null) {
       map.set(n.fqid, n);
+      for (const alias of n.same_as) {
+        map.set(alias.fqid, n);
+      }
     }
   }
   return map;
@@ -503,6 +506,13 @@ const period = $derived(router.getQueryParam("period"));
 const activePickerPeriod = $derived(
   period && isStructurallyValidPeriodWire(period) ? period : null,
 );
+const graphMemberHrefs = $derived.by((): Record<string, string> => {
+  const out: Record<string, string> = {};
+  for (const member of node?.members ?? []) {
+    out[member.fqid] = memberHref(member.fqid);
+  }
+  return out;
+});
 
 // Members are year-grain coverage, so the picker offers only the year grain.
 const grains: PeriodGrain[] = ["year"];
@@ -751,6 +761,9 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
         {committedRows}
         activePeriod={activePickerPeriod}
         {focusKey}
+        {graph}
+        {graphMemberHrefs}
+        {vintageYear}
         onapply={applyStaged}
         onstagechange={(hasDiff) => {
           if (hasDiff) {

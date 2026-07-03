@@ -3,6 +3,7 @@ import { page } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
 import type {
   BindingNodeData,
+  GraphState,
   RelationshipGraph,
   StatesResponse,
   VariableGraphNode,
@@ -25,7 +26,7 @@ import { router } from "./router.svelte";
 //      `addFromCatalog` payloads; out-of-window rows dim; empty selection / no
 //      seed disables Add.
 //   2. the #670 member identity, now derived from the relationship-graph FOCUS node
-//      (#678) — the leaf's single `/graph` fetch feeds both the HistoryGraph
+//      (#678/#904) — the leaf's single `/graph` fetch feeds both the picker graph
 //      renderer AND the header qualifier + "member of ⟨group⟩" link.
 //
 // The leaf + sibling-panel GETs (graph / lineage warnings / parsed docs / the
@@ -62,6 +63,22 @@ function state(over: Partial<VariableStateModel>): VariableStateModel {
     value_set: null,
     is_identifier: false,
     classification_slug: null,
+    ...over,
+  };
+}
+
+function gstate(over: Partial<GraphState>): GraphState {
+  return {
+    state_id: 1,
+    variant: "v",
+    variant_label: null,
+    representation_run_id: 1,
+    valid_from: "2000-01-01",
+    valid_to: "2020-12-31",
+    value_set_id: null,
+    value_set_version_label: "",
+    classification_slug: null,
+    delivery_column_name: null,
     ...over,
   };
 }
@@ -170,7 +187,7 @@ beforeEach(() => {
       ),
     );
   });
-  // The graph fetch: an EMPTY graph by default (no nodes) → the HistoryGraph omits
+  // The graph fetch: an EMPTY graph by default (no nodes) → the picker uses the list
   // itself and the header derives no qualifier. Member-identity cases override it.
   vi.mocked(getBindingGraph).mockReset();
   vi.mocked(getBindingGraph).mockResolvedValue({
@@ -239,6 +256,80 @@ describe("BindingLeafView representation picker (#678)", () => {
       .element(page.getByRole("heading", { name: "Source documents" }))
       .not.toBeInTheDocument();
     expect(getRelatedDocuments).not.toHaveBeenCalled();
+  });
+
+  it("renders HistoryGraph even when no delivery-column rows are selectable", async () => {
+    vi.mocked(getBindingGraph).mockResolvedValue({
+      nodes: [
+        {
+          kind: "variable",
+          id: "v1",
+          fqid: "scb/lisa/kon",
+          label: "Kön",
+          group_key: "g",
+          group_label: "Kön concept",
+          definition: null,
+          description: null,
+          operational_definition: null,
+          facets: [],
+          states: [
+            gstate({
+              delivery_column_name: null,
+              value_set_version_label: "uncolumned coding",
+            }),
+          ],
+          same_as: [],
+        },
+        {
+          kind: "variable",
+          id: "v2",
+          fqid: "scb/lisa/kon2",
+          label: "Kön successor",
+          group_key: "g",
+          group_label: "Kön concept",
+          definition: null,
+          description: null,
+          operational_definition: null,
+          facets: [],
+          states: [
+            gstate({
+              state_id: 2,
+              representation_run_id: 2,
+              delivery_column_name: null,
+              valid_from: "2021-01-01",
+              valid_to: null,
+            }),
+          ],
+          same_as: [],
+        },
+      ],
+      edges: [
+        {
+          id: "v1-v2",
+          kind: "succession",
+          source: "v1",
+          target: "v2",
+          label: null,
+          effective_year: 2021,
+        },
+      ],
+      focus_id: "v1",
+    } as RelationshipGraph as never);
+
+    render(BindingLeafView, {
+      fqidPath: "scb/lisa/kon",
+      node: node(single),
+      ...SEED,
+      vintageYear: 2024,
+    });
+
+    await expect
+      .element(page.getByRole("heading", { name: "History" }))
+      .toBeVisible();
+    expect(document.querySelector(".rep-picker")).toBeNull();
+    await expect
+      .element(page.getByRole("link", { name: "kon2" }))
+      .toBeVisible();
   });
 
   it("lists each representation row with its delivery column + period span", async () => {
@@ -1627,7 +1718,7 @@ describe("BindingLeafView member identity from graph focus (#670/#678)", () => {
     });
 
     // The qualifier is the focus node's facet labels (scope to the identity row —
-    // the same facets also render inside the HistoryGraph cluster).
+    // the same facets also render inside the picker graph cluster when graph mode is on).
     await expect
       .element(page.getByText("Största · Individ · Grov · Standard").first())
       .toBeVisible();
