@@ -123,6 +123,11 @@ _CLOSING_LINE_RE = re.compile(
     r"^\s*(?:[-*]\s*)?(?:close[sd]?|fix(?:e[sd])?|resolve[sd]?)\b",
     re.IGNORECASE,
 )
+_NEGATED_CLOSING_RE = re.compile(
+    r"\b(?:(?:but|and)\s+)?(?:does\s+not|do\s+not|doesn't|don't)\s+"
+    r"(?:close[sd]?|fix(?:e[sd])?|resolve[sd]?)\b",
+    re.IGNORECASE,
+)
 # The blessed launch profiles, kept in ONE place so surface + model/effort/advisor stay
 # together as a validated set (never composed ad hoc at a call site). Each value is
 # (surface, extra_flags): `surface` is the tier's implied dispatch surface; the flags are
@@ -302,9 +307,14 @@ def _closing_issue_numbers(
     """Closing issue refs from local body clauses plus same-repo GitHub refs."""
     seen: set[int] = set()
     issues: list[int] = []
-    closing_body = "\n".join(
-        line for line in body.splitlines() if _CLOSING_LINE_RE.match(line)
-    )
+    closing_lines: list[str] = []
+    for line in body.splitlines():
+        if not _CLOSING_LINE_RE.match(line):
+            continue
+        claim = _NEGATED_CLOSING_RE.split(line, maxsplit=1)[0].rstrip(" ,;")
+        if claim:
+            closing_lines.append(claim)
+    closing_body = "\n".join(closing_lines)
     for number in sorted(
         _plan_sequence.closing_issue_numbers_from_body(
             closing_body, repository_name_with_owner

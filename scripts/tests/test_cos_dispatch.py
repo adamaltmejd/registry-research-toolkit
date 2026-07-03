@@ -418,6 +418,15 @@ def test_closing_issue_numbers_ignores_negated_prose() -> None:
     assert cd._closing_issue_numbers(body, None) == [1052]
 
 
+def test_closing_issue_numbers_ignores_same_line_negated_closing_refs() -> None:
+    got = cd._closing_issue_numbers(
+        "Closes #1, owner/repo#3, and #4 but does not close #2",
+        None,
+        repository_name_with_owner="owner/repo",
+    )
+    assert got == [1, 3, 4]
+
+
 def test_resolve_continue_pr_refuses_closed_pr(
     tmp_path: Path, _hermetic_env: Path
 ) -> None:
