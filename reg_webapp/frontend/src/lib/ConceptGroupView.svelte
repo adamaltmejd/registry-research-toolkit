@@ -120,6 +120,9 @@ const nodesByFqid = $derived.by(() => {
   for (const n of graph?.nodes ?? []) {
     if (n.kind === "variable" && n.fqid != null) {
       map.set(n.fqid, n);
+      for (const alias of n.same_as) {
+        map.set(alias.fqid, n);
+      }
     }
   }
   return map;

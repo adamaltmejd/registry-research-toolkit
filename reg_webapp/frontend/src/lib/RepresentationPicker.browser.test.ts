@@ -239,6 +239,63 @@ describe("RepresentationPicker graph mode (#904)", () => {
     expect(onapply.mock.calls[0][0].adds[0].row.column).toBe("Acol");
   });
 
+  it("matches graph nodes to picker bands through same_as aliases", async () => {
+    const onapply = vi.fn();
+    const aliasFqid = "scb/lisa/alias";
+    const canonicalFqid = "scb/lisa/canonical";
+    const successorFqid = "scb/lisa/successor";
+    render(RepresentationPicker, {
+      bands: [
+        {
+          key: aliasFqid,
+          name: "Alias leaf",
+          registerPrefix: "scb/lisa",
+          rows: [row({ column: "AliasCol" })],
+        } satisfies PickerBand,
+      ],
+      graph: graph({
+        nodes: [
+          graphNode(canonicalFqid, {
+            label: "Canonical",
+            states: [graphState({ delivery_column_name: "AliasCol" })],
+            same_as: [{ fqid: aliasFqid, register: "lisa_old" }],
+          }),
+          graphNode(successorFqid, {
+            label: "Successor",
+            states: [
+              graphState({
+                state_id: 2,
+                representation_run_id: 2,
+                delivery_column_name: "NextCol",
+                valid_from: "2011-01-01",
+                valid_to: "9999-12-31",
+              }),
+            ],
+          }),
+        ],
+        edges: [edge(canonicalFqid, successorFqid)],
+        focus_id: canonicalFqid,
+      }),
+      ...PROPS,
+      focusKey: aliasFqid,
+      onapply,
+    });
+
+    await vi.waitFor(() => {
+      if (!document.querySelector(".graph-picker")) {
+        throw new Error("graph picker not rendered");
+      }
+    });
+    expect(document.querySelector(".col-list")).toBeNull();
+    expect(document.querySelector(".graph-lane.focused")).not.toBeNull();
+
+    await page.getByRole("checkbox", { name: /AliasCol/ }).click();
+    await page.getByRole("button", { name: "Apply staged changes" }).click();
+    expect(onapply).toHaveBeenCalledTimes(1);
+    expect(onapply.mock.calls[0][0].adds[0].band.key).toBe(aliasFqid);
+    expect(onapply.mock.calls[0][0].adds[0].row.column).toBe("AliasCol");
+  });
+
   it("keeps sibling graph nodes visible but unavailable on a leaf-only picker", async () => {
     const fixture = smallSuccessionFixture();
     render(RepresentationPicker, {
@@ -257,6 +314,148 @@ describe("RepresentationPicker graph mode (#904)", () => {
       1,
     );
     expect(document.querySelectorAll(".graph-cell input.cbox")).toHaveLength(1);
+  });
+
+  it("dims folded graph cells by the cell's era, not the folded row span", async () => {
+    const onapply = vi.fn();
+    const aFqid = "scb/lisa/a";
+    const bFqid = "scb/lisa/b";
+    render(RepresentationPicker, {
+      bands: [
+        {
+          key: aFqid,
+          name: "A",
+          registerPrefix: "scb/lisa",
+          rows: [
+            row({
+              column: "NEW",
+              representation: null,
+              renamedColumns: ["OLD"],
+              from: "1990-01-01",
+              to: "2020-12-31",
+              windows: [
+                { from: "1990-01-01", to: "1999-12-31" },
+                { from: "2000-01-01", to: "2020-12-31" },
+              ],
+              period: "1990 – 2020",
+            }),
+          ],
+        } satisfies PickerBand,
+      ],
+      graph: graph({
+        nodes: [
+          graphNode(aFqid, {
+            states: [
+              graphState({
+                state_id: 1,
+                representation_run_id: 1,
+                delivery_column_name: "OLD",
+                valid_from: "1990-01-01",
+                valid_to: "1999-12-31",
+              }),
+              graphState({
+                state_id: 2,
+                representation_run_id: 2,
+                delivery_column_name: "NEW",
+                valid_from: "2000-01-01",
+                valid_to: "2020-12-31",
+              }),
+            ],
+          }),
+          graphNode(bFqid, {
+            states: [graphState({ delivery_column_name: "OTHER" })],
+          }),
+        ],
+        edges: [edge(bFqid, aFqid)],
+        focus_id: aFqid,
+      }),
+      ...PROPS,
+      window: [2010, 2010],
+      onapply,
+    });
+
+    const oldCell = await vi.waitFor(() => {
+      const cell = [
+        ...document.querySelectorAll<HTMLElement>(".graph-cell"),
+      ].find((el) => el.textContent?.includes("OLD"));
+      if (!cell) {
+        throw new Error("OLD cell not rendered");
+      }
+      return cell;
+    });
+    const newCell = [
+      ...document.querySelectorAll<HTMLElement>(".graph-cell"),
+    ].find((el) => el.textContent?.includes("NEW"));
+    expect(oldCell.classList.contains("dimmed")).toBe(true);
+    expect(newCell?.classList.contains("dimmed")).toBe(false);
+
+    await page.getByRole("checkbox", { name: /^OLD\b/ }).click();
+    await page.getByRole("button", { name: "Apply staged changes" }).click();
+    expect(onapply).toHaveBeenCalledTimes(1);
+    expect(onapply.mock.calls[0][0].adds[0].row.column).toBe("NEW");
+  });
+
+  it("keeps an open-start graph cell in-window before the finite graph floor", async () => {
+    const aFqid = "scb/lisa/a";
+    const bFqid = "scb/lisa/b";
+    render(RepresentationPicker, {
+      bands: [
+        {
+          key: aFqid,
+          name: "A",
+          registerPrefix: "scb/lisa",
+          rows: [
+            row({
+              column: "OPEN",
+              from: "0001-01-01",
+              to: "1999-12-31",
+              windows: [{ from: "0001-01-01", to: "1999-12-31" }],
+              period: "until 1999",
+              wirePeriod: null,
+            }),
+          ],
+        } satisfies PickerBand,
+      ],
+      graph: graph({
+        nodes: [
+          graphNode(aFqid, {
+            states: [
+              graphState({
+                delivery_column_name: "OPEN",
+                valid_from: null,
+                valid_to: "1999-12-31",
+              }),
+            ],
+          }),
+          graphNode(bFqid, {
+            states: [
+              graphState({
+                state_id: 2,
+                representation_run_id: 2,
+                delivery_column_name: "NEXT",
+                valid_from: "2000-01-01",
+                valid_to: "2020-12-31",
+              }),
+            ],
+          }),
+        ],
+        edges: [edge(aFqid, bFqid)],
+        focus_id: aFqid,
+      }),
+      ...PROPS,
+      window: [1980, 1980],
+    });
+
+    const openCell = await vi.waitFor(() => {
+      const cell = [
+        ...document.querySelectorAll<HTMLElement>(".graph-cell"),
+      ].find((el) => el.textContent?.includes("OPEN"));
+      if (!cell) {
+        throw new Error("OPEN cell not rendered");
+      }
+      return cell;
+    });
+    expect(openCell.classList.contains("dimmed")).toBe(false);
   });
 
   it("shows each rename era's delivered column while toggling the folded row", async () => {

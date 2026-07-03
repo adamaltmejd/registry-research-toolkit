@@ -1867,6 +1867,8 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
             valid_to: "2015-12-31",
           }),
           gstate({
+            state_id: 2,
+            representation_run_id: 2,
             variant: "individer",
             delivery_column_name: "IncExtra",
             valid_from: "2010-01-01",
@@ -1898,6 +1900,144 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     expect(
       document.querySelectorAll('.col-list input[type="checkbox"]'),
     ).toHaveLength(1);
+  });
+
+  it("graph mode does not leak filtered non-member states as unavailable cells", async () => {
+    vi.mocked(getConceptGroup).mockResolvedValue(
+      node({
+        members: [
+          {
+            fqid: "scb/rams/ink",
+            name: "Inkomst",
+            delivery_column: "IncA",
+            facets: [{ axis: "month", value: "01", label: "januari" }],
+            coverage: null,
+          },
+        ],
+      } as unknown as Partial<ConceptGroupNodeData>),
+    );
+    vi.mocked(getConceptGroupGraph).mockResolvedValue({
+      nodes: [
+        vnode("scb/rams/ink", [
+          gstate({
+            variant: "individer",
+            delivery_column_name: "IncA",
+            valid_from: "2010-01-01",
+            valid_to: "2015-12-31",
+          }),
+          gstate({
+            state_id: 2,
+            representation_run_id: 2,
+            variant: "individer",
+            delivery_column_name: "IncExtra",
+            valid_from: "2010-01-01",
+            valid_to: "2015-12-31",
+          }),
+        ]),
+        vnode("scb/rams/ink-next", [
+          gstate({
+            variant: "individer",
+            delivery_column_name: "IncNext",
+            valid_from: "2016-01-01",
+            valid_to: "2020-12-31",
+          }),
+        ]),
+      ],
+      edges: [
+        {
+          id: "succession:scb/rams/ink->scb/rams/ink-next",
+          kind: "succession",
+          source: "scb/rams/ink",
+          target: "scb/rams/ink-next",
+          label: null,
+          effective_year: 2016,
+        },
+      ],
+      focus_id: null,
+    });
+
+    renderGroup();
+
+    await vi.waitFor(() => {
+      if (!document.querySelector(".graph-picker")) {
+        throw new Error("graph picker not rendered");
+      }
+    });
+    await expect
+      .element(page.getByRole("checkbox", { name: /IncA/ }))
+      .toBeVisible();
+    expect(document.body.textContent).not.toContain("IncExtra");
+    expect(document.querySelectorAll(".graph-cell input.cbox")).toHaveLength(1);
+  });
+
+  it("graph mode renders a disabled row for a member with no graph state", async () => {
+    vi.mocked(getConceptGroup).mockResolvedValue(
+      node({
+        members: [
+          {
+            fqid: "scb/rams/empty",
+            name: "Empty member",
+            delivery_column: "EmptyCol",
+            facets: [{ axis: "month", value: "00", label: "empty" }],
+            coverage: {
+              state_count: 0,
+              coverage_from: null,
+              coverage_to: null,
+              open_ended: false,
+            },
+          },
+          {
+            fqid: "scb/rams/live",
+            name: "Live member",
+            delivery_column: "LiveCol",
+            facets: [{ axis: "month", value: "01", label: "live" }],
+            coverage: null,
+          },
+        ],
+      } as unknown as Partial<ConceptGroupNodeData>),
+    );
+    vi.mocked(getConceptGroupGraph).mockResolvedValue({
+      nodes: [
+        vnode("scb/rams/empty", []),
+        vnode("scb/rams/live", [
+          gstate({
+            variant: "individer",
+            delivery_column_name: "LiveCol",
+            valid_from: "2010-01-01",
+            valid_to: "2020-12-31",
+          }),
+        ]),
+      ],
+      edges: [
+        {
+          id: "succession:scb/rams/empty->scb/rams/live",
+          kind: "succession",
+          source: "scb/rams/empty",
+          target: "scb/rams/live",
+          label: null,
+          effective_year: 2010,
+        },
+      ],
+      focus_id: null,
+    });
+
+    renderGroup();
+
+    const emptyCell = await vi.waitFor(() => {
+      const cell = [
+        ...document.querySelectorAll<HTMLElement>(".graph-cell"),
+      ].find((el) => el.textContent?.includes("EmptyCol"));
+      if (!cell) {
+        throw new Error("EmptyCol graph row not rendered");
+      }
+      return cell;
+    });
+    expect(emptyCell.classList.contains("unavailable")).toBe(true);
+    expect(emptyCell.textContent).toContain("not delivered");
+    await expect
+      .element(page.getByRole("checkbox", { name: /LiveCol/ }))
+      .toBeVisible();
+    expect(document.querySelectorAll(".graph-cell input.cbox")).toHaveLength(1);
   });
 
   it("a WHOLE-VARIABLE member (null delivery_column) exposes ALL the variable's columns", async () => {

@@ -683,9 +683,25 @@ function variableGraphNodes(g: RelationshipGraph): VariableGraphNode[] {
   return g.nodes.filter((n): n is VariableGraphNode => n.kind === "variable");
 }
 
+function graphNodeFqids(node: VariableGraphNode): string[] {
+  return [
+    ...(node.fqid == null ? [] : [node.fqid]),
+    ...node.same_as.map((sa) => sa.fqid),
+  ];
+}
+
+function graphNodeMatchesKey(
+  node: VariableGraphNode,
+  key: string | null | undefined,
+): boolean {
+  return key != null && graphNodeFqids(node).includes(key);
+}
+
 function graphHasSelectableNode(g: RelationshipGraph): boolean {
   const keys = new Set(bands.map((b) => b.key));
-  return variableGraphNodes(g).some((n) => n.fqid != null && keys.has(n.fqid));
+  return variableGraphNodes(g).some((n) =>
+    graphNodeFqids(n).some((fqid) => keys.has(fqid)),
+  );
 }
 
 function graphCellsAreUnambiguous(g: RelationshipGraph): boolean {
@@ -757,6 +773,7 @@ interface GraphLaneBox {
   top: number;
   height: number;
   center: number;
+  rowCount: number;
 }
 
 interface GraphRenderCluster {
@@ -767,9 +784,9 @@ interface GraphRenderCluster {
   height: number;
 }
 
-function graphLaneHeight(rn: RenderNode): number {
-  if (rn.kind === "variable" && rn.rowCount > 1) {
-    return GRAPH_LANE_BASE_H + (rn.rowCount - 1) * GRAPH_ROW_H;
+function graphLaneHeight(rowCount: number): number {
+  if (rowCount > 1) {
+    return GRAPH_LANE_BASE_H + (rowCount - 1) * GRAPH_ROW_H;
   }
   return GRAPH_LANE_BASE_H;
 }
@@ -782,8 +799,9 @@ const graphClusters = $derived.by((): GraphRenderCluster[] => {
   const out = clusters.map((cluster) => {
     let top = 0;
     const lanes = cluster.nodes.map((rn) => {
-      const height = graphLaneHeight(rn);
-      const box = { rn, top, height, center: top + height / 2 };
+      const rowCount = graphLaneDisplayRowCount(rn);
+      const height = graphLaneHeight(rowCount);
+      const box = { rn, top, height, center: top + height / 2, rowCount };
       top += height;
       return box;
     });
@@ -824,10 +842,13 @@ function graphCellTop(
 }
 
 function graphBandForNode(node: VariableGraphNode): PickerBand | null {
-  if (node.fqid == null) {
-    return null;
+  for (const fqid of graphNodeFqids(node)) {
+    const band = bands.find((b) => b.key === fqid);
+    if (band) {
+      return band;
+    }
   }
-  return bands.find((b) => b.key === node.fqid) ?? null;
+  return null;
 }
 
 function rowMatchesCell(row: PickerRepresentation, cell: RunCell): boolean {
@@ -853,6 +874,111 @@ function graphCellMatch(
   return row ? { band, row } : null;
 }
 
+function graphCellInWindow(cell: RunCell): boolean {
+  if (!window) {
+    return true;
+  }
+  const from = cell.openStart
+    ? Number.NEGATIVE_INFINITY
+    : Number.isFinite(cell.fromYear)
+      ? cell.fromYear
+      : Number.NEGATIVE_INFINITY;
+  const to = cell.openEnd
+    ? Number.POSITIVE_INFINITY
+    : Number.isFinite(cell.toYear)
+      ? cell.toYear
+      : Number.POSITIVE_INFINITY;
+  return from <= window[1] && window[0] <= to;
+}
+
+type GraphLaneItem =
+  | {
+      kind: "cell";
+      cell: RunCell;
+      match: { band: PickerBand; row: PickerRepresentation } | null;
+      index: number;
+      rowIndex: number;
+    }
+  | {
+      kind: "row";
+      band: PickerBand;
+      row: PickerRepresentation;
+      rowIndex: number;
+    };
+
+function graphLaneItems(rn: RenderNode): GraphLaneItem[] {
+  if (rn.kind !== "variable") {
+    return [];
+  }
+  const band = graphBandForNode(rn.node);
+  const matchedRows = new Set<string>();
+  const items: GraphLaneItem[] = [];
+  for (const [index, cell] of rn.cells.entries()) {
+    const match = graphCellMatch(rn, cell);
+    if (match) {
+      matchedRows.add(rowKey(match.band, match.row));
+      items.push({ kind: "cell", cell, match, index, rowIndex: cell.row });
+    } else if (!band) {
+      items.push({
+        kind: "cell",
+        cell,
+        match: null,
+        index,
+        rowIndex: cell.row,
+      });
+    }
+  }
+  if (!band) {
+    return items;
+  }
+  const cellRows = rn.cells.length > 0 ? rn.rowCount : 0;
+  let nextRow = cellRows;
+  for (const row of band.rows) {
+    if (matchedRows.has(rowKey(band, row))) {
+      continue;
+    }
+    items.push({ kind: "row", band, row, rowIndex: nextRow });
+    nextRow += 1;
+  }
+  return items;
+}
+
+function graphLaneDisplayRowCount(rn: RenderNode): number {
+  const maxRow = graphLaneItems(rn).reduce(
+    (max, item) => Math.max(max, item.rowIndex),
+    -1,
+  );
+  return Math.max(1, maxRow + 1);
+}
+
+function graphLaneItemKey(item: GraphLaneItem): string {
+  if (item.kind === "cell") {
+    return `cell:${item.cell.runId}:${item.cell.variant}:${item.cell.columns.join("|")}`;
+  }
+  return `row:${rowKey(item.band, item.row)}`;
+}
+
+function graphLaneItemLeft(item: GraphLaneItem): number {
+  if (item.kind === "row") {
+    return GRAPH_TRACK_PAD;
+  }
+  return graphScale
+    ? graphX(item.cell.fromYear)
+    : GRAPH_TRACK_PAD + item.index * (CELL_MIN_W + 8);
+}
+
+function graphLaneItemWidth(item: GraphLaneItem): number {
+  if (item.kind === "row") {
+    return graphTrackInnerW;
+  }
+  return graphScale
+    ? Math.max(
+        CELL_MIN_W,
+        graphX(item.cell.toYear) - graphX(item.cell.fromYear),
+      )
+    : CELL_MIN_W;
+}
+
 function graphCellColumn(cell: RunCell, row: PickerRepresentation): string {
   return cell.columns[0] ?? row.column;
 }
@@ -866,7 +992,7 @@ function graphNodeFocused(rn: RenderNode): boolean {
     rn.node.id === graph?.focus_id ||
     (focusKey != null &&
       rn.node.kind === "variable" &&
-      rn.node.fqid === focusKey)
+      graphNodeMatchesKey(rn.node, focusKey))
   );
 }
 
@@ -910,11 +1036,16 @@ function graphLaneA11y(rn: RenderNode): string {
   if (rn.kind !== "variable") {
     return rn.node.label;
   }
-  if (rn.cells.length === 0) {
+  const items = graphLaneItems(rn);
+  if (items.length === 0) {
     return "no delivered state rows";
   }
-  return rn.cells
-    .map((cell) => `${cell.label}, ${cell.window}, ${cell.variant}`)
+  return items
+    .map((item) =>
+      item.kind === "cell"
+        ? `${item.cell.label}, ${item.cell.window}, ${item.cell.variant}`
+        : `${item.row.column}, ${item.row.period}, ${item.row.variant}`,
+    )
     .join("; ");
 }
 
@@ -1295,7 +1426,7 @@ function codingsVaryHref(band: PickerBand, row: PickerRepresentation): string {
                 {/if}
               {/each}
 
-              {#each lanes as { rn, top, height } (rn.node.id)}
+              {#each lanes as { rn, top, height, rowCount } (rn.node.id)}
                 {@const focused = graphNodeFocused(rn)}
                 {@const muted = graphNodeMuted(rn)}
                 {@const href = graphNodeHref(rn)}
@@ -1339,28 +1470,21 @@ function codingsVaryHref(band: PickerBand, row: PickerRepresentation): string {
 
                   <div class="graph-track" style={`width:${graphTrackW}px`}>
                     {#if rn.kind === "variable"}
-                      {#each rn.cells as cell, i (cell.runId)}
-                        {@const match = graphCellMatch(rn, cell)}
-                        {@const left = graphScale
-                          ? graphX(cell.fromYear)
-                          : GRAPH_TRACK_PAD + i * (CELL_MIN_W + 8)}
-                        {@const width = graphScale
-                          ? Math.max(
-                              CELL_MIN_W,
-                              graphX(cell.toYear) - graphX(cell.fromYear),
-                            )
-                          : CELL_MIN_W}
+                      {#each graphLaneItems(rn) as item (graphLaneItemKey(item))}
+                        {@const left = graphLaneItemLeft(item)}
+                        {@const width = graphLaneItemWidth(item)}
                         {@const cellTopValue = graphCellTop(
                           height,
-                          cell.row,
-                          rn.rowCount,
+                          item.rowIndex,
+                          rowCount,
                         )}
-                        {#if match}
-                          {@const band = match.band}
-                          {@const row = match.row}
+                        {#if item.kind === "cell" && item.match}
+                          {@const band = item.match.band}
+                          {@const row = item.match.row}
+                          {@const cell = item.cell}
                           {@const checked = rowChecked(band, row)}
                           {@const stage = rowStage(band, row)}
-                          {@const inWindow = representationInWindow(row, window)}
+                          {@const inWindow = graphCellInWindow(cell)}
                           <label
                             class="graph-cell"
                             class:selected={checked}
@@ -1398,7 +1522,8 @@ function codingsVaryHref(band: PickerBand, row: PickerRepresentation): string {
                             {/if}
                             <span class="graph-cell-window">{cell.window}</span>
                           </label>
-                        {:else}
+                        {:else if item.kind === "cell"}
+                          {@const cell = item.cell}
                           <div
                             class="graph-cell unavailable"
                             class:open-start={cell.openStart}
@@ -1410,6 +1535,21 @@ function codingsVaryHref(band: PickerBand, row: PickerRepresentation): string {
                               <span class="graph-unavailable-label">{cell.label}</span>
                             </span>
                             <span class="graph-cell-window">{cell.window}</span>
+                          </div>
+                        {:else}
+                          {@const row = item.row}
+                          <div
+                            class="graph-cell unavailable dimmed"
+                            style={`left:${left}px; width:${width}px; top:${cellTopValue}px`}
+                            title={`${row.column} · ${row.period}`}
+                          >
+                            <span class="graph-cell-main">
+                              {@render colChip(row.column)}
+                              {#if row.valueSetLabel}
+                                <span class="graph-cell-sub">{row.valueSetLabel}</span>
+                              {/if}
+                            </span>
+                            <span class="graph-cell-window">{row.period}</span>
                           </div>
                         {/if}
                       {/each}
