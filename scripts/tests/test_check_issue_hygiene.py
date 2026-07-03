@@ -518,9 +518,9 @@ def test_steward_staleness_picks_newest_published_not_first(
 def test_emit_is_deterministic(monkeypatch: pytest.MonkeyPatch, capsys) -> None:
     monkeypatch.delenv("GITHUB_STEP_SUMMARY", raising=False)
     out = h.Findings()
-    out.warn(50, "later issue")
-    out.warn(None, "corpus alert")
-    out.error(10, "earlier issue")
+    out.warn(50, "some-check", "later issue")
+    out.warn(None, "some-check", "corpus alert")
+    out.error(10, "some-check", "earlier issue")
     h.emit(out, "test")
     printed = capsys.readouterr().out
     assert printed.index("#10") < printed.index("#50") < printed.index("corpus alert")
