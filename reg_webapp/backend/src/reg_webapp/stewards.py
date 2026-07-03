@@ -209,7 +209,9 @@ def load_catalog_index(
         ) from exc
     model_seconds = perf_counter() - phase_start
 
-    boot_catalog = cast("Catalog", StewardBootCatalog(catalog))
+    boot_adapter = StewardBootCatalog(catalog)
+    boot_adapter.preload_project(project)
+    boot_catalog = cast("Catalog", boot_adapter)
 
     # Steward-caller mode: the three reg_meta-DRIFT codes downgrade
     # error→warning so the deployment boots through reg_meta evolution (those

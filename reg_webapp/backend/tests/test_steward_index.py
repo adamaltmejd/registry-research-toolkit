@@ -26,6 +26,7 @@ from typing import TYPE_CHECKING
 
 import pytest
 import reg_meta.db
+import reg_webapp.steward_catalog as steward_catalog_module
 from _steward_helpers import (
     CLEAN_SOURCES as _CLEAN_SOURCES,
     steward_project as _steward_project,
@@ -89,7 +90,9 @@ def test_index_maps_variant_coord_to_bindings(catalog):
     assert index.drift_warnings == ()
 
 
-def test_steward_boot_catalog_matches_index_and_reuses_resolve_at(catalog):
+def test_steward_boot_catalog_matches_index_and_reuses_resolve_at(
+    catalog, monkeypatch: pytest.MonkeyPatch
+):
     """The startup adapter must preserve steward validation/index semantics while
     avoiding the duplicate period-resolution pass during index construction."""
 
@@ -127,14 +130,19 @@ def test_steward_boot_catalog_matches_index_and_reuses_resolve_at(catalog):
 
     counting = CountingCatalog(catalog)
     boot_catalog = StewardBootCatalog(counting)
+    # Force the preload path through multiple tiny batches; the production
+    # regression was exceeding SQLite's traditional host-parameter limit.
+    monkeypatch.setattr(steward_catalog_module, "_SQLITE_PARAM_LIMIT", 3)
+    boot_catalog.preload_project(project)
     result = validate_semantic(project, boot_catalog, caller="steward")
     actual = build_catalog_index(project, result.issues, boot_catalog)
 
     assert result.ok and result.issues == ()
     assert actual == expected
-    # Two exact source/binding/period keys in _CLEAN_SOURCES. Without the boot
-    # cache, build_catalog_index would resolve the same two keys again.
-    assert counting.resolve_at_calls == 2
+    # The boot adapter uses a minimal state projection from the same SQLite
+    # connection, so neither validation nor index construction hydrates full
+    # public VariableState models through Catalog.resolve_at.
+    assert counting.resolve_at_calls == 0
     # The categorical binding's value_set still resolves through the real catalog;
     # variable bindings use the adapter's minimal semantic projection instead of
     # full ResolvedVariable hydration.
