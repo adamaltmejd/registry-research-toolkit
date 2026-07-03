@@ -23,6 +23,7 @@ import {
   commonLabelStem,
   coverageFromStates,
   DATA_BROWSER_LABEL,
+  denseIntegerValueSetRange,
   deriveType,
   distinctValueSets,
   encodeCodesParam,
@@ -482,6 +483,45 @@ describe("deriveType", () => {
     ).toBe("categorical");
   });
 
+  it("dense integer age value sets stay numeric, not categorical", () => {
+    const ageValues = Array.from({ length: 111 }, (_, age) => ({
+      code: String(age),
+      label: `${age} år`,
+    })) as VariableStateModel["value_set"];
+    expect(
+      deriveType(
+        state({ value_set_id: 5, value_set: ageValues, data_type: "char" }),
+      ),
+    ).toBe("numeric");
+  });
+
+  it("keeps small numeric and labelled codebooks categorical", () => {
+    expect(
+      deriveType(
+        state({
+          value_set_id: 5,
+          value_set: [
+            { code: "0", label: "No" },
+            { code: "1", label: "Yes" },
+          ] as VariableStateModel["value_set"],
+          data_type: "int",
+        }),
+      ),
+    ).toBe("categorical");
+    expect(
+      deriveType(
+        state({
+          value_set_id: 6,
+          value_set: Array.from({ length: 10 }, (_, value) => ({
+            code: String(value),
+            label: `Category ${value}`,
+          })) as VariableStateModel["value_set"],
+          data_type: "int",
+        }),
+      ),
+    ).toBe("categorical");
+  });
+
   it("maps SQL storage tokens (stripping a trailing length)", () => {
     expect(deriveType(state({ data_type: "int" }))).toBe("numeric");
     expect(deriveType(state({ data_type: "decimal(10,2)" }))).toBe("numeric");
@@ -523,6 +563,57 @@ describe("deriveType", () => {
     expect(deriveType(state({ data_type: "Sträng (text)" }))).toBe("opaque");
     expect(deriveType(state({ data_type: "" }))).toBe("opaque");
     expect(deriveType(state({ data_type: "<undefined>" }))).toBe("opaque");
+  });
+});
+
+describe("denseIntegerValueSetRange", () => {
+  it("recognizes contiguous age-like integer codes", () => {
+    expect(
+      denseIntegerValueSetRange(
+        Array.from({ length: 12 }, (_, age) => ({
+          code: String(age),
+          label: `${age} år`,
+        })),
+      ),
+    ).toEqual({ min: 0, max: 11, count: 12 });
+  });
+
+  it("recognizes dense age-like integer codes with small gaps", () => {
+    expect(
+      denseIntegerValueSetRange(
+        [0, 1, 2, 3, 4, 5, 7, 8, 9, 10, 11].map((age) => ({
+          code: String(age),
+          label: `${age} år`,
+        })),
+      ),
+    ).toEqual({ min: 0, max: 11, count: 11 });
+  });
+
+  it("rejects sparse, leading-zero, and arbitrary-label codebooks", () => {
+    expect(
+      denseIntegerValueSetRange(
+        [0, 2, 4, 6, 8, 10, 12, 14, 16, 18].map((value) => ({
+          code: String(value),
+          label: String(value),
+        })),
+      ),
+    ).toBeNull();
+    expect(
+      denseIntegerValueSetRange(
+        Array.from({ length: 10 }, (_, value) => ({
+          code: String(value).padStart(2, "0"),
+          label: String(value),
+        })),
+      ),
+    ).toBeNull();
+    expect(
+      denseIntegerValueSetRange(
+        Array.from({ length: 10 }, (_, value) => ({
+          code: String(value),
+          label: `Category ${value}`,
+        })),
+      ),
+    ).toBeNull();
   });
 });
 

@@ -3,7 +3,9 @@ import type { VariableStateModel } from "./api";
 import CodeList from "./CodeList.svelte";
 import {
   catalogHref,
+  type DenseIntegerValueSetRange,
   type DistinctValueSet,
+  denseIntegerValueSetRange,
   distinctValueSets,
   formatDataType,
   formatStateWindow,
@@ -244,6 +246,13 @@ function overlapPercent(overlap: number): string {
   />
 {/snippet}
 
+{#snippet denseIntegerRange(range: DenseIntegerValueSetRange)}
+  <p class="vs-numeric-range">
+    Integer values <code>{range.min}</code>-<code>{range.max}</code>
+    <span class="muted">({range.count} values)</span>
+  </p>
+{/snippet}
+
 {#snippet conformanceNotice(conf: NonNullable<VariableStateModel["classification_conformance"]>)}
   <div class:severed={conf.status === "severed"} class="conformance-notice">
     {#if conf.status === "severed"}
@@ -322,10 +331,15 @@ function overlapPercent(overlap: number): string {
       {@render conformanceNotice(vs.classificationConformance)}
     {/if}
   {:else if vs.valueSet && vs.valueSet.length > 0}
+    {@const range = denseIntegerValueSetRange(vs.valueSet)}
     {#if vs.classificationConformance}
       {@render conformanceNotice(vs.classificationConformance)}
     {/if}
-    {@render valueSetTable(vs.valueSet)}
+    {#if range}
+      {@render denseIntegerRange(range)}
+    {:else}
+      {@render valueSetTable(vs.valueSet)}
+    {/if}
   {:else}
     {#if vs.classificationConformance}
       {@render conformanceNotice(vs.classificationConformance)}
@@ -344,9 +358,13 @@ function overlapPercent(overlap: number): string {
           = {humanizeClassificationSlug(vs.classificationSlug)}
         </a>
       {:else}
+        {@const range = denseIntegerValueSetRange(vs.valueSet)}
         <span class="vs-label">{valueSetLabel(vs)}</span>
         {#if vs.valueSet && vs.valueSet.length > 0}
           <span class="muted vs-count">({vs.valueSet.length})</span>
+        {/if}
+        {#if range}
+          <span class="muted vs-range">{range.min}-{range.max}</span>
         {/if}
       {/if}
       <button
@@ -362,11 +380,16 @@ function overlapPercent(overlap: number): string {
       {@render conformanceNotice(vs.classificationConformance)}
     {/if}
     {#if !vs.classificationSlug && vs.valueSet && vs.valueSet.length > 0}
+      {@const range = denseIntegerValueSetRange(vs.valueSet)}
       <!-- #310: inspect a plain value set's codes inline, without isolating. -->
-      <details class="vs-codes">
-        <summary>Values ({vs.valueSet.length})</summary>
-        {@render valueSetTable(vs.valueSet)}
-      </details>
+      {#if range}
+        {@render denseIntegerRange(range)}
+      {:else}
+        <details class="vs-codes">
+          <summary>Values ({vs.valueSet.length})</summary>
+          {@render valueSetTable(vs.valueSet)}
+        </details>
+      {/if}
     {/if}
   </li>
 {/snippet}
@@ -419,10 +442,15 @@ function overlapPercent(overlap: number): string {
     {/if}
 
     {#if s.value_set && s.value_set.length > 0}
+      {@const range = denseIntegerValueSetRange(s.value_set)}
       <h4 class="vs-heading">
         Value set <span class="muted">({s.value_set.length})</span>
       </h4>
-      {@render valueSetTable(s.value_set)}
+      {#if range}
+        {@render denseIntegerRange(range)}
+      {:else}
+        {@render valueSetTable(s.value_set)}
+      {/if}
     {:else}
       <p class="muted">No value set.</p>
     {/if}
@@ -469,9 +497,13 @@ function overlapPercent(overlap: number): string {
             = {humanizeClassificationSlug(vs.classificationSlug)}
           </a>
         {:else}
+          {@const range = denseIntegerValueSetRange(vs.valueSet)}
           {valueSetLabel(vs)}
           {#if vs.valueSet && vs.valueSet.length > 0}
             <span class="muted">({vs.valueSet.length})</span>
+          {/if}
+          {#if range}
+            <span class="muted vs-range">{range.min}-{range.max}</span>
           {/if}
         {/if}
       </h4>
@@ -579,6 +611,10 @@ function overlapPercent(overlap: number): string {
   .vs-count {
     font-size: 0.85em;
   }
+  .vs-range {
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+  }
   .vs-isolate {
     margin-left: auto;
     font-size: var(--text-micro);
@@ -628,6 +664,13 @@ function overlapPercent(overlap: number): string {
   }
   .vs-classification {
     margin: var(--space-1) 0;
+  }
+  .vs-numeric-range {
+    margin: var(--space-1) 0;
+    font-size: var(--text-sm);
+  }
+  .vs-numeric-range code {
+    font-family: var(--font-mono);
   }
   .conformance-notice {
     margin: var(--space-1) 0;
