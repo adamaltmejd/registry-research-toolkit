@@ -100,14 +100,19 @@ def fetch_open_issues() -> list[dict]:
     """Open issues authored by the maintainer, in `fetch_open_issues`'s original shape.
 
     The gated replacement for `check_issue_hygiene.fetch_open_issues` on the ingestion
-    path (plan_sequence's `build_records` consumes the result). Fetches the same fields
-    plus `author`, then keeps ONLY maintainer-authored rows (fail-closed: a missing/None
-    author is dropped). Rows keep the `number,title,labels,body` shape `build_records`
-    reads — the extra `author` key is left in place and ignored downstream. The count of
-    dropped non-maintainer issues is written to stderr (never silently discarded).
+    path (plan_sequence's `build_records` consumes the result). Filters maintainer
+    authorship on BOTH sides: server-side via `gh issue list --author <maintainer>` so a
+    stranger-issue flood can't push maintainer rows past `FETCH_CAP` (the cap is the
+    danger — a truncation would silently drop real work), plus the client-side
+    `_is_maintainer` keep as defense-in-depth (fail-closed: a missing/None author is
+    dropped even if the server-side filter ever changed shape). Rows keep the
+    `number,title,labels,body` shape `build_records` reads — the extra `author` key is
+    left in place and ignored downstream. The count of any dropped non-maintainer issues
+    is written to stderr (never silently discarded).
     """
     maintainer = maintainer_login()
-    rows = gh_json(["issue", "list", "--state", "open", "--limit", str(FETCH_CAP),
+    rows = gh_json(["issue", "list", "--state", "open", "--author", maintainer,
+                    "--limit", str(FETCH_CAP),
                     "--json", "number,title,labels,body,author"])  # fmt: skip
     _warn_if_truncated(rows, "open issues")
     kept = [r for r in rows if _is_maintainer(r, maintainer)]

@@ -302,8 +302,9 @@ issues/comments not authored by the maintainer, and fork-PR `Closes #N` claims, 
 dropped rather than surfaced to a model or rendered into the epic body / candidate
 floor. `plan_sequence.py`'s candidate floor and fork-PR closing-claim path route through
 it, and the skills read issues via `gh_issue.py view`. Raw `gh issue view` /
-`gh issue list --state open` (and `gh api .../issues`, `gh search issues`) model-reads
-in skill files are forbidden, enforced by `scripts/tests/test_skill_gh_reads.py`.
+`gh issue list` without `--search` (and `gh api .../issues`, `gh search issues`)
+model-reads in skill files are forbidden, enforced by
+`scripts/tests/test_skill_gh_reads.py`.
 
 **Marking work in-flight** — when you start developing an issue — in `/pr-pipeline` **or
 ad-hoc** — open a **draft PR** early whose body has `Closes #N`. That is the in-flight

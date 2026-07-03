@@ -106,6 +106,24 @@ def test_fetch_open_issues_requests_author_field(
     assert "author" in captured["args"][-1]  # the --json field list carries author
 
 
+def test_fetch_open_issues_filters_author_server_side(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    # Server-side `--author <maintainer>` keeps a stranger-issue flood from pushing
+    # maintainer rows past FETCH_CAP; the client-side filter is defense-in-depth on top.
+    captured: dict[str, list[str]] = {}
+
+    def fake(args: list[str]):
+        captured["args"] = args
+        return []
+
+    monkeypatch.setattr(gi, "gh_json", fake)
+    gi.fetch_open_issues()
+    args = captured["args"]
+    assert "--author" in args
+    assert args[args.index("--author") + 1] == MAINT
+
+
 def test_fetch_open_issues_preserves_build_records_shape(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:

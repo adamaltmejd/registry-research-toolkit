@@ -3,6 +3,19 @@
 
 Read-only validator over the GitHub issue corpus. It reports; it never edits.
 
+This repo is PUBLIC and /issue-pulse model-reads this output (and auto-applies the
+`blocked`-label drift fixes from it). The checker still validates EVERY open issue,
+including strangers' — but a NON-maintainer-authored issue's findings are redacted to
+number-only, code-authored check-names (via `redact_for_non_maintainer`): every emission
+site stamps its finding with a terse check-name (`area-label`, `blocked-label-drift`, …)
+that the redaction path reads directly, so no title, label text, relationship/touches
+strings, or any body-derived text is quoted, and the actionable `blocked`-label drift
+phrasing is replaced by a non-actionable notice so a stranger issue can't drive an
+auto-applied label edit. Maintainer-authored issues keep the full verbose messages
+unchanged (the name is internal plumbing, never rendered into their message text).
+Authorship is decided by the shared gate (`scripts/gh_issue.py`), never re-implemented
+here.
+
 Checks (per open issue):
   - exactly one area label + one type label;
   - every `Relationships` target (`Depends on`/`Blocked by`/`Part of`/… #N) resolves
@@ -59,6 +72,23 @@ repo_owner_name = _gh.repo_owner_name
 # (plan_sequence.py) keep resolving unchanged.
 FETCH_CAP = _gh.FETCH_CAP
 _warn_if_truncated = _gh._warn_if_truncated
+
+# The maintainer-author trust gate (scripts/gh_issue.py). This checker reads the WHOLE
+# tracker ungated by design (it validates every open issue), but /issue-pulse model-reads
+# its output and downstream auto-applies the blocked-label drift fixes — so a stranger's
+# issue must not leak body-derived text into a message or trigger an actionable drift fix.
+# Reuse the gate's authorship check rather than re-implementing it (same spec-load idiom
+# plan_sequence.py uses). `_is_maintainer` is private, but this is intra-tooling reuse of
+# the single source of truth for "is this the trusted author", not an external API.
+_GISPEC = importlib.util.spec_from_file_location(
+    "gh_issue", Path(__file__).with_name("gh_issue.py")
+)
+assert _GISPEC and _GISPEC.loader
+gh_issue = importlib.util.module_from_spec(_GISPEC)
+_GISPEC.loader.exec_module(gh_issue)
+
+maintainer_login = gh_issue.maintainer_login
+_is_maintainer = gh_issue._is_maintainer
 
 AREA_LABELS = {
     "reg_meta",
@@ -117,14 +147,22 @@ BUILD_IGNORE = {
 
 
 class Findings:
+    # `items` stays `(level, num, msg)` 3-tuples — the public shape `emit`,
+    # `plan_sequence.py`, and the tests iterate/compare. The per-finding check `name` is
+    # internal plumbing for the redaction path only (never rendered into maintainer
+    # message text), so it lives in a parallel `names` list appended in lockstep rather
+    # than widening the tuple.
     def __init__(self) -> None:
         self.items: list[tuple[str, int | None, str]] = []
+        self.names: list[str] = []
 
-    def error(self, num: int | None, msg: str) -> None:
+    def error(self, num: int | None, name: str, msg: str) -> None:
         self.items.append(("ERROR", num, msg))
+        self.names.append(name)
 
-    def warn(self, num: int | None, msg: str) -> None:
+    def warn(self, num: int | None, name: str, msg: str) -> None:
         self.items.append(("WARN", num, msg))
+        self.names.append(name)
 
     @property
     def errors(self) -> int:
@@ -156,8 +194,12 @@ def parse_touches(body: str) -> list[str]:
 
 
 def fetch_open_issues() -> list[dict]:
+    # `author` is fetched so per-issue authorship can gate message redaction (a
+    # non-maintainer issue's findings must be reported number-only). Unlike gh_issue's
+    # ingestion fetch this is NOT `--author`-filtered: the checker validates the WHOLE
+    # tracker, including stranger issues — it just redacts their messages.
     rows = gh_json(["issue", "list", "--state", "open", "--limit", str(FETCH_CAP),
-                    "--json", "number,title,labels,body"])  # fmt: skip
+                    "--json", "number,title,labels,body,author"])  # fmt: skip
     _warn_if_truncated(rows, "open issues")
     return rows
 
@@ -170,7 +212,7 @@ def fetch_one_open_issue(number: int) -> dict | None:
     `gh issue view` resolves a PR number too. Shares _gh's non-zero-tolerant view
     primitive; keeps its own `state == "OPEN"` post-filter and field set.
     """
-    data = _gh.gh_issue_view_or_none(number, "number,title,labels,body,state")
+    data = _gh.gh_issue_view_or_none(number, "number,title,labels,body,state,author")
     if data is None:  # not an issue (a PR, or it doesn't exist)
         return None
     return data if data.get("state") == "OPEN" else None
@@ -223,6 +265,36 @@ def fetch_parents(owner: str, name: str) -> dict[int, int]:
             return parent_of
 
 
+def redact_for_non_maintainer(raw: Findings, out: Findings) -> None:
+    """Fold a non-maintainer issue's per-issue findings into number-only messages.
+
+    This repo is public: a stranger's issue body/labels/title are untrusted, and
+    /issue-pulse model-reads this hygiene output. So for an issue NOT authored by the
+    maintainer, no hygiene message may quote body-derived text (title, label text,
+    relationship/touches strings) — only the issue number and the code-authored check-name
+    each emission site stamped on the finding. This also keeps stranger issues out of the
+    auto-applied `blocked`-label drift-fix surface: the redacted `blocked-label-drift` line
+    is a non-actionable notice, never the verbose "remove it if unblocked" / "no 'blocked'
+    label" phrasing that /issue-pulse pattern-matches to run
+    `gh issue edit … --add-label/--remove-label blocked`.
+
+    Findings are collapsed to one message per (level, check-name) so a flood of derived
+    detail can't leak via repetition. `raw` is the scratch sink `check_issue` wrote into;
+    `out` is the real report sink.
+    """
+    seen: set[tuple[str, str]] = set()
+    for (level, num, _msg), name in zip(raw.items, raw.names, strict=True):
+        key = (level, name)
+        if key in seen:
+            continue
+        seen.add(key)
+        text = f"(non-maintainer) {name} flagged — inspect manually"
+        if level == "ERROR":
+            out.error(num, name, text)
+        else:
+            out.warn(num, name, text)
+
+
 def check_issue(
     issue: dict,
     known: set[int],
@@ -237,59 +309,96 @@ def check_issue(
 
     area = labels & AREA_LABELS
     if len(area) != 1:
-        out.error(num, f"needs exactly one area label (has: {sorted(area) or 'none'})")
+        out.error(num, "area-label",
+                  f"needs exactly one area label (has: {sorted(area) or 'none'})")  # fmt: skip
     type_ = labels & TYPE_LABELS
     if len(type_) != 1:
-        out.error(num, f"needs exactly one type label (has: {sorted(type_) or 'none'})")
+        out.error(num, "type-label",
+                  f"needs exactly one type label (has: {sorted(type_) or 'none'})")  # fmt: skip
     # Priority is optional (absence = normal) but mutually exclusive — at most one bucket.
     prio = labels & PRIORITY_LABELS
     if len(prio) > 1:
         out.error(
-            num, f"has multiple priority labels ({sorted(prio)}); keep at most one"
+            num,
+            "priority-label",
+            f"has multiple priority labels ({sorted(prio)}); keep at most one",
         )
 
     rels = parse_relationships(body)
     for kw, target in rels:
         if target not in known:
-            out.error(num, f"'{kw} #{target}' points to a non-existent issue/PR")
+            out.error(num, "dangling-relationship",
+                      f"'{kw} #{target}' points to a non-existent issue/PR")  # fmt: skip
 
     open_blockers = sorted(
         {t for kw, t in rels if kw in BLOCKING_KEYWORDS and t in open_numbers}
     )
     if "blocked" in labels and "parked" in labels:
-        out.warn(num, "has both 'blocked' and 'parked' labels — keep one status reason")
+        out.warn(num, "status-label-conflict",
+                 "has both 'blocked' and 'parked' labels — keep one status reason")  # fmt: skip
     if "blocked" in labels and not open_blockers:
-        out.warn(num, "has 'blocked' label but no open Depends-on/Blocked-by target — "
-                      "remove it if unblocked")  # fmt: skip
+        out.warn(num, "blocked-label-drift",
+                 "has 'blocked' label but no open Depends-on/Blocked-by target — "
+                 "remove it if unblocked")  # fmt: skip
     if open_blockers and "blocked" not in labels and "parked" not in labels:
-        out.warn(num, f"open blocker(s) {open_blockers} but no 'blocked' label")
+        out.warn(num, "blocked-label-drift",
+                 f"open blocker(s) {open_blockers} but no 'blocked' label")  # fmt: skip
 
     part_of = [t for kw, t in rels if kw == "part of"]
     native_parent = parent_of.get(num)
     for target in part_of:
         if native_parent != target:
-            out.warn(num, f"says 'Part of #{target}' but native parent is "
-                          f"{native_parent or 'unset'} — wire: gh issue edit {num} "
-                          f"--parent {target}")  # fmt: skip
+            out.warn(num, "sub-issue-wiring",
+                     f"says 'Part of #{target}' but native parent is "
+                     f"{native_parent or 'unset'} — wire: gh issue edit {num} "
+                     f"--parent {target}")  # fmt: skip
     if native_parent and native_parent not in part_of:
-        out.warn(num, f"native sub-issue of #{native_parent} but body has no "
-                      f"'Part of #{native_parent}'")  # fmt: skip
+        out.warn(num, "sub-issue-wiring",
+                 f"native sub-issue of #{native_parent} but body has no "
+                 f"'Part of #{native_parent}'")  # fmt: skip
 
     for pattern in parse_touches(body):
         # Must be repo-relative: an absolute / "." pattern raises in Path.glob, and ".."
         # escapes the repo (could spuriously match a sibling) — flag, never glob those.
         if pattern.startswith("/") or pattern == "." or ".." in pattern.split("/"):
-            out.warn(num, f"touches '{pattern}' is not a repo-relative path")
+            out.warn(num, "touches-path",
+                     f"touches '{pattern}' is not a repo-relative path")  # fmt: skip
             continue
         try:
             matched = any(repo_root.glob(pattern))
         except OSError, ValueError, NotImplementedError:
-            out.warn(num, f"touches '{pattern}' is not a valid glob")
+            out.warn(num, "touches-path",
+                     f"touches '{pattern}' is not a valid glob")  # fmt: skip
             continue
         if not matched:
             out.warn(
-                num, f"touches '{pattern}' matches no files (ok if it's a new file)"
+                num,
+                "touches-path",
+                f"touches '{pattern}' matches no files (ok if it's a new file)",
             )
+
+
+def check_issue_gated(
+    issue: dict,
+    known: set[int],
+    open_numbers: set[int],
+    parent_of: dict[int, int],
+    repo_root: Path,
+    out: Findings,
+    maintainer: str,
+) -> None:
+    """Run the per-issue checks, redacting the output for non-maintainer-authored issues.
+
+    A maintainer issue's findings go straight to `out` (verbose, unchanged). A stranger's
+    go through a scratch sink and `redact_for_non_maintainer` so `out` only ever sees
+    number-only, non-body-derived messages for it (see `redact_for_non_maintainer`).
+    """
+    if _is_maintainer(issue, maintainer):
+        check_issue(issue, known, open_numbers, parent_of, repo_root, out)
+        return
+    scratch = Findings()
+    check_issue(issue, known, open_numbers, parent_of, repo_root, scratch)
+    redact_for_non_maintainer(scratch, out)
 
 
 def check_done_but_open(issue_state: dict[int, str], out: Findings) -> None:
@@ -299,8 +408,9 @@ def check_done_but_open(issue_state: dict[int, str], out: Findings) -> None:
     for pr in prs:
         for ref in pr.get("closingIssuesReferences") or []:
             if issue_state.get(ref["number"]) == "OPEN":
-                out.warn(ref["number"], f"still open but merged PR #{pr['number']} "
-                                        f"closes it — verify and close")  # fmt: skip
+                out.warn(ref["number"], "done-but-open",
+                         f"still open but merged PR #{pr['number']} "
+                         f"closes it — verify and close")  # fmt: skip
 
 
 def check_unreleased_build_debt(repo_root: Path, out: Findings) -> None:
@@ -317,9 +427,10 @@ def check_unreleased_build_debt(repo_root: Path, out: Findings) -> None:
     if content:
         preview = ", ".join(sorted(content)[:6])
         more = "" if len(content) <= 6 else f" (+{len(content) - 6} more)"
-        out.warn(None, f"reg_meta_build DB content changed since {tag} "
-                       f"({len(content)} files: {preview}{more}) — a rebuild+release "
-                       f"is pending")  # fmt: skip
+        out.warn(None, "unreleased-build-debt",
+                 f"reg_meta_build DB content changed since {tag} "
+                 f"({len(content)} files: {preview}{more}) — a rebuild+release "
+                 f"is pending")  # fmt: skip
 
 
 # The reg_meta release a steward catalog was generated against, as `reg_meta/vX.Y.Z`.
@@ -378,21 +489,24 @@ def check_steward_catalog_staleness(repo_root: Path, out: Findings) -> None:
         try:
             data = json.loads(catalog.read_text(encoding="utf-8"))
         except OSError, ValueError:
-            out.warn(None, f"steward '{steward}' catalog {catalog.name} is unreadable "
-                           f"or not valid JSON — cannot check reg_meta_version")  # fmt: skip
+            out.warn(None, "stale-steward-catalog",
+                     f"steward '{steward}' catalog {catalog.name} is unreadable "
+                     f"or not valid JSON — cannot check reg_meta_version")  # fmt: skip
             continue
         recorded = data.get("reg_meta_version")
         version = (
             _reg_meta_version_tuple(recorded) if isinstance(recorded, str) else None
         )
         if version is None:
-            out.warn(None, f"steward '{steward}' catalog has a missing or malformed "
-                           f"reg_meta_version ({recorded!r}) — expected 'reg_meta/vX.Y.Z'")  # fmt: skip
+            out.warn(None, "stale-steward-catalog",
+                     f"steward '{steward}' catalog has a missing or malformed "
+                     f"reg_meta_version ({recorded!r}) — expected 'reg_meta/vX.Y.Z'")  # fmt: skip
             continue
         if version < latest:  # strictly behind; equal or (defensively) ahead → silent
-            out.warn(None, f"steward '{steward}' catalog was generated against {recorded} "
-                           f"but the latest reg_meta release is {tag} — regenerate per "
-                           f"reg_webapp/stewards/{steward}/README.md")  # fmt: skip
+            out.warn(None, "stale-steward-catalog",
+                     f"steward '{steward}' catalog was generated against {recorded} "
+                     f"but the latest reg_meta release is {tag} — regenerate per "
+                     f"reg_webapp/stewards/{steward}/README.md")  # fmt: skip
 
 
 def emit(out: Findings, scope: str) -> None:
@@ -429,6 +543,7 @@ def main() -> int:
 
     repo_root = Path(run(["git", "rev-parse", "--show-toplevel"]).strip())
     owner, name = repo_owner_name()
+    maintainer = maintainer_login()
     known, issue_state, open_numbers = fetch_number_states()
     parent_of = fetch_parents(owner, name)
     out = Findings()
@@ -441,12 +556,16 @@ def main() -> int:
         if issue is None:
             print(f"#{args.issue} is not an open issue; skipping.")
             return 0
-        check_issue(issue, known, open_numbers, parent_of, repo_root, out)
+        check_issue_gated(
+            issue, known, open_numbers, parent_of, repo_root, out, maintainer
+        )
         emit(out, f"#{args.issue}")
         return 1 if out.errors else 0
 
     for issue in fetch_open_issues():
-        check_issue(issue, known, open_numbers, parent_of, repo_root, out)
+        check_issue_gated(
+            issue, known, open_numbers, parent_of, repo_root, out, maintainer
+        )
     check_done_but_open(issue_state, out)
     check_unreleased_build_debt(repo_root, out)
     check_steward_catalog_staleness(repo_root, out)
