@@ -70,16 +70,30 @@ import sys
 import time
 from datetime import datetime
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
-# gh process primitives (run/gh_json/repo_owner_name) live in the shared _gh module, loaded
-# via spec so it resolves regardless of sys.path (same idiom as plan_sequence.py).
-_GHSPEC = importlib.util.spec_from_file_location(
-    "_gh", Path(__file__).with_name("_gh.py")
-)
-assert _GHSPEC and _GHSPEC.loader
-_gh = importlib.util.module_from_spec(_GHSPEC)
-_GHSPEC.loader.exec_module(_gh)
+if TYPE_CHECKING:
+    from types import ModuleType
+
+
+def _load_gh() -> ModuleType:
+    # The one leaf that can't go through _gh.load_sibling: _gh can't load itself. Kept a
+    # tiny sys.modules-guarded spec-load, identical in every sibling script, so the whole
+    # process shares ONE _gh instance (a single patch target, not one copy per loader).
+    if (mod := sys.modules.get("_gh")) is not None:
+        return mod
+    spec = importlib.util.spec_from_file_location(
+        "_gh", Path(__file__).with_name("_gh.py")
+    )
+    assert spec and spec.loader
+    mod = importlib.util.module_from_spec(spec)
+    sys.modules["_gh"] = mod
+    spec.loader.exec_module(mod)
+    return mod
+
+
+# gh process primitives (run/gh_json/repo_owner_name) live in the shared _gh module.
+_gh = _load_gh()
 gh_json = _gh.gh_json
 repo_owner_name = _gh.repo_owner_name
 

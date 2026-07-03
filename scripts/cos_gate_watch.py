@@ -29,16 +29,32 @@ from __future__ import annotations
 import importlib.util
 import sys
 from pathlib import Path
+from typing import TYPE_CHECKING
 
-# Reuse cos_preflight's gate-store leaf helpers (XDG root resolution, tolerant JSON
-# read) instead of re-pasting them; sibling scripts are spec-loaded, not packaged.
-_CPF_SPEC = importlib.util.spec_from_file_location(
-    "cos_preflight", Path(__file__).with_name("cos_preflight.py")
-)
-assert _CPF_SPEC and _CPF_SPEC.loader
-_cos_preflight = importlib.util.module_from_spec(_CPF_SPEC)
-sys.modules[_CPF_SPEC.name] = _cos_preflight
-_CPF_SPEC.loader.exec_module(_cos_preflight)
+if TYPE_CHECKING:
+    from types import ModuleType
+
+
+def _load_gh() -> ModuleType:
+    # The one leaf that can't go through _gh.load_sibling: _gh can't load itself. Kept a
+    # tiny sys.modules-guarded spec-load, identical in every sibling script, so the whole
+    # process shares ONE _gh instance (a single patch target, not one copy per loader).
+    if (mod := sys.modules.get("_gh")) is not None:
+        return mod
+    spec = importlib.util.spec_from_file_location(
+        "_gh", Path(__file__).with_name("_gh.py")
+    )
+    assert spec and spec.loader
+    mod = importlib.util.module_from_spec(spec)
+    sys.modules["_gh"] = mod
+    spec.loader.exec_module(mod)
+    return mod
+
+
+# Reuse cos_preflight's gate-store leaf helpers (XDG root resolution, tolerant JSON read)
+# instead of re-pasting them, via _gh's shared sys.modules-guarded loader — so this is the
+# same cos_preflight instance cos_watch loads (the two tiers can't diverge).
+_cos_preflight = _load_gh().load_sibling("cos_preflight")
 
 
 def scan_ready(gate_root: Path) -> dict[int, tuple[str, str]]:

@@ -301,6 +301,18 @@ def test_plan_tick_sentinels_derived_from_plan_sequence() -> None:
     assert cpf._plan_sequence._FRESHNESS_MSG["rerank"] in cpf.PLAN_TICK_SENTINELS[1]
 
 
+def test_siblings_are_single_instances() -> None:
+    # The shared _gh.load_sibling loader is sys.modules-guarded, so a name loaded once is a
+    # SINGLE process-wide instance. This is the property that closes the two-`_gh`-copy
+    # footgun: cos_preflight loads gh_issue, and gh_issue's OWN bootstrap loads _gh — with
+    # the guard those resolve to the same objects, so a patch through one copy (e.g.
+    # cpf._gh.subprocess.run, or cpf.gh_issue.*) is visible through every consumer.
+    assert cpf.gh_issue._gh is cpf._gh
+    assert cpf._plan_sequence._gh is cpf._gh
+    # plan_sequence loads gh_issue too; it must be the same one cos_preflight holds.
+    assert cpf._plan_sequence.gh_issue is cpf.gh_issue
+
+
 def test_plan_tick_exit1_without_sentinel_is_tool_error(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:

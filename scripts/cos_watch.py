@@ -57,16 +57,32 @@ import subprocess
 import sys
 import time
 from pathlib import Path
+from typing import TYPE_CHECKING
 
-# Reuse the fast-tier gate scan from cos_gate_watch (which itself spec-loads
-# cos_preflight for the store-root and tolerant-read leaf helpers).
-_CGW_SPEC = importlib.util.spec_from_file_location(
-    "cos_gate_watch", Path(__file__).with_name("cos_gate_watch.py")
-)
-assert _CGW_SPEC and _CGW_SPEC.loader
-_cos_gate_watch = importlib.util.module_from_spec(_CGW_SPEC)
-sys.modules[_CGW_SPEC.name] = _cos_gate_watch
-_CGW_SPEC.loader.exec_module(_cos_gate_watch)
+if TYPE_CHECKING:
+    from types import ModuleType
+
+
+def _load_gh() -> ModuleType:
+    # The one leaf that can't go through _gh.load_sibling: _gh can't load itself. Kept a
+    # tiny sys.modules-guarded spec-load, identical in every sibling script, so the whole
+    # process shares ONE _gh instance (a single patch target, not one copy per loader).
+    if (mod := sys.modules.get("_gh")) is not None:
+        return mod
+    spec = importlib.util.spec_from_file_location(
+        "_gh", Path(__file__).with_name("_gh.py")
+    )
+    assert spec and spec.loader
+    mod = importlib.util.module_from_spec(spec)
+    sys.modules["_gh"] = mod
+    spec.loader.exec_module(mod)
+    return mod
+
+
+# Reuse the fast-tier gate scan from cos_gate_watch (which itself loads cos_preflight for
+# the store-root and tolerant-read leaf helpers) via _gh's shared sys.modules-guarded
+# loader, so cos_watch, cos_gate_watch, and the probe all share ONE cos_preflight instance.
+_cos_gate_watch = _load_gh().load_sibling("cos_gate_watch")
 _cos_preflight = _cos_gate_watch._cos_preflight
 
 # Slot-ledger scan and its concurrency/staleness constants now live in cos_preflight
