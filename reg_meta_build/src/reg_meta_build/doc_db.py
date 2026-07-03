@@ -87,7 +87,12 @@ def parse_frontmatter(text: str) -> tuple[dict[str, object], str]:
     """Parse YAML frontmatter from markdown text.
 
     Returns (metadata_dict, body) where body is the text after frontmatter.
-    Only handles the subset we generate: scalar values and simple lists.
+    Only handles the subset we generate: scalar values, simple lists, the
+    folded/literal block scalars panache reflows long scalars into
+    (``key: >``/``>-``/``>+`` folded, ``key: |``/``|-``/``|+`` literal), and
+    plain multi-line flow scalars (a ``key: value`` whose value wraps onto bare
+    indented continuation lines with no ``>``/``|`` indicator), folded with
+    single spaces like a YAML plain scalar.
     """
     lines = text.split("\n")
     if not lines or not _FM_DELIM.match(lines[0]):
@@ -105,12 +110,16 @@ def parse_frontmatter(text: str) -> tuple[dict[str, object], str]:
     current_key: str | None = None
     current_list: list[str] | None = None
 
-    for line in lines[1:end]:
+    i = 1
+    while i < end:
+        line = lines[i]
+
         # List item: "  - value"
         if line.startswith("  - ") and current_key:
             if current_list is None:
                 current_list = []
             current_list.append(line[4:].strip())
+            i += 1
             continue
 
         # Save accumulated list
@@ -121,20 +130,106 @@ def parse_frontmatter(text: str) -> tuple[dict[str, object], str]:
         # Key-value: "key: value"
         if ":" in line:
             key, _, val = line.partition(":")
+            key_indent = len(line) - len(line.lstrip(" "))
             key = key.strip()
-            val = val.strip().strip('"').strip("'")
+            val = val.strip()
             current_key = key
+
+            fold = _block_scalar_style(val)
+            if fold is not None:
+                value, i = _read_block_scalar(lines, i + 1, end, key_indent, fold)
+                meta[key] = value
+                continue
+
+            val = val.strip('"').strip("'")
             if val:
+                # Plain multi-line flow scalar: panache may wrap a long value with
+                # no quote-forcing chars as a bare indented continuation (no `>`/`|`
+                # indicator). Fold those continuation lines into the value with
+                # single spaces so it isn't silently truncated to the first line.
+                if _is_plain_flow_continuation(lines, i + 1, end, key_indent):
+                    cont, i = _read_block_scalar(
+                        lines, i + 1, end, key_indent, "folded"
+                    )
+                    meta[key] = f"{val} {cont}".strip() if cont else val
+                    continue
                 meta[key] = val
             # If val is empty, next lines might be a list
         else:
             current_key = None
+        i += 1
 
     if current_list is not None and current_key:
         meta[current_key] = current_list
 
     body = "\n".join(lines[end + 1 :]).lstrip("\n")
     return meta, body
+
+
+def _block_scalar_style(val: str) -> str | None:
+    """Return "folded"/"literal" if ``val`` is a block-scalar indicator, else None.
+
+    Recognizes ``>``/``>-``/``>+`` (folded) and ``|``/``|-``/``|+`` (literal),
+    i.e. the ``key:`` value being an indicator char plus an optional chomping
+    modifier and nothing else.
+    """
+    if val in {">", ">-", ">+"}:
+        return "folded"
+    if val in {"|", "|-", "|+"}:
+        return "literal"
+    return None
+
+
+def _is_plain_flow_continuation(
+    lines: list[str], start: int, end: int, key_indent: int
+) -> bool:
+    """True if ``lines[start]`` begins a plain multi-line flow-scalar continuation.
+
+    A continuation is a non-blank line indented MORE than ``key_indent`` that is
+    not a ``  - `` list item — the shape panache emits when it wraps a long value
+    with no quote-forcing characters (no ``>``/``|`` indicator). Distinguishing it
+    from a nested-list opener (``key:`` with an empty value) is why we only look
+    past a NON-empty first-line value at the call site.
+    """
+    if start >= end:
+        return False
+    line = lines[start]
+    if not line.strip():
+        return False
+    if (len(line) - len(line.lstrip(" "))) <= key_indent:
+        return False
+    return not line.lstrip(" ").startswith("- ")
+
+
+def _read_block_scalar(
+    lines: list[str], start: int, end: int, key_indent: int, style: str
+) -> tuple[str, int]:
+    """Read a block-scalar body starting at ``lines[start]``.
+
+    The body is the run of lines indented more than ``key_indent``; it ends at
+    the first line dedented to ``key_indent`` or less. Returns the joined,
+    trimmed value and the index of the first line past the body.
+    """
+    body: list[str] = []
+    i = start
+    while i < end:
+        line = lines[i]
+        if line.strip() and (len(line) - len(line.lstrip(" "))) <= key_indent:
+            break
+        body.append(line)
+        i += 1
+
+    # Strip the common leading indentation from non-blank body lines.
+    indents = [len(line) - len(line.lstrip(" ")) for line in body if line.strip()]
+    common = min(indents) if indents else 0
+    stripped = [line[common:] if line.strip() else "" for line in body]
+
+    joiner = " " if style == "folded" else "\n"
+    # simplify: folds blank lines to single spaces (not YAML paragraph-break
+    # newlines) and .strip() ignores `+` keep-chomping. Fine because panache emits
+    # only single-paragraph `>-`/`|-`/plain values for these display_names. Revisit
+    # if panache starts emitting multi-paragraph block scalars (blank line inside).
+    return joiner.join(stripped).strip(), i
 
 
 # ---------------------------------------------------------------------------
