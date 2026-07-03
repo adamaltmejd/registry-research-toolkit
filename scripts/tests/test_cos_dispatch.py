@@ -41,24 +41,17 @@ fail fast, never escape.
 
 from __future__ import annotations
 
-import importlib.util
 import json
 import os
 import subprocess
-import sys
 import time
 from pathlib import Path
 
 import pytest
 
-_SCRIPTS = Path(__file__).resolve().parents[1]
-_SPEC = importlib.util.spec_from_file_location(
-    "cos_dispatch", _SCRIPTS / "cos_dispatch.py"
-)
-assert _SPEC and _SPEC.loader
-cd = importlib.util.module_from_spec(_SPEC)
-sys.modules[_SPEC.name] = cd
-_SPEC.loader.exec_module(cd)
+from conftest import load_scripts_module
+
+cd = load_scripts_module("cos_dispatch")
 
 # A stub codex/claude that FAILS LOUDLY if invoked, recording the attempt. Any test that
 # reaches a real launch without installing its own stub trips this instead of the real

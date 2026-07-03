@@ -46,9 +46,9 @@ lanes freshness (0/1/2 above) — so the `/loop` tick does one fetch instead of 
 projection block; the loop's only write is the lanes block, when it moves.
 
 The gh/git process primitives live in the shared `_gh` module (lifted there once
-`pr_review_status.py` became a third consumer); the issue-domain parsers (label sets, the
-relationship/touches regexes) are still reused from the sibling validator
-(check_issue_hygiene.py).
+`pr_review_status.py` became a third consumer, alongside the shared `load_sibling`
+loader); the issue-domain parsers (label sets, the relationship/touches regexes) are still
+reused from the sibling validator (check_issue_hygiene.py).
 """
 
 from __future__ import annotations
@@ -62,31 +62,40 @@ import subprocess
 import sys
 from dataclasses import dataclass, field
 from pathlib import Path
+from typing import TYPE_CHECKING
 
-_HSPEC = importlib.util.spec_from_file_location(
-    "check_issue_hygiene", Path(__file__).with_name("check_issue_hygiene.py")
-)
-assert _HSPEC and _HSPEC.loader
-_h = importlib.util.module_from_spec(_HSPEC)
-_HSPEC.loader.exec_module(_h)
+if TYPE_CHECKING:
+    from types import ModuleType
 
-_GHSPEC = importlib.util.spec_from_file_location(
-    "_gh", Path(__file__).with_name("_gh.py")
-)
-assert _GHSPEC and _GHSPEC.loader
-_gh = importlib.util.module_from_spec(_GHSPEC)
-_GHSPEC.loader.exec_module(_gh)
+
+def _load_gh() -> ModuleType:
+    # The one leaf that can't go through _gh.load_sibling: _gh can't load itself. Kept a
+    # tiny sys.modules-guarded spec-load, identical in every sibling script, so the whole
+    # process shares ONE _gh instance (a single patch target, not one copy per loader).
+    if (mod := sys.modules.get("_gh")) is not None:
+        return mod
+    spec = importlib.util.spec_from_file_location(
+        "_gh", Path(__file__).with_name("_gh.py")
+    )
+    assert spec and spec.loader
+    mod = importlib.util.module_from_spec(spec)
+    sys.modules["_gh"] = mod
+    spec.loader.exec_module(mod)
+    return mod
+
+
+# _gh's sys.modules-guarded loader pulls in the other siblings as single process-wide
+# instances (so this gh_issue IS the one cos_dispatch/check_issue_hygiene use, and a
+# monkeypatch of ps.gh_issue is visible everywhere). check_issue_hygiene supplies the
+# issue-domain parsers (label sets, relationship/touches regexes).
+_gh = _load_gh()
+_h = _gh.load_sibling("check_issue_hygiene")
 
 # The maintainer-author trust gate: this repo is public, so the ingestion set must only
 # ever carry maintainer-authored issue text (a stranger's issue is a prompt-injection
 # surface). gh_issue.fetch_open_issues drops non-maintainer rows; is_own_pr drops fork PRs
-# from the running-claim computation. Loaded via the same spec idiom.
-_GISPEC = importlib.util.spec_from_file_location(
-    "gh_issue", Path(__file__).with_name("gh_issue.py")
-)
-assert _GISPEC and _GISPEC.loader
-gh_issue = importlib.util.module_from_spec(_GISPEC)
-_GISPEC.loader.exec_module(gh_issue)
+# from the running-claim computation.
+gh_issue = _gh.load_sibling("gh_issue")
 
 AREA_LABELS = _h.AREA_LABELS
 PRIORITY_LABELS = _h.PRIORITY_LABELS

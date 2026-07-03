@@ -11,19 +11,17 @@ its own suite.
 
 from __future__ import annotations
 
-import importlib.util
 import json
 import os
-import sys
 import time
-from pathlib import Path
+from typing import TYPE_CHECKING
 
-_SCRIPTS = Path(__file__).resolve().parents[1]
-_SPEC = importlib.util.spec_from_file_location("cos_watch", _SCRIPTS / "cos_watch.py")
-assert _SPEC and _SPEC.loader
-cw = importlib.util.module_from_spec(_SPEC)
-sys.modules[_SPEC.name] = cw
-_SPEC.loader.exec_module(cw)
+from conftest import load_scripts_module
+
+if TYPE_CHECKING:
+    from pathlib import Path
+
+cw = load_scripts_module("cos_watch")
 
 
 def _write_slot(slots_root: Path, slug: str, slot: dict | None = None) -> Path:

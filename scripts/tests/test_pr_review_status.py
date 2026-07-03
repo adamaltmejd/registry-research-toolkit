@@ -11,20 +11,11 @@ by a live run, matching the sibling scripts. Load-bearing regressions pinned bel
 
 from __future__ import annotations
 
-import importlib.util
-import sys
-from pathlib import Path
-
 import pytest
 
-_SCRIPTS = Path(__file__).resolve().parents[1]
-_SPEC = importlib.util.spec_from_file_location(
-    "pr_review_status", _SCRIPTS / "pr_review_status.py"
-)
-assert _SPEC and _SPEC.loader
-prs = importlib.util.module_from_spec(_SPEC)
-sys.modules[_SPEC.name] = prs
-_SPEC.loader.exec_module(prs)
+from conftest import load_scripts_module
+
+prs = load_scripts_module("pr_review_status")
 
 BOT_REVIEW = "chatgpt-codex-connector"  # reviews + comments
 BOT_REACT = "chatgpt-codex-connector[bot]"  # reactions

@@ -170,40 +170,30 @@ def resolve_profile(tier: str, surface_override: str | None) -> tuple[str, list[
     return surface_override, []
 
 
-def _load_cos_preflight() -> ModuleType:
-    # Spec-load the sibling like cos_watch.py does, so we reuse its store-root and slot
-    # leaf helpers (default_gate_root, default_slots_root, scan_slots, DEFAULT_MAX_SLOTS,
-    # require_canonical) instead of re-pasting them. These live in cos_preflight (the slot
-    # helpers were hoisted there from cos_watch on this branch); we depend on that module
-    # exporting them.
+def _load_gh() -> ModuleType:
+    # The one leaf that can't go through _gh.load_sibling: _gh can't load itself. Kept a
+    # tiny sys.modules-guarded spec-load, identical in every sibling script, so the whole
+    # process shares ONE _gh instance (a single patch target, not one copy per loader).
+    if (mod := sys.modules.get("_gh")) is not None:
+        return mod
     spec = importlib.util.spec_from_file_location(
-        "cos_preflight", Path(__file__).with_name("cos_preflight.py")
+        "_gh", Path(__file__).with_name("_gh.py")
     )
     assert spec and spec.loader
-    module = importlib.util.module_from_spec(spec)
-    sys.modules[spec.name] = module
-    spec.loader.exec_module(module)
-    return module
+    mod = importlib.util.module_from_spec(spec)
+    sys.modules["_gh"] = mod
+    spec.loader.exec_module(mod)
+    return mod
 
 
-_cos_preflight = _load_cos_preflight()
-
-
-def _load_gh_issue() -> ModuleType:
-    # Spec-load the sibling maintainer-author trust gate, same importlib idiom as
-    # cos_preflight above, so the dispatch chokepoint reuses its public author check
-    # (is_maintainer_authored) instead of re-implementing it.
-    spec = importlib.util.spec_from_file_location(
-        "gh_issue", Path(__file__).with_name("gh_issue.py")
-    )
-    assert spec and spec.loader
-    module = importlib.util.module_from_spec(spec)
-    sys.modules[spec.name] = module
-    spec.loader.exec_module(module)
-    return module
-
-
-_gh_issue = _load_gh_issue()
+# _gh's sys.modules-guarded loader gives single process-wide instances of the siblings:
+# cos_preflight for its store-root/slot leaf helpers (default_gate_root, default_slots_root,
+# scan_slots, DEFAULT_MAX_SLOTS, require_canonical), and gh_issue for the dispatch
+# chokepoint's public author check (is_maintainer_authored). Both are shared, not private
+# copies, so a monkeypatch of cd._gh_issue reaches this consumer.
+_gh = _load_gh()
+_cos_preflight = _gh.load_sibling("cos_preflight")
+_gh_issue = _gh.load_sibling("gh_issue")
 
 
 def require_maintainer_authored(issues: list[int]) -> None:

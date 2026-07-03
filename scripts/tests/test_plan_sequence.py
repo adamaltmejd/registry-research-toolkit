@@ -6,21 +6,13 @@ the marked-block splice) is pinned here. The gh/git fetchers are covered by a li
 
 from __future__ import annotations
 
-import importlib.util
 import sys
-from pathlib import Path
 
 import pytest
 
-_SCRIPTS = Path(__file__).resolve().parents[1]
-_SPEC = importlib.util.spec_from_file_location(
-    "plan_sequence", _SCRIPTS / "plan_sequence.py"
-)
-assert _SPEC and _SPEC.loader
-ps = importlib.util.module_from_spec(_SPEC)
-# Register before exec: @dataclass resolves sys.modules[__module__] during class build.
-sys.modules[_SPEC.name] = ps
-_SPEC.loader.exec_module(ps)
+from conftest import load_scripts_module
+
+ps = load_scripts_module("plan_sequence")
 
 
 def _rec(

@@ -10,19 +10,15 @@ never scanned. The scan/diff functions are pure; cos_watch.py's loop composes th
 
 from __future__ import annotations
 
-import importlib.util
 import json
-import sys
-from pathlib import Path
+from typing import TYPE_CHECKING
 
-_SCRIPTS = Path(__file__).resolve().parents[1]
-_SPEC = importlib.util.spec_from_file_location(
-    "cos_gate_watch", _SCRIPTS / "cos_gate_watch.py"
-)
-assert _SPEC and _SPEC.loader
-cgw = importlib.util.module_from_spec(_SPEC)
-sys.modules[_SPEC.name] = cgw
-_SPEC.loader.exec_module(cgw)
+from conftest import load_scripts_module
+
+if TYPE_CHECKING:
+    from pathlib import Path
+
+cgw = load_scripts_module("cos_gate_watch")
 
 HEAD = "abcdef1234567890abcdef1234567890abcdef12"
 

@@ -25,19 +25,71 @@ repo's named anti-pattern.
 Stdlib only, and loaded by sibling scripts via `importlib` spec (not a plain `import`), so
 it resolves under `uv run --no-project python scripts/<name>.py` and under pytest's
 spec-loaded test modules alike, regardless of what's on sys.path.
+
+`load_sibling` is the ONE shared, `sys.modules`-guarded spec-loader every sibling script
+uses to pull in its other siblings (`gh_issue`, `plan_sequence`, `cos_preflight`, …). It
+returns the existing `sys.modules[name]` when present rather than re-executing, so a name
+loaded once (by any script or by a spec-loading test) is a SINGLE process-wide instance —
+`cos_preflight`'s `gh_issue` and its `_gh` are the same objects `gh_issue`/`plan_sequence`
+loaded, so a monkeypatch through one copy is visible through the other (the two-`_gh`-copy
+footgun the pre-guard code had). `_gh` itself can't be loaded via its own helper (a module
+can't import itself before it finishes executing), so each script keeps a tiny
+`sys.modules`-guarded `_load_gh()` preamble — the single leaf that cannot be hoisted;
+everything downstream of `_gh` goes through `load_sibling`.
 """
 
 from __future__ import annotations
 
+import importlib.util
 import json
 import os
 import subprocess
 import sys
-from typing import Any
+from pathlib import Path
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from types import ModuleType
 
 FETCH_CAP = (
     5000  # well above the live corpus; a hit is reported, never silently dropped
 )
+
+
+def load_sibling(name: str) -> ModuleType:
+    """Spec-load sibling script `<name>.py`, `sys.modules`-guarded — one instance/process.
+
+    The shared loader for the scripts/ tooling: siblings import each other via `importlib`
+    spec (not a plain `import`) so they resolve under `uv run --no-project python
+    scripts/<name>.py` and under pytest's spec-loaded test modules alike, regardless of
+    what's on sys.path. Guarding on `sys.modules` is what makes it single-instance: if
+    `name` is already loaded (by another script or a spec-loading test), that same module
+    object is returned instead of a second, divergent copy — so a monkeypatch or attribute
+    read through one consumer is visible through every other. Registers the fresh module in
+    `sys.modules` BEFORE exec, so a self-referential construct (e.g. `@dataclass`, which
+    resolves `sys.modules[__module__]` during class build) resolves during load. If exec
+    raises, the half-initialized module is popped back out of `sys.modules` (mirroring
+    CPython's import machinery) so a later caller re-attempts a clean load rather than
+    getting the broken instance back through the guard.
+    """
+    existing = sys.modules.get(name)
+    if existing is not None:
+        return existing
+    spec = importlib.util.spec_from_file_location(
+        name, Path(__file__).with_name(f"{name}.py")
+    )
+    assert spec and spec.loader
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[name] = module
+    try:
+        spec.loader.exec_module(module)
+    except BaseException:
+        # A failed exec leaves a half-initialized module registered; drop it (mirroring
+        # CPython's import machinery) so a later caller re-attempts a clean load instead of
+        # getting the broken instance back through the sys.modules guard.
+        sys.modules.pop(name, None)
+        raise
+    return module
 
 
 def run(cmd: list[str]) -> str:

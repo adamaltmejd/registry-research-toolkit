@@ -25,8 +25,9 @@ author is DROPPED, never surfaced. A drop is counted to stderr (observability â€
 never *silently* discards), but the untrusted content itself is never printed.
 
 Stdlib only. Loadable two ways, matching the sibling scripts:
-  - as an importable module via `importlib` spec (plan_sequence.py loads it this way to
-    swap in the gated `fetch_open_issues`);
+  - as an importable module via `_gh.load_sibling("gh_issue")` (plan_sequence.py and
+    cos_dispatch.py load it this way to reuse the gated `fetch_open_issues` /
+    `is_maintainer_authored`);
   - as a CLI: `uv run --no-project python scripts/gh_issue.py view <n> [--comments]`
     or `... maintainer-login` (print the trusted maintainer login, for author checks).
 
@@ -44,18 +45,32 @@ import json
 import os
 import sys
 from pathlib import Path
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from types import ModuleType
+
+
+def _load_gh() -> ModuleType:
+    # The one leaf that can't go through _gh.load_sibling: _gh can't load itself. Kept a
+    # tiny sys.modules-guarded spec-load, identical in every sibling script, so the whole
+    # process shares ONE _gh instance (a single patch target, not one copy per loader).
+    if (mod := sys.modules.get("_gh")) is not None:
+        return mod
+    spec = importlib.util.spec_from_file_location(
+        "_gh", Path(__file__).with_name("_gh.py")
+    )
+    assert spec and spec.loader
+    mod = importlib.util.module_from_spec(spec)
+    sys.modules["_gh"] = mod
+    spec.loader.exec_module(mod)
+    return mod
+
 
 # gh/git process primitives plus the shared corpus-fetch cap + truncation warning live in
-# the _gh module, loaded via spec so they resolve under
-# `uv run --no-project python scripts/gh_issue.py` and spec-loaded pytest alike â€” the same
-# idiom plan_sequence.py uses. Importing FETCH_CAP rather than redefining it keeps the cap
+# the _gh module. Importing FETCH_CAP rather than redefining it keeps the cap
 # single-sourced.
-_GHSPEC = importlib.util.spec_from_file_location(
-    "_gh", Path(__file__).with_name("_gh.py")
-)
-assert _GHSPEC and _GHSPEC.loader
-_gh = importlib.util.module_from_spec(_GHSPEC)
-_GHSPEC.loader.exec_module(_gh)
+_gh = _load_gh()
 
 gh_json = _gh.gh_json
 repo_owner_name = _gh.repo_owner_name

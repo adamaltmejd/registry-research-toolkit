@@ -1,22 +1,19 @@
 from __future__ import annotations
 
-import importlib.util
 import json
 import sqlite3
-import sys
 import time
 from argparse import Namespace
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 import pytest
 
-_SPEC = importlib.util.spec_from_file_location(
-    "build_db_watch", Path(__file__).parents[1] / "build_db_watch.py"
-)
-assert _SPEC and _SPEC.loader
-build_db_watch = importlib.util.module_from_spec(_SPEC)
-sys.modules["build_db_watch"] = build_db_watch
-_SPEC.loader.exec_module(build_db_watch)
+from conftest import load_scripts_module
+
+if TYPE_CHECKING:
+    from pathlib import Path
+
+build_db_watch = load_scripts_module("build_db_watch")
 
 
 def test_is_milestone_keeps_progress_and_suppresses_ok_lines() -> None:

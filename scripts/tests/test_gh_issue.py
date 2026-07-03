@@ -8,20 +8,14 @@ calls are stubbed the same way the sibling tests stub `gh_json` / `subprocess.ru
 
 from __future__ import annotations
 
-import importlib.util
 import json
-import sys
 import types
-from pathlib import Path
 
 import pytest
 
-_SCRIPTS = Path(__file__).resolve().parents[1]
-_SPEC = importlib.util.spec_from_file_location("gh_issue", _SCRIPTS / "gh_issue.py")
-assert _SPEC and _SPEC.loader
-gi = importlib.util.module_from_spec(_SPEC)
-sys.modules[_SPEC.name] = gi
-_SPEC.loader.exec_module(gi)
+from conftest import load_scripts_module
+
+gi = load_scripts_module("gh_issue")
 
 MAINT = "adamaltmejd"
 

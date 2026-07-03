@@ -12,24 +12,20 @@ main()-path test exercises the --gate-dir CLI flag end to end.
 
 from __future__ import annotations
 
-import importlib.util
 import json
 import os
 import subprocess
-import sys
 import time
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 import pytest
 
-_SCRIPTS = Path(__file__).resolve().parents[1]
-_SPEC = importlib.util.spec_from_file_location(
-    "cos_preflight", _SCRIPTS / "cos_preflight.py"
-)
-assert _SPEC and _SPEC.loader
-cpf = importlib.util.module_from_spec(_SPEC)
-sys.modules[_SPEC.name] = cpf
-_SPEC.loader.exec_module(cpf)
+from conftest import load_scripts_module
+
+if TYPE_CHECKING:
+    from pathlib import Path
+
+cpf = load_scripts_module("cos_preflight")
 
 HEAD = "abcdef1234567890"
 
@@ -299,6 +295,22 @@ def test_plan_tick_sentinels_derived_from_plan_sequence() -> None:
     assert expected == cpf.PLAN_TICK_SENTINELS
     # The derivation actually consumed plan_sequence's wording, not a hardcoded copy.
     assert cpf._plan_sequence._FRESHNESS_MSG["rerank"] in cpf.PLAN_TICK_SENTINELS[1]
+
+
+def test_siblings_are_single_instances() -> None:
+    # The shared _gh.load_sibling loader is sys.modules-guarded, so a name loaded once is a
+    # SINGLE process-wide instance. This is the property that closes the two-`_gh`-copy
+    # footgun: cos_preflight loads gh_issue, and gh_issue's OWN bootstrap loads _gh — with
+    # the guard those resolve to the same objects, so a patch through one copy (e.g.
+    # cpf._gh.subprocess.run, or cpf.gh_issue.*) is visible through every consumer.
+    assert cpf.gh_issue._gh is cpf._gh
+    assert cpf._plan_sequence._gh is cpf._gh
+    # plan_sequence loads gh_issue too; it must be the same one cos_preflight holds.
+    assert cpf._plan_sequence.gh_issue is cpf.gh_issue
+    # plan_sequence also loads check_issue_hygiene (bound as ._h); its own test module must
+    # register the same instance so the two spec-loads don't diverge into separate Findings
+    # classes depending on which ran first in the pytest process.
+    assert cpf._plan_sequence._h is cpf._gh.load_sibling("check_issue_hygiene")
 
 
 def test_plan_tick_exit1_without_sentinel_is_tool_error(

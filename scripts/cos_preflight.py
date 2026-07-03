@@ -97,7 +97,10 @@ import sys
 from datetime import UTC, datetime
 from pathlib import Path
 from tempfile import NamedTemporaryFile
-from typing import Any
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from types import ModuleType
 
 WAKE_EXIT = 10
 # Bump whenever the snapshot dict shape changes; load_state treats a mismatch as first-run
@@ -113,25 +116,30 @@ DEFAULT_MAX_SLOTS = 3
 DEFAULT_SLOT_STALE_HOURS = 24.0
 
 
-def _load_sibling(name: str) -> Any:
-    # Sibling scripts load each other via importlib spec (not a plain import) so they
-    # resolve under `uv run --no-project python scripts/<name>.py` and spec-loaded pytest
-    # alike, regardless of sys.path — the same idiom gh_issue.py uses for _gh.py.
+def _load_gh() -> ModuleType:
+    # The one leaf that can't go through _gh.load_sibling: _gh can't load itself. Kept a
+    # tiny sys.modules-guarded spec-load, identical in every sibling script, so the whole
+    # process shares ONE _gh instance (a single patch target, not one copy per loader).
+    if (mod := sys.modules.get("_gh")) is not None:
+        return mod
     spec = importlib.util.spec_from_file_location(
-        name, Path(__file__).with_name(f"{name}.py")
+        "_gh", Path(__file__).with_name("_gh.py")
     )
     assert spec and spec.loader
-    module = importlib.util.module_from_spec(spec)
-    sys.modules[spec.name] = module
-    spec.loader.exec_module(module)
-    return module
+    mod = importlib.util.module_from_spec(spec)
+    sys.modules["_gh"] = mod
+    spec.loader.exec_module(mod)
+    return mod
 
 
-_plan_sequence = _load_sibling("plan_sequence")
-_gh = _load_sibling("_gh")
+# _gh's sys.modules-guarded loader gives single process-wide instances of the siblings, so
+# this gh_issue/_gh IS the same object gh_issue's own bootstrap loaded — a monkeypatch of
+# cpf._gh or cpf.gh_issue reaches every consumer (no split copies).
+_gh = _load_gh()
+_plan_sequence = _gh.load_sibling("plan_sequence")
 # gh_issue.is_own_pr is the single fail-closed fork predicate (only isCrossRepository is
 # False is own-branch); reuse it rather than re-implementing the check here.
-gh_issue = _load_sibling("gh_issue")
+gh_issue = _gh.load_sibling("gh_issue")
 DEFAULT_PR_FETCH_CAP = getattr(_plan_sequence, "FETCH_CAP", 5000)
 
 # plan_sequence.py --tick prints a deterministic `lanes: <verdict>` line on stderr and
