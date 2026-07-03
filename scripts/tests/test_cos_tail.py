@@ -201,9 +201,9 @@ def test_follower_skip_to_end_discards_history(tmp_path: Path) -> None:
     follower.skip_to_end()
     with log.open("ab") as fh:
         fh.write(b"-tail\nnew\n")
-    # History (including the torn tail it landed mid-write on) is gone; only
-    # complete lines appended after the skip are yielded.
-    assert follower.poll() == ["-tail", "new"]
+    # History is gone, and so is the SUFFIX of the line the skip landed inside —
+    # emitting "-tail" as a standalone line would render a corrupt fragment.
+    assert follower.poll() == ["new"]
 
 
 def test_follower_drain_tail_flushes_unterminated_line(tmp_path: Path) -> None:
@@ -217,6 +217,35 @@ def test_follower_drain_tail_flushes_unterminated_line(tmp_path: Path) -> None:
     follower = ct.LogFollower(tmp_path / "empty.log")
     follower.poll()
     assert follower.drain_tail() is None  # whitespace-only tail is not a line
+
+
+def test_follower_skip_at_line_boundary_keeps_next_line(tmp_path: Path) -> None:
+    log = tmp_path / "lane.log"
+    log.write_bytes(b"old\n")  # writer is at a clean boundary, nothing is torn
+    follower = ct.LogFollower(log)
+    follower.skip_to_end()
+    with log.open("ab") as fh:
+        fh.write(b"new\n")
+    assert follower.poll() == ["new"]
+
+
+def test_follower_drain_discards_torn_suffix(tmp_path: Path) -> None:
+    log = tmp_path / "lane.log"
+    log.write_bytes(b"torn-partial")
+    follower = ct.LogFollower(log)
+    follower.skip_to_end()
+    with log.open("ab") as fh:
+        fh.write(b"-suffix")  # lane ends before the newline ever arrives
+    follower.poll()
+    assert follower.drain_tail() is None  # a fragment, not a line
+
+
+def test_tmux_session_identity_per_state_root(tmp_path: Path) -> None:
+    assert ct.tmux_session(None) == "cos"
+    override = ct.tmux_session(tmp_path)
+    assert override != "cos" and override.startswith("cos-")
+    assert ct.tmux_session(tmp_path) == override  # stable
+    assert ct.tmux_window(tmp_path) == f"{override}:lanes"
 
 
 def test_follower_resets_on_truncation(tmp_path: Path) -> None:

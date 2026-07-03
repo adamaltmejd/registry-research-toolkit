@@ -27,6 +27,7 @@ content with zero interference.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import importlib.util
 import json
 import os
@@ -54,9 +55,6 @@ _CP_SPEC.loader.exec_module(_cos_preflight)
 DEFAULT_INTERVAL = 2.0
 FAIL_TAIL_LINES = 20
 TMUX_SESSION = "cos"
-# Target the window by NAME, never by index — a user's base-index setting moves the
-# first window's index, but `-n lanes` pins its name.
-TMUX_WINDOW = f"{TMUX_SESSION}:lanes"
 LANE_TITLE_PREFIX = "lane:"
 DONE_TITLE_PREFIX = "done:"
 
@@ -283,12 +281,15 @@ class LogFollower:
     path: Path
     pos: int = 0
     _buf: bytes = field(default=b"", repr=False)
+    # True when a hot-join landed mid-line: the next newline ends a line whose head
+    # was discarded, so its suffix must be dropped, not rendered as a fragment.
+    _torn: bool = field(default=False, repr=False)
 
     def poll(self) -> list[str]:
         try:
             size = self.path.stat().st_size
             if size < self.pos:
-                self.pos, self._buf = 0, b""
+                self.pos, self._buf, self._torn = 0, b"", False
             with self.path.open("rb") as fh:
                 fh.seek(self.pos)
                 chunk = fh.read()
@@ -300,11 +301,15 @@ class LogFollower:
             return []
         lines = data.split(b"\n")
         self._buf = lines.pop()
+        if self._torn and lines:
+            lines, self._torn = lines[1:], False
         return [raw.decode("utf-8", errors="replace") for raw in lines if raw.strip()]
 
     def skip_to_end(self) -> None:
         """Advance past existing content without yielding it (hot-join a live lane)."""
         self.poll()
+        # A non-empty buffer means we joined mid-line; its suffix is still coming.
+        self._torn = bool(self._buf)
         self._buf = b""
 
     def drain_tail(self) -> str | None:
@@ -312,9 +317,13 @@ class LogFollower:
 
         A child that exits after a write with no trailing newline leaves its last
         line in the buffer; poll() rightly withholds it while the writer might still
-        be mid-line, so the lane-ended path must flush it explicitly.
+        be mid-line, so the lane-ended path must flush it explicitly. A torn buffer
+        (suffix of a hot-joined line) is discarded, never rendered.
         """
         tail, self._buf = self._buf, b""
+        if self._torn:
+            self._torn = False
+            return None
         return tail.decode("utf-8", errors="replace") if tail.strip() else None
 
 
@@ -480,6 +489,25 @@ def plan_pane_actions(
     return spawn, retire
 
 
+def tmux_session(state_root: Path | None) -> str:
+    """Session name; a --state-root override gets its own session.
+
+    Attaching reuses an existing session's manager, so its state root is part of
+    the session identity — otherwise a leftover session for another root would
+    silently keep showing that root's ledger and logs.
+    """
+    if state_root is None:
+        return TMUX_SESSION
+    digest = hashlib.sha256(str(state_root.resolve()).encode()).hexdigest()[:8]
+    return f"{TMUX_SESSION}-{digest}"
+
+
+def tmux_window(state_root: Path | None) -> str:
+    # Target the window by NAME, never by index — a user's base-index setting moves
+    # the first window's index, but `-n lanes` pins its name.
+    return f"{tmux_session(state_root)}:lanes"
+
+
 def _tmux(*args: str) -> str:
     proc = subprocess.run(["tmux", *args], capture_output=True, text=True, check=True)
     return proc.stdout
@@ -505,13 +533,14 @@ def _self_argv(args: argparse.Namespace, *tail: str) -> list[str]:
 def manage(args: argparse.Namespace) -> int:
     """Manager loop for pane 0 of the tmux session: status display + pane lifecycle."""
     slots_root, logs_root = resolve_roots(args.state_root)
+    window = tmux_window(args.state_root)
     last_table = None
     while True:
         slots = list_slots(slots_root)
         live = {slot.slug for slot in slots}
         panes = {}
         for line in _tmux(
-            "list-panes", "-t", TMUX_WINDOW, "-F", "#{pane_id}\t#{pane_title}"
+            "list-panes", "-t", window, "-F", "#{pane_id}\t#{pane_title}"
         ).splitlines():
             pane_id, _, title = line.partition("\t")
             panes[pane_id] = title
@@ -522,14 +551,14 @@ def manage(args: argparse.Namespace) -> int:
                 "split-window",
                 "-d",
                 "-t",
-                TMUX_WINDOW,
+                window,
                 "-P",
                 "-F",
                 "#{pane_id}",
                 shlex.join(follow_cmd),
             ).strip()
             _tmux("select-pane", "-t", pane_id, "-T", f"{LANE_TITLE_PREFIX}{slug}")
-            _tmux("select-layout", "-t", TMUX_WINDOW, "tiled")
+            _tmux("select-layout", "-t", window, "tiled")
         for pane_id in retire:
             slug = panes[pane_id].removeprefix(LANE_TITLE_PREFIX)
             _tmux("select-pane", "-t", pane_id, "-T", f"{DONE_TITLE_PREFIX}{slug}")
@@ -545,9 +574,10 @@ def cmd_tmux(args: argparse.Namespace) -> int:
     if shutil.which("tmux") is None:
         print("error: tmux not found on PATH", file=sys.stderr)
         return 2
+    session = tmux_session(args.state_root)
     has_session = (
         subprocess.run(
-            ["tmux", "has-session", "-t", TMUX_SESSION], capture_output=True
+            ["tmux", "has-session", "-t", session], capture_output=True
         ).returncode
         == 0
     )
@@ -557,16 +587,16 @@ def cmd_tmux(args: argparse.Namespace) -> int:
             "new-session",
             "-d",
             "-s",
-            TMUX_SESSION,
+            session,
             "-n",
             "lanes",
             shlex.join(manage_cmd),
         )
         # Dead lane panes stay visible ([exited]) instead of vanishing mid-glance;
         # titled borders are how you tell lanes apart.
-        _tmux("set-option", "-t", TMUX_SESSION, "remain-on-exit", "on")
-        _tmux("set-option", "-t", TMUX_SESSION, "pane-border-status", "top")
-    os.execvp("tmux", ["tmux", "attach", "-t", TMUX_SESSION])
+        _tmux("set-option", "-t", session, "remain-on-exit", "on")
+        _tmux("set-option", "-t", session, "pane-border-status", "top")
+    os.execvp("tmux", ["tmux", "attach", "-t", session])
     raise AssertionError("unreachable: execvp does not return")
 
 
