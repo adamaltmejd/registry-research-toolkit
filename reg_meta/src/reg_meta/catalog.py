@@ -483,6 +483,10 @@ class VariableState(_CatalogModel):
     # by edition. Variable-grain `ResolvedVariable.source_register_text` stays
     # populated only when the source text is stable for the variable.
     source_register_text: str | None
+    # State-grain operational definition (#736). Parallel same-period
+    # multi-response members may share one variable/value set while each delivery
+    # column has its own meaning.
+    operational_definition: str | None = None
     # Overlap discriminator (see reg_meta_build/DESIGN.md → Build-time triage (SCB); multi-vintage / grain / coding). NOT NULL
     # DEFAULT '' in the DDL, so '' means "no discriminator", not absent.
     value_set_version_label: str
@@ -1907,7 +1911,7 @@ class Catalog:
             rows = self._conn.execute(
                 "SELECT vs.state_id, vs.register_variant_id, vs.data_type, "
                 "vs.data_length, vs.delivery_column_name, vs.source_register_text, "
-                "vs.value_set_id, "
+                "vs.operational_definition, vs.value_set_id, "
                 "vs.value_set_version_label, vs.valid_from, vs.valid_to, "
                 "v.is_identifier, c.slug AS classification_slug, "
                 "ccf.status AS conformance_status, "
@@ -1933,7 +1937,7 @@ class Catalog:
             rows = self._conn.execute(
                 "SELECT vs.state_id, vs.register_variant_id, vs.data_type, "
                 "vs.data_length, vs.delivery_column_name, vs.source_register_text, "
-                "vs.value_set_id, "
+                "vs.operational_definition, vs.value_set_id, "
                 "vs.value_set_version_label, vs.valid_from, vs.valid_to, "
                 "v.is_identifier, c.slug AS classification_slug, "
                 "ccf.status AS conformance_status, "
@@ -2049,6 +2053,7 @@ class Catalog:
             data_length=row["data_length"],
             delivery_column_name=row["delivery_column_name"],
             source_register_text=row["source_register_text"],
+            operational_definition=row["operational_definition"],
             value_set_version_label=row["value_set_version_label"],
             value_set_id=row["value_set_id"],
             value_set=self._value_set_codes(row["value_set_id"]),
@@ -2147,6 +2152,7 @@ class Catalog:
                             "delivery_column_name": col,
                             "valid_from": wfrom,
                             "valid_to": wto,
+                            "operational_definition": None,
                             "period_token": self._period_token_for_window(wfrom, wto),
                         }
                     )

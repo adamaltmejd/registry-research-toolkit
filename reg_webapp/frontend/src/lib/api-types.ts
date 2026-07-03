@@ -2485,6 +2485,8 @@ export interface components {
             delivery_column_name: string | null;
             /** Is Identifier */
             is_identifier: boolean;
+            /** Operational Definition */
+            operational_definition?: string | null;
             /** Period Token */
             period_token?: string | null;
             /** Register Variant Id */

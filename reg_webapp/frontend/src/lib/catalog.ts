@@ -2170,6 +2170,7 @@ export interface ValueSetTechnicalChange {
 export interface ValueSetVariantUsage {
   variant: string;
   spans: ValueSetSpan[];
+  states: VariableStateModel[];
 }
 
 /** One distinct value set across a variable's states — the dedup unit of the
@@ -2413,7 +2414,18 @@ export function distinctValueSets(
     const rep = group[0];
     const byVariant = statesByVariant(group);
     const usages: ValueSetVariantUsage[] = [...byVariant.entries()].map(
-      ([variant, ss]) => ({ variant, spans: collapseSpans(ss) }),
+      ([variant, ss]) => ({
+        variant,
+        spans: collapseSpans(ss),
+        states: [...ss].sort(
+          (a, b) =>
+            a.valid_from.localeCompare(b.valid_from) ||
+            (a.delivery_column_name ?? "").localeCompare(
+              b.delivery_column_name ?? "",
+            ) ||
+            a.state_id - b.state_id,
+        ),
+      }),
     );
     // The entry's outer window across ALL its states — the view's disambiguator
     // when several non-classification rows share a version label.

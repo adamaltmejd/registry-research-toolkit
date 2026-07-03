@@ -202,6 +202,49 @@ class TestResolveBinding:
             == "Avser personens registrerade kön vid årets slut."
         )
 
+    def test_state_operational_definition_flows_through_resolve(self) -> None:
+        # #736: state-grain operational definitions are distinct from the
+        # variable-level summary and must survive in `ResolvedVariable.states`.
+        conn = build_slugged_db()
+        conn.execute(
+            "UPDATE variable_state SET operational_definition = ? "
+            "WHERE variable_id = (SELECT variable_id FROM variable WHERE slug = 'kon')",
+            ("Avser just denna leveranskolumn.",),
+        )
+        conn.commit()
+        r = Catalog(conn).resolve("scb/lisa/kon")
+        assert isinstance(r, ResolvedVariable)
+        assert r.operational_definition is None
+        assert r.states[0].operational_definition == "Avser just denna leveranskolumn."
+
+    def test_alias_window_expansion_suppresses_base_state_operational_definition(
+        self,
+    ) -> None:
+        # #736: alias-window expansion clones one stored base state into several
+        # delivery-column windows. `variable_alias_window` has no per-window
+        # operational-definition field, so reusing the base state text would
+        # misdescribe the expanded aliases.
+        conn = build_slugged_db()
+        conn.execute(
+            "UPDATE variable_state SET operational_definition = ? "
+            "WHERE variable_id = (SELECT variable_id FROM variable WHERE slug = 'kon')",
+            ("Base state text must not leak to expanded aliases.",),
+        )
+        conn.executemany(
+            "INSERT INTO variable_alias_window ("
+            "variable_id, register_variant_id, delivery_column_name, valid_from, valid_to"
+            ") VALUES ((SELECT variable_id FROM variable WHERE slug = 'kon'), 10, ?, ?, ?)",
+            [
+                ("Kon", "2018-01-01", "2018-01-31"),
+                ("Kon_feb", "2018-02-01", "2018-02-28"),
+            ],
+        )
+        conn.commit()
+        r = Catalog(conn).resolve("scb/lisa/kon")
+        assert isinstance(r, ResolvedVariable)
+        assert [s.delivery_column_name for s in r.states] == ["Kon", "Kon_feb"]
+        assert [s.operational_definition for s in r.states] == [None, None]
+
     def test_deprecated_flag_flows_through_resolve(self) -> None:
         conn = build_slugged_db()
         r = Catalog(conn).resolve("scb/lisa/kon")

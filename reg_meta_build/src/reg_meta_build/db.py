@@ -584,6 +584,10 @@ CREATE TABLE variable_state (
     data_length TEXT,
     delivery_column_name TEXT,
     source_register_text TEXT,
+    -- Per-state delivery-column meaning (#736). Parallel same-period
+    -- multi-response members can share one variable and value set while each
+    -- column carries a distinct SCB `VariabelOperationell_definition`.
+    operational_definition TEXT,
     value_set_id INTEGER REFERENCES value_set(value_set_id),
     -- Overlap discriminator (multi-vintage / grain / coding). NOT NULL
     -- DEFAULT '' so the uniqueness index below bites in the common
@@ -3125,11 +3129,12 @@ def _reinsert_core_graph_from_ir(
         "INSERT INTO variable_state "
         "(state_id, variable_id, register_variant_id, valid_from, valid_to, "
         " data_type, data_length, delivery_column_name, source_register_text, "
-        " value_set_id, "
+        " operational_definition, value_set_id, "
         " value_set_version_label, classification_id) "
         "VALUES (:state_id, :variable_id, :register_variant_id, :valid_from, "
         " :valid_to, :data_type, :data_length, :delivery_column_name, "
-        " :source_register_text, :value_set_id, :value_set_version_label, NULL)",
+        " :source_register_text, :operational_definition, :value_set_id, "
+        " :value_set_version_label, NULL)",
         [
             {
                 "state_id": s.state_id,
@@ -3143,6 +3148,7 @@ def _reinsert_core_graph_from_ir(
                 "data_length": s.data_length,
                 "delivery_column_name": s.delivery_column_name,
                 "source_register_text": s.source_register_text,
+                "operational_definition": s.operational_definition,
                 "value_set_id": s.value_set_id,
                 "value_set_version_label": s.value_set_version_label or "",
             }
@@ -3832,11 +3838,12 @@ def _resolve_curated_codeless_overlaps(
                     "INSERT INTO variable_state (state_id, variable_id, "
                     "register_variant_id, valid_from, valid_to, data_type, "
                     "data_length, delivery_column_name, source_register_text, "
-                    "value_set_id, "
+                    "operational_definition, value_set_id, "
                     "value_set_version_label, classification_id) "
                     "SELECT ?, variable_id, register_variant_id, ?, ?, data_type, "
-                    "data_length, delivery_column_name, source_register_text, NULL, "
-                    "value_set_version_label, classification_id "
+                    "data_length, delivery_column_name, source_register_text, "
+                    "operational_definition, NULL, value_set_version_label, "
+                    "classification_id "
                     "FROM variable_state WHERE state_id = ?",
                     (twin_id, span_from, span_to, state_id),
                 )

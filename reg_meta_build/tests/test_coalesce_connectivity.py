@@ -150,6 +150,7 @@ class TestAutoCaseFoldBuild:
                 year="2020",
                 regver_id=600,
                 data_length="3",
+                varopdef="Three-level response member",
             ),
             _var_row(
                 colname="Nivå",
@@ -159,6 +160,7 @@ class TestAutoCaseFoldBuild:
                 year="2020",
                 regver_id=600,
                 data_length="3",
+                varopdef="Two-level response member",
             ),
         ]
         vm = vm_rows(5201, "Tre grupper", CODING_A) + vm_rows(
@@ -168,17 +170,26 @@ class TestAutoCaseFoldBuild:
         try:
             rows = conn.execute(
                 "SELECT vs.delivery_column_name, vs.variable_id, vs.value_set_id, "
-                "       vs.value_set_version_label "
+                "       vs.value_set_version_label, vs.operational_definition "
                 "FROM variable_state vs JOIN variable v ON v.variable_id = vs.variable_id "
                 "WHERE v.provider_key = '520' AND vs.value_set_id IS NOT NULL"
             ).fetchall()
             n_vars = _n_vars(conn, 520)
+            var_op = conn.execute(
+                "SELECT operational_definition FROM variable "
+                "WHERE register_id = 1 AND provider_key = '520'"
+            ).fetchone()[0]
         finally:
             conn.close()
         assert n_vars == 1  # stem-folded into one variable, not split, not lost
+        assert var_op is None
         assert {r[0] for r in rows} == {"Niva", "Nivå"}  # both columns shipped
         assert len({r[2] for r in rows}) == 2  # both codings survive
         assert len({r[3] for r in rows}) == 2  # discriminated by label
+        assert {r[0]: r[4] for r in rows} == {
+            "Niva": "Three-level response member",
+            "Nivå": "Two-level response member",
+        }
 
 
 class TestEraRenameTwinSplits:
