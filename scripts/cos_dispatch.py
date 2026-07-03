@@ -204,25 +204,10 @@ def _load_gh() -> ModuleType:
 _gh = _load_gh()
 _cos_preflight = _gh.load_sibling("cos_preflight")
 _gh_issue = _gh.load_sibling("gh_issue")
-
-
-def _load_check_issue_hygiene() -> ModuleType:
-    # Spec-load the sibling hygiene checker (same importlib idiom) SOLELY to reuse its
-    # `parse_touches` fenced-block parser — the visual-lane guard must read a `touches`
-    # block exactly as the tracker/sequencer do, and re-pasting that parser is this repo's
-    # named leaf-duplication anti-pattern. check_issue_hygiene only spec-loads `_gh` at
-    # import (no live `gh` at module load), so the load is cheap and side-effect-free.
-    spec = importlib.util.spec_from_file_location(
-        "check_issue_hygiene", Path(__file__).with_name("check_issue_hygiene.py")
-    )
-    assert spec and spec.loader
-    module = importlib.util.module_from_spec(spec)
-    sys.modules[spec.name] = module
-    spec.loader.exec_module(module)
-    return module
-
-
-_check_issue_hygiene = _load_check_issue_hygiene()
+# check_issue_hygiene SOLELY to reuse its `parse_touches` fenced-block parser — the
+# visual-lane guard must read a `touches` block exactly as the tracker/sequencer do, and
+# re-pasting that parser is this repo's named leaf-duplication anti-pattern.
+_check_issue_hygiene = _gh.load_sibling("check_issue_hygiene")
 
 # The rendered-UI surface whose visual merge gate needs a real browser. codex's seatbelt
 # has a fixed mach-lookup allowlist with no mach-register grant and no config knob, so

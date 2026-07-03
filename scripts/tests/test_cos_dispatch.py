@@ -479,9 +479,9 @@ def test_reused_cos_preflight_helpers_are_the_real_hoist(tmp_path: Path) -> None
     assert callable(pre.default_slots_root)
     assert isinstance(pre.DEFAULT_MAX_SLOTS, int)
     # Behavior parity on a shared tmp ledger: cos_dispatch's budget path (busy count via
-    # cos_preflight.scan_slots) and a direct scan_slots call must agree. The two module
-    # loads (this suite's `cpf` vs cos_dispatch's `_cos_preflight`) make `is`-identity
-    # fragile, so we pin parity-by-behavior instead.
+    # cos_preflight.scan_slots) and a direct scan_slots call must agree. We pin
+    # parity-by-behavior rather than identity — the reuse contract is that the same
+    # scan_slots logic drives both paths, not merely that they share a module object.
     slots_root = tmp_path / "pipeline-slots"
     _write_slot(slots_root, "lane-a")
     _write_slot(slots_root, "lane-b")
