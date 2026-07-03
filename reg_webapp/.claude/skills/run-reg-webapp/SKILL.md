@@ -182,3 +182,11 @@ the Playwright browser project).
   driver now waits via `settled()`), or raise its 10s timeout.
 - Backend exits at boot complaining about the DB/schema → no resolvable reg_meta DB, or
   one with a stale `SCHEMA_VERSION`; install/refresh per Prerequisites.
+- Chromium fails to launch with `bootstrap_check_in … Permission denied (1100)` (the
+  `MachPortRendezvousServer` signature) → either a transient Mach rendezvous-name
+  collision, or a sandboxed agent shell (codex `workspace-write` seatbelt, Claude Code's
+  sandboxed Bash) with no mach-register grant. `dev.sh smoke` / `shot` self-heal via the
+  driver's staged relaunch (normal retry, then `--single-process`) — stderr says which
+  stage rendered; single-process is the sandboxed-shell mode (issue #1049). In a
+  sandboxed shell, prefer `dev.sh smoke` / `shot` over `preview_start` — the preview
+  path has no such fallback.
