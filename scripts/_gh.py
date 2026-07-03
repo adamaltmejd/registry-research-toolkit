@@ -9,6 +9,11 @@ the note in `plan_sequence.py` named for lifting them into a shared module. The
 issue-domain parsers (label sets, the relationship/touches regexes) stay in
 `check_issue_hygiene.py`, still shared by only two consumers.
 
+`run_tolerant` is the non-zero-tolerant counterpart to `run`: it hands back the
+`CompletedProcess` (a non-zero exit is a signal the caller inspects, not a fatal error)
+and only SystemExits on a MISSING executable. Lifted out of `cos_preflight.py`, whose
+`git`/`gh`/sibling-probe calls all read a meaningful non-zero exit.
+
 The corpus-fetch plumbing lives here too — `FETCH_CAP` (the list-fetch ceiling) and
 `_warn_if_truncated` (its overflow warning) are domain-neutral and shared by both
 `check_issue_hygiene.py` and `gh_issue.py`; `check_issue_hygiene.py` re-exports them so
@@ -41,6 +46,22 @@ def run(cmd: list[str]) -> str:
         sys.stderr.write(f"command failed: {' '.join(cmd)}\n{proc.stderr}\n")
         raise SystemExit(2)
     return proc.stdout
+
+
+def run_tolerant(cmd: list[str]) -> subprocess.CompletedProcess[str]:
+    """Run `cmd`, tolerate a non-zero exit, and hand back the CompletedProcess.
+
+    Unlike `run` (which fatally SystemExits on non-zero), a non-zero exit here is a normal
+    signal the caller inspects — `cos_preflight.py` runs `git`/`gh`/sibling probes whose
+    non-zero exits carry meaning (a lane-freshness verdict, an absent ref) rather than a
+    fatal error. Only a MISSING executable is fatal: it maps to SystemExit with an
+    actionable `missing executable` message so a broken PATH surfaces as a setup error
+    instead of an uncaught traceback.
+    """
+    try:
+        return subprocess.run(cmd, capture_output=True, text=True)
+    except FileNotFoundError as exc:
+        raise SystemExit(f"missing executable {cmd[0]!r}: {exc}") from exc
 
 
 def gh_json(args: list[str]) -> Any:

@@ -71,6 +71,17 @@ idle auto-advance path. The watcher's fast tier (cos_watch.py) sees the same led
 transitions from emission text alone for low latency; this probe re-observes them
 durably (at-least-once) even if a session misses a fast-tier emission.
 
+Fork-PR trust gate (this repo is public): a PR from a branch outside this repository
+carries untrusted text and an untrusted `Closes #N`, so its per-PR summary is stripped to
+`{number, fork: true, author, draft}` — NEITHER its title/body nor its closing claims
+enter the snapshot the chief-of-staff model reads, and it never fetches the Codex signal
+or reaches a ready/draft/stale bucket. The only load-bearing signal on a fork is
+provenance: a fork PR can never write the local gate store (only local agents can), so a
+gate entry for one is an error — it is flagged (`gate_present: true`) and surfaced as a
+distinct wake reason so the chief refuses and investigates rather than merging. A plain
+fork's appearance/disappearance is visible via its own named reason (how the chief learns
+it exists) without its content ever being ingested. Own-branch PR summaries are unchanged.
+
 It does not make coordination decisions, edit issues, merge PRs, or run the dev
 preview. It only decides whether a real chief-of-staff tick is worth spending tokens on.
 """
@@ -82,7 +93,6 @@ import hashlib
 import importlib.util
 import json
 import os
-import subprocess
 import sys
 from datetime import UTC, datetime
 from pathlib import Path
@@ -92,7 +102,7 @@ from typing import Any
 WAKE_EXIT = 10
 # Bump whenever the snapshot dict shape changes; load_state treats a mismatch as first-run
 # so a schema change re-baselines cleanly instead of comparing incompatible shapes.
-SNAPSHOT_VERSION = 4
+SNAPSHOT_VERSION = 5
 DEFAULT_CANONICAL = Path("/Users/adam/Code/registry-research-toolkit")
 PASSING_CONCLUSIONS = {"SUCCESS", "SKIPPED", "NEUTRAL"}
 NO_STATUS_CHANGES = "projection delta:\nno status changes"
@@ -102,13 +112,26 @@ NO_STATUS_CHANGES = "projection delta:\nno status changes"
 DEFAULT_MAX_SLOTS = 3
 DEFAULT_SLOT_STALE_HOURS = 24.0
 
-_PLAN_SPEC = importlib.util.spec_from_file_location(
-    "plan_sequence", Path(__file__).with_name("plan_sequence.py")
-)
-assert _PLAN_SPEC and _PLAN_SPEC.loader
-_plan_sequence = importlib.util.module_from_spec(_PLAN_SPEC)
-sys.modules[_PLAN_SPEC.name] = _plan_sequence
-_PLAN_SPEC.loader.exec_module(_plan_sequence)
+
+def _load_sibling(name: str) -> Any:
+    # Sibling scripts load each other via importlib spec (not a plain import) so they
+    # resolve under `uv run --no-project python scripts/<name>.py` and spec-loaded pytest
+    # alike, regardless of sys.path — the same idiom gh_issue.py uses for _gh.py.
+    spec = importlib.util.spec_from_file_location(
+        name, Path(__file__).with_name(f"{name}.py")
+    )
+    assert spec and spec.loader
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+_plan_sequence = _load_sibling("plan_sequence")
+_gh = _load_sibling("_gh")
+# gh_issue.is_own_pr is the single fail-closed fork predicate (only isCrossRepository is
+# False is own-branch); reuse it rather than re-implementing the check here.
+gh_issue = _load_sibling("gh_issue")
 DEFAULT_PR_FETCH_CAP = getattr(_plan_sequence, "FETCH_CAP", 5000)
 
 # plan_sequence.py --tick prints a deterministic `lanes: <verdict>` line on stderr and
@@ -124,13 +147,10 @@ PLAN_TICK_SENTINELS = {
 }
 
 
-def run_cmd(cmd: list[str]) -> subprocess.CompletedProcess[str]:
-    try:
-        return subprocess.run(cmd, capture_output=True, text=True)
-    except FileNotFoundError as exc:
-        raise SystemExit(
-            f"missing executable for cos-preflight command {cmd[0]!r}: {exc}"
-        ) from exc
+# Run-a-command-tolerating-non-zero: the shared _gh.run_tolerant primitive (a missing
+# executable maps to a `missing executable` SystemExit; a non-zero exit is handed back for
+# the caller to inspect). Bound at module level so tests can still monkeypatch cpf.run_cmd.
+run_cmd = _gh.run_tolerant
 
 
 def require_canonical(canonical: Path | None) -> None:
@@ -370,6 +390,31 @@ def normalize_reviews(reviews: list[dict[str, Any]]) -> list[dict[str, str | Non
 def summarize_pr(
     raw: dict[str, Any], current_repo: str, gate_root: Path
 ) -> dict[str, Any]:
+    if not gh_issue.is_own_pr(raw):
+        # Fork PR (this repo is public): its title/body are untrusted text and its
+        # `Closes #N` is an untrusted claim on this repo's issues, so NEITHER may enter the
+        # snapshot the chief-of-staff model reads. Surface only the number, author login,
+        # and a fork flag — enough for the chief to learn the fork PR exists (appearance /
+        # disappearance) without ingesting attacker-controlled content. Skip the
+        # closing-claim computation entirely (issue-holdout DoS) and never fetch the Codex
+        # signal or reach a ready/draft/stale bucket. read_merge_gate reads the LOCAL gate
+        # store (keyed by PR number + head, not untrusted text), so it is safe: a fork PR
+        # can never write it, so an entry is an error condition — flag it so actionable_
+        # reasons surfaces "refuse and investigate" rather than the chief merging a fork.
+        author = raw.get("author") or {}
+        fork_summary: dict[str, Any] = {
+            "number": raw["number"],
+            "fork": True,
+            "author": author.get("login"),
+            "draft": bool(raw.get("isDraft")),
+        }
+        gate_state = read_merge_gate(gate_root, raw["number"], raw["headRefOid"])[
+            "state"
+        ]
+        if gate_state != "absent":
+            fork_summary["gate_present"] = True
+        return fork_summary
+
     # The closing refs still come from the PR body (only the GATE moved to the local
     # store); the gate entry is now read from gate_root/pr-<N>/gate.json.
     body = raw.get("body") or ""
@@ -439,7 +484,7 @@ def fetch_pr_summaries(
             "--limit",
             str(limit),
             "--json",
-            "number,title,body,closingIssuesReferences,baseRefName,isDraft,mergeable,headRefOid,statusCheckRollup,latestReviews",
+            "number,title,body,author,isCrossRepository,closingIssuesReferences,baseRefName,isDraft,mergeable,headRefOid,statusCheckRollup,latestReviews",
         ]
     )
     if len(prs) >= limit:
@@ -573,11 +618,22 @@ def actionable_reasons(
     draft_ready: list[str] = []
     stale: list[str] = []
     unclaimed: list[str] = []
+    fork: list[str] = []
+    fork_gated: list[str] = []
     named: set[int] = set()  # PRs already called out by a named bucket below
     for pr in snapshot["prs"]:
         if pr["number"] not in changed:
             continue
-        if not pr.get("claimed", True):
+        if pr.get("fork"):
+            # Fork PR (untrusted, from a branch outside this repo): a gate entry for one
+            # can only be a provenance error — only local agents can write the gate store,
+            # so a fork can never self-certify — surface it distinctly so the chief refuses
+            # and investigates rather than merging. A plain fork gets its own named reason
+            # too (not the previous-gated generic one) so its first-run appearance is
+            # visible: it is how the chief learns a fork PR exists, and its text stayed out
+            # of the snapshot entirely.
+            bucket = fork_gated if pr.get("gate_present") else fork
+        elif not pr.get("claimed", True):
             # Unclaimed PR (no Closes ref, no gate entry): its own named reason, so a
             # first-run probe (where `changed` covers every PR) wakes for pre-existing
             # claim drift instead of the generic reason silently absorbing it into the
@@ -604,6 +660,13 @@ def actionable_reasons(
     if unclaimed:
         reasons.append(
             f"unclaimed open PR (no Closes, no gate entry): {', '.join(unclaimed)}"
+        )
+    if fork:
+        reasons.append(f"fork PR present (text ignored): {', '.join(fork)}")
+    if fork_gated:
+        reasons.append(
+            f"fork PR with merge-gate entry: {', '.join(fork_gated)}; "
+            "refuse and investigate"
         )
 
     if previous:
