@@ -53,12 +53,34 @@ _FORBIDDEN_RES = [
 # the same set and must trip too. The ONLY allowlisted form is the bounded
 # dedupe-before-filing `--search` lookup (documented in AGENTS.md's Issue tracker
 # section). So: any `gh issue list` line is forbidden UNLESS it carries `--search`.
+#
+# The `--search` exemption is scoped to the invocation's OWN argument span — from the
+# `gh issue list` match to the end of that shell command — so a trailing `# ... --search`
+# comment or downstream prose can't suppress a real violation. The span terminates at
+# whatever ends the command as skill markdown actually writes them: a `#` comment start,
+# an unescaped command separator (`|`, `&&`, `;`), a closing backtick for inline code, or
+# end of line. This is a deliberately conservative "arguments segment" cut, not a shell
+# parser.
 _ISSUE_LIST_RE = re.compile(r"\bgh issue list\b")
 _SEARCH_RE = re.compile(r"--search\b")
+# Terminators that end the `gh issue list` invocation's argument span.
+_ARG_SPAN_END_RE = re.compile(r"[#`|;]|&&")
+
+
+def _issue_list_arg_span(line: str, start: int) -> str:
+    """Text of the `gh issue list` invocation's own arguments, from ``start``.
+
+    Stops at the first command terminator (comment, closing backtick, pipe/`&&`/`;`) so
+    `--search` mentioned after the command (comment or prose) doesn't exempt it.
+    """
+    rest = line[start:]
+    end = _ARG_SPAN_END_RE.search(rest)
+    return rest[: end.start()] if end else rest
 
 
 def _is_forbidden(line: str) -> bool:
-    if _ISSUE_LIST_RE.search(line) and not _SEARCH_RE.search(line):
+    m = _ISSUE_LIST_RE.search(line)
+    if m and not _SEARCH_RE.search(_issue_list_arg_span(line, m.end())):
         return True
     return any(rx.search(line) for rx in _FORBIDDEN_RES)
 
@@ -101,6 +123,8 @@ def test_allowlisted_reads_do_not_trip() -> None:
     # ingestion — they must NOT be flagged.
     allowed = [
         'gh issue list --state all --search "<keywords>"',
+        # `--search` inside the invocation's own arg span before a pipe still exempts it.
+        'gh issue list --search "x" | head',
         "gh issue edit <n> --parent <epic>",
         "gh issue create --title ...",
         "gh issue comment <n> --body ...",
@@ -125,6 +149,14 @@ def test_allowlisted_reads_do_not_trip() -> None:
         "gh issue list --limit 5000",
         "gh issue list",
         "gh issue list --state all --json number",  # non-search filters don't exempt it
+        # a trailing comment mentioning --search must NOT exempt the bare command — the
+        # exemption is scoped to the invocation's own arg span (closes the suffix bypass)
+        "gh issue list --state open  # use --search instead",
+        # `--search` in a SEPARATE backticked fragment (prose), not the command's own
+        # args, doesn't exempt: the closing backtick terminates the arg span. Preserves
+        # the "prose mention of the command is a hit" intent already asserted for
+        # `gh issue view` in prose above.
+        "prefer `gh issue list` over the `--search` form when enumerating",
         # newly-forbidden ingestion forms
         "gh api repos/{owner}/{repo}/issues/{n}",
         "gh api repos/{owner}/{repo}/issues/{n}/comments",
