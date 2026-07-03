@@ -403,7 +403,10 @@ have edited a PR body with the maintainer's credentials; the gate defends agains
 process skew, not against malicious local code.) After a verified merge, the
 chief-of-staff archives the PR's gate directory under `merge-gates/merged/` — the PR
 carries no evidence, so the archive IS the audit trail for post-merge regressions; prune
-entries whose PR closed without merging.
+entries whose PR closed without merging — but before deleting one, check for a
+`followups.md` and, if present with unprocessed entries, file them via `/file-issue` (or
+report them) rather than silently dropping them, since a lane's final PR can close
+without merging.
 
 - **Independent review** — every PR gets at least one review independent of its author.
   For small, low-risk PRs the Codex/Copilot bot reviews can be enough; larger or riskier

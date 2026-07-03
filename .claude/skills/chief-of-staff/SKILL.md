@@ -429,11 +429,13 @@ existing issue is not filed). Collect the filed issue numbers for the tick repor
 malformed, report it — never silently drop a follow-up. Then move the merged PR's gate
 directory to `merge-gates/merged/pr-<N>/` — the PR deliberately carries no evidence, so
 this archive is the audit trail if the merge later shows a regression. Prune (delete)
-gate directories whose PR closed without merging. In the same breath, release the
-pipeline slot whose `prs` are now all merged/closed (see Pipeline slots) — that freed
-slot is what triggers the watcher's next `dispatch:` recommendation. For a stack,
-re-check the next PR's head, checks, bot signal, mergeability, evidence, and gate entry
-before merging it.
+gate directories whose PR closed without merging — but before deleting one, check for a
+`followups.md`, and if present with unprocessed entries, file them via `/file-issue` (or
+report them) rather than silently dropping them, since a lane's final PR can close
+without merging. In the same breath, release the pipeline slot whose `prs` are now all
+merged/closed (see Pipeline slots) — that freed slot is what triggers the watcher's next
+`dispatch:` recommendation. For a stack, re-check the next PR's head, checks, bot
+signal, mergeability, evidence, and gate entry before merging it.
 
 ## Self-serve build-db verification
 

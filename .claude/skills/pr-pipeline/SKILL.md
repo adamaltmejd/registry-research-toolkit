@@ -458,8 +458,8 @@ Then end with a **report**:
    `Part of #<epic>`, any `Blocked by`), and a `touches` block when it'll change code
    (it feeds the sequencing projection's parallel-safety). The pipeline **never files
    directly**. It ALWAYS persists these drafts to the lane's final-PR `followups.md`
-   (Step E contract) — so a detached / auto-dispatched run loses nothing and
-   chief-of-staff files them at merge via `/file-issue`. In an **interactive** session,
-   additionally list them and offer to file the ones the human picks immediately via
-   `/file-issue`. Say "none" if the change is fully self-contained (and write no
-   `followups.md`).
+   (format: the Follow-ups note in Step E) — so a detached / auto-dispatched run loses
+   nothing and chief-of-staff files them at merge via `/file-issue`. In an
+   **interactive** session, additionally list them and offer to file the ones the human
+   picks immediately via `/file-issue`. Say "none" if the change is fully self-contained
+   (and write no `followups.md`).

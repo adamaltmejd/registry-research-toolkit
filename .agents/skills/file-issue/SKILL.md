@@ -49,10 +49,9 @@ relationships.
    form above and `gh_issue.py view` are the only allowed reads. If the search hits a
    genuine match, do NOT file — report the existing issue URL instead.
 
-2. **Exactly one area label** — `reg_meta`, `reg_meta_build`, `reg_schema`,
-   `reg_webapp`, `reg_monabundle`, `mock_data_wizard`, or `cross-package` — **and
-   exactly one type label** — `enhancement`, `bug`, or `documentation`. More or fewer
-   than one of either is a refusal.
+2. **Exactly one area label and exactly one type label** — the canonical lists live in
+   the AGENTS.md **Issue tracker** section (enforced by
+   `scripts/check_issue_hygiene.py`). More or fewer than one of either is a refusal.
 
 3. **A `Relationships` block wiring the issue to its origin** — at minimum a
    `Follow-up to #N` (the PR's closed issue) or `Part of #<epic>`, plus any
