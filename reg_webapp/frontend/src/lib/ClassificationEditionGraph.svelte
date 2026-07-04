@@ -29,6 +29,41 @@ interface DagCluster {
   height: number;
 }
 
+function scrollActiveEdition(
+  node: HTMLElement,
+  active: boolean,
+): { update: (next: boolean) => void; destroy: () => void } {
+  let frame: number | null = null;
+  const scroll = () => {
+    frame = null;
+    if (active) {
+      node.scrollIntoView({ block: "nearest", inline: "center" });
+    }
+  };
+  const queue = () => {
+    if (frame != null) {
+      cancelAnimationFrame(frame);
+    }
+    frame = requestAnimationFrame(scroll);
+  };
+  if (active) {
+    queue();
+  }
+  return {
+    update(next: boolean) {
+      active = next;
+      if (active) {
+        queue();
+      }
+    },
+    destroy() {
+      if (frame != null) {
+        cancelAnimationFrame(frame);
+      }
+    },
+  };
+}
+
 const dagClusters = $derived.by((): DagCluster[] => {
   const resolved = resolveEdges(graph);
   const edgeEndpointIds = new Set<string>();
@@ -158,10 +193,12 @@ function editionLabel(node: ClassificationGraphNode): string {
               {@const node = item.point.node}
               {@const href = editionHref(node)}
               {@const focused = node.id === graph.focus_id}
+              {@const active = focused || (graph.focus_id == null && node.is_current)}
               <div
                 class="edition-node"
                 class:focused
                 class:current={node.is_current}
+                use:scrollActiveEdition={active}
                 style={`left:${nodeLeft(item)}px; top:${nodeTop(item)}px;`}
                 aria-label={editionLabel(node)}
               >
