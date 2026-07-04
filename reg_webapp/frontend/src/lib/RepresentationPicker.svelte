@@ -979,7 +979,7 @@ function graphCoversEveryPickerRow(g: RelationshipGraph): boolean {
   }
 
   for (const node of nodes) {
-    if (graphMemberHrefs != null && graphBandForNode(node) == null) {
+    if (graphMemberHrefs != null && graphOriginalBandForNode(node) == null) {
       return false;
     }
     const originalBand = graphOriginalBandForNode(node);
@@ -1031,15 +1031,24 @@ function graphCoversEveryPickerRow(g: RelationshipGraph): boolean {
   );
 }
 
+function graphHasDrawableContext(g: RelationshipGraph): boolean {
+  if (resolveEdges(g).length > 0) {
+    return true;
+  }
+  return (
+    graphMemberHrefs == null &&
+    variableGraphNodes(g).some((node) => node.same_as.length > 0)
+  );
+}
+
 function graphFitsPicker(g: RelationshipGraph): boolean {
   const variableNodes = variableGraphNodes(g);
   const cellCount = variableNodes.reduce(
     (n, node) => n + cellsOf(node).length,
     0,
   );
-  const resolvedEdgeCount = resolveEdges(g).length;
   return (
-    resolvedEdgeCount > 0 &&
+    graphHasDrawableContext(g) &&
     g.nodes.length === variableNodes.length &&
     g.nodes.length <= GRAPH_MAX_NODES &&
     g.edges.length <= GRAPH_MAX_EDGES &&
@@ -1051,8 +1060,33 @@ function graphFitsPicker(g: RelationshipGraph): boolean {
 }
 
 const useGraphMode = $derived(graph != null && graphFitsPicker(graph));
+const graphRenderGraph = $derived.by((): RelationshipGraph | null => {
+  if (!useGraphMode || !graph) {
+    return null;
+  }
+  if (graphMemberHrefs == null) {
+    return graph;
+  }
+  const visibleNodeIds = new Set(
+    variableGraphNodes(graph)
+      .filter((node) => graphBandForNode(node) != null)
+      .map((node) => node.id),
+  );
+  return {
+    ...graph,
+    nodes: graph.nodes.filter((node) => visibleNodeIds.has(node.id)),
+    edges: graph.edges.filter(
+      (edge) =>
+        visibleNodeIds.has(edge.source) && visibleNodeIds.has(edge.target),
+    ),
+    focus_id:
+      graph.focus_id != null && visibleNodeIds.has(graph.focus_id)
+        ? graph.focus_id
+        : null,
+  };
+});
 const graphScale = $derived<YearScale | null>(
-  useGraphMode && graph ? yearScaleOf(graph, vintageYear) : null,
+  graphRenderGraph ? yearScaleOf(graphRenderGraph, vintageYear) : null,
 );
 const graphTrackInnerW = $derived(graphTrackInnerWidthForScale(graphScale));
 const graphTrackW = $derived(graphTrackInnerW + GRAPH_TRACK_PAD * 2);
@@ -1092,10 +1126,10 @@ function graphLaneHeight(rowCount: number): number {
 }
 
 const graphClusters = $derived.by((): GraphRenderCluster[] => {
-  if (!useGraphMode || !graph) {
+  if (!graphRenderGraph) {
     return [];
   }
-  const clusters = clustersOf(graph, graphScale);
+  const clusters = clustersOf(graphRenderGraph, graphScale);
   const out = clusters.map((cluster) => {
     let top = 0;
     const lanes = cluster.nodes.map((rn) => {
@@ -1119,7 +1153,7 @@ const graphClusters = $derived.by((): GraphRenderCluster[] => {
       clusterOfNode.set(rn.node.id, i);
     }
   });
-  for (const edge of resolveEdges(graph)) {
+  for (const edge of resolveEdges(graphRenderGraph)) {
     const source = clusterOfNode.get(edge.source.id);
     const target = clusterOfNode.get(edge.target.id);
     if (source !== undefined && source === target) {
@@ -1210,7 +1244,10 @@ function graphLaneItems(rn: RenderNode): GraphLaneItem[] {
     if (match) {
       matchedRows.add(rowKey(match.band, match.row));
       items.push({ kind: "cell", cell, match, index, rowIndex: cell.row });
-    } else if (graphMemberHrefs == null && (!band || band.rows.length === 0)) {
+    } else if (
+      graphMemberHrefs == null &&
+      (!band || band.rows.length === 0 || cell.columns.length === 0)
+    ) {
       items.push({
         kind: "cell",
         cell,

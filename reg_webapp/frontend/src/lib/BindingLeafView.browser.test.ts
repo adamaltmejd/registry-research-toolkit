@@ -396,6 +396,49 @@ describe("BindingLeafView representation picker (#678)", () => {
     });
   });
 
+  it("renders same_as-only graph context after the standalone graph removal", async () => {
+    vi.mocked(getBindingGraph).mockResolvedValue({
+      nodes: [
+        {
+          kind: "variable",
+          id: "v1",
+          fqid: "scb/lisa/kon",
+          label: "Kön",
+          group_key: null,
+          group_label: null,
+          definition: null,
+          description: null,
+          operational_definition: null,
+          facets: [],
+          states: [],
+          same_as: [{ fqid: "scb/lisa/kon-alias", register: "lisa_old" }],
+        },
+      ],
+      edges: [],
+      focus_id: "v1",
+    } as RelationshipGraph as never);
+
+    render(BindingLeafView, {
+      fqidPath: "scb/lisa/kon",
+      node: node(single),
+      ...SEED,
+      vintageYear: 2024,
+    });
+
+    await vi.waitFor(() => {
+      const graphText =
+        document.querySelector(".rep-picker .graph-picker")?.textContent ?? "";
+      if (!graphText.includes("also in") || !graphText.includes("lisa_old")) {
+        throw new Error(`same_as graph context not rendered: ${graphText}`);
+      }
+    });
+    expect(document.querySelector(".col-list")).toBeNull();
+    const aliasLink = document.querySelector<HTMLAnchorElement>(
+      '.graph-sa-chip[href="/catalog/scb/lisa/kon-alias"]',
+    );
+    expect(aliasLink?.textContent).toBe("lisa_old");
+  });
+
   it("does not clamp open-ended graph timelines to the steward period ceiling", async () => {
     const openEnded = graph({
       states: [

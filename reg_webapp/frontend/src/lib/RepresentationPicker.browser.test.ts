@@ -488,6 +488,80 @@ describe("RepresentationPicker graph mode (#904)", () => {
     expect(document.body.textContent).toContain("No columns");
   });
 
+  it("renders uncolumned leaf graph cells beside selectable cells", async () => {
+    const aFqid = "scb/lisa/mixed";
+    const bFqid = "scb/lisa/mixed-next";
+    render(RepresentationPicker, {
+      bands: [
+        {
+          key: aFqid,
+          name: "Mixed leaf",
+          registerPrefix: "scb/lisa",
+          rows: [
+            row({
+              column: "COL",
+              from: "2000-01-01",
+              to: "2009-12-31",
+              windows: [{ from: "2000-01-01", to: "2009-12-31" }],
+              period: "2000 – 2009",
+            }),
+          ],
+        } satisfies PickerBand,
+      ],
+      graph: graph({
+        nodes: [
+          graphNode(aFqid, {
+            states: [
+              graphState({
+                delivery_column_name: "COL",
+                valid_from: "2000-01-01",
+                valid_to: "2009-12-31",
+              }),
+              graphState({
+                state_id: 2,
+                representation_run_id: 2,
+                delivery_column_name: null,
+                value_set_version_label: "uncolumned coding",
+                valid_from: "2010-01-01",
+                valid_to: "2020-12-31",
+              }),
+            ],
+          }),
+          graphNode(bFqid, {
+            states: [
+              graphState({
+                state_id: 3,
+                representation_run_id: 3,
+                delivery_column_name: null,
+                value_set_version_label: "successor context",
+                valid_from: "2021-01-01",
+                valid_to: null,
+              }),
+            ],
+          }),
+        ],
+        edges: [edge(aFqid, bFqid)],
+        focus_id: aFqid,
+      }),
+      ...PROPS,
+    });
+
+    await vi.waitFor(() => {
+      if (!document.querySelector(".graph-picker")) {
+        throw new Error("graph picker not rendered");
+      }
+    });
+    await expect
+      .element(page.getByRole("checkbox", { name: /COL/ }))
+      .toBeVisible();
+    const unavailable = [
+      ...document.querySelectorAll<HTMLElement>(".graph-cell.unavailable"),
+    ].map((el) => el.textContent ?? "");
+    expect(unavailable.some((text) => text.includes("uncolumned coding"))).toBe(
+      true,
+    );
+  });
+
   it("dims folded graph cells by the cell's era, not the folded row span", async () => {
     const onapply = vi.fn();
     const aFqid = "scb/lisa/a";
@@ -836,7 +910,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
     expect(document.body.textContent).not.toContain("Hidden");
   });
 
-  it("falls back instead of rendering lanes for graph members hidden by filters", async () => {
+  it("keeps graph mode while hiding graph members removed by filters", async () => {
     const aFqid = "scb/lisa/a";
     const bFqid = "scb/lisa/b";
     render(RepresentationPicker, {
@@ -896,13 +970,17 @@ describe("RepresentationPicker graph mode (#904)", () => {
 
     clickFilter("Old");
     await vi.waitFor(() => {
-      if (!document.querySelector(".col-list")) {
-        throw new Error("list fallback not rendered");
+      const graphText =
+        document.querySelector(".graph-picker")?.textContent ?? "";
+      if (!graphText.includes("Acol") || graphText.includes("Bcol")) {
+        throw new Error(`filtered graph not ready: ${graphText}`);
       }
     });
-    expect(document.querySelector(".graph-picker")).toBeNull();
-    expect(visibleColumns()).toEqual(["Acol"]);
-    expect(document.body.textContent).not.toContain("Bcol");
+    expect(document.querySelector(".col-list")).toBeNull();
+    expect(document.querySelector(".graph-picker")).not.toBeNull();
+    await expect
+      .element(page.getByText("Showing 1 of 2 columns"))
+      .toBeVisible();
   });
 
   it("renders each graph cell's own era coding label", async () => {
