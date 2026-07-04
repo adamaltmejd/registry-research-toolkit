@@ -979,6 +979,9 @@ function graphCoversEveryPickerRow(g: RelationshipGraph): boolean {
   }
 
   for (const node of nodes) {
+    if (graphMemberHrefs != null && graphBandForNode(node) == null) {
+      return false;
+    }
     const originalBand = graphOriginalBandForNode(node);
     if (
       !originalBand &&
@@ -1931,6 +1934,7 @@ function codingsVaryHref(
   </div>
 {/snippet}
 
+{#if totalRows > 0 || useGraphMode}
 <div class="rep-picker">
   {#if dimensions.length > 0}
     <!-- The per-dimension filters sit ABOVE the picker surface (#908): they narrow the
@@ -2375,6 +2379,7 @@ function codingsVaryHref(
     </div>
   {/if}
 </div>
+{/if}
 
 <style>
   .rep-picker {

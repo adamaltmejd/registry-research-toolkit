@@ -749,6 +749,126 @@ describe("RepresentationPicker graph mode (#904)", () => {
     expect(onapply.mock.calls[0][0].adds[0].row.column).toBe("MEMBER");
   });
 
+  it("falls back when a group graph includes a non-member variable node", async () => {
+    const aFqid = "scb/lisa/a";
+    const bFqid = "scb/lisa/b";
+    const outsideFqid = "scb/lisa/outside";
+    render(RepresentationPicker, {
+      bands: [
+        {
+          key: aFqid,
+          name: "A",
+          registerPrefix: "scb/lisa",
+          rows: [row({ column: "Acol" })],
+        } satisfies PickerBand,
+        {
+          key: bFqid,
+          name: "B",
+          registerPrefix: "scb/lisa",
+          rows: [row({ column: "Bcol" })],
+        } satisfies PickerBand,
+      ],
+      graphMemberHrefs: {
+        [aFqid]: "/catalog/scb/lisa/a",
+        [bFqid]: "/catalog/scb/lisa/b",
+      },
+      graph: graph({
+        nodes: [
+          graphNode(aFqid, {
+            states: [graphState({ delivery_column_name: "Acol" })],
+          }),
+          graphNode(bFqid, {
+            states: [graphState({ delivery_column_name: "Bcol" })],
+          }),
+          graphNode(outsideFqid, {
+            states: [graphState({ delivery_column_name: "Hidden" })],
+          }),
+        ],
+        edges: [edge(aFqid, outsideFqid)],
+        focus_id: null,
+      }),
+      ...PROPS,
+    });
+
+    await vi.waitFor(() => {
+      if (!document.querySelector(".col-list")) {
+        throw new Error("list fallback not rendered");
+      }
+    });
+    expect(document.querySelector(".graph-picker")).toBeNull();
+    expect(visibleColumns()).toEqual(["Acol", "Bcol"]);
+    expect(document.body.textContent).not.toContain("Hidden");
+  });
+
+  it("falls back instead of rendering lanes for graph members hidden by filters", async () => {
+    const aFqid = "scb/lisa/a";
+    const bFqid = "scb/lisa/b";
+    render(RepresentationPicker, {
+      bands: [
+        {
+          key: aFqid,
+          name: "A",
+          registerPrefix: "scb/lisa",
+          rows: [row({ column: "Acol" })],
+          facetsByColumn: {
+            Acol: [{ axis: "era", value: "old", label: "Old" }],
+          },
+        } satisfies PickerBand,
+        {
+          key: bFqid,
+          name: "B",
+          registerPrefix: "scb/lisa",
+          rows: [row({ column: "Bcol" })],
+          facetsByColumn: {
+            Bcol: [{ axis: "era", value: "new", label: "New" }],
+          },
+        } satisfies PickerBand,
+      ],
+      axes: [{ name: "era", label: "Era" }],
+      graphMemberHrefs: {
+        [aFqid]: "/catalog/scb/lisa/a",
+        [bFqid]: "/catalog/scb/lisa/b",
+      },
+      graph: graph({
+        nodes: [
+          graphNode(aFqid, {
+            states: [graphState({ delivery_column_name: "Acol" })],
+          }),
+          graphNode(bFqid, {
+            states: [
+              graphState({
+                state_id: 2,
+                representation_run_id: 2,
+                delivery_column_name: "Bcol",
+                valid_from: "2011-01-01",
+                valid_to: "9999-12-31",
+              }),
+            ],
+          }),
+        ],
+        edges: [edge(aFqid, bFqid)],
+        focus_id: null,
+      }),
+      ...PROPS,
+    });
+
+    await vi.waitFor(() => {
+      if (!document.querySelector(".graph-picker")) {
+        throw new Error("graph picker not rendered");
+      }
+    });
+
+    clickFilter("Old");
+    await vi.waitFor(() => {
+      if (!document.querySelector(".col-list")) {
+        throw new Error("list fallback not rendered");
+      }
+    });
+    expect(document.querySelector(".graph-picker")).toBeNull();
+    expect(visibleColumns()).toEqual(["Acol"]);
+    expect(document.body.textContent).not.toContain("Bcol");
+  });
+
   it("renders each graph cell's own era coding label", async () => {
     const aFqid = "scb/lisa/a";
     const bFqid = "scb/lisa/b";

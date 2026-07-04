@@ -341,6 +341,61 @@ describe("BindingLeafView representation picker (#678)", () => {
       .toBeVisible();
   });
 
+  it("does not leave an empty picker when a zero-row graph is rejected", async () => {
+    const nodes: VariableGraphNode[] = Array.from({ length: 19 }, (_, i) => ({
+      kind: "variable",
+      id: `v${i}`,
+      fqid: i === 0 ? "scb/lisa/kon" : `scb/lisa/kon${i}`,
+      label: i === 0 ? "Kön" : `Kön ${i}`,
+      group_key: "huge",
+      group_label: "Huge concept",
+      definition: null,
+      description: null,
+      operational_definition: null,
+      facets: [],
+      states: [
+        gstate({
+          state_id: i + 1,
+          representation_run_id: i + 1,
+          delivery_column_name: null,
+          value_set_version_label: `coding ${i}`,
+        }),
+      ],
+      same_as: [],
+    }));
+    vi.mocked(getBindingGraph).mockResolvedValue({
+      nodes,
+      edges: [
+        {
+          id: "v0-v1",
+          kind: "succession",
+          source: "v0",
+          target: "v1",
+          label: null,
+          effective_year: 2021,
+        },
+      ],
+      focus_id: "v0",
+    } as RelationshipGraph as never);
+
+    render(BindingLeafView, {
+      fqidPath: "scb/lisa/kon",
+      node: node(single),
+      ...SEED,
+      vintageYear: 2024,
+    });
+
+    await vi.waitFor(() => {
+      expect(getBindingGraph).toHaveBeenCalledTimes(1);
+      if (!document.querySelector(".member-identity .qualifier")) {
+        throw new Error("graph-derived member identity not rendered");
+      }
+      expect(document.querySelector(".graph-picker")).toBeNull();
+      expect(document.querySelector(".rep-picker")).toBeNull();
+      expect(document.querySelector(".col-list")).toBeNull();
+    });
+  });
+
   it("does not clamp open-ended graph timelines to the steward period ceiling", async () => {
     const openEnded = graph({
       states: [
