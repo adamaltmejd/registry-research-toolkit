@@ -291,6 +291,13 @@ targets so the review diffs against the real PR base, not main). Operate it like
   other gates are complete); any non-`usage_limit` exit-2 kind ⇒ `status: blocked`
   naming the kind (kind list + semantics: CLAUDE.md "PR merge gate"). A new push
   invalidates the verdict — just re-run the launcher (cheap; no re-trigger dance).
+- **Sandbox hazard:** codex spawns its own nested `sandbox-exec`, which a surrounding
+  agent sandbox refuses, so every exec (including the initial `git diff`) fails and the
+  review inspects nothing. If the Bash call is sandboxed, re-run the launcher with
+  `dangerouslyDisableSandbox: true` on the Bash tool call. A `tool_failure` naming
+  `sandbox_apply: Operation not permitted` or "no successful exec" means the ENVIRONMENT
+  is wrong, not the PR — re-run unsandboxed rather than recording `status: blocked` on
+  that run.
 
 When every gate passes, write the handoff into the **local merge-gate store** (contract
 in CLAUDE.md "PR merge gate"; this template is the field-level worked example): create

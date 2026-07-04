@@ -517,7 +517,12 @@ set `status: blocked` and route it. On exit 2, read `error.kind`: `usage_limit` 
 record yourself as `exhausted (usage-limit)` and proceed when all other gates are
 complete; any non-`usage_limit` kind is a blocker — set `status: blocked` with the kind
 as `blocker` (kind list + semantics: AGENTS.md "PR merge gate") and route to the owning
-pipeline. Remove the scratch worktree when done. If the session dies before recording,
+pipeline. Run the launcher un-sandboxed from the throwaway worktree: codex's nested
+`sandbox-exec` cannot apply inside a surrounding agent sandbox, so every exec fails
+there and the review inspects nothing. A `tool_failure` naming
+`sandbox_apply: Operation not permitted` or "no successful exec" is an environment
+problem, not a PR finding — re-run escalated rather than setting `status: blocked` on
+that run. Remove the scratch worktree when done. If the session dies before recording,
 the `running` stamp is the recovery marker: a later tick finding a `codex_bot` line
 stamped `running` with `started` older than the 30-min ceiling treats it as stale —
 finish from the existing `codex-review.md` + JSON if the run completed, else clear the
