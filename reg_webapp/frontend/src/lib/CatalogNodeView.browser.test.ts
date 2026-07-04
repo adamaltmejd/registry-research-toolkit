@@ -246,6 +246,23 @@ describe("CatalogNodeView provider arm", () => {
     // #806: the raw FQID <code> element is dropped — the link's name is identity.
     expect(container.querySelector("code")).toBeNull();
 
+    const lisaLink = container.querySelector<HTMLAnchorElement>(
+      'a[href="/catalog/scb/lisa"]',
+    );
+    const lisaRow = lisaLink?.closest("tr") as HTMLElement | null;
+    const descriptionCell = lisaRow?.querySelector(
+      "td:nth-child(2)",
+    ) as HTMLElement | null;
+    let clicks = 0;
+    lisaLink?.addEventListener("click", (event) => {
+      event.preventDefault();
+      clicks += 1;
+    });
+    expect(table).toHaveAttribute("role", "table");
+    expect(lisaRow).not.toHaveAttribute("tabindex");
+    descriptionCell?.click();
+    expect(clicks).toBe(1);
+
     // #806: the in-page Breadcrumb nav was removed from every browse arm (the rail
     // owns navigation now). Any arm proves it; assert it here.
     expect(document.querySelector('nav[aria-label="Breadcrumb"]')).toBeNull();
@@ -317,6 +334,16 @@ describe("CatalogNodeView register arm", () => {
     expect(link).not.toBeNull();
     link?.focus();
     expect(document.activeElement).toBe(link);
+
+    const row = link?.closest("tr") as HTMLElement | null;
+    let clicks = 0;
+    link?.addEventListener("click", (event) => {
+      event.preventDefault();
+      clicks += 1;
+    });
+    expect(row).not.toHaveAttribute("tabindex");
+    row?.click();
+    expect(clicks).toBe(1);
   });
 
   it("renders thematic tags on the register page", async () => {
@@ -501,6 +528,18 @@ describe("CatalogNodeView classification-root arm (#756)", () => {
     );
     link?.focus();
     expect(document.activeElement).toBe(link);
+
+    const shortNameCell = row?.querySelector(
+      "td:last-child",
+    ) as HTMLElement | null;
+    let clicks = 0;
+    link?.addEventListener("click", (event) => {
+      event.preventDefault();
+      clicks += 1;
+    });
+    expect(row).not.toHaveAttribute("tabindex");
+    shortNameCell?.click();
+    expect(clicks).toBe(1);
   });
 
   it("renders a classification succession family as a stable concept link", async () => {

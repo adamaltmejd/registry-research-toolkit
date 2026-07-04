@@ -258,6 +258,7 @@ $effect(() => {
             columns={registerColumns}
             rows={registers}
             getRowId={registerRowId}
+            rowNavigation
           >
             {#snippet cell(register, column)}
               {#if column.key === "name"}
@@ -310,7 +311,13 @@ $effect(() => {
         />
         {#if filteredRows.length > 0}
           {@const variableRows = variableBrowseRows(filteredRows, node.fqid)}
-          <DataTable framed columns={variableColumns} rows={variableRows} getRowId={browseRowId}>
+          <DataTable
+            framed
+            columns={variableColumns}
+            rows={variableRows}
+            getRowId={browseRowId}
+            rowNavigation
+          >
             {#snippet cell(row)}
               {#if row.kind === "group"}
                 <!-- #673 (M6): register-arm group rows link to their subject page.
@@ -365,6 +372,7 @@ $effect(() => {
               columns={classificationColumns}
               rows={classificationRows}
               getRowId={browseRowId}
+              rowNavigation
             >
               {#snippet cell(row, column)}
                 {#if column.key === "label"}

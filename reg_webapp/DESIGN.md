@@ -1080,6 +1080,14 @@ Load-bearing decisions downstream children (#806–#809) must not re-litigate:
   roving-tabindex grid — list keyboard navigation belongs to Bits UI `Command`
   elsewhere. API: `getRowId` + `selectedId` + `onselect`; omit them for a plain static
   table (`role="table"`).
+- **`DataTable` row navigation — link delegation, not selection.** Browse tables whose
+  primary cell is a link opt into `rowNavigation`; rows stay in plain `role="table"`
+  semantics with no row `tabindex` or `aria-selected`, and the anchor remains the only
+  keyboard-focusable accessible link. Plain row/card clicks delegate to the first
+  contained `a[href]`; clicks on nested controls, modified/non-primary clicks, and
+  text-selection drags are left alone so browser/link semantics stay intact. Row hover
+  (`--surface-hover` + pointer cursor) is the interactivity signal, so link hover
+  underlines are suppressed inside this variant.
 - **`DataTable` framed surface.** Use `framed` when the table itself is the whole
   grouped surface and its column headers should be the single top row. Do not wrap that
   case in `Panel` — a `Panel` title plus table headers creates duplicate heading rows.

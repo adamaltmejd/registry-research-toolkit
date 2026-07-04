@@ -70,6 +70,20 @@ describe("CatalogRoot", () => {
 
     // …with the raw FQID <code> element dropped — the link's name is identity.
     expect(container.querySelector("code")).toBeNull();
+
+    const scbLink = container.querySelector<HTMLAnchorElement>(
+      'a[href="/catalog/scb"]',
+    );
+    const scbRow = scbLink?.closest("tr") as HTMLElement | null;
+    let clicks = 0;
+    scbLink?.addEventListener("click", (event) => {
+      event.preventDefault();
+      clicks += 1;
+    });
+    expect(table).toHaveAttribute("role", "table");
+    expect(scbRow).not.toHaveAttribute("tabindex");
+    scbRow?.click();
+    expect(clicks).toBe(1);
   });
 
   it("shows EmptyState when the filter matches nothing", async () => {
