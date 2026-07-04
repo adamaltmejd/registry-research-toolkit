@@ -114,7 +114,7 @@ describe("ClassificationLeafView (#638 shell)", () => {
           source: "sun1996",
           target: "sun2020",
           label: null,
-          effective_year: 2020,
+          effective_year: 2019,
         },
       ],
       focus_id: "sun2020",
@@ -130,8 +130,68 @@ describe("ClassificationLeafView (#638 shell)", () => {
     expect(
       document.querySelector('a.edition-name[href="/catalog/class/sun1996"]'),
     ).not.toBeNull();
+    await expect.element(page.getByText("2019", { exact: true })).toBeVisible();
     expect(document.body.textContent).not.toContain("Nivå aggregat");
     expect(document.querySelector(".history-graph")).toBeNull();
+  });
+
+  it("omits sibling-only succession chains when the viewed edition has no edge", async () => {
+    vi.mocked(getBindingGraph).mockResolvedValue({
+      nodes: [
+        {
+          kind: "classification",
+          id: "sun1996",
+          fqid: "class/sun1996",
+          label: "SUN 1996",
+          group_key: "sun",
+          version_year: 1996,
+          is_current: false,
+        },
+        {
+          kind: "classification",
+          id: "sun2020",
+          fqid: "class/sun2020",
+          label: "SUN 2020",
+          group_key: "sun",
+          version_year: 2020,
+          is_current: true,
+        },
+        {
+          kind: "classification",
+          id: "niva-test",
+          fqid: "class/niva-test",
+          label: "Nivå aggregat",
+          group_key: "sun",
+          version_year: null,
+          is_current: true,
+        },
+      ],
+      edges: [
+        {
+          id: "sun1996-sun2020",
+          kind: "succession",
+          source: "sun1996",
+          target: "sun2020",
+          label: null,
+          effective_year: 2020,
+        },
+      ],
+      focus_id: "niva-test",
+    } as never);
+
+    await render(ClassificationLeafView, {
+      node: node({
+        fqid: "class/niva-test",
+        name: "Nivå aggregat",
+        short_name: "NIVA",
+      }),
+    });
+
+    await expect
+      .element(page.getByRole("heading", { name: "Editions" }))
+      .not.toBeInTheDocument();
+    expect(document.querySelector(".classification-editions")).toBeNull();
+    expect(document.body.textContent).not.toContain("SUN 1996");
   });
 
   it("omits the codes panel when the edition carries no codes", async () => {

@@ -66,15 +66,40 @@ function scrollActiveEdition(
 
 const dagClusters = $derived.by((): DagCluster[] => {
   const resolved = resolveEdges(graph);
-  const edgeEndpointIds = new Set<string>();
-  for (const edge of resolved) {
-    if (
+  const successionEdges = resolved.filter(
+    (edge) =>
       edge.source.kind === "classification" &&
-      edge.target.kind === "classification"
-    ) {
-      edgeEndpointIds.add(edge.source.id);
-      edgeEndpointIds.add(edge.target.id);
+      edge.target.kind === "classification",
+  );
+  let renderIds = new Set<string>();
+  if (graph.focus_id != null) {
+    const neighbors = new Map<string, Set<string>>();
+    for (const edge of successionEdges) {
+      const sourceNeighbors = neighbors.get(edge.source.id) ?? new Set();
+      sourceNeighbors.add(edge.target.id);
+      neighbors.set(edge.source.id, sourceNeighbors);
+      const targetNeighbors = neighbors.get(edge.target.id) ?? new Set();
+      targetNeighbors.add(edge.source.id);
+      neighbors.set(edge.target.id, targetNeighbors);
     }
+    const queue = neighbors.has(graph.focus_id) ? [graph.focus_id] : [];
+    while (queue.length > 0) {
+      const id = queue.shift() as string;
+      if (renderIds.has(id)) {
+        continue;
+      }
+      renderIds.add(id);
+      for (const next of neighbors.get(id) ?? []) {
+        queue.push(next);
+      }
+    }
+  } else {
+    renderIds = new Set(
+      successionEdges.flatMap((edge) => [edge.source.id, edge.target.id]),
+    );
+  }
+  if (renderIds.size === 0) {
+    return [];
   }
   return clustersOf(graph)
     .map((cluster): DagCluster | null => {
@@ -82,9 +107,9 @@ const dagClusters = $derived.by((): DagCluster[] => {
         .filter(
           (node): node is ClassificationPoint => node.kind === "classification",
         )
-        .filter((point) => edgeEndpointIds.has(point.node.id));
+        .filter((point) => renderIds.has(point.node.id));
       const ids = new Set(points.map((point) => point.node.id));
-      const edges = resolved.filter(
+      const edges = successionEdges.filter(
         (edge) => ids.has(edge.source.id) && ids.has(edge.target.id),
       );
       const layout = classificationDagLayout(points, edges);
@@ -117,6 +142,24 @@ function edgePath(edge: ClassificationDagEdge): string {
   const ty = nodeTop(edge.target) + NODE_H / 2;
   const bend = Math.max(24, Math.abs(tx - sx) / 2);
   return `M${sx} ${sy} C${sx + bend} ${sy} ${tx - bend} ${ty} ${tx} ${ty}`;
+}
+
+function edgeYear(edge: ClassificationDagEdge): string | null {
+  return edge.edge.effective_year != null
+    ? String(edge.edge.effective_year)
+    : null;
+}
+
+function edgeYearLeft(edge: ClassificationDagEdge): number {
+  const sx = nodeLeft(edge.source) + NODE_W;
+  const tx = nodeLeft(edge.target);
+  return sx + (tx - sx) / 2 - 20;
+}
+
+function edgeYearTop(edge: ClassificationDagEdge): number {
+  const sy = nodeTop(edge.source) + NODE_H / 2;
+  const ty = nodeTop(edge.target) + NODE_H / 2;
+  return (sy + ty) / 2 - 12;
 }
 
 function editionYear(node: ClassificationGraphNode): string {
@@ -189,6 +232,19 @@ function editionLabel(node: ClassificationGraphNode): string {
               {/each}
             </svg>
 
+            {#each layout.edges as edge (edge.edge.id)}
+              {@const year = edgeYear(edge)}
+              {#if year}
+                <span
+                  class="edition-edge-year"
+                  aria-label={`Superseded in ${year}`}
+                  style={`left:${edgeYearLeft(edge)}px; top:${edgeYearTop(edge)}px;`}
+                >
+                  {year}
+                </span>
+              {/if}
+            {/each}
+
             {#each layout.nodes as item (item.point.node.id)}
               {@const node = item.point.node}
               {@const href = editionHref(node)}
@@ -231,6 +287,9 @@ function editionLabel(node: ClassificationGraphNode): string {
           {#each layout.edges as edge (edge.edge.id)}
             <li>
               {edge.source.point.node.label} to {edge.target.point.node.label}
+              {#if edge.edge.effective_year != null}
+                in {edge.edge.effective_year}
+              {/if}
             </li>
           {/each}
         </ul>
@@ -282,6 +341,22 @@ function editionLabel(node: ClassificationGraphNode): string {
     fill: none;
     stroke: var(--viz-edge-succession);
     stroke-width: 1.5;
+  }
+  .edition-edge-year {
+    position: absolute;
+    z-index: 2;
+    min-width: 40px;
+    padding: 1px var(--space-1);
+    border: 1px solid
+      color-mix(in srgb, var(--viz-edge-succession) 35%, var(--border));
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    line-height: 1.4;
+    text-align: center;
+    pointer-events: none;
   }
   .edition-arrow-head {
     fill: var(--viz-edge-succession);
