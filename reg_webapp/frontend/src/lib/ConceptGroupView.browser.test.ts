@@ -322,7 +322,11 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     // ONE shared footer spanning the whole list: the cross-variable count, in
     // "column" terms.
     await expect.element(page.getByText("+2 columns")).toBeVisible();
-    await page.getByRole("button", { name: "Apply staged changes" }).click();
+    await page
+      .getByRole("button", {
+        name: /Add to project|Remove from project|Apply changes/,
+      })
+      .click();
 
     await expect.element(page.getByText(/\+2 columns/)).toBeVisible();
     expect(projectStore.draft?.sources).toEqual(
@@ -361,7 +365,11 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     const jan = page.getByRole("checkbox", { name: /Inkjan/ });
     await expect.element(jan).toBeVisible();
     await jan.click();
-    await page.getByRole("button", { name: "Apply staged changes" }).click();
+    await page
+      .getByRole("button", {
+        name: /Add to project|Remove from project|Apply changes/,
+      })
+      .click();
 
     await expect.element(page.getByText(/\+1 column/)).toBeVisible();
     expect(projectStore.draft?.sources[0]).toEqual(
@@ -404,7 +412,11 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     const jan = page.getByRole("checkbox", { name: /Inkjan/ });
     await expect.element(jan).toBeVisible();
     await jan.click();
-    await page.getByRole("button", { name: "Apply staged changes" }).click();
+    await page
+      .getByRole("button", {
+        name: /Add to project|Remove from project|Apply changes/,
+      })
+      .click();
 
     await expect.element(page.getByText(/\+1 column/)).toBeVisible();
     expect(projectStore.draft?.sources[0]).toEqual(
@@ -435,10 +447,16 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
 
     renderGroup();
 
-    await expect.element(page.getByText("No staged changes")).toBeVisible();
     await expect
-      .element(page.getByRole("button", { name: "Apply staged changes" }))
-      .toBeDisabled();
+      .element(page.getByText("No staged changes"))
+      .not.toBeInTheDocument();
+    await expect
+      .element(
+        page.getByRole("button", {
+          name: /Add to project|Remove from project|Apply changes/,
+        }),
+      )
+      .not.toBeInTheDocument();
     expect(projectStore.draft?.sources[0]?.period).toEqual({
       from: 2010,
       to: 2015,
@@ -511,7 +529,11 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
       .element(page.getByRole("checkbox", { name: /InkfebA/ }))
       .not.toBeChecked();
 
-    await page.getByRole("button", { name: "Apply staged changes" }).click();
+    await page
+      .getByRole("button", {
+        name: /Add to project|Remove from project|Apply changes/,
+      })
+      .click();
     await expect.element(page.getByText(/\+2 columns/)).toBeVisible();
     const variables =
       projectStore.draft?.sources.flatMap((s) =>
@@ -536,7 +558,11 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     renderGroup();
 
     await page.getByRole("checkbox", { name: /Inkjan/ }).click();
-    await page.getByRole("button", { name: "Apply staged changes" }).click();
+    await page
+      .getByRole("button", {
+        name: /Add to project|Remove from project|Apply changes/,
+      })
+      .click();
 
     await expect.element(page.getByText(/\+1 column/)).toBeVisible();
     expect(projectStore.draft?.sources[0]?.bindings[0]).toEqual(
@@ -611,7 +637,11 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     renderGroup({ key: "disp" });
 
     await page.getByRole("checkbox", { name: /CDISP5/ }).click();
-    await page.getByRole("button", { name: "Apply staged changes" }).click();
+    await page
+      .getByRole("button", {
+        name: /Add to project|Remove from project|Apply changes/,
+      })
+      .click();
 
     await expect.element(page.getByText(/\+1 column/)).toBeVisible();
     expect(projectStore.draft?.sources[0]).toEqual(
@@ -664,7 +694,11 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     renderGroup({ key: "solo-rep" });
 
     await page.getByRole("checkbox", { name: /SOLO/ }).click();
-    await page.getByRole("button", { name: "Apply staged changes" }).click();
+    await page
+      .getByRole("button", {
+        name: /Add to project|Remove from project|Apply changes/,
+      })
+      .click();
 
     await expect.element(page.getByText(/\+1 column/)).toBeVisible();
     expect(projectStore.draft?.sources[0]?.bindings[0]).toEqual(
@@ -993,15 +1027,16 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     expect(document.querySelector(".late-warn")).toBeNull();
   });
 
-  it("keeps Apply seed-gated (disabled) until a column is selected", async () => {
+  it("keeps Add seed-gated once a column is selected", async () => {
     vi.mocked(getConceptGroup).mockResolvedValue(node());
     vi.mocked(getConceptGroupGraph).mockResolvedValue(twoSingleColGraph());
 
     renderGroup();
-    const add = page.getByRole("button", { name: "Apply staged changes" });
-    await expect.element(add).toBeVisible();
-    await expect.element(add).toBeDisabled();
+    await expect
+      .element(page.getByRole("button", { name: "Add to project" }))
+      .not.toBeInTheDocument();
     await page.getByRole("checkbox", { name: /Inkjan/ }).click();
+    const add = page.getByRole("button", { name: "Add to project" });
     await expect.element(add).toBeEnabled();
   });
 
@@ -1626,16 +1661,15 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
       "/catalog/scb/fordonsreg/naringsgren",
     );
 
-    // The description rides in the context, INSIDE the hover/click <label>.
-    const context = document.querySelector(".subhead-context");
-    expect(context?.textContent).toContain(
-      "Standard för svensk näringsgrensindelning",
-    );
-    expect(context?.closest("label.subhead-label")).not.toBeNull();
+    // Constant coding context no longer renders a description line here.
+    expect(document.querySelector(".subhead-context")).toBeNull();
 
-    // Clicking the DESCRIPTION (part of the select-all label, not the chip-link)
-    // toggles ALL the variable's columns.
-    (context as HTMLElement).click();
+    // The select-all checkbox still toggles ALL the variable's columns.
+    document
+      .querySelector<HTMLInputElement>(
+        'input[aria-label="Select all columns of SNI2002"]',
+      )
+      ?.click();
     await expect.element(page.getByText("+2 columns")).toBeVisible();
     // Both column ROW checkboxes are checked. Scope to the column-list row checkboxes:
     // a two-variant single-column member also surfaces a Variant FILTER (#908) whose
@@ -1729,7 +1763,9 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     titleLink.dispatchEvent(evt);
 
     // No column got selected — the nav link did not toggle the band.
-    await expect.element(page.getByText("No staged changes")).toBeVisible();
+    await expect
+      .element(page.getByText("No staged changes"))
+      .not.toBeInTheDocument();
     expect(
       document.querySelector<HTMLInputElement>(
         'input[aria-label="Select all columns of inkjan"]',
@@ -2330,7 +2366,9 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     expect(evt.defaultPrevented).toBe(true);
     expect(navSpy).toHaveBeenCalledWith("/catalog/scb/rams/inkjan");
     // The click did NOT toggle the row's selection.
-    await expect.element(page.getByText("No staged changes")).toBeVisible();
+    await expect
+      .element(page.getByText("No staged changes"))
+      .not.toBeInTheDocument();
 
     navSpy.mockRestore();
   });

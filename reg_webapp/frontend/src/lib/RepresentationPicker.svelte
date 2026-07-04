@@ -48,8 +48,8 @@ import {
 import { Button, Tag } from "./ui";
 
 // The direct COLUMN picker (#678 redesign): ONE compact, integrated list of a
-// concept's delivery columns with a staged diff and a single "Apply"
-// footer. The binding leaf passes its single variable; the concept-group page passes
+// concept's delivery columns with a staged diff footer whose commit label follows the
+// diff shape. The binding leaf passes its single variable; the concept-group page passes
 // one entry per member variable — and the two render essentially identically (the
 // user is selecting a CONCEPT's columns, not reasoning about the underlying
 // variables). Light hierarchy, no card chrome, no default collapse: every column is
@@ -508,6 +508,15 @@ const periodChangeCount = $derived(periodChanges.length);
 const diffCount = $derived(selectedCount + removeCount + periodChangeCount);
 const rowDiffCount = $derived(selectedCount + removeCount);
 const canApply = $derived(diffCount > 0 && (selectedCount === 0 || canAdd));
+const applyLabel = $derived.by(() => {
+  if (periodChangeCount > 0 || (selectedCount > 0 && removeCount > 0)) {
+    return "Apply changes";
+  }
+  if (removeCount > 0) {
+    return "Remove from project";
+  }
+  return "Add to project";
+});
 
 $effect(() => {
   if (diffCount > 0) {
@@ -594,6 +603,91 @@ const labelingByBand = $derived(
   new Map(filteredBands.map((b) => [b.key, pickerLabeling(b.rows)])),
 );
 
+function normalizedOperationalDefinition(band: PickerBand): string {
+  return band.operationalDefinition?.trim().replace(/\s+/g, " ") ?? "";
+}
+
+function normalizedSearchText(text: string): string {
+  return text.trim().toLocaleLowerCase().replace(/\s+/g, " ");
+}
+
+function commonDefinitionStem(definitions: readonly string[]): string {
+  if (definitions.length < 2) {
+    return "";
+  }
+  const wordLists = definitions.map((definition) =>
+    normalizedSearchText(definition)
+      .split(/\s+/)
+      .filter((word) => word !== ""),
+  );
+  const stem: string[] = [];
+  const maxLen = Math.min(...wordLists.map((words) => words.length));
+  for (let i = 0; i < maxLen; i++) {
+    const word = wordLists[0]?.[i] ?? "";
+    if (word === "" || !wordLists.every((words) => words[i] === word)) {
+      break;
+    }
+    stem.push(word);
+  }
+  const joined = stem.join(" ");
+  return stem.length >= 2 && joined.length >= 10 ? joined : "";
+}
+
+function axisFacetTexts(band: PickerBand): string[] {
+  const texts = new Set<string>();
+  for (const row of band.rows) {
+    for (const axis of axes) {
+      const facet = rowFacet(band, row, axis.name);
+      if (!facet) {
+        continue;
+      }
+      texts.add(facet.label);
+      texts.add(facet.value);
+    }
+  }
+  return [...texts].filter((text) => text.trim() !== "");
+}
+
+function bandHasAxisMarker(band: PickerBand): boolean {
+  return axes.length > 0 && axisFacetTexts(band).length > 0;
+}
+
+function operationalDefinitionCarriedByAxis(band: PickerBand): boolean {
+  const definition = normalizedSearchText(
+    normalizedOperationalDefinition(band),
+  );
+  return axisFacetTexts(band).some((text) => {
+    const facetText = normalizedSearchText(text);
+    return facetText.length >= 3 && definition.includes(facetText);
+  });
+}
+
+const suppressOperationalDefinitions = $derived.by(() => {
+  const withDefinitions = filteredBands.filter(
+    (band) => normalizedOperationalDefinition(band) !== "",
+  );
+  if (withDefinitions.length < 2) {
+    return false;
+  }
+  const definitions = withDefinitions.map(normalizedOperationalDefinition);
+  if (new Set(definitions).size === 1) {
+    return true;
+  }
+  return (
+    withDefinitions.every(bandHasAxisMarker) &&
+    commonDefinitionStem(definitions) !== "" &&
+    withDefinitions.every(operationalDefinitionCarriedByAxis)
+  );
+});
+
+function pickerOperationalDefinition(band: PickerBand): string | null {
+  if (suppressOperationalDefinitions) {
+    return null;
+  }
+  const text = normalizedOperationalDefinition(band);
+  return text === "" ? null : text;
+}
+
 /** Whether the active window starts BEFORE a row's data actually begins — the
  * "data starts late" warning trigger (#678). Only when a window is set, the row's
  * start year resolves (skip the open/unknown-start `0001-01-01` sentinel → `yearOf`
@@ -649,6 +743,7 @@ function bandView(band: PickerBand, id: BandLabel, showPrefix: boolean) {
     rowLabels: new Map((labeling?.rows ?? []).map((r) => [r.key, r])),
     // The superseded predecessor editions folded onto this chain head (#902).
     supersedes: band.supersedes ?? [],
+    operationalDefinition: pickerOperationalDefinition(band),
   };
 }
 
@@ -1233,7 +1328,10 @@ const footerLabel = $derived.by(() => {
       `${periodChangeCount} ${periodChangeCount === 1 ? "period change" : "period changes"}`,
     );
   }
-  const label = parts.length > 0 ? parts.join(" · ") : "No staged changes";
+  if (parts.length === 0) {
+    return "";
+  }
+  const label = parts.join(" · ");
   return (
     label +
     (hiddenSelectedCount > 0
@@ -1288,8 +1386,12 @@ function navigateChip(event: MouseEvent, href: string): void {
  * Both branches yield a clean `<path>?codes=<variant>::<column>#states-heading`; the
  * `#states-heading` hash targets the `<section id="states-heading">` anchor
  * BindingLeafView keeps; the router preserves both query + hash on navigate. */
-function codingsVaryHref(band: PickerBand, row: PickerRepresentation): string {
-  const codes = encodeCodesParam(row.variant, row.column);
+function codingsVaryHref(
+  band: PickerBand,
+  row: PickerRepresentation,
+  column = row.column,
+): string {
+  const codes = encodeCodesParam(row.variant, column);
   // `band.href` (group branch) may carry `?period=…` (memberHref); the leaf branch
   // reads the live path off `globalThis` (`window` is the period-window prop here,
   // shadowing the global). Either way, take ONLY the path — drop the query.
@@ -1371,13 +1473,11 @@ function codingsVaryHref(band: PickerBand, row: PickerRepresentation): string {
 
 <!-- The OPERATIONAL-DEFINITION line (#892/#932): a member variable's per-(split-)variable
      distinguishing text — what tells parallel concept-group members apart when their name/
-     definition coincide (e.g. owner vs previous-owner näringsgren). A quiet band-level line
-     under the identity, led by an `op def` eyebrow (the `.dim-kind` device, so it reads as a
-     kind-of-text label, never a value/code chip). Rendered only when the member carries it
-     (most siblings carry null) — additive, off the existing band-context language. -->
+     definition coincide (e.g. owner vs previous-owner näringsgren). A quiet prose line under
+     the identity, rendered only when it adds member-level distinction in the picker. -->
 {#snippet opDefLine(text: string)}
   <span class="op-def">
-    <span class="dim-kind">op def</span><span class="op-def-text">{text}</span>
+    <span class="op-def-text">{text}</span>
   </span>
 {/snippet}
 
@@ -1413,15 +1513,19 @@ function codingsVaryHref(band: PickerBand, row: PickerRepresentation): string {
   {/if}
 {/snippet}
 
-<!-- The "codings vary" nudge (#905): a quiet DEEP LINK (no longer a passive span) to
-     the value-set viewer focused on this column's coding (`?codes=<column>` +
-     `#states-heading`). A nudge, not a control — token-styled, must not dominate the
+<!-- The "codings vary" nudge (#905/#1058): a quiet DEEP LINK (no longer a passive span)
+     to the value-set viewer focused on this row/cell coding (`?codes=<variant>::<column>`
+     + `#states-heading`). A nudge, not a control — token-styled, must not dominate the
      row. Routed through `navigateChip` (preventDefault + SPA-router navigate) because
      it sits inside the row's <label>: a plain click would toggle the checkbox AND a
      stopPropagation would full-reload the app (same reasoning as `colChip`). A real
      anchor keeps it keyboard-accessible; the title/aria are unchanged. -->
-{#snippet codingsVaryNudge(band: PickerBand, row: PickerRepresentation)}
-  {@const href = codingsVaryHref(band, row)}
+{#snippet codingsVaryNudge(
+  band: PickerBand,
+  row: PickerRepresentation,
+  column = row.column,
+)}
+  {@const href = codingsVaryHref(band, row, column)}
   <a
     class="codings-vary"
     {href}
@@ -1645,7 +1749,7 @@ function codingsVaryHref(band: PickerBand, row: PickerRepresentation): string {
                               {@render stageTag(stage)}
                             {/if}
                             {#if row.codingsVary}
-                              {@render codingsVaryNudge(band, row)}
+                              {@render codingsVaryNudge(band, row, column)}
                             {/if}
                             {#if inWindow}
                               {@render lateWarn(row)}
@@ -1887,8 +1991,8 @@ function codingsVaryHref(band: PickerBand, row: PickerRepresentation): string {
                       .join(" · ")}</span
                   >
                 {/if}
-                {#if band.operationalDefinition}
-                  {@render opDefLine(band.operationalDefinition)}
+                {#if v.operationalDefinition}
+                  {@render opDefLine(v.operationalDefinition)}
                 {/if}
                 {@render renameHint(row.renamedColumns)}
               </span>
@@ -1982,8 +2086,8 @@ function codingsVaryHref(band: PickerBand, row: PickerRepresentation): string {
               <!-- The member's operational definition (#892/#932): the per-variable
                    distinguishing text, on its OWN line below the heading/context (it's a
                    sentence, not a chip) so parallel members are told apart at a glance. -->
-              {#if band.operationalDefinition}
-                {@render opDefLine(band.operationalDefinition)}
+              {#if v.operationalDefinition}
+                {@render opDefLine(v.operationalDefinition)}
               {/if}
             {/snippet}
             {#if empty}
@@ -2140,30 +2244,31 @@ function codingsVaryHref(band: PickerBand, row: PickerRepresentation): string {
     </ul>
   {/if}
 
-  <div class="picker-footer">
-    <span class="count" role="status">{footerLabel}</span>
-    {#if rowDiffCount > 0}
+  {#if diffCount > 0}
+    <div class="picker-footer">
+      <span class="count" role="status">{footerLabel}</span>
+      {#if rowDiffCount > 0}
+        <Button
+          type="button"
+          variant="default"
+          size="sm"
+          disabled={applying}
+          onclick={resetStaging}
+        >
+          Reset
+        </Button>
+      {/if}
       <Button
         type="button"
-        variant="default"
+        variant="primary"
         size="sm"
-        disabled={applying}
-        onclick={resetStaging}
+        disabled={!canApply || applying}
+        onclick={commit}
       >
-        Reset
+        {applying ? "Applying..." : applyLabel}
       </Button>
-    {/if}
-    <Button
-      type="button"
-      variant="primary"
-      size="sm"
-      aria-label="Apply staged changes"
-      disabled={!canApply || applying}
-      onclick={commit}
-    >
-      {applying ? "Applying..." : "Apply"}
-    </Button>
-  </div>
+    </div>
+  {/if}
 </div>
 
 <style>
@@ -3052,8 +3157,7 @@ function codingsVaryHref(band: PickerBand, row: PickerRepresentation): string {
      text, on its own quiet line. In `.row-main` (single row, a flex column) it sits below
      the identity naturally; inside `.subhead-body` (a wrapping flex row) `flex-basis:100%`
      drops it WHOLE to its own row beneath the heading — never sharing a line with the title.
-     A baseline-aligned eyebrow (`.dim-kind` "op def") + the text, muted, so it reads as a
-     distinguishing annotation, not a control. */
+     Muted prose reads as a distinguishing annotation, not a control. */
   .op-def {
     display: flex;
     align-items: baseline;

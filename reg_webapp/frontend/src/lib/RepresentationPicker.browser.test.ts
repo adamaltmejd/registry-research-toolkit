@@ -234,7 +234,11 @@ describe("RepresentationPicker graph mode (#904)", () => {
 
     await page.getByRole("checkbox", { name: /Acol/ }).click();
     await expect.element(page.getByText("+1 column")).toBeVisible();
-    await page.getByRole("button", { name: "Apply staged changes" }).click();
+    await page
+      .getByRole("button", {
+        name: /Add to project|Remove from project|Apply changes/,
+      })
+      .click();
     expect(onapply).toHaveBeenCalledTimes(1);
     expect(onapply.mock.calls[0][0].adds[0].row.column).toBe("Acol");
   });
@@ -296,7 +300,11 @@ describe("RepresentationPicker graph mode (#904)", () => {
     expect(document.querySelector(".graph-lane.focused")).not.toBeNull();
 
     await page.getByRole("checkbox", { name: /AliasCol/ }).click();
-    await page.getByRole("button", { name: "Apply staged changes" }).click();
+    await page
+      .getByRole("button", {
+        name: /Add to project|Remove from project|Apply changes/,
+      })
+      .click();
     expect(onapply).toHaveBeenCalledTimes(1);
     expect(onapply.mock.calls[0][0].adds[0].band.key).toBe(aliasFqid);
     expect(onapply.mock.calls[0][0].adds[0].row.column).toBe("AliasCol");
@@ -461,7 +469,11 @@ describe("RepresentationPicker graph mode (#904)", () => {
     expect(newCell?.classList.contains("dimmed")).toBe(false);
 
     await page.getByRole("checkbox", { name: /^OLD\b/ }).click();
-    await page.getByRole("button", { name: "Apply staged changes" }).click();
+    await page
+      .getByRole("button", {
+        name: /Add to project|Remove from project|Apply changes/,
+      })
+      .click();
     expect(onapply).toHaveBeenCalledTimes(1);
     expect(onapply.mock.calls[0][0].adds[0].row.column).toBe("NEW");
   });
@@ -596,7 +608,11 @@ describe("RepresentationPicker graph mode (#904)", () => {
 
     await page.getByRole("checkbox", { name: /^OLD\b/ }).click();
     await expect.element(page.getByText("+1 column")).toBeVisible();
-    await page.getByRole("button", { name: "Apply staged changes" }).click();
+    await page
+      .getByRole("button", {
+        name: /Add to project|Remove from project|Apply changes/,
+      })
+      .click();
     expect(onapply).toHaveBeenCalledTimes(1);
     expect(onapply.mock.calls[0][0].adds[0].row.column).toBe("NEW");
   });
@@ -661,7 +677,11 @@ describe("RepresentationPicker graph mode (#904)", () => {
     expect(document.body.textContent).not.toContain("HIDDEN");
 
     await page.getByRole("checkbox", { name: /^MEMBER\b/ }).click();
-    await page.getByRole("button", { name: "Apply staged changes" }).click();
+    await page
+      .getByRole("button", {
+        name: /Add to project|Remove from project|Apply changes/,
+      })
+      .click();
     expect(onapply).toHaveBeenCalledTimes(1);
     expect(onapply.mock.calls[0][0].adds[0].row.column).toBe("MEMBER");
   });
@@ -737,6 +757,83 @@ describe("RepresentationPicker graph mode (#904)", () => {
     });
     expect(oldCell.textContent).toContain("Old coding");
     expect(oldCell.textContent).not.toContain("New coding");
+  });
+
+  it("links a folded graph cell's codings-vary nudge to that cell's era column", async () => {
+    const aFqid = "scb/lisa/a";
+    const bFqid = "scb/lisa/b";
+    render(RepresentationPicker, {
+      bands: [
+        {
+          key: aFqid,
+          name: "A",
+          registerPrefix: "scb/lisa",
+          href: "/catalog/scb/lisa/a",
+          rows: [
+            row({
+              variant: "v",
+              column: "NEW",
+              representation: null,
+              renamedColumns: ["OLD"],
+              codingsVary: true,
+              from: "1990-01-01",
+              to: "2020-12-31",
+              period: "1990 – 2020",
+            }),
+          ],
+        } satisfies PickerBand,
+        {
+          key: bFqid,
+          name: "B",
+          registerPrefix: "scb/lisa",
+          rows: [row({ column: "OTHER" })],
+        } satisfies PickerBand,
+      ],
+      graph: graph({
+        nodes: [
+          graphNode(aFqid, {
+            states: [
+              graphState({
+                state_id: 1,
+                representation_run_id: 1,
+                delivery_column_name: "OLD",
+                value_set_version_label: "Old coding",
+                valid_from: "1990-01-01",
+                valid_to: "1999-12-31",
+              }),
+              graphState({
+                state_id: 2,
+                representation_run_id: 2,
+                delivery_column_name: "NEW",
+                value_set_version_label: "New coding",
+                valid_from: "2000-01-01",
+                valid_to: "2020-12-31",
+              }),
+            ],
+          }),
+          graphNode(bFqid, {
+            states: [graphState({ delivery_column_name: "OTHER" })],
+          }),
+        ],
+        edges: [edge(bFqid, aFqid)],
+        focus_id: null,
+      }),
+      ...PROPS,
+    });
+
+    const oldCell = await vi.waitFor(() => {
+      const cell = [
+        ...document.querySelectorAll<HTMLElement>(".graph-cell"),
+      ].find((el) => el.textContent?.includes("OLD"));
+      if (!cell) {
+        throw new Error("OLD cell not rendered");
+      }
+      return cell;
+    });
+    const nudge = oldCell.querySelector<HTMLAnchorElement>(".codings-vary");
+    expect(nudge?.getAttribute("href")).toBe(
+      "/catalog/scb/lisa/a?codes=v%3A%3AOLD#states-heading",
+    );
   });
 
   it("falls back when a graph cell has no unambiguous picker member row", async () => {
@@ -1002,7 +1099,11 @@ describe("RepresentationPicker graph mode (#904)", () => {
     expect(document.querySelector(".col-list")).not.toBeNull();
     await page.getByRole("checkbox", { name: /FEB/ }).click();
     await expect.element(page.getByText("+1 column")).toBeVisible();
-    await page.getByRole("button", { name: "Apply staged changes" }).click();
+    await page
+      .getByRole("button", {
+        name: /Add to project|Remove from project|Apply changes/,
+      })
+      .click();
     expect(onapply).toHaveBeenCalledTimes(1);
     expect(onapply.mock.calls[0][0].adds[0].row.column).toBe("FEB");
   });
@@ -1196,7 +1297,11 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
     expect(visibleColumns()).toEqual(["DIN1", "DIN2"]);
 
     // Committing still includes the hidden-but-selected DIN3.
-    await page.getByRole("button", { name: "Apply staged changes" }).click();
+    await page
+      .getByRole("button", {
+        name: /Add to project|Remove from project|Apply changes/,
+      })
+      .click();
     expect(onapply).toHaveBeenCalledTimes(1);
     const committed = onapply.mock.calls[0][0].adds as {
       row: PickerRepresentation;
@@ -1215,7 +1320,11 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
 
     await page.getByRole("checkbox", { name: /DIN1/ }).click();
     await expect.element(page.getByText("Will be added")).toBeVisible();
-    await page.getByRole("button", { name: "Apply staged changes" }).click();
+    await page
+      .getByRole("button", {
+        name: /Add to project|Remove from project|Apply changes/,
+      })
+      .click();
 
     expect(onapply).toHaveBeenCalledTimes(1);
     await expect.element(page.getByText("Will be added")).toBeVisible();
@@ -1244,7 +1353,11 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
 
     await page.getByRole("checkbox", { name: /DIN1/ }).click();
     await expect.element(page.getByText("Will be added")).toBeVisible();
-    await page.getByRole("button", { name: "Apply staged changes" }).click();
+    await page
+      .getByRole("button", {
+        name: /Add to project|Remove from project|Apply changes/,
+      })
+      .click();
     await applyStarted;
 
     await expect
@@ -1258,7 +1371,16 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
       .toBeDisabled();
 
     finishApply();
-    await expect.element(page.getByText("No staged changes")).toBeVisible();
+    await expect
+      .element(page.getByText("No staged changes"))
+      .not.toBeInTheDocument();
+    await expect
+      .element(
+        page.getByRole("button", {
+          name: /Add to project|Remove from project|Apply changes/,
+        }),
+      )
+      .not.toBeInTheDocument();
   });
 
   it("does not stage period-only source changes from a partial picker", async () => {
@@ -1274,12 +1396,19 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
       onapply,
     });
 
-    await expect.element(page.getByText("No staged changes")).toBeVisible();
+    await expect
+      .element(page.getByText("No staged changes"))
+      .not.toBeInTheDocument();
     await expect
       .element(page.getByRole("button", { name: "Reset" }))
       .not.toBeInTheDocument();
-    const apply = page.getByRole("button", { name: "Apply staged changes" });
-    await expect.element(apply).toBeDisabled();
+    await expect
+      .element(
+        page.getByRole("button", {
+          name: /Add to project|Remove from project|Apply changes/,
+        }),
+      )
+      .not.toBeInTheDocument();
 
     expect(onapply).not.toHaveBeenCalled();
   });
@@ -1301,12 +1430,41 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
     await expect.element(rowCheckbox).toBeChecked();
     await rowCheckbox.click();
     await expect.element(page.getByText("Will be removed")).toBeVisible();
-    const apply = page.getByRole("button", { name: "Apply staged changes" });
+    const apply = page.getByRole("button", { name: "Remove from project" });
     await expect.element(apply).toBeEnabled();
     await apply.click();
 
     expect(onapply).toHaveBeenCalledTimes(1);
     expect(onapply.mock.calls[0][0].removes).toHaveLength(1);
+  });
+
+  it("labels staged footer actions by diff shape", async () => {
+    const band = multiAxisBand();
+    const committedRows = committedRowsFor(band, band.rows[0]);
+    render(RepresentationPicker, {
+      bands: [band],
+      axes: AXES,
+      ...PROPS,
+      committedRows,
+    });
+
+    await expect
+      .element(
+        page.getByRole("button", {
+          name: /Add to project|Remove from project|Apply changes/,
+        }),
+      )
+      .not.toBeInTheDocument();
+
+    await page.getByRole("checkbox", { name: /DIN2/ }).click();
+    await expect
+      .element(page.getByRole("button", { name: "Add to project" }))
+      .toBeVisible();
+
+    await page.getByRole("checkbox", { name: /DIN1/ }).click();
+    await expect
+      .element(page.getByRole("button", { name: "Apply changes" }))
+      .toBeVisible();
   });
 
   it("allows committed nonselectable rows to be removed without allowing new adds", async () => {
@@ -1342,7 +1500,9 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
 
     await committedCheckbox.click();
     await expect.element(page.getByText("Will be removed")).toBeVisible();
-    const apply = page.getByRole("button", { name: "Apply staged changes" });
+    const apply = page.getByRole("button", {
+      name: /Add to project|Remove from project|Apply changes/,
+    });
     await expect.element(apply).toBeEnabled();
     await apply.click();
 
@@ -1384,7 +1544,11 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
     expect(
       document.querySelectorAll(".col-list .row-btn.staged-remove"),
     ).toHaveLength(2);
-    await page.getByRole("button", { name: "Apply staged changes" }).click();
+    await page
+      .getByRole("button", {
+        name: /Add to project|Remove from project|Apply changes/,
+      })
+      .click();
     expect(onapply).toHaveBeenCalledTimes(1);
     expect(onapply.mock.calls[0][0].removes).toHaveLength(2);
   });
@@ -1435,7 +1599,11 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
     expect(visibleColumns()).toEqual(["DIN1", "DIN2"]);
 
     // The surviving hidden selection still commits.
-    await page.getByRole("button", { name: "Apply staged changes" }).click();
+    await page
+      .getByRole("button", {
+        name: /Add to project|Remove from project|Apply changes/,
+      })
+      .click();
     expect(onapply).toHaveBeenCalledTimes(1);
     const committed = onapply.mock.calls[0][0].adds as {
       row: PickerRepresentation;
@@ -1508,6 +1676,138 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
       .element(page.getByText("Showing 1 of 2 columns"))
       .toBeVisible();
     expect(visibleColumns()).toEqual(["FEB"]);
+  });
+
+  it("suppresses repeated operational definitions and constant coding context when facets distinguish rows (#959)", async () => {
+    const axes: GroupAxisModel[] = [{ name: "rank", label: "Rank" }];
+    render(RepresentationPicker, {
+      bands: [
+        {
+          key: "scb/lisa/agi1faman",
+          name: "Förvärvskälla",
+          registerPrefix: "scb/lisa",
+          operationalDefinition:
+            "Variabeln anger familjens största förvärvskälla under året.",
+          rows: [row({ column: "AGI1FAMAN", valueSetLabel: "Förekomst" })],
+          facets: [{ axis: "rank", value: "1", label: "Största" }],
+        },
+        {
+          key: "scb/lisa/agi2faman",
+          name: "Förvärvskälla",
+          registerPrefix: "scb/lisa",
+          operationalDefinition:
+            "Variabeln anger familjens näst största förvärvskälla under året.",
+          rows: [row({ column: "AGI2FAMAN", valueSetLabel: "Förekomst" })],
+          facets: [{ axis: "rank", value: "2", label: "Näst största" }],
+        },
+        {
+          key: "scb/lisa/agi3faman",
+          name: "Förvärvskälla",
+          registerPrefix: "scb/lisa",
+          operationalDefinition:
+            "Variabeln anger familjens tredje största förvärvskälla under året.",
+          rows: [row({ column: "AGI3FAMAN", valueSetLabel: "Förekomst" })],
+          facets: [{ axis: "rank", value: "3", label: "Tredje största" }],
+        },
+      ],
+      axes,
+      ...PROPS,
+    });
+
+    await vi.waitFor(() => {
+      const text = document.body.textContent ?? "";
+      expect(text).toContain("Största");
+      expect(text).toContain("Näst största");
+      expect(text).toContain("Tredje största");
+    });
+    expect(document.body.textContent).not.toContain("Variabeln anger");
+    expect(document.body.textContent).not.toContain("op def");
+    expect(document.body.textContent).not.toContain("Förekomst");
+  });
+
+  it("keeps operational definitions when only a majority share an axis-carried stem (#959)", async () => {
+    const axes: GroupAxisModel[] = [{ name: "rank", label: "Rank" }];
+    render(RepresentationPicker, {
+      bands: [
+        {
+          key: "scb/lisa/first",
+          name: "Förvärvskälla",
+          registerPrefix: "scb/lisa",
+          operationalDefinition:
+            "Variabeln anger familjens första förvärvskälla under året.",
+          rows: [row({ column: "FIRST" })],
+          facets: [{ axis: "rank", value: "1", label: "Första" }],
+        },
+        {
+          key: "scb/lisa/second",
+          name: "Förvärvskälla",
+          registerPrefix: "scb/lisa",
+          operationalDefinition:
+            "Variabeln anger familjens andra förvärvskälla under året.",
+          rows: [row({ column: "SECOND" })],
+          facets: [{ axis: "rank", value: "2", label: "Andra" }],
+        },
+        {
+          key: "scb/lisa/manual",
+          name: "Förvärvskälla",
+          registerPrefix: "scb/lisa",
+          operationalDefinition:
+            "Manually curated source classification for special cases.",
+          rows: [row({ column: "MANUAL" })],
+          facets: [{ axis: "rank", value: "x", label: "Special" }],
+        },
+      ],
+      axes,
+      ...PROPS,
+    });
+
+    await vi.waitFor(() => {
+      const text = document.body.textContent ?? "";
+      expect(text).toContain(
+        "Variabeln anger familjens första förvärvskälla under året.",
+      );
+      expect(text).toContain(
+        "Variabeln anger familjens andra förvärvskälla under året.",
+      );
+      expect(text).toContain(
+        "Manually curated source classification for special cases.",
+      );
+    });
+  });
+
+  it("keeps a unique operational definition when no facet axis carries the distinction (#959)", async () => {
+    render(RepresentationPicker, {
+      bands: [
+        {
+          key: "scb/x/owner",
+          name: "Näringsgren",
+          registerPrefix: "scb/x",
+          operationalDefinition: "Owner industry at the end of the year.",
+          rows: [row({ column: "SNI_OWNER" })],
+        },
+        {
+          key: "scb/x/previous-owner",
+          name: "Näringsgren",
+          registerPrefix: "scb/x",
+          operationalDefinition:
+            "Previous owner industry at the end of the year.",
+          rows: [row({ column: "SNI_PREV" })],
+        },
+      ],
+      axes: [],
+      ...PROPS,
+    });
+
+    await vi.waitFor(() => {
+      const lines = [
+        ...document.querySelectorAll<HTMLElement>(".op-def-text"),
+      ].map((el) => el.textContent);
+      expect(lines).toEqual([
+        "Owner industry at the end of the year.",
+        "Previous owner industry at the end of the year.",
+      ]);
+    });
+    expect(document.body.textContent).not.toContain("op def");
   });
 });
 

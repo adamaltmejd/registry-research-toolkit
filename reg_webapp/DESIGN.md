@@ -1281,21 +1281,22 @@ kind:
   `clusterBands` (#901) groups the bands under `<h3>` name-cluster headings — each name
   renders once and each band leads with its within-cluster distinguisher (facet,
   delivery column, or member slug) rather than the repeated name. One shared staged diff
-  and a single "Apply" footer span all bands. Each picker row is marked with the
-  **kind** of dimension that distinguishes it from its siblings — a `facet` (a #819
-  `GroupAxis` value, per member), `variant` (variant/population), or `coding` (value-set
-  version label) — and a **per-dimension filter strip** lets the user narrow a large
-  multi-axis group to one axis value (#908, `pickerFilterDimensions` / `pickerRowPasses`
-  / `PickerDimension` in `catalog.ts`). A dimension surfaces as a filter only when it
-  discriminates (≥2 distinct values across all visible rows); single-value dimensions
-  are invisible. Filtering is a client-side presentation lens: a hidden-but-selected row
-  still commits, and the footer signals this. The filter logic mirrors the #819
-  `ConceptGroupNavigator`: OR within a dimension, AND across. When the group's graph is
-  edge-bearing, small enough to draw cleanly, has no declared facet axes or other
-  filterable dimensions, and maps every graph cell one-to-one to the visible picker
-  rows, the same picker may switch to graph / time-band mode instead of the list; dense,
-  edge-less, faceted, folded, empty, or otherwise ambiguous sets remain on the compact
-  list.
+  footer spans all bands; it renders only when something is staged and labels the action
+  by diff shape ("Add to project", "Remove from project", or "Apply changes"). Each
+  picker row is marked with the **kind** of dimension that distinguishes it from its
+  siblings — a `facet` (a #819 `GroupAxis` value, per member), `variant`
+  (variant/population), or `coding` (value-set version label) — and a **per-dimension
+  filter strip** lets the user narrow a large multi-axis group to one axis value (#908,
+  `pickerFilterDimensions` / `pickerRowPasses` / `PickerDimension` in `catalog.ts`). A
+  dimension surfaces as a filter only when it discriminates (≥2 distinct values across
+  all visible rows); single-value dimensions are invisible. Filtering is a client-side
+  presentation lens: a hidden-but-selected row still commits, and the footer signals
+  this. The filter logic mirrors the #819 `ConceptGroupNavigator`: OR within a
+  dimension, AND across. When the group's graph is edge-bearing, small enough to draw
+  cleanly, has no declared facet axes or other filterable dimensions, and maps every
+  graph cell one-to-one to the visible picker rows, the same picker may switch to graph
+  / time-band mode instead of the list; dense, edge-less, faceted, folded, empty, or
+  otherwise ambiguous sets remain on the compact list.
 
   Two **succession-collapse** folds ship in #902, both client-side and purely
   presentational:
@@ -1380,11 +1381,12 @@ form when the start is unknown (#658).
   - **Empty** (`states.length === 0`): a clean "no state delivered for this period"
     message (a valid resolved period outside every validity window — not an error).
 
-  **`?codes=<column>` deep-link** (#905): the picker's "codings vary" nudge became a
-  deep link to `?codes=<column>#states-heading`. `BindingLeafView` reads `?codes` into
-  `focusColumn` (pure view state — no refetch) and passes it to `ValueSetView`, which
-  seeds the local isolation onto the distinct value set `valueSetKeyForColumn` resolves
-  that column to (latest-era coding), then scrolls the viewer into view. A stale or
+  **`?codes=<variant>::<column>` deep-link** (#905/#1058): the picker's "codings vary"
+  nudge became a deep link to `?codes=<variant>::<column>#states-heading`.
+  `BindingLeafView` reads `?codes` into value-set focus state (pure view state — no
+  refetch) and passes it to `ValueSetView`, which seeds the local isolation onto the
+  distinct value set `valueSetKeyForColumn` resolves for that row identity. A folded
+  graph cell passes the cell's era column, not the row's latest column. A stale or
   unknown column degrades silently to the default union view.
 
   The component is kept standalone (not folded back into the leaf) so the graph/picker
