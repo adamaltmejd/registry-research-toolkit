@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
 import ValidationPanel from "./ValidationPanel.svelte";
@@ -34,7 +34,9 @@ describe("ValidationPanel — researcher-language findings", () => {
   it("leads with the human title, demotes the raw code, never shows the raw pointer", async () => {
     await render(ValidationPanel, {
       result: DRIFT_RESULT,
+      status: "warnings",
       requestError: null,
+      windowHints: [],
       sources: SOURCES,
     });
 
@@ -65,7 +67,9 @@ describe("ValidationPanel — researcher-language findings", () => {
   it("links out to the binding's catalog subject page (read-only cart fixes happen in the browser, #991)", async () => {
     await render(ValidationPanel, {
       result: DRIFT_RESULT,
+      status: "warnings",
       requestError: null,
+      windowHints: [],
       sources: SOURCES,
     });
 
@@ -91,7 +95,9 @@ describe("ValidationPanel — researcher-language findings", () => {
           },
         ],
       },
+      status: "errors",
       requestError: null,
+      windowHints: [],
       sources: SOURCES,
     });
 
@@ -113,7 +119,9 @@ describe("ValidationPanel — researcher-language findings", () => {
     try {
       await render(ValidationPanel, {
         result: DRIFT_RESULT,
+        status: "warnings",
         requestError: null,
+        windowHints: [],
         sources: SOURCES,
       });
 
@@ -143,7 +151,9 @@ describe("ValidationPanel — researcher-language findings", () => {
           },
         ],
       },
+      status: "errors",
       requestError: null,
+      windowHints: [],
       sources: SOURCES,
     });
 
@@ -152,5 +162,96 @@ describe("ValidationPanel — researcher-language findings", () => {
     // top-level path does NOT resolve to a card.
     expect(sourceAnchorId(0)).toBe("loc-source-0");
     await expect.element(page.getByText("/name")).toBeVisible();
+  });
+
+  it("shows the automatic checking state while validation is pending", async () => {
+    await render(ValidationPanel, {
+      result: null,
+      status: "checking",
+      requestError: null,
+      windowHints: [],
+      sources: SOURCES,
+    });
+
+    await expect
+      .element(page.getByText("Checking the current project…"))
+      .toBeVisible();
+    expect(document.querySelector('[aria-busy="true"]')).not.toBeNull();
+  });
+
+  it("shows project-window coverage hints without mixing them into validation issues", async () => {
+    await render(ValidationPanel, {
+      result: { ok: true, issues: [] },
+      status: "ok",
+      requestError: null,
+      windowHints: [
+        {
+          label: "Source 'lisa_main'",
+          message:
+            "Source 'lisa_main' ends in 2018, before your study window ends 2020.",
+          catalogHref: "/catalog/scb/lisa",
+          catalogLabel: "scb/lisa",
+        },
+      ],
+      sources: SOURCES,
+    });
+
+    await expect
+      .element(
+        page.getByText(
+          "Source 'lisa_main' ends in 2018, before your study window ends 2020.",
+        ),
+      )
+      .toBeVisible();
+    const link = page.getByRole("link", { name: /Extend in catalog/ });
+    await expect.element(link).toBeVisible();
+    await expect.element(link).toHaveAttribute("href", "/catalog/scb/lisa");
+    expect(document.body.textContent).not.toContain("window_coverage");
+  });
+
+  it("offers a retry action when the validation request itself fails", async () => {
+    const onRetry = vi.fn();
+    await render(ValidationPanel, {
+      result: null,
+      status: "unchecked",
+      requestError: "request body is not a JSON object",
+      windowHints: [],
+      sources: SOURCES,
+      onRetry,
+    });
+
+    const retry = page.getByRole("button", { name: "Retry validation" });
+    await expect.element(retry).toBeVisible();
+    await retry.click();
+    expect(onRetry).toHaveBeenCalledOnce();
+  });
+
+  it("renders window hints for duplicate source labels without crashing", async () => {
+    await render(ValidationPanel, {
+      result: { ok: false, issues: [] },
+      status: "errors",
+      requestError: null,
+      windowHints: [
+        {
+          label: "Source 'dup'",
+          message:
+            "Source 'dup' ends in 2018, before your study window ends 2020.",
+          catalogHref: "/catalog/scb/lisa",
+          catalogLabel: "scb/lisa",
+        },
+        {
+          label: "Source 'dup'",
+          message:
+            "Source 'dup' ends in 2019, before your study window ends 2020.",
+          catalogHref: "/catalog/scb/rams",
+          catalogLabel: "scb/rams",
+        },
+      ],
+      sources: SOURCES,
+    });
+
+    expect(
+      page.getByRole("link", { name: /Extend in catalog/ }).elements(),
+    ).toHaveLength(2);
   });
 });

@@ -1,6 +1,13 @@
 <script lang="ts">
 import type { ValidationResultModel } from "./api";
-import { codeLabel, findingLocation, type ValidationIssue } from "./validation";
+import type { ValidationStatus } from "./project_store.svelte";
+import { Button } from "./ui";
+import {
+  codeLabel,
+  findingLocation,
+  type ValidationIssue,
+  type WindowCoverageHint,
+} from "./validation";
 
 // The validation echo (see reg_schema/DESIGN.md → Structural rules and issue
 // codes). Renders the `/validate` result's issue list grouped
@@ -14,10 +21,13 @@ import { codeLabel, findingLocation, type ValidationIssue } from "./validation";
 // ("Source 'lisa_main' → binding scb/lisa/adeldag", via `findingLocation`) that
 // scrolls to and briefly flashes the relevant source/binding card. `sources` is the
 // draft's (possibly malformed) source list, used only to resolve those labels.
-const { result, requestError, sources } = $props<{
+const { result, status, requestError, windowHints, sources, onRetry } = $props<{
   result: ValidationResultModel | null;
+  status: ValidationStatus;
   requestError: string | null;
+  windowHints: readonly WindowCoverageHint[];
   sources: readonly { name?: unknown; bindings?: unknown }[];
+  onRetry?: () => void;
 }>();
 
 // Scroll the located card into view and flash it. Imperative (not a binding):
@@ -66,18 +76,32 @@ const LEVEL_LABEL: Record<Level, string> = {
 <section class="validation" aria-label="Validation results">
   {#if requestError}
     <!-- A malformed REQUEST (true 4xx) — distinct from the 200 ok:false list. -->
-    <p class="banner request-error" role="alert">
-      <strong>Request failed:</strong>
-      {requestError}
-    </p>
+    <div class="banner request-error" role="alert">
+      <span class="banner-text">
+        <strong>Request failed:</strong>
+        {requestError}
+      </span>
+      {#if onRetry}
+        <Button variant="default" size="sm" onclick={onRetry}>
+          Retry validation
+        </Button>
+      {/if}
+    </div>
   {/if}
 
-  {#if result == null}
-    <p class="muted">Not yet validated. Run <strong>Validate</strong> to check this project against the backend.</p>
+  {#if status === "checking"}
+    <p class="summary checking" role="status" aria-busy="true">
+      Checking the current project…
+    </p>
+  {:else if result == null}
+    <p class="muted">Validation has not run for this draft yet.</p>
   {:else}
-    <p class="summary {result.ok ? 'ok' : 'fail'}" role="status">
+    <p
+      class="summary {status === 'warnings' ? 'warning' : result.ok ? 'ok' : 'fail'}"
+      role="status"
+    >
       {#if result.ok}
-        Valid — no errors.
+        {status === "warnings" ? "Valid with warnings" : "Valid"} — no errors.
         {#if result.issues.length > 0}
           ({result.issues.length} non-blocking {result.issues.length === 1 ? "note" : "notes"}.)
         {/if}
@@ -86,7 +110,6 @@ const LEVEL_LABEL: Record<Level, string> = {
         {grouped.error.length === 1 ? "error" : "errors"}.
       {/if}
     </p>
-
     {#each LEVELS as level (level)}
       {#if grouped[level].length > 0}
         <div class="group {level}">
@@ -130,6 +153,30 @@ const LEVEL_LABEL: Record<Level, string> = {
       {/if}
     {/each}
   {/if}
+
+  {#if windowHints.length > 0}
+    <div class="group warning">
+      <h4 class="micro-label">
+        Study window coverage ({windowHints.length})
+      </h4>
+      <ul>
+        {#each windowHints as hint, i (i)}
+          <li>
+            <p class="message">{hint.message}</p>
+          <div class="locators">
+            {#if hint.catalogHref}
+              <a class="catalog-link" href={hint.catalogHref}>
+                Extend in catalog: <code>{hint.catalogLabel}</code>
+              </a>
+            {:else}
+              <span class="path muted">{hint.label}</span>
+            {/if}
+          </div>
+          </li>
+        {/each}
+      </ul>
+    </div>
+  {/if}
 </section>
 
 <style>
@@ -141,7 +188,14 @@ const LEVEL_LABEL: Record<Level, string> = {
     border-radius: var(--radius-sm);
     margin-bottom: var(--space-4);
   }
+  .banner-text {
+    flex: 1;
+  }
   .request-error {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-3);
     background: var(--err-bg);
     border: 1px solid var(--red-border);
   }
@@ -156,6 +210,16 @@ const LEVEL_LABEL: Record<Level, string> = {
     background: var(--ok-bg);
     border: 1px solid var(--ok);
     color: var(--ok);
+  }
+  .summary.checking {
+    background: var(--surface-sunken);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+  }
+  .summary.warning {
+    background: var(--warn-bg);
+    border: 1px solid var(--warn);
+    color: var(--warn);
   }
   .summary.fail {
     background: var(--err-bg);

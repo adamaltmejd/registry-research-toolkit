@@ -168,12 +168,16 @@ describe("dirty flag", () => {
     await projectStore.validate();
     expect(projectStore.validation?.ok).toBe(true);
     expect(projectStore.validatedClean).toBe(true);
+    expect(projectStore.validationStatus).toBe("ok");
+    expect(projectStore.canDownloadOrder).toBe(true);
     // A staged-diff edit must invalidate it so the order download gate re-closes.
     projectStore.applyStagedDiff({
       adds: [add("scb/lisa/v1", "scb/lisa/kon", 2018)],
     });
     expect(projectStore.validation).toBeNull();
     expect(projectStore.validatedClean).toBe(false);
+    expect(projectStore.validationStatus).toBe("unchecked");
+    expect(projectStore.canDownloadOrder).toBe(false);
   });
 });
 
@@ -261,6 +265,36 @@ describe("validate (200 ok:false vs 4xx split + stale-response guard)", () => {
     expect(r).toBeNull();
     expect(projectStore.requestError).toBe("request body is not a JSON object");
     expect(projectStore.validation).toBeNull();
+    expect(projectStore.validationStatus).toBe("unchecked");
+  });
+
+  it("clears a previous green result when the current draft's recheck request fails", async () => {
+    const responses = [
+      {
+        ok: true,
+        status: 200,
+        json: async () => ({ ok: true, issues: [] }),
+      },
+      {
+        ok: false,
+        status: 400,
+        json: async () => ({ detail: "request body is not a JSON object" }),
+      },
+    ];
+    stubFetch(async () => responses.shift() ?? responses.at(-1));
+    projectStore.newProject(SEED);
+
+    await projectStore.validate();
+    expect(projectStore.validationStatus).toBe("ok");
+    expect(projectStore.canDownloadOrder).toBe(true);
+
+    const r = await projectStore.validate();
+
+    expect(r).toBeNull();
+    expect(projectStore.requestError).toBe("request body is not a JSON object");
+    expect(projectStore.validation).toBeNull();
+    expect(projectStore.validationStatus).toBe("unchecked");
+    expect(projectStore.canDownloadOrder).toBe(false);
   });
 
   it("discards a stale response when the draft changed mid-flight (no resurrected validatedClean)", async () => {
@@ -286,6 +320,7 @@ describe("validate (200 ok:false vs 4xx split + stale-response guard)", () => {
     await pending;
     expect(projectStore.validation).toBeNull();
     expect(projectStore.validatedClean).toBe(false);
+    expect(projectStore.canDownloadOrder).toBe(false);
   });
 });
 
@@ -367,6 +402,43 @@ describe("persistence wiring (the A5.4 swap point)", () => {
     await loaded!;
     expect(fake.load).toHaveBeenCalled();
     stop();
+  });
+
+  it("auto-validates the current draft after the debounce", async () => {
+    vi.useFakeTimers();
+    const bodies: unknown[] = [];
+    setPersistence({
+      save: () => Promise.resolve(),
+      load: () => Promise.resolve(null),
+    });
+    stubFetch(async (_url, init) => {
+      if (init?.body != null) {
+        bodies.push(JSON.parse(init.body as string));
+      }
+      return {
+        ok: true,
+        status: 200,
+        json: async () => ({ ok: true, issues: [] }),
+      };
+    });
+    projectStore.newProject(SEED);
+
+    const stop = $effect.root(() => {
+      initPersistence();
+    });
+    await Promise.resolve();
+    expect(projectStore.validationStatus).toBe("checking");
+    expect(projectStore.canDownloadOrder).toBe(false);
+
+    await vi.advanceTimersByTimeAsync(300);
+
+    expect(bodies).toHaveLength(1);
+    expect(projectStore.validation?.ok).toBe(true);
+    expect(projectStore.validationStatus).toBe("ok");
+    expect(projectStore.canDownloadOrder).toBe(true);
+
+    stop();
+    vi.useRealTimers();
   });
 });
 

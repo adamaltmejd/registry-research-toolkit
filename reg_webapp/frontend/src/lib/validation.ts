@@ -20,6 +20,8 @@
 
 import type { components } from "./api-types";
 import { catalogHref, registerPrefixOf } from "./catalog";
+import { periodYearIntervals } from "./period";
+import type { Period, PeriodSegment, StudyWindow } from "./project_data";
 
 export type ValidationIssue = components["schemas"]["ValidationIssueModel"];
 export type ValidationResult = components["schemas"]["ValidationResultModel"];
@@ -259,6 +261,151 @@ export interface FindingLocation {
    * "fix it in the browser" outbound link (#991). Omitted otherwise. */
   catalogHref?: string;
   catalogLabel?: string;
+}
+
+export interface WindowCoverageHint {
+  label: string;
+  message: string;
+  catalogHref?: string;
+  catalogLabel?: string;
+}
+
+function comparablePeriodSegment(segment: unknown): PeriodSegment | null {
+  if (typeof segment === "number" || typeof segment === "string") {
+    return segment;
+  }
+  if (
+    segment != null &&
+    typeof segment === "object" &&
+    "from" in segment &&
+    "to" in segment
+  ) {
+    const { from, to } = segment as { from?: unknown; to?: unknown };
+    if (
+      (typeof from === "number" || typeof from === "string") &&
+      (typeof to === "number" || typeof to === "string")
+    ) {
+      return { from, to };
+    }
+  }
+  return null;
+}
+
+function comparablePeriod(period: unknown): Period | null {
+  if (Array.isArray(period)) {
+    const segments: PeriodSegment[] = [];
+    for (const segment of period) {
+      const comparable = comparablePeriodSegment(segment);
+      if (comparable == null) {
+        return null;
+      }
+      segments.push(comparable);
+    }
+    return segments;
+  }
+  return comparablePeriodSegment(period);
+}
+
+function windowCoverageMessage(
+  label: string,
+  gaps: readonly StudyWindow[],
+  window: StudyWindow,
+): string | null {
+  if (gaps.length === 0) {
+    return null;
+  }
+  const missing = gaps.map(formatYearRange).join(", ");
+  return `${label} does not cover ${missing} within your study window ${window.from}..${window.to}.`;
+}
+
+function formatYearRange(window: StudyWindow): string {
+  return window.from === window.to
+    ? String(window.from)
+    : `${window.from}..${window.to}`;
+}
+
+function uncoveredStudyWindowIntervals(
+  intervals: readonly StudyWindow[],
+  window: StudyWindow,
+): StudyWindow[] {
+  let cursor = window.from;
+  const gaps: StudyWindow[] = [];
+  for (const interval of intervals) {
+    if (interval.to < cursor) {
+      continue;
+    }
+    if (interval.from > window.to) {
+      break;
+    }
+    if (interval.from > cursor) {
+      gaps.push({ from: cursor, to: Math.min(interval.from - 1, window.to) });
+    }
+    cursor = Math.max(cursor, interval.to + 1);
+    if (cursor > window.to) {
+      break;
+    }
+  }
+  if (cursor <= window.to) {
+    gaps.push({ from: cursor, to: window.to });
+  }
+  return gaps;
+}
+
+/** Client-side project-window hint for the read-only cart (#994). This is NOT a
+ * synthetic ValidationIssue: it compares two values already in the draft and
+ * gently points the user back to the register page to stage an extension. Token
+ * periods are skipped because mixed-grain coverage is not safely comparable. */
+export function windowCoverageHints(
+  window: StudyWindow | null | undefined,
+  sources: readonly {
+    name?: unknown;
+    register_variant?: unknown;
+    period?: unknown;
+  }[],
+): WindowCoverageHint[] {
+  if (
+    window == null ||
+    !Number.isInteger(window.from) ||
+    !Number.isInteger(window.to)
+  ) {
+    return [];
+  }
+  const hints: WindowCoverageHint[] = [];
+  for (const [index, source] of sources.entries()) {
+    const period = comparablePeriod(source?.period);
+    if (period == null) {
+      continue;
+    }
+    const intervals = periodYearIntervals(period);
+    if (intervals == null) {
+      continue;
+    }
+    const rawName = source?.name;
+    const label =
+      typeof rawName === "string" && rawName.length > 0
+        ? `Source '${rawName}'`
+        : `Source ${index + 1}`;
+    const rv = source?.register_variant;
+    const registerPrefix = typeof rv === "string" ? registerPrefixOf(rv) : "";
+    const gaps = uncoveredStudyWindowIntervals(intervals, window);
+    const message = windowCoverageMessage(label, gaps, window);
+    if (message == null) {
+      continue;
+    }
+    const catalog =
+      registerPrefix.length > 0
+        ? {
+            catalogHref: catalogHref(registerPrefix),
+            catalogLabel: registerPrefix,
+          }
+        : {};
+    hints.push({
+      label,
+      message,
+      ...catalog,
+    });
+  }
+  return hints;
 }
 
 export function findingLocation(

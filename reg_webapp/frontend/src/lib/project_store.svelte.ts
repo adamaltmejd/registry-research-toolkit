@@ -66,6 +66,9 @@ export const storeSchemaVersion = 1;
 /** The debounce window for the autosave `$effect` (~500ms). */
 const AUTOSAVE_DEBOUNCE_MS = 500;
 
+/** The debounce window for automatic backend validation after a draft edit. */
+const AUTO_VALIDATE_DEBOUNCE_MS = 300;
+
 // ── Version gate (THE A5.4 SEAM) ────────────────────────────────────────────
 
 /** The result of `checkVersionGate`. `ok:true` = load is allowed (the accept path,
@@ -237,8 +240,26 @@ let validation = $state<ValidationResultModel | null>(null);
  * 4xx ApiError message) — distinct from a 200 `ok:false` issue list. */
 let requestError = $state<string | null>(null);
 
-/** True while a `/validate` or download POST is in flight (disables the toolbar). */
-let busy = $state(false);
+/** True while a `/validate` POST is in flight. */
+let validationBusy = $state(false);
+
+/** True while an automatic validation debounce is waiting to fire. */
+let validationScheduled = $state(false);
+
+/** True while an order CSV download POST is in flight. */
+let orderBusy = $state(false);
+
+/** Whether a validation request is currently running; non-reactive because the
+ * reactive status is `validationBusy`. */
+let validationInFlight = false;
+
+/** A draft change or explicit validate call happened while a validation request was
+ * already in flight; run one trailing validation once the current request settles. */
+let validationQueued = false;
+
+/** Monotonic draft generation used to reject stale validation responses even when a
+ * future edit reuses the same object shape. */
+let validationGeneration = 0;
 
 /** The dirty flag: the draft has diverged from the last download. */
 const dirty = $derived(
@@ -249,11 +270,36 @@ const dirty = $derived(
  * Re-validation is required after any edit (an edit clears `validation`). */
 const validatedClean = $derived(validation?.ok === true);
 
+export type ValidationStatus =
+  | "unchecked"
+  | "checking"
+  | "ok"
+  | "warnings"
+  | "errors";
+
+const validationStatus = $derived.by<ValidationStatus>(() => {
+  if (validationScheduled || validationBusy) {
+    return "checking";
+  }
+  if (validation == null) {
+    return "unchecked";
+  }
+  if (!validation.ok) {
+    return "errors";
+  }
+  return validation.issues.length > 0 ? "warnings" : "ok";
+});
+
+const canDownloadOrder = $derived(
+  validatedClean && !validationScheduled && !validationBusy && !orderBusy,
+);
+
 /** Replace the draft, clearing the stale validation (an edit invalidates the last
  * `/validate` result). The mutators below all funnel through here so `dirty` and
  * `validatedClean` recompute on every edit. */
 function setDraft(next: ProjectData): void {
   draft = next;
+  validationGeneration += 1;
   validation = null;
 }
 
@@ -427,10 +473,22 @@ export const projectStore = {
     return requestError;
   },
   get busy() {
-    return busy;
+    return validationBusy || orderBusy;
+  },
+  get validationBusy() {
+    return validationBusy;
+  },
+  get orderBusy() {
+    return orderBusy;
   },
   get validatedClean() {
     return validatedClean;
+  },
+  get canDownloadOrder() {
+    return canDownloadOrder;
+  },
+  get validationStatus() {
+    return validationStatus;
   },
 
   // ── Stable client-side ids (issue #200 — keys for the editor each-blocks) ──
@@ -479,6 +537,7 @@ export const projectStore = {
     // skeleton is always well-formed here, but this matches openFromFile/restore.
     const ids = buildIds(next);
     draft = next;
+    validationGeneration += 1;
     sourceIds = ids;
     lastDownloaded = serializeProjectData(next);
     validation = null;
@@ -530,6 +589,7 @@ export const projectStore = {
     const opened = obj as ProjectData;
     const ids = buildIds(opened);
     draft = opened;
+    validationGeneration += 1;
     sourceIds = ids;
     lastDownloaded = serializeProjectData(opened);
     validation = null;
@@ -570,29 +630,48 @@ export const projectStore = {
     if (draft == null) {
       return null;
     }
-    // Snapshot the draft reference. The name input is NOT disabled during a
-    // validate, and the mutators / new / open all REPLACE the whole draft object,
-    // so a mid-flight edit makes `draft !== target`. Discard a stale response
-    // rather than writing `validation` for a superseded draft — otherwise an
-    // edit's `validation = null` (setDraft) gets clobbered by the old result,
-    // wrongly flipping `validatedClean` back on and re-enabling the downloads.
-    const target = draft;
-    busy = true;
-    requestError = null;
-    try {
-      const result = await validateProject(target as ProjectDataBody);
-      if (draft !== target) {
-        return result;
-      }
-      validation = result;
-      return result;
-    } catch (e) {
-      if (draft === target) {
-        requestError = errMessage(e);
-      }
+    if (validationInFlight) {
+      validationQueued = true;
       return null;
+    }
+
+    let latestResult: ValidationResultModel | null = null;
+    validationInFlight = true;
+    validationBusy = true;
+    try {
+      do {
+        validationQueued = false;
+        // Snapshot the draft reference + generation. Mutators / new / open all
+        // REPLACE the whole draft object and bump the generation, so a mid-flight
+        // edit makes this response stale. Discard it rather than writing
+        // validation for a superseded draft — otherwise stale green results would
+        // re-enable the order CSV download.
+        const target: ProjectData | null = draft;
+        const targetGeneration = validationGeneration;
+        if (target == null) {
+          return latestResult;
+        }
+        requestError = null;
+        try {
+          const result = await validateProject(target as ProjectDataBody);
+          if (draft !== target || validationGeneration !== targetGeneration) {
+            latestResult = result;
+            continue;
+          }
+          validation = result;
+          latestResult = result;
+        } catch (e) {
+          if (draft === target && validationGeneration === targetGeneration) {
+            validation = null;
+            requestError = errMessage(e);
+          }
+          latestResult = null;
+        }
+      } while (validationQueued && draft != null);
+      return latestResult;
     } finally {
-      busy = false;
+      validationInFlight = false;
+      validationBusy = false;
     }
   },
 
@@ -602,14 +681,14 @@ export const projectStore = {
     if (draft == null) {
       return;
     }
-    busy = true;
+    orderBusy = true;
     requestError = null;
     try {
       await downloadOrderCsv(draft as ProjectDataBody);
     } catch (e) {
       requestError = errMessage(e);
     } finally {
-      busy = false;
+      orderBusy = false;
     }
   },
 
@@ -1015,6 +1094,7 @@ export function initPersistence(): Promise<void> {
       // can't leave a restored draft with a stale/empty mirror inside this `.then()`.
       const ids = buildIds(restored);
       draft = restored;
+      validationGeneration += 1;
       sourceIds = ids;
       // Do NOT reset lastDownloaded here: a restored autosave draft has NOT been
       // downloaded to the durable project_data.json this session, so it must read
@@ -1047,6 +1127,26 @@ export function initPersistence(): Promise<void> {
       );
     }, AUTOSAVE_DEBOUNCE_MS);
     return () => clearTimeout(timer);
+  });
+
+  // Auto-validation: every draft replacement schedules a backend validation of the
+  // current serialized draft. The backend stays canonical; this only retires the
+  // manual "Validate" click from the cart UI.
+  $effect(() => {
+    const current = draft;
+    if (current == null) {
+      validationScheduled = false;
+      return;
+    }
+    validationScheduled = true;
+    const timer = setTimeout(() => {
+      validationScheduled = false;
+      void projectStore.validate();
+    }, AUTO_VALIDATE_DEBOUNCE_MS);
+    return () => {
+      clearTimeout(timer);
+      validationScheduled = false;
+    };
   });
 
   return loaded;
