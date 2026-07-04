@@ -1325,12 +1325,15 @@ kind:
 
   The **graph/time-band render mode** (#904) consumes the same `RelationshipGraph`
   payload and the same picker rows. It is strictly additive: it is enabled only when the
-  graph has succession edges, stays under conservative node/edge/cell limits, every
-  picker band has graph coverage, every picker row is represented, every graph cell maps
-  to exactly one member column, and no #908 filter strip would be hidden. Otherwise the
-  compact list is the authoritative picker. A variable leaf still passes its graph so
-  the picker graph renders no-column and sibling/predecessor context as unavailable
-  cells when there is no safe selectable picker row.
+  drawable graph projection stays under conservative node/edge/cell limits, every
+  visible picker band has graph coverage, every visible picker row is represented, and
+  every selectable graph cell maps to exactly one member column. The #908 filter strip
+  remains above both list and graph modes; active filters narrow the graph to the
+  visible member projection rather than hiding the filters or leaking filtered-out
+  lanes. Otherwise the compact list is the authoritative picker. A variable leaf still
+  passes its graph so the picker graph renders no-column, same_as-only, and
+  sibling/predecessor context as unavailable cells when there is no safe selectable
+  picker row.
 
 The **time axis** is the shared `PeriodPicker` (see the Project-window store section): a
 slider-only year-window control seeded from the project window and subject coverage. It
@@ -1417,15 +1420,17 @@ form when the start is unknown (#658).
 
 `RepresentationPicker` owns the rendered variable/concept-group graph context. It uses
 the `RelationshipGraph` payload as a graph/time-band picker when selectable cells can be
-projected onto the picker row model without dropping rows or leaking non-member columns.
-Variable nodes lay out as horizontal representation-run cells along the shared time
-axis; each selectable cell maps back to a picker row by variant + delivery column,
-including #902's folded rename rows when that mapping is one-to-one. Cells that carry
-leaf graph context but have no selectable picker row (for example no-column bindings or
-sibling/predecessor context on a leaf) render as unavailable context, not as checkboxes.
-The #908 dimension filter strip is shared by list and graph modes. `LineageDetails`
-carries the variable-only non-graph residue (`variable_state_lineage` provenance edges
-and `/lineage_warnings`).
+projected onto the picker row model without dropping visible rows or leaking non-member
+columns. Variable nodes lay out as horizontal representation-run cells along the shared
+time axis; each selectable cell maps back to a picker row by variant + delivery column,
+including #902's folded rename rows when that mapping is one-to-one. In group mode the
+rendered graph is the current visible member projection, so #908 filters can hide whole
+members and still keep graph mode when the remaining projection is drawable. Cells that
+carry leaf graph context but have no selectable picker row (for example no-column
+bindings, same_as-only context, or sibling/predecessor context on a leaf) render as
+unavailable context, not as checkboxes. The #908 dimension filter strip is shared by
+list and graph modes. `LineageDetails` carries the variable-only non-graph residue
+(`variable_state_lineage` provenance edges and `/lineage_warnings`).
 
 ### Rejected alternatives + the viz-dependency trigger (#667 spike)
 
