@@ -73,6 +73,37 @@ that omits `--base` falls back here, so the launcher reviews \
 """
 
 
+# --- captured STDERR shapes (codex-cli 0.142.5) --------------------------------------
+# codex emits its exec activity on STDERR: `exec` blocks, ` succeeded in <N>ms:` success
+# markers, and (in a nested sandbox) the `sandbox_apply: Operation not permitted` denial.
+# These mirror the shapes captured from the real PR #1078 run (success) and its sandboxed
+# variant (denial); the SUCCESS marker is what parse_transcript never sees (it reads stdout).
+
+# A real successful run's stderr: a codex banner + an exec block whose result line reports
+# ` succeeded in 0ms:` — the marker the no-op-review backstop keys off.
+SUCCESS_STDERR = """\
+[2026-07-04T00:00:00] OpenAI Codex v0.142.5
+[2026-07-04T00:00:00] exec bash -lc 'git diff --stat' in /repo
+[2026-07-04T00:00:00] bash -lc 'git diff --stat' succeeded in 0ms:
+ scripts/x.py | 2 +-
+"""
+
+# The nested-sandbox false-clean pair. stdout is the ~1KB prose codex prints when every exec
+# failed (no findings header, no `- [P` lines — so all existing guards pass); stderr shows the
+# exec block failing with the sandbox denial and NO ` succeeded in` marker.
+SANDBOXED_CLEAN_STDOUT = """\
+codex
+I could not inspect the patch because the review environment refused to run any commands. \
+No actionable code findings can be produced from the unavailable diff.
+"""
+SANDBOXED_DENIAL_STDERR = """\
+[2026-07-04T00:00:00] OpenAI Codex v0.142.5
+[2026-07-04T00:00:00] exec bash -lc 'git diff --stat' in /repo
+[2026-07-04T00:00:00] bash -lc 'git diff --stat' failed: \
+sandbox-exec: sandbox_apply: Operation not permitted
+"""
+
+
 # --- parse_transcript: findings ------------------------------------------------------
 
 
@@ -330,9 +361,10 @@ def test_run_codex_stderr_is_not_parsed_and_is_delimited(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
     # A `- [P…]` line and a `codex` marker in STDERR must not affect the parse: run_codex
-    # returns stdout only, and the evidence file puts stderr after the delimiter.
+    # returns stdout only, and the evidence file puts stderr after the delimiter. The
+    # ` succeeded in 0ms:` line keeps the no-op-review backstop satisfied (a real run has one).
     stdout = "codex\nReviewed, no issues.\n"
-    stderr = "codex\n- [P1] Stray in stderr — a.py:1-1\n"
+    stderr = "codex\n- [P1] Stray in stderr — a.py:1-1\n git diff succeeded in 0ms:\n"
     _stub_popen(monkeypatch, stdout, stderr, 0)
     out_path = tmp_path / "t.md"
 
@@ -375,6 +407,131 @@ def test_run_codex_timeout_kills_group_and_writes_partial(
     assert e.value.kind == clr.KIND_TIMEOUT
     assert killed == [4242]
     assert "partial stdout" in out_path.read_text(encoding="utf-8")
+
+
+def test_run_codex_nested_sandbox_denial_is_tool_failure(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    # The #1049 nested-sandbox false clean: codex exits 0 with a prose "could not inspect"
+    # message (no findings header) while its stderr shows every exec denied by
+    # `sandbox_apply: Operation not permitted`. Must fail-closed as tool_failure, not clean.
+    # SANDBOXED_DENIAL_STDERR has zero `succeeded in` markers, so the single no-op gate (no
+    # exec-success marker on stderr) fires; the denial marker on stderr then SELECTS the
+    # actionable sandbox message (match="sandbox") over the generic backstop.
+    _stub_popen(monkeypatch, SANDBOXED_CLEAN_STDOUT, SANDBOXED_DENIAL_STDERR, 0)
+
+    with pytest.raises(clr.PreconditionError, match="sandbox") as e:
+        clr.run_codex("deadbeef", tmp_path / "t.md", cwd=tmp_path, timeout_s=1.0)
+    assert e.value.kind == clr.KIND_TOOL_FAILURE
+
+
+def test_run_codex_denial_string_in_reviewed_content_does_not_false_block(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    # Regression: the false-BLOCK the local Codex review of PR #1080 itself caught. When codex
+    # DID exec successfully (a `succeeded in` marker on stderr), the review inspected the diff,
+    # so the `sandbox_apply: Operation not permitted` string — appearing in codex's findings on
+    # STDOUT and echoed on stderr via a quoted diff line — is PR CONTENT, not a real denial. The
+    # old combined-transcript denial scan raised a false tool_failure here; the restructured
+    # gate (exec-success absence is the ONLY gate) must NOT fire, so run_codex returns stdout
+    # unchanged. This PR's own source/tests/docs quote the string, which is exactly what tripped
+    # the false block live.
+    stdout = (
+        "codex\n"
+        "Review comment:\n\n"
+        "- [P2] Restrict sandbox-denial detection — a.py:1-1\n"
+        "  The guard scans for `sandbox_apply: Operation not permitted` too broadly.\n"
+    )
+    stderr = (
+        "[t] exec bash -lc 'git diff' in /repo\n"
+        "[t] bash -lc 'git diff' succeeded in 0ms:\n"
+        "+    # `sandbox_apply: Operation not permitted` documented in the diff\n"
+    )
+    _stub_popen(monkeypatch, stdout, stderr, 0)
+
+    returned = clr.run_codex("deadbeef", tmp_path / "t.md", cwd=tmp_path, timeout_s=1.0)
+
+    assert (
+        returned == stdout
+    )  # exec succeeded → denial string in content must not block
+
+
+def test_run_codex_no_successful_exec_is_tool_failure(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    # A general no-op review with NO sandbox_apply denial: an exec block that merely "exited 1"
+    # and NO ` succeeded in` marker anywhere. The backstop must still reject it as a failed
+    # review (the initial `git diff` never succeeded, so nothing was inspected).
+    stdout = "codex\nI was unable to inspect the diff; no findings can be produced.\n"
+    stderr = (
+        "[2026-07-04T00:00:00] exec bash -lc 'git diff --stat' in /repo\n"
+        "[2026-07-04T00:00:00] bash -lc 'git diff --stat' exited 1\n"
+    )
+    _stub_popen(monkeypatch, stdout, stderr, 0)
+
+    with pytest.raises(clr.PreconditionError, match="no successful exec") as e:
+        clr.run_codex("deadbeef", tmp_path / "t.md", cwd=tmp_path, timeout_s=1.0)
+    assert e.value.kind == clr.KIND_TOOL_FAILURE
+
+
+def test_run_codex_success_marker_on_stdout_only_is_tool_failure(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    # Fail-closed direction (mirrors test_run_codex_usage_limit_on_stdout_only_is_tool_failure):
+    # a PR/prose-controlled `succeeded in <N>ms` phrase on STDOUT must NOT satisfy the no-op
+    # backstop — only a real STDERR exec-success marker counts. Here stderr has none (and no
+    # sandbox denial), so the backstop must fire even though stdout carries the phrase.
+    stdout = "codex\nThe analysis succeeded in 75ms: but no command ran.\n"
+    stderr = "[t] exec bash -lc 'git diff' in /repo\n[t] exec failed: some error\n"
+    _stub_popen(monkeypatch, stdout, stderr, 0)
+
+    with pytest.raises(clr.PreconditionError, match="no successful exec") as e:
+        clr.run_codex("deadbeef", tmp_path / "t.md", cwd=tmp_path, timeout_s=1.0)
+    assert e.value.kind == clr.KIND_TOOL_FAILURE
+
+
+def test_run_codex_findings_transcript_passes_guards_unchanged(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    # The new stderr-scoped backstop must be a no-op ahead of a legitimate findings run: a real
+    # findings stdout + a stderr with a `succeeded in` marker returns stdout unchanged (doesn't
+    # eat real findings), and the pass-through stays parseable as findings.
+    _stub_popen(monkeypatch, FINDINGS_TRANSCRIPT, SUCCESS_STDERR, 0)
+
+    returned = clr.run_codex("deadbeef", tmp_path / "t.md", cwd=tmp_path, timeout_s=1.0)
+
+    assert returned == FINDINGS_TRANSCRIPT
+    assert (
+        clr.parse_transcript(returned, worktree_root=tmp_path)["verdict"] == "findings"
+    )
+
+
+def test_run_codex_with_successful_exec_returns_stdout(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    # Positive path: a real run has at least one ` succeeded in …` marker on stderr, so the
+    # no-op-review guards must NOT fire — run_codex returns stdout for parsing.
+    stdout = "codex\nReviewed the changes, no issues worth flagging.\n"
+    _stub_popen(monkeypatch, stdout, SUCCESS_STDERR, 0)
+
+    returned = clr.run_codex("deadbeef", tmp_path / "t.md", cwd=tmp_path, timeout_s=1.0)
+
+    assert returned == stdout
+
+
+@pytest.mark.parametrize(
+    ("text", "matches"),
+    [
+        ("bash -lc 'git diff' succeeded in 0ms:", True),
+        ("something succeeded in 1.2s:", True),
+        ("long command succeeded in 3m:", True),
+        ("the review succeeded in the end", False),
+    ],
+)
+def test_exec_success_re_matches_timing_units_only(text: str, matches: bool) -> None:
+    # The success marker regex accepts ms/s/m with an optional decimal, but not a prose
+    # "succeeded in the …" — so a chatty final message can't masquerade as a run exec.
+    assert bool(clr.EXEC_SUCCESS_RE.search(text)) is matches
 
 
 # --- preconditions (hermetic tmp git repos) ------------------------------------------
