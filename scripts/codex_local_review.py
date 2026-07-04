@@ -123,8 +123,8 @@ USAGE_LIMIT_MARKER = "reached your codex usage limits"
 # codex emits a ` succeeded in <N>ms:` line on STDERR after each exec it runs successfully
 # (timing unit is ms/s/m with an optional decimal on longer commands). A genuine review ALWAYS
 # runs at least the initial `git diff --stat/--name-status` and that exec succeeds — even an
-# empty-diff clean run runs and succeeds it — so the ABSENCE of any success marker across the
-# whole transcript means codex ran no exec at all and reviewed nothing (a false clean).
+# empty-diff clean run runs and succeeds it — so the ABSENCE of any success marker on STDERR
+# means codex ran no exec at all and reviewed nothing (a false clean).
 EXEC_SUCCESS_RE = re.compile(r"succeeded in \d+(?:\.\d+)?(?:ms|s|m)\b")
 # When codex can't spawn its sandbox (the nested Codex/Claude sandbox failure class, #1049),
 # every exec — including the initial `git diff` — fails with this denial on STDERR and codex
@@ -269,13 +269,14 @@ def run_codex(merge_base: str, out_path: Path, *, cwd: Path, timeout_s: float) -
         forever — the repo learned this in cos_watch), the partial transcript is written as
         gate evidence for diagnosing the hang, and kind timeout is raised;
       - a no-op review (exit 0, non-empty prose) where codex reviewed NOTHING → tool_failure.
-        Two cases, checked over the FULL transcript (stdout + stderr, since the exec markers
-        land on stderr which parse_transcript never sees): the nested-sandbox denial
-        (SANDBOX_DENIED_MARKER — every exec failed with `sandbox_apply: Operation not
-        permitted`, #1049), checked first for its actionable message; and the general
-        backstop of NO `succeeded in …` marker anywhere (a genuine review always runs the
-        initial `git diff` successfully, so its absence means nothing was reviewed). Both are
-        fail-closed so a review that inspected nothing can't land as a false `clean`.
+        Two cases (the exec markers land on stderr, which parse_transcript never sees): the
+        nested-sandbox denial (SANDBOX_DENIED_MARKER — every exec failed with `sandbox_apply:
+        Operation not permitted`, #1049), checked first for its actionable message over the
+        combined stdout+stderr (a false match there BLOCKS, so it stays broad); and the
+        general backstop of NO `succeeded in …` marker on STDERR (a genuine review always runs
+        the initial `git diff` successfully, so its absence means nothing was reviewed) —
+        scoped to stderr only so PR-controlled/prose stdout can't downgrade it to a false
+        clean. Both are fail-closed so a review that inspected nothing can't land as `clean`.
     codex's exit code is NOT used for the clean/findings split — it exits 0 even with findings.
     A missing codex binary is caught by the shutil.which precondition, so it is not re-guarded
     here.
@@ -344,9 +345,10 @@ def run_codex(merge_base: str, out_path: Path, *, cwd: Path, timeout_s: float) -
         )
     # The exec activity (denials + `succeeded in` markers) lands on STDERR, which
     # parse_transcript (stdout only) never sees — so these no-op-review guards inspect the
-    # FULL captured transcript here, where both streams are in scope. Both are fail-closed
-    # (exit-2 blocker), the safe direction: a review that inspected nothing must not read
-    # clean.
+    # captured streams here. Both are fail-closed (exit-2 blocker), the safe direction: a
+    # review that inspected nothing must not read clean. The denial guard scans the combined
+    # transcript (a false match BLOCKS, safe); the success backstop scans STDERR only (a false
+    # match would PASS, unsafe — so it must not see PR-controlled stdout).
     transcript = f"{stdout}\n{stderr}"
     # Nested-sandbox denial first: it gives the specific, actionable message. codex exits 0
     # with a prose "could not inspect the patch" and no findings header, so every existing
@@ -361,9 +363,15 @@ def run_codex(merge_base: str, out_path: Path, *, cwd: Path, timeout_s: float) -
         )
     # General backstop (also catches partial sandbox failures with no denial marker): a
     # genuine review always runs at least the initial `git diff` successfully, so no
-    # `succeeded in …` marker anywhere means codex reviewed nothing — a failed review, not
-    # clean.
-    if not EXEC_SUCCESS_RE.search(transcript):
+    # `succeeded in …` marker means codex reviewed nothing — a failed review, not clean.
+    # Scoped to STDERR only (where the markers verifiably originate — all 58 in the real PR
+    # #1078 transcript were on stderr), the SAME stderr-only fail-closed discipline
+    # USAGE_LIMIT_MARKER uses above: restricting the search means PR-controlled or codex-prose
+    # STDOUT content (a "succeeded in 75ms" phrase, diff text) can't satisfy — downgrade — the
+    # backstop into a false `clean`. Note the asymmetry with the denial marker above: that one
+    # stays on the combined transcript because a false match there BLOCKS (safe), whereas a
+    # false success match here would PASS (unsafe).
+    if not EXEC_SUCCESS_RE.search(stderr):
         raise PreconditionError(
             "codex ran no successful exec (no `git diff` succeeded), so the review "
             f"inspected nothing — treat as a failed review, not clean; see {out_path}",

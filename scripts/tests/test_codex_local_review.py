@@ -415,6 +415,9 @@ def test_run_codex_nested_sandbox_denial_is_tool_failure(
     # The #1049 nested-sandbox false clean: codex exits 0 with a prose "could not inspect"
     # message (no findings header) while its stderr shows every exec denied by
     # `sandbox_apply: Operation not permitted`. Must fail-closed as tool_failure, not clean.
+    # SANDBOXED_DENIAL_STDERR also has zero `succeeded in` markers, so both no-op guard
+    # conditions hold — this pins guard ORDER: the denial guard firing first (match="sandbox")
+    # proves it wins over the generic backstop.
     _stub_popen(monkeypatch, SANDBOXED_CLEAN_STDOUT, SANDBOXED_DENIAL_STDERR, 0)
 
     with pytest.raises(clr.PreconditionError, match="sandbox") as e:
@@ -438,6 +441,38 @@ def test_run_codex_no_successful_exec_is_tool_failure(
     with pytest.raises(clr.PreconditionError, match="no successful exec") as e:
         clr.run_codex("deadbeef", tmp_path / "t.md", cwd=tmp_path, timeout_s=1.0)
     assert e.value.kind == clr.KIND_TOOL_FAILURE
+
+
+def test_run_codex_success_marker_on_stdout_only_is_tool_failure(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    # Fail-closed direction (mirrors test_run_codex_usage_limit_on_stdout_only_is_tool_failure):
+    # a PR/prose-controlled `succeeded in <N>ms` phrase on STDOUT must NOT satisfy the no-op
+    # backstop — only a real STDERR exec-success marker counts. Here stderr has none (and no
+    # sandbox denial), so the backstop must fire even though stdout carries the phrase.
+    stdout = "codex\nThe analysis succeeded in 75ms: but no command ran.\n"
+    stderr = "[t] exec bash -lc 'git diff' in /repo\n[t] exec failed: some error\n"
+    _stub_popen(monkeypatch, stdout, stderr, 0)
+
+    with pytest.raises(clr.PreconditionError, match="no successful exec") as e:
+        clr.run_codex("deadbeef", tmp_path / "t.md", cwd=tmp_path, timeout_s=1.0)
+    assert e.value.kind == clr.KIND_TOOL_FAILURE
+
+
+def test_run_codex_findings_transcript_passes_guards_unchanged(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    # The new stderr-scoped backstop must be a no-op ahead of a legitimate findings run: a real
+    # findings stdout + a stderr with a `succeeded in` marker returns stdout unchanged (doesn't
+    # eat real findings), and the pass-through stays parseable as findings.
+    _stub_popen(monkeypatch, FINDINGS_TRANSCRIPT, SUCCESS_STDERR, 0)
+
+    returned = clr.run_codex("deadbeef", tmp_path / "t.md", cwd=tmp_path, timeout_s=1.0)
+
+    assert returned == FINDINGS_TRANSCRIPT
+    assert (
+        clr.parse_transcript(returned, worktree_root=tmp_path)["verdict"] == "findings"
+    )
 
 
 def test_run_codex_with_successful_exec_returns_stdout(
