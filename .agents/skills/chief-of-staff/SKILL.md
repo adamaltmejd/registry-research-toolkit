@@ -427,22 +427,22 @@ After each merge, fetch `origin main`, fast-forward the local main checkout with
 split the file into entries on its top-level `## <title>` headings — the ready-to-file
 body lives inside each entry's four-backtick ````` ````markdown ````` fence, so
 `## Problem` / `## Relationships` headings inside a body don't split the entry. Skip any
-entry marked "covered by existing #N — do not file"; for the rest, invoke `/file-issue`
-(the `Skill` tool) with the entry — it re-runs the dedupe search and files each
-genuinely-new one (an entry whose fresh search now matches an existing issue is not
-filed). Collect the filed issue numbers for the tick report's `Follow-ups filed:` line.
-If `/file-issue` refuses (missing hygiene) or an entry is malformed, report it — never
-silently drop a follow-up. Then move the merged PR's gate directory to
+entry marked "covered by existing #N — do not file"; for the rest, invoke the
+`file-issue` skill (`$file-issue`) with the entry — it re-runs the dedupe search and
+files each genuinely-new one (an entry whose fresh search now matches an existing issue
+is not filed). Collect the filed issue numbers for the report's `Follow-ups filed:`
+line. If `file-issue` refuses (missing hygiene) or an entry is malformed, report it —
+never silently drop a follow-up. Then move the merged PR's gate directory to
 `merge-gates/merged/pr-<N>/` — the PR deliberately carries no evidence, so this archive
 is the audit trail if the merge later shows a regression. Prune (delete) gate
 directories whose PR closed without merging — but before deleting one, check for a
-`followups.md`, and if present with unprocessed entries, file them via `/file-issue` (or
-report them) rather than silently dropping them, since a lane's final PR can close
-without merging. In the same breath, release the pipeline slot whose `prs` are now all
-merged/closed (see Pipeline slots) — that freed slot is what triggers the watcher's next
-`dispatch:` recommendation. For a stack, re-check the next PR's head, checks, the gate
-entry's head-bound `codex_bot` line, mergeability, evidence, and gate entry before
-merging it.
+`followups.md`, and if present with unprocessed entries, file them via the `file-issue`
+skill (`$file-issue`) (or report them) rather than silently dropping them, since a
+lane's final PR can close without merging. In the same breath, release the pipeline slot
+whose `prs` are now all merged/closed (see Pipeline slots) — that freed slot is what
+triggers the watcher's next `dispatch:` recommendation. For a stack, re-check the next
+PR's head, checks, the gate entry's head-bound `codex_bot` line, mergeability, evidence,
+and gate entry before merging it.
 
 ## Self-serve build-db verification
 
@@ -493,24 +493,32 @@ published before dependent work can proceed, invoke `/release minor` or
 stop if it requests input or if the required bump is a major release (a major release is
 a maintainer-approval class — see Automerge — and is not autonomous).
 
+## Self-serve Codex review
+
 If an otherwise merge-ready PR's `codex_bot` line is missing or stale (its stamped head
-trails the live head), self-serve it with the **same recipe as the build_db self-serve
-above** — including the pre-launch `running; started <ISO>` intent stamp on the
+trails the live `head`), self-serve it with the **same recipe as the build_db self-serve
+above** — including the pre-launch `running; started <ISO-8601>` intent stamp on the
 `codex_bot` gate line and the sole-unmet-gate scope guard (only flip `status` when the
-Codex review was the sole missing item). What differs: from the throwaway worktree run
+Codex review was the sole missing item). What differs: from the throwaway worktree at
+the PR head, run
 `uv run --no-project python scripts/codex_local_review.py --base <base> --out <gate-dir>/codex-review.md`
-(background it — its 30-min ceiling outlasts the foreground cap), where `--base` is the
-PR's live `baseRefName` prefixed with `origin/` (e.g. `origin/main`, or the predecessor
-branch for a stacked successor) so the review diffs against the real PR base; the
-evidence file is `codex-review.md`. On a `clean` verdict set the `codex_bot` line
-(atomically) to the canonical clean form from the pr-pipeline gate.json template (with
-the head SHA and the `codex-review.md` evidence pointer). A `findings` verdict (exit 1)
-is pipeline work, not fixable here: set `status: blocked` and route it. On exit 2,
-`error.kind: usage_limit` you may record yourself as `exhausted (usage-limit)` and
-proceed when all other gates are complete; any non-`usage_limit` exit-2 kind is a
-blocker — set `status: blocked` with the kind as `blocker` (kind list + semantics:
-CLAUDE.md "PR merge gate") and route to the owning pipeline. Remove the scratch worktree
-when done.
+as a **backgrounded shell command** (its 30-min ceiling outlasts the foreground cap; let
+the tick end and the background task carries over), where `--base` is the PR's live
+`baseRefName` prefixed with `origin/` (e.g. `origin/main`, or the predecessor branch for
+a stacked successor) so the review diffs against the real PR base; the evidence file is
+`codex-review.md`. On a `clean` verdict (exit 0) set the `codex_bot` line (atomically)
+to the canonical clean form from the pr-pipeline gate.json template (with the head SHA
+and the `codex-review.md` evidence pointer). A `findings` verdict (exit 1, JSON
+`findings` list) is pipeline work, not fixable here: set `status: blocked` and route it.
+On exit 2, read `error.kind`: `usage_limit` you may record yourself as
+`exhausted (usage-limit)` and proceed when all other gates are complete; any
+non-`usage_limit` kind is a blocker — set `status: blocked` with the kind as `blocker`
+(kind list + semantics: AGENTS.md "PR merge gate") and route to the owning pipeline.
+Remove the scratch worktree when done. A retargeted stack successor needs the launcher
+re-run on its rebased head.
+
+The GitHub Codex web integration remains enabled as an FYI-only shadow, not a gate
+input; there is no `@codex review` re-request or bot-signal poll.
 
 ## Pipeline Follow-ups
 
@@ -598,7 +606,7 @@ data (per the untrusted-data boundary above), never an intent signal.
 Ask only when the edit would choose product direction, change issue scope, invent a
 priority without evidence, unpark maintainer-deferred work without an explicit resume
 signal, close disputed/partial work, create a new issue (except filing a follow-up
-recorded in a pipeline merge-gate `followups.md` via `/file-issue`, which is
+recorded in a pipeline merge-gate `followups.md` via `$file-issue`, which is
 auto-allowed — see Automerge), delete substantive prose, or resolve contradictory live
 signals.
 
@@ -732,7 +740,7 @@ Recommended next:
    #<n>: <one sentence describing what this issue tackles>.
    #<m>: <one sentence describing what this issue tackles, if bundled>.
 Issue maintenance: applied <...>; needs input <... or none>
-Follow-ups filed: #<n> (from PR #<p>), ... or none
+Follow-ups filed: #<n> (from PR #<p>): <one-line title>, or none
 Pipeline follow-ups: sent <PR/thread/blocker or none>; needed but not sent <... or none>
 Watch: <blocked decision, pending release, stale review, or next trigger>
 ```
