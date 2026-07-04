@@ -6,11 +6,11 @@ import { getBindingGraph } from "./api";
 import ClassificationLeafView from "./ClassificationLeafView.svelte";
 
 // The classification leaf rendered through the unified SubjectView shell (#638 PR1).
-// The codes are EMBEDDED on the node (render synchronously); the relationships
-// surface is the #678 history graph, fetched via `getBindingGraph(node.fqid)` —
-// stubbed empty here so it omits itself (its own failure domain; the leaf renders
-// regardless). This guards the shell wiring: the title (nodeLabel = name), the
-// short-name meta dl, and the embedded codes panel.
+// The codes are EMBEDDED on the node (render synchronously); the picker surface is
+// the #906 compact edition DAG, fetched via `getBindingGraph(node.fqid)` — stubbed
+// empty here so it omits itself (its own failure domain; the leaf renders regardless).
+// This guards the shell wiring: the title (nodeLabel = name), the short-name meta dl,
+// and the embedded codes panel.
 
 vi.mock("./api", async (importOriginal) => {
   const actual = await importOriginal<typeof import("./api")>();
@@ -76,7 +76,7 @@ describe("ClassificationLeafView (#638 shell)", () => {
     await expect.element(page.getByText("Förgymnasial")).toBeVisible();
   });
 
-  it("renders the classification HistoryGraph when the graph fetch has editions", async () => {
+  it("renders the compact classification edition graph when the graph fetch has editions", async () => {
     vi.mocked(getBindingGraph).mockResolvedValue({
       nodes: [
         {
@@ -97,6 +97,15 @@ describe("ClassificationLeafView (#638 shell)", () => {
           version_year: 2020,
           is_current: true,
         },
+        {
+          kind: "classification",
+          id: "niva-test",
+          fqid: "class/niva-test",
+          label: "Nivå aggregat",
+          group_key: "sun",
+          version_year: null,
+          is_current: true,
+        },
       ],
       edges: [
         {
@@ -114,11 +123,15 @@ describe("ClassificationLeafView (#638 shell)", () => {
     await render(ClassificationLeafView, { node: node() });
 
     await expect
-      .element(page.getByRole("heading", { name: "History" }))
+      .element(page.getByRole("heading", { name: "Editions" }))
       .toBeVisible();
+    expect(document.querySelector(".classification-editions")).not.toBeNull();
+    expect(document.querySelector(".edition-edge")).not.toBeNull();
     expect(
-      document.querySelector('a.name-link[href="/catalog/class/sun1996"]'),
+      document.querySelector('a.edition-name[href="/catalog/class/sun1996"]'),
     ).not.toBeNull();
+    expect(document.body.textContent).not.toContain("Nivå aggregat");
+    expect(document.querySelector(".history-graph")).toBeNull();
   });
 
   it("omits the codes panel when the edition carries no codes", async () => {

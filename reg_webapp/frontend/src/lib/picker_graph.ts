@@ -528,3 +528,133 @@ export function resolveEdges(graph: RelationshipGraph): ResolvedEdge[] {
   }
   return resolved;
 }
+
+export interface ClassificationDagNode {
+  point: ClassificationPoint;
+  column: number;
+  row: number;
+  order: number;
+}
+
+export interface ClassificationDagEdge {
+  edge: GraphEdge;
+  source: ClassificationDagNode;
+  target: ClassificationDagNode;
+}
+
+export interface ClassificationDagLayout {
+  nodes: ClassificationDagNode[];
+  edges: ClassificationDagEdge[];
+  columns: number;
+  rows: number;
+}
+
+/** Compact non-timeline layout for classification edition succession (#906).
+ * Columns are topological ranks (predecessor → successor), not absolute years;
+ * rows only open when a rank branches. The input points already carry the stable
+ * edition ordering from `clustersOf`, so ties remain deterministic. */
+export function classificationDagLayout(
+  points: ClassificationPoint[],
+  edges: ResolvedEdge[],
+): ClassificationDagLayout {
+  const ordered = points.map((point, order) => ({
+    point,
+    order,
+    rank: 0,
+  }));
+  const byId = new Map(ordered.map((node) => [node.point.node.id, node]));
+  const outgoing = new Map<string, string[]>();
+  const indegree = new Map<string, number>(
+    ordered.map((node) => [node.point.node.id, 0]),
+  );
+  const dagEdges = edges.filter(
+    (edge) =>
+      edge.source.kind === "classification" &&
+      edge.target.kind === "classification" &&
+      byId.has(edge.source.id) &&
+      byId.has(edge.target.id),
+  );
+
+  for (const edge of dagEdges) {
+    const targets = outgoing.get(edge.source.id) ?? [];
+    targets.push(edge.target.id);
+    outgoing.set(edge.source.id, targets);
+    indegree.set(edge.target.id, (indegree.get(edge.target.id) ?? 0) + 1);
+  }
+  for (const targets of outgoing.values()) {
+    targets.sort((a, b) => {
+      const left = byId.get(a)?.order ?? 0;
+      const right = byId.get(b)?.order ?? 0;
+      return left - right;
+    });
+  }
+
+  const queue = ordered
+    .filter((node) => indegree.get(node.point.node.id) === 0)
+    .sort((a, b) => a.order - b.order);
+  const visited = new Set<string>();
+  while (queue.length > 0) {
+    const node = queue.shift() as (typeof ordered)[number];
+    visited.add(node.point.node.id);
+    for (const targetId of outgoing.get(node.point.node.id) ?? []) {
+      const target = byId.get(targetId);
+      if (!target) {
+        continue;
+      }
+      target.rank = Math.max(target.rank, node.rank + 1);
+      const nextIndegree = (indegree.get(targetId) ?? 0) - 1;
+      indegree.set(targetId, nextIndegree);
+      if (nextIndegree === 0) {
+        queue.push(target);
+        queue.sort((a, b) => a.order - b.order);
+      }
+    }
+  }
+
+  // Defensive cycle/skew fallback: keep every node visible in deterministic order.
+  let fallbackRank = ordered.reduce((max, node) => Math.max(max, node.rank), 0);
+  for (const node of ordered) {
+    if (!visited.has(node.point.node.id)) {
+      fallbackRank += 1;
+      node.rank = fallbackRank;
+    }
+  }
+
+  const byRank = new Map<number, typeof ordered>();
+  for (const node of ordered) {
+    const column = byRank.get(node.rank) ?? [];
+    column.push(node);
+    byRank.set(node.rank, column);
+  }
+
+  const layoutNodes: ClassificationDagNode[] = [];
+  for (const [rank, column] of byRank) {
+    column.sort((a, b) => a.order - b.order);
+    column.forEach((node, row) => {
+      layoutNodes.push({
+        point: node.point,
+        column: rank,
+        row,
+        order: node.order,
+      });
+    });
+  }
+  layoutNodes.sort((a, b) => a.order - b.order);
+
+  const layoutById = new Map(
+    layoutNodes.map((node) => [node.point.node.id, node]),
+  );
+  return {
+    nodes: layoutNodes,
+    edges: dagEdges
+      .map((edge) => {
+        const source = layoutById.get(edge.source.id);
+        const target = layoutById.get(edge.target.id);
+        return source && target ? { edge: edge.edge, source, target } : null;
+      })
+      .filter((edge): edge is ClassificationDagEdge => edge != null),
+    columns:
+      layoutNodes.reduce((max, node) => Math.max(max, node.column), -1) + 1,
+    rows: layoutNodes.reduce((max, node) => Math.max(max, node.row), -1) + 1,
+  };
+}
