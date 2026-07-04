@@ -25,9 +25,10 @@ the removed `origin/main → main` fallback was.
 
 The **codex CLI itself exits 0 even when it finds issues** — the transcript text is the
 only signal for the clean/findings split, so this script parses codex's stdout, not its
-exit code. But a NONZERO codex exit, an empty transcript, a timeout, or a format-drifted
-transcript is a hard failure surfaced here as **exit 2** with a classified error — never a
-silent false `clean`.
+exit code. But a NONZERO codex exit, an empty transcript, a timeout, a format-drifted
+transcript, or a no-op review that inspected nothing (a nested-sandbox denial, or no
+successful exec — see below) is a hard failure surfaced here as **exit 2** with a
+classified error — never a silent false `clean`.
 
 Transcript shapes (verified live, codex-cli 0.142.5):
   findings — a findings header line — either `Full review comments:` (multi-finding form)
@@ -64,7 +65,9 @@ On an exit-2 failure a machine-readable error object is still emitted to stdout 
 (head/base/merge_base included only when already resolved). The one-line message is on
 stderr too. Exit codes mirror the verdict: **0** clean · **1** findings · **2** error.
 Only kind `usage_limit` is the merge-gate's exhausted-analog (recordable, not a blocker);
-every other exit-2 kind is a blocker.
+every other exit-2 kind is a blocker. A no-op review — a nested-sandbox denial
+(`sandbox_apply: Operation not permitted`, #1049) or a transcript with no successful exec —
+is a `tool_failure`, so it blocks rather than passing as a false `clean`.
 
 Stdlib only, no `gh` **API** access (unlike the sibling scripts) — it works purely off the
 local git worktree and the codex CLI.
@@ -117,6 +120,17 @@ TIMEOUT_S = 30 * 60
 # out of the diff) lands on stdout, and a loose substring there could flip a hard-blocker
 # tool_failure into a merge-passable usage_limit.
 USAGE_LIMIT_MARKER = "reached your codex usage limits"
+# codex emits a ` succeeded in <N>ms:` line on STDERR after each exec it runs successfully
+# (timing unit is ms/s/m with an optional decimal on longer commands). A genuine review ALWAYS
+# runs at least the initial `git diff --stat/--name-status` and that exec succeeds — even an
+# empty-diff clean run runs and succeeds it — so the ABSENCE of any success marker across the
+# whole transcript means codex ran no exec at all and reviewed nothing (a false clean).
+EXEC_SUCCESS_RE = re.compile(r"succeeded in \d+(?:\.\d+)?(?:ms|s|m)\b")
+# When codex can't spawn its sandbox (the nested Codex/Claude sandbox failure class, #1049),
+# every exec — including the initial `git diff` — fails with this denial on STDERR and codex
+# still exits 0 with a prose "I could not inspect the patch" message. This distinctive
+# substring (binary-path variants of `sandbox-exec:` still match) is the specific signal.
+SANDBOX_DENIED_MARKER = "sandbox_apply: Operation not permitted"
 
 # Error kinds carried on PreconditionError and echoed into the JSON error object.
 KIND_PRECONDITION = "precondition"
@@ -253,7 +267,15 @@ def run_codex(merge_base: str, out_path: Path, *, cwd: Path, timeout_s: float) -
       - timeout → the process group is SIGKILLed (codex spawns sandboxed grandchildren that
         inherit the pipes; killing only the direct child leaves communicate() blocked
         forever — the repo learned this in cos_watch), the partial transcript is written as
-        gate evidence for diagnosing the hang, and kind timeout is raised.
+        gate evidence for diagnosing the hang, and kind timeout is raised;
+      - a no-op review (exit 0, non-empty prose) where codex reviewed NOTHING → tool_failure.
+        Two cases, checked over the FULL transcript (stdout + stderr, since the exec markers
+        land on stderr which parse_transcript never sees): the nested-sandbox denial
+        (SANDBOX_DENIED_MARKER — every exec failed with `sandbox_apply: Operation not
+        permitted`, #1049), checked first for its actionable message; and the general
+        backstop of NO `succeeded in …` marker anywhere (a genuine review always runs the
+        initial `git diff` successfully, so its absence means nothing was reviewed). Both are
+        fail-closed so a review that inspected nothing can't land as a false `clean`.
     codex's exit code is NOT used for the clean/findings split — it exits 0 even with findings.
     A missing codex binary is caught by the shutil.which precondition, so it is not re-guarded
     here.
@@ -319,6 +341,33 @@ def run_codex(merge_base: str, out_path: Path, *, cwd: Path, timeout_s: float) -
     if not stdout.strip():
         raise PreconditionError(
             f"codex produced no transcript; see {out_path}", kind=KIND_TOOL_FAILURE
+        )
+    # The exec activity (denials + `succeeded in` markers) lands on STDERR, which
+    # parse_transcript (stdout only) never sees — so these no-op-review guards inspect the
+    # FULL captured transcript here, where both streams are in scope. Both are fail-closed
+    # (exit-2 blocker), the safe direction: a review that inspected nothing must not read
+    # clean.
+    transcript = f"{stdout}\n{stderr}"
+    # Nested-sandbox denial first: it gives the specific, actionable message. codex exits 0
+    # with a prose "could not inspect the patch" and no findings header, so every existing
+    # guard passes — this is the exact false-clean class the launcher exists to prevent.
+    if SANDBOX_DENIED_MARKER in transcript:
+        raise PreconditionError(
+            "codex could not spawn its sandbox here "
+            "(sandbox_apply: Operation not permitted) — every exec failed, so nothing was "
+            f"reviewed; re-run the launcher outside the agent sandbox / with escalated "
+            f"permissions; see {out_path}",
+            kind=KIND_TOOL_FAILURE,
+        )
+    # General backstop (also catches partial sandbox failures with no denial marker): a
+    # genuine review always runs at least the initial `git diff` successfully, so no
+    # `succeeded in …` marker anywhere means codex reviewed nothing — a failed review, not
+    # clean.
+    if not EXEC_SUCCESS_RE.search(transcript):
+        raise PreconditionError(
+            "codex ran no successful exec (no `git diff` succeeded), so the review "
+            f"inspected nothing — treat as a failed review, not clean; see {out_path}",
+            kind=KIND_TOOL_FAILURE,
         )
     return stdout
 
