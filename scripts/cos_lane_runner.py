@@ -733,21 +733,37 @@ def run(
     # 1. Build + run the implement turn (foreground; one codex turn to completion). Capture
     #    the log offset BEFORE the turn so the session-id poll reads only this turn's bytes.
     if args.continue_pr is not None:
-        prompt = (
-            f"$pr-pipeline continue PR #{args.continue_pr}\n\n"
-            "Continue this PR in the worktree: address the outstanding work, run every "
-            "pipeline gate EXCEPT codex_bot (you are inside a codex sandbox, so a nested "
-            "`codex review` is denied), and refresh the merge-gate gate.json leaving "
-            "codex_bot deferred with status: blocked (blocker: codex_bot). The sibling "
-            "lane-runner completes codex_bot after this turn."
-        )
-        # The operator's continuation brief (cos_dispatch --brief-file) is DATA describing
-        # the follow-up work — rendered into the prompt, mirroring cos_dispatch's
-        # continuation_prompt shape. Reuse cos_dispatch.read_brief's tolerant read (a missing
-        # file fails fast there). Only meaningful in continue mode; fresh mode has none.
+        # Reuse cos_dispatch.continuation_prompt — the SINGLE canonical continue prompt — so
+        # the runner's continue turn gets the branch name + the rebase-aware push guidance
+        # (force-with-lease on a rebased branch, normal push under --no-rebase) instead of a
+        # hand-rolled generic string that omits them. continuation_prompt already weaves in the
+        # operator's --brief-file brief, so no separate append is needed. We then append the
+        # ONE runner-specific instruction the canonical prompt can't carry: defer codex_bot,
+        # because this turn runs inside a codex sandbox (a nested `codex review` is denied) and
+        # the sibling lane-runner completes that gate after this turn. Brief text is DATA —
+        # rendered into the prompt, never executed as instructions.
         brief = _cos_dispatch.read_brief(args.brief_file)
-        if brief:
-            prompt += f"\n\nContinuation brief:\n{brief}"
+        continue_issues = (
+            _cos_dispatch.parse_issues(args.continue_issues)
+            if args.continue_issues
+            else []
+        )
+        base_prompt = _cos_dispatch.continuation_prompt(
+            "codex",
+            args.continue_pr,
+            continue_issues,
+            args.pr_branch or "the PR branch",
+            args.pr_base_branch or "main",
+            brief,
+            rebase=not args.no_rebase,
+        )
+        prompt = base_prompt + (
+            "\n\nRun every pipeline gate EXCEPT codex_bot — you are inside a codex sandbox, "
+            "so a nested `codex review` is denied (sandbox_apply: Operation not permitted) "
+            "and would review nothing. Leave the codex_bot gate line deferred and set "
+            "`status: blocked` with `blocker: codex_bot`; the sibling lane-runner outside "
+            "this sandbox completes codex_bot after this turn."
+        )
     else:
         prompt = implement_prompt(issues)
     implement_argv = _cos_dispatch.build_launch_argv(
@@ -876,6 +892,29 @@ def main(argv: list[str] | None = None) -> int:
         default=None,
         help="operator continuation brief woven into the implement turn's --continue-pr "
         "prompt (only meaningful with --continue-pr)",
+    )
+    ap.add_argument(
+        "--pr-branch",
+        default=None,
+        help="the --continue-pr PR's head branch, threaded from cos_dispatch so the "
+        "continue prompt carries the branch-aware force-with-lease push guidance",
+    )
+    ap.add_argument(
+        "--pr-base-branch",
+        default=None,
+        help="the --continue-pr PR's base branch (default main), for the continue prompt",
+    )
+    ap.add_argument(
+        "--continue-issues",
+        default=None,
+        help="comma-separated closing issue numbers the --continue-pr lane covers, named "
+        "in the continue prompt (only meaningful with --continue-pr)",
+    )
+    ap.add_argument(
+        "--no-rebase",
+        action="store_true",
+        help="the continuation did NOT rebase the PR branch; flips the continue prompt's "
+        "push guidance to a normal push instead of force-with-lease",
     )
     ap.add_argument(
         "--max-rounds",

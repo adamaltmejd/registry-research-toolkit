@@ -178,6 +178,10 @@ def _args(worktree: Path, gate_root: Path, log: Path, **overrides):
         "log": log,
         "slot_file": None,
         "brief_file": None,
+        "pr_branch": None,
+        "pr_base_branch": None,
+        "continue_issues": None,
+        "no_rebase": False,
         "max_rounds": 3,
         "tier": "hard",
         "canonical": worktree.parent / "canonical",
@@ -984,9 +988,13 @@ def test_continue_pr_dry_run_names_pr(tmp_path: Path, capsys) -> None:
     assert "continue PR #88" in result["implement_argv"][-1]
 
 
-def test_continue_pr_brief_file_woven_into_prompt(tmp_path: Path, capsys) -> None:
-    # Fix B: a --brief-file passed to the runner (forwarded by cos_dispatch) is woven into the
-    # implement turn's --continue-pr prompt as a "Continuation brief:" section — not dropped.
+def test_continue_pr_prompt_reuses_canonical_continuation_prompt(
+    tmp_path: Path, capsys
+) -> None:
+    # P2 fix: the runner's continue prompt is built from cos_dispatch.continuation_prompt, so
+    # it carries BOTH the operator brief AND the branch-aware force-with-lease push guidance
+    # (the branch was rebased onto its base by default) — not a hand-rolled string that omits
+    # the branch and push instructions.
     wt = _make_worktree(tmp_path)
     brief = tmp_path / "brief.md"
     brief.write_text("Fix the current-head review finding.", encoding="utf-8")
@@ -998,13 +1006,47 @@ def test_continue_pr_brief_file_woven_into_prompt(tmp_path: Path, capsys) -> Non
             issues=None,
             continue_pr=88,
             brief_file=brief,
+            pr_branch="codex/existing-pr",
+            pr_base_branch="main",
+            continue_issues="1011,1012",
             dry_run=True,
         )
     )
     assert rc == lr.EXIT_OK
     prompt = json.loads(capsys.readouterr().out)["implement_argv"][-1]
     assert "continue PR #88" in prompt
+    # The closing issues the lane covers name the scope.
+    assert "#1011" in prompt and "#1012" in prompt
+    # The brief text is woven in by continuation_prompt (no separate append).
     assert "Continuation brief:\nFix the current-head review finding." in prompt
+    # The branch-aware, rebased push guidance (the P2 gap the hand-rolled prompt omitted).
+    assert "git push --force-with-lease origin HEAD:codex/existing-pr" in prompt
+    # The runner-specific codex_bot deferral is still appended.
+    assert "EXCEPT codex_bot" in prompt
+    assert "blocker: codex_bot" in prompt
+
+
+def test_continue_pr_prompt_no_rebase_uses_normal_push(tmp_path: Path, capsys) -> None:
+    # Under --no-rebase the continuation did not rebase, so the prompt must tell the agent to
+    # push normally, NOT force-with-lease.
+    wt = _make_worktree(tmp_path)
+    rc = lr.run(
+        _args(
+            wt,
+            tmp_path / "gate",
+            tmp_path / "lane.log",
+            issues=None,
+            continue_pr=88,
+            pr_branch="codex/existing-pr",
+            pr_base_branch="main",
+            no_rebase=True,
+            dry_run=True,
+        )
+    )
+    assert rc == lr.EXIT_OK
+    prompt = json.loads(capsys.readouterr().out)["implement_argv"][-1]
+    assert "Push this same branch normally after committing." in prompt
+    assert "force-with-lease" not in prompt
 
 
 def test_fresh_mode_ignores_brief_file(tmp_path: Path, capsys) -> None:

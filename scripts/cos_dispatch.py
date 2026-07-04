@@ -571,6 +571,11 @@ def build_lane_runner_argv(
     tier: str,
     canonical: Path,
     brief_file: Path | None = None,
+    *,
+    pr_branch: str | None = None,
+    pr_base_branch: str | None = None,
+    continue_issues: list[int] | None = None,
+    no_rebase: bool = False,
 ) -> list[str]:
     """The detached launch argv for the codex-surface lane RUNNER (cos_lane_runner.py).
 
@@ -581,8 +586,12 @@ def build_lane_runner_argv(
     session enrichment to it (the runner launches codex, so it owns those — see dispatch()).
 
     Exactly one of `issues` / `continue_pr` is passed through as the runner's
-    mutually-exclusive target. `brief_file` (continue mode only) is forwarded so the operator's
-    continuation brief reaches the runner's --continue-pr prompt instead of being dropped.
+    mutually-exclusive target. In continue mode the resolved PR branch / base branch /
+    closing issues / rebase posture are threaded through so the runner can build its
+    continue prompt from cos_dispatch.continuation_prompt — the SAME branch-aware,
+    force-with-lease-push guidance the bare-agent path gets — instead of a hand-rolled
+    generic string that omits the branch and push instructions. `brief_file` (continue mode
+    only) is forwarded so the operator's continuation brief reaches that prompt.
     `sys.executable` is this (3.14) interpreter; the runner is stdlib + sibling scripts only,
     so it needs no venv. The runner path is located as a sibling of this file, never hard-coded.
     """
@@ -614,6 +623,17 @@ def build_lane_runner_argv(
     # dropped on the default runner path (the runner weaves it into the --continue-pr prompt).
     if brief_file is not None:
         argv += ["--brief-file", str(brief_file)]
+    # Continue-mode inputs for the runner's continuation_prompt: the PR branch + base branch
+    # give the branch-aware force-with-lease push guidance, the closing issues name the lane
+    # scope, and --no-rebase flips the push wording to a normal push. Fresh mode passes none.
+    if pr_branch is not None:
+        argv += ["--pr-branch", pr_branch]
+    if pr_base_branch is not None:
+        argv += ["--pr-base-branch", pr_base_branch]
+    if continue_issues:
+        argv += ["--continue-issues", ",".join(str(n) for n in continue_issues)]
+    if no_rebase:
+        argv += ["--no-rebase"]
     return argv
 
 
@@ -1248,6 +1268,10 @@ def dispatch(
             tier,
             args.canonical,
             brief_file=brief_file,
+            pr_branch=pr_branch,
+            pr_base_branch=pr_base_branch,
+            continue_issues=issues if continue_pr is not None else None,
+            no_rebase=no_rebase,
         )
     else:
         argv = build_launch_argv(

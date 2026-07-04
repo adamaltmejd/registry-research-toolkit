@@ -1115,6 +1115,12 @@ def test_dry_run_no_side_effects_reflects_lane_runner(tmp_path: Path, capsys) ->
     assert argv[argv.index("--base") + 1] == "origin/main"
     assert argv[argv.index("--issues") + 1] == "1011"
     assert argv[argv.index("--gate-root") + 1] == str(state / "merge-gates")
+    # Fresh mode carries none of the continue-only prompt inputs.
+    assert "--continue-pr" not in argv
+    assert "--pr-branch" not in argv
+    assert "--pr-base-branch" not in argv
+    assert "--continue-issues" not in argv
+    assert "--no-rebase" not in argv
     assert result["surface"] == "codex"
     assert result["tier"] == "hard"
     assert result["slot_path"].endswith("auto-codex-issue-1011.json")
@@ -1471,6 +1477,62 @@ def test_continue_pr_rebases_onto_stacked_pr_base_branch(
     assert argv[1].endswith("cos_lane_runner.py")
     assert argv[argv.index("--continue-pr") + 1] == "4242"
     assert argv[argv.index("--base") + 1] == f"origin/{base_branch}"
+    # P2 fix: the resolved PR branch / base branch / closing issues are threaded to the
+    # runner so its continue prompt (built from continuation_prompt) carries the branch-aware
+    # push guidance. --no-rebase is absent here because this default dispatch rebased.
+    assert argv[argv.index("--pr-branch") + 1] == branch
+    assert argv[argv.index("--pr-base-branch") + 1] == base_branch
+    assert argv[argv.index("--continue-issues") + 1] == "1011"
+    assert "--no-rebase" not in argv
+    assert json.loads(capsys.readouterr().out)["mode"] == "continue"
+
+
+def test_continue_pr_no_rebase_forwards_flag_to_lane_runner(
+    tmp_path: Path,
+    capsys,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    # P2 fix: --no-rebase flows through to the runner argv so its continue prompt tells the
+    # agent to push normally, not force-with-lease. The PR branch is not advanced past main,
+    # so the (skipped) rebase would be a no-op anyway; we only assert argv forwarding.
+    canonical = _make_origin(tmp_path)
+    branch = "codex/existing-pr"
+    _push_branch(canonical, branch)
+    launched = _capture_launch(monkeypatch)
+    state = tmp_path / "state"
+    monkeypatch.setattr(
+        cd,
+        "resolve_continue_pr",
+        lambda pr: {
+            "pr": pr,
+            "branch": branch,
+            "base_branch": "main",
+            "issues": [1011],
+            "title": "Existing PR",
+        },
+    )
+
+    rc = cd.dispatch(
+        _args(
+            tmp_path,
+            canonical,
+            issues=None,
+            continue_pr=4242,
+            no_rebase=True,
+            state_root=state,
+        ),
+        launch_grace=_TEST_GRACE,
+        launch_grace_poll=_TEST_GRACE_POLL,
+    )
+
+    assert rc == 0
+    assert len(launched) == 1
+    argv = launched[0]
+    assert argv[1].endswith("cos_lane_runner.py")
+    assert "--no-rebase" in argv
+    assert argv[argv.index("--pr-branch") + 1] == branch
+    assert argv[argv.index("--pr-base-branch") + 1] == "main"
+    assert argv[argv.index("--continue-issues") + 1] == "1011"
     assert json.loads(capsys.readouterr().out)["mode"] == "continue"
 
 
