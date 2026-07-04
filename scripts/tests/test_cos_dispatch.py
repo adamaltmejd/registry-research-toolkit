@@ -49,7 +49,7 @@ from pathlib import Path
 
 import pytest
 
-from conftest import load_scripts_module
+from conftest import _GIT_ENV, load_scripts_module
 
 cd = load_scripts_module("cos_dispatch")
 
@@ -196,14 +196,6 @@ def _write_slot(slots_root: Path, slug: str, override: dict | None = None) -> Pa
     payload.update(override or {})
     path.write_text(json.dumps(payload), encoding="utf-8")
     return path
-
-
-_GIT_ENV = {
-    "GIT_AUTHOR_NAME": "t",
-    "GIT_AUTHOR_EMAIL": "t@t",
-    "GIT_COMMITTER_NAME": "t",
-    "GIT_COMMITTER_EMAIL": "t@t",
-}
 
 
 def _git(cwd: Path, *args: str) -> None:

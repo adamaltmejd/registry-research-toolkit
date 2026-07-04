@@ -286,9 +286,8 @@ in the PR worktree on the converged HEAD. Operate it like this:
   LAST run's verdict on the current head, so a post-fix head never carries a pre-fix
   verdict. Handoff-eligible on `clean`. On exit 2, read `error.kind`: only `usage_limit`
   is the exhausted-analog (record it, not a blocker once the independent review and
-  other gates are complete); every other kind (`timeout`, `format_drift`,
-  `precondition`, `tool_failure`) is a **blocker** — write `status: blocked` naming it,
-  since a format-drift transcript may hide real unparsed findings. A new push
+  other gates are complete); any non-`usage_limit` exit-2 kind ⇒ `status: blocked`
+  naming the kind (kind list + semantics: CLAUDE.md "PR merge gate"). A new push
   invalidates the verdict — just re-run the launcher (cheap; no re-trigger dance).
 
 When every gate passes, write the handoff into the **local merge-gate store** (contract
@@ -324,7 +323,6 @@ The `codex_bot` value above shows the `clean` form; the usage-limit form replace
 `clean` with `exhausted (usage-limit)`, keeping the same head stamp and evidence pointer
 — e.g.
 `local; codex_local_review; head <sha>; exhausted (usage-limit); see codex-review.md in this dir`.
-Those two are the only legal verdict tokens (below).
 
 Issue closure is NOT restated here — the PR body's closing keywords stay authoritative.
 The `visual`, `build_db`, and `codex_bot` lines each stamp the head SHA they were

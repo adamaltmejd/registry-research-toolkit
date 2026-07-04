@@ -166,18 +166,6 @@ def _git(args: list[str], *, cwd: Path) -> subprocess.CompletedProcess[str]:
         ) from exc
 
 
-def _resolve_base(base: str, *, cwd: Path) -> str:
-    """The base ref to diff against; any unresolvable base is a hard error.
-
-    No fallback: silently reviewing against a stale local `main` is the exact silent-wrong-
-    base failure this guard exists to prevent, so an unresolvable base (typo, or origin/main
-    not fetched) fails fast rather than picking a different ref.
-    """
-    if _git(["rev-parse", "--verify", "--quiet", base], cwd=cwd).returncode == 0:
-        return base
-    raise PreconditionError(f"base ref {base!r} does not resolve in this worktree")
-
-
 def check_preconditions(base: str, *, cwd: Path) -> tuple[str, str]:
     """Verify codex is on PATH and the worktree is clean; resolve (head, merge_base).
 
@@ -201,12 +189,14 @@ def check_preconditions(base: str, *, cwd: Path) -> tuple[str, str]:
     head = _git(["rev-parse", "HEAD"], cwd=cwd)
     if head.returncode != 0:
         raise PreconditionError(head.stderr.strip() or "failed to resolve HEAD")
-    resolved_base = _resolve_base(base, cwd=cwd)
-    merge_base = _git(["merge-base", "HEAD", resolved_base], cwd=cwd)
+    # An unresolvable base is a hard error — no fallback: a typo (or an unfetched
+    # origin/main) must not silently review against the wrong base (e.g. a stale local
+    # `main`), the exact silent-wrong-base failure this guard exists to prevent.
+    if _git(["rev-parse", "--verify", "--quiet", base], cwd=cwd).returncode != 0:
+        raise PreconditionError(f"base ref {base!r} does not resolve in this worktree")
+    merge_base = _git(["merge-base", "HEAD", base], cwd=cwd)
     if merge_base.returncode != 0 or not merge_base.stdout.strip():
-        raise PreconditionError(
-            f"failed to resolve merge-base of HEAD and {resolved_base!r}"
-        )
+        raise PreconditionError(f"failed to resolve merge-base of HEAD and {base!r}")
     return head.stdout.strip(), merge_base.stdout.strip()
 
 
@@ -358,9 +348,20 @@ def parse_transcript(transcript: str, *, worktree_root: Path) -> dict[str, Any]:
     if header_idx is not None:
         region = lines[header_idx + 1 :]
         current: dict[str, Any] | None = None
+        # Body lines accumulate in this list and are joined once when the finding closes;
+        # each piece is already `line.strip()`ed, so edge whitespace is impossible and no
+        # post-parse trim is needed.
+        body_lines: list[str] = []
+
+        def _close(finding: dict[str, Any] | None) -> None:
+            if finding is not None:
+                finding["body"] = "\n".join(body_lines)
+
         for line in region:
             match = FINDING_RE.match(line.rstrip())
             if match:
+                _close(current)
+                body_lines = []
                 priority, title, path, start, end = match.groups()
                 current = {
                     "priority": priority,
@@ -373,13 +374,8 @@ def parse_transcript(transcript: str, *, worktree_root: Path) -> dict[str, Any]:
                 findings.append(current)
             elif current is not None and line.strip():
                 # Indented continuation line: attach to the current finding's body.
-                current["body"] = (
-                    f"{current['body']}\n{line.strip()}"
-                    if current["body"]
-                    else line.strip()
-                )
-        for finding in findings:
-            finding["body"] = finding["body"].strip()
+                body_lines.append(line.strip())
+        _close(current)
         if not findings:
             raise PreconditionError(
                 "format drift: 'Full review comments:' header present but no findings "
@@ -492,39 +488,28 @@ def main(argv: list[str] | None = None) -> int:
             cwd=cwd,
             timeout_s=TIMEOUT_S,
         )
-    except PreconditionError as exc:
-        # Still emit a machine-readable error object to stdout so consumers get a signal;
-        # the one-line message goes to stderr too. head/base/merge_base ride along only
-        # when review() already resolved them (a post-precondition codex/parse failure).
+    except Exception as exc:  # noqa: BLE001
+        # Every failure maps to the exit-2 error contract with a machine-readable JSON
+        # object on stdout (and the one-line message on stderr). A PreconditionError
+        # carries its classified `kind` and, once review() resolved the refs, the
+        # head/base/merge_base + transcript path; any other uncaught error (e.g. an OSError
+        # from an unwritable --out parent) is kind tool_failure with none of those. Mapping
+        # the bare-Exception case here matters because Python's default exit 1 is what the
+        # contract reserves for `findings` — a false clean-ish signal. KeyboardInterrupt /
+        # SystemExit are BaseException, not Exception, so they still propagate.
         print(str(exc), file=sys.stderr)
+        kind = exc.kind if isinstance(exc, PreconditionError) else KIND_TOOL_FAILURE
         error: dict[str, Any] = {
             "verdict": "error",
-            "error": {"kind": exc.kind, "message": str(exc)},
-            "output_path": exc.output_path,
+            "error": {"kind": kind, "message": str(exc)},
+            "output_path": getattr(exc, "output_path", None),
         }
-        if exc.head is not None:
-            error["head"] = exc.head
-            error["base"] = exc.base
-            error["merge_base"] = exc.merge_base
+        head = getattr(exc, "head", None)
+        if head is not None:
+            error["head"] = head
+            error["base"] = exc.base  # type: ignore[union-attr]
+            error["merge_base"] = exc.merge_base  # type: ignore[union-attr]
         print(json.dumps(error, indent=2))
-        return 2
-    except Exception as exc:  # noqa: BLE001
-        # Any uncaught error (e.g. an OSError from an unwritable --out parent or mkdir onto
-        # a file path) would otherwise crash with Python's exit 1 — which the contract
-        # reserves for `findings`, a false clean-ish signal. Map it to the exit-2 error
-        # contract with kind tool_failure. KeyboardInterrupt/SystemExit are not Exception,
-        # so they still propagate.
-        print(str(exc), file=sys.stderr)
-        print(
-            json.dumps(
-                {
-                    "verdict": "error",
-                    "error": {"kind": KIND_TOOL_FAILURE, "message": str(exc)},
-                    "output_path": None,
-                },
-                indent=2,
-            )
-        )
         return 2
 
     print(json.dumps(result, indent=2))

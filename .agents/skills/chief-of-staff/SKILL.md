@@ -500,14 +500,14 @@ above** — including the pre-launch `running; started <ISO>` intent stamp on th
 Codex review was the sole missing item). What differs: from the throwaway worktree run
 `uv run --no-project python scripts/codex_local_review.py --out <gate-dir>/codex-review.md`
 (background it — its 30-min ceiling outlasts the foreground cap), and the evidence file
-is `codex-review.md`. On a `clean` verdict set the `codex_bot` line (atomically) to
-`local; codex_local_review; head <sha>; clean; see codex-review.md in this dir`. A
-`findings` verdict (exit 1) is pipeline work, not fixable here: set `status: blocked`
-and route it. On exit 2, `error.kind: usage_limit` you may record yourself as
-`exhausted (usage-limit)` and proceed when all other gates are complete; any other kind
-(`timeout`, `format_drift`, `precondition`, `tool_failure`) is a blocker — set
-`status: blocked` with the kind as `blocker` and route to the owning pipeline. Remove
-the scratch worktree when done.
+is `codex-review.md`. On a `clean` verdict set the `codex_bot` line (atomically) to the
+canonical clean form from the pr-pipeline gate.json template (with the head SHA and the
+`codex-review.md` evidence pointer). A `findings` verdict (exit 1) is pipeline work, not
+fixable here: set `status: blocked` and route it. On exit 2, `error.kind: usage_limit`
+you may record yourself as `exhausted (usage-limit)` and proceed when all other gates
+are complete; any non-`usage_limit` exit-2 kind is a blocker — set `status: blocked`
+with the kind as `blocker` (kind list + semantics: CLAUDE.md "PR merge gate") and route
+to the owning pipeline. Remove the scratch worktree when done.
 
 ## Pipeline Follow-ups
 
