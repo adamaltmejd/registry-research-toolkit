@@ -943,7 +943,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
     const matchedCells = await vi.waitFor(() => {
       const cells = [
         ...document.querySelectorAll<HTMLLabelElement>("label.graph-cell"),
-      ].filter((el) => el.textContent?.includes("Kon"));
+      ].filter((el) => el.textContent?.includes("1990 – 2023"));
       if (cells.length !== 2) {
         throw new Error(
           `expected two matched graph cells, got ${cells.length}`,
@@ -965,6 +965,116 @@ describe("RepresentationPicker graph mode (#904)", () => {
       .click();
     expect(onapply).toHaveBeenCalledTimes(1);
     expect(onapply.mock.calls[0][0].adds[0].row.column).toBe("Kon");
+  });
+
+  it("keeps predecessor variant cells in a folded family group graph projection", async () => {
+    const familyFqid = "scb/lisa/kon";
+    const successorFqid = "scb/lisa/kon-next";
+    render(RepresentationPicker, {
+      bands: [
+        {
+          key: familyFqid,
+          name: "Kön",
+          registerPrefix: "scb/lisa",
+          href: "/catalog/scb/lisa/kon",
+          rows: [
+            row({
+              key: "individer-15plus::Kon",
+              variant: "individer-15plus",
+              variantLabel: "Individer, 15 år och äldre",
+              variantFamily: "individer-15plus",
+              variantFamilyLabel: "Individer",
+              column: "Kon",
+              from: "1990-01-01",
+              to: "2023-12-31",
+              windows: [
+                { from: "1990-01-01", to: "2009-12-31" },
+                { from: "2010-01-01", to: "2023-12-31" },
+              ],
+              variantSegments: [
+                {
+                  variant: "individer-16plus",
+                  variantLabel: "Individer, 16 år och äldre",
+                  windows: [{ from: "1990-01-01", to: "2009-12-31" }],
+                },
+                {
+                  variant: "individer-15plus",
+                  variantLabel: "Individer, 15 år och äldre",
+                  windows: [{ from: "2010-01-01", to: "2023-12-31" }],
+                },
+              ],
+              period: "1990 – 2023",
+              wirePeriod: "1990..2009,2010..2023",
+            }),
+          ],
+        } satisfies PickerBand,
+        {
+          key: successorFqid,
+          name: "Successor",
+          registerPrefix: "scb/lisa",
+          href: "/catalog/scb/lisa/kon-next",
+          rows: [row({ column: "Kon2" })],
+        } satisfies PickerBand,
+      ],
+      graphMemberHrefs: {
+        [familyFqid]: "/catalog/scb/lisa/kon",
+        [successorFqid]: "/catalog/scb/lisa/kon-next",
+      },
+      graph: graph({
+        nodes: [
+          graphNode(familyFqid, {
+            states: [
+              graphState({
+                variant: "individer-16plus",
+                representation_run_id: 1,
+                delivery_column_name: "Kon",
+                valid_from: "1990-01-01",
+                valid_to: "2009-12-31",
+              }),
+              graphState({
+                state_id: 2,
+                variant: "individer-15plus",
+                representation_run_id: 2,
+                delivery_column_name: "Kon",
+                valid_from: "2010-01-01",
+                valid_to: "2023-12-31",
+              }),
+            ],
+          }),
+          graphNode(successorFqid, {
+            states: [
+              graphState({
+                state_id: 3,
+                representation_run_id: 3,
+                delivery_column_name: "Kon2",
+                valid_from: "2024-01-01",
+                valid_to: "9999-12-31",
+              }),
+            ],
+          }),
+        ],
+        edges: [edge(familyFqid, successorFqid)],
+        focus_id: familyFqid,
+      }),
+      ...PROPS,
+    });
+
+    const matchedCells = await vi.waitFor(() => {
+      const cells = [
+        ...document.querySelectorAll<HTMLLabelElement>("label.graph-cell"),
+      ].filter((el) => el.textContent?.includes("1990 – 2023"));
+      if (cells.length !== 2) {
+        throw new Error(
+          `expected two folded-family graph cells, got ${cells.length}`,
+        );
+      }
+      return cells;
+    });
+    for (const cell of matchedCells) {
+      expect(cell.textContent).toContain("1990 – 2023");
+    }
+    expect(document.querySelectorAll(".graph-edge")).toHaveLength(1);
+    expect(document.querySelector(".col-list")).toBeNull();
   });
 
   it("keeps an open-start graph cell in-window before the finite graph floor", async () => {

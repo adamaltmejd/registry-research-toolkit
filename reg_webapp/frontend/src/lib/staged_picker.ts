@@ -1,4 +1,10 @@
-import { type PickerRepresentation, pickerRowVariantFamily } from "./catalog";
+import {
+  addWindowBounds,
+  type PickerRepresentation,
+  type PickerVariantSegment,
+  pickerRowVariantFamily,
+  windowsOverlapWindow,
+} from "./catalog";
 import {
   type PeriodBounds,
   periodCoverageUnion,
@@ -33,6 +39,13 @@ export interface PickerSourcePeriod {
   registerVariant: string;
   period: Period;
 }
+
+export interface PickerCommitScope {
+  period?: string | null | undefined;
+  window?: [number, number] | null;
+}
+
+type CommitVariantSegment = Pick<PickerVariantSegment, "variant" | "windows">;
 
 export function rowRegisterVariant(
   band: StagedPickerBand,
@@ -138,6 +151,27 @@ function rowOverlapsPeriod(row: PickerRepresentation, period: Period): boolean {
   );
 }
 
+function rowVariantSegments(row: PickerRepresentation): CommitVariantSegment[] {
+  return row.variantSegments && row.variantSegments.length > 0
+    ? row.variantSegments
+    : [{ variant: row.variant, windows: row.windows }];
+}
+
+function rowRelevantSegments(
+  row: PickerRepresentation,
+  scope: PickerCommitScope,
+): CommitVariantSegment[] {
+  const segments = rowVariantSegments(row);
+  if (segments.length === 1) {
+    return segments;
+  }
+  const addWindow = addWindowBounds(scope.period, scope.window ?? null);
+  const overlappingSegments = segments.filter((segment) =>
+    windowsOverlapWindow(segment.windows, addWindow),
+  );
+  return overlappingSegments.length > 0 ? overlappingSegments : segments;
+}
+
 function rowMatchesBinding(
   binding: unknown,
   row: PickerRepresentation,
@@ -156,16 +190,14 @@ function rowMatchesBinding(
 export function committedPickerRows(
   draft: ProjectData | null,
   bands: readonly StagedPickerBand[],
+  scope: PickerCommitScope = {},
 ): Map<string, PickerCommittedRow> {
   const committed = new Map<string, PickerCommittedRow>();
   const sources: unknown[] = Array.isArray(draft?.sources) ? draft.sources : [];
   for (const band of bands) {
     for (const row of band.rows) {
       const rowKey = pickerRowKey(band, row);
-      const segments =
-        row.variantSegments && row.variantSegments.length > 0
-          ? row.variantSegments
-          : [{ variant: row.variant }];
+      const segments = rowRelevantSegments(row, scope);
       const matched: PickerCommittedRow[] = [];
       for (const segment of segments) {
         const registerVariant = rowRegisterVariantForVariant(

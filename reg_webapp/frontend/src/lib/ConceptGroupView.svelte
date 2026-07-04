@@ -514,8 +514,6 @@ const bands = $derived.by((): PickerBand[] => {
   }
   return out;
 });
-const committedRows = $derived(committedPickerRows(projectStore.draft, bands));
-
 /** The `band.key` (member fqid) the `?member=` focus hint names, for the picker's
  * deep-link highlight (#678). The backend echoes the VALIDATED member slug on
  * `node.member` (null when absent / unrecognized); the band key is the member fqid,
@@ -596,6 +594,12 @@ const unionCoverage = $derived.by(() => {
  * binding leaf's `pickerWindow`. */
 const pickerWindow = $derived(
   pickerWindowYears(activePickerPeriod, boundedProjectWindow),
+);
+const committedRows = $derived(
+  committedPickerRows(projectStore.draft, bands, {
+    period: activePickerPeriod,
+    window: pickerWindow,
+  }),
 );
 
 /** Write `?period` to the group URL (preserving the pathname + any `?member=` focus

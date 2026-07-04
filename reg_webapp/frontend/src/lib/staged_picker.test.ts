@@ -155,7 +155,78 @@ describe("committedPickerRows", () => {
     ).toHaveLength(2);
   });
 
-  it("does not mark a family row committed until every concrete variant segment is present", () => {
+  it("marks a period-scoped family row committed for the matching concrete segment", () => {
+    const r = row({
+      key: "individer-15plus::Kon",
+      variant: "individer-15plus",
+      variantLabel: "Individer, 15 år och äldre",
+      variantFamily: "individer-15plus",
+      variantFamilyLabel: "Individer",
+      column: "Kon",
+      representation: "Kon",
+      renamedColumns: [],
+      windows: [
+        { from: "1990-01-01", to: "2009-12-31" },
+        { from: "2010-01-01", to: "2023-12-31" },
+      ],
+      variantSegments: [
+        {
+          variant: "individer-16plus",
+          variantLabel: "Individer, 16 år och äldre",
+          windows: [{ from: "1990-01-01", to: "2009-12-31" }],
+        },
+        {
+          variant: "individer-15plus",
+          variantLabel: "Individer, 15 år och äldre",
+          windows: [{ from: "2010-01-01", to: "2023-12-31" }],
+        },
+      ],
+    });
+    const b = band([r]);
+    const draft: ProjectData = {
+      schema_version: "2.0.0",
+      reg_meta_version: "reg_meta/v1.0.0",
+      steward: "global",
+      name: "",
+      sources: [
+        {
+          name: "LISA 1990-2009",
+          register_variant: "scb/lisa/individer-16plus",
+          period: { from: 1990, to: 2009 },
+          bindings: [
+            {
+              variable: "scb/lisa/dinf",
+              type: "integer",
+              representation: "Kon",
+            },
+          ],
+        },
+      ],
+    };
+
+    const committed = committedPickerRows(draft, [b], {
+      period: "1990..2009",
+      window: [1990, 2009],
+    }).get(pickerRowKey(b, r));
+
+    expect(committed).toEqual(
+      expect.objectContaining({
+        registerVariant: "scb/lisa/individer-16plus",
+        representation: "Kon",
+      }),
+    );
+    expect(
+      stagedRemoveForCommitted(committed as NonNullable<typeof committed>),
+    ).toEqual([
+      {
+        registerVariant: "scb/lisa/individer-16plus",
+        variable: "scb/lisa/dinf",
+        representation: "Kon",
+      },
+    ]);
+  });
+
+  it("requires every family segment when no picker period scope is active", () => {
     const r = row({
       key: "individer-15plus::Kon",
       variant: "individer-15plus",

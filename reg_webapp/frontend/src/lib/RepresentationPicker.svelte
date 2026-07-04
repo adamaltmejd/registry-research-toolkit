@@ -810,6 +810,12 @@ interface GraphCellMatch {
   column: string;
 }
 
+function rowConcreteVariants(row: PickerRepresentation): string[] {
+  return row.variantSegments && row.variantSegments.length > 0
+    ? row.variantSegments.map((segment) => segment.variant)
+    : [row.variant];
+}
+
 function graphMemberHrefForNode(node: VariableGraphNode): string | null {
   if (graphMemberHrefs == null) {
     return null;
@@ -827,11 +833,7 @@ function cellMatchedColumns(
   row: PickerRepresentation,
   cell: RunCell,
 ): string[] {
-  const rowVariants =
-    row.variantSegments && row.variantSegments.length > 0
-      ? row.variantSegments.map((segment) => segment.variant)
-      : [row.variant];
-  if (!rowVariants.includes(cell.variant)) {
+  if (!rowConcreteVariants(row).includes(cell.variant)) {
     return [];
   }
   const columns = new Set(cell.columns);
@@ -1072,14 +1074,16 @@ function graphNodeWithVisibleStates(
   }
   const visibleColumnsByVariant = new Map<string, Set<string>>();
   for (const row of band.rows) {
-    let cols = visibleColumnsByVariant.get(row.variant);
-    if (!cols) {
-      cols = new Set<string>();
-      visibleColumnsByVariant.set(row.variant, cols);
-    }
-    cols.add(row.column);
-    for (const renamed of row.renamedColumns) {
-      cols.add(renamed);
+    for (const variant of rowConcreteVariants(row)) {
+      let cols = visibleColumnsByVariant.get(variant);
+      if (!cols) {
+        cols = new Set<string>();
+        visibleColumnsByVariant.set(variant, cols);
+      }
+      cols.add(row.column);
+      for (const renamed of row.renamedColumns) {
+        cols.add(renamed);
+      }
     }
   }
   return {

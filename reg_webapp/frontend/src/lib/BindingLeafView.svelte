@@ -405,10 +405,6 @@ const pickerBands = $derived([
     rows: pickerRows,
   },
 ]);
-const committedRows = $derived(
-  committedPickerRows(projectStore.draft, pickerBands),
-);
-
 const narrowedPeriodLabel = $derived(
   (boundedPickerPeriod ?? params.period ?? "").split(",").join(" + "),
 );
@@ -429,6 +425,12 @@ const activePickerPeriod = $derived(
  * (no dimming). */
 const pickerWindow = $derived(
   pickerWindowYears(activePickerPeriod, boundedProjectWindow),
+);
+const committedRows = $derived(
+  committedPickerRows(projectStore.draft, pickerBands, {
+    period: activePickerPeriod,
+    window: pickerWindow,
+  }),
 );
 
 /** The applied outcome (drives the inline confirmation). */
