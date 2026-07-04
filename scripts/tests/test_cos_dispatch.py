@@ -1,12 +1,16 @@
 """Unit tests for scripts/cos_dispatch.py.
 
 Pins the auto-dispatch launcher's contract: the ordered guards (kill switch → budget →
-collision), the exact per-surface launch argv (codex `$pr-pipeline …` with the pinned
-sandbox flags; claude `/pr-pipeline …` with a pre-generated --session-id), that the
-worktree is materialized off a freshly fetched origin/main, that the slot file is
-written with slot==stem shape (so scan_slots accepts it) promptly after a successful
-launch, codex session-id capture from the JSONL log (plus its bounded-poll timeout →
-session=null), and --dry-run's zero-side-effect check-only path. Review-hardening
+collision), the launch path per surface — a CODEX lane launches cos_lane_runner.py by
+DEFAULT (build_lane_runner_argv, session=null slot, no dispatch-side sentinel/poll — the
+runner owns those); `--no-lane-runner` forces the legacy bare `codex exec` agent
+(`$pr-pipeline …` with the pinned sandbox flags, the dispatch-side sentinel + session
+poll); a CLAUDE lane launches the bare `/pr-pipeline …` agent with a pre-generated
+--session-id — that the worktree is materialized off a freshly fetched origin/main, that
+the slot file is written with slot==stem shape (so scan_slots accepts it) promptly after a
+successful launch, codex session-id capture from the JSONL log on the bare-agent path
+(plus its bounded-poll timeout → session=null), and --dry-run's zero-side-effect
+check-only path (reflecting the chosen launch path). Review-hardening
 invariants: the codex session merge AND the initial ownership write both overlay only
 their own fields, preserving a fast child pipeline's concurrently-written `prs` (a
 vanished/invalid slot falls back to a full write); the id poll parses only bytes past the
@@ -297,6 +301,7 @@ def _args(tmp_path: Path, canonical: Path, **overrides):
         "max_slots": 3,
         "canonical": canonical,
         "no_canonical_check": True,
+        "no_lane_runner": False,  # default: codex launches cos_lane_runner.py
         "dry_run": False,
     }
     defaults.update(overrides)
@@ -782,12 +787,110 @@ def test_worktree_collision_maps_to_exit_2(tmp_path: Path, capsys) -> None:
 # --- happy paths ---
 
 
-def test_happy_path_codex(tmp_path: Path, capsys, _hermetic_env: Path) -> None:
+def _capture_launch(monkeypatch: pytest.MonkeyPatch) -> list[list[str]]:
+    """Capture launch_detached's argv WITHOUT spawning a real child, returning a fake pid.
+
+    The lane-runner path's argv is `<python> cos_lane_runner.py …`; letting launch_detached
+    actually spawn it would run the REAL runner (which drives codex). The runner-path tests
+    only assert the composed argv (per the plan), so we intercept the launch here — the
+    dispatch flow (worktree, slot write, sentinel-skip) still runs for real. Returns a list
+    that receives the argv of each launch.
+    """
+    launched: list[list[str]] = []
+
+    def fake_launch(
+        argv, worktree, log_path, state_root, *, grace=None, grace_poll=None
+    ):
+        launched.append(list(argv))
+        return 424242  # a plausible pid; no real process
+
+    monkeypatch.setattr(cd, "launch_detached", fake_launch)
+    return launched
+
+
+def test_happy_path_codex_lane_runner(
+    tmp_path: Path, capsys, _hermetic_env: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # DEFAULT codex dispatch: launches cos_lane_runner.py (NOT a bare `codex exec`). The
+    # runner argv carries --worktree/--base origin/main/--issues/--gate-root/--log/
+    # --slot-file/--tier/--canonical; the slot is written session=null and NO dispatch-side
+    # session poll is attempted (the runner enriches the session itself).
+    canonical = _make_origin(tmp_path)
+    launched = _capture_launch(monkeypatch)
+    # If a session poll were (wrongly) attempted on the runner path, this would blow up.
+    monkeypatch.setattr(
+        cd,
+        "poll_codex_session_id",
+        lambda *a, **k: (_ for _ in ()).throw(
+            AssertionError("session poll ran on the lane-runner path")
+        ),
+    )
+    state = tmp_path / "state"
+    rc = cd.dispatch(
+        _args(tmp_path, canonical, state_root=state),
+        launch_grace=_TEST_GRACE,
+        launch_grace_poll=_TEST_GRACE_POLL,
+    )
+
+    assert rc == 0
+    result = json.loads(capsys.readouterr().out)
+    slug = "auto-codex-issue-1011"
+    assert result["slot"] == slug
+    assert result["surface"] == "codex"
+    assert result["tier"] == "hard"
+    assert result["session"] is None  # runner enriches it, not dispatch
+    assert result["pid"] == 424242
+
+    # Worktree still materialized off origin/main (dispatch owns the worktree on both paths).
+    worktree = canonical / ".claude" / "worktrees" / slug
+    assert worktree.is_dir()
+    assert (worktree / "README.md").read_text(encoding="utf-8") == "seed\n"
+
+    # The launched argv is the RUNNER, not `codex exec`.
+    assert len(launched) == 1
+    argv = launched[0]
+    assert argv[0] == cd.sys.executable
+    assert argv[1].endswith("cos_lane_runner.py")
+    assert argv[argv.index("--worktree") + 1] == str(worktree)
+    assert argv[argv.index("--base") + 1] == "origin/main"
+    assert argv[argv.index("--issues") + 1] == "1011"
+    assert argv[argv.index("--gate-root") + 1] == str(state / "merge-gates")
+    assert argv[argv.index("--log") + 1] == str(state / "dispatch-logs" / f"{slug}.log")
+    assert argv[argv.index("--slot-file") + 1] == str(
+        state / "pipeline-slots" / f"{slug}.json"
+    )
+    assert argv[argv.index("--tier") + 1] == "hard"
+    assert argv[argv.index("--canonical") + 1] == str(canonical)
+    assert "--continue-pr" not in argv
+    # No bare-agent codex flags leaked into the runner argv.
+    assert "exec" not in argv
+    assert "$pr-pipeline 1011" not in argv
+
+    # Slot written session=null with slot==stem shape; scan_slots accepts it.
+    slot = json.loads(
+        (state / "pipeline-slots" / f"{slug}.json").read_text(encoding="utf-8")
+    )
+    assert slot["slot"] == slug
+    assert slot["session"] is None
+    assert slot["issues"] == [1011]
+    assert slot["surface"] == "codex"
+    assert cd._cos_preflight.scan_slots(state / "pipeline-slots") == {slug}
+
+    # NO dispatch-side run sentinel: the runner writes its own before its implement turn, so
+    # the per-slug log holds nothing from dispatch here.
+    assert not (state / "dispatch-logs" / f"{slug}.log").exists()
+
+
+def test_happy_path_codex_bare_agent(
+    tmp_path: Path, capsys, _hermetic_env: Path
+) -> None:
+    # --no-lane-runner escape: the legacy bare `codex exec` agent path (dispatch owns the
+    # sentinel + session poll). Retargeted from the former default-codex happy path.
     canonical = _make_origin(tmp_path)
     record = _stub_bin(_hermetic_env, "codex", jsonl=_CODEX_JSONL)
     state = tmp_path / "state"
     rc = cd.dispatch(
-        _args(tmp_path, canonical, state_root=state),
+        _args(tmp_path, canonical, state_root=state, no_lane_runner=True),
         codex_id_timeout=5.0,
         codex_id_poll=0.02,
         launch_grace=_TEST_GRACE,
@@ -892,12 +995,15 @@ def test_happy_path_claude(tmp_path: Path, capsys, _hermetic_env: Path) -> None:
 def test_codex_id_timeout_yields_null_session_but_writes_slot(
     tmp_path: Path, capsys, _hermetic_env: Path
 ) -> None:
+    # Bare-agent codex path (--no-lane-runner): dispatch owns the session poll, so a stub
+    # that emits no id line times out to session=null. (On the default runner path there is
+    # no dispatch-side poll at all.)
     canonical = _make_origin(tmp_path)
     # Stub emits NO id line, so the poll times out.
     _stub_bin(_hermetic_env, "codex", jsonl='{"type":"turn.started"}\n')
     state = tmp_path / "state"
     rc = cd.dispatch(
-        _args(tmp_path, canonical, state_root=state),
+        _args(tmp_path, canonical, state_root=state, no_lane_runner=True),
         codex_id_timeout=0.1,
         codex_id_poll=0.02,
         launch_grace=_TEST_GRACE,
@@ -936,8 +1042,11 @@ def test_launch_failure_no_slot_and_names_worktree(
     (gitonly_bin / "git").symlink_to(git_real)
     monkeypatch.setenv("PATH", str(gitonly_bin))
 
+    # Bare-agent path: argv[0] is `codex`, now unresolvable → spawn OSError. (On the runner
+    # path argv[0] is the always-present python, so a missing-codex spawn error can't occur;
+    # the runner's own codex launch would fail-fast internally instead.)
     with pytest.raises(SystemExit) as exc:
-        cd.dispatch(_args(tmp_path, canonical, state_root=state))
+        cd.dispatch(_args(tmp_path, canonical, state_root=state, no_lane_runner=True))
 
     message = str(exc.value.code)
     assert "failed to launch" in message
@@ -954,12 +1063,20 @@ def test_surface_override_contradicting_tier_drops_pins(
     tmp_path: Path, capsys, _hermetic_env: Path
 ) -> None:
     # easy tier (claude) forced onto codex → launches codex with AMBIENT defaults: the
-    # base pinned flags but NO model/effort/advisor profile pins.
+    # base pinned flags but NO model/effort/advisor profile pins. Asserted on the bare codex
+    # argv (--no-lane-runner); the runner path carries no profile pins in its own argv.
     canonical = _make_origin(tmp_path)
     record = _stub_bin(_hermetic_env, "codex", jsonl=_CODEX_JSONL)
     state = tmp_path / "state"
     rc = cd.dispatch(
-        _args(tmp_path, canonical, tier="easy", surface="codex", state_root=state),
+        _args(
+            tmp_path,
+            canonical,
+            tier="easy",
+            surface="codex",
+            state_root=state,
+            no_lane_runner=True,
+        ),
         codex_id_timeout=5.0,
         codex_id_poll=0.02,
         launch_grace=_TEST_GRACE,
@@ -982,24 +1099,50 @@ def test_surface_override_contradicting_tier_drops_pins(
     assert "model_reasoning_effort=xhigh" not in rec["argv"]
 
 
-def test_dry_run_no_side_effects_reflects_tier(tmp_path: Path, capsys) -> None:
+def test_dry_run_no_side_effects_reflects_lane_runner(tmp_path: Path, capsys) -> None:
     canonical = _make_origin(tmp_path)
     state = tmp_path / "state"
 
-    # Default (hard) tier.
+    # Default (hard) tier → the codex lane-runner path: dry-run prints the RUNNER argv with
+    # lane_runner: true, side-effect-free.
     rc = cd.dispatch(_args(tmp_path, canonical, state_root=state, dry_run=True))
     assert rc == 0
     result = json.loads(capsys.readouterr().out)
-    assert result["launch_argv"][0] == "codex"
+    assert result["lane_runner"] is True
+    argv = result["launch_argv"]
+    assert argv[0] == cd.sys.executable
+    assert argv[1].endswith("cos_lane_runner.py")
+    assert argv[argv.index("--base") + 1] == "origin/main"
+    assert argv[argv.index("--issues") + 1] == "1011"
+    assert argv[argv.index("--gate-root") + 1] == str(state / "merge-gates")
     assert result["surface"] == "codex"
     assert result["tier"] == "hard"
-    assert "gpt-5.5" in result["launch_argv"]
     assert result["slot_path"].endswith("auto-codex-issue-1011.json")
     # Zero side effects: no worktree, no slot file, no log dir.
     slug = "auto-codex-issue-1011"
     assert not (canonical / ".claude" / "worktrees" / slug).exists()
     assert not (state / "pipeline-slots").exists()
     assert not (state / "dispatch-logs").exists()
+    _no_real_launch(tmp_path)
+
+
+def test_dry_run_no_lane_runner_reflects_bare_codex(tmp_path: Path, capsys) -> None:
+    canonical = _make_origin(tmp_path)
+    state = tmp_path / "state"
+
+    # --no-lane-runner escape: dry-run prints the bare `codex exec` argv with lane_runner:
+    # false and the hard-tier gpt-5.5 pins.
+    rc = cd.dispatch(
+        _args(tmp_path, canonical, state_root=state, no_lane_runner=True, dry_run=True)
+    )
+    assert rc == 0
+    result = json.loads(capsys.readouterr().out)
+    assert result["lane_runner"] is False
+    assert result["launch_argv"][0] == "codex"
+    assert result["surface"] == "codex"
+    assert result["tier"] == "hard"
+    assert "gpt-5.5" in result["launch_argv"]
+    assert result["slot_path"].endswith("auto-codex-issue-1011.json")
     _no_real_launch(tmp_path)
 
 
@@ -1024,6 +1167,8 @@ def test_dry_run_easy_tier_reflects_claude_profile(tmp_path: Path, capsys) -> No
 def test_continue_pr_dry_run_uses_metadata_free_prompt(
     tmp_path: Path, capsys, monkeypatch: pytest.MonkeyPatch
 ) -> None:
+    # The metadata-free continuation PROMPT is a bare-agent concern (the runner composes its
+    # own continue prompt internally), so this dry-run runs the --no-lane-runner escape.
     canonical = _make_origin(tmp_path)
     brief = tmp_path / "brief.md"
     brief.write_text("Fix the current-head review finding.", encoding="utf-8")
@@ -1040,6 +1185,7 @@ def test_continue_pr_dry_run_uses_metadata_free_prompt(
             issues=None,
             continue_pr=4242,
             brief_file=brief,
+            no_lane_runner=True,
             dry_run=True,
         )
     )
@@ -1056,6 +1202,37 @@ def test_continue_pr_dry_run_uses_metadata_free_prompt(
     assert "closing issue references" in prompt
     assert "git push --force-with-lease" not in prompt
     assert "Fix the current-head review finding." in prompt
+    assert not (canonical / ".claude" / "worktrees" / "continue-codex-pr-4242").exists()
+    _no_real_launch(tmp_path)
+
+
+def test_continue_pr_dry_run_lane_runner_argv(
+    tmp_path: Path, capsys, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # DEFAULT continue dispatch (codex → runner): the dry-run argv is the RUNNER with
+    # --continue-pr and --base origin/main (dry-run doesn't resolve the PR base, so it
+    # defaults to origin/main). No prompt is embedded — the runner builds its own.
+    canonical = _make_origin(tmp_path)
+
+    def should_not_resolve(_pr: int) -> None:
+        raise AssertionError("dry-run read PR metadata")
+
+    monkeypatch.setattr(cd, "resolve_continue_pr", should_not_resolve)
+
+    rc = cd.dispatch(
+        _args(tmp_path, canonical, issues=None, continue_pr=4242, dry_run=True)
+    )
+
+    assert rc == 0
+    result = json.loads(capsys.readouterr().out)
+    assert result["lane_runner"] is True
+    assert result["mode"] == "continue"
+    assert result["prs"] == [4242]
+    argv = result["launch_argv"]
+    assert argv[1].endswith("cos_lane_runner.py")
+    assert argv[argv.index("--continue-pr") + 1] == "4242"
+    assert argv[argv.index("--base") + 1] == "origin/main"
+    assert "--issues" not in argv
     assert not (canonical / ".claude" / "worktrees" / "continue-codex-pr-4242").exists()
     _no_real_launch(tmp_path)
 
@@ -1088,7 +1265,14 @@ def test_continue_pr_happy_path_rebases_branch_and_records_pr(
     )
 
     rc = cd.dispatch(
-        _args(tmp_path, canonical, issues=None, continue_pr=4242, state_root=state),
+        _args(
+            tmp_path,
+            canonical,
+            issues=None,
+            continue_pr=4242,
+            state_root=state,
+            no_lane_runner=True,  # bare-agent path: asserts the continue prompt + poll
+        ),
         codex_id_timeout=5.0,
         codex_id_poll=0.02,
         launch_grace=_TEST_GRACE,
@@ -1215,7 +1399,7 @@ def test_continue_pr_rebases_onto_stacked_pr_base_branch(
     _git(canonical, "commit", "-m", "advance main")
     _git(canonical, "push", "origin", "main")
 
-    record = _stub_bin(_hermetic_env, "codex", jsonl=_CODEX_JSONL)
+    launched = _capture_launch(monkeypatch)
     state = tmp_path / "state"
     monkeypatch.setattr(
         cd,
@@ -1231,8 +1415,6 @@ def test_continue_pr_rebases_onto_stacked_pr_base_branch(
 
     rc = cd.dispatch(
         _args(tmp_path, canonical, issues=None, continue_pr=4242, state_root=state),
-        codex_id_timeout=5.0,
-        codex_id_poll=0.02,
         launch_grace=_TEST_GRACE,
         launch_grace_poll=_TEST_GRACE_POLL,
     )
@@ -1240,12 +1422,19 @@ def test_continue_pr_rebases_onto_stacked_pr_base_branch(
     assert rc == 0
     slug = "continue-codex-pr-4242"
     worktree = canonical / ".claude" / "worktrees" / slug
+    # The worktree is rebased onto the PR base branch (dispatch owns this on both paths).
     assert (worktree / "branch.txt").read_text(encoding="utf-8") == "successor\n"
     assert (worktree / "base-new.txt").read_text(encoding="utf-8") == "base advanced\n"
     assert not (worktree / "main-only.txt").exists()
 
-    rec = _wait_for_record(record)
-    assert f"`origin/{base_branch}`" in rec["argv"][-1]
+    # DEFAULT continue dispatch: the RUNNER argv carries --continue-pr and the resolved PR
+    # base as --base origin/<base_branch> (not origin/main), so the runner's review diffs
+    # against the real stacked base.
+    assert len(launched) == 1
+    argv = launched[0]
+    assert argv[1].endswith("cos_lane_runner.py")
+    assert argv[argv.index("--continue-pr") + 1] == "4242"
+    assert argv[argv.index("--base") + 1] == f"origin/{base_branch}"
     assert json.loads(capsys.readouterr().out)["mode"] == "continue"
 
 
@@ -1394,7 +1583,7 @@ def test_nonexistent_canonical_refused_cleanly(tmp_path: Path) -> None:
 
 def test_cli_default_tier_is_hard(tmp_path: Path, capsys) -> None:
     # Through main()'s real argparse (not the _args helper): omitting --tier defaults to
-    # hard, so the resolved surface is codex with the gpt-5.5 xhigh profile.
+    # hard, so the resolved surface is codex and the default launch path is the lane runner.
     canonical = _make_origin(tmp_path)
     state = tmp_path / "state"
 
@@ -1415,6 +1604,35 @@ def test_cli_default_tier_is_hard(tmp_path: Path, capsys) -> None:
     result = json.loads(capsys.readouterr().out)
     assert result["tier"] == "hard"
     assert result["surface"] == "codex"
+    assert result["lane_runner"] is True
+    assert result["launch_argv"][1].endswith("cos_lane_runner.py")
+    _no_real_launch(tmp_path)
+
+
+def test_cli_no_lane_runner_flag_selects_bare_codex(tmp_path: Path, capsys) -> None:
+    # Through main()'s real argparse: --no-lane-runner forces the bare `codex exec` agent on
+    # the default codex surface, with the hard-tier gpt-5.5 pins.
+    canonical = _make_origin(tmp_path)
+    state = tmp_path / "state"
+
+    rc = cd.main(
+        [
+            "--issues",
+            "1011",
+            "--state-root",
+            str(state),
+            "--canonical",
+            str(canonical),
+            "--no-canonical-check",
+            "--no-lane-runner",
+            "--dry-run",
+        ]
+    )
+
+    assert rc == 0
+    result = json.loads(capsys.readouterr().out)
+    assert result["lane_runner"] is False
+    assert result["launch_argv"][0] == "codex"
     assert "gpt-5.5" in result["launch_argv"]
     _no_real_launch(tmp_path)
 
@@ -1456,8 +1674,11 @@ def test_hostile_git_env_is_scrubbed_from_children(
     monkeypatch.setenv("GIT_WORK_TREE", str(decoy))
     monkeypatch.setenv("GIT_INDEX_FILE", str(decoy / "index"))
 
+    # Asserted on the bare-agent path so the codex stub records the child's env. The scrub is
+    # applied by the shared launch_detached/_child_env, so it holds identically on the runner
+    # path (where the child is the runner).
     rc = cd.dispatch(
-        _args(tmp_path, canonical, state_root=state),
+        _args(tmp_path, canonical, state_root=state, no_lane_runner=True),
         codex_id_timeout=5.0,
         codex_id_poll=0.02,
         launch_grace=_TEST_GRACE,
@@ -1500,6 +1721,8 @@ def test_slot_write_failure_after_launch_exits_2_no_tmp_leak(
     # The agent is ALREADY launched when the final slot write runs. If that write fails,
     # dispatch must convert to exit 2 (NOT crash with a traceback / exit 1) and name the pid
     # + dispatch log so the orphan can be adjudicated. No *.tmp file may be left behind.
+    # Bare-agent path (a real launch must succeed before the slot write runs); the failure
+    # is path-agnostic, and the bare codex stub keeps this hermetic (no real runner spawn).
     canonical = _make_origin(tmp_path)
     _stub_bin(_hermetic_env, "codex", jsonl=_CODEX_JSONL)
     state = tmp_path / "state"
@@ -1507,7 +1730,7 @@ def test_slot_write_failure_after_launch_exits_2_no_tmp_leak(
 
     with pytest.raises(SystemExit) as exc:
         cd.dispatch(
-            _args(tmp_path, canonical, state_root=state),
+            _args(tmp_path, canonical, state_root=state, no_lane_runner=True),
             codex_id_timeout=5.0,
             codex_id_poll=0.02,
             launch_grace=_TEST_GRACE,
@@ -1551,6 +1774,7 @@ def test_slot_write_failure_through_main_is_exit_2(
             "--canonical",
             str(canonical),
             "--no-canonical-check",
+            "--no-lane-runner",  # bare-agent: a real launch, then the slot write fails
         ]
     )
 
@@ -1633,8 +1857,9 @@ def test_codex_child_prs_survive_session_merge(
     tmp_path: Path, capsys, _hermetic_env: Path
 ) -> None:
     # The child pipeline can register drafts/PRs into the SAME slot during the id-poll
-    # window. dispatch's step-7 merge must stamp the polled session WITHOUT clobbering
-    # those prs: the final slot has BOTH the child's prs and the polled session.
+    # window. dispatch's step-7 merge (bare-agent path only) must stamp the polled session
+    # WITHOUT clobbering those prs: the final slot has BOTH the child's prs and the polled
+    # session. (The runner path has no dispatch-side merge — the runner owns the session.)
     canonical = _make_origin(tmp_path)
     state = tmp_path / "state"
     slug = "auto-codex-issue-1011"
@@ -1642,7 +1867,7 @@ def test_codex_child_prs_survive_session_merge(
     _stub_bin_child_claims(_hermetic_env, "codex", slot_path, [4242])
 
     rc = cd.dispatch(
-        _args(tmp_path, canonical, state_root=state),
+        _args(tmp_path, canonical, state_root=state, no_lane_runner=True),
         codex_id_timeout=5.0,
         codex_id_poll=0.02,
         launch_grace=_TEST_GRACE,
@@ -1770,9 +1995,10 @@ def test_poll_codex_session_id_no_new_id_returns_none_not_stale(tmp_path: Path) 
 def test_reused_log_dispatch_records_new_id_not_stale(
     tmp_path: Path, capsys, _hermetic_env: Path
 ) -> None:
-    # End-to-end: pre-seed the per-slug dispatch log with a PRIOR run's thread.started, then
-    # dispatch with a stub emitting a NEW id. The pre-launch offset scopes the poll to this
-    # run's bytes, so the slot records the new id, not the stale one.
+    # End-to-end (bare-agent path — the dispatch-side sentinel + poll live here): pre-seed the
+    # per-slug dispatch log with a PRIOR run's thread.started, then dispatch with a stub
+    # emitting a NEW id. The pre-launch offset scopes the poll to this run's bytes, so the slot
+    # records the new id, not the stale one.
     canonical = _make_origin(tmp_path)
     state = tmp_path / "state"
     slug = "auto-codex-issue-1011"
@@ -1788,7 +2014,7 @@ def test_reused_log_dispatch_records_new_id_not_stale(
     )
 
     rc = cd.dispatch(
-        _args(tmp_path, canonical, state_root=state),
+        _args(tmp_path, canonical, state_root=state, no_lane_runner=True),
         codex_id_timeout=5.0,
         codex_id_poll=0.02,
         launch_grace=_TEST_GRACE,
@@ -1820,7 +2046,7 @@ def test_reused_log_dispatch_no_new_id_records_null_not_stale(
     _stub_bin(_hermetic_env, "codex", jsonl='{"type":"turn.started"}\n')
 
     rc = cd.dispatch(
-        _args(tmp_path, canonical, state_root=state),
+        _args(tmp_path, canonical, state_root=state, no_lane_runner=True),
         codex_id_timeout=0.15,
         codex_id_poll=0.02,
         launch_grace=_TEST_GRACE,
@@ -1851,7 +2077,9 @@ def test_instant_child_exit_is_launch_failure_no_slot(
     # clean rc=0 that fast is failure. dispatch must exit 2 naming the rc, the dispatch log
     # (which holds the child's stderr), and the leaked worktree — and write NO slot.
     canonical = _make_origin(tmp_path)
-    # linger=0 → the stub records/emits, then exits immediately inside the grace window.
+    # linger=0 → the stub records/emits, then exits immediately inside the grace window. The
+    # instant-exit failure models a codex child dying fast, so it runs the bare-agent path
+    # (the runner path launches long-lived python, not the codex stub).
     _stub_bin(
         _hermetic_env, "codex", jsonl=_CODEX_JSONL, exit_code=exit_code, linger=0.0
     )
@@ -1859,7 +2087,7 @@ def test_instant_child_exit_is_launch_failure_no_slot(
 
     with pytest.raises(SystemExit) as exc:
         cd.dispatch(
-            _args(tmp_path, canonical, state_root=state),
+            _args(tmp_path, canonical, state_root=state, no_lane_runner=True),
             codex_id_timeout=5.0,
             codex_id_poll=0.02,
             launch_grace=_FAIL_GRACE,  # ceiling; the check returns as soon as the child exits
@@ -1882,8 +2110,8 @@ def test_instant_child_exit_is_launch_failure_no_slot(
 def test_instant_child_exit_through_main_is_exit_2(
     tmp_path: Path, capsys, _hermetic_env: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    # Same failure through main()'s argv path: string-code SystemExit → exit 2 on stderr,
-    # never a traceback.
+    # Same failure through main()'s argv path (bare-agent via --no-lane-runner): string-code
+    # SystemExit → exit 2 on stderr, never a traceback.
     canonical = _make_origin(tmp_path)
     _stub_bin(_hermetic_env, "codex", jsonl=_CODEX_JSONL, exit_code=3, linger=0.0)
     state = tmp_path / "state"
@@ -1898,6 +2126,7 @@ def test_instant_child_exit_through_main_is_exit_2(
             "--canonical",
             str(canonical),
             "--no-canonical-check",
+            "--no-lane-runner",
         ]
     )
 
@@ -1961,13 +2190,14 @@ def test_state_root_propagated_as_xdg_state_home(
 ) -> None:
     # A standard '.../registry-research-toolkit' --state-root is propagated to the child as
     # XDG_STATE_HOME=<parent>, so the child re-derives exactly this override for its own
-    # ledger/gate stores instead of splitting them into the ambient store.
+    # ledger/gate stores instead of splitting them into the ambient store. Asserted on the
+    # bare-agent child's record; the same _child_env propagates it to the runner path child.
     canonical = _make_origin(tmp_path)
     record = _stub_bin(_hermetic_env, "codex", jsonl=_CODEX_JSONL)
     state = tmp_path / "xdg" / "registry-research-toolkit"
 
     rc = cd.dispatch(
-        _args(tmp_path, canonical, state_root=state),
+        _args(tmp_path, canonical, state_root=state, no_lane_runner=True),
         codex_id_timeout=5.0,
         codex_id_poll=0.02,
         launch_grace=_TEST_GRACE,
@@ -1991,7 +2221,7 @@ def test_non_standard_state_root_warns_and_leaves_xdg_ambient(
     monkeypatch.setenv("XDG_STATE_HOME", "/ambient/xdg")
 
     rc = cd.dispatch(
-        _args(tmp_path, canonical, state_root=state),
+        _args(tmp_path, canonical, state_root=state, no_lane_runner=True),
         codex_id_timeout=5.0,
         codex_id_poll=0.02,
         launch_grace=_TEST_GRACE,
@@ -2015,8 +2245,8 @@ def test_dispatch_log_setup_failure_exits_2_names_worktree(
     # If opening <state>/dispatch-logs/<slug>.log fails after the worktree exists (here:
     # dispatch-logs wedged as a regular FILE so mkdir raises), the OSError must become the
     # exit-2 orphan-adjudication path naming the leaked worktree — never a traceback (exit 1).
-    # The run sentinel is the first dispatch-log write, so no process is launched and no
-    # slot is written.
+    # On the bare-agent path the run sentinel is the FIRST dispatch-log write, so no process
+    # is launched and no slot is written.
     canonical = _make_origin(tmp_path)
     _stub_bin(_hermetic_env, "codex", jsonl=_CODEX_JSONL)
     state = tmp_path / "state"
@@ -2028,7 +2258,7 @@ def test_dispatch_log_setup_failure_exits_2_names_worktree(
 
     with pytest.raises(SystemExit) as exc:
         cd.dispatch(
-            _args(tmp_path, canonical, state_root=state),
+            _args(tmp_path, canonical, state_root=state, no_lane_runner=True),
             launch_grace=_TEST_GRACE,
             launch_grace_poll=_TEST_GRACE_POLL,
         )
@@ -2043,6 +2273,34 @@ def test_dispatch_log_setup_failure_exits_2_names_worktree(
     _no_real_launch(tmp_path)
     assert not (_hermetic_env / "codex.record").exists()
     # No slot written.
+    assert not (state / "pipeline-slots" / f"{slug}.json").exists()
+
+
+def test_lane_runner_log_setup_failure_exits_2_names_worktree(
+    tmp_path: Path, _hermetic_env: Path
+) -> None:
+    # On the RUNNER path dispatch writes no sentinel, so the first dispatch-log touch is
+    # launch_detached opening the log. If that open fails (dispatch-logs wedged as a file),
+    # it must STILL become the exit-2 orphan path naming the leaked worktree — never a
+    # traceback — and write no slot.
+    canonical = _make_origin(tmp_path)
+    state = tmp_path / "state"
+    (state / "dispatch-logs").parent.mkdir(parents=True, exist_ok=True)
+    (state / "dispatch-logs").write_text("not a dir\n", encoding="utf-8")
+
+    with pytest.raises(SystemExit) as exc:
+        cd.dispatch(
+            _args(tmp_path, canonical, state_root=state),
+            launch_grace=_TEST_GRACE,
+            launch_grace_poll=_TEST_GRACE_POLL,
+        )
+
+    message = str(exc.value.code)
+    assert "failed to open dispatch log" in message
+    slug = "auto-codex-issue-1011"
+    worktree = canonical / ".claude" / "worktrees" / slug
+    assert str(worktree) in message
+    _no_real_launch(tmp_path)
     assert not (state / "pipeline-slots" / f"{slug}.json").exists()
 
 
@@ -2171,9 +2429,10 @@ def test_all_maintainer_issues_proceed_to_launch(
     tmp_path: Path, capsys, _hermetic_env: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     # When every lane issue is maintainer-authored, the real author gate passes and the
-    # dispatch proceeds to a normal launch + slot write.
+    # dispatch proceeds to a normal launch + slot write. The launch is captured (not a real
+    # runner spawn), so this stays hermetic on the default runner path.
     canonical = _make_origin(tmp_path)
-    _stub_bin(_hermetic_env, "codex", jsonl=_CODEX_JSONL)
+    launched = _capture_launch(monkeypatch)
     state = tmp_path / "state"
     _stub_gh_author(
         monkeypatch, {1011: _MAINT, 1012: _MAINT.upper()}
@@ -2181,8 +2440,6 @@ def test_all_maintainer_issues_proceed_to_launch(
 
     rc = cd.dispatch(
         _args(tmp_path, canonical, issues="1011,1012", state_root=state),
-        codex_id_timeout=5.0,
-        codex_id_poll=0.02,
         launch_grace=_TEST_GRACE,
         launch_grace_poll=_TEST_GRACE_POLL,
     )
@@ -2190,6 +2447,7 @@ def test_all_maintainer_issues_proceed_to_launch(
     assert rc == 0
     slug = "auto-codex-issue-1011"
     assert (canonical / ".claude" / "worktrees" / slug).is_dir()
+    assert len(launched) == 1 and launched[0][1].endswith("cos_lane_runner.py")
     slot = json.loads(
         (state / "pipeline-slots" / f"{slug}.json").read_text(encoding="utf-8")
     )
