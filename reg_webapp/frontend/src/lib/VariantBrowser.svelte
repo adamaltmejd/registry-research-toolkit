@@ -1,5 +1,5 @@
 <script lang="ts">
-import { getRegisterVariants } from "./api";
+import { getRegisterVariants, type VariantsResponse } from "./api";
 import { asyncResource } from "./async.svelte";
 import { KeyValue, type KeyValueRow } from "./ui";
 
@@ -11,6 +11,15 @@ import { KeyValue, type KeyValueRow } from "./ui";
 const { registerFqid }: { registerFqid: string } = $props();
 
 const variants = asyncResource(() => getRegisterVariants(registerFqid));
+type VariantSummary = VariantsResponse["variants"][number];
+
+interface VariantGroup {
+  key: string;
+  label: string;
+  primary: VariantSummary;
+  variants: VariantSummary[];
+  isFamily: boolean;
+}
 
 // The non-`_default` variants (#673/M4): `_default` is NOT a user-facing variant
 // — it's a STORED variant for some registers (LSS/BU/SOL) and the synthesized
@@ -21,6 +30,39 @@ const variants = asyncResource(() => getRegisterVariants(registerFqid));
 const realVariants = $derived(
   variants.data?.variants.filter((v) => v.slug !== "_default") ?? [],
 );
+const variantGroups = $derived(groupVariants(variants.data?.variants ?? []));
+
+function variantLabel(variant: VariantSummary): string {
+  return variant.name ?? variant.display_group ?? variant.slug;
+}
+
+function groupVariants(rawVariants: readonly VariantSummary[]): VariantGroup[] {
+  const grouped = new Map<string, VariantGroup>();
+  for (const variant of rawVariants) {
+    const key = variant.variant_family ?? variant.slug;
+    const existing = grouped.get(key);
+    if (existing) {
+      existing.variants.push(variant);
+      existing.isFamily = existing.isFamily || variant.variant_family != null;
+      if (!existing.label && variant.variant_family_label) {
+        existing.label = variant.variant_family_label;
+      }
+      continue;
+    }
+    grouped.set(key, {
+      key,
+      label: variant.variant_family_label ?? variantLabel(variant),
+      primary: variant,
+      variants: [variant],
+      isFamily: variant.variant_family != null,
+    });
+  }
+  return [...grouped.values()];
+}
+
+function concreteVariantList(group: VariantGroup): string {
+  return group.variants.map((variant) => variant.slug).join(" / ");
+}
 
 // `display_group` duplicates `name` for most variants (SCB delivers them
 // identical), so show it only when it ADDS information. Compare trimmed: some
@@ -87,54 +129,68 @@ function objectTypeRows(objectType: {
       <p class="error" role="alert">Failed to load variants: {variants.error}</p>
     {:else}
       <ul class="variant-list">
-        {#each variants.data?.variants ?? [] as variant (variant.slug)}
+        {#each variantGroups as group (group.key)}
           <li>
-            <div class="variant">
-              <span class="slug">{variant.slug}</span>
-              {#if variant.name}<span class="name">{variant.name}</span>{/if}
-              <!-- Omit display_group when it just repeats `name` (the common case;
-                   "Arbetsställen Arbetsställen") — trimmed compare, see the helper. -->
-              {#if showsDistinctGroup(variant.name, variant.display_group)}
-                <span class="group">{variant.display_group}</span>
+            <div class={group.isFamily ? "variant-family" : "variant"}>
+              {#if group.isFamily}
+                <span class="name family-name">{group.label}</span>
+                <span class="group">{concreteVariantList(group)}</span>
+              {:else}
+                {@const variant = group.primary}
+                <span class="slug">{variant.slug}</span>
+                {#if variant.name}<span class="name">{variant.name}</span>{/if}
+                <!-- Omit display_group when it just repeats `name` (the common case;
+                     "Arbetsställen Arbetsställen") — trimmed compare, see the helper. -->
+                {#if showsDistinctGroup(variant.name, variant.display_group)}
+                  <span class="group">{variant.display_group}</span>
+                {/if}
               {/if}
             </div>
-            {#if variant.description}
-              <p class="desc muted">{variant.description}</p>
-            {/if}
-            {#if variant.versions && variant.versions.length > 0}
-              <div class="version-list">
-                {#each variant.versions as version, index}
-                  {@const vRows = versionRows(version)}
-                  {@const populations = version.populations ?? []}
-                  {@const objectTypes = version.object_types ?? []}
-                  <section class="version-meta">
-                    <h4 class="version-title">
-                      <span class="micro-label">Version</span>
-                      <span class="version-name">{version.name ?? `#${index + 1}`}</span>
-                    </h4>
-                    {#if vRows.length > 0}
-                      <KeyValue rows={vRows} />
-                    {/if}
-                    {#if populations.length > 0}
-                      <div class="metadata-group">
-                        <h5 class="micro-label metadata-heading">Population</h5>
-                        {#each populations as population}
-                          <KeyValue rows={populationRows(population)} />
-                        {/each}
-                      </div>
-                    {/if}
-                    {#if objectTypes.length > 0}
-                      <div class="metadata-group">
-                        <h5 class="micro-label metadata-heading">Object type</h5>
-                        {#each objectTypes as objectType}
-                          <KeyValue rows={objectTypeRows(objectType)} />
-                        {/each}
-                      </div>
-                    {/if}
-                  </section>
-                {/each}
-              </div>
-            {/if}
+            {#each group.variants as variant (variant.slug)}
+              {#if group.isFamily}
+                <p class="desc muted">
+                  <span class="slug">{variant.slug}</span>
+                  {#if variant.name}<span> · {variant.name}</span>{/if}
+                </p>
+              {/if}
+              {#if variant.description}
+                <p class="desc muted">{variant.description}</p>
+              {/if}
+              {#if variant.versions && variant.versions.length > 0}
+                <div class="version-list">
+                  {#each variant.versions as version, index}
+                    {@const vRows = versionRows(version)}
+                    {@const populations = version.populations ?? []}
+                    {@const objectTypes = version.object_types ?? []}
+                    <section class="version-meta">
+                      <h4 class="version-title">
+                        <span class="micro-label">Version</span>
+                        <span class="version-name">{version.name ?? `#${index + 1}`}</span>
+                      </h4>
+                      {#if vRows.length > 0}
+                        <KeyValue rows={vRows} />
+                      {/if}
+                      {#if populations.length > 0}
+                        <div class="metadata-group">
+                          <h5 class="micro-label metadata-heading">Population</h5>
+                          {#each populations as population}
+                            <KeyValue rows={populationRows(population)} />
+                          {/each}
+                        </div>
+                      {/if}
+                      {#if objectTypes.length > 0}
+                        <div class="metadata-group">
+                          <h5 class="micro-label metadata-heading">Object type</h5>
+                          {#each objectTypes as objectType}
+                            <KeyValue rows={objectTypeRows(objectType)} />
+                          {/each}
+                        </div>
+                      {/if}
+                    </section>
+                  {/each}
+                </div>
+              {/if}
+            {/each}
           </li>
         {/each}
       </ul>
@@ -163,8 +219,20 @@ function objectTypeRows(objectType: {
     border-radius: 4px;
     background: var(--surface);
   }
+  .variant-family {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    padding: 0.4rem 0.6rem;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    background: var(--surface);
+  }
   .slug {
     font-family: ui-monospace, monospace;
+    font-weight: 600;
+  }
+  .family-name {
     font-weight: 600;
   }
   .group {
