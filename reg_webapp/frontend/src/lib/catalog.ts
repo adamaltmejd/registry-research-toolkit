@@ -1475,13 +1475,16 @@ export interface PickerRowLabel {
 /** The adaptive labeling of a variable's rows (#678 1b): `column` is the hoisted
  * CONSTANT delivery column (the picker renders it as a prominent COLUMN CHIP), or
  * null when the column varies (it's then each row's primary). `headerContext` is the
- * remaining quiet context — the constant value-set label, OR (when value-set labels
- * vary but share a long leading stem, #678) that COMMON STEM, hoisted once so the
- * rows show only their suffix. The period is NEVER in `headerContext` — every row
- * renders its own `period` on the right (the picker's period column), so hoisting it
- * would double-show it. The variant, when constant, is NOT hoisted either — a
- * single-variant register's whole-population default is noise and is already in the
- * add coordinate; it only appears when it VARIES (as the row identity). */
+ * remaining quiet context: when value-set labels vary but share a long leading stem
+ * (#678), that COMMON STEM is hoisted once so the rows show only their suffix. A
+ * value-set label that is fully constant across visible
+ * rows is NOT hoisted: in the picker it is non-discriminating coding context (e.g.
+ * `Förekomst`), so it adds noise rather than choice information. The period is NEVER in
+ * `headerContext` — every row renders its own `period` on the right (the picker's
+ * period column), so hoisting it would double-show it. The variant, when constant, is
+ * NOT hoisted either — a single-variant register's whole-population default is noise
+ * and is already in the add coordinate; it only appears when it VARIES (as the row
+ * identity). */
 export interface PickerLabeling {
   column: string | null;
   headerContext: string[];
@@ -1581,17 +1584,14 @@ export function pickerLabeling(
 
   // Value-set distinctness is over NON-EMPTY labels only: a label that is constant
   // except on rows with no value set (e.g. fordonsreg — one population delivers no
-  // value set) must read as CONSTANT, so the one real label hoists to the context
-  // instead of showing per-row. ≤1 distinct non-empty label ⇒ constant; empty rows
-  // simply contribute no value-set label.
+  // value set) must read as CONSTANT and non-discriminating, so it is omitted from the
+  // picker instead of showing per-row or hoisting to context. ≤1 distinct non-empty
+  // label ⇒ constant; empty rows simply contribute no value-set label.
   const nonEmptyLabels = rows
     .map((r) => r.valueSetLabel)
     .filter((l) => l !== "");
   const valueSetLabels = new Set(nonEmptyLabels);
   const valueSetVaries = valueSetLabels.size > 1;
-  // The single constant label to hoist (the lone non-empty one), or "" when none.
-  const constantValueSet =
-    valueSetLabels.size === 1 ? [...valueSetLabels][0] : "";
   // When the labels VARY, hoist their longest majority WORD-STEM (#678): the long
   // repeated lead (e.g. "Svensk standard för näringsgrensindelning,") goes to the
   // context once and each row shows only its suffix. "" when no substantial stem.
@@ -1603,10 +1603,9 @@ export function pickerLabeling(
   const column =
     sample && !columnVaries && sample.column ? sample.column : null;
   const headerContext: string[] = [];
-  // The value-set quiet context: the single constant label, else the hoisted stem.
-  if (!valueSetVaries && constantValueSet) {
-    headerContext.push(constantValueSet);
-  } else if (stem) {
+  // The value-set quiet context is only for varying coding labels with a shared stem;
+  // a fully constant label does not distinguish rows and stays out of the picker.
+  if (stem) {
     headerContext.push(stem);
   }
 

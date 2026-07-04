@@ -2380,7 +2380,7 @@ describe("pickerLabeling (#678 1b adaptive labels)", () => {
     expect(rows[1].primary).toEqual({ text: "Ssyk4", mono: true });
   });
 
-  it("fordonsreg shape: only the population varies → population primary, constant column + value set hoisted (no period, no variant)", () => {
+  it("fordonsreg shape: only the population varies → population primary, constant value set omitted (no period, no variant)", () => {
     // Every row delivers the constant column "Sni2002"; the POPULATION
     // (lastbilar/bussar) is what distinguishes them.
     const { column, headerContext, rows } = pickerLabeling([
@@ -2392,10 +2392,10 @@ describe("pickerLabeling (#678 1b adaptive labels)", () => {
       rep({ variant: "bussar", column: "Sni2002", valueSetLabel: "SNI 2002" }),
     ]);
     // The constant column hoists to the dedicated `column` chip field; the constant
-    // value set hoists to the quiet context; the period is NEVER hoisted and the
-    // (varying) variant stays on rows.
+    // value set is non-discriminating picker context and is omitted; the period is
+    // NEVER hoisted and the (varying) variant stays on rows.
     expect(column).toBe("Sni2002");
-    expect(headerContext).toEqual(["SNI 2002"]);
+    expect(headerContext).toEqual([]);
     // Each row shows the varying population as the (non-mono) primary.
     expect(rows.map((r) => r.primary)).toEqual([
       { text: "lastbilar", mono: false },
@@ -2427,9 +2427,10 @@ describe("pickerLabeling (#678 1b adaptive labels)", () => {
     ]);
   });
 
-  it("fordonsreg empty-label shape: a value-set label constant except on empty rows still hoists (#678 fix 3)", () => {
+  it("fordonsreg empty-label shape: a value-set label constant except on empty rows is omitted (#959)", () => {
     // One population delivers no value set (empty label). The single real label must
-    // read as CONSTANT and hoist — not show per-row — and the empty row shows nothing.
+    // read as CONSTANT and non-discriminating — not show per-row — and the empty row
+    // shows nothing.
     const { column, headerContext, rows } = pickerLabeling([
       rep({
         variant: "lastbilar",
@@ -2444,9 +2445,7 @@ describe("pickerLabeling (#678 1b adaptive labels)", () => {
       }),
     ]);
     expect(column).toBe("Sni2002");
-    expect(headerContext).toEqual([
-      "Standard för svensk näringsgrensindelning, 2002 Branscher",
-    ]);
+    expect(headerContext).toEqual([]);
     // The value set is treated as constant → it is NOT a per-row varying qualifier.
     expect(rows.every((r) => r.qualifiers.length === 0)).toBe(true);
     expect(rows.map((r) => r.primary)).toEqual([
@@ -2520,14 +2519,14 @@ describe("pickerLabeling (#678 1b adaptive labels)", () => {
     ]);
   });
 
-  it("identical-all value-set labels still collapse (the stem covers the whole label)", () => {
-    // When every label is identical, the identical-all hoist still applies (no stem
-    // path needed) — the label hoists to context, rows carry no value-set qualifier.
+  it("identical-all value-set labels collapse without picker context", () => {
+    // When every label is identical, it is not a row discriminator — rows carry no
+    // value-set qualifier and the constant label is not hoisted to picker context.
     const { headerContext, rows } = pickerLabeling([
       rep({ variant: "v", column: "A", valueSetLabel: "SUN 2020" }),
       rep({ variant: "v", column: "B", valueSetLabel: "SUN 2020" }),
     ]);
-    expect(headerContext).toEqual(["SUN 2020"]);
+    expect(headerContext).toEqual([]);
     expect(rows.every((r) => r.qualifiers.length === 0)).toBe(true);
   });
 
@@ -2553,19 +2552,19 @@ describe("pickerLabeling (#678 1b adaptive labels)", () => {
     expect(rows.map((r) => r.period)).toEqual(["2000 – 2005", "2006 – 2010"]);
   });
 
-  it("a single representation (nothing varies) → the column is the mono primary; column field + value set hoist, no variant/period", () => {
+  it("a single representation (nothing varies) → the column is the mono primary; constant value set omitted, no variant/period", () => {
     const { column, headerContext, rows } = pickerLabeling([
       rep({ variant: "v1", column: "Kon", valueSetLabel: "1-siffrig" }),
     ]);
     // The lone row never renders blank: its column is the identifier.
     expect(rows[0].primary).toEqual({ text: "Kon", mono: true });
     expect(rows[0].qualifiers).toEqual([]);
-    // The constant column hoists to the `column` field; the value set to the quiet
-    // context; the constant variant is NOT hoisted (noise) and the period never is.
+    // The constant column hoists to the `column` field; the constant value set is
+    // omitted; the constant variant is NOT hoisted (noise) and the period never is.
     // (In the PICKER, a single-column variable's `column` is suppressed from context
     // since the column becomes the row's primary chip — that's the picker's `view`.)
     expect(column).toBe("Kon");
-    expect(headerContext).toEqual(["1-siffrig"]);
+    expect(headerContext).toEqual([]);
   });
 
   it("falls back to the variant, then a dash, when no column is present", () => {

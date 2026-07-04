@@ -411,7 +411,7 @@ describe("BindingLeafView representation picker (#678)", () => {
     expect(spans).toEqual(["2010 – 2015", "2018 – 2020"]);
   });
 
-  it("Apply is disabled with no diff, enabled once a row is staged", async () => {
+  it("renders the add footer only once a row is staged", async () => {
     render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
       node: node(pickerStates),
@@ -421,12 +421,14 @@ describe("BindingLeafView representation picker (#678)", () => {
       vintageYear: 2024,
     });
 
-    const add = page.getByRole("button", { name: "Apply staged changes" });
-    await expect.element(add).toBeDisabled();
+    await expect
+      .element(page.getByRole("button", { name: "Add to project" }))
+      .not.toBeInTheDocument();
 
     const konRow = page.getByRole("checkbox", { name: /Kon/ });
     await konRow.click();
     await expect.element(konRow).toBeChecked();
+    const add = page.getByRole("button", { name: "Add to project" });
     await expect.element(add).toBeEnabled();
     await expect.element(page.getByText("+1 column")).toBeVisible();
   });
@@ -482,7 +484,11 @@ describe("BindingLeafView representation picker (#678)", () => {
     await page.getByRole("checkbox", { name: /Kon/ }).click();
     await page.getByRole("checkbox", { name: /Sni/ }).click();
     await expect.element(page.getByText("+2 columns")).toBeVisible();
-    await page.getByRole("button", { name: "Apply staged changes" }).click();
+    await page
+      .getByRole("button", {
+        name: /Add to project|Remove from project|Apply changes/,
+      })
+      .click();
 
     await expect.element(page.getByText(/\+2 columns/)).toBeVisible();
     expect(projectStore.draft?.sources).toEqual(
@@ -548,7 +554,11 @@ describe("BindingLeafView representation picker (#678)", () => {
     });
 
     await page.getByRole("checkbox", { name: /Kon/ }).click();
-    await page.getByRole("button", { name: "Apply staged changes" }).click();
+    await page
+      .getByRole("button", {
+        name: /Add to project|Remove from project|Apply changes/,
+      })
+      .click();
 
     await expect.element(page.getByText(/\+1 column/)).toBeVisible();
     expect(periods).toContain("2000,2010..2015");
@@ -587,7 +597,11 @@ describe("BindingLeafView representation picker (#678)", () => {
     });
 
     await page.getByRole("checkbox", { name: /Kon/ }).click();
-    await page.getByRole("button", { name: "Apply staged changes" }).click();
+    await page
+      .getByRole("button", {
+        name: /Add to project|Remove from project|Apply changes/,
+      })
+      .click();
     await vi.waitFor(() => {
       expect(document.querySelector(".add-confirm")?.textContent).toContain(
         "+1 column",
@@ -636,7 +650,9 @@ describe("BindingLeafView representation picker (#678)", () => {
 
     await page.getByRole("checkbox", { name: /Kon/ }).click();
     await expect.element(page.getByText("Will be added")).toBeVisible();
-    const apply = page.getByRole("button", { name: "Apply staged changes" });
+    const apply = page.getByRole("button", {
+      name: /Add to project|Remove from project|Apply changes/,
+    });
     await apply.click();
     await resolveStarted;
 
@@ -683,7 +699,11 @@ describe("BindingLeafView representation picker (#678)", () => {
     await expect.element(page.getByText("-1 column")).toBeVisible();
     expect(projectStore.draft?.sources).toHaveLength(1);
 
-    await page.getByRole("button", { name: "Apply staged changes" }).click();
+    await page
+      .getByRole("button", {
+        name: /Add to project|Remove from project|Apply changes/,
+      })
+      .click();
     await expect.element(page.getByText(/-1 column/)).toBeVisible();
     expect(projectStore.draft?.sources).toHaveLength(0);
   });
@@ -717,10 +737,16 @@ describe("BindingLeafView representation picker (#678)", () => {
       vintageYear: 2024,
     });
 
-    await expect.element(page.getByText("No staged changes")).toBeVisible();
     await expect
-      .element(page.getByRole("button", { name: "Apply staged changes" }))
-      .toBeDisabled();
+      .element(page.getByText("No staged changes"))
+      .not.toBeInTheDocument();
+    await expect
+      .element(
+        page.getByRole("button", {
+          name: /Add to project|Remove from project|Apply changes/,
+        }),
+      )
+      .not.toBeInTheDocument();
 
     expect(projectStore.draft?.sources[0]?.period).toEqual({
       from: 2010,
@@ -754,10 +780,16 @@ describe("BindingLeafView representation picker (#678)", () => {
       vintageYear: 2024,
     });
 
-    await expect.element(page.getByText("No staged changes")).toBeVisible();
     await expect
-      .element(page.getByRole("button", { name: "Apply staged changes" }))
-      .toBeDisabled();
+      .element(page.getByText("No staged changes"))
+      .not.toBeInTheDocument();
+    await expect
+      .element(
+        page.getByRole("button", {
+          name: /Add to project|Remove from project|Apply changes/,
+        }),
+      )
+      .not.toBeInTheDocument();
     expect(projectStore.draft?.sources[0]?.period).toEqual({
       from: 2010,
       to: 2015,
@@ -777,7 +809,11 @@ describe("BindingLeafView representation picker (#678)", () => {
     });
 
     await page.getByRole("checkbox", { name: /Sni/ }).click();
-    await page.getByRole("button", { name: "Apply staged changes" }).click();
+    await page
+      .getByRole("button", {
+        name: /Add to project|Remove from project|Apply changes/,
+      })
+      .click();
 
     await expect.element(page.getByText("+1 column")).toBeVisible();
     expect(projectStore.draft?.sources[0]?.period).toEqual({
@@ -828,7 +864,11 @@ describe("BindingLeafView representation picker (#678)", () => {
 
     // ONE folded row, led by the latest column DINF86 (the display identity / chip).
     await page.getByRole("checkbox", { name: /DINF86/ }).click();
-    await page.getByRole("button", { name: "Apply staged changes" }).click();
+    await page
+      .getByRole("button", {
+        name: /Add to project|Remove from project|Apply changes/,
+      })
+      .click();
 
     await expect.element(page.getByText(/\+1 column/)).toBeVisible();
     expect(projectStore.draft?.sources[0]).toEqual(
@@ -866,7 +906,11 @@ describe("BindingLeafView representation picker (#678)", () => {
     const kon = page.getByRole("checkbox", { name: /Kon/ });
     await expect.element(kon).toBeVisible();
     await kon.click();
-    await page.getByRole("button", { name: "Apply staged changes" }).click();
+    await page
+      .getByRole("button", {
+        name: /Add to project|Remove from project|Apply changes/,
+      })
+      .click();
 
     await expect.element(page.getByText(/\+1 column/)).toBeVisible();
     expect(projectStore.draft?.sources[0]).toEqual(
@@ -909,7 +953,11 @@ describe("BindingLeafView representation picker (#678)", () => {
     const kon = page.getByRole("checkbox", { name: /Kon/ });
     await expect.element(kon).toBeVisible();
     await kon.click();
-    await page.getByRole("button", { name: "Apply staged changes" }).click();
+    await page
+      .getByRole("button", {
+        name: /Add to project|Remove from project|Apply changes/,
+      })
+      .click();
 
     await expect.element(page.getByText(/\+1 column/)).toBeVisible();
     expect(projectStore.draft?.sources[0]).toEqual(
@@ -1028,8 +1076,8 @@ describe("BindingLeafView representation picker (#678)", () => {
     });
 
     // The single-column member leads with its column as the subheading TITLE (a chip);
-    // on the LEAF it's a plain <code> (no self-link). The value set hoists as quiet
-    // context text. The period is NOT in the context — it shows per-row on the right.
+    // on the LEAF it's a plain <code> (no self-link). Constant value-set context is
+    // omitted. The period is NOT in the context — it shows per-row on the right.
     const titleChip = await vi.waitFor(() => {
       const el = document.querySelector(".subhead-title .col-chip");
       if (!el) {
@@ -1040,10 +1088,7 @@ describe("BindingLeafView representation picker (#678)", () => {
     // The chip's leading text node is the column (a trailing ↗ marker only on links).
     expect(titleChip.firstChild?.textContent?.trim()).toBe("Sni2002");
     expect(titleChip.tagName).toBe("CODE");
-    const ctx = document.querySelector(".subhead-context");
-    expect(ctx?.textContent).toContain("SNI 2002");
-    // The period is NOT duplicated into the context line.
-    expect(ctx?.textContent).not.toContain("2003 – 2015");
+    expect(document.querySelector(".subhead-context")).toBeNull();
     // Each row still shows its own period on the right-side column.
     const periods = [
       ...document.querySelectorAll(".col-row.nested .period"),
@@ -1510,10 +1555,12 @@ describe("BindingLeafView representation picker (#678)", () => {
       windowMinYear: SEED.windowMinYear,
       vintageYear: 2024,
     });
-    const add = page.getByRole("button", { name: "Apply staged changes" });
-    await expect.element(add).toBeDisabled();
+    await expect
+      .element(page.getByRole("button", { name: "Add to project" }))
+      .not.toBeInTheDocument();
     // Selecting a row must NOT enable Apply while the seed is absent.
     await page.getByRole("checkbox", { name: /Kon/ }).click();
+    const add = page.getByRole("button", { name: "Add to project" });
     await expect.element(add).toBeDisabled();
   });
 });
@@ -1570,7 +1617,11 @@ describe("BindingLeafView period-scoped value-set history (#744)", () => {
     await expect.element(konRow).toBeVisible();
     await konRow.click();
     await expect
-      .element(page.getByRole("button", { name: "Apply staged changes" }))
+      .element(
+        page.getByRole("button", {
+          name: /Add to project|Remove from project|Apply changes/,
+        }),
+      )
       .toBeEnabled();
   });
 
@@ -1777,7 +1828,11 @@ describe("BindingLeafView period-scoped value-set history (#744)", () => {
     // `node.states`, so selecting one still enables Apply.
     await page.getByRole("checkbox", { name: /Kon/ }).click();
     await expect
-      .element(page.getByRole("button", { name: "Apply staged changes" }))
+      .element(
+        page.getByRole("button", {
+          name: /Add to project|Remove from project|Apply changes/,
+        }),
+      )
       .toBeEnabled();
   });
 
