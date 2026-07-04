@@ -18,8 +18,9 @@ classifiers = [
     "Topic :: Scientific/Engineering",
 ]
 # Internal deps carry meaningful floors, matching the repo's floor-pin convention
-# (cf. reg_meta_build's `reg-meta>=0.12.0`): reg_webapp embeds reg_meta's frozen
-# Pydantic catalog models directly (collapsed in #681, reg-meta 0.19.0) and
+# (cf. reg_meta_build's `reg-meta>=0.37.0`): reg_webapp embeds reg_meta's frozen
+# Pydantic catalog models directly (collapsed in #681, reg-meta 0.19.0), the
+# classification derivation refs added in #779 (reg-meta 0.37.0), and
 # reg-schema's project_data response models (reg-schema 2.0.0). Exact pins are
 # deliberately NOT used — they'd force monorepo-wide version lockstep and wouldn't
 # enable out-of-workspace builds anyway (these packages resolve via
@@ -29,7 +30,7 @@ classifiers = [
 # (GHSA-82w8-qh3p-5jfq, fixed in 1.3.1) rather than left to fastapi's transitive
 # pin; fastapi >=0.137.0 is the first release whose starlette range admits 1.3.x.
 dependencies = [
-    "reg-meta>=0.19.0",
+    "reg-meta>=0.37.0",
     "reg-schema>=2.0.0",
     "fastapi>=0.137.0",
     "starlette>=1.3.1",

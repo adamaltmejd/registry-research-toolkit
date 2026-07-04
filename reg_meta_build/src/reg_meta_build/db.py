@@ -92,6 +92,7 @@ from .period_family_merges import (
 from .relations import (
     derive_variable_vintage_succession,
     load_relations,
+    materialize_classification_derived_from,
     materialize_curated_replaced_by,
     materialize_same_as,
     repo_relations_path,
@@ -984,6 +985,21 @@ CREATE TABLE classification_same_as (
         b_provider, b_classification_slug
     )
 ) WITHOUT ROWID;
+
+-- Non-temporal classification derivation / variant edges (#779). Directional:
+-- `derived_slug` is the specialized classification (for example KS87-P),
+-- `source_slug` is the classification it derives from (for example ICD-9-KS87).
+-- This is deliberately NOT part of `classification_replaced_by`: these edges must
+-- never participate in terminal edition walks, `supersedes_id`, or the
+-- classification-vintage lift that mints variable_replaced_by.
+CREATE TABLE classification_derived_from (
+    derived_slug TEXT NOT NULL,
+    source_slug  TEXT NOT NULL,
+    note         TEXT,
+    PRIMARY KEY (derived_slug, source_slug)
+) WITHOUT ROWID;
+CREATE INDEX idx_classification_derived_from_source
+    ON classification_derived_from(source_slug);
 
 -- Derived concept groups (#303): PRESENTATION-ONLY grouping of near-identical
 -- catalog rows for browse. Identity is untouched — bindings/orders/stats keep
@@ -4566,13 +4582,14 @@ def materialize(
         row_counts["tags"] = tag_counts["tags"]
         row_counts["tag_members"] = tag_counts["members"]
 
-    # same_as edges (curated `relations.toml`). Runs *after* populate_slugs so
-    # register / classification slug columns are populated — the materializer
-    # validates endpoints against them. Skip-slugs takes the honest-failure
-    # stance shared by the slug-keyed linkers below (replaced_by + lineage): skip
-    # cleanly rather than emit zero edges silently from NULL slug columns.
+    # same_as / derived_from edges (curated `relations.toml`). Runs *after*
+    # populate_slugs so register / classification slug columns are populated —
+    # the materializers validate endpoints against them. Skip-slugs takes the
+    # honest-failure stance shared by the slug-keyed linkers below (replaced_by +
+    # lineage): skip cleanly rather than emit zero edges silently from NULL slug
+    # columns.
     if skip_slugs:
-        _progress("Skipping same_as edges (skip_slugs=True)")
+        _progress("Skipping same_as / derived_from edges (skip_slugs=True)")
     else:
         sa_counts = materialize_same_as(
             conn,
@@ -4598,6 +4615,13 @@ def materialize(
             f"{sa_counts['classification']:,} classification same_as edges "
             "(curated)"
         )
+        n_derived_from = materialize_classification_derived_from(
+            conn,
+            relations.derived_from,
+            progress=_progress,
+        )
+        if n_derived_from:
+            row_counts["classification_derived_from_curated"] = n_derived_from
 
     # replaced_by edges. Runs *after* populate_variable_slugs
     # (above) — every grain resolves off a stored slug column, and the

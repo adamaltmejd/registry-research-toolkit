@@ -322,6 +322,26 @@ class TestValidateModule:
         assert not result.passed
         assert any("unknown classification slug" in f for f in result.failures)
 
+    def test_classification_derived_from_dangling_slug_fails(
+        self, fixture_db: Path, tmp_path: Path
+    ):
+        """#779: a non-temporal derived_from edge pointing at an unknown
+        classification slug fails the structural resolution check."""
+        broken = tmp_path / "broken.db"
+        broken.write_bytes(fixture_db.read_bytes())
+        conn = sqlite3.connect(broken)
+        self._seed_classification(conn, "KS87-P", "ks87-p")
+        conn.execute(
+            "INSERT INTO classification_derived_from "
+            "(derived_slug, source_slug, note) "
+            "VALUES ('ks87-p', 'no-such-slug-9999', 'variant')"
+        )
+        conn.commit()
+        conn.close()
+        result = validate_built_db(broken)
+        assert not result.passed
+        assert any("derived_from edge" in f for f in result.failures)
+
     def test_representation_succession_self_loop_fails(
         self, fixture_db: Path, tmp_path: Path
     ):

@@ -31,10 +31,12 @@ from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta.fqid import FqidKind, parse as parse_fqid
 from reg_meta_build.relations import (
     _SAME_AS_MAX_COMPONENT,
+    CuratedClassificationDerivedFrom,
     CuratedReplacedBy,
     CuratedSameAs,
     derive_variable_vintage_succession,
     load_relations,
+    materialize_classification_derived_from,
     materialize_curated_replaced_by,
     materialize_same_as,
     reject_nonmonotone_representation_cycles,
@@ -62,12 +64,13 @@ def _load(tmp_path: Path, text: str):  # noqa: ANN202 - returns CuratedRelations
 class TestLoaderDispatch:
     def test_missing_file_is_empty(self, tmp_path: Path) -> None:
         rel = load_relations(None)
-        assert rel.same_as == () and rel.replaced_by == ()
-        assert load_relations(tmp_path / "absent.toml").same_as == ()
+        assert rel.same_as == () and rel.replaced_by == () and rel.derived_from == ()
+        absent = load_relations(tmp_path / "absent.toml")
+        assert absent.same_as == () and absent.derived_from == ()
 
     def test_present_but_empty_file_is_empty(self, tmp_path: Path) -> None:
         rel = _load(tmp_path, "# no edges yet\n")
-        assert rel.same_as == () and rel.replaced_by == ()
+        assert rel.same_as == () and rel.replaced_by == () and rel.derived_from == ()
 
     def test_missing_type_rejected(self, tmp_path: Path) -> None:
         with pytest.raises(RegMetaError) as exc:
@@ -84,7 +87,7 @@ class TestLoaderDispatch:
         assert exc.value.exit_code == EXIT_CONFIG
         assert exc.value.code == "relations_invalid"
         # The legal types are listed so a typo is self-correcting.
-        for legal in ("same_as", "replaced_by"):
+        for legal in ("same_as", "replaced_by", "derived_from"):
             assert legal in exc.value.remediation
 
     def test_misspelled_toplevel_key_rejected(self, tmp_path: Path) -> None:
@@ -210,6 +213,76 @@ class TestSameAsLoad:
                 'note = ""\n',
             )
         assert exc.value.code == "relations_invalid"
+
+
+# ---------------------------------------------------------------------------
+# derived_from — load
+# ---------------------------------------------------------------------------
+
+
+class TestDerivedFromLoad:
+    def test_parses_classification_edge(self, tmp_path: Path) -> None:
+        rel = _load(
+            tmp_path,
+            '[[edge]]\ntype = "derived_from"\n'
+            'derived = "class/ks87-p"\n'
+            'source = "class/icd-9-ks87"\n'
+            'note = "primary-care variant"\n',
+        )
+        assert len(rel.derived_from) == 1
+        edge = rel.derived_from[0]
+        assert edge.derived.kind is FqidKind.CLASSIFICATION
+        assert edge.source.kind is FqidKind.CLASSIFICATION
+        assert edge.derived.classification == "ks87-p"
+        assert edge.source.classification == "icd-9-ks87"
+        assert edge.note == "primary-care variant"
+
+    def test_rejects_non_classification_endpoint(self, tmp_path: Path) -> None:
+        with pytest.raises(RegMetaError) as exc:
+            _load(
+                tmp_path,
+                '[[edge]]\ntype = "derived_from"\n'
+                'derived = "scb/lisa/kon"\n'
+                'source = "class/icd-9-ks87"\n',
+            )
+        assert exc.value.code == "relations_invalid"
+        assert "only classification" in exc.value.message
+
+    def test_self_link_rejected(self, tmp_path: Path) -> None:
+        with pytest.raises(RegMetaError) as exc:
+            _load(
+                tmp_path,
+                '[[edge]]\ntype = "derived_from"\n'
+                'derived = "class/ks87-p"\n'
+                'source = "class/ks87-p"\n',
+            )
+        assert exc.value.code == "relations_invalid"
+
+    def test_duplicate_directional_pair_rejected(self, tmp_path: Path) -> None:
+        with pytest.raises(RegMetaError) as exc:
+            _load(
+                tmp_path,
+                '[[edge]]\ntype = "derived_from"\n'
+                'derived = "class/ks87-p"\n'
+                'source = "class/icd-9-ks87"\n\n'
+                '[[edge]]\ntype = "derived_from"\n'
+                'derived = "class/ks87-p"\n'
+                'source = "class/icd-9-ks87"\n',
+            )
+        assert exc.value.code == "relations_invalid"
+        assert "duplicate derived_from" in exc.value.message
+
+    def test_foreign_field_effective_year_rejected(self, tmp_path: Path) -> None:
+        with pytest.raises(RegMetaError) as exc:
+            _load(
+                tmp_path,
+                '[[edge]]\ntype = "derived_from"\n'
+                'derived = "class/ks87-p"\n'
+                'source = "class/icd-9-ks87"\n'
+                "effective_year = 1987\n",
+            )
+        assert exc.value.code == "relations_invalid"
+        assert "effective_year" in exc.value.message
 
 
 # ---------------------------------------------------------------------------
@@ -770,8 +843,61 @@ def _class_succession_rows(conn: sqlite3.Connection) -> list[tuple]:
     ]
 
 
+def _derived_from_edge(
+    derived: str = "class/sun-niva2000",
+    source: str = "class/sun1996",
+    *,
+    note: str | None = "specialized dimension",
+) -> CuratedClassificationDerivedFrom:
+    return CuratedClassificationDerivedFrom(
+        derived=parse_fqid(derived),
+        source=parse_fqid(source),
+        note=note,
+    )
+
+
+def _class_derived_from_rows(conn: sqlite3.Connection) -> list[tuple]:
+    return [
+        tuple(r)
+        for r in conn.execute(
+            "SELECT derived_slug, source_slug, note "
+            "FROM classification_derived_from "
+            "ORDER BY derived_slug, source_slug"
+        )
+    ]
+
+
 def _noop(_msg: str) -> None:
     pass
+
+
+class TestClassificationDerivedFromMaterialize:
+    """#779: curated non-temporal classification derivation edges land in their
+    own table, not `classification_replaced_by`."""
+
+    def test_one_edge_writes_note(self) -> None:
+        conn = _class_succession_db()
+        out = materialize_classification_derived_from(
+            conn,
+            [_derived_from_edge()],
+            progress=_noop,
+        )
+        assert out == 1
+        assert _class_derived_from_rows(conn) == [
+            ("sun-niva2000", "sun1996", "specialized dimension")
+        ]
+        assert _class_succession_rows(conn) == []
+
+    def test_unresolved_endpoint_fails_fast(self) -> None:
+        conn = _class_succession_db()
+        with pytest.raises(RegMetaError) as exc:
+            materialize_classification_derived_from(
+                conn,
+                [_derived_from_edge(derived="class/nope")],
+                progress=_noop,
+            )
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert exc.value.code == "derived_from_unresolved_classification"
 
 
 class TestClassificationReplacedByMaterialize:
@@ -1644,7 +1770,7 @@ class TestRepresentationReplacedByMaterialize:
 
 
 # ---------------------------------------------------------------------------
-# The three real edges moved into the repo file
+# The real curated edges shipped in the repo file
 # ---------------------------------------------------------------------------
 
 
@@ -1665,6 +1791,11 @@ class TestMovedEdges:
         # variable-grain with a non-empty note; max connected component stays
         # ≤32 FQIDs.
         assert len(rel.same_as) == 847
+        assert len(rel.derived_from) == 1
+        assert (str(rel.derived_from[0].derived), str(rel.derived_from[0].source)) == (
+            "class/ks87-p",
+            "class/icd-9-ks87",
+        )
         assert all(
             e.grain is FqidKind.VARIABLE_BINDING
             and e.a_variable

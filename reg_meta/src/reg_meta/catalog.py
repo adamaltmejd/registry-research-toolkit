@@ -125,6 +125,12 @@ class ResolvedClassification(_CatalogModel):
     # (`classification_replaced_by`, keyed on this edition's slug). Empty for a
     # terminal (current) edition.
     replaced_by: tuple[ClassificationRef, ...] = ()
+    # NON-temporal derivation / variant refs (#779). `derived_from` names the
+    # source classifications this specialized classification derives from;
+    # `derivatives` names classifications derived from this one. These do not
+    # affect edition succession, terminal walks, or supersedes_id.
+    derived_from: tuple[ClassificationDerivedFromRef, ...] = ()
+    derivatives: tuple[ClassificationDerivedFromRef, ...] = ()
     via_same_as: tuple[Fqid, ...] | None = None
 
 
@@ -559,6 +565,21 @@ class ClassificationRef(_CatalogModel):
     fqid: Fqid | None
     slug: str
     effective_year: int | None = None
+    note: str | None = None
+
+
+class ClassificationDerivedFromRef(_CatalogModel):
+    """A non-temporal classification derivation endpoint (#779).
+
+    Used for links such as KS87-P -> ICD-9-KS87, where the relationship is a
+    contemporaneous setting variant rather than edition succession. `note` is
+    curator-facing relation text from `classification_derived_from`, not
+    provenance for a temporal chain."""
+
+    fqid: Fqid | None
+    slug: str
+    short_name: str
+    name: str
     note: str | None = None
 
 
@@ -2338,6 +2359,55 @@ class Catalog:
             for r in rows
         )
 
+    def _classification_derived_from_edges(
+        self, slug: str
+    ) -> tuple[ClassificationDerivedFromRef, ...]:
+        """OUTBOUND non-temporal derivation refs (#779): classifications this
+        specialized classification derives from. Keyed on the literal slug, not
+        same_as-canonicalized."""
+        rows = self._conn.execute(
+            "SELECT e.source_slug AS slug, c.short_name, c.name, e.note "
+            "FROM classification_derived_from e "
+            "JOIN classification c ON c.slug = e.source_slug "
+            "WHERE e.derived_slug = ? "
+            "ORDER BY e.source_slug",
+            (slug,),
+        ).fetchall()
+        return tuple(
+            ClassificationDerivedFromRef(
+                fqid=self._class_ref_fqid(r["slug"]),
+                slug=r["slug"],
+                short_name=r["short_name"],
+                name=r["name"],
+                note=r["note"],
+            )
+            for r in rows
+        )
+
+    def _classification_derivative_edges(
+        self, slug: str
+    ) -> tuple[ClassificationDerivedFromRef, ...]:
+        """INBOUND non-temporal derivation refs (#779): classifications derived
+        from this source classification. Uses the source-side index."""
+        rows = self._conn.execute(
+            "SELECT e.derived_slug AS slug, c.short_name, c.name, e.note "
+            "FROM classification_derived_from e "
+            "JOIN classification c ON c.slug = e.derived_slug "
+            "WHERE e.source_slug = ? "
+            "ORDER BY e.derived_slug",
+            (slug,),
+        ).fetchall()
+        return tuple(
+            ClassificationDerivedFromRef(
+                fqid=self._class_ref_fqid(r["slug"]),
+                slug=r["slug"],
+                short_name=r["short_name"],
+                name=r["name"],
+                note=r["note"],
+            )
+            for r in rows
+        )
+
     def _lineage_edges(self, variable_id: int) -> tuple[LineageEdge, ...]:
         """Consumer-side lineage (see reg_meta_build/DESIGN.md → Consumer-side lineage (variable_state_lineage)) for this variable's states (the consumer
         side). A2.6: `source_fqid` is the source state's 3-segment binding FQID,
@@ -2616,6 +2686,26 @@ class Catalog:
         `classification_successors`."""
         return list(
             self._classification_predecessor_edges(self._parse_classification(fqid))
+        )
+
+    def classification_derived_from(
+        self, fqid: str | Fqid
+    ) -> list[ClassificationDerivedFromRef]:
+        """The non-temporal source classifications this classification derives
+        from (#779). Keyed on the literal slug and intentionally independent of
+        classification succession."""
+        return list(
+            self._classification_derived_from_edges(self._parse_classification(fqid))
+        )
+
+    def classification_derivatives(
+        self, fqid: str | Fqid
+    ) -> list[ClassificationDerivedFromRef]:
+        """The non-temporal specialized classifications derived from this
+        classification (#779). Keyed on the literal slug and intentionally
+        independent of classification succession."""
+        return list(
+            self._classification_derivative_edges(self._parse_classification(fqid))
         )
 
     def classification_chain(self, fqid: str | Fqid) -> list[ClassificationEdition]:
@@ -3239,6 +3329,8 @@ class Catalog:
             short_name=row["short_name"],
             name=row["name"],
             replaced_by=self._classification_successor_edges(fqid.classification),
+            derived_from=self._classification_derived_from_edges(fqid.classification),
+            derivatives=self._classification_derivative_edges(fqid.classification),
         )
 
     def _class_same_as_source_keys(self) -> frozenset[tuple[str, str]]:

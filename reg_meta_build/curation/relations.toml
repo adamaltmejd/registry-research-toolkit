@@ -382,8 +382,10 @@ effective_year = 2000
 #    stated register transition is death causes from 2027. Read-side currentness and
 #    terminal redirects use the DB manifest's classification succession as-of year,
 #    so a 2026 DB keeps ICD-10-SE current while still exposing the upcoming edge.
-#    ks87-p (the contemporaneous primary-care variant of KS87) is intentionally
-#    NOT modeled here — it needs a variant/derived-from edge type, deferred.
+#    ks87-p (the contemporaneous primary-care variant of KS87) is modeled below as
+#    `derived_from`, not `replaced_by`: it is a setting variant, not a temporal
+#    successor, and must not fork the trunk terminal walk or mint variable-vintage
+#    succession.
 [[edge]]
 type = "replaced_by"
 from = "class/icd-8-ks68"
@@ -401,6 +403,12 @@ type = "replaced_by"
 from = "class/icd-10-se"
 to = "class/icd-11-se"
 effective_year = 2027
+
+[[edge]]
+type = "derived_from"
+derived = "class/ks87-p"
+source = "class/icd-9-ks87"
+note = "Primary-care setting variant of ICD-9-KS87"
 
 # ── IoT disponibel inkomst: 2004 års definition redefinitions (#814, Part of #805) ──
 #    Channel-1 worked example. SCB recut "disponibel inkomst" to a 2004 base-year

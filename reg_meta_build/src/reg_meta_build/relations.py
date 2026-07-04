@@ -3,14 +3,13 @@
 Maintainer-authored relation surfaces used to live apart — `same_as` (split
 between `variable_same_as.toml` and an inline `same_as` field on the slug TOMLs)
 and `replaced_by` (a top-level `[[replaced_by]]` array inside the slug TOMLs).
-They are two *kinds* of the same thing — a curated assertion about a pair of
-catalog entities — so they now share ONE file
+They are kinds of the same thing — a curated assertion about a pair of catalog
+entities — so they now share ONE file
 (`reg_meta_build/curation/relations.toml`) as a single `[[edge]]` array
 discriminated by `type`, and ONE loader + materializer (this module).
 
-The two relation kinds are genuinely different relations, and the materializer
-keeps every prior behavior verbatim (the DB output is byte-identical — gated by
-dbdiff):
+The relation kinds are genuinely different relations, and the materializer keeps
+every prior behavior verbatim (the DB output is byte-identical — gated by dbdiff):
 
   - `same_as` — symmetric, transitive IDENTITY ("one concept, two FQIDs").
     RESOLVER-LOAD-BEARING: `Catalog.resolve` follows it transitively and the
@@ -26,6 +25,11 @@ dbdiff):
     `register_replaced_by` / `variable_replaced_by`, one direction, sharing the
     event pass's seen-PK sets so a curated edge dedups against an event one and
     the combined per-grain graph is cycle-checked.
+  - `derived_from` — directional NON-TEMPORAL classification derivation. It links
+    a specialized contemporaneous classification to its source (for example
+    KS87-P derives from ICD-9-KS87) and lands in `classification_derived_from`.
+    It is deliberately excluded from terminal edition walks and variable-vintage
+    succession lifting.
 
 The same-as candidate GENERATOR (`infer_same_as_candidates`, #508) stays in
 `variable_same_as.py`; it reads structured signals off a built DB and RENDERS a
@@ -64,7 +68,7 @@ if TYPE_CHECKING:
 
 # The legal `type` discriminators. Surfaced in the unknown-type error so a typo
 # is self-correcting.
-_EDGE_TYPES: frozenset[str] = frozenset({"same_as", "replaced_by"})
+_EDGE_TYPES: frozenset[str] = frozenset({"same_as", "replaced_by", "derived_from"})
 
 # Provenance marker for curated replaced_by edges (mirrors db.py so a consumer can
 # tell curated from auto-derived). It lands in `note` for ALL three grains. For
@@ -116,6 +120,7 @@ _SAME_AS_FIELDS: frozenset[str] = frozenset({"a", "b", "note"})
 _REPLACED_BY_FIELDS: frozenset[str] = frozenset(
     {"from", "to", "effective_year", "note", "from_column", "to_column", "variant"}
 )
+_DERIVED_FROM_FIELDS: frozenset[str] = frozenset({"derived", "source", "note"})
 
 _VarKey = tuple[str, str, str]
 _ClassKey = tuple[str, str]
@@ -201,12 +206,27 @@ class CuratedReplacedBy:
 
 
 @dataclass(frozen=True)
+class CuratedClassificationDerivedFrom:
+    """One `type = "derived_from"` non-temporal classification edge. `derived`
+    is the specialized classification; `source` is the classification it derives
+    from. Both endpoints use the `class/<slug>` FQID form and must resolve to live
+    classifications at materialize time. These edges are intentionally separate
+    from `classification_replaced_by`: they are contemporaneous/semantic links,
+    not edition succession."""
+
+    derived: Fqid
+    source: Fqid
+    note: str | None
+
+
+@dataclass(frozen=True)
 class CuratedRelations:
     """The parsed `relations.toml`, grouped by relation kind. One load yields
-    both; the build materializes each into its own table(s)."""
+    all groups; the build materializes each into its own table(s)."""
 
     same_as: tuple[CuratedSameAs, ...]
     replaced_by: tuple[CuratedReplacedBy, ...]
+    derived_from: tuple[CuratedClassificationDerivedFrom, ...]
 
 
 def _join_fqid(provider: str, register: str, variable: str | None) -> str:
@@ -558,6 +578,29 @@ def _load_replaced_by(entry: dict) -> CuratedReplacedBy:
     )
 
 
+def _load_derived_from(entry: dict) -> CuratedClassificationDerivedFrom:
+    """Validate one `type = "derived_from"` classification edge. It is
+    directional but NON-temporal: `derived` is the specialized classification and
+    `source` is the classification it derives from. Only `class/<slug>` endpoints
+    are legal so the relation cannot be confused with register/variable
+    succession."""
+    _reject_foreign_fields(entry, "derived_from", _DERIVED_FROM_FIELDS)
+    derived = _parse_class_relation_fqid("derived", entry.get("derived"))
+    source = _parse_class_relation_fqid("source", entry.get("source"))
+    if derived == source:
+        raise curation_error(
+            "relations_invalid",
+            f"relations [[edge]] type='derived_from' self-link on {str(derived)!r}.",
+            "A derived classification must name a DIFFERENT source "
+            "classification; remove the edge.",
+        )
+    return CuratedClassificationDerivedFrom(
+        derived=derived,
+        source=source,
+        note=_require_note(entry, "derived_from"),
+    )
+
+
 def _require_column(entry: dict, field: str) -> str | None:
     """#843: an optional `from_column` / `to_column` field — when present, a
     non-empty string (a delivery-column header). Returns None when absent."""
@@ -609,13 +652,42 @@ def _parse_replaced_by_fqid(field: str, raw: Any) -> Fqid:
     return fqid
 
 
+def _parse_class_relation_fqid(field: str, raw: Any) -> Fqid:
+    """Parse one classification-only relation endpoint in `class/<slug>` form."""
+    if not isinstance(raw, str) or not raw:
+        raise curation_error(
+            "relations_invalid",
+            f"relations [[edge]] type='derived_from' `{field}` must be a "
+            f"non-empty classification FQID string, got {raw!r}.",
+            'Give a classification FQID like "class/ks87-p".',
+        )
+    try:
+        fqid = parse_fqid(raw)
+    except FqidError as exc:
+        raise curation_error(
+            "relations_invalid",
+            f"relations [[edge]] type='derived_from' `{field}` {raw!r} is not a "
+            f"valid FQID: {exc}.",
+            'Use the classification form `class/<slug>`, e.g. "class/ks87-p".',
+        ) from exc
+    if fqid.kind is not FqidKind.CLASSIFICATION:
+        raise curation_error(
+            "relations_invalid",
+            f"relations [[edge]] type='derived_from' `{field}` {raw!r} is a "
+            f"{fqid.kind.value}-grain FQID; only classification endpoints are "
+            "supported.",
+            'Use the classification form `class/<slug>`, e.g. "class/ks87-p".',
+        )
+    return fqid
+
+
 def load_relations(path: Path | None) -> CuratedRelations:
     """Parse the single `[[edge]]` array from `relations.toml`, dispatching on
     each entry's `type` to per-type validation. Empty when no file (synthetic
     test builds, wheel installs) or no entries.
 
     Load-time validation (all EXIT_CONFIG, actionable): `type` is one of
-    `same_as` / `replaced_by`; per-type required fields are present and
+    `same_as` / `replaced_by` / `derived_from`; per-type required fields are present and
     well-shaped; a field legal for ANOTHER type is rejected as foreign (a
     mis-typed edge); no self-edge/self-loop; unordered duplicate same_as pairs are
     rejected. Endpoint RESOLUTION against the built DB is deferred to materialize
@@ -627,13 +699,15 @@ def load_relations(path: Path | None) -> CuratedRelations:
         prefix="relations",
         code_base="relations",
         file_name="curation/relations.toml",
-        entry_fields="type + the per-type fields (a/b or from/to)",
+        entry_fields="type + the per-type fields (a/b, from/to, or derived/source)",
     )
     same_as: list[CuratedSameAs] = []
     replaced_by: list[CuratedReplacedBy] = []
+    derived_from: list[CuratedClassificationDerivedFrom] = []
     # Unordered FQID pairs already seen — a duplicate is curation drift, not
     # something to silently dedup.
     seen_same_as: set[frozenset[str]] = set()
+    seen_derived_from: set[tuple[str, str]] = set()
     for entry in entries:
         edge_type = entry.get("type")
         if not isinstance(edge_type, str) or edge_type not in _EDGE_TYPES:
@@ -656,11 +730,26 @@ def load_relations(path: Path | None) -> CuratedRelations:
                 )
             seen_same_as.add(pair)
             same_as.append(edge)
-        else:  # replaced_by
+        elif edge_type == "replaced_by":
             replaced_by.append(_load_replaced_by(entry))
+        else:  # derived_from
+            edge = _load_derived_from(entry)
+            assert edge.derived.classification is not None
+            assert edge.source.classification is not None
+            pair = (edge.derived.classification, edge.source.classification)
+            if pair in seen_derived_from:
+                raise curation_error(
+                    "relations_invalid",
+                    f"relations has a duplicate derived_from pair "
+                    f"{str(edge.derived)!r} -> {str(edge.source)!r}.",
+                    "List each derived_from pair once.",
+                )
+            seen_derived_from.add(pair)
+            derived_from.append(edge)
     return CuratedRelations(
         same_as=tuple(same_as),
         replaced_by=tuple(replaced_by),
+        derived_from=tuple(derived_from),
     )
 
 
@@ -840,6 +929,59 @@ def _unknown_same_as_endpoint(fqid: str, side: str, grain: str) -> Exception:
         "relations_same_as_unknown_endpoint",
         f"relations same_as edge endpoint {fqid!r} names a {grain} that does "
         "not exist in this build.",
+        f"Fix the `{side}` FQID in reg_meta_build/curation/relations.toml.",
+    )
+
+
+# ---------------------------------------------------------------------------
+# Materialization — classification derived_from
+# ---------------------------------------------------------------------------
+
+
+def materialize_classification_derived_from(
+    conn: sqlite3.Connection,
+    edges: Iterable[CuratedClassificationDerivedFrom],
+    *,
+    progress: Any | None = None,
+) -> int:
+    """Write curated non-temporal classification derivation edges (#779).
+
+    Both endpoints are all-live `class/<slug>` classification FQIDs. Rows land in
+    `classification_derived_from`, not `classification_replaced_by`, so these
+    contemporaneous/semantic links cannot affect terminal edition walks,
+    `supersedes_id`, or the variable-vintage succession lift."""
+    pending: list[tuple[str, str, str | None]] = []
+    seen: set[tuple[str, str]] = set()
+    live = _slugged_classification_slugs(conn)
+    for edge in edges:
+        assert edge.derived.classification is not None
+        assert edge.source.classification is not None
+        derived = edge.derived.classification
+        source = edge.source.classification
+        if derived not in live:
+            raise _unresolved_derived_classification(edge.derived, "derived")
+        if source not in live:
+            raise _unresolved_derived_classification(edge.source, "source")
+        pair = (derived, source)
+        if pair in seen:
+            continue
+        seen.add(pair)
+        pending.append((derived, source, edge.note))
+    conn.executemany(
+        "INSERT INTO classification_derived_from "
+        "(derived_slug, source_slug, note) VALUES (?, ?, ?)",
+        pending,
+    )
+    if progress is not None:
+        progress(f"  {len(pending):,} classification derived_from edges (curated)")
+    return len(pending)
+
+
+def _unresolved_derived_classification(fqid: Fqid, side: str) -> Exception:
+    return curation_error(
+        "derived_from_unresolved_classification",
+        f"Curated derived_from {side} endpoint {str(fqid)!r} does not resolve to "
+        "a live, slugged classification in this build.",
         f"Fix the `{side}` FQID in reg_meta_build/curation/relations.toml.",
     )
 

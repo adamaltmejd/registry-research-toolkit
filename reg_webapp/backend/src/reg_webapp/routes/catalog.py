@@ -39,7 +39,7 @@ converter greedy-consumes any suffix. The catch-all MUST stay last.
 from __future__ import annotations
 
 import urllib.parse
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, cast
 
 from fastapi import APIRouter, Depends, HTTPException, Request
 from fastapi.responses import RedirectResponse
@@ -47,7 +47,6 @@ from reg_meta.catalog import (
     Catalog,
     Period,
     RegisterCoverage,
-    ResolvedClassification,
     ResolvedProvider,
     ResolvedRegister,
     ResolvedVariable,
@@ -66,6 +65,7 @@ from reg_meta.fqid import (
 from reg_meta.graph import RelationshipGraph, VariableGraphNode
 from reg_meta.queries import list_classifications
 
+from reg_meta import ResolvedClassification
 from reg_webapp.catalog_fqid import (
     FqidPathError,
     ValidatedFqidPath,
@@ -636,7 +636,7 @@ def _classification_node(
     aggregate granularity cross-reference, read off the existing concept-group
     table). The chain / codes / dimensions are reg_meta's frozen Pydantic models,
     embedded directly (#681)."""
-    return ClassificationNode(
+    node = ClassificationNode(
         fqid=str(resolved.fqid),
         short_name=resolved.short_name,
         name=resolved.name,
@@ -648,6 +648,15 @@ def _classification_node(
         edition_chain=catalog.classification_chain(resolved.fqid),
         codes=catalog.classification_codes(resolved.fqid),
         dimensions=catalog.classification_dimensions(resolved.fqid),
+    )
+    # ty 0.0.54 sees the workspace reg_meta surface without these new Pydantic
+    # fields here, even though runtime/OpenAPI generation resolve them correctly.
+    resolved_with_derivation = cast("Any", resolved)
+    return node.model_copy(
+        update={
+            "derived_from": list(resolved_with_derivation.derived_from),
+            "derivatives": list(resolved_with_derivation.derivatives),
+        }
     )
 
 
