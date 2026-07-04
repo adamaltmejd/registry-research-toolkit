@@ -164,7 +164,10 @@ function edgeYearLeft(edge: ClassificationDagEdge): number {
 function edgeYearTop(edge: ClassificationDagEdge): number {
   const sy = nodeTop(edge.source) + NODE_H / 2;
   const ty = nodeTop(edge.target) + NODE_H / 2;
-  return Math.min(sy, ty) - 26;
+  if (edge.source.row === edge.target.row) {
+    return sy - 26;
+  }
+  return (sy + ty) / 2 - 7;
 }
 
 function editionYear(node: ClassificationGraphNode): string {
