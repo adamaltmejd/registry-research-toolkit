@@ -49,7 +49,8 @@ const CELL_MIN_YEARS = CELL_MIN_W / PX_PER_YEAR;
 /** One rendered cell of a variable node — a representation run collapsed across
  * its consecutive same-`representation_run_id` states. `window` is the
  * display window over `[min valid_from, max valid_to]` (open start/end already
- * normalized by `formatWindow`); `label` is the representation identity
+ * normalized by `formatWindow`), or null for wholly unknown windows; `label` is
+ * the representation identity
  * (value-set version label / classification slug / delivery column); `variant`
  * is the run's variant (shown when the node spans >1 variant).
  *
@@ -63,7 +64,7 @@ export interface RunCell {
   runId: number;
   label: string;
   variant: string;
-  window: string;
+  window: string | null;
   fromYear: number;
   toYear: number;
   openStart: boolean;

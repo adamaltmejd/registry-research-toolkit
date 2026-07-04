@@ -7,7 +7,6 @@ import {
   type DistinctValueSet,
   denseIntegerValueSetRange,
   distinctValueSets,
-  formatDataType,
   formatStateWindow,
   formatWindow,
   humanizeClassificationSlug,
@@ -17,7 +16,6 @@ import {
   windowTitle,
 } from "./catalog";
 import FilterInput from "./FilterInput.svelte";
-import TechnicalDetails from "./TechnicalDetails.svelte";
 
 // The PURE value-set / coding viewer for a variable's `variable_state` rows
 // (extracted from the retired StatesView — #905). Presentation ONLY: it never
@@ -31,9 +29,10 @@ import TechnicalDetails from "./TechnicalDetails.svelte";
 // leaf) so the graph/picker surface can host the same coding display next to selected
 // representations without duplicating value-set rendering.
 //
-//   length === 1 → single-state DETAIL (variant, validity, type/length, column,
-//                  value-set version + the (code, label) table in a
-//                  height-constrained scroll container).
+//   length === 1 → single-state DETAIL (variant, validity, value-set version,
+//                  operational definition + the (code, label) table in a
+//                  height-constrained scroll container). Structural fields live
+//                  in BindingLeafView's bottom Technical details disclosure.
 //   length  > 1 → a VALUE-SET-centric view (#668 / dogfooding M13/M18/M20):
 //                  the states dedup at TWO levels into DISTINCT value sets
 //                  (classification editions by `classification_slug`, others by
@@ -112,8 +111,8 @@ const scopeValueSetKeys = $derived.by(() => {
 const ambiguousLabels = $derived.by(() => {
   const counts = new Map<string, number>();
   for (const vs of valueSets) {
-    if (!vs.classificationSlug) {
-      const label = vs.versionLabel || "(no version)";
+    if (!vs.classificationSlug && vs.versionLabel) {
+      const label = vs.versionLabel;
       counts.set(label, (counts.get(label) ?? 0) + 1);
     }
   }
@@ -201,17 +200,22 @@ function inPeriod(vs: DistinctValueSet): boolean {
 }
 
 // The label for a distinct value set: a classification value set reads
-// "LKF ⟨vintage⟩" (humanized slug); otherwise its version label (or a
-// "(no version)" fallback for the empty default), with the overall span appended
-// when that label is shared by another plain row ("Kommun historisk · 1968–1970").
+// "LKF ⟨vintage⟩" (humanized slug); otherwise its version label, with the
+// overall span appended when that label is shared by another plain row
+// ("Kommun historisk · 1968–1970"). Empty/default labels do not render the old
+// empty-version placeholder; they fall back to the span, or a neutral label when
+// the span is wholly unknown.
 function valueSetLabel(vs: DistinctValueSet): string {
   if (vs.classificationSlug) {
     return humanizeClassificationSlug(vs.classificationSlug);
   }
-  const label = vs.versionLabel || "(no version)";
-  return ambiguousLabels.has(label)
-    ? `${label} · ${formatWindow(vs.overallSpan.from, vs.overallSpan.to)}`
-    : label;
+  const span = formatWindow(vs.overallSpan.from, vs.overallSpan.to);
+  if (!vs.versionLabel) {
+    return span ? `Value set · ${span}` : "Value set";
+  }
+  return ambiguousLabels.has(vs.versionLabel) && span
+    ? `${vs.versionLabel} · ${span}`
+    : vs.versionLabel;
 }
 
 function usageChanges(
@@ -229,7 +233,7 @@ function definitionStates(
 function repeatedDefinitionLabels(states: VariableStateModel[]): Set<string> {
   const counts = new Map<string, number>();
   for (const state of states) {
-    const label = state.delivery_column_name ?? formatStateWindow(state);
+    const label = stateDefinitionBaseLabel(state);
     counts.set(label, (counts.get(label) ?? 0) + 1);
   }
   return new Set(
@@ -239,12 +243,19 @@ function repeatedDefinitionLabels(states: VariableStateModel[]): Set<string> {
   );
 }
 
+function stateDefinitionBaseLabel(s: VariableStateModel): string {
+  return (
+    s.delivery_column_name ?? formatStateWindow(s) ?? "Operational definition"
+  );
+}
+
 function stateDefinitionLabel(
   s: VariableStateModel,
   repeated: Set<string>,
 ): string {
-  const label = s.delivery_column_name ?? formatStateWindow(s);
-  return repeated.has(label) ? `${label} (${formatStateWindow(s)})` : label;
+  const label = stateDefinitionBaseLabel(s);
+  const window = formatStateWindow(s);
+  return repeated.has(label) && window ? `${label} (${window})` : label;
 }
 
 function stateDefinitionKey(s: VariableStateModel): string {
@@ -267,6 +278,18 @@ function technicalChangeLabel(change: ValueSetTechnicalChange): string {
 
 function overlapPercent(overlap: number): string {
   return `${Math.round(overlap * 100)}%`;
+}
+
+function usageWindowLabels(
+  spans: DistinctValueSet["usages"][number]["spans"],
+): string[] {
+  return spans
+    .map((sp) => formatWindow(sp.from, sp.to))
+    .filter((label): label is string => label !== null);
+}
+
+function usageVariantLabel(variant: string): string | null {
+  return variant === "_default" ? null : variant;
 }
 </script>
 
@@ -337,11 +360,16 @@ function overlapPercent(overlap: number): string {
       {@const changes = usageChanges(u)}
       {@const definedStates = definitionStates(u)}
       {@const repeatedLabels = repeatedDefinitionLabels(definedStates)}
+      {@const usageSpans = usageWindowLabels(u.spans)}
+      {@const variantLabel = usageVariantLabel(u.variant)}
+      {#if variantLabel || usageSpans.length > 0 || changes.length > 0 || definedStates.length > 0}
       <li>
-        <code class="vs-usage-variant">{u.variant}</code>
-        <span class="muted vs-usage-spans">
-          {u.spans.map((sp) => formatWindow(sp.from, sp.to)).join(", ")}
-        </span>
+        {#if variantLabel}
+          <code class="vs-usage-variant">{variantLabel}</code>
+        {/if}
+        {#if usageSpans.length > 0}
+          <span class="muted vs-usage-spans">{usageSpans.join(", ")}</span>
+        {/if}
         {#if changes.length > 0}
           <span class="vs-change-list">
             {#each changes as change (`${change.at}:${change.notes.join("|")}`)}
@@ -366,6 +394,7 @@ function overlapPercent(overlap: number): string {
           </dl>
         {/if}
       </li>
+      {/if}
     {/each}
   </ul>
 {/snippet}
@@ -399,7 +428,6 @@ function overlapPercent(overlap: number): string {
     {#if vs.classificationConformance}
       {@render conformanceNotice(vs.classificationConformance)}
     {/if}
-    <p class="muted">No value set.</p>
   {/if}
 {/snippet}
 
@@ -459,42 +487,28 @@ function overlapPercent(overlap: number): string {
   </p>
 {:else if single}
   {@const s = single}
+  {@const validWindow = formatStateWindow(s)}
   <div class="state-detail">
     <dl class="meta">
-      <dt class="micro-label">Variant</dt>
-      <dd><code>{s.variant}</code></dd>
-      <dt class="micro-label">Valid</dt>
+      {#if s.variant !== "_default"}
+        <dt class="micro-label">Variant</dt>
+        <dd><code>{s.variant}</code></dd>
+      {/if}
       <!-- #309/#321: sentinel-free, coarsest-exact window ("since 2016",
            "VT2009"); the raw ISO window stays on the tooltip. -->
-      <dd title={windowTitle(s.valid_from, s.valid_to)}>{formatStateWindow(s)}</dd>
-      <dt class="micro-label">Value-set version</dt>
-      <dd>{s.value_set_version_label || "(no version)"}</dd>
+      {#if validWindow}
+        <dt class="micro-label">Valid</dt>
+        <dd title={windowTitle(s.valid_from, s.valid_to)}>{validWindow}</dd>
+      {/if}
+      {#if s.value_set_version_label}
+        <dt class="micro-label">Value-set version</dt>
+        <dd>{s.value_set_version_label}</dd>
+      {/if}
       {#if s.operational_definition}
         <dt class="micro-label">Operational definition</dt>
         <dd>{s.operational_definition}</dd>
       {/if}
     </dl>
-
-    <!-- #638 PR4: Data type and Delivery column are STRUCTURAL backend fields
-         (the physical SQL type + source column) — kept available but demoted
-         behind the "Technical details" disclosure. Both stay conditionally
-         rendered; the disclosure is omitted entirely when neither is present. -->
-    {#if s.data_type || s.delivery_column_name}
-      <TechnicalDetails>
-        <dl class="meta">
-          {#if s.data_type}
-            <dt class="micro-label">Data type</dt>
-            <!-- formatDataType drops a meaningless "(0)"/empty length parenthetical
-                 (the "bigint(0)" artifact) while keeping real ones like "char(25)". -->
-            <dd>{formatDataType(s.data_type, s.data_length)}</dd>
-          {/if}
-          {#if s.delivery_column_name}
-            <dt class="micro-label">Delivery column</dt>
-            <dd><code>{s.delivery_column_name}</code></dd>
-          {/if}
-        </dl>
-      </TechnicalDetails>
-    {/if}
 
     {#if s.classification_conformance && (s.classification_conformance.status === "severed" || s.classification_conformance.nonconforming_code_count > 0)}
       {@render conformanceNotice(s.classification_conformance)}
@@ -510,8 +524,6 @@ function overlapPercent(overlap: number): string {
       {:else}
         {@render valueSetTable(s.value_set)}
       {/if}
-    {:else}
-      <p class="muted">No value set.</p>
     {/if}
   </div>
 {:else}

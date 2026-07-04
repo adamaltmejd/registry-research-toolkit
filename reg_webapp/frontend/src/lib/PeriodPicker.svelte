@@ -1,42 +1,22 @@
 <script lang="ts">
-import PeriodListInput from "./PeriodListInput.svelte";
-import PeriodRangeInput from "./PeriodRangeInput.svelte";
 import PeriodWindowSlider from "./PeriodWindowSlider.svelte";
 import {
   type Coverage,
   clampYearWindow,
   intersectCoverageWindow,
-  looksLikePeriod,
-  type PeriodGrain,
-  periodFieldFromQuery,
-  periodQueryFromField,
-  rangeRepresentable,
   yearWindowFromWire,
   yearWindowRepresentable,
   yearWindowToWire,
 } from "./period";
 import type { StudyWindow } from "./project_data";
 
-// WINDOW-ANCHORED period selection (#615): the DEFAULT control is a year-grain
-// availability slider (PeriodWindowSlider) seeded from the project window, over
-// the subject's data-coverage track. The rich grammar lives behind a "More
-// options" expander: the #308 range-first from/to picker (PeriodRangeInput),
-// the #338/#340 Segments interrupted-series input (PeriodListInput → the #307
-// comma wire), and a Text escape hatch for the wire grammar (special tokens,
-// `_default`, mixed-grain ranges) with an ADVISORY-only hint. The wire grammar
-// stays the SERIALIZATION throughout — the slider emits the same `?period`
-// value the range picker already does (a bare year or a `from..to` year range).
-// The server (`reg_meta.fqid`) is the canonical validator; submit is never
-// blocked. The chosen value is emitted UP to BindingLeafView, which writes it
-// to the URL query (apply-on-submit; #306 named the affordance Apply).
-//
-// PRECEDENCE for what's shown/active (#615 → #611 Period model):
-//   ?period (explicit local) > project window > full history.
-// A local change writes `?period` ONLY — it NEVER mutates the global window
-// (the slider's `onreset` clears `?period`, which falls back to the window).
+// WINDOW-ANCHORED period selection (#615): a year-grain availability slider
+// seeded from the project window and the subject's data-coverage track. The
+// server-side `?period` wire grammar still accepts richer values (terms,
+// `_default`, comma lists), but this UI no longer authors them. A non-year active
+// value renders as read-only text with Clear and is never silently rewritten.
 let {
   period,
-  grains = undefined,
   window = null,
   coverage = null,
   vintageYear = undefined,
@@ -45,138 +25,38 @@ let {
 }: {
   /** The active `?period` from the URL (null = full history). */
   period: string | null;
-  /** Grains offered by the range picker, pre-narrowed to those the variable's
-   * states exhibit (#308 option b); undefined → the component's default. */
-  grains?: PeriodGrain[];
-  /** The global project window (#614), or null = none set. Seeds the slider
-   * (precedence below) and drives the user-deviation hint. */
+  /** The global project window (#614), or null = none set. */
   window?: StudyWindow | null;
-  /** The subject's data-availability span (derived from embedded states, #615),
-   * or null = unknown. Sides are independently nullable (an open start/end);
-   * drives the slider's greyed not-delivered track. */
+  /** The subject's data-availability span, or null = unknown. */
   coverage?: Coverage | null;
-  /** The catalog VINTAGE year (#631) — the slider's open-ended ceiling, matching
-   * the header window slider (App caps both at `context.reg_meta.import_date`'s
-   * year). undefined only before `/api/context` resolves; falls back to
-   * wall-clock so a pre-context leaf still renders (mirrors App's fallback). */
+  /** The catalog vintage year (#631), used as the open-ended coverage ceiling. */
   vintageYear?: number;
-  /** Emitted with the chosen wire value on submit (empty → cleared). */
+  /** Emitted with the chosen wire value on submit. */
   onsubmit: (period: string) => void;
   /** Emitted when the clear button is pressed (drop `?period`). */
   onclear: () => void;
 } = $props();
 
-type PickerMode = "range" | "list" | "text";
-
 // A sensible earliest register year — the slider's floor when neither the
-// window nor coverage reaches further back (mirrors App.svelte's
-// WINDOW_FLOOR_YEAR; the bounds widen to fit window/coverage/selection below).
+// window nor coverage reaches further back.
 const SLIDER_FLOOR_YEAR = 1960;
 
-// The slider's open-ended CEILING (#631): the catalog vintage year, matching the
-// header window slider (both cap at `context.reg_meta.import_date`'s year). The
-// `vintageYear` prop is undefined only before `/api/context` resolves — then fall
-// back to wall-clock so a pre-context leaf still renders (mirrors App's `||
-// new Date().getFullYear()`).
+// The slider's open-ended ceiling (#631). Undefined only before `/api/context`
+// resolves; fall back to wall-clock so a pre-context leaf still renders.
 const ceilingYear = $derived(vintageYear ?? new Date().getFullYear());
 
-// Mode inference: range-first; an ACTIVE comma list opens in Segments; any
-// other period the range UI can't represent opens in text mode (it must be
-// visible/editable, not silently blanked). Grains-aware: a period at a grain
-// this variable doesn't offer must open in text mode too.
-function inferMode(p: string | null): PickerMode {
-  if (p === null || p === "") {
-    return "range";
-  }
-  if (p.includes(",")) {
-    return "list";
-  }
-  return rangeRepresentable(p, grains) ? "range" : "text";
-}
-
-// svelte-ignore state_referenced_locally — intentional one-time seed; the
-// $effect below re-syncs on URL changes.
-let mode = $state<PickerMode>(inferMode(period));
-
-// ── Text mode (the wire-grammar escape hatch — unchanged semantics) ─────────
-// svelte-ignore state_referenced_locally — intentional one-time seed (the
-// $effect keeps it in sync with the URL afterward).
-let field = $state(periodFieldFromQuery(period));
-
-// ── Range + Segments modes ───────────────────────────────────────────────────
-// Each input's latest emit (null while incomplete/empty). The controls remount
-// via {#key period} so back/forward (or an external narrowing) re-seeds them
-// from the URL — and the $effect below re-syncs every mode's value on the same
-// trigger (without it, Apply after back/forward would re-submit the stale
-// pre-navigation value).
-let rangeWire = $state<string | null>(null);
-let listWire = $state<string | null>(null);
-
-/** The list input's seed for the CURRENT period: any non-sentinel wire (a
- * scalar carries over as the first segment — the upgrade path); `_default`
- * is not a segment and seeds empty. */
-function listSeed(p: string | null): string | null {
-  return p !== null && p !== "" && p !== "_default" ? p : null;
-}
-
-$effect(() => {
-  field = periodFieldFromQuery(period);
-  // Only a range-REPRESENTABLE value seeds the range buffer: an active
-  // `_default`/comma/mixed-grain period must not sit invisibly behind blank
-  // range controls where a manual switch to Picker + Apply would re-submit
-  // it (the #347/#349 stale-buffer class) — Apply no-ops on null instead.
-  rangeWire =
-    period !== null && rangeRepresentable(period, grains) ? period : null;
-  listWire = listSeed(period);
-  // Re-derive the mode too: back/forward can land on a period the active UI
-  // can't represent (`_default`, a mixed-grain range, a comma list) — staying
-  // put would show BLANK controls while Apply re-submits the invisible value.
-  mode = inferMode(period);
-});
-
-// ── Year-window slider (#615 default control) ───────────────────────────────
-// PRECEDENCE for what the slider shows as ACTIVE (the user-intent selection,
-// driving the deviation hint + the Apply fallback): a year-representable
-// `?period` (explicit local) > the project window > null (none chosen). A
-// sub-annual / list / `_default` / text `?period` is NOT year-representable — it
-// can't live on the year slider, so the picker opens the "more" expander
-// straight away (the range/list/text modes hold it), with the slider showing
-// only the window/coverage fallback when collapsed back.
-//
-// SEED PRECEDENCE for the THUMBS (#671) is a SUPERSET of the above, so a
-// variable's true data COVERAGE shows up front instead of the full 1960–vintage
-// span reading as available: explicit year `?period` > intersection(coverage,
-// window) > coverage span (no window) > window (no coverage) > full bounds
-// (neither). `seededSelection` below applies it.
-
-/** The year window the slider treats as the ACTIVE (user-chosen) selection — a
- * year-representable `?period` wins; else the project window; else null (nothing
- * explicitly chosen; the thumbs then seed from coverage via `seededSelection`). */
+/** The year window the slider treats as the active selection: a
+ * year-representable `?period` wins; else the project window; else null. */
 const activeYearSelection = $derived<StudyWindow | null>(
   yearWindowFromWire(period) ?? window,
 );
 
-/** The active `?period` wire when it is set but NOT year-representable (a
- * sub-annual token / segment list / `_default` / text) — null otherwise. In
- * this case `activeYearSelection` fell back to the window, so the slider's span
- * is the window PROJECTION, not the active selection; the slider takes this to
- * suppress the misleading "no deviation" reading and show an honest cue
- * pointing at the real value in the (already-open) "more" expander. */
+/** The active `?period` wire when it is set but NOT year-representable. */
 const subAnnualPeriod = $derived<string | null>(
   period !== null && !yearWindowRepresentable(period) ? period : null,
 );
 
-/** The slider bounds: the floor/ceiling that fit ONLY what's drawn — the window,
- * the active selection, and the coverage END — so none is clipped off-track.
- * Coverage sides are INDEPENDENTLY nullable (#615) — an open START doesn't extend
- * the bounds (the slider edge stands in for "open" via `coverageBand`), and an
- * open END contributes the catalog VINTAGE (#631), the ceiling the slider projects
- * "still delivered" to. The vintage is NOT a forced floor on `max`: a finite
- * coverage (1995–2008) stays bounded by its real end, not pushed to the vintage —
- * so the default span doesn't spuriously report the post-coverage years as
- * not-delivered. A window/selection past the vintage still WIDENS the bounds
- * (never clip a real thumb value), but that doesn't extend the coverage band — the
- * gap then flags the beyond-vintage span. */
+/** Bounds that fit what is drawn: project window, active selection, and coverage. */
 const sliderBounds = $derived.by(() => {
   const years: number[] = [];
   for (const w of [window, activeYearSelection]) {
@@ -188,9 +68,6 @@ const sliderBounds = $derived.by(() => {
     if (coverage.from !== null) {
       years.push(coverage.from);
     }
-    // The coverage END: the finite end, or the vintage when open-ended — so an
-    // open-ended coverage reaches the vintage but a finite one is NOT extended
-    // to it (Codex P2).
     years.push(coverage.to ?? ceilingYear);
   }
   const max = years.length > 0 ? Math.max(...years) : ceilingYear;
@@ -198,133 +75,60 @@ const sliderBounds = $derived.by(() => {
   return { min, max };
 });
 
-/** The window the slider THUMBS seed from (#671). An explicit year `?period`
- * (the user's chosen local value) wins verbatim. Otherwise the seed is
- * coverage-aware so the variable's real coverage shows up front:
- * `intersectCoverageWindow` against the EFFECTIVE coverage edges (open start →
- * the slider's rendered FLOOR, open end → the vintage ceiling) yields
- * window∩coverage when a window is set, the coverage span when none is, the window
- * itself when there's no coverage to narrow to (a stateless variable still honours
- * its window), and the full bounds only when neither is set. NOTE: WITH coverage
- * the bare window is intentionally NOT the seed — only its intersection with
- * coverage is (the window's out-of-coverage tail must not read as available); the
- * bare-window seed is the no-coverage case alone.
- *
- * Fix 5: the open-start fallback is `sliderBounds.min`, the slider's actual
- * rendered floor — NOT the fixed `SLIDER_FLOOR_YEAR`. A project window may
- * legitimately start before 1960, which widens `sliderBounds.min` below the floor;
- * an OPEN-start coverage must then extend to that rendered track edge, not clip at
- * 1960 (which silently dropped the covered pre-1960 years). The open-END fallback
- * stays `ceilingYear` — the #631 vintage is the correct cap there. (Declared after
- * `sliderBounds` so the `sliderBounds.min` read is a plain forward reference.) */
+/** Thumb seed precedence (#671): explicit year `?period` > window∩coverage >
+ * coverage > window > full bounds. */
 const seededSelection = $derived<StudyWindow>(
   yearWindowFromWire(period) ??
     intersectCoverageWindow(coverage, window, sliderBounds.min, ceilingYear),
 );
 
-/** The selection to seed the slider thumbs from — the #671 seed precedence
- * (`seededSelection`: active selection, else window∩coverage, else coverage,
- * else full bounds) clamped to the rendered bounds. */
+/** The clamped slider selection shown to the user. */
 const sliderSelection = $derived<StudyWindow>(
   clampYearWindow(seededSelection, sliderBounds.min, sliderBounds.max),
 );
 
-// The slider's live selection (null until the user moves a thumb — Apply then
-// submits it). Re-armed by the {#key period} remount on URL change.
+// The slider's live selection (null until the user moves a thumb). Re-armed on
+// URL/window/coverage/ceiling re-seed by the effect below.
 let sliderWire = $state<string | null>(null);
 
-/** Whether the slider shows a REAL (user-meaningful) selection — drives the
- * availability not-delivered gap (#639). True for a resolved `?period`/window
- * (`activeYearSelection`) OR a live un-applied DRAG (`sliderWire`): a drag is a
- * real selection even before Apply, so the gap must fire during the drag, not
- * only after Apply re-seeds `activeYearSelection`. Without `sliderWire`, dragging
- * the no-`?period`/no-window full-history default into a pre-coverage span would
- * suppress the gap until Apply (Codex P2). The reset $effect clears `sliderWire`
- * on URL re-seed, so `!== null` reliably means "a live un-applied drag exists"
- * and nothing else (a stale drag never survives a seed/ceiling change). */
+/** Whether the slider shows a real user-meaningful selection. */
 const hasSliderSelection = $derived(
   activeYearSelection !== null || sliderWire !== null,
 );
 
-/** Whether the user has ACTUALLY chosen a year-window value distinct from the
- * project window — drives the slider's USER-deviation hint (Fix B). True only for
- * an explicit year `?period` OR a live dragged `sliderWire`; FALSE for the
- * untouched coverage-clamped default seed. Without this, the common
- * window∩coverage seed (e.g. window 2000–2010, coverage 1995–2008 → 2000–2008)
- * compares the clamped thumbs to the bare window and fires a spurious "Deviates
- * from project window" hint with no user action — and its reset would submit the
- * bare window, rendering the not-delivered gap #671 avoids. NOTE: `hasSelection`
- * is NOT usable here — it's true whenever a window is set (`activeYearSelection =
- * wire ?? window`), so it can't tell the untouched default from a real choice. */
+/** Whether the user has actually chosen a year-window value distinct from the
+ * project window. The untouched coverage-clamped default seed is not a user
+ * deviation. */
 const userChosen = $derived(
   yearWindowFromWire(period) !== null || sliderWire !== null,
 );
 
-// The "more options" expander. Opens by default for an active `?period` the year
-// slider can't represent (sub-annual / list / `_default` / text) so it's
-// visible + editable, never hidden behind the year-only slider.
-// svelte-ignore state_referenced_locally — intentional one-time seed; the
-// $effect below re-syncs it on URL change.
-let showMore = $state(period !== null && !yearWindowRepresentable(period));
-
 $effect(() => {
-  // Re-arm the slider buffer + re-open the expander on URL change (back/forward
-  // or an external narrowing) — mirrors the range/list re-seed above. Also track
-  // the SEED (`activeYearSelection`): with no `?period`, changing the global
-  // window (header) or opening a project re-seeds the slider to the new
-  // selection, so a stale dragged `sliderWire` must clear too — else the next
-  // Apply submits the OLD dragged value, not the now-displayed window (Codex P2).
-  // And track the CEILING (`ceilingYear`): a leaf rendered before `/api/context`
-  // resolves seeds the ceiling at wall-clock, then flips to the catalog vintage
-  // when the prop threads down — without clearing, a stale drag past the vintage
-  // would survive the display correction and Apply a beyond-vintage wire (Codex P2).
-  // And track the THUMB SEED (`seededSelection`): #671 made the seed depend on
-  // `coverage` too, so navigating between leaves that share `?period`/window but
-  // differ in coverage re-seeds the thumbs WITHOUT moving `period`/
-  // `activeYearSelection`/`ceilingYear` — a stale drag must clear there as well, or
-  // Apply submits the prior leaf's dragged span instead of the now-shown coverage-
-  // clamped seed (Codex P2). `seededSelection` subsumes the coverage+window+period+
-  // ceiling re-seed precisely, so it's the load-bearing read here.
-  // A drag alone changes none of these, so the legitimate drag-then-Apply path is
-  // untouched (the effect only re-fires on a re-seed / ceiling flip).
+  // Re-arm the slider buffer on URL, window, coverage, or ceiling changes. This
+  // prevents a stale dragged value from surviving a re-seed and being submitted
+  // instead of the newly displayed selection.
   void period;
   void activeYearSelection;
   void ceilingYear;
   void seededSelection;
   sliderWire = null;
-  showMore = period !== null && !yearWindowRepresentable(period);
 });
 
-/** Whether `coverage` yields a USABLE seed — non-null AND not inverted. An
- * INVERTED effective coverage (e.g. `{from:2025, to:null}` on a 2024 vintage →
- * effective `2025..2024`) is treated as NO coverage by both `intersectCoverageWindow`
- * and the slider's `bandEdges` (Fix D): `seededSelection` then falls back to the
- * window, else the FULL bounds. So with no window such a coverage gives a full-span
- * seed containing no data — which `applySlider` must NOT submit on an untouched
- * Apply (Fix 4). Mirrors the inversion test `intersectCoverageWindow` runs — the
- * SAME open-start fallback (`sliderBounds.min`, Fix 5) and open-end fallback
- * (`ceilingYear`) — so this gate's "usable" verdict stays in lockstep with the seed
- * the helper actually produces (an open-start coverage ending below 1960 is a real
- * covered span, not an inversion). */
+/** Whether `coverage` yields a usable non-inverted seed. */
 const effectiveCoverageUsable = $derived(
   coverage !== null &&
     (coverage.from ?? sliderBounds.min) <= (coverage.to ?? ceilingYear),
 );
 
-/** Apply the slider's current selection. A moved thumb (`sliderWire`) wins;
- * otherwise fall back to the SEEDED selection so accepting the displayed default
- * actually applies it — without this, Apply on an untouched seed no-ops and
- * BindingLeafView (narrowing only on `?period`) leaves the user on full history
- * (Codex P2). The fallback is the #671 seed (`seededSelection`): the active
- * selection, else the coverage-framed span the thumbs already show — so
- * accepting the up-front coverage default narrows to it. The gate submits the seed
- * only when there is something meaningful to narrow to: a selection, a window, or a
- * USABLE coverage (`effectiveCoverageUsable` — Fix 4). The no-op cases: no
- * selection + no window + no coverage (the seed is the full bounds), AND an
- * inverted/discarded coverage with no window (which also seeds the full bounds —
- * raw `coverage !== null` would wrongly fire there and submit a no-data span). */
 function applySlider(): void {
   let wire: string | null = sliderWire;
+  // A token/list/default active period is valid URL state but not represented by
+  // the year slider. Rendering it must not rewrite the URL just because the user
+  // accepts the fallback slider projection; only an actual thumb move replaces it
+  // with a year-window wire.
+  if (wire === null && subAnnualPeriod !== null) {
+    return;
+  }
   if (
     wire === null &&
     (activeYearSelection !== null || window !== null || effectiveCoverageUsable)
@@ -336,12 +140,6 @@ function applySlider(): void {
   }
 }
 
-/** "Reset to project window" — narrow BACK to the window, like Apply (Codex P2).
- * It SUBMITS the window's wire (`?period == window` → the user-deviation clears,
- * and BindingLeafView, which narrows only on `?period`, lands on the window),
- * NOT the clear path that would drop `?period` and fall through to full history.
- * No window → nothing to reset to, so it clears (full history). The standalone
- * "Clear" button keeps the explicit drop-to-full-history affordance. */
 function resetToWindow(): void {
   if (window !== null) {
     onsubmit(yearWindowToWire(window));
@@ -350,62 +148,17 @@ function resetToWindow(): void {
   }
 }
 
-// ADVISORY only (text mode): a non-empty field that doesn't match the grammar
-// shows a hint. Submit is NEVER gated on it.
-const advisoryInvalid = $derived(
-  mode === "text" && field.trim() !== "" && !looksLikePeriod(field),
-);
-
 function submit(event: SubmitEvent): void {
   event.preventDefault();
-  // The default (collapsed) control is the year slider — Enter applies it. The
-  // expander's mode-specific Apply buttons are inside `showMore`.
-  if (!showMore) {
-    applySlider();
-    return;
-  }
-  if (mode === "text") {
-    const value = periodQueryFromField(field);
-    if (value === null) {
-      onclear();
-    } else {
-      onsubmit(value);
-    }
-    return;
-  }
-  const wire = mode === "list" ? listWire : rangeWire;
-  if (wire !== null) {
-    onsubmit(wire);
-  }
+  applySlider();
 }
-
-const MODE_LABELS: Record<PickerMode, string> = {
-  range: "Picker",
-  list: "Segments",
-  text: "Text",
-};
 </script>
 
 <form class="period-picker" onsubmit={submit}>
   <div class="head">
     <span class="title micro-label" id="period-label">Period</span>
-    <!-- The "more" expander (#615): the rich grammar (range/list/text) lives
-         behind it; the year slider is the default. -->
-    <button
-      type="button"
-      class="more-toggle"
-      aria-expanded={showMore}
-      aria-controls="period-more"
-      onclick={() => (showMore = !showMore)}
-    >
-      {showMore ? "Fewer options" : "More options"}
-    </button>
   </div>
 
-  <!-- DEFAULT: the year-window availability slider (#615). Keyed on the URL
-       period so back/forward re-seeds the thumbs; submit applies the slider's
-       selection, reset NARROWS back to the project window (submits its wire, like
-       Apply — not a clear; the standalone Clear button drops to full history). -->
   {#key period}
     <div class="slider-row">
       <PeriodWindowSlider
@@ -422,10 +175,9 @@ const MODE_LABELS: Record<PickerMode, string> = {
         onreset={() => resetToWindow()}
       />
       <div class="actions">
-        <!-- Distinct accessible name from the expander modes' "Apply" (both
-             would otherwise collide as one role+name). -->
         <button
           type="button"
+          class="apply"
           aria-label="Apply period"
           onclick={() => applySlider()}
         >
@@ -439,111 +191,6 @@ const MODE_LABELS: Record<PickerMode, string> = {
       </div>
     </div>
   {/key}
-  {#if !window}
-    <p class="muted help">
-      No project window set — narrow the slider to focus a period, or set a
-      window in the header.
-    </p>
-  {/if}
-
-  {#if showMore}
-  <div id="period-more" class="more">
-  <div class="mode-toggles" role="group" aria-label="Period input mode">
-    {#each ["range", "list", "text"] as const as m (m)}
-      <button
-        type="button"
-        class="mode-toggle"
-        aria-pressed={mode === m}
-        onclick={() => (mode = m)}
-      >
-        {MODE_LABELS[m]}
-      </button>
-    {/each}
-  </div>
-
-  {#if mode === "text"}
-    <div class="row">
-      <input
-        id="period-input"
-        type="text"
-        bind:value={field}
-        placeholder="e.g. 2020, HT2020, 2018..2020, _default"
-        autocomplete="off"
-        spellcheck="false"
-        aria-labelledby="period-label"
-        aria-describedby="period-help{advisoryInvalid ? ' period-advisory' : ''}"
-      />
-      <!-- #306: no "Resolve" verb — the period just applies. -->
-      <button type="submit">Apply</button>
-      {#if period !== null}
-        <button type="button" class="clear" onclick={() => onclear()}>
-          Clear
-        </button>
-      {/if}
-    </div>
-    <p id="period-help" class="muted help">
-      A year (<code>2020</code>), a term/quarter/month/day token
-      (<code>HT2020</code>, <code>2020-Q3</code>, <code>2020-08</code>,
-      <code>2020-12-31</code>), a range (<code>2018..2020</code>), or
-      <code>_default</code>. Leave blank for full history.
-    </p>
-    {#if advisoryInvalid}
-      <!-- ADVISORY: the server validates; this never blocks Apply. A caution
-           state — cooler ochre --warn + a ▲ glyph (accent-vs-status: never the
-           brand hue, never hue alone); the meaning also rides the label text. -->
-      <p id="period-advisory" class="advisory" role="status">
-        <span class="advisory-glyph" aria-hidden="true">▲</span>
-        This doesn't look like a period — you can still apply it; the server
-        will confirm.
-      </p>
-    {/if}
-  {:else if mode === "list"}
-    <div class="row range-row">
-      <!-- Keyed on the URL period: back/forward or an external change
-           re-seeds the segments (the component itself seeds once at mount). -->
-      {#key period}
-        <PeriodListInput
-          value={listSeed(period)}
-          {grains}
-          onchange={(wire) => (listWire = wire)}
-        />
-      {/key}
-      <div class="actions">
-        <button type="submit">Apply</button>
-        {#if period !== null}
-          <button type="button" class="clear" onclick={() => onclear()}>
-            Clear
-          </button>
-        {/if}
-      </div>
-    </div>
-    <p class="muted help">
-      An interrupted series: add each segment, then Apply narrows to their
-      union.
-    </p>
-  {:else}
-    <div class="row range-row">
-      <!-- Keyed on the URL period: back/forward or an external change
-           re-seeds the controls (the component itself seeds once at mount). -->
-      {#key period}
-        <PeriodRangeInput
-          value={period}
-          {grains}
-          onchange={(wire) => (rangeWire = wire)}
-        />
-      {/key}
-      <div class="actions">
-        <button type="submit">Apply</button>
-        {#if period !== null}
-          <button type="button" class="clear" onclick={() => onclear()}>
-            Clear
-          </button>
-        {/if}
-      </div>
-    </div>
-  {/if}
-  </div>
-  {/if}
 </form>
 
 <style>
@@ -561,78 +208,17 @@ const MODE_LABELS: Record<PickerMode, string> = {
     gap: var(--space-3);
     margin-bottom: 0.45rem;
   }
-  .more-toggle {
-    font: inherit;
-    font-size: var(--text-micro);
-    padding: 0.15rem var(--space-2);
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    background: var(--surface);
-    color: var(--accent);
-    cursor: pointer;
-  }
-  .more-toggle:hover {
-    border-color: var(--accent);
-  }
-  /* The default slider row + its Apply/Clear actions. */
   .slider-row {
     display: flex;
     flex-wrap: wrap;
     align-items: flex-end;
     gap: var(--space-3);
   }
-  /* The "more" expander panel — a separated block below the slider. */
-  .more {
-    margin-top: var(--space-3);
-    padding-top: 0.6rem;
-    border-top: 1px solid var(--border);
-  }
-  .mode-toggles {
-    display: flex;
-    gap: 0.3rem;
-    margin-bottom: 0.45rem;
-  }
-  .mode-toggle {
-    font: inherit;
-    font-size: var(--text-micro);
-    padding: 0.15rem var(--space-2);
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    background: var(--surface);
-    color: var(--accent);
-    cursor: pointer;
-  }
-  .mode-toggle:hover {
-    border-color: var(--accent);
-  }
-  .mode-toggle[aria-pressed="true"] {
-    border-color: var(--accent);
-    background: var(--accent);
-    color: var(--accent-fg);
-  }
-  .row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-2);
-    align-items: center;
-  }
-  .range-row {
-    align-items: flex-end;
-    justify-content: space-between;
-  }
   .actions {
     display: flex;
     gap: var(--space-2);
   }
-  input[type="text"] {
-    flex: 1 1 16rem;
-    min-width: 0;
-    padding: 0.4rem 0.55rem;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    font: inherit;
-  }
-  button[type="submit"],
+  button.apply,
   button.clear {
     padding: 0.4rem 0.9rem;
     border: 1px solid var(--accent);
@@ -646,26 +232,8 @@ const MODE_LABELS: Record<PickerMode, string> = {
     background: var(--surface);
     color: var(--accent);
   }
-  button[type="submit"]:hover,
+  button.apply:hover,
   button.clear:hover {
     filter: brightness(0.95);
-  }
-  .help {
-    margin: var(--space-2) 0 0;
-    font-size: var(--text-sm);
-  }
-  .help code {
-    font-family: var(--font-mono);
-    font-size: 0.95em;
-  }
-  /* Caution advisory — cool ochre --warn (never the brand hue) paired with the ▲
-     glyph in markup (accent-vs-status). */
-  .advisory {
-    margin: 0.35rem 0 0;
-    font-size: var(--text-sm);
-    color: var(--warn);
-  }
-  .advisory-glyph {
-    font-size: 0.9em;
   }
 </style>

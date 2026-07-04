@@ -22,9 +22,6 @@ import {
 } from "./api";
 import {
   type Coverage,
-  grainOfToken,
-  PERIOD_GRAINS,
-  type PeriodGrain,
   periodRangeEndpoints,
   periodTokenBounds,
   periodTokenForBounds,
@@ -973,7 +970,8 @@ export function representationsCollapse(reps: Representation[]): boolean {
  * contains `::`, so the pair can't alias). `from`/`to` are the row's outer ISO
  * span (min `valid_from` … max `valid_to`, the open-ended `9999-12-31` /
  * unknown `0001-01-01` sentinels preserved for `formatWindow`); `period` is the
- * pre-formatted display span. `wirePeriod` is the span as a year-grain WIRE
+ * pre-formatted display span, or null for wholly unknown windows. `wirePeriod` is
+ * the span as a year-grain WIRE
  * period for the committed source (null when a bound is a sentinel — then the
  * source's period is left unset, the honest "covers the rep's whole span"
  * default, rather than emitting an out-of-grammar `0001`/`9999` token).
@@ -1015,7 +1013,7 @@ export interface PickerRepresentation {
    * interrupted-series wire form) so the committed source never covers the gap years
    * the representation wasn't delivered. */
   windows: { from: string; to: string }[];
-  period: string;
+  period: string | null;
   wirePeriod: string | null;
   valueSetLabel: string;
   codingsVary: boolean;
@@ -1487,7 +1485,7 @@ export interface PickerLabeling {
 /** The distinct count of a dimension across rows (via a projector). */
 function distinctCount(
   rows: readonly PickerRepresentation[],
-  pick: (r: PickerRepresentation) => string,
+  pick: (r: PickerRepresentation) => unknown,
 ): number {
   return new Set(rows.map(pick)).size;
 }
@@ -2577,6 +2575,8 @@ function statesByVariant(
 
 /**
  * The display form of a validity window (#309/#321):
+ *  - wholly unknown (`0001-01-01` → `9999-12-31`) → `null`, so callers omit the
+ *    display line instead of leaking a sentinel year;
  *  - open-ended (the `9999-12-31` sentinel) → `"since <from>"` (year-collapsed
  *    when Jan-1-aligned);
  *  - yearless-start (the `0001-01-01` sentinel, an unknown start) with a finite
@@ -2601,15 +2601,16 @@ export function formatWindow(
   validFrom: string,
   validTo: string,
   periodToken?: string | null,
-): string {
+): string | null {
+  if (validFrom === YEARLESS_VALID_FROM && validTo === OPEN_ENDED_VALID_TO) {
+    return null;
+  }
   if (validTo === OPEN_ENDED_VALID_TO) {
     return `since ${validFrom.endsWith("-01-01") ? validFrom.slice(0, 4) : validFrom}`;
   }
   // Unknown start (the yearless floor) with a finite end → a one-sided
-  // `"until <to>"`, the mirror of `"since"` above. Checked AFTER `since` so a
-  // wholly-unbounded `0001..9999` window keeps the existing open-ended form
-  // rather than reading `"until 9999"`; the closed-window branch below would
-  // otherwise leak the sentinel as `"0001 – <to>"` (#658).
+  // `"until <to>"`, the mirror of `"since"` above. Wholly unknown windows
+  // returned null above, so this arm only handles known finite ends (#658).
   if (validFrom === YEARLESS_VALID_FROM) {
     return `until ${validTo.endsWith("-12-31") ? validTo.slice(0, 4) : validTo}`;
   }
@@ -2636,7 +2637,7 @@ export function showingOf(shown: number, total: number): string | null {
 }
 
 /** `formatWindow` over a state row (its bounds + backend token). */
-export function formatStateWindow(s: VariableStateModel): string {
+export function formatStateWindow(s: VariableStateModel): string | null {
   return formatWindow(s.valid_from, s.valid_to, s.period_token);
 }
 
@@ -2644,25 +2645,6 @@ export function formatStateWindow(s: VariableStateModel): string {
  * rather than leaking the raw 9999-12-31 (Codex P2 on #335). */
 export function windowTitle(validFrom: string, validTo: string): string {
   return `${validFrom} – ${validTo === OPEN_ENDED_VALID_TO ? "open-ended" : validTo}`;
-}
-
-/** The period grains a variable's states actually exhibit (#308 option b) —
- * pre-narrows the range picker's grain select. Year is always offered (the
- * coarse query everyone understands); finer grains come from the states'
- * `period_token`s (the #321 coarsest-exact tokens — defensive on a stale
- * payload missing them, the #317 rule: degrade to year-only). Coarse → fine. */
-export function grainsFromStates(states: VariableStateModel[]): PeriodGrain[] {
-  const found = new Set<PeriodGrain>(["year"]);
-  for (const s of states) {
-    const token = s.period_token;
-    if (typeof token === "string" && !token.includes("..")) {
-      const grain = grainOfToken(token);
-      if (grain) {
-        found.add(grain);
-      }
-    }
-  }
-  return PERIOD_GRAINS.filter((g) => found.has(g));
 }
 
 /** The subject's data-availability span as a year-grain `Coverage` (#615),

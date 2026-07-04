@@ -1198,10 +1198,11 @@ title/fqid header, and one **canonical section order**:
 3. **value set / codes**
 4. **relationships**
 5. **docs**
+6. **technical**
 
 `SubjectView` is a thin *presentational* shell: it owns no data, no headings beyond the
 title, and no restyling. Each section arrives as a Svelte `Snippet` from the leaf view
-and the shell `{@render}`s the five in the fixed order. Every slot is **optional** — a
+and the shell `{@render}`s the six in the fixed order. Every slot is **optional** — a
 kind that has nothing for a section simply doesn't pass that snippet and the slot
 renders nothing (no empty wrapper, no "none found" wall). The variable leaf suppresses
 the under-header fqid line (`showFqid={false}` — its breadcrumb already ends in the
@@ -1221,15 +1222,16 @@ that fills the shell: `binding` → `BindingLeafView`, `classification` →
 `/catalog/group/class/{key}` route) is a fourth non-catch-all kind
 (`classification-group`) → `ClassificationGroupView`, its sibling.
 
-Per-kind mapping into the five sections:
+Per-kind mapping into the six sections:
 
-  | Section       | Variable (`BindingLeafView`)                                                                             | Classification (`ClassificationLeafView`) | Concept group (`ConceptGroupView`)                                                                             |
-  | ------------- | -------------------------------------------------------------------------------------------------------- | ----------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
-  | description   | definition / description / unit `<dl>` + `via_same_as` note + Technical details (sensitive / identifier) | short name `<dl>`                         | shared definition/description (when members agree — #678/#900) above Technical details (key / facets / source) |
-  | picker        | `PeriodPicker` (time) + `RepresentationPicker` (list or graph/time-band) + add-to-project                | — (#906 adds the compact edition DAG)     | `PeriodPicker` (availability lens) + `RepresentationPicker` (list or graph/time-band)                          |
-  | value / codes | codings (`ValueSetView` (#905), each distinct value set via `CodeList`)                                  | `ClassificationCodesPanel` (`CodeList`)   | —                                                                                                              |
-  | relationships | `HistoryGraph` (succession/group context) + `LineageDetails` (provenance/warnings)                       | `HistoryGraph`                            | — (members live in the picker)                                                                                 |
-  | docs          | `DocMentionsPanel`                                                                                       | —                                         | —                                                                                                              |
+  | Section       | Variable (`BindingLeafView`)                                                                            | Classification (`ClassificationLeafView`) | Concept group (`ConceptGroupView`)                                                                             |
+  | ------------- | ------------------------------------------------------------------------------------------------------- | ----------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+  | description   | definition / description / unit `<dl>` + `via_same_as` note                                             | short name `<dl>`                         | shared definition/description (when members agree — #678/#900) above Technical details (key / facets / source) |
+  | picker        | `PeriodPicker` (time) + `RepresentationPicker` (list or graph/time-band) + add-to-project               | — (#906 adds the compact edition DAG)     | `PeriodPicker` (availability lens) + `RepresentationPicker` (list or graph/time-band)                          |
+  | value / codes | codings (`ValueSetView` (#905), each distinct value set via `CodeList`)                                 | `ClassificationCodesPanel` (`CodeList`)   | —                                                                                                              |
+  | relationships | `HistoryGraph` (succession/group context) + `LineageDetails` (provenance/warnings)                      | `HistoryGraph`                            | — (members live in the picker)                                                                                 |
+  | docs          | `DocMentionsPanel`                                                                                      | —                                         | —                                                                                                              |
+  | technical     | one bottom `TechnicalDetails` disclosure (sensitive / identifier, plus single-state data type / column) | —                                         | —                                                                                                              |
 
 **#670 — member identity and fetch ownership.** For a grouped variable,
 `BindingLeafView` renders a member-distinguishing qualifier (facet labels, e.g. "AGI ·
@@ -1321,8 +1323,13 @@ kind:
   soon as sibling/predecessor cells or no-column states cannot be represented without
   loss.
 
-The **time axis** is the shared `PeriodPicker` (see the Project-window store section),
-but it does a different job per kind:
+The **time axis** is the shared `PeriodPicker` (see the Project-window store section): a
+slider-only year-window control seeded from the project window and subject coverage. It
+no longer exposes range, list, or free-text authoring modes. Richer server-supported
+`?period` wires (terms, comma lists, `_default`) remain valid deep-link state; when one
+is active, the picker displays that value read-only with a Clear affordance and does not
+silently rewrite it unless the user moves the slider to a year window. The control does
+a different job per kind:
 
 - On the **variable** it drives resolution: a local change writes `?period` (precedence
   `?period` > project window > full history), which **refetches** the `resolve_at`
@@ -1349,8 +1356,11 @@ form when the start is unknown (#658).
   in `StatesView` are retired). `ValueSetView` receives the already-resolved `states`
   list from `BindingLeafView` and renders in one of three modes:
 
-  - **Single-state detail** (`states.length === 1`): variant, validity, type/length,
-    delivery column, value-set version, and a height-constrained code table.
+  - **Single-state detail** (`states.length === 1`): variant, validity, non-empty
+    value-set version, operational definition, and a height-constrained code table.
+    Default variants, wholly unknown validity windows, empty version labels, and
+    codeless value-set filler are omitted; state structural rows live in the binding
+    leaf's bottom `TechnicalDetails`.
   - **Multi-state / distinct-value-set view** (`states.length > 1`, #668): dedups at two
     levels — classification editions by `classification_slug`, others by `value_set_id`
     — so a column with 415 states collapses to \~21 LKF editions + a few plain lists. A
@@ -1384,11 +1394,14 @@ form when the start is unknown (#658).
   code list.
 
 - **`TechnicalDetails`** (#638 PR4) — the shared "Technical details" `<details>`
-  disclosure that demotes **backend/structural** fields below the user-facing ones: the
-  variable's sensitive / identifier flags, a state's type / length / delivery column
-  (`ValueSetView`), and a group's key / facets / source. One component keeps the summary +
-  styling consistent across the three call sites; callers omit it entirely when there's
-  nothing to demote.
+  disclosure that demotes **backend/structural** fields below the user-facing ones. The
+  binding leaf owns a single bottom disclosure for the variable's sensitive / identifier
+  flags and, when exactly one state is in view, that state's type / length / delivery
+  column. Concept groups still use the component for key / facets / source. One
+  component keeps the summary + styling consistent across call sites; callers omit it
+  entirely when there's nothing to demote. `LineageDetails` follows the same
+  omit-when-empty rule: with no provenance, warnings, loading state, or error, it
+  renders nothing.
 
 ### Why the picker graph is additive to the standalone history graph (#904)
 

@@ -21,7 +21,7 @@ import { catalogHref, formatWindow, windowTitle } from "./catalog";
 // Omit-when-empty (the LineagePanels ethos): each section is shown when it has
 // data OR (warnings) is still loading / errored — we never hide a section whose
 // state is unknown (that would read as a confirmed absence). When BOTH are empty,
-// one compact line replaces the headed walls.
+// render nothing.
 let { fqidPath, node }: { fqidPath: string; node: BindingNodeData } = $props();
 
 const warnings = asyncResource(() => getBindingLineageWarnings(fqidPath));
@@ -42,12 +42,8 @@ const showWarnings = $derived(
 const anySection = $derived(showProvenance || showWarnings);
 </script>
 
-<div class="lineage-details">
-  {#if !anySection}
-    <!-- Both empty (the common case) — one compact line instead of headed walls. -->
-    <p class="muted no-links">No provenance or lineage warnings.</p>
-  {/if}
-
+{#if anySection}
+  <div class="lineage-details">
   <!-- PROVENANCE — source register + consumer/source lineage edges -->
   {#if showProvenance}
     <section aria-labelledby="provenance-heading">
@@ -103,7 +99,8 @@ const anySection = $derived(showProvenance || showWarnings);
       {/if}
     </section>
   {/if}
-</div>
+  </div>
+{/if}
 
 <style>
   .lineage-details {
@@ -111,10 +108,6 @@ const anySection = $derived(showProvenance || showWarnings);
     display: flex;
     flex-direction: column;
     gap: 1.25rem;
-  }
-  .no-links {
-    margin: 0;
-    font-size: 0.9rem;
   }
   h3 {
     margin: 0 0 0.5rem;

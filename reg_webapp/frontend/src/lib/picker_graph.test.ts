@@ -146,6 +146,17 @@ describe("cellsOf — representation-run grouping", () => {
     expect(yearless[0].window).toBe("until 2008");
   });
 
+  it("omits the display window for wholly unknown bounds", () => {
+    const cells = cellsOf(
+      variableNode({
+        states: [state({ valid_from: null, valid_to: null })],
+      }),
+    );
+    expect(cells[0].window).toBeNull();
+    expect(cells[0].openStart).toBe(true);
+    expect(cells[0].openEnd).toBe(true);
+  });
+
   it("carries numeric year bounds + open flags for the shared axis", () => {
     const cells = cellsOf(
       variableNode({

@@ -33,7 +33,6 @@ import {
   formatStateWindow,
   formatWindow,
   fqidSegments,
-  grainsFromStates,
   groupHref,
   groupLinkFromFocus,
   humanizeClassificationSlug,
@@ -3323,10 +3322,13 @@ describe("formatWindow open-start (#658)", () => {
     );
   });
 
-  it("a wholly-unbounded 0001..9999 window keeps 'since' (open-end wins)", () => {
-    // Out of #658's finite-end scope, but pin the precedence: the open-ended form
-    // is checked first, so this does NOT become "until 9999".
-    expect(formatWindow(YEARLESS_VALID_FROM, "9999-12-31")).toBe("since 0001");
+  it("a wholly-unknown 0001..9999 window returns null for callers to omit", () => {
+    expect(formatWindow(YEARLESS_VALID_FROM, "9999-12-31")).toBeNull();
+    expect(
+      formatStateWindow(
+        state({ valid_from: YEARLESS_VALID_FROM, valid_to: "9999-12-31" }),
+      ),
+    ).toBeNull();
   });
 });
 
@@ -3412,27 +3414,6 @@ describe("windowTitle (#309 sentinel-free tooltips)", () => {
     expect(windowTitle("2016-01-01", "9999-12-31")).toBe(
       "2016-01-01 – open-ended",
     );
-  });
-});
-
-describe("grainsFromStates (#308 grain pre-narrowing)", () => {
-  it("always offers year; finer grains come from the #321 tokens, coarse → fine", () => {
-    expect(
-      grainsFromStates([
-        state({ state_id: 1, period_token: "VT2006" }),
-        state({ state_id: 2, period_token: "2007-08" }),
-        state({ state_id: 3, period_token: "2008" }),
-      ]),
-    ).toEqual(["year", "term", "month"]);
-  });
-
-  it("degrades to year-only on token-less payloads (stale edge cache) and lo..hi tokens", () => {
-    expect(grainsFromStates([state({ state_id: 1 })])).toEqual(["year"]);
-    expect(
-      grainsFromStates([
-        state({ state_id: 1, period_token: "1992-01-01..2009-12-31" }),
-      ]),
-    ).toEqual(["year"]);
   });
 });
 

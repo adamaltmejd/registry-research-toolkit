@@ -10,7 +10,7 @@ import type { Snippet } from "svelte";
 // in the fixed order. The sections are all OPTIONAL — a leaf that has no value set
 // (a concept group) simply doesn't pass `valueSet`, and the slot renders nothing
 // (no empty wrapper). The canonical order is the contract: description → picker →
-// value set → relationships → docs.
+// value set → relationships → docs → technical.
 let {
   title,
   fqid,
@@ -20,6 +20,7 @@ let {
   valueSet,
   relationships,
   docs,
+  technical,
 }: {
   title: string;
   // Absent for a concept group (a group has no single fqid — its key shows inside
@@ -35,6 +36,7 @@ let {
   valueSet?: Snippet;
   relationships?: Snippet;
   docs?: Snippet;
+  technical?: Snippet;
 } = $props();
 </script>
 
@@ -50,6 +52,7 @@ let {
   {@render valueSet?.()}
   {@render relationships?.()}
   {@render docs?.()}
+  {@render technical?.()}
 </article>
 
 <style>

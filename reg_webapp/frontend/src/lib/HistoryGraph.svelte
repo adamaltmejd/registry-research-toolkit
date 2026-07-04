@@ -220,9 +220,10 @@ function laneA11yDetails(rn: RenderNode): string {
       ? "renamed predecessor with no live states"
       : "no delivered state rows";
   }
-  const cells = rn.cells.map(
-    (cell) =>
-      `${cell.label}, ${cell.window}${rn.multiVariant ? `, ${cell.variant}` : ""}`,
+  const cells = rn.cells.map((cell) =>
+    [cell.label, cell.window, rn.multiVariant ? cell.variant : null]
+      .filter(Boolean)
+      .join(", "),
   );
   return `representation history: ${cells.join("; ")}`;
 }
@@ -509,14 +510,18 @@ function cellTop(laneHeight: number, row: number, rowCount: number): number {
                           class:open-start={cell.openStart}
                           class:open-end={cell.openEnd}
                           style={`left:${left}px; width:${w}px; top:${cellTop(height, cell.row, rn.rowCount)}px`}
-                          title={`${cell.label} · ${cell.window}`}
+                          title={[cell.label, cell.window]
+                            .filter(Boolean)
+                            .join(" · ")}
                         >
                           <span class="cell-label">{cell.label}</span>
-                          <span class="cell-window"
-                            >{cell.window}{#if rn.multiVariant}<span
-                                class="variant-tag">{cell.variant}</span
-                              >{/if}</span
-                          >
+                          {#if cell.window || rn.multiVariant}
+                            <span class="cell-window"
+                              >{cell.window ?? ""}{#if rn.multiVariant}<span
+                                  class="variant-tag">{cell.variant}</span
+                                >{/if}</span
+                            >
+                          {/if}
                         </div>
                       {/each}
                     {:else}

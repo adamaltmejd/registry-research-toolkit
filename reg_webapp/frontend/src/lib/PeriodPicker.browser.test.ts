@@ -4,96 +4,65 @@ import PeriodPicker from "./PeriodPicker.svelte";
 import type { Coverage } from "./period";
 import type { StudyWindow } from "./project_data";
 
-// The catalog PeriodPicker. The DEFAULT control is the #615 year-window
-// availability slider (seeded from the project window, over the subject's
-// coverage track); the rich grammar (#308 range-first, #338/#340 Segments,
-// Text) moves behind a "More options" expander. Self-contained (props in,
-// onsubmit/onclear out) — BindingLeafView owns the URL write.
-describe("PeriodPicker — more-options modes (range / list / text)", () => {
-  it("Picker mode submits the picked wire (behind the expander)", async () => {
-    const onsubmit = vi.fn<(period: string) => void>();
+// The catalog PeriodPicker. The control is the #615 year-window availability
+// slider (seeded from the project window, over the subject's coverage track).
+// Rich `?period` wire values still resolve server-side, but the picker no longer
+// authors range/list/text periods.
+describe("PeriodPicker — slider-only UI", () => {
+  it("does not render advanced authoring controls or the no-window hint", async () => {
     const screen = await render(PeriodPicker, {
       period: null,
-      onsubmit,
-      onclear: vi.fn(),
-    });
-    await screen.getByRole("button", { name: "More options" }).click();
-    await expect
-      .element(screen.getByRole("button", { name: "Picker" }))
-      .toHaveAttribute("aria-pressed", "true");
-    await screen.getByRole("spinbutton", { name: "From" }).fill("2018");
-    // The expander's Apply (plain "Apply"); the slider's is "Apply period".
-    await screen.getByRole("button", { name: "Apply", exact: true }).click();
-    expect(onsubmit).toHaveBeenLastCalledWith("2018");
-  });
-
-  it("Segments mode builds the #307 comma wire; Apply submits the union query (#340)", async () => {
-    const onsubmit = vi.fn<(period: string) => void>();
-    const screen = await render(PeriodPicker, {
-      period: null,
-      onsubmit,
-      onclear: vi.fn(),
-    });
-    await screen.getByRole("button", { name: "More options" }).click();
-    await screen.getByRole("button", { name: "Segments" }).click();
-    await screen.getByRole("spinbutton", { name: "From" }).fill("2005");
-    await screen.getByRole("spinbutton", { name: "To" }).fill("2010");
-    await screen.getByRole("button", { name: "Add segment" }).click();
-    await screen.getByRole("spinbutton", { name: "From" }).fill("2015");
-    await screen.getByRole("spinbutton", { name: "To" }).fill("2020");
-    await screen.getByRole("button", { name: "Add segment" }).click();
-    await screen.getByRole("button", { name: "Apply", exact: true }).click();
-    expect(onsubmit).toHaveBeenLastCalledWith("2005..2010,2015..2020");
-  });
-
-  it("an active comma ?period opens the expander in Segments with its chips; a removal applies the rest", async () => {
-    const onsubmit = vi.fn<(period: string) => void>();
-    const screen = await render(PeriodPicker, {
-      period: "2005..2010,2015..2020",
-      onsubmit,
-      onclear: vi.fn(),
-    });
-    // A comma list is not year-representable → the expander opens by default in
-    // Segments with the chips visible.
-    await expect
-      .element(screen.getByRole("button", { name: "Segments" }))
-      .toHaveAttribute("aria-pressed", "true");
-    // Exact-match the chip — the sub-annual cue near the slider also renders the
-    // full comma wire (`2005..2010,2015..2020`) as a <code>, so a substring
-    // match would now be ambiguous.
-    await expect
-      .element(screen.getByText("2005..2010", { exact: true }))
-      .toBeVisible();
-    await screen.getByRole("button", { name: "Remove 2005..2010" }).click();
-    await screen.getByRole("button", { name: "Apply", exact: true }).click();
-    expect(onsubmit).toHaveBeenLastCalledWith("2015..2020");
-  });
-
-  it("switching to Picker from an unrepresentable active period blanks the buffer — Apply no-ops, never re-submits the invisible value", async () => {
-    const onsubmit = vi.fn<(period: string) => void>();
-    const screen = await render(PeriodPicker, {
-      period: "2005..2010,2015..2020",
-      onsubmit,
-      onclear: vi.fn(),
-    });
-    // The expander is already open (comma list); switch to Picker → blank buffer.
-    await screen.getByRole("button", { name: "Picker" }).click();
-    // Blank controls + a null buffer: Apply must NOT submit the stale comma
-    // value hiding behind them (the #347/#349 stale-buffer class).
-    await screen.getByRole("button", { name: "Apply", exact: true }).click();
-    expect(onsubmit).not.toHaveBeenCalled();
-  });
-
-  it("an unrepresentable active period (_default) opens the expander in Text, visible and editable", async () => {
-    const screen = await render(PeriodPicker, {
-      period: "_default",
+      window: null,
       onsubmit: vi.fn(),
       onclear: vi.fn(),
     });
     await expect
-      .element(screen.getByRole("button", { name: "Text" }))
-      .toHaveAttribute("aria-pressed", "true");
-    await expect.element(screen.getByRole("textbox")).toHaveValue("_default");
+      .element(screen.getByRole("button", { name: "Apply period" }))
+      .toBeVisible();
+    await expect
+      .element(screen.getByRole("button", { name: "More options" }))
+      .not.toBeInTheDocument();
+    expect(screen.container.querySelector("input[type='text']")).toBeNull();
+    await expect
+      .element(screen.getByText(/No project window set/))
+      .not.toBeInTheDocument();
+  });
+
+  it("keeps an active token ?period visible and clearable without rewriting it on untouched Apply", async () => {
+    const onsubmit = vi.fn<(period: string) => void>();
+    const onclear = vi.fn<() => void>();
+    const screen = await render(PeriodPicker, {
+      period: "HT2020",
+      window: { from: 2000, to: 2010 },
+      onsubmit,
+      onclear,
+    });
+    await expect.element(screen.getByText(/Active period/)).toBeVisible();
+    await expect
+      .element(screen.getByText("HT2020", { exact: true }))
+      .toBeVisible();
+    await screen.getByRole("button", { name: "Apply period" }).click();
+    expect(onsubmit).not.toHaveBeenCalled();
+    await screen.getByRole("button", { name: "Clear" }).click();
+    expect(onclear).toHaveBeenCalledOnce();
+  });
+
+  it("keeps an active comma-list ?period visible and clearable without rewriting it on untouched Apply", async () => {
+    const onsubmit = vi.fn<(period: string) => void>();
+    const onclear = vi.fn<() => void>();
+    const screen = await render(PeriodPicker, {
+      period: "2005..2010,2015..2020",
+      window: { from: 2000, to: 2020 },
+      onsubmit,
+      onclear,
+    });
+    await expect
+      .element(screen.getByText("2005..2010,2015..2020", { exact: true }))
+      .toBeVisible();
+    await screen.getByRole("button", { name: "Apply period" }).click();
+    expect(onsubmit).not.toHaveBeenCalled();
+    await screen.getByRole("button", { name: "Clear" }).click();
+    expect(onclear).toHaveBeenCalledOnce();
   });
 });
 
@@ -422,12 +391,12 @@ describe("PeriodPicker — window slider (#615)", () => {
       .toBeVisible();
   });
 
-  it("sub-annual ?period with a window: the slider shows the sub-annual cue (not a misleading no-deviation), the expander opens to the real value", async () => {
+  it("sub-annual ?period with a window: the slider shows the sub-annual cue without advanced modes", async () => {
     // HT2020 is not year-representable → activeYearSelection falls back to the
     // window, so the slider seeds to the window. Without the cue that would read
     // as "no deviation" (window vs window) and silently hide that the active
-    // value is really HT2020. The picker must instead flag it and open the
-    // expander to the real value.
+    // value is really HT2020. The picker must instead flag it without exposing
+    // the removed range/list/text authoring modes.
     const screen = await render(PeriodPicker, {
       period: "HT2020",
       window: WINDOW,
@@ -445,15 +414,12 @@ describe("PeriodPicker — window slider (#615)", () => {
     await expect
       .element(screen.getByText(/Deviates from project window/))
       .not.toBeInTheDocument();
-    // The expander auto-opened on the real value: HT2020 is a single term-grain
-    // token the range UI CAN hold, so it lands in Picker mode (still NOT
-    // year-grain — that is exactly why the slider can't represent it).
     await expect
-      .element(screen.getByRole("button", { name: "Fewer options" }))
+      .element(screen.getByRole("button", { name: "More options" }))
+      .not.toBeInTheDocument();
+    await expect
+      .element(screen.getByRole("button", { name: "Clear" }))
       .toBeVisible();
-    await expect
-      .element(screen.getByRole("button", { name: "Picker" }))
-      .toHaveAttribute("aria-pressed", "true");
   });
 
   it("a window/seed change clears a stale dragged buffer → Apply submits the new window (Fix C)", async () => {
@@ -747,7 +713,7 @@ describe("PeriodPicker — window slider (#615)", () => {
     ).toBeGreaterThan(0);
   });
 
-  it("no window set: the availability note softens (no amber deviation) + a 'set a window' hint shows", async () => {
+  it("no window set: the availability note softens without rendering a helper hint", async () => {
     const screen = await render(PeriodPicker, {
       period: "2005..2012",
       window: null,
@@ -760,10 +726,10 @@ describe("PeriodPicker — window slider (#615)", () => {
     await expect
       .element(screen.getByText(/Not delivered after 2008/))
       .toBeVisible();
-    // …and the no-window hint nudges the user toward the header window.
+    // …but no generic no-window hint renders on the page.
     await expect
       .element(screen.getByText(/No project window set/))
-      .toBeVisible();
+      .not.toBeInTheDocument();
     // No user-deviation hint (nothing to deviate from).
     await expect
       .element(screen.getByText(/Deviates from project window/))

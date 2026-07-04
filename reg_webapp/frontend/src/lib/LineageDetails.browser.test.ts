@@ -41,17 +41,21 @@ beforeEach(() => {
 });
 
 describe("LineageDetails — omit-when-empty (#678)", () => {
-  it("shows one compact line (no headed walls) when provenance + warnings are empty", async () => {
-    await render(LineageDetails, { fqidPath: "scb/lisa/kon", node: node() });
+  it("renders nothing when provenance + warnings are empty", async () => {
+    const screen = await render(LineageDetails, {
+      fqidPath: "scb/lisa/kon",
+      node: node(),
+    });
 
     await expect
       .element(page.getByText("No provenance or lineage warnings."))
-      .toBeVisible();
+      .not.toBeInTheDocument();
     for (const heading of ["Provenance", "Lineage warnings"]) {
       await expect
         .element(page.getByRole("heading", { name: heading }))
         .not.toBeInTheDocument();
     }
+    expect(screen.container.querySelector(".lineage-details")).toBeNull();
   });
 });
 
