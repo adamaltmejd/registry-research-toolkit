@@ -10,7 +10,6 @@ import {
   type BandLabel,
   catalogHref,
   clusterBands,
-  commonLabelStem,
   encodeCodesParam,
   facetLabelJoin,
   leafSlug,
@@ -608,13 +607,59 @@ function normalizedOperationalDefinition(band: PickerBand): string {
   return band.operationalDefinition?.trim().replace(/\s+/g, " ") ?? "";
 }
 
-function bandHasAxisMarker(band: PickerBand): boolean {
-  return (
-    axes.length > 0 &&
-    band.rows.some((row) =>
-      axes.some((axis) => rowFacet(band, row, axis.name) !== null),
-    )
+function normalizedSearchText(text: string): string {
+  return text.trim().toLocaleLowerCase().replace(/\s+/g, " ");
+}
+
+function commonDefinitionStem(definitions: readonly string[]): string {
+  if (definitions.length < 2) {
+    return "";
+  }
+  const wordLists = definitions.map((definition) =>
+    normalizedSearchText(definition)
+      .split(/\s+/)
+      .filter((word) => word !== ""),
   );
+  const stem: string[] = [];
+  const maxLen = Math.min(...wordLists.map((words) => words.length));
+  for (let i = 0; i < maxLen; i++) {
+    const word = wordLists[0]?.[i] ?? "";
+    if (word === "" || !wordLists.every((words) => words[i] === word)) {
+      break;
+    }
+    stem.push(word);
+  }
+  const joined = stem.join(" ");
+  return stem.length >= 2 && joined.length >= 10 ? joined : "";
+}
+
+function axisFacetTexts(band: PickerBand): string[] {
+  const texts = new Set<string>();
+  for (const row of band.rows) {
+    for (const axis of axes) {
+      const facet = rowFacet(band, row, axis.name);
+      if (!facet) {
+        continue;
+      }
+      texts.add(facet.label);
+      texts.add(facet.value);
+    }
+  }
+  return [...texts].filter((text) => text.trim() !== "");
+}
+
+function bandHasAxisMarker(band: PickerBand): boolean {
+  return axes.length > 0 && axisFacetTexts(band).length > 0;
+}
+
+function operationalDefinitionCarriedByAxis(band: PickerBand): boolean {
+  const definition = normalizedSearchText(
+    normalizedOperationalDefinition(band),
+  );
+  return axisFacetTexts(band).some((text) => {
+    const facetText = normalizedSearchText(text);
+    return facetText.length >= 3 && definition.includes(facetText);
+  });
 }
 
 const suppressOperationalDefinitions = $derived.by(() => {
@@ -630,7 +675,8 @@ const suppressOperationalDefinitions = $derived.by(() => {
   }
   return (
     withDefinitions.every(bandHasAxisMarker) &&
-    commonLabelStem(definitions) !== ""
+    commonDefinitionStem(definitions) !== "" &&
+    withDefinitions.every(operationalDefinitionCarriedByAxis)
   );
 });
 

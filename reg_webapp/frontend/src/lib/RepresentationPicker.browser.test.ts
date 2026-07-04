@@ -1725,6 +1725,56 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
     expect(document.body.textContent).not.toContain("Förekomst");
   });
 
+  it("keeps operational definitions when only a majority share an axis-carried stem (#959)", async () => {
+    const axes: GroupAxisModel[] = [{ name: "rank", label: "Rank" }];
+    render(RepresentationPicker, {
+      bands: [
+        {
+          key: "scb/lisa/first",
+          name: "Förvärvskälla",
+          registerPrefix: "scb/lisa",
+          operationalDefinition:
+            "Variabeln anger familjens första förvärvskälla under året.",
+          rows: [row({ column: "FIRST" })],
+          facets: [{ axis: "rank", value: "1", label: "Första" }],
+        },
+        {
+          key: "scb/lisa/second",
+          name: "Förvärvskälla",
+          registerPrefix: "scb/lisa",
+          operationalDefinition:
+            "Variabeln anger familjens andra förvärvskälla under året.",
+          rows: [row({ column: "SECOND" })],
+          facets: [{ axis: "rank", value: "2", label: "Andra" }],
+        },
+        {
+          key: "scb/lisa/manual",
+          name: "Förvärvskälla",
+          registerPrefix: "scb/lisa",
+          operationalDefinition:
+            "Manually curated source classification for special cases.",
+          rows: [row({ column: "MANUAL" })],
+          facets: [{ axis: "rank", value: "x", label: "Special" }],
+        },
+      ],
+      axes,
+      ...PROPS,
+    });
+
+    await vi.waitFor(() => {
+      const text = document.body.textContent ?? "";
+      expect(text).toContain(
+        "Variabeln anger familjens första förvärvskälla under året.",
+      );
+      expect(text).toContain(
+        "Variabeln anger familjens andra förvärvskälla under året.",
+      );
+      expect(text).toContain(
+        "Manually curated source classification for special cases.",
+      );
+    });
+  });
+
   it("keeps a unique operational definition when no facet axis carries the distinction (#959)", async () => {
     render(RepresentationPicker, {
       bands: [
