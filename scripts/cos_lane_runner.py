@@ -34,6 +34,16 @@ The loop:
                     see it): status blocked naming the kind, exit nonzero
     cap exhausted, still findings -> codex_bot blocked (round cap), status blocked, exit
 
+Why a sibling, not a permission grant (rejected: Option 1): the tempting alternative —
+grant the nested `codex review` app-server the permission it's missing — is INFEASIBLE,
+not merely inadvisable. macOS Seatbelt cannot be nested: a process already confined by a
+codex-launched seatbelt cannot apply a second profile (`sandbox_apply` fails EPERM), and
+this holds even under `danger-full-access` (verified 2026-07-04). The only way to lift
+that EPERM from inside would be to remove the agent's OWN sandbox first — exactly the
+confinement loss the sibling design exists to avoid. So the review must run OUTSIDE the
+seatbelt entirely, as a sibling process, not squeezed through a permission the OS will
+never grant to a nested profile.
+
 Head-binding: the review + the gate line always stamp the CURRENT head, re-read before
 each review. A verdict is never recorded against a head that has since moved.
 

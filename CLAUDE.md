@@ -443,7 +443,13 @@ without merging.
   signal, not a terminal block: a seatbelt nested inside a surrounding agent sandbox
   blocked every exec (the review inspected nothing), so the remedy is to **re-run the
   review un-nested / with escalated permissions** — not to hand off `status: blocked`.
-  Nothing is posted to GitHub. The GitHub Codex web integration stays enabled for a
+  On the **codex surface** the pipeline agent cannot run this at all — it is already
+  inside a codex seatbelt, and Seatbelt cannot nest a second profile even under
+  escalated permissions — so `codex_bot` there is completed by the sibling
+  **`scripts/cos_lane_runner.py`** (launched by `cos_dispatch` by default for codex
+  lanes), not the pipeline agent; the CLAUDE surface still runs
+  `codex_local_review.py` inline as above (see the pr-pipeline and chief-of-staff
+  skills for the split). Nothing is posted to GitHub. The GitHub Codex web integration stays enabled for a
   shadow period but is **no longer a gate input** — its PR comments are FYI only. When a
   PR is otherwise merge-ready but this gate's `codex_bot` evidence is missing or stale
   (wrong head), the chief-of-staff self-serves it exactly like `build_db` — a throwaway

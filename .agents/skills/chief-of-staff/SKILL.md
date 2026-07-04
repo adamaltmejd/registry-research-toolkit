@@ -515,6 +515,11 @@ a maintainer-approval class — see Automerge — and is not autonomous).
 
 ## Self-serve Codex review
 
+Applies to CLAUDE-surface lanes and to codex lanes launched with `--no-lane-runner`. A
+normal (default) codex-surface lane already gets `codex_bot` completed by
+`cos_lane_runner.py` (see Auto dispatch) — do not self-serve it while that runner still
+owns the round loop.
+
 If an otherwise merge-ready PR's `codex_bot` line is missing or stale (its stamped head
 trails the live `head`), self-serve it with the **same recipe as the build_db self-serve
 above** — including the pre-launch `running; started <ISO-8601>` intent stamp on the
@@ -678,6 +683,16 @@ Dispatch lanes SEQUENTIALLY within the single coordinator session — never run 
 auto-mode loops concurrently. `cos_dispatch`'s budget and collision guards protect
 against re-dispatching the same lane, not against two dispatchers racing; the
 one-coordinator rule in Scheduling is what excludes that.
+
+For a **codex-surface** dispatch, `cos_dispatch` launches the deterministic
+`scripts/cos_lane_runner.py` by default, not the bare agent — a codex lane agent cannot
+run its own `codex review` (nested seatbelt), so the runner is a sibling process outside
+that seatbelt that owns the whole per-round codex-review↔fix loop after the lane's
+implement turn finishes. You are therefore **out of that per-round loop** for codex
+lanes: you see one finished handoff (`gate.json` already carrying the `codex_bot`
+verdict, `ready-to-merge` when it's the sole gate left), not a stream of self-serve
+requests. Self-serve Codex review below still applies to CLAUDE-surface lanes and to
+codex lanes launched with `--no-lane-runner` (the escape to the legacy bare-agent path).
 
 - **Kill switch, checked immediately before every launch:**
   `$XDG_STATE_HOME/registry-research-toolkit/auto-dispatch.off` (default

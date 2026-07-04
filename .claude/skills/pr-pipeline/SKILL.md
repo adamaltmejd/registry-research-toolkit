@@ -299,6 +299,22 @@ targets so the review diffs against the real PR base, not main). Operate it like
   the PR — re-run unsandboxed rather than recording `status: blocked` on that run. A
   generic `tool_failure` naming "no successful exec" with no sandbox denial is likewise
   an environment problem, not a PR finding.
+- **Codex surface:** this whole bullet describes the CLAUDE-surface run — a Claude agent
+  shelling to `codex review` applies codex's first (only) seatbelt, so nesting never
+  occurs. A **codex-surface** pipeline agent is a different case: it is ALREADY inside a
+  codex seatbelt, so its own `codex review` would be nested and every exec would deny
+  (`nested_sandbox`, `sandbox_apply: Operation not permitted`) — not fixable with
+  `dangerouslyDisableSandbox`, since the profile itself cannot nest (see
+  `cos_lane_runner.py`'s docstring). So on the codex surface, do NOT attempt the
+  `codex_bot` gate yourself: leave its line deferred (e.g.
+  `running; deferred-to-lane-runner`) and set `status: blocked` with
+  `blocker: codex_bot`, then finish every other gate normally. `cos_dispatch` launches
+  the deterministic **`cos_lane_runner.py`** by default for codex lanes — a sibling
+  process outside your seatbelt — which runs the review un-nested, drives the fix loop
+  by resuming your warm codex session with a findings brief, and completes the
+  `codex_bot` line (and flips `status` to `ready-to-merge` once it is the sole unmet
+  gate) once you exit. `--no-lane-runner` is the escape back to this legacy path, which
+  a human then has to self-serve (see the chief-of-staff skill).
 
 When every gate passes, write the handoff into the **local merge-gate store** (contract
 in CLAUDE.md "PR merge gate"; this template is the field-level worked example): create
