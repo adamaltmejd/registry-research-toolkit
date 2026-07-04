@@ -220,10 +220,13 @@ def test_status_after_codex_bot_flips_ready_when_blocker_is_codex_bot() -> None:
         "blocker": "codex_bot",
         "gates": {
             "codex_bot": "running; deferred",
+            "independent_review": "pass; reviewer subagent",
+            "ci": "pass; gh pr checks",
             "tests": "uv run python -m pytest scripts/",
             "docs": "updated; refreshed",
-            "stack": "before #1086",
+            "visual": "not required",
             "build_db": "not required",
+            "stack": "before #1086",
         },
     }
     assert lr._status_after_codex_bot(gate, _HEAD40) == ("ready-to-merge", None)
@@ -241,24 +244,72 @@ def test_status_after_codex_bot_preserves_agent_named_other_blocker() -> None:
     assert lr._status_after_codex_bot(gate, _HEAD40) == ("blocked", "visual")
 
 
-def test_gates_recorded_by_agent_detects_incomplete_handoff() -> None:
-    # Fix B: a real gates map has at least one non-codex_bot key. An absent / non-dict / empty
-    # map, or one whose ONLY key is codex_bot, is an incomplete handoff (no other gates recorded).
-    assert lr._gates_recorded_by_agent({"gates": {"ci": "pass"}}) is True
-    assert lr._gates_recorded_by_agent({"gates": {"codex_bot": "running"}}) is False
-    assert lr._gates_recorded_by_agent({"gates": {}}) is False
-    assert lr._gates_recorded_by_agent({}) is False
-    assert lr._gates_recorded_by_agent({"gates": "not-a-dict"}) is False
+def _full_gates() -> dict[str, str]:
+    """A complete gates map: every `_REQUIRED_GATE_KEYS` entry plus the deferred codex_bot."""
+    return {
+        "codex_bot": "running; deferred-to-lane-runner",
+        **dict.fromkeys(lr._REQUIRED_GATE_KEYS, "pass; recorded"),
+    }
+
+
+def test_gate_handoff_complete_requires_full_gate_set() -> None:
+    # A complete handoff records EVERY expected repo gate (`_REQUIRED_GATE_KEYS`); codex_bot is
+    # the runner's own gate and does not count. A map that records some but not all required
+    # keys — a PARTIAL handoff — is incomplete, not just an absent/empty/codex_bot-only one.
+    assert lr._gate_handoff_complete({"gates": _full_gates()}) is True
+    # Partial: codex_bot + ci but missing tests/build_db/etc.
+    assert (
+        lr._gate_handoff_complete({"gates": {"codex_bot": "running", "ci": "pass"}})
+        is False
+    )
+    assert lr._gate_handoff_complete({"gates": {"codex_bot": "running"}}) is False
+    assert lr._gate_handoff_complete({"gates": {}}) is False
+    assert lr._gate_handoff_complete({}) is False
+    assert lr._gate_handoff_complete({"gates": "not-a-dict"}) is False
+    # A required key present as a non-string is not a recorded gate line.
+    partial = {**_full_gates(), "build_db": None}
+    assert lr._gate_handoff_complete({"gates": partial}) is False
+
+
+def test_missing_required_gates_names_the_gaps() -> None:
+    # The blocker message is built from this list, so it must name exactly the absent required
+    # keys (sorted, deterministic), and exclude codex_bot.
+    gate = {"gates": {"codex_bot": "running", "ci": "pass", "tests": "ran"}}
+    missing = lr._missing_required_gates(gate)
+    assert "ci" not in missing and "tests" not in missing
+    assert "build_db" in missing and "visual" in missing
+    assert missing == sorted(missing)
+    # No gates map ⇒ every required key is missing.
+    assert lr._missing_required_gates({}) == sorted(lr._REQUIRED_GATE_KEYS)
 
 
 def test_status_after_codex_bot_blocks_on_incomplete_handoff() -> None:
     # Fix B: the agent flagged codex_bot as the sole blocker but recorded NO other gates —
     # its handoff is incomplete. Even with codex_bot clean, the flip is withheld and the
-    # blocker names the incomplete handoff, never a false ready-to-merge.
+    # blocker NAMES the missing required gates, never a false ready-to-merge.
     gate = {"blocker": "codex_bot", "gates": {"codex_bot": "running; deferred"}}
     status, blocker = lr._status_after_codex_bot(gate, _HEAD40, gates_complete=False)
     assert status == "blocked"
-    assert blocker is not None and "incomplete handoff" in blocker
+    assert blocker is not None and "incomplete lane-agent handoff" in blocker
+    # Every required gate is absent, so all of them are named.
+    assert "build_db" in blocker and "tests" in blocker
+
+
+def test_status_after_codex_bot_blocks_on_partial_handoff_names_missing() -> None:
+    # P2: a PARTIAL handoff (codex_bot + ci recorded, but tests/build_db/etc. missing) with
+    # blocker==codex_bot must stay blocked — the flip requires the FULL expected gate set. The
+    # blocker names exactly the missing required keys.
+    gate = {
+        "blocker": "codex_bot",
+        "gates": {"codex_bot": "running; deferred", "ci": "pass; gh pr checks"},
+    }
+    status, blocker = lr._status_after_codex_bot(
+        gate, _HEAD40, gates_complete=lr._gate_handoff_complete(gate)
+    )
+    assert status == "blocked"
+    assert blocker is not None and "incomplete lane-agent handoff" in blocker
+    assert "tests" in blocker and "build_db" in blocker
+    assert "ci" not in blocker  # ci WAS recorded, so it is not named missing
 
 
 def test_status_after_codex_bot_names_the_real_unmet_gate() -> None:
@@ -269,8 +320,13 @@ def test_status_after_codex_bot_names_the_real_unmet_gate() -> None:
         "blocker": "codex_bot",
         "gates": {
             "codex_bot": "running; deferred-to-lane-runner",
+            "independent_review": "pass; reviewer subagent",
             "build_db": "running; reg-meta-build in progress",
             "ci": "pass; gh pr checks",
+            "tests": "uv run pytest scripts/",
+            "docs": "updated; refreshed",
+            "visual": "not required",
+            "stack": "none",
         },
     }
     status, blocker = lr._status_after_codex_bot(gate, _HEAD40)
@@ -286,9 +342,13 @@ def test_status_after_codex_bot_ignores_non_leading_unmet_substring() -> None:
         "blocker": "codex_bot",
         "gates": {
             "codex_bot": "running; deferred-to-lane-runner",
+            "independent_review": "pass; reviewer subagent",
             "tests": "uv run pytest -k not_blocked",
             "docs": "updated; pending nothing here",
             "ci": "pass; gh pr checks",
+            "visual": "not required",
+            "build_db": "not required",
+            "stack": "none",
         },
     }
     assert lr._status_after_codex_bot(gate, _HEAD40) == ("ready-to-merge", None)
@@ -302,8 +362,13 @@ def test_status_after_codex_bot_names_stale_head_bound_gate() -> None:
         "blocker": "codex_bot",
         "gates": {
             "codex_bot": "running; deferred-to-lane-runner",
+            "independent_review": "pass; reviewer subagent",
             "build_db": "local; reg-meta-build; head 0123456789abcdef; pass; dbdiff empty",
             "ci": "pass; gh pr checks",
+            "tests": "uv run pytest scripts/",
+            "docs": "updated; refreshed",
+            "visual": "not required",
+            "stack": "none",
         },
     }
     status, blocker = lr._status_after_codex_bot(gate, _HEAD40)
@@ -666,8 +731,11 @@ def _write_gate_build_db_head(gate_root: Path, pr: int, build_db_head: str) -> P
             "independent_review": "pass; reviewer subagent; findings fixed",
             "codex_bot": "running; deferred-to-lane-runner",
             "ci": "pass; gh pr checks",
+            "tests": "uv run python -m pytest scripts/",
             "build_db": f"local; reg-meta-build; head {build_db_head}; pass; dbdiff empty",
             "docs": "updated; scripts docstring refreshed",
+            "visual": "not required",
+            "stack": "before #1086",
         },
         "blocker": "codex_bot",
     }
@@ -751,11 +819,17 @@ def test_clean_but_another_gate_explicitly_unmet_stays_blocked(
         "status": "blocked",
         "updated": "2026-07-04T00:00:00+00:00",
         "gates": {
+            # Full required set is present (so this is NOT an incomplete handoff) — but build_db
+            # is explicitly not-done, which the explicitly-unmet check must name.
             "independent_review": "pass; reviewer subagent; findings fixed",
             "codex_bot": "running; deferred-to-lane-runner",
             "ci": "pass; gh pr checks",
+            "tests": "uv run python -m pytest scripts/",
+            "docs": "updated; scripts docstring refreshed",
+            "visual": "not required",
             # Explicitly not-done, but the agent still (wrongly) blamed codex_bot alone.
             "build_db": "running; reg-meta-build in progress",
+            "stack": "before #1086",
         },
         "blocker": "codex_bot",
     }
@@ -792,15 +866,26 @@ def test_clean_but_another_gate_explicitly_unmet_stays_blocked(
         pytest.param(
             {"codex_bot": "running; deferred-to-lane-runner"}, id="codex-bot-only"
         ),
+        # P2: a PARTIAL handoff — some required gates recorded, others (tests/build_db/visual/
+        # docs/stack) missing — is ALSO incomplete and must not flip.
+        pytest.param(
+            {
+                "codex_bot": "running; deferred-to-lane-runner",
+                "independent_review": "pass; reviewer subagent",
+                "ci": "pass; gh pr checks",
+            },
+            id="partial-gates-map",
+        ),
     ],
 )
 def test_clean_but_incomplete_handoff_stays_blocked(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, gates
 ) -> None:
-    # Fix B: the agent flagged codex_bot as the sole blocker but recorded no other gates
-    # (ci/tests/build_db/visual never verified). A clean review must NOT flip such a PR to
-    # ready-to-merge — the handoff is incomplete. codex_bot is still recorded clean; only the
-    # flip is withheld, and the blocker names the incomplete handoff.
+    # Fix B + P2: the agent flagged codex_bot as the sole blocker but did NOT record the full
+    # expected gate set (some or all of ci/tests/docs/visual/build_db/stack never verified). A
+    # clean review must NOT flip such a PR to ready-to-merge — the handoff is incomplete.
+    # codex_bot is still recorded clean; only the flip is withheld, and the blocker names the
+    # missing required gates.
     wt = _make_worktree(tmp_path)
     gate_root = tmp_path / "gate"
     gate_dir = gate_root / "pr-4242"
@@ -832,7 +917,8 @@ def test_clean_but_incomplete_handoff_stays_blocked(
     gate_after = _read_gate(gate_dir)
     assert gate_after["status"] == "blocked"
     assert gate_after["status"] != "ready-to-merge"
-    assert "incomplete handoff" in gate_after["blocker"]
+    assert "incomplete lane-agent handoff" in gate_after["blocker"]
+    assert "missing required gate entries" in gate_after["blocker"]
     # codex_bot is still recorded clean on the current head — only the flip is withheld.
     assert "clean" in gate_after["gates"]["codex_bot"]
 

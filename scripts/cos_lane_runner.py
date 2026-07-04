@@ -123,6 +123,23 @@ RECORDABLE_ERROR_KIND = "usage_limit"
 # "blocked" but its leading token is "uv", so it must NOT fire (see _first_explicitly_unmet_gate).
 _UNMET_LEADING_TOKENS = ("blocked", "running", "deferred", "pending")
 
+# The non-codex_bot repo gates a COMPLETE lane-agent handoff must record in gate.json before
+# the runner may flip ready-to-merge. This is a DELIBERATE, DOCUMENTED coupling to the
+# pr-pipeline gate.json template (`.claude/skills/pr-pipeline/SKILL.md` Step E `gates` map);
+# it MUST track that template's `gates` keys, minus `codex_bot` (the runner completes that gate
+# itself, so its own not-done line is expected, not a missing handoff). A gate.json missing any
+# of these keys is an INCOMPLETE handoff — the agent never recorded those gates — so the flip is
+# withheld even when codex_bot comes back clean (see _gate_handoff_complete).
+_REQUIRED_GATE_KEYS = (
+    "independent_review",
+    "ci",
+    "tests",
+    "docs",
+    "visual",
+    "build_db",
+    "stack",
+)
+
 # Exit codes (fail-fast + stable, matching the cos_* sibling conventions).
 EXIT_OK = 0
 EXIT_TOOL = 2
@@ -385,21 +402,37 @@ def _first_explicitly_unmet_gate(gate: dict) -> str | None:
     return None
 
 
-def _gates_recorded_by_agent(gate: dict) -> bool:
-    """Did the lane agent record a REAL gates map (a dict with a non-codex_bot key)?
+def _missing_required_gates(gate: dict) -> list[str]:
+    """The `_REQUIRED_GATE_KEYS` the lane agent did NOT record (as a string) in `gates`.
 
-    A complete handoff writes every gate it ran (ci / tests / build_db / visual / …) into
-    `gates`, deferring only codex_bot to the runner. So an ABSENT / non-dict / empty gates map,
-    or one whose ONLY key is codex_bot, means the agent never recorded its other gates — an
-    incomplete handoff. The runner must NOT flip such a PR to ready-to-merge just because
-    codex_bot came back clean: `_first_explicitly_unmet_gate` finds nothing to block on (there
-    are no other lines), so without this check the sole-unmet path would flip a PR whose other
-    gates were never verified.
+    A complete handoff writes every non-codex_bot repo gate it ran (independent_review / ci /
+    tests / docs / visual / build_db / stack) into `gates` as a string line, deferring only
+    codex_bot to the runner. An ABSENT / non-dict `gates` map ⇒ all required keys missing; a
+    partial map (e.g. codex_bot + `ci` but no `tests`/`build_db`) ⇒ the missing ones. Returned
+    sorted so the blocker message is deterministic.
     """
     gates = gate.get("gates")
     if not isinstance(gates, dict):
-        return False
-    return any(name != "codex_bot" for name in gates)
+        return sorted(_REQUIRED_GATE_KEYS)
+    return sorted(
+        key for key in _REQUIRED_GATE_KEYS if not isinstance(gates.get(key), str)
+    )
+
+
+def _gate_handoff_complete(gate: dict) -> bool:
+    """Did the lane agent record EVERY expected repo gate (`_REQUIRED_GATE_KEYS`)?
+
+    True only when `gates` is a dict AND every required key is present with a string value.
+    A complete handoff writes every gate it ran (independent_review / ci / tests / docs /
+    visual / build_db / stack), deferring only codex_bot to the runner. So an ABSENT / non-dict
+    / empty gates map, a codex_bot-only map, OR a PARTIAL map (some required keys present but
+    others — e.g. `tests` / `build_db` — missing) is an INCOMPLETE handoff: the agent never
+    recorded those gates. The runner must NOT flip such a PR to ready-to-merge just because
+    codex_bot came back clean — `_first_explicitly_unmet_gate` only fires on lines that are
+    PRESENT and explicitly not-done, so an absent required line would otherwise slip the
+    sole-unmet path and flip a PR whose gate was never verified.
+    """
+    return not _missing_required_gates(gate)
 
 
 def _status_after_codex_bot(
@@ -408,14 +441,19 @@ def _status_after_codex_bot(
     """Decide (status, blocker) AFTER the codex_bot line was set clean on `head`.
 
     The single resolver for the non-blocking flip decision — it always names the REAL
-    remaining item, never a stale `codex_bot`:
+    remaining item, never a stale `codex_bot`. The flip is fail-closed and defense-in-depth:
+    it requires the agent's `blocker == codex_bot` contract, the FULL expected gate set
+    (`_REQUIRED_GATE_KEYS`) present, no other gate explicitly unmet, and all head-bound gates
+    current — but it remains ADVISORY: the chief-of-staff re-checks every gate + live CI +
+    mergeability before merging (CLAUDE.md "PR merge gate"). These conditions COMPOSE:
+    complete-set AND none-explicitly-unmet AND head-current → flip.
 
     - The agent named a DIFFERENT blocker: a clean codex_bot does not clear it. Stay blocked,
       PRESERVE the agent's blocker (the real remaining gate).
-    - `gates_complete` is False (the agent recorded no real gates map — see
-      _gates_recorded_by_agent): the handoff is incomplete. Even with codex_bot clean, stay
-      blocked naming the incomplete handoff — the other gates (ci/tests/build_db/visual) were
-      never recorded, so a flip would mark a PR ready that the agent never finished.
+    - `gates_complete` is False (the agent didn't record every `_REQUIRED_GATE_KEYS` entry —
+      see _gate_handoff_complete): the handoff is incomplete. Even with codex_bot clean, stay
+      blocked naming WHICH required gates are missing — those gates were never recorded, so a
+      flip would mark a PR ready that the agent never finished.
     - The agent flagged codex_bot as the SOLE blocker and it is now done: verify nothing else
       actually blocks before flipping (defense-in-depth; the chief-of-staff still re-checks
       every gate + live CI + mergeability before merging — this flip is advisory):
@@ -429,11 +467,14 @@ def _status_after_codex_bot(
         # The agent named a different blocker; a clean codex_bot doesn't clear it.
         return "blocked", gate.get("blocker")
     if not gates_complete:
-        # The agent flagged codex_bot as the sole blocker but recorded no other gates: its
-        # handoff is incomplete (ci/tests/build_db/visual never verified). Do NOT flip.
+        # The agent flagged codex_bot as the sole blocker but did not record every expected
+        # gate: its handoff is incomplete (the named gates were never verified). Do NOT flip;
+        # name WHAT's missing so the blocker is actionable.
+        missing = _missing_required_gates(gate)
         return (
             "blocked",
-            "gate.json has no gates recorded by the lane agent — incomplete handoff",
+            f"gate.json missing required gate entries: {missing} — "
+            "incomplete lane-agent handoff",
         )
     unmet = _first_explicitly_unmet_gate(gate)
     if unmet is not None:
@@ -494,22 +535,24 @@ def write_codex_bot_gate(
     verdict token (`clean` or the usage-limit form). When blocking, `verdict` is ignored:
     `blocker` names the unmet item and the codex_bot line records the block reason. status
     flips to `ready-to-merge` ONLY when the verdict is non-blocking AND codex_bot is the
-    sole unmet gate (all other gate lines already met) AND the agent recorded a real gates map
-    (an absent/empty/codex_bot-only map is an incomplete handoff — see _gates_recorded_by_agent)
-    AND every OTHER head-bound gate line is still verified on the CURRENT head (a fix round that
-    moved HEAD staled build_db / visual — see head_bound_gates_current). If the handoff is
-    incomplete, status stays `blocked` naming it; if a head-bound gate is stale, status stays
-    `blocked` naming it; if the agent named another gate as the blocker, status stays
+    sole unmet gate (all other gate lines already met) AND the agent recorded the FULL expected
+    gate set (a map missing any `_REQUIRED_GATE_KEYS` entry — absent/empty/codex_bot-only or
+    merely partial — is an incomplete handoff, see _gate_handoff_complete) AND every OTHER
+    head-bound gate line is still verified on the CURRENT head (a fix round that moved HEAD
+    staled build_db / visual — see head_bound_gates_current). If the handoff is incomplete,
+    status stays `blocked` naming the missing gates; if a head-bound gate is stale, status
+    stays `blocked` naming it; if the agent named another gate as the blocker, status stays
     `blocked` preserving that blocker. Written atomically (temp+rename) via the shared
     cos_preflight leaf so the preflight probe never sees a torn write; the caller is
     responsible for the codex-review.md evidence already existing.
     """
     gate = read_gate(gate_dir, pr)
-    # Capture whether the agent recorded a REAL gates map BEFORE we mutate it — adding the
-    # codex_bot line below would otherwise mask an empty/absent map, and the sole-unmet flip
-    # would mark a PR ready whose other gates (ci/tests/build_db/visual) the agent never
-    # recorded (an incomplete handoff). See _status_after_codex_bot's gates_complete branch.
-    gates_complete = _gates_recorded_by_agent(gate)
+    # Capture whether the agent recorded the FULL expected gate set BEFORE we mutate it — adding
+    # the codex_bot line below is a required-key-neutral add, but the sole-unmet flip must key
+    # off the agent's own handoff, not the runner's own codex_bot write. A partial map (some
+    # required gates recorded, others — e.g. tests/build_db — missing) is an incomplete handoff.
+    # See _status_after_codex_bot's gates_complete branch.
+    gates_complete = _gate_handoff_complete(gate)
     gates = gate.get("gates")
     if not isinstance(gates, dict):
         gates = {}
