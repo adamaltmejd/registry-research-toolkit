@@ -1934,9 +1934,13 @@ describe("pickerRepresentations (#678 direct picker)", () => {
     ]);
   });
 
-  it("cart display folds known LISA individer coordinates to the family label", () => {
-    expect(variantDisplayLabel("scb/lisa/individer-16plus")).toBe("Individer");
-    expect(variantDisplayLabel("scb/lisa/individer-15plus")).toBe("Individer");
+  it("cart display labels known LISA individer families without hiding the coordinate", () => {
+    expect(variantDisplayLabel("scb/lisa/individer-16plus")).toBe(
+      "Individer (scb/lisa/individer-16plus)",
+    );
+    expect(variantDisplayLabel("scb/lisa/individer-15plus")).toBe(
+      "Individer (scb/lisa/individer-15plus)",
+    );
     expect(variantDisplayLabel("scb/lisa/arbetsstallen")).toBe(
       "scb/lisa/arbetsstallen",
     );

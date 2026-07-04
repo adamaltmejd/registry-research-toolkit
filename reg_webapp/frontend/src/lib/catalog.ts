@@ -595,10 +595,9 @@ export function variantSeg(registerVariant: string): string {
 }
 
 /** The display label for a source's `register_variant` coordinate — the ONE place
- * the cart renders a variant. Today it's the raw coordinate (rendered mono in the
- * UI); this is the #376 variant-FAMILY fold seam — when family labels land, swap
- * the mapping here so every cart row picks it up in one edit rather than
- * re-deriving inline. */
+ * the cart renders a variant. Family folds can add a friendly label, but the concrete
+ * coordinate must stay visible because project sources still extract concrete
+ * register variants. */
 export function variantDisplayLabel(registerVariant: string): string {
   const [provider, register, variant] = fqidSegments(registerVariant);
   if (
@@ -606,7 +605,7 @@ export function variantDisplayLabel(registerVariant: string): string {
     register === "lisa" &&
     (variant === "individer-15plus" || variant === "individer-16plus")
   ) {
-    return "Individer";
+    return `Individer (${registerVariant})`;
   }
   return registerVariant;
 }
