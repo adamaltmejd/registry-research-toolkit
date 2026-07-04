@@ -1914,7 +1914,7 @@ describe("pickerRepresentations (#678 direct picker)", () => {
 
     expect(rows).toHaveLength(1);
     expect(rows[0]).toMatchObject({
-      key: "individer-15plus::Kon",
+      key: "individer-15plus{individer-16plus,individer-15plus}::Kon",
       variant: "individer-15plus",
       variantFamily: "individer-15plus",
       variantFamilyLabel: "Individer",

@@ -8,7 +8,11 @@ import type {
   RelationshipGraph,
   VariableGraphNode,
 } from "./api";
-import type { PickerRepresentation } from "./catalog";
+import {
+  type PickerRepresentation,
+  type PickerStateInput,
+  pickerRepresentations,
+} from "./catalog";
 import RepresentationPicker, {
   type PickerBand,
 } from "./RepresentationPicker.svelte";
@@ -116,6 +120,33 @@ function multiAxisBand(): PickerBand {
         { axis: "hush", value: "h1", label: "Hushall" },
       ],
     },
+  };
+}
+
+type LisaIndividerVariant = "individer-16plus" | "individer-15plus";
+
+function lisaIndividerState(variant: LisaIndividerVariant): PickerStateInput {
+  const predecessor = variant === "individer-16plus";
+  return {
+    state_id: predecessor ? 1 : 2,
+    variant,
+    variant_label: predecessor ? "Individer, 16 plus" : "Individer, 15 plus",
+    variant_family: "individer-15plus",
+    variant_family_label: "Individer",
+    delivery_column_name: "Kon",
+    value_set_version_label: "",
+    value_set_id: null,
+    valid_from: predecessor ? "1990-01-01" : "2010-01-01",
+    valid_to: predecessor ? "2009-12-31" : "2023-12-31",
+  };
+}
+
+function lisaNarrowedBand(variant: LisaIndividerVariant): PickerBand {
+  return {
+    key: "scb/lisa/kon",
+    name: "Kon",
+    registerPrefix: "scb/lisa",
+    rows: pickerRepresentations([lisaIndividerState(variant)]),
   };
 }
 
@@ -2397,6 +2428,34 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
     expect(onapply).toHaveBeenCalledTimes(1);
     await expect.element(page.getByText("Will be added")).toBeVisible();
     await expect.element(page.getByText("+1 column")).toBeVisible();
+  });
+
+  it("clears staged adds when a narrowed folded variant changes concrete segment", async () => {
+    const onapply = vi.fn();
+    const { rerender } = render(RepresentationPicker, {
+      bands: [lisaNarrowedBand("individer-16plus")],
+      ...PROPS,
+      onapply,
+    });
+
+    await page.getByRole("checkbox", { name: /Kon/ }).click();
+    await expect.element(page.getByText("+1 column")).toBeVisible();
+
+    await rerender({
+      bands: [lisaNarrowedBand("individer-15plus")],
+      ...PROPS,
+      onapply,
+    });
+
+    await expect.element(page.getByText("+1 column")).not.toBeInTheDocument();
+    await expect
+      .element(
+        page.getByRole("button", {
+          name: /Add to project|Remove from project|Apply changes/,
+        }),
+      )
+      .not.toBeInTheDocument();
+    expect(onapply).not.toHaveBeenCalled();
   });
 
   it("freezes staging controls while Apply is pending", async () => {

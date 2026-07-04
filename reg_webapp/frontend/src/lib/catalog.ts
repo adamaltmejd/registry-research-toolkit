@@ -990,6 +990,9 @@ export function representationsCollapse(reps: Representation[]): boolean {
  * per-delivery `value_set_version_label` (the same id is labelled inconsistently
  * across populations/years). */
 export interface PickerRepresentation {
+  /** Render/reset identity for this displayed row. Project staging/commit identity is
+   * `pickerRowKey`; folded variant-family rows include their concrete segment variants
+   * here so changing `?variant` cannot reuse stale local picker state. */
   key: string;
   variant: string;
   /** The variant's DISPLAY label — `register_variant.name` when present, else the
@@ -1441,12 +1444,16 @@ function pickerRow(
   const variantFamilyLabel =
     latest.variant_family_label ?? latest.variant_label ?? variantFamily;
   const variantSegments = pickerVariantSegments(group, validFrom, validTo);
+  const familyFolded = group.some((s) => s.variant_family != null);
+  const key = familyFolded
+    ? `${variantFamily}{${variantSegments.map((s) => s.variant).join(",")}}::${column}`
+    : `${variantFamily}::${column}`;
   // A folded rename (>1 column collapsed → `renamedColumns` non-empty) commits
   // `representation: null` so per-period resolution picks the right column per year; an
   // ordinary single column or a parallel co-existing column commits its own `column` (#902).
   const representation = renamedColumns.length > 0 ? null : column;
   return {
-    key: `${variantFamily}::${column}`,
+    key,
     variant,
     variantLabel,
     variantFamily,
@@ -1552,7 +1559,7 @@ export function narrowStatesByModifier<
  * it is the delivery column — the picker renders a mono primary as a COLUMN CHIP),
  * the muted `qualifiers` (the remaining varying dimensions), and `period` ONLY when
  * the span varies across rows (else it is hoisted to the header, so it is null here).
- * `key` is the row's selection key (unchanged — `${variant}::${column}`). */
+ * `key` is the row's render/reset key; project selection uses `pickerRowKey`. */
 export interface PickerRowLabel {
   key: string;
   primary: { text: string; mono: boolean };
