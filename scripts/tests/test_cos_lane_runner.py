@@ -236,6 +236,37 @@ def test_sole_unmet_false_when_blocker_is_another_gate() -> None:
     assert lr.codex_bot_is_sole_unmet(gate) is False
 
 
+def test_sole_unmet_false_when_another_gate_explicitly_unmet() -> None:
+    # Fix A defense-in-depth: the agent CLAIMS codex_bot is the sole blocker, but another gate
+    # line is EXPLICITLY not-done (leading token `running`). The fail-closed negative-token
+    # cross-check overrides the (inconsistent) blocker field and withholds the flip.
+    gate = {
+        "blocker": "codex_bot",
+        "gates": {
+            "codex_bot": "running; deferred-to-lane-runner",
+            "build_db": "running; reg-meta-build in progress",
+            "ci": "pass; gh pr checks",
+        },
+    }
+    assert lr.codex_bot_is_sole_unmet(gate) is False
+
+
+def test_sole_unmet_true_when_unmet_word_is_non_leading_substring() -> None:
+    # Fix A: the check matches the LEADING token, NOT a substring — a legitimate value like
+    # `tests: "uv run pytest -k not_blocked"` contains "blocked" mid-string but leads with
+    # "uv", so it must NOT false-fire. codex_bot remains the sole unmet gate → True.
+    gate = {
+        "blocker": "codex_bot",
+        "gates": {
+            "codex_bot": "running; deferred-to-lane-runner",
+            "tests": "uv run pytest -k not_blocked",
+            "docs": "updated; pending nothing here",
+            "ci": "pass; gh pr checks",
+        },
+    }
+    assert lr.codex_bot_is_sole_unmet(gate) is True
+
+
 def test_head_bound_gates_current_stale_when_other_gate_head_differs() -> None:
     # build_db stamps an OLD (hex) head; the current head differs → stale (build_db named).
     gate = {
@@ -307,6 +338,22 @@ def test_discover_pr_fails_when_none(tmp_path: Path) -> None:
     with pytest.raises(SystemExit) as exc:
         lr.discover_pr(None, tmp_path / "empty-gate")
     assert "could not discover the PR" in str(exc.value.code)
+
+
+def test_discover_pr_empty_slot_fails_fast_not_global_scan(tmp_path: Path) -> None:
+    # Fix B: a provided slot that registered NO PR fails fast — even if the gate store holds
+    # exactly one UNRELATED pr-* dir, the runner must NOT fall through to the global scan and
+    # complete the wrong PR. An empty slot means the lane agent didn't open its draft.
+    slot = _write_slot(tmp_path / "slots", "lane-a", [])
+    gate_root = tmp_path / "gate"
+    _write_gate(
+        gate_root, 9999
+    )  # a lone, unrelated pr-* dir the scan would otherwise return
+    with pytest.raises(SystemExit) as exc:
+        lr.discover_pr(slot, gate_root)
+    code = str(exc.value.code)
+    assert code.startswith(f"{lr.EXIT_TOOL}:")
+    assert "no registered PR" in code
 
 
 def test_discover_pr_multi_pr_slot_fails_fast(tmp_path: Path) -> None:
@@ -510,6 +557,50 @@ def test_clean_and_head_bound_gate_current_flips_ready(
     gate = _read_gate(gate_dir)
     assert gate["status"] == "ready-to-merge"
     assert gate["blocker"] is None
+
+
+def test_clean_but_another_gate_explicitly_unmet_stays_blocked(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # Fix A end-to-end: the agent (inconsistently) named codex_bot as the sole blocker, yet
+    # another gate line reads `running; ...`. Even on a clean review the flip must be withheld
+    # by the negative-token cross-check; status stays blocked, preserving the agent's blocker.
+    wt = _make_worktree(tmp_path)
+    gate_root = tmp_path / "gate"
+    gate_dir = gate_root / "pr-4242"
+    gate_dir.mkdir(parents=True)
+    gate = {
+        "pr": 4242,
+        "head": "oldhead",
+        "status": "blocked",
+        "updated": "2026-07-04T00:00:00+00:00",
+        "gates": {
+            "independent_review": "pass; reviewer subagent; findings fixed",
+            "codex_bot": "running; deferred-to-lane-runner",
+            "ci": "pass; gh pr checks",
+            # Explicitly not-done, but the agent still (wrongly) blamed codex_bot alone.
+            "build_db": "running; reg-meta-build in progress",
+        },
+        "blocker": "codex_bot",
+    }
+    (gate_dir / "gate.json").write_text(json.dumps(gate), encoding="utf-8")
+    _patch_no_turns(monkeypatch)
+    _patch_reviews(monkeypatch, [{"verdict": "clean", "findings": []}])
+
+    rc = _run_loop(
+        tmp_path,
+        worktree=wt,
+        base="origin/main",
+        gate_dir=gate_dir,
+        pr=4242,
+        slot_file=None,
+        session="SID-1",
+    )
+
+    assert rc == lr.EXIT_OK  # codex_bot itself completed cleanly
+    gate_after = _read_gate(gate_dir)
+    assert gate_after["status"] == "blocked"
+    assert "clean" in gate_after["gates"]["codex_bot"]
 
 
 def test_findings_then_resume_then_clean(

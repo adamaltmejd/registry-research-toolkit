@@ -116,6 +116,13 @@ DEFAULT_CODEX_ID_POLL = 0.25
 # precondition / tool_failure / nested_sandbox) is a hard blocker.
 RECORDABLE_ERROR_KIND = "usage_limit"
 
+# Leading tokens that mark a gate line as EXPLICITLY not-done, used by
+# codex_bot_is_sole_unmet as a fail-closed negative-token consistency check on the agent's
+# `blocker` field. Matched only against the line's LEADING token (`.strip().lower()`), never
+# as a substring — a legitimate value like `tests: "uv run pytest -k not_blocked"` contains
+# "blocked" but its leading token is "uv", so it must NOT fire (see codex_bot_is_sole_unmet).
+_UNMET_LEADING_TOKENS = ("blocked", "running", "deferred", "pending")
+
 # Exit codes (fail-fast + stable, matching the cos_* sibling conventions).
 EXIT_OK = 0
 EXIT_TOOL = 2
@@ -272,11 +279,17 @@ def discover_pr(slot_file: Path | None, gate_root: Path) -> int:
     the agent turn was supposed to open a PR. A slot claiming MORE THAN ONE PR also fails
     fast: the runner completes codex_bot for a single PR, and silently taking prs[0] would
     strand the others' gates (real multi-PR support is a follow-up).
+
+    A PROVIDED-but-empty slot (readable dict, but `prs` empty/missing/not-a-list) also fails
+    fast rather than falling through to the global scan: an agent that registered its slot but
+    opened no PR is a lane error, and the scan could otherwise return an UNRELATED pr-* dir if
+    the store happens to hold exactly one. Only when NO slot file was passed (or it is
+    absent/unreadable/torn) does control fall through to the manual/no-slot gate-root scan.
     """
     if slot_file is not None:
         loaded = _cos_preflight._read_json_tolerant(slot_file, "pipeline-slot file")
-        if loaded is not None:
-            prs = loaded[1].get("prs") if isinstance(loaded[1], dict) else None
+        if loaded is not None and isinstance(loaded[1], dict):
+            prs = loaded[1].get("prs")
             if isinstance(prs, list) and prs:
                 if len(prs) > 1:
                     # The runner owns codex_bot for exactly ONE PR; silently completing prs[0]
@@ -289,6 +302,13 @@ def discover_pr(slot_file: Path | None, gate_root: Path) -> int:
                 first = prs[0]
                 if isinstance(first, int):
                     return first
+            # The slot is present and readable but registered no PR: the lane agent didn't open
+            # its draft. Fail fast — falling through to the global scan could return an
+            # unrelated pr-* dir. (A torn/unreadable slot, loaded is None, is the no-slot case.)
+            raise SystemExit(
+                f"{EXIT_TOOL}:slot {slot_file} has no registered PR — the lane agent did "
+                "not open its draft PR; refusing to scan the global gate store"
+            )
     found: list[int] = []
     for path in sorted(gate_root.glob("pr-*")):
         if not path.is_dir():
@@ -337,19 +357,39 @@ def read_gate(gate_dir: Path, pr: int) -> dict:
 def codex_bot_is_sole_unmet(gate: dict) -> bool:
     """True iff codex_bot is the ONLY unmet gate — the guard on flipping ready-to-merge.
 
-    Trusts the lane agent's `blocker` contract rather than parsing free-text gate lines. The
-    runner's own implement prompt instructs the agent to write `status: blocked` with
-    `blocker: "codex_bot"` EXACTLY when codex_bot is the sole unmet gate (all others met);
-    any other remaining blocker is named in `blocker` instead. A free-text scan of the gate
-    lines can't work — the real template grammar has `tests: "<commands run>"`,
-    `docs: "updated; ..."`, `stack: "before #N"` etc., none of which match a fixed
-    met-token whitelist, so every real PR would read as not-sole-unmet and the runner would
-    never flip. So key off the one field the agent set for exactly this purpose.
+    Primary signal: the lane agent's `blocker` contract, NOT a positive scan of the gate
+    lines. The runner's own implement prompt instructs the agent to write `status: blocked`
+    with `blocker: "codex_bot"` EXACTLY when codex_bot is the sole unmet gate (all others
+    met); any other remaining blocker is named in `blocker` instead. A POSITIVE "met" scan of
+    the gate lines can't work — the real template grammar has `tests: "<commands run>"`,
+    `docs: "updated; ..."`, `stack: "before #N"` etc., none of which match a fixed met-token
+    whitelist, so every real PR would read as not-sole-unmet and the runner would never flip.
+    That fragility is exactly why this keys off the one field the agent set for this purpose.
+
+    Defense-in-depth (fail-closed): on top of trusting `blocker`, cross-check that no OTHER
+    present gate line is EXPLICITLY unmet — catches an agent inconsistency where it names
+    codex_bot as the sole blocker while another line still reads `blocked; ...` /
+    `running; ...` etc. This is a NEGATIVE check only (leading-token match against
+    `_UNMET_LEADING_TOKENS`), never a positive met-detection: a legitimate value like
+    `tests: "uv run pytest -k not_blocked"` contains "blocked" as a substring but its leading
+    token is "uv" → does not fire. Matching the LEADING token (`.strip().lower().startswith`)
+    is load-bearing; a substring scan would false-fire on such lines.
 
     This flip is advisory, never the sole merge authority: the chief-of-staff re-checks every
     gate + live CI + mergeability immediately before merging (CLAUDE.md "PR merge gate").
     """
-    return gate.get("blocker") == "codex_bot"
+    if gate.get("blocker") != "codex_bot":
+        return False
+    gates = gate.get("gates")
+    if isinstance(gates, dict):
+        for name, line in gates.items():
+            if name == "codex_bot" or not isinstance(line, str):
+                continue
+            if line.strip().lower().startswith(_UNMET_LEADING_TOKENS):
+                # The agent said codex_bot is the sole blocker, but another gate line is
+                # explicitly not-done — fail closed and withhold the flip.
+                return False
+    return True
 
 
 def head_bound_gates_current(gate: dict, head: str) -> tuple[bool, str | None]:
