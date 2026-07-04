@@ -989,11 +989,35 @@ export function representationsCollapse(reps: Representation[]): boolean {
  * value-set detail. Keyed on the reliable `value_set_id`, NOT the low-trust
  * per-delivery `value_set_version_label` (the same id is labelled inconsistently
  * across populations/years). */
+// ── The per-concrete-segment invariant (#376) ────────────────────────────────
+// A picker row can FOLD a sequential variant FAMILY: one displayed row stands for
+// N concrete `register_variant`s (e.g. LISA `individer-16plus` for the older era +
+// `individer-15plus` for the newer). The fold is browse/display only — every
+// concrete segment still extracts and validates as its own real delivery variant.
+//
+// INVARIANT: `row.variant` is ONLY the HEAD (latest-era) concrete variant. It is a
+// legitimate coordinate for exactly two things — the row's DISPLAY head, and the
+// single-segment fallback when the row is NOT folded (`variantSegments` is absent or
+// length 1). Everything that ATTRIBUTES to a concrete segment — staging identity,
+// the register-variant coordinate an add/remove/commit targets, and a graph-cell or
+// coding deep-link — MUST use the correct concrete variant instead:
+//   - a whole-row Apply/commit fans out over `variantSegments[i].variant`
+//     (see `rowAddSegments` / `committedPickerRows` in staged_picker.ts — the ONE
+//     home for the segment fan-out; do not re-derive it per view);
+//   - a graph cell attributes to the matched `cell.variant` (the concrete era the
+//     cell was delivered under), NOT `row.variant`.
+// Collapsing a folded family to `row.variant` silently leaks state/actions to the
+// wrong concrete segment — the whack-a-mole class of #376 bugs. When you reach for
+// `row.variant`, confirm you mean the HEAD/fallback, not "the segment".
 export interface PickerRepresentation {
   /** Render/reset identity for this displayed row. Project staging/commit identity is
    * `pickerRowKey`; folded variant-family rows include their concrete segment variants
    * here so changing `?variant` cannot reuse stale local picker state. */
   key: string;
+  /** The HEAD (latest-era) concrete variant slug — see the per-concrete-segment
+   * invariant above. Legitimate ONLY as the display head or the single-segment
+   * fallback; a folded family's concrete attribution lives in `variantSegments` /
+   * the matched `cell.variant`, NEVER here. */
   variant: string;
   /** The variant's DISPLAY label — `register_variant.name` when present, else the
    * `variant` slug (a NULL-named variant falls back to the slug). The picker shows

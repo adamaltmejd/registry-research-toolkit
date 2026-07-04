@@ -18,6 +18,7 @@ import {
   pickerFilterDimensions,
   pickerLabeling,
   pickerRowPasses,
+  pickerRowVariantFamilyLabel,
   representationInWindow,
   rowFacet,
   yearOf,
@@ -1520,7 +1521,13 @@ function graphLaneA11y(rn: RenderNode): string {
   return items
     .map((item) => {
       if (item.kind === "row") {
-        return [item.row.column, item.row.period, item.row.variant]
+        // A flat (unmatched) folded row: label with the FAMILY, not the head
+        // `row.variant` (#376) — the cell branch below uses the concrete `cell.variant`.
+        return [
+          item.row.column,
+          item.row.period,
+          pickerRowVariantFamilyLabel(item.row),
+        ]
           .filter(Boolean)
           .join(", ");
       }
@@ -1635,11 +1642,15 @@ function navigateChip(event: MouseEvent, href: string): void {
 }
 
 /** The deep-link target for a row's "codings vary" nudge (#905): the value-set
- * viewer focused on that row's `(variant, column)` coding, scrolled to the States
- * section. The `codes` param carries the row's IDENTITY (`encodeCodesParam` →
- * `variant::column`), NOT just the column — two rows can share one delivery column
- * across different variants/populations, so the focus must target the clicked row's
- * coding, not another variant's latest era. This is a dedicated `?codes=` encoding,
+ * viewer focused on that `(variant, column)` coding, scrolled to the States
+ * section. The `codes` param carries the CONCRETE-segment IDENTITY (`encodeCodesParam`
+ * → `variant::column`), NOT just the column — two rows can share one delivery column
+ * across different variants/populations, so the focus must target the clicked cell's
+ * coding, not another variant's latest era. `variant` is the CONCRETE segment that
+ * delivered `column` (#376): the head `row.variant` for a plain/latest-era row, but the
+ * matched `cell.variant` for a folded-family graph cell whose column belongs to a
+ * PREDECESSOR era — collapsing to `row.variant` there would deep-link to a
+ * `(variant, column)` pair the successor never delivered. This is a dedicated `?codes=` encoding,
  * distinct from the `?variant` RESOLUTION modifier (which narrows the picker + drives
  * the "Narrowed by" chips), so the focus never perturbs the resolution.
  *
@@ -1660,8 +1671,9 @@ function codingsVaryHref(
   band: PickerBand,
   row: PickerRepresentation,
   column = row.column,
+  variant = row.variant,
 ): string {
-  const codes = encodeCodesParam(row.variant, column);
+  const codes = encodeCodesParam(variant, column);
   // `band.href` (group branch) may carry `?period=…` (memberHref); the leaf branch
   // reads the live path off `globalThis` (`window` is the period-window prop here,
   // shadowing the global). Either way, take ONLY the path — drop the query.
@@ -1794,8 +1806,9 @@ function codingsVaryHref(
   band: PickerBand,
   row: PickerRepresentation,
   column = row.column,
+  variant = row.variant,
 )}
-  {@const href = codingsVaryHref(band, row, column)}
+  {@const href = codingsVaryHref(band, row, column, variant)}
   <a
     class="codings-vary"
     {href}
@@ -2030,7 +2043,12 @@ function codingsVaryHref(
                               {@render stageTag(stage)}
                             {/if}
                             {#if row.codingsVary}
-                              {@render codingsVaryNudge(band, row, column)}
+                              {@render codingsVaryNudge(
+                                band,
+                                row,
+                                column,
+                                cell.variant,
+                              )}
                             {/if}
                             {#if inWindow}
                               {@render lateWarn(row)}

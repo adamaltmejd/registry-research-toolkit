@@ -10,7 +10,6 @@ import {
 } from "./api";
 import { asyncResource } from "./async.svelte";
 import {
-  addWindowBounds,
   type BindingResolution,
   bindingFieldsFromResolution,
   coverageFromStates,
@@ -24,9 +23,6 @@ import {
   qualifierFromFocus,
   registerPrefixOf,
   resolveBindingAt,
-  rowAddPeriod,
-  windowsAddPeriod,
-  windowsOverlapWindow,
 } from "./catalog";
 import DocMentionsPanel from "./DocMentionsPanel.svelte";
 import LineageDetails from "./LineageDetails.svelte";
@@ -52,7 +48,8 @@ import {
   committedPickerRows,
   finalSourcePeriodsForStagedAdds,
   periodChangesWithStagedAdds,
-  rowRegisterVariantForVariant,
+  rowAddSegments,
+  type StagedPickerBand,
   sourcePeriodsFromDraft,
   stagedRemoveForCommitted,
 } from "./staged_picker";
@@ -453,37 +450,19 @@ $effect(() => {
 });
 
 function stagedAddCandidates(selection: PickerSelection) {
-  const { band, row } = selection;
-  const addWindow = addWindowBounds(activePickerPeriod, pickerWindow);
-  const segments =
-    row.variantSegments && row.variantSegments.length > 0
-      ? row.variantSegments
-      : [{ variant: row.variant, windows: row.windows }];
-  const overlappingSegments =
-    segments.length === 1
-      ? segments
-      : segments.filter((segment) =>
-          windowsOverlapWindow(segment.windows, addWindow),
-        );
-  const selectedSegments =
-    overlappingSegments.length > 0 ? overlappingSegments : segments;
-  return selectedSegments.map((segment) => {
-    const addPeriod =
-      segments.length === 1
-        ? rowAddPeriod(row, addWindow)
-        : windowsAddPeriod(
-            segment.windows,
-            overlappingSegments.length > 0 ? addWindow : null,
-            false,
-          );
-    return {
-      selection,
-      variant: segment.variant,
-      registerVariant: rowRegisterVariantForVariant(band, segment.variant),
-      periodWire: addPeriod,
-      period: periodFromWire(addPeriod),
-    };
-  });
+  // Fan out to ONE staged add per concrete `register_variant` the row's active scope
+  // touches (#376) — the per-concrete-segment invariant lives in `rowAddSegments`, not
+  // re-derived here (see catalog.ts's PickerRepresentation seam note).
+  return rowAddSegments(selection.band as StagedPickerBand, selection.row, {
+    period: activePickerPeriod,
+    window: pickerWindow,
+  }).map((segment) => ({
+    selection,
+    variant: segment.variant,
+    registerVariant: segment.registerVariant,
+    periodWire: segment.periodWire,
+    period: periodFromWire(segment.periodWire),
+  }));
 }
 
 type StagedAddCandidate = ReturnType<typeof stagedAddCandidates>[number];

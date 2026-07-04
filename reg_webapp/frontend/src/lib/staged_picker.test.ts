@@ -7,9 +7,46 @@ import {
   nullBindingCommittedRowKeys,
   periodChangesWithStagedAdds,
   pickerRowKey,
+  rowAddSegments,
   type StagedPickerBand,
   stagedRemoveForCommitted,
 } from "./staged_picker";
+
+/** A folded LISA `individer` family row: one displayed row standing for two concrete
+ * `register_variant`s (`individer-16plus` predecessor era + `individer-15plus`
+ * successor era) delivering the same column over non-overlapping windows (#376). */
+function foldedFamilyRow(): PickerRepresentation {
+  return row({
+    key: "individer-15plus{individer-16plus,individer-15plus}::Kon",
+    variant: "individer-15plus",
+    variantLabel: "Individer, 15 år och äldre",
+    variantFamily: "individer-15plus",
+    variantFamilyLabel: "Individer",
+    column: "Kon",
+    representation: "Kon",
+    renamedColumns: [],
+    from: "1990-01-01",
+    to: "2023-12-31",
+    windows: [
+      { from: "1990-01-01", to: "2009-12-31" },
+      { from: "2010-01-01", to: "2023-12-31" },
+    ],
+    variantSegments: [
+      {
+        variant: "individer-16plus",
+        variantLabel: "Individer, 16 år och äldre",
+        windows: [{ from: "1990-01-01", to: "2009-12-31" }],
+      },
+      {
+        variant: "individer-15plus",
+        variantLabel: "Individer, 15 år och äldre",
+        windows: [{ from: "2010-01-01", to: "2023-12-31" }],
+      },
+    ],
+    period: "1990 – 2023",
+    wirePeriod: "1990..2009,2010..2023",
+  });
+}
 
 function row(over: Partial<PickerRepresentation> = {}): PickerRepresentation {
   return {
@@ -679,6 +716,53 @@ describe("nullBindingCommittedRowKeys", () => {
     expect(nullBindingCommittedRowKeys(committed, committed[0])).toEqual([
       pickerRowKey(b, rows[0]),
       pickerRowKey(b, rows[1]),
+    ]);
+  });
+});
+
+describe("rowAddSegments (#376 per-concrete-segment fan-out)", () => {
+  it("stages an unfolded row as its single variant over its own span", () => {
+    const b = band([row()]);
+    expect(rowAddSegments(b, b.rows[0], {})).toEqual([
+      {
+        variant: "ind",
+        registerVariant: "scb/lisa/ind",
+        periodWire: "1981..1995",
+      },
+    ]);
+  });
+
+  it("fans a folded family with no active scope into every concrete era segment", () => {
+    const r = foldedFamilyRow();
+    const b = band([r]);
+    // No scope → each concrete segment stages as its OWN register_variant over its OWN
+    // era window; the head `individer-15plus` never absorbs the predecessor era (#376).
+    expect(rowAddSegments(b, r, {})).toEqual([
+      {
+        variant: "individer-16plus",
+        registerVariant: "scb/lisa/individer-16plus",
+        periodWire: "1990..2009",
+      },
+      {
+        variant: "individer-15plus",
+        registerVariant: "scb/lisa/individer-15plus",
+        periodWire: "2010..2023",
+      },
+    ]);
+  });
+
+  it("narrows a period-scoped family add to the concrete era it overlaps, clipped", () => {
+    const r = foldedFamilyRow();
+    const b = band([r]);
+    // A 1995–2000 scope touches only the 16plus era → ONE staged add, for that concrete
+    // segment, clipped to the scope; the 15plus-era source is never created (partial
+    // family add) and the coordinate is the predecessor variant, not the head (#376).
+    expect(rowAddSegments(b, r, { period: "1995..2000" })).toEqual([
+      {
+        variant: "individer-16plus",
+        registerVariant: "scb/lisa/individer-16plus",
+        periodWire: "1995..2000",
+      },
     ]);
   });
 });

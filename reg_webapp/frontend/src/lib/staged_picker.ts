@@ -3,6 +3,8 @@ import {
   type PickerRepresentation,
   type PickerVariantSegment,
   pickerRowVariantFamily,
+  rowAddPeriod,
+  windowsAddPeriod,
   windowsOverlapWindow,
 } from "./catalog";
 import {
@@ -46,13 +48,6 @@ export interface PickerCommitScope {
 }
 
 type CommitVariantSegment = Pick<PickerVariantSegment, "variant" | "windows">;
-
-export function rowRegisterVariant(
-  band: StagedPickerBand,
-  row: PickerRepresentation,
-): string {
-  return rowRegisterVariantForVariant(band, row.variant);
-}
 
 export function rowRegisterVariantForVariant(
   band: StagedPickerBand,
@@ -151,25 +146,87 @@ function rowOverlapsPeriod(row: PickerRepresentation, period: Period): boolean {
   );
 }
 
+/** The concrete `register_variant` segments a folded picker row spans (#376): its
+ * `variantSegments` when folded, else the single-segment fallback on `row.variant`
+ * (the unfolded HEAD — see the per-concrete-segment invariant in catalog.ts). The
+ * ONE place the row → concrete-segment fan-out is derived. */
 function rowVariantSegments(row: PickerRepresentation): CommitVariantSegment[] {
   return row.variantSegments && row.variantSegments.length > 0
     ? row.variantSegments
     : [{ variant: row.variant, windows: row.windows }];
 }
 
+/** The concrete segments a row commits under `scope`, plus the scope machinery each
+ * consumer needs. Shared by `rowRelevantSegments` (staging-match) and `rowAddSegments`
+ * (Apply fan-out) so the two can't drift on WHICH segments a period-scoped add touches
+ * (the #376 whack-a-mole seam). A single-segment (unfolded) row is always fully
+ * relevant; a folded family narrows to the segments whose delivery windows overlap the
+ * active add window, falling back to ALL segments when none do (an explicitly-selected
+ * out-of-window row is never silently dropped). */
+function relevantSegments(
+  row: PickerRepresentation,
+  scope: PickerCommitScope,
+): {
+  segments: CommitVariantSegment[];
+  addWindow: { from: string; to: string } | null;
+  clipped: boolean;
+  folded: boolean;
+} {
+  const addWindow = addWindowBounds(scope.period, scope.window ?? null);
+  const segments = rowVariantSegments(row);
+  if (segments.length === 1) {
+    return { segments, addWindow, clipped: true, folded: false };
+  }
+  const overlapping = segments.filter((segment) =>
+    windowsOverlapWindow(segment.windows, addWindow),
+  );
+  const clipped = overlapping.length > 0;
+  return {
+    segments: clipped ? overlapping : segments,
+    addWindow,
+    clipped,
+    folded: true,
+  };
+}
+
 function rowRelevantSegments(
   row: PickerRepresentation,
   scope: PickerCommitScope,
 ): CommitVariantSegment[] {
-  const segments = rowVariantSegments(row);
-  if (segments.length === 1) {
-    return segments;
-  }
-  const addWindow = addWindowBounds(scope.period, scope.window ?? null);
-  const overlappingSegments = segments.filter((segment) =>
-    windowsOverlapWindow(segment.windows, addWindow),
-  );
-  return overlappingSegments.length > 0 ? overlappingSegments : segments;
+  return relevantSegments(row, scope).segments;
+}
+
+/** One concrete `register_variant` an Apply must stage for a (folded or plain) picker
+ * row, with its scope-clipped add period. */
+export interface RowAddSegment {
+  variant: string;
+  registerVariant: string;
+  periodWire: string | null;
+}
+
+/** The per-concrete-segment Apply plan for a picker row (#376): ONE source per concrete
+ * `register_variant` the row's active scope touches, each with its own era-clipped wire
+ * period. The single home for the picker-row → staged-add fan-out, consumed by every
+ * view's `stagedAddCandidates` so the per-concrete-segment invariant (catalog.ts) is
+ * enforced once, not re-derived per view.
+ *   - An UNFOLDED row stages its one variant with `rowAddPeriod` (the whole-row window,
+ *     fallback allowed so an out-of-window add still commits the row's own span).
+ *   - A FOLDED family stages each relevant concrete segment with its OWN delivery
+ *     windows clipped to the add window (no fallback: a family segment's period is
+ *     era-precise so a partial-family add can't leak coverage into the other era). */
+export function rowAddSegments(
+  band: StagedPickerBand,
+  row: PickerRepresentation,
+  scope: PickerCommitScope,
+): RowAddSegment[] {
+  const { segments, addWindow, clipped, folded } = relevantSegments(row, scope);
+  return segments.map((segment) => ({
+    variant: segment.variant,
+    registerVariant: rowRegisterVariantForVariant(band, segment.variant),
+    periodWire: folded
+      ? windowsAddPeriod(segment.windows, clipped ? addWindow : null, false)
+      : rowAddPeriod(row, addWindow),
+  }));
 }
 
 function rowMatchesBinding(

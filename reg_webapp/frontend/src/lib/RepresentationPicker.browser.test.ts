@@ -1830,6 +1830,111 @@ describe("RepresentationPicker graph mode (#904)", () => {
     );
   });
 
+  it("attributes a folded FAMILY cell's codings-vary link to its concrete era variant", async () => {
+    // #376 regression: a folded variant-family row folds TWO concrete variants
+    // (individer-16plus predecessor era + individer-15plus successor era) delivering
+    // one column `Kon`. Each era renders its own graph cell (carrying its concrete
+    // `cell.variant`). The codings-vary deep link must target the cell's CONCRETE
+    // variant, NOT the head `row.variant` — else the predecessor cell would link to a
+    // `(individer-15plus, Kon)` coding the successor never delivered in that era.
+    const fqid = "scb/lisa/kon";
+    render(RepresentationPicker, {
+      bands: [
+        {
+          key: fqid,
+          name: "Kön",
+          registerPrefix: "scb/lisa",
+          href: "/catalog/scb/lisa/kon",
+          rows: [
+            row({
+              key: "individer-15plus{individer-16plus,individer-15plus}::Kon",
+              variant: "individer-15plus",
+              variantLabel: "Individer, 15 år och äldre",
+              variantFamily: "individer-15plus",
+              variantFamilyLabel: "Individer",
+              column: "Kon",
+              codingsVary: true,
+              from: "1990-01-01",
+              to: "2023-12-31",
+              windows: [
+                { from: "1990-01-01", to: "2009-12-31" },
+                { from: "2010-01-01", to: "2023-12-31" },
+              ],
+              variantSegments: [
+                {
+                  variant: "individer-16plus",
+                  variantLabel: "Individer, 16 år och äldre",
+                  windows: [{ from: "1990-01-01", to: "2009-12-31" }],
+                },
+                {
+                  variant: "individer-15plus",
+                  variantLabel: "Individer, 15 år och äldre",
+                  windows: [{ from: "2010-01-01", to: "2023-12-31" }],
+                },
+              ],
+              period: "1990 – 2023",
+              wirePeriod: "1990..2009,2010..2023",
+            }),
+          ],
+        } satisfies PickerBand,
+      ],
+      graph: graph({
+        nodes: [
+          graphNode(fqid, {
+            states: [
+              graphState({
+                state_id: 1,
+                variant: "individer-16plus",
+                representation_run_id: 1,
+                delivery_column_name: "Kon",
+                value_set_id: 10,
+                value_set_version_label: "16+ coding",
+                valid_from: "1990-01-01",
+                valid_to: "2009-12-31",
+              }),
+              graphState({
+                state_id: 2,
+                variant: "individer-15plus",
+                representation_run_id: 2,
+                delivery_column_name: "Kon",
+                value_set_id: 20,
+                value_set_version_label: "15+ coding",
+                valid_from: "2010-01-01",
+                valid_to: "2023-12-31",
+              }),
+            ],
+          }),
+        ],
+        edges: [],
+        focus_id: fqid,
+      }),
+      ...PROPS,
+    });
+
+    const hrefs = await vi.waitFor(() => {
+      const found = [
+        ...document.querySelectorAll<HTMLLabelElement>("label.graph-cell"),
+      ]
+        .map((c) =>
+          c
+            .querySelector<HTMLAnchorElement>(".codings-vary")
+            ?.getAttribute("href"),
+        )
+        .filter((h): h is string => h != null);
+      if (found.length < 2) {
+        throw new Error("both era coding links not yet rendered");
+      }
+      return found;
+    });
+    // Each era's link carries ITS OWN concrete variant, never both collapsed to the head.
+    expect(hrefs).toContain(
+      "/catalog/scb/lisa/kon?codes=individer-16plus%3A%3AKon#states-heading",
+    );
+    expect(hrefs).toContain(
+      "/catalog/scb/lisa/kon?codes=individer-15plus%3A%3AKon#states-heading",
+    );
+  });
+
   it("falls back when a graph cell has no unambiguous picker member row", async () => {
     const aFqid = "scb/lisa/a";
     const bFqid = "scb/lisa/b";
