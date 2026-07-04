@@ -43,14 +43,16 @@ _GIT_ENV = {
 def make_git_repo(tmp_path: Path) -> Path:
     """A hermetic tmp git repo with one commit on `main`, GIT_* hijack env scrubbed.
 
-    Deletes GIT_DIR/GIT_WORK_TREE from the child env (an ambient worktree env — the
-    pre-push hook hijack — would otherwise point git at the real repo). Merges over
-    os.environ so PATH survives; returns the repo root (the caller chdirs if it needs to).
+    Deletes GIT_DIR/GIT_WORK_TREE/GIT_INDEX_FILE from the child env (an ambient worktree env
+    — the pre-push hook hijack exports all three — would otherwise point git at the real
+    repo, and an ambient GIT_INDEX_FILE would stage the fixture's commits into the real
+    repo's index). Mirrors production `_scrubbed_git_env`. Merges over os.environ so PATH
+    survives; returns the repo root (the caller chdirs if it needs to).
     """
     env = {
         k: v
         for k, v in {**os.environ, **_GIT_ENV}.items()
-        if k not in ("GIT_DIR", "GIT_WORK_TREE")
+        if k not in ("GIT_DIR", "GIT_WORK_TREE", "GIT_INDEX_FILE")
     }
     subprocess.run(
         ["git", "init", "-q", "-b", "main"], cwd=tmp_path, check=True, env=env

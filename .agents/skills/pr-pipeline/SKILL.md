@@ -320,6 +320,12 @@ over `gate.json` — the preflight probe polls this file and must never see a to
 }
 ```
 
+The `codex_bot` value above shows the `clean` form; the usage-limit form replaces
+`clean` with `exhausted (usage-limit)`, keeping the same head stamp and evidence pointer
+— e.g.
+`local; codex_local_review; head <sha>; exhausted (usage-limit); see codex-review.md in this dir`.
+Those two are the only legal verdict tokens (below).
+
 Issue closure is NOT restated here — the PR body's closing keywords stay authoritative.
 The `visual`, `build_db`, and `codex_bot` lines each stamp the head SHA they were
 verified on: those gates are re-verifiable, so a later push must be visibly

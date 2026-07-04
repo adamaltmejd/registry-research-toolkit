@@ -63,6 +63,7 @@ local git worktree and the codex CLI.
 from __future__ import annotations
 
 import argparse
+import contextlib
 import json
 import os
 import re
@@ -98,8 +99,12 @@ STDERR_DELIMITER = "\n--- stderr ---\n"
 # it outlasts the foreground Bash cap, so callers launch this script in the background.
 TIMEOUT_S = 30 * 60
 # codex CLI exits 0 even on findings, but a real failure (auth, usage limit) exits nonzero
-# and prints this phrase; classify it so the merge gate can record it as the exhausted-analog.
-USAGE_LIMIT_MARKER = "usage limit"
+# and prints this phrase on STDERR; classify it so the merge gate can record it as the
+# exhausted-analog. The full phrase (not a loose "usage limit" substring) and the stderr-only
+# scope are load-bearing: PR-controlled transcript content (codex quoting rate-limiting code
+# out of the diff) lands on stdout, and a loose substring there could flip a hard-blocker
+# tool_failure into a merge-passable usage_limit.
+USAGE_LIMIT_MARKER = "reached your codex usage limits"
 
 # Error kinds carried on PreconditionError and echoed into the JSON error object.
 KIND_PRECONDITION = "precondition"
@@ -205,6 +210,18 @@ def check_preconditions(base: str, *, cwd: Path) -> tuple[str, str]:
     return head.stdout.strip(), merge_base.stdout.strip()
 
 
+def _as_text(value: str | bytes | None) -> str:
+    """Coerce a `TimeoutExpired.stdout/.stderr` value to str (empty for None).
+
+    The pipes run in text mode (`text=True`), so the buffered output CPython attaches to a
+    `TimeoutExpired` is already `str`; the bytes branch (statically typed but never taken
+    here) is decoded defensively rather than stringified into a `b'…'` literal.
+    """
+    if value is None:
+        return ""
+    return value if isinstance(value, str) else value.decode("utf-8", "replace")
+
+
 def _write_evidence(out_path: Path, stdout: str, stderr: str) -> None:
     """Write the evidence transcript: stdout, then a delimited stderr section if non-empty.
 
@@ -227,8 +244,9 @@ def run_codex(merge_base: str, out_path: Path, *, cwd: Path, timeout_s: float) -
     stderr section) is written to out_path; only stdout is returned for parsing.
 
     Fail-closed on anything other than a clean codex run:
-      - nonzero exit → PreconditionError, kind usage_limit if the transcript names a usage
-        limit else tool_failure (a plain exit-0-parses-clean would mask an auth/limit error);
+      - nonzero exit → PreconditionError, kind usage_limit ONLY when the exact codex
+        usage-limit phrase appears on STDERR, else tool_failure (fail-closed: PR-controlled
+        stdout can't downgrade a blocker; a plain exit-0-parses-clean would mask the error);
       - exit 0 with empty/whitespace-only stdout → tool_failure ("no transcript");
       - timeout → the process group is SIGKILLed (codex spawns sandboxed grandchildren that
         inherit the pipes; killing only the direct child leaves communicate() blocked
@@ -260,11 +278,19 @@ def run_codex(merge_base: str, out_path: Path, *, cwd: Path, timeout_s: float) -
     try:
         stdout, stderr = proc.communicate(timeout=timeout_s)
     except subprocess.TimeoutExpired:
-        os.killpg(proc.pid, signal.SIGKILL)
+        # The child may have exited (and its group vanished) between the communicate timeout
+        # and this kill; ProcessLookupError then just means there's nothing left to kill.
+        with contextlib.suppress(ProcessLookupError):
+            os.killpg(proc.pid, signal.SIGKILL)
         try:
             stdout, stderr = proc.communicate(timeout=30)
-        except subprocess.TimeoutExpired:
-            stdout, stderr = "", ""
+        except subprocess.TimeoutExpired as drain_exc:
+            # A setsid-escaped grandchild can still hold the pipes past the drain. Don't
+            # overwrite with empty strings — CPython accumulates the buffered output on the
+            # TimeoutExpired, so salvage it and land the partial transcript as evidence.
+            # (TimeoutExpired.stdout/.stderr are typed str|bytes|None; text=True means str,
+            # so _as_text normalizes the None/bytes branches the type checker still sees.)
+            stdout, stderr = _as_text(drain_exc.stdout), _as_text(drain_exc.stderr)
         _write_evidence(out_path, stdout or "", stderr or "")
         raise PreconditionError(
             f"codex review timed out after {timeout_s / 60:.0f} min",
@@ -274,8 +300,15 @@ def run_codex(merge_base: str, out_path: Path, *, cwd: Path, timeout_s: float) -
     stdout, stderr = stdout or "", stderr or ""
     _write_evidence(out_path, stdout, stderr)
     if proc.returncode != 0:
-        combined = f"{stdout}\n{stderr}".lower()
-        kind = KIND_USAGE_LIMIT if USAGE_LIMIT_MARKER in combined else KIND_TOOL_FAILURE
+        # Fail-closed: classify usage_limit ONLY on the exact codex phrase in STDERR.
+        # Scoping to stderr (never stdout) means a mis-routed usage-limit message on stdout
+        # blocks (safe), while PR-controlled stdout content can never downgrade a
+        # hard-blocker tool_failure into a merge-passable usage_limit (the reverse, unsafe).
+        kind = (
+            KIND_USAGE_LIMIT
+            if USAGE_LIMIT_MARKER in stderr.lower()
+            else KIND_TOOL_FAILURE
+        )
         detail = "usage limit reached" if kind == KIND_USAGE_LIMIT else "tool failure"
         raise PreconditionError(
             f"codex review exited {proc.returncode} ({detail}); see {out_path}",
@@ -356,7 +389,10 @@ def parse_transcript(transcript: str, *, worktree_root: Path) -> dict[str, Any]:
         # Every `- [P…` line under the header must have parsed as a finding. A count
         # mismatch means a separator variant (en dash, plain hyphen) was silently absorbed
         # into the previous body and dropped — fail fast rather than under-report.
-        bullet_count = sum(1 for line in region if line.lstrip().startswith("- [P"))
+        # Count only UNINDENTED `- [P` lines (no lstrip), matching FINDING_RE's `^` anchor:
+        # codex emits finding entries at column 0 and their bodies indented, so an indented
+        # body sub-bullet (`  - [Possible fix]`) is a body line, not a dropped finding.
+        bullet_count = sum(1 for line in region if line.startswith("- [P"))
         if bullet_count != len(findings):
             raise PreconditionError(
                 f"format drift: {bullet_count} '- [P…]' finding line(s) under the header "
@@ -471,6 +507,24 @@ def main(argv: list[str] | None = None) -> int:
             error["base"] = exc.base
             error["merge_base"] = exc.merge_base
         print(json.dumps(error, indent=2))
+        return 2
+    except Exception as exc:  # noqa: BLE001
+        # Any uncaught error (e.g. an OSError from an unwritable --out parent or mkdir onto
+        # a file path) would otherwise crash with Python's exit 1 — which the contract
+        # reserves for `findings`, a false clean-ish signal. Map it to the exit-2 error
+        # contract with kind tool_failure. KeyboardInterrupt/SystemExit are not Exception,
+        # so they still propagate.
+        print(str(exc), file=sys.stderr)
+        print(
+            json.dumps(
+                {
+                    "verdict": "error",
+                    "error": {"kind": KIND_TOOL_FAILURE, "message": str(exc)},
+                    "output_path": None,
+                },
+                indent=2,
+            )
+        )
         return 2
 
     print(json.dumps(result, indent=2))

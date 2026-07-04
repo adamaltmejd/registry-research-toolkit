@@ -199,13 +199,18 @@ def test_separator_variant_line_is_format_drift_via_count_guard() -> None:
 
 
 def test_p10_priority_is_format_drift_via_count_guard() -> None:
-    # FINDING_RE pins P<single-digit>; a `[P10]` bullet fails to parse, so the count guard
-    # must fire (regression lock against silently dropping a two-digit priority).
+    # FINDING_RE pins P<single-digit>; a `[P10]` bullet fails to parse. With a parsable
+    # `[P1]` finding alongside it, the header-present and zero-findings guards are both
+    # satisfied, so it is specifically the COUNT guard (bullet lines != parsed findings)
+    # that must fire — a regression lock against silently dropping a two-digit priority.
     transcript = (
         "codex\nSummary.\n\nFull review comments:\n\n"
-        "- [P10] Two-digit priority — a.py:1-1\n  Body.\n"
+        "- [P1] Real finding — a.py:1-1\n  Body.\n\n"
+        "- [P10] Two-digit priority — b.py:2-2\n  Body.\n"
     )
-    with pytest.raises(clr.PreconditionError) as e:
+    with pytest.raises(
+        clr.PreconditionError, match="separator variant was dropped"
+    ) as e:
         clr.parse_transcript(transcript, worktree_root=WORKTREE)
     assert e.value.kind == clr.KIND_FORMAT_DRIFT
 
@@ -229,7 +234,14 @@ class _FakePopen:
 
 
 def _stub_popen(monkeypatch: pytest.MonkeyPatch, stdout, stderr, returncode) -> None:
-    def factory(*_a, **_k):
+    def factory(*_a, **kwargs):
+        # Pin the Popen wiring the fail-closed guards depend on: a refactor to
+        # stderr=subprocess.STDOUT (merging the streams parsing must keep apart) or dropping
+        # start_new_session (so a timeout can't killpg the grandchild group) would keep every
+        # test green while resurrecting the exact bugs round 1 fixed. Assert it here.
+        assert kwargs["stdout"] is subprocess.PIPE
+        assert kwargs["stderr"] is subprocess.PIPE
+        assert kwargs.get("start_new_session") is True
         return _FakePopen(stdout, stderr, returncode)
 
     monkeypatch.setattr(clr.subprocess, "Popen", factory)
@@ -246,14 +258,30 @@ def test_run_codex_empty_transcript_is_tool_failure(
     assert e.value.kind == clr.KIND_TOOL_FAILURE
 
 
-def test_run_codex_nonzero_with_usage_limit_is_usage_limit(
+def test_run_codex_usage_limit_on_stderr_is_usage_limit(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
-    _stub_popen(monkeypatch, "You've reached your Codex usage limits.", "", 1)
+    # The exact codex phrase on STDERR (its real channel for this message) classifies as the
+    # exhausted-analog usage_limit.
+    _stub_popen(monkeypatch, "", "You've reached your Codex usage limits.", 1)
 
     with pytest.raises(clr.PreconditionError) as e:
         clr.run_codex("deadbeef", tmp_path / "t.md", cwd=tmp_path, timeout_s=1.0)
     assert e.value.kind == clr.KIND_USAGE_LIMIT
+
+
+def test_run_codex_usage_limit_on_stdout_only_is_tool_failure(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    # Fail-closed direction: the SAME phrase on STDOUT only (PR-controlled transcript
+    # content, e.g. codex quoting rate-limiting code from the diff) must NOT downgrade the
+    # hard-blocker tool_failure into a merge-passable usage_limit — classification reads
+    # stderr only.
+    _stub_popen(monkeypatch, "You've reached your Codex usage limits.", "", 1)
+
+    with pytest.raises(clr.PreconditionError) as e:
+        clr.run_codex("deadbeef", tmp_path / "t.md", cwd=tmp_path, timeout_s=1.0)
+    assert e.value.kind == clr.KIND_TOOL_FAILURE
 
 
 def test_run_codex_nonzero_other_text_is_tool_failure(
@@ -484,3 +512,22 @@ def test_main_error_exits_2_and_emits_error_json(
     payload = clr.json.loads(captured.out)
     assert payload["verdict"] == "error"
     assert payload["error"]["kind"] == clr.KIND_USAGE_LIMIT
+
+
+def test_main_uncaught_oserror_exits_2_as_tool_failure(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    # An uncaught OSError from review() (e.g. an unwritable --out parent, or mkdir onto a
+    # file path) must NOT crash with Python's exit 1 — the contract reserves 1 for findings.
+    # main() maps any non-PreconditionError to the exit-2 error contract, kind tool_failure.
+    def raise_oserror(*, base, out_path, cwd, timeout_s):
+        raise OSError("Not a directory: /some/file/parent/out.md")
+
+    monkeypatch.setattr(clr, "review", raise_oserror)
+
+    assert clr.main(["--base", "main"]) == 2
+    captured = capsys.readouterr()
+    assert "Not a directory" in captured.err
+    payload = clr.json.loads(captured.out)
+    assert payload["verdict"] == "error"
+    assert payload["error"]["kind"] == clr.KIND_TOOL_FAILURE

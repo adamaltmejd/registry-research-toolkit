@@ -440,8 +440,9 @@ directories whose PR closed without merging — but before deleting one, check f
 report them) rather than silently dropping them, since a lane's final PR can close
 without merging. In the same breath, release the pipeline slot whose `prs` are now all
 merged/closed (see Pipeline slots) — that freed slot is what triggers the watcher's next
-`dispatch:` recommendation. For a stack, re-check the next PR's head, checks, bot
-signal, mergeability, evidence, and gate entry before merging it.
+`dispatch:` recommendation. For a stack, re-check the next PR's head, checks, the gate
+entry's head-bound `codex_bot` line, mergeability, evidence, and gate entry before
+merging it.
 
 ## Self-serve build-db verification
 
