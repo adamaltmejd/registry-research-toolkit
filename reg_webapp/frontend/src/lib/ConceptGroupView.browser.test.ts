@@ -575,11 +575,59 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
         bindings: [
           expect.objectContaining({
             variable: "scb/rams/dispink",
-            type: "",
+            type: "numeric",
             display_name: "CDISP5",
             representation: "CDISP5",
           }),
         ],
+      }),
+    );
+  });
+
+  it("keeps a lone delivery-column group member on the null representation convention", async () => {
+    vi.mocked(getConceptGroup).mockResolvedValue(
+      node({
+        key: "solo-rep",
+        label: "Solo representation",
+        source: "curated",
+        axes: [{ name: "rep", label: "Representation" }],
+        members: [
+          {
+            fqid: "scb/rams/solo",
+            name: "Solo representation",
+            delivery_column: "SOLO",
+            facets: [{ axis: "rep", value: "solo", label: "Solo" }],
+            coverage: null,
+          },
+        ],
+      } as unknown as Partial<ConceptGroupNodeData>),
+    );
+    vi.mocked(getConceptGroupGraph).mockResolvedValue(
+      graph([
+        vnode("scb/rams/solo", [
+          gstate({
+            variant: "individer",
+            delivery_column_name: "SOLO",
+            valid_from: "2010-01-01",
+            valid_to: "2020-12-31",
+          }),
+        ]),
+      ]),
+    );
+    mockResolveColumns({ "scb/rams/solo": ["SOLO"] });
+
+    renderGroup({ key: "solo-rep" });
+
+    await page.getByRole("checkbox", { name: /SOLO/ }).click();
+    await page.getByRole("button", { name: "Apply staged changes" }).click();
+
+    await expect.element(page.getByText(/\+1 column/)).toBeVisible();
+    expect(projectStore.draft?.sources[0]?.bindings[0]).toEqual(
+      expect.objectContaining({
+        variable: "scb/rams/solo",
+        type: "numeric",
+        display_name: "SOLO",
+        representation: null,
       }),
     );
   });

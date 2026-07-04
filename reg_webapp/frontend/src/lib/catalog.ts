@@ -2859,7 +2859,8 @@ export async function resolveBindingAt(
  * a representation-grained group member as explicitly pinned.
  *   - `derived` (exactly ONE delivery column at the (period, variant)) → the resolved
  *     type + display default, and `representation: null` unless `pinRepresentation`
- *     carries an explicit non-null column.
+ *     carries an explicit non-null column. A pinned derived mismatch keeps the resolved
+ *     type (structurally valid) but stores the requested display/representation column.
  *   - `ambiguous` + the payload pins one of the genuinely co-existing columns → that
  *     column's derived type + its `delivery_column_name` display + the pinned
  *     representation.
@@ -2878,10 +2879,7 @@ export function bindingFieldsFromResolution(
     if (options.pinRepresentation && representation != null) {
       const binding: Binding = {
         variable,
-        type:
-          resolution.displayNameDefault === representation
-            ? resolution.type
-            : "",
+        type: resolution.type,
         display_name: representation,
         representation,
       };

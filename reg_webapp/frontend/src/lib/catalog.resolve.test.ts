@@ -157,7 +157,7 @@ describe("bindingFieldsFromResolution", () => {
       ),
     ).toEqual({
       variable: "scb/iot/dispink",
-      type: "",
+      type: "numeric",
       display_name: "CDISP5",
       representation: "CDISP5",
     });

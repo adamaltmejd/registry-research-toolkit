@@ -428,8 +428,19 @@ const bands = $derived.by((): PickerBand[] => {
         .map((m) => m.delivery_column)
         .filter((col): col is string => col != null),
     );
-    const rows = pickerRepresentations(states).map((row) =>
-      row.representation != null && explicitMemberColumns.has(row.column)
+    const baseRows = pickerRepresentations(states);
+    const explicitSelectableColumns = new Set(
+      baseRows
+        .filter(
+          (row) =>
+            row.representation != null && explicitMemberColumns.has(row.column),
+        )
+        .map((row) => row.column),
+    );
+    const rows = baseRows.map((row) =>
+      row.representation != null &&
+      explicitSelectableColumns.size > 1 &&
+      explicitSelectableColumns.has(row.column)
         ? { ...row, pinRepresentation: true }
         : row,
     );
