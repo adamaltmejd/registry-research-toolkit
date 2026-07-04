@@ -919,6 +919,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
           key: aFqid,
           name: "A",
           registerPrefix: "scb/lisa",
+          href: "/catalog/scb/lisa/a",
           rows: [row({ column: "Acol" })],
           facetsByColumn: {
             Acol: [{ axis: "era", value: "old", label: "Old" }],
@@ -928,6 +929,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
           key: bFqid,
           name: "B",
           registerPrefix: "scb/lisa",
+          href: "/catalog/scb/lisa/b",
           rows: [row({ column: "Bcol" })],
           facetsByColumn: {
             Bcol: [{ axis: "era", value: "new", label: "New" }],
@@ -960,6 +962,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
         focus_id: null,
       }),
       ...PROPS,
+      focusKey: bFqid,
     });
 
     await vi.waitFor(() => {
@@ -980,6 +983,80 @@ describe("RepresentationPicker graph mode (#904)", () => {
     expect(document.querySelector(".graph-picker")).not.toBeNull();
     await expect
       .element(page.getByText("Showing 1 of 2 columns"))
+      .toBeVisible();
+  });
+
+  it("uses the visible graph projection for size limits after filtering", async () => {
+    const nodes = Array.from({ length: 19 }, (_, i) => {
+      const fqid = `scb/lisa/v${i}`;
+      return graphNode(fqid, {
+        states: [
+          graphState({
+            state_id: i + 1,
+            representation_run_id: i + 1,
+            delivery_column_name: `C${i}`,
+            valid_from: `${2000 + i}-01-01`,
+            valid_to: `${2000 + i}-12-31`,
+          }),
+        ],
+      });
+    });
+    const bands = nodes.map(
+      (node, i) =>
+        ({
+          key: node.fqid as string,
+          name: node.label,
+          registerPrefix: "scb/lisa",
+          href: `/catalog/${node.fqid as string}`,
+          rows: [row({ column: `C${i}` })],
+          facetsByColumn: {
+            [`C${i}`]: [
+              {
+                axis: "era",
+                value: i === 0 ? "old" : "new",
+                label: i === 0 ? "Old" : "New",
+              },
+            ],
+          },
+        }) satisfies PickerBand,
+    );
+
+    render(RepresentationPicker, {
+      bands,
+      axes: [{ name: "era", label: "Era" }],
+      graphMemberHrefs: Object.fromEntries(
+        nodes.map((node) => [
+          node.fqid as string,
+          `/catalog/${(node.fqid as string).replaceAll("/", "/")}`,
+        ]),
+      ),
+      graph: graph({
+        nodes,
+        edges: [edge(nodes[0].id, nodes[1].id)],
+        focus_id: nodes[1].id,
+      }),
+      ...PROPS,
+      focusKey: nodes[1].fqid ?? null,
+    });
+
+    await vi.waitFor(() => {
+      if (!document.querySelector(".col-list")) {
+        throw new Error("initial large-graph list fallback not rendered");
+      }
+    });
+    expect(document.querySelector(".graph-picker")).toBeNull();
+
+    clickFilter("Old");
+    await vi.waitFor(() => {
+      const graphText =
+        document.querySelector(".graph-picker")?.textContent ?? "";
+      if (!graphText.includes("C0") || graphText.includes("C1")) {
+        throw new Error(`filtered projected graph not ready: ${graphText}`);
+      }
+    });
+    expect(document.querySelector(".col-list")).toBeNull();
+    await expect
+      .element(page.getByText("Showing 1 of 19 columns"))
       .toBeVisible();
   });
 

@@ -862,7 +862,7 @@ function graphFocusIsNavigable(g: RelationshipGraph): boolean {
   if (!focusedNode) {
     return false;
   }
-  const focusedBand = graphBandForNode(focusedNode);
+  const focusedBand = graphOriginalBandForNode(focusedNode);
   return focusedBand?.href != null;
 }
 
@@ -1041,20 +1041,52 @@ function graphHasDrawableContext(g: RelationshipGraph): boolean {
   );
 }
 
+function graphForVisibleRows(g: RelationshipGraph): RelationshipGraph | null {
+  if (graphMemberHrefs == null) {
+    return g;
+  }
+  const memberNodes = variableGraphNodes(g);
+  if (g.nodes.length !== memberNodes.length) {
+    return null;
+  }
+  if (memberNodes.some((node) => graphOriginalBandForNode(node) == null)) {
+    return null;
+  }
+  const visibleNodeIds = new Set(
+    memberNodes
+      .filter((node) => graphBandForNode(node) != null)
+      .map((node) => node.id),
+  );
+  return {
+    ...g,
+    nodes: g.nodes.filter((node) => visibleNodeIds.has(node.id)),
+    edges: g.edges.filter(
+      (edge) =>
+        visibleNodeIds.has(edge.source) && visibleNodeIds.has(edge.target),
+    ),
+    focus_id:
+      g.focus_id != null && visibleNodeIds.has(g.focus_id) ? g.focus_id : null,
+  };
+}
+
 function graphFitsPicker(g: RelationshipGraph): boolean {
-  const variableNodes = variableGraphNodes(g);
+  const renderGraph = graphForVisibleRows(g);
+  if (!renderGraph) {
+    return false;
+  }
+  const variableNodes = variableGraphNodes(renderGraph);
   const cellCount = variableNodes.reduce(
     (n, node) => n + cellsOf(node).length,
     0,
   );
   return (
     graphHasDrawableContext(g) &&
-    g.nodes.length === variableNodes.length &&
-    g.nodes.length <= GRAPH_MAX_NODES &&
-    g.edges.length <= GRAPH_MAX_EDGES &&
+    renderGraph.nodes.length === variableNodes.length &&
+    renderGraph.nodes.length <= GRAPH_MAX_NODES &&
+    renderGraph.edges.length <= GRAPH_MAX_EDGES &&
     cellCount <= GRAPH_MAX_CELLS &&
-    graphCoversEveryPickerRow(g) &&
-    graphReadableWithCurrentRows(g) &&
+    graphCoversEveryPickerRow(renderGraph) &&
+    graphReadableWithCurrentRows(renderGraph) &&
     graphFocusIsNavigable(g)
   );
 }
@@ -1064,26 +1096,7 @@ const graphRenderGraph = $derived.by((): RelationshipGraph | null => {
   if (!useGraphMode || !graph) {
     return null;
   }
-  if (graphMemberHrefs == null) {
-    return graph;
-  }
-  const visibleNodeIds = new Set(
-    variableGraphNodes(graph)
-      .filter((node) => graphBandForNode(node) != null)
-      .map((node) => node.id),
-  );
-  return {
-    ...graph,
-    nodes: graph.nodes.filter((node) => visibleNodeIds.has(node.id)),
-    edges: graph.edges.filter(
-      (edge) =>
-        visibleNodeIds.has(edge.source) && visibleNodeIds.has(edge.target),
-    ),
-    focus_id:
-      graph.focus_id != null && visibleNodeIds.has(graph.focus_id)
-        ? graph.focus_id
-        : null,
-  };
+  return graphForVisibleRows(graph);
 });
 const graphScale = $derived<YearScale | null>(
   graphRenderGraph ? yearScaleOf(graphRenderGraph, vintageYear) : null,
