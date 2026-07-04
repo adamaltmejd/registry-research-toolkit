@@ -778,6 +778,7 @@ const GRAPH_TRACK_PAD = 14;
 const GRAPH_LANE_BASE_H = 58;
 const GRAPH_ROW_H = 46;
 const GRAPH_CELL_H = 40;
+const GRAPH_CODINGS_NUDGE_MIN_READABLE_W = 160;
 
 function variableGraphNodes(g: RelationshipGraph): VariableGraphNode[] {
   return g.nodes.filter((n): n is VariableGraphNode => n.kind === "variable");
@@ -865,22 +866,107 @@ function graphFocusIsNavigable(g: RelationshipGraph): boolean {
   return focusedBand?.href != null;
 }
 
-/** Strict additive graph-mode gate (#904 Option B): the graph picker renders only
- * when it is a lossless, one-to-one projection of the selectable list surface. Any
- * empty band, missing band node, unmatched row, non-member graph cell, shared-run
- * multi-column cell, or #908 declared/filterable dimension falls back to the list.
- * The standalone HistoryGraph still carries graph context for those ambiguous cases. */
+const graphBands = $derived(filteredBands);
+
+function graphOriginalBandForNode(node: VariableGraphNode): PickerBand | null {
+  for (const fqid of graphNodeFqids(node)) {
+    const band = bands.find((b) => b.key === fqid);
+    if (band) {
+      return band;
+    }
+  }
+  return null;
+}
+
+function graphCandidateIsOneToOne(
+  candidates: GraphCellCandidate[],
+  cell: RunCell,
+): boolean {
+  return (
+    candidates.length === 1 &&
+    candidates[0].columns.length === 1 &&
+    cell.columns.length === 1 &&
+    candidates[0].columns[0] === cell.columns[0]
+  );
+}
+
+function graphTrackInnerWidthForScale(scale: YearScale | null): number {
+  return scale
+    ? Math.max(GRAPH_TRACK_MIN, (scale.maxYear - scale.minYear) * PX_PER_YEAR)
+    : GRAPH_TRACK_MIN;
+}
+
+function graphXForScale(year: number, scale: YearScale): number {
+  if (!Number.isFinite(year)) {
+    return GRAPH_TRACK_PAD;
+  }
+  const span = scale.maxYear - scale.minYear || 1;
+  return (
+    GRAPH_TRACK_PAD +
+    ((year - scale.minYear) / span) * graphTrackInnerWidthForScale(scale)
+  );
+}
+
+function graphCellWidthForScale(
+  cell: RunCell,
+  scale: YearScale | null,
+): number {
+  if (!scale) {
+    return CELL_MIN_W;
+  }
+  const fromYear =
+    cell.openStart || !Number.isFinite(cell.fromYear)
+      ? scale.minYear
+      : cell.fromYear;
+  const toYear =
+    cell.openEnd || !Number.isFinite(cell.toYear) ? scale.maxYear : cell.toYear;
+  return Math.max(
+    CELL_MIN_W,
+    graphXForScale(toYear, scale) - graphXForScale(fromYear, scale),
+  );
+}
+
+function graphReadableWithCurrentRows(g: RelationshipGraph): boolean {
+  const scale = yearScaleOf(g, vintageYear);
+  for (const band of graphBands) {
+    const node = variableGraphNodes(g).find((n) =>
+      graphNodeMatchesKey(n, band.key),
+    );
+    if (!node) {
+      return false;
+    }
+    for (const cell of cellsOf(node)) {
+      const matches = graphCellCandidates(band, cell);
+      if (matches.length !== 1) {
+        continue;
+      }
+      const match = matches[0];
+      const column = match.columns[0];
+      if (
+        column &&
+        match.row.codingsVary &&
+        graphCellWidthForScale(cell, scale) < GRAPH_CODINGS_NUDGE_MIN_READABLE_W
+      ) {
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
+/** Strict graph-mode gate: selectable graph cells render only when they are a
+ * lossless, one-to-one projection of the picker rows. Leaf-only graph context that has
+ * no selectable picker row is still allowed, but renders as unavailable context rather
+ * than becoming a checkbox. Group graphs remain stricter about non-member cells so the
+ * picker cannot leak columns outside the browsed concept. */
 function graphCoversEveryPickerRow(g: RelationshipGraph): boolean {
-  if (bands.length === 0 || axes.length > 0 || dimensions.length > 0) {
+  if (graphBands.length === 0) {
     return false;
   }
   const nodes = variableGraphNodes(g);
   const bandNodes = new Map<string, VariableGraphNode>();
   const usedNodeIds = new Set<string>();
-  for (const band of bands) {
-    if (band.rows.length === 0) {
-      return false;
-    }
+  for (const band of graphBands) {
     const matches = nodes.filter((node) => graphNodeMatchesKey(node, band.key));
     if (matches.length !== 1) {
       return false;
@@ -893,32 +979,51 @@ function graphCoversEveryPickerRow(g: RelationshipGraph): boolean {
   }
 
   for (const node of nodes) {
-    const band = graphBandForNode(node);
-    if (!band && cellsOf(node).length > 0) {
+    const originalBand = graphOriginalBandForNode(node);
+    if (
+      !originalBand &&
+      graphMemberHrefs != null &&
+      graphMemberHrefForNode(node) != null &&
+      cellsOf(node).length > 0
+    ) {
       return false;
     }
   }
 
   const coveredRows = new Set<string>();
-  for (const band of bands) {
+  for (const band of graphBands) {
     const node = bandNodes.get(band.key);
     if (!node) {
       return false;
     }
+    const originalBand = graphOriginalBandForNode(node) ?? band;
     for (const cell of cellsOf(node)) {
-      const matches = graphCellCandidates(band, cell);
+      const originalMatches = graphCellCandidates(originalBand, cell);
       if (
-        matches.length !== 1 ||
-        matches[0].columns.length !== 1 ||
-        cell.columns.length !== 1 ||
-        matches[0].columns[0] !== cell.columns[0]
+        originalMatches.length > 0 &&
+        !graphCandidateIsOneToOne(originalMatches, cell)
       ) {
         return false;
       }
-      coveredRows.add(rowKey(matches[0].band, matches[0].row));
+      if (
+        graphMemberHrefs != null &&
+        originalMatches.length === 0 &&
+        cell.columns.length > 0
+      ) {
+        return false;
+      }
+      const matches = graphCellCandidates(band, cell);
+      if (matches.length > 0 && !graphCandidateIsOneToOne(matches, cell)) {
+        return false;
+      }
+      if (matches.length === 1) {
+        coveredRows.add(rowKey(matches[0].band, matches[0].row));
+      } else if (originalMatches.length > 0 && !anyFilterActive) {
+        return false;
+      }
     }
   }
-  return bands.every((band) =>
+  return graphBands.every((band) =>
     band.rows.every((row) => coveredRows.has(rowKey(band, row))),
   );
 }
@@ -937,6 +1042,7 @@ function graphFitsPicker(g: RelationshipGraph): boolean {
     g.edges.length <= GRAPH_MAX_EDGES &&
     cellCount <= GRAPH_MAX_CELLS &&
     graphCoversEveryPickerRow(g) &&
+    graphReadableWithCurrentRows(g) &&
     graphFocusIsNavigable(g)
   );
 }
@@ -945,14 +1051,7 @@ const useGraphMode = $derived(graph != null && graphFitsPicker(graph));
 const graphScale = $derived<YearScale | null>(
   useGraphMode && graph ? yearScaleOf(graph, vintageYear) : null,
 );
-const graphTrackInnerW = $derived(
-  graphScale
-    ? Math.max(
-        GRAPH_TRACK_MIN,
-        (graphScale.maxYear - graphScale.minYear) * PX_PER_YEAR,
-      )
-    : GRAPH_TRACK_MIN,
-);
+const graphTrackInnerW = $derived(graphTrackInnerWidthForScale(graphScale));
 const graphTrackW = $derived(graphTrackInnerW + GRAPH_TRACK_PAD * 2);
 const graphTicks = $derived(graphScale ? axisTicks(graphScale) : []);
 
@@ -1041,7 +1140,7 @@ function graphCellTop(
 
 function graphBandForNode(node: VariableGraphNode): PickerBand | null {
   for (const fqid of graphNodeFqids(node)) {
-    const band = bands.find((b) => b.key === fqid);
+    const band = graphBands.find((b) => b.key === fqid);
     if (band) {
       return band;
     }
@@ -1108,10 +1207,7 @@ function graphLaneItems(rn: RenderNode): GraphLaneItem[] {
     if (match) {
       matchedRows.add(rowKey(match.band, match.row));
       items.push({ kind: "cell", cell, match, index, rowIndex: cell.row });
-    } else if (
-      !band &&
-      (graphMemberHrefs == null || graphMemberHrefForNode(rn.node) != null)
-    ) {
+    } else if (graphMemberHrefs == null && (!band || band.rows.length === 0)) {
       items.push({
         kind: "cell",
         cell,
@@ -1719,6 +1815,7 @@ function codingsVaryHref(
                           {@const stage = rowStage(band, row)}
                           {@const inWindow = graphCellInWindow(cell)}
                           {@const cellSub = graphCellSubLabel(cell, column)}
+                          {@const facetMarkers = rowFacetMarkers(band, column)}
                           <label
                             class="graph-cell"
                             class:selected={checked}
@@ -1742,6 +1839,16 @@ function codingsVaryHref(
                               {@render colChip(column)}
                               {#if cellSub}
                                 <span class="graph-cell-sub">{cellSub}</span>
+                              {/if}
+                              {#if facetMarkers.length > 0}
+                                <span class="facet-markers graph-facet-markers">
+                                  {#each facetMarkers as m (m.name)}
+                                    <span class="facet-marker"
+                                      ><span class="dim-kind facet">{m.axis}</span
+                                      >{m.value}</span
+                                    >
+                                  {/each}
+                                </span>
                               {/if}
                               {@render renameHint(graphRenameHint(item.match))}
                             </span>
@@ -1825,35 +1932,33 @@ function codingsVaryHref(
 {/snippet}
 
 <div class="rep-picker">
+  {#if dimensions.length > 0}
+    <!-- The per-dimension filters sit ABOVE the picker surface (#908): they narrow the
+         compact list and the graph/time-band mode through the same filtered row model. -->
+    <div class="dim-filters" role="group" aria-label="Filter columns by dimension">
+      {#each dimensions as dim (dim.key)}
+        {@render dimFilter(dim)}
+      {/each}
+      <div class="dim-filters-status">
+        <span class="showing" aria-live="polite"
+          >Showing {visibleRows} of {totalRows} columns</span
+        >
+        {#if anyFilterActive}
+          <button type="button" class="clear-filters" onclick={clearFilters}>
+            Clear filters
+          </button>
+        {/if}
+      </div>
+    </div>
+  {/if}
+
+  {#if anyFilterActive && filteredBands.length === 0}
+    <p class="no-match" role="status">No columns match the active filters.</p>
+  {/if}
+
   {#if useGraphMode}
     {@render graphPicker()}
   {:else}
-    {#if dimensions.length > 0}
-      <!-- The per-dimension filters sit ABOVE the column list (#908): narrow a large
-         multi-axis group to one axis value / population / coding. Each dimension is
-         shown only when it discriminates (≥2 distinct values), so a single-axis-value
-         group surfaces no control. -->
-      <div class="dim-filters" role="group" aria-label="Filter columns by dimension">
-        {#each dimensions as dim (dim.key)}
-          {@render dimFilter(dim)}
-        {/each}
-        <div class="dim-filters-status">
-          <span class="showing" aria-live="polite"
-            >Showing {visibleRows} of {totalRows} columns</span
-          >
-          {#if anyFilterActive}
-            <button type="button" class="clear-filters" onclick={clearFilters}>
-              Clear filters
-            </button>
-          {/if}
-        </div>
-      </div>
-    {/if}
-
-    {#if anyFilterActive && filteredBands.length === 0}
-      <p class="no-match" role="status">No columns match the active filters.</p>
-    {/if}
-
     <ul class="col-list integrated-list">
     {#if bands.length > 1 && allKeys.length > 1}
       <!-- Global select-all: grab every visible column of the concept in one move.

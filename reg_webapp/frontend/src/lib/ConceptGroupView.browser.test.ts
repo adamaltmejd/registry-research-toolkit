@@ -2656,7 +2656,7 @@ describe("ConceptGroupView ?member= focus highlight (#678 finding 5)", () => {
     expect(document.querySelectorAll(".focused")).toHaveLength(0);
   });
 
-  it("keeps a focused member navigable from the list fallback", async () => {
+  it("keeps a focused member navigable from graph mode", async () => {
     vi.mocked(getConceptGroup).mockResolvedValue(node({ member: "inkfeb" }));
     vi.mocked(getConceptGroupGraph).mockResolvedValue({
       ...twoSingleColGraph(),
@@ -2677,7 +2677,7 @@ describe("ConceptGroupView ?member= focus highlight (#678 finding 5)", () => {
 
     const focusedLink = await vi.waitFor(() => {
       const el = document.querySelector<HTMLAnchorElement>(
-        '.col-row.single.focused a.col-chip.link[href="/catalog/scb/rams/inkfeb"]',
+        '.graph-lane.focused a.graph-name[href="/catalog/scb/rams/inkfeb"]',
       );
       if (!el) {
         throw new Error("focused member link not yet rendered");
@@ -2685,7 +2685,7 @@ describe("ConceptGroupView ?member= focus highlight (#678 finding 5)", () => {
       return el;
     });
     expect(focusedLink.getAttribute("href")).toBe("/catalog/scb/rams/inkfeb");
-    expect(document.querySelector(".graph-picker")).toBeNull();
+    expect(document.querySelector(".graph-picker")).not.toBeNull();
   });
 
   it("falls back when the focused member is absent from a partial graph payload", async () => {
@@ -2868,11 +2868,17 @@ describe("ConceptGroupView inter-variable succession fold (#902)", () => {
     await expect
       .element(page.getByRole("checkbox", { name: /DINFnew/ }))
       .toBeVisible();
-    expect(document.querySelector(".graph-picker")).toBeNull();
-    const historyText =
-      document.querySelector("details.history")?.textContent ?? "";
-    expect(historyText).toContain("supersedes 1");
-    expect(historyText).toContain("edition");
+    expect(document.querySelector(".graph-picker")).not.toBeNull();
+    await expect
+      .element(page.getByRole("group", { name: /Filter columns/ }))
+      .toBeVisible();
+    const graphText =
+      document.querySelector(".graph-picker")?.textContent ?? "";
+    expect(graphText).toContain("DINFold");
+    expect(graphText).toContain("DINFnew");
+    expect(graphText).toContain("Old level");
+    expect(graphText).toContain("New level");
+    expect(graphText).toContain("→ 2005");
   });
 
   it("surfaces the superseded predecessor as reachable list history", async () => {

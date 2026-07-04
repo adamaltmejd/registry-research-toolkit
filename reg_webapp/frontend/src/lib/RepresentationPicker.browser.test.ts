@@ -371,7 +371,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
     expect(visibleColumns()).toEqual(["AliasCol", "AliasCol", "NextCol"]);
   });
 
-  it("falls back when a leaf graph includes sibling cells outside the picker band", async () => {
+  it("renders leaf sibling graph context as unavailable cells outside the picker band", async () => {
     const fixture = smallSuccessionFixture();
     render(RepresentationPicker, {
       bands: [fixture.bands[0]],
@@ -380,13 +380,76 @@ describe("RepresentationPicker graph mode (#904)", () => {
     });
 
     await vi.waitFor(() => {
-      if (!document.querySelector(".col-list")) {
-        throw new Error("list fallback not rendered");
+      if (!document.querySelector(".graph-picker")) {
+        throw new Error("graph picker not rendered");
       }
     });
-    expect(document.querySelector(".graph-picker")).toBeNull();
-    expect(visibleColumns()).toEqual(["Acol"]);
-    expect(document.body.textContent).not.toContain("Bcol");
+    expect(document.querySelector(".col-list")).toBeNull();
+    await expect
+      .element(page.getByRole("checkbox", { name: /Acol/ }))
+      .toBeVisible();
+    const unavailable = [
+      ...document.querySelectorAll<HTMLElement>(".graph-cell.unavailable"),
+    ].map((el) => el.textContent ?? "");
+    expect(unavailable.some((text) => text.includes("Bcol"))).toBe(true);
+  });
+
+  it("renders graph context for a picker band with zero selectable rows", async () => {
+    const aFqid = "scb/lisa/no-column";
+    const bFqid = "scb/lisa/no-column-next";
+    render(RepresentationPicker, {
+      bands: [
+        {
+          key: aFqid,
+          name: "No-column variable",
+          registerPrefix: "scb/lisa",
+          rows: [],
+        } satisfies PickerBand,
+      ],
+      graph: graph({
+        nodes: [
+          graphNode(aFqid, {
+            label: "No-column variable",
+            states: [
+              graphState({
+                delivery_column_name: null,
+                value_set_version_label: "uncolumned coding",
+              }),
+            ],
+          }),
+          graphNode(bFqid, {
+            label: "No-column successor",
+            states: [
+              graphState({
+                state_id: 2,
+                representation_run_id: 2,
+                delivery_column_name: null,
+                value_set_version_label: "successor coding",
+                valid_from: "2011-01-01",
+                valid_to: null,
+              }),
+            ],
+          }),
+        ],
+        edges: [edge(aFqid, bFqid)],
+        focus_id: aFqid,
+      }),
+      ...PROPS,
+    });
+
+    await vi.waitFor(() => {
+      if (!document.querySelector(".graph-picker")) {
+        throw new Error("graph picker not rendered");
+      }
+    });
+    expect(document.querySelector(".col-list")).toBeNull();
+    const graphText =
+      document.querySelector(".graph-picker")?.textContent ?? "";
+    expect(graphText).toContain("uncolumned coding");
+    expect(graphText).toContain("successor coding");
+    expect(
+      document.querySelector(".graph-picker input[type='checkbox']"),
+    ).toBeNull();
   });
 
   it("dims folded graph cells by the cell's era, not the folded row span", async () => {
@@ -937,7 +1000,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
       .toBeVisible();
   });
 
-  it("falls back when #908 dimensions would be hidden by graph mode", async () => {
+  it("keeps #908 dimension filters above graph mode", async () => {
     const band = multiAxisBand();
     render(RepresentationPicker, {
       bands: [band],
@@ -978,11 +1041,25 @@ describe("RepresentationPicker graph mode (#904)", () => {
     await expect
       .element(page.getByRole("group", { name: /Filter columns/ }))
       .toBeVisible();
-    expect(document.querySelector(".graph-picker")).toBeNull();
-    expect(visibleColumns()).toEqual(["DIN1", "DIN2", "DIN3"]);
+    expect(document.querySelector(".graph-picker")).not.toBeNull();
+    expect(document.querySelector(".col-list")).toBeNull();
+    await expect
+      .element(page.getByText("Showing 3 of 3 columns"))
+      .toBeVisible();
+
+    clickFilter("Familj");
+    await expect
+      .element(page.getByText("Showing 1 of 3 columns"))
+      .toBeVisible();
+    expect(document.querySelector(".graph-picker")).not.toBeNull();
+    const graphText =
+      document.querySelector(".graph-picker")?.textContent ?? "";
+    expect(graphText).toContain("DIN2");
+    expect(graphText).not.toContain("DIN1");
+    expect(graphText).not.toContain("DIN3");
   });
 
-  it("falls back when a declared #908 facet axis has only one value", async () => {
+  it("renders graph mode when a declared #908 facet axis has only one value", async () => {
     const aFqid = "scb/iot/dispink";
     const bFqid = "scb/iot/next";
     render(RepresentationPicker, {
@@ -1028,14 +1105,105 @@ describe("RepresentationPicker graph mode (#904)", () => {
     });
 
     await vi.waitFor(() => {
+      if (!document.querySelector(".graph-picker")) {
+        throw new Error("graph picker not rendered");
+      }
+    });
+    expect(document.querySelector(".col-list")).toBeNull();
+    expect(document.body.textContent).toContain("Enhet");
+    expect(document.body.textContent).toContain("Individ");
+  });
+
+  it("falls back when narrow selectable graph cells carry inline context", async () => {
+    const aFqid = "scb/forskola/sun2000inr-prio";
+    const bFqid = "scb/forskola/sun2000inr-next";
+    render(RepresentationPicker, {
+      bands: [
+        {
+          key: aFqid,
+          name: "Priority coding",
+          registerPrefix: "scb/forskola",
+          rows: [
+            row({
+              column: "SUNPRIO",
+              valueSetLabel: "SUN 2000",
+              codingsVary: true,
+              from: "2000-01-01",
+              to: "2000-12-31",
+              windows: [{ from: "2000-01-01", to: "2000-12-31" }],
+              period: "2000",
+            }),
+          ],
+          facetsByColumn: {
+            SUNPRIO: [{ axis: "priority", value: "old", label: "Old" }],
+          },
+        } satisfies PickerBand,
+        {
+          key: bFqid,
+          name: "Next coding",
+          registerPrefix: "scb/forskola",
+          rows: [
+            row({
+              column: "SUNNEXT",
+              valueSetLabel: "SUN 2020",
+              from: "2020-01-01",
+              to: "2020-12-31",
+              windows: [{ from: "2020-01-01", to: "2020-12-31" }],
+              period: "2020",
+            }),
+          ],
+          facetsByColumn: {
+            SUNNEXT: [{ axis: "priority", value: "new", label: "New" }],
+          },
+        } satisfies PickerBand,
+      ],
+      axes: [{ name: "priority", label: "Priority" }],
+      graph: graph({
+        nodes: [
+          graphNode(aFqid, {
+            states: [
+              graphState({
+                delivery_column_name: "SUNPRIO",
+                value_set_version_label: "SUN 2000",
+                valid_from: "2000-01-01",
+                valid_to: "2000-12-31",
+              }),
+            ],
+          }),
+          graphNode(bFqid, {
+            states: [
+              graphState({
+                state_id: 2,
+                representation_run_id: 2,
+                delivery_column_name: "SUNNEXT",
+                value_set_version_label: "SUN 2020",
+                valid_from: "2020-01-01",
+                valid_to: "2020-12-31",
+              }),
+            ],
+          }),
+        ],
+        edges: [edge(aFqid, bFqid)],
+        focus_id: aFqid,
+      }),
+      ...PROPS,
+    });
+
+    await vi.waitFor(() => {
       if (!document.querySelector(".col-list")) {
         throw new Error("list fallback not rendered");
       }
     });
     expect(document.querySelector(".graph-picker")).toBeNull();
-    expect(visibleColumns()).toEqual(["DIN1", "NEXT"]);
-    expect(document.body.textContent).toContain("Enhet");
-    expect(document.body.textContent).toContain("Individ");
+    await expect
+      .element(page.getByRole("group", { name: /Filter columns/ }))
+      .toBeVisible();
+    expect(visibleColumns()).toEqual(["SUNPRIO", "SUNNEXT"]);
+
+    clickFilter("Old");
+    await vi.waitFor(() => {
+      expect(visibleColumns()).toEqual(["SUNPRIO"]);
+    });
   });
 
   it("falls back to the compact list when one graph run has several selectable columns", async () => {

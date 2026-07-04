@@ -264,7 +264,7 @@ describe("BindingLeafView representation picker (#678)", () => {
     expect(getRelatedDocuments).not.toHaveBeenCalled();
   });
 
-  it("renders HistoryGraph even when no delivery-column rows are selectable", async () => {
+  it("mounts the picker graph when no delivery-column rows are selectable", async () => {
     vi.mocked(getBindingGraph).mockResolvedValue({
       nodes: [
         {
@@ -329,27 +329,59 @@ describe("BindingLeafView representation picker (#678)", () => {
       vintageYear: 2024,
     });
 
-    await expect
-      .element(page.getByRole("heading", { name: "History" }))
-      .toBeVisible();
-    expect(document.querySelector(".rep-picker")).toBeNull();
+    await vi.waitFor(() => {
+      if (!document.querySelector(".rep-picker .graph-picker")) {
+        throw new Error("picker graph not rendered");
+      }
+    });
+    expect(document.querySelector(".col-list")).toBeNull();
+    expect(document.body.textContent).toContain("uncolumned coding");
     await expect
       .element(page.getByRole("link", { name: "kon2" }))
       .toBeVisible();
   });
 
   it("does not clamp open-ended graph timelines to the steward period ceiling", async () => {
-    vi.mocked(getBindingGraph).mockResolvedValue(
-      graph({
-        states: [
-          gstate({
-            valid_from: "2000-01-01",
-            valid_to: null,
-            delivery_column_name: "Kon",
-          }),
-        ],
-      }) as never,
-    );
+    const openEnded = graph({
+      states: [
+        gstate({
+          valid_from: "2000-01-01",
+          valid_to: null,
+          delivery_column_name: "Kon",
+        }),
+      ],
+    });
+    openEnded.nodes.push({
+      kind: "variable",
+      id: "v2",
+      fqid: "scb/lisa/kon2",
+      label: "Kön successor",
+      group_key: null,
+      group_label: null,
+      definition: null,
+      description: null,
+      operational_definition: null,
+      facets: [],
+      states: [
+        gstate({
+          state_id: 2,
+          representation_run_id: 2,
+          delivery_column_name: "Kon2",
+          valid_from: "2005-01-01",
+          valid_to: "2008-12-31",
+        }),
+      ],
+      same_as: [],
+    });
+    openEnded.edges.push({
+      id: "v1-v2",
+      kind: "succession",
+      source: "v1",
+      target: "v2",
+      label: null,
+      effective_year: 2005,
+    });
+    vi.mocked(getBindingGraph).mockResolvedValue(openEnded as never);
 
     render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
@@ -369,11 +401,11 @@ describe("BindingLeafView representation picker (#678)", () => {
     await expect.element(page.getByText("coverage through 2010")).toBeVisible();
 
     const graphTicks = await vi.waitFor(() => {
-      const labels = [...document.querySelectorAll(".history-graph .tick")].map(
-        (el) => el.textContent?.trim() ?? "",
-      );
+      const labels = [
+        ...document.querySelectorAll(".graph-picker .graph-tick"),
+      ].map((el) => el.textContent?.trim() ?? "");
       if (!labels.includes("2026")) {
-        throw new Error(`history graph ticks not ready: ${labels.join(", ")}`);
+        throw new Error(`picker graph ticks not ready: ${labels.join(", ")}`);
       }
       return labels;
     });

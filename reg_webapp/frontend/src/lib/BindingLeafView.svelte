@@ -27,7 +27,6 @@ import {
   rowAddPeriod,
 } from "./catalog";
 import DocMentionsPanel from "./DocMentionsPanel.svelte";
-import HistoryGraph from "./HistoryGraph.svelte";
 import LineageDetails from "./LineageDetails.svelte";
 import PeriodPicker from "./PeriodPicker.svelte";
 import {
@@ -275,17 +274,16 @@ const technicalState = $derived.by(() => {
 });
 
 // ── The relationship-graph fetch (#678/#904) ────────────────────────────────
-// The leaf owns ONE `/graph` fetch (#761/#792): it feeds the restored HistoryGraph,
-// the additive picker graph mode, AND the #670 header identity (qualifier + group
-// link), derived from the graph FOCUS node — no separate `/dimensions` request. Read
-// `fqidPath`
+// The leaf owns ONE `/graph` fetch (#761/#792): it feeds the picker graph mode AND the
+// #670 header identity (qualifier + group link), derived from the graph FOCUS node — no
+// separate `/dimensions` request. Read `fqidPath`
 // synchronously inside `fn` so the resource refetches when the leaf changes (same
 // pattern as `periodResource`).
 //
 // FAILURE-DOMAIN isolation: this resource is independent of `node`, so a graph
-// error / empty / timeout NEVER blanks the leaf — the HistoryGraph omits itself, the
-// picker falls back to the list, and the header just omits the qualifier/link (both
-// gate on a RESOLVED, non-empty graph; additive).
+// error / empty / timeout NEVER blanks the leaf — the picker falls back to the list, and
+// the header just omits the qualifier/link (both gate on a RESOLVED, non-empty graph;
+// additive).
 const graphResource = asyncResource(() => getBindingGraph(fqidPath));
 const graph = $derived(graphResource.data);
 // The graph has RESOLVED (a settled fetch with a payload) — the gate the header
@@ -294,6 +292,9 @@ const graph = $derived(graphResource.data);
 // once — no flicker, never blanked.
 const graphReady = $derived(
   !graphResource.loading && !graphResource.error && graph != null,
+);
+const graphHasDrawableContext = $derived(
+  graphReady && graph != null && graph.edges.length > 0,
 );
 
 // The FOCUS variable node — the node whose `id === focus_id` (the requested
@@ -626,7 +627,7 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
        variant selector + post-click rep chooser. The period window only DIMS
        out-of-window rows (`pickerWindow`), never filters them — selection works
        on any row. `seedReady` still gates the commit. -->
-  {#if pickerRows.length > 0}
+  {#if pickerRows.length > 0 || graphHasDrawableContext}
     <RepresentationPicker
       bands={pickerBands}
       window={pickerWindow}
@@ -745,15 +746,6 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
 {/snippet}
 
 {#snippet relationships()}
-  <!-- #904 Option B: keep the standalone history graph for every leaf case it
-       covered before the picker graph experiment. The picker graph mode is now a
-       strictly-gated enhancement for clean selectable cases; this graph remains the
-       source of succession/group context for no-column and otherwise ambiguous
-       leaves. -->
-  {#if graphReady && graph}
-    <HistoryGraph {graph} {vintageYear} />
-  {/if}
-
   <!-- The two NON-graph affordances the #761 payload doesn't carry — provenance
        (lineage edges + source register) and the fetched lineage warnings — live
        here on the binding leaf. -->
