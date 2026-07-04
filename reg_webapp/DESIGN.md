@@ -1942,9 +1942,11 @@ seed: the fallback is the stale no-draft value (active-draft window writes/clear
 update it), so the new project starts windowless (full history) unless the user sets
 one. An opened project (`openFromFile` / restore) keeps its own `window` unchanged. The
 rail slider also exposes an explicit ✕ clear control that writes `null` back to the
-store, making full history reachable at any time after the first interaction.
-Catalog-derived slider bounds (from the API rather than the fixed 1960 floor) are a
-possible follow-up.
+store, making full history reachable at any time after the first interaction. Filtered
+steward deployments seed the rail and per-page picker bounds from
+`/api/context.steward.catalog_period_span` (#1037), a best-effort year span derived from
+the steward index and clamped to the catalog vintage. The global deployment and
+unparseable steward periods fall back to the fixed 1960 → catalog-vintage bounds.
 
 ## API surface
 

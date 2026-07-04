@@ -31,6 +31,8 @@ import HistoryGraph from "./HistoryGraph.svelte";
 import LineageDetails from "./LineageDetails.svelte";
 import PeriodPicker from "./PeriodPicker.svelte";
 import {
+  clampYearPeriodWire,
+  clampYearWindow,
   isStructurallyValidPeriodWire,
   nextResolutionQuery,
   periodFromWire,
@@ -76,7 +78,10 @@ let {
   node,
   regMetaVersion,
   steward,
+  windowMinYear,
   vintageYear,
+  windowMaxYear = vintageYear,
+  enforcePeriodBounds = false,
 }: {
   fqidPath: string;
   node: BindingNodeData;
@@ -87,10 +92,16 @@ let {
   // until both seed fields are present (sub-second; see `seedReady`).
   regMetaVersion: string;
   steward: string;
-  // #631: the catalog VINTAGE year (App → CatalogNodeView → here), threaded into
-  // the period picker so the local slider's open-ended ceiling caps at the catalog
-  // vintage — matching the header window slider — instead of wall-clock time.
+  // #1037: steward-aware slider floor (App → CatalogNodeView → here).
+  windowMinYear: number;
+  // #631: the true catalog vintage year, used by open-ended graph timelines.
   vintageYear: number;
+  // #1037: steward-aware period-control ceiling. Defaults to `vintageYear` for
+  // direct component callers that are outside App's steward context.
+  windowMaxYear?: number;
+  // #1037: true only for real steward-derived app bounds. The global 1960 floor
+  // is a fallback and must not erase genuinely earlier coverage.
+  enforcePeriodBounds?: boolean;
 } = $props();
 
 // Read the resolution modifiers off the reactive query so the fetch re-runs when
@@ -99,6 +110,15 @@ const params = $derived({
   period: router.getQueryParam("period") ?? undefined,
   variant: router.getQueryParam("variant") ?? undefined,
   value_set_version: router.getQueryParam("value_set_version") ?? undefined,
+});
+const boundedPickerPeriod = $derived(
+  enforcePeriodBounds
+    ? clampYearPeriodWire(params.period, windowMinYear, windowMaxYear)
+    : (params.period ?? null),
+);
+const effectiveParams = $derived({
+  ...params,
+  period: boundedPickerPeriod ?? undefined,
 });
 const hasResolutionModifier = $derived(
   params.variant !== undefined || params.value_set_version !== undefined,
@@ -120,7 +140,9 @@ const focusVariant = $derived(codesFocus?.variant ?? null);
 // node's embedded states are shown (no redundant request; CatalogNodeView already
 // fetched the full node). SYNC `fn()` so the effect tracks the reactive `params`.
 const periodResource = asyncResource<CatalogNode | StatesResponse | null>(() =>
-  params.period ? getCatalogNode(fqidPath, params) : Promise.resolve(null),
+  effectiveParams.period
+    ? getCatalogNode(fqidPath, effectiveParams)
+    : Promise.resolve(null),
 );
 
 // When `?variant` / `?value_set_version` narrows the resolution, the value-set
@@ -129,8 +151,8 @@ const periodResource = asyncResource<CatalogNode | StatesResponse | null>(() =>
 // outside the period instead of staying inline and greyed.
 const periodScopeResource = asyncResource<CatalogNode | StatesResponse | null>(
   () =>
-    params.period && hasResolutionModifier
-      ? getCatalogNode(fqidPath, { period: params.period })
+    effectiveParams.period && hasResolutionModifier
+      ? getCatalogNode(fqidPath, { period: effectiveParams.period })
       : Promise.resolve(null),
 );
 
@@ -155,10 +177,10 @@ const periodScopeStates = $derived.by(() => {
 // `narrowedStates` null and wedge the states section on a permanent
 // "Loading states…" with no feedback.
 const narrowedError = $derived(
-  params.period && periodResource.error ? periodResource.error : null,
+  effectiveParams.period && periodResource.error ? periodResource.error : null,
 );
 const scopeError = $derived(
-  params.period && !periodResource.error && hasResolutionModifier
+  effectiveParams.period && !periodResource.error && hasResolutionModifier
     ? periodScopeResource.error
     : null,
 );
@@ -168,14 +190,14 @@ const scopeError = $derived(
 // full history separately so out-of-period value sets can be collapsed instead of
 // removed (#744).
 const resolvedStates = $derived.by(() =>
-  params.period && !narrowedError ? narrowedStates : node.states,
+  effectiveParams.period && !narrowedError ? narrowedStates : node.states,
 );
 
 // States to show: loading while a period resolve is in flight; a single resolved
 // state renders the detail view; multi/empty period resolves render the full
 // embedded history with `scopeStates` marking what is in-period (#744).
 const states = $derived.by(() => {
-  if (!params.period || narrowedError) {
+  if (!effectiveParams.period || narrowedError) {
     return node.states;
   }
   if (
@@ -191,7 +213,7 @@ const states = $derived.by(() => {
 
 // Whether the visible states are period-narrowed (drives the "narrowed to X" note
 // + ValueSetView's empty-message wording).
-const isNarrowed = $derived(!!params.period && !narrowedError);
+const isNarrowed = $derived(!!effectiveParams.period && !narrowedError);
 const stateScope = $derived(
   isNarrowed
     ? hasResolutionModifier
@@ -377,18 +399,26 @@ const committedRows = $derived(
   committedPickerRows(projectStore.draft, pickerBands),
 );
 
+const narrowedPeriodLabel = $derived(
+  (boundedPickerPeriod ?? params.period ?? "").split(",").join(" + "),
+);
+const boundedProjectWindow = $derived(
+  windowStore.value === null || !enforcePeriodBounds
+    ? windowStore.value
+    : clampYearWindow(windowStore.value, windowMinYear, windowMaxYear),
+);
 const activePickerPeriod = $derived(
-  params.period &&
+  boundedPickerPeriod &&
     !narrowedError &&
-    isStructurallyValidPeriodWire(params.period)
-    ? params.period
+    isStructurallyValidPeriodWire(boundedPickerPeriod)
+    ? boundedPickerPeriod
     : null,
 );
 /** The active period window to DIM against, as an inclusive year pair (a
  * structurally valid `?period` wire wins, else the global study window), or null
  * (no dimming). */
 const pickerWindow = $derived(
-  pickerWindowYears(activePickerPeriod, windowStore.value),
+  pickerWindowYears(activePickerPeriod, boundedProjectWindow),
 );
 
 /** The applied outcome (drives the inline confirmation). */
@@ -579,10 +609,12 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
        same `?period` URL path (a local change writes `?period` only, never the
        global window). -->
   <PeriodPicker
-    period={params.period ?? null}
-    window={windowStore.value}
+    period={boundedPickerPeriod}
+    window={boundedProjectWindow}
     {coverage}
-    {vintageYear}
+    {windowMinYear}
+    vintageYear={windowMaxYear}
+    {enforcePeriodBounds}
     onsubmit={(period) => setResolution({ period })}
     onclear={() => setResolution({ period: null })}
   />
@@ -689,8 +721,8 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
     <h3 id="states-heading">
       <!-- A #307 comma list reads as segments joined with "+" (the union the
            backend resolves since #340) — `2005..2010 + 2015..2020`. -->
-      States{#if isNarrowed && params.period}<span class="muted narrowed-note">
-          · narrowed to {params.period.split(",").join(" + ")}</span
+      States{#if isNarrowed && narrowedPeriodLabel}<span class="muted narrowed-note">
+          · narrowed to {narrowedPeriodLabel}</span
         >{/if}
     </h3>
     {#if valueSetStates}

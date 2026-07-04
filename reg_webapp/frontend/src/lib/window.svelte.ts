@@ -118,6 +118,23 @@ class WindowStore {
       // doesn't survive a reload. Not fatal.
     }
   }
+
+  /** Clamp a stale active window into deployment bounds. This deliberately uses
+   * the normal write path so an active draft's exported `project_data.json` and
+   * the no-draft localStorage fallback cannot keep an out-of-steward span. */
+  clampTo(min: number, max: number): void {
+    const current = this.value;
+    if (current === null) {
+      return;
+    }
+    const from = Math.min(Math.max(current.from, min), max);
+    const to = Math.min(Math.max(current.to, min), max);
+    const next = { from: Math.min(from, to), to: Math.max(from, to) };
+    if (next.from === current.from && next.to === current.to) {
+      return;
+    }
+    this.set(next);
+  }
 }
 
 export const windowStore = new WindowStore();

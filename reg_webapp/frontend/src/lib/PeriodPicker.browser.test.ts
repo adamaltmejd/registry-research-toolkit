@@ -214,6 +214,278 @@ describe("PeriodPicker — window slider (#615)", () => {
     expect(onsubmit).not.toHaveBeenCalled();
   });
 
+  it("uses enforced steward-derived bounds when no selected period reaches outside them (#1037)", async () => {
+    const screen = await render(PeriodPicker, {
+      period: null,
+      window: null,
+      coverage: { from: 1996, to: null },
+      windowMinYear: 2000,
+      vintageYear: 2010,
+      enforcePeriodBounds: true,
+      onsubmit: vi.fn(),
+      onclear: vi.fn(),
+    });
+
+    await expect
+      .element(screen.getByRole("slider", { name: "From year" }))
+      .toHaveAttribute("min", "2000");
+    await expect
+      .element(screen.getByRole("slider", { name: "From year" }))
+      .toHaveValue("2000");
+    await expect
+      .element(screen.getByRole("slider", { name: "To year" }))
+      .toHaveValue("2010");
+  });
+
+  it("enforced steward bounds clamp stale project windows before deriving bounds or Apply output (#1037)", async () => {
+    const onsubmit = vi.fn<(period: string) => void>();
+    const screen = await render(PeriodPicker, {
+      period: null,
+      window: { from: 1960, to: 2026 },
+      coverage: { from: 1996, to: null },
+      windowMinYear: 2000,
+      vintageYear: 2010,
+      enforcePeriodBounds: true,
+      onsubmit,
+      onclear: vi.fn(),
+    });
+
+    await expect
+      .element(screen.getByRole("slider", { name: "From year" }))
+      .toHaveAttribute("min", "2000");
+    await expect
+      .element(screen.getByRole("slider", { name: "To year" }))
+      .toHaveAttribute("max", "2010");
+    await expect
+      .element(screen.getByRole("slider", { name: "From year" }))
+      .toHaveValue("2000");
+    await expect
+      .element(screen.getByRole("slider", { name: "To year" }))
+      .toHaveValue("2010");
+
+    await screen.getByRole("button", { name: "Apply period" }).click();
+    expect(onsubmit).toHaveBeenLastCalledWith("2000..2010");
+  });
+
+  it("enforced steward bounds do not report reset against the raw stale project window (#1037)", async () => {
+    const screen = await render(PeriodPicker, {
+      period: null,
+      window: { from: 2012, to: 2020 },
+      coverage: { from: 1996, to: null },
+      windowMinYear: 2000,
+      vintageYear: 2010,
+      enforcePeriodBounds: true,
+      onsubmit: vi.fn(),
+      onclear: vi.fn(),
+    });
+
+    await expect
+      .element(screen.getByRole("slider", { name: "From year" }))
+      .toHaveValue("2010");
+    expect(document.body.textContent).not.toContain(
+      "Deviates from project window (2012–2020)",
+    );
+  });
+
+  it("enforced steward bounds ignore wholly post-ceiling coverage when deriving slider bounds (#1037)", async () => {
+    const onsubmit = vi.fn<(period: string) => void>();
+    const screen = await render(PeriodPicker, {
+      period: null,
+      window: null,
+      coverage: { from: 2027, to: 2030 },
+      windowMinYear: 2000,
+      vintageYear: 2010,
+      enforcePeriodBounds: true,
+      onsubmit,
+      onclear: vi.fn(),
+    });
+
+    await expect
+      .element(screen.getByRole("slider", { name: "From year" }))
+      .toHaveAttribute("min", "2000");
+    await expect
+      .element(screen.getByRole("slider", { name: "To year" }))
+      .toHaveAttribute("max", "2010");
+    await expect
+      .element(screen.getByRole("slider", { name: "From year" }))
+      .toHaveValue("2000");
+    await expect
+      .element(screen.getByRole("slider", { name: "To year" }))
+      .toHaveValue("2010");
+
+    await screen.getByRole("button", { name: "Apply period" }).click();
+    expect(onsubmit).not.toHaveBeenCalled();
+  });
+
+  it("enforced steward bounds ignore wholly pre-floor coverage when deriving slider bounds (#1037)", async () => {
+    const onsubmit = vi.fn<(period: string) => void>();
+    const screen = await render(PeriodPicker, {
+      period: null,
+      window: null,
+      coverage: { from: 1990, to: 1995 },
+      windowMinYear: 2000,
+      vintageYear: 2010,
+      enforcePeriodBounds: true,
+      onsubmit,
+      onclear: vi.fn(),
+    });
+
+    await expect
+      .element(screen.getByRole("slider", { name: "From year" }))
+      .toHaveAttribute("min", "2000");
+    await expect
+      .element(screen.getByRole("slider", { name: "To year" }))
+      .toHaveAttribute("max", "2010");
+    await expect
+      .element(screen.getByRole("slider", { name: "From year" }))
+      .toHaveValue("2000");
+    await expect
+      .element(screen.getByRole("slider", { name: "To year" }))
+      .toHaveValue("2010");
+
+    await screen.getByRole("button", { name: "Apply period" }).click();
+    expect(onsubmit).not.toHaveBeenCalled();
+  });
+
+  it("enforced steward bounds ignore open-ended post-ceiling coverage when deriving slider bounds (#1037)", async () => {
+    const onsubmit = vi.fn<(period: string) => void>();
+    const screen = await render(PeriodPicker, {
+      period: null,
+      window: null,
+      coverage: { from: 2027, to: null },
+      windowMinYear: 2000,
+      vintageYear: 2010,
+      enforcePeriodBounds: true,
+      onsubmit,
+      onclear: vi.fn(),
+    });
+
+    await expect
+      .element(screen.getByRole("slider", { name: "From year" }))
+      .toHaveAttribute("min", "2000");
+    await expect
+      .element(screen.getByRole("slider", { name: "To year" }))
+      .toHaveAttribute("max", "2010");
+    await expect
+      .element(screen.getByRole("slider", { name: "From year" }))
+      .toHaveValue("2000");
+    await expect
+      .element(screen.getByRole("slider", { name: "To year" }))
+      .toHaveValue("2010");
+
+    await screen.getByRole("button", { name: "Apply period" }).click();
+    expect(onsubmit).not.toHaveBeenCalled();
+  });
+
+  it("enforced steward bounds ignore open-start pre-floor coverage when deriving slider bounds (#1037)", async () => {
+    const onsubmit = vi.fn<(period: string) => void>();
+    const screen = await render(PeriodPicker, {
+      period: null,
+      window: null,
+      coverage: { from: null, to: 1995 },
+      windowMinYear: 2000,
+      vintageYear: 2010,
+      enforcePeriodBounds: true,
+      onsubmit,
+      onclear: vi.fn(),
+    });
+
+    await expect
+      .element(screen.getByRole("slider", { name: "From year" }))
+      .toHaveAttribute("min", "2000");
+    await expect
+      .element(screen.getByRole("slider", { name: "To year" }))
+      .toHaveAttribute("max", "2010");
+    await expect
+      .element(screen.getByRole("slider", { name: "From year" }))
+      .toHaveValue("2000");
+    await expect
+      .element(screen.getByRole("slider", { name: "To year" }))
+      .toHaveValue("2010");
+
+    await screen.getByRole("button", { name: "Apply period" }).click();
+    expect(onsubmit).not.toHaveBeenCalled();
+  });
+
+  it("enforced steward bounds clamp stale active year periods before deriving bounds or Apply output (#1037)", async () => {
+    const onsubmit = vi.fn<(period: string) => void>();
+    const screen = await render(PeriodPicker, {
+      period: "1960..2026",
+      window: { from: 2000, to: 2010 },
+      coverage: { from: 1996, to: null },
+      windowMinYear: 2000,
+      vintageYear: 2010,
+      enforcePeriodBounds: true,
+      onsubmit,
+      onclear: vi.fn(),
+    });
+
+    await expect
+      .element(screen.getByRole("slider", { name: "From year" }))
+      .toHaveAttribute("min", "2000");
+    await expect
+      .element(screen.getByRole("slider", { name: "To year" }))
+      .toHaveAttribute("max", "2010");
+    await expect
+      .element(screen.getByRole("slider", { name: "From year" }))
+      .toHaveValue("2000");
+    await expect
+      .element(screen.getByRole("slider", { name: "To year" }))
+      .toHaveValue("2010");
+
+    await screen.getByRole("button", { name: "Apply period" }).click();
+    expect(onsubmit).toHaveBeenLastCalledWith("2000..2010");
+  });
+
+  it("global fallback floor does not erase real pre-1960 coverage (#1037)", async () => {
+    const onsubmit = vi.fn<(period: string) => void>();
+    const screen = await render(PeriodPicker, {
+      period: null,
+      window: null,
+      coverage: { from: 1950, to: 1965 },
+      windowMinYear: 1960,
+      vintageYear: 2026,
+      onsubmit,
+      onclear: vi.fn(),
+    });
+
+    await expect
+      .element(screen.getByRole("slider", { name: "From year" }))
+      .toHaveAttribute("min", "1950");
+    await expect
+      .element(screen.getByRole("slider", { name: "From year" }))
+      .toHaveValue("1950");
+
+    await screen.getByRole("button", { name: "Apply period" }).click();
+    expect(onsubmit).toHaveBeenLastCalledWith("1950..1965");
+  });
+
+  it("global fallback ceiling does not erase finite post-vintage coverage (#1037)", async () => {
+    const onsubmit = vi.fn<(period: string) => void>();
+    const screen = await render(PeriodPicker, {
+      period: null,
+      window: null,
+      coverage: { from: 2027, to: 2030 },
+      windowMinYear: 1960,
+      vintageYear: 2026,
+      onsubmit,
+      onclear: vi.fn(),
+    });
+
+    await expect
+      .element(screen.getByRole("slider", { name: "To year" }))
+      .toHaveAttribute("max", "2030");
+    await expect
+      .element(screen.getByRole("slider", { name: "From year" }))
+      .toHaveValue("2027");
+    await expect
+      .element(screen.getByRole("slider", { name: "To year" }))
+      .toHaveValue("2030");
+
+    await screen.getByRole("button", { name: "Apply period" }).click();
+    expect(onsubmit).toHaveBeenLastCalledWith("2027..2030");
+  });
+
   it("Apply with an INVERTED (discarded) coverage and no window stays a no-op (Fix 4)", async () => {
     // Fix 4: an inverted effective coverage (e.g. {from:2025, to:null} on a 2024
     // vintage → effective 2025..2024) is treated as NO coverage by both

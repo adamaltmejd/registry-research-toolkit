@@ -764,6 +764,16 @@ export interface components {
             path: string;
         };
         /**
+         * CatalogPeriodSpan
+         * @description Best-effort inclusive year span for a steward's catalog holdings.
+         */
+        CatalogPeriodSpan: {
+            /** From */
+            from: number;
+            /** To */
+            to: number;
+        };
+        /**
          * CatalogSizes
          * @description Headline catalog-size counts — browse-addressable (slugged)
          *     providers/registers/variables; the grain the catalog listings render.
@@ -1453,6 +1463,8 @@ export interface components {
          *     the DB the backend booted against; the webapp block reflects the installed
          *     packages. ``catalog_drift_warnings`` is the steward-catalog
          *     drift surfaced at boot — empty for ``global`` and for an up-to-date catalog.
+         *     The steward block may include a best-effort ``catalog_period_span`` for
+         *     slider bounds.
          */
         ContextResponse: {
             /** Catalog Drift Warnings */
@@ -2148,6 +2160,8 @@ export interface components {
          * @description Deployment identity + branding, from ``steward.toml``.
          */
         StewardInfo: {
+            /** @description Best-effort steward catalog-wide year span for UI slider bounds; null for the global deployment or unparseable steward periods. */
+            catalog_period_span?: components["schemas"]["CatalogPeriodSpan"] | null;
             /** Id */
             id: string;
             /** Long Name */

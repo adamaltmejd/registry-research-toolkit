@@ -281,6 +281,25 @@
         "title": "CatalogDriftWarning",
         "type": "object"
       },
+      "CatalogPeriodSpan": {
+        "description": "Best-effort inclusive year span for a steward's catalog holdings.",
+        "properties": {
+          "from": {
+            "title": "From",
+            "type": "integer"
+          },
+          "to": {
+            "title": "To",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "from",
+          "to"
+        ],
+        "title": "CatalogPeriodSpan",
+        "type": "object"
+      },
       "CatalogSizes": {
         "additionalProperties": false,
         "description": "Headline catalog-size counts \u2014 browse-addressable (slugged)\nproviders/registers/variables; the grain the catalog listings render.",
@@ -1554,7 +1573,7 @@
         "type": "object"
       },
       "ContextResponse": {
-        "description": "``GET /api/context`` \u2014 deployment identity, branding, build info.\n\nNo git sha (decision: no new provenance dep). The reg_meta block reflects\nthe DB the backend booted against; the webapp block reflects the installed\npackages. ``catalog_drift_warnings`` is the steward-catalog\ndrift surfaced at boot \u2014 empty for ``global`` and for an up-to-date catalog.",
+        "description": "``GET /api/context`` \u2014 deployment identity, branding, build info.\n\nNo git sha (decision: no new provenance dep). The reg_meta block reflects\nthe DB the backend booted against; the webapp block reflects the installed\npackages. ``catalog_drift_warnings`` is the steward-catalog\ndrift surfaced at boot \u2014 empty for ``global`` and for an up-to-date catalog.\nThe steward block may include a best-effort ``catalog_period_span`` for\nslider bounds.",
         "properties": {
           "catalog_drift_warnings": {
             "items": {
@@ -3100,6 +3119,17 @@
       "StewardInfo": {
         "description": "Deployment identity + branding, from ``steward.toml``.",
         "properties": {
+          "catalog_period_span": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/CatalogPeriodSpan"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Best-effort steward catalog-wide year span for UI slider bounds; null for the global deployment or unparseable steward periods."
+          },
           "id": {
             "title": "Id",
             "type": "string"
