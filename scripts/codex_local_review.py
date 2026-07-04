@@ -507,8 +507,8 @@ def main(argv: list[str] | None = None) -> int:
         head = getattr(exc, "head", None)
         if head is not None:
             error["head"] = head
-            error["base"] = exc.base  # type: ignore[union-attr]
-            error["merge_base"] = exc.merge_base  # type: ignore[union-attr]
+            error["base"] = getattr(exc, "base", None)
+            error["merge_base"] = getattr(exc, "merge_base", None)
         print(json.dumps(error, indent=2))
         return 2
 
