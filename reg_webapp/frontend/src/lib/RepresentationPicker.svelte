@@ -1155,7 +1155,9 @@ function graphLaneA11y(rn: RenderNode): string {
   return items
     .map((item) => {
       if (item.kind === "row") {
-        return `${item.row.column}, ${item.row.period}, ${item.row.variant}`;
+        return [item.row.column, item.row.period, item.row.variant]
+          .filter(Boolean)
+          .join(", ");
       }
       if (item.match) {
         const sub = graphCellSubLabel(item.cell, item.match.column);
@@ -1168,7 +1170,9 @@ function graphLaneA11y(rn: RenderNode): string {
           .filter(Boolean)
           .join(", ");
       }
-      return `${item.cell.label}, ${item.cell.window}, ${item.cell.variant}`;
+      return [item.cell.label, item.cell.window, item.cell.variant]
+        .filter(Boolean)
+        .join(", ");
     })
     .join("; ");
 }
@@ -1646,7 +1650,9 @@ function codingsVaryHref(band: PickerBand, row: PickerRepresentation): string {
                             {#if inWindow}
                               {@render lateWarn(row)}
                             {/if}
-                            <span class="graph-cell-window">{cell.window}</span>
+                            {#if cell.window}
+                              <span class="graph-cell-window">{cell.window}</span>
+                            {/if}
                           </label>
                         {:else if item.kind === "cell"}
                           {@const cell = item.cell}
@@ -1655,19 +1661,25 @@ function codingsVaryHref(band: PickerBand, row: PickerRepresentation): string {
                             class:open-start={cell.openStart}
                             class:open-end={cell.openEnd}
                             style={`left:${left}px; width:${width}px; top:${cellTopValue}px`}
-                            title={`${cell.label} · ${cell.window}`}
+                            title={[cell.label, cell.window]
+                              .filter(Boolean)
+                              .join(" · ")}
                           >
                             <span class="graph-cell-main">
                               <span class="graph-unavailable-label">{cell.label}</span>
                             </span>
-                            <span class="graph-cell-window">{cell.window}</span>
+                            {#if cell.window}
+                              <span class="graph-cell-window">{cell.window}</span>
+                            {/if}
                           </div>
                         {:else}
                           {@const row = item.row}
                           <div
                             class="graph-cell unavailable dimmed"
                             style={`left:${left}px; width:${width}px; top:${cellTopValue}px`}
-                            title={`${row.column} · ${row.period}`}
+                            title={[row.column, row.period]
+                              .filter(Boolean)
+                              .join(" · ")}
                           >
                             <span class="graph-cell-main">
                               {@render colChip(row.column)}
@@ -1675,7 +1687,9 @@ function codingsVaryHref(band: PickerBand, row: PickerRepresentation): string {
                                 <span class="graph-cell-sub">{row.valueSetLabel}</span>
                               {/if}
                             </span>
-                            <span class="graph-cell-window">{row.period}</span>
+                            {#if row.period}
+                              <span class="graph-cell-window">{row.period}</span>
+                            {/if}
                           </div>
                         {/if}
                       {/each}

@@ -1,23 +1,19 @@
 import { describe, expect, it } from "vitest";
 import {
   clampYearWindow,
-  grainOfToken,
   intersectCoverageWindow,
   isStructurallyValidPeriodWire,
   looksLikePeriod,
   mergePeriods,
   nextResolutionQuery,
   notDeliveredGaps,
-  periodFieldFromQuery,
   periodFromWire,
-  periodQueryFromField,
   periodRangeEndpoints,
   periodTokenBounds,
   periodTokenForBounds,
   periodToWire,
   periodWireBounds,
   queryFromParams,
-  rangeRepresentable,
   sameYearWindow,
   VALUE_SET_VERSION_NONE,
   yearWindowFromWire,
@@ -168,7 +164,7 @@ describe("periodFromWire #307 list arm", () => {
 
 describe("VALUE_SET_VERSION_NONE sentinel", () => {
   it("matches the backend period_param.VALUE_SET_VERSION_NONE", () => {
-    // The picker's "(no version)" chip sends this; the backend maps it to "".
+    // The picker's unlabeled-version chip sends this; the backend maps it to "".
     // MUST stay in lockstep with reg_webapp/backend/.../period_param.py.
     expect(VALUE_SET_VERSION_NONE).toBe("_none");
   });
@@ -180,44 +176,6 @@ describe("VALUE_SET_VERSION_NONE sentinel", () => {
         value_set_version: VALUE_SET_VERSION_NONE,
       }),
     ).toBe("period=2020&value_set_version=_none");
-  });
-});
-
-describe("period field ↔ query round-trip", () => {
-  // The field text IS the wire value (identity on a trimmed string), for every
-  // wire form.
-  const wireForms = [
-    "2020", // year
-    "HT2020", // term token
-    "VT2020",
-    "2020-Q3", // quarter
-    "2020-H1", // half
-    "2020-08", // month
-    "2020-12-31", // day
-    "2018..2020", // range
-    "_default", // snapshot sentinel
-  ];
-
-  for (const wire of wireForms) {
-    it(`round-trips ${wire}`, () => {
-      const field = periodFieldFromQuery(wire);
-      expect(field).toBe(wire);
-      expect(periodQueryFromField(field)).toBe(wire);
-    });
-  }
-
-  it("maps null/absent query to an empty field", () => {
-    expect(periodFieldFromQuery(null)).toBe("");
-    expect(periodFieldFromQuery(undefined)).toBe("");
-  });
-
-  it("maps a blank/whitespace field to null (full history)", () => {
-    expect(periodQueryFromField("")).toBeNull();
-    expect(periodQueryFromField("   ")).toBeNull();
-  });
-
-  it("trims surrounding whitespace off the field", () => {
-    expect(periodQueryFromField("  2020  ")).toBe("2020");
   });
 });
 
@@ -564,38 +522,6 @@ describe("periodWireBounds (#678: exact ISO bounds of a whole ?period)", () => {
       from: "2018-01-01",
       to: "2020-12-31",
     });
-  });
-});
-
-describe("grainOfToken / rangeRepresentable (#308)", () => {
-  it("classifies every token form (H1/H2 map to term)", () => {
-    expect(grainOfToken("2020")).toBe("year");
-    expect(grainOfToken("VT2009")).toBe("term");
-    expect(grainOfToken("HT2009")).toBe("term");
-    expect(grainOfToken("2020-H1")).toBe("term");
-    expect(grainOfToken("2020-Q3")).toBe("quarter");
-    expect(grainOfToken("2020-08")).toBe("month");
-    expect(grainOfToken("2020-08-15")).toBe("day");
-    expect(grainOfToken("_default")).toBeNull();
-    expect(grainOfToken("2018..2020")).toBeNull();
-    expect(grainOfToken("junk")).toBeNull();
-  });
-
-  it("rangeRepresentable accepts single tokens and uniform-grain ranges only", () => {
-    expect(rangeRepresentable("2020")).toBe(true);
-    expect(rangeRepresentable("HT2018")).toBe(true);
-    expect(rangeRepresentable("2010..2020")).toBe(true);
-    expect(rangeRepresentable("VT2018..HT2019")).toBe(true);
-    // Mixed grains (the #306 succession clips) need the text/token escape.
-    expect(rangeRepresentable("1992..2009-06-30")).toBe(false);
-    expect(rangeRepresentable("_default")).toBe(false);
-    expect(rangeRepresentable("")).toBe(false);
-  });
-
-  it("rangeRepresentable is grains-aware: a value at an excluded grain needs the text mode", () => {
-    expect(rangeRepresentable("2020-08", ["year"])).toBe(false);
-    expect(rangeRepresentable("2020-08", ["year", "month"])).toBe(true);
-    expect(rangeRepresentable("2020", ["year"])).toBe(true);
   });
 });
 

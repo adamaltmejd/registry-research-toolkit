@@ -433,10 +433,10 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
     ).toBeNull();
   });
 
-  it("a plain value set with no inline value_set renders 'No value set.' when isolated", async () => {
+  it("a plain value set with no inline value_set omits filler text when isolated", async () => {
     // A plain (non-classification) value set whose `value_set` is null/empty: the
     // isolated body has no codes to dump and no classification to link, so it
-    // reads the explicit "No value set." rather than rendering nothing.
+    // renders no filler text.
     const codeless = state({
       state_id: 1,
       value_set_id: 300,
@@ -455,7 +455,10 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
       narrowed: false,
     });
     await page.getByRole("button", { name: "Isolate" }).first().click();
-    await expect.element(page.getByText("No value set.")).toBeVisible();
+    await expect.element(page.getByText("Codeless")).toBeVisible();
+    await expect
+      .element(page.getByText("No value set."))
+      .not.toBeInTheDocument();
   });
 
   it("does NOT render any resolution-narrowing picker (the picker owns that now)", async () => {
@@ -573,8 +576,68 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
     // NOT the multi-state value-set list UI (`.vs-list`, which only the >1-state
     // view emits), so this really guards the single/multi boundary.
     await expect.element(page.getByText("Variant")).toBeVisible();
+    await expect.element(page.getByText("Value-set version")).toBeVisible();
     expect(document.querySelector(".vs-list")).toBeNull();
     await expect.element(page.getByText("Upplands Väsby")).toBeVisible();
+  });
+
+  it("single-state detail omits default/noise rows and wholly unknown windows", async () => {
+    render(ValueSetView, {
+      states: [
+        state({
+          variant: "_default",
+          value_set_version_label: "",
+          valid_from: "0001-01-01",
+          valid_to: "9999-12-31",
+          value_set: null,
+        }),
+      ],
+      narrowed: false,
+    });
+    await expect.element(page.getByText("Variant")).not.toBeInTheDocument();
+    await expect
+      .element(page.getByText("Value-set version"))
+      .not.toBeInTheDocument();
+    await expect.element(page.getByText("Valid")).not.toBeInTheDocument();
+    await expect.element(page.getByText(/since 0001/)).not.toBeInTheDocument();
+    await expect
+      .element(page.getByText("No value set."))
+      .not.toBeInTheDocument();
+  });
+
+  it("multi-state usage omits default/noise labels and wholly unknown windows", async () => {
+    render(ValueSetView, {
+      states: [
+        state({
+          state_id: 10,
+          variant: "_default",
+          value_set_id: 700,
+          value_set_version_label: "",
+          valid_from: "0001-01-01",
+          valid_to: "9999-12-31",
+          operational_definition: "Defined from the source register.",
+        }),
+        state({
+          state_id: 11,
+          variant: "regional",
+          value_set_id: 700,
+          value_set_version_label: "",
+          valid_from: "2010-01-01",
+          valid_to: "2010-12-31",
+        }),
+      ],
+      narrowed: false,
+    });
+
+    await expect.element(page.getByText("regional")).toBeVisible();
+    await expect
+      .element(page.getByText("Defined from the source register."))
+      .toBeVisible();
+    await expect.element(page.getByText("_default")).not.toBeInTheDocument();
+    await expect
+      .element(page.getByText("Unknown window"))
+      .not.toBeInTheDocument();
+    await expect.element(page.getByText(/since 0001/)).not.toBeInTheDocument();
   });
 
   it("empty mode is unchanged (clean no-state message, not an error)", async () => {

@@ -1316,7 +1316,7 @@ describe("BindingLeafView representation picker (#678)", () => {
       .toBeVisible();
   });
 
-  it("demotes a single state's Data type / Delivery column into its own 'Technical details' disclosure (#638 PR4)", async () => {
+  it("demotes a single state's Data type / Delivery column into the bottom 'Technical details' disclosure (#1038)", async () => {
     render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
       node: node(singleWithStructural),
@@ -1329,24 +1329,26 @@ describe("BindingLeafView representation picker (#678)", () => {
       .element(page.getByText("Technical details").first())
       .toBeVisible();
 
-    const stateTech = [
+    const disclosures = [
       ...document.querySelectorAll<HTMLDetailsElement>("details.tech-details"),
-    ].find((d) => d.textContent?.includes("Data type"));
-    expect(stateTech).toBeDefined();
-    expect(stateTech?.open).toBe(false);
-    expect(stateTech?.textContent).toContain("Data type");
-    expect(stateTech?.textContent).toContain("Delivery column");
-    const stateDetail = stateTech?.closest(".state-detail");
+    ];
+    expect(disclosures).toHaveLength(1);
+    const tech = disclosures[0];
+    expect(tech.open).toBe(false);
+    expect(tech.textContent).toContain("Sensitive");
+    expect(tech.textContent).toContain("Identifier");
+    expect(tech.textContent).toContain("Data type");
+    expect(tech.textContent).toContain("Delivery column");
+    expect(tech.closest(".state-detail")).toBeNull();
     const promptMeta = [
-      ...(stateDetail?.querySelectorAll("dl.meta") ?? []),
+      ...document.querySelectorAll(".state-detail dl.meta"),
     ].find((dl) => !dl.closest("details.tech-details"));
     expect(promptMeta).toBeDefined();
     const promptText = promptMeta?.textContent ?? "";
     expect(promptText).toContain("Variant");
     expect(promptText).toContain("Valid");
-    expect(promptText).toContain("Value-set version");
-    expect(stateTech?.textContent).not.toContain("Variant");
-    expect(stateTech?.textContent).not.toContain("Value-set version");
+    expect(tech.textContent).not.toContain("Variant");
+    expect(tech.textContent).not.toContain("Value-set version");
   });
 
   it("Apply stays seed-gated (disabled) even when a row is staged, until the seed is present", async () => {

@@ -418,7 +418,7 @@ describe("PeriodWindowSlider", () => {
     // selection 2000–2020 vs coverage 1995–2015 WOULD gap 2016–2020 — but the
     // shown span is the window PROJECTION, not the real (sub-annual) value, so the
     // gap is meaningless: no "Not delivered" note, no hatched gap cells. The
-    // sub-annual cue already points at the real value in More options (Codex P2).
+    // sub-annual cue names the real value without implying the slider represents it.
     const screen = await render(PeriodWindowSlider, {
       ...base,
       selection: { from: 2000, to: 2020 },

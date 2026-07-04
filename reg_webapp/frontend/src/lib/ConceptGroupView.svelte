@@ -23,7 +23,6 @@ import {
 import PeriodPicker from "./PeriodPicker.svelte";
 import {
   isStructurallyValidPeriodWire,
-  type PeriodGrain,
   periodFromWire,
   periodToWire,
 } from "./period";
@@ -514,9 +513,6 @@ const graphMemberHrefs = $derived.by((): Record<string, string> => {
   return out;
 });
 
-// Members are year-grain coverage, so the picker offers only the year grain.
-const grains: PeriodGrain[] = ["year"];
-
 // The picker's coverage track = the union span over all member variables' rows.
 // Derived from the bands' representation spans (year-grain): the slider shows where
 // the group as a whole has data. simplify: an inline min/max over the bands' rows is
@@ -739,7 +735,6 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
          writes `?period` only (never the global window); `getConceptGroup` ignores it. -->
     <PeriodPicker
       {period}
-      {grains}
       window={windowStore.value}
       coverage={unionCoverage}
       {vintageYear}

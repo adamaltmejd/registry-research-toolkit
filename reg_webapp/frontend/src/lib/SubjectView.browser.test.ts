@@ -6,8 +6,8 @@ import SubjectView from "./SubjectView.svelte";
 
 // The unified catalog-SUBJECT shell (#638 PR1): a thin presentational layout. The
 // contract this guards is (1) the title/fqid header, (2) the FIXED section order
-// (description → picker → value set → relationships → docs), and (3) omit-when-
-// absent (a section with no snippet renders nothing — no empty wrapper). Sections
+// (description → picker → value set → relationships → docs → technical), and
+// (3) omit-when-absent (a section with no snippet renders nothing — no empty wrapper). Sections
 // are passed as raw snippets, each a uniquely-marked sentinel so DOM order asserts
 // the canonical order.
 
@@ -81,6 +81,7 @@ describe("SubjectView (#638 shell)", () => {
       valueSet: marker("value-set"),
       picker: marker("picker"),
       description: marker("description"),
+      technical: marker("technical"),
     });
 
     const order = [...screen.container.querySelectorAll("[data-testid]")].map(
@@ -92,6 +93,7 @@ describe("SubjectView (#638 shell)", () => {
       "value-set",
       "relationships",
       "docs",
+      "technical",
     ]);
   });
 

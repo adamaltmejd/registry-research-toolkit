@@ -14,8 +14,8 @@ import {
   type BindingResolution,
   bindingFieldsFromResolution,
   coverageFromStates,
+  formatDataType,
   fqidSegments,
-  grainsFromStates,
   groupLinkFromFocus,
   narrowStatesByModifier,
   parseCodesParam,
@@ -242,6 +242,16 @@ const valueSetScope = $derived.by(() => {
   ];
 });
 
+const technicalState = $derived.by(() => {
+  if (valueSetStates === null || valueSetStates.length !== 1) {
+    return null;
+  }
+  if (isNarrowed && valueSetScope !== null && valueSetScope.length === 0) {
+    return null;
+  }
+  return valueSetStates[0];
+});
+
 // ── The relationship-graph fetch (#678/#904) ────────────────────────────────
 // The leaf owns ONE `/graph` fetch (#761/#792): it feeds the restored HistoryGraph,
 // the additive picker graph mode, AND the #670 header identity (qualifier + group
@@ -315,10 +325,6 @@ const registerPrefix = $derived(registerPrefixOf(node.fqid));
 // An implicit project created with an empty seed is never re-seeded, so the Add
 // action stays disabled until the seed is present (sub-second).
 const seedReady = $derived(regMetaVersion !== "" && steward !== "");
-
-// #308: the grains this variable's FULL state history exhibits (year always;
-// finer from the #321 tokens) — pre-narrows the period picker's grain select.
-const grains = $derived(grainsFromStates(node.states));
 
 // #615: the subject's data-availability span (year-grain), derived from the
 // EMBEDDED full state history — the picker's slider draws it as the live track
@@ -564,18 +570,6 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
     {/if}
   </dl>
 
-  <!-- #638 PR4: Sensitive / Identifier are STRUCTURAL backend flags — useful but
-       not what a user reads first — so they live behind the "Technical details"
-       disclosure. Both are always present (booleans), so the disclosure is never
-       empty here. -->
-  <TechnicalDetails>
-    <dl class="meta">
-      <dt>Sensitive</dt>
-      <dd>{node.is_sensitive ? "yes" : "no"}</dd>
-      <dt>Identifier</dt>
-      <dd>{node.is_identifier ? "yes" : "no"}</dd>
-    </dl>
-  </TechnicalDetails>
 {/snippet}
 
 {#snippet picker()}
@@ -586,7 +580,6 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
        global window). -->
   <PeriodPicker
     period={params.period ?? null}
-    {grains}
     window={windowStore.value}
     {coverage}
     {vintageYear}
@@ -672,7 +665,7 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
           onclick={() => setResolution({ value_set_version: null })}
         >
           version: {params.value_set_version === VALUE_SET_VERSION_NONE
-            ? "(no version)"
+            ? "unlabeled"
             : params.value_set_version} <span aria-hidden="true">✕</span>
         </button>
       {/if}
@@ -742,6 +735,30 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
   <DocMentionsPanel {node} />
 {/snippet}
 
+{#snippet technical()}
+  <!-- #638 PR4 / #1038: all backend/structural rows are demoted to one bottom
+       disclosure. The variable flags are always known; state type/column join the
+       same disclosure only when the page is showing one resolved state. -->
+  <TechnicalDetails>
+    <dl class="meta">
+      <dt class="micro-label">Sensitive</dt>
+      <dd>{node.is_sensitive ? "yes" : "no"}</dd>
+      <dt class="micro-label">Identifier</dt>
+      <dd>{node.is_identifier ? "yes" : "no"}</dd>
+      {#if technicalState?.data_type}
+        <dt class="micro-label">Data type</dt>
+        <dd>
+          {formatDataType(technicalState.data_type, technicalState.data_length)}
+        </dd>
+      {/if}
+      {#if technicalState?.delivery_column_name}
+        <dt class="micro-label">Delivery column</dt>
+        <dd><code>{technicalState.delivery_column_name}</code></dd>
+      {/if}
+    </dl>
+  </TechnicalDetails>
+{/snippet}
+
 <SubjectView
   title={node.name ?? node.fqid}
   fqid={node.fqid}
@@ -751,6 +768,7 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
   {valueSet}
   {relationships}
   {docs}
+  {technical}
 />
 
 <style>

@@ -2,9 +2,8 @@
  * Pure period/query helpers for the binding-leaf resolution state (no runes —
  * unit-testable in isolation; `period.test.ts`). The resolution state lives in
  * the URL query (`?period`/`?variant`/`?value_set_version`; see
- * reg_webapp/DESIGN.md → Catalog router structure); these
- * (de)serialize the period between the query and the picker field and build the
- * query string the router navigates to.
+ * reg_webapp/DESIGN.md → Catalog router structure); these helpers parse the wire
+ * period for UI/project behavior and build the query string the router navigates to.
  *
  * The SPA only mirrors the wire grammar (see reg_webapp/DESIGN.md → Pydantic
  * boundary) — the server (`reg_meta.fqid`) is the CANONICAL validator. `looksLikePeriod` is a LIGHT, ADVISORY client hint
@@ -23,31 +22,10 @@ export interface ResolutionParams {
 
 /** Sentinel `?value_set_version` selecting the empty/default label (a state with
  * `value_set_version_label === ""`). The empty string can't ride in the query
- * (≡ absent), so the picker sends this for the "(no version)" option; the backend
+ * (≡ absent), so the picker sends this for the unlabeled-version option; the backend
  * maps it back to `""` before `resolve_at`. MUST match `period_param.py`'s
  * `VALUE_SET_VERSION_NONE`. */
 export const VALUE_SET_VERSION_NONE = "_none";
-
-// ── Period field ↔ query (de)serialize ──────────────────────────────────────
-// The picker is a single free-text field; the URL query carries the same wire
-// string. Round-tripping is the identity on a trimmed string — the field's raw
-// text IS the wire `?period` value (year / token / range / `_default`). These
-// thin wrappers name the boundary (and normalize whitespace) so the call sites
-// read intentionally and a future format tweak has one home.
-
-/** The picker field text for a `?period` query value (or `null`/absent → ""). */
-export function periodFieldFromQuery(
-  period: string | null | undefined,
-): string {
-  return period ?? "";
-}
-
-/** The `?period` wire value for the picker field text — trimmed; an empty/blank
- * field yields `null` (no `?period`, i.e. full history). */
-export function periodQueryFromField(raw: string): string | null {
-  const trimmed = raw.trim();
-  return trimmed === "" ? null : trimmed;
-}
 
 // ── Advisory grammar hint (wire tokens) ──────────────────────────────────────
 // Mirrors `reg_meta.fqid._PERIOD_PATTERNS` (anchored, `\Z`-equivalent — JS `$`
@@ -340,67 +318,6 @@ export function periodRangeEndpoints(wire: string): [string, string] | null {
   }
   const parts = wire.split(RANGE_SEP);
   return parts.length === 2 ? [parts[0].trim(), parts[1].trim()] : null;
-}
-
-// ── Grain model (#308 range-first picker) ────────────────────────────────────
-// The picker UI works in GRAINS (year/term/quarter/month/day) with from/to
-// controls per grain; the wire grammar stays the serialization. The `-H1`/`-H2`
-// half forms map onto the term grain (same bounds; reg_meta accepts them on
-// input but never emits them — the term spelling is canonical).
-
-export type PeriodGrain = "year" | "term" | "quarter" | "month" | "day";
-
-/** Coarse → fine — the grain `<select>` order. */
-export const PERIOD_GRAINS: PeriodGrain[] = [
-  "year",
-  "term",
-  "quarter",
-  "month",
-  "day",
-];
-
-/** Whether a wire period is representable by the RANGE UI (#308): a single
- * grammar token, or a range whose endpoints share ONE grain. `_default`,
- * mixed-grain ranges (the #306 succession clips), #307 segment LISTS, and junk
- * need the text / token escape hatch — they must stay visible and editable,
- * never silently blanked into empty range controls. */
-export function rangeRepresentable(
-  wire: string,
-  grains: PeriodGrain[] = PERIOD_GRAINS,
-): boolean {
-  const endpoints = periodRangeEndpoints(wire) ?? [wire, wire];
-  const gFrom = grainOfToken(endpoints[0]);
-  return (
-    gFrom !== null &&
-    gFrom === grainOfToken(endpoints[1]) &&
-    // A surface offering a NARROWED grain set (the catalog picker) can't
-    // render a value at an excluded grain either — it must fall back to the
-    // text mode, not show blank controls over a hidden value (Codex P2).
-    grains.includes(gFrom)
-  );
-}
-
-/** The grain of one single wire token, or null for a non-token (`_default`,
- * ranges, lists, junk). `YYYY-H1`/`-H2` report `term` (their VT/HT bounds
- * twins). */
-export function grainOfToken(token: string): PeriodGrain | null {
-  const value = token.trim();
-  if (!isPeriodToken(value)) {
-    return null;
-  }
-  if (/^[HV]T/.test(value)) {
-    return "term";
-  }
-  if (/-Q[1-4]$/.test(value)) {
-    return "quarter";
-  }
-  if (/-H[12]$/.test(value)) {
-    return "term";
-  }
-  if (/^\d{4}$/.test(value)) {
-    return "year";
-  }
-  return /^\d{4}-\d{2}$/.test(value) ? "month" : "day";
 }
 
 /** Convert a structured `Source.period` (int | token-string | {from,to} |
@@ -823,9 +740,9 @@ function grammarYear(raw: string): number | null {
 }
 
 /** Whether a wire `?period` is a pure year window the year slider can hold (a
- * bare year or a uniform-year range) — the slider's representability gate
- * (analogous to `rangeRepresentable` for the fine-grain range UI). A sub-annual
- * token / `_default` / segment list / junk routes to the "more" expander. */
+ * bare year or a uniform-year range) — the slider's representability gate. A
+ * sub-annual token / `_default` / segment list / junk remains valid URL state but
+ * is displayed as read-only active text instead of being authored by the slider. */
 export function yearWindowRepresentable(
   wire: string | null | undefined,
 ): boolean {

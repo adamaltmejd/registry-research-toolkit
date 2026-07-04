@@ -56,8 +56,8 @@ interface Props {
   // sub-annual token / segment list / `_default` / text), else null. When
   // non-null the slider's `selection` is the project-window PROJECTION, not the
   // active selection — so we suppress the (misleading) user-deviation hint and
-  // show an honest cue pointing at the real value in the (already-open) "more"
-  // expander, instead of presenting the window as if it were selected.
+  // show an honest cue naming the real value instead of presenting the window as
+  // if it were selected.
   subAnnualPeriod: string | null;
   // false = no `?period` nor window chosen — suppress the not-delivered
   // availability GAP (the selection-vs-coverage deviation), which would otherwise
@@ -393,11 +393,10 @@ const coverageThrough = $derived(
   {#if subAnnualPeriod !== null}
     <!-- The active `?period` is sub-annual (or otherwise not year-grain): the
          slider above shows the project-window default as a year projection, NOT
-         the active value. Be honest about it and point at the real value, which
-         the picker's "more" expander already opens to. -->
+         the active value. Be honest about it without rewriting the URL. -->
     <p class="deviation sub-annual" role="status">
       Active period <code>{subAnnualPeriod}</code> isn't year-grain — the slider shows
-      the project-window default; edit it in More options.
+      the project-window default.
     </p>
   {:else if userDeviation}
     <p class="deviation user" role="status">
