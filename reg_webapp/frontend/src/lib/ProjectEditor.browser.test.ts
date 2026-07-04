@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
 import ProjectEditor from "./ProjectEditor.svelte";
@@ -6,7 +6,7 @@ import { projectStore } from "./project_store.svelte";
 
 // #991/#993: /project is a READ-ONLY data-order CART. The page shows the picked
 // sources/bindings read-only, supports delete + project-name edit + Open/Download +
-// Validate, and links out to the catalog for fixes. There is NO "Add source" /
+// automatic validation, and links out to the catalog for fixes. There is NO "Add source" /
 // "Add binding" / field-editing affordance — adding data happens in the catalog
 // browser.
 
@@ -43,6 +43,19 @@ function seedSources(registerVariants: string[]): void {
 beforeEach(() => {
   // Reset the singleton home/new state before each test.
   projectStore.newProject(SEED);
+  vi.stubGlobal(
+    "fetch",
+    vi.fn(async () => ({
+      ok: true,
+      status: 200,
+      json: async () => ({ ok: true, issues: [] }),
+    })),
+  );
+});
+
+afterEach(() => {
+  vi.restoreAllMocks();
+  vi.unstubAllGlobals();
 });
 
 describe("ProjectEditor cart — read-only, no add affordances", () => {
@@ -79,15 +92,12 @@ describe("ProjectEditor cart — read-only, no add affordances", () => {
       .toBeVisible();
   });
 
-  it("keeps the manual Validate + name edit + Download toolbar", async () => {
+  it("keeps name edit + downloads and retires the manual Validate button", async () => {
     seedSources(["scb/lisa/v1"]);
     await render(ProjectEditor, { regMetaVersion: "1.0.0", steward: "global" });
 
-    // The manual Validate button (#994 auto-validate is out of scope) and the
-    // downloads are present.
-    await expect
-      .element(page.getByRole("button", { name: "Validate" }))
-      .toBeVisible();
+    // Validation now runs automatically; the toolbar keeps only the downloads.
+    expect(page.getByRole("button", { name: "Validate" }).query()).toBeNull();
     await expect
       .element(page.getByRole("button", { name: "Download project_data.json" }))
       .toBeVisible();
@@ -156,10 +166,51 @@ describe("ProjectEditor stable keys (middle-remove keeps the right survivors)", 
 });
 
 describe("ProjectEditor renders the ValidationPanel", () => {
-  it("shows the not-yet-validated hint (the panel is present)", async () => {
+  it("shows the automatic validation status (the panel is present)", async () => {
     seedSources(["scb/lisa/v1"]);
     await render(ProjectEditor, { regMetaVersion: "1.0.0", steward: "global" });
 
-    await expect.element(page.getByText(/Not yet validated/)).toBeVisible();
+    await expect
+      .element(page.getByText("Checking the current project…"))
+      .toBeVisible();
+  });
+
+  it("passes project-window coverage hints into the panel", async () => {
+    seedSources(["scb/lisa/v1"]);
+    projectStore.updateField("window", { from: 2010, to: 2020 });
+    await render(ProjectEditor, { regMetaVersion: "1.0.0", steward: "global" });
+
+    await expect
+      .element(page.getByText(/does not cover .* within your study window/))
+      .toBeVisible();
+    await expect
+      .element(page.getByRole("link", { name: /Extend in catalog/ }))
+      .toHaveAttribute("href", "/catalog/scb/lisa");
+  });
+
+  it("lets a failed automatic validation be retried without a fake edit", async () => {
+    seedSources(["scb/lisa/v1"]);
+    vi.mocked(fetch)
+      .mockResolvedValueOnce({
+        ok: false,
+        status: 400,
+        json: async () => ({ detail: "transient validation failure" }),
+      } as Response)
+      .mockResolvedValueOnce({
+        ok: true,
+        status: 200,
+        json: async () => ({ ok: true, issues: [] }),
+      } as Response);
+
+    await projectStore.validate();
+    await render(ProjectEditor, { regMetaVersion: "1.0.0", steward: "global" });
+
+    const retry = page.getByRole("button", { name: "Retry validation" });
+    await expect.element(retry).toBeVisible();
+    await retry.click();
+
+    await vi.waitFor(() => {
+      expect(projectStore.validationStatus).toBe("ok");
+    });
   });
 });

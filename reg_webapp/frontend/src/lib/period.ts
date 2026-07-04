@@ -465,6 +465,9 @@ function yearIntervalOf(segment: PeriodSegment): [number, number] | null {
     const y = yearEndpointInt(segment);
     return y === null ? null : [y, y];
   }
+  if (segment == null || typeof segment !== "object") {
+    return null;
+  }
   const from = yearEndpointInt(segment.from);
   const to = yearEndpointInt(segment.to);
   if (from === null || to === null || from > to) {
@@ -487,6 +490,54 @@ function yearIntervalsOf(period: Period): [number, number][] | null {
     intervals.push(interval);
   }
   return intervals;
+}
+
+function coalesceYearIntervals(
+  intervals: [number, number][],
+): [number, number][] {
+  const sorted = intervals
+    .map(([lo, hi]): [number, number] => [lo, hi])
+    .sort((a, b) => a[0] - b[0] || a[1] - b[1]);
+  const merged: [number, number][] = [];
+  for (const [lo, hi] of sorted) {
+    const open = merged.at(-1);
+    // Adjacency-merge: overlapping OR touching (a gap of 0 years — `2010..2011`
+    // then `2012..2013` fuse) collapse; a real gap (`lo > open.hi + 1`) splits.
+    if (open && lo <= open[1] + 1) {
+      if (hi > open[1]) {
+        open[1] = hi;
+      }
+    } else {
+      merged.push([lo, hi]);
+    }
+  }
+  return merged;
+}
+
+/** The year intervals of a whole `Source.period` when every segment is
+ * year-shaped, coalesced and sorted. Token periods (`HT2020`, `2020-Q3`,
+ * `_default`) are intentionally skipped rather than guessed. */
+export function periodYearIntervals(period: Period): StudyWindow[] | null {
+  const intervals = yearIntervalsOf(period);
+  if (intervals === null || intervals.length === 0) {
+    return null;
+  }
+  return coalesceYearIntervals(intervals).map(([from, to]) => ({ from, to }));
+}
+
+/** The outer year bounds of a whole `Source.period` when every segment is
+ * year-shaped (ints and `{from,to}` year ranges), else `null`. Used by the
+ * project-cart outer-bound hint. Token periods (`HT2020`, `2020-Q3`, `_default`) are
+ * intentionally skipped rather than guessed. */
+export function periodYearCoverage(period: Period): StudyWindow | null {
+  const intervals = periodYearIntervals(period);
+  if (intervals === null) {
+    return null;
+  }
+  return {
+    from: Math.min(...intervals.map(({ from }) => from)),
+    to: Math.max(...intervals.map(({ to }) => to)),
+  };
 }
 
 /** One inclusive year interval → its structured segment: a point year (`lo === hi`)
@@ -535,22 +586,7 @@ export function mergePeriods(existing: Period, incoming: Period): Period {
   if (existingYears === null || incomingYears === null) {
     return incoming;
   }
-  const sorted = [...existingYears, ...incomingYears].sort(
-    (a, b) => a[0] - b[0] || a[1] - b[1],
-  );
-  const merged: [number, number][] = [];
-  for (const [lo, hi] of sorted) {
-    const open = merged.at(-1);
-    // Adjacency-merge: overlapping OR touching (a gap of 0 years — `2010..2011`
-    // then `2012..2013` fuse) collapse; a real gap (`lo > open.hi + 1`) splits.
-    if (open && lo <= open[1] + 1) {
-      if (hi > open[1]) {
-        open[1] = hi;
-      }
-    } else {
-      merged.push([lo, hi]);
-    }
-  }
+  const merged = coalesceYearIntervals([...existingYears, ...incomingYears]);
   const segments = merged.map(yearIntervalToSegment);
   return segments.length === 1 ? segments[0] : segments;
 }

@@ -15,6 +15,7 @@ import {
   parseJsonPointer,
   sourceAnchorId,
   type ValidationIssue,
+  windowCoverageHints,
 } from "./validation";
 
 describe("parseJsonPointer (RFC 6901)", () => {
@@ -219,6 +220,101 @@ describe("findingLocation (pointer → human location)", () => {
 
   it("returns null when the pointer is malformed (no leading slash)", () => {
     expect(findingLocation("sources/0", sources)).toBeNull();
+  });
+});
+
+describe("windowCoverageHints", () => {
+  it("reports year-shaped sources that do not cover either study-window bound", () => {
+    const hints = windowCoverageHints({ from: 2000, to: 2020 }, [
+      {
+        name: "ends_early",
+        register_variant: "scb/lisa/v1",
+        period: { from: 2000, to: 2018 },
+      },
+      {
+        name: "starts_late",
+        register_variant: "scb/rams/v1",
+        period: { from: 2005, to: 2020 },
+      },
+      {
+        name: "inside",
+        register_variant: "scb/lev/v1",
+        period: { from: 2005, to: 2018 },
+      },
+      {
+        name: "interrupted",
+        register_variant: "scb/inc/v1",
+        period: [
+          { from: 2000, to: 2005 },
+          { from: 2015, to: 2020 },
+        ],
+      },
+      {
+        name: "covered",
+        register_variant: "scb/rams/v1",
+        period: { from: 1999, to: 2022 },
+      },
+    ]);
+
+    expect(hints).toEqual([
+      {
+        label: "Source 'ends_early'",
+        message:
+          "Source 'ends_early' does not cover 2019..2020 within your study window 2000..2020.",
+        catalogHref: "/catalog/scb/lisa",
+        catalogLabel: "scb/lisa",
+      },
+      {
+        label: "Source 'starts_late'",
+        message:
+          "Source 'starts_late' does not cover 2000..2004 within your study window 2000..2020.",
+        catalogHref: "/catalog/scb/rams",
+        catalogLabel: "scb/rams",
+      },
+      {
+        label: "Source 'inside'",
+        message:
+          "Source 'inside' does not cover 2000..2004, 2019..2020 within your study window 2000..2020.",
+        catalogHref: "/catalog/scb/lev",
+        catalogLabel: "scb/lev",
+      },
+      {
+        label: "Source 'interrupted'",
+        message:
+          "Source 'interrupted' does not cover 2006..2014 within your study window 2000..2020.",
+        catalogHref: "/catalog/scb/inc",
+        catalogLabel: "scb/inc",
+      },
+    ]);
+  });
+
+  it("skips token, _default, and malformed periods rather than guessing coverage or crashing", () => {
+    expect(
+      windowCoverageHints({ from: 2000, to: 2020 }, [
+        { name: "term", register_variant: "scb/hst/v1", period: "HT2018" },
+        {
+          name: "default",
+          register_variant: "scb/lisa/v1",
+          period: "_default",
+        },
+        {
+          name: "mixed",
+          register_variant: "scb/lisa/v1",
+          period: [2018, "2020-Q3"],
+        },
+        { name: "bad", register_variant: "scb/lisa/v1", period: null },
+        {
+          name: "null-from",
+          register_variant: "scb/lisa/v1",
+          period: { from: null, to: 2020 },
+        },
+        {
+          name: "undefined-list-endpoint",
+          register_variant: "scb/lisa/v1",
+          period: [{ from: 2000, to: undefined }],
+        },
+      ]),
+    ).toEqual([]);
   });
 });
 

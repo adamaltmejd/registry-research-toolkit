@@ -13,6 +13,8 @@ import {
   periodTokenForBounds,
   periodToWire,
   periodWireBounds,
+  periodYearCoverage,
+  periodYearIntervals,
   queryFromParams,
   sameYearWindow,
   VALUE_SET_VERSION_NONE,
@@ -835,6 +837,47 @@ describe("sameYearWindow", () => {
     expect(sameYearWindow(null, null)).toBe(true);
     expect(sameYearWindow({ from: 2000, to: 2010 }, null)).toBe(false);
     expect(sameYearWindow(null, { from: 2000, to: 2010 })).toBe(false);
+  });
+});
+
+describe("periodYearCoverage", () => {
+  it("returns the outer bounds for year-shaped scalar, range, and list periods", () => {
+    expect(periodYearCoverage(2018)).toEqual({ from: 2018, to: 2018 });
+    expect(periodYearCoverage({ from: "2015", to: 2020 })).toEqual({
+      from: 2015,
+      to: 2020,
+    });
+    expect(periodYearCoverage([2018, { from: 2020, to: 2022 }])).toEqual({
+      from: 2018,
+      to: 2022,
+    });
+  });
+
+  it("returns null for token, _default, and mixed-token periods", () => {
+    expect(periodYearCoverage("HT2020")).toBeNull();
+    expect(periodYearCoverage("_default")).toBeNull();
+    expect(periodYearCoverage([2018, "2020-Q3"])).toBeNull();
+  });
+});
+
+describe("periodYearIntervals", () => {
+  it("returns coalesced year-shaped intervals without hiding real gaps", () => {
+    expect(
+      periodYearIntervals([
+        { from: 2015, to: 2020 },
+        { from: 2000, to: 2005 },
+        { from: 2006, to: 2008 },
+      ]),
+    ).toEqual([
+      { from: 2000, to: 2008 },
+      { from: 2015, to: 2020 },
+    ]);
+  });
+
+  it("returns null for token, _default, and mixed-token periods", () => {
+    expect(periodYearIntervals("HT2020")).toBeNull();
+    expect(periodYearIntervals("_default")).toBeNull();
+    expect(periodYearIntervals([2018, "2020-Q3"])).toBeNull();
   });
 });
 
