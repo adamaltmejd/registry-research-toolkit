@@ -452,6 +452,42 @@ describe("RepresentationPicker graph mode (#904)", () => {
     ).toBeNull();
   });
 
+  it("keeps empty group bands visible when no graph can render", async () => {
+    const aFqid = "scb/lisa/empty-a";
+    const bFqid = "scb/lisa/empty-b";
+    render(RepresentationPicker, {
+      bands: [
+        {
+          key: aFqid,
+          name: "Empty A",
+          registerPrefix: "scb/lisa",
+          rows: [],
+        } satisfies PickerBand,
+        {
+          key: bFqid,
+          name: "Empty B",
+          registerPrefix: "scb/lisa",
+          rows: [],
+        } satisfies PickerBand,
+      ],
+      graphMemberHrefs: {
+        [aFqid]: "/catalog/scb/lisa/empty-a",
+        [bFqid]: "/catalog/scb/lisa/empty-b",
+      },
+      graph: graph({ nodes: [], edges: [], focus_id: null }),
+      ...PROPS,
+    });
+
+    await vi.waitFor(() => {
+      if (!document.querySelector(".col-list")) {
+        throw new Error("empty group list not rendered");
+      }
+    });
+    expect(document.querySelector(".graph-picker")).toBeNull();
+    expect(document.querySelectorAll(".empty-note")).toHaveLength(2);
+    expect(document.body.textContent).toContain("No columns");
+  });
+
   it("dims folded graph cells by the cell's era, not the folded row span", async () => {
     const onapply = vi.fn();
     const aFqid = "scb/lisa/a";

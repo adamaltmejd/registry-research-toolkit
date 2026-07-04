@@ -1934,7 +1934,7 @@ function codingsVaryHref(
   </div>
 {/snippet}
 
-{#if totalRows > 0 || useGraphMode}
+{#if totalRows > 0 || useGraphMode || graphMemberHrefs != null}
 <div class="rep-picker">
   {#if dimensions.length > 0}
     <!-- The per-dimension filters sit ABOVE the picker surface (#908): they narrow the
