@@ -208,10 +208,14 @@ def test_codex_bot_line_usage_limit_grammar() -> None:
     assert line.startswith("local; codex_local_review; head abc123;")
 
 
-def test_sole_unmet_true_when_blocker_is_codex_bot() -> None:
+_HEAD40 = "abcdef1234567890abcdef1234567890abcdef12"
+
+
+def test_status_after_codex_bot_flips_ready_when_blocker_is_codex_bot() -> None:
     # The agent's `blocker` contract is the signal — free-text gate lines (real template
     # grammar: `tests: "<commands>"`, `stack: "before #N"`, `docs: "updated; …"`) are NOT
-    # scanned, so they can carry arbitrary prose without flipping the result.
+    # scanned as unmet, so they can carry arbitrary prose without withholding the flip. With
+    # codex_bot the sole blocker and nothing else explicitly unmet or stale → ready-to-merge.
     gate = {
         "blocker": "codex_bot",
         "gates": {
@@ -222,10 +226,10 @@ def test_sole_unmet_true_when_blocker_is_codex_bot() -> None:
             "build_db": "not required",
         },
     }
-    assert lr.codex_bot_is_sole_unmet(gate) is True
+    assert lr._status_after_codex_bot(gate, _HEAD40) == ("ready-to-merge", None)
 
 
-def test_sole_unmet_false_when_blocker_is_another_gate() -> None:
+def test_status_after_codex_bot_preserves_agent_named_other_blocker() -> None:
     gate = {
         "blocker": "visual",
         "gates": {
@@ -233,13 +237,14 @@ def test_sole_unmet_false_when_blocker_is_another_gate() -> None:
             "visual": "running; deferred design-reviewer pass",
         },
     }
-    assert lr.codex_bot_is_sole_unmet(gate) is False
+    # A clean codex_bot doesn't clear a DIFFERENT blocker — it is preserved verbatim.
+    assert lr._status_after_codex_bot(gate, _HEAD40) == ("blocked", "visual")
 
 
-def test_sole_unmet_false_when_another_gate_explicitly_unmet() -> None:
-    # Fix A defense-in-depth: the agent CLAIMS codex_bot is the sole blocker, but another gate
-    # line is EXPLICITLY not-done (leading token `running`). The fail-closed negative-token
-    # cross-check overrides the (inconsistent) blocker field and withholds the flip.
+def test_status_after_codex_bot_names_the_real_unmet_gate() -> None:
+    # Fix A: the agent CLAIMS codex_bot is the sole blocker, but another gate line is
+    # EXPLICITLY not-done (leading token `running`). The resolver overrides the (inconsistent)
+    # blocker field, stays blocked, and NAMES the actually-unmet gate — not a stale codex_bot.
     gate = {
         "blocker": "codex_bot",
         "gates": {
@@ -248,13 +253,15 @@ def test_sole_unmet_false_when_another_gate_explicitly_unmet() -> None:
             "ci": "pass; gh pr checks",
         },
     }
-    assert lr.codex_bot_is_sole_unmet(gate) is False
+    status, blocker = lr._status_after_codex_bot(gate, _HEAD40)
+    assert status == "blocked"
+    assert blocker is not None and blocker.startswith("build_db is unmet")
 
 
-def test_sole_unmet_true_when_unmet_word_is_non_leading_substring() -> None:
+def test_status_after_codex_bot_ignores_non_leading_unmet_substring() -> None:
     # Fix A: the check matches the LEADING token, NOT a substring — a legitimate value like
     # `tests: "uv run pytest -k not_blocked"` contains "blocked" mid-string but leads with
-    # "uv", so it must NOT false-fire. codex_bot remains the sole unmet gate → True.
+    # "uv", so it must NOT false-fire. codex_bot remains the sole unmet gate → ready-to-merge.
     gate = {
         "blocker": "codex_bot",
         "gates": {
@@ -264,7 +271,27 @@ def test_sole_unmet_true_when_unmet_word_is_non_leading_substring() -> None:
             "ci": "pass; gh pr checks",
         },
     }
-    assert lr.codex_bot_is_sole_unmet(gate) is True
+    assert lr._status_after_codex_bot(gate, _HEAD40) == ("ready-to-merge", None)
+
+
+def test_status_after_codex_bot_names_stale_head_bound_gate() -> None:
+    # Fix A: codex_bot is the sole blocker and nothing is explicitly unmet, but a head-bound
+    # gate (build_db) stamps a DIFFERENT head (a fix round moved HEAD). Stay blocked and NAME
+    # the stale gate + the head to re-verify on — never a ready-to-merge with a stale gate.
+    gate = {
+        "blocker": "codex_bot",
+        "gates": {
+            "codex_bot": "running; deferred-to-lane-runner",
+            "build_db": "local; reg-meta-build; head 0123456789abcdef; pass; dbdiff empty",
+            "ci": "pass; gh pr checks",
+        },
+    }
+    status, blocker = lr._status_after_codex_bot(gate, _HEAD40)
+    assert status == "blocked"
+    assert blocker is not None and blocker.startswith(
+        "build_db verified on a stale head"
+    )
+    assert _HEAD40[:12] in blocker
 
 
 def test_head_bound_gates_current_stale_when_other_gate_head_differs() -> None:
@@ -379,7 +406,7 @@ def _patch_no_turns(monkeypatch: pytest.MonkeyPatch, on_resume=None) -> list[lis
     """
     calls: list[list[str]] = []
 
-    def fake_turn(argv, worktree, log_path):
+    def fake_turn(argv, worktree, log_path, state_root):
         calls.append(argv)
         if on_resume is not None:
             on_resume(argv, worktree)
@@ -563,8 +590,9 @@ def test_clean_but_another_gate_explicitly_unmet_stays_blocked(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     # Fix A end-to-end: the agent (inconsistently) named codex_bot as the sole blocker, yet
-    # another gate line reads `running; ...`. Even on a clean review the flip must be withheld
-    # by the negative-token cross-check; status stays blocked, preserving the agent's blocker.
+    # another gate line reads `running; ...`. Even on a clean review the flip must be withheld,
+    # and — the P2 fix — the gate must NAME the REAL remaining item (build_db), NOT leave a
+    # stale `blocker: codex_bot` once codex_bot is actually done.
     wt = _make_worktree(tmp_path)
     gate_root = tmp_path / "gate"
     gate_dir = gate_root / "pr-4242"
@@ -601,6 +629,11 @@ def test_clean_but_another_gate_explicitly_unmet_stays_blocked(
     gate_after = _read_gate(gate_dir)
     assert gate_after["status"] == "blocked"
     assert "clean" in gate_after["gates"]["codex_bot"]
+    # The P2 bug: the old code left `blocker: codex_bot` here (misreporting a done gate). The
+    # resolver now names build_db — the actually-unmet gate — never a stale codex_bot.
+    assert gate_after["blocker"] is not None
+    assert gate_after["blocker"].startswith("build_db is unmet")
+    assert gate_after["blocker"] != "codex_bot"
 
 
 def test_findings_then_resume_then_clean(
@@ -910,7 +943,7 @@ def test_run_end_to_end_clean(
 
     # The implement turn: model the agent writing gate.json + appending its thread id to the
     # log so poll_codex_session_id resolves the session.
-    def fake_turn(argv, worktree, log_path):
+    def fake_turn(argv, worktree, log_path, state_root):
         _write_gate(gate_root, 4242, other_gates_met=True)
         with log_path.open("a", encoding="utf-8") as fh:
             fh.write(
@@ -948,7 +981,7 @@ def test_run_discovers_pr_and_writes_run_sentinel(
     gate_root = tmp_path / "gate"
     log = tmp_path / "lane.log"
 
-    def fake_turn(argv, worktree, log_path):
+    def fake_turn(argv, worktree, log_path, state_root):
         _write_gate(gate_root, 7, other_gates_met=True)
         with log_path.open("a", encoding="utf-8") as fh:
             fh.write(json.dumps({"type": "thread.started", "thread_id": "T"}) + "\n")
@@ -1020,6 +1053,36 @@ def test_resume_argv_without_session_fails_fast(tmp_path: Path) -> None:
     assert "no codex session id" in str(exc.value.code)
 
 
+def test_run_codex_turn_child_env_carries_xdg_state_home(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # Fix B: the child codex turn must inherit XDG_STATE_HOME derived from the runner's
+    # state_root (mirrors cos_dispatch._child_env), so the child's default_gate_root() resolves
+    # to the SAME merge-gate store the runner reads/completes — not the ambient one. Without
+    # this, a custom --gate-root would have the child write gate.json where the runner never
+    # looks. Capture the env passed to subprocess.run and assert XDG_STATE_HOME + that the
+    # child's derived gate root matches the runner's.
+    captured: dict[str, str] = {}
+
+    def fake_run(argv, **kwargs):
+        captured.update(kwargs["env"])
+        return subprocess.CompletedProcess(argv, 0)
+
+    monkeypatch.setattr(lr.subprocess, "run", fake_run)
+
+    # A standard '.../registry-research-toolkit' state root under a CUSTOM parent (not ambient).
+    state_root = tmp_path / "custom-xdg" / "registry-research-toolkit"
+    lr.run_codex_turn(
+        ["codex", "exec", "x"], tmp_path, tmp_path / "lane.log", state_root
+    )
+
+    assert captured["XDG_STATE_HOME"] == str(state_root.parent)
+    # The runner's gate root lives at <state_root>/merge-gates; the child, seeing this
+    # XDG_STATE_HOME, re-derives exactly that via cos_preflight.default_gate_root().
+    monkeypatch.setenv("XDG_STATE_HOME", captured["XDG_STATE_HOME"])
+    assert lr._cos_preflight.default_gate_root() == state_root / "merge-gates"
+
+
 def test_continue_pr_uses_explicit_pr_not_discovery(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -1032,7 +1095,7 @@ def test_continue_pr_uses_explicit_pr_not_discovery(
     # exists for it beyond this write, so a discovery path could not have found it first.
     _write_gate(gate_root, 55, other_gates_met=True)
 
-    def fake_turn(argv, worktree, log_path):
+    def fake_turn(argv, worktree, log_path, state_root):
         with log_path.open("a", encoding="utf-8") as fh:
             fh.write(json.dumps({"type": "thread.started", "thread_id": "T"}) + "\n")
 

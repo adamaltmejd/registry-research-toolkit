@@ -117,10 +117,10 @@ DEFAULT_CODEX_ID_POLL = 0.25
 RECORDABLE_ERROR_KIND = "usage_limit"
 
 # Leading tokens that mark a gate line as EXPLICITLY not-done, used by
-# codex_bot_is_sole_unmet as a fail-closed negative-token consistency check on the agent's
+# _first_explicitly_unmet_gate as a fail-closed negative-token cross-check on the agent's
 # `blocker` field. Matched only against the line's LEADING token (`.strip().lower()`), never
 # as a substring — a legitimate value like `tests: "uv run pytest -k not_blocked"` contains
-# "blocked" but its leading token is "uv", so it must NOT fire (see codex_bot_is_sole_unmet).
+# "blocked" but its leading token is "uv", so it must NOT fire (see _first_explicitly_unmet_gate).
 _UNMET_LEADING_TOKENS = ("blocked", "running", "deferred", "pending")
 
 # Exit codes (fail-fast + stable, matching the cos_* sibling conventions).
@@ -228,12 +228,20 @@ def findings_brief(findings: list[dict], head: str) -> str:
 # ---- codex turn execution (foreground; one turn to completion) ---------------
 
 
-def run_codex_turn(argv: list[str], worktree: Path, log_path: Path) -> None:
+def run_codex_turn(
+    argv: list[str], worktree: Path, log_path: Path, state_root: Path
+) -> None:
     """Run a codex turn FOREGROUND, appending stdout+stderr to the per-slug log; wait exit.
 
     `codex exec` runs one turn and exits — that IS turn completion, so we block on it (unlike
-    cos_dispatch, which detaches the long-lived lane agent). The child env is GIT_*-scrubbed
-    (an inherited hook GIT_DIR would target the wrong repo) via the shared `_gh.scrubbed_git_env`.
+    cos_dispatch, which detaches the long-lived lane agent). The child env is built the SAME
+    way cos_dispatch builds its child's env (`_cos_dispatch._child_env`): GIT_*-scrubbed (an
+    inherited hook GIT_DIR would target the wrong repo) AND, for a standard
+    `.../registry-research-toolkit` state root, carrying `XDG_STATE_HOME = state_root.parent`
+    so the child (the pr-pipeline agent) derives its gate.json location (via
+    `default_gate_root()`) from the SAME root this runner reads/completes — otherwise a custom
+    `--gate-root` / non-default state root would have the child write gate.json somewhere the
+    runner never looks.
 
     A launch failure (spawn OSError) or an INSTANT nonzero exit is a fail-fast tool error
     (exit 2), naming the log: a real pr-pipeline turn runs for minutes, and codex exec exits
@@ -250,7 +258,7 @@ def run_codex_turn(argv: list[str], worktree: Path, log_path: Path) -> None:
             proc = subprocess.run(
                 argv,
                 cwd=str(worktree),
-                env=_gh.scrubbed_git_env(),
+                env=_cos_dispatch._child_env(state_root),
                 stdin=subprocess.DEVNULL,
                 stdout=log,
                 stderr=subprocess.STDOUT,
@@ -354,42 +362,59 @@ def read_gate(gate_dir: Path, pr: int) -> dict:
     return loaded[1]
 
 
-def codex_bot_is_sole_unmet(gate: dict) -> bool:
-    """True iff codex_bot is the ONLY unmet gate — the guard on flipping ready-to-merge.
+def _first_explicitly_unmet_gate(gate: dict) -> str | None:
+    """Name the first OTHER gate whose LEADING token marks it explicitly not-done, else None.
 
-    Primary signal: the lane agent's `blocker` contract, NOT a positive scan of the gate
-    lines. The runner's own implement prompt instructs the agent to write `status: blocked`
-    with `blocker: "codex_bot"` EXACTLY when codex_bot is the sole unmet gate (all others
-    met); any other remaining blocker is named in `blocker` instead. A POSITIVE "met" scan of
-    the gate lines can't work — the real template grammar has `tests: "<commands run>"`,
-    `docs: "updated; ..."`, `stack: "before #N"` etc., none of which match a fixed met-token
-    whitelist, so every real PR would read as not-sole-unmet and the runner would never flip.
-    That fragility is exactly why this keys off the one field the agent set for this purpose.
+    A NEGATIVE check only (does the gate line explicitly say blocked/running/deferred/
+    pending?), never a positive met-detection — the real template grammar has
+    `tests: "<commands run>"`, `docs: "updated; ..."`, `stack: "before #N"` etc., none of
+    which match a fixed met-token whitelist, so a positive scan would read every real PR as
+    not-done. Matched against the line's LEADING token (`.strip().lower().startswith`), NOT as
+    a substring, so a legitimate value like `tests: "uv run pytest -k not_blocked"` (leading
+    token "uv") does NOT fire. codex_bot is excluded — it is the gate this runner is
+    completing, so its own not-done line is expected, not a blocker.
+    """
+    gates = gate.get("gates")
+    if not isinstance(gates, dict):
+        return None
+    for name, line in gates.items():
+        if name == "codex_bot" or not isinstance(line, str):
+            continue
+        if line.strip().lower().startswith(_UNMET_LEADING_TOKENS):
+            return name
+    return None
 
-    Defense-in-depth (fail-closed): on top of trusting `blocker`, cross-check that no OTHER
-    present gate line is EXPLICITLY unmet — catches an agent inconsistency where it names
-    codex_bot as the sole blocker while another line still reads `blocked; ...` /
-    `running; ...` etc. This is a NEGATIVE check only (leading-token match against
-    `_UNMET_LEADING_TOKENS`), never a positive met-detection: a legitimate value like
-    `tests: "uv run pytest -k not_blocked"` contains "blocked" as a substring but its leading
-    token is "uv" → does not fire. Matching the LEADING token (`.strip().lower().startswith`)
-    is load-bearing; a substring scan would false-fire on such lines.
 
-    This flip is advisory, never the sole merge authority: the chief-of-staff re-checks every
-    gate + live CI + mergeability immediately before merging (CLAUDE.md "PR merge gate").
+def _status_after_codex_bot(gate: dict, head: str) -> tuple[str, str | None]:
+    """Decide (status, blocker) AFTER the codex_bot line was set clean on `head`.
+
+    The single resolver for the non-blocking flip decision — it always names the REAL
+    remaining item, never a stale `codex_bot`:
+
+    - The agent named a DIFFERENT blocker: a clean codex_bot does not clear it. Stay blocked,
+      PRESERVE the agent's blocker (the real remaining gate).
+    - The agent flagged codex_bot as the SOLE blocker and it is now done: verify nothing else
+      actually blocks before flipping (defense-in-depth; the chief-of-staff still re-checks
+      every gate + live CI + mergeability before merging — this flip is advisory):
+        * another gate line is explicitly not-done ⇒ stay blocked, NAME that gate (the agent's
+          `blocker: codex_bot` was inconsistent — the real blocker is the unmet gate);
+        * a fix round moved HEAD and left another head-bound gate (build_db / visual) verified
+          on a stale head ⇒ stay blocked, NAME the stale gate and the head to re-verify on;
+        * everything else current ⇒ flip ready-to-merge, blocker cleared.
     """
     if gate.get("blocker") != "codex_bot":
-        return False
-    gates = gate.get("gates")
-    if isinstance(gates, dict):
-        for name, line in gates.items():
-            if name == "codex_bot" or not isinstance(line, str):
-                continue
-            if line.strip().lower().startswith(_UNMET_LEADING_TOKENS):
-                # The agent said codex_bot is the sole blocker, but another gate line is
-                # explicitly not-done — fail closed and withhold the flip.
-                return False
-    return True
+        # The agent named a different blocker; a clean codex_bot doesn't clear it.
+        return "blocked", gate.get("blocker")
+    unmet = _first_explicitly_unmet_gate(gate)
+    if unmet is not None:
+        return (
+            "blocked",
+            f"{unmet} is unmet though the agent flagged codex_bot as sole blocker",
+        )
+    all_current, stale = head_bound_gates_current(gate, head)
+    if not all_current:
+        return "blocked", f"{stale} verified on a stale head; re-verify on {head[:12]}"
+    return "ready-to-merge", None
 
 
 def head_bound_gates_current(gate: dict, head: str) -> tuple[bool, str | None]:
@@ -461,25 +486,12 @@ def write_codex_bot_gate(
         gate["blocker"] = blocker
     else:
         gates["codex_bot"] = CODEX_BOT_LINE.format(head=head, verdict=verdict)
-        all_current, stale_gate = head_bound_gates_current(gate, head)
-        if codex_bot_is_sole_unmet(gate) and all_current:
-            gate["status"] = "ready-to-merge"
-            gate["blocker"] = None
-        elif codex_bot_is_sole_unmet(gate) and not all_current:
-            # codex_bot is clean on the current head, but a fix round moved HEAD and left
-            # another head-bound gate (build_db / visual) verified on a stale head. Fail
-            # closed: never a ready-to-merge with a stale gate. The resumed agent is asked to
-            # re-verify head-bound gates it completed (see findings_brief); this freshness
-            # check is the backstop when it doesn't.
-            gate["status"] = "blocked"
-            gate["blocker"] = (
-                f"{stale_gate} verified on a stale head; re-verify on {head[:12]}"
-            )
-        else:
-            # codex_bot is done, but the agent named another gate as the blocker — never a
-            # false ready-to-merge. Leave status blocked and PRESERVE the agent's existing
-            # `blocker` (the real remaining gate); do not synthesize a new blocker string.
-            gate["status"] = "blocked"
+        # One resolver names the REAL remaining item: it preserves the agent's blocker when
+        # another gate is named, names the actually-unmet gate when the agent inconsistently
+        # blamed codex_bot alone, names a stale head-bound gate a fix round left behind, and
+        # only flips ready-to-merge when nothing else blocks. Never leaves a stale
+        # `codex_bot` blocker once codex_bot is done.
+        gate["status"], gate["blocker"] = _status_after_codex_bot(gate, head)
 
     gate["head"] = head
     gate["updated"] = _now()
@@ -679,7 +691,7 @@ def run_loop(
             canonical=canonical,
             profile_flags=profile_flags,
         )
-        run_codex_turn(resume_argv, worktree, log_path)
+        run_codex_turn(resume_argv, worktree, log_path, state_root)
 
     # Cap exhausted with findings still present: a clear needs-human block naming the cap.
     head = _cos_dispatch.git_output(worktree, ["rev-parse", "HEAD"])
@@ -843,7 +855,7 @@ def run(
         tier=args.tier,
         mode="continue" if args.continue_pr is not None else "fresh",
     )
-    run_codex_turn(implement_argv, args.worktree, log_path)
+    run_codex_turn(implement_argv, args.worktree, log_path, state_root)
 
     # 2. Resolve the session id (for the resume turns) and enrich the slot.
     session = _cos_dispatch.poll_codex_session_id(
