@@ -626,6 +626,73 @@ describe("RepresentationPicker graph mode (#904)", () => {
       .toBeVisible();
   });
 
+  it("marks dead renamed predecessor lanes with the leaf slug and renamed hint", async () => {
+    const liveFqid = "scb/lisa/sni2007";
+    const deadFqid = "scb/lisa/sni92";
+    render(RepresentationPicker, {
+      bands: [
+        {
+          key: liveFqid,
+          name: "Näringsgren (SNI 2007)",
+          registerPrefix: "scb/lisa",
+          rows: [row({ column: "SNI2007" })],
+        } satisfies PickerBand,
+      ],
+      graph: graph({
+        nodes: [
+          graphNode(liveFqid, {
+            id: "live",
+            fqid: liveFqid,
+            label: "Näringsgren (SNI 2007)",
+            group_key: null,
+            group_label: null,
+            states: [graphState({ delivery_column_name: "SNI2007" })],
+          }),
+          graphNode(deadFqid, {
+            id: "dead",
+            fqid: deadFqid,
+            label: "Näringsgren (SNI 92)",
+            group_key: null,
+            group_label: null,
+            states: [],
+          }),
+        ],
+        edges: [
+          {
+            id: "dead->live",
+            kind: "succession",
+            source: "dead",
+            target: "live",
+            label: null,
+          },
+        ],
+        focus_id: "live",
+      }),
+      ...PROPS,
+    });
+
+    const renamedLink = await vi.waitFor(() => {
+      const el = [...document.querySelectorAll(".graph-name")].find(
+        (node) =>
+          (node as HTMLAnchorElement).getAttribute("href") ===
+          "/catalog/scb/lisa/sni92",
+      );
+      if (!el) {
+        throw new Error("renamed predecessor link not rendered");
+      }
+      return el as HTMLAnchorElement;
+    });
+    expect(renamedLink.textContent?.replace(/\s+/g, " ").trim()).toContain(
+      "sni92 (renamed)",
+    );
+    expect(
+      renamedLink.closest(".graph-lane")?.classList.contains("muted"),
+    ).toBe(true);
+    expect(document.body.textContent ?? "").toContain(
+      "renamed predecessor with no live states",
+    );
+  });
+
   it("dims folded graph cells by the cell's era, not the folded row span", async () => {
     const onapply = vi.fn();
     const aFqid = "scb/lisa/a";
@@ -921,6 +988,68 @@ describe("RepresentationPicker graph mode (#904)", () => {
       .click();
     expect(onapply).toHaveBeenCalledTimes(1);
     expect(onapply.mock.calls[0][0].adds[0].row.column).toBe("MEMBER");
+  });
+
+  it("falls back when a graph node carries a separate non-member column run", async () => {
+    const aFqid = "scb/lisa/a";
+    const bFqid = "scb/lisa/b";
+    render(RepresentationPicker, {
+      bands: [
+        {
+          key: aFqid,
+          name: "A",
+          registerPrefix: "scb/lisa",
+          rows: [row({ column: "MEMBER" })],
+        } satisfies PickerBand,
+        {
+          key: bFqid,
+          name: "B",
+          registerPrefix: "scb/lisa",
+          rows: [row({ column: "NEXT" })],
+        } satisfies PickerBand,
+      ],
+      graphMemberHrefs: {
+        [aFqid]: "/catalog/scb/lisa/a",
+        [bFqid]: "/catalog/scb/lisa/b",
+      },
+      graph: graph({
+        nodes: [
+          graphNode(aFqid, {
+            states: [
+              graphState({
+                state_id: 1,
+                representation_run_id: 1,
+                delivery_column_name: "HIDDEN",
+                valid_from: "1990-01-01",
+                valid_to: "1999-12-31",
+              }),
+              graphState({
+                state_id: 2,
+                representation_run_id: 2,
+                delivery_column_name: "MEMBER",
+                valid_from: "2000-01-01",
+                valid_to: "2020-12-31",
+              }),
+            ],
+          }),
+          graphNode(bFqid, {
+            states: [graphState({ delivery_column_name: "NEXT" })],
+          }),
+        ],
+        edges: [edge(aFqid, bFqid)],
+        focus_id: null,
+      }),
+      ...PROPS,
+    });
+
+    await vi.waitFor(() => {
+      if (!document.querySelector(".col-list")) {
+        throw new Error("list fallback not rendered");
+      }
+    });
+    expect(document.querySelector(".graph-picker")).toBeNull();
+    expect(visibleColumns()).toEqual(["MEMBER", "NEXT"]);
+    expect(document.body.textContent).not.toContain("HIDDEN");
   });
 
   it("falls back when a group graph includes a non-member variable node", async () => {

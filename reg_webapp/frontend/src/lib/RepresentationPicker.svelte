@@ -890,6 +890,19 @@ function graphCandidateIsOneToOne(
   );
 }
 
+function graphCellFullyCoveredByBand(band: PickerBand, cell: RunCell): boolean {
+  if (cell.columns.length === 0) {
+    return true;
+  }
+  const covered = new Set<string>();
+  for (const candidate of graphCellCandidates(band, cell)) {
+    for (const column of candidate.columns) {
+      covered.add(column);
+    }
+  }
+  return cell.columns.every((column) => covered.has(column));
+}
+
 function graphTrackInnerWidthForScale(scale: YearScale | null): number {
   return scale
     ? Math.max(GRAPH_TRACK_MIN, (scale.maxYear - scale.minYear) * PX_PER_YEAR)
@@ -1101,6 +1114,9 @@ function graphForVisibleRows(g: RelationshipGraph): RelationshipGraph | null {
       return null;
     }
     for (const cell of cellsOf(node)) {
+      if (!graphCellFullyCoveredByBand(originalBand, cell)) {
+        return null;
+      }
       if (
         graphCellCandidates(band, cell).length > 0 &&
         !graphCandidateIsOneToOne(graphCellCandidates(originalBand, cell), cell)
@@ -1165,6 +1181,16 @@ const graphScale = $derived<YearScale | null>(
 const graphTrackInnerW = $derived(graphTrackInnerWidthForScale(graphScale));
 const graphTrackW = $derived(graphTrackInnerW + GRAPH_TRACK_PAD * 2);
 const graphTicks = $derived(graphScale ? axisTicks(graphScale) : []);
+const graphSuccessionEndpointIds = $derived.by((): Set<string> => {
+  const ids = new Set<string>();
+  for (const edge of graph?.edges ?? []) {
+    if (edge.kind === "succession") {
+      ids.add(edge.source);
+      ids.add(edge.target);
+    }
+  }
+  return ids;
+});
 
 function graphX(year: number): number {
   if (!graphScale || !Number.isFinite(year)) {
@@ -1406,8 +1432,19 @@ function graphNodeFocused(rn: RenderNode): boolean {
   );
 }
 
+function graphNodeIsRenamed(rn: RenderNode): boolean {
+  return (
+    rn.kind === "variable" &&
+    rn.node.states.length === 0 &&
+    graphSuccessionEndpointIds.has(rn.node.id)
+  );
+}
+
 function graphNodeMuted(rn: RenderNode): boolean {
-  return rn.kind === "variable" && graphBandForNode(rn.node) == null;
+  return (
+    rn.kind === "variable" &&
+    (graphBandForNode(rn.node) == null || graphNodeIsRenamed(rn))
+  );
 }
 
 function graphNodeLabel(rn: RenderNode): string {
@@ -1417,8 +1454,9 @@ function graphNodeLabel(rn: RenderNode): string {
   if (rn.node.facets.length > 0) {
     return facetLabelJoin(rn.node.facets);
   }
-  if (rn.node.group_label != null && rn.node.fqid) {
-    return leafSlug(rn.node.fqid);
+  if ((rn.node.group_label != null || graphNodeIsRenamed(rn)) && rn.node.fqid) {
+    const label = leafSlug(rn.node.fqid);
+    return graphNodeIsRenamed(rn) ? `${label} (renamed)` : label;
   }
   return rn.node.label;
 }
@@ -1455,7 +1493,9 @@ function graphLaneA11y(rn: RenderNode): string {
   }
   const items = graphLaneItems(rn);
   if (items.length === 0) {
-    return "no delivered state rows";
+    return graphNodeIsRenamed(rn)
+      ? "renamed predecessor with no live states"
+      : "no delivered state rows";
   }
   return items
     .map((item) => {
