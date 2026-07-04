@@ -104,7 +104,6 @@ from __future__ import annotations
 import argparse
 import importlib.util
 import json
-import os
 import re
 import subprocess
 import sys
@@ -161,18 +160,6 @@ DEFAULT_CODEX_ID_POLL = 0.25
 # and don't slow the suite; the healthy-path stubs sleep just past it to survive the check.
 DEFAULT_LAUNCH_GRACE = 1.0
 DEFAULT_LAUNCH_GRACE_POLL = 0.1
-
-
-# Git-context env vars that override cwd-based repo discovery. A git hook (pre-push runs
-# our test suite) exports GIT_DIR / GIT_WORK_TREE / GIT_INDEX_FILE etc. into the child
-# environment; git then targets the HOOK's repo regardless of a subprocess's cwd or `-C`.
-# So passing an explicit cwd is NOT enough — every git call (and the launched agent, which
-# runs git internally) must run with these scrubbed. We drop all GIT_* keys wholesale:
-# none of git's config-affecting env vars belong in a fresh dispatch, and a blanket rule
-# can't miss a newly added repo-targeting var. (GIT_SSH/GIT_ASKPASS auth helpers live in
-# the user's shell config, not this exported hook set, so dropping them here is harmless.)
-def _scrubbed_env() -> dict[str, str]:
-    return {k: v for k, v in os.environ.items() if not k.startswith("GIT_")}
 
 
 def resolve_profile(tier: str, surface_override: str | None) -> tuple[str, list[str]]:
@@ -368,7 +355,7 @@ def resolve_continue_pr(pr: int) -> dict:
             "--json",
             "number,title,body,state,baseRefName,headRefName,headRepository,headRepositoryOwner,isCrossRepository,closingIssuesReferences",
         ],
-        env=_scrubbed_env(),
+        env=_gh.scrubbed_git_env(),  # a gh call, not git — but still scrub the hijack env
         capture_output=True,
         text=True,
     )
@@ -645,15 +632,10 @@ def run_git(cwd: Path, args: list[str]) -> None:
     cwd is passed explicitly (not relied on as the ambient process cwd) so the fetch and
     worktree-add always act on the canonical repo — never on whatever directory the
     caller happens to be in, which under --no-canonical-check would corrupt an unrelated
-    checkout.
+    checkout. Runs through the shared _gh.run_git (which scrubs the GIT_* hijack env — cwd
+    is not enough) and turns a non-zero exit into the exit-2 SystemExit this caller wants.
     """
-    proc = subprocess.run(
-        ["git", *args],
-        cwd=str(cwd),
-        env=_scrubbed_env(),  # cwd is not enough: scrub inherited GIT_DIR/GIT_WORK_TREE
-        capture_output=True,
-        text=True,
-    )
+    proc = _gh.run_git(args, cwd=cwd)
     if proc.returncode != 0:
         tail = (
             proc.stderr.strip() or proc.stdout.strip() or f"git {' '.join(args)} failed"
@@ -662,13 +644,7 @@ def run_git(cwd: Path, args: list[str]) -> None:
 
 
 def git_output(cwd: Path, args: list[str]) -> str:
-    proc = subprocess.run(
-        ["git", *args],
-        cwd=str(cwd),
-        env=_scrubbed_env(),
-        capture_output=True,
-        text=True,
-    )
+    proc = _gh.run_git(args, cwd=cwd)
     if proc.returncode != 0:
         tail = (
             proc.stderr.strip() or proc.stdout.strip() or f"git {' '.join(args)} failed"
@@ -678,12 +654,12 @@ def git_output(cwd: Path, args: list[str]) -> str:
 
 
 def branch_exists(canonical: Path, branch: str) -> bool:
-    proc = subprocess.run(
-        ["git", "show-ref", "--verify", "--quiet", f"refs/heads/{branch}"],
-        cwd=str(canonical),
-        env=_scrubbed_env(),
+    return (
+        _gh.run_git(
+            ["show-ref", "--verify", "--quiet", f"refs/heads/{branch}"], cwd=canonical
+        ).returncode
+        == 0
     )
-    return proc.returncode == 0
 
 
 def ensure_clean_worktree(worktree: Path) -> None:
@@ -708,13 +684,7 @@ def ensure_existing_continue_worktree(worktree: Path, branch: str) -> None:
 
 
 def try_ff_only_merge(worktree: Path, ref: str) -> str | None:
-    proc = subprocess.run(
-        ["git", "merge", "--ff-only", ref],
-        cwd=str(worktree),
-        env=_scrubbed_env(),
-        capture_output=True,
-        text=True,
-    )
+    proc = _gh.run_git(["merge", "--ff-only", ref], cwd=worktree)
     if proc.returncode == 0:
         return None
     return (
@@ -727,13 +697,7 @@ def try_ff_only_merge(worktree: Path, ref: str) -> str | None:
 def _cherry_has_unique_patch(
     worktree: Path, upstream: str, head: str, limit: str
 ) -> bool:
-    proc = subprocess.run(
-        ["git", "cherry", upstream, head, limit],
-        cwd=str(worktree),
-        env=_scrubbed_env(),
-        capture_output=True,
-        text=True,
-    )
+    proc = _gh.run_git(["cherry", upstream, head, limit], cwd=worktree)
     if proc.returncode != 0:
         return True
     return any(line.startswith("+") for line in proc.stdout.splitlines())
@@ -753,22 +717,10 @@ def rebased_branch_matches_remote_patches(
 
 
 def rebase_onto(worktree: Path, base_ref: str) -> None:
-    proc = subprocess.run(
-        ["git", "rebase", base_ref],
-        cwd=str(worktree),
-        env=_scrubbed_env(),
-        capture_output=True,
-        text=True,
-    )
+    proc = _gh.run_git(["rebase", base_ref], cwd=worktree)
     if proc.returncode == 0:
         return
-    subprocess.run(
-        ["git", "rebase", "--abort"],
-        cwd=str(worktree),
-        env=_scrubbed_env(),
-        capture_output=True,
-        text=True,
-    )
+    _gh.run_git(["rebase", "--abort"], cwd=worktree)
     tail = proc.stderr.strip() or proc.stdout.strip() or f"git rebase {base_ref} failed"
     raise SystemExit(f"git rebase {base_ref} failed and was aborted: {tail}")
 
@@ -836,21 +788,27 @@ def prepare_continue_worktree(
 def require_git_checkout(canonical: Path) -> None:
     """Refuse (exit 2) unless `canonical` is itself a git worktree root.
 
-    Belt-and-braces before the mutating fetch/worktree-add: git's `-C <dir>` walks UP to
-    the nearest enclosing repo, so a `canonical` that is NOT a checkout (an empty dir, a
-    stray path) would silently target whatever repo sits above it — the exact class of
-    accident that let a test's throwaway path resolve to the real checkout. Requiring the
-    resolved `show-toplevel` to EQUAL `canonical` (true for a main checkout and for a
-    linked worktree root, both valid dispatch origins) rejects that: an ambient parent
-    repo has a different toplevel, and a non-repo dir makes rev-parse fail outright. This
-    does not weaken the production contract — the real canonical checkout satisfies it.
+    Belt-and-braces before the mutating fetch/worktree-add: running IN a non-checkout
+    `canonical` (an empty dir, a stray path) would let git walk UP to the nearest enclosing
+    repo and silently target whatever repo sits above it — the exact class of accident that
+    let a test's throwaway path resolve to the real checkout. Requiring the resolved
+    `show-toplevel` to EQUAL `canonical` (true for a main checkout and for a linked worktree
+    root, both valid dispatch origins) rejects that: an ambient parent repo has a different
+    toplevel, and a non-repo dir makes rev-parse fail outright. This does not weaken the
+    production contract — the real canonical checkout satisfies it.
     """
-    proc = subprocess.run(
-        ["git", "-C", str(canonical), "rev-parse", "--show-toplevel"],
-        env=_scrubbed_env(),  # else an inherited GIT_DIR resolves the hook's repo, not canonical
-        capture_output=True,
-        text=True,
-    )
+    # Run IN `canonical` (via run_git's cwd) rather than `git -C <canonical>`: run_git scrubs
+    # the GIT_* hijack env, so an inherited GIT_DIR can't resolve the hook's repo instead of
+    # canonical — cwd alone would not defend against that. Unlike `git -C <dir>` (which lets
+    # git report the bad dir), cwd=<nonexistent> makes subprocess raise FileNotFoundError
+    # (or NotADirectoryError if a path component is a file) BEFORE git runs, and run_git does
+    # NOT catch it — map both to the same clean exit-2 refusal rather than an uncaught traceback.
+    try:
+        proc = _gh.run_git(["rev-parse", "--show-toplevel"], cwd=canonical)
+    except (FileNotFoundError, NotADirectoryError) as exc:
+        raise SystemExit(
+            f"canonical checkout {canonical} is not a git worktree ({exc})"
+        ) from exc
     toplevel = proc.stdout.strip()
     if proc.returncode != 0 or not toplevel:
         raise SystemExit(
@@ -1007,7 +965,7 @@ def _child_env(state_root: Path) -> dict[str, str]:
 
     The agent runs git in its own worktree, and an inherited GIT_DIR from a dispatching hook
     would point every git call it makes at the wrong repo — so we scrub all GIT_* (see
-    _scrubbed_env). The child also derives its OWN pipeline-slots / merge-gate stores from
+    _gh.scrubbed_git_env). The child also derives its OWN pipeline-slots / merge-gate stores from
     XDG_STATE_HOME; if the operator passed a non-default --state-root, that override is
     invisible to the child unless we propagate it, so the child would split its ledger/gate
     writes into the ambient store. We set XDG_STATE_HOME to <state_root>.parent ONLY when
@@ -1015,7 +973,7 @@ def _child_env(state_root: Path) -> dict[str, str]:
     exactly this override under $XDG_STATE_HOME/registry-research-toolkit); for a non-standard
     root we can't reconstruct a matching XDG_STATE_HOME, so we leave it ambient and warn.
     """
-    env = _scrubbed_env()
+    env = _gh.scrubbed_git_env()
     if state_root.name == "registry-research-toolkit":
         env["XDG_STATE_HOME"] = str(state_root.parent)
     else:

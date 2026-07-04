@@ -71,14 +71,17 @@ a nested-sandbox denial (`sandbox_apply: Operation not permitted`, #1049) is one
 and selects the more actionable message, but the denial string is not an independent blocker
 (it is PR-controllable, so a legitimate review that quotes it must not fire the guard).
 
-Stdlib only, no `gh` **API** access (unlike the sibling scripts) — it works purely off the
-local git worktree and the codex CLI.
+Stdlib only, and no `gh` **API** access (unlike the sibling scripts) — it works purely off
+the local git worktree and the codex CLI. Its one sibling dependency is `_gh`, for the
+shared `run_git` / `scrubbed_git_env` git primitives (themselves stdlib-only subprocess
+wrappers), so the GIT_* hijack scrub has a single home rather than a per-script copy.
 """
 
 from __future__ import annotations
 
 import argparse
 import contextlib
+import importlib.util
 import json
 import os
 import re
@@ -89,7 +92,31 @@ import sys
 import time
 from pathlib import Path
 from tempfile import NamedTemporaryFile
-from typing import Any
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from types import ModuleType
+
+
+def _load_gh() -> ModuleType:
+    # The one leaf that can't go through _gh.load_sibling: _gh can't load itself. Kept a
+    # tiny sys.modules-guarded spec-load, identical in every sibling script, so the whole
+    # process shares ONE _gh instance (a single patch target, not one copy per loader).
+    if (mod := sys.modules.get("_gh")) is not None:
+        return mod
+    spec = importlib.util.spec_from_file_location(
+        "_gh", Path(__file__).with_name("_gh.py")
+    )
+    assert spec and spec.loader
+    mod = importlib.util.module_from_spec(spec)
+    sys.modules["_gh"] = mod
+    spec.loader.exec_module(mod)
+    return mod
+
+
+# Shared with the sibling scripts: run_git (the GIT_* hijack scrub + git runner) and
+# scrubbed_git_env live in _gh so the scrub has ONE home, not a per-script copy.
+_gh = _load_gh()
 
 # The codex CLI has no structured review mode (`codex exec` has --json; `codex review` does
 # not, as of codex-cli 0.142.5), so the verdict is read from the prose transcript.
@@ -170,32 +197,16 @@ class PreconditionError(Exception):
         self.output_path: str | None = None
 
 
-def _scrubbed_git_env() -> dict[str, str]:
-    # Drop GIT_DIR/GIT_WORK_TREE/GIT_INDEX_FILE: the pre-push hook exports GIT_DIR and
-    # hijacks child git, pointing it at the real repo instead of the target worktree.
-    return {
-        k: v
-        for k, v in os.environ.items()
-        if k not in ("GIT_DIR", "GIT_WORK_TREE", "GIT_INDEX_FILE")
-    }
-
-
 def _git(args: list[str], *, cwd: Path) -> subprocess.CompletedProcess[str]:
-    """Run a git command in `cwd` with the GIT_* hijack env scrubbed.
+    """Run a git command in `cwd` via the shared `_gh.run_git` (GIT_* hijack env scrubbed).
 
-    A missing git binary maps to a kind=precondition PreconditionError rather than a
-    traceback. (This can't route through `run_tolerant` — that primitive takes no env
-    override, and the scrub is load-bearing here.)
+    The scrub itself now lives in `_gh.run_git` (one home for all three former copies); the
+    only thing kept local is the missing-binary mapping — `_gh.run_git` deliberately does NOT
+    catch `FileNotFoundError`, so here we turn it into a kind=precondition PreconditionError
+    rather than a traceback.
     """
     try:
-        return subprocess.run(
-            ["git", *args],
-            cwd=cwd,
-            capture_output=True,
-            text=True,
-            check=False,
-            env=_scrubbed_git_env(),
-        )
+        return _gh.run_git(args, cwd=cwd)
     except FileNotFoundError as exc:
         raise PreconditionError(
             f"git binary not found on PATH: {exc}", kind=KIND_PRECONDITION
@@ -308,7 +319,7 @@ def run_codex(merge_base: str, out_path: Path, *, cwd: Path, timeout_s: float) -
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         text=True,
-        env=_scrubbed_git_env(),
+        env=_gh.scrubbed_git_env(),
         start_new_session=True,
     )
     try:

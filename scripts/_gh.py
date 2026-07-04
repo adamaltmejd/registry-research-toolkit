@@ -16,6 +16,14 @@ now. The issue-domain parsers (label sets, the relationship/touches regexes) sta
 and only SystemExits on a MISSING executable. Lifted out of `cos_preflight.py`, whose
 `git`/`gh`/sibling-probe calls all read a meaningful non-zero exit.
 
+`scrubbed_git_env` + `run_git` are the git-specific primitives. `scrubbed_git_env` is the
+SINGLE home for the GIT_* hijack scrub (a pre-push hook exports GIT_DIR/GIT_WORK_TREE/… and
+would otherwise point every child git call at the hook's repo regardless of cwd); `run_git`
+runs `git <args>` in an explicit cwd with that env scrubbed and tolerates a non-zero exit.
+Lifted out of the three private copies that had grown in `cos_dispatch.py` and
+`codex_local_review.py` — `run_git` deliberately does NOT map a missing git binary, leaving
+that to each caller (cos_dispatch surfaces it, codex_local_review maps a PreconditionError).
+
 The corpus-fetch plumbing lives here too — `FETCH_CAP` (the list-fetch ceiling) and
 `_warn_if_truncated` (its overflow warning) are domain-neutral and shared by both
 `check_issue_hygiene.py` and `gh_issue.py`; `check_issue_hygiene.py` re-exports them so
@@ -116,6 +124,42 @@ def run_tolerant(cmd: list[str]) -> subprocess.CompletedProcess[str]:
         return subprocess.run(cmd, capture_output=True, text=True)
     except FileNotFoundError as exc:
         raise SystemExit(f"missing executable {cmd[0]!r}: {exc}") from exc
+
+
+def scrubbed_git_env() -> dict[str, str]:
+    """`os.environ` with every `GIT_*` key dropped — the SINGLE home for the hijack scrub.
+
+    A git hook (this repo's pre-push runs the test suite) exports GIT_DIR / GIT_WORK_TREE /
+    GIT_INDEX_FILE etc. into the child environment; git then targets the HOOK's repo
+    regardless of a subprocess's cwd or `-C`. So passing an explicit cwd is NOT enough —
+    every git call (and any launched agent that runs git internally) must run with these
+    scrubbed. We drop all GIT_* keys wholesale: none of git's config-affecting env vars
+    belong in a fresh subprocess, and a blanket rule can't miss a newly added repo-targeting
+    var. (GIT_SSH/GIT_ASKPASS auth helpers live in the user's shell config, not this exported
+    hook set, so dropping them here is harmless.)
+    """
+    return {k: v for k, v in os.environ.items() if not k.startswith("GIT_")}
+
+
+def run_git(
+    args: list[str], *, cwd: str | os.PathLike[str]
+) -> subprocess.CompletedProcess[str]:
+    """Run `git <args>` in `cwd` with the GIT_* hijack env scrubbed; tolerate non-zero exit.
+
+    The git-specific counterpart to `run_tolerant`: like it, a non-zero exit is a signal the
+    caller inspects (an absent ref, a failed ff-merge), not a fatal error — the CompletedProcess
+    is handed back. Unlike `run_tolerant` it prepends `git`, scrubs the GIT_* hijack env
+    (`scrubbed_git_env`), and runs in an explicit `cwd`. It does NOT catch `FileNotFoundError`:
+    a missing git binary propagates so each caller owns its own mapping (cos_dispatch lets it
+    surface as-is; codex_local_review maps it to a kind=precondition PreconditionError).
+    """
+    return subprocess.run(
+        ["git", *args],
+        cwd=cwd,
+        env=scrubbed_git_env(),
+        capture_output=True,
+        text=True,
+    )
 
 
 def gh_json(args: list[str]) -> Any:
