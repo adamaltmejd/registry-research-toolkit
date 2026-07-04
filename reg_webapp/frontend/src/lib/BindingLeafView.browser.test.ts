@@ -264,7 +264,7 @@ describe("BindingLeafView representation picker (#678)", () => {
     expect(getRelatedDocuments).not.toHaveBeenCalled();
   });
 
-  it("renders HistoryGraph even when no delivery-column rows are selectable", async () => {
+  it("mounts the picker graph when no delivery-column rows are selectable", async () => {
     vi.mocked(getBindingGraph).mockResolvedValue({
       nodes: [
         {
@@ -329,27 +329,216 @@ describe("BindingLeafView representation picker (#678)", () => {
       vintageYear: 2024,
     });
 
-    await expect
-      .element(page.getByRole("heading", { name: "History" }))
-      .toBeVisible();
-    expect(document.querySelector(".rep-picker")).toBeNull();
+    await vi.waitFor(() => {
+      if (!document.querySelector(".rep-picker .graph-picker")) {
+        throw new Error("picker graph not rendered");
+      }
+    });
+    expect(document.querySelector(".col-list")).toBeNull();
+    expect(document.body.textContent).toContain("uncolumned coding");
     await expect
       .element(page.getByRole("link", { name: "kon2" }))
       .toBeVisible();
   });
 
-  it("does not clamp open-ended graph timelines to the steward period ceiling", async () => {
-    vi.mocked(getBindingGraph).mockResolvedValue(
-      graph({
-        states: [
-          gstate({
-            valid_from: "2000-01-01",
-            valid_to: null,
-            delivery_column_name: "Kon",
-          }),
-        ],
-      }) as never,
+  it("does not leave an empty picker when a zero-row graph is rejected", async () => {
+    const nodes: VariableGraphNode[] = Array.from({ length: 19 }, (_, i) => ({
+      kind: "variable",
+      id: `v${i}`,
+      fqid: i === 0 ? "scb/lisa/kon" : `scb/lisa/kon${i}`,
+      label: i === 0 ? "Kön" : `Kön ${i}`,
+      group_key: "huge",
+      group_label: "Huge concept",
+      definition: null,
+      description: null,
+      operational_definition: null,
+      facets: [],
+      states: [
+        gstate({
+          state_id: i + 1,
+          representation_run_id: i + 1,
+          delivery_column_name: null,
+          value_set_version_label: `coding ${i}`,
+        }),
+      ],
+      same_as: [],
+    }));
+    vi.mocked(getBindingGraph).mockResolvedValue({
+      nodes,
+      edges: [
+        {
+          id: "v0-v1",
+          kind: "succession",
+          source: "v0",
+          target: "v1",
+          label: null,
+          effective_year: 2021,
+        },
+      ],
+      focus_id: "v0",
+    } as RelationshipGraph as never);
+
+    render(BindingLeafView, {
+      fqidPath: "scb/lisa/kon",
+      node: node(single),
+      ...SEED,
+      vintageYear: 2024,
+    });
+
+    await vi.waitFor(() => {
+      expect(getBindingGraph).toHaveBeenCalledTimes(1);
+      if (!document.querySelector(".member-identity .qualifier")) {
+        throw new Error("graph-derived member identity not rendered");
+      }
+      expect(document.querySelector(".graph-picker")).toBeNull();
+      expect(document.querySelector(".rep-picker")).toBeNull();
+      expect(document.querySelector(".col-list")).toBeNull();
+    });
+  });
+
+  it("renders same_as-only graph context after the standalone graph removal", async () => {
+    vi.mocked(getBindingGraph).mockResolvedValue({
+      nodes: [
+        {
+          kind: "variable",
+          id: "v1",
+          fqid: "scb/lisa/kon",
+          label: "Kön",
+          group_key: null,
+          group_label: null,
+          definition: null,
+          description: null,
+          operational_definition: null,
+          facets: [],
+          states: [],
+          same_as: [{ fqid: "scb/lisa/kon-alias", register: "lisa_old" }],
+        },
+      ],
+      edges: [],
+      focus_id: "v1",
+    } as RelationshipGraph as never);
+
+    render(BindingLeafView, {
+      fqidPath: "scb/lisa/kon",
+      node: node(single),
+      ...SEED,
+      vintageYear: 2024,
+    });
+
+    await vi.waitFor(() => {
+      const graphText =
+        document.querySelector(".rep-picker .graph-picker")?.textContent ?? "";
+      if (!graphText.includes("also in") || !graphText.includes("lisa_old")) {
+        throw new Error(`same_as graph context not rendered: ${graphText}`);
+      }
+    });
+    expect(document.querySelector(".col-list")).toBeNull();
+    const aliasLink = document.querySelector<HTMLAnchorElement>(
+      '.graph-sa-chip[href="/catalog/scb/lisa/kon-alias"]',
     );
+    expect(aliasLink?.textContent).toBe("lisa_old");
+  });
+
+  it("renders edge-less no-column graph runs after the standalone graph removal", async () => {
+    vi.mocked(getBindingGraph).mockResolvedValue({
+      nodes: [
+        {
+          kind: "variable",
+          id: "v1",
+          fqid: "scb/lisa/kon",
+          label: "Kön",
+          group_key: null,
+          group_label: null,
+          definition: null,
+          description: null,
+          operational_definition: null,
+          facets: [],
+          states: [
+            gstate({
+              delivery_column_name: null,
+              value_set_version_label: "old coding",
+              valid_from: "2000-01-01",
+              valid_to: "2009-12-31",
+            }),
+            gstate({
+              state_id: 2,
+              representation_run_id: 2,
+              delivery_column_name: null,
+              value_set_version_label: "new coding",
+              valid_from: "2010-01-01",
+              valid_to: "2020-12-31",
+            }),
+          ],
+          same_as: [],
+        },
+      ],
+      edges: [],
+      focus_id: "v1",
+    } as RelationshipGraph as never);
+
+    render(BindingLeafView, {
+      fqidPath: "scb/lisa/kon",
+      node: node(single),
+      ...SEED,
+      vintageYear: 2024,
+    });
+
+    await vi.waitFor(() => {
+      const graphText =
+        document.querySelector(".rep-picker .graph-picker")?.textContent ?? "";
+      if (
+        !graphText.includes("old coding") ||
+        !graphText.includes("new coding")
+      ) {
+        throw new Error(`edge-less run graph not rendered: ${graphText}`);
+      }
+    });
+    expect(
+      document.querySelector(".graph-picker input[type='checkbox']"),
+    ).toBeNull();
+  });
+
+  it("does not clamp open-ended graph timelines to the steward period ceiling", async () => {
+    const openEnded = graph({
+      states: [
+        gstate({
+          valid_from: "2000-01-01",
+          valid_to: null,
+          delivery_column_name: "Kon",
+        }),
+      ],
+    });
+    openEnded.nodes.push({
+      kind: "variable",
+      id: "v2",
+      fqid: "scb/lisa/kon2",
+      label: "Kön successor",
+      group_key: null,
+      group_label: null,
+      definition: null,
+      description: null,
+      operational_definition: null,
+      facets: [],
+      states: [
+        gstate({
+          state_id: 2,
+          representation_run_id: 2,
+          delivery_column_name: "Kon2",
+          valid_from: "2005-01-01",
+          valid_to: "2008-12-31",
+        }),
+      ],
+      same_as: [],
+    });
+    openEnded.edges.push({
+      id: "v1-v2",
+      kind: "succession",
+      source: "v1",
+      target: "v2",
+      label: null,
+      effective_year: 2005,
+    });
+    vi.mocked(getBindingGraph).mockResolvedValue(openEnded as never);
 
     render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
@@ -369,11 +558,11 @@ describe("BindingLeafView representation picker (#678)", () => {
     await expect.element(page.getByText("coverage through 2010")).toBeVisible();
 
     const graphTicks = await vi.waitFor(() => {
-      const labels = [...document.querySelectorAll(".history-graph .tick")].map(
-        (el) => el.textContent?.trim() ?? "",
-      );
+      const labels = [
+        ...document.querySelectorAll(".graph-picker .graph-tick"),
+      ].map((el) => el.textContent?.trim() ?? "");
       if (!labels.includes("2026")) {
-        throw new Error(`history graph ticks not ready: ${labels.join(", ")}`);
+        throw new Error(`picker graph ticks not ready: ${labels.join(", ")}`);
       }
       return labels;
     });
