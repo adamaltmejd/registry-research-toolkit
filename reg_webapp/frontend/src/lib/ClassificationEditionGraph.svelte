@@ -21,6 +21,7 @@ const NODE_H = 58;
 const COL_GAP = 48;
 const ROW_GAP = 18;
 const PAD = 14;
+const EDGE_LABEL_BAND = 24;
 
 interface DagCluster {
   cluster: NodeCluster;
@@ -121,7 +122,11 @@ const dagClusters = $derived.by((): DagCluster[] => {
         layout,
         width:
           PAD * 2 + layout.columns * NODE_W + (layout.columns - 1) * COL_GAP,
-        height: PAD * 2 + layout.rows * NODE_H + (layout.rows - 1) * ROW_GAP,
+        height:
+          PAD * 2 +
+          EDGE_LABEL_BAND +
+          layout.rows * NODE_H +
+          (layout.rows - 1) * ROW_GAP,
       };
     })
     .filter((cluster): cluster is DagCluster => cluster != null);
@@ -132,7 +137,7 @@ function nodeLeft(node: ClassificationDagNode): number {
 }
 
 function nodeTop(node: ClassificationDagNode): number {
-  return PAD + node.row * (NODE_H + ROW_GAP);
+  return PAD + EDGE_LABEL_BAND + node.row * (NODE_H + ROW_GAP);
 }
 
 function edgePath(edge: ClassificationDagEdge): string {
@@ -153,13 +158,13 @@ function edgeYear(edge: ClassificationDagEdge): string | null {
 function edgeYearLeft(edge: ClassificationDagEdge): number {
   const sx = nodeLeft(edge.source) + NODE_W;
   const tx = nodeLeft(edge.target);
-  return sx + (tx - sx) / 2 - 20;
+  return sx + (tx - sx) / 2 - 24;
 }
 
 function edgeYearTop(edge: ClassificationDagEdge): number {
   const sy = nodeTop(edge.source) + NODE_H / 2;
   const ty = nodeTop(edge.target) + NODE_H / 2;
-  return (sy + ty) / 2 - 12;
+  return Math.min(sy, ty) - 26;
 }
 
 function editionYear(node: ClassificationGraphNode): string {
