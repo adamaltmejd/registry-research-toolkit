@@ -870,6 +870,103 @@ describe("RepresentationPicker graph mode (#904)", () => {
     expect(matchedCell.textContent).not.toContain("2010 – 2023");
   });
 
+  it("matches every concrete variant graph cell for a folded family row", async () => {
+    const onapply = vi.fn();
+    const fqid = "scb/lisa/kon";
+    render(RepresentationPicker, {
+      bands: [
+        {
+          key: fqid,
+          name: "Kön",
+          registerPrefix: "scb/lisa",
+          rows: [
+            row({
+              key: "individer-15plus::Kon",
+              variant: "individer-15plus",
+              variantLabel: "Individer, 15 år och äldre",
+              variantFamily: "individer-15plus",
+              variantFamilyLabel: "Individer",
+              column: "Kon",
+              from: "1990-01-01",
+              to: "2023-12-31",
+              windows: [
+                { from: "1990-01-01", to: "2009-12-31" },
+                { from: "2010-01-01", to: "2023-12-31" },
+              ],
+              variantSegments: [
+                {
+                  variant: "individer-16plus",
+                  variantLabel: "Individer, 16 år och äldre",
+                  windows: [{ from: "1990-01-01", to: "2009-12-31" }],
+                },
+                {
+                  variant: "individer-15plus",
+                  variantLabel: "Individer, 15 år och äldre",
+                  windows: [{ from: "2010-01-01", to: "2023-12-31" }],
+                },
+              ],
+              period: "1990 – 2023",
+              wirePeriod: "1990..2009,2010..2023",
+            }),
+          ],
+        } satisfies PickerBand,
+      ],
+      graph: graph({
+        nodes: [
+          graphNode(fqid, {
+            states: [
+              graphState({
+                variant: "individer-16plus",
+                representation_run_id: 1,
+                delivery_column_name: "Kon",
+                valid_from: "1990-01-01",
+                valid_to: "2009-12-31",
+              }),
+              graphState({
+                state_id: 2,
+                variant: "individer-15plus",
+                representation_run_id: 2,
+                delivery_column_name: "Kon",
+                valid_from: "2010-01-01",
+                valid_to: "2023-12-31",
+              }),
+            ],
+          }),
+        ],
+        edges: [],
+        focus_id: fqid,
+      }),
+      ...PROPS,
+      onapply,
+    });
+
+    const matchedCells = await vi.waitFor(() => {
+      const cells = [
+        ...document.querySelectorAll<HTMLLabelElement>("label.graph-cell"),
+      ].filter((el) => el.textContent?.includes("Kon"));
+      if (cells.length !== 2) {
+        throw new Error(
+          `expected two matched graph cells, got ${cells.length}`,
+        );
+      }
+      return cells;
+    });
+    for (const cell of matchedCells) {
+      expect(cell.textContent).toContain("1990 – 2023");
+    }
+
+    matchedCells[0].querySelector("input")?.click();
+
+    await expect.element(page.getByText("+1 column")).toBeVisible();
+    await page
+      .getByRole("button", {
+        name: /Add to project|Remove from project|Apply changes/,
+      })
+      .click();
+    expect(onapply).toHaveBeenCalledTimes(1);
+    expect(onapply.mock.calls[0][0].adds[0].row.column).toBe("Kon");
+  });
+
   it("keeps an open-start graph cell in-window before the finite graph floor", async () => {
     const aFqid = "scb/lisa/a";
     const bFqid = "scb/lisa/b";

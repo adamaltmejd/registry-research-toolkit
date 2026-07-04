@@ -827,7 +827,11 @@ function cellMatchedColumns(
   row: PickerRepresentation,
   cell: RunCell,
 ): string[] {
-  if (row.variant !== cell.variant) {
+  const rowVariants =
+    row.variantSegments && row.variantSegments.length > 0
+      ? row.variantSegments.map((segment) => segment.variant)
+      : [row.variant];
+  if (!rowVariants.includes(cell.variant)) {
     return [];
   }
   const columns = new Set(cell.columns);

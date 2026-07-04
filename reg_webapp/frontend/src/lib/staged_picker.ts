@@ -166,6 +166,7 @@ export function committedPickerRows(
         row.variantSegments && row.variantSegments.length > 0
           ? row.variantSegments
           : [{ variant: row.variant }];
+      const matched: PickerCommittedRow[] = [];
       for (const segment of segments) {
         const registerVariant = rowRegisterVariantForVariant(
           band,
@@ -186,24 +187,7 @@ export function committedPickerRows(
         if (!binding) {
           continue;
         }
-        const removal = {
-          registerVariant,
-          variable: band.key,
-          representation: bindingRepresentation(binding),
-        };
-        const existing = committed.get(rowKey);
-        if (existing) {
-          existing.removals ??= [
-            {
-              registerVariant: existing.registerVariant,
-              variable: existing.variable,
-              representation: existing.representation,
-            },
-          ];
-          existing.removals.push(removal);
-          continue;
-        }
-        committed.set(rowKey, {
+        matched.push({
           key: rowKey,
           registerVariant,
           variable: band.key,
@@ -212,6 +196,24 @@ export function committedPickerRows(
           sourcePeriod: period,
         });
       }
+      if (matched.length !== segments.length) {
+        continue;
+      }
+      const first = matched[0];
+      if (!first) {
+        continue;
+      }
+      committed.set(rowKey, {
+        ...first,
+        removals:
+          matched.length > 1
+            ? matched.map((match) => ({
+                registerVariant: match.registerVariant,
+                variable: match.variable,
+                representation: match.representation,
+              }))
+            : undefined,
+      });
     }
   }
   return committed;
