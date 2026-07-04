@@ -545,13 +545,15 @@ non-`usage_limit` exit-2 kind is a blocker — set `status: blocked` with the ki
 pipeline. Run the launcher unsandboxed (`dangerouslyDisableSandbox: true` on the Bash
 call) from the throwaway worktree: codex's nested `sandbox-exec` cannot apply inside a
 surrounding agent sandbox, so every exec fails there and the review inspects nothing. A
-`tool_failure` naming `sandbox_apply: Operation not permitted` or "no successful exec"
-is an environment problem, not a PR finding — re-run with the sandbox disabled rather
-than setting `status: blocked` on that run. Remove the scratch worktree when done. If
-the session dies before recording, the `running` stamp is the recovery marker: a later
-tick finding a `codex_bot` line stamped `running` with `started` older than the 30-min
-ceiling treats it as stale — finish from the existing `codex-review.md` + JSON if the
-run completed, else clear the stamp and re-run.
+`nested_sandbox` error (the `sandbox_apply: Operation not permitted` denial) is an
+environment problem, not a PR finding — re-run with the sandbox disabled rather than
+setting `status: blocked` on that run. A generic `tool_failure` naming "no successful
+exec" with no sandbox denial is likewise an environment problem, not a PR finding.
+Remove the scratch worktree when done. If the session dies before recording, the
+`running` stamp is the recovery marker: a later tick finding a `codex_bot` line stamped
+`running` with `started` older than the 30-min ceiling treats it as stale — finish from
+the existing `codex-review.md` + JSON if the run completed, else clear the stamp and
+re-run.
 
 ## Pipeline Follow-ups
 

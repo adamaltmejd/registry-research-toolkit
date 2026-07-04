@@ -294,10 +294,11 @@ targets so the review diffs against the real PR base, not main). Operate it like
 - **Sandbox hazard:** codex spawns its own nested `sandbox-exec`, which a surrounding
   agent sandbox refuses, so every exec (including the initial `git diff`) fails and the
   review inspects nothing. If the Bash call is sandboxed, re-run the launcher with
-  `dangerouslyDisableSandbox: true` on the Bash tool call. A `tool_failure` naming
-  `sandbox_apply: Operation not permitted` or "no successful exec" means the ENVIRONMENT
-  is wrong, not the PR — re-run unsandboxed rather than recording `status: blocked` on
-  that run.
+  `dangerouslyDisableSandbox: true` on the Bash tool call. A `nested_sandbox` error (the
+  `sandbox_apply: Operation not permitted` denial) means the ENVIRONMENT is wrong, not
+  the PR — re-run unsandboxed rather than recording `status: blocked` on that run. A
+  generic `tool_failure` naming "no successful exec" with no sandbox denial is likewise
+  an environment problem, not a PR finding.
 
 When every gate passes, write the handoff into the **local merge-gate store** (contract
 in CLAUDE.md "PR merge gate"; this template is the field-level worked example): create

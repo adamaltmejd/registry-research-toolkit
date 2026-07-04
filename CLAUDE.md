@@ -437,8 +437,11 @@ without merging.
   line, head-SHA-bound like `visual`/`build_db`). On exit 2, only `error.kind:
   usage_limit` is the exhausted-analog — recordable and not a merge blocker once the
   independent review and all other gates are complete; every other kind (`timeout`,
-  `format_drift`, `precondition`, `tool_failure`) is a **blocker** (a format-drift
-  transcript may hide real unparsed findings), so write `status: blocked` naming it.
+  `format_drift`, `precondition`, `tool_failure`, `nested_sandbox`) is a **blocker** (a
+  format-drift transcript may hide real unparsed findings; `nested_sandbox` means a
+  seatbelt nested inside a surrounding agent sandbox blocked every exec — the
+  ENVIRONMENT is wrong, not the PR, so re-run un-nested/escalated rather than treating it
+  as a PR finding), so write `status: blocked` naming it.
   Nothing is posted to GitHub. The GitHub Codex web integration stays enabled for a
   shadow period but is **no longer a gate input** — its PR comments are FYI only. When a
   PR is otherwise merge-ready but this gate's `codex_bot` evidence is missing or stale
