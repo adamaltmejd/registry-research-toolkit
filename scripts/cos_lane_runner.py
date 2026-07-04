@@ -88,8 +88,9 @@ VERDICT_USAGE_LIMIT = "exhausted (usage-limit)"
 DEFAULT_MAX_ROUNDS = 3
 
 # Bounded poll for the codex thread id in the implement turn's JSONL log (reused from
-# cos_dispatch's contract). A null session is tolerated — resume turns then fail fast if
-# any findings need fixing. Injectable via run()'s kwargs so tests don't sleep the ceiling.
+# cos_dispatch's contract). A null session is tolerated — if findings then need fixing, the
+# loop records a head-bound blocked codex_bot line and hands off to a human (no resume is
+# possible without a session). Injectable via run()'s kwargs so tests don't sleep the ceiling.
 DEFAULT_CODEX_ID_TIMEOUT = 30.0
 DEFAULT_CODEX_ID_POLL = 0.25
 
@@ -215,6 +216,10 @@ def run_codex_turn(argv: list[str], worktree: Path, log_path: Path) -> None:
     log_path.parent.mkdir(parents=True, exist_ok=True)
     try:
         with log_path.open("a", encoding="utf-8") as log:
+            # simplify: no timeout by design — a real pr-pipeline turn legitimately runs for
+            # many minutes, so any fixed ceiling would kill healthy turns; a wedged turn is
+            # caught by cos_watch's stale-slot timer, which surfaces the hung slot for
+            # adjudication. Add a timeout only if a non-slot caller ever needs a bound.
             proc = subprocess.run(
                 argv,
                 cwd=str(worktree),
@@ -299,47 +304,22 @@ def read_gate(gate_dir: Path, pr: int) -> dict:
     return loaded[1]
 
 
-def _gate_line_met(name: str, value: object) -> bool:
-    """Whether a non-codex_bot gate line reads as satisfied (deterministic keyword scan).
-
-    Gate lines are free text, so we key off the same stable tokens the pr-pipeline template
-    uses: a line is met when it starts with `pass`, `clean`, or `not required`/`not
-    required`, and unmet otherwise (a `running`/`deferred`/`blocked`/missing line). Scoped to
-    the leading token so PR-controlled prose later in the line can't flip an unmet line to
-    met. codex_bot is judged by the runner directly, never through this.
-    """
-    if not isinstance(value, str):
-        return False
-    head = value.strip().lower()
-    return (
-        head.startswith("pass")
-        or head.startswith("clean")
-        or head.startswith(
-            "local"
-        )  # a completed local-review line (visual/codex_bot form)
-        or head.startswith("not required")
-        or head.startswith("none")  # e.g. the `stack: none` line
-    )
-
-
 def codex_bot_is_sole_unmet(gate: dict) -> bool:
     """True iff codex_bot is the ONLY unmet gate — the guard on flipping ready-to-merge.
 
-    Reads every OTHER gate line: if any is unmet (running / deferred / blocked / missing),
-    codex_bot is NOT the sole blocker, so status stays blocked and the runner only records
-    the codex_bot verdict. This mirrors the sole-unmet scope the chief-of-staff self-serve
-    uses — a shorter diff that skipped it would let the runner falsely flip a PR whose
-    build_db/visual/review gate is still open.
+    Trusts the lane agent's `blocker` contract rather than parsing free-text gate lines. The
+    runner's own implement prompt instructs the agent to write `status: blocked` with
+    `blocker: "codex_bot"` EXACTLY when codex_bot is the sole unmet gate (all others met);
+    any other remaining blocker is named in `blocker` instead. A free-text scan of the gate
+    lines can't work — the real template grammar has `tests: "<commands run>"`,
+    `docs: "updated; ..."`, `stack: "before #N"` etc., none of which match a fixed
+    met-token whitelist, so every real PR would read as not-sole-unmet and the runner would
+    never flip. So key off the one field the agent set for exactly this purpose.
+
+    This flip is advisory, never the sole merge authority: the chief-of-staff re-checks every
+    gate + live CI + mergeability immediately before merging (CLAUDE.md "PR merge gate").
     """
-    gates = gate.get("gates")
-    if not isinstance(gates, dict):
-        return False
-    for name, value in gates.items():
-        if name == "codex_bot":
-            continue
-        if not _gate_line_met(name, value):
-            return False
-    return True
+    return gate.get("blocker") == "codex_bot"
 
 
 def write_codex_bot_gate(
@@ -373,24 +353,14 @@ def write_codex_bot_gate(
             gate["status"] = "ready-to-merge"
             gate["blocker"] = None
         else:
-            # codex_bot is done, but another gate is still unmet — never a false
-            # ready-to-merge. Leave status blocked, naming what remains.
+            # codex_bot is done, but the agent named another gate as the blocker — never a
+            # false ready-to-merge. Leave status blocked and PRESERVE the agent's existing
+            # `blocker` (the real remaining gate); do not synthesize a new blocker string.
             gate["status"] = "blocked"
-            gate["blocker"] = _first_unmet_non_codex_bot(gate) or "another gate unmet"
 
     gate["head"] = head
     gate["updated"] = _now()
     _cos_preflight._atomic_write_json(gate_dir / "gate.json", gate)
-
-
-def _first_unmet_non_codex_bot(gate: dict) -> str | None:
-    gates = gate.get("gates")
-    if not isinstance(gates, dict):
-        return None
-    for name, value in gates.items():
-        if name != "codex_bot" and not _gate_line_met(name, value):
-            return f"{name} not yet met"
-    return None
 
 
 # ---- slot heartbeat ----------------------------------------------------------
@@ -481,6 +451,9 @@ def run_loop(
     session: str | None,
     log_path: Path,
     max_rounds: int,
+    state_root: Path,
+    canonical: Path,
+    profile_flags: list[str],
 ) -> int:
     """The review↔fix loop over the PR the agent opened. Returns the process exit code.
 
@@ -494,14 +467,27 @@ def run_loop(
         head = _cos_dispatch.git_output(worktree, ["rev-parse", "HEAD"])
         result = run_review(base, gate_dir, worktree)
         verdict = result.get("verdict")
+        # Bind the gate stamp to the head codex actually reviewed when it reports one, so a
+        # concurrent HEAD move between the rev-parse and the review can't mislabel the stamp.
+        reviewed_head = result.get("head") or head
 
         if verdict == "clean":
             write_codex_bot_gate(
-                gate_dir, pr, head, VERDICT_CLEAN, blocking=False, blocker="codex_bot"
+                gate_dir,
+                pr,
+                reviewed_head,
+                VERDICT_CLEAN,
+                blocking=False,
+                blocker="codex_bot",
             )
             print(
                 json.dumps(
-                    {"pr": pr, "head": head, "codex_bot": "clean", "round": _round},
+                    {
+                        "pr": pr,
+                        "head": reviewed_head,
+                        "codex_bot": "clean",
+                        "round": _round,
+                    },
                     indent=2,
                 )
             )
@@ -513,7 +499,7 @@ def run_loop(
                 write_codex_bot_gate(
                     gate_dir,
                     pr,
-                    head,
+                    reviewed_head,
                     VERDICT_USAGE_LIMIT,
                     blocking=False,
                     blocker="codex_bot",
@@ -522,7 +508,7 @@ def run_loop(
                     json.dumps(
                         {
                             "pr": pr,
-                            "head": head,
+                            "head": reviewed_head,
                             "codex_bot": "exhausted (usage-limit)",
                         },
                         indent=2,
@@ -546,8 +532,33 @@ def run_loop(
         findings = result.get("findings") or []
         if _round == max_rounds:
             break
-        brief = findings_brief(findings, head)
-        resume_argv = _resume_argv(session, brief)
+        if session is None:
+            # No warm session to resume — we can't deterministically continue the same
+            # thread, and a cold session would re-derive the whole lane. Record an accurate
+            # head-bound BLOCKED codex_bot line (every other terminal path writes one) and
+            # hand off to a human rather than raising with a stale gate.
+            blocker = (
+                "no codex session id resolved from the implement turn — cannot resume to "
+                "fix review findings"
+            )
+            write_codex_bot_gate(
+                gate_dir,
+                pr,
+                reviewed_head,
+                VERDICT_CLEAN,
+                blocking=True,
+                blocker=blocker,
+            )
+            print(f"{blocker}; wrote status: blocked for PR #{pr}", file=sys.stderr)
+            return EXIT_NEEDS_HUMAN
+        brief = findings_brief(findings, reviewed_head)
+        resume_argv = _resume_argv(
+            session,
+            brief,
+            state_root=state_root,
+            canonical=canonical,
+            profile_flags=profile_flags,
+        )
         run_codex_turn(resume_argv, worktree, log_path)
 
     # Cap exhausted with findings still present: a clear needs-human block naming the cap.
@@ -560,19 +571,55 @@ def run_loop(
     return EXIT_NEEDS_HUMAN
 
 
-def _resume_argv(session: str | None, brief: str) -> list[str]:
-    """`codex exec resume <session> "<brief>"` — resume the SAME warm session to fix findings.
+def _resume_argv(
+    session: str | None,
+    brief: str,
+    *,
+    state_root: Path,
+    canonical: Path,
+    profile_flags: list[str],
+) -> list[str]:
+    """`codex exec resume` — resume the SAME warm session to fix findings, sandboxed + granted.
 
     A resolved session id is required to resume the warm context; without it the runner
     cannot deterministically continue the same thread, so it fails fast rather than opening a
     cold session that re-derives the whole lane.
+
+    Unlike `codex exec`, `codex exec resume` (codex 0.142.5) does NOT accept `-C` / `-s` /
+    `--add-dir` — only `-c <key=value>`, `-m`, `--json`. So the sandbox + writable grants the
+    implement turn passes via those flags must instead go through config keys:
+      - `approval_policy="never"` — the resume runs stdin=DEVNULL; a prompt would wedge it.
+      - `sandbox_mode="workspace-write"` — same posture as the implement turn.
+      - `sandbox_workspace_write.writable_roots` — the `--add-dir` equivalent, a TOML array;
+        it must grant the SAME two dirs the implement turn does: the dispatch state root and
+        `<canonical>/.git` (the linked worktree's writable git state lives OUTSIDE cwd, so
+        without it the fix turn's commit/push is denied, #1050). Built via json.dumps so the
+        dir strings are safely quoted (a JSON string array is valid TOML).
+    The subprocess cwd is set to the worktree by run_codex_turn, so directory needs no `-C`.
+    `profile_flags` (`-m`/`-c model_reasoning_effort=…`) are accepted by resume and pin the
+    same model tier as the implement turn.
     """
     if session is None:
         raise SystemExit(
             f"{EXIT_TOOL}:no codex session id resolved from the implement turn's log; "
             "cannot resume to fix review findings"
         )
-    return ["codex", "exec", "resume", session, brief]
+    writable_roots = json.dumps([str(state_root), str(canonical / ".git")])
+    return [
+        "codex",
+        "exec",
+        "resume",
+        "-c",
+        'approval_policy="never"',
+        "-c",
+        'sandbox_mode="workspace-write"',
+        "-c",
+        f"sandbox_workspace_write.writable_roots={writable_roots}",
+        *profile_flags,
+        "--json",
+        session,
+        brief,
+    ]
 
 
 def run(
@@ -596,6 +643,14 @@ def run(
     gate_root: Path = args.gate_root
     log_path: Path = args.log
     slot_file: Path | None = args.slot_file
+    state_root: Path = (
+        gate_root.parent
+    )  # --add-dir grant for the child's ledger/gate writes
+
+    # Resolve the tier's blessed model/effort pins (surface fixed to codex — this runner only
+    # ever drives a codex session), used for BOTH the implement turn and the resume turns so
+    # they run on the same model tier, not codex's ambient default.
+    _, profile_flags = _cos_dispatch.resolve_profile(args.tier, "codex")
 
     # 1. Build + run the implement turn (foreground; one codex turn to completion). Capture
     #    the log offset BEFORE the turn so the session-id poll reads only this turn's bytes.
@@ -614,9 +669,9 @@ def run(
         "codex",
         args.worktree,
         issues,
-        gate_root.parent,  # state root: --add-dir grant for the child's ledger/gate writes
+        state_root,
         None,
-        [],
+        profile_flags,
         args.canonical,
         prompt=prompt,
     )
@@ -644,7 +699,7 @@ def run(
         issues=issues,
         prs=[args.continue_pr] if args.continue_pr is not None else [],
         surface="codex",
-        tier="lane-runner",
+        tier=args.tier,
         mode="continue" if args.continue_pr is not None else "fresh",
     )
     run_codex_turn(implement_argv, args.worktree, log_path)
@@ -661,8 +716,13 @@ def run(
         )
     enrich_slot_session(slot_file, session)
 
-    # 3. Discover the PR the agent opened, then run the review↔fix loop over it.
-    pr = discover_pr(slot_file, gate_root)
+    # 3. Discover the PR the agent opened (continue mode names it explicitly — trust that over
+    #    discovery so we can't complete the wrong PR), then run the review↔fix loop over it.
+    pr = (
+        args.continue_pr
+        if args.continue_pr is not None
+        else discover_pr(slot_file, gate_root)
+    )
     gate_dir = gate_root / f"pr-{pr}"
     return run_loop(
         worktree=args.worktree,
@@ -673,6 +733,9 @@ def run(
         session=session,
         log_path=log_path,
         max_rounds=args.max_rounds,
+        state_root=state_root,
+        canonical=args.canonical,
+        profile_flags=profile_flags,
     )
 
 
@@ -728,6 +791,13 @@ def main(argv: list[str] | None = None) -> int:
         default=DEFAULT_MAX_ROUNDS,
         help=f"max review rounds before recording codex_bot blocked (default "
         f"{DEFAULT_MAX_ROUNDS})",
+    )
+    ap.add_argument(
+        "--tier",
+        choices=tuple(_cos_dispatch.LAUNCH_PROFILES),
+        default="hard",
+        help="launch tier whose model/effort pins drive both the implement and resume turns "
+        "(surface fixed to codex); default hard (gpt-5.5 xhigh)",
     )
     ap.add_argument(
         "--canonical",

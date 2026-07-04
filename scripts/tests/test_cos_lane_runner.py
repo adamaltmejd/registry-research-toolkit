@@ -113,15 +113,24 @@ def _write_gate(
     *,
     other_gates_met: bool = True,
     status: str = "blocked",
+    blocker: str = "codex_bot",
 ) -> Path:
     """The gate.json the lane agent would have written: codex_bot deferred, status blocked.
 
-    `other_gates_met` toggles whether the non-codex_bot gates read as satisfied — the
-    sole-unmet guard's input.
+    Non-codex_bot gate lines use the REAL pr-pipeline template grammar (free-text commands /
+    references, not a fixed met-token whitelist) so the tests pin behavior against the shape
+    the runner actually meets. `other_gates_met` toggles the `visual` line and, with it, the
+    agent's `blocker`: when another gate is still open the agent names IT (not codex_bot) as
+    the blocker, which is exactly what the runner's sole-unmet check trusts.
     """
     gate_dir = gate_root / f"pr-{pr}"
     gate_dir.mkdir(parents=True, exist_ok=True)
-    other = "pass; verified" if other_gates_met else "running; not yet done"
+    if other_gates_met:
+        visual = "local; run-reg-webapp shot; head oldhead; no regressions"
+        effective_blocker = blocker
+    else:
+        visual = "running; deferred design-reviewer pass"
+        effective_blocker = "visual"
     gate = {
         "pr": pr,
         "head": "oldhead",
@@ -131,13 +140,13 @@ def _write_gate(
             "independent_review": "pass; reviewer subagent; findings fixed",
             "codex_bot": "running; deferred-to-lane-runner",
             "ci": "pass; gh pr checks",
-            "tests": "pass; pytest",
-            "docs": "not required",
-            "visual": other,
+            "tests": "uv run python -m pytest scripts/tests/test_cos_lane_runner.py",
+            "docs": "updated; scripts docstring refreshed",
+            "visual": visual,
             "build_db": "not required",
-            "stack": "none",
+            "stack": "before #1086",
         },
-        "blocker": "codex_bot",
+        "blocker": effective_blocker,
     }
     (gate_dir / "gate.json").write_text(json.dumps(gate), encoding="utf-8")
     return gate_dir
@@ -169,6 +178,7 @@ def _args(worktree: Path, gate_root: Path, log: Path, **overrides):
         "log": log,
         "slot_file": None,
         "max_rounds": 3,
+        "tier": "hard",
         "canonical": worktree.parent / "canonical",
         "no_canonical_check": True,
         "dry_run": False,
@@ -193,24 +203,30 @@ def test_codex_bot_line_usage_limit_grammar() -> None:
     assert line.startswith("local; codex_local_review; head abc123;")
 
 
-def test_sole_unmet_true_when_only_codex_bot_deferred() -> None:
+def test_sole_unmet_true_when_blocker_is_codex_bot() -> None:
+    # The agent's `blocker` contract is the signal — free-text gate lines (real template
+    # grammar: `tests: "<commands>"`, `stack: "before #N"`, `docs: "updated; …"`) are NOT
+    # scanned, so they can carry arbitrary prose without flipping the result.
     gate = {
+        "blocker": "codex_bot",
         "gates": {
             "codex_bot": "running; deferred",
-            "visual": "pass; verified",
+            "tests": "uv run python -m pytest scripts/",
+            "docs": "updated; refreshed",
+            "stack": "before #1086",
             "build_db": "not required",
-            "stack": "none",
-        }
+        },
     }
     assert lr.codex_bot_is_sole_unmet(gate) is True
 
 
-def test_sole_unmet_false_when_another_gate_unmet() -> None:
+def test_sole_unmet_false_when_blocker_is_another_gate() -> None:
     gate = {
+        "blocker": "visual",
         "gates": {
             "codex_bot": "running; deferred",
-            "visual": "running; not yet done",
-        }
+            "visual": "running; deferred design-reviewer pass",
+        },
     }
     assert lr.codex_bot_is_sole_unmet(gate) is False
 
@@ -287,6 +303,19 @@ def _patch_reviews(monkeypatch: pytest.MonkeyPatch, verdicts: list[dict]) -> lis
     return seen_heads
 
 
+def _run_loop(tmp_path: Path, **overrides):
+    """run_loop with the state_root/canonical/profile_flags grants defaulted for tests."""
+    kwargs = {
+        "state_root": tmp_path / "state",
+        "canonical": tmp_path / "canonical",
+        "profile_flags": ["-m", "gpt-5.5", "-c", "model_reasoning_effort=xhigh"],
+        "log_path": tmp_path / "lane.log",
+        "max_rounds": 3,
+    }
+    kwargs.update(overrides)
+    return lr.run_loop(**kwargs)
+
+
 def test_clean_first_round_flips_ready_when_sole_unmet(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys
 ) -> None:
@@ -296,15 +325,14 @@ def test_clean_first_round_flips_ready_when_sole_unmet(
     resume_calls = _patch_no_turns(monkeypatch)
     _patch_reviews(monkeypatch, [{"verdict": "clean", "findings": []}])
 
-    rc = lr.run_loop(
+    rc = _run_loop(
+        tmp_path,
         worktree=wt,
         base="origin/main",
         gate_dir=gate_dir,
         pr=4242,
         slot_file=None,
         session="SID-1",
-        log_path=tmp_path / "lane.log",
-        max_rounds=3,
     )
 
     assert rc == lr.EXIT_OK
@@ -329,22 +357,22 @@ def test_clean_but_another_gate_unmet_stays_blocked(
     _patch_no_turns(monkeypatch)
     _patch_reviews(monkeypatch, [{"verdict": "clean", "findings": []}])
 
-    rc = lr.run_loop(
+    rc = _run_loop(
+        tmp_path,
         worktree=wt,
         base="origin/main",
         gate_dir=gate_dir,
         pr=4242,
         slot_file=None,
         session="SID-1",
-        log_path=tmp_path / "lane.log",
-        max_rounds=3,
     )
 
     assert rc == lr.EXIT_OK  # codex_bot itself completed cleanly
     gate = _read_gate(gate_dir)
-    # But status must NOT flip — another gate is unmet.
+    # But status must NOT flip — another gate is unmet. The agent's real remaining blocker
+    # is PRESERVED verbatim (not overwritten with a synthesized string).
     assert gate["status"] == "blocked"
-    assert gate["blocker"] and gate["blocker"] != "codex_bot"
+    assert gate["blocker"] == "visual"
     assert "clean" in gate["gates"]["codex_bot"]
 
 
@@ -380,23 +408,25 @@ def test_findings_then_resume_then_clean(
         ],
     )
 
-    rc = lr.run_loop(
+    rc = _run_loop(
+        tmp_path,
         worktree=wt,
         base="origin/main",
         gate_dir=gate_dir,
         pr=4242,
         slot_file=None,
         session="SID-9",
-        log_path=tmp_path / "lane.log",
-        max_rounds=3,
     )
 
     assert rc == lr.EXIT_OK
-    # Exactly one resume turn, targeting the warm session.
+    # Exactly one resume turn, targeting the warm session (session + brief are the last two
+    # positional args, after the sandbox/config/profile flags — see F1/F6).
     assert len(resume_calls) == 1
-    assert resume_calls[0][:4] == ["codex", "exec", "resume", "SID-9"]
+    argv = resume_calls[0]
+    assert argv[:3] == ["codex", "exec", "resume"]
+    assert argv[-2] == "SID-9"
     # The brief (last arg) is DATA about the findings.
-    assert "Fix me" in resume_calls[0][-1]
+    assert "Fix me" in argv[-1]
     # Head re-read each round: round 1 saw the pre-resume head, round 2 the post-resume one.
     post_resume_head = _head(wt)
     assert seen_heads == [pre_resume_head, post_resume_head]
@@ -435,14 +465,14 @@ def test_cap_exhausted_with_findings_blocks(
         monkeypatch, [finding, finding]
     )  # max_rounds=2 → both rounds findings
 
-    rc = lr.run_loop(
+    rc = _run_loop(
+        tmp_path,
         worktree=wt,
         base="origin/main",
         gate_dir=gate_dir,
         pr=4242,
         slot_file=None,
         session="SID-2",
-        log_path=tmp_path / "lane.log",
         max_rounds=2,
     )
 
@@ -467,15 +497,14 @@ def test_review_error_usage_limit_is_recordable(
         [{"verdict": "error", "error": {"kind": "usage_limit", "message": "limit"}}],
     )
 
-    rc = lr.run_loop(
+    rc = _run_loop(
+        tmp_path,
         worktree=wt,
         base="origin/main",
         gate_dir=gate_dir,
         pr=4242,
         slot_file=None,
         session="SID-3",
-        log_path=tmp_path / "lane.log",
-        max_rounds=3,
     )
 
     assert rc == lr.EXIT_OK
@@ -497,15 +526,14 @@ def test_review_error_other_kind_blocks(
         monkeypatch, [{"verdict": "error", "error": {"kind": kind, "message": "x"}}]
     )
 
-    rc = lr.run_loop(
+    rc = _run_loop(
+        tmp_path,
         worktree=wt,
         base="origin/main",
         gate_dir=gate_dir,
         pr=4242,
         slot_file=None,
         session="SID-4",
-        log_path=tmp_path / "lane.log",
-        max_rounds=3,
     )
 
     assert rc == lr.EXIT_NEEDS_HUMAN
@@ -516,15 +544,16 @@ def test_review_error_other_kind_blocks(
     assert gate["status"] != "ready-to-merge"
 
 
-def test_findings_without_session_fails_fast(
+def test_findings_without_session_records_blocked_and_needs_human(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    # A null session can't resume the warm context; findings then fail fast rather than
-    # opening a cold session.
+    # A null session can't resume the warm context; rather than raising with a stale gate,
+    # the loop records a head-bound BLOCKED codex_bot line and returns EXIT_NEEDS_HUMAN so
+    # every terminal path leaves an accurate gate for the current head (F4).
     wt = _make_worktree(tmp_path)
     gate_root = tmp_path / "gate"
     gate_dir = _write_gate(gate_root, 4242, other_gates_met=True)
-    _patch_no_turns(monkeypatch)
+    resume_calls = _patch_no_turns(monkeypatch)
     _patch_reviews(
         monkeypatch,
         [
@@ -544,18 +573,23 @@ def test_findings_without_session_fails_fast(
         ],
     )
 
-    with pytest.raises(SystemExit) as exc:
-        lr.run_loop(
-            worktree=wt,
-            base="origin/main",
-            gate_dir=gate_dir,
-            pr=4242,
-            slot_file=None,
-            session=None,
-            log_path=tmp_path / "lane.log",
-            max_rounds=3,
-        )
-    assert "no codex session id" in str(exc.value.code)
+    rc = _run_loop(
+        tmp_path,
+        worktree=wt,
+        base="origin/main",
+        gate_dir=gate_dir,
+        pr=4242,
+        slot_file=None,
+        session=None,
+    )
+
+    assert rc == lr.EXIT_NEEDS_HUMAN
+    assert resume_calls == []  # no resume attempted without a session
+    gate = _read_gate(gate_dir)
+    assert gate["status"] == "blocked"
+    assert "no codex session id" in gate["blocker"]
+    assert f"head {_head(wt)};" in gate["gates"]["codex_bot"]
+    assert "blocked" in gate["gates"]["codex_bot"]
 
 
 # --- gate.json read guard -----------------------------------------------------
@@ -707,4 +741,154 @@ def test_run_discovers_pr_and_writes_run_sentinel(
     first = json.loads(log.read_text(encoding="utf-8").splitlines()[0])
     assert first["type"] == lr._cos_dispatch.RUN_STARTED_TYPE
     assert first["surface"] == "codex"
+    assert first["tier"] == "hard"  # the tier label, not a literal "lane-runner" (F6)
     assert _read_gate(gate_root / "pr-7")["status"] == "ready-to-merge"
+
+
+# --- F-fix regressions: resume grants / continue-pr / discovery / exit codes --
+
+
+def test_resume_argv_carries_sandbox_and_profile_grants(tmp_path: Path) -> None:
+    # F1/F6: `codex exec resume` gets the sandbox posture + writable grants + model pins via
+    # `-c`/`-m` (it rejects -C/-s/--add-dir), matching what the implement turn grants.
+    state_root = tmp_path / "state"
+    canonical = tmp_path / "canonical"
+    profile_flags = ["-m", "gpt-5.5", "-c", "model_reasoning_effort=xhigh"]
+    argv = lr._resume_argv(
+        "SID-9",
+        "fix these",
+        state_root=state_root,
+        canonical=canonical,
+        profile_flags=profile_flags,
+    )
+    assert argv[:3] == ["codex", "exec", "resume"]
+    assert argv[-2:] == ["SID-9", "fix these"]
+
+    # Each `-c key=value` grant is a discrete flag pair; reconstruct the pairs to assert.
+    pairs = [argv[i + 1] for i in range(len(argv) - 1) if argv[i] == "-c"]
+    assert 'approval_policy="never"' in pairs
+    assert 'sandbox_mode="workspace-write"' in pairs
+    assert "model_reasoning_effort=xhigh" in pairs
+    roots_flag = next(
+        p for p in pairs if p.startswith("sandbox_workspace_write.writable_roots=")
+    )
+    # The writable_roots value is a JSON/TOML array carrying BOTH grants.
+    roots = json.loads(roots_flag.split("=", 1)[1])
+    assert str(state_root) in roots
+    assert str(canonical / ".git") in roots
+    # The model pin is present and --json is passed (resume accepts both).
+    assert "-m" in argv and "gpt-5.5" in argv
+    assert "--json" in argv
+
+
+def test_resume_argv_without_session_fails_fast(tmp_path: Path) -> None:
+    with pytest.raises(SystemExit) as exc:
+        lr._resume_argv(
+            None,
+            "brief",
+            state_root=tmp_path / "state",
+            canonical=tmp_path / "canonical",
+            profile_flags=[],
+        )
+    assert "no codex session id" in str(exc.value.code)
+
+
+def test_continue_pr_uses_explicit_pr_not_discovery(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # F3: in continue mode the explicit --continue-pr is authoritative; discovery is not
+    # consulted (a slot with no prs / an empty gate root would otherwise misfire).
+    wt = _make_worktree(tmp_path)
+    gate_root = tmp_path / "gate"
+    log = tmp_path / "lane.log"
+    # The gate the continued PR's agent refreshes is for pr-55, but NO slot prs / scan match
+    # exists for it beyond this write, so a discovery path could not have found it first.
+    _write_gate(gate_root, 55, other_gates_met=True)
+
+    def fake_turn(argv, worktree, log_path):
+        with log_path.open("a", encoding="utf-8") as fh:
+            fh.write(json.dumps({"type": "thread.started", "thread_id": "T"}) + "\n")
+
+    monkeypatch.setattr(lr, "run_codex_turn", fake_turn)
+
+    def boom_discover(slot_file, gate_root):  # pragma: no cover - must not be called
+        raise AssertionError("discover_pr must not run in continue mode")
+
+    monkeypatch.setattr(lr, "discover_pr", boom_discover)
+    monkeypatch.setattr(
+        lr,
+        "run_review",
+        lambda base, gate_dir, worktree: {"verdict": "clean", "findings": []},
+    )
+
+    rc = lr.run(
+        _args(wt, gate_root, log, issues=None, continue_pr=55),
+        codex_id_timeout=1.0,
+        codex_id_poll=0.02,
+    )
+    assert rc == lr.EXIT_OK
+    assert _read_gate(gate_root / "pr-55")["status"] == "ready-to-merge"
+    # The continue prompt + sentinel name PR #55.
+    first = json.loads(log.read_text(encoding="utf-8").splitlines()[0])
+    assert first["mode"] == "continue"
+    assert first["prs"] == [55]
+
+
+def test_continue_pr_dry_run_names_pr(tmp_path: Path, capsys) -> None:
+    wt = _make_worktree(tmp_path)
+    rc = lr.run(
+        _args(
+            wt,
+            tmp_path / "gate",
+            tmp_path / "lane.log",
+            issues=None,
+            continue_pr=88,
+            dry_run=True,
+        )
+    )
+    assert rc == lr.EXIT_OK
+    result = json.loads(capsys.readouterr().out)
+    assert result["continue_pr"] == 88
+    assert "continue PR #88" in result["implement_argv"][-1]
+
+
+def test_discover_pr_multi_dir_raises_without_slot_prs(tmp_path: Path) -> None:
+    # F-tests: >1 pr-* gate dir and no slot prs → ambiguous, must fail fast.
+    gate_root = tmp_path / "gate"
+    _write_gate(gate_root, 11, other_gates_met=True)
+    _write_gate(gate_root, 22, other_gates_met=True)
+    with pytest.raises(SystemExit) as exc:
+        lr.discover_pr(None, gate_root)
+    assert "could not discover the PR" in str(exc.value.code)
+
+
+@pytest.mark.parametrize(
+    ("encoded", "expected_rc"),
+    [
+        (f"{lr.EXIT_TOOL}:boom", lr.EXIT_TOOL),
+        (f"{lr.EXIT_NEEDS_HUMAN}:nope", lr.EXIT_NEEDS_HUMAN),
+    ],
+)
+def test_main_maps_encoded_systemexit_to_code(
+    monkeypatch: pytest.MonkeyPatch, capsys, encoded: str, expected_rc: int
+) -> None:
+    # main() splits the `"<code>:<message>"` SystemExit encoding into a stable int + stderr.
+    def boom(args, **kwargs):
+        raise SystemExit(encoded)
+
+    monkeypatch.setattr(lr, "run", boom)
+    rc = lr.main(
+        [
+            "--worktree",
+            "/tmp/wt",
+            "--base",
+            "origin/main",
+            "--issues",
+            "1",
+            "--log",
+            "/tmp/lane.log",
+            "--no-canonical-check",
+        ]
+    )
+    assert rc == expected_rc
+    assert encoded.split(":", 1)[1] in capsys.readouterr().err
