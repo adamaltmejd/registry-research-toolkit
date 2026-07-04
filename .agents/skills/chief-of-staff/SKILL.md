@@ -96,7 +96,7 @@ It runs two tiers in one loop (both stores live under
 
 On any emission, run a normal tick — starting with your own preflight probe, exactly as
 below. The preflight now snapshots the slot ledger too (membership + staleness,
-`SNAPSHOT_VERSION` 5), so slot transitions ride the same durable at-least-once
+`SNAPSHOT_VERSION` 6), so slot transitions ride the same durable at-least-once
 probe/`--commit` handling as PR/gate events — the fast tier is the low-latency path and
 the probe is the durability net. That means the tick's own staging probe sees a slot
 transition against its baseline and wakes on it (exit `10`); an idle probe (exit `0`)
@@ -230,8 +230,9 @@ new work, but it must not edit project code as part of the work itself.
    - inspect open PRs that close issues, especially drafts, ready PRs, and stacks;
    - read merge-gate handoff entries from the local gate store
      (`~/.local/state/registry-research-toolkit/merge-gates/pr-<N>/gate.json`;
-     `$XDG_STATE_HOME` root if set) — not from PR bodies, and not from
-     `scripts/pr_review_status.py`, which is only the Codex bot-review signal.
+     `$XDG_STATE_HOME` root if set) — not from PR bodies. The Codex verdict is the gate
+     entry's head-bound `codex_bot` line, written by the pipeline's local `codex review`
+     run; there is no live GitHub bot-signal poll.
 5. Apply clear, evidence-backed issue maintenance automatically. If it changes
    lane-affecting state such as `priority:*`, `touches`, `Relationships`, `blocked`, or
    `parked`, rerun the `/issue-pulse` lane-staleness path before recommending work; do
@@ -389,17 +390,19 @@ Merge only on the current head and only when every item passes:
   at merge time and investigates rather than merging.
 - The gate entry records converged independent review, tests/checks, docs decisions, and
   required visual/build-db results. The independent_review line must name the review
-  source and why it satisfies the risk-scaled repo gate; bot-only review is sufficient
-  only for small, low-risk PRs.
+  source and why it satisfies the risk-scaled repo gate; the local Codex review alone is
+  sufficient only for small, low-risk PRs.
 - Required visual/build-db evidence files are present in the PR's gate directory. For
   rendered-output PRs, visual proof means a `/reg-webapp-design-reviewer` report with
   its screenshots in the gate directory; screenshots without the reviewer report block
   automerge. References to scratch or `/tmp` paths instead of files in the gate
   directory do not count — the artifacts must be there.
 - `gh pr checks <pr>` is green on the current head.
-- `uv run --no-project python scripts/pr_review_status.py <pr> --once` is settled with
-  `clean`, or `exhausted` with all other gates complete. `findings`, `reviewing`,
-  `none`, or tool errors block automerge.
+- The gate entry's head-bound `codex_bot` line is `clean`, or `exhausted (usage-limit)`
+  with all other gates complete (the only two legal verdict tokens; see the pr-pipeline
+  gate.json template), and its stamped head matches the live head. A missing/stale
+  `codex_bot`, or a still-unrun local Codex review, blocks automerge — self-serve it
+  (below) rather than merging without it.
 - Stale-head check passes immediately before merge, and the merge command uses
   `--match-head-commit` with that same SHA.
 - For stacked PRs, branch deletion cannot close or break dependent PRs. Before merging a
@@ -408,8 +411,8 @@ Merge only on the current head and only when every item passes:
   during merge; immediately retarget the successor to `main` after the predecessor
   merge, then verify it remains open on the intended head. After retargeting, require
   the successor branch to be rebased or otherwise updated onto the new base, then
-  regenerate checks, Codex bot review, independent-review judgment, and the gate entry
-  before automerging it.
+  regenerate checks, the local Codex review, independent-review judgment, and the gate
+  entry before automerging it.
 
 Merge one PR at a time:
 
@@ -438,7 +441,8 @@ skill (`$file-issue`) (or report them) rather than silently dropping them, since
 lane's final PR can close without merging. In the same breath, release the pipeline slot
 whose `prs` are now all merged/closed (see Pipeline slots) — that freed slot is what
 triggers the watcher's next `dispatch:` recommendation. For a stack, re-check the next
-PR's head, checks, bot signal, mergeability, evidence, and gate entry before merging it.
+PR's head, checks, the gate entry's head-bound `codex_bot` line, mergeability, evidence,
+and gate entry before merging it.
 
 ## Self-serve build-db verification
 
@@ -489,9 +493,39 @@ published before dependent work can proceed, invoke `/release minor` or
 stop if it requests input or if the required bump is a major release (a major release is
 a maintainer-approval class — see Automerge — and is not autonomous).
 
-If a ready PR lacks a current-head Codex verdict, comment `@codex review` only when the
-gate entry shows implementation is finished, then skip the merge until a later tick
-observes a settled signal.
+## Self-serve Codex review
+
+If an otherwise merge-ready PR's `codex_bot` line is missing or stale (its stamped head
+trails the live `head`), self-serve it with the **same recipe as the build_db self-serve
+above** — including the pre-launch `running; started <ISO-8601>` intent stamp on the
+`codex_bot` gate line and the sole-unmet-gate scope guard (only flip `status` when the
+Codex review was the sole missing item). What differs: from the throwaway worktree at
+the PR head, run
+`uv run --no-project python scripts/codex_local_review.py --base <base> --out <gate-dir>/codex-review.md`,
+where `--base` is the PR's live `baseRefName` prefixed with `origin/` (e.g.
+`origin/main`, or the predecessor branch for a stacked successor) so the review diffs
+against the real PR base; the evidence file is `codex-review.md`. Unlike the \~20-min
+`build_db` build, WAIT for this launcher (its 30-min internal ceiling) and record its
+verdict into `gate.json` (bump `updated`) in the SAME tick — recording the verdict
+completes the self-serve, and the launcher's own completion writes only
+`codex-review.md` + its stdout JSON with no `gate.json` byte-change, so nothing else
+would ever wake to convert `running` into the verdict. On a `clean` verdict (exit 0) set
+the `codex_bot` line (atomically) to the canonical clean form from the pr-pipeline
+gate.json template (with the head SHA and the `codex-review.md` evidence pointer). A
+`findings` verdict (exit 1, JSON `findings` list) is pipeline work, not fixable here:
+set `status: blocked` and route it. On exit 2, read `error.kind`: `usage_limit` you may
+record yourself as `exhausted (usage-limit)` and proceed when all other gates are
+complete; any non-`usage_limit` kind is a blocker — set `status: blocked` with the kind
+as `blocker` (kind list + semantics: AGENTS.md "PR merge gate") and route to the owning
+pipeline. Remove the scratch worktree when done. If the session dies before recording,
+the `running` stamp is the recovery marker: a later tick finding a `codex_bot` line
+stamped `running` with `started` older than the 30-min ceiling treats it as stale —
+finish from the existing `codex-review.md` + JSON if the run completed, else clear the
+stamp and re-run. A retargeted stack successor needs the launcher re-run on its rebased
+head.
+
+The GitHub Codex web integration remains enabled as an FYI-only shadow, not a gate
+input; there is no `@codex review` re-request or bot-signal poll.
 
 ## Pipeline Follow-ups
 

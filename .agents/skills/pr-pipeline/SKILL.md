@@ -28,8 +28,10 @@ Agent-surface notes:
   a fresh subagent. On Codex `multi_agent_v1`, omit `agent_type` (there is no
   review-specific role), do not fork the full history, and pass only the PR number or
   branch/range plus necessary issue context. In-session `registry-code-review` is
-  diagnostic, not independent review evidence. The GitHub bot-review window described by
-  the repository guidance still applies.
+  diagnostic, not independent review evidence. The Codex review that gates merge is the
+  local `scripts/codex_local_review.py` run in the merge-gate handoff (Step E analog),
+  not a GitHub bot-review window; the GitHub Codex web integration stays enabled as an
+  FYI-only shadow, never a gate input.
 - For rendered-output PRs, run `reg-webapp-design-reviewer` in a clean subagent session.
   On Codex `multi_agent_v1`, launch a fresh generic subagent and instruct it to invoke
   the repo-local `reg-webapp-design-reviewer` skill by that exact name. Pass the changed
@@ -167,10 +169,11 @@ Run focused verification as the work evolves:
 1. Check test coverage pragmatically. Add regression tests for fixed bugs, new branches,
    contract boundaries, validation codes, exit codes, and deterministic ordering where
    they matter.
-2. Commit and push the implementation before any GitHub-based PR review or bot-review
-   window. The early draft PR may contain only the empty claim commit; do not count a
-   review of that stale diff as the independent review for the actual patch. If running
-   `registry-code-review` locally before push, target the current local diff explicitly.
+2. Commit and push the implementation before any GitHub-based PR review or the local
+   Codex review. The early draft PR may contain only the empty claim commit; do not
+   count a review of that stale diff as the independent review for the actual patch. If
+   running `registry-code-review` locally before push, target the current local diff
+   explicitly.
 3. Run review on the actual implementation diff. First attempt to launch a fresh
    subagent running `registry-code-review`, and pass only the PR number or branch/range
    plus necessary issue context, not the author's intended fixes or conclusions. On
@@ -222,18 +225,15 @@ Run focused verification as the work evolves:
 
 ## Ready And Merge-Gate Handoff
 
-Mark the PR ready when the code is near-final — "ready" is what starts the Codex/Copilot
-auto-review, and it fires ONCE on the open→ready transition, NOT on later pushes (a new
-HEAD needs an explicit `@codex review`). The draft already holds the in-flight claim and
-CI runs on drafts, so time "ready" so the bot reviews code you won't churn:
+Mark the PR ready when the code is near-final. Marking ready no longer starts any review
+window — the Codex review that gates merge is the local `scripts/codex_local_review.py`
+run below, not a GitHub trigger — so "ready" just publishes the PR for CI and human
+reviewers. The draft's only significance is the in-flight claim (see Claim) and CI/human
+visibility, and CI runs on drafts too. Mark ready on the HEAD that has converged:
 
-- trivial / mechanical / low-risk PR (you expect a clean review): mark ready early so
-  the bot reviews in parallel with your review pass — if both stay clean and HEAD
-  doesn't move, that one bot verdict also clears the gate;
+- trivial / mechanical / low-risk PR: can go ready immediately;
 - substantive PR (you expect review/doc fixes to push commits): stay draft through
-  review
-  + docs, then mark ready once on the converged HEAD — an early ready only strands the
-    bot verdict on a stale HEAD (it won't re-review) and burns a Codex run.
+  review + docs, then go ready once on the converged HEAD.
 
 ```sh
 gh pr ready <pr>
@@ -244,17 +244,24 @@ durable evidence in the local merge-gate store:
 
 - independent review converged;
 - CI green;
-- bot review window settled on the current HEAD — run
-  `uv run --no-project python scripts/pr_review_status.py <pr>` to compute Codex's
-  signal (`clean`/`findings`/`reviewing`/`exhausted`/`none`, scoped to the current HEAD;
-  verdict bodies returned in `messages`, no second `gh` call) instead of re-deriving the
-  login-sensitive `gh api` calls. It defaults to polling (re-fetch every 30 s — no
-  webhooks — to a \~15-min ceiling), so launch it once per HEAD as a background task
-  (the wait outlasts a 10-min foreground cap); `--once` is a single snapshot. Never
-  conclude while it reports `reviewing`; after a new push, re-trigger with
-  `@codex review` and launch a fresh background poll. A `none` result can be handed to a
-  human with explanation, but it is not enough for `status: ready-to-merge` automerge
-  evidence;
+- local Codex review clean on the converged HEAD — run
+  `uv run --no-project python scripts/codex_local_review.py --base <base> --out <gate-dir>/codex-review.md`
+  in the PR worktree. `--base` is **required**: pass `origin/main` for an independent
+  PR; for a stacked successor pass the **predecessor branch** it targets, so the review
+  diffs against the real PR base, not main. The launcher runs `codex review` locally
+  against the PR's merge-base and reports the verdict as JSON on stdout (exit **0**
+  clean · **1** findings, JSON `findings` list · **2** classified error, `error.kind`);
+  `--out` lands the transcript directly in the merge-gate directory (no copy step). Its
+  internal 30-min ceiling outlasts a 10-min foreground cap, so launch it once per HEAD
+  as a background task (a foreground run risks the tool call being killed mid-review).
+  There is no polling, no `@codex review` re-request, no GitHub trigger. Route
+  `findings` (exit 1) into the fix loop like `registry-code-review` findings, then
+  re-run the launcher on the new HEAD until it reports clean (the gate line records only
+  the LAST run's verdict on the current head). On exit 2, read `error.kind`: only
+  `usage_limit` is the exhausted-analog (recordable, not a blocker once other gates are
+  complete); any non-`usage_limit` kind ⇒ `status: blocked` naming the kind (kind list +
+  semantics: AGENTS.md "PR merge gate"). A still-unrun local Codex review is not enough
+  for `status: ready-to-merge` automerge evidence;
 - real-data validation when build pipeline or DB content changed;
 - visual verification when rendered output changed: complete the clean-subagent
   `reg-webapp-design-reviewer` pass, including screenshot/render inspection on the
@@ -280,7 +287,7 @@ torn write):
   "updated": "<ISO-8601>",
   "gates": {
     "independent_review": "pass; <review source>; risk=<small|larger>; why sufficient; findings fixed/dismissed",
-    "codex_bot": "<clean|exhausted>; scripts/pr_review_status.py <pr> --once",
+    "codex_bot": "local; codex_local_review; head <sha>; clean; see codex-review.md in this dir",
     "ci": "pass; gh pr checks <pr>",
     "tests": "<commands run>",
     "docs": "<updated / not required>",
@@ -292,18 +299,27 @@ torn write):
 }
 ```
 
+The `codex_bot` value above shows the `clean` form; the usage-limit form replaces
+`clean` with `exhausted (usage-limit)`, keeping the same head stamp and evidence pointer
+— e.g.
+`local; codex_local_review; head <sha>; exhausted (usage-limit); see codex-review.md in this dir`.
+
 Issue closure is NOT restated here — the PR body's closing keywords stay authoritative.
-The `visual` and `build_db` lines each stamp the head SHA they were verified on: those
-gates are expensive, so a later push must be visibly distinguishable from "already
-verified on this head" (chief-of-staff refuses to merge when a per-gate SHA trails
-`head`).
+The `visual`, `build_db`, and `codex_bot` lines each stamp the head SHA they were
+verified on: those gates are re-verifiable, so a later push must be visibly
+distinguishable from "already verified on this head" (chief-of-staff refuses to merge
+when a per-gate SHA trails `head`).
 
 The current-head `status: ready-to-merge` gate entry is the single chief-of-staff
 handoff indicator — the PR body carries only the description and closing keywords, and
 evidence is NEVER posted to GitHub (no attachments, no evidence branches, no committed
 screenshots). Do not write `ready-to-merge` if any gate is missing, pending, stale, or
 only reported in the local chat transcript — write `status: blocked` with `blocker`
-naming the missing item, and report what chief-of-staff must wait for. A later push
+naming the missing item, and report what chief-of-staff must wait for. The canonical
+`codex_bot` grammar is the gate.json template above: the only legal verdict tokens are
+`clean` or `exhausted (usage-limit)` (the launcher's `error.kind: usage_limit` analog) —
+`findings-fixed` is not a legal token. A launcher exit 2 of any other kind is a blocker,
+and a still-unrun local Codex review is not enough for automerge evidence. A later push
 makes the entry stale (its `head` no longer matches); rerun the gate on the new head and
 refresh it.
 
