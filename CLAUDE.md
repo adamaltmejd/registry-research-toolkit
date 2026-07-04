@@ -328,8 +328,10 @@ evidence, parent/sub-issue wiring already stated in issue text, clear
 `Relationships`/`touches` repairs, and closing issues whose PR is merged and verified on
 `main`. It should stop and ask only for material conflicts: product direction, issue
 scope changes, new priorities without evidence, unparking deferred work without an
-explicit resume signal, partial/disputed closure, new issue creation, deleting
-substantive prose, or contradictions between labels, body, comments, and live PR state.
+explicit resume signal, partial/disputed closure, new issue creation (except filing
+follow-ups recorded in a pipeline merge-gate `followups.md` via `/file-issue`, which is
+auto-allowed), deleting substantive prose, or contradictions between labels, body,
+comments, and live PR state.
 If maintenance changes lane-affecting state such as `priority:*`, `touches`,
 `Relationships`, `blocked`, or `parked`, or if a merge changes the ready/running sets,
 rerun the issue-pulse lane-staleness path before recommending work. It must run only
@@ -370,7 +372,9 @@ routine merge decisions and execution.
 in the PR: `$XDG_STATE_HOME/registry-research-toolkit/merge-gates/pr-<N>/` (default
 `~/.local/state/registry-research-toolkit/merge-gates/pr-<N>/`), one directory per PR
 holding `gate.json` plus the evidence files it references (design-reviewer report and
-screenshots, `build-db` log, dbdiff output). All pipelines and the chief-of-staff run on
+screenshots, `build-db` log, dbdiff output, and an optional `followups.md` recording the
+lane's drafted follow-up issues for the chief-of-staff to file at merge via
+`/file-issue`). All pipelines and the chief-of-staff run on
 this machine, so a local file is durable across worktree deletion, `git clean`, and
 reboots — which `/tmp` and worktree paths are not — and needs no GitHub attachment
 gymnastics. Do NOT post evidence to the PR (no evidence branches, no committed
@@ -399,7 +403,10 @@ have edited a PR body with the maintainer's credentials; the gate defends agains
 process skew, not against malicious local code.) After a verified merge, the
 chief-of-staff archives the PR's gate directory under `merge-gates/merged/` — the PR
 carries no evidence, so the archive IS the audit trail for post-merge regressions; prune
-entries whose PR closed without merging.
+entries whose PR closed without merging — but before deleting one, check for a
+`followups.md` and, if present with unprocessed entries, file them via `/file-issue` (or
+report them) rather than silently dropping them, since a lane's final PR can close
+without merging.
 
 - **Independent review** — every PR gets at least one review independent of its author.
   For small, low-risk PRs the Codex/Copilot bot reviews can be enough; larger or riskier

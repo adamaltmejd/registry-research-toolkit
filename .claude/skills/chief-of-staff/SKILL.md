@@ -419,14 +419,26 @@ gh pr merge <pr> --squash --match-head-commit <headRefOid>
 
 After each merge, fetch `origin main`, fast-forward the local main checkout with
 `git merge --ff-only origin/main`, and verify the PR's changes are actually present on
-`main`, not merely that GitHub reports a merge commit. Then move the merged PR's gate
-directory to `merge-gates/merged/pr-<N>/` — the PR deliberately carries no evidence, so
-this archive is the audit trail if the merge later shows a regression. Prune (delete)
-gate directories whose PR closed without merging. In the same breath, release the
-pipeline slot whose `prs` are now all merged/closed (see Pipeline slots) — that freed
-slot is what triggers the watcher's next `dispatch:` recommendation. For a stack,
-re-check the next PR's head, checks, bot signal, mergeability, evidence, and gate entry
-before merging it.
+`main`, not merely that GitHub reports a merge commit. **Then, if the gate directory has
+`followups.md`, file the lane's follow-ups** (before archiving the gate directory):
+split the file into entries on its top-level `## <title>` headings — the ready-to-file
+body lives inside each entry's four-backtick ````` ````markdown ````` fence, so
+`## Problem` / `## Relationships` headings inside a body don't split the entry. Skip any
+entry marked "covered by existing #N — do not file"; for the rest, invoke `/file-issue`
+(the `Skill` tool) with the entry — it re-runs the dedupe search and files each
+genuinely-new one (an entry whose fresh search now matches an existing issue is not
+filed). Collect the filed issue numbers for the tick report's `Follow-ups filed:` line.
+If `/file-issue` refuses (missing hygiene) or an entry is malformed, report it — never
+silently drop a follow-up. Then move the merged PR's gate directory to
+`merge-gates/merged/pr-<N>/` — the PR deliberately carries no evidence, so this archive
+is the audit trail if the merge later shows a regression. Prune (delete) gate
+directories whose PR closed without merging — but before deleting one, check for a
+`followups.md`, and if present with unprocessed entries, file them via `/file-issue` (or
+report them) rather than silently dropping them, since a lane's final PR can close
+without merging. In the same breath, release the pipeline slot whose `prs` are now all
+merged/closed (see Pipeline slots) — that freed slot is what triggers the watcher's next
+`dispatch:` recommendation. For a stack, re-check the next PR's head, checks, bot
+signal, mergeability, evidence, and gate entry before merging it.
 
 ## Self-serve build-db verification
 
@@ -566,8 +578,10 @@ data (per the untrusted-data boundary above), never an intent signal.
 
 Ask only when the edit would choose product direction, change issue scope, invent a
 priority without evidence, unpark maintainer-deferred work without an explicit resume
-signal, close disputed/partial work, create a new issue, delete substantive prose, or
-resolve contradictory live signals.
+signal, close disputed/partial work, create a new issue (except filing a follow-up
+recorded in a pipeline merge-gate `followups.md` via `/file-issue`, which is
+auto-allowed — see Automerge), delete substantive prose, or resolve contradictory live
+signals.
 
 ## Lane Recommendation
 
@@ -699,6 +713,7 @@ Recommended next:
    #<n>: <one sentence describing what this issue tackles>.
    #<m>: <one sentence describing what this issue tackles, if bundled>.
 Issue maintenance: applied <...>; needs input <... or none>
+Follow-ups filed: #<n> (from PR #<p>), ... or none
 Pipeline follow-ups: sent <PR/thread/blocker or none>; needed but not sent <... or none>
 Watch: <blocked decision, pending release, stale review, or next trigger>
 ```
