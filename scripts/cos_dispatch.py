@@ -1228,6 +1228,9 @@ def dispatch(
     # slot itself (see cos_lane_runner.enrich_slot_session), so dispatch defers both.
     pre_session = str(uuid.uuid4()) if surface == "claude" else None
     if use_lane_runner:
+        # build_lane_runner_argv ignores prompt — the runner composes its own
+        # implement/continue prompt. The shared branch above still runs for the runner path
+        # because resolve_continue_pr feeds issues/base/rebase.
         argv = build_lane_runner_argv(
             worktree,
             issues,

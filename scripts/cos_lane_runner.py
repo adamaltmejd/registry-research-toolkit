@@ -333,17 +333,24 @@ def codex_bot_is_sole_unmet(gate: dict) -> bool:
 
 
 def write_codex_bot_gate(
-    gate_dir: Path, pr: int, head: str, verdict: str, *, blocking: bool, blocker: str
+    gate_dir: Path,
+    pr: int,
+    head: str,
+    *,
+    verdict: str = VERDICT_CLEAN,
+    blocking: bool = False,
+    blocker: str,
 ) -> None:
     """Update the PR's gate.json codex_bot line, then set status, then atomic-write.
 
-    `verdict` is the completed codex_bot line's verdict token (`clean` or the usage-limit
-    form) when NOT blocking; when blocking, `blocker` names the unmet item and the codex_bot
-    line records the block reason. status flips to `ready-to-merge` ONLY when the verdict is
-    non-blocking AND codex_bot is the sole unmet gate (all other gate lines already met);
-    otherwise status stays `blocked` with `blocker` set. Written atomically (temp+rename)
-    via the shared cos_preflight leaf so the preflight probe never sees a torn write; the
-    caller is responsible for the codex-review.md evidence already existing.
+    `verdict` is consumed ONLY when NOT blocking — it is the completed codex_bot line's
+    verdict token (`clean` or the usage-limit form). When blocking, `verdict` is ignored:
+    `blocker` names the unmet item and the codex_bot line records the block reason. status
+    flips to `ready-to-merge` ONLY when the verdict is non-blocking AND codex_bot is the
+    sole unmet gate (all other gate lines already met); otherwise status stays `blocked`
+    with `blocker` set. Written atomically (temp+rename) via the shared cos_preflight leaf
+    so the preflight probe never sees a torn write; the caller is responsible for the
+    codex-review.md evidence already existing.
     """
     gate = read_gate(gate_dir, pr)
     gates = gate.get("gates")
@@ -486,7 +493,7 @@ def run_loop(
                 gate_dir,
                 pr,
                 reviewed_head,
-                VERDICT_CLEAN,
+                verdict=VERDICT_CLEAN,
                 blocking=False,
                 blocker="codex_bot",
             )
@@ -510,7 +517,7 @@ def run_loop(
                     gate_dir,
                     pr,
                     reviewed_head,
-                    VERDICT_USAGE_LIMIT,
+                    verdict=VERDICT_USAGE_LIMIT,
                     blocking=False,
                     blocker="codex_bot",
                 )
@@ -530,9 +537,7 @@ def run_loop(
             # a PR finding. An un-nested runner must never see nested_sandbox; if it does,
             # it is still recorded as a block, not treated as clean.
             blocker = f"codex review error: {kind or 'unknown'}"
-            write_codex_bot_gate(
-                gate_dir, pr, head, VERDICT_CLEAN, blocking=True, blocker=blocker
-            )
+            write_codex_bot_gate(gate_dir, pr, head, blocking=True, blocker=blocker)
             print(f"{blocker}; wrote status: blocked for PR #{pr}", file=sys.stderr)
             return EXIT_NEEDS_HUMAN
 
@@ -555,7 +560,6 @@ def run_loop(
                 gate_dir,
                 pr,
                 reviewed_head,
-                VERDICT_CLEAN,
                 blocking=True,
                 blocker=blocker,
             )
@@ -574,9 +578,7 @@ def run_loop(
     # Cap exhausted with findings still present: a clear needs-human block naming the cap.
     head = _cos_dispatch.git_output(worktree, ["rev-parse", "HEAD"])
     blocker = f"codex review still had findings after {max_rounds} round(s)"
-    write_codex_bot_gate(
-        gate_dir, pr, head, VERDICT_CLEAN, blocking=True, blocker=blocker
-    )
+    write_codex_bot_gate(gate_dir, pr, head, blocking=True, blocker=blocker)
     print(f"{blocker}; wrote status: blocked for PR #{pr}", file=sys.stderr)
     return EXIT_NEEDS_HUMAN
 
