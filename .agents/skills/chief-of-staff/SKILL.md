@@ -52,21 +52,35 @@ contexts.
 
 All wake cadence lives in one deterministic script, `scripts/cos_watch.py`; the agent
 never wakes idle. It makes no wake DECISIONS — the tick below is identical regardless of
-which emission woke the session; the watcher only changes WHEN a tick fires. Arm it ONCE
-per session, not per tick, using the current surface's supported persistent-command
-primitive. Before arming, inspect active background commands/monitors if the surface
-supports that and skip arming when a `cos_watch.py` command is already running. If the
-surface has no persistent-command primitive, do not fake one; fall back to a 15-30 min
-heartbeat. **Right after arming, run one normal tick (probe → handle → commit)**: the
-watcher's own probes are read-only (`--observe`) and never bootstrap a missing baseline,
-so this first staging probe is what establishes the baseline the watcher compares
-against — without it, previous-gated drift (e.g. a new review on a claimed PR) stays
-invisible until the safety-net heartbeat's tick writes one. The command to run
-persistently is:
+which emission woke the session; the watcher only changes WHEN a tick fires. Each stdout
+emission line (`ready gate:`, `wake:`, `slot freed:`, `dispatch:`, `stale slot:`,
+`preflight error`) is meant to wake the session; how that emission actually reaches the
+session is surface-specific. Arm the watcher ONCE per session, not per tick. Before
+arming, inspect the surface's active background commands/monitors and skip arming when a
+`cos_watch.py` watcher is already running.
+
+**Codex `$chief-of-staff` surface — arm as a persistent background command.** On Codex
+the emission-wake model works directly: arm `cos_watch` with the surface's persistent
+background-command primitive and each stdout emission wakes the session on its own (no
+Monitor needed, and none is available here). The command to run persistently is:
 
 ```sh
 uv run --no-project python scripts/cos_watch.py
 ```
+
+**Claude Code `/loop` surface — arm via a `Monitor`, not a bare background command.**
+There a plain backgrounded command only delivers a wake when it EXITS, and `cos_watch`
+runs forever, so its emissions would pile up unseen; that surface instead runs the same
+`cos_watch` command under a persistent `Monitor` that converts each emission line into a
+distinct wake. (This is the Claude-Code mirror's concern; on Codex, arm the background
+command as above.)
+
+If the surface genuinely has no emission-wake primitive at all, do not fake one; fall
+back to a 15-30 min heartbeat. **Right after arming, run one normal tick (probe → handle
+→ commit)**: the watcher's own probes are read-only (`--observe`) and never bootstrap a
+missing baseline, so this first staging probe is what establishes the baseline the
+watcher compares against — without it, previous-gated drift (e.g. a new review on a
+claimed PR) stays invisible until the safety-net heartbeat's tick writes one.
 
 It runs two tiers in one loop (both stores live under
 `$XDG_STATE_HOME/registry-research-toolkit`, default `~/.local/state/...`):
@@ -102,12 +116,14 @@ the probe is the durability net. That means the tick's own staging probe sees a 
 transition against its baseline and wakes on it (exit `10`); an idle probe (exit `0`)
 after a `dispatch:` / `stale slot:` emission means a prior tick already committed that
 transition, so it is a genuine no-op — stop. The durable truth is the ledger itself,
-which every full tick re-reads. Do not schedule polling wakeups on top of the watcher;
-keep at most one long safety-net heartbeat (\~3600s) for dead-monitor recovery. On each
-safety-net wake, renew the safety net and, when the surface can inspect persistent
-commands, verify the watcher is still alive. If the watcher exited, re-arm it; if arming
-keeps failing, fall back to a 15-30 min heartbeat, which is then the only wake path,
-including for merges.
+which every full tick re-reads. The emission-driven wake path (the Codex background
+command, or the Claude-Code Monitor) is the PRIMARY wake; the heartbeat is only a SAFETY
+NET. Do not schedule polling wakeups on top of the watcher; keep at most one long
+safety-net heartbeat (\~3600s) for dead-monitor recovery. On each safety-net wake, renew
+the safety net and, when the surface can inspect persistent commands, verify the watcher
+is still alive (on Codex, the background command; on Claude Code, the `cos_watch`
+Monitor). If the watcher exited, re-arm it; if arming keeps failing, fall back to a
+15-30 min heartbeat, which is then the only wake path, including for merges.
 
 Caveats: monitor and safety net are session-scoped — a dead session kills both, which is
 why an external fixed-cadence `/loop` or scheduled heartbeat is what revives the loop
