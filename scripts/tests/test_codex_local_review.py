@@ -623,6 +623,34 @@ def test_precondition_explicit_main_base_resolves(
     assert head == merge_base
 
 
+def test_git_scrubs_non_trio_git_env_var(
+    git_repo: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # The trio→blanket widening: codex's git (clr._git → _gh.run_git → scrubbed_git_env)
+    # must drop EVERY GIT_* var, not just the historical GIT_DIR/GIT_WORK_TREE/GIT_INDEX_FILE
+    # trio. Assert on the env the child git process actually receives — a `rev-parse` result
+    # alone can't prove scrubbing (rev-parse never shells to ssh, so it would resolve the
+    # toplevel whether or not GIT_SSH_COMMAND leaked). Spy on the shared runner's
+    # subprocess.run to capture that env; a future narrowing back to the trio leaves
+    # GIT_SSH_COMMAND in it and fails this test.
+    monkeypatch.setenv("GIT_SSH_COMMAND", "false")
+    captured: dict[str, str] = {}
+    real_run = subprocess.run
+
+    def spy(*args: object, **kwargs: object) -> subprocess.CompletedProcess[str]:
+        captured.update(kwargs["env"])  # type: ignore[arg-type]
+        return real_run(*args, **kwargs)  # type: ignore[arg-type]
+
+    monkeypatch.setattr(clr._gh.subprocess, "run", spy)
+
+    result = clr._git(["rev-parse", "--show-toplevel"], cwd=git_repo)
+
+    assert not any(k.startswith("GIT_") for k in captured)
+    assert "GIT_SSH_COMMAND" not in captured
+    assert result.returncode == 0
+    assert Path(result.stdout.strip()).resolve() == git_repo.resolve()
+
+
 # --- review(): parse is driven by the (stubbed) codex transcript ---------------------
 
 

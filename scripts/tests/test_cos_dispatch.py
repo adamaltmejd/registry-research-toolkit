@@ -1378,6 +1378,20 @@ def test_non_repo_canonical_refused_before_any_git_mutation(
     _no_real_launch(tmp_path)
 
 
+def test_nonexistent_canonical_refused_cleanly(tmp_path: Path) -> None:
+    # A canonical path that does not EXIST (not merely an empty existing dir) must still
+    # fail cleanly with exit 2, not an uncaught FileNotFoundError. run_git passes
+    # cwd=<nonexistent> to subprocess, which raises FileNotFoundError BEFORE git runs (and
+    # run_git deliberately doesn't catch it) — unlike `git -C <bad>` where git itself exits
+    # 128. require_git_checkout maps that to the same clean SystemExit refusal. The sibling
+    # test above only covers an EXISTING empty dir (git exits 128), so it can't catch this.
+    with pytest.raises(SystemExit) as exc:
+        cd.require_git_checkout(tmp_path / "does-not-exist")
+
+    assert exc.value.code != 0
+    assert "not a git worktree" in str(exc.value.code)
+
+
 def test_cli_default_tier_is_hard(tmp_path: Path, capsys) -> None:
     # Through main()'s real argparse (not the _args helper): omitting --tier defaults to
     # hard, so the resolved surface is codex with the gpt-5.5 xhigh profile.
@@ -1427,7 +1441,8 @@ def test_hostile_git_env_is_scrubbed_from_children(
     # The live-incident invariant: even with GIT_DIR/GIT_WORK_TREE/GIT_INDEX_FILE exported
     # (as the pre-push hook does), (i) the script's own git ops still target the tmp
     # canonical correctly, and (ii) the launched child receives NONE of those repo-targeting
-    # GIT_* vars. Deleting _scrubbed_env must fail this test.
+    # GIT_* vars. Deleting the `_gh.scrubbed_git_env` scrub (or bypassing `_gh.run_git`) must
+    # fail this test.
     #
     # Build the origin FIRST — the fixture git calls (_git) inherit os.environ, so the
     # hostile GIT_* must not be set until setup is done, or setup itself would be hijacked.

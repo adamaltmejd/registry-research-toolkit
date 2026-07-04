@@ -788,19 +788,27 @@ def prepare_continue_worktree(
 def require_git_checkout(canonical: Path) -> None:
     """Refuse (exit 2) unless `canonical` is itself a git worktree root.
 
-    Belt-and-braces before the mutating fetch/worktree-add: git's `-C <dir>` walks UP to
-    the nearest enclosing repo, so a `canonical` that is NOT a checkout (an empty dir, a
-    stray path) would silently target whatever repo sits above it — the exact class of
-    accident that let a test's throwaway path resolve to the real checkout. Requiring the
-    resolved `show-toplevel` to EQUAL `canonical` (true for a main checkout and for a
-    linked worktree root, both valid dispatch origins) rejects that: an ambient parent
-    repo has a different toplevel, and a non-repo dir makes rev-parse fail outright. This
-    does not weaken the production contract — the real canonical checkout satisfies it.
+    Belt-and-braces before the mutating fetch/worktree-add: running IN a non-checkout
+    `canonical` (an empty dir, a stray path) would let git walk UP to the nearest enclosing
+    repo and silently target whatever repo sits above it — the exact class of accident that
+    let a test's throwaway path resolve to the real checkout. Requiring the resolved
+    `show-toplevel` to EQUAL `canonical` (true for a main checkout and for a linked worktree
+    root, both valid dispatch origins) rejects that: an ambient parent repo has a different
+    toplevel, and a non-repo dir makes rev-parse fail outright. This does not weaken the
+    production contract — the real canonical checkout satisfies it.
     """
     # Run IN `canonical` (via run_git's cwd) rather than `git -C <canonical>`: run_git scrubs
     # the GIT_* hijack env, so an inherited GIT_DIR can't resolve the hook's repo instead of
-    # canonical — cwd alone would not defend against that.
-    proc = _gh.run_git(["rev-parse", "--show-toplevel"], cwd=canonical)
+    # canonical — cwd alone would not defend against that. Unlike `git -C <dir>` (which lets
+    # git report the bad dir), cwd=<nonexistent> makes subprocess raise FileNotFoundError
+    # (or NotADirectoryError if a path component is a file) BEFORE git runs, and run_git does
+    # NOT catch it — map both to the same clean exit-2 refusal rather than an uncaught traceback.
+    try:
+        proc = _gh.run_git(["rev-parse", "--show-toplevel"], cwd=canonical)
+    except (FileNotFoundError, NotADirectoryError) as exc:
+        raise SystemExit(
+            f"canonical checkout {canonical} is not a git worktree ({exc})"
+        ) from exc
     toplevel = proc.stdout.strip()
     if proc.returncode != 0 or not toplevel:
         raise SystemExit(

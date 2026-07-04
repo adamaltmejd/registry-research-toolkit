@@ -46,8 +46,11 @@ def make_git_repo(tmp_path: Path) -> Path:
     Deletes GIT_DIR/GIT_WORK_TREE/GIT_INDEX_FILE from the child env (an ambient worktree env
     — the pre-push hook hijack exports all three — would otherwise point git at the real
     repo, and an ambient GIT_INDEX_FILE would stage the fixture's commits into the real
-    repo's index). Mirrors production `_scrubbed_git_env`. Merges over os.environ so PATH
-    survives; returns the repo root (the caller chdirs if it needs to).
+    repo's index). This scrubs ONLY that historical trio ON PURPOSE — it's a fixture-local
+    hermeticity helper, not the production scrub. Production's `_gh.scrubbed_git_env` drops
+    every `GIT_*` key wholesale; here the named trio is all this fixture needs to isolate its
+    own git ops. Merges over os.environ so PATH survives; returns the repo root (the caller
+    chdirs if it needs to).
     """
     env = {
         k: v
