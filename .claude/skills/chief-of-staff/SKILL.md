@@ -56,8 +56,11 @@ which emission woke the session; the watcher only changes WHEN a tick fires. Eac
 emission line (`ready gate:`, `wake:`, `slot freed:`, `dispatch:`, `stale slot:`,
 `preflight error`) is meant to wake the session; how that emission actually reaches the
 session is surface-specific. Arm the watcher ONCE per session, not per tick. Before
-arming, inspect the surface's active monitors/background commands and skip arming when a
-`cos_watch.py` watcher is already running.
+arming, inspect the surface's active monitors/background commands and skip arming only
+when the surface-CORRECT watcher (defined below) is already in place — not merely when
+some `cos_watch.py` process exists. A bare backgrounded `cos_watch` is the WRONG
+primitive on Claude Code (it can't wake the loop, see below), so finding one is a reason
+to re-arm, never to skip.
 
 **Claude Code `/loop` surface — arm via a `Monitor`.** On this surface, run `cos_watch`
 under a persistent `Monitor` whose `command` IS the `cos_watch` invocation, from the
@@ -75,13 +78,15 @@ Arm it as, e.g.:
 Monitor({command: "uv run --no-project python scripts/cos_watch.py", persistent: true, description: "chief-of-staff wake events"})
 ```
 
-Inspect via the task/monitor list to decide whether a `cos_watch` Monitor is already
-running before arming. **Do NOT arm `cos_watch` as a plain backgrounded Bash command on
-this surface.** A backgrounded Bash command delivers a wake `task-notification` only
-when it EXITS, and `cos_watch` runs forever — so its emissions would pile up in the
-task-output file, unseen, and never wake the loop (this was the #1081 bug; the raw
-background command does not wake the session here). The Monitor is what makes the
-emission-wake model work on Claude Code.
+Inspect the task/monitor list before arming: skip only if a `cos_watch` **Monitor** is
+already armed. If instead a bare backgrounded `cos_watch` command is running (an older
+session's arming, or a mis-arm), STOP it and arm the Monitor — do not read it as
+"already running" and skip, or its emissions keep piling up unseen. **Do NOT arm
+`cos_watch` as a plain backgrounded Bash command on this surface.** A backgrounded Bash
+command delivers a wake `task-notification` only when it EXITS, and `cos_watch` runs
+forever — so its emissions would pile up in the task-output file, unseen, and never wake
+the loop (this was the #1081 bug; the raw background command does not wake the session
+here). The Monitor is what makes the emission-wake model work on Claude Code.
 
 If the surface genuinely has no emission-wake primitive at all, do not fake one; fall
 back to a 15-30 min heartbeat. **Right after arming, run one normal tick (probe → handle

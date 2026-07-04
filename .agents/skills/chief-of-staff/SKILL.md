@@ -56,8 +56,12 @@ which emission woke the session; the watcher only changes WHEN a tick fires. Eac
 emission line (`ready gate:`, `wake:`, `slot freed:`, `dispatch:`, `stale slot:`,
 `preflight error`) is meant to wake the session; how that emission actually reaches the
 session is surface-specific. Arm the watcher ONCE per session, not per tick. Before
-arming, inspect the surface's active background commands/monitors and skip arming when a
-`cos_watch.py` watcher is already running.
+arming, inspect the surface's active background commands/monitors and skip arming only
+when the surface-CORRECT watcher (defined below) is already in place — not merely when
+some `cos_watch.py` process exists. On Codex the correct primitive is the persistent
+background command; on Claude Code it is a `cos_watch` Monitor, and a bare backgrounded
+`cos_watch` there is the WRONG primitive (it can't wake the loop), so finding one is a
+reason to re-arm, never to skip.
 
 **Codex `$chief-of-staff` surface — arm as a persistent background command.** On Codex
 the emission-wake model works directly: arm `cos_watch` with the surface's persistent
