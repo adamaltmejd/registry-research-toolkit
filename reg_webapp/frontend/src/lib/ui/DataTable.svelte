@@ -11,12 +11,18 @@ import type { Column } from "./types";
 // `cell` snippet is the escape hatch for custom cell content — default renders
 // `row[column.key]`.
 //
-// OPTIONAL selection: pass `getRowId` + `selectedId` (+ `onselect`) and the
-// table adopts ARIA grid semantics (role=grid) with keyboard-focusable selectable
-// rows (tabindex, Enter/Space activate), carrying `aria-selected` + the selected
-// style + the focus ring. Omit them and it's a plain static table (role=table, no
-// row tabindex). List keyboard NAV is owned by Bits UI `Command` elsewhere —
-// this is selectable rows + visual states only, NOT a roving-tabindex grid.
+// OPTIONAL variants are deliberately distinct:
+// - Selection: pass `getRowId` + `selectedId` (+ `onselect`) and the table adopts
+//   ARIA grid semantics (role=grid) with keyboard-focusable selectable rows
+//   (tabindex, Enter/Space activate), carrying `aria-selected` + the selected
+//   style + the focus ring.
+// - Row navigation: pass `rowNavigation` for link-list tables whose row/card
+//   surface should delegate a plain click to the row's primary `a[href]`. The
+//   anchor remains the only tab stop and accessible link; rows stay role=table
+//   rows with no tabindex.
+// Omit both and it's a plain static table (role=table, no row tabindex). List
+// keyboard NAV is owned by Bits UI `Command` elsewhere — this is selectable rows
+// + visual states only, NOT a roving-tabindex grid.
 //
 // RESPONSIVE: at <=48rem the default table stacks (each <tr> becomes a card,
 // cells stack with their column micro-label as a `::before` prefix). The framed
@@ -39,6 +45,8 @@ interface Props {
   getRowId?: (row: Row) => string;
   selectedId?: string;
   onselect?: (row: Row) => void;
+  /** Link-list variant: plain row/card clicks delegate to the row's primary anchor. */
+  rowNavigation?: boolean;
   /** Give the table the raised panel surface; the column headers become the title row. */
   framed?: boolean;
 }
@@ -50,10 +58,14 @@ let {
   getRowId,
   selectedId,
   onselect,
+  rowNavigation = false,
   framed = false,
 }: Props = $props();
 
 const selectable = $derived(getRowId !== undefined && onselect !== undefined);
+const navigable = $derived(rowNavigation && !selectable);
+type MouseStart = { row: EventTarget | null; x: number; y: number };
+let mouseStart: MouseStart | null = null;
 
 function alignOf(col: Column<Row>): "start" | "end" {
   return col.align ?? (col.numeric ? "end" : "start");
@@ -77,9 +89,67 @@ function fromInteractiveChild(
   return hit !== null && hit !== rowEl;
 }
 
+function rowSelectionText(rowEl: HTMLElement): boolean {
+  const selection = window.getSelection();
+  if (
+    selection === null ||
+    selection.isCollapsed ||
+    selection.toString().trim() === ""
+  ) {
+    return false;
+  }
+  const { anchorNode, focusNode } = selection;
+  return (
+    (anchorNode !== null && rowEl.contains(anchorNode)) ||
+    (focusNode !== null && rowEl.contains(focusNode))
+  );
+}
+
+function movedSinceMouseDown(event: MouseEvent, rowEl: HTMLElement): boolean {
+  if (mouseStart === null || mouseStart.row !== rowEl) return false;
+  const dx = event.clientX - mouseStart.x;
+  const dy = event.clientY - mouseStart.y;
+  return Math.hypot(dx, dy) > 4;
+}
+
+function primaryRowLink(rowEl: HTMLElement): HTMLAnchorElement | null {
+  const link = rowEl.querySelector("a[href]");
+  return link instanceof HTMLAnchorElement ? link : null;
+}
+
 function onrowclick(event: MouseEvent, row: Row): void {
   if (fromInteractiveChild(event, event.currentTarget)) return;
   onselect?.(row);
+}
+
+function onrowmousedown(event: MouseEvent): void {
+  mouseStart =
+    event.button === 0
+      ? { row: event.currentTarget, x: event.clientX, y: event.clientY }
+      : null;
+}
+
+function onrownavigationclick(event: MouseEvent): void {
+  const rowEl = event.currentTarget;
+  if (!(rowEl instanceof HTMLElement)) {
+    mouseStart = null;
+    return;
+  }
+  const dragged = movedSinceMouseDown(event, rowEl);
+  mouseStart = null;
+  if (
+    event.defaultPrevented ||
+    event.button !== 0 ||
+    event.metaKey ||
+    event.ctrlKey ||
+    event.shiftKey ||
+    event.altKey ||
+    fromInteractiveChild(event, event.currentTarget)
+  ) {
+    return;
+  }
+  if (rowSelectionText(rowEl) || dragged) return;
+  primaryRowLink(rowEl)?.click();
 }
 
 function onkeydown(event: KeyboardEvent, row: Row): void {
@@ -139,10 +209,16 @@ function onkeydown(event: KeyboardEvent, row: Row): void {
       <tr
         role="row"
         class:selectable
+        class:navigable
         class:selected={isSelected}
         tabindex={selectable ? 0 : undefined}
         aria-selected={selectable ? isSelected : undefined}
-        onclick={selectable ? (e) => onrowclick(e, row) : undefined}
+        onmousedown={navigable ? onrowmousedown : undefined}
+        onclick={selectable
+          ? (e) => onrowclick(e, row)
+          : navigable
+            ? onrownavigationclick
+            : undefined}
         onkeydown={selectable ? (e) => onkeydown(e, row) : undefined}
       >
         {#each columns as col, colIndex (col.key)}
@@ -228,6 +304,9 @@ function onkeydown(event: KeyboardEvent, row: Row): void {
   tbody tr.selectable {
     cursor: pointer;
   }
+  tbody tr.navigable {
+    cursor: pointer;
+  }
   tbody tr:hover {
     background: var(--surface-hover);
   }
@@ -240,6 +319,9 @@ function onkeydown(event: KeyboardEvent, row: Row): void {
   tbody tr.selectable:focus-visible {
     outline: none;
     box-shadow: var(--focus-ring);
+  }
+  tbody tr.navigable :global(a[href]:hover) {
+    text-decoration: none;
   }
 
   /* Stacked cards on narrow canvases (#832). The same 48rem breakpoint the rest

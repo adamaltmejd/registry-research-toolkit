@@ -50,7 +50,7 @@ const columns: Column<RootRow>[] = [{ key: "name", label: "Name" }];
       label="Filter catalog sections"
     />
     {#if filtered.length > 0}
-      <DataTable framed {columns} rows={filtered}>
+      <DataTable framed {columns} rows={filtered} rowNavigation>
         {#snippet cell(row)}
           <a class="row-link" href={catalogHref(row.fqid)} title={row.fqid}>
             {row.name ?? row.fqid}

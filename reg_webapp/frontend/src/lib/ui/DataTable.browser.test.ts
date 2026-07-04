@@ -34,6 +34,7 @@ interface TableProps<R extends object> {
   getRowId?: (row: R) => string;
   selectedId?: string;
   onselect?: (row: R) => void;
+  rowNavigation?: boolean;
   framed?: boolean;
 }
 
@@ -280,6 +281,151 @@ describe("DataTable", () => {
     // Click activates onselect.
     (trs[1] as HTMLElement).click();
     expect(selected).toBe("2");
+  });
+
+  it("delegates row-navigation clicks to the row's primary link without grid semantics", async () => {
+    const cell = createRawSnippet<[Row, Column<Row>]>((_getRow, getCol) => ({
+      render: () =>
+        getCol().key === "label"
+          ? '<a href="/catalog/scb/lisa">open LISA</a>'
+          : "<span>plain</span>",
+    }));
+    const { container } = renderTable({
+      columns,
+      rows,
+      cell,
+      rowNavigation: true,
+    });
+    const table = container.querySelector("table");
+    const firstRow = container.querySelector("tbody tr") as HTMLElement;
+    const firstCell = firstRow.querySelector("td:first-child") as HTMLElement;
+    const link = firstRow.querySelector("a") as HTMLAnchorElement;
+    let clicks = 0;
+    link.addEventListener("click", (event) => {
+      event.preventDefault();
+      clicks += 1;
+    });
+
+    expect(table).toHaveAttribute("role", "table");
+    expect(firstRow).not.toHaveAttribute("tabindex");
+    expect(firstRow).not.toHaveAttribute("aria-selected");
+    expect(firstRow.querySelector("td")).toHaveAttribute("role", "cell");
+    await page.getByRole("link", { name: "open LISA" }).first().hover();
+    expect(getComputedStyle(link).textDecorationLine).toBe("none");
+
+    firstCell.click();
+    expect(clicks).toBe(1);
+
+    link.click();
+    expect(clicks).toBe(2);
+  });
+
+  it("leaves modified row-navigation clicks to browser/link semantics", async () => {
+    const cell = createRawSnippet<[Row, Column<Row>]>((_getRow, getCol) => ({
+      render: () =>
+        getCol().key === "label"
+          ? '<a href="/catalog/scb/lisa">open LISA</a>'
+          : "<span>plain</span>",
+    }));
+    const { container } = renderTable({
+      columns,
+      rows,
+      cell,
+      rowNavigation: true,
+    });
+    const firstRow = container.querySelector("tbody tr") as HTMLElement;
+    const firstCell = firstRow.querySelector("td:first-child") as HTMLElement;
+    const link = firstRow.querySelector("a") as HTMLAnchorElement;
+    let clicks = 0;
+    link.addEventListener("click", (event) => {
+      event.preventDefault();
+      clicks += 1;
+    });
+
+    firstCell.dispatchEvent(
+      new MouseEvent("click", { bubbles: true, button: 0, metaKey: true }),
+    );
+    firstCell.dispatchEvent(
+      new MouseEvent("click", { bubbles: true, button: 1 }),
+    );
+    expect(clicks).toBe(0);
+  });
+
+  it("does not navigate at the tail of a row text selection", async () => {
+    const cell = createRawSnippet<[Row, Column<Row>]>((_getRow, getCol) => ({
+      render: () =>
+        getCol().key === "label"
+          ? '<a href="/catalog/scb/lisa">open LISA</a>'
+          : "<span>selectable text</span>",
+    }));
+    const { container } = renderTable({
+      columns,
+      rows,
+      cell,
+      rowNavigation: true,
+    });
+    const firstRow = container.querySelector("tbody tr") as HTMLElement;
+    const firstCell = firstRow.querySelector("td:first-child") as HTMLElement;
+    const link = firstRow.querySelector("a") as HTMLAnchorElement;
+    let clicks = 0;
+    link.addEventListener("click", (event) => {
+      event.preventDefault();
+      clicks += 1;
+    });
+
+    const range = document.createRange();
+    range.selectNodeContents(firstCell);
+    const selection = window.getSelection();
+    selection?.removeAllRanges();
+    selection?.addRange(range);
+    try {
+      firstCell.click();
+      expect(clicks).toBe(0);
+    } finally {
+      selection?.removeAllRanges();
+    }
+  });
+
+  it("does not navigate after a row-navigation drag", async () => {
+    const cell = createRawSnippet<[Row, Column<Row>]>((_getRow, getCol) => ({
+      render: () =>
+        getCol().key === "label"
+          ? '<a href="/catalog/scb/lisa">open LISA</a>'
+          : "<span>plain</span>",
+    }));
+    const { container } = renderTable({
+      columns,
+      rows,
+      cell,
+      rowNavigation: true,
+    });
+    const firstRow = container.querySelector("tbody tr") as HTMLElement;
+    const firstCell = firstRow.querySelector("td:first-child") as HTMLElement;
+    const link = firstRow.querySelector("a") as HTMLAnchorElement;
+    let clicks = 0;
+    link.addEventListener("click", (event) => {
+      event.preventDefault();
+      clicks += 1;
+    });
+
+    firstCell.dispatchEvent(
+      new MouseEvent("mousedown", {
+        bubbles: true,
+        button: 0,
+        clientX: 0,
+        clientY: 0,
+      }),
+    );
+    firstCell.dispatchEvent(
+      new MouseEvent("click", {
+        bubbles: true,
+        button: 0,
+        clientX: 12,
+        clientY: 0,
+      }),
+    );
+
+    expect(clicks).toBe(0);
   });
 
   it("leaves a snippet-empty cell matching :empty so the stacked label is suppressed (#832)", async () => {
