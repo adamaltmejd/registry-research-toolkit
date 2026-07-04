@@ -53,21 +53,19 @@ contexts.
 All wake cadence lives in one deterministic script, `scripts/cos_watch.py`; the agent
 never wakes idle. It makes no wake DECISIONS — the tick below is identical regardless of
 which emission woke the session; the watcher only changes WHEN a tick fires. Arm it ONCE
-per session, not per tick: first call `TaskList` and skip arming if a cos-watch monitor
-is already running; otherwise arm exactly one. **Right after arming, run one normal tick
-(probe → handle → commit)**: the watcher's own probes are read-only (`--observe`) and
-never bootstrap a missing baseline, so this first staging probe is what establishes the
-baseline the watcher compares against — without it, previous-gated drift (e.g. a new
-review on a claimed PR) stays invisible until the safety-net heartbeat's tick writes
-one.
+per session, not per tick, using the current surface's supported persistent-command
+primitive. Before arming, inspect active background commands/monitors if the surface
+supports that and skip arming when a `cos_watch.py` command is already running. If the
+surface has no persistent-command primitive, do not fake one; fall back to a 15-30 min
+heartbeat. **Right after arming, run one normal tick (probe → handle → commit)**: the
+watcher's own probes are read-only (`--observe`) and never bootstrap a missing baseline,
+so this first staging probe is what establishes the baseline the watcher compares
+against — without it, previous-gated drift (e.g. a new review on a claimed PR) stays
+invisible until the safety-net heartbeat's tick writes one. The command to run
+persistently is:
 
-```text
-Monitor({
-  command: "uv run --no-project python scripts/cos_watch.py",
-  description: "chief-of-staff wake watch",
-  persistent: true,
-  timeout_ms: 60000   // schema-required; ignored when persistent
-})
+```sh
+uv run --no-project python scripts/cos_watch.py
 ```
 
 It runs two tiers in one loop (both stores live under
@@ -105,10 +103,11 @@ transition against its baseline and wakes on it (exit `10`); an idle probe (exit
 after a `dispatch:` / `stale slot:` emission means a prior tick already committed that
 transition, so it is a genuine no-op — stop. The durable truth is the ledger itself,
 which every full tick re-reads. Do not schedule polling wakeups on top of the watcher;
-keep at most one long ScheduleWakeup (\~3600s) as a dead-monitor safety net, and on each
-wake re-arm it and verify (TaskList) the monitor is still alive — if the monitor reports
-the watcher process exited, re-arm the monitor; if arming keeps failing, fall back to a
-15-30 min heartbeat, which is then the only wake path, including for merges.
+keep at most one long safety-net heartbeat (\~3600s) for dead-monitor recovery. On each
+safety-net wake, renew the safety net and, when the surface can inspect persistent
+commands, verify the watcher is still alive. If the watcher exited, re-arm it; if arming
+keeps failing, fall back to a 15-30 min heartbeat, which is then the only wake path,
+including for merges.
 
 Caveats: monitor and safety net are session-scoped — a dead session kills both, which is
 why an external fixed-cadence `/loop` or scheduled heartbeat is what revives the loop
@@ -504,6 +503,14 @@ title/history — ONLY when `session` is null or absent (e.g. a manual lane that
 self-identify). Either way, do not create a new thread; if no match resolves, report
 that and include the exact message text to send.
 
+If the owning pipeline session is known dead or unreachable and the PR needs a current
+branch follow-up, use `cos_dispatch.py --continue-pr <pr> --brief-file <path>` from the
+canonical checkout instead of creating an ad hoc thread. Continue mode is the blessed
+dead-session path: it resolves the existing PR branch and PR base, rebases it onto
+`origin/<baseRefName>` by default, launches a continuation prompt, and records a
+`mode: "continue"` slot with `prs: [<pr>]`. Use `--no-rebase` only when keeping the
+exact PR head/base relationship is intentional.
+
 The message must name the PR, issue, current head SHA, specific blocker, exact unblock
 steps, required gate-directory evidence, and
 `Do not merge; chief-of-staff owns merge execution.` Do not request implementation
@@ -634,19 +641,35 @@ one-coordinator rule in Scheduling is what excludes that.
   uv run --no-project python scripts/cos_dispatch.py --issues <n[,m]> [--tier easy|hard] [--surface codex|claude] [--slug NAME]
   ```
 
+  To continue an existing PR whose pipeline session is gone, launch a continuation
+  instead of hand-rolling a worktree/thread:
+
+  ```sh
+  uv run --no-project python scripts/cos_dispatch.py --continue-pr <pr> [--brief-file <path>] [--tier easy|hard] [--surface codex|claude] [--slug NAME]
+  ```
+
+  Continue mode resolves the same-repository PR head branch and base branch, creates or
+  reuses a clean worktree for the head branch, rebases onto `origin/<baseRefName>` by
+  default (`--no-rebase` only when preserving the exact PR head/base relationship is
+  intentional), launches the same tier profile with a continuation prompt, and records
+  `mode: "continue"` plus `prs: [<pr>]` in the slot.
+
   The tier's implied surface is the default (no `--surface` needed). The script is the
   deterministic launcher: it re-checks the kill switch (exit `3`) and the slot budget
-  (exit `4`), refuses a slug/worktree collision (exit `2`), creates a fresh worktree off
-  `origin/main`, launches the agent DETACHED with the resolved tier profile (hard/codex:
+  (exit `4`), refuses a slug/worktree collision for fresh lanes and any live slot
+  already claiming the same PR in continue mode (exit `2`), creates the requested
+  worktree, appends a `cos.run.started` sentinel to the per-slug dispatch log, and
+  launches the agent DETACHED with the resolved tier profile (hard/codex:
   `codex exec -C <worktree> -s workspace-write -c approval_policy=never --add-dir <state-root> --add-dir <canonical>/.git --json -m gpt-5.5 -c model_reasoning_effort=xhigh '$pr-pipeline <issues>'`
   — the second `--add-dir` grants the linked worktree's writable git state, which lives
   under the canonical checkout's `.git`, outside the sandboxed cwd; easy/claude:
   `claude --session-id <uuid> --model claude-sonnet-5 --effort high --advisor opus -p '/pr-pipeline <issues>' --dangerously-skip-permissions`),
-  captures the session/thread id, and stamps the slot file with ownership (`surface`,
-  `tier`, `session`, `pid`, `dispatched`) — written LAST, only after a successful
-  launch, so a failed launch never leaks a slot. Its stdout JSON (`slot`, `worktree`,
-  `surface`, `tier`, `session`, `pid`, `log`) is what you report; dispatch logs live
-  under `<state-root>/dispatch-logs/<slug>.log`.
+  writes the slot file immediately after a healthy launch (`surface`, `tier`, `session`,
+  `pid`, `dispatched`; codex `session` is initially null), then enriches the codex
+  `session` from the log when available. Failed launches never leak a slot. Its stdout
+  JSON (`slot`, `worktree`, `surface`, `tier`, `mode`, `issues`, `prs`, `session`,
+  `pid`, `log`) is what you report; dispatch logs live under
+  `<state-root>/dispatch-logs/<slug>.log`.
 
 - **Merge-approval classes still hold** (see Automerge): even in auto mode, a launched
   pipeline's PR only merges through the same gate, and the maintainer-approval classes
@@ -662,7 +685,8 @@ tick has enough time left to close them before returning. Manual/ad-hoc runs may
 subagents more proactively for separable read-only checks, but never delegate live issue
 mutation.
 
-Return concise output:
+Return concise output. Use `$pr-pipeline` on Codex and `/pr-pipeline` on Claude for
+`<pipeline-command>`:
 
 ```text
 chief tick: <fresh/restamped/reranked>; <hygiene>; active <n>; free <n>
@@ -671,7 +695,7 @@ Active work: PR #<p> -> #<issue>: <status / risk>, or none
 Merged: PR #<p> -> #<issue>: <merge sha>; added <one-sentence feature summary>; see
   <preview URL + route, or "No preview page: <verification surface>">, or none
 Recommended next:
-1. `/pr-pipeline issue <n>[,<m>]` - <lane label>; <shape>; <why / guardrail>.
+1. `<pipeline-command> issue <n>[,<m>]` - <lane label>; <shape>; <why / guardrail>.
    #<n>: <one sentence describing what this issue tackles>.
    #<m>: <one sentence describing what this issue tackles, if bundled>.
 Issue maintenance: applied <...>; needs input <... or none>

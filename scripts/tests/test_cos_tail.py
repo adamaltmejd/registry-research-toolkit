@@ -275,6 +275,17 @@ def test_current_run_offset_finds_last_run(tmp_path: Path) -> None:
     assert ct.current_run_offset(log) == len(torn)
 
 
+def test_current_run_offset_prefers_cos_run_sentinel(tmp_path: Path) -> None:
+    log = tmp_path / "lane.log"
+    old = b'{"type":"thread.started","thread_id":"old"}\nold output\n'
+    sentinel = (
+        b'{"type":"cos.run.started","slug":"lane","surface":"claude",'
+        b'"dispatched":"2026-07-03T00:00:00+00:00"}\n'
+    )
+    log.write_bytes(old + sentinel + b"plain claude output\n")
+    assert ct.current_run_offset(log) == len(old)
+
+
 def test_lane_is_plain_sniffs_past_leading_stderr(tmp_path: Path) -> None:
     codex_log = tmp_path / "codex.log"
     codex_log.write_bytes(
@@ -288,6 +299,38 @@ def test_lane_is_plain_sniffs_past_leading_stderr(tmp_path: Path) -> None:
     assert ct.lane_is_plain(None, plain_log) is True
     assert ct.lane_is_plain("codex", plain_log) is False  # surface wins over sniff
     assert ct.lane_is_plain("claude", codex_log) is True
+
+
+def test_lane_is_plain_ignores_claude_run_sentinel(tmp_path: Path) -> None:
+    plain_log = tmp_path / "done-claude.log"
+    plain_log.write_text(
+        '{"type":"cos.run.started","slug":"done-claude","surface":"claude"}\n'
+        'plain narration\n{"type":"item.started"}\n',
+        encoding="utf-8",
+    )
+    assert ct.lane_is_plain(None, plain_log) is True
+
+
+def test_lane_is_plain_uses_codex_run_sentinel_without_slot(tmp_path: Path) -> None:
+    codex_log = tmp_path / "done-codex.log"
+    codex_log.write_text(
+        '{"type":"cos.run.started","slug":"done-codex","surface":"codex"}\n'
+        '{"type":"item.completed","item":{"type":"agent_message","text":"done"}}\n',
+        encoding="utf-8",
+    )
+    assert ct.lane_is_plain(None, codex_log) is False
+
+
+def test_lane_is_plain_sniffs_current_reused_run_surface(tmp_path: Path) -> None:
+    reused_log = tmp_path / "reused.log"
+    reused_log.write_text(
+        '{"type":"thread.started","thread_id":"old-codex"}\n'
+        '{"type":"item.completed","item":{"type":"agent_message","text":"old"}}\n'
+        '{"type":"cos.run.started","slug":"reused","surface":"claude"}\n'
+        "plain claude output\n",
+        encoding="utf-8",
+    )
+    assert ct.lane_is_plain(None, reused_log) is True
 
 
 def test_follow_from_run_start_skips_prior_runs(tmp_path: Path, capsys) -> None:

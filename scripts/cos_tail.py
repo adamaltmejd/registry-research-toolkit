@@ -342,6 +342,7 @@ class LogFollower:
         return tail.decode("utf-8", errors="replace") if tail.strip() else None
 
 
+COS_RUN_MARKER = b'{"type":"cos.run.started"'
 CODEX_RUN_MARKER = b'{"type":"thread.started"'
 
 
@@ -350,8 +351,9 @@ def current_run_offset(log_path: Path) -> int:
 
     A retried dispatch reuses the slug and appends a whole new run, so replaying
     from byte 0 would show a prior run's commands/failures as if they were current.
-    Each codex run opens with a thread.started event; the last marker starts the
-    current run. Logs without the marker (claude lanes, fresh files) start at 0.
+    Every new dispatch now opens with a cos.run.started event, including plain
+    claude-surface runs. Older codex logs only have thread.started, so keep that
+    fallback. Logs without either marker (fresh files) start at 0.
     """
     try:
         data = log_path.read_bytes()
@@ -361,6 +363,9 @@ def current_run_offset(log_path: Path) -> int:
     # run's unterminated final byte, so requiring a preceding newline would miss the
     # new run and replay the old one. The raw marker bytes cannot occur inside a
     # JSON string value (its quotes would be escaped), so a hit is a real event.
+    cos_marker = data.rfind(COS_RUN_MARKER)
+    if cos_marker >= 0:
+        return cos_marker
     return max(data.rfind(CODEX_RUN_MARKER), 0)
 
 
@@ -377,13 +382,32 @@ def lane_is_plain(surface: str | None, log_path: Path) -> bool:
     if surface == "claude":
         return True
     try:
+        offset = current_run_offset(log_path)
         with log_path.open("rb") as fh:
+            if offset:
+                fh.seek(offset)
             head = fh.read(16384)
     except OSError:
         return False
     # stdout+stderr share the dispatch log, so startup warnings can precede the
-    # first JSON event — classify on any JSON-looking line in the head, not line 1.
-    return not any(line.lstrip().startswith(b'{"type":') for line in head.splitlines())
+    # first JSON event — classify on codex events in the head, but ignore the
+    # cross-surface cos.run.started sentinel that can also lead a plain claude log.
+    for line in head.splitlines():
+        stripped = line.lstrip()
+        if not stripped.startswith(b'{"type":'):
+            continue
+        if stripped.startswith(COS_RUN_MARKER):
+            try:
+                event = json.loads(stripped.decode("utf-8", errors="replace"))
+            except ValueError:
+                continue
+            if event.get("surface") == "claude":
+                return True
+            if event.get("surface") == "codex":
+                return False
+            continue
+        return False
+    return True
 
 
 def follow_one(

@@ -5,7 +5,9 @@ On a `dispatch:` wake (cos_watch.py emits it once a freed slot leaves the pipeli
 ledger below --max-slots), the chief-of-staff in `auto` mode runs THIS script once per
 lane it decides to dispatch, instead of only recommending commands. The script is the
 side-effecting half of that decision: it claims a slot, materializes a worktree, and
-launches a detached pr-pipeline agent (codex or claude) on the given issues.
+launches a detached pr-pipeline agent (codex or claude). The default `--issues` mode
+starts a fresh lane from `origin/main`; `--continue-pr` resumes an existing same-repo PR
+branch in a fresh agent after rebasing it onto the PR base branch by default.
 
 It is deliberately dumb about WHICH lane to run — the agent (or /plan-lanes) picks the
 issues; this script just performs the launch atomically and records the claim. Order of
@@ -15,18 +17,21 @@ tiny. A failure after the worktree is created leaks only the worktree, which the
 names for adjudication.
 
 Steps (fail-fast between each). After arg/canonical validation (require_canonical,
-parse_issues, resolve_profile, slug validation — all exit 2):
+target resolution, resolve_profile, slug validation — all exit 2):
   1. kill switch  — <state-root>/auto-dispatch.off present ⇒ refuse (exit 3).
   2. budget       — busy slots >= --max-slots ⇒ refuse (exit 4).
-  3. collision    — slot file OR worktree dir already exists ⇒ refuse (exit 2).
-  3b. author check — each --issues number must be maintainer-authored
-                    (gh_issue.is_maintainer_authored); refuse (exit 2) before any side
-                    effect. Skipped under --dry-run (its no-network contract).
-  4. worktree     — `git fetch origin main` then `git worktree add -b wt/<slug> …
-                    origin/main`, run in the canonical checkout. `wt/<slug>` is only the
-                    placeholder branch git requires; the pipeline skill creates its real
-                    `s/<slug>` branch from inside the worktree.
-  5. launch       — capture the dispatch-log byte offset, then spawn the agent DETACHED.
+  3. collision    — fresh mode refuses slot OR worktree collision; continue mode also
+                    refuses any live slot already claiming the PR.
+  3b. author check — each --issues number, and the --continue-pr PR number, must be
+                    maintainer-authored (gh_issue.is_maintainer_authored); refuse
+                    (exit 2) before any side effect. Skipped under --dry-run (its
+                    no-network contract).
+  4. worktree     — fresh mode fetches origin/main and `git worktree add -b wt/<slug> …
+                    origin/main`. Continue mode fetches origin/main plus the PR head and
+                    base branches, creates or reuses a clean worktree on the PR branch,
+                    and rebases onto the PR base unless --no-rebase is set.
+  5. launch       — append a `cos.run.started` JSON sentinel to the per-slug dispatch
+                    log, then spawn the agent DETACHED.
                     The codex argv runs `-s workspace-write` with TWO `--add-dir` grants —
                     <state-root> AND <canonical>/.git, the latter because the linked
                     worktree's writable git state (index/HEAD/refs/objects) lives under the
@@ -39,24 +44,25 @@ parse_issues, resolve_profile, slug validation — all exit 2):
                     the window (a rejected flag, missing auth, bad config) is a launch
                     failure. A launch failure here (spawn OSError, dispatch-log setup OSError,
                     or an instant child exit) → exit 2 naming the leaked worktree; NO slot
-                    file is written. The pre-launch offset scopes the later codex-id poll to
-                    THIS run's log bytes, so a reused per-slug log from a prior dispatch can't
-                    yield a stale thread id.
+                    file is written. The sentinel offset scopes the later codex-id poll
+                    and cos_tail --from-run-start to THIS run's log bytes, including
+                    plain claude-surface lanes.
   6. slot file    — write of <state-root>/pipeline-slots/<slug>.json IMMEDIATELY after a
                     healthy launch (session=null for codex, the pre-generated uuid for
                     claude). An OVERLAY write: if the detached child reached its
-                    register-slot step first, we overlay only the ownership fields and
-                    preserve the child's fresher issues/prs (same discipline as step 7's
-                    session merge); else the full payload. The `slot` field MUST equal the
-                    filename stem or scan_slots treats it as absent. A write failure here
-                    (agent already running) becomes exit 2 naming the orphan, never a
-                    traceback.
+                    register-slot step first, we overlay only dispatcher-owned fields
+                    and preserve the child's fresher issue/PR claim; continue mode owns
+                    `prs:[<pr>]` because the PR already exists. The `slot` field MUST
+                    equal the filename stem or scan_slots treats it as absent. A write
+                    failure here (agent already running) becomes exit 2 naming the
+                    orphan, never a traceback.
   7. session id   — codex only: poll the JSONL log (bytes past the step-5 offset) for the
                     first event carrying a thread/session id, bounded; on timeout,
                     session=null (the chief's fuzzy-thread-search fallback covers it) plus
-                    a stderr warning. Then RE-READ the slot file and merge-update ONLY the
-                    `session` field, preserving any issues/prs a fast child pipeline wrote
-                    during the poll window (its claim is fresher); a vanished/invalid file
+                    a stderr warning. Then RE-READ the slot file and merge-update the
+                    `session` field plus continue-owned `mode`/`prs`, preserving any other
+                    issues/prs a fast child pipeline wrote during the poll window (its claim
+                    is fresher); a vanished/invalid file
                     falls back to a full rewrite. A merge-update failure after the step-6
                     write is a stderr warning but still exit 0 — the slot exists, only the
                     session enrichment failed. claude's session is already final at step 6.
@@ -99,6 +105,7 @@ import argparse
 import importlib.util
 import json
 import os
+import re
 import subprocess
 import sys
 import time
@@ -111,7 +118,17 @@ if TYPE_CHECKING:
     from types import ModuleType
 
 DEFAULT_TIER = "hard"
-
+RUN_STARTED_TYPE = "cos.run.started"
+MAIN_FETCH_REFSPEC = "+refs/heads/main:refs/remotes/origin/main"
+_NEGATED_CLOSING_CLAUSE_RE = re.compile(
+    r"\b(?:(?:but|and)\s+)?(?:does\s+not|do\s+not|doesn't|don't)\s+"
+    r"(?:close[sd]?|fix(?:e[sd])?|resolve[sd]?)\s*:?[ \t]*"
+    r"(?:[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+)?#\d+"
+    r"(?:(?:\s*,\s*(?:and\s+)?|\s+and\s+)"
+    r"(?:[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+)?#\d+)*",
+    re.IGNORECASE,
+)
+_ISSUE_REF_RE = re.compile(r"(?:[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+)?#(\d+)")
 # The blessed launch profiles, kept in ONE place so surface + model/effort/advisor stay
 # together as a validated set (never composed ad hoc at a call site). Each value is
 # (surface, extra_flags): `surface` is the tier's implied dispatch surface; the flags are
@@ -197,6 +214,7 @@ def _load_gh() -> ModuleType:
 _gh = _load_gh()
 _cos_preflight = _gh.load_sibling("cos_preflight")
 _gh_issue = _gh.load_sibling("gh_issue")
+_plan_sequence = _gh.load_sibling("plan_sequence")
 
 
 def require_maintainer_authored(issues: list[int]) -> None:
@@ -248,11 +266,230 @@ def default_slug(surface: str, issues: list[int]) -> str:
     return f"auto-{surface}-issue-{issues[0]}"
 
 
+def default_continue_slug(surface: str, pr: int) -> str:
+    return f"continue-{surface}-pr-{pr}"
+
+
 def validate_slug(slug: str) -> None:
     # The slot filename is <slug>.json and scan_slots requires slot==stem, so the slug
     # must be a clean single-path-component stem — no separators, no traversal.
     if not slug or "/" in slug or slug in {".", ".."} or slug != Path(slug).name:
         raise SystemExit(f"invalid --slug {slug!r}: must be a valid filename stem")
+
+
+def _ref_matches_repository(ref: dict, repository_name_with_owner: str | None) -> bool:
+    if repository_name_with_owner is None:
+        return True
+    repo = ref.get("repository")
+    if not isinstance(repo, dict):
+        return False
+    if repo.get("nameWithOwner") == repository_name_with_owner:
+        return True
+    expected_owner, sep, expected_name = repository_name_with_owner.partition("/")
+    if not sep:
+        return False
+    owner = repo.get("owner")
+    login = owner.get("login") if isinstance(owner, dict) else None
+    name = repo.get("name")
+    return (
+        isinstance(login, str)
+        and isinstance(name, str)
+        and login.lower() == expected_owner.lower()
+        and name.lower() == expected_name.lower()
+    )
+
+
+def _negated_closing_numbers(body: str) -> set[int]:
+    numbers: set[int] = set()
+    for match in _NEGATED_CLOSING_CLAUSE_RE.finditer(body):
+        for ref_match in _ISSUE_REF_RE.finditer(match.group(0)):
+            numbers.add(int(ref_match.group(1)))
+    return numbers
+
+
+def _closing_issue_numbers(
+    body: str,
+    refs: list[dict] | None,
+    *,
+    repository_name_with_owner: str | None = None,
+) -> list[int]:
+    """Closing issue refs from local body clauses plus same-repo GitHub refs."""
+    seen: set[int] = set()
+    issues: list[int] = []
+    negated = _negated_closing_numbers(body)
+    closing_body = _NEGATED_CLOSING_CLAUSE_RE.sub("", body)
+    for number in sorted(
+        _plan_sequence.closing_issue_numbers_from_body(
+            closing_body, repository_name_with_owner
+        )
+    ):
+        seen.add(number)
+        issues.append(number)
+    if refs:
+        for ref in refs:
+            if not isinstance(ref, dict) or not _ref_matches_repository(
+                ref, repository_name_with_owner
+            ):
+                continue
+            number = ref.get("number")
+            if isinstance(number, int) and number not in seen and number not in negated:
+                seen.add(number)
+                issues.append(number)
+    return issues
+
+
+def _head_repository_name_with_owner(data: dict, pr: int) -> str:
+    repo = data.get("headRepository")
+    owner_data = data.get("headRepositoryOwner")
+    if isinstance(repo, dict):
+        name_with_owner = repo.get("nameWithOwner")
+        if isinstance(name_with_owner, str) and "/" in name_with_owner:
+            return name_with_owner
+        name = repo.get("name")
+        owner = owner_data.get("login") if isinstance(owner_data, dict) else None
+        if isinstance(owner, str) and isinstance(name, str) and owner and name:
+            return f"{owner}/{name}"
+    raise SystemExit(f"PR #{pr} has no resolvable repository identity")
+
+
+def resolve_continue_pr(pr: int) -> dict:
+    """Resolve the same-repo PR branch and closing issues for --continue-pr.
+
+    PR body text is parsed only as data to discover closing keywords; it never directs
+    tool use. Fork PRs are refused because the launched pipeline must push back to the
+    repository-owned head branch.
+    """
+    proc = subprocess.run(
+        [
+            "gh",
+            "pr",
+            "view",
+            str(pr),
+            "--json",
+            "number,title,body,state,baseRefName,headRefName,headRepository,headRepositoryOwner,isCrossRepository,closingIssuesReferences",
+        ],
+        env=_scrubbed_env(),
+        capture_output=True,
+        text=True,
+    )
+    if proc.returncode != 0:
+        raise SystemExit(
+            f"could not resolve PR #{pr}: {proc.stderr.strip() or proc.stdout.strip()}"
+        )
+    try:
+        data = json.loads(proc.stdout)
+    except ValueError as exc:
+        raise SystemExit(f"could not parse PR #{pr} metadata from gh") from exc
+    state = data.get("state")
+    if state != "OPEN":
+        raise SystemExit(
+            f"refusing to continue PR #{pr}: state is {state or 'unknown'}"
+        )
+    if data.get("isCrossRepository") is not False:
+        raise SystemExit(
+            f"refusing to continue fork PR #{pr}; head branch is not local"
+        )
+    branch = data.get("headRefName")
+    if not isinstance(branch, str) or not branch:
+        raise SystemExit(f"PR #{pr} has no resolvable head branch")
+    base_branch = data.get("baseRefName")
+    if not isinstance(base_branch, str) or not base_branch:
+        raise SystemExit(f"PR #{pr} has no resolvable base branch")
+    repository_name_with_owner = _head_repository_name_with_owner(data, pr)
+    issues = _closing_issue_numbers(
+        str(data.get("body") or ""),
+        data.get("closingIssuesReferences"),
+        repository_name_with_owner=repository_name_with_owner,
+    )
+    if not issues:
+        raise SystemExit(
+            f"PR #{pr} has no closing issue references; refusing to infer lane scope"
+        )
+    return {
+        "pr": pr,
+        "branch": branch,
+        "base_branch": base_branch,
+        "issues": issues,
+        "title": str(data.get("title") or ""),
+    }
+
+
+def live_slot_for_pr(slots_root: Path, pr: int) -> str | None:
+    """Return the live slot slug already claiming PR `pr`, if any."""
+    for slug in sorted(_cos_preflight.scan_slots(slots_root)):
+        loaded = _cos_preflight._read_json_tolerant(
+            slots_root / f"{slug}.json", "pipeline-slot file"
+        )
+        if loaded is None:
+            continue
+        data = loaded[1]
+        prs = data.get("prs")
+        if isinstance(prs, list) and pr in prs:
+            return slug
+    return None
+
+
+def read_brief(path: Path | None) -> str:
+    if path is None:
+        return ""
+    try:
+        return path.read_text(encoding="utf-8").strip()
+    except OSError as exc:
+        raise SystemExit(f"could not read --brief-file {path}: {exc}") from exc
+
+
+def dry_run_continuation_prompt(surface: str, pr: int, brief: str) -> str:
+    prefix = "$pr-pipeline" if surface == "codex" else "/pr-pipeline"
+    parts = [
+        f"{prefix} continue PR #{pr}",
+        (
+            f"Dry-run preview for continuing PR #{pr}. Live dispatch will verify the "
+            "PR is maintainer-authored, open, same-repository, and has closing issue "
+            "references before it reads PR body metadata or launches an agent."
+        ),
+    ]
+    if brief:
+        parts.append(f"Continuation brief:\n{brief}")
+    return "\n\n".join(parts)
+
+
+def continuation_prompt(
+    surface: str,
+    pr: int,
+    issues: list[int],
+    branch: str,
+    base_branch: str,
+    brief: str,
+    *,
+    rebase: bool,
+) -> str:
+    prefix = "$pr-pipeline" if surface == "codex" else "/pr-pipeline"
+    issue_text = ", ".join(f"#{issue}" for issue in issues) or "none"
+    parts = [
+        f"{prefix} continue PR #{pr}",
+        (
+            f"Continue PR #{pr} on branch `{branch}` for issue(s) {issue_text} in "
+            "this worktree. Do NOT restart the work, do NOT open a new PR, and do "
+            "NOT change the closing keywords except to keep them accurate."
+        ),
+        (
+            "The branch has been checked out from the PR head and rebased onto "
+            f"`origin/{base_branch}` unless this dispatch used `--no-rebase`. Inspect the "
+            "current diff, fix the requested follow-up, run the relevant gates, and "
+            "refresh the existing PR's merge-gate handoff."
+        ),
+    ]
+    if rebase:
+        parts.append(
+            "This continuation rebased the PR branch before launch; after committing, push "
+            f"with `git push --force-with-lease origin HEAD:{branch}` so the existing PR "
+            "updates safely."
+        )
+    else:
+        parts.append("Push this same branch normally after committing.")
+    if brief:
+        parts.append(f"Continuation brief:\n{brief}")
+    return "\n\n".join(parts)
 
 
 def build_launch_argv(
@@ -263,6 +500,8 @@ def build_launch_argv(
     session_id: str | None,
     profile_flags: list[str],
     canonical: Path,
+    *,
+    prompt: str | None = None,
 ) -> list[str]:
     """The exact detached launch argv for the chosen surface + tier profile flags.
 
@@ -284,6 +523,7 @@ def build_launch_argv(
     """
     issues_arg = " ".join(str(n) for n in issues)
     if surface == "codex":
+        prompt = prompt or f"$pr-pipeline {issues_arg}"
         return [
             "codex",
             "exec",
@@ -299,17 +539,18 @@ def build_launch_argv(
             str(canonical / ".git"),  # linked worktree's writable git state lives here
             "--json",
             *profile_flags,
-            f"$pr-pipeline {issues_arg}",
+            prompt,
         ]
     # claude: the session id is pre-generated so we know it before launch.
     assert session_id is not None
+    prompt = prompt or f"/pr-pipeline {issues_arg}"
     return [
         "claude",
         "--session-id",
         session_id,
         *profile_flags,
         "-p",
-        f"/pr-pipeline {issues_arg}",
+        prompt,
         "--dangerously-skip-permissions",
     ]
 
@@ -339,21 +580,35 @@ def _extract_session_id(line: str) -> str | None:
     return None
 
 
-def log_size(log_path: Path) -> int:
-    """Byte size of the dispatch log, or 0 if it does not exist yet.
-
-    Captured immediately BEFORE launch so poll_codex_session_id parses only bytes this run
-    appended — dispatch logs are append-only and keyed by slug, so a retried dispatch with
-    the same slug would otherwise re-read a PRIOR run's `thread.started` and return its
-    stale id. Reading only past the pre-launch offset scopes the parse to this launch.
-    """
+def append_run_sentinel(
+    log_path: Path,
+    *,
+    slug: str,
+    issues: list[int],
+    prs: list[int],
+    surface: str,
+    tier: str,
+    mode: str,
+) -> int:
+    """Append the explicit per-run boundary marker and return its byte offset."""
+    event = {
+        "type": RUN_STARTED_TYPE,
+        "slug": slug,
+        "issues": issues,
+        "prs": prs,
+        "surface": surface,
+        "tier": tier,
+        "mode": mode,
+        "dispatched": datetime.now(UTC).isoformat(),
+    }
     try:
-        return log_path.stat().st_size
-    except OSError:
-        # No prior log (FileNotFoundError) OR the log path is unusable (e.g. dispatch-logs
-        # wedged as a file → NotADirectoryError): offset 0 is correct either way; the actual
-        # open failure surfaces as the exit-2 log-setup path in launch_detached.
-        return 0
+        log_path.parent.mkdir(parents=True, exist_ok=True)
+        with log_path.open("a", encoding="utf-8") as fh:
+            offset = fh.tell()
+            fh.write(json.dumps(event, separators=(",", ":")) + "\n")
+    except OSError as exc:
+        raise SystemExit(f"failed to write run sentinel {log_path}: {exc}") from exc
+    return offset
 
 
 def poll_codex_session_id(
@@ -406,6 +661,178 @@ def run_git(cwd: Path, args: list[str]) -> None:
         raise SystemExit(f"git {' '.join(args)} failed: {tail}")
 
 
+def git_output(cwd: Path, args: list[str]) -> str:
+    proc = subprocess.run(
+        ["git", *args],
+        cwd=str(cwd),
+        env=_scrubbed_env(),
+        capture_output=True,
+        text=True,
+    )
+    if proc.returncode != 0:
+        tail = (
+            proc.stderr.strip() or proc.stdout.strip() or f"git {' '.join(args)} failed"
+        )
+        raise SystemExit(f"git {' '.join(args)} failed: {tail}")
+    return proc.stdout.strip()
+
+
+def branch_exists(canonical: Path, branch: str) -> bool:
+    proc = subprocess.run(
+        ["git", "show-ref", "--verify", "--quiet", f"refs/heads/{branch}"],
+        cwd=str(canonical),
+        env=_scrubbed_env(),
+    )
+    return proc.returncode == 0
+
+
+def ensure_clean_worktree(worktree: Path) -> None:
+    dirty = git_output(worktree, ["status", "--short"])
+    if dirty:
+        raise SystemExit(f"worktree {worktree} has local changes; refusing to continue")
+
+
+def ensure_existing_continue_worktree(worktree: Path, branch: str) -> None:
+    toplevel = git_output(worktree, ["rev-parse", "--show-toplevel"])
+    if Path(toplevel).resolve() != worktree.resolve():
+        raise SystemExit(
+            f"existing worktree {worktree} resolves to {toplevel}; refusing to continue"
+        )
+    current = git_output(worktree, ["branch", "--show-current"])
+    if current != branch:
+        raise SystemExit(
+            f"existing worktree {worktree} is on branch {current!r}, not PR branch "
+            f"{branch!r}; refusing to continue"
+        )
+    ensure_clean_worktree(worktree)
+
+
+def try_ff_only_merge(worktree: Path, ref: str) -> str | None:
+    proc = subprocess.run(
+        ["git", "merge", "--ff-only", ref],
+        cwd=str(worktree),
+        env=_scrubbed_env(),
+        capture_output=True,
+        text=True,
+    )
+    if proc.returncode == 0:
+        return None
+    return (
+        proc.stderr.strip()
+        or proc.stdout.strip()
+        or f"git merge --ff-only {ref} failed"
+    )
+
+
+def _cherry_has_unique_patch(
+    worktree: Path, upstream: str, head: str, limit: str
+) -> bool:
+    proc = subprocess.run(
+        ["git", "cherry", upstream, head, limit],
+        cwd=str(worktree),
+        env=_scrubbed_env(),
+        capture_output=True,
+        text=True,
+    )
+    if proc.returncode != 0:
+        return True
+    return any(line.startswith("+") for line in proc.stdout.splitlines())
+
+
+def rebased_branch_matches_remote_patches(
+    worktree: Path, remote_branch_ref: str, base_ref: str
+) -> bool:
+    remote_base = git_output(worktree, ["merge-base", base_ref, remote_branch_ref])
+    local_has_extra = _cherry_has_unique_patch(
+        worktree, remote_branch_ref, "HEAD", base_ref
+    )
+    remote_has_extra = _cherry_has_unique_patch(
+        worktree, "HEAD", remote_branch_ref, remote_base
+    )
+    return not local_has_extra and not remote_has_extra
+
+
+def rebase_onto(worktree: Path, base_ref: str) -> None:
+    proc = subprocess.run(
+        ["git", "rebase", base_ref],
+        cwd=str(worktree),
+        env=_scrubbed_env(),
+        capture_output=True,
+        text=True,
+    )
+    if proc.returncode == 0:
+        return
+    subprocess.run(
+        ["git", "rebase", "--abort"],
+        cwd=str(worktree),
+        env=_scrubbed_env(),
+        capture_output=True,
+        text=True,
+    )
+    tail = proc.stderr.strip() or proc.stdout.strip() or f"git rebase {base_ref} failed"
+    raise SystemExit(f"git rebase {base_ref} failed and was aborted: {tail}")
+
+
+def prepare_continue_worktree(
+    canonical: Path,
+    worktree: Path,
+    branch: str,
+    base_branch: str,
+    *,
+    rebase: bool,
+) -> None:
+    run_git(canonical, ["fetch", "origin", MAIN_FETCH_REFSPEC])
+    run_git(
+        canonical,
+        ["fetch", "origin", f"+refs/heads/{branch}:refs/remotes/origin/{branch}"],
+    )
+    if base_branch != "main":
+        run_git(
+            canonical,
+            [
+                "fetch",
+                "origin",
+                f"+refs/heads/{base_branch}:refs/remotes/origin/{base_branch}",
+            ],
+        )
+    if worktree.exists():
+        ensure_existing_continue_worktree(worktree, branch)
+    elif branch_exists(canonical, branch):
+        run_git(canonical, ["worktree", "add", str(worktree), branch])
+    else:
+        run_git(
+            canonical,
+            [
+                "worktree",
+                "add",
+                "-b",
+                branch,
+                str(worktree),
+                f"refs/remotes/origin/{branch}",
+            ],
+        )
+    ensure_clean_worktree(worktree)
+    remote_branch_ref = f"refs/remotes/origin/{branch}"
+    base_ref = f"refs/remotes/origin/{base_branch}"
+    merge_error = try_ff_only_merge(worktree, remote_branch_ref)
+    remote_tip = git_output(worktree, ["rev-parse", remote_branch_ref])
+    head = git_output(worktree, ["rev-parse", "HEAD"])
+    rebased_equivalent = (
+        head != remote_tip
+        and rebase
+        and rebased_branch_matches_remote_patches(worktree, remote_branch_ref, base_ref)
+    )
+    if head != remote_tip and not rebased_equivalent:
+        detail = f": {merge_error}" if merge_error else ""
+        raise SystemExit(
+            f"worktree {worktree} is not at origin/{branch}{detail}; "
+            "refusing to continue without manual reconciliation"
+        )
+    if rebase:
+        rebase_onto(worktree, base_ref)
+        ensure_clean_worktree(worktree)
+
+
 def require_git_checkout(canonical: Path) -> None:
     """Refuse (exit 2) unless `canonical` is itself a git worktree root.
 
@@ -452,20 +879,26 @@ def _full_slot_payload(
     tier: str,
     session_id: str | None,
     pid: int,
+    *,
+    prs: list[int] | None = None,
+    mode: str | None = None,
 ) -> dict:
     # `slot` MUST equal the filename stem or scan_slots drops the entry. `prs: []` is the
     # dispatcher's empty starting point; the child (pr-pipeline SKILL.md) fills it in — the
     # overlay path below never lets this empty list clobber a fresher child claim.
-    return {
+    payload = {
         "slot": slug,
         "issues": issues,
-        "prs": [],
+        "prs": [] if prs is None else prs,
         "surface": surface,
         "tier": tier,
         "session": session_id,
         "pid": pid,
         "dispatched": datetime.now(UTC).isoformat(),
     }
+    if mode is not None:
+        payload["mode"] = mode
+    return payload
 
 
 def _write_or_overlay_slot(
@@ -510,6 +943,9 @@ def write_slot_file(
     tier: str,
     session_id: str | None,
     pid: int,
+    *,
+    prs: list[int] | None = None,
+    mode: str | None = None,
 ) -> None:
     """The dispatcher's initial ownership write, immediately after a successful launch.
 
@@ -519,8 +955,15 @@ def write_slot_file(
     fields and preserve the child's `issues`/`prs` (the same discipline as the session
     merge); if no valid slot exists yet we write the full payload. See _write_or_overlay_slot.
     """
-    payload = _full_slot_payload(slug, issues, surface, tier, session_id, pid)
-    _write_or_overlay_slot(slot_path, payload, _OWNERSHIP_FIELDS)
+    payload = _full_slot_payload(
+        slug, issues, surface, tier, session_id, pid, prs=prs, mode=mode
+    )
+    overlay_fields = _OWNERSHIP_FIELDS
+    if mode is not None:
+        overlay_fields += ("mode",)
+    if mode == "continue":
+        overlay_fields += ("prs",)
+    _write_or_overlay_slot(slot_path, payload, overlay_fields)
 
 
 def merge_session_into_slot(
@@ -531,21 +974,32 @@ def merge_session_into_slot(
     tier: str,
     session_id: str | None,
     pid: int,
+    *,
+    prs: list[int] | None = None,
+    mode: str | None = None,
 ) -> None:
     """Enrich the codex slot with its polled session id WITHOUT clobbering the child claim.
 
     Between the initial ownership write (write_slot_file) and the codex session id
     resolving (up to the poll ceiling), a fast child pipeline may already have registered
     drafts/PRs into the SAME slot file (see pr-pipeline SKILL.md). Its claim is fresher, so
-    we overlay ONLY the `session` field, preserving whatever `issues`/`prs`/other fields it
-    now carries. If the file vanished or is unreadable/invalid (torn write, someone deleted
+    we overlay only dispatcher-owned enrichment. Fresh lanes stamp just `session`; continue
+    lanes also restore their known `mode` and `prs: [<pr>]` claim so a child rewrite cannot
+    hide the in-flight PR from `live_slot_for_pr`. If the file vanished or is unreadable/invalid (torn write, someone deleted
     it), we fall back to rewriting the full ownership payload from our own known-good values
     — the slot must exist for the launched agent.
 
     Written atomically (temp + rename) via the shared leaf, same as the initial write.
     """
-    payload = _full_slot_payload(slug, issues, surface, tier, session_id, pid)
-    _write_or_overlay_slot(slot_path, payload, ("session",))
+    payload = _full_slot_payload(
+        slug, issues, surface, tier, session_id, pid, prs=prs, mode=mode
+    )
+    overlay_fields = ("session",)
+    if mode is not None:
+        overlay_fields += ("mode",)
+    if mode == "continue":
+        overlay_fields += ("prs",)
+    _write_or_overlay_slot(slot_path, payload, overlay_fields)
 
 
 def _child_env(state_root: Path) -> dict[str, str]:
@@ -651,12 +1105,30 @@ def dispatch(
     canonical = None if args.no_canonical_check else args.canonical
     _cos_preflight.require_canonical(canonical)
 
-    issues = parse_issues(args.issues)
     tier = args.tier
     # The tier picks the surface and its blessed pins; an explicit --surface can override
     # the surface (dropping the pins if it contradicts the tier). See resolve_profile.
     surface, profile_flags = resolve_profile(tier, args.surface)
-    slug = args.slug or default_slug(surface, issues)
+
+    continue_pr = getattr(args, "continue_pr", None)
+    brief_file = getattr(args, "brief_file", None)
+    no_rebase = bool(getattr(args, "no_rebase", False))
+    if continue_pr is None:
+        mode = "fresh"
+        issues = parse_issues(args.issues)
+        prs: list[int] = []
+        pr_branch = None
+        pr_base_branch = None
+        prompt = None
+        slug = args.slug or default_slug(surface, issues)
+    else:
+        mode = "continue"
+        issues = []
+        prs = [continue_pr]
+        pr_branch = None
+        pr_base_branch = None
+        prompt = None
+        slug = args.slug or default_continue_slug(surface, continue_pr)
     validate_slug(slug)
 
     state_root: Path = args.state_root
@@ -677,11 +1149,41 @@ def dispatch(
         print(f"no free slot budget: busy {busy}/{args.max_slots}")
         return 4
 
-    # 3. Collision — an existing slot file or worktree dir means a concurrent claim.
+    # 3. Collision — a slot for the same PR is already live, or the target slot exists.
+    if continue_pr is not None and (
+        existing_slot := live_slot_for_pr(slots_root, continue_pr)
+    ):
+        raise SystemExit(
+            f"PR #{continue_pr} is already claimed by live slot {existing_slot}"
+        )
     if slot_path.exists():
         raise SystemExit(f"slot collision: {slot_path} already exists")
-    if worktree.exists():
+    if mode == "fresh" and worktree.exists():
         raise SystemExit(f"worktree collision: {worktree} already exists")
+
+    if continue_pr is not None:
+        if args.dry_run:
+            # Dry-run is a no-network preview. Do not read PR body metadata here;
+            # live dispatch does the maintainer/same-repo/open/closing-ref gates before launch.
+            issues = []
+            prompt = dry_run_continuation_prompt(
+                surface, continue_pr, read_brief(brief_file)
+            )
+        else:
+            require_maintainer_authored([continue_pr])
+            pr_info = resolve_continue_pr(continue_pr)
+            issues = list(pr_info["issues"])
+            pr_branch = str(pr_info["branch"])
+            pr_base_branch = str(pr_info.get("base_branch") or "main")
+            prompt = continuation_prompt(
+                surface,
+                continue_pr,
+                issues,
+                pr_branch,
+                pr_base_branch,
+                read_brief(brief_file),
+                rebase=not no_rebase,
+            )
 
     # A pre-generated uuid is the claude session id (known before launch); codex's is
     # parsed from its JSONL log after launch.
@@ -694,6 +1196,7 @@ def dispatch(
         pre_session,
         profile_flags,
         args.canonical,
+        prompt=prompt,
     )
 
     if args.dry_run:
@@ -706,6 +1209,9 @@ def dispatch(
                     "slot_path": str(slot_path),
                     "surface": surface,
                     "tier": tier,
+                    "mode": mode,
+                    "issues": issues,
+                    "prs": prs,
                 },
                 indent=2,
             )
@@ -715,29 +1221,58 @@ def dispatch(
     # 3b. Author check — defense in depth: refuse to launch a pipeline on any issue that is
     # not maintainer-authored. Read-only network I/O, run BEFORE the first side effect (the
     # worktree). Deliberately AFTER the --dry-run return: dry-run promises zero side effects
-    # AND no network, and its check-only tests do not stub `gh` — so a live author lookup
-    # there would break that contract. Dry-run still surfaces the resolved argv/slot; the
-    # author gate is a launch-path guard, so gating it here loses nothing for the preview.
+    # AND no author-gate network, and its check-only tests do not stub `gh` — so a live
+    # author lookup there would break that contract. Dry-run still surfaces the resolved
+    # argv/slot; the author gate is a launch-path guard, so gating it here loses nothing
+    # for the preview. Continue mode checks the PR before resolving its body; here it checks
+    # the closing issues before the first side effect.
     require_maintainer_authored(issues)
 
-    # 4. Worktree — placeholder wt/<slug> branch off a freshly fetched origin/main.
+    # 4. Worktree — fresh mode creates a placeholder wt/<slug> branch off origin/main;
+    # continue mode materializes or reuses the PR branch and rebases it onto the PR base.
     canonical_repo: Path = args.canonical
     # Guard the mutating git ops: confirm canonical is a worktree ROOT so `git -C` can't
     # walk up into an unintended enclosing repo (see require_git_checkout).
     require_git_checkout(canonical_repo)
-    run_git(canonical_repo, ["fetch", "origin", "main"])
-    run_git(
-        canonical_repo,
-        ["worktree", "add", "-b", f"wt/{slug}", str(worktree), "origin/main"],
-    )
+    if mode == "fresh":
+        run_git(canonical_repo, ["fetch", "origin", MAIN_FETCH_REFSPEC])
+        run_git(
+            canonical_repo,
+            [
+                "worktree",
+                "add",
+                "-b",
+                f"wt/{slug}",
+                str(worktree),
+                "origin/main",
+            ],
+        )
+    else:
+        assert pr_branch is not None
+        assert pr_base_branch is not None
+        prepare_continue_worktree(
+            canonical_repo,
+            worktree,
+            pr_branch,
+            pr_base_branch,
+            rebase=not no_rebase,
+        )
 
     # 5. Launch detached, then health-check it survived the grace window. A launch failure
     # after the worktree exists (spawn OSError, log-setup OSError, or an instant child exit)
     # leaks only the worktree (named in the error for adjudication); NO slot file is written.
-    # Capture the pre-launch log offset FIRST so the codex-id poll parses only bytes THIS
-    # launch appends — a reused per-slug log from a prior dispatch mustn't yield a stale id.
-    log_offset = log_size(log_path)
+    # Append an explicit run sentinel FIRST and poll only from that byte offset, so both
+    # codex and plain-surface logs get a stable current-run boundary.
     try:
+        log_offset = append_run_sentinel(
+            log_path,
+            slug=slug,
+            issues=issues,
+            prs=prs,
+            surface=surface,
+            tier=tier,
+            mode=mode,
+        )
         pid = launch_detached(
             argv,
             worktree,
@@ -766,7 +1301,17 @@ def dispatch(
         pre_session  # claude: final; codex: null placeholder, enriched in step 7
     )
     try:
-        write_slot_file(slot_path, slug, issues, surface, tier, session_id, pid)
+        write_slot_file(
+            slot_path,
+            slug,
+            issues,
+            surface,
+            tier,
+            session_id,
+            pid,
+            prs=prs,
+            mode="continue" if mode == "continue" else None,
+        )
     except OSError as exc:
         raise SystemExit(
             f"slot write failed: {exc} — agent ALREADY LAUNCHED and now unrecorded "
@@ -776,9 +1321,9 @@ def dispatch(
         ) from exc
 
     # 7. Codex session id — poll the log (only bytes past log_offset) for the thread id,
-    # then MERGE it into the slot's `session` field without clobbering whatever the child
-    # pipeline may have written into issues/prs during the poll window (its claim is
-    # fresher). A merge-update failure AFTER a successful step-6 write is non-fatal: the
+    # then MERGE it into the slot's `session` field (and continue-owned mode/prs) without
+    # clobbering whatever else the child pipeline may have written during the poll window
+    # (its claim is fresher). A merge-update failure AFTER a successful step-6 write is non-fatal: the
     # slot exists (budget is accounted, the agent is recorded), only the session enrichment
     # failed — warn on stderr but still exit 0. claude's session is already final in step 6.
     if surface == "codex":
@@ -794,7 +1339,15 @@ def dispatch(
             )
         try:
             merge_session_into_slot(
-                slot_path, slug, issues, surface, tier, session_id, pid
+                slot_path,
+                slug,
+                issues,
+                surface,
+                tier,
+                session_id,
+                pid,
+                prs=prs,
+                mode="continue" if mode == "continue" else None,
             )
         except OSError as exc:
             print(
@@ -811,6 +1364,9 @@ def dispatch(
                 "worktree": str(worktree),
                 "surface": surface,
                 "tier": tier,
+                "mode": mode,
+                "issues": issues,
+                "prs": prs,
                 "session": session_id,
                 "pid": pid,
                 "log": str(log_path),
@@ -823,10 +1379,27 @@ def dispatch(
 
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument(
+    target = ap.add_mutually_exclusive_group(required=True)
+    target.add_argument(
         "--issues",
-        required=True,
         help="comma-separated issue numbers for the pr-pipeline lane, e.g. 1011,1012",
+    )
+    target.add_argument(
+        "--continue-pr",
+        type=int,
+        help="continue an existing same-repository PR branch instead of dispatching a "
+        "fresh lane from origin/main",
+    )
+    ap.add_argument(
+        "--brief-file",
+        type=Path,
+        default=None,
+        help="additional continuation instructions for --continue-pr",
+    )
+    ap.add_argument(
+        "--no-rebase",
+        action="store_true",
+        help="with --continue-pr, skip the default rebase onto the PR base branch",
     )
     ap.add_argument(
         "--tier",
