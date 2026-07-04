@@ -501,21 +501,28 @@ above** — including the pre-launch `running; started <ISO-8601>` intent stamp 
 `codex_bot` gate line and the sole-unmet-gate scope guard (only flip `status` when the
 Codex review was the sole missing item). What differs: from the throwaway worktree at
 the PR head, run
-`uv run --no-project python scripts/codex_local_review.py --base <base> --out <gate-dir>/codex-review.md`
-as a **backgrounded shell command** (its 30-min ceiling outlasts the foreground cap; let
-the tick end and the background task carries over), where `--base` is the PR's live
-`baseRefName` prefixed with `origin/` (e.g. `origin/main`, or the predecessor branch for
-a stacked successor) so the review diffs against the real PR base; the evidence file is
-`codex-review.md`. On a `clean` verdict (exit 0) set the `codex_bot` line (atomically)
-to the canonical clean form from the pr-pipeline gate.json template (with the head SHA
-and the `codex-review.md` evidence pointer). A `findings` verdict (exit 1, JSON
-`findings` list) is pipeline work, not fixable here: set `status: blocked` and route it.
-On exit 2, read `error.kind`: `usage_limit` you may record yourself as
-`exhausted (usage-limit)` and proceed when all other gates are complete; any
-non-`usage_limit` kind is a blocker — set `status: blocked` with the kind as `blocker`
-(kind list + semantics: AGENTS.md "PR merge gate") and route to the owning pipeline.
-Remove the scratch worktree when done. A retargeted stack successor needs the launcher
-re-run on its rebased head.
+`uv run --no-project python scripts/codex_local_review.py --base <base> --out <gate-dir>/codex-review.md`,
+where `--base` is the PR's live `baseRefName` prefixed with `origin/` (e.g.
+`origin/main`, or the predecessor branch for a stacked successor) so the review diffs
+against the real PR base; the evidence file is `codex-review.md`. Unlike the \~20-min
+`build_db` build, WAIT for this launcher (its 30-min internal ceiling) and record its
+verdict into `gate.json` (bump `updated`) in the SAME tick — recording the verdict
+completes the self-serve, and the launcher's own completion writes only
+`codex-review.md` + its stdout JSON with no `gate.json` byte-change, so nothing else
+would ever wake to convert `running` into the verdict. On a `clean` verdict (exit 0) set
+the `codex_bot` line (atomically) to the canonical clean form from the pr-pipeline
+gate.json template (with the head SHA and the `codex-review.md` evidence pointer). A
+`findings` verdict (exit 1, JSON `findings` list) is pipeline work, not fixable here:
+set `status: blocked` and route it. On exit 2, read `error.kind`: `usage_limit` you may
+record yourself as `exhausted (usage-limit)` and proceed when all other gates are
+complete; any non-`usage_limit` kind is a blocker — set `status: blocked` with the kind
+as `blocker` (kind list + semantics: AGENTS.md "PR merge gate") and route to the owning
+pipeline. Remove the scratch worktree when done. If the session dies before recording,
+the `running` stamp is the recovery marker: a later tick finding a `codex_bot` line
+stamped `running` with `started` older than the 30-min ceiling treats it as stale —
+finish from the existing `codex-review.md` + JSON if the run completed, else clear the
+stamp and re-run. A retargeted stack successor needs the launcher re-run on its rebased
+head.
 
 The GitHub Codex web integration remains enabled as an FYI-only shadow, not a gate
 input; there is no `@codex review` re-request or bot-signal poll.
