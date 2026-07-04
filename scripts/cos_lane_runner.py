@@ -823,7 +823,27 @@ def run_loop(
             canonical=canonical,
             profile_flags=profile_flags,
         )
-        run_codex_turn(resume_argv, worktree, log_path, state_root)
+        try:
+            run_codex_turn(resume_argv, worktree, log_path, state_root)
+        except SystemExit as exc:
+            # The resume turn failed to launch or exited nonzero. Unlike the IMPLEMENT turn
+            # (which fails before any PR/gate exists), the PR + gate_dir already exist here,
+            # so a bare propagation would exit WITHOUT refreshing codex_bot — leaving the
+            # agent's stale deferred line in gate.json. Record an accurate head-bound BLOCKED
+            # codex_bot line (every other terminal path writes one) and hand off, mirroring
+            # the session=None / cap-exhausted blocks. run_codex_turn encodes its SystemExit
+            # as `"<exit-code>:<message>"`; surface the message part as main() does.
+            code = exc.code
+            detail = (
+                code.partition(":")[2]
+                if isinstance(code, str) and ":" in code
+                else str(code)
+            )
+            head = _cos_dispatch.git_output(worktree, ["rev-parse", "HEAD"])
+            blocker = f"codex resume turn failed: {detail}"
+            write_codex_bot_gate(gate_dir, pr, head, blocking=True, blocker=blocker)
+            print(f"{blocker}; wrote status: blocked for PR #{pr}", file=sys.stderr)
+            return EXIT_NEEDS_HUMAN
 
     # Cap exhausted with findings still present: a clear needs-human block naming the cap.
     head = _cos_dispatch.git_output(worktree, ["rev-parse", "HEAD"])

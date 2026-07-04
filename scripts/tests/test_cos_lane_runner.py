@@ -984,6 +984,67 @@ def test_findings_then_resume_then_clean(
     assert gate["status"] == "ready-to-merge"
 
 
+def test_resume_turn_failure_records_blocked_and_needs_human(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # The resume `codex exec resume` turn can raise SystemExit (EXIT_TOOL-encoded) if it
+    # fails to launch or exits nonzero. Unlike the null-session path, the PR + gate_dir
+    # already exist here, so the loop must record a head-bound BLOCKED codex_bot line
+    # naming the resume failure and return EXIT_NEEDS_HUMAN — not propagate an unhandled
+    # SystemExit that exits with the agent's stale deferred codex_bot line intact.
+    wt = _make_worktree(tmp_path)
+    gate_root = tmp_path / "gate"
+    gate_dir = _write_gate(gate_root, 4242, other_gates_met=True)
+
+    def fail_on_resume(argv, worktree):
+        raise SystemExit(
+            f"{lr.EXIT_TOOL}:codex turn exited 1 (the turn did not complete); see log"
+        )
+
+    resume_calls = _patch_no_turns(monkeypatch, on_resume=fail_on_resume)
+    _patch_reviews(
+        monkeypatch,
+        [
+            {
+                "verdict": "findings",
+                "findings": [
+                    {
+                        "priority": "P1",
+                        "title": "t",
+                        "path": "f.txt",
+                        "line_start": 1,
+                        "line_end": 1,
+                        "body": "b",
+                    }
+                ],
+            }
+        ],
+    )
+
+    rc = _run_loop(
+        tmp_path,
+        worktree=wt,
+        base="origin/main",
+        gate_dir=gate_dir,
+        pr=4242,
+        slot_file=None,
+        session="SID-7",
+    )
+
+    assert rc == lr.EXIT_NEEDS_HUMAN
+    # The resume was attempted (and it raised) — this is the RESUME failure path, not
+    # the null-session one.
+    assert len(resume_calls) == 1
+    gate = _read_gate(gate_dir)
+    assert gate["status"] == "blocked"
+    assert "codex resume turn failed" in gate["blocker"]
+    # The exc detail (message part of the encoded SystemExit) is surfaced, not the code.
+    assert "the turn did not complete" in gate["blocker"]
+    # A head-bound BLOCKED codex_bot line for the CURRENT head, like every terminal path.
+    assert f"head {_head(wt)};" in gate["gates"]["codex_bot"]
+    assert "blocked" in gate["gates"]["codex_bot"]
+
+
 def test_cap_exhausted_with_findings_blocks(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
