@@ -158,7 +158,7 @@ function edgeYear(edge: ClassificationDagEdge): string | null {
 function edgeYearLeft(edge: ClassificationDagEdge): number {
   const sx = nodeLeft(edge.source) + NODE_W;
   const tx = nodeLeft(edge.target);
-  return sx + (tx - sx) / 2 - 24;
+  return sx + (tx - sx) / 2 - 17;
 }
 
 function edgeYearTop(edge: ClassificationDagEdge): number {
@@ -350,16 +350,17 @@ function editionLabel(node: ClassificationGraphNode): string {
   .edition-edge-year {
     position: absolute;
     z-index: 2;
-    min-width: 40px;
-    padding: 1px var(--space-1);
+    box-sizing: border-box;
+    width: 34px;
+    padding: 0 2px;
     border: 1px solid
       color-mix(in srgb, var(--viz-edge-succession) 35%, var(--border));
     border-radius: var(--radius-sm);
     background: var(--surface);
     color: var(--text-muted);
     font-family: var(--font-mono);
-    font-size: var(--text-xs);
-    line-height: 1.4;
+    font-size: var(--text-micro);
+    line-height: 1.25;
     text-align: center;
     pointer-events: none;
   }
