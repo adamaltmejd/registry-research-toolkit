@@ -498,16 +498,19 @@ trails the live head), self-serve it with the **same recipe as the build_db self
 above** — including the pre-launch `running; started <ISO>` intent stamp on the
 `codex_bot` gate line and the sole-unmet-gate scope guard (only flip `status` when the
 Codex review was the sole missing item). What differs: from the throwaway worktree run
-`uv run --no-project python scripts/codex_local_review.py --out <gate-dir>/codex-review.md`
-(background it — its 30-min ceiling outlasts the foreground cap), and the evidence file
-is `codex-review.md`. On a `clean` verdict set the `codex_bot` line (atomically) to the
-canonical clean form from the pr-pipeline gate.json template (with the head SHA and the
-`codex-review.md` evidence pointer). A `findings` verdict (exit 1) is pipeline work, not
-fixable here: set `status: blocked` and route it. On exit 2, `error.kind: usage_limit`
-you may record yourself as `exhausted (usage-limit)` and proceed when all other gates
-are complete; any non-`usage_limit` exit-2 kind is a blocker — set `status: blocked`
-with the kind as `blocker` (kind list + semantics: CLAUDE.md "PR merge gate") and route
-to the owning pipeline. Remove the scratch worktree when done.
+`uv run --no-project python scripts/codex_local_review.py --base <base> --out <gate-dir>/codex-review.md`
+(background it — its 30-min ceiling outlasts the foreground cap), where `--base` is the
+PR's live `baseRefName` prefixed with `origin/` (e.g. `origin/main`, or the predecessor
+branch for a stacked successor) so the review diffs against the real PR base; the
+evidence file is `codex-review.md`. On a `clean` verdict set the `codex_bot` line
+(atomically) to the canonical clean form from the pr-pipeline gate.json template (with
+the head SHA and the `codex-review.md` evidence pointer). A `findings` verdict (exit 1)
+is pipeline work, not fixable here: set `status: blocked` and route it. On exit 2,
+`error.kind: usage_limit` you may record yourself as `exhausted (usage-limit)` and
+proceed when all other gates are complete; any non-`usage_limit` exit-2 kind is a
+blocker — set `status: blocked` with the kind as `blocker` (kind list + semantics:
+CLAUDE.md "PR merge gate") and route to the owning pipeline. Remove the scratch worktree
+when done.
 
 ## Pipeline Follow-ups
 

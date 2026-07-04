@@ -420,8 +420,10 @@ without merging.
   unanswered. Review is iterative: if fixes introduce substantial new changes, run
   another round on the new diff — repeat until a round produces nothing material.
 - **Local Codex review** — after the review loop converges (above), run
-  **`uv run --no-project python scripts/codex_local_review.py --out <gate-dir>/codex-review.md`**
-  in the PR worktree on the final HEAD. **Launch it via Bash with `run_in_background:
+  **`uv run --no-project python scripts/codex_local_review.py --base origin/main --out <gate-dir>/codex-review.md`**
+  in the PR worktree on the final HEAD. `--base` is **required** — pass `origin/main` for
+  an independent PR; for a stacked successor pass the **predecessor branch** it targets
+  (so the review diffs against the real PR base, not main). **Launch it via Bash with `run_in_background:
   true`** — its internal 30-min ceiling outlasts the 10-min foreground Bash cap, so a
   foreground run risks being killed mid-review; the harness notifies on completion.
   `--out <gate-dir>/codex-review.md` lands the transcript straight in the merge-gate
@@ -441,9 +443,9 @@ without merging.
   shadow period but is **no longer a gate input** — its PR comments are FYI only. When a
   PR is otherwise merge-ready but this gate's `codex_bot` evidence is missing or stale
   (wrong head), the chief-of-staff self-serves it exactly like `build_db` — a throwaway
-  worktree at the PR head, `scripts/codex_local_review.py` run there with `--out` into
-  the gate store and `gate.json` refreshed — instead of routing a follow-up or asking the
-  user.
+  worktree at the PR head, `scripts/codex_local_review.py` run there with the PR's live
+  `baseRefName` (prefixed `origin/`) as `--base` and `--out` into the gate store, and
+  `gate.json` refreshed — instead of routing a follow-up or asking the user.
 - **Real-data validation** when build-pipeline or DB content changed: run a real-seed
   `reg-meta-build build-db` **on the PR head** (validation runs by default), not just
   fixture tests. The untracked seed lives only in the main checkout. From a worktree,

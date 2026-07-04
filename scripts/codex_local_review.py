@@ -14,8 +14,14 @@ Run from the PR worktree:
 
 It resolves `merge_base = git merge-base HEAD <base>` and invokes
 `codex review -c sandbox_mode="read-only" --base <merge_base_sha>`, capturing the codex
-transcript to `--out`. `--base` accepts a full SHA and is mutually exclusive with a
+transcript to `--out`. codex's `--base` accepts a full SHA and is mutually exclusive with a
 positional prompt, so no prompt is ever passed.
+
+`--base` is REQUIRED — the caller must pass the ref the PR actually targets (e.g.
+`origin/main`, or the predecessor branch for a stacked PR). There is no default: a
+defaulted `origin/main` would silently review the wrong diff for a stacked or non-main-based
+PR, producing merge-gate evidence against the wrong base — the same silent-wrong-base class
+the removed `origin/main → main` fallback was.
 
 The **codex CLI itself exits 0 even when it finds issues** — the transcript text is the
 only signal for the clean/findings split, so this script parses codex's stdout, not its
@@ -24,23 +30,27 @@ transcript is a hard failure surfaced here as **exit 2** with a classified error
 silent false `clean`.
 
 Transcript shapes (verified live, codex-cli 0.142.5):
-  findings — a `Full review comments:` line, then entries of the form
+  findings — a findings header line — either `Full review comments:` (multi-finding form)
+             or `Review comment:` (singular form codex emits for a single finding) — then
+             entries of the form
              `- [P1] Title text — /abs/or/rel/path.py:13-13` (line range `NN` or `NN-MM`),
              each followed by indented body lines until the next `- [P` entry or the end.
-  clean    — a prose final message with NO `Full review comments:` header (an empty diff
-             prints e.g. "The diff against the requested base is empty…"; a reviewed-clean
-             diff is prose too).
+             The parser accepts EITHER header exactly; the first line matching either is
+             the header.
+  clean    — a prose final message with NO findings header (an empty diff prints e.g.
+             "The diff against the requested base is empty…"; a reviewed-clean diff is
+             prose too).
 
 stdout and stderr are captured separately: only stdout is parsed, and the evidence file is
 stdout followed by a `--- stderr ---` delimited section (when stderr is non-empty), so a
 stderr marker or trailing stderr can neither create a phantom finding nor blind the
 no-header drift guard.
 
-Format-drift guard (fail fast rather than report a false `clean`): a `Full review
-comments:` header present but zero findings parse, a header whose parsed `- [P` line count
-disagrees with the findings list (a separator variant silently absorbed), OR the header
-absent but a `- [P` line appears after the last `codex` message marker — all exit 2 with
-kind `format_drift`.
+Format-drift guard (fail fast rather than report a false `clean`): a findings header
+present but zero findings parse, a header whose parsed `- [P` line count disagrees with
+the findings list (a separator variant silently absorbed), OR the header absent but a
+`- [P` line appears after the last `codex` message marker — all exit 2 with kind
+`format_drift`.
 
 Output: one JSON object on stdout. On success —
   {"head", "base", "merge_base", "verdict": "clean"|"findings",
@@ -86,8 +96,10 @@ from typing import Any
 # title/path split is on the LAST em dash so a title containing " — " keeps its text and
 # the trailing `path:line[-line]` is the path. Codex emits an em dash (— U+2014) here.
 FINDING_RE = re.compile(r"^- \[(P\d)\] (.+) — (.+?):(\d+)(?:-(\d+))?$")
-# The header that precedes the findings block in codex's final message.
-FINDINGS_HEADER = "Full review comments:"
+# The header(s) that precede the findings block in codex's final message. codex-cli 0.142.5
+# emits `Full review comments:` for multiple findings and the singular `Review comment:` for
+# exactly one — accept either (first line matching either is the header).
+FINDINGS_HEADERS = ("Full review comments:", "Review comment:")
 # codex prints a bare `codex` line as the marker before each of its own messages; the final
 # message (verdict) is the tail after the LAST such marker.
 CODEX_MARKER = "codex"
@@ -333,15 +345,17 @@ def parse_transcript(transcript: str, *, worktree_root: Path) -> dict[str, Any]:
 
     Returns {"verdict": "clean"|"findings", "findings": [...]}. Raises PreconditionError
     (kind format_drift → exit 2) when the transcript's header/finding shape is inconsistent:
-    a `Full review comments:` header with zero parsable findings, a header whose count of
-    `- [P` lines disagrees with the parsed findings list (a separator variant — en dash,
-    plain hyphen — silently absorbed into the previous finding's body and dropped), or a
-    `- [P` line after the last `codex` marker with no header. Each would otherwise let a
-    false `clean` (or a dropped finding) through.
+    a findings header (`Full review comments:` or the singular `Review comment:`) with zero
+    parsable findings, a header whose count of `- [P` lines disagrees with the parsed
+    findings list (a separator variant — en dash, plain hyphen — silently absorbed into the
+    previous finding's body and dropped), or a `- [P` line after the last `codex` marker with
+    no header. Each would otherwise let a false `clean` (or a dropped finding) through.
     """
     lines = transcript.splitlines()
+    # The first line matching EITHER accepted header is the findings header (if both ever
+    # appear, first wins — treated equivalently).
     header_idx = next(
-        (i for i, line in enumerate(lines) if line.strip() == FINDINGS_HEADER), None
+        (i for i, line in enumerate(lines) if line.strip() in FINDINGS_HEADERS), None
     )
 
     findings: list[dict[str, Any]] = []
@@ -378,8 +392,8 @@ def parse_transcript(transcript: str, *, worktree_root: Path) -> dict[str, Any]:
         _close(current)
         if not findings:
             raise PreconditionError(
-                "format drift: 'Full review comments:' header present but no findings "
-                "parsed — inspect the transcript",
+                "format drift: findings header present but no findings parsed — inspect "
+                "the transcript",
                 kind=KIND_FORMAT_DRIFT,
             )
         # Every `- [P…` line under the header must have parsed as a finding. A count
@@ -407,8 +421,8 @@ def parse_transcript(transcript: str, *, worktree_root: Path) -> dict[str, Any]:
     for line in lines[last_marker + 1 :]:
         if line.lstrip().startswith("- [P"):
             raise PreconditionError(
-                "format drift: a '- [P…]' finding line appears with no "
-                f"'{FINDINGS_HEADER}' header — inspect the transcript",
+                "format drift: a '- [P…]' finding line appears with no findings header "
+                "('Full review comments:' or 'Review comment:') — inspect the transcript",
                 kind=KIND_FORMAT_DRIFT,
             )
     return {"verdict": "clean", "findings": []}
@@ -466,9 +480,10 @@ def main(argv: list[str] | None = None) -> int:
     )
     ap.add_argument(
         "--base",
-        default="origin/main",
-        help="base ref to diff against (default origin/main); any unresolvable base is a "
-        "hard error — no fallback (a stale local main would be a silent-wrong-base review)",
+        required=True,
+        help="base ref the PR targets (e.g. origin/main, or the predecessor branch for a "
+        "stacked PR) — required so merge-gate evidence can never be produced against the "
+        "wrong base; any unresolvable base is a hard error (no fallback)",
     )
     ap.add_argument(
         "--out",

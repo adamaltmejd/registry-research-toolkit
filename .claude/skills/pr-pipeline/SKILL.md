@@ -268,8 +268,10 @@ independent review converged (your `/code-review` loop is the independent Claude
 CI green · local Codex review clean · real-data validation for build-affecting work ·
 **visual verification (clean `/reg-webapp-design-reviewer` result with screenshot/render
 proof) for UI changes** · stale-head check. For the Codex review, run
-**`uv run --no-project python scripts/codex_local_review.py --out <gate-dir>/codex-review.md`**
-in the PR worktree on the converged HEAD. Operate it like this:
+**`uv run --no-project python scripts/codex_local_review.py --base origin/main --out <gate-dir>/codex-review.md`**
+in the PR worktree on the converged HEAD (`--base` is **required**: pass `origin/main`
+for an independent PR; for a stacked successor pass the **predecessor branch** it
+targets so the review diffs against the real PR base, not main). Operate it like this:
 
 - **Launch it via Bash with `run_in_background: true`.** Its internal 30-min ceiling
   outlasts the 10-min foreground Bash cap, so a foreground run risks the tool call being

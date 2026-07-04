@@ -5,7 +5,8 @@ codex launch leaf (`run_codex`) is never invoked against the real binary — tes
 `subprocess.Popen` it drives. Fixtures below are captured from live runs (codex-cli
 0.142.5). Load-bearing regressions:
   - a findings transcript parses priorities, single + span line ranges, abs-path
-    normalization, and multi-line bodies attached to the right finding;
+    normalization, and multi-line bodies attached to the right finding, under BOTH the
+    `Full review comments:` (multi) and singular `Review comment:` (one-finding) headers;
   - a clean (no-header) transcript reads clean;
   - format drift (header with no parsable findings; a header whose `- [P` count disagrees
     with the parsed findings; `[P10]`; a `- [P` line with no header) fails fast (exit 2,
@@ -56,6 +57,21 @@ The diff against the requested base is empty, so there are no introduced code ch
 flag.
 """
 
+# codex-cli 0.142.5 emits the SINGULAR `Review comment:` header (no "Full") when there is
+# exactly one finding. Captured live from a real single-finding review.
+SINGLE_FINDING_TRANSCRIPT = f"""\
+codex
+The local Codex review launcher and instructions default to origin/main, which produces \
+incorrect merge-gate review evidence for stacked or non-main-based PRs.
+
+Review comment:
+
+- [P2] Require callers to pass the PR base — {WORKTREE}/scripts/codex_local_review.py:468-470
+  When the PR is stacked or otherwise targets a non-main base, every documented caller \
+that omits `--base` falls back here, so the launcher reviews \
+`merge-base(HEAD, origin/main)..HEAD` instead of the actual PR diff.
+"""
+
 
 # --- parse_transcript: findings ------------------------------------------------------
 
@@ -67,6 +83,22 @@ def test_findings_transcript_parses_both_findings() -> None:
     assert [f["priority"] for f in out["findings"]] == ["P1", "P2"]
     assert out["findings"][0]["title"] == "Remove the temporary probe before merging"
     assert out["findings"][1]["title"] == "Fix rolling_mean's shared default output"
+
+
+def test_single_finding_review_comment_header_parses() -> None:
+    # The SINGULAR `Review comment:` header (codex's one-finding form) must parse the same
+    # as `Full review comments:`: one P2 finding, repo-relative path, body attached.
+    out = clr.parse_transcript(SINGLE_FINDING_TRANSCRIPT, worktree_root=WORKTREE)
+
+    assert out["verdict"] == "findings"
+    assert len(out["findings"]) == 1
+    finding = out["findings"][0]
+    assert finding["priority"] == "P2"
+    assert finding["title"] == "Require callers to pass the PR base"
+    assert finding["path"] == "scripts/codex_local_review.py"
+    assert finding["line_start"] == 468
+    assert finding["line_end"] == 470
+    assert finding["body"].startswith("When the PR is stacked")
 
 
 def test_findings_paths_are_repo_relative() -> None:
@@ -512,6 +544,20 @@ def test_main_error_exits_2_and_emits_error_json(
     payload = clr.json.loads(captured.out)
     assert payload["verdict"] == "error"
     assert payload["error"]["kind"] == clr.KIND_USAGE_LIMIT
+
+
+def test_main_missing_base_is_argparse_error(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    # --base is REQUIRED (no default): omitting it must be an argparse error, never a
+    # silent review against a defaulted base. review() must never even be reached.
+    monkeypatch.setattr(
+        clr, "review", lambda **_k: pytest.fail("review() must not run without --base")
+    )
+
+    with pytest.raises(SystemExit) as e:
+        clr.main([])
+    assert e.value.code == 2  # argparse usage error
 
 
 def test_main_uncaught_oserror_exits_2_as_tool_failure(
