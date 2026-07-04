@@ -1232,14 +1232,14 @@ that fills the shell: `binding` → `BindingLeafView`, `classification` →
 
 Per-kind mapping into the six sections:
 
-  | Section       | Variable (`BindingLeafView`)                                                                            | Classification (`ClassificationLeafView`) | Concept group (`ConceptGroupView`)                                                                             |
-  | ------------- | ------------------------------------------------------------------------------------------------------- | ----------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
-  | description   | definition / description / unit `<dl>` + `via_same_as` note                                             | short name `<dl>`                         | shared definition/description (when members agree — #678/#900) above Technical details (key / facets / source) |
-  | picker        | `PeriodPicker` (time) + `RepresentationPicker` (list or graph/time-band) + add-to-project               | — (#906 adds the compact edition DAG)     | `PeriodPicker` (availability lens) + `RepresentationPicker` (list or graph/time-band)                          |
-  | value / codes | codings (`ValueSetView` (#905), each distinct value set via `CodeList`)                                 | `ClassificationCodesPanel` (`CodeList`)   | —                                                                                                              |
-  | relationships | `HistoryGraph` (succession/group context) + `LineageDetails` (provenance/warnings)                      | `HistoryGraph`                            | — (members live in the picker)                                                                                 |
-  | docs          | `DocMentionsPanel`                                                                                      | —                                         | —                                                                                                              |
-  | technical     | one bottom `TechnicalDetails` disclosure (sensitive / identifier, plus single-state data type / column) | —                                         | —                                                                                                              |
+  | Section       | Variable (`BindingLeafView`)                                                                            | Classification (`ClassificationLeafView`)                        | Concept group (`ConceptGroupView`)                                                                             |
+  | ------------- | ------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+  | description   | definition / description / unit `<dl>` + `via_same_as` note                                             | short name `<dl>`                                                | shared definition/description (when members agree — #678/#900) above Technical details (key / facets / source) |
+  | picker        | `PeriodPicker` (time) + `RepresentationPicker` (list or graph/time-band) + add-to-project               | `ClassificationEditionGraph` compact edition DAG (#906)          | `PeriodPicker` (availability lens) + `RepresentationPicker` (list or graph/time-band)                          |
+  | value / codes | codings (`ValueSetView` (#905), each distinct value set via `CodeList`)                                 | `ClassificationCodesPanel` (`CodeList`)                          | —                                                                                                              |
+  | relationships | `HistoryGraph` (succession/group context) + `LineageDetails` (provenance/warnings)                      | derived classification links; edition succession lives in picker | — (members live in the picker)                                                                                 |
+  | docs          | `DocMentionsPanel`                                                                                      | —                                                                | —                                                                                                              |
+  | technical     | one bottom `TechnicalDetails` disclosure (sensitive / identifier, plus single-state data type / column) | —                                                                | —                                                                                                              |
 
 **#670 — member identity and fetch ownership.** For a grouped variable,
 `BindingLeafView` renders a member-distinguishing qualifier (facet labels, e.g. "AGI ·
@@ -1266,10 +1266,11 @@ kind:
   — it auto-splits into one source per segment — so the selector is invisible for an
   unambiguous variable.
 
-- **Classification** — editions (`sun1996` → `sun2000` → …) are the slice, but there is
-  **deliberately no picker yet**. The standalone `HistoryGraph` remains the current
-  rendered succession surface for classification leaves; #906 owns any future compact
-  non-timeline edition DAG inside the picker surface.
+- **Classification** — editions (`sun1996` → `sun2000` → …) are the slice. The
+  `ClassificationEditionGraph` (#906) renders the `/graph` succession chain as a compact
+  non-timeline DAG in the picker section: topology gives the horizontal order, branches
+  open rows only within the affected rank, and edition cards navigate to non-current
+  catalog leaves. It is read-only for now, not an add-to-project control.
 
 - **Concept group** — the **column / representation picker** (`RepresentationPicker`,
   #678): one compact band per member variable, each listing that variable's delivery
@@ -1421,8 +1422,8 @@ time axis; each cell maps back to a selectable picker row by variant + delivery 
 including #902's folded rename rows when that mapping is one-to-one. Succession edges
 draw on the left rail; `LineageDetails` carries the variable-only non-graph residue
 (`variable_state_lineage` provenance edges + `/lineage_warnings`). The standalone
-`HistoryGraph` remains the authoritative rendered graph context for leaf history,
-including no-column variables and classification succession.
+`HistoryGraph` remains the authoritative rendered graph context for variable leaf
+history, including no-column variables.
 
 ### Rejected alternatives + the viz-dependency trigger (#667 spike)
 

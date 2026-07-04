@@ -2,19 +2,17 @@
 import { type ClassificationNodeData, getBindingGraph } from "./api";
 import { asyncResource } from "./async.svelte";
 import ClassificationCodesPanel from "./ClassificationCodesPanel.svelte";
+import ClassificationEditionGraph from "./ClassificationEditionGraph.svelte";
 import { catalogHref, nodeLabel } from "./catalog";
-import HistoryGraph from "./HistoryGraph.svelte";
 import SubjectView from "./SubjectView.svelte";
 
 // The classification LEAF — a standard ("Utbildningsnivå") rendered through the
 // unified SubjectView shell (#638 PR1). The node EMBEDS its codes, so the codes
-// panel renders synchronously. The relationships surface is the #678 unified
-// history graph over the relationship-graph contract (#761/#792): the route serves
-// classification leaves now (`getBindingGraph(node.fqid)` dispatches on FQID kind),
-// and the renderer draws editions as version-ordered points with succession edges.
-// No period picker yet (an edition picker is a later PR), and no docs surface
-// (classifications carry no doc mentions), so those two SubjectView sections are
-// omitted. No LineageDetails here either — classifications carry no lineage/warnings.
+// panel renders synchronously. The picker surface owns the compact classification
+// edition DAG (#906) over the relationship-graph contract (#761/#792); it is
+// navigational/read-only for now, not an add-to-project picker. No period picker,
+// docs surface, or LineageDetails here — classifications carry no study-window or
+// lineage/warnings.
 let { node }: { node: ClassificationNodeData } = $props();
 
 // The relationship graph for this classification edition (#678). Its OWN failure
@@ -47,9 +45,16 @@ function classRefHref(ref: { fqid: string | null; slug: string }): string {
   <ClassificationCodesPanel {node} />
 {/snippet}
 
-<!-- #678: the unified history graph — editions as version-ordered points
-     (succession edges, Fork B group clusters). Omits itself on an empty graph or while
-     the fetch is unresolved/errored (its own failure domain). -->
+<!-- #906: a compact non-timeline edition DAG in the picker slot. Omits itself on an
+     empty graph or while the fetch is unresolved/errored (its own failure domain). -->
+{#snippet picker()}
+  {#if graphReady && graph}
+    <ClassificationEditionGraph {graph} />
+  {/if}
+{/snippet}
+
+<!-- Non-temporal classification derivation links live in the relationships slot;
+     temporal succession stays in the compact picker graph above. -->
 {#snippet relationships()}
   {#if hasDerivedRefs}
     <section
@@ -91,15 +96,13 @@ function classRefHref(ref: { fqid: string | null; slug: string }): string {
       {/if}
     </section>
   {/if}
-  {#if graphReady && graph}
-    <HistoryGraph {graph} />
-  {/if}
 {/snippet}
 
 <SubjectView
   title={nodeLabel(node)}
   fqid={node.fqid}
   {description}
+  {picker}
   {valueSet}
   {relationships}
 />

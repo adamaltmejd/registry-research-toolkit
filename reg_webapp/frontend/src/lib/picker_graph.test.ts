@@ -9,6 +9,7 @@ import {
   axisTicks,
   cellsOf,
   clampCellsToScale,
+  classificationDagLayout,
   clustersOf,
   resolveEdges,
   type YearScale,
@@ -542,5 +543,102 @@ describe("resolveEdges", () => {
     expect(resolved).toHaveLength(1);
     expect(resolved[0].source.id).toBe("a");
     expect(resolved[0].target.id).toBe("b");
+  });
+});
+
+describe("classificationDagLayout — compact edition DAG (#906)", () => {
+  it("lays a linear succession chain out as one compact row", () => {
+    const older = classificationNode({
+      id: "sun1996",
+      version_year: 1996,
+      is_current: false,
+    });
+    const newer = classificationNode({
+      id: "sun2020",
+      version_year: 2020,
+      is_current: true,
+    });
+    const graph: RelationshipGraph = {
+      nodes: [newer, older],
+      edges: [
+        {
+          id: "sun1996-sun2020",
+          kind: "succession",
+          source: "sun1996",
+          target: "sun2020",
+          label: null,
+        },
+      ],
+      focus_id: "sun2020",
+    };
+    const cluster = clustersOf(graph)[0];
+    const points = cluster.nodes.filter((n) => n.kind === "classification");
+    const layout = classificationDagLayout(points, resolveEdges(graph));
+
+    expect(layout.rows).toBe(1);
+    expect(layout.columns).toBe(2);
+    expect(
+      layout.nodes.map((node) => [node.point.node.id, node.column, node.row]),
+    ).toEqual([
+      ["sun1996", 0, 0],
+      ["sun2020", 1, 0],
+    ]);
+    expect(layout.edges.map((edge) => edge.edge.id)).toEqual([
+      "sun1996-sun2020",
+    ]);
+  });
+
+  it("opens rows only for branching ranks, preserving edition order", () => {
+    const base = classificationNode({
+      id: "base",
+      label: "Base",
+      version_year: 1990,
+      is_current: false,
+    });
+    const branchA = classificationNode({
+      id: "branch-a",
+      label: "Branch A",
+      version_year: 2000,
+      is_current: false,
+    });
+    const branchB = classificationNode({
+      id: "branch-b",
+      label: "Branch B",
+      version_year: 2001,
+      is_current: false,
+    });
+    const graph: RelationshipGraph = {
+      nodes: [branchB, base, branchA],
+      edges: [
+        {
+          id: "base-a",
+          kind: "succession",
+          source: "base",
+          target: "branch-a",
+          label: null,
+        },
+        {
+          id: "base-b",
+          kind: "succession",
+          source: "base",
+          target: "branch-b",
+          label: null,
+        },
+      ],
+      focus_id: "branch-a",
+    };
+    const cluster = clustersOf(graph)[0];
+    const points = cluster.nodes.filter((n) => n.kind === "classification");
+    const layout = classificationDagLayout(points, resolveEdges(graph));
+
+    expect(layout.rows).toBe(2);
+    expect(layout.columns).toBe(2);
+    expect(
+      layout.nodes.map((node) => [node.point.node.id, node.column, node.row]),
+    ).toEqual([
+      ["base", 0, 0],
+      ["branch-a", 1, 0],
+      ["branch-b", 1, 1],
+    ]);
   });
 });
