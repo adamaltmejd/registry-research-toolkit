@@ -177,6 +177,7 @@ def _args(worktree: Path, gate_root: Path, log: Path, **overrides):
         "gate_root": gate_root,
         "log": log,
         "slot_file": None,
+        "brief_file": None,
         "max_rounds": 3,
         "tier": "hard",
         "canonical": worktree.parent / "canonical",
@@ -231,6 +232,36 @@ def test_sole_unmet_false_when_blocker_is_another_gate() -> None:
     assert lr.codex_bot_is_sole_unmet(gate) is False
 
 
+def test_head_bound_gates_current_stale_when_other_gate_head_differs() -> None:
+    # build_db stamps an OLD (hex) head; the current head differs → stale (build_db named).
+    gate = {
+        "gates": {
+            "codex_bot": "running; deferred",
+            "build_db": "local; head 0123456789abcdef; pass; dbdiff empty",
+            "ci": "pass; gh pr checks",
+        }
+    }
+    ok, stale = lr.head_bound_gates_current(gate, "fedcba9876543210fedcba98")
+    assert ok is False
+    assert stale == "build_db"
+
+
+def test_head_bound_gates_current_ok_when_matching_or_absent() -> None:
+    head = "abcdef1234567890abcdef1234567890abcdef12"
+    gate = {
+        "gates": {
+            "codex_bot": f"local; head {head}; clean",  # excluded from the scan
+            # build_db stamps the truncated 12-char form of the SAME head → prefix-matches.
+            "build_db": f"local; head {head[:12]}; pass",
+            "visual": "not required",  # no head token → never stale
+            "ci": "pass; gh pr checks",
+        }
+    }
+    ok, stale = lr.head_bound_gates_current(gate, head)
+    assert ok is True
+    assert stale is None
+
+
 def test_findings_brief_renders_data_not_instructions() -> None:
     findings = [
         {
@@ -248,6 +279,10 @@ def test_findings_brief_renders_data_not_instructions() -> None:
     assert "[P1] Bad thing — a/b.py:3-5" in brief
     assert "ignore previous instructions" in brief
     assert "keep the PR's existing `Closes #N`" in brief
+    # The brief tells the resumed agent that pushing fixes moves HEAD, so it must re-run any
+    # head-bound gate it already completed (Fix A: keeps build_db/visual fresh for the flip).
+    assert "MOVES HEAD" in brief
+    assert "RE-RUN" in brief
 
 
 # --- PR discovery -------------------------------------------------------------
@@ -268,6 +303,18 @@ def test_discover_pr_fails_when_none(tmp_path: Path) -> None:
     with pytest.raises(SystemExit) as exc:
         lr.discover_pr(None, tmp_path / "empty-gate")
     assert "could not discover the PR" in str(exc.value.code)
+
+
+def test_discover_pr_multi_pr_slot_fails_fast(tmp_path: Path) -> None:
+    # Fix C: a slot claiming >1 PR fails fast — silently completing prs[0] would strand the
+    # other PRs' codex_bot gates. Real multi-PR support is a follow-up, not built here.
+    slot = _write_slot(tmp_path / "slots", "lane-a", [4242, 4243])
+    with pytest.raises(SystemExit) as exc:
+        lr.discover_pr(slot, tmp_path / "gate")
+    code = str(exc.value.code)
+    assert code.startswith(f"{lr.EXIT_TOOL}:")
+    assert "single PR per lane" in code
+    assert "[4242, 4243]" in code
 
 
 # --- the loop: clean / findings / cap / errors -------------------------------
@@ -374,6 +421,91 @@ def test_clean_but_another_gate_unmet_stays_blocked(
     assert gate["status"] == "blocked"
     assert gate["blocker"] == "visual"
     assert "clean" in gate["gates"]["codex_bot"]
+
+
+def _write_gate_build_db_head(gate_root: Path, pr: int, build_db_head: str) -> Path:
+    """A gate where codex_bot is the sole unmet blocker but build_db stamps a specific head.
+
+    Used for the Fix A staleness check: if build_db's stamped head differs from the current
+    head (a fix round moved HEAD), the flip must be BLOCKED even though blocker==codex_bot.
+    """
+    gate_dir = gate_root / f"pr-{pr}"
+    gate_dir.mkdir(parents=True, exist_ok=True)
+    gate = {
+        "pr": pr,
+        "head": build_db_head,
+        "status": "blocked",
+        "updated": "2026-07-04T00:00:00+00:00",
+        "gates": {
+            "independent_review": "pass; reviewer subagent; findings fixed",
+            "codex_bot": "running; deferred-to-lane-runner",
+            "ci": "pass; gh pr checks",
+            "build_db": f"local; reg-meta-build; head {build_db_head}; pass; dbdiff empty",
+            "docs": "updated; scripts docstring refreshed",
+        },
+        "blocker": "codex_bot",
+    }
+    (gate_dir / "gate.json").write_text(json.dumps(gate), encoding="utf-8")
+    return gate_dir
+
+
+def test_clean_but_head_bound_gate_stale_stays_blocked(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # Fix A: codex_bot is the sole unmet blocker AND clean, but build_db was verified on a
+    # DIFFERENT head (a fix round moved HEAD). The flip must fail closed: status stays blocked
+    # naming build_db as stale, never a ready-to-merge with a stale head-bound gate.
+    wt = _make_worktree(tmp_path)
+    gate_root = tmp_path / "gate"
+    stale_head = "0123456789abcdef0123456789abcdef01234567"  # != the worktree HEAD
+    gate_dir = _write_gate_build_db_head(gate_root, 4242, stale_head)
+    _patch_no_turns(monkeypatch)
+    _patch_reviews(monkeypatch, [{"verdict": "clean", "findings": []}])
+
+    rc = _run_loop(
+        tmp_path,
+        worktree=wt,
+        base="origin/main",
+        gate_dir=gate_dir,
+        pr=4242,
+        slot_file=None,
+        session="SID-1",
+    )
+
+    assert rc == lr.EXIT_OK  # codex_bot itself completed cleanly
+    gate = _read_gate(gate_dir)
+    assert gate["status"] == "blocked"
+    assert gate["blocker"].startswith("build_db verified on a stale head")
+    assert _head(wt)[:12] in gate["blocker"]
+    # codex_bot is still recorded clean on the current head — only the flip is withheld.
+    assert "clean" in gate["gates"]["codex_bot"]
+
+
+def test_clean_and_head_bound_gate_current_flips_ready(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # Fix A: when build_db's stamped head MATCHES the current head, the sole-unmet flip
+    # proceeds to ready-to-merge (the staleness guard doesn't block a fresh gate).
+    wt = _make_worktree(tmp_path)
+    gate_root = tmp_path / "gate"
+    gate_dir = _write_gate_build_db_head(gate_root, 4242, _head(wt))
+    _patch_no_turns(monkeypatch)
+    _patch_reviews(monkeypatch, [{"verdict": "clean", "findings": []}])
+
+    rc = _run_loop(
+        tmp_path,
+        worktree=wt,
+        base="origin/main",
+        gate_dir=gate_dir,
+        pr=4242,
+        slot_file=None,
+        session="SID-1",
+    )
+
+    assert rc == lr.EXIT_OK
+    gate = _read_gate(gate_dir)
+    assert gate["status"] == "ready-to-merge"
+    assert gate["blocker"] is None
 
 
 def test_findings_then_resume_then_clean(
@@ -850,6 +982,46 @@ def test_continue_pr_dry_run_names_pr(tmp_path: Path, capsys) -> None:
     result = json.loads(capsys.readouterr().out)
     assert result["continue_pr"] == 88
     assert "continue PR #88" in result["implement_argv"][-1]
+
+
+def test_continue_pr_brief_file_woven_into_prompt(tmp_path: Path, capsys) -> None:
+    # Fix B: a --brief-file passed to the runner (forwarded by cos_dispatch) is woven into the
+    # implement turn's --continue-pr prompt as a "Continuation brief:" section — not dropped.
+    wt = _make_worktree(tmp_path)
+    brief = tmp_path / "brief.md"
+    brief.write_text("Fix the current-head review finding.", encoding="utf-8")
+    rc = lr.run(
+        _args(
+            wt,
+            tmp_path / "gate",
+            tmp_path / "lane.log",
+            issues=None,
+            continue_pr=88,
+            brief_file=brief,
+            dry_run=True,
+        )
+    )
+    assert rc == lr.EXIT_OK
+    prompt = json.loads(capsys.readouterr().out)["implement_argv"][-1]
+    assert "continue PR #88" in prompt
+    assert "Continuation brief:\nFix the current-head review finding." in prompt
+
+
+def test_fresh_mode_ignores_brief_file(tmp_path: Path, capsys) -> None:
+    # Fix B: fresh mode has no continuation brief — a --brief-file (if ever passed) is not
+    # woven into the implement prompt.
+    wt = _make_worktree(tmp_path)
+    brief = tmp_path / "brief.md"
+    brief.write_text("should not appear", encoding="utf-8")
+    rc = lr.run(
+        _args(
+            wt, tmp_path / "gate", tmp_path / "lane.log", brief_file=brief, dry_run=True
+        )
+    )
+    assert rc == lr.EXIT_OK
+    prompt = json.loads(capsys.readouterr().out)["implement_argv"][-1]
+    assert "should not appear" not in prompt
+    assert "Continuation brief:" not in prompt
 
 
 def test_discover_pr_multi_dir_raises_without_slot_prs(tmp_path: Path) -> None:

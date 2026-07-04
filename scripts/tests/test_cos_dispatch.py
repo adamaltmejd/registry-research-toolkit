@@ -1233,7 +1233,43 @@ def test_continue_pr_dry_run_lane_runner_argv(
     assert argv[argv.index("--continue-pr") + 1] == "4242"
     assert argv[argv.index("--base") + 1] == "origin/main"
     assert "--issues" not in argv
+    # No --brief-file was passed, so it is absent from the runner argv.
+    assert "--brief-file" not in argv
     assert not (canonical / ".claude" / "worktrees" / "continue-codex-pr-4242").exists()
+    _no_real_launch(tmp_path)
+
+
+def test_continue_pr_lane_runner_argv_forwards_brief_file(
+    tmp_path: Path, capsys, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # Fix B: a --brief-file on a codex continue dispatch is forwarded to the runner argv so the
+    # operator's brief reaches the runner's --continue-pr prompt instead of being dropped.
+    canonical = _make_origin(tmp_path)
+    brief = tmp_path / "brief.md"
+    brief.write_text("Fix the current-head review finding.", encoding="utf-8")
+
+    def should_not_resolve(_pr: int) -> None:
+        raise AssertionError("dry-run read PR metadata")
+
+    monkeypatch.setattr(cd, "resolve_continue_pr", should_not_resolve)
+
+    rc = cd.dispatch(
+        _args(
+            tmp_path,
+            canonical,
+            issues=None,
+            continue_pr=4242,
+            brief_file=brief,
+            dry_run=True,
+        )
+    )
+
+    assert rc == 0
+    result = json.loads(capsys.readouterr().out)
+    assert result["lane_runner"] is True
+    argv = result["launch_argv"]
+    assert argv[1].endswith("cos_lane_runner.py")
+    assert argv[argv.index("--brief-file") + 1] == str(brief)
     _no_real_launch(tmp_path)
 
 

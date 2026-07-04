@@ -73,6 +73,7 @@ import argparse
 import contextlib
 import importlib.util
 import json
+import re
 import subprocess
 import sys
 from datetime import UTC, datetime
@@ -92,6 +93,12 @@ CODEX_BOT_LINE = (
 )
 VERDICT_CLEAN = "clean"
 VERDICT_USAGE_LIMIT = "exhausted (usage-limit)"
+
+# Head-bound gate lines stamp the SHA they were verified on as a `head <sha>` token (the
+# build_db / visual / codex_bot canonical grammar). Used to detect a gate line that has gone
+# stale after a fix round moved HEAD. A line with NO such token (`"not required"`,
+# `"pass; gh pr checks"`, `"updated; ..."`) is not head-bound and can never be stale.
+HEAD_TOKEN_RE = re.compile(r"head\s+([0-9a-f]{7,40})", re.IGNORECASE)
 
 # Default round cap: one initial review + up to this many fix rounds. 3 mirrors the
 # pr-pipeline review-loop budget; injectable via --max-rounds.
@@ -190,9 +197,12 @@ def findings_brief(findings: list[dict], head: str) -> str:
         f"The local `codex review` found {len(findings)} issue(s) on the current head "
         f"({head[:12]}). Fix each on THIS branch, then commit and push so the PR head "
         "updates. Do NOT open a new PR, and keep the PR's existing `Closes #N` closing "
-        "keywords. Refresh the existing merge-gate `gate.json` (bump `updated`) after "
-        "pushing; leave the `codex_bot` line deferred — the lane-runner re-reviews the new "
-        "head and completes that gate.\n\nReview findings:",
+        "keywords. Pushing these fixes MOVES HEAD, which stales any head-bound gate you "
+        "already completed (build_db / visual, whose gate lines stamp `head <sha>`) — so "
+        "RE-RUN each head-bound gate that applies on the new head and refresh its "
+        "`gate.json` line to that head. Refresh the existing merge-gate `gate.json` (bump "
+        "`updated`) after pushing; leave the `codex_bot` line deferred — the lane-runner "
+        "re-reviews the new head and completes that gate.\n\nReview findings:",
     ]
     for i, f in enumerate(findings, 1):
         loc = f.get("path", "?")
@@ -259,13 +269,23 @@ def discover_pr(slot_file: Path | None, gate_root: Path) -> int:
     (`pr-<N>/` dirs) is the fallback when no slot file was passed or it carries no PR yet.
     A gate directory without a matching `gate.json` (or whose `gate.json` `pr` disagrees) is
     skipped, mirroring the gate protocol's read rule. Fail-fast (exit 2) if none is found —
-    the agent turn was supposed to open a PR.
+    the agent turn was supposed to open a PR. A slot claiming MORE THAN ONE PR also fails
+    fast: the runner completes codex_bot for a single PR, and silently taking prs[0] would
+    strand the others' gates (real multi-PR support is a follow-up).
     """
     if slot_file is not None:
         loaded = _cos_preflight._read_json_tolerant(slot_file, "pipeline-slot file")
         if loaded is not None:
             prs = loaded[1].get("prs") if isinstance(loaded[1], dict) else None
             if isinstance(prs, list) and prs:
+                if len(prs) > 1:
+                    # The runner owns codex_bot for exactly ONE PR; silently completing prs[0]
+                    # would leave the other PRs' codex_bot gates uncompleted. Fail fast until
+                    # real multi-PR support lands (a follow-up).
+                    raise SystemExit(
+                        f"{EXIT_TOOL}:the lane-runner supports a single PR per lane, but this "
+                        f"slot claims {prs}; split the lane or dispatch with --no-lane-runner"
+                    )
                 first = prs[0]
                 if isinstance(first, int):
                     return first
@@ -332,6 +352,38 @@ def codex_bot_is_sole_unmet(gate: dict) -> bool:
     return gate.get("blocker") == "codex_bot"
 
 
+def head_bound_gates_current(gate: dict, head: str) -> tuple[bool, str | None]:
+    """Are all OTHER head-bound gate lines still verified on the current head?
+
+    The runner only re-verifies codex_bot. But a `findings → resume` round pushes fix commits
+    and MOVES HEAD, which makes the OTHER head-bound gates (build_db, visual — whose lines
+    carry a `head <sha>` stamp) stale: they were verified on the PRE-fix head. Flipping to
+    ready-to-merge in that state would hand off a PR whose build_db/visual gate no longer
+    matches the head. So before flipping, require every non-codex_bot gate line that stamps a
+    head to match the CURRENT head.
+
+    codex_bot is EXCLUDED — it is being (re)written to the current head by this same call, so
+    its own stamp is authoritative, not a staleness signal. A gate line with no `head ` token
+    is not head-bound (`"not required"`, `"pass; gh pr checks"`, `"updated; ..."`) → never
+    stale. Prefix-match either direction because lines may carry the full or a truncated
+    (12-char) sha. Returns (all_current, first_stale_gate_name).
+    """
+    gates = gate.get("gates")
+    if not isinstance(gates, dict):
+        return True, None
+    for name, line in gates.items():
+        if name == "codex_bot" or not isinstance(line, str):
+            continue
+        match = HEAD_TOKEN_RE.search(line)
+        if match is None:
+            continue  # not head-bound → never stale
+        sha = match.group(1).lower()
+        current = head.lower()
+        if not (current.startswith(sha) or sha.startswith(current[:12])):
+            return False, name
+    return True, None
+
+
 def write_codex_bot_gate(
     gate_dir: Path,
     pr: int,
@@ -347,10 +399,13 @@ def write_codex_bot_gate(
     verdict token (`clean` or the usage-limit form). When blocking, `verdict` is ignored:
     `blocker` names the unmet item and the codex_bot line records the block reason. status
     flips to `ready-to-merge` ONLY when the verdict is non-blocking AND codex_bot is the
-    sole unmet gate (all other gate lines already met); otherwise status stays `blocked`
-    with `blocker` set. Written atomically (temp+rename) via the shared cos_preflight leaf
-    so the preflight probe never sees a torn write; the caller is responsible for the
-    codex-review.md evidence already existing.
+    sole unmet gate (all other gate lines already met) AND every OTHER head-bound gate line
+    is still verified on the CURRENT head (a fix round that moved HEAD staled build_db /
+    visual — see head_bound_gates_current). If a head-bound gate is stale, status stays
+    `blocked` naming it; if the agent named another gate as the blocker, status stays
+    `blocked` preserving that blocker. Written atomically (temp+rename) via the shared
+    cos_preflight leaf so the preflight probe never sees a torn write; the caller is
+    responsible for the codex-review.md evidence already existing.
     """
     gate = read_gate(gate_dir, pr)
     gates = gate.get("gates")
@@ -366,9 +421,20 @@ def write_codex_bot_gate(
         gate["blocker"] = blocker
     else:
         gates["codex_bot"] = CODEX_BOT_LINE.format(head=head, verdict=verdict)
-        if codex_bot_is_sole_unmet(gate):
+        all_current, stale_gate = head_bound_gates_current(gate, head)
+        if codex_bot_is_sole_unmet(gate) and all_current:
             gate["status"] = "ready-to-merge"
             gate["blocker"] = None
+        elif codex_bot_is_sole_unmet(gate) and not all_current:
+            # codex_bot is clean on the current head, but a fix round moved HEAD and left
+            # another head-bound gate (build_db / visual) verified on a stale head. Fail
+            # closed: never a ready-to-merge with a stale gate. The resumed agent is asked to
+            # re-verify head-bound gates it completed (see findings_brief); this freshness
+            # check is the backstop when it doesn't.
+            gate["status"] = "blocked"
+            gate["blocker"] = (
+                f"{stale_gate} verified on a stale head; re-verify on {head[:12]}"
+            )
         else:
             # codex_bot is done, but the agent named another gate as the blocker — never a
             # false ready-to-merge. Leave status blocked and PRESERVE the agent's existing
@@ -675,6 +741,13 @@ def run(
             "codex_bot deferred with status: blocked (blocker: codex_bot). The sibling "
             "lane-runner completes codex_bot after this turn."
         )
+        # The operator's continuation brief (cos_dispatch --brief-file) is DATA describing
+        # the follow-up work — rendered into the prompt, mirroring cos_dispatch's
+        # continuation_prompt shape. Reuse cos_dispatch.read_brief's tolerant read (a missing
+        # file fails fast there). Only meaningful in continue mode; fresh mode has none.
+        brief = _cos_dispatch.read_brief(args.brief_file)
+        if brief:
+            prompt += f"\n\nContinuation brief:\n{brief}"
     else:
         prompt = implement_prompt(issues)
     implement_argv = _cos_dispatch.build_launch_argv(
@@ -796,6 +869,13 @@ def main(argv: list[str] | None = None) -> int:
         default=None,
         help="pipeline-slot file to read the agent's registered PR from and to enrich with "
         "the resolved session id / heartbeat",
+    )
+    ap.add_argument(
+        "--brief-file",
+        type=Path,
+        default=None,
+        help="operator continuation brief woven into the implement turn's --continue-pr "
+        "prompt (only meaningful with --continue-pr)",
     )
     ap.add_argument(
         "--max-rounds",
