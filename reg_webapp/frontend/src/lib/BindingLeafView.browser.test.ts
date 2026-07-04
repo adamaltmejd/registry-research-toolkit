@@ -167,6 +167,31 @@ const pickerStates = [
   }),
 ];
 
+const foldedVariantStates = [
+  state({
+    state_id: 10,
+    variant: "individer-16plus",
+    variant_label: "Individer, 16 år och äldre",
+    variant_family: "individer-15plus",
+    variant_family_label: "Individer",
+    delivery_column_name: "Kon",
+    valid_from: "1990-01-01",
+    valid_to: "2009-12-31",
+    data_type: "int",
+  }),
+  state({
+    state_id: 11,
+    variant: "individer-15plus",
+    variant_label: "Individer, 15 år och äldre",
+    variant_family: "individer-15plus",
+    variant_family_label: "Individer",
+    delivery_column_name: "Kon",
+    valid_from: "2010-01-01",
+    valid_to: "2023-12-31",
+    data_type: "int",
+  }),
+];
+
 const singleWithStructural = [
   state({
     state_id: 1,
@@ -704,6 +729,111 @@ describe("BindingLeafView representation picker (#678)", () => {
             }),
           ],
         }),
+      ]),
+    );
+  });
+
+  it("applying one folded variant-family row adds each concrete era source", async () => {
+    vi.mocked(getCatalogNode).mockImplementation(async (_fqid, params) => {
+      const variant =
+        typeof params?.variant === "string" ? params.variant : undefined;
+      return statesResponse(
+        foldedVariantStates.filter(
+          (s) => variant === undefined || s.variant === variant,
+        ),
+      );
+    });
+
+    render(BindingLeafView, {
+      fqidPath: "scb/lisa/kon",
+      node: node(foldedVariantStates),
+      regMetaVersion: SEED.regMetaVersion,
+      steward: SEED.steward,
+      windowMinYear: SEED.windowMinYear,
+      vintageYear: 2024,
+    });
+
+    await page.getByRole("checkbox", { name: /Kon/ }).click();
+    await expect.element(page.getByText("+1 column")).toBeVisible();
+    await page
+      .getByRole("button", {
+        name: /Add to project|Remove from project|Apply changes/,
+      })
+      .click();
+
+    await expect.element(page.getByText(/\+1 column/)).toBeVisible();
+    const sourcesByVariant = new Map(
+      projectStore.draft?.sources?.map((source) => [
+        source.register_variant,
+        source,
+      ]),
+    );
+    expect([...sourcesByVariant.keys()].sort()).toEqual([
+      "scb/lisa/individer-15plus",
+      "scb/lisa/individer-16plus",
+    ]);
+    expect(sourcesByVariant.get("scb/lisa/individer-16plus")).toMatchObject({
+      period: { from: 1990, to: 2009 },
+      bindings: [
+        expect.objectContaining({
+          variable: "scb/lisa/kon",
+          type: "numeric",
+          representation: null,
+          display_name: "Kon",
+        }),
+      ],
+    });
+    expect(sourcesByVariant.get("scb/lisa/individer-15plus")).toMatchObject({
+      period: { from: 2010, to: 2023 },
+      bindings: [
+        expect.objectContaining({
+          variable: "scb/lisa/kon",
+          type: "numeric",
+          representation: null,
+          display_name: "Kon",
+        }),
+      ],
+    });
+  });
+
+  it("applying a dimmed folded family row falls back to concrete segment spans", async () => {
+    vi.mocked(getCatalogNode).mockImplementation(async (_fqid, params) => {
+      const variant =
+        typeof params?.variant === "string" ? params.variant : undefined;
+      return statesResponse(
+        foldedVariantStates.filter(
+          (s) => variant === undefined || s.variant === variant,
+        ),
+      );
+    });
+    router.navigate("/catalog/scb/lisa/kon?period=1980");
+
+    render(BindingLeafView, {
+      fqidPath: "scb/lisa/kon",
+      node: node(foldedVariantStates),
+      regMetaVersion: SEED.regMetaVersion,
+      steward: SEED.steward,
+      windowMinYear: SEED.windowMinYear,
+      vintageYear: 2024,
+    });
+
+    await page.getByRole("checkbox", { name: /Kon/ }).click();
+    await page
+      .getByRole("button", {
+        name: /Add to project|Remove from project|Apply changes/,
+      })
+      .click();
+
+    const sourcePeriods = new Map(
+      projectStore.draft?.sources?.map((source) => [
+        source.register_variant,
+        source.period,
+      ]),
+    );
+    expect(sourcePeriods).toEqual(
+      new Map([
+        ["scb/lisa/individer-16plus", { from: 1990, to: 2009 }],
+        ["scb/lisa/individer-15plus", { from: 2010, to: 2023 }],
       ]),
     );
   });

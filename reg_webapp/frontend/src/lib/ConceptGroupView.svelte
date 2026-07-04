@@ -19,6 +19,8 @@ import {
   registerPrefixOf,
   resolveBindingAt,
   rowAddPeriod,
+  windowsAddPeriod,
+  windowsOverlapWindow,
 } from "./catalog";
 import PeriodPicker from "./PeriodPicker.svelte";
 import {
@@ -41,7 +43,7 @@ import {
   committedPickerRows,
   finalSourcePeriodsForStagedAdds,
   periodChangesWithStagedAdds,
-  rowRegisterVariant,
+  rowRegisterVariantForVariant,
   sourcePeriodsFromDraft,
   stagedRemoveForCommitted,
 } from "./staged_picker";
@@ -631,20 +633,44 @@ $effect(() => {
   applyOutcome = null;
 });
 
-function stagedAddCandidate(selection: PickerSelection) {
+function stagedAddCandidates(selection: PickerSelection) {
   const { band, row } = selection;
   const addWindow = addWindowBounds(activePickerPeriod, pickerWindow);
-  const addPeriod = rowAddPeriod(row, addWindow);
-  return {
-    selection,
-    registerVariant: rowRegisterVariant(band, row),
-    periodWire: addPeriod,
-    period: periodFromWire(addPeriod),
-  };
+  const segments =
+    row.variantSegments && row.variantSegments.length > 0
+      ? row.variantSegments
+      : [{ variant: row.variant, windows: row.windows }];
+  const overlappingSegments =
+    segments.length === 1
+      ? segments
+      : segments.filter((segment) =>
+          windowsOverlapWindow(segment.windows, addWindow),
+        );
+  const selectedSegments =
+    overlappingSegments.length > 0 ? overlappingSegments : segments;
+  return selectedSegments.map((segment) => {
+    const addPeriod =
+      segments.length === 1
+        ? rowAddPeriod(row, addWindow)
+        : windowsAddPeriod(
+            segment.windows,
+            overlappingSegments.length > 0 ? addWindow : null,
+            false,
+          );
+    return {
+      selection,
+      variant: segment.variant,
+      registerVariant: rowRegisterVariantForVariant(band, segment.variant),
+      periodWire: addPeriod,
+      period: periodFromWire(addPeriod),
+    };
+  });
 }
 
+type StagedAddCandidate = ReturnType<typeof stagedAddCandidates>[number];
+
 async function stagedAdd(
-  candidate: ReturnType<typeof stagedAddCandidate>,
+  candidate: StagedAddCandidate,
   resolvePeriodWire: string | null,
 ) {
   const { band, row } = candidate.selection;
@@ -653,7 +679,7 @@ async function stagedAdd(
     resolution = await resolveBindingAt(
       band.key,
       resolvePeriodWire,
-      row.variant,
+      candidate.variant,
     );
   } catch {
     resolution = { kind: "unresolved" as const, reason: "no-states" as const };
@@ -686,7 +712,7 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
     });
   }
   const target = projectStore.draft;
-  const candidates = payload.adds.map(stagedAddCandidate);
+  const candidates = payload.adds.flatMap(stagedAddCandidates);
   const finalPeriods = finalSourcePeriodsForStagedAdds(
     sourcePeriodsFromDraft(target),
     payload.periodChanges,
@@ -705,9 +731,12 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
   if (projectStore.draft !== target) {
     return false;
   }
+  const removes = payload.removes.flatMap((r) =>
+    stagedRemoveForCommitted(r.committed),
+  );
   projectStore.applyStagedDiff({
     adds,
-    removes: payload.removes.map((r) => stagedRemoveForCommitted(r.committed)),
+    removes,
     periodChange: periodChangesWithStagedAdds(
       payload.periodChanges,
       candidates,
@@ -715,7 +744,7 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
   });
   applyOutcome = {
     added: payload.adds.length,
-    removed: payload.removes.length,
+    removed: removes.length,
     periodChanged: payload.periodChanges.length,
   };
   return true;

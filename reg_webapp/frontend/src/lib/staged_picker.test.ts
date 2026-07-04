@@ -8,6 +8,7 @@ import {
   periodChangesWithStagedAdds,
   pickerRowKey,
   type StagedPickerBand,
+  stagedRemoveForCommitted,
 } from "./staged_picker";
 
 function row(over: Partial<PickerRepresentation> = {}): PickerRepresentation {
@@ -70,6 +71,88 @@ describe("committedPickerRows", () => {
         variable: "scb/lisa/dinf",
       }),
     );
+  });
+
+  it("keys family rows by variant family and removes every concrete source", () => {
+    const r = row({
+      key: "individer-15plus::Kon",
+      variant: "individer-15plus",
+      variantLabel: "Individer, 15 år och äldre",
+      variantFamily: "individer-15plus",
+      variantFamilyLabel: "Individer",
+      column: "Kon",
+      representation: "Kon",
+      renamedColumns: [],
+      windows: [
+        { from: "1990-01-01", to: "2009-12-31" },
+        { from: "2010-01-01", to: "2023-12-31" },
+      ],
+      variantSegments: [
+        {
+          variant: "individer-16plus",
+          variantLabel: "Individer, 16 år och äldre",
+          windows: [{ from: "1990-01-01", to: "2009-12-31" }],
+        },
+        {
+          variant: "individer-15plus",
+          variantLabel: "Individer, 15 år och äldre",
+          windows: [{ from: "2010-01-01", to: "2023-12-31" }],
+        },
+      ],
+    });
+    const b = band([r]);
+    const draft: ProjectData = {
+      schema_version: "2.0.0",
+      reg_meta_version: "reg_meta/v1.0.0",
+      steward: "global",
+      name: "",
+      sources: [
+        {
+          name: "LISA 1990-2009",
+          register_variant: "scb/lisa/individer-16plus",
+          period: { from: 1990, to: 2009 },
+          bindings: [
+            {
+              variable: "scb/lisa/dinf",
+              type: "integer",
+              representation: "Kon",
+            },
+          ],
+        },
+        {
+          name: "LISA 2010-2023",
+          register_variant: "scb/lisa/individer-15plus",
+          period: { from: 2010, to: 2023 },
+          bindings: [
+            {
+              variable: "scb/lisa/dinf",
+              type: "integer",
+              representation: "Kon",
+            },
+          ],
+        },
+      ],
+    };
+
+    expect(pickerRowKey(b, r)).toBe(
+      "scb/lisa/individer-15plus::scb/lisa/dinf::Kon",
+    );
+    const committed = committedPickerRows(draft, [b]).get(pickerRowKey(b, r));
+    expect(committed?.removals).toEqual([
+      {
+        registerVariant: "scb/lisa/individer-16plus",
+        variable: "scb/lisa/dinf",
+        representation: "Kon",
+      },
+      {
+        registerVariant: "scb/lisa/individer-15plus",
+        variable: "scb/lisa/dinf",
+        representation: "Kon",
+      },
+    ]);
+    expect(
+      stagedRemoveForCommitted(committed as NonNullable<typeof committed>),
+    ).toHaveLength(2);
   });
 
   it("scopes a null stored representation to rows overlapping the source period", () => {

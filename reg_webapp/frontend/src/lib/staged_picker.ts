@@ -1,4 +1,4 @@
-import type { PickerRepresentation } from "./catalog";
+import { type PickerRepresentation, pickerRowVariantFamily } from "./catalog";
 import {
   type PeriodBounds,
   periodCoverageUnion,
@@ -21,6 +21,7 @@ export interface PickerCommittedRow {
   representation: string | null;
   sourceName: string;
   sourcePeriod: Period;
+  removals?: StagedRemove[];
 }
 
 export interface PickerAddPeriod {
@@ -37,18 +38,22 @@ export function rowRegisterVariant(
   band: StagedPickerBand,
   row: PickerRepresentation,
 ): string {
-  return `${band.registerPrefix}/${row.variant}`;
+  return rowRegisterVariantForVariant(band, row.variant);
 }
 
-/** The picker row identity seam (#995). Today it is concrete variant + variable +
- * row representation grain; #376 can swap the variant-family grain here without
- * rewriting the staging consumers. */
+export function rowRegisterVariantForVariant(
+  band: StagedPickerBand,
+  variant: string,
+): string {
+  return `${band.registerPrefix}/${variant}`;
+}
+
 export function pickerRowKey(
   band: StagedPickerBand,
   row: PickerRepresentation,
 ): string {
   return [
-    rowRegisterVariant(band, row),
+    `${band.registerPrefix}/${pickerRowVariantFamily(row)}`,
     band.key,
     row.representation ?? row.column,
   ].join("::");
@@ -156,29 +161,57 @@ export function committedPickerRows(
   const sources: unknown[] = Array.isArray(draft?.sources) ? draft.sources : [];
   for (const band of bands) {
     for (const row of band.rows) {
-      const registerVariant = rowRegisterVariant(band, row);
-      const source = sources.find(
-        (s) => sourceRegisterVariant(s) === registerVariant,
-      );
-      if (!source) {
-        continue;
+      const rowKey = pickerRowKey(band, row);
+      const segments =
+        row.variantSegments && row.variantSegments.length > 0
+          ? row.variantSegments
+          : [{ variant: row.variant }];
+      for (const segment of segments) {
+        const registerVariant = rowRegisterVariantForVariant(
+          band,
+          segment.variant,
+        );
+        const source = sources.find(
+          (s) => sourceRegisterVariant(s) === registerVariant,
+        );
+        if (!source) {
+          continue;
+        }
+        const period = sourcePeriod(source);
+        const binding = sourceBindings(source).find(
+          (b) =>
+            bindingVariable(b) === band.key &&
+            rowMatchesBinding(b, row, period),
+        );
+        if (!binding) {
+          continue;
+        }
+        const removal = {
+          registerVariant,
+          variable: band.key,
+          representation: bindingRepresentation(binding),
+        };
+        const existing = committed.get(rowKey);
+        if (existing) {
+          existing.removals ??= [
+            {
+              registerVariant: existing.registerVariant,
+              variable: existing.variable,
+              representation: existing.representation,
+            },
+          ];
+          existing.removals.push(removal);
+          continue;
+        }
+        committed.set(rowKey, {
+          key: rowKey,
+          registerVariant,
+          variable: band.key,
+          representation: bindingRepresentation(binding),
+          sourceName: sourceName(source),
+          sourcePeriod: period,
+        });
       }
-      const period = sourcePeriod(source);
-      const binding = sourceBindings(source).find(
-        (b) =>
-          bindingVariable(b) === band.key && rowMatchesBinding(b, row, period),
-      );
-      if (!binding) {
-        continue;
-      }
-      committed.set(pickerRowKey(band, row), {
-        key: pickerRowKey(band, row),
-        registerVariant,
-        variable: band.key,
-        representation: bindingRepresentation(binding),
-        sourceName: sourceName(source),
-        sourcePeriod: period,
-      });
     }
   }
   return committed;
@@ -200,12 +233,16 @@ export function sourcePeriodsFromDraft(
 
 export function stagedRemoveForCommitted(
   committed: PickerCommittedRow,
-): StagedRemove {
-  return {
-    registerVariant: committed.registerVariant,
-    variable: committed.variable,
-    representation: committed.representation,
-  };
+): StagedRemove[] {
+  return committed.removals && committed.removals.length > 0
+    ? committed.removals
+    : [
+        {
+          registerVariant: committed.registerVariant,
+          variable: committed.variable,
+          representation: committed.representation,
+        },
+      ];
 }
 
 export function nullBindingCommittedRowKeys(

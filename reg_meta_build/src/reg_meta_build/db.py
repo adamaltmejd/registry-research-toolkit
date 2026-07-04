@@ -1794,7 +1794,8 @@ _REPLACED_BY_STAT_KEYS = (
     # rows), kept distinct from the inverse-collapse count.
     "n_skipped_duplicate",
     # #440/#522 curated-TOML pass. `n_curated_register_replaced_by` /
-    # `n_curated_variable_replaced_by` count edges INSERTED from
+    # `n_curated_variant_replaced_by` / `n_curated_variable_replaced_by` count
+    # edges INSERTED from
     # `curation/relations.toml` `type = "replaced_by"` edges (a subset of
     # `n_*_replaced_by` above — the curated rows roll into the same totals).
     # `n_curated_classification_replaced_by` (#579) counts curated classification
@@ -1804,6 +1805,7 @@ _REPLACED_BY_STAT_KEYS = (
     # (event-derived, an auto classification edge, or another curated row), via the
     # SHARED seen-PK sets (per-grain).
     "n_curated_register_replaced_by",
+    "n_curated_variant_replaced_by",
     "n_curated_variable_replaced_by",
     "n_curated_classification_replaced_by",
     # #843 representation-grain curated edges inserted into
@@ -2221,15 +2223,15 @@ def _materialize_replaced_by_edges(
 
     # #440/#522 curated pass — runs RIGHT AFTER the event-derived pass, sharing
     # the `seen_*` PK sets above so curated edges dedup against event-derived
-    # ones. (Curated rows are register/variable grain only — no variant — so the
-    # variant seen-set is not passed.) The curated `replaced_by` edges now come
-    # from `curation/relations.toml` (the typed `[[edge]]` surface), loaded once
-    # in `build_db` and threaded in.
+    # ones. The curated `replaced_by` edges now come from
+    # `curation/relations.toml` (the typed `[[edge]]` surface), loaded once in
+    # `build_db` and threaded in.
     curated = materialize_curated_replaced_by(
         conn,
         curated_replaced_by,
         seen_register,
         seen_variable,
+        seen_variant,
         providers=providers,
         progress=_progress,
     )
@@ -2242,13 +2244,14 @@ def _materialize_replaced_by_edges(
     stats.update(
         n_timeseries_event_rows_scanned=n_scanned,
         n_register_replaced_by=n_register + curated["register"],
-        n_variant_replaced_by=n_variant,
+        n_variant_replaced_by=n_variant + curated["variant"],
         n_variable_replaced_by=n_variable + curated["variable"],
         n_skipped_unresolved=n_skipped_unresolved,
         n_skipped_ambiguous_variable=n_skipped_ambiguous_variable,
         n_skipped_collapsed_inverse=n_skipped_collapsed_inverse,
         n_skipped_duplicate=n_skipped_duplicate,
         n_curated_register_replaced_by=curated["register"],
+        n_curated_variant_replaced_by=curated["variant"],
         n_curated_variable_replaced_by=curated["variable"],
         n_curated_classification_replaced_by=curated["classification"],
         n_curated_representation_replaced_by=curated["representation"],

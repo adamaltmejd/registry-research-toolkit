@@ -2047,6 +2047,28 @@
             "title": "Variant",
             "type": "string"
           },
+          "variant_family": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Variant Family"
+          },
+          "variant_family_label": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Variant Family Label"
+          },
           "variant_label": {
             "anyOf": [
               {
@@ -4010,6 +4032,28 @@
             "title": "Variant",
             "type": "string"
           },
+          "variant_family": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Variant Family"
+          },
+          "variant_family_label": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Variant Family Label"
+          },
           "variant_label": {
             "anyOf": [
               {
@@ -4126,6 +4170,28 @@
           "slug": {
             "title": "Slug",
             "type": "string"
+          },
+          "variant_family": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Variant Family"
+          },
+          "variant_family_label": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Variant Family Label"
           },
           "versions": {
             "default": [],

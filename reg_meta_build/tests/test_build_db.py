@@ -3937,6 +3937,7 @@ class TestReplacedByEdges:
                 "n_skipped_duplicate",
                 # #440 curated-TOML pass
                 "n_curated_register_replaced_by",
+                "n_curated_variant_replaced_by",
                 "n_curated_variable_replaced_by",
                 # #579 curated classification succession (sun1996 split)
                 "n_curated_classification_replaced_by",
@@ -3949,6 +3950,7 @@ class TestReplacedByEdges:
             # This fixture carries no curated representation edges, so a no-edge
             # build reports 0 even though repo curation can author them.
             assert stats["n_curated_representation_replaced_by"] == 0
+            assert stats["n_curated_variant_replaced_by"] == 0
             # Scanned counts only Ersatt av/Ersätter rows on the four target
             # entitets — the single Register row in this fixture matches.
             assert stats["n_timeseries_event_rows_scanned"] == 1
@@ -4124,6 +4126,49 @@ class TestReplacedByEdges:
             assert len(edges) == 1
             assert tuple(edges[0]) == ("testreg", "otherreg", None, "curated:slug_toml")
             assert self._stats(conn)["n_curated_register_replaced_by"] == 1
+        finally:
+            conn.close()
+
+    def test_curated_variant_edge(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """A curated variant endpoint edge → one `variant_replaced_by` row."""
+        extra = (
+            '\n[[edge]]\ntype = "replaced_by"\n'
+            'from = "scb/testreg"\n'
+            'from_variant = "individer"\n'
+            'to = "scb/otherreg"\n'
+            'to_variant = "foretag"\n'
+            "effective_year = 2010\n"
+            'note = "frame changed"\n'
+        )
+        db_path = self._build(
+            tmp_path,
+            timeseries_rows=_NO_EVENT_ROWS,
+            relations_extra=extra,
+            monkeypatch=monkeypatch,
+        )
+        conn = open_db(db_path)
+        try:
+            edges = conn.execute(
+                "SELECT predecessor_register, predecessor_variant, "
+                "successor_register, successor_variant, effective_year, note, "
+                "beskrivning FROM variant_replaced_by"
+            ).fetchall()
+            assert [tuple(e) for e in edges] == [
+                (
+                    "testreg",
+                    "individer",
+                    "otherreg",
+                    "foretag",
+                    2010,
+                    "curated:slug_toml",
+                    "frame changed",
+                )
+            ]
+            stats = self._stats(conn)
+            assert stats["n_curated_variant_replaced_by"] == 1
+            assert stats["n_variant_replaced_by"] == 1
         finally:
             conn.close()
 

@@ -50,6 +50,9 @@
 #                           any human reason belongs in a `#` comment above the
 #                           edges. A 1→many split (one predecessor, several
 #                           successors) is allowed.
+#                           Variant succession is intentionally NOT a fourth FQID
+#                           grain: use register FQIDs in `from` / `to` and add
+#                           concrete `from_variant` / `to_variant` slugs.
 #
 # References resolve against the built DB at materialize time; a dangling FQID
 # FAILS the build (EXIT_CONFIG). An edge whose provider isn't in the build is
@@ -78,6 +81,19 @@ from = "scb/lisa/anninkf04"
 to = "scb/lisa/anninkf18"
 effective_year = 2018
 note = "Summa annan inkomst recut to the 2018 års definition"
+
+# ── LISA individual-frame variant succession (#376) ──
+#    The register_variant coordinate changed from the 16+ population through 2009 to
+#    the 15+ population from 2010. This is browse/display succession only: project
+#    sources still bind the concrete variant delivered for the selected era.
+[[edge]]
+type = "replaced_by"
+from = "scb/lisa"
+from_variant = "individer-16plus"
+to = "scb/lisa"
+to_variant = "individer-15plus"
+effective_year = 2010
+note = "LISA individual-frame variant changed from 16+ to 15+"
 
 # ── LISA näringsgren: SNI coding succession + KU → AGI source switch (#375/#931) ──
 #    The browser groups every LISA näringsgren variable under one concept group; SNI

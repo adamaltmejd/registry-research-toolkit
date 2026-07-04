@@ -50,7 +50,13 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
-from reg_meta.fqid import Fqid, FqidError, FqidKind, parse as parse_fqid
+from reg_meta.fqid import (
+    Fqid,
+    FqidError,
+    FqidKind,
+    parse as parse_fqid,
+    validate_slug,
+)
 
 from ._curation import (
     curation_error,
@@ -117,8 +123,20 @@ _SAME_AS_FIELDS: frozenset[str] = frozenset({"a", "b", "note"})
 # semantics), a variant slug = scoped. Legal ONLY on a representation edge and
 # only WITH `effective_year` (the time-monotone cycle check needs the ordering) —
 # both enforced in `_load_replaced_by`.
+# `from_variant` / `to_variant` (#376) ride a REGISTER-grain edge to name concrete
+# register_variant endpoints while keeping variants out of the public FQID grammar.
 _REPLACED_BY_FIELDS: frozenset[str] = frozenset(
-    {"from", "to", "effective_year", "note", "from_column", "to_column", "variant"}
+    {
+        "from",
+        "to",
+        "effective_year",
+        "note",
+        "from_column",
+        "to_column",
+        "variant",
+        "from_variant",
+        "to_variant",
+    }
 )
 _DERIVED_FROM_FIELDS: frozenset[str] = frozenset({"derived", "source", "note"})
 
@@ -203,6 +221,8 @@ class CuratedReplacedBy:
     predecessor_column: str | None = None
     successor_column: str | None = None
     variant: str = ""
+    predecessor_variant: str | None = None
+    successor_variant: str | None = None
 
 
 @dataclass(frozen=True)
@@ -449,6 +469,8 @@ def _load_replaced_by(entry: dict) -> CuratedReplacedBy:
     # different-column (the common representation rename) is LEGAL.
     pred_column = _require_column(entry, "from_column")
     succ_column = _require_column(entry, "to_column")
+    pred_variant = _require_variant_endpoint(entry, "from_variant")
+    succ_variant = _require_variant_endpoint(entry, "to_variant")
     if (pred_column is None) != (succ_column is None):
         raise curation_error(
             "relations_invalid",
@@ -457,6 +479,36 @@ def _load_replaced_by(entry: dict) -> CuratedReplacedBy:
             "endpoints' columns.",
             "Give both `from_column` and `to_column` for a representation "
             "(column-grain) edge, or neither for an entity-grain edge.",
+        )
+    if (pred_variant is None) != (succ_variant is None):
+        raise curation_error(
+            "relations_invalid",
+            "relations [[edge]] type='replaced_by' has exactly one of "
+            "`from_variant` / `to_variant` — a variant edge names BOTH "
+            "concrete register_variant endpoints.",
+            "Give both `from_variant` and `to_variant` for a variant-grain "
+            "succession, or neither for an entity-grain edge.",
+        )
+    if pred_variant is not None and (
+        predecessor.kind is not FqidKind.REGISTER
+        or successor.kind is not FqidKind.REGISTER
+    ):
+        raise curation_error(
+            "relations_invalid",
+            "relations [[edge]] type='replaced_by' carries `from_variant` / "
+            "`to_variant` but the endpoints are not register-grain.",
+            "A concrete register_variant succession uses register FQIDs in "
+            "`from` / `to` plus `from_variant` / `to_variant`. Drop the variant "
+            "fields, or change the endpoints to provider/register FQIDs.",
+        )
+    if pred_variant is not None and pred_column is not None:
+        raise curation_error(
+            "relations_invalid",
+            "relations [[edge]] type='replaced_by' carries both variant endpoints "
+            "and column endpoints.",
+            "Use `from_variant` / `to_variant` for a register_variant succession, "
+            "or `from_column` / `to_column` for a representation succession — "
+            "not both on one edge.",
         )
     if pred_column is not None and predecessor.kind is not FqidKind.VARIABLE_BINDING:
         raise curation_error(
@@ -496,16 +548,22 @@ def _load_replaced_by(entry: dict) -> CuratedReplacedBy:
     # matches columns case-insensitively), so it must be rejected too.
     pred_col_fold = pred_column.lower() if pred_column is not None else None
     succ_col_fold = succ_column.lower() if succ_column is not None else None
-    if (str(predecessor), pred_col_fold) == (str(successor), succ_col_fold):
+    if (
+        str(predecessor),
+        pred_col_fold,
+        pred_variant,
+    ) == (str(successor), succ_col_fold, succ_variant):
         raise curation_error(
             "relations_invalid",
             f"relations [[edge]] type='replaced_by' self-loop on "
             f"{str(predecessor)!r}"
             + (f" column {pred_column!r}" if pred_column is not None else "")
+            + (f" variant {pred_variant!r}" if pred_variant is not None else "")
             + ".",
             "An entity cannot replace itself; remove the edge. (A representation "
             "edge MAY repeat the variable FQID — but then `from_column` and "
-            "`to_column` must differ.)",
+            "`to_column` must differ; a variant edge MAY repeat the register FQID "
+            "but then `from_variant` and `to_variant` must differ.)",
         )
     note = _require_note(entry, "replaced_by")
     # `note` is provenance-only on a classification edge: that table has no
@@ -567,6 +625,15 @@ def _load_replaced_by(entry: dict) -> CuratedReplacedBy:
             "left and later returned within the variant); the cycle check orders "
             "it by year. Add `effective_year`, or drop `variant`.",
         )
+    if variant is not None and pred_variant is not None:
+        raise curation_error(
+            "relations_invalid",
+            "relations [[edge]] type='replaced_by' carries both `variant` and "
+            "`from_variant` / `to_variant`.",
+            "`variant` scopes a representation edge; `from_variant` / "
+            "`to_variant` define concrete register_variant endpoints. Use only "
+            "one of those shapes.",
+        )
     return CuratedReplacedBy(
         predecessor=predecessor,
         successor=successor,
@@ -575,6 +642,8 @@ def _load_replaced_by(entry: dict) -> CuratedReplacedBy:
         predecessor_column=pred_column,
         successor_column=succ_column,
         variant=variant or "",
+        predecessor_variant=pred_variant,
+        successor_variant=succ_variant,
     )
 
 
@@ -615,6 +684,32 @@ def _require_column(entry: dict, field: str) -> str | None:
             'Give a delivery-column name like `from_column = "DispInk04"`, or '
             "drop the field.",
         )
+    return raw
+
+
+def _require_variant_endpoint(entry: dict, field: str) -> str | None:
+    """#376: an optional concrete `register_variant` endpoint slug for a
+    register-grain succession. Returns None when absent."""
+    raw = entry.get(field)
+    if raw is None:
+        return None
+    if not isinstance(raw, str) or not raw:
+        raise curation_error(
+            "relations_invalid",
+            f"relations [[edge]] type='replaced_by' `{field}` must be a "
+            f"non-empty register_variant slug string when present, got {raw!r}.",
+            f'Give a register_variant slug like `{field} = "individer-15plus"`, '
+            "or drop the field for an entity-grain succession.",
+        )
+    try:
+        validate_slug(raw, "register_variant", allow_default=True)
+    except FqidError as exc:
+        raise curation_error(
+            "relations_invalid",
+            f"relations [[edge]] type='replaced_by' `{field}` is not a valid "
+            f"register_variant slug: {raw!r}.",
+            str(exc),
+        ) from exc
     return raw
 
 
@@ -1430,11 +1525,27 @@ def _unresolved_curated_variant(fqid: Fqid, variant: str) -> Exception:
     )
 
 
+def _unresolved_curated_variant_endpoint(
+    fqid: Fqid, variant: str, side: str
+) -> Exception:
+    """#376: a concrete variant succession endpoint whose slug doesn't resolve."""
+    return curation_error(
+        "replaced_by_unresolved_variant",
+        f"Curated replaced_by {side} variant endpoint {str(fqid)!r} "
+        f"variant {variant!r} does not resolve to a live register_variant in "
+        "this build.",
+        "A concrete register_variant succession is all-live. Fix the register "
+        "FQID / variant slug, or drop the edge in "
+        "reg_meta_build/curation/relations.toml.",
+    )
+
+
 def materialize_curated_replaced_by(
     conn: sqlite3.Connection,
     edges: Iterable[CuratedReplacedBy],
     seen_register: set[tuple[str, str, str, str]],
     seen_variable: set[tuple[str, str, str, str, str, str]],
+    seen_variant: set[tuple[str, str, str, str, str, str]] | None = None,
     *,
     providers: frozenset[str],
     progress: Any,
@@ -1442,10 +1553,10 @@ def materialize_curated_replaced_by(
     """Materialize curated `replaced_by` succession edges (#440 — now from
     `relations.toml`). Runs right after the event-derived pass
     (`_materialize_replaced_by_edges` in db.py), SHARING its `seen_register` /
-    `seen_variable` PK sets so a curated edge dedups against an event-derived one
-    (and against another curated row). The rows are parsed/shape-validated DB-free
-    by `load_relations`; this pass does the DB-aware existence checks, the
-    COMBINED-graph cycle check, and the INSERTs.
+    `seen_variable` / `seen_variant` PK sets so a curated edge dedups against an
+    event-derived one (and against another curated row). The rows are
+    parsed/shape-validated DB-free by `load_relations`; this pass does the DB-aware
+    existence checks, the COMBINED-graph cycle check, and the INSERTs.
 
     Acyclicity: the load-time check sees only the curated edges, so it can't catch
     a curated edge that closes a cycle WITH an event-derived edge (event A->B +
@@ -1457,10 +1568,11 @@ def materialize_curated_replaced_by(
     non-resolving successor is a CURATION ERROR -> fail fast), EXCEPT a successor
     whose PROVIDER isn't in this (partial) build, which is SKIPPED. For the
     register/variable grains the PREDECESSOR MAY be dead — inserted VERBATIM
-    (slug-anchored); its provider is never gated. The CLASSIFICATION grain is the
-    exception: its predecessor must ALSO be live (see the #579 arm below). For
-    register/variable grains `note = 'curated:slug_toml'` marks provenance and the
-    row's own `note` lands in `beskrivning`.
+    (slug-anchored); its provider is never gated. The CLASSIFICATION and VARIANT
+    grains are the exceptions: their predecessors must ALSO be live (see the #579
+    and #376 arms below). For register/variable/variant grains
+    `note = 'curated:slug_toml'` marks provenance and the row's own `note` lands in
+    `beskrivning`.
 
     #579 classification arm: classifications are GLOBAL — no provider segment on
     the `class/<slug>` form, so classification edges are NOT provider-gated (the
@@ -1520,12 +1632,22 @@ def materialize_curated_replaced_by(
     strictly-acyclic `reject_replaced_by_cycles` (a variable-level round-trip is a
     hard curation error, never a permitted return).
 
-    Returns `{"register", "variable", "classification", "representation",
+    #376 variant arm: an edge carrying `predecessor_variant` / `successor_variant`
+    is a concrete register_variant succession. Variant stays out of FQID grammar:
+    TOML uses register-grain `from` / `to` plus concrete endpoint slugs. BOTH
+    variant endpoints must resolve live, matching the existing event-derived
+    `RegisterVariant` shape. The edge lands in `variant_replaced_by`; dedup and
+    cycle checks share the event-derived `seen_variant` set.
+
+    Returns `{"register", "variant", "variable", "classification", "representation",
     "skipped_duplicate", "skipped_inactive_provider"}`."""
     edges = list(edges)
+    if seen_variant is None:
+        seen_variant = set()
     if not edges:
         return {
             "register": 0,
+            "variant": 0,
             "variable": 0,
             "classification": 0,
             "representation": 0,
@@ -1584,10 +1706,14 @@ def materialize_curated_replaced_by(
     variable_cycle_edges: list[tuple[tuple[str, ...], tuple[str, ...]]] = [
         (pk[:3], pk[3:]) for pk in seen_variable
     ]
+    variant_cycle_edges: list[tuple[tuple[str, ...], tuple[str, ...]]] = [
+        (pk[:3], pk[3:]) for pk in seen_variant
+    ]
 
     n_skipped_duplicate = 0
     n_skipped_inactive_provider = 0
     pending_register: list[tuple] = []
+    pending_variant: list[tuple] = []
     pending_variable: list[tuple] = []
     pending_classification: list[tuple] = []
     pending_representation: list[tuple] = []
@@ -1595,6 +1721,42 @@ def materialize_curated_replaced_by(
     for edge in edges:
         pred = edge.predecessor
         succ = edge.successor
+        if edge.predecessor_variant is not None or edge.successor_variant is not None:
+            assert (
+                edge.predecessor_variant is not None
+                and edge.successor_variant is not None
+            )
+            assert (
+                succ.provider is not None
+                and succ.register is not None
+                and pred.provider is not None
+                and pred.register is not None
+            )
+            if succ.provider not in providers:
+                n_skipped_inactive_provider += 1
+                continue
+            if live_variants is None:
+                live_variants = _slugged_register_variant_keys(conn)
+            pred_key = (pred.provider, pred.register, edge.predecessor_variant)
+            succ_key = (succ.provider, succ.register, edge.successor_variant)
+            if pred_key not in live_variants:
+                raise _unresolved_curated_variant_endpoint(
+                    pred, edge.predecessor_variant, "predecessor"
+                )
+            if succ_key not in live_variants:
+                raise _unresolved_curated_variant_endpoint(
+                    succ, edge.successor_variant, "successor"
+                )
+            pk = (*pred_key, *succ_key)
+            if pk in seen_variant:
+                n_skipped_duplicate += 1
+                continue
+            seen_variant.add(pk)
+            variant_cycle_edges.append((pred_key, succ_key))
+            pending_variant.append(
+                (*pk, edge.effective_year, _REPLACED_BY_NOTE_CURATED, edge.note)
+            )
+            continue
         # #843 representation grain: a variable-grain edge carrying both columns is
         # a column-level era rename. Curated-only — no auto source, no provider
         # gate beyond the standard successor-provider check below — and ALL-LIVE
@@ -1807,6 +1969,7 @@ def materialize_curated_replaced_by(
             )
 
     reject_replaced_by_cycles(register_cycle_edges)
+    reject_replaced_by_cycles(variant_cycle_edges)
     reject_replaced_by_cycles(variable_cycle_edges)
     # Classification: cycle-check the COMBINED slug graph (auto #571 edges +
     # pending curated) before any INSERT. None when no classification edge was
@@ -1851,6 +2014,13 @@ def materialize_curated_replaced_by(
         pending_register,
     )
     conn.executemany(
+        "INSERT INTO variant_replaced_by ("
+        "predecessor_provider, predecessor_register, predecessor_variant, "
+        "successor_provider, successor_register, successor_variant, "
+        "effective_year, note, beskrivning) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        pending_variant,
+    )
+    conn.executemany(
         "INSERT INTO variable_replaced_by ("
         "predecessor_provider, predecessor_register, predecessor_variable, "
         "successor_provider, successor_register, successor_variable, "
@@ -1874,12 +2044,14 @@ def materialize_curated_replaced_by(
         pending_representation,
     )
     n_register = len(pending_register)
+    n_variant = len(pending_variant)
     n_variable = len(pending_variable)
     n_classification = len(pending_classification)
     n_representation = len(pending_representation)
 
     progress(
-        f"  {n_register:,} register / {n_variable:,} variable / "
+        f"  {n_register:,} register / {n_variant:,} variant / "
+        f"{n_variable:,} variable / "
         f"{n_classification:,} classification / "
         f"{n_representation:,} representation curated replaced_by edges "
         f"({n_skipped_duplicate:,} dedup-collapsed, "
@@ -1888,6 +2060,7 @@ def materialize_curated_replaced_by(
     )
     return {
         "register": n_register,
+        "variant": n_variant,
         "variable": n_variable,
         "classification": n_classification,
         "representation": n_representation,

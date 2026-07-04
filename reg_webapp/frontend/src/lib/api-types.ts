@@ -1674,6 +1674,10 @@ export interface components {
             value_set_version_label: string;
             /** Variant */
             variant: string;
+            /** Variant Family */
+            variant_family?: string | null;
+            /** Variant Family Label */
+            variant_family_label?: string | null;
             /** Variant Label */
             variant_label: string | null;
         };
@@ -2546,6 +2550,10 @@ export interface components {
             value_set_version_label: string;
             /** Variant */
             variant: string;
+            /** Variant Family */
+            variant_family?: string | null;
+            /** Variant Family Label */
+            variant_family_label?: string | null;
             /** Variant Label */
             variant_label: string | null;
         };
@@ -2565,6 +2573,10 @@ export interface components {
             panel_time_key: string | string[] | null;
             /** Slug */
             slug: string;
+            /** Variant Family */
+            variant_family?: string | null;
+            /** Variant Family Label */
+            variant_family_label?: string | null;
             /**
              * Versions
              * @default []

@@ -1414,9 +1414,21 @@ function graphCellSubLabel(cell: RunCell, column: string): string {
     : cell.label;
 }
 
-function graphCellTitle(cell: RunCell, column: string): string {
+function graphCellDisplayWindow(
+  cell: RunCell,
+  match: GraphCellMatch,
+): string | null {
+  return match.row.variantSegments && match.row.variantSegments.length > 1
+    ? match.row.period
+    : cell.window;
+}
+
+function graphCellTitle(cell: RunCell, match: GraphCellMatch): string {
+  const column = match.column;
   const sub = graphCellSubLabel(cell, column);
-  return [column, sub || null, cell.window].filter(Boolean).join(" · ");
+  return [column, sub || null, graphCellDisplayWindow(cell, match)]
+    .filter(Boolean)
+    .join(" · ");
 }
 
 function graphRenameHint(match: GraphCellMatch): string[] {
@@ -1509,7 +1521,7 @@ function graphLaneA11y(rn: RenderNode): string {
         return [
           item.match.column,
           sub || null,
-          item.cell.window,
+          graphCellDisplayWindow(item.cell, item.match),
           item.cell.variant,
         ]
           .filter(Boolean)
@@ -1980,7 +1992,7 @@ function codingsVaryHref(
                             class:open-start={cell.openStart}
                             class:open-end={cell.openEnd}
                             style={`left:${left}px; width:${width}px; top:${cellTopValue}px`}
-                            title={graphCellTitle(cell, column)}
+                            title={graphCellTitle(cell, item.match)}
                           >
                             <input
                               type="checkbox"
@@ -2015,8 +2027,10 @@ function codingsVaryHref(
                             {#if inWindow}
                               {@render lateWarn(row)}
                             {/if}
-                            {#if cell.window}
-                              <span class="graph-cell-window">{cell.window}</span>
+                            {#if graphCellDisplayWindow(cell, item.match)}
+                              <span class="graph-cell-window"
+                                >{graphCellDisplayWindow(cell, item.match)}</span
+                              >
                             {/if}
                           </label>
                         {:else if item.kind === "cell"}

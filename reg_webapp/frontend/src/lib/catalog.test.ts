@@ -60,6 +60,7 @@ import {
   rowAddPeriod,
   rowFacet,
   valueSetKeyForColumn,
+  variantDisplayLabel,
   variantSeg,
   windowTitle,
   YEARLESS_VALID_FROM,
@@ -1887,6 +1888,58 @@ describe("pickerRepresentations (#678 direct picker)", () => {
       }),
     ]);
     expect(row.variantLabel).toBe("ovriga-fordonsslag");
+  });
+
+  it("folds sequential concrete variants into one family row", () => {
+    const rows = pickerRepresentations([
+      state({
+        variant: "individer-16plus",
+        variant_label: "Individer, 16 år och äldre",
+        variant_family: "individer-15plus",
+        variant_family_label: "Individer",
+        delivery_column_name: "Kon",
+        valid_from: "1990-01-01",
+        valid_to: "2009-12-31",
+      }),
+      state({
+        variant: "individer-15plus",
+        variant_label: "Individer, 15 år och äldre",
+        variant_family: "individer-15plus",
+        variant_family_label: "Individer",
+        delivery_column_name: "Kon",
+        valid_from: "2010-01-01",
+        valid_to: "2023-12-31",
+      }),
+    ]);
+
+    expect(rows).toHaveLength(1);
+    expect(rows[0]).toMatchObject({
+      key: "individer-15plus::Kon",
+      variant: "individer-15plus",
+      variantFamily: "individer-15plus",
+      variantFamilyLabel: "Individer",
+      column: "Kon",
+    });
+    expect(rows[0].variantSegments).toEqual([
+      {
+        variant: "individer-16plus",
+        variantLabel: "Individer, 16 år och äldre",
+        windows: [{ from: "1990-01-01", to: "2009-12-31" }],
+      },
+      {
+        variant: "individer-15plus",
+        variantLabel: "Individer, 15 år och äldre",
+        windows: [{ from: "2010-01-01", to: "2023-12-31" }],
+      },
+    ]);
+  });
+
+  it("cart display folds known LISA individer coordinates to the family label", () => {
+    expect(variantDisplayLabel("scb/lisa/individer-16plus")).toBe("Individer");
+    expect(variantDisplayLabel("scb/lisa/individer-15plus")).toBe("Individer");
+    expect(variantDisplayLabel("scb/lisa/arbetsstallen")).toBe(
+      "scb/lisa/arbetsstallen",
+    );
   });
 
   // ── #902 part 2: collapse an intra-variable SEQUENTIAL RENAME ────────────────

@@ -745,6 +745,39 @@ class TestReplacedByLoad:
         assert e.variant == "punktskatter-for-energi"
         assert e.effective_year == 2014
 
+    def test_parses_register_variant_endpoint_edge(self, tmp_path: Path) -> None:
+        rel = _load(
+            tmp_path,
+            '[[edge]]\ntype = "replaced_by"\nfrom = "scb/lisa"\n'
+            'from_variant = "individer-16plus"\nto = "scb/lisa"\n'
+            'to_variant = "individer-15plus"\neffective_year = 2010\n',
+        )
+        e = rel.replaced_by[0]
+        assert e.predecessor.kind is FqidKind.REGISTER
+        assert e.predecessor_variant == "individer-16plus"
+        assert e.successor_variant == "individer-15plus"
+        assert e.effective_year == 2010
+
+    def test_variant_endpoints_are_both_or_neither(self, tmp_path: Path) -> None:
+        with pytest.raises(RegMetaError) as exc:
+            _load(
+                tmp_path,
+                '[[edge]]\ntype = "replaced_by"\nfrom = "scb/lisa"\n'
+                'from_variant = "individer-16plus"\nto = "scb/lisa"\n',
+            )
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert exc.value.code == "relations_invalid"
+
+    def test_variant_endpoints_require_register_grain(self, tmp_path: Path) -> None:
+        with pytest.raises(RegMetaError) as exc:
+            _load(
+                tmp_path,
+                '[[edge]]\ntype = "replaced_by"\nfrom = "scb/lisa/a"\n'
+                'from_variant = "individer-16plus"\nto = "scb/lisa/b"\n'
+                'to_variant = "individer-15plus"\n',
+            )
+        assert exc.value.code == "relations_invalid"
+
     def test_variant_on_non_representation_edge_rejected(self, tmp_path: Path) -> None:
         # `variant` scopes a column-level rename; on a plain variable-grain edge
         # (no columns) it is a mis-modeled succession → rejected.
@@ -843,6 +876,47 @@ def _class_succession_rows(conn: sqlite3.Connection) -> list[tuple]:
     ]
 
 
+def _variant_succession_db() -> sqlite3.Connection:
+    conn = build_slugged_db(classification=None)
+    add_variant(
+        conn,
+        register_variant_id=11,
+        register_id=1,
+        slug="individer-16plus",
+        name="Individer 16+",
+    )
+    conn.commit()
+    return conn
+
+
+def _variant_succession_rows(conn: sqlite3.Connection) -> list[tuple]:
+    return [
+        tuple(r)
+        for r in conn.execute(
+            "SELECT predecessor_provider, predecessor_register, predecessor_variant, "
+            "successor_provider, successor_register, successor_variant, "
+            "effective_year, note, beskrivning "
+            "FROM variant_replaced_by "
+            "ORDER BY predecessor_variant, successor_variant"
+        )
+    ]
+
+
+def _variant_replaced_by_edge(
+    *,
+    year: int | None = 2010,
+    note: str | None = "population frame changed",
+) -> CuratedReplacedBy:
+    return CuratedReplacedBy(
+        predecessor=parse_fqid("scb/lisa"),
+        successor=parse_fqid("scb/lisa"),
+        note=note,
+        effective_year=year,
+        predecessor_variant="individer-16plus",
+        successor_variant="individer-15plus",
+    )
+
+
 def _derived_from_edge(
     derived: str = "class/sun-niva2000",
     source: str = "class/sun1996",
@@ -869,6 +943,83 @@ def _class_derived_from_rows(conn: sqlite3.Connection) -> list[tuple]:
 
 def _noop(_msg: str) -> None:
     pass
+
+
+class TestVariantReplacedByMaterialize:
+    """#376: curated concrete register_variant succession lands in
+    `variant_replaced_by` without adding variant to the public FQID grammar."""
+
+    def test_one_edge_writes_with_provenance(self) -> None:
+        conn = _variant_succession_db()
+        out = materialize_curated_replaced_by(
+            conn,
+            [_variant_replaced_by_edge()],
+            set(),
+            set(),
+            providers=_SCB,
+            progress=_noop,
+        )
+        assert out["variant"] == 1
+        assert _variant_succession_rows(conn) == [
+            (
+                "scb",
+                "lisa",
+                "individer-16plus",
+                "scb",
+                "lisa",
+                "individer-15plus",
+                2010,
+                "curated:slug_toml",
+                "population frame changed",
+            )
+        ]
+
+    def test_dedups_against_event_derived_variant_edge(self) -> None:
+        conn = _variant_succession_db()
+        seen_variant = {
+            (
+                "scb",
+                "lisa",
+                "individer-16plus",
+                "scb",
+                "lisa",
+                "individer-15plus",
+            )
+        }
+        out = materialize_curated_replaced_by(
+            conn,
+            [_variant_replaced_by_edge()],
+            set(),
+            set(),
+            seen_variant,
+            providers=_SCB,
+            progress=_noop,
+        )
+        assert out["variant"] == 0
+        assert out["skipped_duplicate"] == 1
+        assert _variant_succession_rows(conn) == []
+
+    def test_unresolved_predecessor_variant_fails_fast(self) -> None:
+        conn = build_slugged_db(classification=None)
+        edge = CuratedReplacedBy(
+            predecessor=parse_fqid("scb/lisa"),
+            successor=parse_fqid("scb/lisa"),
+            note=None,
+            effective_year=2010,
+            predecessor_variant="ghost",
+            successor_variant="individer-15plus",
+        )
+        with pytest.raises(RegMetaError) as exc:
+            materialize_curated_replaced_by(
+                conn,
+                [edge],
+                set(),
+                set(),
+                providers=_SCB,
+                progress=_noop,
+            )
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert exc.value.code == "replaced_by_unresolved_variant"
 
 
 class TestClassificationDerivedFromMaterialize:
@@ -1340,6 +1491,7 @@ class TestRepresentationReplacedByMaterialize:
         )
         assert out == {
             "register": 0,
+            "variant": 0,
             "variable": 0,
             "classification": 0,
             "representation": 0,
@@ -1785,8 +1937,9 @@ class TestMovedEdges:
         # #814 iot disponibel-inkomst 2004-års-definition succession edges + 1
         # #875 KSju lgrp → NgGr1 representation-grain succession edge + 1
         # #846 RTB PNR → PersonNr representation-grain rename edge + 2 #846 FRIDA
-        # firm-key variant-scoped gap-fill round-trip edges.
-        assert len(rel.replaced_by) == 51
+        # firm-key variant-scoped gap-fill round-trip edges + 1 #376 LISA
+        # register_variant succession edge.
+        assert len(rel.replaced_by) == 52
         # #508 (615) + #737 (232) = 847 curated same_as identity edges; all
         # variable-grain with a non-empty note; max connected component stays
         # ≤32 FQIDs.
