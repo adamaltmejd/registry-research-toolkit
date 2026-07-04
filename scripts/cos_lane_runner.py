@@ -385,7 +385,26 @@ def _first_explicitly_unmet_gate(gate: dict) -> str | None:
     return None
 
 
-def _status_after_codex_bot(gate: dict, head: str) -> tuple[str, str | None]:
+def _gates_recorded_by_agent(gate: dict) -> bool:
+    """Did the lane agent record a REAL gates map (a dict with a non-codex_bot key)?
+
+    A complete handoff writes every gate it ran (ci / tests / build_db / visual / …) into
+    `gates`, deferring only codex_bot to the runner. So an ABSENT / non-dict / empty gates map,
+    or one whose ONLY key is codex_bot, means the agent never recorded its other gates — an
+    incomplete handoff. The runner must NOT flip such a PR to ready-to-merge just because
+    codex_bot came back clean: `_first_explicitly_unmet_gate` finds nothing to block on (there
+    are no other lines), so without this check the sole-unmet path would flip a PR whose other
+    gates were never verified.
+    """
+    gates = gate.get("gates")
+    if not isinstance(gates, dict):
+        return False
+    return any(name != "codex_bot" for name in gates)
+
+
+def _status_after_codex_bot(
+    gate: dict, head: str, *, gates_complete: bool = True
+) -> tuple[str, str | None]:
     """Decide (status, blocker) AFTER the codex_bot line was set clean on `head`.
 
     The single resolver for the non-blocking flip decision — it always names the REAL
@@ -393,6 +412,10 @@ def _status_after_codex_bot(gate: dict, head: str) -> tuple[str, str | None]:
 
     - The agent named a DIFFERENT blocker: a clean codex_bot does not clear it. Stay blocked,
       PRESERVE the agent's blocker (the real remaining gate).
+    - `gates_complete` is False (the agent recorded no real gates map — see
+      _gates_recorded_by_agent): the handoff is incomplete. Even with codex_bot clean, stay
+      blocked naming the incomplete handoff — the other gates (ci/tests/build_db/visual) were
+      never recorded, so a flip would mark a PR ready that the agent never finished.
     - The agent flagged codex_bot as the SOLE blocker and it is now done: verify nothing else
       actually blocks before flipping (defense-in-depth; the chief-of-staff still re-checks
       every gate + live CI + mergeability before merging — this flip is advisory):
@@ -405,6 +428,13 @@ def _status_after_codex_bot(gate: dict, head: str) -> tuple[str, str | None]:
     if gate.get("blocker") != "codex_bot":
         # The agent named a different blocker; a clean codex_bot doesn't clear it.
         return "blocked", gate.get("blocker")
+    if not gates_complete:
+        # The agent flagged codex_bot as the sole blocker but recorded no other gates: its
+        # handoff is incomplete (ci/tests/build_db/visual never verified). Do NOT flip.
+        return (
+            "blocked",
+            "gate.json has no gates recorded by the lane agent — incomplete handoff",
+        )
     unmet = _first_explicitly_unmet_gate(gate)
     if unmet is not None:
         return (
@@ -464,15 +494,22 @@ def write_codex_bot_gate(
     verdict token (`clean` or the usage-limit form). When blocking, `verdict` is ignored:
     `blocker` names the unmet item and the codex_bot line records the block reason. status
     flips to `ready-to-merge` ONLY when the verdict is non-blocking AND codex_bot is the
-    sole unmet gate (all other gate lines already met) AND every OTHER head-bound gate line
-    is still verified on the CURRENT head (a fix round that moved HEAD staled build_db /
-    visual — see head_bound_gates_current). If a head-bound gate is stale, status stays
+    sole unmet gate (all other gate lines already met) AND the agent recorded a real gates map
+    (an absent/empty/codex_bot-only map is an incomplete handoff — see _gates_recorded_by_agent)
+    AND every OTHER head-bound gate line is still verified on the CURRENT head (a fix round that
+    moved HEAD staled build_db / visual — see head_bound_gates_current). If the handoff is
+    incomplete, status stays `blocked` naming it; if a head-bound gate is stale, status stays
     `blocked` naming it; if the agent named another gate as the blocker, status stays
     `blocked` preserving that blocker. Written atomically (temp+rename) via the shared
     cos_preflight leaf so the preflight probe never sees a torn write; the caller is
     responsible for the codex-review.md evidence already existing.
     """
     gate = read_gate(gate_dir, pr)
+    # Capture whether the agent recorded a REAL gates map BEFORE we mutate it — adding the
+    # codex_bot line below would otherwise mask an empty/absent map, and the sole-unmet flip
+    # would mark a PR ready whose other gates (ci/tests/build_db/visual) the agent never
+    # recorded (an incomplete handoff). See _status_after_codex_bot's gates_complete branch.
+    gates_complete = _gates_recorded_by_agent(gate)
     gates = gate.get("gates")
     if not isinstance(gates, dict):
         gates = {}
@@ -487,11 +524,13 @@ def write_codex_bot_gate(
     else:
         gates["codex_bot"] = CODEX_BOT_LINE.format(head=head, verdict=verdict)
         # One resolver names the REAL remaining item: it preserves the agent's blocker when
-        # another gate is named, names the actually-unmet gate when the agent inconsistently
-        # blamed codex_bot alone, names a stale head-bound gate a fix round left behind, and
-        # only flips ready-to-merge when nothing else blocks. Never leaves a stale
-        # `codex_bot` blocker once codex_bot is done.
-        gate["status"], gate["blocker"] = _status_after_codex_bot(gate, head)
+        # another gate is named, blocks on an incomplete handoff (no gates recorded), names the
+        # actually-unmet gate when the agent inconsistently blamed codex_bot alone, names a stale
+        # head-bound gate a fix round left behind, and only flips ready-to-merge when nothing
+        # else blocks. Never leaves a stale `codex_bot` blocker once codex_bot is done.
+        gate["status"], gate["blocker"] = _status_after_codex_bot(
+            gate, head, gates_complete=gates_complete
+        )
 
     gate["head"] = head
     gate["updated"] = _now()
@@ -536,6 +575,56 @@ def enrich_slot_session(slot_file: Path | None, session: str | None) -> None:
     data["updated"] = _now()
     with contextlib.suppress(OSError):
         _cos_preflight._atomic_write_json(slot_file, data)
+
+
+# ---- review base resolution --------------------------------------------------
+
+
+def resolve_review_base(pr: int, fallback: str) -> str:
+    """Resolve the review base from the PR's LIVE base branch, else fall back to `fallback`.
+
+    Makes `--base` a fallback and the PR's actual base authoritative: a `codex_local_review`
+    diffed against the wrong base can hide or invent findings, so a stacked or non-main-based
+    PR must be reviewed against its REAL base (`origin/<baseRefName>`), not whatever base ref
+    the dispatcher happened to pass. Mirrors cos_dispatch.resolve_continue_pr's gh call +
+    GIT_*-scrub (a gh call, not git, but the hijack env is still scrubbed).
+
+    `baseRefName` is METADATA — a branch name used ONLY to build a ref — never an instruction
+    to the runner. On any failure (nonzero exit, parse error, empty/non-string baseRefName)
+    return `fallback` and warn on stderr, so a transient gh hiccup degrades to the dispatcher's
+    base rather than blocking the review.
+    """
+    proc = subprocess.run(
+        ["gh", "pr", "view", str(pr), "--json", "baseRefName"],
+        env=_gh.scrubbed_git_env(),  # a gh call, not git — but still scrub the hijack env
+        capture_output=True,
+        text=True,
+    )
+    if proc.returncode != 0:
+        print(
+            f"warning: could not resolve PR #{pr} base ref from gh "
+            f"({proc.stderr.strip() or proc.stdout.strip() or 'nonzero exit'}); "
+            f"falling back to --base {fallback}",
+            file=sys.stderr,
+        )
+        return fallback
+    try:
+        base_ref_name = json.loads(proc.stdout).get("baseRefName")
+    except ValueError:
+        print(
+            f"warning: could not parse PR #{pr} base ref from gh; "
+            f"falling back to --base {fallback}",
+            file=sys.stderr,
+        )
+        return fallback
+    if not isinstance(base_ref_name, str) or not base_ref_name:
+        print(
+            f"warning: PR #{pr} has no resolvable base branch; "
+            f"falling back to --base {fallback}",
+            file=sys.stderr,
+        )
+        return fallback
+    return f"origin/{base_ref_name}"
 
 
 # ---- review subprocess -------------------------------------------------------
@@ -877,9 +966,13 @@ def run(
         else discover_pr(slot_file, gate_root)
     )
     gate_dir = gate_root / f"pr-{pr}"
+    # Resolve the review base from the PR's LIVE base branch, so the review always diffs against
+    # the PR's real base (a stacked or non-main-based PR is reviewed against its predecessor, not
+    # main). --base is the fallback if gh can't resolve the base. See resolve_review_base.
+    base = resolve_review_base(pr, args.base)
     return run_loop(
         worktree=args.worktree,
-        base=args.base,
+        base=base,
         gate_dir=gate_dir,
         pr=pr,
         slot_file=slot_file,
@@ -904,8 +997,10 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument(
         "--base",
         required=True,
-        help="the PR base ref for the review (origin/main, or the predecessor branch for a "
-        "stacked PR) — passed straight to codex_local_review.py",
+        help="FALLBACK PR base ref for the review + the --dry-run value; the PR's live base "
+        "branch (resolved via gh) is authoritative, so a stacked or non-main-based PR is "
+        "always reviewed against its real base (origin/main, or the predecessor branch for a "
+        "stacked PR). Used only if gh can't resolve the base — see resolve_review_base",
     )
     target = ap.add_mutually_exclusive_group(required=True)
     target.add_argument(

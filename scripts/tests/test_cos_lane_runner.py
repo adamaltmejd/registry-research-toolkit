@@ -241,6 +241,26 @@ def test_status_after_codex_bot_preserves_agent_named_other_blocker() -> None:
     assert lr._status_after_codex_bot(gate, _HEAD40) == ("blocked", "visual")
 
 
+def test_gates_recorded_by_agent_detects_incomplete_handoff() -> None:
+    # Fix B: a real gates map has at least one non-codex_bot key. An absent / non-dict / empty
+    # map, or one whose ONLY key is codex_bot, is an incomplete handoff (no other gates recorded).
+    assert lr._gates_recorded_by_agent({"gates": {"ci": "pass"}}) is True
+    assert lr._gates_recorded_by_agent({"gates": {"codex_bot": "running"}}) is False
+    assert lr._gates_recorded_by_agent({"gates": {}}) is False
+    assert lr._gates_recorded_by_agent({}) is False
+    assert lr._gates_recorded_by_agent({"gates": "not-a-dict"}) is False
+
+
+def test_status_after_codex_bot_blocks_on_incomplete_handoff() -> None:
+    # Fix B: the agent flagged codex_bot as the sole blocker but recorded NO other gates —
+    # its handoff is incomplete. Even with codex_bot clean, the flip is withheld and the
+    # blocker names the incomplete handoff, never a false ready-to-merge.
+    gate = {"blocker": "codex_bot", "gates": {"codex_bot": "running; deferred"}}
+    status, blocker = lr._status_after_codex_bot(gate, _HEAD40, gates_complete=False)
+    assert status == "blocked"
+    assert blocker is not None and "incomplete handoff" in blocker
+
+
 def test_status_after_codex_bot_names_the_real_unmet_gate() -> None:
     # Fix A: the agent CLAIMS codex_bot is the sole blocker, but another gate line is
     # EXPLICITLY not-done (leading token `running`). The resolver overrides the (inconsistent)
@@ -393,6 +413,134 @@ def test_discover_pr_multi_pr_slot_fails_fast(tmp_path: Path) -> None:
     assert code.startswith(f"{lr.EXIT_TOOL}:")
     assert "single PR per lane" in code
     assert "[4242, 4243]" in code
+
+
+# --- review base resolution (Fix A) ------------------------------------------
+
+
+def _patch_gh(monkeypatch: pytest.MonkeyPatch, *, stdout: str, returncode: int = 0):
+    """Stub subprocess.run for the `gh pr view` call in resolve_review_base."""
+    calls: list[list[str]] = []
+
+    def fake_run(argv, **kwargs):
+        calls.append(argv)
+        return subprocess.CompletedProcess(argv, returncode, stdout=stdout, stderr="")
+
+    monkeypatch.setattr(lr.subprocess, "run", fake_run)
+    return calls
+
+
+def test_resolve_review_base_uses_pr_live_base(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    # The PR's live baseRefName is authoritative: a stacked PR based on a predecessor branch
+    # is reviewed against origin/<that>, NOT the dispatcher's --base fallback.
+    calls = _patch_gh(monkeypatch, stdout=json.dumps({"baseRefName": "s/predecessor"}))
+    base = lr.resolve_review_base(88, "origin/main")
+    assert base == "origin/s/predecessor"
+    # It called `gh pr view 88 --json baseRefName`.
+    assert calls == [["gh", "pr", "view", "88", "--json", "baseRefName"]]
+
+
+def test_resolve_review_base_falls_back_on_gh_failure(
+    monkeypatch: pytest.MonkeyPatch, capsys
+) -> None:
+    # A nonzero gh exit → fall back to --base and warn (no exception, review still runs).
+    _patch_gh(monkeypatch, stdout="", returncode=1)
+    base = lr.resolve_review_base(88, "origin/main")
+    assert base == "origin/main"
+    assert "falling back to --base origin/main" in capsys.readouterr().err
+
+
+def test_resolve_review_base_falls_back_on_parse_error(
+    monkeypatch: pytest.MonkeyPatch, capsys
+) -> None:
+    _patch_gh(monkeypatch, stdout="not json")
+    base = lr.resolve_review_base(88, "origin/main")
+    assert base == "origin/main"
+    assert "could not parse" in capsys.readouterr().err
+
+
+def test_resolve_review_base_falls_back_on_empty_base_ref(
+    monkeypatch: pytest.MonkeyPatch, capsys
+) -> None:
+    # An empty/missing baseRefName is not usable → fall back.
+    _patch_gh(monkeypatch, stdout=json.dumps({"baseRefName": ""}))
+    base = lr.resolve_review_base(88, "origin/fallback")
+    assert base == "origin/fallback"
+    assert "no resolvable base branch" in capsys.readouterr().err
+
+
+def test_run_reviews_against_resolved_pr_base(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # Fix A end-to-end: run() reviews against the PR's live base (origin/<baseRefName>), NOT
+    # the dispatcher's --base, even when they differ. Capture the base run_review saw.
+    wt = _make_worktree(tmp_path)
+    gate_root = tmp_path / "gate"
+    log = tmp_path / "lane.log"
+    _write_gate(gate_root, 55, other_gates_met=True)
+
+    def fake_turn(argv, worktree, log_path, state_root):
+        with log_path.open("a", encoding="utf-8") as fh:
+            fh.write(json.dumps({"type": "thread.started", "thread_id": "T"}) + "\n")
+
+    monkeypatch.setattr(lr, "run_codex_turn", fake_turn)
+    monkeypatch.setattr(
+        lr,
+        "resolve_review_base",
+        lambda pr, fallback: "origin/s/predecessor",
+    )
+    seen_bases: list[str] = []
+
+    def fake_review(base, gate_dir, worktree):
+        seen_bases.append(base)
+        return {"verdict": "clean", "findings": []}
+
+    monkeypatch.setattr(lr, "run_review", fake_review)
+
+    rc = lr.run(
+        _args(wt, gate_root, log, issues=None, continue_pr=55, base="origin/main"),
+        codex_id_timeout=1.0,
+        codex_id_poll=0.02,
+    )
+    assert rc == lr.EXIT_OK
+    # The review ran against the PR's resolved base, not the --base fallback.
+    assert seen_bases == ["origin/s/predecessor"]
+
+
+def test_run_reviews_against_fallback_when_gh_fails(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # Fix A fallback: when resolve_review_base can't resolve the PR base (gh failed), run()
+    # reviews against --base — the review still runs, degraded to the dispatcher's ref.
+    wt = _make_worktree(tmp_path)
+    gate_root = tmp_path / "gate"
+    log = tmp_path / "lane.log"
+    _write_gate(gate_root, 55, other_gates_met=True)
+
+    def fake_turn(argv, worktree, log_path, state_root):
+        with log_path.open("a", encoding="utf-8") as fh:
+            fh.write(json.dumps({"type": "thread.started", "thread_id": "T"}) + "\n")
+
+    monkeypatch.setattr(lr, "run_codex_turn", fake_turn)
+    # gh nonzero → resolve_review_base returns the fallback unchanged.
+    monkeypatch.setattr(lr, "resolve_review_base", lambda pr, fallback: fallback)
+    seen_bases: list[str] = []
+
+    def fake_review(base, gate_dir, worktree):
+        seen_bases.append(base)
+        return {"verdict": "clean", "findings": []}
+
+    monkeypatch.setattr(lr, "run_review", fake_review)
+
+    rc = lr.run(
+        _args(wt, gate_root, log, issues=None, continue_pr=55, base="origin/main"),
+        codex_id_timeout=1.0,
+        codex_id_poll=0.02,
+    )
+    assert rc == lr.EXIT_OK
+    assert seen_bases == ["origin/main"]
 
 
 # --- the loop: clean / findings / cap / errors -------------------------------
@@ -634,6 +782,59 @@ def test_clean_but_another_gate_explicitly_unmet_stays_blocked(
     assert gate_after["blocker"] is not None
     assert gate_after["blocker"].startswith("build_db is unmet")
     assert gate_after["blocker"] != "codex_bot"
+
+
+@pytest.mark.parametrize(
+    "gates",
+    [
+        pytest.param(None, id="no-gates-map"),
+        pytest.param({}, id="empty-gates-map"),
+        pytest.param(
+            {"codex_bot": "running; deferred-to-lane-runner"}, id="codex-bot-only"
+        ),
+    ],
+)
+def test_clean_but_incomplete_handoff_stays_blocked(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, gates
+) -> None:
+    # Fix B: the agent flagged codex_bot as the sole blocker but recorded no other gates
+    # (ci/tests/build_db/visual never verified). A clean review must NOT flip such a PR to
+    # ready-to-merge — the handoff is incomplete. codex_bot is still recorded clean; only the
+    # flip is withheld, and the blocker names the incomplete handoff.
+    wt = _make_worktree(tmp_path)
+    gate_root = tmp_path / "gate"
+    gate_dir = gate_root / "pr-4242"
+    gate_dir.mkdir(parents=True)
+    gate = {
+        "pr": 4242,
+        "head": "oldhead",
+        "status": "blocked",
+        "updated": "2026-07-04T00:00:00+00:00",
+        "blocker": "codex_bot",
+    }
+    if gates is not None:
+        gate["gates"] = gates
+    (gate_dir / "gate.json").write_text(json.dumps(gate), encoding="utf-8")
+    _patch_no_turns(monkeypatch)
+    _patch_reviews(monkeypatch, [{"verdict": "clean", "findings": []}])
+
+    rc = _run_loop(
+        tmp_path,
+        worktree=wt,
+        base="origin/main",
+        gate_dir=gate_dir,
+        pr=4242,
+        slot_file=None,
+        session="SID-1",
+    )
+
+    assert rc == lr.EXIT_OK  # codex_bot itself completed cleanly
+    gate_after = _read_gate(gate_dir)
+    assert gate_after["status"] == "blocked"
+    assert gate_after["status"] != "ready-to-merge"
+    assert "incomplete handoff" in gate_after["blocker"]
+    # codex_bot is still recorded clean on the current head — only the flip is withheld.
+    assert "clean" in gate_after["gates"]["codex_bot"]
 
 
 def test_findings_then_resume_then_clean(
@@ -951,6 +1152,8 @@ def test_run_end_to_end_clean(
             )
 
     monkeypatch.setattr(lr, "run_codex_turn", fake_turn)
+    # Stub the gh-backed base resolution so the test never touches the network.
+    monkeypatch.setattr(lr, "resolve_review_base", lambda pr, fallback: fallback)
     monkeypatch.setattr(
         lr,
         "run_review",
@@ -987,6 +1190,7 @@ def test_run_discovers_pr_and_writes_run_sentinel(
             fh.write(json.dumps({"type": "thread.started", "thread_id": "T"}) + "\n")
 
     monkeypatch.setattr(lr, "run_codex_turn", fake_turn)
+    monkeypatch.setattr(lr, "resolve_review_base", lambda pr, fallback: fallback)
     monkeypatch.setattr(
         lr,
         "run_review",
@@ -1105,6 +1309,7 @@ def test_continue_pr_uses_explicit_pr_not_discovery(
         raise AssertionError("discover_pr must not run in continue mode")
 
     monkeypatch.setattr(lr, "discover_pr", boom_discover)
+    monkeypatch.setattr(lr, "resolve_review_base", lambda pr, fallback: fallback)
     monkeypatch.setattr(
         lr,
         "run_review",
