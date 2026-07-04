@@ -415,14 +415,45 @@ def test_run_codex_nested_sandbox_denial_is_tool_failure(
     # The #1049 nested-sandbox false clean: codex exits 0 with a prose "could not inspect"
     # message (no findings header) while its stderr shows every exec denied by
     # `sandbox_apply: Operation not permitted`. Must fail-closed as tool_failure, not clean.
-    # SANDBOXED_DENIAL_STDERR also has zero `succeeded in` markers, so both no-op guard
-    # conditions hold — this pins guard ORDER: the denial guard firing first (match="sandbox")
-    # proves it wins over the generic backstop.
+    # SANDBOXED_DENIAL_STDERR has zero `succeeded in` markers, so the single no-op gate (no
+    # exec-success marker on stderr) fires; the denial marker on stderr then SELECTS the
+    # actionable sandbox message (match="sandbox") over the generic backstop.
     _stub_popen(monkeypatch, SANDBOXED_CLEAN_STDOUT, SANDBOXED_DENIAL_STDERR, 0)
 
     with pytest.raises(clr.PreconditionError, match="sandbox") as e:
         clr.run_codex("deadbeef", tmp_path / "t.md", cwd=tmp_path, timeout_s=1.0)
     assert e.value.kind == clr.KIND_TOOL_FAILURE
+
+
+def test_run_codex_denial_string_in_reviewed_content_does_not_false_block(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    # Regression: the false-BLOCK the local Codex review of PR #1080 itself caught. When codex
+    # DID exec successfully (a `succeeded in` marker on stderr), the review inspected the diff,
+    # so the `sandbox_apply: Operation not permitted` string — appearing in codex's findings on
+    # STDOUT and echoed on stderr via a quoted diff line — is PR CONTENT, not a real denial. The
+    # old combined-transcript denial scan raised a false tool_failure here; the restructured
+    # gate (exec-success absence is the ONLY gate) must NOT fire, so run_codex returns stdout
+    # unchanged. This PR's own source/tests/docs quote the string, which is exactly what tripped
+    # the false block live.
+    stdout = (
+        "codex\n"
+        "Review comment:\n\n"
+        "- [P2] Restrict sandbox-denial detection — a.py:1-1\n"
+        "  The guard scans for `sandbox_apply: Operation not permitted` too broadly.\n"
+    )
+    stderr = (
+        "[t] exec bash -lc 'git diff' in /repo\n"
+        "[t] bash -lc 'git diff' succeeded in 0ms:\n"
+        "+    # `sandbox_apply: Operation not permitted` documented in the diff\n"
+    )
+    _stub_popen(monkeypatch, stdout, stderr, 0)
+
+    returned = clr.run_codex("deadbeef", tmp_path / "t.md", cwd=tmp_path, timeout_s=1.0)
+
+    assert (
+        returned == stdout
+    )  # exec succeeded → denial string in content must not block
 
 
 def test_run_codex_no_successful_exec_is_tool_failure(
