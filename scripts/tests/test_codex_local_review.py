@@ -1,13 +1,19 @@
 """Unit tests for scripts/codex_local_review.py — the local `codex review` launcher.
 
 The deterministic core (`parse_transcript` + the precondition logic) is pinned here; the
-codex launch leaf (`run_codex`) is never invoked against the real binary — tests stub it.
-Fixtures below are captured from live runs (codex-cli 0.142.5). Load-bearing regressions:
+codex launch leaf (`run_codex`) is never invoked against the real binary — tests stub the
+`subprocess.Popen` it drives. Fixtures below are captured from live runs (codex-cli
+0.142.5). Load-bearing regressions:
   - a findings transcript parses priorities, single + span line ranges, abs-path
     normalization, and multi-line bodies attached to the right finding;
   - a clean (no-header) transcript reads clean;
-  - format drift (header with no parsable findings; a `- [P` line with no header) fails
-    fast (exit 2) rather than a false `clean`;
+  - format drift (header with no parsable findings; a header whose `- [P` count disagrees
+    with the parsed findings; `[P10]`; a `- [P` line with no header) fails fast (exit 2,
+    kind format_drift) rather than a false `clean`;
+  - fail-closed on a codex failure: empty transcript / nonzero exit surface as exit 2 with
+    a classified kind (usage_limit vs tool_failure), never a silent clean;
+  - only stdout is parsed — a `- [P…]` line in stderr neither creates a finding nor trips
+    the drift guard, and stderr lands after the `--- stderr ---` delimiter in the evidence;
   - preconditions (codex on PATH, git work tree, clean tracked worktree, resolvable base)
     exercised against hermetic tmp git repos.
 """
@@ -16,18 +22,15 @@ from __future__ import annotations
 
 import subprocess
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 import pytest
 
-from conftest import load_scripts_module
-
-if TYPE_CHECKING:
-    import pytest as _pytest
+from conftest import load_scripts_module, make_git_repo
 
 clr = load_scripts_module("codex_local_review")
 
-WORKTREE = Path("/Users/adam/Code/registry-research-toolkit/.claude/worktrees/adoring")
+# A neutral repo-relative-path root for parse tests (no real machine path).
+WORKTREE = Path("/repo/worktree")
 
 # --- captured fixtures (codex-cli 0.142.5) -------------------------------------------
 
@@ -91,6 +94,18 @@ def test_findings_span_line_range() -> None:
     assert out["findings"][0]["line_end"] == 40
 
 
+def test_findings_single_number_ref_has_equal_start_end() -> None:
+    # A `path:NN` ref (no range) parses with line_end == line_start.
+    transcript = (
+        "codex\nSummary.\n\nFull review comments:\n\n"
+        "- [P1] Single line ref — path.py:13\n  Body.\n"
+    )
+    out = clr.parse_transcript(transcript, worktree_root=WORKTREE)
+
+    assert out["findings"][0]["line_start"] == 13
+    assert out["findings"][0]["line_end"] == 13
+
+
 def test_findings_multi_line_body_attaches_to_right_finding() -> None:
     transcript = (
         "codex\nSummary.\n\nFull review comments:\n\n"
@@ -146,14 +161,17 @@ def test_prose_clean_with_reviewed_diff_is_clean() -> None:
     assert out["verdict"] == "clean"
 
 
-# --- parse_transcript: format drift → exit 2 -----------------------------------------
+# --- parse_transcript: format drift → exit 2 (kind format_drift) ---------------------
 
 
 def test_header_with_no_parsable_findings_is_format_drift() -> None:
     transcript = "codex\nSummary.\n\nFull review comments:\n\nSome prose, no entries.\n"
 
-    with pytest.raises(clr.PreconditionError, match="header present but no findings"):
+    with pytest.raises(
+        clr.PreconditionError, match="header present but no findings"
+    ) as e:
         clr.parse_transcript(transcript, worktree_root=WORKTREE)
+    assert e.value.kind == clr.KIND_FORMAT_DRIFT
 
 
 def test_finding_line_without_header_is_format_drift() -> None:
@@ -161,54 +179,173 @@ def test_finding_line_without_header_is_format_drift() -> None:
     # silently read as clean.
     transcript = "codex\nSummary text.\n- [P1] Stray finding — a.py:1-1\n  Body.\n"
 
-    with pytest.raises(clr.PreconditionError, match="no .* header"):
+    with pytest.raises(clr.PreconditionError, match="no .* header") as e:
         clr.parse_transcript(transcript, worktree_root=WORKTREE)
+    assert e.value.kind == clr.KIND_FORMAT_DRIFT
+
+
+def test_separator_variant_line_is_format_drift_via_count_guard() -> None:
+    # An en-dash (–, U+2013) separator instead of the em dash (—) fails FINDING_RE, so the
+    # line is absorbed into the previous body and dropped from the findings list. The
+    # count guard (bullet lines != parsed findings) must catch it rather than under-report.
+    transcript = (
+        "codex\nSummary.\n\nFull review comments:\n\n"
+        "- [P1] Real finding — a.py:1-1\n  Body A.\n\n"
+        "- [P2] Variant separator – b.py:2-2\n  Body B.\n"
+    )
+    with pytest.raises(clr.PreconditionError, match="separator variant") as e:
+        clr.parse_transcript(transcript, worktree_root=WORKTREE)
+    assert e.value.kind == clr.KIND_FORMAT_DRIFT
+
+
+def test_p10_priority_is_format_drift_via_count_guard() -> None:
+    # FINDING_RE pins P<single-digit>; a `[P10]` bullet fails to parse, so the count guard
+    # must fire (regression lock against silently dropping a two-digit priority).
+    transcript = (
+        "codex\nSummary.\n\nFull review comments:\n\n"
+        "- [P10] Two-digit priority — a.py:1-1\n  Body.\n"
+    )
+    with pytest.raises(clr.PreconditionError) as e:
+        clr.parse_transcript(transcript, worktree_root=WORKTREE)
+    assert e.value.kind == clr.KIND_FORMAT_DRIFT
+
+
+# --- run_codex: fail-closed on codex failure -----------------------------------------
+
+
+class _FakePopen:
+    """Minimal Popen stand-in returning canned (stdout, stderr, returncode)."""
+
+    def __init__(self, stdout: str, stderr: str, returncode: int) -> None:
+        self._out, self._err, self.returncode, self.pid = (
+            stdout,
+            stderr,
+            returncode,
+            4242,
+        )
+
+    def communicate(self, timeout: float | None = None):  # noqa: ARG002
+        return self._out, self._err
+
+
+def _stub_popen(monkeypatch: pytest.MonkeyPatch, stdout, stderr, returncode) -> None:
+    def factory(*_a, **_k):
+        return _FakePopen(stdout, stderr, returncode)
+
+    monkeypatch.setattr(clr.subprocess, "Popen", factory)
+
+
+def test_run_codex_empty_transcript_is_tool_failure(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    # Returncode 0 but no stdout must NOT parse as clean — it's a tool failure.
+    _stub_popen(monkeypatch, "   \n", "", 0)
+
+    with pytest.raises(clr.PreconditionError, match="no transcript") as e:
+        clr.run_codex("deadbeef", tmp_path / "t.md", cwd=tmp_path, timeout_s=1.0)
+    assert e.value.kind == clr.KIND_TOOL_FAILURE
+
+
+def test_run_codex_nonzero_with_usage_limit_is_usage_limit(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    _stub_popen(monkeypatch, "You've reached your Codex usage limits.", "", 1)
+
+    with pytest.raises(clr.PreconditionError) as e:
+        clr.run_codex("deadbeef", tmp_path / "t.md", cwd=tmp_path, timeout_s=1.0)
+    assert e.value.kind == clr.KIND_USAGE_LIMIT
+
+
+def test_run_codex_nonzero_other_text_is_tool_failure(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    _stub_popen(monkeypatch, "", "some auth error", 1)
+
+    with pytest.raises(clr.PreconditionError) as e:
+        clr.run_codex("deadbeef", tmp_path / "t.md", cwd=tmp_path, timeout_s=1.0)
+    assert e.value.kind == clr.KIND_TOOL_FAILURE
+
+
+def test_run_codex_stderr_is_not_parsed_and_is_delimited(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    # A `- [P…]` line and a `codex` marker in STDERR must not affect the parse: run_codex
+    # returns stdout only, and the evidence file puts stderr after the delimiter.
+    stdout = "codex\nReviewed, no issues.\n"
+    stderr = "codex\n- [P1] Stray in stderr — a.py:1-1\n"
+    _stub_popen(monkeypatch, stdout, stderr, 0)
+    out_path = tmp_path / "t.md"
+
+    returned = clr.run_codex("deadbeef", out_path, cwd=tmp_path, timeout_s=1.0)
+
+    assert returned == stdout  # stderr excluded from the parsed stream
+    # Parsing the returned stdout alone reads clean (the stderr finding is invisible).
+    assert clr.parse_transcript(returned, worktree_root=tmp_path)["verdict"] == "clean"
+    evidence = out_path.read_text(encoding="utf-8")
+    assert clr.STDERR_DELIMITER in evidence
+    assert evidence.index(clr.STDERR_DELIMITER) > evidence.index("no issues")
+
+
+def test_run_codex_timeout_kills_group_and_writes_partial(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    # A timeout must killpg the group (grandchildren inherit the pipes), write the partial
+    # transcript as evidence, and raise kind timeout — not leave communicate() blocked.
+    killed: list[int] = []
+
+    class _TimingOutPopen:
+        pid = 4242
+
+        def __init__(self, *_a, **_k) -> None:
+            self._calls = 0
+
+        def communicate(self, timeout: float | None = None):  # noqa: ARG002
+            self._calls += 1
+            if self._calls == 1:
+                raise subprocess.TimeoutExpired(cmd="codex", timeout=1.0)
+            return "partial stdout", "partial stderr"
+
+    monkeypatch.setattr(clr.subprocess, "Popen", lambda *a, **k: _TimingOutPopen())
+    monkeypatch.setattr(clr.os, "killpg", lambda pid, sig: killed.append(pid))
+    out_path = tmp_path / "t.md"
+
+    with pytest.raises(clr.PreconditionError, match="timed out") as e:
+        clr.run_codex("deadbeef", out_path, cwd=tmp_path, timeout_s=1.0)
+
+    assert e.value.kind == clr.KIND_TIMEOUT
+    assert killed == [4242]
+    assert "partial stdout" in out_path.read_text(encoding="utf-8")
 
 
 # --- preconditions (hermetic tmp git repos) ------------------------------------------
 
 
 @pytest.fixture
-def git_repo(tmp_path: Path, monkeypatch: _pytest.MonkeyPatch) -> Path:
-    """A hermetic tmp git repo with one commit, cwd chdir'd into it, GIT_* env cleared.
-
-    Mirrors the scripts/tests hermetic pattern: delete GIT_DIR/GIT_WORK_TREE so an ambient
-    worktree env (the pre-push hook hijack) can't leak in and point git at the real repo.
-    """
-    monkeypatch.delenv("GIT_DIR", raising=False)
-    monkeypatch.delenv("GIT_WORK_TREE", raising=False)
+def git_repo(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
+    """A hermetic tmp git repo with one commit, cwd chdir'd into it (see conftest)."""
     monkeypatch.chdir(tmp_path)
-    env = {"GIT_AUTHOR_NAME": "t", "GIT_AUTHOR_EMAIL": "t@e", "GIT_COMMITTER_NAME": "t",
-           "GIT_COMMITTER_EMAIL": "t@e"}  # fmt: skip
-    subprocess.run(["git", "init", "-q", "-b", "main"], cwd=tmp_path, check=True)
-    (tmp_path / "f.txt").write_text("hello\n", encoding="utf-8")
-    subprocess.run(["git", "add", "."], cwd=tmp_path, check=True)
-    subprocess.run(
-        ["git", "commit", "-q", "-m", "init"], cwd=tmp_path, check=True, env={**env}
-    )
-    return tmp_path
+    return make_git_repo(tmp_path)
 
 
-def _codex_on_path(monkeypatch: _pytest.MonkeyPatch, present: bool = True) -> None:
+def _codex_on_path(monkeypatch: pytest.MonkeyPatch, present: bool = True) -> None:
     monkeypatch.setattr(
         clr.shutil, "which", lambda _name: "/usr/bin/codex" if present else None
     )
 
 
 def test_precondition_missing_codex_errors(
-    git_repo: Path, monkeypatch: _pytest.MonkeyPatch
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
+    # No git repo needed — the codex-on-PATH check is first.
     _codex_on_path(monkeypatch, present=False)
 
     with pytest.raises(clr.PreconditionError, match="codex CLI not found"):
-        clr.check_preconditions("main", cwd=git_repo)
+        clr.check_preconditions("main", cwd=tmp_path)
 
 
 def test_precondition_not_a_git_worktree_errors(
-    tmp_path: Path, monkeypatch: _pytest.MonkeyPatch
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    monkeypatch.delenv("GIT_DIR", raising=False)
-    monkeypatch.delenv("GIT_WORK_TREE", raising=False)
     _codex_on_path(monkeypatch)
 
     with pytest.raises(clr.PreconditionError, match="not inside a git work tree"):
@@ -216,7 +353,7 @@ def test_precondition_not_a_git_worktree_errors(
 
 
 def test_precondition_dirty_tracked_worktree_errors(
-    git_repo: Path, monkeypatch: _pytest.MonkeyPatch
+    git_repo: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     _codex_on_path(monkeypatch)
     (git_repo / "f.txt").write_text("modified\n", encoding="utf-8")  # tracked edit
@@ -226,7 +363,7 @@ def test_precondition_dirty_tracked_worktree_errors(
 
 
 def test_precondition_untracked_file_is_ok(
-    git_repo: Path, monkeypatch: _pytest.MonkeyPatch
+    git_repo: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     # Untracked files are invisible to the committed diff, so they must NOT block the review.
     _codex_on_path(monkeypatch)
@@ -238,7 +375,7 @@ def test_precondition_untracked_file_is_ok(
 
 
 def test_precondition_unresolvable_explicit_base_errors(
-    git_repo: Path, monkeypatch: _pytest.MonkeyPatch
+    git_repo: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     _codex_on_path(monkeypatch)
 
@@ -246,23 +383,34 @@ def test_precondition_unresolvable_explicit_base_errors(
         clr.check_preconditions("no-such-ref", cwd=git_repo)
 
 
-def test_default_base_falls_back_to_main(
-    git_repo: Path, monkeypatch: _pytest.MonkeyPatch
+def test_precondition_missing_origin_main_no_longer_falls_back(
+    git_repo: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    # origin/main doesn't exist in the hermetic repo; the default base must fall back to main
-    # (which does), so preconditions pass and merge-base resolves to HEAD.
+    # The origin/main→main fallback was removed: origin/main doesn't resolve in a hermetic
+    # repo, so it is a hard error now (no silent review against local main).
     _codex_on_path(monkeypatch)
 
-    head, merge_base = clr.check_preconditions("origin/main", cwd=git_repo)
+    with pytest.raises(clr.PreconditionError, match="does not resolve"):
+        clr.check_preconditions("origin/main", cwd=git_repo)
 
-    assert head == merge_base  # single commit: merge-base of HEAD and main is HEAD
+
+def test_precondition_explicit_main_base_resolves(
+    git_repo: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # Callers pass --base main explicitly in hermetic repos; merge-base of HEAD and main is
+    # HEAD in a single-commit repo.
+    _codex_on_path(monkeypatch)
+
+    head, merge_base = clr.check_preconditions("main", cwd=git_repo)
+
+    assert head == merge_base
 
 
 # --- review(): parse is driven by the (stubbed) codex transcript ---------------------
 
 
 def test_review_stubs_codex_and_reports_verdict(
-    git_repo: Path, monkeypatch: _pytest.MonkeyPatch, tmp_path: Path
+    git_repo: Path, monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
     # End-to-end wiring without the real binary: stub run_codex to write + return a fixture
     # transcript, and assert review() threads the parse + metadata into the result dict.
@@ -284,15 +432,55 @@ def test_review_stubs_codex_and_reports_verdict(
     assert "duration_s" in result
 
 
-def test_run_codex_timeout_maps_to_precondition_error(
-    git_repo: Path, monkeypatch: _pytest.MonkeyPatch, tmp_path: Path
+# --- main(): argv wiring + exit codes + error JSON -----------------------------------
+
+
+def _stub_review(monkeypatch: pytest.MonkeyPatch, verdict: str) -> None:
+    def fake_review(*, base, out_path, cwd, timeout_s):
+        return {
+            "head": "h",
+            "base": base,
+            "merge_base": "h",
+            "verdict": verdict,
+            "findings": [],
+            "output_path": str(out_path or "/tmp/x.md"),
+            "duration_s": 0.1,
+        }
+
+    monkeypatch.setattr(clr, "review", fake_review)
+
+
+def test_main_clean_exits_0(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ) -> None:
-    # A codex timeout must surface as a PreconditionError (→ exit 2), not an uncaught
-    # TimeoutExpired. Stub subprocess.run to raise it.
-    def raise_timeout(*_a, **_k):
-        raise subprocess.TimeoutExpired(cmd="codex", timeout=1.0)
+    _stub_review(monkeypatch, "clean")
 
-    monkeypatch.setattr(clr.subprocess, "run", raise_timeout)
+    assert clr.main(["--base", "main"]) == 0
+    assert '"verdict": "clean"' in capsys.readouterr().out
 
-    with pytest.raises(clr.PreconditionError, match="timed out"):
-        clr.run_codex("deadbeef", tmp_path / "t.md", cwd=git_repo, timeout_s=1.0)
+
+def test_main_findings_exits_1(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    _stub_review(monkeypatch, "findings")
+
+    assert clr.main(["--base", "main"]) == 1
+    assert '"verdict": "findings"' in capsys.readouterr().out
+
+
+def test_main_error_exits_2_and_emits_error_json(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    # A PreconditionError (any exit-2 path) must exit 2, print the one-line message on
+    # stderr, AND emit a machine-readable error object on stdout with the classified kind.
+    def raise_usage_limit(*, base, out_path, cwd, timeout_s):
+        raise clr.PreconditionError("usage limit reached", kind=clr.KIND_USAGE_LIMIT)
+
+    monkeypatch.setattr(clr, "review", raise_usage_limit)
+
+    assert clr.main(["--base", "main"]) == 2
+    captured = capsys.readouterr()
+    assert "usage limit reached" in captured.err
+    payload = clr.json.loads(captured.out)
+    assert payload["verdict"] == "error"
+    assert payload["error"]["kind"] == clr.KIND_USAGE_LIMIT

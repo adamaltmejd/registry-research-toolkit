@@ -105,7 +105,7 @@ if TYPE_CHECKING:
 WAKE_EXIT = 10
 # Bump whenever the snapshot dict shape changes; load_state treats a mismatch as first-run
 # so a schema change re-baselines cleanly instead of comparing incompatible shapes.
-SNAPSHOT_VERSION = 5
+SNAPSHOT_VERSION = 6
 DEFAULT_CANONICAL = Path("/Users/adam/Code/registry-research-toolkit")
 PASSING_CONCLUSIONS = {"SUCCESS", "SKIPPED", "NEUTRAL"}
 NO_STATUS_CHANGES = "projection delta:\nno status changes"

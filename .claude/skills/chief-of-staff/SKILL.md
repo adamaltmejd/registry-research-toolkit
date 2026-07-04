@@ -96,7 +96,7 @@ It runs two tiers in one loop (both stores live under
 
 On any emission, run a normal tick — starting with your own preflight probe, exactly as
 below. The preflight now snapshots the slot ledger too (membership + staleness,
-`SNAPSHOT_VERSION` 5), so slot transitions ride the same durable at-least-once
+`SNAPSHOT_VERSION` 6), so slot transitions ride the same durable at-least-once
 probe/`--commit` handling as PR/gate events — the fast tier is the low-latency path and
 the probe is the durability net. That means the tick's own staging probe sees a slot
 transition against its baseline and wakes on it (exit `10`); an idle probe (exit `0`)
@@ -398,10 +398,11 @@ Merge only on the current head and only when every item passes:
   automerge. References to scratch or `/tmp` paths instead of files in the gate
   directory do not count — the artifacts must be there.
 - `gh pr checks <pr>` is green on the current head.
-- The gate entry's head-bound `codex_bot` line is `clean` (or `findings-fixed`), or a
-  usage-limit `exhausted` with all other gates complete, and its stamped head matches
-  the live head. A missing/stale `codex_bot`, or a still-unrun local Codex review,
-  blocks automerge — self-serve it (below) rather than merging without it.
+- The gate entry's head-bound `codex_bot` line is `clean`, or `exhausted (usage-limit)`
+  with all other gates complete (the only two legal verdict tokens; see the pr-pipeline
+  gate.json template), and its stamped head matches the live head. A missing/stale
+  `codex_bot`, or a still-unrun local Codex review, blocks automerge — self-serve it
+  (below) rather than merging without it.
 - Stale-head check passes immediately before merge, and the merge command uses
   `--match-head-commit` with that same SHA.
 - For stacked PRs, branch deletion cannot close or break dependent PRs. Before merging a
@@ -492,15 +493,20 @@ stop if it requests input or if the required bump is a major release (a major re
 a maintainer-approval class — see Automerge — and is not autonomous).
 
 If an otherwise merge-ready PR's `codex_bot` line is missing or stale (its stamped head
-trails the live head), self-serve it exactly like `build_db`: fetch the PR head, add a
-throwaway worktree at that exact SHA (never switch branches in the main checkout), run
-`uv run --no-project python scripts/codex_local_review.py` from that worktree, copy the
-transcript into the PR's gate directory as `codex-review.md`, and update the `codex_bot`
-line (atomically) to `local; codex_local_review; head <sha>; clean|findings-fixed`
-naming the evidence — editing only the gate you verified, never another gate's line or
-head stamp. A findings verdict or a usage-limit / tool failure is not something to fix
-here: set `status: blocked` with the reason as `blocker` and route it to the pipeline.
-Remove the scratch worktree when done.
+trails the live head), self-serve it with the **same recipe as the build_db self-serve
+above** — including the pre-launch `running; started <ISO>` intent stamp on the
+`codex_bot` gate line and the sole-unmet-gate scope guard (only flip `status` when the
+Codex review was the sole missing item). What differs: from the throwaway worktree run
+`uv run --no-project python scripts/codex_local_review.py --out <gate-dir>/codex-review.md`
+(background it — its 30-min ceiling outlasts the foreground cap), and the evidence file
+is `codex-review.md`. On a `clean` verdict set the `codex_bot` line (atomically) to
+`local; codex_local_review; head <sha>; clean; see codex-review.md in this dir`. A
+`findings` verdict (exit 1) is pipeline work, not fixable here: set `status: blocked`
+and route it. On exit 2, `error.kind: usage_limit` you may record yourself as
+`exhausted (usage-limit)` and proceed when all other gates are complete; any other kind
+(`timeout`, `format_drift`, `precondition`, `tool_failure`) is a blocker — set
+`status: blocked` with the kind as `blocker` and route to the owning pipeline. Remove
+the scratch worktree when done.
 
 ## Pipeline Follow-ups
 

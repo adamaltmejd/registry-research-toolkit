@@ -19,6 +19,8 @@ drift.
 from __future__ import annotations
 
 import importlib.util
+import os
+import subprocess
 import sys
 from pathlib import Path
 from typing import TYPE_CHECKING
@@ -27,6 +29,38 @@ if TYPE_CHECKING:
     from types import ModuleType
 
 _SCRIPTS = Path(__file__).resolve().parents[1]
+
+# Identity env for hermetic git commits, merged over os.environ so PATH (and thus the git
+# binary) survives — a bare four-var env would drop PATH and break `git` invocation.
+_GIT_ENV = {
+    "GIT_AUTHOR_NAME": "t",
+    "GIT_AUTHOR_EMAIL": "t@e",
+    "GIT_COMMITTER_NAME": "t",
+    "GIT_COMMITTER_EMAIL": "t@e",
+}
+
+
+def make_git_repo(tmp_path: Path) -> Path:
+    """A hermetic tmp git repo with one commit on `main`, GIT_* hijack env scrubbed.
+
+    Deletes GIT_DIR/GIT_WORK_TREE from the child env (an ambient worktree env — the
+    pre-push hook hijack — would otherwise point git at the real repo). Merges over
+    os.environ so PATH survives; returns the repo root (the caller chdirs if it needs to).
+    """
+    env = {
+        k: v
+        for k, v in {**os.environ, **_GIT_ENV}.items()
+        if k not in ("GIT_DIR", "GIT_WORK_TREE")
+    }
+    subprocess.run(
+        ["git", "init", "-q", "-b", "main"], cwd=tmp_path, check=True, env=env
+    )
+    (tmp_path / "f.txt").write_text("hello\n", encoding="utf-8")
+    subprocess.run(["git", "add", "."], cwd=tmp_path, check=True, env=env)
+    subprocess.run(
+        ["git", "commit", "-q", "-m", "init"], cwd=tmp_path, check=True, env=env
+    )
+    return tmp_path
 
 
 def load_scripts_module(name: str) -> ModuleType:

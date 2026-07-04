@@ -265,24 +265,31 @@ final HEAD (a docs push after it requires a re-run).
 
 **E · Merge-gate handoff.** Satisfy the **`CLAUDE.md` "PR merge gate"** in full —
 independent review converged (your `/code-review` loop is the independent Claude pass) ·
-CI green · local Codex review clean/fixed · real-data validation for build-affecting
-work · **visual verification (clean `/reg-webapp-design-reviewer` result with
-screenshot/render proof) for UI changes** · stale-head check. For the Codex review, run
-**`uv run --no-project python scripts/codex_local_review.py`** in the PR worktree on the
-converged HEAD. Operate it like this:
+CI green · local Codex review clean · real-data validation for build-affecting work ·
+**visual verification (clean `/reg-webapp-design-reviewer` result with screenshot/render
+proof) for UI changes** · stale-head check. For the Codex review, run
+**`uv run --no-project python scripts/codex_local_review.py --out <gate-dir>/codex-review.md`**
+in the PR worktree on the converged HEAD. Operate it like this:
 
-- **Run it foreground on the converged HEAD** (\~1–3 min): it launches `codex review`
+- **Launch it via Bash with `run_in_background: true`.** Its internal 30-min ceiling
+  outlasts the 10-min foreground Bash cap, so a foreground run risks the tool call being
+  killed mid-review; the harness notifies you on completion. It launches `codex review`
   locally against the PR's merge-base and reports the verdict as JSON on stdout (exit
-  **0** clean · **1** findings · **2** tool/precondition/parse error), with the full
-  transcript at the `output_path` it names. No GitHub trigger, no polling, no
-  `@codex review` re-request protocol.
-- **Act on the verdict:** route `findings` into the fix loop exactly like `/code-review`
-  findings (fix each, or dismiss with a reason), handoff-eligible on `clean`, treat a
-  usage-limit / tool failure (exit 2) as end-of-wait (not a blocker) only when the
-  independent review and other gates are complete. A new push invalidates the verdict —
-  just **re-run** the launcher on the new HEAD (cheap; no re-trigger dance).
-- Copy the transcript into the gate dir as `codex-review.md` and set the `gate.json`
-  `codex_bot` line to the head-bound form below.
+  **0** clean · **1** findings · **2** error, with `error.kind`). No GitHub trigger, no
+  polling, no `@codex review` re-request protocol. Pass
+  `--out <gate-dir>/codex-review.md` so the transcript lands directly in the merge-gate
+  directory (no copy step; the gate contract's "evidence files first, gate.json last"
+  ordering still holds — write `gate.json` after the run finishes).
+- **Act on the verdict:** route `findings` (exit 1) into the fix loop exactly like
+  `/code-review` findings (fix each, or dismiss with a reason), then **re-run the
+  launcher on the new HEAD until it reports `clean`** — the gate line records only the
+  LAST run's verdict on the current head, so a post-fix head never carries a pre-fix
+  verdict. Handoff-eligible on `clean`. On exit 2, read `error.kind`: only `usage_limit`
+  is the exhausted-analog (record it, not a blocker once the independent review and
+  other gates are complete); every other kind (`timeout`, `format_drift`,
+  `precondition`, `tool_failure`) is a **blocker** — write `status: blocked` naming it,
+  since a format-drift transcript may hide real unparsed findings. A new push
+  invalidates the verdict — just re-run the launcher (cheap; no re-trigger dance).
 
 When every gate passes, write the handoff into the **local merge-gate store** (contract
 in CLAUDE.md "PR merge gate"; this template is the field-level worked example): create
@@ -301,7 +308,7 @@ over `gate.json` — the preflight probe polls this file and must never see a to
   "updated": "<ISO-8601>",
   "gates": {
     "independent_review": "pass; <review source>; risk=<small|larger>; why sufficient; findings fixed/dismissed",
-    "codex_bot": "local; codex_local_review; head <sha>; <clean|findings-fixed|exhausted>; see codex-review.md in this dir",
+    "codex_bot": "local; codex_local_review; head <sha>; clean; see codex-review.md in this dir",
     "ci": "pass; gh pr checks <pr>",
     "tests": "<commands run>",
     "docs": "<updated / not required>",
@@ -324,10 +331,12 @@ handoff indicator — the PR body carries only the description and closing keywo
 evidence is NEVER posted to GitHub (no attachments, no evidence branches, no committed
 screenshots). Do not write `ready-to-merge` if any gate is missing, pending, stale, or
 only reported in the local chat transcript — write `status: blocked` with `blocker`
-naming the missing item instead, and report what chief-of-staff must wait for. A codex
-usage-limit / tool failure (exit 2) can be handed to a human with explanation, but a
-still-unrun local Codex review is not enough for automerge evidence. A later push makes
-the entry stale (its `head` no longer matches); rerun the gate on the new head and
+naming the missing item instead, and report what chief-of-staff must wait for. The
+canonical `codex_bot` grammar is the gate.json template above: the only legal verdict
+tokens are `clean` or `exhausted (usage-limit)` (the launcher's
+`error.kind: usage_limit` analog). A launcher exit 2 of any other kind is a blocker, and
+a still-unrun local Codex review is not enough for automerge evidence. A later push
+makes the entry stale (its `head` no longer matches); rerun the gate on the new head and
 refresh it. Evidence must live IN the gate directory (copied, not symlinked): scratch
 and `/tmp` paths the watcher or reviewer wrote do not survive until a later
 chief-of-staff tick. Whenever you add or repair evidence files in an existing gate

@@ -214,6 +214,40 @@ def test_merge_gate_hash_changes_on_evidence_edit(tmp_path: Path) -> None:
     assert hash_a and hash_b and hash_a != hash_b
 
 
+def test_codex_bot_gate_line_changes_hash_and_wakes_only_that_pr(
+    tmp_path: Path,
+) -> None:
+    # Adding/editing a `codex_bot` gate line changes gate_hash (so the snapshot fingerprint
+    # moves and the chief wakes) — this is the fingerprint that subsumes the deleted
+    # per-PR codex_signal wake path. And, mirroring test_gate_reason_names_only_changed_pr,
+    # a gate reason names ONLY the PR whose codex_bot line moved, not an unchanged sibling.
+    path = _write_gate(tmp_path, 956, _gate(956, gates={"ci": "pass"}))
+    hash_a = cpf.read_merge_gate(tmp_path, 956, HEAD)["gate_hash"]
+    path.write_text(
+        json.dumps(
+            _gate(
+                956,
+                gates={"ci": "pass", "codex_bot": "local; head abc; clean"},
+            )
+        ),
+        "utf-8",
+    )
+    hash_b = cpf.read_merge_gate(tmp_path, 956, HEAD)["gate_hash"]
+    assert hash_a and hash_b and hash_a != hash_b
+
+    # Two ready PRs; only #957's codex_bot line changes between snapshots — the reason must
+    # name #957 only.
+    p956 = _ready_pr(956)
+    p957 = _ready_pr(957)
+    previous = _snapshot(prs=[p956, p957])
+    p957_changed = _ready_pr(957, gate={**p957["gate"], "gate_hash": "moved"})
+    snap = _snapshot(prs=[p956, p957_changed])
+
+    reasons = cpf.actionable_reasons(snap, previous)
+    assert "ready merge-gate PR changed: #957" in reasons
+    assert "#956" not in " ".join(reasons)
+
+
 def test_checks_verdict_buckets() -> None:
     assert cpf.checks_verdict([]) == "none"
     assert cpf.checks_verdict([{"name": "test", "status": "IN_PROGRESS"}]) == "pending"

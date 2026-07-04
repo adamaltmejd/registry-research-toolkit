@@ -420,24 +420,30 @@ without merging.
   unanswered. Review is iterative: if fixes introduce substantial new changes, run
   another round on the new diff — repeat until a round produces nothing material.
 - **Local Codex review** — after the review loop converges (above), run
-  **`uv run --no-project python scripts/codex_local_review.py`** in the PR worktree on
-  the final HEAD. It launches `codex review` locally against the PR's merge-base and
-  reports the verdict as JSON on stdout (exit **0** clean · **1** findings · **2**
-  tool/precondition/parse error); the full transcript is written to the `output_path` it
-  reports. Findings are handled like any review findings — fix each, or dismiss it with a
-  stated reason. Copy the transcript into the PR's merge-gate directory as
-  `codex-review.md`, and record the verdict on the `gate.json` `codex_bot` line as
-  `local; codex_local_review; head <sha>; clean|findings-fixed` (head-SHA-bound like
-  `visual`/`build_db`, so a new push requires a fresh run). A codex usage-limit / tool
-  failure (exit 2) is recorded on the gate line and, like the old out-of-tokens
-  `exhausted`, is not a merge blocker once the independent review and all other gates are
-  complete. Nothing is posted to GitHub. The GitHub Codex web integration stays enabled
-  for a shadow period but is **no longer a gate input** — its PR comments are FYI only.
-  When a PR is otherwise merge-ready but this gate's `codex_bot` evidence is missing or
-  stale (wrong head), the chief-of-staff self-serves it exactly like `build_db` — a
-  throwaway worktree at the PR head, `scripts/codex_local_review.py` run there, the
-  transcript copied into the gate store and `gate.json` refreshed — instead of routing a
-  follow-up or asking the user.
+  **`uv run --no-project python scripts/codex_local_review.py --out <gate-dir>/codex-review.md`**
+  in the PR worktree on the final HEAD. **Launch it via Bash with `run_in_background:
+  true`** — its internal 30-min ceiling outlasts the 10-min foreground Bash cap, so a
+  foreground run risks being killed mid-review; the harness notifies on completion.
+  `--out <gate-dir>/codex-review.md` lands the transcript straight in the merge-gate
+  directory (no copy step). It launches `codex review` locally against the PR's
+  merge-base and reports the verdict as JSON on stdout (exit **0** clean · **1** findings
+  · **2** error, with a classified `error.kind`). Findings (exit 1) are handled like any
+  review findings — fix each or dismiss with a stated reason, then **re-run the launcher
+  on the new HEAD until it reports `clean`**; the `codex_bot` gate line records only the
+  LAST run's verdict on the current head, so its only legal tokens are `clean` or
+  `exhausted (usage-limit)` (see the pr-pipeline gate.json template for the canonical
+  line, head-SHA-bound like `visual`/`build_db`). On exit 2, only `error.kind:
+  usage_limit` is the exhausted-analog — recordable and not a merge blocker once the
+  independent review and all other gates are complete; every other kind (`timeout`,
+  `format_drift`, `precondition`, `tool_failure`) is a **blocker** (a format-drift
+  transcript may hide real unparsed findings), so write `status: blocked` naming it.
+  Nothing is posted to GitHub. The GitHub Codex web integration stays enabled for a
+  shadow period but is **no longer a gate input** — its PR comments are FYI only. When a
+  PR is otherwise merge-ready but this gate's `codex_bot` evidence is missing or stale
+  (wrong head), the chief-of-staff self-serves it exactly like `build_db` — a throwaway
+  worktree at the PR head, `scripts/codex_local_review.py` run there with `--out` into
+  the gate store and `gate.json` refreshed — instead of routing a follow-up or asking the
+  user.
 - **Real-data validation** when build-pipeline or DB content changed: run a real-seed
   `reg-meta-build build-db` **on the PR head** (validation runs by default), not just
   fixture tests. The untracked seed lives only in the main checkout. From a worktree,
@@ -485,9 +491,10 @@ without merging.
   predecessor branch, do not delete the predecessor branch during merge; immediately
   retarget the successor to `main` after the predecessor merge, then verify it remains
   open on the intended head. After retargeting, require the successor branch to be
-  rebased or otherwise updated onto the new base, then regenerate checks, Codex bot
-  review, independent-review judgment, and the gate entry before automerging it. Never
-  delete a branch that is the head branch of another open PR.
+  rebased or otherwise updated onto the new base, then regenerate checks, re-run the local
+  Codex review (`scripts/codex_local_review.py` on the rebased successor head),
+  independent-review judgment, and the gate entry before automerging it. Never delete a
+  branch that is the head branch of another open PR.
 
 **Agent-driven PR work outside `/pr-pipeline`:** when you build a change end to end
 without the user invoking the skill, run the same shape — plan → implement →
