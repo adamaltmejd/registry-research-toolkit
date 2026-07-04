@@ -13,7 +13,7 @@ from __future__ import annotations
 
 from typing import Annotated, Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 from reg_meta.catalog import (
     BindingGroupRef,
     ClassificationCode,
@@ -44,12 +44,28 @@ from reg_meta.search import (
 from reg_meta import ClassificationDerivedFromRef  # noqa: TC001
 
 
+class CatalogPeriodSpan(BaseModel):
+    """Best-effort inclusive year span for a steward's catalog holdings."""
+
+    model_config = ConfigDict(populate_by_name=True)
+
+    from_: int = Field(alias="from")
+    to: int
+
+
 class StewardInfo(BaseModel):
     """Deployment identity + branding, from ``steward.toml``."""
 
     id: str
     name: str
     long_name: str
+    catalog_period_span: CatalogPeriodSpan | None = Field(
+        default=None,
+        description=(
+            "Best-effort steward catalog-wide year span for UI slider bounds; "
+            "null for the global deployment or unparseable steward periods."
+        ),
+    )
 
 
 class RegMetaInfo(BaseModel):
@@ -99,6 +115,8 @@ class ContextResponse(BaseModel):
     the DB the backend booted against; the webapp block reflects the installed
     packages. ``catalog_drift_warnings`` is the steward-catalog
     drift surfaced at boot — empty for ``global`` and for an up-to-date catalog.
+    The steward block may include a best-effort ``catalog_period_span`` for
+    slider bounds.
     """
 
     steward: StewardInfo

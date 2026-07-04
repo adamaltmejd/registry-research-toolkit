@@ -1647,8 +1647,9 @@ def test_list_period_steward_index_resolves_columns(catalog):
     assert index.bindings_by_variant["scb/lisa/individer-15plus"] == frozenset(
         {("scb/lisa/kon", "Kon")}
     )
-    # The best-effort register span hints off the FIRST (lowest) segment.
-    assert index.period_range_by_register["scb/lisa"] == ("2018", "2018")
+    # The best-effort register span covers every explicit segment so steward UI
+    # bounds do not silently hide later list-period holdings.
+    assert index.period_range_by_register["scb/lisa"] == ("2018", "2020")
 
 
 @pytest.fixture

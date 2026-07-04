@@ -182,18 +182,28 @@ let {
   fqidPath,
   regMetaVersion,
   steward,
+  windowMinYear,
   vintageYear,
+  windowMaxYear = vintageYear,
+  enforcePeriodBounds = false,
 }: {
   fqidPath: string;
   // C1: the deployment seed, threaded to BindingLeafView's "Add to project" so a
   // pristine store can implicitly create the project (App → here → BindingLeafView).
   regMetaVersion: string;
   steward: string;
-  // #631: the catalog VINTAGE year (App derives it from context.reg_meta.import_date,
-  // same value the header window slider caps at). Threaded to BindingLeafView's
-  // period picker so the local slider's open-ended ceiling matches the header — not
-  // wall-clock. Same App→here→BindingLeafView prop-drill as the deployment seed.
+  // #1037: steward-aware period-control bounds, threaded to BindingLeafView's
+  // period picker. Kept separate from `vintageYear`, which is the true catalog
+  // vintage for open-ended graph timelines.
+  windowMinYear: number;
+  // #631: the true catalog vintage year (App derives it from
+  // context.reg_meta.import_date), used by graph/picker timelines that need to
+  // extend open-ended histories to the catalog build vintage.
   vintageYear: number;
+  windowMaxYear?: number;
+  // #1037: true only when App's bounds came from steward.catalog_period_span,
+  // making them hard picker limits rather than global fallback hints.
+  enforcePeriodBounds?: boolean;
 } = $props();
 
 const resource = asyncResource(() => getCatalogNode(fqidPath));
@@ -353,7 +363,16 @@ $effect(() => {
            renders those from `node` (always present — so a cold deep-link with
            `?period` isn't blank) and fetches only the period-NARROWED states from
            the URL query, reactive without a remount. -->
-      <BindingLeafView {fqidPath} {node} {regMetaVersion} {steward} {vintageYear} />
+      <BindingLeafView
+        {fqidPath}
+        {node}
+        {regMetaVersion}
+        {steward}
+        {windowMinYear}
+        {windowMaxYear}
+        {enforcePeriodBounds}
+        {vintageYear}
+      />
     {:else if node.kind === "classification-root"}
       <!-- #516 umbrella folding: e.g. group:sun renders as ONE group row
            expanding to its dimension members; #771 one-dimensional succession

@@ -88,6 +88,142 @@ def test_index_maps_variant_coord_to_bindings(catalog):
         "scb/rams": ("2019", "2019"),
     }
     assert index.drift_warnings == ()
+    assert index.catalog_period_span == (2018, 2019)
+
+
+def test_catalog_period_span_extracts_years_from_mixed_period_tokens():
+    index = CatalogIndex(
+        bindings_by_variant={},
+        period_range_by_register={
+            "scb/lisa": ("HT1995", "2020-Q3"),
+            "sos/patient": ("2018", "2018-12-31"),
+        },
+        drift_warnings=(),
+    )
+
+    assert index.catalog_period_span == (1995, 2020)
+
+
+def test_catalog_period_span_is_null_when_any_token_has_no_year():
+    index = CatalogIndex(
+        bindings_by_variant={},
+        period_range_by_register={
+            "scb/lisa": ("2018", "2018"),
+            "sos/patient": ("_default", "_default"),
+        },
+        drift_warnings=(),
+    )
+
+    assert index.catalog_period_span is None
+
+
+def test_catalog_period_span_is_null_for_token_only_periods():
+    index = CatalogIndex(
+        bindings_by_variant={},
+        period_range_by_register={"scb/lisa": ("_default", "_default")},
+        drift_warnings=(),
+    )
+
+    assert index.catalog_period_span is None
+
+
+def test_index_period_range_uses_range_and_list_endpoints(catalog):
+    project = ProjectData.model_validate(
+        _steward_project(
+            [
+                {
+                    "name": "lisa",
+                    "register_variant": "scb/lisa/individer-15plus",
+                    "period": {"from": 2018, "to": 2020},
+                    "bindings": [{"variable": "scb/lisa/kon", "type": "categorical"}],
+                },
+                {
+                    "name": "rams",
+                    "register_variant": "scb/rams/standard",
+                    "period": [2019, {"from": 2021, "to": 2022}],
+                    "bindings": [{"variable": "scb/rams/syss", "type": "numeric"}],
+                },
+            ]
+        )
+    )
+    result = validate_semantic(project, catalog, caller="steward")
+    assert result.ok
+
+    index = build_catalog_index(project, result.issues, catalog)
+
+    assert index.period_range_by_register == {
+        "scb/lisa": ("2018", "2020"),
+        "scb/rams": ("2019", "2022"),
+    }
+    assert index.catalog_period_span == (2018, 2022)
+
+
+def test_index_period_range_preserves_mixed_token_year_high_end(catalog):
+    project = ProjectData.model_validate(
+        _steward_project(
+            [
+                {
+                    "name": "lisa",
+                    "register_variant": "scb/lisa/individer-15plus",
+                    "period": ["HT1995", 2005, 2020],
+                    "bindings": [{"variable": "scb/lisa/ghostvar", "type": "numeric"}],
+                },
+            ]
+        )
+    )
+    issues = (
+        ValidationIssue(
+            level="warning",
+            code="fqid_unresolved",
+            path="/sources/0/bindings/0/variable",
+            message="gone from reg_meta",
+        ),
+    )
+
+    index = build_catalog_index(project, issues, catalog)
+
+    assert index.period_range_by_register == {"scb/lisa": ("HT1995", "2020")}
+    assert index.catalog_period_span == (1995, 2020)
+
+
+def test_index_period_range_preserves_yearless_token_as_unknown_span(catalog):
+    project = ProjectData.model_validate(
+        _steward_project(
+            [
+                {
+                    "name": "lisa_default",
+                    "register_variant": "scb/lisa/individer-15plus",
+                    "period": "_default",
+                    "bindings": [{"variable": "scb/lisa/ghostvar", "type": "numeric"}],
+                },
+                {
+                    "name": "lisa_2018",
+                    "register_variant": "scb/lisa/individer-15plus",
+                    "period": 2018,
+                    "bindings": [{"variable": "scb/lisa/ghostvar", "type": "numeric"}],
+                },
+            ]
+        )
+    )
+    issues = (
+        ValidationIssue(
+            level="warning",
+            code="fqid_unresolved",
+            path="/sources/0/bindings/0/variable",
+            message="gone from reg_meta",
+        ),
+        ValidationIssue(
+            level="warning",
+            code="fqid_unresolved",
+            path="/sources/1/bindings/0/variable",
+            message="gone from reg_meta",
+        ),
+    )
+
+    index = build_catalog_index(project, issues, catalog)
+
+    assert index.period_range_by_register == {"scb/lisa": ("_default", "_default")}
+    assert index.catalog_period_span is None
 
 
 def test_steward_boot_catalog_matches_index_and_reuses_resolve_at(
@@ -465,6 +601,7 @@ def test_boot_with_filtered_steward_populates_index(catalog_db, _filtered_stewar
     assert resp.status_code == 200
     body = resp.json()
     assert body["steward"]["id"] == "ifau"
+    assert body["steward"]["catalog_period_span"] == {"from": 2018, "to": 2019}
     assert body["catalog_drift_warnings"] == []
 
 
@@ -517,4 +654,6 @@ def test_boot_global_has_no_index(catalog_db, tmp_path, monkeypatch):
         assert app.state.catalog_index is None
         resp = client.get("/api/context")
     assert resp.status_code == 200
-    assert resp.json()["catalog_drift_warnings"] == []
+    body = resp.json()
+    assert body["steward"]["catalog_period_span"] is None
+    assert body["catalog_drift_warnings"] == []

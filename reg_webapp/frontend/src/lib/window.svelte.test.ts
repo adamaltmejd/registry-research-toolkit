@@ -76,6 +76,16 @@ describe("windowStore — no active draft (localStorage fallback)", () => {
     windowStore.set({ from: 2001, to: 2009 });
     expect(windowStore.fallback).toEqual({ from: 2001, to: 2009 });
   });
+
+  it("clampTo() rewrites a stale fallback window into steward bounds (#1037)", () => {
+    windowStore.set({ from: 1960, to: 2026 });
+    windowStore.clampTo(2000, 2010);
+
+    expect(windowStore.value).toEqual({ from: 2000, to: 2010 });
+    expect(
+      JSON.parse(localStorage.getItem("reg_webapp:project_window") ?? "null"),
+    ).toEqual({ from: 2000, to: 2010 });
+  });
 });
 
 describe("windowStore — active draft (project hydrate + write-back)", () => {
@@ -121,6 +131,23 @@ describe("windowStore — active draft (project hydrate + write-back)", () => {
     expect(draft).not.toBeNull();
     if (draft) {
       expect(JSON.parse(serializeProjectData(draft)).window).toBeUndefined();
+    }
+  });
+
+  it("clampTo() rewrites an active draft window before export (#1037)", () => {
+    projectStore.newProject(SEED);
+    projectStore.updateField("window", { from: 1960, to: 2026 });
+
+    windowStore.clampTo(2000, 2010);
+
+    expect(projectStore.draft?.window).toEqual({ from: 2000, to: 2010 });
+    const draft = projectStore.draft;
+    expect(draft).not.toBeNull();
+    if (draft) {
+      expect(JSON.parse(serializeProjectData(draft)).window).toEqual({
+        from: 2000,
+        to: 2010,
+      });
     }
   });
 });

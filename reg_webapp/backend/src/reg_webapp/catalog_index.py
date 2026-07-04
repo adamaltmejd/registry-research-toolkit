@@ -53,6 +53,7 @@ drift" banner.
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass
 from functools import cached_property
 from typing import TYPE_CHECKING
@@ -66,6 +67,8 @@ if TYPE_CHECKING:
     from reg_meta.catalog import Catalog
     from reg_schema.project_data import Binding, ProjectData, Source
     from reg_schema.validation import ValidationIssue
+
+_YEAR_RE = re.compile(r"(?<!\d)\d{4}(?!\d)")
 
 
 @dataclass(frozen=True)
@@ -102,6 +105,32 @@ class CatalogIndex:
     bindings_by_variant: dict[str, frozenset[tuple[str, str | None]]]
     period_range_by_register: dict[str, tuple[str, str]]
     drift_warnings: tuple[DriftWarning, ...]
+
+    @cached_property
+    def catalog_period_span(self) -> tuple[int, int] | None:
+        """Best-effort steward-wide year span for UI bounds.
+
+        ``period_range_by_register`` stores mixed period grammar tokens because
+        it is a UI hint, not a validity gate. Extract obvious 4-digit years and
+        return ``None`` when any token has no year-shaped content (``_default``
+        and similar): a yearless steward period may represent full history, so a
+        narrow year span would hide holdings.
+        """
+        if any(
+            not _YEAR_RE.search(token)
+            for bounds in self.period_range_by_register.values()
+            for token in bounds
+        ):
+            return None
+        years = [
+            int(match.group())
+            for bounds in self.period_range_by_register.values()
+            for token in bounds
+            for match in _YEAR_RE.finditer(token)
+        ]
+        if not years:
+            return None
+        return (min(years), max(years))
 
     @cached_property
     def _admitted_pairs(self) -> frozenset[tuple[str, str | None]]:
@@ -285,7 +314,7 @@ def build_catalog_index(
             # it must NOT contribute to the register's period span either.
             continue
         register_fqid = "/".join(variant_coord.split("/")[:2])
-        periods_by_register.setdefault(register_fqid, []).append(_period_token(source))
+        periods_by_register.setdefault(register_fqid, []).extend(_period_tokens(source))
         for b_idx, binding in enumerate(source.bindings):
             binding_base = f"{source_base}/bindings/{b_idx}"
             if _is_dropped(source_base, binding_base, dropped):
@@ -296,8 +325,7 @@ def build_catalog_index(
     return CatalogIndex(
         bindings_by_variant={k: frozenset(v) for k, v in bindings_by_variant.items()},
         period_range_by_register={
-            reg: (min(tokens), max(tokens))
-            for reg, tokens in periods_by_register.items()
+            reg: _period_bounds(tokens) for reg, tokens in periods_by_register.items()
         },
         drift_warnings=tuple(
             DriftWarning(code=w.code, path=w.path, message=w.message) for w in warnings
@@ -305,21 +333,45 @@ def build_catalog_index(
     )
 
 
-def _period_token(source) -> str:  # noqa: ANN001 — reg_schema Source (TYPE_CHECKING-only import)
-    """A comparable string token for a source's period, for the best-effort
-    register span. A bare int/str period is its own token; a range collapses to
-    its endpoints' span via ``from``. ISO/period tokens sort chronologically as
-    strings only loosely (mixed grammars don't), so this is a UI hint, never a
-    gate — see the module docstring."""
+def _period_tokens(source) -> tuple[str, ...]:  # noqa: ANN001 — reg_schema Source (TYPE_CHECKING-only import)
+    """Comparable string tokens for a source's best-effort register span.
+
+    A bare int/str period is its own token; a range contributes BOTH endpoints;
+    the #307 list form contributes every segment's tokens. ISO/period tokens
+    sort chronologically as strings only loosely (mixed grammars don't), so this
+    is a UI hint, never a gate — see the module docstring.
+    """
     period = source.period
     if isinstance(period, tuple):
-        # #307 list form: structurally sorted ascending, so the first segment
-        # carries the lower-bound token.
-        period = period[0]
-    if isinstance(period, (int, str)):
-        return str(period)
-    # PeriodRange: use the `from_` endpoint as the lower-bound token.
-    return str(period.from_)
+        return tuple(token for segment in period for token in _segment_tokens(segment))
+    return _segment_tokens(period)
+
+
+def _period_bounds(tokens: list[str]) -> tuple[str, str]:
+    """Best-effort raw-token bounds for UI hints.
+
+    Prefer tokens with obvious 4-digit years so mixed token/year registers do not
+    hide a later numeric holding behind lexicographic max (for example
+    ``HT1995``, ``2005``, ``2020``). If any token carries no year, preserve that
+    token as the collapsed span so ``catalog_period_span`` falls back instead of
+    narrowing full-history / opaque holdings.
+    """
+    year_tokens: list[tuple[int, int, str]] = []
+    for token in tokens:
+        years = [int(match.group()) for match in _YEAR_RE.finditer(token)]
+        if not years:
+            return (token, token)
+        if years:
+            year_tokens.append((min(years), max(years), token))
+    lo = min(year_tokens, key=lambda item: (item[0], item[2]))[2]
+    hi = max(year_tokens, key=lambda item: (item[1], item[2]))[2]
+    return (lo, hi)
+
+
+def _segment_tokens(segment) -> tuple[str, ...]:  # noqa: ANN001 — reg_schema PeriodSegment
+    if isinstance(segment, (int, str)):
+        return (str(segment),)
+    return (str(segment.from_), str(segment.to))
 
 
 def _resolved_columns(

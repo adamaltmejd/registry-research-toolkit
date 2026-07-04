@@ -4,7 +4,9 @@ from __future__ import annotations
 
 from fastapi.testclient import TestClient
 from reg_webapp.app import create_app
+from reg_webapp.catalog_index import CatalogIndex
 from reg_webapp.models import ContextResponse
+from reg_webapp.routes.context import _catalog_period_span
 
 
 def test_context_returns_200_and_shape(
@@ -30,3 +32,18 @@ def test_context_returns_200_and_shape(
 
     assert ctx.webapp.version
     assert ctx.webapp.reg_meta_version
+    assert ctx.steward.catalog_period_span is None
+
+
+def test_catalog_period_span_clamps_to_vintage_year():
+    index = CatalogIndex(
+        bindings_by_variant={},
+        period_range_by_register={"scb/lisa": ("1995", "2030")},
+        drift_warnings=(),
+    )
+
+    span = _catalog_period_span(index, vintage_year=2026)
+
+    assert span is not None
+    assert span.from_ == 1995
+    assert span.to == 2026

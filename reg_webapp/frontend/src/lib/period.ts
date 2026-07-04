@@ -762,6 +762,21 @@ export function clampYearWindow(
   return { from: Math.min(from, to), to: Math.max(from, to) };
 }
 
+/** Clamp only a year-grain `?period` wire to `[min, max]`. Non-year-grain
+ * values stay verbatim because the year slider renders them read-only instead of
+ * silently rewriting richer period grammar. */
+export function clampYearPeriodWire(
+  wire: string | null | undefined,
+  min: number,
+  max: number,
+): string | null {
+  const value = wire ?? null;
+  const window = yearWindowFromWire(value);
+  return window === null
+    ? value
+    : yearWindowToWire(clampYearWindow(window, min, max));
+}
+
 /** The subject's data-availability span with INDEPENDENTLY-bounded sides (#615):
  * a `null` side is UNBOUNDED (the start/end is unknown — the `0001`/`9999`
  * sentinels of `coverageFromStates`). Distinct from `StudyWindow` (a hard int

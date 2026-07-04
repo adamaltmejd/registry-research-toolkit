@@ -238,7 +238,15 @@ beforeEach(() => {
 });
 
 function renderGroup(
-  props: Partial<{ provider: string; register: string; key: string }> = {},
+  props: Partial<{
+    provider: string;
+    register: string;
+    key: string;
+    windowMinYear: number;
+    windowMaxYear: number;
+    vintageYear: number;
+    enforcePeriodBounds: boolean;
+  }> = {},
 ) {
   return render(ConceptGroupView, {
     provider: "scb",
@@ -246,6 +254,7 @@ function renderGroup(
     key: "ink",
     regMetaVersion: SEED.regMetaVersion,
     steward: SEED.steward,
+    windowMinYear: 1960,
     vintageYear: 2024,
     ...props,
   });
@@ -365,6 +374,42 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
             representation: null,
           }),
         ],
+      }),
+    );
+  });
+
+  it("clamps a stale group ?period to steward bounds before staged add (#1037)", async () => {
+    vi.mocked(getConceptGroup).mockResolvedValue(node());
+    vi.mocked(getConceptGroupGraph).mockResolvedValue(
+      graph([
+        vnode("scb/rams/inkjan", [
+          gstate({
+            variant: "individer",
+            delivery_column_name: "Inkjan",
+            valid_from: "1996-01-01",
+            valid_to: "2026-12-31",
+          }),
+        ]),
+      ]),
+    );
+    mockResolveColumns({ "scb/rams/inkjan": ["Inkjan"] });
+    router.navigate("/catalog/group/scb/rams/ink?period=1960..2026");
+
+    renderGroup({
+      windowMinYear: 2000,
+      windowMaxYear: 2010,
+      enforcePeriodBounds: true,
+    });
+
+    const jan = page.getByRole("checkbox", { name: /Inkjan/ });
+    await expect.element(jan).toBeVisible();
+    await jan.click();
+    await page.getByRole("button", { name: "Apply staged changes" }).click();
+
+    await expect.element(page.getByText(/\+1 column/)).toBeVisible();
+    expect(projectStore.draft?.sources[0]).toEqual(
+      expect.objectContaining({
+        period: { from: 2000, to: 2010 },
       }),
     );
   });

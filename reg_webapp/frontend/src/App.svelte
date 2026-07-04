@@ -64,17 +64,28 @@ const steward = $derived(context?.steward.id ?? "");
 // (e.g. "2026-06-12T08:30:00Z"); show just the leading YYYY-MM-DD (split on "T").
 const buildDate = $derived(context?.reg_meta.import_date.split("T")[0] ?? "");
 
-// The header window slider's bounds (#611 → Period model). The floor is FIXED —
-// a sensible earliest register year (Swedish registers start in the 1960s) — and
-// the ceiling is the catalog vintage year (the `import_date` year, current year
-// as fallback). `/api/context` exposes no catalog-wide variable year range, and
-// adding one would need a new reg_meta aggregate accessor + backend field +
-// openapi/types regen — heavier than this PR warrants; a catalog-derived
-// refinement can be a later follow-up (#614 report).
-const WINDOW_FLOOR_YEAR = 1960;
-const windowMaxYear = $derived(
+// The header window slider's bounds (#611 → Period model). A steward deployment
+// can expose a best-effort catalog-wide year span; use it so filtered catalogs do
+// not show decades of empty track. Global/unparseable deployments fall back to
+// the historical 1960 → catalog-vintage range.
+const FALLBACK_WINDOW_FLOOR_YEAR = 1960;
+const catalogVintageYear = $derived(
   Number(context?.reg_meta.import_date.slice(0, 4)) || new Date().getFullYear(),
 );
+const catalogPeriodSpan = $derived(
+  context?.steward.catalog_period_span ?? null,
+);
+const enforcePeriodBounds = $derived(catalogPeriodSpan !== null);
+const windowMinYear = $derived(
+  catalogPeriodSpan?.from ?? FALLBACK_WINDOW_FLOOR_YEAR,
+);
+const windowMaxYear = $derived(catalogPeriodSpan?.to ?? catalogVintageYear);
+
+$effect(() => {
+  if (enforcePeriodBounds) {
+    windowStore.clampTo(windowMinYear, windowMaxYear);
+  }
+});
 
 // The route-derived topbar breadcrumb (#803). Structural only — raw slug labels;
 // the routed page owns its rich, display-name header.
@@ -88,7 +99,7 @@ const breadcrumbItems = $derived(routeBreadcrumbs(route));
 <div class="app" use:link>
   <AppShell
     steward={context?.steward ?? null}
-    windowMin={WINDOW_FLOOR_YEAR}
+    windowMin={windowMinYear}
     windowMax={windowMaxYear}
     windowValue={windowStore.value}
     onWindowChange={(next) => windowStore.set(next)}
@@ -130,7 +141,10 @@ const breadcrumbItems = $derived(routeBreadcrumbs(route));
             fqidPath={route.fqidPath}
             {regMetaVersion}
             {steward}
-            vintageYear={windowMaxYear}
+            {windowMinYear}
+            {windowMaxYear}
+            {enforcePeriodBounds}
+            vintageYear={catalogVintageYear}
           />
         {/key}
       {:else if route.name === "group"}
@@ -144,7 +158,10 @@ const breadcrumbItems = $derived(routeBreadcrumbs(route));
             key={route.key}
             {regMetaVersion}
             {steward}
-            vintageYear={windowMaxYear}
+            {windowMinYear}
+            {windowMaxYear}
+            {enforcePeriodBounds}
+            vintageYear={catalogVintageYear}
           />
         {/key}
       {:else if route.name === "class-group"}

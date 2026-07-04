@@ -22,6 +22,8 @@ import {
 } from "./catalog";
 import PeriodPicker from "./PeriodPicker.svelte";
 import {
+  clampYearPeriodWire,
+  clampYearWindow,
   isStructurallyValidPeriodWire,
   periodFromWire,
   periodToWire,
@@ -67,18 +69,27 @@ let {
   // never re-seeded, so Add stays disabled until both are present (sub-second).
   regMetaVersion,
   steward,
-  // #631: the catalog VINTAGE year (App → here, mirroring CatalogNodeView), the
-  // period picker's open-ended slider ceiling. undefined only before
-  // /api/context resolves (the picker falls back to wall-clock then).
+  // #1037: steward-aware slider floor (App → here, mirroring CatalogNodeView).
+  windowMinYear,
+  // #631: the true catalog vintage year, used by open-ended graph timelines.
   vintageYear,
+  // #1037: steward-aware period-control ceiling. Defaults to `vintageYear` for
+  // direct component callers that are outside App's steward context.
+  windowMaxYear = vintageYear,
+  enforcePeriodBounds = false,
 }: {
   provider: string;
   register: string;
   key: string;
   regMetaVersion: string;
   steward: string;
+  windowMinYear: number;
   vintageYear?: number;
+  windowMaxYear?: number;
+  enforcePeriodBounds?: boolean;
 } = $props();
+
+const periodCeilingYear = $derived(windowMaxYear ?? new Date().getFullYear());
 
 // The `?member=` focus hint lives in the query (like `?period`), so refining it
 // doesn't remount this view. Read it reactively and pass it to the fetch (the
@@ -502,8 +513,20 @@ const focusKey = $derived.by((): string | null => {
 // so the value triggers NO refetch; it just narrows the dim window (mirrors the
 // binding leaf's `pickerWindow`).
 const period = $derived(router.getQueryParam("period"));
+const boundedPickerPeriod = $derived(
+  enforcePeriodBounds
+    ? clampYearPeriodWire(period, windowMinYear, periodCeilingYear)
+    : period,
+);
+const boundedProjectWindow = $derived(
+  windowStore.value === null || !enforcePeriodBounds
+    ? windowStore.value
+    : clampYearWindow(windowStore.value, windowMinYear, periodCeilingYear),
+);
 const activePickerPeriod = $derived(
-  period && isStructurallyValidPeriodWire(period) ? period : null,
+  boundedPickerPeriod && isStructurallyValidPeriodWire(boundedPickerPeriod)
+    ? boundedPickerPeriod
+    : null,
 );
 const graphMemberHrefs = $derived.by((): Record<string, string> => {
   const out: Record<string, string> = {};
@@ -550,7 +573,7 @@ const unionCoverage = $derived.by(() => {
  * wire wins, else the global study window), or null (no dimming). Mirrors the
  * binding leaf's `pickerWindow`. */
 const pickerWindow = $derived(
-  pickerWindowYears(activePickerPeriod, windowStore.value),
+  pickerWindowYears(activePickerPeriod, boundedProjectWindow),
 );
 
 /** Write `?period` to the group URL (preserving the pathname + any `?member=` focus
@@ -734,10 +757,12 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
          the members' union coverage span, and dims rows whose span doesn't overlap;
          writes `?period` only (never the global window); `getConceptGroup` ignores it. -->
     <PeriodPicker
-      {period}
-      window={windowStore.value}
+      period={boundedPickerPeriod}
+      window={boundedProjectWindow}
       coverage={unionCoverage}
-      {vintageYear}
+      {windowMinYear}
+      vintageYear={periodCeilingYear}
+      {enforcePeriodBounds}
       onsubmit={(p) => writePeriod(p)}
       onclear={() => writePeriod(null)}
     />

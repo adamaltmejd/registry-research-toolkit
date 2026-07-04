@@ -2,6 +2,7 @@
 import PeriodWindowSlider from "./PeriodWindowSlider.svelte";
 import {
   type Coverage,
+  clampYearPeriodWire,
   clampYearWindow,
   intersectCoverageWindow,
   yearWindowFromWire,
@@ -19,7 +20,9 @@ let {
   period,
   window = null,
   coverage = null,
+  windowMinYear = 1960,
   vintageYear = undefined,
+  enforcePeriodBounds = false,
   onsubmit,
   onclear,
 }: {
@@ -29,57 +32,116 @@ let {
   window?: StudyWindow | null;
   /** The subject's data-availability span, or null = unknown. */
   coverage?: Coverage | null;
+  /** The outer floor for the year slider; steward deployments may narrow it. */
+  windowMinYear?: number;
   /** The catalog vintage year (#631), used as the open-ended coverage ceiling. */
   vintageYear?: number;
+  /** Treat the outer bounds as hard steward limits rather than global fallbacks. */
+  enforcePeriodBounds?: boolean;
   /** Emitted with the chosen wire value on submit. */
   onsubmit: (period: string) => void;
   /** Emitted when the clear button is pressed (drop `?period`). */
   onclear: () => void;
 } = $props();
 
-// A sensible earliest register year — the slider's floor when neither the
-// window nor coverage reaches further back.
-const SLIDER_FLOOR_YEAR = 1960;
-
 // The slider's open-ended ceiling (#631). Undefined only before `/api/context`
 // resolves; fall back to wall-clock so a pre-context leaf still renders.
 const ceilingYear = $derived(vintageYear ?? new Date().getFullYear());
+const boundedPeriod = $derived(
+  enforcePeriodBounds
+    ? clampYearPeriodWire(period, windowMinYear, ceilingYear)
+    : period,
+);
+
+/** Subject coverage clipped to hard steward bounds only. The global 1960 floor is
+ * a fallback for unknown/empty cases, so real pre-1960 coverage must still widen
+ * the track in non-steward deployments. */
+const boundedCoverage = $derived.by<Coverage | null>(() => {
+  if (coverage === null) {
+    return null;
+  }
+  const bounded = {
+    from:
+      coverage.from === null
+        ? null
+        : enforcePeriodBounds
+          ? Math.max(coverage.from, windowMinYear)
+          : coverage.from,
+    to:
+      coverage.to === null
+        ? null
+        : enforcePeriodBounds
+          ? Math.min(coverage.to, ceilingYear)
+          : coverage.to,
+  };
+  if (enforcePeriodBounds) {
+    const boundedFrom = bounded.from ?? windowMinYear;
+    const boundedTo = bounded.to ?? ceilingYear;
+    if (boundedFrom > boundedTo) {
+      return null;
+    }
+  }
+  return bounded;
+});
+
+const periodWindow = $derived<StudyWindow | null>(
+  yearWindowFromWire(boundedPeriod),
+);
+
+const boundedWindow = $derived<StudyWindow | null>(
+  window === null || !enforcePeriodBounds
+    ? window
+    : clampYearWindow(window, windowMinYear, ceilingYear),
+);
+
+const boundedPeriodWindow = $derived<StudyWindow | null>(
+  periodWindow === null || !enforcePeriodBounds
+    ? periodWindow
+    : clampYearWindow(periodWindow, windowMinYear, ceilingYear),
+);
 
 /** The year window the slider treats as the active selection: a
  * year-representable `?period` wins; else the project window; else null. */
 const activeYearSelection = $derived<StudyWindow | null>(
-  yearWindowFromWire(period) ?? window,
+  boundedPeriodWindow ?? boundedWindow,
 );
 
 /** The active `?period` wire when it is set but NOT year-representable. */
 const subAnnualPeriod = $derived<string | null>(
-  period !== null && !yearWindowRepresentable(period) ? period : null,
+  boundedPeriod !== null && !yearWindowRepresentable(boundedPeriod)
+    ? boundedPeriod
+    : null,
 );
 
 /** Bounds that fit what is drawn: project window, active selection, and coverage. */
 const sliderBounds = $derived.by(() => {
   const years: number[] = [];
-  for (const w of [window, activeYearSelection]) {
+  for (const w of [boundedWindow, activeYearSelection]) {
     if (w) {
       years.push(w.from, w.to);
     }
   }
-  if (coverage) {
-    if (coverage.from !== null) {
-      years.push(coverage.from);
+  if (boundedCoverage) {
+    if (boundedCoverage.from !== null) {
+      years.push(boundedCoverage.from);
     }
-    years.push(coverage.to ?? ceilingYear);
+    years.push(boundedCoverage.to ?? ceilingYear);
   }
   const max = years.length > 0 ? Math.max(...years) : ceilingYear;
-  const min = Math.min(SLIDER_FLOOR_YEAR, ...years, max);
+  const min = Math.min(windowMinYear, ...years, max);
   return { min, max };
 });
 
 /** Thumb seed precedence (#671): explicit year `?period` > window∩coverage >
  * coverage > window > full bounds. */
 const seededSelection = $derived<StudyWindow>(
-  yearWindowFromWire(period) ??
-    intersectCoverageWindow(coverage, window, sliderBounds.min, ceilingYear),
+  boundedPeriodWindow ??
+    intersectCoverageWindow(
+      boundedCoverage,
+      boundedWindow,
+      sliderBounds.min,
+      ceilingYear,
+    ),
 );
 
 /** The clamped slider selection shown to the user. */
@@ -99,9 +161,7 @@ const hasSliderSelection = $derived(
 /** Whether the user has actually chosen a year-window value distinct from the
  * project window. The untouched coverage-clamped default seed is not a user
  * deviation. */
-const userChosen = $derived(
-  yearWindowFromWire(period) !== null || sliderWire !== null,
-);
+const userChosen = $derived(periodWindow !== null || sliderWire !== null);
 
 $effect(() => {
   // Re-arm the slider buffer on URL, window, coverage, or ceiling changes. This
@@ -116,8 +176,9 @@ $effect(() => {
 
 /** Whether `coverage` yields a usable non-inverted seed. */
 const effectiveCoverageUsable = $derived(
-  coverage !== null &&
-    (coverage.from ?? sliderBounds.min) <= (coverage.to ?? ceilingYear),
+  boundedCoverage !== null &&
+    (boundedCoverage.from ?? sliderBounds.min) <=
+      (boundedCoverage.to ?? ceilingYear),
 );
 
 function applySlider(): void {
@@ -141,8 +202,8 @@ function applySlider(): void {
 }
 
 function resetToWindow(): void {
-  if (window !== null) {
-    onsubmit(yearWindowToWire(window));
+  if (boundedWindow !== null) {
+    onsubmit(yearWindowToWire(boundedWindow));
   } else {
     onclear();
   }
@@ -165,8 +226,8 @@ function submit(event: SubmitEvent): void {
         min={sliderBounds.min}
         max={sliderBounds.max}
         selection={sliderSelection}
-        {window}
-        {coverage}
+        window={boundedWindow}
+        coverage={boundedCoverage}
         vintageYear={ceilingYear}
         {subAnnualPeriod}
         hasSelection={hasSliderSelection}

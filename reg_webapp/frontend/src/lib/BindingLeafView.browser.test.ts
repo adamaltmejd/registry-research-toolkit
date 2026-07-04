@@ -19,6 +19,7 @@ import {
 import BindingLeafView from "./BindingLeafView.svelte";
 import { projectStore } from "./project_store.svelte";
 import { router } from "./router.svelte";
+import { windowStore } from "./window.svelte";
 
 // Two surfaces under test:
 //   1. the direct representation picker (#678) — the variable's representations
@@ -215,13 +216,18 @@ beforeEach(() => {
   // No `?period` — the embedded states drive the plan.
   window.history.pushState({}, "", "/__reset__");
   router.navigate("/catalog/scb/lisa/kon");
+  windowStore.set(null);
   projectStore.newProject({
     reg_meta_version: "reg_meta/v1.0.0",
     steward: "global",
   });
 });
 
-const SEED = { regMetaVersion: "reg_meta/v1.0.0", steward: "global" } as const;
+const SEED = {
+  regMetaVersion: "reg_meta/v1.0.0",
+  steward: "global",
+  windowMinYear: 1960,
+} as const;
 
 describe("BindingLeafView representation picker (#678)", () => {
   it("does not fetch or render register source documents on variable pages (#967)", async () => {
@@ -332,12 +338,55 @@ describe("BindingLeafView representation picker (#678)", () => {
       .toBeVisible();
   });
 
+  it("does not clamp open-ended graph timelines to the steward period ceiling", async () => {
+    vi.mocked(getBindingGraph).mockResolvedValue(
+      graph({
+        states: [
+          gstate({
+            valid_from: "2000-01-01",
+            valid_to: null,
+            delivery_column_name: "Kon",
+          }),
+        ],
+      }) as never,
+    );
+
+    render(BindingLeafView, {
+      fqidPath: "scb/lisa/kon",
+      node: node([
+        state({
+          valid_from: "2000-01-01",
+          valid_to: "9999-12-31",
+          delivery_column_name: "Kon",
+        }),
+      ]),
+      ...SEED,
+      windowMinYear: 2000,
+      windowMaxYear: 2010,
+      vintageYear: 2026,
+    });
+
+    await expect.element(page.getByText("coverage through 2010")).toBeVisible();
+
+    const graphTicks = await vi.waitFor(() => {
+      const labels = [...document.querySelectorAll(".history-graph .tick")].map(
+        (el) => el.textContent?.trim() ?? "",
+      );
+      if (!labels.includes("2026")) {
+        throw new Error(`history graph ticks not ready: ${labels.join(", ")}`);
+      }
+      return labels;
+    });
+    expect(graphTicks).toContain("2026");
+  });
+
   it("lists each representation row with its delivery column + period span", async () => {
     render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
       node: node(pickerStates),
       regMetaVersion: SEED.regMetaVersion,
       steward: SEED.steward,
+      windowMinYear: SEED.windowMinYear,
       vintageYear: 2024,
     });
 
@@ -368,6 +417,7 @@ describe("BindingLeafView representation picker (#678)", () => {
       node: node(pickerStates),
       regMetaVersion: SEED.regMetaVersion,
       steward: SEED.steward,
+      windowMinYear: SEED.windowMinYear,
       vintageYear: 2024,
     });
 
@@ -390,6 +440,7 @@ describe("BindingLeafView representation picker (#678)", () => {
       node: node(pickerStates),
       regMetaVersion: SEED.regMetaVersion,
       steward: SEED.steward,
+      windowMinYear: SEED.windowMinYear,
       vintageYear: 2024,
     });
 
@@ -424,6 +475,7 @@ describe("BindingLeafView representation picker (#678)", () => {
       node: node(pickerStates),
       regMetaVersion: SEED.regMetaVersion,
       steward: SEED.steward,
+      windowMinYear: SEED.windowMinYear,
       vintageYear: 2024,
     });
 
@@ -491,6 +543,7 @@ describe("BindingLeafView representation picker (#678)", () => {
       node: node(pickerStates),
       regMetaVersion: SEED.regMetaVersion,
       steward: SEED.steward,
+      windowMinYear: SEED.windowMinYear,
       vintageYear: 2024,
     });
 
@@ -529,6 +582,7 @@ describe("BindingLeafView representation picker (#678)", () => {
       node: node(pickerStates),
       regMetaVersion: SEED.regMetaVersion,
       steward: SEED.steward,
+      windowMinYear: SEED.windowMinYear,
       vintageYear: 2024,
     });
 
@@ -576,6 +630,7 @@ describe("BindingLeafView representation picker (#678)", () => {
       node: node(pickerStates),
       regMetaVersion: SEED.regMetaVersion,
       steward: SEED.steward,
+      windowMinYear: SEED.windowMinYear,
       vintageYear: 2024,
     });
 
@@ -614,6 +669,7 @@ describe("BindingLeafView representation picker (#678)", () => {
       node: node(pickerStates),
       regMetaVersion: SEED.regMetaVersion,
       steward: SEED.steward,
+      windowMinYear: SEED.windowMinYear,
       vintageYear: 2024,
     });
 
@@ -657,6 +713,7 @@ describe("BindingLeafView representation picker (#678)", () => {
       node: node(pickerStates),
       regMetaVersion: SEED.regMetaVersion,
       steward: SEED.steward,
+      windowMinYear: SEED.windowMinYear,
       vintageYear: 2024,
     });
 
@@ -693,6 +750,7 @@ describe("BindingLeafView representation picker (#678)", () => {
       node: node(pickerStates),
       regMetaVersion: SEED.regMetaVersion,
       steward: SEED.steward,
+      windowMinYear: SEED.windowMinYear,
       vintageYear: 2024,
     });
 
@@ -714,6 +772,7 @@ describe("BindingLeafView representation picker (#678)", () => {
       node: node(pickerStates),
       regMetaVersion: SEED.regMetaVersion,
       steward: SEED.steward,
+      windowMinYear: SEED.windowMinYear,
       vintageYear: 2024,
     });
 
@@ -763,6 +822,7 @@ describe("BindingLeafView representation picker (#678)", () => {
       node: node(renameStates),
       regMetaVersion: SEED.regMetaVersion,
       steward: SEED.steward,
+      windowMinYear: SEED.windowMinYear,
       vintageYear: 2024,
     });
 
@@ -799,6 +859,7 @@ describe("BindingLeafView representation picker (#678)", () => {
       node: node(pickerStates),
       regMetaVersion: SEED.regMetaVersion,
       steward: SEED.steward,
+      windowMinYear: SEED.windowMinYear,
       vintageYear: 2024,
     });
 
@@ -821,6 +882,83 @@ describe("BindingLeafView representation picker (#678)", () => {
     );
   });
 
+  it("clamps a stale project window to steward bounds before staged add (#1037)", async () => {
+    const longSpan = [
+      state({
+        state_id: 1,
+        variant: "individer",
+        delivery_column_name: "Kon",
+        valid_from: "1996-01-01",
+        valid_to: "2026-12-31",
+      }),
+    ];
+    vi.mocked(getCatalogNode).mockResolvedValue(statesResponse(longSpan));
+    windowStore.set({ from: 1960, to: 2026 });
+
+    render(BindingLeafView, {
+      fqidPath: "scb/lisa/kon",
+      node: node(longSpan),
+      regMetaVersion: SEED.regMetaVersion,
+      steward: SEED.steward,
+      windowMinYear: 2000,
+      windowMaxYear: 2010,
+      vintageYear: 2024,
+      enforcePeriodBounds: true,
+    });
+
+    const kon = page.getByRole("checkbox", { name: /Kon/ });
+    await expect.element(kon).toBeVisible();
+    await kon.click();
+    await page.getByRole("button", { name: "Apply staged changes" }).click();
+
+    await expect.element(page.getByText(/\+1 column/)).toBeVisible();
+    expect(projectStore.draft?.sources[0]).toEqual(
+      expect.objectContaining({
+        period: { from: 2000, to: 2010 },
+      }),
+    );
+  });
+
+  it("uses the steward-bounded period in the States narrowed note (#1037)", async () => {
+    const longSpan = [
+      state({
+        state_id: 1,
+        variant: "individer",
+        delivery_column_name: "Kon",
+        valid_from: "1996-01-01",
+        valid_to: "2026-12-31",
+      }),
+    ];
+    vi.mocked(getCatalogNode).mockResolvedValue(statesResponse(longSpan));
+    router.navigate("/catalog/scb/lisa/kon?period=1960..2026");
+
+    render(BindingLeafView, {
+      fqidPath: "scb/lisa/kon",
+      node: node(longSpan),
+      regMetaVersion: SEED.regMetaVersion,
+      steward: SEED.steward,
+      windowMinYear: 2000,
+      windowMaxYear: 2010,
+      vintageYear: 2024,
+      enforcePeriodBounds: true,
+    });
+
+    await expect
+      .element(page.getByText(/narrowed to 2000\.\.2010/))
+      .toBeVisible();
+    expect(document.body.textContent).not.toContain("narrowed to 1960..2026");
+    expect(
+      vi
+        .mocked(getCatalogNode)
+        .mock.calls.some(([, p]) => p?.period === "2000..2010"),
+    ).toBe(true);
+    expect(
+      vi
+        .mocked(getCatalogNode)
+        .mock.calls.some(([, p]) => p?.period === "1960..2026"),
+    ).toBe(false);
+  });
+
   it("dims rows whose span does not overlap the active period window", async () => {
     // Narrow to 2018..2020 — the Sni row (2018–2020) overlaps, the Kon row
     // (2010–2015) does not, so Kon's row is dimmed (but still selectable).
@@ -834,6 +972,7 @@ describe("BindingLeafView representation picker (#678)", () => {
       node: node(pickerStates),
       regMetaVersion: SEED.regMetaVersion,
       steward: SEED.steward,
+      windowMinYear: SEED.windowMinYear,
       vintageYear: 2024,
     });
 
@@ -884,6 +1023,7 @@ describe("BindingLeafView representation picker (#678)", () => {
       node: node(fordonsreg, { fqid: "scb/fordonsreg/naringsgren" }),
       regMetaVersion: SEED.regMetaVersion,
       steward: SEED.steward,
+      windowMinYear: SEED.windowMinYear,
       vintageYear: 2024,
     });
 
@@ -964,6 +1104,7 @@ describe("BindingLeafView representation picker (#678)", () => {
       node: node(colVaries, { fqid: "scb/lisa/yrke", name: "Yrke" }),
       regMetaVersion: SEED.regMetaVersion,
       steward: SEED.steward,
+      windowMinYear: SEED.windowMinYear,
       vintageYear: 2024,
     });
 
@@ -1019,6 +1160,7 @@ describe("BindingLeafView representation picker (#678)", () => {
       node: node(sni92, { fqid: "scb/fordonsreg/sni92", name: "Näringsgren" }),
       regMetaVersion: SEED.regMetaVersion,
       steward: SEED.steward,
+      windowMinYear: SEED.windowMinYear,
       vintageYear: 2024,
     });
 
@@ -1076,6 +1218,7 @@ describe("BindingLeafView representation picker (#678)", () => {
       node: node(states),
       regMetaVersion: SEED.regMetaVersion,
       steward: SEED.steward,
+      windowMinYear: SEED.windowMinYear,
       vintageYear: 2024,
     });
 
@@ -1149,6 +1292,7 @@ describe("BindingLeafView representation picker (#678)", () => {
       node: node(states),
       regMetaVersion: SEED.regMetaVersion,
       steward: SEED.steward,
+      windowMinYear: SEED.windowMinYear,
       vintageYear: 2024,
     });
     // The viewer is isolated on ColA's latest coding: the "Used by" detail + the
@@ -1191,6 +1335,7 @@ describe("BindingLeafView representation picker (#678)", () => {
       node: node(states),
       regMetaVersion: SEED.regMetaVersion,
       steward: SEED.steward,
+      windowMinYear: SEED.windowMinYear,
       vintageYear: 2024,
     });
     // Isolated on variant "a"'s coding ("Coding A"), NOT "b"'s latest-era "Coding B".
@@ -1221,6 +1366,7 @@ describe("BindingLeafView representation picker (#678)", () => {
       node: node(oneColumn),
       regMetaVersion: SEED.regMetaVersion,
       steward: SEED.steward,
+      windowMinYear: SEED.windowMinYear,
       vintageYear: 2024,
     });
 
@@ -1256,6 +1402,7 @@ describe("BindingLeafView representation picker (#678)", () => {
       node: node(single),
       regMetaVersion: SEED.regMetaVersion,
       steward: SEED.steward,
+      windowMinYear: SEED.windowMinYear,
       vintageYear: 2024,
     });
 
@@ -1271,6 +1418,7 @@ describe("BindingLeafView representation picker (#678)", () => {
       node: node(single),
       regMetaVersion: SEED.regMetaVersion,
       steward: SEED.steward,
+      windowMinYear: SEED.windowMinYear,
       vintageYear: 2024,
     });
 
@@ -1307,6 +1455,7 @@ describe("BindingLeafView representation picker (#678)", () => {
       } as Partial<BindingNodeData>),
       regMetaVersion: SEED.regMetaVersion,
       steward: SEED.steward,
+      windowMinYear: SEED.windowMinYear,
       vintageYear: 2024,
     });
 
@@ -1322,6 +1471,7 @@ describe("BindingLeafView representation picker (#678)", () => {
       node: node(singleWithStructural),
       regMetaVersion: SEED.regMetaVersion,
       steward: SEED.steward,
+      windowMinYear: SEED.windowMinYear,
       vintageYear: 2024,
     });
 
@@ -1357,6 +1507,7 @@ describe("BindingLeafView representation picker (#678)", () => {
       node: node(pickerStates),
       regMetaVersion: "",
       steward: "",
+      windowMinYear: SEED.windowMinYear,
       vintageYear: 2024,
     });
     const add = page.getByRole("button", { name: "Apply staged changes" });
@@ -1405,6 +1556,7 @@ describe("BindingLeafView period-scoped value-set history (#744)", () => {
       node: node([inA, inB, outside]),
       regMetaVersion: SEED.regMetaVersion,
       steward: SEED.steward,
+      windowMinYear: SEED.windowMinYear,
       vintageYear: 2024,
     });
 
@@ -1482,6 +1634,7 @@ describe("BindingLeafView period-scoped value-set history (#744)", () => {
       node: node([inA, inB, samePeriodOtherVariant, outsideIndivider]),
       regMetaVersion: SEED.regMetaVersion,
       steward: SEED.steward,
+      windowMinYear: SEED.windowMinYear,
       vintageYear: 2024,
     });
 
@@ -1531,6 +1684,7 @@ describe("BindingLeafView period-scoped value-set history (#744)", () => {
       node: node([inA, samePeriodOtherVariant]),
       regMetaVersion: SEED.regMetaVersion,
       steward: SEED.steward,
+      windowMinYear: SEED.windowMinYear,
       vintageYear: 2024,
     });
 
@@ -1570,6 +1724,7 @@ describe("BindingLeafView period-scoped value-set history (#744)", () => {
       node: node([picked, samePeriodOtherVariant]),
       regMetaVersion: SEED.regMetaVersion,
       steward: SEED.steward,
+      windowMinYear: SEED.windowMinYear,
       vintageYear: 2024,
     });
 
@@ -1611,6 +1766,7 @@ describe("BindingLeafView period-scoped value-set history (#744)", () => {
       node: node([picked, otherVariant]),
       regMetaVersion: SEED.regMetaVersion,
       steward: SEED.steward,
+      windowMinYear: SEED.windowMinYear,
       vintageYear: 2024,
     });
 
@@ -1663,6 +1819,7 @@ describe("BindingLeafView period-scoped value-set history (#744)", () => {
       node: node([individerCoding, otherCoding]),
       regMetaVersion: SEED.regMetaVersion,
       steward: SEED.steward,
+      windowMinYear: SEED.windowMinYear,
       vintageYear: 2024,
     });
 
@@ -1716,6 +1873,7 @@ describe("BindingLeafView member identity from graph focus (#670/#678)", () => {
       node: groupedNode,
       regMetaVersion: SEED.regMetaVersion,
       steward: SEED.steward,
+      windowMinYear: SEED.windowMinYear,
       vintageYear: 2024,
     });
 
@@ -1757,6 +1915,7 @@ describe("BindingLeafView member identity from graph focus (#670/#678)", () => {
       node: groupedNode,
       regMetaVersion: SEED.regMetaVersion,
       steward: SEED.steward,
+      windowMinYear: SEED.windowMinYear,
       vintageYear: 2024,
     });
 
@@ -1783,6 +1942,7 @@ describe("BindingLeafView member identity from graph focus (#670/#678)", () => {
       node: groupedNode,
       regMetaVersion: SEED.regMetaVersion,
       steward: SEED.steward,
+      windowMinYear: SEED.windowMinYear,
       vintageYear: 2024,
     });
 
@@ -1808,6 +1968,7 @@ describe("BindingLeafView member identity from graph focus (#670/#678)", () => {
       node: groupedNode,
       regMetaVersion: SEED.regMetaVersion,
       steward: SEED.steward,
+      windowMinYear: SEED.windowMinYear,
       vintageYear: 2024,
     });
 
@@ -1832,6 +1993,7 @@ describe("BindingLeafView member identity from graph focus (#670/#678)", () => {
       node: groupedNode,
       regMetaVersion: SEED.regMetaVersion,
       steward: SEED.steward,
+      windowMinYear: SEED.windowMinYear,
       vintageYear: 2024,
     });
 
@@ -1853,6 +2015,7 @@ describe("BindingLeafView member identity from graph focus (#670/#678)", () => {
       node: node(single),
       regMetaVersion: SEED.regMetaVersion,
       steward: SEED.steward,
+      windowMinYear: SEED.windowMinYear,
       vintageYear: 2024,
     });
 
@@ -1873,6 +2036,7 @@ describe("BindingLeafView member identity from graph focus (#670/#678)", () => {
       node: groupedNode,
       regMetaVersion: SEED.regMetaVersion,
       steward: SEED.steward,
+      windowMinYear: SEED.windowMinYear,
       vintageYear: 2024,
     });
 

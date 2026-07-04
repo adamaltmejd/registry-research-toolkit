@@ -217,6 +217,7 @@ describe("CatalogNodeView provider arm", () => {
       fqidPath: "scb",
       regMetaVersion: "test",
       steward: "global",
+      windowMinYear: 1960,
       vintageYear: 2024,
     });
 
@@ -275,6 +276,7 @@ describe("CatalogNodeView provider arm", () => {
       fqidPath: "scb",
       regMetaVersion: "test",
       steward: "global",
+      windowMinYear: 1960,
       vintageYear: 2024,
     });
 
@@ -294,6 +296,7 @@ describe("CatalogNodeView register arm", () => {
       fqidPath: "scb/lisa",
       regMetaVersion: "test",
       steward: "global",
+      windowMinYear: 1960,
       vintageYear: 2024,
     });
 
@@ -323,6 +326,7 @@ describe("CatalogNodeView register arm", () => {
       fqidPath: "scb/lisa",
       regMetaVersion: "test",
       steward: "global",
+      windowMinYear: 1960,
       vintageYear: 2024,
     });
 
@@ -353,6 +357,7 @@ describe("CatalogNodeView register arm", () => {
       fqidPath: "scb/lisa",
       regMetaVersion: "test",
       steward: "global",
+      windowMinYear: 1960,
       vintageYear: 2024,
     });
 
@@ -397,6 +402,7 @@ describe("CatalogNodeView register arm", () => {
       fqidPath: "scb/lisa",
       regMetaVersion: "test",
       steward: "global",
+      windowMinYear: 1960,
       vintageYear: 2024,
     });
 
@@ -434,6 +440,7 @@ describe("CatalogNodeView register arm", () => {
       fqidPath: "scb/lisa",
       regMetaVersion: "test",
       steward: "global",
+      windowMinYear: 1960,
       vintageYear: 2024,
     });
 
@@ -460,6 +467,7 @@ describe("CatalogNodeView classification-root arm (#756)", () => {
       fqidPath: "class",
       regMetaVersion: "test",
       steward: "global",
+      windowMinYear: 1960,
       vintageYear: 2024,
     });
 
@@ -512,6 +520,7 @@ describe("CatalogNodeView classification-root arm (#756)", () => {
       fqidPath: "class",
       regMetaVersion: "test",
       steward: "global",
+      windowMinYear: 1960,
       vintageYear: 2024,
     });
 
@@ -549,6 +558,7 @@ describe("CatalogNodeView classification-root arm (#756)", () => {
       fqidPath: "class",
       regMetaVersion: "test",
       steward: "global",
+      windowMinYear: 1960,
       vintageYear: 2024,
     });
 
