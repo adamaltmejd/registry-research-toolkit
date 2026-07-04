@@ -562,6 +562,70 @@ describe("RepresentationPicker graph mode (#904)", () => {
     );
   });
 
+  it("renders edge-less selectable multi-run leaf graphs", async () => {
+    const aFqid = "scb/lisa/renamed";
+    render(RepresentationPicker, {
+      bands: [
+        {
+          key: aFqid,
+          name: "Renamed leaf",
+          registerPrefix: "scb/lisa",
+          rows: [
+            row({
+              column: "NEW",
+              representation: null,
+              renamedColumns: ["OLD"],
+              from: "2000-01-01",
+              to: "2020-12-31",
+              windows: [
+                { from: "2000-01-01", to: "2009-12-31" },
+                { from: "2010-01-01", to: "2020-12-31" },
+              ],
+              period: "2000 – 2020",
+            }),
+          ],
+        } satisfies PickerBand,
+      ],
+      graph: graph({
+        nodes: [
+          graphNode(aFqid, {
+            states: [
+              graphState({
+                delivery_column_name: "OLD",
+                valid_from: "2000-01-01",
+                valid_to: "2009-12-31",
+              }),
+              graphState({
+                state_id: 2,
+                representation_run_id: 2,
+                delivery_column_name: "NEW",
+                valid_from: "2010-01-01",
+                valid_to: "2020-12-31",
+              }),
+            ],
+          }),
+        ],
+        edges: [],
+        focus_id: aFqid,
+      }),
+      ...PROPS,
+    });
+
+    await vi.waitFor(() => {
+      const graphText =
+        document.querySelector(".graph-picker")?.textContent ?? "";
+      if (!graphText.includes("OLD") || !graphText.includes("NEW")) {
+        throw new Error(
+          `edge-less selectable graph not rendered: ${graphText}`,
+        );
+      }
+    });
+    expect(document.querySelector(".col-list")).toBeNull();
+    await expect
+      .element(page.getByRole("checkbox", { name: /^OLD\b/ }))
+      .toBeVisible();
+  });
+
   it("dims folded graph cells by the cell's era, not the folded row span", async () => {
     const onapply = vi.fn();
     const aFqid = "scb/lisa/a";
@@ -1057,6 +1121,107 @@ describe("RepresentationPicker graph mode (#904)", () => {
     expect(document.querySelector(".col-list")).toBeNull();
     await expect
       .element(page.getByText("Showing 1 of 19 columns"))
+      .toBeVisible();
+  });
+
+  it("uses the visible cell projection for size limits after filtering", async () => {
+    const aFqid = "scb/lisa/many-columns";
+    const bFqid = "scb/lisa/successor";
+    const columns = Array.from({ length: 50 }, (_, i) => `C${i}`);
+    render(RepresentationPicker, {
+      bands: [
+        {
+          key: aFqid,
+          name: "Many columns",
+          registerPrefix: "scb/lisa",
+          href: "/catalog/scb/lisa/many-columns",
+          rows: columns.map((column, i) =>
+            row({
+              column,
+              from: `${2000 + i}-01-01`,
+              to: `${2000 + i}-12-31`,
+              windows: [{ from: `${2000 + i}-01-01`, to: `${2000 + i}-12-31` }],
+              period: `${2000 + i}`,
+            }),
+          ),
+          facetsByColumn: Object.fromEntries(
+            columns.map((column, i) => [
+              column,
+              [
+                {
+                  axis: "era",
+                  value: i === 0 ? "old" : "new",
+                  label: i === 0 ? "Old" : "New",
+                },
+              ],
+            ]),
+          ),
+        } satisfies PickerBand,
+        {
+          key: bFqid,
+          name: "Successor",
+          registerPrefix: "scb/lisa",
+          href: "/catalog/scb/lisa/successor",
+          rows: [row({ column: "NEXT" })],
+          facetsByColumn: {
+            NEXT: [{ axis: "era", value: "new", label: "New" }],
+          },
+        } satisfies PickerBand,
+      ],
+      axes: [{ name: "era", label: "Era" }],
+      graphMemberHrefs: {
+        [aFqid]: "/catalog/scb/lisa/many-columns",
+        [bFqid]: "/catalog/scb/lisa/successor",
+      },
+      graph: graph({
+        nodes: [
+          graphNode(aFqid, {
+            states: columns.map((column, i) =>
+              graphState({
+                state_id: i + 1,
+                representation_run_id: i + 1,
+                delivery_column_name: column,
+                valid_from: `${2000 + i}-01-01`,
+                valid_to: `${2000 + i}-12-31`,
+              }),
+            ),
+          }),
+          graphNode(bFqid, {
+            states: [
+              graphState({
+                state_id: 100,
+                representation_run_id: 100,
+                delivery_column_name: "NEXT",
+                valid_from: "2050-01-01",
+                valid_to: "2050-12-31",
+              }),
+            ],
+          }),
+        ],
+        edges: [edge(aFqid, bFqid)],
+        focus_id: null,
+      }),
+      ...PROPS,
+    });
+
+    await vi.waitFor(() => {
+      if (!document.querySelector(".col-list")) {
+        throw new Error("initial many-cell list fallback not rendered");
+      }
+    });
+    expect(document.querySelector(".graph-picker")).toBeNull();
+
+    clickFilter("Old");
+    await vi.waitFor(() => {
+      const graphText =
+        document.querySelector(".graph-picker")?.textContent ?? "";
+      if (!graphText.includes("C0") || graphText.includes("C1")) {
+        throw new Error(`filtered cell projection not ready: ${graphText}`);
+      }
+    });
+    expect(document.querySelector(".col-list")).toBeNull();
+    await expect
+      .element(page.getByText("Showing 1 of 51 columns"))
       .toBeVisible();
   });
 

@@ -439,6 +439,65 @@ describe("BindingLeafView representation picker (#678)", () => {
     expect(aliasLink?.textContent).toBe("lisa_old");
   });
 
+  it("renders edge-less no-column graph runs after the standalone graph removal", async () => {
+    vi.mocked(getBindingGraph).mockResolvedValue({
+      nodes: [
+        {
+          kind: "variable",
+          id: "v1",
+          fqid: "scb/lisa/kon",
+          label: "Kön",
+          group_key: null,
+          group_label: null,
+          definition: null,
+          description: null,
+          operational_definition: null,
+          facets: [],
+          states: [
+            gstate({
+              delivery_column_name: null,
+              value_set_version_label: "old coding",
+              valid_from: "2000-01-01",
+              valid_to: "2009-12-31",
+            }),
+            gstate({
+              state_id: 2,
+              representation_run_id: 2,
+              delivery_column_name: null,
+              value_set_version_label: "new coding",
+              valid_from: "2010-01-01",
+              valid_to: "2020-12-31",
+            }),
+          ],
+          same_as: [],
+        },
+      ],
+      edges: [],
+      focus_id: "v1",
+    } as RelationshipGraph as never);
+
+    render(BindingLeafView, {
+      fqidPath: "scb/lisa/kon",
+      node: node(single),
+      ...SEED,
+      vintageYear: 2024,
+    });
+
+    await vi.waitFor(() => {
+      const graphText =
+        document.querySelector(".rep-picker .graph-picker")?.textContent ?? "";
+      if (
+        !graphText.includes("old coding") ||
+        !graphText.includes("new coding")
+      ) {
+        throw new Error(`edge-less run graph not rendered: ${graphText}`);
+      }
+    });
+    expect(
+      document.querySelector(".graph-picker input[type='checkbox']"),
+    ).toBeNull();
+  });
+
   it("does not clamp open-ended graph timelines to the steward period ceiling", async () => {
     const openEnded = graph({
       states: [

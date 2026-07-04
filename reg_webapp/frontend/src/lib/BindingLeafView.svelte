@@ -297,7 +297,11 @@ const graphHasDrawableContext = $derived(
   graphReady &&
     graph != null &&
     (graph.edges.length > 0 ||
-      graph.nodes.some((n) => n.kind === "variable" && n.same_as.length > 0)),
+      graph.nodes.some(
+        (n) =>
+          n.kind === "variable" &&
+          (n.same_as.length > 0 || n.states.length > 0),
+      )),
 );
 
 // The FOCUS variable node — the node whose `id === focus_id` (the requested

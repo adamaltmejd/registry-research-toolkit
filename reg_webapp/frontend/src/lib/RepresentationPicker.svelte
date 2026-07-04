@@ -1037,8 +1037,47 @@ function graphHasDrawableContext(g: RelationshipGraph): boolean {
   }
   return (
     graphMemberHrefs == null &&
-    variableGraphNodes(g).some((node) => node.same_as.length > 0)
+    variableGraphNodes(g).some(
+      (node) => node.same_as.length > 0 || cellsOf(node).length > 1,
+    )
   );
+}
+
+function graphNodeWithVisibleStates(
+  node: VariableGraphNode,
+): VariableGraphNode {
+  if (graphMemberHrefs == null) {
+    return node;
+  }
+  const band = graphBandForNode(node);
+  if (!band) {
+    return node;
+  }
+  const visibleColumnsByVariant = new Map<string, Set<string>>();
+  for (const row of band.rows) {
+    let cols = visibleColumnsByVariant.get(row.variant);
+    if (!cols) {
+      cols = new Set<string>();
+      visibleColumnsByVariant.set(row.variant, cols);
+    }
+    cols.add(row.column);
+    for (const renamed of row.renamedColumns) {
+      cols.add(renamed);
+    }
+  }
+  return {
+    ...node,
+    states: node.states.filter((state) => {
+      if (!state.delivery_column_name) {
+        return false;
+      }
+      return (
+        visibleColumnsByVariant
+          .get(state.variant)
+          ?.has(state.delivery_column_name) ?? false
+      );
+    }),
+  };
 }
 
 function graphForVisibleRows(g: RelationshipGraph): RelationshipGraph | null {
@@ -1052,6 +1091,24 @@ function graphForVisibleRows(g: RelationshipGraph): RelationshipGraph | null {
   if (memberNodes.some((node) => graphOriginalBandForNode(node) == null)) {
     return null;
   }
+  for (const node of memberNodes) {
+    const band = graphBandForNode(node);
+    if (!band) {
+      continue;
+    }
+    const originalBand = graphOriginalBandForNode(node);
+    if (!originalBand) {
+      return null;
+    }
+    for (const cell of cellsOf(node)) {
+      if (
+        graphCellCandidates(band, cell).length > 0 &&
+        !graphCandidateIsOneToOne(graphCellCandidates(originalBand, cell), cell)
+      ) {
+        return null;
+      }
+    }
+  }
   const visibleNodeIds = new Set(
     memberNodes
       .filter((node) => graphBandForNode(node) != null)
@@ -1059,7 +1116,11 @@ function graphForVisibleRows(g: RelationshipGraph): RelationshipGraph | null {
   );
   return {
     ...g,
-    nodes: g.nodes.filter((node) => visibleNodeIds.has(node.id)),
+    nodes: g.nodes
+      .filter((node) => visibleNodeIds.has(node.id))
+      .map((node) =>
+        node.kind === "variable" ? graphNodeWithVisibleStates(node) : node,
+      ),
     edges: g.edges.filter(
       (edge) =>
         visibleNodeIds.has(edge.source) && visibleNodeIds.has(edge.target),
