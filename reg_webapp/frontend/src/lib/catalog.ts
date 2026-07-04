@@ -1003,6 +1003,12 @@ export interface PickerRepresentation {
    * (`DINF86`) over the union window would break the earlier eras — `DINF86` wasn't
    * delivered before 1990, so it would resolve empty / under-cover those years (#902). */
   representation: string | null;
+  /** Force a non-null `representation` to stay pinned in the final binding even when
+   * resolving the source period sees only one sibling column. Used by representation-
+   * grained concept-group members: the clicked delivery column is the user's explicit
+   * choice, and a coverage gap must validate as a gap rather than silently substituting
+   * the sibling that happens to resolve at the source period. */
+  pinRepresentation?: boolean;
   from: string;
   to: string;
   /** The column's DISJOINT delivery windows (#678 finding: an interrupted series),
@@ -2775,24 +2781,20 @@ export function memberCoverageUnion(
   return { from, to: unionTo };
 }
 
-// ── Shared binding resolution (picker derive-on-pick + store re-derive) ──────
-// ONE resolution path, used by BOTH the CatalogPicker's derive-on-pick AND the
-// store's re-derive-on-(period/variant)-change (B2, UI audit). Keeping it here —
-// not inlined in the picker — is what lets the store re-resolve every binding of a
-// source through the IDENTICAL logic when the source's period/variant changes, so a
-// picked binding never goes silently stale.
+// ── Shared binding resolution (picker staged adds + legacy single-pick handoff) ──
+// ONE resolution path, used by the subject-page staged picker and the store's
+// legacy `addFromCatalog` entry point. Keeping it here — not inlined in either
+// caller — keeps final binding-field derivation consistent at pick time.
 
 /** Why a binding could not be resolved to a real type at the source's
- * (period, variant). Drives the BindingEditor's "unresolved" marker (B2.3): an
- * honest "set the period" / "no data here" cue instead of dressing the opaque
- * fallback as a derived type. */
+ * (period, variant). Drives an honest "set the period" / "no data here" result
+ * instead of dressing the opaque fallback as a derived type. */
 export type UnresolvedReason = "period-unset" | "no-states" | "not-a-leaf";
 
 /** The outcome of resolving one binding's variable at a (period, variant).
  *  - `derived`: a single representation → type + display-name default ready to apply.
- *  - `ambiguous`: >1 co-existing delivery column → the author must pick a
- *    representation (only the picker's chooser can; the store can't auto-pick, so
- *    it surfaces a non-blocking hint and leaves the existing value).
+ *  - `ambiguous`: >1 co-existing delivery column → the staged picker must supply
+ *    the chosen representation.
  *  - `unresolved`: resolution impossible (no period / no covering state). */
 export type BindingResolution =
   | {
@@ -2804,16 +2806,22 @@ export type BindingResolution =
   | { kind: "ambiguous"; fqid: string; states: VariableStateModel[] }
   | { kind: "unresolved"; reason: UnresolvedReason };
 
+export interface BindingFieldOptions {
+  /** Preserve a non-null requested representation even if resolution does not derive
+   * that exact column. Ordinary single-column rows leave this false so the #991
+   * null-when-unambiguous convention still holds. */
+  pinRepresentation?: boolean;
+}
+
 /**
  * Resolve `fqid` at the source's (`period`, `variant`) through the catalog
- * `?period` resolve — the SINGLE source of truth for derive-on-pick AND store
- * re-derive. A null/blank period is `unresolved` ("period-unset") WITHOUT a fetch
+ * `?period` resolve — the SINGLE source of truth for pick-time binding-field
+ * derivation. A null/blank period is `unresolved` ("period-unset") WITHOUT a fetch
  * (the resolve needs a period). A leaf that yields no covering state is
  * `no-states`; a non-leaf payload is `not-a-leaf` (shouldn't happen with
  * `?period`). >1 co-existing representation is `ambiguous` (deferred to the picker
  * chooser); exactly one is `derived` with the prefill. A network/422 throws — the
- * caller owns the error surface (the picker shows `resolveError`; the store stores
- * a per-binding error hint). */
+ * caller owns the error surface. */
 export async function resolveBindingAt(
   fqid: string,
   period: string | null,
@@ -2847,23 +2855,36 @@ export async function resolveBindingAt(
 
 /** Map a `resolveBindingAt` result to a binding's FINAL fields (the #991 write-once
  * model — resolve once, write the concrete type/display/representation, no marker).
- * Honors the #991 null-when-unambiguous convention (issue #992): a representation is
- * pinned ONLY for a pick among genuinely CO-EXISTING siblings.
+ * Honors the #991 null-when-unambiguous convention (issue #992) unless the caller marks
+ * a representation-grained group member as explicitly pinned.
  *   - `derived` (exactly ONE delivery column at the (period, variant)) → the resolved
- *     type + display default, and `representation: null` — unambiguous, so the payload
- *     column is DROPPED (never pinned).
+ *     type + display default, and `representation: null` unless `pinRepresentation`
+ *     carries an explicit non-null column. A pinned derived mismatch keeps the resolved
+ *     type (structurally valid) but stores the requested display/representation column.
  *   - `ambiguous` + the payload pins one of the genuinely co-existing columns → that
  *     column's derived type + its `delivery_column_name` display + the pinned
  *     representation.
  *   - `ambiguous` (null / non-matching representation) OR `unresolved` → type `""`
  *     (NOT `"opaque"`). A resolve failure / unresolved add must not synthesize a valid
- *     opaque binding; the backend validator must flag it instead. */
+ *     opaque binding; the backend validator must flag it instead. With
+ *     `pinRepresentation`, the exact requested column stays on the binding so validation
+ *     reports that column's coverage gap rather than a sibling substitution. */
 export function bindingFieldsFromResolution(
   variable: string,
   resolution: BindingResolution,
   representation: string | null,
+  options: BindingFieldOptions = {},
 ): Binding {
   if (resolution.kind === "derived") {
+    if (options.pinRepresentation && representation != null) {
+      const binding: Binding = {
+        variable,
+        type: resolution.type,
+        display_name: representation,
+        representation,
+      };
+      return binding;
+    }
     const binding: Binding = {
       variable,
       type: resolution.type,
@@ -2889,6 +2910,14 @@ export function bindingFieldsFromResolution(
         representation,
       };
     }
+  }
+  if (options.pinRepresentation && representation != null) {
+    return {
+      variable,
+      type: "",
+      display_name: representation,
+      representation,
+    };
   }
   return { variable, type: "", representation };
 }

@@ -434,7 +434,27 @@ const bands = $derived.by((): PickerBand[] => {
               s.delivery_column_name != null &&
               cols.has(s.delivery_column_name),
           );
-    const rows = pickerRepresentations(states);
+    const explicitMemberColumns = new Set(
+      (membersByFqid.get(member.fqid) ?? [])
+        .map((m) => m.delivery_column)
+        .filter((col): col is string => col != null),
+    );
+    const baseRows = pickerRepresentations(states);
+    const explicitSelectableColumns = new Set(
+      baseRows
+        .filter(
+          (row) =>
+            row.representation != null && explicitMemberColumns.has(row.column),
+        )
+        .map((row) => row.column),
+    );
+    const rows = baseRows.map((row) =>
+      row.representation != null &&
+      explicitSelectableColumns.size > 1 &&
+      explicitSelectableColumns.has(row.column)
+        ? { ...row, pinRepresentation: true }
+        : row,
+    );
     const rowColumns = new Set(rows.map((r) => r.column));
     const rowSeed = rows[0];
     for (const groupMember of membersByFqid.get(member.fqid) ?? []) {
@@ -645,6 +665,7 @@ async function stagedAdd(
       band.key,
       resolution,
       row.representation,
+      { pinRepresentation: row.pinRepresentation === true },
     ),
   };
 }
