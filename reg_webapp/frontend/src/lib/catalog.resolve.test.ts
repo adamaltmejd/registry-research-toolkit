@@ -7,7 +7,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { CatalogNode, StatesResponse, VariableStateModel } from "./api";
 import { getCatalogNode } from "./api";
-import { resolveBindingAt } from "./catalog";
+import { bindingFieldsFromResolution, resolveBindingAt } from "./catalog";
 
 vi.mock("./api", async (importOriginal) => {
   const actual = await importOriginal<typeof import("./api")>();
@@ -117,6 +117,70 @@ describe("resolveBindingAt", () => {
     expect(getCatalogNode).toHaveBeenCalledWith("scb/lisa/lon", {
       period: "2015",
       variant: undefined,
+    });
+  });
+});
+
+describe("bindingFieldsFromResolution", () => {
+  it("keeps ordinary single-column derived picks unpinned", () => {
+    expect(
+      bindingFieldsFromResolution(
+        "scb/lisa/kon",
+        {
+          kind: "derived",
+          type: "numeric",
+          displayNameDefault: "Kon",
+          representation: null,
+        },
+        "Kon",
+      ),
+    ).toEqual({
+      variable: "scb/lisa/kon",
+      type: "numeric",
+      display_name: "Kon",
+      representation: null,
+    });
+  });
+
+  it("pins an explicit representation-grained pick even when resolution sees one sibling", () => {
+    expect(
+      bindingFieldsFromResolution(
+        "scb/iot/dispink",
+        {
+          kind: "derived",
+          type: "numeric",
+          displayNameDefault: "CDISP",
+          representation: null,
+        },
+        "CDISP5",
+        { pinRepresentation: true },
+      ),
+    ).toEqual({
+      variable: "scb/iot/dispink",
+      type: "",
+      display_name: "CDISP5",
+      representation: "CDISP5",
+    });
+  });
+
+  it("pins an explicit representation-grained pick with derived fields when that column resolves", () => {
+    expect(
+      bindingFieldsFromResolution(
+        "scb/iot/dispink",
+        {
+          kind: "derived",
+          type: "numeric",
+          displayNameDefault: "CDISP5",
+          representation: null,
+        },
+        "CDISP5",
+        { pinRepresentation: true },
+      ),
+    ).toEqual({
+      variable: "scb/iot/dispink",
+      type: "numeric",
+      display_name: "CDISP5",
+      representation: "CDISP5",
     });
   });
 });

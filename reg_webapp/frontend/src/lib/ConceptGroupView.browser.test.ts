@@ -503,6 +503,87 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     );
   });
 
+  it("pins a representation-grained member even when the final source period resolves a sibling column", async () => {
+    vi.mocked(getConceptGroup).mockResolvedValue(
+      node({
+        key: "disp",
+        label: "Disponibel inkomst",
+        source: "curated",
+        axes: [{ name: "kapitalvinst", label: "Kapitalvinst" }],
+        members: [
+          {
+            fqid: "scb/rams/dispink",
+            name: "Disponibel inkomst",
+            delivery_column: "CDISP",
+            facets: [
+              {
+                axis: "kapitalvinst",
+                value: "incl",
+                label: "Inkl. kapitalvinst",
+              },
+            ],
+            coverage: null,
+          },
+          {
+            fqid: "scb/rams/dispink",
+            name: "Disponibel inkomst",
+            delivery_column: "CDISP5",
+            facets: [
+              {
+                axis: "kapitalvinst",
+                value: "excl",
+                label: "Exkl. kapitalvinst",
+              },
+            ],
+            coverage: null,
+          },
+        ],
+      } as unknown as Partial<ConceptGroupNodeData>),
+    );
+    vi.mocked(getConceptGroupGraph).mockResolvedValue(
+      graph([
+        vnode("scb/rams/dispink", [
+          gstate({
+            variant: "individer",
+            delivery_column_name: "CDISP",
+            valid_from: "2010-01-01",
+            valid_to: "2020-12-31",
+          }),
+          gstate({
+            variant: "individer",
+            delivery_column_name: "CDISP5",
+            valid_from: "2010-01-01",
+            valid_to: "2020-12-31",
+          }),
+        ]),
+      ]),
+    );
+    // Regression for #838: resolving the final source period sees only the sibling
+    // CDISP. The stored binding must still name the clicked CDISP5 representation so
+    // validation reports the coverage gap instead of extracting CDISP.
+    mockResolveColumns({ "scb/rams/dispink": ["CDISP"] });
+
+    renderGroup({ key: "disp" });
+
+    await page.getByRole("checkbox", { name: /CDISP5/ }).click();
+    await page.getByRole("button", { name: "Apply staged changes" }).click();
+
+    await expect.element(page.getByText(/\+1 column/)).toBeVisible();
+    expect(projectStore.draft?.sources[0]).toEqual(
+      expect.objectContaining({
+        register_variant: "scb/rams/individer",
+        bindings: [
+          expect.objectContaining({
+            variable: "scb/rams/dispink",
+            type: "",
+            display_name: "CDISP5",
+            representation: "CDISP5",
+          }),
+        ],
+      }),
+    );
+  });
+
   it("the global select-all grabs every column of the concept", async () => {
     vi.mocked(getConceptGroup).mockResolvedValue(node());
     vi.mocked(getConceptGroupGraph).mockResolvedValue(twoMultiColGraph());
