@@ -74,8 +74,8 @@ durably (at-least-once) even if a session misses a fast-tier emission.
 Fork-PR trust gate (this repo is public): a PR from a branch outside this repository
 carries untrusted text and an untrusted `Closes #N`, so its per-PR summary is stripped to
 `{number, fork: true, author, draft}` — NEITHER its title/body nor its closing claims
-enter the snapshot the chief-of-staff model reads, and it never fetches the Codex signal
-or reaches a ready/draft/stale bucket. The only load-bearing signal on a fork is
+enter the snapshot the chief-of-staff model reads, and it never reaches a
+ready/draft/stale bucket. The only load-bearing signal on a fork is
 provenance: a fork PR can never write the local gate store (only local agents can), so a
 gate entry for one is an error — it is flagged (`gate_present: true`) and surfaced as a
 distinct wake reason so the chief refuses and investigates rather than merging. A plain
@@ -373,15 +373,6 @@ def checks_verdict(checks: list[dict[str, Any]]) -> str:
     return "passing"
 
 
-def codex_signal(pr: int) -> str:
-    proc = run_cmd([sys.executable, "scripts/pr_review_status.py", str(pr), "--once"])
-    if proc.returncode not in {0, 1}:
-        raise SystemExit(
-            proc.stderr.strip() or f"pr_review_status.py {pr} --once failed"
-        )
-    return json.loads(proc.stdout)["signal"]
-
-
 def normalize_reviews(reviews: list[dict[str, Any]]) -> list[dict[str, str | None]]:
     # Only the author login + submittedAt of each latest review — enough to see a new
     # Codex/human verdict land on an in-flight PR without embedding the (churny) body.
@@ -404,8 +395,8 @@ def summarize_pr(
         # snapshot the chief-of-staff model reads. Surface only the number, author login,
         # and a fork flag — enough for the chief to learn the fork PR exists (appearance /
         # disappearance) without ingesting attacker-controlled content. Skip the
-        # closing-claim computation entirely (issue-holdout DoS) and never fetch the Codex
-        # signal or reach a ready/draft/stale bucket. read_merge_gate reads the LOCAL gate
+        # closing-claim computation entirely (issue-holdout DoS) and never reach a
+        # ready/draft/stale bucket. read_merge_gate reads the LOCAL gate
         # store (keyed by PR number + head, not untrusted text), so it is safe: a fork PR
         # can never write it, so an entry is an error condition — flag it so actionable_
         # reasons surfaces "refuse and investigate" rather than the chief merging a fork.
@@ -441,10 +432,6 @@ def summarize_pr(
             "draft": bool(raw.get("isDraft")),
         }
 
-    signal = None
-    if gate["state"] == "current-ready":
-        signal = codex_signal(raw["number"])
-
     summary: dict[str, Any] = {
         "number": raw["number"],
         "claimed": True,
@@ -457,7 +444,6 @@ def summarize_pr(
         # individual check transition within one CI run.
         "checks": checks_verdict(raw.get("statusCheckRollup") or []),
         "gate": gate,
-        "codex_signal": signal,
     }
     if gate["state"] != "absent":
         # PR carries a gate entry, so its mergeability IS load-bearing: a tick may have
@@ -472,9 +458,10 @@ def summarize_pr(
         summary["conflicting"] = raw.get("mergeable") == "CONFLICTING"
     # A new review on an in-flight issue-closing PR is the chief's "send unblock
     # follow-up" trigger even before the gate is current-ready, so surface it here. This
-    # is only a cheap change-detector for review ACTIVITY: a Codex clean verdict shaped as
-    # a "Reviewed commit: <sha>" comment or a 👍 reaction is invisible here — reading that
-    # verdict stays the merge-gate poller's (scripts/pr_review_status.py) job.
+    # is only a cheap change-detector for review ACTIVITY. The Codex verdict itself is no
+    # longer read from GitHub: it lives in the PR's local gate entry (`codex_bot` line),
+    # written by the pipeline's local `codex review` run, and reaches the chief via the
+    # gate_hash fingerprint that already fingerprints gate.json's bytes.
     if closing:
         summary["reviews"] = normalize_reviews(raw.get("latestReviews") or [])
     return summary

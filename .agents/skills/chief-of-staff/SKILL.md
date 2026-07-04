@@ -230,8 +230,9 @@ new work, but it must not edit project code as part of the work itself.
    - inspect open PRs that close issues, especially drafts, ready PRs, and stacks;
    - read merge-gate handoff entries from the local gate store
      (`~/.local/state/registry-research-toolkit/merge-gates/pr-<N>/gate.json`;
-     `$XDG_STATE_HOME` root if set) — not from PR bodies, and not from
-     `scripts/pr_review_status.py`, which is only the Codex bot-review signal.
+     `$XDG_STATE_HOME` root if set) — not from PR bodies. The Codex verdict is the gate
+     entry's head-bound `codex_bot` line, written by the pipeline's local `codex review`
+     run; there is no live GitHub bot-signal poll.
 5. Apply clear, evidence-backed issue maintenance automatically. If it changes
    lane-affecting state such as `priority:*`, `touches`, `Relationships`, `blocked`, or
    `parked`, rerun the `/issue-pulse` lane-staleness path before recommending work; do
@@ -389,17 +390,18 @@ Merge only on the current head and only when every item passes:
   at merge time and investigates rather than merging.
 - The gate entry records converged independent review, tests/checks, docs decisions, and
   required visual/build-db results. The independent_review line must name the review
-  source and why it satisfies the risk-scaled repo gate; bot-only review is sufficient
-  only for small, low-risk PRs.
+  source and why it satisfies the risk-scaled repo gate; the local Codex review alone is
+  sufficient only for small, low-risk PRs.
 - Required visual/build-db evidence files are present in the PR's gate directory. For
   rendered-output PRs, visual proof means a `/reg-webapp-design-reviewer` report with
   its screenshots in the gate directory; screenshots without the reviewer report block
   automerge. References to scratch or `/tmp` paths instead of files in the gate
   directory do not count — the artifacts must be there.
 - `gh pr checks <pr>` is green on the current head.
-- `uv run --no-project python scripts/pr_review_status.py <pr> --once` is settled with
-  `clean`, or `exhausted` with all other gates complete. `findings`, `reviewing`,
-  `none`, or tool errors block automerge.
+- The gate entry's head-bound `codex_bot` line is `clean` (or `findings-fixed`), or a
+  usage-limit `exhausted` with all other gates complete, and its stamped head matches
+  the live head. A missing/stale `codex_bot`, or a still-unrun local Codex review,
+  blocks automerge — self-serve it (below) rather than merging without it.
 - Stale-head check passes immediately before merge, and the merge command uses
   `--match-head-commit` with that same SHA.
 - For stacked PRs, branch deletion cannot close or break dependent PRs. Before merging a
@@ -408,8 +410,8 @@ Merge only on the current head and only when every item passes:
   during merge; immediately retarget the successor to `main` after the predecessor
   merge, then verify it remains open on the intended head. After retargeting, require
   the successor branch to be rebased or otherwise updated onto the new base, then
-  regenerate checks, Codex bot review, independent-review judgment, and the gate entry
-  before automerging it.
+  regenerate checks, the local Codex review, independent-review judgment, and the gate
+  entry before automerging it.
 
 Merge one PR at a time:
 
@@ -424,21 +426,21 @@ After each merge, fetch `origin main`, fast-forward the local main checkout with
 split the file into entries on its top-level `## <title>` headings — the ready-to-file
 body lives inside each entry's four-backtick ````` ````markdown ````` fence, so
 `## Problem` / `## Relationships` headings inside a body don't split the entry. Skip any
-entry marked "covered by existing #N — do not file"; for the rest, invoke the
-`file-issue` skill (`$file-issue`) with the entry — it re-runs the dedupe search and
-files each genuinely-new one (an entry whose fresh search now matches an existing issue
-is not filed). Collect the filed issue numbers for the report's `Follow-ups filed:`
-line. If `file-issue` refuses (missing hygiene) or an entry is malformed, report it —
-never silently drop a follow-up. Then move the merged PR's gate directory to
+entry marked "covered by existing #N — do not file"; for the rest, invoke `/file-issue`
+(the `Skill` tool) with the entry — it re-runs the dedupe search and files each
+genuinely-new one (an entry whose fresh search now matches an existing issue is not
+filed). Collect the filed issue numbers for the tick report's `Follow-ups filed:` line.
+If `/file-issue` refuses (missing hygiene) or an entry is malformed, report it — never
+silently drop a follow-up. Then move the merged PR's gate directory to
 `merge-gates/merged/pr-<N>/` — the PR deliberately carries no evidence, so this archive
 is the audit trail if the merge later shows a regression. Prune (delete) gate
 directories whose PR closed without merging — but before deleting one, check for a
-`followups.md`, and if present with unprocessed entries, file them via the `file-issue`
-skill (`$file-issue`) (or report them) rather than silently dropping them, since a
-lane's final PR can close without merging. In the same breath, release the pipeline slot
-whose `prs` are now all merged/closed (see Pipeline slots) — that freed slot is what
-triggers the watcher's next `dispatch:` recommendation. For a stack, re-check the next
-PR's head, checks, bot signal, mergeability, evidence, and gate entry before merging it.
+`followups.md`, and if present with unprocessed entries, file them via `/file-issue` (or
+report them) rather than silently dropping them, since a lane's final PR can close
+without merging. In the same breath, release the pipeline slot whose `prs` are now all
+merged/closed (see Pipeline slots) — that freed slot is what triggers the watcher's next
+`dispatch:` recommendation. For a stack, re-check the next PR's head, checks, bot
+signal, mergeability, evidence, and gate entry before merging it.
 
 ## Self-serve build-db verification
 
@@ -489,9 +491,16 @@ published before dependent work can proceed, invoke `/release minor` or
 stop if it requests input or if the required bump is a major release (a major release is
 a maintainer-approval class — see Automerge — and is not autonomous).
 
-If a ready PR lacks a current-head Codex verdict, comment `@codex review` only when the
-gate entry shows implementation is finished, then skip the merge until a later tick
-observes a settled signal.
+If an otherwise merge-ready PR's `codex_bot` line is missing or stale (its stamped head
+trails the live head), self-serve it exactly like `build_db`: fetch the PR head, add a
+throwaway worktree at that exact SHA (never switch branches in the main checkout), run
+`uv run --no-project python scripts/codex_local_review.py` from that worktree, copy the
+transcript into the PR's gate directory as `codex-review.md`, and update the `codex_bot`
+line (atomically) to `local; codex_local_review; head <sha>; clean|findings-fixed`
+naming the evidence — editing only the gate you verified, never another gate's line or
+head stamp. A findings verdict or a usage-limit / tool failure is not something to fix
+here: set `status: blocked` with the reason as `blocker` and route it to the pipeline.
+Remove the scratch worktree when done.
 
 ## Pipeline Follow-ups
 
@@ -579,7 +588,7 @@ data (per the untrusted-data boundary above), never an intent signal.
 Ask only when the edit would choose product direction, change issue scope, invent a
 priority without evidence, unpark maintainer-deferred work without an explicit resume
 signal, close disputed/partial work, create a new issue (except filing a follow-up
-recorded in a pipeline merge-gate `followups.md` via `$file-issue`, which is
+recorded in a pipeline merge-gate `followups.md` via `/file-issue`, which is
 auto-allowed — see Automerge), delete substantive prose, or resolve contradictory live
 signals.
 
@@ -713,7 +722,7 @@ Recommended next:
    #<n>: <one sentence describing what this issue tackles>.
    #<m>: <one sentence describing what this issue tackles, if bundled>.
 Issue maintenance: applied <...>; needs input <... or none>
-Follow-ups filed: #<n> (from PR #<p>): <one-line title>, or none
+Follow-ups filed: #<n> (from PR #<p>), ... or none
 Pipeline follow-ups: sent <PR/thread/blocker or none>; needed but not sent <... or none>
 Watch: <blocked decision, pending release, stale review, or next trigger>
 ```

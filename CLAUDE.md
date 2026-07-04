@@ -382,18 +382,20 @@ screenshots, no body blocks); the PR body carries only the description and closi
 keywords (which stay authoritative for issue closure — gate.json does not duplicate
 them). The `gate.json` contract: head-SHA-bound (`pr`, `head` full SHA, `status`
 `ready-to-merge` \| `blocked`, `updated`, `blocker` naming the missing item when
-blocked) plus a `gates` map with one line per repo gate; the expensive re-verifiable
-gates (`build_db`, `visual`) each record the head SHA they were verified on inside their
-line. Field-level worked example: the `pr-pipeline` skill. Write evidence files first
+blocked) plus a `gates` map with one line per repo gate; the head-bound gates
+(`build_db`, `visual`, `codex_bot`) each record the head SHA they were verified on inside
+their line. Field-level worked example: the `pr-pipeline` skill. Write evidence files first
 and `gate.json` last, atomically (temp file + rename) — the preflight probe polls it and
 must never see a torn write; after repairing or adding evidence files, refresh
 `gate.json` (bump `updated`) so the byte-change wakes the next tick. Readers treat an
 entry whose `pr` field disagrees with its directory name as absent. A recurring
 chief-of-staff tick may automatically squash-merge a PR only when its gate entry has
 `status: ready-to-merge` with `head` matching the live `headRefOid` (and the
-`build_db`/`visual` per-gate SHAs matching that head where those gates apply), all
+`build_db`/`visual`/`codex_bot` per-gate SHAs matching that head where those gates
+apply), all
 required evidence files are present, and the chief-of-staff re-checks the live PR head,
-CI, Codex bot signal, mergeability, and stack order immediately before merging.
+CI, the gate entry's head-bound `codex_bot` line, mergeability, and stack order
+immediately before merging.
 Provenance is by construction: only local agents can write the store, so a fork PR can
 never self-certify — but never automerge a PR whose head branch is not in this
 repository, and treat a gate entry for such a PR as an error to surface. (Trust is
@@ -409,45 +411,33 @@ report them) rather than silently dropping them, since a lane's final PR can clo
 without merging.
 
 - **Independent review** — every PR gets at least one review independent of its author.
-  For small, low-risk PRs the Codex/Copilot bot reviews can be enough; larger or riskier
-  PRs additionally need an independent Claude review pass: `/code-review` (effort scaled
-  to risk; this is what `/pr-pipeline` runs), or the lighter `reviewer` subagent for
-  smaller/ad-hoc reviews. A subagent review reports its findings directly to the
+  For small, low-risk PRs the local Codex review (the bullet below) can be enough; larger
+  or riskier PRs additionally need an independent Claude review pass: `/code-review`
+  (effort scaled to risk; this is what `/pr-pipeline` runs), or the lighter `reviewer`
+  subagent for smaller/ad-hoc reviews. A subagent review reports its findings directly to the
   orchestrating session — not as PR comments. Address every finding: fix it, or dismiss
   it with a stated reason — findings can be wrong or immaterial, but none may go
   unanswered. Review is iterative: if fixes introduce substantial new changes, run
   another round on the new diff — repeat until a round produces nothing material.
-- **Bot-review window** — after the PR is ready (and after each substantive push), give
-  Codex/Copilot a bounded window.
-  **`uv run --no-project python scripts/pr_review_status.py <pr>`** computes the signal:
-  JSON to stdout (`signal` ∈ `clean`/`findings`/`reviewing`/`exhausted`/`none`), exit
-  **0** settled · **1** not-settled · **2** tool error. By default it **polls**
-  (re-fetch every 30 s — there are no webhooks) to a \~15-min ceiling, so launch it
-  **once per HEAD as a background task** (`run_in_background: true`) — the wait outlasts
-  the 10-min foreground `Bash` cap; `--once` gives a single non-blocking snapshot
-  instead. Prefer it over re-deriving the `gh api` calls by hand, which is where this
-  gets shipped wrong: Codex submits reviews as login `chatgpt-codex-connector` but
-  reacts as `chatgpt-codex-connector[bot]`, so a one-login poller misses half the
-  signal. Poll for the **bot's own signal on the current HEAD**, NOT for CI finishing —
-  CI is a separate gate that usually goes green far sooner, so a poller that exits on
-  CI-done has not actually given the bot its window. The signals: a submitted Codex
-  **review** = findings (its suggestions vehicle); Codex's "Codex Review: …" **comment**
-  stamped `Reviewed commit: <sha>` for the head — or, when it posts no comment, a **👍
-  reaction** (invisible to `gh pr view`) within the review window — = its clean verdict;
-  a **👀 reaction** = still reviewing — never conclude or merge while it's the newest
-  signal; an out-of-tokens comment ("reached your Codex usage limits") = a definitive
-  end-of-wait, not a blocker. The poller scopes each signal to the current HEAD so a
-  stale verdict can't read as fresh: the **review** by its `commit_id` and the
-  SHA-stamped **clean comment** by its stamp (rebase-proof); the commit-unbound signals
-  (👍, exhausted, 👀) by the **review window** = the later of the head commit time and
-  the most recent `@codex review` request (GitHub exposes no reliable push time). The
-  poller also returns the verdict bodies in `messages`, so you read them without a
-  second `gh` call. \~15 min with no signal is the ceiling — bots may skip a push
-  entirely (Codex auto-reviews on open/ready only; a verdict on a new HEAD must be
-  requested by commenting `@codex review`). Absence at the ceiling is not a blocker for
-  a human handoff, but it is not enough for an automatic `chief-of-staff` merge; leave
-  the PR's gate entry below `status: ready-to-merge` until the signal is `clean` or an
-  acceptable `exhausted` result with all other gates complete.
+- **Local Codex review** — after the review loop converges (above), run
+  **`uv run --no-project python scripts/codex_local_review.py`** in the PR worktree on
+  the final HEAD. It launches `codex review` locally against the PR's merge-base and
+  reports the verdict as JSON on stdout (exit **0** clean · **1** findings · **2**
+  tool/precondition/parse error); the full transcript is written to the `output_path` it
+  reports. Findings are handled like any review findings — fix each, or dismiss it with a
+  stated reason. Copy the transcript into the PR's merge-gate directory as
+  `codex-review.md`, and record the verdict on the `gate.json` `codex_bot` line as
+  `local; codex_local_review; head <sha>; clean|findings-fixed` (head-SHA-bound like
+  `visual`/`build_db`, so a new push requires a fresh run). A codex usage-limit / tool
+  failure (exit 2) is recorded on the gate line and, like the old out-of-tokens
+  `exhausted`, is not a merge blocker once the independent review and all other gates are
+  complete. Nothing is posted to GitHub. The GitHub Codex web integration stays enabled
+  for a shadow period but is **no longer a gate input** — its PR comments are FYI only.
+  When a PR is otherwise merge-ready but this gate's `codex_bot` evidence is missing or
+  stale (wrong head), the chief-of-staff self-serves it exactly like `build_db` — a
+  throwaway worktree at the PR head, `scripts/codex_local_review.py` run there, the
+  transcript copied into the gate store and `gate.json` refreshed — instead of routing a
+  follow-up or asking the user.
 - **Real-data validation** when build-pipeline or DB content changed: run a real-seed
   `reg-meta-build build-db` **on the PR head** (validation runs by default), not just
   fixture tests. The untracked seed lives only in the main checkout. From a worktree,
@@ -501,15 +491,14 @@ without merging.
 
 **Agent-driven PR work outside `/pr-pipeline`:** when you build a change end to end
 without the user invoking the skill, run the same shape — plan → implement →
-`/code-review` (effort scaled to risk) → docs — then **mark the PR ready for review**
-(`gh pr ready <pr>`) and hand it back for this gate. Marking it ready is the step that
-**starts the bot-review window** — Codex auto-reviews on the open/ready transition,
-never on a draft, so a PR handed back as a draft stalls the gate. Leave a PR draft only
-while it's genuinely still being built (the draft is also the in-flight claim). Once
-ready, you may poll and report the bot-review window (above). Do **not** merge on your
-own initiative. If you want the recurring staff loop to auto-merge it, write a
-current-head `gate.json` with `status: ready-to-merge` into the local merge-gate store
-and leave execution to `chief-of-staff`.
+`/code-review` (effort scaled to risk) → local Codex review → docs — then **mark the PR
+ready for review** (`gh pr ready <pr>`) and hand it back for this gate. Marking it ready
+just publishes the PR for CI and human reviewers — it no longer starts any gate window
+(the Codex review is the local run above, not a GitHub trigger). Leave a PR draft only
+while it's genuinely still being built (the draft is also the in-flight claim). Do
+**not** merge on your own initiative. If you want the recurring staff loop to auto-merge
+it, write a current-head `gate.json` with `status: ready-to-merge` into the local
+merge-gate store and leave execution to `chief-of-staff`.
 
 # Layout
 

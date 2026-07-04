@@ -180,8 +180,7 @@ into the successor PR. Keep the closing keyword in the body; `plan_sequence.py` 
 PR bodies as a fallback because GitHub may not populate `closingIssuesReferences` for
 non-default-base stacked PRs. This marks the issue(s) **in-flight** (`running` in the
 sequencing projection) immediately, so a concurrent dispatch skips them and anything
-touching their files — it's how lanes stay non-colliding without a separate claim. Draft
-also holds bot review until you start it (Step B → "When to mark the PR ready"), and an
+touching their files — it's how lanes stay non-colliding without a separate claim. An
 inline `--body` heredoc can trip the permission classifier, so use `--body-file`. For
 dependent successors, early draft creation is only a claim; before implementing or
 testing the successor, first update the predecessor branch with its real contract
@@ -209,13 +208,13 @@ the human, don't work around it.
 against the committed HEAD; you pick which suggestions to accept and dispatch a fresh
 implementer to add them → commit.
 
-**When to mark the PR ready.** Marking **ready** starts the one-shot Codex/Copilot
-auto-review (mechanics + re-trigger in Step E). Time it to the HEAD you won't churn: a
-**trivial / low-risk PR** you expect to pass clean → mark ready **now**, so Codex runs
-in parallel with your `/code-review` (one clean verdict on an unmoved HEAD also clears
-the Step E gate, and you fold any Codex findings into the same fix pass); a
-**substantive PR** → stay **draft** through Steps C–D and mark ready **once** on the
-converged HEAD, so you don't strand Codex's verdict on a stale HEAD.
+**When to mark the PR ready.** Marking **ready** no longer starts any review window (the
+Codex review is the local run in Step E, not a GitHub trigger) — it just publishes the
+PR for CI and human reviewers. Mark ready on the HEAD that has converged: a
+**substantive PR** stays **draft** through Steps C–D and goes ready once on the
+converged HEAD; a **trivial / low-risk PR** you expect to pass clean can go ready
+immediately. The draft's only remaining significance is the in-flight-claim semantics
+(above) and CI/human visibility.
 
 **C · Review loop.** Run **`/code-review <effort>`** on the PR — it fans out lenses
 (bugs, CLAUDE.md/DESIGN adherence, git history, prior-PR comments, code comments, plus
@@ -261,34 +260,29 @@ unreleased DB content (custom DB)").
 
 **D · Docs.** Only if the diff drifted authored docs (Step 0.3). Dispatch the
 docs-updater on the final code → commit its result. Do this AFTER review converges and
-BEFORE the merge-gate hold, so the bot-review window runs against the true final HEAD (a
-docs push after the hold starts restarts it).
+BEFORE the merge-gate hold, so the local Codex review (Step E) runs against the true
+final HEAD (a docs push after it requires a re-run).
 
 **E · Merge-gate handoff.** Satisfy the **`CLAUDE.md` "PR merge gate"** in full —
 independent review converged (your `/code-review` loop is the independent Claude pass) ·
-CI green · bot-review window settled · real-data validation for build-affecting work ·
-**visual verification (clean `/reg-webapp-design-reviewer` result with screenshot/render
-proof) for UI changes** · stale-head check. For the bot-review window, run
-**`uv run --no-project python scripts/pr_review_status.py <pr>`** — it computes Codex's
-signal on the **current HEAD** (`clean`/`findings`/`reviewing`/`exhausted`/`none`) and
-returns the verdict bodies in `messages` (no second `gh` call), so you don't re-derive
-the login-sensitive `gh api` calls. Operate it like this:
+CI green · local Codex review clean/fixed · real-data validation for build-affecting
+work · **visual verification (clean `/reg-webapp-design-reviewer` result with
+screenshot/render proof) for UI changes** · stale-head check. For the Codex review, run
+**`uv run --no-project python scripts/codex_local_review.py`** in the PR worktree on the
+converged HEAD. Operate it like this:
 
-- **Launch it once per HEAD as a background task** (`Bash` with
-  `run_in_background: true`) right after you mark ready (or after a new push +
-  `@codex review`). It defaults to **polling** — re-fetching every 30 s (there are no
-  webhooks; a fresh verdict is seen only by re-asking) to a **\~15-min** ceiling — and
-  the harness re-invokes you when it exits, so you keep working meanwhile. It is **not**
-  continuous and **not** many launches: one background poll spans the whole window for
-  that HEAD. The 15-min wait outlasts the 10-min foreground `Bash` cap, which is why it
-  must be backgrounded; `--once` is the quick snapshot when you just want the current
-  state.
-- **Act on the settled signal:** route `findings` to a fix (the suggestions are in
-  `messages` — no need to open the PR), handoff-eligible on `clean`, treat `exhausted`
-  as end-of-wait (not a blocker) only when the independent review and other gates are
-  complete, never conclude on `reviewing`/`none`. A new push invalidates the verdict —
-  re-trigger with `@codex review` and launch a fresh background poll on the new HEAD.
-- Never key the window on CI going green — CI is a separate gate.
+- **Run it foreground on the converged HEAD** (\~1–3 min): it launches `codex review`
+  locally against the PR's merge-base and reports the verdict as JSON on stdout (exit
+  **0** clean · **1** findings · **2** tool/precondition/parse error), with the full
+  transcript at the `output_path` it names. No GitHub trigger, no polling, no
+  `@codex review` re-request protocol.
+- **Act on the verdict:** route `findings` into the fix loop exactly like `/code-review`
+  findings (fix each, or dismiss with a reason), handoff-eligible on `clean`, treat a
+  usage-limit / tool failure (exit 2) as end-of-wait (not a blocker) only when the
+  independent review and other gates are complete. A new push invalidates the verdict —
+  just **re-run** the launcher on the new HEAD (cheap; no re-trigger dance).
+- Copy the transcript into the gate dir as `codex-review.md` and set the `gate.json`
+  `codex_bot` line to the head-bound form below.
 
 When every gate passes, write the handoff into the **local merge-gate store** (contract
 in CLAUDE.md "PR merge gate"; this template is the field-level worked example): create
@@ -307,7 +301,7 @@ over `gate.json` — the preflight probe polls this file and must never see a to
   "updated": "<ISO-8601>",
   "gates": {
     "independent_review": "pass; <review source>; risk=<small|larger>; why sufficient; findings fixed/dismissed",
-    "codex_bot": "<clean|exhausted>; scripts/pr_review_status.py <pr> --once",
+    "codex_bot": "local; codex_local_review; head <sha>; <clean|findings-fixed|exhausted>; see codex-review.md in this dir",
     "ci": "pass; gh pr checks <pr>",
     "tests": "<commands run>",
     "docs": "<updated / not required>",
@@ -320,25 +314,25 @@ over `gate.json` — the preflight probe polls this file and must never see a to
 ```
 
 Issue closure is NOT restated here — the PR body's closing keywords stay authoritative.
-The `visual` and `build_db` lines each stamp the head SHA they were verified on: those
-gates are expensive, so a later push must be visibly distinguishable from "already
-verified on this head" (chief-of-staff refuses to merge when a per-gate SHA trails
-`head`).
+The `visual`, `build_db`, and `codex_bot` lines each stamp the head SHA they were
+verified on: those gates are re-verifiable, so a later push must be visibly
+distinguishable from "already verified on this head" (chief-of-staff refuses to merge
+when a per-gate SHA trails `head`).
 
 The current-head `status: ready-to-merge` gate entry is the single chief-of-staff
 handoff indicator — the PR body carries only the description and closing keywords, and
 evidence is NEVER posted to GitHub (no attachments, no evidence branches, no committed
 screenshots). Do not write `ready-to-merge` if any gate is missing, pending, stale, or
 only reported in the local chat transcript — write `status: blocked` with `blocker`
-naming the missing item instead, and report what chief-of-staff must wait for. A `none`
-Codex signal can be handed to a human with explanation, but it is not enough for
-automerge evidence. A later push makes the entry stale (its `head` no longer matches);
-rerun the gate on the new head and refresh it. Evidence must live IN the gate directory
-(copied, not symlinked): scratch and `/tmp` paths the watcher or reviewer wrote do not
-survive until a later chief-of-staff tick. Whenever you add or repair evidence files in
-an existing gate directory, also refresh `gate.json` (bump `updated`) — the preflight
-probe fingerprints only `gate.json`'s bytes, so an evidence-only change is invisible
-until the file moves.
+naming the missing item instead, and report what chief-of-staff must wait for. A codex
+usage-limit / tool failure (exit 2) can be handed to a human with explanation, but a
+still-unrun local Codex review is not enough for automerge evidence. A later push makes
+the entry stale (its `head` no longer matches); rerun the gate on the new head and
+refresh it. Evidence must live IN the gate directory (copied, not symlinked): scratch
+and `/tmp` paths the watcher or reviewer wrote do not survive until a later
+chief-of-staff tick. Whenever you add or repair evidence files in an existing gate
+directory, also refresh `gate.json` (bump `updated`) — the preflight probe fingerprints
+only `gate.json`'s bytes, so an evidence-only change is invisible until the file moves.
 
 Pipeline-specific operational notes the gate doesn't carry:
 
@@ -413,8 +407,9 @@ Pipeline-specific operational notes the gate doesn't carry:
   ```
 
 - Do not merge. `/chief-of-staff` performs the squash merge after re-checking live head,
-  CI, Codex bot signal, mergeability, gate evidence, and stack order. If a remote branch
-  should be deleted after merge, leave that to the merge owner.
+  CI, the gate entry's head-bound `codex_bot` line, mergeability, gate evidence, and
+  stack order. If a remote branch should be deleted after merge, leave that to the merge
+  owner.
 
 Before the next planned PR, fork from the correct base: `origin/main` for independent
 work, or the predecessor PR branch for a stacked dependency. Record the stack order in

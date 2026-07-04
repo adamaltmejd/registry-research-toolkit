@@ -45,10 +45,10 @@ lanes freshness (0/1/2 above) — so the `/loop` tick does one fetch instead of 
 `--lanes-stale`. It never writes: CI (`plan-sequence.yml`) + the daily cron own the
 projection block; the loop's only write is the lanes block, when it moves.
 
-The gh/git process primitives live in the shared `_gh` module (lifted there once
-`pr_review_status.py` became a third consumer, alongside the shared `load_sibling`
-loader); the issue-domain parsers (label sets, the relationship/touches regexes) are still
-reused from the sibling validator (check_issue_hygiene.py).
+The gh/git process primitives live in the shared `_gh` module (lifted there once a third
+consumer joined, alongside the shared `load_sibling` loader); the issue-domain parsers
+(label sets, the relationship/touches regexes) are still reused from the sibling validator
+(check_issue_hygiene.py).
 """
 
 from __future__ import annotations

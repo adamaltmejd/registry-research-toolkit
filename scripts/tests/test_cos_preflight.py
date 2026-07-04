@@ -90,7 +90,6 @@ def _ready_pr(number=956, *, draft=False, head=HEAD, **overrides):
             "head": head,
             "current": True,
         },
-        "codex_signal": "clean",
         "reviews": [],
     }
     pr.update(overrides)
@@ -553,8 +552,8 @@ def _gate_pr(
     gate_root: Path, *, mergeable, checks=None, status="present-only", **extra
 ):
     # A claimed PR that carries a gate entry (gate state != "absent") but is NOT
-    # current-ready, so summarize_pr does not fetch the Codex signal (no network). The
-    # closing ref still comes from the body; the gate lives in the local store.
+    # current-ready. The closing ref still comes from the body; the gate lives in the
+    # local store (summarize_pr makes no network calls of its own).
     number = extra.get("number", 956)
     _write_gate(gate_root, number, _gate(number, status=status, head=HEAD))
     return _raw_pr(mergeable=mergeable, checks=checks or [], closes_body=True, **extra)
@@ -676,22 +675,6 @@ def test_fork_pr_closing_claims_ignored(gates: Path) -> None:
 
     assert "issues" not in entry
     assert "777" not in json.dumps(entry)
-
-
-def test_fork_pr_never_fetches_codex_signal(
-    gates: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    # A fork PR must never reach the current-ready path that fetches the Codex signal —
-    # even if (impossibly) a gate entry exists for it.
-    monkeypatch.setattr(
-        cpf, "codex_signal", lambda _n: pytest.fail("fork PR must not fetch codex")
-    )
-    _write_gate(gates, 1200, _gate(1200, head=HEAD))
-
-    entry = cpf.summarize_pr(_fork_raw(1200), "owner/repo", gates)
-
-    assert entry["fork"] is True
-    assert "codex_signal" not in entry
 
 
 def test_fork_pr_with_gate_entry_flags_error(gates: Path) -> None:
@@ -874,7 +857,7 @@ def test_gate_reason_names_only_changed_pr() -> None:
     p956 = _ready_pr(956)
     p957 = _ready_pr(957)
     previous = _snapshot(prs=[p956, p957])
-    p957_changed = _ready_pr(957, codex_signal="findings")
+    p957_changed = _ready_pr(957, checks="failing")
     snap = _snapshot(prs=[p956, p957_changed])
 
     reasons = cpf.actionable_reasons(snap, previous)
@@ -886,7 +869,7 @@ def test_generic_reason_suppressed_when_all_changed_prs_are_gate_named() -> None
     # A gate-state PR change already emits its specific named reason; the generic
     # "open PR state changed" must NOT also fire for it.
     previous = _snapshot(prs=[_ready_pr(957)])
-    snap = _snapshot(prs=[_ready_pr(957, codex_signal="findings")])
+    snap = _snapshot(prs=[_ready_pr(957, checks="failing")])
 
     reasons = cpf.actionable_reasons(snap, previous)
 
@@ -924,7 +907,7 @@ def test_gate_named_and_non_gate_changes_emit_both_reasons() -> None:
     previous = _snapshot(prs=[_ready_pr(957), plain])
     snap = _snapshot(
         prs=[
-            _ready_pr(957, codex_signal="findings"),
+            _ready_pr(957, checks="failing"),
             _claimed_nongate_pr(958, reviews=[{"author": "x"}]),
         ]
     )

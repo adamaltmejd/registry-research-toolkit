@@ -5,11 +5,11 @@
 `gh_api_paginated` (paginated gh-api array flattening), and `repo_owner_name`
 (owner/name from $GITHUB_REPOSITORY, else `gh repo view`) are the thin,
 domain-neutral wrappers every gh-driven script in here needs. The original process
-wrappers were born in `check_issue_hygiene.py` and reused by `plan_sequence.py`;
-`pr_review_status.py` is the third consumer — the trigger the note in `plan_sequence.py`
-named for lifting them into a shared module. The issue-domain parsers (label sets, the
-relationship/touches regexes) stay in `check_issue_hygiene.py`, still shared by only two
-consumers.
+wrappers were born in `check_issue_hygiene.py` and reused by `plan_sequence.py`; a third
+consumer was the trigger the note in `plan_sequence.py` named for lifting them into a
+shared module, and the cos_* tooling (`cos_preflight.py`, `cos_watch.py`, …) consumes them
+now. The issue-domain parsers (label sets, the relationship/touches regexes) stay in
+`check_issue_hygiene.py`, shared by its own set of consumers.
 
 `run_tolerant` is the non-zero-tolerant counterpart to `run`: it hands back the
 `CompletedProcess` (a non-zero exit is a signal the caller inspects, not a fatal error)
