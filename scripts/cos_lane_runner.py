@@ -26,16 +26,54 @@ The loop:
 
     run codex exec ($pr-pipeline-impl: all gates, codex_bot deferred) fg -> log; wait exit
     session = poll_codex_session_id(log, from the pre-turn offset)   # cos_dispatch leaf
-    pr      = discover the PR the agent opened (slot `prs`, else gate-root scan)
-    for round in 1..MAX_ROUNDS:
-        head    = git rev-parse HEAD      # a resume moved HEAD; re-read every round
-        verdict = codex_local_review.py --base <base> --out <gate-dir>/codex-review.md
-        clean    -> write codex_bot line (head-bound); flip status iff sole-unmet; exit 0
-        findings -> resume <session> with a findings brief foreground -> log; continue
-        error    -> usage_limit: record exhausted, flip iff sole-unmet, exit 0;
-                    any other kind (incl. nested_sandbox — an un-nested runner must not
-                    see it): status blocked naming the kind, exit nonzero
-    cap exhausted, still findings -> codex_bot blocked (round cap), status blocked, exit
+    prs     = discover EVERY PR the lane opened (slot `prs` in stack order, else gate scan)
+    for pr in prs:                        # a codex lane may open a STACK of PRs
+        if multi-PR: git checkout <pr head branch>   # review the RIGHT tree per PR
+        base = resolve_review_base(pr)    # a stacked successor reviews vs its predecessor
+        if multi-PR and base is non-main and pr_is_behind_base(base): BLOCK (stale base)
+            #  this PR's OWN base advanced past its fork point (a predecessor's earlier fix
+            #  round moved origin/<pred>), so it does NOT contain its base tip — do NOT
+            #  review it; chief-of-staff rebases + re-reviews it before merge. A main-based
+            #  PR is EXEMPT (main advancing is normal), so INDEPENDENT PRs never block siblings
+        run_loop(pr, base, session):      # the SAME warm session drives every PR's fixes
+            for round in 1..MAX_ROUNDS:
+                head    = git rev-parse HEAD   # a resume moved HEAD; re-read every round
+                verdict = codex_local_review.py --base <base> --out <gate>/codex-review.md
+                clean    -> write codex_bot line (head-bound); flip status iff sole-unmet
+                findings -> resume <session> with a findings brief foreground -> log; loop
+                error    -> usage_limit: record exhausted, flip iff sole-unmet;
+                            any other kind (incl. nested_sandbox — an un-nested runner must
+                            not see it): status blocked naming the kind
+            cap exhausted, still findings -> codex_bot blocked (round cap), status blocked
+    exit 0 iff EVERY PR's gate completed OK; else the first non-OK code (a blocked PR
+    never strands the others — each PR's codex_bot gate is independent).
+
+Multi-PR (a stack): the single-PR common case is UNCHANGED — one PR, no checkout, review
+the current HEAD the implement turn left. Only when the lane opened >1 PR does the runner
+check out each PR's head branch before its loop, because `codex_local_review` reviews the
+worktree HEAD (vs merge-base with the PR's base) and the agent exits on the TIP branch, so
+predecessors are otherwise not checked out. A head-branch that can't be resolved or checked
+out BLOCKS that one PR's gate (never a silent wrong-tree review) and the runner continues to
+the next PR.
+
+Stacked-successor staleness (per-PR, behind-its-own-base): staleness is decided PER PR,
+locally — never a lane-wide flag. After a PR's head branch is checked out and its base is
+resolved, the runner asks whether the PR head contains its base branch's CURRENT tip
+(`git merge-base --is-ancestor <base> HEAD`): exit 0 = base tip IS contained → up-to-date →
+review; exit 1 = base tip NOT contained → the base advanced under the PR (a predecessor's
+earlier fix round moved `origin/<pred>`) → the PR is STALE, so BLOCK it WITHOUT reviewing.
+The review itself would be correct (`codex_local_review` diffs merge-base(HEAD, base) = the
+successor's own fork point), but marking a stale-based successor clean/ready-to-merge is
+misleading stack evidence. This is PRECISE, not lane-wide: a PR based on `main` is EXEMPT
+(main advancing is normal, not our concern), so INDEPENDENT PRs in one lane — several based
+on main — never false-block one another; only a stacked successor whose in-lane predecessor
+moved is blocked. Because the check reads the LIVE base tip each iteration, a predecessor's
+fix-round push is naturally reflected when the loop reaches the successor — no cross-PR flag
+is needed. Any merge-base exit code other than 0/1 (a git error) is treated conservatively
+as NOT stale (review) so a transient git hiccup can't false-block. The runner does NOT
+rebase: chief-of-staff owns the stacked-successor rebase + re-review before merge (PR
+merge-gate stacked-PR safety). Single-PR lanes never run this check (there is no successor
+to stale).
 
 Why a sibling, not a permission grant (rejected: Option 1): the tempting alternative —
 grant the nested `codex review` app-server the permission it's missing — is INFEASIBLE,
@@ -103,9 +141,9 @@ VERDICT_USAGE_LIMIT = "exhausted (usage-limit)"
 # `"pass; gh pr checks"`, `"updated; ..."`) is not head-bound and can never be stale.
 HEAD_TOKEN_RE = re.compile(r"head\s+([0-9a-f]{7,40})", re.IGNORECASE)
 
-# Default round cap: one initial review + up to this many fix rounds. 3 mirrors the
-# pr-pipeline review-loop budget; injectable via --max-rounds.
-DEFAULT_MAX_ROUNDS = 3
+# Default round cap: one initial review + up to this many fix rounds. 5 because a 3-round cap
+# was hit too often in practice; injectable via --max-rounds.
+DEFAULT_MAX_ROUNDS = 5
 
 # Bounded poll for the codex thread id in the implement turn's JSONL log (reused from
 # cos_dispatch's contract). A null session is tolerated — if findings then need fixing, the
@@ -309,48 +347,66 @@ def run_codex_turn(
 # ---- PR discovery ------------------------------------------------------------
 
 
-def discover_pr(slot_file: Path | None, gate_root: Path) -> int:
-    """The PR the lane agent opened: slot `prs` first entry, else a gate-root pr-* scan.
+def discover_prs(slot_file: Path | None, gate_root: Path) -> list[int]:
+    """EVERY PR the lane opened, in slot order (stack/merge order — predecessor first).
 
-    The slot file's `prs` is the authoritative claim the agent registered; a gate-root scan
-    (`pr-<N>/` dirs) is the fallback when no slot file was passed or it carries no PR yet.
-    A gate directory without a matching `gate.json` (or whose `gate.json` `pr` disagrees) is
-    skipped, mirroring the gate protocol's read rule. Fail-fast (exit 2) if none is found —
-    the agent turn was supposed to open a PR. A slot claiming MORE THAN ONE PR also fails
-    fast: the runner completes codex_bot for a single PR, and silently taking prs[0] would
-    strand the others' gates (real multi-PR support is a follow-up).
+    The slot file's `prs` is the authoritative claim the agent registered; its order is the
+    lane's stack/merge order (predecessor first), which the runner preserves so a stack is
+    reviewed/completed base-first. A gate-root scan (`pr-<N>/` dirs, sorted NUMERICALLY by PR
+    number) is the fallback when no slot file was passed or it carries no PR yet. Numeric —
+    not the dir-name STRING — because ascending PR number is creation order is stack order
+    (predecessor first), the invariant run() relies on to check out/review base-first; a
+    lexicographic sort would return e.g. `pr-9` after `pr-11`, out of stack order across a
+    digit-width boundary. A gate directory without a matching `gate.json` (or whose
+    `gate.json` `pr` disagrees) is skipped, mirroring the gate protocol's read rule.
+    Fail-fast (exit 2) if none is found — the agent turn was supposed to open at least one PR.
+    A slot claiming multiple PRs is now SUPPORTED: all are returned (the runner completes
+    codex_bot for each), not fail-fast (the #1086 single-PR stopgap).
 
-    A PROVIDED-but-empty slot (readable dict, but `prs` empty/missing/not-a-list) also fails
+    A PROVIDED-but-empty slot (readable dict, but `prs` empty/missing/not-a-list) still fails
     fast rather than falling through to the global scan: an agent that registered its slot but
-    opened no PR is a lane error, and the scan could otherwise return an UNRELATED pr-* dir if
-    the store happens to hold exactly one. Only when NO slot file was passed (or it is
-    absent/unreadable/torn) does control fall through to the manual/no-slot gate-root scan.
+    opened no PR is a lane error, and the scan could otherwise return UNRELATED pr-* dirs. The
+    slot `prs` is written by trusted local code as a list of ints, so a NON-int entry signals
+    slot corruption: a present, non-empty list that is all ints is returned in order; ANY
+    non-int entry fails fast (never silently narrowed — that would strand the dropped PR's
+    codex_bot gate).
+
+    The slot `prs` claim is the AUTHORITATIVE multi-PR lane membership — only it can say which
+    PRs form a lane. Only when NO slot file was passed (or it is absent/unreadable/torn) does
+    control fall through to the manual/no-slot gate-root scan, which is a SINGLE-PR-only
+    fallback: `gate_root` is the SHARED merge-gate store, so it cannot disambiguate which of
+    several `pr-*` dirs belong to one lane. It therefore returns a PR only when EXACTLY ONE
+    valid `pr-*` dir is found; 0 or >1 found fails fast (exit 2) — a multi-PR lane must
+    register a slot `prs` claim, and an ambiguous shared store can't be scoped. It never
+    returns the whole store (the prior behavior would check out/review/REWRITE gates for
+    unrelated PRs). This matches the original single-PR `discover_pr`'s exactly-one-or-fail.
     """
     if slot_file is not None:
         loaded = _cos_preflight._read_json_tolerant(slot_file, "pipeline-slot file")
         if loaded is not None and isinstance(loaded[1], dict):
             prs = loaded[1].get("prs")
             if isinstance(prs, list) and prs:
-                if len(prs) > 1:
-                    # The runner owns codex_bot for exactly ONE PR; silently completing prs[0]
-                    # would leave the other PRs' codex_bot gates uncompleted. Fail fast until
-                    # real multi-PR support lands (a follow-up).
-                    raise SystemExit(
-                        f"{EXIT_TOOL}:the lane-runner supports a single PR per lane, but this "
-                        f"slot claims {prs}; split the lane or dispatch with --no-lane-runner"
-                    )
-                first = prs[0]
-                if isinstance(first, int):
-                    return first
-            # The slot is present and readable but registered no PR: the lane agent didn't open
-            # its draft. Fail fast — falling through to the global scan could return an
-            # unrelated pr-* dir. (A torn/unreadable slot, loaded is None, is the no-slot case.)
+                claimed = [pr for pr in prs if isinstance(pr, int)]
+                if len(claimed) == len(prs):
+                    return claimed
+                # A present, non-empty list with a non-int entry is slot corruption. Fail
+                # fast naming the slot — silently narrowing to the int subset would strand
+                # the dropped PR's codex_bot gate (blocked with no signal, the exact "other
+                # PRs stranded" regression the old len>1 fail-fast prevented).
+                raise SystemExit(
+                    f"{EXIT_TOOL}:slot {slot_file} has a malformed `prs` entry (expected a "
+                    f"list of int PR numbers, got {prs!r}); refusing to silently drop it"
+                )
+            # The slot is present and readable but registered no PR: the lane agent
+            # didn't open its draft. Fail fast — falling through to the global scan could
+            # return unrelated pr-* dirs. (A torn/unreadable slot, loaded is None, is the
+            # no-slot case that falls through to the scan below.)
             raise SystemExit(
                 f"{EXIT_TOOL}:slot {slot_file} has no registered PR — the lane agent did "
                 "not open its draft PR; refusing to scan the global gate store"
             )
     found: list[int] = []
-    for path in sorted(gate_root.glob("pr-*")):
+    for path in gate_root.glob("pr-*"):
         if not path.is_dir():
             continue
         try:
@@ -364,13 +420,117 @@ def discover_pr(slot_file: Path | None, gate_root: Path) -> int:
             continue
         if loaded[1].get("pr") == number:
             found.append(number)
+    # The no-slot scan is SINGLE-PR-only: the shared gate store can't disambiguate lane
+    # membership, so return a PR only when EXACTLY ONE valid pr-* dir is found. >1 fails fast
+    # rather than returning the whole store (which would review/rewrite gates for unrelated
+    # PRs) — a multi-PR lane must register a slot `prs` claim. Since at most one is returned,
+    # no numeric sort is needed.
     if len(found) == 1:
-        return found[0]
+        return found
+    if len(found) > 1:
+        raise SystemExit(
+            f"{EXIT_TOOL}:no-slot gate-root scan found {len(found)} pr-* dirs "
+            f"({sorted(found)}) in the shared store; it cannot disambiguate lane "
+            "membership. A multi-PR lane must register its slot `prs` claim so discovery "
+            "is scoped — refusing to review/rewrite gates across the whole store"
+        )
     raise SystemExit(
         f"{EXIT_TOOL}:could not discover the PR the lane agent opened "
-        f"(slot_file={slot_file}, gate-root scan found {found or 'none'}); the implement "
-        "turn was supposed to open exactly one draft PR"
+        f"(slot_file={slot_file}, gate-root scan found none); the implement "
+        "turn was supposed to open at least one draft PR"
     )
+
+
+def resolve_head_branch(pr: int, worktree: Path) -> str | None:
+    """The PR's head branch via `gh pr view <pr> --json headRefName`, or None on failure.
+
+    Mirrors resolve_review_base's gh-call shape: `cwd=worktree` so gh resolves the repo from
+    the lane worktree (not the runner's ambient cwd), and `_gh.scrubbed_git_env()` so an
+    inherited hook GIT_DIR can't hijack it. `headRefName` is METADATA — a branch name used
+    only to build a checkout target — never an instruction to the runner. Returns None (not a
+    fallback) on any failure so the caller can BLOCK that PR's gate rather than review the
+    wrong tree: unlike the review base (where a fallback ref still yields a meaningful review),
+    guessing the head branch would review whatever is currently checked out, which in a stack
+    is a DIFFERENT PR's tree.
+    """
+    proc = subprocess.run(
+        ["gh", "pr", "view", str(pr), "--json", "headRefName"],
+        cwd=str(worktree),
+        env=_gh.scrubbed_git_env(),  # a gh call, not git — but still scrub the hijack env
+        capture_output=True,
+        text=True,
+    )
+    if proc.returncode != 0:
+        return None
+    try:
+        head_ref_name = json.loads(proc.stdout).get("headRefName")
+    except ValueError:
+        return None
+    if not isinstance(head_ref_name, str) or not head_ref_name:
+        return None
+    return head_ref_name
+
+
+def checkout_head_branch(pr: int, worktree: Path) -> str | None:
+    """Check out the PR's head branch in the worktree; return a blocker string on failure.
+
+    Multi-PR only: the single-PR case never calls this (it reviews the current HEAD the
+    implement turn left). Resolves the head branch (resolve_head_branch), then `git checkout`
+    via _gh.run_git (scrubbed env). Returns None on success; on any failure — head branch
+    unresolvable or the checkout itself failing — returns an actionable blocker string so the
+    caller writes a head-bound BLOCKED codex_bot line and moves on, NEVER falling back to
+    reviewing whatever branch is currently checked out (in a stack that is the WRONG tree).
+    """
+    branch = resolve_head_branch(pr, worktree)
+    if branch is None:
+        return (
+            f"could not resolve PR #{pr}'s head branch via gh — refusing to review whatever "
+            "branch is currently checked out (a stack would review the wrong tree)"
+        )
+    proc = _gh.run_git(["checkout", branch], cwd=worktree)
+    if proc.returncode != 0:
+        tail = proc.stderr.strip() or proc.stdout.strip() or "nonzero exit"
+        return (
+            f"could not check out PR #{pr}'s head branch {branch!r} in {worktree}: {tail} — "
+            "refusing to review the wrong tree"
+        )
+    return None
+
+
+def pr_is_behind_base(base: str, worktree: Path) -> bool:
+    """Is the checked-out PR head BEHIND its own base (the base tip is NOT an ancestor)?
+
+    Per-PR staleness for a stacked successor: after the head branch is checked out, ask
+    whether the PR head contains its base branch's CURRENT tip via
+    `git merge-base --is-ancestor <base> HEAD` — exit 0 (base tip IS an ancestor of HEAD →
+    up-to-date → NOT behind), exit 1 (base tip NOT contained → the base advanced under the
+    PR → behind). Because it reads the LIVE base tip each call, a predecessor's fix-round
+    push (which updates `origin/<predecessor>`) is naturally reflected when the loop reaches
+    the successor — no cross-PR flag is needed.
+
+    Conservative-on-error: any exit code other than 0 or 1 (a git error, a bad ref) is
+    treated as NOT behind (review normally) and warned on stderr, so a transient git hiccup
+    can't false-block a PR. Only a clean exit 1 marks the PR stale. Runs in `cwd=worktree`
+    with `_gh.scrubbed_git_env()`, mirroring resolve_review_base / checkout_head_branch.
+    """
+    proc = subprocess.run(
+        ["git", "merge-base", "--is-ancestor", base, "HEAD"],
+        cwd=str(worktree),
+        env=_gh.scrubbed_git_env(),
+        capture_output=True,
+        text=True,
+    )
+    if proc.returncode == 0:
+        return False
+    if proc.returncode == 1:
+        return True
+    print(
+        f"warning: `git merge-base --is-ancestor {base} HEAD` in {worktree} exited "
+        f"{proc.returncode} ({proc.stderr.strip() or proc.stdout.strip() or 'no output'}); "
+        "treating the PR as NOT behind its base (reviewing) rather than false-blocking",
+        file=sys.stderr,
+    )
+    return False
 
 
 # ---- gate.json read / write --------------------------------------------------
@@ -1070,31 +1230,88 @@ def run(
         )
     enrich_slot_session(slot_file, session)
 
-    # 3. Discover the PR the agent opened (continue mode names it explicitly — trust that over
-    #    discovery so we can't complete the wrong PR), then run the review↔fix loop over it.
-    pr = (
-        args.continue_pr
+    # 3. Discover EVERY PR the lane opened (continue mode names ONE PR explicitly — trust that
+    #    over discovery, and it is NOT multi-PR by construction — so we can't complete the wrong
+    #    PR), then run the review↔fix loop over each in stack order.
+    prs = (
+        [args.continue_pr]
         if args.continue_pr is not None
-        else discover_pr(slot_file, gate_root)
+        else discover_prs(slot_file, gate_root)
     )
-    gate_dir = gate_root / f"pr-{pr}"
-    # Resolve the review base from the PR's LIVE base branch, so the review always diffs against
-    # the PR's real base (a stacked or non-main-based PR is reviewed against its predecessor, not
-    # main). --base is the fallback if gh can't resolve the base. See resolve_review_base.
-    base = resolve_review_base(pr, args.base, args.worktree)
-    return run_loop(
-        worktree=args.worktree,
-        base=base,
-        gate_dir=gate_dir,
-        pr=pr,
-        slot_file=slot_file,
-        session=session,
-        log_path=log_path,
-        max_rounds=args.max_rounds,
-        state_root=state_root,
-        canonical=args.canonical,
-        profile_flags=profile_flags,
-    )
+    multi_pr = len(prs) > 1
+    first_non_ok: int | None = None
+    for pr in prs:
+        gate_dir = gate_root / f"pr-{pr}"
+        # For a STACK, check out each PR's head branch so the review runs against the RIGHT tree
+        # (codex_local_review reviews the worktree HEAD; the agent exited on the TIP branch, so
+        # predecessors aren't checked out). The single-PR case does NOT check out — it reviews
+        # the current HEAD the implement/continue turn left, keeping that path byte-for-byte the
+        # same as before. A checkout failure BLOCKS this PR's gate (never a wrong-tree review)
+        # and the loop continues to the next PR.
+        if multi_pr:
+            checkout_blocker = checkout_head_branch(pr, args.worktree)
+            if checkout_blocker is not None:
+                head = _cos_dispatch.git_output(args.worktree, ["rev-parse", "HEAD"])
+                write_codex_bot_gate(
+                    gate_dir, pr, head, blocking=True, blocker=checkout_blocker
+                )
+                print(
+                    f"{checkout_blocker}; wrote status: blocked for PR #{pr}",
+                    file=sys.stderr,
+                )
+                if first_non_ok is None:
+                    first_non_ok = EXIT_NEEDS_HUMAN
+                continue
+        # Resolve the review base from the PR's LIVE base branch, so the review always diffs
+        # against the PR's real base (a stacked successor is reviewed against its predecessor
+        # branch, not main). --base is the fallback if gh can't resolve the base.
+        base = resolve_review_base(pr, args.base, args.worktree)
+        # MULTI-PR only, PER PR: a stacked successor is stale ONLY if its OWN base branch has
+        # advanced past its fork point (a predecessor's earlier fix round moved origin/<pred>).
+        # A PR based on main is NEVER blocked here — main advancing is normal, not our concern —
+        # so we exempt a main/origin/main base (the fallback, or a main-based PR) and apply the
+        # is-ancestor check only to a non-main base. Because the check reads the LIVE base tip
+        # each iteration, a predecessor's fix-round push is naturally reflected when the loop
+        # reaches the successor — no cross-PR flag is needed, and INDEPENDENT PRs (each based on
+        # main) never false-block one another.
+        if (
+            multi_pr
+            and base not in ("main", "origin/main")
+            and pr_is_behind_base(base, args.worktree)
+        ):
+            head = _cos_dispatch.git_output(args.worktree, ["rev-parse", "HEAD"])
+            blocker = (
+                f"this stacked successor is behind its base {base!r} (a predecessor fix "
+                "advanced it); rebase before review — chief-of-staff rebases and re-reviews "
+                "stacked successors before merge."
+            )
+            write_codex_bot_gate(gate_dir, pr, head, blocking=True, blocker=blocker)
+            print(
+                f"stale-based stacked successor PR #{pr}; wrote status: blocked",
+                file=sys.stderr,
+            )
+            if first_non_ok is None:
+                first_non_ok = EXIT_NEEDS_HUMAN
+            continue
+        rc = run_loop(
+            worktree=args.worktree,
+            base=base,
+            gate_dir=gate_dir,
+            pr=pr,
+            slot_file=slot_file,
+            session=session,
+            log_path=log_path,
+            max_rounds=args.max_rounds,
+            state_root=state_root,
+            canonical=args.canonical,
+            profile_flags=profile_flags,
+        )
+        # Every PR's gate is independent — a blocked one must not strand the others, so we
+        # process the whole list and return the FIRST non-OK code (each PR always leaves an
+        # accurate gate.json via run_loop's terminal paths).
+        if rc != EXIT_OK and first_non_ok is None:
+            first_non_ok = rc
+    return first_non_ok if first_non_ok is not None else EXIT_OK
 
 
 def main(argv: list[str] | None = None) -> int:
