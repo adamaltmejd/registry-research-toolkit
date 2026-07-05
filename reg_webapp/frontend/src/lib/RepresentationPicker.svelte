@@ -1787,7 +1787,8 @@ function graphEdgeLabel(edge: ResolvedEdge): string | null {
         ? edge.edge.source_column
         : `${edge.edge.source_column} → ${edge.edge.target_column}`
       : null;
-  const base = representation ?? edge.edge.label;
+  const label = edge.edge.label?.trim() ? edge.edge.label : null;
+  const base = label ?? representation;
   if (edge.edge.effective_year != null) {
     return base
       ? `${base} · ${edge.edge.effective_year}`

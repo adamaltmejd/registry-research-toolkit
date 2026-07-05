@@ -817,6 +817,31 @@ class TestEdges:
         assert edge.label == "identifier rename"
         assert edge.effective_year == 2014
 
+    def test_representation_succession_reverse_lookup_uses_successor_index(
+        self,
+    ) -> None:
+        # #1113 review: graph anchors can be successors, so the inbound half of
+        # the touching-edge query must not scan representation_replaced_by.
+        conn = build_slugged_db()
+        plan = "\n".join(
+            row[3]
+            for row in conn.execute(
+                "EXPLAIN QUERY PLAN "
+                "SELECT predecessor_provider, predecessor_register, "
+                "predecessor_variable, predecessor_column, successor_provider, "
+                "successor_register, successor_variable, successor_column, "
+                "variant, effective_year, beskrivning "
+                "FROM representation_replaced_by "
+                "WHERE (predecessor_provider = ? AND predecessor_register = ? "
+                "AND predecessor_variable = ?) "
+                "OR (successor_provider = ? AND successor_register = ? "
+                "AND successor_variable = ?)",
+                ("scb", "lisa", "kon", "scb", "lisa", "kon"),
+            )
+        )
+
+        assert "idx_representation_replaced_by_successor" in plan
+
     def test_variant_scoped_representation_edge_keeps_variant_scope(self) -> None:
         # #846/#888: a variant-local rename must not render as global. The graph
         # carries the scoped register-variant slug so consumers can filter the edge

@@ -706,7 +706,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
             kind: "succession",
             source: aFqid,
             target: aFqid,
-            label: null,
+            label: "identifier rename",
             effective_year: 2010,
             source_column: "OLD",
             target_column: "NEW",
@@ -734,6 +734,9 @@ describe("RepresentationPicker graph mode (#904)", () => {
     expect(Math.abs(x2 - x1)).toBeGreaterThan(8);
     expect(Math.abs(y2 - y1)).toBeLessThan(1);
     expect(document.querySelector(".graph-reason")?.textContent).toContain(
+      "identifier rename · 2010",
+    );
+    expect(document.querySelector(".graph-picker")?.textContent).not.toContain(
       "OLD → NEW · 2010",
     );
   });
