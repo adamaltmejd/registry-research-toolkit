@@ -66,10 +66,15 @@ const representation = $derived(strField("representation"));
     gap: var(--space-2);
     min-width: 0;
   }
-  /* The variable is a machine FQID — mono, like every code/identifier. */
+  /* The variable is a machine FQID — mono, like every code/identifier. As flex
+     items of `.binding-body` they default to `min-width: auto`, so a long unbroken
+     FQID would refuse to shrink and overflow the card on mobile; `min-width: 0` +
+     `overflow-wrap: anywhere` lets it break within the row instead (#1110). */
   .variable-value {
     font-family: var(--font-mono);
     font-size: var(--text-sm);
+    min-width: 0;
+    overflow-wrap: anywhere;
   }
   /* The pinned representation (delivery column) is a subtler mono chip. */
   .representation {
@@ -79,5 +84,7 @@ const representation = $derived(strField("representation"));
     padding: 0.05rem var(--space-2);
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
+    min-width: 0;
+    overflow-wrap: anywhere;
   }
 </style>

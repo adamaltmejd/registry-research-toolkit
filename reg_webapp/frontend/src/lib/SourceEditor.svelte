@@ -181,6 +181,15 @@ const metaRows = $derived([
     display: flex;
     align-items: baseline;
     gap: var(--space-2);
+    /* As a flex child of `.source-head` the h3 defaults to `min-width: auto`, so a
+       long unbroken source name would refuse to shrink and overflow the card on
+       mobile. `min-width: 0` lets it shrink; `overflow-wrap: anywhere` (inherited by
+       the name text run, which itself becomes an anonymous flex item here) lowers
+       the text's min-content contribution so it breaks within the heading instead of
+       clipping. The error Tag sits in its own flex item, so the name absorbs the
+       shrink and the badge is not squeezed (#1110). */
+    min-width: 0;
+    overflow-wrap: anywhere;
   }
   .bindings h4 {
     margin: 0 0 var(--space-2);
