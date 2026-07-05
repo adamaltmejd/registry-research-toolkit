@@ -741,6 +741,109 @@ describe("RepresentationPicker graph mode (#904)", () => {
     );
   });
 
+  it("hides representation edges when filters hide an endpoint cell", async () => {
+    const aFqid = "scb/iot/filter-edge";
+    render(RepresentationPicker, {
+      bands: [
+        {
+          key: aFqid,
+          name: "Filtered edge",
+          registerPrefix: "scb/iot",
+          rows: [
+            row({
+              column: "OLD",
+              valueSetLabel: "kr",
+              from: "2000-01-01",
+              to: "2009-12-31",
+              windows: [{ from: "2000-01-01", to: "2009-12-31" }],
+              period: "2000 – 2009",
+            }),
+            row({
+              column: "NEW",
+              valueSetLabel: "kr",
+              from: "2010-01-01",
+              to: "2020-12-31",
+              windows: [{ from: "2010-01-01", to: "2020-12-31" }],
+              period: "2010 – 2020",
+            }),
+          ],
+          facetsByColumn: {
+            OLD: [
+              { axis: "enhet", value: "ind", label: "Individ" },
+              { axis: "hush", value: "h1", label: "Hushall" },
+            ],
+            NEW: [
+              { axis: "enhet", value: "ind", label: "Individ" },
+              { axis: "hush", value: "h2", label: "Familj" },
+            ],
+          },
+        } satisfies PickerBand,
+      ],
+      axes: AXES,
+      graph: graph({
+        nodes: [
+          graphNode(aFqid, {
+            states: [
+              graphState({
+                delivery_column_name: "OLD",
+                valid_from: "2000-01-01",
+                valid_to: "2009-12-31",
+              }),
+              graphState({
+                state_id: 2,
+                representation_run_id: 2,
+                delivery_column_name: "NEW",
+                valid_from: "2010-01-01",
+                valid_to: "2020-12-31",
+              }),
+            ],
+          }),
+        ],
+        edges: [
+          {
+            id: "repr-old-new",
+            kind: "succession",
+            source: aFqid,
+            target: aFqid,
+            label: "identifier rename",
+            effective_year: 2010,
+            source_column: "OLD",
+            target_column: "NEW",
+            variant: null,
+          },
+        ],
+        focus_id: aFqid,
+      }),
+      ...PROPS,
+    });
+
+    await vi.waitFor(() => {
+      if (!document.querySelector(".graph-edge.representation")) {
+        throw new Error("representation edge not initially rendered");
+      }
+    });
+
+    clickFilter("Familj");
+
+    await expect
+      .element(page.getByText("Showing 1 of 2 columns"))
+      .toBeVisible();
+    await expect
+      .element(page.getByRole("checkbox", { name: /^NEW\b/ }))
+      .toBeVisible();
+    await vi.waitFor(() => {
+      if (!document.querySelector(".graph-picker")) {
+        throw new Error("graph mode should remain active");
+      }
+      if (document.querySelector(".graph-edge")) {
+        throw new Error("filtered representation edge still rendered");
+      }
+      if (document.querySelector(".graph-reason")) {
+        throw new Error("filtered representation edge label still rendered");
+      }
+    });
+  });
+
   it("draws round-trip representation edges to the resumed later cell", async () => {
     const aFqid = "scb/lisa/roundtrip";
     render(RepresentationPicker, {

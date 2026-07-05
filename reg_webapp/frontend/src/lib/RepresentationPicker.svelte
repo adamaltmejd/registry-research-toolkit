@@ -1539,12 +1539,17 @@ function graphRepresentationEdgeEndpoint(
   if (lane.rn.kind !== "variable" || column == null) {
     return null;
   }
-  const candidates = lane.rn.cells
-    .map((cell, index) => ({ cell, index }))
+  const candidates = graphLaneItems(lane.rn)
     .filter(
-      ({ cell }) =>
-        (variant == null || cell.variant === variant) &&
-        cell.columns.some((candidate) => graphColumnMatches(candidate, column)),
+      (item): item is Extract<GraphLaneItem, { kind: "cell" }> =>
+        item.kind === "cell",
+    )
+    .filter(
+      (item) =>
+        (variant == null || item.cell.variant === variant) &&
+        item.cell.columns.some((candidate) =>
+          graphColumnMatches(candidate, column),
+        ),
     )
     .sort(
       (a, b) =>
@@ -1556,16 +1561,9 @@ function graphRepresentationEdgeEndpoint(
   if (!match) {
     return null;
   }
-  const item: GraphLaneItem = {
-    kind: "cell",
-    cell: match.cell,
-    match: null,
-    index: match.index,
-    rowIndex: match.cell.row,
-  };
-  const left = GRAPH_GUTTER_W + graphLaneItemLeft(item);
-  const width = graphLaneItemWidth(item);
-  const top = graphCellTop(lane.height, match.cell.row, lane.rowCount);
+  const left = GRAPH_GUTTER_W + graphLaneItemLeft(match);
+  const width = graphLaneItemWidth(match);
+  const top = graphCellTop(lane.height, match.rowIndex, lane.rowCount);
   return {
     left,
     right: left + width,
@@ -1578,7 +1576,9 @@ function graphEdgeSegment(
   edge: ResolvedEdge,
   source: GraphLaneBox,
   target: GraphLaneBox,
-): GraphEdgeSegment {
+): GraphEdgeSegment | null {
+  const representationEdge =
+    edge.edge.source_column != null || edge.edge.target_column != null;
   const sourceEndpoint = graphRepresentationEdgeEndpoint(
     source,
     edge.edge.source_column,
@@ -1616,6 +1616,9 @@ function graphEdgeSegment(
       representation: true,
     };
   }
+  if (representationEdge) {
+    return null;
+  }
   return {
     x1: GRAPH_GUTTER_W - 10,
     y1: source.center,
@@ -1636,8 +1639,11 @@ function graphEdgeLabelAnchor(
   edge: ResolvedEdge,
   source: GraphLaneBox,
   target: GraphLaneBox,
-): GraphEdgeLabelPosition {
+): GraphEdgeLabelPosition | null {
   const segment = graphEdgeSegment(edge, source, target);
+  if (!segment) {
+    return null;
+  }
   return {
     left: graphEdgeLabelLeft(segment),
     top: (segment.y1 + segment.y2) / 2,
@@ -1650,8 +1656,11 @@ function graphEdgeLabelPosition(
   target: GraphLaneBox,
   edges: ResolvedEdge[],
   byId: Map<string, GraphLaneBox>,
-): GraphEdgeLabelPosition {
+): GraphEdgeLabelPosition | null {
   const anchor = graphEdgeLabelAnchor(edge, source, target);
+  if (!anchor) {
+    return null;
+  }
   const stack = edges
     .map((candidate) => {
       const candidateSource = byId.get(candidate.source.id);
@@ -1663,13 +1672,17 @@ function graphEdgeLabelPosition(
       ) {
         return null;
       }
+      const candidateAnchor = graphEdgeLabelAnchor(
+        candidate,
+        candidateSource,
+        candidateTarget,
+      );
+      if (!candidateAnchor) {
+        return null;
+      }
       return {
         edgeId: candidate.edge.id,
-        anchor: graphEdgeLabelAnchor(
-          candidate,
-          candidateSource,
-          candidateTarget,
-        ),
+        anchor: candidateAnchor,
       };
     })
     .filter(
@@ -2260,16 +2273,18 @@ function codingsVaryHref(
                   {@const target = byId.get(edge.target.id)}
                   {#if source && target}
                     {@const segment = graphEdgeSegment(edge, source, target)}
-                    <line
-                      data-edge-id={edge.edge.id}
-                      x1={segment.x1}
-                      y1={segment.y1}
-                      x2={segment.x2}
-                      y2={segment.y2}
-                      class="graph-edge"
-                      class:representation={segment.representation}
-                      marker-end={`url(#picker-arrow-${ci})`}
-                    />
+                    {#if segment}
+                      <line
+                        data-edge-id={edge.edge.id}
+                        x1={segment.x1}
+                        y1={segment.y1}
+                        x2={segment.x2}
+                        y2={segment.y2}
+                        class="graph-edge"
+                        class:representation={segment.representation}
+                        marker-end={`url(#picker-arrow-${ci})`}
+                      />
+                    {/if}
                   {/if}
                 {/each}
               </svg>
@@ -2286,14 +2301,16 @@ function codingsVaryHref(
                     cEdges,
                     byId,
                   )}
-                  <div
-                    class="graph-reason"
-                    style={`top:${labelPos.top}px; left:${labelPos.left}px`}
-                    title={label}
-                    aria-hidden="true"
-                  >
-                    {label}
-                  </div>
+                  {#if labelPos}
+                    <div
+                      class="graph-reason"
+                      style={`top:${labelPos.top}px; left:${labelPos.left}px`}
+                      title={label}
+                      aria-hidden="true"
+                    >
+                      {label}
+                    </div>
+                  {/if}
                 {/if}
               {/each}
 
