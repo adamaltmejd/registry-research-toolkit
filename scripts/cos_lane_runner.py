@@ -4,10 +4,13 @@
 A codex-surface lane structurally cannot run its own `codex review`: a `codex review`
 launched *inside* the lane agent's own seatbelt is a nested sandbox, and every exec is
 denied (`sandbox_apply: Operation not permitted`, kind `nested_sandbox` — see
-codex_local_review.py and #1049). So a codex lane does everything a normal pr-pipeline
-lane does EXCEPT the codex_bot gate: it opens the draft PR (`Closes #N`), registers the
-slot `prs`, runs independent review / build_db / visual, and writes `gate.json` with the
-`codex_bot` line deferred and `status: blocked` (blocker=codex_bot).
+codex_local_review.py and #1049). So the implement turn invokes the
+`$pr-pipeline-impl` skill — the pr-pipeline implementation phase, which BUILDS IN the
+codex_bot deferral: it opens the draft PR (`Closes #N`), registers the slot `prs`, runs
+independent review / build_db / visual, and writes `gate.json` with the FULL expected gate
+set present, the `codex_bot` line deferred, and `status: blocked` (blocker=codex_bot). The
+deferral is structural in the skill's contract, not a prose "run everything EXCEPT X"
+override the agent must reconcile.
 
 THIS runner is the sibling — launched OUTSIDE the agent's seatbelt (by cos_dispatch, or
 directly) — that completes only that gate. It runs `codex_local_review.py` un-nested,
@@ -21,7 +24,7 @@ EXITS. So the runner does not stream-parse; it foreground-runs each codex turn (
 stderr appended to the per-slug dispatch log), waits for exit, then acts on the result.
 The loop:
 
-    run codex exec (implement, all gates EXCEPT codex_bot) foreground -> log; wait exit
+    run codex exec ($pr-pipeline-impl: all gates, codex_bot deferred) fg -> log; wait exit
     session = poll_codex_session_id(log, from the pre-turn offset)   # cos_dispatch leaf
     pr      = discover the PR the agent opened (slot `prs`, else gate-root scan)
     for round in 1..MAX_ROUNDS:
@@ -130,7 +133,8 @@ _UNMET_LEADING_TOKEN_RE = re.compile(
 
 # The non-codex_bot repo gates a COMPLETE lane-agent handoff must record in gate.json before
 # the runner may flip ready-to-merge. This is a DELIBERATE, DOCUMENTED coupling to the
-# pr-pipeline gate.json template (`.claude/skills/pr-pipeline/SKILL.md` Step E `gates` map);
+# pr-pipeline-impl gate.json template (`.claude/skills/pr-pipeline-impl/SKILL.md` Step E `gates`
+# map — the implementation phase writes gate.json, so its template is the coupling source);
 # it MUST track that template's `gates` keys, minus `codex_bot` (the runner completes that gate
 # itself, so its own not-done line is expected, not a missing handoff). A gate.json missing any
 # of these keys is an INCOMPLETE handoff — the agent never recorded those gates — so the flip is
@@ -199,29 +203,23 @@ def _now() -> str:
 
 
 def implement_prompt(issues: list[int]) -> str:
-    """The implement-turn prompt: run the FULL pr-pipeline EXCEPT the codex_bot gate.
+    """The implement-turn prompt: invoke `$pr-pipeline-impl` (which builds in codex_bot deferral).
 
-    This IS the runner's contract with the codex lane agent. The agent opens the draft PR
-    (`Closes #N`), registers the slot `prs`, runs independent review / build_db / visual,
-    and writes `gate.json` — but it must NOT attempt its own `codex review` (nested
-    seatbelt), leaving the `codex_bot` line deferred and `status: blocked`
-    (blocker=codex_bot). The runner completes codex_bot after this turn.
+    Structural, not a prose override: `$pr-pipeline-impl` IS the implementation phase — it
+    opens the draft PR (`Closes #N`), registers the slot `prs`, runs independent review /
+    build_db / visual, and writes `gate.json` with the FULL expected gate set present, the
+    `codex_bot` line deferred, and `status: blocked` (blocker=codex_bot). Deferring codex_bot
+    is part of that skill's contract on the codex surface, so no "run everything EXCEPT X"
+    reconciliation is needed here. This sibling lane-runner completes codex_bot after the turn.
     """
     issue_text = " ".join(str(n) for n in issues)
     return (
-        f"$pr-pipeline {issue_text}\n\n"
-        "Run the full pr-pipeline for the issue(s) above in this worktree, with ONE "
-        "exception: do NOT run your own `codex review` / the codex_bot gate. You are "
-        "running inside a codex sandbox, so a nested `codex review` is denied "
-        "(sandbox_apply: Operation not permitted) and would review nothing. A sibling "
-        "lane-runner outside this sandbox owns the codex_bot gate and will complete it "
-        "after this turn.\n\n"
-        "So: open the draft PR with `Closes #<issue>`, register the slot `prs`, run the "
-        "independent review / build_db / visual gates as the pipeline requires, and write "
-        "the merge-gate `gate.json` — but leave the `codex_bot` gate line deferred "
-        "(e.g. `running; deferred-to-lane-runner`) and set `status: blocked` with "
-        "`blocker: codex_bot`. Do not mark the PR ready-to-merge; the runner does that "
-        "once the review is clean and codex_bot is the sole remaining gate."
+        f"$pr-pipeline-impl {issue_text}\n\n"
+        "Run the pr-pipeline implementation phase for the issue(s) above in this worktree. "
+        "It writes the merge-gate `gate.json` with the `codex_bot` line deferred and "
+        "`status: blocked` (blocker=codex_bot) — that is correct on this codex surface: a "
+        "nested `codex review` is denied here, so this sibling lane-runner (outside your "
+        "sandbox) completes codex_bot after this turn."
     )
 
 
@@ -1007,12 +1005,16 @@ def run(
             brief,
             rebase=not args.no_rebase,
         )
+        # A continue turn RESUMES an existing PR; it does not re-invoke a skill, so the
+        # $pr-pipeline-impl codex_bot deferral doesn't apply automatically. The codex_bot gate
+        # is owned by this sibling lane-runner (consistent with the pr-pipeline-impl contract),
+        # so the continue turn must leave that gate line deferred rather than completing it.
         prompt = base_prompt + (
-            "\n\nRun every pipeline gate EXCEPT codex_bot — you are inside a codex sandbox, "
-            "so a nested `codex review` is denied (sandbox_apply: Operation not permitted) "
-            "and would review nothing. Leave the codex_bot gate line deferred and set "
-            "`status: blocked` with `blocker: codex_bot`; the sibling lane-runner outside "
-            "this sandbox completes codex_bot after this turn."
+            "\n\ncodex_bot is owned by the sibling lane-runner (outside your sandbox): a "
+            "nested `codex review` is denied here (sandbox_apply: Operation not permitted), so "
+            "do NOT attempt it. Refresh the other gates as needed, leave the `codex_bot` gate "
+            "line deferred, and keep `status: blocked` with `blocker: codex_bot`; the "
+            "lane-runner completes codex_bot after this turn."
         )
     else:
         prompt = implement_prompt(issues)

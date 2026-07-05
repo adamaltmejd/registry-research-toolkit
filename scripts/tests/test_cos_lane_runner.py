@@ -475,6 +475,22 @@ def test_required_head_bound_gates_need_head_stamp(gate_name: str) -> None:
     )
 
 
+def test_implement_prompt_invokes_impl_skill_not_override() -> None:
+    # #1090: the implement turn invokes the $pr-pipeline-impl skill STRUCTURALLY (which
+    # builds in the codex_bot deferral), instead of $pr-pipeline plus a prose "run everything
+    # EXCEPT codex_bot" override. The structural invocation is the whole point of the split —
+    # the deferral is the skill's contract, not a reconciliation the agent must perform.
+    prompt = lr.implement_prompt([1011, 1012])
+    assert prompt.startswith("$pr-pipeline-impl 1011 1012")
+    # No "run everything EXCEPT X" override framing survives.
+    assert "EXCEPT" not in prompt
+    assert "with ONE exception" not in prompt
+    # It still names the codex_bot deferral as the skill's expected outcome + reassures that
+    # the sibling lane-runner completes it (reassurance, not an override).
+    assert "codex_bot" in prompt
+    assert "lane-runner" in prompt
+
+
 def test_findings_brief_renders_data_not_instructions() -> None:
     findings = [
         {
@@ -1479,7 +1495,7 @@ def test_dry_run_prints_plan_no_side_effects(tmp_path: Path, capsys) -> None:
     result = json.loads(capsys.readouterr().out)
     assert result["implement_argv"][0] == "codex"
     assert result["implement_argv"][1] == "exec"
-    assert "$pr-pipeline 1011" in result["implement_argv"][-1]
+    assert "$pr-pipeline-impl 1011" in result["implement_argv"][-1]
     assert result["base"] == "origin/main"
     assert result["max_rounds"] == 3
     # Zero side effects: no log written.
@@ -1756,9 +1772,11 @@ def test_continue_pr_prompt_reuses_canonical_continuation_prompt(
     assert "Continuation brief:\nFix the current-head review finding." in prompt
     # The branch-aware, rebased push guidance (the P2 gap the hand-rolled prompt omitted).
     assert "git push --force-with-lease origin HEAD:codex/existing-pr" in prompt
-    # The runner-specific codex_bot deferral is still appended.
-    assert "EXCEPT codex_bot" in prompt
+    # The runner-specific codex_bot deferral is still appended — reworded to reference the
+    # sibling lane-runner's ownership, NOT the old "run everything EXCEPT X" override framing.
+    assert "codex_bot is owned by the sibling lane-runner" in prompt
     assert "blocker: codex_bot" in prompt
+    assert "EXCEPT codex_bot" not in prompt
 
 
 def test_continue_pr_prompt_no_rebase_uses_normal_push(tmp_path: Path, capsys) -> None:
