@@ -143,6 +143,80 @@ describe("SourceEditor read-only cart card", () => {
     expect(page.getByRole("alert").query()).toBeNull();
   });
 
+  it("wraps a long source name and binding FQID without horizontal overflow on mobile (#1110)", async () => {
+    // Regression for PR #1109's visual-gate finding: at 375px a long unbroken source
+    // name (`.source-head h3`) and a long unbroken binding FQID (`.variable-value`,
+    // a flex item of `.binding-body`) formerly refused to shrink (flex items default
+    // to `min-width: auto`) and clipped/overflowed the card. `min-width: 0` +
+    // `overflow-wrap: anywhere` at those flex boundaries must let both wrap in-card.
+    const source = {
+      name: "a_very_long_source_name_that_would_not_normally_wrap_on_its_own",
+      register_variant: "scb/lisa/v1",
+      period: 2020,
+      bindings: [
+        {
+          variable:
+            "scb/lisa/a_very_long_binding_identifier_that_would_not_wrap_either",
+          type: "categorical",
+        },
+      ],
+    } as Source;
+    const view = await render(SourceEditor, {
+      sourceIndex: 0,
+      source,
+      issues: [],
+    });
+
+    // The mobile breakpoint must be active for the mobile-target regression to be
+    // meaningful — pin the precondition so a viewport-config change can't silently
+    // no-op this test (mirrors the SearchView #808/#806 wrap regression).
+    expect(window.matchMedia("(max-width: 48rem)").matches).toBe(true);
+
+    // Pin the card to the 375px canvas (narrowest mobile target); border-box keeps
+    // 375 inclusive of the card's padding so content resolves against the real width.
+    const root = document.querySelector<HTMLElement>(".source");
+    expect(root).not.toBeNull();
+    if (root) {
+      root.style.boxSizing = "border-box";
+      root.style.width = "375px";
+    }
+
+    // Assert on the CONSTRAINED containers, not the leaf text nodes: the `h3` /
+    // `.variable-value` are flex items that (pre-fix) keep `min-width: auto` and take
+    // their full content width, so their OWN scrollWidth == clientWidth even while
+    // overflowing the card — the overflow shows up on the bounded parent. This mirrors
+    // the SearchView #808/#806 regression, which checks the `.cols-1` grid container.
+    //
+    // The heading text lives on `h3`; assert it is present, then check the heading row
+    // (`.source-head`) and the whole card (`.source`) do not overflow.
+    const heading = document.querySelector<HTMLElement>(".source-head h3");
+    expect(heading?.textContent).toContain(
+      "a_very_long_source_name_that_would_not_normally_wrap_on_its_own",
+    );
+    const sourceHead = document.querySelector<HTMLElement>(".source-head");
+    expect(sourceHead?.scrollWidth ?? 0).toBeLessThanOrEqual(
+      (sourceHead?.clientWidth ?? 0) + 1,
+    );
+
+    const variableValue = document.querySelector<HTMLElement>(
+      ".binding .variable-value",
+    );
+    expect(variableValue?.textContent).toContain(
+      "a_very_long_binding_identifier_that_would_not_wrap_either",
+    );
+    const binding = document.querySelector<HTMLElement>(".binding");
+    expect(binding?.scrollWidth ?? 0).toBeLessThanOrEqual(
+      (binding?.clientWidth ?? 0) + 1,
+    );
+
+    // Belt-and-suspenders: the whole card must not overflow its 375px box either.
+    expect(root?.scrollWidth ?? 0).toBeLessThanOrEqual(
+      (root?.clientWidth ?? 0) + 1,
+    );
+
+    view.unmount();
+  });
+
   it("rolls up errors under the source into a header badge", async () => {
     const source = {
       name: "s",
