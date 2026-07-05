@@ -525,22 +525,28 @@ Loop over **every** `reg_webapp/stewards/*/steward.project_data.json` (do not
 special-case any one steward); for each whose `reg_meta_version` is older than the new
 `reg_meta/vX.Y.Z`:
 
-- **download the just-published asset** (not a local rebuild) so the catalog matches
-  exactly what the container bakes — this is critical for copy-forward releases (8d),
-  where a local rebuild could admit FQIDs absent from the shipped DB. Decompress it to
-  an uncompressed `reg_meta.db` (`extend-db` opens the base with sqlite, never the
-  `.zst`):
+- **download the steward's shipped flavored asset** (not a local rebuild) so the catalog
+  matches exactly what the container bakes — for swecov that is
+  `reg_meta_swecov.db.zst`, the very file 8c uploaded and `build-swecov-image` bakes as
+  `data.swecov.se`'s DB. Generating against a local `extend-db` rebuild re-introduces
+  the drift this asset exists to prevent: the untracked `flavor_inventory.json` can
+  differ from what 8c shipped (git can't see its drift), and a copy-forward release
+  ships a prior flavored DB, so a fresh local overlay would admit FQIDs absent from the
+  baked asset. Decompress the shipped asset to an uncompressed `reg_meta.db` (the
+  generator opens the base with sqlite, never the `.zst`):
 
   ```sh
   set -euo pipefail
-  base_dir="$(mktemp -d "${TMPDIR:-/tmp}/reg_meta_base.XXXXXX")"
-  gh release download reg_meta/vX.Y.Z --pattern reg_meta.db.zst --dir "$base_dir"
-  zstd -d "$base_dir/reg_meta.db.zst" -o "$base_dir/reg_meta.db"
+  base_dir="$(mktemp -d "${TMPDIR:-/tmp}/reg_meta_swecov.XXXXXX")"
+  gh release download reg_meta/vX.Y.Z --pattern reg_meta_swecov.db.zst --dir "$base_dir"
+  zstd -d "$base_dir/reg_meta_swecov.db.zst" -o "$base_dir/reg_meta.db"
   ```
 
-- `reg-meta-build extend-db --base-db "$base_dir/reg_meta.db" …` to overlay the steward
-  providers, then regenerate the catalog per `reg_webapp/stewards/<id>/README.md` so its
-  `reg_meta_version` records the published `reg_meta/vX.Y.Z`. **Pass the release tag to
+- regenerate the catalog per `reg_webapp/stewards/<id>/README.md` **against that
+  flavored DB** (`--db "$base_dir/reg_meta.db"`) so its `reg_meta_version` records the
+  published `reg_meta/vX.Y.Z`. The shipped asset already carries the steward's flavor
+  providers, so **no `extend-db` overlay is needed** — dropping that local step is
+  exactly how using the shipped asset removes the drift risk. **Pass the release tag to
   the generator explicitly** — swecov's `build_catalog.py steward` takes a required
   `--reg-meta-version reg_meta/vX.Y.Z` that stamps that field; older copies defaulted it
   to a fixed tag and **silently downgraded** the stamp (caught in 0.25.0). And when you
