@@ -185,6 +185,40 @@ describe("AppShell — project chip", () => {
     await expect.element(page.getByText("2 sources · 3 columns")).toBeVisible();
     await expect.element(page.getByText("Warnings")).toBeVisible();
   });
+
+  it("tolerates malformed source slots while showing counts", async () => {
+    await projectStore.openFromFile(
+      new File(
+        [
+          JSON.stringify({
+            schema_version: "2.0.0",
+            steward: "global",
+            reg_meta_version: "reg_meta/v1.0.0",
+            name: "Malformed project",
+            sources: [
+              null,
+              {
+                name: "LISA",
+                register_variant: "scb/lisa/v1",
+                period: 2018,
+                bindings: [{ variable: "scb/lisa/kon", type: "categorical" }],
+              },
+            ],
+          }),
+        ],
+        "project_data.json",
+        { type: "application/json" },
+      ),
+    );
+
+    await render(AppShell, minimalProps());
+    await openDrawer();
+
+    await expect
+      .element(page.getByRole("link", { name: /^Project: Malformed project/ }))
+      .toBeVisible();
+    await expect.element(page.getByText("2 sources · 1 column")).toBeVisible();
+  });
 });
 
 describe("AppShell — mobile drawer", () => {

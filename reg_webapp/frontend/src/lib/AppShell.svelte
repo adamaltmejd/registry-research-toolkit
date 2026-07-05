@@ -92,7 +92,7 @@ const projectSourceCount = $derived(projectSources.length);
 const projectColumnCount = $derived(
   projectSources.reduce(
     (total, source) =>
-      total + (Array.isArray(source.bindings) ? source.bindings.length : 0),
+      total + (Array.isArray(source?.bindings) ? source.bindings.length : 0),
     0,
   ),
 );
