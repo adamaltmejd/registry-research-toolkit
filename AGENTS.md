@@ -81,8 +81,8 @@ simplification reads as intent and a deferral can't silently rot.
 
 **Altitude split:** "does this need to exist / does an existing subsystem or library
 subsume it?" is a plan-time call (the lead, or whoever scopes the work); the leaf-level
-reuse and simplicity craft is the implementer's — see the pr-pipeline skill (the lead's
-altitude duties) and the implementer role (the leaf craft).
+reuse and simplicity craft is the implementer's — see the pr-pipeline-impl skill (the
+lead's altitude / plan-time duties) and the implementer role (the leaf craft).
 
 # Python conventions
 
@@ -384,7 +384,8 @@ them). The `gate.json` contract: head-SHA-bound (`pr`, `head` full SHA, `status`
 `ready-to-merge` \| `blocked`, `updated`, `blocker` naming the missing item when
 blocked) plus a `gates` map with one line per repo gate; the head-bound gates
 (`build_db`, `visual`, `codex_bot`) each record the head SHA they were verified on inside
-their line. Field-level worked example: the `pr-pipeline` skill. Write evidence files first
+their line. Field-level worked example: the `pr-pipeline-impl` skill (its
+`pipeline-contract.md` gate.json template). Write evidence files first
 and `gate.json` last, atomically (temp file + rename) — the preflight probe polls it and
 must never see a torn write; after repairing or adding evidence files, refresh
 `gate.json` (bump `updated`) so the byte-change wakes the next tick. Readers treat an
@@ -425,7 +426,9 @@ without merging.
   an independent PR; for a stacked successor pass the **predecessor branch** it targets
   (so the review diffs against the real PR base, not main). **Launch it via Bash with `run_in_background:
   true`** — its internal 30-min ceiling outlasts the 10-min foreground Bash cap, so a
-  foreground run risks being killed mid-review; the harness notifies on completion.
+  foreground run risks being killed mid-review; the harness notifies on completion. "In
+  the PR worktree" means run it with cwd / tree set to that worktree checked out at the PR
+  head, so the review diffs the PR's own tree.
   `--out <gate-dir>/codex-review.md` lands the transcript straight in the merge-gate
   directory (no copy step). It launches `codex review` locally against the PR's
   merge-base and reports the verdict as JSON on stdout (exit **0** clean · **1** findings
@@ -433,8 +436,9 @@ without merging.
   review findings — fix each or dismiss with a stated reason, then **re-run the launcher
   on the new HEAD until it reports `clean`**; the `codex_bot` gate line records only the
   LAST run's verdict on the current head, so its only legal tokens are `clean` or
-  `exhausted (usage-limit)` (see the pr-pipeline gate.json template for the canonical
-  line, head-SHA-bound like `visual`/`build_db`). On exit 2, only `error.kind:
+  `exhausted (usage-limit)` (see the pr-pipeline-impl gate.json template
+  (`pipeline-contract.md`) for the canonical line, head-SHA-bound like
+  `visual`/`build_db`). On exit 2, only `error.kind:
   usage_limit` is the exhausted-analog — recordable and not a merge blocker once the
   independent review and all other gates are complete; every other kind (`timeout`,
   `format_drift`, `precondition`, `tool_failure`) is a **blocker** (a format-drift
