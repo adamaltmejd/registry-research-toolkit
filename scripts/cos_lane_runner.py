@@ -328,20 +328,26 @@ def discover_prs(slot_file: Path | None, gate_root: Path) -> list[int]:
 
     The slot file's `prs` is the authoritative claim the agent registered; its order is the
     lane's stack/merge order (predecessor first), which the runner preserves so a stack is
-    reviewed/completed base-first. A gate-root scan (`pr-<N>/` dirs, sorted) is the fallback
-    when no slot file was passed or it carries no PR yet. A gate directory without a matching
-    `gate.json` (or whose `gate.json` `pr` disagrees) is skipped, mirroring the gate
-    protocol's read rule. Fail-fast (exit 2) if none is found — the agent turn was supposed
-    to open at least one PR. A slot claiming multiple PRs is now SUPPORTED: all are returned
-    (the runner completes codex_bot for each), not fail-fast (the #1086 single-PR stopgap).
+    reviewed/completed base-first. A gate-root scan (`pr-<N>/` dirs, sorted NUMERICALLY by PR
+    number) is the fallback when no slot file was passed or it carries no PR yet. Numeric —
+    not the dir-name STRING — because ascending PR number is creation order is stack order
+    (predecessor first), the invariant run() relies on to check out/review base-first; a
+    lexicographic sort would return e.g. `pr-9` after `pr-11`, out of stack order across a
+    digit-width boundary. A gate directory without a matching `gate.json` (or whose
+    `gate.json` `pr` disagrees) is skipped, mirroring the gate protocol's read rule.
+    Fail-fast (exit 2) if none is found — the agent turn was supposed to open at least one PR.
+    A slot claiming multiple PRs is now SUPPORTED: all are returned (the runner completes
+    codex_bot for each), not fail-fast (the #1086 single-PR stopgap).
 
     A PROVIDED-but-empty slot (readable dict, but `prs` empty/missing/not-a-list) still fails
     fast rather than falling through to the global scan: an agent that registered its slot but
-    opened no PR is a lane error, and the scan could otherwise return UNRELATED pr-* dirs.
-    Non-int entries in `prs` are dropped (tolerant read); an all-non-int list is an empty
-    claim and fails fast the same way. Only when NO slot file was passed (or it is
-    absent/unreadable/torn) does control fall through to the manual/no-slot gate-root scan,
-    which returns ALL valid pr-dirs found (sorted).
+    opened no PR is a lane error, and the scan could otherwise return UNRELATED pr-* dirs. The
+    slot `prs` is written by trusted local code as a list of ints, so a NON-int entry signals
+    slot corruption: a present, non-empty list that is all ints is returned in order; ANY
+    non-int entry fails fast (never silently narrowed — that would strand the dropped PR's
+    codex_bot gate). Only when NO slot file was passed (or it is absent/unreadable/torn) does
+    control fall through to the manual/no-slot gate-root scan, which returns ALL valid
+    pr-dirs found (sorted numerically).
     """
     if slot_file is not None:
         loaded = _cos_preflight._read_json_tolerant(slot_file, "pipeline-slot file")
@@ -349,9 +355,17 @@ def discover_prs(slot_file: Path | None, gate_root: Path) -> list[int]:
             prs = loaded[1].get("prs")
             if isinstance(prs, list) and prs:
                 claimed = [pr for pr in prs if isinstance(pr, int)]
-                if claimed:
+                if len(claimed) == len(prs):
                     return claimed
-            # The slot is present and readable but registered no (int) PR: the lane agent
+                # A present, non-empty list with a non-int entry is slot corruption. Fail
+                # fast naming the slot — silently narrowing to the int subset would strand
+                # the dropped PR's codex_bot gate (blocked with no signal, the exact "other
+                # PRs stranded" regression the old len>1 fail-fast prevented).
+                raise SystemExit(
+                    f"{EXIT_TOOL}:slot {slot_file} has a malformed `prs` entry (expected a "
+                    f"list of int PR numbers, got {prs!r}); refusing to silently drop it"
+                )
+            # The slot is present and readable but registered no PR: the lane agent
             # didn't open its draft. Fail fast — falling through to the global scan could
             # return unrelated pr-* dirs. (A torn/unreadable slot, loaded is None, is the
             # no-slot case that falls through to the scan below.)
@@ -360,7 +374,7 @@ def discover_prs(slot_file: Path | None, gate_root: Path) -> list[int]:
                 "not open its draft PR; refusing to scan the global gate store"
             )
     found: list[int] = []
-    for path in sorted(gate_root.glob("pr-*")):
+    for path in gate_root.glob("pr-*"):
         if not path.is_dir():
             continue
         try:
@@ -375,7 +389,9 @@ def discover_prs(slot_file: Path | None, gate_root: Path) -> list[int]:
         if loaded[1].get("pr") == number:
             found.append(number)
     if found:
-        return found
+        # Sort by the parsed integer (ascending == creation/stack order), NOT the dir-name
+        # string — a lexicographic sort returns pr-9 after pr-11 across a digit-width boundary.
+        return sorted(found)
     raise SystemExit(
         f"{EXIT_TOOL}:could not discover the PR the lane agent opened "
         f"(slot_file={slot_file}, gate-root scan found none); the implement "

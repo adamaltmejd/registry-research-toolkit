@@ -559,12 +559,14 @@ def test_discover_prs_multi_pr_slot_returns_list_in_order(tmp_path: Path) -> Non
 
 
 def test_discover_prs_gate_root_scan_returns_all_sorted(tmp_path: Path) -> None:
-    # #1089: with no slot file, the gate-root scan returns ALL valid pr-dirs (sorted), not just
-    # when exactly one exists — a multi-PR lane may be discovered from the store.
+    # #1089: with no slot file, the gate-root scan returns ALL valid pr-dirs, not just when
+    # exactly one exists — a multi-PR lane may be discovered from the store. CROSS-width
+    # numbers (9, 11) so the assert distinguishes NUMERIC from lexicographic order: a
+    # dir-name-string sort would return [11, 9] (pr-11 < pr-9 as strings) and fail this.
     gate_root = tmp_path / "gate"
-    _write_gate(gate_root, 22, other_gates_met=True)
     _write_gate(gate_root, 11, other_gates_met=True)
-    assert lr.discover_prs(None, gate_root) == [11, 22]
+    _write_gate(gate_root, 9, other_gates_met=True)
+    assert lr.discover_prs(None, gate_root) == [9, 11]
 
 
 # --- review base resolution (Fix A) ------------------------------------------
@@ -1627,12 +1629,18 @@ def test_run_multi_pr_completes_every_pr_gate(
 
     monkeypatch.setattr(lr, "run_codex_turn", fake_turn)
 
+    # A SHARED ordered event log proving no PR is reviewed before it is checked out: both
+    # the checkout and the review stubs append a tagged marker, so the final sequence must
+    # interleave as checkout(pr) → review(pr) per PR, in stack order.
+    events: list[tuple[str, int]] = []
+
     # Per-PR checkout is exercised (multi-PR) — record which PRs were checked out; return None
     # (success) so the loop proceeds.
     checkouts: list[int] = []
 
     def fake_checkout(pr, worktree):
         checkouts.append(pr)  # None ⇒ checkout succeeded
+        events.append(("checkout", pr))
 
     monkeypatch.setattr(lr, "checkout_head_branch", fake_checkout)
 
@@ -1645,7 +1653,9 @@ def test_run_multi_pr_completes_every_pr_gate(
     seen: list[tuple[int, str]] = []
 
     def fake_review(base, gate_dir, worktree):
-        seen.append((int(gate_dir.name[len("pr-") :]), base))
+        pr = int(gate_dir.name[len("pr-") :])
+        seen.append((pr, base))
+        events.append(("review", pr))
         return {"verdict": "clean", "findings": []}
 
     monkeypatch.setattr(lr, "run_review", fake_review)
@@ -1663,6 +1673,15 @@ def test_run_multi_pr_completes_every_pr_gate(
     assert _read_gate(gate_root / "pr-4243")["status"] == "ready-to-merge"
     # Per-PR base resolution: each PR was reviewed against its OWN resolved base.
     assert seen == [(4242, "origin/main"), (4243, "origin/s/4242")]
+    # Ordering invariant: each PR is checked out BEFORE it is reviewed, and the PRs are
+    # processed in stack order — proving no PR is reviewed against a wrong (not-yet-checked-out)
+    # tree.
+    assert events == [
+        ("checkout", 4242),
+        ("review", 4242),
+        ("checkout", 4243),
+        ("review", 4243),
+    ]
 
 
 def test_run_multi_pr_checkout_failure_blocks_only_that_pr(
@@ -2051,20 +2070,27 @@ def test_fresh_mode_ignores_brief_file(tmp_path: Path, capsys) -> None:
     assert "Continuation brief:" not in prompt
 
 
-def test_discover_prs_non_int_entries_dropped(tmp_path: Path) -> None:
-    # A tolerant read drops non-int `prs` entries; a real int PR still comes through.
+def test_discover_prs_mixed_non_int_entries_fail_fast(tmp_path: Path) -> None:
+    # A MIXED int/non-int `prs` list is slot corruption → fail fast, NOT a silent narrow to
+    # the int subset (which would strand the dropped PR's codex_bot gate — the "other PRs
+    # stranded" regression). The slot `prs` is written by trusted local code as a list of ints.
     slots_root = tmp_path / "slots"
     slots_root.mkdir(parents=True)
     path = slots_root / "lane-a.json"
     path.write_text(
-        json.dumps({"slot": "lane-a", "prs": ["oops", 4242], "surface": "codex"}),
+        json.dumps({"slot": "lane-a", "prs": [4242, "4243"], "surface": "codex"}),
         encoding="utf-8",
     )
-    assert lr.discover_prs(path, tmp_path / "gate") == [4242]
+    with pytest.raises(SystemExit) as exc:
+        lr.discover_prs(path, tmp_path / "gate")
+    code = str(exc.value.code)
+    assert code.startswith(f"{lr.EXIT_TOOL}:")
+    assert "malformed" in code
 
 
 def test_discover_prs_all_non_int_fails_fast(tmp_path: Path) -> None:
-    # An all-non-int `prs` list is an empty claim → fail fast (no fall-through to the scan).
+    # An all-non-int `prs` list is malformed → fail fast (no fall-through to the scan, no
+    # silent narrow to an empty int subset).
     slots_root = tmp_path / "slots"
     slots_root.mkdir(parents=True)
     path = slots_root / "lane-a.json"
@@ -2074,7 +2100,9 @@ def test_discover_prs_all_non_int_fails_fast(tmp_path: Path) -> None:
     )
     with pytest.raises(SystemExit) as exc:
         lr.discover_prs(path, tmp_path / "gate")
-    assert "no registered PR" in str(exc.value.code)
+    code = str(exc.value.code)
+    assert code.startswith(f"{lr.EXIT_TOOL}:")
+    assert "malformed" in code
 
 
 @pytest.mark.parametrize(
