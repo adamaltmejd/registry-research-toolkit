@@ -236,5 +236,6 @@ describe("ClassificationGroupView (#756)", () => {
       .element(page.getByRole("link", { name: /SSYK 2012/ }))
       .toHaveAttribute("href", "/catalog/class/ssyk2012");
     await expect.element(page.getByText(/ssyk2012 - current/)).toBeVisible();
+    expect(getClassificationGroupGraph).not.toHaveBeenCalled();
   });
 });

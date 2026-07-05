@@ -4,6 +4,7 @@ import {
   type ClassificationGroupNodeData,
   getClassificationGroup,
   getClassificationGroupGraph,
+  type RelationshipGraph,
 } from "./api";
 import { asyncResource } from "./async.svelte";
 import ClassificationEditionGraph from "./ClassificationEditionGraph.svelte";
@@ -31,10 +32,16 @@ let { key }: { key: string } = $props();
 
 const resource = asyncResource(() => getClassificationGroup(key));
 const node = $derived(resource.data);
+const EMPTY_GRAPH: RelationshipGraph = { nodes: [], edges: [], focus_id: null };
 // Classification umbrella pages consume the same relationship-graph contract as
 // classification leaves (#757/#761), but read-only: editions navigate to their leaf
 // pages; there is no add-to-project picker for classifications.
-const graphResource = asyncResource(() => getClassificationGroupGraph(key));
+const graphResource = asyncResource(() => {
+  const activeKey = key;
+  return node?.kind === "classification-group"
+    ? getClassificationGroupGraph(activeKey)
+    : Promise.resolve(EMPTY_GRAPH);
+});
 const graph = $derived(graphResource.data);
 const graphReady = $derived(
   !graphResource.loading && !graphResource.error && graph != null,
