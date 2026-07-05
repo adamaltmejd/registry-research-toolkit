@@ -2359,6 +2359,33 @@ describe("BindingLeafView member identity from graph focus (#670/#678)", () => {
       .toBeVisible();
   });
 
+  it("a grouped facet-less focus with one delivery column shows original column casing", async () => {
+    vi.mocked(getBindingGraph).mockResolvedValue(
+      focusGraph({
+        facets: [],
+        states: [gstate({ delivery_column_name: "ProdGrpKod" })],
+      }) as never,
+    );
+
+    render(BindingLeafView, {
+      fqidPath: groupedFqid,
+      node: groupedNode,
+      regMetaVersion: SEED.regMetaVersion,
+      steward: SEED.steward,
+      windowMinYear: SEED.windowMinYear,
+      vintageYear: 2024,
+    });
+
+    const qualifier = await vi.waitFor(() => {
+      const el = document.querySelector(".member-identity code.qualifier.slug");
+      if (!el) {
+        throw new Error("column qualifier not yet rendered");
+      }
+      return el;
+    });
+    expect(qualifier.textContent).toBe("ProdGrpKod");
+  });
+
   it("renders no identity row while the graph is loading (no transient slug flicker)", async () => {
     vi.mocked(getBindingGraph).mockReturnValue(new Promise(() => {}));
 

@@ -4,18 +4,24 @@ import { render } from "vitest-browser-svelte";
 import type {
   ClassificationFamilyNodeData,
   ClassificationGroupNodeData,
+  RelationshipGraph,
 } from "./api";
-import { ApiError, getClassificationGroup } from "./api";
+import {
+  ApiError,
+  getClassificationGroup,
+  getClassificationGroupGraph,
+} from "./api";
 import ClassificationGroupView from "./ClassificationGroupView.svelte";
 import { router } from "./router.svelte";
 
-// Mock the single GET the view drives (mirrors ConceptGroupView.browser.test's
+// Mock the GETs the view drives (mirrors ConceptGroupView.browser.test's
 // api-mock style); keep the rest of api.ts real (the type exports + router).
 vi.mock("./api", async (importOriginal) => {
   const actual = await importOriginal<typeof import("./api")>();
   return {
     ...actual,
     getClassificationGroup: vi.fn(),
+    getClassificationGroupGraph: vi.fn(),
   };
 });
 
@@ -77,8 +83,62 @@ function familyNode(
   } as unknown as ClassificationFamilyNodeData;
 }
 
+function groupGraph(): RelationshipGraph {
+  return {
+    nodes: [
+      {
+        kind: "classification",
+        id: "class/sun1996",
+        fqid: "class/sun1996",
+        label: "SUN 1996",
+        group_key: "class/sun",
+        group_label: "Svensk utbildningsnomenklatur",
+        version_year: 1996,
+        is_current: false,
+      },
+      {
+        kind: "classification",
+        id: "class/sun2020",
+        fqid: "class/sun2020",
+        label: "SUN 2020",
+        group_key: "class/sun",
+        group_label: "Svensk utbildningsnomenklatur",
+        version_year: 2020,
+        is_current: true,
+      },
+      {
+        kind: "classification",
+        id: "class/niva-test",
+        fqid: "class/niva-test",
+        label: "Nivå aggregat",
+        group_key: "class/sun",
+        group_label: "Svensk utbildningsnomenklatur",
+        version_year: null,
+        is_current: true,
+      },
+    ],
+    edges: [
+      {
+        id: "succession:class/sun1996->class/sun2020",
+        kind: "succession",
+        source: "class/sun1996",
+        target: "class/sun2020",
+        label: null,
+        effective_year: 2020,
+      },
+    ],
+    focus_id: null,
+  };
+}
+
 beforeEach(() => {
   vi.mocked(getClassificationGroup).mockReset();
+  vi.mocked(getClassificationGroupGraph).mockReset();
+  vi.mocked(getClassificationGroupGraph).mockResolvedValue({
+    nodes: [],
+    edges: [],
+    focus_id: null,
+  });
   // Reset the URL so each case starts clean (the router is a module singleton).
   router.navigate("/catalog/group/class/sun");
 });
@@ -89,11 +149,11 @@ describe("ClassificationGroupView (#756)", () => {
 
     await render(ClassificationGroupView, { key: "sun" });
 
-    // The umbrella label heads the page.
+    // The heading names the page kind and the umbrella label.
     await expect
       .element(
         page.getByRole("heading", {
-          name: "Svensk utbildningsnomenklatur",
+          name: "Classification group: Svensk utbildningsnomenklatur",
           level: 2,
         }),
       )
@@ -138,6 +198,27 @@ describe("ClassificationGroupView (#756)", () => {
     await expect
       .element(page.getByText(/Not found: classification group or family/))
       .toBeVisible();
+  });
+
+  it("renders the classification group relationship graph with historical editions", async () => {
+    vi.mocked(getClassificationGroup).mockResolvedValue(node());
+    vi.mocked(getClassificationGroupGraph).mockResolvedValue(groupGraph());
+
+    await render(ClassificationGroupView, { key: "sun" });
+
+    expect(getClassificationGroupGraph).toHaveBeenCalledWith("sun");
+    await expect
+      .element(page.getByRole("heading", { name: "Editions" }))
+      .toBeVisible();
+    expect(document.querySelector(".classification-editions")).not.toBeNull();
+    expect(document.querySelector(".edition-edge")).not.toBeNull();
+    expect(
+      document.querySelector('a.edition-name[href="/catalog/class/sun1996"]'),
+    ).not.toBeNull();
+    expect(document.querySelector(".edition-edge-year")?.textContent).toBe(
+      "2020",
+    );
+    expect(document.body.textContent).not.toContain("group:sun");
   });
 
   it("renders a succession family as an edition-chain subject page", async () => {

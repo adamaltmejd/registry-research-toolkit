@@ -3,8 +3,10 @@ import {
   type ClassificationFamilyNodeData,
   type ClassificationGroupNodeData,
   getClassificationGroup,
+  getClassificationGroupGraph,
 } from "./api";
 import { asyncResource } from "./async.svelte";
+import ClassificationEditionGraph from "./ClassificationEditionGraph.svelte";
 import { catalogHref, leafSlug, memberKey } from "./catalog";
 import SubjectView from "./SubjectView.svelte";
 import TechnicalDetails from "./TechnicalDetails.svelte";
@@ -29,6 +31,14 @@ let { key }: { key: string } = $props();
 
 const resource = asyncResource(() => getClassificationGroup(key));
 const node = $derived(resource.data);
+// Classification umbrella pages consume the same relationship-graph contract as
+// classification leaves (#757/#761), but read-only: editions navigate to their leaf
+// pages; there is no add-to-project picker for classifications.
+const graphResource = asyncResource(() => getClassificationGroupGraph(key));
+const graph = $derived(graphResource.data);
+const graphReady = $derived(
+  !graphResource.loading && !graphResource.error && graph != null,
+);
 
 /** A member's display label: its own curated short facet label (umbrellas are
  * axis-less — each member carries its own picker label, with no shared group
@@ -133,9 +143,12 @@ function editionLabel(
         {/each}
       </ul>
     </section>
+    {#if graphReady && graph}
+      <ClassificationEditionGraph {graph} />
+    {/if}
   {/snippet}
 
-  <SubjectView title={node.label} {description} {picker} />
+  <SubjectView title={`Classification group: ${node.label}`} {description} {picker} />
 {/if}
 
 <style>
