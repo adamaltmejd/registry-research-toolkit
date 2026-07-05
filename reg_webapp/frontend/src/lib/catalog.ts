@@ -2923,10 +2923,11 @@ export function memberCoverageUnion(
   return { from, to: unionTo };
 }
 
-// ── Shared binding resolution (picker staged adds + legacy single-pick handoff) ──
-// ONE resolution path, used by the subject-page staged picker and the store's
-// legacy `addFromCatalog` entry point. Keeping it here — not inlined in either
-// caller — keeps final binding-field derivation consistent at pick time.
+// ── Shared binding resolution (subject-page staged picker adds) ──────────────
+// ONE resolution path, used by the subject-page staged picker's add handlers
+// (`ConceptGroupView.svelte` and `BindingLeafView.svelte`). Keeping it here — not
+// inlined in either caller — keeps final binding-field derivation consistent at
+// pick time.
 
 /** Why a binding could not be resolved to a real type at the source's
  * (period, variant). Drives an honest "set the period" / "no data here" result
