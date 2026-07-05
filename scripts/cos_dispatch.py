@@ -621,8 +621,13 @@ def build_lane_runner_argv(
     ]
     # The operator's continuation brief flows through to the runner so it isn't silently
     # dropped on the default runner path (the runner weaves it into the --continue-pr prompt).
+    # Resolve to an ABSOLUTE path first: the runner is spawned detached with cwd = the lane
+    # worktree (launch_detached), and it re-reads --brief-file there — so a RELATIVE brief path
+    # (`--brief-file followup.md`) would resolve under the worktree, not the caller's dir, and
+    # the file wouldn't be found. resolve() returns an absolute path even for a not-yet-existing
+    # file; the runner's read_brief fails fast if it's genuinely missing.
     if brief_file is not None:
-        argv += ["--brief-file", str(brief_file)]
+        argv += ["--brief-file", str(brief_file.resolve())]
     # Continue-mode inputs for the runner's continuation_prompt: the PR branch + base branch
     # give the branch-aware force-with-lease push guidance, the closing issues name the lane
     # scope, and --no-rebase flips the push wording to a normal push. Fresh mode passes none.

@@ -1275,8 +1275,34 @@ def test_continue_pr_lane_runner_argv_forwards_brief_file(
     assert result["lane_runner"] is True
     argv = result["launch_argv"]
     assert argv[1].endswith("cos_lane_runner.py")
-    assert argv[argv.index("--brief-file") + 1] == str(brief)
+    # The runner is spawned with cwd = the lane worktree, so the forwarded path is resolved to
+    # absolute (resolve() also normalizes /tmp -> /private/tmp on macOS).
+    assert argv[argv.index("--brief-file") + 1] == str(brief.resolve())
     _no_real_launch(tmp_path)
+
+
+def test_continue_pr_lane_runner_argv_resolves_relative_brief_file(
+    tmp_path: Path,
+) -> None:
+    # A RELATIVE --brief-file must be forwarded to the runner as an ABSOLUTE path: the runner is
+    # spawned detached with cwd = the lane worktree (launch_detached) and re-reads --brief-file
+    # there, so a relative path would resolve under the worktree, not the caller's dir, and the
+    # file would not be found — the continuation would exit before the implement turn.
+    argv = cd.build_lane_runner_argv(
+        worktree=tmp_path / "wt",
+        issues=[],
+        continue_pr=4242,
+        base_ref="origin/main",
+        gate_root=tmp_path / "state" / "merge-gates",
+        log_path=tmp_path / "state" / "dispatch-logs" / "slug.log",
+        slot_path=tmp_path / "state" / "pipeline-slots" / "slug.json",
+        tier="hard",
+        canonical=tmp_path / "canonical",
+        brief_file=Path("followup.md"),
+    )
+    forwarded = argv[argv.index("--brief-file") + 1]
+    assert Path(forwarded).is_absolute()
+    assert Path(forwarded).name == "followup.md"
 
 
 def test_continue_pr_happy_path_rebases_branch_and_records_pr(
