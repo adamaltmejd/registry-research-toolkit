@@ -358,8 +358,14 @@ Build and upload fresh if **any** condition is true:
   non-empty. The `flavor_inventory.json` and the generator are
   maintainer-local/untracked, so git can't see their drift — when in doubt, rebuild.
 - The release is a **major** version bump.
+- The immediately-previous release does **not** carry `reg_meta_swecov.db.zst` (e.g.
+  recovering from the v0.36.0–v0.38.0 gap). Copy-forward would then reach back to an
+  older release whose flavored DB was baked on a **different** main catalog than this
+  release ships — a stale mismatch. Rebuild instead.
 
-Otherwise copy the prior release's asset forward (8d) and skip the rest of 8c.
+Otherwise copy the prior release's asset forward (8d) — but **only from the
+immediately-previous release**, never a further-back one, so the flavored DB always
+pairs with the same global content 8a copied forward. Then skip the rest of 8c.
 
 Build the flavored DB from **this release's** main asset — download the
 `reg_meta.db.zst` you just uploaded to the draft in 8a and decompress it (`extend-db`
@@ -390,7 +396,11 @@ rm -rf "$base_dir" "$flav_dir" reg_meta_swecov.db.zst
 
 `extend-db` validates by default (it skips only the code-less↔code-bearing guard, which
 the base already passed). After the build, confirm it carries **more** than the eight
-global providers — the SWECOV flavor providers raise the `provider` count.
+global providers — the SWECOV flavor providers raise the `provider` count. This is a
+light sanity check, not the authoritative gate: `deploy-swecov`'s
+`REG_WEBAPP_FAIL_ON_STEWARD_DRIFT=1` smoke gate fails the (post-publish) deploy if the
+committed steward catalog references any content the flavored DB lacks, so a truncated
+or stale inventory surfaces there rather than shipping silently.
 
 **Maintainer-local inputs**: `reg_meta_build/input_data/swecov/` (holding
 `flavor_inventory.json`) is untracked/maintainer-local. If a **fresh** SWECOV build is
