@@ -124,11 +124,12 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from types import ModuleType
 
-# The head-bound codex_bot gate line, canonical grammar from the pr-pipeline gate.json
-# template. `{head}` is the full SHA the verdict was verified on; `{verdict}` is either
-# `clean` or `exhausted (usage-limit)` — the ONLY two legal tokens (see the merge-gate
-# section of CLAUDE.md and the pr-pipeline SKILL.md). Kept here as the single source so a
-# reword can't drift from the template the reviewer/chief-of-staff parse.
+# The head-bound codex_bot gate line, canonical grammar from the pr-pipeline-impl gate.json
+# template (its `.claude/skills/pr-pipeline-impl/pipeline-contract.md` fragment). `{head}`
+# is the full SHA the verdict was verified on; `{verdict}` is either `clean` or
+# `exhausted (usage-limit)` — the ONLY two legal tokens (see the merge-gate section of
+# CLAUDE.md and the pr-pipeline-impl skill). Kept here as the single source so a reword
+# can't drift from the template the reviewer/chief-of-staff parse.
 CODEX_BOT_LINE = (
     "local; codex_local_review; head {head}; {verdict}; see codex-review.md in this dir"
 )
