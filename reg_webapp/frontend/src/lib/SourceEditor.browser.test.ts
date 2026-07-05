@@ -111,6 +111,25 @@ describe("SourceEditor read-only cart card", () => {
     await expect.element(alert).toHaveTextContent(/bindings\s+are malformed/);
   });
 
+  it("renders an alert (not a crash) when the source slot is null", async () => {
+    // A `sources: [null, …]` slot: SourceEditor must degrade to a malformed card
+    // rather than deref `source.<field>` and throw (defense in depth for the render
+    // boundary — ProjectEditor passes the raw slot straight in).
+    await render(SourceEditor, {
+      sourceIndex: 0,
+      source: null as unknown as Source,
+      issues: [],
+    });
+
+    const alert = page.getByRole("alert");
+    await expect.element(alert).toBeVisible();
+    await expect.element(alert).toHaveTextContent(/source entry is malformed/);
+    // Still removable — the degraded card keeps its Remove affordance.
+    await expect
+      .element(page.getByRole("button", { name: /Remove source/ }))
+      .toBeVisible();
+  });
+
   it("renders the empty state (no alert) for a well-formed source with no bindings", async () => {
     const source = {
       name: "ok",
