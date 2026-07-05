@@ -558,15 +558,19 @@ def test_discover_prs_multi_pr_slot_returns_list_in_order(tmp_path: Path) -> Non
     assert lr.discover_prs(slot, tmp_path / "gate") == [4242, 4243]
 
 
-def test_discover_prs_gate_root_scan_returns_all_sorted(tmp_path: Path) -> None:
-    # #1089: with no slot file, the gate-root scan returns ALL valid pr-dirs, not just when
-    # exactly one exists — a multi-PR lane may be discovered from the store. CROSS-width
-    # numbers (9, 11) so the assert distinguishes NUMERIC from lexicographic order: a
-    # dir-name-string sort would return [11, 9] (pr-11 < pr-9 as strings) and fail this.
+def test_discover_prs_gate_root_scan_multi_dir_raises(tmp_path: Path) -> None:
+    # SAFETY: with NO slot file, the gate-root scan is single-PR-only. `gate_root` is the
+    # SHARED merge-gate store, so >1 pr-* dir can't be disambiguated into a lane — the runner
+    # must FAIL FAST (exit EXIT_TOOL) rather than review/rewrite gates across the whole store.
+    # A multi-PR lane must register its slot `prs` claim (that path is exercised separately).
     gate_root = tmp_path / "gate"
     _write_gate(gate_root, 11, other_gates_met=True)
     _write_gate(gate_root, 9, other_gates_met=True)
-    assert lr.discover_prs(None, gate_root) == [9, 11]
+    with pytest.raises(SystemExit) as exc:
+        lr.discover_prs(None, gate_root)
+    code = str(exc.value.code)
+    assert code.startswith(f"{lr.EXIT_TOOL}:")
+    assert "cannot disambiguate lane membership" in code
 
 
 # --- review base resolution (Fix A) ------------------------------------------

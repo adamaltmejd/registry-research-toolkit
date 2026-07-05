@@ -117,9 +117,9 @@ VERDICT_USAGE_LIMIT = "exhausted (usage-limit)"
 # `"pass; gh pr checks"`, `"updated; ..."`) is not head-bound and can never be stale.
 HEAD_TOKEN_RE = re.compile(r"head\s+([0-9a-f]{7,40})", re.IGNORECASE)
 
-# Default round cap: one initial review + up to this many fix rounds. 3 mirrors the
-# pr-pipeline review-loop budget; injectable via --max-rounds.
-DEFAULT_MAX_ROUNDS = 3
+# Default round cap: one initial review + up to this many fix rounds. 5 because a 3-round cap
+# was hit too often in practice; injectable via --max-rounds.
+DEFAULT_MAX_ROUNDS = 5
 
 # Bounded poll for the codex thread id in the implement turn's JSONL log (reused from
 # cos_dispatch's contract). A null session is tolerated — if findings then need fixing, the
@@ -345,9 +345,17 @@ def discover_prs(slot_file: Path | None, gate_root: Path) -> list[int]:
     slot `prs` is written by trusted local code as a list of ints, so a NON-int entry signals
     slot corruption: a present, non-empty list that is all ints is returned in order; ANY
     non-int entry fails fast (never silently narrowed — that would strand the dropped PR's
-    codex_bot gate). Only when NO slot file was passed (or it is absent/unreadable/torn) does
-    control fall through to the manual/no-slot gate-root scan, which returns ALL valid
-    pr-dirs found (sorted numerically).
+    codex_bot gate).
+
+    The slot `prs` claim is the AUTHORITATIVE multi-PR lane membership — only it can say which
+    PRs form a lane. Only when NO slot file was passed (or it is absent/unreadable/torn) does
+    control fall through to the manual/no-slot gate-root scan, which is a SINGLE-PR-only
+    fallback: `gate_root` is the SHARED merge-gate store, so it cannot disambiguate which of
+    several `pr-*` dirs belong to one lane. It therefore returns a PR only when EXACTLY ONE
+    valid `pr-*` dir is found; 0 or >1 found fails fast (exit 2) — a multi-PR lane must
+    register a slot `prs` claim, and an ambiguous shared store can't be scoped. It never
+    returns the whole store (the prior behavior would check out/review/REWRITE gates for
+    unrelated PRs). This matches the original single-PR `discover_pr`'s exactly-one-or-fail.
     """
     if slot_file is not None:
         loaded = _cos_preflight._read_json_tolerant(slot_file, "pipeline-slot file")
@@ -388,10 +396,20 @@ def discover_prs(slot_file: Path | None, gate_root: Path) -> list[int]:
             continue
         if loaded[1].get("pr") == number:
             found.append(number)
-    if found:
-        # Sort by the parsed integer (ascending == creation/stack order), NOT the dir-name
-        # string — a lexicographic sort returns pr-9 after pr-11 across a digit-width boundary.
-        return sorted(found)
+    # The no-slot scan is SINGLE-PR-only: the shared gate store can't disambiguate lane
+    # membership, so return a PR only when EXACTLY ONE valid pr-* dir is found. >1 fails fast
+    # rather than returning the whole store (which would review/rewrite gates for unrelated
+    # PRs) — a multi-PR lane must register a slot `prs` claim. Since at most one is returned,
+    # no numeric sort is needed.
+    if len(found) == 1:
+        return found
+    if len(found) > 1:
+        raise SystemExit(
+            f"{EXIT_TOOL}:no-slot gate-root scan found {len(found)} pr-* dirs "
+            f"({sorted(found)}) in the shared store; it cannot disambiguate lane "
+            "membership. A multi-PR lane must register its slot `prs` claim so discovery "
+            "is scoped — refusing to review/rewrite gates across the whole store"
+        )
     raise SystemExit(
         f"{EXIT_TOOL}:could not discover the PR the lane agent opened "
         f"(slot_file={slot_file}, gate-root scan found none); the implement "
