@@ -45,6 +45,7 @@ import {
   stagedRemoveForCommitted,
 } from "./staged_picker";
 import TechnicalDetails from "./TechnicalDetails.svelte";
+import { Tag } from "./ui";
 import { windowStore } from "./window.svelte";
 
 // The concept-group SUBJECT page (#617, #678 inc 2): fetches a group by (provider,
@@ -98,6 +99,7 @@ const resource = asyncResource(() =>
   getConceptGroup(provider, register, key, memberHint ?? undefined),
 );
 const node = $derived(resource.data);
+const nodeTags = $derived(node?.tags ?? []);
 
 // The group's relationship graph (#761/#678) — the union of its member variables'
 // nodes, each carrying that variable's states. Its OWN failure domain: a graph
@@ -261,15 +263,24 @@ const suppressRowDimensionFilters = $derived(
   (node?.axes.length ?? 0) === 0 || node?.source === "curated",
 );
 
-const foldSuccessionBands = $derived((node?.axes.length ?? 0) === 0);
+const foldSuccessionBands = true;
 
-/** The inter-variable SUCCESSION fold (#902): for AXIS-LESS groups, the group graph's
- * `succession` edges collapse predecessor→successor pairs whose BOTH endpoints are
- * members of this group, so a superseded edition is NOT a co-equal band — the chain
- * HEAD (the latest edition) leads and its predecessor(s) become quiet history on the
- * head band. Faceted groups still surface the same history, but keep predecessor
- * members selectable: their axes are the user's browse surface, and hiding an older
- * member can make period-specific columns unreachable.
+const focusedMemberFqid = $derived.by((): string | null => {
+  const hint = node?.member;
+  if (hint == null) {
+    return null;
+  }
+  return (
+    node?.members.find((member) => leafSlug(member.fqid) === hint)?.fqid ?? null
+  );
+});
+
+/** The inter-variable SUCCESSION fold (#902/#926): the group graph's `succession`
+ * edges collapse predecessor→successor pairs whose BOTH endpoints are members of this
+ * group, so a superseded edition is NOT a co-equal band — the chain HEAD (the latest
+ * edition) leads and its predecessor(s) become history on the head band. #926 exposes
+ * the predecessor's rows inside that disclosure, keeping the collapsed presentation
+ * while preserving an add path for the covering predecessor.
  *
  * Edge direction (reg_meta `graph.py`): `source` is the PREDECESSOR (older), `target`
  * the SUCCESSOR (newer), and `effective_year` the year the source was replaced by the
@@ -406,20 +417,11 @@ const bands = $derived.by((): PickerBand[] => {
     facetByColumnByFqid.set(member.fqid, map);
   }
   const { superseded, historyByHead } = successionFold;
-  const seen = new Set<string>();
-  const out: PickerBand[] = [];
-  for (const member of node.members) {
-    if (seen.has(member.fqid)) {
-      continue;
-    }
-    seen.add(member.fqid);
-    // In axis-less groups, a member superseded by an in-group succession edge (#902)
-    // is not its own band — it rides as history on its chain head. Faceted groups
-    // keep predecessors selectable while still showing the successor's history
-    // disclosure.
-    if (foldSuccessionBands && superseded.has(member.fqid)) {
-      continue;
-    }
+
+  function bandForMember(
+    member: ConceptGroupNodeMember,
+    includeHistory: boolean,
+  ): PickerBand {
     const allStates = nodesByFqid.get(member.fqid)?.states ?? [];
     // null filter = whole-variable member → every column; a Set = only the group's
     // member columns for this variable (a state with no column is always dropped by
@@ -469,7 +471,7 @@ const bands = $derived.by((): PickerBand[] => {
       rows.push(neverDeliveredRow(deliveryColumn, rowSeed));
       rowColumns.add(deliveryColumn);
     }
-    out.push({
+    return {
       key: member.fqid,
       name: member.name ?? leafSlug(member.fqid),
       registerPrefix: registerPrefixOf(member.fqid),
@@ -500,17 +502,71 @@ const bands = $derived.by((): PickerBand[] => {
       href: memberHref(member.fqid),
       rows,
       // The chain head carries its superseded predecessor editions as history (#902):
-      // oldest-first, each a leaf-page link, so they stay reachable without being
-      // co-equal selectable bands. Undefined for a member that heads no in-group chain.
-      supersedes: historyByHead.get(member.fqid)?.map((p) => ({
-        name: predecessorName(p.fqid),
-        href: memberHref(p.fqid),
-        effectiveYear: p.effectiveYear,
-      })),
-    });
+      // oldest-first, each a leaf-page link, with optional selectable rows (#926) so
+      // old study windows can add the covering predecessor without making it a
+      // co-equal top-level band.
+      supersedes: includeHistory
+        ? historyByHead
+            .get(member.fqid)
+            ?.filter((p) => p.fqid !== focusedMemberFqid)
+            .map((p) => {
+              const predecessor = membersByFqid.get(p.fqid)?.[0];
+              return {
+                name: predecessorName(p.fqid),
+                href: memberHref(p.fqid),
+                effectiveYear: p.effectiveYear,
+                band:
+                  foldSuccessionBands && predecessor
+                    ? bandForMember(predecessor, false)
+                    : undefined,
+              };
+            })
+        : undefined,
+    };
+  }
+
+  const seen = new Set<string>();
+  const out: PickerBand[] = [];
+  for (const member of node.members) {
+    if (seen.has(member.fqid)) {
+      continue;
+    }
+    seen.add(member.fqid);
+    // A member superseded by an in-group succession edge (#902/#926) normally rides as
+    // selectable history on its chain head. If a validated `?member=` names that
+    // predecessor, keep it top-level so the deep link is visible and focused.
+    if (
+      foldSuccessionBands &&
+      superseded.has(member.fqid) &&
+      focusedMemberFqid !== member.fqid
+    ) {
+      continue;
+    }
+    out.push(bandForMember(member, true));
   }
   return out;
 });
+
+/** Bands that participate in selection semantics, including folded predecessor rows
+ * rendered inside the history disclosure (#926). The visual list stays headed by the
+ * latest edition; coverage and committed-row matching must still see the predecessor
+ * band so old-era selections are neither invisible to the period lens nor re-addable
+ * once committed. */
+function pickerBandsIncludingHistory(source: PickerBand[]): PickerBand[] {
+  const out = [...source];
+  const seen = new Set(source.map((band) => band.key));
+  for (const band of source) {
+    for (const predecessor of band.supersedes ?? []) {
+      if (predecessor.band && !seen.has(predecessor.band.key)) {
+        seen.add(predecessor.band.key);
+        out.push(predecessor.band);
+      }
+    }
+  }
+  return out;
+}
+const selectableBands = $derived(pickerBandsIncludingHistory(bands));
+
 /** The `band.key` (member fqid) the `?member=` focus hint names, for the picker's
  * deep-link highlight (#678). The backend echoes the VALIDATED member slug on
  * `node.member` (null when absent / unrecognized); the band key is the member fqid,
@@ -561,7 +617,7 @@ const unionCoverage = $derived.by(() => {
   let from: number | null = null;
   let to: number | null = null;
   let openEnded = false;
-  for (const band of bands) {
+  for (const band of selectableBands) {
     for (const row of band.rows) {
       if (row.selectable === false) {
         continue;
@@ -593,7 +649,7 @@ const pickerWindow = $derived(
   pickerWindowYears(activePickerPeriod, boundedProjectWindow),
 );
 const committedRows = $derived(
-  committedPickerRows(projectStore.draft, bands, {
+  committedPickerRows(projectStore.draft, selectableBands, {
     period: activePickerPeriod,
     window: pickerWindow,
   }),
@@ -746,6 +802,19 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
   </p>
 {:else if node}
   {#snippet description()}
+    {#if nodeTags.length > 0}
+      <div class="tag-strip" aria-label="Thematic tags">
+        {#each nodeTags as tag (tag.slug)}
+          <span class="tag-item">
+            <Tag tone="neutral">{tag.label}</Tag>
+            {#if tag.starred && tag.note}
+              <span class="tag-note">Recommended: {tag.note}</span>
+            {/if}
+          </span>
+        {/each}
+      </div>
+    {/if}
+
     <!-- #678/#900: the SHARED concept definition/description — rendered ONLY when the
          members genuinely AGREE on a single value (most siblings carry null; the
          canonical member carries the one the group shares). Rendered as a clean
@@ -866,6 +935,23 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
   }
   .meta dt {
     font-weight: 600;
+  }
+  .tag-strip {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
+    margin: var(--space-3) 0 var(--space-4);
+  }
+  .tag-item {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--space-2);
+  }
+  .tag-note {
+    font-size: var(--text-sm);
+    color: var(--text-muted);
   }
   /* The add-confirmation line (the picker owns the Add button). */
   .page-add {

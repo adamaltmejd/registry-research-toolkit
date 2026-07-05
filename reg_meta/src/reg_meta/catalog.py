@@ -299,6 +299,7 @@ class ConceptGroupSummary(_CatalogModel):
     source: Literal["edge", "token", "curated"]
     axes: tuple[GroupAxis, ...]
     members: tuple[ConceptGroupMember, ...]
+    tags: tuple[TagMembership, ...] = ()
 
 
 # The three `concept_group.source` values the DB CHECK permits (reg_meta_build/db.py).
@@ -376,6 +377,59 @@ def _tag_membership(row: sqlite3.Row) -> TagMembership:
         rank=row["rank"],
         starred=bool(row["starred"]),
         note=row["note"],
+    )
+
+
+def _tag_note_key(row: sqlite3.Row) -> tuple[int, int, int, str]:
+    note = row["note"]
+    starred = bool(row["starred"])
+    note_bucket = 0 if starred and note else 1 if note else 2
+    return (note_bucket, row["rank"], row["member_variable_id"], row["slug"])
+
+
+def _aggregate_tag_memberships(
+    rows: Iterable[sqlite3.Row],
+) -> tuple[TagMembership, ...]:
+    """Collapse member-grain tag rows into one thematic tag per slug.
+
+    The lowest rank orders the group tag, any starred member makes the group tag
+    recommended, and a note from the strongest contributing membership is retained
+    for the group-level surface.
+    """
+    tags: dict[str, dict[str, object]] = {}
+    for row in rows:
+        current = tags.get(row["slug"])
+        starred = bool(row["starred"])
+        if current is None:
+            tags[row["slug"]] = {
+                "slug": row["slug"],
+                "label": row["label"],
+                "rank": row["rank"],
+                "starred": starred,
+                "note": row["note"],
+                "_note_key": _tag_note_key(row),
+            }
+            continue
+        current["rank"] = min(cast("int", current["rank"]), row["rank"])
+        current["starred"] = bool(current["starred"]) or starred
+        note_key = _tag_note_key(row)
+        if row["note"] and note_key < cast(
+            "tuple[int, int, int, str]", current["_note_key"]
+        ):
+            current["note"] = row["note"]
+            current["_note_key"] = note_key
+    return tuple(
+        TagMembership(
+            slug=cast("str", tag["slug"]),
+            label=cast("str", tag["label"]),
+            rank=cast("int", tag["rank"]),
+            starred=cast("bool", tag["starred"]),
+            note=cast("str | None", tag["note"]),
+        )
+        for tag in sorted(
+            tags.values(),
+            key=lambda t: (cast("int", t["rank"]), cast("str", t["slug"])),
+        )
     )
 
 
@@ -1470,7 +1524,7 @@ class Catalog:
         rows = self._conn.execute(
             "SELECT g.group_id, g.group_key, g.label AS group_label, g.source, "
             "m.member_id, m.delivery_column_name, "
-            "v.slug AS variable_slug, v.name AS variable_name, "
+            "v.variable_id, v.slug AS variable_slug, v.name AS variable_name, "
             "f.axis AS facet_axis, f.value AS facet_value, f.label AS facet_label, "
             "a.ordinal AS axis_ordinal, a.label AS axis_label "
             "FROM concept_group g "
@@ -1488,6 +1542,68 @@ class Catalog:
         ).fetchall()
         groups = self._assemble_variable_groups(provider_slug, register_slug, rows)
         return sorted(groups, key=lambda g: g.key)
+
+    def _tags_for_variable_ids(
+        self, variable_ids: Iterable[int]
+    ) -> tuple[TagMembership, ...]:
+        ids = tuple(sorted(set(variable_ids)))
+        if not ids:
+            return ()
+        placeholders = ",".join("?" for _ in ids)
+        rows = self._conn.execute(
+            "SELECT DISTINCT t.slug, t.label, tm.rank, tm.starred, tm.note, "
+            "tm.variable_id AS member_variable_id "
+            "FROM tag_member tm "
+            "JOIN tag t ON t.tag_id = tm.tag_id "
+            f"WHERE tm.variable_id IN ({placeholders}) "
+            "ORDER BY tm.rank, t.slug, tm.variable_id",
+            ids,
+        ).fetchall()
+        return _aggregate_tag_memberships(rows)
+
+    def _variable_ids_for_binding_fqids(self, fqids: Iterable[Fqid]) -> tuple[int, ...]:
+        variables_by_register: dict[tuple[str, str], set[str]] = {}
+        for fqid in fqids:
+            if (
+                fqid.kind is not FqidKind.VARIABLE_BINDING
+                or fqid.provider is None
+                or fqid.register is None
+                or fqid.variable is None
+            ):
+                continue
+            variables_by_register.setdefault((fqid.provider, fqid.register), set()).add(
+                fqid.variable
+            )
+        ids: list[int] = []
+        for (provider_slug, register_slug), variable_slugs in sorted(
+            variables_by_register.items()
+        ):
+            variables = tuple(sorted(variable_slugs))
+            placeholders = ",".join("?" for _ in variables)
+            rows = self._conn.execute(
+                "SELECT v.variable_id "
+                "FROM variable v "
+                "JOIN register r ON v.register_id = r.register_id "
+                "JOIN provider p ON r.provider_id = p.provider_id "
+                "WHERE p.slug = ? AND r.slug = ? "
+                f"AND v.slug IN ({placeholders}) "
+                "ORDER BY v.variable_id",
+                (provider_slug, register_slug, *variables),
+            ).fetchall()
+            ids.extend(r["variable_id"] for r in rows)
+        return tuple(ids)
+
+    def tags_for_variable_members(
+        self, fqids: Iterable[Fqid]
+    ) -> tuple[TagMembership, ...]:
+        """Aggregate direct variable-grain tags for an explicit member set.
+
+        This is the scoped counterpart to `ConceptGroupSummary.tags`: callers that
+        narrow a group first (for example a steward catalog) can recompute group
+        tags from only the members that remain, without inheriting tags from
+        excluded siblings.
+        """
+        return self._tags_for_variable_ids(self._variable_ids_for_binding_fqids(fqids))
 
     def _assemble_variable_groups(
         self,
@@ -1513,6 +1629,7 @@ class Catalog:
             member = members.setdefault(
                 r["member_id"],
                 {
+                    "variable_id": r["variable_id"],
                     "fqid": Fqid.binding_fqid(
                         provider_slug, register_slug, r["variable_slug"]
                     ),
@@ -1561,6 +1678,9 @@ class Catalog:
                             delivery_column=m["delivery_column"],
                         )
                         for m in ordered_members
+                    ),
+                    tags=self._tags_for_variable_ids(
+                        m["variable_id"] for m in members.values()
                     ),
                 )
             )
@@ -1783,11 +1903,7 @@ class Catalog:
             for r in rows
         ]
 
-    def tags_for_variable(self, fqid: Fqid) -> list[TagMembership]:
-        """Tags the variable at `fqid` (a 3-seg binding FQID) belongs to (#311),
-        ordered by tag rank then slug. Each carries this membership's
-        rank/starred/note. Empty when the variable resolves to no tags (or the
-        FQID names no variable)."""
+    def _direct_tags_for_variable(self, fqid: Fqid) -> list[TagMembership]:
         rows = self._conn.execute(
             "SELECT t.slug, t.label, tm.rank, tm.starred, tm.note "
             "FROM tag_member tm "
@@ -1800,6 +1916,77 @@ class Catalog:
             (fqid.provider, fqid.register, fqid.variable),
         ).fetchall()
         return [_tag_membership(r) for r in rows]
+
+    def _group_tags_for_variable(
+        self,
+        fqid: Fqid,
+        *,
+        group_member_fqids: Iterable[Fqid] | None = None,
+    ) -> tuple[TagMembership, ...]:
+        scope_ids = (
+            self._variable_ids_for_binding_fqids(group_member_fqids)
+            if group_member_fqids is not None
+            else None
+        )
+        if scope_ids is not None and not scope_ids:
+            return ()
+        scope_clause = ""
+        scope_params: tuple[int, ...] = ()
+        if scope_ids is not None:
+            placeholders = ",".join("?" for _ in scope_ids)
+            scope_clause = f"AND group_member.variable_id IN ({placeholders}) "
+            scope_params = scope_ids
+        rows = self._conn.execute(
+            "SELECT DISTINCT t.slug, t.label, tm.rank, tm.starred, tm.note, "
+            "tm.variable_id AS member_variable_id "
+            "FROM variable target "
+            "JOIN register target_r ON target.register_id = target_r.register_id "
+            "JOIN provider target_p ON target_r.provider_id = target_p.provider_id "
+            "JOIN concept_group_variable target_member "
+            "  ON target_member.variable_id = target.variable_id "
+            "JOIN concept_group_variable group_member "
+            "  ON group_member.group_id = target_member.group_id "
+            "JOIN tag_member tm ON tm.variable_id = group_member.variable_id "
+            "JOIN tag t ON t.tag_id = tm.tag_id "
+            "WHERE target_p.slug = ? AND target_r.slug = ? AND target.slug = ? "
+            f"{scope_clause}"
+            "ORDER BY tm.rank, t.slug, tm.variable_id",
+            (fqid.provider, fqid.register, fqid.variable, *scope_params),
+        ).fetchall()
+        return _aggregate_tag_memberships(rows)
+
+    def tags_for_variable(
+        self,
+        fqid: Fqid,
+        *,
+        group_member_fqids: Iterable[Fqid] | None = None,
+    ) -> list[TagMembership]:
+        """Tags the variable at `fqid` (a 3-seg binding FQID) belongs to (#311),
+        ordered by tag rank then slug.
+
+        Direct variable-grain memberships keep their curated rank/starred/note.
+        If the variable is in a concept group, thematic tags curated on any sibling
+        member are inherited as neutral memberships so every member shares the
+        group-level theme without copying a representative member's note/star.
+        `group_member_fqids` scopes that inheritance to a caller-narrowed member
+        set while preserving the variable's own direct tags.
+        """
+        direct = self._direct_tags_for_variable(fqid)
+        direct_slugs = {tag.slug for tag in direct}
+        inherited = [
+            TagMembership(
+                slug=tag.slug,
+                label=tag.label,
+                rank=tag.rank,
+                starred=False,
+                note=None,
+            )
+            for tag in self._group_tags_for_variable(
+                fqid, group_member_fqids=group_member_fqids
+            )
+            if tag.slug not in direct_slugs
+        ]
+        return sorted([*direct, *inherited], key=lambda tag: (tag.rank, tag.slug))
 
     def tags_for_register(self, fqid: Fqid) -> list[TagMembership]:
         """Tags the register at `fqid` (a 2-seg `provider/register` FQID) belongs

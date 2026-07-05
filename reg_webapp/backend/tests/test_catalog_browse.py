@@ -288,6 +288,39 @@ def test_group_route_carries_per_member_coverage(client):
         assert "coverage" in member
 
 
+def test_group_route_serializes_aggregated_member_tags(catalog_db):
+    """#982: group subjects carry thematic tags aggregated from member bindings."""
+    with sqlite3.connect(catalog_db) as conn:
+        conn.execute(
+            "INSERT INTO variable (variable_id, register_id, provider_key, name, slug) "
+            "VALUES (960, 1, '960', 'Civilstånd', 'civilstand')"
+        )
+        conn.execute(
+            "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
+            "label, source) VALUES (960, 'variable', 1, 'tagged-demo', "
+            "'Tagged demo', 'curated')"
+        )
+        conn.execute(
+            "INSERT INTO concept_group_variable "
+            "(group_id, variable_id, delivery_column_name) "
+            "SELECT 960, variable_id, NULL FROM variable "
+            "WHERE register_id = 1 AND slug IN ('kon', 'civilstand')"
+        )
+
+    with TestClient(create_app()) as client:
+        body = client.get("/api/catalog/group/scb/lisa/tagged-demo").json()
+
+    assert body["tags"] == [
+        {
+            "slug": "income",
+            "label": "Income & earnings",
+            "rank": 0,
+            "starred": True,
+            "note": "fixture recommendation",
+        }
+    ]
+
+
 def test_group_route_representation_members_per_column_coverage(catalog_db):
     """#819: two representation members sharing ONE variable (e.g. CDISP 1968– vs
     CDISP5 2020–) must show DIFFERENT coverage — each its per-column window, not the

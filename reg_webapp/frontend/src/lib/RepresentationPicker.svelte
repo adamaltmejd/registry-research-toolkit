@@ -121,6 +121,10 @@ export interface PickerBand {
      * `effective_year`), or null when the edge carries none — shown as a quiet
      * "until <year>" qualifier on the history entry. */
     effectiveYear: number | null;
+    /** Optional selectable predecessor band (#926). Axis-less group views keep the
+     * predecessor folded visually, but expose its era-specific rows inside this
+     * disclosure so an old study window can add the covering variable. */
+    band?: Omit<PickerBand, "supersedes">;
   }[];
 }
 
@@ -219,8 +223,23 @@ let applying = $state(false);
  * row). Reassigned (not mutated) so the `$state` record/Set stay reactive. Reset
  * alongside staged row keys when the band set changes (the effect below). */
 let filterSelection = $state<Record<string, Set<string>>>({});
+const selectableBands = $derived.by((): PickerBand[] => {
+  const out = [...bands];
+  const seen = new Set(bands.map((band) => band.key));
+  for (const band of bands) {
+    for (const predecessor of band.supersedes ?? []) {
+      if (predecessor.band && !seen.has(predecessor.band.key)) {
+        seen.add(predecessor.band.key);
+        out.push(predecessor.band);
+      }
+    }
+  }
+  return out;
+});
 const bandsSignature = $derived(
-  bands.map((b) => `${b.key}:${b.rows.map((r) => r.key).join(",")}`).join("|"),
+  selectableBands
+    .map((b) => `${b.key}:${b.rows.map((r) => r.key).join(",")}`)
+    .join("|"),
 );
 const committedSignature = $derived(
   [...committedRows.values()]
@@ -248,7 +267,7 @@ $effect(() => {
 // controls collapse. Filtering is a CLIENT-SIDE LENS: it narrows which rows show,
 // never the selection or the commit.
 const dimensions = $derived(
-  pickerFilterDimensions(bands, axes, {
+  pickerFilterDimensions(selectableBands, axes, {
     includeRowDimensions: includeRowDimensionFilters,
   }),
 );
@@ -279,20 +298,52 @@ function clearFilters(): void {
   filterSelection = {};
 }
 
-/** The bands with their rows narrowed to those passing the active filters; a band
- * whose rows are ALL filtered out is dropped (so the adaptive labeling / clustering
- * below run on the visible subset, exactly as they do unfiltered). The narrowed
- * bands keep every other field — only `rows` shrinks. */
+function filteredRowsForBand(band: PickerBand): PickerRepresentation[] {
+  if (!anyFilterActive) {
+    return band.rows;
+  }
+  return band.rows.filter((row) =>
+    pickerRowPasses(row, band, dimensions, filterSelection),
+  );
+}
+
+const visibleHistoryRows = $derived.by(
+  (): { band: PickerBand; row: PickerRepresentation }[] => {
+    const out: { band: PickerBand; row: PickerRepresentation }[] = [];
+    const seen = new Set<string>();
+    for (const band of bands) {
+      for (const predecessor of band.supersedes ?? []) {
+        if (!predecessor.band) {
+          continue;
+        }
+        for (const row of filteredRowsForBand(predecessor.band)) {
+          const key = rowKey(predecessor.band, row);
+          if (rowSelectable(row) && !seen.has(key)) {
+            seen.add(key);
+            out.push({ band: predecessor.band, row });
+          }
+        }
+      }
+    }
+    return out;
+  },
+);
+
+/** The bands with their rows narrowed to those passing the active filters. A head band
+ * remains visible if only its selectable history matches, so filters do not hide the
+ * disclosure that contains matching predecessor rows. */
 const filteredBands = $derived.by((): PickerBand[] => {
   if (!anyFilterActive) {
     return bands;
   }
   const out: PickerBand[] = [];
   for (const band of bands) {
-    const rows = band.rows.filter((row) =>
-      pickerRowPasses(row, band, dimensions, filterSelection),
+    const rows = filteredRowsForBand(band);
+    const hasVisibleHistory = (band.supersedes ?? []).some(
+      (predecessor) =>
+        predecessor.band && filteredRowsForBand(predecessor.band).length > 0,
     );
-    if (rows.length > 0) {
+    if (rows.length > 0 || hasVisibleHistory) {
       out.push({ ...band, rows });
     }
   }
@@ -300,9 +351,12 @@ const filteredBands = $derived.by((): PickerBand[] => {
 });
 
 /** The total visible rows under the active filters (the "showing N of M" count). */
-const totalRows = $derived(bands.reduce((n, b) => n + b.rows.length, 0));
+const totalRows = $derived(
+  selectableBands.reduce((n, b) => n + b.rows.length, 0),
+);
 const visibleRows = $derived(
-  filteredBands.reduce((n, b) => n + b.rows.length, 0),
+  filteredBands.reduce((n, b) => n + b.rows.length, 0) +
+    visibleHistoryRows.length,
 );
 
 function rowKey(band: PickerBand, row: PickerRepresentation): string {
@@ -442,15 +496,17 @@ let hoveredBandKey = $state<string | null>(null);
  * on the rows the active filters leave showing, never the hidden ones (filtering is
  * a presentation lens — it must not let "select all" grab a row the user has filtered
  * out of view). A hidden row's staged state persists regardless. */
-const allKeys = $derived(
-  filteredBands.flatMap((b) =>
-    b.rows.filter(rowSelectable).map((r) => rowKey(b, r)),
-  ),
-);
-const allVisibleRows = $derived(
-  filteredBands.flatMap((b) =>
+const allVisibleRows = $derived([
+  ...filteredBands.flatMap((b) =>
     b.rows.filter(rowSelectable).map((r) => ({ band: b, row: r })),
   ),
+  ...visibleHistoryRows,
+]);
+const allKeys = $derived(
+  allVisibleRows.map(({ band, row }) => rowKey(band, row)),
+);
+const visibleSelectableBandCount = $derived(
+  new Set(allVisibleRows.map(({ band }) => band.key)).size,
 );
 const allSelected = $derived(
   allVisibleRows.length > 0 &&
@@ -477,7 +533,7 @@ function toggleAll(): void {
 
 const stagedAdds = $derived.by((): PickerSelection[] => {
   const out: PickerSelection[] = [];
-  for (const band of bands) {
+  for (const band of selectableBands) {
     for (const row of band.rows) {
       if (rowSelectable(row) && stagedAddKeys.has(rowKey(band, row))) {
         out.push({ band, row });
@@ -488,7 +544,7 @@ const stagedAdds = $derived.by((): PickerSelection[] => {
 });
 const stagedRemoves = $derived.by((): PickerRemoval[] => {
   const out: PickerRemoval[] = [];
-  for (const band of bands) {
+  for (const band of selectableBands) {
     for (const row of band.rows) {
       const key = rowKey(band, row);
       const committed = committedRows.get(key);
@@ -1581,6 +1637,9 @@ const hiddenSelectedCount = $derived.by((): number => {
     return 0;
   }
   const visible = new Set(allKeys);
+  for (const { band, row } of visibleHistoryRows) {
+    visible.add(rowKey(band, row));
+  }
   let n = 0;
   for (const { band, row } of [...stagedAdds, ...stagedRemoves]) {
     if (!visible.has(rowKey(band, row))) {
@@ -1712,8 +1771,10 @@ function codingsVaryHref(
 <!-- The SUPERSEDED-editions history (#902): an inter-variable succession fold leads
      with the LATEST edition (this band) and tucks its superseded predecessor(s) behind
      a quiet disclosure — "supersedes <name>" — rather than rendering each as a co-equal
-     selectable band. Each predecessor stays reachable via its own leaf-page link (NOT a
-     selection target). Closed by default; a thin, low-key affordance, never card chrome. -->
+     selectable band. Each predecessor stays reachable via its own leaf-page link and,
+     when rows are available, exposes era-specific selection controls inside the
+     disclosure (#926). Closed by default; a thin, low-key affordance, never card
+     chrome. -->
 <!-- The sequential-RENAME progression hint (#902): a column delivered under several
      names over non-overlapping eras (`DINF` → `DINF83` → `DINF86`) collapses to ONE row
      led by the latest column; this quiet sub-text names the superseded column(s) so the
@@ -1728,7 +1789,12 @@ function codingsVaryHref(
 {/snippet}
 
 {#snippet historyDisclosure(
-  supersedes: { name: string; href: string; effectiveYear: number | null }[],
+  supersedes: {
+    name: string;
+    href: string;
+    effectiveYear: number | null;
+    band?: Omit<PickerBand, "supersedes">;
+  }[],
 )}
   {#if supersedes.length > 0}
     <details class="history">
@@ -1738,6 +1804,10 @@ function codingsVaryHref(
       >
       <ul class="history-list">
         {#each supersedes as p (p.href)}
+          {@const predecessorBand = p.band}
+          {@const predecessorRows = predecessorBand
+            ? filteredRowsForBand(predecessorBand)
+            : []}
           <li>
             <a
               class="history-link"
@@ -1746,6 +1816,49 @@ function codingsVaryHref(
             >{#if p.effectiveYear != null}<span class="history-until"
                 >until {p.effectiveYear}</span
               >{/if}
+            {#if predecessorBand && predecessorRows.length > 0}
+              <ul class="history-rows" aria-label={`Selectable rows for ${p.name}`}>
+                {#each predecessorRows as row (row.key)}
+                  {@const checked = rowChecked(predecessorBand, row)}
+                  {@const stage = rowStage(predecessorBand, row)}
+                  {@const inWindow = representationInWindow(row, window)}
+                  <li>
+                    <label
+                      class="history-row"
+                      class:selected={checked}
+                      class:committed={stage === "committed"}
+                      class:staged-add={stage === "staged-add"}
+                      class:staged-remove={stage === "staged-remove"}
+                      class:dimmed={!inWindow}
+                    >
+                      <input
+                        type="checkbox"
+                        class="cbox"
+                        disabled={applying || !rowCanToggle(predecessorBand, row)}
+                        checked={checked}
+                        onchange={() => toggleRow(predecessorBand, row)}
+                      />
+                      <span class="history-row-main">
+                        {@render colChip(row.column)}
+                        {@render renameHint(row.renamedColumns)}
+                        {#if stage !== "none"}
+                          {@render stageTag(stage)}
+                        {/if}
+                      </span>
+                      {#if row.codingsVary}
+                        {@render codingsVaryNudge(predecessorBand, row)}
+                      {/if}
+                      {#if inWindow}
+                        {@render lateWarn(row)}
+                      {/if}
+                      {#if row.period}
+                        <span class="period">{row.period}</span>
+                      {/if}
+                    </label>
+                  </li>
+                {/each}
+              </ul>
+            {/if}
           </li>
         {/each}
       </ul>
@@ -2147,7 +2260,7 @@ function codingsVaryHref(
     </div>
   {/if}
 
-  {#if anyFilterActive && filteredBands.length === 0}
+  {#if anyFilterActive && visibleRows === 0}
     <p class="no-match" role="status">No columns match the active filters.</p>
   {/if}
 
@@ -2155,12 +2268,12 @@ function codingsVaryHref(
     {@render graphPicker()}
   {:else}
     <ul class="col-list integrated-list">
-    {#if bands.length > 1 && allKeys.length > 1}
+    {#if visibleSelectableBandCount > 1 && allKeys.length > 1}
       <!-- Global select-all: grab every visible column of the concept in one move.
            Rendered as the first integrated list row so hover, click-anywhere, and the
            full-selection gutter match the column rows below. Omitted when there's only
-           ONE variable — that variable's own select-all IS "select all columns", so a
-           global one would just duplicate it. -->
+           ONE selectable band, where that variable's own select-all already covers it,
+           or one selectable row, where a global one would just duplicate it. -->
       <li class="select-all-row">
         <label
           class="select-all row-btn integrated-list-row"
@@ -3521,6 +3634,48 @@ function codingsVaryHref(
     margin-left: 0.4rem;
     color: var(--text-muted);
     font-variant-numeric: tabular-nums;
+  }
+  .history-rows {
+    list-style: none;
+    margin: 0.2rem 0 0.25rem;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+  }
+  .history-row {
+    box-sizing: border-box;
+    width: 100%;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto auto auto;
+    align-items: center;
+    gap: var(--space-2);
+    padding: 0.2rem 0.35rem;
+    border-left: 2px solid transparent;
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    cursor: pointer;
+  }
+  .history-row:hover {
+    background: var(--surface-sunken);
+  }
+  .history-row.selected {
+    border-left-color: var(--accent);
+    background: var(--accent-bg);
+  }
+  .history-row.staged-remove {
+    border-left-color: var(--warn);
+    background: var(--warn-bg);
+  }
+  .history-row.dimmed {
+    opacity: 0.58;
+  }
+  .history-row-main {
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--space-2);
   }
   .period {
     flex: 0 0 auto;

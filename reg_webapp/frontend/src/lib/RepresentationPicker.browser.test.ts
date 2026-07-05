@@ -2535,6 +2535,333 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
     await expect.element(page.getByText("+1 column")).toBeVisible();
   });
 
+  it("stages selectable superseded predecessor rows from the history disclosure (#926)", async () => {
+    const onapply = vi.fn();
+    const predecessor = {
+      key: "scb/iot/dispink-old",
+      name: "Disponibel inkomst familj",
+      registerPrefix: "scb/iot",
+      rows: [
+        row({
+          column: "DINFold",
+          from: "1999-01-01",
+          to: "2004-12-31",
+          windows: [{ from: "1999-01-01", to: "2004-12-31" }],
+          period: "1999 – 2004",
+          wirePeriod: "1999..2004",
+        }),
+      ],
+    } satisfies PickerBand;
+    const successor = {
+      key: "scb/iot/dispink-new",
+      name: "Disponibel inkomst familj 2004",
+      registerPrefix: "scb/iot",
+      rows: [row({ column: "DINFnew" })],
+      supersedes: [
+        {
+          name: predecessor.name,
+          href: "/catalog/scb/iot/dispink-old",
+          effectiveYear: 2005,
+          band: predecessor,
+        },
+      ],
+    } satisfies PickerBand;
+
+    render(RepresentationPicker, {
+      bands: [successor],
+      ...PROPS,
+      onapply,
+    });
+
+    await page.getByText("supersedes 1 edition").click();
+    await page.getByRole("checkbox", { name: /DINFold/ }).click();
+    await expect.element(page.getByText("+1 column")).toBeVisible();
+    await page.getByRole("button", { name: "Add to project" }).click();
+
+    expect(onapply).toHaveBeenCalledTimes(1);
+    const payload = onapply.mock.calls[0][0];
+    expect(payload.adds).toHaveLength(1);
+    expect(payload.adds[0].band.key).toBe("scb/iot/dispink-old");
+    expect(payload.adds[0].row.column).toBe("DINFold");
+  });
+
+  it("deduplicates one folded predecessor shared by split successors (#926)", async () => {
+    const onapply = vi.fn();
+    const predecessor = {
+      key: "scb/iot/dispink-old",
+      name: "Disponibel inkomst old",
+      registerPrefix: "scb/iot",
+      rows: [row({ column: "DINFold" })],
+    } satisfies PickerBand;
+    const successors = ["new-a", "new-b"].map(
+      (slug) =>
+        ({
+          key: `scb/iot/dispink-${slug}`,
+          name: `Disponibel inkomst ${slug}`,
+          registerPrefix: "scb/iot",
+          rows: [row({ column: `DINF${slug}` })],
+          supersedes: [
+            {
+              name: predecessor.name,
+              href: "/catalog/scb/iot/dispink-old",
+              effectiveYear: 2005,
+              band: predecessor,
+            },
+          ],
+        }) satisfies PickerBand,
+    );
+
+    render(RepresentationPicker, {
+      bands: successors,
+      ...PROPS,
+      onapply,
+    });
+
+    const summary = document.querySelector<HTMLElement>(
+      "details.history summary",
+    );
+    if (!summary) {
+      throw new Error("history disclosure not rendered");
+    }
+    summary.click();
+    await page.getByRole("checkbox", { name: /DINFold/ }).click();
+    await expect.element(page.getByText("+1 column")).toBeVisible();
+    await page.getByRole("button", { name: "Add to project" }).click();
+
+    expect(onapply).toHaveBeenCalledTimes(1);
+    const payload = onapply.mock.calls[0][0];
+    expect(payload.adds).toHaveLength(1);
+    expect(payload.adds[0].band.key).toBe("scb/iot/dispink-old");
+    expect(payload.adds[0].row.column).toBe("DINFold");
+  });
+
+  it("applies filters and hidden-counts to folded history rows (#926)", async () => {
+    const predecessor = {
+      key: "scb/iot/dispink-old",
+      name: "Disponibel inkomst old",
+      registerPrefix: "scb/iot",
+      rows: [row({ column: "DINFold" })],
+      facetsByColumn: {
+        DINFold: [{ axis: "era", value: "old", label: "Old level" }],
+      },
+    } satisfies PickerBand;
+    const successor = {
+      key: "scb/iot/dispink-new",
+      name: "Disponibel inkomst new",
+      registerPrefix: "scb/iot",
+      rows: [row({ column: "DINFnew" })],
+      facetsByColumn: {
+        DINFnew: [{ axis: "era", value: "new", label: "New level" }],
+      },
+      supersedes: [
+        {
+          name: predecessor.name,
+          href: "/catalog/scb/iot/dispink-old",
+          effectiveYear: 2005,
+          band: predecessor,
+        },
+      ],
+    } satisfies PickerBand;
+
+    render(RepresentationPicker, {
+      bands: [successor],
+      axes: [{ name: "era", label: "Era" }],
+      ...PROPS,
+    });
+
+    await page.getByText("supersedes 1 edition").click();
+    await page.getByRole("checkbox", { name: /DINFold/ }).click();
+    await expect.element(page.getByText("+1 column")).toBeVisible();
+
+    clickFilter("Old level");
+    await expect
+      .element(page.getByText("Showing 1 of 2 columns"))
+      .toBeVisible();
+    await expect.element(page.getByText("+1 column")).toBeVisible();
+    await expect
+      .element(page.getByText("+1 column (1 hidden by filters)"))
+      .not.toBeInTheDocument();
+    const details =
+      document.querySelector<HTMLDetailsElement>("details.history");
+    if (!details) {
+      throw new Error("history disclosure not rendered");
+    }
+    details.open = true;
+    await expect
+      .element(page.getByRole("checkbox", { name: /DINFold/ }))
+      .toBeVisible();
+
+    await page.getByRole("button", { name: "Clear filters" }).click();
+    clickFilter("New level");
+    await expect
+      .element(page.getByText("+1 column (1 hidden by filters)"))
+      .toBeVisible();
+    await expect
+      .element(page.getByRole("checkbox", { name: /DINFold/ }))
+      .not.toBeInTheDocument();
+  });
+
+  it("includes visible folded history rows in global select-all (#926)", async () => {
+    const onapply = vi.fn();
+    const predecessor = {
+      key: "scb/iot/dispink-old",
+      name: "Disponibel inkomst old",
+      registerPrefix: "scb/iot",
+      rows: [row({ column: "DINFold" })],
+    } satisfies PickerBand;
+    const successor = {
+      key: "scb/iot/dispink-new",
+      name: "Disponibel inkomst new",
+      registerPrefix: "scb/iot",
+      rows: [row({ column: "DINFnew" })],
+      supersedes: [
+        {
+          name: predecessor.name,
+          href: "/catalog/scb/iot/dispink-old",
+          effectiveYear: 2005,
+          band: predecessor,
+        },
+      ],
+    } satisfies PickerBand;
+    const sibling = {
+      key: "scb/iot/dispink-other",
+      name: "Disponibel inkomst other",
+      registerPrefix: "scb/iot",
+      rows: [row({ column: "DINFother" })],
+    } satisfies PickerBand;
+
+    render(RepresentationPicker, {
+      bands: [successor, sibling],
+      ...PROPS,
+      onapply,
+    });
+
+    await page.getByRole("checkbox", { name: "Select all columns" }).click();
+    await expect.element(page.getByText("+3 columns")).toBeVisible();
+
+    const details =
+      document.querySelector<HTMLDetailsElement>("details.history");
+    if (!details) {
+      throw new Error("history disclosure not rendered");
+    }
+    details.open = true;
+    await expect
+      .element(page.getByRole("checkbox", { name: /DINFold/ }))
+      .toBeChecked();
+
+    await page.getByRole("button", { name: "Add to project" }).click();
+    expect(onapply).toHaveBeenCalledTimes(1);
+    const addedColumns = onapply.mock.calls[0][0].adds.map(
+      (selection: { row: PickerRepresentation }) => selection.row.column,
+    );
+    expect(addedColumns.sort()).toEqual(["DINFnew", "DINFold", "DINFother"]);
+  });
+
+  it("shows global select-all for one successor plus one folded predecessor (#926)", async () => {
+    const onapply = vi.fn();
+    const predecessor = {
+      key: "scb/iot/dispink-old",
+      name: "Disponibel inkomst old",
+      registerPrefix: "scb/iot",
+      rows: [row({ column: "DINFold" })],
+    } satisfies PickerBand;
+    const successor = {
+      key: "scb/iot/dispink-new",
+      name: "Disponibel inkomst new",
+      registerPrefix: "scb/iot",
+      rows: [row({ column: "DINFnew" })],
+      supersedes: [
+        {
+          name: predecessor.name,
+          href: "/catalog/scb/iot/dispink-old",
+          effectiveYear: 2005,
+          band: predecessor,
+        },
+      ],
+    } satisfies PickerBand;
+
+    render(RepresentationPicker, {
+      bands: [successor],
+      ...PROPS,
+      onapply,
+    });
+
+    await page.getByRole("checkbox", { name: "Select all columns" }).click();
+    await expect.element(page.getByText("+2 columns")).toBeVisible();
+
+    const details =
+      document.querySelector<HTMLDetailsElement>("details.history");
+    if (!details) {
+      throw new Error("history disclosure not rendered");
+    }
+    details.open = true;
+    await expect
+      .element(page.getByRole("checkbox", { name: /DINFold/ }))
+      .toBeChecked();
+
+    await page.getByRole("button", { name: "Add to project" }).click();
+    expect(onapply).toHaveBeenCalledTimes(1);
+    const addedColumns = onapply.mock.calls[0][0].adds.map(
+      (selection: { row: PickerRepresentation }) => selection.row.column,
+    );
+    expect(addedColumns.sort()).toEqual(["DINFnew", "DINFold"]);
+  });
+
+  it("hides global select-all when filters leave one folded family band visible (#926)", async () => {
+    const predecessor = {
+      key: "scb/iot/dispink-old",
+      name: "Disponibel inkomst old",
+      registerPrefix: "scb/iot",
+      rows: [row({ column: "DINFold" })],
+      facetsByColumn: {
+        DINFold: [{ axis: "era", value: "old", label: "Old level" }],
+      },
+    } satisfies PickerBand;
+    const successor = {
+      key: "scb/iot/dispink-new",
+      name: "Disponibel inkomst new",
+      registerPrefix: "scb/iot",
+      rows: [row({ column: "DINFnew1" }), row({ column: "DINFnew2" })],
+      facetsByColumn: {
+        DINFnew1: [{ axis: "era", value: "new", label: "New level" }],
+        DINFnew2: [{ axis: "era", value: "new", label: "New level" }],
+      },
+      supersedes: [
+        {
+          name: predecessor.name,
+          href: "/catalog/scb/iot/dispink-old",
+          effectiveYear: 2005,
+          band: predecessor,
+        },
+      ],
+    } satisfies PickerBand;
+
+    render(RepresentationPicker, {
+      bands: [successor],
+      axes: [{ name: "era", label: "Era" }],
+      ...PROPS,
+    });
+
+    await vi.waitFor(() => {
+      if (
+        !document.querySelector(
+          '.select-all-row input[aria-label="Select all columns"]',
+        )
+      ) {
+        throw new Error("global select-all not rendered");
+      }
+    });
+    clickFilter("New level");
+    await expect
+      .element(page.getByText("Showing 2 of 3 columns"))
+      .toBeVisible();
+    expect(
+      document.querySelector(
+        '.select-all-row input[aria-label="Select all columns"]',
+      ),
+    ).toBeNull();
+  });
+
   it("clears staged adds when a narrowed folded variant changes concrete segment", async () => {
     const onapply = vi.fn();
     const { rerender } = render(RepresentationPicker, {

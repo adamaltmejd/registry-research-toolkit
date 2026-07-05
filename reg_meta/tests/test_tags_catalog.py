@@ -94,6 +94,111 @@ def test_tags_for_variable_empty_for_untagged() -> None:
     assert cat.tags_for_variable(Fqid.binding_fqid("scb", "rams", "syss")) == []
 
 
+def test_concept_group_tags_aggregate_members_and_inherit_to_siblings() -> None:
+    conn = _seeded_conn()
+    add_variable(conn, register_id=1, var_id=51, name="Civilstånd", slug="civilstand")
+    conn.execute(
+        "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
+        "label, source) VALUES (910, 'variable', 1, 'demog', 'Demographics', 'curated')"
+    )
+    conn.execute(
+        "INSERT INTO concept_group_variable "
+        "(group_id, variable_id, delivery_column_name) "
+        "SELECT 910, variable_id, NULL FROM variable "
+        "WHERE register_id = 1 AND slug IN ('kon', 'civilstand')"
+    )
+
+    cat = Catalog(conn)
+    group = cat.concept_group("scb", "lisa", "demog")
+    assert group is not None
+    assert [tag.slug for tag in group.tags] == ["income"]
+    assert group.tags[0].starred is True
+    assert group.tags[0].note == "primary"
+
+    inherited = cat.tags_for_variable(Fqid.binding_fqid("scb", "lisa", "civilstand"))
+    assert [tag.slug for tag in inherited] == ["income"]
+    assert inherited[0].rank == 0
+    assert inherited[0].starred is False
+    assert inherited[0].note is None
+
+    direct = cat.tags_for_variable(Fqid.binding_fqid("scb", "lisa", "kon"))
+    assert [tag.slug for tag in direct] == ["income"]
+    assert direct[0].starred is True
+    assert direct[0].note == "primary"
+
+
+def test_tags_for_variable_inheritance_can_scope_group_members() -> None:
+    conn = _seeded_conn()
+    add_variable(conn, register_id=1, var_id=51, name="Civilstånd", slug="civilstand")
+    conn.execute(
+        "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
+        "label, source) VALUES (910, 'variable', 1, 'demog', 'Demographics', 'curated')"
+    )
+    conn.execute(
+        "INSERT INTO concept_group_variable "
+        "(group_id, variable_id, delivery_column_name) "
+        "SELECT 910, variable_id, NULL FROM variable "
+        "WHERE register_id = 1 AND slug IN ('kon', 'civilstand')"
+    )
+
+    cat = Catalog(conn)
+    civilstand = Fqid.binding_fqid("scb", "lisa", "civilstand")
+    kon = Fqid.binding_fqid("scb", "lisa", "kon")
+
+    assert [tag.slug for tag in cat.tags_for_variable(civilstand)] == ["income"]
+    assert cat.tags_for_variable(civilstand, group_member_fqids=(civilstand,)) == []
+    assert [
+        tag.slug
+        for tag in cat.tags_for_variable(
+            civilstand, group_member_fqids=(civilstand, kon)
+        )
+    ] == ["income"]
+
+
+def test_concept_group_tag_note_prefers_noted_member_with_equal_rank() -> None:
+    conn = build_slugged_db(classification=None)
+    add_variable(conn, register_id=1, var_id=51, name="Civilstånd", slug="civilstand")
+    materialize_tags(
+        conn,
+        (
+            CuratedTag(
+                slug="income",
+                label="Income",
+                description=None,
+                members=(
+                    TagMember("scb", "lisa", "kon", rank=0, starred=False, note=None),
+                    TagMember(
+                        "scb",
+                        "lisa",
+                        "civilstand",
+                        rank=0,
+                        starred=False,
+                        note="documented sibling",
+                    ),
+                ),
+            ),
+        ),
+        providers=_SCB,
+    )
+    conn.execute(
+        "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
+        "label, source) VALUES (911, 'variable', 1, 'demog', 'Demographics', 'curated')"
+    )
+    conn.execute(
+        "INSERT INTO concept_group_variable "
+        "(group_id, variable_id, delivery_column_name) "
+        "SELECT 911, variable_id, NULL FROM variable "
+        "WHERE register_id = 1 AND slug IN ('kon', 'civilstand')"
+    )
+
+    group = Catalog(conn).concept_group("scb", "lisa", "demog")
+    assert group is not None
+    assert [tag.slug for tag in group.tags] == ["income"]
+    assert group.tags[0].rank == 0
+    assert group.tags[0].starred is False
+    assert group.tags[0].note == "documented sibling"
+
+
 def test_tags_for_register() -> None:
     cat = Catalog(_seeded_conn())
     lisa = cat.tags_for_register(Fqid.register_fqid("scb", "lisa"))

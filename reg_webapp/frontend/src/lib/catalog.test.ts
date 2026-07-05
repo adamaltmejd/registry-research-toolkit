@@ -885,6 +885,7 @@ function group(over: Partial<ConceptGroup>): ConceptGroup {
     label: "Inkomst",
     source: "token",
     axes: ax("month"),
+    tags: [],
     members: [
       {
         fqid: "scb/lisa/inkjan",

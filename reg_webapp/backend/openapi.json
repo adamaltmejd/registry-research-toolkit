@@ -1371,6 +1371,13 @@
             ],
             "title": "Source",
             "type": "string"
+          },
+          "tags": {
+            "items": {
+              "$ref": "#/components/schemas/TagMembership"
+            },
+            "title": "Tags",
+            "type": "array"
           }
         },
         "required": [
@@ -1560,6 +1567,14 @@
             ],
             "title": "Source",
             "type": "string"
+          },
+          "tags": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/TagMembership"
+            },
+            "title": "Tags",
+            "type": "array"
           }
         },
         "required": [

@@ -306,6 +306,30 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
       .toBeVisible();
   });
 
+  it("renders thematic tag chips and recommendation notes", async () => {
+    vi.mocked(getConceptGroup).mockResolvedValue(
+      node({
+        tags: [
+          {
+            slug: "income",
+            label: "Income & earnings",
+            rank: 0,
+            starred: true,
+            note: "primary fixture measure",
+          },
+        ],
+      }),
+    );
+    vi.mocked(getConceptGroupGraph).mockResolvedValue(twoSingleColGraph());
+
+    renderGroup();
+
+    await expect.element(page.getByText("Income & earnings")).toBeVisible();
+    await expect
+      .element(page.getByText("Recommended: primary fixture measure"))
+      .toBeVisible();
+  });
+
   it("selecting columns across two members + Apply commits the right staged diff", async () => {
     vi.mocked(getConceptGroup).mockResolvedValue(node());
     vi.mocked(getConceptGroupGraph).mockResolvedValue(twoSingleColGraph());
@@ -2226,16 +2250,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
           }),
         ]),
       ],
-      edges: [
-        {
-          id: "succession:scb/rams/empty->scb/rams/live",
-          kind: "succession",
-          source: "scb/rams/empty",
-          target: "scb/rams/live",
-          label: null,
-          effective_year: 2010,
-        },
-      ],
+      edges: [],
       focus_id: null,
     });
 
@@ -2661,7 +2676,7 @@ describe("ConceptGroupView ?member= focus highlight (#678 finding 5)", () => {
     expect(document.querySelectorAll(".focused")).toHaveLength(0);
   });
 
-  it("keeps a focused member navigable from graph mode", async () => {
+  it("keeps a focused successor navigable after succession folds to list mode", async () => {
     vi.mocked(getConceptGroup).mockResolvedValue(node({ member: "inkfeb" }));
     vi.mocked(getConceptGroupGraph).mockResolvedValue({
       ...twoSingleColGraph(),
@@ -2682,7 +2697,7 @@ describe("ConceptGroupView ?member= focus highlight (#678 finding 5)", () => {
 
     const focusedLink = await vi.waitFor(() => {
       const el = document.querySelector<HTMLAnchorElement>(
-        '.graph-lane.focused a.graph-name[href="/catalog/scb/rams/inkfeb"]',
+        '.col-row.single.focused a.col-chip[href="/catalog/scb/rams/inkfeb"]',
       );
       if (!el) {
         throw new Error("focused member link not yet rendered");
@@ -2690,7 +2705,7 @@ describe("ConceptGroupView ?member= focus highlight (#678 finding 5)", () => {
       return el;
     });
     expect(focusedLink.getAttribute("href")).toBe("/catalog/scb/rams/inkfeb");
-    expect(document.querySelector(".graph-picker")).not.toBeNull();
+    expect(document.querySelector(".graph-picker")).toBeNull();
   });
 
   it("falls back when the focused member is absent from a partial graph payload", async () => {
@@ -2802,6 +2817,53 @@ describe("ConceptGroupView inter-variable succession fold (#902)", () => {
     };
   }
 
+  it("keeps a focused superseded predecessor visible in faceted succession groups", async () => {
+    vi.mocked(getConceptGroup).mockResolvedValue(
+      node({
+        key: "faceted-succession",
+        label: "Faceted succession",
+        axes: [{ name: "level", label: "Level" }],
+        member: "dispink-old",
+        members: [
+          {
+            fqid: "scb/iot/dispink-old",
+            name: "Disponibel inkomst familj",
+            facets: [{ axis: "level", value: "old", label: "Old level" }],
+            coverage: null,
+          },
+          {
+            fqid: "scb/iot/dispink-new",
+            name: "Disponibel inkomst familj 2004",
+            facets: [{ axis: "level", value: "new", label: "New level" }],
+            coverage: null,
+          },
+        ],
+      } as unknown as Partial<ConceptGroupNodeData>),
+    );
+    vi.mocked(getConceptGroupGraph).mockResolvedValue(successionGraph());
+    router.navigate(
+      "/catalog/group/scb/iot/faceted-succession?member=dispink-old",
+    );
+
+    renderGroup({
+      provider: "scb",
+      register: "iot",
+      key: "faceted-succession",
+    });
+
+    const focused = await vi.waitFor(() => {
+      const el = document.querySelector(
+        ".graph-lane.focused, .col-row.single.focused, .subhead.focused",
+      );
+      if (!el) {
+        throw new Error("focused predecessor not rendered");
+      }
+      return el;
+    });
+    expect(focused.textContent).toContain("DINFold");
+    expect(document.querySelector("details.history")).toBeNull();
+  });
+
   it("folds a predecessor→successor member pair into ONE band led by the LATEST edition", async () => {
     vi.mocked(getConceptGroup).mockResolvedValue(successionNode());
     vi.mocked(getConceptGroupGraph).mockResolvedValue(successionGraph());
@@ -2817,18 +2879,24 @@ describe("ConceptGroupView inter-variable succession fold (#902)", () => {
     await expect
       .element(page.getByRole("checkbox", { name: /DINFnew/ }))
       .toBeVisible();
-    // …but the superseded predecessor's column is NOT a co-equal selectable band.
-    expect(document.querySelector('input[aria-label*="DINFold"]')).toBeNull();
+    // …but the superseded predecessor's column is NOT a co-equal top-level row.
+    const topLevelColumns = [
+      ...document.querySelectorAll(".col-list .row-btn .col-chip"),
+    ].map((el) => el.textContent?.replace("↗", "").trim());
+    expect(topLevelColumns).toEqual(["DINFnew"]);
     // Graph mode is strictly additive now; folded predecessor cells fall back to the
     // list, with the predecessor reachable through the history disclosure.
     expect(document.querySelector(".graph-picker")).toBeNull();
     expect(
-      document.querySelectorAll(".col-list .row-btn input.cbox"),
+      document.querySelectorAll(".col-list .col-row .row-btn input.cbox"),
     ).toHaveLength(1);
     const historyText =
       document.querySelector("details.history")?.textContent ?? "";
     expect(historyText).toContain("supersedes 1");
     expect(historyText).toContain("edition");
+    expect(document.querySelector(".history-rows")?.textContent).toContain(
+      "DINFold",
+    );
     expect(
       document.querySelector<HTMLAnchorElement>(
         'a.history-link[href="/catalog/scb/iot/dispink-old"]',
@@ -2836,7 +2904,44 @@ describe("ConceptGroupView inter-variable succession fold (#902)", () => {
     ).toContain("Disponibel inkomst familj");
   });
 
-  it("keeps faceted succession predecessors selectable while still showing history", async () => {
+  it("allows a folded predecessor row to be selected for its era (#926)", async () => {
+    vi.mocked(getConceptGroup).mockResolvedValue(successionNode());
+    vi.mocked(getConceptGroupGraph).mockResolvedValue(successionGraph());
+    mockResolveColumns({
+      "scb/iot/dispink-old": ["DINFold"],
+      "scb/iot/dispink-new": ["DINFnew"],
+    });
+    router.navigate("/catalog/group/scb/iot/disponibel-inkomst");
+
+    renderGroup({
+      provider: "scb",
+      register: "iot",
+      key: "disponibel-inkomst",
+    });
+
+    await page.getByText("supersedes 1 edition").click();
+    await page.getByRole("checkbox", { name: /DINFold/ }).click();
+    await expect.element(page.getByText("+1 column")).toBeVisible();
+    await page.getByRole("button", { name: "Add to project" }).click();
+
+    await expect.element(page.getByText(/\+1 column/)).toBeVisible();
+    expect(projectStore.draft?.sources).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          register_variant: "scb/iot/familj",
+          period: { from: 1999, to: 2004 },
+          bindings: [
+            expect.objectContaining({
+              variable: "scb/iot/dispink-old",
+              representation: null,
+            }),
+          ],
+        }),
+      ]),
+    );
+  });
+
+  it("keeps faceted succession predecessors selectable from folded history", async () => {
     vi.mocked(getConceptGroup).mockResolvedValue(
       node({
         key: "faceted-succession",
@@ -2868,22 +2973,19 @@ describe("ConceptGroupView inter-variable succession fold (#902)", () => {
     });
 
     await expect
-      .element(page.getByRole("checkbox", { name: /DINFold/ }))
-      .toBeVisible();
-    await expect
       .element(page.getByRole("checkbox", { name: /DINFnew/ }))
       .toBeVisible();
-    expect(document.querySelector(".graph-picker")).not.toBeNull();
-    await expect
-      .element(page.getByRole("group", { name: /Filter columns/ }))
-      .toBeVisible();
-    const graphText =
-      document.querySelector(".graph-picker")?.textContent ?? "";
-    expect(graphText).toContain("DINFold");
-    expect(graphText).toContain("DINFnew");
-    expect(graphText).toContain("Old level");
-    expect(graphText).toContain("New level");
-    expect(graphText).toContain("→ 2005");
+    expect(document.querySelector(".graph-picker")).toBeNull();
+    const topLevelColumns = [
+      ...document.querySelectorAll(".col-list .row-btn .col-chip"),
+    ].map((el) => el.textContent?.replace("↗", "").trim());
+    expect(topLevelColumns).toEqual(["DINFnew"]);
+
+    await page.getByText("supersedes 1 edition").click();
+    const predecessor = page.getByRole("checkbox", { name: /DINFold/ });
+    await expect.element(predecessor).toBeVisible();
+    await predecessor.click();
+    await expect.element(page.getByText("+1 column")).toBeVisible();
   });
 
   it("surfaces the superseded predecessor as reachable list history", async () => {
@@ -2898,7 +3000,7 @@ describe("ConceptGroupView inter-variable succession fold (#902)", () => {
     });
 
     // The predecessor stays reachable as list history, with its supersession year, and
-    // is NOT a co-equal selection target.
+    // its rows stay scoped inside the disclosure rather than becoming a top-level band.
     await vi.waitFor(() => {
       if (!document.querySelector("details.history")) {
         throw new Error("history disclosure not yet rendered");
@@ -2911,6 +3013,9 @@ describe("ConceptGroupView inter-variable succession fold (#902)", () => {
     expect(link?.textContent).toContain("Disponibel inkomst familj");
     expect(document.querySelector(".history-until")?.textContent).toContain(
       "2005",
+    );
+    expect(document.querySelector(".history-rows")?.textContent).toContain(
+      "DINFold",
     );
   });
 
@@ -3098,7 +3203,7 @@ describe("ConceptGroupView inter-variable succession fold (#902)", () => {
       .toBeVisible();
     expect(document.querySelector(".graph-picker")).toBeNull();
     expect(
-      document.querySelectorAll(".col-list .row-btn input.cbox"),
+      document.querySelectorAll(".col-list .col-row .row-btn input.cbox"),
     ).toHaveLength(1);
     expect(document.querySelector('input[aria-label*="DINA"]')).toBeNull();
     expect(document.querySelector('input[aria-label*="DINB"]')).toBeNull();
