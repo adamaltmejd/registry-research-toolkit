@@ -96,13 +96,10 @@ place of the fenced body.
 
 ## Real `build-db` recipe
 
-Run the cheap gates first and the real `build-db` **LAST and ONCE** on the truly-final
-HEAD via the `build-db` skill / `scripts/build_db_watch.py` (timestamped log, sparse
-progress, post-build SQLite checks, long-session polling). The overlay-input rule for a
-PR that changes tracked `reg_meta_build/input_data/**` — build against an overlay of the
-PR-head tracked inputs on top of the main checkout's untracked seed, mirroring
-deletions/renames, never a direct main-checkout `--input-dir` — is the canonical root-MD
-"Real-data validation" rule; follow it. The command shape:
+The overlay-input rule for a PR that changes tracked `reg_meta_build/input_data/**` is
+the canonical root-MD "Real-data validation" rule — follow it there. Only the command
+SHAPE is a worked example; the `# or the overlay root (see root MD)` comment below
+points back at that rule. The command shape:
 
 ```sh
 db_dir="$(mktemp -d "${TMPDIR:-/tmp}/regmeta-<slug>.XXXXXX")"

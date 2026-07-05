@@ -133,9 +133,10 @@ _UNMET_LEADING_TOKEN_RE = re.compile(
 
 # The non-codex_bot repo gates a COMPLETE lane-agent handoff must record in gate.json before
 # the runner may flip ready-to-merge. This is a DELIBERATE, DOCUMENTED coupling to the
-# pr-pipeline-impl gate.json template (`.claude/skills/pr-pipeline-impl/SKILL.md` Step E `gates`
-# map — the implementation phase writes gate.json, so its template is the coupling source);
-# it MUST track that template's `gates` keys, minus `codex_bot` (the runner completes that gate
+# pr-pipeline-impl gate.json template, whose canonical home is the shared contract fragment
+# (`.claude/skills/pr-pipeline-impl/pipeline-contract.md`, the `gate.json` handoff template;
+# the same keys are also enumerated inline in the impl skill's Step E inline invariant). It
+# MUST track that template's `gates` keys, minus `codex_bot` (the runner completes that gate
 # itself, so its own not-done line is expected, not a missing handoff). A gate.json missing any
 # of these keys is an INCOMPLETE handoff — the agent never recorded those gates — so the flip is
 # withheld even when codex_bot comes back clean (see _gate_handoff_complete).

@@ -317,27 +317,20 @@ contract explicitly delegates to "the pr-pipeline skill" (its field-level worked
 example) plus the impl-phase framing:
 
 - **Follow-ups → `followups.md`** (the format has no byte-shared home in AGENTS.md).
-  When the lane has follow-ups (see Handoff Report), persist them as a `followups.md`
-  evidence file so a detached / auto-dispatched run loses nothing — chief-of-staff files
-  them at merge via the `file-issue` skill. Write it into the gate directory BEFORE
-  `gate.json` (it bumps `updated`), like every other evidence file. For a **multi-PR
-  lane, write ONE `followups.md`** into the FINAL PR (in merge order) of the lane, not
-  into every PR. The exact format (per-entry `## <title>` heading, the labels /
-  dedupe-search / `Relationships`-with-`Follow-up to #N` metadata, the four-backtick
-  body fence) is in `.claude/skills/pr-pipeline-impl/pipeline-contract.md` — **read it**
-  when you have follow-ups to persist.
+  When the lane has follow-ups (see Handoff Report), persist them so a detached /
+  auto-dispatched run loses nothing — chief-of-staff files them at merge via the
+  `file-issue` skill. The full rule (write the file before `gate.json`; for a multi-PR
+  lane write ONE `followups.md` into the FINAL PR in merge order) and the exact format
+  live in `.claude/skills/pr-pipeline-impl/pipeline-contract.md` — **read it** when you
+  have follow-ups to persist.
 
-- **Real `build-db`** — run the real `build-db` last and once for build-affecting work
-  via the `build-db` skill / `scripts/build_db_watch.py` (timestamped log, sparse
-  progress, post-build SQLite checks, long-session polling). The overlay-input rule for
-  a PR that changes tracked `reg_meta_build/input_data/**` — build against an overlay of
-  the PR-head tracked inputs on top of the main checkout's untracked seed, mirroring
-  deletions/renames, never a direct main-checkout `--input-dir` — is the canonical
-  **AGENTS.md "Real-data validation"** rule; follow it. The `build_db_watch.py` command
-  shape (the `mktemp` + `--slug`/`--db-dir`/`--input-dir` invocation, the
-  `--dbdiff-against` / `--providers` narrowing, the `rm -rf "$db_dir"` cleanup) is the
-  worked recipe in `.claude/skills/pr-pipeline-impl/pipeline-contract.md` — **read it**
-  at this step.
+- **Real `build-db`** — for build-affecting work, the real `build-db` is a final gate on
+  the truly final head, not part of the iterate loop. The rule for when/how to run it
+  (last and once, timestamped log / post-build checks / long-session polling) and the
+  overlay-input rule for a PR that changes tracked `reg_meta_build/input_data/**`
+  (canonical in **AGENTS.md "Real-data validation"**), plus the `build_db_watch.py`
+  command recipe, are all in `.claude/skills/pr-pipeline-impl/pipeline-contract.md` —
+  **read it** at this step.
 
 When every non-codex_bot gate passes, write the handoff `gate.json` into
 `merge-gates/pr-<N>/` per the AGENTS.md contract (evidence files copied in FIRST,

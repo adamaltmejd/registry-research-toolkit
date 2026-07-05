@@ -88,15 +88,17 @@ phase's handoff on trust:
   current-head `gate.json` in the local merge-gate store marked `status: ready-to-merge`
   (evidence files present in its directory), or `status: blocked` with `blocker` naming
   the missing item.
-- **Docs current** — the change doesn't leave authored docs stale anywhere: the touched
-  `<package>/DESIGN.md` (including its design-spec prose and any token/symbol it names),
-  README / CLI help, docstrings, `CLAUDE.md`/`AGENTS.md`, `ARCHITECTURE.md`. The impl
-  phase's Step D fixes per-PR drift; this is a final sweep across the WHOLE change (e.g.
-  a cross-PR rename or a new contract no single PR's docs-updater owned). **Default to
-  fixing drift inline** — it's part of this PR, and a one-line doc fix in a file you
-  already touched is never a follow-up. Record a follow-up ONLY when the fix needs its
-  own scoped change (its own diff, review, or decision) — not as an escape hatch for a
-  one-liner you'd rather defer.
+- **Docs current** — RE-VERIFY the impl phase's reported cross-change docs sweep (its
+  handoff claims it left no authored doc stale; don't trust that on faith). Confirm no
+  authored doc is still stale anywhere: the touched `<package>/DESIGN.md` (including its
+  design-spec prose and any token/symbol it names), README / CLI help, docstrings,
+  `CLAUDE.md`/`AGENTS.md`, `ARCHITECTURE.md`. The impl phase already ran Step D (per-PR
+  drift) and its own whole-change sweep; this is the orchestrator's independent re-check
+  that they actually held — especially a cross-PR rename or a new contract no single
+  PR's docs-updater owned. Fix any residual drift inline — it's part of this PR, and a
+  one-line doc fix in a file you already touched is never a follow-up. Record a
+  follow-up ONLY when the fix needs its own scoped change (its own diff, review, or
+  decision).
 - **Nothing half-done** — every review finding was fixed or dismissed-with-reason, no
   role was silently skipped, no scope was quietly cut.
 
