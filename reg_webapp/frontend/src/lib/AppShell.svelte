@@ -3,7 +3,11 @@ import type { Snippet } from "svelte";
 import { getCatalogRoot } from "./api";
 import { asyncResource } from "./async.svelte";
 import { catalogHref, DATA_BROWSER_LABEL } from "./catalog";
-import type { StudyWindow } from "./project_data";
+import {
+  type StudyWindow,
+  safeSourceBindings,
+  safeSourceSlots,
+} from "./project_data";
 import { projectStore, type ValidationStatus } from "./project_store.svelte";
 import { type Route, router } from "./router.svelte";
 import SearchOmnibox from "./SearchOmnibox.svelte";
@@ -85,14 +89,11 @@ const dataBrowserActive = $derived(
 );
 
 const projectDraft = $derived(projectStore.draft);
-const projectSources = $derived(
-  Array.isArray(projectDraft?.sources) ? projectDraft.sources : [],
-);
+const projectSources = $derived(safeSourceSlots(projectDraft?.sources));
 const projectSourceCount = $derived(projectSources.length);
 const projectColumnCount = $derived(
   projectSources.reduce(
-    (total, source) =>
-      total + (Array.isArray(source?.bindings) ? source.bindings.length : 0),
+    (total, source) => total + safeSourceBindings(source).length,
     0,
   ),
 );

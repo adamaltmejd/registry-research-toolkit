@@ -13,7 +13,16 @@ import {
   periodToWire,
   periodWireBounds,
 } from "./period";
-import { isPlainObject, type Period, type ProjectData } from "./project_data";
+import {
+  isPlainObject,
+  type Period,
+  type ProjectData,
+  safeSourceBindings,
+  safeSourceName,
+  safeSourcePeriod,
+  safeSourceRegisterVariant,
+  safeSourceSlots,
+} from "./project_data";
 import type { StagedPeriodChange, StagedRemove } from "./project_store.svelte";
 
 export interface StagedPickerBand {
@@ -67,28 +76,8 @@ export function pickerRowKey(
   ].join("::");
 }
 
-function sourceRegisterVariant(source: unknown): string {
-  return isPlainObject(source) && typeof source.register_variant === "string"
-    ? source.register_variant
-    : "";
-}
-
-function sourceBindings(source: unknown): unknown[] {
-  return isPlainObject(source) && Array.isArray(source.bindings)
-    ? source.bindings
-    : [];
-}
-
-function sourceName(source: unknown): string {
-  return isPlainObject(source) && typeof source.name === "string"
-    ? source.name
-    : "";
-}
-
 function sourcePeriod(source: unknown): Period {
-  return isPlainObject(source) && "period" in source
-    ? (source.period as Period)
-    : "";
+  return safeSourcePeriod(source) ?? "";
 }
 
 function bindingVariable(binding: unknown): string {
@@ -248,7 +237,7 @@ export function committedPickerRows(
   scope: PickerCommitScope = {},
 ): Map<string, PickerCommittedRow> {
   const committed = new Map<string, PickerCommittedRow>();
-  const sources: unknown[] = Array.isArray(draft?.sources) ? draft.sources : [];
+  const sources = safeSourceSlots(draft?.sources);
   for (const band of bands) {
     for (const row of band.rows) {
       const rowKey = pickerRowKey(band, row);
@@ -260,13 +249,13 @@ export function committedPickerRows(
           segment.variant,
         );
         const source = sources.find(
-          (s) => sourceRegisterVariant(s) === registerVariant,
+          (s) => safeSourceRegisterVariant(s) === registerVariant,
         );
         if (!source) {
           continue;
         }
         const period = sourcePeriod(source);
-        const binding = sourceBindings(source).find(
+        const binding = safeSourceBindings(source).find(
           (b) =>
             bindingVariable(b) === band.key &&
             rowMatchesBinding(b, row, period),
@@ -279,7 +268,7 @@ export function committedPickerRows(
           registerVariant,
           variable: band.key,
           representation: bindingRepresentation(binding),
-          sourceName: sourceName(source),
+          sourceName: safeSourceName(source),
           sourcePeriod: period,
         });
       }
@@ -310,9 +299,9 @@ export function sourcePeriodsFromDraft(
   draft: ProjectData | null,
 ): PickerSourcePeriod[] {
   const out: PickerSourcePeriod[] = [];
-  const sources: unknown[] = Array.isArray(draft?.sources) ? draft.sources : [];
+  const sources = safeSourceSlots(draft?.sources);
   for (const source of sources) {
-    const registerVariant = sourceRegisterVariant(source);
+    const registerVariant = safeSourceRegisterVariant(source);
     if (registerVariant) {
       out.push({ registerVariant, period: sourcePeriod(source) });
     }

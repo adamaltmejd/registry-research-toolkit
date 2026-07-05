@@ -1,5 +1,6 @@
 <script lang="ts">
 import type { ValidationResultModel } from "./api";
+import type { SafeSource } from "./project_data";
 import type { ValidationStatus } from "./project_store.svelte";
 import { Button } from "./ui";
 import {
@@ -26,7 +27,7 @@ const { result, status, requestError, windowHints, sources, onRetry } = $props<{
   status: ValidationStatus;
   requestError: string | null;
   windowHints: readonly WindowCoverageHint[];
-  sources: readonly { name?: unknown; bindings?: unknown }[];
+  sources: readonly SafeSource[];
   onRetry?: () => void;
 }>();
 

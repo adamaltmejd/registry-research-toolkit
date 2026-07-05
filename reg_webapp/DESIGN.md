@@ -1837,6 +1837,15 @@ flow that will run this on every edit is the sibling #994 (not yet landed as of
 resolves a catalog coordinate, so the remediation path is always back to the catalog,
 never a cart-side patch.
 
+Opened project files are held **verbatim** in the store so serialize/validate see the
+same malformed structure the backend diagnoses. The SPA's read side uses one
+`project_data.ts` safe-source-slot seam instead: non-array `sources` renders as empty,
+while malformed `sources[]` slots normalize to `null` for rendering/validation-display
+and remain counted so `/sources/{i}` anchors line up with backend issue paths. Store
+mutators that inspect source fields use the same accessors over the raw slots, so an
+untouched malformed slot is preserved until the user deletes it or replaces the source
+array through an explicit structural edit.
+
 The commit primitive is `applyStagedDiff({adds, removes, periodChange})` — the
 browse-and-stage flow accumulates a user's picks/removes as a diff and commits it in
 **one atomic synchronous store mutation**, so autosave and the stable-id mirror fire/
