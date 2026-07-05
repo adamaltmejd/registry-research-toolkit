@@ -26,6 +26,26 @@ const MALFORMED = JSON.stringify({
   sources: "not-an-array",
 });
 
+// Model-A-versioned but with a null SLOT inside an otherwise-valid `sources` array
+// (`[null, {…}]`). The array shape is fine (so it isn't the non-array case above),
+// but one element is malformed — the render boundary must degrade that slot, keep
+// the valid sibling, and NOT drop the slot (so `/sources/{i}` addressing lines up).
+const NULL_SLOT = JSON.stringify({
+  schema_version: "2.0.0",
+  steward: "global",
+  reg_meta_version: "reg_meta/v1.0.0",
+  name: "NullSlot",
+  sources: [
+    null,
+    {
+      name: "lisa_main",
+      register_variant: "scb/lisa/v1",
+      period: 2020,
+      bindings: [{ variable: "scb/lisa/kon", type: "categorical" }],
+    },
+  ],
+});
+
 /** Seed a draft of `n` sources by register variant, each a single categorical
  * binding — the cart's read-only content (adds funnel through the staged-diff
  * commit path, since the editor no longer mutates directly). */
@@ -130,6 +150,33 @@ describe("ProjectEditor cart — read-only, no add affordances", () => {
     // The malformed value is preserved verbatim on the draft (serialize/validate
     // still see it — the SPA is not the structural validator).
     expect(projectStore.draft?.sources as unknown).toBe("not-an-array");
+  });
+
+  it("renders a null source slot as a degraded card without crashing, keeping the valid source and the slot count", async () => {
+    await projectStore.openFromFile(new File([NULL_SLOT], "project_data.json"));
+    await render(ProjectEditor, { regMetaVersion: "1.0.0", steward: "global" });
+
+    // The loaded draft renders (name heading) — no crash on the null slot.
+    await expect
+      .element(page.getByRole("heading", { name: /NullSlot/ }))
+      .toBeVisible();
+    // The null slot stays COUNTED (2, not 1) so `/sources/{i}` addressing for
+    // validation issues still lines up with the ORIGINAL array position.
+    await expect
+      .element(page.getByRole("heading", { name: "Sources (2)" }))
+      .toBeVisible();
+    // The valid sibling still renders its coordinate…
+    await expect
+      .element(page.getByText("scb/lisa/v1", { exact: true }))
+      .toBeVisible();
+    // …and the malformed slot shows a degraded alert instead of silently vanishing.
+    await expect
+      .element(page.getByText(/This source entry is malformed/))
+      .toBeVisible();
+
+    // The null slot is preserved verbatim on the draft (serialize/validate still
+    // see it — the SPA is not the structural validator, and the load is verbatim).
+    expect((projectStore.draft?.sources as unknown[])?.[0]).toBeNull();
   });
 });
 

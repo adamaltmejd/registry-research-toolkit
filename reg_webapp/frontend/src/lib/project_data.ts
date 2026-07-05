@@ -138,6 +138,18 @@ export function regMetaReleaseTag(packageVersion: string): string {
   return packageVersion ? `reg_meta/v${packageVersion}` : "";
 }
 
+// ── Type guards ─────────────────────────────────────────────────────────────
+
+/** A STRICT plain-object guard: true only for a non-null, non-array object. The
+ * shared form of the "is this a JSON object, not `null` and not an array" check that
+ * the store's open-file guard and the editors' malformed-slot fallbacks all need
+ * (a verbatim-loaded draft can carry a `null`/array where an object is expected). */
+export function isPlainObject(
+  value: unknown,
+): value is Record<string, unknown> {
+  return value !== null && typeof value === "object" && !Array.isArray(value);
+}
+
 // ── Immutable top-level edits ───────────────────────────────────────────────
 // Every mutator returns a NEW object (shallow clone + replaced slice) so the
 // store can swap the `$state` reference and `dirty` recomputes. Unmapped keys on
@@ -191,7 +203,9 @@ export function uniqueSourceName(
   const taken = new Set(
     sources
       .filter((_, i) => i !== excludeIndex)
-      .map((s) => (typeof s.name === "string" ? s.name : "")),
+      // `s?.name`: a null/malformed slot in a verbatim-loaded `sources` array must
+      // not throw here — coerce it to "" (it just won't collide with any real name).
+      .map((s) => (typeof s?.name === "string" ? s.name : "")),
   );
   if (!taken.has(base)) {
     return base;
