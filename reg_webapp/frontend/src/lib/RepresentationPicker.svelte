@@ -505,6 +505,9 @@ const allVisibleRows = $derived([
 const allKeys = $derived(
   allVisibleRows.map(({ band, row }) => rowKey(band, row)),
 );
+const visibleSelectableBandCount = $derived(
+  new Set(allVisibleRows.map(({ band }) => band.key)).size,
+);
 const allSelected = $derived(
   allVisibleRows.length > 0 &&
     allVisibleRows.every(({ band, row }) => rowChecked(band, row)),
@@ -2265,12 +2268,12 @@ function codingsVaryHref(
     {@render graphPicker()}
   {:else}
     <ul class="col-list integrated-list">
-    {#if bands.length > 1 && allKeys.length > 1}
+    {#if visibleSelectableBandCount > 1 && allKeys.length > 1}
       <!-- Global select-all: grab every visible column of the concept in one move.
            Rendered as the first integrated list row so hover, click-anywhere, and the
            full-selection gutter match the column rows below. Omitted when there's only
-           ONE variable — that variable's own select-all IS "select all columns", so a
-           global one would just duplicate it. -->
+           ONE selectable band, where that variable's own select-all already covers it,
+           or one selectable row, where a global one would just duplicate it. -->
       <li class="select-all-row">
         <label
           class="select-all row-btn integrated-list-row"

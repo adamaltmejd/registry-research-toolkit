@@ -564,8 +564,13 @@ def _binding_tags(
     narrowed_group = (
         None if group is None else _narrow_group_members(group, index, catalog)
     )
+    narrowed_members = () if narrowed_group is None else narrowed_group.members
+    canonical_fqid = str(resolved.canonical_fqid)
+    target_survived = any(
+        str(member.fqid) == canonical_fqid for member in narrowed_members
+    )
     group_member_fqids = (
-        () if narrowed_group is None else tuple(m.fqid for m in narrowed_group.members)
+        tuple(member.fqid for member in narrowed_members) if target_survived else ()
     )
     # See `_narrow_group_members`: local ty can see the pre-PR reg_meta surface here.
     catalog_with_tag_scope = cast("Any", catalog)

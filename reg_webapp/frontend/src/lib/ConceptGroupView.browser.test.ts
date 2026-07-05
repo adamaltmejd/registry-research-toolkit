@@ -2888,7 +2888,7 @@ describe("ConceptGroupView inter-variable succession fold (#902)", () => {
     // list, with the predecessor reachable through the history disclosure.
     expect(document.querySelector(".graph-picker")).toBeNull();
     expect(
-      document.querySelectorAll(".col-list .row-btn input.cbox"),
+      document.querySelectorAll(".col-list .col-row .row-btn input.cbox"),
     ).toHaveLength(1);
     const historyText =
       document.querySelector("details.history")?.textContent ?? "";
@@ -3203,7 +3203,7 @@ describe("ConceptGroupView inter-variable succession fold (#902)", () => {
       .toBeVisible();
     expect(document.querySelector(".graph-picker")).toBeNull();
     expect(
-      document.querySelectorAll(".col-list .row-btn input.cbox"),
+      document.querySelectorAll(".col-list .col-row .row-btn input.cbox"),
     ).toHaveLength(1);
     expect(document.querySelector('input[aria-label*="DINA"]')).toBeNull();
     expect(document.querySelector('input[aria-label*="DINB"]')).toBeNull();
