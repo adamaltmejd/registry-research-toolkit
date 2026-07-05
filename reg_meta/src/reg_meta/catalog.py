@@ -380,6 +380,13 @@ def _tag_membership(row: sqlite3.Row) -> TagMembership:
     )
 
 
+def _tag_note_key(row: sqlite3.Row) -> tuple[int, int, int, str]:
+    note = row["note"]
+    starred = bool(row["starred"])
+    note_bucket = 0 if starred and note else 1 if note else 2
+    return (note_bucket, row["rank"], row["member_variable_id"], row["slug"])
+
+
 def _aggregate_tag_memberships(
     rows: Iterable[sqlite3.Row],
 ) -> tuple[TagMembership, ...]:
@@ -400,18 +407,14 @@ def _aggregate_tag_memberships(
                 "rank": row["rank"],
                 "starred": starred,
                 "note": row["note"],
-                "_note_key": (
-                    0 if starred and row["note"] else 1,
-                    row["rank"],
-                    row["slug"],
-                ),
+                "_note_key": _tag_note_key(row),
             }
             continue
         current["rank"] = min(cast("int", current["rank"]), row["rank"])
         current["starred"] = bool(current["starred"]) or starred
-        note_key = (0 if starred and row["note"] else 1, row["rank"], row["slug"])
+        note_key = _tag_note_key(row)
         if row["note"] and note_key < cast(
-            "tuple[int, int, str]", current["_note_key"]
+            "tuple[int, int, int, str]", current["_note_key"]
         ):
             current["note"] = row["note"]
             current["_note_key"] = note_key
@@ -1548,11 +1551,12 @@ class Catalog:
             return ()
         placeholders = ",".join("?" for _ in ids)
         rows = self._conn.execute(
-            "SELECT DISTINCT t.slug, t.label, tm.rank, tm.starred, tm.note "
+            "SELECT DISTINCT t.slug, t.label, tm.rank, tm.starred, tm.note, "
+            "tm.variable_id AS member_variable_id "
             "FROM tag_member tm "
             "JOIN tag t ON t.tag_id = tm.tag_id "
             f"WHERE tm.variable_id IN ({placeholders}) "
-            "ORDER BY tm.rank, t.slug",
+            "ORDER BY tm.rank, t.slug, tm.variable_id",
             ids,
         ).fetchall()
         return _aggregate_tag_memberships(rows)
@@ -1871,7 +1875,8 @@ class Catalog:
 
     def _group_tags_for_variable(self, fqid: Fqid) -> tuple[TagMembership, ...]:
         rows = self._conn.execute(
-            "SELECT DISTINCT t.slug, t.label, tm.rank, tm.starred, tm.note "
+            "SELECT DISTINCT t.slug, t.label, tm.rank, tm.starred, tm.note, "
+            "tm.variable_id AS member_variable_id "
             "FROM variable target "
             "JOIN register target_r ON target.register_id = target_r.register_id "
             "JOIN provider target_p ON target_r.provider_id = target_p.provider_id "
@@ -1882,7 +1887,7 @@ class Catalog:
             "JOIN tag_member tm ON tm.variable_id = group_member.variable_id "
             "JOIN tag t ON t.tag_id = tm.tag_id "
             "WHERE target_p.slug = ? AND target_r.slug = ? AND target.slug = ? "
-            "ORDER BY tm.rank, t.slug",
+            "ORDER BY tm.rank, t.slug, tm.variable_id",
             (fqid.provider, fqid.register, fqid.variable),
         ).fetchall()
         return _aggregate_tag_memberships(rows)
