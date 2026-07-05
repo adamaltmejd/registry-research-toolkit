@@ -367,20 +367,25 @@ Otherwise copy the prior release's asset forward (8d) — but **only from the
 immediately-previous release**, never a further-back one, so the flavored DB always
 pairs with the same global content 8a copied forward. Then skip the rest of 8c.
 
-Build the flavored DB from **this release's** main asset — download the
-`reg_meta.db.zst` you just uploaded to the draft in 8a and decompress it (`extend-db`
-opens the base with sqlite, never the `.zst`). Downloading from the draft is
-self-contained: the asset is on the draft whether 8a rebuilt it or copied it forward, so
-this does not depend on 8a's temp dir surviving. It is the same flavored DB step 11
-regenerates the steward catalog against — 8c builds it from the draft **before
-publish**, step 11 from the published release after. Checkpoint WAL→DELETE
+Build the flavored DB from **this release's** main asset by downloading and
+decompressing it (`extend-db` opens the base with sqlite, never the `.zst`). Where that
+asset lives when 8c runs depends on 8a's decision, because the main-DB copy-forward is
+deferred to 8d (which runs **after** 8c): if 8a **rebuilt** the main DB it is already on
+this release's draft (`reg_meta/vX.Y.Z`); if 8a is **copying it forward**, pull it from
+the copy-forward source `reg_meta/v<prev>` instead — it is not on the draft yet. Either
+way the base is a fetched file, not 8a's temp dir. It is the same flavored DB step 11
+regenerates the steward catalog against — 8c builds it from the release's main asset
+**before publish**, step 11 from the published release after. Checkpoint WAL→DELETE
 (self-contained single file, same invariant as 8a):
 
 ```sh
 set -euo pipefail
-# Base = the reg_meta.db.zst already on the draft from 8a (fresh build or copy-forward).
+# main_src = where this release's reg_meta.db.zst lives when 8c runs:
+#   reg_meta/vX.Y.Z   if 8a rebuilt it (already uploaded to the draft), or
+#   reg_meta/v<prev>  if 8a is copying it forward (8d uploads to the draft after 8c).
+main_src="reg_meta/vX.Y.Z"
 base_dir="$(mktemp -d "${TMPDIR:-/tmp}/reg_meta_base.XXXXXX")"
-gh release download reg_meta/vX.Y.Z --pattern reg_meta.db.zst --dir "$base_dir"
+gh release download "$main_src" --pattern reg_meta.db.zst --dir "$base_dir"
 zstd -d "$base_dir/reg_meta.db.zst" -o "$base_dir/reg_meta.db"
 flav_dir="$(mktemp -d "${TMPDIR:-/tmp}/reg_meta_swecov.XXXXXX")"
 uv run reg-meta-build --db "$flav_dir" extend-db \
