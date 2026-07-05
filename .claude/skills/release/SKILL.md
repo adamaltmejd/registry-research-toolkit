@@ -198,14 +198,18 @@ attempt went wrong — see Error recovery.
 
 ### 8. Build and upload release assets (reg_meta only)
 
-reg_meta ships two release assets, and **every release must carry both before it is
-published** (self-contained releases). The container deploy pipeline
-(`.github/workflows/container-build.yml`) resolves the newest `reg_meta/v*` release into
-a concrete `reg-meta update --tag`, which fetches both assets from that single tag — a
-release published without them breaks every main-push image build until assets appear
-(#343, the asset-less `reg_meta/v0.11.0`). The conditions in 8a/8b decide whether each
-asset needs a **fresh build**; one that doesn't is **copied forward** from the prior
-release (8c). Never skip an asset outright.
+reg_meta ships **three** release assets, and **every release must carry all three before
+it is published** (self-contained releases). Two are consumed by `reg-meta update`: the
+container deploy pipeline (`.github/workflows/container-build.yml`) resolves the newest
+`reg_meta/v*` release into a concrete `reg-meta update --tag`, which fetches
+`reg_meta.db.zst` + `reg_meta_docs.db.zst` from that single tag — a release published
+without them breaks every main-push image build until assets appear (#343, the
+asset-less `reg_meta/v0.11.0`). The **third**, `reg_meta_swecov.db.zst` (8c), is the
+flavored SWECOV DB the same workflow's `build-swecov-image` job bakes as
+`data.swecov.se`'s `REG_META_DB`; a release missing it fails every SWECOV deploy at
+asset resolution (broke v0.36.0–v0.38.0, #1091). The conditions in 8a/8b/8c decide
+whether each asset needs a **fresh build**; one that doesn't is **copied forward** from
+the prior release (8d). Never skip an asset outright.
 
 (`reg-meta update` in `latest` mode still walks backwards through releases to find the
 most recent one carrying each asset — robustness for historical asset-less releases —
@@ -237,7 +241,7 @@ Build and upload fresh if **any** condition is true:
   fresh build is still the safe choice — it doubles as the real-data validation gate and
   captures any upstream SCB input drift you cannot prove absent.
 
-Otherwise copy the prior release's asset forward (8c) and skip the rest of 8a.
+Otherwise copy the prior release's asset forward (8d) and skip the rest of 8a.
 
 The shipped DB is the full **global catalog** — every global provider, built with
 build-db's **default** `--providers` set (currently
@@ -309,7 +313,7 @@ Build and upload fresh if **any** of these is true:
   the prior asset when in doubt; a binary change means build fresh.
 - The release is a **major** version bump.
 
-Otherwise copy the prior release's asset forward (8c) and skip the rest of 8b.
+Otherwise copy the prior release's asset forward (8d) and skip the rest of 8b.
 
 If `reg_meta_build/docs/` changed because a newly-published SCB PDF was ingested, the
 PDF→markdown recipe (marker flags, `GEMINI_API_KEY`, \~$1-2 cost, multiprocessing-crash
@@ -333,11 +337,68 @@ gh release upload reg_meta/vX.Y.Z reg_meta_docs.db.zst
 rm -rf "$docs_dir" reg_meta_docs.db.zst
 ```
 
-#### 8c. Copy-forward for assets not rebuilt
+#### 8c. SWECOV flavored DB asset (`reg_meta_swecov.db.zst`)
 
-For each asset whose 8a/8b conditions did **not** require a fresh build, copy the prior
-release's asset forward so the new release stays self-contained. `<prev>` is the newest
-existing `reg_meta/v*` release that carries the asset — normally the immediately
+The SWECOV steward app (`data.swecov.se`) bakes a **flavored** DB — the global catalog
+plus SWECOV's flavor providers — as its `REG_META_DB`. `container-build.yml`'s
+`build-swecov-image` job resolves this asset (by url + sha256) from the newest published
+`reg_meta/v*` release; **absent, the SWECOV deploy fails** at "Resolve SWECOV DB release
+artifact" and `deploy-swecov` / `edge-deploy-swecov` skip. The consumer side is PR
+#1014; this producer step must run on **every** reg_meta release (#1091 — omitting it
+broke v0.36.0–v0.38.0's SWECOV deploys silently, since the global apps deploy fine
+without it).
+
+Build and upload fresh if **any** condition is true:
+
+- 8a rebuilt the main DB asset — the flavor is `extend-db`-baked **on top of** the main
+  DB content, so a fresh main DB requires a fresh flavored DB.
+- The SWECOV flavor inputs changed since the prior asset:
+  `git diff <prev reg_meta tag>..HEAD -- reg_meta_build/fqid_slugs/swecov/` is
+  non-empty. The `flavor_inventory.json` and the generator are
+  maintainer-local/untracked, so git can't see their drift — when in doubt, rebuild.
+- The release is a **major** version bump.
+
+Otherwise copy the prior release's asset forward (8d) and skip the rest of 8c.
+
+Build from **this release's** main DB: the fresh `$db_dir/reg_meta.db` you just built in
+8a (before you `rm` it) — or, if 8a copied the main asset forward, the copied-forward
+`reg_meta.db.zst` decompressed (`extend-db` opens the base with sqlite, never the
+`.zst`). This is the same flavored DB step 11 regenerates the steward catalog against,
+but built here **before publish**, not from the post-publish download. Checkpoint
+WAL→DELETE (self-contained single file, same invariant as 8a):
+
+```sh
+set -euo pipefail
+# $main_db = the reg_meta.db built in 8a (or the copied-forward asset, decompressed).
+flav_dir="$(mktemp -d "${TMPDIR:-/tmp}/reg_meta_swecov.XXXXXX")"
+uv run reg-meta-build --db "$flav_dir" extend-db \
+    --base-db "$main_db" \
+    --inventory reg_meta_build/input_data/swecov/derived/flavor_inventory.json \
+    --slug-dir reg_meta_build/fqid_slugs/swecov
+db="$flav_dir/reg_meta.db"
+uv run python -c "import sqlite3,sys; c=sqlite3.connect(sys.argv[1]); c.execute('PRAGMA wal_checkpoint(TRUNCATE)'); c.execute('PRAGMA journal_mode=DELETE'); c.commit(); c.close()" "$db"
+zstd -3 -T0 "$db" -o reg_meta_swecov.db.zst
+gh release upload reg_meta/vX.Y.Z reg_meta_swecov.db.zst
+rm -rf "$flav_dir" reg_meta_swecov.db.zst
+```
+
+`extend-db` validates by default (it skips only the code-less↔code-bearing guard, which
+the base already passed). After the build, confirm it carries **more** than the eight
+global providers — the SWECOV flavor providers raise the `provider` count.
+
+**Maintainer-local inputs**: `reg_meta_build/input_data/swecov/` (holding
+`flavor_inventory.json`) is untracked/maintainer-local. In a non-maintainer or CI
+environment it is absent — but a missing SWECOV asset **breaks the deploy** (unlike the
+step-11 catalog regen, which is coverage hygiene the webapp boots through). So do
+**not** skip silently: if the inputs are absent, publish can still proceed (the global
+apps deploy), but **report loudly** that the SWECOV asset is owed and the SWECOV deploy
+stays red until a maintainer uploads it and re-dispatches `container-build.yml`.
+
+#### 8d. Copy-forward for assets not rebuilt
+
+For each asset whose 8a/8b/8c conditions did **not** require a fresh build, copy the
+prior release's asset forward so the new release stays self-contained. `<prev>` is the
+newest existing `reg_meta/v*` release that carries the asset — normally the immediately
 previous release; check with `gh release view reg_meta/v<prev> --json assets`. This is
 safe precisely because the rebuild conditions did not fire. Run `gh` from the repo root
 (cd-ing out of the checkout breaks its repo detection) and stage through a temp dir with
@@ -345,17 +406,17 @@ safe precisely because the rebuild conditions did not fire. Run `gh` from the re
 
 ```sh
 set -euo pipefail
-asset="<asset-name>"   # reg_meta.db.zst or reg_meta_docs.db.zst
+asset="<asset-name>"   # reg_meta.db.zst, reg_meta_docs.db.zst, or reg_meta_swecov.db.zst
 cf_dir="$(mktemp -d "${TMPDIR:-/tmp}/reg_meta_cf.XXXXXX")"
 gh release download reg_meta/v<prev> --pattern "$asset" --clobber --dir "$cf_dir"
 gh release upload reg_meta/vX.Y.Z "$cf_dir/$asset"
 rm -rf "$cf_dir"
 ```
 
-#### 8d. Verify before publishing
+#### 8e. Verify before publishing
 
-Verify **both** assets are present on the draft release — do not publish without them
-(#343):
+Verify **all three** assets are present on the draft release — do not publish without
+them (#343 for the two `reg-meta update` assets; #1091 for `reg_meta_swecov.db.zst`):
 
 ```sh
 gh release view reg_meta/vX.Y.Z --json assets --jq '.assets[].name'
@@ -442,7 +503,7 @@ special-case any one steward); for each whose `reg_meta_version` is older than t
 `reg_meta/vX.Y.Z`:
 
 - **download the just-published asset** (not a local rebuild) so the catalog matches
-  exactly what the container bakes — this is critical for copy-forward releases (8c),
+  exactly what the container bakes — this is critical for copy-forward releases (8d),
   where a local rebuild could admit FQIDs absent from the shipped DB. Decompress it to
   an uncompressed `reg_meta.db` (`extend-db` opens the base with sqlite, never the
   `.zst`):
