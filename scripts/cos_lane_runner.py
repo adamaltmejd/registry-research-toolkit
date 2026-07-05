@@ -28,8 +28,12 @@ The loop:
     session = poll_codex_session_id(log, from the pre-turn offset)   # cos_dispatch leaf
     prs     = discover EVERY PR the lane opened (slot `prs` in stack order, else gate scan)
     for pr in prs:                        # a codex lane may open a STACK of PRs
+        if multi-PR and lane_dirty: BLOCK (stale base)   # an earlier PR's fix round moved
+            #  its head; this stacked successor is now based on a stale predecessor, so do
+            #  NOT checkout/review it — chief-of-staff rebases + re-reviews it before merge
         if multi-PR: git checkout <pr head branch>   # review the RIGHT tree per PR
         base = resolve_review_base(pr)    # a stacked successor reviews vs its predecessor
+        head_before = git rev-parse HEAD  # multi-PR only: detect this PR's fix rounds
         run_loop(pr, base, session):      # the SAME warm session drives every PR's fixes
             for round in 1..MAX_ROUNDS:
                 head    = git rev-parse HEAD   # a resume moved HEAD; re-read every round
@@ -40,6 +44,8 @@ The loop:
                             any other kind (incl. nested_sandbox — an un-nested runner must
                             not see it): status blocked naming the kind
             cap exhausted, still findings -> codex_bot blocked (round cap), status blocked
+        head_after = git rev-parse HEAD   # multi-PR only: a fix round moved HEAD ->
+            #  lane_dirty = True, so every DOWNSTREAM successor is stale-based and blocked
     exit 0 iff EVERY PR's gate completed OK; else the first non-OK code (a blocked PR
     never strands the others — each PR's codex_bot gate is independent).
 
@@ -50,6 +56,16 @@ worktree HEAD (vs merge-base with the PR's base) and the agent exits on the TIP 
 predecessors are otherwise not checked out. A head-branch that can't be resolved or checked
 out BLOCKS that one PR's gate (never a silent wrong-tree review) and the runner continues to
 the next PR.
+
+Stacked-successor staleness (predecessor-first): when a PR in the stack goes through a
+findings->resume round its branch head MOVES (the resume pushes fix commits). Every
+DOWNSTREAM successor is then based on the OLD predecessor head, so the runner marks the lane
+`lane_dirty` and BLOCKS each remaining successor WITHOUT reviewing it — the review itself
+would be correct (`codex_local_review` diffs merge-base(HEAD, base) = the successor's own
+fork point), but marking a stale-based successor clean/ready-to-merge is misleading stack
+evidence. The runner does NOT rebase: chief-of-staff owns the stacked-successor rebase +
+re-review before merge (PR merge-gate stacked-PR safety). Single-PR lanes never set
+lane_dirty (there is no successor to stale).
 
 Why a sibling, not a permission grant (rejected: Option 1): the tempting alternative —
 grant the nested `codex review` app-server the permission it's missing — is INFEASIBLE,
@@ -1180,8 +1196,33 @@ def run(
     )
     multi_pr = len(prs) > 1
     first_non_ok: int | None = None
+    # MULTI-PR only: once an earlier PR in the stack goes through a findings->resume round its
+    # branch head MOVES, so every DOWNSTREAM successor is now based on a stale predecessor. We
+    # do NOT review/mark those — the review would be correct (merge-base gives the successor's
+    # own fork point), but marking a stale-based successor clean/ready-to-merge is misleading
+    # stack evidence; chief-of-staff owns the rebase + re-review of stacked successors before
+    # merge (PR merge-gate stacked-PR safety). Single-PR lanes never touch this flag.
+    lane_dirty = False
     for pr in prs:
         gate_dir = gate_root / f"pr-{pr}"
+        # A predecessor's fix round already moved HEAD: this stacked successor is stale-based.
+        # Block it WITHOUT checkout/review (reviewing on a stale base is exactly what we avoid),
+        # recording a head-bound BLOCKED codex_bot line like every other terminal path.
+        if multi_pr and lane_dirty:
+            head = _cos_dispatch.git_output(args.worktree, ["rev-parse", "HEAD"])
+            blocker = (
+                "an earlier PR in this lane was updated by a codex fix round; this stacked "
+                "successor is now based on a stale predecessor head — rebase it before review. "
+                "chief-of-staff rebases and re-reviews stacked successors before merge."
+            )
+            write_codex_bot_gate(gate_dir, pr, head, blocking=True, blocker=blocker)
+            print(
+                f"stale-based stacked successor PR #{pr}; wrote status: blocked",
+                file=sys.stderr,
+            )
+            if first_non_ok is None:
+                first_non_ok = EXIT_NEEDS_HUMAN
+            continue
         # For a STACK, check out each PR's head branch so the review runs against the RIGHT tree
         # (codex_local_review reviews the worktree HEAD; the agent exited on the TIP branch, so
         # predecessors aren't checked out). The single-PR case does NOT check out — it reviews
@@ -1206,6 +1247,14 @@ def run(
         # against the PR's real base (a stacked successor is reviewed against its predecessor
         # branch, not main). --base is the fallback if gh can't resolve the base.
         base = resolve_review_base(pr, args.base, args.worktree)
+        # MULTI-PR only: snapshot HEAD around run_loop so a fix round (which resumes codex and
+        # pushes fix commits, moving HEAD) marks the lane dirty for the downstream successors.
+        # The single-PR path skips this — no successor to stale, so no extra rev-parse.
+        head_before = (
+            _cos_dispatch.git_output(args.worktree, ["rev-parse", "HEAD"])
+            if multi_pr
+            else None
+        )
         rc = run_loop(
             worktree=args.worktree,
             base=base,
@@ -1219,6 +1268,10 @@ def run(
             canonical=args.canonical,
             profile_flags=profile_flags,
         )
+        if multi_pr:
+            head_after = _cos_dispatch.git_output(args.worktree, ["rev-parse", "HEAD"])
+            if head_after != head_before:
+                lane_dirty = True
         # Every PR's gate is independent — a blocked one must not strand the others, so we
         # process the whole list and return the FIRST non-OK code (each PR always leaves an
         # accurate gate.json via run_loop's terminal paths).

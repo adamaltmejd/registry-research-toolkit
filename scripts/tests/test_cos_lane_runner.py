@@ -1688,6 +1688,84 @@ def test_run_multi_pr_completes_every_pr_gate(
     ]
 
 
+def test_run_multi_pr_fix_round_blocks_stale_successor(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # #1089: predecessor-first, when the FIRST PR goes through a findings->resume round its
+    # branch head MOVES (the resume pushes fix commits). Every DOWNSTREAM successor is then
+    # based on a stale predecessor head, so the runner must BLOCK it WITHOUT reviewing it (the
+    # review would be correct — merge-base gives the successor's own fork point — but marking a
+    # stale-based successor clean/ready is misleading stack evidence; chief-of-staff owns the
+    # rebase + re-review). The aggregate exit is needs-human.
+    wt = _make_worktree(tmp_path)
+    gate_root = tmp_path / "gate"
+    slot = _write_slot(tmp_path / "slots", "lane-a", [4242, 4243])
+    log = tmp_path / "lane.log"
+
+    # The implement turn opens BOTH PRs and writes both gates; the LATER (resume) turn is the
+    # predecessor's fix round — model it by advancing HEAD, which run()'s head-before/after
+    # snapshot detects and turns into lane_dirty for the successor.
+    turns = {"n": 0}
+
+    def fake_turn(argv, worktree, log_path, state_root):
+        turns["n"] += 1
+        if turns["n"] == 1:
+            _write_gate(gate_root, 4242, other_gates_met=True)
+            _write_gate(gate_root, 4243, other_gates_met=True)
+            with log_path.open("a", encoding="utf-8") as fh:
+                fh.write(
+                    json.dumps({"type": "thread.started", "thread_id": "T"}) + "\n"
+                )
+        else:
+            # The predecessor's resume turn "pushes fix commits" → HEAD moves.
+            _advance_head(worktree, f"fix{turns['n']}")
+
+    monkeypatch.setattr(lr, "run_codex_turn", fake_turn)
+
+    # Only #4242 is ever checked out — #4243 is blocked before its (would-be) checkout.
+    checkouts: list[int] = []
+
+    def fake_checkout(pr, worktree):
+        checkouts.append(pr)  # None ⇒ success
+
+    monkeypatch.setattr(lr, "checkout_head_branch", fake_checkout)
+    monkeypatch.setattr(lr, "resolve_review_base", lambda pr, fb, wt: "origin/main")
+
+    # #4242: findings on round 1 (drives a resume that moves HEAD), then clean on round 2.
+    # #4243 must NEVER reach run_review — assert on the PRs run_review saw.
+    reviewed: list[int] = []
+
+    def fake_review(base, gate_dir, worktree):
+        pr = int(gate_dir.name[len("pr-") :])
+        reviewed.append(pr)
+        if pr == 4242 and reviewed.count(4242) == 1:
+            return {"verdict": "findings", "findings": [{"body": "fix me"}]}
+        return {"verdict": "clean", "findings": []}
+
+    monkeypatch.setattr(lr, "run_review", fake_review)
+
+    rc = lr.run(
+        _args(wt, gate_root, log, slot_file=slot),
+        codex_id_timeout=1.0,
+        codex_id_poll=0.02,
+    )
+
+    # Aggregate exit is the stale successor's needs-human code, not OK.
+    assert rc == lr.EXIT_NEEDS_HUMAN
+    # #4242 was reviewed twice (findings → clean) and flipped ready-to-merge.
+    assert reviewed == [4242, 4242]
+    assert _read_gate(gate_root / "pr-4242")["status"] == "ready-to-merge"
+    # #4243 was NEVER reviewed and NEVER checked out — the stale-base block short-circuits both.
+    assert 4243 not in reviewed
+    assert checkouts == [4242]
+    # #4243's gate is a head-bound BLOCKED codex_bot line naming the stale-predecessor reason.
+    stale = _read_gate(gate_root / "pr-4243")
+    assert stale["status"] == "blocked"
+    assert "stale predecessor" in stale["blocker"]
+    assert f"head {_head(wt)};" in stale["gates"]["codex_bot"]
+    assert "blocked" in stale["gates"]["codex_bot"]
+
+
 def test_run_multi_pr_checkout_failure_blocks_only_that_pr(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
