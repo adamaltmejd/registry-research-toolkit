@@ -2817,6 +2817,53 @@ describe("ConceptGroupView inter-variable succession fold (#902)", () => {
     };
   }
 
+  it("keeps a focused superseded predecessor visible in faceted succession groups", async () => {
+    vi.mocked(getConceptGroup).mockResolvedValue(
+      node({
+        key: "faceted-succession",
+        label: "Faceted succession",
+        axes: [{ name: "level", label: "Level" }],
+        member: "dispink-old",
+        members: [
+          {
+            fqid: "scb/iot/dispink-old",
+            name: "Disponibel inkomst familj",
+            facets: [{ axis: "level", value: "old", label: "Old level" }],
+            coverage: null,
+          },
+          {
+            fqid: "scb/iot/dispink-new",
+            name: "Disponibel inkomst familj 2004",
+            facets: [{ axis: "level", value: "new", label: "New level" }],
+            coverage: null,
+          },
+        ],
+      } as unknown as Partial<ConceptGroupNodeData>),
+    );
+    vi.mocked(getConceptGroupGraph).mockResolvedValue(successionGraph());
+    router.navigate(
+      "/catalog/group/scb/iot/faceted-succession?member=dispink-old",
+    );
+
+    renderGroup({
+      provider: "scb",
+      register: "iot",
+      key: "faceted-succession",
+    });
+
+    const focused = await vi.waitFor(() => {
+      const el = document.querySelector(
+        ".graph-lane.focused, .col-row.single.focused, .subhead.focused",
+      );
+      if (!el) {
+        throw new Error("focused predecessor not rendered");
+      }
+      return el;
+    });
+    expect(focused.textContent).toContain("DINFold");
+    expect(document.querySelector("details.history")).toBeNull();
+  });
+
   it("folds a predecessor→successor member pair into ONE band led by the LATEST edition", async () => {
     vi.mocked(getConceptGroup).mockResolvedValue(successionNode());
     vi.mocked(getConceptGroupGraph).mockResolvedValue(successionGraph());

@@ -496,15 +496,14 @@ let hoveredBandKey = $state<string | null>(null);
  * on the rows the active filters leave showing, never the hidden ones (filtering is
  * a presentation lens — it must not let "select all" grab a row the user has filtered
  * out of view). A hidden row's staged state persists regardless. */
-const allKeys = $derived(
-  filteredBands.flatMap((b) =>
-    b.rows.filter(rowSelectable).map((r) => rowKey(b, r)),
-  ),
-);
-const allVisibleRows = $derived(
-  filteredBands.flatMap((b) =>
+const allVisibleRows = $derived([
+  ...filteredBands.flatMap((b) =>
     b.rows.filter(rowSelectable).map((r) => ({ band: b, row: r })),
   ),
+  ...visibleHistoryRows,
+]);
+const allKeys = $derived(
+  allVisibleRows.map(({ band, row }) => rowKey(band, row)),
 );
 const allSelected = $derived(
   allVisibleRows.length > 0 &&

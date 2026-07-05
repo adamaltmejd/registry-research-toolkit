@@ -265,6 +265,16 @@ const suppressRowDimensionFilters = $derived(
 
 const foldSuccessionBands = true;
 
+const focusedMemberFqid = $derived.by((): string | null => {
+  const hint = node?.member;
+  if (hint == null) {
+    return null;
+  }
+  return (
+    node?.members.find((member) => leafSlug(member.fqid) === hint)?.fqid ?? null
+  );
+});
+
 /** The inter-variable SUCCESSION fold (#902/#926): the group graph's `succession`
  * edges collapse predecessor→successor pairs whose BOTH endpoints are members of this
  * group, so a superseded edition is NOT a co-equal band — the chain HEAD (the latest
@@ -496,18 +506,21 @@ const bands = $derived.by((): PickerBand[] => {
       // old study windows can add the covering predecessor without making it a
       // co-equal top-level band.
       supersedes: includeHistory
-        ? historyByHead.get(member.fqid)?.map((p) => {
-            const predecessor = membersByFqid.get(p.fqid)?.[0];
-            return {
-              name: predecessorName(p.fqid),
-              href: memberHref(p.fqid),
-              effectiveYear: p.effectiveYear,
-              band:
-                foldSuccessionBands && predecessor
-                  ? bandForMember(predecessor, false)
-                  : undefined,
-            };
-          })
+        ? historyByHead
+            .get(member.fqid)
+            ?.filter((p) => p.fqid !== focusedMemberFqid)
+            .map((p) => {
+              const predecessor = membersByFqid.get(p.fqid)?.[0];
+              return {
+                name: predecessorName(p.fqid),
+                href: memberHref(p.fqid),
+                effectiveYear: p.effectiveYear,
+                band:
+                  foldSuccessionBands && predecessor
+                    ? bandForMember(predecessor, false)
+                    : undefined,
+              };
+            })
         : undefined,
     };
   }
@@ -519,9 +532,14 @@ const bands = $derived.by((): PickerBand[] => {
       continue;
     }
     seen.add(member.fqid);
-    // A member superseded by an in-group succession edge (#902/#926) is not its own
-    // band — it rides as selectable history on its chain head.
-    if (foldSuccessionBands && superseded.has(member.fqid)) {
+    // A member superseded by an in-group succession edge (#902/#926) normally rides as
+    // selectable history on its chain head. If a validated `?member=` names that
+    // predecessor, keep it top-level so the deep link is visible and focused.
+    if (
+      foldSuccessionBands &&
+      superseded.has(member.fqid) &&
+      focusedMemberFqid !== member.fqid
+    ) {
       continue;
     }
     out.push(bandForMember(member, true));

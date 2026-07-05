@@ -2701,6 +2701,62 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
       .not.toBeInTheDocument();
   });
 
+  it("includes visible folded history rows in global select-all (#926)", async () => {
+    const onapply = vi.fn();
+    const predecessor = {
+      key: "scb/iot/dispink-old",
+      name: "Disponibel inkomst old",
+      registerPrefix: "scb/iot",
+      rows: [row({ column: "DINFold" })],
+    } satisfies PickerBand;
+    const successor = {
+      key: "scb/iot/dispink-new",
+      name: "Disponibel inkomst new",
+      registerPrefix: "scb/iot",
+      rows: [row({ column: "DINFnew" })],
+      supersedes: [
+        {
+          name: predecessor.name,
+          href: "/catalog/scb/iot/dispink-old",
+          effectiveYear: 2005,
+          band: predecessor,
+        },
+      ],
+    } satisfies PickerBand;
+    const sibling = {
+      key: "scb/iot/dispink-other",
+      name: "Disponibel inkomst other",
+      registerPrefix: "scb/iot",
+      rows: [row({ column: "DINFother" })],
+    } satisfies PickerBand;
+
+    render(RepresentationPicker, {
+      bands: [successor, sibling],
+      ...PROPS,
+      onapply,
+    });
+
+    await page.getByRole("checkbox", { name: "Select all columns" }).click();
+    await expect.element(page.getByText("+3 columns")).toBeVisible();
+
+    const details =
+      document.querySelector<HTMLDetailsElement>("details.history");
+    if (!details) {
+      throw new Error("history disclosure not rendered");
+    }
+    details.open = true;
+    await expect
+      .element(page.getByRole("checkbox", { name: /DINFold/ }))
+      .toBeChecked();
+
+    await page.getByRole("button", { name: "Add to project" }).click();
+    expect(onapply).toHaveBeenCalledTimes(1);
+    const addedColumns = onapply.mock.calls[0][0].adds.map(
+      (selection: { row: PickerRepresentation }) => selection.row.column,
+    );
+    expect(addedColumns.sort()).toEqual(["DINFnew", "DINFold", "DINFother"]);
+  });
+
   it("clears staged adds when a narrowed folded variant changes concrete segment", async () => {
     const onapply = vi.fn();
     const { rerender } = render(RepresentationPicker, {
