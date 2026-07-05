@@ -160,7 +160,7 @@ function plural(count: number, singular: string, pluralLabel: string): string {
         class:active={route.name === "project"}
         class:empty={projectDraft == null}
         aria-current={isCurrent(route.name === "project")}
-        aria-label={`Project: ${projectTitle}, ${plural(projectSourceCount, "source", "sources")} and ${plural(projectColumnCount, "column", "columns")}, ${STATUS_LABEL[projectStatus]}`}
+        aria-label={`Project: ${projectTitle}, ${plural(projectSourceCount, "source", "sources")} and ${plural(projectColumnCount, "column", "columns")}, ${STATUS_LABEL[projectStatus]}${projectStore.dirty ? ", unsaved changes" : ""}`}
       >
         <span class="project-chip-head">
           <span class="project-chip-label">Project</span>

@@ -182,6 +182,9 @@ describe("AppShell — project chip", () => {
         page.getByRole("link", { name: /^Project: Cancer sibling study/ }),
       )
       .toBeVisible();
+    await expect
+      .element(page.getByRole("link", { name: /unsaved changes/i }))
+      .toBeVisible();
     await expect.element(page.getByText("2 sources · 3 columns")).toBeVisible();
     await expect.element(page.getByText("Warnings")).toBeVisible();
   });
