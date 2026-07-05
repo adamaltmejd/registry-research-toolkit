@@ -244,7 +244,20 @@ durable evidence in the local merge-gate store:
 
 - independent review converged;
 - CI green;
-- local Codex review clean on the converged HEAD — run
+- local Codex review clean on the converged HEAD. **On the codex surface you cannot run
+  this yourself**: you are already inside a codex seatbelt, so your own `codex review`
+  would be a NESTED sandbox — Seatbelt cannot nest a second profile no matter the
+  permission (`sandbox_apply` denies EPERM even under escalated grants; see
+  `cos_lane_runner.py`'s docstring), so escalating your own permissions cannot fix it.
+  Do NOT attempt the gate: leave the `codex_bot` line deferred (e.g.
+  `running; deferred-to-lane-runner`) and set `status: blocked` with
+  `blocker: codex_bot`, finish every other gate normally, and stop. `cos_dispatch`
+  launches the deterministic `cos_lane_runner.py` by default for codex lanes — a sibling
+  process outside your seatbelt — which runs the review un-nested, drives the fix loop
+  by resuming your warm session with a findings brief, and completes `codex_bot` (and
+  flips `status` to `ready-to-merge` once it is the sole unmet gate) after you exit.
+  `--no-lane-runner` is the escape back to the legacy path below, which a human then has
+  to self-serve (see the chief-of-staff skill). The legacy/self-serve recipe: run
   `uv run --no-project python scripts/codex_local_review.py --base <base> --out <gate-dir>/codex-review.md`
   in the PR worktree. `--base` is **required**: pass `origin/main` for an independent
   PR; for a stacked successor pass the **predecessor branch** it targets, so the review
@@ -268,7 +281,9 @@ durable evidence in the local merge-gate store:
   `sandbox_apply: Operation not permitted` denial) means the ENVIRONMENT is wrong, not
   the PR — re-run with escalated permissions rather than recording `status: blocked` on
   that run. A generic `tool_failure` naming "no successful exec" with no sandbox denial
-  is likewise an environment problem, not a PR finding;
+  is likewise an environment problem, not a PR finding. (This legacy recipe is also what
+  the CLAUDE surface runs inline — a Claude agent shelling to `codex review` applies
+  codex's first, only, seatbelt, so nesting never occurs there.);
 - real-data validation when build pipeline or DB content changed;
 - visual verification when rendered output changed: complete the clean-subagent
   `reg-webapp-design-reviewer` pass, including screenshot/render inspection on the

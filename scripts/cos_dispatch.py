@@ -5,9 +5,21 @@ On a `dispatch:` wake (cos_watch.py emits it once a freed slot leaves the pipeli
 ledger below --max-slots), the chief-of-staff in `auto` mode runs THIS script once per
 lane it decides to dispatch, instead of only recommending commands. The script is the
 side-effecting half of that decision: it claims a slot, materializes a worktree, and
-launches a detached pr-pipeline agent (codex or claude). The default `--issues` mode
-starts a fresh lane from `origin/main`; `--continue-pr` resumes an existing same-repo PR
-branch in a fresh agent after rebasing it onto the PR base branch by default.
+launches a detached child. The default `--issues` mode starts a fresh lane from
+`origin/main`; `--continue-pr` resumes an existing same-repo PR branch in a fresh agent
+after rebasing it onto the PR base branch by default.
+
+The detached child depends on the surface. A CODEX lane launches the deterministic
+cos_lane_runner.py by DEFAULT (build_lane_runner_argv): a codex lane structurally cannot
+run its own `codex review` (a nested seatbelt denies every exec), so the runner
+foreground-runs the codex implement turn and then owns the codex_bot review↔fix loop
+OUTSIDE the seatbelt. A CLAUDE lane launches the bare `/pr-pipeline` agent directly
+(build_launch_argv) — claude runs `codex review` cross-runtime with no nesting, so it
+needs no runner. `--no-lane-runner` is an escape hatch forcing the legacy bare `codex
+exec` agent even on codex (a fallback/testing path, NOT the normal one). On the runner
+path cos_dispatch defers the run sentinel and the slot `session` enrichment to the runner
+(the runner launches codex, so it owns both); on the bare-agent path cos_dispatch writes
+the sentinel and polls/merges the session itself.
 
 It is deliberately dumb about WHICH lane to run — the agent (or /plan-lanes) picks the
 issues; this script just performs the launch atomically and records the claim. Order of
@@ -30,42 +42,48 @@ target resolution, resolve_profile, slug validation — all exit 2):
                     origin/main`. Continue mode fetches origin/main plus the PR head and
                     base branches, creates or reuses a clean worktree on the PR branch,
                     and rebases onto the PR base unless --no-rebase is set.
-  5. launch       — append a `cos.run.started` JSON sentinel to the per-slug dispatch
-                    log, then spawn the agent DETACHED.
-                    The codex argv runs `-s workspace-write` with TWO `--add-dir` grants —
-                    <state-root> AND <canonical>/.git, the latter because the linked
-                    worktree's writable git state (index/HEAD/refs/objects) lives under the
-                    canonical checkout's git dir, outside the sandboxed cwd (#1050); see
-                    build_launch_argv. The child env carries the
-                    --state-root override as XDG_STATE_HOME so its ledger/gate writes land
-                    under the same root). We do not wait; the process re-parents when this
-                    session exits. Then a short HEALTH CHECK: wait a grace window and poll —
-                    Popen succeeding only means exec() worked, so ANY completed exit inside
-                    the window (a rejected flag, missing auth, bad config) is a launch
-                    failure. A launch failure here (spawn OSError, dispatch-log setup OSError,
-                    or an instant child exit) → exit 2 naming the leaked worktree; NO slot
-                    file is written. The sentinel offset scopes the later codex-id poll
-                    and cos_tail --from-run-start to THIS run's log bytes, including
-                    plain claude-surface lanes.
+  5. launch       — on the BARE-AGENT path (claude, or codex under --no-lane-runner)
+                    append a `cos.run.started` JSON sentinel to the per-slug dispatch log
+                    FIRST, then spawn the agent DETACHED; on the RUNNER path spawn the
+                    runner directly and let IT write its own sentinel (before its implement
+                    turn), so the runner's session poll reads only that turn's bytes.
+                    The bare codex argv runs `-s workspace-write` with TWO `--add-dir`
+                    grants — <state-root> AND <canonical>/.git, the latter because the
+                    linked worktree's writable git state (index/HEAD/refs/objects) lives
+                    under the canonical checkout's git dir, outside the sandboxed cwd
+                    (#1050); see build_launch_argv. The runner argv is
+                    `<python> cos_lane_runner.py --worktree … --base … (--issues|--continue-pr) …`
+                    (build_lane_runner_argv); the runner grants those same two dirs to the
+                    codex turns it launches. The child env carries the --state-root override
+                    as XDG_STATE_HOME so its ledger/gate writes land under the same root. We
+                    do not wait; the process re-parents when this session exits. Then a
+                    short HEALTH CHECK: wait a grace window and poll — Popen succeeding only
+                    means exec() worked, so ANY completed exit inside the window (a rejected
+                    flag, missing auth, bad config) is a launch failure. A launch failure
+                    here (spawn OSError, dispatch-log setup OSError, or an instant child
+                    exit) → exit 2 naming the leaked worktree; NO slot file is written. The
+                    runner is long-lived (the codex implement turn runs for minutes), so the
+                    health check passes for it too.
   6. slot file    — write of <state-root>/pipeline-slots/<slug>.json IMMEDIATELY after a
-                    healthy launch (session=null for codex, the pre-generated uuid for
-                    claude). An OVERLAY write: if the detached child reached its
-                    register-slot step first, we overlay only dispatcher-owned fields
-                    and preserve the child's fresher issue/PR claim; continue mode owns
-                    `prs:[<pr>]` because the PR already exists. The `slot` field MUST
-                    equal the filename stem or scan_slots treats it as absent. A write
-                    failure here (agent already running) becomes exit 2 naming the
+                    healthy launch (session=null for codex — both the bare agent AND the
+                    runner — the pre-generated uuid for claude). An OVERLAY write: if the
+                    detached child reached its register-slot step first, we overlay only
+                    dispatcher-owned fields and preserve the child's fresher issue/PR claim;
+                    continue mode owns `prs:[<pr>]` because the PR already exists. The `slot`
+                    field MUST equal the filename stem or scan_slots treats it as absent. A
+                    write failure here (agent already running) becomes exit 2 naming the
                     orphan, never a traceback.
-  7. session id   — codex only: poll the JSONL log (bytes past the step-5 offset) for the
-                    first event carrying a thread/session id, bounded; on timeout,
-                    session=null (the chief's fuzzy-thread-search fallback covers it) plus
-                    a stderr warning. Then RE-READ the slot file and merge-update the
-                    `session` field plus continue-owned `mode`/`prs`, preserving any other
-                    issues/prs a fast child pipeline wrote during the poll window (its claim
-                    is fresher); a vanished/invalid file
-                    falls back to a full rewrite. A merge-update failure after the step-6
-                    write is a stderr warning but still exit 0 — the slot exists, only the
-                    session enrichment failed. claude's session is already final at step 6.
+  7. session id   — BARE-AGENT codex only (skipped on the runner path — the runner enriches
+                    the slot session itself): poll the JSONL log (bytes past the step-5
+                    offset) for the first event carrying a thread/session id, bounded; on
+                    timeout, session=null (the chief's fuzzy-thread-search fallback covers
+                    it) plus a stderr warning. Then RE-READ the slot file and merge-update
+                    the `session` field plus continue-owned `mode`/`prs`, preserving any
+                    other issues/prs a fast child pipeline wrote during the poll window (its
+                    claim is fresher); a vanished/invalid file falls back to a full rewrite.
+                    A merge-update failure after the step-6 write is a stderr warning but
+                    still exit 0 — the slot exists, only the session enrichment failed.
+                    claude's session is already final at step 6.
 
 Exit codes: 0 launched (or --dry-run OK); 2 usage/collision/tool error; 3 kill switch;
 4 no free slot budget.
@@ -540,6 +558,88 @@ def build_launch_argv(
         prompt,
         "--dangerously-skip-permissions",
     ]
+
+
+def build_lane_runner_argv(
+    worktree: Path,
+    issues: list[int],
+    continue_pr: int | None,
+    base_ref: str,
+    gate_root: Path,
+    log_path: Path,
+    slot_path: Path,
+    tier: str,
+    canonical: Path,
+    brief_file: Path | None = None,
+    *,
+    pr_branch: str | None = None,
+    pr_base_branch: str | None = None,
+    continue_issues: list[int] | None = None,
+    no_rebase: bool = False,
+) -> list[str]:
+    """The detached launch argv for the codex-surface lane RUNNER (cos_lane_runner.py).
+
+    On the codex surface the deterministic runner — not a bare `codex exec` agent — is the
+    default child: it foreground-runs the codex implement turn and then owns the codex_bot
+    review↔fix loop OUTSIDE the seatbelt (a codex lane can't run its own `codex review`, a
+    nested sandbox). cos_dispatch launches the runner and defers the run sentinel + slot
+    session enrichment to it (the runner launches codex, so it owns those — see dispatch()).
+
+    Exactly one of `issues` / `continue_pr` is passed through as the runner's
+    mutually-exclusive target. In continue mode the resolved PR branch / base branch /
+    closing issues / rebase posture are threaded through so the runner can build its
+    continue prompt from cos_dispatch.continuation_prompt — the SAME branch-aware,
+    force-with-lease-push guidance the bare-agent path gets — instead of a hand-rolled
+    generic string that omits the branch and push instructions. `brief_file` (continue mode
+    only) is forwarded so the operator's continuation brief reaches that prompt.
+    `sys.executable` is this (3.14) interpreter; the runner is stdlib + sibling scripts only,
+    so it needs no venv. The runner path is located as a sibling of this file, never hard-coded.
+    """
+    argv = [
+        sys.executable,
+        str(Path(__file__).with_name("cos_lane_runner.py")),
+        "--worktree",
+        str(worktree),
+        "--base",
+        base_ref,
+    ]
+    if continue_pr is not None:
+        argv += ["--continue-pr", str(continue_pr)]
+    else:
+        argv += ["--issues", ",".join(str(n) for n in issues)]
+    argv += [
+        "--gate-root",
+        str(gate_root),
+        "--log",
+        str(log_path),
+        "--slot-file",
+        str(slot_path),
+        "--tier",
+        tier,
+        "--canonical",
+        str(canonical),
+    ]
+    # The operator's continuation brief flows through to the runner so it isn't silently
+    # dropped on the default runner path (the runner weaves it into the --continue-pr prompt).
+    # Resolve to an ABSOLUTE path first: the runner is spawned detached with cwd = the lane
+    # worktree (launch_detached), and it re-reads --brief-file there — so a RELATIVE brief path
+    # (`--brief-file followup.md`) would resolve under the worktree, not the caller's dir, and
+    # the file wouldn't be found. resolve() returns an absolute path even for a not-yet-existing
+    # file; the runner's read_brief fails fast if it's genuinely missing.
+    if brief_file is not None:
+        argv += ["--brief-file", str(brief_file.resolve())]
+    # Continue-mode inputs for the runner's continuation_prompt: the PR branch + base branch
+    # give the branch-aware force-with-lease push guidance, the closing issues name the lane
+    # scope, and --no-rebase flips the push wording to a normal push. Fresh mode passes none.
+    if pr_branch is not None:
+        argv += ["--pr-branch", pr_branch]
+    if pr_base_branch is not None:
+        argv += ["--pr-base-branch", pr_base_branch]
+    if continue_issues:
+        argv += ["--continue-issues", ",".join(str(n) for n in continue_issues)]
+    if no_rebase:
+        argv += ["--no-rebase"]
+    return argv
 
 
 # Observed codex 0.142.5 JSONL (from `codex exec --json --ephemeral -s read-only`):
@@ -1143,27 +1243,62 @@ def dispatch(
                 rebase=not no_rebase,
             )
 
-    # A pre-generated uuid is the claude session id (known before launch); codex's is
-    # parsed from its JSONL log after launch.
-    pre_session = str(uuid.uuid4()) if surface == "claude" else None
-    argv = build_launch_argv(
-        surface,
-        worktree,
-        issues,
-        state_root,
-        pre_session,
-        profile_flags,
-        args.canonical,
-        prompt=prompt,
+    # Launch path. A codex-surface lane launches the deterministic cos_lane_runner.py by
+    # DEFAULT (the runner owns the codex_bot review↔fix loop un-nested; --no-lane-runner is
+    # an escape hatch back to the bare `codex exec` agent). claude lanes are unchanged: claude
+    # runs `codex review` cross-runtime with no nesting, so the bare agent path applies.
+    use_lane_runner = surface == "codex" and not getattr(args, "no_lane_runner", False)
+    gate_root = state_root / "merge-gates"
+    base_ref = (
+        "origin/main" if mode == "fresh" else f"origin/{pr_base_branch or 'main'}"
     )
+
+    # A pre-generated uuid is the claude session id (known before launch). On BOTH bare-agent
+    # codex and the runner path the session is null in the initial slot write: bare codex is
+    # enriched by dispatch's step-7 poll; the runner writes its own sentinel + enriches the
+    # slot itself (see cos_lane_runner.enrich_slot_session), so dispatch defers both.
+    pre_session = str(uuid.uuid4()) if surface == "claude" else None
+    if use_lane_runner:
+        # build_lane_runner_argv ignores prompt — the runner composes its own
+        # implement/continue prompt. The shared branch above still runs for the runner path
+        # because resolve_continue_pr feeds issues/base/rebase.
+        argv = build_lane_runner_argv(
+            worktree,
+            issues,
+            continue_pr,
+            base_ref,
+            gate_root,
+            log_path,
+            slot_path,
+            tier,
+            args.canonical,
+            brief_file=brief_file,
+            pr_branch=pr_branch,
+            pr_base_branch=pr_base_branch,
+            continue_issues=issues if continue_pr is not None else None,
+            no_rebase=no_rebase,
+        )
+    else:
+        argv = build_launch_argv(
+            surface,
+            worktree,
+            issues,
+            state_root,
+            pre_session,
+            profile_flags,
+            args.canonical,
+            prompt=prompt,
+        )
 
     if args.dry_run:
         # Checks 1–3 only; no worktree, no launch, no slot file, no log. The argv already
-        # reflects the resolved tier profile; surface/tier are echoed for the operator.
+        # reflects the resolved tier profile (or the runner argv when active); surface/tier
+        # are echoed for the operator, and `lane_runner` names the chosen launch path.
         print(
             json.dumps(
                 {
                     "launch_argv": argv,
+                    "lane_runner": use_lane_runner,
                     "slot_path": str(slot_path),
                     "surface": surface,
                     "tier": tier,
@@ -1219,17 +1354,26 @@ def dispatch(
     # 5. Launch detached, then health-check it survived the grace window. A launch failure
     # after the worktree exists (spawn OSError, log-setup OSError, or an instant child exit)
     # leaks only the worktree (named in the error for adjudication); NO slot file is written.
-    # Append an explicit run sentinel FIRST and poll only from that byte offset, so both
-    # codex and plain-surface logs get a stable current-run boundary.
+    #
+    # On the BARE-AGENT path (claude, or codex under --no-lane-runner) cos_dispatch owns the
+    # run sentinel: append it FIRST and poll only from that byte offset (step 7), so both
+    # codex and plain-surface logs get a stable current-run boundary. On the RUNNER path the
+    # runner writes its OWN sentinel before its implement turn and polls the session itself,
+    # so cos_dispatch must NOT append one here — that would split the run boundary and leave
+    # the runner's session poll reading past a foreign marker.
     try:
-        log_offset = append_run_sentinel(
-            log_path,
-            slug=slug,
-            issues=issues,
-            prs=prs,
-            surface=surface,
-            tier=tier,
-            mode=mode,
+        log_offset = (
+            None
+            if use_lane_runner
+            else append_run_sentinel(
+                log_path,
+                slug=slug,
+                issues=issues,
+                prs=prs,
+                surface=surface,
+                tier=tier,
+                mode=mode,
+            )
         )
         pid = launch_detached(
             argv,
@@ -1284,7 +1428,15 @@ def dispatch(
     # (its claim is fresher). A merge-update failure AFTER a successful step-6 write is non-fatal: the
     # slot exists (budget is accounted, the agent is recorded), only the session enrichment
     # failed — warn on stderr but still exit 0. claude's session is already final in step 6.
-    if surface == "codex":
+    #
+    # ONLY on the bare-agent codex path: the RUNNER launches codex itself (cos_dispatch's
+    # detached child is the runner, whose pid we hold), so it — not cos_dispatch — writes the
+    # run sentinel and enriches the slot `session` (cos_lane_runner.enrich_slot_session). The
+    # slot stays session=null here; the runner fills it in.
+    if surface == "codex" and not use_lane_runner:
+        # The bare-agent path always appended a sentinel in step 5 (log_offset is None only on
+        # the runner path, which is excluded here), so the poll starts at this run's bytes.
+        assert log_offset is not None
         session_id = poll_codex_session_id(
             log_path, codex_id_timeout, codex_id_poll, start_offset=log_offset
         )
@@ -1397,6 +1549,14 @@ def main(argv: list[str] | None = None) -> int:
         "--no-canonical-check",
         action="store_true",
         help="skip the canonical-checkout guard, for tests or local runs",
+    )
+    ap.add_argument(
+        "--no-lane-runner",
+        action="store_true",
+        help="ESCAPE HATCH (not the normal path): on the codex surface, launch the legacy "
+        "bare `codex exec` pr-pipeline agent instead of the default cos_lane_runner.py "
+        "runner. The runner is default-on for codex so its codex_bot review loop runs "
+        "un-nested; use this only as a fallback/testing escape. No effect on claude",
     )
     ap.add_argument(
         "--dry-run",

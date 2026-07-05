@@ -521,6 +521,11 @@ published before dependent work can proceed, invoke `/release minor` or
 stop if it requests input or if the required bump is a major release (a major release is
 a maintainer-approval class — see Automerge — and is not autonomous).
 
+This applies to CLAUDE-surface lanes and to codex lanes launched with
+`--no-lane-runner`; a normal (default) codex-surface lane already gets its `codex_bot`
+gate completed by `cos_lane_runner.py` (see Auto dispatch) — do not self-serve it while
+that runner is still owning the round loop.
+
 If an otherwise merge-ready PR's `codex_bot` line is missing or stale (its stamped head
 trails the live head), self-serve it with the **same recipe as the build_db self-serve
 above** — including the pre-launch `running; started <ISO>` intent stamp on the
@@ -680,6 +685,17 @@ Dispatch lanes SEQUENTIALLY within the single coordinator session — never run 
 auto-mode loops concurrently. `cos_dispatch`'s budget and collision guards protect
 against re-dispatching the same lane, not against two dispatchers racing; the
 one-coordinator rule in Scheduling is what excludes that.
+
+For a **codex-surface** dispatch, `cos_dispatch` launches the deterministic
+`scripts/cos_lane_runner.py` **by default**, not the bare agent — a codex lane agent
+cannot run its own `codex review` (nested seatbelt), so the runner is a sibling process
+outside that seatbelt that owns the whole per-round codex-review↔fix loop after the
+lane's implement turn finishes. This means you are **out of that per-round loop** for
+codex lanes: you see a single finished handoff (`gate.json` already carrying the
+`codex_bot` verdict, `ready-to-merge` when it's the sole gate left), not a stream of
+self-serve requests. The Self-serve Codex review recipe below still applies to
+CLAUDE-surface lanes, and to any codex lane launched with `--no-lane-runner` (the escape
+to the legacy bare-agent path, where you self-serve `codex_bot` exactly as before).
 
 - **Kill switch, checked immediately before every launch:**
   `$XDG_STATE_HOME/registry-research-toolkit/auto-dispatch.off` (default
