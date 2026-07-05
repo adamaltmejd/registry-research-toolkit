@@ -850,6 +850,76 @@ describe("stable client-side ids (issue #200)", () => {
       expect(projectStore.sourceId(0)).not.toBe(projectStore.sourceId(1));
     });
 
+    it("applyStagedDiff does NOT throw on a null sources SLOT (issue #1099 — the cart stays usable)", async () => {
+      // The render fix (#1099) lets a `sources: [null, …]` draft LOAD + render, but the
+      // store's commit path (applyStagedDiff) iterates EVERY source unconditionally in
+      // its prune/find-or-create steps. Any catalog add/remove — even one targeting a
+      // DIFFERENT register_variant than the null slot — must not collaterally throw on
+      // the malformed slot, and must leave that slot VERBATIM (the load contract).
+      const raw = {
+        schema_version: "2.0.0",
+        steward: "global",
+        reg_meta_version: "reg_meta/v1.0.0",
+        name: "has-null-source",
+        sources: [
+          null,
+          {
+            name: "lisa",
+            register_variant: "scb/lisa/v1",
+            period: 2020,
+            bindings: [{ variable: "scb/lisa/kon", type: "categorical" }],
+          },
+          {
+            name: "rtb",
+            register_variant: "scb/rtb/v1",
+            period: 2018,
+            bindings: [{ variable: "scb/rtb/fodelsear", type: "categorical" }],
+          },
+        ],
+      };
+      await projectStore.openFromFile(jsonFile(JSON.stringify(raw)));
+      expect(projectStore.openError).toBeNull();
+
+      // A batch that never NAMES the null slot's (empty) register_variant: add a new
+      // variant, prune an unrelated one (rtb), and repin the sibling's (lisa) period.
+      // Each step iterates the null slot — none may throw.
+      expect(() =>
+        projectStore.applyStagedDiff({
+          adds: [add("scb/hst/v1", "scb/hst/alder", 2019, { type: "numeric" })],
+          removes: [
+            { registerVariant: "scb/rtb/v1", variable: "scb/rtb/fodelsear" },
+          ],
+          periodChange: [
+            {
+              registerVariant: "scb/lisa/v1",
+              period: { from: 2010, to: 2020 },
+            },
+          ],
+        }),
+      ).not.toThrow();
+
+      const sources = projectStore.draft?.sources as unknown[];
+      // The null slot survives VERBATIM at its original index (load contract holds).
+      expect(sources[0]).toBeNull();
+      // The intended mutations all applied: rtb pruned, hst added, lisa's period repinned.
+      const byVariant = new Map(
+        (projectStore.draft?.sources ?? [])
+          .filter((s): s is NonNullable<typeof s> => s != null)
+          .map((s) => [s.register_variant, s]),
+      );
+      expect(byVariant.has("scb/rtb/v1")).toBe(false);
+      expect(byVariant.get("scb/lisa/v1")?.period).toEqual({
+        from: 2010,
+        to: 2020,
+      });
+      expect(
+        byVariant.get("scb/lisa/v1")?.bindings.map((b) => b.variable),
+      ).toEqual(["scb/lisa/kon"]);
+      expect(
+        byVariant.get("scb/hst/v1")?.bindings.map((b) => b.variable),
+      ).toEqual(["scb/hst/alder"]);
+    });
+
     it("updateField('sources', …) rebuilds the mirror so it can't desync (review #280)", () => {
       projectStore.newProject(SEED);
       projectStore.applyStagedDiff({

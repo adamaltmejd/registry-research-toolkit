@@ -180,6 +180,16 @@ export function defaultSourceName(registerVariant: string): string {
   return slug.toUpperCase();
 }
 
+/** A STRICT plain-object guard: true only for a non-null, non-array object. The
+ * shared form of the "is this a JSON object, not `null` and not an array" check that
+ * the store's open-file guard and the editors' malformed-slot fallbacks all need
+ * (a verbatim-loaded draft can carry a `null`/array where an object is expected). */
+export function isPlainObject(
+  value: unknown,
+): value is Record<string, unknown> {
+  return value !== null && typeof value === "object" && !Array.isArray(value);
+}
+
 /** `base` if no OTHER source (case-sensitive, as the schema compares) already
  * uses it, else the first free `base_2`, `base_3`, … The source at
  * `excludeIndex` is ignored (it's the one being named). */
@@ -191,7 +201,9 @@ export function uniqueSourceName(
   const taken = new Set(
     sources
       .filter((_, i) => i !== excludeIndex)
-      .map((s) => (typeof s.name === "string" ? s.name : "")),
+      // `s?.name`: a null/malformed slot in a verbatim-loaded `sources` array must
+      // not throw here — coerce it to "" (it just won't collide with any real name).
+      .map((s) => (typeof s?.name === "string" ? s.name : "")),
   );
   if (!taken.has(base)) {
     return base;

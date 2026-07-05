@@ -42,6 +42,7 @@ import { periodCoverageUnion, periodFromWire, periodToWire } from "./period";
 import {
   type Binding,
   defaultSourceName,
+  isPlainObject,
   newProjectData,
   type Period,
   type ProjectData,
@@ -401,9 +402,13 @@ function sourceHasBinding(
   return bindings.some((b) => bindingMatches(b, variable, representation));
 }
 
-/** The `register_variant` of a source as a string (coerce non-string to ""). */
+/** The `register_variant` of a source as a string (coerce non-string to ""). The
+ * `source?.` guard mirrors `buildIds`' malformed-yields-empty contract: a
+ * null/undefined slot yields "", which matches no real `register_variant`, so the
+ * find-or-create / prune comparisons in `applyStagedDiff` leave a malformed slot
+ * untouched instead of throwing. */
 function registerVariantOf(source: Source): string {
-  return typeof source.register_variant === "string"
+  return typeof source?.register_variant === "string"
     ? source.register_variant
     : "";
 }
@@ -563,11 +568,7 @@ export const projectStore = {
       openError = "Not valid JSON — could not parse the file.";
       return;
     }
-    if (
-      parsed === null ||
-      typeof parsed !== "object" ||
-      Array.isArray(parsed)
-    ) {
+    if (!isPlainObject(parsed)) {
       openError = "project_data.json must be a JSON object at the top level.";
       return;
     }
@@ -835,7 +836,11 @@ export const projectStore = {
     sources = sources.filter(
       (s) =>
         !removedVariants.has(registerVariantOf(s)) ||
-        (Array.isArray(s.bindings) ? s.bindings : []).length > 0,
+        // `s?.bindings` for consistency with the malformed-yields-empty contract
+        // (`registerVariantOf` / `buildIds`): a malformed slot's "" is not in
+        // `removedVariants` for real-slug diffs, so the OR short-circuits before this —
+        // the guard just keeps the accessor null-safe like the rest of the step.
+        (Array.isArray(s?.bindings) ? s.bindings : []).length > 0,
     );
 
     // Atomic replacement: compute the next draft + rebuilt mirror BEFORE assigning

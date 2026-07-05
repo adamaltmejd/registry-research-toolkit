@@ -2,7 +2,7 @@
 import BindingEditor from "./BindingEditor.svelte";
 import { variantDisplayLabel } from "./catalog";
 import { periodToWire } from "./period";
-import type { Period, Source } from "./project_data";
+import { isPlainObject, type Period, type Source } from "./project_data";
 import { projectStore } from "./project_store.svelte";
 import { Button, EmptyState, KeyValue, type KeyValueRow, Tag } from "./ui";
 import {
@@ -36,9 +36,7 @@ const errorCount = $derived(rolledUp.filter((i) => i.level === "error").length);
 // counted (its `sourceIndex` / `/sources/{i}` addressing must still line up), so the
 // field derefs below use `source?.` to never throw, and the template branches on
 // `sourceMalformed` — the same full-replace-with-guards doctrine as `bindingsMalformed`.
-const sourceMalformed = $derived(
-  source == null || typeof source !== "object" || Array.isArray(source),
-);
+const sourceMalformed = $derived(!isPlainObject(source));
 const sourceLabel = $derived(
   sourceMalformed ? "(malformed source)" : source?.name || "(unnamed source)",
 );

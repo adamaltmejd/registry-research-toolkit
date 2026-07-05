@@ -13,7 +13,7 @@ import {
   periodToWire,
   periodWireBounds,
 } from "./period";
-import type { Period, ProjectData } from "./project_data";
+import { isPlainObject, type Period, type ProjectData } from "./project_data";
 import type { StagedPeriodChange, StagedRemove } from "./project_store.svelte";
 
 export interface StagedPickerBand {
@@ -67,40 +67,38 @@ export function pickerRowKey(
   ].join("::");
 }
 
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null;
-}
-
 function sourceRegisterVariant(source: unknown): string {
-  return isRecord(source) && typeof source.register_variant === "string"
+  return isPlainObject(source) && typeof source.register_variant === "string"
     ? source.register_variant
     : "";
 }
 
 function sourceBindings(source: unknown): unknown[] {
-  return isRecord(source) && Array.isArray(source.bindings)
+  return isPlainObject(source) && Array.isArray(source.bindings)
     ? source.bindings
     : [];
 }
 
 function sourceName(source: unknown): string {
-  return isRecord(source) && typeof source.name === "string" ? source.name : "";
+  return isPlainObject(source) && typeof source.name === "string"
+    ? source.name
+    : "";
 }
 
 function sourcePeriod(source: unknown): Period {
-  return isRecord(source) && "period" in source
+  return isPlainObject(source) && "period" in source
     ? (source.period as Period)
     : "";
 }
 
 function bindingVariable(binding: unknown): string {
-  return isRecord(binding) && typeof binding.variable === "string"
+  return isPlainObject(binding) && typeof binding.variable === "string"
     ? binding.variable
     : "";
 }
 
 function bindingRepresentation(binding: unknown): string | null {
-  return isRecord(binding) && typeof binding.representation === "string"
+  return isPlainObject(binding) && typeof binding.representation === "string"
     ? binding.representation
     : null;
 }
