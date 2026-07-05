@@ -107,7 +107,10 @@ accepted combo; requires Claude Code >= 2.1.98).
 `--surface` is an explicit override. When it CONTRADICTS the tier's implied surface, the
 launch runs on that surface with its AMBIENT defaults — NO model/effort/advisor pins, so
 we never invent an unblessed model combo. When `--surface` merely restates the tier's own
-surface (or is omitted), the tier's profile applies in full.
+surface (or is omitted), the tier's profile applies in full. Exception: the default
+codex lane-runner path is codex-fixed and needs a codex-surface tier so its implement and
+resume turns share a blessed profile; use `--no-lane-runner` for an intentional ambient
+codex override.
 
 Stores match the sibling cos_* scripts: --state-root defaults to the parent of
 cos_preflight.default_gate_root() ($XDG_STATE_HOME/registry-research-toolkit), so the
@@ -161,6 +164,9 @@ LAUNCH_PROFILES: dict[str, tuple[str, list[str]]] = {
         ["--model", "claude-sonnet-5", "--effort", "high", "--advisor", "opus"],
     ),
 }
+CODEX_RUNNER_TIERS = tuple(
+    tier for tier, (surface, _flags) in LAUNCH_PROFILES.items() if surface == "codex"
+)
 
 # Bounded poll for the codex thread id in its JSONL log. 30s ceiling; a null session is
 # a tolerated outcome (the chief falls back to fuzzy thread search), so this never blocks
@@ -193,6 +199,17 @@ def resolve_profile(tier: str, surface_override: str | None) -> tuple[str, list[
     if surface_override is None or surface_override == tier_surface:
         return tier_surface, list(flags)
     return surface_override, []
+
+
+def require_codex_runner_tier(tier: str) -> None:
+    """Reject non-codex tiers before the default codex lane-runner creates a worktree."""
+    if tier in CODEX_RUNNER_TIERS:
+        return
+    raise SystemExit(
+        f"--tier {tier!r} cannot use the default codex lane-runner; choose one of "
+        f"{', '.join(CODEX_RUNNER_TIERS)} or pass --no-lane-runner for an ambient codex "
+        "override"
+    )
 
 
 def _load_gh() -> ModuleType:
@@ -1248,6 +1265,8 @@ def dispatch(
     # an escape hatch back to the bare `codex exec` agent). claude lanes are unchanged: claude
     # runs `codex review` cross-runtime with no nesting, so the bare agent path applies.
     use_lane_runner = surface == "codex" and not getattr(args, "no_lane_runner", False)
+    if use_lane_runner:
+        require_codex_runner_tier(tier)
     gate_root = state_root / "merge-gates"
     base_ref = (
         "origin/main" if mode == "fresh" else f"origin/{pr_base_branch or 'main'}"
@@ -1524,7 +1543,8 @@ def main(argv: list[str] | None = None) -> int:
         default=None,
         help="explicit surface override; defaults to the --tier's implied surface. When "
         "it CONTRADICTS the tier surface the launch runs on it with ambient defaults "
-        "(no model/effort/advisor pins)",
+        "(no model/effort/advisor pins), except the default codex lane-runner rejects "
+        "non-codex tiers; pass --no-lane-runner for that ambient override",
     )
     ap.add_argument(
         "--slug",

@@ -1099,6 +1099,55 @@ def test_surface_override_contradicting_tier_drops_pins(
     assert "model_reasoning_effort=xhigh" not in rec["argv"]
 
 
+def test_easy_tier_codex_surface_default_runner_rejected_before_side_effects(
+    tmp_path: Path, _hermetic_env: Path
+) -> None:
+    # Review regression: easy is a claude tier. Forcing it onto codex is still supported on
+    # the bare-agent escape, but the default codex lane-runner cannot carry `--tier easy`
+    # because the runner is codex-fixed and would reject it after worktree creation.
+    canonical = _make_origin(tmp_path)
+    state = tmp_path / "state"
+
+    with pytest.raises(SystemExit) as exc:
+        cd.dispatch(_args(tmp_path, canonical, tier="easy", surface="codex"))
+
+    message = str(exc.value.code)
+    assert "cannot use the default codex lane-runner" in message
+    assert "--no-lane-runner" in message
+    slug = "auto-codex-issue-1011"
+    assert not (canonical / ".claude" / "worktrees" / slug).exists()
+    assert not (state / "pipeline-slots").exists()
+    assert not (state / "dispatch-logs").exists()
+    _no_real_launch(tmp_path)
+
+
+def test_dry_run_easy_tier_codex_surface_default_runner_rejected(
+    tmp_path: Path,
+) -> None:
+    # Dry-run must not print a runner argv that the runner will reject on launch.
+    canonical = _make_origin(tmp_path)
+    state = tmp_path / "state"
+
+    with pytest.raises(SystemExit) as exc:
+        cd.dispatch(
+            _args(
+                tmp_path,
+                canonical,
+                tier="easy",
+                surface="codex",
+                state_root=state,
+                dry_run=True,
+            )
+        )
+
+    assert "cannot use the default codex lane-runner" in str(exc.value.code)
+    slug = "auto-codex-issue-1011"
+    assert not (canonical / ".claude" / "worktrees" / slug).exists()
+    assert not (state / "pipeline-slots").exists()
+    assert not (state / "dispatch-logs").exists()
+    _no_real_launch(tmp_path)
+
+
 def test_dry_run_no_side_effects_reflects_lane_runner(tmp_path: Path, capsys) -> None:
     canonical = _make_origin(tmp_path)
     state = tmp_path / "state"

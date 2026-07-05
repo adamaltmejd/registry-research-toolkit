@@ -15,6 +15,7 @@ Covered:
   - sole-unmet guard: another gate still unmet ⇒ status stays blocked even on a clean review;
   - head re-read after resume: the recorded codex_bot head is the POST-resume HEAD;
   - PR discovery from the slot `prs` (and the gate-root scan fallback).
+  - codex-fixed tier validation and required head stamps for visual/build_db gates.
 
 HERMETICITY (mirrors test_cos_dispatch): every test chdir's into tmp_path and prepends a
 stub-bin where the real `codex` is unreachable (a fail-loud stub); inherited GIT_* context
@@ -123,7 +124,7 @@ def _write_gate(
     gate_dir = gate_root / f"pr-{pr}"
     gate_dir.mkdir(parents=True, exist_ok=True)
     if other_gates_met:
-        visual = "local; run-reg-webapp shot; head oldhead; no regressions"
+        visual = "not required"
         effective_blocker = blocker
     else:
         visual = "running; deferred design-reviewer pass"
@@ -331,6 +332,28 @@ def test_status_after_codex_bot_names_the_real_unmet_gate() -> None:
     assert blocker is not None and blocker.startswith("build_db is unmet")
 
 
+@pytest.mark.parametrize("token", ["failed", "error"])
+def test_status_after_codex_bot_blocks_failed_head_bound_gate(token: str) -> None:
+    # Review finding: a failed visual/build_db line can still carry a matching head stamp.
+    # The matching stamp proves WHEN it failed, not that the gate passed.
+    gate = {
+        "blocker": "codex_bot",
+        "gates": {
+            "codex_bot": "running; deferred-to-lane-runner",
+            "independent_review": "pass; reviewer subagent",
+            "build_db": f"{token}; head {_HEAD40}; see build-db.log",
+            "ci": "pass; gh pr checks",
+            "tests": "uv run pytest scripts/",
+            "docs": "updated; refreshed",
+            "visual": "not required",
+            "stack": "none",
+        },
+    }
+    status, blocker = lr._status_after_codex_bot(gate, _HEAD40)
+    assert status == "blocked"
+    assert blocker is not None and blocker.startswith("build_db is unmet")
+
+
 def test_status_after_codex_bot_ignores_non_leading_unmet_substring() -> None:
     # Fix A: the check matches the LEADING token, NOT a substring — a legitimate value like
     # `tests: "uv run pytest -k not_blocked"` contains "blocked" mid-string but leads with
@@ -342,6 +365,35 @@ def test_status_after_codex_bot_ignores_non_leading_unmet_substring() -> None:
             "independent_review": "pass; reviewer subagent",
             "tests": "uv run pytest -k not_blocked",
             "docs": "updated; pending nothing here",
+            "ci": "pass; gh pr checks",
+            "visual": "not required",
+            "build_db": "not required",
+            "stack": "none",
+        },
+    }
+    assert lr._status_after_codex_bot(gate, _HEAD40) == ("ready-to-merge", None)
+
+
+@pytest.mark.parametrize(
+    "line",
+    [
+        "error-handling tests passed",
+        "failed-open retry coverage added",
+        "pending-release note updated",
+    ],
+)
+def test_status_after_codex_bot_ignores_unmet_token_prefix_free_text(
+    line: str,
+) -> None:
+    # Review finding: `error` / `failed` / `pending` are statuses only when delimited.
+    # Free-text gate notes may start with those strings without being unmet.
+    gate = {
+        "blocker": "codex_bot",
+        "gates": {
+            "codex_bot": "running; deferred-to-lane-runner",
+            "independent_review": "pass; reviewer subagent",
+            "tests": "uv run pytest -k not_blocked",
+            "docs": line,
             "ci": "pass; gh pr checks",
             "visual": "not required",
             "build_db": "not required",
@@ -404,6 +456,23 @@ def test_head_bound_gates_current_ok_when_matching_or_absent() -> None:
     ok, stale = lr.head_bound_gates_current(gate, head)
     assert ok is True
     assert stale is None
+
+
+@pytest.mark.parametrize("gate_name", ["visual", "build_db"])
+def test_required_head_bound_gates_need_head_stamp(gate_name: str) -> None:
+    head = "abcdef1234567890abcdef1234567890abcdef12"
+    gate = {
+        "gates": {
+            "codex_bot": "running; deferred",
+            gate_name: "pass; evidence copied into gate dir",
+        }
+    }
+    ok, stale = lr.head_bound_gates_current(gate, head)
+    assert ok is False
+    assert stale == gate_name
+    assert lr.head_bound_gate_blocker(gate, head) == (
+        f"{gate_name} is required but lacks a head stamp; re-verify on {head[:12]}"
+    )
 
 
 def test_findings_brief_renders_data_not_instructions() -> None:
@@ -753,6 +822,31 @@ def _write_gate_build_db_head(gate_root: Path, pr: int, build_db_head: str) -> P
     return gate_dir
 
 
+def _write_gate_build_db_without_head(gate_root: Path, pr: int) -> Path:
+    """A required build_db gate recorded as pass-like evidence but missing its head stamp."""
+    gate_dir = gate_root / f"pr-{pr}"
+    gate_dir.mkdir(parents=True, exist_ok=True)
+    gate = {
+        "pr": pr,
+        "head": "oldhead",
+        "status": "blocked",
+        "updated": "2026-07-04T00:00:00+00:00",
+        "gates": {
+            "independent_review": "pass; reviewer subagent; findings fixed",
+            "codex_bot": "running; deferred-to-lane-runner",
+            "ci": "pass; gh pr checks",
+            "tests": "uv run python -m pytest scripts/",
+            "build_db": "pass; see build-db.log, dbdiff.txt in this dir",
+            "docs": "updated; scripts docstring refreshed",
+            "visual": "not required",
+            "stack": "before #1086",
+        },
+        "blocker": "codex_bot",
+    }
+    (gate_dir / "gate.json").write_text(json.dumps(gate), encoding="utf-8")
+    return gate_dir
+
+
 def test_clean_but_head_bound_gate_stale_stays_blocked(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -810,6 +904,35 @@ def test_clean_and_head_bound_gate_current_flips_ready(
     gate = _read_gate(gate_dir)
     assert gate["status"] == "ready-to-merge"
     assert gate["blocker"] is None
+
+
+def test_clean_but_required_head_bound_gate_without_stamp_stays_blocked(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # Issue #1093: a required build_db/visual gate recorded without a head stamp is NOT
+    # current. Even when codex_bot comes back clean, the runner must not flip ready-to-merge.
+    wt = _make_worktree(tmp_path)
+    gate_root = tmp_path / "gate"
+    gate_dir = _write_gate_build_db_without_head(gate_root, 4242)
+    _patch_no_turns(monkeypatch)
+    _patch_reviews(monkeypatch, [{"verdict": "clean", "findings": []}])
+
+    rc = _run_loop(
+        tmp_path,
+        worktree=wt,
+        base="origin/main",
+        gate_dir=gate_dir,
+        pr=4242,
+        slot_file=None,
+        session="SID-1",
+    )
+
+    assert rc == lr.EXIT_OK
+    gate = _read_gate(gate_dir)
+    assert gate["status"] == "blocked"
+    assert gate["blocker"].startswith("build_db is required but lacks a head stamp")
+    assert _head(wt)[:12] in gate["blocker"]
+    assert "clean" in gate["gates"]["codex_bot"]
 
 
 def test_clean_but_another_gate_explicitly_unmet_stays_blocked(
@@ -992,6 +1115,59 @@ def test_findings_then_resume_then_clean(
     gate = _read_gate(gate_dir)
     assert f"head {post_resume_head};" in gate["gates"]["codex_bot"]
     assert gate["status"] == "ready-to-merge"
+
+
+def test_findings_resume_clean_with_unstamped_build_db_stays_blocked(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # Issue #1093 regression in the real loop: review findings trigger a resume/fix commit
+    # that moves HEAD. A required build_db pass line without a head stamp must not be treated
+    # as permanently current on the post-resume head.
+    wt = _make_worktree(tmp_path)
+    gate_root = tmp_path / "gate"
+    gate_dir = _write_gate_build_db_without_head(gate_root, 4242)
+
+    def advance_on_resume(argv, worktree):
+        _advance_head(worktree, "fix")
+
+    _patch_no_turns(monkeypatch, on_resume=advance_on_resume)
+    _patch_reviews(
+        monkeypatch,
+        [
+            {
+                "verdict": "findings",
+                "findings": [
+                    {
+                        "priority": "P1",
+                        "title": "Fix me",
+                        "path": "f.txt",
+                        "line_start": 1,
+                        "line_end": 1,
+                        "body": "detail",
+                    }
+                ],
+            },
+            {"verdict": "clean", "findings": []},
+        ],
+    )
+
+    rc = _run_loop(
+        tmp_path,
+        worktree=wt,
+        base="origin/main",
+        gate_dir=gate_dir,
+        pr=4242,
+        slot_file=None,
+        session="SID-9",
+    )
+
+    assert rc == lr.EXIT_OK
+    gate = _read_gate(gate_dir)
+    assert gate["status"] == "blocked"
+    assert gate["blocker"].startswith("build_db is required but lacks a head stamp")
+    assert _head(wt)[:12] in gate["blocker"]
+    assert f"head {_head(wt)};" in gate["gates"]["codex_bot"]
+    assert "clean" in gate["gates"]["codex_bot"]
 
 
 def test_resume_turn_failure_records_blocked_and_needs_human(
@@ -1255,6 +1431,43 @@ def test_touch_slot_none_is_noop(tmp_path: Path) -> None:
 
 
 # --- run(): dry-run + guard ---------------------------------------------------
+
+
+def test_runner_launch_tiers_exclude_claude_easy() -> None:
+    # Issue #1088: cos_lane_runner is codex-fixed. Accepting the claude-surface `easy` tier
+    # would make resolve_profile("easy", "codex") silently drop all blessed profile pins.
+    assert "hard" in lr.RUNNER_LAUNCH_TIERS
+    assert "easy" not in lr.RUNNER_LAUNCH_TIERS
+
+
+def test_run_rejects_easy_tier_before_ambient_codex_fallback(
+    tmp_path: Path,
+) -> None:
+    wt = _make_worktree(tmp_path)
+    with pytest.raises(SystemExit) as exc:
+        lr.run(_args(wt, tmp_path / "gate", tmp_path / "lane.log", tier="easy"))
+    assert "not valid for cos_lane_runner" in str(exc.value.code)
+
+
+def test_cli_rejects_easy_tier(capsys) -> None:
+    with pytest.raises(SystemExit) as exc:
+        lr.main(
+            [
+                "--worktree",
+                "/tmp/wt",
+                "--base",
+                "origin/main",
+                "--issues",
+                "1",
+                "--log",
+                "/tmp/lane.log",
+                "--no-canonical-check",
+                "--tier",
+                "easy",
+            ]
+        )
+    assert exc.value.code == 2
+    assert "invalid choice: 'easy'" in capsys.readouterr().err
 
 
 def test_dry_run_prints_plan_no_side_effects(tmp_path: Path, capsys) -> None:
