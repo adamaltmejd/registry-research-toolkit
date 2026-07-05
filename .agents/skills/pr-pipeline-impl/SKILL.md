@@ -325,12 +325,12 @@ example) plus the impl-phase framing:
   have follow-ups to persist.
 
 - **Real `build-db`** — for build-affecting work, the real `build-db` is a final gate on
-  the truly final head, not part of the iterate loop. The rule for when/how to run it
-  (last and once, timestamped log / post-build checks / long-session polling) and the
-  overlay-input rule for a PR that changes tracked `reg_meta_build/input_data/**`
-  (canonical in **AGENTS.md "Real-data validation"**), plus the `build_db_watch.py`
-  command recipe, are all in `.claude/skills/pr-pipeline-impl/pipeline-contract.md` —
-  **read it** at this step.
+  the truly final head — **last and once**, not part of the iterate loop. Run it per the
+  **`build-db` skill** (timestamped log, post-build SQLite checks, long-session
+  polling); the overlay-input rule for a PR that changes tracked
+  `reg_meta_build/input_data/**` is canonical in **AGENTS.md "Real-data validation"**;
+  the `build_db_watch.py` command recipe/shape is in
+  `.claude/skills/pr-pipeline-impl/pipeline-contract.md` — **read it** at this step.
 
 When every non-codex_bot gate passes, write the handoff `gate.json` into
 `merge-gates/pr-<N>/` per the AGENTS.md contract (evidence files copied in FIRST,
