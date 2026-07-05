@@ -360,26 +360,31 @@ Build and upload fresh if **any** condition is true:
 
 Otherwise copy the prior release's asset forward (8d) and skip the rest of 8c.
 
-Build from **this release's** main DB: the fresh `$db_dir/reg_meta.db` you just built in
-8a (before you `rm` it) — or, if 8a copied the main asset forward, the copied-forward
-`reg_meta.db.zst` decompressed (`extend-db` opens the base with sqlite, never the
-`.zst`). This is the same flavored DB step 11 regenerates the steward catalog against,
-but built here **before publish**, not from the post-publish download. Checkpoint
-WAL→DELETE (self-contained single file, same invariant as 8a):
+Build the flavored DB from **this release's** main asset — download the
+`reg_meta.db.zst` you just uploaded to the draft in 8a and decompress it (`extend-db`
+opens the base with sqlite, never the `.zst`). Downloading from the draft is
+self-contained: the asset is on the draft whether 8a rebuilt it or copied it forward, so
+this does not depend on 8a's temp dir surviving. It is the same flavored DB step 11
+regenerates the steward catalog against — 8c builds it from the draft **before
+publish**, step 11 from the published release after. Checkpoint WAL→DELETE
+(self-contained single file, same invariant as 8a):
 
 ```sh
 set -euo pipefail
-# $main_db = the reg_meta.db built in 8a (or the copied-forward asset, decompressed).
+# Base = the reg_meta.db.zst already on the draft from 8a (fresh build or copy-forward).
+base_dir="$(mktemp -d "${TMPDIR:-/tmp}/reg_meta_base.XXXXXX")"
+gh release download reg_meta/vX.Y.Z --pattern reg_meta.db.zst --dir "$base_dir"
+zstd -d "$base_dir/reg_meta.db.zst" -o "$base_dir/reg_meta.db"
 flav_dir="$(mktemp -d "${TMPDIR:-/tmp}/reg_meta_swecov.XXXXXX")"
 uv run reg-meta-build --db "$flav_dir" extend-db \
-    --base-db "$main_db" \
+    --base-db "$base_dir/reg_meta.db" \
     --inventory reg_meta_build/input_data/swecov/derived/flavor_inventory.json \
     --slug-dir reg_meta_build/fqid_slugs/swecov
 db="$flav_dir/reg_meta.db"
 uv run python -c "import sqlite3,sys; c=sqlite3.connect(sys.argv[1]); c.execute('PRAGMA wal_checkpoint(TRUNCATE)'); c.execute('PRAGMA journal_mode=DELETE'); c.commit(); c.close()" "$db"
 zstd -3 -T0 "$db" -o reg_meta_swecov.db.zst
 gh release upload reg_meta/vX.Y.Z reg_meta_swecov.db.zst
-rm -rf "$flav_dir" reg_meta_swecov.db.zst
+rm -rf "$base_dir" "$flav_dir" reg_meta_swecov.db.zst
 ```
 
 `extend-db` validates by default (it skips only the code-less↔code-bearing guard, which
@@ -387,12 +392,14 @@ the base already passed). After the build, confirm it carries **more** than the 
 global providers — the SWECOV flavor providers raise the `provider` count.
 
 **Maintainer-local inputs**: `reg_meta_build/input_data/swecov/` (holding
-`flavor_inventory.json`) is untracked/maintainer-local. In a non-maintainer or CI
-environment it is absent — but a missing SWECOV asset **breaks the deploy** (unlike the
-step-11 catalog regen, which is coverage hygiene the webapp boots through). So do
-**not** skip silently: if the inputs are absent, publish can still proceed (the global
-apps deploy), but **report loudly** that the SWECOV asset is owed and the SWECOV deploy
-stays red until a maintainer uploads it and re-dispatches `container-build.yml`.
+`flavor_inventory.json`) is untracked/maintainer-local. If a **fresh** SWECOV build is
+required (per the conditions above) but these inputs are absent — a non-maintainer or CI
+environment — **stop and do not publish**. Publishing (`--draft=false`, step 9)
+dispatches `container-build.yml`, whose `build-swecov-image` job hard-fails on the
+missing (or stale) asset — recreating exactly the broken-release state this step exists
+to prevent. Ask the maintainer to build and upload `reg_meta_swecov.db.zst` before
+publishing. (The 8d copy-forward path needs no maintainer-local inputs, so it is always
+available when a fresh build was **not** required.)
 
 #### 8d. Copy-forward for assets not rebuilt
 
