@@ -288,8 +288,8 @@ export function membersHaveUniqueCoords(
 // register group), so the facets are unambiguous.
 
 /** A member-distinguishing qualifier and whether it is the facet-label form or
- * the slug fallback — the discriminant the caller styles on (`facets` → a human
- * label `<span>`, `slug` → a technical-identifier `<code>`). */
+ * the technical-identifier fallback — the discriminant the caller styles on
+ * (`facets` → a human label `<span>`, `slug` → a mono `<code>`). */
 export type MemberQualifier = { text: string; kind: "facets" | "slug" };
 
 /** Join a faceted member's facet labels into one display string (" · "-
@@ -299,12 +299,22 @@ export function facetLabelJoin(facets: { label: string }[]): string {
   return facets.map((f) => f.label).join(" · ");
 }
 
+function singleDeliveryColumnName(focus: VariableGraphNode): string | null {
+  const columns = new Set(
+    focus.states
+      .map((s) => s.delivery_column_name)
+      .filter((col): col is string => col != null && col !== ""),
+  );
+  return columns.size === 1 ? [...columns][0] : null;
+}
+
 /** The member-distinguishing qualifier from the graph FOCUS node (#678): the
  * focus's facet labels joined with " · " (e.g. "AGI · 2007 SNI edition") when it
  * carries facets; else, for a GROUPED member with no facets (an edge group's
- * split siblings — `group_label` set, `facets: []`), the leaf slug fallback
- * (`kind: "slug"`), since the slug is the only differentiator between those
- * siblings; else `null` for an UNGROUPED variable (its `node.name` suffices).
+ * split siblings — `group_label` set, `facets: []`), a single authoritative
+ * delivery column when the graph focus has one (#798), falling back to the leaf
+ * slug (`kind: "slug"`); else `null` for an UNGROUPED variable (its `node.name`
+ * suffices).
  *
  * `fqid` is the LEAF's own fqid — only a fallback for the focus node's `fqid`,
  * which is itself the slug-fallback source. The focus node's `fqid` is the
@@ -323,12 +333,17 @@ export function qualifierFromFocus(
   if (focus.facets.length > 0) {
     return { text: facetLabelJoin(focus.facets), kind: "facets" };
   }
-  // Grouped (a group label) but facet-less → the CANONICAL leaf slug distinguishes
-  // the edge-group split siblings. Prefer the focus node's own (canonical) fqid so
-  // an alias page shows the canonical sibling slug, not its alias; fall back to the
-  // leaf arg when the focus carries no fqid. Ungrouped (no group label) → null.
+  // Grouped (a group label) but facet-less → a technical identifier distinguishes
+  // the split siblings. Prefer the authoritative delivery-column casing when this
+  // member resolves to exactly one column (#798). Otherwise prefer the focus node's
+  // own canonical fqid so an alias page shows the canonical sibling slug, not its
+  // alias; fall back to the leaf arg when the focus carries no fqid. Ungrouped (no
+  // group label) → null.
   return focus.group_label != null
-    ? { text: leafSlug(focus.fqid ?? fqid), kind: "slug" }
+    ? {
+        text: singleDeliveryColumnName(focus) ?? leafSlug(focus.fqid ?? fqid),
+        kind: "slug",
+      }
     : null;
 }
 

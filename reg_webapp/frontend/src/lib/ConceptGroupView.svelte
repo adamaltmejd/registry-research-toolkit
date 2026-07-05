@@ -853,7 +853,7 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
     {/if}
   {/snippet}
 
-  <SubjectView title={node.label} {description} {picker} />
+  <SubjectView title={`Variable group: ${node.label}`} {description} {picker} />
 {/if}
 
 <style>

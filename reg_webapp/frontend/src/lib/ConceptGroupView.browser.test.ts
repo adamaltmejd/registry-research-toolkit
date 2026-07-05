@@ -267,9 +267,14 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
 
     renderGroup();
 
-    // The group's label heads the page.
+    // The heading names the page kind and the group's label.
     await expect
-      .element(page.getByRole("heading", { name: "Inkomst", level: 2 }))
+      .element(
+        page.getByRole("heading", {
+          name: "Variable group: Inkomst",
+          level: 2,
+        }),
+      )
       .toBeVisible();
 
     // ONE integrated list; each single-column member is a single compact row — no
