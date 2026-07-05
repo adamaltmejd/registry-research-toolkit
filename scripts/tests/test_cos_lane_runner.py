@@ -1654,6 +1654,11 @@ def test_run_multi_pr_completes_every_pr_gate(
         return "origin/main" if pr == 4242 else "origin/s/4242"
 
     monkeypatch.setattr(lr, "resolve_review_base", fake_base)
+
+    # Clean stack: the successor's is-ancestor check reports UP-TO-DATE (its base tip IS an
+    # ancestor of its head), so no PR is falsely blocked. (The main-based predecessor is exempt
+    # and never asked; stub returns False = not-behind for any base to keep the test hermetic.)
+    monkeypatch.setattr(lr, "pr_is_behind_base", lambda base, worktree: False)
     seen: list[tuple[int, str]] = []
 
     def fake_review(base, gate_dir, worktree):
@@ -1691,20 +1696,98 @@ def test_run_multi_pr_completes_every_pr_gate(
 def test_run_multi_pr_fix_round_blocks_stale_successor(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    # #1089: predecessor-first, when the FIRST PR goes through a findings->resume round its
-    # branch head MOVES (the resume pushes fix commits). Every DOWNSTREAM successor is then
-    # based on a stale predecessor head, so the runner must BLOCK it WITHOUT reviewing it (the
-    # review would be correct — merge-base gives the successor's own fork point — but marking a
-    # stale-based successor clean/ready is misleading stack evidence; chief-of-staff owns the
-    # rebase + re-review). The aggregate exit is needs-human.
+    # #1089: a 2-PR STACK where #4243's base is #4242's branch. When the per-PR is-ancestor
+    # check reports #4243 is BEHIND its base (its base tip advanced past its fork point — a
+    # predecessor fix moved origin/<pred>), the runner must BLOCK #4243 WITHOUT reviewing it
+    # (the review would be correct — merge-base gives the successor's own fork point — but
+    # marking a stale-based successor clean/ready is misleading stack evidence; chief-of-staff
+    # owns the rebase + re-review). The predecessor #4242 reviews+flips normally. The aggregate
+    # exit is needs-human.
     wt = _make_worktree(tmp_path)
     gate_root = tmp_path / "gate"
     slot = _write_slot(tmp_path / "slots", "lane-a", [4242, 4243])
     log = tmp_path / "lane.log"
 
-    # The implement turn opens BOTH PRs and writes both gates; the LATER (resume) turn is the
-    # predecessor's fix round — model it by advancing HEAD, which run()'s head-before/after
-    # snapshot detects and turns into lane_dirty for the successor.
+    def fake_turn(argv, worktree, log_path, state_root):
+        _write_gate(gate_root, 4242, other_gates_met=True)
+        _write_gate(gate_root, 4243, other_gates_met=True)
+        with log_path.open("a", encoding="utf-8") as fh:
+            fh.write(json.dumps({"type": "thread.started", "thread_id": "T"}) + "\n")
+
+    monkeypatch.setattr(lr, "run_codex_turn", fake_turn)
+
+    # Only #4242 is ever checked out AND base-checked before #4243 is blocked at its is-ancestor
+    # gate (which runs AFTER its checkout + base resolution).
+    checkouts: list[int] = []
+
+    def fake_checkout(pr, worktree):
+        checkouts.append(pr)  # None ⇒ success
+
+    monkeypatch.setattr(lr, "checkout_head_branch", fake_checkout)
+
+    # #4242 is a stacked predecessor on origin/main; #4243 is the successor stacked on #4242's
+    # branch (a NON-main base), so #4243 is subject to the is-ancestor staleness check.
+    def fake_base(pr, fb, wt):
+        return "origin/main" if pr == 4242 else "origin/s/4242"
+
+    monkeypatch.setattr(lr, "resolve_review_base", fake_base)
+
+    # The is-ancestor check: #4243 is BEHIND its base (its base tip advanced past its fork
+    # point); #4242 (main-based) is exempt and never asked. Record which bases were checked.
+    behind_checks: list[str] = []
+
+    def fake_behind(base, worktree):
+        behind_checks.append(base)
+        return base == "origin/s/4242"  # only the successor is behind
+
+    monkeypatch.setattr(lr, "pr_is_behind_base", fake_behind)
+
+    # #4243 must NEVER reach run_review — assert on the PRs run_review saw.
+    reviewed: list[int] = []
+
+    def fake_review(base, gate_dir, worktree):
+        reviewed.append(int(gate_dir.name[len("pr-") :]))
+        return {"verdict": "clean", "findings": []}
+
+    monkeypatch.setattr(lr, "run_review", fake_review)
+
+    rc = lr.run(
+        _args(wt, gate_root, log, slot_file=slot),
+        codex_id_timeout=1.0,
+        codex_id_poll=0.02,
+    )
+
+    # Aggregate exit is the stale successor's needs-human code, not OK.
+    assert rc == lr.EXIT_NEEDS_HUMAN
+    # #4242 was reviewed (clean) and flipped ready-to-merge.
+    assert reviewed == [4242]
+    assert _read_gate(gate_root / "pr-4242")["status"] == "ready-to-merge"
+    # #4243 was NEVER reviewed — the per-PR is-ancestor block short-circuits its run_loop.
+    assert 4243 not in reviewed
+    # Both PRs are checked out (the block happens AFTER checkout + base resolution), but only
+    # the non-main successor base is is-ancestor-checked (the main-based predecessor is exempt).
+    assert checkouts == [4242, 4243]
+    assert behind_checks == ["origin/s/4242"]
+    # #4243's gate is a head-bound BLOCKED codex_bot line naming the behind-its-base reason.
+    stale = _read_gate(gate_root / "pr-4243")
+    assert stale["status"] == "blocked"
+    assert "behind its base" in stale["blocker"]
+    assert f"head {_head(wt)};" in stale["gates"]["codex_bot"]
+    assert "blocked" in stale["gates"]["codex_bot"]
+
+
+def test_run_multi_pr_independent_prs_not_blocked(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # #1089 regression (codex review finding): a lane can hold INDEPENDENT PRs — several based
+    # on `main`, not stacked. A fix round on the first must NOT block a sibling that isn't
+    # actually stacked on it. Because a main-based PR is EXEMPT from the is-ancestor staleness
+    # check, both PRs are reviewed and both get gates — no false "stale predecessor" block.
+    wt = _make_worktree(tmp_path)
+    gate_root = tmp_path / "gate"
+    slot = _write_slot(tmp_path / "slots", "lane-a", [4242, 4243])
+    log = tmp_path / "lane.log"
+
     turns = {"n": 0}
 
     def fake_turn(argv, worktree, log_path, state_root):
@@ -1717,22 +1800,33 @@ def test_run_multi_pr_fix_round_blocks_stale_successor(
                     json.dumps({"type": "thread.started", "thread_id": "T"}) + "\n"
                 )
         else:
-            # The predecessor's resume turn "pushes fix commits" → HEAD moves.
+            # The first PR's resume turn "pushes fix commits" → HEAD moves. Under the OLD
+            # lane-dirty logic this would have blocked the independent sibling; it must not now.
             _advance_head(worktree, f"fix{turns['n']}")
 
     monkeypatch.setattr(lr, "run_codex_turn", fake_turn)
 
-    # Only #4242 is ever checked out — #4243 is blocked before its (would-be) checkout.
     checkouts: list[int] = []
 
     def fake_checkout(pr, worktree):
         checkouts.append(pr)  # None ⇒ success
 
     monkeypatch.setattr(lr, "checkout_head_branch", fake_checkout)
+
+    # BOTH PRs are independent, based on main → resolve_review_base returns origin/main for each.
     monkeypatch.setattr(lr, "resolve_review_base", lambda pr, fb, wt: "origin/main")
 
-    # #4242: findings on round 1 (drives a resume that moves HEAD), then clean on round 2.
-    # #4243 must NEVER reach run_review — assert on the PRs run_review saw.
+    # The is-ancestor check must NEVER be invoked for a main-based PR (the exemption is the whole
+    # point of the fix) — fail loudly if the exemption regresses.
+    def boom_behind(base, worktree):  # pragma: no cover - must not be called
+        raise AssertionError(
+            "pr_is_behind_base must not run for a main-based (independent) PR"
+        )
+
+    monkeypatch.setattr(lr, "pr_is_behind_base", boom_behind)
+
+    # #4242 gets findings on round 1 (drives a resume that moves HEAD), then clean; #4243 is
+    # clean — it must still be reviewed and flipped, not blocked as a "stale predecessor".
     reviewed: list[int] = []
 
     def fake_review(base, gate_dir, worktree):
@@ -1750,20 +1844,13 @@ def test_run_multi_pr_fix_round_blocks_stale_successor(
         codex_id_poll=0.02,
     )
 
-    # Aggregate exit is the stale successor's needs-human code, not OK.
-    assert rc == lr.EXIT_NEEDS_HUMAN
-    # #4242 was reviewed twice (findings → clean) and flipped ready-to-merge.
-    assert reviewed == [4242, 4242]
+    # No PR is blocked: both are reviewed and both flip ready-to-merge, so the aggregate is OK.
+    assert rc == lr.EXIT_OK
+    # #4242 reviewed twice (findings → clean), #4243 reviewed once (clean) — NOT skipped.
+    assert reviewed == [4242, 4242, 4243]
+    assert checkouts == [4242, 4243]
     assert _read_gate(gate_root / "pr-4242")["status"] == "ready-to-merge"
-    # #4243 was NEVER reviewed and NEVER checked out — the stale-base block short-circuits both.
-    assert 4243 not in reviewed
-    assert checkouts == [4242]
-    # #4243's gate is a head-bound BLOCKED codex_bot line naming the stale-predecessor reason.
-    stale = _read_gate(gate_root / "pr-4243")
-    assert stale["status"] == "blocked"
-    assert "stale predecessor" in stale["blocker"]
-    assert f"head {_head(wt)};" in stale["gates"]["codex_bot"]
-    assert "blocked" in stale["gates"]["codex_bot"]
+    assert _read_gate(gate_root / "pr-4243")["status"] == "ready-to-merge"
 
 
 def test_run_multi_pr_checkout_failure_blocks_only_that_pr(
@@ -1930,6 +2017,41 @@ def test_checkout_head_branch_checkout_failure_returns_blocker(
     blocker = lr.checkout_head_branch(4242, wt)
     assert blocker is not None
     assert "could not check out PR #4242's head branch 'no-such-branch'" in blocker
+
+
+def test_pr_is_behind_base_up_to_date(tmp_path: Path) -> None:
+    # Real git: a branch whose HEAD contains the base tip is NOT behind (base IS an ancestor).
+    wt = _make_worktree(tmp_path)
+    _git(wt, "checkout", "-q", "-b", "s/base")
+    _advance_head(wt, "base-work")
+    _git(wt, "checkout", "-q", "-b", "s/succ")
+    _advance_head(wt, "succ-work")  # succ contains all of s/base's commits
+    assert lr.pr_is_behind_base("s/base", wt) is False
+
+
+def test_pr_is_behind_base_behind(tmp_path: Path) -> None:
+    # Real git: the base branch advances a commit the successor doesn't have → base tip is NOT
+    # an ancestor of the successor head → behind.
+    wt = _make_worktree(tmp_path)
+    _git(wt, "checkout", "-q", "-b", "s/base")
+    _advance_head(wt, "base-v1")
+    _git(wt, "checkout", "-q", "-b", "s/succ")  # forks from s/base @ base-v1
+    _advance_head(wt, "succ-work")
+    _git(wt, "checkout", "-q", "s/base")
+    _advance_head(wt, "base-v2")  # base advances past the successor's fork point
+    _git(wt, "checkout", "-q", "s/succ")
+    assert lr.pr_is_behind_base("s/base", wt) is True
+
+
+def test_pr_is_behind_base_git_error_is_conservative(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    # A git error (exit code other than 0/1 — here a nonexistent base ref) is treated
+    # conservatively as NOT behind (review), warning on stderr, so a transient hiccup can't
+    # false-block a PR.
+    wt = _make_worktree(tmp_path)
+    assert lr.pr_is_behind_base("no-such-ref", wt) is False
+    assert "treating the PR as NOT behind" in capsys.readouterr().err
 
 
 # --- F-fix regressions: resume grants / continue-pr / discovery / exit codes --
