@@ -610,6 +610,41 @@ describe("applyStagedDiff (#992 — one atomic commit path)", () => {
     expect(bindings[0].representation).toBe("Ssyk3");
   });
 
+  it("two distinct non-null representations of the SAME variable coexist as separate bindings (bindingMatches' both-non-null branch), and re-adding one IS a duplicate", () => {
+    projectStore.newProject(SEED);
+    // Add the 3-digit extraction of SSYK.
+    projectStore.applyStagedDiff({
+      adds: [
+        add("scb/lisa/v1", "scb/lisa/ssyk", 2018, { representation: "Ssyk3" }),
+      ],
+    });
+    // Add the 4-digit extraction of the SAME variable with NO intervening remove.
+    // bindingMatches compares both non-null reps exactly (Ssyk4 !== Ssyk3), so this
+    // is a distinct extraction — NOT a duplicate — and lands a SECOND binding.
+    projectStore.applyStagedDiff({
+      adds: [
+        add("scb/lisa/v1", "scb/lisa/ssyk", 2018, { representation: "Ssyk4" }),
+      ],
+    });
+    expect(projectStore.draft?.sources).toHaveLength(1);
+    // BOTH extractions coexist on the one source, in add order.
+    expect(
+      projectStore.draft?.sources[0].bindings.map((b) => b.representation),
+    ).toEqual(["Ssyk3", "Ssyk4"]);
+
+    // Re-adding one of the now-coexisting reps (Ssyk3) DOES match its existing
+    // binding → the guard drops it (no third binding), even though its sibling
+    // Ssyk4 is a distinct live representation of the same variable.
+    projectStore.applyStagedDiff({
+      adds: [
+        add("scb/lisa/v1", "scb/lisa/ssyk", 2018, { representation: "Ssyk3" }),
+      ],
+    });
+    expect(
+      projectStore.draft?.sources[0].bindings.map((b) => b.representation),
+    ).toEqual(["Ssyk3", "Ssyk4"]);
+  });
+
   it("removes drop matching bindings and prune sources left empty", () => {
     projectStore.newProject(SEED);
     projectStore.applyStagedDiff({
