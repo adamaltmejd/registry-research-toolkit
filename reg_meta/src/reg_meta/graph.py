@@ -80,6 +80,10 @@ class GraphState(_CatalogModel):
     # ASCII-folded slug). None for a NULL-named variant → the consumer falls back to
     # the `variant` slug. Display-only; `variant` stays the add coordinate.
     variant_label: str | None
+    # Variant-family metadata (#376), copied from `VariableState`. Null when the
+    # concrete variant is not part of a curated variant succession family.
+    variant_family: str | None = None
+    variant_family_label: str | None = None
     representation_run_id: int
     delivery_column_name: str | None
     value_set_id: int | None
@@ -266,6 +270,8 @@ def _graph_states(states: tuple[VariableState, ...]) -> list[GraphState]:
                 state_id=s.state_id,
                 variant=s.variant,
                 variant_label=s.variant_label,
+                variant_family=s.variant_family,
+                variant_family_label=s.variant_family_label,
                 representation_run_id=run_id,
                 delivery_column_name=s.delivery_column_name,
                 value_set_id=s.value_set_id,

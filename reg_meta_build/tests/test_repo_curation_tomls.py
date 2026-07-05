@@ -350,7 +350,7 @@ def test_repo_relations_parses() -> None:
     # + 1 #875 KSju lgrp → NgGr1 representation-grain succession edge
     # + 1 #846 RTB PNR → PersonNr representation-grain rename edge
     # + 2 #846 FRIDA firm-key variant-scoped gap-fill round-trip edges.
-    assert len(relations.replaced_by) == 51
+    assert len(relations.replaced_by) == 52
     assert all(str(e.predecessor) and str(e.successor) for e in relations.replaced_by)
     ksju_edges = [
         e

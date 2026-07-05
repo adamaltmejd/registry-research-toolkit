@@ -60,6 +60,7 @@ import {
   rowAddPeriod,
   rowFacet,
   valueSetKeyForColumn,
+  variantDisplayLabel,
   variantSeg,
   windowTitle,
   YEARLESS_VALID_FROM,
@@ -1887,6 +1888,100 @@ describe("pickerRepresentations (#678 direct picker)", () => {
       }),
     ]);
     expect(row.variantLabel).toBe("ovriga-fordonsslag");
+  });
+
+  it("folds sequential concrete variants into one family row", () => {
+    const rows = pickerRepresentations([
+      state({
+        variant: "individer-16plus",
+        variant_label: "Individer, 16 år och äldre",
+        variant_family: "individer-15plus",
+        variant_family_label: "Individer",
+        delivery_column_name: "Kon",
+        valid_from: "1990-01-01",
+        valid_to: "2009-12-31",
+      }),
+      state({
+        variant: "individer-15plus",
+        variant_label: "Individer, 15 år och äldre",
+        variant_family: "individer-15plus",
+        variant_family_label: "Individer",
+        delivery_column_name: "Kon",
+        valid_from: "2010-01-01",
+        valid_to: "2023-12-31",
+      }),
+    ]);
+
+    expect(rows).toHaveLength(1);
+    expect(rows[0]).toMatchObject({
+      key: "individer-15plus{individer-16plus,individer-15plus}::Kon",
+      variant: "individer-15plus",
+      variantFamily: "individer-15plus",
+      variantFamilyLabel: "Individer",
+      column: "Kon",
+    });
+    expect(rows[0].variantSegments).toEqual([
+      {
+        variant: "individer-16plus",
+        variantLabel: "Individer, 16 år och äldre",
+        windows: [{ from: "1990-01-01", to: "2009-12-31" }],
+      },
+      {
+        variant: "individer-15plus",
+        variantLabel: "Individer, 15 år och äldre",
+        windows: [{ from: "2010-01-01", to: "2023-12-31" }],
+      },
+    ]);
+  });
+
+  it("gives a distinct row-key per narrowing so staging can't leak across ?variant", () => {
+    const familyStates = [
+      state({
+        variant: "individer-16plus",
+        variant_family: "individer-15plus",
+        variant_family_label: "Individer",
+        delivery_column_name: "Kon",
+        valid_from: "1990-01-01",
+        valid_to: "2009-12-31",
+      }),
+      state({
+        variant: "individer-15plus",
+        variant_family: "individer-15plus",
+        variant_family_label: "Individer",
+        delivery_column_name: "Kon",
+        valid_from: "2010-01-01",
+        valid_to: "2023-12-31",
+      }),
+    ];
+    const familyKey = pickerRepresentations(familyStates)[0].key;
+    const oldKey = pickerRepresentations(
+      narrowStatesByModifier(familyStates, "individer-16plus", null),
+    )[0].key;
+    const newKey = pickerRepresentations(
+      narrowStatesByModifier(familyStates, "individer-15plus", null),
+    )[0].key;
+    // The folded family and each `?variant`-narrowed concrete variant are THREE distinct
+    // row identities. `pickerRowKey` is derived from `key`'s variant projection, so a
+    // narrowed concrete variant never reuses the folded family's (or the other variant's)
+    // staged/committed picker state (#376 finding: the narrowed-variant staging leak).
+    expect(familyKey).toBe(
+      "individer-15plus{individer-16plus,individer-15plus}::Kon",
+    );
+    expect(oldKey).toBe("individer-15plus{individer-16plus}::Kon");
+    expect(newKey).toBe("individer-15plus{individer-15plus}::Kon");
+    expect(new Set([familyKey, oldKey, newKey]).size).toBe(3);
+  });
+
+  it("cart display labels known LISA individer families without hiding the coordinate", () => {
+    expect(variantDisplayLabel("scb/lisa/individer-16plus")).toBe(
+      "Individer (scb/lisa/individer-16plus)",
+    );
+    expect(variantDisplayLabel("scb/lisa/individer-15plus")).toBe(
+      "Individer (scb/lisa/individer-15plus)",
+    );
+    expect(variantDisplayLabel("scb/lisa/arbetsstallen")).toBe(
+      "scb/lisa/arbetsstallen",
+    );
   });
 
   // ── #902 part 2: collapse an intra-variable SEQUENTIAL RENAME ────────────────

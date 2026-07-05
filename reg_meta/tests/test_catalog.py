@@ -898,6 +898,38 @@ class TestResolveVariableLongitudinal:
         assert len(closed) == 1
         assert closed[0].period_token == "2020"
 
+    def test_state_carries_variant_family_metadata(self) -> None:
+        conn = build_slugged_db()
+        add_variant(
+            conn,
+            register_variant_id=11,
+            register_id=1,
+            slug="individer-16plus",
+            name="Individer 16+",
+        )
+        conn.execute(
+            "UPDATE register_variant SET display_group = ? WHERE register_variant_id = 10",
+            ("Individer, 15 år och äldre",),
+        )
+        conn.execute(
+            "UPDATE register_variant SET display_group = ? WHERE register_variant_id = 11",
+            ("Individer, 16 år och äldre",),
+        )
+        conn.execute(
+            "INSERT INTO variant_replaced_by ("
+            "predecessor_provider, predecessor_register, predecessor_variant, "
+            "successor_provider, successor_register, successor_variant, "
+            "effective_year, note) VALUES "
+            "('scb', 'lisa', 'individer-16plus', 'scb', 'lisa', "
+            "'individer-15plus', 2010, 'curated:slug_toml')"
+        )
+        conn.commit()
+
+        state = Catalog(conn).resolve(_KON).states[0]
+        assert state.variant == "individer-15plus"
+        assert state.variant_family == "individer-15plus"
+        assert state.variant_family_label == "Individer"
+
 
 class TestResolveAt:
     """see DESIGN.md → Catalog API surface: `resolve_at` — period/variant/version-narrowed list of states."""

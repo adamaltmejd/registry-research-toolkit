@@ -87,6 +87,28 @@ from reg_meta_build.resolution import (
     resolve_year_intervals,
 )
 
+_LISA_REGISTER_NAME_PREFIX = "longitudinell integrationsdatabas"
+
+
+def _register_variant_description(
+    registernamn: str, registervariantnamn: str, raw_description: str
+) -> str | None:
+    """SCB register-variant description, with narrowly-scoped LISA cleanup (#376)."""
+    description = raw_description.strip()
+    if not description:
+        return description
+    register_norm = registernamn.casefold()
+    variant_norm = registervariantnamn.casefold()
+    description_norm = description.casefold()
+    if (
+        register_norm.startswith(_LISA_REGISTER_NAME_PREFIX)
+        and variant_norm.startswith("individer,")
+        and _LISA_REGISTER_NAME_PREFIX in description_norm
+    ):
+        return None
+    return description
+
+
 if TYPE_CHECKING:
     from collections.abc import Callable, Iterator
 
@@ -307,7 +329,11 @@ def _import_registerinformation(
                     # `Registervariantrubrik` and `RegistervariantSekretess`
                     # are dropped.
                     "name": registervariantnamn,
-                    "description": row["Registervariantbeskrivning"].strip(),
+                    "description": _register_variant_description(
+                        registernamn,
+                        registervariantnamn,
+                        row["Registervariantbeskrivning"],
+                    ),
                 },
             )
 

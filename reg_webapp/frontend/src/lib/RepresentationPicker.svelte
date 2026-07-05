@@ -18,6 +18,7 @@ import {
   pickerFilterDimensions,
   pickerLabeling,
   pickerRowPasses,
+  pickerRowVariantFamilyLabel,
   representationInWindow,
   rowFacet,
   yearOf,
@@ -810,6 +811,12 @@ interface GraphCellMatch {
   column: string;
 }
 
+function rowConcreteVariants(row: PickerRepresentation): string[] {
+  return row.variantSegments && row.variantSegments.length > 0
+    ? row.variantSegments.map((segment) => segment.variant)
+    : [row.variant];
+}
+
 function graphMemberHrefForNode(node: VariableGraphNode): string | null {
   if (graphMemberHrefs == null) {
     return null;
@@ -827,7 +834,7 @@ function cellMatchedColumns(
   row: PickerRepresentation,
   cell: RunCell,
 ): string[] {
-  if (row.variant !== cell.variant) {
+  if (!rowConcreteVariants(row).includes(cell.variant)) {
     return [];
   }
   const columns = new Set(cell.columns);
@@ -1068,14 +1075,16 @@ function graphNodeWithVisibleStates(
   }
   const visibleColumnsByVariant = new Map<string, Set<string>>();
   for (const row of band.rows) {
-    let cols = visibleColumnsByVariant.get(row.variant);
-    if (!cols) {
-      cols = new Set<string>();
-      visibleColumnsByVariant.set(row.variant, cols);
-    }
-    cols.add(row.column);
-    for (const renamed of row.renamedColumns) {
-      cols.add(renamed);
+    for (const variant of rowConcreteVariants(row)) {
+      let cols = visibleColumnsByVariant.get(variant);
+      if (!cols) {
+        cols = new Set<string>();
+        visibleColumnsByVariant.set(variant, cols);
+      }
+      cols.add(row.column);
+      for (const renamed of row.renamedColumns) {
+        cols.add(renamed);
+      }
     }
   }
   return {
@@ -1414,9 +1423,21 @@ function graphCellSubLabel(cell: RunCell, column: string): string {
     : cell.label;
 }
 
-function graphCellTitle(cell: RunCell, column: string): string {
+function graphCellDisplayWindow(
+  cell: RunCell,
+  match: GraphCellMatch,
+): string | null {
+  return match.row.variantSegments && match.row.variantSegments.length > 1
+    ? match.row.period
+    : cell.window;
+}
+
+function graphCellTitle(cell: RunCell, match: GraphCellMatch): string {
+  const column = match.column;
   const sub = graphCellSubLabel(cell, column);
-  return [column, sub || null, cell.window].filter(Boolean).join(" · ");
+  return [column, sub || null, graphCellDisplayWindow(cell, match)]
+    .filter(Boolean)
+    .join(" · ");
 }
 
 function graphRenameHint(match: GraphCellMatch): string[] {
@@ -1500,7 +1521,13 @@ function graphLaneA11y(rn: RenderNode): string {
   return items
     .map((item) => {
       if (item.kind === "row") {
-        return [item.row.column, item.row.period, item.row.variant]
+        // A flat (unmatched) folded row: label with the FAMILY, not the head
+        // `row.variant` (#376) — the cell branch below uses the concrete `cell.variant`.
+        return [
+          item.row.column,
+          item.row.period,
+          pickerRowVariantFamilyLabel(item.row),
+        ]
           .filter(Boolean)
           .join(", ");
       }
@@ -1509,7 +1536,7 @@ function graphLaneA11y(rn: RenderNode): string {
         return [
           item.match.column,
           sub || null,
-          item.cell.window,
+          graphCellDisplayWindow(item.cell, item.match),
           item.cell.variant,
         ]
           .filter(Boolean)
@@ -1615,11 +1642,15 @@ function navigateChip(event: MouseEvent, href: string): void {
 }
 
 /** The deep-link target for a row's "codings vary" nudge (#905): the value-set
- * viewer focused on that row's `(variant, column)` coding, scrolled to the States
- * section. The `codes` param carries the row's IDENTITY (`encodeCodesParam` →
- * `variant::column`), NOT just the column — two rows can share one delivery column
- * across different variants/populations, so the focus must target the clicked row's
- * coding, not another variant's latest era. This is a dedicated `?codes=` encoding,
+ * viewer focused on that `(variant, column)` coding, scrolled to the States
+ * section. The `codes` param carries the CONCRETE-segment IDENTITY (`encodeCodesParam`
+ * → `variant::column`), NOT just the column — two rows can share one delivery column
+ * across different variants/populations, so the focus must target the clicked cell's
+ * coding, not another variant's latest era. `variant` is the CONCRETE segment that
+ * delivered `column` (#376): the head `row.variant` for a plain/latest-era row, but the
+ * matched `cell.variant` for a folded-family graph cell whose column belongs to a
+ * PREDECESSOR era — collapsing to `row.variant` there would deep-link to a
+ * `(variant, column)` pair the successor never delivered. This is a dedicated `?codes=` encoding,
  * distinct from the `?variant` RESOLUTION modifier (which narrows the picker + drives
  * the "Narrowed by" chips), so the focus never perturbs the resolution.
  *
@@ -1640,8 +1671,9 @@ function codingsVaryHref(
   band: PickerBand,
   row: PickerRepresentation,
   column = row.column,
+  variant = row.variant,
 ): string {
-  const codes = encodeCodesParam(row.variant, column);
+  const codes = encodeCodesParam(variant, column);
   // `band.href` (group branch) may carry `?period=…` (memberHref); the leaf branch
   // reads the live path off `globalThis` (`window` is the period-window prop here,
   // shadowing the global). Either way, take ONLY the path — drop the query.
@@ -1774,8 +1806,9 @@ function codingsVaryHref(
   band: PickerBand,
   row: PickerRepresentation,
   column = row.column,
+  variant = row.variant,
 )}
-  {@const href = codingsVaryHref(band, row, column)}
+  {@const href = codingsVaryHref(band, row, column, variant)}
   <a
     class="codings-vary"
     {href}
@@ -1980,7 +2013,7 @@ function codingsVaryHref(
                             class:open-start={cell.openStart}
                             class:open-end={cell.openEnd}
                             style={`left:${left}px; width:${width}px; top:${cellTopValue}px`}
-                            title={graphCellTitle(cell, column)}
+                            title={graphCellTitle(cell, item.match)}
                           >
                             <input
                               type="checkbox"
@@ -2010,13 +2043,20 @@ function codingsVaryHref(
                               {@render stageTag(stage)}
                             {/if}
                             {#if row.codingsVary}
-                              {@render codingsVaryNudge(band, row, column)}
+                              {@render codingsVaryNudge(
+                                band,
+                                row,
+                                column,
+                                cell.variant,
+                              )}
                             {/if}
                             {#if inWindow}
                               {@render lateWarn(row)}
                             {/if}
-                            {#if cell.window}
-                              <span class="graph-cell-window">{cell.window}</span>
+                            {#if graphCellDisplayWindow(cell, item.match)}
+                              <span class="graph-cell-window"
+                                >{graphCellDisplayWindow(cell, item.match)}</span
+                              >
                             {/if}
                           </label>
                         {:else if item.kind === "cell"}

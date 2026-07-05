@@ -595,13 +595,18 @@ export function variantSeg(registerVariant: string): string {
 }
 
 /** The display label for a source's `register_variant` coordinate — the ONE place
- * the cart renders a variant. Today it's the raw coordinate (rendered mono in the
- * UI); this is the #376 variant-FAMILY fold seam — when family labels land, swap
- * the mapping here so every cart row picks it up in one edit rather than
- * re-deriving inline. */
+ * the cart renders a variant. Family folds can add a friendly label, but the concrete
+ * coordinate must stay visible because project sources still extract concrete
+ * register variants. */
 export function variantDisplayLabel(registerVariant: string): string {
-  // #376: family-label fold seam — resolve a family label here instead of the raw
-  // coordinate once #376 ships.
+  const [provider, register, variant] = fqidSegments(registerVariant);
+  if (
+    provider === "scb" &&
+    register === "lisa" &&
+    (variant === "individer-15plus" || variant === "individer-16plus")
+  ) {
+    return `Individer (${registerVariant})`;
+  }
   return registerVariant;
 }
 
@@ -984,14 +989,46 @@ export function representationsCollapse(reps: Representation[]): boolean {
  * value-set detail. Keyed on the reliable `value_set_id`, NOT the low-trust
  * per-delivery `value_set_version_label` (the same id is labelled inconsistently
  * across populations/years). */
+// ── The per-concrete-segment invariant (#376) ────────────────────────────────
+// A picker row can FOLD a sequential variant FAMILY: one displayed row stands for
+// N concrete `register_variant`s (e.g. LISA `individer-16plus` for the older era +
+// `individer-15plus` for the newer). The fold is browse/display only — every
+// concrete segment still extracts and validates as its own real delivery variant.
+//
+// INVARIANT: `row.variant` is ONLY the HEAD (latest-era) concrete variant. It is a
+// legitimate coordinate for exactly two things — the row's DISPLAY head, and the
+// single-segment fallback when the row is NOT folded (`variantSegments` is absent or
+// length 1). Everything that ATTRIBUTES to a concrete segment — staging identity,
+// the register-variant coordinate an add/remove/commit targets, and a graph-cell or
+// coding deep-link — MUST use the correct concrete variant instead:
+//   - a whole-row Apply/commit fans out over `variantSegments[i].variant`
+//     (see `rowAddSegments` / `committedPickerRows` in staged_picker.ts — the ONE
+//     home for the segment fan-out; do not re-derive it per view);
+//   - a graph cell attributes to the matched `cell.variant` (the concrete era the
+//     cell was delivered under), NOT `row.variant`.
+// Collapsing a folded family to `row.variant` silently leaks state/actions to the
+// wrong concrete segment — the whack-a-mole class of #376 bugs. When you reach for
+// `row.variant`, confirm you mean the HEAD/fallback, not "the segment".
 export interface PickerRepresentation {
+  /** Render/reset identity for this displayed row. Project staging/commit identity is
+   * `pickerRowKey`; folded variant-family rows include their concrete segment variants
+   * here so changing `?variant` cannot reuse stale local picker state. */
   key: string;
+  /** The HEAD (latest-era) concrete variant slug — see the per-concrete-segment
+   * invariant above. Legitimate ONLY as the display head or the single-segment
+   * fallback; a folded family's concrete attribution lives in `variantSegments` /
+   * the matched `cell.variant`, NEVER here. */
   variant: string;
   /** The variant's DISPLAY label — `register_variant.name` when present, else the
    * `variant` slug (a NULL-named variant falls back to the slug). The picker shows
    * THIS wherever the variant is the row identity; `variant` (the slug) stays the
    * selection key and the add coordinate. */
   variantLabel: string;
+  /** Stable family key for display/selection when concrete variants form one
+   * browse family (#376). Falls back to `variant` for ordinary rows. */
+  variantFamily?: string;
+  /** Display label for `variantFamily`, falling back to `variantLabel`. */
+  variantFamilyLabel?: string;
   column: string;
   /** The value to COMMIT to `binding.representation` for this row — DISTINCT from
    * `column` (the display identity, the chip the picker always shows). `column` for an
@@ -1019,6 +1056,10 @@ export interface PickerRepresentation {
    * interrupted-series wire form) so the committed source never covers the gap years
    * the representation wasn't delivered. */
   windows: { from: string; to: string }[];
+  /** Concrete variant segments that back this displayed row. Ordinary rows have
+   * exactly one segment; folded variant-family rows have one per concrete variant,
+   * so Apply can stage era-clipped sources while the picker shows one row. */
+  variantSegments?: PickerVariantSegment[];
   period: string | null;
   wirePeriod: string | null;
   valueSetLabel: string;
@@ -1038,6 +1079,12 @@ export interface PickerRepresentation {
    * Empty for an ordinary single-column row or a genuinely parallel (co-existing)
    * column, which stay their own rows. */
   renamedColumns: string[];
+}
+
+export interface PickerVariantSegment {
+  variant: string;
+  variantLabel: string;
+  windows: { from: string; to: string }[];
 }
 
 /** The WIRE segment for ONE inclusive ISO window, or null when a bound is a sentinel
@@ -1176,14 +1223,22 @@ export function rowAddPeriod(
   row: PickerRepresentation,
   window: { from: string; to: string } | null,
 ): string | null {
+  return windowsAddPeriod(row.windows, window, true);
+}
+
+export function windowsAddPeriod(
+  windows: readonly { from: string; to: string }[],
+  window: { from: string; to: string } | null,
+  fallbackOnEmpty: boolean,
+): string | null {
   if (!window) {
-    return row.wirePeriod;
+    return rowWirePeriod(windows);
   }
   // Clamp each delivery window into the active window; a sentinel bound is unbounded
   // on that side, so the active-window edge wins there. Drop windows that fall wholly
   // outside (empty intersection) — only the surviving, in-window spans commit.
   const clamped: { from: string; to: string }[] = [];
-  for (const w of row.windows) {
+  for (const w of windows) {
     const lo =
       w.from === YEARLESS_VALID_FROM
         ? window.from
@@ -1197,9 +1252,27 @@ export function rowAddPeriod(
   // Wholly outside the window (no surviving window): keep the row's own span so an
   // explicitly-selected dimmed row still adds something sensible.
   if (clamped.length === 0) {
-    return row.wirePeriod;
+    return fallbackOnEmpty ? rowWirePeriod(windows) : null;
   }
   return rowWirePeriod(clamped);
+}
+
+export function windowsOverlapWindow(
+  windows: readonly { from: string; to: string }[],
+  window: { from: string; to: string } | null,
+): boolean {
+  if (!window) {
+    return true;
+  }
+  return windows.some((w) => {
+    const lo =
+      w.from === YEARLESS_VALID_FROM
+        ? window.from
+        : maxIso(w.from, window.from);
+    const hi =
+      w.to === OPEN_ENDED_VALID_TO ? window.to : minIso(w.to, window.to);
+    return lo <= hi;
+  });
 }
 
 /** The later / earlier of two ISO `YYYY-MM-DD` bounds (lexicographic order is
@@ -1227,6 +1300,8 @@ export interface PickerStateInput {
    * add coordinate. Both sources carry it (`VariableStateModel.variant_label` / the
    * graph `GraphState.variant_label`). */
   variant_label: string | null;
+  variant_family?: string | null;
+  variant_family_label?: string | null;
   delivery_column_name: string | null;
   value_set_version_label: string;
   /** The RELIABLE value-set identity — the coding-change signal (`codingsVary`).
@@ -1271,38 +1346,37 @@ function latestRepresentativeState<S extends { state_id: number }>(
 export function pickerRepresentations(
   states: readonly PickerStateInput[],
 ): PickerRepresentation[] {
-  // Group by VARIANT first, then by column within each variant: the
+  // Group by VARIANT FAMILY first, then by column within each family: the
   // coexist-vs-rename distinction (#902) is per-variant (a rename is one
-  // variable+variant's columns over non-overlapping eras), so coexistence must be
-  // computed on a variant's own states, not across populations. First-seen variant
-  // order, then first-seen column order within it, keep the output stable.
-  const byVariant = new Map<string, Map<string, PickerStateInput[]>>();
+  // variable+family's columns over non-overlapping eras). First-seen family order,
+  // then first-seen column order within it, keep the output stable.
+  const byFamily = new Map<string, Map<string, PickerStateInput[]>>();
   for (const s of states) {
     if (!s.delivery_column_name) {
       continue;
     }
-    const cols =
-      byVariant.get(s.variant) ?? new Map<string, PickerStateInput[]>();
+    const family = s.variant_family ?? s.variant;
+    const cols = byFamily.get(family) ?? new Map<string, PickerStateInput[]>();
     const group = cols.get(s.delivery_column_name);
     if (group) {
       group.push(s);
     } else {
       cols.set(s.delivery_column_name, [s]);
     }
-    byVariant.set(s.variant, cols);
+    byFamily.set(family, cols);
   }
   const out: PickerRepresentation[] = [];
-  for (const [variant, cols] of byVariant) {
+  for (const [family, cols] of byFamily) {
     // The variant's genuinely CO-EXISTING (overlapping) columns — parallel
     // representations that stay their OWN rows. Every other column is, relative to its
     // siblings, a sequential RENAME and folds into ONE row (when ≥2 of them). Reuses
     // the shared `coexistingColumns` leaf so the picker and the editor's chooser can't
     // drift on the distinction (CLAUDE.md: reuse the leaf, don't re-derive it).
-    const variantStates: PickerStateInput[] = [];
+    const familyStates: PickerStateInput[] = [];
     for (const g of cols.values()) {
-      variantStates.push(...g);
+      familyStates.push(...g);
     }
-    const coexisting = coexistingColumns(variantStates);
+    const coexisting = coexistingColumns(familyStates);
     const renameGroups: PickerStateInput[][] = [];
     const renameStates: PickerStateInput[] = [];
     for (const [column, group] of cols) {
@@ -1321,7 +1395,7 @@ export function pickerRepresentations(
       renameGroups.push(renameStates);
     }
     for (const group of renameGroups) {
-      out.push(pickerRow(variant, group));
+      out.push(pickerRow(family, group));
     }
   }
   return out;
@@ -1336,7 +1410,7 @@ export function pickerRepresentations(
  * superseded (earlier) columns are listed chronologically in `renamedColumns` for the
  * picker's quiet progression hint (the latest, which leads, is excluded). */
 function pickerRow(
-  variant: string,
+  family: string,
   group: PickerStateInput[],
 ): PickerRepresentation {
   // Normalize a state's nullable bounds to the catalog sentinels: a null start is
@@ -1365,6 +1439,7 @@ function pickerRow(
   // codings-vary deep-link resolver. For a folded rename this is the CURRENT
   // (surviving) column name — `DINF86`, not the retired `DINF`.
   const latest = latestRepresentativeState(group, validTo);
+  const variant = latest.variant;
   const column = latest.delivery_column_name as string;
   // The superseded columns of a folded rename, oldest-first (the leading latest column
   // excluded) — the picker's "was X, Y, Z" progression hint. Ordered by each column's
@@ -1388,26 +1463,70 @@ function pickerRow(
   const codingsVary = new Set(group.map((s) => s.value_set_id)).size > 1;
   // The variant display label — the curator `variant_label`, falling back to the
   // slug for a NULL-named variant. Display-only; the slug stays the key/coordinate.
-  const variantLabel = group[0].variant_label ?? variant;
+  const variantLabel = latest.variant_label ?? variant;
+  const variantFamily = latest.variant_family ?? family;
+  const variantFamilyLabel =
+    latest.variant_family_label ?? latest.variant_label ?? variantFamily;
+  const variantSegments = pickerVariantSegments(group, validFrom, validTo);
+  const familyFolded = group.some((s) => s.variant_family != null);
+  const key = familyFolded
+    ? `${variantFamily}{${variantSegments.map((s) => s.variant).join(",")}}::${column}`
+    : `${variantFamily}::${column}`;
   // A folded rename (>1 column collapsed → `renamedColumns` non-empty) commits
   // `representation: null` so per-period resolution picks the right column per year; an
   // ordinary single column or a parallel co-existing column commits its own `column` (#902).
   const representation = renamedColumns.length > 0 ? null : column;
   return {
-    key: `${variant}::${column}`,
+    key,
     variant,
     variantLabel,
+    variantFamily,
+    variantFamilyLabel,
     column,
     representation,
     from,
     to,
     windows,
+    variantSegments,
     period: formatWindow(from, to),
     wirePeriod: rowWirePeriod(windows),
     valueSetLabel: latest.value_set_version_label,
     codingsVary,
     renamedColumns,
   };
+}
+
+function pickerVariantSegments(
+  group: readonly PickerStateInput[],
+  validFrom: (s: PickerStateInput) => string,
+  validTo: (s: PickerStateInput) => string,
+): PickerVariantSegment[] {
+  const byVariant = new Map<string, PickerStateInput[]>();
+  for (const s of group) {
+    const rows = byVariant.get(s.variant);
+    if (rows) {
+      rows.push(s);
+    } else {
+      byVariant.set(s.variant, [s]);
+    }
+  }
+  return [...byVariant.entries()]
+    .map(([variant, states]) => {
+      const latest = latestRepresentativeState(states, validTo);
+      const windows = deliveryWindows(
+        states.map((s) => ({ from: validFrom(s), to: validTo(s) })),
+      );
+      return {
+        variant,
+        variantLabel: latest.variant_label ?? variant,
+        windows,
+      };
+    })
+    .sort((a, b) => {
+      const aFrom = a.windows[0]?.from ?? YEARLESS_VALID_FROM;
+      const bFrom = b.windows[0]?.from ?? YEARLESS_VALID_FROM;
+      return aFrom.localeCompare(bFrom) || a.variant.localeCompare(b.variant);
+    });
 }
 
 /** Narrow `pickerRepresentations`' input states to the SAME subset an active
@@ -1464,7 +1583,7 @@ export function narrowStatesByModifier<
  * it is the delivery column — the picker renders a mono primary as a COLUMN CHIP),
  * the muted `qualifiers` (the remaining varying dimensions), and `period` ONLY when
  * the span varies across rows (else it is hoisted to the header, so it is null here).
- * `key` is the row's selection key (unchanged — `${variant}::${column}`). */
+ * `key` is the row's render/reset key; project selection uses `pickerRowKey`. */
 export interface PickerRowLabel {
   key: string;
   primary: { text: string; mono: boolean };
@@ -1497,6 +1616,14 @@ function distinctCount(
   pick: (r: PickerRepresentation) => unknown,
 ): number {
   return new Set(rows.map(pick)).size;
+}
+
+export function pickerRowVariantFamily(row: PickerRepresentation): string {
+  return row.variantFamily ?? row.variant;
+}
+
+export function pickerRowVariantFamilyLabel(row: PickerRepresentation): string {
+  return row.variantFamilyLabel ?? row.variantLabel;
 }
 
 /** The longest leading WORD-SEQUENCE (whitespace-split) shared by a MAJORITY
@@ -1579,7 +1706,7 @@ export function pickerLabeling(
   rows: readonly PickerRepresentation[],
 ): PickerLabeling {
   const columnVaries = distinctCount(rows, (r) => r.column) > 1;
-  const variantVaries = distinctCount(rows, (r) => r.variant) > 1;
+  const variantVaries = distinctCount(rows, pickerRowVariantFamily) > 1;
   const periodVaries = distinctCount(rows, (r) => r.period) > 1;
 
   // Value-set distinctness is over NON-EMPTY labels only: a label that is constant
@@ -1618,7 +1745,7 @@ export function pickerLabeling(
       varying.push({ text: r.column, mono: true });
     }
     if (variantVaries) {
-      varying.push({ text: r.variantLabel, mono: false });
+      varying.push({ text: pickerRowVariantFamilyLabel(r), mono: false });
     }
     if (valueSetVaries && r.valueSetLabel) {
       // With a hoisted stem, show only this row's SUFFIX (full label for an outlier
@@ -1637,7 +1764,7 @@ export function pickerLabeling(
       (r.column
         ? { text: r.column, mono: true }
         : r.variant
-          ? { text: r.variantLabel, mono: false }
+          ? { text: pickerRowVariantFamilyLabel(r), mono: false }
           : { text: "—", mono: false });
     return {
       key: r.key,
@@ -1767,13 +1894,14 @@ export function pickerFilterDimensions(
   }
 
   if (options.includeRowDimensions !== false) {
-    // Variant (population) — a per-ROW dimension keyed on the variant slug, displayed
-    // by its `variantLabel` (curator name, slug-fallback).
+    // Variant (population) — a per-ROW dimension keyed on the family key when a
+    // curated variant family exists, displayed by its family label.
     const variantSeen = new Map<string, string>();
     for (const band of bands) {
       for (const row of band.rows) {
-        if (!variantSeen.has(row.variant)) {
-          variantSeen.set(row.variant, row.variantLabel);
+        const family = pickerRowVariantFamily(row);
+        if (!variantSeen.has(family)) {
+          variantSeen.set(family, pickerRowVariantFamilyLabel(row));
         }
       }
     }
@@ -1832,7 +1960,7 @@ export function pickerRowPasses(
       continue;
     }
     if (dim.kind === "variant") {
-      if (!sel.has(row.variant)) {
+      if (!sel.has(pickerRowVariantFamily(row))) {
         return false;
       }
     } else if (dim.kind === "coding") {

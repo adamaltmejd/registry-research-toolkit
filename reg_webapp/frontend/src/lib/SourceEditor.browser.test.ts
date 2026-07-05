@@ -44,6 +44,20 @@ describe("SourceEditor read-only cart card", () => {
     ).toBeNull();
   });
 
+  it("shows the LISA family label without hiding the concrete source variant", async () => {
+    const source = {
+      name: "lisa_old",
+      register_variant: "scb/lisa/individer-16plus",
+      period: { from: 1990, to: 2009 },
+      bindings: [{ variable: "scb/lisa/kon", type: "categorical" }],
+    } as Source;
+    await render(SourceEditor, { sourceIndex: 0, source, issues: [] });
+
+    await expect
+      .element(page.getByText("Individer (scb/lisa/individer-16plus)"))
+      .toBeVisible();
+  });
+
   it("shows the '(no period)' fallback for a null period", async () => {
     const source = {
       name: "s",

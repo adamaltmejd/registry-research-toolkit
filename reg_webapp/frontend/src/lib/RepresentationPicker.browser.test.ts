@@ -8,7 +8,11 @@ import type {
   RelationshipGraph,
   VariableGraphNode,
 } from "./api";
-import type { PickerRepresentation } from "./catalog";
+import {
+  type PickerRepresentation,
+  type PickerStateInput,
+  pickerRepresentations,
+} from "./catalog";
 import RepresentationPicker, {
   type PickerBand,
 } from "./RepresentationPicker.svelte";
@@ -116,6 +120,33 @@ function multiAxisBand(): PickerBand {
         { axis: "hush", value: "h1", label: "Hushall" },
       ],
     },
+  };
+}
+
+type LisaIndividerVariant = "individer-16plus" | "individer-15plus";
+
+function lisaIndividerState(variant: LisaIndividerVariant): PickerStateInput {
+  const predecessor = variant === "individer-16plus";
+  return {
+    state_id: predecessor ? 1 : 2,
+    variant,
+    variant_label: predecessor ? "Individer, 16 plus" : "Individer, 15 plus",
+    variant_family: "individer-15plus",
+    variant_family_label: "Individer",
+    delivery_column_name: "Kon",
+    value_set_version_label: "",
+    value_set_id: null,
+    valid_from: predecessor ? "1990-01-01" : "2010-01-01",
+    valid_to: predecessor ? "2009-12-31" : "2023-12-31",
+  };
+}
+
+function lisaNarrowedBand(variant: LisaIndividerVariant): PickerBand {
+  return {
+    key: "scb/lisa/kon",
+    name: "Kon",
+    registerPrefix: "scb/lisa",
+    rows: pickerRepresentations([lisaIndividerState(variant)]),
   };
 }
 
@@ -780,6 +811,301 @@ describe("RepresentationPicker graph mode (#904)", () => {
       .click();
     expect(onapply).toHaveBeenCalledTimes(1);
     expect(onapply.mock.calls[0][0].adds[0].row.column).toBe("NEW");
+  });
+
+  it("labels a graph-matched folded variant-family row with its full family period", async () => {
+    const predecessorFqid = "scb/lisa/kon-old";
+    const currentFqid = "scb/lisa/kon";
+    render(RepresentationPicker, {
+      bands: [
+        {
+          key: currentFqid,
+          name: "Kön",
+          registerPrefix: "scb/lisa",
+          rows: [
+            row({
+              key: "individer-15plus::Kon",
+              variant: "individer-15plus",
+              variantLabel: "Individer, 15 år och äldre",
+              variantFamily: "individer-15plus",
+              variantFamilyLabel: "Individer",
+              column: "Kon",
+              from: "1990-01-01",
+              to: "2023-12-31",
+              windows: [
+                { from: "1990-01-01", to: "2009-12-31" },
+                { from: "2010-01-01", to: "2023-12-31" },
+              ],
+              variantSegments: [
+                {
+                  variant: "individer-16plus",
+                  variantLabel: "Individer, 16 år och äldre",
+                  windows: [{ from: "1990-01-01", to: "2009-12-31" }],
+                },
+                {
+                  variant: "individer-15plus",
+                  variantLabel: "Individer, 15 år och äldre",
+                  windows: [{ from: "2010-01-01", to: "2023-12-31" }],
+                },
+              ],
+              period: "1990 – 2023",
+              wirePeriod: "1990..2009,2010..2023",
+            }),
+          ],
+        } satisfies PickerBand,
+      ],
+      graph: graph({
+        nodes: [
+          graphNode(predecessorFqid, {
+            label: "Kön old",
+            states: [
+              graphState({
+                variant: "individer-16plus",
+                delivery_column_name: "Kon",
+                valid_from: "1990-01-01",
+                valid_to: "2009-12-31",
+              }),
+            ],
+          }),
+          graphNode(currentFqid, {
+            label: "Kön",
+            states: [
+              graphState({
+                variant: "individer-15plus",
+                delivery_column_name: "Kon",
+                valid_from: "2010-01-01",
+                valid_to: "2023-12-31",
+              }),
+            ],
+          }),
+        ],
+        edges: [edge(predecessorFqid, currentFqid)],
+        focus_id: currentFqid,
+      }),
+      ...PROPS,
+    });
+
+    await expect
+      .element(page.getByRole("checkbox", { name: /Kon.*1990.*2023/ }))
+      .toBeVisible();
+    const matchedCell = await vi.waitFor(() => {
+      const cell = [
+        ...document.querySelectorAll<HTMLLabelElement>("label.graph-cell"),
+      ].find((el) => el.textContent?.includes("Kon"));
+      if (!cell) {
+        throw new Error("matched graph cell not rendered");
+      }
+      return cell;
+    });
+    expect(matchedCell.textContent).toContain("1990 – 2023");
+    expect(matchedCell.textContent).not.toContain("2010 – 2023");
+  });
+
+  it("matches every concrete variant graph cell for a folded family row", async () => {
+    const onapply = vi.fn();
+    const fqid = "scb/lisa/kon";
+    render(RepresentationPicker, {
+      bands: [
+        {
+          key: fqid,
+          name: "Kön",
+          registerPrefix: "scb/lisa",
+          rows: [
+            row({
+              key: "individer-15plus::Kon",
+              variant: "individer-15plus",
+              variantLabel: "Individer, 15 år och äldre",
+              variantFamily: "individer-15plus",
+              variantFamilyLabel: "Individer",
+              column: "Kon",
+              from: "1990-01-01",
+              to: "2023-12-31",
+              windows: [
+                { from: "1990-01-01", to: "2009-12-31" },
+                { from: "2010-01-01", to: "2023-12-31" },
+              ],
+              variantSegments: [
+                {
+                  variant: "individer-16plus",
+                  variantLabel: "Individer, 16 år och äldre",
+                  windows: [{ from: "1990-01-01", to: "2009-12-31" }],
+                },
+                {
+                  variant: "individer-15plus",
+                  variantLabel: "Individer, 15 år och äldre",
+                  windows: [{ from: "2010-01-01", to: "2023-12-31" }],
+                },
+              ],
+              period: "1990 – 2023",
+              wirePeriod: "1990..2009,2010..2023",
+            }),
+          ],
+        } satisfies PickerBand,
+      ],
+      graph: graph({
+        nodes: [
+          graphNode(fqid, {
+            states: [
+              graphState({
+                variant: "individer-16plus",
+                representation_run_id: 1,
+                delivery_column_name: "Kon",
+                valid_from: "1990-01-01",
+                valid_to: "2009-12-31",
+              }),
+              graphState({
+                state_id: 2,
+                variant: "individer-15plus",
+                representation_run_id: 2,
+                delivery_column_name: "Kon",
+                valid_from: "2010-01-01",
+                valid_to: "2023-12-31",
+              }),
+            ],
+          }),
+        ],
+        edges: [],
+        focus_id: fqid,
+      }),
+      ...PROPS,
+      onapply,
+    });
+
+    const matchedCells = await vi.waitFor(() => {
+      const cells = [
+        ...document.querySelectorAll<HTMLLabelElement>("label.graph-cell"),
+      ].filter((el) => el.textContent?.includes("1990 – 2023"));
+      if (cells.length !== 2) {
+        throw new Error(
+          `expected two matched graph cells, got ${cells.length}`,
+        );
+      }
+      return cells;
+    });
+    for (const cell of matchedCells) {
+      expect(cell.textContent).toContain("1990 – 2023");
+    }
+
+    matchedCells[0].querySelector("input")?.click();
+
+    await expect.element(page.getByText("+1 column")).toBeVisible();
+    await page
+      .getByRole("button", {
+        name: /Add to project|Remove from project|Apply changes/,
+      })
+      .click();
+    expect(onapply).toHaveBeenCalledTimes(1);
+    expect(onapply.mock.calls[0][0].adds[0].row.column).toBe("Kon");
+  });
+
+  it("keeps predecessor variant cells in a folded family group graph projection", async () => {
+    const familyFqid = "scb/lisa/kon";
+    const successorFqid = "scb/lisa/kon-next";
+    render(RepresentationPicker, {
+      bands: [
+        {
+          key: familyFqid,
+          name: "Kön",
+          registerPrefix: "scb/lisa",
+          href: "/catalog/scb/lisa/kon",
+          rows: [
+            row({
+              key: "individer-15plus::Kon",
+              variant: "individer-15plus",
+              variantLabel: "Individer, 15 år och äldre",
+              variantFamily: "individer-15plus",
+              variantFamilyLabel: "Individer",
+              column: "Kon",
+              from: "1990-01-01",
+              to: "2023-12-31",
+              windows: [
+                { from: "1990-01-01", to: "2009-12-31" },
+                { from: "2010-01-01", to: "2023-12-31" },
+              ],
+              variantSegments: [
+                {
+                  variant: "individer-16plus",
+                  variantLabel: "Individer, 16 år och äldre",
+                  windows: [{ from: "1990-01-01", to: "2009-12-31" }],
+                },
+                {
+                  variant: "individer-15plus",
+                  variantLabel: "Individer, 15 år och äldre",
+                  windows: [{ from: "2010-01-01", to: "2023-12-31" }],
+                },
+              ],
+              period: "1990 – 2023",
+              wirePeriod: "1990..2009,2010..2023",
+            }),
+          ],
+        } satisfies PickerBand,
+        {
+          key: successorFqid,
+          name: "Successor",
+          registerPrefix: "scb/lisa",
+          href: "/catalog/scb/lisa/kon-next",
+          rows: [row({ column: "Kon2" })],
+        } satisfies PickerBand,
+      ],
+      graphMemberHrefs: {
+        [familyFqid]: "/catalog/scb/lisa/kon",
+        [successorFqid]: "/catalog/scb/lisa/kon-next",
+      },
+      graph: graph({
+        nodes: [
+          graphNode(familyFqid, {
+            states: [
+              graphState({
+                variant: "individer-16plus",
+                representation_run_id: 1,
+                delivery_column_name: "Kon",
+                valid_from: "1990-01-01",
+                valid_to: "2009-12-31",
+              }),
+              graphState({
+                state_id: 2,
+                variant: "individer-15plus",
+                representation_run_id: 2,
+                delivery_column_name: "Kon",
+                valid_from: "2010-01-01",
+                valid_to: "2023-12-31",
+              }),
+            ],
+          }),
+          graphNode(successorFqid, {
+            states: [
+              graphState({
+                state_id: 3,
+                representation_run_id: 3,
+                delivery_column_name: "Kon2",
+                valid_from: "2024-01-01",
+                valid_to: "9999-12-31",
+              }),
+            ],
+          }),
+        ],
+        edges: [edge(familyFqid, successorFqid)],
+        focus_id: familyFqid,
+      }),
+      ...PROPS,
+    });
+
+    const matchedCells = await vi.waitFor(() => {
+      const cells = [
+        ...document.querySelectorAll<HTMLLabelElement>("label.graph-cell"),
+      ].filter((el) => el.textContent?.includes("1990 – 2023"));
+      if (cells.length !== 2) {
+        throw new Error(
+          `expected two folded-family graph cells, got ${cells.length}`,
+        );
+      }
+      return cells;
+    });
+    for (const cell of matchedCells) {
+      expect(cell.textContent).toContain("1990 – 2023");
+    }
+    expect(document.querySelectorAll(".graph-edge")).toHaveLength(1);
+    expect(document.querySelector(".col-list")).toBeNull();
   });
 
   it("keeps an open-start graph cell in-window before the finite graph floor", async () => {
@@ -1504,6 +1830,111 @@ describe("RepresentationPicker graph mode (#904)", () => {
     );
   });
 
+  it("attributes a folded FAMILY cell's codings-vary link to its concrete era variant", async () => {
+    // #376 regression: a folded variant-family row folds TWO concrete variants
+    // (individer-16plus predecessor era + individer-15plus successor era) delivering
+    // one column `Kon`. Each era renders its own graph cell (carrying its concrete
+    // `cell.variant`). The codings-vary deep link must target the cell's CONCRETE
+    // variant, NOT the head `row.variant` — else the predecessor cell would link to a
+    // `(individer-15plus, Kon)` coding the successor never delivered in that era.
+    const fqid = "scb/lisa/kon";
+    render(RepresentationPicker, {
+      bands: [
+        {
+          key: fqid,
+          name: "Kön",
+          registerPrefix: "scb/lisa",
+          href: "/catalog/scb/lisa/kon",
+          rows: [
+            row({
+              key: "individer-15plus{individer-16plus,individer-15plus}::Kon",
+              variant: "individer-15plus",
+              variantLabel: "Individer, 15 år och äldre",
+              variantFamily: "individer-15plus",
+              variantFamilyLabel: "Individer",
+              column: "Kon",
+              codingsVary: true,
+              from: "1990-01-01",
+              to: "2023-12-31",
+              windows: [
+                { from: "1990-01-01", to: "2009-12-31" },
+                { from: "2010-01-01", to: "2023-12-31" },
+              ],
+              variantSegments: [
+                {
+                  variant: "individer-16plus",
+                  variantLabel: "Individer, 16 år och äldre",
+                  windows: [{ from: "1990-01-01", to: "2009-12-31" }],
+                },
+                {
+                  variant: "individer-15plus",
+                  variantLabel: "Individer, 15 år och äldre",
+                  windows: [{ from: "2010-01-01", to: "2023-12-31" }],
+                },
+              ],
+              period: "1990 – 2023",
+              wirePeriod: "1990..2009,2010..2023",
+            }),
+          ],
+        } satisfies PickerBand,
+      ],
+      graph: graph({
+        nodes: [
+          graphNode(fqid, {
+            states: [
+              graphState({
+                state_id: 1,
+                variant: "individer-16plus",
+                representation_run_id: 1,
+                delivery_column_name: "Kon",
+                value_set_id: 10,
+                value_set_version_label: "16+ coding",
+                valid_from: "1990-01-01",
+                valid_to: "2009-12-31",
+              }),
+              graphState({
+                state_id: 2,
+                variant: "individer-15plus",
+                representation_run_id: 2,
+                delivery_column_name: "Kon",
+                value_set_id: 20,
+                value_set_version_label: "15+ coding",
+                valid_from: "2010-01-01",
+                valid_to: "2023-12-31",
+              }),
+            ],
+          }),
+        ],
+        edges: [],
+        focus_id: fqid,
+      }),
+      ...PROPS,
+    });
+
+    const hrefs = await vi.waitFor(() => {
+      const found = [
+        ...document.querySelectorAll<HTMLLabelElement>("label.graph-cell"),
+      ]
+        .map((c) =>
+          c
+            .querySelector<HTMLAnchorElement>(".codings-vary")
+            ?.getAttribute("href"),
+        )
+        .filter((h): h is string => h != null);
+      if (found.length < 2) {
+        throw new Error("both era coding links not yet rendered");
+      }
+      return found;
+    });
+    // Each era's link carries ITS OWN concrete variant, never both collapsed to the head.
+    expect(hrefs).toContain(
+      "/catalog/scb/lisa/kon?codes=individer-16plus%3A%3AKon#states-heading",
+    );
+    expect(hrefs).toContain(
+      "/catalog/scb/lisa/kon?codes=individer-15plus%3A%3AKon#states-heading",
+    );
+  });
+
   it("falls back when a graph cell has no unambiguous picker member row", async () => {
     const aFqid = "scb/lisa/a";
     const bFqid = "scb/lisa/b";
@@ -2102,6 +2533,34 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
     expect(onapply).toHaveBeenCalledTimes(1);
     await expect.element(page.getByText("Will be added")).toBeVisible();
     await expect.element(page.getByText("+1 column")).toBeVisible();
+  });
+
+  it("clears staged adds when a narrowed folded variant changes concrete segment", async () => {
+    const onapply = vi.fn();
+    const { rerender } = render(RepresentationPicker, {
+      bands: [lisaNarrowedBand("individer-16plus")],
+      ...PROPS,
+      onapply,
+    });
+
+    await page.getByRole("checkbox", { name: /Kon/ }).click();
+    await expect.element(page.getByText("+1 column")).toBeVisible();
+
+    await rerender({
+      bands: [lisaNarrowedBand("individer-15plus")],
+      ...PROPS,
+      onapply,
+    });
+
+    await expect.element(page.getByText("+1 column")).not.toBeInTheDocument();
+    await expect
+      .element(
+        page.getByRole("button", {
+          name: /Add to project|Remove from project|Apply changes/,
+        }),
+      )
+      .not.toBeInTheDocument();
+    expect(onapply).not.toHaveBeenCalled();
   });
 
   it("freezes staging controls while Apply is pending", async () => {

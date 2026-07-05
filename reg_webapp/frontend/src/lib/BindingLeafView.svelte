@@ -10,7 +10,6 @@ import {
 } from "./api";
 import { asyncResource } from "./async.svelte";
 import {
-  addWindowBounds,
   type BindingResolution,
   bindingFieldsFromResolution,
   coverageFromStates,
@@ -24,7 +23,6 @@ import {
   qualifierFromFocus,
   registerPrefixOf,
   resolveBindingAt,
-  rowAddPeriod,
 } from "./catalog";
 import DocMentionsPanel from "./DocMentionsPanel.svelte";
 import LineageDetails from "./LineageDetails.svelte";
@@ -50,7 +48,8 @@ import {
   committedPickerRows,
   finalSourcePeriodsForStagedAdds,
   periodChangesWithStagedAdds,
-  rowRegisterVariant,
+  rowAddSegments,
+  type StagedPickerBand,
   sourcePeriodsFromDraft,
   stagedRemoveForCommitted,
 } from "./staged_picker";
@@ -403,10 +402,6 @@ const pickerBands = $derived([
     rows: pickerRows,
   },
 ]);
-const committedRows = $derived(
-  committedPickerRows(projectStore.draft, pickerBands),
-);
-
 const narrowedPeriodLabel = $derived(
   (boundedPickerPeriod ?? params.period ?? "").split(",").join(" + "),
 );
@@ -428,6 +423,12 @@ const activePickerPeriod = $derived(
 const pickerWindow = $derived(
   pickerWindowYears(activePickerPeriod, boundedProjectWindow),
 );
+const committedRows = $derived(
+  committedPickerRows(projectStore.draft, pickerBands, {
+    period: activePickerPeriod,
+    window: pickerWindow,
+  }),
+);
 
 /** The applied outcome (drives the inline confirmation). */
 let applyOutcome = $state<{
@@ -448,20 +449,26 @@ $effect(() => {
   applyOutcome = null;
 });
 
-function stagedAddCandidate(selection: PickerSelection) {
-  const { band, row } = selection;
-  const addWindow = addWindowBounds(activePickerPeriod, pickerWindow);
-  const addPeriod = rowAddPeriod(row, addWindow);
-  return {
+function stagedAddCandidates(selection: PickerSelection) {
+  // Fan out to ONE staged add per concrete `register_variant` the row's active scope
+  // touches (#376) — the per-concrete-segment invariant lives in `rowAddSegments`, not
+  // re-derived here (see catalog.ts's PickerRepresentation seam note).
+  return rowAddSegments(selection.band as StagedPickerBand, selection.row, {
+    period: activePickerPeriod,
+    window: pickerWindow,
+  }).map((segment) => ({
     selection,
-    registerVariant: rowRegisterVariant(band, row),
-    periodWire: addPeriod,
-    period: periodFromWire(addPeriod),
-  };
+    variant: segment.variant,
+    registerVariant: segment.registerVariant,
+    periodWire: segment.periodWire,
+    period: periodFromWire(segment.periodWire),
+  }));
 }
 
+type StagedAddCandidate = ReturnType<typeof stagedAddCandidates>[number];
+
 async function stagedAdd(
-  candidate: ReturnType<typeof stagedAddCandidate>,
+  candidate: StagedAddCandidate,
   resolvePeriodWire: string | null,
 ) {
   const { band, row } = candidate.selection;
@@ -470,7 +477,7 @@ async function stagedAdd(
     resolution = await resolveBindingAt(
       band.key,
       resolvePeriodWire,
-      row.variant,
+      candidate.variant,
     );
   } catch {
     resolution = { kind: "unresolved" as const, reason: "no-states" as const };
@@ -503,7 +510,7 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
     });
   }
   const target = projectStore.draft;
-  const candidates = payload.adds.map(stagedAddCandidate);
+  const candidates = payload.adds.flatMap(stagedAddCandidates);
   const finalPeriods = finalSourcePeriodsForStagedAdds(
     sourcePeriodsFromDraft(target),
     payload.periodChanges,
@@ -522,9 +529,12 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
   if (projectStore.draft !== target) {
     return false;
   }
+  const removes = payload.removes.flatMap((r) =>
+    stagedRemoveForCommitted(r.committed),
+  );
   projectStore.applyStagedDiff({
     adds,
-    removes: payload.removes.map((r) => stagedRemoveForCommitted(r.committed)),
+    removes,
     periodChange: periodChangesWithStagedAdds(
       payload.periodChanges,
       candidates,
@@ -532,7 +542,7 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
   });
   applyOutcome = {
     added: payload.adds.length,
-    removed: payload.removes.length,
+    removed: removes.length,
     periodChanged: payload.periodChanges.length,
   };
   return true;

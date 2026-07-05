@@ -222,3 +222,41 @@ describe("VariantBrowser — hide the section without a real variant (#673/M4)",
       .toBeVisible();
   });
 });
+
+describe("VariantBrowser — variant family folds (#376)", () => {
+  it("renders one browse item for concrete variants in the same family", async () => {
+    vi.mocked(getRegisterVariants).mockResolvedValue({
+      variants: [
+        {
+          slug: "individer-16plus",
+          name: "Individer, 16 år och äldre",
+          display_group: "Individer, 16 år och äldre",
+          variant_family: "individer-15plus",
+          variant_family_label: "Individer",
+        },
+        {
+          slug: "individer-15plus",
+          name: "Individer, 15 år och äldre",
+          display_group: "Individer, 15 år och äldre",
+          variant_family: "individer-15plus",
+          variant_family_label: "Individer",
+        },
+      ],
+    } as unknown as VariantsResponse);
+
+    const { container } = await render(VariantBrowser, {
+      registerFqid: "scb/lisa",
+    });
+
+    await expect
+      .element(page.getByText("Individer", { exact: true }))
+      .toBeVisible();
+    expect(container.querySelectorAll(".variant-list > li")).toHaveLength(1);
+    await expect
+      .element(page.getByText("individer-16plus", { exact: true }))
+      .toBeVisible();
+    await expect
+      .element(page.getByText("individer-15plus", { exact: true }))
+      .toBeVisible();
+  });
+});

@@ -32,6 +32,7 @@ const errorCount = $derived(rolledUp.filter((i) => i.level === "error").length);
 const registerVariant = $derived(
   typeof source.register_variant === "string" ? source.register_variant : "",
 );
+const registerVariantLabel = $derived(variantDisplayLabel(registerVariant));
 
 // Defensive: a malformed opened spec may carry `bindings` as a non-array. Show an
 // inline note instead of the list (full-replace-with-guards, maintainer decision)
@@ -54,8 +55,8 @@ const periodDisplay = $derived(periodToWire(source.period as Period));
 const metaRows = $derived([
   {
     label: "Register variant",
-    value: variantDisplayLabel(registerVariant),
-    mono: true,
+    value: registerVariantLabel,
+    mono: registerVariantLabel === registerVariant,
   },
   { label: "Period", value: periodDisplay ?? "(no period)" },
 ] satisfies KeyValueRow[]);

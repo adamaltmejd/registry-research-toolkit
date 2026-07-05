@@ -57,6 +57,7 @@ _CLASSIFICATION_FAMILY_LABELS = {
     "sni": "SNI",
     "ssyk": "SSYK",
 }
+_VariantFamilyInfo = tuple[str, str]  # (family_key, display_label)
 
 
 def _classification_family_key(slug: str) -> str | None:
@@ -68,6 +69,25 @@ def _classification_family_key(slug: str) -> str | None:
         if suffix != slug and suffix[:1].isdigit():
             return key
     return None
+
+
+def _variant_family_label(labels: Iterable[str]) -> str:
+    """Display label for a register-variant succession family.
+
+    LISA's `Individer, 15 år och äldre` / `Individer, 16 år och äldre` shape is
+    the first consumer: the common pre-comma stem is the family label. Fallback to
+    the full common label when labels already match, then to the first label for
+    non-uniform families.
+    """
+    ordered = [label for label in labels if label]
+    if not ordered:
+        return ""
+    if all(label == ordered[0] for label in ordered):
+        return ordered[0]
+    stems = [label.split(",", 1)[0].strip() for label in ordered]
+    if stems[0] and all(stem == stems[0] for stem in stems):
+        return stems[0]
+    return ordered[0]
 
 
 class _CatalogModel(BaseModel):
@@ -398,6 +418,8 @@ class VariantSummary(_CatalogModel):
     name: str | None
     description: str | None
     display_group: str | None
+    variant_family: str | None = None
+    variant_family_label: str | None = None
     panel_entity_key: str | tuple[str, ...] | None
     panel_time_key: str | tuple[str, ...] | None
     panel_time_grain: str | None
@@ -477,6 +499,12 @@ class VariableState(_CatalogModel):
     # (the consumer falls back to the slug). `variant` (the slug) stays the add
     # coordinate; this is display-only and never an identity.
     variant_label: str | None
+    # Variant-family metadata (#376). `variant_family` is the stable family key
+    # (the terminal/head variant slug), while `variant_family_label` is display
+    # text for picker/cart folding. Both are None for variants with no curated
+    # succession family; concrete `variant` remains the add coordinate.
+    variant_family: str | None = None
+    variant_family_label: str | None = None
     register_variant_id: int
     valid_from: str  # ISO 8601 'YYYY-MM-DD', inclusive
     valid_to: str  # ISO 8601 'YYYY-MM-DD', inclusive ('9999-12-31' open-ended)
@@ -922,6 +950,7 @@ class Catalog:
         # trip every miss. Catalog treats the DB as immutable for its lifetime.
         self._var_same_as_sources: frozenset[tuple[str, str, str]] | None = None
         self._class_same_as_sources: frozenset[tuple[str, str]] | None = None
+        self._variant_family_cache: dict[int, dict[str, _VariantFamilyInfo]] = {}
 
     @classmethod
     def open(
@@ -1202,7 +1231,8 @@ class Catalog:
         slug — the synthesized variant for LSS/BU/SOL etc.; see DESIGN.md → Two-level variable model — so it is
         returned, not filtered.)"""
         rows = self._conn.execute(
-            "SELECT rv.register_variant_id, rv.slug, rv.name, rv.description, "
+            "SELECT rv.register_variant_id, rv.register_id, rv.slug, rv.name, "
+            "rv.description, "
             "rv.display_group, "
             "rv.panel_entity_key, rv.panel_time_key, rv.panel_time_grain "
             "FROM register_variant rv "
@@ -1215,12 +1245,27 @@ class Catalog:
         versions_by_variant = self._register_version_metadata_by_variant(
             [r["register_variant_id"] for r in rows]
         )
+        family_by_variant = (
+            self._variant_families_for_register_id(rows[0]["register_id"])
+            if rows
+            else {}
+        )
         return [
             VariantSummary(
                 slug=r["slug"],
                 name=r["name"],
                 description=r["description"],
                 display_group=r["display_group"],
+                variant_family=(
+                    family_by_variant[r["slug"]][0]
+                    if r["slug"] in family_by_variant
+                    else None
+                ),
+                variant_family_label=(
+                    family_by_variant[r["slug"]][1]
+                    if r["slug"] in family_by_variant
+                    else None
+                ),
                 panel_entity_key=_decode_panel_entity_key(r["panel_entity_key"]),
                 # `_decode_panel_entity_key` is the generic stored-key decoder —
                 # reused for the (now-composite-capable) time key too.
@@ -1230,6 +1275,105 @@ class Catalog:
             )
             for r in rows
         ]
+
+    def _variant_families_for_register_id(
+        self, register_id: int
+    ) -> dict[str, _VariantFamilyInfo]:
+        """Curated register_variant succession families for one register (#376).
+
+        Returns `variant_slug -> (family_key, family_label)`. The family key is the
+        terminal/head variant slug in that register-local succession component.
+        """
+        cached = self._variant_family_cache.get(register_id)
+        if cached is not None:
+            return cached
+
+        variants = self._conn.execute(
+            "SELECT slug, name, display_group FROM register_variant "
+            "WHERE register_id = ? AND slug IS NOT NULL",
+            (register_id,),
+        ).fetchall()
+        by_slug = {row["slug"]: row for row in variants}
+        if len(by_slug) < 2:
+            self._variant_family_cache[register_id] = {}
+            return {}
+
+        reg = self._conn.execute(
+            "SELECT p.slug AS provider_slug, r.slug AS register_slug "
+            "FROM register r JOIN provider p ON r.provider_id = p.provider_id "
+            "WHERE r.register_id = ?",
+            (register_id,),
+        ).fetchone()
+        if reg is None or reg["provider_slug"] is None or reg["register_slug"] is None:
+            self._variant_family_cache[register_id] = {}
+            return {}
+
+        edge_rows = self._conn.execute(
+            "SELECT predecessor_variant, successor_variant "
+            "FROM variant_replaced_by "
+            "WHERE predecessor_provider = ? AND predecessor_register = ? "
+            "AND successor_provider = ? AND successor_register = ? "
+            "ORDER BY predecessor_variant, successor_variant",
+            (
+                reg["provider_slug"],
+                reg["register_slug"],
+                reg["provider_slug"],
+                reg["register_slug"],
+            ),
+        ).fetchall()
+
+        outgoing: dict[str, set[str]] = {}
+        undirected: dict[str, set[str]] = {}
+        for row in edge_rows:
+            pred = row["predecessor_variant"]
+            succ = row["successor_variant"]
+            if pred not in by_slug or succ not in by_slug:
+                continue
+            outgoing.setdefault(pred, set()).add(succ)
+            undirected.setdefault(pred, set()).add(succ)
+            undirected.setdefault(succ, set()).add(pred)
+
+        out: dict[str, _VariantFamilyInfo] = {}
+        seen: set[str] = set()
+        for start in sorted(undirected):
+            if start in seen:
+                continue
+            stack = [start]
+            component: set[str] = set()
+            while stack:
+                node = stack.pop()
+                if node in component:
+                    continue
+                component.add(node)
+                stack.extend(undirected.get(node, ()))
+            seen.update(component)
+            if len(component) < 2:
+                continue
+            heads = sorted(v for v in component if not outgoing.get(v))
+            family_key = heads[0] if heads else sorted(component)[0]
+            labels = [
+                by_slug[v]["display_group"] or by_slug[v]["name"] or v
+                for v in sorted(component)
+            ]
+            family_label = _variant_family_label(labels)
+            for variant in component:
+                out[variant] = (family_key, family_label)
+
+        self._variant_family_cache[register_id] = out
+        return out
+
+    def _variant_family_for_variant_id(
+        self, register_variant_id: int
+    ) -> _VariantFamilyInfo | None:
+        row = self._conn.execute(
+            "SELECT register_id, slug FROM register_variant WHERE register_variant_id = ?",
+            (register_variant_id,),
+        ).fetchone()
+        if row is None or row["slug"] is None:
+            return None
+        return self._variant_families_for_register_id(row["register_id"]).get(
+            row["slug"]
+        )
 
     def _register_version_metadata_by_variant(
         self, register_variant_ids: list[int]
@@ -2063,10 +2207,13 @@ class Catalog:
                 ),
                 remediation="Rebuild the reg_meta DB (slug population is incomplete).",
             )
+        family = self._variant_family_for_variant_id(rvid)
         return VariableState(
             state_id=row["state_id"],
             variant=variant,
             variant_label=row["variant_label"],
+            variant_family=family[0] if family is not None else None,
+            variant_family_label=family[1] if family is not None else None,
             register_variant_id=rvid,
             valid_from=row["valid_from"],
             valid_to=row["valid_to"],

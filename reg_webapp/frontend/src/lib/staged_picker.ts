@@ -1,4 +1,12 @@
-import type { PickerRepresentation } from "./catalog";
+import {
+  addWindowBounds,
+  type PickerRepresentation,
+  type PickerVariantSegment,
+  pickerRowVariantFamily,
+  rowAddPeriod,
+  windowsAddPeriod,
+  windowsOverlapWindow,
+} from "./catalog";
 import {
   type PeriodBounds,
   periodCoverageUnion,
@@ -21,6 +29,7 @@ export interface PickerCommittedRow {
   representation: string | null;
   sourceName: string;
   sourcePeriod: Period;
+  removals?: StagedRemove[];
 }
 
 export interface PickerAddPeriod {
@@ -33,22 +42,26 @@ export interface PickerSourcePeriod {
   period: Period;
 }
 
-export function rowRegisterVariant(
-  band: StagedPickerBand,
-  row: PickerRepresentation,
-): string {
-  return `${band.registerPrefix}/${row.variant}`;
+export interface PickerCommitScope {
+  period?: string | null | undefined;
+  window?: [number, number] | null;
 }
 
-/** The picker row identity seam (#995). Today it is concrete variant + variable +
- * row representation grain; #376 can swap the variant-family grain here without
- * rewriting the staging consumers. */
+type CommitVariantSegment = Pick<PickerVariantSegment, "variant" | "windows">;
+
+export function rowRegisterVariantForVariant(
+  band: StagedPickerBand,
+  variant: string,
+): string {
+  return `${band.registerPrefix}/${variant}`;
+}
+
 export function pickerRowKey(
   band: StagedPickerBand,
   row: PickerRepresentation,
 ): string {
   return [
-    rowRegisterVariant(band, row),
+    `${band.registerPrefix}/${pickerRowVariantFamily(row)}`,
     band.key,
     row.representation ?? row.column,
   ].join("::");
@@ -133,6 +146,89 @@ function rowOverlapsPeriod(row: PickerRepresentation, period: Period): boolean {
   );
 }
 
+/** The concrete `register_variant` segments a folded picker row spans (#376): its
+ * `variantSegments` when folded, else the single-segment fallback on `row.variant`
+ * (the unfolded HEAD — see the per-concrete-segment invariant in catalog.ts). The
+ * ONE place the row → concrete-segment fan-out is derived. */
+function rowVariantSegments(row: PickerRepresentation): CommitVariantSegment[] {
+  return row.variantSegments && row.variantSegments.length > 0
+    ? row.variantSegments
+    : [{ variant: row.variant, windows: row.windows }];
+}
+
+/** The concrete segments a row commits under `scope`, plus the scope machinery each
+ * consumer needs. Shared by `rowRelevantSegments` (staging-match) and `rowAddSegments`
+ * (Apply fan-out) so the two can't drift on WHICH segments a period-scoped add touches
+ * (the #376 whack-a-mole seam). A single-segment (unfolded) row is always fully
+ * relevant; a folded family narrows to the segments whose delivery windows overlap the
+ * active add window, falling back to ALL segments when none do (an explicitly-selected
+ * out-of-window row is never silently dropped). */
+function relevantSegments(
+  row: PickerRepresentation,
+  scope: PickerCommitScope,
+): {
+  segments: CommitVariantSegment[];
+  addWindow: { from: string; to: string } | null;
+  clipped: boolean;
+  folded: boolean;
+} {
+  const addWindow = addWindowBounds(scope.period, scope.window ?? null);
+  const segments = rowVariantSegments(row);
+  if (segments.length === 1) {
+    return { segments, addWindow, clipped: true, folded: false };
+  }
+  const overlapping = segments.filter((segment) =>
+    windowsOverlapWindow(segment.windows, addWindow),
+  );
+  const clipped = overlapping.length > 0;
+  return {
+    segments: clipped ? overlapping : segments,
+    addWindow,
+    clipped,
+    folded: true,
+  };
+}
+
+function rowRelevantSegments(
+  row: PickerRepresentation,
+  scope: PickerCommitScope,
+): CommitVariantSegment[] {
+  return relevantSegments(row, scope).segments;
+}
+
+/** One concrete `register_variant` an Apply must stage for a (folded or plain) picker
+ * row, with its scope-clipped add period. */
+export interface RowAddSegment {
+  variant: string;
+  registerVariant: string;
+  periodWire: string | null;
+}
+
+/** The per-concrete-segment Apply plan for a picker row (#376): ONE source per concrete
+ * `register_variant` the row's active scope touches, each with its own era-clipped wire
+ * period. The single home for the picker-row → staged-add fan-out, consumed by every
+ * view's `stagedAddCandidates` so the per-concrete-segment invariant (catalog.ts) is
+ * enforced once, not re-derived per view.
+ *   - An UNFOLDED row stages its one variant with `rowAddPeriod` (the whole-row window,
+ *     fallback allowed so an out-of-window add still commits the row's own span).
+ *   - A FOLDED family stages each relevant concrete segment with its OWN delivery
+ *     windows clipped to the add window (no fallback: a family segment's period is
+ *     era-precise so a partial-family add can't leak coverage into the other era). */
+export function rowAddSegments(
+  band: StagedPickerBand,
+  row: PickerRepresentation,
+  scope: PickerCommitScope,
+): RowAddSegment[] {
+  const { segments, addWindow, clipped, folded } = relevantSegments(row, scope);
+  return segments.map((segment) => ({
+    variant: segment.variant,
+    registerVariant: rowRegisterVariantForVariant(band, segment.variant),
+    periodWire: folded
+      ? windowsAddPeriod(segment.windows, clipped ? addWindow : null, false)
+      : rowAddPeriod(row, addWindow),
+  }));
+}
+
 function rowMatchesBinding(
   binding: unknown,
   row: PickerRepresentation,
@@ -151,33 +247,61 @@ function rowMatchesBinding(
 export function committedPickerRows(
   draft: ProjectData | null,
   bands: readonly StagedPickerBand[],
+  scope: PickerCommitScope = {},
 ): Map<string, PickerCommittedRow> {
   const committed = new Map<string, PickerCommittedRow>();
   const sources: unknown[] = Array.isArray(draft?.sources) ? draft.sources : [];
   for (const band of bands) {
     for (const row of band.rows) {
-      const registerVariant = rowRegisterVariant(band, row);
-      const source = sources.find(
-        (s) => sourceRegisterVariant(s) === registerVariant,
-      );
-      if (!source) {
+      const rowKey = pickerRowKey(band, row);
+      const segments = rowRelevantSegments(row, scope);
+      const matched: PickerCommittedRow[] = [];
+      for (const segment of segments) {
+        const registerVariant = rowRegisterVariantForVariant(
+          band,
+          segment.variant,
+        );
+        const source = sources.find(
+          (s) => sourceRegisterVariant(s) === registerVariant,
+        );
+        if (!source) {
+          continue;
+        }
+        const period = sourcePeriod(source);
+        const binding = sourceBindings(source).find(
+          (b) =>
+            bindingVariable(b) === band.key &&
+            rowMatchesBinding(b, row, period),
+        );
+        if (!binding) {
+          continue;
+        }
+        matched.push({
+          key: rowKey,
+          registerVariant,
+          variable: band.key,
+          representation: bindingRepresentation(binding),
+          sourceName: sourceName(source),
+          sourcePeriod: period,
+        });
+      }
+      if (matched.length !== segments.length) {
         continue;
       }
-      const period = sourcePeriod(source);
-      const binding = sourceBindings(source).find(
-        (b) =>
-          bindingVariable(b) === band.key && rowMatchesBinding(b, row, period),
-      );
-      if (!binding) {
+      const first = matched[0];
+      if (!first) {
         continue;
       }
-      committed.set(pickerRowKey(band, row), {
-        key: pickerRowKey(band, row),
-        registerVariant,
-        variable: band.key,
-        representation: bindingRepresentation(binding),
-        sourceName: sourceName(source),
-        sourcePeriod: period,
+      committed.set(rowKey, {
+        ...first,
+        removals:
+          matched.length > 1
+            ? matched.map((match) => ({
+                registerVariant: match.registerVariant,
+                variable: match.variable,
+                representation: match.representation,
+              }))
+            : undefined,
       });
     }
   }
@@ -200,12 +324,16 @@ export function sourcePeriodsFromDraft(
 
 export function stagedRemoveForCommitted(
   committed: PickerCommittedRow,
-): StagedRemove {
-  return {
-    registerVariant: committed.registerVariant,
-    variable: committed.variable,
-    representation: committed.representation,
-  };
+): StagedRemove[] {
+  return committed.removals && committed.removals.length > 0
+    ? committed.removals
+    : [
+        {
+          registerVariant: committed.registerVariant,
+          variable: committed.variable,
+          representation: committed.representation,
+        },
+      ];
 }
 
 export function nullBindingCommittedRowKeys(

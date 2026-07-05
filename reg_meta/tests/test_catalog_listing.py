@@ -10,7 +10,7 @@ from __future__ import annotations
 
 import json
 
-from _slugged_db import add_register, add_variable, build_slugged_db
+from _slugged_db import add_register, add_variable, add_variant, build_slugged_db
 from reg_meta.catalog import (
     BindingSummary,
     Catalog,
@@ -376,6 +376,67 @@ class TestListVariants:
 
     def test_unknown_provider_is_empty(self) -> None:
         assert _variants_catalog().list_variants("nope", "rams") == []
+
+    def test_variant_family_metadata_from_successions(self) -> None:
+        cat = _variants_catalog()
+        conn = cat._conn
+        add_variant(
+            conn,
+            register_variant_id=25,
+            register_id=2,
+            slug="legacy",
+            name="Legacy",
+        )
+        conn.execute(
+            "UPDATE register_variant SET display_group = ? WHERE register_variant_id = ?",
+            ("Survey frame, old", 25),
+        )
+        conn.execute(
+            "UPDATE register_variant SET display_group = ? WHERE register_variant_id = ?",
+            ("Survey frame, current", 21),
+        )
+        conn.execute(
+            "INSERT INTO variant_replaced_by ("
+            "predecessor_provider, predecessor_register, predecessor_variant, "
+            "successor_provider, successor_register, successor_variant, "
+            "effective_year, note) VALUES "
+            "('scb', 'rams', 'legacy', 'scb', 'rams', 'standard', 2019, "
+            "'curated:slug_toml')"
+        )
+        conn.commit()
+
+        by_slug = {v.slug: v for v in cat.list_variants("scb", "rams")}
+        assert by_slug["legacy"].variant_family == "standard"
+        assert by_slug["standard"].variant_family == "standard"
+        assert by_slug["legacy"].variant_family_label == "Survey frame"
+        assert by_slug["extended"].variant_family is None
+
+    def test_identical_comma_variant_family_labels_stay_whole(self) -> None:
+        cat = _variants_catalog()
+        conn = cat._conn
+        add_variant(
+            conn,
+            register_variant_id=25,
+            register_id=2,
+            slug="legacy",
+            name="Legacy",
+        )
+        conn.execute(
+            "UPDATE register_variant SET display_group = ? WHERE register_variant_id IN (?, ?)",
+            ("Survey frame, baseline", 21, 25),
+        )
+        conn.execute(
+            "INSERT INTO variant_replaced_by ("
+            "predecessor_provider, predecessor_register, predecessor_variant, "
+            "successor_provider, successor_register, successor_variant, "
+            "effective_year, note) VALUES "
+            "('scb', 'rams', 'legacy', 'scb', 'rams', 'standard', 2019, "
+            "'curated:slug_toml')"
+        )
+        conn.commit()
+
+        by_slug = {v.slug: v for v in cat.list_variants("scb", "rams")}
+        assert by_slug["legacy"].variant_family_label == "Survey frame, baseline"
 
 
 def _groups_catalog() -> Catalog:
