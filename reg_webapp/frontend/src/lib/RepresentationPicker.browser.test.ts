@@ -833,6 +833,20 @@ describe("RepresentationPicker graph mode (#904)", () => {
     expect(document.querySelector(".graph-picker")?.textContent).toContain(
       "PersOrgNr → BorgNr · 2018",
     );
+    const labelPositions = await vi.waitFor(() => {
+      const labels = [
+        ...document.querySelectorAll<HTMLElement>(".graph-reason"),
+      ].filter(
+        (label) =>
+          label.textContent?.includes("BorgNr → PersOrgNr · 2014") ||
+          label.textContent?.includes("PersOrgNr → BorgNr · 2018"),
+      );
+      if (labels.length !== 2) {
+        throw new Error("round-trip labels not rendered");
+      }
+      return labels.map((label) => `${label.style.left}:${label.style.top}`);
+    });
+    expect(new Set(labelPositions).size).toBe(2);
   });
 
   it("marks dead renamed predecessor lanes with the leaf slug and renamed hint", async () => {

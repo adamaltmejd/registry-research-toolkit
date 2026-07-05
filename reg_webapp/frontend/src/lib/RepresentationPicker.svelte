@@ -1496,6 +1496,11 @@ interface GraphEdgeSegment {
   representation: boolean;
 }
 
+interface GraphEdgeLabelPosition {
+  left: number;
+  top: number;
+}
+
 type GraphRepresentationEndpointRole = "source" | "target";
 
 function graphEndpointYearScore(
@@ -1625,6 +1630,72 @@ function graphEdgeLabelLeft(segment: GraphEdgeSegment): number {
     return GRAPH_GUTTER_W + 6;
   }
   return Math.max(GRAPH_GUTTER_W + 6, (segment.x1 + segment.x2) / 2 + 6);
+}
+
+function graphEdgeLabelAnchor(
+  edge: ResolvedEdge,
+  source: GraphLaneBox,
+  target: GraphLaneBox,
+): GraphEdgeLabelPosition {
+  const segment = graphEdgeSegment(edge, source, target);
+  return {
+    left: graphEdgeLabelLeft(segment),
+    top: (segment.y1 + segment.y2) / 2,
+  };
+}
+
+function graphEdgeLabelPosition(
+  edge: ResolvedEdge,
+  source: GraphLaneBox,
+  target: GraphLaneBox,
+  edges: ResolvedEdge[],
+  byId: Map<string, GraphLaneBox>,
+): GraphEdgeLabelPosition {
+  const anchor = graphEdgeLabelAnchor(edge, source, target);
+  const stack = edges
+    .map((candidate) => {
+      const candidateSource = byId.get(candidate.source.id);
+      const candidateTarget = byId.get(candidate.target.id);
+      if (
+        !graphEdgeLabel(candidate) ||
+        candidateSource == null ||
+        candidateTarget == null
+      ) {
+        return null;
+      }
+      return {
+        edgeId: candidate.edge.id,
+        anchor: graphEdgeLabelAnchor(
+          candidate,
+          candidateSource,
+          candidateTarget,
+        ),
+      };
+    })
+    .filter(
+      (
+        candidate,
+      ): candidate is { edgeId: string; anchor: GraphEdgeLabelPosition } => {
+        if (candidate == null) {
+          return false;
+        }
+        return (
+          Math.abs(candidate.anchor.left - anchor.left) < 32 &&
+          Math.abs(candidate.anchor.top - anchor.top) < 12
+        );
+      },
+    );
+  if (stack.length <= 1) {
+    return anchor;
+  }
+  const index = Math.max(
+    0,
+    stack.findIndex((candidate) => candidate.edgeId === edge.edge.id),
+  );
+  return {
+    left: anchor.left,
+    top: anchor.top + (index - (stack.length - 1) / 2) * 18,
+  };
 }
 
 function graphCellSubLabel(cell: RunCell, column: string): string {
@@ -2207,10 +2278,16 @@ function codingsVaryHref(
                 {@const target = byId.get(edge.target.id)}
                 {@const label = graphEdgeLabel(edge)}
                 {#if label && source && target}
-                  {@const segment = graphEdgeSegment(edge, source, target)}
+                  {@const labelPos = graphEdgeLabelPosition(
+                    edge,
+                    source,
+                    target,
+                    cEdges,
+                    byId,
+                  )}
                   <div
                     class="graph-reason"
-                    style={`top:${(segment.y1 + segment.y2) / 2}px; left:${graphEdgeLabelLeft(segment)}px`}
+                    style={`top:${labelPos.top}px; left:${labelPos.left}px`}
                     title={label}
                     aria-hidden="true"
                   >
