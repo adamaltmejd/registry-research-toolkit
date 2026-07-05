@@ -212,6 +212,14 @@ describe("findingLocation (pointer → human location)", () => {
     expect(loc?.catalogHref).toBeUndefined();
   });
 
+  it("locates a malformed source slot by index without a catalog link", () => {
+    const loc = findingLocation("/sources/0/register_variant", [null]);
+    expect(loc).toEqual({
+      label: "Source 1",
+      anchorId: sourceAnchorId(0),
+    });
+  });
+
   it("returns null for a whole-document or non-source path (raw-pointer fallback)", () => {
     expect(findingLocation("", sources)).toBeNull();
     expect(findingLocation("/name", sources)).toBeNull();
@@ -313,6 +321,7 @@ describe("windowCoverageHints", () => {
           register_variant: "scb/lisa/v1",
           period: [{ from: 2000, to: undefined }],
         },
+        null,
       ]),
     ).toEqual([]);
   });

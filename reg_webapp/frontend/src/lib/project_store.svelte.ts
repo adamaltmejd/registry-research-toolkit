@@ -44,6 +44,8 @@ import {
   removeBinding,
   removeSource,
   type Source,
+  safeSourceBindings,
+  safeSourceRegisterVariant,
   serializeProjectData,
   uniqueSourceName,
   updateField,
@@ -211,9 +213,7 @@ function buildIds(next: ProjectData | null): SourceIds[] {
     next != null && Array.isArray(next.sources) ? next.sources : [];
   return sources.map((s) => ({
     id: nextId(),
-    // `s?.bindings`: a null/undefined source element must not throw — yield no
-    // binding ids for it (the malformed-yields-empty-mirror contract).
-    bindings: Array.isArray(s?.bindings) ? s.bindings.map(() => nextId()) : [],
+    bindings: safeSourceBindings(s).map(() => nextId()),
   }));
 }
 
@@ -323,17 +323,6 @@ function bindingMatches(
   // null on EITHER side means "the only column" — a match regardless of the other
   // side's value; both non-null compares the exact delivery column.
   return wantRep == null || bRep == null || bRep === wantRep;
-}
-
-/** The `register_variant` of a source as a string (coerce non-string to ""). The
- * `source?.` guard mirrors `buildIds`' malformed-yields-empty contract: a
- * null/undefined slot yields "", which matches no real `register_variant`, so the
- * find-or-create / prune comparisons in `applyStagedDiff` leave a malformed slot
- * untouched instead of throwing. */
-function registerVariantOf(source: Source): string {
-  return typeof source?.register_variant === "string"
-    ? source.register_variant
-    : "";
 }
 
 // ── Staged-diff commit path (#992 → the #995 consumer's ONE atomic mutation) ──
@@ -693,10 +682,10 @@ export const projectStore = {
     for (const remove of diff.removes ?? []) {
       removedVariants.add(remove.registerVariant);
       sources = sources.map((s) =>
-        registerVariantOf(s) === remove.registerVariant
+        safeSourceRegisterVariant(s) === remove.registerVariant
           ? {
               ...s,
-              bindings: (Array.isArray(s.bindings) ? s.bindings : []).filter(
+              bindings: safeSourceBindings(s).filter(
                 (b) =>
                   !bindingMatches(
                     b,
@@ -712,7 +701,7 @@ export const projectStore = {
     // (b) adds → find-or-create by register_variant ALONE + merge period.
     for (const add of diff.adds ?? []) {
       const idx = sources.findIndex(
-        (s) => registerVariantOf(s) === add.registerVariant,
+        (s) => safeSourceRegisterVariant(s) === add.registerVariant,
       );
       const binding = stagedToBinding(add.binding);
       if (idx < 0) {
@@ -723,7 +712,7 @@ export const projectStore = {
         continue;
       }
       const found = sources[idx];
-      const existing = Array.isArray(found.bindings) ? found.bindings : [];
+      const existing = safeSourceBindings(found);
       const isDup = existing.some((b) =>
         bindingMatches(
           b,
@@ -745,7 +734,7 @@ export const projectStore = {
     // (c) period changes → replace the matching source's period wholesale.
     for (const change of diff.periodChange ?? []) {
       sources = sources.map((s) =>
-        registerVariantOf(s) === change.registerVariant
+        safeSourceRegisterVariant(s) === change.registerVariant
           ? { ...s, period: change.period }
           : s,
       );
@@ -758,12 +747,8 @@ export const projectStore = {
     //     adds-only batch never touched is left alone.
     sources = sources.filter(
       (s) =>
-        !removedVariants.has(registerVariantOf(s)) ||
-        // `registerVariantOf`'s null-safety (above) is what protects a malformed slot
-        // here: its "" never matches a real register_variant, so this branch is never
-        // reached for a null `s` — matching the bare `s.bindings`/`found.bindings`
-        // accesses in steps (a)/(b) above.
-        (Array.isArray(s.bindings) ? s.bindings : []).length > 0,
+        !removedVariants.has(safeSourceRegisterVariant(s)) ||
+        safeSourceBindings(s).length > 0,
     );
 
     // Atomic replacement: compute the next draft + rebuilt mirror BEFORE assigning
@@ -797,7 +782,7 @@ function stagedToBinding(b: StagedBinding): Binding {
 function newSource(
   registerVariant: string,
   period: Period,
-  siblings: Source[],
+  siblings: readonly unknown[],
   bindings: Binding[],
 ): Source {
   const base = defaultSourceName(registerVariant);

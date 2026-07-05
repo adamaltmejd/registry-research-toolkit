@@ -1,5 +1,5 @@
 <script lang="ts">
-import { regMetaReleaseTag } from "./project_data";
+import { regMetaReleaseTag, safeSourceSlots } from "./project_data";
 import { initPersistence, projectStore } from "./project_store.svelte";
 import SourceEditor from "./SourceEditor.svelte";
 import { Button, EmptyState, KeyValue, type KeyValueRow, Panel } from "./ui";
@@ -94,13 +94,9 @@ async function onFilePicked(event: Event): Promise<void> {
   {:else}
     <!-- ── Loaded draft ───────────────────────────────────────────────────── -->
     {@const draft = projectStore.draft}
-    <!-- An opened file is loaded VERBATIM and is NOT structurally validated
-         client-side (the backend diagnoses it; see reg_webapp/DESIGN.md →
-         Pydantic boundary). A malformed spec may lack
-         `sources` or have it non-array; coerce to [] for the read-only SUMMARY so
-         the page still renders and backend validation can diagnose it. The draft
-         itself stays verbatim for serialize/validate. -->
-    {@const sources = Array.isArray(draft.sources) ? draft.sources : []}
+    <!-- Read-side safe source slots preserve array positions for degraded cards
+         while the draft itself stays verbatim for serialize/validate. -->
+    {@const sources = safeSourceSlots(draft.sources)}
     {@const coverageHints = windowCoverageHints(draft.window, sources)}
     <!-- The read-only deployment-seed identifiers (steward / reg_meta / schema
          version) as labelled mono rows. Coerced to a string so a malformed opened

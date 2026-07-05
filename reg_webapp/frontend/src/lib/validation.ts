@@ -21,7 +21,16 @@
 import type { components } from "./api-types";
 import { catalogHref, registerPrefixOf } from "./catalog";
 import { periodYearIntervals } from "./period";
-import type { Period, PeriodSegment, StudyWindow } from "./project_data";
+import {
+  type Period,
+  type PeriodSegment,
+  type SafeSource,
+  type StudyWindow,
+  safeSourceBindings,
+  safeSourceName,
+  safeSourcePeriod,
+  safeSourceRegisterVariant,
+} from "./project_data";
 
 export type ValidationIssue = components["schemas"]["ValidationIssueModel"];
 export type ValidationResult = components["schemas"]["ValidationResultModel"];
@@ -357,11 +366,7 @@ function uncoveredStudyWindowIntervals(
  * periods are skipped because mixed-grain coverage is not safely comparable. */
 export function windowCoverageHints(
   window: StudyWindow | null | undefined,
-  sources: readonly {
-    name?: unknown;
-    register_variant?: unknown;
-    period?: unknown;
-  }[],
+  sources: readonly SafeSource[],
 ): WindowCoverageHint[] {
   if (
     window == null ||
@@ -372,7 +377,7 @@ export function windowCoverageHints(
   }
   const hints: WindowCoverageHint[] = [];
   for (const [index, source] of sources.entries()) {
-    const period = comparablePeriod(source?.period);
+    const period = comparablePeriod(safeSourcePeriod(source));
     if (period == null) {
       continue;
     }
@@ -380,13 +385,11 @@ export function windowCoverageHints(
     if (intervals == null) {
       continue;
     }
-    const rawName = source?.name;
+    const rawName = safeSourceName(source);
     const label =
-      typeof rawName === "string" && rawName.length > 0
-        ? `Source '${rawName}'`
-        : `Source ${index + 1}`;
-    const rv = source?.register_variant;
-    const registerPrefix = typeof rv === "string" ? registerPrefixOf(rv) : "";
+      rawName.length > 0 ? `Source '${rawName}'` : `Source ${index + 1}`;
+    const rv = safeSourceRegisterVariant(source);
+    const registerPrefix = rv.length > 0 ? registerPrefixOf(rv) : "";
     const gaps = uncoveredStudyWindowIntervals(intervals, window);
     const message = windowCoverageMessage(label, gaps, window);
     if (message == null) {
@@ -410,11 +413,7 @@ export function windowCoverageHints(
 
 export function findingLocation(
   path: string,
-  sources: readonly {
-    name?: unknown;
-    register_variant?: unknown;
-    bindings?: unknown;
-  }[],
+  sources: readonly SafeSource[],
 ): FindingLocation | null {
   const tokens = parseJsonPointer(path);
   // Only /sources/<i>[/bindings/<j>/...] paths name a locatable card.
@@ -425,17 +424,15 @@ export function findingLocation(
   if (!Number.isInteger(sIdx) || sIdx < 0) {
     return null;
   }
-  const source = sources[sIdx];
-  const rawName = source?.name;
+  const source = sources[sIdx] ?? null;
+  const rawName = safeSourceName(source);
   const sourceLabel =
-    typeof rawName === "string" && rawName.length > 0
-      ? `Source '${rawName}'`
-      : `Source ${sIdx + 1}`;
+    rawName.length > 0 ? `Source '${rawName}'` : `Source ${sIdx + 1}`;
 
   if (tokens[2] === "bindings" && tokens.length >= 4) {
     const bIdx = Number(tokens[3]);
     if (Number.isInteger(bIdx) && bIdx >= 0) {
-      const bindings = Array.isArray(source?.bindings) ? source.bindings : [];
+      const bindings = safeSourceBindings(source);
       const variable = (bindings[bIdx] as { variable?: unknown } | undefined)
         ?.variable;
       const bindingLabel =
@@ -461,8 +458,8 @@ export function findingLocation(
   // `/catalog/<provider>/<register>/<variant>` link would be dead (#993). When the
   // register_variant has fewer than 2 segments (`registerPrefixOf` → "") there is no
   // valid register prefix, so the link is omitted (the no-catalog fallback).
-  const rv = source?.register_variant;
-  const registerPrefix = typeof rv === "string" ? registerPrefixOf(rv) : "";
+  const rv = safeSourceRegisterVariant(source);
+  const registerPrefix = rv.length > 0 ? registerPrefixOf(rv) : "";
   const catalog =
     registerPrefix.length > 0
       ? {

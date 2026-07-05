@@ -150,6 +150,52 @@ export function isPlainObject(
   return value !== null && typeof value === "object" && !Array.isArray(value);
 }
 
+/** A read-side source slot after the SPA's malformed-slot seam has run. A plain
+ * object is safe to inspect field-by-field, but not assumed structurally valid;
+ * `null` means the original `sources[]` slot was `null`, an array, or another
+ * non-object value. The raw draft is still kept verbatim for serialize/validate. */
+export type SafeSource = Record<string, unknown> | null;
+
+export function asSafeSource(slot: unknown): SafeSource {
+  return isPlainObject(slot) ? slot : null;
+}
+
+/** Read-side view of a draft's `sources`. Non-array `sources` renders as empty;
+ * malformed array slots stay counted as `null` so `/sources/{i}` addressing and
+ * degraded cards line up with backend validation paths. */
+export function safeSourceSlots(sources: unknown): SafeSource[] {
+  return Array.isArray(sources) ? sources.map(asSafeSource) : [];
+}
+
+export function safeSourceName(source: unknown): string {
+  const safe = asSafeSource(source);
+  return typeof safe?.name === "string" ? safe.name : "";
+}
+
+export function safeSourceRegisterVariant(source: unknown): string {
+  const safe = asSafeSource(source);
+  return typeof safe?.register_variant === "string"
+    ? safe.register_variant
+    : "";
+}
+
+export function safeSourcePeriod(source: unknown): Period | null {
+  const safe = asSafeSource(source);
+  return safe != null && "period" in safe ? (safe.period as Period) : null;
+}
+
+export function safeSourceBindings(source: unknown): Binding[] {
+  const safe = asSafeSource(source);
+  return Array.isArray(safe?.bindings) ? (safe.bindings as Binding[]) : [];
+}
+
+export function sourceBindingsMalformed(source: unknown): boolean {
+  const safe = asSafeSource(source);
+  return (
+    safe != null && safe.bindings !== undefined && !Array.isArray(safe.bindings)
+  );
+}
+
 // ── Immutable top-level edits ───────────────────────────────────────────────
 // Every mutator returns a NEW object (shallow clone + replaced slice) so the
 // store can swap the `$state` reference and `dirty` recomputes. Unmapped keys on
@@ -196,16 +242,12 @@ export function defaultSourceName(registerVariant: string): string {
  * uses it, else the first free `base_2`, `base_3`, … The source at
  * `excludeIndex` is ignored (it's the one being named). */
 export function uniqueSourceName(
-  sources: Source[],
+  sources: readonly unknown[],
   base: string,
   excludeIndex: number,
 ): string {
   const taken = new Set(
-    sources
-      .filter((_, i) => i !== excludeIndex)
-      // `s?.name`: a null/malformed slot in a verbatim-loaded `sources` array must
-      // not throw here — coerce it to "" (it just won't collide with any real name).
-      .map((s) => (typeof s?.name === "string" ? s.name : "")),
+    sources.filter((_, i) => i !== excludeIndex).map(safeSourceName),
   );
   if (!taken.has(base)) {
     return base;
@@ -234,9 +276,12 @@ export function updateSource(
 ): ProjectData {
   return {
     ...draft,
-    sources: sourcesArray(draft).map((s, i) =>
-      i === index ? { ...s, ...patch } : s,
-    ),
+    sources: sourcesArray(draft).map((s, i) => {
+      if (i !== index || asSafeSource(s) == null) {
+        return s;
+      }
+      return { ...s, ...patch };
+    }),
   };
 }
 
@@ -263,11 +308,12 @@ function updateSourceBindings(
 ): ProjectData {
   return {
     ...draft,
-    sources: sourcesArray(draft).map((s, i) =>
-      i === sourceIndex
-        ? { ...s, bindings: fn(Array.isArray(s.bindings) ? s.bindings : []) }
-        : s,
-    ),
+    sources: sourcesArray(draft).map((s, i) => {
+      if (i !== sourceIndex || asSafeSource(s) == null) {
+        return s;
+      }
+      return { ...s, bindings: fn(safeSourceBindings(s)) };
+    }),
   };
 }
 

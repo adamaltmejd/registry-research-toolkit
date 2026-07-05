@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  asSafeSource,
   type Binding,
   defaultSourceName,
   MODEL_A_SCHEMA_VERSION,
@@ -9,7 +10,13 @@ import {
   removeBinding,
   removeSource,
   type Source,
+  safeSourceBindings,
+  safeSourceName,
+  safeSourcePeriod,
+  safeSourceRegisterVariant,
+  safeSourceSlots,
   serializeProjectData,
+  sourceBindingsMalformed,
   uniqueSourceName,
   updateField,
   updateSource,
@@ -107,6 +114,54 @@ describe("immutable source edits", () => {
     expect(next.sources[0].bindings).toHaveLength(1); // preserved
     expect((next.sources[0] as Record<string, unknown>).extra_key).toBe("kept"); // unmapped key preserved
   });
+
+  it("source/binding edits leave malformed source slots untouched", () => {
+    const malformed = {
+      ...newProjectData(SEED),
+      sources: [
+        null,
+        source({
+          name: "ok",
+          bindings: [{ variable: "scb/lisa/kon", type: "categorical" }],
+        }),
+      ],
+    } as unknown as ProjectData;
+
+    expect(updateSource(malformed, 0, { name: "x" }).sources[0]).toBeNull();
+    expect(removeBinding(malformed, 0, 0).sources[0]).toBeNull();
+    expect(removeBinding(malformed, 1, 0).sources[1].bindings).toEqual([]);
+  });
+});
+
+describe("safe source slot helpers", () => {
+  it("normalizes malformed source slots for read-side consumers without throwing", () => {
+    const good = source({
+      name: "LISA",
+      register_variant: "scb/lisa/v1",
+      period: 2020,
+      bindings: [{ variable: "scb/lisa/kon", type: "categorical" }],
+    });
+
+    expect(safeSourceSlots("not-an-array")).toEqual([]);
+    expect(safeSourceSlots([null, [], good])).toEqual([null, null, good]);
+    expect(asSafeSource(good)).toBe(good);
+    expect(asSafeSource([])).toBeNull();
+
+    expect(safeSourceName(good)).toBe("LISA");
+    expect(safeSourceRegisterVariant(good)).toBe("scb/lisa/v1");
+    expect(safeSourcePeriod(good)).toBe(2020);
+    expect(safeSourceBindings(good)).toEqual(good.bindings);
+    expect(safeSourceName(null)).toBe("");
+    expect(safeSourceRegisterVariant({ register_variant: 17 })).toBe("");
+    expect(safeSourceBindings({ bindings: "oops" })).toEqual([]);
+  });
+
+  it("reports malformed bindings only for safe source objects with non-array bindings", () => {
+    expect(sourceBindingsMalformed(null)).toBe(false);
+    expect(sourceBindingsMalformed({ name: "missing bindings" })).toBe(false);
+    expect(sourceBindingsMalformed({ bindings: "oops" })).toBe(true);
+    expect(sourceBindingsMalformed({ bindings: [] })).toBe(false);
+  });
 });
 
 describe("source-name prefill helpers (#312)", () => {
@@ -136,6 +191,10 @@ describe("source-name prefill helpers (#312)", () => {
 
   it("uniqueSourceName ignores the source being named itself", () => {
     expect(uniqueSourceName([src("LISA")], "LISA", 0)).toBe("LISA");
+  });
+
+  it("uniqueSourceName ignores malformed source slots", () => {
+    expect(uniqueSourceName([null, [], src("LISA")], "LISA", 3)).toBe("LISA_2");
   });
 });
 
