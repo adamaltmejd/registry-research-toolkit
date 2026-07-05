@@ -841,6 +841,9 @@ describe("RepresentationPicker graph mode (#904)", () => {
       if (document.querySelector(".graph-reason")) {
         throw new Error("filtered representation edge label still rendered");
       }
+      if (document.querySelector(".graph-fallback li")) {
+        throw new Error("filtered representation edge fallback still rendered");
+      }
     });
   });
 

@@ -1628,6 +1628,21 @@ function graphEdgeSegment(
   };
 }
 
+function graphRenderableEdges(
+  edges: ResolvedEdge[],
+  byId: Map<string, GraphLaneBox>,
+): ResolvedEdge[] {
+  return edges.filter((edge) => {
+    const source = byId.get(edge.source.id);
+    const target = byId.get(edge.target.id);
+    return (
+      source != null &&
+      target != null &&
+      graphEdgeSegment(edge, source, target) != null
+    );
+  });
+}
+
 function graphEdgeLabelLeft(segment: GraphEdgeSegment): number {
   if (!segment.representation) {
     return GRAPH_GUTTER_W + 6;
@@ -2479,9 +2494,9 @@ function codingsVaryHref(
           </div>
         </div>
 
-        {#if cEdges.length > 0}
+        {#if graphRenderableEdges(cEdges, byId).length > 0}
           <ul class="graph-fallback">
-            {#each cEdges as edge (edge.edge.id)}
+            {#each graphRenderableEdges(cEdges, byId) as edge (edge.edge.id)}
               {@const source = byId.get(edge.source.id)?.rn}
               {@const target = byId.get(edge.target.id)?.rn}
               <li>
