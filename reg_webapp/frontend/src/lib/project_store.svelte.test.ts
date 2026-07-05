@@ -549,6 +549,67 @@ describe("applyStagedDiff (#992 — one atomic commit path)", () => {
     ).toEqual(["scb/hst/kon", "scb/hst/alder", "scb/hst/inkomst"]);
   });
 
+  it("the add-path duplicate guard makes a re-add of the SAME (variant, variable, representation) a no-op (one binding, not two)", () => {
+    projectStore.newProject(SEED);
+    projectStore.applyStagedDiff({
+      adds: [
+        add("scb/lisa/v1", "scb/lisa/ssyk", 2018, { representation: "Ssyk3" }),
+      ],
+    });
+    // A SECOND commit of the identical add sees the first commit's binding as
+    // `existing` → the guard drops it (bindingMatches' exact-column compare).
+    projectStore.applyStagedDiff({
+      adds: [
+        add("scb/lisa/v1", "scb/lisa/ssyk", 2018, { representation: "Ssyk3" }),
+      ],
+    });
+    expect(projectStore.draft?.sources).toHaveLength(1);
+    // Exactly ONE binding for the variable — the second add collapsed onto it.
+    expect(
+      projectStore.draft?.sources[0].bindings.map((b) => b.variable),
+    ).toEqual(["scb/lisa/ssyk"]);
+  });
+
+  it("the add-path duplicate guard treats a null-STORED binding as a duplicate of ANY payload representation (null-either-side, no field overwrite)", () => {
+    projectStore.newProject(SEED);
+    // Store a binding with NO representation (the stored-null side).
+    projectStore.applyStagedDiff({
+      adds: [add("scb/lisa/v1", "scb/lisa/ssyk", 2018)],
+    });
+    // Re-add the SAME variable with a CONCRETE representation. Per bindingMatches'
+    // null-either-side rule (a stored null matches ANY payload rep), this is a
+    // duplicate → a true no-op.
+    projectStore.applyStagedDiff({
+      adds: [
+        add("scb/lisa/v1", "scb/lisa/ssyk", 2018, { representation: "Ssyk3" }),
+      ],
+    });
+    const bindings = projectStore.draft?.sources[0].bindings ?? [];
+    expect(bindings).toHaveLength(1);
+    expect(bindings[0].variable).toBe("scb/lisa/ssyk");
+    // The guard is a no-op, not a replace: the stored binding keeps its original
+    // (absent) representation rather than adopting the payload's Ssyk3.
+    expect(bindings[0].representation ?? null).toBeNull();
+  });
+
+  it("the add-path duplicate guard treats a null PAYLOAD representation as a duplicate of a non-null stored binding (mirror null-either-side)", () => {
+    projectStore.newProject(SEED);
+    projectStore.applyStagedDiff({
+      adds: [
+        add("scb/lisa/v1", "scb/lisa/ssyk", 2018, { representation: "Ssyk3" }),
+      ],
+    });
+    // Re-add the SAME variable with NO representation (the payload-null side) →
+    // the rule matches the stored Ssyk3 binding → no-op, still ONE binding that
+    // retains its original Ssyk3.
+    projectStore.applyStagedDiff({
+      adds: [add("scb/lisa/v1", "scb/lisa/ssyk", 2018)],
+    });
+    const bindings = projectStore.draft?.sources[0].bindings ?? [];
+    expect(bindings).toHaveLength(1);
+    expect(bindings[0].representation).toBe("Ssyk3");
+  });
+
   it("removes drop matching bindings and prune sources left empty", () => {
     projectStore.newProject(SEED);
     projectStore.applyStagedDiff({

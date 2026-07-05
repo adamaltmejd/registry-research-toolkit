@@ -61,7 +61,6 @@ import {
   rowFacet,
   valueSetKeyForColumn,
   variantDisplayLabel,
-  variantSeg,
   windowTitle,
   YEARLESS_VALID_FROM,
   yearOf,
@@ -448,17 +447,14 @@ describe("leafSlug", () => {
   });
 });
 
-describe("registerPrefixOf / variantSeg", () => {
-  it("splits a 3-seg register_variant into prefix + variant", () => {
+describe("registerPrefixOf", () => {
+  it("splits a 3-seg register_variant into its 2-seg prefix", () => {
     expect(registerPrefixOf("scb/lisa/individer")).toBe("scb/lisa");
-    expect(variantSeg("scb/lisa/individer")).toBe("individer");
   });
 
   it("returns '' for a register_variant of the wrong shape", () => {
     expect(registerPrefixOf("scb")).toBe(""); // < 2 segments
     expect(registerPrefixOf("")).toBe("");
-    expect(variantSeg("scb/lisa")).toBe(""); // not exactly 3 segments
-    expect(variantSeg("")).toBe("");
   });
 });
 

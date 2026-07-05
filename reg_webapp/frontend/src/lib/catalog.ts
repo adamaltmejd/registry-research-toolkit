@@ -602,13 +602,6 @@ export function registerPrefixOf(registerVariant: string): string {
   return segs.length >= 2 ? `${segs[0]}/${segs[1]}` : "";
 }
 
-/** The variant coordinate (3rd seg) of a 3-seg register_variant, or "" when it
- * isn't that shape (the picker omits the `?variant` modifier then). */
-export function variantSeg(registerVariant: string): string {
-  const segs = fqidSegments(registerVariant);
-  return segs.length === 3 ? segs[2] : "";
-}
-
 /** The display label for a source's `register_variant` coordinate — the ONE place
  * the cart renders a variant. Family folds can add a friendly label, but the concrete
  * coordinate must stay visible because project sources still extract concrete
