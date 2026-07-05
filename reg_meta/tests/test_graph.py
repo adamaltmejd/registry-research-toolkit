@@ -674,6 +674,59 @@ class TestEdges:
         assert b.states != []
         assert b.group_key == "scb/lisa/civ-only"
 
+    def test_live_chain_only_successor_walks_representation_succession(self) -> None:
+        # #888 regression: if A reaches B only through variable succession, B is
+        # hydrated by `_ensure_edition_node`. That live hydration must also walk B's
+        # representation-grain succession edges, otherwise B:col -> C:col disappears
+        # unless B or C is queried directly.
+        conn = build_slugged_db()
+        add_variable(
+            conn, register_id=1, var_id=45, name="Chain member", slug="chain-member"
+        )
+        add_state(
+            conn,
+            register_id=1,
+            variable_slug="chain-member",
+            register_variant_id=10,
+            delivery_column_name="B1",
+        )
+        add_variable(
+            conn, register_id=1, var_id=46, name="Rep successor", slug="rep-successor"
+        )
+        add_state(
+            conn,
+            register_id=1,
+            variable_slug="rep-successor",
+            register_variant_id=10,
+            delivery_column_name="C1",
+        )
+        _seed_replaced_by(
+            conn,
+            predecessor=("scb", "lisa", "kon"),
+            successor=("scb", "lisa", "chain-member"),
+            reason="renamed",
+        )
+        _seed_representation_replaced_by(
+            conn,
+            predecessor=("scb", "lisa", "chain-member", "B1"),
+            successor=("scb", "lisa", "rep-successor", "C1"),
+            effective_year=2020,
+        )
+
+        g = Catalog(conn).graph_for_fqid(_KON)
+
+        assert {n.id for n in g.nodes} == {
+            _KON,
+            "scb/lisa/chain-member",
+            "scb/lisa/rep-successor",
+        }
+        assert {
+            (e.source, e.target, e.source_column, e.target_column) for e in g.edges
+        } == {
+            ("scb/lisa/kon", "scb/lisa/chain-member", None, None),
+            ("scb/lisa/chain-member", "scb/lisa/rep-successor", "B1", "C1"),
+        }
+
     def test_dead_predecessor_stays_thin(self) -> None:
         # F1 boundary: a genuinely DEAD/renamed predecessor (no live `variable` row,
         # #355/#411) must STILL render as a THIN node (states=[]) — hydration is

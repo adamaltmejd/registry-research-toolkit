@@ -451,9 +451,7 @@ class _GraphBuilder:
             self._hydrated.add(node_id)
         if first_build:
             self._add_succession(resolved.canonical_fqid)
-        if node_id not in self._representation_anchors_walked:
-            self._representation_anchors_walked.add(node_id)
-            self._add_representation_succession(resolved.canonical_fqid)
+        self._add_representation_succession_once(node_id, resolved.canonical_fqid)
         return node_id
 
     def _variable_node(self, resolved: ResolvedVariable) -> VariableGraphNode:
@@ -571,6 +569,12 @@ class _GraphBuilder:
                 graph_edge,
             )
 
+    def _add_representation_succession_once(self, node_id: str, fqid: Fqid) -> None:
+        if node_id in self._representation_anchors_walked:
+            return
+        self._representation_anchors_walked.add(node_id)
+        self._add_representation_succession(fqid)
+
     def _ensure_edition_node(self, edition: VariableEdition) -> str | None:
         """A succession-chain edition's node id, building a node for it if absent.
 
@@ -610,6 +614,7 @@ class _GraphBuilder:
             # Live edition: full node.
             self._nodes[node_id] = self._variable_node(resolved)
             self._hydrated.add(node_id)
+            self._add_representation_succession_once(node_id, resolved.canonical_fqid)
             return node_id
         # Dead/renamed (or non-variable resolution): thin placeholder, built once.
         self._nodes.setdefault(
