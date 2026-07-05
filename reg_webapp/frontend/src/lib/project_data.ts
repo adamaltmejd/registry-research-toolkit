@@ -138,6 +138,18 @@ export function regMetaReleaseTag(packageVersion: string): string {
   return packageVersion ? `reg_meta/v${packageVersion}` : "";
 }
 
+// ── Type guards ─────────────────────────────────────────────────────────────
+
+/** A STRICT plain-object guard: true only for a non-null, non-array object. The
+ * shared form of the "is this a JSON object, not `null` and not an array" check that
+ * the store's open-file guard and the editors' malformed-slot fallbacks all need
+ * (a verbatim-loaded draft can carry a `null`/array where an object is expected). */
+export function isPlainObject(
+  value: unknown,
+): value is Record<string, unknown> {
+  return value !== null && typeof value === "object" && !Array.isArray(value);
+}
+
 // ── Immutable top-level edits ───────────────────────────────────────────────
 // Every mutator returns a NEW object (shallow clone + replaced slice) so the
 // store can swap the `$state` reference and `dirty` recomputes. Unmapped keys on
@@ -178,16 +190,6 @@ function sourcesArray(draft: ProjectData): Source[] {
 export function defaultSourceName(registerVariant: string): string {
   const slug = registerVariant.split("/")[1] ?? "";
   return slug.toUpperCase();
-}
-
-/** A STRICT plain-object guard: true only for a non-null, non-array object. The
- * shared form of the "is this a JSON object, not `null` and not an array" check that
- * the store's open-file guard and the editors' malformed-slot fallbacks all need
- * (a verbatim-loaded draft can carry a `null`/array where an object is expected). */
-export function isPlainObject(
-  value: unknown,
-): value is Record<string, unknown> {
-  return value !== null && typeof value === "object" && !Array.isArray(value);
 }
 
 /** `base` if no OTHER source (case-sensitive, as the schema compares) already

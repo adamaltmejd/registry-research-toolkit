@@ -836,11 +836,11 @@ export const projectStore = {
     sources = sources.filter(
       (s) =>
         !removedVariants.has(registerVariantOf(s)) ||
-        // `s?.bindings` for consistency with the malformed-yields-empty contract
-        // (`registerVariantOf` / `buildIds`): a malformed slot's "" is not in
-        // `removedVariants` for real-slug diffs, so the OR short-circuits before this —
-        // the guard just keeps the accessor null-safe like the rest of the step.
-        (Array.isArray(s?.bindings) ? s.bindings : []).length > 0,
+        // `registerVariantOf`'s null-safety (above) is what protects a malformed slot
+        // here: its "" never matches a real register_variant, so this branch is never
+        // reached for a null `s` — matching the bare `s.bindings`/`found.bindings`
+        // accesses in steps (a)/(b) above.
+        (Array.isArray(s.bindings) ? s.bindings : []).length > 0,
     );
 
     // Atomic replacement: compute the next draft + rebuilt mirror BEFORE assigning
