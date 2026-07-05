@@ -566,17 +566,17 @@ describe("resolveEdges", () => {
       states: [
         state({
           variant: "energy",
-          delivery_column_name: "borgnr",
+          delivery_column_name: "BorgNr",
           representation_run_id: 1,
         }),
         state({
           variant: "energy",
-          delivery_column_name: "persorgnr",
+          delivery_column_name: "PersOrgNr",
           representation_run_id: 2,
         }),
         state({
           variant: "vehicles",
-          delivery_column_name: "borgnr",
+          delivery_column_name: "BorgNr",
           representation_run_id: 3,
         }),
       ],

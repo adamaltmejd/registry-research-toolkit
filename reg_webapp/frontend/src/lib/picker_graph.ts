@@ -451,10 +451,12 @@ function nodeHasRepresentationEndpoint(
   column: string,
   variant: string | null | undefined,
 ): boolean {
+  const foldedColumn = column.toLocaleLowerCase("sv-SE");
   return (
     node?.states.some(
       (state) =>
-        state.delivery_column_name === column &&
+        state.delivery_column_name?.toLocaleLowerCase("sv-SE") ===
+          foldedColumn &&
         (variant == null || state.variant === variant),
     ) ?? false
   );
