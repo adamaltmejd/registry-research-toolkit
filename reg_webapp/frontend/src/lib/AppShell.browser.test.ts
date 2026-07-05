@@ -6,6 +6,7 @@ import AppShell from "./AppShell.svelte";
 import type { RootResponse } from "./api";
 import { getCatalogRoot } from "./api";
 import { DATA_BROWSER_LABEL } from "./catalog";
+import { projectStore } from "./project_store.svelte";
 import { router } from "./router.svelte";
 
 // Stub ONLY the catalog-root GET (the shell's provider-facet fetch); keep the
@@ -66,6 +67,7 @@ beforeEach(() => {
 
 afterEach(() => {
   window.history.pushState({}, "", "/");
+  vi.unstubAllGlobals();
 });
 
 // The browser-test viewport is 414px — below the 48rem drawer breakpoint — so the
@@ -104,7 +106,7 @@ describe("AppShell — active nav (aria-current)", () => {
       .toHaveAttribute("aria-current", "page");
     // The Project link is NOT current.
     expect(
-      page.getByRole("link", { name: "Project" }).query(),
+      page.getByRole("link", { name: /^Project:/ }).query(),
     ).not.toHaveAttribute("aria-current");
   });
 
@@ -114,11 +116,111 @@ describe("AppShell — active nav (aria-current)", () => {
     await openDrawer();
 
     await expect
-      .element(page.getByRole("link", { name: "Project" }))
+      .element(page.getByRole("link", { name: /^Project:/ }))
       .toHaveAttribute("aria-current", "page");
     expect(
       page.getByRole("link", { name: DATA_BROWSER_LABEL }).query(),
     ).not.toHaveAttribute("aria-current");
+  });
+});
+
+describe("AppShell — project chip", () => {
+  it("shows the no-project state in the drawer", async () => {
+    await render(AppShell, minimalProps());
+    await openDrawer();
+
+    const chip = page.getByRole("link", { name: /^Project: No project/ });
+    await expect.element(chip).toBeVisible();
+    await expect.element(chip).toHaveAttribute("href", "/project");
+    await expect.element(page.getByText("0 sources · 0 columns")).toBeVisible();
+    await expect.element(page.getByText("Unchecked")).toBeVisible();
+  });
+
+  it("shows project name, counts, and validation status from the store", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => ({
+        ok: true,
+        status: 200,
+        json: async () => ({
+          ok: true,
+          issues: [{ level: "warning", code: "w", path: "", message: "note" }],
+        }),
+      })),
+    );
+    projectStore.newProject({
+      reg_meta_version: "reg_meta/v1.0.0",
+      steward: "global",
+    });
+    projectStore.updateField("name", "Cancer sibling study");
+    projectStore.applyStagedDiff({
+      adds: [
+        {
+          registerVariant: "scb/lisa/v1",
+          period: 2018,
+          binding: { variable: "scb/lisa/kon", type: "categorical" },
+        },
+        {
+          registerVariant: "scb/lisa/v1",
+          period: 2018,
+          binding: { variable: "scb/lisa/alder", type: "numeric" },
+        },
+        {
+          registerVariant: "scb/rtb/v1",
+          period: 2019,
+          binding: { variable: "scb/rtb/fodelsear", type: "numeric" },
+        },
+      ],
+    });
+    await projectStore.validate();
+
+    await render(AppShell, minimalProps());
+    await openDrawer();
+
+    await expect
+      .element(
+        page.getByRole("link", { name: /^Project: Cancer sibling study/ }),
+      )
+      .toBeVisible();
+    await expect
+      .element(page.getByRole("link", { name: /unsaved changes/i }))
+      .toBeVisible();
+    await expect.element(page.getByText("2 sources · 3 columns")).toBeVisible();
+    await expect.element(page.getByText("Warnings")).toBeVisible();
+  });
+
+  it("tolerates malformed source slots while showing counts", async () => {
+    await projectStore.openFromFile(
+      new File(
+        [
+          JSON.stringify({
+            schema_version: "2.0.0",
+            steward: "global",
+            reg_meta_version: "reg_meta/v1.0.0",
+            name: "Malformed project",
+            sources: [
+              null,
+              {
+                name: "LISA",
+                register_variant: "scb/lisa/v1",
+                period: 2018,
+                bindings: [{ variable: "scb/lisa/kon", type: "categorical" }],
+              },
+            ],
+          }),
+        ],
+        "project_data.json",
+        { type: "application/json" },
+      ),
+    );
+
+    await render(AppShell, minimalProps());
+    await openDrawer();
+
+    await expect
+      .element(page.getByRole("link", { name: /^Project: Malformed project/ }))
+      .toBeVisible();
+    await expect.element(page.getByText("2 sources · 1 column")).toBeVisible();
   });
 });
 
