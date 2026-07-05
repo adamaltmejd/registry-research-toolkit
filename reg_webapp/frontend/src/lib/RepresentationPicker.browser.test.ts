@@ -657,6 +657,87 @@ describe("RepresentationPicker graph mode (#904)", () => {
       .toBeVisible();
   });
 
+  it("draws same-variable representation edges between graph cells", async () => {
+    const aFqid = "scb/lisa/renamed";
+    render(RepresentationPicker, {
+      bands: [
+        {
+          key: aFqid,
+          name: "Renamed leaf",
+          registerPrefix: "scb/lisa",
+          rows: [
+            row({
+              column: "NEW",
+              representation: null,
+              renamedColumns: ["OLD"],
+              from: "2000-01-01",
+              to: "2020-12-31",
+              windows: [
+                { from: "2000-01-01", to: "2009-12-31" },
+                { from: "2010-01-01", to: "2020-12-31" },
+              ],
+              period: "2000 – 2020",
+            }),
+          ],
+        } satisfies PickerBand,
+      ],
+      graph: graph({
+        nodes: [
+          graphNode(aFqid, {
+            states: [
+              graphState({
+                delivery_column_name: "OLD",
+                valid_from: "2000-01-01",
+                valid_to: "2009-12-31",
+              }),
+              graphState({
+                state_id: 2,
+                representation_run_id: 2,
+                delivery_column_name: "NEW",
+                valid_from: "2010-01-01",
+                valid_to: "2020-12-31",
+              }),
+            ],
+          }),
+        ],
+        edges: [
+          {
+            id: "repr-old-new",
+            kind: "succession",
+            source: aFqid,
+            target: aFqid,
+            label: null,
+            effective_year: 2010,
+            source_column: "OLD",
+            target_column: "NEW",
+            variant: null,
+          },
+        ],
+        focus_id: aFqid,
+      }),
+      ...PROPS,
+    });
+
+    const line = await vi.waitFor(() => {
+      const edge = document.querySelector<SVGLineElement>(
+        ".graph-edge.representation",
+      );
+      if (!edge) {
+        throw new Error("representation edge not rendered");
+      }
+      return edge;
+    });
+    const x1 = Number(line.getAttribute("x1"));
+    const x2 = Number(line.getAttribute("x2"));
+    const y1 = Number(line.getAttribute("y1"));
+    const y2 = Number(line.getAttribute("y2"));
+    expect(Math.abs(x2 - x1)).toBeGreaterThan(8);
+    expect(Math.abs(y2 - y1)).toBeLessThan(1);
+    expect(document.querySelector(".graph-reason")?.textContent).toContain(
+      "OLD → NEW · 2010",
+    );
+  });
+
   it("marks dead renamed predecessor lanes with the leaf slug and renamed hint", async () => {
     const liveFqid = "scb/lisa/sni2007";
     const deadFqid = "scb/lisa/sni92";

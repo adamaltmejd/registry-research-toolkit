@@ -28,6 +28,7 @@ import {
   CELL_MIN_W,
   cellsOf,
   clustersOf,
+  graphColumnMatches,
   graphEdgeVisibleInGraph,
   type NodeCluster,
   PX_PER_YEAR,
@@ -1480,6 +1481,108 @@ function graphLaneItemWidth(item: GraphLaneItem): number {
     : CELL_MIN_W;
 }
 
+interface GraphEdgeEndpoint {
+  left: number;
+  right: number;
+  centerX: number;
+  y: number;
+}
+
+interface GraphEdgeSegment {
+  x1: number;
+  y1: number;
+  x2: number;
+  y2: number;
+  representation: boolean;
+}
+
+function graphRepresentationEdgeEndpoint(
+  lane: GraphLaneBox,
+  column: string | null | undefined,
+  variant: string | null | undefined,
+): GraphEdgeEndpoint | null {
+  if (lane.rn.kind !== "variable" || column == null) {
+    return null;
+  }
+  for (const [index, cell] of lane.rn.cells.entries()) {
+    if (
+      (variant == null || cell.variant === variant) &&
+      cell.columns.some((candidate) => graphColumnMatches(candidate, column))
+    ) {
+      const item: GraphLaneItem = {
+        kind: "cell",
+        cell,
+        match: null,
+        index,
+        rowIndex: cell.row,
+      };
+      const left = GRAPH_GUTTER_W + graphLaneItemLeft(item);
+      const width = graphLaneItemWidth(item);
+      const top = graphCellTop(lane.height, cell.row, lane.rowCount);
+      return {
+        left,
+        right: left + width,
+        centerX: left + width / 2,
+        y: lane.top + top + GRAPH_CELL_H / 2,
+      };
+    }
+  }
+  return null;
+}
+
+function graphEdgeSegment(
+  edge: ResolvedEdge,
+  source: GraphLaneBox,
+  target: GraphLaneBox,
+): GraphEdgeSegment {
+  const sourceEndpoint = graphRepresentationEdgeEndpoint(
+    source,
+    edge.edge.source_column,
+    edge.edge.variant,
+  );
+  const targetEndpoint = graphRepresentationEdgeEndpoint(
+    target,
+    edge.edge.target_column,
+    edge.edge.variant,
+  );
+  if (sourceEndpoint && targetEndpoint) {
+    const forward = sourceEndpoint.centerX <= targetEndpoint.centerX;
+    let x1 = forward ? sourceEndpoint.right : sourceEndpoint.left;
+    let x2 = forward ? targetEndpoint.left : targetEndpoint.right;
+    if (Math.abs(x2 - x1) < 8) {
+      x1 = sourceEndpoint.centerX;
+      x2 = targetEndpoint.centerX;
+    }
+    if (
+      Math.abs(x2 - x1) < 1 &&
+      Math.abs(targetEndpoint.y - sourceEndpoint.y) < 1
+    ) {
+      x2 += 22;
+    }
+    return {
+      x1,
+      y1: sourceEndpoint.y,
+      x2,
+      y2: targetEndpoint.y,
+      representation: true,
+    };
+  }
+  return {
+    x1: GRAPH_GUTTER_W - 10,
+    y1: source.center,
+    x2: GRAPH_GUTTER_W - 10,
+    y2: target.center,
+    representation: false,
+  };
+}
+
+function graphEdgeLabelLeft(segment: GraphEdgeSegment): number {
+  if (!segment.representation) {
+    return GRAPH_GUTTER_W + 6;
+  }
+  return Math.max(GRAPH_GUTTER_W + 6, (segment.x1 + segment.x2) / 2 + 6);
+}
+
 function graphCellSubLabel(cell: RunCell, column: string): string {
   return cell.label === column || cell.columns.includes(cell.label)
     ? ""
@@ -2019,7 +2122,7 @@ function codingsVaryHref(
 
               <svg
                 class="graph-connectors"
-                width={graphTrackW}
+                width={GRAPH_GUTTER_W + graphTrackW}
                 height={stackH}
                 aria-hidden="true"
               >
@@ -2040,12 +2143,14 @@ function codingsVaryHref(
                   {@const source = byId.get(edge.source.id)}
                   {@const target = byId.get(edge.target.id)}
                   {#if source && target}
+                    {@const segment = graphEdgeSegment(edge, source, target)}
                     <line
-                      x1={GRAPH_GUTTER_W - 10}
-                      y1={source.center}
-                      x2={GRAPH_GUTTER_W - 10}
-                      y2={target.center}
+                      x1={segment.x1}
+                      y1={segment.y1}
+                      x2={segment.x2}
+                      y2={segment.y2}
                       class="graph-edge"
+                      class:representation={segment.representation}
                       marker-end={`url(#picker-arrow-${ci})`}
                     />
                   {/if}
@@ -2057,9 +2162,10 @@ function codingsVaryHref(
                 {@const target = byId.get(edge.target.id)}
                 {@const label = graphEdgeLabel(edge)}
                 {#if label && source && target}
+                  {@const segment = graphEdgeSegment(edge, source, target)}
                   <div
                     class="graph-reason"
-                    style={`top:${(source.center + target.center) / 2}px; left:${GRAPH_GUTTER_W + 6}px`}
+                    style={`top:${(segment.y1 + segment.y2) / 2}px; left:${graphEdgeLabelLeft(segment)}px`}
                     title={label}
                     aria-hidden="true"
                   >
@@ -2796,6 +2902,9 @@ function codingsVaryHref(
   .graph-edge {
     stroke: var(--viz-edge-succession);
     stroke-width: 1.5;
+  }
+  .graph-edge.representation {
+    stroke-dasharray: 4 3;
   }
   .graph-arrow-head {
     fill: var(--viz-edge-succession);

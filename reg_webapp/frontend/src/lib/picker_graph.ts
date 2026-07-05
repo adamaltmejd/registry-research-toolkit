@@ -446,17 +446,20 @@ function variableNodeById(
   );
 }
 
+export function graphColumnMatches(left: string, right: string): boolean {
+  return left.toLocaleLowerCase("sv-SE") === right.toLocaleLowerCase("sv-SE");
+}
+
 function nodeHasRepresentationEndpoint(
   node: VariableGraphNode | undefined,
   column: string,
   variant: string | null | undefined,
 ): boolean {
-  const foldedColumn = column.toLocaleLowerCase("sv-SE");
   return (
     node?.states.some(
       (state) =>
-        state.delivery_column_name?.toLocaleLowerCase("sv-SE") ===
-          foldedColumn &&
+        state.delivery_column_name != null &&
+        graphColumnMatches(state.delivery_column_name, column) &&
         (variant == null || state.variant === variant),
     ) ?? false
   );
@@ -471,8 +474,11 @@ export function graphEdgeVisibleInGraph(
   edge: GraphEdge,
   graph: RelationshipGraph,
 ): boolean {
-  if (edge.source_column == null || edge.target_column == null) {
+  if (edge.source_column == null && edge.target_column == null) {
     return true;
+  }
+  if (edge.source_column == null || edge.target_column == null) {
+    return false;
   }
   const byId = variableNodeById(graph);
   return (

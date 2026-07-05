@@ -22,8 +22,11 @@ from concurrent.futures import ThreadPoolExecutor
 
 import pytest
 from fastapi.testclient import TestClient
+from reg_meta.graph import GraphEdge, GraphState, RelationshipGraph, VariableGraphNode
 from reg_webapp.app import create_app
+from reg_webapp.catalog_index import CatalogIndex
 from reg_webapp.etag import CACHE_CONTROL_REVALIDATE, CACHE_CONTROL_SHORT
+from reg_webapp.routes.catalog import _narrow_graph_to_held
 
 _KON = "scb/lisa/kon"
 _SYSS = "scb/rams/syss"
@@ -184,6 +187,89 @@ def test_graph_endpoint_variable_carries_same_as(client):
     kon_node = next(n for n in body["nodes"] if n["id"] == _KON)
     alias_fqids = {ref["fqid"] for ref in kon_node["same_as"]}
     assert _SYSS in alias_fqids
+
+
+def test_steward_graph_narrowing_drops_unheld_representation_edge_columns():
+    # #888: representation-grain edges carry endpoint column names. Steward graph
+    # narrowing must drop an edge when either endpoint column was removed from the
+    # node states, otherwise the API leaks an unheld delivery column through edge
+    # metadata while the node itself correctly survives.
+    index = CatalogIndex(
+        bindings_by_variant={
+            "scb/lisa/individer-15plus": frozenset({(_KON, "BorgNr")})
+        },
+        period_range_by_register={"scb/lisa": ("2010", "2014")},
+        drift_warnings=(),
+    )
+    node = VariableGraphNode(
+        id=_KON,
+        fqid=_KON,
+        label="Kön",
+        group_key=None,
+        definition=None,
+        description=None,
+        operational_definition=None,
+        states=[
+            GraphState(
+                state_id=1,
+                variant="individer-15plus",
+                variant_label="Individer 15+",
+                representation_run_id=1,
+                delivery_column_name="BorgNr",
+                value_set_id=None,
+                value_set_version_label="",
+                classification_slug=None,
+                valid_from="2010-01-01",
+                valid_to="2013-12-31",
+            ),
+            GraphState(
+                state_id=2,
+                variant="individer-15plus",
+                variant_label="Individer 15+",
+                representation_run_id=2,
+                delivery_column_name="PersOrgNr",
+                value_set_id=None,
+                value_set_version_label="",
+                classification_slug=None,
+                valid_from="2014-01-01",
+                valid_to=None,
+            ),
+        ],
+        same_as=[],
+        facets=[],
+        group_label=None,
+    )
+    graph = RelationshipGraph(
+        nodes=[node],
+        edges=[
+            GraphEdge(
+                id="succession:representation:held-case",
+                source=_KON,
+                target=_KON,
+                label=None,
+                source_column="borgnr",
+                target_column="BorgNr",
+            ),
+            GraphEdge(
+                id="succession:representation:unheld-target",
+                source=_KON,
+                target=_KON,
+                label=None,
+                source_column="BorgNr",
+                target_column="PersOrgNr",
+            ),
+        ],
+        focus_id=_KON,
+    )
+
+    narrowed = _narrow_graph_to_held(graph, index)
+
+    (kept_node,) = narrowed.nodes
+    assert isinstance(kept_node, VariableGraphNode)
+    assert [state.delivery_column_name for state in kept_node.states] == ["BorgNr"]
+    assert [edge.id for edge in narrowed.edges] == [
+        "succession:representation:held-case"
+    ]
 
 
 def test_graph_endpoint_dead_binding_301s_to_successor(client):
