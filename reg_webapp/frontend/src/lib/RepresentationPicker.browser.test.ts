@@ -657,6 +657,307 @@ describe("RepresentationPicker graph mode (#904)", () => {
       .toBeVisible();
   });
 
+  it("draws same-variable representation edges between graph cells", async () => {
+    const aFqid = "scb/lisa/renamed";
+    render(RepresentationPicker, {
+      bands: [
+        {
+          key: aFqid,
+          name: "Renamed leaf",
+          registerPrefix: "scb/lisa",
+          rows: [
+            row({
+              column: "NEW",
+              representation: null,
+              renamedColumns: ["OLD"],
+              from: "2000-01-01",
+              to: "2020-12-31",
+              windows: [
+                { from: "2000-01-01", to: "2009-12-31" },
+                { from: "2010-01-01", to: "2020-12-31" },
+              ],
+              period: "2000 – 2020",
+            }),
+          ],
+        } satisfies PickerBand,
+      ],
+      graph: graph({
+        nodes: [
+          graphNode(aFqid, {
+            states: [
+              graphState({
+                delivery_column_name: "OLD",
+                valid_from: "2000-01-01",
+                valid_to: "2009-12-31",
+              }),
+              graphState({
+                state_id: 2,
+                representation_run_id: 2,
+                delivery_column_name: "NEW",
+                valid_from: "2010-01-01",
+                valid_to: "2020-12-31",
+              }),
+            ],
+          }),
+        ],
+        edges: [
+          {
+            id: "repr-old-new",
+            kind: "succession",
+            source: aFqid,
+            target: aFqid,
+            label: "identifier rename",
+            effective_year: 2010,
+            source_column: "OLD",
+            target_column: "NEW",
+            variant: null,
+          },
+        ],
+        focus_id: aFqid,
+      }),
+      ...PROPS,
+    });
+
+    const line = await vi.waitFor(() => {
+      const edge = document.querySelector<SVGLineElement>(
+        ".graph-edge.representation",
+      );
+      if (!edge) {
+        throw new Error("representation edge not rendered");
+      }
+      return edge;
+    });
+    const x1 = Number(line.getAttribute("x1"));
+    const x2 = Number(line.getAttribute("x2"));
+    const y1 = Number(line.getAttribute("y1"));
+    const y2 = Number(line.getAttribute("y2"));
+    expect(Math.abs(x2 - x1)).toBeGreaterThan(8);
+    expect(Math.abs(y2 - y1)).toBeLessThan(1);
+    expect(document.querySelector(".graph-reason")?.textContent).toContain(
+      "identifier rename · 2010",
+    );
+    expect(document.querySelector(".graph-picker")?.textContent).not.toContain(
+      "OLD → NEW · 2010",
+    );
+  });
+
+  it("hides representation edges when filters hide an endpoint cell", async () => {
+    const aFqid = "scb/iot/filter-edge";
+    render(RepresentationPicker, {
+      bands: [
+        {
+          key: aFqid,
+          name: "Filtered edge",
+          registerPrefix: "scb/iot",
+          rows: [
+            row({
+              column: "OLD",
+              valueSetLabel: "kr",
+              from: "2000-01-01",
+              to: "2009-12-31",
+              windows: [{ from: "2000-01-01", to: "2009-12-31" }],
+              period: "2000 – 2009",
+            }),
+            row({
+              column: "NEW",
+              valueSetLabel: "kr",
+              from: "2010-01-01",
+              to: "2020-12-31",
+              windows: [{ from: "2010-01-01", to: "2020-12-31" }],
+              period: "2010 – 2020",
+            }),
+          ],
+          facetsByColumn: {
+            OLD: [
+              { axis: "enhet", value: "ind", label: "Individ" },
+              { axis: "hush", value: "h1", label: "Hushall" },
+            ],
+            NEW: [
+              { axis: "enhet", value: "ind", label: "Individ" },
+              { axis: "hush", value: "h2", label: "Familj" },
+            ],
+          },
+        } satisfies PickerBand,
+      ],
+      axes: AXES,
+      graph: graph({
+        nodes: [
+          graphNode(aFqid, {
+            states: [
+              graphState({
+                delivery_column_name: "OLD",
+                valid_from: "2000-01-01",
+                valid_to: "2009-12-31",
+              }),
+              graphState({
+                state_id: 2,
+                representation_run_id: 2,
+                delivery_column_name: "NEW",
+                valid_from: "2010-01-01",
+                valid_to: "2020-12-31",
+              }),
+            ],
+          }),
+        ],
+        edges: [
+          {
+            id: "repr-old-new",
+            kind: "succession",
+            source: aFqid,
+            target: aFqid,
+            label: "identifier rename",
+            effective_year: 2010,
+            source_column: "OLD",
+            target_column: "NEW",
+            variant: null,
+          },
+        ],
+        focus_id: aFqid,
+      }),
+      ...PROPS,
+    });
+
+    await vi.waitFor(() => {
+      if (!document.querySelector(".graph-edge.representation")) {
+        throw new Error("representation edge not initially rendered");
+      }
+    });
+
+    clickFilter("Familj");
+
+    await expect
+      .element(page.getByText("Showing 1 of 2 columns"))
+      .toBeVisible();
+    await expect
+      .element(page.getByRole("checkbox", { name: /^NEW\b/ }))
+      .toBeVisible();
+    await vi.waitFor(() => {
+      if (!document.querySelector(".graph-picker")) {
+        throw new Error("graph mode should remain active");
+      }
+      if (document.querySelector(".graph-edge")) {
+        throw new Error("filtered representation edge still rendered");
+      }
+      if (document.querySelector(".graph-reason")) {
+        throw new Error("filtered representation edge label still rendered");
+      }
+      if (document.querySelector(".graph-fallback li")) {
+        throw new Error("filtered representation edge fallback still rendered");
+      }
+    });
+  });
+
+  it("draws round-trip representation edges to the resumed later cell", async () => {
+    const aFqid = "scb/lisa/roundtrip";
+    render(RepresentationPicker, {
+      bands: [
+        {
+          key: aFqid,
+          name: "Roundtrip leaf",
+          registerPrefix: "scb/lisa",
+          rows: [
+            row({
+              column: "BorgNr",
+              representation: null,
+              renamedColumns: ["PersOrgNr"],
+              from: "2007-01-01",
+              to: "2023-12-31",
+              windows: [
+                { from: "2007-01-01", to: "2013-12-31" },
+                { from: "2014-01-01", to: "2017-12-31" },
+                { from: "2018-01-01", to: "2023-12-31" },
+              ],
+              period: "2007 – 2023",
+            }),
+          ],
+        } satisfies PickerBand,
+      ],
+      graph: graph({
+        nodes: [
+          graphNode(aFqid, {
+            states: [
+              graphState({
+                delivery_column_name: "BorgNr",
+                valid_from: "2007-01-01",
+                valid_to: "2013-12-31",
+              }),
+              graphState({
+                state_id: 2,
+                representation_run_id: 2,
+                delivery_column_name: "PersOrgNr",
+                valid_from: "2014-01-01",
+                valid_to: "2017-12-31",
+              }),
+              graphState({
+                state_id: 3,
+                representation_run_id: 3,
+                delivery_column_name: "BorgNr",
+                valid_from: "2018-01-01",
+                valid_to: "2023-12-31",
+              }),
+            ],
+          }),
+        ],
+        edges: [
+          {
+            id: "repr-borgnr-persorgnr",
+            kind: "succession",
+            source: aFqid,
+            target: aFqid,
+            label: null,
+            effective_year: 2014,
+            source_column: "BorgNr",
+            target_column: "PersOrgNr",
+            variant: null,
+          },
+          {
+            id: "repr-persorgnr-borgnr",
+            kind: "succession",
+            source: aFqid,
+            target: aFqid,
+            label: null,
+            effective_year: 2018,
+            source_column: "PersOrgNr",
+            target_column: "BorgNr",
+            variant: null,
+          },
+        ],
+        focus_id: aFqid,
+      }),
+      ...PROPS,
+    });
+
+    const line = await vi.waitFor(() => {
+      const edge = document.querySelector<SVGLineElement>(
+        '.graph-edge.representation[data-edge-id="repr-persorgnr-borgnr"]',
+      );
+      if (!edge) {
+        throw new Error("round-trip representation edge not rendered");
+      }
+      return edge;
+    });
+    const x1 = Number(line.getAttribute("x1"));
+    const x2 = Number(line.getAttribute("x2"));
+    expect(x2).toBeGreaterThan(x1);
+    expect(document.querySelector(".graph-picker")?.textContent).toContain(
+      "PersOrgNr → BorgNr · 2018",
+    );
+    const labelPositions = await vi.waitFor(() => {
+      const labels = [
+        ...document.querySelectorAll<HTMLElement>(".graph-reason"),
+      ].filter(
+        (label) =>
+          label.textContent?.includes("BorgNr → PersOrgNr · 2014") ||
+          label.textContent?.includes("PersOrgNr → BorgNr · 2018"),
+      );
+      if (labels.length !== 2) {
+        throw new Error("round-trip labels not rendered");
+      }
+      return labels.map((label) => `${label.style.left}:${label.style.top}`);
+    });
+    expect(new Set(labelPositions).size).toBe(2);
+  });
+
   it("marks dead renamed predecessor lanes with the leaf slug and renamed hint", async () => {
     const liveFqid = "scb/lisa/sni2007";
     const deadFqid = "scb/lisa/sni92";

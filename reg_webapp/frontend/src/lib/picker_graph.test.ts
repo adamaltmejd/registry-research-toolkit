@@ -11,6 +11,7 @@ import {
   clampCellsToScale,
   classificationDagLayout,
   clustersOf,
+  graphEdgeVisibleInGraph,
   resolveEdges,
   type YearScale,
   yearScaleOf,
@@ -543,6 +544,71 @@ describe("resolveEdges", () => {
     expect(resolved).toHaveLength(1);
     expect(resolved[0].source.id).toBe("a");
     expect(resolved[0].target.id).toBe("b");
+  });
+
+  it("keeps variable-grain edges independent of representation state rows", () => {
+    const a = variableNode({ id: "a" });
+    const b = variableNode({ id: "b" });
+    const graph: RelationshipGraph = {
+      nodes: [a, b],
+      edges: [
+        { id: "e1", kind: "succession", source: "a", target: "b", label: null },
+      ],
+      focus_id: "a",
+    };
+    expect(graphEdgeVisibleInGraph(graph.edges[0], graph)).toBe(true);
+    expect(resolveEdges(graph)).toHaveLength(1);
+  });
+
+  it("requires representation edges to match scoped columns and variant", () => {
+    const node = variableNode({
+      id: "v1",
+      states: [
+        state({
+          variant: "energy",
+          delivery_column_name: "BorgNr",
+          representation_run_id: 1,
+        }),
+        state({
+          variant: "energy",
+          delivery_column_name: "PersOrgNr",
+          representation_run_id: 2,
+        }),
+        state({
+          variant: "vehicles",
+          delivery_column_name: "BorgNr",
+          representation_run_id: 3,
+        }),
+      ],
+    });
+    const scoped = {
+      id: "rep",
+      kind: "succession" as const,
+      source: "v1",
+      target: "v1",
+      label: null,
+      source_column: "borgnr",
+      target_column: "persorgnr",
+      variant: "energy",
+    };
+    const graph: RelationshipGraph = {
+      nodes: [node],
+      edges: [scoped],
+      focus_id: "v1",
+    };
+    expect(graphEdgeVisibleInGraph(scoped, graph)).toBe(true);
+
+    const filtered: RelationshipGraph = {
+      ...graph,
+      nodes: [
+        {
+          ...node,
+          states: node.states.filter((s) => s.variant === "vehicles"),
+        },
+      ],
+    };
+    expect(graphEdgeVisibleInGraph(scoped, filtered)).toBe(false);
+    expect(resolveEdges(filtered)).toHaveLength(0);
   });
 });
 

@@ -1288,11 +1288,9 @@ CREATE INDEX idx_variable_replaced_by_successor
 -- columns) — stricter than the register/variable "dead predecessor allowed" rule,
 -- and intentionally so.
 --
--- NO successor index: there is no reader/accessor yet (a consumer in #846/#838
--- adds one when it needs the successor-keyed reverse lookup), matching the
--- register/variant precedent — only the variable grain carries an index, for the
--- A2.5 `.predecessors()` accessor that actually exists (see the
--- `idx_variable_replaced_by_successor` comment above).
+-- Graph consumers read representation edges touching an anchor from both
+-- directions. The successor-keyed reverse branch needs its own index; the
+-- predecessor-first primary key only serves the outbound branch.
 --
 -- #846 OPTIONAL VARIANT SCOPE: a representation rename usually holds for the
 -- WHOLE variable (the default — e.g. RTB `PNR -> PersonNr` across every variant),
@@ -1329,6 +1327,10 @@ CREATE TABLE representation_replaced_by (
                  successor_column,
                  variant)
 ) WITHOUT ROWID;
+CREATE INDEX idx_representation_replaced_by_successor
+    ON representation_replaced_by(
+        successor_provider, successor_register, successor_variable
+    );
 
 -- Classification EDITION succession (#571): a temporal chain over vintages of
 -- ONE classification (ssyk1996→ssyk2012, lkf1980…lkf2026, sun2000-niva→

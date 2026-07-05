@@ -63,7 +63,7 @@ from reg_meta.fqid import (
     parse,
     validate_slug,
 )
-from reg_meta.graph import RelationshipGraph, VariableGraphNode
+from reg_meta.graph import GraphEdge, GraphNode, RelationshipGraph, VariableGraphNode
 from reg_meta.queries import list_classifications
 
 from reg_meta import ResolvedClassification
@@ -273,6 +273,55 @@ def _held_graph_node_columns(
     return frozenset(held)
 
 
+def _graph_column_matches(left: str, right: str) -> bool:
+    return left.casefold() == right.casefold()
+
+
+def _node_has_representation_endpoint(
+    node: VariableGraphNode | None,
+    *,
+    column: str,
+    variant: str | None,
+) -> bool:
+    if node is None:
+        return False
+    return any(
+        state.delivery_column_name is not None
+        and _graph_column_matches(state.delivery_column_name, column)
+        and (variant is None or state.variant == variant)
+        for state in node.states
+    )
+
+
+def _graph_edge_survives_narrowing(
+    edge: GraphEdge, kept_nodes_by_id: dict[str, GraphNode]
+) -> bool:
+    if edge.source not in kept_nodes_by_id or edge.target not in kept_nodes_by_id:
+        return False
+    source_column = getattr(edge, "source_column", None)
+    target_column = getattr(edge, "target_column", None)
+    variant = getattr(edge, "variant", None)
+    if source_column is None and target_column is None:
+        return True
+    if source_column is None or target_column is None:
+        return False
+    source = kept_nodes_by_id[edge.source]
+    target = kept_nodes_by_id[edge.target]
+    if not isinstance(source, VariableGraphNode) or not isinstance(
+        target, VariableGraphNode
+    ):
+        return False
+    return _node_has_representation_endpoint(
+        source,
+        column=source_column,
+        variant=variant,
+    ) and _node_has_representation_endpoint(
+        target,
+        column=target_column,
+        variant=variant,
+    )
+
+
 def _narrow_graph_to_held(
     graph: RelationshipGraph, index: CatalogIndex, focus_fqid: str | None = None
 ) -> RelationshipGraph:
@@ -291,7 +340,7 @@ def _narrow_graph_to_held(
     `representation_run_id`s on surviving states may skip values (a dropped run leaves a
     gap) — harmless: the run id groups ADJACENT surviving states into render cells; it
     is not a dense sequence the consumers rely on."""
-    kept_nodes: list = []
+    kept_nodes: list[GraphNode] = []
     kept_ids: set[str] = set()
     for node in graph.nodes:
         if not isinstance(node, VariableGraphNode) or node.fqid is None:
@@ -312,10 +361,11 @@ def _narrow_graph_to_held(
                 )
             )
             kept_ids.add(node.id)
+    kept_nodes_by_id = {node.id: node for node in kept_nodes}
     kept_edges = [
         edge
         for edge in graph.edges
-        if edge.source in kept_ids and edge.target in kept_ids
+        if _graph_edge_survives_narrowing(edge, kept_nodes_by_id)
     ]
     focus_id = graph.focus_id if graph.focus_id in kept_ids else None
     return graph.model_copy(

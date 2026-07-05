@@ -28,6 +28,8 @@ import {
   CELL_MIN_W,
   cellsOf,
   clustersOf,
+  graphColumnMatches,
+  graphEdgeVisibleInGraph,
   type NodeCluster,
   PX_PER_YEAR,
   type RenderNode,
@@ -1195,19 +1197,25 @@ function graphForVisibleRows(g: RelationshipGraph): RelationshipGraph | null {
       .filter((node) => graphBandForNode(node) != null)
       .map((node) => node.id),
   );
-  return {
+  const visibleGraph: RelationshipGraph = {
     ...g,
     nodes: g.nodes
       .filter((node) => visibleNodeIds.has(node.id))
       .map((node) =>
         node.kind === "variable" ? graphNodeWithVisibleStates(node) : node,
       ),
-    edges: g.edges.filter(
-      (edge) =>
-        visibleNodeIds.has(edge.source) && visibleNodeIds.has(edge.target),
-    ),
+    edges: [],
     focus_id:
       g.focus_id != null && visibleNodeIds.has(g.focus_id) ? g.focus_id : null,
+  };
+  return {
+    ...visibleGraph,
+    edges: g.edges.filter(
+      (edge) =>
+        visibleNodeIds.has(edge.source) &&
+        visibleNodeIds.has(edge.target) &&
+        graphEdgeVisibleInGraph(edge, visibleGraph),
+    ),
   };
 }
 
@@ -1473,6 +1481,251 @@ function graphLaneItemWidth(item: GraphLaneItem): number {
     : CELL_MIN_W;
 }
 
+interface GraphEdgeEndpoint {
+  left: number;
+  right: number;
+  centerX: number;
+  y: number;
+}
+
+interface GraphEdgeSegment {
+  x1: number;
+  y1: number;
+  x2: number;
+  y2: number;
+  representation: boolean;
+}
+
+interface GraphEdgeLabelPosition {
+  left: number;
+  top: number;
+}
+
+type GraphRepresentationEndpointRole = "source" | "target";
+
+function graphEndpointYearScore(
+  cell: RunCell,
+  role: GraphRepresentationEndpointRole,
+  effectiveYear: number | null | undefined,
+): number {
+  if (effectiveYear == null || !Number.isFinite(effectiveYear)) {
+    return 0;
+  }
+  if (role === "source") {
+    if (cell.toYear < effectiveYear) {
+      return effectiveYear - cell.toYear;
+    }
+    if (cell.fromYear <= effectiveYear && effectiveYear <= cell.toYear) {
+      return 0.5;
+    }
+    return 10000 + Math.abs(cell.fromYear - effectiveYear);
+  }
+  if (cell.fromYear >= effectiveYear) {
+    return cell.fromYear - effectiveYear;
+  }
+  if (cell.fromYear <= effectiveYear && effectiveYear <= cell.toYear) {
+    return 0.5;
+  }
+  return 10000 + Math.abs(effectiveYear - cell.toYear);
+}
+
+function graphRepresentationEdgeEndpoint(
+  lane: GraphLaneBox,
+  column: string | null | undefined,
+  variant: string | null | undefined,
+  role: GraphRepresentationEndpointRole,
+  effectiveYear: number | null | undefined,
+): GraphEdgeEndpoint | null {
+  if (lane.rn.kind !== "variable" || column == null) {
+    return null;
+  }
+  const candidates = graphLaneItems(lane.rn)
+    .filter(
+      (item): item is Extract<GraphLaneItem, { kind: "cell" }> =>
+        item.kind === "cell",
+    )
+    .filter(
+      (item) =>
+        (variant == null || item.cell.variant === variant) &&
+        item.cell.columns.some((candidate) =>
+          graphColumnMatches(candidate, column),
+        ),
+    )
+    .sort(
+      (a, b) =>
+        graphEndpointYearScore(a.cell, role, effectiveYear) -
+          graphEndpointYearScore(b.cell, role, effectiveYear) ||
+        a.index - b.index,
+    );
+  const match = candidates[0];
+  if (!match) {
+    return null;
+  }
+  const left = GRAPH_GUTTER_W + graphLaneItemLeft(match);
+  const width = graphLaneItemWidth(match);
+  const top = graphCellTop(lane.height, match.rowIndex, lane.rowCount);
+  return {
+    left,
+    right: left + width,
+    centerX: left + width / 2,
+    y: lane.top + top + GRAPH_CELL_H / 2,
+  };
+}
+
+function graphEdgeSegment(
+  edge: ResolvedEdge,
+  source: GraphLaneBox,
+  target: GraphLaneBox,
+): GraphEdgeSegment | null {
+  const representationEdge =
+    edge.edge.source_column != null || edge.edge.target_column != null;
+  const sourceEndpoint = graphRepresentationEdgeEndpoint(
+    source,
+    edge.edge.source_column,
+    edge.edge.variant,
+    "source",
+    edge.edge.effective_year,
+  );
+  const targetEndpoint = graphRepresentationEdgeEndpoint(
+    target,
+    edge.edge.target_column,
+    edge.edge.variant,
+    "target",
+    edge.edge.effective_year,
+  );
+  if (sourceEndpoint && targetEndpoint) {
+    const forward = sourceEndpoint.centerX <= targetEndpoint.centerX;
+    let x1 = forward ? sourceEndpoint.right : sourceEndpoint.left;
+    let x2 = forward ? targetEndpoint.left : targetEndpoint.right;
+    const endpointGap = forward ? x2 - x1 : x1 - x2;
+    if (endpointGap < 8) {
+      x1 = sourceEndpoint.centerX;
+      x2 = targetEndpoint.centerX;
+    }
+    if (
+      Math.abs(x2 - x1) < 1 &&
+      Math.abs(targetEndpoint.y - sourceEndpoint.y) < 1
+    ) {
+      x2 += 22;
+    }
+    return {
+      x1,
+      y1: sourceEndpoint.y,
+      x2,
+      y2: targetEndpoint.y,
+      representation: true,
+    };
+  }
+  if (representationEdge) {
+    return null;
+  }
+  return {
+    x1: GRAPH_GUTTER_W - 10,
+    y1: source.center,
+    x2: GRAPH_GUTTER_W - 10,
+    y2: target.center,
+    representation: false,
+  };
+}
+
+function graphRenderableEdges(
+  edges: ResolvedEdge[],
+  byId: Map<string, GraphLaneBox>,
+): ResolvedEdge[] {
+  return edges.filter((edge) => {
+    const source = byId.get(edge.source.id);
+    const target = byId.get(edge.target.id);
+    return (
+      source != null &&
+      target != null &&
+      graphEdgeSegment(edge, source, target) != null
+    );
+  });
+}
+
+function graphEdgeLabelLeft(segment: GraphEdgeSegment): number {
+  if (!segment.representation) {
+    return GRAPH_GUTTER_W + 6;
+  }
+  return Math.max(GRAPH_GUTTER_W + 6, (segment.x1 + segment.x2) / 2 + 6);
+}
+
+function graphEdgeLabelAnchor(
+  edge: ResolvedEdge,
+  source: GraphLaneBox,
+  target: GraphLaneBox,
+): GraphEdgeLabelPosition | null {
+  const segment = graphEdgeSegment(edge, source, target);
+  if (!segment) {
+    return null;
+  }
+  return {
+    left: graphEdgeLabelLeft(segment),
+    top: (segment.y1 + segment.y2) / 2,
+  };
+}
+
+function graphEdgeLabelPosition(
+  edge: ResolvedEdge,
+  source: GraphLaneBox,
+  target: GraphLaneBox,
+  edges: ResolvedEdge[],
+  byId: Map<string, GraphLaneBox>,
+): GraphEdgeLabelPosition | null {
+  const anchor = graphEdgeLabelAnchor(edge, source, target);
+  if (!anchor) {
+    return null;
+  }
+  const stack = edges
+    .map((candidate) => {
+      const candidateSource = byId.get(candidate.source.id);
+      const candidateTarget = byId.get(candidate.target.id);
+      if (
+        !graphEdgeLabel(candidate) ||
+        candidateSource == null ||
+        candidateTarget == null
+      ) {
+        return null;
+      }
+      const candidateAnchor = graphEdgeLabelAnchor(
+        candidate,
+        candidateSource,
+        candidateTarget,
+      );
+      if (!candidateAnchor) {
+        return null;
+      }
+      return {
+        edgeId: candidate.edge.id,
+        anchor: candidateAnchor,
+      };
+    })
+    .filter(
+      (
+        candidate,
+      ): candidate is { edgeId: string; anchor: GraphEdgeLabelPosition } => {
+        if (candidate == null) {
+          return false;
+        }
+        return (
+          Math.abs(candidate.anchor.left - anchor.left) < 32 &&
+          Math.abs(candidate.anchor.top - anchor.top) < 12
+        );
+      },
+    );
+  if (stack.length <= 1) {
+    return anchor;
+  }
+  const index = Math.max(
+    0,
+    stack.findIndex((candidate) => candidate.edgeId === edge.edge.id),
+  );
+  return {
+    left: anchor.left,
+    top: anchor.top + (index - (stack.length - 1) / 2) * 18,
+  };
+}
+
 function graphCellSubLabel(cell: RunCell, column: string): string {
   return cell.label === column || cell.columns.includes(cell.label)
     ? ""
@@ -1556,12 +1809,20 @@ function graphNodeHref(rn: RenderNode): string | null {
 }
 
 function graphEdgeLabel(edge: ResolvedEdge): string | null {
+  const representation =
+    edge.edge.source_column != null && edge.edge.target_column != null
+      ? edge.edge.source_column === edge.edge.target_column
+        ? edge.edge.source_column
+        : `${edge.edge.source_column} → ${edge.edge.target_column}`
+      : null;
+  const label = edge.edge.label?.trim() ? edge.edge.label : null;
+  const base = label ?? representation;
   if (edge.edge.effective_year != null) {
-    return edge.edge.label
-      ? `${edge.edge.label} → ${edge.edge.effective_year}`
+    return base
+      ? `${base} · ${edge.edge.effective_year}`
       : `→ ${edge.edge.effective_year}`;
   }
-  return edge.edge.label;
+  return base;
 }
 
 function graphLaneA11y(rn: RenderNode): string {
@@ -2005,7 +2266,7 @@ function codingsVaryHref(
 
               <svg
                 class="graph-connectors"
-                width={graphTrackW}
+                width={GRAPH_GUTTER_W + graphTrackW}
                 height={stackH}
                 aria-hidden="true"
               >
@@ -2026,14 +2287,19 @@ function codingsVaryHref(
                   {@const source = byId.get(edge.source.id)}
                   {@const target = byId.get(edge.target.id)}
                   {#if source && target}
-                    <line
-                      x1={GRAPH_GUTTER_W - 10}
-                      y1={source.center}
-                      x2={GRAPH_GUTTER_W - 10}
-                      y2={target.center}
-                      class="graph-edge"
-                      marker-end={`url(#picker-arrow-${ci})`}
-                    />
+                    {@const segment = graphEdgeSegment(edge, source, target)}
+                    {#if segment}
+                      <line
+                        data-edge-id={edge.edge.id}
+                        x1={segment.x1}
+                        y1={segment.y1}
+                        x2={segment.x2}
+                        y2={segment.y2}
+                        class="graph-edge"
+                        class:representation={segment.representation}
+                        marker-end={`url(#picker-arrow-${ci})`}
+                      />
+                    {/if}
                   {/if}
                 {/each}
               </svg>
@@ -2043,14 +2309,23 @@ function codingsVaryHref(
                 {@const target = byId.get(edge.target.id)}
                 {@const label = graphEdgeLabel(edge)}
                 {#if label && source && target}
-                  <div
-                    class="graph-reason"
-                    style={`top:${(source.center + target.center) / 2}px; left:${GRAPH_GUTTER_W + 6}px`}
-                    title={label}
-                    aria-hidden="true"
-                  >
-                    {label}
-                  </div>
+                  {@const labelPos = graphEdgeLabelPosition(
+                    edge,
+                    source,
+                    target,
+                    cEdges,
+                    byId,
+                  )}
+                  {#if labelPos}
+                    <div
+                      class="graph-reason"
+                      style={`top:${labelPos.top}px; left:${labelPos.left}px`}
+                      title={label}
+                      aria-hidden="true"
+                    >
+                      {label}
+                    </div>
+                  {/if}
                 {/if}
               {/each}
 
@@ -2219,9 +2494,9 @@ function codingsVaryHref(
           </div>
         </div>
 
-        {#if cEdges.length > 0}
+        {#if graphRenderableEdges(cEdges, byId).length > 0}
           <ul class="graph-fallback">
-            {#each cEdges as edge (edge.edge.id)}
+            {#each graphRenderableEdges(cEdges, byId) as edge (edge.edge.id)}
               {@const source = byId.get(edge.source.id)?.rn}
               {@const target = byId.get(edge.target.id)?.rn}
               <li>
@@ -2782,6 +3057,9 @@ function codingsVaryHref(
   .graph-edge {
     stroke: var(--viz-edge-succession);
     stroke-width: 1.5;
+  }
+  .graph-edge.representation {
+    stroke-dasharray: 4 3;
   }
   .graph-arrow-head {
     fill: var(--viz-edge-succession);
