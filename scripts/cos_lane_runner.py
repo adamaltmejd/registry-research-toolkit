@@ -118,10 +118,15 @@ RECORDABLE_ERROR_KIND = "usage_limit"
 
 # Leading tokens that mark a gate line as EXPLICITLY not-done, used by
 # _first_explicitly_unmet_gate as a fail-closed negative-token cross-check on the agent's
-# `blocker` field. Matched only against the line's LEADING token (`.strip().lower()`), never
-# as a substring — a legitimate value like `tests: "uv run pytest -k not_blocked"` contains
-# "blocked" but its leading token is "uv", so it must NOT fire (see _first_explicitly_unmet_gate).
-_UNMET_LEADING_TOKENS = ("blocked", "running", "deferred", "pending")
+# `blocker` field. Matched only as a delimited LEADING status token, never as a substring or
+# raw prefix — a legitimate value like `tests: "uv run pytest -k not_blocked"` contains
+# "blocked", and a free-text note like `"error-handling tests passed"` starts with "error",
+# but neither line leads with an unmet status token (see _first_explicitly_unmet_gate).
+_UNMET_LEADING_TOKENS = ("blocked", "running", "deferred", "pending", "failed", "error")
+_UNMET_LEADING_TOKEN_RE = re.compile(
+    rf"^(?:{'|'.join(re.escape(token) for token in _UNMET_LEADING_TOKENS)})(?:$|[\s:;,])",
+    re.IGNORECASE,
+)
 
 # The non-codex_bot repo gates a COMPLETE lane-agent handoff must record in gate.json before
 # the runner may flip ready-to-merge. This is a DELIBERATE, DOCUMENTED coupling to the
@@ -139,6 +144,8 @@ _REQUIRED_GATE_KEYS = (
     "build_db",
     "stack",
 )
+
+HEAD_BOUND_REQUIRED_GATES = frozenset({"visual", "build_db"})
 
 # Exit codes (fail-fast + stable, matching the cos_* sibling conventions).
 EXIT_OK = 0
@@ -173,6 +180,15 @@ _cos_preflight = _gh.load_sibling("cos_preflight")
 # The review subprocess is codex_local_review.py, invoked un-nested so its `nested_sandbox`
 # denial cannot occur; its JSON stdout is the contract, so we resolve its path once here.
 CODEX_LOCAL_REVIEW = Path(__file__).with_name("codex_local_review.py")
+
+# Only dispatch tiers whose blessed surface is codex make sense here: this runner is codex-
+# fixed, so accepting a claude tier like `easy` would force resolve_profile("easy", "codex")
+# down the ambient-default fallback path and silently drop the tier's pins.
+RUNNER_LAUNCH_TIERS = tuple(
+    tier
+    for tier, (surface, _flags) in _cos_dispatch.LAUNCH_PROFILES.items()
+    if surface == "codex"
+)
 
 
 def _now() -> str:
@@ -386,10 +402,10 @@ def _first_explicitly_unmet_gate(gate: dict) -> str | None:
     pending?), never a positive met-detection — the real template grammar has
     `tests: "<commands run>"`, `docs: "updated; ..."`, `stack: "before #N"` etc., none of
     which match a fixed met-token whitelist, so a positive scan would read every real PR as
-    not-done. Matched against the line's LEADING token (`.strip().lower().startswith`), NOT as
-    a substring, so a legitimate value like `tests: "uv run pytest -k not_blocked"` (leading
-    token "uv") does NOT fire. codex_bot is excluded — it is the gate this runner is
-    completing, so its own not-done line is expected, not a blocker.
+    not-done. Matched against a delimited leading status token, NOT as a substring or raw
+    prefix, so legitimate values like `tests: "uv run pytest -k not_blocked"` (leading token
+    "uv") or `"error-handling tests passed"` do NOT fire. codex_bot is excluded — it is the
+    gate this runner is completing, so its own not-done line is expected, not a blocker.
     """
     gates = gate.get("gates")
     if not isinstance(gates, dict):
@@ -397,7 +413,7 @@ def _first_explicitly_unmet_gate(gate: dict) -> str | None:
     for name, line in gates.items():
         if name == "codex_bot" or not isinstance(line, str):
             continue
-        if line.strip().lower().startswith(_UNMET_LEADING_TOKENS):
+        if _UNMET_LEADING_TOKEN_RE.match(line.strip()):
             return name
     return None
 
@@ -482,9 +498,8 @@ def _status_after_codex_bot(
             "blocked",
             f"{unmet} is unmet though the agent flagged codex_bot as sole blocker",
         )
-    all_current, stale = head_bound_gates_current(gate, head)
-    if not all_current:
-        return "blocked", f"{stale} verified on a stale head; re-verify on {head[:12]}"
+    if (blocker := head_bound_gate_blocker(gate, head)) is not None:
+        return "blocked", blocker
     return "ready-to-merge", None
 
 
@@ -499,10 +514,12 @@ def head_bound_gates_current(gate: dict, head: str) -> tuple[bool, str | None]:
     head to match the CURRENT head.
 
     codex_bot is EXCLUDED — it is being (re)written to the current head by this same call, so
-    its own stamp is authoritative, not a staleness signal. A gate line with no `head ` token
-    is not head-bound (`"not required"`, `"pass; gh pr checks"`, `"updated; ..."`) → never
-    stale. Prefix-match either direction because lines may carry the full or a truncated
-    (12-char) sha. Returns (all_current, first_stale_gate_name).
+    its own stamp is authoritative, not a staleness signal. For required head-bound gates
+    (`visual`, `build_db`), only a leading `"not required"` line is allowed to omit a head
+    stamp; any other completed-looking line without `head <sha>` is not current. Other gate
+    lines with no `head ` token (`"pass; gh pr checks"`, `"updated; ..."`) are not
+    head-bound. Prefix-match either direction because lines may carry the full or a truncated
+    (12-char) sha. Returns (all_current, first_stale_or_unstamped_gate_name).
     """
     gates = gate.get("gates")
     if not isinstance(gates, dict):
@@ -512,12 +529,30 @@ def head_bound_gates_current(gate: dict, head: str) -> tuple[bool, str | None]:
             continue
         match = HEAD_TOKEN_RE.search(line)
         if match is None:
+            if (
+                name in HEAD_BOUND_REQUIRED_GATES
+                and not line.strip().lower().startswith("not required")
+            ):
+                return False, name
             continue  # not head-bound → never stale
         sha = match.group(1).lower()
         current = head.lower()
         if not (current.startswith(sha) or sha.startswith(current[:12])):
             return False, name
     return True, None
+
+
+def head_bound_gate_blocker(gate: dict, head: str) -> str | None:
+    """Return an actionable blocker for stale or unstamped head-bound evidence."""
+    all_current, stale = head_bound_gates_current(gate, head)
+    if all_current or stale is None:
+        return None
+
+    gates = gate.get("gates")
+    line = gates.get(stale) if isinstance(gates, dict) else None
+    if isinstance(line, str) and HEAD_TOKEN_RE.search(line) is None:
+        return f"{stale} is required but lacks a head stamp; re-verify on {head[:12]}"
+    return f"{stale} verified on a stale head; re-verify on {head[:12]}"
 
 
 def write_codex_bot_gate(
@@ -938,6 +973,11 @@ def run(
     # Resolve the tier's blessed model/effort pins (surface fixed to codex — this runner only
     # ever drives a codex session), used for BOTH the implement turn and the resume turns so
     # they run on the same model tier, not codex's ambient default.
+    if args.tier not in RUNNER_LAUNCH_TIERS:
+        raise SystemExit(
+            f"{EXIT_TOOL}:--tier {args.tier!r} is not valid for cos_lane_runner "
+            f"(codex-fixed); choose one of: {', '.join(RUNNER_LAUNCH_TIERS)}"
+        )
     _, profile_flags = _cos_dispatch.resolve_profile(args.tier, "codex")
 
     # 1. Build + run the implement turn (foreground; one codex turn to completion). Capture
@@ -1141,7 +1181,7 @@ def main(argv: list[str] | None = None) -> int:
     )
     ap.add_argument(
         "--tier",
-        choices=tuple(_cos_dispatch.LAUNCH_PROFILES),
+        choices=RUNNER_LAUNCH_TIERS,
         default="hard",
         help="launch tier whose model/effort pins drive both the implement and resume turns "
         "(surface fixed to codex); default hard (gpt-5.5 xhigh)",
