@@ -1848,12 +1848,12 @@ folded into the existing source's period via `mergePeriods` (`period.ts`) rather
 minting a second source: when both periods are pure year grammar it coalesces into the
 sorted, disjoint #307 list form (adjacency-merging touching/overlapping intervals),
 otherwise (either side is token grammar or `_default`) it REPLACES with the incoming
-period, since mixed-grain union has no defined sort. `addFromCatalog` remains the
-store-owned single-pick handoff and applies the same find-or-create + `mergePeriods`
-merge outside the staged-diff path; subject-page picker views use `applyStagedDiff`.
-`updateField` (the project's own `name` / `window`) and `removeSource`/`removeBinding`
-are the only other mutators the cart UI calls — a source's own name and period are no
-longer directly editable in the cart.
+period, since mixed-grain union has no defined sort. `applyStagedDiff` is now the SOLE
+catalog→project mutation path (the store's earlier single-pick `addFromCatalog` handoff
+was dead since #992/#993 and was deleted in #1104). `updateField` (the project's own
+`name` / `window`) and `removeSource`/`removeBinding` are the only other mutators the
+cart UI calls — a source's own name and period are no longer directly editable in the
+cart.
 
 ## Browser storage + project-file persistence (the SPA store)
 

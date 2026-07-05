@@ -24,7 +24,7 @@ import { windowStore } from "./window.svelte";
 // Two surfaces under test:
 //   1. the direct representation picker (#678) — the variable's representations
 //      list as selectable rows; selecting rows + Add commits the right
-//      `addFromCatalog` payloads; out-of-window rows dim; empty selection / no
+//      `applyStagedDiff` payloads; out-of-window rows dim; empty selection / no
 //      seed disables Add.
 //   2. the #670 member identity, now derived from the relationship-graph FOCUS node
 //      (#678/#904) — the leaf's single `/graph` fetch feeds both the picker graph
