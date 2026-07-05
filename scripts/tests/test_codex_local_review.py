@@ -409,20 +409,22 @@ def test_run_codex_timeout_kills_group_and_writes_partial(
     assert "partial stdout" in out_path.read_text(encoding="utf-8")
 
 
-def test_run_codex_nested_sandbox_denial_is_tool_failure(
+def test_run_codex_nested_sandbox_denial_is_nested_sandbox(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
     # The #1049 nested-sandbox false clean: codex exits 0 with a prose "could not inspect"
     # message (no findings header) while its stderr shows every exec denied by
-    # `sandbox_apply: Operation not permitted`. Must fail-closed as tool_failure, not clean.
-    # SANDBOXED_DENIAL_STDERR has zero `succeeded in` markers, so the single no-op gate (no
-    # exec-success marker on stderr) fires; the denial marker on stderr then SELECTS the
-    # actionable sandbox message (match="sandbox") over the generic backstop.
+    # `sandbox_apply: Operation not permitted`. Must fail-closed (never clean); the denial
+    # classifies as its own kind `nested_sandbox` — a blocker like tool_failure, but meaning
+    # the environment nested us, not the PR/tooling broke. SANDBOXED_DENIAL_STDERR has zero
+    # `succeeded in` markers, so the single no-op gate (no exec-success marker on stderr)
+    # fires; the denial marker on stderr then SELECTS the actionable sandbox message
+    # (match="sandbox") and this kind over the generic backstop.
     _stub_popen(monkeypatch, SANDBOXED_CLEAN_STDOUT, SANDBOXED_DENIAL_STDERR, 0)
 
     with pytest.raises(clr.PreconditionError, match="sandbox") as e:
         clr.run_codex("deadbeef", tmp_path / "t.md", cwd=tmp_path, timeout_s=1.0)
-    assert e.value.kind == clr.KIND_TOOL_FAILURE
+    assert e.value.kind == clr.KIND_NESTED_SANDBOX
 
 
 def test_run_codex_denial_string_in_reviewed_content_does_not_false_block(

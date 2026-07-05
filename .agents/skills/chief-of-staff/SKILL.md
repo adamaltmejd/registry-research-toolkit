@@ -539,15 +539,16 @@ complete; any non-`usage_limit` kind is a blocker — set `status: blocked` with
 as `blocker` (kind list + semantics: AGENTS.md "PR merge gate") and route to the owning
 pipeline. Run the launcher un-sandboxed from the throwaway worktree: codex's nested
 `sandbox-exec` cannot apply inside a surrounding agent sandbox, so every exec fails
-there and the review inspects nothing. A `tool_failure` naming
-`sandbox_apply: Operation not permitted` or "no successful exec" is an environment
-problem, not a PR finding — re-run escalated rather than setting `status: blocked` on
-that run. Remove the scratch worktree when done. If the session dies before recording,
-the `running` stamp is the recovery marker: a later tick finding a `codex_bot` line
-stamped `running` with `started` older than the 30-min ceiling treats it as stale —
-finish from the existing `codex-review.md` + JSON if the run completed, else clear the
-stamp and re-run. A retargeted stack successor needs the launcher re-run on its rebased
-head.
+there and the review inspects nothing. A `nested_sandbox` error (the
+`sandbox_apply: Operation not permitted` denial) is an environment problem, not a PR
+finding — re-run escalated rather than setting `status: blocked` on that run. A generic
+`tool_failure` naming "no successful exec" with no sandbox denial is likewise an
+environment problem, not a PR finding. Remove the scratch worktree when done. If the
+session dies before recording, the `running` stamp is the recovery marker: a later tick
+finding a `codex_bot` line stamped `running` with `started` older than the 30-min
+ceiling treats it as stale — finish from the existing `codex-review.md` + JSON if the
+run completed, else clear the stamp and re-run. A retargeted stack successor needs the
+launcher re-run on its rebased head.
 
 The GitHub Codex web integration remains enabled as an FYI-only shadow, not a gate
 input; there is no `@codex review` re-request or bot-signal poll.

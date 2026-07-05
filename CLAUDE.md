@@ -439,6 +439,10 @@ without merging.
   independent review and all other gates are complete; every other kind (`timeout`,
   `format_drift`, `precondition`, `tool_failure`) is a **blocker** (a format-drift
   transcript may hide real unparsed findings), so write `status: blocked` naming it.
+  `nested_sandbox` is likewise not recordable as `clean`, but it is a wrong-ENVIRONMENT
+  signal, not a terminal block: a seatbelt nested inside a surrounding agent sandbox
+  blocked every exec (the review inspected nothing), so the remedy is to **re-run the
+  review un-nested / with escalated permissions** — not to hand off `status: blocked`.
   Nothing is posted to GitHub. The GitHub Codex web integration stays enabled for a
   shadow period but is **no longer a gate input** — its PR comments are FYI only. When a
   PR is otherwise merge-ready but this gate's `codex_bot` evidence is missing or stale

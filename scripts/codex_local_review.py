@@ -59,17 +59,24 @@ Output: one JSON object on stdout. On success —
    "output_path", "duration_s"}
 On an exit-2 failure a machine-readable error object is still emitted to stdout —
   {"verdict": "error",
-   "error": {"kind": "usage_limit"|"timeout"|"format_drift"|"precondition"|"tool_failure",
+   "error": {"kind": "usage_limit"|"timeout"|"format_drift"|"precondition"|"tool_failure"
+                     |"nested_sandbox",
              "message": <one line>},
    "output_path": <str or null>, "head"?, "base"?, "merge_base"?}
 (head/base/merge_base included only when already resolved). The one-line message is on
 stderr too. Exit codes mirror the verdict: **0** clean · **1** findings · **2** error.
 Only kind `usage_limit` is the merge-gate's exhausted-analog (recordable, not a blocker);
 every other exit-2 kind is a blocker. A no-op review — a transcript with no successful exec
-marker on STDERR — is a `tool_failure`, so it blocks rather than passing as a false `clean`;
-a nested-sandbox denial (`sandbox_apply: Operation not permitted`, #1049) is one such case
-and selects the more actionable message, but the denial string is not an independent blocker
-(it is PR-controllable, so a legitimate review that quotes it must not fire the guard).
+marker on STDERR — blocks rather than passing as a false `clean`; the generic case is a
+`tool_failure`. A nested-sandbox denial (`sandbox_apply: Operation not permitted`, #1049) is
+one such case but classifies as its own kind `nested_sandbox`: also a blocker (you cannot
+record a `clean`/ready-to-merge on it), yet distinct from `tool_failure` in MEANING — the
+ENVIRONMENT is wrong (a nested seatbelt blocked every exec, the #1049 family), not the PR or
+the review tooling, so the fix is to re-run un-nested / with escalated permissions, or (on
+the codex surface) let the sibling lane-runner own the review. The denial string is still not
+an independent blocker (it is PR-controllable, so a legitimate review that quotes it must not
+fire the guard) — it is consulted only inside the already-failing no-op branch, to pick both
+the message and this kind.
 
 Stdlib only, and no `gh` **API** access (unlike the sibling scripts) — it works purely off
 the local git worktree and the codex CLI. Its one sibling dependency is `_gh`, for the
@@ -166,7 +173,9 @@ EXEC_SUCCESS_RE = re.compile(r"succeeded in \d+(?:\.\d+)?(?:ms|s|m)\b")
 # docs all quote it) and codex echoes the reviewed diff on stderr, so scanning for it as a
 # blocker would false-fire on a legitimate review that merely mentions it. It is consulted
 # ONLY on STDERR, and ONLY once the exec-success absence has already decided to fail closed
-# (see run_codex), to pick the more actionable nested-sandbox message over the generic one.
+# (see run_codex), to select both the more actionable nested-sandbox message over the generic
+# one AND the distinct error kind `nested_sandbox` (vs the generic `tool_failure`), so a
+# consumer can tell "the environment nested me" apart from "the review tooling broke".
 SANDBOX_DENIED_MARKER = "sandbox_apply: Operation not permitted"
 
 # Error kinds carried on PreconditionError and echoed into the JSON error object.
@@ -175,14 +184,15 @@ KIND_TOOL_FAILURE = "tool_failure"
 KIND_USAGE_LIMIT = "usage_limit"
 KIND_TIMEOUT = "timeout"
 KIND_FORMAT_DRIFT = "format_drift"
+KIND_NESTED_SANDBOX = "nested_sandbox"
 
 
 class PreconditionError(Exception):
     """A precondition/tool/parse failure — mapped to exit 2 with a classified one-line kind.
 
     `kind` names which failure class this is (precondition / tool_failure / usage_limit /
-    timeout / format_drift); only `usage_limit` is the merge gate's exhausted-analog, so
-    the kind rides into the JSON error object consumers read.
+    timeout / format_drift / nested_sandbox); only `usage_limit` is the merge gate's
+    exhausted-analog, so the kind rides into the JSON error object consumers read.
     """
 
     def __init__(self, message: str, *, kind: str = KIND_PRECONDITION) -> None:
@@ -289,16 +299,17 @@ def run_codex(merge_base: str, out_path: Path, *, cwd: Path, timeout_s: float) -
         inherit the pipes; killing only the direct child leaves communicate() blocked
         forever — the repo learned this in cos_watch), the partial transcript is written as
         gate evidence for diagnosing the hang, and kind timeout is raised;
-      - a no-op review (exit 0, non-empty prose) where codex reviewed NOTHING → tool_failure.
-        The SINGLE gate is the ABSENCE of any `succeeded in …` exec-success marker on STDERR
-        (the exec markers land on stderr, which parse_transcript never sees; a genuine review
-        always runs the initial `git diff` successfully, so no marker means nothing was
-        reviewed). Scoped to stderr only so PR-controlled/prose stdout can't downgrade it to a
-        false clean. The SANDBOX_DENIED_MARKER (#1049) is NOT an independent blocker — the
-        string is PR-controllable (this PR quotes it) and codex echoes the reviewed diff on
-        stderr, so it is consulted ONLY inside this fail-closed branch, on STDERR, to pick the
-        actionable nested-sandbox message over the generic backstop. Fail-closed so a review
-        that inspected nothing can't land as `clean`.
+      - a no-op review (exit 0, non-empty prose) where codex reviewed NOTHING → a blocker,
+        generically tool_failure. The SINGLE gate is the ABSENCE of any `succeeded in …`
+        exec-success marker on STDERR (the exec markers land on stderr, which parse_transcript
+        never sees; a genuine review always runs the initial `git diff` successfully, so no
+        marker means nothing was reviewed). Scoped to stderr only so PR-controlled/prose stdout
+        can't downgrade it to a false clean. The SANDBOX_DENIED_MARKER (#1049) is NOT an
+        independent blocker — the string is PR-controllable (this PR quotes it) and codex echoes
+        the reviewed diff on stderr, so it is consulted ONLY inside this fail-closed branch, on
+        STDERR, to select the actionable nested-sandbox message AND the distinct kind
+        `nested_sandbox` (the environment nested us) over the generic tool_failure backstop.
+        Fail-closed so a review that inspected nothing can't land as `clean`.
     codex's exit code is NOT used for the clean/findings split — it exits 0 even with findings.
     A missing codex binary is caught by the shutil.which precondition, so it is not re-guarded
     here.
@@ -375,12 +386,16 @@ def run_codex(merge_base: str, out_path: Path, *, cwd: Path, timeout_s: float) -
     if not EXEC_SUCCESS_RE.search(stderr):
         # Nothing ran. Prefer the actionable nested-sandbox message (#1049) when codex
         # couldn't spawn its seatbelt (the denial lands on stderr); else the generic backstop.
+        # The denial gets its own kind (nested_sandbox, not tool_failure): still a blocker and
+        # still fail-closed, but it says the ENVIRONMENT is wrong (a nested seatbelt blocked
+        # every exec) rather than the PR or the review tooling — so a codex-surface consumer /
+        # the deterministic lane-runner can re-run un-nested or defer to the sibling runner.
         if SANDBOX_DENIED_MARKER in stderr:
             raise PreconditionError(
                 "codex could not spawn its sandbox here (sandbox_apply: Operation not "
                 "permitted) — every exec failed, so nothing was reviewed; re-run the launcher "
                 f"outside the agent sandbox / with escalated permissions; see {out_path}",
-                kind=KIND_TOOL_FAILURE,
+                kind=KIND_NESTED_SANDBOX,
             )
         raise PreconditionError(
             "codex ran no successful exec (no `git diff` succeeded), so the review "

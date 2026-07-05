@@ -264,10 +264,11 @@ durable evidence in the local merge-gate store:
   for `status: ready-to-merge` automerge evidence. Run the launcher outside the
   workspace seatbelt: codex spawns its own nested `sandbox-exec`, which a surrounding
   agent sandbox refuses, so every exec (including the initial `git diff`) fails and the
-  review inspects nothing. A `tool_failure` naming
-  `sandbox_apply: Operation not permitted` or "no successful exec" means the ENVIRONMENT
-  is wrong, not the PR — re-run with escalated permissions rather than recording
-  `status: blocked` on that run;
+  review inspects nothing. A `nested_sandbox` error (the
+  `sandbox_apply: Operation not permitted` denial) means the ENVIRONMENT is wrong, not
+  the PR — re-run with escalated permissions rather than recording `status: blocked` on
+  that run. A generic `tool_failure` naming "no successful exec" with no sandbox denial
+  is likewise an environment problem, not a PR finding;
 - real-data validation when build pipeline or DB content changed;
 - visual verification when rendered output changed: complete the clean-subagent
   `reg-webapp-design-reviewer` pass, including screenshot/render inspection on the
