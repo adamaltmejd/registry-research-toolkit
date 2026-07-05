@@ -4,7 +4,7 @@ import { getCatalogRoot } from "./api";
 import { asyncResource } from "./async.svelte";
 import { catalogHref, DATA_BROWSER_LABEL } from "./catalog";
 import type { StudyWindow } from "./project_data";
-import { projectStore } from "./project_store.svelte";
+import { projectStore, type ValidationStatus } from "./project_store.svelte";
 import { type Route, router } from "./router.svelte";
 import SearchOmnibox from "./SearchOmnibox.svelte";
 import { type BreadcrumbItem, Breadcrumbs } from "./ui";
@@ -84,6 +84,36 @@ const dataBrowserActive = $derived(
     route.name === "class-group",
 );
 
+const projectDraft = $derived(projectStore.draft);
+const projectSources = $derived(
+  Array.isArray(projectDraft?.sources) ? projectDraft.sources : [],
+);
+const projectSourceCount = $derived(projectSources.length);
+const projectColumnCount = $derived(
+  projectSources.reduce(
+    (total, source) =>
+      total + (Array.isArray(source.bindings) ? source.bindings.length : 0),
+    0,
+  ),
+);
+const projectTitle = $derived.by(() => {
+  if (projectDraft == null) {
+    return "No project";
+  }
+  const name =
+    typeof projectDraft.name === "string" ? projectDraft.name.trim() : "";
+  return name.length > 0 ? name : "Untitled project";
+});
+const projectStatus = $derived(projectStore.validationStatus);
+
+const STATUS_LABEL: Record<ValidationStatus, string> = {
+  unchecked: "Unchecked",
+  checking: "Checking",
+  ok: "Valid",
+  warnings: "Warnings",
+  errors: "Errors",
+};
+
 function isCurrent(active: boolean): "page" | undefined {
   return active ? "page" : undefined;
 }
@@ -93,6 +123,10 @@ function isCurrent(active: boolean): "page" | undefined {
 // CatalogRoot labelling).
 function facetLabel(child: { name?: string | null; fqid: string }): string {
   return child.name ?? child.fqid;
+}
+
+function plural(count: number, singular: string, pluralLabel: string): string {
+  return `${count} ${count === 1 ? singular : pluralLabel}`;
 }
 </script>
 
@@ -122,11 +156,28 @@ function facetLabel(child: { name?: string | null; fqid: string }): string {
         aria-current={isCurrent(dataBrowserActive)}>{DATA_BROWSER_LABEL}</a>
       <a
         href="/project"
-        class="nav-item"
+        class="project-chip"
         class:active={route.name === "project"}
-        aria-current={isCurrent(route.name === "project")}>
-        Project
-        {#if projectStore.dirty}<span class="nav-dirty" title="Unsaved changes">●</span>{/if}
+        class:empty={projectDraft == null}
+        aria-current={isCurrent(route.name === "project")}
+        aria-label={`Project: ${projectTitle}, ${plural(projectSourceCount, "source", "sources")} and ${plural(projectColumnCount, "column", "columns")}, ${STATUS_LABEL[projectStatus]}`}
+      >
+        <span class="project-chip-head">
+          <span class="project-chip-label">Project</span>
+          {#if projectStore.dirty}
+            <span class="project-dirty">Unsaved</span>
+          {/if}
+        </span>
+        <span class="project-chip-title">{projectTitle}</span>
+        <span class="project-chip-meta">
+          <span>
+            {plural(projectSourceCount, "source", "sources")} · {plural(projectColumnCount, "column", "columns")}
+          </span>
+          <span class={`project-status ${projectStatus}`}>
+            <span class="project-status-dot" aria-hidden="true"></span>
+            {STATUS_LABEL[projectStatus]}
+          </span>
+        </span>
       </a>
     </nav>
 
@@ -302,10 +353,99 @@ function facetLabel(child: { name?: string | null; fqid: string }): string {
     border-left-color: var(--accent);
     background: var(--accent-bg);
   }
-  .nav-dirty {
-    color: var(--warn);
+  .project-chip {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    box-sizing: border-box;
+    min-width: 0;
+    padding: var(--space-2);
+    border: 1px solid var(--border);
+    border-left: 3px solid transparent;
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    color: var(--text);
+    text-decoration: none;
+  }
+  .project-chip:hover {
+    border-color: var(--border-strong);
+    border-left-color: var(--accent);
+    background: var(--surface-hover);
+  }
+  .project-chip:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+  }
+  .project-chip.active {
+    border-color: color-mix(in srgb, var(--accent) 45%, var(--border));
+    border-left-color: var(--accent);
+    background: var(--accent-bg);
+  }
+  .project-chip.empty .project-chip-title {
+    color: var(--text-muted);
+  }
+  .project-chip-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+    min-width: 0;
+  }
+  .project-chip-label {
+    font-size: var(--micro-label-size);
+    letter-spacing: var(--micro-label-tracking);
+    text-transform: uppercase;
+    color: var(--text-faint);
+  }
+  .project-dirty {
+    flex: 0 0 auto;
     font-size: var(--text-micro);
-    vertical-align: super;
+    font-weight: 700;
+    color: var(--warn);
+  }
+  .project-chip-title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+  .project-chip-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+    font-family: var(--font-mono);
+    font-size: var(--text-micro);
+    color: var(--text-muted);
+  }
+  .project-status {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    font-family: var(--font-ui);
+    font-weight: 700;
+  }
+  .project-status-dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 999px;
+    background: currentColor;
+  }
+  .project-status.unchecked {
+    color: var(--text-faint);
+  }
+  .project-status.checking {
+    color: var(--info);
+  }
+  .project-status.ok {
+    color: var(--ok);
+  }
+  .project-status.warnings {
+    color: var(--warn);
+  }
+  .project-status.errors {
+    color: var(--err);
   }
 
   /* The window-slider control block in the rail. The eyebrow reuses the
