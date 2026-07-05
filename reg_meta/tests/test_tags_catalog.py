@@ -127,6 +127,34 @@ def test_concept_group_tags_aggregate_members_and_inherit_to_siblings() -> None:
     assert direct[0].note == "primary"
 
 
+def test_tags_for_variable_inheritance_can_scope_group_members() -> None:
+    conn = _seeded_conn()
+    add_variable(conn, register_id=1, var_id=51, name="Civilstånd", slug="civilstand")
+    conn.execute(
+        "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
+        "label, source) VALUES (910, 'variable', 1, 'demog', 'Demographics', 'curated')"
+    )
+    conn.execute(
+        "INSERT INTO concept_group_variable "
+        "(group_id, variable_id, delivery_column_name) "
+        "SELECT 910, variable_id, NULL FROM variable "
+        "WHERE register_id = 1 AND slug IN ('kon', 'civilstand')"
+    )
+
+    cat = Catalog(conn)
+    civilstand = Fqid.binding_fqid("scb", "lisa", "civilstand")
+    kon = Fqid.binding_fqid("scb", "lisa", "kon")
+
+    assert [tag.slug for tag in cat.tags_for_variable(civilstand)] == ["income"]
+    assert cat.tags_for_variable(civilstand, group_member_fqids=(civilstand,)) == []
+    assert [
+        tag.slug
+        for tag in cat.tags_for_variable(
+            civilstand, group_member_fqids=(civilstand, kon)
+        )
+    ] == ["income"]
+
+
 def test_concept_group_tag_note_prefers_noted_member_with_equal_rank() -> None:
     conn = build_slugged_db(classification=None)
     add_variable(conn, register_id=1, var_id=51, name="Civilstånd", slug="civilstand")

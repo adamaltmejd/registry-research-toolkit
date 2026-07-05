@@ -759,6 +759,10 @@ unexpected/typo'd field that survives structural but fails model construction) i
 because it's an author-time choice, not drift) also fails the boot — don't admit a
 broken binding to the index and never surface it.
 
+Filtered browse responses narrow concept-group members to held bindings/columns, then
+recompute group tags and inherited binding tags from those surviving members. A steward
+catalog must not surface a thematic tag that exists only on an excluded sibling.
+
 Pre-v1, adding a proving steward is a monorepo PR (drop a directory, register the
 hostname, rebuild). `REG_WEBAPP_STEWARD` selects which steward a process serves;
 `REG_WEBAPP_STEWARDS_DIR` overrides the on-disk root for a packaged wheel/Docker image

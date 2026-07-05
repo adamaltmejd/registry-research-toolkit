@@ -378,6 +378,75 @@ def _seed_unnamed_column_variable(catalog_db: Path) -> None:
         conn.commit()
 
 
+def _seed_steward_tag_scope_group(catalog_db: Path) -> None:
+    """Seed a group where only the unheld sibling carries a thematic tag."""
+    with sqlite3.connect(catalog_db) as conn:
+        held_id = conn.execute(
+            "INSERT INTO variable "
+            "(variable_id, register_id, provider_key, name, slug) "
+            "VALUES (9906, 1, '9906', 'Held untagged', 'helduntagged')"
+        ).lastrowid
+        tagged_id = conn.execute(
+            "INSERT INTO variable "
+            "(variable_id, register_id, provider_key, name, slug) "
+            "VALUES (9907, 1, '9907', 'Unheld tagged', 'unheldtagged')"
+        ).lastrowid
+        conn.execute(
+            "INSERT INTO variable_alias "
+            "(variable_id, register_variant_id, delivery_column_name) "
+            "VALUES (?, 10, 'HeldUntagged')",
+            (held_id,),
+        )
+        conn.execute(
+            "INSERT INTO variable_state "
+            "(variable_id, register_variant_id, valid_from, valid_to, data_type, "
+            "delivery_column_name) "
+            "VALUES (?, 10, '2018-01-01', '9999-12-31', 'int', 'HeldUntagged')",
+            (held_id,),
+        )
+        conn.execute(
+            "INSERT INTO concept_group "
+            "(group_id, kind, register_id, group_key, label, source) "
+            "VALUES (9910, 'variable', 1, 'steward-tags', "
+            "'Steward tag scope', 'curated')"
+        )
+        conn.executemany(
+            "INSERT INTO concept_group_variable "
+            "(group_id, variable_id, delivery_column_name) VALUES (9910, ?, NULL)",
+            [(held_id,), (tagged_id,)],
+        )
+        tag_id = conn.execute(
+            "INSERT INTO tag (slug, label, description) VALUES (?, ?, ?)",
+            ("assets", "Assets", "Fixture tag held only by the unheld sibling."),
+        ).lastrowid
+        conn.execute(
+            "INSERT INTO tag_member "
+            "(tag_id, register_id, variable_id, rank, starred, note) "
+            "VALUES (?, NULL, ?, 0, 1, 'unheld sibling only')",
+            (tag_id, tagged_id),
+        )
+        conn.commit()
+
+
+def _seed_kon_single_member_group(catalog_db: Path) -> None:
+    """Put canonical `kon` in a group so alias leaf tags use the scoped path."""
+    with sqlite3.connect(catalog_db) as conn:
+        kon_id = conn.execute(
+            "SELECT variable_id FROM variable WHERE register_id = 1 AND slug = 'kon'"
+        ).fetchone()[0]
+        conn.execute(
+            "INSERT INTO concept_group "
+            "(group_id, kind, register_id, group_key, label, source) "
+            "VALUES (9911, 'variable', 1, 'alias-tags', 'Alias tags', 'curated')"
+        )
+        conn.execute(
+            "INSERT INTO concept_group_variable "
+            "(group_id, variable_id, delivery_column_name) VALUES (9911, ?, NULL)",
+            (kon_id,),
+        )
+        conn.commit()
+
+
 # ── BROWSE ──────────────────────────────────────────────────────────────────
 
 
@@ -783,6 +852,72 @@ def test_all_unheld_concept_group_404s(steward_client):
     resp = steward_client.get("/api/catalog/group/scb/rams/ink")
     assert resp.status_code == 404
     assert "catalog" in resp.json()["detail"].lower()
+
+
+def test_indexed_steward_tags_ignore_unheld_group_siblings(
+    catalog_db: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    _seed_steward_tag_scope_group(catalog_db)
+
+    with TestClient(create_app()) as client:
+        assert client.app.state.catalog_index is None
+        global_group = client.get("/api/catalog/group/scb/lisa/steward-tags").json()
+        global_leaf = client.get("/api/catalog/scb/lisa/helduntagged").json()
+
+    assert [tag["slug"] for tag in global_group["tags"]] == ["assets"]
+    assert [tag["slug"] for tag in global_leaf["tags"]] == ["assets"]
+    assert global_leaf["tags"][0]["starred"] is False
+    assert global_leaf["tags"][0]["note"] is None
+
+    stewards = _set_steward_env(tmp_path, monkeypatch)
+    with _booted(
+        stewards,
+        "ifau",
+        [
+            {
+                "name": "lisa",
+                "register_variant": "scb/lisa/individer-15plus",
+                "period": 2018,
+                "bindings": [{"variable": "scb/lisa/helduntagged", "type": "numeric"}],
+            }
+        ],
+    ) as client:
+        assert client.app.state.catalog_index is not None
+        steward_group = client.get("/api/catalog/group/scb/lisa/steward-tags").json()
+        steward_leaf = client.get("/api/catalog/scb/lisa/helduntagged").json()
+
+    assert [m["fqid"] for m in steward_group["members"]] == ["scb/lisa/helduntagged"]
+    assert steward_group["tags"] == []
+    assert steward_leaf["tags"] == []
+
+
+def test_indexed_same_as_alias_leaf_keeps_canonical_direct_tags(
+    catalog_db: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    _seed_kon_same_register_alias(catalog_db)
+    _seed_kon_single_member_group(catalog_db)
+    stewards = _set_steward_env(tmp_path, monkeypatch)
+
+    with _booted(
+        stewards,
+        "ifau",
+        [
+            {
+                "name": "lisa",
+                "register_variant": "scb/lisa/individer-15plus",
+                "period": 2018,
+                "bindings": [{"variable": "scb/lisa/kon-alias", "type": "numeric"}],
+            }
+        ],
+    ) as client:
+        assert client.app.state.catalog_index is not None
+        body = client.get("/api/catalog/scb/lisa/kon-alias").json()
+
+    assert body["kind"] == "binding"
+    assert body["fqid"] == "scb/lisa/kon-alias"
+    assert [tag["slug"] for tag in body["tags"]] == ["income"]
+    assert body["tags"][0]["starred"] is True
+    assert body["tags"][0]["note"] == "fixture recommendation"
 
 
 # ── Fix 3: held binding leaf narrows embedded edges ──────────────────────────

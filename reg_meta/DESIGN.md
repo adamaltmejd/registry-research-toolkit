@@ -958,9 +958,11 @@ and tag-backed search boost remain separate consumption work.
 memberships on resolved register and variable nodes so consumers do not reimplement the
 reverse lookup. `ConceptGroupSummary.tags` aggregates member variable memberships, and
 `tags_for_variable()` also inherits group-level tag slugs onto untagged siblings as
-neutral memberships while direct variable memberships keep their rank/star/note.
-Build-side derivation + dangling-reference fail-fast live in `reg_meta_build/tags.py`
-(see `reg_meta_build/DESIGN.md`).
+neutral memberships while direct variable memberships keep their rank/star/note. Callers
+that narrow a group first may supply that member set so aggregation/inheritance follows
+the narrowed surface; unscoped calls keep the full-catalog behavior. Build-side
+derivation + dangling-reference fail-fast live in `reg_meta_build/tags.py` (see
+`reg_meta_build/DESIGN.md`).
 
 ## Storage optimization
 

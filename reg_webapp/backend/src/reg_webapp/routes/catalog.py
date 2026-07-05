@@ -50,6 +50,7 @@ from reg_meta.catalog import (
     ResolvedProvider,
     ResolvedRegister,
     ResolvedVariable,
+    TagMembership,
     VariableCoverage,
     VariableState,
 )
@@ -322,13 +323,15 @@ def _narrow_graph_to_held(
     )
 
 
-def _narrow_group_members(group, index: CatalogIndex):  # noqa: ANN001 — reg_meta ConceptGroupSummary
+def _narrow_group_members(group, index: CatalogIndex, catalog: Catalog):  # noqa: ANN001 — reg_meta ConceptGroupSummary
     """Return `group` with its `members` narrowed to the steward's holdings (#859),
     or None if no member survives. A representation member (`delivery_column` set) is
     kept iff `index.admits(str(member.fqid), member.delivery_column)`; a whole-variable
     member (`delivery_column` None) iff its bare FQID is in `admitted_variable_fqids`.
     Reuses the existing `admits` / `admitted_variable_fqids` probes (no re-derivation).
-    A frozen Pydantic model, so the narrowed copy is via `model_copy`."""
+    The group's tags are recomputed from the surviving members so a filtered steward
+    never inherits thematic tags from excluded siblings. A frozen Pydantic model, so
+    the narrowed copy is via `model_copy`."""
     admitted = index.admitted_variable_fqids
     kept = [
         m
@@ -341,10 +344,20 @@ def _narrow_group_members(group, index: CatalogIndex):  # noqa: ANN001 — reg_m
     ]
     if not kept:
         return None
-    return group.model_copy(update={"members": tuple(kept)})
+    # ty 0.0.54 resolves reg_webapp's workspace reg_meta dependency from the main
+    # checkout in this worktree layout, so it may not see this PR's new helper.
+    catalog_with_tag_scope = cast("Any", catalog)
+    return group.model_copy(
+        update={
+            "members": tuple(kept),
+            "tags": catalog_with_tag_scope.tags_for_variable_members(
+                m.fqid for m in kept
+            ),
+        }
+    )
 
 
-def _narrow_groups(groups: list, index: CatalogIndex) -> list:  # noqa: ANN001 — reg_meta ConceptGroupSummary list
+def _narrow_groups(groups: list, index: CatalogIndex, catalog: Catalog) -> list:  # noqa: ANN001 — reg_meta ConceptGroupSummary list
     """Narrow each concept group's members to the steward's holdings (#859),
     dropping a group with no surviving member. The shared body of the identical
     walrus comprehension in `_register_response` and `get_binding_dimensions`
@@ -352,7 +365,7 @@ def _narrow_groups(groups: list, index: CatalogIndex) -> list:  # noqa: ANN001 �
     return [
         narrowed
         for g in groups
-        if (narrowed := _narrow_group_members(g, index)) is not None
+        if (narrowed := _narrow_group_members(g, index, catalog)) is not None
     ]
 
 
@@ -536,6 +549,34 @@ def _held_variable_coverage(
     return _coverage_from_rows(rows)
 
 
+def _binding_tags(
+    catalog: Catalog, resolved: ResolvedVariable, index: CatalogIndex | None
+) -> list[TagMembership]:
+    """Variable tags scoped to a filtered steward's held group siblings."""
+    if index is None or resolved.group is None:
+        return list(resolved.tags)
+
+    group = catalog.concept_group(
+        resolved.group.provider,
+        resolved.group.register_name,
+        resolved.group.key,
+    )
+    narrowed_group = (
+        None if group is None else _narrow_group_members(group, index, catalog)
+    )
+    group_member_fqids = (
+        () if narrowed_group is None else tuple(m.fqid for m in narrowed_group.members)
+    )
+    # See `_narrow_group_members`: local ty can see the pre-PR reg_meta surface here.
+    catalog_with_tag_scope = cast("Any", catalog)
+    return list(
+        catalog_with_tag_scope.tags_for_variable(
+            resolved.canonical_fqid,
+            group_member_fqids=group_member_fqids,
+        )
+    )
+
+
 # ── reg_meta model → catalog node mappers (see DESIGN.md → Pydantic boundary) ──
 # The per-leaf 1:1 wrappers are gone (#681): reg_meta now returns frozen Pydantic
 # models whose `Fqid` fields serialize to the canonical string and whose
@@ -610,7 +651,7 @@ def _binding_node(
         # ungrouped. Keyed on the RESOLVED variable's triple, so a same_as alias
         # reports its target's group (reg_meta sets it on `ResolvedVariable.group`).
         group=resolved.group,
-        tags=list(resolved.tags),
+        tags=_binding_tags(catalog, resolved, index),
         via_same_as=(
             [str(f) for f in resolved.via_same_as]
             if resolved.via_same_as is not None
@@ -880,7 +921,7 @@ def _register_response(
     if index is not None:
         admitted = index.admitted_variable_fqids
         bindings = [b for b in bindings if str(b.fqid) in admitted]
-        groups = _narrow_groups(groups, index)
+        groups = _narrow_groups(groups, index, catalog)
     # #351/#865 coverage, keyed by variable slug for global and by
     # (variable slug, delivery column) for filtered stewards. The filtered path uses
     # only held delivery-column rows so a partial-column steward does not inherit the
@@ -1278,7 +1319,7 @@ def get_concept_group_graph(
             if not index.admits_register(register_fqid):
                 raise HTTPException(status_code=404, detail=_NOT_IN_CATALOG_DETAIL)
             group = catalog.concept_group(provider, register, key)
-            if group is None or _narrow_group_members(group, index) is None:
+            if group is None or _narrow_group_members(group, index, catalog) is None:
                 raise HTTPException(status_code=404, detail=_NOT_IN_CATALOG_DETAIL)
         graph = catalog.graph_for_group(provider, register, key)
     if graph is None:
@@ -1393,7 +1434,7 @@ def get_concept_group(
         # no held member is a 404 (not in this steward's catalog). The `?member`
         # hint is then matched against the NARROWED member set.
         if index is not None:
-            group = _narrow_group_members(group, index)
+            group = _narrow_group_members(group, index, catalog)
             if group is None:
                 raise HTTPException(status_code=404, detail=_NOT_IN_CATALOG_DETAIL)
         # The `?member` hint is admitted onto the node only when it names a real
@@ -1530,7 +1571,7 @@ def get_binding_dimensions(
         # held (same rule as `_register_response`), dropping a group with no held
         # member, so a steward sees only its own holdings in the facet groups.
         if index is not None:
-            groups = _narrow_groups(groups, index)
+            groups = _narrow_groups(groups, index, catalog)
     return DimensionsResponse(binding=str(parsed), dimensions=groups)
 
 
