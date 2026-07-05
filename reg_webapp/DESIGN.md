@@ -1232,14 +1232,14 @@ that fills the shell: `binding` → `BindingLeafView`, `classification` →
 
 Per-kind mapping into the six sections:
 
-  | Section       | Variable (`BindingLeafView`)                                                                            | Classification (`ClassificationLeafView`)                        | Concept group (`ConceptGroupView`)                                                                             |
-  | ------------- | ------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
-  | description   | definition / description / unit `<dl>` + `via_same_as` note                                             | short name `<dl>`                                                | shared definition/description (when members agree — #678/#900) above Technical details (key / facets / source) |
-  | picker        | `PeriodPicker` (time) + `RepresentationPicker` (list or graph/time-band) + add-to-project               | `ClassificationEditionGraph` compact edition DAG (#906)          | `PeriodPicker` (availability lens) + `RepresentationPicker` (list or graph/time-band)                          |
-  | value / codes | codings (`ValueSetView` (#905), each distinct value set via `CodeList`)                                 | `ClassificationCodesPanel` (`CodeList`)                          | —                                                                                                              |
-  | relationships | `LineageDetails` (provenance/warnings); succession/group graph context lives in the picker              | derived classification links; edition succession lives in picker | — (members live in the picker)                                                                                 |
-  | docs          | `DocMentionsPanel`                                                                                      | —                                                                | —                                                                                                              |
-  | technical     | one bottom `TechnicalDetails` disclosure (sensitive / identifier, plus single-state data type / column) | —                                                                | —                                                                                                              |
+  | Section       | Variable (`BindingLeafView`)                                                                            | Classification (`ClassificationLeafView`)                        | Concept group (`ConceptGroupView`)                                                                                                            |
+  | ------------- | ------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+  | description   | definition / description / unit `<dl>` + `via_same_as` note                                             | short name `<dl>`                                                | aggregated thematic tags, then shared definition/description (when members agree — #678/#900) above Technical details (key / facets / source) |
+  | picker        | `PeriodPicker` (time) + `RepresentationPicker` (list or graph/time-band) + add-to-project               | `ClassificationEditionGraph` compact edition DAG (#906)          | `PeriodPicker` (availability lens) + `RepresentationPicker` (list or graph/time-band)                                                         |
+  | value / codes | codings (`ValueSetView` (#905), each distinct value set via `CodeList`)                                 | `ClassificationCodesPanel` (`CodeList`)                          | —                                                                                                                                             |
+  | relationships | `LineageDetails` (provenance/warnings); succession/group graph context lives in the picker              | derived classification links; edition succession lives in picker | — (members live in the picker)                                                                                                                |
+  | docs          | `DocMentionsPanel`                                                                                      | —                                                                | —                                                                                                                                             |
+  | technical     | one bottom `TechnicalDetails` disclosure (sensitive / identifier, plus single-state data type / column) | —                                                                | —                                                                                                                                             |
 
 **#670 — member identity and fetch ownership.** For a grouped variable,
 `BindingLeafView` renders a member-distinguishing qualifier (facet labels, e.g. "AGI ·
@@ -1319,8 +1319,10 @@ kind:
     The superseded predecessor is dropped as a co-equal selectable band; the chain head
     (latest edition) leads and carries its predecessors as a "supersedes N edition(s)"
     disclosure (a closed `<details>` — oldest-first leaf links with the `effective_year`
-    qualifier, never selection targets). Partial chains — an edge endpoint outside the
-    group — stay normal bands. The fold is purely client-side (`bands` derived reads
+    qualifier). When a predecessor has era-specific rows, those rows remain selectable
+    inside the disclosure so old study windows can add the covering variable without
+    making it a top-level peer. Partial chains — an edge endpoint outside the group —
+    stay normal bands. The fold is purely client-side (`bands` derived reads
     `successionFold`) and requires no API change.
 
   The **graph/time-band render mode** (#904) consumes the same `RelationshipGraph`

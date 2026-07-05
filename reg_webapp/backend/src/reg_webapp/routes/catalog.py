@@ -718,15 +718,18 @@ def _concept_group_node(
                 coverage=member_cov,
             )
         )
-    return ConceptGroupNode(
-        provider=provider_slug,
-        register=register_slug,
-        key=group.key,
-        label=group.label,
-        source=group.source,
-        axes=list(group.axes),
-        members=members,
-        member=member_hint,
+    return ConceptGroupNode.model_validate(
+        {
+            "provider": provider_slug,
+            "register": register_slug,
+            "key": group.key,
+            "label": group.label,
+            "source": group.source,
+            "axes": list(group.axes),
+            "members": members,
+            "tags": list(group.tags),
+            "member": member_hint,
+        }
     )
 
 

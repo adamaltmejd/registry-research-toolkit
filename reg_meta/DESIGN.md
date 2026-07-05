@@ -956,8 +956,11 @@ and tag-backed search boost remain separate consumption work.
 `tags_for_register(fqid)` → `TagMembership` (the tag's slug/label + this membership's
 `rank`/`starred`/`note`), ordered by rank then slug. `Catalog.resolve()` embeds those
 memberships on resolved register and variable nodes so consumers do not reimplement the
-reverse lookup. Build-side derivation + dangling-reference fail-fast live in
-`reg_meta_build/tags.py` (see `reg_meta_build/DESIGN.md`).
+reverse lookup. `ConceptGroupSummary.tags` aggregates member variable memberships, and
+`tags_for_variable()` also inherits group-level tag slugs onto untagged siblings as
+neutral memberships while direct variable memberships keep their rank/star/note.
+Build-side derivation + dangling-reference fail-fast live in `reg_meta_build/tags.py`
+(see `reg_meta_build/DESIGN.md`).
 
 ## Storage optimization
 

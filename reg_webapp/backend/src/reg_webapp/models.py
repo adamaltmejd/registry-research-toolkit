@@ -411,6 +411,9 @@ class ConceptGroupNode(BaseModel):
     # `ConceptGroupMember`) — the SPA matches on `name`, displays `label`.
     axes: list[GroupAxis]
     members: list[ConceptGroupNodeMember]
+    # #982: thematic tags aggregated from member bindings. Defaulted per the
+    # additive payload-skew rule; older edge-cache generations simply omit it.
+    tags: list[TagMembership] = Field(default_factory=list)
     # The validated `?member=` focus hint (a member's leaf slug), echoed so the SPA
     # highlights it; None when absent or not a member of this group.
     member: str | None = None

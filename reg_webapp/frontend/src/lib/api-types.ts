@@ -1352,6 +1352,8 @@ export interface components {
              * @enum {string}
              */
             source: "edge" | "token" | "curated";
+            /** Tags */
+            tags?: components["schemas"]["TagMembership"][];
         };
         /**
          * ConceptGroupNodeMember
@@ -1454,6 +1456,11 @@ export interface components {
              * @enum {string}
              */
             source: "edge" | "token" | "curated";
+            /**
+             * Tags
+             * @default []
+             */
+            tags: components["schemas"]["TagMembership"][];
         };
         /**
          * ContextResponse
