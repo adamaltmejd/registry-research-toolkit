@@ -517,49 +517,54 @@ def test_findings_brief_renders_data_not_instructions() -> None:
 # --- PR discovery -------------------------------------------------------------
 
 
-def test_discover_pr_from_slot_prs(tmp_path: Path) -> None:
+def test_discover_prs_from_slot_prs(tmp_path: Path) -> None:
     slot = _write_slot(tmp_path / "slots", "lane-a", [4242])
-    assert lr.discover_pr(slot, tmp_path / "gate") == 4242
+    assert lr.discover_prs(slot, tmp_path / "gate") == [4242]
 
 
-def test_discover_pr_gate_root_scan_fallback(tmp_path: Path) -> None:
+def test_discover_prs_gate_root_scan_fallback(tmp_path: Path) -> None:
     gate_root = tmp_path / "gate"
     _write_gate(gate_root, 4242)
-    assert lr.discover_pr(None, gate_root) == 4242
+    assert lr.discover_prs(None, gate_root) == [4242]
 
 
-def test_discover_pr_fails_when_none(tmp_path: Path) -> None:
+def test_discover_prs_fails_when_none(tmp_path: Path) -> None:
     with pytest.raises(SystemExit) as exc:
-        lr.discover_pr(None, tmp_path / "empty-gate")
+        lr.discover_prs(None, tmp_path / "empty-gate")
     assert "could not discover the PR" in str(exc.value.code)
 
 
-def test_discover_pr_empty_slot_fails_fast_not_global_scan(tmp_path: Path) -> None:
-    # Fix B: a provided slot that registered NO PR fails fast — even if the gate store holds
-    # exactly one UNRELATED pr-* dir, the runner must NOT fall through to the global scan and
-    # complete the wrong PR. An empty slot means the lane agent didn't open its draft.
+def test_discover_prs_empty_slot_fails_fast_not_global_scan(tmp_path: Path) -> None:
+    # A provided slot that registered NO PR fails fast — even if the gate store holds exactly
+    # one UNRELATED pr-* dir, the runner must NOT fall through to the global scan and complete
+    # the wrong PR. An empty slot means the lane agent didn't open its draft.
     slot = _write_slot(tmp_path / "slots", "lane-a", [])
     gate_root = tmp_path / "gate"
     _write_gate(
         gate_root, 9999
     )  # a lone, unrelated pr-* dir the scan would otherwise return
     with pytest.raises(SystemExit) as exc:
-        lr.discover_pr(slot, gate_root)
+        lr.discover_prs(slot, gate_root)
     code = str(exc.value.code)
     assert code.startswith(f"{lr.EXIT_TOOL}:")
     assert "no registered PR" in code
 
 
-def test_discover_pr_multi_pr_slot_fails_fast(tmp_path: Path) -> None:
-    # Fix C: a slot claiming >1 PR fails fast — silently completing prs[0] would strand the
-    # other PRs' codex_bot gates. Real multi-PR support is a follow-up, not built here.
+def test_discover_prs_multi_pr_slot_returns_list_in_order(tmp_path: Path) -> None:
+    # #1089: a slot claiming >1 PR is now SUPPORTED — the runner completes codex_bot for each.
+    # discover_prs RETURNS the full list in slot order (stack/merge order, predecessor first),
+    # no longer fails fast (the #1086 stopgap is gone).
     slot = _write_slot(tmp_path / "slots", "lane-a", [4242, 4243])
-    with pytest.raises(SystemExit) as exc:
-        lr.discover_pr(slot, tmp_path / "gate")
-    code = str(exc.value.code)
-    assert code.startswith(f"{lr.EXIT_TOOL}:")
-    assert "single PR per lane" in code
-    assert "[4242, 4243]" in code
+    assert lr.discover_prs(slot, tmp_path / "gate") == [4242, 4243]
+
+
+def test_discover_prs_gate_root_scan_returns_all_sorted(tmp_path: Path) -> None:
+    # #1089: with no slot file, the gate-root scan returns ALL valid pr-dirs (sorted), not just
+    # when exactly one exists — a multi-PR lane may be discovered from the store.
+    gate_root = tmp_path / "gate"
+    _write_gate(gate_root, 22, other_gates_met=True)
+    _write_gate(gate_root, 11, other_gates_met=True)
+    assert lr.discover_prs(None, gate_root) == [11, 22]
 
 
 # --- review base resolution (Fix A) ------------------------------------------
@@ -1599,6 +1604,233 @@ def test_run_discovers_pr_and_writes_run_sentinel(
     assert _read_gate(gate_root / "pr-7")["status"] == "ready-to-merge"
 
 
+# --- multi-PR lane (#1089) ----------------------------------------------------
+
+
+def test_run_multi_pr_completes_every_pr_gate(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # #1089: a 2-PR slot where both reviews come back clean → BOTH PRs' gates get the clean
+    # codex_bot line + flip. The review base is resolved PER PR (a stacked successor reviews
+    # vs its predecessor branch), and each PR's head branch is checked out before its loop.
+    wt = _make_worktree(tmp_path)
+    gate_root = tmp_path / "gate"
+    slot = _write_slot(tmp_path / "slots", "lane-a", [4242, 4243])
+    log = tmp_path / "lane.log"
+
+    def fake_turn(argv, worktree, log_path, state_root):
+        # The implement turn opens BOTH PRs and writes both gates.
+        _write_gate(gate_root, 4242, other_gates_met=True)
+        _write_gate(gate_root, 4243, other_gates_met=True)
+        with log_path.open("a", encoding="utf-8") as fh:
+            fh.write(json.dumps({"type": "thread.started", "thread_id": "T"}) + "\n")
+
+    monkeypatch.setattr(lr, "run_codex_turn", fake_turn)
+
+    # Per-PR checkout is exercised (multi-PR) — record which PRs were checked out; return None
+    # (success) so the loop proceeds.
+    checkouts: list[int] = []
+
+    def fake_checkout(pr, worktree):
+        checkouts.append(pr)  # None ⇒ checkout succeeded
+
+    monkeypatch.setattr(lr, "checkout_head_branch", fake_checkout)
+
+    # Per-PR base resolution: predecessor #4242 reviews vs origin/main, successor #4243 vs the
+    # predecessor branch. Record the (pr, base) pairs run_review saw.
+    def fake_base(pr, fallback, worktree):
+        return "origin/main" if pr == 4242 else "origin/s/4242"
+
+    monkeypatch.setattr(lr, "resolve_review_base", fake_base)
+    seen: list[tuple[int, str]] = []
+
+    def fake_review(base, gate_dir, worktree):
+        seen.append((int(gate_dir.name[len("pr-") :]), base))
+        return {"verdict": "clean", "findings": []}
+
+    monkeypatch.setattr(lr, "run_review", fake_review)
+
+    rc = lr.run(
+        _args(wt, gate_root, log, slot_file=slot),
+        codex_id_timeout=1.0,
+        codex_id_poll=0.02,
+    )
+
+    assert rc == lr.EXIT_OK
+    # Both PRs were checked out (in slot order) and both gates flipped ready-to-merge.
+    assert checkouts == [4242, 4243]
+    assert _read_gate(gate_root / "pr-4242")["status"] == "ready-to-merge"
+    assert _read_gate(gate_root / "pr-4243")["status"] == "ready-to-merge"
+    # Per-PR base resolution: each PR was reviewed against its OWN resolved base.
+    assert seen == [(4242, "origin/main"), (4243, "origin/s/4242")]
+
+
+def test_run_multi_pr_checkout_failure_blocks_only_that_pr(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # #1089: when a PR's head branch can't be checked out, THAT PR's codex_bot gate is BLOCKED
+    # (a head-bound blocked line, never a wrong-tree review) and the runner STILL completes the
+    # other PR. The aggregate exit is the first non-OK code (needs-human).
+    wt = _make_worktree(tmp_path)
+    gate_root = tmp_path / "gate"
+    slot = _write_slot(tmp_path / "slots", "lane-a", [4242, 4243])
+    log = tmp_path / "lane.log"
+
+    def fake_turn(argv, worktree, log_path, state_root):
+        _write_gate(gate_root, 4242, other_gates_met=True)
+        _write_gate(gate_root, 4243, other_gates_met=True)
+        with log_path.open("a", encoding="utf-8") as fh:
+            fh.write(json.dumps({"type": "thread.started", "thread_id": "T"}) + "\n")
+
+    monkeypatch.setattr(lr, "run_codex_turn", fake_turn)
+
+    # #4242's checkout FAILS (blocker string); #4243's succeeds.
+    def fake_checkout(pr, worktree):
+        return "could not check out PR #4242's head branch" if pr == 4242 else None
+
+    monkeypatch.setattr(lr, "checkout_head_branch", fake_checkout)
+    monkeypatch.setattr(lr, "resolve_review_base", lambda pr, fb, wt: "origin/main")
+
+    reviewed: list[int] = []
+
+    def fake_review(base, gate_dir, worktree):
+        reviewed.append(int(gate_dir.name[len("pr-") :]))
+        return {"verdict": "clean", "findings": []}
+
+    monkeypatch.setattr(lr, "run_review", fake_review)
+
+    rc = lr.run(
+        _args(wt, gate_root, log, slot_file=slot),
+        codex_id_timeout=1.0,
+        codex_id_poll=0.02,
+    )
+
+    # The aggregate exit is the blocked PR's needs-human code, not OK.
+    assert rc == lr.EXIT_NEEDS_HUMAN
+    # #4242 was BLOCKED without ever being reviewed (no wrong-tree review); #4243 completed.
+    assert reviewed == [4243]
+    blocked = _read_gate(gate_root / "pr-4242")
+    assert blocked["status"] == "blocked"
+    assert "could not check out PR #4242" in blocked["blocker"]
+    # A head-bound blocked codex_bot line for the current head — like every terminal path.
+    assert f"head {_head(wt)};" in blocked["gates"]["codex_bot"]
+    assert "blocked" in blocked["gates"]["codex_bot"]
+    # The OTHER PR still flipped ready-to-merge — a blocked sibling didn't strand it.
+    assert _read_gate(gate_root / "pr-4243")["status"] == "ready-to-merge"
+
+
+def test_run_single_pr_does_not_checkout(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # #1089 invariant: the single-PR common case must NOT check out — it reviews the current
+    # HEAD the implement turn left (byte-for-byte the pre-#1089 behavior). checkout_head_branch
+    # is never called when the lane opened exactly one PR.
+    wt = _make_worktree(tmp_path)
+    gate_root = tmp_path / "gate"
+    slot = _write_slot(tmp_path / "slots", "lane-a", [4242])
+    log = tmp_path / "lane.log"
+
+    def fake_turn(argv, worktree, log_path, state_root):
+        _write_gate(gate_root, 4242, other_gates_met=True)
+        with log_path.open("a", encoding="utf-8") as fh:
+            fh.write(json.dumps({"type": "thread.started", "thread_id": "T"}) + "\n")
+
+    monkeypatch.setattr(lr, "run_codex_turn", fake_turn)
+
+    def boom_checkout(pr, worktree):  # pragma: no cover - must not be called
+        raise AssertionError("checkout_head_branch must not run for a single-PR lane")
+
+    monkeypatch.setattr(lr, "checkout_head_branch", boom_checkout)
+    monkeypatch.setattr(lr, "resolve_review_base", lambda pr, fb, wt: fb)
+    monkeypatch.setattr(
+        lr,
+        "run_review",
+        lambda base, gate_dir, worktree: {"verdict": "clean", "findings": []},
+    )
+
+    rc = lr.run(
+        _args(wt, gate_root, log, slot_file=slot),
+        codex_id_timeout=1.0,
+        codex_id_poll=0.02,
+    )
+    assert rc == lr.EXIT_OK
+    assert _read_gate(gate_root / "pr-4242")["status"] == "ready-to-merge"
+
+
+# --- checkout_head_branch / resolve_head_branch (#1089) -----------------------
+
+
+def test_resolve_head_branch_returns_branch(monkeypatch: pytest.MonkeyPatch) -> None:
+    calls = _patch_gh(monkeypatch, stdout=json.dumps({"headRefName": "s/4242"}))
+    assert lr.resolve_head_branch(4242, Path(_REVIEW_WT)) == "s/4242"
+    argv, kwargs = calls[0]
+    assert argv == ["gh", "pr", "view", "4242", "--json", "headRefName"]
+    assert kwargs["cwd"] == _REVIEW_WT
+
+
+@pytest.mark.parametrize(
+    ("stdout", "returncode"),
+    [
+        ("", 1),  # gh nonzero exit
+        ("not json", 0),  # parse error
+        (json.dumps({"headRefName": ""}), 0),  # empty branch name
+        (json.dumps({}), 0),  # missing key
+    ],
+)
+def test_resolve_head_branch_none_on_failure(
+    monkeypatch: pytest.MonkeyPatch, stdout: str, returncode: int
+) -> None:
+    # Unlike the review base, an unresolvable head branch returns None (no fallback) so the
+    # caller can BLOCK rather than review the wrong tree.
+    _patch_gh(monkeypatch, stdout=stdout, returncode=returncode)
+    assert lr.resolve_head_branch(4242, Path(_REVIEW_WT)) is None
+
+
+def test_checkout_head_branch_success(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # A real branch checkout: resolve_head_branch yields the branch, git checkout succeeds,
+    # and the helper returns None (no blocker).
+    wt = _make_worktree(tmp_path)
+    _git(wt, "checkout", "-q", "-b", "s/pred")
+    _advance_head(wt, "pred-work")
+    _git(wt, "checkout", "-q", "main")
+    monkeypatch.setattr(lr, "resolve_head_branch", lambda pr, worktree: "s/pred")
+    assert lr.checkout_head_branch(4242, wt) is None
+    # The worktree HEAD is now on the resolved branch.
+    branch = subprocess.run(
+        ["git", "rev-parse", "--abbrev-ref", "HEAD"],
+        cwd=str(wt),
+        capture_output=True,
+        text=True,
+        check=True,
+    ).stdout.strip()
+    assert branch == "s/pred"
+
+
+def test_checkout_head_branch_unresolvable_returns_blocker(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    wt = _make_worktree(tmp_path)
+    monkeypatch.setattr(lr, "resolve_head_branch", lambda pr, worktree: None)
+    blocker = lr.checkout_head_branch(4242, wt)
+    assert blocker is not None
+    assert "could not resolve PR #4242's head branch" in blocker
+
+
+def test_checkout_head_branch_checkout_failure_returns_blocker(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # The branch resolves but does not exist in the worktree → git checkout fails → blocker.
+    wt = _make_worktree(tmp_path)
+    monkeypatch.setattr(
+        lr, "resolve_head_branch", lambda pr, worktree: "no-such-branch"
+    )
+    blocker = lr.checkout_head_branch(4242, wt)
+    assert blocker is not None
+    assert "could not check out PR #4242's head branch 'no-such-branch'" in blocker
+
+
 # --- F-fix regressions: resume grants / continue-pr / discovery / exit codes --
 
 
@@ -1696,9 +1928,9 @@ def test_continue_pr_uses_explicit_pr_not_discovery(
     monkeypatch.setattr(lr, "run_codex_turn", fake_turn)
 
     def boom_discover(slot_file, gate_root):  # pragma: no cover - must not be called
-        raise AssertionError("discover_pr must not run in continue mode")
+        raise AssertionError("discover_prs must not run in continue mode")
 
-    monkeypatch.setattr(lr, "discover_pr", boom_discover)
+    monkeypatch.setattr(lr, "discover_prs", boom_discover)
     monkeypatch.setattr(
         lr, "resolve_review_base", lambda pr, fallback, worktree: fallback
     )
@@ -1819,14 +2051,30 @@ def test_fresh_mode_ignores_brief_file(tmp_path: Path, capsys) -> None:
     assert "Continuation brief:" not in prompt
 
 
-def test_discover_pr_multi_dir_raises_without_slot_prs(tmp_path: Path) -> None:
-    # F-tests: >1 pr-* gate dir and no slot prs → ambiguous, must fail fast.
-    gate_root = tmp_path / "gate"
-    _write_gate(gate_root, 11, other_gates_met=True)
-    _write_gate(gate_root, 22, other_gates_met=True)
+def test_discover_prs_non_int_entries_dropped(tmp_path: Path) -> None:
+    # A tolerant read drops non-int `prs` entries; a real int PR still comes through.
+    slots_root = tmp_path / "slots"
+    slots_root.mkdir(parents=True)
+    path = slots_root / "lane-a.json"
+    path.write_text(
+        json.dumps({"slot": "lane-a", "prs": ["oops", 4242], "surface": "codex"}),
+        encoding="utf-8",
+    )
+    assert lr.discover_prs(path, tmp_path / "gate") == [4242]
+
+
+def test_discover_prs_all_non_int_fails_fast(tmp_path: Path) -> None:
+    # An all-non-int `prs` list is an empty claim → fail fast (no fall-through to the scan).
+    slots_root = tmp_path / "slots"
+    slots_root.mkdir(parents=True)
+    path = slots_root / "lane-a.json"
+    path.write_text(
+        json.dumps({"slot": "lane-a", "prs": ["oops"], "surface": "codex"}),
+        encoding="utf-8",
+    )
     with pytest.raises(SystemExit) as exc:
-        lr.discover_pr(None, gate_root)
-    assert "could not discover the PR" in str(exc.value.code)
+        lr.discover_prs(path, tmp_path / "gate")
+    assert "no registered PR" in str(exc.value.code)
 
 
 @pytest.mark.parametrize(
