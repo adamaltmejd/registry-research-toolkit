@@ -1496,38 +1496,77 @@ interface GraphEdgeSegment {
   representation: boolean;
 }
 
+type GraphRepresentationEndpointRole = "source" | "target";
+
+function graphEndpointYearScore(
+  cell: RunCell,
+  role: GraphRepresentationEndpointRole,
+  effectiveYear: number | null | undefined,
+): number {
+  if (effectiveYear == null || !Number.isFinite(effectiveYear)) {
+    return 0;
+  }
+  if (role === "source") {
+    if (cell.toYear < effectiveYear) {
+      return effectiveYear - cell.toYear;
+    }
+    if (cell.fromYear <= effectiveYear && effectiveYear <= cell.toYear) {
+      return 0.5;
+    }
+    return 10000 + Math.abs(cell.fromYear - effectiveYear);
+  }
+  if (cell.fromYear >= effectiveYear) {
+    return cell.fromYear - effectiveYear;
+  }
+  if (cell.fromYear <= effectiveYear && effectiveYear <= cell.toYear) {
+    return 0.5;
+  }
+  return 10000 + Math.abs(effectiveYear - cell.toYear);
+}
+
 function graphRepresentationEdgeEndpoint(
   lane: GraphLaneBox,
   column: string | null | undefined,
   variant: string | null | undefined,
+  role: GraphRepresentationEndpointRole,
+  effectiveYear: number | null | undefined,
 ): GraphEdgeEndpoint | null {
   if (lane.rn.kind !== "variable" || column == null) {
     return null;
   }
-  for (const [index, cell] of lane.rn.cells.entries()) {
-    if (
-      (variant == null || cell.variant === variant) &&
-      cell.columns.some((candidate) => graphColumnMatches(candidate, column))
-    ) {
-      const item: GraphLaneItem = {
-        kind: "cell",
-        cell,
-        match: null,
-        index,
-        rowIndex: cell.row,
-      };
-      const left = GRAPH_GUTTER_W + graphLaneItemLeft(item);
-      const width = graphLaneItemWidth(item);
-      const top = graphCellTop(lane.height, cell.row, lane.rowCount);
-      return {
-        left,
-        right: left + width,
-        centerX: left + width / 2,
-        y: lane.top + top + GRAPH_CELL_H / 2,
-      };
-    }
+  const candidates = lane.rn.cells
+    .map((cell, index) => ({ cell, index }))
+    .filter(
+      ({ cell }) =>
+        (variant == null || cell.variant === variant) &&
+        cell.columns.some((candidate) => graphColumnMatches(candidate, column)),
+    )
+    .sort(
+      (a, b) =>
+        graphEndpointYearScore(a.cell, role, effectiveYear) -
+          graphEndpointYearScore(b.cell, role, effectiveYear) ||
+        a.index - b.index,
+    );
+  const match = candidates[0];
+  if (!match) {
+    return null;
   }
-  return null;
+  const item: GraphLaneItem = {
+    kind: "cell",
+    cell: match.cell,
+    match: null,
+    index: match.index,
+    rowIndex: match.cell.row,
+  };
+  const left = GRAPH_GUTTER_W + graphLaneItemLeft(item);
+  const width = graphLaneItemWidth(item);
+  const top = graphCellTop(lane.height, match.cell.row, lane.rowCount);
+  return {
+    left,
+    right: left + width,
+    centerX: left + width / 2,
+    y: lane.top + top + GRAPH_CELL_H / 2,
+  };
 }
 
 function graphEdgeSegment(
@@ -1539,17 +1578,22 @@ function graphEdgeSegment(
     source,
     edge.edge.source_column,
     edge.edge.variant,
+    "source",
+    edge.edge.effective_year,
   );
   const targetEndpoint = graphRepresentationEdgeEndpoint(
     target,
     edge.edge.target_column,
     edge.edge.variant,
+    "target",
+    edge.edge.effective_year,
   );
   if (sourceEndpoint && targetEndpoint) {
     const forward = sourceEndpoint.centerX <= targetEndpoint.centerX;
     let x1 = forward ? sourceEndpoint.right : sourceEndpoint.left;
     let x2 = forward ? targetEndpoint.left : targetEndpoint.right;
-    if (Math.abs(x2 - x1) < 8) {
+    const endpointGap = forward ? x2 - x1 : x1 - x2;
+    if (endpointGap < 8) {
       x1 = sourceEndpoint.centerX;
       x2 = targetEndpoint.centerX;
     }
@@ -2145,6 +2189,7 @@ function codingsVaryHref(
                   {#if source && target}
                     {@const segment = graphEdgeSegment(edge, source, target)}
                     <line
+                      data-edge-id={edge.edge.id}
                       x1={segment.x1}
                       y1={segment.y1}
                       x2={segment.x2}

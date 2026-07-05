@@ -738,6 +738,103 @@ describe("RepresentationPicker graph mode (#904)", () => {
     );
   });
 
+  it("draws round-trip representation edges to the resumed later cell", async () => {
+    const aFqid = "scb/lisa/roundtrip";
+    render(RepresentationPicker, {
+      bands: [
+        {
+          key: aFqid,
+          name: "Roundtrip leaf",
+          registerPrefix: "scb/lisa",
+          rows: [
+            row({
+              column: "BorgNr",
+              representation: null,
+              renamedColumns: ["PersOrgNr"],
+              from: "2007-01-01",
+              to: "2023-12-31",
+              windows: [
+                { from: "2007-01-01", to: "2013-12-31" },
+                { from: "2014-01-01", to: "2017-12-31" },
+                { from: "2018-01-01", to: "2023-12-31" },
+              ],
+              period: "2007 – 2023",
+            }),
+          ],
+        } satisfies PickerBand,
+      ],
+      graph: graph({
+        nodes: [
+          graphNode(aFqid, {
+            states: [
+              graphState({
+                delivery_column_name: "BorgNr",
+                valid_from: "2007-01-01",
+                valid_to: "2013-12-31",
+              }),
+              graphState({
+                state_id: 2,
+                representation_run_id: 2,
+                delivery_column_name: "PersOrgNr",
+                valid_from: "2014-01-01",
+                valid_to: "2017-12-31",
+              }),
+              graphState({
+                state_id: 3,
+                representation_run_id: 3,
+                delivery_column_name: "BorgNr",
+                valid_from: "2018-01-01",
+                valid_to: "2023-12-31",
+              }),
+            ],
+          }),
+        ],
+        edges: [
+          {
+            id: "repr-borgnr-persorgnr",
+            kind: "succession",
+            source: aFqid,
+            target: aFqid,
+            label: null,
+            effective_year: 2014,
+            source_column: "BorgNr",
+            target_column: "PersOrgNr",
+            variant: null,
+          },
+          {
+            id: "repr-persorgnr-borgnr",
+            kind: "succession",
+            source: aFqid,
+            target: aFqid,
+            label: null,
+            effective_year: 2018,
+            source_column: "PersOrgNr",
+            target_column: "BorgNr",
+            variant: null,
+          },
+        ],
+        focus_id: aFqid,
+      }),
+      ...PROPS,
+    });
+
+    const line = await vi.waitFor(() => {
+      const edge = document.querySelector<SVGLineElement>(
+        '.graph-edge.representation[data-edge-id="repr-persorgnr-borgnr"]',
+      );
+      if (!edge) {
+        throw new Error("round-trip representation edge not rendered");
+      }
+      return edge;
+    });
+    const x1 = Number(line.getAttribute("x1"));
+    const x2 = Number(line.getAttribute("x2"));
+    expect(x2).toBeGreaterThan(x1);
+    expect(document.querySelector(".graph-picker")?.textContent).toContain(
+      "PersOrgNr → BorgNr · 2018",
+    );
+  });
+
   it("marks dead renamed predecessor lanes with the leaf slug and renamed hint", async () => {
     const liveFqid = "scb/lisa/sni2007";
     const deadFqid = "scb/lisa/sni92";
