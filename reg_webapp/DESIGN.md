@@ -1429,13 +1429,16 @@ the `RelationshipGraph` payload as a graph/time-band picker when selectable cell
 projected onto the picker row model without dropping visible rows or leaking non-member
 columns. Variable nodes lay out as horizontal representation-run cells along the shared
 time axis; each selectable cell maps back to a picker row by variant + delivery column,
-including #902's folded rename rows when that mapping is one-to-one. In group mode the
-rendered graph is the current visible member projection, so #908 filters can hide whole
-members and still keep graph mode when the remaining projection is drawable. Cells that
-carry leaf graph context but have no selectable picker row (for example no-column
-bindings, same_as-only context, or sibling/predecessor context on a leaf) render as
-unavailable context, not as checkboxes. The #908 dimension filter strip is shared by
-list and graph modes. `LineageDetails` carries the variable-only non-graph residue
+including #902's folded rename rows when that mapping is one-to-one. Curated
+representation-grain succession (#888) rides the same graph edge set with source/target
+column metadata and an optional variant scope, so a variant-local rename is visible only
+when that variant's cells are in the current projection. In group mode the rendered
+graph is the current visible member projection, so #908 filters can hide whole members
+and still keep graph mode when the remaining projection is drawable. Cells that carry
+leaf graph context but have no selectable picker row (for example no-column bindings,
+same_as-only context, or sibling/predecessor context on a leaf) render as unavailable
+context, not as checkboxes. The #908 dimension filter strip is shared by list and graph
+modes. `LineageDetails` carries the variable-only non-graph residue
 (`variable_state_lineage` provenance edges and `/lineage_warnings`).
 
 ### Rejected alternatives + the viz-dependency trigger (#667 spike)

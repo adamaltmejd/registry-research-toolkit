@@ -28,6 +28,7 @@ import {
   CELL_MIN_W,
   cellsOf,
   clustersOf,
+  graphEdgeVisibleInGraph,
   type NodeCluster,
   PX_PER_YEAR,
   type RenderNode,
@@ -1195,19 +1196,25 @@ function graphForVisibleRows(g: RelationshipGraph): RelationshipGraph | null {
       .filter((node) => graphBandForNode(node) != null)
       .map((node) => node.id),
   );
-  return {
+  const visibleGraph: RelationshipGraph = {
     ...g,
     nodes: g.nodes
       .filter((node) => visibleNodeIds.has(node.id))
       .map((node) =>
         node.kind === "variable" ? graphNodeWithVisibleStates(node) : node,
       ),
-    edges: g.edges.filter(
-      (edge) =>
-        visibleNodeIds.has(edge.source) && visibleNodeIds.has(edge.target),
-    ),
+    edges: [],
     focus_id:
       g.focus_id != null && visibleNodeIds.has(g.focus_id) ? g.focus_id : null,
+  };
+  return {
+    ...visibleGraph,
+    edges: g.edges.filter(
+      (edge) =>
+        visibleNodeIds.has(edge.source) &&
+        visibleNodeIds.has(edge.target) &&
+        graphEdgeVisibleInGraph(edge, visibleGraph),
+    ),
   };
 }
 
@@ -1556,12 +1563,19 @@ function graphNodeHref(rn: RenderNode): string | null {
 }
 
 function graphEdgeLabel(edge: ResolvedEdge): string | null {
+  const representation =
+    edge.edge.source_column != null && edge.edge.target_column != null
+      ? edge.edge.source_column === edge.edge.target_column
+        ? edge.edge.source_column
+        : `${edge.edge.source_column} → ${edge.edge.target_column}`
+      : null;
+  const base = representation ?? edge.edge.label;
   if (edge.edge.effective_year != null) {
-    return edge.edge.label
-      ? `${edge.edge.label} → ${edge.edge.effective_year}`
+    return base
+      ? `${base} · ${edge.edge.effective_year}`
       : `→ ${edge.edge.effective_year}`;
   }
-  return edge.edge.label;
+  return base;
 }
 
 function graphLaneA11y(rn: RenderNode): string {

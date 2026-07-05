@@ -436,6 +436,57 @@ function findRoot(parent: Map<string, string>, id: string): string {
   return root;
 }
 
+function variableNodeById(
+  graph: RelationshipGraph,
+): Map<string, VariableGraphNode> {
+  return new Map(
+    graph.nodes
+      .filter((node): node is VariableGraphNode => node.kind === "variable")
+      .map((node) => [node.id, node]),
+  );
+}
+
+function nodeHasRepresentationEndpoint(
+  node: VariableGraphNode | undefined,
+  column: string,
+  variant: string | null | undefined,
+): boolean {
+  return (
+    node?.states.some(
+      (state) =>
+        state.delivery_column_name === column &&
+        (variant == null || state.variant === variant),
+    ) ?? false
+  );
+}
+
+/** Whether an edge applies to the graph currently being rendered. Variable-grain
+ * succession edges apply whenever their nodes are present. Representation-grain
+ * edges additionally require the source/target columns to be present on the
+ * endpoint nodes, and a non-null `variant` confines the match to that concrete
+ * register variant (#846/#888). */
+export function graphEdgeVisibleInGraph(
+  edge: GraphEdge,
+  graph: RelationshipGraph,
+): boolean {
+  if (edge.source_column == null || edge.target_column == null) {
+    return true;
+  }
+  const byId = variableNodeById(graph);
+  return (
+    nodeHasRepresentationEndpoint(
+      byId.get(edge.source),
+      edge.source_column,
+      edge.variant,
+    ) &&
+    nodeHasRepresentationEndpoint(
+      byId.get(edge.target),
+      edge.target_column,
+      edge.variant,
+    )
+  );
+}
+
 /** Cluster the graph's nodes into connected subjects, preserving first-seen
  * cluster order and ordering each cluster's members earliest-first. Two nodes
  * share a cluster when they share a `group_key` (Fork B) OR are joined by an edge
@@ -472,7 +523,9 @@ export function clustersOf(
   }
   // Union edge-connected nodes (a succession chain is one subject).
   for (const edge of graph.edges) {
-    union(edge.source, edge.target);
+    if (graphEdgeVisibleInGraph(edge, graph)) {
+      union(edge.source, edge.target);
+    }
   }
 
   // Build clusters in first-seen node order, keyed on the union root.
@@ -520,6 +573,9 @@ export function resolveEdges(graph: RelationshipGraph): ResolvedEdge[] {
   const byId = new Map<string, GraphNode>(graph.nodes.map((n) => [n.id, n]));
   const resolved: ResolvedEdge[] = [];
   for (const edge of graph.edges) {
+    if (!graphEdgeVisibleInGraph(edge, graph)) {
+      continue;
+    }
     const source = byId.get(edge.source);
     const target = byId.get(edge.target);
     if (source && target) {

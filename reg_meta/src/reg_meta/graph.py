@@ -18,7 +18,8 @@ the webapp's FastAPI response models (no wrapper, per #681).
 
 **Compose, don't re-query.** The builder orchestrates the existing ``Catalog``
 accessors — each the single source of truth for its edge type (``variable_chain``
-for succession, ``resolve``'s ``ResolvedVariable.group``
+for variable succession, ``representation_successions`` for representation-grain
+succession, ``resolve``'s ``ResolvedVariable.group``
 + ``concept_group`` for variable-group membership, ``classification_group`` for the
 classification umbrella, ``classification_chain`` for classification editions,
 ``resolve`` for same_as canonicalization). The only genuinely new logic is group
@@ -30,8 +31,10 @@ leaf-duplication trap).
 ``lineage`` and ``source_register`` are #678's provenance affordance (not edges);
 group membership is shared ``group_key`` metadata + renderer clustering (no
 ``group:<key>`` node); ``same_as`` is resolved away to the canonical node and
-exposed as node metadata (``same_as[]``); representation / value-set transitions
-are states-within-a-node (the run ids), not edges.
+exposed as node metadata (``same_as[]``); ordinary representation / value-set
+transitions are states-within-a-node (the run ids), while curated
+``representation_replaced_by`` rows are succession edges with column/variant
+endpoint metadata.
 """
 
 from __future__ import annotations
@@ -54,6 +57,7 @@ if TYPE_CHECKING:
     from .catalog import (
         Catalog,
         ConceptGroupSummary,
+        RepresentationSuccessionRef,
         VariableEdition,
         VariableState,
     )
@@ -188,6 +192,13 @@ class GraphEdge(_CatalogModel):
     target: str  # node id
     label: str | None
     effective_year: int | None = None
+    # Representation-grain succession (#843/#846): when populated, the edge is a
+    # column-level succession inside the variable-grain source/target nodes. A
+    # null `variant` means the edge is unscoped; otherwise it applies only inside
+    # that register-variant slug.
+    source_column: str | None = None
+    target_column: str | None = None
+    variant: str | None = None
 
 
 class RelationshipGraph(_CatalogModel):
@@ -317,6 +328,36 @@ def _succession_edge(
     )
 
 
+def _representation_succession_edge(edge: RepresentationSuccessionRef) -> GraphEdge:
+    """A representation-grain succession rendered as a graph succession edge.
+
+    The graph stays variable-node-grained, so source/target are the endpoint
+    variable FQIDs while the optional column/variant fields identify the
+    representation endpoints inside those nodes.
+    """
+    if edge.predecessor_fqid is None or edge.successor_fqid is None:
+        msg = "representation succession edge missing a variable endpoint FQID"
+        raise ValueError(msg)
+    source = str(edge.predecessor_fqid)
+    target = str(edge.successor_fqid)
+    scope = edge.variant or ""
+    return GraphEdge(
+        id=(
+            "succession:representation:"
+            f"{source}:{edge.predecessor_column}:{scope}->"
+            f"{target}:{edge.successor_column}:{scope}"
+        ),
+        kind="succession",
+        source=source,
+        target=target,
+        label=edge.reason,
+        effective_year=edge.effective_year,
+        source_column=edge.predecessor_column,
+        target_column=edge.successor_column,
+        variant=edge.variant,
+    )
+
+
 # ── The builder ──────────────────────────────────────────────────────────────
 
 
@@ -353,6 +394,11 @@ class _GraphBuilder:
         # then upgraded once when its own (member-anchored) walk reaches it. Keying on
         # this makes the upgrade idempotent (no repeated model_copy).
         self._class_grouped: set[str] = set()
+        # Representation succession can legally contain variant-scoped round trips
+        # (#846), so the graph walk must be edge-key guarded rather than assuming a
+        # topological terminal successor exists.
+        self._representation_anchors_walked: set[str] = set()
+        self._representation_edges_walked: set[tuple[str, str, str, str, str]] = set()
         # Concept-group cache, keyed by the member's `(provider, register, key)`
         # triple — the group's address (#616). A variable node's facets/group_label
         # come from its canonical group's member list, so a grouped variable needs
@@ -405,6 +451,9 @@ class _GraphBuilder:
             self._hydrated.add(node_id)
         if first_build:
             self._add_succession(resolved.canonical_fqid)
+        if node_id not in self._representation_anchors_walked:
+            self._representation_anchors_walked.add(node_id)
+            self._add_representation_succession(resolved.canonical_fqid)
         return node_id
 
     def _variable_node(self, resolved: ResolvedVariable) -> VariableGraphNode:
@@ -491,6 +540,36 @@ class _GraphBuilder:
                 continue
             edge = _succession_edge(prev_id, cur_id, prev.reason, prev.effective_year)
             self._edges.setdefault(edge.id, edge)
+
+    def _add_representation_succession(self, fqid: Fqid) -> None:
+        """Add representation-grain succession edges touching ``fqid``.
+
+        Unlike variable-grain ``variable_chain``, representation succession may be
+        a permitted variant-scoped round trip. Walk by explicit edge identity and
+        never by "terminal successor" so a column returning later cannot loop.
+        """
+        for edge in self._catalog.representation_successions(fqid):
+            if edge.predecessor_fqid is None or edge.successor_fqid is None:
+                continue
+            edge_key = (
+                str(edge.predecessor_fqid),
+                edge.predecessor_column,
+                str(edge.successor_fqid),
+                edge.successor_column,
+                edge.variant or "",
+            )
+            if edge_key in self._representation_edges_walked:
+                continue
+            self._representation_edges_walked.add(edge_key)
+            source_id = self.add_variable(edge.predecessor_fqid)
+            target_id = self.add_variable(edge.successor_fqid)
+            if source_id is None or target_id is None:
+                continue
+            graph_edge = _representation_succession_edge(edge)
+            self._edges.setdefault(
+                graph_edge.id,
+                graph_edge,
+            )
 
     def _ensure_edition_node(self, edition: VariableEdition) -> str | None:
         """A succession-chain edition's node id, building a node for it if absent.

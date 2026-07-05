@@ -1647,8 +1647,14 @@ export interface components {
             label: string | null;
             /** Source */
             source: string;
+            /** Source Column */
+            source_column?: string | null;
             /** Target */
             target: string;
+            /** Target Column */
+            target_column?: string | null;
+            /** Variant */
+            variant?: string | null;
         };
         /**
          * GraphState

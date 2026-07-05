@@ -839,7 +839,8 @@ the webapp is the only consumer.
 
 **Compose, don't re-query.** The builder orchestrates the existing accessors — each the
 single source of truth for its edge type: `variable_chain` (variable succession),
-`dimensions` / `concept_group` (group membership), `classification_chain` +
+`representation_successions` (curated representation-grain succession), `dimensions` /
+`concept_group` (group membership), `classification_chain` +
 `classification_predecessors` (classification editions), `resolve` (same_as
 canonicalization). The only genuinely new logic is group expansion, edition dedup, and
 the representation-run computation.
@@ -874,10 +875,13 @@ nodes are present and a version ordering when point-year (classification) nodes 
 kind was retired in #800 — grouping is concept-groups, identity equivalence is
 `same_as`, thematic see-also is deferred to tags (#311). Everything else is
 metadata/affordance: `lineage` / `source_register` are #678's provenance affordance (not
-edges); `same_as` is resolved away to the canonical node; representation / value-set
-transitions are states-within-a-node (the run ids), not edges. Every edge carries a
-stable `id` that doubles as its dedup key, so a shared succession edge surfaced from
-multiple members during a group union collapses.
+edges); `same_as` is resolved away to the canonical node; ordinary value-set /
+classification / column boundaries are states-within-a-node (the run ids), not edges.
+Curated `representation_replaced_by` rows are the exception: they surface as
+`succession` edges between the variable-grain nodes, carrying `source_column`,
+`target_column`, and optional `variant` metadata so a variant-scoped rename renders only
+inside that variant. Every edge carries a stable `id` that doubles as its dedup key, so
+a shared succession edge surfaced from multiple members during a group union collapses.
 
 **Representation runs (the #526 fold, query-side mirror).** Each `GraphState` carries a
 `representation_run_id` (int, unique within the node): consecutive states sharing it

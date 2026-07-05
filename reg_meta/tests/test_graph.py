@@ -60,6 +60,26 @@ def _seed_replaced_by(
     conn.commit()
 
 
+def _seed_representation_replaced_by(
+    conn: sqlite3.Connection,
+    *,
+    predecessor: tuple[str, str, str, str],
+    successor: tuple[str, str, str, str],
+    variant: str = "",
+    reason: str | None = None,
+    effective_year: int | None = None,
+) -> None:
+    conn.execute(
+        "INSERT INTO representation_replaced_by ("
+        "predecessor_provider, predecessor_register, predecessor_variable, "
+        "predecessor_column, successor_provider, successor_register, "
+        "successor_variable, successor_column, variant, effective_year, note, "
+        "beskrivning) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
+        (*predecessor, *successor, variant, effective_year, "curated:test", reason),
+    )
+    conn.commit()
+
+
 def _seed_same_as(
     conn: sqlite3.Connection,
     alias: tuple[str, str, str],
@@ -700,6 +720,141 @@ class TestEdges:
         g = Catalog(conn).graph_for_fqid(_KON)
         assert g.edges  # the succession edge is present
         assert all(e.kind == "succession" for e in g.edges)
+
+    def test_representation_succession_edge_carries_columns_and_year(self) -> None:
+        # #888: representation-grain succession is a graph edge with variable-node
+        # endpoints plus column endpoint metadata, so the renderer can map it to
+        # representation-run cells instead of treating it as a variable-level rename.
+        conn = build_slugged_db()
+        conn.execute("DELETE FROM variable_state")
+        add_state(
+            conn,
+            register_id=1,
+            variable_slug="kon",
+            register_variant_id=10,
+            valid_from="2010-01-01",
+            valid_to="2013-12-31",
+            delivery_column_name="BorgNr",
+        )
+        add_state(
+            conn,
+            register_id=1,
+            variable_slug="kon",
+            register_variant_id=10,
+            valid_from="2014-01-01",
+            delivery_column_name="PersOrgNr",
+        )
+        _seed_representation_replaced_by(
+            conn,
+            predecessor=("scb", "lisa", "kon", "BorgNr"),
+            successor=("scb", "lisa", "kon", "PersOrgNr"),
+            reason="identifier rename",
+            effective_year=2014,
+        )
+
+        g = Catalog(conn).graph_for_fqid(_KON)
+
+        assert {n.id for n in g.nodes} == {_KON}
+        (edge,) = g.edges
+        assert edge.source == _KON
+        assert edge.target == _KON
+        assert edge.source_column == "BorgNr"
+        assert edge.target_column == "PersOrgNr"
+        assert edge.variant is None
+        assert edge.label == "identifier rename"
+        assert edge.effective_year == 2014
+
+    def test_variant_scoped_representation_edge_keeps_variant_scope(self) -> None:
+        # #846/#888: a variant-local rename must not render as global. The graph
+        # carries the scoped register-variant slug so consumers can filter the edge
+        # when a different variant is in view.
+        conn = build_slugged_db()
+        add_variant(
+            conn,
+            register_variant_id=11,
+            register_id=1,
+            slug="punktskatter-for-energi",
+            name="Punktskatter för energi",
+        )
+        conn.execute("DELETE FROM variable_state")
+        add_state(
+            conn,
+            register_id=1,
+            variable_slug="kon",
+            register_variant_id=10,
+            delivery_column_name="BorgNr",
+        )
+        add_state(
+            conn,
+            register_id=1,
+            variable_slug="kon",
+            register_variant_id=11,
+            valid_from="2014-01-01",
+            valid_to="2017-12-31",
+            delivery_column_name="PersOrgNr",
+        )
+        _seed_representation_replaced_by(
+            conn,
+            predecessor=("scb", "lisa", "kon", "BorgNr"),
+            successor=("scb", "lisa", "kon", "PersOrgNr"),
+            variant="punktskatter-for-energi",
+            effective_year=2014,
+        )
+
+        (edge,) = Catalog(conn).graph_for_fqid(_KON).edges
+        assert edge.source_column == "BorgNr"
+        assert edge.target_column == "PersOrgNr"
+        assert edge.variant == "punktskatter-for-energi"
+
+    def test_variant_scoped_representation_round_trip_terminates(self) -> None:
+        # #846 permits time-monotone variant-scoped round trips. The graph walk is
+        # edge-key guarded, so reading both directions for one variable terminates
+        # and emits each curated edge once.
+        conn = build_slugged_db()
+        add_variant(
+            conn,
+            register_variant_id=11,
+            register_id=1,
+            slug="punktskatter-for-energi",
+            name="Punktskatter för energi",
+        )
+        conn.execute("DELETE FROM variable_state")
+        for vf, vt, col in (
+            ("2007-01-01", "2013-12-31", "BorgNr"),
+            ("2014-01-01", "2017-12-31", "PersOrgNr"),
+            ("2018-01-01", "9999-12-31", "BorgNr"),
+        ):
+            add_state(
+                conn,
+                register_id=1,
+                variable_slug="kon",
+                register_variant_id=11,
+                valid_from=vf,
+                valid_to=vt,
+                delivery_column_name=col,
+            )
+        for pred_col, succ_col, year in (
+            ("BorgNr", "PersOrgNr", 2014),
+            ("PersOrgNr", "BorgNr", 2018),
+        ):
+            _seed_representation_replaced_by(
+                conn,
+                predecessor=("scb", "lisa", "kon", pred_col),
+                successor=("scb", "lisa", "kon", succ_col),
+                variant="punktskatter-for-energi",
+                effective_year=year,
+            )
+
+        g = Catalog(conn).graph_for_fqid(_KON)
+
+        assert len(g.edges) == 2
+        assert {
+            (e.source_column, e.target_column, e.variant, e.effective_year)
+            for e in g.edges
+        } == {
+            ("BorgNr", "PersOrgNr", "punktskatter-for-energi", 2014),
+            ("PersOrgNr", "BorgNr", "punktskatter-for-energi", 2018),
+        }
 
     def test_alias_entry_keys_on_canonical_node(self) -> None:
         # A pure-alias FQID (no live variable row) resolving via same_as to a

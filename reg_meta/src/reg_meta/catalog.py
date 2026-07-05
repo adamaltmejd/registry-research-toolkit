@@ -630,6 +630,31 @@ class VariableRef(_CatalogModel):
     effective_year: int | None = None
 
 
+class RepresentationSuccessionRef(_CatalogModel):
+    """A representation-grain succession edge from ``representation_replaced_by``.
+
+    The node identity remains variable-grain (``predecessor_fqid`` /
+    ``successor_fqid``), while the column and optional variant fields identify the
+    representation endpoints inside those nodes. ``variant`` is None for the DB's
+    unscoped ``''`` sentinel; otherwise it is the register-variant slug the edge
+    is confined to (#846).
+    """
+
+    predecessor_fqid: Fqid | None
+    predecessor_provider: str
+    predecessor_register_name: str = Field(alias="predecessor_register")
+    predecessor_variable: str
+    predecessor_column: str
+    successor_fqid: Fqid | None
+    successor_provider: str
+    successor_register_name: str = Field(alias="successor_register")
+    successor_variable: str
+    successor_column: str
+    variant: str | None = None
+    reason: str | None = None
+    effective_year: int | None = None
+
+
 class ClassificationRef(_CatalogModel):
     """A classification-grain succession edge endpoint (#571): one
     `classification_replaced_by` neighbor of a classification edition. Carried by
@@ -2641,6 +2666,57 @@ class Catalog:
             for r in rows
         )
 
+    def _representation_succession_edges(
+        self, provider: str, register: str, variable: str
+    ) -> tuple[RepresentationSuccessionRef, ...]:
+        """Representation-grain succession touching this variable (#843/#846).
+
+        Reads both outbound and inbound rows because the graph is a connected
+        context, not an immediate-neighbor endpoint. The edge itself stays
+        directional via the predecessor/successor fields.
+        """
+        rows = self._conn.execute(
+            "SELECT predecessor_provider, predecessor_register, "
+            "predecessor_variable, predecessor_column, successor_provider, "
+            "successor_register, successor_variable, successor_column, variant, "
+            "effective_year, beskrivning FROM representation_replaced_by "
+            "WHERE (predecessor_provider = ? AND predecessor_register = ? "
+            "AND predecessor_variable = ?) "
+            "OR (successor_provider = ? AND successor_register = ? "
+            "AND successor_variable = ?) "
+            "ORDER BY effective_year IS NULL, effective_year, "
+            "predecessor_provider, predecessor_register, predecessor_variable, "
+            "predecessor_column, successor_provider, successor_register, "
+            "successor_variable, successor_column, variant",
+            (provider, register, variable, provider, register, variable),
+        ).fetchall()
+        return tuple(
+            RepresentationSuccessionRef(
+                predecessor_fqid=self._ref_fqid(
+                    r["predecessor_provider"],
+                    r["predecessor_register"],
+                    r["predecessor_variable"],
+                ),
+                predecessor_provider=r["predecessor_provider"],
+                predecessor_register=r["predecessor_register"],
+                predecessor_variable=r["predecessor_variable"],
+                predecessor_column=r["predecessor_column"],
+                successor_fqid=self._ref_fqid(
+                    r["successor_provider"],
+                    r["successor_register"],
+                    r["successor_variable"],
+                ),
+                successor_provider=r["successor_provider"],
+                successor_register=r["successor_register"],
+                successor_variable=r["successor_variable"],
+                successor_column=r["successor_column"],
+                variant=r["variant"] or None,
+                reason=r["beskrivning"],
+                effective_year=r["effective_year"],
+            )
+            for r in rows
+        )
+
     @staticmethod
     def _class_ref_fqid(slug: str) -> Fqid | None:
         """Best-effort 2-segment classification FQID for a succession endpoint
@@ -2862,6 +2938,20 @@ class Catalog:
         """see DESIGN.md → Catalog API surface: variables that replaced this binding's variable (outbound)."""
         provider, register, variable, _ = self._resolve_edge_triple(fqid)
         return list(self._successor_edges(provider, register, variable))
+
+    def representation_successions(
+        self, fqid: str | Fqid
+    ) -> list[RepresentationSuccessionRef]:
+        """Representation-grain succession edges touching this binding's variable.
+
+        The returned rows are directional but include both inbound and outbound
+        edges, so graph consumers can build a connected context without
+        re-querying the table themselves. The FQID resolves to the canonical live
+        variable before reading the table, matching the variable-grain edge
+        accessors.
+        """
+        provider, register, variable, _ = self._resolve_edge_triple(fqid)
+        return list(self._representation_succession_edges(provider, register, variable))
 
     def variable_chain(self, fqid: str | Fqid) -> list[VariableEdition]:
         """The FULL succession timeline of a variable's chain (#582), oldest first,
