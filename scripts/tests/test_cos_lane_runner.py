@@ -28,14 +28,11 @@ from __future__ import annotations
 import json
 import os
 import subprocess
-from typing import TYPE_CHECKING
+from pathlib import Path
 
 import pytest
 
 from conftest import _GIT_ENV, load_scripts_module
-
-if TYPE_CHECKING:
-    from pathlib import Path
 
 lr = load_scripts_module("cos_lane_runner")
 
@@ -484,15 +481,23 @@ def test_discover_pr_multi_pr_slot_fails_fast(tmp_path: Path) -> None:
 
 
 def _patch_gh(monkeypatch: pytest.MonkeyPatch, *, stdout: str, returncode: int = 0):
-    """Stub subprocess.run for the `gh pr view` call in resolve_review_base."""
-    calls: list[list[str]] = []
+    """Stub subprocess.run for the `gh pr view` call in resolve_review_base.
+
+    Records both the argv and the full kwargs (so a test can assert the `cwd` the gh call
+    was invoked with — the P2 fix threads the worktree through as cwd, mirroring how every
+    other repo-acting subprocess in the runner sets cwd=worktree).
+    """
+    calls: list[tuple[list[str], dict]] = []
 
     def fake_run(argv, **kwargs):
-        calls.append(argv)
+        calls.append((argv, kwargs))
         return subprocess.CompletedProcess(argv, returncode, stdout=stdout, stderr="")
 
     monkeypatch.setattr(lr.subprocess, "run", fake_run)
     return calls
+
+
+_REVIEW_WT = "/lane/worktree"
 
 
 def test_resolve_review_base_uses_pr_live_base(
@@ -501,10 +506,13 @@ def test_resolve_review_base_uses_pr_live_base(
     # The PR's live baseRefName is authoritative: a stacked PR based on a predecessor branch
     # is reviewed against origin/<that>, NOT the dispatcher's --base fallback.
     calls = _patch_gh(monkeypatch, stdout=json.dumps({"baseRefName": "s/predecessor"}))
-    base = lr.resolve_review_base(88, "origin/main")
+    base = lr.resolve_review_base(88, "origin/main", Path(_REVIEW_WT))
     assert base == "origin/s/predecessor"
-    # It called `gh pr view 88 --json baseRefName`.
-    assert calls == [["gh", "pr", "view", "88", "--json", "baseRefName"]]
+    # It called `gh pr view 88 --json baseRefName` FROM the lane worktree — so gh resolves the
+    # repo from the worktree, not the runner's ambient cwd (the P2 fix).
+    argv, kwargs = calls[0]
+    assert argv == ["gh", "pr", "view", "88", "--json", "baseRefName"]
+    assert kwargs["cwd"] == _REVIEW_WT
 
 
 def test_resolve_review_base_falls_back_on_gh_failure(
@@ -512,7 +520,7 @@ def test_resolve_review_base_falls_back_on_gh_failure(
 ) -> None:
     # A nonzero gh exit → fall back to --base and warn (no exception, review still runs).
     _patch_gh(monkeypatch, stdout="", returncode=1)
-    base = lr.resolve_review_base(88, "origin/main")
+    base = lr.resolve_review_base(88, "origin/main", Path(_REVIEW_WT))
     assert base == "origin/main"
     assert "falling back to --base origin/main" in capsys.readouterr().err
 
@@ -521,7 +529,7 @@ def test_resolve_review_base_falls_back_on_parse_error(
     monkeypatch: pytest.MonkeyPatch, capsys
 ) -> None:
     _patch_gh(monkeypatch, stdout="not json")
-    base = lr.resolve_review_base(88, "origin/main")
+    base = lr.resolve_review_base(88, "origin/main", Path(_REVIEW_WT))
     assert base == "origin/main"
     assert "could not parse" in capsys.readouterr().err
 
@@ -531,7 +539,7 @@ def test_resolve_review_base_falls_back_on_empty_base_ref(
 ) -> None:
     # An empty/missing baseRefName is not usable → fall back.
     _patch_gh(monkeypatch, stdout=json.dumps({"baseRefName": ""}))
-    base = lr.resolve_review_base(88, "origin/fallback")
+    base = lr.resolve_review_base(88, "origin/fallback", Path(_REVIEW_WT))
     assert base == "origin/fallback"
     assert "no resolvable base branch" in capsys.readouterr().err
 
@@ -554,7 +562,7 @@ def test_run_reviews_against_resolved_pr_base(
     monkeypatch.setattr(
         lr,
         "resolve_review_base",
-        lambda pr, fallback: "origin/s/predecessor",
+        lambda pr, fallback, worktree: "origin/s/predecessor",
     )
     seen_bases: list[str] = []
 
@@ -590,7 +598,9 @@ def test_run_reviews_against_fallback_when_gh_fails(
 
     monkeypatch.setattr(lr, "run_codex_turn", fake_turn)
     # gh nonzero → resolve_review_base returns the fallback unchanged.
-    monkeypatch.setattr(lr, "resolve_review_base", lambda pr, fallback: fallback)
+    monkeypatch.setattr(
+        lr, "resolve_review_base", lambda pr, fallback, worktree: fallback
+    )
     seen_bases: list[str] = []
 
     def fake_review(base, gate_dir, worktree):
@@ -1300,7 +1310,9 @@ def test_run_end_to_end_clean(
 
     monkeypatch.setattr(lr, "run_codex_turn", fake_turn)
     # Stub the gh-backed base resolution so the test never touches the network.
-    monkeypatch.setattr(lr, "resolve_review_base", lambda pr, fallback: fallback)
+    monkeypatch.setattr(
+        lr, "resolve_review_base", lambda pr, fallback, worktree: fallback
+    )
     monkeypatch.setattr(
         lr,
         "run_review",
@@ -1337,7 +1349,9 @@ def test_run_discovers_pr_and_writes_run_sentinel(
             fh.write(json.dumps({"type": "thread.started", "thread_id": "T"}) + "\n")
 
     monkeypatch.setattr(lr, "run_codex_turn", fake_turn)
-    monkeypatch.setattr(lr, "resolve_review_base", lambda pr, fallback: fallback)
+    monkeypatch.setattr(
+        lr, "resolve_review_base", lambda pr, fallback, worktree: fallback
+    )
     monkeypatch.setattr(
         lr,
         "run_review",
@@ -1456,7 +1470,9 @@ def test_continue_pr_uses_explicit_pr_not_discovery(
         raise AssertionError("discover_pr must not run in continue mode")
 
     monkeypatch.setattr(lr, "discover_pr", boom_discover)
-    monkeypatch.setattr(lr, "resolve_review_base", lambda pr, fallback: fallback)
+    monkeypatch.setattr(
+        lr, "resolve_review_base", lambda pr, fallback, worktree: fallback
+    )
     monkeypatch.setattr(
         lr,
         "run_review",

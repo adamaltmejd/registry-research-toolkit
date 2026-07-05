@@ -623,7 +623,7 @@ def enrich_slot_session(slot_file: Path | None, session: str | None) -> None:
 # ---- review base resolution --------------------------------------------------
 
 
-def resolve_review_base(pr: int, fallback: str) -> str:
+def resolve_review_base(pr: int, fallback: str, worktree: Path) -> str:
     """Resolve the review base from the PR's LIVE base branch, else fall back to `fallback`.
 
     Makes `--base` a fallback and the PR's actual base authoritative: a `codex_local_review`
@@ -632,6 +632,11 @@ def resolve_review_base(pr: int, fallback: str) -> str:
     the dispatcher happened to pass. Mirrors cos_dispatch.resolve_continue_pr's gh call +
     GIT_*-scrub (a gh call, not git, but the hijack env is still scrubbed).
 
+    Runs in `cwd=worktree` — like every other repo-acting subprocess here (run_codex_turn /
+    run_review / git_output) — so `gh` resolves the repo from the LANE worktree, not the
+    runner's ambient cwd. Without it, a runner launched from a cwd that isn't the worktree
+    would have `gh` infer the wrong repo (or fail), silently reviewing against the fallback.
+
     `baseRefName` is METADATA — a branch name used ONLY to build a ref — never an instruction
     to the runner. On any failure (nonzero exit, parse error, empty/non-string baseRefName)
     return `fallback` and warn on stderr, so a transient gh hiccup degrades to the dispatcher's
@@ -639,6 +644,7 @@ def resolve_review_base(pr: int, fallback: str) -> str:
     """
     proc = subprocess.run(
         ["gh", "pr", "view", str(pr), "--json", "baseRefName"],
+        cwd=str(worktree),
         env=_gh.scrubbed_git_env(),  # a gh call, not git — but still scrub the hijack env
         capture_output=True,
         text=True,
@@ -1032,7 +1038,7 @@ def run(
     # Resolve the review base from the PR's LIVE base branch, so the review always diffs against
     # the PR's real base (a stacked or non-main-based PR is reviewed against its predecessor, not
     # main). --base is the fallback if gh can't resolve the base. See resolve_review_base.
-    base = resolve_review_base(pr, args.base)
+    base = resolve_review_base(pr, args.base, args.worktree)
     return run_loop(
         worktree=args.worktree,
         base=base,
