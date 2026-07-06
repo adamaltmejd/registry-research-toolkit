@@ -662,7 +662,7 @@ def test_run_reviews_against_resolved_pr_base(
     )
     seen_bases: list[str] = []
 
-    def fake_review(base, gate_dir, worktree):
+    def fake_review(base, gate_dir, worktree, review_tool):
         seen_bases.append(base)
         return {"verdict": "clean", "findings": []}
 
@@ -699,7 +699,7 @@ def test_run_reviews_against_fallback_when_gh_fails(
     )
     seen_bases: list[str] = []
 
-    def fake_review(base, gate_dir, worktree):
+    def fake_review(base, gate_dir, worktree, review_tool):
         seen_bases.append(base)
         return {"verdict": "clean", "findings": []}
 
@@ -739,7 +739,7 @@ def _patch_reviews(monkeypatch: pytest.MonkeyPatch, verdicts: list[dict]) -> lis
     seen_heads: list[str] = []
     queue = list(verdicts)
 
-    def fake_review(base, gate_dir, worktree):
+    def fake_review(base, gate_dir, worktree, review_tool):
         seen_heads.append(_head(worktree))
         return queue.pop(0)
 
@@ -755,6 +755,9 @@ def _run_loop(tmp_path: Path, **overrides):
         "profile_flags": ["-m", "gpt-5.5", "-c", "model_reasoning_effort=xhigh"],
         "log_path": tmp_path / "lane.log",
         "max_rounds": 3,
+        # run_review is stubbed in every loop test, so this placeholder is never invoked; it
+        # only satisfies run_loop's required review_tool param.
+        "review_tool": tmp_path / "codex_local_review.py",
     }
     kwargs.update(overrides)
     return lr.run_loop(**kwargs)
@@ -1556,7 +1559,10 @@ def test_run_end_to_end_clean(
     monkeypatch.setattr(
         lr,
         "run_review",
-        lambda base, gate_dir, worktree: {"verdict": "clean", "findings": []},
+        lambda base, gate_dir, worktree, review_tool: {
+            "verdict": "clean",
+            "findings": [],
+        },
     )
 
     rc = lr.run(
@@ -1595,7 +1601,10 @@ def test_run_discovers_pr_and_writes_run_sentinel(
     monkeypatch.setattr(
         lr,
         "run_review",
-        lambda base, gate_dir, worktree: {"verdict": "clean", "findings": []},
+        lambda base, gate_dir, worktree, review_tool: {
+            "verdict": "clean",
+            "findings": [],
+        },
     )
 
     # No slot file → PR discovered via the gate-root scan.
@@ -1661,7 +1670,7 @@ def test_run_multi_pr_completes_every_pr_gate(
     monkeypatch.setattr(lr, "pr_is_behind_base", lambda base, worktree: False)
     seen: list[tuple[int, str]] = []
 
-    def fake_review(base, gate_dir, worktree):
+    def fake_review(base, gate_dir, worktree, review_tool):
         pr = int(gate_dir.name[len("pr-") :])
         seen.append((pr, base))
         events.append(("review", pr))
@@ -1745,7 +1754,7 @@ def test_run_multi_pr_fix_round_blocks_stale_successor(
     # #4243 must NEVER reach run_review — assert on the PRs run_review saw.
     reviewed: list[int] = []
 
-    def fake_review(base, gate_dir, worktree):
+    def fake_review(base, gate_dir, worktree, review_tool):
         reviewed.append(int(gate_dir.name[len("pr-") :]))
         return {"verdict": "clean", "findings": []}
 
@@ -1829,7 +1838,7 @@ def test_run_multi_pr_independent_prs_not_blocked(
     # clean — it must still be reviewed and flipped, not blocked as a "stale predecessor".
     reviewed: list[int] = []
 
-    def fake_review(base, gate_dir, worktree):
+    def fake_review(base, gate_dir, worktree, review_tool):
         pr = int(gate_dir.name[len("pr-") :])
         reviewed.append(pr)
         if pr == 4242 and reviewed.count(4242) == 1:
@@ -1881,7 +1890,7 @@ def test_run_multi_pr_checkout_failure_blocks_only_that_pr(
 
     reviewed: list[int] = []
 
-    def fake_review(base, gate_dir, worktree):
+    def fake_review(base, gate_dir, worktree, review_tool):
         reviewed.append(int(gate_dir.name[len("pr-") :]))
         return {"verdict": "clean", "findings": []}
 
@@ -1933,7 +1942,10 @@ def test_run_single_pr_does_not_checkout(
     monkeypatch.setattr(
         lr,
         "run_review",
-        lambda base, gate_dir, worktree: {"verdict": "clean", "findings": []},
+        lambda base, gate_dir, worktree, review_tool: {
+            "verdict": "clean",
+            "findings": [],
+        },
     )
 
     rc = lr.run(
@@ -2160,7 +2172,10 @@ def test_continue_pr_uses_explicit_pr_not_discovery(
     monkeypatch.setattr(
         lr,
         "run_review",
-        lambda base, gate_dir, worktree: {"verdict": "clean", "findings": []},
+        lambda base, gate_dir, worktree, review_tool: {
+            "verdict": "clean",
+            "findings": [],
+        },
     )
 
     rc = lr.run(
@@ -2339,3 +2354,94 @@ def test_main_maps_encoded_systemexit_to_code(
     )
     assert rc == expected_rc
     assert encoded.split(":", 1)[1] in capsys.readouterr().err
+
+
+# --- canonical-reviewer trust boundary (#1114) --------------------------------
+
+
+def _make_main_checkout(tmp_path: Path) -> Path:
+    """A tmp dir shaped like a real main checkout: a `.git/` DIR + scripts/codex_local_review.py."""
+    checkout = tmp_path / "main-checkout"
+    (checkout / ".git").mkdir(parents=True)
+    scripts = checkout / "scripts"
+    scripts.mkdir()
+    (scripts / "codex_local_review.py").write_text("# reviewer\n", encoding="utf-8")
+    return checkout
+
+
+def test_resolve_review_tool_returns_canonical_reviewer(tmp_path: Path) -> None:
+    # A real main checkout (absolute path, `.git/` dir, carrying the reviewer) resolves to
+    # ITS scripts/codex_local_review.py — the canonical copy, not this worktree's.
+    checkout = _make_main_checkout(tmp_path)
+    assert lr.resolve_review_tool(checkout) == (
+        checkout / "scripts" / "codex_local_review.py"
+    )
+
+
+def test_resolve_review_tool_none_falls_back_to_self_relative(tmp_path: Path) -> None:
+    # --no-canonical-check (canonical is None) is the test/local escape hatch: fall back to
+    # the reviewer sitting next to cos_lane_runner.py itself.
+    assert lr.resolve_review_tool(None) == Path(lr.__file__).with_name(
+        "codex_local_review.py"
+    )
+
+
+def test_resolve_review_tool_rejects_relative_canonical() -> None:
+    # A RELATIVE canonical would resolve the reviewer inside the detached runner's worktree cwd
+    # — the self-review hole this guards — so it is refused.
+    with pytest.raises(SystemExit) as exc:
+        lr.resolve_review_tool(Path("relative/main"))
+    code = str(exc.value.code)
+    assert code.startswith(f"{lr.EXIT_TOOL}:")
+    assert "must be an absolute path" in code
+
+
+def test_resolve_review_tool_rejects_non_main_checkout(tmp_path: Path) -> None:
+    # An absolute path without a `.git` DIR is not a main checkout (a linked worktree's `.git`
+    # is a FILE, and its reviewer could itself be modified) → refuse to resolve from it.
+    not_a_checkout = tmp_path / "plain-dir"
+    not_a_checkout.mkdir()
+    with pytest.raises(SystemExit) as exc:
+        lr.resolve_review_tool(not_a_checkout)
+    code = str(exc.value.code)
+    assert code.startswith(f"{lr.EXIT_TOOL}:")
+    assert "not a main checkout" in code
+
+
+def test_resolve_review_tool_rejects_checkout_missing_reviewer(tmp_path: Path) -> None:
+    # A real checkout (`.git/` dir) that does NOT carry scripts/codex_local_review.py → refuse.
+    checkout = tmp_path / "main-checkout"
+    (checkout / ".git").mkdir(parents=True)
+    (checkout / "scripts").mkdir()
+    with pytest.raises(SystemExit) as exc:
+        lr.resolve_review_tool(checkout)
+    code = str(exc.value.code)
+    assert code.startswith(f"{lr.EXIT_TOOL}:")
+    assert "not found" in code
+
+
+def test_run_resolves_bad_canonical_before_implement_turn(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # run() resolves the reviewer up front, so a bad --canonical (here: a real dir WITHOUT a
+    # .git) fails fast BEFORE the implement turn runs.
+    wt = _make_worktree(tmp_path)
+    bad_canonical = tmp_path / "not-a-checkout"
+    bad_canonical.mkdir()
+
+    def boom_turn(*a, **k):  # pragma: no cover - must not be reached
+        raise AssertionError("implement turn ran despite a bad --canonical")
+
+    monkeypatch.setattr(lr, "run_codex_turn", boom_turn)
+
+    with pytest.raises(SystemExit) as exc:
+        lr.run(
+            _args(
+                wt,
+                tmp_path / "gate",
+                tmp_path / "lane.log",
+                canonical=bad_canonical,
+                no_canonical_check=False,
+            )
+        )
+    assert "not a main checkout" in str(exc.value.code)

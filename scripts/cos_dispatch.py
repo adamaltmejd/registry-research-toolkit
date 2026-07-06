@@ -38,6 +38,11 @@ target resolution, resolve_profile, slug validation — all exit 2):
                     maintainer-authored (gh_issue.is_maintainer_authored); refuse
                     (exit 2) before any side effect. Skipped under --dry-run (its
                     no-network contract).
+  3c. .agents guard — a CODEX lane whose issues' `touches` include `.agents/**` is refused
+                    (exit 5, route to claude): the codex workspace-write sandbox makes
+                    `.agents/` read-only, so the lane would block at the first `.agents`
+                    edit. Reads the touches per issue (network), so — like the author check —
+                    it runs after the --dry-run return.
   4. worktree     — fresh mode fetches origin/main and `git worktree add -b wt/<slug> …
                     origin/main`. Continue mode fetches origin/main plus the PR head and
                     base branches, creates or reuses a clean worktree on the PR branch,
@@ -86,7 +91,7 @@ target resolution, resolve_profile, slug validation — all exit 2):
                     claude's session is already final at step 6.
 
 Exit codes: 0 launched (or --dry-run OK); 2 usage/collision/tool error; 3 kill switch;
-4 no free slot budget.
+4 no free slot budget; 5 .agents-touching lane refused on codex (route to claude).
 
 Launch profiles (`--tier`, default `hard`): each tier is ONE blessed launch profile —
 a surface plus the model/effort/advisor pins that are validated to work together, kept
@@ -259,6 +264,43 @@ def require_maintainer_authored(issues: list[int]) -> None:
                 f"(author != {_gh_issue.maintainer_login()}); "
                 "refusing to dispatch a pipeline on untrusted issue content"
             )
+
+
+def _issue_touches(number: int) -> list[str]:
+    """The `touches` globs from issue #number's maintainer-authored body, or [] on any failure.
+
+    Reuses the trust-gated reader (gh_issue.view — maintainer-author fail-closed) and the
+    shared touches parser (plan_sequence.parse_touches) rather than re-deriving either. Best
+    effort / fail-open: a non-zero exit (refused / missing), an empty payload, or unparseable
+    JSON returns [] — the `.agents` guard this feeds is a routing safety net, and the codex
+    sandbox's read-only `.agents` is the ultimate backstop, so a body we cannot read must not
+    crash the dispatch.
+    """
+    exit_code, payload = _gh_issue.view(number, False)
+    if exit_code != 0 or not payload:
+        return []
+    try:
+        body = json.loads(payload).get("body") or ""
+    except ValueError:
+        return []
+    return _plan_sequence.parse_touches(body)
+
+
+def _lane_touches_agents(issues: list[int]) -> bool:
+    """True iff any lane issue's `touches` path is under `.agents/` (the codex read-only mirror).
+
+    The codex workspace-write sandbox makes `.agents/` READ-ONLY, so a codex lane whose issues
+    edit the `.agents` skill/instruction mirror blocks at the first `.agents` write. Normalize
+    each path (strip whitespace and an optional leading `./`) and match a path EQUAL to
+    `.agents` or under `.agents/` — so `.agents`, `.agents/**`, `.agents/skills/x` hit, but
+    `.agentsfoo` (a different top-level name) does not.
+    """
+    for number in issues:
+        for raw in _issue_touches(number):
+            norm = raw.strip().removeprefix("./")
+            if norm == ".agents" or norm.startswith(".agents/"):
+                return True
+    return False
 
 
 def default_state_root() -> Path:
@@ -593,6 +635,7 @@ def build_lane_runner_argv(
     pr_base_branch: str | None = None,
     continue_issues: list[int] | None = None,
     no_rebase: bool = False,
+    no_canonical_check: bool = False,
 ) -> list[str]:
     """The detached launch argv for the codex-surface lane RUNNER (cos_lane_runner.py).
 
@@ -634,8 +677,16 @@ def build_lane_runner_argv(
         "--tier",
         tier,
         "--canonical",
-        str(canonical),
+        # Resolve to ABSOLUTE: the runner is detached with cwd=<lane worktree>, and it resolves
+        # the canonical reviewer from --canonical — a RELATIVE canonical would resolve inside
+        # the worktree, reopening the self-review hole the runner's guard closes.
+        str(canonical.resolve()),
     ]
+    if no_canonical_check:
+        # Production cos_dispatch omits this, so the runner validates against the real main
+        # checkout and resolves the canonical reviewer; tests pass it through so the runner
+        # falls back to its self-relative reviewer (no real main checkout to validate against).
+        argv += ["--no-canonical-check"]
     # The operator's continuation brief flows through to the runner so it isn't silently
     # dropped on the default runner path (the runner weaves it into the --continue-pr prompt).
     # Resolve to an ABSOLUTE path first: the runner is spawned detached with cwd = the lane
@@ -1296,6 +1347,7 @@ def dispatch(
             pr_base_branch=pr_base_branch,
             continue_issues=issues if continue_pr is not None else None,
             no_rebase=no_rebase,
+            no_canonical_check=args.no_canonical_check,
         )
     else:
         argv = build_launch_argv(
@@ -1339,6 +1391,23 @@ def dispatch(
     # for the preview. Continue mode checks the PR before resolving its body; here it checks
     # the closing issues before the first side effect.
     require_maintainer_authored(issues)
+
+    # 3c. .agents guard — the codex workspace-write sandbox makes `.agents/` READ-ONLY, so a
+    # CODEX lane whose issues' `touches` edit the `.agents` skill/instruction mirror would block
+    # at the first `.agents` write. Refuse the codex dispatch up front (exit 5, a "wrong surface"
+    # routing refusal in the same family as the kill switch / no-budget, NOT a tool error) with
+    # an actionable pointer at claude, instead of launching into a guaranteed block. It reads the
+    # touches per issue (network), so — like the author check — it sits AFTER the --dry-run
+    # return (dry-run promises no network). Gated on codex only: the read-only `.agents` binds
+    # BOTH the default lane-runner and the --no-lane-runner bare agent (both run -s workspace-write).
+    if surface == "codex" and _lane_touches_agents(issues):
+        print(
+            f"lane {issues} touches .agents/** which the codex workspace-write sandbox "
+            "makes read-only; refusing a codex dispatch (it would block at the first "
+            ".agents edit). Dispatch on the claude surface instead "
+            "(e.g. --surface claude, or --tier easy)."
+        )
+        return 5
 
     # 4. Worktree — fresh mode creates a placeholder wt/<slug> branch off origin/main;
     # continue mode materializes or reuses the PR branch and rebases it onto the PR base.
