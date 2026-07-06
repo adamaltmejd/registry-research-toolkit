@@ -342,9 +342,10 @@ variable = "agi3sektorgrp"
 value = "3"
 label = "tredje största förvärvskällan"
 
-# AGI/KU FÅMANS rows share one concept and three rank levels. Keep them in one
-# group, but declare both source and rank so no two members occupy the same
-# facet coordinate.
+# AGI/KU FÅMANS rows share one concept and three rank levels. KU→AGI is a
+# temporal source succession (see curation/relations.toml #1122); source coords
+# remain on members so the folded history labels the KU/AGI handoff and each
+# member has a unique coordinate.
 [[variable_group]]
 register = "scb/lisa"
 key = "faman"

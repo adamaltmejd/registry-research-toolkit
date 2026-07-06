@@ -349,8 +349,9 @@ def test_repo_relations_parses() -> None:
     # + 7 #814 iot disponibel-inkomst 2004-års-definition succession edges
     # + 1 #875 KSju lgrp → NgGr1 representation-grain succession edge
     # + 1 #846 RTB PNR → PersonNr representation-grain rename edge
-    # + 2 #846 FRIDA firm-key variant-scoped gap-fill round-trip edges.
-    assert len(relations.replaced_by) == 52
+    # + 2 #846 FRIDA firm-key variant-scoped gap-fill round-trip edges
+    # + 3 #1122 LISA FÅMANS KU→AGI source succession edges.
+    assert len(relations.replaced_by) == 55
     assert all(str(e.predecessor) and str(e.successor) for e in relations.replaced_by)
     ksju_edges = [
         e
