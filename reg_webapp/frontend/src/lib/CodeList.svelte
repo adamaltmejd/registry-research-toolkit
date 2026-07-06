@@ -131,7 +131,7 @@ function groupedByLevel(list: Code[]): CodeLayout | null {
   const levels = list
     .map(codeLevel)
     .filter((level): level is number => level != null);
-  if (levels.length < list.length || new Set(levels).size < 2) {
+  if (levels.length === 0 || new Set(levels).size < 2) {
     return null;
   }
   const topLevel = Math.min(...levels);
@@ -156,7 +156,11 @@ function groupedByLevel(list: Code[]): CodeLayout | null {
 
   for (const code of list) {
     const level = codeLevel(code);
-    if (level == null || level <= topLevel) {
+    if (level == null) {
+      singles.push(code);
+      continue;
+    }
+    if (level <= topLevel) {
       continue;
     }
     const candidate = normalizeCodeKey(code.code);
@@ -350,7 +354,9 @@ function groupedByBucketPrefix(list: Code[]): CodeLayout | null {
       {:else if layout.kind === "collapsed-flat"}
         <Collapsible.Root bind:open={flatExpanded} class="flat-collapse">
           <p class="summary-note">
-            Showing first {layout.preview.length} of {shown.length} codes.
+            {flatExpanded
+              ? `Showing all ${shown.length} codes.`
+              : `Showing first ${layout.preview.length} of ${shown.length} codes.`}
           </p>
           <Collapsible.Trigger class="flat-toggle">
             {flatExpanded ? "Show fewer codes" : `Show all ${shown.length} codes`}

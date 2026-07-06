@@ -53,6 +53,23 @@ function interleavedLevelledCodes(): Code[] {
   );
 }
 
+function mixedNullAndLevelledCodes(): Code[] {
+  return [
+    { code: "A", label: "Section A", level: null },
+    { code: "B", label: "Section B", level: null },
+    ...Array.from({ length: 3 }, (_, division) => {
+      const parent = String(division + 1).padStart(2, "0");
+      return [
+        { code: parent, label: `Division ${parent}`, level: 2 },
+        ...Array.from({ length: 20 }, (_, child) => {
+          const code = `${parent}${String(child + 1).padStart(2, "0")}`;
+          return { code, label: `Industry ${code}`, level: 4 };
+        }),
+      ];
+    }).flat(),
+  ];
+}
+
 function prefixCodes(): Code[] {
   return [
     ...Array.from({ length: 30 }, (_, i) => ({
@@ -200,6 +217,28 @@ describe("CodeList — unified value-set / code viewer (#638 PR3)", () => {
     await expect.element(page.getByText("Child 21")).toBeVisible();
   });
 
+  it("groups the numeric subset when classifications mix null and numeric levels", async () => {
+    await render(CodeList, { codes: mixedNullAndLevelledCodes() });
+    const division = page.getByRole("button", {
+      name: /01\s+Division 01\s+21 codes/,
+    });
+
+    await expect.element(division).toBeVisible();
+    await expect.element(page.getByText("Section A")).toBeVisible();
+    await expect
+      .element(page.getByText("Industry 0101"))
+      .not.toBeInTheDocument();
+    await expect
+      .element(page.getByText("Showing first 50 of 65 codes."))
+      .not.toBeInTheDocument();
+
+    await division.click();
+    await expect.element(page.getByText("Industry 0101")).toBeVisible();
+    await expect
+      .element(page.getByText("Industry 0201"))
+      .not.toBeInTheDocument();
+  });
+
   it("groups large unlevelled code sets by visible code prefix", async () => {
     await render(CodeList, { codes: prefixCodes() });
     const group = page.getByRole("button", {
@@ -275,6 +314,10 @@ describe("CodeList — unified value-set / code viewer (#638 PR3)", () => {
 
     await page.getByRole("button", { name: "Show all 60 codes" }).click();
     await expect.element(page.getByText("Flat code 0060")).toBeVisible();
+    await expect.element(page.getByText("Showing all 60 codes.")).toBeVisible();
+    await expect
+      .element(page.getByText("Showing first 50 of 60 codes."))
+      .not.toBeInTheDocument();
     await expect
       .element(page.getByRole("button", { name: "Show fewer codes" }))
       .toBeVisible();
