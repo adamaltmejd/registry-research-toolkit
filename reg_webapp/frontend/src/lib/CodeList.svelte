@@ -169,6 +169,14 @@ function normalizeCodeKey(value: string): string {
     .toLowerCase();
 }
 
+function isExplicitPrefixParent(prefix: string, candidate: string): boolean {
+  if (candidate.length <= prefix.length || !candidate.startsWith(prefix)) {
+    return false;
+  }
+  const next = candidate[prefix.length];
+  return !(/\d$/.test(prefix) && /\d/.test(next));
+}
+
 function groupedByExplicitPrefix(list: Code[]): CodeLayout | null {
   if (list.length > EXPLICIT_PREFIX_SCAN_LIMIT) {
     // simplify: explicit parent discovery is quadratic; index it if large
@@ -201,7 +209,7 @@ function groupedByExplicitPrefix(list: Code[]): CodeLayout | null {
         continue;
       }
       const candidate = normalized[childIndex];
-      if (candidate.length > prefix.length && candidate.startsWith(prefix)) {
+      if (isExplicitPrefixParent(prefix, candidate)) {
         children.push(list[childIndex]);
         childIndexes.push(childIndex);
       }

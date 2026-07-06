@@ -72,6 +72,13 @@ function flatCodes(): Code[] {
   }));
 }
 
+function alphanumericSiblingCodes(): Code[] {
+  return Array.from({ length: 60 }, (_, i) => ({
+    code: `A${i + 1}`,
+    label: `A sibling ${i + 1}`,
+  }));
+}
+
 describe("CodeList — unified value-set / code viewer (#638 PR3)", () => {
   it("renders rows but NO filter box below the threshold (< 5 codes)", async () => {
     await render(CodeList, { codes: codes(4) });
@@ -202,6 +209,20 @@ describe("CodeList — unified value-set / code viewer (#638 PR3)", () => {
       .toBeVisible();
     await expect
       .element(page.getByRole("button", { name: /Codes starting with 1/ }))
+      .not.toBeInTheDocument();
+  });
+
+  it("does not treat sequential alphanumeric siblings as parent-child codes", async () => {
+    await render(CodeList, { codes: alphanumericSiblingCodes() });
+    await expect
+      .element(page.getByText("Showing first 50 of 60 codes."))
+      .toBeVisible();
+    await expect.element(page.getByText(/^A sibling 1$/)).toBeVisible();
+    await expect
+      .element(page.getByText(/^A sibling 60$/))
+      .not.toBeInTheDocument();
+    await expect
+      .element(page.getByRole("button", { name: /A1\s+A sibling 1/ }))
       .not.toBeInTheDocument();
   });
 
