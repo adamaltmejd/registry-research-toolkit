@@ -152,19 +152,21 @@ Plus two **concept-group subject routes**, both declared above the catch-all:
   only when it names a real member — a bad hint is silently ignored, keeping the group
   page first-class.
 
-- `GET /catalog/group/class/{key}` (#756) — a FIXED 3-seg shape (literal `group`,
-  literal `class`, `{key}`), the **classification-umbrella sibling** of the
-  register-scoped route above. Returns a `ClassificationGroupNode`
-  (`kind: "classification-group"`) resolved via `Catalog.list_classification_groups()`
-  filtered by key; 404 on an unknown key. Has **no** provider/register, **no**
-  per-member coverage, and **no** `?member=` focus hint — classification umbrella groups
-  are catalog-global, not scoped to a single register. This route is declared
-  **immediately above** the register-group route so the literal `class` segment matches
-  before `{provider}` is tried. A collision with the register-group route is
-  unconstructable: `class` is not a valid provider slug (`Fqid.register_fqid` rejects
-  it), so no real register-group URL can share this shape. Classification-root browse
-  rows link to this route (via `classGroupHref`) and render through a dedicated
-  `ClassificationGroupView` component.
+- `GET /catalog/group/class/{key}` (#756/#1116) — a FIXED 3-seg shape (literal `group`,
+  literal `class`, `{key}`), the **classification-subject sibling** of the
+  register-scoped route above. Returns either a curated umbrella
+  `ClassificationGroupNode` (`kind: "classification-group"`) resolved via
+  `Catalog.classification_group(key)`, or a derived one-dimensional
+  `ClassificationFamilyNode` (`kind: "classification-family"`) resolved via
+  `Catalog.classification_family(key)`; 404 when neither exists. Has **no**
+  provider/register, **no** per-member coverage, and **no** `?member=` focus hint —
+  classification subjects are catalog-global, not scoped to a single register. This
+  route is declared **immediately above** the register-group route so the literal
+  `class` segment matches before `{provider}` is tried. A collision with the
+  register-group route is unconstructable: `class` is not a valid provider slug
+  (`Fqid.register_fqid` rejects it), so no real register-group URL can share this shape.
+  Classification-root browse rows link to this route (via `classGroupHref`) and render
+  through a dedicated `ClassificationGroupView` component.
 
 The `group` literal **is** reserved in the **provider slot** of the FQID grammar
 (`RESERVED_GROUP_SLUG`, see reg_meta/DESIGN.md → FQID grammar): because the
@@ -1994,7 +1996,7 @@ POSTs are not. Catalog browse paths use FQID segments directly.
   | GET    | `/api/catalog/{fqid}`                            | Single endpoint for every hierarchy node (`kind`-discriminated). On a binding leaf, embeds the variable's full longitudinal record + its full variable `succession_chain` (#582); on a classification leaf, embeds the full succession `edition_chain` (#571), value-set `codes`, curated `dimensions`, and optional derived `family` (#1116). Optional `?period` / `?variant` / `?value_set_version` narrow a binding leaf to a `{binding, states}` subset (uniform with `/states`). A dead/renamed binding, register, or classification slug with a successor 301-redirects to its terminal successor (kind-dispatched — #355 PART 2, #412, #571); `?period` branch and sub-endpoints also redirect (#411). |
   | GET    | `/api/catalog/{provider}/{register}/variants`    | The register's variant browser.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
   | GET    | `/api/catalog/group/{provider}/{register}/{key}` | The concept group as a browsable subject (all members; `?member=` focus). (#617/#616)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-  | GET    | `/api/catalog/group/class/{key}`                 | The classification umbrella group as a browsable subject (all members). (#756)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+  | GET    | `/api/catalog/group/class/{key}`                 | The classification subject route: curated umbrella group (`ClassificationGroupNode`) or derived one-dimensional succession family (`ClassificationFamilyNode`). (#756/#1116)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
   | GET    | `/api/catalog/{fqid}/states`                     | Full state history for a binding. Dead/renamed binding 301s to `/states` on its terminal successor (#411).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
   | GET    | `/api/catalog/{fqid}/predecessors`               | Inbound `variable_replaced_by` edges. Dead/renamed binding 301s to `/predecessors` on its terminal successor (#411).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
   | GET    | `/api/catalog/{fqid}/successors`                 | Outbound `variable_replaced_by` edges. Dead/renamed binding 301s to `/successors` on its terminal successor (#411).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
