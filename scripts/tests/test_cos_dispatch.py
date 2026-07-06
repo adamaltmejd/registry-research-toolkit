@@ -2724,6 +2724,16 @@ def test_issue_touches_fails_open_on_refused_read(
     assert cd._issue_touches(7) == []
 
 
+def test_issue_touches_fails_open_on_unparseable_json(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    # gh_issue.view returns exit 0 but a NON-JSON payload (a torn/garbage body). The
+    # `except ValueError` branch fails open to [] — distinct from the non-zero-exit refused read
+    # above (this exercises the parse-failure path the refused-read test does not).
+    monkeypatch.setattr(cd._gh_issue, "view", lambda number, comments: (0, "not json"))
+    assert cd._issue_touches(7) == []
+
+
 def test_codex_lane_touching_agents_refused_exit_5(
     tmp_path: Path, capsys, _hermetic_env: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -2773,6 +2783,36 @@ def test_agents_touching_lane_proceeds_on_claude(
     _no_real_launch(tmp_path)
 
 
+def test_agents_guard_does_no_network_on_claude_surface(
+    tmp_path: Path, capsys, _hermetic_env: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # The guard short-circuits on `surface == "codex"` FIRST, so a claude dispatch must NEVER
+    # invoke _lane_touches_agents (which would do a per-issue `gh issue view` network read).
+    # Wire it to blow up if called and prove a full claude launch still reaches rc == 0 without
+    # touching it — the "boom" pattern from test_dry_run_skips_author_check.
+    canonical = _make_origin(tmp_path)
+    launched = _capture_launch(monkeypatch)
+    state = tmp_path / "state"
+
+    def boom(issues: list[int]) -> bool:
+        raise AssertionError(
+            "_lane_touches_agents ran on the claude surface (network I/O)"
+        )
+
+    monkeypatch.setattr(cd, "_lane_touches_agents", boom)
+
+    rc = cd.dispatch(
+        _args(tmp_path, canonical, surface="claude", state_root=state),
+        launch_grace=_TEST_GRACE,
+        launch_grace_poll=_TEST_GRACE_POLL,
+    )
+
+    assert rc == 0  # reached launch; boom never raised, so the guard never fired
+    assert json.loads(capsys.readouterr().out)["surface"] == "claude"
+    assert len(launched) == 1
+    _no_real_launch(tmp_path)
+
+
 def test_codex_lane_without_agents_proceeds_past_guard(
     tmp_path: Path, capsys, _hermetic_env: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -2794,6 +2834,47 @@ def test_codex_lane_without_agents_proceeds_past_guard(
 
     assert rc == 0
     assert len(launched) == 1 and launched[0][1].endswith("cos_lane_runner.py")
+    _no_real_launch(tmp_path)
+
+
+def test_continue_pr_touching_agents_refused_exit_5(
+    tmp_path: Path, capsys, _hermetic_env: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # dispatch() resolves a continue-PR's closing `issues` from resolve_continue_pr BEFORE the
+    # shared `.agents` guard, so a continue PR whose closing issues touch `.agents/**` must ALSO
+    # be refused with exit 5 on codex — never launched into a guaranteed read-only `.agents`
+    # write block. Mirrors the fresh-mode test_codex_lane_touching_agents_refused_exit_5 with the
+    # continue-PR metadata stub of test_continue_pr_author_gate_runs_before_pr_body_read.
+    canonical = _make_origin(tmp_path)
+    state = tmp_path / "state"
+    monkeypatch.setattr(
+        cd,
+        "resolve_continue_pr",
+        lambda pr: {
+            "pr": pr,
+            "branch": "codex/existing-pr",
+            "base_branch": "main",
+            "issues": [1011],
+            "title": "Existing PR",
+        },
+    )
+    monkeypatch.setattr(cd, "_lane_touches_agents", _REAL_LANE_TOUCHES_AGENTS)
+    monkeypatch.setattr(
+        cd, "_issue_touches", lambda number: [".agents/skills/x/SKILL.md"]
+    )
+
+    rc = cd.dispatch(
+        _args(tmp_path, canonical, issues=None, continue_pr=4242, state_root=state)
+    )
+
+    assert rc == 5
+    out = capsys.readouterr().out
+    assert ".agents" in out
+    assert "claude" in out
+    # Refused before the worktree/slot side effects, and no real agent launched.
+    slug = "continue-codex-pr-4242"
+    assert not (canonical / ".claude" / "worktrees" / slug).exists()
+    assert not (state / "pipeline-slots").exists()
     _no_real_launch(tmp_path)
 
 

@@ -2445,3 +2445,78 @@ def test_run_resolves_bad_canonical_before_implement_turn(
             )
         )
     assert "not a main checkout" in str(exc.value.code)
+
+
+def test_run_review_builds_argv_from_passed_review_tool(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # #1114: the resolved CANONICAL review_tool is the script the subprocess actually runs — the
+    # runner never re-derives it. Stub subprocess.run (via the generic _patch_gh capture helper)
+    # and assert run_review composed `<python> <review_tool> --base <base> --out <gate>/
+    # codex-review.md`. A sentinel canonical path makes the script-path assertion unambiguous.
+    review_tool = Path("/canonical/scripts/codex_local_review.py")
+    gate_dir = tmp_path / "gate" / "pr-99"
+    worktree = tmp_path / "wt"
+    calls = _patch_gh(monkeypatch, stdout=json.dumps({"verdict": "clean"}))
+
+    result = lr.run_review("origin/main", gate_dir, worktree, review_tool)
+
+    assert result == {"verdict": "clean"}
+    argv, _kwargs = calls[0]
+    # argv[0] is the python executable; the element right after it is the resolved review_tool.
+    assert argv[0] == lr.sys.executable
+    assert argv[1] == str(review_tool)
+    assert argv[argv.index("--base") + 1] == "origin/main"
+    assert argv[argv.index("--out") + 1] == str(gate_dir / "codex-review.md")
+
+
+def test_dry_run_bad_canonical_still_refuses(tmp_path: Path, capsys) -> None:
+    # resolve_review_tool is a LOCAL check run BEFORE the dry-run branch (like the runner's other
+    # pre-dry-run local guards), so a --dry-run with a non-checkout --canonical (absolute, no
+    # `.git` dir) STILL fails fast — it never prints a preview a real launch would then reject.
+    wt = _make_worktree(tmp_path)
+    bad_canonical = tmp_path / "not-a-checkout"
+    bad_canonical.mkdir()
+
+    with pytest.raises(SystemExit) as exc:
+        lr.run(
+            _args(
+                wt,
+                tmp_path / "gate",
+                tmp_path / "lane.log",
+                canonical=bad_canonical,
+                no_canonical_check=False,
+                dry_run=True,
+            )
+        )
+
+    assert "not a main checkout" in str(exc.value.code)
+    # No preview was printed — the local guard fired before the dry-run branch.
+    assert capsys.readouterr().out == ""
+
+
+def test_dry_run_good_canonical_prints_preview(tmp_path: Path, capsys) -> None:
+    # Positive counterpart: a --dry-run with a GOOD --canonical (a real main checkout carrying
+    # scripts/codex_local_review.py) passes resolve_review_tool and prints the side-effect-free
+    # preview, returning EXIT_OK.
+    wt = _make_worktree(tmp_path)
+    canonical = _make_main_checkout(tmp_path)
+    log = tmp_path / "lane.log"
+
+    rc = lr.run(
+        _args(
+            wt,
+            tmp_path / "gate",
+            log,
+            canonical=canonical,
+            no_canonical_check=False,
+            dry_run=True,
+        )
+    )
+
+    assert rc == lr.EXIT_OK
+    result = json.loads(capsys.readouterr().out)
+    assert result["implement_argv"][0] == "codex"
+    assert "$pr-pipeline-impl 1011" in result["implement_argv"][-1]
+    # Side-effect-free: no log written.
+    assert not log.exists()
