@@ -301,10 +301,7 @@ export function facetLabelJoin(facets: { label: string }[]): string {
 
 const FACET_AXIS_TONE_COUNT = 6;
 
-/** Deterministically map a stable facet axis name to one muted facet-axis tone.
- * The axis name, not display order, is the key so the same axis keeps its color
- * when a group adds/removes another axis. */
-export function facetAxisTone(axis: string): number {
+function facetAxisHashTone(axis: string): number {
   let hash = 0;
   for (let i = 0; i < axis.length; i += 1) {
     hash = (hash * 31 + axis.charCodeAt(i)) % FACET_AXIS_TONE_COUNT;
@@ -312,10 +309,40 @@ export function facetAxisTone(axis: string): number {
   return hash;
 }
 
+/** Deterministically map a stable facet axis name to one muted facet-axis tone.
+ * A declared axis set resolves hash collisions by linear probing, so each axis
+ * in one group gets its own color family while preserving the stable-name hash
+ * wherever it does not collide. */
+export function facetAxisTone(
+  axis: string,
+  axisOrder: readonly string[] = [],
+): number {
+  if (!axisOrder.includes(axis)) {
+    return facetAxisHashTone(axis);
+  }
+
+  const used = new Set<number>();
+  for (const name of axisOrder) {
+    let tone = facetAxisHashTone(name);
+    while (used.has(tone) && used.size < FACET_AXIS_TONE_COUNT) {
+      tone = (tone + 1) % FACET_AXIS_TONE_COUNT;
+    }
+    used.add(tone);
+    if (name === axis) {
+      return tone;
+    }
+  }
+
+  return facetAxisHashTone(axis);
+}
+
 /** Inline CSS-custom-property bridge for facet-axis pills. Component CSS reads
  * `--facet-axis-hue` / `--facet-axis-ink`; this helper selects the token pair. */
-export function facetAxisStyle(axis: string): string {
-  const tone = facetAxisTone(axis);
+export function facetAxisStyle(
+  axis: string,
+  axisOrder: readonly string[] = [],
+): string {
+  const tone = facetAxisTone(axis, axisOrder);
   return [
     `--facet-axis-hue: var(--facet-axis-${tone})`,
     `--facet-axis-ink: var(--facet-axis-${tone}-ink)`,

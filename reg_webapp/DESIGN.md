@@ -1043,10 +1043,11 @@ Components always use the ink stop for any categorical label text; fill/border u
 raw hue.
 
 A separate **facet-axis** palette tags concept-group dimensions in member/filter pills.
-It is a data-encoding sub-system: deterministic from the stable axis name, value-only in
-visible text, and separate from node-type, status, and brand chrome. The visible value
-pill gets the axis color; the axis label remains in the fieldset legend, `title`, and
-screen-reader text so hue is not the only carrier of meaning.
+It is a data-encoding sub-system: deterministic within the declared axis set
+(stable-name hash plus collision resolution), value-only in visible text, and separate
+from node-type, status, and brand chrome. The visible value pill gets the axis color;
+the axis label remains in the fieldset legend, `title`, and screen-reader text so hue is
+not the only carrier of meaning.
 
 ### Geometry, elevation, motion
 

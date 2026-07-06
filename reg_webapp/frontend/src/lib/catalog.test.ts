@@ -1296,6 +1296,12 @@ describe("facetAxisTone / facetAxisStyle", () => {
     expect(facetAxisTone("source")).toBeLessThan(6);
   });
 
+  it("resolves collisions inside one declared axis set", () => {
+    const axisOrder = ["enhet", "hush", "kapitalvinst"];
+    const tones = axisOrder.map((axis) => facetAxisTone(axis, axisOrder));
+    expect(new Set(tones).size).toBe(axisOrder.length);
+  });
+
   it("emits the facet-axis token pair consumed by picker pills", () => {
     const tone = facetAxisTone("source");
     expect(facetAxisStyle("source")).toBe(

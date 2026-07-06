@@ -159,6 +159,7 @@ const AXES: GroupAxisModel[] = [
   { name: "enhet", label: "Enhet" },
   { name: "hush", label: "Hushallsbegrepp" },
 ];
+const AXIS_ORDER = AXES.map((axis) => axis.name);
 
 const PROPS = {
   window: null,
@@ -2679,8 +2680,8 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
     expect(fieldsets.every((el) => el.classList.contains("facet-axis"))).toBe(
       true,
     );
-    expect(styleAttr(fieldsets[0])).toBe(facetAxisStyle("enhet"));
-    expect(styleAttr(fieldsets[1])).toBe(facetAxisStyle("hush"));
+    expect(styleAttr(fieldsets[0])).toBe(facetAxisStyle("enhet", AXIS_ORDER));
+    expect(styleAttr(fieldsets[1])).toBe(facetAxisStyle("hush", AXIS_ORDER));
     expect(styleAttr(fieldsets[0])).not.toBe(styleAttr(fieldsets[1]));
 
     // Each row is marked with value-only facet pills; the axis rides as aria/title
@@ -2696,7 +2697,7 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
     expect(markers[0].querySelector(".dim-kind")).toBeNull();
     expect(markers[0].getAttribute("aria-label")).toBe("Enhet: Individ");
     expect(markers[0].getAttribute("title")).toBe("Enhet: Individ");
-    expect(styleAttr(markers[0])).toBe(facetAxisStyle("enhet"));
+    expect(styleAttr(markers[0])).toBe(facetAxisStyle("enhet", AXIS_ORDER));
   });
 
   it("renders global select-all as an integrated row with selected and indeterminate states", async () => {

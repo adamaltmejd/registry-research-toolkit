@@ -274,6 +274,7 @@ const dimensions = $derived(
     includeRowDimensions: includeRowDimensionFilters,
   }),
 );
+const facetAxisOrder = $derived(axes.map((axis) => axis.name));
 
 const anyFilterActive = $derived(
   Object.values(filterSelection).some((s) => s.size > 0),
@@ -2207,7 +2208,9 @@ function codingsVaryHref(
   <fieldset
     class="dim-filter"
     class:facet-axis={dim.kind === "facet"}
-    style={dim.kind === "facet" ? facetAxisStyle(dim.axis ?? dim.key) : undefined}
+    style={dim.kind === "facet"
+      ? facetAxisStyle(dim.axis ?? dim.key, facetAxisOrder)
+      : undefined}
   >
     <legend>
       <span class="dim-kind">{dim.label}</span>
@@ -2231,7 +2234,7 @@ function codingsVaryHref(
 {#snippet facetMarker(m: { name: string; axis: string; value: string })}
   <span
     class="facet-marker"
-    style={facetAxisStyle(m.name)}
+    style={facetAxisStyle(m.name, facetAxisOrder)}
     title={`${m.axis}: ${m.value}`}
     aria-label={`${m.axis}: ${m.value}`}
   >
