@@ -524,9 +524,12 @@ If an otherwise merge-ready PR's `codex_bot` line is missing or stale (its stamp
 trails the live `head`), self-serve it with the **same recipe as the build_db self-serve
 above** — including the pre-launch `running; started <ISO-8601>` intent stamp on the
 `codex_bot` gate line and the sole-unmet-gate scope guard (only flip `status` when the
-Codex review was the sole missing item). What differs: from the throwaway worktree at
-the PR head, run
-`uv run --no-project python scripts/codex_local_review.py --base <base> --out <gate-dir>/codex-review.md`,
+Codex review was the sole missing item). What differs: run the **canonical** reviewer —
+the main checkout's `scripts/codex_local_review.py`, never the throwaway worktree's own
+copy (a PR that edits the reviewer must not review itself) — with **cwd = that
+worktree** (codex_local_review reviews its cwd's diff, independent of the script's own
+location, so this reviews the PR tree with the unmodified reviewer):
+`uv run --no-project python <main-checkout>/scripts/codex_local_review.py --base <base> --out <gate-dir>/codex-review.md`,
 where `--base` is the PR's live `baseRefName` prefixed with `origin/` (e.g.
 `origin/main`, or the predecessor branch for a stacked successor) so the review diffs
 against the real PR base; the evidence file is `codex-review.md`. Unlike the \~20-min
@@ -700,6 +703,13 @@ codex lanes launched with `--no-lane-runner` (the escape to the legacy bare-agen
   the kill switch as the reason. Touch the file to pause auto dispatch; remove it to
   resume. (`scripts/cos_dispatch.py` re-checks it too and refuses with exit `3`.)
 
+- **`.agents`-touching lanes go to claude, not codex:** the codex `workspace-write`
+  sandbox makes `.agents/` READ-ONLY, so a codex lane whose issues' `touches` include
+  `.agents/**` (the skill/instruction mirror) would block at the first `.agents` edit.
+  `cos_dispatch` refuses that codex dispatch with **exit `5`** and a message pointing at
+  claude — route the lane to the claude surface (`--surface claude`, or `--tier easy`)
+  rather than dispatching into a guaranteed block.
+
 - **Lane selection is UNCHANGED** from Lane Recommendation: the persisted `/plan-lanes`
   ranking plus every guardrail there — no
   blocked/parked/claimed/insufficiently-described work, at most `3 - busy` lanes, one
@@ -746,9 +756,11 @@ codex lanes launched with `--no-lane-runner` (the escape to the legacy bare-agen
   The tier's implied surface is the default (no `--surface` needed). The script is the
   deterministic launcher: it re-checks the kill switch (exit `3`) and the slot budget
   (exit `4`), refuses a slug/worktree collision for fresh lanes and any live slot
-  already claiming the same PR in continue mode (exit `2`), creates the requested
-  worktree, appends a `cos.run.started` sentinel to the per-slug dispatch log, and
-  launches the agent DETACHED with the resolved tier profile (hard/codex:
+  already claiming the same PR in continue mode (exit `2`), refuses a codex lane whose
+  issues touch `.agents/**` (exit `5`; the codex sandbox makes `.agents` read-only —
+  route to claude), creates the requested worktree, appends a `cos.run.started` sentinel
+  to the per-slug dispatch log, and launches the agent DETACHED with the resolved tier
+  profile (hard/codex:
   `codex exec -C <worktree> -s workspace-write -c approval_policy=never --add-dir <state-root> --add-dir <canonical>/.git --json -m gpt-5.5 -c model_reasoning_effort=xhigh '$pr-pipeline <issues>'`
   — the second `--add-dir` grants the linked worktree's writable git state, which lives
   under the canonical checkout's `.git`, outside the sandboxed cwd; easy/claude:

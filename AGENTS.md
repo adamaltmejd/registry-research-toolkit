@@ -457,9 +457,11 @@ without merging.
   shadow period but is **no longer a gate input** — its PR comments are FYI only. When a
   PR is otherwise merge-ready but this gate's `codex_bot` evidence is missing or stale
   (wrong head), the chief-of-staff self-serves it exactly like `build_db` — a throwaway
-  worktree at the PR head, `scripts/codex_local_review.py` run there with the PR's live
-  `baseRefName` (prefixed `origin/`) as `--base` and `--out` into the gate store, and
-  `gate.json` refreshed — instead of routing a follow-up or asking the user.
+  worktree at the PR head, the **canonical** `scripts/codex_local_review.py` (sourced from
+  the main checkout, never the worktree's own copy, so a PR that modifies the reviewer can't
+  self-review) run with **cwd = that worktree** and the PR's live `baseRefName` (prefixed
+  `origin/`) as `--base` and `--out` into the gate store, and `gate.json` refreshed — instead
+  of routing a follow-up or asking the user.
 - **Real-data validation** when build-pipeline or DB content changed: run a real-seed
   `reg-meta-build build-db` **on the PR head** (validation runs by default), not just
   fixture tests. The untracked seed lives only in the main checkout. From a worktree,

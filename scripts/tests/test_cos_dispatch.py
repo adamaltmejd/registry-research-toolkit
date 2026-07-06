@@ -138,6 +138,24 @@ def _stub_author_check(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(cd, "require_maintainer_authored", lambda issues: None)
 
 
+# The real `.agents` guard, captured before the autouse no-op below replaces it, so the
+# dedicated #1102 tests can restore the genuine function over a stubbed _issue_touches.
+_REAL_LANE_TOUCHES_AGENTS = cd._lane_touches_agents
+
+
+@pytest.fixture(autouse=True)
+def _stub_agents_guard(monkeypatch: pytest.MonkeyPatch) -> None:
+    """No-op the codex `.agents` guard by default so existing codex tests don't hit live `gh`.
+
+    dispatch()'s `.agents` guard (`_lane_touches_agents`, a read-only `gh issue view` per issue)
+    runs on the codex surface after the author check. The launch-reaching tests here don't model
+    issue touches, so default them to "no lane touches .agents"; the dedicated #1102 tests below
+    override this with the real function (_REAL_LANE_TOUCHES_AGENTS) over a stubbed _issue_touches
+    to exercise refuse/proceed.
+    """
+    monkeypatch.setattr(cd, "_lane_touches_agents", lambda issues: False)
+
+
 def _no_real_launch(tmp_path: Path) -> None:
     """Assert the fail-loud stub never recorded a real-binary invocation."""
     log = tmp_path / "stub-invocations.log"
@@ -2647,3 +2665,252 @@ def test_dry_run_skips_author_check(
 
     assert rc == 0
     assert json.loads(capsys.readouterr().out)["surface"] == "codex"
+
+
+# --- codex `.agents` read-only guard (#1102) ----------------------------------
+
+
+@pytest.mark.parametrize(
+    "path,expected",
+    [
+        (".agents/x", True),
+        (".agents", True),
+        (".agents/**", True),
+        (".agents/skills/chief-of-staff/SKILL.md", True),
+        ("./.agents/y", True),  # a leading ./ is stripped, still under .agents/
+        (".agentsfoo", False),  # a different top-level name, not the mirror
+        ("scripts/cos_dispatch.py", False),
+        ("reg_meta/agents.py", False),
+    ],
+)
+def test_lane_touches_agents_path_matching(
+    monkeypatch: pytest.MonkeyPatch, path: str, expected: bool
+) -> None:
+    # The real guard (captured before the autouse no-op) over a stubbed _issue_touches: only a
+    # path equal to `.agents` or under `.agents/` counts as touching the read-only mirror.
+    monkeypatch.setattr(cd, "_issue_touches", lambda number: [path])
+    assert _REAL_LANE_TOUCHES_AGENTS([1]) is expected
+
+
+def test_lane_touches_agents_scans_all_issues(monkeypatch: pytest.MonkeyPatch) -> None:
+    # True iff ANY issue in the lane touches .agents; a lane of only non-.agents issues is False.
+    touches = {1: ["scripts/x.py"], 2: [".agents/skills/y"], 3: ["reg_meta/z.py"]}
+    monkeypatch.setattr(cd, "_issue_touches", lambda number: touches[number])
+    assert _REAL_LANE_TOUCHES_AGENTS([1, 3]) is False
+    assert _REAL_LANE_TOUCHES_AGENTS([1, 2, 3]) is True
+
+
+def test_issue_touches_parses_body_touches_block(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    # _issue_touches reuses gh_issue.view (trust-gated) + plan_sequence.parse_touches: a
+    # maintainer-authored body's fenced ```touches``` block is parsed to its glob list.
+    body = "Problem\n\n```touches\n.agents/skills/x/SKILL.md\nscripts/cos_dispatch.py\n```\n"
+    monkeypatch.setattr(
+        cd._gh_issue, "view", lambda number, comments: (0, json.dumps({"body": body}))
+    )
+    assert cd._issue_touches(7) == [
+        ".agents/skills/x/SKILL.md",
+        "scripts/cos_dispatch.py",
+    ]
+
+
+def test_issue_touches_fails_open_on_refused_read(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    # A refused / missing issue (non-zero exit from gh_issue.view) fails open to [] — the guard
+    # is a best-effort safety net, and the codex read-only sandbox is the ultimate backstop.
+    monkeypatch.setattr(cd._gh_issue, "view", lambda number, comments: (3, ""))
+    assert cd._issue_touches(7) == []
+
+
+def test_issue_touches_fails_open_on_unparseable_json(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    # gh_issue.view returns exit 0 but a NON-JSON payload (a torn/garbage body). The
+    # `except ValueError` branch fails open to [] — distinct from the non-zero-exit refused read
+    # above (this exercises the parse-failure path the refused-read test does not).
+    monkeypatch.setattr(cd._gh_issue, "view", lambda number, comments: (0, "not json"))
+    assert cd._issue_touches(7) == []
+
+
+def test_codex_lane_touching_agents_refused_exit_5(
+    tmp_path: Path, capsys, _hermetic_env: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # A codex lane whose issue touches `.agents/**` is refused with exit 5 BEFORE any side
+    # effect (no worktree, no slot, no launch), pointing the operator at the claude surface.
+    canonical = _make_origin(tmp_path)
+    state = tmp_path / "state"
+    monkeypatch.setattr(cd, "_lane_touches_agents", _REAL_LANE_TOUCHES_AGENTS)
+    monkeypatch.setattr(
+        cd, "_issue_touches", lambda number: [".agents/skills/x/SKILL.md"]
+    )
+
+    rc = cd.dispatch(_args(tmp_path, canonical, state_root=state))
+
+    assert rc == 5
+    out = capsys.readouterr().out
+    assert ".agents" in out
+    assert "claude" in out
+    # Refused before the worktree/slot side effects, and no real agent launched.
+    assert not (canonical / ".claude" / "worktrees" / "auto-codex-issue-1011").exists()
+    assert not (state / "pipeline-slots").exists()
+    _no_real_launch(tmp_path)
+
+
+def test_agents_touching_lane_proceeds_on_claude(
+    tmp_path: Path, capsys, _hermetic_env: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # The SAME .agents-touching lane on --surface claude is NOT refused by this guard (the
+    # read-only `.agents` sandbox is codex-only) — it proceeds to launch. Launch is captured.
+    canonical = _make_origin(tmp_path)
+    launched = _capture_launch(monkeypatch)
+    state = tmp_path / "state"
+    monkeypatch.setattr(cd, "_lane_touches_agents", _REAL_LANE_TOUCHES_AGENTS)
+    monkeypatch.setattr(
+        cd, "_issue_touches", lambda number: [".agents/skills/x/SKILL.md"]
+    )
+
+    rc = cd.dispatch(
+        _args(tmp_path, canonical, surface="claude", state_root=state),
+        launch_grace=_TEST_GRACE,
+        launch_grace_poll=_TEST_GRACE_POLL,
+    )
+
+    assert rc == 0
+    assert json.loads(capsys.readouterr().out)["surface"] == "claude"
+    assert len(launched) == 1  # the guard did not refuse the claude dispatch
+    _no_real_launch(tmp_path)
+
+
+def test_agents_guard_does_no_network_on_claude_surface(
+    tmp_path: Path, capsys, _hermetic_env: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # The guard short-circuits on `surface == "codex"` FIRST, so a claude dispatch must NEVER
+    # invoke _lane_touches_agents (which would do a per-issue `gh issue view` network read).
+    # Wire it to blow up if called and prove a full claude launch still reaches rc == 0 without
+    # touching it — the "boom" pattern from test_dry_run_skips_author_check.
+    canonical = _make_origin(tmp_path)
+    launched = _capture_launch(monkeypatch)
+    state = tmp_path / "state"
+
+    def boom(issues: list[int]) -> bool:
+        raise AssertionError(
+            "_lane_touches_agents ran on the claude surface (network I/O)"
+        )
+
+    monkeypatch.setattr(cd, "_lane_touches_agents", boom)
+
+    rc = cd.dispatch(
+        _args(tmp_path, canonical, surface="claude", state_root=state),
+        launch_grace=_TEST_GRACE,
+        launch_grace_poll=_TEST_GRACE_POLL,
+    )
+
+    assert rc == 0  # reached launch; boom never raised, so the guard never fired
+    assert json.loads(capsys.readouterr().out)["surface"] == "claude"
+    assert len(launched) == 1
+    _no_real_launch(tmp_path)
+
+
+def test_codex_lane_without_agents_proceeds_past_guard(
+    tmp_path: Path, capsys, _hermetic_env: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # A codex lane whose touches do NOT include `.agents/` passes the guard and launches the
+    # runner as usual. Launch is captured (no real runner spawn).
+    canonical = _make_origin(tmp_path)
+    launched = _capture_launch(monkeypatch)
+    state = tmp_path / "state"
+    monkeypatch.setattr(cd, "_lane_touches_agents", _REAL_LANE_TOUCHES_AGENTS)
+    monkeypatch.setattr(
+        cd, "_issue_touches", lambda number: ["scripts/cos_dispatch.py"]
+    )
+
+    rc = cd.dispatch(
+        _args(tmp_path, canonical, state_root=state),
+        launch_grace=_TEST_GRACE,
+        launch_grace_poll=_TEST_GRACE_POLL,
+    )
+
+    assert rc == 0
+    assert len(launched) == 1 and launched[0][1].endswith("cos_lane_runner.py")
+    _no_real_launch(tmp_path)
+
+
+def test_continue_pr_touching_agents_refused_exit_5(
+    tmp_path: Path, capsys, _hermetic_env: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # dispatch() resolves a continue-PR's closing `issues` from resolve_continue_pr BEFORE the
+    # shared `.agents` guard, so a continue PR whose closing issues touch `.agents/**` must ALSO
+    # be refused with exit 5 on codex — never launched into a guaranteed read-only `.agents`
+    # write block. Mirrors the fresh-mode test_codex_lane_touching_agents_refused_exit_5 with the
+    # continue-PR metadata stub of test_continue_pr_author_gate_runs_before_pr_body_read.
+    canonical = _make_origin(tmp_path)
+    state = tmp_path / "state"
+    monkeypatch.setattr(
+        cd,
+        "resolve_continue_pr",
+        lambda pr: {
+            "pr": pr,
+            "branch": "codex/existing-pr",
+            "base_branch": "main",
+            "issues": [1011],
+            "title": "Existing PR",
+        },
+    )
+    monkeypatch.setattr(cd, "_lane_touches_agents", _REAL_LANE_TOUCHES_AGENTS)
+    monkeypatch.setattr(
+        cd, "_issue_touches", lambda number: [".agents/skills/x/SKILL.md"]
+    )
+
+    rc = cd.dispatch(
+        _args(tmp_path, canonical, issues=None, continue_pr=4242, state_root=state)
+    )
+
+    assert rc == 5
+    out = capsys.readouterr().out
+    assert ".agents" in out
+    assert "claude" in out
+    # Refused before the worktree/slot side effects, and no real agent launched.
+    slug = "continue-codex-pr-4242"
+    assert not (canonical / ".claude" / "worktrees" / slug).exists()
+    assert not (state / "pipeline-slots").exists()
+    _no_real_launch(tmp_path)
+
+
+# --- canonical-reviewer threading to the lane runner (#1114) -------------------
+
+
+def _lane_runner_argv(canonical: Path, **overrides) -> list[str]:
+    kwargs = {
+        "worktree": Path("/wt/lane"),
+        "issues": [1011],
+        "continue_pr": None,
+        "base_ref": "origin/main",
+        "gate_root": Path("/state/merge-gates"),
+        "log_path": Path("/state/dispatch-logs/slug.log"),
+        "slot_path": Path("/state/pipeline-slots/slug.json"),
+        "tier": "hard",
+        "canonical": canonical,
+    }
+    kwargs.update(overrides)
+    return cd.build_lane_runner_argv(**kwargs)
+
+
+def test_build_lane_runner_argv_canonical_is_absolute() -> None:
+    # The runner is detached with cwd=<lane worktree> and resolves the canonical reviewer from
+    # --canonical, so a RELATIVE canonical would resolve the reviewer inside the worktree (the
+    # self-review hole). build_lane_runner_argv therefore emits the RESOLVED absolute path.
+    argv = _lane_runner_argv(Path("relative/canonical"))
+    forwarded = argv[argv.index("--canonical") + 1]
+    assert Path(forwarded).is_absolute()
+    assert Path(forwarded) == Path("relative/canonical").resolve()
+    # Production omits --no-canonical-check (the runner validates against the real main checkout).
+    assert "--no-canonical-check" not in argv
+
+
+def test_build_lane_runner_argv_forwards_no_canonical_check() -> None:
+    # Tests dispatch cos_dispatch WITH --no-canonical-check; it must propagate so the runner
+    # uses its self-relative reviewer fallback instead of validating a nonexistent main checkout.
+    argv = _lane_runner_argv(Path("/canon"), no_canonical_check=True)
+    assert "--no-canonical-check" in argv

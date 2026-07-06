@@ -101,7 +101,10 @@ poller (`poll_codex_session_id`) and its run sentinel, and the git primitives co
 cos_dispatch; the atomic gate/slot writer (`_atomic_write_json`), the merge-gate reader
 (`read_merge_gate`), and the gate-store root (`default_gate_root`) come from cos_preflight;
 the review itself is `codex_local_review.py` invoked as a subprocess (its JSON stdout is
-the contract), un-nested so its `nested_sandbox` denial cannot occur here.
+the contract), un-nested so its `nested_sandbox` denial cannot occur here — and resolved
+from --canonical (resolve_review_tool), so the CANONICAL reviewer runs even when this runner
+is launched from a worktree whose own reviewer a PR modified (codex_local_review reviews cwd,
+independent of the script's location).
 
 Exit codes: 0 gate completed (clean or usage-limit recorded); 2 arg/launch/env failure;
 3 needs-human (findings remain after the round cap, or a blocking review error kind). A
@@ -221,9 +224,44 @@ _gh = _load_gh()
 _cos_dispatch = _gh.load_sibling("cos_dispatch")
 _cos_preflight = _gh.load_sibling("cos_preflight")
 
-# The review subprocess is codex_local_review.py, invoked un-nested so its `nested_sandbox`
-# denial cannot occur; its JSON stdout is the contract, so we resolve its path once here.
-CODEX_LOCAL_REVIEW = Path(__file__).with_name("codex_local_review.py")
+
+def resolve_review_tool(canonical: Path | None) -> Path:
+    """Resolve the codex_local_review.py to run — the CANONICAL one, enforced.
+
+    The review subprocess is invoked un-nested (this runner runs OUTSIDE the lane agent's
+    seatbelt), so its `nested_sandbox` denial cannot occur; its JSON stdout is the contract.
+
+    By construction Path(__file__) is already the canonical reviewer (cos_dispatch launches
+    <canonical>/scripts/cos_lane_runner.py). But that is not ENFORCED: a manual launch of a
+    *worktree's* cos_lane_runner.py would resolve that worktree's own codex_local_review.py,
+    letting a PR that modifies the reviewer self-review. So resolve the reviewer from
+    --canonical: an ABSOLUTE path to a real main checkout (`.git` dir) carrying
+    `scripts/codex_local_review.py`. --no-canonical-check (canonical is None) is the
+    test/local escape hatch — fall back to the self-relative reviewer.
+    """
+    if canonical is None:
+        return Path(__file__).with_name("codex_local_review.py")
+    if not canonical.is_absolute():
+        raise SystemExit(
+            f"{EXIT_TOOL}:--canonical {canonical} must be an absolute path (the runner is "
+            "detached with cwd=<lane worktree>, so a relative canonical would resolve the "
+            "reviewer inside the worktree — the self-review hole this guards)"
+        )
+    if not (canonical / ".git").is_dir():
+        # A `.git` DIR — not a file — deliberately rejects a linked-worktree canonical, whose
+        # reviewer could itself be modified. Only a real main checkout may resolve the reviewer.
+        raise SystemExit(
+            f"{EXIT_TOOL}:--canonical {canonical} is not a main checkout (no .git dir); "
+            "refusing to resolve the reviewer from it"
+        )
+    tool = canonical / "scripts" / "codex_local_review.py"
+    if not tool.is_file():
+        raise SystemExit(
+            f"{EXIT_TOOL}:canonical reviewer {tool} not found; --canonical must carry "
+            "scripts/codex_local_review.py"
+        )
+    return tool
+
 
 # Only dispatch tiers whose blessed surface is codex make sense here: this runner is codex-
 # fixed, so accepting a claude tier like `easy` would force resolve_profile("easy", "codex")
@@ -874,19 +912,22 @@ def resolve_review_base(pr: int, fallback: str, worktree: Path) -> str:
 # ---- review subprocess -------------------------------------------------------
 
 
-def run_review(base: str, gate_dir: Path, worktree: Path) -> dict:
+def run_review(base: str, gate_dir: Path, worktree: Path, review_tool: Path) -> dict:
     """Run codex_local_review.py as a subprocess in the worktree; return its parsed JSON.
 
-    Invoked un-nested (this runner is outside the lane agent's seatbelt), so the review's
-    `nested_sandbox` denial cannot legitimately occur; if it somehow does, the caller treats
-    it as an environment blocker. `--out <gate-dir>/codex-review.md` lands the evidence
-    straight in the gate directory. codex_local_review's stdout JSON is the contract (exit 0
-    clean / 1 findings / 2 error); a torn/empty stdout is a tool failure.
+    `review_tool` is the CANONICAL reviewer resolved from --canonical (resolve_review_tool),
+    NOT the self-relative one — so a PR that modifies the worktree's own reviewer is still
+    reviewed by the unmodified canonical copy (codex_local_review reviews cwd, independent of
+    the script's own location). Invoked un-nested (this runner is outside the lane agent's
+    seatbelt), so the review's `nested_sandbox` denial cannot legitimately occur; if it somehow
+    does, the caller treats it as an environment blocker. `--out <gate-dir>/codex-review.md`
+    lands the evidence straight in the gate directory. codex_local_review's stdout JSON is the
+    contract (exit 0 clean / 1 findings / 2 error); a torn/empty stdout is a tool failure.
     """
     proc = subprocess.run(
         [
             sys.executable,
-            str(CODEX_LOCAL_REVIEW),
+            str(review_tool),
             "--base",
             base,
             "--out",
@@ -922,6 +963,7 @@ def run_loop(
     state_root: Path,
     canonical: Path,
     profile_flags: list[str],
+    review_tool: Path,
 ) -> int:
     """The review↔fix loop over the PR the agent opened. Returns the process exit code.
 
@@ -933,7 +975,7 @@ def run_loop(
     for _round in range(1, max_rounds + 1):
         touch_slot(slot_file)
         head = _cos_dispatch.git_output(worktree, ["rev-parse", "HEAD"])
-        result = run_review(base, gate_dir, worktree)
+        result = run_review(base, gate_dir, worktree, review_tool)
         verdict = result.get("verdict")
         # Bind the gate stamp to the head codex actually reviewed when it reports one, so a
         # concurrent HEAD move between the rev-parse and the review can't mislabel the stamp.
@@ -1119,6 +1161,11 @@ def run(
             f"{EXIT_TOOL}:--worktree must be a lane worktree, not the canonical checkout "
             f"{canonical}"
         )
+
+    # Resolve the CANONICAL codex_local_review.py up front, so a bad --canonical fails fast
+    # BEFORE the implement turn (not after minutes of work). Enforced from the main checkout,
+    # not the worktree's own copy, so a PR that modifies the reviewer can't self-review.
+    review_tool = resolve_review_tool(canonical)
 
     # continue-pr carries no issues here — the lane already exists and the prompt names it.
     issues = _cos_dispatch.parse_issues(args.issues) if args.issues is not None else []
@@ -1306,6 +1353,7 @@ def run(
             state_root=state_root,
             canonical=args.canonical,
             profile_flags=profile_flags,
+            review_tool=review_tool,
         )
         # Every PR's gate is independent — a blocked one must not strand the others, so we
         # process the whole list and return the FIRST non-OK code (each PR always leaves an
@@ -1411,13 +1459,18 @@ def main(argv: list[str] | None = None) -> int:
         "--canonical",
         type=Path,
         default=_cos_preflight.DEFAULT_CANONICAL,
-        help="canonical checkout path (used only to grant the child its git-dir --add-dir "
-        "and to guard --worktree is not main)",
+        help="canonical MAIN checkout path: grants the child its git-dir --add-dir, guards "
+        "--worktree is not main, AND resolves + validates the canonical codex_local_review.py "
+        "reviewer (absolute path, real .git dir, carrying scripts/codex_local_review.py) so a "
+        "PR that modifies the reviewer cannot self-review. --no-canonical-check falls back to "
+        "the self-relative reviewer (tests/local)",
     )
     ap.add_argument(
         "--no-canonical-check",
         action="store_true",
-        help="skip the --worktree-is-not-canonical guard, for tests or local runs",
+        help="skip the --worktree-is-not-canonical guard AND the canonical-reviewer "
+        "resolution (falling back to the self-relative codex_local_review.py), for "
+        "tests or local runs",
     )
     ap.add_argument(
         "--dry-run",
