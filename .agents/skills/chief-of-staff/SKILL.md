@@ -756,9 +756,11 @@ codex lanes launched with `--no-lane-runner` (the escape to the legacy bare-agen
   The tier's implied surface is the default (no `--surface` needed). The script is the
   deterministic launcher: it re-checks the kill switch (exit `3`) and the slot budget
   (exit `4`), refuses a slug/worktree collision for fresh lanes and any live slot
-  already claiming the same PR in continue mode (exit `2`), creates the requested
-  worktree, appends a `cos.run.started` sentinel to the per-slug dispatch log, and
-  launches the agent DETACHED with the resolved tier profile (hard/codex:
+  already claiming the same PR in continue mode (exit `2`), refuses a codex lane whose
+  issues touch `.agents/**` (exit `5`; the codex sandbox makes `.agents` read-only —
+  route to claude), creates the requested worktree, appends a `cos.run.started` sentinel
+  to the per-slug dispatch log, and launches the agent DETACHED with the resolved tier
+  profile (hard/codex:
   `codex exec -C <worktree> -s workspace-write -c approval_policy=never --add-dir <state-root> --add-dir <canonical>/.git --json -m gpt-5.5 -c model_reasoning_effort=xhigh '$pr-pipeline <issues>'`
   — the second `--add-dir` grants the linked worktree's writable git state, which lives
   under the canonical checkout's `.git`, outside the sandboxed cwd; easy/claude:
