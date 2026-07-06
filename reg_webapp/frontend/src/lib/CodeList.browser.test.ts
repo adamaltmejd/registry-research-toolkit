@@ -52,6 +52,19 @@ function prefixCodes(): Code[] {
   ];
 }
 
+function largePrefixCodes(): Code[] {
+  return [
+    ...Array.from({ length: 1100 }, (_, i) => ({
+      code: `A${String(i + 1).padStart(5, "0")}`,
+      label: `Large A ${String(i + 1).padStart(5, "0")}`,
+    })),
+    ...Array.from({ length: 1100 }, (_, i) => ({
+      code: `B${String(i + 1).padStart(5, "0")}`,
+      label: `Large B ${String(i + 1).padStart(5, "0")}`,
+    })),
+  ];
+}
+
 function flatCodes(): Code[] {
   return Array.from({ length: 60 }, (_, i) => ({
     code: `x-${String(i + 1).padStart(4, "0")}`,
@@ -157,6 +170,17 @@ describe("CodeList — unified value-set / code viewer (#638 PR3)", () => {
     await expect.element(page.getByText("A prefix 001")).toBeVisible();
     await expect
       .element(page.getByText("B prefix 001"))
+      .not.toBeInTheDocument();
+  });
+
+  it("uses cheap prefix buckets past the explicit-parent scan ceiling", async () => {
+    await render(CodeList, { codes: largePrefixCodes() });
+    const group = page.getByRole("button", {
+      name: /A\s+Codes starting with A\s+1100 codes/,
+    });
+    await expect.element(group).toBeVisible();
+    await expect
+      .element(page.getByText("Large A 00001"))
       .not.toBeInTheDocument();
   });
 

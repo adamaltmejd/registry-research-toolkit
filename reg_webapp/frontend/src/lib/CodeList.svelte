@@ -58,6 +58,7 @@ const CODE_FILTER_THRESHOLD = 5;
 const COLLAPSE_THRESHOLD = 50;
 const FLAT_PREVIEW_LIMIT = 50;
 const MIN_GROUP_COUNT = 2;
+const EXPLICIT_PREFIX_SCAN_LIMIT = 2000;
 const showFilter = $derived(codes.length >= CODE_FILTER_THRESHOLD);
 
 // In-memory type-to-filter over code + label (matchesFilter folds diacritics and
@@ -165,6 +166,11 @@ function normalizeCodeKey(value: string): string {
 }
 
 function groupedByExplicitPrefix(list: Code[]): CodeLayout | null {
+  if (list.length > EXPLICIT_PREFIX_SCAN_LIMIT) {
+    // simplify: explicit parent discovery is quadratic; index it if large
+    // no-level code systems need true parent/child grouping instead of buckets.
+    return null;
+  }
   const normalized = list.map((code) => normalizeCodeKey(code.code));
   const claimed = new Set<number>();
   const groups: CodeGroup[] = [];
