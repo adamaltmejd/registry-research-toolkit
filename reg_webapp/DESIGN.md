@@ -1233,12 +1233,13 @@ so the response is always a `kind`-tagged node) and switches on `kind`. The
 **list/browse** nodes — `provider`, `register`, `classification-root` — are NOT
 subjects: they render their child lists inline (with #303/#516 concept-group folding),
 not through `SubjectView`. The three **leaf** kinds each delegate to a per-kind view
-that fills the shell: `binding` → `BindingLeafView`, `classification` →
-`ClassificationLeafView`, and the `concept-group` (served by the fixed
+that fills the shell: `binding` → `BindingLeafView`; ungrouped `classification` →
+`ClassificationLeafView`; grouped or family `classification` → `ClassificationGroupView`
+with the requested edition tab active; and the `concept-group` (served by the fixed
 `/catalog/group/{provider}/{register}/{key}` route, see Catalog router structure above)
-→ `ConceptGroupView`. The classification-umbrella group (served by the fixed
-`/catalog/group/class/{key}` route) is a fourth non-catch-all kind
-(`classification-group`) → `ClassificationGroupView`, its sibling.
+→ `ConceptGroupView`. The classification subject route (served by the fixed
+`/catalog/group/class/{key}` route) returns either `classification-group` or
+`classification-family`, and both render through `ClassificationGroupView`.
 
 Per-kind mapping into the six sections:
 
