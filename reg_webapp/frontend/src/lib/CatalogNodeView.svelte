@@ -224,6 +224,14 @@ const classificationSubjectKey = $derived.by((): string | null => {
   return node.family?.key ?? node.dimensions?.[0]?.key ?? null;
 });
 
+function classificationTabFocusFqid(node: ClassificationNodeData): string {
+  return (
+    node.edition_chain?.find(
+      (edition) => edition.is_self && edition.fqid != null,
+    )?.fqid ?? node.fqid
+  );
+}
+
 // In-memory type-to-filter over the current node's child list (a provider's 238
 // registers / a register's 740 bindings render flat otherwise). Reset on
 // navigation so a new node opens unfiltered. `rankFilter` matches on the leaf
@@ -440,7 +448,7 @@ $effect(() => {
              standalone leaf view. -->
         <ClassificationGroupView
           key={classificationSubjectKey}
-          activeFqid={node.fqid}
+          activeFqid={classificationTabFocusFqid(node)}
           initialActiveNode={node}
         />
       {:else}

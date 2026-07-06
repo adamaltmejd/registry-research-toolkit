@@ -641,4 +641,121 @@ describe("CatalogNodeView classification-root arm (#756)", () => {
       .toHaveAttribute("aria-selected", "true");
     await expect.element(page.getByText("Man")).toBeVisible();
   });
+
+  it("opens classification family aliases on the canonical self edition tab", async () => {
+    vi.mocked(getCatalogNode)
+      .mockResolvedValueOnce({
+        kind: "classification",
+        fqid: "class/ssyk1996-legacy",
+        name: "SSYK 1996",
+        short_name: "SSYK1996",
+        edition_chain: [
+          {
+            slug: "ssyk1996",
+            fqid: "class/ssyk1996",
+            name: "SSYK 1996",
+            effective_year: 2012,
+            version_year: 1996,
+            is_current: false,
+            is_self: true,
+          },
+          {
+            slug: "ssyk2012",
+            fqid: "class/ssyk2012",
+            name: "SSYK 2012",
+            effective_year: null,
+            version_year: 2012,
+            is_current: true,
+            is_self: false,
+          },
+        ],
+        codes: [
+          { code: "1", label: "Older occupation", level: 1, is_valid: true },
+        ],
+        dimensions: [],
+        family: {
+          kind: "classification-family",
+          key: "ssyk",
+          label: "SSYK",
+          editions: [
+            {
+              slug: "ssyk1996",
+              fqid: "class/ssyk1996",
+              name: "SSYK 1996",
+              effective_year: 2012,
+              version_year: 1996,
+              is_current: false,
+              is_self: true,
+            },
+            {
+              slug: "ssyk2012",
+              fqid: "class/ssyk2012",
+              name: "SSYK 2012",
+              effective_year: null,
+              version_year: 2012,
+              is_current: true,
+              is_self: false,
+            },
+          ],
+        },
+        derived_from: [],
+        derivatives: [],
+      } as unknown as CatalogNode)
+      .mockResolvedValueOnce({
+        kind: "classification",
+        fqid: "class/ssyk1996",
+        name: "SSYK 1996",
+        short_name: "SSYK1996",
+        edition_chain: [],
+        codes: [
+          { code: "1", label: "Older occupation", level: 1, is_valid: true },
+        ],
+        dimensions: [],
+        family: null,
+        derived_from: [],
+        derivatives: [],
+      } as unknown as CatalogNode);
+    vi.mocked(getClassificationGroup).mockResolvedValue({
+      kind: "classification-family",
+      key: "ssyk",
+      label: "SSYK",
+      editions: [
+        {
+          slug: "ssyk1996",
+          fqid: "class/ssyk1996",
+          name: "SSYK 1996",
+          effective_year: 2012,
+          version_year: 1996,
+          is_current: false,
+          is_self: true,
+        },
+        {
+          slug: "ssyk2012",
+          fqid: "class/ssyk2012",
+          name: "SSYK 2012",
+          effective_year: null,
+          version_year: 2012,
+          is_current: true,
+          is_self: false,
+        },
+      ],
+    });
+
+    await render(CatalogNodeView, {
+      fqidPath: "class/ssyk1996-legacy",
+      regMetaVersion: "test",
+      steward: "global",
+      windowMinYear: 1960,
+      vintageYear: 2024,
+    });
+
+    await expect
+      .element(page.getByRole("tab", { name: /SSYK 1996/ }))
+      .toHaveAttribute("aria-selected", "true");
+    await expect
+      .element(page.getByRole("tab", { name: /SSYK 2012/ }))
+      .toHaveAttribute("aria-selected", "false");
+    await expect.element(page.getByText("Older occupation")).toBeVisible();
+    expect(getCatalogNode).toHaveBeenLastCalledWith("class/ssyk1996");
+  });
 });
