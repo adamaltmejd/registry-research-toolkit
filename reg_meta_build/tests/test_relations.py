@@ -1938,8 +1938,9 @@ class TestMovedEdges:
         # #875 KSju lgrp → NgGr1 representation-grain succession edge + 1
         # #846 RTB PNR → PersonNr representation-grain rename edge + 2 #846 FRIDA
         # firm-key variant-scoped gap-fill round-trip edges + 1 #376 LISA
-        # register_variant succession edge.
-        assert len(rel.replaced_by) == 52
+        # register_variant succession edge + 3 #1122 LISA FÅMANS KU→AGI source
+        # succession edges.
+        assert len(rel.replaced_by) == 55
         # #508 (615) + #737 (232) = 847 curated same_as identity edges; all
         # variable-grain with a non-empty note; max connected component stays
         # ≤32 FQIDs.
@@ -1959,6 +1960,17 @@ class TestMovedEdges:
         # Spot-check one moved edge of each type.
         assert ("scb/lisa/anninkf", "scb/lisa/anninkf04") in {
             (str(e.predecessor), str(e.successor)) for e in rel.replaced_by
+        }
+        faman_edges = {
+            (str(e.predecessor), str(e.successor), e.effective_year)
+            for e in rel.replaced_by
+            if e.predecessor.register == "lisa"
+            and (e.predecessor.variable or "").endswith("faman")
+        }
+        assert faman_edges == {
+            ("scb/lisa/ku1faman", "scb/lisa/agi1faman", 2019),
+            ("scb/lisa/ku2faman", "scb/lisa/agi2faman", 2019),
+            ("scb/lisa/ku3faman", "scb/lisa/agi3faman", 2019),
         }
         # The #579 1→many classification split: one predecessor, three successors
         # (all three SUN 2000 dimensions), parsed as `class/<slug>` (CLASSIFICATION

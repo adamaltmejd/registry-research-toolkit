@@ -315,6 +315,34 @@ to = "scb/lisa/naringsgren-tredje-storsta-agi-sni2007u"
 effective_year = 2019
 note = "Näringsgren (rank 3, utökad nivå) source switched from kontrolluppgift to arbetsgivardeklaration (AGI) in 2019"
 
+# ── LISA FÅMANS: KU → AGI source switch (#1122) ──
+#    Reproducible derivation: on a real SCB build, group variables by
+#    (register, provider_key, name) and keep groups with both `ku*` and `agi*`
+#    variable slugs that are not already a single coalesced variable timeline and
+#    not already covered by the näringsgren source-switch edges above. The only
+#    remaining split is LISA VarId 16897, rank 1/2/3, with KU rows ending in 2018
+#    and AGI rows beginning in 2019.
+[[edge]]
+type = "replaced_by"
+from = "scb/lisa/ku1faman"
+to = "scb/lisa/agi1faman"
+effective_year = 2019
+note = "FÅMANS (rank 1) source switched from kontrolluppgift to arbetsgivardeklaration (AGI) in 2019"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/lisa/ku2faman"
+to = "scb/lisa/agi2faman"
+effective_year = 2019
+note = "FÅMANS (rank 2) source switched from kontrolluppgift to arbetsgivardeklaration (AGI) in 2019"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/lisa/ku3faman"
+to = "scb/lisa/agi3faman"
+effective_year = 2019
+note = "FÅMANS (rank 3) source switched from kontrolluppgift to arbetsgivardeklaration (AGI) in 2019"
+
 # ── KSju näringsgren: grouped-SNI 2009 column → NgGr1 (#875) ──
 #    The 2009 `lgrp` sibling is the grouped-SNI predecessor of `NgGr1`
 #    (2010–11). This is representation-grain because the succession is between
