@@ -1283,24 +1283,26 @@ kind:
   `clusterBands` (#901) groups the bands under `<h3>` name-cluster headings — each name
   renders once and each band leads with its within-cluster distinguisher (facet,
   delivery column, or member slug) rather than the repeated name. One shared staged diff
-  footer spans all bands; it renders only when something is staged and labels the action
-  by diff shape ("Add to project", "Remove from project", or "Apply changes"). Each
-  picker row is marked with the **kind** of dimension that distinguishes it from its
-  siblings — a `facet` (a #819 `GroupAxis` value, per member), `variant`
-  (variant/population), or `coding` (value-set version label) — and a **per-dimension
-  filter strip** lets the user narrow a large multi-axis group to one axis value (#908,
-  `pickerFilterDimensions` / `pickerRowPasses` / `PickerDimension` in `catalog.ts`). A
-  dimension surfaces as a filter only when it discriminates (≥2 distinct values across
-  all visible rows); single-value dimensions are invisible. Filtering is a client-side
-  presentation lens: a hidden-but-selected row still commits, and the footer signals
-  this. The filter logic mirrors the #819 `ConceptGroupNavigator`: OR within a
-  dimension, AND across. When the group's graph is edge-bearing, small enough to draw
-  cleanly, and maps every selectable graph cell one-to-one to the visible picker rows,
-  the same picker may switch to graph / time-band mode instead of the list. The #908
-  dimension filter strip stays above either render mode; active filters narrow graph
-  cells through the same filtered row model as the compact list. Leaf graph context with
-  no selectable delivery-column row still renders in graph mode as unavailable context
-  cells, so no-column bindings keep their succession/group context.
+  footer spans all bands; it is always rendered from first paint (so its presence never
+  shifts the layout), with its Apply/Reset controls disabled — or hidden where nothing
+  is actionable — until something is staged, and it labels the action by diff shape
+  ("Add to project", "Remove from project", or "Apply changes"). Each picker row is
+  marked with the **kind** of dimension that distinguishes it from its siblings — a
+  `facet` (a #819 `GroupAxis` value, per member), `variant` (variant/population), or
+  `coding` (value-set version label) — and a **per-dimension filter strip** lets the
+  user narrow a large multi-axis group to one axis value (#908, `pickerFilterDimensions`
+  / `pickerRowPasses` / `PickerDimension` in `catalog.ts`). A dimension surfaces as a
+  filter only when it discriminates (≥2 distinct values across all visible rows);
+  single-value dimensions are invisible. Filtering is a client-side presentation lens: a
+  hidden-but-selected row still commits, and the footer signals this. The filter logic
+  mirrors the #819 `ConceptGroupNavigator`: OR within a dimension, AND across. When the
+  group's graph is edge-bearing, small enough to draw cleanly, and maps every selectable
+  graph cell one-to-one to the visible picker rows, the same picker may switch to graph
+  / time-band mode instead of the list. The #908 dimension filter strip stays above
+  either render mode; active filters narrow graph cells through the same filtered row
+  model as the compact list. Leaf graph context with no selectable delivery-column row
+  still renders in graph mode as unavailable context cells, so no-column bindings keep
+  their succession/group context.
 
   Two **succession-collapse** folds ship in #902, both client-side and purely
   presentational:

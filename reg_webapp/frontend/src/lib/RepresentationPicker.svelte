@@ -2159,7 +2159,12 @@ function codingsVaryHref(
   {:else if stage === "staged-add"}
     <Tag tone="ok">
       {#snippet glyph()}{rowStageGlyph(stage)}{/snippet}
-      {rowStageLabel(stage)}
+      <!-- Visible text stays compact ("1 Column", #1115 row-height fix), but the
+           "+" glyph is aria-hidden, so a visually-hidden prefix restores the
+           pending-action status in the checkbox's accessible name. The visible
+           label keeps its own wrapping span so it remains an exact-text element
+           (the a11y prefix would otherwise fold into the tag's text). -->
+      <span class="visually-hidden">Will be added, </span><span>{rowStageLabel(stage)}</span>
     </Tag>
   {:else}
     <Tag tone="warn">
@@ -2903,6 +2908,12 @@ function codingsVaryHref(
                         .join(" · ")}</span
                     >
                   {/if}
+                  <!-- simplify: nested/grouped rows still grow a line when staged
+                       (stageTag renders as a stacked sibling in `.row-main`'s
+                       flex-column here, unlike the single-column `.primary-line`
+                       inline path) — #1115 only fixes the single-column case.
+                       Upgrade trigger: fix when a nested-row layout pass touches
+                       this structure, or on a follow-up report. -->
                   {#if stage !== "none"}
                     {@render stageTag(stage)}
                   {/if}

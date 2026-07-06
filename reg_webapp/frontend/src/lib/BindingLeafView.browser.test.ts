@@ -17,6 +17,10 @@ import {
   getRelatedDocuments,
 } from "./api";
 import BindingLeafView from "./BindingLeafView.svelte";
+import {
+  expectApplyDisabled,
+  expectStagedAddColumnVisible,
+} from "./picker-test-helpers";
 import { projectStore } from "./project_store.svelte";
 import { router } from "./router.svelte";
 import { windowStore } from "./window.svelte";
@@ -970,9 +974,7 @@ describe("BindingLeafView representation picker (#678)", () => {
     });
 
     await page.getByRole("checkbox", { name: /Kon/ }).click();
-    await expect
-      .element(page.getByText("1 Column", { exact: true }))
-      .toBeVisible();
+    await expectStagedAddColumnVisible();
     const apply = page.getByRole("button", {
       name: /Add to project|Remove from project|Apply changes/,
     });
@@ -982,9 +984,7 @@ describe("BindingLeafView representation picker (#678)", () => {
     projectStore.updateField("name", "edited during apply");
     resolveFetch();
 
-    await expect
-      .element(page.getByText("1 Column", { exact: true }))
-      .toBeVisible();
+    await expectStagedAddColumnVisible();
     await expect.element(page.getByText("+1 column")).toBeVisible();
     expect(projectStore.draft?.sources).toHaveLength(0);
     expect(projectStore.draft?.name).toBe("edited during apply");
@@ -1065,13 +1065,7 @@ describe("BindingLeafView representation picker (#678)", () => {
     await expect
       .element(page.getByText("No staged changes"))
       .not.toBeInTheDocument();
-    await expect
-      .element(
-        page.getByRole("button", {
-          name: /Add to project|Remove from project|Apply changes/,
-        }),
-      )
-      .toBeDisabled();
+    await expectApplyDisabled();
 
     expect(projectStore.draft?.sources[0]?.period).toEqual({
       from: 2010,
@@ -1108,13 +1102,7 @@ describe("BindingLeafView representation picker (#678)", () => {
     await expect
       .element(page.getByText("No staged changes"))
       .not.toBeInTheDocument();
-    await expect
-      .element(
-        page.getByRole("button", {
-          name: /Add to project|Remove from project|Apply changes/,
-        }),
-      )
-      .toBeDisabled();
+    await expectApplyDisabled();
     expect(projectStore.draft?.sources[0]?.period).toEqual({
       from: 2010,
       to: 2015,
