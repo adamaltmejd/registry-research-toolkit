@@ -11,6 +11,7 @@ import {
   catalogHref,
   clusterBands,
   encodeCodesParam,
+  facetAxisStyle,
   facetLabelJoin,
   leafSlug,
   type PickerDimension,
@@ -1866,13 +1867,12 @@ function graphLaneA11y(rn: RenderNode): string {
     .join("; ");
 }
 
-/** A row's facet DIMENSION markers (#908): one `{ axis, value }` per declared axis
- * the row's column carries a facet on (axis = the curator label, value = the facet
- * label), in `axes` order. Generalizes the quiet single facet line into an
- * axis-named marker so the user sees WHAT KIND of dimension (e.g. "Hushållsbegrepp:
- * Individ") distinguishes the row. Empty for a row with no structured facets (the
- * binding leaf, or an axis-less group) — the existing `facetByColumn` line still
- * renders there. */
+/** A row's facet DIMENSION markers (#908/#1121): one `{ axis, value }` per declared
+ * axis the row's column carries a facet on (axis = the curator label, value = the
+ * facet label), in `axes` order. The visible pill is value-only; the axis name
+ * supplies both deterministic color and a screen-reader/title label. Empty for a
+ * row with no structured facets (the binding leaf, or an axis-less group) — the
+ * existing `facetByColumn` line still renders there. */
 function rowFacetMarkers(
   band: PickerBand,
   column: string,
@@ -2197,15 +2197,18 @@ function codingsVaryHref(
   >
 {/snippet}
 
-<!-- One dimension FILTER fieldset (#908): a tracked micro-label naming the dimension
-     KIND (an axis label, "Population", or "Coding") over its pill-checkboxes. The
-     pills reuse the #819 navigator pattern — a visually-hidden native checkbox
-     (keyboard + a11y + labelled) under a selectable accent chip — so axis identity is
-     carried by TEXT (the legend), never hue. Multi-select within a dimension (OR),
-     AND across dimensions. Filter-only: it narrows the visible rows, never the
-     selection or the commit. -->
+<!-- One dimension FILTER fieldset (#908/#1121): a tracked micro-label naming the
+     dimension KIND (an axis label, "Population", or "Coding") over value-only
+     pill-checkboxes. Facet dimensions carry a deterministic axis tint so values from
+     the same axis read as one family; non-facet row dimensions stay neutral.
+     Multi-select within a dimension (OR), AND across dimensions. Filter-only: it
+     narrows the visible rows, never the selection or the commit. -->
 {#snippet dimFilter(dim: PickerDimension)}
-  <fieldset class="dim-filter">
+  <fieldset
+    class="dim-filter"
+    class:facet-axis={dim.kind === "facet"}
+    style={dim.kind === "facet" ? facetAxisStyle(dim.axis ?? dim.key) : undefined}
+  >
     <legend>
       <span class="dim-kind">{dim.label}</span>
     </legend>
@@ -2223,6 +2226,18 @@ function codingsVaryHref(
       {/each}
     </div>
   </fieldset>
+{/snippet}
+
+{#snippet facetMarker(m: { name: string; axis: string; value: string })}
+  <span
+    class="facet-marker"
+    style={facetAxisStyle(m.name)}
+    title={`${m.axis}: ${m.value}`}
+    aria-label={`${m.axis}: ${m.value}`}
+  >
+    <span class="visually-hidden">{m.axis}: </span>
+    <span class="facet-value">{m.value}</span>
+  </span>
 {/snippet}
 
 {#snippet graphPicker()}
@@ -2423,10 +2438,7 @@ function codingsVaryHref(
                               {#if facetMarkers.length > 0}
                                 <span class="facet-markers graph-facet-markers">
                                   {#each facetMarkers as m (m.name)}
-                                    <span class="facet-marker"
-                                      ><span class="dim-kind facet">{m.axis}</span
-                                      >{m.value}</span
-                                    >
+                                    {@render facetMarker(m)}
                                   {/each}
                                 </span>
                               {/if}
@@ -2598,10 +2610,9 @@ function codingsVaryHref(
           {@const facet = v.primaryIsFacet
             ? undefined
             : band.facetByColumn?.[row.column]}
-          <!-- #908: the row's structured facet DIMENSION markers (axis label : value).
-               When the band carries declared-axis facets, mark each row with its axis
-               so the dimension TYPE is legible; this generalizes the single `facet`
-               line above. Empty for the leaf / axis-less group (the `facet` line stays). -->
+          <!-- #908/#1121: structured facet DIMENSION markers. Each visible pill shows
+               only the value label; the stable axis name drives color and hidden/title
+               text. Empty for the leaf / axis-less group (the `facet` line stays). -->
           {@const facetMarkers = rowFacetMarkers(band, row.column)}
           <!-- A single-column variable = ONE selectable row, led by the variable's
                distinguishing identity (the leaf ≈ one-variable group case). The row is a
@@ -2660,16 +2671,12 @@ function codingsVaryHref(
                     {@render stageTag(stage)}
                   {/if}
                 </span>
-                <!-- #908: the per-axis facet markers — each an axis-named dimension
-                     marker (e.g. "Hushållsbegrepp: Individ") so the user sees what KIND
-                     of dimension distinguishes the row. -->
+                <!-- #908/#1121: per-axis facet value pills. The hidden/title axis label
+                     and tint preserve which dimension distinguishes the row. -->
                 {#if facetMarkers.length > 0}
                   <span class="facet-markers">
                     {#each facetMarkers as m (m.name)}
-                      <span class="facet-marker"
-                        ><span class="dim-kind facet">{m.axis}</span
-                        >{m.value}</span
-                      >
+                      {@render facetMarker(m)}
                     {/each}
                   </span>
                 {/if}
@@ -2873,22 +2880,24 @@ function codingsVaryHref(
                   onchange={() => toggleRow(band, row)}
                 />
                 <span class="row-main">
-                  {#if label?.primary.mono}
-                    <!-- A mono primary here is the varying DELIVERY COLUMN → chip (NOT a
-                         link — these columns aren't separate variables). -->
-                    {@render colChip(label.primary.text)}
-                  {:else}
-                    <span class="primary">{label?.primary.text}</span>
-                  {/if}
-                  <!-- #908: the per-axis facet dimension markers (axis label : value)
-                       so a multi-axis column reads its dimension TYPE at a glance. -->
+                  <span class="primary-line">
+                    {#if label?.primary.mono}
+                      <!-- A mono primary here is the varying DELIVERY COLUMN → chip (NOT
+                           a link — these columns aren't separate variables). -->
+                      {@render colChip(label.primary.text)}
+                    {:else}
+                      <span class="primary">{label?.primary.text}</span>
+                    {/if}
+                    {#if stage !== "none"}
+                      {@render stageTag(stage)}
+                    {/if}
+                  </span>
+                  <!-- #908/#1121: per-axis facet value pills. The hidden/title axis
+                       label and tint preserve the dimension family. -->
                   {#if facetMarkers.length > 0}
                     <span class="facet-markers">
                       {#each facetMarkers as m (m.name)}
-                        <span class="facet-marker"
-                          ><span class="dim-kind facet">{m.axis}</span
-                          >{m.value}</span
-                        >
+                        {@render facetMarker(m)}
                       {/each}
                     </span>
                   {/if}
@@ -2907,15 +2916,6 @@ function codingsVaryHref(
                         .filter(Boolean)
                         .join(" · ")}</span
                     >
-                  {/if}
-                  <!-- simplify: nested/grouped rows still grow a line when staged
-                       (stageTag renders as a stacked sibling in `.row-main`'s
-                       flex-column here, unlike the single-column `.primary-line`
-                       inline path) — #1115 only fixes the single-column case.
-                       Upgrade trigger: fix when a nested-row layout pass touches
-                       this structure, or on a follow-up report. -->
-                  {#if stage !== "none"}
-                    {@render stageTag(stage)}
                   {/if}
                   {@render renameHint(row.renamedColumns)}
                 </span>
@@ -3353,8 +3353,7 @@ function codingsVaryHref(
   }
   /* The dimension-KIND eyebrow: a tracked uppercase micro-label naming the dimension
      (an axis label, "Population", or "Coding"). The design system's hierarchy device
-     — it reads as a section label, not a value. Reused as the per-row facet-marker
-     axis prefix so the marking and the filter legend share one visual language. */
+     — it reads as a section label, not a value. */
   .dim-kind {
     font-size: var(--text-micro);
     letter-spacing: 0.04em;
@@ -3384,11 +3383,28 @@ function codingsVaryHref(
     background: var(--surface);
     color: var(--text);
   }
+  .dim-filter.facet-axis {
+    border-color: color-mix(in srgb, var(--facet-axis-hue) 30%, transparent);
+    background: color-mix(in srgb, var(--facet-axis-hue) 5%, var(--surface));
+  }
+  .dim-filter.facet-axis .dim-kind {
+    color: var(--facet-axis-ink);
+  }
+  .dim-filter.facet-axis .filter-pill {
+    border-color: color-mix(in srgb, var(--facet-axis-hue) 30%, transparent);
+    background: color-mix(in srgb, var(--facet-axis-hue) 10%, var(--surface));
+    color: var(--facet-axis-ink);
+  }
   .filter-pill.on {
     background: var(--accent-bg);
     border-color: var(--accent);
     color: var(--accent-ink);
     font-weight: 600;
+  }
+  .dim-filter.facet-axis .filter-pill.on {
+    border-color: color-mix(in srgb, var(--facet-axis-hue) 60%, transparent);
+    background: color-mix(in srgb, var(--facet-axis-hue) 22%, var(--surface));
+    color: var(--facet-axis-ink);
   }
   /* Keyboard focus ring on the (hidden) input projects onto its pill label. */
   .filter-pill:focus-within {
@@ -3430,23 +3446,28 @@ function codingsVaryHref(
     font-size: var(--text-sm);
     color: var(--text-muted);
   }
-  /* The per-row facet dimension markers (#908): one axis-named marker per declared
-     axis the row carries, sitting in the quiet sub-context line. Each pairs the
-     uppercase axis eyebrow (`.dim-kind`) with the facet value, so a multi-axis row
-     reads "HUSHÅLLSBEGREPP Individ · KAPITALVINST Inkl." — the dimension type made
-     legible, not just the value. */
+  /* The per-row facet dimension markers (#908/#1121): value-only pills in the
+     quiet sub-context line. Axis identity rides on a deterministic muted tint
+     (with a hidden/title axis label for assistive tech), so multi-axis rows read
+     "Individ · Inkl." visually while same-axis values share a color family. */
   .facet-markers {
     display: flex;
     flex-wrap: wrap;
-    align-items: baseline;
-    gap: var(--space-1) var(--space-3);
+    align-items: center;
+    gap: var(--space-1);
     font-size: var(--text-sm);
     color: var(--text-muted);
   }
   .facet-marker {
     display: inline-flex;
-    align-items: baseline;
-    gap: var(--space-1);
+    align-items: center;
+    padding: 0.08rem 0.45rem;
+    border: 1px solid color-mix(in srgb, var(--facet-axis-hue) 35%, transparent);
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--facet-axis-hue) 11%, var(--surface));
+    color: var(--facet-axis-ink);
+    font-weight: 500;
+    line-height: 1.15;
     overflow-wrap: anywhere;
   }
 

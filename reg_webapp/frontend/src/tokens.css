@@ -208,6 +208,16 @@
   --cat-class: #7a3f8c; /* plum — classifications */
   --cat-group: #2f6b3f; /* moss — concept groups */
 
+  /* Facet-axis data palette — concept-group dimensions, NOT node type, status,
+     or brand chrome. Muted hues let rows/pills show "same axis family" without
+     colliding with selection or validation semantics. */
+  --facet-axis-0: #4f6f8f; /* steel */
+  --facet-axis-1: #6f7c3f; /* olive */
+  --facet-axis-2: #8a5f88; /* mauve */
+  --facet-axis-3: #9a6a42; /* clay */
+  --facet-axis-4: #4f8074; /* sea */
+  --facet-axis-5: #6b6794; /* slate-indigo */
+
   /* ════════════════════════════════════════════════════════════════════════
      LAYER 2 — SEMANTIC ROLES (the layer components consume)
      ════════════════════════════════════════════════════════════════════════ */
@@ -253,6 +263,16 @@
   --cat-code-ink: color-mix(in srgb, var(--cat-code) 85%, black);
   --cat-class-ink: color-mix(in srgb, var(--cat-class) 85%, black);
   --cat-group-ink: color-mix(in srgb, var(--cat-group) 85%, black);
+
+  /* Facet-axis TEXT stops. Components use these paired with the raw facet-axis
+     hue for tint/border, mirroring categorical tags but keeping facet data in a
+     separate sub-system from node-type identity. */
+  --facet-axis-0-ink: color-mix(in srgb, var(--facet-axis-0) 78%, black);
+  --facet-axis-1-ink: color-mix(in srgb, var(--facet-axis-1) 78%, black);
+  --facet-axis-2-ink: color-mix(in srgb, var(--facet-axis-2) 78%, black);
+  --facet-axis-3-ink: color-mix(in srgb, var(--facet-axis-3) 78%, black);
+  --facet-axis-4-ink: color-mix(in srgb, var(--facet-axis-4) 78%, black);
+  --facet-axis-5-ink: color-mix(in srgb, var(--facet-axis-5) 78%, black);
 
   /* Data-viz EDGE encoding (#810) — graph-relation marks, NOT chrome. The
      history graph draws relationship edges between nodes; an edge is DATA, so
@@ -355,4 +375,16 @@ body {
      history graph's edges stay legible the moment the dark seam fills in). The
      succession steel lifts toward a brighter sky tone. */
   --viz-edge-succession: #7ba3c4;
+  --facet-axis-0: #8fb2d1;
+  --facet-axis-1: #aebd72;
+  --facet-axis-2: #d0a4cc;
+  --facet-axis-3: #d0a072;
+  --facet-axis-4: #8fc5b9;
+  --facet-axis-5: #aaa7d0;
+  --facet-axis-0-ink: #d7e9f5;
+  --facet-axis-1-ink: #edf3c6;
+  --facet-axis-2-ink: #f4dcf1;
+  --facet-axis-3-ink: #f3dfc8;
+  --facet-axis-4-ink: #d7f0eb;
+  --facet-axis-5-ink: #e5e3f5;
 }

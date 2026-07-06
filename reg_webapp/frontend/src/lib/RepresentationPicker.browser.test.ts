@@ -9,6 +9,7 @@ import type {
   VariableGraphNode,
 } from "./api";
 import {
+  facetAxisStyle,
   type PickerRepresentation,
   type PickerStateInput,
   pickerRepresentations,
@@ -203,6 +204,10 @@ function clickFilter(value: string): void {
     throw new Error(`filter pill not found: ${value}`);
   }
   pill.click();
+}
+
+function styleAttr(el: HTMLElement): string {
+  return (el.getAttribute("style") ?? "").replace(/;$/, "");
 }
 
 describe("RepresentationPicker graph mode (#904)", () => {
@@ -2668,9 +2673,30 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
       (l) => l.textContent?.trim(),
     );
     expect(legends).toEqual(["Enhet", "Hushallsbegrepp"]);
-    // Each row is marked with its axis dimension markers (axis label + value).
-    const markers = document.querySelector(".col-row .facet-markers");
-    expect(markers?.textContent).toContain("Individ");
+    const fieldsets = [
+      ...document.querySelectorAll<HTMLElement>(".dim-filter"),
+    ];
+    expect(fieldsets.every((el) => el.classList.contains("facet-axis"))).toBe(
+      true,
+    );
+    expect(styleAttr(fieldsets[0])).toBe(facetAxisStyle("enhet"));
+    expect(styleAttr(fieldsets[1])).toBe(facetAxisStyle("hush"));
+    expect(styleAttr(fieldsets[0])).not.toBe(styleAttr(fieldsets[1]));
+
+    // Each row is marked with value-only facet pills; the axis rides as aria/title
+    // text and the same deterministic tint used by the matching filter fieldset.
+    const markers = [
+      ...document.querySelectorAll<HTMLElement>(
+        ".col-row .facet-markers .facet-marker",
+      ),
+    ];
+    expect(
+      markers.map((m) => m.querySelector(".facet-value")?.textContent?.trim()),
+    ).toContain("Individ");
+    expect(markers[0].querySelector(".dim-kind")).toBeNull();
+    expect(markers[0].getAttribute("aria-label")).toBe("Enhet: Individ");
+    expect(markers[0].getAttribute("title")).toBe("Enhet: Individ");
+    expect(styleAttr(markers[0])).toBe(facetAxisStyle("enhet"));
   });
 
   it("renders global select-all as an integrated row with selected and indeterminate states", async () => {
@@ -2862,6 +2888,38 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
     await expect
       .element(page.getByRole("checkbox", { name: /Will be added/ }))
       .toBeVisible();
+  });
+
+  it("keeps nested row height stable when staging a pick (#1127)", async () => {
+    render(RepresentationPicker, {
+      bands: [multiAxisBand()],
+      axes: AXES,
+      ...PROPS,
+    });
+
+    const rowEl = await vi.waitFor(() => {
+      const el = document.querySelector<HTMLElement>(
+        ".col-row.nested .row-btn",
+      );
+      if (!el) {
+        throw new Error("nested row not yet rendered");
+      }
+      return el;
+    });
+    const rowMain = rowEl.querySelector<HTMLElement>(".row-main");
+    const before = rowEl.getBoundingClientRect().height;
+
+    rowEl.querySelector<HTMLInputElement>("input.cbox")?.click();
+
+    await expectStagedAddColumnVisible();
+    const after = rowEl.getBoundingClientRect().height;
+    expect(after).toBeLessThanOrEqual(before + 1);
+    expect(rowEl.querySelector(".primary-line .tag")).not.toBeNull();
+    expect(
+      [...(rowMain?.children ?? [])].some((child) =>
+        child.classList.contains("tag"),
+      ),
+    ).toBe(false);
   });
 
   it("stages selectable superseded predecessor rows from the history disclosure (#926)", async () => {

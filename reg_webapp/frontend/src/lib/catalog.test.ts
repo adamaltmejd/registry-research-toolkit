@@ -27,6 +27,8 @@ import {
   deriveType,
   distinctValueSets,
   encodeCodesParam,
+  facetAxisStyle,
+  facetAxisTone,
   facetLabelJoin,
   foldText,
   formatDataType,
@@ -1284,6 +1286,21 @@ describe("facetLabelJoin", () => {
   it("returns a single facet's label unchanged and '' for none", () => {
     expect(facetLabelJoin([{ label: "KU" }])).toBe("KU");
     expect(facetLabelJoin([])).toBe("");
+  });
+});
+
+describe("facetAxisTone / facetAxisStyle", () => {
+  it("maps a stable axis name to a deterministic bounded facet tone", () => {
+    expect(facetAxisTone("source")).toBe(facetAxisTone("source"));
+    expect(facetAxisTone("source")).toBeGreaterThanOrEqual(0);
+    expect(facetAxisTone("source")).toBeLessThan(6);
+  });
+
+  it("emits the facet-axis token pair consumed by picker pills", () => {
+    const tone = facetAxisTone("source");
+    expect(facetAxisStyle("source")).toBe(
+      `--facet-axis-hue: var(--facet-axis-${tone}); --facet-axis-ink: var(--facet-axis-${tone}-ink)`,
+    );
   });
 });
 

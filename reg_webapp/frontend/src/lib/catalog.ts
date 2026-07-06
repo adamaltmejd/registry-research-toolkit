@@ -299,6 +299,29 @@ export function facetLabelJoin(facets: { label: string }[]): string {
   return facets.map((f) => f.label).join(" · ");
 }
 
+const FACET_AXIS_TONE_COUNT = 6;
+
+/** Deterministically map a stable facet axis name to one muted facet-axis tone.
+ * The axis name, not display order, is the key so the same axis keeps its color
+ * when a group adds/removes another axis. */
+export function facetAxisTone(axis: string): number {
+  let hash = 0;
+  for (let i = 0; i < axis.length; i += 1) {
+    hash = (hash * 31 + axis.charCodeAt(i)) % FACET_AXIS_TONE_COUNT;
+  }
+  return hash;
+}
+
+/** Inline CSS-custom-property bridge for facet-axis pills. Component CSS reads
+ * `--facet-axis-hue` / `--facet-axis-ink`; this helper selects the token pair. */
+export function facetAxisStyle(axis: string): string {
+  const tone = facetAxisTone(axis);
+  return [
+    `--facet-axis-hue: var(--facet-axis-${tone})`,
+    `--facet-axis-ink: var(--facet-axis-${tone}-ink)`,
+  ].join("; ");
+}
+
 function singleDeliveryColumnName(focus: VariableGraphNode): string | null {
   const columns = new Set(
     focus.states
