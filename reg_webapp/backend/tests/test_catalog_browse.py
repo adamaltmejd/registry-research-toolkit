@@ -748,6 +748,36 @@ def test_classification_leaf_embeds_dimension_cross_reference(client):
     assert {"class/sun2020", "class/niva-test"} <= member_fqids
 
 
+def test_classification_leaf_embeds_family_cross_reference(catalog_db):
+    with sqlite3.connect(catalog_db) as conn:
+        conn.execute(
+            "UPDATE classification SET valid_from = 1997 WHERE slug = 'icd-10-se'"
+        )
+        conn.execute(
+            "INSERT INTO classification "
+            "(short_name, name, slug, valid_from) "
+            "VALUES ('ICD-11-SE', 'ICD-11-SE', 'icd-11-se', 2027)"
+        )
+        conn.execute(
+            "INSERT INTO classification_replaced_by "
+            "(predecessor_slug, successor_slug, effective_year, note) "
+            "VALUES ('icd-10-se', 'icd-11-se', 2027, 'curated:test')"
+        )
+
+    with TestClient(create_app()) as local_client:
+        resp = local_client.get("/api/catalog/class/icd-11-se")
+
+    assert resp.status_code == 200
+    family = resp.json()["family"]
+    assert family["kind"] == "classification-family"
+    assert family["key"] == "icd"
+    assert family["label"] == "ICD"
+    assert [edition["slug"] for edition in family["editions"]] == [
+        "icd-10-se",
+        "icd-11-se",
+    ]
+
+
 def test_classification_leaf_without_codes_or_dimensions_is_empty(client):
     # A classification in no umbrella group and with no codes carries empty lists
     # (the SPA omits both sections). sun1996 is a superseded edition with neither.
@@ -756,6 +786,7 @@ def test_classification_leaf_without_codes_or_dimensions_is_empty(client):
     body = resp.json()
     assert body["codes"] == []
     assert body["dimensions"] == []
+    assert body["family"] is None
 
 
 def test_classification_split_root_edition_chain_fans_out(client):

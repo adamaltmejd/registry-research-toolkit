@@ -4,10 +4,12 @@ import { render } from "vitest-browser-svelte";
 import type {
   ClassificationFamilyNodeData,
   ClassificationGroupNodeData,
+  ClassificationNodeData,
   RelationshipGraph,
 } from "./api";
 import {
   ApiError,
+  getCatalogNode,
   getClassificationGroup,
   getClassificationGroupGraph,
 } from "./api";
@@ -20,6 +22,7 @@ vi.mock("./api", async (importOriginal) => {
   const actual = await importOriginal<typeof import("./api")>();
   return {
     ...actual,
+    getCatalogNode: vi.fn(),
     getClassificationGroup: vi.fn(),
     getClassificationGroupGraph: vi.fn(),
   };
@@ -83,6 +86,23 @@ function familyNode(
   } as unknown as ClassificationFamilyNodeData;
 }
 
+function classificationNode(
+  overrides: Partial<ClassificationNodeData> = {},
+): ClassificationNodeData {
+  return {
+    kind: "classification",
+    fqid: "class/sun2020",
+    name: "SUN 2020",
+    short_name: "SUN2020",
+    edition_chain: [],
+    codes: [{ code: "1", label: "Man", level: 1, is_valid: true }],
+    dimensions: [],
+    derived_from: [],
+    derivatives: [],
+    ...overrides,
+  } as unknown as ClassificationNodeData;
+}
+
 function groupGraph(): RelationshipGraph {
   return {
     nodes: [
@@ -132,8 +152,10 @@ function groupGraph(): RelationshipGraph {
 }
 
 beforeEach(() => {
+  vi.mocked(getCatalogNode).mockReset();
   vi.mocked(getClassificationGroup).mockReset();
   vi.mocked(getClassificationGroupGraph).mockReset();
+  vi.mocked(getCatalogNode).mockResolvedValue(classificationNode());
   vi.mocked(getClassificationGroupGraph).mockResolvedValue({
     nodes: [],
     edges: [],
@@ -144,7 +166,7 @@ beforeEach(() => {
 });
 
 describe("ClassificationGroupView (#756)", () => {
-  it("renders the umbrella label + members as facet-labelled links to leaf FQIDs", async () => {
+  it("renders the umbrella label + members as edition tabs", async () => {
     vi.mocked(getClassificationGroup).mockResolvedValue(node());
 
     await render(ClassificationGroupView, { key: "sun" });
@@ -159,13 +181,14 @@ describe("ClassificationGroupView (#756)", () => {
       )
       .toBeVisible();
     // Members are labelled by their facet ("Utbildningsnivå" / "Aggregat") and
-    // link to their classification leaf FQIDs.
+    // rendered as tabs. The selected tab's codes are fetched lazily.
     await expect
-      .element(page.getByRole("link", { name: "Utbildningsnivå" }))
-      .toHaveAttribute("href", "/catalog/class/sun2020");
+      .element(page.getByRole("tab", { name: /Utbildningsnivå/ }))
+      .toBeVisible();
     await expect
-      .element(page.getByRole("link", { name: "Aggregat" }))
-      .toHaveAttribute("href", "/catalog/class/niva-test");
+      .element(page.getByRole("tab", { name: /Aggregat/ }))
+      .toBeVisible();
+    await expect.element(page.getByText("Man")).toBeVisible();
   });
 
   it("demotes key + source into a 'Technical details' disclosure, OMITTING the Facets row when axis-less", async () => {
@@ -218,11 +241,23 @@ describe("ClassificationGroupView (#756)", () => {
     expect(document.querySelector(".edition-edge-year")?.textContent).toBe(
       "2020",
     );
+    await expect
+      .element(page.getByRole("tab", { name: /Utbildningsnivå/ }))
+      .toHaveAttribute("aria-selected", "true");
+    expect(getCatalogNode).toHaveBeenCalledWith("class/sun2020");
     expect(document.body.textContent).not.toContain("group:sun");
   });
 
   it("renders a succession family as an edition-chain subject page", async () => {
     vi.mocked(getClassificationGroup).mockResolvedValue(familyNode());
+    vi.mocked(getCatalogNode).mockResolvedValue(
+      classificationNode({
+        fqid: "class/ssyk2012",
+        name: "SSYK 2012",
+        short_name: "SSYK2012",
+        codes: [{ code: "9", label: "Yrke", level: 1, is_valid: true }],
+      }),
+    );
 
     await render(ClassificationGroupView, { key: "ssyk" });
 
@@ -230,12 +265,35 @@ describe("ClassificationGroupView (#756)", () => {
       .element(page.getByRole("heading", { name: "SSYK", level: 2 }))
       .toBeVisible();
     await expect
-      .element(page.getByRole("link", { name: /SSYK 1996/ }))
-      .toHaveAttribute("href", "/catalog/class/ssyk1996");
+      .element(page.getByRole("tab", { name: /SSYK 1996/ }))
+      .toBeVisible();
     await expect
-      .element(page.getByRole("link", { name: /SSYK 2012/ }))
-      .toHaveAttribute("href", "/catalog/class/ssyk2012");
+      .element(page.getByRole("tab", { name: /SSYK 2012/ }))
+      .toHaveAttribute("aria-selected", "true");
     await expect.element(page.getByText(/ssyk2012 - current/)).toBeVisible();
+    await expect.element(page.getByText("Yrke")).toBeVisible();
     expect(getClassificationGroupGraph).not.toHaveBeenCalled();
+  });
+
+  it("uses the active member FQID without re-fetching the initial classification node", async () => {
+    const active = classificationNode({
+      fqid: "class/niva-test",
+      name: "Nivå aggregat",
+      short_name: "NIVA",
+      codes: [{ code: "A", label: "Aggregatnivå", level: 1, is_valid: true }],
+    });
+    vi.mocked(getClassificationGroup).mockResolvedValue(node());
+
+    await render(ClassificationGroupView, {
+      key: "sun",
+      activeFqid: "class/niva-test",
+      initialActiveNode: active,
+    });
+
+    await expect
+      .element(page.getByRole("tab", { name: /Aggregat/ }))
+      .toHaveAttribute("aria-selected", "true");
+    await expect.element(page.getByText("Aggregatnivå")).toBeVisible();
+    expect(getCatalogNode).not.toHaveBeenCalled();
   });
 });

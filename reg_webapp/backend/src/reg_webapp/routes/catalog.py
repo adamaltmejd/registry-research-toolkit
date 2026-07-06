@@ -748,8 +748,12 @@ def _classification_node(
     # ty 0.0.54 sees the workspace reg_meta surface without these new Pydantic
     # fields here, even though runtime/OpenAPI generation resolve them correctly.
     resolved_with_derivation = cast("Any", resolved)
+    family = cast("Any", catalog).classification_family_for_fqid(resolved.fqid)
     return node.model_copy(
         update={
+            "family": _classification_family_node(family)
+            if family is not None
+            else None,
             "derived_from": list(resolved_with_derivation.derived_from),
             "derivatives": list(resolved_with_derivation.derivatives),
         }

@@ -1,14 +1,20 @@
 <script lang="ts">
+import { Tabs } from "bits-ui";
 import {
   type ClassificationFamilyNodeData,
+  type ClassificationGraphNode,
   type ClassificationGroupNodeData,
+  type ClassificationNodeData,
+  getCatalogNode,
   getClassificationGroup,
   getClassificationGroupGraph,
   type RelationshipGraph,
 } from "./api";
 import { asyncResource } from "./async.svelte";
+import ClassificationCodesPanel from "./ClassificationCodesPanel.svelte";
 import ClassificationEditionGraph from "./ClassificationEditionGraph.svelte";
-import { catalogHref, leafSlug, memberKey } from "./catalog";
+import { catalogHref, leafSlug, narrowCatalogNode } from "./catalog";
+import { router } from "./router.svelte";
 import SubjectView from "./SubjectView.svelte";
 import TechnicalDetails from "./TechnicalDetails.svelte";
 
@@ -28,7 +34,13 @@ import TechnicalDetails from "./TechnicalDetails.svelte";
 // are axis-less, so there is no shared group facet axis). The loading / error arms
 // stay OUTSIDE the shell (the shell is the success body). Identity is carried by the
 // #803 topbar trail + the page <h2> (SubjectView title), not an in-page breadcrumb.
-let { key }: { key: string } = $props();
+interface Props {
+  key: string;
+  activeFqid?: string | null;
+  initialActiveNode?: ClassificationNodeData | null;
+}
+
+let { key, activeFqid = null, initialActiveNode = null }: Props = $props();
 
 const resource = asyncResource(() => getClassificationGroup(key));
 const node = $derived(resource.data);
@@ -47,6 +59,16 @@ const graphReady = $derived(
   !graphResource.loading && !graphResource.error && graph != null,
 );
 
+interface EditionTab {
+  value: string;
+  fqid: string | null;
+  label: string;
+  name: string;
+  meta: string;
+  versionYear: number | null;
+  isCurrent: boolean;
+}
+
 /** A member's display label: its own curated short facet label (umbrellas are
  * axis-less — each member carries its own picker label, with no shared group
  * axis), falling back to the member name, then its leaf slug. */
@@ -61,7 +83,177 @@ function editionLabel(
 ): string {
   return edition.name ?? edition.slug;
 }
+
+function graphNodeForFqid(fqid: string | null): ClassificationGraphNode | null {
+  if (fqid == null || graph == null) {
+    return null;
+  }
+  return (
+    graph.nodes.find(
+      (item): item is ClassificationGraphNode =>
+        item.kind === "classification" && item.fqid === fqid,
+    ) ?? null
+  );
+}
+
+function memberTab(
+  member: ClassificationGroupNodeData["members"][number],
+): EditionTab {
+  const point = graphNodeForFqid(member.fqid);
+  return {
+    value: member.fqid,
+    fqid: member.fqid,
+    label: memberLabel(member),
+    name: member.name ?? member.fqid,
+    meta: leafSlug(member.fqid),
+    versionYear: point?.version_year ?? null,
+    isCurrent: point?.is_current ?? false,
+  };
+}
+
+function familyTab(
+  edition: ClassificationFamilyNodeData["editions"][number],
+): EditionTab {
+  return {
+    value: edition.fqid ?? `missing:${edition.slug}`,
+    fqid: edition.fqid,
+    label: editionLabel(edition),
+    name: edition.name ?? edition.slug,
+    meta: `${edition.slug}${edition.is_current ? " - current" : ""}`,
+    versionYear: edition.version_year,
+    isCurrent: edition.is_current,
+  };
+}
+
+const tabs = $derived.by((): EditionTab[] => {
+  if (node?.kind === "classification-family") {
+    return node.editions.map(familyTab);
+  }
+  if (node?.kind === "classification-group") {
+    return node.members.map(memberTab);
+  }
+  return [];
+});
+
+function latestTabFqid(tabList: EditionTab[]): string | null {
+  let best: EditionTab | null = null;
+  for (const tab of tabList) {
+    if (tab.fqid == null) {
+      continue;
+    }
+    if (best == null) {
+      best = tab;
+      continue;
+    }
+    const tabYear = tab.versionYear ?? Number.NEGATIVE_INFINITY;
+    const bestYear = best.versionYear ?? Number.NEGATIVE_INFINITY;
+    if (
+      tabYear > bestYear ||
+      (tabYear === bestYear && tab.isCurrent && !best.isCurrent)
+    ) {
+      best = tab;
+    }
+  }
+  return best?.fqid ?? null;
+}
+
+let selectedFqid = $state<string | null>(null);
+const tabSelectionReady = $derived(
+  node?.kind !== "classification-group" || !graphResource.loading,
+);
+
+$effect(() => {
+  const requested =
+    activeFqid != null && tabs.some((tab) => tab.fqid === activeFqid)
+      ? activeFqid
+      : null;
+  if (requested != null) {
+    selectedFqid = requested;
+    return;
+  }
+  if (!tabSelectionReady) {
+    return;
+  }
+  if (selectedFqid == null || !tabs.some((tab) => tab.fqid === selectedFqid)) {
+    selectedFqid = latestTabFqid(tabs);
+  }
+});
+
+const activeNodeResource = asyncResource(async () => {
+  const fqid = selectedFqid;
+  if (fqid == null) {
+    return null;
+  }
+  if (initialActiveNode?.fqid === fqid) {
+    return initialActiveNode;
+  }
+  const resolved = narrowCatalogNode(await getCatalogNode(fqid));
+  if (resolved?.kind !== "classification") {
+    throw new Error(`${fqid} did not resolve to a classification`);
+  }
+  return resolved;
+});
+const activeNode = $derived(activeNodeResource.data);
+const activeNodeHasCodes = $derived((activeNode?.codes ?? []).length > 0);
+const focusedGraph = $derived.by((): RelationshipGraph | null => {
+  if (graph == null || selectedFqid == null) {
+    return graph;
+  }
+  const focus = graphNodeForFqid(selectedFqid);
+  return focus == null ? graph : { ...graph, focus_id: focus.id };
+});
+
+function selectEdition(value: string): void {
+  const tab = tabs.find((item) => item.value === value);
+  if (tab?.fqid == null) {
+    return;
+  }
+  selectedFqid = tab.fqid;
+  router.navigate(catalogHref(tab.fqid));
+}
 </script>
+
+{#snippet valueSet()}
+  {#if tabs.length > 0 && selectedFqid != null}
+    <section class="edition-tabs-section" aria-labelledby="edition-tabs-heading">
+      <h3 id="edition-tabs-heading">Value set</h3>
+      <div class="edition-tabs">
+        <Tabs.Root
+          value={selectedFqid}
+          onValueChange={selectEdition}
+          activationMode="manual"
+          loop
+        >
+          <Tabs.List class="edition-tab-list" aria-label="Classification editions">
+            {#each tabs as tab (tab.value)}
+              <Tabs.Trigger
+                value={tab.value}
+                disabled={tab.fqid == null}
+                class="edition-tab"
+                title={tab.name}
+              >
+                <span class="tab-label">{tab.label}</span>
+                <span class="tab-meta">{tab.meta}</span>
+              </Tabs.Trigger>
+            {/each}
+          </Tabs.List>
+
+          <Tabs.Content value={selectedFqid} class="edition-tab-panel">
+            {#if activeNodeResource.loading}
+              <p class="muted" aria-busy="true">Loading value set…</p>
+            {:else if activeNodeResource.error}
+              <p class="error" role="alert">{activeNodeResource.error}</p>
+            {:else if activeNode && activeNodeHasCodes}
+              <ClassificationCodesPanel node={activeNode} />
+            {:else}
+              <p class="muted">No codes are available for this edition.</p>
+            {/if}
+          </Tabs.Content>
+        </Tabs.Root>
+      </div>
+    </section>
+  {/if}
+{/snippet}
 
 {#if resource.loading}
   <p class="muted" aria-busy="true">Loading…</p>
@@ -85,34 +277,7 @@ function editionLabel(
     </TechnicalDetails>
   {/snippet}
 
-  {#snippet picker()}
-    <section class="member-selector" aria-labelledby="editions-heading">
-      <h3 id="editions-heading">Editions</h3>
-      <ul class="facet-chips">
-        {#each node.editions as edition (edition.slug)}
-          <li>
-            {#if edition.fqid}
-              <a class="chip edition-chip" href={catalogHref(edition.fqid)} title={edition.slug}>
-                <span>{editionLabel(edition)}</span>
-                <span class="edition-meta">
-                  {edition.slug}{edition.is_current ? " - current" : ""}
-                </span>
-              </a>
-            {:else}
-              <span class="chip edition-chip">
-                <span>{editionLabel(edition)}</span>
-                <span class="edition-meta">
-                  {edition.slug}{edition.is_current ? " - current" : ""}
-                </span>
-              </span>
-            {/if}
-          </li>
-        {/each}
-      </ul>
-    </section>
-  {/snippet}
-
-  <SubjectView title={node.label} {description} {picker} />
+  <SubjectView title={node.label} {description} valueSet={valueSet} />
 {:else if node}
   {#snippet description()}
     <!-- Key, axes, and source are build-derivation metadata, not researcher-facing
@@ -134,28 +299,17 @@ function editionLabel(
   {/snippet}
 
   {#snippet picker()}
-    <!-- The member selector: classification umbrellas are axis-less, so each
-         member renders as a chip labelled by its own curated short facet label, a
-         link to its classification leaf FQID. No coverage / availability lens —
-         classifications have no year-grain study window. -->
-    <section class="member-selector" aria-labelledby="members-heading">
-      <h3 id="members-heading">Members</h3>
-      <ul class="facet-chips">
-        {#each node.members as member (memberKey(member))}
-          <li>
-            <a class="chip" href={catalogHref(member.fqid)} title={member.fqid}>
-              {memberLabel(member)}
-            </a>
-          </li>
-        {/each}
-      </ul>
-    </section>
-    {#if graphReady && graph}
-      <ClassificationEditionGraph {graph} />
+    {#if graphReady && focusedGraph}
+      <ClassificationEditionGraph graph={focusedGraph} />
     {/if}
   {/snippet}
 
-  <SubjectView title={`Classification group: ${node.label}`} {description} {picker} />
+  <SubjectView
+    title={`Classification group: ${node.label}`}
+    {description}
+    {picker}
+    valueSet={valueSet}
+  />
 {/if}
 
 <style>
@@ -169,41 +323,82 @@ function editionLabel(
   .meta dt {
     font-weight: 600;
   }
-  /* The member selector mirrors ConceptGroupView's chips shape (copied, not
-     imported — scoped styles don't cross components), minus the coverage /
-     availability decoration classifications don't have. */
-  .facet-chips {
-    list-style: none;
+  .edition-tabs-section {
+    margin: var(--space-4) 0;
+  }
+  .edition-tabs-section h3 {
+    margin: 0 0 var(--space-2);
+    padding-bottom: var(--space-1);
+    border-bottom: 1px solid var(--border);
+    font-size: var(--text-h3);
+  }
+  .edition-tabs :global(.edition-tab-list) {
     display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-2);
-    padding: 0;
-    margin: var(--space-2) 0;
+    align-items: flex-end;
+    gap: 0;
+    max-width: 100%;
+    overflow-x: auto;
+    border-bottom: 1px solid var(--border);
   }
-  /* The chip pill borrows ConceptGroupRow's `.chip` geometry (--border, em-based
-     padding); it keeps the rounded 1rem radius the chips already had. */
-  .chip {
-    display: inline-block;
-    border: 1px solid var(--border);
-    border-radius: 1rem;
-    padding: 0.1em 0.5em;
-    text-decoration: none;
-  }
-  .edition-chip {
+  .edition-tabs :global(.edition-tab) {
+    box-sizing: border-box;
     display: inline-flex;
+    min-width: 8.5rem;
+    max-width: 16rem;
+    flex: 0 0 auto;
     flex-direction: column;
-    gap: 0.05rem;
-    max-width: 24rem;
+    align-items: flex-start;
+    gap: 1px;
+    margin: 0 0 -1px;
+    padding: var(--space-2) var(--space-3);
+    border: 1px solid transparent;
+    border-bottom-color: var(--border);
+    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+    background: transparent;
+    color: var(--text);
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
   }
-  .edition-meta {
+  .edition-tabs :global(.edition-tab:hover:not(:disabled)) {
+    background: var(--surface-hover);
+  }
+  .edition-tabs :global(.edition-tab[data-state="active"]) {
+    border-color: var(--border);
+    border-bottom-color: var(--surface);
+    background: var(--surface);
+  }
+  .edition-tabs :global(.edition-tab:disabled) {
+    color: var(--text-faint);
+    cursor: not-allowed;
+  }
+  .edition-tabs :global(.edition-tab:focus-visible) {
+    outline: none;
+    box-shadow: var(--focus-ring);
+  }
+  .tab-label {
+    max-width: 100%;
+    overflow: hidden;
+    font-weight: 600;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .tab-meta {
+    max-width: 100%;
+    overflow: hidden;
     color: var(--text-muted);
     font-family: var(--font-mono);
     font-size: var(--text-micro);
-    overflow-wrap: anywhere;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
-  /* Keyboard focus on a member chip link: the shared --focus-ring (#808/#828). */
-  .chip:focus-visible {
-    outline: none;
-    box-shadow: var(--focus-ring);
+  .edition-tabs :global(.edition-tab-panel) {
+    padding-top: var(--space-3);
+  }
+  @media (max-width: 48rem) {
+    .edition-tabs :global(.edition-tab) {
+      min-width: 9rem;
+      max-width: 13rem;
+    }
   }
 </style>

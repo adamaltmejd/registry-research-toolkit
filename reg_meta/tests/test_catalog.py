@@ -1391,6 +1391,9 @@ class TestEdgeAccessors:
         ]
         assert [edition.is_current for edition in family.editions] == [False, True]
         assert Catalog(conn).classification_family("sun") is None
+        assert Catalog(conn).classification_family_for_fqid("class/ssyk1996") == family
+        assert Catalog(conn).classification_family_for_fqid("class/ssyk2012") == family
+        assert Catalog(conn).classification_family_for_fqid("class/sun2020") is None
 
     def test_classification_chain_multi_hop_ordered_oldest_first(self) -> None:
         # sun1996 → sun2000 → sun2020 (the live terminal). All three editions are

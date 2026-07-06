@@ -791,6 +791,16 @@
             "title": "Edition Chain",
             "type": "array"
           },
+          "family": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ClassificationFamilyNode"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "fqid": {
             "title": "Fqid",
             "type": "string"

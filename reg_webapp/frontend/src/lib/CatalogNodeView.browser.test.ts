@@ -4,6 +4,8 @@ import { render } from "vitest-browser-svelte";
 import type { CatalogNode } from "./api";
 import {
   getCatalogNode,
+  getClassificationGroup,
+  getClassificationGroupGraph,
   getRegisterVariants,
   getRelatedDocuments,
 } from "./api";
@@ -17,6 +19,8 @@ vi.mock("./api", async (importOriginal) => {
   return {
     ...actual,
     getCatalogNode: vi.fn(),
+    getClassificationGroup: vi.fn(),
+    getClassificationGroupGraph: vi.fn(),
     getRegisterVariants: vi.fn(),
     getRelatedDocuments: vi.fn(),
   };
@@ -184,8 +188,15 @@ function groupedRegisterNode(): CatalogNode {
 
 beforeEach(() => {
   vi.mocked(getCatalogNode).mockReset();
+  vi.mocked(getClassificationGroup).mockReset();
+  vi.mocked(getClassificationGroupGraph).mockReset();
   vi.mocked(getRegisterVariants).mockReset();
   vi.mocked(getRelatedDocuments).mockReset();
+  vi.mocked(getClassificationGroupGraph).mockResolvedValue({
+    nodes: [],
+    edges: [],
+    focus_id: null,
+  });
   vi.mocked(getRegisterVariants).mockResolvedValue({
     register: "scb/lisa",
     variants: [
@@ -566,5 +577,68 @@ describe("CatalogNodeView classification-root arm (#756)", () => {
       .element(page.getByRole("link", { name: "SSYK" }))
       .toHaveAttribute("href", "/catalog/group/class/ssyk");
     await expect.element(page.getByText("ssyk2012")).toBeVisible();
+  });
+
+  it("renders a grouped classification FQID through the canonical group tabs", async () => {
+    vi.mocked(getCatalogNode).mockResolvedValue({
+      kind: "classification",
+      fqid: "class/sun2020",
+      name: "SUN 2020",
+      short_name: "SUN2020",
+      edition_chain: [],
+      codes: [{ code: "1", label: "Man", level: 1, is_valid: true }],
+      dimensions: [
+        {
+          key: "sun",
+          label: "Svensk utbildningsnomenklatur",
+          source: "token",
+          axes: [],
+          members: [
+            {
+              fqid: "class/sun2020",
+              name: "SUN 2020",
+              facets: [{ axis: null, value: "niva", label: "Utbildningsnivå" }],
+            },
+          ],
+        },
+      ],
+      family: null,
+      derived_from: [],
+      derivatives: [],
+    } as unknown as CatalogNode);
+    vi.mocked(getClassificationGroup).mockResolvedValue({
+      kind: "classification-group",
+      key: "sun",
+      label: "Svensk utbildningsnomenklatur",
+      source: "token",
+      axes: [],
+      members: [
+        {
+          fqid: "class/sun2020",
+          name: "SUN 2020",
+          facets: [{ axis: null, value: "niva", label: "Utbildningsnivå" }],
+        },
+      ],
+    });
+
+    await render(CatalogNodeView, {
+      fqidPath: "class/sun2020",
+      regMetaVersion: "test",
+      steward: "global",
+      windowMinYear: 1960,
+      vintageYear: 2024,
+    });
+
+    await expect
+      .element(
+        page.getByRole("heading", {
+          name: "Classification group: Svensk utbildningsnomenklatur",
+        }),
+      )
+      .toBeVisible();
+    await expect
+      .element(page.getByRole("tab", { name: /Utbildningsnivå/ }))
+      .toHaveAttribute("aria-selected", "true");
+    await expect.element(page.getByText("Man")).toBeVisible();
   });
 });
