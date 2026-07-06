@@ -85,6 +85,13 @@ function codeLevel(code: Code): number | null {
     : null;
 }
 
+function normalizeCodeKey(value: string): string {
+  return value
+    .trim()
+    .replace(/[\s./_-]+/g, "")
+    .toLowerCase();
+}
+
 function layoutFor(list: Code[], isFiltering: boolean): CodeLayout {
   if (
     isFiltering ||
@@ -130,27 +137,46 @@ function groupedByLevel(list: Code[]): CodeLayout | null {
   const topLevel = Math.min(...levels);
   const groups: CodeGroup[] = [];
   const singles: Code[] = [];
-  let current: CodeGroup | null = null;
+  const parents: { normalized: string; group: CodeGroup }[] = [];
 
   for (const [index, code] of list.entries()) {
     const level = codeLevel(code);
     if (level === topLevel) {
-      current = {
+      const group = {
         key: `level:${code.code}:${index}`,
         code: code.code,
         label: code.label,
         count: 1,
         children: [],
       };
-      groups.push(current);
+      groups.push(group);
+      parents.push({ normalized: normalizeCodeKey(code.code), group });
+    }
+  }
+
+  for (const code of list) {
+    const level = codeLevel(code);
+    if (level == null || level <= topLevel) {
       continue;
     }
-    if (current == null || level == null || level <= topLevel) {
+    const candidate = normalizeCodeKey(code.code);
+    let parent: (typeof parents)[number] | null = null;
+    for (const entry of parents) {
+      if (
+        entry.normalized.length > 0 &&
+        candidate.length > entry.normalized.length &&
+        candidate.startsWith(entry.normalized) &&
+        (parent == null || entry.normalized.length > parent.normalized.length)
+      ) {
+        parent = entry;
+      }
+    }
+    if (parent == null) {
       singles.push(code);
       continue;
     }
-    current.children.push(code);
-    current.count += 1;
+    parent.group.children.push(code);
+    parent.group.count += 1;
   }
 
   const populated = groups.filter((group) => group.children.length > 0);
@@ -160,13 +186,6 @@ function groupedByLevel(list: Code[]): CodeLayout | null {
       .map((group) => ({ code: group.code, label: group.label })),
   );
   return usefulGroupedLayout(populated, singles, list.length);
-}
-
-function normalizeCodeKey(value: string): string {
-  return value
-    .trim()
-    .replace(/[\s./_-]+/g, "")
-    .toLowerCase();
 }
 
 function isExplicitPrefixParent(prefix: string, candidate: string): boolean {

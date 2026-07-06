@@ -39,6 +39,20 @@ function levelledCodes(): Code[] {
   ];
 }
 
+function interleavedLevelledCodes(): Code[] {
+  return Array.from({ length: 6 }, (_, parent) => parent + 1).flatMap(
+    (parent) => [
+      { code: String(parent), label: `Parent ${parent}`, level: 1 },
+      { code: `${parent}0`, label: `Parent ${parent}0`, level: 1 },
+      ...Array.from({ length: 9 }, (_, child) => ({
+        code: `${parent}${child + 1}`,
+        label: `Child ${parent}${child + 1}`,
+        level: 2,
+      })),
+    ],
+  );
+}
+
 function prefixCodes(): Code[] {
   return [
     ...Array.from({ length: 30 }, (_, i) => ({
@@ -161,6 +175,29 @@ describe("CodeList — unified value-set / code viewer (#638 PR3)", () => {
     await group.click();
     await expect.element(page.getByText("A child 01")).toBeVisible();
     await expect.element(page.getByText("B child 01")).not.toBeInTheDocument();
+  });
+
+  it("assigns levelled children by code parent instead of row order", async () => {
+    await render(CodeList, { codes: interleavedLevelledCodes() });
+    const parent1 = page.getByRole("button", {
+      name: /1\s+Parent 1\s+10 codes/,
+    });
+    const parent2 = page.getByRole("button", {
+      name: /2\s+Parent 2\s+10 codes/,
+    });
+
+    await expect.element(parent1).toBeVisible();
+    await expect.element(parent2).toBeVisible();
+    await expect
+      .element(page.getByRole("button", { name: /10\s+Parent 10\s+10 codes/ }))
+      .not.toBeInTheDocument();
+
+    await parent1.click();
+    await expect.element(page.getByText("Child 11")).toBeVisible();
+    await expect.element(page.getByText("Child 21")).not.toBeInTheDocument();
+
+    await parent2.click();
+    await expect.element(page.getByText("Child 21")).toBeVisible();
   });
 
   it("groups large unlevelled code sets by visible code prefix", async () => {
