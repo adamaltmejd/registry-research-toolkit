@@ -209,7 +209,8 @@ the canonical group/family surface with the requested edition tab active. The ac
 renders the resolved edition as a code/label panel (shared `CodeList` viewer — the same
 component used for the variable value set, with a size-dependent filter: the search box
 appears only when the set reaches the `CODE_FILTER_THRESHOLD`, hidden for small sets;
-#638), and non-active tabs do not fetch their value sets until selected.
+large sets collapse into derived level/prefix groups or a bounded flat preview; #638 /
+#1120), and non-active tabs do not fetch their value sets until selected.
 
 **Variable succession is embedded too (#582).** The binding leaf node carries the **full
 variable succession chain** inline as `succession_chain` (reg_meta's `VariableEdition`,
@@ -1425,9 +1426,11 @@ form when the start is unknown (#658).
   multi-state view (and for the single value set in the detail mode), and
   `ClassificationCodesPanel` for the edition's codes. It owns a **size-dependent
   filter** (a search box appears only at ≥ `CODE_FILTER_THRESHOLD` codes — pointless for
-  a handful) and a height-constrained scroll for the long LISA sets. Classification
-  conformance warnings render on the variable value-set surface, not inside the shared
-  code list.
+  a handful), a height-constrained scroll, and the **large-list collapse** (#1120):
+  levelled classification codes become drillable groups, prefix-shaped sets group by
+  visible code prefix, and genuinely flat sets show a bounded preview with an explicit
+  expand control. Classification conformance warnings render on the variable value-set
+  surface, not inside the shared code list.
 
 - **`TechnicalDetails`** (#638 PR4) — the shared "Technical details" `<details>`
   disclosure that demotes **backend/structural** fields below the user-facing ones. The

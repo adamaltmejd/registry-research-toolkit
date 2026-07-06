@@ -31,8 +31,8 @@ import FilterInput from "./FilterInput.svelte";
 //
 //   length === 1 → single-state DETAIL (variant, validity, value-set version,
 //                  operational definition + the (code, label) table in a
-//                  height-constrained scroll container). Structural fields live
-//                  in BindingLeafView's bottom Technical details disclosure.
+//                  height-constrained / large-list-collapsed container). Structural
+//                  fields live in BindingLeafView's bottom Technical details disclosure.
 //   length  > 1 → a VALUE-SET-centric view (#668 / dogfooding M13/M18/M20):
 //                  the states dedup at TWO levels into DISTINCT value sets
 //                  (classification editions by `classification_slug`, others by
@@ -297,7 +297,7 @@ function usageVariantLabel(variant: string): string | null {
      list row's inline expansion (#310). The shared CodeList (#638 PR3): a
      variable value set is a code→label set, identical to a classification's
      codes, so it renders through the unified viewer (which owns the
-     size-dependent filter + the height-constrained scroll). -->
+     size-dependent filter + large-list collapse). -->
 {#snippet valueSetTable(valueSet: NonNullable<VariableStateModel["value_set"]>)}
   <CodeList
     codes={valueSet}
