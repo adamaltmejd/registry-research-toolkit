@@ -7,13 +7,106 @@ import CodeList from "./CodeList.svelte";
 // BOTH the classification code list and the variable value set; the filter box is
 // size-dependent (hidden below CODE_FILTER_THRESHOLD = 5).
 
-type Code = { code: string; label: string; is_valid?: boolean | null };
+type Code = {
+  code: string;
+  label: string;
+  is_valid?: boolean | null;
+  level?: number | null;
+};
 
 // A list of N codes labelled "Code 1".."Code N" — enough to cross the threshold.
 function codes(n: number): Code[] {
   return Array.from({ length: n }, (_, i) => ({
     code: String(i + 1),
     label: `Code ${i + 1}`,
+  }));
+}
+
+function levelledCodes(): Code[] {
+  return [
+    { code: "A", label: "Chapter A", level: 1 },
+    ...Array.from({ length: 25 }, (_, i) => ({
+      code: `A${String(i + 1).padStart(2, "0")}`,
+      label: `A child ${String(i + 1).padStart(2, "0")}`,
+      level: 2,
+    })),
+    { code: "B", label: "Chapter B", level: 1 },
+    ...Array.from({ length: 25 }, (_, i) => ({
+      code: `B${String(i + 1).padStart(2, "0")}`,
+      label: `B child ${String(i + 1).padStart(2, "0")}`,
+      level: 2,
+    })),
+  ];
+}
+
+function interleavedLevelledCodes(): Code[] {
+  return Array.from({ length: 6 }, (_, parent) => parent + 1).flatMap(
+    (parent) => [
+      { code: String(parent), label: `Parent ${parent}`, level: 1 },
+      { code: `${parent}0`, label: `Parent ${parent}0`, level: 1 },
+      ...Array.from({ length: 9 }, (_, child) => ({
+        code: `${parent}${child + 1}`,
+        label: `Child ${parent}${child + 1}`,
+        level: 2,
+      })),
+    ],
+  );
+}
+
+function mixedNullAndLevelledCodes(): Code[] {
+  return [
+    { code: "A", label: "Section A", level: null },
+    { code: "B", label: "Section B", level: null },
+    ...Array.from({ length: 3 }, (_, division) => {
+      const parent = String(division + 1).padStart(2, "0");
+      return [
+        { code: parent, label: `Division ${parent}`, level: 2 },
+        ...Array.from({ length: 20 }, (_, child) => {
+          const code = `${parent}${String(child + 1).padStart(2, "0")}`;
+          return { code, label: `Industry ${code}`, level: 4 };
+        }),
+      ];
+    }).flat(),
+  ];
+}
+
+function prefixCodes(): Code[] {
+  return [
+    ...Array.from({ length: 30 }, (_, i) => ({
+      code: `A${String(i + 1).padStart(3, "0")}`,
+      label: `A prefix ${String(i + 1).padStart(3, "0")}`,
+    })),
+    ...Array.from({ length: 30 }, (_, i) => ({
+      code: `B${String(i + 1).padStart(3, "0")}`,
+      label: `B prefix ${String(i + 1).padStart(3, "0")}`,
+    })),
+  ];
+}
+
+function largePrefixCodes(): Code[] {
+  return [
+    ...Array.from({ length: 1100 }, (_, i) => ({
+      code: `A${String(i + 1).padStart(5, "0")}`,
+      label: `Large A ${String(i + 1).padStart(5, "0")}`,
+    })),
+    ...Array.from({ length: 1100 }, (_, i) => ({
+      code: `B${String(i + 1).padStart(5, "0")}`,
+      label: `Large B ${String(i + 1).padStart(5, "0")}`,
+    })),
+  ];
+}
+
+function flatCodes(): Code[] {
+  return Array.from({ length: 60 }, (_, i) => ({
+    code: `x-${String(i + 1).padStart(4, "0")}`,
+    label: `Flat code ${String(i + 1).padStart(4, "0")}`,
+  }));
+}
+
+function alphanumericSiblingCodes(): Code[] {
+  return Array.from({ length: 60 }, (_, i) => ({
+    code: `A${i + 1}`,
+    label: `A sibling ${i + 1}`,
   }));
 }
 
@@ -86,6 +179,176 @@ describe("CodeList — unified value-set / code viewer (#638 PR3)", () => {
     await render(CodeList, { codes: codes(5) });
     await page.getByRole("textbox", { name: "Filter codes" }).fill("zzz");
     await expect.element(page.getByText("No codes match “zzz”.")).toBeVisible();
+  });
+
+  it("collapses large levelled classifications into drillable groups", async () => {
+    await render(CodeList, { codes: levelledCodes() });
+    const group = page.getByRole("button", {
+      name: /A\s+Chapter A\s+26 codes/,
+    });
+    await expect.element(group).toBeVisible();
+    await expect.element(page.getByText("A child 01")).not.toBeInTheDocument();
+
+    await group.click();
+    await expect.element(page.getByText("A child 01")).toBeVisible();
+    await expect.element(page.getByText("B child 01")).not.toBeInTheDocument();
+  });
+
+  it("assigns levelled children by code parent instead of row order", async () => {
+    await render(CodeList, { codes: interleavedLevelledCodes() });
+    const parent1 = page.getByRole("button", {
+      name: /1\s+Parent 1\s+10 codes/,
+    });
+    const parent2 = page.getByRole("button", {
+      name: /2\s+Parent 2\s+10 codes/,
+    });
+
+    await expect.element(parent1).toBeVisible();
+    await expect.element(parent2).toBeVisible();
+    await expect
+      .element(page.getByRole("button", { name: /10\s+Parent 10\s+10 codes/ }))
+      .not.toBeInTheDocument();
+
+    await parent1.click();
+    await expect.element(page.getByText("Child 11")).toBeVisible();
+    await expect.element(page.getByText("Child 21")).not.toBeInTheDocument();
+
+    await parent2.click();
+    await expect.element(page.getByText("Child 21")).toBeVisible();
+  });
+
+  it("groups the numeric subset when classifications mix null and numeric levels", async () => {
+    await render(CodeList, { codes: mixedNullAndLevelledCodes() });
+    const division = page.getByRole("button", {
+      name: /01\s+Division 01\s+21 codes/,
+    });
+
+    await expect.element(division).toBeVisible();
+    await expect.element(page.getByText("Section A")).toBeVisible();
+    await expect
+      .element(page.getByText("Industry 0101"))
+      .not.toBeInTheDocument();
+    await expect
+      .element(page.getByText("Showing first 50 of 65 codes."))
+      .not.toBeInTheDocument();
+
+    await division.click();
+    await expect.element(page.getByText("Industry 0101")).toBeVisible();
+    await expect
+      .element(page.getByText("Industry 0201"))
+      .not.toBeInTheDocument();
+  });
+
+  it("groups large unlevelled code sets by visible code prefix", async () => {
+    await render(CodeList, { codes: prefixCodes() });
+    const group = page.getByRole("button", {
+      name: /A\s+Codes starting with A\s+30 codes/,
+    });
+    await expect.element(group).toBeVisible();
+    await expect
+      .element(page.getByText("A prefix 001"))
+      .not.toBeInTheDocument();
+
+    await group.click();
+    await expect.element(page.getByText("A prefix 001")).toBeVisible();
+    await expect
+      .element(page.getByText("B prefix 001"))
+      .not.toBeInTheDocument();
+  });
+
+  it("uses cheap prefix buckets past the explicit-parent scan ceiling", async () => {
+    await render(CodeList, { codes: largePrefixCodes() });
+    const group = page.getByRole("button", {
+      name: /A\s+Codes starting with A\s+1100 codes/,
+    });
+    await expect.element(group).toBeVisible();
+    await expect
+      .element(page.getByText("Large A 00001"))
+      .not.toBeInTheDocument();
+  });
+
+  it("does not collapse a flat list when the preview would hide no rows", async () => {
+    await render(CodeList, { codes: codes(50) });
+    await expect.element(page.getByText("Code 50")).toBeVisible();
+    await expect
+      .element(page.getByText("Showing first 50 of 50 codes."))
+      .not.toBeInTheDocument();
+    await expect
+      .element(page.getByRole("button", { name: "Show all 50 codes" }))
+      .not.toBeInTheDocument();
+  });
+
+  it("does not group plain numeric category codes by first digit", async () => {
+    await render(CodeList, { codes: codes(60) });
+    await expect
+      .element(page.getByText("Showing first 50 of 60 codes."))
+      .toBeVisible();
+    await expect
+      .element(page.getByRole("button", { name: /Codes starting with 1/ }))
+      .not.toBeInTheDocument();
+  });
+
+  it("does not treat sequential alphanumeric siblings as parent-child codes", async () => {
+    await render(CodeList, { codes: alphanumericSiblingCodes() });
+    await expect
+      .element(page.getByText("Showing first 50 of 60 codes."))
+      .toBeVisible();
+    await expect.element(page.getByText(/^A sibling 1$/)).toBeVisible();
+    await expect
+      .element(page.getByText(/^A sibling 60$/))
+      .not.toBeInTheDocument();
+    await expect
+      .element(page.getByRole("button", { name: /A1\s+A sibling 1/ }))
+      .not.toBeInTheDocument();
+  });
+
+  it("falls back to a bounded preview for genuinely flat large sets", async () => {
+    await render(CodeList, { codes: flatCodes() });
+    await expect
+      .element(page.getByText("Showing first 50 of 60 codes."))
+      .toBeVisible();
+    await expect.element(page.getByText("Flat code 0001")).toBeVisible();
+    await expect
+      .element(page.getByText("Flat code 0060"))
+      .not.toBeInTheDocument();
+
+    await page.getByRole("button", { name: "Show all 60 codes" }).click();
+    await expect.element(page.getByText("Flat code 0060")).toBeVisible();
+    await expect.element(page.getByText("Showing all 60 codes.")).toBeVisible();
+    await expect
+      .element(page.getByText("Showing first 50 of 60 codes."))
+      .not.toBeInTheDocument();
+    await expect
+      .element(page.getByRole("button", { name: "Show fewer codes" }))
+      .toBeVisible();
+  });
+
+  it("keeps the flat-list expand control above the preview rows", async () => {
+    await render(CodeList, { codes: flatCodes() });
+    const toggle = document.querySelector(".flat-toggle");
+    const firstRow = document.querySelector(".code-row");
+
+    await expect
+      .element(page.getByRole("button", { name: "Show all 60 codes" }))
+      .toBeVisible();
+    expect(toggle).not.toBeNull();
+    expect(firstRow).not.toBeNull();
+    expect(
+      toggle?.compareDocumentPosition(firstRow as Element) ??
+        Node.DOCUMENT_POSITION_PRECEDING,
+    ).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+    expect(getComputedStyle(toggle as Element).position).toBe("sticky");
+  });
+
+  it("shows filtered large lists as flat matches", async () => {
+    await render(CodeList, { codes: levelledCodes() });
+    await page
+      .getByRole("textbox", { name: "Filter codes" })
+      .fill("A child 01");
+    await expect.element(page.getByText("A child 01")).toBeVisible();
+    await expect
+      .element(page.getByRole("button", { name: /Chapter A/ }))
+      .not.toBeInTheDocument();
   });
 
   it("renders nothing for an empty code list", async () => {
