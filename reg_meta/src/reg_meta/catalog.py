@@ -1903,6 +1903,35 @@ class Catalog:
                 return family
         return None
 
+    def classification_family_for_fqid(
+        self, fqid: str | Fqid
+    ) -> ClassificationFamilySummary | None:
+        """The derived succession family containing a classification edition.
+
+        Curated umbrella groups are stored membership and exposed via
+        ``classification_dimensions``. One-dimensional families are derived from
+        ``classification_replaced_by`` instead, so member FQID deep-links need this
+        reverse lookup to find the stable family route without guessing from the
+        slug in the frontend.
+        """
+        resolved = self._resolve_classification(self._coerce_classification_fqid(fqid))
+        row = self._conn.execute(
+            "SELECT slug FROM classification WHERE id = ?",
+            (resolved.classification_id,),
+        ).fetchone()
+        if row is None or row["slug"] is None:
+            return None
+        slug = row["slug"]
+        key = _classification_family_key(slug)
+        if key is None:
+            return None
+        family = self.classification_family(key)
+        if family is None:
+            return None
+        return (
+            family if any(edition.slug == slug for edition in family.editions) else None
+        )
+
     def list_tags(self) -> list[TagSummary]:
         """The curated thematic tag vocabulary (#311) with per-tag member counts,
         ordered by slug. `member_count` spans both grains; `starred_count` is the

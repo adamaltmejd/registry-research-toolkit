@@ -1055,6 +1055,7 @@ export interface components {
             dimensions?: components["schemas"]["ConceptGroupSummary"][];
             /** Edition Chain */
             edition_chain?: components["schemas"]["ClassificationEdition"][];
+            family?: components["schemas"]["ClassificationFamilyNode"] | null;
             /** Fqid */
             fqid: string;
             /**

@@ -9,6 +9,7 @@ import {
 } from "./api";
 import { asyncResource } from "./async.svelte";
 import BindingLeafView from "./BindingLeafView.svelte";
+import ClassificationGroupView from "./ClassificationGroupView.svelte";
 import ClassificationLeafView from "./ClassificationLeafView.svelte";
 import ConceptGroupRow from "./ConceptGroupRow.svelte";
 import {
@@ -216,6 +217,20 @@ const node = $derived(narrowCatalogNode(resource.data));
 const notBrowsable = $derived(
   resource.data !== null && !isCatalogNode(resource.data),
 );
+const classificationSubjectKey = $derived.by((): string | null => {
+  if (node?.kind !== "classification") {
+    return null;
+  }
+  return node.family?.key ?? node.dimensions?.[0]?.key ?? null;
+});
+
+function classificationTabFocusFqid(node: ClassificationNodeData): string {
+  return (
+    node.edition_chain?.find(
+      (edition) => edition.is_self && edition.fqid != null,
+    )?.fqid ?? node.fqid
+  );
+}
 
 // In-memory type-to-filter over the current node's child list (a provider's 238
 // registers / a register's 740 bindings render flat otherwise). Reset on
@@ -426,9 +441,21 @@ $effect(() => {
         <EmptyState title="No classifications." />
       {/if}
     {:else if node.kind === "classification"}
-      <!-- #638 PR1: the classification leaf renders through the unified SubjectView
-           shell, same as the binding leaf + concept group. -->
-      <ClassificationLeafView {node} />
+      {#if classificationSubjectKey}
+        <!-- #1116: grouped / family classification FQIDs stay valid as shareable
+             deep-links, but the canonical surface is the group/family page with
+             this edition's tab active. Ungrouped classifications still use the
+             standalone leaf view. -->
+        <ClassificationGroupView
+          key={classificationSubjectKey}
+          activeFqid={classificationTabFocusFqid(node)}
+          initialActiveNode={node}
+        />
+      {:else}
+        <!-- #638 PR1: the ungrouped classification leaf renders through the unified
+             SubjectView shell, same as the binding leaf + concept group. -->
+        <ClassificationLeafView {node} />
+      {/if}
     {/if}
   </article>
 {:else if notBrowsable}

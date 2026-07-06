@@ -180,6 +180,20 @@ class RegisterNode(BaseModel):
     tags: list[TagMembership] = Field(default_factory=list)
 
 
+class ClassificationFamilyNode(BaseModel):
+    """A one-dimensional classification succession family as a browsable subject.
+
+    Served from the same stable `/catalog/group/class/{key}` route as curated
+    classification umbrellas, but kept as a distinct `kind`: it is browse identity
+    over `classification_replaced_by`, not concept-group membership.
+    """
+
+    kind: Literal["classification-family"] = "classification-family"
+    key: str
+    label: str
+    editions: list[ClassificationEdition]
+
+
 class ClassificationNode(BaseModel):
     """A classification leaf (`class/<slug>`, 2 seg)."""
 
@@ -209,6 +223,10 @@ class ClassificationNode(BaseModel):
     # existing concept-group table; reuses the browse `ConceptGroupSummary`. Empty
     # for an ungrouped classification (the common case).
     dimensions: list[ConceptGroupSummary] = Field(default_factory=list)
+    # #1116: the derived one-dimensional succession family this edition belongs to,
+    # when one exists (e.g. ICD/SSYK/LKF/SNI). Curated umbrella membership stays in
+    # `dimensions`; this field is only for family-route canonicalization.
+    family: ClassificationFamilyNode | None = None
     # #779: non-temporal classification derivation refs. These are see-also links
     # distinct from `edition_chain` / succession.
     derived_from: list[ClassificationDerivedFromRef] = Field(default_factory=list)
@@ -328,20 +346,6 @@ class RegisterResponse(RegisterNode):
 
     children: list[RegisterChild]
     groups: list[ConceptGroupSummary] = []
-
-
-class ClassificationFamilyNode(BaseModel):
-    """A one-dimensional classification succession family as a browsable subject.
-
-    Served from the same stable `/catalog/group/class/{key}` route as curated
-    classification umbrellas, but kept as a distinct `kind`: it is browse identity
-    over `classification_replaced_by`, not concept-group membership.
-    """
-
-    kind: Literal["classification-family"] = "classification-family"
-    key: str
-    label: str
-    editions: list[ClassificationEdition]
 
 
 class ClassificationRootResponse(ClassificationRootNode):
