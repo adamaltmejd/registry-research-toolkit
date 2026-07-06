@@ -276,6 +276,15 @@ const LEVEL_LABEL: Record<Level, string> = {
   .path {
     font-size: var(--text-sm);
     color: var(--text-muted);
+    /* The JSON-pointer / window-hint label carries a raw machine string. The
+       `.path.muted` variant is a flex child of `.locators` (window hints) that
+       defaults to `min-width: auto`, and the raw `<code class="path">` pointer
+       fallback is a long unbroken run; both must break in-place rather than
+       overflow the card on mobile. `min-width: 0` lets the flex-child variant
+       shrink; `overflow-wrap: anywhere` lowers the run's min-content contribution so
+       it breaks instead of clipping (#1112). */
+    min-width: 0;
+    overflow-wrap: anywhere;
   }
   /* The raw JSON pointer is a machine identifier → mono; the "(whole document)"
      fallback is prose (a <span>) and stays in the UI face. */
@@ -303,6 +312,14 @@ const LEVEL_LABEL: Record<Level, string> = {
     color: var(--accent);
     cursor: pointer;
     text-align: left;
+    /* As flex children of `.locators` (flex-wrap: wrap) these default to
+       `min-width: auto`, so a long unbroken locate label or catalog FQID would
+       refuse to shrink and overflow the card on mobile. `min-width: 0` lets each
+       shrink; `overflow-wrap: anywhere` (inherited by the child `<code>` FQID run in
+       the catalog link) lowers the text's min-content contribution so it breaks
+       within the row instead of clipping (#1112). */
+    min-width: 0;
+    overflow-wrap: anywhere;
   }
   .locate:hover,
   .catalog-link:hover {
