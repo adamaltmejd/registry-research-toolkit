@@ -184,6 +184,27 @@ describe("CodeList — unified value-set / code viewer (#638 PR3)", () => {
       .not.toBeInTheDocument();
   });
 
+  it("does not collapse a flat list when the preview would hide no rows", async () => {
+    await render(CodeList, { codes: codes(50) });
+    await expect.element(page.getByText("Code 50")).toBeVisible();
+    await expect
+      .element(page.getByText("Showing first 50 of 50 codes."))
+      .not.toBeInTheDocument();
+    await expect
+      .element(page.getByRole("button", { name: "Show all 50 codes" }))
+      .not.toBeInTheDocument();
+  });
+
+  it("does not group plain numeric category codes by first digit", async () => {
+    await render(CodeList, { codes: codes(60) });
+    await expect
+      .element(page.getByText("Showing first 50 of 60 codes."))
+      .toBeVisible();
+    await expect
+      .element(page.getByRole("button", { name: /Codes starting with 1/ }))
+      .not.toBeInTheDocument();
+  });
+
   it("falls back to a bounded preview for genuinely flat large sets", async () => {
     await render(CodeList, { codes: flatCodes() });
     await expect

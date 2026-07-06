@@ -86,7 +86,11 @@ function codeLevel(code: Code): number | null {
 }
 
 function layoutFor(list: Code[], isFiltering: boolean): CodeLayout {
-  if (isFiltering || list.length < COLLAPSE_THRESHOLD) {
+  if (
+    isFiltering ||
+    list.length < COLLAPSE_THRESHOLD ||
+    list.length <= FLAT_PREVIEW_LIMIT
+  ) {
     return { kind: "flat", codes: list };
   }
   return (
@@ -172,6 +176,9 @@ function groupedByExplicitPrefix(list: Code[]): CodeLayout | null {
     return null;
   }
   const normalized = list.map((code) => normalizeCodeKey(code.code));
+  if (normalized.every((code) => /^\d+$/.test(code))) {
+    return null;
+  }
   const claimed = new Set<number>();
   const groups: CodeGroup[] = [];
 
@@ -225,8 +232,8 @@ function bucketPrefix(code: string): string | null {
   if (letterPrefix) {
     return letterPrefix.slice(0, 1).toUpperCase();
   }
-  const digitPrefix = /^\d+/.exec(trimmed)?.[0];
-  return digitPrefix ? digitPrefix.slice(0, 1) : null;
+  const digitLetterPrefix = /^\d+[A-Za-z]+/.exec(trimmed)?.[0];
+  return digitLetterPrefix ? digitLetterPrefix.toUpperCase() : null;
 }
 
 function groupedByBucketPrefix(list: Code[]): CodeLayout | null {
