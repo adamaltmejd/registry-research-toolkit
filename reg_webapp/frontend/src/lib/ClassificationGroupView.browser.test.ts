@@ -248,6 +248,74 @@ describe("ClassificationGroupView (#756)", () => {
     expect(document.body.textContent).not.toContain("group:sun");
   });
 
+  it("defaults to the current group member before future-dated graph successors", async () => {
+    vi.mocked(getClassificationGroup).mockResolvedValue(
+      node({
+        key: "icd",
+        label: "ICD",
+        members: [
+          {
+            fqid: "class/icd11",
+            name: "ICD-11",
+            facets: [{ axis: null, value: "icd11", label: "ICD-11" }],
+          },
+          {
+            fqid: "class/icd10",
+            name: "ICD-10",
+            facets: [{ axis: null, value: "icd10", label: "ICD-10" }],
+          },
+        ],
+      }),
+    );
+    vi.mocked(getClassificationGroupGraph).mockResolvedValue({
+      nodes: [
+        {
+          kind: "classification",
+          id: "class/icd11",
+          fqid: "class/icd11",
+          label: "ICD-11",
+          group_key: "class/icd",
+          group_label: "ICD",
+          version_year: 2027,
+          is_current: false,
+        },
+        {
+          kind: "classification",
+          id: "class/icd10",
+          fqid: "class/icd10",
+          label: "ICD-10",
+          group_key: "class/icd",
+          group_label: "ICD",
+          version_year: 2016,
+          is_current: true,
+        },
+      ],
+      edges: [],
+      focus_id: null,
+    });
+    vi.mocked(getCatalogNode).mockResolvedValue(
+      classificationNode({
+        fqid: "class/icd10",
+        name: "ICD-10",
+        short_name: "ICD10",
+        codes: [
+          { code: "A", label: "Current diagnosis", level: 1, is_valid: true },
+        ],
+      }),
+    );
+
+    await render(ClassificationGroupView, { key: "icd" });
+
+    await expect
+      .element(page.getByRole("tab", { name: /ICD-10/ }))
+      .toHaveAttribute("aria-selected", "true");
+    await expect
+      .element(page.getByRole("tab", { name: /ICD-11/ }))
+      .toHaveAttribute("aria-selected", "false");
+    await expect.element(page.getByText("Current diagnosis")).toBeVisible();
+    expect(getCatalogNode).toHaveBeenCalledWith("class/icd10");
+  });
+
   it("renders a succession family as an edition-chain subject page", async () => {
     vi.mocked(getClassificationGroup).mockResolvedValue(familyNode());
     vi.mocked(getCatalogNode).mockResolvedValue(
@@ -273,6 +341,57 @@ describe("ClassificationGroupView (#756)", () => {
     await expect.element(page.getByText(/ssyk2012 - current/)).toBeVisible();
     await expect.element(page.getByText("Yrke")).toBeVisible();
     expect(getClassificationGroupGraph).not.toHaveBeenCalled();
+  });
+
+  it("defaults to the current family edition before future-dated successors", async () => {
+    vi.mocked(getClassificationGroup).mockResolvedValue(
+      familyNode({
+        key: "icd",
+        label: "ICD",
+        editions: [
+          {
+            slug: "icd11",
+            fqid: "class/icd11",
+            name: "ICD-11",
+            effective_year: null,
+            version_year: 2027,
+            is_current: false,
+            is_self: false,
+          },
+          {
+            slug: "icd10",
+            fqid: "class/icd10",
+            name: "ICD-10",
+            effective_year: 2027,
+            version_year: 2016,
+            is_current: true,
+            is_self: false,
+          },
+        ],
+      }),
+    );
+    vi.mocked(getCatalogNode).mockResolvedValue(
+      classificationNode({
+        fqid: "class/icd10",
+        name: "ICD-10",
+        short_name: "ICD10",
+        codes: [
+          { code: "A", label: "Current diagnosis", level: 1, is_valid: true },
+        ],
+      }),
+    );
+
+    await render(ClassificationGroupView, { key: "icd" });
+
+    await expect
+      .element(page.getByRole("tab", { name: /ICD-10/ }))
+      .toHaveAttribute("aria-selected", "true");
+    await expect
+      .element(page.getByRole("tab", { name: /ICD-11/ }))
+      .toHaveAttribute("aria-selected", "false");
+    await expect.element(page.getByText(/icd10 - current/)).toBeVisible();
+    await expect.element(page.getByText("Current diagnosis")).toBeVisible();
+    expect(getCatalogNode).toHaveBeenCalledWith("class/icd10");
   });
 
   it("uses the active member FQID without re-fetching the initial classification node", async () => {

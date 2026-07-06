@@ -145,12 +145,15 @@ function latestTabFqid(tabList: EditionTab[]): string | null {
       best = tab;
       continue;
     }
+    if (tab.isCurrent !== best.isCurrent) {
+      if (tab.isCurrent) {
+        best = tab;
+      }
+      continue;
+    }
     const tabYear = tab.versionYear ?? Number.NEGATIVE_INFINITY;
     const bestYear = best.versionYear ?? Number.NEGATIVE_INFINITY;
-    if (
-      tabYear > bestYear ||
-      (tabYear === bestYear && tab.isCurrent && !best.isCurrent)
-    ) {
+    if (tabYear > bestYear) {
       best = tab;
     }
   }
