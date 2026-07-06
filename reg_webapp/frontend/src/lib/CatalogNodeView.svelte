@@ -126,7 +126,7 @@ function classificationBrowseRows(
     id: `family:${family.key}`,
     kind: "family",
     family,
-    label: family.label,
+    label: `${family.label} (${family.editions.length} editions)`,
     href: classGroupHref(family.key),
     shortName: familyCurrentLabel(family),
   }));

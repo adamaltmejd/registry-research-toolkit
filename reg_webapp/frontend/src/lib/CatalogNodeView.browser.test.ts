@@ -574,8 +574,9 @@ describe("CatalogNodeView classification-root arm (#756)", () => {
     });
 
     await expect
-      .element(page.getByRole("link", { name: "SSYK" }))
+      .element(page.getByRole("link", { name: "SSYK (2 editions)" }))
       .toHaveAttribute("href", "/catalog/group/class/ssyk");
+    await expect.element(page.getByText("2 editions")).toBeVisible();
     await expect.element(page.getByText("ssyk2012")).toBeVisible();
   });
 
@@ -724,6 +725,7 @@ describe("CatalogNodeView classification-root arm (#756)", () => {
           slug: "ssyk1996",
           fqid: "class/ssyk1996",
           name: "SSYK 1996",
+          short_name: "SSYK1996",
           effective_year: 2012,
           version_year: 1996,
           is_current: false,
@@ -733,6 +735,7 @@ describe("CatalogNodeView classification-root arm (#756)", () => {
           slug: "ssyk2012",
           fqid: "class/ssyk2012",
           name: "SSYK 2012",
+          short_name: "SSYK2012",
           effective_year: null,
           version_year: 2012,
           is_current: true,

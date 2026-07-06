@@ -51,7 +51,8 @@ const EMPTY_GRAPH: RelationshipGraph = { nodes: [], edges: [], focus_id: null };
 // pages; there is no add-to-project picker for classifications.
 const graphResource = asyncResource(() => {
   const activeKey = key;
-  return node?.kind === "classification-group"
+  return node?.kind === "classification-group" ||
+    node?.kind === "classification-family"
     ? getClassificationGroupGraph(activeKey)
     : Promise.resolve(EMPTY_GRAPH);
 });
@@ -265,6 +266,12 @@ function selectEdition(value: string): void {
   {/if}
 {/snippet}
 
+{#snippet picker()}
+  {#if graphReady && focusedGraph}
+    <ClassificationEditionGraph graph={focusedGraph} />
+  {/if}
+{/snippet}
+
 {#if resource.loading}
   <p class="muted" aria-busy="true">Loading…</p>
 {:else if resource.error}
@@ -290,6 +297,7 @@ function selectEdition(value: string): void {
   <SubjectView
     title={node.label}
     {description}
+    {picker}
     valueSet={valueSet}
     {relationships}
   />
@@ -311,12 +319,6 @@ function selectEdition(value: string): void {
         <dd>{node.source}</dd>
       </dl>
     </TechnicalDetails>
-  {/snippet}
-
-  {#snippet picker()}
-    {#if graphReady && focusedGraph}
-      <ClassificationEditionGraph graph={focusedGraph} />
-    {/if}
   {/snippet}
 
   <SubjectView

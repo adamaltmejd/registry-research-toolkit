@@ -561,6 +561,18 @@
             "description": "The edition's display name (every chain edition is a live row).",
             "title": "Name"
           },
+          "short_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The edition's short display name, from the live classification row.",
+            "title": "Short Name"
+          },
           "slug": {
             "description": "The edition's literal slug (e.g. 'sun2000').",
             "title": "Slug",
@@ -583,6 +595,7 @@
           "slug",
           "fqid",
           "name",
+          "short_name",
           "effective_year",
           "version_year",
           "is_current",
@@ -679,6 +692,17 @@
             "title": "Label",
             "type": "string"
           },
+          "short_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Short Name"
+          },
           "version_year": {
             "anyOf": [
               {
@@ -696,6 +720,7 @@
           "fqid",
           "label",
           "group_key",
+          "short_name",
           "version_year",
           "is_current"
         ],
@@ -4419,7 +4444,7 @@
     },
     "/api/catalog/group/class/{key}/graph": {
       "get": {
-        "description": "The relationship graph for a classification umbrella group (#761) \u2014 the\nunion of its member editions' succession chains (`focus_id=None`). 404 when no\nclassification group has that key. Shares the `/api/catalog` cache. By-key\nresolution lives in reg_meta (`Catalog.graph_for_classification_group` \u2192\n`classification_group(key)`).",
+        "description": "The relationship graph for a classification subject (#761/#1119).\n\nCurated umbrella groups and derived one-dimensional succession families share\nthe same canonical `/catalog/group/class/{key}` subject route; this graph\nendpoint mirrors that by-key resolution and returns the union of member/edition\nsuccession chains (`focus_id=None`). 404 when no classification group or family\nhas that key. Shares the `/api/catalog` cache.",
         "operationId": "get_classification_group_graph_api_catalog_group_class__key__graph_get",
         "parameters": [
           {

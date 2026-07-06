@@ -1335,15 +1335,20 @@ def get_register_variants(
 
 @router.get("/catalog/group/class/{key:path}/graph", response_model=RelationshipGraph)
 def get_classification_group_graph(request: Request, key: str) -> RelationshipGraph:
-    """The relationship graph for a classification umbrella group (#761) — the
-    union of its member editions' succession chains (`focus_id=None`). 404 when no
-    classification group has that key. Shares the `/api/catalog` cache. By-key
-    resolution lives in reg_meta (`Catalog.graph_for_classification_group` →
-    `classification_group(key)`)."""
+    """The relationship graph for a classification subject (#761/#1119).
+
+    Curated umbrella groups and derived one-dimensional succession families share
+    the same canonical `/catalog/group/class/{key}` subject route; this graph
+    endpoint mirrors that by-key resolution and returns the union of member/edition
+    succession chains (`focus_id=None`). 404 when no classification group or family
+    has that key. Shares the `/api/catalog` cache.
+    """
     with _catalog_conn(request) as conn:
         graph = Catalog(conn).graph_for_classification_group(key)
     if graph is None:
-        raise HTTPException(status_code=404, detail=f"no classification group {key!r}")
+        raise HTTPException(
+            status_code=404, detail=f"no classification group or family {key!r}"
+        )
     return graph
 
 
