@@ -977,9 +977,10 @@ Two layers, semantic roles only consumed by components:
   `--border-strong`, `--accent`, `--accent-fg`, `--accent-bg`, `--accent-ink`, the
   categorical-ink family `--cat-reg-ink` / `--cat-var-ink` / `--cat-code-ink` /
   `--cat-class-ink` / `--cat-group-ink`, the facet-axis data roles `--facet-axis-*` /
-  `--facet-axis-*-ink` (AA-cleared text stops — see § Color), plus the status roles
-  below. Dark mode is a single `[data-theme="dark"]` block that remaps these roles to
-  dark primitive stops — no component CSS changes.
+  `--facet-axis-*-ink` (AA-cleared text stops — see § Color), the data-viz edge role
+  `--viz-edge-succession` (an AA-legible stroke/fill, not a text stop — see § Color),
+  plus the status roles below. Dark mode is a single `[data-theme="dark"]` block that
+  remaps these roles to dark primitive stops — no component CSS changes.
 
 The tokens move out of `App.svelte`'s `:global(:root)` (the #689 spike stub) into a
 global `frontend/src/tokens.css` imported once in `main.ts`. The stub's
@@ -1049,6 +1050,18 @@ It is a data-encoding sub-system: deterministic within the declared axis set
 from node-type, status, and brand chrome. The visible value pill gets the axis color;
 the axis label remains in the fieldset legend, `title`, and screen-reader text so hue is
 not the only carrier of meaning.
+
+A separate **data-viz edge** palette (`--viz-edge-*`, added under #810, landed via PR
+#794) colors relationship marks in the history/graph view — data, not chrome, so it
+never borrows the brand accent (collides with "is selected") or a status hue (an edge
+isn't an error/warning). It ships one role, `--viz-edge-succession`: a desaturated steel
+for the directed predecessor→successor edge, cooler than the Rost accent and darker than
+the `--cat-var` indigo so the three never read as the same mark (≈4.6:1 on `--surface`,
+an AA-legible hairline/arrow), with its own lightened dark-theme stop shipped alongside
+the light one rather than waiting on the dark-seam role remap. The sub-system's earlier
+"succession vs related" scope is now succession-only — #800 retired the `related` edge
+kind entirely. `ClassificationEditionGraph` and `RepresentationPicker` (graph mode)
+consume the role directly with no hardcoded colors.
 
 ### Geometry, elevation, motion
 
