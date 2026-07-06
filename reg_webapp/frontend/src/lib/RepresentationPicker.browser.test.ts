@@ -13,6 +13,10 @@ import {
   type PickerStateInput,
   pickerRepresentations,
 } from "./catalog";
+import {
+  expectApplyDisabled,
+  expectStagedAddColumnVisible,
+} from "./picker-test-helpers";
 import RepresentationPicker, {
   type PickerBand,
 } from "./RepresentationPicker.svelte";
@@ -2824,7 +2828,7 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
     });
 
     await page.getByRole("checkbox", { name: /DIN1/ }).click();
-    await expect.element(page.getByText("Will be added")).toBeVisible();
+    await expectStagedAddColumnVisible();
     await page
       .getByRole("button", {
         name: /Add to project|Remove from project|Apply changes/,
@@ -2832,8 +2836,32 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
       .click();
 
     expect(onapply).toHaveBeenCalledTimes(1);
-    await expect.element(page.getByText("Will be added")).toBeVisible();
+    await expectStagedAddColumnVisible();
     await expect.element(page.getByText("+1 column")).toBeVisible();
+  });
+
+  it("keeps the 'Will be added' status in the staged-add checkbox accessible name while showing the compact '1 Column' tag (#1115 a11y)", async () => {
+    render(RepresentationPicker, {
+      bands: [multiAxisBand()],
+      axes: AXES,
+      ...PROPS,
+    });
+
+    // Before staging, no row carries the pending-add status.
+    await expect
+      .element(page.getByRole("checkbox", { name: /Will be added/ }))
+      .not.toBeInTheDocument();
+
+    await page.getByRole("checkbox", { name: /DIN1/ }).click();
+
+    // Visible tag stays the compact "1 Column" (the row-height fix), but the
+    // checkbox's accessible name regains "Will be added" via the visually-hidden
+    // prefix — the "+" glyph itself is aria-hidden, so without it a screen reader
+    // would hear only the ambiguous "1 Column".
+    await expectStagedAddColumnVisible();
+    await expect
+      .element(page.getByRole("checkbox", { name: /Will be added/ }))
+      .toBeVisible();
   });
 
   it("stages selectable superseded predecessor rows from the history disclosure (#926)", async () => {
@@ -3181,13 +3209,7 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
     });
 
     await expect.element(page.getByText("+1 column")).not.toBeInTheDocument();
-    await expect
-      .element(
-        page.getByRole("button", {
-          name: /Add to project|Remove from project|Apply changes/,
-        }),
-      )
-      .not.toBeInTheDocument();
+    await expectApplyDisabled();
     expect(onapply).not.toHaveBeenCalled();
   });
 
@@ -3212,7 +3234,7 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
     });
 
     await page.getByRole("checkbox", { name: /DIN1/ }).click();
-    await expect.element(page.getByText("Will be added")).toBeVisible();
+    await expectStagedAddColumnVisible();
     await page
       .getByRole("button", {
         name: /Add to project|Remove from project|Apply changes/,
@@ -3234,13 +3256,7 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
     await expect
       .element(page.getByText("No staged changes"))
       .not.toBeInTheDocument();
-    await expect
-      .element(
-        page.getByRole("button", {
-          name: /Add to project|Remove from project|Apply changes/,
-        }),
-      )
-      .not.toBeInTheDocument();
+    await expectApplyDisabled();
   });
 
   it("does not stage period-only source changes from a partial picker", async () => {
@@ -3262,13 +3278,7 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
     await expect
       .element(page.getByRole("button", { name: "Reset" }))
       .not.toBeInTheDocument();
-    await expect
-      .element(
-        page.getByRole("button", {
-          name: /Add to project|Remove from project|Apply changes/,
-        }),
-      )
-      .not.toBeInTheDocument();
+    await expectApplyDisabled();
 
     expect(onapply).not.toHaveBeenCalled();
   });
@@ -3308,13 +3318,7 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
       committedRows,
     });
 
-    await expect
-      .element(
-        page.getByRole("button", {
-          name: /Add to project|Remove from project|Apply changes/,
-        }),
-      )
-      .not.toBeInTheDocument();
+    await expectApplyDisabled();
 
     await page.getByRole("checkbox", { name: /DIN2/ }).click();
     await expect
@@ -3771,5 +3775,40 @@ describe("RepresentationPicker sequential-rename hint (#902)", () => {
       r.textContent?.includes("PlainCol"),
     );
     expect(plainRow?.querySelector(".rename-hint")).toBeNull();
+  });
+});
+
+describe("RepresentationPicker footer + row-height stability (#1115)", () => {
+  it("keeps the footer rendered (Apply disabled) with nothing staged", async () => {
+    // The footer is now ALWAYS present so picking a row can't pop it into
+    // existence — it just enables the disabled Apply button.
+    render(RepresentationPicker, {
+      bands: [lisaNarrowedBand("individer-16plus")],
+      ...PROPS,
+    });
+
+    expect(document.querySelector(".picker-footer")).not.toBeNull();
+    await expect
+      .element(page.getByRole("button", { name: "Add to project" }))
+      .toBeDisabled();
+  });
+
+  it("does not grow a single-column row's height when it is picked", async () => {
+    // The #1115 regression: a Tag first appearing inline in the row grew the
+    // row (Tag `line-height: 1.4` vs the row's centered 0.9rem primary). Its
+    // height must be pixel-identical before and after staging.
+    render(RepresentationPicker, {
+      bands: [lisaNarrowedBand("individer-16plus")],
+      ...PROPS,
+    });
+
+    const row = () =>
+      document.querySelector(".col-row.single .row-btn") as HTMLElement;
+    const before = row().clientHeight;
+
+    await page.getByRole("checkbox", { name: /Kon/ }).click();
+    await expectStagedAddColumnVisible();
+
+    expect(row().clientHeight).toBe(before);
   });
 });

@@ -11,6 +11,7 @@ import type {
 } from "./api";
 import { getCatalogNode, getConceptGroup, getConceptGroupGraph } from "./api";
 import ConceptGroupView from "./ConceptGroupView.svelte";
+import { expectApplyDisabled } from "./picker-test-helpers";
 import { projectStore } from "./project_store.svelte";
 import { router } from "./router.svelte";
 import { windowStore } from "./window.svelte";
@@ -479,13 +480,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     await expect
       .element(page.getByText("No staged changes"))
       .not.toBeInTheDocument();
-    await expect
-      .element(
-        page.getByRole("button", {
-          name: /Add to project|Remove from project|Apply changes/,
-        }),
-      )
-      .not.toBeInTheDocument();
+    await expectApplyDisabled();
     expect(projectStore.draft?.sources[0]?.period).toEqual({
       from: 2010,
       to: 2015,
