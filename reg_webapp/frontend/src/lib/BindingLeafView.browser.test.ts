@@ -625,7 +625,7 @@ describe("BindingLeafView representation picker (#678)", () => {
     expect(spans).toEqual(["2010 – 2015", "2018 – 2020"]);
   });
 
-  it("renders the add footer only once a row is staged", async () => {
+  it("enables the add footer's Apply only once a row is staged", async () => {
     render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
       node: node(pickerStates),
@@ -635,9 +635,11 @@ describe("BindingLeafView representation picker (#678)", () => {
       vintageYear: 2024,
     });
 
+    // The footer is always rendered (#1115); its Apply button stays disabled
+    // until a row is staged, rather than popping into existence.
     await expect
       .element(page.getByRole("button", { name: "Add to project" }))
-      .not.toBeInTheDocument();
+      .toBeDisabled();
 
     const konRow = page.getByRole("checkbox", { name: /Kon/ });
     await konRow.click();
@@ -968,7 +970,9 @@ describe("BindingLeafView representation picker (#678)", () => {
     });
 
     await page.getByRole("checkbox", { name: /Kon/ }).click();
-    await expect.element(page.getByText("Will be added")).toBeVisible();
+    await expect
+      .element(page.getByText("1 Column", { exact: true }))
+      .toBeVisible();
     const apply = page.getByRole("button", {
       name: /Add to project|Remove from project|Apply changes/,
     });
@@ -978,7 +982,9 @@ describe("BindingLeafView representation picker (#678)", () => {
     projectStore.updateField("name", "edited during apply");
     resolveFetch();
 
-    await expect.element(page.getByText("Will be added")).toBeVisible();
+    await expect
+      .element(page.getByText("1 Column", { exact: true }))
+      .toBeVisible();
     await expect.element(page.getByText("+1 column")).toBeVisible();
     expect(projectStore.draft?.sources).toHaveLength(0);
     expect(projectStore.draft?.name).toBe("edited during apply");
@@ -1065,7 +1071,7 @@ describe("BindingLeafView representation picker (#678)", () => {
           name: /Add to project|Remove from project|Apply changes/,
         }),
       )
-      .not.toBeInTheDocument();
+      .toBeDisabled();
 
     expect(projectStore.draft?.sources[0]?.period).toEqual({
       from: 2010,
@@ -1108,7 +1114,7 @@ describe("BindingLeafView representation picker (#678)", () => {
           name: /Add to project|Remove from project|Apply changes/,
         }),
       )
-      .not.toBeInTheDocument();
+      .toBeDisabled();
     expect(projectStore.draft?.sources[0]?.period).toEqual({
       from: 2010,
       to: 2015,
@@ -1876,7 +1882,7 @@ describe("BindingLeafView representation picker (#678)", () => {
     });
     await expect
       .element(page.getByRole("button", { name: "Add to project" }))
-      .not.toBeInTheDocument();
+      .toBeDisabled();
     // Selecting a row must NOT enable Apply while the seed is absent.
     await page.getByRole("checkbox", { name: /Kon/ }).click();
     const add = page.getByRole("button", { name: "Add to project" });

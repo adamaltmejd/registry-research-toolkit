@@ -2824,7 +2824,9 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
     });
 
     await page.getByRole("checkbox", { name: /DIN1/ }).click();
-    await expect.element(page.getByText("Will be added")).toBeVisible();
+    await expect
+      .element(page.getByText("1 Column", { exact: true }))
+      .toBeVisible();
     await page
       .getByRole("button", {
         name: /Add to project|Remove from project|Apply changes/,
@@ -2832,7 +2834,9 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
       .click();
 
     expect(onapply).toHaveBeenCalledTimes(1);
-    await expect.element(page.getByText("Will be added")).toBeVisible();
+    await expect
+      .element(page.getByText("1 Column", { exact: true }))
+      .toBeVisible();
     await expect.element(page.getByText("+1 column")).toBeVisible();
   });
 
@@ -3187,7 +3191,7 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
           name: /Add to project|Remove from project|Apply changes/,
         }),
       )
-      .not.toBeInTheDocument();
+      .toBeDisabled();
     expect(onapply).not.toHaveBeenCalled();
   });
 
@@ -3212,7 +3216,9 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
     });
 
     await page.getByRole("checkbox", { name: /DIN1/ }).click();
-    await expect.element(page.getByText("Will be added")).toBeVisible();
+    await expect
+      .element(page.getByText("1 Column", { exact: true }))
+      .toBeVisible();
     await page
       .getByRole("button", {
         name: /Add to project|Remove from project|Apply changes/,
@@ -3240,7 +3246,7 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
           name: /Add to project|Remove from project|Apply changes/,
         }),
       )
-      .not.toBeInTheDocument();
+      .toBeDisabled();
   });
 
   it("does not stage period-only source changes from a partial picker", async () => {
@@ -3268,7 +3274,7 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
           name: /Add to project|Remove from project|Apply changes/,
         }),
       )
-      .not.toBeInTheDocument();
+      .toBeDisabled();
 
     expect(onapply).not.toHaveBeenCalled();
   });
@@ -3314,7 +3320,7 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
           name: /Add to project|Remove from project|Apply changes/,
         }),
       )
-      .not.toBeInTheDocument();
+      .toBeDisabled();
 
     await page.getByRole("checkbox", { name: /DIN2/ }).click();
     await expect
@@ -3771,5 +3777,42 @@ describe("RepresentationPicker sequential-rename hint (#902)", () => {
       r.textContent?.includes("PlainCol"),
     );
     expect(plainRow?.querySelector(".rename-hint")).toBeNull();
+  });
+});
+
+describe("RepresentationPicker footer + row-height stability (#1115)", () => {
+  it("keeps the footer rendered (Apply disabled) with nothing staged", async () => {
+    // The footer is now ALWAYS present so picking a row can't pop it into
+    // existence — it just enables the disabled Apply button.
+    render(RepresentationPicker, {
+      bands: [lisaNarrowedBand("individer-16plus")],
+      ...PROPS,
+    });
+
+    expect(document.querySelector(".picker-footer")).not.toBeNull();
+    await expect
+      .element(page.getByRole("button", { name: "Add to project" }))
+      .toBeDisabled();
+  });
+
+  it("does not grow a single-column row's height when it is picked", async () => {
+    // The #1115 regression: a Tag first appearing inline in the row grew the
+    // row (Tag `line-height: 1.4` vs the row's centered 0.9rem primary). Its
+    // height must be pixel-identical before and after staging.
+    render(RepresentationPicker, {
+      bands: [lisaNarrowedBand("individer-16plus")],
+      ...PROPS,
+    });
+
+    const row = () =>
+      document.querySelector(".col-row.single .row-btn") as HTMLElement;
+    const before = row().clientHeight;
+
+    await page.getByRole("checkbox", { name: /Kon/ }).click();
+    await expect
+      .element(page.getByText("1 Column", { exact: true }))
+      .toBeVisible();
+
+    expect(row().clientHeight).toBe(before);
   });
 });

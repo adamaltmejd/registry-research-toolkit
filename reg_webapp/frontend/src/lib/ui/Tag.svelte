@@ -45,7 +45,7 @@ let { tone = "neutral", mono = false, glyph, children }: Props = $props();
     padding: 0.1em 0.5em;
     border-radius: var(--radius-sm);
     font-size: var(--text-sm);
-    line-height: 1.4;
+    line-height: 1;
     white-space: nowrap;
     border: 1px solid transparent;
   }

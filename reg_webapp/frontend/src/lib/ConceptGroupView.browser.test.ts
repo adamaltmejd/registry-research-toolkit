@@ -485,7 +485,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
           name: /Add to project|Remove from project|Apply changes/,
         }),
       )
-      .not.toBeInTheDocument();
+      .toBeDisabled();
     expect(projectStore.draft?.sources[0]?.period).toEqual({
       from: 2010,
       to: 2015,

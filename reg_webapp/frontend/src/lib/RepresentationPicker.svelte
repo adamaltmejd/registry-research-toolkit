@@ -397,7 +397,7 @@ function rowStageLabel(stage: RowStage): string {
     return "In project";
   }
   if (stage === "staged-add") {
-    return "Will be added";
+    return "1 Column";
   }
   if (stage === "staged-remove") {
     return "Will be removed";
@@ -2932,31 +2932,29 @@ function codingsVaryHref(
     </ul>
   {/if}
 
-  {#if diffCount > 0}
-    <div class="picker-footer">
-      <span class="count" role="status">{footerLabel}</span>
-      {#if rowDiffCount > 0}
-        <Button
-          type="button"
-          variant="default"
-          size="sm"
-          disabled={applying}
-          onclick={resetStaging}
-        >
-          Reset
-        </Button>
-      {/if}
+  <div class="picker-footer">
+    <span class="count" role="status">{footerLabel}</span>
+    {#if rowDiffCount > 0}
       <Button
         type="button"
-        variant="primary"
+        variant="default"
         size="sm"
-        disabled={!canApply || applying}
-        onclick={commit}
+        disabled={applying}
+        onclick={resetStaging}
       >
-        {applying ? "Applying..." : applyLabel}
+        Reset
       </Button>
-    </div>
-  {/if}
+    {/if}
+    <Button
+      type="button"
+      variant="primary"
+      size="sm"
+      disabled={!canApply || applying}
+      onclick={commit}
+    >
+      {applying ? "Applying..." : applyLabel}
+    </Button>
+  </div>
 </div>
 {/if}
 
