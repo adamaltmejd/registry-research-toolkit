@@ -14,8 +14,7 @@ import { page } from "vitest/browser";
  * staged-diff shape ("Add to project" | "Remove from project" | "Apply changes").
  * Tests grab it by this alternation regardless of the current label.
  */
-export const APPLY_BUTTON_NAME =
-  /Add to project|Remove from project|Apply changes/;
+const APPLY_BUTTON_NAME = /Add to project|Remove from project|Apply changes/;
 
 /** Assert the footer's Apply/commit button is present and disabled. */
 export async function expectApplyDisabled(): Promise<void> {
@@ -25,7 +24,7 @@ export async function expectApplyDisabled(): Promise<void> {
 }
 
 /** The compact tag a staged single-column row shows (#1115). */
-export const STAGED_ADD_COLUMN_LABEL = "1 Column";
+const STAGED_ADD_COLUMN_LABEL = "1 Column";
 
 /** Assert the "1 Column" staged-add tag is visible. */
 export async function expectStagedAddColumnVisible(): Promise<void> {
