@@ -415,4 +415,101 @@ describe("ClassificationGroupView (#756)", () => {
     await expect.element(page.getByText("Aggregatnivå")).toBeVisible();
     expect(getCatalogNode).not.toHaveBeenCalled();
   });
+
+  it("renders related classifications for an active grouped classification node", async () => {
+    const active = classificationNode({
+      fqid: "class/niva-test",
+      name: "Nivå aggregat",
+      short_name: "NIVA",
+      codes: [{ code: "A", label: "Aggregatnivå", level: 1, is_valid: true }],
+      derived_from: [
+        {
+          fqid: "class/sun2020",
+          slug: "sun2020",
+          short_name: "SUN2020",
+          name: "Svensk utbildningsnomenklatur",
+          note: "Grouped source classification",
+        },
+      ],
+      derivatives: [
+        {
+          fqid: "class/niva-extra",
+          slug: "niva-extra",
+          short_name: "NIVA extra",
+          name: "Extra grouped derivative",
+          note: null,
+        },
+      ],
+    });
+    vi.mocked(getClassificationGroup).mockResolvedValue(node());
+
+    await render(ClassificationGroupView, {
+      key: "sun",
+      activeFqid: "class/niva-test",
+      initialActiveNode: active,
+    });
+
+    await expect
+      .element(page.getByRole("heading", { name: "Related classifications" }))
+      .toBeVisible();
+    await expect.element(page.getByText("Derived from")).toBeVisible();
+    await expect
+      .element(page.getByRole("link", { name: "SUN2020" }))
+      .toHaveAttribute("href", "/catalog/class/sun2020");
+    await expect
+      .element(page.getByText("Grouped source classification"))
+      .toBeVisible();
+    await expect
+      .element(page.getByText("Derived classifications"))
+      .toBeVisible();
+    await expect
+      .element(page.getByRole("link", { name: "NIVA extra" }))
+      .toHaveAttribute("href", "/catalog/class/niva-extra");
+    expect(getCatalogNode).not.toHaveBeenCalled();
+  });
+
+  it("renders related classifications for an active family edition node", async () => {
+    vi.mocked(getClassificationGroup).mockResolvedValue(familyNode());
+    vi.mocked(getCatalogNode).mockResolvedValue(
+      classificationNode({
+        fqid: "class/ssyk2012",
+        name: "SSYK 2012",
+        short_name: "SSYK2012",
+        codes: [{ code: "9", label: "Yrke", level: 1, is_valid: true }],
+        derived_from: [
+          {
+            fqid: "class/ssyk1996",
+            slug: "ssyk1996",
+            short_name: "SSYK1996",
+            name: "SSYK 1996",
+            note: "Derived family predecessor",
+          },
+        ],
+        derivatives: [
+          {
+            fqid: "class/ssyk-derived",
+            slug: "ssyk-derived",
+            short_name: "SSYK derived",
+            name: "Derived occupational classification",
+            note: null,
+          },
+        ],
+      }),
+    );
+
+    await render(ClassificationGroupView, { key: "ssyk" });
+
+    await expect
+      .element(page.getByRole("heading", { name: "Related classifications" }))
+      .toBeVisible();
+    await expect
+      .element(page.getByRole("link", { name: "SSYK1996" }))
+      .toHaveAttribute("href", "/catalog/class/ssyk1996");
+    await expect
+      .element(page.getByText("Derived family predecessor"))
+      .toBeVisible();
+    await expect
+      .element(page.getByRole("link", { name: "SSYK derived" }))
+      .toHaveAttribute("href", "/catalog/class/ssyk-derived");
+  });
 });

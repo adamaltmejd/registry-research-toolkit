@@ -13,6 +13,7 @@ import {
 import { asyncResource } from "./async.svelte";
 import ClassificationCodesPanel from "./ClassificationCodesPanel.svelte";
 import ClassificationEditionGraph from "./ClassificationEditionGraph.svelte";
+import ClassificationRelatedLinks from "./ClassificationRelatedLinks.svelte";
 import { catalogHref, leafSlug, narrowCatalogNode } from "./catalog";
 import { router } from "./router.svelte";
 import SubjectView from "./SubjectView.svelte";
@@ -258,6 +259,12 @@ function selectEdition(value: string): void {
   {/if}
 {/snippet}
 
+{#snippet relationships()}
+  {#if activeNode}
+    <ClassificationRelatedLinks node={activeNode} />
+  {/if}
+{/snippet}
+
 {#if resource.loading}
   <p class="muted" aria-busy="true">Loading…</p>
 {:else if resource.error}
@@ -280,7 +287,12 @@ function selectEdition(value: string): void {
     </TechnicalDetails>
   {/snippet}
 
-  <SubjectView title={node.label} {description} valueSet={valueSet} />
+  <SubjectView
+    title={node.label}
+    {description}
+    valueSet={valueSet}
+    {relationships}
+  />
 {:else if node}
   {#snippet description()}
     <!-- Key, axes, and source are build-derivation metadata, not researcher-facing
@@ -312,6 +324,7 @@ function selectEdition(value: string): void {
     {description}
     {picker}
     valueSet={valueSet}
+    {relationships}
   />
 {/if}
 
