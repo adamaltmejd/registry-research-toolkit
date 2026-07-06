@@ -222,6 +222,23 @@ describe("CodeList — unified value-set / code viewer (#638 PR3)", () => {
       .toBeVisible();
   });
 
+  it("keeps the flat-list expand control above the preview rows", async () => {
+    await render(CodeList, { codes: flatCodes() });
+    const toggle = document.querySelector(".flat-toggle");
+    const firstRow = document.querySelector(".code-row");
+
+    await expect
+      .element(page.getByRole("button", { name: "Show all 60 codes" }))
+      .toBeVisible();
+    expect(toggle).not.toBeNull();
+    expect(firstRow).not.toBeNull();
+    expect(
+      toggle?.compareDocumentPosition(firstRow as Element) ??
+        Node.DOCUMENT_POSITION_PRECEDING,
+    ).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+    expect(getComputedStyle(toggle as Element).position).toBe("sticky");
+  });
+
   it("shows filtered large lists as flat matches", async () => {
     await render(CodeList, { codes: levelledCodes() });
     await page

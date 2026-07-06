@@ -325,6 +325,9 @@ function groupedByBucketPrefix(list: Code[]): CodeLayout | null {
           <p class="summary-note">
             Showing first {layout.preview.length} of {shown.length} codes.
           </p>
+          <Collapsible.Trigger class="flat-toggle">
+            {flatExpanded ? "Show fewer codes" : `Show all ${shown.length} codes`}
+          </Collapsible.Trigger>
           <ul class="codes">
             {#each layout.preview as code, i (i)}
               {@render codeRow(code)}
@@ -339,9 +342,6 @@ function groupedByBucketPrefix(list: Code[]): CodeLayout | null {
               </ul>
             {/if}
           </Collapsible.Content>
-          <Collapsible.Trigger class="flat-toggle">
-            {flatExpanded ? "Show fewer codes" : `Show all ${shown.length} codes`}
-          </Collapsible.Trigger>
         </Collapsible.Root>
       {:else}
         <ul class="codes">
@@ -475,6 +475,9 @@ function groupedByBucketPrefix(list: Code[]): CodeLayout | null {
     margin: 0;
   }
   :global(.flat-toggle) {
+    position: sticky;
+    top: 0;
+    z-index: 1;
     align-self: flex-start;
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
