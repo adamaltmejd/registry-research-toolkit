@@ -122,7 +122,7 @@ __all__ = [
     "VarnameSearchResult",
 ]
 
-__version__ = "0.38.2"
+__version__ = "0.38.3"
 
 
 def __getattr__(name: str):
