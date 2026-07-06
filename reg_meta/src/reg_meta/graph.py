@@ -56,6 +56,7 @@ from .fqid import Fqid
 if TYPE_CHECKING:
     from .catalog import (
         Catalog,
+        ClassificationFamilySummary,
         ConceptGroupSummary,
         RepresentationSuccessionRef,
         VariableEdition,
@@ -158,6 +159,7 @@ class ClassificationGraphNode(_GraphNodeBase):
     terminal (head) edition."""
 
     kind: Literal["classification"] = "classification"
+    short_name: str | None
     version_year: int | None
     is_current: bool
     # The umbrella group's display label (the ``ConceptGroupSummary.label``, e.g.
@@ -698,7 +700,8 @@ class _GraphBuilder:
                 self._nodes[node_id] = ClassificationGraphNode(
                     id=node_id,
                     fqid=edition.fqid,
-                    label=edition.name or node_id,
+                    label=edition.name or edition.short_name or node_id,
+                    short_name=edition.short_name,
                     group_key=group_key if is_member else None,
                     group_label=group_label if is_member else None,
                     version_year=edition.version_year,
@@ -835,15 +838,24 @@ def graph_for_concept_group(
 def graph_for_classification_group(
     catalog: Catalog, key: str
 ) -> RelationshipGraph | None:
-    """The classification umbrella group's union graph, keyed by its derivation
-    ``key`` (resolved via the new ``classification_group`` accessor). Each member is
-    a ``class/<slug>`` edition; the union is its succession chain + co-members. None
-    when the group doesn't exist (the webapp maps it to 404)."""
+    """The classification subject graph addressed by ``key``.
+
+    Curated umbrellas resolve via ``classification_group``; derived
+    one-dimensional succession families resolve via ``classification_family``. In
+    both cases each member/edition is a ``class/<slug>`` node and the union is its
+    succession chain + co-members. None when neither subject exists (the webapp maps
+    it to 404).
+    """
     group = catalog.classification_group(key)
-    if group is None:
+    if group is not None:
+        builder = _GraphBuilder(catalog)
+        _add_classification_group_members(builder, group)
+        return builder.build(focus_id=None)
+    family = catalog.classification_family(key)
+    if family is None:
         return None
     builder = _GraphBuilder(catalog)
-    _add_classification_group_members(builder, group)
+    _add_classification_family_editions(builder, family)
     return builder.build(focus_id=None)
 
 
@@ -907,6 +919,32 @@ def _add_classification_group_members(
             member.fqid.classification,
             group_key=group_key,
             group_label=group.label,
+            member_slugs=member_slugs,
+        )
+
+
+def _add_classification_family_editions(
+    builder: _GraphBuilder, family: ClassificationFamilySummary
+) -> None:
+    """Union every edition of a derived one-dimensional classification family.
+
+    Family editions are not curated concept-group members, but the graph renderer
+    uses the same ``group_key`` / ``group_label`` cluster metadata to title the
+    edition chain consistently with umbrella groups.
+    """
+    group_key = f"class/{family.key}"
+    member_slugs = frozenset(
+        edition.fqid.classification
+        for edition in family.editions
+        if edition.fqid is not None and edition.fqid.classification is not None
+    )
+    for edition in family.editions:
+        if edition.fqid is None or edition.fqid.classification is None:
+            continue
+        builder.add_classification(
+            edition.fqid.classification,
+            group_key=group_key,
+            group_label=family.label,
             member_slugs=member_slugs,
         )
 

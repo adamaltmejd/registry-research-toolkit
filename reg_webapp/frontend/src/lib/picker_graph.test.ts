@@ -61,6 +61,7 @@ function classificationNode(
     id: "c1",
     fqid: "class/sun2020",
     label: "SUN 2020",
+    short_name: "SUN2020",
     group_key: "sun",
     version_year: 2020,
     is_current: true,

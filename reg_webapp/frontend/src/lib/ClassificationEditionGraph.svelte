@@ -1,6 +1,6 @@
 <script lang="ts">
 import type { ClassificationGraphNode, RelationshipGraph } from "./api";
-import { catalogHref, leafSlug } from "./catalog";
+import { catalogHref } from "./catalog";
 import {
   type ClassificationDagEdge,
   type ClassificationDagNode,
@@ -175,7 +175,7 @@ function editionYear(node: ClassificationGraphNode): string {
 }
 
 function editionName(node: ClassificationGraphNode): string {
-  return node.fqid != null ? leafSlug(node.fqid) : node.label;
+  return node.short_name ?? node.label;
 }
 
 function editionHref(node: ClassificationGraphNode): string | null {
@@ -186,7 +186,9 @@ function editionHref(node: ClassificationGraphNode): string | null {
 }
 
 function editionLabel(node: ClassificationGraphNode): string {
-  return `${editionName(node)}, ${node.label}, ${editionYear(node)}${node.is_current ? ", current edition" : ""}`;
+  const name = editionName(node);
+  const fullName = node.label !== name ? `, ${node.label}` : "";
+  return `${name}${fullName}, ${editionYear(node)}${node.is_current ? ", current edition" : ""}`;
 }
 </script>
 
@@ -276,7 +278,6 @@ function editionLabel(node: ClassificationGraphNode): string {
                       >{editionName(node)}</span
                     >
                   {/if}
-                  <span class="edition-year">{editionYear(node)}</span>
                 </span>
                 <span class="edition-tags">
                   {#if focused}
@@ -330,13 +331,11 @@ function editionLabel(node: ClassificationGraphNode): string {
   .edition-scroll {
     overflow-x: auto;
     overflow-y: hidden;
-    border: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
-    border-radius: var(--radius);
-    background: var(--surface);
+    padding: var(--space-1) 0;
   }
   .edition-dag {
     position: relative;
-    min-width: 100%;
+    margin-inline: auto;
   }
   .edition-connectors {
     position: absolute;
@@ -419,12 +418,6 @@ function editionLabel(node: ClassificationGraphNode): string {
     outline: none;
     box-shadow: var(--focus-ring);
     border-radius: var(--radius-sm);
-  }
-  .edition-year {
-    font-family: var(--font-mono);
-    font-size: var(--text-micro);
-    font-variant-numeric: tabular-nums;
-    color: var(--cat-class-ink);
   }
   .edition-tags {
     display: flex;

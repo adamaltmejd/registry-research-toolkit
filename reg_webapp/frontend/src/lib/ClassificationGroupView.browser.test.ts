@@ -111,6 +111,7 @@ function groupGraph(): RelationshipGraph {
         id: "class/sun1996",
         fqid: "class/sun1996",
         label: "SUN 1996",
+        short_name: "SUN1996",
         group_key: "class/sun",
         group_label: "Svensk utbildningsnomenklatur",
         version_year: 1996,
@@ -121,6 +122,7 @@ function groupGraph(): RelationshipGraph {
         id: "class/sun2020",
         fqid: "class/sun2020",
         label: "SUN 2020",
+        short_name: "SUN2020",
         group_key: "class/sun",
         group_label: "Svensk utbildningsnomenklatur",
         version_year: 2020,
@@ -131,6 +133,7 @@ function groupGraph(): RelationshipGraph {
         id: "class/niva-test",
         fqid: "class/niva-test",
         label: "Nivå aggregat",
+        short_name: "NIVA",
         group_key: "class/sun",
         group_label: "Svensk utbildningsnomenklatur",
         version_year: null,
@@ -145,6 +148,46 @@ function groupGraph(): RelationshipGraph {
         target: "class/sun2020",
         label: null,
         effective_year: 2020,
+      },
+    ],
+    focus_id: null,
+  };
+}
+
+function familyGraph(): RelationshipGraph {
+  return {
+    nodes: [
+      {
+        kind: "classification",
+        id: "class/ssyk1996",
+        fqid: "class/ssyk1996",
+        label: "Standard för svensk yrkesklassificering 1996",
+        short_name: "SSYK1996",
+        group_key: "class/ssyk",
+        group_label: "SSYK",
+        version_year: 1996,
+        is_current: false,
+      },
+      {
+        kind: "classification",
+        id: "class/ssyk2012",
+        fqid: "class/ssyk2012",
+        label: "Standard för svensk yrkesklassificering 2012",
+        short_name: "SSYK2012",
+        group_key: "class/ssyk",
+        group_label: "SSYK",
+        version_year: 2012,
+        is_current: true,
+      },
+    ],
+    edges: [
+      {
+        id: "succession:class/ssyk1996->class/ssyk2012",
+        kind: "succession",
+        source: "class/ssyk1996",
+        target: "class/ssyk2012",
+        label: null,
+        effective_year: 2012,
       },
     ],
     focus_id: null,
@@ -241,6 +284,10 @@ describe("ClassificationGroupView (#756)", () => {
     expect(document.querySelector(".edition-edge-year")?.textContent).toBe(
       "2020",
     );
+    expect(document.querySelector(".edition-year")).toBeNull();
+    await expect
+      .element(page.getByRole("link", { name: "SUN1996" }))
+      .toHaveAttribute("href", "/catalog/class/sun1996");
     await expect
       .element(page.getByRole("tab", { name: /Utbildningsnivå/ }))
       .toHaveAttribute("aria-selected", "true");
@@ -274,6 +321,7 @@ describe("ClassificationGroupView (#756)", () => {
           id: "class/icd11",
           fqid: "class/icd11",
           label: "ICD-11",
+          short_name: "ICD-11",
           group_key: "class/icd",
           group_label: "ICD",
           version_year: 2027,
@@ -284,6 +332,7 @@ describe("ClassificationGroupView (#756)", () => {
           id: "class/icd10",
           fqid: "class/icd10",
           label: "ICD-10",
+          short_name: "ICD-10",
           group_key: "class/icd",
           group_label: "ICD",
           version_year: 2016,
@@ -318,6 +367,7 @@ describe("ClassificationGroupView (#756)", () => {
 
   it("renders a succession family as an edition-chain subject page", async () => {
     vi.mocked(getClassificationGroup).mockResolvedValue(familyNode());
+    vi.mocked(getClassificationGroupGraph).mockResolvedValue(familyGraph());
     vi.mocked(getCatalogNode).mockResolvedValue(
       classificationNode({
         fqid: "class/ssyk2012",
@@ -339,8 +389,17 @@ describe("ClassificationGroupView (#756)", () => {
       .element(page.getByRole("tab", { name: /SSYK 2012/ }))
       .toHaveAttribute("aria-selected", "true");
     await expect.element(page.getByText(/ssyk2012 - current/)).toBeVisible();
-    await expect.element(page.getByText("Yrke")).toBeVisible();
-    expect(getClassificationGroupGraph).not.toHaveBeenCalled();
+    await expect
+      .element(page.getByRole("heading", { name: "Editions" }))
+      .toBeVisible();
+    await expect
+      .element(page.getByRole("link", { name: "SSYK1996" }))
+      .toHaveAttribute("href", "/catalog/class/ssyk1996");
+    expect(document.querySelector(".edition-year")).toBeNull();
+    await vi.waitFor(() => {
+      expect(document.querySelector(".code-label")?.textContent).toBe("Yrke");
+    });
+    expect(getClassificationGroupGraph).toHaveBeenCalledWith("ssyk");
   });
 
   it("defaults to the current family edition before future-dated successors", async () => {
@@ -353,6 +412,7 @@ describe("ClassificationGroupView (#756)", () => {
             slug: "icd11",
             fqid: "class/icd11",
             name: "ICD-11",
+            short_name: "ICD-11",
             effective_year: null,
             version_year: 2027,
             is_current: false,
@@ -362,6 +422,7 @@ describe("ClassificationGroupView (#756)", () => {
             slug: "icd10",
             fqid: "class/icd10",
             name: "ICD-10",
+            short_name: "ICD-10",
             effective_year: 2027,
             version_year: 2016,
             is_current: true,

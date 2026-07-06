@@ -1394,6 +1394,7 @@ class TestClassificationChains:
         assert nodes["class/sun1996"].version_year == 1996
         assert nodes["class/sun2000"].version_year == 2000
         assert nodes["class/sun2020"].version_year == 2020
+        assert nodes["class/sun2020"].short_name == "SUN2020"
         assert nodes["class/sun2020"].is_current is True
         # Two directed succession edges, deduped (no duplicate from co-membership).
         succ = [e for e in g.edges if e.kind == "succession"]
@@ -1444,6 +1445,30 @@ class TestClassificationChains:
             "class/sun1996",
             "class/sun2000-niva",
         )
+
+    def test_one_dimensional_family_graph_uses_family_key(self) -> None:
+        conn = build_slugged_db(classification=None)
+        _add_classification(conn, cid=1, slug="icd-10-se", name="ICD-10")
+        _add_classification(conn, cid=2, slug="icd-11-se", name="ICD-11")
+        _add_class_succession(
+            conn,
+            predecessor="icd-10-se",
+            successor="icd-11-se",
+            effective_year=2027,
+        )
+
+        g = Catalog(conn).graph_for_classification_group("icd")
+
+        assert g is not None
+        nodes = {n.id: n for n in g.nodes}
+        assert set(nodes) == {"class/icd-10-se", "class/icd-11-se"}
+        assert all(isinstance(n, ClassificationGraphNode) for n in g.nodes)
+        assert nodes["class/icd-10-se"].group_key == "class/icd"
+        assert nodes["class/icd-10-se"].group_label == "ICD"
+        assert nodes["class/icd-10-se"].short_name == "ICD-10-SE"
+        assert {(e.source, e.target) for e in g.edges} == {
+            ("class/icd-10-se", "class/icd-11-se")
+        }
 
     def test_umbrella_members_carry_group_label_heading(self) -> None:
         # #794 P3: a curated umbrella member carries the group's display `label` as

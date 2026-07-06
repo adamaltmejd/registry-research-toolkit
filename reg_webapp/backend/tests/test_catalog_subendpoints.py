@@ -343,6 +343,20 @@ def test_classification_group_graph_endpoint(client):
     assert not any(nid.startswith("group:") for nid in node_ids)
     # All nodes are classification-kind editions (point version_year, not interval).
     assert all(n["kind"] == "classification" for n in body["nodes"])
+    assert any(n["short_name"] == "SUN2020" for n in body["nodes"])
+
+
+def test_classification_family_graph_endpoint(client):
+    resp = client.get("/api/catalog/group/class/sni/graph")
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["focus_id"] is None
+    node_ids = {n["id"] for n in body["nodes"]}
+    assert {"class/sni-root1996", "class/sni-grp2020"} <= node_ids
+    assert not any(nid.startswith("group:") for nid in node_ids)
+    assert all(n["kind"] == "classification" for n in body["nodes"])
+    assert any(n["group_label"] == "SNI" for n in body["nodes"])
+    assert any(n["short_name"] == "SNI-ROOT1996" for n in body["nodes"])
 
 
 def test_classification_group_graph_unknown_key_404(client):

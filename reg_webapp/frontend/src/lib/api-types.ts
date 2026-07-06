@@ -73,11 +73,13 @@ export interface paths {
         };
         /**
          * Get Classification Group Graph
-         * @description The relationship graph for a classification umbrella group (#761) — the
-         *     union of its member editions' succession chains (`focus_id=None`). 404 when no
-         *     classification group has that key. Shares the `/api/catalog` cache. By-key
-         *     resolution lives in reg_meta (`Catalog.graph_for_classification_group` →
-         *     `classification_group(key)`).
+         * @description The relationship graph for a classification subject (#761/#1119).
+         *
+         *     Curated umbrella groups and derived one-dimensional succession families share
+         *     the same canonical `/catalog/group/class/{key}` subject route; this graph
+         *     endpoint mirrors that by-key resolution and returns the union of member/edition
+         *     succession chains (`focus_id=None`). 404 when no classification group or family
+         *     has that key. Shares the `/api/catalog` cache.
          */
         get: operations["get_classification_group_graph_api_catalog_group_class__key__graph_get"];
         put?: never;
@@ -944,6 +946,11 @@ export interface components {
              */
             name: string | null;
             /**
+             * Short Name
+             * @description The edition's short display name, from the live classification row.
+             */
+            short_name: string | null;
+            /**
              * Slug
              * @description The edition's literal slug (e.g. 'sun2000').
              */
@@ -999,6 +1006,8 @@ export interface components {
             kind: "classification";
             /** Label */
             label: string;
+            /** Short Name */
+            short_name: string | null;
             /** Version Year */
             version_year: number | null;
         };
