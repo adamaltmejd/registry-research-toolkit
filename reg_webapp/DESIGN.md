@@ -975,9 +975,10 @@ Two layers, semantic roles only consumed by components:
   `--surface-sunken`, `--text`, `--text-muted`, `--text-faint`, `--border`,
   `--border-strong`, `--accent`, `--accent-fg`, `--accent-bg`, `--accent-ink`, the
   categorical-ink family `--cat-reg-ink` / `--cat-var-ink` / `--cat-code-ink` /
-  `--cat-class-ink` / `--cat-group-ink` (AA-cleared text stops — see § Color), plus the
-  status roles below. Dark mode is a single `[data-theme="dark"]` block that remaps
-  these roles to dark primitive stops — no component CSS changes.
+  `--cat-class-ink` / `--cat-group-ink`, the facet-axis data roles `--facet-axis-*` /
+  `--facet-axis-*-ink` (AA-cleared text stops — see § Color), plus the status roles
+  below. Dark mode is a single `[data-theme="dark"]` block that remaps these roles to
+  dark primitive stops — no component CSS changes.
 
 The tokens move out of `App.svelte`'s `:global(:root)` (the #689 spike stub) into a
 global `frontend/src/tokens.css` imported once in `main.ts`. The stub's
@@ -1040,6 +1041,13 @@ darkens it enough to clear WCAG AA on those tint backgrounds (teal and gold fall
 under 4.5:1 as plain text on their own tint). This mirrors `--accent-ink` for the brand.
 Components always use the ink stop for any categorical label text; fill/border use the
 raw hue.
+
+A separate **facet-axis** palette tags concept-group dimensions in member/filter pills.
+It is a data-encoding sub-system: deterministic within the declared axis set
+(stable-name hash plus collision resolution), value-only in visible text, and separate
+from node-type, status, and brand chrome. The visible value pill gets the axis color;
+the axis label remains in the fieldset legend, `title`, and screen-reader text so hue is
+not the only carrier of meaning.
 
 ### Geometry, elevation, motion
 
