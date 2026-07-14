@@ -1439,6 +1439,38 @@ def test_delivery_alias_participates_in_pre_slice_relevance_order(monkeypatch) -
     ]
 
 
+def test_steward_scope_narrows_internal_alias_ranking() -> None:
+    row = {
+        "type": "variable",
+        "fqid": "scb/reg/visible",
+        "variable_name": "Exact topic",
+        "delivery_column_names": ("HELD", "EXACT"),
+        "_ranking_delivery_column_names": ("HELD", "EXACT"),
+    }
+
+    narrowed = queries._filter_variable_delivery_scope(
+        [row], "exact", {"scb/reg/visible": {"HELD"}}
+    )
+
+    assert narrowed[0]["delivery_column_names"] == ("HELD",)
+    assert narrowed[0]["_ranking_delivery_column_names"] == ("HELD",)
+    assert queries._search_display_score("exact", narrowed[0]) == 100
+
+
+def test_group_representation_ranking_scope_excludes_unheld_columns() -> None:
+    scope = {"scb/reg/member": {"HELD"}}
+
+    assert queries._group_member_in_delivery_scope(
+        {"fqid": "scb/reg/member", "delivery_column": "HELD"}, scope
+    )
+    assert not queries._group_member_in_delivery_scope(
+        {"fqid": "scb/reg/member", "delivery_column": "EXACT"}, scope
+    )
+    assert queries._group_member_in_delivery_scope(
+        {"fqid": "scb/reg/member", "delivery_column": None}, scope
+    )
+
+
 def test_excluded_fqid_is_cursor_bound_and_removed_before_limit(monkeypatch) -> None:
     conn = build_slugged_db()
     rows = [

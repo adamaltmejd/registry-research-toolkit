@@ -499,7 +499,11 @@ def _filter_variable_delivery_scope(
             held_columns, terms, _variable_search_public_text(row)
         )
         filtered.append(
-            {**row, "delivery_column_names": matched_columns or held_columns}
+            {
+                **row,
+                "delivery_column_names": matched_columns or held_columns,
+                "_ranking_delivery_column_names": matched_columns or held_columns,
+            }
         )
     return filtered
 
@@ -1004,6 +1008,7 @@ def search(
             all_results,
             label_hits,
             allow=allow,
+            delivery_column_scope=delivery_column_scope,
         )
 
     all_results.sort(
@@ -2607,6 +2612,7 @@ def _fold_concept_groups(
     label_hits: list[sqlite3.Row],
     *,
     allow: frozenset[str] | None = None,
+    delivery_column_scope: Mapping[str, Collection[str | None]] | None = None,
 ) -> list[dict[str, Any]]:
     """Collapse sibling search hits under their concept group (#322).
 
@@ -2630,7 +2636,10 @@ def _fold_concept_groups(
     that ends up with NO held member is dropped (the label-only path can surface a
     group none of whose members the steward holds). CLASSIFICATION-kind groups are
     catalog-global (decision 2) and pass through unnarrowed. `None` = no
-    restriction (the `global` path is byte-identical to pre-#859)."""
+    restriction (the `global` path is byte-identical to pre-#859).
+
+    ``delivery_column_scope`` applies the same steward restriction at variable
+    representation grain before the group participates in relevance ordering."""
     membership = _member_group_index(conn, results)
 
     buckets: dict[int, list[dict[str, Any]]] = {}
@@ -2673,6 +2682,7 @@ def _fold_concept_groups(
                 summaries,
                 label_matched=gid in label_ids,
                 allow=allow,
+                delivery_column_scope=delivery_column_scope,
             )
             if group_row is not None:
                 out.append(group_row)
@@ -2680,7 +2690,12 @@ def _fold_concept_groups(
         if row["group_id"] not in emitted:
             emitted.add(row["group_id"])
             group_row = _group_result_row(
-                row, [], summaries, label_matched=True, allow=allow
+                row,
+                [],
+                summaries,
+                label_matched=True,
+                allow=allow,
+                delivery_column_scope=delivery_column_scope,
             )
             if group_row is not None:
                 out.append(group_row)
@@ -2785,6 +2800,7 @@ def _group_result_row(
     *,
     label_matched: bool,
     allow: frozenset[str] | None = None,
+    delivery_column_scope: Mapping[str, Collection[str | None]] | None = None,
 ) -> dict[str, Any] | None:
     """One `type: "group"` search result row: group identity + the full
     member list + the leaf hits it folded (`matched`). `fts_rank` is the best
@@ -2806,6 +2822,14 @@ def _group_result_row(
         members = [m for m in members if m.get("fqid") in allow]
         if not members:
             return None
+    if delivery_column_scope is not None and meta["kind"] != "classification":
+        members = [
+            member
+            for member in members
+            if _group_member_in_delivery_scope(member, delivery_column_scope)
+        ]
+        if not members:
+            return None
     return {
         "type": "group",
         "kind": meta["kind"],
@@ -2821,6 +2845,17 @@ def _group_result_row(
         "label_matched": label_matched,
         "fts_rank": min((h.get("fts_rank", 0) for h in matched), default=0),
     }
+
+
+def _group_member_in_delivery_scope(
+    member: dict[str, Any],
+    delivery_column_scope: Mapping[str, Collection[str | None]],
+) -> bool:
+    fqid = member.get("fqid")
+    if fqid not in delivery_column_scope:
+        return False
+    delivery_column = member.get("delivery_column")
+    return delivery_column is None or delivery_column in delivery_column_scope[fqid]
 
 
 # `_code_id` is the value-arm's deferred-annotation marker (#352 perf):
