@@ -23,14 +23,6 @@ prefix_rule(
 )
 
 prefix_rule(
-    pattern = ["gh", "pr", "ready"],
-    decision = "allow",
-    justification = "Publish a converged pipeline PR for review without merging it.",
-    match = ["gh pr ready 1140"],
-    not_match = ["gh pr merge 1140"],
-)
-
-prefix_rule(
     pattern = ["gh", "issue", "list"],
     decision = "allow",
     justification = "Run the required open-and-closed issue deduplication search.",
@@ -42,8 +34,8 @@ prefix_rule(
 )
 
 # Git metadata is outside a linked worktree's writable root. Staging is a normal
-# implementation step. Commits and pushes remain auto-reviewed: prefix rules cannot
-# reliably reject a dangerous option that Git accepts at multiple argument positions.
+# implementation step. Commits and pushes always prompt, so option reordering cannot
+# hide a hook bypass or force push behind a broader user-level allow.
 prefix_rule(
     pattern = ["git", "add"],
     decision = "allow",
@@ -69,8 +61,38 @@ prefix_rule(
     ],
 )
 
-# Common high-impact command forms retain an explicit approval boundary. AGENTS.md and
-# auto-review remain the load-bearing policy because command options may be reordered.
+# Match the whole subcommand, not a particular option position.
+prefix_rule(
+    pattern = ["git", "commit"],
+    decision = "prompt",
+    justification = "Commits must run hooks and include only the intended staged diff.",
+    match = [
+        "git commit -m normal",
+        "git commit -m bypass --no-verify",
+    ],
+)
+
+prefix_rule(
+    pattern = ["git", "push"],
+    decision = "prompt",
+    justification = "Remote publication, hook bypasses, and branch rewriting require review.",
+    match = [
+        "git push origin branch",
+        "git push origin branch --force-with-lease",
+    ],
+)
+
+prefix_rule(
+    pattern = ["gh", "pr", "ready"],
+    decision = "prompt",
+    justification = "Changing draft state is a remote PR lifecycle mutation.",
+    match = [
+        "gh pr ready 1140",
+        "gh pr ready 1140 --undo",
+    ],
+)
+
+# Common high-impact command forms retain an explicit approval boundary.
 prefix_rule(
     pattern = ["git", "reset", "--hard"],
     decision = "prompt",

@@ -9,19 +9,20 @@ The policy is deliberately layered:
   directories.
 - Network remains denied inside the default sandbox, so remote mutations still need an
   approval decision unless an exact project rule covers the operation.
-- Persistent allow rules cover read-only GitHub operations, marking a PR ready, staging,
-  and fast-forward pulls.
+- Persistent allow rules cover read-only GitHub operations, staging, and fast-forward
+  pulls.
 - Tests, linters, package scripts, local servers, and repository-owned Python or shell
   scripts remain with the auto-reviewer. They execute or accept paths from the
   checked-out head, so persistently allowing them would let an untrusted public PR
   escape the sandbox or read arbitrary host files.
-- Commits, pushes, destructive Git operations, merges, worktree removal, and process
-  termination retain review or prompt boundaries. Prefix rules cannot reliably forbid a
-  Git flag that is legal at several argument positions, so AGENTS.md remains the
-  load-bearing prohibition on hook bypasses and destructive commands.
+- Commits, pushes, PR draft-state changes, destructive Git operations, merges, worktree
+  removal, and process termination use broad prompt rules. Matching the whole subcommand
+  keeps reordered hook-bypass and force flags behind the same boundary.
 - The configured `chrome-devtools` MCP server uses a pinned package and launches an
   isolated, headless browser with host-file navigation, usage statistics, and CrUX
-  lookups disabled. Its tool calls do not prompt individually.
+  lookups disabled. Navigation, inspection, and page interaction are auto-approved;
+  uploads, screenshots, snapshots, traces, script exports, and other path-capable tools
+  retain approval.
 
 Rules remove an execution confirmation; they do not grant task authority. `AGENTS.md`,
 the user's request, and the invoked skill still decide whether an action belongs in the
