@@ -308,6 +308,32 @@ def test_owner_cap_keeps_tightest_value_set_owners(
     ]
 
 
+def test_owner_cap_breaks_cross_register_slug_ties_deterministically(
+    conn: sqlite3.Connection,
+) -> None:
+    _seed_register(conn, 1, "rega")
+    _seed_register(conn, 2, "regb")
+    _seed_code(conn, 1, "TARGET", "Target label")
+    for owner_index, slug in enumerate(("a", "b", "c", "d")):
+        variable_id = _seed_variable(conn, 1, str(100 + owner_index), slug, slug)
+        _map(conn, 1, variable_id)
+    for register_id, name in ((1, "same-a"), (2, "same-b")):
+        variable_id = _seed_variable(conn, register_id, name, name, "same")
+        _map(conn, 1, variable_id)
+    _finalize(conn)
+
+    hit = search(conn, "Target label", field="value", type="value").results[0]
+
+    assert hit.variable_count == 6
+    assert [owner.name for owner in hit.variables] == [
+        "a",
+        "b",
+        "c",
+        "d",
+        "same-a",
+    ]
+
+
 def test_owner_cap_can_be_disabled_for_variable_owners(
     conn: sqlite3.Connection,
 ) -> None:

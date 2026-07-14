@@ -1700,7 +1700,7 @@ def _code_owner_annotations_batch(
         is attributed only the codes its own value set carried — no fan-out);
       - owner ordering by the variable's own distinct-code count ASC (a code on a
         tight enum is more discriminative than the same code on a 500-value
-        catalog), ties broken by slug for determinism;
+        catalog), ties broken by slug and full catalog identity for determinism;
       - `reg_ids` (a `--register` scope) constrains BOTH the variable owners and
         `variable_count`; classifications are catalog-scoped, so a register scope
         leaves them empty (mirrors `_search_classifications`' guard)."""
@@ -1753,7 +1753,8 @@ def _code_owner_annotations_batch(
         )
         var_rows = conn.execute(
             "WITH owners AS ("
-            "  SELECT cvm.code_id, v.name AS variable_name, v.slug AS variable_slug, "
+            "  SELECT cvm.code_id, v.variable_id, v.name AS variable_name, "
+            "         v.slug AS variable_slug, "
             "         r.name AS register_name, r.slug AS register_slug, "
             "         p.slug AS provider_slug, "
             "         (SELECT COUNT(*) FROM code_variable_map c2 "
@@ -1766,7 +1767,8 @@ def _code_owner_annotations_batch(
             f"  WHERE 1=1{reg_filter}"
             "), ranked AS ("
             "  SELECT *, ROW_NUMBER() OVER ("
-            "    PARTITION BY code_id ORDER BY var_code_count ASC, variable_slug"
+            "    PARTITION BY code_id ORDER BY var_code_count ASC, variable_slug, "
+            "      provider_slug, register_slug, variable_id"
             "  ) AS rn FROM owners"
             f") SELECT * FROM ranked{var_rank_filter} ORDER BY code_id, rn",
             var_params,
