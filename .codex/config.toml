@@ -79,12 +79,6 @@ approval_mode = "approve"
 [mcp_servers.chrome-devtools.tools.list_network_requests]
 approval_mode = "approve"
 
-[mcp_servers.chrome-devtools.tools.get_network_request]
-approval_mode = "approve"
-
-[mcp_servers.chrome-devtools.tools.lighthouse_audit]
-approval_mode = "approve"
-
 [mcp_servers.chrome-devtools.tools.performance_analyze_insight]
 approval_mode = "approve"
 
@@ -94,6 +88,9 @@ approval_mode = "approve"
 # These accept host input/output paths. Keep them explicitly user-reviewed even when a
 # future server release changes annotations or adds other tools.
 [mcp_servers.chrome-devtools.tools.upload_file]
+approval_mode = "prompt"
+
+[mcp_servers.chrome-devtools.tools.get_network_request]
 approval_mode = "prompt"
 
 [mcp_servers.chrome-devtools.tools.take_screenshot]
@@ -118,4 +115,7 @@ approval_mode = "prompt"
 approval_mode = "prompt"
 
 [mcp_servers.chrome-devtools.tools.screencast_stop]
+approval_mode = "prompt"
+
+[mcp_servers.chrome-devtools.tools.lighthouse_audit]
 approval_mode = "prompt"
