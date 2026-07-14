@@ -764,7 +764,7 @@ def search(
     fold_candidate_limit = _MAX_CURSOR_POSITION + 1 if fold_groups else candidate_limit
     entity_candidate_limit = (
         _MAX_CURSOR_POSITION + 1
-        if type in {"register", "variable", "classification"}
+        if type in {"all", "register", "variable", "classification"}
         else fold_candidate_limit
     )
     branch_offset = 0
@@ -1150,7 +1150,11 @@ def _search_identity_texts(row: dict[str, Any]) -> tuple[str, ...]:
                 str(fqid).split("/")[-1] if fqid else None,
                 row.get("variable_name"),
                 row.get("datacolumn"),
-                *(row.get("delivery_column_names") or ()),
+                *(
+                    row.get("_ranking_delivery_column_names")
+                    or row.get("delivery_column_names")
+                    or ()
+                ),
             )
         )
     elif row_type in {"classification", "classification_succession"}:
@@ -1549,18 +1553,11 @@ def _search_description_variables(
         + "ORDER BY rank, vf.rowid LIMIT ? OFFSET ?",
         (query, *register_params, limit, offset),
     ).fetchall()
-    delivery_columns = (
-        _delivery_column_names_for_variables(
-            conn,
-            (
-                r["variable_id"]
-                for r in rows
-                if not reg_ids or r["register_id"] in reg_ids
-            ),
-        )
-        if include_delivery_columns
-        else {}
+    ranking_delivery_columns = _delivery_column_names_for_variables(
+        conn,
+        (r["variable_id"] for r in rows if not reg_ids or r["register_id"] in reg_ids),
     )
+    delivery_columns = ranking_delivery_columns if include_delivery_columns else {}
     results = []
     for r in rows:
         if reg_ids and r["register_id"] not in reg_ids:
@@ -1583,6 +1580,9 @@ def _search_description_variables(
                 "variable_description": r["variable_description"],
                 "variable_operational_definition": r["variable_operational_definition"],
                 "delivery_column_names": delivery_columns.get(r["variable_id"], ()),
+                "_ranking_delivery_column_names": ranking_delivery_columns.get(
+                    r["variable_id"], ()
+                ),
                 "fts_rank": r["rank"],
                 "_variable_id": r["variable_id"],
             }
@@ -2830,6 +2830,7 @@ _INTERNAL_KEYS = (
     "_variable_id",
     "_classification_id",
     "_code_id",
+    "_ranking_delivery_column_names",
     "variable_description",
 )
 

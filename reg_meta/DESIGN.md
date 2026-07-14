@@ -443,20 +443,22 @@ carrying `rank: float`). The `SearchResults` envelope carries a bounded `results
 `has_more`, and an opaque `next_cursor`. Cursor context binds the normalized query,
 requested scopes, steward restriction, and catalog manifest; the final order uses a
 unique entity identity after query-sensitive exact/prefix relevance and FTS rank. Typed
-entity searches use the same fixed bounded horizon as folding so the published relevance
-order cannot change when a later page expands an early FTS prefix. Invalid or mismatched
-cursors fail at the library boundary. Cursor integrity is checked before query work and
-continuation has a hard 1,000-result depth ceiling, so a forged token cannot request an
-unbounded prefix; researchers reaching the ceiling must refine the broad query.
-Non-foldable branches use an adaptive `limit + 1` prefix and backfill when in-scope
-shaping consumes a page. Foldable variable/classification/group branches instead use one
-fixed 1,001-row horizon: every cursor sees the same complete bounded fold universe, so a
-later sibling cannot turn an already-consumed leaf into a group or succession row.
-Type/register/year/group eligibility, classification-code exclusions, and the value
-surface's published bm25-plus-mapping-count rank are applied inside SQL before each
-branch's bound. This is the search-surface analog of the catalog-typing move (#681): the
-webapp's per-result mapper functions and `models.py` search wrappers are deleted; the
-FastAPI response models embed reg_meta's search types directly.
+and mixed entity searches use the same fixed bounded horizon as folding so the published
+relevance order cannot change when a later page expands an early FTS prefix. Variable
+delivery aliases for that bounded candidate set are batch-loaded into an internal
+ranking field before slicing; display annotation still runs only for the shown page.
+Invalid or mismatched cursors fail at the library boundary. Cursor integrity is checked
+before query work and continuation has a hard 1,000-result depth ceiling, so a forged
+token cannot request an unbounded prefix; researchers reaching the ceiling must refine
+the broad query. Non-foldable branches use an adaptive `limit + 1` prefix and backfill
+when in-scope shaping consumes a page. Foldable variable/classification/group branches
+instead use one fixed 1,001-row horizon: every cursor sees the same complete bounded
+fold universe, so a later sibling cannot turn an already-consumed leaf into a group or
+succession row. Type/register/year/group eligibility, classification-code exclusions,
+and the value surface's published bm25-plus-mapping-count rank are applied inside SQL
+before each branch's bound. This is the search-surface analog of the catalog-typing move
+(#681): the webapp's per-result mapper functions and `models.py` search wrappers are
+deleted; the FastAPI response models embed reg_meta's search types directly.
 
 An optional cursor-bound `exclude_fqids` set removes register/classification identities
 inside their SQL branches before the bound. Presentation layers use it when they inject

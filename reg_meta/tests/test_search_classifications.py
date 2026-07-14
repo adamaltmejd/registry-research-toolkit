@@ -677,7 +677,7 @@ def test_variable_search_reads_alias_table_when_fts_payload_is_legacy_text() -> 
     assert rows[0].delivery_column_names == ("fedunsatreason_1",)
 
 
-def test_variable_search_hydrates_delivery_aliases_for_displayed_page_only(
+def test_variable_search_hydrates_bounded_alias_rank_then_displayed_page(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     conn = build_slugged_db(
@@ -722,7 +722,7 @@ def test_variable_search_hydrates_delivery_aliases_for_displayed_page_only(
     ).fetchone()[0]
     assert len(out.results) == 1
     assert out.has_more
-    assert seen == [(shown_variable_id,)]
+    assert seen == [(1, 2), (shown_variable_id,)]
     assert out.results[0].delivery_column_names in {("Alpha",), ("Beta",)}
 
 
@@ -1347,6 +1347,96 @@ def test_published_relevance_order_is_stable_across_cursor_pages(monkeypatch) ->
     assert combined == ["class/exact", "class/broad-a", "class/broad-b"]
     assert len(combined) == len(set(combined))
     assert not second.has_more
+
+
+def test_mixed_search_relevance_order_is_stable_without_folding(monkeypatch) -> None:
+    conn = build_slugged_db()
+    rows = [
+        {
+            "type": "classification",
+            "fqid": fqid,
+            "short_name": short_name,
+            "classification_name": name,
+            "fts_rank": rank,
+            "_classification_id": 950 + index,
+        }
+        for index, (fqid, short_name, name, rank) in enumerate(
+            (
+                ("class/broad-a", "Broad A", "Exact topic A", -10.0),
+                ("class/broad-b", "Broad B", "Exact topic B", -9.0),
+                ("class/exact", "Exact", "Exact", -1.0),
+            )
+        )
+    ]
+    monkeypatch.setattr(
+        queries,
+        "_search_classifications",
+        lambda *_args, **_kwargs: [dict(row) for row in rows],
+    )
+    monkeypatch.setattr(queries, "_search_description_registers", lambda *_a, **_k: [])
+    monkeypatch.setattr(queries, "_search_description_variables", lambda *_a, **_k: [])
+
+    first = queries.search(
+        conn, "exact", field="description", type="all", limit=2, fold_groups=False
+    )
+    assert first.next_cursor is not None
+    second = queries.search(
+        conn,
+        "exact",
+        field="description",
+        type="all",
+        limit=2,
+        fold_groups=False,
+        cursor=first.next_cursor,
+    )
+    assert [str(row.fqid) for row in (*first.results, *second.results)] == [
+        "class/exact",
+        "class/broad-a",
+        "class/broad-b",
+    ]
+    assert not second.has_more
+
+
+def test_delivery_alias_participates_in_pre_slice_relevance_order(monkeypatch) -> None:
+    conn = build_slugged_db()
+    rows = [
+        {
+            "type": "variable",
+            "fqid": fqid,
+            "variable_name": name,
+            "register_name": "Register",
+            "delivery_column_names": (),
+            "_ranking_delivery_column_names": aliases,
+            "fts_rank": rank,
+            "_variable_id": 980 + index,
+        }
+        for index, (fqid, name, aliases, rank) in enumerate(
+            (
+                ("scb/reg/broad-a", "Exact topic A", ("OTHER_A",), -10.0),
+                ("scb/reg/broad-b", "Exact topic B", ("OTHER_B",), -9.0),
+                ("scb/reg/exact", "Unrelated", ("EXACT",), -1.0),
+            )
+        )
+    ]
+    monkeypatch.setattr(
+        queries,
+        "_search_description_variables",
+        lambda *_args, **_kwargs: [dict(row) for row in rows],
+    )
+
+    out = queries.search(
+        conn,
+        "exact",
+        field="description",
+        type="variable",
+        limit=3,
+        fold_groups=False,
+    )
+    assert [str(row.fqid) for row in out.results] == [
+        "scb/reg/exact",
+        "scb/reg/broad-a",
+        "scb/reg/broad-b",
+    ]
 
 
 def test_excluded_fqid_is_cursor_bound_and_removed_before_limit(monkeypatch) -> None:
