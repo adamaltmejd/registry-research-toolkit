@@ -41,6 +41,7 @@ from reg_webapp.routes.search import (
     _best_bets,
     _has_searchable_token,
     _narrow_variable_leaf_columns,
+    _rank_codes,
     _validated_limit,
 )
 
@@ -614,6 +615,37 @@ def _code(code: str, *, classification_count: int = 0, variable_count: int = 0):
         variable_count=variable_count,
         rank=0.0,
     )
+
+
+def test_rank_codes_classification_backed_precede():
+    results = [
+        _code("a", classification_count=0, variable_count=99),
+        _code("b", classification_count=1, variable_count=0),
+    ]
+    assert [result.code for result in _rank_codes(results)] == ["b", "a"]
+
+
+def test_rank_codes_orders_by_classification_then_variable_count():
+    results = [
+        _code("a", classification_count=1, variable_count=1),
+        _code("b", classification_count=3, variable_count=0),
+        _code("c", classification_count=1, variable_count=5),
+    ]
+    assert [result.code for result in _rank_codes(results)] == ["b", "c", "a"]
+
+
+def test_rank_codes_is_stable_on_ties():
+    results = [
+        _code("a", classification_count=2, variable_count=1),
+        _code("b", classification_count=2, variable_count=1),
+        _code("c", classification_count=2, variable_count=1),
+    ]
+    assert [result.code for result in _rank_codes(results)] == ["a", "b", "c"]
+
+
+def test_rank_codes_tolerates_default_counts():
+    results = [_code("a"), _code("b", classification_count=1)]
+    assert [result.code for result in _rank_codes(results)] == ["b", "a"]
 
 
 def test_code_system_first_short_name():

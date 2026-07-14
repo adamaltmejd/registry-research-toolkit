@@ -82,6 +82,24 @@ def _validated_limit(limit: int = _DEFAULT_LIMIT) -> int:
     return max(1, min(limit, _MAX_LIMIT))
 
 
+def _rank_codes(results: list[CodeSearchResult]) -> list[CodeSearchResult]:
+    """Preserve the established owner-count relevance within one origin page.
+
+    The origin cursor is computed before this stable presentation reorder, and
+    every selected origin row remains on the page, so continuation advances over
+    exactly the displayed set without changing SQL work bounds.
+    """
+    return sorted(
+        results,
+        key=lambda result: (
+            result.classification_count > 0,
+            result.classification_count,
+            result.variable_count,
+        ),
+        reverse=True,
+    )
+
+
 def _validated_type(type: str = "all") -> str:
     """``?type`` gate: scope the search to a single result group (#393 item 1).
     The param is named ``type`` so the wire param is ``?type=``; the bound name in
@@ -793,7 +811,9 @@ def get_search(
                 cast("list[SearchResult]", boosted_classification_codes),
                 limit=limit,
             )
-            classification_code_results = boosted_classification_codes[:limit]
+            classification_code_results = _rank_codes(
+                boosted_classification_codes[:limit]
+            )
             groups.append(
                 ClassificationCodeSearchGroup(
                     results=classification_code_results,
@@ -825,7 +845,7 @@ def get_search(
                 cast("list[SearchResult]", boosted_register_values),
                 limit=limit,
             )
-            register_value_results = boosted_register_values[:limit]
+            register_value_results = _rank_codes(boosted_register_values[:limit])
             groups.append(
                 RegisterValueSetSearchGroup(
                     results=register_value_results,

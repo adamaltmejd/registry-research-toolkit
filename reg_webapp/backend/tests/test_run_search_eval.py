@@ -98,9 +98,12 @@ expect = "gap"
     monkeypatch.setattr(
         run_search_eval,
         "search",
-        lambda *_args, **_kwargs: SearchResults(
-            results=(), has_more=True, next_cursor="opaque"
-        ),
+        lambda *_args, **_kwargs: SearchResults(results=(), has_more=False),
+    )
+    monkeypatch.setattr(
+        run_search_eval,
+        "pinned_fqids",
+        lambda *_args, **_kwargs: ("scb/first", "scb/second"),
     )
     monkeypatch.setattr(
         run_search_eval,

@@ -1349,6 +1349,62 @@ def test_published_relevance_order_is_stable_across_cursor_pages(monkeypatch) ->
     assert not second.has_more
 
 
+def test_generic_identity_matches_do_not_swamp_discriminative_fts_rank(
+    monkeypatch,
+) -> None:
+    conn = build_slugged_db()
+    rows = [
+        {
+            "type": "classification",
+            "fqid": f"class/generic-{index:02d}",
+            "short_name": f"Generic {index:02d}",
+            "classification_name": "Civilstånd",
+            "fts_rank": -1.0 + index / 100,
+            "_classification_id": 1_000 + index,
+        }
+        for index in range(51)
+    ]
+    rows.append(
+        {
+            "type": "classification",
+            "fqid": "class/discriminative",
+            "short_name": "CIVILGREL",
+            "classification_name": "Civilstånd, grupperat",
+            "fts_rank": -10.0,
+            "_classification_id": 2_000,
+        }
+    )
+    monkeypatch.setattr(
+        queries,
+        "_search_classifications",
+        lambda *_args, **_kwargs: [dict(row) for row in rows],
+    )
+
+    first = queries.search(
+        conn,
+        "civilstånd",
+        field="description",
+        type="classification",
+        limit=25,
+        fold_groups=False,
+    )
+    assert str(first.results[0].fqid) == "class/discriminative"
+    assert first.next_cursor is not None
+
+    second = queries.search(
+        conn,
+        "civilstånd",
+        field="description",
+        type="classification",
+        limit=25,
+        fold_groups=False,
+        cursor=first.next_cursor,
+    )
+    combined = [str(row.fqid) for row in (*first.results, *second.results)]
+    assert len(combined) == len(set(combined))
+    assert combined[0] == "class/discriminative"
+
+
 def test_mixed_search_relevance_order_is_stable_without_folding(monkeypatch) -> None:
     conn = build_slugged_db()
     rows = [

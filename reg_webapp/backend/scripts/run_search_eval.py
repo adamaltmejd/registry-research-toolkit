@@ -36,7 +36,7 @@ from typing import TYPE_CHECKING
 
 from reg_meta.db import db_path_from_args, open_db
 from reg_meta.queries import search
-from reg_webapp.golden import apply_golden_boost
+from reg_webapp.golden import apply_golden_boost, pinned_fqids
 
 if TYPE_CHECKING:
     from reg_meta.search import SearchResult
@@ -144,15 +144,19 @@ def main() -> int:
         # Apply golden boost over one bounded result window, matching the route's
         # page-sized pin work. Exact totals are intentionally unavailable: report the
         # returned page size and whether another origin/boosted row exists.
+        pin_fqids = pinned_fqids(c["query"], c["group"])
         boosted = apply_golden_boost(
             conn,
             c["query"],
             c["group"],
             res.results,
+            fqids=pin_fqids,
             limit=args.limit,
         )
         page = boosted[: args.limit]
-        page_has_more = res.has_more or len(boosted) > args.limit
+        page_has_more = (
+            res.has_more or len(boosted) > args.limit or len(pin_fqids) > args.limit
+        )
         rank = _rank_of(page, c["intended"])
         found = rank is not None
         if c["expect"] == "hit":

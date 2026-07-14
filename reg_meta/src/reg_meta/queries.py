@@ -51,6 +51,7 @@ _YEAR_RE = re.compile(r"(?<!\d)(?:19|20)\d{2}(?!\d)")
 # they are used for code-system identity/ranking, not as per-row navigation in the
 # webapp.
 _CODE_OWNERS_PER_HIT = 5
+_MAX_IDENTITY_PROMOTION_MATCHES = 50
 _CURSOR_VERSION = 1
 _MAX_CURSOR_POSITION = 1_000
 _CURSOR_INTEGRITY_DOMAIN = "reg-meta-search-cursor-v1"
@@ -1011,9 +1012,13 @@ def search(
             delivery_column_scope=delivery_column_scope,
         )
 
+    identity_match_count = sum(
+        _search_identity_score(query, row) > 0 for row in all_results
+    )
+    promote_identity = identity_match_count <= _MAX_IDENTITY_PROMOTION_MATCHES
     all_results.sort(
         key=lambda row: (
-            -_search_display_score(query, row),
+            -(_search_display_score(query, row) if promote_identity else 0),
             row.get("fts_rank", 0),
             _search_result_identity(row),
         )
@@ -1193,8 +1198,8 @@ def _search_identity_texts(row: dict[str, Any]) -> tuple[str, ...]:
     return tuple(_fold_search_text(text) for text in texts if text is not None)
 
 
-def _search_display_score(query: str, row: dict[str, Any]) -> int:
-    """Stable query-sensitive score applied before every cursor slice."""
+def _search_identity_score(query: str, row: dict[str, Any]) -> int:
+    """Exact/prefix identity score, before the broad-match saturation gate."""
     # Value/code SQL already publishes its exact final rank (code-shape strength,
     # owner scope, BM25, and mapping-count penalty) before LIMIT. Do not layer the
     # entity-name score over that rank or an exact generic label can undo it.
@@ -1204,10 +1209,25 @@ def _search_display_score(query: str, row: dict[str, Any]) -> int:
     texts = _search_identity_texts(row)
     exact = bool(folded_query) and any(text == folded_query for text in texts)
     prefix = bool(folded_query) and any(text.startswith(folded_query) for text in texts)
-    group_bonus = 0
+    return (1000 if exact else 0) + (100 if prefix and not exact else 0)
+
+
+def _search_group_authority_bonus(row: dict[str, Any]) -> int:
     if row.get("type") == "group" and row.get("label_matched"):
-        group_bonus = 50 + min(len(row.get("matched") or ()), 50)
-    return (1000 if exact else 0) + (100 if prefix and not exact else 0) + group_bonus
+        return 50 + min(len(row.get("matched") or ()), 50)
+    return 0
+
+
+def _search_display_score(query: str, row: dict[str, Any]) -> int:
+    """Stable query-sensitive score for one row.
+
+    The final ordering suppresses display-score promotion when more than the default
+    50-row search window matches exactly/prefix-wise. Applying an unbounded exact
+    and group-label bonus to a generic label such as ``Civilstånd`` would otherwise
+    pull dozens of weaker FTS hits ahead of the previously top-ranked discriminative
+    results.
+    """
+    return _search_identity_score(query, row) + _search_group_authority_bonus(row)
 
 
 def _matched_count(row: dict[str, Any]) -> int:
