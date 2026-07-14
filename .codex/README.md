@@ -23,9 +23,9 @@ The policy is deliberately layered:
   uploads, screenshots, snapshots, traces, script exports, and other path-capable tools
   retain approval.
 
-Rules remove an execution confirmation; they do not grant task authority. `AGENTS.md`,
-the user's request, and the invoked skill still decide whether an action belongs in the
-task.
+Approval settings change execution confirmation; they do not grant task authority.
+`AGENTS.md`, the user's request, and the invoked skill still decide whether an action
+belongs in the task.
 
 Codex reads project configuration and rules only for trusted projects and scans them at
 startup. Restart Codex or start a new task after changing these files.

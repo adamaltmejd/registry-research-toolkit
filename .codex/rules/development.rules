@@ -1,9 +1,8 @@
 # Project-local Codex execution policy.
 #
-# These rules are intentionally narrower than "allow the tool": they cover low-risk
-# coordination commands repeatedly used by this project. A matching allow only removes
-# the sandbox-escalation prompt; it does not authorize work outside the user's requested
-# task or override AGENTS.md.
+# These broad prompt rules guard shell commands whose trailing options can launch host
+# helpers, execute transports, or mutate remote/destructive state. They do not authorize
+# work outside the user's requested task or override AGENTS.md.
 
 prefix_rule(
     pattern = ["gh", "pr"],
