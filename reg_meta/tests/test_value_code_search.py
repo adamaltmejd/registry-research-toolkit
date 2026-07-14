@@ -267,6 +267,47 @@ def test_owner_cap_vs_full_count(conn: sqlite3.Connection) -> None:
     assert len(hit.variables) == _CODE_OWNERS_PER_HIT == 5
 
 
+def test_owner_cap_keeps_tightest_value_set_owners(
+    conn: sqlite3.Connection,
+) -> None:
+    """The cap prefers variables with fewer distinct codes, then slug order."""
+    _seed_register(conn, 1, "reg")
+    _seed_code(conn, 1, "TARGET", "Target label")
+    owner_specs = (
+        ("z-tight", 1),
+        ("a-two", 2),
+        ("b-three", 3),
+        ("c-four", 4),
+        ("d-five", 5),
+        ("e-six", 6),
+    )
+    next_code_id = 2
+    for owner_index, (slug, code_count) in enumerate(owner_specs):
+        variable_id = _seed_variable(conn, 1, str(100 + owner_index), slug, slug)
+        _map(conn, 1, variable_id)
+        for extra_index in range(code_count - 1):
+            _seed_code(
+                conn,
+                next_code_id,
+                f"EXTRA-{owner_index}-{extra_index}",
+                f"Unrelated {owner_index} {extra_index}",
+            )
+            _map(conn, next_code_id, variable_id)
+            next_code_id += 1
+    _finalize(conn)
+
+    hit = search(conn, "Target label", field="value", type="value").results[0]
+
+    assert hit.variable_count == 6
+    assert [owner.name for owner in hit.variables] == [
+        "z-tight",
+        "a-two",
+        "b-three",
+        "c-four",
+        "d-five",
+    ]
+
+
 def test_owner_cap_can_be_disabled_for_variable_owners(
     conn: sqlite3.Connection,
 ) -> None:

@@ -908,8 +908,22 @@ def _cmd_search(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     doc_results = (
         _search_docs(args.query, db_arg=args.db) if args.cursor is None else []
     )
-    all_results = search_rows + doc_results
-    all_results.sort(key=lambda x: x.get("rank", 0))
+    # `search_rows` is already in the catalog's public, query-sensitive order.
+    # Its raw ranks alone do not encode the exact/prefix score that precedes rank,
+    # so sorting the combined list by rank can reorder catalog rows and make the
+    # positional cursor below skip or repeat them. Interleave ranked docs without
+    # changing the catalog subsequence.
+    doc_results.sort(key=lambda x: x.get("rank", 0))
+    all_results: list[dict[str, Any]] = []
+    doc_index = 0
+    for search_row in search_rows:
+        while doc_index < len(doc_results) and doc_results[doc_index].get(
+            "rank", 0
+        ) <= search_row.get("rank", 0):
+            all_results.append(doc_results[doc_index])
+            doc_index += 1
+        all_results.append(search_row)
+    all_results.extend(doc_results[doc_index:])
     results = all_results[: args.limit]
 
     doc_total = sum(1 for r in all_results if r.get("type") == "doc")

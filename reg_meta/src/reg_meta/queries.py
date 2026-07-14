@@ -1755,7 +1755,9 @@ def _code_owner_annotations_batch(
             "WITH owners AS ("
             "  SELECT cvm.code_id, v.name AS variable_name, v.slug AS variable_slug, "
             "         r.name AS register_name, r.slug AS register_slug, "
-            "         p.slug AS provider_slug "
+            "         p.slug AS provider_slug, "
+            "         (SELECT COUNT(*) FROM code_variable_map c2 "
+            "            WHERE c2.variable_id = v.variable_id) AS var_code_count "
             "  FROM _match_code_ids m "
             "  JOIN code_variable_map cvm ON cvm.code_id = m.code_id "
             "  JOIN variable v ON cvm.variable_id = v.variable_id "
@@ -1764,7 +1766,7 @@ def _code_owner_annotations_batch(
             f"  WHERE 1=1{reg_filter}"
             "), ranked AS ("
             "  SELECT *, ROW_NUMBER() OVER ("
-            "    PARTITION BY code_id ORDER BY variable_slug"
+            "    PARTITION BY code_id ORDER BY var_code_count ASC, variable_slug"
             "  ) AS rn FROM owners"
             f") SELECT * FROM ranked{var_rank_filter} ORDER BY code_id, rn",
             var_params,
