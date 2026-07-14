@@ -864,6 +864,47 @@ def test_variable_search_delivery_scope_drops_unheld_alias_hit() -> None:
     assert out.results == ()
 
 
+def test_irrelevant_like_branches_do_not_saturate_register_search(
+    db: sqlite3.Connection, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    def unexpected(*args: object, **kwargs: object) -> list[dict[str, object]]:
+        raise AssertionError("variable-only LIKE branch ran for register search")
+
+    monkeypatch.setattr(queries, "_search_datacolumns", unexpected)
+    monkeypatch.setattr(queries, "_search_varnames", unexpected)
+
+    result = search(db, "no-register-match", field="all", type="register", limit=1)
+
+    assert result.results == ()
+    assert not result.has_more
+    assert result.next_cursor is None
+
+
+def test_classification_code_exclusion_happens_before_limit() -> None:
+    conn = build_slugged_db()
+    conn.executemany(
+        "INSERT INTO classification (id, short_name, name, slug) VALUES (?, ?, ?, ?)",
+        (
+            (60, "A", "C12 name hit A", "class-a"),
+            (61, "B", "C12 name hit B", "class-b"),
+            (62, "C", "Unrelated title", "class-c"),
+        ),
+    )
+    add_value_set(conn, value_set_id=70, codes=[("C12", "Shared code")])
+    code_id = conn.execute(
+        "SELECT code_id FROM value_code WHERE code = 'C12'"
+    ).fetchone()[0]
+    for slug in ("class-a", "class-b", "class-c"):
+        _link_code_to_classification(conn, slug, code_id)
+    _rebuild_fts(conn)
+    name_rows = queries._search_classifications(conn, '"C12"*', 10, 0)
+    exclude = {row["_classification_id"] for row in name_rows}
+
+    code_rows = queries._search_classifications_by_code(conn, "C12", exclude, 1, 0)
+
+    assert [str(row["fqid"]) for row in code_rows] == ["class/class-c"]
+
+
 def test_variable_search_delivery_scope_keeps_description_hit() -> None:
     conn = build_slugged_db(
         variable=("Plain variable", 32183, 1001, "HeldColumn"),

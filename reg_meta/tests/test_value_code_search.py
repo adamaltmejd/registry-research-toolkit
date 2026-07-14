@@ -316,6 +316,52 @@ def test_mapping_count_downweight_orders_rarer_first(conn: sqlite3.Connection) -
     assert results[0].code == "2"
 
 
+def test_sql_limit_uses_published_mapping_penalized_rank(
+    conn: sqlite3.Connection,
+) -> None:
+    _seed_register(conn, 1, "reg")
+    for code_id, code, label, owners in (
+        (1, "COMMON", "Needle", 120),
+        (2, "MEDIUM", "Needle medium", 60),
+        (3, "RARE", "Needle rare suffix", 1),
+    ):
+        _seed_code(conn, code_id, code, label)
+        for owner in range(owners):
+            variable_id = _seed_variable(
+                conn,
+                1,
+                f"{code_id}-{owner}",
+                f"Owner {code_id}-{owner}",
+                f"owner-{code_id}-{owner}",
+            )
+            _map(conn, code_id, variable_id)
+    _finalize(conn)
+
+    expected = search(conn, "Needle", field="value", type="value", limit=20)
+    first = search(conn, "Needle", field="value", type="value", limit=1)
+
+    assert first.results[0].code == expected.results[0].code == "RARE"
+    seen: list[str] = []
+    cursor = None
+    while True:
+        page = search(
+            conn,
+            "Needle",
+            field="value",
+            type="value",
+            limit=1,
+            cursor=cursor,
+        )
+        seen.extend(row.code for row in page.results)
+        if not page.has_more:
+            assert page.next_cursor is None
+            break
+        assert page.next_cursor is not None
+        cursor = page.next_cursor
+    assert seen == [row.code for row in expected.results]
+    assert len(seen) == len(set(seen))
+
+
 def _seed_n_label_codes(conn: sqlite3.Connection, n: int, label: str) -> None:
     """Seed `n` distinct (code, label) pairs that all share `label` text (so one
     label-FTS query matches all n), each owned by its own variable in register 1."""

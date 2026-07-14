@@ -8,7 +8,6 @@ the functions that library consumers import.
 from __future__ import annotations
 
 import json
-import math
 import re
 import unicodedata
 from base64 import urlsafe_b64decode, urlsafe_b64encode
@@ -748,6 +747,12 @@ def search(
         ),
         _MAX_CURSOR_POSITION + 1,
     )
+    # Folding changes row identity (leaf -> concept group / succession family).
+    # A prefix that grows with each cursor can therefore change already-consumed
+    # identities when a later sibling enters the fold. Use one fixed, bounded
+    # horizon for every foldable branch so all pages see the same fold universe.
+    # Non-foldable register/value branches keep the cheaper limit+1 prefix.
+    fold_candidate_limit = _MAX_CURSOR_POSITION + 1 if fold_groups else candidate_limit
     branch_offset = 0
 
     reg_ids: set[int] | None = None
@@ -778,9 +783,12 @@ def search(
     all_results: list[dict[str, Any]] = []
     candidate_saturated = False
 
-    def add_candidates(rows: list[dict[str, Any]]) -> None:
+    def add_candidates(rows: list[dict[str, Any]], branch_limit: int) -> None:
         nonlocal candidate_saturated
-        candidate_saturated = candidate_saturated or len(rows) >= candidate_limit
+        # Only an adaptive prefix can be expanded. A foldable branch already ran
+        # at the absolute bounded horizon and is stable across every cursor.
+        if branch_limit < _MAX_CURSOR_POSITION + 1:
+            candidate_saturated = candidate_saturated or len(rows) >= branch_limit
         all_results.extend(rows)
 
     like_pattern = f"%{_escape_like(query)}%"
@@ -796,18 +804,20 @@ def search(
     # (#393 item 5) excludes them so a both-ways match isn't emitted twice.
     classification_name_ids: set[int] = set()
 
-    if field in ("datacolumn", "all"):
+    if field in ("datacolumn", "all") and type in ("variable", "all"):
         add_candidates(
             _search_datacolumns(
-                conn, like_pattern, reg_ids, candidate_limit, branch_offset
-            )
+                conn, like_pattern, reg_ids, fold_candidate_limit, branch_offset
+            ),
+            fold_candidate_limit,
         )
 
-    if field in ("varname", "all"):
+    if field in ("varname", "all") and type in ("variable", "all"):
         add_candidates(
             _search_varnames(
-                conn, like_pattern, reg_ids, candidate_limit, branch_offset
-            )
+                conn, like_pattern, reg_ids, fold_candidate_limit, branch_offset
+            ),
+            fold_candidate_limit,
         )
 
     if field in ("description", "all") and fts_query is not None:
@@ -820,7 +830,8 @@ def search(
                     fqids is not None,
                     candidate_limit,
                     branch_offset,
-                )
+                ),
+                candidate_limit,
             )
         if type in ("variable", "all"):
             add_candidates(
@@ -830,18 +841,19 @@ def search(
                     reg_ids,
                     include_delivery_columns=delivery_column_scope is not None,
                     restrict_fqids=fqids is not None,
-                    limit=candidate_limit,
+                    limit=fold_candidate_limit,
                     offset=branch_offset,
-                )
+                ),
+                fold_candidate_limit,
             )
         # Classifications are catalog-scoped (no register), so a `--register` scope
         # excludes them — `reg_ids` set means "registers only".
         if type in ("classification", "all") and reg_ids is None:
             cls_rows = _search_classifications(
-                conn, fts_query, candidate_limit, branch_offset
+                conn, fts_query, fold_candidate_limit, branch_offset
             )
             classification_name_ids = {r["_classification_id"] for r in cls_rows}
-            add_candidates(cls_rows)
+            add_candidates(cls_rows, fold_candidate_limit)
 
     # Code-aware classification surfacing (#393 item 5): a code-shaped query also
     # surfaces the classifications that CONTAIN a matching code (C12 -> ICD-10-SE),
@@ -861,9 +873,10 @@ def search(
                 conn,
                 query,
                 classification_name_ids,
-                candidate_limit,
+                fold_candidate_limit,
                 branch_offset,
-            )
+            ),
+            fold_candidate_limit,
         )
 
     # Code/value search (#352): FTS over value_code labels + exact/prefix code
@@ -881,7 +894,8 @@ def search(
                 code_owner_scope=code_owner_scope,
                 limit=candidate_limit,
                 offset=branch_offset,
-            )
+            ),
+            candidate_limit,
         )
 
     if type == "register":
@@ -938,13 +952,12 @@ def search(
                 reg_ids,
                 type=type,
                 year_range=parse_year_range(years) if years else None,
-                limit=candidate_limit,
+                limit=fold_candidate_limit,
                 offset=branch_offset,
             )
             if field in ("varname", "description", "all") and fts_query is not None
             else []
         )
-        candidate_saturated = candidate_saturated or len(label_hits) >= candidate_limit
         # Collapse classification EDITION chains FIRST (#571): editions aren't
         # concept_group members, so they need a separate fold. Once collapsed to
         # their terminal, the curated SUN-style umbrella group (#516) then folds
@@ -996,9 +1009,7 @@ def search(
         raise _invalid_cursor(
             "Search cursor no longer matches the deterministic result ordering."
         )
-    has_more = page_end < _MAX_CURSOR_POSITION and (
-        candidate_saturated or len(all_results) > page_end
-    )
+    has_more = page_end < _MAX_CURSOR_POSITION and len(all_results) > page_end
     results = all_results[candidate_offset:page_end]
     result_identities = [_search_result_identity(row) for row in results]
 
@@ -1775,13 +1786,12 @@ def _search_values_fts(
         }
 
     if fts_query is not None:
-        # bm25 default weights; mapping_count downweight is a small additive term
-        # (scaled by log so a 60k-mapping junk-ish label sinks but doesn't dwarf
-        # bm25). Both terms are smaller-is-better, so the sum sorts ascending. No
-        # The owner predicate runs before this bound, including register scope.
+        # Bound on the exact public rank. Truncating on raw bm25 and adding the
+        # mapping penalty afterward can exclude a rarer row that publicly outranks
+        # the retained prefix, making continuation reorder before its cursor.
         label_rows = conn.execute(
             "SELECT vc.code_id, vc.code, vc.label, vc.mapping_count, "
-            "bm25(value_code_fts) AS rank "
+            "bm25(value_code_fts) + ln(1 + vc.mapping_count) * 0.5 AS rank "
             "FROM value_code_fts "
             "JOIN value_code vc ON vc.code_id = value_code_fts.rowid "
             f"WHERE value_code_fts MATCH ?{owner_filter} "
@@ -1789,8 +1799,7 @@ def _search_values_fts(
             (fts_query, *owner_params, limit, offset),
         ).fetchall()
         for r in label_rows:
-            base = r["rank"] + math.log1p(r["mapping_count"]) * 0.5
-            hits[r["code_id"]] = _hit(r, base)
+            hits[r["code_id"]] = _hit(r, r["rank"])
 
     if _is_code_shaped(query):
         q = query.strip()
@@ -2039,18 +2048,22 @@ def _search_classifications_by_code(
     above it. COLLATE NOCASE makes exact-precedence hold for any-case code query
     (the WHERE already surfaces them — LIKE is case-insensitive)."""
     q = query.strip()
+    exclusion = ""
+    exclusion_params: list[int] = []
+    if exclude_ids:
+        exclusion = " AND c.id NOT IN (" + _in_placeholders(exclude_ids) + ")"
+        exclusion_params = sorted(exclude_ids)
     rows = conn.execute(
         "SELECT c.id AS classification_id, c.short_name, c.name AS classification_name, "
         "c.slug, MAX(CASE WHEN vc.code = ? COLLATE NOCASE THEN 1 ELSE 0 END) AS has_exact "
         "FROM value_code vc "
         "JOIN classification_code cc ON cc.code_id = vc.code_id "
         "JOIN classification c ON c.id = cc.classification_id "
-        "WHERE vc.code = ? OR vc.code LIKE ? ESCAPE '\\' "
+        "WHERE (vc.code = ? OR vc.code LIKE ? ESCAPE '\\') " + exclusion + " "
         "GROUP BY c.id, c.short_name, c.name, c.slug "
         "ORDER BY has_exact DESC, c.short_name, c.id LIMIT ? OFFSET ?",
-        (q, q, f"{_escape_like(q)}%", limit, offset),
+        (q, q, f"{_escape_like(q)}%", *exclusion_params, limit, offset),
     ).fetchall()
-    kept = [r for r in rows if r["classification_id"] not in exclude_ids]
     return [
         _classification_leaf(
             slug=r["slug"],
@@ -2059,7 +2072,7 @@ def _search_classifications_by_code(
             fts_rank=_CLASS_CODE_RANK_BASE + i,
             classification_id=r["classification_id"],
         )
-        for i, r in enumerate(kept)
+        for i, r in enumerate(rows)
     ]
 
 
@@ -2170,67 +2183,50 @@ def _search_group_labels(
     entirely; `type == "classification"` excludes variable groups. Under a
     `year_range` (--years), a variable group needs at least one member state
     overlapping the range — the group itself has no validity window."""
-    if type == "register":
+    if type in ("register", "value") or (
+        type == "classification" and year_range is not None
+    ):
         return []
-    register_filter = ""
-    register_params: list[int] = []
+    filters = ["(g.label LIKE ? ESCAPE '\\' OR g.group_key LIKE ? ESCAPE '\\')"]
+    params: list[Any] = [like_pattern, like_pattern]
     if reg_ids:
-        register_filter = (
-            " AND g.kind = 'variable' AND g.register_id IN ("
+        filters.append(
+            "g.kind = 'variable' AND g.register_id IN ("
             + _in_placeholders(reg_ids)
-            + ") "
+            + ")"
         )
-        register_params = sorted(reg_ids)
-    rows = conn.execute(
+        params.extend(sorted(reg_ids))
+    elif type == "variable":
+        filters.append("g.kind = 'variable'")
+    elif type == "classification":
+        filters.append("g.kind = 'classification'")
+    if year_range is not None:
+        lo, hi = year_range
+        filters.append("g.kind = 'variable'")
+        state_filters = ["cgv.group_id = g.group_id"]
+        if hi is not None:
+            state_filters.append("CAST(substr(vs.valid_from, 1, 4) AS INTEGER) <= ?")
+            params.append(hi)
+        if lo is not None:
+            state_filters.append("CAST(substr(vs.valid_to, 1, 4) AS INTEGER) >= ?")
+            params.append(lo)
+        filters.append(
+            "EXISTS (SELECT 1 FROM concept_group_variable cgv "
+            "JOIN variable_state vs ON vs.variable_id = cgv.variable_id WHERE "
+            + " AND ".join(state_filters)
+            + ")"
+        )
+    return conn.execute(
         "SELECT g.group_id, g.kind, g.group_key, g.label, g.source, "
         "g.register_id, r.name AS register_name "
         "FROM concept_group g "
         "LEFT JOIN register r ON r.register_id = g.register_id "
-        "WHERE (g.label LIKE ? ESCAPE '\\' OR g.group_key LIKE ? ESCAPE '\\') "
-        + register_filter
+        "WHERE "
+        + " AND ".join(f"({item})" for item in filters)
+        + " "
         + "ORDER BY g.kind, g.group_key, g.group_id LIMIT ? OFFSET ?",
-        (like_pattern, like_pattern, *register_params, limit, offset),
+        (*params, limit, offset),
     ).fetchall()
-    hits = []
-    for r in rows:
-        if r["kind"] == "classification":
-            # Classifications are catalog-scoped (no register) and carry no
-            # validity window, so a --years filter excludes the family too —
-            # symmetric with the classification-leaf exclusion in
-            # `_filter_search_by_years` (#350).
-            if reg_ids or type == "variable" or year_range is not None:
-                continue
-        else:
-            # A variable-kind group has no place in a classifications-only query.
-            if type == "classification":
-                continue
-            if reg_ids and r["register_id"] not in reg_ids:
-                continue
-            if year_range is not None and not _group_member_state_in_years(
-                conn, r["group_id"], *year_range
-            ):
-                continue
-        hits.append(r)
-    return hits
-
-
-def _group_member_state_in_years(
-    conn: sqlite3.Connection, group_id: int, lo: int | None, hi: int | None
-) -> bool:
-    """Whether any member variable of a variable-kind group has a
-    `variable_state` validity window overlapping the requested year range —
-    the --years semantics for a label-matched group (mirrors what
-    `_filter_search_by_years` does for leaf hits)."""
-    rows = conn.execute(
-        "SELECT vs.valid_from, vs.valid_to "
-        "FROM concept_group_variable cgv "
-        "JOIN variable_state vs ON vs.variable_id = cgv.variable_id "
-        "WHERE cgv.group_id = ?",
-        (group_id,),
-    ).fetchall()
-    return any(
-        _state_overlaps_years(r["valid_from"], r["valid_to"], lo, hi) for r in rows
-    )
 
 
 def _terminal_classification_slug(

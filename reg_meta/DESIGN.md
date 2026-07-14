@@ -445,11 +445,16 @@ requested scopes, steward restriction, and catalog manifest; the final order use
 unique entity identity after relevance rank. Invalid or mismatched cursors fail at the
 library boundary. Cursor integrity is checked before query work and continuation has a
 hard 1,000-result depth ceiling, so a forged token cannot request an unbounded prefix;
-researchers reaching the ceiling must refine the broad query. Candidate prefixes
-adaptively backfill when steward filtering or concept folding consumes a page, within
-that same ceiling. This is the search-surface analog of the catalog-typing move (#681):
-the webapp's per-result mapper functions and `models.py` search wrappers are deleted;
-the FastAPI response models embed reg_meta's search types directly.
+researchers reaching the ceiling must refine the broad query. Non-foldable branches use
+an adaptive `limit + 1` prefix and backfill when in-scope shaping consumes a page.
+Foldable variable/classification/group branches instead use one fixed 1,001-row horizon:
+every cursor sees the same complete bounded fold universe, so a later sibling cannot
+turn an already-consumed leaf into a group or succession row. Type/register/year/group
+eligibility, classification-code exclusions, and the value surface's published
+bm25-plus-mapping-count rank are applied inside SQL before each branch's bound. This is
+the search-surface analog of the catalog-typing move (#681): the webapp's per-result
+mapper functions and `models.py` search wrappers are deleted; the FastAPI response
+models embed reg_meta's search types directly.
 
 `search` accepts an optional `fqids: Collection[str] | None` allow-list (#859) that
 restricts the **register and variable** leaf rows (and concept-group folding) to
