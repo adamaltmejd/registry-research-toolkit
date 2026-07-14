@@ -311,10 +311,9 @@ def apply_golden_boost(
     pinned entity is promoted to rank 1 rather than duplicated. Net effect on length:
 
     - pin already on the page → removed from its FTS slot, re-prepended at rank 1
-      (promoted, no dup) → ``len`` unchanged → the route's ``total_count`` delta is 0
-      (correct: it was already counted by FTS).
-    - pin not on the page (the shipped non-matching case) → prepended → ``len`` +1 →
-      ``total_count`` +1 (correct: a net-new injection).
+      (promoted, no duplicate) → ``len`` unchanged.
+    - pin not on the page → prepended → ``len`` +1, so the route can retain
+      continuation for the displaced origin row without computing an exact total.
 
     The common case — no matching pin — returns ``results`` as a list unchanged (kept
     cheap: one dict lookup).
