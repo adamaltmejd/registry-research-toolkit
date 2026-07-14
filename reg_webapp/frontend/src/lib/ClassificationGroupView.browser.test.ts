@@ -471,6 +471,45 @@ describe("ClassificationGroupView (#756)", () => {
     ).toHaveLength(0);
   });
 
+  it("collapses the reserved graph row when the focused member has no succession edges", async () => {
+    let resolveGraph: (value: RelationshipGraph) => void = () => {};
+    const active = classificationNode({
+      fqid: "class/niva-test",
+      name: "Nivå aggregat",
+      short_name: "NIVA",
+    });
+    vi.mocked(getClassificationGroup).mockResolvedValue(node());
+    vi.mocked(getClassificationGroupGraph).mockImplementation(
+      () =>
+        new Promise((resolve) => {
+          resolveGraph = resolve;
+        }),
+    );
+
+    const { container } = await render(ClassificationGroupView, {
+      key: "sun",
+      activeFqid: "class/niva-test",
+      initialActiveNode: active,
+    });
+
+    const valueSet = page.getByRole("region", { name: "Value set" });
+    await expect.element(valueSet).toBeVisible();
+    const reservedTop = valueSet.element().getBoundingClientRect().top;
+    expect(container.querySelector(".reserve-edition-graph")).not.toBeNull();
+
+    resolveGraph(groupGraph());
+
+    await vi.waitFor(() => {
+      expect(container.querySelector(".reserve-edition-graph")).toBeNull();
+    });
+    expect(
+      reservedTop - valueSet.element().getBoundingClientRect().top,
+    ).toBeGreaterThan(100);
+    expect(
+      page.getByRole("heading", { name: "Editions" }).elements(),
+    ).toHaveLength(0);
+  });
+
   it("collapses the reserved graph row after the graph request fails", async () => {
     let rejectGraph: (reason: Error) => void = () => {};
     vi.mocked(getClassificationGroup).mockResolvedValue(familyNode());

@@ -15,6 +15,7 @@ import ClassificationCodesPanel from "./ClassificationCodesPanel.svelte";
 import ClassificationEditionGraph from "./ClassificationEditionGraph.svelte";
 import ClassificationRelatedLinks from "./ClassificationRelatedLinks.svelte";
 import { catalogHref, leafSlug, narrowCatalogNode } from "./catalog";
+import { classificationGraphHasRenderableSuccession } from "./picker_graph";
 import { router } from "./router.svelte";
 import SubjectView from "./SubjectView.svelte";
 import TechnicalDetails from "./TechnicalDetails.svelte";
@@ -211,7 +212,9 @@ const focusedGraph = $derived.by((): RelationshipGraph | null => {
   return focus == null ? graph : { ...graph, focus_id: focus.id };
 });
 const graphRenderable = $derived(
-  graphReady && focusedGraph?.edges.some((edge) => edge.kind === "succession"),
+  graphReady &&
+    focusedGraph != null &&
+    classificationGraphHasRenderableSuccession(focusedGraph),
 );
 const reserveEditionGraph = $derived(
   expectsEditionGraph && (graphResource.loading || graphRenderable),

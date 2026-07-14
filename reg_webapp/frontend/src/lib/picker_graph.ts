@@ -593,6 +593,27 @@ export function resolveEdges(graph: RelationshipGraph): ResolvedEdge[] {
   return resolved;
 }
 
+/** Whether the classification-edition renderer has a succession component to
+ * draw for the current focus. A group graph can contain edges for sibling
+ * editions while its focused member is isolated, so a graph-wide edge check is
+ * not a renderability check. */
+export function classificationGraphHasRenderableSuccession(
+  graph: RelationshipGraph,
+): boolean {
+  const successionEdges = resolveEdges(graph).filter(
+    (edge) =>
+      edge.source.kind === "classification" &&
+      edge.target.kind === "classification",
+  );
+  if (graph.focus_id == null) {
+    return successionEdges.length > 0;
+  }
+  return successionEdges.some(
+    (edge) =>
+      edge.source.id === graph.focus_id || edge.target.id === graph.focus_id,
+  );
+}
+
 export interface ClassificationDagNode {
   point: ClassificationPoint;
   column: number;
