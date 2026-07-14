@@ -76,6 +76,7 @@ def _search_context(
     register: str | None,
     years: str | None,
     fqids: Collection[str] | None,
+    exclude_fqids: Collection[str] | None,
     delivery_column_scope: Mapping[str, Collection[str | None]] | None,
     fold_groups: bool,
     code_owner_scope: str,
@@ -95,6 +96,7 @@ def _search_context(
             "register": register,
             "years": years,
             "fqids": None if fqids is None else sorted(fqids),
+            "exclude_fqids": (None if exclude_fqids is None else sorted(exclude_fqids)),
             "delivery_column_scope": scope,
             "fold_groups": fold_groups,
             "code_owner_scope": code_owner_scope,
@@ -604,6 +606,7 @@ def search(
     register: str | None = None,
     years: str | None = None,
     fqids: Collection[str] | None = None,
+    exclude_fqids: Collection[str] | None = None,
     delivery_column_scope: Mapping[str, Collection[str | None]] | None = None,
     limit: int = 50,
     cursor: str | None = None,
@@ -657,6 +660,11 @@ def search(
     and before folding/paging, so every bounded page respects the restriction.
     reg_meta stays steward-agnostic: the caller passes the allow-list; the set's
     provenance is opaque here.
+
+    ``exclude_fqids`` removes navigable register/classification identities inside
+    their SQL branches before the bounded prefix. It is part of cursor context so
+    callers that inject a curated identity separately cannot see it again on a
+    continuation page.
 
     delivery_column_scope is the optional column-grain companion to ``fqids`` for
     variable FTS rows. It masks returned delivery-column aliases to held columns
@@ -728,6 +736,7 @@ def search(
         register=register,
         years=years,
         fqids=fqids,
+        exclude_fqids=exclude_fqids,
         delivery_column_scope=delivery_column_scope,
         fold_groups=fold_groups,
         code_owner_scope=code_owner_scope,
@@ -753,6 +762,11 @@ def search(
     # horizon for every foldable branch so all pages see the same fold universe.
     # Non-foldable register/value branches keep the cheaper limit+1 prefix.
     fold_candidate_limit = _MAX_CURSOR_POSITION + 1 if fold_groups else candidate_limit
+    entity_candidate_limit = (
+        _MAX_CURSOR_POSITION + 1
+        if type in {"register", "variable", "classification"}
+        else fold_candidate_limit
+    )
     branch_offset = 0
 
     reg_ids: set[int] | None = None
@@ -768,6 +782,13 @@ def search(
         conn.executemany(
             "INSERT INTO _search_allowed_fqids (fqid) VALUES (?)",
             ((fqid,) for fqid in sorted(fqids)),
+        )
+    if exclude_fqids is not None:
+        conn.execute("DROP TABLE IF EXISTS _search_excluded_fqids")
+        conn.execute("CREATE TEMP TABLE _search_excluded_fqids (fqid TEXT PRIMARY KEY)")
+        conn.executemany(
+            "INSERT INTO _search_excluded_fqids (fqid) VALUES (?)",
+            ((fqid,) for fqid in sorted(exclude_fqids)),
         )
 
     _REGISTER_TYPES = {"register"}
@@ -800,9 +821,17 @@ def search(
     # FTS indexes contribute nothing.
     fts_query = _fts_match_query(query)
 
-    # Classifications surfaced by the name-FTS arm; the code-containment arm
-    # (#393 item 5) excludes them so a both-ways match isn't emitted twice.
+    # Classifications surfaced by the name-FTS arm, plus caller-excluded identities;
+    # the code-containment arm (#393 item 5) excludes both before its SQL LIMIT.
     classification_name_ids: set[int] = set()
+    if exclude_fqids is not None:
+        classification_name_ids.update(
+            row["id"]
+            for row in conn.execute(
+                "SELECT c.id FROM classification c "
+                "JOIN _search_excluded_fqids ef ON ef.fqid = 'class/' || c.slug"
+            )
+        )
 
     if field in ("datacolumn", "all") and type in ("variable", "all"):
         add_candidates(
@@ -828,10 +857,11 @@ def search(
                     fts_query,
                     reg_ids,
                     fqids is not None,
-                    candidate_limit,
+                    exclude_fqids is not None,
+                    entity_candidate_limit,
                     branch_offset,
                 ),
-                candidate_limit,
+                entity_candidate_limit,
             )
         if type in ("variable", "all"):
             add_candidates(
@@ -841,19 +871,23 @@ def search(
                     reg_ids,
                     include_delivery_columns=delivery_column_scope is not None,
                     restrict_fqids=fqids is not None,
-                    limit=fold_candidate_limit,
+                    limit=entity_candidate_limit,
                     offset=branch_offset,
                 ),
-                fold_candidate_limit,
+                entity_candidate_limit,
             )
         # Classifications are catalog-scoped (no register), so a `--register` scope
         # excludes them — `reg_ids` set means "registers only".
         if type in ("classification", "all") and reg_ids is None:
             cls_rows = _search_classifications(
-                conn, fts_query, fold_candidate_limit, branch_offset
+                conn,
+                fts_query,
+                exclude_fqids is not None,
+                entity_candidate_limit,
+                branch_offset,
             )
-            classification_name_ids = {r["_classification_id"] for r in cls_rows}
-            add_candidates(cls_rows, fold_candidate_limit)
+            classification_name_ids.update(r["_classification_id"] for r in cls_rows)
+            add_candidates(cls_rows, entity_candidate_limit)
 
     # Code-aware classification surfacing (#393 item 5): a code-shaped query also
     # surfaces the classifications that CONTAIN a matching code (C12 -> ICD-10-SE),
@@ -972,7 +1006,13 @@ def search(
             allow=allow,
         )
 
-    all_results.sort(key=lambda x: (x.get("fts_rank", 0), _search_result_identity(x)))
+    all_results.sort(
+        key=lambda row: (
+            -_search_display_score(query, row),
+            row.get("fts_rank", 0),
+            _search_result_identity(row),
+        )
+    )
     page_end = min(candidate_offset + limit, _MAX_CURSOR_POSITION)
     if (
         candidate_saturated
@@ -987,6 +1027,7 @@ def search(
             register=register,
             years=years,
             fqids=fqids,
+            exclude_fqids=exclude_fqids,
             delivery_column_scope=delivery_column_scope,
             limit=limit,
             cursor=cursor,
@@ -1083,6 +1124,81 @@ def _search_result_identity(row: dict[str, Any]) -> str:
             row.get("variable_name", ""),
         )
     )
+
+
+def _fold_search_text(value: object) -> str:
+    text = str(value).strip().casefold()
+    decomposed = unicodedata.normalize("NFKD", text)
+    return re.sub(
+        r"\s+", " ", "".join(ch for ch in decomposed if not unicodedata.combining(ch))
+    )
+
+
+def _search_identity_texts(row: dict[str, Any]) -> tuple[str, ...]:
+    """Identity-bearing text used by the published exact/prefix relevance order."""
+    row_type = row.get("type")
+    texts: list[object] = []
+    fqid = row.get("fqid")
+    if row_type == "register":
+        texts.extend(
+            (fqid, str(fqid).split("/")[-1] if fqid else None, row.get("register_name"))
+        )
+    elif row_type in {"variable", "varname", "datacolumn"}:
+        texts.extend(
+            (
+                fqid,
+                str(fqid).split("/")[-1] if fqid else None,
+                row.get("variable_name"),
+                row.get("datacolumn"),
+                *(row.get("delivery_column_names") or ()),
+            )
+        )
+    elif row_type in {"classification", "classification_succession"}:
+        texts.extend(
+            (
+                fqid,
+                str(fqid).split("/")[-1] if fqid else None,
+                row.get("short_name"),
+                row.get("classification_name"),
+                row.get("terminal_fqid"),
+            )
+        )
+        for edition in row.get("editions") or ():
+            texts.extend(
+                (edition.get("fqid"), edition.get("slug"), edition.get("name"))
+            )
+    elif row_type == "group":
+        texts.extend((row.get("group_key"), row.get("group_label")))
+        for member in row.get("members") or ():
+            texts.extend(
+                (
+                    member.get("fqid"),
+                    member.get("name"),
+                    member.get("delivery_column"),
+                )
+            )
+            for facet in member.get("facets") or ():
+                texts.extend((facet.get("value"), facet.get("label")))
+    elif row_type == "code":
+        texts.extend((row.get("code"), row.get("label")))
+    return tuple(_fold_search_text(text) for text in texts if text is not None)
+
+
+def _search_display_score(query: str, row: dict[str, Any]) -> int:
+    """Stable query-sensitive score applied before every cursor slice."""
+    # Value/code SQL already publishes its exact final rank (code-shape strength,
+    # owner scope, BM25, and mapping-count penalty) before LIMIT. Do not layer the
+    # entity-name score over that rank or an exact generic label can undo it.
+    if row.get("type") == "code":
+        return 0
+    folded_query = _fold_search_text(query)
+    texts = _search_identity_texts(row)
+    exact = bool(folded_query) and any(text == folded_query for text in texts)
+    prefix = bool(folded_query) and any(text.startswith(folded_query) for text in texts)
+    group_bonus = 0
+    if row.get("type") == "group" and row.get("label_matched"):
+        group_bonus = 50 + min(len(row.get("matched") or ()), 50)
+    return (1000 if exact else 0) + (100 if prefix and not exact else 0) + group_bonus
 
 
 def _matched_count(row: dict[str, Any]) -> int:
@@ -1331,6 +1447,7 @@ def _search_description_registers(
     query: str,
     reg_ids: set[int] | None,
     restrict_fqids: bool,
+    exclude_fqids: bool,
     limit: int,
     offset: int,
 ) -> list[dict[str, Any]]:
@@ -1356,6 +1473,12 @@ def _search_description_registers(
             "AND EXISTS (SELECT 1 FROM _search_allowed_fqids af "
             "WHERE af.fqid = p.slug || '/' || r.slug) "
             if restrict_fqids
+            else ""
+        )
+        + (
+            "AND NOT EXISTS (SELECT 1 FROM _search_excluded_fqids ef "
+            "WHERE ef.fqid = p.slug || '/' || r.slug) "
+            if exclude_fqids
             else ""
         )
         + register_filter
@@ -1968,7 +2091,11 @@ def _classification_leaf(
 
 
 def _search_classifications(
-    conn: sqlite3.Connection, query: str, limit: int, offset: int
+    conn: sqlite3.Connection,
+    query: str,
+    exclude_fqids: bool,
+    limit: int,
+    offset: int,
 ) -> list[dict[str, Any]]:
     """FTS search over `classification_fts` (#350) — the third shipped FTS index,
     built but previously unsearched (see DESIGN.md → FTS5 configuration). Indexes
@@ -1981,7 +2108,13 @@ def _search_classifications(
         "FROM classification_fts cf "
         "JOIN classification c ON c.id = cf.rowid "
         "WHERE classification_fts MATCH ? "
-        "ORDER BY cf.rank, c.id LIMIT ? OFFSET ?",
+        + (
+            "AND NOT EXISTS (SELECT 1 FROM _search_excluded_fqids ef "
+            "WHERE ef.fqid = 'class/' || c.slug) "
+            if exclude_fqids
+            else ""
+        )
+        + "ORDER BY cf.rank, c.id LIMIT ? OFFSET ?",
         (query, limit, offset),
     ).fetchall()
     return [

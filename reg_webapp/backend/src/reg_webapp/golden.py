@@ -202,6 +202,12 @@ def _validate_pin_fqid(query: str, group: str, fqid: str) -> None:
 _PINS = _load_pins(GOLDEN_PATH)
 
 
+def pinned_fqids(query: str, group: str) -> tuple[str, ...]:
+    """Return curated identities that origin search must exclude on every page."""
+    pin = _PINS.get((_normalize(query), group))
+    return () if pin is None else pin.fqids
+
+
 def apply_golden_boost(
     conn: sqlite3.Connection,
     query: str,
@@ -231,11 +237,8 @@ def apply_golden_boost(
     `ConceptGroupSearchResult` (foldable into the classification arm) carries no
     `fqid` field, so `getattr(..., None)` treats it as un-pinnable — never deduped.
 
-    LIMITATION: only the result PAGE is visible here, not the full FTS match set. A
-    pin that is itself an FTS match ranking BEYOND the page can't be deduped — it is
-    re-counted (``total_count`` +1) and may reappear on a deep page. Golden pins are
-    intended for canonical answers that rank poorly or not at all, so pinning a
-    top-FTS-match is a degenerate config; the limitation does not bite the intended use.
+    Callers exclude ``pinned_fqids(query, group)`` from origin search on every page,
+    so a pinned identity cannot reappear at its natural deep FTS position.
     """
     pin = _PINS.get((_normalize(query), group))
     if pin is None:

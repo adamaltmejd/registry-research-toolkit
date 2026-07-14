@@ -897,7 +897,7 @@ def test_classification_code_exclusion_happens_before_limit() -> None:
     for slug in ("class-a", "class-b", "class-c"):
         _link_code_to_classification(conn, slug, code_id)
     _rebuild_fts(conn)
-    name_rows = queries._search_classifications(conn, '"C12"*', 10, 0)
+    name_rows = queries._search_classifications(conn, '"C12"*', False, 10, 0)
     exclude = {row["_classification_id"] for row in name_rows}
 
     code_rows = queries._search_classifications_by_code(conn, "C12", exclude, 1, 0)
@@ -1289,3 +1289,118 @@ def test_classification_editions_orders_by_bfs_depth() -> None:
     assert by_slug["eC"]["effective_year"] is None  # terminal, no outbound edge
     assert by_slug["eB"]["effective_year"] is None  # undated edge, display-only
     assert by_slug["eA"]["effective_year"] == 2000
+
+
+def test_published_relevance_order_is_stable_across_cursor_pages(monkeypatch) -> None:
+    conn = build_slugged_db()
+    rows = [
+        {
+            "type": "classification",
+            "fqid": fqid,
+            "short_name": short_name,
+            "classification_name": name,
+            "fts_rank": rank,
+            "_classification_id": 900 + index,
+        }
+        for index, (fqid, short_name, name, rank) in enumerate(
+            (
+                ("class/broad-a", "Broad A", "Exact topic A", -10.0),
+                ("class/broad-b", "Broad B", "Exact topic B", -9.0),
+                ("class/exact", "Exact", "Exact", -1.0),
+            )
+        )
+    ]
+    monkeypatch.setattr(
+        queries,
+        "_search_classifications",
+        lambda *_args, **_kwargs: [dict(row) for row in rows],
+    )
+
+    first = queries.search(
+        conn,
+        "exact",
+        field="description",
+        type="classification",
+        limit=2,
+        fold_groups=False,
+    )
+    assert first.next_cursor is not None
+    second = queries.search(
+        conn,
+        "exact",
+        field="description",
+        type="classification",
+        limit=2,
+        fold_groups=False,
+        cursor=first.next_cursor,
+    )
+    combined = [str(row.fqid) for row in (*first.results, *second.results)]
+    whole = queries.search(
+        conn,
+        "exact",
+        field="description",
+        type="classification",
+        limit=3,
+        fold_groups=False,
+    )
+    assert combined == [str(row.fqid) for row in whole.results]
+    assert combined == ["class/exact", "class/broad-a", "class/broad-b"]
+    assert len(combined) == len(set(combined))
+    assert not second.has_more
+
+
+def test_excluded_fqid_is_cursor_bound_and_removed_before_limit(monkeypatch) -> None:
+    conn = build_slugged_db()
+    rows = [
+        {
+            "type": "classification",
+            "fqid": f"class/item-{index}",
+            "short_name": f"Item {index}",
+            "classification_name": f"Item {index}",
+            "fts_rank": float(index),
+            "_classification_id": 920 + index,
+        }
+        for index in range(4)
+    ]
+
+    def fake_search(_conn, _query, exclude_fqids, _limit, _offset):
+        assert exclude_fqids
+        return [dict(row) for row in rows if row["fqid"] != "class/item-2"]
+
+    monkeypatch.setattr(queries, "_search_classifications", fake_search)
+    first = queries.search(
+        conn,
+        "item",
+        field="description",
+        type="classification",
+        limit=2,
+        fold_groups=False,
+        exclude_fqids={"class/item-2"},
+    )
+    assert first.next_cursor is not None
+    second = queries.search(
+        conn,
+        "item",
+        field="description",
+        type="classification",
+        limit=2,
+        fold_groups=False,
+        exclude_fqids={"class/item-2"},
+        cursor=first.next_cursor,
+    )
+    assert [str(row.fqid) for row in (*first.results, *second.results)] == [
+        "class/item-0",
+        "class/item-1",
+        "class/item-3",
+    ]
+    with pytest.raises(RegMetaError) as exc:
+        queries.search(
+            conn,
+            "item",
+            field="description",
+            type="classification",
+            limit=2,
+            fold_groups=False,
+            cursor=first.next_cursor,
+        )
+    assert exc.value.code == "invalid_search_cursor"

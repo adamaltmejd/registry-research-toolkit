@@ -313,10 +313,16 @@ async function loadMore(group: SearchGroup): Promise<void> {
   ) {
     return;
   }
+  const requestQuery = q;
+  const requestType = searchType;
   continuationLoading[group.group] = true;
   continuationErrors[group.group] = "";
   try {
-    const page = await search(q, { type, cursor: group.next_cursor });
+    const page = await search(requestQuery, {
+      type,
+      cursor: group.next_cursor,
+    });
+    if (q !== requestQuery || searchType !== requestType) return;
     const next = page.groups.find(
       (candidate) => candidate.group === group.group,
     );
@@ -328,9 +334,12 @@ async function loadMore(group: SearchGroup): Promise<void> {
       results: [...group.results, ...next.results],
     } as SearchGroup;
   } catch (error) {
+    if (q !== requestQuery || searchType !== requestType) return;
     continuationErrors[group.group] = String(error);
   } finally {
-    continuationLoading[group.group] = false;
+    if (q === requestQuery && searchType === requestType) {
+      continuationLoading[group.group] = false;
+    }
   }
 }
 

@@ -2691,4 +2691,80 @@ describe("SearchView — codes grouped by code system (#393 item 3)", () => {
       }),
     );
   });
+
+  it("ignores a continuation response after the search context changes", async () => {
+    let resolveContinuation!: (response: SearchResponse) => void;
+    const continuation = new Promise<SearchResponse>((resolve) => {
+      resolveContinuation = resolve;
+    });
+    vi.mocked(search)
+      .mockResolvedValueOnce({
+        kind: "search",
+        query: "old",
+        groups: [
+          {
+            group: "registers",
+            has_more: true,
+            next_cursor: "old-page-2",
+            results: [
+              {
+                type: "register",
+                fqid: "scb/old",
+                name: "Old first",
+                purpose: null,
+              },
+            ],
+          },
+        ],
+      } as unknown as SearchResponse)
+      .mockReturnValueOnce(continuation)
+      .mockResolvedValueOnce({
+        kind: "search",
+        query: "new",
+        groups: [
+          {
+            group: "registers",
+            has_more: false,
+            next_cursor: null,
+            results: [
+              {
+                type: "register",
+                fqid: "scb/new",
+                name: "New result",
+                purpose: null,
+              },
+            ],
+          },
+        ],
+      } as unknown as SearchResponse);
+    setQuery("old");
+    await render(SearchView);
+    await page.getByRole("button", { name: "Load more" }).click();
+
+    setQuery("new");
+    await expect.element(page.getByText("New result")).toBeVisible();
+    resolveContinuation({
+      kind: "search",
+      query: "old",
+      groups: [
+        {
+          group: "registers",
+          has_more: false,
+          next_cursor: null,
+          results: [
+            {
+              type: "register",
+              fqid: "scb/stale",
+              name: "Stale second",
+              purpose: null,
+            },
+          ],
+        },
+      ],
+    } as unknown as SearchResponse);
+    await nextFrame();
+
+    await expect.element(page.getByText("New result")).toBeVisible();
+    expect(page.getByText("Stale second").query()).toBeNull();
+  });
 });

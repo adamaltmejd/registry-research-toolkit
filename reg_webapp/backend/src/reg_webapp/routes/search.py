@@ -108,30 +108,6 @@ def _has_searchable_token(q: str) -> bool:
     return _WORD_CHAR.search(q) is not None
 
 
-def _rank_codes(results: list[CodeSearchResult]) -> list[CodeSearchResult]:
-    """Re-rank a code/value page so classification-backed (curated) codes lead,
-    then by classification_count, then variable_count — all DESCENDING; FTS order
-    is preserved within ties (stable sort, #393 item 2).
-
-    LIMITATION (deferred annotation): reg_meta returns the FTS-top-N codes and only
-    THEN annotates the shown page with owner counts (`_annotate_value_page`), so the
-    counts exist only on the rows already in the page. This re-sort therefore only
-    reorders WITHIN that page — it cannot pull a curated code that ranked below the
-    FTS cutoff into view. Accepted as an easy-win until ranking moves into reg_meta.
-
-    Operates on reg_meta's `CodeSearchResult` models directly (#701) — no per-row
-    re-wrapping. Pure helper (no IO) so it's unit-testable in isolation."""
-    return sorted(
-        results,
-        key=lambda r: (
-            r.classification_count > 0,
-            r.classification_count,
-            r.variable_count,
-        ),
-        reverse=True,
-    )
-
-
 def _fold_match_text(value: object) -> str:
     text = str(value).strip().casefold()
     decomposed = unicodedata.normalize("NFKD", text)
@@ -239,30 +215,6 @@ def _looks_like_golden_pin(result: SearchResult) -> bool:
     """Golden pins are order-prepended with rank=0.0; keep them pinned when the
     display pass applies best-bet scoring inside typed groups."""
     return result.type in ("register", "classification") and result.rank == 0.0
-
-
-def _rank_display_results(
-    query: str, results: list[SearchResult]
-) -> list[SearchResult]:
-    """Apply the same query-sensitive best-bet score within one typed section.
-
-    Top results uses `_best_bet_score` to merge across typed groups. Reusing that
-    score inside each category keeps an exact/prefix hit from leading Top results
-    while sitting lower in its own category. Golden pins stay first because their
-    contract is stronger than FTS/order scoring.
-    """
-    return [
-        result
-        for _, result in sorted(
-            enumerate(results),
-            key=lambda item: (
-                _looks_like_golden_pin(item[1]),
-                _best_bet_score(query, item[1]),
-                -item[0],
-            ),
-            reverse=True,
-        )
-    ]
 
 
 def _boosted_continuation(
@@ -574,12 +526,14 @@ def get_search(
         # FastAPI response models all operate on the same reg_meta types.
         if want_register:
             phase_start = perf_counter()
+            register_pin_fqids = golden.pinned_fqids(q, "register")
             reg = _search_boundary(
                 conn,
                 q,
                 field="description",
                 type="register",
                 fqids=fqids,
+                exclude_fqids=register_pin_fqids or None,
                 limit=limit,
                 cursor=cursor,
                 fold_groups=False,
@@ -606,7 +560,7 @@ def get_search(
                 RegisterSearchGroup(
                     results=cast(
                         "list[RegisterSearchResult]",
-                        list(_rank_display_results(q, reg_results)[:limit]),
+                        list(reg_results[:limit]),
                     ),
                     has_more=reg_has_more,
                     next_cursor=reg_next_cursor,
@@ -691,7 +645,7 @@ def get_search(
                 VariableSearchGroup(
                     results=cast(
                         "list[VariableSearchItem]",
-                        list(_rank_display_results(q, var_results)[:limit]),
+                        list(var_results[:limit]),
                     ),
                     has_more=var_has_more or len(var_results) > limit,
                     next_cursor=var_next_cursor,
@@ -700,11 +654,13 @@ def get_search(
             phase_timings.append(("variable", perf_counter() - phase_start))
         if want_classification:
             phase_start = perf_counter()
+            classification_pin_fqids = golden.pinned_fqids(q, "classification")
             cls = _search_boundary(
                 conn,
                 q,
                 field="description",
                 type="classification",
+                exclude_fqids=classification_pin_fqids or None,
                 limit=limit,
                 cursor=cursor,
             )
@@ -720,7 +676,7 @@ def get_search(
                 ClassificationSearchGroup(
                     results=cast(
                         "list[ClassificationSearchItem]",
-                        list(_rank_display_results(q, cls_results)[:limit]),
+                        list(cls_results[:limit]),
                     ),
                     has_more=cls_has_more,
                     next_cursor=cls_next_cursor,
@@ -758,9 +714,7 @@ def get_search(
                 cast("list[SearchResult]", boosted_classification_codes),
                 limit=limit,
             )
-            classification_code_results = _rank_codes(boosted_classification_codes)[
-                :limit
-            ]
+            classification_code_results = boosted_classification_codes[:limit]
             groups.append(
                 ClassificationCodeSearchGroup(
                     results=classification_code_results,
@@ -792,7 +746,7 @@ def get_search(
                 cast("list[SearchResult]", boosted_register_values),
                 limit=limit,
             )
-            register_value_results = _rank_codes(boosted_register_values)[:limit]
+            register_value_results = boosted_register_values[:limit]
             groups.append(
                 RegisterValueSetSearchGroup(
                     results=register_value_results,

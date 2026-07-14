@@ -12,6 +12,7 @@ without the app.
 
 from __future__ import annotations
 
+import sqlite3
 from pathlib import Path
 
 import pytest
@@ -40,8 +41,6 @@ from reg_webapp.routes.search import (
     _best_bets,
     _has_searchable_token,
     _narrow_variable_leaf_columns,
-    _rank_codes,
-    _rank_display_results,
     _validated_limit,
 )
 
@@ -607,8 +606,7 @@ def test_value_search_keeps_code_owner_lists_bounded(client, monkeypatch):
 
 
 def _code(code: str, *, classification_count: int = 0, variable_count: int = 0):
-    """A minimal `CodeSearchResult` model (#701) for the `_rank_codes` unit tests —
-    it now operates on reg_meta's typed models, not raw dicts."""
+    """Build a minimal typed code result for route helper tests."""
     return CodeSearchResult(
         code=code,
         label=code,
@@ -616,42 +614,6 @@ def _code(code: str, *, classification_count: int = 0, variable_count: int = 0):
         variable_count=variable_count,
         rank=0.0,
     )
-
-
-def test_rank_codes_classification_backed_precede():
-    # classification_count > 0 sorts ahead of == 0 regardless of variable_count.
-    results = [
-        _code("a", classification_count=0, variable_count=99),
-        _code("b", classification_count=1, variable_count=0),
-    ]
-    assert [r.code for r in _rank_codes(results)] == ["b", "a"]
-
-
-def test_rank_codes_orders_by_classification_then_variable_count():
-    results = [
-        _code("a", classification_count=1, variable_count=1),
-        _code("b", classification_count=3, variable_count=0),
-        _code("c", classification_count=1, variable_count=5),
-    ]
-    # b (cls 3) leads; among cls==1, c (var 5) precedes a (var 1).
-    assert [r.code for r in _rank_codes(results)] == ["b", "c", "a"]
-
-
-def test_rank_codes_is_stable_on_ties():
-    # Equal sort keys preserve the incoming (FTS) order.
-    results = [
-        _code("a", classification_count=2, variable_count=1),
-        _code("b", classification_count=2, variable_count=1),
-        _code("c", classification_count=2, variable_count=1),
-    ]
-    assert [r.code for r in _rank_codes(results)] == ["a", "b", "c"]
-
-
-def test_rank_codes_tolerates_default_counts():
-    # Default counts are 0 (a code with no owners sinks below a backed one rather
-    # than raising).
-    results = [_code("a"), _code("b", classification_count=1)]
-    assert [r.code for r in _rank_codes(results)] == ["b", "a"]
 
 
 def test_code_system_first_short_name():
@@ -879,14 +841,12 @@ def test_top_results_direct_group_label_match_beats_prefix_leaves():
         rank=-12.0,
     )
 
-    ranked = _rank_display_results("disponibel", [*leaves, group])
     top = _best_bets(
         "disponibel",
-        [VariableSearchGroup(total_count=7, results=ranked)],
+        [VariableSearchGroup(total_count=7, results=[*leaves, group])],
         limit=5,
     )
 
-    assert ranked[0] == group
     assert top[0] == group
 
 
@@ -967,51 +927,6 @@ def test_top_results_exact_leaf_still_beats_group_authority_bonus():
     )
 
     assert top == [exact, broad_group]
-
-
-def test_display_ranking_matches_best_bet_exact_boost():
-    broad = VariableSearchResult(
-        fqid="scb/lsum/ftgsni200",
-        name="Näringsgren, huvudsaklig",
-        register="LSUM",
-        rank=-10.0,
-    )
-    exact = ConceptGroupSearchResult(
-        kind="variable",
-        group_key="naringsgren",
-        group_label="Näringsgren",
-        register="LCS",
-        member_count=2,
-        matched_count=2,
-        members=(
-            ConceptGroupMember(
-                fqid="scb/lcs/naringsgren", name="Näringsgren", facets=()
-            ),
-            ConceptGroupMember(fqid="scb/lcs/sni", name="Näringsgren", facets=()),
-        ),
-        rank=-9.0,
-    )
-
-    ranked = _rank_display_results("näringsgren", [broad, exact])
-
-    assert ranked == [exact, broad]
-
-
-def test_display_ranking_keeps_golden_pins_first():
-    pin = RegisterSearchResult(
-        fqid="sos/par",
-        name="Patientregistret",
-        rank=0.0,
-    )
-    exact = RegisterSearchResult(
-        fqid="scb/diagnos",
-        name="Diagnos",
-        rank=-10.0,
-    )
-
-    ranked = _rank_display_results("diagnos", [pin, exact])
-
-    assert ranked == [pin, exact]
 
 
 def test_top_results_keeps_distinct_null_fqid_leaves():
@@ -1259,6 +1174,52 @@ def test_golden_boost_respects_limit(client, monkeypatch):
         "registers",
     )
     assert [row["fqid"] for row in continuation["results"]] == ["scb/lisa"]
+
+
+def test_deep_golden_fts_hit_is_emitted_once_across_all_pages(
+    client, catalog_db, monkeypatch
+):
+    conn = sqlite3.connect(catalog_db)
+    try:
+        conn.execute("UPDATE register SET purpose = 'Deep golden topic'")
+        conn.execute("INSERT INTO register_fts(register_fts) VALUES ('rebuild')")
+        conn.commit()
+    finally:
+        conn.close()
+    monkeypatch.setattr(
+        golden,
+        "_PINS",
+        {
+            ("deep golden topic", "register"): _Pin(
+                query="deep golden topic",
+                group="register",
+                fqids=("scb/rams",),
+                note=None,
+            )
+        },
+    )
+
+    cursor = None
+    fqids: list[str] = []
+    while True:
+        params = {
+            "q": "deep golden topic",
+            "limit": 1,
+            "type": "register",
+        }
+        if cursor is not None:
+            params["cursor"] = cursor
+        group = _group(client.get("/api/search", params=params).json(), "registers")
+        fqids.extend(row["fqid"] for row in group["results"])
+        if not group["has_more"]:
+            assert group["next_cursor"] is None
+            break
+        cursor = group["next_cursor"]
+        assert cursor is not None
+
+    assert fqids[0] == "scb/rams"
+    assert fqids.count("scb/rams") == 1
+    assert len(fqids) == len(set(fqids))
 
 
 # ── Fix 3: diacritic fold in the pin lookup key ──────────────────────────────
