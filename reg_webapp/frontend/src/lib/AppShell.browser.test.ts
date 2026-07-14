@@ -258,3 +258,27 @@ describe("AppShell — mobile drawer", () => {
     await expect.element(toggle).toHaveAttribute("aria-expanded", "false");
   });
 });
+
+describe("AppShell — viewport geometry", () => {
+  it("grows the main canvas through the remaining viewport with short routed content", async () => {
+    const { container } = await render(AppShell, minimalProps());
+
+    const shell = container.querySelector<HTMLElement>(".shell");
+    const frame = container.querySelector<HTMLElement>(".frame");
+    const topbar = container.querySelector<HTMLElement>(".topbar");
+    const canvas = container.querySelector<HTMLElement>(".canvas");
+    expect(shell).not.toBeNull();
+    expect(frame).not.toBeNull();
+    expect(topbar).not.toBeNull();
+    expect(canvas).not.toBeNull();
+
+    const shellRect = shell?.getBoundingClientRect();
+    const frameRect = frame?.getBoundingClientRect();
+    const topbarRect = topbar?.getBoundingClientRect();
+    const canvasRect = canvas?.getBoundingClientRect();
+    expect(shellRect?.height).toBeGreaterThanOrEqual(window.innerHeight);
+    expect(frameRect?.bottom).toBeCloseTo(shellRect?.bottom ?? 0, 0);
+    expect(canvasRect?.top).toBeCloseTo(topbarRect?.bottom ?? 0, 0);
+    expect(canvasRect?.bottom).toBeCloseTo(frameRect?.bottom ?? 0, 0);
+  });
+});

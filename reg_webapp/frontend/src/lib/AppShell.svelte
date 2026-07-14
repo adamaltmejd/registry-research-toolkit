@@ -276,6 +276,7 @@ function plural(count: number, singular: string, pluralLabel: string): string {
     display: grid;
     grid-template-columns: 16rem minmax(0, 1fr);
     min-height: 100vh;
+    min-height: 100dvh;
   }
 
   /* ── Rail ──────────────────────────────────────────────────────────────── */
@@ -559,19 +560,19 @@ function plural(count: number, singular: string, pluralLabel: string): string {
        exceeds the viewport (border-box folds the padding INTO `width: 100%` —
        without it, there being no global border-box reset in this app, the canvas
        was 100% + 32px wide, overflowing by exactly its horizontal padding). With
-       the canvas bounded, `overflow-x: auto` lets content WIDER than the canvas
-       (ConceptGroupView's facet-matrix, dense tables) scroll horizontally INSIDE
-       the canvas instead of being clipped (a `hidden` clip made the rightmost
-       columns unreachable). Only the overflowing children scroll; the document
-       does not — so this stays within criterion #1, it's a reachability fix, not
-       a clip-bandaid. */
+       the canvas bounded, App's `.routed` child owns horizontal scrolling for
+       content WIDER than the canvas (ConceptGroupView's facet-matrix, dense
+       tables). Keeping overflow off this main wrapper also lets its block size
+       grow normally with the routed body + citation footer. */
     box-sizing: border-box;
+    flex: 1 0 auto;
+    display: flex;
+    flex-direction: column;
     width: 100%;
     max-width: 80rem;
     min-width: 0;
     margin: 0 auto;
     padding: var(--space-4);
-    overflow-x: auto;
   }
 
   .scrim {

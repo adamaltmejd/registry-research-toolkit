@@ -29,7 +29,7 @@ import {
 } from "./catalog";
 import FilterInput from "./FilterInput.svelte";
 import RelatedDocumentsPanel from "./RelatedDocumentsPanel.svelte";
-import { type Column, DataTable, EmptyState, Panel, Tag } from "./ui";
+import { type Column, DataTable, EmptyState, Panel, Skeleton, Tag } from "./ui";
 import VariantBrowser from "./VariantBrowser.svelte";
 
 // The provider arm renders its register list as a real DataTable: a Register
@@ -250,7 +250,21 @@ $effect(() => {
 </script>
 
 {#if resource.loading}
-  <p class="muted" aria-busy="true">Loading…</p>
+  <section
+    class="route-loading"
+    class:classification-loading={fqidPath.startsWith("class/")}
+    aria-busy="true"
+    aria-live="polite"
+  >
+    <p class="muted loading-status">Loading…</p>
+    <div class="loading-geometry">
+      <Skeleton width="min(24rem, 70%)" count={2} />
+      <Skeleton
+        variant="block"
+        count={fqidPath.startsWith("class/") ? 3 : 1}
+      />
+    </div>
+  </section>
 {:else if resource.error}
   <p class="error" role="alert">
     {#if resource.status === 404}
@@ -441,21 +455,27 @@ $effect(() => {
         <EmptyState title="No classifications." />
       {/if}
     {:else if node.kind === "classification"}
-      {#if classificationSubjectKey}
-        <!-- #1116: grouped / family classification FQIDs stay valid as shareable
-             deep-links, but the canonical surface is the group/family page with
-             this edition's tab active. Ungrouped classifications still use the
-             standalone leaf view. -->
-        <ClassificationGroupView
-          key={classificationSubjectKey}
-          activeFqid={classificationTabFocusFqid(node)}
-          initialActiveNode={node}
-        />
-      {:else}
-        <!-- #638 PR1: the ungrouped classification leaf renders through the unified
-             SubjectView shell, same as the binding leaf + concept group. -->
-        <ClassificationLeafView {node} />
-      {/if}
+      <div
+        class="classification-detail"
+        class:reserve-edition-graph={(node.family?.editions.length ?? 0) > 1 ||
+          (node.edition_chain?.length ?? 0) > 1}
+      >
+        {#if classificationSubjectKey}
+          <!-- #1116: grouped / family classification FQIDs stay valid as shareable
+               deep-links, but the canonical surface is the group/family page with
+               this edition's tab active. Ungrouped classifications still use the
+               standalone leaf view. -->
+          <ClassificationGroupView
+            key={classificationSubjectKey}
+            activeFqid={classificationTabFocusFqid(node)}
+            initialActiveNode={node}
+          />
+        {:else}
+          <!-- #638 PR1: the ungrouped classification leaf renders through the unified
+               SubjectView shell, same as the binding leaf + concept group. -->
+          <ClassificationLeafView {node} />
+        {/if}
+      </div>
     {/if}
   </article>
 {:else if notBrowsable}
@@ -469,6 +489,55 @@ $effect(() => {
 {/if}
 
 <style>
+  /* Match the successful route's title/detail rhythm while the first catalog
+     request is unresolved. Classification routes reserve the extra graph/value
+     surfaces through three standard Skeleton blocks; ordinary browse routes use
+     one. The placeholder remains bounded and responsive because it follows the
+     content column instead of measuring the viewport in JavaScript. */
+  .route-loading {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+  .loading-status {
+    margin: 0;
+  }
+  .loading-geometry {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    max-width: 64rem;
+  }
+  .classification-loading .loading-geometry {
+    gap: var(--space-4);
+  }
+  /* A succession family renders its value-set tabs before the optional graph
+     request finishes. Give the existing subject article a persistent picker
+     row sized to one compact DAG (its common shape), then place the real graph
+     into that row when it arrives. The value-set section therefore keeps the
+     same normal-flow position; a branching graph can still expand the auto max.
+     This is tied to edition metadata, so unrelated classifications do not gain
+     an empty picker row. */
+  .reserve-edition-graph :global(article) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto minmax(13rem, auto);
+    min-width: 0;
+  }
+  .reserve-edition-graph :global(article > .subject-header) {
+    grid-row: 1;
+  }
+  .reserve-edition-graph :global(article > .tech-details) {
+    grid-row: 2;
+  }
+  .reserve-edition-graph :global(article > .classification-editions) {
+    grid-row: 3;
+    align-self: start;
+    margin-block: var(--space-4) 0;
+  }
+  .reserve-edition-graph :global(article > .edition-tabs-section) {
+    grid-row: 4;
+  }
   /* The register's own subject text (register arm). */
   .purpose-text {
     color: var(--text-muted);

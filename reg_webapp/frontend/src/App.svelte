@@ -236,6 +236,16 @@ const breadcrumbItems = $derived(routeBreadcrumbs(route));
     background: var(--err-bg);
     border: 1px solid var(--red-border);
   }
+  /* AppShell's canvas grows through the viewport remainder. Keep the routed
+     region as its flexible body so asynchronous pages replace content inside a
+     stable main-area footprint instead of promoting the citation footer into
+     the provisional route-content position. Tall routes still expand normally. */
+  .routed {
+    flex: 1 0 auto;
+    min-block-size: 100%;
+    min-width: 0;
+    overflow-x: auto;
+  }
   .vintage {
     font-size: 0.8rem;
     text-align: center;
