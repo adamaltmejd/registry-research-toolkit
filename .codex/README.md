@@ -46,9 +46,6 @@ default_tools_approval_mode = "prompt"
 [mcp_servers.chrome-devtools.tools.list_pages]
 approval_mode = "approve"
 
-[mcp_servers.chrome-devtools.tools.get_tab_id]
-approval_mode = "approve"
-
 [mcp_servers.chrome-devtools.tools.list_console_messages]
 approval_mode = "approve"
 
