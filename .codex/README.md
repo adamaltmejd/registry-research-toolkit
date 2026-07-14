@@ -19,9 +19,9 @@ The policy is deliberately layered:
   force, and destructive flags behind the same boundary.
 - The configured `chrome-devtools` MCP server uses a pinned package and launches an
   isolated, headless browser with host-file navigation, usage statistics, and CrUX
-  lookups disabled. Navigation, inspection, and page interaction are auto-approved;
-  uploads, screenshots, snapshots, traces, script exports, and other path-capable tools
-  retain approval.
+  lookups disabled. Basic tab setup, inspection, and page interaction are auto-approved;
+  scripted navigation, uploads, screenshots, snapshots, traces, script exports, and
+  other path-capable tools retain approval.
 
 Approval settings change execution confirmation; they do not grant task authority.
 `AGENTS.md`, the user's request, and the invoked skill still decide whether an action
