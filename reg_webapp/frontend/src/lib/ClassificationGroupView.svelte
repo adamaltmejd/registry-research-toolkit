@@ -136,7 +136,7 @@ const tabs = $derived.by((): EditionTab[] => {
   }
   return [];
 });
-const reserveEditionGraph = $derived(
+const expectsEditionGraph = $derived(
   tabs.length > 1 || (initialActiveNode?.edition_chain?.length ?? 0) > 1,
 );
 
@@ -210,6 +210,12 @@ const focusedGraph = $derived.by((): RelationshipGraph | null => {
   const focus = graphNodeForFqid(selectedFqid);
   return focus == null ? graph : { ...graph, focus_id: focus.id };
 });
+const graphRenderable = $derived(
+  graphReady && focusedGraph?.edges.some((edge) => edge.kind === "succession"),
+);
+const reserveEditionGraph = $derived(
+  expectsEditionGraph && (graphResource.loading || graphRenderable),
+);
 
 function selectEdition(value: string): void {
   const tab = tabs.find((item) => item.value === value);
@@ -270,7 +276,7 @@ function selectEdition(value: string): void {
 {/snippet}
 
 {#snippet picker()}
-  {#if graphReady && focusedGraph}
+  {#if graphRenderable && focusedGraph}
     <ClassificationEditionGraph graph={focusedGraph} />
   {/if}
 {/snippet}
@@ -339,8 +345,9 @@ function selectEdition(value: string): void {
 
 <style>
   /* Multi-edition classification subjects render their value-set tabs before
-     the optional graph request finishes. Own the reservation here so canonical
-     group routes and leaf aliases share the same stable SubjectView geometry. */
+     the optional graph request finishes. Hold one compact DAG row while that
+     request is pending, retain it only for a renderable succession graph, and
+     collapse it after an empty/error response. */
   .reserve-edition-graph :global(article) {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
@@ -360,6 +367,9 @@ function selectEdition(value: string): void {
   }
   .reserve-edition-graph :global(article > .edition-tabs-section) {
     grid-row: 4;
+  }
+  .reserve-edition-graph :global(article > .derived-links) {
+    grid-row: 5;
   }
   /* #638 PR4: row spacing standardized across the subject kinds. */
   .meta {
