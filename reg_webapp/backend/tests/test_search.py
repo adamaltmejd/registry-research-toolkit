@@ -85,10 +85,10 @@ def test_response_has_typed_groups(client):
         "classification_codes",
         "register_value_sets",
     }
-    # Every group carries its own total_count + results list (the extensible
+    # Every group carries bounded-continuation metadata plus its results list.
     # per-group envelope docs will reuse).
     for g in body["groups"]:
-        assert "total_count" in g
+        assert "has_more" in g and "next_cursor" in g
         assert isinstance(g["results"], list)
 
 
@@ -131,6 +131,15 @@ def test_invalid_type_is_422(client):
     )
 
 
+def test_invalid_cursor_is_actionable_422(client):
+    response = client.get(
+        "/api/search",
+        params={"q": "LISA", "type": "register", "cursor": "not-a-cursor"},
+    )
+    assert response.status_code == 422
+    assert "cursor" in response.json()["detail"].lower()
+
+
 def test_default_type_is_all_four_groups(client):
     # No ?type= preserves the canonical typed groups when there is no useful
     # cross-group top-results panel to show.
@@ -164,7 +173,7 @@ def test_scoped_empty_query_returns_only_selected_empty_group(client):
         "classification_codes",
         "register_value_sets",
     ]
-    assert all(g["total_count"] == 0 for g in body["groups"])
+    assert all(not g["has_more"] for g in body["groups"])
     assert all(g["results"] == [] for g in body["groups"])
 
 
@@ -174,7 +183,7 @@ def test_scoped_empty_query_non_value_scope(client):
     # short-circuit (the existing scoped-empty test covers only `value`).
     body = client.get("/api/search", params={"q": "  ", "type": "register"}).json()
     assert [g["group"] for g in body["groups"]] == ["registers"]
-    assert body["groups"][0]["total_count"] == 0
+    assert not body["groups"][0]["has_more"]
     assert body["groups"][0]["results"] == []
 
 
@@ -232,7 +241,7 @@ def test_value_groups_always_present(client):
     body = client.get("/api/search", params={"q": "zzqq"}).json()
     for name in ("classification_codes", "register_value_sets"):
         g = _group(body, name)
-        assert g["total_count"] == 0
+        assert not g["has_more"]
         assert g["results"] == []
 
 
@@ -319,7 +328,7 @@ def test_code_shaped_query_surfaces_owning_classification(client):
     g = _group(client.get("/api/search", params={"q": "C12"}).json(), "classifications")
     fqids = [r["fqid"] for r in g["results"] if r["type"] == "classification"]
     assert "class/icd-10-se" in fqids
-    assert g["total_count"] >= 1
+    assert len(g["results"]) >= 1
 
 
 # ── concept-group folding (#322) ─────────────────────────────────────────────
@@ -381,12 +390,12 @@ def test_empty_query_returns_empty_groups(client):
         "classification_codes",
         "register_value_sets",
     }
-    assert all(g["total_count"] == 0 and g["results"] == [] for g in body["groups"])
+    assert all(not g["has_more"] and g["results"] == [] for g in body["groups"])
 
 
 def test_whitespace_query_returns_empty_groups(client):
     body = client.get("/api/search", params={"q": "   "}).json()
-    assert all(g["total_count"] == 0 for g in body["groups"])
+    assert all(not g["has_more"] for g in body["groups"])
 
 
 def test_missing_q_is_422(client):
@@ -518,6 +527,7 @@ def test_filtered_variable_search_passes_delivery_scope_into_full_backfill_query
         delivery_column_scope=None,
         limit=50,
         fold_groups=True,
+        cursor=None,
     ):
         assert query == "needle"
         assert field == "description"
@@ -536,8 +546,8 @@ def test_filtered_variable_search_passes_delivery_scope_into_full_backfill_query
             ),
         )
         return SearchResults(
-            total_count=len(rows),
-            results=rows if limit is None else rows[:limit],
+            results=rows[:limit],
+            has_more=False,
         )
 
     monkeypatch.setattr(search_route, "reg_meta_search", fake_search)
@@ -545,13 +555,13 @@ def test_filtered_variable_search_passes_delivery_scope_into_full_backfill_query
     body = client.get("/api/search?q=needle&type=variable&limit=1").json()
     group = _group(body, "variables")
 
-    assert calls == [None]
-    assert group["total_count"] == 1
+    assert calls == [1]
+    assert not group["has_more"]
     assert [r["name"] for r in group["results"]] == ["needle variable"]
     assert group["results"][0]["delivery_column_names"] == ["Kon"]
 
 
-def test_value_search_requests_full_code_owner_list(client, monkeypatch):
+def test_value_search_keeps_code_owner_lists_bounded(client, monkeypatch):
     class ExplodingIndex:
         held_register_fqids = frozenset({"scb/lisa"})
         admitted_variable_fqids = frozenset({"scb/lisa/kon"})
@@ -570,8 +580,9 @@ def test_value_search_requests_full_code_owner_list(client, monkeypatch):
         type,
         limit=50,
         fold_groups=True,
-        code_variable_owner_limit=None,
+        code_variable_owner_limit=5,
         code_owner_scope="all",
+        cursor=None,
     ):
         assert query == "needle"
         assert field == "value"
@@ -581,17 +592,17 @@ def test_value_search_requests_full_code_owner_list(client, monkeypatch):
         calls.append((code_variable_owner_limit, code_owner_scope))
         if code_owner_scope == "register_local":
             return SearchResults(
-                total_count=1, results=(_code("1", variable_count=250),)
+                results=(_code("1", variable_count=250),), has_more=False
             )
-        return SearchResults(total_count=0, results=())
+        return SearchResults(results=(), has_more=False)
 
     monkeypatch.setattr(search_route, "reg_meta_search", fake_search)
 
     body = client.get("/api/search?q=needle&type=value&limit=1").json()
     group = _group(body, "register_value_sets")
 
-    assert calls == [(None, "classification"), (None, "register_local")]
-    assert group["total_count"] == 1
+    assert calls == [(5, "classification"), (5, "register_local")]
+    assert not group["has_more"]
     assert group["results"][0]["variable_count"] == 250
 
 
@@ -678,7 +689,7 @@ def test_top_results_group_precedes_typed_groups(client):
     body = client.get("/api/search", params={"q": "C12"}).json()
     assert [g["group"] for g in body["groups"]][:2] == ["top_results", "registers"]
     top = _group(body, "top_results")
-    assert top["total_count"] >= len(top["results"])
+    assert not top["has_more"]
     assert top["results"]
 
 
@@ -1186,7 +1197,7 @@ def test_golden_boost_register_injection_end_to_end(client, pinned):
     # register FTS hit, so the pinned scb/rams is the lone net-new result).
     g = _group(client.get("/api/search", params={"q": "gizmo"}).json(), "registers")
     assert g["results"][0]["fqid"] == "scb/rams"
-    assert g["total_count"] == 1
+    assert not g["has_more"]
 
 
 def test_golden_boost_no_double_count_when_pin_is_fts_hit(client, pinned):
@@ -1198,16 +1209,16 @@ def test_golden_boost_no_double_count_when_pin_is_fts_hit(client, pinned):
     assert fqids.count("scb/lisa") == 1
     # The dedup'd pin added nothing, so total_count == the result count (no
     # net-new injection inflating it).
-    assert g["total_count"] == len(fqids)
+    assert not g["has_more"]
 
 
-def test_golden_boost_unpinned_query_total_count_unchanged(client):
+def test_golden_boost_unpinned_query_continuation_well_formed(client):
     # A query with no pin (default production _PINS, which targets sysselsättning /
     # diagnos — absent from the fixture) leaves every group's total_count as the
     # raw FTS count: no injection, no off-by-one.
     body = client.get("/api/search", params={"q": "kon"}).json()
     for g in body["groups"]:
-        assert g["total_count"] >= 0  # well-formed; no boost-driven inflation
+        assert isinstance(g["has_more"], bool)  # well-formed; no boost-driven inflation
 
 
 # ── Fix 2: golden-boost must respect ?limit (#393 item 2) ────────────────────
@@ -1233,7 +1244,21 @@ def test_golden_boost_respects_limit(client, monkeypatch):
     )
     assert len(g["results"]) == 1  # page capped at ?limit
     assert g["results"][0]["fqid"] == "scb/rams"  # the pin still leads at rank 1
-    assert g["total_count"] == 2  # full count: FTS hit + net-new pin (not capped)
+    assert g["has_more"]  # the displaced FTS hit remains available by cursor
+
+    continuation = _group(
+        client.get(
+            "/api/search",
+            params={
+                "q": "LISA",
+                "limit": 1,
+                "type": "register",
+                "cursor": g["next_cursor"],
+            },
+        ).json(),
+        "registers",
+    )
+    assert [row["fqid"] for row in continuation["results"]] == ["scb/lisa"]
 
 
 # ── Fix 3: diacritic fold in the pin lookup key ──────────────────────────────

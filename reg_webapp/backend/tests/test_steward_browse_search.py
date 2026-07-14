@@ -644,7 +644,7 @@ def test_search_scopes_register_and_variable_with_exact_count(steward_client):
     var_fqids = {r.get("fqid") for r in groups["variables"]["results"]}
     assert var_fqids <= {"scb/lisa/kon"}
     # total_count is query-time-exact (no unheld variable inflates it).
-    assert groups["variables"]["total_count"] == len(groups["variables"]["results"])
+    assert not groups["variables"]["has_more"]
 
 
 def test_search_classification_group_passes_through(steward_client):
@@ -661,12 +661,12 @@ def test_search_register_arm_scoped_to_held(steward_client):
     held_grp = {g["group"]: g for g in held["groups"]}["registers"]
     assert {r["fqid"] for r in held_grp["results"]} == {"scb/lisa"}
     # Query-time-exact: no unheld register inflates the count.
-    assert held_grp["total_count"] == len(held_grp["results"])
+    assert not held_grp["has_more"]
 
     unheld = steward_client.get("/api/search?q=rams&type=register").json()
     unheld_grp = {g["group"]: g for g in unheld["groups"]}["registers"]
     assert unheld_grp["results"] == []  # scb/rams filtered out
-    assert unheld_grp["total_count"] == 0  # exact, not the pre-filter universe count
+    assert not unheld_grp["has_more"]
 
 
 def test_search_held_concept_group_row_survives_scope(lonfink_rep_both_client):
@@ -685,8 +685,8 @@ def test_search_held_concept_group_row_survives_scope(lonfink_rep_both_client):
         "LonFinkFeb",
     }
     # total_count counts the surviving group row (it is NOT dropped).
-    assert grp["total_count"] == len(grp["results"])
-    assert grp["total_count"] >= 1
+    assert not grp["has_more"]
+    assert len(grp["results"]) >= 1
 
 
 def test_search_group_members_narrowed_to_held_column(lonfink_rep_jan_client):
@@ -705,7 +705,7 @@ def test_search_group_members_narrowed_to_held_column(lonfink_rep_jan_client):
     assert cols == {"LonFinkJan"}  # the unheld LonFinkFeb representation is excluded
     assert rep["member_count"] == 1  # member_count reset to the narrowed length
     # The group is KEPT (it has a surviving member), so total_count stays exact.
-    assert grp["total_count"] == len(grp["results"])
+    assert not grp["has_more"]
 
 
 def test_search_variable_leaf_column_chips_narrowed_to_held_column(
@@ -725,7 +725,7 @@ def test_search_variable_leaf_drops_unheld_delivery_alias_hit(lonfink_jan_client
     body = lonfink_jan_client.get("/api/search?q=LonFinkFeb&type=variable").json()
     grp = {g["group"]: g for g in body["groups"]}["variables"]
     assert grp["results"] == []
-    assert grp["total_count"] == 0
+    assert not grp["has_more"]
 
 
 def test_search_backfills_after_all_unheld_group_drop(
@@ -754,7 +754,7 @@ def test_search_backfills_after_all_unheld_group_drop(
         body = client.get("/api/search?q=Backfill&type=variable&limit=1").json()
     grp = {g["group"]: g for g in body["groups"]}["variables"]
     assert [r["group_key"] for r in grp["results"]] == ["z-backfill-keep"]
-    assert grp["total_count"] == 1
+    assert not grp["has_more"]
 
 
 def test_search_group_column_grain_passthrough_global(global_client):

@@ -200,7 +200,9 @@ def _build_parser() -> argparse.ArgumentParser:
         "--limit", type=int, default=50, help="Max results (default: 50)."
     )
     search_p.add_argument(
-        "--offset", type=int, default=0, help="Skip first N results (default: 0)."
+        "--cursor",
+        default=None,
+        help="Opaque continuation cursor returned by the preceding search page.",
     )
     search_p.add_argument(
         "--no-fold",
@@ -892,7 +894,7 @@ def _cmd_search(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
             register=args.register,
             years=args.years,
             limit=args.limit,
-            offset=args.offset,
+            cursor=args.cursor,
             fold_groups=not args.no_fold,
         )
     finally:
@@ -903,17 +905,31 @@ def _cmd_search(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     # (mode="json" → `Fqid`→string, tuples→lists; by_alias → the `register` wire
     # key) so the doc rows (plain dicts) interleave on the shared `rank` sort key.
     search_rows = [m.model_dump(mode="json", by_alias=True) for m in data.results]
-    doc_results = _search_docs(args.query, db_arg=args.db)
+    doc_results = (
+        _search_docs(args.query, db_arg=args.db) if args.cursor is None else []
+    )
     all_results = search_rows + doc_results
     all_results.sort(key=lambda x: x.get("rank", 0))
-    total_count = data.total_count + len(doc_results)
     results = all_results[: args.limit]
 
     doc_total = sum(1 for r in all_results if r.get("type") == "doc")
     doc_shown = sum(1 for r in results if r.get("type") == "doc")
     doc_hidden = doc_total - doc_shown
+    catalog_consumed = len(results) - doc_shown
+    catalog_has_more = catalog_consumed < len(search_rows) or data.has_more
+    catalog_cursor = None
+    if catalog_has_more:
+        catalog_cursor = (
+            data.page_cursor
+            if catalog_consumed == 0
+            else data.cursors_after[catalog_consumed - 1]
+        )
 
-    out: dict[str, Any] = {"total_count": total_count, "results": results}
+    out: dict[str, Any] = {
+        "results": results,
+        "has_more": catalog_has_more,
+        "next_cursor": catalog_cursor,
+    }
     if doc_hidden > 0:
         out["doc_hint"] = (
             f"{doc_hidden} documentation match{'es' if doc_hidden != 1 else ''} "
@@ -930,7 +946,7 @@ def _cmd_search(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
             "register": args.register,
             "years": args.years,
             "limit": args.limit,
-            "offset": args.offset,
+            "cursor": args.cursor,
             "no_fold": args.no_fold,
         },
         db_info=info,
@@ -2306,7 +2322,6 @@ def _collect_hints(
 ) -> None:
     """Populate command-specific contextual hints."""
     if key == ("search", None):
-        total = data.get("total_count", 0)
         results = data.get("results", [])
         group_rows = [r for r in results if r.get("type") == "group"]
         # The typed group rows (#701) carry the scalar `matched_count` (the raw
@@ -2320,15 +2335,16 @@ def _collect_hints(
             )
         if getattr(args, "field", "all") == "all":
             hint_add(hints, "Searching all fields (--field to narrow)")
-        if total > len(results):
+        if data.get("has_more"):
             hint_add(
                 hints,
-                f"Showing {len(results)} of {total} matches (--limit/--offset to page)",
+                f"Showing {len(results)} matches; continue with --cursor "
+                f"{data.get('next_cursor')}",
             )
         doc_hint = data.pop("doc_hint", None)
         if doc_hint:
             hint_add(hints, doc_hint)
-        if total == 0 and not results:
+        if not results:
             hint_add(hints, "No results (try broader --field or reg-meta docs search)")
 
     elif key == ("get", "groups"):

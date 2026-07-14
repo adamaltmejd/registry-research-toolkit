@@ -191,7 +191,29 @@ class TestSearchFolding:
     def test_fold_counts_one_result_for_pagination(self) -> None:
         conn = _seeded_conn()
         data = search(conn, "Lönesumma")
-        assert data.total_count == 1
+        assert len(data.results) == 1
+
+    def test_folded_prefix_backfills_and_continues_without_gap(self) -> None:
+        conn = _seeded_conn()
+        add_variable(
+            conn,
+            register_id=1,
+            var_id=999,
+            name="Lönesumma fristående",
+            slug="lonesumma-fristaende",
+        )
+        expected = search(conn, "Lönesumma", limit=10)
+        assert [result.type for result in expected.results] == ["group", "varname"]
+
+        first = search(conn, "Lönesumma", limit=1)
+        assert first.has_more and first.next_cursor is not None
+        second = search(conn, "Lönesumma", limit=1, cursor=first.next_cursor)
+
+        assert [result.type for result in (*first.results, *second.results)] == [
+            "group",
+            "varname",
+        ]
+        assert not second.has_more
 
     def test_lone_member_hit_stays_leaf_with_annotation(self) -> None:
         conn = _seeded_conn()
@@ -355,7 +377,7 @@ class TestSearchFqidsFilter:
             conn, "januari", field="description", fqids={"scb/lisa/agiinkfeb"}
         )
         assert data.results == ()
-        assert data.total_count == 0
+        assert len(data.results) == 0
 
     def test_held_variable_leaf_kept(self) -> None:
         conn = _seeded_conn()
@@ -365,7 +387,7 @@ class TestSearchFqidsFilter:
         )
         # The held member surfaces (lone hit → leaf row), exact count.
         assert {str(r.fqid) for r in data.results} == {"scb/lisa/agiinkjan"}
-        assert data.total_count == 1
+        assert len(data.results) == 1
 
 
 class TestClassificationSuccessionFold:
@@ -421,7 +443,7 @@ class TestClassificationSuccessionFold:
     def test_chain_counts_one_result_for_pagination(self) -> None:
         conn = self._chain_conn()
         data = search(conn, "yrkesklassificering", field="description")
-        assert data.total_count == 1
+        assert len(data.results) == 1
 
     def test_lone_terminal_hit_stays_leaf(self) -> None:
         # Only the TERMINAL edition matches (rename the predecessors out of the

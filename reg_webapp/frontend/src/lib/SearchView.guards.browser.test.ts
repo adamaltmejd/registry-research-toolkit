@@ -51,7 +51,8 @@ describe("SearchView — request cancellation (supersede)", () => {
           groups: [
             {
               group: "registers",
-              total_count: 1,
+              has_more: false,
+              next_cursor: null,
               results: [
                 {
                   type: "register",
@@ -143,7 +144,8 @@ describe("SearchView — classification_succession routing (#571)", () => {
             groups: [
               {
                 group: "classifications",
-                total_count: 2,
+                has_more: false,
+                next_cursor: null,
                 results: [
                   {
                     type: "classification",
@@ -283,7 +285,8 @@ describe("SearchView — timeout", () => {
             groups: [
               {
                 group: "registers",
-                total_count: 1,
+                has_more: false,
+                next_cursor: null,
                 results: [
                   {
                     type: "register",

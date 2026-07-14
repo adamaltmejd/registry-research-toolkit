@@ -345,17 +345,17 @@ concurrency smoke (the `TestClient` sequential default masks the bug).
 
 ## Global catalog search (`routes/search.py` + `conn.py`)
 
-`GET /api/search?q=&limit=&type=` (#350) is the discovery surface consumed by the global
-header omnibox (`SearchOmnibox.svelte`, shipped in this PR). It returns **typed result
-groups** over the shipped FTS5 indexes, reusing reg_meta's concept-group-folded `search`
-(`reg_meta.queries.search`, #322) — the webapp does NOT reimplement folding or FTS.
-`?type=` (#393) scopes the search to ONE group: `all` (the default, or omitted)
-preserves the fixed-order four-group response; any single type (`register` / `variable`
-/ `classification` / `value`) runs AND emits only that one group. An unknown value 422s
-at the boundary (the valid set mirrors reg_meta's `SEARCH_TYPES`). For a FILTERED
-steward, the register and variable surfaces are further scoped to the steward's held
-FQIDs — see § Steward layering → Browse and search scoping (#859) above; classification
-and code surfaces are catalog-global and unaffected.
+`GET /api/search?q=&limit=&type=&cursor=` (#350) is the discovery surface consumed by
+the global header omnibox (`SearchOmnibox.svelte`, shipped in this PR). It returns
+**typed result groups** over the shipped FTS5 indexes, reusing reg_meta's
+concept-group-folded `search` (`reg_meta.queries.search`, #322) — the webapp does NOT
+reimplement folding or FTS. `?type=` (#393) scopes the search to ONE group: `all` (the
+default, or omitted) preserves the fixed-order four-group response; any single type
+(`register` / `variable` / `classification` / `value`) runs AND emits only that one
+group. An unknown value 422s at the boundary (the valid set mirrors reg_meta's
+`SEARCH_TYPES`). For a FILTERED steward, the register and variable surfaces are further
+scoped to the steward's held FQIDs — see § Steward layering → Browse and search scoping
+(#859) above; classification and code surfaces are catalog-global and unaffected.
 
 The SPA surface: a global `<SearchOmnibox>` in the app header routes to a shareable
 `/search?q=` results page (`SearchView.svelte`) that renders an optional compact
@@ -364,16 +364,16 @@ compete, with navigation to catalog nodes. The router gained `search` and `doc` 
 (query lives in `?q=`, keyed on pathname so the page re-runs on every query change) and
 a `router.replace()` method (mirrors the `?period` URL-as-single-source-of-truth
 pattern: the omnibox syncs back to the URL, and the URL drives the view). `api.ts`
-gained `search(q, {limit?, type?})` typed off the codegen'd contract. Off `/search`,
-typing in the omnibox stays local until Enter/form submit and shows an Enter hint while
-focused; on `/search`, typing live-refines with replaceState. `SearchView` renders an
-"All · Registers · Variables · Classifications · Codes" scope toggle backed by `?type=`
-(URL state, like `?q=`/`?period`; `all` is omitted from the canonical URL), a Close
-control that `replace()`s back to the route that entered search (or `/catalog` for a
-cold deep-link), and variable rows whose heading carries delivery-column pills while
-register, definition, and `operational_definition` live in the muted detail line. When
-several search hits address the same variable, `SearchView` folds them into one row and
-merges the delivery-column pills so a column-code search shows one variable with the
+gained `search(q, {limit?, type?, cursor?})` typed off the codegen'd contract. Off
+`/search`, typing in the omnibox stays local until Enter/form submit and shows an Enter
+hint while focused; on `/search`, typing live-refines with replaceState. `SearchView`
+renders an "All · Registers · Variables · Classifications · Codes" scope toggle backed
+by `?type=` (URL state, like `?q=`/`?period`; `all` is omitted from the canonical URL),
+a Close control that `replace()`s back to the route that entered search (or `/catalog`
+for a cold deep-link), and variable rows whose heading carries delivery-column pills
+while register, definition, and `operational_definition` live in the muted detail line.
+When several search hits address the same variable, `SearchView` folds them into one row
+and merges the delivery-column pills so a column-code search shows one variable with the
 matched columns inline; the "Variables" group heading itself stays plain text. The
 omnibox preserves an active scope when re-querying. Global search does **not** render
 documentation results; documentation is reached from item pages via `DocMentionsPanel`
@@ -385,13 +385,20 @@ and a bounded `excerpt`; 404 distinguishes "not ingested" vs "not found";
 `snippet`/`excerpt` are rendered as TEXT, never `{@html}`, and the full converted body
 is never fetched.
 
+Each rendered group starts with at most 3 results. A `Load more` control requests that
+group's cursor and appends the next bounded page; query or scope changes discard the
+continuation state. The heading uses `N+ results` while `has_more` is true, rather than
+claiming an exact total. The control is keyboard-native, announces its busy state, and
+keeps continuation errors local to the group.
+
 **The response contract is the point — designed to extend.** The body is
 `{kind, query, groups: SearchGroup[]}`; each `SearchGroup` is a discriminated arm
-(`group` literal) carrying its own `total_count` + typed `results`. Today: `top_results`
-(#393 items 6/7 — optional, all-scope-only, and emitted only when multiple candidates
-compete; built from the already-prepared typed rows, exact identifier/name/code matches
-first, then type priors register → variable/group → classification → code), `registers`,
-`variables` (leaf hits ⧺ folded concept groups), `classifications` (leaf hits ⧺ folded
+(`group` literal) carrying bounded typed `results`, `has_more`, and `next_cursor`.
+`top_results` is presentation-only and never paginates. Today: `top_results` (#393 items
+6/7 — optional, all-scope-only, and emitted only when multiple candidates compete; built
+from the already-prepared typed rows, exact identifier/name/code matches first, then
+type priors register → variable/group → classification → code), `registers`, `variables`
+(leaf hits ⧺ folded concept groups), `classifications` (leaf hits ⧺ folded
 classification-succession rows (`type: "classification_succession"`, #571 — a query that
 hits ≥2 editions of the same chain collapses to one
 `ClassificationSuccessionSearchResult` keyed on the terminal edition, carrying the full
@@ -410,8 +417,8 @@ sort key.
   `field="description"` path; **codes (#352) via the `field="value", type="value"`
   path** (`value_code_fts` label match + code-shape exact/prefix on `value_code.code`,
   ranked bm25 + rarity-downweight, owner-annotated — see reg_meta DESIGN.md → FTS5
-  configuration). Each group gets its own `total_count` + per-group `limit`; codes don't
-  fold into concept groups (`fold_groups=False`). The codes page is then re-ranked
+  configuration). Each group gets its own bounded page and context-bound cursor; codes
+  don't fold into concept groups (`fold_groups=False`). The codes page is then re-ranked
   (#393) so classification-backed (curated) codes lead, then by `classification_count`,
   then `variable_count` — but only WITHIN the FTS-top-N page reg_meta already annotated,
   so it can't pull a curated code that ranked below the FTS cutoff into view. Each
@@ -427,6 +434,14 @@ sort key.
   (`_fts_match_query`); the webapp passes the raw query through. The query reaches FTS
   only as a bound parameter (no SQLi surface), so the gates guard cost/abuse, not
   injection.
+- **Bounded-origin budget (#1135):** every reg_meta SQL arm receives a finite prefix
+  bound and expensive folding, owner annotation, golden construction, steward backfill,
+  and top-results construction operate only on bounded candidates. The default is 3 per
+  group (maximum 50). The route emits per-phase `Server-Timing` entries for controlled
+  profiling. Representative broad all-scope cache-miss p95 is budgeted at 500 ms and
+  browser-cold search LCP below 2.5 s; edge-cache hits are not accepted as cold-origin
+  evidence. Invalid/context-stale cursors map to an actionable HTTP 422 at the route
+  boundary. There is no in-process response cache.
 - **Golden-boost** (`golden.apply_golden_boost`, #393 item 4 / #311): a curated-pin
   INJECTION (no longer the old no-op seam). For an exact (normalized: diacritic-fold +
   casefold + strip — so `sysselsattning` matches the `sysselsättning` pin, consistent
@@ -439,9 +454,10 @@ sort key.
   (the `SearchResult` union, #701) so the route AND the eval runner
   (`scripts/run_search_eval.py`) apply the SAME function — that's what makes the eval
   measure the route's TRUE behavior. Pins dedup by `fqid` (a pin already an FTS hit
-  injects nothing), and a group's `total_count` adds the count of net-new injected
-  results. `register` + `classification` pins are implemented (resolve cheaply by slug);
-  a `variable`/`value` pin is a config error at LOAD (fail fast). The TOML is parsed +
+  injects nothing). When a net-new pin displaces an origin row, continuation advances
+  only past the origin prefix actually shown, so the displaced row appears on the next
+  page. `register` + `classification` pins are implemented (resolve cheaply by slug); a
+  `variable`/`value` pin is a config error at LOAD (fail fast). The TOML is parsed +
   validated once at import; a typo'd fqid raises at apply (never silently drops). Eval
   gaps the pins close are flipped to `expect = "hit"` in `search_eval.toml` (SUN remains
   the lone gap — a concept-group modeling issue, not a golden-boost one).

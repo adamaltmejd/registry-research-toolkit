@@ -17,10 +17,9 @@ import {
   fqidSegments,
   groupHref,
   leafSlug,
-  showingOf,
 } from "./catalog";
 import { router } from "./router.svelte";
-import { Panel } from "./ui";
+import { Button, Panel } from "./ui";
 
 // The routed search-results panel (#379). Reads `?q=` off the router and renders
 // GET /api/search's top-results group plus the ordered typed groups
@@ -163,7 +162,24 @@ function syncDetailSeparators(node: HTMLElement): {
 // this maps to the friendly copy — other errors keep the generic "Search failed".
 const timedOut = $derived(results.error?.startsWith("TimeoutError") ?? false);
 
-const groups = $derived(results.data?.groups ?? []);
+let continuedGroups = $state<Record<string, SearchGroup>>({});
+let continuationLoading = $state<Record<string, boolean>>({});
+let continuationErrors = $state<Record<string, string>>({});
+let continuationContext = "";
+$effect(() => {
+  const context = `${q}\u0000${searchType}`;
+  if (context !== continuationContext) {
+    continuationContext = context;
+    continuedGroups = {};
+    continuationLoading = {};
+    continuationErrors = {};
+  }
+});
+const groups = $derived(
+  (results.data?.groups ?? []).map(
+    (group) => continuedGroups[group.group] ?? group,
+  ),
+);
 // A searched query (≥ min length) with zero results across every group (distinct
 // from the empty / keep-typing hints and from loading). Gate on the min length so
 // a 1-char query shows the keep-typing hint, not a spurious "no matches".
@@ -278,6 +294,45 @@ type ClassificationDisplayResult =
   | ConceptGroupSearchResult;
 type CodeOwnerClassification = CodeSearchResult["classifications"][number];
 type CodeOwnerVariable = CodeSearchResult["variables"][number];
+
+function continuationType(group: SearchGroup): SearchType | null {
+  if (group.group === "registers") return "register";
+  if (group.group === "variables") return "variable";
+  if (group.group === "classifications") return "classification";
+  if (group.group === "classification_codes") return "classification_code";
+  if (group.group === "register_value_sets") return "register_value";
+  return null;
+}
+
+async function loadMore(group: SearchGroup): Promise<void> {
+  const type = continuationType(group);
+  if (
+    type == null ||
+    group.next_cursor == null ||
+    continuationLoading[group.group]
+  ) {
+    return;
+  }
+  continuationLoading[group.group] = true;
+  continuationErrors[group.group] = "";
+  try {
+    const page = await search(q, { type, cursor: group.next_cursor });
+    const next = page.groups.find(
+      (candidate) => candidate.group === group.group,
+    );
+    if (next == null) {
+      throw new Error("Search continuation returned the wrong result group.");
+    }
+    continuedGroups[group.group] = {
+      ...next,
+      results: [...group.results, ...next.results],
+    } as SearchGroup;
+  } catch (error) {
+    continuationErrors[group.group] = String(error);
+  } finally {
+    continuationLoading[group.group] = false;
+  }
+}
 
 function isVariableResult(r: { type: string }): r is VariableSearchResult {
   return r.type === "variable";
@@ -695,7 +750,9 @@ function closeSearch(): void {
         {@const caption =
           group.group === "top_results"
             ? null
-            : showingOf(renderedResults.length, group.total_count)}
+            : group.has_more
+              ? `${renderedResults.length}+ results`
+              : `${renderedResults.length} ${renderedResults.length === 1 ? "result" : "results"}`}
         <div
           class={group.group === "top_results"
             ? "group top-results-group"
@@ -792,6 +849,24 @@ function closeSearch(): void {
                 {@render codeRow(result)}
               {/each}
             </div>
+          {/if}
+          {#if group.group !== "top_results" && group.has_more && group.next_cursor}
+            <div class="continuation">
+              <Button
+                variant="default"
+                size="sm"
+                disabled={continuationLoading[group.group]}
+                aria-busy={continuationLoading[group.group]}
+                onclick={() => void loadMore(group)}
+              >
+                {continuationLoading[group.group] ? "Loading…" : "Load more"}
+              </Button>
+            </div>
+          {/if}
+          {#if continuationErrors[group.group]}
+            <p class="continuation-error error" role="alert">
+              Could not load more results. Try again.
+            </p>
           {/if}
           </Panel>
         </div>
@@ -1735,6 +1810,17 @@ function closeSearch(): void {
     color: var(--accent-ink);
   }
   .more {
+    font-size: var(--text-sm);
+  }
+  .continuation {
+    display: flex;
+    justify-content: center;
+    padding: var(--space-3);
+    border-top: 1px solid var(--border);
+  }
+  .continuation-error {
+    margin: 0;
+    padding: 0 var(--space-3) var(--space-3);
     font-size: var(--text-sm);
   }
 </style>

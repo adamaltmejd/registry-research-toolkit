@@ -27,6 +27,7 @@ sys.path.insert(
 
 from _slugged_db import (  # noqa: E402
     add_binding,
+    add_register,
     add_value_set,
     add_variable,
     build_slugged_db,
@@ -539,7 +540,7 @@ def test_variable_search_folds_multiple_matched_delivery_columns() -> None:
 
     out = search(conn, "fedunsatreason", field="description", type="variable")
 
-    assert out.total_count == 1
+    assert len(out.results) == 1
     assert len(out.results) == 1
     assert str(out.results[0].fqid) == "scb/lisa/formal-utbildning"
     assert out.results[0].delivery_column_names == (
@@ -567,7 +568,7 @@ def test_variable_search_exact_column_token_shows_only_that_alias() -> None:
 
     out = search(conn, "fedunsatreason_1", field="description", type="variable")
 
-    assert out.total_count == 1
+    assert len(out.results) == 1
     assert len(out.results) == 1
     assert out.results[0].delivery_column_names == ("fedunsatreason_1",)
 
@@ -598,7 +599,7 @@ def test_variable_search_delivery_scope_drops_unheld_suffix_token_alias_hit() ->
         delivery_column_scope={"scb/lisa/formal-utbildning": {"fedunsatreason_2"}},
     )
 
-    assert out.total_count == 0
+    assert len(out.results) == 0
     assert out.results == ()
 
 
@@ -620,7 +621,7 @@ def test_variable_search_multi_alias_query_shows_only_matching_aliases() -> None
 
     out = search(conn, "fedunsatreason zedalias", field="description", type="variable")
 
-    assert out.total_count == 1
+    assert len(out.results) == 1
     assert len(out.results) == 1
     assert out.results[0].delivery_column_names == (
         "fedunsatreason_1",
@@ -719,10 +720,118 @@ def test_variable_search_hydrates_delivery_aliases_for_displayed_page_only(
     shown_variable_id = conn.execute(
         "SELECT variable_id FROM variable WHERE slug = ?", (shown_slug,)
     ).fetchone()[0]
-    assert out.total_count == 2
     assert len(out.results) == 1
+    assert out.has_more
     assert seen == [(shown_variable_id,)]
     assert out.results[0].delivery_column_names in {("Alpha",), ("Beta",)}
+
+
+def test_variable_cursor_pages_are_stable_and_sql_bounded() -> None:
+    conn = build_slugged_db(
+        variable=("Needle alpha", 32183, 1001, "Alpha"),
+        delivery_column_name="Alpha",
+        variable_slug="needle-alpha",
+    )
+    for index, name in enumerate(("beta", "gamma", "delta"), start=2):
+        add_variable(
+            conn,
+            register_id=1,
+            var_id=42180 + index,
+            name=f"Needle {name}",
+            slug=f"needle-{name}",
+        )
+        add_binding(
+            conn,
+            cvid=1000 + index,
+            register_id=1,
+            register_variant_id=10,
+            regver_id=100,
+            var_id=42180 + index,
+            delivery_column_name=name.title(),
+        )
+    _rebuild_fts(conn)
+    statements: list[str] = []
+    conn.set_trace_callback(statements.append)
+
+    expected = search(conn, "Needle", field="description", type="variable", limit=10)
+    first = search(conn, "Needle", field="description", type="variable", limit=2)
+    assert first.has_more and first.next_cursor is not None
+    second = search(
+        conn,
+        "  NEEDLE  ",
+        field="description",
+        type="variable",
+        limit=2,
+        cursor=first.next_cursor,
+    )
+
+    combined = [str(result.fqid) for result in (*first.results, *second.results)]
+    assert combined == [str(result.fqid) for result in expected.results]
+    assert len(combined) == len(set(combined))
+    variable_fts = [sql for sql in statements if "FROM variable_fts" in sql]
+    assert variable_fts
+    assert all("LIMIT" in sql for sql in variable_fts)
+
+    held = combined[2]
+    scoped = search(
+        conn,
+        "Needle",
+        field="description",
+        type="variable",
+        fqids={held},
+        limit=1,
+    )
+    assert [str(result.fqid) for result in scoped.results] == [held]
+    assert not scoped.has_more
+
+    with pytest.raises(RegMetaError) as exc:
+        search(
+            conn,
+            "Needle",
+            field="description",
+            type="variable",
+            fqids={combined[0]},
+            limit=2,
+            cursor=first.next_cursor,
+        )
+    assert exc.value.code == "invalid_search_cursor"
+
+
+def test_register_scope_is_applied_before_sql_pagination() -> None:
+    conn = build_slugged_db(
+        variable=("Needle alpha", 32183, 1001, "Alpha"),
+        delivery_column_name="Alpha",
+        variable_slug="needle-alpha",
+    )
+    for index in range(5):
+        add_variable(
+            conn,
+            register_id=1,
+            var_id=42180 + index,
+            name=f"Needle blocker {index}",
+            slug=f"needle-blocker-{index}",
+        )
+    add_register(conn, register_id=2, slug="regb", name="Register B")
+    add_variable(
+        conn,
+        register_id=2,
+        var_id=52180,
+        name="Needle target",
+        slug="needle-target",
+    )
+    _rebuild_fts(conn)
+
+    page = search(
+        conn,
+        "Needle",
+        field="description",
+        type="variable",
+        register="Register B",
+        limit=1,
+    )
+
+    assert [str(result.fqid) for result in page.results] == ["scb/regb/needle-target"]
+    assert not page.has_more
 
 
 def test_variable_search_delivery_scope_drops_unheld_alias_hit() -> None:
@@ -751,7 +860,7 @@ def test_variable_search_delivery_scope_drops_unheld_alias_hit() -> None:
         delivery_column_scope={"scb/lisa/plain-variable": {"HeldColumn"}},
     )
 
-    assert out.total_count == 0
+    assert len(out.results) == 0
     assert out.results == ()
 
 
@@ -785,7 +894,7 @@ def test_variable_search_delivery_scope_keeps_description_hit() -> None:
         delivery_column_scope={"scb/lisa/plain-variable": {"HeldColumn"}},
     )
 
-    assert out.total_count == 1
+    assert len(out.results) == 1
     assert str(out.results[0].fqid) == "scb/lisa/plain-variable"
     assert out.results[0].delivery_column_names == ("HeldColumn",)
 
@@ -850,7 +959,7 @@ def test_variable_search_delivery_scope_filters_before_group_folding() -> None:
         },
     )
 
-    assert out.total_count == 0
+    assert len(out.results) == 0
     assert out.results == ()
 
 

@@ -533,10 +533,10 @@ class TestSearchIntegration:
             ["--db", combined_db_dir, "docs", "search", "kommun"],
         )
         doc_count = docs_data.get("total_count", 0)
-        if doc_count == 0:
-            pytest.skip("No doc results for test query")
+        if doc_count <= 1:
+            pytest.skip("Not enough doc results to exercise truncation")
 
-        # Search with limit=0 so all doc results are truncated
+        # Search with a one-row page so additional doc results are truncated.
         data, code = _run_json(
             [
                 "--db",
@@ -545,11 +545,48 @@ class TestSearchIntegration:
                 "--query",
                 "kommun",
                 "--limit",
-                "0",
+                "1",
             ],
         )
         assert code == 0
         assert "not shown" in data.get("doc_hint", "")
+
+    def test_docs_do_not_displace_catalog_continuation(
+        self, combined_db_dir: str
+    ) -> None:
+        first, code = _run_json(
+            [
+                "--db",
+                combined_db_dir,
+                "search",
+                "--query",
+                "kommun",
+                "--limit",
+                "1",
+            ]
+        )
+        assert code == 0
+        if not first["has_more"]:
+            pytest.skip("Fixture query has no displaced catalog continuation")
+        assert first["next_cursor"] is not None
+
+        second, code = _run_json(
+            [
+                "--db",
+                combined_db_dir,
+                "search",
+                "--query",
+                "kommun",
+                "--limit",
+                "1",
+                "--cursor",
+                first["next_cursor"],
+            ]
+        )
+        assert code == 0
+        assert second["results"]
+        assert second["results"] != first["results"]
+        assert not second["has_more"] or second["next_cursor"] is not None
 
     def test_search_exact_variable_name_ranked_high(self, combined_db_dir: str):
         """Exact variable name match in docs should rank near the top."""

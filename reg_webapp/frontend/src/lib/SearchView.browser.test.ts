@@ -56,14 +56,16 @@ describe("SearchView — typed result groups (#379)", () => {
       groups: [
         {
           group: "registers",
-          total_count: 1,
+          has_more: false,
+          next_cursor: null,
           results: [
             { type: "register", fqid: "scb/lisa", name: "LISA", purpose: null },
           ],
         },
         {
           group: "variables",
-          total_count: 1,
+          has_more: false,
+          next_cursor: null,
           results: [
             {
               type: "variable",
@@ -77,7 +79,8 @@ describe("SearchView — typed result groups (#379)", () => {
         },
         {
           group: "classifications",
-          total_count: 1,
+          has_more: false,
+          next_cursor: null,
           results: [
             {
               type: "classification",
@@ -89,7 +92,8 @@ describe("SearchView — typed result groups (#379)", () => {
         },
         {
           group: "register_value_sets",
-          total_count: 1,
+          has_more: false,
+          next_cursor: null,
           results: [
             {
               type: "code",
@@ -139,7 +143,8 @@ describe("SearchView — typed result groups (#379)", () => {
       groups: [
         {
           group: "top_results",
-          total_count: 2,
+          has_more: false,
+          next_cursor: null,
           results: [
             {
               type: "variable",
@@ -159,7 +164,8 @@ describe("SearchView — typed result groups (#379)", () => {
         },
         {
           group: "registers",
-          total_count: 1,
+          has_more: false,
+          next_cursor: null,
           results: [
             { type: "register", fqid: "scb/lisa", name: "LISA", purpose: null },
           ],
@@ -191,7 +197,8 @@ describe("SearchView — typed result groups (#379)", () => {
       groups: [
         {
           group: "top_results",
-          total_count: 2,
+          has_more: false,
+          next_cursor: null,
           results: [
             {
               type: "group",
@@ -267,7 +274,8 @@ describe("SearchView — typed result groups (#379)", () => {
       groups: [
         {
           group: "top_results",
-          total_count: 25,
+          has_more: false,
+          next_cursor: null,
           results: [
             {
               type: "code",
@@ -337,7 +345,8 @@ describe("SearchView — typed result groups (#379)", () => {
       groups: [
         {
           group: "top_results",
-          total_count: 2,
+          has_more: false,
+          next_cursor: null,
           results: [
             {
               type: "code",
@@ -384,7 +393,8 @@ describe("SearchView — typed result groups (#379)", () => {
       groups: [
         {
           group: "variables",
-          total_count: 1,
+          has_more: false,
+          next_cursor: null,
           results: [
             {
               type: "variable",
@@ -434,7 +444,8 @@ describe("SearchView — typed result groups (#379)", () => {
       groups: [
         {
           group: "variables",
-          total_count: 2,
+          has_more: false,
+          next_cursor: null,
           results: [
             {
               type: "variable",
@@ -478,7 +489,8 @@ describe("SearchView — typed result groups (#379)", () => {
       groups: [
         {
           group: "variables",
-          total_count: 1,
+          has_more: false,
+          next_cursor: null,
           results: [
             {
               type: "variable",
@@ -521,7 +533,8 @@ describe("SearchView — typed result groups (#379)", () => {
       groups: [
         {
           group: "variables",
-          total_count: 1,
+          has_more: false,
+          next_cursor: null,
           results: [
             {
               type: "variable",
@@ -572,15 +585,31 @@ describe("SearchView — typed result groups (#379)", () => {
       groups: [
         {
           group: "registers",
-          total_count: 1,
+          has_more: false,
+          next_cursor: null,
           results: [
             { type: "register", fqid: "scb/lisa", name: "LISA", purpose: null },
           ],
         },
-        { group: "variables", total_count: 0, results: [] },
-        { group: "classifications", total_count: 0, results: [] },
-        { group: "classification_codes", total_count: 0, results: [] },
-        { group: "register_value_sets", total_count: 0, results: [] },
+        { group: "variables", has_more: false, next_cursor: null, results: [] },
+        {
+          group: "classifications",
+          has_more: false,
+          next_cursor: null,
+          results: [],
+        },
+        {
+          group: "classification_codes",
+          has_more: false,
+          next_cursor: null,
+          results: [],
+        },
+        {
+          group: "register_value_sets",
+          has_more: false,
+          next_cursor: null,
+          results: [],
+        },
       ],
     } as unknown as SearchResponse);
     setQuery("kon");
@@ -594,14 +623,15 @@ describe("SearchView — typed result groups (#379)", () => {
       .not.toBeInTheDocument();
   });
 
-  it("shows 'showing N of M' only when the slice is truncated", async () => {
+  it("uses a plus count when continuation is available", async () => {
     vi.mocked(search).mockResolvedValue({
       kind: "search",
       query: "ab",
       groups: [
         {
           group: "registers",
-          total_count: 42,
+          has_more: true,
+          next_cursor: "next-register-page",
           results: [
             { type: "register", fqid: "scb/lisa", name: "LISA", purpose: null },
           ],
@@ -613,19 +643,18 @@ describe("SearchView — typed result groups (#379)", () => {
     setQuery("ab");
     await render(SearchView);
 
-    await expect.element(page.getByText("showing 1 of 42")).toBeVisible();
+    await expect.element(page.getByText("1+ results")).toBeVisible();
   });
 
-  it("omits the 'showing N of M' caption when the slice is complete", async () => {
-    // Guards the strict `shown < total` boundary in `showingOf` — a `<=`
-    // regression would print "showing 1 of 1" on every complete group.
+  it("uses an exact rendered count when the bounded page is complete", async () => {
     vi.mocked(search).mockResolvedValue({
       kind: "search",
       query: "lisa",
       groups: [
         {
           group: "registers",
-          total_count: 1,
+          has_more: false,
+          next_cursor: null,
           results: [
             { type: "register", fqid: "scb/lisa", name: "LISA", purpose: null },
           ],
@@ -639,8 +668,7 @@ describe("SearchView — typed result groups (#379)", () => {
     await expect
       .element(page.getByRole("heading", { name: "Registers" }))
       .toBeVisible();
-    // …but no truncation caption (shown === total).
-    await expect.element(page.getByText(/showing/)).not.toBeInTheDocument();
+    await expect.element(page.getByText("1 result")).toBeVisible();
   });
 
   it("expands a multi-variable code to the full variable-owner link list (#808 round 5)", async () => {
@@ -650,7 +678,8 @@ describe("SearchView — typed result groups (#379)", () => {
       groups: [
         {
           group: "register_value_sets",
-          total_count: 1,
+          has_more: false,
+          next_cursor: null,
           results: [
             {
               type: "code",
@@ -751,7 +780,8 @@ describe("SearchView — typed result groups (#379)", () => {
       groups: [
         {
           group: "register_value_sets",
-          total_count: 1,
+          has_more: false,
+          next_cursor: null,
           results: [
             {
               type: "code",
@@ -792,7 +822,8 @@ describe("SearchView — typed result groups (#379)", () => {
       groups: [
         {
           group: "classification_codes",
-          total_count: 1,
+          has_more: false,
+          next_cursor: null,
           results: [
             {
               type: "code",
@@ -837,7 +868,8 @@ describe("SearchView — typed result groups (#379)", () => {
       groups: [
         {
           group: "classification_codes",
-          total_count: 1,
+          has_more: false,
+          next_cursor: null,
           results: [
             {
               type: "code",
@@ -898,7 +930,8 @@ describe("SearchView — typed result groups (#379)", () => {
       groups: [
         {
           group: "classification_codes",
-          total_count: 1,
+          has_more: false,
+          next_cursor: null,
           results: [
             {
               type: "code",
@@ -944,7 +977,8 @@ describe("SearchView — typed result groups (#379)", () => {
       groups: [
         {
           group: "variables",
-          total_count: 1,
+          has_more: false,
+          next_cursor: null,
           results: [
             {
               type: "group",
@@ -1005,7 +1039,8 @@ describe("SearchView — typed result groups (#379)", () => {
       groups: [
         {
           group: "variables",
-          total_count: 2,
+          has_more: false,
+          next_cursor: null,
           results: [
             {
               type: "group",
@@ -1065,7 +1100,8 @@ describe("SearchView — typed result groups (#379)", () => {
       groups: [
         {
           group: "classifications",
-          total_count: 1,
+          has_more: false,
+          next_cursor: null,
           results: [
             {
               type: "classification_succession",
@@ -1124,7 +1160,8 @@ describe("SearchView — typed result groups (#379)", () => {
       groups: [
         {
           group: "classifications",
-          total_count: 1,
+          has_more: false,
+          next_cursor: null,
           results: [
             {
               type: "classification_succession",
@@ -1168,7 +1205,8 @@ describe("SearchView — typed result groups (#379)", () => {
       groups: [
         {
           group: "classifications",
-          total_count: 1,
+          has_more: false,
+          next_cursor: null,
           results: [
             {
               type: "classification",
@@ -1205,7 +1243,8 @@ describe("SearchView — typed result groups (#379)", () => {
       groups: [
         {
           group: "classifications",
-          total_count: 1,
+          has_more: false,
+          next_cursor: null,
           results: [
             {
               type: "classification",
@@ -1241,7 +1280,8 @@ describe("SearchView — typed result groups (#379)", () => {
       groups: [
         {
           group: "classifications",
-          total_count: 1,
+          has_more: false,
+          next_cursor: null,
           results: [
             {
               type: "classification",
@@ -1281,7 +1321,8 @@ describe("SearchView — typed result groups (#379)", () => {
       groups: [
         {
           group: "variables",
-          total_count: 2,
+          has_more: false,
+          next_cursor: null,
           results: [
             {
               type: "group",
@@ -1348,7 +1389,8 @@ describe("SearchView — typed result groups (#379)", () => {
       groups: [
         {
           group: "registers",
-          total_count: 2,
+          has_more: false,
+          next_cursor: null,
           results: [
             { type: "register", fqid: null, name: "Orphan", purpose: "first" },
             { type: "register", fqid: null, name: "Orphan", purpose: "second" },
@@ -1374,7 +1416,8 @@ describe("SearchView — typed result groups (#379)", () => {
       groups: [
         {
           group: "registers",
-          total_count: 1,
+          has_more: false,
+          next_cursor: null,
           results: [
             { type: "register", fqid: null, name: "Orphan", purpose: null },
           ],
@@ -1402,7 +1445,8 @@ describe("SearchView — typed result groups (#379)", () => {
       groups: [
         {
           group: "registers",
-          total_count: 1,
+          has_more: false,
+          next_cursor: null,
           results: [
             { type: "register", fqid: "scb/lisa", name: "LISA", purpose: null },
           ],
@@ -1410,7 +1454,8 @@ describe("SearchView — typed result groups (#379)", () => {
         {
           // A group literal the SPA has never heard of, carrying NON-EMPTY results.
           group: "future_widgets",
-          total_count: 1,
+          has_more: false,
+          next_cursor: null,
           results: [
             { type: "future_widget", fqid: "scb/lisa/x", name: "Widget" },
           ],
@@ -1451,11 +1496,26 @@ describe("SearchView — typed result groups (#379)", () => {
       kind: "search",
       query: "zzz",
       groups: [
-        { group: "registers", total_count: 0, results: [] },
-        { group: "variables", total_count: 0, results: [] },
-        { group: "classifications", total_count: 0, results: [] },
-        { group: "classification_codes", total_count: 0, results: [] },
-        { group: "register_value_sets", total_count: 0, results: [] },
+        { group: "registers", has_more: false, next_cursor: null, results: [] },
+        { group: "variables", has_more: false, next_cursor: null, results: [] },
+        {
+          group: "classifications",
+          has_more: false,
+          next_cursor: null,
+          results: [],
+        },
+        {
+          group: "classification_codes",
+          has_more: false,
+          next_cursor: null,
+          results: [],
+        },
+        {
+          group: "register_value_sets",
+          has_more: false,
+          next_cursor: null,
+          results: [],
+        },
       ],
     } as unknown as SearchResponse);
     setQuery("zzz");
@@ -1475,7 +1535,8 @@ describe("SearchView — typed result groups (#379)", () => {
       groups: [
         {
           group: "future_widgets",
-          total_count: 1,
+          has_more: false,
+          next_cursor: null,
           results: [
             { type: "future_widget", fqid: "scb/lisa/x", name: "Widget" },
           ],
@@ -1503,7 +1564,8 @@ describe("SearchView — typed result groups (#379)", () => {
       groups: [
         {
           group: "classifications",
-          total_count: 1,
+          has_more: false,
+          next_cursor: null,
           results: [
             {
               type: "classification_succession",
@@ -1568,14 +1630,16 @@ describe("SearchView — compact per-type tables (#808)", () => {
     groups: [
       {
         group: "registers",
-        total_count: 1,
+        has_more: false,
+        next_cursor: null,
         results: [
           { type: "register", fqid: "scb/lisa", name: "LISA", purpose: null },
         ],
       },
       {
         group: "variables",
-        total_count: 1,
+        has_more: false,
+        next_cursor: null,
         results: [
           {
             type: "variable",
@@ -1589,7 +1653,8 @@ describe("SearchView — compact per-type tables (#808)", () => {
       },
       {
         group: "classifications",
-        total_count: 1,
+        has_more: false,
+        next_cursor: null,
         results: [
           {
             type: "classification",
@@ -1601,7 +1666,8 @@ describe("SearchView — compact per-type tables (#808)", () => {
       },
       {
         group: "register_value_sets",
-        total_count: 1,
+        has_more: false,
+        next_cursor: null,
         results: [
           {
             type: "code",
@@ -1715,7 +1781,8 @@ describe("SearchView — compact per-type tables (#808)", () => {
       groups: [
         {
           group: "variables",
-          total_count: 1,
+          has_more: false,
+          next_cursor: null,
           results: [
             {
               type: "variable",
@@ -1863,7 +1930,8 @@ describe("SearchView — compact per-type tables (#808)", () => {
       groups: [
         {
           group: "variables",
-          total_count: 1,
+          has_more: false,
+          next_cursor: null,
           results: [
             {
               type: "variable",
@@ -1903,7 +1971,8 @@ describe("SearchView — compact per-type tables (#808)", () => {
       groups: [
         {
           group: "variables",
-          total_count: 1,
+          has_more: false,
+          next_cursor: null,
           results: [
             {
               type: "variable",
@@ -1961,7 +2030,8 @@ describe("SearchView — compact per-type tables (#808)", () => {
       groups: [
         {
           group: "variables",
-          total_count: 3,
+          has_more: false,
+          next_cursor: null,
           results: [
             {
               type: "variable",
@@ -2043,7 +2113,8 @@ describe("SearchView — compact per-type tables (#808)", () => {
       groups: [
         {
           group: "variables",
-          total_count: 1,
+          has_more: false,
+          next_cursor: null,
           results: [
             {
               type: "group",
@@ -2100,7 +2171,8 @@ describe("SearchView — compact per-type tables (#808)", () => {
       groups: [
         {
           group: "classification_codes",
-          total_count: 1,
+          has_more: false,
+          next_cursor: null,
           results: [
             {
               type: "code",
@@ -2181,7 +2253,8 @@ describe("SearchView — compact per-type tables (#808)", () => {
       groups: [
         {
           group: "classification_codes",
-          total_count: 2,
+          has_more: false,
+          next_cursor: null,
           results: [
             {
               type: "code",
@@ -2228,7 +2301,8 @@ describe("SearchView — compact per-type tables (#808)", () => {
       groups: [
         {
           group: "variables",
-          total_count: 2,
+          has_more: false,
+          next_cursor: null,
           results: [
             {
               type: "group",
@@ -2289,7 +2363,8 @@ describe("SearchView — documentation is excluded from global search", () => {
     groups: [
       {
         group: "registers",
-        total_count: 1,
+        has_more: false,
+        next_cursor: null,
         results: [
           { type: "register", fqid: "scb/lisa", name: "LISA", purpose: null },
         ],
@@ -2340,7 +2415,8 @@ describe("SearchView — scoped-search ?type= toggle (#393 item 1)", () => {
     groups: [
       {
         group: "registers",
-        total_count: 1,
+        has_more: false,
+        next_cursor: null,
         results: [
           { type: "register", fqid: "scb/lisa", name: "LISA", purpose: null },
         ],
@@ -2457,7 +2533,8 @@ describe("SearchView — codes grouped by code system (#393 item 3)", () => {
       groups: [
         {
           group: "classification_codes",
-          total_count: 2,
+          has_more: false,
+          next_cursor: null,
           results: [
             {
               type: "code",
@@ -2487,7 +2564,8 @@ describe("SearchView — codes grouped by code system (#393 item 3)", () => {
         },
         {
           group: "register_value_sets",
-          total_count: 1,
+          has_more: false,
+          next_cursor: null,
           results: [
             {
               type: "code",
@@ -2548,34 +2626,69 @@ describe("SearchView — codes grouped by code system (#393 item 3)", () => {
     expect(headings).toEqual(["SUN2020"]);
   });
 
-  it("keeps the 'showing N of M' caption on the classification codes group header", async () => {
-    vi.mocked(search).mockResolvedValue({
-      kind: "search",
-      query: "code",
-      groups: [
-        {
-          group: "classification_codes",
-          total_count: 9,
-          results: [
-            {
-              type: "code",
-              code: "1",
-              label: "Man",
-              variables: [],
-              variable_count: 0,
-              classifications: [
-                { fqid: "class/sun2020", short_name: "SUN2020", name: null },
-              ],
-              classification_count: 1,
-              code_system: "SUN2020",
-            },
-          ],
-        },
-      ],
-    } as unknown as SearchResponse);
+  it("communicates bounded continuation and appends the next group page", async () => {
+    vi.mocked(search)
+      .mockResolvedValueOnce({
+        kind: "search",
+        query: "code",
+        groups: [
+          {
+            group: "classification_codes",
+            has_more: true,
+            next_cursor: "opaque-page-2",
+            results: [
+              {
+                type: "code",
+                code: "1",
+                label: "Man",
+                variables: [],
+                variable_count: 0,
+                classifications: [
+                  { fqid: "class/sun2020", short_name: "SUN2020", name: null },
+                ],
+                classification_count: 1,
+                code_system: "SUN2020",
+              },
+            ],
+          },
+        ],
+      } as unknown as SearchResponse)
+      .mockResolvedValueOnce({
+        kind: "search",
+        query: "code",
+        groups: [
+          {
+            group: "classification_codes",
+            has_more: false,
+            next_cursor: null,
+            results: [
+              {
+                type: "code",
+                code: "2",
+                label: "Kvinna",
+                variables: [],
+                variable_count: 0,
+                classifications: [],
+                classification_count: 0,
+                code_system: null,
+              },
+            ],
+          },
+        ],
+      } as unknown as SearchResponse);
     setQuery("code");
     await render(SearchView);
 
-    await expect.element(page.getByText("showing 1 of 9")).toBeVisible();
+    await expect.element(page.getByText("1+ results")).toBeVisible();
+    await page.getByRole("button", { name: "Load more" }).click();
+    await expect.element(page.getByText("2 results")).toBeVisible();
+    await expect.element(page.getByText("Kvinna")).toBeVisible();
+    expect(search).toHaveBeenLastCalledWith(
+      "code",
+      expect.objectContaining({
+        cursor: "opaque-page-2",
+        type: "classification_code",
+      }),
+    );
   });
 });

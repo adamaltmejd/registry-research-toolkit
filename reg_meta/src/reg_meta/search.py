@@ -266,8 +266,18 @@ SearchResult = Annotated[
 
 
 class SearchResults(_CatalogModel):
-    """The `reg_meta.queries.search` envelope: the full match count plus the
-    sliced/folded result page (a `type`-discriminated union of result models)."""
+    """One bounded search page.
 
-    total_count: int
+    ``has_more`` is established with ``limit + 1``; ``next_cursor`` is an opaque,
+    context-bound continuation token and is present exactly when another page may
+    be requested.
+    """
+
     results: tuple[SearchResult, ...]
+    has_more: bool
+    next_cursor: str | None = None
+    # Internal continuation seams for presentation layers that prepend bounded
+    # pins and therefore consume only a prefix of this origin page. Excluded from
+    # JSON/OpenAPI; ordinary callers use ``next_cursor``.
+    page_cursor: str | None = Field(default=None, exclude=True)
+    cursors_after: tuple[str, ...] = Field(default=(), exclude=True)
