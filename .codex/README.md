@@ -18,9 +18,9 @@ The policy is deliberately layered:
 - Destructive Git operations, force pushes, merges, worktree removal, and process
   termination retain an explicit prompt. Hook bypasses are forbidden by repository
   policy.
-- The configured `chrome-devtools` MCP server launches an isolated, headless browser
-  with usage statistics and CrUX lookups disabled, and does not prompt for each tool
-  call.
+- The configured `chrome-devtools` MCP server uses a pinned package and launches an
+  isolated, headless browser with usage statistics and CrUX lookups disabled. Its tool
+  calls do not prompt individually.
 
 Rules remove an execution confirmation; they do not grant task authority. `AGENTS.md`,
 the user's request, and the invoked skill still decide whether an action belongs in the

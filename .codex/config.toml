@@ -12,7 +12,7 @@ sandbox_mode = "workspace-write"
 command = "npx"
 args = [
   "-y",
-  "chrome-devtools-mcp@latest",
+  "chrome-devtools-mcp@1.6.0",
   "--headless=true",
   "--isolated=true",
   "--no-usage-statistics",
