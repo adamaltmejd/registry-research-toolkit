@@ -25,12 +25,6 @@ default_tools_approval_mode = "prompt"
 [mcp_servers.chrome-devtools.tools.list_pages]
 approval_mode = "approve"
 
-[mcp_servers.chrome-devtools.tools.select_page]
-approval_mode = "approve"
-
-[mcp_servers.chrome-devtools.tools.close_page]
-approval_mode = "approve"
-
 [mcp_servers.chrome-devtools.tools.get_tab_id]
 approval_mode = "approve"
 
@@ -52,6 +46,12 @@ approval_mode = "approve"
 # These generate page events, navigate, execute code, or accept host input/output paths.
 # Keep them explicitly user-reviewed even when a future server release changes
 # annotations or adds other tools.
+[mcp_servers.chrome-devtools.tools.select_page]
+approval_mode = "prompt"
+
+[mcp_servers.chrome-devtools.tools.close_page]
+approval_mode = "prompt"
+
 [mcp_servers.chrome-devtools.tools.resize_page]
 approval_mode = "prompt"
 

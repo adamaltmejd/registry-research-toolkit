@@ -19,9 +19,10 @@ The policy is deliberately layered:
   broadly prevents `env git` and equivalent wrappers from hiding it.
 - The configured `chrome-devtools` MCP server uses a pinned package and launches an
   isolated, headless browser with host-file navigation, usage statistics, and CrUX
-  lookups disabled. Page listing/selection and passive inspection are auto-approved;
-  event-generating interaction, new-page and scripted navigation, uploads, screenshots,
-  snapshots, traces, script exports, and other path-capable tools retain approval.
+  lookups disabled. Page listing and passive inspection are auto-approved; page-state
+  changes, event-generating interaction, new-page and scripted navigation, uploads,
+  screenshots, snapshots, traces, script exports, and other path-capable tools retain
+  approval.
 
 Approval settings change execution confirmation; they do not grant task authority.
 `AGENTS.md`, the user's request, and the invoked skill still decide whether an action
