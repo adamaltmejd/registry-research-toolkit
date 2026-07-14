@@ -126,11 +126,10 @@ Four content-synced FTS5 indexes power search:
     code-exact rank floor means that in the flat `type="all"` CLI path, code-exact hits
     intentionally precede other result types for a code-shaped query (the user typed a
     code); the webapp calls `search()` per type, so its typed groups are unaffected. The
-    value arm returns the FULL in-scope match set (no internal limit/offset) —
-    `search()` does the `total_count` + `[offset:offset+limit]` slice, so total_count is
-    true and offset paginates. NB: `value_code_fts` is external-content, so
-    `COUNT(*)`/`SELECT col` read the CONTENT table (value_code) — the honest indexed-row
-    count is the `_docsize` shadow table.
+    value arm applies owner scope inside SQL and returns only a bounded ranked prefix;
+    owner annotation is set-based and limited to the displayed page. NB:
+    `value_code_fts` is external-content, so `COUNT(*)`/`SELECT col` read the CONTENT
+    table (value_code) — the honest indexed-row count is the `_docsize` shadow table.
 
 `search` takes a RAW user query and builds the FTS5 MATCH expression internally
 (`_fts_match_query`): each whitespace token becomes a quoted prefix term (`"tok"*`),
@@ -440,22 +439,44 @@ from `reg_meta_docs.db`. The list is metadata only; binary content is fetched by
 **`search.py` — the typed search surface (#701).** `queries.search` builds its result
 rows as plain dicts through the internal pipeline and converts ONCE at the end into the
 `SearchResult` discriminated union (eight arms, each `type:`-literal-discriminated, each
-carrying `rank: float`). The `SearchResults` envelope (`total_count` + `results` tuple)
-is what callers receive. This is the search-surface analog of the catalog-typing move
-(#681): the webapp's per-result mapper functions and `models.py` search wrappers are
-deleted; the FastAPI response models embed reg_meta's search types directly.
+carrying `rank: float`). The `SearchResults` envelope carries a bounded `results` tuple,
+`has_more`, and an opaque `next_cursor`. Cursor context binds the normalized query,
+requested scopes, steward restriction, and catalog manifest; the final order uses a
+unique entity identity after query-sensitive exact/prefix relevance and FTS rank. Typed
+and mixed entity searches use the same fixed bounded horizon as folding so the published
+relevance order cannot change when a later page expands an early FTS prefix. Variable
+delivery aliases for that bounded candidate set are batch-loaded into an internal
+ranking field before slicing; display annotation still runs only for the shown page.
+Steward delivery-column scope narrows that field and representation group members before
+scoring, so unheld aliases cannot affect order or cursor identity. Invalid or mismatched
+cursors fail at the library boundary. Cursor integrity is checked before query work and
+continuation has a hard 1,000-result depth ceiling, so a forged token cannot request an
+unbounded prefix; researchers reaching the ceiling must refine the broad query.
+Non-foldable branches use an adaptive `limit + 1` prefix and backfill when in-scope
+shaping consumes a page. Foldable variable/classification/group branches instead use one
+fixed 1,001-row horizon: every cursor sees the same complete bounded fold universe, so a
+later sibling cannot turn an already-consumed leaf into a group or succession row.
+Type/register/year/group eligibility, classification-code exclusions, and the value
+surface's published bm25-plus-mapping-count rank are applied inside SQL before each
+branch's bound. This is the search-surface analog of the catalog-typing move (#681): the
+webapp's per-result mapper functions and `models.py` search wrappers are deleted; the
+FastAPI response models embed reg_meta's search types directly.
+
+An optional cursor-bound `exclude_fqids` set removes register/classification identities
+inside their SQL branches before the bound. Presentation layers use it when they inject
+a curated identity separately: every continuation then shares one origin universe and
+cannot emit the injected identity again at its natural FTS position.
 
 `search` accepts an optional `fqids: Collection[str] | None` allow-list (#859) that
 restricts the **register and variable** leaf rows (and concept-group folding) to
 entities whose navigable `fqid` is in the set. A group surfaces only if ≥1 of its
 members is held, and its `members` list is narrowed to held members. Classification and
 value/code surfaces are catalog-global and pass through unaffected. `None` means no
-restriction — the pre-#859 behavior is byte-identical. The restriction is applied BEFORE
-folding and BEFORE the `total_count`/slice, so both are exact. reg_meta stays
-steward-agnostic: the caller supplies the allow-list; the set's provenance is opaque
-here. The webapp's filtered-steward `/api/search` passes
-`admitted_variable_fqids | held_register_fqids` (see `reg_webapp/DESIGN.md`); the CLI
-never passes `fqids`.
+restriction — the pre-#859 behavior is byte-identical. The restriction is applied before
+folding and paging, so every page is in scope. reg_meta stays steward-agnostic: the
+caller supplies the allow-list; the set's provenance is opaque here. The webapp's
+filtered-steward `/api/search` passes `admitted_variable_fqids | held_register_fqids`
+(see `reg_webapp/DESIGN.md`); the CLI never passes `fqids`.
 
 **Why two methods for succession.** `predecessors` / `successors` are split (not one
 `replaced` returning a dict) so every edge-traversal accessor returns `list[...]`
@@ -1152,7 +1173,8 @@ format for version comparison.
 
 - Stable ordering for repeated runs against the same database
 - Stable JSON key ordering
-- Deterministic paging (offset, limit)
+- Deterministic bounded paging (`limit + 1`, opaque context-bound cursor, unique final
+  identity tie-breaker)
 
 ## Security
 

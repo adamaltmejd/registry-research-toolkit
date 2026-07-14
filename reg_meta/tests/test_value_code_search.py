@@ -11,10 +11,13 @@ stoplisted), which is faithful for the ranking/dedup/scope behaviour under test.
 
 from __future__ import annotations
 
+import json
 import sqlite3
+from base64 import urlsafe_b64decode, urlsafe_b64encode
 from typing import TYPE_CHECKING
 
 import pytest
+from reg_meta.errors import RegMetaError
 from reg_meta.queries import search
 
 if TYPE_CHECKING:
@@ -207,12 +210,14 @@ def test_code_owner_scope_splits_classification_and_register_local_pages(
         code_owner_scope="register_local",
     )
 
-    assert classification.total_count == 2
+    assert len(classification.results) == 2
+    assert not classification.has_more
     assert [(r.code, r.label) for r in classification.results] == [
         ("E22", "Hyperfunktion av hypofysen"),
         ("E22.0", "ICD child"),
     ]
-    assert register_local.total_count == 2
+    assert len(register_local.results) == 2
+    assert not register_local.has_more
     assert [(r.code, r.label) for r in register_local.results] == [
         ("E22", "Register local exact"),
         ("E220", "Register local compact prefix"),
@@ -260,6 +265,73 @@ def test_owner_cap_vs_full_count(conn: sqlite3.Connection) -> None:
     hit = next(r for r in results if r.label == "Delad kod")
     assert hit.variable_count == 6
     assert len(hit.variables) == _CODE_OWNERS_PER_HIT == 5
+
+
+def test_owner_cap_keeps_tightest_value_set_owners(
+    conn: sqlite3.Connection,
+) -> None:
+    """The cap prefers variables with fewer distinct codes, then slug order."""
+    _seed_register(conn, 1, "reg")
+    _seed_code(conn, 1, "TARGET", "Target label")
+    owner_specs = (
+        ("z-tight", 1),
+        ("a-two", 2),
+        ("b-three", 3),
+        ("c-four", 4),
+        ("d-five", 5),
+        ("e-six", 6),
+    )
+    next_code_id = 2
+    for owner_index, (slug, code_count) in enumerate(owner_specs):
+        variable_id = _seed_variable(conn, 1, str(100 + owner_index), slug, slug)
+        _map(conn, 1, variable_id)
+        for extra_index in range(code_count - 1):
+            _seed_code(
+                conn,
+                next_code_id,
+                f"EXTRA-{owner_index}-{extra_index}",
+                f"Unrelated {owner_index} {extra_index}",
+            )
+            _map(conn, next_code_id, variable_id)
+            next_code_id += 1
+    _finalize(conn)
+
+    hit = search(conn, "Target label", field="value", type="value").results[0]
+
+    assert hit.variable_count == 6
+    assert [owner.name for owner in hit.variables] == [
+        "z-tight",
+        "a-two",
+        "b-three",
+        "c-four",
+        "d-five",
+    ]
+
+
+def test_owner_cap_breaks_cross_register_slug_ties_deterministically(
+    conn: sqlite3.Connection,
+) -> None:
+    _seed_register(conn, 1, "rega")
+    _seed_register(conn, 2, "regb")
+    _seed_code(conn, 1, "TARGET", "Target label")
+    for owner_index, slug in enumerate(("a", "b", "c", "d")):
+        variable_id = _seed_variable(conn, 1, str(100 + owner_index), slug, slug)
+        _map(conn, 1, variable_id)
+    for register_id, name in ((1, "same-a"), (2, "same-b")):
+        variable_id = _seed_variable(conn, register_id, name, name, "same")
+        _map(conn, 1, variable_id)
+    _finalize(conn)
+
+    hit = search(conn, "Target label", field="value", type="value").results[0]
+
+    assert hit.variable_count == 6
+    assert [owner.name for owner in hit.variables] == [
+        "a",
+        "b",
+        "c",
+        "d",
+        "same-a",
+    ]
 
 
 def test_owner_cap_can_be_disabled_for_variable_owners(
@@ -311,6 +383,52 @@ def test_mapping_count_downweight_orders_rarer_first(conn: sqlite3.Connection) -
     assert results[0].code == "2"
 
 
+def test_sql_limit_uses_published_mapping_penalized_rank(
+    conn: sqlite3.Connection,
+) -> None:
+    _seed_register(conn, 1, "reg")
+    for code_id, code, label, owners in (
+        (1, "COMMON", "Needle", 120),
+        (2, "MEDIUM", "Needle medium", 60),
+        (3, "RARE", "Needle rare suffix", 1),
+    ):
+        _seed_code(conn, code_id, code, label)
+        for owner in range(owners):
+            variable_id = _seed_variable(
+                conn,
+                1,
+                f"{code_id}-{owner}",
+                f"Owner {code_id}-{owner}",
+                f"owner-{code_id}-{owner}",
+            )
+            _map(conn, code_id, variable_id)
+    _finalize(conn)
+
+    expected = search(conn, "Needle", field="value", type="value", limit=20)
+    first = search(conn, "Needle", field="value", type="value", limit=1)
+
+    assert first.results[0].code == expected.results[0].code == "RARE"
+    seen: list[str] = []
+    cursor = None
+    while True:
+        page = search(
+            conn,
+            "Needle",
+            field="value",
+            type="value",
+            limit=1,
+            cursor=cursor,
+        )
+        seen.extend(row.code for row in page.results)
+        if not page.has_more:
+            assert page.next_cursor is None
+            break
+        assert page.next_cursor is not None
+        cursor = page.next_cursor
+    assert seen == [row.code for row in expected.results]
+    assert len(seen) == len(set(seen))
+
+
 def _seed_n_label_codes(conn: sqlite3.Connection, n: int, label: str) -> None:
     """Seed `n` distinct (code, label) pairs that all share `label` text (so one
     label-FTS query matches all n), each owned by its own variable in register 1."""
@@ -322,26 +440,32 @@ def _seed_n_label_codes(conn: sqlite3.Connection, n: int, label: str) -> None:
     _finalize(conn)
 
 
-def test_total_count_reflects_true_match_count(conn: sqlite3.Connection) -> None:
-    """total_count is the FULL match count, not saturated at `limit` (regression:
-    the value arm used to truncate internally to `limit`, capping total_count)."""
+def test_limit_plus_one_reports_more_without_exact_count(
+    conn: sqlite3.Connection,
+) -> None:
     _seed_n_label_codes(conn, 8, "Diagnos")
     out = search(conn, "Diagnos", field="value", type="value", limit=3)
-    assert out.total_count == 8, out.total_count
+    assert len(out.results) == 3
+    assert out.has_more
+    assert out.next_cursor is not None
     assert len(out.results) == 3  # the page is still limit-bounded
 
 
-def test_offset_paginates_codes(conn: sqlite3.Connection) -> None:
-    """offset paginates the value arm (regression: offset>0 used to return [])."""
+def test_cursor_paginates_codes(conn: sqlite3.Connection) -> None:
     _seed_n_label_codes(conn, 8, "Diagnos")
-    page1 = search(
-        conn, "Diagnos", field="value", type="value", limit=3, offset=0
-    ).results
+    first = search(conn, "Diagnos", field="value", type="value", limit=3)
+    assert first.next_cursor is not None
+    page1 = first.results
     page2 = search(
-        conn, "Diagnos", field="value", type="value", limit=3, offset=3
+        conn,
+        "Diagnos",
+        field="value",
+        type="value",
+        limit=3,
+        cursor=first.next_cursor,
     ).results
     assert len(page1) == 3
-    assert len(page2) == 3, "offset=limit must return the NEXT page, not []"
+    assert len(page2) == 3, "the continuation cursor must return the next page"
     # Disjoint pages (same deterministic order across calls).
     assert {r.code for r in page1}.isdisjoint({r.code for r in page2})
 
@@ -369,7 +493,7 @@ def test_register_scope_returns_deep_in_scope_hit(conn: sqlite3.Connection) -> N
     scoped = search(
         conn, "Diagnos", field="value", type="value", register="rega", limit=3
     )
-    assert scoped.total_count == 1, scoped.total_count
+    assert len(scoped.results) == 1
     assert [r.label for r in scoped.results] == ["Diagnos A"]
 
 
@@ -397,6 +521,7 @@ def test_annotate_only_the_page_unscoped(
         reg_ids: object,
         *,
         variable_limit: int | None = queries._CODE_OWNERS_PER_HIT,
+        variable_counts: object = None,
     ) -> object:
         seen_batches.append(list(code_ids))
         return real_batch(
@@ -404,6 +529,7 @@ def test_annotate_only_the_page_unscoped(
             code_ids,
             reg_ids,  # type: ignore[arg-type]
             variable_limit=variable_limit,
+            variable_counts=variable_counts,  # type: ignore[arg-type]
         )
 
     monkeypatch.setattr(queries, "_code_owner_annotations_batch", _spy)
@@ -419,20 +545,18 @@ def test_annotate_only_the_page_unscoped(
             "the full match set is being annotated (perf regression)"
         )
     # Sanity: more codes matched than were annotated.
-    assert out.total_count == 30
+    assert out.has_more
     assert len(out.results) == limit
 
 
-def test_total_count_unchanged_with_deferred_annotation(
+def test_more_flag_with_deferred_annotation(
     conn: sqlite3.Connection,
 ) -> None:
-    """total_count stays the FULL match count under deferred annotation, and the
-    page is limit-bounded (the unscoped arm returns every ranked row, just
-    unannotated, so len(all_results) is identical to the old full-annotate path)."""
+    """Deferred annotation remains page-bounded while look-ahead reports more."""
     _seed_n_label_codes(conn, 12, "Diagnos")
     out = search(conn, "Diagnos", field="value", type="value", limit=4)
-    assert out.total_count == 12
     assert len(out.results) == 4
+    assert out.has_more
 
 
 def test_page_rows_carry_correct_owners(conn: sqlite3.Connection) -> None:
@@ -456,7 +580,7 @@ def test_page_rows_carry_correct_owners(conn: sqlite3.Connection) -> None:
     assert not hasattr(hit, "_code_id")
 
 
-def test_offset_page_annotated(conn: sqlite3.Connection) -> None:
+def test_cursor_page_annotated(conn: sqlite3.Connection) -> None:
     """Pagination past offset 0 annotates the RIGHT page: the second page's rows
     carry their own correct owner annotation (not the first page's)."""
     # Two distinctly-owned codes sharing the label token, deterministic order.
@@ -471,8 +595,16 @@ def test_offset_page_annotated(conn: sqlite3.Connection) -> None:
     _map(conn, 2, v2)
     _finalize(conn)
 
-    page1 = search(conn, "Diagnos", field="value", type="value", limit=1, offset=0)
-    page2 = search(conn, "Diagnos", field="value", type="value", limit=1, offset=1)
+    page1 = search(conn, "Diagnos", field="value", type="value", limit=1)
+    assert page1.next_cursor is not None
+    page2 = search(
+        conn,
+        "Diagnos",
+        field="value",
+        type="value",
+        limit=1,
+        cursor=page1.next_cursor,
+    )
     assert len(page1.results) == 1
     assert len(page2.results) == 1
     # Disjoint pages, each annotated with its OWN code's owner count.
@@ -486,7 +618,7 @@ def test_offset_page_annotated(conn: sqlite3.Connection) -> None:
 
 def test_reg_scope_does_not_use_code_id_marker(conn: sqlite3.Connection) -> None:
     """The reg-scoped (`--register`) arm is byte-identical to before: it annotates
-    the full set + filters out-of-scope codes + reports the filtered total_count,
+    only the bounded in-scope page and never uses a deferred `_code_id` marker,
     and its rows never carry the `_code_id` marker (annotated up front, not
     deferred)."""
     _seed_register(conn, 1, "rega")
@@ -502,7 +634,7 @@ def test_reg_scope_does_not_use_code_id_marker(conn: sqlite3.Connection) -> None
 
     scoped = search(conn, "Diagnos", field="value", type="value", register="rega")
     # Only the regA-owned code survives the reg-scope drop.
-    assert scoped.total_count == 1
+    assert len(scoped.results) == 1
     assert [r.label for r in scoped.results] == ["Diagnos A"]
     assert all(not hasattr(r, "_code_id") for r in scoped.results)
     assert scoped.results[0].variable_count == 1
@@ -579,3 +711,104 @@ def test_code_shaped_drops_ownerless_dangling_code(conn: sqlite3.Connection) -> 
     assert "9002" not in prefix, (
         f"ownerless code must be dropped from prefix search too, got {prefix}"
     )
+
+
+def test_cursor_pages_are_duplicate_free_and_gap_free(conn: sqlite3.Connection) -> None:
+    _seed_n_label_codes(conn, 8, "Diagnos")
+    expected = search(conn, "Diagnos", field="value", type="value", limit=20)
+
+    seen: list[str] = []
+    cursor = None
+    while True:
+        page = search(
+            conn,
+            "Diagnos",
+            field="value",
+            type="value",
+            limit=3,
+            cursor=cursor,
+        )
+        seen.extend(result.code for result in page.results)
+        if not page.has_more:
+            break
+        assert page.next_cursor is not None
+        cursor = page.next_cursor
+
+    assert seen == [result.code for result in expected.results]
+    assert len(seen) == len(set(seen))
+
+
+def test_cursor_rejects_invalid_and_context_mismatched_tokens(
+    conn: sqlite3.Connection,
+) -> None:
+    _seed_n_label_codes(conn, 4, "Diagnos")
+    first = search(conn, "Diagnos", field="value", type="value", limit=1)
+    assert first.next_cursor is not None
+
+    for cursor, query, scope in (
+        ("not-a-cursor", "Diagnos", "all"),
+        (first.next_cursor, "Annan", "all"),
+        (first.next_cursor, "Diagnos", "classification"),
+    ):
+        with pytest.raises(RegMetaError) as exc:
+            search(
+                conn,
+                query,
+                field="value",
+                type="value",
+                limit=1,
+                code_owner_scope=scope,
+                cursor=cursor,
+            )
+        assert exc.value.code == "invalid_search_cursor"
+        assert "cursor" in exc.value.message.lower()
+
+
+def test_cursor_binds_catalog_generation(conn: sqlite3.Connection) -> None:
+    _seed_n_label_codes(conn, 4, "Diagnos")
+    first = search(conn, "Diagnos", field="value", type="value", limit=1)
+    assert first.next_cursor is not None
+    conn.execute(
+        "INSERT OR REPLACE INTO import_manifest (key, value) "
+        "VALUES ('import_date', '2099-01-01')"
+    )
+
+    with pytest.raises(RegMetaError) as exc:
+        search(
+            conn,
+            "Diagnos",
+            field="value",
+            type="value",
+            limit=1,
+            cursor=first.next_cursor,
+        )
+    assert "catalog generation" in exc.value.message
+
+
+def test_cursor_rejects_tampered_or_oversized_position(
+    conn: sqlite3.Connection,
+) -> None:
+    _seed_n_label_codes(conn, 4, "Diagnos")
+    first = search(conn, "Diagnos", field="value", type="value", limit=1)
+    assert first.next_cursor is not None
+    raw = urlsafe_b64decode(first.next_cursor + "=" * (-len(first.next_cursor) % 4))
+    payload = json.loads(raw)
+    payload["offset"] = 1_000_000
+    forged = (
+        urlsafe_b64encode(
+            json.dumps(payload, sort_keys=True, separators=(",", ":")).encode()
+        )
+        .decode()
+        .rstrip("=")
+    )
+
+    with pytest.raises(RegMetaError) as exc:
+        search(
+            conn,
+            "Diagnos",
+            field="value",
+            type="value",
+            limit=1,
+            cursor=forged,
+        )
+    assert exc.value.code == "invalid_search_cursor"

@@ -148,7 +148,10 @@ mechanisms are documented in the owning DESIGN.md and only summarized here.
   Go/Rust port of the query API reproduces the same spec; clients are unaffected.
 - **Performance budget (v1 targets, not yet enforced).** Starting points:
   `/api/catalog/*` p95 ≤ 200 ms (cache miss); `/api/project/validate`,
-  `/api/project/order` p95 ≤ 1 s. The 200-column load-test fixture is committed
+  `/api/project/order` p95 ≤ 1 s; representative broad all-scope `/api/search`
+  cache-miss p95 ≤ 500 ms and browser-cold search LCP < 2.5 s. Search correctness and
+  latency are origin properties: edge hits do not substitute for cold-origin evidence.
+  The 200-column load-test fixture is committed
   (`reg_schema/test_corpus/load_test_200col/`), but the load-test harness and CI perf
   gate are remaining work (see REFACTOR_SPEC.md).
 - **Cross-package version compatibility.** `reg_webapp` **floor-pins** its runtime deps

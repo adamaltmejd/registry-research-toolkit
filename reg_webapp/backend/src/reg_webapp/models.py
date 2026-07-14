@@ -627,21 +627,21 @@ ClassificationSearchItem = Annotated[
 
 
 class RegisterSearchGroup(BaseModel):
-    """The `registers` result group. `total_count` is the folded result count
-    for this group BEFORE the per-group display limit (so the SPA can show
-    "showing N of M")."""
+    """One bounded page of register results."""
 
     group: Literal["registers"] = "registers"
-    total_count: int
     results: list[RegisterSearchResult]
+    has_more: bool = False
+    next_cursor: str | None = None
 
 
 class VariableSearchGroup(BaseModel):
     """The `variables` result group (leaf hits ⧺ folded concept groups)."""
 
     group: Literal["variables"] = "variables"
-    total_count: int
     results: list[VariableSearchItem]
+    has_more: bool = False
+    next_cursor: str | None = None
 
 
 class ClassificationSearchGroup(BaseModel):
@@ -650,18 +650,18 @@ class ClassificationSearchGroup(BaseModel):
     (#516, e.g. `group:sun`)."""
 
     group: Literal["classifications"] = "classifications"
-    total_count: int
     results: list[ClassificationSearchItem]
+    has_more: bool = False
+    next_cursor: str | None = None
 
 
 class ClassificationCodeSearchGroup(BaseModel):
-    """The `classification_codes` result group (#352/#393). `total_count` is the
-    result count before the per-group display limit (so the SPA can show
-    "showing N of M")."""
+    """One bounded page of classification-owned code results (#352/#393)."""
 
     group: Literal["classification_codes"] = "classification_codes"
-    total_count: int
     results: list[CodeSearchResult]
+    has_more: bool = False
+    next_cursor: str | None = None
 
 
 class RegisterValueSetSearchGroup(BaseModel):
@@ -669,8 +669,9 @@ class RegisterValueSetSearchGroup(BaseModel):
     codes with no owning classification."""
 
     group: Literal["register_value_sets"] = "register_value_sets"
-    total_count: int
     results: list[CodeSearchResult]
+    has_more: bool = False
+    next_cursor: str | None = None
 
 
 TopSearchItem = Annotated[
@@ -690,8 +691,9 @@ class TopSearchGroup(BaseModel):
     groups remain unchanged below it."""
 
     group: Literal["top_results"] = "top_results"
-    total_count: int
     results: list[TopSearchItem]
+    has_more: Literal[False] = False
+    next_cursor: None = None
 
 
 # The extension seam: append new `group` literal arms here — each a new

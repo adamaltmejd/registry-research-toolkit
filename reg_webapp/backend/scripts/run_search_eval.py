@@ -36,7 +36,7 @@ from typing import TYPE_CHECKING
 
 from reg_meta.db import db_path_from_args, open_db
 from reg_meta.queries import search
-from reg_webapp.golden import apply_golden_boost
+from reg_webapp.golden import apply_golden_boost, pinned_fqids
 
 if TYPE_CHECKING:
     from reg_meta.search import SearchResult
@@ -141,16 +141,23 @@ def main() -> int:
             limit=args.limit,
             fold_groups=fold,
         )
-        # Apply golden-boost the same way `/api/search` does (over the reg_meta typed
-        # search models, #701), so the eval reflects the route's true post-boost
-        # ranking. The net-new injection bumps the displayed total too, matching the
-        # route's total_count adjustment.
-        boosted = apply_golden_boost(conn, c["query"], c["group"], res.results)
-        total = res.total_count + (len(boosted) - len(res.results))
-        # The route caps the displayed page at `limit` (a net-new pin must not push the
-        # group past the cap), so measure the rank against the page the user sees — not
-        # the un-trimmed boosted list. `total` stays the full count (computed above).
-        rank = _rank_of(boosted[: args.limit], c["intended"])
+        # Apply golden boost over one bounded result window, matching the route's
+        # page-sized pin work. Exact totals are intentionally unavailable: report the
+        # returned page size and whether another origin/boosted row exists.
+        pin_fqids = pinned_fqids(c["query"], c["group"])
+        boosted = apply_golden_boost(
+            conn,
+            c["query"],
+            c["group"],
+            res.results,
+            fqids=pin_fqids,
+            limit=args.limit,
+        )
+        page = boosted[: args.limit]
+        page_has_more = (
+            res.has_more or len(boosted) > args.limit or len(pin_fqids) > args.limit
+        )
+        rank = _rank_of(page, c["intended"])
         found = rank is not None
         if c["expect"] == "hit":
             hit_total += 1
@@ -167,27 +174,28 @@ def main() -> int:
                 c["intended"],
                 c["expect"],
                 str(rank) if found else "-",
-                f"{total}",
+                str(len(page)),
+                str(page_has_more).lower(),
                 status,
             )
         )
     conn.close()
 
-    w = [
-        max(
-            len(r[i])
-            for r in [
-                ("query", "group", "intended", "expect", "rank", "total", "status"),
-                *rows,
-            ]
-        )
-        for i in range(7)
-    ]
-    hdr = ("query", "group", "intended", "expect", "rank", "total", "status")
+    hdr = (
+        "query",
+        "group",
+        "intended",
+        "expect",
+        "rank",
+        "returned",
+        "has_more",
+        "status",
+    )
+    w = [max(len(r[i]) for r in [hdr, *rows]) for i in range(len(hdr))]
     print("  ".join(h.ljust(w[i]) for i, h in enumerate(hdr)))
-    print("  ".join("-" * w[i] for i in range(7)))
+    print("  ".join("-" * width for width in w))
     for r in rows:
-        print("  ".join(str(r[i]).ljust(w[i]) for i in range(7)))
+        print("  ".join(str(value).ljust(w[i]) for i, value in enumerate(r)))
 
     print()
     print(

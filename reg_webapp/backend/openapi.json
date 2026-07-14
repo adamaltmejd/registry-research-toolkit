@@ -374,7 +374,7 @@
         "type": "object"
       },
       "ClassificationCodeSearchGroup": {
-        "description": "The `classification_codes` result group (#352/#393). `total_count` is the\nresult count before the per-group display limit (so the SPA can show\n\"showing N of M\").",
+        "description": "One bounded page of classification-owned code results (#352/#393).",
         "properties": {
           "group": {
             "const": "classification_codes",
@@ -382,20 +382,31 @@
             "title": "Group",
             "type": "string"
           },
+          "has_more": {
+            "default": false,
+            "title": "Has More",
+            "type": "boolean"
+          },
+          "next_cursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Cursor"
+          },
           "results": {
             "items": {
               "$ref": "#/components/schemas/CodeSearchResult"
             },
             "title": "Results",
             "type": "array"
-          },
-          "total_count": {
-            "title": "Total Count",
-            "type": "integer"
           }
         },
         "required": [
-          "total_count",
           "results"
         ],
         "title": "ClassificationCodeSearchGroup",
@@ -947,6 +958,22 @@
             "title": "Group",
             "type": "string"
           },
+          "has_more": {
+            "default": false,
+            "title": "Has More",
+            "type": "boolean"
+          },
+          "next_cursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Cursor"
+          },
           "results": {
             "items": {
               "discriminator": {
@@ -971,14 +998,9 @@
             },
             "title": "Results",
             "type": "array"
-          },
-          "total_count": {
-            "title": "Total Count",
-            "type": "integer"
           }
         },
         "required": [
-          "total_count",
           "results"
         ],
         "title": "ClassificationSearchGroup",
@@ -2738,7 +2760,7 @@
         "type": "object"
       },
       "RegisterSearchGroup": {
-        "description": "The `registers` result group. `total_count` is the folded result count\nfor this group BEFORE the per-group display limit (so the SPA can show\n\"showing N of M\").",
+        "description": "One bounded page of register results.",
         "properties": {
           "group": {
             "const": "registers",
@@ -2746,20 +2768,31 @@
             "title": "Group",
             "type": "string"
           },
+          "has_more": {
+            "default": false,
+            "title": "Has More",
+            "type": "boolean"
+          },
+          "next_cursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Cursor"
+          },
           "results": {
             "items": {
               "$ref": "#/components/schemas/RegisterSearchResult"
             },
             "title": "Results",
             "type": "array"
-          },
-          "total_count": {
-            "title": "Total Count",
-            "type": "integer"
           }
         },
         "required": [
-          "total_count",
           "results"
         ],
         "title": "RegisterSearchGroup",
@@ -2829,20 +2862,31 @@
             "title": "Group",
             "type": "string"
           },
+          "has_more": {
+            "default": false,
+            "title": "Has More",
+            "type": "boolean"
+          },
+          "next_cursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Cursor"
+          },
           "results": {
             "items": {
               "$ref": "#/components/schemas/CodeSearchResult"
             },
             "title": "Results",
             "type": "array"
-          },
-          "total_count": {
-            "title": "Total Count",
-            "type": "integer"
           }
         },
         "required": [
-          "total_count",
           "results"
         ],
         "title": "RegisterValueSetSearchGroup",
@@ -3329,6 +3373,16 @@
             "title": "Group",
             "type": "string"
           },
+          "has_more": {
+            "const": false,
+            "default": false,
+            "title": "Has More",
+            "type": "boolean"
+          },
+          "next_cursor": {
+            "title": "Next Cursor",
+            "type": "null"
+          },
           "results": {
             "items": {
               "discriminator": {
@@ -3365,14 +3419,9 @@
             },
             "title": "Results",
             "type": "array"
-          },
-          "total_count": {
-            "title": "Total Count",
-            "type": "integer"
           }
         },
         "required": [
-          "total_count",
           "results"
         ],
         "title": "TopSearchGroup",
@@ -3831,6 +3880,22 @@
             "title": "Group",
             "type": "string"
           },
+          "has_more": {
+            "default": false,
+            "title": "Has More",
+            "type": "boolean"
+          },
+          "next_cursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Cursor"
+          },
           "results": {
             "items": {
               "discriminator": {
@@ -3851,14 +3916,9 @@
             },
             "title": "Results",
             "type": "array"
-          },
-          "total_count": {
-            "title": "Total Count",
-            "type": "integer"
           }
         },
         "required": [
-          "total_count",
           "results"
         ],
         "title": "VariableSearchGroup",
@@ -5408,9 +5468,25 @@
     },
     "/api/search": {
       "get": {
-        "description": "Search registers, variables (concept-folded, #322), classifications, and\ncodes/values (#352) over the shipped FTS indexes. Each typed group is an\nindependent reg_meta `search()` call (register/variable/classification via the\nFTS `field=\"description\"` path; codes via the `field=\"value\"` path) so each\ncarries its own `total_count` and per-group `limit`; the value surface is split\ninto classification codes and register-local value sets so each gets its own\npage. The all-scope response prepends a `top_results` best-bets group built\nfrom those same typed rows when multiple candidates compete (#393 items 6/7);\nscoped responses emit only the requested typed surface (`type=value` emits the\ntwo value groups). A query with no usable token returns the selected group(s)\nempty (total 0) \u2014 not a 422.\n\n``?type=`` (#393 item 1) scopes the search: ``all`` (the default) preserves the\noptional top-results\u2192register\u2192variable\u2192classification\u2192value behavior; any\nsingle type runs AND emits only that typed surface. Group ORDER is fixed for\nthe ``all`` case.\n\nA FILTERED steward (``app.state.catalog_index`` present, #859) scopes the\nREGISTER and VARIABLE surfaces to the steward's held FQIDs \u2014 both the reg_meta\nquery (the ``fqids`` allow-list, applied query-time so ``total_count`` is exact)\nand the golden boost (a boosted pin the steward does not hold is dropped). The\nCLASSIFICATION and VALUE/code surfaces are catalog-global and pass through\nunscoped. The ``global`` deployment (no index) is byte-for-byte unchanged.",
+        "description": "Search registers, variables (concept-folded, #322), classifications, and\ncodes/values (#352) over the shipped FTS indexes. Each typed group is an\nindependent reg_meta `search()` call (register/variable/classification via the\nFTS `field=\"description\"` path; codes via the `field=\"value\"` path) so each\ncarries its own bounded continuation cursor; the value surface is split\ninto classification codes and register-local value sets so each gets its own\npage. The all-scope response prepends a `top_results` best-bets group built\nfrom those same typed rows when multiple candidates compete (#393 items 6/7);\nscoped responses emit only the requested typed surface (`type=value` emits the\ntwo value groups). A query with no usable token returns the selected group(s)\nempty (total 0) \u2014 not a 422.\n\n``?type=`` (#393 item 1) scopes the search: ``all`` (the default) preserves the\noptional top-results\u2192register\u2192variable\u2192classification\u2192value behavior; any\nsingle type runs AND emits only that typed surface. Group ORDER is fixed for\nthe ``all`` case.\n\nA FILTERED steward (``app.state.catalog_index`` present, #859) scopes the\nREGISTER and VARIABLE surfaces to the steward's held FQIDs \u2014 both the reg_meta\nquery (the ``fqids`` allow-list, applied query-time before paging)\nand the golden boost (a boosted pin the steward does not hold is dropped). The\nCLASSIFICATION and VALUE/code surfaces are catalog-global and pass through\nunscoped. A global deployment uses the same cursor contract without the steward\nrestriction.",
         "operationId": "get_search_api_search_get",
         "parameters": [
+          {
+            "in": "query",
+            "name": "cursor",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Cursor"
+            }
+          },
           {
             "in": "query",
             "name": "q",
@@ -5425,7 +5501,7 @@
             "name": "limit",
             "required": false,
             "schema": {
-              "default": 20,
+              "default": 3,
               "title": "Limit",
               "type": "integer"
             }

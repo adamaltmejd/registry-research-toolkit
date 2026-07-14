@@ -28,9 +28,13 @@ silently dropping the pin.
 
 from __future__ import annotations
 
+import json
 import tomllib
 import unicodedata
+from base64 import urlsafe_b64decode, urlsafe_b64encode
+from binascii import Error as Base64Error
 from dataclasses import dataclass
+from hashlib import sha256
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -168,6 +172,8 @@ def _load_pins(path: Path) -> dict[tuple[str, str], _Pin]:
             )
         if not fqids or not isinstance(fqids, list):
             raise ValueError(f"golden pin #{i} ({query!r}): missing/empty `fqids`")
+        if len(fqids) != len(set(fqids)):
+            raise ValueError(f"golden pin #{i} ({query!r}): duplicate `fqids`")
         for fqid in fqids:
             _validate_pin_fqid(query, group, fqid)
         key = (_normalize(query), group)
@@ -200,6 +206,91 @@ def _validate_pin_fqid(query: str, group: str, fqid: str) -> None:
 
 
 _PINS = _load_pins(GOLDEN_PATH)
+_CURSOR_PREFIX = "golden."
+_CURSOR_VERSION = 1
+_CURSOR_DOMAIN = "reg-webapp-golden-cursor-v1"
+
+
+class GoldenCursorError(ValueError):
+    """An invalid or context-mismatched golden continuation cursor."""
+
+
+def _cursor_context(query: str, group: str, fqids: tuple[str, ...]) -> str:
+    value = json.dumps(
+        {"query": _normalize(query), "group": group, "fqids": fqids},
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+    )
+    return sha256(value.encode()).hexdigest()
+
+
+def _cursor_signature(payload: dict[str, object]) -> str:
+    value = json.dumps(payload, sort_keys=True, separators=(",", ":"))
+    return sha256(f"{_CURSOR_DOMAIN}:{value}".encode()).hexdigest()
+
+
+def decode_continuation(
+    cursor: str | None,
+    query: str,
+    group: str,
+    fqids: tuple[str, ...],
+) -> tuple[str | None, int]:
+    """Unwrap golden state, or treat a plain reg_meta cursor as pins-exhausted."""
+    if cursor is None:
+        return None, 0
+    if not cursor.startswith(_CURSOR_PREFIX):
+        return cursor, len(fqids)
+    try:
+        raw = cursor.removeprefix(_CURSOR_PREFIX)
+        payload = json.loads(urlsafe_b64decode(raw + "=" * (-len(raw) % 4)))
+        if not isinstance(payload, dict):
+            raise ValueError
+        signature = payload.pop("signature", None)
+        if signature != _cursor_signature(payload):
+            raise ValueError
+        if payload.get("v") != _CURSOR_VERSION:
+            raise GoldenCursorError("Golden search cursor version is unsupported.")
+        if payload.get("context") != _cursor_context(query, group, fqids):
+            raise GoldenCursorError(
+                "Golden search cursor does not match this query and result group."
+            )
+        origin = payload.get("origin")
+        offset = payload.get("offset")
+        if not isinstance(origin, str) or not isinstance(offset, int):
+            raise ValueError
+        if offset < 0 or offset >= len(fqids):
+            raise ValueError
+        return origin, offset
+    except GoldenCursorError:
+        raise
+    except (Base64Error, UnicodeDecodeError, json.JSONDecodeError, ValueError) as exc:
+        raise GoldenCursorError("Golden search cursor is invalid or tampered.") from exc
+
+
+def encode_continuation(
+    origin_cursor: str,
+    query: str,
+    group: str,
+    fqids: tuple[str, ...],
+    offset: int,
+) -> str:
+    """Wrap the origin cursor with the next bounded golden-pin position."""
+    payload: dict[str, object] = {
+        "v": _CURSOR_VERSION,
+        "context": _cursor_context(query, group, fqids),
+        "origin": origin_cursor,
+        "offset": offset,
+    }
+    payload["signature"] = _cursor_signature(payload)
+    raw = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode()
+    return _CURSOR_PREFIX + urlsafe_b64encode(raw).decode().rstrip("=")
+
+
+def pinned_fqids(query: str, group: str) -> tuple[str, ...]:
+    """Return curated identities that origin search must exclude on every page."""
+    pin = _PINS.get((_normalize(query), group))
+    return () if pin is None else pin.fqids
 
 
 def apply_golden_boost(
@@ -207,6 +298,10 @@ def apply_golden_boost(
     query: str,
     group: str,
     results: tuple[SearchResult, ...],
+    *,
+    fqids: tuple[str, ...] | None = None,
+    start: int = 0,
+    limit: int | None = None,
 ) -> list[SearchResult]:
     """Promote any curated pin for ``(query, group)`` to the TOP of ``results``.
 
@@ -216,10 +311,9 @@ def apply_golden_boost(
     pinned entity is promoted to rank 1 rather than duplicated. Net effect on length:
 
     - pin already on the page → removed from its FTS slot, re-prepended at rank 1
-      (promoted, no dup) → ``len`` unchanged → the route's ``total_count`` delta is 0
-      (correct: it was already counted by FTS).
-    - pin not on the page (the shipped non-matching case) → prepended → ``len`` +1 →
-      ``total_count`` +1 (correct: a net-new injection).
+      (promoted, no duplicate) → ``len`` unchanged.
+    - pin not on the page → prepended → ``len`` +1, so the route can retain
+      continuation for the displaced origin row without computing an exact total.
 
     The common case — no matching pin — returns ``results`` as a list unchanged (kept
     cheap: one dict lookup).
@@ -231,18 +325,17 @@ def apply_golden_boost(
     `ConceptGroupSearchResult` (foldable into the classification arm) carries no
     `fqid` field, so `getattr(..., None)` treats it as un-pinnable — never deduped.
 
-    LIMITATION: only the result PAGE is visible here, not the full FTS match set. A
-    pin that is itself an FTS match ranking BEYOND the page can't be deduped — it is
-    re-counted (``total_count`` +1) and may reappear on a deep page. Golden pins are
-    intended for canonical answers that rank poorly or not at all, so pinning a
-    top-FTS-match is a degenerate config; the limitation does not bite the intended use.
+    Callers exclude ``pinned_fqids(query, group)`` from origin search on every page,
+    so a pinned identity cannot reappear at its natural deep FTS position.
     """
     pin = _PINS.get((_normalize(query), group))
-    if pin is None:
+    selected_fqids = pin.fqids if fqids is None and pin is not None else fqids
+    if not selected_fqids:
         return list(results)
     build = _PIN_BUILDERS[group]
-    pinned = [build(conn, fqid) for fqid in pin.fqids]
-    pin_fqids = set(pin.fqids)
+    stop = None if limit is None else start + limit
+    pinned = [build(conn, fqid) for fqid in selected_fqids[start:stop]]
+    pin_fqids = set(selected_fqids)
     # `getattr(..., None)`: a `ConceptGroupSearchResult` carries no `fqid` field, so
     # it can never match a pin (matches the old dict `.get("fqid")` semantics).
     kept = [r for r in results if _fqid_str(getattr(r, "fqid", None)) not in pin_fqids]

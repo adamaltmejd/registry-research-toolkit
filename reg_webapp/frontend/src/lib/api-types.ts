@@ -582,7 +582,7 @@ export interface paths {
          *     codes/values (#352) over the shipped FTS indexes. Each typed group is an
          *     independent reg_meta `search()` call (register/variable/classification via the
          *     FTS `field="description"` path; codes via the `field="value"` path) so each
-         *     carries its own `total_count` and per-group `limit`; the value surface is split
+         *     carries its own bounded continuation cursor; the value surface is split
          *     into classification codes and register-local value sets so each gets its own
          *     page. The all-scope response prepends a `top_results` best-bets group built
          *     from those same typed rows when multiple candidates compete (#393 items 6/7);
@@ -597,10 +597,11 @@ export interface paths {
          *
          *     A FILTERED steward (``app.state.catalog_index`` present, #859) scopes the
          *     REGISTER and VARIABLE surfaces to the steward's held FQIDs — both the reg_meta
-         *     query (the ``fqids`` allow-list, applied query-time so ``total_count`` is exact)
+         *     query (the ``fqids`` allow-list, applied query-time before paging)
          *     and the golden boost (a boosted pin the steward does not hold is dropped). The
          *     CLASSIFICATION and VALUE/code surfaces are catalog-global and pass through
-         *     unscoped. The ``global`` deployment (no index) is byte-for-byte unchanged.
+         *     unscoped. A global deployment uses the same cursor contract without the steward
+         *     restriction.
          */
         get: operations["get_search_api_search_get"];
         put?: never;
@@ -827,9 +828,7 @@ export interface components {
         };
         /**
          * ClassificationCodeSearchGroup
-         * @description The `classification_codes` result group (#352/#393). `total_count` is the
-         *     result count before the per-group display limit (so the SPA can show
-         *     "showing N of M").
+         * @description One bounded page of classification-owned code results (#352/#393).
          */
         ClassificationCodeSearchGroup: {
             /**
@@ -837,10 +836,15 @@ export interface components {
              * @enum {string}
              */
             group: "classification_codes";
+            /**
+             * Has More
+             * @default false
+             */
+            has_more: boolean;
+            /** Next Cursor */
+            next_cursor?: string | null;
             /** Results */
             results: components["schemas"]["CodeSearchResult"][];
-            /** Total Count */
-            total_count: number;
         };
         /**
          * ClassificationConformance
@@ -1148,10 +1152,15 @@ export interface components {
              * @enum {string}
              */
             group: "classifications";
+            /**
+             * Has More
+             * @default false
+             */
+            has_more: boolean;
+            /** Next Cursor */
+            next_cursor?: string | null;
             /** Results */
             results: (components["schemas"]["ClassificationSearchResult"] | components["schemas"]["ClassificationSuccessionSearchResult"] | components["schemas"]["ConceptGroupSearchResult"])[];
-            /** Total Count */
-            total_count: number;
         };
         /**
          * ClassificationSearchResult
@@ -1959,9 +1968,7 @@ export interface components {
         };
         /**
          * RegisterSearchGroup
-         * @description The `registers` result group. `total_count` is the folded result count
-         *     for this group BEFORE the per-group display limit (so the SPA can show
-         *     "showing N of M").
+         * @description One bounded page of register results.
          */
         RegisterSearchGroup: {
             /**
@@ -1969,10 +1976,15 @@ export interface components {
              * @enum {string}
              */
             group: "registers";
+            /**
+             * Has More
+             * @default false
+             */
+            has_more: boolean;
+            /** Next Cursor */
+            next_cursor?: string | null;
             /** Results */
             results: components["schemas"]["RegisterSearchResult"][];
-            /** Total Count */
-            total_count: number;
         };
         /**
          * RegisterSearchResult
@@ -2004,10 +2016,15 @@ export interface components {
              * @enum {string}
              */
             group: "register_value_sets";
+            /**
+             * Has More
+             * @default false
+             */
+            has_more: boolean;
+            /** Next Cursor */
+            next_cursor?: string | null;
             /** Results */
             results: components["schemas"]["CodeSearchResult"][];
-            /** Total Count */
-            total_count: number;
         };
         /**
          * RegisterVersionMetadata
@@ -2236,10 +2253,16 @@ export interface components {
              * @enum {string}
              */
             group: "top_results";
+            /**
+             * Has More
+             * @default false
+             * @constant
+             */
+            has_more: false;
+            /** Next Cursor */
+            next_cursor?: null;
             /** Results */
             results: (components["schemas"]["RegisterSearchResult"] | components["schemas"]["VariableSearchResult"] | components["schemas"]["ClassificationSearchResult"] | components["schemas"]["ClassificationSuccessionSearchResult"] | components["schemas"]["ConceptGroupSearchResult"] | components["schemas"]["CodeSearchResult"])[];
-            /** Total Count */
-            total_count: number;
         };
         /** ValidationError */
         ValidationError: {
@@ -2488,10 +2511,15 @@ export interface components {
              * @enum {string}
              */
             group: "variables";
+            /**
+             * Has More
+             * @default false
+             */
+            has_more: boolean;
+            /** Next Cursor */
+            next_cursor?: string | null;
             /** Results */
             results: (components["schemas"]["VariableSearchResult"] | components["schemas"]["ConceptGroupSearchResult"])[];
-            /** Total Count */
-            total_count: number;
         };
         /**
          * VariableSearchResult
@@ -3334,6 +3362,7 @@ export interface operations {
     get_search_api_search_get: {
         parameters: {
             query: {
+                cursor?: string | null;
                 q: string;
                 limit?: number;
                 type?: string;

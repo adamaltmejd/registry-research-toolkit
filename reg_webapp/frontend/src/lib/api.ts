@@ -523,8 +523,8 @@ export function downloadOrderCsv(draft: ProjectDataBody): Promise<void> {
 // `GET /api/search?q=` returns an optional cross-group best-bets group followed by
 // the typed result groups over the shipped FTS indexes (registers / variables /
 // classifications / classification codes / register-local value sets). Each
-// group's `total_count` is the full match count BEFORE the per-request `limit`,
-// so the SPA renders "showing N of M". A
+// Each group is a bounded `limit + 1` page with `has_more` and an opaque
+// continuation cursor. A
 // concept-group row (`type:"group"`) is not an FQID, but it can be linked to its
 // fixed group route when the scope is derivable from members; its `members` carry
 // the real leaf FQIDs for fallback links. A `fqid` can be `null` on any leaf (a hit
@@ -571,7 +571,9 @@ export type SearchType =
   | "register"
   | "variable"
   | "classification"
-  | "value";
+  | "value"
+  | "classification_code"
+  | "register_value";
 
 /** GET a search endpoint (`path` relative to `/api`) with the shared query +
  * abort plumbing every search surface uses: `q` is encoded, an explicit `limit`
@@ -590,6 +592,7 @@ function searchGet<T>(
     limit?: number;
     type?: SearchType;
     register?: string;
+    cursor?: string;
   },
 ): Promise<T> {
   const params = new URLSearchParams({ q });
@@ -601,6 +604,9 @@ function searchGet<T>(
   }
   if (options?.register !== undefined) {
     params.set("register", options.register);
+  }
+  if (options?.cursor !== undefined) {
+    params.set("cursor", options.cursor);
   }
   const signals = [AbortSignal.timeout(SEARCH_TIMEOUT_MS)];
   if (options?.signal) {
@@ -621,10 +627,15 @@ export const SEARCH_MIN_QUERY_LENGTH = 2;
  * per-group result cap — omit it to use the server default (20, clamped ≤50);
  * `type` scopes the search to one group (#393 item 1) — omit it (or pass `all`)
  * for the four-group default. A blank/punctuation-only query returns the selected
- * group(s) empty (`total_count: 0`), not an error. */
+ * group(s) empty, not an error. */
 export function search(
   q: string,
-  options?: { signal?: AbortSignal; limit?: number; type?: SearchType },
+  options?: {
+    signal?: AbortSignal;
+    limit?: number;
+    type?: SearchType;
+    cursor?: string;
+  },
 ): Promise<SearchResponse> {
   return searchGet<SearchResponse>("/search", q, options);
 }

@@ -18,9 +18,11 @@ from __future__ import annotations
 import re
 import unicodedata
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, cast
+from time import perf_counter
+from typing import TYPE_CHECKING, Any, cast
 
-from fastapi import APIRouter, Depends, HTTPException, Request
+from fastapi import APIRouter, Depends, HTTPException, Request, Response
+from reg_meta.errors import RegMetaError
 from reg_meta.queries import SEARCH_TYPES, search as reg_meta_search
 
 from reg_webapp import golden
@@ -42,6 +44,7 @@ if TYPE_CHECKING:
         CodeSearchResult,
         RegisterSearchResult,
         SearchResult,
+        SearchResults,
     )
 
     from reg_webapp.catalog_index import CatalogIndex
@@ -53,15 +56,24 @@ if TYPE_CHECKING:
 
 router = APIRouter(prefix="/api")
 
-_DEFAULT_LIMIT = 20
+_DEFAULT_LIMIT = 3
 _MAX_LIMIT = 50
 _TOP_RESULTS_LIMIT = 5
 _GROUP_LABEL_MATCH_BONUS = 50
 _GROUP_MATCHED_MEMBER_BONUS_CAP = 50
+_WEB_SEARCH_TYPES = SEARCH_TYPES | {"classification_code", "register_value"}
 
 # A "real" token carries at least one unicode alphanumeric char; pure
 # punctuation tokenizes to nothing in FTS5 and would yield an empty phrase.
 _WORD_CHAR = re.compile(r"[^\W_]", re.UNICODE)
+
+
+def _search_boundary(*args: Any, **kwargs: Any) -> SearchResults:
+    """Translate reg_meta's usage boundary into this HTTP boundary."""
+    try:
+        return reg_meta_search(*args, **kwargs)
+    except RegMetaError as exc:
+        raise HTTPException(status_code=422, detail=exc.message) from exc
 
 
 def _validated_limit(limit: int = _DEFAULT_LIMIT) -> int:
@@ -70,18 +82,45 @@ def _validated_limit(limit: int = _DEFAULT_LIMIT) -> int:
     return max(1, min(limit, _MAX_LIMIT))
 
 
+def _rank_codes(results: list[CodeSearchResult]) -> list[CodeSearchResult]:
+    """Preserve the established owner-count relevance within one origin page.
+
+    The origin cursor is computed before this stable presentation reorder, and
+    every selected origin row remains on the page, so continuation advances over
+    exactly the displayed set without changing SQL work bounds.
+    """
+    return sorted(
+        results,
+        key=lambda result: (
+            result.classification_count > 0,
+            result.classification_count,
+            result.variable_count,
+        ),
+        reverse=True,
+    )
+
+
 def _validated_type(type: str = "all") -> str:
     """``?type`` gate: scope the search to a single result group (#393 item 1).
     The param is named ``type`` so the wire param is ``?type=``; the bound name in
     `get_search` is `req_type` to avoid shadowing the `type` builtin. An unknown
     value 422s here rather than reaching reg_meta (where a bad `type` raises
     `RegMetaError` → 500) — fail fast at the boundary with the valid set."""
-    if type not in SEARCH_TYPES:
+    if type not in _WEB_SEARCH_TYPES:
         raise HTTPException(
             status_code=422,
-            detail=f"invalid type '{type}' (valid: {sorted(SEARCH_TYPES)})",
+            detail=f"invalid type '{type}' (valid: {sorted(_WEB_SEARCH_TYPES)})",
         )
     return type
+
+
+def _validated_cursor(cursor: str | None = None) -> str | None:
+    if cursor is not None and not cursor.strip():
+        raise HTTPException(
+            status_code=422,
+            detail="Search cursor must not be empty. Restart the search without cursor.",
+        )
+    return cursor
 
 
 def _has_searchable_token(q: str) -> bool:
@@ -94,30 +133,6 @@ def _has_searchable_token(q: str) -> bool:
     folds diacritics on both index and query side (å→a), matching the SPA's
     ``foldText``."""
     return _WORD_CHAR.search(q) is not None
-
-
-def _rank_codes(results: list[CodeSearchResult]) -> list[CodeSearchResult]:
-    """Re-rank a code/value page so classification-backed (curated) codes lead,
-    then by classification_count, then variable_count — all DESCENDING; FTS order
-    is preserved within ties (stable sort, #393 item 2).
-
-    LIMITATION (deferred annotation): reg_meta returns the FTS-top-N codes and only
-    THEN annotates the shown page with owner counts (`_annotate_value_page`), so the
-    counts exist only on the rows already in the page. This re-sort therefore only
-    reorders WITHIN that page — it cannot pull a curated code that ranked below the
-    FTS cutoff into view. Accepted as an easy-win until ranking moves into reg_meta.
-
-    Operates on reg_meta's `CodeSearchResult` models directly (#701) — no per-row
-    re-wrapping. Pure helper (no IO) so it's unit-testable in isolation."""
-    return sorted(
-        results,
-        key=lambda r: (
-            r.classification_count > 0,
-            r.classification_count,
-            r.variable_count,
-        ),
-        reverse=True,
-    )
 
 
 def _fold_match_text(value: object) -> str:
@@ -229,28 +244,69 @@ def _looks_like_golden_pin(result: SearchResult) -> bool:
     return result.type in ("register", "classification") and result.rank == 0.0
 
 
-def _rank_display_results(
-    query: str, results: list[SearchResult]
-) -> list[SearchResult]:
-    """Apply the same query-sensitive best-bet score within one typed section.
+def _boosted_continuation(
+    origin: SearchResults,
+    boosted: list[SearchResult],
+    *,
+    limit: int,
+) -> tuple[bool, str | None]:
+    """Advance only past origin rows that survive a pin-prepended page.
 
-    Top results uses `_best_bet_score` to merge across typed groups. Reusing that
-    score inside each category keeps an exact/prefix hit from leading Top results
-    while sitting lower in its own category. Golden pins stay first because their
-    contract is stronger than FTS/order scoring.
+    A net-new golden pin can displace an origin hit. Returning the origin page's
+    ordinary ``next_cursor`` would skip that hit forever. reg_meta exposes
+    excluded-from-wire cursors at each bounded prefix so this presentation layer
+    can continue after exactly the origin rows it consumed.
     """
-    return [
-        result
-        for _, result in sorted(
-            enumerate(results),
-            key=lambda item: (
-                _looks_like_golden_pin(item[1]),
-                _best_bet_score(query, item[1]),
-                -item[0],
-            ),
-            reverse=True,
-        )
-    ]
+    displaced = len(boosted) > limit
+    if not displaced:
+        return origin.has_more, origin.next_cursor
+    net_new = sum(not any(item == row for row in origin.results) for item in boosted)
+    consumed = min(len(origin.results), max(0, limit - net_new))
+    next_cursor = (
+        origin.page_cursor if consumed == 0 else origin.cursors_after[consumed - 1]
+    )
+    return True, next_cursor
+
+
+def _golden_cursor_boundary(
+    cursor: str | None,
+    query: str,
+    group: str,
+    pin_fqids: tuple[str, ...],
+) -> tuple[str | None, int]:
+    try:
+        return golden.decode_continuation(cursor, query, group, pin_fqids)
+    except golden.GoldenCursorError as exc:
+        raise HTTPException(
+            status_code=422,
+            detail=f"{exc} Restart the search without cursor.",
+        ) from exc
+
+
+def _golden_continuation(
+    *,
+    origin_has_more: bool,
+    origin_cursor: str | None,
+    origin_page_cursor: str | None,
+    query: str,
+    group: str,
+    pin_fqids: tuple[str, ...],
+    pin_offset: int,
+    limit: int,
+) -> tuple[bool, str | None]:
+    next_pin_offset = pin_offset + min(limit, len(pin_fqids) - pin_offset)
+    if next_pin_offset >= len(pin_fqids):
+        return origin_has_more, origin_cursor
+    resume_cursor = origin_cursor or origin_page_cursor
+    if resume_cursor is None:
+        raise RuntimeError("golden continuation lost its bounded origin cursor")
+    return True, golden.encode_continuation(
+        resume_cursor,
+        query,
+        group,
+        pin_fqids,
+        next_pin_offset,
+    )
 
 
 def _top_candidate_key(result: SearchResult, group_order: int, row_order: int) -> str:
@@ -368,7 +424,7 @@ def _scope_to_fqids(
     arm can carry `ConceptGroupSearchResult` rows (folded groups / label matches) which
     have no `fqid` — those are already query-time scoped by reg_meta (`_group_result_row`'s
     `allow` narrows members to held), so they must NOT be dropped here, or a filtered
-    steward stops seeing held concept groups and `total_count` shrinks. Compares the
+    steward stops seeing held concept groups. Compares the
     SERIALIZED fqid string (the model's `fqid` is an `Fqid | None`; the held set holds
     canonical strings), mirroring `golden.apply_golden_boost`'s dedup."""
     if fqids is None:
@@ -392,10 +448,8 @@ def _narrow_search_groups(
     a whole-variable member (`delivery_column` None) iff its bare FQID is in
     `admitted_variable_fqids`. `member_count` is reset to the narrowed length.
 
-    A group left with NO surviving member is DROPPED, and the returned `dropped` count
-    lets the caller decrement `total_count` for it. The steward variable arm fetches
-    the full FQID-grain result set before this helper runs so dropped all-unheld groups
-    can be removed before the final display slice instead of shortening the page.
+    A group left with NO surviving member is DROPPED. The steward variable arm uses
+    bounded cursor backfill so a dropped row does not unnecessarily shorten the page.
 
     Browse's `_narrow_group_members` operates on a DIFFERENT model
     (`ConceptGroupSummary` vs `ConceptGroupSearchResult`), so a thin search-local helper
@@ -457,15 +511,17 @@ def _narrow_variable_leaf_columns(
 @router.get("/search", response_model=SearchResponse)
 def get_search(
     request: Request,
+    response: Response,
     q: str = Depends(validate_text_query),
     limit: int = Depends(_validated_limit),
     req_type: str = Depends(_validated_type),
+    cursor: str | None = None,
 ) -> SearchResponse:
     """Search registers, variables (concept-folded, #322), classifications, and
     codes/values (#352) over the shipped FTS indexes. Each typed group is an
     independent reg_meta `search()` call (register/variable/classification via the
     FTS `field="description"` path; codes via the `field="value"` path) so each
-    carries its own `total_count` and per-group `limit`; the value surface is split
+    carries its own bounded continuation cursor; the value surface is split
     into classification codes and register-local value sets so each gets its own
     page. The all-scope response prepends a `top_results` best-bets group built
     from those same typed rows when multiple candidates compete (#393 items 6/7);
@@ -480,16 +536,20 @@ def get_search(
 
     A FILTERED steward (``app.state.catalog_index`` present, #859) scopes the
     REGISTER and VARIABLE surfaces to the steward's held FQIDs — both the reg_meta
-    query (the ``fqids`` allow-list, applied query-time so ``total_count`` is exact)
+    query (the ``fqids`` allow-list, applied query-time before paging)
     and the golden boost (a boosted pin the steward does not hold is dropped). The
     CLASSIFICATION and VALUE/code surfaces are catalog-global and pass through
-    unscoped. The ``global`` deployment (no index) is byte-for-byte unchanged."""
+    unscoped. A global deployment uses the same cursor contract without the steward
+    restriction."""
+    cursor = _validated_cursor(cursor)
+
     # Per-type gates: each arm runs (and its group is emitted) only when the
     # requested type selects it. `all` selects every arm.
     want_register = req_type in ("all", "register")
     want_variable = req_type in ("all", "variable")
     want_classification = req_type in ("all", "classification")
-    want_value = req_type in ("all", "value")
+    want_classification_code = req_type in ("all", "value", "classification_code")
+    want_register_value = req_type in ("all", "value", "register_value")
 
     # #859: a filtered steward's held-FQID allow-list scopes the register/variable
     # surfaces (None for the `global` deployment → no restriction). The set is the
@@ -511,61 +571,95 @@ def get_search(
     # live path, just empty.
     if not _has_searchable_token(q):
         if want_register:
-            groups.append(RegisterSearchGroup(total_count=0, results=[]))
+            groups.append(RegisterSearchGroup(results=[], has_more=False))
         if want_variable:
-            groups.append(VariableSearchGroup(total_count=0, results=[]))
+            groups.append(VariableSearchGroup(results=[], has_more=False))
         if want_classification:
-            groups.append(ClassificationSearchGroup(total_count=0, results=[]))
-        if want_value:
-            groups.append(ClassificationCodeSearchGroup(total_count=0, results=[]))
-            groups.append(RegisterValueSetSearchGroup(total_count=0, results=[]))
+            groups.append(ClassificationSearchGroup(results=[], has_more=False))
+        if want_classification_code:
+            groups.append(ClassificationCodeSearchGroup(results=[], has_more=False))
+        if want_register_value:
+            groups.append(RegisterValueSetSearchGroup(results=[], has_more=False))
         return SearchResponse(query=q, groups=groups)
 
+    phase_timings: list[tuple[str, float]] = []
     with catalog_conn(request) as conn:
         # `field="description"` is reg_meta's FTS path (register_fts +
         # variable_fts + classification_fts) — NOT the LIKE-based
         # datacolumn/varname/value fields (codes are #352's own group). reg_meta
         # builds the safe FTS MATCH expression from the raw query internally; one
-        # call per type yields a per-group total_count + limit. Registers have no
+        # call per type yields an independent bounded page. Registers have no
         # concept groups, so folding is off there.
         # reg_meta `search()` now returns typed `SearchResults` (#701): each arm's
         # rows are ALREADY the right reg_meta result models, so the webapp slices
         # and groups them directly — no per-row re-wrapping. The golden seam and the
         # FastAPI response models all operate on the same reg_meta types.
         if want_register:
-            reg = reg_meta_search(
+            phase_start = perf_counter()
+            register_pin_fqids = golden.pinned_fqids(q, "register")
+            if fqids is not None:
+                register_pin_fqids = tuple(
+                    pin for pin in register_pin_fqids if pin in fqids
+                )
+            register_cursor, register_pin_offset = _golden_cursor_boundary(
+                cursor, q, "register", register_pin_fqids
+            )
+            reg = _search_boundary(
                 conn,
                 q,
                 field="description",
                 type="register",
                 fqids=fqids,
+                exclude_fqids=register_pin_fqids or None,
                 limit=limit,
+                cursor=register_cursor,
                 fold_groups=False,
             )
-            reg_results = golden.apply_golden_boost(conn, q, "register", reg.results)
+            reg_results = golden.apply_golden_boost(
+                conn,
+                q,
+                "register",
+                reg.results,
+                fqids=register_pin_fqids,
+                start=register_pin_offset,
+                limit=limit,
+            )
             # #859: drop boosted pins the steward does not hold (the reg_meta hits
             # are already `fqids`-scoped; the boost prepends pins from a separate
             # source, so re-apply the same filter to them). No-op when `fqids` is
             # None (the `global` deployment).
             reg_results = _scope_to_fqids(reg_results, fqids)
+            reg_has_more, reg_next_cursor = _boosted_continuation(
+                reg, reg_results, limit=limit
+            )
+            reg_has_more, reg_next_cursor = _golden_continuation(
+                origin_has_more=reg_has_more,
+                origin_cursor=reg_next_cursor,
+                origin_page_cursor=reg.page_cursor,
+                query=q,
+                group="register",
+                pin_fqids=register_pin_fqids,
+                pin_offset=register_pin_offset,
+                limit=limit,
+            )
             # `search(type="register")` yields only register rows, but the static
             # element type is the broad `SearchResult` union — narrow to what the
             # group declares (the `type=` param is the runtime guarantee).
-            # total_count counts the full boosted set (incl. a net-new pin), but the
-            # displayed page is capped at `limit` — a pin prepended onto an already-full
-            # FTS page must not push the group past the requested cap (#393 item 2).
-            # `reg.total_count` is now query-time-exact (already `fqids`-scoped), so
-            # the delta counts only net-new HELD pins.
+            # The displayed page is capped at `limit`. If a net-new pin displaces
+            # an origin row, `_boosted_continuation` resumes before that row.
             groups.append(
                 RegisterSearchGroup(
-                    total_count=reg.total_count + (len(reg_results) - len(reg.results)),
                     results=cast(
                         "list[RegisterSearchResult]",
-                        list(_rank_display_results(q, reg_results)[:limit]),
+                        list(reg_results[:limit]),
                     ),
+                    has_more=reg_has_more,
+                    next_cursor=reg_next_cursor,
                 )
             )
+            phase_timings.append(("register", perf_counter() - phase_start))
         if want_variable:
+            phase_start = perf_counter()
             delivery_column_scope = (
                 {
                     fqid: index.held_columns(fqid)
@@ -574,124 +668,203 @@ def get_search(
                 if index is not None
                 else None
             )
-            var = reg_meta_search(
+            var = _search_boundary(
                 conn,
                 q,
                 field="description",
                 type="variable",
                 fqids=fqids,
                 delivery_column_scope=delivery_column_scope,
-                # reg_meta computes the full folded result set before slicing for
-                # exact `total_count`; filtered stewards need that full set here so
-                # column-grain group drops can be backfilled before the display slice.
-                limit=None if index is not None else limit,
+                limit=limit,
+                cursor=cursor,
             )
-            var_results = golden.apply_golden_boost(conn, q, "variable", var.results)
+            var_results = (
+                golden.apply_golden_boost(conn, q, "variable", var.results)
+                if cursor is None
+                else list(var.results)
+            )
             # #859: same boost re-filter as the register arm (drops unheld LEAF pins;
             # group/fqid-less rows pass through).
             var_results = _scope_to_fqids(var_results, fqids)
-            # total_count already counts the boosted delta over reg_meta's
-            # `fqids`-scoped hits; computed BEFORE column-grain narrowing so the
-            # group-drop decrement is layered on the same base.
-            var_total = var.total_count + (len(var_results) - len(var.results))
+            var_origin_has_more, var_origin_next_cursor = _boosted_continuation(
+                var, var_results, limit=limit
+            )
             # #865: reg_meta narrowed group members at FQID grain, but #819
             # representation members share one FQID across `delivery_column`s — a steward
             # holding only some columns still sees the unheld representations. Refine each
             # group row's `members` at COLUMN grain (browse's `_narrow_group_members`
             # equivalent for the search model), dropping a group with no held member and
-            # decrementing total_count for the full post-filtered variable result set.
+            # removing it from the bounded page.
             if index is not None:
                 var_results = _narrow_variable_leaf_columns(var_results, index)
-                var_results, dropped = _narrow_search_groups(var_results, index)
-                var_total -= dropped
+                var_results, _ = _narrow_search_groups(var_results, index)
+                continuation_cursor = var_origin_next_cursor
+                continuation_has_more = var_origin_has_more
+                # Column-grain steward narrowing can drop a whole folded row.
+                # Backfill one bounded candidate at a time so we never skip an
+                # unshown origin row when advancing the opaque cursor.
+                backfill_budget = limit * 4 + 4
+                while (
+                    len(var_results) < limit
+                    and continuation_has_more
+                    and continuation_cursor is not None
+                    and backfill_budget > 0
+                ):
+                    page = _search_boundary(
+                        conn,
+                        q,
+                        field="description",
+                        type="variable",
+                        fqids=fqids,
+                        delivery_column_scope=delivery_column_scope,
+                        limit=1,
+                        cursor=continuation_cursor,
+                    )
+                    page_results = _scope_to_fqids(list(page.results), fqids)
+                    page_results = _narrow_variable_leaf_columns(page_results, index)
+                    page_results, _ = _narrow_search_groups(page_results, index)
+                    var_results.extend(page_results)
+                    continuation_cursor = page.next_cursor
+                    continuation_has_more = page.has_more
+                    backfill_budget -= 1
+                var_has_more = continuation_has_more
+                var_next_cursor = continuation_cursor
+            else:
+                var_has_more = var_origin_has_more
+                var_next_cursor = var_origin_next_cursor
             groups.append(
                 VariableSearchGroup(
-                    total_count=var_total,
                     results=cast(
                         "list[VariableSearchItem]",
-                        list(_rank_display_results(q, var_results)[:limit]),
+                        list(var_results[:limit]),
                     ),
+                    has_more=var_has_more or len(var_results) > limit,
+                    next_cursor=var_next_cursor,
                 )
             )
+            phase_timings.append(("variable", perf_counter() - phase_start))
         if want_classification:
-            cls = reg_meta_search(
+            phase_start = perf_counter()
+            classification_pin_fqids = golden.pinned_fqids(q, "classification")
+            classification_cursor, classification_pin_offset = _golden_cursor_boundary(
+                cursor, q, "classification", classification_pin_fqids
+            )
+            cls = _search_boundary(
                 conn,
                 q,
                 field="description",
                 type="classification",
+                exclude_fqids=classification_pin_fqids or None,
                 limit=limit,
+                cursor=classification_cursor,
             )
             cls_results = golden.apply_golden_boost(
-                conn, q, "classification", cls.results
+                conn,
+                q,
+                "classification",
+                cls.results,
+                fqids=classification_pin_fqids,
+                start=classification_pin_offset,
+                limit=limit,
+            )
+            cls_has_more, cls_next_cursor = _boosted_continuation(
+                cls, cls_results, limit=limit
+            )
+            cls_has_more, cls_next_cursor = _golden_continuation(
+                origin_has_more=cls_has_more,
+                origin_cursor=cls_next_cursor,
+                origin_page_cursor=cls.page_cursor,
+                query=q,
+                group="classification",
+                pin_fqids=classification_pin_fqids,
+                pin_offset=classification_pin_offset,
+                limit=limit,
             )
             groups.append(
                 ClassificationSearchGroup(
-                    total_count=cls.total_count + (len(cls_results) - len(cls.results)),
                     results=cast(
                         "list[ClassificationSearchItem]",
-                        list(_rank_display_results(q, cls_results)[:limit]),
+                        list(cls_results[:limit]),
                     ),
+                    has_more=cls_has_more,
+                    next_cursor=cls_next_cursor,
                 )
             )
-        if want_value:
+            phase_timings.append(("classification", perf_counter() - phase_start))
+        if want_classification_code:
+            phase_start = perf_counter()
             # Codes (#352): the value/code surface — `value_code_fts` label match +
             # code-shape exact/prefix match, NOT the FTS description path. reg_meta
             # ranks (bm25 + rarity downweight) and annotates each hit with its
             # owning variables/classifications. Codes don't fold into concept
             # groups. Split classification-owned codes from register-local value
             # sets before pagination so neither bucket starves the other.
-            classification_codes = reg_meta_search(
+            classification_codes = _search_boundary(
                 conn,
                 q,
                 field="value",
                 type="value",
                 limit=limit,
                 fold_groups=False,
-                code_variable_owner_limit=None,
                 code_owner_scope="classification",
+                cursor=cursor,
             )
             boosted_classification_codes = cast(
                 "list[CodeSearchResult]",
                 golden.apply_golden_boost(
                     conn, q, "value", classification_codes.results
-                ),
+                )
+                if cursor is None
+                else list(classification_codes.results),
             )
-            classification_code_results = _rank_codes(boosted_classification_codes)[
-                :limit
-            ]
+            code_has_more, code_next_cursor = _boosted_continuation(
+                classification_codes,
+                cast("list[SearchResult]", boosted_classification_codes),
+                limit=limit,
+            )
+            classification_code_results = _rank_codes(
+                boosted_classification_codes[:limit]
+            )
             groups.append(
                 ClassificationCodeSearchGroup(
-                    total_count=classification_codes.total_count
-                    + (
-                        len(boosted_classification_codes)
-                        - len(classification_codes.results)
-                    ),
                     results=classification_code_results,
+                    has_more=code_has_more,
+                    next_cursor=code_next_cursor,
                 )
             )
-
-            register_values = reg_meta_search(
+            phase_timings.append(("classification_code", perf_counter() - phase_start))
+        if want_register_value:
+            phase_start = perf_counter()
+            register_values = _search_boundary(
                 conn,
                 q,
                 field="value",
                 type="value",
                 limit=limit,
                 fold_groups=False,
-                code_variable_owner_limit=None,
                 code_owner_scope="register_local",
+                cursor=cursor,
             )
             boosted_register_values = cast(
                 "list[CodeSearchResult]",
-                golden.apply_golden_boost(conn, q, "value", register_values.results),
+                golden.apply_golden_boost(conn, q, "value", register_values.results)
+                if cursor is None
+                else list(register_values.results),
             )
-            register_value_results = _rank_codes(boosted_register_values)[:limit]
+            value_has_more, value_next_cursor = _boosted_continuation(
+                register_values,
+                cast("list[SearchResult]", boosted_register_values),
+                limit=limit,
+            )
+            register_value_results = _rank_codes(boosted_register_values[:limit])
             groups.append(
                 RegisterValueSetSearchGroup(
-                    total_count=register_values.total_count
-                    + (len(boosted_register_values) - len(register_values.results)),
                     results=register_value_results,
+                    has_more=value_has_more,
+                    next_cursor=value_next_cursor,
                 )
             )
+            phase_timings.append(("register_value", perf_counter() - phase_start))
 
     if req_type == "all":
         top_total = sum(len(group.results) for group in groups)
@@ -701,9 +874,12 @@ def get_search(
             groups.insert(
                 0,
                 TopSearchGroup(
-                    total_count=top_total,
                     results=best_bets,
                 ),
             )
+
+    response.headers["Server-Timing"] = ", ".join(
+        f"{name};dur={seconds * 1000:.1f}" for name, seconds in phase_timings
+    )
 
     return SearchResponse(query=q, groups=groups)

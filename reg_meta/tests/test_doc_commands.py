@@ -5,6 +5,8 @@ from __future__ import annotations
 import io
 import json
 import sys
+from argparse import Namespace
+from types import SimpleNamespace
 from typing import TYPE_CHECKING
 
 import pytest
@@ -516,6 +518,84 @@ def combined_db_dir(tmp_path_factory: pytest.TempPathFactory, doc_db_dir: Path) 
 
 
 class TestSearchIntegration:
+    def test_docs_preserve_catalog_order_when_advancing_cursor(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """Raw rank conflicts must not reorder the cursor-bearing catalog rows."""
+        import reg_meta.cli as cli
+
+        class _Connection:
+            def close(self) -> None:
+                pass
+
+        class _Row:
+            def __init__(self, fqid: str, rank: float) -> None:
+                self._data = {"type": "variable", "fqid": fqid, "rank": rank}
+
+            def model_dump(self, **_kwargs: object) -> dict[str, object]:
+                return self._data.copy()
+
+        pages = {
+            None: SimpleNamespace(
+                # Public order is A, B even though B has the better raw rank.
+                results=(_Row("scb/reg/a", 10.0), _Row("scb/reg/b", 0.0)),
+                has_more=True,
+                page_cursor="start",
+                cursors_after=("after-a", "after-b"),
+            ),
+            "after-a": SimpleNamespace(
+                results=(_Row("scb/reg/b", 0.0), _Row("scb/reg/c", 20.0)),
+                has_more=False,
+                page_cursor="after-a",
+                cursors_after=("after-b", "after-c"),
+            ),
+        }
+        monkeypatch.setattr(cli, "db_path_from_args", lambda _db: "unused")
+        monkeypatch.setattr(cli, "open_db", lambda _db: _Connection())
+        monkeypatch.setattr(cli, "get_db_info", lambda _conn: {})
+        monkeypatch.setattr(
+            cli, "search", lambda _conn, _query, **kwargs: pages[kwargs["cursor"]]
+        )
+        monkeypatch.setattr(
+            cli,
+            "_search_docs",
+            lambda _query, db_arg=None: [
+                {"type": "doc", "display_name": "Guide", "rank": -100.0}
+            ],
+        )
+
+        args = Namespace(
+            db=None,
+            query="needle",
+            field="all",
+            type="all",
+            register=None,
+            years=None,
+            limit=2,
+            cursor=None,
+            no_fold=False,
+        )
+        first, code = cli._cmd_search(args)
+        assert code == 0
+        assert [row.get("fqid") for row in first["data"]["results"]] == [
+            None,
+            "scb/reg/a",
+        ]
+        assert first["data"]["next_cursor"] == "after-a"
+
+        args.cursor = first["data"]["next_cursor"]
+        second, code = cli._cmd_search(args)
+        assert code == 0
+        catalog_fqids = [
+            row["fqid"]
+            for page in (first, second)
+            for row in page["data"]["results"]
+            if row["type"] != "doc"
+        ]
+        assert catalog_fqids == ["scb/reg/a", "scb/reg/b", "scb/reg/c"]
+        assert len(catalog_fqids) == len(set(catalog_fqids))
+        assert not second["data"]["has_more"]
+
     def test_search_includes_doc_results(self, combined_db_dir: str):
         """Doc results must appear in default search."""
         data, code = _run_json(
@@ -533,10 +613,10 @@ class TestSearchIntegration:
             ["--db", combined_db_dir, "docs", "search", "kommun"],
         )
         doc_count = docs_data.get("total_count", 0)
-        if doc_count == 0:
-            pytest.skip("No doc results for test query")
+        if doc_count <= 1:
+            pytest.skip("Not enough doc results to exercise truncation")
 
-        # Search with limit=0 so all doc results are truncated
+        # Search with a one-row page so additional doc results are truncated.
         data, code = _run_json(
             [
                 "--db",
@@ -545,11 +625,48 @@ class TestSearchIntegration:
                 "--query",
                 "kommun",
                 "--limit",
-                "0",
+                "1",
             ],
         )
         assert code == 0
         assert "not shown" in data.get("doc_hint", "")
+
+    def test_docs_do_not_displace_catalog_continuation(
+        self, combined_db_dir: str
+    ) -> None:
+        first, code = _run_json(
+            [
+                "--db",
+                combined_db_dir,
+                "search",
+                "--query",
+                "kommun",
+                "--limit",
+                "1",
+            ]
+        )
+        assert code == 0
+        if not first["has_more"]:
+            pytest.skip("Fixture query has no displaced catalog continuation")
+        assert first["next_cursor"] is not None
+
+        second, code = _run_json(
+            [
+                "--db",
+                combined_db_dir,
+                "search",
+                "--query",
+                "kommun",
+                "--limit",
+                "1",
+                "--cursor",
+                first["next_cursor"],
+            ]
+        )
+        assert code == 0
+        assert second["results"]
+        assert second["results"] != first["results"]
+        assert not second["has_more"] or second["next_cursor"] is not None
 
     def test_search_exact_variable_name_ranked_high(self, combined_db_dir: str):
         """Exact variable name match in docs should rank near the top."""

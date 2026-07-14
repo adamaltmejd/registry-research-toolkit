@@ -12,6 +12,7 @@ without the app.
 
 from __future__ import annotations
 
+import sqlite3
 from pathlib import Path
 
 import pytest
@@ -41,7 +42,6 @@ from reg_webapp.routes.search import (
     _has_searchable_token,
     _narrow_variable_leaf_columns,
     _rank_codes,
-    _rank_display_results,
     _validated_limit,
 )
 
@@ -85,10 +85,10 @@ def test_response_has_typed_groups(client):
         "classification_codes",
         "register_value_sets",
     }
-    # Every group carries its own total_count + results list (the extensible
+    # Every group carries bounded-continuation metadata plus its results list.
     # per-group envelope docs will reuse).
     for g in body["groups"]:
-        assert "total_count" in g
+        assert "has_more" in g and "next_cursor" in g
         assert isinstance(g["results"], list)
 
 
@@ -131,6 +131,40 @@ def test_invalid_type_is_422(client):
     )
 
 
+def test_invalid_cursor_is_actionable_422(client):
+    response = client.get(
+        "/api/search",
+        params={"q": "LISA", "type": "register", "cursor": "not-a-cursor"},
+    )
+    assert response.status_code == 422
+    assert "cursor" in response.json()["detail"].lower()
+
+
+def test_empty_cursor_is_actionable_422_without_golden_pin(client):
+    response = client.get("/api/search?q=unconfigured&type=register&cursor=")
+    assert response.status_code == 422
+    assert response.json()["detail"] == (
+        "Search cursor must not be empty. Restart the search without cursor."
+    )
+
+
+def test_empty_cursor_is_actionable_422_with_golden_pin(client, monkeypatch):
+    monkeypatch.setattr(
+        golden,
+        "_PINS",
+        {
+            ("lisa", "register"): _Pin(
+                query="lisa", group="register", fqids=("scb/rams",), note=None
+            )
+        },
+    )
+    response = client.get("/api/search?q=LISA&type=register&cursor=")
+    assert response.status_code == 422
+    assert response.json()["detail"] == (
+        "Search cursor must not be empty. Restart the search without cursor."
+    )
+
+
 def test_default_type_is_all_four_groups(client):
     # No ?type= preserves the canonical typed groups when there is no useful
     # cross-group top-results panel to show.
@@ -164,7 +198,7 @@ def test_scoped_empty_query_returns_only_selected_empty_group(client):
         "classification_codes",
         "register_value_sets",
     ]
-    assert all(g["total_count"] == 0 for g in body["groups"])
+    assert all(not g["has_more"] for g in body["groups"])
     assert all(g["results"] == [] for g in body["groups"])
 
 
@@ -174,7 +208,7 @@ def test_scoped_empty_query_non_value_scope(client):
     # short-circuit (the existing scoped-empty test covers only `value`).
     body = client.get("/api/search", params={"q": "  ", "type": "register"}).json()
     assert [g["group"] for g in body["groups"]] == ["registers"]
-    assert body["groups"][0]["total_count"] == 0
+    assert not body["groups"][0]["has_more"]
     assert body["groups"][0]["results"] == []
 
 
@@ -232,7 +266,7 @@ def test_value_groups_always_present(client):
     body = client.get("/api/search", params={"q": "zzqq"}).json()
     for name in ("classification_codes", "register_value_sets"):
         g = _group(body, name)
-        assert g["total_count"] == 0
+        assert not g["has_more"]
         assert g["results"] == []
 
 
@@ -319,7 +353,7 @@ def test_code_shaped_query_surfaces_owning_classification(client):
     g = _group(client.get("/api/search", params={"q": "C12"}).json(), "classifications")
     fqids = [r["fqid"] for r in g["results"] if r["type"] == "classification"]
     assert "class/icd-10-se" in fqids
-    assert g["total_count"] >= 1
+    assert len(g["results"]) >= 1
 
 
 # ── concept-group folding (#322) ─────────────────────────────────────────────
@@ -381,12 +415,12 @@ def test_empty_query_returns_empty_groups(client):
         "classification_codes",
         "register_value_sets",
     }
-    assert all(g["total_count"] == 0 and g["results"] == [] for g in body["groups"])
+    assert all(not g["has_more"] and g["results"] == [] for g in body["groups"])
 
 
 def test_whitespace_query_returns_empty_groups(client):
     body = client.get("/api/search", params={"q": "   "}).json()
-    assert all(g["total_count"] == 0 for g in body["groups"])
+    assert all(not g["has_more"] for g in body["groups"])
 
 
 def test_missing_q_is_422(client):
@@ -518,6 +552,7 @@ def test_filtered_variable_search_passes_delivery_scope_into_full_backfill_query
         delivery_column_scope=None,
         limit=50,
         fold_groups=True,
+        cursor=None,
     ):
         assert query == "needle"
         assert field == "description"
@@ -536,8 +571,8 @@ def test_filtered_variable_search_passes_delivery_scope_into_full_backfill_query
             ),
         )
         return SearchResults(
-            total_count=len(rows),
-            results=rows if limit is None else rows[:limit],
+            results=rows[:limit],
+            has_more=False,
         )
 
     monkeypatch.setattr(search_route, "reg_meta_search", fake_search)
@@ -545,13 +580,13 @@ def test_filtered_variable_search_passes_delivery_scope_into_full_backfill_query
     body = client.get("/api/search?q=needle&type=variable&limit=1").json()
     group = _group(body, "variables")
 
-    assert calls == [None]
-    assert group["total_count"] == 1
+    assert calls == [1]
+    assert not group["has_more"]
     assert [r["name"] for r in group["results"]] == ["needle variable"]
     assert group["results"][0]["delivery_column_names"] == ["Kon"]
 
 
-def test_value_search_requests_full_code_owner_list(client, monkeypatch):
+def test_value_search_keeps_code_owner_lists_bounded(client, monkeypatch):
     class ExplodingIndex:
         held_register_fqids = frozenset({"scb/lisa"})
         admitted_variable_fqids = frozenset({"scb/lisa/kon"})
@@ -570,8 +605,9 @@ def test_value_search_requests_full_code_owner_list(client, monkeypatch):
         type,
         limit=50,
         fold_groups=True,
-        code_variable_owner_limit=None,
+        code_variable_owner_limit=5,
         code_owner_scope="all",
+        cursor=None,
     ):
         assert query == "needle"
         assert field == "value"
@@ -581,23 +617,22 @@ def test_value_search_requests_full_code_owner_list(client, monkeypatch):
         calls.append((code_variable_owner_limit, code_owner_scope))
         if code_owner_scope == "register_local":
             return SearchResults(
-                total_count=1, results=(_code("1", variable_count=250),)
+                results=(_code("1", variable_count=250),), has_more=False
             )
-        return SearchResults(total_count=0, results=())
+        return SearchResults(results=(), has_more=False)
 
     monkeypatch.setattr(search_route, "reg_meta_search", fake_search)
 
     body = client.get("/api/search?q=needle&type=value&limit=1").json()
     group = _group(body, "register_value_sets")
 
-    assert calls == [(None, "classification"), (None, "register_local")]
-    assert group["total_count"] == 1
+    assert calls == [(5, "classification"), (5, "register_local")]
+    assert not group["has_more"]
     assert group["results"][0]["variable_count"] == 250
 
 
 def _code(code: str, *, classification_count: int = 0, variable_count: int = 0):
-    """A minimal `CodeSearchResult` model (#701) for the `_rank_codes` unit tests —
-    it now operates on reg_meta's typed models, not raw dicts."""
+    """Build a minimal typed code result for route helper tests."""
     return CodeSearchResult(
         code=code,
         label=code,
@@ -608,12 +643,11 @@ def _code(code: str, *, classification_count: int = 0, variable_count: int = 0):
 
 
 def test_rank_codes_classification_backed_precede():
-    # classification_count > 0 sorts ahead of == 0 regardless of variable_count.
     results = [
         _code("a", classification_count=0, variable_count=99),
         _code("b", classification_count=1, variable_count=0),
     ]
-    assert [r.code for r in _rank_codes(results)] == ["b", "a"]
+    assert [result.code for result in _rank_codes(results)] == ["b", "a"]
 
 
 def test_rank_codes_orders_by_classification_then_variable_count():
@@ -622,25 +656,21 @@ def test_rank_codes_orders_by_classification_then_variable_count():
         _code("b", classification_count=3, variable_count=0),
         _code("c", classification_count=1, variable_count=5),
     ]
-    # b (cls 3) leads; among cls==1, c (var 5) precedes a (var 1).
-    assert [r.code for r in _rank_codes(results)] == ["b", "c", "a"]
+    assert [result.code for result in _rank_codes(results)] == ["b", "c", "a"]
 
 
 def test_rank_codes_is_stable_on_ties():
-    # Equal sort keys preserve the incoming (FTS) order.
     results = [
         _code("a", classification_count=2, variable_count=1),
         _code("b", classification_count=2, variable_count=1),
         _code("c", classification_count=2, variable_count=1),
     ]
-    assert [r.code for r in _rank_codes(results)] == ["a", "b", "c"]
+    assert [result.code for result in _rank_codes(results)] == ["a", "b", "c"]
 
 
 def test_rank_codes_tolerates_default_counts():
-    # Default counts are 0 (a code with no owners sinks below a backed one rather
-    # than raising).
     results = [_code("a"), _code("b", classification_count=1)]
-    assert [r.code for r in _rank_codes(results)] == ["b", "a"]
+    assert [result.code for result in _rank_codes(results)] == ["b", "a"]
 
 
 def test_code_system_first_short_name():
@@ -678,7 +708,7 @@ def test_top_results_group_precedes_typed_groups(client):
     body = client.get("/api/search", params={"q": "C12"}).json()
     assert [g["group"] for g in body["groups"]][:2] == ["top_results", "registers"]
     top = _group(body, "top_results")
-    assert top["total_count"] >= len(top["results"])
+    assert not top["has_more"]
     assert top["results"]
 
 
@@ -868,14 +898,12 @@ def test_top_results_direct_group_label_match_beats_prefix_leaves():
         rank=-12.0,
     )
 
-    ranked = _rank_display_results("disponibel", [*leaves, group])
     top = _best_bets(
         "disponibel",
-        [VariableSearchGroup(total_count=7, results=ranked)],
+        [VariableSearchGroup(total_count=7, results=[*leaves, group])],
         limit=5,
     )
 
-    assert ranked[0] == group
     assert top[0] == group
 
 
@@ -956,51 +984,6 @@ def test_top_results_exact_leaf_still_beats_group_authority_bonus():
     )
 
     assert top == [exact, broad_group]
-
-
-def test_display_ranking_matches_best_bet_exact_boost():
-    broad = VariableSearchResult(
-        fqid="scb/lsum/ftgsni200",
-        name="Näringsgren, huvudsaklig",
-        register="LSUM",
-        rank=-10.0,
-    )
-    exact = ConceptGroupSearchResult(
-        kind="variable",
-        group_key="naringsgren",
-        group_label="Näringsgren",
-        register="LCS",
-        member_count=2,
-        matched_count=2,
-        members=(
-            ConceptGroupMember(
-                fqid="scb/lcs/naringsgren", name="Näringsgren", facets=()
-            ),
-            ConceptGroupMember(fqid="scb/lcs/sni", name="Näringsgren", facets=()),
-        ),
-        rank=-9.0,
-    )
-
-    ranked = _rank_display_results("näringsgren", [broad, exact])
-
-    assert ranked == [exact, broad]
-
-
-def test_display_ranking_keeps_golden_pins_first():
-    pin = RegisterSearchResult(
-        fqid="sos/par",
-        name="Patientregistret",
-        rank=0.0,
-    )
-    exact = RegisterSearchResult(
-        fqid="scb/diagnos",
-        name="Diagnos",
-        rank=-10.0,
-    )
-
-    ranked = _rank_display_results("diagnos", [pin, exact])
-
-    assert ranked == [pin, exact]
 
 
 def test_top_results_keeps_distinct_null_fqid_leaves():
@@ -1186,7 +1169,7 @@ def test_golden_boost_register_injection_end_to_end(client, pinned):
     # register FTS hit, so the pinned scb/rams is the lone net-new result).
     g = _group(client.get("/api/search", params={"q": "gizmo"}).json(), "registers")
     assert g["results"][0]["fqid"] == "scb/rams"
-    assert g["total_count"] == 1
+    assert not g["has_more"]
 
 
 def test_golden_boost_no_double_count_when_pin_is_fts_hit(client, pinned):
@@ -1198,16 +1181,16 @@ def test_golden_boost_no_double_count_when_pin_is_fts_hit(client, pinned):
     assert fqids.count("scb/lisa") == 1
     # The dedup'd pin added nothing, so total_count == the result count (no
     # net-new injection inflating it).
-    assert g["total_count"] == len(fqids)
+    assert not g["has_more"]
 
 
-def test_golden_boost_unpinned_query_total_count_unchanged(client):
+def test_golden_boost_unpinned_query_continuation_well_formed(client):
     # A query with no pin (default production _PINS, which targets sysselsättning /
     # diagnos — absent from the fixture) leaves every group's total_count as the
     # raw FTS count: no injection, no off-by-one.
     body = client.get("/api/search", params={"q": "kon"}).json()
     for g in body["groups"]:
-        assert g["total_count"] >= 0  # well-formed; no boost-driven inflation
+        assert isinstance(g["has_more"], bool)  # well-formed; no boost-driven inflation
 
 
 # ── Fix 2: golden-boost must respect ?limit (#393 item 2) ────────────────────
@@ -1233,7 +1216,149 @@ def test_golden_boost_respects_limit(client, monkeypatch):
     )
     assert len(g["results"]) == 1  # page capped at ?limit
     assert g["results"][0]["fqid"] == "scb/rams"  # the pin still leads at rank 1
-    assert g["total_count"] == 2  # full count: FTS hit + net-new pin (not capped)
+    assert g["has_more"]  # the displaced FTS hit remains available by cursor
+
+    continuation = _group(
+        client.get(
+            "/api/search",
+            params={
+                "q": "LISA",
+                "limit": 1,
+                "type": "register",
+                "cursor": g["next_cursor"],
+            },
+        ).json(),
+        "registers",
+    )
+    assert [row["fqid"] for row in continuation["results"]] == ["scb/lisa"]
+
+
+def test_golden_pins_over_limit_continue_once_in_configured_order(client, monkeypatch):
+    monkeypatch.setattr(
+        golden,
+        "_PINS",
+        {
+            ("gizmo", "register"): _Pin(
+                query="gizmo",
+                group="register",
+                fqids=("scb/rams", "scb/lisa"),
+                note=None,
+            )
+        },
+    )
+    built: list[str] = []
+    real_builder = golden._PIN_BUILDERS["register"]
+
+    def counted_builder(conn, fqid):
+        built.append(fqid)
+        return real_builder(conn, fqid)
+
+    monkeypatch.setitem(golden._PIN_BUILDERS, "register", counted_builder)
+
+    first = _group(
+        client.get(
+            "/api/search",
+            params={"q": "gizmo", "limit": 1, "type": "register"},
+        ).json(),
+        "registers",
+    )
+    assert [row["fqid"] for row in first["results"]] == ["scb/rams"]
+    assert first["has_more"]
+    assert first["next_cursor"].startswith("golden.")
+
+    second = _group(
+        client.get(
+            "/api/search",
+            params={
+                "q": "gizmo",
+                "limit": 1,
+                "type": "register",
+                "cursor": first["next_cursor"],
+            },
+        ).json(),
+        "registers",
+    )
+    assert [row["fqid"] for row in second["results"]] == ["scb/lisa"]
+    assert not second["has_more"]
+    assert second["next_cursor"] is None
+
+    combined = [*first["results"], *second["results"]]
+    assert [row["fqid"] for row in combined] == ["scb/rams", "scb/lisa"]
+    assert len({row["fqid"] for row in combined}) == len(combined)
+    assert built == ["scb/rams", "scb/lisa"]
+
+    mismatched = client.get(
+        "/api/search",
+        params={
+            "q": "other",
+            "limit": 1,
+            "type": "register",
+            "cursor": first["next_cursor"],
+        },
+    )
+    assert mismatched.status_code == 422
+    assert "does not match" in mismatched.json()["detail"]
+
+    tampered_cursor = first["next_cursor"][:-1] + (
+        "A" if first["next_cursor"][-1] != "A" else "B"
+    )
+    tampered = client.get(
+        "/api/search",
+        params={
+            "q": "gizmo",
+            "limit": 1,
+            "type": "register",
+            "cursor": tampered_cursor,
+        },
+    )
+    assert tampered.status_code == 422
+    assert "invalid or tampered" in tampered.json()["detail"]
+
+
+def test_deep_golden_fts_hit_is_emitted_once_across_all_pages(
+    client, catalog_db, monkeypatch
+):
+    conn = sqlite3.connect(catalog_db)
+    try:
+        conn.execute("UPDATE register SET purpose = 'Deep golden topic'")
+        conn.execute("INSERT INTO register_fts(register_fts) VALUES ('rebuild')")
+        conn.commit()
+    finally:
+        conn.close()
+    monkeypatch.setattr(
+        golden,
+        "_PINS",
+        {
+            ("deep golden topic", "register"): _Pin(
+                query="deep golden topic",
+                group="register",
+                fqids=("scb/rams",),
+                note=None,
+            )
+        },
+    )
+
+    cursor = None
+    fqids: list[str] = []
+    while True:
+        params = {
+            "q": "deep golden topic",
+            "limit": 1,
+            "type": "register",
+        }
+        if cursor is not None:
+            params["cursor"] = cursor
+        group = _group(client.get("/api/search", params=params).json(), "registers")
+        fqids.extend(row["fqid"] for row in group["results"])
+        if not group["has_more"]:
+            assert group["next_cursor"] is None
+            break
+        cursor = group["next_cursor"]
+        assert cursor is not None
+
+    assert fqids[0] == "scb/rams"
+    assert fqids.count("scb/rams") == 1
+    assert len(fqids) == len(set(fqids))
 
 
 # ── Fix 3: diacritic fold in the pin lookup key ──────────────────────────────
@@ -1285,6 +1410,18 @@ def test_load_pins_missing_file_raises(tmp_path):
     # fast (CLAUDE.md) rather than silently disabling golden-boost.
     with pytest.raises(FileNotFoundError):
         golden._load_pins(tmp_path / "nonexistent.toml")
+
+
+def test_load_pins_rejects_duplicate_fqids(tmp_path):
+    config = tmp_path / "golden.toml"
+    config.write_text(
+        '[[pin]]\nquery = "gizmo"\ngroup = "register"\n'
+        'fqids = ["scb/rams", "scb/rams"]\n',
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValueError, match="duplicate `fqids`"):
+        golden._load_pins(config)
 
 
 def test_committed_pins_non_empty():

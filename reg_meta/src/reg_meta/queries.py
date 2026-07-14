@@ -7,13 +7,16 @@ the functions that library consumers import.
 
 from __future__ import annotations
 
-import math
+import json
 import re
 import unicodedata
+from base64 import urlsafe_b64decode, urlsafe_b64encode
+from binascii import Error as Base64Error
+from hashlib import sha256
 from typing import TYPE_CHECKING, Any
 
 from .catalog import Catalog, ConceptGroupMember, GroupFacet
-from .db import classification_succession_as_of_year
+from .db import classification_succession_as_of_year, get_manifest
 from .errors import EXIT_NOT_FOUND, EXIT_USAGE, RegMetaError
 from .fqid import Fqid, try_emit
 from .search import (
@@ -48,6 +51,135 @@ _YEAR_RE = re.compile(r"(?<!\d)(?:19|20)\d{2}(?!\d)")
 # they are used for code-system identity/ranking, not as per-row navigation in the
 # webapp.
 _CODE_OWNERS_PER_HIT = 5
+_MAX_IDENTITY_PROMOTION_MATCHES = 50
+_CURSOR_VERSION = 1
+_MAX_CURSOR_POSITION = 1_000
+_CURSOR_INTEGRITY_DOMAIN = "reg-meta-search-cursor-v1"
+
+
+def _normalized_search_query(query: str) -> str:
+    return " ".join(query.split()).casefold()
+
+
+def _stable_digest(value: object) -> str:
+    payload = json.dumps(
+        value, ensure_ascii=False, sort_keys=True, separators=(",", ":")
+    )
+    return sha256(payload.encode("utf-8")).hexdigest()
+
+
+def _search_context(
+    conn: sqlite3.Connection,
+    query: str,
+    *,
+    field: str,
+    type: str,
+    register: str | None,
+    years: str | None,
+    fqids: Collection[str] | None,
+    exclude_fqids: Collection[str] | None,
+    delivery_column_scope: Mapping[str, Collection[str | None]] | None,
+    fold_groups: bool,
+    code_owner_scope: str,
+    classification_as_of_year: int | None,
+) -> str:
+    scope = None
+    if delivery_column_scope is not None:
+        scope = {
+            key: sorted("" if item is None else item for item in values)
+            for key, values in sorted(delivery_column_scope.items())
+        }
+    return _stable_digest(
+        {
+            "query": _normalized_search_query(query),
+            "field": field,
+            "type": type,
+            "register": register,
+            "years": years,
+            "fqids": None if fqids is None else sorted(fqids),
+            "exclude_fqids": (None if exclude_fqids is None else sorted(exclude_fqids)),
+            "delivery_column_scope": scope,
+            "fold_groups": fold_groups,
+            "code_owner_scope": code_owner_scope,
+            "classification_as_of_year": classification_as_of_year,
+            "catalog": sorted(get_manifest(conn).items()),
+        }
+    )
+
+
+def _invalid_cursor(message: str) -> RegMetaError:
+    return RegMetaError(
+        exit_code=EXIT_USAGE,
+        code="invalid_search_cursor",
+        error_class="usage",
+        message=message,
+        remediation="Restart the search without --cursor using the same query and scope.",
+    )
+
+
+def _decode_search_cursor(cursor: str, context: str) -> tuple[int, str]:
+    try:
+        raw = urlsafe_b64decode(cursor + "=" * (-len(cursor) % 4))
+        payload = json.loads(raw)
+        if not isinstance(payload, dict):
+            raise ValueError
+        if payload.get("v") != _CURSOR_VERSION:
+            raise _invalid_cursor("Search cursor version is unsupported.")
+        if payload.get("context") != context:
+            raise _invalid_cursor(
+                "Search cursor does not match this query, scope, steward restriction, or catalog generation."
+            )
+        offset = payload.get("offset")
+        after = payload.get("after")
+        signature = payload.get("signature")
+        if (
+            not isinstance(offset, int)
+            or not 0 <= offset <= _MAX_CURSOR_POSITION
+            or not isinstance(after, str)
+            or signature
+            != _stable_digest(
+                {
+                    "domain": _CURSOR_INTEGRITY_DOMAIN,
+                    "context": context,
+                    "offset": offset,
+                    "after": after,
+                }
+            )
+        ):
+            raise ValueError
+        return offset, after
+    except RegMetaError:
+        raise
+    except Base64Error, UnicodeDecodeError, json.JSONDecodeError, ValueError, TypeError:
+        raise _invalid_cursor("Search cursor is malformed or corrupted.") from None
+
+
+def _encode_search_cursor(context: str, offset: int, after: str) -> str:
+    if offset > _MAX_CURSOR_POSITION:
+        raise _invalid_cursor(
+            "Search continuation exceeded the maximum supported bounded depth."
+        )
+    signature = _stable_digest(
+        {
+            "domain": _CURSOR_INTEGRITY_DOMAIN,
+            "context": context,
+            "offset": offset,
+            "after": after,
+        }
+    )
+    raw = json.dumps(
+        {
+            "v": _CURSOR_VERSION,
+            "context": context,
+            "offset": offset,
+            "after": after,
+            "signature": signature,
+        },
+        sort_keys=True,
+        separators=(",", ":"),
+    ).encode("utf-8")
+    return urlsafe_b64encode(raw).decode("ascii").rstrip("=")
+
 
 # var_id is the SCB legacy numeric variable id (= SCB's numeric provider_key).
 # SOS (provider_key=name) and curated thin providers (provider_key=column) carry
@@ -368,7 +500,11 @@ def _filter_variable_delivery_scope(
             held_columns, terms, _variable_search_public_text(row)
         )
         filtered.append(
-            {**row, "delivery_column_names": matched_columns or held_columns}
+            {
+                **row,
+                "delivery_column_names": matched_columns or held_columns,
+                "_ranking_delivery_column_names": matched_columns or held_columns,
+            }
         )
     return filtered
 
@@ -475,13 +611,15 @@ def search(
     register: str | None = None,
     years: str | None = None,
     fqids: Collection[str] | None = None,
+    exclude_fqids: Collection[str] | None = None,
     delivery_column_scope: Mapping[str, Collection[str | None]] | None = None,
-    limit: int | None = 50,
-    offset: int = 0,
+    limit: int = 50,
+    cursor: str | None = None,
     fold_groups: bool = True,
     code_variable_owner_limit: int | None = _CODE_OWNERS_PER_HIT,
     code_owner_scope: str = "all",
     classification_as_of_year: int | None = None,
+    _candidate_limit_override: int | None = None,
 ) -> SearchResults:
     """Search across registers, variables, and classifications.
 
@@ -524,9 +662,14 @@ def search(
     filtered-steward `/api/search` only ever passes `field="description"`.
     Classification and value/code surfaces are catalog-global and unaffected.
     `None` = no restriction. The restriction is applied to leaf rows BEFORE folding
-    and BEFORE the `total_count`/slice, so the count is exact and paging is correct.
+    and before folding/paging, so every bounded page respects the restriction.
     reg_meta stays steward-agnostic: the caller passes the allow-list; the set's
     provenance is opaque here.
+
+    ``exclude_fqids`` removes navigable register/classification identities inside
+    their SQL branches before the bounded prefix. It is part of cursor context so
+    callers that inject a curated identity separately cannot see it again on a
+    continuation page.
 
     delivery_column_scope is the optional column-grain companion to ``fqids`` for
     variable FTS rows. It masks returned delivery-column aliases to held columns
@@ -548,10 +691,11 @@ def search(
     succession policy year for tests and controlled release checks. ``None`` uses
     the committed DB policy.
 
-    ``limit=None`` returns the full result set after ``offset``. Returns a
-    `SearchResults` (`total_count` + the sliced, folded `results` tuple of typed
-    result models, discriminated on `type`). Doc results are NOT included here —
-    the CLI layer merges them separately.
+    ``cursor`` is the opaque continuation returned by the preceding page. It is
+    bound to the normalized query, every requested scope, the active steward
+    restriction, and the catalog manifest. Returns at most ``limit`` rows and
+    determines ``has_more`` with one bounded look-ahead row. Doc results are NOT
+    included here — the CLI layer merges them separately.
     """
     if field not in SEARCH_FIELDS:
         raise RegMetaError(
@@ -580,13 +724,77 @@ def search(
             ),
             remediation="Use all, classification, or register_local.",
         )
+    if limit < 1:
+        raise RegMetaError(
+            exit_code=EXIT_USAGE,
+            code="usage_error",
+            error_class="usage",
+            message="Search limit must be at least 1.",
+            remediation="Pass --limit with a positive integer.",
+        )
+
+    context = _search_context(
+        conn,
+        query,
+        field=field,
+        type=type,
+        register=register,
+        years=years,
+        fqids=fqids,
+        exclude_fqids=exclude_fqids,
+        delivery_column_scope=delivery_column_scope,
+        fold_groups=fold_groups,
+        code_owner_scope=code_owner_scope,
+        classification_as_of_year=classification_as_of_year,
+    )
+    candidate_offset, cursor_after = (
+        _decode_search_cursor(cursor, context) if cursor else (0, "")
+    )
+    # Every branch is independently bounded, but all branches start at their own
+    # head. Applying the merged-page offset to every branch would skip results
+    # from a branch that contributed fewer rows to earlier pages. A bounded prefix
+    # lets the final deterministic merge/fold own continuation correctly.
+    candidate_limit = min(
+        max(
+            candidate_offset + limit + 1,
+            _candidate_limit_override or 0,
+        ),
+        _MAX_CURSOR_POSITION + 1,
+    )
+    # Folding changes row identity (leaf -> concept group / succession family).
+    # A prefix that grows with each cursor can therefore change already-consumed
+    # identities when a later sibling enters the fold. Use one fixed, bounded
+    # horizon for every foldable branch so all pages see the same fold universe.
+    # Non-foldable register/value branches keep the cheaper limit+1 prefix.
+    fold_candidate_limit = _MAX_CURSOR_POSITION + 1 if fold_groups else candidate_limit
+    entity_candidate_limit = (
+        _MAX_CURSOR_POSITION + 1
+        if type in {"all", "register", "variable", "classification"}
+        else fold_candidate_limit
+    )
+    branch_offset = 0
 
     reg_ids: set[int] | None = None
     if register:
         ids = resolve_register_ids(conn, register)
         if not ids:
-            return SearchResults(total_count=0, results=())
+            return SearchResults(results=(), has_more=False)
         reg_ids = set(ids)
+
+    if fqids is not None:
+        conn.execute("DROP TABLE IF EXISTS _search_allowed_fqids")
+        conn.execute("CREATE TEMP TABLE _search_allowed_fqids (fqid TEXT PRIMARY KEY)")
+        conn.executemany(
+            "INSERT INTO _search_allowed_fqids (fqid) VALUES (?)",
+            ((fqid,) for fqid in sorted(fqids)),
+        )
+    if exclude_fqids is not None:
+        conn.execute("DROP TABLE IF EXISTS _search_excluded_fqids")
+        conn.execute("CREATE TEMP TABLE _search_excluded_fqids (fqid TEXT PRIMARY KEY)")
+        conn.executemany(
+            "INSERT INTO _search_excluded_fqids (fqid) VALUES (?)",
+            ((fqid,) for fqid in sorted(exclude_fqids)),
+        )
 
     _REGISTER_TYPES = {"register"}
     _VARIABLE_TYPES = {"variable", "varname", "datacolumn"}
@@ -599,6 +807,16 @@ def search(
     _RESTRICTABLE_LEAF_TYPES = {"register", "variable"}
 
     all_results: list[dict[str, Any]] = []
+    candidate_saturated = False
+
+    def add_candidates(rows: list[dict[str, Any]], branch_limit: int) -> None:
+        nonlocal candidate_saturated
+        # Only an adaptive prefix can be expanded. A foldable branch already ran
+        # at the absolute bounded horizon and is stable across every cursor.
+        if branch_limit < _MAX_CURSOR_POSITION + 1:
+            candidate_saturated = candidate_saturated or len(rows) >= branch_limit
+        all_results.extend(rows)
+
     like_pattern = f"%{_escape_like(query)}%"
     # The FTS path (register/variable/classification indexes) takes a SAFE FTS5
     # MATCH expression built from the raw query — quoted prefix terms that
@@ -608,34 +826,73 @@ def search(
     # FTS indexes contribute nothing.
     fts_query = _fts_match_query(query)
 
-    # Classifications surfaced by the name-FTS arm; the code-containment arm
-    # (#393 item 5) excludes them so a both-ways match isn't emitted twice.
+    # Classifications surfaced by the name-FTS arm, plus caller-excluded identities;
+    # the code-containment arm (#393 item 5) excludes both before its SQL LIMIT.
     classification_name_ids: set[int] = set()
+    if exclude_fqids is not None:
+        classification_name_ids.update(
+            row["id"]
+            for row in conn.execute(
+                "SELECT c.id FROM classification c "
+                "JOIN _search_excluded_fqids ef ON ef.fqid = 'class/' || c.slug"
+            )
+        )
 
-    if field in ("datacolumn", "all"):
-        all_results.extend(_search_datacolumns(conn, like_pattern, reg_ids))
+    if field in ("datacolumn", "all") and type in ("variable", "all"):
+        add_candidates(
+            _search_datacolumns(
+                conn, like_pattern, reg_ids, fold_candidate_limit, branch_offset
+            ),
+            fold_candidate_limit,
+        )
 
-    if field in ("varname", "all"):
-        all_results.extend(_search_varnames(conn, like_pattern, reg_ids))
+    if field in ("varname", "all") and type in ("variable", "all"):
+        add_candidates(
+            _search_varnames(
+                conn, like_pattern, reg_ids, fold_candidate_limit, branch_offset
+            ),
+            fold_candidate_limit,
+        )
 
     if field in ("description", "all") and fts_query is not None:
         if type in ("register", "all"):
-            all_results.extend(_search_description_registers(conn, fts_query, reg_ids))
+            add_candidates(
+                _search_description_registers(
+                    conn,
+                    fts_query,
+                    reg_ids,
+                    fqids is not None,
+                    exclude_fqids is not None,
+                    entity_candidate_limit,
+                    branch_offset,
+                ),
+                entity_candidate_limit,
+            )
         if type in ("variable", "all"):
-            all_results.extend(
+            add_candidates(
                 _search_description_variables(
                     conn,
                     fts_query,
                     reg_ids,
                     include_delivery_columns=delivery_column_scope is not None,
-                )
+                    restrict_fqids=fqids is not None,
+                    limit=entity_candidate_limit,
+                    offset=branch_offset,
+                ),
+                entity_candidate_limit,
             )
         # Classifications are catalog-scoped (no register), so a `--register` scope
         # excludes them — `reg_ids` set means "registers only".
         if type in ("classification", "all") and reg_ids is None:
-            cls_rows = _search_classifications(conn, fts_query)
-            classification_name_ids = {r["_classification_id"] for r in cls_rows}
-            all_results.extend(cls_rows)
+            cls_rows = _search_classifications(
+                conn,
+                fts_query,
+                exclude_fqids is not None,
+                entity_candidate_limit,
+                branch_offset,
+            )
+            classification_name_ids.update(r["_classification_id"] for r in cls_rows)
+            add_candidates(cls_rows, entity_candidate_limit)
 
     # Code-aware classification surfacing (#393 item 5): a code-shaped query also
     # surfaces the classifications that CONTAIN a matching code (C12 -> ICD-10-SE),
@@ -650,24 +907,34 @@ def search(
         and reg_ids is None
         and _is_code_shaped(query)
     ):
-        all_results.extend(
-            _search_classifications_by_code(conn, query, classification_name_ids)
+        add_candidates(
+            _search_classifications_by_code(
+                conn,
+                query,
+                classification_name_ids,
+                fold_candidate_limit,
+                branch_offset,
+            ),
+            fold_candidate_limit,
         )
 
     # Code/value search (#352): FTS over value_code labels + exact/prefix code
     # match, annotated with owning variables / classifications. Emits `type:
     # "code"` rows. Gated on `value`/`all` field AND a non-`register`-only type
     # scope (a `register` type request wants register leaves, not codes). Returns
-    # the FULL in-scope match set (like the other arms); the outer offset/limit
-    # slice below is what paginates, so total_count is the true count.
+    # a bounded, in-scope prefix like every other arm; the deterministic merged
+    # ordering below owns continuation.
     if field in ("value", "all") and type in ("value", "all"):
-        all_results.extend(
+        add_candidates(
             _search_values_fts(
                 conn,
                 query,
                 reg_ids,
                 code_owner_scope=code_owner_scope,
-            )
+                limit=candidate_limit,
+                offset=branch_offset,
+            ),
+            candidate_limit,
         )
 
     if type == "register":
@@ -724,6 +991,8 @@ def search(
                 reg_ids,
                 type=type,
                 year_range=parse_year_range(years) if years else None,
+                limit=fold_candidate_limit,
+                offset=branch_offset,
             )
             if field in ("varname", "description", "all") and fts_query is not None
             else []
@@ -740,13 +1009,60 @@ def search(
             all_results,
             label_hits,
             allow=allow,
+            delivery_column_scope=delivery_column_scope,
         )
 
-    all_results.sort(key=lambda x: x.get("fts_rank", 0))
-    total_count = len(all_results)
-    results = (
-        all_results[offset:] if limit is None else all_results[offset : offset + limit]
+    identity_match_count = sum(
+        _search_identity_score(query, row) > 0 for row in all_results
     )
+    promote_identity = identity_match_count <= _MAX_IDENTITY_PROMOTION_MATCHES
+    all_results.sort(
+        key=lambda row: (
+            -(_search_display_score(query, row) if promote_identity else 0),
+            row.get("fts_rank", 0),
+            _search_result_identity(row),
+        )
+    )
+    page_end = min(candidate_offset + limit, _MAX_CURSOR_POSITION)
+    if (
+        candidate_saturated
+        and len(all_results) <= page_end
+        and candidate_limit < _MAX_CURSOR_POSITION + 1
+    ):
+        return search(
+            conn,
+            query,
+            field=field,
+            type=type,
+            register=register,
+            years=years,
+            fqids=fqids,
+            exclude_fqids=exclude_fqids,
+            delivery_column_scope=delivery_column_scope,
+            limit=limit,
+            cursor=cursor,
+            fold_groups=fold_groups,
+            code_variable_owner_limit=code_variable_owner_limit,
+            code_owner_scope=code_owner_scope,
+            classification_as_of_year=classification_as_of_year,
+            _candidate_limit_override=min(
+                candidate_limit * 2, _MAX_CURSOR_POSITION + 1
+            ),
+        )
+    if cursor and (
+        candidate_offset > len(all_results)
+        or (
+            candidate_offset
+            and _search_result_identity(all_results[candidate_offset - 1])
+            != cursor_after
+        )
+    ):
+        raise _invalid_cursor(
+            "Search cursor no longer matches the deterministic result ordering."
+        )
+    has_more = page_end < _MAX_CURSOR_POSITION and len(all_results) > page_end
+    results = all_results[candidate_offset:page_end]
+    result_identities = [_search_result_identity(row) for row in results]
 
     # Annotate value/code rows AFTER the slice: the unscoped value arm
     # (`reg_ids is None`) returns rows unannotated with a `_code_id` marker, so we
@@ -771,9 +1087,147 @@ def search(
     # boundary where the heterogeneous rows become the discriminated `SearchResult`
     # union. `fts_rank` → the public `rank`.
     return SearchResults(
-        total_count=total_count,
         results=tuple(_row_to_model(r) for r in results),
+        has_more=has_more,
+        next_cursor=(
+            _encode_search_cursor(
+                context,
+                candidate_offset + len(results),
+                result_identities[-1],
+            )
+            if has_more and results
+            else None
+        ),
+        page_cursor=_encode_search_cursor(
+            context,
+            candidate_offset,
+            cursor_after,
+        ),
+        cursors_after=tuple(
+            _encode_search_cursor(context, candidate_offset + index, identity)
+            for index, identity in enumerate(result_identities, start=1)
+        ),
     )
+
+
+def _search_result_identity(row: dict[str, Any]) -> str:
+    """Unique deterministic final-order tie-breaker for every search arm."""
+    row_type = row.get("type", "")
+    if row_type == "group":
+        return (
+            f"group:{row.get('kind')}:{row.get('register_id')}:{row.get('group_key')}"
+        )
+    if row_type == "classification_succession":
+        return f"classification_succession:{row.get('fqid')}"
+    if row_type == "code":
+        return f"code:{row.get('_code_id', '')}:{row.get('code')}:{row.get('label')}"
+    if row.get("fqid") is not None:
+        return f"{row_type}:{row['fqid']}"
+    return ":".join(
+        str(part)
+        for part in (
+            row_type,
+            row.get("register_id", ""),
+            row.get("_variable_id", ""),
+            row.get("_classification_id", ""),
+            row.get("datacolumn", ""),
+            row.get("variable_name", ""),
+        )
+    )
+
+
+def _fold_search_text(value: object) -> str:
+    text = str(value).strip().casefold()
+    decomposed = unicodedata.normalize("NFKD", text)
+    return re.sub(
+        r"\s+", " ", "".join(ch for ch in decomposed if not unicodedata.combining(ch))
+    )
+
+
+def _search_identity_texts(row: dict[str, Any]) -> tuple[str, ...]:
+    """Identity-bearing text used by the published exact/prefix relevance order."""
+    row_type = row.get("type")
+    texts: list[object] = []
+    fqid = row.get("fqid")
+    if row_type == "register":
+        texts.extend(
+            (fqid, str(fqid).split("/")[-1] if fqid else None, row.get("register_name"))
+        )
+    elif row_type in {"variable", "varname", "datacolumn"}:
+        texts.extend(
+            (
+                fqid,
+                str(fqid).split("/")[-1] if fqid else None,
+                row.get("variable_name"),
+                row.get("datacolumn"),
+                *(
+                    row.get("_ranking_delivery_column_names")
+                    or row.get("delivery_column_names")
+                    or ()
+                ),
+            )
+        )
+    elif row_type in {"classification", "classification_succession"}:
+        texts.extend(
+            (
+                fqid,
+                str(fqid).split("/")[-1] if fqid else None,
+                row.get("short_name"),
+                row.get("classification_name"),
+                row.get("terminal_fqid"),
+            )
+        )
+        for edition in row.get("editions") or ():
+            texts.extend(
+                (edition.get("fqid"), edition.get("slug"), edition.get("name"))
+            )
+    elif row_type == "group":
+        texts.extend((row.get("group_key"), row.get("group_label")))
+        for member in row.get("members") or ():
+            texts.extend(
+                (
+                    member.get("fqid"),
+                    member.get("name"),
+                    member.get("delivery_column"),
+                )
+            )
+            for facet in member.get("facets") or ():
+                texts.extend((facet.get("value"), facet.get("label")))
+    elif row_type == "code":
+        texts.extend((row.get("code"), row.get("label")))
+    return tuple(_fold_search_text(text) for text in texts if text is not None)
+
+
+def _search_identity_score(query: str, row: dict[str, Any]) -> int:
+    """Exact/prefix identity score, before the broad-match saturation gate."""
+    # Value/code SQL already publishes its exact final rank (code-shape strength,
+    # owner scope, BM25, and mapping-count penalty) before LIMIT. Do not layer the
+    # entity-name score over that rank or an exact generic label can undo it.
+    if row.get("type") == "code":
+        return 0
+    folded_query = _fold_search_text(query)
+    texts = _search_identity_texts(row)
+    exact = bool(folded_query) and any(text == folded_query for text in texts)
+    prefix = bool(folded_query) and any(text.startswith(folded_query) for text in texts)
+    return (1000 if exact else 0) + (100 if prefix and not exact else 0)
+
+
+def _search_group_authority_bonus(row: dict[str, Any]) -> int:
+    if row.get("type") == "group" and row.get("label_matched"):
+        return 50 + min(len(row.get("matched") or ()), 50)
+    return 0
+
+
+def _search_display_score(query: str, row: dict[str, Any]) -> int:
+    """Stable query-sensitive score for one row.
+
+    The final ordering suppresses display-score promotion when more than the default
+    50-row search window matches exactly/prefix-wise. Applying an unbounded exact
+    and group-label bonus to a generic label such as ``Civilstånd`` would otherwise
+    pull dozens of weaker FTS hits ahead of the previously top-ranked discriminative
+    results.
+    """
+    return _search_identity_score(query, row) + _search_group_authority_bonus(row)
 
 
 def _matched_count(row: dict[str, Any]) -> int:
@@ -928,7 +1382,11 @@ def _row_to_model(row: dict[str, Any]) -> SearchResult:
 
 
 def _search_datacolumns(
-    conn: sqlite3.Connection, like_pattern: str, reg_ids: set[int] | None
+    conn: sqlite3.Connection,
+    like_pattern: str,
+    reg_ids: set[int] | None,
+    limit: int,
+    offset: int,
 ) -> list[dict[str, Any]]:
     # Aliased SELECT so both `variable.name` and `register.name` land under
     # distinct row keys after the glossary rename (see DESIGN.md → Glossary and Swedish↔English crosswalk) collapsed them to a single
@@ -936,6 +1394,11 @@ def _search_datacolumns(
     # A2.7: `variable_alias` is variable_id-keyed now (was cvid-keyed). Join
     # straight to `variable` via `variable_id`; `var_id` is the variable's
     # `provider_key`.
+    register_filter = ""
+    register_params: list[int] = []
+    if reg_ids:
+        register_filter = " AND v.register_id IN (" + _in_placeholders(reg_ids) + ") "
+        register_params = sorted(reg_ids)
     rows = conn.execute(
         "SELECT DISTINCT va.delivery_column_name, v.register_id, v.variable_id, "
         "" + _VAR_ID_V + ", "
@@ -944,8 +1407,9 @@ def _search_datacolumns(
         "JOIN variable v ON va.variable_id = v.variable_id "
         "JOIN register r ON v.register_id = r.register_id "
         "WHERE va.delivery_column_name LIKE ? ESCAPE '\\' "
-        "ORDER BY va.delivery_column_name, v.register_id",
-        (like_pattern,),
+        + register_filter
+        + "ORDER BY va.delivery_column_name, v.register_id, v.variable_id LIMIT ? OFFSET ?",
+        (like_pattern, *register_params, limit, offset),
     ).fetchall()
     results = []
     for r in rows:
@@ -967,8 +1431,17 @@ def _search_datacolumns(
 
 
 def _search_varnames(
-    conn: sqlite3.Connection, like_pattern: str, reg_ids: set[int] | None
+    conn: sqlite3.Connection,
+    like_pattern: str,
+    reg_ids: set[int] | None,
+    limit: int,
+    offset: int,
 ) -> list[dict[str, Any]]:
+    register_filter = ""
+    register_params: list[int] = []
+    if reg_ids:
+        register_filter = " AND v.register_id IN (" + _in_placeholders(reg_ids) + ") "
+        register_params = sorted(reg_ids)
     rows = conn.execute(
         "SELECT v.register_id, v.variable_id, "
         "" + _VAR_ID_V + ", "
@@ -976,8 +1449,9 @@ def _search_varnames(
         "FROM variable v "
         "JOIN register r ON v.register_id = r.register_id "
         "WHERE v.name LIKE ? ESCAPE '\\' "
-        "ORDER BY v.name, v.register_id",
-        (like_pattern,),
+        + register_filter
+        + "ORDER BY v.name, v.register_id, v.variable_id LIMIT ? OFFSET ?",
+        (like_pattern, *register_params, limit, offset),
     ).fetchall()
     results = []
     for r in rows:
@@ -998,7 +1472,13 @@ def _search_varnames(
 
 
 def _search_description_registers(
-    conn: sqlite3.Connection, query: str, reg_ids: set[int] | None
+    conn: sqlite3.Connection,
+    query: str,
+    reg_ids: set[int] | None,
+    restrict_fqids: bool,
+    exclude_fqids: bool,
+    limit: int,
+    offset: int,
 ) -> list[dict[str, Any]]:
     # register_fts now mirrors the renamed columns: `name` + `purpose`.
     # `registerrubrik` was dropped per the glossary rename (see DESIGN.md → Glossary and Swedish↔English crosswalk).
@@ -1006,6 +1486,11 @@ def _search_description_registers(
     # `fqid` — the navigation key discovery surfaces (#350 /api/search) need and
     # the flat search row otherwise lacks. `try_emit` yields None for an
     # unslugged register (not catalog-addressable); additive for CLI consumers.
+    register_filter = ""
+    register_params: list[int] = []
+    if reg_ids:
+        register_filter = " AND rf.register_id IN (" + _in_placeholders(reg_ids) + ") "
+        register_params = sorted(reg_ids)
     rows = conn.execute(
         "SELECT rf.register_id, rf.name, rf.purpose, rf.rank, "
         "r.slug AS register_slug, p.slug AS provider_slug "
@@ -1013,8 +1498,21 @@ def _search_description_registers(
         "JOIN register r ON r.register_id = rf.register_id "
         "JOIN provider p ON p.provider_id = r.provider_id "
         "WHERE register_fts MATCH ? "
-        "ORDER BY rf.rank",
-        (query,),
+        + (
+            "AND EXISTS (SELECT 1 FROM _search_allowed_fqids af "
+            "WHERE af.fqid = p.slug || '/' || r.slug) "
+            if restrict_fqids
+            else ""
+        )
+        + (
+            "AND NOT EXISTS (SELECT 1 FROM _search_excluded_fqids ef "
+            "WHERE ef.fqid = p.slug || '/' || r.slug) "
+            if exclude_fqids
+            else ""
+        )
+        + register_filter
+        + "ORDER BY rf.rank, rf.register_id LIMIT ? OFFSET ?",
+        (query, *register_params, limit, offset),
     ).fetchall()
     results = []
     for r in rows:
@@ -1041,6 +1539,9 @@ def _search_description_variables(
     reg_ids: set[int] | None,
     *,
     include_delivery_columns: bool,
+    restrict_fqids: bool,
+    limit: int,
+    offset: int,
 ) -> list[dict[str, Any]]:
     # `variable_fts` is content-synced to `variable` (content_rowid='rowid', and
     # `variable_id` is the INTEGER PRIMARY KEY rowid alias), so `vf.rowid` IS
@@ -1048,6 +1549,11 @@ def _search_description_variables(
     # Join `variable`/`provider` for the slugs so each hit carries its 3-seg
     # binding `fqid` (#350) — the navigation key /api/search needs. `v.slug` /
     # `p.slug` feed `try_emit`, which yields None for an unslugged variable.
+    register_filter = ""
+    register_params: list[int] = []
+    if reg_ids:
+        register_filter = " AND vf.register_id IN (" + _in_placeholders(reg_ids) + ") "
+        register_params = sorted(reg_ids)
     rows = conn.execute(
         "SELECT vf.register_id, vf.rowid AS variable_id, "
         "" + _VAR_ID_VF + ", "
@@ -1062,21 +1568,21 @@ def _search_description_variables(
         "JOIN provider p ON p.provider_id = r.provider_id "
         "JOIN variable v ON v.variable_id = vf.rowid "
         "WHERE variable_fts MATCH ? "
-        "ORDER BY rank",
-        (query,),
-    ).fetchall()
-    delivery_columns = (
-        _delivery_column_names_for_variables(
-            conn,
-            (
-                r["variable_id"]
-                for r in rows
-                if not reg_ids or r["register_id"] in reg_ids
-            ),
+        + (
+            "AND EXISTS (SELECT 1 FROM _search_allowed_fqids af "
+            "WHERE af.fqid = p.slug || '/' || r.slug || '/' || v.slug) "
+            if restrict_fqids
+            else ""
         )
-        if include_delivery_columns
-        else {}
+        + register_filter
+        + "ORDER BY rank, vf.rowid LIMIT ? OFFSET ?",
+        (query, *register_params, limit, offset),
+    ).fetchall()
+    ranking_delivery_columns = _delivery_column_names_for_variables(
+        conn,
+        (r["variable_id"] for r in rows if not reg_ids or r["register_id"] in reg_ids),
     )
+    delivery_columns = ranking_delivery_columns if include_delivery_columns else {}
     results = []
     for r in rows:
         if reg_ids and r["register_id"] not in reg_ids:
@@ -1099,6 +1605,9 @@ def _search_description_variables(
                 "variable_description": r["variable_description"],
                 "variable_operational_definition": r["variable_operational_definition"],
                 "delivery_column_names": delivery_columns.get(r["variable_id"], ()),
+                "_ranking_delivery_column_names": ranking_delivery_columns.get(
+                    r["variable_id"], ()
+                ),
                 "fts_rank": r["rank"],
                 "_variable_id": r["variable_id"],
             }
@@ -1192,6 +1701,7 @@ def _code_owner_annotations_batch(
     reg_ids: set[int] | None,
     *,
     variable_limit: int | None = _CODE_OWNERS_PER_HIT,
+    variable_counts: Mapping[int, int] | None = None,
 ) -> dict[int, dict[str, Any]]:
     """Resolve owning variables / classifications for a SET of codes at once (#352).
 
@@ -1210,13 +1720,17 @@ def _code_owner_annotations_batch(
         is attributed only the codes its own value set carried — no fan-out);
       - owner ordering by the variable's own distinct-code count ASC (a code on a
         tight enum is more discriminative than the same code on a 500-value
-        catalog), ties broken by slug for determinism;
+        catalog), ties broken by slug and full catalog identity for determinism;
       - `reg_ids` (a `--register` scope) constrains BOTH the variable owners and
         `variable_count`; classifications are catalog-scoped, so a register scope
         leaves them empty (mirrors `_search_classifications`' guard)."""
     out: dict[int, dict[str, Any]] = {
         cid: _empty_owner_annotation() for cid in code_ids
     }
+    if variable_counts is not None:
+        for code_id, count in variable_counts.items():
+            if code_id in out:
+                out[code_id]["variable_count"] = count
     if not code_ids:
         return out
 
@@ -1236,23 +1750,21 @@ def _code_owner_annotations_batch(
             reg_filter = " AND v.register_id IN (" + ",".join("?" * len(reg_ids)) + ")"
             reg_params = sorted(reg_ids)
 
-        # Full per-code variable count (register-scoped when reg_ids set).
-        for row in conn.execute(
-            "SELECT cvm.code_id, COUNT(*) AS n "
-            "FROM _match_code_ids m "
-            "JOIN code_variable_map cvm ON cvm.code_id = m.code_id "
-            "JOIN variable v ON cvm.variable_id = v.variable_id "
-            f"WHERE 1=1{reg_filter} "
-            "GROUP BY cvm.code_id",
-            reg_params,
-        ):
-            out[row["code_id"]]["variable_count"] = row["n"]
+        # `value_code.mapping_count` is the canonical unscoped count and already
+        # rides each search hit. Reuse it instead of rescanning every mapping for
+        # the bounded page; a register scope still needs its narrower SQL count.
+        if variable_counts is None or reg_ids:
+            for row in conn.execute(
+                "SELECT cvm.code_id, COUNT(*) AS n "
+                "FROM _match_code_ids m "
+                "JOIN code_variable_map cvm ON cvm.code_id = m.code_id "
+                "JOIN variable v ON cvm.variable_id = v.variable_id "
+                f"WHERE 1=1{reg_filter} "
+                "GROUP BY cvm.code_id",
+                reg_params,
+            ):
+                out[row["code_id"]]["variable_count"] = row["n"]
 
-        # Variable owners per code via a windowed rank over the same ordering the
-        # capped slice used (var_code_count ASC, slug). The outer rn filter is
-        # optional: web search needs the full expanded variable list, while the
-        # library/CLI default stays capped. Provider/register/variable slugs feed
-        # the binding FQID.
         var_rank_filter = "" if variable_limit is None else " WHERE rn <= ?"
         var_params: tuple[Any, ...] = (
             tuple(reg_params)
@@ -1261,7 +1773,8 @@ def _code_owner_annotations_batch(
         )
         var_rows = conn.execute(
             "WITH owners AS ("
-            "  SELECT cvm.code_id, v.name AS variable_name, v.slug AS variable_slug, "
+            "  SELECT cvm.code_id, v.variable_id, v.name AS variable_name, "
+            "         v.slug AS variable_slug, "
             "         r.name AS register_name, r.slug AS register_slug, "
             "         p.slug AS provider_slug, "
             "         (SELECT COUNT(*) FROM code_variable_map c2 "
@@ -1274,7 +1787,8 @@ def _code_owner_annotations_batch(
             f"  WHERE 1=1{reg_filter}"
             "), ranked AS ("
             "  SELECT *, ROW_NUMBER() OVER ("
-            "    PARTITION BY code_id ORDER BY var_code_count ASC, variable_slug"
+            "    PARTITION BY code_id ORDER BY var_code_count ASC, variable_slug, "
+            "      provider_slug, register_slug, variable_id"
             "  ) AS rn FROM owners"
             f") SELECT * FROM ranked{var_rank_filter} ORDER BY code_id, rn",
             var_params,
@@ -1341,15 +1855,14 @@ def _search_values_fts(
     reg_ids: set[int] | None,
     *,
     code_owner_scope: str = "all",
+    limit: int,
+    offset: int,
 ) -> list[dict[str, Any]]:
     """Code/value search over `value_code_fts` (#352).
 
-    Returns the FULL ranked, in-scope match set (NOT internally limited or offset),
-    exactly like the register/variable/classification arms — `search()` does the
-    `total_count = len(...)` + `[offset:offset+limit]` slice, so total_count is the
-    true match count and offset paginates. (An earlier draft truncated to `limit*4`
-    + `[:limit]` here, which false-emptied register-scoped queries whose top codes
-    were all out-of-scope, saturated total_count at `limit`, and broke offset.)
+    Returns one SQL-bounded ranked prefix, exactly like the register/variable/
+    classification arms. Owner restrictions are inside SQL so a bounded prefix
+    cannot be consumed by out-of-scope codes.
 
     Label FTS (bm25) is the primary surface — ~55% of codes are bare numbers, so
     labels carry the meaning. Each label hit JOINs `value_code` for the (code,
@@ -1362,11 +1875,10 @@ def _search_values_fts(
         page. Rows come back unannotated (empty owners) with an internal
         `_code_id` marker; `search()` annotates only the ≤limit page rows via
         `_annotate_value_page`. A broad term matches thousands of codes, so
-        annotating the full set before the offset/limit slice was the omnibox
+        annotating the full match set before paging was the omnibox
         timeout this avoids.
-      - `reg_ids is not None` (`--register`): the full set is annotated up front
-        (`_code_owner_annotations_batch`, set-based to avoid an N+1) so the
-        reg-scope drop can run; the match set is small (one register's codes).
+      - `reg_ids is not None` (`--register`): the bounded prefix is annotated
+        up front (`_code_owner_annotations_batch`, set-based to avoid an N+1).
 
     Ranking: bm25 relevance, then `mapping_count` ASCENDING — a label shared by
     many variables (a generic enum) is less discriminative than a rare one, so it
@@ -1391,6 +1903,15 @@ def _search_values_fts(
             "SELECT 1 FROM classification_code cc WHERE cc.code_id = vc.code_id"
             ")"
         )
+    owner_params: list[Any] = []
+    if reg_ids:
+        placeholders = ",".join("?" * len(reg_ids))
+        owner_filter += (
+            " AND EXISTS (SELECT 1 FROM code_variable_map cvm "
+            "JOIN variable v_scope ON v_scope.variable_id = cvm.variable_id "
+            f"WHERE cvm.code_id = vc.code_id AND v_scope.register_id IN ({placeholders}))"
+        )
+        owner_params = sorted(reg_ids)
     owner_order = (
         "CASE "
         "  WHEN EXISTS ("
@@ -1417,22 +1938,20 @@ def _search_values_fts(
         }
 
     if fts_query is not None:
-        # bm25 default weights; mapping_count downweight is a small additive term
-        # (scaled by log so a 60k-mapping junk-ish label sinks but doesn't dwarf
-        # bm25). Both terms are smaller-is-better, so the sum sorts ascending. No
-        # LIMIT — the outer search() slice paginates; bounding here would re-break
-        # total_count / register-scope (see the docstring).
+        # Bound on the exact public rank. Truncating on raw bm25 and adding the
+        # mapping penalty afterward can exclude a rarer row that publicly outranks
+        # the retained prefix, making continuation reorder before its cursor.
         label_rows = conn.execute(
             "SELECT vc.code_id, vc.code, vc.label, vc.mapping_count, "
-            "bm25(value_code_fts) AS rank "
+            "bm25(value_code_fts) + ln(1 + vc.mapping_count) * 0.5 AS rank "
             "FROM value_code_fts "
             "JOIN value_code vc ON vc.code_id = value_code_fts.rowid "
-            f"WHERE value_code_fts MATCH ?{owner_filter}",
-            (fts_query,),
+            f"WHERE value_code_fts MATCH ?{owner_filter} "
+            "ORDER BY rank, vc.mapping_count, vc.code_id LIMIT ? OFFSET ?",
+            (fts_query, *owner_params, limit, offset),
         ).fetchall()
         for r in label_rows:
-            base = r["rank"] + math.log1p(r["mapping_count"]) * 0.5
-            hits[r["code_id"]] = _hit(r, base)
+            hits[r["code_id"]] = _hit(r, r["rank"])
 
     if _is_code_shaped(query):
         q = query.strip()
@@ -1451,8 +1970,9 @@ def _search_values_fts(
             "    SELECT 1 FROM classification_code cc WHERE cc.code_id = vc.code_id)) "
             f"{owner_filter} "
             f"ORDER BY {owner_order}"
-            "(code = ? COLLATE NOCASE) DESC, length(code), code, code_id",
-            (q, f"{_escape_like(q)}%", q),
+            "(code = ? COLLATE NOCASE) DESC, length(code), code, code_id "
+            "LIMIT ? OFFSET ?",
+            (q, f"{_escape_like(q)}%", *owner_params, q, limit, offset),
         ).fetchall()
         # Code matches are the strongest signal a code query gives — seed them
         # below the FTS rank floor (a large negative offset) so an exact "F32"
@@ -1467,17 +1987,17 @@ def _search_values_fts(
             if existing is None or code_rank < existing["base_rank"]:
                 hits[r["code_id"]] = _hit(r, code_rank)
 
-    ordered = sorted(hits.values(), key=lambda h: (h["base_rank"], h["code"]))
+    ordered = sorted(
+        hits.values(), key=lambda h: (h["base_rank"], h["code"], h["code_id"])
+    )[:limit]
 
     # Unscoped path (the webapp's `/api/search`, the perf-critical one): a broad
     # term ("läkemedel", "cancer") matches thousands of codes, and annotating ALL
-    # of them before the outer offset/limit slice was the >60 s omnibox timeout.
+    # of them before paging was the >60 s omnibox timeout.
     # Defer owner annotation to the PAGE — return every ranked row unannotated
     # (empty owners) carrying an internal `_code_id` marker, and let `search()`
     # annotate only the ≤limit rows actually shown (`_annotate_value_page`). This
-    # keeps total_count = len(ordered) exact (no rows dropped here — there's no
-    # register scope to filter against) while doing O(matches) cheap dict-building
-    # instead of O(matches) owner queries.
+    # keeps owner work proportional to the shown bounded page.
     if reg_ids is None:
         return [
             {
@@ -1496,8 +2016,7 @@ def _search_values_fts(
 
     # Register-scoped path (CLI `--register`): the match set is small (one
     # register's codes), and the reg-scope DROP below needs every code's owners.
-    # Annotate the full set up front + filter — total_count must reflect the
-    # post-filter count. These rows carry NO `_code_id` (already annotated).
+    # Annotate the bounded prefix. These rows carry NO `_code_id` (already annotated).
     owners_by_code = _code_owner_annotations_batch(
         conn, [h["code_id"] for h in ordered], reg_ids
     )
@@ -1558,6 +2077,13 @@ def _annotate_value_page(
         code_ids,
         reg_ids,
         variable_limit=variable_limit,
+        variable_counts={
+            r["_code_id"]: r["mapping_count"]
+            for r in page
+            if r.get("type") == "code" and "_code_id" in r
+        }
+        if reg_ids is None
+        else None,
     )
     for r in page:
         if r.get("type") == "code" and "_code_id" in r:
@@ -1594,7 +2120,11 @@ def _classification_leaf(
 
 
 def _search_classifications(
-    conn: sqlite3.Connection, query: str
+    conn: sqlite3.Connection,
+    query: str,
+    exclude_fqids: bool,
+    limit: int,
+    offset: int,
 ) -> list[dict[str, Any]]:
     """FTS search over `classification_fts` (#350) — the third shipped FTS index,
     built but previously unsearched (see DESIGN.md → FTS5 configuration). Indexes
@@ -1607,8 +2137,14 @@ def _search_classifications(
         "FROM classification_fts cf "
         "JOIN classification c ON c.id = cf.rowid "
         "WHERE classification_fts MATCH ? "
-        "ORDER BY cf.rank",
-        (query,),
+        + (
+            "AND NOT EXISTS (SELECT 1 FROM _search_excluded_fqids ef "
+            "WHERE ef.fqid = 'class/' || c.slug) "
+            if exclude_fqids
+            else ""
+        )
+        + "ORDER BY cf.rank, c.id LIMIT ? OFFSET ?",
+        (query, limit, offset),
     ).fetchall()
     return [
         _classification_leaf(
@@ -1630,7 +2166,11 @@ _CLASS_CODE_RANK_BASE = 1000.0
 
 
 def _search_classifications_by_code(
-    conn: sqlite3.Connection, query: str, exclude_ids: set[int]
+    conn: sqlite3.Connection,
+    query: str,
+    exclude_ids: set[int],
+    limit: int,
+    offset: int,
 ) -> list[dict[str, Any]]:
     """Surface the classifications that CONTAIN a code-shaped query (#393 item 5).
 
@@ -1670,18 +2210,22 @@ def _search_classifications_by_code(
     above it. COLLATE NOCASE makes exact-precedence hold for any-case code query
     (the WHERE already surfaces them — LIKE is case-insensitive)."""
     q = query.strip()
+    exclusion = ""
+    exclusion_params: list[int] = []
+    if exclude_ids:
+        exclusion = " AND c.id NOT IN (" + _in_placeholders(exclude_ids) + ")"
+        exclusion_params = sorted(exclude_ids)
     rows = conn.execute(
         "SELECT c.id AS classification_id, c.short_name, c.name AS classification_name, "
         "c.slug, MAX(CASE WHEN vc.code = ? COLLATE NOCASE THEN 1 ELSE 0 END) AS has_exact "
         "FROM value_code vc "
         "JOIN classification_code cc ON cc.code_id = vc.code_id "
         "JOIN classification c ON c.id = cc.classification_id "
-        "WHERE vc.code = ? OR vc.code LIKE ? ESCAPE '\\' "
+        "WHERE (vc.code = ? OR vc.code LIKE ? ESCAPE '\\') " + exclusion + " "
         "GROUP BY c.id, c.short_name, c.name, c.slug "
-        "ORDER BY has_exact DESC, c.short_name",
-        (q, q, f"{_escape_like(q)}%"),
+        "ORDER BY has_exact DESC, c.short_name, c.id LIMIT ? OFFSET ?",
+        (q, q, f"{_escape_like(q)}%", *exclusion_params, limit, offset),
     ).fetchall()
-    kept = [r for r in rows if r["classification_id"] not in exclude_ids]
     return [
         _classification_leaf(
             slug=r["slug"],
@@ -1690,7 +2234,7 @@ def _search_classifications_by_code(
             fts_rank=_CLASS_CODE_RANK_BASE + i,
             classification_id=r["classification_id"],
         )
-        for i, r in enumerate(kept)
+        for i, r in enumerate(rows)
     ]
 
 
@@ -1786,6 +2330,8 @@ def _search_group_labels(
     *,
     type: str,
     year_range: tuple[int | None, int | None] | None = None,
+    limit: int,
+    offset: int,
 ) -> list[sqlite3.Row]:
     """Concept groups whose LABEL or key matches the query (#322): the family
     itself is findable even when no single leaf row matches (e.g. searching
@@ -1799,57 +2345,50 @@ def _search_group_labels(
     entirely; `type == "classification"` excludes variable groups. Under a
     `year_range` (--years), a variable group needs at least one member state
     overlapping the range — the group itself has no validity window."""
-    if type == "register":
+    if type in ("register", "value") or (
+        type == "classification" and year_range is not None
+    ):
         return []
-    rows = conn.execute(
+    filters = ["(g.label LIKE ? ESCAPE '\\' OR g.group_key LIKE ? ESCAPE '\\')"]
+    params: list[Any] = [like_pattern, like_pattern]
+    if reg_ids:
+        filters.append(
+            "g.kind = 'variable' AND g.register_id IN ("
+            + _in_placeholders(reg_ids)
+            + ")"
+        )
+        params.extend(sorted(reg_ids))
+    elif type == "variable":
+        filters.append("g.kind = 'variable'")
+    elif type == "classification":
+        filters.append("g.kind = 'classification'")
+    if year_range is not None:
+        lo, hi = year_range
+        filters.append("g.kind = 'variable'")
+        state_filters = ["cgv.group_id = g.group_id"]
+        if hi is not None:
+            state_filters.append("CAST(substr(vs.valid_from, 1, 4) AS INTEGER) <= ?")
+            params.append(hi)
+        if lo is not None:
+            state_filters.append("CAST(substr(vs.valid_to, 1, 4) AS INTEGER) >= ?")
+            params.append(lo)
+        filters.append(
+            "EXISTS (SELECT 1 FROM concept_group_variable cgv "
+            "JOIN variable_state vs ON vs.variable_id = cgv.variable_id WHERE "
+            + " AND ".join(state_filters)
+            + ")"
+        )
+    return conn.execute(
         "SELECT g.group_id, g.kind, g.group_key, g.label, g.source, "
         "g.register_id, r.name AS register_name "
         "FROM concept_group g "
         "LEFT JOIN register r ON r.register_id = g.register_id "
-        "WHERE g.label LIKE ? ESCAPE '\\' OR g.group_key LIKE ? ESCAPE '\\' "
-        "ORDER BY g.kind, g.group_key",
-        (like_pattern, like_pattern),
+        "WHERE "
+        + " AND ".join(f"({item})" for item in filters)
+        + " "
+        + "ORDER BY g.kind, g.group_key, g.group_id LIMIT ? OFFSET ?",
+        (*params, limit, offset),
     ).fetchall()
-    hits = []
-    for r in rows:
-        if r["kind"] == "classification":
-            # Classifications are catalog-scoped (no register) and carry no
-            # validity window, so a --years filter excludes the family too —
-            # symmetric with the classification-leaf exclusion in
-            # `_filter_search_by_years` (#350).
-            if reg_ids or type == "variable" or year_range is not None:
-                continue
-        else:
-            # A variable-kind group has no place in a classifications-only query.
-            if type == "classification":
-                continue
-            if reg_ids and r["register_id"] not in reg_ids:
-                continue
-            if year_range is not None and not _group_member_state_in_years(
-                conn, r["group_id"], *year_range
-            ):
-                continue
-        hits.append(r)
-    return hits
-
-
-def _group_member_state_in_years(
-    conn: sqlite3.Connection, group_id: int, lo: int | None, hi: int | None
-) -> bool:
-    """Whether any member variable of a variable-kind group has a
-    `variable_state` validity window overlapping the requested year range —
-    the --years semantics for a label-matched group (mirrors what
-    `_filter_search_by_years` does for leaf hits)."""
-    rows = conn.execute(
-        "SELECT vs.valid_from, vs.valid_to "
-        "FROM concept_group_variable cgv "
-        "JOIN variable_state vs ON vs.variable_id = cgv.variable_id "
-        "WHERE cgv.group_id = ?",
-        (group_id,),
-    ).fetchall()
-    return any(
-        _state_overlaps_years(r["valid_from"], r["valid_to"], lo, hi) for r in rows
-    )
 
 
 def _terminal_classification_slug(
@@ -2097,6 +2636,7 @@ def _fold_concept_groups(
     label_hits: list[sqlite3.Row],
     *,
     allow: frozenset[str] | None = None,
+    delivery_column_scope: Mapping[str, Collection[str | None]] | None = None,
 ) -> list[dict[str, Any]]:
     """Collapse sibling search hits under their concept group (#322).
 
@@ -2120,7 +2660,10 @@ def _fold_concept_groups(
     that ends up with NO held member is dropped (the label-only path can surface a
     group none of whose members the steward holds). CLASSIFICATION-kind groups are
     catalog-global (decision 2) and pass through unnarrowed. `None` = no
-    restriction (the `global` path is byte-identical to pre-#859)."""
+    restriction (the `global` path is byte-identical to pre-#859).
+
+    ``delivery_column_scope`` applies the same steward restriction at variable
+    representation grain before the group participates in relevance ordering."""
     membership = _member_group_index(conn, results)
 
     buckets: dict[int, list[dict[str, Any]]] = {}
@@ -2163,6 +2706,7 @@ def _fold_concept_groups(
                 summaries,
                 label_matched=gid in label_ids,
                 allow=allow,
+                delivery_column_scope=delivery_column_scope,
             )
             if group_row is not None:
                 out.append(group_row)
@@ -2170,7 +2714,12 @@ def _fold_concept_groups(
         if row["group_id"] not in emitted:
             emitted.add(row["group_id"])
             group_row = _group_result_row(
-                row, [], summaries, label_matched=True, allow=allow
+                row,
+                [],
+                summaries,
+                label_matched=True,
+                allow=allow,
+                delivery_column_scope=delivery_column_scope,
             )
             if group_row is not None:
                 out.append(group_row)
@@ -2275,6 +2824,7 @@ def _group_result_row(
     *,
     label_matched: bool,
     allow: frozenset[str] | None = None,
+    delivery_column_scope: Mapping[str, Collection[str | None]] | None = None,
 ) -> dict[str, Any] | None:
     """One `type: "group"` search result row: group identity + the full
     member list + the leaf hits it folded (`matched`). `fts_rank` is the best
@@ -2296,6 +2846,14 @@ def _group_result_row(
         members = [m for m in members if m.get("fqid") in allow]
         if not members:
             return None
+    if delivery_column_scope is not None and meta["kind"] != "classification":
+        members = [
+            member
+            for member in members
+            if _group_member_in_delivery_scope(member, delivery_column_scope)
+        ]
+        if not members:
+            return None
     return {
         "type": "group",
         "kind": meta["kind"],
@@ -2313,6 +2871,17 @@ def _group_result_row(
     }
 
 
+def _group_member_in_delivery_scope(
+    member: dict[str, Any],
+    delivery_column_scope: Mapping[str, Collection[str | None]],
+) -> bool:
+    fqid = member.get("fqid")
+    if fqid not in delivery_column_scope:
+        return False
+    delivery_column = member.get("delivery_column")
+    return delivery_column is None or delivery_column in delivery_column_scope[fqid]
+
+
 # `_code_id` is the value-arm's deferred-annotation marker (#352 perf):
 # `_annotate_value_page` removes it on the shown page, but list it here so a stray
 # marker can never leak past `_strip_internal_keys` into a public result row.
@@ -2320,6 +2889,7 @@ _INTERNAL_KEYS = (
     "_variable_id",
     "_classification_id",
     "_code_id",
+    "_ranking_delivery_column_names",
     "variable_description",
 )
 

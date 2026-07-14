@@ -191,7 +191,79 @@ class TestSearchFolding:
     def test_fold_counts_one_result_for_pagination(self) -> None:
         conn = _seeded_conn()
         data = search(conn, "Lönesumma")
-        assert data.total_count == 1
+        assert len(data.results) == 1
+
+    def test_folded_prefix_backfills_and_continues_without_gap(self) -> None:
+        conn = _seeded_conn()
+        add_variable(
+            conn,
+            register_id=1,
+            var_id=999,
+            name="Lönesumma fristående",
+            slug="lonesumma-fristaende",
+        )
+        expected = search(conn, "Lönesumma", limit=10)
+        assert [result.type for result in expected.results] == ["group", "varname"]
+
+        first = search(conn, "Lönesumma", limit=1)
+        assert first.has_more and first.next_cursor is not None
+        second = search(conn, "Lönesumma", limit=1, cursor=first.next_cursor)
+
+        assert [result.type for result in (*first.results, *second.results)] == [
+            "group",
+            "varname",
+        ]
+        assert not second.has_more
+
+    def test_cursor_completes_group_before_first_page(self) -> None:
+        conn = _seeded_conn()
+        conn.execute(
+            "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
+            "label, source) VALUES (30, 'variable', 1, 'needle-family', "
+            "'Needle family label', 'curated')"
+        )
+        for var_id, name, slug in (
+            (930, "Needle A", "needle-a"),
+            (931, "Needle Z", "needle-z"),
+        ):
+            add_variable(conn, register_id=1, var_id=var_id, name=name, slug=slug)
+            variable_id = conn.execute(
+                "SELECT variable_id FROM variable WHERE slug = ?", (slug,)
+            ).fetchone()[0]
+            conn.execute(
+                "INSERT INTO concept_group_variable (variable_id, group_id) "
+                "VALUES (?, 30)",
+                (variable_id,),
+            )
+        add_variable(
+            conn,
+            register_id=1,
+            var_id=932,
+            name="Needle M",
+            slug="needle-m",
+        )
+
+        expected = search(conn, "Needle", field="varname", type="variable", limit=10)
+        first = search(conn, "Needle", field="varname", type="variable", limit=1)
+        assert first.results[0].type == "group"
+        assert first.results[0].matched_count == 2
+        assert first.next_cursor is not None
+        second = search(
+            conn,
+            "Needle",
+            field="varname",
+            type="variable",
+            limit=1,
+            cursor=first.next_cursor,
+        )
+
+        assert [r.type for r in (*first.results, *second.results)] == [
+            r.type for r in expected.results
+        ]
+        assert (
+            len({r.model_dump_json() for r in (*first.results, *second.results)}) == 2
+        )
+        assert not second.has_more
 
     def test_lone_member_hit_stays_leaf_with_annotation(self) -> None:
         conn = _seeded_conn()
@@ -309,6 +381,77 @@ class TestSearchFolding:
         assert [r.type for r in kept] == ["group"]
         assert kept[0].label_matched is True
 
+    def test_group_label_scope_is_applied_before_limit(self) -> None:
+        conn = _seeded_conn()
+        for group_id, key in ((40, "a-class"), (41, "b-class")):
+            conn.execute(
+                "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
+                "label, source) VALUES (?, 'classification', NULL, ?, "
+                "'Shared scope label', 'curated')",
+                (group_id, key),
+            )
+        conn.execute(
+            "UPDATE concept_group SET label = 'Shared scope label' WHERE group_id = 10"
+        )
+
+        result = search(
+            conn,
+            "Shared scope label",
+            field="description",
+            type="variable",
+            limit=1,
+        )
+
+        assert [r.group_key for r in result.results if r.type == "group"] == ["agiink"]
+        assert not result.has_more
+
+    def test_group_label_year_scope_is_applied_before_limit(self) -> None:
+        conn = _seeded_conn()
+        for group_id, key, var_id in (
+            (50, "a-old", 950),
+            (51, "b-old", 951),
+            (52, "c-current", 952),
+        ):
+            conn.execute(
+                "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
+                "label, source) VALUES (?, 'variable', 1, ?, "
+                "'Shared year label', 'curated')",
+                (group_id, key),
+            )
+            slug = f"{key}-member"
+            add_variable(conn, register_id=1, var_id=var_id, name=key, slug=slug)
+            variable_id = conn.execute(
+                "SELECT variable_id FROM variable WHERE slug = ?", (slug,)
+            ).fetchone()[0]
+            conn.execute(
+                "INSERT INTO concept_group_variable (variable_id, group_id) "
+                "VALUES (?, ?)",
+                (variable_id, group_id),
+            )
+            if key == "c-current":
+                add_state(
+                    conn,
+                    register_id=1,
+                    variable_slug=slug,
+                    register_variant_id=10,
+                    valid_from="2020-01-01",
+                    valid_to="2020-12-31",
+                )
+
+        result = search(
+            conn,
+            "Shared year label",
+            field="description",
+            type="variable",
+            years="2020",
+            limit=1,
+        )
+
+        assert [r.group_key for r in result.results if r.type == "group"] == [
+            "c-current"
+        ]
+        assert not result.has_more
+
 
 class TestSearchFqidsFilter:
     """#859: the `fqids` allow-list restricts the register/variable result
@@ -355,7 +498,7 @@ class TestSearchFqidsFilter:
             conn, "januari", field="description", fqids={"scb/lisa/agiinkfeb"}
         )
         assert data.results == ()
-        assert data.total_count == 0
+        assert len(data.results) == 0
 
     def test_held_variable_leaf_kept(self) -> None:
         conn = _seeded_conn()
@@ -365,7 +508,7 @@ class TestSearchFqidsFilter:
         )
         # The held member surfaces (lone hit → leaf row), exact count.
         assert {str(r.fqid) for r in data.results} == {"scb/lisa/agiinkjan"}
-        assert data.total_count == 1
+        assert len(data.results) == 1
 
 
 class TestClassificationSuccessionFold:
@@ -421,7 +564,44 @@ class TestClassificationSuccessionFold:
     def test_chain_counts_one_result_for_pagination(self) -> None:
         conn = self._chain_conn()
         data = search(conn, "yrkesklassificering", field="description")
-        assert data.total_count == 1
+        assert len(data.results) == 1
+
+    def test_cursor_completes_succession_before_first_page(self) -> None:
+        conn = build_slugged_db()
+        name = "Needle classification family"
+        _add_classification(
+            conn, cid=70, short_name="NEEDLE-A", name=name, slug="needle-old"
+        )
+        _add_classification(
+            conn, cid=71, short_name="NEEDLE-M", name=name, slug="needle-standalone"
+        )
+        _add_classification(
+            conn, cid=72, short_name="NEEDLE-Z", name=name, slug="needle-current"
+        )
+        _add_succession_edge(conn, predecessor="needle-old", successor="needle-current")
+        _rebuild_fts(conn)
+
+        expected = search(conn, "Needle classification", field="description", limit=10)
+        cursor = None
+        seen = []
+        while True:
+            page = search(
+                conn,
+                "Needle classification",
+                field="description",
+                limit=1,
+                cursor=cursor,
+            )
+            seen.extend(page.results)
+            if not page.has_more:
+                break
+            assert page.next_cursor is not None
+            cursor = page.next_cursor
+
+        assert [r.type for r in seen] == [r.type for r in expected.results]
+        assert len({r.model_dump_json() for r in seen}) == len(seen)
+        succession = next(r for r in seen if r.type == "classification_succession")
+        assert succession.matched_count == 2
 
     def test_lone_terminal_hit_stays_leaf(self) -> None:
         # Only the TERMINAL edition matches (rename the predecessors out of the

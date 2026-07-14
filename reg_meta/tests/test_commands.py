@@ -43,7 +43,7 @@ class TestSearch:
     def test_search_variable(self, db_path: str):
         data, code = _run_json(["--db", db_path, "search", "--query", "testvariabel"])
         assert code == 0
-        assert data["data"]["total_count"] >= 1
+        assert len(data["data"]["results"]) >= 1
         result = data["data"]["results"][0]
         assert result["type"] == "variable"
         # The typed `variable` row (#701) carries the navigable fqid/name, not the
@@ -56,7 +56,7 @@ class TestSearch:
             ["--db", db_path, "search", "--query", "Testning", "--type", "register"]
         )
         assert code == 0
-        assert data["data"]["total_count"] >= 1
+        assert len(data["data"]["results"]) >= 1
         # The typed `register` row (#701) carries the navigable fqid, not register_id.
         assert data["data"]["results"][0]["fqid"] == "scb/testreg"
 
@@ -84,11 +84,10 @@ class TestSearch:
             ["--db", db_path, "search", "--query", "Kön", "--register", "NONEXISTENT"]
         )
         assert code == 0
-        assert data["data"]["total_count"] == 0
+        assert len(data["data"]["results"]) == 0
 
     def test_search_pagination(self, db_path: str):
-        data_all, _ = _run_json(["--db", db_path, "search", "--query", "Kön"])
-        data_page, _ = _run_json(
+        first, _ = _run_json(
             [
                 "--db",
                 db_path,
@@ -97,16 +96,28 @@ class TestSearch:
                 "Kön",
                 "--limit",
                 "1",
-                "--offset",
-                "0",
             ]
         )
-        assert len(data_page["data"]["results"]) <= 1
-        assert data_page["data"]["total_count"] == data_all["data"]["total_count"]
+        assert len(first["data"]["results"]) <= 1
+        if first["data"]["has_more"]:
+            second, _ = _run_json(
+                [
+                    "--db",
+                    db_path,
+                    "search",
+                    "--query",
+                    "Kön",
+                    "--limit",
+                    "1",
+                    "--cursor",
+                    first["data"]["next_cursor"],
+                ]
+            )
+            assert second["data"]["results"] != first["data"]["results"]
 
     def test_search_swedish_chars(self, db_path: str):
         data, _ = _run_json(["--db", db_path, "search", "--query", "svenska"])
-        assert data["data"]["total_count"] >= 1
+        assert len(data["data"]["results"]) >= 1
 
     def test_search_value_code(self, db_path: str):
         """Search for a value label returns `code`-type hits (#352): label FTS over
@@ -131,7 +142,7 @@ class TestSearch:
             ["--db", db_path, "search", "--query", "Kön", "--years", "2020"]
         )
         assert code == 0
-        assert data["data"]["total_count"] >= 1
+        assert len(data["data"]["results"]) >= 1
 
     def test_search_years_excludes_outside_range(self, db_path: str):
         """--years filters out results with no versions in range."""
@@ -139,7 +150,7 @@ class TestSearch:
             ["--db", db_path, "search", "--query", "Kön", "--years", "2050"]
         )
         assert code == 0
-        assert data["data"]["total_count"] == 0
+        assert len(data["data"]["results"]) == 0
 
     def test_search_years_range(self, db_path: str):
         """--years accepts a range like 2020-2021."""
@@ -147,7 +158,7 @@ class TestSearch:
             ["--db", db_path, "search", "--query", "Kön", "--years", "2020-2021"]
         )
         assert code == 0
-        assert data["data"]["total_count"] >= 1
+        assert len(data["data"]["results"]) >= 1
 
     def test_search_years_register_type(self, db_path: str):
         """--years works with --type register."""
@@ -165,7 +176,7 @@ class TestSearch:
             ]
         )
         assert code == 0
-        assert data["data"]["total_count"] >= 1
+        assert len(data["data"]["results"]) >= 1
 
     def test_search_years_register_type_no_match(self, db_path: str):
         data, code = _run_json(
@@ -182,7 +193,7 @@ class TestSearch:
             ]
         )
         assert code == 0
-        assert data["data"]["total_count"] == 0
+        assert len(data["data"]["results"]) == 0
 
 
 # ---------------------------------------------------------------------------
@@ -1630,7 +1641,7 @@ class TestOutputFormats:
         assert code == 0
         assert "contract_version" not in data
         assert "run" not in data
-        assert "total_count" in data
+        assert "has_more" in data
 
     def test_repeated_flag_errors(self, db_path: str):
         """Repeated optional flags should error, not silently overwrite."""
@@ -2059,7 +2070,7 @@ class TestSearchYearOverlap:
         conn = _overlap_db()
         # 2011 is the MID year of the multi-year state; the variable must survive.
         out = search(conn, "Kön", field="varname", years="2011")
-        assert out.total_count >= 1
+        assert len(out.results) >= 1
 
     def test_var_pair_kept_for_far_future_open_ended(self):
         from reg_meta.queries import search
@@ -2069,7 +2080,7 @@ class TestSearchYearOverlap:
         # Pre-fix `_years_in_range` capped both at their opening year, so 2099
         # matched nothing and the variable was wrongly dropped.
         out = search(conn, "Kön", field="varname", years="2099")
-        assert out.total_count >= 1
+        assert len(out.results) >= 1
 
     def test_var_pair_kept_for_gap_year_covered_only_by_yearless(self):
         from reg_meta.queries import search
@@ -2080,7 +2091,7 @@ class TestSearchYearOverlap:
         # Pre-fix the yearless window enumerated as just [1], so 2013 matched no
         # state and the variable was dropped.
         out = search(conn, "Kön", field="varname", years="2013")
-        assert out.total_count >= 1
+        assert len(out.results) >= 1
 
     def test_var_pair_dropped_when_no_window_covers_year(self):
         from reg_meta.queries import search
@@ -2088,7 +2099,7 @@ class TestSearchYearOverlap:
         conn = _overlap_db()
         # Year 0 is below every window (yearless starts at 0001) → no match.
         out = search(conn, "Kön", field="varname", years="0-0")
-        assert out.total_count == 0
+        assert len(out.results) == 0
 
 
 # ---------------------------------------------------------------------------
