@@ -136,6 +136,9 @@ const tabs = $derived.by((): EditionTab[] => {
   }
   return [];
 });
+const reserveEditionGraph = $derived(
+  tabs.length > 1 || (initialActiveNode?.edition_chain?.length ?? 0) > 1,
+);
 
 function latestTabFqid(tabList: EditionTab[]): string | null {
   let best: EditionTab | null = null;
@@ -294,13 +297,15 @@ function selectEdition(value: string): void {
     </TechnicalDetails>
   {/snippet}
 
-  <SubjectView
-    title={node.label}
-    {description}
-    {picker}
-    valueSet={valueSet}
-    {relationships}
-  />
+  <div class:reserve-edition-graph={reserveEditionGraph}>
+    <SubjectView
+      title={node.label}
+      {description}
+      {picker}
+      valueSet={valueSet}
+      {relationships}
+    />
+  </div>
 {:else if node}
   {#snippet description()}
     <!-- Key, axes, and source are build-derivation metadata, not researcher-facing
@@ -321,16 +326,41 @@ function selectEdition(value: string): void {
     </TechnicalDetails>
   {/snippet}
 
-  <SubjectView
-    title={`Classification group: ${node.label}`}
-    {description}
-    {picker}
-    valueSet={valueSet}
-    {relationships}
-  />
+  <div class:reserve-edition-graph={reserveEditionGraph}>
+    <SubjectView
+      title={`Classification group: ${node.label}`}
+      {description}
+      {picker}
+      valueSet={valueSet}
+      {relationships}
+    />
+  </div>
 {/if}
 
 <style>
+  /* Multi-edition classification subjects render their value-set tabs before
+     the optional graph request finishes. Own the reservation here so canonical
+     group routes and leaf aliases share the same stable SubjectView geometry. */
+  .reserve-edition-graph :global(article) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto minmax(13rem, auto);
+    min-width: 0;
+  }
+  .reserve-edition-graph :global(article > .subject-header) {
+    grid-row: 1;
+  }
+  .reserve-edition-graph :global(article > .tech-details) {
+    grid-row: 2;
+  }
+  .reserve-edition-graph :global(article > .classification-editions) {
+    grid-row: 3;
+    align-self: start;
+    margin-block: var(--space-4) 0;
+  }
+  .reserve-edition-graph :global(article > .edition-tabs-section) {
+    grid-row: 4;
+  }
   /* #638 PR4: row spacing standardized across the subject kinds. */
   .meta {
     display: grid;

@@ -455,27 +455,21 @@ $effect(() => {
         <EmptyState title="No classifications." />
       {/if}
     {:else if node.kind === "classification"}
-      <div
-        class="classification-detail"
-        class:reserve-edition-graph={(node.family?.editions.length ?? 0) > 1 ||
-          (node.edition_chain?.length ?? 0) > 1}
-      >
-        {#if classificationSubjectKey}
-          <!-- #1116: grouped / family classification FQIDs stay valid as shareable
-               deep-links, but the canonical surface is the group/family page with
-               this edition's tab active. Ungrouped classifications still use the
-               standalone leaf view. -->
-          <ClassificationGroupView
-            key={classificationSubjectKey}
-            activeFqid={classificationTabFocusFqid(node)}
-            initialActiveNode={node}
-          />
-        {:else}
-          <!-- #638 PR1: the ungrouped classification leaf renders through the unified
-               SubjectView shell, same as the binding leaf + concept group. -->
-          <ClassificationLeafView {node} />
-        {/if}
-      </div>
+      {#if classificationSubjectKey}
+        <!-- #1116: grouped / family classification FQIDs stay valid as shareable
+             deep-links, but the canonical surface is the group/family page with
+             this edition's tab active. Ungrouped classifications still use the
+             standalone leaf view. -->
+        <ClassificationGroupView
+          key={classificationSubjectKey}
+          activeFqid={classificationTabFocusFqid(node)}
+          initialActiveNode={node}
+        />
+      {:else}
+        <!-- #638 PR1: the ungrouped classification leaf renders through the unified
+             SubjectView shell, same as the binding leaf + concept group. -->
+        <ClassificationLeafView {node} />
+      {/if}
     {/if}
   </article>
 {:else if notBrowsable}
@@ -510,33 +504,6 @@ $effect(() => {
   }
   .classification-loading .loading-geometry {
     gap: var(--space-4);
-  }
-  /* A succession family renders its value-set tabs before the optional graph
-     request finishes. Give the existing subject article a persistent picker
-     row sized to one compact DAG (its common shape), then place the real graph
-     into that row when it arrives. The value-set section therefore keeps the
-     same normal-flow position; a branching graph can still expand the auto max.
-     This is tied to edition metadata, so unrelated classifications do not gain
-     an empty picker row. */
-  .reserve-edition-graph :global(article) {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    grid-template-rows: auto auto minmax(13rem, auto);
-    min-width: 0;
-  }
-  .reserve-edition-graph :global(article > .subject-header) {
-    grid-row: 1;
-  }
-  .reserve-edition-graph :global(article > .tech-details) {
-    grid-row: 2;
-  }
-  .reserve-edition-graph :global(article > .classification-editions) {
-    grid-row: 3;
-    align-self: start;
-    margin-block: var(--space-4) 0;
-  }
-  .reserve-edition-graph :global(article > .edition-tabs-section) {
-    grid-row: 4;
   }
   /* The register's own subject text (register arm). */
   .purpose-text {

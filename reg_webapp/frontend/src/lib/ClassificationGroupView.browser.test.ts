@@ -404,6 +404,38 @@ describe("ClassificationGroupView (#756)", () => {
     expect(getClassificationGroupGraph).toHaveBeenCalledWith("ssyk");
   });
 
+  it("keeps canonical family value-set geometry stable while the graph resolves", async () => {
+    let resolveGraph: (value: RelationshipGraph) => void = () => {};
+    vi.mocked(getClassificationGroup).mockResolvedValue(familyNode());
+    vi.mocked(getClassificationGroupGraph).mockImplementation(
+      () =>
+        new Promise((resolve) => {
+          resolveGraph = resolve;
+        }),
+    );
+    vi.mocked(getCatalogNode).mockResolvedValue(
+      classificationNode({
+        fqid: "class/ssyk2012",
+        name: "SSYK 2012",
+        short_name: "SSYK2012",
+      }),
+    );
+
+    await render(ClassificationGroupView, { key: "ssyk" });
+
+    const valueSet = page.getByRole("region", { name: "Value set" });
+    await expect.element(valueSet).toBeVisible();
+    const before = valueSet.element().getBoundingClientRect().top;
+
+    resolveGraph(familyGraph());
+
+    await expect
+      .element(page.getByRole("heading", { name: "Editions" }))
+      .toBeVisible();
+    const after = valueSet.element().getBoundingClientRect().top;
+    expect(Math.abs(after - before)).toBeLessThan(2);
+  });
+
   it("defaults to the current family edition before future-dated successors", async () => {
     vi.mocked(getClassificationGroup).mockResolvedValue(
       familyNode({
