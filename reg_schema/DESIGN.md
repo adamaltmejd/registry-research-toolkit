@@ -57,7 +57,10 @@ mappings to `(register_variant, variable FQID, canonical representation)`. This
 preserves unmapped columns for coverage and permits one table/column to serve several
 logical variants. `reg_schema` remains independent of the inventory and of reg_meta;
 shared `reg_meta` project code will join a structurally valid project, semantic
-resolution, and the optional inventory in the v1 target.
+resolution, and the optional inventory in the v1 target. `reg_schema` validates the
+requested-period shape only; the materializer must require the union of each matched
+edition's overlap with its exact resolved representation slice to cover every requested
+segment and report exact uncovered gaps.
 
 Every v1 researcher project must carry an explicit requested period. `"_default"` exists
 only for the provisional steward pseudo-project, so remove it from `Source.period` when

@@ -1844,27 +1844,33 @@ CSV contract, not per-steward templates:
 steward,provider,register,variant,requested_period,edition,table,column,variable
 ```
 
-`project_data.json` will supply the logical selection and explicit requested period;
-reg_meta will resolve its canonical representation; the selected steward's public
-delivery inventory will map exact `(register_variant, variable, representation)`
-coordinates to every matching physical table, literal physical column, and overlapping
-physical edition. A table identifier is opaque (exact filename or schema-qualified SQL
-table). Edition uses the existing finite period grammar and may cover several periods,
-but is never inferred from an ambiguous filename or represented as `"_default"`. One
-table/column may map to several variants and several tables may map to one coordinate.
+`project_data.json` will supply the logical selection and explicit requested period, and
+reg_meta will split any representation changes into deterministic logical slices. A
+steward table will match a slice only when its inventory mapping exactly matches
+`(register_variant, variable, representation)` and its physical edition overlaps that
+slice; overlap elsewhere in the overall request will not match. A table identifier is
+opaque (exact filename or schema-qualified SQL table). Edition uses the existing finite
+period grammar and may cover several periods, but is never inferred from an ambiguous
+filename or represented as `"_default"`. One table/column may map to several variants
+and several tables may map to one coordinate. Each matched edition will contribute only
+its overlap with the exact slice to coverage. Those slice-clipped contributions must
+cover every segment of the requested period before any rows are emitted. A partial
+overlap will block the whole order and report the exact uncovered gaps rather than
+silently producing a partial manifest. Once coverage passes, every table matching at
+least one slice will be emitted.
 
 Steward rows will output the literal physical `table` and `column`; the canonical
 representation will stay a join discriminator. The confirmed global fallback will use
 blank `table`, the resolved canonical column, and `edition = requested_period` until a
-physical global inventory exists. It will be valid only when canonical resolution
-completely covers the request; representation changes will fan out deterministically,
-while unresolved or ambiguous coverage blocks. The output `steward` will be the active
-deployment/inventory; the project's provenance field must match before ordering. Every
-uploaded project will be validated against the receiving deployment. A provenance
-mismatch will block ordering, and the app will deliberately offer no steward-retarget
-workflow: changing provenance means editing the JSON and uploading it again. Preserve
-project source/binding order and sort any fan-out by table, canonical edition, then
-physical column.
+physical global inventory exists. It will obey the same full-coverage gate using
+canonical resolution; representation changes will fan out deterministically, while
+unresolved, ambiguous, or partially covered requests block. The output `steward` will be
+the active deployment/inventory; the project's provenance field must match before
+ordering. Every uploaded project will be validated against the receiving deployment. A
+provenance mismatch will block ordering, and the app will deliberately offer no steward-
+retarget workflow: changing provenance means editing the JSON and uploading it again.
+Preserve project source/binding order and sort any fan-out by table, canonical edition,
+then physical column.
 
 The SPA will expose one common study window as the project-authoring default. When a
 source has any overlap, adding it will immediately persist the full available
@@ -1876,19 +1882,19 @@ will become blocking. The picker and project page will highlight every divergenc
 common window will never become hidden inheritance, and an explicit apply-to-all action
 will rewrite only sources with an overlap.
 
-The materializer will include a whole multi-period table when its edition overlaps the
-request. V1 will have no table chooser, population field, or SQL/file row-filter
-expression. `simplify:` add table-specific period predicates when a delivery consumer
-needs them; SWECOV's large per-register SoS SQL tables are the known trigger. An
-unresolved mapping for a selected binding blocks the order; deliberately unmapped
-inventory columns remain valid coverage evidence and will never be selected. Never fall
-back to `display_name` or an FQID leaf. Shared `reg_meta` project code will own the
-semantic pass, inventory join, materializer, and CSV renderer. FastAPI will serve the
-SPA; the agent/CLI will load the versioned catalog DB and public inventory locally. Both
-thin adapters must emit byte-identical results. This deliberately adds
-`reg_meta → reg_schema` rather than a fifth package. `REFACTOR_SPEC.md` §12 tracks
-direct replacement of the current renderer, `StewardBootCatalog`, and
-`steward.project_data.json` filter.
+The materializer will include a matched multi-period table whole even when the resolved
+slice covers only a subset of its edition. V1 will have no table chooser, population
+field, or SQL/file row-filter expression. `simplify:` add table-specific period
+predicates when a delivery consumer needs them; SWECOV's large per-register SoS SQL
+tables are the known trigger. An unresolved mapping for a selected binding blocks the
+order; deliberately unmapped inventory columns remain valid coverage evidence and will
+never be selected. Never fall back to `display_name` or an FQID leaf. Shared `reg_meta`
+project code will own the semantic pass, inventory join, materializer, and CSV renderer.
+FastAPI will serve the SPA; the agent/CLI will load the versioned catalog DB and public
+inventory locally. Both thin adapters must emit byte-identical results. This
+deliberately adds `reg_meta → reg_schema` rather than a fifth package.
+`REFACTOR_SPEC.md` §12 tracks direct replacement of the current renderer,
+`StewardBootCatalog`, and `steward.project_data.json` filter.
 
 An empty project will remain a structurally valid draft for authoring, but the
 materializer will return a blocking `empty_order` issue rather than a header-only CSV.

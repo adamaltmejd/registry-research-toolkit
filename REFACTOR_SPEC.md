@@ -188,20 +188,26 @@ Rules:
   the project blocking. Highlight every divergence in both the picker and project page.
   A common-window edit never silently rewrites existing source periods; an explicit
   "apply overlap to all" action performs that rewrite where overlap exists;
-- a steward table matches on exact `(register_variant, variable, representation)`
-  mapping plus physical-edition overlap with the requested period;
-- emit every matching table by default; v1 has no table chooser and no separate
-  population field;
-- a matching multi-period table is ordered whole, even when the request covers only a
-  subset of its edition;
+- for each selected binding, first resolve any representation changes into deterministic
+  logical slices. A steward table matches a slice only when its mapping exactly matches
+  `(register_variant, variable, representation)` and its physical edition overlaps that
+  slice; overlap elsewhere in the overall request does not match. The edition
+  contributes only its overlap with that slice to coverage. The union of those
+  slice-clipped contributions must cover the full requested period, including every
+  segment of a disjoint request. Any uncovered subperiod blocks the entire order with
+  the exact gaps; overlap alone never permits a partial manifest;
+- after that coverage gate passes, emit every table matching at least one slice by
+  default; v1 has no table chooser and no separate population field;
+- a matching multi-period table is ordered whole, even when its matched slice covers
+  only a subset of the table's edition;
 - steward rows carry the literal physical `table` and physical `column`. The canonical
   `representation` is a join discriminator, not an output substitute, and `display_name`
   is not a delivery coordinate;
 - the confirmed global-deployment fallback is the same row shape with blank `table`, the
   resolved canonical column in `column`, and `edition = requested_period` until a
-  physical global inventory exists. It is valid only when canonical resolution
-  completely covers the request; if representation changes across the request, fan out
-  deterministically, and block unresolved or ambiguous coverage;
+  physical global inventory exists. It obeys the same full-coverage gate using canonical
+  resolution; if representation changes across the request, fan out deterministically,
+  and block unresolved, ambiguous, or partially covered requests;
 - `steward` names the active deployment/inventory. `ProjectData.steward` is provenance
   and must match before ordering;
 - uploading a project to a steward deployment always validates it against that
