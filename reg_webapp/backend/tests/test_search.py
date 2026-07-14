@@ -140,6 +140,31 @@ def test_invalid_cursor_is_actionable_422(client):
     assert "cursor" in response.json()["detail"].lower()
 
 
+def test_empty_cursor_is_actionable_422_without_golden_pin(client):
+    response = client.get("/api/search?q=unconfigured&type=register&cursor=")
+    assert response.status_code == 422
+    assert response.json()["detail"] == (
+        "Search cursor must not be empty. Restart the search without cursor."
+    )
+
+
+def test_empty_cursor_is_actionable_422_with_golden_pin(client, monkeypatch):
+    monkeypatch.setattr(
+        golden,
+        "_PINS",
+        {
+            ("lisa", "register"): _Pin(
+                query="lisa", group="register", fqids=("scb/rams",), note=None
+            )
+        },
+    )
+    response = client.get("/api/search?q=LISA&type=register&cursor=")
+    assert response.status_code == 422
+    assert response.json()["detail"] == (
+        "Search cursor must not be empty. Restart the search without cursor."
+    )
+
+
 def test_default_type_is_all_four_groups(client):
     # No ?type= preserves the canonical typed groups when there is no useful
     # cross-group top-results panel to show.

@@ -114,6 +114,15 @@ def _validated_type(type: str = "all") -> str:
     return type
 
 
+def _validated_cursor(cursor: str | None = None) -> str | None:
+    if cursor is not None and not cursor.strip():
+        raise HTTPException(
+            status_code=422,
+            detail="Search cursor must not be empty. Restart the search without cursor.",
+        )
+    return cursor
+
+
 def _has_searchable_token(q: str) -> bool:
     """Whether the query carries at least one unicode alphanumeric char. A
     blank / whitespace / punctuation-only query short-circuits to empty groups
@@ -532,6 +541,8 @@ def get_search(
     CLASSIFICATION and VALUE/code surfaces are catalog-global and pass through
     unscoped. A global deployment uses the same cursor contract without the steward
     restriction."""
+    cursor = _validated_cursor(cursor)
+
     # Per-type gates: each arm runs (and its group is emitted) only when the
     # requested type selects it. `all` selects every arm.
     want_register = req_type in ("all", "register")
