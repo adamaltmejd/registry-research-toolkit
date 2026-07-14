@@ -9,8 +9,9 @@ scheme:
     Cache-Control: <one of three per-route policies — see below>
 
 ``cache_control_for`` picks one of three policies per path, all paired with the
-body-hash ETag so revalidation stays a cheap 304 when unchanged and a fresh 200
-when the body moves:
+body-hash ETag so an unchanged representation returns a bodyless 304 and a changed
+one returns a fresh 200. At this head the route still executes and serializes before
+the body hash is known, so the 304 saves transfer but not origin computation:
 
 - ``/api/context`` (the deployment-identity read the SPA vintage footer renders)
   carries ``no-cache`` — it must revalidate on every request because it visibly
@@ -25,8 +26,9 @@ when the body moves:
   #322 concept-group folds, so it has the identical staleness gap #499 fixed for
   catalog (#506); ``/api/stats`` depends on the boot-loaded steward catalog index
   for filtered deployments (#726). A short window forces revalidation soon (the
-  ETag keeps it a 304); we keep it ``public`` (NOT ``no-cache``) so the Cloudflare
-  edge stays cacheable — ``CF-Cache-Status: HIT`` and the #220 probe survive,
+  ETag avoids retransmitting an unchanged body, but route work still occurs); we
+  keep it ``public`` (NOT ``no-cache``) so the Cloudflare edge stays cacheable —
+  ``CF-Cache-Status: HIT`` and the #220 probe survive,
   which ``no-cache`` would break.
 - The rebuild-stable doc-library reads (``/api/docs/*``) keep the 24h
   ``max-age=86400`` window: their content only changes on a DB rebuild (which the
@@ -51,8 +53,8 @@ import hashlib
 CACHE_CONTROL = "public, max-age=86400, must-revalidate"
 
 # Always-revalidate policy for deployment-identity reads: the browser must
-# revalidate every request, but the existing ETag makes that a cheap 304 when
-# unchanged and a fresh 200 right after a deploy.
+# revalidate every request. The existing body-derived ETag avoids retransmitting
+# an unchanged response but still executes the route; a deploy returns a fresh 200.
 CACHE_CONTROL_REVALIDATE = "no-cache"
 
 # Short window for fold-bearing reads (catalog + search) and steward-dependent
@@ -60,7 +62,8 @@ CACHE_CONTROL_REVALIDATE = "no-cache"
 # returning user whose browser holds the unversioned cached copy. The body-hash
 # ETag already changes when the body changes, but the 24h `CACHE_CONTROL` window
 # lets the browser serve its stale copy for a day WITHOUT revalidating. 60s
-# forces revalidation soon (the ETag keeps it a cheap 304). We keep it `public`
+# forces revalidation soon (the ETag avoids retransmitting an unchanged body, but
+# the current middleware still executes the route). We keep it `public`
 # (NOT `no-cache`) so the Cloudflare edge stays cacheable: `CF-Cache-Status: HIT`
 # and the #220 probe survive, which `no-cache` would break.
 CACHE_CONTROL_SHORT = "public, max-age=60, must-revalidate"

@@ -41,23 +41,65 @@ root `ARCHITECTURE.md`; remaining/unbuilt schema work lives in `REFACTOR_SPEC.md
   consumed by `reg_schema` (Python) and the SPA (TypeScript codegen'd from OpenAPI).
   Composition just concatenates `issues`.
 
+## Logical project selection vs. physical delivery
+
+`project_data.json` records research intent, not steward storage topology. A `Source`
+groups bindings by logical `register_variant` and requested period; `Source.name` is an
+internal handle used by panels. It is never a physical filename or SQL-table identity.
+One logical source can resolve to many edition-specific physical tables, and one
+multi-period physical table can satisfy several requested periods, so adding `table` or
+physical `edition` fields to `Source` would conflate two different grains.
+
+The v1 target therefore keeps a separate, public, version-controlled steward delivery
+inventory compiled into the released steward artifact. Each physical table has one
+explicit finite edition and literal physical columns; each column has zero or more
+mappings to `(register_variant, variable FQID, canonical representation)`. This
+preserves unmapped columns for coverage and permits one table/column to serve several
+logical variants. `reg_schema` remains independent of the inventory and of reg_meta;
+shared `reg_meta` project code will join a structurally valid project, semantic
+resolution, and the optional inventory in the v1 target.
+
+Every v1 researcher project must carry an explicit requested period. `"_default"` exists
+only for the provisional steward pseudo-project, so remove it from `Source.period` when
+that filter migrates to the delivery inventory; do not retain a structurally valid but
+non-orderable project state. The SPA may expose a common study window as an authoring
+default, but each `Source` still persists its concrete period. Adding a source defaults
+that period to the full available intersection, including disjoint segments. If the
+intersection is empty, the add is blocked rather than inventing a period. A later
+common-window edit does not mutate existing source periods; if it leaves an existing
+source disjoint, the source keeps its explicit period and the project becomes blocking.
+Divergence remains visible rather than being hidden as inheritance, and an explicit
+apply-to-all action rewrites only sources with an overlap. An empty project is a valid
+editable draft but cannot be materialized as an order. See `REFACTOR_SPEC.md` §12.
+
+## Closed project root
+
+**V1 decision (2026-07-14; pending implementation at this head):** `ProjectData` is a
+closed object. Unknown top-level keys receive `unexpected_field`, just like unknown keys
+on `Source`, `Binding`, and `Panel`. V1 has neither arbitrary steward-namespaced blocks
+nor a placeholder `extensions` field. The only current corpus use is the archived
+`reg_monabundle` subsystem, so the cutover deletes that mechanism and its fixtures
+without migration code. If a real future consumer needs extension data, add one explicit
+`extensions` container with a defined owner and validation boundary then.
+
 ## Not in scope (intentionally)
 
-- **§6.8.2 namespaced-block rules.** Each namespaced block (`reg_monabundle`, `swecov`,
-  …) is validated by its owning package where it exists. `reg_schema` treats those
-  blocks as opaque objects — it only checks shape, not contents.
+- **Generic extension validation.** V1 has no extension surface to validate. A future
+  extension consumer must introduce its explicit container and owner-specific contract
+  rather than reopening the project root.
 - **§6.8.3 semantic rules (reg_meta-backed).** FQID resolution against a live reg_meta
-  DB, classification existence, steward-catalog membership, drift detection. Lives in
-  `reg_webapp` (and any local CLI that loads reg_meta). The split is what lets
-  `reg_schema` ship reg_meta-free.
+  DB, classification existence, steward-inventory membership, drift detection. The
+  current web-only implementation lives in `reg_webapp/semantic.py`; the v1 target moves
+  it into shared `reg_meta` project code used by the webapp and CLI. The dependency
+  remains one-way, so `reg_schema` still ships reg_meta-free.
 - The `project_data.codes.json` sibling file. Codes live alongside the spec and are
   dereferenced from reg_meta at kit-build time; deferred to the MONA rebuild (see
   REFACTOR_SPEC.md §8/9/10a — archived). It may grow a schema dataclass here later;
   phase 1 keeps it out.
 - **Per-source SQL filtering (`where`).** There is no `where` field in the v1 baseline
   `Source`. Cohort/row filtering is a property of the MONA-side runner, not the order
-  spec. A steward that wants to record a filter for audit puts it in its own namespaced
-  block (e.g. `swecov.filters`).
+  spec. A future audit-filter use case requires a separately designed contract; it does
+  not reserve a generic v1 escape hatch.
 
 ## What this layer does NOT validate
 
@@ -154,9 +196,9 @@ rule for adding cases.
 
 The corpus grows alongside the validator: at least one well-formed empty-issues case to
 prove the format/harness/round-trip, plus one (or more) negative case per structural
-rule. Negative cases for §6.8.2 (namespaced blocks) and §6.8.3 (reg_meta-backed
-semantic) layers live in their owning packages, not here — `reg_schema` only owns the
-structural layer's corpus.
+rule. The current-head namespaced-block fixtures are legacy tests removed by the v1
+closed-root cutover. Negative cases for §6.8.3 (reg_meta-backed semantic) live in their
+owning packages, not here — `reg_schema` only owns the structural layer's corpus.
 
 ## Structural rules and issue codes
 
@@ -169,7 +211,7 @@ UI affordances, new codes are additive (§6.8.0). Current codes:
   | `missing_required_field`               | A required field (top-level, source, binding, panel, member) is absent.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
   | `invalid_field_type`                   | A field's JSON type is wrong (e.g. `steward` is not a string; `members` is not an array; `period` is null).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
   | `invalid_enum_value`                   | `steward`, `type`, `id_subtype`, `numeric_subtype` is outside its allowed set.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-  | `unexpected_field`                     | An unrecognized key on a CLOSED object (`Source` / `Binding` / `Panel` / member) — these are the `extra="forbid"` `_Model` subclasses. Top-level unknown keys are namespaced blocks, not errors (`ProjectData` is `extra="ignore"`).                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+  | `unexpected_field`                     | An unrecognized key on a closed object. At the current head this covers `Source` / `Binding` / `Panel` / member; the v1 closed-root cutover makes it cover `ProjectData` too and removes the temporary interpretation of unknown top-level objects as namespaced blocks.                                                                                                                                                                                                                                                                                                                                                                                                          |
   | `invalid_fqid`                         | FQID segment count or per-segment characters are wrong: binding `variable` is not a 3-segment `<provider>/<register>/<slug>`, `value_set` is not a 2-segment `class/<slug>`, or `register_variant` is not a 3-part `<provider>/<register>/<variant>` coordinate. The binding leaf is a bare slug — the retired `@version` pin is now a stray `@` the per-segment grammar rejects (§6.8.3 resolves the value set from `(variable, variant, period)`).                                                                                                                                                                                                                              |
   | `fqid_register_variant_mismatch`       | A binding `variable`'s first **2** segments (provider/register) don't equal the owning source's `register_variant` prefix. The variant is not repeated on the binding — it lives once on the Source.                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
   | `invalid_period`                       | A `Source.period` is not an int year, a period-token string (`YYYY`, `YYYY-MM`, `YYYY-MM-DD`, `HTYYYY`, `VTYYYY`, `YYYY-Q[1-4]`, `YYYY-H[12]`), the snapshot sentinel `"_default"`, a `{"from","to"}` range object with valid endpoints, or a #307 segment LIST (interrupted series). The list rules raise the same code (member-pathed `/period/<i>`): empty list, a non-segment member (`_default` / nested list / junk), an inverted member range, or members not sorted-ascending / overlapping. A `YYYY-MM-DD` token that passes the syntactic 01-31 day envelope but names a calendar-impossible day (`2019-02-29` in a non-leap year, `2018-02-30`) also raises this code. |

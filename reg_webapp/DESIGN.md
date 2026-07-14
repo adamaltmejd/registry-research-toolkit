@@ -196,8 +196,8 @@ link). The earlier immediate-neighbor routes (`/classification_predecessors`,
 (reg_meta's `Catalog.classification_successors`/`classification_predecessors` accessors
 remain as public API and back the chain walk.)
 
-The classification leaf also embeds further payloads inline for synchronous SPA render:
-`codes` (reg_meta's `ClassificationCode`, embedded directly from
+At the current head, the classification leaf also embeds further payloads inline for
+synchronous SPA render: `codes` (reg_meta's `ClassificationCode`, embedded directly from
 `Catalog.classification_codes` — the resolved edition's canonical value-set codes and
 labels; omitted when empty), `dimensions` (#609; reg_meta's `ConceptGroupSummary`,
 embedded directly from `Catalog.classification_dimensions` — the curated umbrella
@@ -210,7 +210,9 @@ renders the resolved edition as a code/label panel (shared `CodeList` viewer —
 component used for the variable value set, with a size-dependent filter: the search box
 appears only when the set reaches the `CODE_FILTER_THRESHOLD`, hidden for small sets;
 large sets collapse into derived level/prefix groups or a bounded flat preview; #638 /
-#1120), and non-active tabs do not fetch their value sets until selected.
+#1120), and non-active tabs do not fetch their value sets until selected. The v1 payload
+correction under `CodeList` removes the synchronous full-code embedding while retaining
+bounded metadata and relationship data here.
 
 **Variable succession is embedded too (#582).** The binding leaf node carries the **full
 variable succession chain** inline as `succession_chain` (reg_meta's `VariableEdition`,
@@ -469,9 +471,11 @@ sort key.
   import; a typo'd fqid raises at apply (never silently drops). Eval gaps the pins close
   are flipped to `expect = "hit"` in `search_eval.toml` (SUN remains the lone gap — a
   concept-group modeling issue, not a golden-boost one).
-- **ETag/caching is automatic**: `/api/search` is a GET, so the `ETagMiddleware` stamps
-  a body-derived ETag (the query is part of the URL → part of the CF edge cache key, and
-  part of the body → part of the ETag). No per-route caching code.
+- **ETag/cache-header wiring is automatic; cache effectiveness is not assumed**:
+  `/api/search` is a GET, so the `ETagMiddleware` stamps a body-derived ETag (the query
+  is part of the URL → part of the CF edge cache key, and part of the body → part of the
+  ETag). No per-route caching code. The pending v1 performance probe must separately
+  prove edge MISS→HIT and no-origin warm behavior for this query route.
 - **Connection seam** (`conn.py`): the per-request read-only open (`catalog_conn`, the
   threadpool-safe pattern from #168) is shared with the catalog routes — extracted to
   `conn.py` so search doesn't import the catalog route module just for the connection.
@@ -643,9 +647,29 @@ the 7 binding-suffix sub-endpoints) carries
 (see below); fold- or steward-dependent reads (`/api/catalog/*`, `/api/search`, and
 `/api/stats`) keep `public, max-age=60, must-revalidate`; rebuild-stable doc-library
 reads (`/api/docs/*`) keep `public, max-age=86400, must-revalidate`. A matching
-`If-None-Match` yields a **304** with no body. The pure logic lives in `etag.py`
-(`compute_etag` + `etag_matches` + `cache_control_for`); an ASGI middleware
-(`ETagMiddleware`) wires it DRY onto every GET read response.
+`If-None-Match` yields a **304** with no body, but the current body-derived middleware
+still executes the route and serializes the response first: it saves transfer, not
+origin computation or latency. The pure logic lives in `etag.py` (`compute_etag` +
+`etag_matches` + `cache_control_for`); an ASGI middleware (`ETagMiddleware`) wires it
+DRY onto every GET read response.
+
+**V1 early-revalidation correction (decision 2026-07-14; not implemented at this
+head).** App code, catalog DB, delivery inventory, steward configuration, and docs DB
+are immutable for a process lifetime; changing any of them replaces the process. At
+startup, derive one content-backed generation token from those inputs. For known pure
+GET reads, derive the validator from that token plus steward and the canonical request
+identity, and satisfy a matching `If-None-Match` before route execution, DB work, or
+body serialization. Keep the current body-derived path as the conservative fallback for
+an unknown or mutable GET. This makes a 304 cheap without weakening exact representation
+identity.
+
+Browser and shared-cache freshness are separate concerns. Keep a short browser window
+where prompt redeploy visibility matters, but let the Cloudflare cache retain immutable,
+deploy-generation-keyed catalog/search responses for substantially longer without
+synchronous origin revalidation at every browser expiry. A warm search must be served
+without route execution. This complements rather than masks the bounded cold-query work:
+arbitrary first-time queries still have to meet the origin budget. #1135's bounded SQL
+path meets it, so no second in-process response cache is warranted.
 
 - **`reg_meta_version`** is the INSTALLED `reg_meta.__version__` (the v1.x Model A
   package release), NOT the DB `schema_version` manifest. `steward_id` is
@@ -656,19 +680,20 @@ reads (`/api/docs/*`) keep `public, max-age=86400, must-revalidate`. A matching
 - **`/api/context` revalidates always** (`Cache-Control: no-cache`, in
   `REVALIDATE_ALWAYS_PATHS`): the SPA vintage footer reads it to assert a specific
   deploy version/date, so a sub-24h-stale copy would *visibly lie* right after a deploy.
-  The ETag keeps revalidation cheap — a 304 when nothing changed, a fresh 200 the moment
-  a deploy bumps the version. Catalog and search endpoints use `max-age=60` because both
-  embed the #322 concept-group folds (which change without a rebuild/deploy) and a
-  sub-minute-stale fold set would surface the wrong grouping for a returning user whose
-  browser holds the unversioned copy; `/api/stats` shares that short tier because a
-  filtered steward's counts depend on the steward catalog index, which can change on a
-  same-id redeploy. The body-hash ETag keeps revalidation a cheap 304 when nothing
-  changed, and `public` keeps the CF edge cacheable (the #220 probe survives). Only
-  `/api/docs/*` keeps `max-age=86400` — doc-library content is rebuild-stable and a
-  sub-day-stale list is acceptable there; the ETag still guarantees correctness on
-  revalidation. The edge worker (`reg_webapp/edge/`) defers to this origin's
-  `Cache-Control` contract (it only stamps the `__edge_v` cache-generation param,
-  orthogonal to caching policy), so the per-route policy needs no edge change.
+  The current ETag keeps an unchanged body off the wire; the early-validator correction
+  above makes that path computationally cheap too. A deploy bump produces a fresh 200.
+  Catalog and search endpoints use `max-age=60` because both embed the #322
+  concept-group folds, which can change at the same browser URL on redeploy. A long
+  browser-fresh copy would surface the old grouping to a returning user even though the
+  edge generation changed; `/api/stats` shares that short browser tier because filtered
+  counts can also change on a same-id redeploy. The body-hash ETag avoids retransmitting
+  unchanged bodies, and `public` keeps the CF edge cacheable (the #220 probe survives);
+  early validation is what removes repeated route work. Only `/api/docs/*` keeps
+  `max-age=86400` — doc-library content is rebuild-stable and a sub-day-stale list is
+  acceptable there; the ETag still guarantees correctness on revalidation. The edge
+  worker (`reg_webapp/edge/`) defers to this origin's `Cache-Control` contract (it only
+  stamps the `__edge_v` cache-generation param, orthogonal to caching policy), so the
+  per-route policy needs no edge change.
 - **Middleware skips WRITE endpoints** via a method gate: only `GET` reads are stamped,
   so the POST endpoints pass through with no ETag. It also skips non-200 responses — an
   error body isn't a cacheable representation, and handing the client a validator for a
@@ -677,19 +702,66 @@ reads (`/api/docs/*`) keep `public, max-age=86400, must-revalidate`. A matching
   (Cloudflare edge caching / DDoS shielding / edge rate-limits) is a deploy/maintainer
   concern and not backend code. Remaining: edge config — see `REFACTOR_SPEC.md`.
 
+## Production performance baseline (2026-07-14)
+
+The table is the pre-correction production baseline that motivated #1135 and #1136.
+Chrome 150 traces used browser-cold isolated contexts, 1× CPU, and no network
+throttling. No CrUX field data was available, and DevTools emitted neither TBT nor Speed
+Index; do not substitute Lighthouse values for the missing trace metrics.
+
+  | Journey            | TTFB   | FCP    | LCP      | CLS   | Interpretation                                               |
+  | ------------------ | ------ | ------ | -------- | ----- | ------------------------------------------------------------ |
+  | Home `/`           | 319 ms | 548 ms | 546 ms   | 0.008 | Good; no homepage optimization lane                          |
+  | Search `?q=person` | 66 ms  | 152 ms | 2,918 ms | 0.044 | Backend/cache wait dominates LCP                             |
+  | ICD-11-SE detail   | 78 ms  | 184 ms | 264 ms   | 0.303 | LCP is the shell footer; classification content shifts later |
+
+Search INP was 26 ms (0.1 ms input delay, 2 ms processing, 24 ms presentation), so the
+interaction and subsequent DOM work are not the search bottleneck. The API took 2,759 ms
+cold and 1,330 ms repeat/revalidated for only 6.9 KB compressed / 28.4 KB decoded; 97.7%
+of LCP was render delay awaiting results. #1135 shipped bounded SQL candidates, stable
+cursors, and bounded folding/backfill instead of full-result/count work. On its final
+head, 25 distinct direct-origin requests measured 276.1 ms p95 (280.4 ms maximum), and a
+browser-cold trace measured 380 ms LCP. The v1 regression budgets remain 500 ms
+cache-miss p95 and browser-cold LCP below 2.5 s; warm edge hits must not execute the
+origin.
+
+ICD-11-SE transferred 542.5 KB / decoded 3.28 MB in 398 ms. The client sensibly grouped
+17,159 `X` codes into only 675 DOM nodes, so DOM virtualization is not the missing fix;
+the complete code corpus should not cross the initial detail boundary. One asynchronous
+replacement contributed 0.295 CLS at roughly 709 ms, and repeat CLS remained 0.118.
+#1136 made the canvas a flex column, let the routed region fill the viewport remainder,
+added bounded catalog-loading skeletons, and reserved the multi-edition graph slot only
+while it is pending or renderable. Exact-head ICD-11-SE traces then measured CLS 0.0616
+cold and 0.0158 repeat (LCP 108 ms and 80 ms). Cold and repeat CLS < 0.1 remains the
+regression budget. The separate 3.28 MB payload correction under `CodeList` is still
+pending.
+
+Content-hashed JS (\~103 KB), CSS (\~17 KB), and initially used fonts (\~130 KB)
+currently revalidate, costing roughly 24–46 ms per main asset on repeat visits. Hashed
+`/assets/*` responses must get a long-lived `immutable` policy through Workers Assets'
+`frontend/public/_headers` support; `index.html` and SPA fallback documents remain
+revalidatable. This is P2: render-blocking CSS cost only 26–39 ms and DevTools estimated
+zero FCP/LCP savings from removing it.
+
 ## Steward layering and the in-memory catalog index (`stewards.py` + `catalog_index.py`)
 
-A steward is `stewards/<id>/steward.toml` (identity/branding, required) plus an optional
-`steward.project_data.json` (the catalog filter). The **`global`** steward ships only
-`steward.toml` — the *absence* of the project file means full-universe mode (no filter,
-reg_meta's whole catalog). The loader (`stewards.load_steward`) detects that absence via
-`has_catalog_filter`.
+A steward currently ships `stewards/<id>/steward.toml` (identity/branding, required)
+plus an optional `steward.project_data.json` (the catalog filter). The **`global`**
+steward ships only `steward.toml` — the *absence* of the project file means
+full-universe mode (no filter, reg_meta's whole catalog). The loader
+(`stewards.load_steward`) detects that absence via `has_catalog_filter`.
 
-**Why reuse `project_data.json` as the catalog schema?** A steward catalog is
-structurally identical to a researcher's project (same `reg_schema` validator) — many
-`sources`, no `panels` — so the FQIDs on its columns *are* the catalog, with no separate
-catalog schema to maintain. The webapp can validate both a project and a catalog with
-the same structural + semantic validators, so consistency comes for free.
+**Current implementation, not the v1 target.** Reusing `project_data.json` made the
+first filter cheap to validate, but it is lossy: project `Source.name` is an internal
+handle, its period may span many deliveries, and the generated steward file collapses
+physical table and edition identity into `(register_variant, FQID, column)` admission.
+The v1 boundary is a public steward delivery inventory: each table has one explicit
+finite edition and literal physical columns, and each column has zero or more mappings
+to `(register_variant, variable FQID, canonical representation)`. Unmapped columns
+remain in the physical coverage denominator without becoming orderable; multiple
+mappings allow a combined table to serve several variants. That one inventory must
+derive exact edition-aware admission, browse unions, coverage, and normalized order
+output. See the durable order contract below and `REFACTOR_SPEC.md` §12.
 
 The in-memory **`CatalogIndex`** is built once at boot (`load_catalog_index`, with the
 boot connection) and held on `app.state` for the process lifetime. It is the filter that
@@ -802,10 +874,11 @@ stays in-repo while testing the model, but that is not the release distribution 
 before v1, extract SWECOV into its own steward repo/system and keep that system copyable
 for later steward deployments. A real filtered steward catalog now ships:
 `stewards/swecov/steward.project_data.json` (column-based admission against the flavored
-reg_meta DB; see `stewards/swecov/README.md` for provenance and coverage). Remaining:
-deploy wiring for the swecov hostname, the SPA catalog-authoring mode, a
-`reg-meta-build steward-diff` CLI, and per-steward `extensions` — see
-`REFACTOR_SPEC.md`.
+reg_meta DB; see `stewards/swecov/README.md` for provenance and coverage), and its
+`data.swecov.se` deployment is wired. Remaining v1 work is the delivery-inventory
+replacement and extraction to the steward-owned system. The SPA catalog-authoring mode
+and a `reg-meta-build steward-diff` CLI are deferred post-v1; see `REFACTOR_SPEC.md`. V1
+deliberately has no generic per-steward extension surface.
 
 ## Pydantic boundary
 
@@ -1469,6 +1542,18 @@ form when the start is unknown (#658).
   expand control. Classification conformance warnings render on the variable value-set
   surface, not inside the shared code list.
 
+  **V1 payload correction (decision 2026-07-14; not implemented at this head).** A
+  classification or value-set detail response does not embed its complete code corpus.
+  Codes use a dedicated paginated, searchable endpoint with stable cursors; the detail
+  payload carries summary metadata, authoritative level buckets, optional
+  presentation-only prefix buckets where the classification explicitly supports them,
+  and an initial bounded page only. Expanding a bucket or filtering fetches the matching
+  page instead of downloading the corpus before rendering its grouping. Genuinely flat
+  sets remain flat: do not promote `CodeList`'s current prefix heuristics to semantic
+  hierarchy. The separate full export reuses reg_meta's existing complete-code export
+  rather than adding a second exporter. The shared `CodeList` remains the renderer for
+  pages from either owner surface.
+
 - **`TechnicalDetails`** (#638 PR4) — the shared "Technical details" `<details>`
   disclosure that demotes **backend/structural** fields below the user-facing ones. The
   binding leaf owns a single bottom disclosure for the variable's sensitive / identifier
@@ -1686,9 +1771,17 @@ plain Docker image; only `fly.toml` and the CI deploy job are Fly-specific.
   MISS→HIT per URL, ETag→body mapping consistent, and conditional GETs answer 304 from
   the edge (`CF-Cache-Status: HIT`, no origin traffic). The path-based FQID surface
   stands; no query-string fallback needed before publishing the OpenAPI.
-- **Known quirk**: pre-existing zone bot protection 403s non-browser User-Agents (e.g.
-  Python's default `urllib` UA) on every path including `/api/*`; the SPA is unaffected,
-  but programmatic API consumers must send a real User-Agent header.
+- **V1 performance-probe extension (pending)** — add a representative `/api/search`
+  MISS→HIT + `Age`/`CF-Cache-Status` assertion and prove its warm conditional request
+  performs no origin route work. Probe static responses separately: emitted hashed
+  `/assets/*` files must be long-lived `immutable`, while `index.html` and SPA fallback
+  documents must revalidate. The original #220 path gate remains unchanged.
+- **V1 programmatic boundary (decision 2026-07-14)**: the local agent/CLI reads the
+  versioned DB and public delivery inventory directly, so it does not depend on the
+  deployed API or impersonate a browser to evade zone bot protection. V1 deployment
+  supports the SPA. If remote programmatic API access becomes a product surface later,
+  admit a truthful toolkit User-Agent on the API paths under endpoint-specific rate
+  limits and probes; do not document a fake browser header as the contract.
 
 ## Frontend unit tests (Vitest)
 
@@ -1722,11 +1815,13 @@ runs.
 ## Project-write surface (`routes/project.py`)
 
 Two POST endpoints: `/api/project/validate`, `/api/project/order`. Both read the body as
-a **raw JSON dict** (not a typed param): `/validate` must accept malformed specs to
-diagnose them, and the raw dict preserves steward-namespaced blocks (`swecov` /
-`reg_monabundle`) that a typed `extra="ignore"` body would silently drop. The raw body
-is documented in OpenAPI as an open object (`additionalProperties: true`) so the SPA
-codegen sees a body to send.
+a **raw JSON dict** (not a typed param) because `/validate` must accept malformed specs
+to diagnose them. At the current head this also preserves steward-namespaced blocks that
+`ProjectData(extra="ignore")` would silently drop. The v1 closed-root cutover removes
+that secondary rationale and reports unknown top-level keys; raw ingress remains useful
+for diagnostic validation. The request body is currently documented in OpenAPI as an
+open object (`additionalProperties: true`) so the SPA codegen sees a body to send;
+tighten that schema with the closed-root implementation.
 
 - **`/validate` status discipline.** A spec that FAILS validation is a *successful
   validation response* — **HTTP 200 with `ok=false` + the issues**. 4xx is reserved for
@@ -1736,10 +1831,67 @@ codegen sees a body to send.
   runs first, so a structurally-rejected body costs no DB hit. It also runs the
   cross-block referential checks (orphan `binding_options` keys /
   suppress_k-on-non-categorical).
-- **`/order`** renders the steward's default order-export CSV (a `text/csv` download)
+- **`/order`** renders the current provisional order-export CSV (a `text/csv` download)
   and is the one documented exception to the "every route declares a `response_model`"
   lint (it returns raw bytes). Unlike `/validate`, it structurally **gates** first: you
   cannot render a provider order from an invalid spec → 422.
+
+**V1 normalized delivery manifest (decision 2026-07-11; not implemented at this head).**
+The current seven-column, one-row-per-binding renderer is provisional. V1 has one common
+CSV contract, not per-steward templates:
+
+```text
+steward,provider,register,variant,requested_period,edition,table,column,variable
+```
+
+`project_data.json` will supply the logical selection and explicit requested period;
+reg_meta will resolve its canonical representation; the selected steward's public
+delivery inventory will map exact `(register_variant, variable, representation)`
+coordinates to every matching physical table, literal physical column, and overlapping
+physical edition. A table identifier is opaque (exact filename or schema-qualified SQL
+table). Edition uses the existing finite period grammar and may cover several periods,
+but is never inferred from an ambiguous filename or represented as `"_default"`. One
+table/column may map to several variants and several tables may map to one coordinate.
+
+Steward rows will output the literal physical `table` and `column`; the canonical
+representation will stay a join discriminator. The confirmed global fallback will use
+blank `table`, the resolved canonical column, and `edition = requested_period` until a
+physical global inventory exists. It will be valid only when canonical resolution
+completely covers the request; representation changes will fan out deterministically,
+while unresolved or ambiguous coverage blocks. The output `steward` will be the active
+deployment/inventory; the project's provenance field must match before ordering. Every
+uploaded project will be validated against the receiving deployment. A provenance
+mismatch will block ordering, and the app will deliberately offer no steward-retarget
+workflow: changing provenance means editing the JSON and uploading it again. Preserve
+project source/binding order and sort any fan-out by table, canonical edition, then
+physical column.
+
+The SPA will expose one common study window as the project-authoring default. When a
+source has any overlap, adding it will immediately persist the full available
+intersection, including every disjoint segment; this will be the default action, not a
+suggestion the user must accept. With no overlap, the picker will block the add and
+explain the incompatibility rather than inventing a period. If a later common-window
+edit leaves an existing source disjoint, its explicit period will remain and the project
+will become blocking. The picker and project page will highlight every divergence. The
+common window will never become hidden inheritance, and an explicit apply-to-all action
+will rewrite only sources with an overlap.
+
+The materializer will include a whole multi-period table when its edition overlaps the
+request. V1 will have no table chooser, population field, or SQL/file row-filter
+expression. `simplify:` add table-specific period predicates when a delivery consumer
+needs them; SWECOV's large per-register SoS SQL tables are the known trigger. An
+unresolved mapping for a selected binding blocks the order; deliberately unmapped
+inventory columns remain valid coverage evidence and will never be selected. Never fall
+back to `display_name` or an FQID leaf. Shared `reg_meta` project code will own the
+semantic pass, inventory join, materializer, and CSV renderer. FastAPI will serve the
+SPA; the agent/CLI will load the versioned catalog DB and public inventory locally. Both
+thin adapters must emit byte-identical results. This deliberately adds
+`reg_meta → reg_schema` rather than a fifth package. `REFACTOR_SPEC.md` §12 tracks
+direct replacement of the current renderer, `StewardBootCatalog`, and
+`steward.project_data.json` filter.
+
+An empty project will remain a structurally valid draft for authoring, but the
+materializer will return a blocking `empty_order` issue rather than a header-only CSV.
 
 **Connection model = per-request open ON ONE THREAD** (the locked cross-thread guard).
 `/validate` and `/order` are `async` only to read the body off the wire; the blocking
@@ -1753,18 +1905,19 @@ The order CSV cell values are passed through a **spreadsheet formula-injection**
 otherwise execute as a formula when the data provider opens the manifest. A leading
 formula-trigger char (`=+-@\t\r`) is prefixed with a single quote.
 
-## Semantic validation (`semantic.py`)
+## Current semantic validation (`semantic.py`)
 
-The §6.8.3 reg_meta-backed validation layer. It lives in the webapp — NOT `reg_schema` —
-because `reg_schema` is reg_meta-free by design (the schema has many consumers,
-including future exporters and the MONA rebuild, that do not carry the DB); semantic
-rules need the live DB, so they belong where the DB is. `reg_schema` lists these codes
-as defined-but-not-emitted on its own surface; this is their home. The webapp invokes it
-(with `reg_schema`'s structural validator and the owning packages' block validators) —
-`reg_schema` itself never imports the owning packages. It emits the same frozen
-`reg_schema.ValidationIssue` shape the other layers do, so composition is plain tuple
-concatenation. It takes a `Catalog` and never opens a connection (the caller owns the
-connection's lifetime).
+The current §6.8.3 reg_meta-backed validation layer lives in the webapp, not
+`reg_schema`: `reg_schema` stays reg_meta-free and cannot resolve against a live DB.
+`reg_schema` lists these codes as defined-but-not-emitted on its own surface. The webapp
+currently invokes `semantic.py` with the structural and owning-package block validators;
+it emits the same frozen `reg_schema.ValidationIssue` shape, takes a `Catalog`, and
+leaves connection ownership to its caller.
+
+This location is provisional. The v1 delivery boundary above moves semantic validation
+and order materialization together into shared `reg_meta` project code so the FastAPI
+SPA adapter and local CLI execute one implementation. `reg_schema` remains independent;
+the dependency direction is `reg_meta -> reg_schema`, never the reverse.
 
 Rules, walking each source's `register_variant` + every binding:
 
@@ -1836,20 +1989,22 @@ steward holds *no* column of the concept, and the distinct
 `representation_outside_steward_catalog` when the steward holds the concept but not the
 column the binding **resolves** to — its message enumerates what the steward *does* hold
 ("available from this steward as 'Ssyk1' only" is the actionable form of "not
-available"). Warnings, because this is also the deliberate "what would my project look
-like under steward X?" feature — load a spec against another steward's deployment and
-the warnings enumerate exactly which columns would be unavailable; the SPA offers a
-one-click "drop out-of-scope columns" remediation. The check is wired into
-`/api/project/validate`: `routes/project.py` threads `app.state.catalog_index` into
-`validate_semantic` via `run_in_threadpool`; the check runs **after** the per-binding
-period resolution because the researcher side's resolved columns are what
-`CatalogIndex.admits(fqid, column)` compares (when those are indeterminate — unresolved
-period, unknown pinned representation, ambiguous multi-column binding — the binding
-already carries its own error and only the FQID-level arm runs). The `global` deployment
-(index `None`) never emits either code. Admission keying stays variant-agnostic and on
-the literal binding FQID: a curated same_as sibling (e.g. `kon→syss`) names a
-*different* physical column, so warning on it is correct under holdings semantics, not a
-keying artifact.
+available"). These are warnings during editing so an uploaded project can be inspected,
+but the current provisional `/order` route runs only the structural gate and does not
+consume them. This is a known pre-v1 limitation: the inventory-backed materializer will
+rerun semantic/inventory validation and block these conditions. There is no cross-
+steward preview, retarget, or one-click mutation feature: the active deployment is the
+validation target, and the user edits and re-uploads the JSON if they intend to change
+it. The current check is wired into `/api/project/validate`: `routes/project.py` threads
+`app.state.catalog_index` into `validate_semantic` via `run_in_threadpool`; it runs
+**after** the per-binding period resolution because the researcher side's resolved
+columns are what `CatalogIndex.admits(fqid, column)` compares (when those are
+indeterminate — unresolved period, unknown pinned representation, ambiguous multi-column
+binding — the binding already carries its own error and only the FQID-level arm runs).
+The `global` deployment (index `None`) never emits either code. Admission keying stays
+variant-agnostic and on the literal binding FQID: a curated same_as sibling (e.g.
+`kon→syss`) names a *different* physical column, so warning on it is correct under
+holdings semantics, not a keying artifact.
 
 ## Cost protection (`limits.py`)
 
@@ -2036,34 +2191,36 @@ The committed `backend/openapi.json` is the canonical contract; this table is th
 orientation map. All endpoints are under `/api/`; read GETs are edge-cacheable, write
 POSTs are not. Catalog browse paths use FQID segments directly.
 
-  | Method | Path                                             | Purpose                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-  | ------ | ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-  | GET    | `/api/context`                                   | Deployment identity, branding, build info, catalog-drift warnings.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-  | GET    | `/api/catalog`                                   | Top-level: every provider the steward exposes + the `class` root.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-  | GET    | `/api/search`                                    | Global FTS search → typed result groups (`registers` / `variables` (folded) / `classifications` / `codes` (#352)); extensible, with unknown groups skipped by the SPA. Documentation is not rendered in global search. `?q=` required, `?limit=` per-group cap, `?type=` scopes to one group (`all` default; #393).                                                                                                                                                                                                                                                                                                                                                                                           |
-  | GET    | `/api/docs/search`                               | Docs FTS search (excerpts + source pointer), optional `?register=`; `ingested=false` when no docs index.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
-  | GET    | `/api/docs/doc/{identifier}`                     | One doc by variable/filename — metadata + source pointer + bounded excerpt (never full body).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
-  | GET    | `/api/docs/for-variable`                         | Parsed-document hook: fuzzy name/`provider_key` matches + `register_ingested` coverage flag.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-  | GET    | `/api/catalog/{fqid}`                            | Single endpoint for every hierarchy node (`kind`-discriminated). On a binding leaf, embeds the variable's full longitudinal record + its full variable `succession_chain` (#582); on a classification leaf, embeds the full succession `edition_chain` (#571), value-set `codes`, curated `dimensions`, and optional derived `family` (#1116). Optional `?period` / `?variant` / `?value_set_version` narrow a binding leaf to a `{binding, states}` subset (uniform with `/states`). A dead/renamed binding, register, or classification slug with a successor 301-redirects to its terminal successor (kind-dispatched — #355 PART 2, #412, #571); `?period` branch and sub-endpoints also redirect (#411). |
-  | GET    | `/api/catalog/{provider}/{register}/variants`    | The register's variant browser.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-  | GET    | `/api/catalog/group/{provider}/{register}/{key}` | The concept group as a browsable subject (all members; `?member=` focus). (#617/#616)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-  | GET    | `/api/catalog/group/class/{key}`                 | The classification subject route: curated umbrella group (`ClassificationGroupNode`) or derived one-dimensional succession family (`ClassificationFamilyNode`). (#756/#1116)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-  | GET    | `/api/catalog/{fqid}/states`                     | Full state history for a binding. Dead/renamed binding 301s to `/states` on its terminal successor (#411).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-  | GET    | `/api/catalog/{fqid}/predecessors`               | Inbound `variable_replaced_by` edges. Dead/renamed binding 301s to `/predecessors` on its terminal successor (#411).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-  | GET    | `/api/catalog/{fqid}/successors`                 | Outbound `variable_replaced_by` edges. Dead/renamed binding 301s to `/successors` on its terminal successor (#411).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
-  | GET    | `/api/catalog/{fqid}/lineage`                    | Materialized `variable_state_lineage` edges (consumer ← source). Dead/renamed binding 301s to `/lineage` on its terminal successor (#411).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-  | GET    | `/api/catalog/{fqid}/lineage_warnings`           | Linker-emitted lineage coverage warnings. Dead/renamed binding 301s to `/lineage_warnings` on its terminal successor (#411).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-  | GET    | `/api/catalog/{fqid}/dimensions`                 | Concept-group dimension memberships containing this variable (the variant facet groups: level/population/rank/…). Dead/renamed binding 301s to `/dimensions` on its terminal successor (#411).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-  | POST   | `/api/project/validate`                          | Three-layer validation; 200 + `ok` + issues.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-  | POST   | `/api/project/order`                             | Default order-export CSV download.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+  | Method | Path                                             | Purpose                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+  | ------ | ------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | GET    | `/api/context`                                   | Deployment identity, branding, build info, catalog-drift warnings.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+  | GET    | `/api/catalog`                                   | Top-level: every provider the steward exposes + the `class` root.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+  | GET    | `/api/search`                                    | Global FTS search → bounded typed groups (`top_results`, `registers`, folded `variables`, `classifications`, `classification_codes`, `register_value_sets`); extensible, with unknown groups skipped by the SPA. Each emitted group carries `has_more` and an opaque `next_cursor`. `?q=` is required; `?limit=` caps each group; `?type=` scopes the response (`all` default); `?cursor=` continues the requested context-bound page. Documentation is not rendered in global search.                                                                                                                                                                                                                                                                                                                                                                           |
+  | GET    | `/api/docs/search`                               | Docs FTS search (excerpts + source pointer), optional `?register=`; `ingested=false` when no docs index.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+  | GET    | `/api/docs/doc/{identifier}`                     | One doc by variable/filename — metadata + source pointer + bounded excerpt (never full body).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+  | GET    | `/api/docs/for-variable`                         | Parsed-document hook: fuzzy name/`provider_key` matches + `register_ingested` coverage flag.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+  | GET    | `/api/catalog/{fqid}`                            | Single endpoint for every hierarchy node (`kind`-discriminated). On a binding leaf, embeds the variable's full longitudinal record + its full variable `succession_chain` (#582). At the current head a classification leaf embeds its succession chain, complete value-set `codes`, curated `dimensions`, and optional derived `family` (#1116); the v1 `CodeList` payload correction removes the complete codes in favor of bounded metadata/buckets plus the dedicated code-page/export paths. Optional `?period` / `?variant` / `?value_set_version` narrow a binding leaf to a `{binding, states}` subset (uniform with `/states`). A dead/renamed binding, register, or classification slug with a successor 301-redirects to its terminal successor (kind-dispatched — #355 PART 2, #412, #571); `?period` branch and sub-endpoints also redirect (#411). |
+  | GET    | `/api/catalog/{provider}/{register}/variants`    | The register's variant browser.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+  | GET    | `/api/catalog/group/{provider}/{register}/{key}` | The concept group as a browsable subject (all members; `?member=` focus). (#617/#616)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+  | GET    | `/api/catalog/group/class/{key}`                 | The classification subject route: curated umbrella group (`ClassificationGroupNode`) or derived one-dimensional succession family (`ClassificationFamilyNode`). (#756/#1116)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+  | GET    | `/api/catalog/{fqid}/states`                     | Full state history for a binding. Dead/renamed binding 301s to `/states` on its terminal successor (#411).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+  | GET    | `/api/catalog/{fqid}/predecessors`               | Inbound `variable_replaced_by` edges. Dead/renamed binding 301s to `/predecessors` on its terminal successor (#411).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+  | GET    | `/api/catalog/{fqid}/successors`                 | Outbound `variable_replaced_by` edges. Dead/renamed binding 301s to `/successors` on its terminal successor (#411).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+  | GET    | `/api/catalog/{fqid}/lineage`                    | Materialized `variable_state_lineage` edges (consumer ← source). Dead/renamed binding 301s to `/lineage` on its terminal successor (#411).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+  | GET    | `/api/catalog/{fqid}/lineage_warnings`           | Linker-emitted lineage coverage warnings. Dead/renamed binding 301s to `/lineage_warnings` on its terminal successor (#411).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+  | GET    | `/api/catalog/{fqid}/dimensions`                 | Concept-group dimension memberships containing this variable (the variant facet groups: level/population/rank/…). Dead/renamed binding 301s to `/dimensions` on its terminal successor (#411).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+  | POST   | `/api/project/validate`                          | Three-layer validation; 200 + `ok` + issues.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+  | POST   | `/api/project/order`                             | Current provisional order-export CSV download.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
 
-**Order-export CSV columns** (the v1 default; fixed order is the contract):
+**Current provisional order-export CSV columns** (implemented at this head):
 `provider,register,variant,variable,representation,period,display_name` — one row per
 spec binding. `representation` is its OWN column (not folded into `display_name`): a
 custom display name would otherwise hide which delivery column the binding pinned, so
 the data provider couldn't tell representations apart. `period` serializes via the
-catalog `?period` wire form (range → `"<from>..<to>"`, snapshot → `"_default"`).
-Pluggable per-steward `order_template`s are remaining — see `REFACTOR_SPEC.md`.
+catalog `?period` wire form (range → `"<from>..<to>"`, snapshot → `"_default"`). This is
+not the v1 delivery contract: the inventory-backed normalized manifest above replaces it
+directly, including its best-effort fallback behavior. There are no per-steward export
+templates in the v1 plan; see `REFACTOR_SPEC.md` §12.
 
 Global FTS search shipped as `GET /api/search` (#350); the docs library shipped as
 `/api/docs/*` (#354).

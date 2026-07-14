@@ -519,7 +519,7 @@ export interface paths {
         put?: never;
         /**
          * Order Project
-         * @description Render the steward's default v1 order-export CSV.
+         * @description Render the current provisional order-export CSV.
          *
          *     Reads the raw dict and runs the STRUCTURAL gate (see reg_schema/DESIGN.md →
          *     Structural rules and issue codes) before rendering: the

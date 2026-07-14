@@ -1,7 +1,7 @@
 """`POST /api/project/order` against the slugged ``catalog_db`` fixture.
 
 See DESIGN.md → Project-write surface (routes/project.py + routes/bundle.py).
-Covers the default v1 order-export CSV: the column header + shape, the
+Covers the current provisional order-export CSV: the column header + shape, the
 ``text/csv`` content-type + ``Content-Disposition`` download header,
 determinism (same spec → byte-identical CSV), the period serialization
 (int / range / ``_default``), and the ``display_name`` fallback from reg_meta's

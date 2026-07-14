@@ -101,9 +101,13 @@ async def _read_body(response: Response) -> bytes:
 
     ``BaseHTTPMiddleware`` always hands ``dispatch`` a ``_StreamingResponse``
     whose body is an async iterator (Starlette wraps the downstream response), so
-    we buffer that iterator once — catalog/context payloads are small (KB-scale),
-    hashable in memory. A plain ``Response`` (no iterator) is handled too for
-    robustness, carrying its bytes on ``.body``."""
+    we buffer that iterator once. A plain ``Response`` (no iterator) is handled
+    too for robustness, carrying its bytes on ``.body``.
+
+    This buffering is provisional rather than free: classification responses at
+    the current head can be several decoded megabytes. The pending v1 payload split
+    will bound those responses, while the pending generation-token validator will
+    avoid route execution entirely for a matching conditional read."""
     iterator = getattr(response, "body_iterator", None)
     if iterator is None:
         return bytes(response.body)
