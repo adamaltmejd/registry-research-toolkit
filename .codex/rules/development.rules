@@ -27,78 +27,20 @@ prefix_rule(
     not_match = ["gh pr view 1140"],
 )
 
-# Git metadata is outside a linked worktree's writable root. Staging is a normal
-# implementation step. Commits and pushes always prompt, so option reordering cannot
-# hide a hook bypass or force push behind a broader user-level allow.
+# Git accepts global options before its subcommand, including config and repository-path
+# overrides. Match the executable itself so no option ordering can bypass the boundary.
 prefix_rule(
-    pattern = ["git", "add"],
+    pattern = ["git"],
     decision = "prompt",
-    justification = "Git add can launch configured editor or interactive diff helpers.",
+    justification = "Git global and subcommand options can invoke helpers or mutate repository state.",
     match = [
-        "git add .codex/config.toml .codex/rules/development.rules",
-        "git add --edit",
-        "git add --patch",
-    ],
-    not_match = ["git push origin main"],
-)
-
-prefix_rule(
-    pattern = ["git", "pull"],
-    decision = "prompt",
-    justification = "Git pull accepts transport options that can execute host commands.",
-    match = [
-        "git pull --ff-only",
-        "git pull --ff-only origin main",
-        "git pull --ff-only --upload-pack=malicious /tmp/repo HEAD",
-    ],
-    not_match = ["git status --short"],
-)
-
-# Match the whole subcommand, not a particular option position.
-prefix_rule(
-    pattern = ["git", "commit"],
-    decision = "prompt",
-    justification = "Commits must run hooks and include only the intended staged diff.",
-    match = [
+        "git status --short",
         "git commit -m normal",
-        "git commit -m bypass --no-verify",
+        "git -C . commit -m normal",
+        "git -c core.hooksPath=/dev/null commit -m bypass",
+        "git --git-dir=.git reset --hard HEAD",
     ],
-)
-
-prefix_rule(
-    pattern = ["git", "push"],
-    decision = "prompt",
-    justification = "Remote publication, hook bypasses, and branch rewriting require review.",
-    match = [
-        "git push origin branch",
-        "git push origin branch --force-with-lease",
-    ],
-)
-
-# Common high-impact command forms retain an explicit approval boundary.
-prefix_rule(
-    pattern = ["git", "reset"],
-    decision = "prompt",
-    justification = "Git reset can destroy staged or working-tree changes.",
-    match = [
-        "git reset --hard origin/main",
-        "git reset -q --hard origin/main",
-    ],
-    not_match = ["git status --short"],
-)
-
-prefix_rule(
-    pattern = ["git", "clean"],
-    decision = "prompt",
-    justification = "Git clean can delete untracked user files.",
-    match = ["git clean -fd"],
-)
-
-prefix_rule(
-    pattern = ["git", "worktree", "remove"],
-    decision = "prompt",
-    justification = "Removing a worktree can discard local state.",
-    match = ["git worktree remove /tmp/review-worktree"],
+    not_match = ["gh pr view 1140"],
 )
 
 prefix_rule(
