@@ -1,44 +1,80 @@
-# Codex project permissions
+# Codex permission setup
 
-This trusted project carries its Codex defaults in `config.toml` and its persistent
-command policy in `rules/development.rules`.
+This public repository deliberately does not commit executable Codex configuration or
+rules. A trusted checkout may later contain an untrusted pull-request head, and Codex
+loads trusted project `.codex/config.toml` files before user configuration. A PR could
+therefore replace an MCP command and execute a host program when the server starts,
+before any per-tool approval applies.
 
-The policy is deliberately layered:
+Project rules are also the wrong security boundary for Git and GitHub commands. Rules
+match literal argument prefixes: global options before a subcommand, executable
+wrappers, and absolute executable paths change that prefix. A finite project allow or
+prompt list would either be incomplete or overclaim what it protects.
 
-- `workspace-write` keeps filesystem mutations confined to the checkout and temporary
-  directories.
-- Network remains denied inside the default sandbox, so remote mutations still need an
-  approval decision.
-- Tests, linters, package scripts, local servers, and repository-owned Python or shell
-  scripts remain with the auto-reviewer. They execute or accept paths from the
-  checked-out head, so persistently allowing them would let an untrusted public PR
-  escape the sandbox or read arbitrary host files.
-- GitHub PR/issue operations, direct Git invocations, common command launchers, and
-  process termination use broad prompt rules. Matching the Git executable itself also
-  covers repository/config overrides placed before its subcommand; matching launchers
-  broadly prevents `env git` and equivalent wrappers from hiding it.
-- The configured `chrome-devtools` MCP server uses a pinned package and launches an
-  isolated, headless browser with host-file navigation, usage statistics, and CrUX
-  lookups disabled. Page listing and passive inspection are auto-approved; page-state
-  changes, event-generating interaction, new-page and scripted navigation, uploads,
-  screenshots, snapshots, traces, script exports, and other path-capable tools retain
-  approval.
+Keep executable setup in maintainer-controlled configuration instead:
 
-Approval settings change execution confirmation; they do not grant task authority.
-`AGENTS.md`, the user's request, and the invoked skill still decide whether an action
-belongs in the task.
+- use `~/.codex/config.toml`, not this checkout, for MCP commands and approval policy;
+- leave shell commands to the sandbox and auto-reviewer rather than persisting
+  project-level Git/GitHub rules;
+- review any pull request that adds `.codex/config.toml`, `.codex/rules/`, or project
+  hooks before starting Codex from that checkout.
 
-Codex reads project configuration and rules only for trusted projects and scans them at
-startup. Restart Codex or start a new task after changing these files.
+## Maintainer-global Chrome setup
 
-Validate a representative command with:
+The following belongs in `~/.codex/config.toml`. It pins the server, uses an isolated
+headless profile, blocks host-file navigation, and defaults every tool to a prompt. Only
+the audited passive inspection tools are approved without confirmation.
 
-```sh
-codex execpolicy check --pretty \
-  --rules .codex/rules/development.rules \
-  -- gh pr view 1140 --json headRefOid
+```toml
+approval_policy = "on-request"
+approvals_reviewer = "auto_review"
+sandbox_mode = "workspace-write"
+
+[mcp_servers.chrome-devtools]
+command = "npx"
+args = [
+  "-y",
+  "chrome-devtools-mcp@1.6.0",
+  "--headless=true",
+  "--isolated=true",
+  "--blocked-url-pattern=file://*",
+  "--no-usage-statistics",
+  "--no-performance-crux",
+]
+default_tools_approval_mode = "prompt"
+
+[mcp_servers.chrome-devtools.tools.list_pages]
+approval_mode = "approve"
+
+[mcp_servers.chrome-devtools.tools.get_tab_id]
+approval_mode = "approve"
+
+[mcp_servers.chrome-devtools.tools.list_console_messages]
+approval_mode = "approve"
+
+[mcp_servers.chrome-devtools.tools.get_console_message]
+approval_mode = "approve"
+
+[mcp_servers.chrome-devtools.tools.list_network_requests]
+approval_mode = "approve"
+
+[mcp_servers.chrome-devtools.tools.performance_analyze_insight]
+approval_mode = "approve"
+
+[mcp_servers.chrome-devtools.tools.wait_for]
+approval_mode = "approve"
 ```
 
-Rules match argument prefixes, not shell text. Avoid persisting approvals for mutable
-programs under `/tmp`, checked-out scripts, or compound shell loops. Keep reusable
-automation tracked, but let the auto-reviewer evaluate its execution.
+Restart Codex after changing global configuration, then verify the effective server:
+
+```sh
+codex mcp get chrome-devtools --json
+```
+
+The effective `args` must contain `chrome-devtools-mcp@1.6.0`; replace an existing
+unpinned entry such as `@latest` rather than layering this beneath it.
+
+The current Codex documentation describes [configuration
+precedence](https://developers.openai.com/codex/config-basic#configuration-precedence),
+[MCP configuration](https://developers.openai.com/codex/mcp), and the [literal-prefix
+rules model](https://developers.openai.com/codex/rules).
