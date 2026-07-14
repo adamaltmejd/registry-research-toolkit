@@ -1,0 +1,21 @@
+# Keep normal commands inside a workspace-write sandbox. Project rules selectively
+# allow the GitHub reads, localhost servers, browser tests, and pinned tools that need
+# network or shared-cache access; remote mutations still cross an approval boundary.
+approval_policy = "on-request"
+approvals_reviewer = "auto_review"
+sandbox_mode = "workspace-write"
+
+# chrome-devtools-mcp launches an isolated, headless browser for this project's render
+# and performance checks. Task authorization still comes from the prompt/skills; this
+# only removes per-tool confirmation once that workflow has chosen to use the server.
+[mcp_servers.chrome-devtools]
+command = "npx"
+args = [
+  "-y",
+  "chrome-devtools-mcp@latest",
+  "--headless=true",
+  "--isolated=true",
+  "--no-usage-statistics",
+  "--no-performance-crux",
+]
+default_tools_approval_mode = "approve"
