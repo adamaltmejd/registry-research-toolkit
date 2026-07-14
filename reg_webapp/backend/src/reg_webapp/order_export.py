@@ -1,12 +1,13 @@
-"""Default v1 order-export CSV renderer (`POST /api/project/order`).
+"""Provisional order-export CSV renderer (`POST /api/project/order`).
 
 See DESIGN.md → API surface for the order-export CSV columns. The steward's
 *order export* is the human-readable manifest a researcher hands
-to the data provider: one row per bound variable. v1 ships the DEFAULT template
-only — a CSV with the columns
+to the data provider: one row per bound variable. This pre-v1 implementation
+ships a CSV with the columns
 ``provider,register,variant,variable,representation,period,display_name`` — one
-row per ``sources[*].bindings[*]``. Stewards inherit this
-default; per-steward jinja2 ``order_template`` overrides are DEFERRED (not v1).
+row per ``sources[*].bindings[*]``. The v1 contract replaces this module with one
+inventory-backed normalized manifest shared by every steward; it does not add
+per-steward templates. See ``REFACTOR_SPEC.md`` §12.
 
 ``period`` follows the wire serialization (matching the ``/api/catalog``
 ``?period=`` and the catch-all): an int year prints as-is; a ``PeriodRange``
@@ -18,10 +19,9 @@ prints literally; a #307 segment list prints comma-joined
 the binding is resolved against the live ``Catalog`` at the source's
 ``(register_variant, period)`` and the matching state's
 ``delivery_column_name`` is used (the default-resolution rule). A binding
-that doesn't resolve, or has no covering state, falls back to its bare
-``variable`` FQID leaf — the order is a manifest, so a best-effort label beats a
-crash; the semantic validator is where unresolved bindings are surfaced as
-errors, not here.
+that doesn't resolve, or has no covering state, currently falls back to its bare
+``variable`` FQID leaf. This is provisional behavior, not the v1 contract: the
+normalized materializer blocks unresolved or ambiguous physical mappings.
 
 Output is DETERMINISTIC: rows follow ``sources`` then ``bindings`` declaration
 order (no sort — the spec's own order is the contract), and the CSV is written
@@ -44,7 +44,7 @@ if TYPE_CHECKING:
     from reg_meta.catalog import Catalog
     from reg_schema.project_data import Binding, ProjectData, Source
 
-# The default order-export column header (fixed order is the contract).
+# The current provisional order-export column header (fixed order at this boundary).
 # `representation` is its OWN column (not folded into display_name): a custom
 # display_name would otherwise hide which delivery column the binding pinned, so
 # the data provider couldn't tell representations apart.
@@ -60,7 +60,7 @@ ORDER_COLUMNS = (
 
 
 def render_order_csv(project: ProjectData, catalog: Catalog) -> str:
-    """Render ``project`` to the default v1 order-export CSV.
+    """Render ``project`` to the current provisional order-export CSV.
 
     One row per ``sources[*].bindings[*]`` in declaration order. ``catalog`` is
     consulted only to default a missing ``display_name`` from the binding's

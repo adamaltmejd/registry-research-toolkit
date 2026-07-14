@@ -58,18 +58,29 @@ registers/variables on top of a released global DB).
 
 ## What the toolkit is
 
-A web application (FastAPI + Svelte SPA), deployed in three steward-scoped flavours off
+A web application (FastAPI + Svelte SPA), designed for three steward-scoped flavours off
 one image, that lets researchers browse a catalog, author a per-project variable list,
-and export it as a data order. Backed by Python packages usable standalone via CLI.
+and export it as a data order. The human SPA and agent/CLI are equal v1 product
+surfaces. The current CLI covers catalog metadata, not project validate/order yet; §12's
+shared materializer closes that parity gap rather than duplicating the workflow. The SPA
+will call it through FastAPI; the agent/CLI v1 path will load the versioned catalog DB
+and public delivery inventory locally and emit byte-identical results without depending
+on a deployed API.
 
-The unifying artifact is **`project_data.json`** — written by the webapp, consumed by
-everything downstream (future exporters, the planned MONA runner rebuild). Its schema
-and structural validator are `reg_schema`
-([`reg_schema/DESIGN.md`](reg_schema/DESIGN.md)).
+The unifying research-intent artifact is **`project_data.json`** — written by the
+webapp, consumed by future exporters and the planned MONA runner rebuild. Its schema and
+structural validator are `reg_schema` ([`reg_schema/DESIGN.md`](reg_schema/DESIGN.md)).
+It deliberately does not encode physical filenames or SQL tables. The v1 steward
+boundary will add a separate public delivery inventory
+(`table + edition → literal columns → zero-or-more logical mappings`); joining a
+project, reg_meta resolution, and that optional inventory will produce one normalized
+order manifest for both web and CLI consumers. See `REFACTOR_SPEC.md` §12.
 
-Pipeline coverage: explore metadata → author a variable list → order data → mock-data
-bootstrap before delivery. Population definition (a predicate over base registers,
-executed only inside MONA) is deliberately out of scope.
+Current shipped coverage is explore metadata → author a variable list → provisional
+seven-column binding CSV. The normalized physical delivery manifest remains v1 work; the
+former mock-data bootstrap is archived pending the from-scratch MONA rebuild. Population
+definition (a predicate over base registers, executed only inside MONA) is deliberately
+out of scope.
 
 ## Package layout
 
@@ -87,12 +98,12 @@ registry-research-toolkit/
     stewards/
       global/       # steward.toml only (full universe)
       ifau/         # steward.toml + steward.project_data.json   [PLANNED]
-      swecov/       # steward.toml + steward.project_data.json   [PLANNED]
+      swecov/       # steward.toml + current steward.project_data.json
 ```
 
 > The `reg_monabundle` and `mock_data_wizard` packages have been archived to
 > `archive/mona-subsystem` (tag `mona-subsystem-pre-rebuild`), pending a from-scratch
-> MONA rebuild. Only the `global/` steward dir is populated. See
+> MONA rebuild. The `global/` and `swecov/` steward dirs are populated. See
 > [`REFACTOR_SPEC.md`](REFACTOR_SPEC.md).
 
 Dependency graph (acyclic):
@@ -146,14 +157,16 @@ mechanisms are documented in the owning DESIGN.md and only summarized here.
   `bun run gen:types` + `git diff --exit-code` so the codegen'd TS types stay in sync.
   (There is no `make` target — drift is a failing test, not a Makefile step.) A future
   Go/Rust port of the query API reproduces the same spec; clients are unaffected.
-- **Performance budget (v1 targets, not yet enforced).** Starting points:
-  `/api/catalog/*` p95 ≤ 200 ms (cache miss); `/api/project/validate`,
+- **Performance budget (v1 targets, not yet CI-enforced).** Starting points:
+  `/api/catalog/*` p95 ≤ 200 ms (cache miss); `/api/project/validate` and
   `/api/project/order` p95 ≤ 1 s; representative broad all-scope `/api/search`
   cache-miss p95 ≤ 500 ms and browser-cold search LCP < 2.5 s. Search correctness and
   latency are origin properties: edge hits do not substitute for cold-origin evidence.
+  Classification/value-set initial responses must be bounded by bucket/page limits
+  rather than total code cardinality, and cold/repeat rendered routes target CLS < 0.1.
   The 200-column load-test fixture is committed
   (`reg_schema/test_corpus/load_test_200col/`), but the load-test harness and CI perf
-  gate are remaining work (see REFACTOR_SPEC.md).
+  gate are remaining work (see `REFACTOR_SPEC.md`).
 - **Cross-package version compatibility.** `reg_webapp` **floor-pins** its runtime deps
   (`reg-meta>=…`, `reg-schema>=…`), not exact pins: the packages resolve via
   `[tool.uv.sources]` in the workspace, and exact pins would force monorepo-wide

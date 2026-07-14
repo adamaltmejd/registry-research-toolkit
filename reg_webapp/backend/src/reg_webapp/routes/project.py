@@ -6,7 +6,7 @@ Two endpoints:
 - ``POST /api/project/validate`` — runs the two-layer validator over a
   raw ``project_data.json`` and returns the CONCATENATED issue list (structural
   ⧺ semantic) as a ``ValidationResultModel``.
-- ``POST /api/project/order`` — renders the steward's default v1 order-export CSV
+- ``POST /api/project/order`` — renders the current provisional order-export CSV
   (``order_export.render_order_csv``) as a ``text/csv`` download.
 
 **Status discipline.** ``/validate`` is a *diagnostic*: a spec
@@ -232,7 +232,7 @@ def _validate_blocking(
     },
 )
 async def order_project(request: Request) -> Response:
-    """Render the steward's default v1 order-export CSV.
+    """Render the current provisional order-export CSV.
 
     Reads the raw dict and runs the STRUCTURAL gate (see reg_schema/DESIGN.md →
     Structural rules and issue codes) before rendering: the
