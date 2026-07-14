@@ -6,8 +6,8 @@ approvals_reviewer = "auto_review"
 sandbox_mode = "workspace-write"
 
 # chrome-devtools-mcp launches an isolated, headless browser for this project's render
-# and performance checks. Safe navigation, inspection, and interaction tools skip
-# confirmation; filesystem-capable tools retain it.
+# and performance checks. Passive inspection tools skip confirmation; tools that can
+# generate page events, navigate, execute code, or access files retain it.
 [mcp_servers.chrome-devtools]
 command = "npx"
 args = [
@@ -31,37 +31,7 @@ approval_mode = "approve"
 [mcp_servers.chrome-devtools.tools.close_page]
 approval_mode = "approve"
 
-[mcp_servers.chrome-devtools.tools.resize_page]
-approval_mode = "approve"
-
-[mcp_servers.chrome-devtools.tools.handle_dialog]
-approval_mode = "approve"
-
 [mcp_servers.chrome-devtools.tools.get_tab_id]
-approval_mode = "approve"
-
-[mcp_servers.chrome-devtools.tools.click]
-approval_mode = "approve"
-
-[mcp_servers.chrome-devtools.tools.hover]
-approval_mode = "approve"
-
-[mcp_servers.chrome-devtools.tools.fill]
-approval_mode = "approve"
-
-[mcp_servers.chrome-devtools.tools.type_text]
-approval_mode = "approve"
-
-[mcp_servers.chrome-devtools.tools.drag]
-approval_mode = "approve"
-
-[mcp_servers.chrome-devtools.tools.fill_form]
-approval_mode = "approve"
-
-[mcp_servers.chrome-devtools.tools.press_key]
-approval_mode = "approve"
-
-[mcp_servers.chrome-devtools.tools.emulate]
 approval_mode = "approve"
 
 [mcp_servers.chrome-devtools.tools.list_console_messages]
@@ -79,8 +49,39 @@ approval_mode = "approve"
 [mcp_servers.chrome-devtools.tools.wait_for]
 approval_mode = "approve"
 
-# These accept host input/output paths. Keep them explicitly user-reviewed even when a
-# future server release changes annotations or adds other tools.
+# These generate page events, navigate, execute code, or accept host input/output paths.
+# Keep them explicitly user-reviewed even when a future server release changes
+# annotations or adds other tools.
+[mcp_servers.chrome-devtools.tools.resize_page]
+approval_mode = "prompt"
+
+[mcp_servers.chrome-devtools.tools.handle_dialog]
+approval_mode = "prompt"
+
+[mcp_servers.chrome-devtools.tools.click]
+approval_mode = "prompt"
+
+[mcp_servers.chrome-devtools.tools.hover]
+approval_mode = "prompt"
+
+[mcp_servers.chrome-devtools.tools.fill]
+approval_mode = "prompt"
+
+[mcp_servers.chrome-devtools.tools.type_text]
+approval_mode = "prompt"
+
+[mcp_servers.chrome-devtools.tools.drag]
+approval_mode = "prompt"
+
+[mcp_servers.chrome-devtools.tools.fill_form]
+approval_mode = "prompt"
+
+[mcp_servers.chrome-devtools.tools.press_key]
+approval_mode = "prompt"
+
+[mcp_servers.chrome-devtools.tools.emulate]
+approval_mode = "prompt"
+
 [mcp_servers.chrome-devtools.tools.upload_file]
 approval_mode = "prompt"
 

@@ -13,14 +13,15 @@ The policy is deliberately layered:
   scripts remain with the auto-reviewer. They execute or accept paths from the
   checked-out head, so persistently allowing them would let an untrusted public PR
   escape the sandbox or read arbitrary host files.
-- GitHub PR/issue operations, every Git invocation, and process termination use broad
-  prompt rules. Matching the Git executable itself also covers repository/config
-  overrides placed before its subcommand.
+- GitHub PR/issue operations, direct Git invocations, common command launchers, and
+  process termination use broad prompt rules. Matching the Git executable itself also
+  covers repository/config overrides placed before its subcommand; matching launchers
+  broadly prevents `env git` and equivalent wrappers from hiding it.
 - The configured `chrome-devtools` MCP server uses a pinned package and launches an
   isolated, headless browser with host-file navigation, usage statistics, and CrUX
-  lookups disabled. Page listing/selection, inspection, and interaction are
-  auto-approved; new-page and scripted navigation, uploads, screenshots, snapshots,
-  traces, script exports, and other path-capable tools retain approval.
+  lookups disabled. Page listing/selection and passive inspection are auto-approved;
+  event-generating interaction, new-page and scripted navigation, uploads, screenshots,
+  snapshots, traces, script exports, and other path-capable tools retain approval.
 
 Approval settings change execution confirmation; they do not grant task authority.
 `AGENTS.md`, the user's request, and the invoked skill still decide whether an action

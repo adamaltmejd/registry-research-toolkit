@@ -43,6 +43,22 @@ prefix_rule(
     not_match = ["gh pr view 1140"],
 )
 
+# Common command launchers can otherwise hide Git from the direct executable rule.
+# Match each launcher broadly because its own options and environment assignments can
+# precede the wrapped command.
+prefix_rule(
+    pattern = [["env", "/usr/bin/env", "command", "xcrun"]],
+    decision = "prompt",
+    justification = "Command launchers can wrap Git or other host executables and bypass their direct rules.",
+    match = [
+        "env git commit -m normal",
+        "env GIT_CONFIG_NOSYSTEM=1 git status --short",
+        "command git reset --hard HEAD",
+        "xcrun git commit -m normal",
+    ],
+    not_match = ["git status --short"],
+)
+
 prefix_rule(
     pattern = [["kill", "pkill", "killall"]],
     decision = "prompt",
