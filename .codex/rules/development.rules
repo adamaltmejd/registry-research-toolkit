@@ -48,17 +48,15 @@ prefix_rule(
 )
 
 prefix_rule(
-    pattern = ["git", "pull", "--ff-only"],
-    decision = "allow",
-    justification = "Apply the canonical checkout's required fast-forward-only sync.",
+    pattern = ["git", "pull"],
+    decision = "prompt",
+    justification = "Git pull accepts transport options that can execute host commands.",
     match = [
         "git pull --ff-only",
         "git pull --ff-only origin main",
+        "git pull --ff-only --upload-pack=malicious /tmp/repo HEAD",
     ],
-    not_match = [
-        "git pull --rebase origin main",
-        "git reset --hard origin/main",
-    ],
+    not_match = ["git status --short"],
 )
 
 # Match the whole subcommand, not a particular option position.
@@ -94,10 +92,14 @@ prefix_rule(
 
 # Common high-impact command forms retain an explicit approval boundary.
 prefix_rule(
-    pattern = ["git", "reset", "--hard"],
+    pattern = ["git", "reset"],
     decision = "prompt",
-    justification = "A hard reset can destroy uncommitted work.",
-    match = ["git reset --hard origin/main"],
+    justification = "Git reset can destroy staged or working-tree changes.",
+    match = [
+        "git reset --hard origin/main",
+        "git reset -q --hard origin/main",
+    ],
+    not_match = ["git status --short"],
 )
 
 prefix_rule(
