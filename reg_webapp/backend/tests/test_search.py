@@ -1176,6 +1176,79 @@ def test_golden_boost_respects_limit(client, monkeypatch):
     assert [row["fqid"] for row in continuation["results"]] == ["scb/lisa"]
 
 
+def test_golden_pins_over_limit_continue_once_in_configured_order(client, monkeypatch):
+    monkeypatch.setattr(
+        golden,
+        "_PINS",
+        {
+            ("gizmo", "register"): _Pin(
+                query="gizmo",
+                group="register",
+                fqids=("scb/rams", "scb/lisa"),
+                note=None,
+            )
+        },
+    )
+
+    first = _group(
+        client.get(
+            "/api/search",
+            params={"q": "gizmo", "limit": 1, "type": "register"},
+        ).json(),
+        "registers",
+    )
+    assert [row["fqid"] for row in first["results"]] == ["scb/rams"]
+    assert first["has_more"]
+    assert first["next_cursor"].startswith("golden.")
+
+    second = _group(
+        client.get(
+            "/api/search",
+            params={
+                "q": "gizmo",
+                "limit": 1,
+                "type": "register",
+                "cursor": first["next_cursor"],
+            },
+        ).json(),
+        "registers",
+    )
+    assert [row["fqid"] for row in second["results"]] == ["scb/lisa"]
+    assert not second["has_more"]
+    assert second["next_cursor"] is None
+
+    combined = [*first["results"], *second["results"]]
+    assert [row["fqid"] for row in combined] == ["scb/rams", "scb/lisa"]
+    assert len({row["fqid"] for row in combined}) == len(combined)
+
+    mismatched = client.get(
+        "/api/search",
+        params={
+            "q": "other",
+            "limit": 1,
+            "type": "register",
+            "cursor": first["next_cursor"],
+        },
+    )
+    assert mismatched.status_code == 422
+    assert "does not match" in mismatched.json()["detail"]
+
+    tampered_cursor = first["next_cursor"][:-1] + (
+        "A" if first["next_cursor"][-1] != "A" else "B"
+    )
+    tampered = client.get(
+        "/api/search",
+        params={
+            "q": "gizmo",
+            "limit": 1,
+            "type": "register",
+            "cursor": tampered_cursor,
+        },
+    )
+    assert tampered.status_code == 422
+    assert "invalid or tampered" in tampered.json()["detail"]
+
+
 def test_deep_golden_fts_hit_is_emitted_once_across_all_pages(
     client, catalog_db, monkeypatch
 ):
@@ -1271,6 +1344,18 @@ def test_load_pins_missing_file_raises(tmp_path):
     # fast (CLAUDE.md) rather than silently disabling golden-boost.
     with pytest.raises(FileNotFoundError):
         golden._load_pins(tmp_path / "nonexistent.toml")
+
+
+def test_load_pins_rejects_duplicate_fqids(tmp_path):
+    config = tmp_path / "golden.toml"
+    config.write_text(
+        '[[pin]]\nquery = "gizmo"\ngroup = "register"\n'
+        'fqids = ["scb/rams", "scb/rams"]\n',
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValueError, match="duplicate `fqids`"):
+        golden._load_pins(config)
 
 
 def test_committed_pins_non_empty():

@@ -241,6 +241,45 @@ def _boosted_continuation(
     return True, next_cursor
 
 
+def _golden_cursor_boundary(
+    cursor: str | None,
+    query: str,
+    group: str,
+    pin_fqids: tuple[str, ...],
+) -> tuple[str | None, int]:
+    try:
+        return golden.decode_continuation(cursor, query, group, pin_fqids)
+    except golden.GoldenCursorError as exc:
+        raise HTTPException(
+            status_code=422,
+            detail=f"{exc} Restart the search without cursor.",
+        ) from exc
+
+
+def _golden_continuation(
+    *,
+    origin_has_more: bool,
+    origin_cursor: str | None,
+    query: str,
+    group: str,
+    pin_fqids: tuple[str, ...],
+    pin_offset: int,
+    limit: int,
+) -> tuple[bool, str | None]:
+    next_pin_offset = pin_offset + min(limit, len(pin_fqids) - pin_offset)
+    if next_pin_offset >= len(pin_fqids):
+        return origin_has_more, origin_cursor
+    if origin_cursor is None:
+        raise RuntimeError("golden continuation lost its bounded origin cursor")
+    return True, golden.encode_continuation(
+        origin_cursor,
+        query,
+        group,
+        pin_fqids,
+        next_pin_offset,
+    )
+
+
 def _top_candidate_key(result: SearchResult, group_order: int, row_order: int) -> str:
     if result.type == "group":
         if result.kind == "classification":
@@ -527,6 +566,13 @@ def get_search(
         if want_register:
             phase_start = perf_counter()
             register_pin_fqids = golden.pinned_fqids(q, "register")
+            if fqids is not None:
+                register_pin_fqids = tuple(
+                    pin for pin in register_pin_fqids if pin in fqids
+                )
+            register_cursor, register_pin_offset = _golden_cursor_boundary(
+                cursor, q, "register", register_pin_fqids
+            )
             reg = _search_boundary(
                 conn,
                 q,
@@ -535,13 +581,16 @@ def get_search(
                 fqids=fqids,
                 exclude_fqids=register_pin_fqids or None,
                 limit=limit,
-                cursor=cursor,
+                cursor=register_cursor,
                 fold_groups=False,
             )
-            reg_results = (
-                golden.apply_golden_boost(conn, q, "register", reg.results)
-                if cursor is None
-                else list(reg.results)
+            reg_results = golden.apply_golden_boost(
+                conn,
+                q,
+                "register",
+                reg.results,
+                fqids=register_pin_fqids,
+                start=register_pin_offset,
             )
             # #859: drop boosted pins the steward does not hold (the reg_meta hits
             # are already `fqids`-scoped; the boost prepends pins from a separate
@@ -550,6 +599,15 @@ def get_search(
             reg_results = _scope_to_fqids(reg_results, fqids)
             reg_has_more, reg_next_cursor = _boosted_continuation(
                 reg, reg_results, limit=limit
+            )
+            reg_has_more, reg_next_cursor = _golden_continuation(
+                origin_has_more=reg_has_more,
+                origin_cursor=reg_next_cursor,
+                query=q,
+                group="register",
+                pin_fqids=register_pin_fqids,
+                pin_offset=register_pin_offset,
+                limit=limit,
             )
             # `search(type="register")` yields only register rows, but the static
             # element type is the broad `SearchResult` union — narrow to what the
@@ -655,6 +713,9 @@ def get_search(
         if want_classification:
             phase_start = perf_counter()
             classification_pin_fqids = golden.pinned_fqids(q, "classification")
+            classification_cursor, classification_pin_offset = _golden_cursor_boundary(
+                cursor, q, "classification", classification_pin_fqids
+            )
             cls = _search_boundary(
                 conn,
                 q,
@@ -662,15 +723,27 @@ def get_search(
                 type="classification",
                 exclude_fqids=classification_pin_fqids or None,
                 limit=limit,
-                cursor=cursor,
+                cursor=classification_cursor,
             )
-            cls_results = (
-                golden.apply_golden_boost(conn, q, "classification", cls.results)
-                if cursor is None
-                else list(cls.results)
+            cls_results = golden.apply_golden_boost(
+                conn,
+                q,
+                "classification",
+                cls.results,
+                fqids=classification_pin_fqids,
+                start=classification_pin_offset,
             )
             cls_has_more, cls_next_cursor = _boosted_continuation(
                 cls, cls_results, limit=limit
+            )
+            cls_has_more, cls_next_cursor = _golden_continuation(
+                origin_has_more=cls_has_more,
+                origin_cursor=cls_next_cursor,
+                query=q,
+                group="classification",
+                pin_fqids=classification_pin_fqids,
+                pin_offset=classification_pin_offset,
+                limit=limit,
             )
             groups.append(
                 ClassificationSearchGroup(
