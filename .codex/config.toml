@@ -1,6 +1,6 @@
 # Keep normal commands inside a workspace-write sandbox. Project rules selectively
-# allow GitHub reads and pinned non-executing tools that need network or shared-cache
-# access; checked-out code and remote mutations still cross an approval boundary.
+# allow low-risk GitHub and Git coordination; checked-out code, arbitrary file
+# processors, and remote mutations still cross an approval boundary.
 approval_policy = "on-request"
 approvals_reviewer = "auto_review"
 sandbox_mode = "workspace-write"
@@ -15,6 +15,7 @@ args = [
   "chrome-devtools-mcp@1.6.0",
   "--headless=true",
   "--isolated=true",
+  "--blocked-url-pattern=file://*",
   "--no-usage-statistics",
   "--no-performance-crux",
 ]

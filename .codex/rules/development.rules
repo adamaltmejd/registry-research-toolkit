@@ -1,34 +1,9 @@
 # Project-local Codex execution policy.
 #
-# These rules are intentionally narrower than "allow the tool": they cover the pinned
-# non-executing verification and coordination commands repeatedly used by this project. A
-# matching allow only removes the sandbox-escalation prompt; it does not authorize work
-# outside the user's requested task or override AGENTS.md.
-
-prefix_rule(
-    pattern = ["uvx", "--from", "ty==0.0.54", "ty", "check"],
-    decision = "allow",
-    justification = "Run the repository-pinned read-only Python type checker.",
-    match = [
-        "uvx --from ty==0.0.54 ty check",
-        "uvx --from ty==0.0.54 ty check reg_meta",
-    ],
-    not_match = ["uvx --from ty ty check"],
-)
-
-prefix_rule(
-    pattern = ["uvx", "--from", "panache-cli==2.59.0", "panache", ["format", "lint"], "--check"],
-    decision = "allow",
-    justification = "Run the repository-pinned Markdown formatter and linter.",
-    match = [
-        "uvx --from panache-cli==2.59.0 panache format --check .",
-        "uvx --from panache-cli==2.59.0 panache lint --check .",
-    ],
-    not_match = [
-        "uvx --from panache-cli panache lint --check .",
-        "uvx --from panache-cli==2.59.0 panache format .",
-    ],
-)
+# These rules are intentionally narrower than "allow the tool": they cover low-risk
+# coordination commands repeatedly used by this project. A matching allow only removes
+# the sandbox-escalation prompt; it does not authorize work outside the user's requested
+# task or override AGENTS.md.
 
 prefix_rule(
     pattern = ["gh", "pr", ["view", "list", "checks", "diff"]],
