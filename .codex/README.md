@@ -8,16 +8,15 @@ The policy is deliberately layered:
 - `workspace-write` keeps filesystem mutations confined to the checkout and temporary
   directories.
 - Network remains denied inside the default sandbox, so remote mutations still need an
-  approval decision unless an exact project rule covers the operation.
-- Persistent allow rules cover read-only GitHub operations and staging.
+  approval decision.
 - Tests, linters, package scripts, local servers, and repository-owned Python or shell
   scripts remain with the auto-reviewer. They execute or accept paths from the
   checked-out head, so persistently allowing them would let an untrusted public PR
   escape the sandbox or read arbitrary host files.
-- Pulls, commits, pushes, resets, PR draft-state changes, destructive Git operations,
-  merges, worktree removal, and process termination use broad prompt rules. Matching the
-  whole subcommand keeps reordered transport, hook-bypass, force, and destructive flags
-  behind the same boundary.
+- GitHub PR/issue operations plus Git add, pull, commit, push, reset, destructive
+  operations, worktree removal, and process termination use broad prompt rules. Matching
+  the whole subcommand keeps reordered browser-launch, editor, transport, hook-bypass,
+  force, and destructive flags behind the same boundary.
 - The configured `chrome-devtools` MCP server uses a pinned package and launches an
   isolated, headless browser with host-file navigation, usage statistics, and CrUX
   lookups disabled. Navigation, inspection, and page interaction are auto-approved;

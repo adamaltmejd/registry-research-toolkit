@@ -1,6 +1,6 @@
-# Keep normal commands inside a workspace-write sandbox. Project rules selectively
-# allow low-risk GitHub and Git coordination; checked-out code, arbitrary file
-# processors, and remote mutations still cross an approval boundary.
+# Keep normal commands inside a workspace-write sandbox. Project rules preserve prompt
+# boundaries for shell tools whose trailing options can launch host helpers; safe
+# browser operations are approved per MCP tool schema.
 approval_policy = "on-request"
 approvals_reviewer = "auto_review"
 sandbox_mode = "workspace-write"

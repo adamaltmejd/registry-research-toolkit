@@ -6,31 +6,26 @@
 # task or override AGENTS.md.
 
 prefix_rule(
-    pattern = ["gh", "pr", ["view", "list", "checks", "diff"]],
-    decision = "allow",
-    justification = "Read pull-request metadata, diffs, and CI state.",
+    pattern = ["gh", "pr"],
+    decision = "prompt",
+    justification = "PR subcommands mutate remote state or accept --web to launch a host browser.",
     match = [
         "gh pr view 1140 --json headRefOid,isDraft",
-        "gh pr list --state open --json number,title",
-        "gh pr checks 1140 --watch",
-        "gh pr diff 1140",
-    ],
-    not_match = [
-        "gh pr create --draft",
         "gh pr merge 1140",
-        "gh pr ready 1140",
+        "gh pr view 1140 --web",
     ],
+    not_match = ["gh issue list --state all"],
 )
 
 prefix_rule(
-    pattern = ["gh", "issue", "list"],
-    decision = "allow",
-    justification = "Run the required open-and-closed issue deduplication search.",
-    match = ["gh issue list --state all --search approvals"],
-    not_match = [
-        "gh issue create --title test",
-        "gh issue edit 1140 --add-label bug",
+    pattern = ["gh", "issue"],
+    decision = "prompt",
+    justification = "Issue subcommands mutate remote state or accept --web to launch a host browser.",
+    match = [
+        "gh issue list --state all --search approvals",
+        "gh issue list --web",
     ],
+    not_match = ["gh pr view 1140"],
 )
 
 # Git metadata is outside a linked worktree's writable root. Staging is a normal
@@ -38,11 +33,12 @@ prefix_rule(
 # hide a hook bypass or force push behind a broader user-level allow.
 prefix_rule(
     pattern = ["git", "add"],
-    decision = "allow",
-    justification = "Stage an explicitly selected implementation diff in this trusted repository.",
+    decision = "prompt",
+    justification = "Git add can launch configured editor or interactive diff helpers.",
     match = [
         "git add .codex/config.toml .codex/rules/development.rules",
-        "git add -u",
+        "git add --edit",
+        "git add --patch",
     ],
     not_match = ["git push origin main"],
 )
@@ -80,16 +76,6 @@ prefix_rule(
     ],
 )
 
-prefix_rule(
-    pattern = ["gh", "pr", "ready"],
-    decision = "prompt",
-    justification = "Changing draft state is a remote PR lifecycle mutation.",
-    match = [
-        "gh pr ready 1140",
-        "gh pr ready 1140 --undo",
-    ],
-)
-
 # Common high-impact command forms retain an explicit approval boundary.
 prefix_rule(
     pattern = ["git", "reset"],
@@ -114,13 +100,6 @@ prefix_rule(
     decision = "prompt",
     justification = "Removing a worktree can discard local state.",
     match = ["git worktree remove /tmp/review-worktree"],
-)
-
-prefix_rule(
-    pattern = ["gh", "pr", "merge"],
-    decision = "prompt",
-    justification = "Only chief-of-staff may merge after rechecking the durable gate.",
-    match = ["gh pr merge 1140 --squash"],
 )
 
 prefix_rule(
