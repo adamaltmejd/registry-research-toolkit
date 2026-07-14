@@ -242,7 +242,6 @@ const breadcrumbItems = $derived(routeBreadcrumbs(route));
      the provisional route-content position. Tall routes still expand normally. */
   .routed {
     flex: 1 0 auto;
-    min-block-size: 100%;
     min-width: 0;
     overflow-x: auto;
   }

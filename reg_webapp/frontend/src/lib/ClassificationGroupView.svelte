@@ -350,11 +350,13 @@ function selectEdition(value: string): void {
   /* Multi-edition classification subjects render their value-set tabs before
      the optional graph request finishes. Hold one compact DAG row while that
      request is pending, retain it only for a renderable succession graph, and
-     collapse it after an empty/error response. */
+     collapse it after an empty/error response. A branched graph scrolls inside
+     this bounded slot instead of growing the row after it resolves. */
   .reserve-edition-graph :global(article) {
+    --edition-graph-slot: 13rem;
     display: grid;
     grid-template-columns: minmax(0, 1fr);
-    grid-template-rows: auto auto minmax(13rem, auto);
+    grid-template-rows: auto auto var(--edition-graph-slot);
     min-width: 0;
   }
   .reserve-edition-graph :global(article > .subject-header) {
@@ -366,7 +368,10 @@ function selectEdition(value: string): void {
   .reserve-edition-graph :global(article > .classification-editions) {
     grid-row: 3;
     align-self: start;
+    box-sizing: border-box;
+    max-block-size: calc(var(--edition-graph-slot) - var(--space-4));
     margin-block: var(--space-4) 0;
+    overflow: auto;
   }
   .reserve-edition-graph :global(article > .edition-tabs-section) {
     grid-row: 4;
