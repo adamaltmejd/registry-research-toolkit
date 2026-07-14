@@ -1,7 +1,7 @@
 # Project-local Codex execution policy.
 #
 # These rules are intentionally narrower than "allow the tool": they cover the pinned
-# verification commands and repository workflows repeatedly used by this project. A
+# non-executing verification and coordination commands repeatedly used by this project. A
 # matching allow only removes the sandbox-escalation prompt; it does not authorize work
 # outside the user's requested task or override AGENTS.md.
 
@@ -17,68 +17,16 @@ prefix_rule(
 )
 
 prefix_rule(
-    pattern = ["uvx", "--from", "panache-cli==2.59.0", "panache"],
+    pattern = ["uvx", "--from", "panache-cli==2.59.0", "panache", ["format", "lint"], "--check"],
     decision = "allow",
     justification = "Run the repository-pinned Markdown formatter and linter.",
     match = [
         "uvx --from panache-cli==2.59.0 panache format --check .",
         "uvx --from panache-cli==2.59.0 panache lint --check .",
     ],
-    not_match = ["uvx --from panache-cli panache lint --check ."],
-)
-
-prefix_rule(
-    pattern = ["uv", "run", "ruff", ["check", "format"]],
-    decision = "allow",
-    justification = "Run the workspace-configured Python lint and format commands.",
-    match = [
-        "uv run ruff check",
-        "uv run ruff format --check",
-        "uv run ruff format reg_meta/src/reg_meta/queries.py",
-    ],
-    not_match = ["uv run ruff server"],
-)
-
-prefix_rule(
-    pattern = ["uv", "run", "python", "-m", "pytest"],
-    decision = "allow",
-    justification = "Run repository tests, including localhost smoke-test fixtures.",
-    match = [
-        "uv run python -m pytest",
-        "uv run python -m pytest reg_meta/ -q",
-    ],
-    not_match = ["uv run python scripts/release.py"],
-)
-
-prefix_rule(
-    pattern = ["bun", "run", ["lint", "check", "test", "build"]],
-    decision = "allow",
-    justification = "Run the frontend's declared verification scripts and browser tests.",
-    match = [
-        "bun run lint",
-        "bun run check",
-        "bun run test",
-        "bun run build",
-        "bun run test -- SearchView.browser.test.ts",
-    ],
     not_match = [
-        "bun run dev",
-        "bun /tmp/search_perf_trace.mjs",
-    ],
-)
-
-prefix_rule(
-    pattern = ["bash", "reg_webapp/.claude/skills/run-reg-webapp/dev.sh", ["preview", "smoke", "shot"]],
-    decision = "allow",
-    justification = "Run the repository-owned local webapp driver for render verification.",
-    match = [
-        "bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh preview",
-        "bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh smoke",
-        "bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh shot /search?q=person",
-    ],
-    not_match = [
-        "bash /tmp/dev.sh preview",
-        "bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh deploy",
+        "uvx --from panache-cli panache lint --check .",
+        "uvx --from panache-cli==2.59.0 panache format .",
     ],
 )
 
@@ -96,17 +44,6 @@ prefix_rule(
         "gh pr create --draft",
         "gh pr merge 1140",
         "gh pr ready 1140",
-    ],
-)
-
-prefix_rule(
-    pattern = ["gh", "pr", "create", "--draft"],
-    decision = "allow",
-    justification = "Open the draft PR claim required by an explicitly invoked PR pipeline.",
-    match = ["gh pr create --draft --base main --title wip --body-file /tmp/body.md"],
-    not_match = [
-        "gh pr create --base main --title ready",
-        "gh pr merge 1140",
     ],
 )
 
@@ -129,40 +66,9 @@ prefix_rule(
     ],
 )
 
-prefix_rule(
-    pattern = [
-        "uv",
-        "run",
-        "--no-project",
-        "python",
-        [
-            "scripts/gh_issue.py",
-            "scripts/cos_preflight.py",
-            "scripts/check_issue_hygiene.py",
-            "scripts/plan_sequence.py",
-            "scripts/cos_watch.py",
-        ],
-    ],
-    decision = "allow",
-    justification = "Run the repository-owned trusted issue and coordination workflows.",
-    match = [
-        "uv run --no-project python scripts/gh_issue.py view 1140 --comments",
-        "uv run --no-project python scripts/cos_preflight.py",
-        "uv run --no-project python scripts/cos_preflight.py --commit fingerprint",
-        "uv run --no-project python scripts/check_issue_hygiene.py",
-        "uv run --no-project python scripts/plan_sequence.py --tick 328",
-        "uv run --no-project python scripts/cos_watch.py --once",
-    ],
-    not_match = [
-        "uv run --no-project python scripts/cos_dispatch.py --auto",
-        "uv run --no-project python scripts/codex_local_review.py --base origin/main",
-    ],
-)
-
 # Git metadata is outside a linked worktree's writable root. Staging is a normal
-# implementation step, but commits remain auto-reviewed so hook bypass flags cannot be
-# hidden later in the argument list. Network publication, branch rewriting, worktree
-# removal, and merges also remain outside the allow list.
+# implementation step. Commits and pushes remain auto-reviewed: prefix rules cannot
+# reliably reject a dangerous option that Git accepts at multiple argument positions.
 prefix_rule(
     pattern = ["git", "add"],
     decision = "allow",
@@ -188,32 +94,8 @@ prefix_rule(
     ],
 )
 
-# Load-bearing repository prohibitions. These are blocked even if a broader user rule
-# exists; use the hook-enabled form instead.
-prefix_rule(
-    pattern = ["git", "commit", ["--no-verify", "-n"]],
-    decision = "forbidden",
-    justification = "Repository policy requires commit hooks; remove --no-verify/-n.",
-    match = [
-        "git commit --no-verify -m bypass",
-        "git commit -n -m bypass",
-    ],
-    not_match = ["git commit -m normal"],
-)
-
-prefix_rule(
-    pattern = ["git", "push", ["--no-verify", "-n"]],
-    decision = "forbidden",
-    justification = "Repository policy requires push hooks; remove --no-verify/-n.",
-    match = [
-        "git push --no-verify origin branch",
-        "git push -n origin branch",
-    ],
-    not_match = ["git push origin branch"],
-)
-
-# High-impact operations always retain an explicit approval boundary. These prompt
-# rules also override a less-specific allow rule from another active config layer.
+# Common high-impact command forms retain an explicit approval boundary. AGENTS.md and
+# auto-review remain the load-bearing policy because command options may be reordered.
 prefix_rule(
     pattern = ["git", "reset", "--hard"],
     decision = "prompt",
@@ -233,16 +115,6 @@ prefix_rule(
     decision = "prompt",
     justification = "Removing a worktree can discard local state.",
     match = ["git worktree remove /tmp/review-worktree"],
-)
-
-prefix_rule(
-    pattern = ["git", "push", ["--force", "--force-with-lease"]],
-    decision = "prompt",
-    justification = "Rewriting a remote branch requires current-head verification.",
-    match = [
-        "git push --force origin branch",
-        "git push --force-with-lease origin branch",
-    ],
 )
 
 prefix_rule(

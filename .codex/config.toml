@@ -1,6 +1,6 @@
 # Keep normal commands inside a workspace-write sandbox. Project rules selectively
-# allow the GitHub reads, localhost servers, browser tests, and pinned tools that need
-# network or shared-cache access; remote mutations still cross an approval boundary.
+# allow GitHub reads and pinned non-executing tools that need network or shared-cache
+# access; checked-out code and remote mutations still cross an approval boundary.
 approval_policy = "on-request"
 approvals_reviewer = "auto_review"
 sandbox_mode = "workspace-write"
