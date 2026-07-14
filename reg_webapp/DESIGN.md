@@ -462,12 +462,13 @@ sort key.
   signed opaque wrapper carries the next pin position plus the unchanged reg_meta origin
   cursor; its context binds the normalized query, group, ordered pin identities, and the
   origin cursor retains the catalog/steward binding. Pins therefore span pages in config
-  order without being duplicated or lost. `register` + `classification` pins are
-  implemented (resolve cheaply by slug); a `variable`/`value` pin is a config error at
-  LOAD (fail fast). The TOML is parsed + validated once at import; a typo'd fqid raises
-  at apply (never silently drops). Eval gaps the pins close are flipped to
-  `expect = "hit"` in `search_eval.toml` (SUN remains the lone gap — a concept-group
-  modeling issue, not a golden-boost one).
+  order without being duplicated or lost; only the current page's pin slice is resolved,
+  keeping golden construction bounded by the requested limit. `register` +
+  `classification` pins are implemented (resolve cheaply by slug); a `variable`/`value`
+  pin is a config error at LOAD (fail fast). The TOML is parsed + validated once at
+  import; a typo'd fqid raises at apply (never silently drops). Eval gaps the pins close
+  are flipped to `expect = "hit"` in `search_eval.toml` (SUN remains the lone gap — a
+  concept-group modeling issue, not a golden-boost one).
 - **ETag/caching is automatic**: `/api/search` is a GET, so the `ETagMiddleware` stamps
   a body-derived ETag (the query is part of the URL → part of the CF edge cache key, and
   part of the body → part of the ETag). No per-route caching code.

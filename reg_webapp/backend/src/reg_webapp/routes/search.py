@@ -260,6 +260,7 @@ def _golden_continuation(
     *,
     origin_has_more: bool,
     origin_cursor: str | None,
+    origin_page_cursor: str | None,
     query: str,
     group: str,
     pin_fqids: tuple[str, ...],
@@ -269,10 +270,11 @@ def _golden_continuation(
     next_pin_offset = pin_offset + min(limit, len(pin_fqids) - pin_offset)
     if next_pin_offset >= len(pin_fqids):
         return origin_has_more, origin_cursor
-    if origin_cursor is None:
+    resume_cursor = origin_cursor or origin_page_cursor
+    if resume_cursor is None:
         raise RuntimeError("golden continuation lost its bounded origin cursor")
     return True, golden.encode_continuation(
-        origin_cursor,
+        resume_cursor,
         query,
         group,
         pin_fqids,
@@ -591,6 +593,7 @@ def get_search(
                 reg.results,
                 fqids=register_pin_fqids,
                 start=register_pin_offset,
+                limit=limit,
             )
             # #859: drop boosted pins the steward does not hold (the reg_meta hits
             # are already `fqids`-scoped; the boost prepends pins from a separate
@@ -603,6 +606,7 @@ def get_search(
             reg_has_more, reg_next_cursor = _golden_continuation(
                 origin_has_more=reg_has_more,
                 origin_cursor=reg_next_cursor,
+                origin_page_cursor=reg.page_cursor,
                 query=q,
                 group="register",
                 pin_fqids=register_pin_fqids,
@@ -732,6 +736,7 @@ def get_search(
                 cls.results,
                 fqids=classification_pin_fqids,
                 start=classification_pin_offset,
+                limit=limit,
             )
             cls_has_more, cls_next_cursor = _boosted_continuation(
                 cls, cls_results, limit=limit
@@ -739,6 +744,7 @@ def get_search(
             cls_has_more, cls_next_cursor = _golden_continuation(
                 origin_has_more=cls_has_more,
                 origin_cursor=cls_next_cursor,
+                origin_page_cursor=cls.page_cursor,
                 query=q,
                 group="classification",
                 pin_fqids=classification_pin_fqids,

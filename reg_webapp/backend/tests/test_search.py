@@ -1189,6 +1189,14 @@ def test_golden_pins_over_limit_continue_once_in_configured_order(client, monkey
             )
         },
     )
+    built: list[str] = []
+    real_builder = golden._PIN_BUILDERS["register"]
+
+    def counted_builder(conn, fqid):
+        built.append(fqid)
+        return real_builder(conn, fqid)
+
+    monkeypatch.setitem(golden._PIN_BUILDERS, "register", counted_builder)
 
     first = _group(
         client.get(
@@ -1220,6 +1228,7 @@ def test_golden_pins_over_limit_continue_once_in_configured_order(client, monkey
     combined = [*first["results"], *second["results"]]
     assert [row["fqid"] for row in combined] == ["scb/rams", "scb/lisa"]
     assert len({row["fqid"] for row in combined}) == len(combined)
+    assert built == ["scb/rams", "scb/lisa"]
 
     mismatched = client.get(
         "/api/search",

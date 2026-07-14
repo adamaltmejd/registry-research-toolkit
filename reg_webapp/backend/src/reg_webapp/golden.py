@@ -301,6 +301,7 @@ def apply_golden_boost(
     *,
     fqids: tuple[str, ...] | None = None,
     start: int = 0,
+    limit: int | None = None,
 ) -> list[SearchResult]:
     """Promote any curated pin for ``(query, group)`` to the TOP of ``results``.
 
@@ -333,7 +334,8 @@ def apply_golden_boost(
     if not selected_fqids:
         return list(results)
     build = _PIN_BUILDERS[group]
-    pinned = [build(conn, fqid) for fqid in selected_fqids[start:]]
+    stop = None if limit is None else start + limit
+    pinned = [build(conn, fqid) for fqid in selected_fqids[start:stop]]
     pin_fqids = set(selected_fqids)
     # `getattr(..., None)`: a `ConceptGroupSearchResult` carries no `fqid` field, so
     # it can never match a pin (matches the old dict `.get("fqid")` semantics).
