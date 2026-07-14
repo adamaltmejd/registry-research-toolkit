@@ -15,6 +15,7 @@ import ClassificationCodesPanel from "./ClassificationCodesPanel.svelte";
 import ClassificationEditionGraph from "./ClassificationEditionGraph.svelte";
 import ClassificationRelatedLinks from "./ClassificationRelatedLinks.svelte";
 import { catalogHref, leafSlug, narrowCatalogNode } from "./catalog";
+import { classificationGraphHasRenderableSuccession } from "./picker_graph";
 import { router } from "./router.svelte";
 import SubjectView from "./SubjectView.svelte";
 import TechnicalDetails from "./TechnicalDetails.svelte";
@@ -136,6 +137,9 @@ const tabs = $derived.by((): EditionTab[] => {
   }
   return [];
 });
+const expectsEditionGraph = $derived(
+  tabs.length > 1 || (initialActiveNode?.edition_chain?.length ?? 0) > 1,
+);
 
 function latestTabFqid(tabList: EditionTab[]): string | null {
   let best: EditionTab | null = null;
@@ -207,6 +211,14 @@ const focusedGraph = $derived.by((): RelationshipGraph | null => {
   const focus = graphNodeForFqid(selectedFqid);
   return focus == null ? graph : { ...graph, focus_id: focus.id };
 });
+const graphRenderable = $derived(
+  graphReady &&
+    focusedGraph != null &&
+    classificationGraphHasRenderableSuccession(focusedGraph),
+);
+const reserveEditionGraph = $derived(
+  expectsEditionGraph && (graphResource.loading || graphRenderable),
+);
 
 function selectEdition(value: string): void {
   const tab = tabs.find((item) => item.value === value);
@@ -267,7 +279,7 @@ function selectEdition(value: string): void {
 {/snippet}
 
 {#snippet picker()}
-  {#if graphReady && focusedGraph}
+  {#if graphRenderable && focusedGraph}
     <ClassificationEditionGraph graph={focusedGraph} />
   {/if}
 {/snippet}
@@ -294,13 +306,15 @@ function selectEdition(value: string): void {
     </TechnicalDetails>
   {/snippet}
 
-  <SubjectView
-    title={node.label}
-    {description}
-    {picker}
-    valueSet={valueSet}
-    {relationships}
-  />
+  <div class:reserve-edition-graph={reserveEditionGraph}>
+    <SubjectView
+      title={node.label}
+      {description}
+      {picker}
+      valueSet={valueSet}
+      {relationships}
+    />
+  </div>
 {:else if node}
   {#snippet description()}
     <!-- Key, axes, and source are build-derivation metadata, not researcher-facing
@@ -321,16 +335,50 @@ function selectEdition(value: string): void {
     </TechnicalDetails>
   {/snippet}
 
-  <SubjectView
-    title={`Classification group: ${node.label}`}
-    {description}
-    {picker}
-    valueSet={valueSet}
-    {relationships}
-  />
+  <div class:reserve-edition-graph={reserveEditionGraph}>
+    <SubjectView
+      title={`Classification group: ${node.label}`}
+      {description}
+      {picker}
+      valueSet={valueSet}
+      {relationships}
+    />
+  </div>
 {/if}
 
 <style>
+  /* Multi-edition classification subjects render their value-set tabs before
+     the optional graph request finishes. Hold one compact DAG row while that
+     request is pending, retain it only for a renderable succession graph, and
+     collapse it after an empty/error response. A branched graph scrolls inside
+     this bounded slot instead of growing the row after it resolves. */
+  .reserve-edition-graph :global(article) {
+    --edition-graph-slot: 13rem;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto var(--edition-graph-slot);
+    min-width: 0;
+  }
+  .reserve-edition-graph :global(article > .subject-header) {
+    grid-row: 1;
+  }
+  .reserve-edition-graph :global(article > .tech-details) {
+    grid-row: 2;
+  }
+  .reserve-edition-graph :global(article > .classification-editions) {
+    grid-row: 3;
+    align-self: start;
+    box-sizing: border-box;
+    max-block-size: calc(var(--edition-graph-slot) - var(--space-4));
+    margin-block: var(--space-4) 0;
+    overflow: auto;
+  }
+  .reserve-edition-graph :global(article > .edition-tabs-section) {
+    grid-row: 4;
+  }
+  .reserve-edition-graph :global(article > .derived-links) {
+    grid-row: 5;
+  }
   /* #638 PR4: row spacing standardized across the subject kinds. */
   .meta {
     display: grid;

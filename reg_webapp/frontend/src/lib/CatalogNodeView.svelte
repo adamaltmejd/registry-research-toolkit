@@ -29,7 +29,7 @@ import {
 } from "./catalog";
 import FilterInput from "./FilterInput.svelte";
 import RelatedDocumentsPanel from "./RelatedDocumentsPanel.svelte";
-import { type Column, DataTable, EmptyState, Panel, Tag } from "./ui";
+import { type Column, DataTable, EmptyState, Panel, Skeleton, Tag } from "./ui";
 import VariantBrowser from "./VariantBrowser.svelte";
 
 // The provider arm renders its register list as a real DataTable: a Register
@@ -250,7 +250,21 @@ $effect(() => {
 </script>
 
 {#if resource.loading}
-  <p class="muted" aria-busy="true">Loading…</p>
+  <section
+    class="route-loading"
+    class:classification-loading={fqidPath.startsWith("class/")}
+    aria-busy="true"
+    aria-live="polite"
+  >
+    <p class="muted loading-status">Loading…</p>
+    <div class="loading-geometry">
+      <Skeleton width="min(24rem, 70%)" count={2} />
+      <Skeleton
+        variant="block"
+        count={fqidPath.startsWith("class/") ? 3 : 1}
+      />
+    </div>
+  </section>
 {:else if resource.error}
   <p class="error" role="alert">
     {#if resource.status === 404}
@@ -469,6 +483,28 @@ $effect(() => {
 {/if}
 
 <style>
+  /* Match the successful route's title/detail rhythm while the first catalog
+     request is unresolved. Classification routes reserve the extra graph/value
+     surfaces through three standard Skeleton blocks; ordinary browse routes use
+     one. The placeholder remains bounded and responsive because it follows the
+     content column instead of measuring the viewport in JavaScript. */
+  .route-loading {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+  .loading-status {
+    margin: 0;
+  }
+  .loading-geometry {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    max-width: 64rem;
+  }
+  .classification-loading .loading-geometry {
+    gap: var(--space-4);
+  }
   /* The register's own subject text (register arm). */
   .purpose-text {
     color: var(--text-muted);

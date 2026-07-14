@@ -220,6 +220,28 @@ beforeEach(() => {
   });
 });
 
+describe("CatalogNodeView loading geometry", () => {
+  it("keeps an announced classification-shaped placeholder while the route resolves", async () => {
+    vi.mocked(getCatalogNode).mockImplementation(() => new Promise(() => {}));
+
+    const { container } = await render(CatalogNodeView, {
+      fqidPath: "class/icd-11-se",
+      regMetaVersion: "test",
+      steward: "global",
+      windowMinYear: 1960,
+      vintageYear: 2024,
+    });
+
+    const loading = page.getByText("Loading…", { exact: true });
+    await expect.element(loading).toBeVisible();
+    const loadingSurface = container.querySelector(".route-loading");
+    expect(loadingSurface).toHaveAttribute("aria-busy", "true");
+    expect(loadingSurface).toHaveAttribute("aria-live", "polite");
+    expect(loadingSurface).toHaveClass("classification-loading");
+    expect(container.querySelectorAll(".skeleton.block")).toHaveLength(3);
+  });
+});
+
 describe("CatalogNodeView provider arm", () => {
   it("renders registers as DataTable links with no FQID code element", async () => {
     vi.mocked(getCatalogNode).mockResolvedValue(providerNode());
@@ -641,6 +663,98 @@ describe("CatalogNodeView classification-root arm (#756)", () => {
       .element(page.getByRole("tab", { name: /Utbildningsnivå/ }))
       .toHaveAttribute("aria-selected", "true");
     await expect.element(page.getByText("Man")).toBeVisible();
+  });
+
+  it("keeps family value-set geometry stable while the edition graph resolves", async () => {
+    const editions = [
+      {
+        slug: "icd-10-se",
+        fqid: "class/icd-10-se",
+        name: "ICD-10-SE",
+        version_year: 1997,
+        is_current: true,
+      },
+      {
+        slug: "icd-11-se",
+        fqid: "class/icd-11-se",
+        name: "ICD-11-SE",
+        version_year: 2027,
+        is_current: false,
+      },
+    ];
+    let resolveGraph: (value: never) => void = () => {};
+    vi.mocked(getClassificationGroupGraph).mockImplementation(
+      () =>
+        new Promise((resolve) => {
+          resolveGraph = resolve;
+        }),
+    );
+    vi.mocked(getCatalogNode).mockResolvedValue({
+      kind: "classification",
+      fqid: "class/icd-11-se",
+      name: "ICD-11-SE",
+      short_name: "ICD-11-SE",
+      edition_chain: [],
+      codes: [{ code: "1A", label: "Infection", level: 1, is_valid: true }],
+      dimensions: [],
+      family: {
+        kind: "classification-family",
+        key: "icd",
+        label: "ICD",
+        editions,
+      },
+      derived_from: [],
+      derivatives: [],
+    } as unknown as CatalogNode);
+    vi.mocked(getClassificationGroup).mockResolvedValue({
+      kind: "classification-family",
+      key: "icd",
+      label: "ICD",
+      editions,
+    } as never);
+
+    await render(CatalogNodeView, {
+      fqidPath: "class/icd-11-se",
+      regMetaVersion: "test",
+      steward: "global",
+      windowMinYear: 1960,
+      vintageYear: 2027,
+    });
+
+    const valueSet = page.getByRole("region", { name: "Value set" });
+    await expect.element(valueSet).toBeVisible();
+    const before = valueSet.element().getBoundingClientRect().top;
+
+    resolveGraph({
+      nodes: [
+        ...editions.map((edition) => ({
+          kind: "classification" as const,
+          id: edition.slug,
+          fqid: edition.fqid,
+          label: edition.name,
+          group_key: "icd",
+          version_year: edition.version_year,
+          is_current: edition.is_current,
+        })),
+      ],
+      edges: [
+        {
+          id: "icd-succession",
+          kind: "succession",
+          source: "icd-10-se",
+          target: "icd-11-se",
+          label: null,
+          effective_year: 2027,
+        },
+      ],
+      focus_id: null,
+    } as never);
+
+    await expect
+      .element(page.getByRole("heading", { name: "Editions" }))
+      .toBeVisible();
+    const after = valueSet.element().getBoundingClientRect().top;
+    expect(Math.abs(after - before)).toBeLessThan(2);
   });
 
   it("opens classification family aliases on the canonical self edition tab", async () => {

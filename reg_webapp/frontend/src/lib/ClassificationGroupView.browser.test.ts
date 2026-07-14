@@ -404,6 +404,289 @@ describe("ClassificationGroupView (#756)", () => {
     expect(getClassificationGroupGraph).toHaveBeenCalledWith("ssyk");
   });
 
+  it("keeps canonical family value-set geometry stable while the graph resolves", async () => {
+    let resolveGraph: (value: RelationshipGraph) => void = () => {};
+    vi.mocked(getClassificationGroup).mockResolvedValue(familyNode());
+    vi.mocked(getClassificationGroupGraph).mockImplementation(
+      () =>
+        new Promise((resolve) => {
+          resolveGraph = resolve;
+        }),
+    );
+    vi.mocked(getCatalogNode).mockResolvedValue(
+      classificationNode({
+        fqid: "class/ssyk2012",
+        name: "SSYK 2012",
+        short_name: "SSYK2012",
+      }),
+    );
+
+    await render(ClassificationGroupView, { key: "ssyk" });
+
+    const valueSet = page.getByRole("region", { name: "Value set" });
+    await expect.element(valueSet).toBeVisible();
+    const before = valueSet.element().getBoundingClientRect().top;
+
+    resolveGraph(familyGraph());
+
+    await expect
+      .element(page.getByRole("heading", { name: "Editions" }))
+      .toBeVisible();
+    const after = valueSet.element().getBoundingClientRect().top;
+    expect(Math.abs(after - before)).toBeLessThan(2);
+  });
+
+  it("keeps lower content stable when a branched edition graph exceeds the reserved slot", async () => {
+    let resolveGraph: (value: RelationshipGraph) => void = () => {};
+    const editions = [
+      ["root", 1990, false],
+      ["left", 2000, false],
+      ["right", 2001, false],
+      ["current", 2010, true],
+    ] as const;
+    vi.mocked(getClassificationGroup).mockResolvedValue(
+      familyNode({
+        key: "branch",
+        label: "Branched editions",
+        editions: editions.map(([slug, versionYear, isCurrent]) => ({
+          slug,
+          fqid: `class/${slug}`,
+          name: slug,
+          short_name: slug,
+          effective_year: isCurrent ? null : versionYear + 1,
+          version_year: versionYear,
+          is_current: isCurrent,
+          is_self: false,
+        })),
+      }),
+    );
+    vi.mocked(getClassificationGroupGraph).mockImplementation(
+      () =>
+        new Promise((resolve) => {
+          resolveGraph = resolve;
+        }),
+    );
+    vi.mocked(getCatalogNode).mockResolvedValue(
+      classificationNode({
+        fqid: "class/current",
+        derived_from: [
+          {
+            fqid: "class/root",
+            slug: "root",
+            short_name: "root",
+            name: "root",
+            note: null,
+          },
+        ],
+      }),
+    );
+
+    await render(ClassificationGroupView, { key: "branch" });
+
+    const valueSet = page.getByRole("region", { name: "Value set" });
+    const related = page.getByRole("region", {
+      name: "Related classifications",
+    });
+    await expect.element(valueSet).toBeVisible();
+    await expect.element(related).toBeVisible();
+    const valueSetBefore = valueSet.element().getBoundingClientRect().top;
+    const relatedBefore = related.element().getBoundingClientRect().top;
+
+    resolveGraph({
+      nodes: editions.map(([slug, versionYear, isCurrent]) => ({
+        kind: "classification" as const,
+        id: `class/${slug}`,
+        fqid: `class/${slug}`,
+        label: slug,
+        short_name: slug,
+        group_key: "class/branch",
+        group_label: "Branched editions",
+        version_year: versionYear,
+        is_current: isCurrent,
+      })),
+      edges: [
+        ["root", "left"],
+        ["root", "right"],
+        ["left", "current"],
+        ["right", "current"],
+      ].map(([source, target]) => ({
+        id: `succession:class/${source}->class/${target}`,
+        kind: "succession" as const,
+        source: `class/${source}`,
+        target: `class/${target}`,
+        label: null,
+        effective_year: null,
+      })),
+      focus_id: null,
+    });
+
+    const graph = page.getByRole("region", { name: "Editions" });
+    await expect.element(graph).toBeVisible();
+    expect(graph.element().scrollHeight).toBeGreaterThan(
+      graph.element().clientHeight,
+    );
+    expect(
+      Math.abs(valueSet.element().getBoundingClientRect().top - valueSetBefore),
+    ).toBeLessThan(2);
+    expect(
+      Math.abs(related.element().getBoundingClientRect().top - relatedBefore),
+    ).toBeLessThan(2);
+  });
+
+  it("collapses the reserved graph row after an empty graph resolves", async () => {
+    let resolveGraph: (value: RelationshipGraph) => void = () => {};
+    vi.mocked(getClassificationGroup).mockResolvedValue(familyNode());
+    vi.mocked(getClassificationGroupGraph).mockImplementation(
+      () =>
+        new Promise((resolve) => {
+          resolveGraph = resolve;
+        }),
+    );
+    vi.mocked(getCatalogNode).mockResolvedValue(
+      classificationNode({ fqid: "class/ssyk2012" }),
+    );
+
+    const { container } = await render(ClassificationGroupView, {
+      key: "ssyk",
+    });
+
+    const valueSet = page.getByRole("region", { name: "Value set" });
+    await expect.element(valueSet).toBeVisible();
+    const reservedTop = valueSet.element().getBoundingClientRect().top;
+    expect(container.querySelector(".reserve-edition-graph")).not.toBeNull();
+
+    resolveGraph({ nodes: [], edges: [], focus_id: null });
+
+    await vi.waitFor(() => {
+      expect(container.querySelector(".reserve-edition-graph")).toBeNull();
+    });
+    expect(
+      reservedTop - valueSet.element().getBoundingClientRect().top,
+    ).toBeGreaterThan(100);
+    expect(
+      page.getByRole("heading", { name: "Editions" }).elements(),
+    ).toHaveLength(0);
+  });
+
+  it("collapses the reserved graph row when the focused member has no succession edges", async () => {
+    let resolveGraph: (value: RelationshipGraph) => void = () => {};
+    const active = classificationNode({
+      fqid: "class/niva-test",
+      name: "Nivå aggregat",
+      short_name: "NIVA",
+    });
+    vi.mocked(getClassificationGroup).mockResolvedValue(node());
+    vi.mocked(getClassificationGroupGraph).mockImplementation(
+      () =>
+        new Promise((resolve) => {
+          resolveGraph = resolve;
+        }),
+    );
+
+    const { container } = await render(ClassificationGroupView, {
+      key: "sun",
+      activeFqid: "class/niva-test",
+      initialActiveNode: active,
+    });
+
+    const valueSet = page.getByRole("region", { name: "Value set" });
+    await expect.element(valueSet).toBeVisible();
+    const reservedTop = valueSet.element().getBoundingClientRect().top;
+    expect(container.querySelector(".reserve-edition-graph")).not.toBeNull();
+
+    resolveGraph(groupGraph());
+
+    await vi.waitFor(() => {
+      expect(container.querySelector(".reserve-edition-graph")).toBeNull();
+    });
+    expect(
+      reservedTop - valueSet.element().getBoundingClientRect().top,
+    ).toBeGreaterThan(100);
+    expect(
+      page.getByRole("heading", { name: "Editions" }).elements(),
+    ).toHaveLength(0);
+  });
+
+  it("collapses the reserved graph row after the graph request fails", async () => {
+    let rejectGraph: (reason: Error) => void = () => {};
+    vi.mocked(getClassificationGroup).mockResolvedValue(familyNode());
+    vi.mocked(getClassificationGroupGraph).mockImplementation(
+      () =>
+        new Promise((_, reject) => {
+          rejectGraph = reject;
+        }),
+    );
+    vi.mocked(getCatalogNode).mockResolvedValue(
+      classificationNode({ fqid: "class/ssyk2012" }),
+    );
+
+    const { container } = await render(ClassificationGroupView, {
+      key: "ssyk",
+    });
+
+    const valueSet = page.getByRole("region", { name: "Value set" });
+    await expect.element(valueSet).toBeVisible();
+    const reservedTop = valueSet.element().getBoundingClientRect().top;
+    expect(container.querySelector(".reserve-edition-graph")).not.toBeNull();
+
+    rejectGraph(new Error("graph unavailable"));
+
+    await vi.waitFor(() => {
+      expect(container.querySelector(".reserve-edition-graph")).toBeNull();
+    });
+    expect(
+      reservedTop - valueSet.element().getBoundingClientRect().top,
+    ).toBeGreaterThan(100);
+  });
+
+  it("keeps related classifications after the value set while the graph resolves", async () => {
+    let resolveGraph: (value: RelationshipGraph) => void = () => {};
+    vi.mocked(getClassificationGroup).mockResolvedValue(familyNode());
+    vi.mocked(getClassificationGroupGraph).mockImplementation(
+      () =>
+        new Promise((resolve) => {
+          resolveGraph = resolve;
+        }),
+    );
+    vi.mocked(getCatalogNode).mockResolvedValue(
+      classificationNode({
+        fqid: "class/ssyk2012",
+        derived_from: [
+          {
+            fqid: "class/ssyk1996",
+            slug: "ssyk1996",
+            short_name: "SSYK1996",
+            name: "SSYK 1996",
+            note: null,
+          },
+        ],
+      }),
+    );
+
+    await render(ClassificationGroupView, { key: "ssyk" });
+
+    const valueSet = page.getByRole("region", { name: "Value set" });
+    const related = page.getByRole("region", {
+      name: "Related classifications",
+    });
+    await expect.element(valueSet).toBeVisible();
+    await expect.element(related).toBeVisible();
+    const valueSetBefore = valueSet.element().getBoundingClientRect();
+    const relatedBefore = related.element().getBoundingClientRect();
+    expect(relatedBefore.top).toBeGreaterThanOrEqual(valueSetBefore.bottom);
+
+    resolveGraph(familyGraph());
+
+    await expect
+      .element(page.getByRole("heading", { name: "Editions" }))
+      .toBeVisible();
+    const valueSetAfter = valueSet.element().getBoundingClientRect();
+    const relatedAfter = related.element().getBoundingClientRect();
+    expect(relatedAfter.top).toBeGreaterThanOrEqual(valueSetAfter.bottom);
+    expect(Math.abs(valueSetAfter.top - valueSetBefore.top)).toBeLessThan(2);
+    expect(Math.abs(relatedAfter.top - relatedBefore.top)).toBeLessThan(2);
+  });
+
   it("defaults to the current family edition before future-dated successors", async () => {
     vi.mocked(getClassificationGroup).mockResolvedValue(
       familyNode({
