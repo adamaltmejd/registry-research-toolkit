@@ -92,6 +92,11 @@ def test_openapi_documents_closed_canonical_project_root(client):
         "panels",
         "window",
     }
+    member_items = openapi["components"]["schemas"]["Panel"]["properties"]["members"][
+        "items"
+    ]
+    assert {"type": "string"} in member_items["anyOf"]
+    assert {"$ref": "#/components/schemas/PanelMember"} in member_items["anyOf"]
 
 
 def test_unresolvable_fqid_is_200_not_4xx(client):

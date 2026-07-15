@@ -216,6 +216,12 @@ def test_panel_optional_fields_default_none() -> None:
     assert panel.comment is None
 
 
+def test_panel_json_schema_accepts_bare_member_shorthand() -> None:
+    items = Panel.model_json_schema()["properties"]["members"]["items"]
+    assert {"type": "string"} in items["anyOf"]
+    assert {"$ref": "#/$defs/PanelMember"} in items["anyOf"]
+
+
 def test_literal_period_is_frozen_and_equal_by_value() -> None:
     a = LiteralPeriod(period="2018-01")
     b = LiteralPeriod(period="2018-01")

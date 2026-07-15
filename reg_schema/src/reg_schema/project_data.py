@@ -235,7 +235,11 @@ class Panel(_Model):
     time_key: TimeKey | None = None
     comment: str | None = None
 
-    @field_validator("members", mode="before")
+    @field_validator(
+        "members",
+        mode="before",
+        json_schema_input_type=tuple[str | PanelMember, ...],
+    )
     @classmethod
     def _normalize_member_shorthand(cls, value: object) -> object:
         # A bare-string member is the source name. Expand it to the

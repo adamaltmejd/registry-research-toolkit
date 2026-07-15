@@ -2581,7 +2581,14 @@
           },
           "members": {
             "items": {
-              "$ref": "#/components/schemas/PanelMember"
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "$ref": "#/components/schemas/PanelMember"
+                }
+              ]
             },
             "title": "Members",
             "type": "array"

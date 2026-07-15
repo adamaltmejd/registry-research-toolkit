@@ -1927,7 +1927,7 @@ export interface components {
              */
             entity_key: string | string[] | null;
             /** Members */
-            members: components["schemas"]["PanelMember"][];
+            members: (string | components["schemas"]["PanelMember"])[];
             /** Panel Id */
             panel_id: string;
             /**
