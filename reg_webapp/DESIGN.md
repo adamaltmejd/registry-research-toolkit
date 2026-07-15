@@ -1827,9 +1827,7 @@ boundary unchanged.
   a malformed REQUEST (non-JSON, duplicate JSON keys, a too-deeply-nested or non-object
   body, an oversized body). It runs the §6.8.0 two-layer composition (structural →
   semantic) and returns the **concatenated** issue list; the DB-free structural layer
-  runs first, so a structurally-rejected body costs no DB hit. It also runs the
-  cross-block referential checks (orphan `binding_options` keys /
-  suppress_k-on-non-categorical).
+  runs first, so a structurally-rejected body costs no DB hit.
 - **`/order`** renders the current provisional order-export CSV (a `text/csv` download)
   and is the one documented exception to the "every route declares a `response_model`"
   lint (it returns raw bytes). Unlike `/validate`, it structurally **gates** first: you
