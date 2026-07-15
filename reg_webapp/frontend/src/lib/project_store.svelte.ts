@@ -464,8 +464,8 @@ export const projectStore = {
 
   /**
    * Open a `project_data.json` File. Parse → guard non-object → `checkVersionGate`.
-   * On accept: load the parsed dict VERBATIM (unmapped keys / namespaced blocks
-   * survive) and set the dirty baseline (`lastDownloaded`) to the draft
+   * On accept: load the parsed dict VERBATIM (including invalid unknown root keys)
+   * and set the dirty baseline (`lastDownloaded`) to the draft
    * re-serialized through OUR serializer — NOT the file's raw text — so a
    * freshly-opened, unedited draft is CLEAN even when the file's own formatting
    * differs from our pretty-print. On a parse error or a gate failure: set

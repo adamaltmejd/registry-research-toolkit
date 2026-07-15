@@ -49,8 +49,7 @@ class _Model(BaseModel):
 
     ``extra="forbid"`` makes a typo in a constructed model fail loudly
     instead of dropping into defaults — the same drift guard the IR
-    models use (``reg_meta_build.ir``). ``ProjectData`` relaxes this for
-    namespaced blocks; see its docstring.
+    models use (``reg_meta_build.ir``).
     """
 
     model_config = ConfigDict(frozen=True, extra="forbid")
@@ -236,7 +235,11 @@ class Panel(_Model):
     time_key: TimeKey | None = None
     comment: str | None = None
 
-    @field_validator("members", mode="before")
+    @field_validator(
+        "members",
+        mode="before",
+        json_schema_input_type=tuple[str | PanelMember, ...],
+    )
     @classmethod
     def _normalize_member_shorthand(cls, value: object) -> object:
         # A bare-string member is the source name. Expand it to the
@@ -296,22 +299,13 @@ class StudyWindow(_Model):
 class ProjectData(_Model):
     """The top-level ``project_data.json`` shape.
 
-    ``extra="ignore"`` (overriding ``_Model``'s ``forbid``) tolerates
-    steward-namespaced blocks (``swecov``, ``reg_monabundle``, … — any
-    namespaced block) WITHOUT modeling them as fields: reg_schema delegates
-    their content validation to the owning package (see DESIGN.md → Not in
-    scope (intentionally)), so the block rides through on the dict side and
-    is handled by that package (on the webapp write path the raw-body reader
-    preserves it verbatim, precisely because ``extra="ignore"`` drops it from
-    the model). If a field is genuinely wanted for one, we add it
-    deliberately rather than growing an ``extras`` dict.
-
-    ``frozen=True`` is the trivial base default — value-immutability plus
-    hashability (no namespaced block is stored on the model, so every
-    ``ProjectData`` is hashable like any other frozen ``_Model``).
+    The root is closed like every nested ``_Model``: an unknown field is a
+    model-construction error. API boundaries still run the accumulating
+    structural validator first so callers receive one stable
+    ``unexpected_field`` issue per unknown key rather than a fail-fast Pydantic
+    error. A future extension needs an explicit modeled container; arbitrary
+    namespaced root blocks are not part of the v1 contract.
     """
-
-    model_config = ConfigDict(frozen=True, extra="ignore")
 
     schema_version: str
     steward: Steward

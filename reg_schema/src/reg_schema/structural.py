@@ -46,19 +46,14 @@ _TOP_LEVEL_REQUIRED: tuple[str, ...] = (
     "name",
     "sources",
 )
-_TOP_LEVEL_OPTIONAL_BASELINE: tuple[str, ...] = ("panels", "window")
-_TOP_LEVEL_BASELINE: frozenset[str] = frozenset(
-    _TOP_LEVEL_REQUIRED + _TOP_LEVEL_OPTIONAL_BASELINE
-)
+_TOP_LEVEL_OPTIONAL: tuple[str, ...] = ("panels", "window")
+_PROJECT_KEYS: frozenset[str] = frozenset(_TOP_LEVEL_REQUIRED + _TOP_LEVEL_OPTIONAL)
 
 # Allowed-key sets for the CLOSED objects (`_Model` subclasses with
 # ``extra="forbid"`` in ``project_data.py``). An unrecognized key on any of
 # these emits ``unexpected_field``. Mirror the Pydantic model field sets
 # exactly — the drift guard is ``test_structural.py``'s pinning test, which
-# asserts each frozenset equals ``Model.model_fields``. The top level
-# (``ProjectData``) is deliberately NOT here: it is ``extra="ignore"`` so a
-# top-level unknown key is a steward-namespaced block, not an error
-# (see ``_check_namespaced_blocks``).
+# asserts each frozenset equals ``Model.model_fields``.
 _SOURCE_KEYS: frozenset[str] = frozenset(
     {"name", "register_variant", "period", "bindings"}
 )
@@ -116,8 +111,7 @@ def validate_structural(data: Mapping[str, object]) -> ValidationResult:
     Returns a ``ValidationResult`` whose ``issues`` capture every
     structural problem found. The result is dependency-free: nothing
     here consults reg_meta. Semantic resolution (see reg_webapp/DESIGN.md
-    → Semantic validation (semantic.py)) and namespaced-block validation
-    (see DESIGN.md → Not in scope (intentionally)) are owned by other layers.
+    → Semantic validation (semantic.py)) is owned by another layer.
     """
 
     issues: list[ValidationIssue] = []
@@ -131,7 +125,6 @@ def validate_structural(data: Mapping[str, object]) -> ValidationResult:
     _check_window(data.get("window"), issues)
     _check_sources(data.get("sources"), issues)
     _check_panels(data.get("panels"), data.get("sources"), issues)
-    _check_namespaced_blocks(data, issues)
     return ValidationResult(issues=tuple(issues))
 
 
@@ -160,12 +153,11 @@ def _check_unexpected_keys(
     """Emit ``unexpected_field`` for each key on a CLOSED object not in ``allowed``.
 
     Mirrors the ``extra="forbid"`` config on the ``_Model``
-    subclasses (``Source`` / ``Binding`` / ``Panel`` / ``PanelMember``; see
+    subclasses (``ProjectData`` / ``Source`` / ``Binding`` / ``Panel`` /
+    ``PanelMember``; see
     DESIGN.md → Two layers: models vs. validator): a
     typo'd or unknown key on one of those objects is a structural error, not
-    a silently-ignored extra. The top level (``ProjectData``) is
-    ``extra="ignore"`` and is handled separately by
-    ``_check_namespaced_blocks`` — it must NOT route through here.
+    a silently-ignored extra.
     """
     for key in sorted(set(container) - allowed):
         issues.append(
@@ -555,6 +547,8 @@ def _check_period(period: object, base: str, issues: list[ValidationIssue]) -> N
 def _check_top_level_fields(
     data: Mapping[str, object], issues: list[ValidationIssue]
 ) -> None:
+    _check_unexpected_keys(data, _PROJECT_KEYS, "", "project root", issues)
+
     # Distinguish "absent" from "present-but-null". JSON null deserializes
     # to Python None, which `dict.get` returns for both cases. Without this
     # split, ``"schema_version": null`` bypasses both missing-field and
@@ -577,7 +571,7 @@ def _check_top_level_fields(
                 )
             )
 
-    for field in _TOP_LEVEL_OPTIONAL_BASELINE:
+    for field in _TOP_LEVEL_OPTIONAL:
         if field in data and data[field] is None:
             issues.append(
                 _error(
@@ -668,35 +662,6 @@ def _check_window(window: object, issues: list[ValidationIssue]) -> None:
                 f"({endpoints['from']})",
             )
         )
-
-
-def _check_namespaced_blocks(
-    data: Mapping[str, object], issues: list[ValidationIssue]
-) -> None:
-    # Any non-baseline top-level key is treated as a namespaced block.
-    # The owning package validates contents (see DESIGN.md → Not in
-    # scope (intentionally)); the structural layer only checks the block is
-    # an object.
-    #
-    # DELIBERATE: the TOP LEVEL stays OPEN. ``ProjectData`` is
-    # ``extra="ignore"`` (project_data.py) precisely so steward-namespaced
-    # blocks (``reg_monabundle``, ``swecov``, …) ride
-    # through without being modeled as fields. A top-level unknown key is a
-    # namespaced block, NOT an ``unexpected_field`` — do not "tighten" this
-    # to mirror the closed-object check in ``_check_unexpected_keys`` (which
-    # applies only to Source/Binding/Panel/member, the ``extra="forbid"``
-    # ``_Model`` subclasses).
-    for key, value in data.items():
-        if key in _TOP_LEVEL_BASELINE:
-            continue
-        if not isinstance(value, Mapping):
-            issues.append(
-                _error(
-                    "invalid_field_type",
-                    f"/{_jp_escape(key)}",
-                    f"namespaced block {key!r} must be an object",
-                )
-            )
 
 
 # --- Sources / Columns --------------------------------------------------

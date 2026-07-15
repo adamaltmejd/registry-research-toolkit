@@ -6,9 +6,8 @@ payload, but the filename follows the corpus harness contract (see
 ``reg_schema/test_corpus/README.md``).
 
 A realistic-shape SCB project: LISA + LOUISE + RTB across a handful of
-years, ~25 bindings per source, a panel linking the LISA years, and a
-populated ``reg_monabundle.binding_options`` block with ``suppress_k``
-overrides. Consumed by the structural corpus harness in
+years, ~25 bindings per source, and a panel linking the LISA years.
+Consumed by the structural corpus harness in
 ``reg_schema/tests/test_corpus.py``, which picks it up automatically (the
 case directory carries ``input.json`` + ``expected_ValidationResult.json``)
 and pins that the fixture stays structurally valid.
@@ -137,16 +136,6 @@ def build() -> dict[str, object]:
         ],
     }
 
-    # ~15 ``suppress_k`` overrides — categorical bindings where the
-    # researcher wants a tighter k-anonymity floor than the global
-    # default. Spread across registers so the block exercises lookup
-    # paths. Block keys are 3-segment binding FQIDs.
-    binding_options: dict[str, dict[str, int]] = {}
-    for _source_name, register_variant, _period in SOURCES:
-        prefix = _provider_register(register_variant)
-        for slug in ("kommun", "ssyk2012", "ast_sni2007"):
-            binding_options[f"{prefix}/{slug}"] = {"suppress_k": 25}
-
     return {
         "schema_version": "2.0.0",
         "steward": "global",
@@ -154,7 +143,6 @@ def build() -> dict[str, object]:
         "name": "load_test_200col",
         "sources": sources_out,
         "panels": [panel],
-        "reg_monabundle": {"binding_options": binding_options},
     }
 
 

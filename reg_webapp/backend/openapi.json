@@ -1,6 +1,126 @@
 {
   "components": {
     "schemas": {
+      "Binding": {
+        "additionalProperties": false,
+        "description": "A binding on a Source \u2014 one variable to include in the extract.\n\n``variable`` is the binding FQID: ``<provider>/<register>/<slug>`` (3\nsegments, see reg_meta/DESIGN.md \u2192 FQID grammar). Its ``provider/register`` prefix (first 2 segments) must\nequal the source's ``register_variant`` prefix \u2014 the variant is NOT\nrepeated here, it lives once on the Source. That cross-field rule\nis enforced by the structural validator. There is no ``@version`` pin \u2014\nthat grammar is retired.\n\nA FQID names one CONCEPT. The reg_meta build enforces one value set per\n``(variable, variant, period, delivery_column)``, but a concept may carry\nseveral co-existing delivery columns \u2014 parallel REPRESENTATIONS of it (SSYK\n3/4/5-digit, age 5/10-yr brackets). ``representation`` selects which one (by\nits ``variable_alias.delivery_column_name``); it is required only when the\nconcept resolves to >1 column at the source's ``(variant, period)`` \u2014 the\nsemantic validator (see reg_webapp/DESIGN.md \u2192 Semantic validation (semantic.py)) flags an ambiguous binding that omits it, and the\nSPA offers a chooser. A single-representation concept leaves it ``None``.\n\n``display_name`` is optional: when absent, reg_meta-backed consumers\nresolve the default from ``variable_alias.delivery_column_name`` for\nthe binding's state at the source's ``(register_variant, period)``. A\nreg_meta-free consumer that materializes data artifacts must resolve\nthe default itself before emitting them \u2014 it never carries an\nunresolved ``display_name`` into its output.",
+        "properties": {
+          "date_format": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Date Format"
+          },
+          "datetime_format": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Datetime Format"
+          },
+          "display_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Display Name"
+          },
+          "id_subtype": {
+            "anyOf": [
+              {
+                "enum": [
+                  "integer",
+                  "string"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Id Subtype"
+          },
+          "numeric_subtype": {
+            "anyOf": [
+              {
+                "enum": [
+                  "integer",
+                  "double"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Numeric Subtype"
+          },
+          "representation": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Representation"
+          },
+          "type": {
+            "enum": [
+              "id",
+              "categorical",
+              "numeric",
+              "date",
+              "datetime",
+              "opaque"
+            ],
+            "title": "Type",
+            "type": "string"
+          },
+          "value_set": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Value Set"
+          },
+          "variable": {
+            "title": "Variable",
+            "type": "string"
+          }
+        },
+        "required": [
+          "variable",
+          "type"
+        ],
+        "title": "Binding",
+        "type": "object"
+      },
       "BindingChild": {
         "description": "A binding child under a register node \u2014 a thin (fqid, name) entry, NOT\nthe embedded longitudinal record (that is only on the binding LEAF response).\n`coverage` (#351) is the per-variable study-window aggregate.",
         "properties": {
@@ -2376,6 +2496,28 @@
         "title": "LineageWarningsResponse",
         "type": "object"
       },
+      "LiteralPeriod": {
+        "additionalProperties": false,
+        "description": "The ``{\"period\": int | string}`` time_key form.\n\nThe only way to express a string-shaped literal period at the\nschema level. Disambiguates ``\"2018\"`` (column ref) from\n``{\"period\": \"2018-01\"}`` (literal period).",
+        "properties": {
+          "period": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "title": "Period"
+          }
+        },
+        "required": [
+          "period"
+        ],
+        "title": "LiteralPeriod",
+        "type": "object"
+      },
       "ObjectTypeMetadata": {
         "additionalProperties": false,
         "description": "SCB object-type prose for one register version (#799).",
@@ -2401,6 +2543,213 @@
           "definition"
         ],
         "title": "ObjectTypeMetadata",
+        "type": "object"
+      },
+      "Panel": {
+        "additionalProperties": false,
+        "description": "A panel definition over sources.\n\nMembers are stored uniformly as ``PanelMember``. The bare-string\nshorthand (a source name with panel-level key defaults) is normalized\nto ``PanelMember(source=<name>)`` by the ``members`` validator, so\nconsumers never branch on ``str | PanelMember``. Source-collision (each\nsource belongs to at most one panel) and composite ordering /\nhomogeneity rules are enforced by the structural validator, not here.",
+        "properties": {
+          "comment": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Comment"
+          },
+          "entity_key": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Entity Key"
+          },
+          "members": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "$ref": "#/components/schemas/PanelMember"
+                }
+              ]
+            },
+            "title": "Members",
+            "type": "array"
+          },
+          "panel_id": {
+            "title": "Panel Id",
+            "type": "string"
+          },
+          "time_key": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "$ref": "#/components/schemas/LiteralPeriod"
+              },
+              {
+                "$ref": "#/components/schemas/TimeRange"
+              },
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "$ref": "#/components/schemas/LiteralPeriod"
+                    },
+                    {
+                      "$ref": "#/components/schemas/TimeRange"
+                    }
+                  ]
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Time Key"
+          }
+        },
+        "required": [
+          "panel_id",
+          "members"
+        ],
+        "title": "Panel",
+        "type": "object"
+      },
+      "PanelMember": {
+        "additionalProperties": false,
+        "description": "A member of a Panel.\n\n``source`` is the source ``name`` (the panel layer joins on\ndelivered-data column headers, not FQIDs). ``entity_key`` /\n``time_key`` override panel-level defaults; when both panel and member\nleave a key unset, it is inherited from the member's variant's\n``panel_template`` at kit/bundle-build time \u2014 the structural\nvalidator does not flag the absence (it has no reg_meta).",
+        "properties": {
+          "entity_key": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Entity Key"
+          },
+          "source": {
+            "title": "Source",
+            "type": "string"
+          },
+          "time_key": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "$ref": "#/components/schemas/LiteralPeriod"
+              },
+              {
+                "$ref": "#/components/schemas/TimeRange"
+              },
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "$ref": "#/components/schemas/LiteralPeriod"
+                    },
+                    {
+                      "$ref": "#/components/schemas/TimeRange"
+                    }
+                  ]
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Time Key"
+          }
+        },
+        "required": [
+          "source"
+        ],
+        "title": "PanelMember",
+        "type": "object"
+      },
+      "PeriodRange": {
+        "additionalProperties": false,
+        "description": "The ``{\"from\": ..., \"to\": ...}`` range form of ``Source.period``.\n\nEndpoints follow the same int / period-token-string forms as a bare\nperiod. ``from`` is a Python keyword, so the field is ``from_`` with a\n``\"from\"`` alias; ``populate_by_name`` lets callers use either.\n\nThis bare object is **only** legal as a ``Source.period`` value; a\n``TimePoint`` range uses the discriminated ``TimeRange`` wrapper\n(``{\"range\": {...}}``) so ``TimeKey``'s union stays unambiguous.\n\n``serialize_by_alias=True`` so ``model_dump()`` emits ``\"from\"`` (not the\nPython-safe ``\"from_\"``) without every caller having to pass\n``by_alias=True`` \u2014 the un-aliased key would fail re-validation\n(``_is_period_range_obj`` requires exactly ``{\"from\", \"to\"}``).",
+        "properties": {
+          "from": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "title": "From"
+          },
+          "to": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "title": "To"
+          }
+        },
+        "required": [
+          "from",
+          "to"
+        ],
+        "title": "PeriodRange",
         "type": "object"
       },
       "PopulationMetadata": {
@@ -2474,6 +2823,68 @@
           "predecessors"
         ],
         "title": "PredecessorsResponse",
+        "type": "object"
+      },
+      "ProjectData": {
+        "additionalProperties": false,
+        "description": "The top-level ``project_data.json`` shape.\n\nThe root is closed like every nested ``_Model``: an unknown field is a\nmodel-construction error. API boundaries still run the accumulating\nstructural validator first so callers receive one stable\n``unexpected_field`` issue per unknown key rather than a fail-fast Pydantic\nerror. A future extension needs an explicit modeled container; arbitrary\nnamespaced root blocks are not part of the v1 contract.",
+        "properties": {
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "panels": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/Panel"
+            },
+            "title": "Panels",
+            "type": "array"
+          },
+          "reg_meta_version": {
+            "title": "Reg Meta Version",
+            "type": "string"
+          },
+          "schema_version": {
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "sources": {
+            "items": {
+              "$ref": "#/components/schemas/Source"
+            },
+            "title": "Sources",
+            "type": "array"
+          },
+          "steward": {
+            "enum": [
+              "global",
+              "ifau",
+              "swecov"
+            ],
+            "title": "Steward",
+            "type": "string"
+          },
+          "window": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/StudyWindow"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
+          }
+        },
+        "required": [
+          "schema_version",
+          "steward",
+          "reg_meta_version",
+          "name",
+          "sources"
+        ],
+        "title": "ProjectData",
         "type": "object"
       },
       "ProviderNode": {
@@ -3243,6 +3654,65 @@
         "title": "SearchResponse",
         "type": "object"
       },
+      "Source": {
+        "additionalProperties": false,
+        "description": "A data source / table in the spec.\n\n``register_variant`` is the 3-part variant **coordinate**\n(``<provider>/<register>/<variant>``) \u2014 not an FQID kind (see reg_meta/DESIGN.md \u2192 FQID grammar), but\nthe same 3-part grammar. ``period`` is always required and polymorphic\n(``Period``). Together ``(register_variant's variant, period)`` selects\neach binding variable's ``variable_state``. ``name`` is the internal\nsource handle referenced by panel members; it is not an FQID.",
+        "properties": {
+          "bindings": {
+            "items": {
+              "$ref": "#/components/schemas/Binding"
+            },
+            "title": "Bindings",
+            "type": "array"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "period": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "$ref": "#/components/schemas/PeriodRange"
+              },
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "$ref": "#/components/schemas/PeriodRange"
+                    }
+                  ]
+                },
+                "type": "array"
+              }
+            ],
+            "title": "Period"
+          },
+          "register_variant": {
+            "title": "Register Variant",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "register_variant",
+          "period",
+          "bindings"
+        ],
+        "title": "Source",
+        "type": "object"
+      },
       "StatesResponse": {
         "description": "`GET /api/catalog/{fqid}/states` \u2014 the binding's full state history.\nSame `states` shape the binding leaf embeds, as a standalone envelope. With a\n`?period` query on the catch-all this same shape carries the resolve_at\nsubset (uniform: codegen sees one state-list type).",
         "properties": {
@@ -3298,6 +3768,26 @@
           "long_name"
         ],
         "title": "StewardInfo",
+        "type": "object"
+      },
+      "StudyWindow": {
+        "additionalProperties": false,
+        "description": "The optional ``{\"from\": <year>, \"to\": <year>}`` project study window.\n\nThe global \"project window\" the redesigned subject page defaults each\npage's period picker to (see issue #611 \u2192 Period model). Deliberately\nNOT the full ``Period`` / ``PeriodRange`` grammar: it is a plain\nyear-int pair, matching the year-granular header slider. Per-page\ndeviation (months/quarters/terms, interrupted segments) keeps the rich\ngrammar via ``?period``; this window only seeds the default.\n\n``from`` is a Python keyword, so the field is ``from_`` with a ``\"from\"``\nalias \u2014 mirroring ``PeriodRange``. ``serialize_by_alias=True`` so\n``model_dump()`` emits ``\"from\"`` (not ``\"from_\"``) without callers\npassing ``by_alias=True``.\n\nEndpoints are plain ``int`` years (not the ``int | str`` period-token\nforms of ``PeriodRange``): the window is year-granular by design. The\nonly invariant is ``to >= from`` \u2014 a same-year window (``from == to``)\nis valid; a window can't end before it starts.",
+        "properties": {
+          "from": {
+            "title": "From",
+            "type": "integer"
+          },
+          "to": {
+            "title": "To",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "from",
+          "to"
+        ],
+        "title": "StudyWindow",
         "type": "object"
       },
       "SuccessorsResponse": {
@@ -3362,6 +3852,20 @@
           "note"
         ],
         "title": "TagMembership",
+        "type": "object"
+      },
+      "TimeRange": {
+        "additionalProperties": false,
+        "description": "The ``{\"range\": {\"from\": ..., \"to\": ...}}`` time_key form.\n\nThe discriminated wrapper for a period range in ``TimeKey`` position \u2014\ndistinct from the bare ``{\"from\", \"to\"}`` object, which is legal only\nas a ``Source.period`` (``PeriodRange``). The wrapper keeps the\n``TimePoint`` union unambiguous.",
+        "properties": {
+          "range": {
+            "$ref": "#/components/schemas/PeriodRange"
+          }
+        },
+        "required": [
+          "range"
+        ],
+        "title": "TimeRange",
         "type": "object"
       },
       "TopSearchGroup": {
@@ -5418,8 +5922,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "additionalProperties": true,
-                "type": "object"
+                "$ref": "#/components/schemas/ProjectData"
               }
             }
           },
@@ -5444,8 +5947,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "additionalProperties": true,
-                "type": "object"
+                "$ref": "#/components/schemas/ProjectData"
               }
             }
           },

@@ -16,7 +16,7 @@ duplicate JSON keys, a too-deeply-nested body, a non-object top level, or an
 oversized body (the last handled by ``BodySizeLimitMiddleware`` before the handler
 runs). The body is parsed as JSON regardless of ``Content-Type`` (lenient — a
 researcher tool, not a strict public API). An extra/typo KEY on a closed object
-(Source/Binding/Panel/PanelMember) surfaces as the structural ``unexpected_field``
+(ProjectData/Source/Binding/Panel/PanelMember) surfaces as the structural ``unexpected_field``
 issue; a residual model-construction failure is a thin defensive issue (still coded
 ``invalid_field``) — a 200 ISSUE either way, NEVER a 500.
 
@@ -66,12 +66,30 @@ if TYPE_CHECKING:
 router = APIRouter(prefix="/api/project")
 
 
+def openapi_schemas() -> dict[str, dict[str, Any]]:
+    """Return ProjectData and its nested models as OpenAPI components.
+
+    The handlers intentionally use raw request ingress, so FastAPI cannot discover
+    these request-only models itself. The app factory registers this Pydantic-
+    generated component set, keeping the canonical schema as the single source of
+    truth while the operations reference it normally.
+    """
+    schema = ProjectData.model_json_schema(ref_template="#/components/schemas/{model}")
+    definitions = schema.pop("$defs", {})
+    return {**definitions, "ProjectData": schema}
+
+
+# Document the canonical closed contract even though runtime intentionally reads
+# a raw dict so malformed projects can receive accumulated diagnostics.
+_PROJECT_BODY_SCHEMA = {"$ref": "#/components/schemas/ProjectData"}
+
+
 def _model_issue(message: str, exc: ValidationError) -> ValidationIssue:
     """Turn a residual ``ProjectData.model_validate`` failure into an error issue.
 
     THIN DEFENSIVE catch. ``validate_structural`` now owns the structural problems
-    (missing / mistyped / unexpected keys — incl. ``unexpected_field`` on the closed
-    Source/Binding/Panel/PanelMember objects), and the caller only builds the model
+    (missing / mistyped / unexpected keys — incl. ``unexpected_field`` on all closed
+    project objects), and the caller only builds the model
     once structural passed. So the common extra-key case never reaches here (it is
     ``unexpected_field`` from reg_schema); a model ``ValidationError`` here is a
     constraint structural did NOT replicate (rare — effectively unreachable under
@@ -133,25 +151,16 @@ def _semantic_issues(
 
 
 # The body is read RAW (not a typed param), so FastAPI emits no `requestBody` in
-# the OpenAPI schema — document it explicitly as an unconstrained JSON object
-# (a project_data.json) so the SPA codegen sees a body to send. We deliberately
-# don't pin the ProjectData schema here: /validate must accept malformed specs to
-# diagnose them.
+# the OpenAPI schema. Document the canonical closed ProjectData schema explicitly;
+# runtime ingress remains raw so invalid values and unknown keys survive long
+# enough for `/validate` to diagnose them.
 @router.post(
     "/validate",
     response_model=ValidationResultModel,
     openapi_extra={
         "requestBody": {
             "required": True,
-            "content": {
-                "application/json": {
-                    # `additionalProperties: true` → openapi-typescript emits an OPEN
-                    # object (`Record<string, unknown>`); a bare `type: object` would
-                    # codegen as `Record<string, never>` (empty), unassignable from a
-                    # real project_data.json.
-                    "schema": {"type": "object", "additionalProperties": True}
-                }
-            },
+            "content": {"application/json": {"schema": _PROJECT_BODY_SCHEMA}},
         }
     },
 )
@@ -219,15 +228,7 @@ def _validate_blocking(
     openapi_extra={
         "requestBody": {
             "required": True,
-            "content": {
-                "application/json": {
-                    # `additionalProperties: true` → openapi-typescript emits an OPEN
-                    # object (`Record<string, unknown>`); a bare `type: object` would
-                    # codegen as `Record<string, never>` (empty), unassignable from a
-                    # real project_data.json.
-                    "schema": {"type": "object", "additionalProperties": True}
-                }
-            },
+            "content": {"application/json": {"schema": _PROJECT_BODY_SCHEMA}},
         }
     },
 )

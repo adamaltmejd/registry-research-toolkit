@@ -216,6 +216,12 @@ def test_panel_optional_fields_default_none() -> None:
     assert panel.comment is None
 
 
+def test_panel_json_schema_accepts_bare_member_shorthand() -> None:
+    items = Panel.model_json_schema()["properties"]["members"]["items"]
+    assert {"type": "string"} in items["anyOf"]
+    assert {"$ref": "#/$defs/PanelMember"} in items["anyOf"]
+
+
 def test_literal_period_is_frozen_and_equal_by_value() -> None:
     a = LiteralPeriod(period="2018-01")
     b = LiteralPeriod(period="2018-01")
@@ -329,23 +335,16 @@ def test_project_data_is_frozen() -> None:
         pd.name = "other"  # type: ignore[misc]
 
 
-def test_project_data_ignores_extra_steward_blocks() -> None:
-    # extra="ignore" (overriding _Model's forbid): unmodeled steward
-    # blocks ride through on the dict side and are handled by the owning
-    # package (see DESIGN.md → Not in scope (intentionally)); the model
-    # neither stores them nor errors. reg_monabundle is no longer a typed
-    # field — it is a plain namespaced block exactly like swecov.
-    pd = ProjectData(
-        schema_version="2.0.0",
-        steward="global",
-        reg_meta_version="reg_meta/v1.0.0",
-        name="demo",
-        sources=(_source(),),
-        swecov={"filters": {}},  # type: ignore[call-arg]
-        reg_monabundle={"binding_options": {}},  # type: ignore[call-arg]
-    )
-    assert not hasattr(pd, "swecov")
-    assert not hasattr(pd, "reg_monabundle")
+def test_project_data_rejects_unknown_root_field() -> None:
+    raw = _project().model_dump(mode="json")
+    raw["stewrad"] = "global"
+    with pytest.raises(ValidationError):
+        ProjectData.model_validate(raw)
+
+
+def test_project_data_accepts_valid_current_project() -> None:
+    raw = _project().model_dump(mode="json")
+    assert ProjectData.model_validate(raw) == _project()
 
 
 # JSON schema (SPA TypeScript codegen source) ---------------------------

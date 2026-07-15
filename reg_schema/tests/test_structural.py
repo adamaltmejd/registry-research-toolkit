@@ -74,7 +74,7 @@ def test_minimum_spec_is_ok() -> None:
     assert result.issues == ()
 
 
-def test_accepts_panels_and_namespaced_block() -> None:
+def test_accepts_panels() -> None:
     spec = _spec(
         panels=[
             {
@@ -84,7 +84,6 @@ def test_accepts_panels_and_namespaced_block() -> None:
                 "members": ["lisa_2018"],
             }
         ],
-        reg_monabundle={"binding_options": {}},
     )
     result = validate_structural(spec)
     assert result.ok, result.issues
@@ -146,18 +145,13 @@ def test_optional_baseline_field_null_is_invalid_field_type() -> None:
     assert "/panels" in _at(result, "invalid_field_type")
 
 
-def test_namespaced_block_must_be_object() -> None:
-    result = validate_structural(_spec(reg_monabundle="not-an-object"))
-    assert _at(result, "invalid_field_type") == ["/reg_monabundle"]
-
-
-def test_unknown_top_level_field_is_treated_as_namespaced_block() -> None:
-    # A non-baseline key must just be a mapping — its contents are
-    # opaque at this layer.
-    ok = validate_structural(_spec(swecov={"filters": {}}))
-    assert ok.ok, ok.issues
-    bad = validate_structural(_spec(swecov=[1, 2, 3]))
-    assert _at(bad, "invalid_field_type") == ["/swecov"]
+def test_unknown_top_level_fields_emit_one_issue_each_in_sorted_order() -> None:
+    result = validate_structural(
+        _spec(z_scalar=7, a_object={"nested": True}, m_array=[1, 2, 3])
+    )
+    issues = [issue for issue in result.issues if issue.code == "unexpected_field"]
+    assert [issue.path for issue in issues] == ["/a_object", "/m_array", "/z_scalar"]
+    assert all(issue.level == "error" for issue in issues)
 
 
 # --- Study window -------------------------------------------------------
@@ -715,11 +709,9 @@ def test_empty_bindings_emits_explicit_code() -> None:
 
 # --- Unexpected fields on closed objects --------------------------------
 #
-# Source/Binding/Panel/PanelMember are ``extra="forbid"`` (_Model in
+# ProjectData/Source/Binding/Panel/PanelMember are ``extra="forbid"`` (_Model in
 # project_data.py): an unrecognized key is a structural error
-# (`unexpected_field`), not a silently-ignored extra. The TOP LEVEL stays
-# open (ProjectData is extra="ignore" for steward-namespaced blocks) —
-# see test_unknown_top_level_field_is_treated_as_namespaced_block.
+# (`unexpected_field`), not a silently-ignored extra.
 
 
 def test_unexpected_field_on_source() -> None:
@@ -769,21 +761,9 @@ def test_unexpected_field_key_is_rfc6901_escaped() -> None:
     assert [i.path for i in issues] == ["/sources/0/bindings/0/foo~1bar~0baz"]
 
 
-def test_namespaced_block_key_is_rfc6901_escaped() -> None:
-    # Same pointer-escaping contract for the OTHER user-controlled key site: a
-    # non-object namespaced block whose top-level key contains `/` or `~`.
-    result = validate_structural(_spec(**{"weird/block~x": "not-an-object"}))
-    issues = [i for i in result.issues if i.code == "invalid_field_type"]
-    assert "/weird~1block~0x" in [i.path for i in issues]
-
-
-def test_unexpected_field_not_emitted_for_top_level_namespaced_block() -> None:
-    # Top level is open: an unknown top-level key is a namespaced block,
-    # never `unexpected_field`. Guards against a future reader "fixing"
-    # _check_namespaced_blocks to mirror the closed-object check.
-    result = validate_structural(_spec(swecov={"filters": {}}))
-    assert result.ok, result.issues
-    assert "unexpected_field" not in _codes(result)
+def test_unknown_top_level_field_key_is_rfc6901_escaped() -> None:
+    result = validate_structural(_spec(**{"weird/block~x": "invalid"}))
+    assert _at(result, "unexpected_field") == ["/weird~1block~0x"]
 
 
 # --- Nested required-field null handling -------------------------------
@@ -1314,6 +1294,7 @@ def test_allowed_key_frozensets_match_pydantic_models() -> None:
         Binding,
         Panel,
         PanelMember,
+        ProjectData,
         Source,
         StudyWindow,
     )
@@ -1321,10 +1302,12 @@ def test_allowed_key_frozensets_match_pydantic_models() -> None:
         _BINDING_KEYS,
         _PANEL_KEYS,
         _PANEL_MEMBER_KEYS,
+        _PROJECT_KEYS,
         _SOURCE_KEYS,
         _WINDOW_KEYS,
     )
 
+    assert _wire_keys(ProjectData) == _PROJECT_KEYS
     assert _wire_keys(Source) == _SOURCE_KEYS
     assert _wire_keys(Binding) == _BINDING_KEYS
     assert _wire_keys(Panel) == _PANEL_KEYS

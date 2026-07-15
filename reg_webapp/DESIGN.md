@@ -1816,21 +1816,18 @@ runs.
 
 Two POST endpoints: `/api/project/validate`, `/api/project/order`. Both read the body as
 a **raw JSON dict** (not a typed param) because `/validate` must accept malformed specs
-to diagnose them. At the current head this also preserves steward-namespaced blocks that
-`ProjectData(extra="ignore")` would silently drop. The v1 closed-root cutover removes
-that secondary rationale and reports unknown top-level keys; raw ingress remains useful
-for diagnostic validation. The request body is currently documented in OpenAPI as an
-open object (`additionalProperties: true`) so the SPA codegen sees a body to send;
-tighten that schema with the closed-root implementation.
+to diagnose them. Unknown top-level keys remain verbatim until the structural layer
+reports each as `unexpected_field`; they are never normalized or dropped by typed model
+construction first. OpenAPI documents the canonical closed `ProjectData` schema, while
+the SPA keeps a raw diagnostic transport type so malformed uploads can reach this
+boundary unchanged.
 
 - **`/validate` status discipline.** A spec that FAILS validation is a *successful
   validation response* — **HTTP 200 with `ok=false` + the issues**. 4xx is reserved for
   a malformed REQUEST (non-JSON, duplicate JSON keys, a too-deeply-nested or non-object
   body, an oversized body). It runs the §6.8.0 two-layer composition (structural →
   semantic) and returns the **concatenated** issue list; the DB-free structural layer
-  runs first, so a structurally-rejected body costs no DB hit. It also runs the
-  cross-block referential checks (orphan `binding_options` keys /
-  suppress_k-on-non-categorical).
+  runs first, so a structurally-rejected body costs no DB hit.
 - **`/order`** renders the current provisional order-export CSV (a `text/csv` download)
   and is the one documented exception to the "every route declares a `response_model`"
   lint (it returns raw bytes). Unlike `/validate`, it structurally **gates** first: you

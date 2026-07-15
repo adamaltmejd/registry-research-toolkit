@@ -248,11 +248,11 @@ describe("validateProject", () => {
         });
       }),
     );
-    const draft = { schema_version: "2.0.0", reg_monabundle: { x: 1 } };
+    const draft = { schema_version: "2.0.0", typo_root: { x: 1 } };
     await validateProject(draft);
     expect(seenUrl).toBe("/api/project/validate");
     expect(seenInit?.method).toBe("POST");
-    // The namespaced block rides along in the posted body (the raw-dict embed).
+    // The invalid key survives transport so the backend can diagnose it.
     expect(JSON.parse(seenInit?.body as string)).toEqual(draft);
   });
 

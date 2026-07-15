@@ -182,7 +182,7 @@ describe("dirty flag", () => {
 });
 
 describe("openFromFile", () => {
-  it("loads a valid file VERBATIM, preserving namespaced blocks + panels", async () => {
+  it("loads a malformed file VERBATIM so unknown root keys remain diagnosable", async () => {
     const raw = {
       schema_version: "2.0.0",
       steward: "global",
@@ -197,19 +197,42 @@ describe("openFromFile", () => {
         },
       ],
       panels: [{ panel_id: "p1", members: [{ source: "s1" }] }],
-      reg_monabundle: {
-        binding_options: { "scb/lisa/kon": { suppress_k: 5 } },
-      },
-      swecov: { foo: "bar" },
+      typo_object: { nested: true },
+      typo_scalar: 7,
     };
     await projectStore.openFromFile(jsonFile(JSON.stringify(raw)));
     expect(projectStore.openError).toBeNull();
     expect(projectStore.draft?.name).toBe("opened");
-    // The namespaced blocks + panels survive on the draft (the round-trip embed).
+    // Invalid values + known panels survive on the raw draft.
     const draft = projectStore.draft as Record<string, unknown>;
     expect(draft.panels).toEqual(raw.panels);
-    expect(draft.reg_monabundle).toEqual(raw.reg_monabundle);
-    expect(draft.swecov).toEqual({ foo: "bar" });
+    expect(draft.typo_object).toEqual(raw.typo_object);
+    expect(draft.typo_scalar).toBe(7);
+    let posted: unknown;
+    stubFetch(async (_url, init) => {
+      posted = JSON.parse(init?.body as string);
+      return {
+        ok: true,
+        status: 200,
+        json: async () => ({
+          ok: false,
+          issues: [
+            {
+              level: "error",
+              code: "unexpected_field",
+              path: "/typo_object",
+              message: "unexpected key 'typo_object' on project root",
+            },
+          ],
+        }),
+      };
+    });
+    await projectStore.validate();
+    expect((posted as Record<string, unknown>).typo_object).toEqual(
+      raw.typo_object,
+    );
+    expect((posted as Record<string, unknown>).typo_scalar).toBe(7);
+    expect(projectStore.validation?.ok).toBe(false);
     // A freshly-opened draft is clean.
     expect(projectStore.dirty).toBe(false);
   });

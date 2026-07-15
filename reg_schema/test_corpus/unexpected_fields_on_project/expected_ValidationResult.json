@@ -1,0 +1,16 @@
+{
+  "issues": [
+    {
+      "level": "error",
+      "code": "unexpected_field",
+      "path": "/object~1key~0",
+      "message": "unexpected key 'object/key~' on project root"
+    },
+    {
+      "level": "error",
+      "code": "unexpected_field",
+      "path": "/scalar_key",
+      "message": "unexpected key 'scalar_key' on project root"
+    }
+  ]
+}

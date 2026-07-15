@@ -486,14 +486,16 @@ export function getClassificationGroupGraph(
 // ── Project write surface (A5.2b-ii) ────────────────────────────────────────
 // The POST endpoints the authoring SPA drives (see reg_webapp/DESIGN.md →
 // Project-write surface (routes/project.py)). Each takes the WHOLE serialized
-// draft as an open object (the requestBodies are `additionalProperties: true`),
-// so steward-namespaced blocks ride along — the backend embeds the raw dict
-// (routes/project.py).
+// draft as a raw object. The OpenAPI request schema documents the canonical
+// CLOSED ProjectData contract, while this transport type stays deliberately raw:
+// malformed uploads (including unknown root keys) must reach the backend
+// unchanged so `/validate` can diagnose them.
 
 export type ValidationResultModel = Schemas["ValidationResultModel"];
 
-/** A serialized project_data.json draft posted to the write endpoints — an open
- * object (the backend reads it raw, preserving namespaced blocks). */
+/** A serialized project_data.json draft posted to the write endpoints. This is a
+ * raw diagnostic transport shape, not an extension surface: unknown keys are
+ * invalid but must survive until the backend reports them. */
 export type ProjectDataBody = Record<string, unknown>;
 
 /**

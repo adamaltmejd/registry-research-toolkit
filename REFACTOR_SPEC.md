@@ -89,11 +89,9 @@ The `reg_webapp` `/api/bundle` and `/api/kit` endpoints are removed along with t
 packages they depended on. The surviving authoring surface is `/api/project/validate`,
 `/api/project/order`, and the SPA's order-CSV download. The typed `reg_monabundle` block
 field has been **removed** from `reg_schema`'s `ProjectData` (#702): it was a vestige of
-the deleted bundle consumer, the sole reason that field was modeled. At the current
-head, `reg_monabundle` still rides through the generic steward-namespaced-block
-mechanism (`extra="ignore"` + `structural.py`'s "namespaced block must be an object"
-check) exactly like `swecov`. That generic mechanism is also dead v1 surface and is
-removed directly: archived project files receive no migration or compatibility path.
+the deleted bundle consumer, the sole reason that field was modeled. #1134 removed the
+remaining generic namespaced-root mechanism: archived project files receive no migration
+or compatibility path, and unknown root keys are structural errors.
 
 Step 10b (composite `entity_key` / `time_key` runtime support) gates on the MONA rebuild
 rather than on §10a as originally planned.
@@ -240,14 +238,13 @@ identical results through web and CLI paths; remove `StewardBootCatalog`, the
 pseudo-project filter, and the template plan. Delete this section when that boundary
 ships.
 
-**Closed project root decision (#1134, 2026-07-14; pending implementation):** v1 has no
-generic namespaced blocks and no placeholder `extensions` field. Make `ProjectData`'s
-root closed, report every unknown top-level key as `unexpected_field`, and delete the
-namespaced-block validator, tests, and archived `reg_monabundle` fixtures. If a concrete
-future consumer needs extension data, design an explicit `extensions` container and
-owner-specific contract at that point; do not preserve an open root just in case. This
-is independent of order rendering despite appearing beside the old template plan
-historically.
+**Closed project root (#1134, 2026-07-15):** v1 has no generic namespaced blocks and no
+placeholder `extensions` field. `ProjectData` rejects extras, and the structural layer
+reports every unknown top-level key as `unexpected_field`; the archived `reg_monabundle`
+fixtures and namespaced-block validator are gone. If a concrete future consumer needs
+extension data, design an explicit `extensions` container and owner-specific contract at
+that point; do not preserve an open root just in case. This is independent of order
+rendering despite appearing beside the old template plan historically.
 
 **Interface decisions (2026-07-14):** steward-provenance mismatch hard-blocks ordering;
 the app has no steward-retarget workflow, and every upload is validated against the

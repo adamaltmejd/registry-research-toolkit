@@ -15,7 +15,7 @@ holding a long-lived shared one — see ``routes/catalog.py`` ``_catalog_conn``.
 from __future__ import annotations
 
 from contextlib import asynccontextmanager
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 import reg_meta.db
 import reg_meta.doc_db
@@ -41,6 +41,19 @@ if TYPE_CHECKING:
 # fast instead of as an opaque per-request 500. schema_version is already
 # guaranteed by open_db's gate; import_date is the one this adds.
 _REQUIRED_MANIFEST_KEYS = ("schema_version", "import_date")
+
+
+class _RegistryApp(FastAPI):
+    """FastAPI app with the raw-ingress ProjectData request schema registered."""
+
+    def openapi(self) -> dict[str, Any]:
+        schema = super().openapi()
+        components = schema.setdefault("components", {}).setdefault("schemas", {})
+        for name, model_schema in project.openapi_schemas().items():
+            existing = components.setdefault(name, model_schema)
+            if existing != model_schema:
+                raise RuntimeError(f"OpenAPI schema component collision: {name}")
+        return schema
 
 
 @asynccontextmanager
@@ -120,7 +133,7 @@ def create_app(*, rate_limit_per_minute: int = RATE_LIMIT_PER_MINUTE) -> FastAPI
     # (/api, /openapi.json, /docs — see reg_webapp/edge/), and /redoc would fall
     # through to the SPA shell there; disable it so the local and deployed
     # surfaces match. Swagger at /docs is the one interactive-docs surface.
-    app = FastAPI(
+    app = _RegistryApp(
         title="reg_webapp", version=__version__, lifespan=lifespan, redoc_url=None
     )
     # Middleware ordering (Starlette executes add_middleware in REVERSE order —
@@ -149,4 +162,5 @@ def create_app(*, rate_limit_per_minute: int = RATE_LIMIT_PER_MINUTE) -> FastAPI
     # A5.2b-ii write surface: project validate/order. The ETag middleware skips
     # these (method gate); the cap + limiter gate them.
     app.include_router(project.router)
+
     return app

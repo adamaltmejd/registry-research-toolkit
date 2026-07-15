@@ -4,12 +4,13 @@ See DESIGN.md → Project-write surface (routes/project.py).
 
 ``POST /api/project/validate`` reads the body as a RAW dict rather than a typed
 Pydantic body: ``/validate`` must DIAGNOSE a malformed spec (a typed body would
-make FastAPI 422 the very inputs it exists to report), and it must preserve
-steward-namespaced blocks (``swecov`` / ``reg_monabundle`` …) that the
-``ProjectData`` model drops (``extra="ignore"``). So it uses this reader, which
-json.loads the body ourselves and maps a malformed REQUEST (non-JSON, duplicate
-key, non-object, pathologically nested) to a 4xx — distinct from a well-formed
-object that simply fails validation (a 200 with ``ok=false`` on ``/validate``).
+make FastAPI 422 the very inputs it exists to report). In particular, unknown
+root keys must reach the structural validator verbatim so it can emit one stable
+``unexpected_field`` issue per key; they must not be dropped by typed model
+construction first. This reader json.loads the body ourselves and maps a malformed
+REQUEST (non-JSON, duplicate key, non-object, pathologically nested) to a 4xx —
+distinct from a well-formed object that simply fails validation (a 200 with
+``ok=false`` on ``/validate``).
 """
 
 from __future__ import annotations

@@ -92,9 +92,8 @@ before downstream consumers do.
 The corpus starts with well-formed inputs and an empty-issues expectation — these prove
 the format, harness, and round-trip work end-to-end before §6.8.1 rule-emission cases
 pile on. Phase 3 grows the corpus alongside `validate_structural()`, adding one (or
-more) cases per rule. Negative cases for §6.8.2 (namespaced blocks) and §6.8.3
-(reg_meta-backed semantic) layers land in their owning packages, not here — `reg_schema`
-only owns the structural layer's corpus.
+more) cases per rule. Negative cases for §6.8.3 (reg_meta-backed semantic) rules land in
+their owning packages, not here — `reg_schema` only owns the structural layer's corpus.
 
 ## Adding a case
 
