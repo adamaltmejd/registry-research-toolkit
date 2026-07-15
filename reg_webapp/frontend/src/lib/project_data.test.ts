@@ -212,21 +212,19 @@ describe("immutable binding edits", () => {
 });
 
 describe("serializeProjectData", () => {
-  it("preserves unmapped top-level keys (panels, namespaced blocks) verbatim", () => {
+  it("preserves known panels and invalid root values verbatim for diagnostics", () => {
     const draft = {
       ...newProjectData(SEED),
       name: "p",
       panels: [{ panel_id: "panel1", members: [{ source: "s1" }] }],
-      reg_monabundle: {
-        binding_options: { "scb/lisa/kon": { suppress_k: 5 } },
-      },
-      swecov: { foo: "bar" },
+      typo_object: { nested: { value: 1 } },
+      typo_scalar: 7,
     } as unknown as ProjectData;
     const text = serializeProjectData(draft);
     const roundTripped = JSON.parse(text);
     expect(roundTripped.panels).toEqual(draft.panels);
-    expect(roundTripped.reg_monabundle).toEqual(draft.reg_monabundle);
-    expect(roundTripped.swecov).toEqual({ foo: "bar" });
+    expect(roundTripped.typo_object).toEqual(draft.typo_object);
+    expect(roundTripped.typo_scalar).toBe(7);
   });
 
   it("is stable (pretty 2-space, insertion order preserved)", () => {

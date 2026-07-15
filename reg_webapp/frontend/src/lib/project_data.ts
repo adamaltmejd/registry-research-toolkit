@@ -1,11 +1,11 @@
 /**
  * Pure project_data.json model helpers (NO runes — unit-tested in isolation;
- * `project_data.test.ts`). The SPA's authoring draft is an OPEN object: the
+ * `project_data.test.ts`). The canonical ProjectData root is CLOSED. The SPA's
+ * in-memory draft remains deliberately raw enough to hold a malformed upload:
  * FOCUSED authoring scope (A5.3c) edits the top-level fields + `sources[]`
- * (`register_variant`, `period`, `bindings[]`); `panels[]` and steward-namespaced
- * blocks (`reg_monabundle`, `swecov`, …) ROUND-TRIP VERBATIM — they ride on the
- * dict side and are NEVER stripped on open/save (matching the backend raw-dict
- * embed; reg_schema keeps these as opaque blocks).
+ * (`register_variant`, `period`, `bindings[]`); known `panels[]` and invalid
+ * unknown root keys ROUND-TRIP VERBATIM until backend validation reports them.
+ * Raw retention is a diagnostic path, not a supported extension mechanism.
  *
  * This is NOT a structural validator — the backend is canonical (see
  * reg_webapp/DESIGN.md → Pydantic boundary). These
@@ -14,10 +14,11 @@
  * `reg_schema/src/reg_schema/project_data.py` (see reg_schema/DESIGN.md → Two
  * layers: models vs. validator).
  *
- * There is no codegen'd `ProjectData` schema in `api-types` (the write endpoints
- * declare `additionalProperties: true` open-object request bodies, NOT the pinned
- * model — `/validate` must accept malformed specs to diagnose them). So the draft
- * type is a hand-written OPEN shape that keeps unmapped keys.
+ * OpenAPI codegen documents the closed canonical request model, but the SPA cannot
+ * use that strict type for its in-memory draft because `/validate` must also accept
+ * malformed specs to diagnose them. The hand-written draft type therefore keeps an
+ * index signature solely to retain invalid uploaded keys until diagnostics are
+ * produced.
  */
 
 /** A binding on a source — one variable to include. Only the fields the
@@ -71,9 +72,8 @@ export interface Source {
 }
 
 /**
- * The top-level project_data.json draft. OPEN: `panels[]`, `reg_monabundle`
- * and any steward-namespaced block ride through the index signature untouched —
- * the A5.3c surface never edits them, but they must round-trip verbatim.
+ * The top-level project_data.json draft. Canonically closed; the index signature
+ * exists only so an invalid uploaded key is not normalized away before validation.
  */
 export interface ProjectData {
   schema_version: string;
@@ -199,7 +199,7 @@ export function sourceBindingsMalformed(source: unknown): boolean {
 // ── Immutable top-level edits ───────────────────────────────────────────────
 // Every mutator returns a NEW object (shallow clone + replaced slice) so the
 // store can swap the `$state` reference and `dirty` recomputes. Unmapped keys on
-// the spread survive (the `...draft` carries `panels`/`reg_monabundle`/…).
+// the spread survive (the `...draft` carries known panels and raw invalid keys).
 
 /** Replace a top-level scalar field (`name`, `steward`, `reg_meta_version`, …). */
 export function updateField<K extends keyof ProjectData>(
@@ -319,9 +319,9 @@ function updateSourceBindings(
 
 /**
  * Serialize a draft to the wire JSON text the SPA posts / downloads. A stable,
- * pretty (2-space) JSON — unmapped keys (`panels`, `reg_monabundle`, …) are
- * carried by `JSON.stringify` over the open object, so steward blocks round-trip
- * verbatim. NOT key-sorted: insertion order is preserved (a re-serialized file is
+ * pretty (2-space) JSON. Raw invalid keys are carried by `JSON.stringify` so an
+ * opened malformed file remains diagnosable and is never silently repaired.
+ * NOT key-sorted: insertion order is preserved (a re-serialized file is
  * structurally faithful to what was opened), which is also what the `dirty`
  * baseline compares against.
  */

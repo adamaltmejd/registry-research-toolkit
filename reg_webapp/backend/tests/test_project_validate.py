@@ -6,10 +6,8 @@ Covers the status discipline that defines this endpoint:
 - a clean spec → 200 ``ok=true`` ``issues=[]``;
 - an unresolvable FQID → 200 ``ok=false`` + the semantic issue (NOT 4xx —
   a validation failure is a successful validation RESPONSE);
-- an extra/typo key on a CLOSED nested object (Source/Binding/Panel/member) →
-  200 with the structural ``unexpected_field`` issue (NOT 500; the top-level
-  ``ProjectData`` is ``extra=ignore`` so a stray top-level key is a tolerated
-  namespaced block, not an error);
+- an extra/typo key on any CLOSED object (ProjectData/Source/Binding/Panel/member)
+  → 200 with the structural ``unexpected_field`` issue (NOT 500);
 - malformed JSON / duplicate keys / non-object body → 4xx (a malformed REQUEST);
 - the two-layer concatenation (structural ⧺ semantic);
 - a concurrency smoke test (the cross-thread sqlite P1 the sequential TestClient
@@ -75,6 +73,25 @@ def test_clean_spec_is_ok(client):
     body = resp.json()
     assert body["ok"] is True
     assert body["issues"] == []
+
+
+def test_openapi_documents_closed_canonical_project_root(client):
+    openapi = client.get("/openapi.json").json()
+    request_schema = openapi["paths"]["/api/project/validate"]["post"]["requestBody"][
+        "content"
+    ]["application/json"]["schema"]
+    assert request_schema == {"$ref": "#/components/schemas/ProjectData"}
+    schema = openapi["components"]["schemas"]["ProjectData"]
+    assert schema["additionalProperties"] is False
+    assert set(schema["properties"]) == {
+        "schema_version",
+        "steward",
+        "reg_meta_version",
+        "name",
+        "sources",
+        "panels",
+        "window",
+    }
 
 
 def test_unresolvable_fqid_is_200_not_4xx(client):
@@ -173,11 +190,8 @@ def test_model_issue_empty_loc_is_whole_document_pointer():
     assert issue.code == "invalid_field"
 
 
-def test_top_level_extra_key_is_issue_not_500(client):
-    """``ProjectData`` itself is ``extra=ignore`` (it tolerates namespaced
-    blocks), so a stray TOP-LEVEL key does not raise — but a typo'd nested
-    ``Source`` field (``extra=forbid``) does. Assert the nested-typo path is a
-    clean 200 issue rather than a 500 traceback out of the handler."""
+def test_nested_extra_key_is_issue_not_500(client):
+    """A typo'd nested ``Source`` field is a clean 200 issue, not a traceback."""
     spec = _clean_spec()
     spec["sources"][0]["register_varient"] = "typo"  # nested Source, extra=forbid
     resp = client.post("/api/project/validate", json=spec)
@@ -256,16 +270,17 @@ def test_two_layer_concatenation(client):
     assert "unexpected_field" not in codes, codes
 
 
-def test_namespaced_block_is_tolerated_not_validated(client):
-    """A steward-namespaced block (e.g. ``reg_monabundle``) on a structurally clean
-    spec round-trips untouched — ``ProjectData`` is ``extra=ignore``, so the block
-    rides along without being validated or rejected. The webapp no longer runs a
-    block-validation layer (the bundle build that owned it was archived)."""
+def test_unknown_root_fields_are_200_unexpected_field_issues(client):
+    """Raw ingress preserves every invalid root key through structural diagnostics."""
     spec = _clean_spec()
-    spec["reg_monabundle"] = {"binding_options": {"scb/lisa/kon": {"suppress_k": 5}}}
+    spec["z_scalar"] = 7
+    spec["a/object~key"] = {"nested": True}
     resp = client.post("/api/project/validate", json=spec)
     assert resp.status_code == 200
-    assert resp.json()["ok"] is True
+    body = resp.json()
+    assert body["ok"] is False
+    issues = [issue for issue in body["issues"] if issue["code"] == "unexpected_field"]
+    assert [issue["path"] for issue in issues] == ["/a~1object~0key", "/z_scalar"]
 
 
 def test_concurrent_validate_no_cross_thread_error(unthrottled_client):

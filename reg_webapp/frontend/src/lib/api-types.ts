@@ -639,6 +639,77 @@ export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
         /**
+         * Binding
+         * @description A binding on a Source — one variable to include in the extract.
+         *
+         *     ``variable`` is the binding FQID: ``<provider>/<register>/<slug>`` (3
+         *     segments, see reg_meta/DESIGN.md → FQID grammar). Its ``provider/register`` prefix (first 2 segments) must
+         *     equal the source's ``register_variant`` prefix — the variant is NOT
+         *     repeated here, it lives once on the Source. That cross-field rule
+         *     is enforced by the structural validator. There is no ``@version`` pin —
+         *     that grammar is retired.
+         *
+         *     A FQID names one CONCEPT. The reg_meta build enforces one value set per
+         *     ``(variable, variant, period, delivery_column)``, but a concept may carry
+         *     several co-existing delivery columns — parallel REPRESENTATIONS of it (SSYK
+         *     3/4/5-digit, age 5/10-yr brackets). ``representation`` selects which one (by
+         *     its ``variable_alias.delivery_column_name``); it is required only when the
+         *     concept resolves to >1 column at the source's ``(variant, period)`` — the
+         *     semantic validator (see reg_webapp/DESIGN.md → Semantic validation (semantic.py)) flags an ambiguous binding that omits it, and the
+         *     SPA offers a chooser. A single-representation concept leaves it ``None``.
+         *
+         *     ``display_name`` is optional: when absent, reg_meta-backed consumers
+         *     resolve the default from ``variable_alias.delivery_column_name`` for
+         *     the binding's state at the source's ``(register_variant, period)``. A
+         *     reg_meta-free consumer that materializes data artifacts must resolve
+         *     the default itself before emitting them — it never carries an
+         *     unresolved ``display_name`` into its output.
+         */
+        Binding: {
+            /**
+             * Date Format
+             * @default null
+             */
+            date_format: string | null;
+            /**
+             * Datetime Format
+             * @default null
+             */
+            datetime_format: string | null;
+            /**
+             * Display Name
+             * @default null
+             */
+            display_name: string | null;
+            /**
+             * Id Subtype
+             * @default null
+             */
+            id_subtype: ("integer" | "string") | null;
+            /**
+             * Numeric Subtype
+             * @default null
+             */
+            numeric_subtype: ("integer" | "double") | null;
+            /**
+             * Representation
+             * @default null
+             */
+            representation: string | null;
+            /**
+             * Type
+             * @enum {string}
+             */
+            type: "id" | "categorical" | "numeric" | "date" | "datetime" | "opaque";
+            /**
+             * Value Set
+             * @default null
+             */
+            value_set: string | null;
+            /** Variable */
+            variable: string;
+        };
+        /**
          * BindingChild
          * @description A binding child under a register node — a thin (fqid, name) entry, NOT
          *     the embedded longitudinal record (that is only on the binding LEAF response).
@@ -1812,6 +1883,18 @@ export interface components {
             lineage_warnings: components["schemas"]["LineageWarning"][];
         };
         /**
+         * LiteralPeriod
+         * @description The ``{"period": int | string}`` time_key form.
+         *
+         *     The only way to express a string-shaped literal period at the
+         *     schema level. Disambiguates ``"2018"`` (column ref) from
+         *     ``{"period": "2018-01"}`` (literal period).
+         */
+        LiteralPeriod: {
+            /** Period */
+            period: number | string;
+        };
+        /**
          * ObjectTypeMetadata
          * @description SCB object-type prose for one register version (#799).
          */
@@ -1820,6 +1903,86 @@ export interface components {
             definition: string | null;
             /** Name */
             name: string;
+        };
+        /**
+         * Panel
+         * @description A panel definition over sources.
+         *
+         *     Members are stored uniformly as ``PanelMember``. The bare-string
+         *     shorthand (a source name with panel-level key defaults) is normalized
+         *     to ``PanelMember(source=<name>)`` by the ``members`` validator, so
+         *     consumers never branch on ``str | PanelMember``. Source-collision (each
+         *     source belongs to at most one panel) and composite ordering /
+         *     homogeneity rules are enforced by the structural validator, not here.
+         */
+        Panel: {
+            /**
+             * Comment
+             * @default null
+             */
+            comment: string | null;
+            /**
+             * Entity Key
+             * @default null
+             */
+            entity_key: string | string[] | null;
+            /** Members */
+            members: components["schemas"]["PanelMember"][];
+            /** Panel Id */
+            panel_id: string;
+            /**
+             * Time Key
+             * @default null
+             */
+            time_key: number | string | components["schemas"]["LiteralPeriod"] | components["schemas"]["TimeRange"] | (number | string | components["schemas"]["LiteralPeriod"] | components["schemas"]["TimeRange"])[] | null;
+        };
+        /**
+         * PanelMember
+         * @description A member of a Panel.
+         *
+         *     ``source`` is the source ``name`` (the panel layer joins on
+         *     delivered-data column headers, not FQIDs). ``entity_key`` /
+         *     ``time_key`` override panel-level defaults; when both panel and member
+         *     leave a key unset, it is inherited from the member's variant's
+         *     ``panel_template`` at kit/bundle-build time — the structural
+         *     validator does not flag the absence (it has no reg_meta).
+         */
+        PanelMember: {
+            /**
+             * Entity Key
+             * @default null
+             */
+            entity_key: string | string[] | null;
+            /** Source */
+            source: string;
+            /**
+             * Time Key
+             * @default null
+             */
+            time_key: number | string | components["schemas"]["LiteralPeriod"] | components["schemas"]["TimeRange"] | (number | string | components["schemas"]["LiteralPeriod"] | components["schemas"]["TimeRange"])[] | null;
+        };
+        /**
+         * PeriodRange
+         * @description The ``{"from": ..., "to": ...}`` range form of ``Source.period``.
+         *
+         *     Endpoints follow the same int / period-token-string forms as a bare
+         *     period. ``from`` is a Python keyword, so the field is ``from_`` with a
+         *     ``"from"`` alias; ``populate_by_name`` lets callers use either.
+         *
+         *     This bare object is **only** legal as a ``Source.period`` value; a
+         *     ``TimePoint`` range uses the discriminated ``TimeRange`` wrapper
+         *     (``{"range": {...}}``) so ``TimeKey``'s union stays unambiguous.
+         *
+         *     ``serialize_by_alias=True`` so ``model_dump()`` emits ``"from"`` (not the
+         *     Python-safe ``"from_"``) without every caller having to pass
+         *     ``by_alias=True`` — the un-aliased key would fail re-validation
+         *     (``_is_period_range_obj`` requires exactly ``{"from", "to"}``).
+         */
+        PeriodRange: {
+            /** From */
+            from: number | string;
+            /** To */
+            to: number | string;
         };
         /**
          * PopulationMetadata
@@ -1844,6 +2007,39 @@ export interface components {
             binding: string;
             /** Predecessors */
             predecessors: components["schemas"]["VariableRef"][];
+        };
+        /**
+         * ProjectData
+         * @description The top-level ``project_data.json`` shape.
+         *
+         *     The root is closed like every nested ``_Model``: an unknown field is a
+         *     model-construction error. API boundaries still run the accumulating
+         *     structural validator first so callers receive one stable
+         *     ``unexpected_field`` issue per unknown key rather than a fail-fast Pydantic
+         *     error. A future extension needs an explicit modeled container; arbitrary
+         *     namespaced root blocks are not part of the v1 contract.
+         */
+        ProjectData: {
+            /** Name */
+            name: string;
+            /**
+             * Panels
+             * @default []
+             */
+            panels: components["schemas"]["Panel"][];
+            /** Reg Meta Version */
+            reg_meta_version: string;
+            /** Schema Version */
+            schema_version: string;
+            /** Sources */
+            sources: components["schemas"]["Source"][];
+            /**
+             * Steward
+             * @enum {string}
+             */
+            steward: "global" | "ifau" | "swecov";
+            /** @default null */
+            window: components["schemas"]["StudyWindow"] | null;
         };
         /**
          * ProviderNode
@@ -2187,6 +2383,27 @@ export interface components {
             query: string;
         };
         /**
+         * Source
+         * @description A data source / table in the spec.
+         *
+         *     ``register_variant`` is the 3-part variant **coordinate**
+         *     (``<provider>/<register>/<variant>``) — not an FQID kind (see reg_meta/DESIGN.md → FQID grammar), but
+         *     the same 3-part grammar. ``period`` is always required and polymorphic
+         *     (``Period``). Together ``(register_variant's variant, period)`` selects
+         *     each binding variable's ``variable_state``. ``name`` is the internal
+         *     source handle referenced by panel members; it is not an FQID.
+         */
+        Source: {
+            /** Bindings */
+            bindings: components["schemas"]["Binding"][];
+            /** Name */
+            name: string;
+            /** Period */
+            period: number | string | components["schemas"]["PeriodRange"] | (number | string | components["schemas"]["PeriodRange"])[];
+            /** Register Variant */
+            register_variant: string;
+        };
+        /**
          * StatesResponse
          * @description `GET /api/catalog/{fqid}/states` — the binding's full state history.
          *     Same `states` shape the binding leaf embeds, as a standalone envelope. With a
@@ -2212,6 +2429,33 @@ export interface components {
             long_name: string;
             /** Name */
             name: string;
+        };
+        /**
+         * StudyWindow
+         * @description The optional ``{"from": <year>, "to": <year>}`` project study window.
+         *
+         *     The global "project window" the redesigned subject page defaults each
+         *     page's period picker to (see issue #611 → Period model). Deliberately
+         *     NOT the full ``Period`` / ``PeriodRange`` grammar: it is a plain
+         *     year-int pair, matching the year-granular header slider. Per-page
+         *     deviation (months/quarters/terms, interrupted segments) keeps the rich
+         *     grammar via ``?period``; this window only seeds the default.
+         *
+         *     ``from`` is a Python keyword, so the field is ``from_`` with a ``"from"``
+         *     alias — mirroring ``PeriodRange``. ``serialize_by_alias=True`` so
+         *     ``model_dump()`` emits ``"from"`` (not ``"from_"``) without callers
+         *     passing ``by_alias=True``.
+         *
+         *     Endpoints are plain ``int`` years (not the ``int | str`` period-token
+         *     forms of ``PeriodRange``): the window is year-granular by design. The
+         *     only invariant is ``to >= from`` — a same-year window (``from == to``)
+         *     is valid; a window can't end before it starts.
+         */
+        StudyWindow: {
+            /** From */
+            from: number;
+            /** To */
+            to: number;
         };
         /**
          * SuccessorsResponse
@@ -2240,6 +2484,18 @@ export interface components {
             slug: string;
             /** Starred */
             starred: boolean;
+        };
+        /**
+         * TimeRange
+         * @description The ``{"range": {"from": ..., "to": ...}}`` time_key form.
+         *
+         *     The discriminated wrapper for a period range in ``TimeKey`` position —
+         *     distinct from the bare ``{"from", "to"}`` object, which is legal only
+         *     as a ``Source.period`` (``PeriodRange``). The wrapper keeps the
+         *     ``TimePoint`` union unambiguous.
+         */
+        TimeRange: {
+            range: components["schemas"]["PeriodRange"];
         };
         /**
          * TopSearchGroup
@@ -3316,9 +3572,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": {
-                    [key: string]: unknown;
-                };
+                "application/json": components["schemas"]["ProjectData"];
             };
         };
         responses: {
@@ -3342,9 +3596,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": {
-                    [key: string]: unknown;
-                };
+                "application/json": components["schemas"]["ProjectData"];
             };
         };
         responses: {

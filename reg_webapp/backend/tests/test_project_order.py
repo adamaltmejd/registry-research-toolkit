@@ -156,6 +156,14 @@ def test_structurally_invalid_spec_is_422_not_bad_csv(client):
     assert resp.status_code == 422, f"bad period → {resp.status_code}"
 
 
+def test_unknown_root_field_is_422_at_structural_gate(client):
+    spec = _spec()
+    spec["reg_monabundle"] = {"binding_options": {}}
+    resp = client.post("/api/project/order", json=spec)
+    assert resp.status_code == 422
+    assert "unexpected_field@/reg_monabundle" in resp.json()["detail"]
+
+
 def test_unresolvable_binding_falls_back_to_fqid_leaf(client):
     """A binding whose FQID doesn't resolve still renders a row — the order is a
     manifest, so the display_name best-effort falls back to the bare FQID leaf

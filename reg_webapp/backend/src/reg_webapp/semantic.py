@@ -1,7 +1,7 @@
 """Semantic validation — reg_meta-backed.
 
 See DESIGN.md → Semantic validation (semantic.py). The third validation layer:
-structural (``reg_schema``) and namespaced-block (owning packages) run first;
+structural (``reg_schema``) validation runs first;
 this one resolves every
 FQID in a *structurally valid* ``project_data.json`` against a live reg_meta
 ``Catalog``. It lives in the webapp — NOT ``reg_schema`` — because ``reg_schema``

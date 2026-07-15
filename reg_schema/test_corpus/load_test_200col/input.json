@@ -1236,36 +1236,5 @@
         }
       ]
     }
-  ],
-  "reg_monabundle": {
-    "binding_options": {
-      "scb/lisa/kommun": {
-        "suppress_k": 25
-      },
-      "scb/lisa/ssyk2012": {
-        "suppress_k": 25
-      },
-      "scb/lisa/ast_sni2007": {
-        "suppress_k": 25
-      },
-      "scb/louise/kommun": {
-        "suppress_k": 25
-      },
-      "scb/louise/ssyk2012": {
-        "suppress_k": 25
-      },
-      "scb/louise/ast_sni2007": {
-        "suppress_k": 25
-      },
-      "scb/rtb/kommun": {
-        "suppress_k": 25
-      },
-      "scb/rtb/ssyk2012": {
-        "suppress_k": 25
-      },
-      "scb/rtb/ast_sni2007": {
-        "suppress_k": 25
-      }
-    }
-  }
+  ]
 }
