@@ -2211,7 +2211,15 @@ def populate_variable_slugs(
         for _rid, _pk in split_pk:
             disc.update(_split_sibling_disc(conn, _rid, _pk))
 
-        def _source_id(rid: int, pk: str, vid: int) -> str:
+        def _source_id(
+            rid: int,
+            pk: str,
+            vid: int,
+            # Bind this iteration's lookups (B023): the closure must never read
+            # a later provider-iteration's `split_pk`/`disc` through the cell.
+            split_pk: set[tuple[int, str]] = split_pk,
+            disc: dict[int, str] = disc,
+        ) -> str:
             # The variable source-ID uses '.' as the segment separator, so a
             # provider_key containing '.' would be mis-parsed downstream as a
             # split-sibling 3-part key (`_parse_variable_id` → phantom
@@ -3498,13 +3506,13 @@ __all__ = (
     "CLASSIFICATIONS_ZONE",
     "ENTITY_KINDS",
     "FREEZE_STATE_FILE",
+    "SNAPSHOT_FILENAME",
     "DefaultCandidateClass",
     "DefaultSlugCandidate",
     "EntityKeyPin",
     "EntityKeyVariable",
     "EntityKind",
     "PrecheckResult",
-    "SNAPSHOT_FILENAME",
     "SlugEntry",
     "SlugFreezeState",
     "classify_default_candidate",

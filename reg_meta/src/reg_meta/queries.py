@@ -122,7 +122,7 @@ def _decode_search_cursor(cursor: str, context: str) -> tuple[int, str]:
         raw = urlsafe_b64decode(cursor + "=" * (-len(cursor) % 4))
         payload = json.loads(raw)
         if not isinstance(payload, dict):
-            raise ValueError
+            raise TypeError
         if payload.get("v") != _CURSOR_VERSION:
             raise _invalid_cursor("Search cursor version is unsupported.")
         if payload.get("context") != context:

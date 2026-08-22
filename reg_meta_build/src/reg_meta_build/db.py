@@ -1738,7 +1738,7 @@ def _emit_timing(label: str, t0: float) -> None:
 
 
 @contextmanager
-def _stage_timer(label: str):  # noqa: ANN201 - internal timing context manager
+def _stage_timer(label: str):
     """Time a build stage, emitting ``[timing] <label>: <s>`` when timing is on.
 
     Near-zero cost when off (a `perf_counter` + the `_emit_timing` env lookup);
@@ -2033,7 +2033,7 @@ def _materialize_replaced_by_edges(
     placeholders_h = ", ".join("?" * len(_REPLACED_BY_HANDELSE))
     placeholders_e = ", ".join("?" * len(_REPLACED_BY_ENTITET))
     candidate_rows = conn.execute(
-        f"SELECT timeseries_event_id, handelse, entitet, id1, id2, beskrivning "  # noqa: S608 -- placeholders bound below
+        f"SELECT timeseries_event_id, handelse, entitet, id1, id2, beskrivning "
         f"FROM timeseries_event "
         f"WHERE handelse IN ({placeholders_h}) "
         f"AND entitet IN ({placeholders_e}) "
@@ -3378,8 +3378,7 @@ def _codeless_window_fully_covered(
                 return False  # gap before the first window's start
         elif w_from > _next_day(cursor, column=column):
             return False  # gap between this window and the covered prefix
-        if w_to > cursor:
-            cursor = w_to
+        cursor = max(cursor, w_to)
         if cursor >= cl_to:
             return True
     return cursor >= cl_to
@@ -3423,8 +3422,7 @@ def _codeless_residual_spans(
             spans.append(
                 (_next_day(cursor, column=column), _prev_day(w_from, column=column))
             )
-        if w_to > cursor:
-            cursor = w_to
+        cursor = max(cursor, w_to)
     if cursor < cl_to:
         # Uncovered suffix after the last covered day.
         spans.append((_next_day(cursor, column=column), cl_to))

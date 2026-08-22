@@ -706,7 +706,7 @@ def _cmd_info(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
         ]
         table_counts = {}
         for t in tables:
-            count = conn.execute(f'SELECT COUNT(*) FROM "{t}"').fetchone()[0]  # noqa: S608
+            count = conn.execute(f'SELECT COUNT(*) FROM "{t}"').fetchone()[0]
             table_counts[t] = count or 0
     finally:
         conn.close()
@@ -3040,7 +3040,7 @@ def _print_version(db_arg: str | None = None) -> None:
             sys.stderr.write("Up to date.\n")
         else:
             sys.stderr.write("Could not check for updates.\n")
-    except Exception:
+    except Exception:  # noqa: BLE001 — best-effort version check; report and continue
         sys.stderr.write("Could not check for updates.\n")
 
 
@@ -3165,7 +3165,7 @@ def run(argv: list[str] | None = None) -> int:
             from .update import UpdateChecker
 
             update_checker = UpdateChecker()
-        except Exception:
+        except Exception:  # noqa: BLE001, S110 — update check is best-effort; never block the command
             pass
 
     try:
@@ -3224,10 +3224,10 @@ def run(argv: list[str] | None = None) -> int:
                         f"\n  Update available: v{__version__} → v{new_ver}"
                         "  —  run `reg-meta update`\n"
                     )
-            except Exception:
+            except Exception:  # noqa: BLE001, S110 — update reminder is best-effort; never mask the command's result
                 pass
         return exit_code
-    except Exception as exc:
+    except Exception as exc:  # noqa: BLE001 — top-level CLI boundary: render envelope + stable exit code
         return handle_cli_exception(exc, getattr(args, "output", None))
 
 

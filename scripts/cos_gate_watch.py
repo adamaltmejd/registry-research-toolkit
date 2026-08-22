@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Fast-tier merge-gate scan for the chief-of-staff watcher (cos_watch.py).
 
 The highest-value wake event — "a PR is ready to merge" — is a LOCAL file write

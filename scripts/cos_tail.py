@@ -679,7 +679,7 @@ def cmd_tmux(args: argparse.Namespace) -> int:
     session = tmux_session(args.state_root)
     has_session = (
         subprocess.run(
-            ["tmux", "has-session", "-t", session], capture_output=True
+            ["tmux", "has-session", "-t", session], capture_output=True, check=False
         ).returncode
         == 0
     )

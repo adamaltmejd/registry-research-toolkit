@@ -528,7 +528,7 @@ def extract_wiki_links(
             continue
 
         # Skip lines that are headings (variable header contains the name)
-        if stripped.startswith("#") or stripped.startswith("**"):
+        if stripped.startswith(("#", "**")):
             result.append(line)
             continue
 
@@ -542,7 +542,9 @@ def extract_wiki_links(
             result.append(line)
             continue
 
-        def replace_col(m: re.Match) -> str:
+        # `line=line` binds the current loop value; the closure is only called within
+        # this iteration (col_re.sub below), but the explicit bind keeps that safe.
+        def replace_col(m: re.Match, line: str = line) -> str:
             col = m.group(1)
             if col == own_col:
                 return col

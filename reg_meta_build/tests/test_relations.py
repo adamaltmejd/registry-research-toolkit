@@ -50,7 +50,7 @@ _SCB = frozenset({"scb"})
 _ROOT = Path(__file__).resolve().parent.parent
 
 
-def _load(tmp_path: Path, text: str):  # noqa: ANN202 - returns CuratedRelations
+def _load(tmp_path: Path, text: str):
     path = tmp_path / "relations.toml"
     path.write_text(text, encoding="utf-8")
     return load_relations(path)

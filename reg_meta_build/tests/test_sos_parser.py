@@ -58,7 +58,9 @@ def test_as_int_handles_common_shapes() -> None:
 def test_as_date_accepts_datetime_and_date() -> None:
     from datetime import date, datetime
 
-    assert _as_date(datetime(2026, 3, 26)) == date(2026, 3, 26)
+    # noqa'd naive datetime is the point: openpyxl yields tz-naive cell values,
+    # and _as_date must accept exactly that shape.
+    assert _as_date(datetime(2026, 3, 26)) == date(2026, 3, 26)  # noqa: DTZ001
     assert _as_date(date(2026, 3, 26)) == date(2026, 3, 26)
     assert _as_date("2026-03-26") is None  # strings aren't implicitly parsed
     assert _as_date(None) is None
@@ -380,7 +382,7 @@ def test_kodlista_parse_exception_records_raw_hint_placeholder(
     # sheet (`raw_rows` truthy -> raw_kodlista_hints) and won't fabricate a value
     # set from the variable's Värdemängd. Force the raise via monkeypatch (no
     # real-corpus sheet triggers it today — 0 occurrences).
-    import reg_meta_build.sources.sos as sos
+    from reg_meta_build.sources import sos
 
     def _boom(ws: object) -> None:
         raise ValueError("synthetic parse failure")

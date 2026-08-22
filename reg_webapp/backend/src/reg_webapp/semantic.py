@@ -372,12 +372,12 @@ def _replacement_applies(effective_year: int | None, period: SchemaPeriod) -> bo
     return end_year is None or effective_year <= end_year
 
 
-def _state_union_bounds(states) -> tuple[str, str]:  # noqa: ANN001 — reg_meta states
+def _state_union_bounds(states) -> tuple[str, str]:
     """Inclusive ISO bounds spanning a non-empty set of variable states."""
     return min(s.valid_from for s in states), max(s.valid_to for s in states)
 
 
-def _has_codelivered_versions(states) -> bool:  # noqa: ANN001 — reg_meta VariableState
+def _has_codelivered_versions(states) -> bool:
     """CO-DELIVERY: are ≥2 states with DISTINCT VALUE SETS (different
     ``value_set_id`` — not merely a different free-text version label) valid at the
     SAME instant (overlapping validity windows)? That is the genuine ambiguity: the
@@ -402,7 +402,7 @@ def _has_codelivered_versions(states) -> bool:  # noqa: ANN001 — reg_meta Vari
     return False
 
 
-def _coexisting_columns(states) -> list[str]:  # noqa: ANN001 — reg_meta VariableState
+def _coexisting_columns(states) -> list[str]:
     """REPRESENTATION: the distinct delivery columns that are valid at the
     SAME instant (overlapping windows) — genuine parallel representations the
     binding must choose between (SSYK 3/4/5-digit, age brackets). Distinct columns
@@ -427,7 +427,7 @@ def _coexisting_columns(states) -> list[str]:  # noqa: ANN001 — reg_meta Varia
 
 
 def _range_coverage_gaps(
-    states,  # noqa: ANN001 — reg_meta VariableState
+    states,
     lo: str,
     hi: str,
 ) -> list[tuple[str, str]]:
@@ -471,8 +471,8 @@ def _range_coverage_gaps(
 
 
 def _representation_under_covers(
-    matched,  # noqa: ANN001 — reg_meta VariableState
-    states,  # noqa: ANN001 — reg_meta VariableState
+    matched,
+    states,
     lo: str,
     hi: str,
 ) -> bool:
@@ -480,7 +480,7 @@ def _representation_under_covers(
     return _range_coverage_gaps(matched, lo, hi) != _range_coverage_gaps(states, lo, hi)
 
 
-def _state_window_key(state) -> tuple[int, str | None, str]:  # noqa: ANN001
+def _state_window_key(state) -> tuple[int, str | None, str]:
     """Identity for one resolved state/window, matching the catalog route dedup."""
     return state.state_id, state.delivery_column_name, state.valid_from
 
@@ -570,7 +570,7 @@ def _check_binding_hints(
     binding: Binding,
     source: Source,
     var_path: str,
-    resolved,  # noqa: ANN001 — binding FQID resolves to reg_meta.ResolvedVariable
+    resolved,
     caller: Caller,
     issues: list[ValidationIssue],
 ) -> None:

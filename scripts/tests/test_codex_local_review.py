@@ -292,7 +292,7 @@ class _FakePopen:
             4242,
         )
 
-    def communicate(self, timeout: float | None = None):  # noqa: ARG002
+    def communicate(self, timeout: float | None = None):
         return self._out, self._err
 
 
@@ -391,7 +391,7 @@ def test_run_codex_timeout_kills_group_and_writes_partial(
         def __init__(self, *_a, **_k) -> None:
             self._calls = 0
 
-        def communicate(self, timeout: float | None = None):  # noqa: ARG002
+        def communicate(self, timeout: float | None = None):
             self._calls += 1
             if self._calls == 1:
                 raise subprocess.TimeoutExpired(cmd="codex", timeout=1.0)

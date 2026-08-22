@@ -282,7 +282,7 @@ class TestDocGet:
         assert data["display_name"] == "TESTREG — Översikt"
 
     def test_get_not_found(self, doc_db_path: str):
-        data, code = _run_json(["--db", doc_db_path, "docs", "get", "NonExistent"])
+        _data, code = _run_json(["--db", doc_db_path, "docs", "get", "NonExistent"])
         assert code == 16  # EXIT_NOT_FOUND
 
     def test_get_has_tags(self, doc_db_path: str):
@@ -522,7 +522,7 @@ class TestSearchIntegration:
         self, monkeypatch: pytest.MonkeyPatch
     ) -> None:
         """Raw rank conflicts must not reorder the cursor-bearing catalog rows."""
-        import reg_meta.cli as cli
+        from reg_meta import cli
 
         class _Connection:
             def close(self) -> None:

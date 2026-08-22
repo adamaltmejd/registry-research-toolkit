@@ -11,6 +11,7 @@ BEHAVIOR those strings drive.
 from __future__ import annotations
 
 import sqlite3
+from itertools import pairwise
 from pathlib import Path
 
 import pytest
@@ -954,7 +955,7 @@ def test_vardemangd_content_shares_value_set() -> None:
             _var("B", value_set_text="1=ja; 0=nej", data_from=2001),
         ],
     )
-    objs, adapter = _emit(reg)
+    objs, _adapter = _emit(reg)
     states = _of(objs, IRVariableState)
     assert len(states) == 2
     ids = {s.value_set_id for s in states}
@@ -2916,7 +2917,7 @@ class TestSegmentWindowedCodes:
             ]
         )
         bounds = [(s[0] or "0000-01-01", s[1] or "9999-12-31") for s in segs]
-        for (_, hi), (lo_next, _) in zip(bounds, bounds[1:]):
+        for (_, hi), (lo_next, _) in pairwise(bounds):
             assert hi < lo_next  # strictly before the next segment's start
 
     def test_daldkl5_shape_three_segments(self) -> None:

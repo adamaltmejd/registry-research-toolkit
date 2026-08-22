@@ -710,10 +710,10 @@ def _clean_body_for_search(body: str) -> str:
     for line in body.split("\n"):
         stripped = line.strip()
         # Skip table rows and separator lines
-        if stripped.startswith("|") or stripped.startswith("---"):
+        if stripped.startswith(("|", "---")):
             continue
         # Skip image references
-        if stripped.startswith("![]") or stripped.startswith("Image "):
+        if stripped.startswith(("![]", "Image ")):
             continue
         # Skip empty bold-only lines (variable headers)
         if re.match(r"^\*\*[^*]+\*\*\s*$", stripped):

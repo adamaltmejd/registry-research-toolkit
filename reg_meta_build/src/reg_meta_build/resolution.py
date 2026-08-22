@@ -35,6 +35,7 @@ from __future__ import annotations
 
 from collections import defaultdict
 from dataclasses import dataclass
+from itertools import pairwise
 from typing import TYPE_CHECKING
 
 from reg_meta.fqid import _MONTH_LAST_DAY
@@ -116,7 +117,7 @@ def assemble_runs[C: Hashable](
     runs: list[tuple[list[tuple[str, str]], bool, bool]] = []
     cur = [intervals[0]]
     cur_cut_in = False
-    for prev, nxt in zip(intervals, intervals[1:]):
+    for prev, nxt in pairwise(intervals):
         rival_between = any(
             r_hi > prev[1] and r_lo < nxt[0] for r_lo, r_hi, _ in rivals
         )
@@ -238,7 +239,7 @@ def _resolve_column_intervals[C: Hashable](
     owned: list[tuple[C, str, str]] = []
     genuine_segs: list[tuple[str, str, list[C]]] = []
     seg_owned: dict[C, list[tuple[str, str]]] = defaultdict(list)
-    for seg_lo, seg_next in zip(bounds, bounds[1:]):
+    for seg_lo, seg_next in pairwise(bounds):
         covering = [
             gk
             for gk in carriers

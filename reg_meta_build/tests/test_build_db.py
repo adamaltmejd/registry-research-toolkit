@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import sqlite3
 from pathlib import Path
+from typing import ClassVar
 
 import pytest
 from _csv_fixtures import (
@@ -1162,7 +1163,7 @@ class TestVardemangderDrift:
         # "ZZZ" is in neither allowlist; build must fail with an actionable
         # error pointing the maintainer at the two allowlists.
         drift_rows = list(VARDEMANGDER_REAL_ROWS) + [
-            "|".join(["ZZZ", "ZZZ", "ZZZ", "Future placeholder", "2002", "5102"]),
+            "ZZZ|ZZZ|ZZZ|Future placeholder|2002|5102",
         ]
         input_dir = tmp_path / "input"
         db_dir = tmp_path / "db"
@@ -1187,7 +1188,7 @@ class TestVardemangderDrift:
         # reviewers (Codex, Copilot) flagged as a risk.
         # Column order: version|niva|kod|label|cvid|item
         drift_rows = list(VARDEMANGDER_REAL_ROWS) + [
-            "|".join(["Tal", "1", "Tal", "Some label", "2002", "5102"]),
+            "Tal|1|Tal|Some label|2002|5102",
         ]
         input_dir = tmp_path / "input"
         db_dir = tmp_path / "db"
@@ -2957,7 +2958,7 @@ class TestVariableStateTypeFold:
         assert row is not None
         return json.loads(row["value"])
 
-    _MAN_KVINNA = [("1", "Man"), ("2", "Kvinna")]
+    _MAN_KVINNA: ClassVar[list[tuple[str, str]]] = [("1", "Man"), ("2", "Kvinna")]
 
     def test_value_set_anchored_char_varchar_folds(self, tmp_path: Path):
         """The reported case: same variable, two editions, SAME value set,
@@ -3798,8 +3799,7 @@ class TestReplacedByEdges:
                 "variable_replaced_by",
             ):
                 notes = {
-                    r[0]
-                    for r in conn.execute(f"SELECT note FROM {table}").fetchall()  # noqa: S608 -- table name is a literal
+                    r[0] for r in conn.execute(f"SELECT note FROM {table}").fetchall()
                 }
                 assert notes == {"auto:timeseries_event"}, table
         finally:

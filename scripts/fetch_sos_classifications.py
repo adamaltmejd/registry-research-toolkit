@@ -310,9 +310,7 @@ def _ssl_context() -> ssl.SSLContext:
 
 def _http_get(url: str) -> bytes:
     req = urllib.request.Request(url, headers={"User-Agent": _USER_AGENT})
-    with urllib.request.urlopen(  # noqa: S310 (trusted gov hosts)
-        req, timeout=120, context=_ssl_context()
-    ) as resp:
+    with urllib.request.urlopen(req, timeout=120, context=_ssl_context()) as resp:
         return resp.read()
 
 
@@ -525,7 +523,7 @@ def parse_xls(xls_bytes: bytes, src: Source) -> list[Code]:
     for r in range(src.skip_rows, sheet.nrows):
 
         def cell(c: int | None) -> str:
-            if c is None or c >= sheet.ncols:  # noqa: B023 (sheet/r are stable per row)
+            if c is None or c >= sheet.ncols:
                 return ""
             v = sheet.cell_value(r, c)  # noqa: B023
             if isinstance(v, float) and v.is_integer():

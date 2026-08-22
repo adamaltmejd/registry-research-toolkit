@@ -412,7 +412,9 @@ def main() -> int:
             if args.emit_toml:
                 sys.stdout.write(emit_toml_entry(year))
                 sys.stdout.write("\n")
-        except Exception as exc:
+        # Best-effort per-year boundary: download/xls/pdf parsing raise many types; a
+        # failed year is recorded and reported, never fatal mid-sweep.
+        except Exception as exc:  # noqa: BLE001
             print(f"  FAILED: {exc}", file=sys.stderr)
             failed_years.append(year)
 
@@ -430,7 +432,9 @@ def main() -> int:
                     f"  lkf{year}.pdf: {dst.stat().st_size} bytes",
                     file=sys.stderr,
                 )
-            except Exception as exc:
+            # Best-effort per-PDF boundary: urlretrieve raises URL/OS/HTTP types; a
+            # failed download is recorded and reported, never fatal mid-sweep.
+            except Exception as exc:  # noqa: BLE001
                 print(f"  lkf{year}.pdf FAILED: {exc}", file=sys.stderr)
                 failed_pdfs.append(year)
 

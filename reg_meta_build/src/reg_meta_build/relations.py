@@ -1156,11 +1156,11 @@ def _strongly_connected_components(
     components: list[set[Any]] = []
     counter = 0
 
-    for root in adj:
+    for root, root_succs in adj.items():
         if root in index_of:
             continue
         # work stack of (node, iterator over its successors)
-        work: list[tuple[Any, Any]] = [(root, iter(adj[root]))]
+        work: list[tuple[Any, Any]] = [(root, iter(root_succs))]
         index_of[root] = low[root] = counter
         counter += 1
         stack.append(root)

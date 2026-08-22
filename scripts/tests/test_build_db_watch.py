@@ -4,7 +4,7 @@ import json
 import sqlite3
 import time
 from argparse import Namespace
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, ClassVar
 
 import pytest
 
@@ -219,7 +219,7 @@ def test_run_build_does_not_emit_quiet_health_when_output_is_current(
 
     class FakeProc:
         pid = 12345
-        stdout = []
+        stdout: ClassVar[list] = []
 
         def poll(self):
             return None
@@ -265,7 +265,7 @@ def test_run_build_sigterm_path_terminates_child(monkeypatch, tmp_path: Path) ->
 
     class FakeProc:
         pid = 12345
-        stdout = []
+        stdout: ClassVar[list] = []
         terminated = False
         killed = False
 

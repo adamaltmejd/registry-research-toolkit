@@ -17,15 +17,16 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 import pytest
-import reg_meta.queries as queries
 from reg_meta.errors import RegMetaError
 from reg_meta.queries import _fts_match_query, search
+
+from reg_meta import queries
 
 sys.path.insert(
     0, str(Path(__file__).resolve().parents[2] / "reg_meta_build" / "tests")
 )
 
-from _slugged_db import (  # noqa: E402
+from _slugged_db import (
     add_binding,
     add_register,
     add_value_set,

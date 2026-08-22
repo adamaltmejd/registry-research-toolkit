@@ -19,6 +19,7 @@ See DESIGN.md → FQID path guard (catalog_fqid.py). Two layers:
 from __future__ import annotations
 
 import sqlite3
+from typing import Self
 
 import pytest
 from fastapi.testclient import TestClient
@@ -114,10 +115,10 @@ class _StatementCounter:
         self.opens = 0
         self._orig = sqlite3.connect
 
-    def __enter__(self) -> _StatementCounter:
+    def __enter__(self) -> Self:
         counter = self
 
-        def traced(*args, **kwargs):  # noqa: ANN002, ANN003 — passthrough shim
+        def traced(*args, **kwargs):
             counter.opens += 1
             conn = counter._orig(*args, **kwargs)
             conn.set_trace_callback(lambda _stmt: counter._bump())
@@ -126,7 +127,7 @@ class _StatementCounter:
         sqlite3.connect = traced
         return self
 
-    def __exit__(self, *exc) -> None:  # noqa: ANN002
+    def __exit__(self, *exc) -> None:
         sqlite3.connect = self._orig
 
     def _bump(self) -> None:

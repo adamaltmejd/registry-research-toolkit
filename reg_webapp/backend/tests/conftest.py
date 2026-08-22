@@ -116,7 +116,7 @@ def _build_catalog_fixture_db(db_path: Path) -> None:
     register ``scb/rams`` with its own binding, and a ``variable_same_as`` edge
     so the embedded leaf carries a non-empty ``same_as``. Then copies the
     in-memory DB to ``db_path`` and stamps the manifest."""
-    from _slugged_db import (  # noqa: PLC0415 — sys.path-injected test helper
+    from _slugged_db import (
         add_register,
         add_state,
         add_value_set,
@@ -228,7 +228,7 @@ def _rebuild_fts(src: sqlite3.Connection) -> None:
 
 def _seed_tags(src: sqlite3.Connection) -> None:
     """Seed thematic tags so catalog routes exercise the #311 consumption path."""
-    from reg_meta_build.tags import (  # noqa: PLC0415 - test fixture setup
+    from reg_meta_build.tags import (
         CuratedTag,
         TagMember,
         materialize_tags,

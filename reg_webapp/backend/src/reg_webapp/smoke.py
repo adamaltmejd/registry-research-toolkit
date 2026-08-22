@@ -49,9 +49,9 @@ def _get(url: str, timeout: float) -> tuple[int, Any]:
     it with ``isinstance`` before use. An error body that isn't JSON yields
     ``None`` (the status already tells the checks it failed).
     """
-    req = urllib.request.Request(url, method="GET")  # noqa: S310 (loopback only)
+    req = urllib.request.Request(url, method="GET")
     try:
-        with urllib.request.urlopen(req, timeout=timeout) as resp:  # noqa: S310
+        with urllib.request.urlopen(req, timeout=timeout) as resp:
             return resp.status, json.loads(resp.read().decode("utf-8"))
     except urllib.error.HTTPError as exc:
         try:

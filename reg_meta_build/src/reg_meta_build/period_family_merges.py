@@ -352,10 +352,15 @@ def materialize_period_family_merges(
         # once per member.
         delivered_years_cache: dict[int, dict[int, set[int]]] = {}
 
-        def _years_for(variable_id: int) -> dict[int, set[int]]:
-            if variable_id not in delivered_years_cache:
-                delivered_years_cache[variable_id] = _delivered_years(conn, variable_id)
-            return delivered_years_cache[variable_id]
+        def _years_for(
+            variable_id: int,
+            # Bind this family's cache (B023): the closure must never read a
+            # later family-iteration's cache through the loop cell.
+            cache: dict[int, dict[int, set[int]]] = delivered_years_cache,
+        ) -> dict[int, set[int]]:
+            if variable_id not in cache:
+                cache[variable_id] = _delivered_years(conn, variable_id)
+            return cache[variable_id]
 
         survivor_years = _years_for(survivor)
         _check_value_set_agreement(conn, family, members, ctx)

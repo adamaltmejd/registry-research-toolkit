@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Shared `gh`/`git` process primitives for the scripts/ tooling.
 
 `run` (checked subprocess → stdout), `gh_json` (run + JSON-decode),
@@ -103,7 +102,7 @@ def load_sibling(name: str) -> ModuleType:
 
 
 def run(cmd: list[str]) -> str:
-    proc = subprocess.run(cmd, capture_output=True, text=True)
+    proc = subprocess.run(cmd, capture_output=True, text=True, check=False)
     if proc.returncode != 0:
         sys.stderr.write(f"command failed: {' '.join(cmd)}\n{proc.stderr}\n")
         raise SystemExit(2)
@@ -121,7 +120,7 @@ def run_tolerant(cmd: list[str]) -> subprocess.CompletedProcess[str]:
     instead of an uncaught traceback.
     """
     try:
-        return subprocess.run(cmd, capture_output=True, text=True)
+        return subprocess.run(cmd, capture_output=True, text=True, check=False)
     except FileNotFoundError as exc:
         raise SystemExit(f"missing executable {cmd[0]!r}: {exc}") from exc
 
@@ -159,6 +158,7 @@ def run_git(
         env=scrubbed_git_env(),
         capture_output=True,
         text=True,
+        check=False,
     )
 
 
@@ -190,6 +190,7 @@ def gh_issue_view_or_none(number: int, fields: str) -> dict | None:
         ["gh", "issue", "view", str(number), "--json", fields],
         capture_output=True,
         text=True,
+        check=False,
     )
     if proc.returncode != 0:
         return None

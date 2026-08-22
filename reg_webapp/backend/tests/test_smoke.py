@@ -43,7 +43,7 @@ def _make_handler(routes: dict[str, tuple[int, object]]):
         def log_message(self, *_args: object) -> None:  # silence test noise
             pass
 
-        def do_GET(self) -> None:  # noqa: N802 (BaseHTTPRequestHandler API)
+        def do_GET(self) -> None:
             if self.path not in routes:
                 self.send_response(404)
                 self.end_headers()

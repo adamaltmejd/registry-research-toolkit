@@ -12,7 +12,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, Any
 
-from reg_meta.catalog import _period_bounds  # noqa: PLC2701
+from reg_meta.catalog import _period_bounds
 from reg_meta.fqid import Fqid, FqidError, FqidKind, parse
 
 if TYPE_CHECKING:
@@ -237,7 +237,7 @@ class StewardBootCatalog:
         return list(self._resolve_at_cache[key])
 
     def _conn(self) -> sqlite3.Connection:
-        return self._catalog._conn  # noqa: SLF001
+        return self._catalog._conn
 
     def _preload_direct_identities(
         self, triples_by_key: dict[str, tuple[str, str, str]]
@@ -427,12 +427,12 @@ class StewardBootCatalog:
         key = str(fqid)
         if key in self._identity_cache:
             return self._identity_cache[key]
-        resolved = self._catalog._resolve_variable_identity(fqid)  # noqa: SLF001
+        resolved = self._catalog._resolve_variable_identity(fqid)
         if resolved is None:
             self._identity_cache[key] = None
             return None
         var, _via_same_as = resolved
-        meta = self._catalog._lookup_variable_meta(var["variable_id"])  # noqa: SLF001
+        meta = self._catalog._lookup_variable_meta(var["variable_id"])
         identity = _VariableIdentity(
             variable_id=var["variable_id"],
             register_id=meta["register_id"],
@@ -448,7 +448,7 @@ class StewardBootCatalog:
         key = (register_id, variant)
         if key in self._variant_id_cache:
             return self._variant_id_cache[key]
-        rvid = self._catalog._resolve_variant_id(register_id, variant)  # noqa: SLF001
+        rvid = self._catalog._resolve_variant_id(register_id, variant)
         resolved: int | None = rvid if isinstance(rvid, int) else None
         self._variant_id_cache[key] = resolved
         return resolved

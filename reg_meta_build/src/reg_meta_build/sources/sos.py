@@ -259,7 +259,7 @@ def parse_register_file(path: Path | str) -> SosRegister:
                     kod, kod_warnings = _parse_kodlista(wb[sheet_name])
                     kodlistor.append(kod)
                     warnings.extend(kod_warnings)
-                except Exception as exc:
+                except Exception as exc:  # noqa: BLE001 — best-effort parse boundary: any sheet failure downgrades to a raw-hint warning
                     warnings.append(f"kodlista {sheet_name!r}: {exc}")
                     # Preserve kodlista-wins (#401): a sheet that FAILS to parse is
                     # still a kodlista sheet — record its hint as a raw/unparseable
@@ -712,7 +712,7 @@ def _parse_kodlista(ws: Any) -> tuple[SosKodlista, list[str]]:
                     positions["tp"] = i
                 elif hl == "kod":
                     positions["kod"] = i
-                elif hl.startswith("beskrivning") or hl.startswith("betydelse"):
+                elif hl.startswith(("beskrivning", "betydelse")):
                     positions["desc"] = i
                 elif hl == "variabelnamn":
                     positions["var"] = i
@@ -826,13 +826,13 @@ def _parse_quality_sheet(ws: Any) -> SosQualitySheet:
 # A4.3b imports the IR contract + shared hashing/mint/IO infra from the build
 # core. Safe against the db<->sources cycle: `db.py` imports the SOS adapter
 # only function-locally (in `build_db`), never at module top.
-from reg_meta_build.db import (  # noqa: E402
+from reg_meta_build.db import (
     _VALID_FROM_UNKNOWN,
     _file_sha256,
     _value_set_hash,
 )
-from reg_meta_build.id import mint  # noqa: E402
-from reg_meta_build.ir import (  # noqa: E402
+from reg_meta_build.id import mint
+from reg_meta_build.ir import (
     IRDeliveryProvenance,
     IRRegister,
     IRValueCode,

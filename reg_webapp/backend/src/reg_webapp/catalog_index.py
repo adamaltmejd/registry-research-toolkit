@@ -333,7 +333,7 @@ def build_catalog_index(
     )
 
 
-def _period_tokens(source) -> tuple[str, ...]:  # noqa: ANN001 — reg_schema Source (TYPE_CHECKING-only import)
+def _period_tokens(source) -> tuple[str, ...]:
     """Comparable string tokens for a source's best-effort register span.
 
     A bare int/str period is its own token; a range contributes BOTH endpoints;
@@ -368,7 +368,7 @@ def _period_bounds(tokens: list[str]) -> tuple[str, str]:
     return (lo, hi)
 
 
-def _segment_tokens(segment) -> tuple[str, ...]:  # noqa: ANN001 — reg_schema PeriodSegment
+def _segment_tokens(segment) -> tuple[str, ...]:
     if isinstance(segment, (int, str)):
         return (str(segment),)
     return (str(segment.from_), str(segment.to))

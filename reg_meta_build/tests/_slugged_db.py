@@ -96,7 +96,7 @@ def build_slugged_db(
         )
 
     if variable is not None and version is not None and register is not None:
-        v_name, var_id, cvid, default_kol = variable
+        v_name, var_id, _cvid, default_kol = variable
         kol = delivery_column_name or default_kol
         stored_slug = variable_slug or derive_variable_slug(kol)
         cur = conn.execute(

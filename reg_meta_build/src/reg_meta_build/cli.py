@@ -1813,7 +1813,7 @@ def run(argv: list[str] | None = None) -> int:
         else:
             write_json(payload.get("data", payload), output_path)
         return exit_code
-    except Exception as exc:
+    except Exception as exc:  # noqa: BLE001 — CLI top-level boundary: map any failure to a stable exit code
         return handle_cli_exception(exc, output_path)
 
 

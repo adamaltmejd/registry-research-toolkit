@@ -207,7 +207,7 @@ def _validate_blocking(
     if structural.ok:
         # The connection opens HERE on this threadpool thread (one thread), AFTER
         # the DB-free layers — a structurally invalid body never reaches the open.
-        from reg_meta.catalog import Catalog  # noqa: PLC0415 — lazy: DB-bound
+        from reg_meta.catalog import Catalog
 
         with per_request_conn(db_path) as conn:
             issues.extend(_semantic_issues(raw, Catalog(conn), index))
@@ -266,7 +266,7 @@ def _order_blocking(db_path: Path, raw: dict[str, Any]) -> Response:
     except ValidationError as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from exc
 
-    from reg_meta.catalog import Catalog  # noqa: PLC0415 — lazy: DB-bound
+    from reg_meta.catalog import Catalog
 
     with per_request_conn(db_path) as conn:
         csv_text = render_order_csv(project, Catalog(conn))

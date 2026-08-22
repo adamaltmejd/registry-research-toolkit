@@ -20,7 +20,7 @@ sys.path.insert(
     0, str(Path(__file__).resolve().parents[2] / "reg_meta_build" / "tests")
 )
 
-from _slugged_db import add_state, add_variable, build_slugged_db  # noqa: E402
+from _slugged_db import add_state, add_variable, build_slugged_db
 
 if TYPE_CHECKING:
     import sqlite3

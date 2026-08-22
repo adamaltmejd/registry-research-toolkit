@@ -435,6 +435,7 @@ def resolve_continue_pr(pr: int) -> dict:
         env=_gh.scrubbed_git_env(),  # a gh call, not git — but still scrub the hijack env
         capture_output=True,
         text=True,
+        check=False,
     )
     if proc.returncode != 0:
         raise SystemExit(
@@ -1051,8 +1052,8 @@ def _write_or_overlay_slot(
     try:
         existing = json.loads(slot_path.read_text(encoding="utf-8"))
         if not isinstance(existing, dict):
-            raise ValueError("slot file is not a JSON object")
-    except OSError, ValueError:
+            raise TypeError("slot file is not a JSON object")
+    except OSError, ValueError, TypeError:
         # Absent / torn / invalid: write the full payload from our known-good values.
         _cos_preflight._atomic_write_json(slot_path, payload)
         return

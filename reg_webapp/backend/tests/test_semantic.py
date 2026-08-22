@@ -44,7 +44,7 @@ def test_period_display_scalar(period, expected):
 
 
 def test_period_display_range_is_wire_form_not_repr():
-    from reg_schema.project_data import PeriodRange  # noqa: PLC0415
+    from reg_schema.project_data import PeriodRange
 
     pr = PeriodRange.model_validate({"from": 2015, "to": 2020})
     rendered = period_display(pr)
@@ -169,7 +169,7 @@ def test_variable_replaced_hint_skips_period_before_effective_year(catalog):
 
 
 def test_deprecated_traversal_hint_for_deprecated_variable():
-    from _slugged_db import build_slugged_db  # noqa: PLC0415
+    from _slugged_db import build_slugged_db
 
     conn = build_slugged_db()
     conn.execute("UPDATE variable SET deprecated = 1 WHERE slug = 'kon'")
@@ -257,7 +257,7 @@ def multiversion_catalog():
     same variant with DISTINCT value sets (different `value_set_id`) — the genuine
     co-delivery ambiguity (a `(variable, variant, period)` resolving to two
     different code-lists)."""
-    from _slugged_db import add_state, add_value_set, build_slugged_db  # noqa: PLC0415
+    from _slugged_db import add_state, add_value_set, build_slugged_db
 
     conn = build_slugged_db()
     add_value_set(conn, value_set_id=701, codes=[("1", "Man"), ("2", "Kvinna")])
@@ -311,7 +311,7 @@ def same_value_set_catalog():
     that share ONE `value_set_id` but carry different free-text version labels —
     the same values under two names. This is NOT ambiguity (the re-key on
     `value_set_id` must NOT false-positive on it — the ~71% phantom case)."""
-    from _slugged_db import add_state, add_value_set, build_slugged_db  # noqa: PLC0415
+    from _slugged_db import add_state, add_value_set, build_slugged_db
 
     conn = build_slugged_db()
     add_value_set(conn, value_set_id=701, codes=[("1", "Man"), ("2", "Kvinna")])
@@ -358,7 +358,7 @@ def multi_representation_catalog():
     """`scb/lisa/kon` carries TWO co-existing DELIVERY COLUMNS at 2018 — parallel
     REPRESENTATIONS of one concept (the SSYK 3/5-digit / age-bracket shape). A
     binding must pick one via `representation`."""
-    from _slugged_db import add_state, add_value_set, build_slugged_db  # noqa: PLC0415
+    from _slugged_db import add_state, add_value_set, build_slugged_db
 
     conn = build_slugged_db()
     add_value_set(conn, value_set_id=701, codes=[("1", "Man"), ("2", "Kvinna")])
@@ -462,7 +462,7 @@ def transition_catalog():
     """A DB where `scb/lisa/kon` has two SEQUENTIAL (non-overlapping) states under
     the same variant: sun2000 valid 2010-2015, then sun2020 valid 2016-9999 — a
     version TRANSITION, not co-delivery."""
-    from _slugged_db import add_state, build_slugged_db  # noqa: PLC0415
+    from _slugged_db import add_state, build_slugged_db
 
     conn = build_slugged_db()
     # Re-window the seeded kon state to the LATER era; add the earlier era as a
@@ -532,7 +532,7 @@ def column_rename_catalog():
     """`scb/lisa/kon` delivered under DISTINCT columns in NON-overlapping windows:
     `KonOld` 2010-2015, renamed `KonNew` 2016-9999. A rename, not parallel
     co-existence — a range crossing it must be drift, not representation-ambiguity."""
-    from _slugged_db import add_state, build_slugged_db  # noqa: PLC0415
+    from _slugged_db import add_state, build_slugged_db
 
     conn = build_slugged_db()
     conn.execute(
@@ -580,7 +580,7 @@ def uneven_representation_catalog():
     """Two co-existing columns with UNEVEN spans: `kon` 2010-9999 and `kon_detalj`
     only 2018-9999. Picking the shorter column over a range that predates it
     under-covers the requested period."""
-    from _slugged_db import add_state, add_value_set, build_slugged_db  # noqa: PLC0415
+    from _slugged_db import add_state, add_value_set, build_slugged_db
 
     conn = build_slugged_db()
     add_value_set(conn, value_set_id=702, codes=[("1", "M"), ("2", "K"), ("3", "X")])
@@ -665,7 +665,7 @@ def representation_internal_gap_catalog():
     requested range, so the old outer-bounds check stays silent — yet the pinned
     column's 2013-2017 extract is empty because only the sibling delivers it. This
     is the #342/#465 internal-gap case the gap-based check must catch."""
-    from _slugged_db import add_state, add_value_set, build_slugged_db  # noqa: PLC0415
+    from _slugged_db import add_state, add_value_set, build_slugged_db
 
     conn = build_slugged_db()
     # Re-window the seeded `kon` state to the FIRST pinned-column era.
@@ -850,7 +850,7 @@ def list_year_segment_gap_catalog():
     """The pinned column `kon` starts midway through the 2020 list segment while
     sibling `kon_detalj` fills the leading half. The pin is present in the
     segment, so the per-segment presence loop is not enough."""
-    from _slugged_db import add_state, build_slugged_db  # noqa: PLC0415
+    from _slugged_db import add_state, build_slugged_db
 
     conn = build_slugged_db()
     conn.execute(
@@ -913,7 +913,7 @@ def synthesized_feb_end_catalog():
     reg_meta period-token windows may carry this ISO-shaped but non-calendar
     bound, so semantic gap math must normalize it before using `date` arithmetic.
     """
-    from _slugged_db import build_slugged_db  # noqa: PLC0415
+    from _slugged_db import build_slugged_db
 
     conn = build_slugged_db()
     conn.execute(
@@ -1074,7 +1074,7 @@ def internal_gap_catalog():
     2010-2012, then 2016-9999 — an INTERNAL gap (2013-2015 has no state at all).
     The seeded state is re-windowed to the later era; the earlier era is added as a
     second state, leaving the 2013-2015 hole."""
-    from _slugged_db import add_state, build_slugged_db  # noqa: PLC0415
+    from _slugged_db import add_state, build_slugged_db
 
     conn = build_slugged_db()
     conn.execute(
@@ -1216,7 +1216,7 @@ def two_lisa_var_catalog():
     ONE variable per register, so landing an unadmitted warning at binding index 1
     AFTER an admitted binding 0 (both in one source, both period-clean) needs a
     second resolvable variable under kon's variant — built here."""
-    from _slugged_db import add_state, add_variable, build_slugged_db  # noqa: PLC0415
+    from _slugged_db import add_state, add_variable, build_slugged_db
 
     conn = build_slugged_db()
     add_variable(conn, register_id=1, var_id=88, name="Ålder", slug="alder")
@@ -1370,7 +1370,7 @@ def two_repr_catalog():
     """`scb/lisa/kon` delivered under TWO CO-EXISTING columns at 2018+ — the
     seeded `Kon` plus a parallel `KonDetailed` (same window, distinct column) —
     a multi-representation concept whose bindings must pin `representation`."""
-    from _slugged_db import add_state, build_slugged_db  # noqa: PLC0415
+    from _slugged_db import add_state, build_slugged_db
 
     conn = build_slugged_db()
     add_state(
@@ -1500,7 +1500,7 @@ def renamed_column_catalog():
     """`scb/lisa/kon` SEQUENTIALLY renamed: column `Kon` through 2019-12-31, then
     `KonNy` from 2020 (non-overlapping windows — a rename, NOT co-existing
     representations, so no `representation` pin is required on either side)."""
-    from _slugged_db import add_state, build_slugged_db  # noqa: PLC0415
+    from _slugged_db import add_state, build_slugged_db
 
     conn = build_slugged_db()
     conn.execute(
@@ -1659,7 +1659,7 @@ def gap_overlap_catalog():
     2012-2025 (mutual overlap 2012-2014). A researcher binding segments
     [2010, 2020] touches one column per segment — never both at one requested
     instant — while the scalar range 2010..2020 includes the overlap window."""
-    from _slugged_db import add_state, build_slugged_db  # noqa: PLC0415
+    from _slugged_db import add_state, build_slugged_db
 
     conn = build_slugged_db()
     conn.execute(
@@ -1720,7 +1720,7 @@ def middle_segment_sibling_catalog():
     only the sibling `KonAlt` delivers 2014-2016. Segments [2010, 2015, 2020]
     have matching OUTER bounds for both the pin and the union — the middle
     segment's hole is invisible to the outer-bounds drift check."""
-    from _slugged_db import add_state, build_slugged_db  # noqa: PLC0415
+    from _slugged_db import add_state, build_slugged_db
 
     conn = build_slugged_db()
     conn.execute(

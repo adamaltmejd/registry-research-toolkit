@@ -283,7 +283,7 @@ class TestGetSchema:
         assert all(v["year"] >= 2022 for v in versions)
 
     def test_columns_include_aliases(self, db_path: str):
-        data, code = _run_json(
+        data, _code = _run_json(
             ["--db", db_path, "get", "schema", "10", "--years", "2020"]
         )
         columns = data["data"]["variants"][0]["versions"][0]["columns"]
@@ -296,11 +296,11 @@ class TestGetSchema:
         )
 
     def test_not_found(self, db_path: str):
-        data, code = _run_json(["--db", db_path, "get", "schema", "99999"])
+        _data, code = _run_json(["--db", db_path, "get", "schema", "99999"])
         assert code == 16
 
     def test_no_args(self, db_path: str):
-        data, code = _run_json(["--db", db_path, "get", "schema"])
+        _data, code = _run_json(["--db", db_path, "get", "schema"])
         assert code == 2
 
     def test_columns_like_filter(self, db_path: str):
@@ -420,7 +420,7 @@ class TestGetVarinfo:
         assert len(data["data"]["variables"]) == 2
 
     def test_instance_details(self, db_path: str):
-        data, code = _run_json(
+        data, _code = _run_json(
             ["--db", db_path, "get", "varinfo", "Kön", "--register", "TESTREG"]
         )
         inst = data["data"]["instances"][0]
@@ -433,7 +433,7 @@ class TestGetVarinfo:
         assert "value_set_count" in inst
 
     def test_value_set_count(self, db_path: str):
-        data, code = _run_json(
+        data, _code = _run_json(
             ["--db", db_path, "get", "varinfo", "Kön", "--register", "TESTREG"]
         )
         # The Kön value-set (Man, Kvinna) carries 2 codes; at least one state
@@ -442,7 +442,7 @@ class TestGetVarinfo:
         assert with_codes
 
     def test_not_found(self, db_path: str):
-        data, code = _run_json(["--db", db_path, "get", "varinfo", "NONEXISTENT"])
+        _data, code = _run_json(["--db", db_path, "get", "varinfo", "NONEXISTENT"])
         assert code == 16
 
 
@@ -627,7 +627,7 @@ class TestGetValues:
 
     def test_not_found(self, db_path: str):
         # 99999 is neither a known var_id nor a variable name → not_found.
-        data, code = _run_json(["--db", db_path, "get", "values", "99999"])
+        _data, code = _run_json(["--db", db_path, "get", "values", "99999"])
         assert code == 16
 
     def test_by_variable_year_resolves_to_single_cvid(self, db_path: str):
@@ -686,11 +686,11 @@ class TestGetValues:
         assert codes == {"1", "2"}
 
     def test_by_variable_unknown(self, db_path: str):
-        data, code = _run_json(["--db", db_path, "get", "values", "NONEXISTENT_VAR"])
+        _data, code = _run_json(["--db", db_path, "get", "values", "NONEXISTENT_VAR"])
         assert code == 16
 
     def test_by_variable_year_no_match(self, db_path: str):
-        data, code = _run_json(
+        _data, code = _run_json(
             [
                 "--db",
                 db_path,
@@ -1058,7 +1058,7 @@ class TestGetDatacolumns:
         assert "TestKolumn" in col_names
 
     def test_not_found(self, db_path: str):
-        data, code = _run_json(["--db", db_path, "get", "datacolumns", "NONEXISTENT"])
+        _data, code = _run_json(["--db", db_path, "get", "datacolumns", "NONEXISTENT"])
         assert code == 16
 
     def test_full_alias_history_survives_reparent(self):
@@ -1116,7 +1116,7 @@ class TestGetCodedVariables:
 
     def test_kon_present(self, db_path: str):
         """Kön has value items in our fixtures → should appear."""
-        data, code = _run_json(["--db", db_path, "get", "coded-variables"])
+        data, _code = _run_json(["--db", db_path, "get", "coded-variables"])
         names = {r["variable_name"] for r in data["data"]}
         assert "Kön" in names
 
@@ -1144,7 +1144,7 @@ class TestResolve:
         assert all(m["register_id"] == 1 for m in col["matches"])
 
     def test_cross_register(self, db_path: str):
-        data, code = _run_json(["--db", db_path, "resolve", "--columns", "Kon"])
+        data, _code = _run_json(["--db", db_path, "resolve", "--columns", "Kon"])
         col = data["data"]["columns"][0]
         reg_ids = {m["register_id"] for m in col["matches"]}
         # "Kon" is in reg 1, "KON" is in reg 2 — case-insensitive should match both
@@ -1163,7 +1163,7 @@ class TestResolve:
         assert col["matches"] == []
 
     def test_require_match_fails(self, db_path: str):
-        data, code = _run_json(
+        _data, code = _run_json(
             ["--db", db_path, "resolve", "--columns", "ZZZNOPE", "--require-match"]
         )
         assert code == 17
@@ -1437,7 +1437,7 @@ class TestGetDiff:
         assert data["error"]["code"] == "usage_error"
 
     def test_register_not_found(self, db_path: str):
-        data, code = _run_json(
+        _data, code = _run_json(
             [
                 "--db",
                 db_path,
@@ -1454,7 +1454,7 @@ class TestGetDiff:
         assert code == 16
 
     def test_no_versions_in_range(self, db_path: str):
-        data, code = _run_json(
+        _data, code = _run_json(
             [
                 "--db",
                 db_path,
@@ -1492,9 +1492,9 @@ class TestGetLineage:
     def test_source_resolution(self, db_path: str):
         data, code = _run_json(["--db", db_path, "get", "lineage", "Kön"])
         assert code == 0
-        otherreg = [
+        otherreg = next(
             r for r in data["data"]["registers"] if r["register_name"] == "OTHERREG"
-        ][0]
+        )
         # TESTREG should resolve to register_id "1"
         assert otherreg["source_register_id"] == 1
         assert otherreg["source_register_text"] == "TESTREG"
@@ -1517,7 +1517,7 @@ class TestGetLineage:
         assert regs[0]["register_name"] == "OTHERREG"
 
     def test_not_found(self, db_path: str):
-        data, code = _run_json(["--db", db_path, "get", "lineage", "NONEXISTENT"])
+        _data, code = _run_json(["--db", db_path, "get", "lineage", "NONEXISTENT"])
         assert code == 16
 
     def test_provenance_coverage(self, db_path: str):
@@ -1530,9 +1530,9 @@ class TestGetLineage:
     def test_year_range(self, db_path: str):
         data, code = _run_json(["--db", db_path, "get", "lineage", "Kön"])
         assert code == 0
-        testreg = [
+        testreg = next(
             r for r in data["data"]["registers"] if r["register_name"] == "TESTREG"
-        ][0]
+        )
         # A2.6: year range spans the variable_state validity windows; the count
         # is of states now (the 2020+2021 cvids coalesced into one 2020-2021
         # state, plus the 2022 state → 2 states spanning 2020..2022).

@@ -152,7 +152,7 @@ def _stub_view(monkeypatch: pytest.MonkeyPatch, payload: dict | None) -> None:
     so a PR case is modelled by passing a PR-shaped payload, never by payload=None.
     """
 
-    def fake_run(cmd, capture_output, text):
+    def fake_run(cmd, capture_output, text, check):
         if payload is None:
             return types.SimpleNamespace(returncode=1, stdout="", stderr="not found")
         return types.SimpleNamespace(
@@ -264,7 +264,7 @@ def test_view_comments_requests_comments_field(
 ) -> None:
     captured: dict[str, list[str]] = {}
 
-    def fake_run(cmd, capture_output, text):
+    def fake_run(cmd, capture_output, text, check):
         captured["cmd"] = cmd
         return types.SimpleNamespace(
             returncode=0,

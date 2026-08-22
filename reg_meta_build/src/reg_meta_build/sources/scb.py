@@ -32,7 +32,7 @@ import sqlite3
 import tempfile
 from collections import Counter, defaultdict
 from dataclasses import dataclass, field
-from itertools import combinations, groupby
+from itertools import combinations, groupby, pairwise
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
@@ -3320,7 +3320,7 @@ def _coalesce_variable_states(
         # bug would ship silently without this build-time backstop.
         for col, wins in emitted_windows.items():
             wins = sorted(wins)
-            for (a_lo, a_hi), (b_lo, _) in zip(wins, wins[1:]):
+            for (a_lo, a_hi), (b_lo, _) in pairwise(wins):
                 if b_lo <= a_hi:
                     raise RegMetaError(
                         exit_code=EXIT_CONFIG,

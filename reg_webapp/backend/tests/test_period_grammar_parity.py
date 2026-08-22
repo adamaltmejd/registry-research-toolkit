@@ -104,8 +104,8 @@ def test_period_bounds_expansions_agree(value: str) -> None:
     ISO interval, or the structural overlap verdicts would drift from
     reg_meta's interval-intersection verdicts (incl. the deliberate synthesized
     Feb-29 upper bound both sides share)."""
-    from reg_meta.fqid import period_token_to_bounds  # noqa: PLC0415
-    from reg_schema.structural import _endpoint_bounds  # noqa: PLC0415
+    from reg_meta.fqid import period_token_to_bounds
+    from reg_schema.structural import _endpoint_bounds
 
     assert _endpoint_bounds(value) == period_token_to_bounds(value), (
         f"period bounds drift for {value!r}: "

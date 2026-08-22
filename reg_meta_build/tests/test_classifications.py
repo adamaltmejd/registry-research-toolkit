@@ -3738,6 +3738,7 @@ def _run_json(db_dir: Path, args: list[str]) -> tuple[dict, int]:
         ],
         capture_output=True,
         text=True,
+        check=False,  # tests assert on returncode; nonzero exits are expected
     )
     out = proc.stdout.strip()
     # JSON errors still produce JSON on stdout; just parse.
@@ -3799,7 +3800,7 @@ class TestCli:
         assert all(c["level"] == 1 for c in codes)
 
     def test_only_valid_requires_codes(self, classification_db: Path):
-        data, code = _run_json(
+        _data, code = _run_json(
             classification_db,
             ["get", "classification", "TESTKON", "--only-valid"],
         )
@@ -3842,14 +3843,14 @@ class TestCli:
         assert data["error"]["code"] == "not_found"
 
     def test_level_requires_codes(self, classification_db: Path):
-        data, code = _run_json(
+        _data, code = _run_json(
             classification_db,
             ["get", "classification", "TESTKON", "--level", "1"],
         )
         assert code == 2  # EXIT_USAGE
 
     def test_list_with_positional_fails(self, classification_db: Path):
-        data, code = _run_json(
+        _data, code = _run_json(
             classification_db,
             ["get", "classification", "TESTKON", "--list"],
         )

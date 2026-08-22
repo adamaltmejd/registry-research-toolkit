@@ -415,7 +415,7 @@ def test_build_index_drops_only_warning_level_issues():
     bindings must resolve against the catalog (#206 column resolution), so the
     fixture seeds `alder` / `civst` alongside the warned-on ghost `aaa` (a
     dropped binding is never resolved — it may be absent from the DB)."""
-    from _slugged_db import add_state, add_variable, build_slugged_db  # noqa: PLC0415
+    from _slugged_db import add_state, add_variable, build_slugged_db
 
     conn = build_slugged_db()
     for var_id, name, slug, column in [
@@ -530,7 +530,7 @@ def test_steward_catalog_with_unresolved_semantic_error_fails_fast(tmp_path):
     reg_meta-drift downgrades, result.ok is still False, so load_catalog_index fails
     fast with StewardCatalogError rather than booting a catalog-with-errors as if
     valid (which would admit the broken binding + never surface it)."""
-    from _slugged_db import add_state, add_value_set, build_slugged_db  # noqa: PLC0415
+    from _slugged_db import add_state, add_value_set, build_slugged_db
 
     conn = build_slugged_db()
     # Two co-delivered (overlapping) states for kon under the variant with DISTINCT

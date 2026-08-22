@@ -39,6 +39,7 @@ endpoint metadata.
 
 from __future__ import annotations
 
+import itertools
 from typing import TYPE_CHECKING, Annotated, Literal
 
 from pydantic import Field
@@ -533,7 +534,7 @@ class _GraphBuilder:
         chain = self._catalog.variable_chain(fqid)
         if len(chain) < 2:
             return
-        for prev, cur in zip(chain, chain[1:]):
+        for prev, cur in itertools.pairwise(chain):
             prev_id = self._ensure_edition_node(prev)
             cur_id = self._ensure_edition_node(cur)
             if prev_id is None or cur_id is None:

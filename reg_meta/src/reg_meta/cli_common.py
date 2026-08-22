@@ -40,7 +40,7 @@ def handle_cli_exception(exc: BaseException, output_path: str | None) -> int:
     }
     try:
         write_json(error_payload, output_path)
-    except Exception:
+    except Exception:  # noqa: BLE001 — last-resort error reporting; fall back to stderr
         sys.stderr.write(json.dumps(error_payload) + "\n")
     return EXIT_INTERNAL
 

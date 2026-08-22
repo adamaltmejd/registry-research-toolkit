@@ -6,9 +6,10 @@ from hashlib import sha256
 from typing import TYPE_CHECKING
 
 import pytest
-import reg_meta_build.doc_db as doc_db
 from reg_meta.errors import RegMetaError
 from reg_meta_build.doc_db import RelatedDocument, build_doc_db, parse_frontmatter
+
+from reg_meta_build import doc_db
 
 if TYPE_CHECKING:
     from pathlib import Path

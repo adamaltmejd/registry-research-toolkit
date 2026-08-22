@@ -185,7 +185,7 @@ def test_model_issue_empty_loc_is_whole_document_pointer():
     string, unresolvable). A5.3's SPA resolves these pointers, so the contract is
     exact. Defensive path (structural owns the common cases), unit-tested directly."""
     from pydantic_core import ValidationError
-    from reg_webapp.routes.project import _model_issue  # noqa: PLC0415
+    from reg_webapp.routes.project import _model_issue
 
     exc = ValidationError.from_exception_data(
         "ProjectData", [{"type": "missing", "loc": (), "input": {}}]

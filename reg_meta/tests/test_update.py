@@ -302,7 +302,7 @@ class TestDownloadDocsDbSchemaGuard:
         existing = db_dir / DOC_DB_FILENAME
         existing.write_bytes(b"existing-docs-sentinel")
 
-        major, minor = (int(x) for x in DOC_SCHEMA_VERSION.split(".")[:2])
+        major, _minor = (int(x) for x in DOC_SCHEMA_VERSION.split(".")[:2])
         # Force incompatibility by claiming a different major version.
         self._patch_download(monkeypatch, f"{major + 1}.0.0")
 
@@ -512,7 +512,7 @@ class TestRunUpdatePypiBehind:
         # install so the non-uv-tool skip branch doesn't short-circuit it.
         monkeypatch.setattr(update, "_is_uv_tool_install", lambda: True)
 
-        def fake_run(cmd, capture_output, text):
+        def fake_run(cmd, capture_output, text, check):
             return _subprocess.CompletedProcess(
                 cmd, returncode=0, stdout="", stderr="Nothing to upgrade\n"
             )
@@ -534,7 +534,7 @@ class TestIsUvToolInstall:
 
         from reg_meta import update
 
-        def fake_run(cmd, capture_output, text):
+        def fake_run(cmd, capture_output, text, check):
             if raises is not None:
                 raise raises
             return _subprocess.CompletedProcess(
@@ -678,7 +678,7 @@ class TestRunUpdateNonUvToolSkip:
 
         upgrade_calls: list[list[str]] = []
 
-        def fake_run(cmd, capture_output, text):
+        def fake_run(cmd, capture_output, text, check):
             upgrade_calls.append(cmd)
             return _subprocess.CompletedProcess(
                 cmd, returncode=0, stdout="Upgraded reg-meta\n", stderr=""

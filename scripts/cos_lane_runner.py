@@ -371,6 +371,7 @@ def run_codex_turn(
                 stdin=subprocess.DEVNULL,
                 stdout=log,
                 stderr=subprocess.STDOUT,
+                check=False,
             )
     except OSError as exc:
         raise SystemExit(
@@ -498,6 +499,7 @@ def resolve_head_branch(pr: int, worktree: Path) -> str | None:
         env=_gh.scrubbed_git_env(),  # a gh call, not git — but still scrub the hijack env
         capture_output=True,
         text=True,
+        check=False,
     )
     if proc.returncode != 0:
         return None
@@ -558,6 +560,7 @@ def pr_is_behind_base(base: str, worktree: Path) -> bool:
         env=_gh.scrubbed_git_env(),
         capture_output=True,
         text=True,
+        check=False,
     )
     if proc.returncode == 0:
         return False
@@ -881,6 +884,7 @@ def resolve_review_base(pr: int, fallback: str, worktree: Path) -> str:
         env=_gh.scrubbed_git_env(),  # a gh call, not git — but still scrub the hijack env
         capture_output=True,
         text=True,
+        check=False,
     )
     if proc.returncode != 0:
         print(
@@ -937,6 +941,7 @@ def run_review(base: str, gate_dir: Path, worktree: Path, review_tool: Path) -> 
         env=_gh.scrubbed_git_env(),
         capture_output=True,
         text=True,
+        check=False,
     )
     try:
         return json.loads(proc.stdout)

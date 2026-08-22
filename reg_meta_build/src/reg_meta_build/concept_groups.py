@@ -80,6 +80,7 @@ import functools
 import re
 import sqlite3
 from dataclasses import dataclass
+from itertools import pairwise
 from pathlib import Path
 from typing import TYPE_CHECKING, Literal
 
@@ -1421,10 +1422,7 @@ def derive_classification_succession(conn: sqlite3.Connection) -> int:
             stripped_names.add(" ".join(name.replace(str(year), "", 1).split()))
         if not ok or len(stripped_names) != 1 or not next(iter(stripped_names)):
             continue
-        edges = [
-            (pred[1], succ[1], succ[0])
-            for pred, succ in zip(editions, editions[1:], strict=False)
-        ]
+        edges = [(pred[1], succ[1], succ[0]) for pred, succ in pairwise(editions)]
         conn.executemany(
             "INSERT INTO classification_replaced_by "
             "(predecessor_slug, successor_slug, effective_year, note) "

@@ -96,11 +96,11 @@ class RunPaths:
 
 
 def now_stamp() -> str:
-    return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    return datetime.now().astimezone().strftime("%Y-%m-%d %H:%M:%S")
 
 
 def slug_stamp() -> str:
-    return datetime.now().strftime("regmeta-build-%Y%m%d-%H%M%S")
+    return datetime.now().astimezone().strftime("regmeta-build-%Y%m%d-%H%M%S")
 
 
 def repo_root() -> Path:
@@ -125,7 +125,7 @@ def is_milestone(line: str) -> bool:
         return False
     if stripped.startswith(MILESTONE_PREFIXES):
         return True
-    if stripped.startswith("...") or stripped.startswith("  ..."):
+    if stripped.startswith(("...", "  ...")):
         return True
     return any(token in stripped for token in MILESTONE_CONTAINS)
 

@@ -364,7 +364,7 @@ def test_create_empty_provenance_db_schema(tmp_path: Path) -> None:
             "delivery_approval",
         }
         for table in tables:
-            (count,) = conn.execute(f"SELECT COUNT(*) FROM {table}").fetchone()  # noqa: S608
+            (count,) = conn.execute(f"SELECT COUNT(*) FROM {table}").fetchone()
             assert count == 0, f"{table} should be empty in create_empty"
     finally:
         conn.close()

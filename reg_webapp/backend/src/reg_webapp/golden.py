@@ -245,7 +245,7 @@ def decode_continuation(
         raw = cursor.removeprefix(_CURSOR_PREFIX)
         payload = json.loads(urlsafe_b64decode(raw + "=" * (-len(raw) % 4)))
         if not isinstance(payload, dict):
-            raise ValueError
+            raise TypeError
         signature = payload.pop("signature", None)
         if signature != _cursor_signature(payload):
             raise ValueError
@@ -258,13 +258,19 @@ def decode_continuation(
         origin = payload.get("origin")
         offset = payload.get("offset")
         if not isinstance(origin, str) or not isinstance(offset, int):
-            raise ValueError
+            raise TypeError
         if offset < 0 or offset >= len(fqids):
             raise ValueError
         return origin, offset
     except GoldenCursorError:
         raise
-    except (Base64Error, UnicodeDecodeError, json.JSONDecodeError, ValueError) as exc:
+    except (
+        Base64Error,
+        UnicodeDecodeError,
+        json.JSONDecodeError,
+        TypeError,
+        ValueError,
+    ) as exc:
         raise GoldenCursorError("Golden search cursor is invalid or tampered.") from exc
 
 

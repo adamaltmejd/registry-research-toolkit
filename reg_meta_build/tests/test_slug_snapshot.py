@@ -139,6 +139,7 @@ def _git_committed_filenames(directory: Path) -> set[str] | None:
         capture_output=True,
         text=True,
         env=_git_env(),
+        check=False,  # nonzero = not a work tree; handled via returncode below
     )
     if inside.returncode != 0 or inside.stdout.strip() != "true":
         return None
@@ -148,6 +149,7 @@ def _git_committed_filenames(directory: Path) -> set[str] | None:
         capture_output=True,
         text=True,
         env=_git_env(),
+        check=False,  # nonzero (e.g. unborn HEAD) is handled via returncode below
     )
     if listed.returncode != 0:
         return None  # also covers an unborn HEAD (no commit) — can't assert

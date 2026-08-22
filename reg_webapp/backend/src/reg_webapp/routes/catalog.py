@@ -373,7 +373,7 @@ def _narrow_graph_to_held(
     )
 
 
-def _narrow_group_members(group, index: CatalogIndex, catalog: Catalog):  # noqa: ANN001 — reg_meta ConceptGroupSummary
+def _narrow_group_members(group, index: CatalogIndex, catalog: Catalog):
     """Return `group` with its `members` narrowed to the steward's holdings (#859),
     or None if no member survives. A representation member (`delivery_column` set) is
     kept iff `index.admits(str(member.fqid), member.delivery_column)`; a whole-variable
@@ -407,7 +407,7 @@ def _narrow_group_members(group, index: CatalogIndex, catalog: Catalog):  # noqa
     )
 
 
-def _narrow_groups(groups: list, index: CatalogIndex, catalog: Catalog) -> list:  # noqa: ANN001 — reg_meta ConceptGroupSummary list
+def _narrow_groups(groups: list, index: CatalogIndex, catalog: Catalog) -> list:
     """Narrow each concept group's members to the steward's holdings (#859),
     dropping a group with no surviving member. The shared body of the identical
     walrus comprehension in `_register_response` and `get_binding_dimensions`
@@ -508,7 +508,7 @@ def _resolves_live(catalog: Catalog, parsed: Fqid) -> bool:
     return True
 
 
-def _narrow_refs_to_held(refs: list, index: CatalogIndex) -> list:  # noqa: ANN001 — VariableRef list
+def _narrow_refs_to_held(refs: list, index: CatalogIndex) -> list:
     """Narrow a list of variable-grain edge refs (predecessors/successors/same_as)
     to those whose `fqid` is a held binding (#859). A ref with `fqid is None`
     (unaddressable) can be in no steward catalog, so it drops. Reuses
@@ -518,7 +518,7 @@ def _narrow_refs_to_held(refs: list, index: CatalogIndex) -> list:  # noqa: ANN0
 
 
 def _narrow_lineage_to_held(
-    edges: list,  # noqa: ANN001 — LineageEdge list
+    edges: list,
     index: CatalogIndex,
     consumer_state_ids: frozenset[int],
 ) -> list:
@@ -538,7 +538,7 @@ def _narrow_lineage_to_held(
 
 def _narrow_lineage_warnings_to_held(
     warnings: list,
-    consumer_state_ids: frozenset[int],  # noqa: ANN001 — LineageWarning list
+    consumer_state_ids: frozenset[int],
 ) -> list:
     """Narrow lineage warnings to held consumer states (#865)."""
     return [w for w in warnings if w.consumer_state_id in consumer_state_ids]
@@ -848,7 +848,7 @@ def _classification_group_node(group) -> ClassificationGroupNode:
     )
 
 
-def _classification_family_node(family) -> ClassificationFamilyNode:  # noqa: ANN001
+def _classification_family_node(family) -> ClassificationFamilyNode:
     """Map a derived classification succession family (#771) onto its subject node."""
     return ClassificationFamilyNode(
         key=family.key,

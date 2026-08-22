@@ -98,7 +98,7 @@ class TestJsonClean:
     def test_json_data_has_no_hint_keys(self, db_path: str):
         import json
 
-        out, err, code = _run_capture(
+        out, _err, code = _run_capture(
             ["--format", "json", "--db", db_path, "search", "--query", "Kommun"],
         )
         assert code == 0

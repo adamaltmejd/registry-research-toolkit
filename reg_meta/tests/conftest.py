@@ -17,7 +17,7 @@ sys.path.insert(
     0, str(Path(__file__).resolve().parent.parent.parent / "reg_meta_build" / "tests")
 )
 
-from _shared_fixtures import (  # noqa: E402,F401
+from _shared_fixtures import (  # noqa: F401
     _no_repo_curation,
     db_conn,
     db_path,

@@ -53,7 +53,9 @@ def docker() -> str:
     path = shutil.which("docker")
     if not path:
         pytest.fail("Docker not available (binary not found on PATH)", pytrace=False)
-    result = subprocess.run([path, "info"], capture_output=True, timeout=10)
+    result = subprocess.run(
+        [path, "info"], capture_output=True, timeout=10, check=False
+    )
     if result.returncode != 0:
         pytest.fail("Docker daemon not running — start Docker and retry", pytrace=False)
     return path
@@ -92,12 +94,13 @@ def image(docker: str) -> str:
             capture_output=True,
             text=True,
             timeout=300,
+            check=False,
         )
         assert result.returncode == 0, f"Docker build failed:\n{result.stderr}"
 
     yield tag
 
-    subprocess.run([docker, "rmi", tag], capture_output=True, timeout=30)
+    subprocess.run([docker, "rmi", tag], capture_output=True, timeout=30, check=False)
 
 
 def _docker_run(
@@ -120,6 +123,7 @@ def _docker_run(
         capture_output=True,
         text=True,
         timeout=timeout,
+        check=False,
     )
 
 

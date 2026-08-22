@@ -66,7 +66,9 @@ def _is_uv_tool_install() -> bool:
     the upgrade targets this install, so we must not attempt it.
     """
     try:
-        proc = subprocess.run(["uv", "tool", "dir"], capture_output=True, text=True)
+        proc = subprocess.run(
+            ["uv", "tool", "dir"], capture_output=True, text=True, check=False
+        )
     except FileNotFoundError:
         return False
     if proc.returncode != 0 or not proc.stdout.strip():
@@ -160,7 +162,7 @@ class UpdateChecker:
                 else None
             )
             self._checked = True
-        except Exception:
+        except Exception:  # noqa: BLE001, S110 — best-effort background check; any failure means "no update info this run"
             pass
 
     @property
@@ -290,6 +292,7 @@ def run_update(
                 ["uv", "tool", "upgrade", "reg_meta"],
                 capture_output=True,
                 text=True,
+                check=False,
             )
         except FileNotFoundError:
             raise RegMetaError(

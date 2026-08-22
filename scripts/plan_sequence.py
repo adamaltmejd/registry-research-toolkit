@@ -638,7 +638,7 @@ def parse_basis(block: str) -> tuple[set[int], set[int], str] | None:
     m = _BASIS_RE.search(block)
     if not m:
         return None
-    nums = lambda s: {int(x) for x in s.split(",") if x}  # noqa: E731
+    nums = lambda s: {int(x) for x in s.split(",") if x}
     return nums(m.group(1)), nums(m.group(2)), m.group(3) or ""
 
 

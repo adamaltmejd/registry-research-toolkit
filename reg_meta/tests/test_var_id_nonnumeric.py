@@ -40,7 +40,7 @@ sys.path.insert(
     0, str(Path(__file__).resolve().parents[2] / "reg_meta_build" / "tests")
 )
 
-from _slugged_db import (  # noqa: E402
+from _slugged_db import (
     add_register,
     add_state,
     add_variant,
