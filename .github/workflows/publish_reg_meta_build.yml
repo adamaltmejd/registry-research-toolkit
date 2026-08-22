@@ -30,4 +30,4 @@ jobs:
           uv run reg-meta-build --help > /dev/null
 
       - run: uv build reg_meta_build/ --out-dir dist/
-      - uses: pypa/gh-action-pypi-publish@v1.14.0
+      - uses: pypa/gh-action-pypi-publish@v1.14.2

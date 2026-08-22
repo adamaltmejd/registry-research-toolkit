@@ -54,7 +54,7 @@ jobs:
           fi
 
       - run: uv build reg_meta/ --out-dir dist/
-      - uses: pypa/gh-action-pypi-publish@v1.14.0
+      - uses: pypa/gh-action-pypi-publish@v1.14.2
 
   # Post-release end-to-end smoke: install reg_meta into a clean Docker container
   # and run the full install → `reg-meta update` (downloads this release's DB) →
