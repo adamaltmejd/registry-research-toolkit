@@ -238,7 +238,7 @@ beforeEach(() => {
   });
 });
 
-function renderGroup(
+async function renderGroup(
   props: Partial<{
     provider: string;
     register: string;
@@ -249,7 +249,7 @@ function renderGroup(
     enforcePeriodBounds: boolean;
   }> = {},
 ) {
-  return render(ConceptGroupView, {
+  return await render(ConceptGroupView, {
     provider: "scb",
     register: "rams",
     key: "ink",
@@ -266,7 +266,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     vi.mocked(getConceptGroup).mockResolvedValue(node());
     vi.mocked(getConceptGroupGraph).mockResolvedValue(twoSingleColGraph());
 
-    renderGroup();
+    await renderGroup();
 
     // The heading names the page kind and the group's label.
     await expect
@@ -323,7 +323,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     );
     vi.mocked(getConceptGroupGraph).mockResolvedValue(twoSingleColGraph());
 
-    renderGroup();
+    await renderGroup();
 
     await expect.element(page.getByText("Income & earnings")).toBeVisible();
     await expect
@@ -339,7 +339,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
       "scb/rams/inkfeb": ["Inkfeb"],
     });
 
-    renderGroup();
+    await renderGroup();
 
     // Distinct names → name-cluster headings (#901); each single-column row's checkbox
     // is named by its delivery COLUMN (the leading identity), not the repeated name.
@@ -389,7 +389,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     // inkjan spans 2010–2015; narrow the group to 2012..2014.
     router.navigate("/catalog/group/scb/rams/ink?period=2012..2014");
 
-    renderGroup();
+    await renderGroup();
 
     // The single-column row's checkbox is named by its delivery COLUMN (#901).
     const jan = page.getByRole("checkbox", { name: /Inkjan/ });
@@ -433,7 +433,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     mockResolveColumns({ "scb/rams/inkjan": ["Inkjan"] });
     router.navigate("/catalog/group/scb/rams/ink?period=1960..2026");
 
-    renderGroup({
+    await renderGroup({
       windowMinYear: 2000,
       windowMaxYear: 2010,
       enforcePeriodBounds: true,
@@ -475,7 +475,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     });
     router.navigate("/catalog/group/scb/rams/ink?period=2020,2019");
 
-    renderGroup();
+    await renderGroup();
 
     await expect
       .element(page.getByText("No staged changes"))
@@ -492,7 +492,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     vi.mocked(getConceptGroupGraph).mockResolvedValue(twoMultiColGraph());
     mockResolveColumns({ "scb/rams/inkjan": ["InkjanA", "InkjanB"] });
 
-    renderGroup();
+    await renderGroup();
 
     // Each ≥2-column member is a subheading + its rows — visible by default, no
     // collapse toggle.
@@ -526,7 +526,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     vi.mocked(getConceptGroup).mockResolvedValue(node());
     vi.mocked(getConceptGroupGraph).mockResolvedValue(twoMultiColGraph());
 
-    renderGroup();
+    await renderGroup();
 
     // The inkjan subheading's select-all toggle selects BOTH its columns at once.
     // Members have distinct NAMES here → one name-CLUSTER each (#901), and a lone
@@ -579,7 +579,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
       ]),
     );
 
-    renderGroup();
+    await renderGroup();
 
     await page.getByRole("checkbox", { name: /Inkjan/ }).click();
     await page
@@ -658,7 +658,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     // validation reports the coverage gap instead of extracting CDISP.
     mockResolveColumns({ "scb/rams/dispink": ["CDISP"] });
 
-    renderGroup({ key: "disp" });
+    await renderGroup({ key: "disp" });
 
     await page.getByRole("checkbox", { name: /CDISP5/ }).click();
     await page
@@ -715,7 +715,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     );
     mockResolveColumns({ "scb/rams/solo": ["SOLO"] });
 
-    renderGroup({ key: "solo-rep" });
+    await renderGroup({ key: "solo-rep" });
 
     await page.getByRole("checkbox", { name: /SOLO/ }).click();
     await page
@@ -739,7 +739,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     vi.mocked(getConceptGroup).mockResolvedValue(node());
     vi.mocked(getConceptGroupGraph).mockResolvedValue(twoMultiColGraph());
 
-    renderGroup();
+    await renderGroup();
 
     const all = await vi.waitFor(() => {
       const el = document.querySelector<HTMLInputElement>(
@@ -776,7 +776,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
       ]),
     );
 
-    renderGroup();
+    await renderGroup();
 
     // inkjan's single-column row checkbox is named by its delivery COLUMN (#901),
     // its name now leading the cluster heading instead.
@@ -843,7 +843,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
       ]),
     );
 
-    renderGroup({ key: "disprep" });
+    await renderGroup({ key: "disprep" });
 
     const delivered = page.getByRole("checkbox", { name: /^CDISP(?!5)/ });
     const aliasOnly = page.getByRole("checkbox", { name: /CDISP5/ });
@@ -865,7 +865,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     // not, so inkjan's row is dimmed (but still selectable).
     router.navigate("/catalog/group/scb/rams/ink?period=2018..2020");
 
-    renderGroup();
+    await renderGroup();
 
     // Single-column rows are named by their delivery COLUMN (#901).
     const jan = page.getByRole("checkbox", { name: /Inkjan/ });
@@ -928,7 +928,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     );
     router.navigate("/catalog/group/scb/rams/ink?period=1980..2004");
 
-    renderGroup();
+    await renderGroup();
 
     // Wait for both subheadings to render, then check their dim state.
     await vi.waitFor(() => {
@@ -980,7 +980,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     );
     router.navigate("/catalog/group/scb/rams/ink?period=1980..2004");
 
-    renderGroup();
+    await renderGroup();
 
     // The late-start row (inkjan/Late, single column) carries the warning marker.
     const lateRow = await vi.waitFor(() => {
@@ -1023,7 +1023,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     );
     router.navigate("/catalog/group/scb/rams/ink?period=1980..2004");
 
-    renderGroup();
+    await renderGroup();
 
     const outRow = await vi.waitFor(() => {
       const cb = page.getByRole("checkbox", { name: /Out/ }).element();
@@ -1043,7 +1043,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     vi.mocked(getConceptGroupGraph).mockResolvedValue(twoSingleColGraph());
     // No ?period and no project window → no window → no warnings anywhere.
 
-    renderGroup();
+    await renderGroup();
 
     await expect
       .element(page.getByRole("checkbox", { name: /Inkjan/ }))
@@ -1055,10 +1055,14 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     vi.mocked(getConceptGroup).mockResolvedValue(node());
     vi.mocked(getConceptGroupGraph).mockResolvedValue(twoSingleColGraph());
 
-    renderGroup();
+    await renderGroup();
+    // Once the graph loads, the picker footer ALWAYS mounts the apply button
+    // (disabled until a selection exists) — under v2 the old `.not.toBeInTheDocument()`
+    // only ever passed against the pre-fetch loading DOM. Assert the real loaded-page
+    // invariant: the button is present but disabled before any column is selected.
     await expect
       .element(page.getByRole("button", { name: "Add to project" }))
-      .not.toBeInTheDocument();
+      .toBeDisabled();
     await page.getByRole("checkbox", { name: /Inkjan/ }).click();
     const add = page.getByRole("button", { name: "Add to project" });
     await expect.element(add).toBeEnabled();
@@ -1068,7 +1072,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     vi.mocked(getConceptGroup).mockResolvedValue(node());
     vi.mocked(getConceptGroupGraph).mockResolvedValue(twoSingleColGraph());
 
-    renderGroup();
+    await renderGroup();
 
     await expect.element(page.getByText("Technical details")).toBeVisible();
     const disclosure = document.querySelector<HTMLDetailsElement>(
@@ -1135,7 +1139,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
       ]),
     );
 
-    renderGroup({
+    await renderGroup({
       provider: "scb",
       register: "iot",
       key: "disponibel-inkomst",
@@ -1230,7 +1234,11 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
       ]),
     );
 
-    renderGroup({ provider: "scb", register: "moms", key: "naringsgren" });
+    await renderGroup({
+      provider: "scb",
+      register: "moms",
+      key: "naringsgren",
+    });
 
     // Ng0 / Ng1 are single-column compact rows led by the column rendered as a
     // COLUMN CHIP (the prominent selection signal); the constant concept name is NOT
@@ -1326,7 +1334,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
       ]),
     );
 
-    renderGroup({
+    await renderGroup({
       provider: "scb",
       register: "iot",
       key: "disponibel-inkomst",
@@ -1395,7 +1403,11 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
       ]),
     );
 
-    renderGroup({ provider: "scb", register: "moms", key: "naringsgren" });
+    await renderGroup({
+      provider: "scb",
+      register: "moms",
+      key: "naringsgren",
+    });
 
     // Bands render, led by their columns; NO cluster heading at all.
     await expect
@@ -1453,7 +1465,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
       ]),
     );
 
-    renderGroup({
+    await renderGroup({
       provider: "scb",
       register: "forskoleklass",
       key: "utbildning",
@@ -1493,7 +1505,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     vi.mocked(getConceptGroup).mockResolvedValue(node());
     vi.mocked(getConceptGroupGraph).mockResolvedValue(twoSingleColGraph());
 
-    renderGroup();
+    await renderGroup();
 
     // The column chip ITSELF is the navigation link to the member's leaf FQID — there
     // is no separate "View ↗" link anymore.
@@ -1526,7 +1538,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     vi.mocked(getConceptGroup).mockResolvedValue(node());
     vi.mocked(getConceptGroupGraph).mockResolvedValue(twoMultiColGraph());
 
-    renderGroup();
+    await renderGroup();
 
     const titleLink = await vi.waitFor(() => {
       const el = document.querySelector<HTMLAnchorElement>(
@@ -1550,7 +1562,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     vi.mocked(getConceptGroup).mockResolvedValue(node());
     vi.mocked(getConceptGroupGraph).mockResolvedValue(twoMultiColGraph());
 
-    renderGroup();
+    await renderGroup();
 
     // The WHOLE subheading is a <label> wrapping the select-all checkbox: clicking it
     // (off the title link) toggles every column of that variable.
@@ -1584,7 +1596,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     vi.mocked(getConceptGroup).mockResolvedValue(node());
     vi.mocked(getConceptGroupGraph).mockResolvedValue(twoMultiColGraph());
 
-    renderGroup();
+    await renderGroup();
 
     const inkjanSub = await vi.waitFor(() => {
       const li = document
@@ -1664,7 +1676,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
       ]),
     );
 
-    renderGroup({
+    await renderGroup({
       provider: "scb",
       register: "fordonsreg",
       key: "naringsgren",
@@ -1712,7 +1724,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     vi.mocked(getConceptGroup).mockResolvedValue(node());
     vi.mocked(getConceptGroupGraph).mockResolvedValue(twoMultiColGraph());
 
-    renderGroup();
+    await renderGroup();
 
     // The inkjan column rows (by their column checkboxes) and the inkjan subhead label.
     const janA = await vi.waitFor(() => {
@@ -1769,7 +1781,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     vi.mocked(getConceptGroup).mockResolvedValue(node());
     vi.mocked(getConceptGroupGraph).mockResolvedValue(twoMultiColGraph());
 
-    renderGroup();
+    await renderGroup();
 
     const titleLink = await vi.waitFor(() => {
       const el = document.querySelector<HTMLAnchorElement>(
@@ -1831,7 +1843,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
       ]),
     );
 
-    renderGroup({
+    await renderGroup({
       provider: "scb",
       register: "fordonsreg",
       key: "naringsgren",
@@ -1885,7 +1897,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
       ]),
     );
 
-    renderGroup();
+    await renderGroup();
 
     // The shared block renders ABOVE the Technical details disclosure (not inside it).
     const sharedMeta = await vi.waitFor(() => {
@@ -1923,7 +1935,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     vi.mocked(getConceptGroup).mockResolvedValue(node());
     vi.mocked(getConceptGroupGraph).mockResolvedValue(twoSingleColGraph());
 
-    renderGroup();
+    await renderGroup();
 
     // Wait for the page to render (the picker rows, named by their delivery COLUMN
     // post-#901), then assert no shared block.
@@ -1980,7 +1992,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
       ]),
     );
 
-    renderGroup();
+    await renderGroup();
 
     // The page renders (picker rows present), but there is NO group-level shared block.
     await expect
@@ -2038,7 +2050,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
       ]),
     );
 
-    renderGroup();
+    await renderGroup();
 
     // BOTH members' distinct op-def text renders inline on their own band — NOT
     // deduped away (it's the distinguishing text, not shared concept text).
@@ -2063,7 +2075,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     vi.mocked(getConceptGroup).mockResolvedValue(node());
     vi.mocked(getConceptGroupGraph).mockResolvedValue(twoSingleColGraph());
 
-    renderGroup();
+    await renderGroup();
 
     // The bands render (rows named by their delivery column), but no op-def eyebrow.
     await expect
@@ -2112,7 +2124,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
       ]),
     );
 
-    renderGroup();
+    await renderGroup();
 
     // The member column renders; the non-member one does NOT.
     await expect
@@ -2190,7 +2202,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
       focus_id: null,
     });
 
-    renderGroup();
+    await renderGroup();
 
     await vi.waitFor(() => {
       if (!document.querySelector(".col-list")) {
@@ -2249,7 +2261,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
       focus_id: null,
     });
 
-    renderGroup();
+    await renderGroup();
 
     expect(document.querySelector(".graph-picker")).toBeNull();
     const emptyRow = page.getByRole("checkbox", { name: /EmptyCol/ });
@@ -2298,7 +2310,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
       ]),
     );
 
-    renderGroup();
+    await renderGroup();
 
     await expect
       .element(page.getByRole("checkbox", { name: /IncA/ }))
@@ -2314,7 +2326,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     vi.mocked(getConceptGroup).mockResolvedValue(node());
     vi.mocked(getConceptGroupGraph).mockResolvedValue(twoSingleColGraph());
 
-    renderGroup();
+    await renderGroup();
 
     // The chip link keeps the window the user narrowed the group to.
     const janLink = await vi.waitFor(() => {
@@ -2335,7 +2347,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     vi.mocked(getConceptGroup).mockResolvedValue(node());
     vi.mocked(getConceptGroupGraph).mockResolvedValue(twoSingleColGraph());
 
-    renderGroup();
+    await renderGroup();
 
     const janLink = await vi.waitFor(() => {
       const el = document.querySelector<HTMLAnchorElement>(
@@ -2355,7 +2367,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     vi.mocked(getConceptGroupGraph).mockResolvedValue(twoSingleColGraph());
     const navSpy = vi.spyOn(router, "navigate");
 
-    renderGroup();
+    await renderGroup();
 
     const janLink = await vi.waitFor(() => {
       const el = document.querySelector<HTMLAnchorElement>(
@@ -2393,7 +2405,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     vi.mocked(getConceptGroupGraph).mockResolvedValue(twoSingleColGraph());
     const navSpy = vi.spyOn(router, "navigate");
 
-    renderGroup();
+    await renderGroup();
 
     const janLink = await vi.waitFor(() => {
       const el = document.querySelector<HTMLAnchorElement>(
@@ -2501,7 +2513,7 @@ describe("ConceptGroupView per-column facet labels (#678 finding 4)", () => {
     vi.mocked(getConceptGroup).mockResolvedValue(twoFacetMembersOneFqid());
     vi.mocked(getConceptGroupGraph).mockResolvedValue(dispinkGraph());
 
-    renderGroup();
+    await renderGroup();
 
     // Both columns render as picker rows (a multi-column member → a subheading over
     // two column rows).
@@ -2584,7 +2596,11 @@ describe("ConceptGroupView picker dimension filters (#908/#931)", () => {
     vi.mocked(getConceptGroup).mockResolvedValue(dimensionNode());
     vi.mocked(getConceptGroupGraph).mockResolvedValue(dimensionGraph());
 
-    renderGroup({ provider: "scb", register: "rams", key: "dimensioned" });
+    await renderGroup({
+      provider: "scb",
+      register: "rams",
+      key: "dimensioned",
+    });
 
     expect(await filterLegends()).toEqual(["Level", "Variant", "Coding"]);
   });
@@ -2611,7 +2627,11 @@ describe("ConceptGroupView picker dimension filters (#908/#931)", () => {
     );
     vi.mocked(getConceptGroupGraph).mockResolvedValue(dimensionGraph());
 
-    renderGroup({ provider: "scb", register: "rams", key: "dimensioned" });
+    await renderGroup({
+      provider: "scb",
+      register: "rams",
+      key: "dimensioned",
+    });
 
     await vi.waitFor(() => {
       if (!document.querySelector(".col-row.single")) {
@@ -2629,7 +2649,11 @@ describe("ConceptGroupView picker dimension filters (#908/#931)", () => {
     );
     vi.mocked(getConceptGroupGraph).mockResolvedValue(dimensionGraph());
 
-    renderGroup({ provider: "scb", register: "rams", key: "dimensioned" });
+    await renderGroup({
+      provider: "scb",
+      register: "rams",
+      key: "dimensioned",
+    });
 
     expect(await filterLegends()).toEqual(["Level"]);
   });
@@ -2643,7 +2667,7 @@ describe("ConceptGroupView ?member= focus highlight (#678 finding 5)", () => {
     vi.mocked(getConceptGroupGraph).mockResolvedValue(twoSingleColGraph());
     router.navigate("/catalog/group/scb/rams/ink?member=inkfeb");
 
-    renderGroup();
+    await renderGroup();
 
     const focused = await vi.waitFor(() => {
       const el = document.querySelector(".col-row.single.focused");
@@ -2661,7 +2685,7 @@ describe("ConceptGroupView ?member= focus highlight (#678 finding 5)", () => {
     vi.mocked(getConceptGroup).mockResolvedValue(node());
     vi.mocked(getConceptGroupGraph).mockResolvedValue(twoSingleColGraph());
 
-    renderGroup();
+    await renderGroup();
 
     await vi.waitFor(() => {
       if (document.querySelectorAll(".col-row.single").length < 2) {
@@ -2688,7 +2712,7 @@ describe("ConceptGroupView ?member= focus highlight (#678 finding 5)", () => {
     });
     router.navigate("/catalog/group/scb/rams/ink?member=inkfeb");
 
-    renderGroup();
+    await renderGroup();
 
     const focusedLink = await vi.waitFor(() => {
       const el = document.querySelector<HTMLAnchorElement>(
@@ -2731,7 +2755,7 @@ describe("ConceptGroupView ?member= focus highlight (#678 finding 5)", () => {
     });
     router.navigate("/catalog/group/scb/rams/ink?member=inkfeb");
 
-    renderGroup();
+    await renderGroup();
 
     await vi.waitFor(() => {
       if (!document.querySelector(".col-list")) {
@@ -2840,7 +2864,7 @@ describe("ConceptGroupView inter-variable succession fold (#902)", () => {
       "/catalog/group/scb/iot/faceted-succession?member=dispink-old",
     );
 
-    renderGroup({
+    await renderGroup({
       provider: "scb",
       register: "iot",
       key: "faceted-succession",
@@ -2864,7 +2888,7 @@ describe("ConceptGroupView inter-variable succession fold (#902)", () => {
     vi.mocked(getConceptGroupGraph).mockResolvedValue(successionGraph());
     router.navigate("/catalog/group/scb/iot/disponibel-inkomst");
 
-    renderGroup({
+    await renderGroup({
       provider: "scb",
       register: "iot",
       key: "disponibel-inkomst",
@@ -2908,7 +2932,7 @@ describe("ConceptGroupView inter-variable succession fold (#902)", () => {
     });
     router.navigate("/catalog/group/scb/iot/disponibel-inkomst");
 
-    renderGroup({
+    await renderGroup({
       provider: "scb",
       register: "iot",
       key: "disponibel-inkomst",
@@ -2961,7 +2985,7 @@ describe("ConceptGroupView inter-variable succession fold (#902)", () => {
     vi.mocked(getConceptGroupGraph).mockResolvedValue(successionGraph());
     router.navigate("/catalog/group/scb/iot/faceted-succession");
 
-    renderGroup({
+    await renderGroup({
       provider: "scb",
       register: "iot",
       key: "faceted-succession",
@@ -2988,7 +3012,7 @@ describe("ConceptGroupView inter-variable succession fold (#902)", () => {
     vi.mocked(getConceptGroupGraph).mockResolvedValue(successionGraph());
     router.navigate("/catalog/group/scb/iot/disponibel-inkomst");
 
-    renderGroup({
+    await renderGroup({
       provider: "scb",
       register: "iot",
       key: "disponibel-inkomst",
@@ -3021,7 +3045,7 @@ describe("ConceptGroupView inter-variable succession fold (#902)", () => {
       "/catalog/group/scb/iot/disponibel-inkomst?period=2010..2012",
     );
 
-    renderGroup({
+    await renderGroup({
       provider: "scb",
       register: "iot",
       key: "disponibel-inkomst",
@@ -3084,7 +3108,7 @@ describe("ConceptGroupView inter-variable succession fold (#902)", () => {
     });
     router.navigate("/catalog/group/scb/iot/g");
 
-    renderGroup({ provider: "scb", register: "iot", key: "g" });
+    await renderGroup({ provider: "scb", register: "iot", key: "g" });
 
     // The predecessor still renders its own selectable row (not folded away), and there
     // is no history disclosure.
@@ -3186,7 +3210,7 @@ describe("ConceptGroupView inter-variable succession fold (#902)", () => {
     });
     router.navigate("/catalog/group/scb/iot/disponibel-inkomst");
 
-    renderGroup({
+    await renderGroup({
       provider: "scb",
       register: "iot",
       key: "disponibel-inkomst",
@@ -3230,7 +3254,7 @@ describe("ConceptGroupView inter-variable succession fold (#902)", () => {
     vi.mocked(getConceptGroupGraph).mockResolvedValue(g);
     router.navigate("/catalog/group/scb/iot/disponibel-inkomst");
 
-    renderGroup({
+    await renderGroup({
       provider: "scb",
       register: "iot",
       key: "disponibel-inkomst",

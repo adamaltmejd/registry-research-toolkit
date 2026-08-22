@@ -175,6 +175,10 @@ describe("SearchView — typed result groups (#379)", () => {
     setQuery("kon");
     await render(SearchView);
 
+    // Poll until the async search results have rendered before the sync queries.
+    await expect
+      .element(page.getByRole("heading", { name: "Top results" }))
+      .toBeVisible();
     const headings = Array.from(document.querySelectorAll("h2")).map((h) =>
       h.textContent?.trim(),
     );
@@ -243,6 +247,10 @@ describe("SearchView — typed result groups (#379)", () => {
     setQuery("näringsgren");
     await render(SearchView);
 
+    // Poll until the async search results have rendered before the sync queries.
+    await expect
+      .element(page.getByRole("heading", { name: "Top results" }))
+      .toBeVisible();
     const row = document.querySelector<HTMLElement>(
       ".search-view .top-results .group-result-row",
     );
@@ -369,6 +377,10 @@ describe("SearchView — typed result groups (#379)", () => {
     setQuery("man");
     await render(SearchView);
 
+    // Poll until the async search results have rendered before the sync queries.
+    await expect
+      .element(page.getByRole("heading", { name: "Top results" }))
+      .toBeVisible();
     const row = document.querySelector<HTMLElement>(
       ".search-view .top-results .single-code-row",
     );
@@ -472,6 +484,10 @@ describe("SearchView — typed result groups (#379)", () => {
     setQuery("fedunsatreason");
     await render(SearchView);
 
+    // Poll until the async search results have rendered before the sync queries.
+    await expect
+      .element(page.getByRole("heading", { name: "Variables" }))
+      .toBeVisible();
     const links = document.querySelectorAll<HTMLAnchorElement>(
       ".search-view a.row-link[href='/catalog/scb/aes/formal-utbildning']",
     );
@@ -508,6 +524,10 @@ describe("SearchView — typed result groups (#379)", () => {
     setQuery("fedunsatreason");
     await render(SearchView);
 
+    // Poll until the async search results have rendered before the sync queries.
+    await expect
+      .element(page.getByRole("heading", { name: "Variables" }))
+      .toBeVisible();
     const detail = document.querySelector<HTMLElement>(
       ".search-view .result-detail",
     );
@@ -1010,6 +1030,10 @@ describe("SearchView — typed result groups (#379)", () => {
     setQuery("ink");
     await render(SearchView);
 
+    // Poll until the async search results have rendered before the sync queries.
+    await expect
+      .element(page.getByRole("heading", { name: "Variables" }))
+      .toBeVisible();
     // The group itself keeps a primary link to the first-class group page; no
     // inline disclosure is reintroduced in search results.
     const row = document.querySelector<HTMLElement>(
@@ -1075,6 +1099,10 @@ describe("SearchView — typed result groups (#379)", () => {
     setQuery("disp");
     await render(SearchView);
 
+    // Poll until the async search results have rendered before the sync queries.
+    await expect
+      .element(page.getByRole("heading", { name: "Variables" }))
+      .toBeVisible();
     expect(
       document.querySelector(
         ".search-view .group-result-row a.row-link[href='/catalog/group/scb/lisa/dispink']",
@@ -1720,6 +1748,10 @@ describe("SearchView — compact per-type tables (#808)", () => {
     setQuery("kon");
     await render(SearchView);
 
+    // Poll until the async search results have rendered before the sync queries.
+    await expect
+      .element(page.getByRole("heading", { name: "Registers" }))
+      .toBeVisible();
     const row = document.querySelector<HTMLAnchorElement>(
       ".search-view .group a.leaf-row[href='/catalog/scb/lisa']",
     );
@@ -1801,6 +1833,10 @@ describe("SearchView — compact per-type tables (#808)", () => {
     setQuery("raks");
     await render(SearchView);
 
+    // Poll until the async search results have rendered before the sync queries.
+    await expect
+      .element(page.getByRole("heading", { name: "Variables" }))
+      .toBeVisible();
     const link = document.querySelector<HTMLAnchorElement>(
       ".search-view a.row-link[href='/catalog/scb/lisa/raks-andelutbbidrink']",
     );
@@ -1860,6 +1896,10 @@ describe("SearchView — compact per-type tables (#808)", () => {
     setQuery("kon");
     await render(SearchView);
 
+    // Poll until the async search results have rendered before the sync queries.
+    await expect
+      .element(page.getByRole("heading", { name: "Variables" }))
+      .toBeVisible();
     const link = document.querySelector<HTMLAnchorElement>(
       ".search-view a.row-link[href='/catalog/scb/lisa/kon']",
     );
@@ -1886,6 +1926,10 @@ describe("SearchView — compact per-type tables (#808)", () => {
     setQuery("kon");
     await render(SearchView);
 
+    // Poll until the async search results have rendered before the sync queries.
+    await expect
+      .element(page.getByRole("heading", { name: "Classifications" }))
+      .toBeVisible();
     // Scope by the classification href; several groups share the same row class.
     const row = document.querySelector<HTMLAnchorElement>(
       ".search-view a.leaf-row[href='/catalog/class/sun2020']",
@@ -1905,6 +1949,10 @@ describe("SearchView — compact per-type tables (#808)", () => {
     setQuery("kon");
     await render(SearchView);
 
+    // Poll until the async search results have rendered before the sync queries.
+    await expect
+      .element(page.getByRole("heading", { name: "Registers" }))
+      .toBeVisible();
     // The registers group renders the same one-column grid table as variables,
     // NOT a DataTable and not a split name/description table.
     const grid = document.querySelector(".search-view .children.table.cols-1");
@@ -1990,6 +2038,10 @@ describe("SearchView — compact per-type tables (#808)", () => {
     } as unknown as SearchResponse);
     setQuery("for");
     const view = await render(SearchView);
+    // Poll until the async search results have rendered before the sync queries.
+    await expect
+      .element(page.getByRole("heading", { name: "Variables" }))
+      .toBeVisible();
 
     // The mobile breakpoint must be active for the bounded track to apply — pin the
     // precondition so a viewport-config change can't silently no-op this regression.

@@ -31,7 +31,7 @@ describe("Panel", () => {
     const meta = createRawSnippet(() => ({
       render: () => "<span>12 codes</span>",
     }));
-    const { container } = render(Panel, {
+    const { container } = await render(Panel, {
       title: "Codes",
       meta,
       children: body("x"),
@@ -41,15 +41,15 @@ describe("Panel", () => {
   });
 
   it("omits the meta wrapper when absent", async () => {
-    const { container } = render(Panel, {
+    const { container } = await render(Panel, {
       title: "Codes",
       children: body("x"),
     });
     expect(container.querySelector(".panel-meta")).toBeNull();
   });
 
-  it("can render a flush body for integrated lists", () => {
-    const { container } = render(Panel, {
+  it("can render a flush body for integrated lists", async () => {
+    const { container } = await render(Panel, {
       title: "Variables",
       flush: true,
       children: body("x"),

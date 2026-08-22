@@ -16,23 +16,23 @@ describe("Tag", () => {
   });
 
   it("applies the categorical tone class", async () => {
-    const { container } = render(Tag, { tone: "var", children: label });
+    const { container } = await render(Tag, { tone: "var", children: label });
     expect(container.querySelector(".tag")).toHaveClass("tone-var");
   });
 
   it("defaults to the neutral tone", async () => {
-    const { container } = render(Tag, { children: label });
+    const { container } = await render(Tag, { children: label });
     expect(container.querySelector(".tag")).toHaveClass("tone-neutral");
   });
 
   it("mono-faces a code-like tag", async () => {
-    const { container } = render(Tag, { mono: true, children: label });
+    const { container } = await render(Tag, { mono: true, children: label });
     expect(container.querySelector(".tag")).toHaveClass("mono");
   });
 
   it("renders a leading glyph for status tones, hidden from a11y", async () => {
     const glyph = createRawSnippet(() => ({ render: () => "<span>✕</span>" }));
-    const { container } = render(Tag, {
+    const { container } = await render(Tag, {
       tone: "error",
       glyph,
       children: label,

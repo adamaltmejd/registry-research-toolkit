@@ -109,29 +109,29 @@ Tell the user exactly what to do:
 > **Next steps on MONA:**
 >
 > 1. Upload `mdw_runner.py` to MONA via **My Files** and move it from your Inkorg into
->   the project folder.
+>    the project folder.
 > 2. Open the bundle in Notepad++ and edit the `configure()` block at the top to return
->   the list of sources you want to aggregate. The file has inline examples for
->   `file_source(...)` and `sql_source(...)`. If you don't know what's available yet,
->   return one bare source with no filters to trigger discovery — for example
->   `return [sql_source(dsn="P{num}")]` or
->   `return [file_source(path=r"\\micro.intra\projekt\P{num}$\P{num}_Data")]`. On the
->   first run the bundle writes a `mdw_sources_<timestamp>.py` sidecar listing every
->   discoverable file and SQL view, then exits. (Returning `[]` is an error, not
->   discovery — the bundle exits with a message asking you to populate `configure()` or
->   drop a sidecar.)
+>    the list of sources you want to aggregate. The file has inline examples for
+>    `file_source(...)` and `sql_source(...)`. If you don't know what's available yet,
+>    return one bare source with no filters to trigger discovery — for example
+>    `return [sql_source(dsn="P{num}")]` or
+>    `return [file_source(path=r"\\micro.intra\projekt\P{num}$\P{num}_Data")]`. On the
+>    first run the bundle writes a `mdw_sources_<timestamp>.py` sidecar listing every
+>    discoverable file and SQL view, then exits. (Returning `[]` is an error, not
+>    discovery — the bundle exits with a message asking you to populate `configure()` or
+>    drop a sidecar.)
 > 3. Open the **Batch client**, choose **Python**, select `mdw_runner.py`, and run it.
 > 4. The bundle writes `mdw_step3_stats.json` next to itself. (If discovery ran, edit
->   the new `mdw_sources_<timestamp>.py` sidecar and re-run the bundle — the sidecar
->   overrides `configure()` automatically.)
+>    the new `mdw_sources_<timestamp>.py` sidecar and re-run the bundle — the sidecar
+>    overrides `configure()` automatically.)
 > 5. Review `mdw_step3_stats.json` in Notepad++ before export. It must contain only
->   aggregate statistics such as counts, shares, value frequencies, or year coverage
->   summaries. Do **not** export the file if you see personal identifiers, row-level
->   records, names, addresses, free-text fields, exact dates of birth, lists of
->   households, or anything else that looks like data about identifiable people rather
->   than aggregates. If an individual field is unsafe but the rest of the file is fine,
->   replace that field with `null`. If the problem is broader than that, stop and fix
->   the extraction before exporting anything.
+>    aggregate statistics such as counts, shares, value frequencies, or year coverage
+>    summaries. Do **not** export the file if you see personal identifiers, row-level
+>    records, names, addresses, free-text fields, exact dates of birth, lists of
+>    households, or anything else that looks like data about identifiable people rather
+>    than aggregates. If an individual field is unsafe but the rest of the file is fine,
+>    replace that field with `null`. If the problem is broader than that, stop and fix
+>    the extraction before exporting anything.
 > 6. Export the file via the file exporter and download it from **My Files**.
 > 7. Place `mdw_step3_stats.json` in `{projdir}/` and return to this skill.
 

@@ -16,7 +16,7 @@ import type { Column } from "./types";
 // (5) responsive stacking hooks — explicit ARIA roles (kept across the CSS
 // display change) + per-cell `data-label` + the `.first` primary-column marker.
 
-// Row fixtures are typed concretely. vitest-browser-svelte's `render(Component,
+// Row fixtures are typed concretely. vitest-browser-svelte's `await render(Component,
 // props)` can't infer the `Row` generic from the props (unlike `<DataTable .. />`
 // in a .svelte file, where Svelte infers it) — `render` fixes `Row` to the
 // component's DEFAULT instantiation (`object`, whose `keyof & string` is `never`),
@@ -38,8 +38,8 @@ interface TableProps<R extends object> {
   framed?: boolean;
 }
 
-function renderTable<R extends object>(props: TableProps<R>) {
-  return render(DataTable as unknown as Component<TableProps<R>>, props);
+async function renderTable<R extends object>(props: TableProps<R>) {
+  return await render(DataTable as unknown as Component<TableProps<R>>, props);
 }
 
 const columns: Column<Row>[] = [
@@ -60,7 +60,7 @@ const twoColumnColumns: Column<Row>[] = [
 
 describe("DataTable", () => {
   it("renders micro-label column headers with scope", async () => {
-    const { container } = renderTable({ columns, rows });
+    const { container } = await renderTable({ columns, rows });
     const headers = container.querySelectorAll("thead th");
     expect(headers).toHaveLength(3);
     for (const th of headers) {
@@ -72,7 +72,7 @@ describe("DataTable", () => {
   });
 
   it("right-aligns + mono-faces a numeric column", async () => {
-    const { container } = renderTable({ columns, rows });
+    const { container } = await renderTable({ columns, rows });
     // The numeric "Count" cell (3rd col) of the first data row.
     const firstRowCells = container.querySelectorAll("tbody tr:first-child td");
     const countCell = firstRowCells[2];
@@ -91,7 +91,7 @@ describe("DataTable", () => {
     const cell = createRawSnippet(() => ({
       render: () => "<span>custom</span>",
     }));
-    const { container } = renderTable({ columns, rows, cell });
+    const { container } = await renderTable({ columns, rows, cell });
     // Every cell routes through the snippet → no raw value text.
     expect(container.querySelectorAll("tbody td").length).toBeGreaterThan(0);
     await expect.element(page.getByText("custom").first()).toBeVisible();
@@ -103,7 +103,7 @@ describe("DataTable", () => {
     // keeps valid table semantics. Without selection props the table is a plain
     // `role="table"` (not grid); rows are `role="row"`; cells are `role="cell"`
     // (not gridcell); and rows are NOT a tab stop / not aria-selected.
-    const { container } = renderTable({ columns, rows });
+    const { container } = await renderTable({ columns, rows });
     const table = container.querySelector("table");
     expect(table).toHaveAttribute("role", "table");
     const tr = container.querySelector("tbody tr");
@@ -132,7 +132,7 @@ describe("DataTable", () => {
     // a `::before` prefix sourced from `data-label`; the primary (first) column is
     // the card title, marked `.first` with no prefix. Assert the DOM hooks the CSS
     // relies on (the `@media` rendering itself is environment-CSS, not asserted).
-    const { container } = renderTable({ columns, rows });
+    const { container } = await renderTable({ columns, rows });
     const firstRowCells = container.querySelectorAll("tbody tr:first-child td");
     expect(firstRowCells[0]).toHaveAttribute("data-label", "Code");
     expect(firstRowCells[0]).toHaveClass("first");
@@ -157,7 +157,7 @@ describe("DataTable", () => {
     // viewport afterward so the narrow size doesn't leak into sibling tests.
     await page.viewport(600, 800);
     try {
-      const { container } = renderTable({ columns, rows });
+      const { container } = await renderTable({ columns, rows });
       const countCell = container.querySelector<HTMLElement>(
         "tbody tr:first-child td.align-end",
       );
@@ -173,7 +173,7 @@ describe("DataTable", () => {
   it("keeps one visible header row for framed tables in the narrow layout", async () => {
     await page.viewport(600, 800);
     try {
-      const { container } = renderTable({ columns, rows, framed: true });
+      const { container } = await renderTable({ columns, rows, framed: true });
       const table = container.querySelector("table.data-table");
       expect(table).toHaveClass("framed");
 
@@ -193,7 +193,7 @@ describe("DataTable", () => {
   it("renders framed two-column narrow rows as flat one-column rows", async () => {
     await page.viewport(600, 800);
     try {
-      const { container } = renderTable({
+      const { container } = await renderTable({
         columns: twoColumnColumns,
         rows,
         framed: true,
@@ -239,7 +239,7 @@ describe("DataTable", () => {
       { key: "label", label: "Label" },
       { key: "count", label: "Count", numeric: true },
     ];
-    const withWidth = renderTable({ columns: widthColumns, rows });
+    const withWidth = await renderTable({ columns: widthColumns, rows });
     expect(withWidth.container.querySelector("thead th")).toHaveAttribute(
       "style",
       expect.stringContaining("width: 8rem"),
@@ -247,7 +247,7 @@ describe("DataTable", () => {
     // The standard fixture pins no width, so the floor stays in force. The CSS
     // guard keys off `width` appearing in the style attribute, not the attribute
     // being absent — so assert the style carries no `width`, not that it's empty.
-    const noWidth = renderTable({ columns, rows });
+    const noWidth = await renderTable({ columns, rows });
     const noWidthStyle = noWidth.container
       .querySelector("thead th")
       ?.getAttribute("style");
@@ -256,7 +256,7 @@ describe("DataTable", () => {
 
   it("makes rows selectable grid-rows when selection props are passed", async () => {
     let selected = "";
-    const { container } = renderTable({
+    const { container } = await renderTable({
       columns,
       rows,
       getRowId: (r: Row) => String(r.code),
@@ -290,7 +290,7 @@ describe("DataTable", () => {
           ? '<a href="/catalog/scb/lisa">open LISA</a>'
           : "<span>plain</span>",
     }));
-    const { container } = renderTable({
+    const { container } = await renderTable({
       columns,
       rows,
       cell,
@@ -327,7 +327,7 @@ describe("DataTable", () => {
           ? '<a href="/catalog/scb/lisa">open LISA</a>'
           : "<span>plain</span>",
     }));
-    const { container } = renderTable({
+    const { container } = await renderTable({
       columns,
       rows,
       cell,
@@ -358,7 +358,7 @@ describe("DataTable", () => {
           ? '<a href="/catalog/scb/lisa">open LISA</a>'
           : "<span>selectable text</span>",
     }));
-    const { container } = renderTable({
+    const { container } = await renderTable({
       columns,
       rows,
       cell,
@@ -393,7 +393,7 @@ describe("DataTable", () => {
           ? '<a href="/catalog/scb/lisa">open LISA</a>'
           : "<span>plain</span>",
     }));
-    const { container } = renderTable({
+    const { container } = await renderTable({
       columns,
       rows,
       cell,
@@ -439,7 +439,7 @@ describe("DataTable", () => {
     // renders the real CatalogNodeView snippet shape through the Svelte compiler
     // and asserts the empty cell genuinely matches `:empty` (the crux), while a
     // populated cell does not.
-    const { container } = render(DataTableEmptyCellHarness, {});
+    const { container } = await render(DataTableEmptyCellHarness, {});
     const noPurposeRow = container.querySelectorAll(
       "tbody tr",
     )[1] as HTMLElement;
@@ -468,7 +468,7 @@ describe("DataTable", () => {
     // interface satisfies but `Row extends Record<string, unknown>` did NOT, so
     // this whole suite would fail `bun run check` if Fix 1 regressed. (renderTable
     // can't carry that proof: it casts the component, bypassing the constraint.)
-    render(DataTableInterfaceRowHarness, {});
+    await render(DataTableInterfaceRowHarness, {});
     await expect.element(page.getByText("Stockholm")).toBeVisible();
     await expect.element(page.getByText("01")).toBeVisible();
   });
@@ -486,7 +486,7 @@ describe("DataTable", () => {
       },
     }));
     let selected = "";
-    const { container } = renderTable({
+    const { container } = await renderTable({
       columns,
       rows,
       cell,

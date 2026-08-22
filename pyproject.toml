@@ -43,7 +43,14 @@ target-version = "py314"
 # into TYPE_CHECKING blocks and only works without breaking runtime annotations
 # when `from __future__ import annotations` is in effect (already adopted in
 # 89/98 .py files in this workspace).
-extend-select = [
+# Ruff 0.16 expanded the default rule set (59 → 413 rules); pin the pre-0.16
+# defaults (E4/E7/E9/F) explicitly so the tool bump stays behavior-stable.
+# Adopting the new defaults is a separate cleanup (~170 manual findings).
+select = [
+  "E4",
+  "E7",
+  "E9",
+  "F",
   "W",    # pycodestyle warnings
   "I",    # isort
   "UP",   # pyupgrade
@@ -59,6 +66,10 @@ extend-select = [
   "NPY",  # numpy
   "FURB", # refurb
 ]
+# ISC004 (new in ruff 0.16's ISC group) flags the deliberate wrapped-long-string
+# pattern used throughout (56 sites); parenthesizing them is churn with no
+# missing-comma signal here. Revisit with the default-rules adoption follow-up.
+ignore = ["ISC004"]
 
 [tool.ruff.lint.isort]
 # Merge `from X import a` + `from X import b as c` into one block. Default

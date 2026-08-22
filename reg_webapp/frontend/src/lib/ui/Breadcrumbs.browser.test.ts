@@ -31,7 +31,7 @@ describe("Breadcrumbs", () => {
   });
 
   it("marks the last item as the current page", async () => {
-    const { container } = render(Breadcrumbs, { items });
+    const { container } = await render(Breadcrumbs, { items });
     const current = container.querySelector('[aria-current="page"]');
     expect(current).not.toBeNull();
     expect(current?.textContent).toBe("LISA");
@@ -45,7 +45,7 @@ describe("Breadcrumbs", () => {
       { label: "SCB" }, // no href, non-final → plain span, no aria-current
       { label: "LISA", href: "/catalog/scb/lisa" },
     ];
-    const { container } = render(Breadcrumbs, { items: withPlainMiddle });
+    const { container } = await render(Breadcrumbs, { items: withPlainMiddle });
     // Exactly one current node, and it's the last item.
     const currents = container.querySelectorAll('[aria-current="page"]');
     expect(currents).toHaveLength(1);

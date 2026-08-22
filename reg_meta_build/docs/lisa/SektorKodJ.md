@@ -103,8 +103,8 @@ erhåller näringsgrenskod utifrån den verksamhet kategorin omfattar:
 - Lärare som omväxlande vikarierar vid olika skolor (SNI92 = 80100, SNI2002 = 80102,
   SNI2007 = 85201)
 
-- Förskollärare/barnskötare som omväxlande vikarierar vid olika förskolor/daghem (SNI92
-  = 85321, SNI2002 = 80101, SNI2007 = 85100)
+- Förskollärare/barnskötare som omväxlande vikarierar vid olika förskolor/daghem (SNI92 =
+  85321, SNI2002 = 80101, SNI2007 = 85100)
 
 - Kommunala dagbarnvårdare (SNI92 = 85322, SNI2002 = 85322, SNI2007 = 88910)
 

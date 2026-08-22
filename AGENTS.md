@@ -92,7 +92,7 @@ lead's altitude / plan-time duties) and the implementer role (the leaf craft).
   for new deps; uv writes to the right PEP 735 group. Hand-editing is fine for bumping
   an existing constraint (then `uv lock`).
 - One-off tools (not project deps): `uvx --from <package> <tool>` — e.g.
-  `uvx --from pre-commit==4.6.0 pre-commit run --all-files`.
+  `uvx --from pre-commit==4.6.2 pre-commit run --all-files`.
 - Refresh lockfile with `uv lock --upgrade`; CI uses `uv sync --frozen`.
 - 7-day minimum release age is project policy: `exclude-newer = "7 days"` in the root
   `pyproject.toml` `[tool.uv]`, recorded in `uv.lock`'s `[options]` block. It applies on
@@ -146,7 +146,7 @@ the cross-package invariants and each `<package>/DESIGN.md` for the detail;
   (dev-only) is used for property-based tests on invariant-heavy surfaces
   (`test_*_properties.py` in `reg_meta` and `reg_meta_build`), additive to the
   example/snapshot suites.
-- **Type checking**: `uvx --from ty==0.0.54 ty check` (Astral, beta). Blocking in CI;
+- **Type checking**: `uvx --from ty==0.0.72 ty check` (Astral, beta). Blocking in CI;
   pinned via `uvx` so CI, pre-commit, and cached Codex environments use the same
   checker. `ty` moves quickly, so bump this pin deliberately/frequently. Not a dev dep —
   keep `pyproject.toml` clean.
@@ -164,9 +164,9 @@ the cross-package invariants and each `<package>/DESIGN.md` for the detail;
 
 - `uv run ruff check` — python lint
 - `uv run ruff format --check` — python format check
-- `uvx --from panache-cli==2.59.0 panache format --check .` — markdown format check
+- `uvx --from panache-cli==3.4.0 panache format --check .` — markdown format check
   (config in `.panache.toml`; drop `--check` to fix)
-- `uvx --from panache-cli==2.59.0 panache lint --check .` — markdown lint
+- `uvx --from panache-cli==3.4.0 panache lint .` — markdown lint
 - `uv run python -m pytest` — all tests (pytest discovers per-package via root pyproject
   `testpaths`)
 - `uv run python -m pytest reg_meta/` — narrow to a single package

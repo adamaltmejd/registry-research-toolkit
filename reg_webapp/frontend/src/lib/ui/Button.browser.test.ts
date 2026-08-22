@@ -13,7 +13,7 @@ function label(text: string) {
 
 describe("Button", () => {
   it("renders a button with the variant + size class", async () => {
-    const { container } = render(Button, {
+    const { container } = await render(Button, {
       variant: "primary",
       size: "sm",
       children: label("Add"),
@@ -25,7 +25,7 @@ describe("Button", () => {
   });
 
   it("renders an anchor when href is set", async () => {
-    const { container } = render(Button, {
+    const { container } = await render(Button, {
       href: "/catalog",
       children: label("Browse"),
     });
@@ -49,7 +49,7 @@ describe("Button", () => {
 
   it("does not fire onclick when disabled", async () => {
     let clicked = 0;
-    const { container } = render(Button, {
+    const { container } = await render(Button, {
       disabled: true,
       onclick: () => {
         clicked += 1;
@@ -66,7 +66,7 @@ describe("Button", () => {
   it("forwards native attributes onto the element (Fix 3)", async () => {
     // Migrated callers need aria-label (icon buttons), title, etc. — `...rest`
     // spreads them onto Bits UI's Button.Root.
-    const { container } = render(Button, {
+    const { container } = await render(Button, {
       "aria-label": "Close panel",
       title: "Close",
       children: label("×"),
@@ -77,7 +77,7 @@ describe("Button", () => {
   });
 
   it("merges a caller class with the variant/size hook (Fix 3)", async () => {
-    const { container } = render(Button, {
+    const { container } = await render(Button, {
       variant: "ghost",
       class: "my-layout",
       children: label("Go"),

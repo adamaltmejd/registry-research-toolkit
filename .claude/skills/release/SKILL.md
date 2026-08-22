@@ -139,7 +139,7 @@ bash scripts/check_versions.sh
 uv run python -m pytest <package>/ -x -q
 uv run ruff check
 uv run ruff format --check
-uvx --from ty==0.0.54 ty check
+uvx --from ty==0.0.72 ty check
 ```
 
 This pytest is a fast per-package pre-flight; the **full** suite runs at push time (step

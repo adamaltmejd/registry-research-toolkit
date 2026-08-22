@@ -1432,7 +1432,7 @@ class Catalog:
             if len(component) < 2:
                 continue
             heads = sorted(v for v in component if not outgoing.get(v))
-            family_key = heads[0] if heads else sorted(component)[0]
+            family_key = heads[0] if heads else min(component)
             labels = [
                 by_slug[v]["display_group"] or by_slug[v]["name"] or v
                 for v in sorted(component)
@@ -1870,7 +1870,7 @@ class Catalog:
                 if (key := _classification_family_key(slug)) is not None
             }
             if keys:
-                key = sorted(keys)[0]
+                key = min(keys)
                 slugs_by_key.setdefault(key, set()).update(slugs)
 
         families: list[ClassificationFamilySummary] = []

@@ -4,3 +4,6 @@ dist/
 # Vitest browser-mode run artifacts (transient): failure screenshots + attachments.
 __screenshots__/
 .vitest-attachments/
+
+# svelte-check --tsgo emission cache (transient).
+.svelte-check/

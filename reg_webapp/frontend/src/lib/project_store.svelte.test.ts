@@ -1050,7 +1050,9 @@ describe("stable client-side ids (issue #200)", () => {
       projectStore.updateField("sources", [
         { name: "only", register_variant: "", period: "", bindings: [] },
       ]);
-      expect((projectStore.draft?.sources as unknown[]).length).toBe(1);
+      expect(
+        (projectStore.draft?.sources as unknown[] | undefined)?.length,
+      ).toBe(1);
       expect(projectStore.sourceId(0)).toBeTruthy();
       // The rebuilt mirror has exactly one entry → index 1 falls back to the index.
       expect(projectStore.sourceId(1)).toBe("i1");

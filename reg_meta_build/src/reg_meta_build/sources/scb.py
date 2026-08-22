@@ -2184,7 +2184,7 @@ def _resolve_column_year(
     vs_min: dict[int, int] = {}
     for vs, gks in nonnull.items():
         vs_min[vs] = min(
-            (groups[gk].regver_min for gk in gks if groups[gk].regver_min is not None),
+            (rv for gk in gks if (rv := groups[gk].regver_min) is not None),
             default=1 << 30,
         )
     latest = max(vs_min.values())
@@ -2281,7 +2281,7 @@ def _resolve_column_year(
     vs_max: dict[int, int] = {}
     for vs, gks in nonnull.items():
         vs_max[vs] = max(
-            (groups[gk].regver_max for gk in gks if groups[gk].regver_max is not None),
+            (rv for gk in gks if (rv := groups[gk].regver_max) is not None),
             default=-1,
         )
     top_max = max(vs_max.values())
@@ -2762,7 +2762,9 @@ def _coalesce_variable_states(
                     # only on value_set/grain/vintage), so the cap could keep
                     # different entries depending on un-ORDER-BY'd source-query
                     # order. Dropped before the sample is stored.
-                    "_gk": gk,
+                    # Pre-stringified here so the sort key below stays a plain
+                    # tuple-of-str lookup.
+                    "_gk": tuple("" if x is None else str(x) for x in gk),
                 }
             )
     # Sort BEFORE capping so the sample membership is row-order-independent
@@ -2775,7 +2777,7 @@ def _coalesce_variable_states(
             e["register_id"],
             e["var_id"],
             str(e["column"]),
-            tuple("" if x is None else str(x) for x in e["_gk"]),
+            e["_gk"],
         )
     )
     type_class_fold_sample = [

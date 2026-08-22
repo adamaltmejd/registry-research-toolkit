@@ -94,7 +94,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
       plainState,
       state({ ...plainState, state_id: 4, valid_from: "1968-01-01" }),
     ];
-    render(ValueSetView, { states, narrowed: false });
+    await render(ValueSetView, { states, narrowed: false });
     expect(document.querySelectorAll(".vs-list > li")).toHaveLength(2);
   });
 
@@ -124,7 +124,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
       }),
     ];
 
-    render(ValueSetView, { states, narrowed: false });
+    await render(ValueSetView, { states, narrowed: false });
 
     expect(document.querySelectorAll(".vs-list > li")).toHaveLength(1);
     await expect.element(page.getByText("fedunsatreason_1")).toBeVisible();
@@ -167,7 +167,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
       }),
     ];
 
-    render(ValueSetView, { states, narrowed: false });
+    await render(ValueSetView, { states, narrowed: false });
 
     expect(document.querySelectorAll(".vs-list > li")).toHaveLength(1);
     await expect.element(page.getByText("month_jan")).toBeVisible();
@@ -210,7 +210,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
       }),
     ];
 
-    render(ValueSetView, { states, narrowed: false });
+    await render(ValueSetView, { states, narrowed: false });
 
     await expect.element(page.getByText("reason (2010)")).toBeVisible();
     await expect.element(page.getByText("Early definition")).toBeVisible();
@@ -219,7 +219,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
   });
 
   it("a classification value set shows the '= LKF ⟨vintage⟩' link, NOT a code dump", async () => {
-    render(ValueSetView, {
+    await render(ValueSetView, {
       states: [classState, plainState],
       narrowed: false,
     });
@@ -230,7 +230,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
   });
 
   it("warns on nonconforming codes while keeping a classification link", async () => {
-    render(ValueSetView, {
+    await render(ValueSetView, {
       states: [
         state({
           ...classState,
@@ -259,7 +259,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
   });
 
   it("shows severed classification evidence on the plain value-set row", async () => {
-    render(ValueSetView, {
+    await render(ValueSetView, {
       states: [
         state({
           value_set_id: 300,
@@ -299,7 +299,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
 
   it("a plain value set exposes its codes inline (expandable), not the classification link", async () => {
     // ≥2 states → the multi-state union (one state alone is single-state DETAIL).
-    render(ValueSetView, {
+    await render(ValueSetView, {
       states: [plainState, classState],
       narrowed: false,
     });
@@ -312,7 +312,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
   });
 
   it("a dense integer value set renders as a range, not an expandable code dump", async () => {
-    render(ValueSetView, {
+    await render(ValueSetView, {
       states: [ageState, plainState],
       narrowed: false,
     });
@@ -323,7 +323,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
   });
 
   it("single-state dense integer detail renders the same range summary", async () => {
-    render(ValueSetView, { states: [ageState], narrowed: false });
+    await render(ValueSetView, { states: [ageState], narrowed: false });
     expect(normalizedText(".vs-numeric-range")).toContain(
       "Integer values 0-20 (21 values)",
     );
@@ -339,7 +339,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
       state({ ...classState, state_id: 9, value_set_id: 101 }), // SAME edition, distinct id
       plainState,
     ];
-    render(ValueSetView, { states, narrowed: false });
+    await render(ValueSetView, { states, narrowed: false });
     expect(document.querySelectorAll(".vs-list > li")).toHaveLength(2);
     // Exactly one "= LKF 2007" link (no duplicate row).
     expect(
@@ -366,7 +366,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
       valid_from: "1971-01-01",
       valid_to: "1973-12-31",
     });
-    render(ValueSetView, { states: [a, b], narrowed: false });
+    await render(ValueSetView, { states: [a, b], narrowed: false });
     const labels = [...document.querySelectorAll(".vs-label")].map(
       (el) => el.textContent,
     );
@@ -377,7 +377,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
   });
 
   it("per-row Isolate focuses one value set; '← All value sets' returns to the union", async () => {
-    render(ValueSetView, {
+    await render(ValueSetView, {
       states: [classState, plainState],
       narrowed: false,
     });
@@ -394,7 +394,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
   });
 
   it("the FilterInput narrows the union list (by label / variant slug)", async () => {
-    render(ValueSetView, {
+    await render(ValueSetView, {
       states: [classState, plainState],
       narrowed: false,
     });
@@ -414,7 +414,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
     // unfiltered list. If isolation keyed on a list INDEX, the filtered row's
     // index 0 would wrongly isolate `classState` (= LKF 2007); keying on the
     // stable `vs.key` isolates the right one.
-    render(ValueSetView, {
+    await render(ValueSetView, {
       states: [classState, plainState],
       narrowed: false,
     });
@@ -450,7 +450,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
       value_set_version_label: "Other",
       variant: "a",
     });
-    render(ValueSetView, {
+    await render(ValueSetView, {
       states: [codeless, other],
       narrowed: false,
     });
@@ -465,7 +465,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
     // #905: the old variant / value-set-version chips moved to RepresentationPicker.
     // The viewer is pure display — no `.picker` fieldset, regardless of variant
     // multiplicity.
-    render(ValueSetView, {
+    await render(ValueSetView, {
       states: [classState, plainState], // distinct variants doda / fodda
       narrowed: false,
     });
@@ -495,7 +495,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
         delivery_column_name: "KOMMUN_ID",
       }),
     ];
-    render(ValueSetView, { states, narrowed: false });
+    await render(ValueSetView, { states, narrowed: false });
     await expect
       .element(
         page.getByText(
@@ -514,7 +514,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
       valid_from: "2008-01-01",
       valid_to: "2008-12-31",
     });
-    render(ValueSetView, {
+    await render(ValueSetView, {
       states: [classState, inScopePlain, plainState],
       scopeStates: [classState, inScopePlain],
       narrowed: true,
@@ -548,7 +548,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
       valid_from: "2008-01-01",
       valid_to: "2008-12-31",
     });
-    render(ValueSetView, {
+    await render(ValueSetView, {
       states: [classState, inScopePlain, plainState],
       scopeStates: [classState, inScopePlain],
       narrowed: true,
@@ -562,7 +562,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
   });
 
   it("single-state DETAIL mode is unchanged (Variant / Valid / value set)", async () => {
-    render(ValueSetView, {
+    await render(ValueSetView, {
       states: [
         state({
           variant: "doda",
@@ -582,7 +582,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
   });
 
   it("single-state detail omits default/noise rows and wholly unknown windows", async () => {
-    render(ValueSetView, {
+    await render(ValueSetView, {
       states: [
         state({
           variant: "_default",
@@ -606,7 +606,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
   });
 
   it("multi-state usage omits default/noise labels and wholly unknown windows", async () => {
-    render(ValueSetView, {
+    await render(ValueSetView, {
       states: [
         state({
           state_id: 10,
@@ -641,7 +641,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
   });
 
   it("empty mode is unchanged (clean no-state message, not an error)", async () => {
-    render(ValueSetView, { states: [], narrowed: true });
+    await render(ValueSetView, { states: [], narrowed: true });
     await expect
       .element(page.getByText("No state delivered for this period."))
       .toBeVisible();
@@ -660,7 +660,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
       valid_from: "2007-01-01",
       valid_to: "2010-12-31",
     });
-    render(ValueSetView, {
+    await render(ValueSetView, {
       states: [lone],
       scopeStates: [], // the period delivered ZERO of this variable's states
       narrowed: true,
@@ -690,7 +690,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
       valid_from: "2007-01-01",
       valid_to: "2010-12-31",
     });
-    render(ValueSetView, {
+    await render(ValueSetView, {
       states: [lone],
       scopeStates: [lone],
       narrowed: true,
@@ -714,7 +714,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
       valid_from: "2008-01-01",
       valid_to: "2008-12-31",
     });
-    render(ValueSetView, {
+    await render(ValueSetView, {
       states: [classState, inScopePlain, plainState],
       scopeStates: [classState, inScopePlain],
       narrowed: true,
@@ -742,7 +742,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
     // one — the union list is hidden and the isolated detail shows it.
     const classCol = state({ ...classState, delivery_column_name: "CLASSCOL" });
     const plainCol = state({ ...plainState, delivery_column_name: "PLAINCOL" });
-    render(ValueSetView, {
+    await render(ValueSetView, {
       states: [classCol, plainCol],
       narrowed: false,
       focusColumn: "PLAINCOL",
@@ -778,7 +778,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
       valid_from: "2019-01-01",
       valid_to: "2022-12-31",
     });
-    render(ValueSetView, {
+    await render(ValueSetView, {
       states: [early, latest],
       narrowed: false,
       focusColumn: "COL",
@@ -816,7 +816,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
       valid_from: "2010-01-01",
       valid_to: "2012-12-31",
     });
-    const { rerender } = render(ValueSetView, {
+    const { rerender } = await render(ValueSetView, {
       states: [first, firstOther],
       narrowed: false,
       focusColumn: "COL",
@@ -881,7 +881,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
       valid_from: "1990-01-01",
       valid_to: "1995-12-31",
     });
-    render(ValueSetView, {
+    await render(ValueSetView, {
       states: [inPeriodCol, outOfPeriodCol],
       // scopeStates covers ONLY the in-period value set.
       scopeStates: [inPeriodCol],
@@ -905,7 +905,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
     // union list, not a blank isolated detail.
     const classCol = state({ ...classState, delivery_column_name: "CLASSCOL" });
     const plainCol = state({ ...plainState, delivery_column_name: "PLAINCOL" });
-    render(ValueSetView, {
+    await render(ValueSetView, {
       states: [classCol, plainCol],
       narrowed: false,
       focusColumn: "NOPE",
@@ -937,7 +937,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
       valid_from: "2019-01-01",
       valid_to: "2022-12-31",
     });
-    const { rerender } = render(ValueSetView, {
+    const { rerender } = await render(ValueSetView, {
       states: [a, b],
       narrowed: false,
       focusColumn: "COL",

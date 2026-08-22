@@ -35,7 +35,7 @@ function group(overrides: Partial<ConceptGroup> = {}): ConceptGroup {
 
 describe("ConceptGroupRow (#673 M6)", () => {
   it("href-mode renders a link with the summary, no <details>", async () => {
-    const { container } = render(ConceptGroupRow, {
+    const { container } = await render(ConceptGroupRow, {
       group: group(),
       href: "/catalog/group/scb/rams/ink",
     });
@@ -53,7 +53,7 @@ describe("ConceptGroupRow (#673 M6)", () => {
   });
 
   it("pick-mode keeps the inline <details> + member buttons even when href is also passed", async () => {
-    const { container } = render(ConceptGroupRow, {
+    const { container } = await render(ConceptGroupRow, {
       group: group(),
       href: "/catalog/group/scb/rams/ink",
       onpick: vi.fn(),
@@ -74,7 +74,7 @@ describe("ConceptGroupRow (#673 M6)", () => {
   });
 
   it("no-href + no-onpick keeps the inline <details> (browse, classification arm)", async () => {
-    const { container } = render(ConceptGroupRow, { group: group() });
+    const { container } = await render(ConceptGroupRow, { group: group() });
 
     // Neither href nor onpick → the existing inline <details> browse, no link.
     expect(container.querySelector("a.group-link")).toBeNull();
@@ -87,7 +87,7 @@ describe("ConceptGroupRow (#673 M6)", () => {
     // facet labels as chips — NOT drop to the bare-slug plain list (regression:
     // the old `axes.length === 1` chip branch fell through to the slug list for
     // an empty `axes`, hiding the curated labels).
-    render(ConceptGroupRow, {
+    await render(ConceptGroupRow, {
       // The axis-less caller (CatalogNodeView) passes `axisNoun([]) === "members"`.
       noun: "members",
       group: group({
@@ -179,7 +179,7 @@ function threeAxisGroup(): ConceptGroup {
 describe("ConceptGroupRow >2-axis navigator (#819 PR2)", () => {
   it("PICK mode renders every member as a pickable button (no matrix collapse/drop)", async () => {
     const onpick = vi.fn();
-    const { container } = render(ConceptGroupRow, {
+    const { container } = await render(ConceptGroupRow, {
       group: threeAxisGroup(),
       onpick,
     });
@@ -215,7 +215,7 @@ describe("ConceptGroupRow >2-axis navigator (#819 PR2)", () => {
   });
 
   it("axis identity on member tags is carried by TEXT, not color-only", async () => {
-    const { container } = render(ConceptGroupRow, {
+    const { container } = await render(ConceptGroupRow, {
       group: threeAxisGroup(),
       onpick: vi.fn(),
     });
@@ -236,7 +236,9 @@ describe("ConceptGroupRow >2-axis navigator (#819 PR2)", () => {
   });
 
   it("BROWSE mode (no href, no onpick) renders every member as a leaf link", async () => {
-    const { container } = render(ConceptGroupRow, { group: threeAxisGroup() });
+    const { container } = await render(ConceptGroupRow, {
+      group: threeAxisGroup(),
+    });
     expect(container.querySelector("table.facet-matrix")).toBeNull();
     await page.getByText("2 variables").click();
 
@@ -250,7 +252,7 @@ describe("ConceptGroupRow >2-axis navigator (#819 PR2)", () => {
   });
 
   it("a per-axis filter narrows the visible members without dropping any from the set", async () => {
-    const { container } = render(ConceptGroupRow, {
+    const { container } = await render(ConceptGroupRow, {
       group: threeAxisGroup(),
       onpick: vi.fn(),
     });
@@ -281,7 +283,7 @@ describe("ConceptGroupRow >2-axis navigator (#819 PR2)", () => {
   it("shows each member's delivery column so duplicate-coord members are distinguishable (#819 FIX B)", async () => {
     // The two scb/iot/dispink reps share fqid AND name; in pick mode (where the
     // user is CHOOSING a column) they must be told apart by their delivery column.
-    const { container } = render(ConceptGroupRow, {
+    const { container } = await render(ConceptGroupRow, {
       group: threeAxisGroup(),
       onpick: vi.fn(),
     });
@@ -351,7 +353,7 @@ function twoAxisCollidingGroup(): ConceptGroup {
 describe("ConceptGroupRow ≤2-axis colliding-coord navigator (#819 FIX C)", () => {
   it("routes a 2-axis group with shared-coordinate members through the navigator, dropping none", async () => {
     const onpick = vi.fn();
-    const { container } = render(ConceptGroupRow, {
+    const { container } = await render(ConceptGroupRow, {
       group: twoAxisCollidingGroup(),
       onpick,
     });
@@ -381,7 +383,7 @@ describe("ConceptGroupRow ≤2-axis colliding-coord navigator (#819 FIX C)", () 
   });
 
   it("keeps the matrix for a genuinely unique-coordinate 2-axis group (no regression)", async () => {
-    const { container } = render(ConceptGroupRow, {
+    const { container } = await render(ConceptGroupRow, {
       group: group({
         key: "agi",
         label: "AGI",

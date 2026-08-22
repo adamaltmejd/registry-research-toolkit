@@ -18,7 +18,7 @@ describe("EmptyState", () => {
   });
 
   it("omits the description when absent", async () => {
-    const { container } = render(EmptyState, { title: "Empty" });
+    const { container } = await render(EmptyState, { title: "Empty" });
     expect(container.querySelector(".description")).toBeNull();
   });
 
@@ -26,7 +26,7 @@ describe("EmptyState", () => {
     const action = createRawSnippet(() => ({
       render: () => "<button>Reset</button>",
     }));
-    const { container } = render(EmptyState, { title: "Empty", action });
+    const { container } = await render(EmptyState, { title: "Empty", action });
     expect(container.querySelector(".action")).not.toBeNull();
     await expect
       .element(page.getByRole("button", { name: "Reset" }))

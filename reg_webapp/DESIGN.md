@@ -42,8 +42,8 @@ The FastAPI lifespan opens reg_meta read-only through reg_meta's **own** helpers
 a hardcoded path:
 
 ```python
-db_path = reg_meta.db.db_path_from_args(None)   # REG_META_DB > XDG > platform
-conn = reg_meta.db.open_db(db_path)             # mode=ro + _check_schema_compat
+db_path = reg_meta.db.db_path_from_args(None)  # REG_META_DB > XDG > platform
+conn = reg_meta.db.open_db(db_path)  # mode=ro + _check_schema_compat
 ```
 
 `open_db` already opens `mode=ro` and runs `_check_schema_compat` — a real

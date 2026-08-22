@@ -6,7 +6,7 @@ import FilterInput from "./FilterInput.svelte";
 describe("FilterInput", () => {
   it("shows the result count only while filtering", async () => {
     // Empty value → plain full list, no count.
-    const { rerender } = render(FilterInput, {
+    const { rerender } = await render(FilterInput, {
       value: "",
       total: 740,
       shown: 740,
@@ -20,7 +20,7 @@ describe("FilterInput", () => {
   });
 
   it("autofocuses the input when asked", async () => {
-    render(FilterInput, {
+    await render(FilterInput, {
       value: "",
       total: 1,
       shown: 1,
@@ -36,7 +36,12 @@ describe("FilterInput", () => {
   });
 
   it("propagates typed text via the bound value", async () => {
-    render(FilterInput, { value: "", total: 1, shown: 1, label: "Filter" });
+    await render(FilterInput, {
+      value: "",
+      total: 1,
+      shown: 1,
+      label: "Filter",
+    });
     const input = page.getByRole("textbox", { name: "Filter" });
     await input.fill("kon");
     await expect.element(input).toHaveValue("kon");

@@ -23,7 +23,7 @@ describe("KeyValue", () => {
   });
 
   it("mono-faces a flagged value", async () => {
-    const { container } = render(KeyValue, {
+    const { container } = await render(KeyValue, {
       rows: [{ label: "Slug", value: "kon", mono: true }],
     });
     const monoDd = container.querySelector("dd.mono");
@@ -34,7 +34,7 @@ describe("KeyValue", () => {
   it("renders duplicate-label rows without crashing", async () => {
     // Keyed-each by index (not label) — two rows sharing a label must both render
     // rather than throw "Cannot have duplicate keys".
-    const { container } = render(KeyValue, {
+    const { container } = await render(KeyValue, {
       rows: [
         { label: "Type", value: "integer" },
         { label: "Type", value: "string" },
@@ -52,7 +52,7 @@ describe("KeyValue", () => {
     const value = createRawSnippet<[{ label: string }]>((getRow) => ({
       render: () => `<span class="rich">${getRow().label}-tag</span>`,
     }));
-    const { container } = render(KeyValue, {
+    const { container } = await render(KeyValue, {
       rows: [{ label: "Status" }],
       value,
     });

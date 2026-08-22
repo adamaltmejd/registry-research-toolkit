@@ -277,7 +277,7 @@ describe("BindingLeafView representation picker (#678)", () => {
       ],
     });
 
-    render(BindingLeafView, {
+    await render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
       node: node(single),
       ...SEED,
@@ -351,7 +351,7 @@ describe("BindingLeafView representation picker (#678)", () => {
       focus_id: "v1",
     } as RelationshipGraph as never);
 
-    render(BindingLeafView, {
+    await render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
       node: node(single),
       ...SEED,
@@ -407,7 +407,7 @@ describe("BindingLeafView representation picker (#678)", () => {
       focus_id: "v0",
     } as RelationshipGraph as never);
 
-    render(BindingLeafView, {
+    await render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
       node: node(single),
       ...SEED,
@@ -447,7 +447,7 @@ describe("BindingLeafView representation picker (#678)", () => {
       focus_id: "v1",
     } as RelationshipGraph as never);
 
-    render(BindingLeafView, {
+    await render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
       node: node(single),
       ...SEED,
@@ -505,7 +505,7 @@ describe("BindingLeafView representation picker (#678)", () => {
       focus_id: "v1",
     } as RelationshipGraph as never);
 
-    render(BindingLeafView, {
+    await render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
       node: node(single),
       ...SEED,
@@ -569,7 +569,7 @@ describe("BindingLeafView representation picker (#678)", () => {
     });
     vi.mocked(getBindingGraph).mockResolvedValue(openEnded as never);
 
-    render(BindingLeafView, {
+    await render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
       node: node([
         state({
@@ -599,7 +599,7 @@ describe("BindingLeafView representation picker (#678)", () => {
   });
 
   it("lists each representation row with its delivery column + period span", async () => {
-    render(BindingLeafView, {
+    await render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
       node: node(pickerStates),
       regMetaVersion: SEED.regMetaVersion,
@@ -630,7 +630,7 @@ describe("BindingLeafView representation picker (#678)", () => {
   });
 
   it("enables the add footer's Apply only once a row is staged", async () => {
-    render(BindingLeafView, {
+    await render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
       node: node(pickerStates),
       regMetaVersion: SEED.regMetaVersion,
@@ -657,7 +657,7 @@ describe("BindingLeafView representation picker (#678)", () => {
     // pickerStates is a 2-column variable (Kon/Sni → a subheading). Selecting ONE
     // column makes the variable's select-all indeterminate: native :indeterminate
     // (the dash), NOT :checked (so the accent-fill rule never applies).
-    render(BindingLeafView, {
+    await render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
       node: node(pickerStates),
       regMetaVersion: SEED.regMetaVersion,
@@ -692,7 +692,7 @@ describe("BindingLeafView representation picker (#678)", () => {
   });
 
   it("selecting rows + Apply commits the right staged diff", async () => {
-    render(BindingLeafView, {
+    await render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
       node: node(pickerStates),
       regMetaVersion: SEED.regMetaVersion,
@@ -750,7 +750,7 @@ describe("BindingLeafView representation picker (#678)", () => {
       );
     });
 
-    render(BindingLeafView, {
+    await render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
       node: node(foldedVariantStates),
       regMetaVersion: SEED.regMetaVersion,
@@ -814,7 +814,7 @@ describe("BindingLeafView representation picker (#678)", () => {
     });
     router.navigate("/catalog/scb/lisa/kon?period=1980");
 
-    render(BindingLeafView, {
+    await render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
       node: node(foldedVariantStates),
       regMetaVersion: SEED.regMetaVersion,
@@ -869,7 +869,7 @@ describe("BindingLeafView representation picker (#678)", () => {
       ]);
     });
 
-    render(BindingLeafView, {
+    await render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
       node: node(pickerStates),
       regMetaVersion: SEED.regMetaVersion,
@@ -912,7 +912,7 @@ describe("BindingLeafView representation picker (#678)", () => {
         }),
       ]),
     );
-    render(BindingLeafView, {
+    await render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
       node: node(pickerStates),
       regMetaVersion: SEED.regMetaVersion,
@@ -964,7 +964,7 @@ describe("BindingLeafView representation picker (#678)", () => {
       });
     });
 
-    render(BindingLeafView, {
+    await render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
       node: node(pickerStates),
       regMetaVersion: SEED.regMetaVersion,
@@ -1005,7 +1005,7 @@ describe("BindingLeafView representation picker (#678)", () => {
         },
       ],
     });
-    render(BindingLeafView, {
+    await render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
       node: node(pickerStates),
       regMetaVersion: SEED.regMetaVersion,
@@ -1053,7 +1053,7 @@ describe("BindingLeafView representation picker (#678)", () => {
     } as never);
     router.navigate("/catalog/scb/lisa/kon?period=2012..2014");
 
-    render(BindingLeafView, {
+    await render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
       node: node(pickerStates),
       regMetaVersion: SEED.regMetaVersion,
@@ -1090,7 +1090,7 @@ describe("BindingLeafView representation picker (#678)", () => {
     });
     router.navigate("/catalog/scb/lisa/kon?period=2020,2019");
 
-    render(BindingLeafView, {
+    await render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
       node: node(pickerStates),
       regMetaVersion: SEED.regMetaVersion,
@@ -1112,7 +1112,7 @@ describe("BindingLeafView representation picker (#678)", () => {
   it("does not clamp staged adds with a structurally invalid ?period", async () => {
     router.navigate("/catalog/scb/lisa/kon?period=2020,2019");
 
-    render(BindingLeafView, {
+    await render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
       node: node(pickerStates),
       regMetaVersion: SEED.regMetaVersion,
@@ -1166,7 +1166,7 @@ describe("BindingLeafView representation picker (#678)", () => {
         valid_to: "1995-12-31",
       }),
     ];
-    render(BindingLeafView, {
+    await render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
       node: node(renameStates),
       regMetaVersion: SEED.regMetaVersion,
@@ -1207,7 +1207,7 @@ describe("BindingLeafView representation picker (#678)", () => {
     } as never);
     // Kon spans 2010–2015; narrow to 2012..2014.
     router.navigate("/catalog/scb/lisa/kon?period=2012..2014");
-    render(BindingLeafView, {
+    await render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
       node: node(pickerStates),
       regMetaVersion: SEED.regMetaVersion,
@@ -1252,7 +1252,7 @@ describe("BindingLeafView representation picker (#678)", () => {
     vi.mocked(getCatalogNode).mockResolvedValue(statesResponse(longSpan));
     windowStore.set({ from: 1960, to: 2026 });
 
-    render(BindingLeafView, {
+    await render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
       node: node(longSpan),
       regMetaVersion: SEED.regMetaVersion,
@@ -1293,7 +1293,7 @@ describe("BindingLeafView representation picker (#678)", () => {
     vi.mocked(getCatalogNode).mockResolvedValue(statesResponse(longSpan));
     router.navigate("/catalog/scb/lisa/kon?period=1960..2026");
 
-    render(BindingLeafView, {
+    await render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
       node: node(longSpan),
       regMetaVersion: SEED.regMetaVersion,
@@ -1328,7 +1328,7 @@ describe("BindingLeafView representation picker (#678)", () => {
     } as never);
     router.navigate("/catalog/scb/lisa/kon?period=2018..2020");
 
-    render(BindingLeafView, {
+    await render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
       node: node(pickerStates),
       regMetaVersion: SEED.regMetaVersion,
@@ -1379,7 +1379,7 @@ describe("BindingLeafView representation picker (#678)", () => {
         valid_to: "2015-12-31",
       }),
     ];
-    render(BindingLeafView, {
+    await render(BindingLeafView, {
       fqidPath: "scb/fordonsreg/naringsgren",
       node: node(fordonsreg, { fqid: "scb/fordonsreg/naringsgren" }),
       regMetaVersion: SEED.regMetaVersion,
@@ -1457,7 +1457,7 @@ describe("BindingLeafView representation picker (#678)", () => {
         valid_to: "2020-12-31",
       }),
     ];
-    render(BindingLeafView, {
+    await render(BindingLeafView, {
       fqidPath: "scb/lisa/yrke",
       node: node(colVaries, { fqid: "scb/lisa/yrke", name: "Yrke" }),
       regMetaVersion: SEED.regMetaVersion,
@@ -1513,7 +1513,7 @@ describe("BindingLeafView representation picker (#678)", () => {
         valid_to: "2020-12-31",
       }),
     ];
-    render(BindingLeafView, {
+    await render(BindingLeafView, {
       fqidPath: "scb/fordonsreg/sni92",
       node: node(sni92, { fqid: "scb/fordonsreg/sni92", name: "Näringsgren" }),
       regMetaVersion: SEED.regMetaVersion,
@@ -1571,7 +1571,7 @@ describe("BindingLeafView representation picker (#678)", () => {
         valid_to: "2022-12-31",
       }),
     ];
-    render(BindingLeafView, {
+    await render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
       node: node(states),
       regMetaVersion: SEED.regMetaVersion,
@@ -1645,7 +1645,7 @@ describe("BindingLeafView representation picker (#678)", () => {
       }),
     ];
     router.navigate("/catalog/scb/lisa/kon?codes=ColA");
-    render(BindingLeafView, {
+    await render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
       node: node(states),
       regMetaVersion: SEED.regMetaVersion,
@@ -1688,7 +1688,7 @@ describe("BindingLeafView representation picker (#678)", () => {
       }),
     ];
     router.navigate("/catalog/scb/lisa/kon?codes=a%3A%3ACOL");
-    render(BindingLeafView, {
+    await render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
       node: node(states),
       regMetaVersion: SEED.regMetaVersion,
@@ -1719,7 +1719,7 @@ describe("BindingLeafView representation picker (#678)", () => {
         value_set_version_label: "1-siffrig",
       }),
     ];
-    render(BindingLeafView, {
+    await render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
       node: node(oneColumn),
       regMetaVersion: SEED.regMetaVersion,
@@ -1755,7 +1755,7 @@ describe("BindingLeafView representation picker (#678)", () => {
   });
 
   it("renders no picker when no state carries a delivery column", async () => {
-    render(BindingLeafView, {
+    await render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
       node: node(single),
       regMetaVersion: SEED.regMetaVersion,
@@ -1771,7 +1771,7 @@ describe("BindingLeafView representation picker (#678)", () => {
   });
 
   it("demotes Sensitive / Identifier into a 'Technical details' disclosure (#638 PR4)", async () => {
-    render(BindingLeafView, {
+    await render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
       node: node(single),
       regMetaVersion: SEED.regMetaVersion,
@@ -1798,7 +1798,7 @@ describe("BindingLeafView representation picker (#678)", () => {
   });
 
   it("renders thematic tag chips and recommendation notes", async () => {
-    render(BindingLeafView, {
+    await render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
       node: node(single, {
         tags: [
@@ -1824,7 +1824,7 @@ describe("BindingLeafView representation picker (#678)", () => {
   });
 
   it("demotes a single state's Data type / Delivery column into the bottom 'Technical details' disclosure (#1038)", async () => {
-    render(BindingLeafView, {
+    await render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
       node: node(singleWithStructural),
       regMetaVersion: SEED.regMetaVersion,
@@ -1860,7 +1860,7 @@ describe("BindingLeafView representation picker (#678)", () => {
   });
 
   it("Apply stays seed-gated (disabled) even when a row is staged, until the seed is present", async () => {
-    render(BindingLeafView, {
+    await render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
       node: node(pickerStates),
       regMetaVersion: "",
@@ -1911,7 +1911,7 @@ describe("BindingLeafView period-scoped value-set history (#744)", () => {
     } as never);
     router.navigate("/catalog/scb/lisa/kon?period=2007..2008");
 
-    render(BindingLeafView, {
+    await render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
       node: node([inA, inB, outside]),
       regMetaVersion: SEED.regMetaVersion,
@@ -1993,7 +1993,7 @@ describe("BindingLeafView period-scoped value-set history (#744)", () => {
       "/catalog/scb/lisa/kon?period=2007..2008&variant=individer",
     );
 
-    render(BindingLeafView, {
+    await render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
       node: node([inA, inB, samePeriodOtherVariant, outsideIndivider]),
       regMetaVersion: SEED.regMetaVersion,
@@ -2043,7 +2043,7 @@ describe("BindingLeafView period-scoped value-set history (#744)", () => {
     } as never);
     router.navigate("/catalog/scb/lisa/kon?period=2007");
 
-    render(BindingLeafView, {
+    await render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
       node: node([inA, samePeriodOtherVariant]),
       regMetaVersion: SEED.regMetaVersion,
@@ -2083,7 +2083,7 @@ describe("BindingLeafView period-scoped value-set history (#744)", () => {
     );
     router.navigate("/catalog/scb/lisa/kon?period=2007&variant=individer");
 
-    render(BindingLeafView, {
+    await render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
       node: node([picked, samePeriodOtherVariant]),
       regMetaVersion: SEED.regMetaVersion,
@@ -2125,7 +2125,7 @@ describe("BindingLeafView period-scoped value-set history (#744)", () => {
     });
     router.navigate("/catalog/scb/lisa/kon?period=2007&variant=individer");
 
-    render(BindingLeafView, {
+    await render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
       node: node([picked, otherVariant]),
       regMetaVersion: SEED.regMetaVersion,
@@ -2182,7 +2182,7 @@ describe("BindingLeafView period-scoped value-set history (#744)", () => {
     });
     router.navigate("/catalog/scb/lisa/kon?period=2007&variant=typo");
 
-    render(BindingLeafView, {
+    await render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
       node: node([individerCoding, otherCoding]),
       regMetaVersion: SEED.regMetaVersion,
@@ -2236,7 +2236,7 @@ describe("BindingLeafView member identity from graph focus (#670/#678)", () => {
       }) as never,
     );
 
-    render(BindingLeafView, {
+    await render(BindingLeafView, {
       fqidPath: groupedFqid,
       node: groupedNode,
       regMetaVersion: SEED.regMetaVersion,
@@ -2278,7 +2278,7 @@ describe("BindingLeafView member identity from graph focus (#670/#678)", () => {
       }) as never,
     );
 
-    render(BindingLeafView, {
+    await render(BindingLeafView, {
       fqidPath: groupedFqid,
       node: groupedNode,
       regMetaVersion: SEED.regMetaVersion,
@@ -2305,7 +2305,7 @@ describe("BindingLeafView member identity from graph focus (#670/#678)", () => {
       focusGraph({ fqid: "scb/rams/inkjan", facets: [] }) as never,
     );
 
-    render(BindingLeafView, {
+    await render(BindingLeafView, {
       fqidPath: groupedFqid,
       node: groupedNode,
       regMetaVersion: SEED.regMetaVersion,
@@ -2331,7 +2331,7 @@ describe("BindingLeafView member identity from graph focus (#670/#678)", () => {
       focusGraph({ facets: [] }) as never,
     );
 
-    render(BindingLeafView, {
+    await render(BindingLeafView, {
       fqidPath: groupedFqid,
       node: groupedNode,
       regMetaVersion: SEED.regMetaVersion,
@@ -2361,7 +2361,7 @@ describe("BindingLeafView member identity from graph focus (#670/#678)", () => {
       }) as never,
     );
 
-    render(BindingLeafView, {
+    await render(BindingLeafView, {
       fqidPath: groupedFqid,
       node: groupedNode,
       regMetaVersion: SEED.regMetaVersion,
@@ -2383,7 +2383,7 @@ describe("BindingLeafView member identity from graph focus (#670/#678)", () => {
   it("renders no identity row while the graph is loading (no transient slug flicker)", async () => {
     vi.mocked(getBindingGraph).mockReturnValue(new Promise(() => {}));
 
-    render(BindingLeafView, {
+    await render(BindingLeafView, {
       fqidPath: groupedFqid,
       node: groupedNode,
       regMetaVersion: SEED.regMetaVersion,
@@ -2405,7 +2405,7 @@ describe("BindingLeafView member identity from graph focus (#670/#678)", () => {
 
   it("an ungrouped variable renders neither qualifier nor group link", async () => {
     // Default beforeEach stubs an empty graph; the plain node has no group.
-    render(BindingLeafView, {
+    await render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
       node: node(single),
       regMetaVersion: SEED.regMetaVersion,
@@ -2426,7 +2426,7 @@ describe("BindingLeafView member identity from graph focus (#670/#678)", () => {
     // leaf — the header (node.name) still renders, the qualifier/link omitted.
     vi.mocked(getBindingGraph).mockRejectedValue(new Error("graph down"));
 
-    render(BindingLeafView, {
+    await render(BindingLeafView, {
       fqidPath: groupedFqid,
       node: groupedNode,
       regMetaVersion: SEED.regMetaVersion,

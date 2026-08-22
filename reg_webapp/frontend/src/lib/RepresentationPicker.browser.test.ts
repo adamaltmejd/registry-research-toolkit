@@ -258,7 +258,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
   it("uses the graph/time-band picker for a small edge-bearing variable graph", async () => {
     const onapply = vi.fn();
     const fixture = smallSuccessionFixture();
-    render(RepresentationPicker, {
+    await render(RepresentationPicker, {
       bands: fixture.bands,
       graph: fixture.graph,
       ...PROPS,
@@ -289,7 +289,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
     const aliasFqid = "scb/lisa/alias";
     const canonicalFqid = "scb/lisa/canonical";
     const successorFqid = "scb/lisa/successor";
-    render(RepresentationPicker, {
+    await render(RepresentationPicker, {
       bands: [
         {
           key: aliasFqid,
@@ -355,7 +355,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
     const aliasFqid = "scb/lisa/alias";
     const canonicalFqid = "scb/lisa/canonical";
     const successorFqid = "scb/lisa/successor";
-    render(RepresentationPicker, {
+    await render(RepresentationPicker, {
       bands: [
         {
           key: canonicalFqid,
@@ -414,7 +414,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
 
   it("renders leaf sibling graph context as unavailable cells outside the picker band", async () => {
     const fixture = smallSuccessionFixture();
-    render(RepresentationPicker, {
+    await render(RepresentationPicker, {
       bands: [fixture.bands[0]],
       graph: fixture.graph,
       ...PROPS,
@@ -438,7 +438,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
   it("renders graph context for a picker band with zero selectable rows", async () => {
     const aFqid = "scb/lisa/no-column";
     const bFqid = "scb/lisa/no-column-next";
-    render(RepresentationPicker, {
+    await render(RepresentationPicker, {
       bands: [
         {
           key: aFqid,
@@ -496,7 +496,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
   it("keeps empty group bands visible when no graph can render", async () => {
     const aFqid = "scb/lisa/empty-a";
     const bFqid = "scb/lisa/empty-b";
-    render(RepresentationPicker, {
+    await render(RepresentationPicker, {
       bands: [
         {
           key: aFqid,
@@ -532,7 +532,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
   it("renders uncolumned leaf graph cells beside selectable cells", async () => {
     const aFqid = "scb/lisa/mixed";
     const bFqid = "scb/lisa/mixed-next";
-    render(RepresentationPicker, {
+    await render(RepresentationPicker, {
       bands: [
         {
           key: aFqid,
@@ -605,7 +605,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
 
   it("renders edge-less selectable multi-run leaf graphs", async () => {
     const aFqid = "scb/lisa/renamed";
-    render(RepresentationPicker, {
+    await render(RepresentationPicker, {
       bands: [
         {
           key: aFqid,
@@ -669,7 +669,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
 
   it("draws same-variable representation edges between graph cells", async () => {
     const aFqid = "scb/lisa/renamed";
-    render(RepresentationPicker, {
+    await render(RepresentationPicker, {
       bands: [
         {
           key: aFqid,
@@ -753,7 +753,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
 
   it("hides representation edges when filters hide an endpoint cell", async () => {
     const aFqid = "scb/iot/filter-edge";
-    render(RepresentationPicker, {
+    await render(RepresentationPicker, {
       bands: [
         {
           key: aFqid,
@@ -859,7 +859,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
 
   it("draws round-trip representation edges to the resumed later cell", async () => {
     const aFqid = "scb/lisa/roundtrip";
-    render(RepresentationPicker, {
+    await render(RepresentationPicker, {
       bands: [
         {
           key: aFqid,
@@ -971,7 +971,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
   it("marks dead renamed predecessor lanes with the leaf slug and renamed hint", async () => {
     const liveFqid = "scb/lisa/sni2007";
     const deadFqid = "scb/lisa/sni92";
-    render(RepresentationPicker, {
+    await render(RepresentationPicker, {
       bands: [
         {
           key: liveFqid,
@@ -1039,7 +1039,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
     const onapply = vi.fn();
     const aFqid = "scb/lisa/a";
     const bFqid = "scb/lisa/b";
-    render(RepresentationPicker, {
+    await render(RepresentationPicker, {
       bands: [
         {
           key: aFqid,
@@ -1127,7 +1127,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
   it("labels a graph-matched folded variant-family row with its full family period", async () => {
     const predecessorFqid = "scb/lisa/kon-old";
     const currentFqid = "scb/lisa/kon";
-    render(RepresentationPicker, {
+    await render(RepresentationPicker, {
       bands: [
         {
           key: currentFqid,
@@ -1215,7 +1215,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
   it("matches every concrete variant graph cell for a folded family row", async () => {
     const onapply = vi.fn();
     const fqid = "scb/lisa/kon";
-    render(RepresentationPicker, {
+    await render(RepresentationPicker, {
       bands: [
         {
           key: fqid,
@@ -1312,7 +1312,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
   it("keeps predecessor variant cells in a folded family group graph projection", async () => {
     const familyFqid = "scb/lisa/kon";
     const successorFqid = "scb/lisa/kon-next";
-    render(RepresentationPicker, {
+    await render(RepresentationPicker, {
       bands: [
         {
           key: familyFqid,
@@ -1422,7 +1422,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
   it("keeps an open-start graph cell in-window before the finite graph floor", async () => {
     const aFqid = "scb/lisa/a";
     const bFqid = "scb/lisa/b";
-    render(RepresentationPicker, {
+    await render(RepresentationPicker, {
       bands: [
         {
           key: aFqid,
@@ -1492,7 +1492,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
     const onapply = vi.fn();
     const aFqid = "scb/lisa/a";
     const bFqid = "scb/lisa/b";
-    render(RepresentationPicker, {
+    await render(RepresentationPicker, {
       bands: [
         {
           key: aFqid,
@@ -1562,7 +1562,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
     const onapply = vi.fn();
     const aFqid = "scb/lisa/a";
     const bFqid = "scb/lisa/b";
-    render(RepresentationPicker, {
+    await render(RepresentationPicker, {
       bands: [
         {
           key: aFqid,
@@ -1630,7 +1630,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
   it("falls back when a graph node carries a separate non-member column run", async () => {
     const aFqid = "scb/lisa/a";
     const bFqid = "scb/lisa/b";
-    render(RepresentationPicker, {
+    await render(RepresentationPicker, {
       bands: [
         {
           key: aFqid,
@@ -1693,7 +1693,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
     const aFqid = "scb/lisa/a";
     const bFqid = "scb/lisa/b";
     const outsideFqid = "scb/lisa/outside";
-    render(RepresentationPicker, {
+    await render(RepresentationPicker, {
       bands: [
         {
           key: aFqid,
@@ -1743,7 +1743,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
   it("keeps graph mode while hiding graph members removed by filters", async () => {
     const aFqid = "scb/lisa/a";
     const bFqid = "scb/lisa/b";
-    render(RepresentationPicker, {
+    await render(RepresentationPicker, {
       bands: [
         {
           key: aFqid,
@@ -1851,7 +1851,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
         }) satisfies PickerBand,
     );
 
-    render(RepresentationPicker, {
+    await render(RepresentationPicker, {
       bands,
       axes: [{ name: "era", label: "Era" }],
       graphMemberHrefs: Object.fromEntries(
@@ -1894,7 +1894,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
     const aFqid = "scb/lisa/many-columns";
     const bFqid = "scb/lisa/successor";
     const columns = Array.from({ length: 50 }, (_, i) => `C${i}`);
-    render(RepresentationPicker, {
+    await render(RepresentationPicker, {
       bands: [
         {
           key: aFqid,
@@ -1994,7 +1994,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
   it("renders each graph cell's own era coding label", async () => {
     const aFqid = "scb/lisa/a";
     const bFqid = "scb/lisa/b";
-    render(RepresentationPicker, {
+    await render(RepresentationPicker, {
       bands: [
         {
           key: aFqid,
@@ -2067,7 +2067,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
   it("links a folded graph cell's codings-vary nudge to that cell's era column", async () => {
     const aFqid = "scb/lisa/a";
     const bFqid = "scb/lisa/b";
-    render(RepresentationPicker, {
+    await render(RepresentationPicker, {
       bands: [
         {
           key: aFqid,
@@ -2149,7 +2149,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
     // variant, NOT the head `row.variant` — else the predecessor cell would link to a
     // `(individer-15plus, Kon)` coding the successor never delivered in that era.
     const fqid = "scb/lisa/kon";
-    render(RepresentationPicker, {
+    await render(RepresentationPicker, {
       bands: [
         {
           key: fqid,
@@ -2249,7 +2249,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
   it("falls back when a graph cell has no unambiguous picker member row", async () => {
     const aFqid = "scb/lisa/a";
     const bFqid = "scb/lisa/b";
-    render(RepresentationPicker, {
+    await render(RepresentationPicker, {
       bands: [
         {
           key: aFqid,
@@ -2294,7 +2294,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
   it("falls back when a picker row has no graph cell coverage", async () => {
     const aFqid = "scb/lisa/a";
     const bFqid = "scb/lisa/b";
-    render(RepresentationPicker, {
+    await render(RepresentationPicker, {
       bands: [
         {
           key: aFqid,
@@ -2349,7 +2349,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
 
   it("keeps #908 dimension filters above graph mode", async () => {
     const band = multiAxisBand();
-    render(RepresentationPicker, {
+    await render(RepresentationPicker, {
       bands: [band],
       axes: AXES,
       graph: graph({
@@ -2409,7 +2409,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
   it("renders graph mode when a declared #908 facet axis has only one value", async () => {
     const aFqid = "scb/iot/dispink";
     const bFqid = "scb/iot/next";
-    render(RepresentationPicker, {
+    await render(RepresentationPicker, {
       bands: [
         {
           key: aFqid,
@@ -2464,7 +2464,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
   it("falls back when narrow selectable graph cells carry inline context", async () => {
     const aFqid = "scb/forskola/sun2000inr-prio";
     const bFqid = "scb/forskola/sun2000inr-next";
-    render(RepresentationPicker, {
+    await render(RepresentationPicker, {
       bands: [
         {
           key: aFqid,
@@ -2557,7 +2557,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
     const onapply = vi.fn();
     const aFqid = "scb/lisa/monthly";
     const bFqid = "scb/lisa/successor";
-    render(RepresentationPicker, {
+    await render(RepresentationPicker, {
       bands: [
         {
           key: aFqid,
@@ -2639,7 +2639,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
           rows: [row({ column: `C${i}` })],
         }) satisfies PickerBand,
     );
-    render(RepresentationPicker, {
+    await render(RepresentationPicker, {
       bands,
       graph: graph({
         nodes,
@@ -2660,7 +2660,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
 
 describe("RepresentationPicker dimension marking + filters (#908)", () => {
   it("renders a filter fieldset per discriminating dimension, naming its kind", async () => {
-    render(RepresentationPicker, {
+    await render(RepresentationPicker, {
       bands: [multiAxisBand()],
       axes: AXES,
       ...PROPS,
@@ -2701,7 +2701,7 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
   });
 
   it("renders global select-all as an integrated row with selected and indeterminate states", async () => {
-    render(RepresentationPicker, {
+    await render(RepresentationPicker, {
       bands: [
         multiAxisBand(),
         {
@@ -2754,7 +2754,7 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
   });
 
   it("a single-value group surfaces NO filter controls", async () => {
-    render(RepresentationPicker, {
+    await render(RepresentationPicker, {
       bands: [
         {
           key: "scb/x/y",
@@ -2776,7 +2776,7 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
   });
 
   it("selecting a facet value narrows the visible rows; clearing restores them", async () => {
-    render(RepresentationPicker, {
+    await render(RepresentationPicker, {
       bands: [multiAxisBand()],
       axes: AXES,
       ...PROPS,
@@ -2803,7 +2803,7 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
 
   it("filtering is presentation-only: a hidden selected column still commits, flagged in the footer", async () => {
     const onapply = vi.fn();
-    render(RepresentationPicker, {
+    await render(RepresentationPicker, {
       bands: [multiAxisBand()],
       axes: AXES,
       ...PROPS,
@@ -2847,7 +2847,7 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
 
   it("keeps staged rows when the parent rejects an async apply as stale", async () => {
     const onapply = vi.fn().mockResolvedValue(false);
-    render(RepresentationPicker, {
+    await render(RepresentationPicker, {
       bands: [multiAxisBand()],
       axes: AXES,
       ...PROPS,
@@ -2868,7 +2868,7 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
   });
 
   it("keeps the 'Will be added' status in the staged-add checkbox accessible name while showing the compact '1 Column' tag (#1115 a11y)", async () => {
-    render(RepresentationPicker, {
+    await render(RepresentationPicker, {
       bands: [multiAxisBand()],
       axes: AXES,
       ...PROPS,
@@ -2892,7 +2892,7 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
   });
 
   it("keeps nested row height stable when staging a pick (#1127)", async () => {
-    render(RepresentationPicker, {
+    await render(RepresentationPicker, {
       bands: [multiAxisBand()],
       axes: AXES,
       ...PROPS,
@@ -2955,7 +2955,7 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
       ],
     } satisfies PickerBand;
 
-    render(RepresentationPicker, {
+    await render(RepresentationPicker, {
       bands: [successor],
       ...PROPS,
       onapply,
@@ -2999,7 +2999,7 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
         }) satisfies PickerBand,
     );
 
-    render(RepresentationPicker, {
+    await render(RepresentationPicker, {
       bands: successors,
       ...PROPS,
       onapply,
@@ -3051,7 +3051,7 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
       ],
     } satisfies PickerBand;
 
-    render(RepresentationPicker, {
+    await render(RepresentationPicker, {
       bands: [successor],
       axes: [{ name: "era", label: "Era" }],
       ...PROPS,
@@ -3118,7 +3118,7 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
       rows: [row({ column: "DINFother" })],
     } satisfies PickerBand;
 
-    render(RepresentationPicker, {
+    await render(RepresentationPicker, {
       bands: [successor, sibling],
       ...PROPS,
       onapply,
@@ -3168,7 +3168,7 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
       ],
     } satisfies PickerBand;
 
-    render(RepresentationPicker, {
+    await render(RepresentationPicker, {
       bands: [successor],
       ...PROPS,
       onapply,
@@ -3224,7 +3224,7 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
       ],
     } satisfies PickerBand;
 
-    render(RepresentationPicker, {
+    await render(RepresentationPicker, {
       bands: [successor],
       axes: [{ name: "era", label: "Era" }],
       ...PROPS,
@@ -3252,7 +3252,7 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
 
   it("clears staged adds when a narrowed folded variant changes concrete segment", async () => {
     const onapply = vi.fn();
-    const { rerender } = render(RepresentationPicker, {
+    const { rerender } = await render(RepresentationPicker, {
       bands: [lisaNarrowedBand("individer-16plus")],
       ...PROPS,
       onapply,
@@ -3276,20 +3276,22 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
     let finishApply: () => void = () => {
       throw new Error("apply did not start");
     };
-    const applyStarted = new Promise<void>((started) => {
-      const onapply = vi.fn().mockImplementation(
-        () =>
-          new Promise<void>((resolve) => {
-            finishApply = resolve;
-            started();
-          }),
-      );
-      render(RepresentationPicker, {
-        bands: [multiAxisBand()],
-        axes: AXES,
-        ...PROPS,
-        onapply,
-      });
+    let started!: () => void;
+    const applyStarted = new Promise<void>((resolve) => {
+      started = resolve;
+    });
+    const onapply = vi.fn().mockImplementation(
+      () =>
+        new Promise<void>((resolve) => {
+          finishApply = resolve;
+          started();
+        }),
+    );
+    await render(RepresentationPicker, {
+      bands: [multiAxisBand()],
+      axes: AXES,
+      ...PROPS,
+      onapply,
     });
 
     await page.getByRole("checkbox", { name: /DIN1/ }).click();
@@ -3322,7 +3324,7 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
     const onapply = vi.fn();
     const band = multiAxisBand();
     const committedRows = committedRowsFor(band, band.rows[0]);
-    render(RepresentationPicker, {
+    await render(RepresentationPicker, {
       bands: [band],
       axes: AXES,
       ...PROPS,
@@ -3346,7 +3348,7 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
     const onapply = vi.fn();
     const band = multiAxisBand();
     const committedRows = committedRowsFor(band, band.rows[0]);
-    render(RepresentationPicker, {
+    await render(RepresentationPicker, {
       bands: [band],
       axes: AXES,
       ...PROPS,
@@ -3370,7 +3372,7 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
   it("labels staged footer actions by diff shape", async () => {
     const band = multiAxisBand();
     const committedRows = committedRowsFor(band, band.rows[0]);
-    render(RepresentationPicker, {
+    await render(RepresentationPicker, {
       bands: [band],
       axes: AXES,
       ...PROPS,
@@ -3406,7 +3408,7 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
       rows: [nonselectableCommitted, nonselectableUncommitted, base.rows[2]],
     };
     const committedRows = committedRowsFor(band, nonselectableCommitted);
-    render(RepresentationPicker, {
+    await render(RepresentationPicker, {
       bands: [band],
       axes: AXES,
       ...PROPS,
@@ -3453,7 +3455,7 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
         ];
       }),
     );
-    render(RepresentationPicker, {
+    await render(RepresentationPicker, {
       bands: [band],
       axes: AXES,
       ...PROPS,
@@ -3478,7 +3480,7 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
 
   it("toggle-all acts on visible rows only: a hidden-but-selected row survives select-all then deselect-all", async () => {
     const onapply = vi.fn();
-    render(RepresentationPicker, {
+    await render(RepresentationPicker, {
       bands: [multiAxisBand()],
       axes: AXES,
       ...PROPS,
@@ -3535,7 +3537,7 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
   });
 
   it("'No columns match' shows when a filter empties the list", async () => {
-    render(RepresentationPicker, {
+    await render(RepresentationPicker, {
       bands: [multiAxisBand()],
       axes: AXES,
       ...PROPS,
@@ -3569,7 +3571,7 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
   }
 
   it("band-level facets (whole-variable members) render the facet filter + per-row markers (C1)", async () => {
-    render(RepresentationPicker, {
+    await render(RepresentationPicker, {
       bands: [
         monthBand("jan", "JAN", "01", "January"),
         monthBand("feb", "FEB", "02", "February"),
@@ -3603,7 +3605,7 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
 
   it("suppresses repeated operational definitions and constant coding context when facets distinguish rows (#959)", async () => {
     const axes: GroupAxisModel[] = [{ name: "rank", label: "Rank" }];
-    render(RepresentationPicker, {
+    await render(RepresentationPicker, {
       bands: [
         {
           key: "scb/lisa/agi1faman",
@@ -3650,7 +3652,7 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
 
   it("keeps operational definitions when only a majority share an axis-carried stem (#959)", async () => {
     const axes: GroupAxisModel[] = [{ name: "rank", label: "Rank" }];
-    render(RepresentationPicker, {
+    await render(RepresentationPicker, {
       bands: [
         {
           key: "scb/lisa/first",
@@ -3699,7 +3701,7 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
   });
 
   it("keeps a unique operational definition when no facet axis carries the distinction (#959)", async () => {
-    render(RepresentationPicker, {
+    await render(RepresentationPicker, {
       bands: [
         {
           key: "scb/x/owner",
@@ -3738,7 +3740,7 @@ describe("codingsVaryNudge deep link (#905)", () => {
   /** Render one band whose single coding-varying row carries the nudge, then return
    * the nudge anchor's `href`. */
   async function nudgeHref(band: PickerBand): Promise<string> {
-    render(RepresentationPicker, { bands: [band], axes: [], ...PROPS });
+    await render(RepresentationPicker, { bands: [band], axes: [], ...PROPS });
     const nudge = await vi.waitFor(() => {
       const a = document.querySelector(".rep-picker .codings-vary");
       if (!a) {
@@ -3800,7 +3802,7 @@ describe("RepresentationPicker sequential-rename hint (#902)", () => {
   // pickerRepresentations; here we feed the collapsed `renamedColumns` directly to test
   // the render path (the `{@render renameHint(...)}` snippet) in isolation.
   it("renders a 'was <old>' hint for a collapsed rename, and none when empty", async () => {
-    render(RepresentationPicker, {
+    await render(RepresentationPicker, {
       bands: [
         {
           key: "scb/x/renamed",
@@ -3841,7 +3843,7 @@ describe("RepresentationPicker footer + row-height stability (#1115)", () => {
   it("keeps the footer rendered (Apply disabled) with nothing staged", async () => {
     // The footer is now ALWAYS present so picking a row can't pop it into
     // existence — it just enables the disabled Apply button.
-    render(RepresentationPicker, {
+    await render(RepresentationPicker, {
       bands: [lisaNarrowedBand("individer-16plus")],
       ...PROPS,
     });
@@ -3856,7 +3858,7 @@ describe("RepresentationPicker footer + row-height stability (#1115)", () => {
     // The #1115 regression: a Tag first appearing inline in the row grew the
     // row (Tag `line-height: 1.4` vs the row's centered 0.9rem primary). Its
     // height must be pixel-identical before and after staging.
-    render(RepresentationPicker, {
+    await render(RepresentationPicker, {
       bands: [lisaNarrowedBand("individer-16plus")],
       ...PROPS,
     });

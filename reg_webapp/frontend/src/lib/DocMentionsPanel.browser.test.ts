@@ -166,6 +166,8 @@ describe("DocMentionsPanel (#402)", () => {
     );
     await render(DocMentionsPanel, { node: node() });
 
+    // Poll until the async mentions fetch has rendered before the sync queries.
+    await expect.element(page.getByText("LISA — Kön")).toBeVisible();
     const highlight = document.querySelector(".mentions mark");
     expect(highlight?.textContent).toBe("kön");
     // The literal delimiter never reaches the DOM text.
@@ -195,6 +197,8 @@ describe("DocMentionsPanel (#402)", () => {
     );
     await render(DocMentionsPanel, { node: node() });
 
+    // Poll until the async mentions fetch has rendered before the sync queries.
+    await expect.element(page.getByText("LISA — Kön")).toBeVisible();
     expect(document.querySelector(".mentions em")?.textContent).toBe("below");
     expect(document.querySelector(".mentions mark")).toBeNull();
   });
@@ -219,6 +223,8 @@ describe("DocMentionsPanel (#402)", () => {
     );
     await render(DocMentionsPanel, { node: node() });
 
+    // Poll until the async mentions fetch has rendered before the sync queries.
+    await expect.element(page.getByText("LISA — Kön")).toBeVisible();
     expect(document.querySelector(".mentions mark")).toBeNull();
     expect(document.querySelector(".mentions em")).toBeNull();
     expect(document.querySelector(".hit-detail")?.textContent).toBe(
@@ -246,6 +252,8 @@ describe("DocMentionsPanel (#402)", () => {
     );
     await render(DocMentionsPanel, { node: node() });
 
+    // Poll until the async mentions fetch has rendered before the sync queries.
+    await expect.element(page.getByText("LISA — Kön")).toBeVisible();
     const marks = document.querySelectorAll(".mentions mark");
     expect(marks.length).toBe(2);
     expect(marks[0]?.textContent).toBe("kön");

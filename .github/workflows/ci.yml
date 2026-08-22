@@ -26,14 +26,14 @@ jobs:
       # bypassed locally with `--no-verify`. Covers panache + ty + ruff. The
       # pytest hook is pre-push-staged, so `pre-commit run` (pre-commit stage)
       # doesn't invoke it — the dedicated `test` job below is its CI home.
-      - run: uvx --from pre-commit==4.6.0 pre-commit run --all-files
+      - run: uvx --from pre-commit==4.6.2 pre-commit run --all-files
       # Type check via ty (Astral, beta). Pinned via uvx so CI, pre-commit,
       # and cached Codex environments resolve the same checker without making
       # ty a workspace dev dependency. ty moves quickly, so bump this pin
       # deliberately/frequently. Baseline triage landed (scripts/tests excluded,
       # structural.py validator-narrow noise suppressed via [tool.ty.overrides]
       # in pyproject.toml); the check is now blocking.
-      - run: uvx --from ty==0.0.54 ty check
+      - run: uvx --from ty==0.0.72 ty check
 
   check-versions:
     runs-on: ubuntu-latest

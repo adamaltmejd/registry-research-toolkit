@@ -7,7 +7,7 @@ import Skeleton from "./Skeleton.svelte";
 // variant drives the shape class.
 describe("Skeleton", () => {
   it("hides the placeholder from the a11y tree", async () => {
-    const { container } = render(Skeleton, {});
+    const { container } = await render(Skeleton, {});
     expect(container.querySelector(".skeleton-stack")).toHaveAttribute(
       "aria-hidden",
       "true",
@@ -15,17 +15,17 @@ describe("Skeleton", () => {
   });
 
   it("repeats the placeholder `count` times", async () => {
-    const { container } = render(Skeleton, { count: 3 });
+    const { container } = await render(Skeleton, { count: 3 });
     expect(container.querySelectorAll(".skeleton")).toHaveLength(3);
   });
 
   it("applies the variant class", async () => {
-    const { container } = render(Skeleton, { variant: "block" });
+    const { container } = await render(Skeleton, { variant: "block" });
     expect(container.querySelector(".skeleton")).toHaveClass("block");
   });
 
   it("applies an explicit width", async () => {
-    const { container } = render(Skeleton, { width: "12rem" });
+    const { container } = await render(Skeleton, { width: "12rem" });
     const el = container.querySelector(".skeleton") as HTMLElement;
     expect(el.style.width).toBe("12rem");
   });

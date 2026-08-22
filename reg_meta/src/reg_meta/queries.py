@@ -2615,19 +2615,19 @@ def _classification_editions(
             list(year_by_slug),
         ).fetchall()
     }
-    editions = [
+    return [
         {
             "slug": slug,
             "fqid": try_emit(Fqid.classification_fqid, slug),
             "name": name_by_slug.get(slug),
             "effective_year": year,
         }
-        for slug, year in year_by_slug.items()
+        # Terminal-first by BFS depth (depth 0 = terminal); slug a stable tiebreak
+        # among same-depth predecessors. Date-independent → robust to undated edges.
+        for slug, year in sorted(
+            year_by_slug.items(), key=lambda kv: (depth_by_slug[kv[0]], kv[0])
+        )
     ]
-    # Terminal-first by BFS depth (depth 0 = terminal); slug a stable tiebreak among
-    # same-depth predecessors. Date-independent → robust to undated edges.
-    editions.sort(key=lambda e: (depth_by_slug[e["slug"]], e["slug"]))
-    return editions
 
 
 def _fold_concept_groups(
@@ -2876,7 +2876,7 @@ def _group_member_in_delivery_scope(
     delivery_column_scope: Mapping[str, Collection[str | None]],
 ) -> bool:
     fqid = member.get("fqid")
-    if fqid not in delivery_column_scope:
+    if fqid is None or fqid not in delivery_column_scope:
         return False
     delivery_column = member.get("delivery_column")
     return delivery_column is None or delivery_column in delivery_column_scope[fqid]
