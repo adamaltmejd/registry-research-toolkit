@@ -608,22 +608,15 @@ class TestSearchIntegration:
 
     def test_search_doc_hint_when_truncated(self, combined_db_dir: str):
         """When doc results are cut off by limit, doc_hint should be in JSON data."""
-        # First verify docs exist for this query
-        docs_data, _ = _run_json(
-            ["--db", combined_db_dir, "docs", "search", "kommun"],
-        )
-        doc_count = docs_data.get("total_count", 0)
-        if doc_count <= 1:
-            pytest.skip("Not enough doc results to exercise truncation")
-
-        # Search with a one-row page so additional doc results are truncated.
+        # "variabel" matches three fixture docs (MappedVar, UnmappedVar and the
+        # methodology page), so a one-row page always truncates at least two.
         data, code = _run_json(
             [
                 "--db",
                 combined_db_dir,
                 "search",
                 "--query",
-                "kommun",
+                "variabel",
                 "--limit",
                 "1",
             ],
@@ -634,20 +627,23 @@ class TestSearchIntegration:
     def test_docs_do_not_displace_catalog_continuation(
         self, combined_db_dir: str
     ) -> None:
+        # "testreg" matches the fixture overview doc and the TESTREG register.
+        # The doc outranks the register, so a one-row page is all doc and the
+        # catalog row must survive as the continuation.
         first, code = _run_json(
             [
                 "--db",
                 combined_db_dir,
                 "search",
                 "--query",
-                "kommun",
+                "testreg",
                 "--limit",
                 "1",
             ]
         )
         assert code == 0
-        if not first["has_more"]:
-            pytest.skip("Fixture query has no displaced catalog continuation")
+        assert [r["type"] for r in first["results"]] == ["doc"]
+        assert first["has_more"]
         assert first["next_cursor"] is not None
 
         second, code = _run_json(
@@ -656,7 +652,7 @@ class TestSearchIntegration:
                 combined_db_dir,
                 "search",
                 "--query",
-                "kommun",
+                "testreg",
                 "--limit",
                 "1",
                 "--cursor",

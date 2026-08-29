@@ -165,17 +165,29 @@ bash scripts/check_versions.sh
 timeout_minutes = 20
 
 [checks.test]
-# simplify: exit-code evidence only, matching CI. test_report = "junit" is the
-# better gate (zero tests / any skip = missing evidence) but it surfaced two
-# permanently-skipped fixture-conditional tests in test_doc_commands.py that
-# must be fixed first; re-enable junit evidence in that ticket.
+# junit evidence: zero tests or any skip is missing evidence, so the optional
+# marker-gated suites are deselected rather than skipped — a deselected test
+# never enters the report, a conftest-skipped one does.
 command = '''sh -ec '
 export UV_CACHE_DIR=/opt/uv/cache UV_PYTHON_INSTALL_DIR=/opt/uv/python UV_LINK_MODE=copy
 uv sync --frozen --offline --no-install-workspace
 uv sync --frozen --offline --no-build-isolation
-uv run python -m pytest -q -n auto
+uv run python -m pytest -q -n auto -m "not integration and not release" --junitxml="$YARD_TEST_REPORT"
+# pytest puts totals on <testsuite>, not the <testsuites> root; the yard
+# junit reader wants them on the root — aggregate them up. (No apostrophes
+# in this block: it lives inside a single-quoted sh -ec string.)
+uv run python - <<PY
+import os, xml.etree.ElementTree as ET
+path = os.environ["YARD_TEST_REPORT"]
+tree = ET.parse(path); root = tree.getroot()
+if root.tag == "testsuites" and "tests" not in root.attrib:
+    for key in ("tests", "errors", "failures", "skipped"):
+        root.set(key, str(sum(int(s.get(key, 0)) for s in root.findall("testsuite"))))
+    tree.write(path, xml_declaration=True, encoding="utf-8")
+PY
 ' '''
 timeout_minutes = 40
+test_report = "junit"
 
 [checks.frontend]
 command = '''sh -ec '
