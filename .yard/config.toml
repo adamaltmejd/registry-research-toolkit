@@ -247,7 +247,7 @@ checks = "all"
 
 # concurrency limits how many ready tickets run at once.
 [scheduler]
-concurrency = 1
+concurrency = 2
 
 # The merge policy governs automatic merging only. Operator approval is never
 # limited by it.
