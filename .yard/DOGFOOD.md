@@ -114,3 +114,26 @@ into insights for the Yard builder agent, then pruned.
 - Operator note (own mistake, but instructive): verifying gate commands by piping
   through `tail` masks exit codes in sh (no pipefail); two rounds were lost to "SYNC_OK"
   lines printed after failed syncs.
+- Learned the hard way (worth a README sentence in Yard): the *gate image* is built from
+  the **candidate's own tree**, while config comes from canonical — so an infrastructure
+  fix landed on canonical never reaches an in-flight candidate whose base predates it.
+  The recovery is abandon + fresh attempt (full worker re-spend, here on an
+  already-reviewed one-paragraph README diff). Also: an operator-triggered gate re-run
+  (`yard lane start LANE/eN`) re-enters the automatic repair loop on failure — two more
+  worker repair generations were spent on the same unfixable environment failure before
+  the attention came back. An operator re-run might reasonably come straight back to the
+  operator instead.
+- Genuinely good strictness: `test_report = "junit"` treats any skip as missing
+  evidence, and it immediately surfaced two fixture-conditional tests in
+  `reg_meta/tests/test_doc_commands.py` that skip *unconditionally* everywhere (CI
+  included) — dead coverage nobody had noticed. Gate temporarily downgraded to exit-code
+  evidence (CI parity); ticket to fix the two tests and re-enable junit is the
+  follow-up. Papercut in the same event: the attention's junit detail listed the skipped
+  tests by name — excellent — but the "missing evidence" phrasing for "5 skipped"
+  initially reads as "report unparsable", not "skips are disallowed".
+- The candidate-pinned contract cuts deep: THREE attempts were spent discovering that
+  neither the Dockerfile nor gate commands can be repaired under an in-flight attempt.
+  Each iteration of gate config costs a full abandon + fresh worker implementation of an
+  unchanged one-paragraph diff. An operator verb like "replay this candidate onto
+  current canonical/contract" (rebase the candidate, keep the work, rerun verification)
+  would have saved two of the three.
