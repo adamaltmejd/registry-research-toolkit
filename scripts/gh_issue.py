@@ -13,27 +13,22 @@ It is deliberately an **allowlist helper, not a transparent `gh` shim.** A shim 
 merely forwarded arbitrary `gh` invocations could not soundly filter — `gh api …`,
 `gh search …`, GraphQL, and future subcommands return author-bearing payloads in shapes
 this gate can't enumerate, so a "filter everything gh returns" promise would be a lie the
-first time an un-modelled shape slipped through. Instead this exposes exactly the two
-ingestion reads the automation needs (`fetch_open_issues` for the work-set,
-`view <n> [--comments]` for a single issue), each gated on maintainer authorship, plus a
-small non-content utility surface that authenticates the trusted login WITHOUT surfacing
-any issue/PR text — the `maintainer-login` CLI and the `is_maintainer_authored(n)`
-predicate (returns only a bool, never the body/comments).
+first time an un-modelled shape slipped through. Instead this exposes exactly the one
+ingestion read the automation needs (`view <n> [--comments]`, a single issue), gated on
+maintainer authorship, plus the `maintainer-login` CLI — a non-content utility that names
+the trusted login WITHOUT surfacing any issue/PR text.
 
-**Fail-closed** everywhere: a row/issue/comment with a missing, None, or non-maintainer
-author is DROPPED, never surfaced. A drop is counted to stderr (observability — the gate
-never *silently* discards), but the untrusted content itself is never printed.
+**Fail-closed** everywhere: an issue/comment with a missing, None, or non-maintainer
+author is DROPPED, never surfaced. A refusal is reported to stderr (observability — the
+gate never *silently* discards), but the untrusted content itself is never printed.
 
-Stdlib only. Loadable two ways, matching the sibling scripts:
-  - as an importable module via `_gh.load_sibling("gh_issue")`, exposing the gated
-    `fetch_open_issues` / `is_maintainer_authored`;
-  - as a CLI: `uv run --no-project python scripts/gh_issue.py view <n> [--comments]`
-    or `... maintainer-login` (print the trusted maintainer login, for author checks).
+Stdlib only, and a CLI: `uv run --no-project python scripts/gh_issue.py view <n>
+[--comments]` or `... maintainer-login` (print the trusted maintainer login, for author
+checks).
 
-Reuses `_gh.py`'s process primitives, corpus-fetch cap + truncation warning
-(`FETCH_CAP` / `_warn_if_truncated`), and the non-zero-tolerant single-issue view
-primitive (`gh_issue_view_or_none`) rather than re-pasting them — leaf duplication is
-this repo's named anti-pattern.
+Reuses `_gh.py`'s process primitives (`repo_owner_name`) and its non-zero-tolerant
+single-issue view primitive (`gh_issue_view_or_none`) rather than re-pasting them — leaf
+duplication is this repo's named anti-pattern.
 """
 
 from __future__ import annotations
@@ -51,9 +46,9 @@ if TYPE_CHECKING:
 
 
 def _load_gh() -> ModuleType:
-    # The one leaf that can't go through _gh.load_sibling: _gh can't load itself. Kept a
-    # tiny sys.modules-guarded spec-load, identical in every sibling script, so the whole
-    # process shares ONE _gh instance (a single patch target, not one copy per loader).
+    # _gh can't load itself, so its consumer owns the load: a tiny sys.modules-guarded
+    # spec-load, so the whole process shares ONE _gh instance (a single patch target, not
+    # one copy per loader).
     if (mod := sys.modules.get("_gh")) is not None:
         return mod
     spec = importlib.util.spec_from_file_location(
@@ -66,15 +61,10 @@ def _load_gh() -> ModuleType:
     return mod
 
 
-# gh/git process primitives plus the shared corpus-fetch cap + truncation warning live in
-# the _gh module. Importing FETCH_CAP rather than redefining it keeps the cap
-# single-sourced.
+# The gh process primitives live in the _gh module.
 _gh = _load_gh()
 
-gh_json = _gh.gh_json
 repo_owner_name = _gh.repo_owner_name
-FETCH_CAP = _gh.FETCH_CAP
-_warn_if_truncated = _gh._warn_if_truncated
 
 EXIT_OK = 0
 EXIT_USAGE = 2
@@ -110,34 +100,6 @@ def _is_maintainer(obj: dict, maintainer: str) -> bool:
     return login is not None and login.casefold() == maintainer.casefold()
 
 
-def fetch_open_issues() -> list[dict]:
-    """Open issues authored by the maintainer — the gated work-set read.
-
-    The only enumeration of the issue corpus the ingestion path may use. Filters maintainer
-    authorship on BOTH sides: server-side via `gh issue list --author <maintainer>` so a
-    stranger-issue flood can't push maintainer rows past `FETCH_CAP` (the cap is the
-    danger — a truncation would silently drop real work), plus the client-side
-    `_is_maintainer` keep as defense-in-depth (fail-closed: a missing/None author is
-    dropped even if the server-side filter ever changed shape). Rows carry the
-    `number,title,labels,body` shape consumers read — the extra `author` key is
-    left in place and ignored downstream. The count of any dropped non-maintainer issues
-    is written to stderr (never silently discarded).
-    """
-    maintainer = maintainer_login()
-    rows = gh_json(["issue", "list", "--state", "open", "--author", maintainer,
-                    "--limit", str(FETCH_CAP),
-                    "--json", "number,title,labels,body,author"])  # fmt: skip
-    _warn_if_truncated(rows, "open issues")
-    kept = [r for r in rows if _is_maintainer(r, maintainer)]
-    dropped = len(rows) - len(kept)
-    if dropped:
-        sys.stderr.write(
-            f"gh_issue: dropped {dropped} non-maintainer issue(s) "
-            f"(author != {maintainer}) from the ingestion set\n"
-        )
-    return kept
-
-
 def is_own_pr(pr: dict) -> bool:
     """Whether a PR is from a branch in THIS repository (not a fork).
 
@@ -160,20 +122,6 @@ def _fetch_issue(number: int, comments: bool) -> dict | None:
     """
     fields = "number,title,state,body,author" + (",comments" if comments else "")
     return _gh.gh_issue_view_or_none(number, fields)
-
-
-def is_maintainer_authored(number: int) -> bool:
-    """Whether issue/PR #number exists AND is authored by the maintainer.
-
-    The public author-check a cross-script consumer uses instead of composing the private
-    `_fetch_issue` + `_is_maintainer` itself. Fail-closed: a missing number
-    (`_fetch_issue` → None) or a
-    missing/None/non-maintainer author → False. Inherits `_fetch_issue`'s caveat that
-    `gh issue view` resolves a PR number too, so a maintainer-authored PR passes exactly
-    like a maintainer issue (authorship, not issue-ness, is the trust boundary).
-    """
-    data = _fetch_issue(number, comments=False)
-    return data is not None and _is_maintainer(data, maintainer_login())
 
 
 def view(number: int, comments: bool) -> tuple[int, str]:

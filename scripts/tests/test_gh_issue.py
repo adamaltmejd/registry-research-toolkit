@@ -1,9 +1,9 @@
 """Unit tests for scripts/gh_issue.py — the maintainer-author trust gate.
 
 The gate is fail-closed: a missing/None/non-maintainer author is dropped, never
-surfaced. These pin that on the two ingestion reads (`fetch_open_issues`, the `view`
-CLI), the fork check (`is_own_pr`), and the `REGISTRY_MAINTAINER_LOGIN` override. The gh
-calls are stubbed the same way the sibling tests stub `gh_json` / `subprocess.run`.
+surfaced. These pin that on the one ingestion read (the `view` CLI), the fork check
+(`is_own_pr`), and the `REGISTRY_MAINTAINER_LOGIN` override. The gh calls are stubbed by
+patching `subprocess.run` on the shared `_gh` instance.
 """
 
 from __future__ import annotations
@@ -24,13 +24,6 @@ MAINT = "adamaltmejd"
 def _pin_maintainer(monkeypatch: pytest.MonkeyPatch) -> None:
     """Pin the maintainer via the env override so no test needs a live `gh repo view`."""
     monkeypatch.setenv("REGISTRY_MAINTAINER_LOGIN", MAINT)
-
-
-def _issue(number: int, login: str | None) -> dict:
-    """An `issue list` row; login=None models a missing/null author (fail-closed case)."""
-    row = {"number": number, "title": f"t{number}", "labels": [], "body": "b"}
-    row["author"] = {"login": login} if login is not None else None
-    return row
 
 
 # --- maintainer_login ----------------------------------------------------------------
@@ -57,74 +50,6 @@ def test_maintainer_login_empty_override_falls_back(
     monkeypatch.setenv("REGISTRY_MAINTAINER_LOGIN", "")
     monkeypatch.setattr(gi, "repo_owner_name", lambda: ("theowner", "therepo"))
     assert gi.maintainer_login() == "theowner"
-
-
-# --- fetch_open_issues (fail-closed allowlist) ---------------------------------------
-
-
-def test_fetch_open_issues_keeps_only_maintainer(
-    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
-) -> None:
-    rows = [
-        _issue(1, MAINT),
-        _issue(2, "stranger"),
-        _issue(3, MAINT.upper()),  # case-insensitive match → kept
-        _issue(4, None),  # null author → dropped (fail-closed)
-    ]
-    monkeypatch.setattr(gi, "gh_json", lambda args: rows)
-    kept = gi.fetch_open_issues()
-    assert sorted(r["number"] for r in kept) == [1, 3]
-    # The drop count is reported to stderr (observability — never silent).
-    assert "dropped 2 non-maintainer issue(s)" in capsys.readouterr().err
-
-
-def test_fetch_open_issues_missing_author_key_dropped(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    row = {"number": 5, "title": "t", "labels": [], "body": "b"}  # no author key at all
-    monkeypatch.setattr(gi, "gh_json", lambda args: [row])
-    assert gi.fetch_open_issues() == []
-
-
-def test_fetch_open_issues_requests_author_field(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    captured: dict[str, list[str]] = {}
-
-    def fake(args: list[str]):
-        captured["args"] = args
-        return []
-
-    monkeypatch.setattr(gi, "gh_json", fake)
-    gi.fetch_open_issues()
-    assert "author" in captured["args"][-1]  # the --json field list carries author
-
-
-def test_fetch_open_issues_filters_author_server_side(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    # Server-side `--author <maintainer>` keeps a stranger-issue flood from pushing
-    # maintainer rows past FETCH_CAP; the client-side filter is defense-in-depth on top.
-    captured: dict[str, list[str]] = {}
-
-    def fake(args: list[str]):
-        captured["args"] = args
-        return []
-
-    monkeypatch.setattr(gi, "gh_json", fake)
-    gi.fetch_open_issues()
-    args = captured["args"]
-    assert "--author" in args
-    assert args[args.index("--author") + 1] == MAINT
-
-
-def test_fetch_open_issues_preserves_build_records_shape(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    # build_records reads number/title/labels/body — kept rows must still carry them.
-    monkeypatch.setattr(gi, "gh_json", lambda args: [_issue(1, MAINT)])
-    (row,) = gi.fetch_open_issues()
-    assert {"number", "title", "labels", "body"} <= row.keys()
 
 
 # --- is_own_pr (fork gate, fail-closed) ----------------------------------------------
@@ -283,66 +208,6 @@ def test_view_comments_requests_comments_field(
 def test_cli_usage_error_exits_2() -> None:
     assert gi.main([]) == gi.EXIT_USAGE  # no subcommand
     assert gi.main(["bogus"]) == gi.EXIT_USAGE
-
-
-# --- is_maintainer_authored (public predicate, fail-closed) --------------------------
-
-
-def test_is_maintainer_authored_true_for_maintainer(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    _stub_view(
-        monkeypatch,
-        {"number": 328, "title": "epic", "body": "plan", "author": {"login": MAINT}},
-    )
-    assert gi.is_maintainer_authored(328) is True
-
-
-def test_is_maintainer_authored_case_insensitive(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    _stub_view(
-        monkeypatch,
-        {"number": 5, "title": "t", "body": "b", "author": {"login": MAINT.upper()}},
-    )
-    assert gi.is_maintainer_authored(5) is True
-
-
-def test_is_maintainer_authored_false_for_stranger(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    _stub_view(
-        monkeypatch,
-        {"number": 9, "title": "x", "body": "evil", "author": {"login": "stranger"}},
-    )
-    assert gi.is_maintainer_authored(9) is False
-
-
-def test_is_maintainer_authored_false_for_missing_number(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    # A non-zero `gh issue view` (genuinely missing number) → _fetch_issue None → False.
-    _stub_view(monkeypatch, None)
-    assert gi.is_maintainer_authored(1) is False
-
-
-def test_is_maintainer_authored_false_for_null_author(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    _stub_view(monkeypatch, {"number": 7, "title": "t", "body": "b", "author": None})
-    assert gi.is_maintainer_authored(7) is False
-
-
-def test_is_maintainer_authored_true_for_maintainer_pr(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    # `gh issue view` resolves a PR number too (exit 0 + payload): a maintainer-authored PR
-    # passes exactly like a maintainer issue — authorship, not issue-ness, is the boundary.
-    _stub_view(
-        monkeypatch,
-        {"number": 1024, "title": "pr", "body": "b", "author": {"login": MAINT}},
-    )
-    assert gi.is_maintainer_authored(1024) is True
 
 
 # --- maintainer-login subcommand -----------------------------------------------------
