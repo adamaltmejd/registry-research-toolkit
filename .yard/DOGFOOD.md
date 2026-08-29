@@ -181,3 +181,21 @@ into insights for the Yard builder agent, then pruned.
 - Retested unchanged: preflight gate probe (head word only), project-less
   `yard daemon status` error. High-value items (preflight gate-runs, candidate replay,
   environment-failure detection, junit root totals) not in this patch.
+
+## 2026-08-29 — update to 0.10.1 and trial (Y-3)
+
+- 0.10.1 answers the first report nearly point-for-point (Y-478..Y-484). Verified live:
+  `preflight --gates` ran all three real gates to a passing verdict on the container
+  floor for zero token spend (the exact mode the report asked for); project-less
+  `yard daemon status` now explains instead of ordering `yard init`; Y-481's junit
+  reader accepted stock pytest output in a real lane's test gate. Not yet exercised
+  (need a natural occurrence): `yard lane replay`, `gate-fails-on-base`, the sh -n
+  config lint, the new scaffold uv example.
+- Y-3 (delete the now-obsolete junit aggregation workaround) trialed the `light`
+  workflow: filed parked 17:50, landed 17:52 on first attempt, $0.36 — Sonnet, no review
+  panel, all gates. Pure-deletion diff exactly to spec. The approval detail for a
+  review-none lane correctly carries no review object; the operator read is visibly the
+  only review, which is the right shape for this class.
+- Board note: with the workaround gone, the gate config is back to what a fresh 0.10.1
+  scaffold would suggest — the workaround lived exactly one release cycle, which is the
+  dogfooding loop working as intended.
