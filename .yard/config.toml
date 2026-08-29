@@ -146,21 +146,28 @@ total_work_timeout_minutes = 360
 # and a baked frontend node_modules). UV_LINK_MODE=copy because the baked
 # cache is another uid's files and hardlinking across owners is refused.
 
+# Each command is wrapped in an explicit `sh -c` so its head word is a real
+# executable preflight can resolve (a head of `export`/`cd` reports as
+# undecided gate-resolution).
 [checks.lint]
-command = '''export UV_CACHE_DIR=/opt/uv/cache UV_PYTHON_INSTALL_DIR=/opt/uv/python UV_LINK_MODE=copy \
-  && uv sync --frozen --offline \
-  && uv run ruff check \
-  && uv run ruff format --check \
-  && uvx --offline --from ty==0.0.72 ty check \
-  && uvx --offline --from panache-cli==3.4.0 panache format --check . \
-  && uvx --offline --from panache-cli==3.4.0 panache lint . \
-  && bash scripts/check_versions.sh'''
+command = '''sh -ec '
+export UV_CACHE_DIR=/opt/uv/cache UV_PYTHON_INSTALL_DIR=/opt/uv/python UV_LINK_MODE=copy
+uv sync --frozen --offline
+uv run ruff check
+uv run ruff format --check
+uvx --offline --from ty==0.0.72 ty check
+uvx --offline --from panache-cli==3.4.0 panache format --check .
+uvx --offline --from panache-cli==3.4.0 panache lint .
+bash scripts/check_versions.sh
+' '''
 timeout_minutes = 20
 
 [checks.test]
-command = '''export UV_CACHE_DIR=/opt/uv/cache UV_PYTHON_INSTALL_DIR=/opt/uv/python UV_LINK_MODE=copy \
-  && uv sync --frozen --offline \
-  && uv run python -m pytest -q -n auto --junitxml="$YARD_TEST_REPORT"'''
+command = '''sh -ec '
+export UV_CACHE_DIR=/opt/uv/cache UV_PYTHON_INSTALL_DIR=/opt/uv/python UV_LINK_MODE=copy
+uv sync --frozen --offline
+uv run python -m pytest -q -n auto --junitxml="$YARD_TEST_REPORT"
+' '''
 timeout_minutes = 40
 test_report = "junit"
 
@@ -169,13 +176,15 @@ test_report = "junit"
 # follow-up; GitHub CI still runs it on every push of main. Add it once the
 # image carries a pinned Playwright Chromium.
 [checks.frontend]
-command = '''cd reg_webapp/frontend \
-  && cp -a /opt/frontend/node_modules . \
-  && bun run lint \
-  && bun run check \
-  && bun run build \
-  && bun run gen:types \
-  && git diff --exit-code -- src/lib/api-types.ts'''
+command = '''sh -ec '
+cd reg_webapp/frontend
+cp -a /opt/frontend/node_modules .
+bun run lint
+bun run check
+bun run build
+bun run gen:types
+git diff --exit-code -- src/lib/api-types.ts
+' '''
 timeout_minutes = 20
 
 # Review runs on every candidate. profile names one of the profiles below.

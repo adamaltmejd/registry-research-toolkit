@@ -14,7 +14,7 @@
 #   /opt/frontend/node_modules — bun install of the frontend lockfile
 # The warm layers are keyed on the manifest/lock files alone, so ordinary
 # source changes reuse them; a lockfile change rebuilds only its own layer.
-FROM debian:stable-slim@sha256:04634311a8d5fc442b6eb06d792293c4f3e2268652ca7634e00ce8ef5cc0a28ac
+FROM debian:stable-slim@sha256:04634311a8d5fc442b6eb06d792293c4f3e2268652ca7634e00ce8ef5cc0a28a
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \

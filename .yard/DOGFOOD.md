@@ -52,3 +52,21 @@ into insights for the Yard builder agent, then pruned.
   role, `codex login` only for a codex reviewer/worker) without saying which failures
   are ignorable for a given config. `yard daemon preflight` itself does this correctly
   (profile-driven), so the manual block is the weaker duplicate of it.
+
+### `preflight --full` round (first project config)
+
+- Good: `--full` caught a corrupted base-image digest (operator paste error) before any
+  lane spent a token, quoting the exact Dockerfile line and Docker's own error. This is
+  exactly the pay-nothing-first promise working.
+- Papercut: gate-resolution probes the *first word* of each `command`, and a head of
+  `export` or `cd` — normal openings for the multi-step gate any real CI mirror is —
+  reports as undecided, with requirement text (`PATH=/its/bin:$PATH <command>`) whose
+  worked example only covers a single-command gate with leading `VAR=` assignments. The
+  workaround (wrap the whole gate in `sh -ec '…'`) is easy but undocumented, and it
+  downgrades the probe's value to "sh exists". Either resolve past leading
+  builtins/assignments, or document the `sh -c` wrapper as the intended shape for
+  multi-step gates.
+- Papercut: with the image build failing, the identical multi-line Docker error is
+  repeated verbatim under every requirement that needed the image (worker-cli plus one
+  per gate) — 4 copies in one report. One failure line + "same cause" references would
+  read faster, especially for an agent operator paying tokens for the repetition.
