@@ -137,3 +137,16 @@ into insights for the Yard builder agent, then pruned.
   unchanged one-paragraph diff. An operator verb like "replay this candidate onto
   current canonical/contract" (rebase the candidate, keep the work, rerun verification)
   would have saved two of the three.
+
+### End of first loop (Y-1 landed)
+
+- Full loop proven: file parked, read, unpark, worker, review, gates, approval-needed,
+  diff read, approve at exact head, landed, `yard sync`. The approve-to-landed-to-synced
+  tail took seconds and the exits/guards were exactly right at every decision.
+- Total cost of the one-paragraph README section: $3.20 across four attempts ($1.67 +
+  $0.50 + $0.49 + $0.54). Attempt 1 was mostly the worker diagnosing the operator image;
+  attempts 2 and 3 were burned solely because the contract is candidate-pinned and every
+  gate-config fix needs a fresh attempt re-implementing an unchanged diff. Steady-state
+  cost for such a ticket is the \~$0.50 of attempt 4; the 6x multiple is the price of
+  setting up gates by live fire. All of it would have been avoided by a preflight mode
+  that actually runs gate commands (logged above).
