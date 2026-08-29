@@ -168,3 +168,16 @@ into insights for the Yard builder agent, then pruned.
   set for auto-merge. Reasonable, but undocumented in the config comments.
 - A landing that changes .yard/config.toml owes a daemon restart; `yard sync` printed
   the restart hint — good — though it is easy to miss below the fast-forward line.
+
+## 2026-08-29 — update to 0.9.2
+
+- Update flawless: verified install (SHA256SUMS + contract + --version agree), daemon
+  restart, v0.9.1 store opened unchanged (schema 40 as the notes promised), full
+  preflight green. The release notes' compatibility seam (`proposal show` vs an
+  un-restarted daemon) was accurate.
+- Resolved and verified: `yard proposal show` prints the full record — body, stamp,
+  decision, reason — including for already-decided A-1. Fixes the truncated-board
+  papercut from this morning.
+- Retested unchanged: preflight gate probe (head word only), project-less
+  `yard daemon status` error. High-value items (preflight gate-runs, candidate replay,
+  environment-failure detection, junit root totals) not in this patch.
