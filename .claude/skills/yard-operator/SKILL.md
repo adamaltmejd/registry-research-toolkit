@@ -311,3 +311,31 @@ A board left parked with a clear question on it is a better outcome than a decis
 taken past the edge of what you read.
 
 And then, whatever you did: watch again.
+
+## This project: admission rule and filing conventions
+
+This section is the project half the skill above defers to ("where the project states
+its own admission rule, that one governs"). It exists because this repository is
+consciously shedding overengineering; hold these lines even when a worker, reviewer, or
+plan argues well for crossing them.
+
+- **Tickets are filed from features the maintainer wants to build — nothing else.** The
+  GitHub issue tracker is an archive, not a queue: nothing migrates in bulk, and a
+  ticket enters Yard only when it is the work we choose to run next, rewritten to Yard's
+  shape (consumer, observable behavior, one lane's worth) rather than translated.
+- **Cleanup is admissible only as deletion.** Removing dead code, unused surface, or
+  retired machinery reduces overengineering and a proposal for it can be accepted on
+  that ground alone. "Cleanup" that *adds* — new abstractions, wrappers, config options,
+  generalization, hardening beyond the deployment's threat model — is the
+  overengineering this project is shedding: reject it, recording the re-admission
+  condition.
+- **The guard asymmetry.** Never accept, and never approve, a simplification that drops
+  a load-bearing guard: PII/MONA confinement, k-anonymity/disclosure control,
+  determinism/byte-identity, JSON-contract validation, fail-fast. A shorter diff that
+  drops one of these is not simpler, it is broken.
+- **Yard is the primary build pathway.** Manual builds happen only for special cases
+  (releases, real-seed `build-db` verification); the pre-Yard GitHub coordination
+  machinery (pr-pipeline / chief-of-staff dispatch) is being retired and gets no new
+  work.
+- **Dogfooding duty.** While operating, log how Yard itself behaves — problems and
+  papercuts — in `.yard/DOGFOOD.md` (see CLAUDE.md, "Yard").

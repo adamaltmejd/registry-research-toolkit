@@ -331,22 +331,22 @@ scope changes, new priorities without evidence, unparking deferred work without 
 explicit resume signal, partial/disputed closure, new issue creation (except filing
 follow-ups recorded in a pipeline merge-gate `followups.md` via `/file-issue`, which is
 auto-allowed), deleting substantive prose, or contradictions between labels, body,
-comments, and live PR state.
-If maintenance changes lane-affecting state such as `priority:*`, `touches`,
-`Relationships`, `blocked`, or `parked`, or if a merge changes the ready/running sets,
-rerun the issue-pulse lane-staleness path before recommending work. It must run only
-from the canonical main checkout `/Users/adam/Code/registry-research-toolkit`, never
-from a worktree. Its startup gate is: verify the exact repo top-level, `test -d .git`,
-and branch `main`; run `git pull --ff-only` as the first sync action; re-verify the main
-checkout; and stop if `git status --short` is not empty. If any gate fails, report the
-condition and ask the user to fix it before relaunching. Actual implementation work
-always happens in separate worktrees; chief-of-staff coordinates issues/PRs and merges
-ready gated PRs from the main checkout. When a merge creates a required build/release
-boundary, such as DB content that dependent work needs published, chief-of-staff may
-invoke `/release minor` or `/release patch` (`$release minor` / `$release patch` on
-Codex surfaces) and then must follow the release workflow gates; a major release is not
-autonomous. With `/chief-of-staff auto` (opt-in per session) it may also auto-dispatch
-pr-pipeline lanes into free slots via `scripts/cos_dispatch.py`, gated by the
+comments, and live PR state. If maintenance changes lane-affecting state such as
+`priority:*`, `touches`, `Relationships`, `blocked`, or `parked`, or if a merge changes
+the ready/running sets, rerun the issue-pulse lane-staleness path before recommending
+work. It must run only from the canonical main checkout
+`/Users/adam/Code/registry-research-toolkit`, never from a worktree. Its startup gate
+is: verify the exact repo top-level, `test -d .git`, and branch `main`; run
+`git pull --ff-only` as the first sync action; re-verify the main checkout; and stop if
+`git status --short` is not empty. If any gate fails, report the condition and ask the
+user to fix it before relaunching. Actual implementation work always happens in separate
+worktrees; chief-of-staff coordinates issues/PRs and merges ready gated PRs from the
+main checkout. When a merge creates a required build/release boundary, such as DB
+content that dependent work needs published, chief-of-staff may invoke `/release minor`
+or `/release patch` (`$release minor` / `$release patch` on Codex surfaces) and then
+must follow the release workflow gates; a major release is not autonomous. With
+`/chief-of-staff auto` (opt-in per session) it may also auto-dispatch pr-pipeline lanes
+into free slots via `scripts/cos_dispatch.py`, gated by the
 `<state-root>/auto-dispatch.off` kill switch (present ⇒ fall back to recommending), at
 one of two launch tiers — `easy` (Sonnet 5 with an Opus advisor, for small low-risk
 lanes) or `hard` (Codex gpt-5.5 xhigh, the default). Merges in the maintainer-approval
@@ -374,37 +374,34 @@ in the PR: `$XDG_STATE_HOME/registry-research-toolkit/merge-gates/pr-<N>/` (defa
 holding `gate.json` plus the evidence files it references (design-reviewer report and
 screenshots, `build-db` log, dbdiff output, and an optional `followups.md` recording the
 lane's drafted follow-up issues for the chief-of-staff to file at merge via
-`/file-issue`). All pipelines and the chief-of-staff run on
-this machine, so a local file is durable across worktree deletion, `git clean`, and
-reboots — which `/tmp` and worktree paths are not — and needs no GitHub attachment
-gymnastics. Do NOT post evidence to the PR (no evidence branches, no committed
-screenshots, no body blocks); the PR body carries only the description and closing
-keywords (which stay authoritative for issue closure — gate.json does not duplicate
-them). The `gate.json` contract: head-SHA-bound (`pr`, `head` full SHA, `status`
-`ready-to-merge` \| `blocked`, `updated`, `blocker` naming the missing item when
-blocked) plus a `gates` map with one line per repo gate; the head-bound gates
-(`build_db`, `visual`, `codex_bot`) each record the head SHA they were verified on inside
-their line. Field-level worked example: the `pr-pipeline-impl` skill (its
-`pipeline-contract.md` gate.json template). Write evidence files first
-and `gate.json` last, atomically (temp file + rename) — the preflight probe polls it and
+`/file-issue`). All pipelines and the chief-of-staff run on this machine, so a local
+file is durable across worktree deletion, `git clean`, and reboots — which `/tmp` and
+worktree paths are not — and needs no GitHub attachment gymnastics. Do NOT post evidence
+to the PR (no evidence branches, no committed screenshots, no body blocks); the PR body
+carries only the description and closing keywords (which stay authoritative for issue
+closure — gate.json does not duplicate them). The `gate.json` contract: head-SHA-bound
+(`pr`, `head` full SHA, `status` `ready-to-merge` \| `blocked`, `updated`, `blocker`
+naming the missing item when blocked) plus a `gates` map with one line per repo gate;
+the head-bound gates (`build_db`, `visual`, `codex_bot`) each record the head SHA they
+were verified on inside their line. Field-level worked example: the `pr-pipeline-impl`
+skill (its `pipeline-contract.md` gate.json template). Write evidence files first and
+`gate.json` last, atomically (temp file + rename) — the preflight probe polls it and
 must never see a torn write; after repairing or adding evidence files, refresh
 `gate.json` (bump `updated`) so the byte-change wakes the next tick. Readers treat an
 entry whose `pr` field disagrees with its directory name as absent. A recurring
 chief-of-staff tick may automatically squash-merge a PR only when its gate entry has
 `status: ready-to-merge` with `head` matching the live `headRefOid` (and the
 `build_db`/`visual`/`codex_bot` per-gate SHAs matching that head where those gates
-apply), all
-required evidence files are present, and the chief-of-staff re-checks the live PR head,
-CI, the gate entry's head-bound `codex_bot` line, mergeability, and stack order
-immediately before merging.
-Provenance is by construction: only local agents can write the store, so a fork PR can
-never self-certify — but never automerge a PR whose head branch is not in this
-repository, and treat a gate entry for such a PR as an error to surface. (Trust is
-machine-level and accepted as such for this single-maintainer repo: any code executed
-locally — a test run, a build — could write the store, exactly as it could previously
-have edited a PR body with the maintainer's credentials; the gate defends against
-process skew, not against malicious local code.) After a verified merge, the
-chief-of-staff archives the PR's gate directory under `merge-gates/merged/` — the PR
+apply), all required evidence files are present, and the chief-of-staff re-checks the
+live PR head, CI, the gate entry's head-bound `codex_bot` line, mergeability, and stack
+order immediately before merging. Provenance is by construction: only local agents can
+write the store, so a fork PR can never self-certify — but never automerge a PR whose
+head branch is not in this repository, and treat a gate entry for such a PR as an error
+to surface. (Trust is machine-level and accepted as such for this single-maintainer
+repo: any code executed locally — a test run, a build — could write the store, exactly
+as it could previously have edited a PR body with the maintainer's credentials; the gate
+defends against process skew, not against malicious local code.) After a verified merge,
+the chief-of-staff archives the PR's gate directory under `merge-gates/merged/` — the PR
 carries no evidence, so the archive IS the audit trail for post-merge regressions; prune
 entries whose PR closed without merging — but before deleting one, check for a
 `followups.md` and, if present with unprocessed entries, file them via `/file-issue` (or
@@ -412,56 +409,57 @@ report them) rather than silently dropping them, since a lane's final PR can clo
 without merging.
 
 - **Independent review** — every PR gets at least one review independent of its author.
-  For small, low-risk PRs the local Codex review (the bullet below) can be enough; larger
-  or riskier PRs additionally need an independent Claude review pass: `/code-review`
-  (effort scaled to risk; this is what `/pr-pipeline` runs), or the lighter `reviewer`
-  subagent for smaller/ad-hoc reviews. A subagent review reports its findings directly to the
-  orchestrating session — not as PR comments. Address every finding: fix it, or dismiss
-  it with a stated reason — findings can be wrong or immaterial, but none may go
-  unanswered. Review is iterative: if fixes introduce substantial new changes, run
-  another round on the new diff — repeat until a round produces nothing material.
+  For small, low-risk PRs the local Codex review (the bullet below) can be enough;
+  larger or riskier PRs additionally need an independent Claude review pass:
+  `/code-review` (effort scaled to risk; this is what `/pr-pipeline` runs), or the
+  lighter `reviewer` subagent for smaller/ad-hoc reviews. A subagent review reports its
+  findings directly to the orchestrating session — not as PR comments. Address every
+  finding: fix it, or dismiss it with a stated reason — findings can be wrong or
+  immaterial, but none may go unanswered. Review is iterative: if fixes introduce
+  substantial new changes, run another round on the new diff — repeat until a round
+  produces nothing material.
 - **Local Codex review** — after the review loop converges (above), run
   **`uv run --no-project python scripts/codex_local_review.py --base origin/main --out <gate-dir>/codex-review.md`**
-  in the PR worktree on the final HEAD. `--base` is **required** — pass `origin/main` for
-  an independent PR; for a stacked successor pass the **predecessor branch** it targets
-  (so the review diffs against the real PR base, not main). **Launch it via Bash with `run_in_background:
-  true`** — its internal 30-min ceiling outlasts the 10-min foreground Bash cap, so a
-  foreground run risks being killed mid-review; the harness notifies on completion. "In
-  the PR worktree" means run it with cwd / tree set to that worktree checked out at the PR
-  head, so the review diffs the PR's own tree.
+  in the PR worktree on the final HEAD. `--base` is **required** — pass `origin/main`
+  for an independent PR; for a stacked successor pass the **predecessor branch** it
+  targets (so the review diffs against the real PR base, not main). **Launch it via Bash
+  with `run_in_background: true`** — its internal 30-min ceiling outlasts the 10-min
+  foreground Bash cap, so a foreground run risks being killed mid-review; the harness
+  notifies on completion. "In the PR worktree" means run it with cwd / tree set to that
+  worktree checked out at the PR head, so the review diffs the PR's own tree.
   `--out <gate-dir>/codex-review.md` lands the transcript straight in the merge-gate
   directory (no copy step). It launches `codex review` locally against the PR's
-  merge-base and reports the verdict as JSON on stdout (exit **0** clean · **1** findings
-  · **2** error, with a classified `error.kind`). Findings (exit 1) are handled like any
-  review findings — fix each or dismiss with a stated reason, then **re-run the launcher
-  on the new HEAD until it reports `clean`**; the `codex_bot` gate line records only the
-  LAST run's verdict on the current head, so its only legal tokens are `clean` or
-  `exhausted (usage-limit)` (see the pr-pipeline-impl gate.json template
+  merge-base and reports the verdict as JSON on stdout (exit **0** clean · **1**
+  findings · **2** error, with a classified `error.kind`). Findings (exit 1) are handled
+  like any review findings — fix each or dismiss with a stated reason, then **re-run the
+  launcher on the new HEAD until it reports `clean`**; the `codex_bot` gate line records
+  only the LAST run's verdict on the current head, so its only legal tokens are `clean`
+  or `exhausted (usage-limit)` (see the pr-pipeline-impl gate.json template
   (`pipeline-contract.md`) for the canonical line, head-SHA-bound like
-  `visual`/`build_db`). On exit 2, only `error.kind:
-  usage_limit` is the exhausted-analog — recordable and not a merge blocker once the
-  independent review and all other gates are complete; every other kind (`timeout`,
-  `format_drift`, `precondition`, `tool_failure`) is a **blocker** (a format-drift
-  transcript may hide real unparsed findings), so write `status: blocked` naming it.
-  `nested_sandbox` is likewise not recordable as `clean`, but it is a wrong-ENVIRONMENT
-  signal, not a terminal block: a seatbelt nested inside a surrounding agent sandbox
-  blocked every exec (the review inspected nothing), so the remedy is to **re-run the
-  review un-nested / with escalated permissions** — not to hand off `status: blocked`.
-  On the **codex surface** the pipeline agent cannot run this at all — it is already
-  inside a codex seatbelt, and Seatbelt cannot nest a second profile even under
-  escalated permissions — so `codex_bot` there is completed by the sibling
-  **`scripts/cos_lane_runner.py`** (launched by `cos_dispatch` by default for codex
-  lanes), not the pipeline agent; the CLAUDE surface still runs
-  `codex_local_review.py` inline as above (see the pr-pipeline and chief-of-staff
-  skills for the split). Nothing is posted to GitHub. The GitHub Codex web integration stays enabled for a
-  shadow period but is **no longer a gate input** — its PR comments are FYI only. When a
-  PR is otherwise merge-ready but this gate's `codex_bot` evidence is missing or stale
-  (wrong head), the chief-of-staff self-serves it exactly like `build_db` — a throwaway
-  worktree at the PR head, the **canonical** `scripts/codex_local_review.py` (sourced from
-  the main checkout, never the worktree's own copy, so a PR that modifies the reviewer can't
-  self-review) run with **cwd = that worktree** and the PR's live `baseRefName` (prefixed
-  `origin/`) as `--base` and `--out` into the gate store, and `gate.json` refreshed — instead
-  of routing a follow-up or asking the user.
+  `visual`/`build_db`). On exit 2, only `error.kind: usage_limit` is the
+  exhausted-analog — recordable and not a merge blocker once the independent review and
+  all other gates are complete; every other kind (`timeout`, `format_drift`,
+  `precondition`, `tool_failure`) is a **blocker** (a format-drift transcript may hide
+  real unparsed findings), so write `status: blocked` naming it. `nested_sandbox` is
+  likewise not recordable as `clean`, but it is a wrong-ENVIRONMENT signal, not a
+  terminal block: a seatbelt nested inside a surrounding agent sandbox blocked every
+  exec (the review inspected nothing), so the remedy is to **re-run the review un-nested
+  / with escalated permissions** — not to hand off `status: blocked`. On the **codex
+  surface** the pipeline agent cannot run this at all — it is already inside a codex
+  seatbelt, and Seatbelt cannot nest a second profile even under escalated permissions —
+  so `codex_bot` there is completed by the sibling **`scripts/cos_lane_runner.py`**
+  (launched by `cos_dispatch` by default for codex lanes), not the pipeline agent; the
+  CLAUDE surface still runs `codex_local_review.py` inline as above (see the pr-pipeline
+  and chief-of-staff skills for the split). Nothing is posted to GitHub. The GitHub
+  Codex web integration stays enabled for a shadow period but is **no longer a gate
+  input** — its PR comments are FYI only. When a PR is otherwise merge-ready but this
+  gate's `codex_bot` evidence is missing or stale (wrong head), the chief-of-staff
+  self-serves it exactly like `build_db` — a throwaway worktree at the PR head, the
+  **canonical** `scripts/codex_local_review.py` (sourced from the main checkout, never
+  the worktree's own copy, so a PR that modifies the reviewer can't self-review) run
+  with **cwd = that worktree** and the PR's live `baseRefName` (prefixed `origin/`) as
+  `--base` and `--out` into the gate store, and `gate.json` refreshed — instead of
+  routing a follow-up or asking the user.
 - **Real-data validation** when build-pipeline or DB content changed: run a real-seed
   `reg-meta-build build-db` **on the PR head** (validation runs by default), not just
   fixture tests. The untracked seed lives only in the main checkout. From a worktree,
@@ -509,8 +507,8 @@ without merging.
   predecessor branch, do not delete the predecessor branch during merge; immediately
   retarget the successor to `main` after the predecessor merge, then verify it remains
   open on the intended head. After retargeting, require the successor branch to be
-  rebased or otherwise updated onto the new base, then regenerate checks, re-run the local
-  Codex review (`scripts/codex_local_review.py` on the rebased successor head),
+  rebased or otherwise updated onto the new base, then regenerate checks, re-run the
+  local Codex review (`scripts/codex_local_review.py` on the rebased successor head),
   independent-review judgment, and the gate entry before automerging it. Never delete a
   branch that is the head branch of another open PR.
 
@@ -536,12 +534,20 @@ repo-wide invariants), see `ARCHITECTURE.md`; for the remaining post-A5 work, se
 # Yard
 
 Development runs through [Switchyard](https://github.com/adamaltmejd/switchyard)
-(`yard`): tickets, isolated lanes, review, gates, operator approval. Yard is built to
-be driven by an agent operator, and **the agent working this repo is that operator** —
-when driving the board (filing tickets, answering attention items, approving/rejecting
+(`yard`): tickets, isolated lanes, review, gates, operator approval. Yard is built to be
+driven by an agent operator, and **the agent working this repo is that operator** — when
+driving the board (filing tickets, answering attention items, approving/rejecting
 candidates), load the `/yard-operator` skill (`.claude/skills/yard-operator/SKILL.md`,
-scaffolded by `yard init`) and follow it. Project config is `.yard/config.toml`; its
-gates mirror `.github/workflows/ci.yml`.
+scaffolded by `yard init`) and follow it — including its project section (admission
+rule, filing conventions). Project config is `.yard/config.toml`; its gates mirror
+`.github/workflows/ci.yml`.
+
+**Yard is the primary build pathway.** New work runs as Yard tickets, not as pr-pipeline
+/ chief-of-staff lanes — that machinery is being retired and must not be dispatched for
+new work (manual builds remain for special cases: releases, real-seed `build-db`
+verification). Do not run the COS auto-dispatch loop while Yard operates this repo: Yard
+lands on its local canonical main, and a second write path to main produces diverged
+heads that `yard sync` will refuse.
 
 **Dogfooding**: Yard is the maintainer's own project under active development, and this
 repo is its testbed. While operating it, keep a running log in `.yard/DOGFOOD.md` of

@@ -69,7 +69,7 @@ inactivity_timeout_minutes = 0
 total_work_timeout_minutes = 360
 context_limit_tokens = 300000
 compaction_threshold_share = 0.7
-# instructions = "Match the conventions of the code you are changing."
+instructions = "Smallest safe change, in the ticket's scope only. Follow the repo ladder (no change > existing capability > stdlib > installed dep > minimal new code > new dep) and prefer deletion to addition: pre-v1 with no external users, break and delete freely — no compat shims, migration code, deprecation wrappers, or speculative options/abstractions no ticket asked for. Never simplify away the load-bearing guards: PII/MONA confinement, k-anonymity/disclosure control, determinism/byte-identity, JSON-contract validation, fail-fast. If the work grows past the ticket, do less and file a proposal instead."
 
 # Plan-first tickets need the planning role. Without it, such a ticket waits
 # for the operator instead of planning itself.
@@ -86,7 +86,7 @@ compaction_threshold_share = 0.7
 backend = "claude"
 model = "claude-fable-5"
 effort = "high"
-instructions = "Plan against this repository's CLAUDE.md conventions (reuse-first ladder, load-bearing guards: PII/MONA confinement, determinism, JSON-contract validation, fail-fast) and each package's DESIGN.md. Name the package(s) a ticket touches."
+instructions = "Plan against this repository's CLAUDE.md conventions and each package's DESIGN.md; name the package(s) each ticket touches. This project is shedding overengineering: delete or defer behavior before splitting it, and split only what is independently useful — answer a frightening size by shrinking the scope, never by subdividing it into a backlog. Every ticket names its consumer and the observable behavior they get. Problems that have not happened are not requirements, and this single-maintainer research tool is not an adversarial environment."
 
 # The conflict role resolves a conflicted retarget and takes the same keys as
 # the implementation role. Without it, the lane stops for the operator.
@@ -115,6 +115,7 @@ access = "writable"
 tools = { subagents = false }
 inactivity_timeout_minutes = 0
 total_work_timeout_minutes = 360
+instructions = "Smallest safe change, in the ticket's scope only; match the conventions of the code you are changing. No scope beyond the ticket — if more is needed, file a proposal."
 
 # Each [checks.<name>] section defines a gate every candidate must pass.
 # command runs the gate and timeout_minutes limits one run. environment is
@@ -171,21 +172,19 @@ uv run python -m pytest -q -n auto --junitxml="$YARD_TEST_REPORT"
 timeout_minutes = 40
 test_report = "junit"
 
-# simplify: `bun run test` (vitest jsdom + Playwright-Chromium browser projects)
-# is not run here — baking Chromium + its OS libs into the gate image is a
-# follow-up; GitHub CI still runs it on every push of main. Add it once the
-# image carries a pinned Playwright Chromium.
 [checks.frontend]
 command = '''sh -ec '
+export PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers
 cd reg_webapp/frontend
 cp -a /opt/frontend/node_modules .
 bun run lint
 bun run check
+bun run test
 bun run build
 bun run gen:types
 git diff --exit-code -- src/lib/api-types.ts
 ' '''
-timeout_minutes = 20
+timeout_minutes = 30
 
 # Review runs on every candidate. profile names one of the profiles below.
 # max_gate_repair_rounds limits repairs after gate failures, max_rounds limits

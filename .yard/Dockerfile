@@ -60,4 +60,12 @@ RUN cd /opt/frontend \
     && bun install --frozen-lockfile \
     && chmod -R a+rwX /opt/frontend
 
+# Playwright Chromium for the frontend `browser` vitest project, at the exact
+# playwright version the lockfile pins (resolved from the baked node_modules).
+# --with-deps apt-installs Chromium's shared libraries here, with build-time
+# network; the gate then runs it offline via PLAYWRIGHT_BROWSERS_PATH.
+RUN cd /opt/frontend \
+    && PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers bunx playwright install --with-deps chromium \
+    && chmod -R a+rwX /opt/pw-browsers
+
 WORKDIR /workspace
