@@ -82,6 +82,15 @@ wheels = [
 ]
 
 [[package]]
+name = "editables"
+version = "0.6"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/82/f8/02a4e9a0cb961b0feeb431ac96b231c157ecdcbbeacafe9e2fdb4b1dde39/editables-0.6.tar.gz", hash = "sha256:1163834902381c4613787951c5914800fdf155ae08848a373b8ea5006780977c", size = 16763, upload-time = "2026-04-14T10:39:04.677Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/cc/0e/d095533037fc9468f947b19f2da53f869804632b508808de41e86e801797/editables-0.6-py3-none-any.whl", hash = "sha256:d70e4698078a1d033e7786d9c64e5be070d058a67c21417024d38a58ac20aa43", size = 5438, upload-time = "2026-04-14T10:39:03.663Z" },
+]
+
+[[package]]
 name = "et-xmlfile"
 version = "2.0.0"
 source = { registry = "https://pypi.org/simple" }
@@ -467,6 +476,7 @@ dependencies = [
 [package.dev-dependencies]
 dev = [
     { name = "duckdb" },
+    { name = "editables" },
     { name = "hatchling" },
     { name = "httpx2" },
     { name = "hypothesis" },
@@ -487,6 +497,7 @@ requires-dist = [
 [package.metadata.requires-dev]
 dev = [
     { name = "duckdb", specifier = ">=1.5.2" },
+    { name = "editables", specifier = ">=0.6" },
     { name = "hatchling", specifier = ">=1.32.0" },
     { name = "httpx2", specifier = ">=2.4.0" },
     { name = "hypothesis", specifier = ">=6.155.2" },
