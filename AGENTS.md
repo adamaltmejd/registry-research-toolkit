@@ -97,11 +97,11 @@ simplification reads as intent and a deferral can't silently rot.
 - The workspace floor is uniformly `>=3.14` (ruff `target-version = py314` to match),
   after a coordinated bump (#682, 2026-06-22).
 - A repo-root `.python-version` pins the interpreter to `3.14` so that **project-less
-  `uv run --no-project` tooling** (the issue-hygiene / plan-sequence scripts in CI and
-  the issue-tracker skills) resolves the `>=3.14` floor instead of the runner's ambient
-  Python. `--no-project` skips workspace discovery, so without this pin the
-  `requires-python` floor is bypassed for those runs and the 3.14-only PEP 758 syntax in
-  `scripts/` would `SyntaxError` on a < 3.14 runner.
+  `uv run --no-project` tooling** (`scripts/build_db_watch.py` in the `build-db` skill,
+  `scripts/gh_issue.py`) resolves the `>=3.14` floor instead of the ambient Python.
+  `--no-project` skips workspace discovery, so without this pin the `requires-python`
+  floor is bypassed for those runs and the 3.14-only PEP 758 syntax in `scripts/` would
+  `SyntaxError` on a < 3.14 interpreter.
 
 ## Stack
 
@@ -216,12 +216,10 @@ scaffolded by `yard init`) and follow it — including its project section (admi
 rule, filing conventions). Project config is `.yard/config.toml`; its gates mirror
 `.github/workflows/ci.yml`.
 
-**Yard is the primary build pathway.** New work runs as Yard tickets, not as pr-pipeline
-/ chief-of-staff lanes — that machinery is being retired and must not be dispatched for
-new work (manual builds remain for special cases: releases, real-seed `build-db`
-verification). Do not run the COS auto-dispatch loop while Yard operates this repo: Yard
-lands on its local canonical main, and a second write path to main produces diverged
-heads that `yard sync` will refuse.
+**Yard is the primary build pathway.** New work runs as Yard tickets; manual builds
+remain for special cases (releases, real-seed `build-db` verification). Keep main to a
+single write path: Yard lands on its local canonical main, and a second writer produces
+diverged heads that `yard sync` will refuse.
 
 **Dogfooding**: Yard is the maintainer's own project under active development, and this
 repo is its testbed. While operating it, keep a running log in `.yard/DOGFOOD.md` of
