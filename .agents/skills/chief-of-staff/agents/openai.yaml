@@ -1,6 +1,0 @@
-interface:
-  display_name: "Registry Chief of Staff"
-  short_description: "Maintain issues, preview DBs, pipelines, gated PRs, and lanes"
-  default_prompt: "Use $chief-of-staff to run one registry staff tick: update preview DBs, check PR gates, merge ready PRs, and recommend lanes."
-policy:
-  allow_implicit_invocation: false

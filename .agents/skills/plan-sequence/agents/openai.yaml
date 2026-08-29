@@ -1,6 +1,0 @@
-interface:
-  display_name: "Registry Plan Sequence"
-  short_description: "Refresh issue sequencing projection"
-  default_prompt: "Use $plan-sequence to preview or refresh the registry issue sequencing plan."
-policy:
-  allow_implicit_invocation: true

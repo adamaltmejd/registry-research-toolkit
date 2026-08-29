@@ -2,8 +2,8 @@
 name: reg-webapp-design-reviewer
 description: >-
   Registry Research Toolkit `reg_webapp` rendered-UI review skill. Use for repo-local
-  rendered-output PR gates, pr-pipeline visual verification, screenshot-based layout
-  review, responsive checks, accessibility visual checks, and UI regression review after
+  rendered-output PR gates, visual verification, screenshot-based layout review,
+  responsive checks, accessibility visual checks, and UI regression review after
   implementation. This is the post-implementation reviewer counterpart to
   `reg-webapp-frontend-design` and is deliberately named to avoid generic
   `web-design-reviewer` skills.

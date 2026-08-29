@@ -194,10 +194,10 @@ bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh smoke
 skill's rules at all three widths. If the rendering depends on unreleased DB content,
 pass `REG_META_DB=<db_dir>` to the same driver command.
 
-For `pr-pipeline`, this authoring pass precedes implementation and does not replace the
-visual gate: after implementation, the required evidence is a clean
-`reg-webapp-design-reviewer` pass against the rendered app with screenshot proof —
-author screenshots are iteration evidence, not the gate.
+This authoring pass precedes implementation and does not replace the visual gate: after
+implementation, the required evidence is a clean `reg-webapp-design-reviewer` pass
+against the rendered app with screenshot proof — author screenshots are iteration
+evidence, not the gate.
 
 Attribution: adapted from Anthropic's Apache-2.0 `frontend-design` plugin concept
 (LICENSE.txt); the rules above are specific to the Registry Research Toolkit.

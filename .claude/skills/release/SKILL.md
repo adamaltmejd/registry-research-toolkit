@@ -1,9 +1,7 @@
 ---
 name: release
 description: >-
-  Create and publish a release. Usage: /release [package] <patch|minor|major>;
-  chief-of-staff may invoke /release minor or /release patch after an authorized
-  build/release boundary
+  Create and publish a release. Usage: /release [package] <patch|minor|major>
 disable-model-invocation: false
 argument-hint: "[package] <patch|minor|major>"
 ---
@@ -14,11 +12,9 @@ Create and publish a release for one or both PyPI packages.
 
 **Never start a release unless the user explicitly asks for one.** This skill may be
 invoked via `/release` or merely referenced in conversation — either way, do not proceed
-without clear intent to release. Exception: if `chief-of-staff` invokes exactly
-`/release minor` or `/release patch` after merging a PR that creates a required
-build/release boundary, treat that handoff as explicit user authorization for that minor
-or patch release. Stop and ask if the package or bump level is ambiguous; **major bumps
-require explicit confirmation** after showing the current and planned versions.
+without clear intent to release. Stop and ask if the package or bump level is ambiguous;
+**major bumps require explicit confirmation** after showing the current and planned
+versions.
 
 ## Packages
 
@@ -516,9 +512,7 @@ refreshing, keeps the deployed catalog and baked DB in lockstep.
 
 Land the regen as its **own commit pushed to `origin/main`** — separate from the
 version-bump commit, which was already tagged in step 7. `origin/main` advancing past
-the tag is expected and harmless; the catalog ships on the next webapp deploy, and the
-staleness alert (`scripts/check_issue_hygiene.py`, keyed on the latest *published*
-release) clears once the commit is on `main`.
+the tag is expected and harmless; the catalog ships on the next webapp deploy.
 
 Loop over **every** `reg_webapp/stewards/*/steward.project_data.json` (do not
 special-case any one steward); for each whose `reg_meta_version` is older than the new

@@ -1,6 +1,0 @@
-interface:
-  display_name: "Registry Plan Lanes"
-  short_description: "Rank ready registry issue lanes"
-  default_prompt: "Use $plan-lanes to rank the next ready registry issue lanes."
-policy:
-  allow_implicit_invocation: true

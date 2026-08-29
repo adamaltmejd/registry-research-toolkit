@@ -335,7 +335,6 @@ plan argues well for crossing them.
   drops one of these is not simpler, it is broken.
 - **Yard is the primary build pathway.** Manual builds happen only for special cases
   (releases, real-seed `build-db` verification); the pre-Yard GitHub coordination
-  machinery (pr-pipeline / chief-of-staff dispatch) is being retired and gets no new
-  work.
+  machinery is retired and gets no new work.
 - **Dogfooding duty.** While operating, log how Yard itself behaves — problems and
   papercuts — in `.yard/DOGFOOD.md` (see CLAUDE.md, "Yard").
