@@ -199,3 +199,39 @@ into insights for the Yard builder agent, then pruned.
 - Board note: with the workaround gone, the gate config is back to what a fresh 0.10.1
   scaffold would suggest — the workaround lived exactly one release cycle, which is the
   dogfooding loop working as intended.
+
+## 2026-08-29 evening — machinery retirement (Y-4..Y-9) on 0.10.1
+
+Six lanes, \~2.5 hours wall-clock, $7.74 total: retired the pre-Yard coordination
+machinery (9 scripts + 9 test files + 2 workflows + 7 skills + 4 role agents + both
+mirror trees), trimmed CLAUDE.md/AGENTS.md by \~680 lines, then two worker-proposed
+follow-up trims. Observations:
+
+- **The proposal loop is the standout.** Three of six lanes came from worker proposals
+  (A-11, A-14, A-15) — each flagged work outside its ticket fence instead of
+  scope-creeping, each read whole via the new `proposal show`, each decided by the
+  admission rule and accepted `--parked`, each landed clean. Workers also self-reported
+  the judgment calls they were NOT making (trust-surface API, protected sections) — the
+  frozen prompts plus role instructions are calibrating scope discipline extremely well.
+- **Replay/retarget earned its keep**: Y-4's candidate was carried onto a moved main
+  with review + gates redone and zero worker re-spend; two more lanes auto-retargeted
+  silently. The one stop: retarget's exactness check tripped on `__pycache__` in the
+  lane clone. The error's remedy text was perfect, but `build_artifacts` takes literal
+  directories only, so Python's pycache spray must be enumerated dir by dir — a pattern
+  (or built-in pycache handling) would remove a growing list.
+- **Y-481's skip message verified live** ("1 skipped test is not gate evidence — fix or
+  remove it: <name>") — and it caught a real flake: the same candidate's test gate
+  skipped `test_pinned_providers_auto_toml_git_tracked[fqid_slugs]` ("slug_dir is not
+  inside a git work tree") on one run and ran it green on the re-run. The gate view's
+  git-work-tree availability appears non-deterministic across runs of the SAME candidate
+  — worth a look at how the gate binds the candidate view.
+- **`correctnessMismatch` did its job**: a reviewer verdicted pass while narrating
+  "patch is incorrect" (claimed a deleted helper was still referenced); yard surfaced
+  the tension as a flag, the operator read settled it (the reviewer was wrong — the
+  helper had been inlined). Exactly the right division of labor.
+- Papercut: a gate-failed attention after an operator-requested re-run still says reason
+  "automatic-repair-rounds-exhausted" wording in some paths — minor, the exits were
+  right.
+- Costs: Y-4 $1.83 · Y-5 $0.83 (light) · Y-6 $1.15 · Y-7 $1.67 · Y-8 $0.66 (light) · Y-9
+  $1.60. Concurrency 2 worked; the serialization point is the operator read, not the
+  machinery.
