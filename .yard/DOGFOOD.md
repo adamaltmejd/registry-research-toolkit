@@ -70,3 +70,47 @@ into insights for the Yard builder agent, then pruned.
   repeated verbatim under every requirement that needed the image (worker-cli plus one
   per gate) — 4 copies in one report. One failure line + "same cause" references would
   read faster, especially for an agent operator paying tokens for the repetition.
+
+### Config-completion round
+
+- Product gap (from a real operator question): gates are selected per *workflow*, at
+  filing time — a prediction about what the lane will touch. CI systems condition on the
+  observed diff (paths-filter); a "non-UI" workflow that skips the frontend gate would
+  silently skip the openapi-types drift tripwire whenever the prediction is wrong.
+  Change-aware gates (skip/require by candidate paths, decided at gate time) would
+  dissolve the whole UI-lane/core-lane workflow-taxonomy question.
+- Asymmetry: the frozen planning prompt carries real anti-overengineering pressure
+  (named consumer, minimum behavior, exclusions, delete-before-split), but the
+  implementation role ships with no scope ceiling at all — `instructions` is empty in
+  the scaffold and its one example is about code conventions. A default worker-side
+  ceiling (the §7 rules of the operator skill, worker-facing) would protect projects
+  that never hand-write role instructions.
+
+### First lane (Y-1/1): gate-failure round trip
+
+- What worked: the `gate-failed` attention carried ready-to-copy exits with guards
+  (`yard lane start Y-1/1/e8 --expect-generation 1`); the worker's investigation was
+  excellent — reproduced the failure on an untouched tree, proved it pre-existing,
+  probed a fix, and filed a proposal instead of scope-creeping (the new role
+  instructions visibly held); `yard lane show` exposes per-execution token usage and
+  cost, which made the spend legible ($1.67 for a README lane, most of it spent
+  diagnosing operator infrastructure).
+- Product gap: the worker burned both `max_gate_repair_rounds` on a failure it could
+  never fix — the gate image is built from `.yard/Dockerfile` in canonical, which the
+  candidate cannot change. A gate that fails *identically on the base tree* is an
+  environment failure, not a candidate failure; detecting that (run the failed gate once
+  against base, or even just observe an unchanged-handoff round) and routing to the
+  operator instead of the repair loop would save the rounds and the tokens.
+- Product gap, larger: `preflight --full` advertises "can each gate's command start?"
+  but resolves only the command's head word (`sh` after the wrapper workaround), so a
+  whole class of image defects passed preflight and was discovered by paid lanes:
+  missing `node` (CI green only because GitHub runners ship it), Debian node 20 vs
+  undici incompatibility in vitest teardown, and uv's offline resolver refusing
+  `build-system.requires` lookups entirely (editable workspace members cannot build in
+  an isolated offline gate at all — fixed by locking hatchling+editables as dev deps and
+  a two-step `uv sync --no-install-workspace` / `--no-build-isolation`). A `--full`
+  variant that actually runs each gate command against the current tree would have
+  caught all of it for container-minutes instead of worker-tokens.
+- Operator note (own mistake, but instructive): verifying gate commands by piping
+  through `tail` masks exit codes in sh (no pipefail); two rounds were lost to "SYNC_OK"
+  lines printed after failed syncs.
