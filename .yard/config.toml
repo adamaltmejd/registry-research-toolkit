@@ -153,7 +153,8 @@ instructions = "Smallest safe change, in the ticket's scope only; match the conv
 [checks.lint]
 command = '''sh -ec '
 export UV_CACHE_DIR=/opt/uv/cache UV_PYTHON_INSTALL_DIR=/opt/uv/python UV_LINK_MODE=copy
-uv sync --frozen --offline
+uv sync --frozen --offline --no-install-workspace
+uv sync --frozen --offline --no-build-isolation
 uv run ruff check
 uv run ruff format --check
 uvx --offline --from ty==0.0.72 ty check
@@ -166,7 +167,8 @@ timeout_minutes = 20
 [checks.test]
 command = '''sh -ec '
 export UV_CACHE_DIR=/opt/uv/cache UV_PYTHON_INSTALL_DIR=/opt/uv/python UV_LINK_MODE=copy
-uv sync --frozen --offline
+uv sync --frozen --offline --no-install-workspace
+uv sync --frozen --offline --no-build-isolation
 uv run python -m pytest -q -n auto --junitxml="$YARD_TEST_REPORT"
 ' '''
 timeout_minutes = 40

@@ -16,15 +16,19 @@
 # source changes reuse them; a lockfile change rebuilds only its own layer.
 FROM debian:stable-slim@sha256:04634311a8d5fc442b6eb06d792293c4f3e2268652ca7634e00ce8ef5cc0a28a
 
-# nodejs: the frontend tools' launchers (biome, svelte-check, vitest, vite,
-# openapi-typescript) are `#!/usr/bin/env node` scripts — bun alone does not
-# satisfy them (CI is green only because GitHub runners ship system node).
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
-       ca-certificates git nodejs \
+       ca-certificates git \
        ripgrep jq curl file diffutils patch tar xz-utils zstd unzip coreutils \
     && install -d -m 1777 /yard/state/tmp \
     && rm -rf /var/lib/apt/lists/*
+
+# node: the frontend tools' launchers (biome, svelte-check, vitest, vite,
+# openapi-typescript) are `#!/usr/bin/env node` scripts — bun alone does not
+# satisfy them (CI is green only because GitHub runners ship system node), and
+# Debian's node 20 trips an undici incompatibility in the vitest jsdom teardown.
+# Pinned digest = node 24.20.0.
+COPY --from=node:24-bookworm-slim@sha256:ba849c60be29959425b8734d57b8b4b7d56f98edd9504c9af091d5281095a71e /usr/local/bin/node /usr/local/bin/node
 
 # Pinned toolchain binaries. Move these pins deliberately, with the repo's own
 # uv/bun versions (uv: brew-installed on the host; bun: reg_webapp toolchain).
@@ -34,9 +38,11 @@ RUN ln -s /usr/local/bin/bun /usr/local/bin/bunx
 
 # --- Python warm layer: keyed on workspace manifests + lockfile only. ---
 # --no-install-workspace: members' own builds are done by each gate's offline
-# `uv sync` in the candidate tree; here we only need every third-party wheel
-# (plus hatchling, the members' build backend) in the cache, and the managed
-# interpreter installed. Gates run as the host uid, so the caches must be
+# two-step `uv sync` in the candidate tree (hatchling is a locked dev dep, so
+# the first sync puts it in the venv and --no-build-isolation builds the
+# members with it — uv's offline resolver refuses build-system.requires
+# lookups, so isolated builds cannot work offline); here we only need every
+# locked wheel in the cache and the managed interpreter installed. Gates run as the host uid, so the caches must be
 # world-writable (uv takes lock files in its cache dir) — chmod in the same
 # layer to avoid duplicating it.
 COPY .python-version pyproject.toml uv.lock /opt/warm/
@@ -48,8 +54,7 @@ RUN cd /opt/warm \
     && export UV_CACHE_DIR=/opt/uv/cache UV_PYTHON_INSTALL_DIR=/opt/uv/python \
     && uv python install \
     && uv sync --frozen --no-install-workspace \
-    && uv pip install --no-deps --target /tmp/warm-bb hatchling editables \
-    && rm -rf /tmp/warm-bb /opt/warm/.venv \
+    && rm -rf /opt/warm/.venv \
     # Tool envs for the pinned checkers (keep versions == the CI/CLAUDE.md pins):
     && uvx --from ty==0.0.72 ty --version \
     && uvx --from panache-cli==3.4.0 panache --version \
