@@ -1,0 +1,279 @@
+# Yard project configuration.
+# Every key that has a default is written out below, set to that default.
+# Commented lines are examples of keys that have none.
+# Unknown keys are errors.
+
+# Finished work lands on this branch.
+[target]
+ref = "main"
+
+# Lanes and gates run in a container built from the named Dockerfile.
+[isolation]
+dockerfile = ".yard/Dockerfile"
+
+# The implementation role writes code.
+# backend selects "claude" or "codex", and model names a model that backend
+# offers. effort sets reasoning depth to "low", "medium", "high", "xhigh", or
+# "max". access grants "writable" or "read-only" workspace access, and tools
+# turns subagents on or off. instructions add your own standing guidance to
+# every prompt for the role.
+# If a worker emits no events for inactivity_timeout_minutes, Yard kills the
+# generation and starts a fresh one with the same session. Zero disables that,
+# and zero is the shipped default because silence is not proof of a wedge: a
+# worker inside one long tool call is legitimately silent for exactly as long
+# as that call takes. Recommended when you leave lanes running unattended or
+# watch the board for stalls: set it above this project's longest silent step
+# (its slowest test run or image build) with room to spare. A value below that
+# makes healthy lanes kill and repeat their own slow step, without attention,
+# until the total-work budget is gone.
+# total_work_timeout_minutes is the unconditional stop across every automatic
+# restart, and automation never resets it. It applies whatever the setting
+# above is, and a worker wedged under it is reported by its lane's last-event
+# age in the status board and by worker-failed attention when it runs out.
+# A lane's rounds all resume one session, so its context grows across them,
+# and the two settings below are how that is managed in the open rather than
+# left to whatever the CLI does when it runs out.
+# context_limit_tokens states the window this model actually runs with and is
+# passed straight to the backend, so the CLI's own mid-round auto-compaction
+# triggers there rather than wherever it would have on its own. Claude takes
+# 100000 to 1000000 tokens; Codex takes no such setting and refuses one.
+# compaction_threshold_share is the better moment: when a round ends with more
+# than this share of that window occupied, Yard compacts the session before the
+# next round resumes it -- at a boundary where the round's conclusion is already
+# stated, instead of mid-thought. It runs while the round is being reviewed and
+# gated, so it usually costs no wall-clock. Occupancy is read from the backend's
+# own reports; a round that reports none is left alone and says so in the lane's
+# history.
+# 300000 with a 0.7 share is the shipped pair, and the arithmetic is the point:
+# a round starts at 210000 or less with about 90000 of headroom, so the
+# provider's mid-round fallback should essentially never fire, while every round
+# after a full one starts from a compacted brief. A far larger window is not the
+# better default it looks like -- a repair round reasons better from a current
+# brief than from stale plans and old tool output it is still carrying. Raise it
+# if your work genuinely needs a bigger window.
+# The profile below is quality-first: the strongest model this backend offers,
+# at high effort, with subagents on. It is the setting for a ticket whose
+# difficulty you cannot bound in advance. Simple work you still mean to land is
+# what the light role and the light workflow further down are for, and they are
+# selected per ticket, so this dial stays where hard work needs it. Yard meters
+# no cost, enforces no budget, and quotes no price; every model turn here is
+# billed by the provider whose CLI ran it, and their usage reporting is the only
+# account of it.
+[roles.implementation]
+backend = "claude"
+model = "claude-opus-5"
+effort = "high"
+access = "writable"
+tools = { subagents = true }
+inactivity_timeout_minutes = 0
+total_work_timeout_minutes = 360
+context_limit_tokens = 300000
+compaction_threshold_share = 0.7
+# instructions = "Match the conventions of the code you are changing."
+
+# Plan-first tickets need the planning role. Without it, such a ticket waits
+# for the operator instead of planning itself.
+# The frozen planning prompt already asks every plan for its named consumer,
+# the minimum behavior that consumer needs, which assumptions were stated and
+# which inferred, the deployment's own threat model, and its exclusions -- and
+# to delete or defer behavior before splitting it. That half is universal, so
+# it is not yours to write. instructions is the other half: what is true of
+# this project only, and nowhere in the ticket. The plan document a ticket is
+# planned against earns its place, and so does a size ceiling this project wants
+# held -- though Yard ships no number of its own, because a budget in the
+# scaffold reads as a contract and size is a signal read after the fact.
+[roles.planning]
+backend = "claude"
+model = "claude-fable-5"
+effort = "high"
+instructions = "Plan against this repository's CLAUDE.md conventions (reuse-first ladder, load-bearing guards: PII/MONA confinement, determinism, JSON-contract validation, fail-fast) and each package's DESIGN.md. Name the package(s) a ticket touches."
+
+# The conflict role resolves a conflicted retarget and takes the same keys as
+# the implementation role. Without it, the lane stops for the operator.
+[roles.conflict]
+backend = "claude"
+model = "claude-fable-5"
+effort = "high"
+access = "writable"
+tools = { subagents = true }
+inactivity_timeout_minutes = 0
+total_work_timeout_minutes = 360
+
+# A role table named anything other than implementation, planning, conflict, or
+# review is an additional worker role a workflow can select, and it takes the
+# same keys as the roles above. This one is for simple work, and the light
+# workflow further down is what puts a lane on it. Its candidates are meant to
+# land, so the model is one that finishes a small task correctly rather than the
+# least this backend can run; medium effort is what such a task takes, and
+# subagents are off because work small enough to select this role is work one
+# worker holds in its own context.
+[roles.light]
+backend = "claude"
+model = "claude-sonnet-5"
+effort = "medium"
+access = "writable"
+tools = { subagents = false }
+inactivity_timeout_minutes = 0
+total_work_timeout_minutes = 360
+
+# Each [checks.<name>] section defines a gate every candidate must pass.
+# command runs the gate and timeout_minutes limits one run. environment is
+# "container" or "host": container gates have no credentials and no network,
+# and a host gate must also name the platform and architecture it needs.
+# A gate that sets test_report to "junit" has its JUnit XML read back from
+# $YARD_TEST_REPORT. Give each gate a name of your own in place of "test".
+
+# A container gate command is run as /bin/sh -c under env -i, so the image's
+# own ENV lines never reach it and nothing of your shell profile does either.
+# The whole environment is this floor:
+#   PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+#   HOME=/tmp
+#   TMPDIR=/tmp
+#   LANG=C.UTF-8
+#   YARD_TEST_REPORT, when this gate sets test_report
+#   GIT_CONFIG_* trusting /workspace, so Git commands there are not refused
+# A toolchain the Dockerfile installs outside that PATH, or one that reads its
+# own variables, is therefore unreachable by its bare name; state what it needs
+# in the command itself, which is a shell command and expands $PATH as usual.
+# There is no env key for a check. Rust installed by rustup under /usr/local is
+# the worked case -- bare "cargo" resolves to nothing there, and this works:
+#   command = "PATH=/usr/local/cargo/bin:$PATH RUSTUP_HOME=/usr/local/rustup CARGO_HOME=/usr/local/cargo cargo clippy --all-targets -- -D warnings"
+
+# The three gates mirror .github/workflows/ci.yml (lint / test /
+# reg-webapp-frontend). Gates run network-disabled, so every command resolves
+# offline against the caches the .yard/Dockerfile pre-warms under /opt
+# (uv wheel cache + managed python, uvx tool envs for the pinned ty/panache,
+# and a baked frontend node_modules). UV_LINK_MODE=copy because the baked
+# cache is another uid's files and hardlinking across owners is refused.
+
+[checks.lint]
+command = '''export UV_CACHE_DIR=/opt/uv/cache UV_PYTHON_INSTALL_DIR=/opt/uv/python UV_LINK_MODE=copy \
+  && uv sync --frozen --offline \
+  && uv run ruff check \
+  && uv run ruff format --check \
+  && uvx --offline --from ty==0.0.72 ty check \
+  && uvx --offline --from panache-cli==3.4.0 panache format --check . \
+  && uvx --offline --from panache-cli==3.4.0 panache lint . \
+  && bash scripts/check_versions.sh'''
+timeout_minutes = 20
+
+[checks.test]
+command = '''export UV_CACHE_DIR=/opt/uv/cache UV_PYTHON_INSTALL_DIR=/opt/uv/python UV_LINK_MODE=copy \
+  && uv sync --frozen --offline \
+  && uv run python -m pytest -q -n auto --junitxml="$YARD_TEST_REPORT"'''
+timeout_minutes = 40
+test_report = "junit"
+
+# simplify: `bun run test` (vitest jsdom + Playwright-Chromium browser projects)
+# is not run here — baking Chromium + its OS libs into the gate image is a
+# follow-up; GitHub CI still runs it on every push of main. Add it once the
+# image carries a pinned Playwright Chromium.
+[checks.frontend]
+command = '''cd reg_webapp/frontend \
+  && cp -a /opt/frontend/node_modules . \
+  && bun run lint \
+  && bun run check \
+  && bun run build \
+  && bun run gen:types \
+  && git diff --exit-code -- src/lib/api-types.ts'''
+timeout_minutes = 20
+
+# Review runs on every candidate. profile names one of the profiles below.
+# max_gate_repair_rounds limits repairs after gate failures, max_rounds limits
+# repairs after blocking review findings, and timeout_minutes limits one
+# review run.
+[checks.review]
+max_gate_repair_rounds = 2
+max_rounds = 5
+profile = "default"
+timeout_minutes = 30
+
+# A review profile defines the reviewer panel and the finding priorities.
+# reviewers lists entries in engine:model:effort format, and a reviewer from a
+# different engine family than the implementer is recommended. blocking sets
+# the repair threshold, and max_priority sets the least severe reported
+# finding; priorities run from P0 (most severe) through P3 (least). Name
+# profiles as you like and select one above.
+[checks.review.profiles.default]
+reviewers = ["codex:gpt-5.6-sol:high"]
+blocking = "P1"
+max_priority = "P3"
+
+# A workflow is a named binding of the knobs above, never a step language. It
+# states three: role names the worker role its lanes run as, review names one
+# of the profiles above -- or "none" for no review at all -- and checks is
+# either "all" or a list of the gate names such a lane must pass. A ticket
+# selects one with yard ticket new --workflow NAME, and a ticket that names none
+# runs "default", so what unspecified tickets run is moved by editing the table
+# below rather than by touching the backlog. yard workflow list shows what every
+# workflow this project declares binds.
+[workflows.default]
+role = "implementation"
+review = "default"
+checks = "all"
+
+# The light workflow is the everyday lane for simple work, selected one ticket
+# at a time: the role above, every gate, and no review. Skipping the review
+# panel is its one economy, and it is the right one for a rename, a message, or
+# a small fix -- work where a panel would cost more than it catches. The gates
+# are not part of that economy: checks = "all" means a candidate you might land
+# has passed the same CI as any other, because a candidate no gate has seen is
+# not light, it is unverified.
+# A review of "none" means no review execution is ever started for such a lane
+# -- its checks still run, its candidate is still yours to approve, and it is
+# never eligible for automatic merging, which requires a clean current review.
+# A light candidate is therefore unreviewed by policy, and it lands the way any
+# other one does: because you read it and approved it. Send a ticket whose
+# difficulty you cannot judge in advance down "default" instead -- an unreviewed
+# candidate that needed a reviewer spends the difference again on repair rounds
+# you drive yourself.
+[workflows.light]
+role = "light"
+review = "none"
+checks = "all"
+
+# concurrency limits how many ready tickets run at once.
+[scheduler]
+concurrency = 1
+
+# The merge policy governs automatic merging only. Operator approval is never
+# limited by it.
+# enabled turns automatic merging on. Every changed path must match
+# allow_paths, so an empty list qualifies nothing, and no changed path may
+# match protected_paths. allow_non_hermetic_gates names the host gates that
+# may still count toward an automatic merge. autoreview_pin holds the one
+# reviewer-tool commit automatic merging accepts.
+[merge]
+enabled = false
+allow_paths = []
+protected_paths = []
+allow_non_hermetic_gates = []
+# autoreview_pin = "fe588b1fe588b1fe588b1fe588b1fe588b1fe588"
+
+# build_artifacts names the directories ordinary build activity fills with
+# output your .gitignore already covers -- target, node_modules, dist, and
+# whatever your toolchain writes. Each is a directory path relative to the
+# repository root, not a pattern, and none is guessed for you.
+# A candidate must be exactly what its commits say, so replaying one onto a
+# moved target reads the clone it came from and refuses whatever the candidate
+# does not contain. Naming these directories is what keeps ordinary build
+# output from being that, including the empty directories a build leaves
+# behind that no file listing enumerates at all.
+# Naming a directory settles nothing on its own: a declared directory is
+# disregarded only where Git classifies the whole of it as ignored -- which is
+# also what accounts for those empty directories, since Git reports the
+# ignored directory in place of its contents. Two things keep a directory from
+# qualifying: anything tracked inside it, and an ignore rule covering only its
+# contents -- target/ classifies the directory, target/** does not.
+# Everything else still counts: a change to a source file, an unignored file
+# anywhere, and an ignored entry outside these directories. Being ignored is
+# not being reproducible. A .env file, a local database, and a build's
+# leftovers are all ignored, and only the last is build output.
+[workspace]
+build_artifacts = [
+  ".venv",
+  ".pytest_cache",
+  ".ruff_cache",
+  "reg_webapp/frontend/node_modules",
+  "reg_webapp/frontend/dist",
+]

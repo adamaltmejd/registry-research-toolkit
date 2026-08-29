@@ -532,3 +532,19 @@ lives in `reg_meta/DESIGN.md`; per-provider source-delivery shapes in
 `reg_meta_build/DESIGN.md`). For the cross-package design (topology, dependency graph,
 repo-wide invariants), see `ARCHITECTURE.md`; for the remaining post-A5 work, see
 `REFACTOR_SPEC.md`.
+
+# Yard
+
+Development runs through [Switchyard](https://github.com/adamaltmejd/switchyard)
+(`yard`): tickets, isolated lanes, review, gates, operator approval. Yard is built to
+be driven by an agent operator, and **the agent working this repo is that operator** —
+when driving the board (filing tickets, answering attention items, approving/rejecting
+candidates), load the `/yard-operator` skill (`.claude/skills/yard-operator/SKILL.md`,
+scaffolded by `yard init`) and follow it. Project config is `.yard/config.toml`; its
+gates mirror `.github/workflows/ci.yml`.
+
+**Dogfooding**: Yard is the maintainer's own project under active development, and this
+repo is its testbed. While operating it, keep a running log in `.yard/DOGFOOD.md` of
+everything about how Yard works in practice — serious problems, but also papercuts:
+inconsistencies, unclear output, extra steps, and anything that wastes time or tokens.
+Periodically the maintainer summarizes it into insights for the Yard builder agent.

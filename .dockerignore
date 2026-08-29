@@ -44,3 +44,25 @@ archive/
 REFACTOR_SPEC.md
 ARCHITECTURE.md
 AGENTS.md
+
+# >>> yard init: Docker build context >>>
+# Yard builds every lane worker and gate image from this directory as the
+# Docker build context, so whatever is not excluded here is copied to the
+# daemon on each build. Yard owns the two entries below; the rest of the file
+# is yours, and this block is appended once and never rewritten.
+#
+# .yard/local is Yard's own local state — the store, logs, lane workspaces, and
+# a live daemon socket, which is not a file a build context can carry at all.
+# .git is large, and it is also the main source of image-digest divergence
+# between gates: each gate builds from a fresh detached view whose .git differs,
+# so a COPY that reaches it misses the layer cache every time.
+.git
+.yard/local
+#
+# Your build output belongs here too. Yard does not know which trees this
+# project has, so these are suggestions — uncomment what applies, delete the
+# rest, and add your own:
+# target/
+# node_modules/
+# dist/
+# <<< yard init: Docker build context <<<

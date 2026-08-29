@@ -1,0 +1,4 @@
+# Yard's local state: store, sockets, logs, and workspaces.
+# Losing it loses this project's backlog and coordination history, so back it
+# up like any other local database — but do not commit it.
+local/
