@@ -170,8 +170,9 @@ export UV_CACHE_DIR=/opt/uv/cache UV_PYTHON_INSTALL_DIR=/opt/uv/python UV_LINK_M
 uv sync --frozen --offline --no-install-workspace
 uv sync --frozen --offline --no-build-isolation
 uv run python -m pytest -q -n auto --junitxml="$YARD_TEST_REPORT"
-# pytest puts totals on <testsuite>, not the <testsuites> root; yard's junit
-# reader wants them on the root — aggregate them up.
+# pytest puts totals on <testsuite>, not the <testsuites> root; the yard
+# junit reader wants them on the root — aggregate them up. (No apostrophes
+# in this block: it lives inside a single-quoted sh -ec string.)
 uv run python - <<PY
 import os, xml.etree.ElementTree as ET
 path = os.environ["YARD_TEST_REPORT"]
