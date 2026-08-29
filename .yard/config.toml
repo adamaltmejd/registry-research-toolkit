@@ -285,6 +285,12 @@ allow_non_hermetic_gates = []
 [workspace]
 build_artifacts = [
   ".venv",
+  # __pycache__ spray: build_artifacts takes literal directories, not patterns,
+  # so each pycache dir a worker's in-clone test run creates must be named.
+  # Extend this list if a retarget stops on another one.
+  "__pycache__",
+  "scripts/__pycache__",
+  "scripts/tests/__pycache__",
   ".pytest_cache",
   ".ruff_cache",
   "reg_webapp/frontend/node_modules",
