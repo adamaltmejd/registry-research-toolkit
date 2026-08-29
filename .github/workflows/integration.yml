@@ -40,10 +40,9 @@ jobs:
       # exhausted from shared runner IPs.
       #
       # A failure during a release-owed window (main's SCHEMA_VERSION past the
-      # newest published asset) is expected and informative — it mirrors the
-      # issue-hygiene "DB content changed since last tag" drift alert, not a code
-      # regression. The post-release call never hits this (the matching asset was
-      # just published).
+      # newest published asset) is expected and informative — a release-drift
+      # signal, not a code regression. The post-release call never hits this (the
+      # matching asset was just published).
       - name: Run Docker integration + release tests
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

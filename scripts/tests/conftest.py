@@ -5,8 +5,8 @@ The `scripts/` tooling modules import each other via `_gh.load_sibling`, a
 whole process (so a monkeypatch or attribute read through one consumer is visible through
 every other — see `scripts/_gh.py`). A test that loads its target module with an
 unconditional `sys.modules[name] = fresh` breaks that: if an earlier-collected test file
-already pulled the same module in as a `load_sibling` sibling (e.g. `test_cos_preflight`
-loads `cos_preflight` -> `plan_sequence` -> `check_issue_hygiene`), the overwrite splits
+already pulled the same module in as a `load_sibling` sibling (a test loading a script
+that in turn `load_sibling`s the same name), the overwrite splits
 the singleton — a consumer holds the old object while later `load_sibling` calls return
 the new one, so identity tests pass or fail depending on collection order.
 

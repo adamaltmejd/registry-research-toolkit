@@ -25,9 +25,8 @@ author is DROPPED, never surfaced. A drop is counted to stderr (observability �
 never *silently* discards), but the untrusted content itself is never printed.
 
 Stdlib only. Loadable two ways, matching the sibling scripts:
-  - as an importable module via `_gh.load_sibling("gh_issue")` (plan_sequence.py and
-    cos_dispatch.py load it this way to reuse the gated `fetch_open_issues` /
-    `is_maintainer_authored`);
+  - as an importable module via `_gh.load_sibling("gh_issue")`, exposing the gated
+    `fetch_open_issues` / `is_maintainer_authored`;
   - as a CLI: `uv run --no-project python scripts/gh_issue.py view <n> [--comments]`
     or `... maintainer-login` (print the trusted maintainer login, for author checks).
 
@@ -112,16 +111,15 @@ def _is_maintainer(obj: dict, maintainer: str) -> bool:
 
 
 def fetch_open_issues() -> list[dict]:
-    """Open issues authored by the maintainer, in `fetch_open_issues`'s original shape.
+    """Open issues authored by the maintainer — the gated work-set read.
 
-    The gated replacement for `check_issue_hygiene.fetch_open_issues` on the ingestion
-    path (plan_sequence's `build_records` consumes the result). Filters maintainer
+    The only enumeration of the issue corpus the ingestion path may use. Filters maintainer
     authorship on BOTH sides: server-side via `gh issue list --author <maintainer>` so a
     stranger-issue flood can't push maintainer rows past `FETCH_CAP` (the cap is the
     danger — a truncation would silently drop real work), plus the client-side
     `_is_maintainer` keep as defense-in-depth (fail-closed: a missing/None author is
-    dropped even if the server-side filter ever changed shape). Rows keep the
-    `number,title,labels,body` shape `build_records` reads — the extra `author` key is
+    dropped even if the server-side filter ever changed shape). Rows carry the
+    `number,title,labels,body` shape consumers read — the extra `author` key is
     left in place and ignored downstream. The count of any dropped non-maintainer issues
     is written to stderr (never silently discarded).
     """
@@ -167,9 +165,9 @@ def _fetch_issue(number: int, comments: bool) -> dict | None:
 def is_maintainer_authored(number: int) -> bool:
     """Whether issue/PR #number exists AND is authored by the maintainer.
 
-    The public author-check the cross-script consumers use (e.g. cos_dispatch's dispatch
-    chokepoint) instead of composing the private `_fetch_issue` + `_is_maintainer`
-    themselves. Fail-closed: a missing number (`_fetch_issue` → None) or a
+    The public author-check a cross-script consumer uses instead of composing the private
+    `_fetch_issue` + `_is_maintainer` itself. Fail-closed: a missing number
+    (`_fetch_issue` → None) or a
     missing/None/non-maintainer author → False. Inherits `_fetch_issue`'s caveat that
     `gh issue view` resolves a PR number too, so a maintainer-authored PR passes exactly
     like a maintainer issue (authorship, not issue-ness, is the trust boundary).

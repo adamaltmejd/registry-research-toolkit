@@ -214,7 +214,7 @@ jobs:
                 exit 1
               fi
               echo "pending_bump=true" >> "$GITHUB_OUTPUT"
-              echo "::notice::pending reg_meta release — bake + deploy paused by design (code schema ahead of latest released asset $TAG). The owed release (publish_reg_meta.yml → container-build dispatch) clears this; check_issue_hygiene.py also flags it." ;;
+              echo "::notice::pending reg_meta release — bake + deploy paused by design (code schema ahead of latest released asset $TAG). The owed release (publish_reg_meta.yml → container-build dispatch) clears this." ;;
             compatible)
               echo "pending_bump=false" >> "$GITHUB_OUTPUT" ;;
             *)

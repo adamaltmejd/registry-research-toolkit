@@ -3,48 +3,37 @@
 `run` (checked subprocess → stdout), `gh_json` (run + JSON-decode),
 `gh_api_paginated` (paginated gh-api array flattening), and `repo_owner_name`
 (owner/name from $GITHUB_REPOSITORY, else `gh repo view`) are the thin,
-domain-neutral wrappers every gh-driven script in here needs. The original process
-wrappers were born in `check_issue_hygiene.py` and reused by `plan_sequence.py`; a third
-consumer was the trigger the note in `plan_sequence.py` named for lifting them into a
-shared module, and the cos_* tooling (`cos_preflight.py`, `cos_watch.py`, …) consumes them
-now. The issue-domain parsers (label sets, the relationship/touches regexes) stay in
-`check_issue_hygiene.py`, shared by its own set of consumers.
+domain-neutral wrappers every gh-driven script in here needs.
 
 `run_tolerant` is the non-zero-tolerant counterpart to `run`: it hands back the
 `CompletedProcess` (a non-zero exit is a signal the caller inspects, not a fatal error)
-and only SystemExits on a MISSING executable. Lifted out of `cos_preflight.py`, whose
-`git`/`gh`/sibling-probe calls all read a meaningful non-zero exit.
+and only SystemExits on a MISSING executable.
 
 `scrubbed_git_env` + `run_git` are the git-specific primitives. `scrubbed_git_env` is the
 SINGLE home for the GIT_* hijack scrub (a pre-push hook exports GIT_DIR/GIT_WORK_TREE/… and
 would otherwise point every child git call at the hook's repo regardless of cwd); `run_git`
 runs `git <args>` in an explicit cwd with that env scrubbed and tolerates a non-zero exit.
-Lifted out of the three private copies that had grown in `cos_dispatch.py` and
-`codex_local_review.py` — `run_git` deliberately does NOT map a missing git binary, leaving
-that to each caller (cos_dispatch surfaces it, codex_local_review maps a PreconditionError).
+`run_git` deliberately does NOT map a missing git binary, leaving that to each caller.
 
 The corpus-fetch plumbing lives here too — `FETCH_CAP` (the list-fetch ceiling) and
-`_warn_if_truncated` (its overflow warning) are domain-neutral and shared by both
-`check_issue_hygiene.py` and `gh_issue.py`; `check_issue_hygiene.py` re-exports them so
-its existing importers resolve unchanged. `gh_issue_view_or_none` is the single-issue
-`gh issue view` primitive whose non-zero exit is a NORMAL signal (not an issue / missing),
-shared by both single-issue readers rather than re-pasted — leaf duplication is this
-repo's named anti-pattern.
+`_warn_if_truncated` (its overflow warning) are domain-neutral and consumed by
+`gh_issue.py`, which re-exports them so its own importers resolve unchanged.
+`gh_issue_view_or_none` is the single-issue `gh issue view` primitive whose non-zero exit
+is a NORMAL signal (not an issue / missing) rather than an error.
 
 Stdlib only, and loaded by sibling scripts via `importlib` spec (not a plain `import`), so
 it resolves under `uv run --no-project python scripts/<name>.py` and under pytest's
 spec-loaded test modules alike, regardless of what's on sys.path.
 
-`load_sibling` is the ONE shared, `sys.modules`-guarded spec-loader every sibling script
-uses to pull in its other siblings (`gh_issue`, `plan_sequence`, `cos_preflight`, …). It
-returns the existing `sys.modules[name]` when present rather than re-executing, so a name
-loaded once (by any script or by a spec-loading test) is a SINGLE process-wide instance —
-`cos_preflight`'s `gh_issue` and its `_gh` are the same objects `gh_issue`/`plan_sequence`
-loaded, so a monkeypatch through one copy is visible through the other (the two-`_gh`-copy
-footgun the pre-guard code had). `_gh` itself can't be loaded via its own helper (a module
-can't import itself before it finishes executing), so each script keeps a tiny
-`sys.modules`-guarded `_load_gh()` preamble — the single leaf that cannot be hoisted;
-everything downstream of `_gh` goes through `load_sibling`.
+`load_sibling` is the ONE shared, `sys.modules`-guarded spec-loader for pulling one
+sibling script into another. It returns the existing `sys.modules[name]` when present
+rather than re-executing, so a name loaded once (by any script or by a spec-loading test)
+is a SINGLE process-wide instance — a monkeypatch or attribute read through one consumer
+is visible through every other (the two-copy footgun the pre-guard code had). `_gh` itself
+can't be loaded via its own helper (a module can't import itself before it finishes
+executing), so each script keeps a tiny `sys.modules`-guarded `_load_gh()` preamble — the
+single leaf that cannot be hoisted; everything downstream of `_gh` goes through
+`load_sibling`.
 """
 
 from __future__ import annotations
@@ -113,9 +102,9 @@ def run_tolerant(cmd: list[str]) -> subprocess.CompletedProcess[str]:
     """Run `cmd`, tolerate a non-zero exit, and hand back the CompletedProcess.
 
     Unlike `run` (which fatally SystemExits on non-zero), a non-zero exit here is a normal
-    signal the caller inspects — `cos_preflight.py` runs `git`/`gh`/sibling probes whose
-    non-zero exits carry meaning (a lane-freshness verdict, an absent ref) rather than a
-    fatal error. Only a MISSING executable is fatal: it maps to SystemExit with an
+    signal the caller inspects — a `git`/`gh` probe's non-zero exit carries meaning (an
+    absent ref, a negative verdict) rather than being a fatal error. Only a MISSING
+    executable is fatal: it maps to SystemExit with an
     actionable `missing executable` message so a broken PATH surfaces as a setup error
     instead of an uncaught traceback.
     """
@@ -149,8 +138,7 @@ def run_git(
     caller inspects (an absent ref, a failed ff-merge), not a fatal error — the CompletedProcess
     is handed back. Unlike `run_tolerant` it prepends `git`, scrubs the GIT_* hijack env
     (`scrubbed_git_env`), and runs in an explicit `cwd`. It does NOT catch `FileNotFoundError`:
-    a missing git binary propagates so each caller owns its own mapping (cos_dispatch lets it
-    surface as-is; codex_local_review maps it to a kind=precondition PreconditionError).
+    a missing git binary propagates so each caller owns its own mapping.
     """
     return subprocess.run(
         ["git", *args],
