@@ -1,9 +1,9 @@
 """Unit tests for scripts/gh_issue.py — the maintainer-author trust gate.
 
 The gate is fail-closed: a missing/None/non-maintainer author is dropped, never
-surfaced. These pin that on the one ingestion read (the `view` CLI), the fork check
-(`is_own_pr`), and the `REGISTRY_MAINTAINER_LOGIN` override. The gh calls are stubbed by
-patching `subprocess.run` on the shared `_gh` instance.
+surfaced. These pin that on the one ingestion read (the `view` CLI) and the
+`REGISTRY_MAINTAINER_LOGIN` override. The gh calls are stubbed by patching
+`gh_issue.subprocess.run`.
 """
 
 from __future__ import annotations
@@ -52,22 +52,6 @@ def test_maintainer_login_empty_override_falls_back(
     assert gi.maintainer_login() == "theowner"
 
 
-# --- is_own_pr (fork gate, fail-closed) ----------------------------------------------
-
-
-@pytest.mark.parametrize(
-    ("pr", "own"),
-    [
-        ({"isCrossRepository": False}, True),
-        ({"isCrossRepository": True}, False),
-        ({"isCrossRepository": None}, False),
-        ({}, False),  # missing field → not own
-    ],
-)
-def test_is_own_pr(pr: dict, own: bool) -> None:
-    assert gi.is_own_pr(pr) is own
-
-
 # --- view CLI ------------------------------------------------------------------------
 
 
@@ -84,9 +68,7 @@ def _stub_view(monkeypatch: pytest.MonkeyPatch, payload: dict | None) -> None:
             returncode=0, stdout=json.dumps(payload), stderr=""
         )
 
-    # `_fetch_issue` now routes through the shared `_gh.gh_issue_view_or_none`, which runs
-    # `_gh.subprocess.run` — patch there, not `gi.subprocess`.
-    monkeypatch.setattr(gi._gh.subprocess, "run", fake_run)
+    monkeypatch.setattr(gi.subprocess, "run", fake_run)
 
 
 def test_view_maintainer_issue_prints_json(
@@ -199,7 +181,7 @@ def test_view_comments_requests_comments_field(
             stderr="",
         )
 
-    monkeypatch.setattr(gi._gh.subprocess, "run", fake_run)
+    monkeypatch.setattr(gi.subprocess, "run", fake_run)
     gi.main(["view", "1", "--comments"])
     assert "state" in captured["cmd"][-1]
     assert "comments" in captured["cmd"][-1]

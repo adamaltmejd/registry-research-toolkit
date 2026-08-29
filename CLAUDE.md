@@ -184,10 +184,10 @@ plus a **type**: `enhancement`, `bug`, or `documentation`.
 
 **Ingestion trust gate** — this repo is public, so automation reads issue/PR content
 **only** through `scripts/gh_issue.py`, a fail-closed maintainer-author trust gate:
-issues/comments not authored by the maintainer, and fork-PR `Closes #N` claims, are
-dropped rather than surfaced to a model. Raw `gh issue view` / `gh issue list` without
-`--search` (and `gh api .../issues`, `gh search issues`) model-reads in skill files are
-forbidden, enforced by `scripts/tests/test_skill_gh_reads.py`.
+issues/comments not authored by the maintainer are dropped rather than surfaced to a
+model. Raw `gh issue view` / `gh issue list` without `--search` (and `gh api
+.../issues`, `gh search issues`) model-reads in skill files are forbidden, enforced by
+`scripts/tests/test_skill_gh_reads.py`.
 
 # Git
 

@@ -26,49 +26,67 @@ Stdlib only, and a CLI: `uv run --no-project python scripts/gh_issue.py view <n>
 [--comments]` or `... maintainer-login` (print the trusted maintainer login, for author
 checks).
 
-Reuses `_gh.py`'s process primitives (`repo_owner_name`) and its non-zero-tolerant
-single-issue view primitive (`gh_issue_view_or_none`) rather than re-pasting them — leaf
-duplication is this repo's named anti-pattern.
+The `gh` process primitives are the small private section below. They lived in a shared
+`_gh.py` while several sibling scripts used them; this is the only consumer left, so they
+sit here directly rather than behind a spec-loader preamble.
 """
 
 from __future__ import annotations
 
 import argparse
-import importlib.util
 import json
 import os
+import subprocess
 import sys
-from pathlib import Path
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from types import ModuleType
-
-
-def _load_gh() -> ModuleType:
-    # _gh can't load itself, so its consumer owns the load: a tiny sys.modules-guarded
-    # spec-load, so the whole process shares ONE _gh instance (a single patch target, not
-    # one copy per loader).
-    if (mod := sys.modules.get("_gh")) is not None:
-        return mod
-    spec = importlib.util.spec_from_file_location(
-        "_gh", Path(__file__).with_name("_gh.py")
-    )
-    assert spec and spec.loader
-    mod = importlib.util.module_from_spec(spec)
-    sys.modules["_gh"] = mod
-    spec.loader.exec_module(mod)
-    return mod
-
-
-# The gh process primitives live in the _gh module.
-_gh = _load_gh()
-
-repo_owner_name = _gh.repo_owner_name
 
 EXIT_OK = 0
 EXIT_USAGE = 2
 EXIT_REFUSED = 3
+
+
+# --- gh process primitives -----------------------------------------------------------
+
+
+def run(cmd: list[str]) -> str:
+    proc = subprocess.run(cmd, capture_output=True, text=True, check=False)
+    if proc.returncode != 0:
+        sys.stderr.write(f"command failed: {' '.join(cmd)}\n{proc.stderr}\n")
+        raise SystemExit(2)
+    return proc.stdout
+
+
+def gh_issue_view_or_none(number: int, fields: str) -> dict | None:
+    """`gh issue view <number> --json <fields>` decoded, or None on non-zero exit.
+
+    Unlike `run` (which fatally `SystemExit`s on a non-zero exit), a non-zero exit here is
+    a NORMAL signal — the number isn't a resolvable issue (a PR, or missing) — so it
+    returns None instead of aborting. `gh issue view` also resolves a PR number, so a
+    non-None result is NOT proof the number is an issue; the caller applies its own
+    trust/state gate on top.
+    """
+    proc = subprocess.run(
+        ["gh", "issue", "view", str(number), "--json", fields],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if proc.returncode != 0:
+        return None
+    return json.loads(proc.stdout)
+
+
+def repo_owner_name() -> tuple[str, str]:
+    """owner/name from $GITHUB_REPOSITORY, else `gh repo view`."""
+    slug = os.environ.get("GITHUB_REPOSITORY")
+    if not slug:
+        slug = json.loads(run(["gh", "repo", "view", "--json", "nameWithOwner"]))[
+            "nameWithOwner"
+        ]
+    owner, name = slug.split("/", 1)
+    return owner, name
+
+
+# --- trust gate ----------------------------------------------------------------------
 
 
 def maintainer_login() -> str:
@@ -100,16 +118,6 @@ def _is_maintainer(obj: dict, maintainer: str) -> bool:
     return login is not None and login.casefold() == maintainer.casefold()
 
 
-def is_own_pr(pr: dict) -> bool:
-    """Whether a PR is from a branch in THIS repository (not a fork).
-
-    Fail-closed: only an explicit `isCrossRepository is False` is own-branch; None, True,
-    or a missing field all read as not-own, so a fork PR's closing claims are never
-    trusted into the running set.
-    """
-    return pr.get("isCrossRepository") is False
-
-
 def _fetch_issue(number: int, comments: bool) -> dict | None:
     """The raw `gh issue view` payload for #number, or None if the number doesn't exist.
 
@@ -121,7 +129,7 @@ def _fetch_issue(number: int, comments: bool) -> dict | None:
     only forwards the payload; whether to surface it is decided there.
     """
     fields = "number,title,state,body,author" + (",comments" if comments else "")
-    return _gh.gh_issue_view_or_none(number, fields)
+    return gh_issue_view_or_none(number, fields)
 
 
 def view(number: int, comments: bool) -> tuple[int, str]:
