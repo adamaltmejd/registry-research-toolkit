@@ -150,3 +150,21 @@ into insights for the Yard builder agent, then pruned.
   cost for such a ticket is the \~$0.50 of attempt 4; the 6x multiple is the price of
   setting up gates by live fire. All of it would have been avoided by a preflight mode
   that actually runs gate commands (logged above).
+
+### Second lane (Y-2): config-transition candidate, single attempt
+
+- Everything worked: one attempt, review pass, all gates green, landed. The worker
+  rewrote both fixture-conditional tests deterministically and with *stronger*
+  assertions than asked (asserting the truncation/continuation occurs), and restored the
+  junit gate exactly to spec (quote-safe, deselection, aggregation).
+- The self-proving config edit worked as hoped: the candidate's own test gate ran under
+  its re-enabled junit contract (contract digest transition surfaced in the approval
+  detail; report showed tests=4212 skipped=0). Correction to an earlier entry: a
+  candidate CAN change gate config/Dockerfile and its own verification uses it —
+  candidate-pinning cuts against *operator* fixes reaching in-flight attempts, not
+  against a lane testing its own infra change.
+- Noticed: the approval detail flagged `.yard/config.toml` under `protectedPaths`
+  although `[merge].protected_paths` is empty — presumably a built-in always-protected
+  set for auto-merge. Reasonable, but undocumented in the config comments.
+- A landing that changes .yard/config.toml owes a daemon restart; `yard sync` printed
+  the restart hint — good — though it is easy to miss below the fast-forward line.
