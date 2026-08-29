@@ -16,9 +16,12 @@
 # source changes reuse them; a lockfile change rebuilds only its own layer.
 FROM debian:stable-slim@sha256:04634311a8d5fc442b6eb06d792293c4f3e2268652ca7634e00ce8ef5cc0a28a
 
+# nodejs: the frontend tools' launchers (biome, svelte-check, vitest, vite,
+# openapi-typescript) are `#!/usr/bin/env node` scripts — bun alone does not
+# satisfy them (CI is green only because GitHub runners ship system node).
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
-       ca-certificates git \
+       ca-certificates git nodejs \
        ripgrep jq curl file diffutils patch tar xz-utils zstd unzip coreutils \
     && install -d -m 1777 /yard/state/tmp \
     && rm -rf /var/lib/apt/lists/*
