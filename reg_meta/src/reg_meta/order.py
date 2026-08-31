@@ -8,6 +8,13 @@ manifest or a fail-closed result naming every gap. It is shared domain code —
 the FastAPI endpoint and the CLI/plugin are thin adapters over this function, so
 both emit byte-identical results (§12).
 
+`inventory=None` selects §12's confirmed GLOBAL-DEPLOYMENT FALLBACK: the global
+deployment has no physical inventory, so canonical resolution alone grounds the
+order. It is the same pipeline — only step 3's matching differs (see below) —
+and produces the same entry shape with a blank `table`, the resolved canonical
+column in `column`, and `edition` equal to that slice's requested period.
+`OrderProvenance.mode` names which of the two grounded the manifest.
+
 Pipeline, per `sources[*].bindings[*]` in project declaration order:
 
 1. **Availability clip.** A source period means "these columns, wherever each is
@@ -25,13 +32,16 @@ Pipeline, per `sources[*].bindings[*]` in project declaration order:
 3. **Steward matching + coverage gate.** A table matches a slice only when one
    of its columns carries a mapping matching `(register_variant, variable,
    representation)` AND its physical edition overlaps THAT slice; the edition
-   contributes only its overlap. A mapping that OMITS `representation` is §12's
-   single-representation arm: it matches only a binding that resolves to one
-   canonical representation across the request; otherwise an overlapping table
-   carrying one blocks the order rather than claiming one column is two
-   representations (a table that cannot overlap is inert). Any subperiod of the
-   availability-clipped request left uncovered blocks the WHOLE order with the
-   exact gaps — overlap alone never yields a partial manifest.
+   contributes only its overlap. In global-fallback mode the slice's own
+   canonical column is what serves it, so the slice covers itself exactly and
+   the gate below runs unchanged over that contribution. A mapping that OMITS
+   `representation` is §12's single-representation arm: it matches only a
+   binding that resolves to one canonical representation across the request;
+   otherwise an overlapping table carrying one blocks the order rather than
+   claiming one column is two representations (a table that cannot overlap is
+   inert). Any subperiod of the availability-clipped request left uncovered
+   blocks the WHOLE order with the exact gaps — overlap alone never yields a
+   partial manifest.
 4. **Emission.** Every matching table is emitted whole (v1 has no table chooser
    and no row filter — the §12 `simplify:` stands). Entries keep project
    source/binding order; the fan-out within a binding sorts by table, canonical
@@ -85,6 +95,13 @@ if TYPE_CHECKING:
 # (this writer, the steward-side extract reader) validate against the models.
 ORDER_MANIFEST_VERSION = 1
 
+# The deployment a `None` inventory is: the full-universe global deployment,
+# which has no physical delivery topology (§12's fallback). It is a value of
+# `reg_schema`'s `Steward` literal and the webapp's default steward id, and the
+# provenance gate below compares `ProjectData.steward` against it exactly as it
+# does against a real inventory's steward.
+GLOBAL_STEWARD = "global"
+
 # An inclusive ISO `(lo, hi)` date interval — the currency of every clip,
 # slice, edition and coverage computation below.
 _Interval = tuple[str, str]
@@ -130,7 +147,11 @@ class PhysicalCoordinate(_OrderModel):
     schema-qualified SQL table), `column` its literal case-preserving physical
     column, and `edition` the table's curated edition rendered canonically (a
     period token, an explicit `lo..hi` range, or a comma-joined list for an
-    interrupted series)."""
+    interrupted series).
+
+    In §12's global-deployment fallback there is no physical topology: `table`
+    is blank, `column` carries the resolved canonical column, and `edition`
+    equals the entry's requested period."""
 
     edition: str
     table: str
@@ -169,8 +190,13 @@ class OrderProvenance(_OrderModel):
     self-contained offline (§12: no network, no catalog lookup at extract time).
 
     `project_hash` is the SHA-256 of the project's canonical JSON, so a manifest
-    can be tied back to the exact uploaded project bytes."""
+    can be tied back to the exact uploaded project bytes.
 
+    `mode` names what GROUNDED the entries — a steward's physical inventory or
+    §12's global fallback (canonical resolution alone, blank `table`) — so a
+    reader never has to infer it from the entry shape."""
+
+    mode: Literal["steward_inventory", "global_fallback"]
     steward: str
     project_name: str
     project_schema_version: str
@@ -248,7 +274,9 @@ def extraction_filenames(entry: OrderEntry) -> tuple[str, ...]:
 
     A deterministic function of the entry alone: register + variant slugs from
     the logical coordinate, one file per segment of the physical edition (an
-    interrupted-series edition delivers one file per segment).
+    interrupted-series edition delivers one file per segment). A global-fallback
+    entry carries `edition = requested_period`, so the same rule gives it one
+    file per requested period segment.
 
     simplify: names use the reg_meta SLUG spelling (`lisa_individer-15plus_…`),
     not the steward's display casing (§12's illustrative `LISA_Individ_2019` is
@@ -395,24 +423,30 @@ def _requested_intervals(period: Period) -> tuple[_Interval, ...]:
 
 def materialize_order(
     project: ProjectData,
-    inventory: DeliveryInventory,
+    inventory: DeliveryInventory | None,
     conn: sqlite3.Connection,
 ) -> OrderResult:
     """Materialize `project` against `inventory` and the open reg_meta DB.
 
+    `inventory=None` is §12's global-deployment fallback — the deployment has no
+    physical topology, so canonical resolution grounds the order and entries
+    carry a blank `table`. Everything else (clip, slice, coverage gate, emission
+    order, determinism) is the same pipeline.
+
     Returns a complete `OrderManifest` or a non-empty finding set — never a
     partial order. `conn` is read only (the caller owns its lifetime, mirroring
     `validate_semantic`)."""
-    if project.steward != inventory.steward:
+    steward = GLOBAL_STEWARD if inventory is None else inventory.steward
+    if project.steward != steward:
         return _blocked(
             OrderFinding(
                 code="steward_mismatch",
                 message=(
                     f"project steward {project.steward!r} does not match the "
-                    f"deployment inventory steward {inventory.steward!r}; "
-                    "a project is validated against the inventory it is "
-                    "uploaded to, and provenance retargeting is not an "
-                    "application feature (REFACTOR_SPEC.md §12)"
+                    f"deployment steward {steward!r}; a project is validated "
+                    "against the deployment it is uploaded to, and provenance "
+                    "retargeting is not an application feature "
+                    "(REFACTOR_SPEC.md §12)"
                 ),
             )
         )
@@ -453,11 +487,12 @@ def _blocked(finding: OrderFinding) -> OrderResult:
 
 
 def _provenance(
-    project: ProjectData, inventory: DeliveryInventory, conn: sqlite3.Connection
+    project: ProjectData, inventory: DeliveryInventory | None, conn: sqlite3.Connection
 ) -> OrderProvenance:
     manifest = get_manifest(conn)
     return OrderProvenance(
-        steward=inventory.steward,
+        mode="global_fallback" if inventory is None else "steward_inventory",
+        steward=GLOBAL_STEWARD if inventory is None else inventory.steward,
         project_name=project.name,
         project_schema_version=project.schema_version,
         project_reg_meta_version=project.reg_meta_version,
@@ -482,7 +517,7 @@ def _project_hash(project: ProjectData) -> str:
 
 def _materialize_source(
     source: Source,
-    inventory: DeliveryInventory,
+    inventory: DeliveryInventory | None,
     catalog: Catalog,
     entries: list[OrderEntry],
     clips: list[ClipReport],
@@ -521,7 +556,7 @@ def _materialize_binding(
     source: Source,
     variant: str,
     requested: tuple[_Interval, ...],
-    inventory: DeliveryInventory,
+    inventory: DeliveryInventory | None,
     catalog: Catalog,
     entries: list[OrderEntry],
     clips: list[ClipReport],
@@ -608,16 +643,10 @@ def _materialize_binding(
             for lo, hi in _merge(intervals)
         )
     )
-    if overlapping := _coexisting_columns(slices):
-        finding(
-            "representation_ambiguous",
-            f"binding {binding.variable!r} resolves to co-existing "
-            f"representations {overlapping} at {source.register_variant}; pin "
-            "one with `representation` — a manifest never guesses",
-            _render(requested),
-        )
-        return
-
+    # The clip is reported BEFORE the ambiguity gate: a binding that is both
+    # clipped and ambiguous must surface both, since §12 reports every clip per
+    # binding, never silently, and the finding is stated against the clipped
+    # window the researcher has to reason about.
     availability = _merge([(lo, hi) for lo, hi, _ in slices])
     if availability != requested:
         clips.append(
@@ -629,6 +658,16 @@ def _materialize_binding(
             )
         )
 
+    if overlapping := _coexisting_columns(slices):
+        finding(
+            "representation_ambiguous",
+            f"binding {binding.variable!r} resolves to co-existing "
+            f"representations {overlapping} at {source.register_variant}; pin "
+            "one with `representation` — a manifest never guesses",
+            _render(requested),
+        )
+        return
+
     # An inventory mapping may omit `representation` — §12's "the concept has a
     # single representation" arm. That is only unambiguous when the binding
     # really resolves to ONE canonical representation across the request. When
@@ -637,7 +676,7 @@ def _materialize_binding(
     # column represents two canonical representations.
     representations = sorted(by_column)
     unqualified_ok = len(representations) == 1
-    if not unqualified_ok:
+    if inventory is not None and not unqualified_ok:
         blocked_by_unqualified = False
         for table in inventory.tables:
             # §12: a table matches a slice only where its edition overlaps, and
@@ -671,30 +710,42 @@ def _materialize_binding(
     # STEP 3+4: match each slice against the inventory, gate on full coverage of
     # the clipped request, then emit.
     contributions: dict[tuple[str, str, str], list[_Interval]] = {}
-    editions: dict[str, tuple[_Interval, ...]] = {}
+    editions: dict[tuple[str, str, str], tuple[_Interval, ...]] = {}
     blocked = False
     for lo, hi, column in slices:
         matched = False
         covered: list[_Interval] = []
-        for table in inventory.tables:
-            bounds = edition_bounds(table.edition)
-            for inv_column in table.columns:
-                if not _column_matches(
-                    inv_column,
-                    source.register_variant,
-                    parsed,
-                    column,
-                    unqualified_ok=unqualified_ok,
-                ):
-                    continue
-                matched = True
-                overlaps = [x for b in bounds if (x := _intersect(b, (lo, hi)))]
-                if not overlaps:
-                    continue
-                editions[table.id] = bounds
-                key = (table.id, inv_column.name, column)
-                contributions.setdefault(key, []).extend(overlaps)
-                covered.extend(overlaps)
+        if inventory is None:
+            # §12 global fallback: canonical resolution IS the topology. The
+            # slice is served by the canonical column it resolved to, under a
+            # blank table; it covers itself exactly, so the gate below (which
+            # still runs) can only fail on what resolution itself did not
+            # deliver — the block already raised as an unresolved, unavailable
+            # or ambiguous binding.
+            matched = True
+            key = ("", column, column)
+            contributions.setdefault(key, []).append((lo, hi))
+            covered.append((lo, hi))
+        else:
+            for table in inventory.tables:
+                bounds = edition_bounds(table.edition)
+                for inv_column in table.columns:
+                    if not _column_matches(
+                        inv_column,
+                        source.register_variant,
+                        parsed,
+                        column,
+                        unqualified_ok=unqualified_ok,
+                    ):
+                        continue
+                    matched = True
+                    overlaps = [x for b in bounds if (x := _intersect(b, (lo, hi)))]
+                    if not overlaps:
+                        continue
+                    key = (table.id, inv_column.name, column)
+                    editions[key] = bounds
+                    contributions.setdefault(key, []).extend(overlaps)
+                    covered.extend(overlaps)
         if not matched:
             blocked = True
             finding(
@@ -719,11 +770,18 @@ def _materialize_binding(
     if blocked:
         return
 
+    if inventory is None:
+        # §12: a fallback entry's `edition` IS its requested period — known only
+        # once the slices contributing to one canonical column are collected.
+        for key, intervals in contributions.items():
+            editions[key] = _merge(intervals)
+
     provider, register, _ = source.register_variant.split("/")
-    for (table_id, physical_column, column), intervals in sorted(
+    for key, intervals in sorted(
         contributions.items(),
-        key=lambda item: (item[0][0], editions[item[0][0]], item[0][1]),
+        key=lambda item: (item[0][0], editions[item[0]], item[0][1]),
     ):
+        table_id, physical_column, column = key
         entries.append(
             OrderEntry(
                 source=source.name,
@@ -736,7 +794,7 @@ def _materialize_binding(
                 ),
                 requested_period=_render(_merge(intervals)),
                 physical=PhysicalCoordinate(
-                    edition=_render(editions[table_id]),
+                    edition=_render(editions[key]),
                     table=table_id,
                     column=physical_column,
                 ),

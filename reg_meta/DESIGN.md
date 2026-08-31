@@ -739,6 +739,14 @@ partial order. `REFACTOR_SPEC.md` §12 is the decision text. The FastAPI endpoin
 CLI/plugin are thin adapters over this one function, which is what makes their results
 byte-identical; all logic (and all fail-closing) lives here.
 
+`inventory=None` selects §12's **global-deployment fallback**: the global deployment has
+no physical delivery topology, so canonical resolution alone grounds the order. It is
+the SAME function and the same pipeline — only step 3's matching arm differs — so there
+is no second clip/slice/coverage implementation to drift. `OrderProvenance.mode`
+(`steward_inventory` \| `global_fallback`) names which one produced a manifest, and the
+provenance gate treats the global deployment like any other: `ProjectData.steward` must
+equal `"global"` (`order.GLOBAL_STEWARD`).
+
 Per `sources[*].bindings[*]`, in project declaration order:
 
 1. **Availability clip first.** A source period means "these columns, wherever each is
@@ -746,9 +754,10 @@ Per `sources[*].bindings[*]`, in project declaration order:
    union of its `variable_state` windows at the source's variant, via
    `Catalog.resolve_at` — so a column first delivered in 2019 under a 2018–2020 source
    does not widen the order into a cross-product. Every clip is reported as a
-   `ClipReport` on the manifest: informational, never silent, never an error. This is
-   also the seam a deferred per-binding period override would narrow (§12); no schema
-   change was needed.
+   `ClipReport` on the manifest: informational, never silent, never an error — and
+   recorded BEFORE the ambiguity gate can return, so a binding that is both clipped and
+   ambiguous surfaces both. This is also the seam a deferred per-binding period override
+   would narrow (§12); no schema change was needed.
 2. **Representation slicing.** The clipped request is partitioned into slices of
    constant canonical representation (`delivery_column_name`). A sequential rename fans
    out into two slices; two columns valid at the SAME instant with no
@@ -766,7 +775,10 @@ Per `sources[*].bindings[*]`, in project declaration order:
    cannot make anything ambiguous. Any subperiod of the availability-clipped request
    left uncovered blocks the WHOLE order with the exact gap (`coverage_gap`), and a
    slice no mapping serves blocks with `mapping_missing`. Overlap alone never buys a
-   partial manifest.
+   partial manifest. In global-fallback mode the slice's own canonical column serves it
+   under a blank table, so the slice covers itself exactly and the same gate runs
+   unchanged — what canonical resolution did not deliver has already blocked upstream as
+   an unresolved, unavailable or ambiguous binding.
 4. **Emission.** Every matching table is emitted whole — v1 has no table chooser and no
    row filter (the §12 `simplify:` stands, with SWECOV's
    one-large-SQL-table-per-register delivery as the upgrade trigger). Entries preserve
@@ -778,16 +790,16 @@ binding — `steward_mismatch`, `project_empty`, `period_not_orderable`,
 `variable_unresolved`, `binding_unavailable`, `representation_unknown`,
 `representation_unresolved`, `representation_ambiguous`, `mapping_missing`,
 `mapping_ambiguous`, `coverage_gap` — so a researcher fixes the whole order in one edit
-instead of one gap per round trip. `ProjectData.steward` must equal the inventory's
-`steward` (provenance is checked before anything resolves; retargeting is deliberately
-not a feature), and an empty project stays a valid draft that cannot produce a
-header-only manifest.
+instead of one gap per round trip. `ProjectData.steward` must equal the deployment's
+steward — the inventory's, or `"global"` in fallback mode (provenance is checked before
+anything resolves; retargeting is deliberately not a feature) — and an empty project
+stays a valid draft that cannot produce a header-only manifest.
 
 **The manifest is a versioned JSON contract.** `OrderManifest` (version
-`ORDER_MANIFEST_VERSION`) carries provenance (steward, project name / schema version /
-declared reg_meta version / SHA-256 of the project's canonical JSON, plus the catalog
-DB's `schema_version` and `import_date`), the resolved entries — logical coordinate
-(`provider,register,variant,variable` + the canonical representation), the
+`ORDER_MANIFEST_VERSION`) carries provenance (mode, steward, project name / schema
+version / declared reg_meta version / SHA-256 of the project's canonical JSON, plus the
+catalog DB's `schema_version` and `import_date`), the resolved entries — logical
+coordinate (`provider,register,variant,variable` + the canonical representation), the
 availability-clipped `requested_period`, and the physical coordinate
 (`edition`,`table`,`column`) — and the informational clips. It is machine-written here
 and machine-read offline by the steward-side extract system, so it is self-contained: no
@@ -801,9 +813,10 @@ rule — one UTF-8 CSV per variant + period unit — in the contract rather than
 to the extractor.
 
 Pure domain code: no FastAPI, no filesystem writes, no timestamps (the only time-shaped
-manifest values come from the DB manifest and the project). The global-deployment
-fallback (blank `table`, canonical column, `edition = requested_period`) is a separate
-lane on the same entry shape.
+manifest values come from the DB manifest and the project). A global-fallback entry is
+the same shape with a blank `table`, the canonical column in `column`, and
+`edition = requested_period`, so `extraction_filenames` gives it one file per requested
+period segment without a special case.
 
 ## Value sets are year-projected
 

@@ -1,4 +1,4 @@
-"""Order materializer + JSON order-manifest contract (REFACTOR_SPEC.md §12 lane 2).
+"""Order materializer + JSON order-manifest contract (REFACTOR_SPEC.md §12).
 
 Everything here is synthetic: a hand-built catalog DB (`_slugged_db`, the same
 builder the Catalog tests use) plus a fixture inventory parsed through lane 1's
@@ -11,6 +11,10 @@ The catalog fixture is one LISA variant delivering three concepts over
 - `disponibel-inkomst` — `DispInk09` from 2019 only (the availability clip);
 - `yrke`     — `Ssyk3` in 2018, `Ssyk4` from 2019 (the representation change
                that fans into two slices).
+
+`TestGlobalFallback` runs the same catalog with NO inventory (`materialize_order(
+project, None, conn)`) — §12's global-deployment fallback, which grounds the
+order on canonical resolution alone.
 """
 
 from __future__ import annotations
@@ -618,6 +622,146 @@ class TestBlockingFindings:
 
         assert result.manifest is not None
         assert [e.physical.column for e in result.manifest.entries] == ["Ssyk4"]
+
+
+class TestGlobalFallback:
+    """§12's global-deployment fallback: no inventory, so canonical resolution
+    alone grounds the order — same entry shape, blank `table`, the resolved
+    canonical column in `column`, `edition` = that slice's requested period."""
+
+    def test_clean_project_materializes_against_canonical_resolution(
+        self, conn
+    ) -> None:
+        project = _project(
+            "scb/lisa/kon",
+            "scb/lisa/disponibel-inkomst",
+            "scb/lisa/yrke",
+            steward="global",
+        )
+
+        result = materialize_order(project, None, conn)
+
+        assert result.findings == ()
+        manifest = result.manifest
+        assert manifest is not None
+        assert manifest.provenance.mode == "global_fallback"
+        assert manifest.provenance.steward == "global"
+        assert [
+            (
+                e.logical.variable,
+                e.requested_period,
+                e.physical.table,
+                e.physical.column,
+                e.physical.edition,
+            )
+            for e in manifest.entries
+        ] == [
+            ("scb/lisa/kon", "2018..2020", "", "Kon", "2018..2020"),
+            (
+                "scb/lisa/disponibel-inkomst",
+                "2019..2020",
+                "",
+                "DispInk09",
+                "2019..2020",
+            ),
+            ("scb/lisa/yrke", "2018", "", "Ssyk3", "2018"),
+            ("scb/lisa/yrke", "2019..2020", "", "Ssyk4", "2019..2020"),
+        ]
+        # The availability clip is informational here too.
+        assert [c.variable for c in manifest.clips] == ["scb/lisa/disponibel-inkomst"]
+
+    def test_repeat_materialization_is_byte_identical(self, conn) -> None:
+        project = _project("scb/lisa/kon", "scb/lisa/yrke", steward="global")
+
+        first = materialize_order(project, None, conn).manifest
+        second = materialize_order(project, None, conn).manifest
+
+        assert first is not None
+        assert second is not None
+        assert first.to_json() == second.to_json()
+
+    def test_representation_change_fans_into_two_entries(self, conn) -> None:
+        result = materialize_order(
+            _project("scb/lisa/yrke", steward="global"), None, conn
+        )
+
+        assert result.manifest is not None
+        assert [
+            (e.logical.representation, e.physical.column, e.physical.edition)
+            for e in result.manifest.entries
+        ] == [("Ssyk3", "Ssyk3", "2018"), ("Ssyk4", "Ssyk4", "2019..2020")]
+
+    def test_unresolvable_binding_blocks(self, conn) -> None:
+        result = materialize_order(
+            _project("scb/lisa/nonexistent", steward="global"), None, conn
+        )
+
+        assert result.manifest is None
+        assert _codes(result) == ["variable_unresolved"]
+
+    def test_binding_outside_availability_blocks(self, conn) -> None:
+        result = materialize_order(
+            _project("scb/lisa/kon", steward="global", period=2015), None, conn
+        )
+
+        assert result.manifest is None
+        assert _codes(result) == ["binding_unavailable"]
+
+    def test_ambiguous_and_clipped_binding_reports_both(self, conn) -> None:
+        # The clip is appended BEFORE the ambiguity gate returns: a binding that
+        # is both clipped (2017 is outside availability) and ambiguous (`Ssyk4`
+        # and `Ssyk5` co-exist from 2019) surfaces both, so the researcher sees
+        # the window the finding is stated against.
+        add_state(
+            conn,
+            register_id=1,
+            variable_slug="yrke",
+            register_variant_id=10,
+            valid_from="2019-01-01",
+            valid_to="2020-12-31",
+            delivery_column_name="Ssyk5",
+            value_set_version_label="ssyk5",
+        )
+        conn.commit()
+
+        result = materialize_order(
+            _project(
+                "scb/lisa/yrke",
+                steward="global",
+                period=PeriodRange(from_=2017, to=2020),
+            ),
+            None,
+            conn,
+        )
+
+        assert result.manifest is None
+        assert _codes(result) == ["representation_ambiguous"]
+        assert [
+            (c.variable, c.requested_period, c.ordered_period) for c in result.clips
+        ] == [("scb/lisa/yrke", "2017..2020", "2018..2020")]
+
+    def test_steward_mismatch_blocks_a_steward_project(self, conn) -> None:
+        # The global deployment is a deployment like any other: a project whose
+        # provenance names a steward is not orderable against it.
+        result = materialize_order(_project("scb/lisa/kon"), None, conn)
+
+        assert result.manifest is None
+        assert _codes(result) == ["steward_mismatch"]
+
+    def test_extraction_filename_is_one_file_per_period_segment(self, conn) -> None:
+        # `edition = requested_period`, so §12's naming rule gives an
+        # interrupted request one file per segment without a special case.
+        result = materialize_order(
+            _project("scb/lisa/kon", steward="global", period=(2018, 2020)),
+            None,
+            conn,
+        )
+
+        assert result.manifest is not None
+        assert extraction_filenames(result.manifest.entries[0]) == (
+            "lisa_individer-15plus_2018.csv",
+            "lisa_individer-15plus_2020.csv",
+        )
 
 
 class TestIntervalAlgebra:
