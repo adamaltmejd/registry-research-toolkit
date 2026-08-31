@@ -1,3 +1,5 @@
+from importlib import import_module
+
 from .catalog import (
     BindingGroupRef,
     Catalog,
@@ -79,6 +81,7 @@ __all__ = [
     "ClassificationRef",
     "ClassificationSearchResult",
     "ClassificationSuccessionSearchResult",
+    "ClipReport",
     "CodeOwnerClassification",
     "CodeOwnerVariable",
     "CodeSearchResult",
@@ -94,7 +97,14 @@ __all__ = [
     "InventoryTable",
     "LineageEdge",
     "LineageWarning",
+    "LogicalCoordinate",
+    "OrderEntry",
+    "OrderFinding",
+    "OrderManifest",
+    "OrderProvenance",
+    "OrderResult",
     "Period",
+    "PhysicalCoordinate",
     "RegisterSearchResult",
     "RelatedDocument",
     "RelatedDocumentContent",
@@ -119,6 +129,7 @@ __all__ = [
     "download_db",
     "edition_bounds",
     "extract_year",
+    "extraction_filenames",
     "get_availability",
     "get_classification_concept_groups",
     "get_coded_variables",
@@ -131,6 +142,7 @@ __all__ = [
     "get_values_by_variable",
     "get_varinfo",
     "load_inventory",
+    "materialize_order",
     "open_db",
     "parse_fqid",
     "resolve",
@@ -141,14 +153,38 @@ __all__ = [
 __version__ = "0.39.1"
 
 
-def __getattr__(name: str):
-    """Lazy-load `download_db` so the eager `import reg_meta` doesn't pay
-    for `zstandard` + `urllib.request` (~13ms of cold startup) on every
-    query-side CLI invocation. The CLI's `_prompt_first_run_download` and
-    `update.py` import from `.download` directly; only library consumers
-    using `from reg_meta import download_db` trigger the lazy path."""
-    if name == "download_db":
-        from .download import download_db
+# Public names resolved on first access instead of at import. `download_db`
+# keeps `zstandard` + `urllib.request` (~13ms of cold startup) off every
+# query-side CLI invocation; the `order` surface keeps `reg_schema` (models plus
+# its ~1.6k-line structural validator, ~6ms) off it for the same reason — the
+# materializer's consumers are the webapp and the order CLI adapter, not every
+# `reg-meta search`.
+_LAZY_ATTRS = {
+    "download_db": "download",
+    **dict.fromkeys(
+        (
+            "ClipReport",
+            "LogicalCoordinate",
+            "OrderEntry",
+            "OrderFinding",
+            "OrderManifest",
+            "OrderProvenance",
+            "OrderResult",
+            "PhysicalCoordinate",
+            "extraction_filenames",
+            "materialize_order",
+        ),
+        "order",
+    ),
+}
 
-        return download_db
-    raise AttributeError(f"module 'reg_meta' has no attribute {name!r}")
+
+def __getattr__(name: str):
+    """Resolve a `_LAZY_ATTRS` name by importing its module on first access.
+    Callers inside the package (the CLI's `_prompt_first_run_download`,
+    `update.py`) import from `.download` / `.order` directly; only library
+    consumers using `from reg_meta import ...` take this path."""
+    module = _LAZY_ATTRS.get(name)
+    if module is None:
+        raise AttributeError(f"module 'reg_meta' has no attribute {name!r}")
+    return getattr(import_module(f".{module}", __name__), name)

@@ -17,8 +17,14 @@ classifiers = [
     "Programming Language :: Python :: 3",
     "Topic :: Scientific/Engineering",
 ]
+# `reg-schema` is the dependency REFACTOR_SPEC.md §12 sanctions: the shared order
+# materializer (`order.py`) consumes `ProjectData`, and the decision was to take
+# this edge rather than create a third package for one function. It resolves via
+# [tool.uv.sources] in the workspace root, so the floor is a convention pin
+# (cf. reg_webapp), not a PyPI resolution.
 dependencies = [
     "pydantic>=2.13.4",
+    "reg-schema>=2.0.0",
     "zstandard>=0.23",
 ]
 

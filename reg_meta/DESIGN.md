@@ -657,9 +657,9 @@ period. What a steward physically delivers is separate data, and the delivery in
 is that contract: the public, version-controlled steward source of truth from which
 edition-aware admission, coverage stats, browse unions, and order materialization are
 derived. `REFACTOR_SPEC.md` §12 is the decision text; this section documents the format
-and the validator. This module is the contract alone: the materializer, the coverage
-gate, the order manifest, and each steward's real inventory content (and its generator)
-are separate work.
+and the validator. This module is the contract alone — the materializer, the coverage
+gate and the order manifest live in `order.py` (next section); each steward's real
+inventory content (and its generator) is separate work.
 
 **Format: TOML** (ratified 2026-08-31), following the repo's generated-`auto.toml`-plus-
 curated-overrides pattern (`reg_meta_build/fqid_slugs/`): humans curate editions, and
@@ -725,10 +725,77 @@ flavored DB?) is a standing build/CI gate, deliberately NOT part of this structu
 — the validator is pure domain code with no DB access.
 
 The models are `reg_schema`-free: the contract needs only reg_meta's own period grammar
-and FQID parser, so the `reg_meta → reg_schema` dependency §12 sanctions for the shared
-materializer is not taken yet. `EditionRange` mirrors reg_schema's `PeriodRange` wire
-shape (`from`/`to`, `from_` attr with a `"from"` alias); the two converge when that
-dependency lands.
+and FQID parser. (`order.py` takes the `reg_meta → reg_schema` dependency §12 sanctions;
+the inventory contract itself does not need it.) `EditionRange` mirrors reg_schema's
+`PeriodRange` wire shape (`from`/`to`, `from_` attr with a `"from"` alias), so a project
+period and an inventory edition expand through one grammar without a converter.
+
+## Order materializer and manifest (`order.py`)
+
+`materialize_order(project, inventory, conn)` is the one place a logical
+`project_data.json` selection meets a steward's physical delivery topology. It returns
+either a complete `OrderManifest` or a non-empty set of `OrderFinding`s — never a
+partial order. `REFACTOR_SPEC.md` §12 is the decision text. The FastAPI endpoint and the
+CLI/plugin are thin adapters over this one function, which is what makes their results
+byte-identical; all logic (and all fail-closing) lives here.
+
+Per `sources[*].bindings[*]`, in project declaration order:
+
+1. **Availability clip first.** A source period means "these columns, wherever each is
+   available inside this window". Each binding is clipped to its own availability — the
+   union of its `variable_state` windows at the source's variant, via
+   `Catalog.resolve_at` — so a column first delivered in 2019 under a 2018–2020 source
+   does not widen the order into a cross-product. Every clip is reported as a
+   `ClipReport` on the manifest: informational, never silent, never an error. This is
+   also the seam a deferred per-binding period override would narrow (§12); no schema
+   change was needed.
+2. **Representation slicing.** The clipped request is partitioned into slices of
+   constant canonical representation (`delivery_column_name`). A sequential rename fans
+   out into two slices; two columns valid at the SAME instant with no
+   `Binding.representation` pin is ambiguity and blocks. Resolution logic is not
+   re-derived here — `resolve_at` is the source.
+3. **Steward matching + coverage gate.** A table matches a slice only when one of its
+   columns carries a mapping matching `(register_variant, variable, representation)` AND
+   its edition overlaps THAT slice; the edition contributes only its overlap. Any
+   subperiod of the availability-clipped request left uncovered blocks the WHOLE order
+   with the exact gap (`coverage_gap`), and a slice no mapping serves blocks with
+   `mapping_missing`. Overlap alone never buys a partial manifest.
+4. **Emission.** Every matching table is emitted whole — v1 has no table chooser and no
+   row filter (the §12 `simplify:` stands, with SWECOV's
+   one-large-SQL-table-per-register delivery as the upgrade trigger). Entries preserve
+   project source/binding order; the fan-out inside a binding sorts by table, canonical
+   edition, then physical column.
+
+**Fail-closed, one pass.** A blocking result enumerates every finding across every
+binding — `steward_mismatch`, `project_empty`, `period_not_orderable`,
+`variable_unresolved`, `binding_unavailable`, `representation_unknown`,
+`representation_unresolved`, `representation_ambiguous`, `mapping_missing`,
+`coverage_gap` — so a researcher fixes the whole order in one edit instead of one gap
+per round trip. `ProjectData.steward` must equal the inventory's `steward` (provenance
+is checked before anything resolves; retargeting is deliberately not a feature), and an
+empty project stays a valid draft that cannot produce a header-only manifest.
+
+**The manifest is a versioned JSON contract.** `OrderManifest` (version
+`ORDER_MANIFEST_VERSION`) carries provenance (steward, project name / schema version /
+declared reg_meta version / SHA-256 of the project's canonical JSON, plus the catalog
+DB's `schema_version` and `import_date`), the resolved entries — logical coordinate
+(`provider,register,variant,variable` + the canonical representation), the
+availability-clipped `requested_period`, and the physical coordinate
+(`edition`,`table`,`column`) — and the informational clips. It is machine-written here
+and machine-read offline by the steward-side extract system, so it is self-contained: no
+network, no catalog lookup at extract time. Both boundaries validate against the same
+frozen `extra="forbid"` models. `to_json()` is the canonical serialization (sorted keys,
+stable entry order, trailing newline); repeated runs over the same inputs are
+byte-identical. Periods render through the shared grammar's inverse
+(`period_token_for_bounds`), so a manifest speaks the same period spelling as a project
+period and an inventory edition. `extraction_filenames(entry)` pins §12's output-naming
+rule — one UTF-8 CSV per variant + period unit — in the contract rather than leaving it
+to the extractor.
+
+Pure domain code: no FastAPI, no filesystem writes, no timestamps (the only time-shaped
+manifest values come from the DB manifest and the project). The global-deployment
+fallback (blank `table`, canonical column, `edition = requested_period`) is a separate
+lane on the same entry shape.
 
 ## Value sets are year-projected
 

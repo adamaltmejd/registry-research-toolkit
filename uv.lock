@@ -402,12 +402,14 @@ version = "0.39.1"
 source = { editable = "reg_meta" }
 dependencies = [
     { name = "pydantic" },
+    { name = "reg-schema" },
     { name = "zstandard" },
 ]
 
 [package.metadata]
 requires-dist = [
     { name = "pydantic", specifier = ">=2.13.4" },
+    { name = "reg-schema", editable = "reg_schema" },
     { name = "zstandard", specifier = ">=0.23" },
 ]
 

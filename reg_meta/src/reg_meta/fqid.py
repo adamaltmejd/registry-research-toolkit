@@ -279,6 +279,27 @@ def period_token_to_bounds(token: str) -> tuple[str, str]:
     return token, token  # YYYY-MM-DD single day
 
 
+def snap_to_real_month_end(iso: str) -> str:
+    """Snap a synthesized upper bound to a REAL calendar date.
+
+    `period_token_to_bounds` over-counts February's synthesized upper bound to
+    day 29 (`_MONTH_LAST_DAY["02"]`) regardless of leap year — intentional and
+    harmless for the resolver's LEXICAL ISO-string interval overlap, but any
+    consumer doing real `date` arithmetic on a bound (coverage-gap math in
+    `order.py`, `reg_webapp`'s semantic range checks) would raise `ValueError`
+    on a non-leap `2019-02-29`. The only token whose synthesized `hi` is a
+    non-real date is a non-leap `YYYY-02` month token, so only `YYYY-02-29` in a
+    non-leap year reaches the fallback; snapping it to `-02-28` is also MORE
+    correct (a window through "Feb 2019" really ends Feb 28, and it avoids a
+    spurious 1-day phantom gap). Author-supplied `YYYY-MM-DD` days are already
+    calendar-valid (`is_period` validates them), so they pass the try arm."""
+    try:
+        date.fromisoformat(iso)
+    except ValueError:
+        return iso[:8] + "28"
+    return iso
+
+
 def period_token_for_bounds(lo: str, hi: str) -> str:
     """Render an inclusive ISO interval as the COARSEST period token that
     `period_token_to_bounds` expands back to exactly ``(lo, hi)`` — the

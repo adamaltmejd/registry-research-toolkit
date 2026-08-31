@@ -50,7 +50,7 @@ What structural does NOT guarantee is the SYNTHESIZED upper bound: a non-leap
 in reg_meta for lexical interval overlap). State/window bounds can carry that
 same grammar-generated end date, so before the gap math does real ``date``
 arithmetic this layer snaps those upper bounds to the real month-end
-(``_snap_to_real_month_end``).
+(reg_meta's ``snap_to_real_month_end`` — the period grammar owns it).
 """
 
 from __future__ import annotations
@@ -59,7 +59,12 @@ from datetime import date, timedelta
 from typing import TYPE_CHECKING, Literal
 
 from reg_meta.errors import RegMetaError
-from reg_meta.fqid import FqidError, parse, period_token_to_bounds
+from reg_meta.fqid import (
+    FqidError,
+    parse,
+    period_token_to_bounds,
+    snap_to_real_month_end,
+)
 
 # Runtime import (not just TYPE_CHECKING): semantic coverage checks branch on
 # `isinstance(..., PeriodRange)` for explicit range math.
@@ -294,28 +299,6 @@ def _endpoint_bounds(endpoint: int | str) -> tuple[str, str]:
     return period_token_to_bounds(endpoint)
 
 
-def _snap_to_real_month_end(iso: str) -> str:
-    """Snap a synthesized upper bound to a REAL calendar date.
-
-    `period_token_to_bounds` over-counts February's synthesized upper bound to
-    day 29 (`_MONTH_LAST_DAY["02"]`) regardless of leap year — intentional and
-    harmless for reg_meta's LEXICAL ISO-string interval overlap, but this layer
-    does real `date` arithmetic (`_range_coverage_gaps`), where a non-leap
-    `2019-02-29` raises `ValueError`. The synthesized value can appear either in
-    requested period bounds or in reg_meta state/window bounds. The only token
-    whose synthesized `hi` is a non-real date is a non-leap `YYYY-02` month
-    token, so only `YYYY-02-29` in a non-leap year can reach the fallback;
-    snapping it to `-02-28` is also MORE correct (a window through "Feb 2019"
-    really ends Feb 28, and it avoids a spurious 1-day phantom gap).
-    Author-supplied `YYYY-MM-DD` days are already calendar-valid (structural
-    guarantee), so they pass the try arm."""
-    try:
-        date.fromisoformat(iso)
-    except ValueError:
-        return iso[:8] + "28"
-    return iso
-
-
 def _requested_range_bounds(period: PeriodRange) -> tuple[str, str]:
     """The inclusive ISO `[lo, hi]` the author asked for with an explicit range:
     `lo` from the `from` endpoint, `hi` from the `to` endpoint. Structural
@@ -326,7 +309,7 @@ def _requested_range_bounds(period: PeriodRange) -> tuple[str, str]:
     gap math does real `date` arithmetic on it."""
     lo, _ = _endpoint_bounds(period.from_)
     _, hi = _endpoint_bounds(period.to)
-    return lo, _snap_to_real_month_end(hi)
+    return lo, snap_to_real_month_end(hi)
 
 
 def _period_segment_bounds(period: int | str | PeriodRange) -> tuple[str, str] | None:
@@ -341,7 +324,7 @@ def _period_segment_bounds(period: int | str | PeriodRange) -> tuple[str, str] |
     if period == "_default":
         return None
     lo, hi = _endpoint_bounds(period)
-    return lo, _snap_to_real_month_end(hi)
+    return lo, snap_to_real_month_end(hi)
 
 
 def _period_end_year(period: SchemaPeriod) -> int | None:
@@ -445,7 +428,7 @@ def _range_coverage_gaps(
     the open-ended sentinel, so a window that reaches ``hi`` marks the cursor
     complete instead of computing ``hi + 1 day``."""
     one_day = timedelta(days=1)
-    real_hi = _snap_to_real_month_end(hi)
+    real_hi = snap_to_real_month_end(hi)
     windows = sorted(
         (max(s.valid_from, lo), min(s.valid_to, hi))
         for s in states
@@ -460,7 +443,7 @@ def _range_coverage_gaps(
         start = date.fromisoformat(w_lo)
         if start > cursor:
             gaps.append((cursor.isoformat(), (start - one_day).isoformat()))
-        finish = date.fromisoformat(_snap_to_real_month_end(w_hi))
+        finish = date.fromisoformat(snap_to_real_month_end(w_hi))
         if finish >= end:
             cursor = None
             break
