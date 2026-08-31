@@ -327,3 +327,44 @@ follow-up trims. Observations:
   release, would close the gap. Overwriting on update is not the answer: the
   repository-specific appendix (admission rule, filing conventions) lives in that same
   file by Yard's own design.
+
+## 2026-08-31 — `--watch --json` usage error exits 0
+
+`yard status --watch --json` refuses with a usage error ("--watch writes JSON lines
+already; --json says nothing more") but exits **0**. A script or operator loop that
+armed the watch this way believes it is watching when it never armed — the exact failure
+mode the wake-driven loop exists to prevent. Usage refusals should exit non-zero.
+(Minor: the refusal is also printed twice, once plain and once as JSON.)
+
+## 2026-08-31 — retarget/.hypothesis + restart timeout
+
+- Y-13/1 retarget onto moved canonical blocked on the lane clone's untracked
+  `.hypothesis/` (property-test example DB). The error's remediation was exact and
+  worked (declare in build_artifacts, commit+sync, daemon restart, re-run e3) — good
+  message. Papercut: every new ignored cache dir is discovered one failed retarget at a
+  time; a preflight that lists ignored-dir candidates not in build_artifacts would have
+  caught `.hypothesis` before it cost a blocked lane.
+- `yard daemon restart` timed out ("acknowledged the stop but had not released the
+  project within 60000ms") — yet immediately afterwards `yard daemon status` said no
+  daemon was answering and a plain restart started cleanly. The timeout message
+  suggested watching a quiesce that had apparently already finished.
+- Follow-up: the very next retarget (e4) stopped on
+  `reg_webapp/backend/src/reg_webapp/__pycache__` — the one-at-a-time discovery bit
+  twice in ten minutes. Fixed by enumerating the whole per-package `__pycache__` spray
+  from a main checkout in one commit. Also: the retried `yard lane start` right after
+  `yard daemon restart` was refused with "startup reconciliation is still in progress" —
+  fair, but the restart command returning before lane mutations are available makes the
+  natural restart-then-act sequence race-y by default.
+- Y-13/1 round 3: the reviewer flagged behavior ratified mid-lane by the operator (A-28:
+  range editions = one lo..hi file), because the frozen ticket body still carried the
+  pre-decision "per period unit" example — the "amendment does not travel" shape,
+  mercifully advisory. A way to surface operator decisions recorded on a rejected
+  proposal to the lane's reviewer (they ARE in the lane's history) would have avoided
+  arguing §12 against the stale brief in a rejection note.
+- Y-19/1 worker died on a transient provider error ("Connection lost mid-response"). The
+  worker-failed attention item printed ONLY the abandon exit; the actual recovery —
+  `yard lane start Y-19/1 --expect-generation 1` re-running the failed round with no new
+  attempt — had to be found in `yard lane start --help`. For a provider-error reason
+  specifically, the re-run exit seems like the primary answer and abandon the
+  destructive one; offering only abandon invites exactly the
+  healthy-attempt-stopped-on-a-misreading failure the skill warns about.
