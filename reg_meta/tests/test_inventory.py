@@ -266,11 +266,51 @@ name = "Kon"
     assert "duplicate physical column 'Kon'" in excinfo.value.message
 
 
+def test_rejects_an_inventory_with_no_tables(tmp_path) -> None:
+    """The inventory is the authoritative holdings statement: an empty one is a
+    curation error, never a steward that delivers nothing."""
+    text = """
+version = 1
+steward = "swecov"
+table = []
+"""
+    with pytest.raises(RegMetaError) as excinfo:
+        load_inventory(_write(tmp_path, text))
+    assert excinfo.value.code == "inventory_invalid"
+    assert excinfo.value.exit_code == EXIT_CONFIG
+    assert "table: Value error, inventory declares no tables" in excinfo.value.message
+
+
+def test_rejects_a_table_with_no_columns(tmp_path) -> None:
+    text = """
+version = 1
+steward = "swecov"
+
+[[table]]
+id = "LISA_Individ.csv"
+edition = 2019
+column = []
+"""
+    with pytest.raises(RegMetaError) as excinfo:
+        load_inventory(_write(tmp_path, text))
+    assert excinfo.value.code == "inventory_invalid"
+    # The error names the offending table, not an array index.
+    assert (
+        "table['LISA_Individ.csv'].column: Value error, table declares no columns"
+        in (excinfo.value.message)
+    )
+
+
 def test_rejects_unknown_contract_version(tmp_path) -> None:
     text = """
 version = 2
 steward = "swecov"
-table = []
+
+[[table]]
+id = "LISA_Individ.csv"
+edition = 2019
+[[table.column]]
+name = "Kon"
 """
     with pytest.raises(RegMetaError) as excinfo:
         load_inventory(_write(tmp_path, text))

@@ -715,10 +715,14 @@ is editing a TOML file where an index is not a locator. Structural rules beyond 
 shape: unknown keys are rejected (`extra="forbid"`), a table identifier appears once (an
 identifier is exact and carries exactly one edition), a physical column is declared once
 per table with all of its mappings under it, and a mapping's variable must belong to its
-`register_variant`'s `provider/register`. Inventory ↔ reg_meta DB consistency (does each
-mapping's `(register_variant, variable, representation)` resolve against the flavored
-DB?) is a standing build/CI gate, deliberately NOT part of this structural pass — the
-validator is pure domain code with no DB access.
+`register_variant`'s `provider/register`. Structurally empty input is rejected too — an
+inventory declares at least one table, and a table at least one column. This file is the
+steward's authoritative holdings statement, so an empty one is a mis-generated or
+half-authored file, never a claim to deliver nothing; accepting it would silently zero
+out admission, coverage, and browse unions. Inventory ↔ reg_meta DB consistency (does
+each mapping's `(register_variant, variable, representation)` resolve against the
+flavored DB?) is a standing build/CI gate, deliberately NOT part of this structural pass
+— the validator is pure domain code with no DB access.
 
 The models are `reg_schema`-free: the contract needs only reg_meta's own period grammar
 and FQID parser, so the `reg_meta → reg_schema` dependency §12 sanctions for the shared

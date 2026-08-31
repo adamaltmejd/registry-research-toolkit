@@ -236,6 +236,25 @@ class InventoryTable(_InventoryModel):
         edition_bounds(value)
         return value
 
+    @field_validator("columns")
+    @classmethod
+    def _check_columns_present(
+        cls, value: tuple[InventoryColumn, ...]
+    ) -> tuple[InventoryColumn, ...]:
+        """A column-less table states nothing: it can neither be ordered nor
+        counted in the coverage denominator, so it is a curation error (an
+        unparsed or half-authored table), not a valid holdings statement.
+
+        A field validator rather than `min_length=1`, which reports "at least 1
+        item AFTER validation" — that would fire a second, misleading line
+        whenever a table's own fields failed for an unrelated reason."""
+        if not value:
+            raise ValueError(
+                "table declares no columns — list every delivered physical "
+                "column, including the unresolved ones that carry no mapping"
+            )
+        return value
+
     @model_validator(mode="after")
     def _check_unique_columns(self) -> InventoryTable:
         seen: set[str] = set()
@@ -266,6 +285,24 @@ class DeliveryInventory(_InventoryModel):
     @classmethod
     def _check_steward(cls, value: str) -> str:
         validate_slug(value, "steward")
+        return value
+
+    @field_validator("tables")
+    @classmethod
+    def _check_tables_present(
+        cls, value: tuple[InventoryTable, ...]
+    ) -> tuple[InventoryTable, ...]:
+        """An inventory with no tables is a curation error (a mis-generated or
+        truncated file), not a steward that delivers nothing: this file is the
+        authoritative holdings statement, so an empty one must fail loudly
+        rather than silently zero out admission, coverage, and browse unions.
+        Same `min_length=1` caveat as `InventoryTable.columns`."""
+        if not value:
+            raise ValueError(
+                "inventory declares no tables — an inventory is a steward's "
+                "holdings statement, so an empty `table` array is a curation "
+                "error, not a delivery topology"
+            )
         return value
 
     @model_validator(mode="after")
