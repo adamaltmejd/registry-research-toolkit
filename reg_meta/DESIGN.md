@@ -795,7 +795,12 @@ steward — the inventory's, or `"global"` in fallback mode (provenance is check
 anything resolves; retargeting is deliberately not a feature) — and an empty project
 stays a valid draft that cannot produce a header-only manifest.
 
-**The manifest is a versioned JSON contract.** `OrderManifest` (version
+**The manifest is a versioned JSON contract.** Version 1 is **in definition** until the
+§12 boundary ships: it has no external consumer yet, so shape changes while the
+remaining §12 lanes land stay within version 1 rather than churning the number (operator
+decision, Y-19/1 review). Bump discipline — an incompatible change bumps
+`ORDER_MANIFEST_VERSION`, pre-v1 changed-not-migrated — binds from the first external
+reader (the steward-side extract system). `OrderManifest` (version
 `ORDER_MANIFEST_VERSION`) carries provenance (mode, steward, project name / schema
 version / declared reg_meta version / SHA-256 of the project's canonical JSON, plus the
 catalog DB's `schema_version` and `import_date`), the resolved entries — logical
