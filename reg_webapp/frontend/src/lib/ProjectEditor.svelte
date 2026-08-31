@@ -11,19 +11,19 @@ import { windowCoverageHints } from "./validation";
 // browsing (sources + bindings), and adding/changing data always happens in the
 // catalog browser. So this page is browse-only authoring: view the picked
 // sources/bindings, delete a source/binding, edit the project NAME, and
-// Open/Download the project_data.json + Download order CSV. Fixes for a
+// Open/Download the project_data.json + Download order.json. Fixes for a
 // validation finding are reached via the ValidationPanel's outbound catalog link
 // (the catalog subject page is the only place a binding is (re-)picked). This is:
 //  - the home/new screen (draft == null): New / Open buttons,
 //  - the loaded-draft view: the read-only steward/version/schema block + editable
 //    project name, a dirty indicator, a toolbar
-//    (New / Open / Download project_data.json / Download order CSV),
+//    (New / Open / Download project_data.json / Download order.json),
 //    the open-error banner, the READ-ONLY sources/bindings list, the ValidationPanel.
 //
 // `reg_meta_version` (bare package version) and `steward` (the deployment's
 // steward id) are seeded from the deployment context (passed by App.svelte) and
 // shown read-only. Validation runs automatically against the current draft, so the
-// order CSV download is gated on the current backend result instead of a manual
+// order download is gated on the current backend result instead of a manual
 // Validate click.
 const { regMetaVersion, steward } = $props<{
   regMetaVersion: string;
@@ -129,18 +129,21 @@ async function onFilePicked(event: Event): Promise<void> {
       <Button variant="default" onclick={() => projectStore.downloadProject()}>
         Download project_data.json
       </Button>
-      <!-- The order CSV download is gated behind the CURRENT automatic validation:
-           the backend rejects a structurally invalid spec with a 422, so requiring a
-           green validation first is the clearest UX (no surprise error banner). -->
+      <!-- The order download is gated behind the CURRENT automatic validation: the
+           backend rejects anything that is not an order with a 422, so requiring a
+           green validation first is the clearest UX (no surprise error banner). A
+           materializer block can still land here — it renders in the
+           ValidationPanel's request-error slot. Named for the file it produces,
+           like its project_data.json sibling. -->
       <Button
         variant="primary"
         disabled={!projectStore.canDownloadOrder}
         title={projectStore.canDownloadOrder
-          ? "Download the order-export CSV"
+          ? "Download the order manifest"
           : "Waiting for a valid project"}
         onclick={() => projectStore.downloadOrder()}
       >
-        {projectStore.orderBusy ? "Downloading…" : "Download order CSV"}
+        {projectStore.orderBusy ? "Downloading…" : "Download order.json"}
       </Button>
     </div>
 

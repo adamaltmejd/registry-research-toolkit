@@ -6,8 +6,9 @@ Two endpoints:
 - ``POST /api/project/validate`` — runs the two-layer validator over a
   raw ``project_data.json`` and returns the CONCATENATED issue list (structural
   ⧺ semantic) as a ``ValidationResultModel``.
-- ``POST /api/project/order`` — renders the current provisional order-export CSV
-  (``order_export.render_order_csv``) as a ``text/csv`` download.
+- ``POST /api/project/order`` — materializes the JSON order manifest through
+  reg_meta's shared ``order.materialize_order`` and serves it as an
+  ``order.json`` download.
 
 **Status discipline.** ``/validate`` is a *diagnostic*: a spec
 that FAILS validation is a SUCCESSFUL validation RESPONSE — HTTP 200 with
@@ -26,8 +27,8 @@ issue; a residual model-construction failure is a thin defensive issue (still co
 threadpool via ``run_in_threadpool`` so it never stalls the event loop — the
 catalog routes are plain ``def`` for the same reason.
 ``project_validation.per_request_conn`` opens the reg_meta connection on that
-worker thread (``/order`` is a sync ``def``, so on its threadpool thread): open +
-query + close stay on ONE thread — NOT a generator ``Depends``, which would run on
+worker thread (``/order``'s blocking half runs on its threadpool thread too):
+open + query + close stay on ONE thread — NOT a generator ``Depends``, which would run on
 a possibly-different AnyIO thread → cross-thread ``sqlite3.ProgrammingError`` (the
 A5.2a/b-i P1). The body parse + structural layer are DB-FREE and run BEFORE the
 open, so a malformed or structurally-rejected body costs no DB hit.
@@ -41,6 +42,13 @@ from fastapi import APIRouter, HTTPException, Request
 from fastapi.concurrency import run_in_threadpool
 from fastapi.responses import Response
 from pydantic import ValidationError
+from reg_meta.errors import RegMetaError
+from reg_meta.order import (
+    OrderManifest,
+    blocked_message,
+    materialize_order,
+    project_from_raw,
+)
 from reg_schema.project_data import ProjectData
 from reg_schema.structural import validate_structural
 from reg_schema.validation import ValidationIssue, ValidationResult
@@ -49,7 +57,6 @@ from reg_webapp.models import (
     ValidationIssueModel,
     ValidationResultModel,
 )
-from reg_webapp.order_export import render_order_csv
 from reg_webapp.project_validation import (
     per_request_conn,
     semantic_issues,
@@ -60,6 +67,7 @@ if TYPE_CHECKING:
     from pathlib import Path
 
     from reg_meta.catalog import Catalog
+    from reg_meta.inventory import DeliveryInventory
 
     from reg_webapp.catalog_index import CatalogIndex
 
@@ -215,16 +223,16 @@ def _validate_blocking(
     return _to_result_model(ValidationResult(issues=tuple(issues)))
 
 
-# The order export is a CSV DOWNLOAD, so this endpoint cannot declare a
-# Pydantic `response_model=` — it returns raw `text/csv` bytes, the ONE documented
-# exception to the "every route declares a response_model" lint. Documented here
-# so the carve-out is explicit (a binary/download response, not a JSON model).
-# `responses=` + `response_class` declare the `text/csv` media type so the
-# OpenAPI contract (and the SPA's codegen) sees a download, not a JSON body.
+# The 200 body IS `OrderManifest.to_json()` VERBATIM — the manifest's own
+# canonical serialization (sorted keys, stable entry order, trailing newline),
+# which is what makes this adapter and `reg-meta order` byte-identical (§12).
+# So the handler returns a raw `Response` (FastAPI passes a `Response` through
+# without re-serializing) while `response_model=` still publishes the reg_meta
+# model as the typed contract for the OpenAPI snapshot + the SPA codegen. It is
+# served as an attachment because the SPA's action is a file download.
 @router.post(
     "/order",
-    response_class=Response,
-    responses={200: {"content": {"text/csv": {}}}},
+    response_model=OrderManifest,
     openapi_extra={
         "requestBody": {
             "required": True,
@@ -233,45 +241,51 @@ def _validate_blocking(
     },
 )
 async def order_project(request: Request) -> Response:
-    """Render the current provisional order-export CSV.
+    """Materialize a ``project_data.json`` into the JSON order manifest.
 
-    Reads the raw dict and runs the STRUCTURAL gate (see reg_schema/DESIGN.md →
-    Structural rules and issue codes) before rendering: the
-    ``ProjectData`` model enforces only field types, while the structural rules
-    (FQID shape, period grammar, the binding/source-prefix match) live in
-    ``validate_structural`` — so a Pydantic-valid-but-structurally-invalid spec
-    (e.g. a malformed ``register_variant`` or bad period token) would otherwise
-    render a bad provider order at 200. A structurally invalid spec → 422.
-    ``async`` + ``run_in_threadpool`` (blocking display_name resolution off the
-    event loop), mirroring ``/validate``."""
+    A THIN adapter over ``reg_meta.order.materialize_order`` (REFACTOR_SPEC.md
+    §12): no gate, no fallback and no rendering lives here, so this endpoint and
+    the ``reg-meta order`` CLI emit byte-identical manifests. The deployment's
+    delivery inventory is read once at boot (``app.state.inventory``); ``None``
+    is §12's global-deployment fallback, which the materializer takes directly.
+
+    200 is the manifest — ``application/json``, downloaded as ``order.json``.
+    Anything else is NOT AN ORDER: 422 either because the spec is invalid
+    (``project_from_raw``) or because the materializer blocked it, with every
+    finding named in ``detail``. There is deliberately no partial 200.
+
+    ``async`` + ``run_in_threadpool`` (blocking sqlite resolution off the event
+    loop), mirroring ``/validate``."""
     raw = await read_raw_json_object(request)
-    return await run_in_threadpool(_order_blocking, request.app.state.db_path, raw)
+    return await run_in_threadpool(
+        _order_blocking,
+        request.app.state.db_path,
+        raw,
+        request.app.state.inventory,
+    )
 
 
-def _order_blocking(db_path: Path, raw: dict[str, Any]) -> Response:
-    """Structural-gate then render the order CSV, on a threadpool thread. A
-    structurally invalid spec, or one the model rejects (extra/typo field), → 422
-    — you cannot render a provider order from an invalid spec (unlike ``/validate``,
-    which DIAGNOSES it at 200)."""
-    structural = validate_structural(raw)
-    if not structural.ok:
-        errors = [i for i in structural.issues if i.level == "error"]
-        raise HTTPException(
-            status_code=422,
-            detail="cannot render an order for a structurally invalid spec: "
-            + "; ".join(f"{i.code}@{i.path}" for i in errors),
-        )
+def _order_blocking(
+    db_path: Path, raw: dict[str, Any], inventory: DeliveryInventory | None
+) -> Response:
+    """Gate, materialize and serialize, on a threadpool thread.
+
+    Both failure modes are a 422 — an invalid spec and a fail-closed blocked
+    order are equally "this is not an order" (unlike ``/validate``, which
+    DIAGNOSES an invalid spec at 200). ``RegMetaError`` is what
+    ``order.project_from_raw`` raises for a structurally invalid or
+    model-rejected spec; its message is the same one the CLI envelopes."""
     try:
-        project = ProjectData.model_validate(raw)
-    except ValidationError as exc:
-        raise HTTPException(status_code=422, detail=str(exc)) from exc
-
-    from reg_meta.catalog import Catalog
+        project = project_from_raw(raw)
+    except RegMetaError as exc:
+        raise HTTPException(status_code=422, detail=exc.message) from exc
 
     with per_request_conn(db_path) as conn:
-        csv_text = render_order_csv(project, Catalog(conn))
+        result = materialize_order(project, inventory, conn)
+    if result.manifest is None:
+        raise HTTPException(status_code=422, detail=blocked_message(result))
     return Response(
-        content=csv_text,
-        media_type="text/csv",
-        headers={"content-disposition": 'attachment; filename="order.csv"'},
+        content=result.manifest.to_json(),
+        media_type="application/json",
+        headers={"content-disposition": 'attachment; filename="order.json"'},
     )

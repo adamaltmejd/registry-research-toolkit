@@ -129,9 +129,9 @@ binds steward-only providers (`swedbank`, `region-*`, `swecov`, …) that the *g
 release DB does not contain, so booting `REG_WEBAPP_STEWARD=swecov` against the plain
 global asset would drop every steward-only binding as drift — the flavored DB must ship
 as the deployment's reg_meta asset, and the SWECOV smoke gate fails on any steward
-catalog drift warning. The `ifau` steward catalog has not been authored yet. The current
-seven-column order CSV is a provisional binding manifest, not the v1 delivery contract;
-§12 replaces it with the normalized delivery manifest below.
+catalog drift warning. The `ifau` steward catalog has not been authored yet. The
+provisional seven-column order CSV is gone: both product surfaces now serve §12's
+normalized delivery manifest below.
 
 The SPA catalog-authoring mode (distinct from project authoring) and a `reg-meta-build`
 steward-diff CLI are **deferred post-v1**. V1 steward holdings are generated or
@@ -263,14 +263,17 @@ table-specific period predicates when steward delivery/extraction consumes the m
 SWECOV's one-large-SQL-table-per-SoS-register delivery is the known upgrade trigger; it
 will need period-column `WHERE` clauses later.
 
-Completion: define and validate the delivery-inventory contract; emit SWECOV's public
-table/edition/column grounding from the maintainer holdings' exact `Table` column
-(retain `Vy` as grounding/audit evidence, not as the authoritative table identifier);
-batch-check its mappings against the flavored DB; derive the steward index from it;
-replace the provisional seven-column renderer with the shared materializer; expose
-identical results through web and CLI paths; remove `StewardBootCatalog`, the
-pseudo-project filter, and the template plan. Delete this section when that boundary
-ships.
+Completion: ~~define and validate the delivery-inventory contract~~ (shipped); emit
+SWECOV's public table/edition/column grounding from the maintainer holdings' exact
+`Table` column (retain `Vy` as grounding/audit evidence, not as the authoritative table
+identifier); batch-check its mappings against the flavored DB; derive the steward index
+from it;
+~~replace the provisional seven-column renderer with the shared materializer;
+expose identical results through web and CLI paths~~
+(shipped — `POST /api/project/order` and `reg-meta order` are thin adapters over
+`reg_meta.order.materialize_order`, pinned byte-identical by a cross-adapter test);
+remove `StewardBootCatalog`, the pseudo-project filter, and the template plan. Delete
+this section when that boundary ships.
 
 **Closed project root (#1134, 2026-07-15):** v1 has no generic namespaced blocks and no
 placeholder `extensions` field. `ProjectData` rejects extras, and the structural layer

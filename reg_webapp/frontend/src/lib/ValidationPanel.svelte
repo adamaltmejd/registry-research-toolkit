@@ -90,7 +90,13 @@ const LEVEL_LABEL: Record<Level, string> = {
     </div>
   {/if}
 
-  {#if status === "checking"}
+  <!-- The summary is suppressed while a request error stands: `/order` can
+       fail-close a project that VALIDATES clean (a steward-provenance mismatch,
+       an uncovered period), and "Valid — no errors." directly under "Request
+       failed" tells the researcher two contradictory things at once. -->
+  {#if requestError}
+    <!-- the banner above is the current status -->
+  {:else if status === "checking"}
     <p class="summary checking" role="status" aria-busy="true">
       Checking the current project…
     </p>
@@ -190,10 +196,19 @@ const LEVEL_LABEL: Record<Level, string> = {
     margin-bottom: var(--space-4);
   }
   .banner-text {
-    flex: 1;
+    /* A basis, not `flex: 1` (basis 0): the message is the banner's content and
+       must force the retry button onto its own row before it is squeezed into a
+       gutter — at 375px a shrink-to-fit text column left the order materializer's
+       message running a dozen ragged lines. */
+    flex: 1 1 16rem;
   }
   .request-error {
     display: flex;
+    /* Wraps because this banner now carries the order materializer's full
+       fail-closed message (§12), not just a short 4xx string — unwrapped, the
+       retry button holds its width and squeezes the text into a narrow gutter
+       at 375px. Mirrors `.issue-head` / `.locators` below. */
+    flex-wrap: wrap;
     align-items: baseline;
     justify-content: space-between;
     gap: var(--space-3);

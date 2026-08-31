@@ -62,18 +62,20 @@ import json
 from datetime import date, timedelta
 from typing import TYPE_CHECKING, Literal
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, ValidationError
 
-# Runtime import (not just TYPE_CHECKING): the requested-period conversion
-# branches on `isinstance(..., PeriodRange)`. This is the `reg_meta →
+# Runtime imports (not just TYPE_CHECKING): the requested-period conversion
+# branches on `isinstance(..., PeriodRange)`, and the adapter door below builds
+# and structurally gates the `ProjectData` model itself. This is the `reg_meta →
 # reg_schema` dependency §12 sanctions — the materializer consumes
 # `ProjectData`, and adding a third package to hold one function was
 # explicitly ruled out.
-from reg_schema.project_data import PeriodRange
+from reg_schema.project_data import PeriodRange, ProjectData
+from reg_schema.structural import validate_structural
 
 from .catalog import Catalog
 from .db import get_manifest
-from .errors import RegMetaError
+from .errors import EXIT_CONFIG, RegMetaError
 from .fqid import (
     Fqid,
     FqidError,
@@ -85,8 +87,10 @@ from .inventory import EditionRange, edition_bounds
 
 if TYPE_CHECKING:
     import sqlite3
+    from pathlib import Path
+    from typing import Any
 
-    from reg_schema.project_data import Binding, Period, ProjectData, Source
+    from reg_schema.project_data import Binding, Period, Source
 
     from .inventory import DeliveryInventory, EditionSegment, InventoryColumn
 
@@ -479,6 +483,116 @@ def materialize_order(
         ),
         findings=(),
         clips=tuple(clips),
+    )
+
+
+# ── adapter door ───────────────────────────────────────────────────────────
+# The FastAPI endpoint and the `reg-meta order` CLI are THIN adapters over
+# `materialize_order` (§12), so the two things they would otherwise each re-type
+# — the untrusted-input gate and the blocked-result wording — live here, once.
+
+
+def load_project(path: Path) -> ProjectData:
+    """Read a `project_data.json` file and gate it into a `ProjectData`.
+
+    The CLI adapter's input door (mirrors `inventory.load_inventory`); the
+    FastAPI adapter already holds the raw body and calls `project_from_raw`
+    directly. Fail-closed: an unreadable or non-JSON-object file raises
+    `RegMetaError` (`project_unreadable`, EXIT_CONFIG)."""
+    try:
+        raw = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise _order_config_error(
+            "project_unreadable",
+            f"Could not read project {path}: {exc}",
+            "The project must be a UTF-8 `project_data.json` document (see "
+            "reg_schema/DESIGN.md).",
+        ) from exc
+    if not isinstance(raw, dict):
+        raise _order_config_error(
+            "project_unreadable",
+            f"Project {path} is not a JSON object (got {type(raw).__name__}).",
+            "The project must be a UTF-8 `project_data.json` document (see "
+            "reg_schema/DESIGN.md).",
+        )
+    return project_from_raw(raw)
+
+
+def project_from_raw(raw: dict[str, Any]) -> ProjectData:
+    """Structurally gate `raw` and build the model `materialize_order` takes.
+
+    The `ProjectData` model enforces field TYPES only, while the structural
+    rules (FQID shape, period grammar, the binding/source-prefix match) live in
+    `reg_schema.validate_structural` — so without this gate a model-valid but
+    structurally invalid spec would materialize a bad provider order. Both
+    adapters go through here, so both reject the same specs with the same
+    words. Fail-closed: an invalid spec raises `RegMetaError`
+    (`project_invalid`, EXIT_CONFIG) naming every structural error, never a
+    partial order."""
+    structural = validate_structural(raw)
+    if not structural.ok:
+        errors = [issue for issue in structural.issues if issue.level == "error"]
+        raise _order_config_error(
+            "project_invalid",
+            "cannot materialize an order for a structurally invalid project: "
+            + "; ".join(f"{issue.code}@{issue.path}" for issue in errors),
+            "Fix the reported structural errors (an order is materialized only "
+            "from a valid project).",
+        )
+    try:
+        return ProjectData.model_validate(raw)
+    except ValidationError as exc:
+        # `validate_structural` passed but the closed models still reject an
+        # unrecognized or invalid nested field — a broken project either way,
+        # reported on the same path rather than as an opaque traceback.
+        raise _order_config_error(
+            "project_invalid",
+            "project passed structural validation but failed model construction "
+            f"(an unrecognized or invalid field?): {exc}",
+            "Fix the reported field (an order is materialized only from a valid "
+            "project).",
+        ) from exc
+
+
+def blocked_message(result: OrderResult) -> str:
+    """Every blocking finding of `result` as one human-readable message.
+
+    §12's byte-identical-adapters rule covers the FAIL-CLOSED path too, not just
+    a produced manifest: the FastAPI 422 detail and the CLI's error envelope say
+    exactly the same thing about the same order because both render it here.
+    Findings come in the materializer's own accumulation order, each prefixed
+    with the exact source/variable/period it names. Deliberately ONE line: this
+    string is read inside a JSON error envelope and inside the SPA's
+    request-error banner, and an embedded newline is an escape sequence in the
+    first and collapsed whitespace in the second."""
+    count = len(result.findings)
+    return f"order blocked by {count} finding{'' if count == 1 else 's'}: " + "; ".join(
+        f"{finding.code}: {_finding_locator(finding)}{finding.message}"
+        for finding in result.findings
+    )
+
+
+def _finding_locator(finding: OrderFinding) -> str:
+    """The `[source variable period]` prefix naming what a finding is about, or
+    `""` for a whole-project finding (`steward_mismatch`, `project_empty`)."""
+    parts = [
+        part
+        for part in (finding.source, finding.variable, finding.period)
+        if part is not None
+    ]
+    return f"[{' '.join(parts)}] " if parts else ""
+
+
+def _order_config_error(code: str, message: str, remediation: str) -> RegMetaError:
+    """A configuration-class error (EXIT_CONFIG) for the authored project input
+    — the same class `inventory._inventory_error` gives the authored inventory,
+    so a CLI user sees one exit code for "your input file is broken"."""
+    return RegMetaError(
+        exit_code=EXIT_CONFIG,
+        code=code,
+        error_class="configuration",
+        message=message,
+        remediation=remediation,
     )
 
 

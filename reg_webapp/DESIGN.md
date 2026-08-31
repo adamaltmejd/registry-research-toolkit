@@ -1828,73 +1828,48 @@ boundary unchanged.
   body, an oversized body). It runs the §6.8.0 two-layer composition (structural →
   semantic) and returns the **concatenated** issue list; the DB-free structural layer
   runs first, so a structurally-rejected body costs no DB hit.
-- **`/order`** renders the current provisional order-export CSV (a `text/csv` download)
-  and is the one documented exception to the "every route declares a `response_model`"
-  lint (it returns raw bytes). Unlike `/validate`, it structurally **gates** first: you
-  cannot render a provider order from an invalid spec → 422.
+- **`/order`** materializes the JSON order manifest and serves it as an `order.json`
+  download (see below). Unlike `/validate`, it **gates** first: you cannot materialize
+  an order from an invalid spec → 422.
 
-**V1 normalized delivery manifest (decision 2026-07-11; not implemented at this head).**
-The current seven-column, one-row-per-binding renderer is provisional. V1 has one common
-CSV contract, not per-steward templates:
+**The order manifest (shipped, §12 lane 4).** `/order` is a THIN adapter over
+`reg_meta.order.materialize_order(project, inventory, conn)` — the contract, the
+pipeline, and every fail-closed finding live in `reg_meta/DESIGN.md` → "Order
+materializer and manifest (`order.py`)", not here. The adapter owns exactly three
+things:
 
-```text
-steward,provider,register,variant,requested_period,edition,table,column,variable
-```
+- **The deployment's inventory**, read once at boot by
+  `stewards.load_delivery_inventory` from `stewards/<id>/inventory.toml` and parked on
+  `app.state.inventory`. Its absence is §12's global-deployment fallback
+  (`inventory=None`), which the materializer takes directly; a malformed inventory, or
+  one declaring a different steward than the directory it sits in, fails startup (fail
+  fast — a mis-stewarded inventory would otherwise reject every upload as a confusing
+  `steward_mismatch`).
+- **The download**: the 200 body is `OrderManifest.to_json()` VERBATIM (the handler
+  returns a raw `Response`, which FastAPI passes through without re-serializing), so the
+  SPA download and `reg-meta order` hand the steward byte-identical files — §12's
+  equal-product-surfaces rule, pinned by a cross-adapter test. `response_model=` still
+  publishes the reg_meta `OrderManifest` as the typed contract for the OpenAPI snapshot
+  and the SPA codegen, so this is NOT a `response_model` carve-out.
+- **The "not an order" status**: 422, never a partial 200 — for an invalid spec
+  (`order.project_from_raw`, the gate both adapters share) and for a fail-closed blocked
+  order alike, with every finding named in `detail` via `order.blocked_message` (the
+  same text the CLI envelopes). The SPA renders it through the existing request-error
+  path.
 
-`project_data.json` will supply the logical selection and explicit requested period, and
-reg_meta will split any representation changes into deterministic logical slices. A
-steward table will match a slice only when its inventory mapping exactly matches
-`(register_variant, variable, representation)` and its physical edition overlaps that
-slice; overlap elsewhere in the overall request will not match. A table identifier is
-opaque (exact filename or schema-qualified SQL table). Edition uses the existing finite
-period grammar and may cover several periods, but is never inferred from an ambiguous
-filename or represented as `"_default"`. One table/column may map to several variants
-and several tables may map to one coordinate. Each matched edition will contribute only
-its overlap with the exact slice to coverage. Those slice-clipped contributions must
-cover every segment of the requested period before any rows are emitted. A partial
-overlap will block the whole order and report the exact uncovered gaps rather than
-silently producing a partial manifest. Once coverage passes, every table matching at
-least one slice will be emitted.
+**Still to come (decision 2026-07-11).** The SPA will expose one common study window as
+the project-authoring default. When a source has any overlap, adding it will immediately
+persist the full available intersection, including every disjoint segment; this will be
+the default action, not a suggestion the user must accept. With no overlap, the picker
+will block the add and explain the incompatibility rather than inventing a period. If a
+later common-window edit leaves an existing source disjoint, its explicit period will
+remain and the project will become blocking. The picker and project page will highlight
+every divergence. The common window will never become hidden inheritance, and an
+explicit apply-to-all action will rewrite only sources with an overlap.
 
-Steward rows will output the literal physical `table` and `column`; the canonical
-representation will stay a join discriminator. The confirmed global fallback will use
-blank `table`, the resolved canonical column, and `edition = requested_period` until a
-physical global inventory exists. It will obey the same full-coverage gate using
-canonical resolution; representation changes will fan out deterministically, while
-unresolved, ambiguous, or partially covered requests block. The output `steward` will be
-the active deployment/inventory; the project's provenance field must match before
-ordering. Every uploaded project will be validated against the receiving deployment. A
-provenance mismatch will block ordering, and the app will deliberately offer no steward-
-retarget workflow: changing provenance means editing the JSON and uploading it again.
-Preserve project source/binding order and sort any fan-out by table, canonical edition,
-then physical column.
-
-The SPA will expose one common study window as the project-authoring default. When a
-source has any overlap, adding it will immediately persist the full available
-intersection, including every disjoint segment; this will be the default action, not a
-suggestion the user must accept. With no overlap, the picker will block the add and
-explain the incompatibility rather than inventing a period. If a later common-window
-edit leaves an existing source disjoint, its explicit period will remain and the project
-will become blocking. The picker and project page will highlight every divergence. The
-common window will never become hidden inheritance, and an explicit apply-to-all action
-will rewrite only sources with an overlap.
-
-The materializer will include a matched multi-period table whole even when the resolved
-slice covers only a subset of its edition. V1 will have no table chooser, population
-field, or SQL/file row-filter expression. `simplify:` add table-specific period
-predicates when a delivery consumer needs them; SWECOV's large per-register SoS SQL
-tables are the known trigger. An unresolved mapping for a selected binding blocks the
-order; deliberately unmapped inventory columns remain valid coverage evidence and will
-never be selected. Never fall back to `display_name` or an FQID leaf. Shared `reg_meta`
-project code will own the semantic pass, inventory join, materializer, and CSV renderer.
-FastAPI will serve the SPA; the agent/CLI will load the versioned catalog DB and public
-inventory locally. Both thin adapters must emit byte-identical results. This
-deliberately adds `reg_meta → reg_schema` rather than a fifth package.
-`REFACTOR_SPEC.md` §12 tracks direct replacement of the current renderer,
-`StewardBootCatalog`, and `steward.project_data.json` filter.
-
-An empty project will remain a structurally valid draft for authoring, but the
-materializer will return a blocking `empty_order` issue rather than a header-only CSV.
+Shared `reg_meta` project code still has to absorb the semantic pass (`semantic.py`
+below); `REFACTOR_SPEC.md` §12 tracks that, plus removal of `StewardBootCatalog` and the
+`steward.project_data.json` filter.
 
 **Connection model = per-request open ON ONE THREAD** (the locked cross-thread guard).
 `/validate` and `/order` are `async` only to read the body off the wire; the blocking
@@ -1902,11 +1877,6 @@ work (structural parse + per-binding sqlite resolution) is offloaded via
 `run_in_threadpool`, and the reg_meta connection opens on **that** worker thread inside
 a `with`-block — NEVER a generator `Depends` (which can run on a different AnyIO thread
 → `sqlite3.ProgrammingError`).
-
-The order CSV cell values are passed through a **spreadsheet formula-injection** guard
-(`_csv_safe`): a researcher-controlled `display_name` like `=HYPERLINK(...)` would
-otherwise execute as a formula when the data provider opens the manifest. A leading
-formula-trigger char (`=+-@\t\r`) is prefixed with a single quote.
 
 ## Current semantic validation (`semantic.py`)
 
@@ -1917,10 +1887,11 @@ currently invokes `semantic.py` with the structural and owning-package block val
 it emits the same frozen `reg_schema.ValidationIssue` shape, takes a `Catalog`, and
 leaves connection ownership to its caller.
 
-This location is provisional. The v1 delivery boundary above moves semantic validation
-and order materialization together into shared `reg_meta` project code so the FastAPI
-SPA adapter and local CLI execute one implementation. `reg_schema` remains independent;
-the dependency direction is `reg_meta -> reg_schema`, never the reverse.
+This location is provisional. Order materialization has already moved to shared
+`reg_meta` project code (`order.py`, above), which is what lets the FastAPI SPA adapter
+and the local CLI execute one implementation; semantic validation follows on the same
+path. `reg_schema` remains independent; the dependency direction is
+`reg_meta -> reg_schema`, never the reverse.
 
 Rules, walking each source's `register_variant` + every binding:
 
@@ -1993,10 +1964,10 @@ steward holds *no* column of the concept, and the distinct
 column the binding **resolves** to — its message enumerates what the steward *does* hold
 ("available from this steward as 'Ssyk1' only" is the actionable form of "not
 available"). These are warnings during editing so an uploaded project can be inspected,
-but the current provisional `/order` route runs only the structural gate and does not
-consume them. This is a known pre-v1 limitation: the inventory-backed materializer will
-rerun semantic/inventory validation and block these conditions. There is no cross-
-steward preview, retarget, or one-click mutation feature: the active deployment is the
+but `/order` does not consume them: the materializer runs its own fail-closed
+inventory/resolution gate and blocks these conditions with its own findings, so a
+steward-catalog warning never silently becomes an order. There is no cross- steward
+preview, retarget, or one-click mutation feature: the active deployment is the
 validation target, and the user edits and re-uploads the JSON if they intend to change
 it. The current check is wired into `/api/project/validate`: `routes/project.py` threads
 `app.state.catalog_index` into `validate_semantic` via `run_in_threadpool`; it runs
@@ -2213,17 +2184,7 @@ POSTs are not. Catalog browse paths use FQID segments directly.
   | GET    | `/api/catalog/{fqid}/lineage_warnings`           | Linker-emitted lineage coverage warnings. Dead/renamed binding 301s to `/lineage_warnings` on its terminal successor (#411).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
   | GET    | `/api/catalog/{fqid}/dimensions`                 | Concept-group dimension memberships containing this variable (the variant facet groups: level/population/rank/…). Dead/renamed binding 301s to `/dimensions` on its terminal successor (#411).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
   | POST   | `/api/project/validate`                          | Three-layer validation; 200 + `ok` + issues.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
-  | POST   | `/api/project/order`                             | Current provisional order-export CSV download.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-
-**Current provisional order-export CSV columns** (implemented at this head):
-`provider,register,variant,variable,representation,period,display_name` — one row per
-spec binding. `representation` is its OWN column (not folded into `display_name`): a
-custom display name would otherwise hide which delivery column the binding pinned, so
-the data provider couldn't tell representations apart. `period` serializes via the
-catalog `?period` wire form (range → `"<from>..<to>"`, snapshot → `"_default"`). This is
-not the v1 delivery contract: the inventory-backed normalized manifest above replaces it
-directly, including its best-effort fallback behavior. There are no per-steward export
-templates in the v1 plan; see `REFACTOR_SPEC.md` §12.
+  | POST   | `/api/project/order`                             | The materialized JSON order manifest, downloaded as `order.json`; 422 when the result is not an order.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
 
 Global FTS search shipped as `GET /api/search` (#350); the docs library shipped as
 `/api/docs/*` (#354).

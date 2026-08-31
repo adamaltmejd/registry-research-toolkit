@@ -25,7 +25,7 @@
  */
 
 import {
-  downloadOrderCsv,
+  downloadOrderManifest,
   errMessage,
   type ProjectDataBody,
   triggerDownload,
@@ -240,7 +240,7 @@ let validationBusy = $state(false);
 /** True while an automatic validation debounce is waiting to fire. */
 let validationScheduled = $state(false);
 
-/** True while an order CSV download POST is in flight. */
+/** True while an order-manifest download POST is in flight. */
 let orderBusy = $state(false);
 
 /** Whether a validation request is currently running; non-reactive because the
@@ -260,7 +260,7 @@ const dirty = $derived(
   draft != null && serializeProjectData(draft) !== lastDownloaded,
 );
 
-/** A clean draft that has VALIDATED ok — the gate for the order CSV download.
+/** A clean draft that has VALIDATED ok — the gate for the order download.
  * Re-validation is required after any edit (an edit clears `validation`). */
 const validatedClean = $derived(validation?.ok === true);
 
@@ -284,8 +284,16 @@ const validationStatus = $derived.by<ValidationStatus>(() => {
   return validation.issues.length > 0 ? "warnings" : "ok";
 });
 
+// `requestError` closes the gate too: `/order` can fail-close a project that
+// VALIDATES clean (a steward-provenance mismatch, an uncovered period), and an
+// enabled accent CTA that can only repeat the same 422 reads as "ready". Any
+// edit re-runs validation, which clears `requestError` and reopens the gate.
 const canDownloadOrder = $derived(
-  validatedClean && !validationScheduled && !validationBusy && !orderBusy,
+  validatedClean &&
+    requestError == null &&
+    !validationScheduled &&
+    !validationBusy &&
+    !orderBusy,
 );
 
 /** Replace the draft, clearing the stale validation (an edit invalidates the last
@@ -558,7 +566,7 @@ export const projectStore = {
         // REPLACE the whole draft object and bump the generation, so a mid-flight
         // edit makes this response stale. Discard it rather than writing
         // validation for a superseded draft — otherwise stale green results would
-        // re-enable the order CSV download.
+        // re-enable the order download.
         const target: ProjectData | null = draft;
         const targetGeneration = validationGeneration;
         if (target == null) {
@@ -588,8 +596,9 @@ export const projectStore = {
     }
   },
 
-  /** Download the order-export CSV (`/project/order`). A structurally invalid spec
-   * is the backend's 422 → `requestError`. */
+  /** Download the JSON order manifest (`/project/order`). A spec that is not an
+   * order — invalid, or fail-closed blocked by the materializer — is the
+   * backend's 422 → `requestError`, which the ValidationPanel renders. */
   async downloadOrder(): Promise<void> {
     if (draft == null) {
       return;
@@ -597,7 +606,7 @@ export const projectStore = {
     orderBusy = true;
     requestError = null;
     try {
-      await downloadOrderCsv(draft as ProjectDataBody);
+      await downloadOrderManifest(draft as ProjectDataBody);
     } catch (e) {
       requestError = errMessage(e);
     } finally {

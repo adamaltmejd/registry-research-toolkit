@@ -127,7 +127,7 @@ export async function apiPostJson<T>(path: string, body: unknown): Promise<T> {
  * (`attachment; filename="..."`), falling back to `fallbackFilename`. A non-2xx is
  * an `ApiError` (the backend's 400/422 — a malformed request or an invalid spec
  * the download endpoint rejects, unlike `/validate`'s 200 diagnosis). Used for the
- * CSV order export (`/project/order`).
+ * order manifest (`/project/order`).
  *
  * The download is wired with a transient `<a download>` + `createObjectURL`,
  * revoked after the click — the standard no-dep blob-download pattern.
@@ -164,7 +164,7 @@ export async function apiPostForBlob(
 
 /** Parse the `filename="..."` out of a `Content-Disposition` header, or `null`
  * when absent/unparseable. Only the simple quoted form the backend emits
- * (`attachment; filename="order.csv"`) is handled — that's all the contract
+ * (`attachment; filename="order.json"`) is handled — that's all the contract
  * produces. */
 function filenameFromContentDisposition(header: string | null): string | null {
   if (!header) {
@@ -514,11 +514,13 @@ export function validateProject(
   return apiPostJson<ValidationResultModel>("/project/validate", draft);
 }
 
-/** POST a draft to `/api/project/order` and download the rendered order-export
- * CSV. A structurally invalid spec is the backend's 422 (an `ApiError`) — unlike
- * `/validate`, the order endpoint cannot render from an invalid spec. */
-export function downloadOrderCsv(draft: ProjectDataBody): Promise<void> {
-  return apiPostForBlob("/project/order", draft, "order.csv");
+/** POST a draft to `/api/project/order` and download the materialized JSON order
+ * manifest (`OrderManifest`, served verbatim so the SPA and the `reg-meta order`
+ * CLI hand the steward byte-identical files). Anything that is NOT an order — an
+ * invalid spec, or an order the materializer fail-closed on — is the backend's
+ * 422 (an `ApiError` naming every finding), never a partial download. */
+export function downloadOrderManifest(draft: ProjectDataBody): Promise<void> {
+  return apiPostForBlob("/project/order", draft, "order.json");
 }
 
 // ── Search surface (#379) ───────────────────────────────────────────────────

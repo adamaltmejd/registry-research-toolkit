@@ -33,7 +33,9 @@ from .db import (
     open_db,
 )
 from .errors import (
+    EXIT_NO_MATCH,
     EXIT_NOT_FOUND,
+    EXIT_SUCCESS,
     EXIT_USAGE,
     RegMetaError,
 )
@@ -604,6 +606,34 @@ def _build_parser() -> argparse.ArgumentParser:
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
 
+    order_p = sub.add_parser(
+        "order",
+        help="Materialize a project_data.json into a JSON order manifest.",
+        description=(
+            "Materialize a project against this DB (and, for a steward\n"
+            "deployment, its delivery inventory) into the canonical JSON order\n"
+            "manifest — the SAME materializer the webapp serves, so both emit\n"
+            "byte-identical manifests (REFACTOR_SPEC.md §12).\n\n"
+            "Writes the manifest to stdout, or to --output. A blocked order\n"
+            "writes the JSON error envelope naming every finding and exits 17;\n"
+            "an unreadable/invalid project or inventory exits 10.\n\n"
+            "Examples:\n"
+            "  reg-meta order project_data.json\n"
+            "  reg-meta order project_data.json --inventory swecov.toml -o order.json"
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    order_p.add_argument("project", help="Path to the project_data.json to order.")
+    order_p.add_argument(
+        "--inventory",
+        default=None,
+        help=(
+            "Path to the steward delivery-inventory TOML. Omit for a global "
+            "deployment (no physical topology — canonical resolution grounds "
+            "the order)."
+        ),
+    )
+
     # --- doc command family ---
     doc_p = sub.add_parser(
         "docs",
@@ -737,6 +767,46 @@ def _cmd_update(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
         data=result,
         duration_ms=duration_ms,
     ), 0
+
+
+def _cmd_order(args: argparse.Namespace) -> int:
+    """`reg-meta order` — the CLI adapter over `order.materialize_order`.
+
+    A THIN adapter (§12): every gate, every finding and the serialization itself
+    belong to `order.py`, so this function only moves bytes. It writes
+    `OrderManifest.to_json()` VERBATIM (not the CLI envelope, and not through
+    `--format`) — that canonical serialization IS the artifact, and byte-identity
+    with the FastAPI adapter is the contract.
+
+    Exit codes come from the existing error classes via `handle_cli_exception`:
+    0 ok, 17 (`EXIT_NO_MATCH`) a fail-closed blocked order, 10 (`EXIT_CONFIG`) an
+    unreadable/invalid project or inventory."""
+    from .inventory import load_inventory
+    from .order import blocked_message, load_project, materialize_order
+
+    project = load_project(Path(args.project))
+    # No `--inventory` is the GLOBAL deployment (§12's fallback), the same
+    # `inventory=None` the webapp's global deployment passes — not a degraded
+    # mode the adapter invents.
+    inventory = load_inventory(Path(args.inventory)) if args.inventory else None
+    conn = open_db(db_path_from_args(args.db))
+    try:
+        result = materialize_order(project, inventory, conn)
+    finally:
+        conn.close()
+    if result.manifest is None:
+        raise RegMetaError(
+            exit_code=EXIT_NO_MATCH,
+            code="order_blocked",
+            error_class="order",
+            message=blocked_message(result),
+            remediation=(
+                "Fix every reported finding — the materializer is fail-closed "
+                "and never emits a partial order."
+            ),
+        )
+    write_to(result.manifest.to_json(), args.output, truncate=True)
+    return EXIT_SUCCESS
 
 
 # ---------------------------------------------------------------------------
@@ -3142,6 +3212,16 @@ def run(argv: list[str] | None = None) -> int:
         if not sub_command:
             _print_group_brief(parser, "docs")
             return EXIT_USAGE
+
+    # `order` writes the canonical manifest bytes (`OrderManifest.to_json`)
+    # verbatim, so it bypasses the envelope/`--format` pipeline below —
+    # byte-identity with the FastAPI adapter is the §12 contract. Errors still
+    # render through the shared envelope + exit codes.
+    if args.command == "order":
+        try:
+            return _cmd_order(args)
+        except Exception as exc:  # noqa: BLE001 — CLI boundary: envelope + stable exit code
+            return handle_cli_exception(exc, getattr(args, "output", None))
 
     key = (args.command, sub_command)
     handler = COMMAND_DISPATCH.get(key)

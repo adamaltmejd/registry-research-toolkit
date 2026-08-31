@@ -226,6 +226,24 @@ describe("ValidationPanel — researcher-language findings", () => {
     expect(onRetry).toHaveBeenCalledOnce();
   });
 
+  it("yields the green summary to a standing request error (a blocked order, §12)", async () => {
+    // `/order` fail-closes projects that VALIDATE clean, so the last green
+    // result can coexist with an order block. Announcing both — "Request
+    // failed" directly above "Valid — no errors." — tells the researcher two
+    // contradictory things at once, so the banner is the only status shown.
+    await render(ValidationPanel, {
+      result: { ok: true, issues: [] },
+      status: "ok",
+      requestError:
+        "order blocked by 1 finding: steward_mismatch: project steward 'swecov' does not match the deployment steward 'global'",
+      windowHints: [],
+      sources: SOURCES,
+    });
+
+    await expect.element(page.getByText(/steward_mismatch/)).toBeVisible();
+    expect(document.body.textContent).not.toContain("no errors");
+  });
+
   it("wraps a long locate label and catalog FQID without horizontal overflow on mobile (#1112)", async () => {
     // Regression for #1112 (follow-up to #1110's SourceEditor/BindingEditor fix): at
     // 375px the `.locators` row's flex children — the `.locate` label ("Source '…' →

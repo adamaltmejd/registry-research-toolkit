@@ -823,6 +823,30 @@ the same shape with a blank `table`, the canonical column in `column`, and
 `edition = requested_period`, so `extraction_filenames` gives it one file per requested
 period segment without a special case.
 
+**The adapter door.** §12's "both product surfaces emit byte-identical results" holds
+only if the adapters are genuinely thin, so the two things they would otherwise each
+re-type live here too, beside the materializer:
+
+- `project_from_raw(raw)` (and `load_project(path)`, the CLI's file-reading wrapper) is
+  the ONE door into `materialize_order` for an untrusted `project_data.json`. The
+  `ProjectData` model enforces field TYPES only, so it runs `reg_schema`'s
+  `validate_structural` first — without that gate a model-valid but structurally invalid
+  spec (a malformed `register_variant`, a bad period token) would materialize a bad
+  provider order. An invalid spec raises `RegMetaError` (`project_invalid` /
+  `project_unreadable`, `EXIT_CONFIG`), so both adapters reject the same specs with the
+  same words.
+- `blocked_message(result)` renders every blocking finding, in the materializer's own
+  accumulation order, each prefixed with the source/variable/period it names. The
+  fail-closed path is byte-identical across adapters too, not just a produced manifest.
+
+The adapters themselves are `reg_webapp`'s `POST /api/project/order` (see
+`reg_webapp/DESIGN.md` → Project-write surface) and
+`reg-meta order <project.json> [--inventory <toml>]`, which writes `to_json()` verbatim
+to stdout or `--output` — never through the CLI envelope or `--format`, because that
+canonical serialization IS the artifact. Omitting `--inventory` is the same
+`inventory=None` global fallback the webapp's global deployment passes, not a degraded
+CLI mode.
+
 ## Value sets are year-projected
 
 `Vardemangder.csv` is the historical union — every code that ever applied to a variable
@@ -1338,7 +1362,7 @@ format for version comparison.
   | 2    | Usage/argument error                           |
   | 10   | Configuration error (missing DB, bad encoding) |
   | 16   | Not found                                      |
-  | 17   | No match with `--require-match`                |
+  | 17   | No match with `--require-match`; blocked order |
   | 25   | Network error (`reg-meta update`)              |
   | 30   | Unexpected internal error                      |
 

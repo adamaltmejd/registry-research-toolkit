@@ -1,23 +1,28 @@
-"""`POST /api/project/order` against the slugged ``catalog_db`` fixture.
+"""`POST /api/project/order` — the FastAPI adapter over reg_meta's shared order
+materializer, against the slugged ``catalog_db`` fixture.
 
-See DESIGN.md → Project-write surface (routes/project.py + routes/bundle.py).
-Covers the current provisional order-export CSV: the column header + shape, the
-``text/csv`` content-type + ``Content-Disposition`` download header,
-determinism (same spec → byte-identical CSV), the period serialization
-(int / range / ``_default``), and the ``display_name`` fallback from reg_meta's
-``delivery_column_name`` when the binding leaves ``display_name`` unset.
+See DESIGN.md → Project-write surface (routes/project.py) and reg_meta/DESIGN.md
+→ Order materializer and manifest. The endpoint is a THIN adapter
+(REFACTOR_SPEC.md §12), so the materializer's own rules are pinned by
+``reg_meta/tests/test_order.py``; what belongs HERE is the adapter contract: the
+``order.json`` download shape, the "not an order" 422s (an invalid spec and a
+fail-closed blocked order alike — never a partial 200), and the byte-identity
+with the ``reg-meta order`` CLI that is §12's whole point.
 
-The fixture's ``scb/lisa/kon`` binding has ``delivery_column_name = "Kon"`` at
-variant ``individer-15plus`` / state ``2018-01-01..9999-12-31``.
+The fixture has no ``inventory.toml``, so the deployment runs §12's
+global-deployment fallback (``inventory=None``) — hence ``steward: "global"``
+in the spec below. The fixture's ``scb/lisa/kon`` binding resolves to
+``delivery_column_name = "Kon"`` at variant ``individer-15plus`` / state
+``2018-01-01..9999-12-31``.
 """
 
 from __future__ import annotations
 
-import csv
-import io
+import json
 
 import pytest
 from fastapi.testclient import TestClient
+from reg_meta.order import OrderManifest
 from reg_webapp.app import create_app
 
 
@@ -27,20 +32,10 @@ def client(catalog_db):
         yield c
 
 
-def _spec(
-    *,
-    display_name: str | None = None,
-    period: object = 2018,
-    representation: str | None = None,
-) -> dict:
-    binding: dict = {"variable": "scb/lisa/kon", "type": "categorical"}
-    if display_name is not None:
-        binding["display_name"] = display_name
-    if representation is not None:
-        binding["representation"] = representation
+def _spec(*, steward: str = "global", period: object = 2018) -> dict:
     return {
         "schema_version": "2.0.0",
-        "steward": "ifau",
+        "steward": steward,
         "reg_meta_version": "5.1.0",
         "name": "test",
         "sources": [
@@ -48,108 +43,92 @@ def _spec(
                 "name": "lisa-2018",
                 "register_variant": "scb/lisa/individer-15plus",
                 "period": period,
-                "bindings": [binding],
+                "bindings": [{"variable": "scb/lisa/kon", "type": "categorical"}],
             }
         ],
     }
 
 
-def _rows(csv_text: str) -> list[list[str]]:
-    return list(csv.reader(io.StringIO(csv_text)))
-
-
-def test_content_type_and_disposition(client):
+def test_manifest_download_shape(client):
     resp = client.post("/api/project/order", json=_spec())
-    assert resp.status_code == 200
-    assert resp.headers["content-type"].startswith("text/csv")
+    assert resp.status_code == 200, resp.text
+    assert resp.headers["content-type"].startswith("application/json")
     assert "attachment" in resp.headers["content-disposition"]
-    assert "order.csv" in resp.headers["content-disposition"]
+    assert "order.json" in resp.headers["content-disposition"]
 
 
-def test_csv_header_and_row_shape(client):
-    resp = client.post("/api/project/order", json=_spec(display_name="Sex"))
-    rows = _rows(resp.text)
-    assert rows[0] == [
-        "provider",
-        "register",
-        "variant",
-        "variable",
-        "representation",
-        "period",
-        "display_name",
-    ]
-    assert rows[1] == [
-        "scb",
-        "lisa",
-        "individer-15plus",
-        "scb/lisa/kon",
-        "",
-        "2018",
-        "Sex",
-    ]
-
-
-def test_display_name_fallback_from_reg_meta(client):
-    """No explicit ``display_name`` → the renderer resolves the binding at the
-    source's ``(variant, period)`` and uses ``delivery_column_name`` (``"Kon"``
-    in the fixture)."""
+def test_body_is_the_manifests_own_canonical_serialization(client):
+    """The 200 body is ``OrderManifest.to_json()`` VERBATIM — FastAPI never
+    re-serializes it — so it round-trips through the reg_meta contract model and
+    keeps that serialization's sorted keys + trailing newline."""
     resp = client.post("/api/project/order", json=_spec())
-    rows = _rows(resp.text)
-    assert rows[1][-1] == "Kon"
+    manifest = OrderManifest.model_validate(json.loads(resp.text))
+    assert resp.text == manifest.to_json()
+    assert resp.text.endswith("\n")
 
 
-def test_range_period_serializes_with_double_dot(client):
-    resp = client.post(
-        "/api/project/order", json=_spec(period={"from": 2018, "to": 2020})
-    )
-    rows = _rows(resp.text)
-    assert rows[1][5] == "2018..2020"
-
-
-def test_list_period_serializes_comma_joined(client):
-    # #307: the interrupted-series wire grammar is comma-joined member wires.
-    # The order goes through the full validate-then-render endpoint, so this
-    # also pins that a list-period spec passes the structural gate end-to-end.
-    resp = client.post(
-        "/api/project/order",
-        json=_spec(period=[{"from": 2018, "to": 2019}, {"from": 2021, "to": 2022}]),
-    )
-    rows = _rows(resp.text)
-    assert rows[1][5] == "2018..2019,2021..2022"
-
-
-def test_default_sentinel_period_serializes_literally(client):
-    resp = client.post("/api/project/order", json=_spec(period="_default"))
-    rows = _rows(resp.text)
-    assert rows[1][5] == "_default"
-
-
-def test_representation_column_survives_custom_display_name(client):
-    # A binding with BOTH a representation and a custom display_name must still
-    # carry the representation in its own column (else the provider can't tell
-    # which delivery column was pinned).
-    resp = client.post(
-        "/api/project/order",
-        json=_spec(display_name="Sex (detailed)", representation="kon_detalj"),
-    )
-    rows = _rows(resp.text)
-    assert rows[0][4] == "representation"
-    assert rows[1][4] == "kon_detalj"
-    assert rows[1][-1] == "Sex (detailed)"
+def test_manifest_grounds_the_global_fallback_entry(client):
+    """The deployment has no inventory, so §12's global fallback grounds the
+    order: blank ``table``, the resolved canonical column, ``edition`` = the
+    requested period. Pinned here because it is the boot wiring
+    (``app.state.inventory is None``) that selects it, not the materializer."""
+    resp = client.post("/api/project/order", json=_spec())
+    manifest = OrderManifest.model_validate(json.loads(resp.text))
+    assert manifest.provenance.mode == "global_fallback"
+    assert manifest.provenance.steward == "global"
+    (entry,) = manifest.entries
+    assert entry.physical.table == ""
+    assert entry.physical.column == "Kon"
+    assert entry.physical.edition == "2018"
 
 
 def test_deterministic(client):
-    """Same spec → byte-identical CSV (no sort, no timestamps)."""
-    a = client.post("/api/project/order", json=_spec(display_name="Sex")).text
-    b = client.post("/api/project/order", json=_spec(display_name="Sex")).text
+    """Same spec → byte-identical manifest (no timestamps, stable order)."""
+    a = client.post("/api/project/order", json=_spec()).text
+    b = client.post("/api/project/order", json=_spec()).text
     assert a == b
 
 
-def test_structurally_invalid_spec_is_422_not_bad_csv(client):
-    """/order runs the structural gate before rendering: a Pydantic-valid but
-    structurally-invalid spec (here a bad period token — a `str`, so the model
-    accepts it, but the period grammar rejects it) is a 422, NOT a 200 CSV of a bad
-    provider order (Codex P2)."""
+def test_byte_identical_to_the_cli_adapter(client, catalog_db, tmp_path, capsys):
+    """§12's contract: the FastAPI adapter and ``reg-meta order`` are thin
+    adapters over ONE materializer, so the same (project, inventory, DB) inputs
+    produce byte-identical ``order.json`` on both surfaces."""
+    from reg_meta.cli import run
+
+    project_path = tmp_path / "project_data.json"
+    project_path.write_text(json.dumps(_spec()), encoding="utf-8")
+
+    exit_code = run(["order", str(project_path), "--db", str(catalog_db.parent)])
+    assert exit_code == 0
+    cli_manifest = capsys.readouterr().out
+
+    web_manifest = client.post("/api/project/order", json=_spec()).text
+    assert cli_manifest == web_manifest
+
+
+def test_blocked_order_is_422_not_a_200_manifest(client):
+    """A fail-closed blocked order is NOT an order: a 422 naming every finding,
+    never a 200 with a partial manifest. Here the project's steward provenance
+    does not match the deployment's (§12 blocks retargeting)."""
+    resp = client.post("/api/project/order", json=_spec(steward="swecov"))
+    assert resp.status_code == 422
+    detail = resp.json()["detail"]
+    assert "steward_mismatch" in detail
+    assert "order blocked" in detail
+
+
+def test_empty_project_is_blocked_not_a_header_only_manifest(client):
+    spec = _spec()
+    spec["sources"] = []
+    resp = client.post("/api/project/order", json=spec)
+    assert resp.status_code == 422
+    assert "project_empty" in resp.json()["detail"]
+
+
+def test_structurally_invalid_spec_is_422(client):
+    """The shared gate (`order.project_from_raw`) runs before materialization: a
+    Pydantic-valid but structurally invalid spec (a bad period token — a `str`,
+    so the model accepts it) is a 422, not a manifest of a bad provider order."""
     spec = _spec()
     spec["sources"][0]["period"] = "notaperiod"
     resp = client.post("/api/project/order", json=spec)
@@ -162,33 +141,6 @@ def test_unknown_root_field_is_422_at_structural_gate(client):
     resp = client.post("/api/project/order", json=spec)
     assert resp.status_code == 422
     assert "unexpected_field@/reg_monabundle" in resp.json()["detail"]
-
-
-def test_unresolvable_binding_falls_back_to_fqid_leaf(client):
-    """A binding whose FQID doesn't resolve still renders a row — the order is a
-    manifest, so the display_name best-effort falls back to the bare FQID leaf
-    rather than crashing (unresolved bindings are the validator's job to flag)."""
-    spec = _spec()
-    spec["sources"][0]["bindings"][0]["variable"] = "scb/lisa/nosuchvar"
-    resp = client.post("/api/project/order", json=spec)
-    assert resp.status_code == 200
-    rows = _rows(resp.text)
-    assert rows[1][-1] == "nosuchvar"
-
-
-@pytest.mark.parametrize(
-    "evil",
-    ['=HYPERLINK("http://evil","x")', "+1+1", "-2+3", "@SUM(A1:A9)", "\t=cmd"],
-)
-def test_csv_formula_injection_is_neutralized(client, evil):
-    """The order CSV is handed to a data provider who opens it in a spreadsheet, so
-    an attacker-controlled display_name beginning with a formula trigger (= + - @,
-    leading tab/CR) must be neutralized — prefixed with a single quote so it's
-    treated as text, not executed (the stdlib csv writer does NOT do this)."""
-    resp = client.post("/api/project/order", json=_spec(display_name=evil))
-    assert resp.status_code == 200
-    cell = _rows(resp.text)[1][-1]  # the display_name column
-    assert cell == "'" + evil, f"formula cell not neutralized: {cell!r}"
 
 
 def test_concurrent_order_no_cross_thread_error(catalog_db):
@@ -204,11 +156,7 @@ def test_concurrent_order_no_cross_thread_error(catalog_db):
     ):
         codes = list(
             pool.map(
-                lambda _: (
-                    c.post(
-                        "/api/project/order", json=_spec(display_name="Sex")
-                    ).status_code
-                ),
+                lambda _: c.post("/api/project/order", json=_spec()).status_code,
                 range(50),
             )
         )

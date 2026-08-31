@@ -519,17 +519,21 @@ export interface paths {
         put?: never;
         /**
          * Order Project
-         * @description Render the current provisional order-export CSV.
+         * @description Materialize a ``project_data.json`` into the JSON order manifest.
          *
-         *     Reads the raw dict and runs the STRUCTURAL gate (see reg_schema/DESIGN.md →
-         *     Structural rules and issue codes) before rendering: the
-         *     ``ProjectData`` model enforces only field types, while the structural rules
-         *     (FQID shape, period grammar, the binding/source-prefix match) live in
-         *     ``validate_structural`` — so a Pydantic-valid-but-structurally-invalid spec
-         *     (e.g. a malformed ``register_variant`` or bad period token) would otherwise
-         *     render a bad provider order at 200. A structurally invalid spec → 422.
-         *     ``async`` + ``run_in_threadpool`` (blocking display_name resolution off the
-         *     event loop), mirroring ``/validate``.
+         *     A THIN adapter over ``reg_meta.order.materialize_order`` (REFACTOR_SPEC.md
+         *     §12): no gate, no fallback and no rendering lives here, so this endpoint and
+         *     the ``reg-meta order`` CLI emit byte-identical manifests. The deployment's
+         *     delivery inventory is read once at boot (``app.state.inventory``); ``None``
+         *     is §12's global-deployment fallback, which the materializer takes directly.
+         *
+         *     200 is the manifest — ``application/json``, downloaded as ``order.json``.
+         *     Anything else is NOT AN ORDER: 422 either because the spec is invalid
+         *     (``project_from_raw``) or because the materializer blocked it, with every
+         *     finding named in ``detail``. There is deliberately no partial 200.
+         *
+         *     ``async`` + ``run_in_threadpool`` (blocking sqlite resolution off the event
+         *     loop), mirroring ``/validate``.
          */
         post: operations["order_project_api_project_order_post"];
         delete?: never;
@@ -1312,6 +1316,23 @@ export interface components {
             type: "classification_succession";
         };
         /**
+         * ClipReport
+         * @description One informational availability clip (§12: reported, never silent, never
+         *     an error): the binding asked for `requested_period` and is ordered for
+         *     `ordered_period`, because that is where the column is documented as
+         *     available. Emitted only when the clip actually narrows the request.
+         */
+        ClipReport: {
+            /** Ordered Period */
+            ordered_period: string;
+            /** Requested Period */
+            requested_period: string;
+            /** Source */
+            source: string;
+            /** Variable */
+            variable: string;
+        };
+        /**
          * CodeOwnerClassification
          * @description A classification that carries a code (#352) — catalog-scoped (no owning
          *     register).
@@ -1895,6 +1916,31 @@ export interface components {
             period: number | string;
         };
         /**
+         * LogicalCoordinate
+         * @description What the researcher asked for: the project-side coordinate of one entry.
+         *
+         *     `variable` is the 3-segment binding FQID; `representation` is the canonical
+         *     reg_meta `delivery_column_name` the slice resolved to — a join discriminator
+         *     carried for provenance, NOT the output column (that is
+         *     `PhysicalCoordinate.column`).
+         *
+         *     `register` is a `BaseModel` method, so the Python attr is `register_name`
+         *     with a `"register"` alias — the wire key stays the §12 coordinate spelling
+         *     (same pattern as `catalog.BindingGroupRef`).
+         */
+        LogicalCoordinate: {
+            /** Provider */
+            provider: string;
+            /** Register */
+            register: string;
+            /** Representation */
+            representation: string;
+            /** Variable */
+            variable: string;
+            /** Variant */
+            variant: string;
+        };
+        /**
          * ObjectTypeMetadata
          * @description SCB object-type prose for one register version (#799).
          */
@@ -1903,6 +1949,74 @@ export interface components {
             definition: string | null;
             /** Name */
             name: string;
+        };
+        /**
+         * OrderEntry
+         * @description One resolved logical→physical binding of the order.
+         *
+         *     `source` is the project source name, so an entry stays traceable to the
+         *     binding that produced it. `requested_period` is the AVAILABILITY-CLIPPED
+         *     period this table serves (canonically rendered), not the source's raw
+         *     declared period — the table itself is ordered whole regardless (§12).
+         */
+        OrderEntry: {
+            logical: components["schemas"]["LogicalCoordinate"];
+            physical: components["schemas"]["PhysicalCoordinate"];
+            /** Requested Period */
+            requested_period: string;
+            /** Source */
+            source: string;
+        };
+        /**
+         * OrderManifest
+         * @description The versioned JSON order manifest — machine-written here, machine-read by
+         *     the steward-side extract system, never hand-edited.
+         */
+        OrderManifest: {
+            /** Clips */
+            clips: components["schemas"]["ClipReport"][];
+            /** Entries */
+            entries: components["schemas"]["OrderEntry"][];
+            provenance: components["schemas"]["OrderProvenance"];
+            /**
+             * Version
+             * @constant
+             */
+            version: 1;
+        };
+        /**
+         * OrderProvenance
+         * @description Everything the steward-side extract system needs to know WHICH project,
+         *     against WHICH catalog, for WHICH deployment — so the manifest is
+         *     self-contained offline (§12: no network, no catalog lookup at extract time).
+         *
+         *     `project_hash` is the SHA-256 of the project's canonical JSON, so a manifest
+         *     can be tied back to the exact uploaded project bytes.
+         *
+         *     `mode` names what GROUNDED the entries — a steward's physical inventory or
+         *     §12's global fallback (canonical resolution alone, blank `table`) — so a
+         *     reader never has to infer it from the entry shape.
+         */
+        OrderProvenance: {
+            /** Catalog Import Date */
+            catalog_import_date: string;
+            /** Catalog Schema Version */
+            catalog_schema_version: string;
+            /**
+             * Mode
+             * @enum {string}
+             */
+            mode: "steward_inventory" | "global_fallback";
+            /** Project Hash */
+            project_hash: string;
+            /** Project Name */
+            project_name: string;
+            /** Project Reg Meta Version */
+            project_reg_meta_version: string;
+            /** Project Schema Version */
+            project_schema_version: string;
+            /** Steward */
+            steward: string;
         };
         /**
          * Panel
@@ -1983,6 +2097,28 @@ export interface components {
             from: number | string;
             /** To */
             to: number | string;
+        };
+        /**
+         * PhysicalCoordinate
+         * @description What the steward delivers: the entry's physical coordinate.
+         *
+         *     `table` is the inventory's opaque exact identifier (a delivery filename or a
+         *     schema-qualified SQL table), `column` its literal case-preserving physical
+         *     column, and `edition` the table's curated edition rendered canonically (a
+         *     period token, an explicit `lo..hi` range, or a comma-joined list for an
+         *     interrupted series).
+         *
+         *     In §12's global-deployment fallback there is no physical topology: `table`
+         *     is blank, `column` carries the resolved canonical column, and `edition`
+         *     equals the entry's requested period.
+         */
+        PhysicalCoordinate: {
+            /** Column */
+            column: string;
+            /** Edition */
+            edition: string;
+            /** Table */
+            table: string;
         };
         /**
          * PopulationMetadata
@@ -3582,7 +3718,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "text/csv": unknown;
+                    "application/json": components["schemas"]["OrderManifest"];
                 };
             };
         };

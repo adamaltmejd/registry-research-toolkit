@@ -1287,6 +1287,36 @@
         "title": "ClassificationSuccessionSearchResult",
         "type": "object"
       },
+      "ClipReport": {
+        "additionalProperties": false,
+        "description": "One informational availability clip (\u00a712: reported, never silent, never\nan error): the binding asked for `requested_period` and is ordered for\n`ordered_period`, because that is where the column is documented as\navailable. Emitted only when the clip actually narrows the request.",
+        "properties": {
+          "ordered_period": {
+            "title": "Ordered Period",
+            "type": "string"
+          },
+          "requested_period": {
+            "title": "Requested Period",
+            "type": "string"
+          },
+          "source": {
+            "title": "Source",
+            "type": "string"
+          },
+          "variable": {
+            "title": "Variable",
+            "type": "string"
+          }
+        },
+        "required": [
+          "source",
+          "variable",
+          "requested_period",
+          "ordered_period"
+        ],
+        "title": "ClipReport",
+        "type": "object"
+      },
       "CodeOwnerClassification": {
         "additionalProperties": false,
         "description": "A classification that carries a code (#352) \u2014 catalog-scoped (no owning\nregister).",
@@ -2518,6 +2548,41 @@
         "title": "LiteralPeriod",
         "type": "object"
       },
+      "LogicalCoordinate": {
+        "additionalProperties": false,
+        "description": "What the researcher asked for: the project-side coordinate of one entry.\n\n`variable` is the 3-segment binding FQID; `representation` is the canonical\nreg_meta `delivery_column_name` the slice resolved to \u2014 a join discriminator\ncarried for provenance, NOT the output column (that is\n`PhysicalCoordinate.column`).\n\n`register` is a `BaseModel` method, so the Python attr is `register_name`\nwith a `\"register\"` alias \u2014 the wire key stays the \u00a712 coordinate spelling\n(same pattern as `catalog.BindingGroupRef`).",
+        "properties": {
+          "provider": {
+            "title": "Provider",
+            "type": "string"
+          },
+          "register": {
+            "title": "Register",
+            "type": "string"
+          },
+          "representation": {
+            "title": "Representation",
+            "type": "string"
+          },
+          "variable": {
+            "title": "Variable",
+            "type": "string"
+          },
+          "variant": {
+            "title": "Variant",
+            "type": "string"
+          }
+        },
+        "required": [
+          "provider",
+          "register",
+          "variant",
+          "variable",
+          "representation"
+        ],
+        "title": "LogicalCoordinate",
+        "type": "object"
+      },
       "ObjectTypeMetadata": {
         "additionalProperties": false,
         "description": "SCB object-type prose for one register version (#799).",
@@ -2543,6 +2608,124 @@
           "definition"
         ],
         "title": "ObjectTypeMetadata",
+        "type": "object"
+      },
+      "OrderEntry": {
+        "additionalProperties": false,
+        "description": "One resolved logical\u2192physical binding of the order.\n\n`source` is the project source name, so an entry stays traceable to the\nbinding that produced it. `requested_period` is the AVAILABILITY-CLIPPED\nperiod this table serves (canonically rendered), not the source's raw\ndeclared period \u2014 the table itself is ordered whole regardless (\u00a712).",
+        "properties": {
+          "logical": {
+            "$ref": "#/components/schemas/LogicalCoordinate"
+          },
+          "physical": {
+            "$ref": "#/components/schemas/PhysicalCoordinate"
+          },
+          "requested_period": {
+            "title": "Requested Period",
+            "type": "string"
+          },
+          "source": {
+            "title": "Source",
+            "type": "string"
+          }
+        },
+        "required": [
+          "source",
+          "logical",
+          "requested_period",
+          "physical"
+        ],
+        "title": "OrderEntry",
+        "type": "object"
+      },
+      "OrderManifest": {
+        "additionalProperties": false,
+        "description": "The versioned JSON order manifest \u2014 machine-written here, machine-read by\nthe steward-side extract system, never hand-edited.",
+        "properties": {
+          "clips": {
+            "items": {
+              "$ref": "#/components/schemas/ClipReport"
+            },
+            "title": "Clips",
+            "type": "array"
+          },
+          "entries": {
+            "items": {
+              "$ref": "#/components/schemas/OrderEntry"
+            },
+            "title": "Entries",
+            "type": "array"
+          },
+          "provenance": {
+            "$ref": "#/components/schemas/OrderProvenance"
+          },
+          "version": {
+            "const": 1,
+            "title": "Version",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "version",
+          "provenance",
+          "entries",
+          "clips"
+        ],
+        "title": "OrderManifest",
+        "type": "object"
+      },
+      "OrderProvenance": {
+        "additionalProperties": false,
+        "description": "Everything the steward-side extract system needs to know WHICH project,\nagainst WHICH catalog, for WHICH deployment \u2014 so the manifest is\nself-contained offline (\u00a712: no network, no catalog lookup at extract time).\n\n`project_hash` is the SHA-256 of the project's canonical JSON, so a manifest\ncan be tied back to the exact uploaded project bytes.\n\n`mode` names what GROUNDED the entries \u2014 a steward's physical inventory or\n\u00a712's global fallback (canonical resolution alone, blank `table`) \u2014 so a\nreader never has to infer it from the entry shape.",
+        "properties": {
+          "catalog_import_date": {
+            "title": "Catalog Import Date",
+            "type": "string"
+          },
+          "catalog_schema_version": {
+            "title": "Catalog Schema Version",
+            "type": "string"
+          },
+          "mode": {
+            "enum": [
+              "steward_inventory",
+              "global_fallback"
+            ],
+            "title": "Mode",
+            "type": "string"
+          },
+          "project_hash": {
+            "title": "Project Hash",
+            "type": "string"
+          },
+          "project_name": {
+            "title": "Project Name",
+            "type": "string"
+          },
+          "project_reg_meta_version": {
+            "title": "Project Reg Meta Version",
+            "type": "string"
+          },
+          "project_schema_version": {
+            "title": "Project Schema Version",
+            "type": "string"
+          },
+          "steward": {
+            "title": "Steward",
+            "type": "string"
+          }
+        },
+        "required": [
+          "mode",
+          "steward",
+          "project_name",
+          "project_schema_version",
+          "project_reg_meta_version",
+          "project_hash",
+          "catalog_schema_version",
+          "catalog_import_date"
+        ],
+        "title": "OrderProvenance",
         "type": "object"
       },
       "Panel": {
@@ -2750,6 +2933,31 @@
           "to"
         ],
         "title": "PeriodRange",
+        "type": "object"
+      },
+      "PhysicalCoordinate": {
+        "additionalProperties": false,
+        "description": "What the steward delivers: the entry's physical coordinate.\n\n`table` is the inventory's opaque exact identifier (a delivery filename or a\nschema-qualified SQL table), `column` its literal case-preserving physical\ncolumn, and `edition` the table's curated edition rendered canonically (a\nperiod token, an explicit `lo..hi` range, or a comma-joined list for an\ninterrupted series).\n\nIn \u00a712's global-deployment fallback there is no physical topology: `table`\nis blank, `column` carries the resolved canonical column, and `edition`\nequals the entry's requested period.",
+        "properties": {
+          "column": {
+            "title": "Column",
+            "type": "string"
+          },
+          "edition": {
+            "title": "Edition",
+            "type": "string"
+          },
+          "table": {
+            "title": "Table",
+            "type": "string"
+          }
+        },
+        "required": [
+          "edition",
+          "table",
+          "column"
+        ],
+        "title": "PhysicalCoordinate",
         "type": "object"
       },
       "PopulationMetadata": {
@@ -5916,7 +6124,7 @@
     },
     "/api/project/order": {
       "post": {
-        "description": "Render the current provisional order-export CSV.\n\nReads the raw dict and runs the STRUCTURAL gate (see reg_schema/DESIGN.md \u2192\nStructural rules and issue codes) before rendering: the\n``ProjectData`` model enforces only field types, while the structural rules\n(FQID shape, period grammar, the binding/source-prefix match) live in\n``validate_structural`` \u2014 so a Pydantic-valid-but-structurally-invalid spec\n(e.g. a malformed ``register_variant`` or bad period token) would otherwise\nrender a bad provider order at 200. A structurally invalid spec \u2192 422.\n``async`` + ``run_in_threadpool`` (blocking display_name resolution off the\nevent loop), mirroring ``/validate``.",
+        "description": "Materialize a ``project_data.json`` into the JSON order manifest.\n\nA THIN adapter over ``reg_meta.order.materialize_order`` (REFACTOR_SPEC.md\n\u00a712): no gate, no fallback and no rendering lives here, so this endpoint and\nthe ``reg-meta order`` CLI emit byte-identical manifests. The deployment's\ndelivery inventory is read once at boot (``app.state.inventory``); ``None``\nis \u00a712's global-deployment fallback, which the materializer takes directly.\n\n200 is the manifest \u2014 ``application/json``, downloaded as ``order.json``.\nAnything else is NOT AN ORDER: 422 either because the spec is invalid\n(``project_from_raw``) or because the materializer blocked it, with every\nfinding named in ``detail``. There is deliberately no partial 200.\n\n``async`` + ``run_in_threadpool`` (blocking sqlite resolution off the event\nloop), mirroring ``/validate``.",
         "operationId": "order_project_api_project_order_post",
         "requestBody": {
           "content": {
@@ -5931,7 +6139,11 @@
         "responses": {
           "200": {
             "content": {
-              "text/csv": {}
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrderManifest"
+                }
+              }
             },
             "description": "Successful Response"
           }

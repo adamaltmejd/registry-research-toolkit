@@ -1423,17 +1423,17 @@ period (a `Binding`'s `representation` picks the actual delivery column), so ove
 unchanged. BUT the **variable FQID is the order contract's addressable handle**:
 `reg_schema.project_data.Binding.variable` (`project_data.py:136`, the binding FQID
 `<provider>/<register>/<slug>`) is what a `project_data.json` binding addresses and what
-the order export emits (`reg_webapp/backend/.../order_export.py`); concept_groups are
-NOT FQID-addressable, so `representation` only disambiguates the column *within* a
-variable — it does not make the variable set itself invisible to bindings. Any
-retirement that changes the leaf variable set therefore carries a **binding /
-default-selection migration precondition** — existing bindings to the affected FQIDs
-must be remapped and the default-representation chooser updated. The `fold_override`
-retire candidate (channel-2) inherited this precondition and addressed it pre-#845 by
-SPLIT + concept-group faceting (the leaf variables are visible to bindings from day one,
-so no FQID remapping is needed). The `column_merge` retire candidate (channel-1) was
-addressed across two PRs: the RTB half (#846 PR A) left the dense `personnr` sibling's
-FQID unchanged; the FRIDA gap-fill half (#846 this PR) split `borgnr`/`persorgnr` into
+the order manifest emits (`reg_meta/src/reg_meta/order.py`); concept_groups are NOT
+FQID-addressable, so `representation` only disambiguates the column *within* a variable
+— it does not make the variable set itself invisible to bindings. Any retirement that
+changes the leaf variable set therefore carries a **binding / default-selection
+migration precondition** — existing bindings to the affected FQIDs must be remapped and
+the default-representation chooser updated. The `fold_override` retire candidate
+(channel-2) inherited this precondition and addressed it pre-#845 by SPLIT +
+concept-group faceting (the leaf variables are visible to bindings from day one, so no
+FQID remapping is needed). The `column_merge` retire candidate (channel-1) was addressed
+across two PRs: the RTB half (#846 PR A) left the dense `personnr` sibling's FQID
+unchanged; the FRIDA gap-fill half (#846 this PR) split `borgnr`/`persorgnr` into
 separate variables but landed the `panel_entity_key` pin on the dense `person-orgnr`
 variable, so no existing binding was invalidated (pre-v1 seeded bindings are re-curated
 in-PR). A **keep** surface's effect instead reaches the representation's value-set /

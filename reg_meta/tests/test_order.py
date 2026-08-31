@@ -23,11 +23,14 @@ from typing import TYPE_CHECKING
 
 import pytest
 from _slugged_db import add_state, add_variable, build_slugged_db
+from reg_meta.cli import run
+from reg_meta.errors import EXIT_CONFIG, EXIT_NO_MATCH
 from reg_meta.inventory import load_inventory
 from reg_meta.order import (
     ORDER_MANIFEST_VERSION,
     OrderManifest,
     extraction_filenames,
+    load_project,
     materialize_order,
 )
 from reg_schema.project_data import Binding, PeriodRange, ProjectData, Source
@@ -781,3 +784,163 @@ class TestIntervalAlgebra:
         assert _gaps(whole, [("2019-01-01", "9999-12-31")]) == (
             ("2018-01-01", "2018-12-31"),
         )
+
+
+class TestCliAdapter:
+    """`reg-meta order` — the CLI adapter over `materialize_order`.
+
+    A thin adapter (§12), so what is pinned here is the adapter contract only:
+    the manifest's own canonical bytes reach stdout/`--output` UNCHANGED (never
+    the CLI envelope, never `--format`), and each failure gets a stable exit
+    code from the existing error classes. The materializer's rules are pinned by
+    the classes above; the byte-identity with the FastAPI adapter is pinned in
+    `reg_webapp/backend/tests/test_project_order.py` (only there do both
+    adapters exist).
+    """
+
+    @staticmethod
+    def _db_dir(conn: sqlite3.Connection, tmp_path: Path) -> str:
+        """The in-memory synthetic catalog, on disk where `--db` can open it."""
+        import sqlite3 as _sqlite3
+
+        from reg_meta.db import DB_FILENAME
+
+        db_dir = tmp_path / "db"
+        db_dir.mkdir()
+        target = _sqlite3.connect(db_dir / DB_FILENAME)
+        try:
+            conn.backup(target)
+        finally:
+            target.close()
+        return str(db_dir)
+
+    @staticmethod
+    def _project_file(tmp_path: Path, path_name: str = "project_data.json", **over):
+        import json
+
+        spec = {
+            "schema_version": "2.0.0",
+            "steward": "global",
+            "reg_meta_version": "0.39.1",
+            "name": "Synthetic order",
+            "sources": [
+                {
+                    "name": "lisa",
+                    "register_variant": _VARIANT,
+                    "period": {"from": 2018, "to": 2020},
+                    "bindings": [{"variable": "scb/lisa/kon", "type": "categorical"}],
+                }
+            ],
+        }
+        spec.update(over)
+        path = tmp_path / path_name
+        path.write_text(json.dumps(spec), encoding="utf-8")
+        return path
+
+    def test_stdout_carries_the_manifest_bytes_verbatim(
+        self, conn, tmp_path, capsys
+    ) -> None:
+        project = self._project_file(tmp_path)
+        expected = materialize_order(load_project(project), None, conn)
+
+        code = run(["order", str(project), "--db", self._db_dir(conn, tmp_path)])
+
+        assert code == 0
+        assert expected.manifest is not None
+        assert capsys.readouterr().out == expected.manifest.to_json()
+
+    def test_output_flag_writes_the_manifest_to_a_file(
+        self, conn, tmp_path, capsys
+    ) -> None:
+        project = self._project_file(tmp_path)
+        out = tmp_path / "order.json"
+
+        code = run(
+            [
+                "order",
+                str(project),
+                "--db",
+                self._db_dir(conn, tmp_path),
+                "--output",
+                str(out),
+            ]
+        )
+
+        assert code == 0
+        assert capsys.readouterr().out == ""
+        assert OrderManifest.model_validate_json(out.read_text(encoding="utf-8"))
+
+    def test_inventory_flag_grounds_the_order_on_the_steward_topology(
+        self, conn, tmp_path, capsys
+    ) -> None:
+        """`--inventory` is the steward deployment's arm: entries carry the
+        inventory's literal table, not the global fallback's blank one."""
+        import json
+
+        inventory_path = tmp_path / "inventory.toml"
+        inventory_path.write_text(FIXTURE_INVENTORY, encoding="utf-8")
+        project = self._project_file(tmp_path, steward="swecov")
+
+        code = run(
+            [
+                "order",
+                str(project),
+                "--inventory",
+                str(inventory_path),
+                "--db",
+                self._db_dir(conn, tmp_path),
+            ]
+        )
+
+        assert code == 0
+        manifest = json.loads(capsys.readouterr().out)
+        assert manifest["provenance"]["mode"] == "steward_inventory"
+        assert [entry["physical"]["table"] for entry in manifest["entries"]] == [
+            "LISA_Individ_2018.csv",
+            "LISA_Individ_2019-2020.csv",
+        ]
+
+    def test_blocked_order_exits_no_match_naming_every_finding(
+        self, conn, tmp_path, capsys
+    ) -> None:
+        """Fail-closed: a blocked order is the error envelope + exit 17
+        (`EXIT_NO_MATCH`), never a partial manifest on stdout."""
+        import json
+
+        project = self._project_file(tmp_path, steward="swecov")
+
+        code = run(["order", str(project), "--db", self._db_dir(conn, tmp_path)])
+
+        assert code == EXIT_NO_MATCH
+        error = json.loads(capsys.readouterr().out)["error"]
+        assert error["code"] == "order_blocked"
+        assert "steward_mismatch" in error["message"]
+
+    def test_unreadable_project_exits_config(self, conn, tmp_path, capsys) -> None:
+        import json
+
+        code = run(
+            ["order", str(tmp_path / "nope.json"), "--db", self._db_dir(conn, tmp_path)]
+        )
+
+        assert code == EXIT_CONFIG
+        assert json.loads(capsys.readouterr().out)["error"]["code"] == (
+            "project_unreadable"
+        )
+
+    def test_structurally_invalid_project_exits_config(
+        self, conn, tmp_path, capsys
+    ) -> None:
+        """The shared gate runs before the DB is even opened: a model-valid but
+        structurally invalid spec (a bad period token) never materializes."""
+        import json
+
+        project = self._project_file(tmp_path)
+        spec = json.loads(project.read_text(encoding="utf-8"))
+        spec["sources"][0]["period"] = "notaperiod"
+        project.write_text(json.dumps(spec), encoding="utf-8")
+
+        code = run(["order", str(project), "--db", self._db_dir(conn, tmp_path)])
+
+        assert code == EXIT_CONFIG
+        assert json.loads(capsys.readouterr().out)["error"]["code"] == "project_invalid"

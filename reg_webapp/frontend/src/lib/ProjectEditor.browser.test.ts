@@ -122,7 +122,7 @@ describe("ProjectEditor cart — read-only, no add affordances", () => {
       .element(page.getByRole("button", { name: "Download project_data.json" }))
       .toBeVisible();
     await expect
-      .element(page.getByRole("button", { name: "Download order CSV" }))
+      .element(page.getByRole("button", { name: "Download order.json" }))
       .toBeVisible();
 
     // The one editable field — the project name — writes through updateField.

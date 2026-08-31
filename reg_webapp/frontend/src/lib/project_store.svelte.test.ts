@@ -1141,3 +1141,46 @@ describe("stable client-side ids (issue #200)", () => {
     });
   });
 });
+
+describe("a blocked order (§12)", () => {
+  it("closes the download gate on the 422 so the CTA can't repeat a request that cannot succeed", async () => {
+    // The materializer fail-closes projects that VALIDATE clean (a steward-
+    // provenance mismatch, an uncovered period), so a green validation is not
+    // enough to keep the accent CTA enabled once /order has said no.
+    stubFetch(async (url) =>
+      String(url).includes("/project/order")
+        ? {
+            ok: false,
+            status: 422,
+            json: async () => ({
+              detail:
+                "order blocked by 1 finding: steward_mismatch: project steward 'swecov' does not match the deployment steward 'global'",
+            }),
+            headers: new Headers(),
+          }
+        : {
+            ok: true,
+            status: 200,
+            json: async () => ({ ok: true, issues: [] }),
+          },
+    );
+    projectStore.newProject(SEED);
+    await projectStore.validate();
+    expect(projectStore.canDownloadOrder).toBe(true);
+
+    await projectStore.downloadOrder();
+
+    expect(projectStore.requestError).toContain("steward_mismatch");
+    expect(projectStore.canDownloadOrder).toBe(false);
+    // The last /validate result is untouched — the block is an ORDER verdict,
+    // not a validation one; the panel just stops announcing it (see
+    // ValidationPanel: the summary yields to a standing request error).
+    expect(projectStore.validation?.ok).toBe(true);
+
+    // Re-validating (an edit, or the banner's retry) clears the error and
+    // reopens the gate — the block is not sticky past a change.
+    await projectStore.validate();
+    expect(projectStore.requestError).toBeNull();
+    expect(projectStore.canDownloadOrder).toBe(true);
+  });
+});

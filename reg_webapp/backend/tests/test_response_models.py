@@ -6,12 +6,14 @@ endpoint without a typed contract is a hole.
 
 Two contract shapes are allowed:
 
-- a Pydantic ``response_model`` (the JSON endpoints), OR
-- a documented BINARY/DOWNLOAD media type (``/api/project/order`` → ``text/csv``).
-  These cannot declare a Pydantic ``response_model`` (they return raw bytes), but
-  they DO declare their media type in the route's ``responses=`` so the OpenAPI
-  contract (and the SPA codegen) sees a download, not an untyped JSON body. This is
-  the sanctioned carve-out.
+- a Pydantic ``response_model`` (the JSON endpoints, including
+  ``/api/project/order`` — it returns the manifest's own canonical bytes but
+  still declares the reg_meta ``OrderManifest`` as its contract), OR
+- a documented BINARY/DOWNLOAD media type (the PDF file route). These cannot
+  declare a Pydantic ``response_model`` (they return opaque bytes), but they DO
+  declare their media type in the route's ``responses=`` so the OpenAPI contract
+  (and the SPA codegen) sees a download, not an untyped JSON body. This is the
+  sanctioned carve-out.
 """
 
 from __future__ import annotations
@@ -30,7 +32,6 @@ if TYPE_CHECKING:
 # addition here.
 _DOWNLOAD_ENDPOINTS: dict[str, tuple[str, str]] = {
     "/api/docs/file/{register}/{filename}": ("get", "application/pdf"),
-    "/api/project/order": ("post", "text/csv"),
 }
 
 

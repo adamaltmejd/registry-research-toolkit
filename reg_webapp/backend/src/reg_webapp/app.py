@@ -31,7 +31,7 @@ from .limits import (
 )
 from .middleware import ETagMiddleware
 from .routes import catalog, context, docs, project, search, stats
-from .stewards import load_catalog_index, load_steward
+from .stewards import load_catalog_index, load_delivery_inventory, load_steward
 
 if TYPE_CHECKING:
     from collections.abc import AsyncIterator
@@ -90,6 +90,12 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     app.state.manifest = manifest
     app.state.steward = steward
     app.state.catalog_index = catalog_index
+    # The order materializer's physical delivery topology, read ONCE at boot
+    # (an authored file, no DB). `None` is REFACTOR_SPEC.md §12's
+    # global-deployment fallback, which `materialize_order` takes directly —
+    # see routes/project.py `/order`. A malformed or mis-stewarded inventory
+    # raises here, failing startup fast rather than per request.
+    app.state.inventory = load_delivery_inventory(steward)
     # The catalog routes open a FRESH read-only connection PER REQUEST from this
     # boot-resolved path (the connection model is locked: a shared sqlite3 conn
     # isn't safe across FastAPI's sync-handler threadpool). The schema was

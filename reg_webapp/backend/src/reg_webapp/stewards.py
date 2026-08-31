@@ -6,13 +6,18 @@ catalog_index.py). A steward is configured by ``reg_webapp/stewards/<id>/``:
 - ``steward.toml`` — identity and branding (required).
 - ``steward.project_data.json`` — the catalog filter (optional). Its
   *absence* selects full-universe mode — the special ``global`` deployment.
+- ``inventory.toml`` — the steward's delivery inventory (optional), loaded at
+  boot for the order materializer. Its *absence* selects §12's
+  global-deployment fallback (``inventory=None``).
 
 ``load_steward`` reads ``steward.toml`` (identity) and detects the project
 file's presence. ``load_catalog_index`` (A5.2b-i) actually parses + validates
 that project file against a live reg_meta ``Catalog`` and builds the
 in-memory index — called once at FastAPI startup with the boot connection (see
 ``app.py``). The two are split because index-building needs the reg_meta DB,
-which only exists once the lifespan opens it.
+which only exists once the lifespan opens it. ``load_delivery_inventory`` is a
+third, DB-free boot read (see ``reg_meta/DESIGN.md`` → Steward delivery
+inventory).
 """
 
 from __future__ import annotations
@@ -27,6 +32,7 @@ from time import perf_counter
 from typing import TYPE_CHECKING, cast
 
 from pydantic import ValidationError
+from reg_meta.inventory import load_inventory
 from reg_schema.project_data import ProjectData
 from reg_schema.structural import validate_structural
 
@@ -36,6 +42,7 @@ from .steward_catalog import StewardBootCatalog
 
 if TYPE_CHECKING:
     from reg_meta.catalog import Catalog
+    from reg_meta.inventory import DeliveryInventory
 
     from .catalog_index import CatalogIndex
 
@@ -59,6 +66,7 @@ def _stewards_dir() -> Path:
 
 STEWARD_TOML = "steward.toml"
 STEWARD_PROJECT_DATA = "steward.project_data.json"
+STEWARD_INVENTORY = "inventory.toml"
 
 DEFAULT_STEWARD_ID = "global"
 
@@ -248,3 +256,35 @@ def load_catalog_index(
         sum(len(bindings) for bindings in index.bindings_by_variant.values()),
     )
     return index
+
+
+def load_delivery_inventory(
+    steward: Steward, *, root: Path | None = None
+) -> DeliveryInventory | None:
+    """Load this deployment's ``inventory.toml`` — the order materializer's
+    physical delivery topology (``reg_meta.inventory``).
+
+    Returns ``None`` when the steward directory has no inventory: that is
+    REFACTOR_SPEC.md §12's **global-deployment fallback**, the exact
+    ``inventory=None`` ``materialize_order`` takes, not a degraded mode this
+    adapter invents. DB-free, so the lifespan can read it outside the boot
+    connection.
+
+    Fail fast (CLAUDE.md) on a misconfigured deployment: a malformed inventory
+    raises reg_meta's ``RegMetaError``, and an inventory declaring a DIFFERENT
+    steward than the directory it sits in raises ``ValueError`` — the
+    materializer's provenance gate compares ``ProjectData.steward`` against the
+    inventory's, so a mismatch here would silently reject every upload with a
+    confusing ``steward_mismatch``. Mirrors ``load_steward``'s id-vs-directory
+    check.
+    """
+    path = (root or _stewards_dir()) / steward.id / STEWARD_INVENTORY
+    if not path.is_file():
+        return None
+    inventory = load_inventory(path)
+    if inventory.steward != steward.id:
+        raise ValueError(
+            f"{path}: inventory steward {inventory.steward!r} does not match "
+            f"deployment steward {steward.id!r}"
+        )
+    return inventory
