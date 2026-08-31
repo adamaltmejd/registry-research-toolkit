@@ -211,10 +211,12 @@ Development runs through [Switchyard](https://github.com/adamaltmejd/switchyard)
 (`yard`): tickets, isolated lanes, review, gates, operator approval. Yard is built to be
 driven by an agent operator, and **the agent working this repo is that operator** — when
 driving the board (filing tickets, answering attention items, approving/rejecting
-candidates), load the `/yard-operator` skill (`.claude/skills/yard-operator/SKILL.md`,
-scaffolded by `yard init`) and follow it — including its project section (admission
-rule, filing conventions). Project config is `.yard/config.toml`; its gates mirror
-`.github/workflows/ci.yml`.
+candidates), load the `yard-operator` skill (`/yard-operator` in Claude Code,
+`$yard-operator` in Codex) and follow it — including its project section (admission
+rule, filing conventions). It is one file, `.claude/skills/yard-operator/SKILL.md`
+(scaffolded by `yard init`); `.agents/skills/yard-operator` is a symlink to that
+directory, so both catalogs serve the same routine and it cannot drift. Project config
+is `.yard/config.toml`; its gates mirror `.github/workflows/ci.yml`.
 
 **Yard is the primary build pathway.** New work runs as Yard tickets; manual builds
 remain for special cases (releases, real-seed `build-db` verification). Keep main to a

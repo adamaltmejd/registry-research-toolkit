@@ -306,3 +306,24 @@ follow-up trims. Observations:
   (cursor 5519→5685, approval-needed raised). A watch that exits without writing the
   line it exited for leaves the operator to re-read the board cold; if it delivered the
   wake somewhere, it wasn't stdout.
+
+## 2026-08-31 — Y-12: `yard init` scaffolds one agent path, once
+
+- **Codex cannot discover the operator skill Yard scaffolds.** `yard init` (0.10.3)
+  writes `.claude/skills/yard-operator/SKILL.md` and nothing under `.agents/skills/`, so
+  a fresh Codex session — the other half of how this board is actually driven — has no
+  operator routine in its catalog at all. Bridged here with a tracked relative symlink
+  (`.agents/skills/yard-operator` → `../../.claude/skills/yard-operator`), which is the
+  cheap fix; the durable one is for `init` to write the alias itself, or to ask which
+  agent catalogs to scaffold. The root instructions have the same shape — this repo
+  already keeps `AGENTS.md`/`CLAUDE.md` as byte-identical copies behind a pre-commit
+  check, because static tools that do not follow links must see both.
+- **The scaffolded routine is a copy, and an upgrade never revisits it.** The skill
+  `init` wrote pre-dates `yard lane replay`, so after 0.10.3 its §6 still said "no
+  command carries a candidate into a fresh lane, and none is needed" — the binary moved
+  and the operator's own instructions were left asserting the opposite of current
+  behavior. Nothing surfaced the drift; we caught it by reading. A version stamp in the
+  scaffolded file, plus a `preflight`/`doctor` note when it trails the installed
+  release, would close the gap. Overwriting on update is not the answer: the
+  repository-specific appendix (admission rule, filing conventions) lives in that same
+  file by Yard's own design.

@@ -9,7 +9,7 @@ description: Operate a Yard project — hold the wake-driven loop across every d
   `yard status` attention item.
 ---
 
-# /yard-operator
+# Yard operator
 
 You are operating a Yard project: the side of the loop that decides. Yard files,
 schedules, runs, reviews, gates and lands the work. What you own is the decisions
@@ -244,15 +244,21 @@ wrong — leave it unparked and let a fresh one be admitted. Discarding the tick
 before you abandon. Deciding this after you watch a new worker start is deciding it too
 late.
 
-**Work worth keeping leaves an abandoned attempt as a diff.** Abandoning scraps the
-attempt and its workspace, not its evidence: the candidate is retained, so
-`yard lane diff ATTEMPT` still prints it afterwards. That is the supported salvage
-recipe, and it introduces nothing new — take that diff, apply it in your own checkout,
+**Work worth keeping survives the abandoned attempt, and one command carries it.**
+Abandoning scraps the attempt and its workspace, not its evidence: the candidate is
+retained, so `yard lane diff ATTEMPT` still prints it afterwards, and
+`yard lane replay ATTEMPT` replays that retained candidate onto the current target for
+the same ticket — a fresh attempt whose review and every gate are rerun against that
+target, without a worker re-implementing the diff. Read `yard lane replay --help` for
+the guards it takes: replaying is a decision like every other one here, and what it
+produces is a candidate you still approve under §3.
+
+Replay is for the same ticket. When the work belongs under a different one — the premise
+moved, or the diff is only briefing for a fresh scope — take the retained diff instead
 and enter it the ordinary way. Either you read it and vouch for it yourself, which is a
 commit and `yard sync`; or you put what matters in the fresh ticket's body as briefing
-and let its worker integrate it under review. No command carries a candidate into a
-fresh lane, and none is needed. Whichever way it enters, it enters through a supported
-path — never by reaching into a lane workspace (§2).
+and let its worker integrate it under review. Whichever way it enters, it enters through
+a supported path — never by reaching into a lane workspace (§2).
 
 **A decision that changes what the reviewer would enforce retires the ticket.** When you
 ratify a contract or a design that moves the premise the work is judged against, do not
@@ -337,7 +343,7 @@ plan argues well for crossing them.
   (releases, real-seed `build-db` verification); the pre-Yard GitHub coordination
   machinery is retired and gets no new work.
 - **Dogfooding duty.** While operating, log how Yard itself behaves — problems and
-  papercuts — in `.yard/DOGFOOD.md` (see CLAUDE.md, "Yard").
+  papercuts — in `.yard/DOGFOOD.md` (see AGENTS.md / CLAUDE.md, "Yard").
 - **File UI-changing tickets with `--workflow ui`.** Any ticket that changes rendered
   reg_webapp frontend UI should be filed on the `ui` workflow, which adds the
   design-instructed review panel on top of the default lane. A mis-filed ticket loses
