@@ -338,3 +338,8 @@ plan argues well for crossing them.
   machinery is retired and gets no new work.
 - **Dogfooding duty.** While operating, log how Yard itself behaves — problems and
   papercuts — in `.yard/DOGFOOD.md` (see CLAUDE.md, "Yard").
+- **File UI-changing tickets with `--workflow ui`.** Any ticket that changes rendered
+  reg_webapp frontend UI should be filed on the `ui` workflow, which adds the
+  design-instructed review panel on top of the default lane. A mis-filed ticket loses
+  only that visual review — every gate still runs. Everything else stays on `default` or
+  `light` as before.
