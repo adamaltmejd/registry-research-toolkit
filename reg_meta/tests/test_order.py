@@ -527,6 +527,20 @@ class TestBlockingFindings:
         assert _codes(result) == ["coverage_gap", "mapping_missing", "mapping_missing"]
         assert [f.period for f in result.findings] == ["2019", "2018", "2019..2020"]
 
+    def test_blocked_result_still_reports_its_clips(self, conn, inventory) -> None:
+        # The clipped binding materializes, a later binding blocks: the clip is
+        # still surfaced, so the researcher sees the window the rest of the
+        # order was stated against and fixes everything in one pass.
+        project = _project("scb/lisa/disponibel-inkomst", "scb/lisa/nonexistent")
+
+        result = materialize_order(project, inventory, conn)
+
+        assert result.manifest is None
+        assert _codes(result) == ["variable_unresolved"]
+        assert [
+            (c.variable, c.requested_period, c.ordered_period) for c in result.clips
+        ] == [("scb/lisa/disponibel-inkomst", "2018..2020", "2019..2020")]
+
     def test_default_period_is_not_orderable(self, conn, inventory) -> None:
         result = materialize_order(
             _project("scb/lisa/kon", period="_default"), inventory, conn

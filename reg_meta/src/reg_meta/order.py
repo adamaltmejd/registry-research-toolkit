@@ -15,8 +15,8 @@ Pipeline, per `sources[*].bindings[*]` in project declaration order:
    clipped to its own documented availability — the union of its
    `variable_state` windows at the source's variant — so a column delivered only
    for a suffix of the window does not widen the order into a cross-product.
-   Every clip is reported per binding (`OrderManifest.clips`), never silently,
-   and never as an error.
+   Every clip is reported per binding (`OrderResult.clips`, and on the manifest
+   itself when one is produced), never silently, and never as an error.
 2. **Representation slicing.** The clipped request is partitioned into slices of
    constant canonical representation (`delivery_column_name`), via
    `Catalog.resolve_at` — the resolution logic is not re-derived here. Two
@@ -224,10 +224,17 @@ class OrderFinding(_OrderModel):
 
 class OrderResult(_OrderModel):
     """The materializer's single deterministic output: either a complete
-    manifest or a non-empty finding set. Never both, never partial."""
+    manifest or a non-empty finding set. Never both, never partial.
+
+    `clips` carries every availability clip the pass accumulated, blocked or
+    not: §12 reports clips per binding and never silently, and a blocked
+    researcher fixing the whole order in one pass needs to see the clipped
+    windows the findings are stated against. A produced manifest repeats them —
+    it is the self-contained artifact record."""
 
     manifest: OrderManifest | None
     findings: tuple[OrderFinding, ...]
+    clips: tuple[ClipReport, ...] = ()
 
     @property
     def ok(self) -> bool:
@@ -428,7 +435,7 @@ def materialize_order(
         _materialize_source(source, inventory, catalog, entries, clips, findings)
 
     if findings:
-        return OrderResult(manifest=None, findings=tuple(findings))
+        return OrderResult(manifest=None, findings=tuple(findings), clips=tuple(clips))
     return OrderResult(
         manifest=OrderManifest(
             version=ORDER_MANIFEST_VERSION,
@@ -437,6 +444,7 @@ def materialize_order(
             clips=tuple(clips),
         ),
         findings=(),
+        clips=tuple(clips),
     )
 
 
