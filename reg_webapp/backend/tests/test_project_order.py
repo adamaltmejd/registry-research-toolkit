@@ -9,9 +9,10 @@ See DESIGN.md → Project-write surface (routes/project.py) and reg_meta/DESIGN.
 fail-closed blocked order alike — never a partial 200), and the byte-identity
 with the ``reg-meta order`` CLI that is §12's whole point.
 
-The fixture has no ``inventory.toml``, so the deployment runs §12's
-global-deployment fallback (``inventory=None``) — hence ``steward: "global"``
-in the spec below. The fixture's ``scb/lisa/kon`` binding resolves to
+These tests run the deployment with NO steward configured, and that one has no
+``inventory.toml``, so it runs §12's global-deployment fallback
+(``inventory=None``) — hence ``steward: "global"`` in the spec below. A NAMED
+steward gets no such fallback (see the boot guard below). The fixture's ``scb/lisa/kon`` binding resolves to
 ``delivery_column_name = "Kon"`` at variant ``individer-15plus`` / state
 ``2018-01-01..9999-12-31``.
 """
@@ -21,6 +22,7 @@ from __future__ import annotations
 import json
 
 import pytest
+from _steward_helpers import CLEAN_SOURCES, write_steward
 from fastapi.testclient import TestClient
 from reg_meta.order import OrderManifest
 from reg_webapp.app import create_app
@@ -80,6 +82,28 @@ def test_manifest_grounds_the_global_fallback_entry(client):
     assert entry.physical.table == ""
     assert entry.physical.column == "Kon"
     assert entry.physical.edition == "2018"
+
+
+def test_named_steward_without_an_inventory_fails_at_boot(
+    catalog_db, tmp_path, monkeypatch
+):
+    """The other side of the fallback above: an absent inventory means "global
+    fallback" ONLY for the deployment with no steward configured. A NAMED
+    steward booting into it would block every one of its own projects on
+    ``steward_mismatch`` (the fallback demands ``steward == "global"``) from a
+    server that reported itself healthy at startup — a deployment error
+    deferred to, and paid by, each researcher in turn. So it fails at boot,
+    naming the file to author (fail fast, like ``load_steward``'s own checks)."""
+    stewards = tmp_path / "stewards"
+    write_steward(stewards, "ifau", CLEAN_SOURCES, inventory=False)
+    monkeypatch.setenv("REG_WEBAPP_STEWARDS_DIR", str(stewards))
+    monkeypatch.setenv("REG_WEBAPP_STEWARD", "ifau")
+
+    with (
+        pytest.raises(FileNotFoundError, match="inventory.toml"),
+        TestClient(create_app()),
+    ):
+        pass
 
 
 def test_deterministic(client):

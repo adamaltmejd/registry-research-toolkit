@@ -6,8 +6,9 @@ catalog_index.py). A steward is configured by ``reg_webapp/stewards/<id>/``:
 - ``steward.toml`` — identity and branding (required).
 - ``steward.project_data.json`` — the catalog filter (optional). Its
   *absence* selects full-universe mode — the special ``global`` deployment.
-- ``inventory.toml`` — the steward's delivery inventory (optional), loaded at
-  boot for the order materializer. Its *absence* selects §12's
+- ``inventory.toml`` — the steward's delivery inventory, loaded at boot for the
+  order materializer. REQUIRED for a named steward (absent → boot fails). Only
+  the ``global`` deployment may omit it, and there its *absence* selects §12's
   global-deployment fallback (``inventory=None``).
 
 ``load_steward`` reads ``steward.toml`` (identity) and detects the project
@@ -264,22 +265,38 @@ def load_delivery_inventory(
     """Load this deployment's ``inventory.toml`` — the order materializer's
     physical delivery topology (``reg_meta.inventory``).
 
-    Returns ``None`` when the steward directory has no inventory: that is
-    REFACTOR_SPEC.md §12's **global-deployment fallback**, the exact
-    ``inventory=None`` ``materialize_order`` takes, not a degraded mode this
-    adapter invents. DB-free, so the lifespan can read it outside the boot
-    connection.
+    Returns ``None`` ONLY for the ``global`` deployment — the one with no
+    steward configured, whose absent inventory is REFACTOR_SPEC.md §12's
+    **global-deployment fallback**: the exact ``inventory=None``
+    ``materialize_order`` takes, not a degraded mode this adapter invents.
+    DB-free, so the lifespan can read it outside the boot connection.
 
-    Fail fast (CLAUDE.md) on a misconfigured deployment: a malformed inventory
-    raises reg_meta's ``RegMetaError``, and an inventory declaring a DIFFERENT
-    steward than the directory it sits in raises ``ValueError`` — the
-    materializer's provenance gate compares ``ProjectData.steward`` against the
-    inventory's, so a mismatch here would silently reject every upload with a
-    confusing ``steward_mismatch``. Mirrors ``load_steward``'s id-vs-directory
-    check.
+    Fail fast (CLAUDE.md) on a misconfigured deployment, in the same posture as
+    ``load_steward``'s missing-config and id-vs-directory checks:
+
+    - A NAMED steward with no ``inventory.toml`` raises ``FileNotFoundError``.
+      Booting it into the global fallback instead would leave every one of that
+      steward's projects blocked on ``steward_mismatch`` (the fallback demands
+      ``ProjectData.steward == "global"``) from an endpoint that reported
+      itself healthy at startup — a deployment error deferred to, and paid by,
+      each researcher in turn.
+    - A malformed inventory raises reg_meta's ``RegMetaError``.
+    - An inventory declaring a DIFFERENT steward than the directory it sits in
+      raises ``ValueError`` — the materializer's provenance gate compares
+      ``ProjectData.steward`` against the inventory's, so a mismatch here would
+      silently reject every upload with the same confusing
+      ``steward_mismatch``.
     """
     path = (root or _stewards_dir()) / steward.id / STEWARD_INVENTORY
     if not path.is_file():
+        if steward.id != DEFAULT_STEWARD_ID:
+            raise FileNotFoundError(
+                f"delivery inventory not found: {path} — the {steward.id!r} "
+                "deployment must declare what it delivers before it can "
+                "materialize orders. Author the inventory (see reg_meta/DESIGN.md "
+                "→ Steward delivery inventory); only the 'global' deployment may "
+                "run without one (REFACTOR_SPEC.md §12's global fallback)."
+            )
         return None
     inventory = load_inventory(path)
     if inventory.steward != steward.id:

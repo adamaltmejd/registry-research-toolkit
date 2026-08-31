@@ -93,8 +93,9 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     # The order materializer's physical delivery topology, read ONCE at boot
     # (an authored file, no DB). `None` is REFACTOR_SPEC.md §12's
     # global-deployment fallback, which `materialize_order` takes directly —
-    # see routes/project.py `/order`. A malformed or mis-stewarded inventory
-    # raises here, failing startup fast rather than per request.
+    # see routes/project.py `/order`. A NAMED steward has no fallback: a
+    # missing, malformed or mis-stewarded inventory raises here, failing startup
+    # rather than blocking every researcher's order on a healthy-looking server.
     app.state.inventory = load_delivery_inventory(steward)
     # The catalog routes open a FRESH read-only connection PER REQUEST from this
     # boot-resolved path (the connection model is locked: a shared sqlite3 conn

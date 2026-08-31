@@ -24,6 +24,7 @@ import json
 from concurrent.futures import ThreadPoolExecutor
 
 import pytest
+from _steward_helpers import IFAU_INVENTORY
 from fastapi.testclient import TestClient
 from reg_webapp.app import create_app
 
@@ -359,6 +360,10 @@ def filtered_client(catalog_db, tmp_path, monkeypatch):
         ),
         encoding="utf-8",
     )
+    # A named steward must ship a delivery inventory or the deployment refuses
+    # to boot (stewards.load_delivery_inventory) — irrelevant to validation,
+    # required to get a client at all.
+    (base / "inventory.toml").write_text(IFAU_INVENTORY, encoding="utf-8")
     monkeypatch.setenv("REG_WEBAPP_STEWARDS_DIR", str(tmp_path / "stewards"))
     monkeypatch.setenv("REG_WEBAPP_STEWARD", "ifau")
     with TestClient(create_app()) as c:
