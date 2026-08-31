@@ -1155,6 +1155,16 @@ describe("a blocked order (§12)", () => {
             json: async () => ({
               detail:
                 "order blocked by 1 finding: steward_mismatch: project steward 'swecov' does not match the deployment steward 'global'",
+              findings: [
+                {
+                  code: "steward_mismatch",
+                  message:
+                    "project steward 'swecov' does not match the deployment steward 'global'",
+                  source: null,
+                  variable: null,
+                  period: null,
+                },
+              ],
             }),
             headers: new Headers(),
           }
@@ -1182,5 +1192,84 @@ describe("a blocked order (§12)", () => {
     await projectStore.validate();
     expect(projectStore.requestError).toBeNull();
     expect(projectStore.canDownloadOrder).toBe(true);
+  });
+
+  it("keeps the findings as DATA, and moves them with the banner", async () => {
+    // The 422 carries typed findings (code + coordinates), which the panel
+    // renders one by one. They are half of the same channel as `requestError`:
+    // findings under no banner (or a banner over stale findings) would each
+    // misreport the request.
+    stubFetch(async (url) =>
+      String(url).includes("/project/order")
+        ? {
+            ok: false,
+            status: 422,
+            json: async () => ({
+              detail: "order blocked by 2 findings: …",
+              findings: [
+                {
+                  code: "variable_unresolved",
+                  message: "scb/lisa/ghostvar does not resolve",
+                  source: "lisa",
+                  variable: "scb/lisa/ghostvar",
+                  period: null,
+                },
+                {
+                  code: "coverage_gap",
+                  message: "the delivery does not cover 2019",
+                  source: "lisa",
+                  variable: "scb/lisa/kon",
+                  period: "2019",
+                },
+              ],
+            }),
+            headers: new Headers(),
+          }
+        : {
+            ok: true,
+            status: 200,
+            json: async () => ({ ok: true, issues: [] }),
+          },
+    );
+    projectStore.newProject(SEED);
+    await projectStore.validate();
+    await projectStore.downloadOrder();
+
+    expect(projectStore.orderFindings.map((f) => f.code)).toEqual([
+      "variable_unresolved",
+      "coverage_gap",
+    ]);
+    // The coordinates survive as fields — the panel locates a card by them.
+    expect(projectStore.orderFindings[1]).toMatchObject({
+      source: "lisa",
+      variable: "scb/lisa/kon",
+      period: "2019",
+    });
+
+    await projectStore.validate();
+    expect(projectStore.orderFindings).toEqual([]);
+  });
+
+  it("carries no findings for a request error that is not a blocked order", async () => {
+    stubFetch(async (url) =>
+      String(url).includes("/project/order")
+        ? {
+            ok: false,
+            status: 413,
+            json: async () => ({ detail: "project_data.json is too large" }),
+            headers: new Headers(),
+          }
+        : {
+            ok: true,
+            status: 200,
+            json: async () => ({ ok: true, issues: [] }),
+          },
+    );
+    projectStore.newProject(SEED);
+    await projectStore.validate();
+    await projectStore.downloadOrder();
+
+    expect(projectStore.requestError).toContain("too large");
+    expect(projectStore.orderFindings).toEqual([]);
   });
 });

@@ -136,9 +136,58 @@ def test_blocked_order_is_422_not_a_200_manifest(client):
     does not match the deployment's (§12 blocks retargeting)."""
     resp = client.post("/api/project/order", json=_spec(steward="swecov"))
     assert resp.status_code == 422
-    detail = resp.json()["detail"]
-    assert "steward_mismatch" in detail
-    assert "order blocked" in detail
+    body = resp.json()
+    assert "steward_mismatch" in body["detail"]
+    assert "order blocked" in body["detail"]
+
+
+def test_blocked_order_carries_the_findings_as_data(client):
+    """The 422 body carries the materializer's OWN findings — code, message and
+    the source/variable/period coordinates — as an array, not one flattened
+    string. This is the contract the SPA renders per finding and any other
+    client acts on; a blob would lose the structure at the boundary."""
+    spec = _spec()
+    # An FQID the catalog does not admit: grammatically fine (so the gate passes
+    # it) and unresolvable (so the materializer fail-closes on THAT binding).
+    spec["sources"][0]["bindings"].append(
+        {"variable": "scb/lisa/ghostvar", "type": "numeric"}
+    )
+    resp = client.post("/api/project/order", json=spec)
+    assert resp.status_code == 422
+
+    findings = resp.json()["findings"]
+    assert findings, "a blocked order must report at least one finding"
+    for finding in findings:
+        assert set(finding) == {"code", "message", "source", "variable", "period"}
+    # The coordinates are DATA — the SPA locates the offending card by them.
+    (blocking,) = [f for f in findings if f["variable"] == "scb/lisa/ghostvar"]
+    assert blocking["code"] == "variable_unresolved"
+    assert blocking["source"] == "lisa-2018"
+    assert blocking["message"]
+
+
+def test_blocked_findings_match_the_materializers_own(client, catalog_db):
+    """Not a re-modeled echo: the array IS ``OrderResult.findings``, so the
+    adapter cannot drift from the materializer it adapts."""
+    from reg_meta.order import materialize_order, project_from_raw
+    from reg_webapp.project_validation import per_request_conn
+
+    spec = _spec(steward="swecov")
+    with per_request_conn(catalog_db) as conn:
+        expected = materialize_order(project_from_raw(spec), None, conn)
+
+    findings = client.post("/api/project/order", json=spec).json()["findings"]
+    assert findings == [f.model_dump(mode="json") for f in expected.findings]
+
+
+def test_invalid_spec_422_carries_no_findings(client):
+    """The gate's 422 is the SAME shape with an EMPTY findings array — nothing
+    found the project unorderable, it was never ordered."""
+    spec = _spec()
+    spec["sources"][0]["period"] = "notaperiod"
+    body = client.post("/api/project/order", json=spec).json()
+    assert body["findings"] == []
+    assert body["detail"]
 
 
 def test_empty_project_is_blocked_not_a_header_only_manifest(client):
@@ -146,7 +195,9 @@ def test_empty_project_is_blocked_not_a_header_only_manifest(client):
     spec["sources"] = []
     resp = client.post("/api/project/order", json=spec)
     assert resp.status_code == 422
-    assert "project_empty" in resp.json()["detail"]
+    body = resp.json()
+    assert "project_empty" in body["detail"]
+    assert [f["code"] for f in body["findings"]] == ["project_empty"]
 
 
 def test_structurally_invalid_spec_is_422(client):

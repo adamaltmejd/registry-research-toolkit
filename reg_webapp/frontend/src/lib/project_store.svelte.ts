@@ -27,6 +27,8 @@
 import {
   downloadOrderManifest,
   errMessage,
+  type OrderFinding,
+  orderFindingsFromError,
   type ProjectDataBody,
   triggerDownload,
   type ValidationResultModel,
@@ -234,6 +236,22 @@ let validation = $state<ValidationResultModel | null>(null);
  * 4xx ApiError message) — distinct from a 200 `ok:false` issue list. */
 let requestError = $state<string | null>(null);
 
+/** The typed findings of the last BLOCKED order (`/order`'s 422 body), if that is
+ * what set `requestError`. A fail-closed order is not a sentence — it is a finding
+ * list, and the panel renders each one like a validation issue. Empty for every
+ * other request error (a malformed request, a network failure). */
+let orderFindings = $state<OrderFinding[]>([]);
+
+/** Move the request-error channel as ONE unit. A standing banner over stale
+ * findings, or findings with no banner, would each misreport the same request. */
+function setRequestError(
+  message: string | null,
+  findings: readonly OrderFinding[] = [],
+): void {
+  requestError = message;
+  orderFindings = [...findings];
+}
+
 /** True while a `/validate` POST is in flight. */
 let validationBusy = $state(false);
 
@@ -397,6 +415,10 @@ export const projectStore = {
   get requestError() {
     return requestError;
   },
+  /** The blocked order's findings, rendered under the request-error banner. */
+  get orderFindings() {
+    return orderFindings;
+  },
   get busy() {
     return validationBusy || orderBusy;
   },
@@ -467,7 +489,7 @@ export const projectStore = {
     lastDownloaded = serializeProjectData(next);
     validation = null;
     openError = null;
-    requestError = null;
+    setRequestError(null);
   },
 
   /**
@@ -515,7 +537,7 @@ export const projectStore = {
     lastDownloaded = serializeProjectData(opened);
     validation = null;
     openError = null;
-    requestError = null;
+    setRequestError(null);
   },
 
   /** Dismiss the open-error banner. */
@@ -525,7 +547,7 @@ export const projectStore = {
 
   /** Dismiss the malformed-request banner. */
   clearRequestError(): void {
-    requestError = null;
+    setRequestError(null);
   },
 
   /** Download the current draft as `project_data.json` and mark it clean (set the
@@ -572,7 +594,7 @@ export const projectStore = {
         if (target == null) {
           return latestResult;
         }
-        requestError = null;
+        setRequestError(null);
         try {
           const result = await validateProject(target as ProjectDataBody);
           if (draft !== target || validationGeneration !== targetGeneration) {
@@ -584,7 +606,7 @@ export const projectStore = {
         } catch (e) {
           if (draft === target && validationGeneration === targetGeneration) {
             validation = null;
-            requestError = errMessage(e);
+            setRequestError(errMessage(e));
           }
           latestResult = null;
         }
@@ -598,17 +620,19 @@ export const projectStore = {
 
   /** Download the JSON order manifest (`/project/order`). A spec that is not an
    * order — invalid, or fail-closed blocked by the materializer — is the
-   * backend's 422 → `requestError`, which the ValidationPanel renders. */
+   * backend's 422: its `detail` line becomes `requestError` and its typed
+   * findings become `orderFindings`, which the ValidationPanel renders one by
+   * one like validation issues. */
   async downloadOrder(): Promise<void> {
     if (draft == null) {
       return;
     }
     orderBusy = true;
-    requestError = null;
+    setRequestError(null);
     try {
       await downloadOrderManifest(draft as ProjectDataBody);
     } catch (e) {
-      requestError = errMessage(e);
+      setRequestError(errMessage(e), orderFindingsFromError(e));
     } finally {
       orderBusy = false;
     }

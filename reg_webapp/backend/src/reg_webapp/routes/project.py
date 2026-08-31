@@ -8,7 +8,8 @@ Two endpoints:
   ⧺ semantic) as a ``ValidationResultModel``.
 - ``POST /api/project/order`` — materializes the JSON order manifest through
   reg_meta's shared ``order.materialize_order`` and serves it as an
-  ``order.json`` download.
+  ``order.json`` download; anything that is not an order is a 422 carrying the
+  typed findings (``OrderBlockedModel``).
 
 **Status discipline.** ``/validate`` is a *diagnostic*: a spec
 that FAILS validation is a SUCCESSFUL validation RESPONSE — HTTP 200 with
@@ -38,12 +39,13 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-from fastapi import APIRouter, HTTPException, Request
+from fastapi import APIRouter, Request
 from fastapi.concurrency import run_in_threadpool
-from fastapi.responses import Response
+from fastapi.responses import JSONResponse, Response
 from pydantic import ValidationError
 from reg_meta.errors import RegMetaError
 from reg_meta.order import (
+    OrderFinding,
     OrderManifest,
     blocked_message,
     materialize_order,
@@ -54,6 +56,7 @@ from reg_schema.structural import validate_structural
 from reg_schema.validation import ValidationIssue, ValidationResult
 
 from reg_webapp.models import (
+    OrderBlockedModel,
     ValidationIssueModel,
     ValidationResultModel,
 )
@@ -64,6 +67,7 @@ from reg_webapp.project_validation import (
 from reg_webapp.request_body import read_raw_json_object
 
 if TYPE_CHECKING:
+    from collections.abc import Sequence
     from pathlib import Path
 
     from reg_meta.catalog import Catalog
@@ -233,6 +237,15 @@ def _validate_blocking(
 @router.post(
     "/order",
     response_model=OrderManifest,
+    responses={
+        422: {
+            "model": OrderBlockedModel,
+            "description": (
+                "Not an order: the spec is invalid, or the materializer "
+                "fail-closed on it. Carries the typed findings."
+            ),
+        }
+    },
     openapi_extra={
         "requestBody": {
             "required": True,
@@ -251,8 +264,10 @@ async def order_project(request: Request) -> Response:
 
     200 is the manifest — ``application/json``, downloaded as ``order.json``.
     Anything else is NOT AN ORDER: 422 either because the spec is invalid
-    (``project_from_raw``) or because the materializer blocked it, with every
-    finding named in ``detail``. There is deliberately no partial 200.
+    (``project_from_raw``) or because the materializer blocked it, carrying the
+    typed ``OrderBlockedModel`` — the findings as DATA (each with its code and
+    its source/variable/period coordinates), not one flattened line. There is
+    deliberately no partial 200.
 
     ``async`` + ``run_in_threadpool`` (blocking sqlite resolution off the event
     loop), mirroring ``/validate``."""
@@ -270,22 +285,36 @@ def _order_blocking(
 ) -> Response:
     """Gate, materialize and serialize, on a threadpool thread.
 
-    Both failure modes are a 422 — an invalid spec and a fail-closed blocked
-    order are equally "this is not an order" (unlike ``/validate``, which
-    DIAGNOSES an invalid spec at 200). ``RegMetaError`` is what
-    ``order.project_from_raw`` raises for a structurally invalid or
-    model-rejected spec; its message is the same one the CLI envelopes."""
+    Both failure modes are a 422 of the SAME shape — an invalid spec and a
+    fail-closed blocked order are equally "this is not an order" (unlike
+    ``/validate``, which DIAGNOSES an invalid spec at 200); only the gate's has
+    no findings to carry. ``RegMetaError`` is what ``order.project_from_raw``
+    raises for a structurally invalid or model-rejected spec; its message is the
+    same one the CLI envelopes."""
     try:
         project = project_from_raw(raw)
     except RegMetaError as exc:
-        raise HTTPException(status_code=422, detail=exc.message) from exc
+        return _not_an_order(exc.message, ())
 
     with per_request_conn(db_path) as conn:
         result = materialize_order(project, inventory, conn)
     if result.manifest is None:
-        raise HTTPException(status_code=422, detail=blocked_message(result))
+        return _not_an_order(blocked_message(result), result.findings)
     return Response(
         content=result.manifest.to_json(),
         media_type="application/json",
         headers={"content-disposition": 'attachment; filename="order.json"'},
     )
+
+
+def _not_an_order(detail: str, findings: Sequence[OrderFinding]) -> JSONResponse:
+    """The 422 body: the flattened ``detail`` line AND the typed findings.
+
+    Returned, not raised: ``HTTPException`` can only carry ``detail``, and the
+    findings are the contract — a client (the SPA's per-finding rendering, a
+    future extractor) must be able to read a finding's ``code`` and its
+    ``source`` / ``variable`` / ``period`` coordinates without parsing prose.
+    ``findings`` is empty only for a spec the gate rejected before the
+    materializer ever saw it."""
+    body = OrderBlockedModel(detail=detail, findings=list(findings))
+    return JSONResponse(status_code=422, content=body.model_dump(mode="json"))

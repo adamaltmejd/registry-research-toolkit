@@ -514,13 +514,50 @@ export function validateProject(
   return apiPostJson<ValidationResultModel>("/project/validate", draft);
 }
 
+/** One blocking reason an order could not be materialized — reg_meta's own
+ * `OrderFinding`, straight off the 422 body: the stable `code`, the message, and
+ * the optional `source` / `variable` / `period` coordinates that say WHERE. */
+export type OrderFinding = Schemas["OrderFinding"];
+
+/** The `/project/order` 422 body: the flattened `detail` line plus the findings
+ * as DATA (`OrderBlockedModel`). */
+export type OrderBlocked = Schemas["OrderBlockedModel"];
+
 /** POST a draft to `/api/project/order` and download the materialized JSON order
  * manifest (`OrderManifest`, served verbatim so the SPA and the `reg-meta order`
  * CLI hand the steward byte-identical files). Anything that is NOT an order — an
  * invalid spec, or an order the materializer fail-closed on — is the backend's
- * 422 (an `ApiError` naming every finding), never a partial download. */
+ * 422 (an `ApiError` whose `body` is `OrderBlocked`), never a partial download. */
 export function downloadOrderManifest(draft: ProjectDataBody): Promise<void> {
   return apiPostForBlob("/project/order", draft, "order.json");
+}
+
+/** The typed findings carried by a caught `/project/order` failure, or `[]` for
+ * anything else (a network error, the gate's finding-less 422, a non-JSON body).
+ *
+ * The narrowing is structural on purpose: this reads an `unknown` catch value at
+ * the HTTP boundary, so it trusts only the shape it verifies — a malformed entry
+ * drops rather than reaching the renderer with `undefined` fields.
+ */
+export function orderFindingsFromError(e: unknown): OrderFinding[] {
+  if (!(e instanceof ApiError)) {
+    return [];
+  }
+  const body = e.body;
+  if (!body || typeof body !== "object" || !("findings" in body)) {
+    return [];
+  }
+  const findings = (body as { findings: unknown }).findings;
+  if (!Array.isArray(findings)) {
+    return [];
+  }
+  return findings.filter(
+    (f): f is OrderFinding =>
+      f != null &&
+      typeof f === "object" &&
+      typeof (f as OrderFinding).code === "string" &&
+      typeof (f as OrderFinding).message === "string",
+  );
 }
 
 // ── Search surface (#379) ───────────────────────────────────────────────────

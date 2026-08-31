@@ -13,9 +13,11 @@
  * 2. The `KNOWN_CODES` registry: every stable validation code → a friendly label +
  *    the level it's typically raised at. Hand-maintained from the validator
  *    sources: structural (`reg_schema/structural.py`; see reg_schema/DESIGN.md →
- *    Structural rules and issue codes) and semantic (see reg_webapp/DESIGN.md →
- *    Semantic validation (semantic.py)). An UNKNOWN code
- *    degrades gracefully (the issue is still shown with its raw code + level).
+ *    Structural rules and issue codes), semantic (see reg_webapp/DESIGN.md →
+ *    Semantic validation (semantic.py)) and the ORDER MATERIALIZER's findings
+ *    (`reg_meta/order.py`), which the panel renders through the same path. An
+ *    UNKNOWN code degrades gracefully (the issue is still shown with its raw
+ *    code + level).
  */
 
 import type { components } from "./api-types";
@@ -109,6 +111,7 @@ export interface CodeInfo {
  * renders with its raw code (see `codeLabel`). Sourced from:
  * - structural (`reg_schema/structural.py`; see reg_schema/DESIGN.md → Structural rules and issue codes)
  * - semantic (`reg_webapp.semantic`; see reg_webapp/DESIGN.md → Semantic validation (semantic.py))
+ * - the order materializer's findings (`reg_meta/order.py`; see reg_meta/DESIGN.md → Order materializer and manifest)
  */
 export const KNOWN_CODES: Record<string, CodeInfo> = {
   // ── structural ────────────────────────────────────────────────────────────
@@ -223,6 +226,31 @@ export const KNOWN_CODES: Record<string, CodeInfo> = {
     label: "The binding has a replacement edge at/before this period",
     hint: "info",
   },
+  // ── order materializer (§12) ──────────────────────────────────────────────
+  // Every one BLOCKS the order: the materializer is fail-closed and emits a
+  // manifest or findings, never a partial order. They reach the panel from
+  // `/order`'s 422, not from `/validate`.
+  // Short CLASSIFIERS, not sentences: an order finding's own message already
+  // states the case WITH its coordinates in it, so a title paraphrasing it costs
+  // a line and adds nothing (the structural/semantic labels above lead rows
+  // whose messages are far terser).
+  steward_mismatch: { label: "Steward mismatch", hint: "error" },
+  project_empty: { label: "Empty project", hint: "error" },
+  period_not_orderable: { label: "Period not orderable", hint: "error" },
+  variable_unresolved: { label: "Unresolved variable", hint: "error" },
+  binding_unavailable: { label: "Variable unavailable", hint: "error" },
+  representation_unknown: { label: "Unknown representation", hint: "error" },
+  representation_unresolved: {
+    label: "Unresolved representation",
+    hint: "error",
+  },
+  representation_ambiguous: {
+    label: "Ambiguous representation",
+    hint: "error",
+  },
+  mapping_missing: { label: "Unmapped variable", hint: "error" },
+  mapping_ambiguous: { label: "Ambiguous mapping", hint: "error" },
+  coverage_gap: { label: "Coverage gap", hint: "error" },
 };
 
 /** The friendly label for a code, or the raw code when it isn't registered (an
@@ -472,4 +500,39 @@ export function findingLocation(
     anchorId: sourceAnchorId(sIdx),
     ...catalog,
   };
+}
+
+/** The RFC-6901 pointer an ORDER finding names, so a blocked order renders
+ * through the SAME `findingLocation` path as a validation issue.
+ *
+ * The two validators address the draft differently: the validator speaks in
+ * POSITIONS (it walked the document), the order materializer speaks in VALUES —
+ * the source's `name` and the binding's `variable` FQID, because it walked the
+ * MODEL. This resolves those values back to positions against the current draft.
+ *
+ * `""` (the whole document) when nothing matches: a project-level finding
+ * (`steward_mismatch`, `project_empty`) names no coordinate, and a source or
+ * binding edited away since the request has no card left to locate. The panel's
+ * existing no-location fallback then applies.
+ */
+export function orderFindingPointer(
+  finding: { source?: string | null; variable?: string | null },
+  sources: readonly SafeSource[],
+): string {
+  if (!finding.source) {
+    return "";
+  }
+  const sIdx = sources.findIndex((s) => safeSourceName(s) === finding.source);
+  if (sIdx < 0) {
+    return "";
+  }
+  if (!finding.variable) {
+    return jsonPointer(["sources", sIdx]);
+  }
+  const bIdx = safeSourceBindings(sources[sIdx]).findIndex(
+    (b) => (b as { variable?: unknown }).variable === finding.variable,
+  );
+  return bIdx < 0
+    ? jsonPointer(["sources", sIdx])
+    : jsonPointer(["sources", sIdx, "bindings", bIdx]);
 }

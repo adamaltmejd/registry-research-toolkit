@@ -838,6 +838,10 @@ re-type live here too, beside the materializer:
 - `blocked_message(result)` renders every blocking finding, in the materializer's own
   accumulation order, each prefixed with the source/variable/period it names. The
   fail-closed path is byte-identical across adapters too, not just a produced manifest.
+  It is a PRESENTATION of `OrderResult.findings`, never the record of them: the findings
+  are already typed models, and an adapter whose transport can carry structure carries
+  the models (the webapp's 422 body does — see `reg_webapp/DESIGN.md` → The order
+  manifest), with this line as the human summary beside them.
 
 The adapters themselves are `reg_webapp`'s `POST /api/project/order` (see
 `reg_webapp/DESIGN.md` → Project-write surface) and

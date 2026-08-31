@@ -12,6 +12,7 @@ import {
   issuesUnderPointer,
   jsonPointer,
   KNOWN_CODES,
+  orderFindingPointer,
   parseJsonPointer,
   sourceAnchorId,
   type ValidationIssue,
@@ -228,6 +229,58 @@ describe("findingLocation (pointer → human location)", () => {
 
   it("returns null when the pointer is malformed (no leading slash)", () => {
     expect(findingLocation("sources/0", sources)).toBeNull();
+  });
+});
+
+describe("orderFindingPointer (order coordinates → pointer)", () => {
+  // The order materializer names a location by VALUE (the source's `name`, the
+  // binding's `variable` FQID) because it walked the MODEL; the validator names
+  // it by POSITION because it walked the document. This resolves the former to
+  // the latter so a blocked order reuses `findingLocation` unchanged.
+  const sources = [
+    { name: "rams", register_variant: "scb/rams/v1", bindings: [] },
+    {
+      name: "lisa_main",
+      register_variant: "scb/lisa/v1",
+      bindings: [
+        { variable: "scb/lisa/adeldag" },
+        { variable: "scb/lisa/kon" },
+      ],
+    },
+  ];
+
+  it("resolves a source + variable to that binding's pointer", () => {
+    expect(
+      orderFindingPointer(
+        { source: "lisa_main", variable: "scb/lisa/kon" },
+        sources,
+      ),
+    ).toBe("/sources/1/bindings/1");
+  });
+
+  it("resolves a source-only finding to the source pointer", () => {
+    expect(orderFindingPointer({ source: "rams" }, sources)).toBe("/sources/0");
+  });
+
+  it("falls back to the source when the variable is no longer on it", () => {
+    // The draft is editable and the finding is from an earlier request: a
+    // binding deleted since must still locate the source it was on.
+    expect(
+      orderFindingPointer(
+        { source: "lisa_main", variable: "scb/lisa/ghostvar" },
+        sources,
+      ),
+    ).toBe("/sources/1");
+  });
+
+  it("is the whole document for a project-level finding or an unknown source", () => {
+    // steward_mismatch / project_empty name no coordinate; a renamed source has
+    // no card left to point at. Either way the panel's no-location path applies.
+    expect(orderFindingPointer({}, sources)).toBe("");
+    expect(orderFindingPointer({ source: null, variable: null }, sources)).toBe(
+      "",
+    );
+    expect(orderFindingPointer({ source: "gone" }, sources)).toBe("");
   });
 });
 

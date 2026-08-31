@@ -2610,6 +2610,28 @@
         "title": "ObjectTypeMetadata",
         "type": "object"
       },
+      "OrderBlockedModel": {
+        "description": "`POST /api/project/order` 422 body \u2014 the \"this is not an order\" result.\n\nFail-closed is a CONTRACT, not a message: the findings ride as reg_meta's own\nfrozen ``OrderFinding`` models (embedded directly, like every other reg_meta\nshape here), each carrying its stable ``code``, its message, and the optional\n``source`` / ``variable`` / ``period`` coordinates that say WHERE \u2014 so the SPA\nrenders them through the same per-finding path as a validation issue, and any\nother client can act on them, instead of parsing one flattened string.\n\n``detail`` is the same flattened one-liner ``order.blocked_message`` gives the\nCLI, kept because every 4xx on this API carries a ``detail`` string (FastAPI's\n``HTTPException`` shape) and generic error handling reads it. ``findings`` is\nEMPTY when the spec never reached the materializer (a structurally invalid\nproject \u2014 the gate's own 422), which is exactly the truth: nothing found it\nunorderable, it was never ordered.",
+        "properties": {
+          "detail": {
+            "title": "Detail",
+            "type": "string"
+          },
+          "findings": {
+            "items": {
+              "$ref": "#/components/schemas/OrderFinding"
+            },
+            "title": "Findings",
+            "type": "array"
+          }
+        },
+        "required": [
+          "detail",
+          "findings"
+        ],
+        "title": "OrderBlockedModel",
+        "type": "object"
+      },
       "OrderEntry": {
         "additionalProperties": false,
         "description": "One resolved logical\u2192physical binding of the order.\n\n`source` is the project source name, so an entry stays traceable to the\nbinding that produced it. `requested_period` is the AVAILABILITY-CLIPPED\nperiod this table serves (canonically rendered), not the source's raw\ndeclared period \u2014 the table itself is ordered whole regardless (\u00a712).",
@@ -2636,6 +2658,59 @@
           "physical"
         ],
         "title": "OrderEntry",
+        "type": "object"
+      },
+      "OrderFinding": {
+        "additionalProperties": false,
+        "description": "One blocking reason the order cannot be materialized.\n\nCodes: `steward_mismatch`, `project_empty`, `period_not_orderable`,\n`variable_unresolved`, `binding_unavailable`, `representation_unknown`,\n`representation_unresolved`, `representation_ambiguous`, `mapping_missing`,\n`mapping_ambiguous`, `coverage_gap`. `period` carries the EXACT offending\nsubperiod for the coverage codes, so a researcher can fix the request in one\nedit.",
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          },
+          "period": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Period"
+          },
+          "source": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source"
+          },
+          "variable": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Variable"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ],
+        "title": "OrderFinding",
         "type": "object"
       },
       "OrderManifest": {
@@ -6124,7 +6199,7 @@
     },
     "/api/project/order": {
       "post": {
-        "description": "Materialize a ``project_data.json`` into the JSON order manifest.\n\nA THIN adapter over ``reg_meta.order.materialize_order`` (REFACTOR_SPEC.md\n\u00a712): no gate, no fallback and no rendering lives here, so this endpoint and\nthe ``reg-meta order`` CLI emit byte-identical manifests. The deployment's\ndelivery inventory is read once at boot (``app.state.inventory``); ``None``\nis \u00a712's global-deployment fallback, which the materializer takes directly.\n\n200 is the manifest \u2014 ``application/json``, downloaded as ``order.json``.\nAnything else is NOT AN ORDER: 422 either because the spec is invalid\n(``project_from_raw``) or because the materializer blocked it, with every\nfinding named in ``detail``. There is deliberately no partial 200.\n\n``async`` + ``run_in_threadpool`` (blocking sqlite resolution off the event\nloop), mirroring ``/validate``.",
+        "description": "Materialize a ``project_data.json`` into the JSON order manifest.\n\nA THIN adapter over ``reg_meta.order.materialize_order`` (REFACTOR_SPEC.md\n\u00a712): no gate, no fallback and no rendering lives here, so this endpoint and\nthe ``reg-meta order`` CLI emit byte-identical manifests. The deployment's\ndelivery inventory is read once at boot (``app.state.inventory``); ``None``\nis \u00a712's global-deployment fallback, which the materializer takes directly.\n\n200 is the manifest \u2014 ``application/json``, downloaded as ``order.json``.\nAnything else is NOT AN ORDER: 422 either because the spec is invalid\n(``project_from_raw``) or because the materializer blocked it, carrying the\ntyped ``OrderBlockedModel`` \u2014 the findings as DATA (each with its code and\nits source/variable/period coordinates), not one flattened line. There is\ndeliberately no partial 200.\n\n``async`` + ``run_in_threadpool`` (blocking sqlite resolution off the event\nloop), mirroring ``/validate``.",
         "operationId": "order_project_api_project_order_post",
         "requestBody": {
           "content": {
@@ -6146,6 +6221,16 @@
               }
             },
             "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrderBlockedModel"
+                }
+              }
+            },
+            "description": "Not an order: the spec is invalid, or the materializer fail-closed on it. Carries the typed findings."
           }
         },
         "summary": "Order Project"

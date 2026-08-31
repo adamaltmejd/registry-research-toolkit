@@ -1,11 +1,13 @@
 <script lang="ts">
-import type { ValidationResultModel } from "./api";
+import type { OrderFinding, ValidationResultModel } from "./api";
 import type { SafeSource } from "./project_data";
 import type { ValidationStatus } from "./project_store.svelte";
 import { Button } from "./ui";
 import {
   codeLabel,
+  type FindingLocation,
   findingLocation,
+  orderFindingPointer,
   type ValidationIssue,
   type WindowCoverageHint,
 } from "./validation";
@@ -22,10 +24,21 @@ import {
 // ("Source 'lisa_main' → binding scb/lisa/adeldag", via `findingLocation`) that
 // scrolls to and briefly flashes the relevant source/binding card. `sources` is the
 // draft's (possibly malformed) source list, used only to resolve those labels.
-const { result, status, requestError, windowHints, sources, onRetry } = $props<{
+const {
+  result,
+  status,
+  requestError,
+  orderFindings = [],
+  windowHints,
+  sources,
+  onRetry,
+} = $props<{
   result: ValidationResultModel | null;
   status: ValidationStatus;
   requestError: string | null;
+  /** A blocked order's findings (`/order`'s 422). Rendered in the SAME per-finding
+   * shape as a validation issue — they are findings, not a message. */
+  orderFindings?: readonly OrderFinding[];
   windowHints: readonly WindowCoverageHint[];
   sources: readonly SafeSource[];
   onRetry?: () => void;
@@ -74,19 +87,87 @@ const LEVEL_LABEL: Record<Level, string> = {
 };
 </script>
 
+<!-- Where a finding sits in the draft, for BOTH finding lists below (a validation
+     issue and an order finding differ in how they name their location, not in how
+     it is presented). -->
+{#snippet locators(loc: FindingLocation)}
+  <div class="locators">
+    <!-- Click-to-locate: scrolls to + flashes the source/binding card
+         instead of leaking the raw JSON pointer. -->
+    <button type="button" class="locate" onclick={() => locate(loc.anchorId)}>
+      {loc.label}
+    </button>
+    {#if loc.catalogHref}
+      <!-- The cart is read-only (#991): fixes happen on the catalog
+           subject page, so link out to it. Omitted when the finding
+           resolves no catalog coordinate (an unpicked row). -->
+      <a class="catalog-link" href={loc.catalogHref}>
+        Fix in catalog: <code>{loc.catalogLabel}</code>
+      </a>
+    {/if}
+  </div>
+{/snippet}
+
 <section class="validation" aria-label="Validation results">
   {#if requestError}
-    <!-- A malformed REQUEST (true 4xx) — distinct from the 200 ok:false list. -->
+    <!-- A malformed REQUEST (true 4xx) — distinct from the 200 ok:false list.
+         When the request came back with FINDINGS (a blocked order), they ARE
+         the message: the banner states the verdict once and the group below
+         carries each reason, instead of repeating every finding twice — once
+         flattened into `detail`, once rendered. -->
     <div class="banner request-error" role="alert">
       <span class="banner-text">
-        <strong>Request failed:</strong>
-        {requestError}
+        {#if orderFindings.length > 0}
+          <!-- NOT "request failed": the request succeeded and answered
+               precisely. What failed is the ORDER, and the findings say why. -->
+          <strong>Order blocked:</strong>
+          the materializer produced no order for this project.
+        {:else}
+          <strong>Request failed:</strong>
+          {requestError}
+        {/if}
       </span>
       {#if onRetry}
         <Button variant="default" size="sm" onclick={onRetry}>
           Retry validation
         </Button>
       {/if}
+    </div>
+  {/if}
+
+  <!-- A blocked order is a FINDING LIST, not a sentence: the banner above carries
+       the one-line summary, and each finding renders here in the same shape as a
+       validation issue — human title, demoted code chip, the message, and the
+       card it points at. The coordinates arrive as data (`source` / `variable` /
+       `period`), so `orderFindingPointer` resolves them to the same location the
+       issue list locates by. -->
+  {#if orderFindings.length > 0}
+    <!-- Named + associated so the alert above never has to say "below": the
+         heading IS this group's accessible name. -->
+    <div class="group error" role="group" aria-labelledby="order-findings-heading">
+      <h4 class="micro-label" id="order-findings-heading">
+        Blocking findings ({orderFindings.length})
+      </h4>
+      <ul>
+        {#each orderFindings as finding, i (`${finding.code}|${finding.variable ?? ""}|${finding.period ?? ""}|${i}`)}
+          {@const loc = findingLocation(orderFindingPointer(finding, sources), sources)}
+          <li>
+            <div class="issue-head">
+              <span class="label">{codeLabel(finding.code)}</span>
+              <code class="code">{finding.code}</code>
+            </div>
+            <p class="message">{finding.message}</p>
+            {#if finding.period}
+              <!-- The EXACT offending subperiod for the coverage codes — the one
+                   edit that fixes the request. -->
+              <p class="path muted">Period {finding.period}</p>
+            {/if}
+            {#if loc}
+              {@render locators(loc)}
+            {/if}
+          </li>
+        {/each}
+      </ul>
     </div>
   {/if}
 
@@ -133,21 +214,7 @@ const LEVEL_LABEL: Record<Level, string> = {
                 </div>
                 <p class="message">{issue.message}</p>
                 {#if loc}
-                  <div class="locators">
-                    <!-- Click-to-locate: scrolls to + flashes the source/binding card
-                         instead of leaking the raw JSON pointer. -->
-                    <button type="button" class="locate" onclick={() => locate(loc.anchorId)}>
-                      {loc.label}
-                    </button>
-                    {#if loc.catalogHref}
-                      <!-- The cart is read-only (#991): fixes happen on the catalog
-                           subject page, so link out to it. Omitted when the finding
-                           resolves no catalog coordinate (an unpicked row). -->
-                      <a class="catalog-link" href={loc.catalogHref}>
-                        Fix in catalog: <code>{loc.catalogLabel}</code>
-                      </a>
-                    {/if}
-                  </div>
+                  {@render locators(loc)}
                 {:else if issue.path}
                   <code class="path">{issue.path}</code>
                 {:else}

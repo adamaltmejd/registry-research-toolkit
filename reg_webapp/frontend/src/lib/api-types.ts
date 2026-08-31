@@ -529,8 +529,10 @@ export interface paths {
          *
          *     200 is the manifest — ``application/json``, downloaded as ``order.json``.
          *     Anything else is NOT AN ORDER: 422 either because the spec is invalid
-         *     (``project_from_raw``) or because the materializer blocked it, with every
-         *     finding named in ``detail``. There is deliberately no partial 200.
+         *     (``project_from_raw``) or because the materializer blocked it, carrying the
+         *     typed ``OrderBlockedModel`` — the findings as DATA (each with its code and
+         *     its source/variable/period coordinates), not one flattened line. There is
+         *     deliberately no partial 200.
          *
          *     ``async`` + ``run_in_threadpool`` (blocking sqlite resolution off the event
          *     loop), mirroring ``/validate``.
@@ -1951,6 +1953,30 @@ export interface components {
             name: string;
         };
         /**
+         * OrderBlockedModel
+         * @description `POST /api/project/order` 422 body — the "this is not an order" result.
+         *
+         *     Fail-closed is a CONTRACT, not a message: the findings ride as reg_meta's own
+         *     frozen ``OrderFinding`` models (embedded directly, like every other reg_meta
+         *     shape here), each carrying its stable ``code``, its message, and the optional
+         *     ``source`` / ``variable`` / ``period`` coordinates that say WHERE — so the SPA
+         *     renders them through the same per-finding path as a validation issue, and any
+         *     other client can act on them, instead of parsing one flattened string.
+         *
+         *     ``detail`` is the same flattened one-liner ``order.blocked_message`` gives the
+         *     CLI, kept because every 4xx on this API carries a ``detail`` string (FastAPI's
+         *     ``HTTPException`` shape) and generic error handling reads it. ``findings`` is
+         *     EMPTY when the spec never reached the materializer (a structurally invalid
+         *     project — the gate's own 422), which is exactly the truth: nothing found it
+         *     unorderable, it was never ordered.
+         */
+        OrderBlockedModel: {
+            /** Detail */
+            detail: string;
+            /** Findings */
+            findings: components["schemas"]["OrderFinding"][];
+        };
+        /**
          * OrderEntry
          * @description One resolved logical→physical binding of the order.
          *
@@ -1966,6 +1992,29 @@ export interface components {
             requested_period: string;
             /** Source */
             source: string;
+        };
+        /**
+         * OrderFinding
+         * @description One blocking reason the order cannot be materialized.
+         *
+         *     Codes: `steward_mismatch`, `project_empty`, `period_not_orderable`,
+         *     `variable_unresolved`, `binding_unavailable`, `representation_unknown`,
+         *     `representation_unresolved`, `representation_ambiguous`, `mapping_missing`,
+         *     `mapping_ambiguous`, `coverage_gap`. `period` carries the EXACT offending
+         *     subperiod for the coverage codes, so a researcher can fix the request in one
+         *     edit.
+         */
+        OrderFinding: {
+            /** Code */
+            code: string;
+            /** Message */
+            message: string;
+            /** Period */
+            period?: string | null;
+            /** Source */
+            source?: string | null;
+            /** Variable */
+            variable?: string | null;
         };
         /**
          * OrderManifest
@@ -3719,6 +3768,15 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["OrderManifest"];
+                };
+            };
+            /** @description Not an order: the spec is invalid, or the materializer fail-closed on it. Carries the typed findings. */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OrderBlockedModel"];
                 };
             };
         };

@@ -32,6 +32,7 @@ from reg_meta.catalog import (
     VariantSummary,
 )
 from reg_meta.fqid import CLASSIFICATION_PREFIX
+from reg_meta.order import OrderFinding  # noqa: TC002 — a runtime model field
 from reg_meta.search import (
     ClassificationSearchResult,
     ClassificationSuccessionSearchResult,
@@ -588,6 +589,27 @@ class ValidationResultModel(BaseModel):
 
     ok: bool
     issues: list[ValidationIssueModel]
+
+
+class OrderBlockedModel(BaseModel):
+    """`POST /api/project/order` 422 body — the "this is not an order" result.
+
+    Fail-closed is a CONTRACT, not a message: the findings ride as reg_meta's own
+    frozen ``OrderFinding`` models (embedded directly, like every other reg_meta
+    shape here), each carrying its stable ``code``, its message, and the optional
+    ``source`` / ``variable`` / ``period`` coordinates that say WHERE — so the SPA
+    renders them through the same per-finding path as a validation issue, and any
+    other client can act on them, instead of parsing one flattened string.
+
+    ``detail`` is the same flattened one-liner ``order.blocked_message`` gives the
+    CLI, kept because every 4xx on this API carries a ``detail`` string (FastAPI's
+    ``HTTPException`` shape) and generic error handling reads it. ``findings`` is
+    EMPTY when the spec never reached the materializer (a structurally invalid
+    project — the gate's own 422), which is exactly the truth: nothing found it
+    unorderable, it was never ordered."""
+
+    detail: str
+    findings: list[OrderFinding]
 
 
 # ── Global catalog search (#350; see DESIGN.md → Global catalog search) ──────

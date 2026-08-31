@@ -244,6 +244,83 @@ describe("ValidationPanel — researcher-language findings", () => {
     expect(document.body.textContent).not.toContain("no errors");
   });
 
+  it("renders each order finding like a validation issue, located by its coordinates (§12)", async () => {
+    // The 422 carries findings as DATA, so each one gets its own row — human
+    // title, demoted code, message, and the card it points at — instead of one
+    // flattened blob. The materializer names its location by VALUE (source name
+    // + variable FQID); `orderFindingPointer` resolves that to the same card the
+    // issue list locates by.
+    await render(ValidationPanel, {
+      result: { ok: true, issues: [] },
+      status: "ok",
+      requestError: "order blocked by 2 findings: …",
+      orderFindings: [
+        {
+          code: "variable_unresolved",
+          message: "scb/lisa/ghostvar does not resolve in the catalog",
+          source: "lisa_main",
+          variable: "scb/lisa/adeldag",
+          period: null,
+        },
+        {
+          code: "steward_mismatch",
+          message: "project steward 'swecov' does not match 'global'",
+          source: null,
+          variable: null,
+          period: null,
+        },
+      ],
+      windowHints: [],
+      sources: SOURCES,
+    });
+
+    // The banner states the verdict ONCE; the findings below are the message.
+    // …and does NOT claim the request failed; the findings carry the reasons.
+    await expect
+      .element(page.getByText("the materializer produced no order"))
+      .toBeVisible();
+    expect(document.body.textContent).not.toContain(
+      "order blocked by 2 findings: …",
+    );
+
+    await expect.element(page.getByText("Blocking findings (2)")).toBeVisible();
+    // Each finding is its own row: human title + demoted raw code + message.
+    await expect.element(page.getByText("Unresolved variable")).toBeVisible();
+    await expect.element(page.getByText("variable_unresolved")).toBeVisible();
+    await expect
+      .element(
+        page.getByText("scb/lisa/ghostvar does not resolve in the catalog"),
+      )
+      .toBeVisible();
+    // The coordinates locate a card — the same affordance a validation issue gets.
+    await expect
+      .element(page.getByText("Source 'lisa_main' → binding scb/lisa/adeldag"))
+      .toBeVisible();
+    // A project-level finding names no coordinate, so it simply has no locator.
+    await expect.element(page.getByText("Steward mismatch")).toBeVisible();
+  });
+
+  it("shows a coverage finding's exact offending period", async () => {
+    await render(ValidationPanel, {
+      result: { ok: true, issues: [] },
+      status: "ok",
+      requestError: "order blocked by 1 finding: …",
+      orderFindings: [
+        {
+          code: "coverage_gap",
+          message: "the delivery does not cover the requested period",
+          source: "lisa_main",
+          variable: "scb/lisa/adeldag",
+          period: "2019",
+        },
+      ],
+      windowHints: [],
+      sources: SOURCES,
+    });
+
+    await expect.element(page.getByText("Period 2019")).toBeVisible();
+  });
+
   it("wraps a long locate label and catalog FQID without horizontal overflow on mobile (#1112)", async () => {
     // Regression for #1112 (follow-up to #1110's SourceEditor/BindingEditor fix): at
     // 375px the `.locators` row's flex children — the `.locate` label ("Source '…' →
