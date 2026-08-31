@@ -163,14 +163,27 @@ into the released steward artifact. Derive exact edition-aware admission, covera
 stats, browse unions, and order materialization from it; do not maintain a second lossy
 holdings model or deployment-local secret configuration. Replace
 `steward.project_data.json` in the same pre-v1 cutover rather than adding a dual-source
-compatibility path.
+compatibility path. **Format (ratified 2026-08-31): the inventory is authored as TOML**,
+following the repo's generated-`auto.toml`-plus-curated-overrides pattern — humans touch
+it (explicitly curated editions, comments carrying curation rationale), so a
+comment-capable format is required; the compiled steward artifact's internal
+representation is the build's choice. Inventory ↔ reg_meta DB consistency (every
+mapping's `(register_variant, variable FQID, representation)` resolves against the
+flavored DB) is a **standing build/CI gate**, not a one-off check.
 
-The v1 order CSV has one row per selected variable, matching physical table, and
-concrete physical column, with fixed columns:
-
-```text
-steward,provider,register,variant,requested_period,edition,table,column,variable
-```
+**The v1 order manifest is a versioned JSON contract (ratified 2026-08-31, replacing the
+earlier nine-column CSV decision).** It is machine-written by the materializer and
+machine-read by the steward-side extract system (MONA for SWECOV; other stewards on
+their own private runtimes), never hand-edited, and validated by a Pydantic contract at
+both boundaries. It must be **self-contained for offline steward-side extraction** — no
+network, no catalog lookup: order metadata plus provenance (steward, catalog/DB
+versions, project identity/hash) plus resolved entries, each carrying the logical
+coordinate (`provider,register,variant,variable`), the requested period, and the
+physical coordinate (`edition,table,column`). Serialization is deterministic (sorted
+keys, stable entry order). Extraction output is one UTF-8 CSV per variant + period unit
+(e.g. `LISA_Individ_2019.csv`); the naming convention is pinned in the order contract,
+not improvised by the extractor. A human-readable table rendering of the manifest may
+exist as a derived view for the executing data manager; the JSON is the contract.
 
 Rules:
 
@@ -186,23 +199,31 @@ Rules:
   the project blocking. Highlight every divergence in both the picker and project page.
   A common-window edit never silently rewrites existing source periods; an explicit
   "apply overlap to all" action performs that rewrite where overlap exists;
-- for each selected binding, first resolve any representation changes into deterministic
-  logical slices. A steward table matches a slice only when its mapping exactly matches
-  `(register_variant, variable, representation)` and its physical edition overlaps that
-  slice; overlap elsewhere in the overall request does not match. The edition
-  contributes only its overlap with that slice to coverage. The union of those
-  slice-clipped contributions must cover the full requested period, including every
-  segment of a disjoint request. Any uncovered subperiod blocks the entire order with
-  the exact gaps; overlap alone never permits a partial manifest;
+- **intersection semantics (ratified 2026-08-31):** a source period expresses "these
+  columns, wherever each is available inside this window." Before slicing, clip each
+  binding to that column's documented availability window; a clip is **reported
+  informationally per binding** ("DispInk09: available from 2019, ordered 2019–2020"),
+  never silent, and never an error. This is what resolves the variable-by-period matrix
+  (dogfood 2026-08-30 P0.4) without schema change: one source per variant, no
+  cross-product over-order;
+- for each selected binding, after availability clipping, resolve any representation
+  changes into deterministic logical slices. A steward table matches a slice only when
+  its mapping exactly matches `(register_variant, variable, representation)` and its
+  physical edition overlaps that slice; overlap elsewhere in the overall request does
+  not match. The edition contributes only its overlap with that slice to coverage. The
+  union of those slice-clipped contributions must cover the full availability-clipped
+  requested period, including every segment of a disjoint request. Any uncovered
+  subperiod **within a column's availability window** blocks the entire order with the
+  exact gaps; overlap alone never permits a partial manifest;
 - after that coverage gate passes, emit every table matching at least one slice by
   default; v1 has no table chooser and no separate population field;
 - a matching multi-period table is ordered whole, even when its matched slice covers
   only a subset of the table's edition;
-- steward rows carry the literal physical `table` and physical `column`. The canonical
-  `representation` is a join discriminator, not an output substitute, and `display_name`
-  is not a delivery coordinate;
-- the confirmed global-deployment fallback is the same row shape with blank `table`, the
-  resolved canonical column in `column`, and `edition = requested_period` until a
+- steward entries carry the literal physical `table` and physical `column`. The
+  canonical `representation` is a join discriminator, not an output substitute, and
+  `display_name` is not a delivery coordinate;
+- the confirmed global-deployment fallback is the same entry shape with blank `table`,
+  the resolved canonical column in `column`, and `edition = requested_period` until a
   physical global inventory exists. It obeys the same full-coverage gate using canonical
   resolution; if representation changes across the request, fan out deterministically,
   and block unresolved, ambiguous, or partially covered requests;
@@ -223,6 +244,14 @@ Rules:
   versioned DB and public inventory directly. Both adapters must emit byte-identical
   results. This deliberately adds `reg_meta → reg_schema` rather than creating another
   package.
+
+**Deferred (2026-08-31): per-binding period override.** No schema change now —
+intersection semantics above cover every observed case. If a researcher ever
+deliberately wants *less* than the availability intersection, the shape is a
+binding-level period override narrowing below the variant-level source period
+independent of availability (e.g. source LISA 2000–2020 but `DispInk09` only 2000–2002
+even though it exists later too). File it when someone actually asks; the availability
+clip leaves the seam (an override is just a further clip).
 
 `simplify:` v1 records no row filter and includes the whole matching table. Add
 table-specific period predicates when steward delivery/extraction consumes the manifest.
