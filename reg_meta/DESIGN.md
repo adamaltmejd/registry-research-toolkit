@@ -756,10 +756,15 @@ Per `sources[*].bindings[*]`, in project declaration order:
    re-derived here — `resolve_at` is the source.
 3. **Steward matching + coverage gate.** A table matches a slice only when one of its
    columns carries a mapping matching `(register_variant, variable, representation)` AND
-   its edition overlaps THAT slice; the edition contributes only its overlap. Any
-   subperiod of the availability-clipped request left uncovered blocks the WHOLE order
-   with the exact gap (`coverage_gap`), and a slice no mapping serves blocks with
-   `mapping_missing`. Overlap alone never buys a partial manifest.
+   its edition overlaps THAT slice; the edition contributes only its overlap. A mapping
+   that OMITS `representation` is the inventory's single-representation arm: it matches
+   only a binding that resolves to ONE canonical representation across the request. When
+   the representation changed, an unqualified mapping cannot say which slice its column
+   is, so it blocks (`mapping_ambiguous`) instead of letting one physical column claim
+   two canonical representations. Any subperiod of the availability-clipped request left
+   uncovered blocks the WHOLE order with the exact gap (`coverage_gap`), and a slice no
+   mapping serves blocks with `mapping_missing`. Overlap alone never buys a partial
+   manifest.
 4. **Emission.** Every matching table is emitted whole — v1 has no table chooser and no
    row filter (the §12 `simplify:` stands, with SWECOV's
    one-large-SQL-table-per-register delivery as the upgrade trigger). Entries preserve
@@ -770,10 +775,11 @@ Per `sources[*].bindings[*]`, in project declaration order:
 binding — `steward_mismatch`, `project_empty`, `period_not_orderable`,
 `variable_unresolved`, `binding_unavailable`, `representation_unknown`,
 `representation_unresolved`, `representation_ambiguous`, `mapping_missing`,
-`coverage_gap` — so a researcher fixes the whole order in one edit instead of one gap
-per round trip. `ProjectData.steward` must equal the inventory's `steward` (provenance
-is checked before anything resolves; retargeting is deliberately not a feature), and an
-empty project stays a valid draft that cannot produce a header-only manifest.
+`mapping_ambiguous`, `coverage_gap` — so a researcher fixes the whole order in one edit
+instead of one gap per round trip. `ProjectData.steward` must equal the inventory's
+`steward` (provenance is checked before anything resolves; retargeting is deliberately
+not a feature), and an empty project stays a valid draft that cannot produce a
+header-only manifest.
 
 **The manifest is a versioned JSON contract.** `OrderManifest` (version
 `ORDER_MANIFEST_VERSION`) carries provenance (steward, project name / schema version /

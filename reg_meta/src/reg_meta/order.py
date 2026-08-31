@@ -25,9 +25,12 @@ Pipeline, per `sources[*].bindings[*]` in project declaration order:
 3. **Steward matching + coverage gate.** A table matches a slice only when one
    of its columns carries a mapping matching `(register_variant, variable,
    representation)` AND its physical edition overlaps THAT slice; the edition
-   contributes only its overlap. Any subperiod of the availability-clipped
-   request left uncovered blocks the WHOLE order with the exact gaps — overlap
-   alone never yields a partial manifest.
+   contributes only its overlap. A mapping that OMITS `representation` is §12's
+   single-representation arm: it matches only a binding that resolves to one
+   canonical representation across the request, and blocks otherwise rather than
+   claiming one column is two representations. Any subperiod of the
+   availability-clipped request left uncovered blocks the WHOLE order with the
+   exact gaps — overlap alone never yields a partial manifest.
 4. **Emission.** Every matching table is emitted whole (v1 has no table chooser
    and no row filter — the §12 `simplify:` stands). Entries keep project
    source/binding order; the fan-out within a binding sorts by table, canonical
@@ -207,8 +210,9 @@ class OrderFinding(_OrderModel):
     Codes: `steward_mismatch`, `project_empty`, `period_not_orderable`,
     `variable_unresolved`, `binding_unavailable`, `representation_unknown`,
     `representation_unresolved`, `representation_ambiguous`, `mapping_missing`,
-    `coverage_gap`. `period` carries the EXACT offending subperiod for the
-    coverage codes, so a researcher can fix the request in one edit."""
+    `mapping_ambiguous`, `coverage_gap`. `period` carries the EXACT offending
+    subperiod for the coverage codes, so a researcher can fix the request in one
+    edit."""
 
     code: str
     message: str
@@ -610,6 +614,35 @@ def _materialize_binding(
             )
         )
 
+    # An inventory mapping may omit `representation` — §12's "the concept has a
+    # single representation" arm. That is only unambiguous when the binding
+    # really resolves to ONE canonical representation across the request. When
+    # it changed, an unqualified mapping cannot say WHICH slice its column is,
+    # so it matches nothing and blocks: a manifest never claims one physical
+    # column represents two canonical representations.
+    representations = sorted(by_column)
+    unqualified_ok = len(representations) == 1
+    if not unqualified_ok:
+        blocked_by_unqualified = False
+        for table in inventory.tables:
+            for inv_column in table.columns:
+                if not _has_unqualified_mapping(
+                    inv_column, source.register_variant, parsed
+                ):
+                    continue
+                blocked_by_unqualified = True
+                finding(
+                    "mapping_ambiguous",
+                    f"steward table {table.id!r} column {inv_column.name!r} maps "
+                    f"{source.register_variant} {binding.variable!r} with no "
+                    f"`representation`, but the binding delivers "
+                    f"{representations} across the request; qualify the mapping "
+                    "with the canonical representation its column carries",
+                    _render(requested),
+                )
+        if blocked_by_unqualified:
+            return
+
     # STEP 3+4: match each slice against the inventory, gate on full coverage of
     # the clipped request, then emit.
     contributions: dict[tuple[str, str, str], list[_Interval]] = {}
@@ -622,7 +655,11 @@ def _materialize_binding(
             bounds = edition_bounds(table.edition)
             for inv_column in table.columns:
                 if not _column_matches(
-                    inv_column, source.register_variant, parsed, column
+                    inv_column,
+                    source.register_variant,
+                    parsed,
+                    column,
+                    unqualified_ok=unqualified_ok,
                 ):
                     continue
                 matched = True
@@ -701,22 +738,38 @@ def _column_matches(
     variant_coordinate: str,
     variable: Fqid,
     representation: str,
+    *,
+    unqualified_ok: bool,
 ) -> bool:
     """Does this physical column carry a mapping for exactly this slice?
 
     Exact match on `(register_variant, variable, representation)` — matching
-    anywhere else in the overall request is not a match (§12).
-
-    simplify: a mapping with NO `representation` is §12's "the concept has a
-    single representation" arm and matches whichever canonical column the slice
-    resolved to; an explicit one must be equal. Tighten it (an unpinned mapping
-    on a multi-representation concept is arguably ambiguous) when a steward
-    inventory actually carries that shape — the DB-side consistency gate over
-    the inventory is where that shows up first.
+    anywhere else in the overall request is not a match (§12). A mapping that
+    OMITS `representation` matches only when `unqualified_ok`, i.e. the caller
+    has proven the binding resolves to exactly one canonical representation
+    across the request (§12's "the concept has a single representation" arm);
+    otherwise it is ambiguous and the caller has already blocked the order.
     """
     return any(
         mapping.register_variant == variant_coordinate
         and mapping.variable == variable
-        and (mapping.representation is None or mapping.representation == representation)
+        and (
+            mapping.representation == representation
+            or (unqualified_ok and mapping.representation is None)
+        )
+        for mapping in inv_column.mappings
+    )
+
+
+def _has_unqualified_mapping(
+    inv_column: InventoryColumn, variant_coordinate: str, variable: Fqid
+) -> bool:
+    """Does this physical column map the logical coordinate with NO
+    `representation`? The ambiguity probe for a binding whose representation
+    changes across the request."""
+    return any(
+        mapping.register_variant == variant_coordinate
+        and mapping.variable == variable
+        and mapping.representation is None
         for mapping in inv_column.mappings
     )

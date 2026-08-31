@@ -108,6 +108,30 @@ variable = "scb/lisa/kon"
 """
 
 
+# `yrke` mapped by a single column with NO `representation`, in a table spanning
+# both of its representation slices (`Ssyk3` 2018, `Ssyk4` 2019–2020). The
+# mapping cannot say which slice its column is, so it must block rather than
+# claim one physical column carries both canonical representations.
+UNQUALIFIED_INVENTORY = """
+version = 1
+steward = "swecov"
+
+[[table]]
+id = "LISA_Individ_2018-2020.csv"
+edition = { from = 2018, to = 2020 }
+[[table.column]]
+name = "Yrke"
+[[table.column.mapping]]
+register_variant = "scb/lisa/individer-15plus"
+variable = "scb/lisa/yrke"
+[[table.column]]
+name = "Kon"
+[[table.column.mapping]]
+register_variant = "scb/lisa/individer-15plus"
+variable = "scb/lisa/kon"
+"""
+
+
 def _inventory(tmp_path: Path, text: str) -> DeliveryInventory:
     path = tmp_path / "inventory.toml"
     path.write_text(text, encoding="utf-8")
@@ -397,6 +421,41 @@ class TestBlockingFindings:
         # The exact uncovered subperiod, not just "incomplete".
         assert result.findings[0].period == "2019"
         assert result.findings[0].variable == "scb/lisa/kon"
+
+    def test_unqualified_mapping_blocks_a_representation_change(
+        self, conn, tmp_path
+    ) -> None:
+        # One unqualified column cannot serve both `Ssyk3` and `Ssyk4`: matching
+        # it against every slice would emit a manifest claiming that column is
+        # two different canonical representations.
+        result = materialize_order(
+            _project("scb/lisa/yrke"),
+            _inventory(tmp_path, UNQUALIFIED_INVENTORY),
+            conn,
+        )
+
+        assert result.manifest is None
+        assert _codes(result) == ["mapping_ambiguous"]
+        assert "Ssyk3" in result.findings[0].message
+        assert "Ssyk4" in result.findings[0].message
+
+    def test_unqualified_mapping_serves_a_single_representation(
+        self, conn, tmp_path
+    ) -> None:
+        # Same inventory, but `kon` resolves to ONE canonical representation
+        # across the request — §12's single-representation arm still matches.
+        result = materialize_order(
+            _project("scb/lisa/kon"),
+            _inventory(tmp_path, UNQUALIFIED_INVENTORY),
+            conn,
+        )
+
+        assert result.findings == ()
+        assert result.manifest is not None
+        assert [
+            (e.logical.representation, e.physical.column)
+            for e in result.manifest.entries
+        ] == [("Kon", "Kon")]
 
     def test_steward_mismatch_blocks_before_anything_resolves(
         self, conn, inventory
