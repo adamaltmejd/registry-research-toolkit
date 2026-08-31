@@ -317,6 +317,9 @@ build_artifacts = [
   "scripts/tests/__pycache__",
   ".pytest_cache",
   ".ruff_cache",
+  # Hypothesis example DB, written by in-clone property-test runs (.gitignore
+  # matches the directory: `.hypothesis/`). First tripped a Y-13/1 retarget.
+  ".hypothesis",
   "reg_webapp/frontend/node_modules",
   "reg_webapp/frontend/dist",
 ]
