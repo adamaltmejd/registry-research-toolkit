@@ -650,6 +650,82 @@ sub-resource coordinate (passed to `resolve_at`), not a slash-path FQID segment.
 v0.x per-edition `resolve()` behavior was deleted, not aliased — pre-v1 policy (no
 shims).
 
+## Steward delivery inventory (`inventory.py`)
+
+A `project_data.json` source is a **logical** selection — register variant, variable,
+period. What a steward physically delivers is separate data, and the delivery inventory
+is that contract: the public, version-controlled steward source of truth from which
+edition-aware admission, coverage stats, browse unions, and order materialization are
+derived. `REFACTOR_SPEC.md` §12 is the decision text; this section documents the format
+and the validator. This module is the contract alone: the materializer, the coverage
+gate, the order manifest, and each steward's real inventory content (and its generator)
+are separate work.
+
+**Format: TOML** (ratified 2026-08-31), following the repo's generated-`auto.toml`-plus-
+curated-overrides pattern (`reg_meta_build/fqid_slugs/`): humans curate editions, and
+comments carry the curation rationale, so the format has to be comment-capable. The
+compiled steward artifact's internal representation is the build's choice, not this
+file's.
+
+```toml
+version = 1                       # contract version — bumped, never migrated (pre-v1)
+steward = "swecov"                # the deployment this inventory belongs to
+
+[[table]]
+id = "LISA_Individ_2019.csv"      # opaque EXACT identifier: a delivery filename, or a
+                                  # schema-qualified SQL table (`dbo.Patientregister`)
+edition = 2019                    # ONE explicit finite period — never "_default"
+
+[[table.column]]
+name = "Kon"                      # literal, case-preserving physical column
+[[table.column.mapping]]
+register_variant = "scb/lisa/individer-15plus"
+variable = "scb/lisa/kon"
+representation = "Kon"            # optional; the canonical reg_meta representation
+
+[[table.column]]
+name = "LopNr"                    # zero mappings = unresolved, but still inventoried
+```
+
+- **`id` is opaque and exact.** It is never parsed for meaning: a table whose name
+  carries no period still requires an explicit curated `edition`. Filename-edition
+  inference is not implemented here; if a generator adds it, §12 requires it to fail for
+  review on zero or ambiguous period tokens rather than guess.
+- **One explicit finite `edition` per table**, in the shared period grammar — a token
+  (`2019`, `2019-03`, `2019-Q3`, `HT2019`, `2019-03-01`), a `{ from, to }` range, or a
+  finite list of those for an interrupted series. A bare TOML year int canonicalizes to
+  its token string. `"_default"` and any unbounded "all periods" sentinel are rejected:
+  an edition is what makes coverage computable. `edition_bounds()` expands an edition
+  into inclusive ISO `(lo, hi)` intervals via `fqid.period_token_to_bounds`, so an
+  inventory edition and a project period expand through the same grammar.
+- **Zero or more mappings per column.** A mapping names the 3-part variant coordinate,
+  the 3-segment variable binding FQID, and the nullable canonical `representation` (a
+  join discriminator, not an output substitute). Zero mappings keep an unresolved
+  physical column in the coverage denominator without admitting or ordering it; several
+  mappings let one column serve several variants (the combined Utrikeshandel table); and
+  several tables may independently map to the same logical coordinate.
+
+**Validator.** `load_inventory(path)` parses the TOML and returns the frozen Pydantic
+models (`DeliveryInventory` → `InventoryTable` → `InventoryColumn` → `ColumnMapping`),
+or fails fast with `RegMetaError` — `inventory_toml_unreadable` / `inventory_invalid`,
+both `EXIT_CONFIG` (10), the same configuration class the curation TOMLs use. Errors
+name the offending table and column by identifier rather than array index
+(`table['LISA_Individ_2019.csv'].column['Kon'].mapping[0].variable`), because the author
+is editing a TOML file where an index is not a locator. Structural rules beyond field
+shape: unknown keys are rejected (`extra="forbid"`), a table identifier appears once (an
+identifier is exact and carries exactly one edition), a physical column is declared once
+per table with all of its mappings under it, and a mapping's variable must belong to its
+`register_variant`'s `provider/register`. Inventory ↔ reg_meta DB consistency (does each
+mapping's `(register_variant, variable, representation)` resolve against the flavored
+DB?) is a standing build/CI gate, deliberately NOT part of this structural pass — the
+validator is pure domain code with no DB access.
+
+The models are `reg_schema`-free: the contract needs only reg_meta's own period grammar
+and FQID parser, so the `reg_meta → reg_schema` dependency §12 sanctions for the shared
+materializer is not taken yet. `EditionRange` mirrors reg_schema's `PeriodRange` wire
+shape (`from`/`to`, `from_` attr with a `"from"` alias); the two converge when that
+dependency lands.
+
 ## Value sets are year-projected
 
 `Vardemangder.csv` is the historical union — every code that ever applied to a variable
