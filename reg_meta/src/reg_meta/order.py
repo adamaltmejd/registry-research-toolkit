@@ -27,8 +27,9 @@ Pipeline, per `sources[*].bindings[*]` in project declaration order:
    representation)` AND its physical edition overlaps THAT slice; the edition
    contributes only its overlap. A mapping that OMITS `representation` is §12's
    single-representation arm: it matches only a binding that resolves to one
-   canonical representation across the request, and blocks otherwise rather than
-   claiming one column is two representations. Any subperiod of the
+   canonical representation across the request; otherwise an overlapping table
+   carrying one blocks the order rather than claiming one column is two
+   representations (a table that cannot overlap is inert). Any subperiod of the
    availability-clipped request left uncovered blocks the WHOLE order with the
    exact gaps — overlap alone never yields a partial manifest.
 4. **Emission.** Every matching table is emitted whole (v1 has no table chooser
@@ -296,15 +297,21 @@ def _gaps(
     merged_cover = _merge(covered)
     for lo, hi in whole:
         cursor = lo
+        complete = False
         for c_lo, c_hi in merged_cover:
             if c_hi < cursor or c_lo > hi:
                 continue
             if c_lo > cursor:
                 out.append((cursor, _prev_day(c_lo)))
-            cursor = max(cursor, _next_day(c_hi))
-            if cursor > hi:
+            if c_hi >= hi:
+                # Coverage reached the upper bound: complete, and no successor
+                # arithmetic — `_next_day` saturates at the open-ended
+                # `9999-12-31` sentinel, which would leave a phantom zero-width
+                # gap on a fully covered open-ended interval.
+                complete = True
                 break
-        if cursor <= hi:
+            cursor = _next_day(c_hi)
+        if not complete and cursor <= hi:
             out.append((cursor, hi))
     return tuple(out)
 
@@ -625,6 +632,16 @@ def _materialize_binding(
     if not unqualified_ok:
         blocked_by_unqualified = False
         for table in inventory.tables:
+            # §12: a table matches a slice only where its edition overlaps, and
+            # overlap elsewhere in the request is not a match. A table that
+            # cannot reach this binding's clipped request contributes nothing,
+            # so its unqualified mapping is inert and must not block either.
+            if not any(
+                _intersect(bounds, window)
+                for bounds in edition_bounds(table.edition)
+                for window in availability
+            ):
+                continue
             for inv_column in table.columns:
                 if not _has_unqualified_mapping(
                     inv_column, source.register_variant, parsed

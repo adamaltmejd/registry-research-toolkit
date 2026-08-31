@@ -132,6 +132,24 @@ variable = "scb/lisa/kon"
 """
 
 
+# The qualified fixture plus a 2021 table whose single `yrke` column is
+# unqualified. It lies outside every request below, so it can never contribute a
+# column — and therefore must never block a representation-changing binding.
+INERT_UNQUALIFIED_INVENTORY = (
+    FIXTURE_INVENTORY
+    + """
+[[table]]
+id = "LISA_Individ_2021.csv"
+edition = 2021
+[[table.column]]
+name = "Yrke"
+[[table.column.mapping]]
+register_variant = "scb/lisa/individer-15plus"
+variable = "scb/lisa/yrke"
+"""
+)
+
+
 def _inventory(tmp_path: Path, text: str) -> DeliveryInventory:
     path = tmp_path / "inventory.toml"
     path.write_text(text, encoding="utf-8")
@@ -439,6 +457,28 @@ class TestBlockingFindings:
         assert "Ssyk3" in result.findings[0].message
         assert "Ssyk4" in result.findings[0].message
 
+    def test_out_of_period_unqualified_mapping_never_blocks(
+        self, conn, tmp_path
+    ) -> None:
+        # The unqualified `yrke` column sits in a 2021 table, outside the
+        # 2018–2020 request: it cannot match any slice, so it cannot make the
+        # representation change ambiguous either.
+        result = materialize_order(
+            _project("scb/lisa/yrke"),
+            _inventory(tmp_path, INERT_UNQUALIFIED_INVENTORY),
+            conn,
+        )
+
+        assert result.findings == ()
+        assert result.manifest is not None
+        assert [
+            (e.logical.representation, e.physical.table)
+            for e in result.manifest.entries
+        ] == [
+            ("Ssyk3", "LISA_Individ_2018.csv"),
+            ("Ssyk4", "LISA_Individ_2019-2020.csv"),
+        ]
+
     def test_unqualified_mapping_serves_a_single_representation(
         self, conn, tmp_path
     ) -> None:
@@ -564,3 +604,22 @@ class TestBlockingFindings:
 
         assert result.manifest is not None
         assert [e.physical.column for e in result.manifest.entries] == ["Ssyk4"]
+
+
+class TestIntervalAlgebra:
+    def test_coverage_reaching_the_open_ended_sentinel_leaves_no_gap(self) -> None:
+        # `_next_day` saturates at the open-ended sentinel, so the coverage gate
+        # must recognise "reached the upper bound" directly rather than by
+        # stepping past it — otherwise a fully covered open-ended interval
+        # reports a phantom zero-width gap.
+        from reg_meta.order import _gaps
+
+        whole = (("2018-01-01", "9999-12-31"),)
+
+        assert _gaps(whole, [("2018-01-01", "9999-12-31")]) == ()
+        assert _gaps(whole, [("2018-01-01", "2019-12-31")]) == (
+            ("2020-01-01", "9999-12-31"),
+        )
+        assert _gaps(whole, [("2019-01-01", "9999-12-31")]) == (
+            ("2018-01-01", "2018-12-31"),
+        )

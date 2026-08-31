@@ -761,10 +761,12 @@ Per `sources[*].bindings[*]`, in project declaration order:
    only a binding that resolves to ONE canonical representation across the request. When
    the representation changed, an unqualified mapping cannot say which slice its column
    is, so it blocks (`mapping_ambiguous`) instead of letting one physical column claim
-   two canonical representations. Any subperiod of the availability-clipped request left
-   uncovered blocks the WHOLE order with the exact gap (`coverage_gap`), and a slice no
-   mapping serves blocks with `mapping_missing`. Overlap alone never buys a partial
-   manifest.
+   two canonical representations — but only from a table whose edition overlaps the
+   clipped request, since a table that cannot overlap never contributes a column and so
+   cannot make anything ambiguous. Any subperiod of the availability-clipped request
+   left uncovered blocks the WHOLE order with the exact gap (`coverage_gap`), and a
+   slice no mapping serves blocks with `mapping_missing`. Overlap alone never buys a
+   partial manifest.
 4. **Emission.** Every matching table is emitted whole — v1 has no table chooser and no
    row filter (the §12 `simplify:` stands, with SWECOV's
    one-large-SQL-table-per-register delivery as the upgrade trigger). Entries preserve
