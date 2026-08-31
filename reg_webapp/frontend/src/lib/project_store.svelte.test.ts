@@ -1272,4 +1272,45 @@ describe("a blocked order (§12)", () => {
     expect(projectStore.requestError).toContain("too large");
     expect(projectStore.orderFindings).toEqual([]);
   });
+
+  it("discards a blocked-order 422 that lands after a mid-flight draft edit", async () => {
+    // A block belongs to the draft that was POSTed. If the researcher edits while
+    // the request is in flight, the 422's findings name sources and variables the
+    // current draft may no longer have — the panel would locate them against cards
+    // that moved, and the gate would close over a draft nothing has judged. Same
+    // generation guard the auto-validate path uses (#994).
+    let resolveFetch: (v: unknown) => void = () => {};
+    stubFetch(
+      () =>
+        new Promise((res) => {
+          resolveFetch = res;
+        }),
+    );
+    projectStore.newProject(SEED);
+    const pending = projectStore.downloadOrder();
+    // Edit mid-flight → setDraft swaps the draft object + bumps the generation.
+    projectStore.updateField("name", "edited mid-flight");
+
+    resolveFetch({
+      ok: false,
+      status: 422,
+      json: async () => ({
+        detail: "order blocked by 1 finding: …",
+        findings: [
+          {
+            code: "variable_unresolved",
+            message: "scb/lisa/ghostvar does not resolve",
+            source: "lisa",
+            variable: "scb/lisa/ghostvar",
+            period: null,
+          },
+        ],
+      }),
+      headers: new Headers(),
+    });
+    await pending;
+
+    expect(projectStore.requestError).toBeNull();
+    expect(projectStore.orderFindings).toEqual([]);
+  });
 });

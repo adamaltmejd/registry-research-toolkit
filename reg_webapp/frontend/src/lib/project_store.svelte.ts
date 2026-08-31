@@ -269,8 +269,8 @@ let validationInFlight = false;
  * already in flight; run one trailing validation once the current request settles. */
 let validationQueued = false;
 
-/** Monotonic draft generation used to reject stale validation responses even when a
- * future edit reuses the same object shape. */
+/** Monotonic draft generation used to reject stale `/validate` and `/order`
+ * responses even when a future edit reuses the same object shape. */
 let validationGeneration = 0;
 
 /** The dirty flag: the draft has diverged from the last download. */
@@ -627,12 +627,21 @@ export const projectStore = {
     if (draft == null) {
       return;
     }
+    // Snapshot the draft + generation like `validate` does: a mid-flight edit
+    // REPLACES the draft object and bumps the generation, so a 422 that lands
+    // afterwards describes a superseded draft. Its findings point at sources and
+    // variables the researcher may already have fixed or removed — discard them
+    // rather than banner a block the current draft never earned.
+    const target: ProjectData = draft;
+    const targetGeneration = validationGeneration;
     orderBusy = true;
     setRequestError(null);
     try {
-      await downloadOrderManifest(draft as ProjectDataBody);
+      await downloadOrderManifest(target as ProjectDataBody);
     } catch (e) {
-      setRequestError(errMessage(e), orderFindingsFromError(e));
+      if (draft === target && validationGeneration === targetGeneration) {
+        setRequestError(errMessage(e), orderFindingsFromError(e));
+      }
     } finally {
       orderBusy = false;
     }
