@@ -289,3 +289,20 @@ follow-up trims. Observations:
 - Not yet knowable: whether the unmet `reviewer:claude` requirement blocks admission
   globally or only ui-workflow tickets. Nothing is ready on the board; the next
   default-workflow ticket settles it (rollback if global: comment out the ui profile).
+
+## 2026-08-31 — Y-11 trial: admission scoping settled, one watch papercut
+
+- Filed Y-11 (light, doc-only) specifically to test whether the unmet `reviewer:claude`
+  requirement blocks admission globally. **It does not**: the light-workflow ticket was
+  admitted within seconds and ran to a clean landing while preflight still reports
+  `not ready` on `reviewer:claude`. Per-profile requirement scoping is the right call —
+  please pin it as contract, not accident.
+- Worker behavior was exemplary: the ticket carried a conditional ("mirror the edit iff
+  the `.agents` mirror exists"), the mirror does not exist, and the worker took the skip
+  branch correctly instead of inventing the file. 23s of worker time, $0.33, gates 3/3,
+  landed on first read.
+- Papercut: the `yard status --watch --since <cursor>` armed before admission exited 0
+  with an EMPTY output — no wake line, no quiet line — although a wake clearly happened
+  (cursor 5519→5685, approval-needed raised). A watch that exits without writing the
+  line it exited for leaves the operator to re-read the board cold; if it delivered the
+  wake somewhere, it wasn't stdout.
