@@ -16,28 +16,35 @@ accessibility contract. This is a post-implementation reviewer skill, not an aut
 or design-planning skill. Use `reg-webapp-frontend-design` before building new UI; use
 this skill after implementation for the rendered visual gate.
 
-## Registry PR Gate Contract
+## Who Runs This, And As What
 
-For rendered-output PRs, run this skill in a clean subagent/session before the lead
-records the visual gate. The reviewer pass owns screenshot/render inspection and is the
-required visual evidence. Invoke this repo-local skill by its full name,
+Two consumers, one contract. Invoke this repo-local skill by its full name,
 `reg-webapp-design-reviewer`; do not substitute a generic `web-design-reviewer` skill.
 
-Required output for the PR gate:
+- **In-lane self-check (authoring layer).** A yard implementation worker whose ticket
+  changes rendered UI runs this skill before declaring its candidate — in a clean
+  subagent whose prompt is only the changed routes, the diff, and this skill, so the
+  judgment does not inherit the implementing session's rationalizations. The worker
+  fixes or explicitly dismisses every finding; the subagent reports, it does not
+  rewrite.
+- **Review seat (judgment layer).** Yard's `ui` review profile carries a claude reviewer
+  instructed to run this skill in the operator environment. Its findings enter the
+  review report with priorities; blocking findings drive repair rounds. This is the
+  independent pass — the self-check above does not substitute for it.
+
+In both seats the honesty rule is absolute: if the app fails to boot or screenshots
+cannot be produced, that is a `P1` finding saying exactly that. Never report a clean
+result without screenshot evidence. Manual spot screenshots, `bun` checks, or a
+non-rendered code skim do not substitute for this pass.
+
+Required output in either seat:
 
 - changed route(s) or URL(s) reviewed;
 - exact render command or preview URL used;
 - viewports tested;
-- screenshots or render proof inspected;
+- screenshots or render proof inspected (local paths);
 - findings grouped by severity;
-- every finding fixed or dismissed with a reason;
-- a final reviewer result suitable for the lead to copy, with the screenshots, into the
-  PR's local merge-gate directory (`merge-gates/pr-<N>/` under the
-  `$XDG_STATE_HOME/registry-research-toolkit` root, default
-  `~/.local/state/registry-research-toolkit/`).
-
-Manual screenshots, `bun` checks, or a lead-agent visual skim do not substitute for this
-reviewer pass.
+- every finding fixed or dismissed with a reason.
 
 ## Inputs
 
@@ -55,8 +62,9 @@ Common routes:
 - `/project`
 - `/doc/<identifier>`
 
-If the rendered behavior depends on unreleased DB content, ask the lead for the scratch
-DB directory or use the PR's build-db output and pass it as `REG_META_DB`.
+If the rendered behavior depends on unreleased DB content, get the scratch DB directory
+from the ticket or the build-db output and pass it as `REG_META_DB`; otherwise the
+dev.sh helpers fetch the released DB themselves.
 
 ## Rendering
 
@@ -71,11 +79,10 @@ REG_META_DB="$db_dir" bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh shot 
 Use `shot --all --viewport 1920x1080` for responsive screenshots unless the route is
 demonstrably desktop-only. Use `smoke` only as an additive broad-flow check for catalog
 browsing or app-shell changes; smoke alone captures the default desktop viewport and is
-not enough for the formal visual gate. Screenshots land in `/tmp/reg-webapp-shots/`;
-include these local paths and a concise proof payload in the reviewer report. The lead
-must copy that reviewer result and its screenshots into the PR's merge-gate directory
-before marking the merge gate ready — `/tmp/reg-webapp-shots/` is purged, so paths there
-are not durable evidence. Never attach evidence to the PR or commit it to the branch.
+not enough for the formal visual review. Screenshots land in `/tmp/reg-webapp-shots/`;
+include these local paths and a concise proof payload in the report. `/tmp` is purged,
+so the report's route/viewport/element descriptions must stand on their own — never
+commit screenshots to the branch.
 
 Browser automation should inspect screenshots and, when available, DOM/accessibility
 snapshots and console output. Do not rely on `bun run lint/check/test/build`; those do
@@ -135,9 +142,10 @@ Screenshots alone cannot catch token bypass, so also read the PR's frontend diff
 
 Mark blockers as `P1`, meaningful UX defects as `P2`, and minor polish as `P3`.
 
-If acting as the reviewer subagent, report findings to the lead; do not silently rewrite
-broad UI. If explicitly responsible for fixes, make the smallest source change, follow
-existing components/tokens, then re-render the affected route and update the report.
+In the self-check subagent or the review seat, report findings; do not silently rewrite
+broad UI. If explicitly responsible for fixes (the implementing worker acting on its
+subagent's report), make the smallest source change, follow existing components/tokens,
+then re-render the affected route and update the report.
 
 Dismiss a finding only with a concrete reason, such as "existing behavior outside this
 PR", "intended clipping", or "route not affected by this diff".
@@ -149,12 +157,11 @@ PR", "intended clipping", or "route not affected by this diff".
 
 ## Summary
 
-- PR/branch: <PR number or branch>
+- Ticket/branch: <ticket id, branch, or diff reviewed>
 - Routes: <reviewed route(s)>
 - Render command or URL: <command/URL>
 - Viewports: <tested viewports>
 - Local screenshots inspected: <paths under /tmp/reg-webapp-shots/ or other local paths>
-- Merge-gate proof: <files copied to the PR's merge-gate directory, or pending lead copy>
 - Result: <pass / findings fixed / findings dismissed / blocked>
 
 ## Findings
@@ -168,10 +175,8 @@ PR", "intended clipping", or "route not affected by this diff".
 - Recommendation: <smallest practical fix>
 - Status: <fixed / dismissed with reason / needs owner>
 
-## Final Gate Note
+## Final Note
 
 reg-webapp-design-reviewer: <pass / blocked>; routes=<routes>; viewports=<viewports>;
-local_screenshots=<paths>;
-gate_proof=<files in the merge-gate directory or pending lead copy>;
-findings=<none / fixed / dismissed>.
+local_screenshots=<paths>; findings=<none / fixed / dismissed>.
 ```

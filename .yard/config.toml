@@ -69,7 +69,7 @@ inactivity_timeout_minutes = 0
 total_work_timeout_minutes = 360
 context_limit_tokens = 300000
 compaction_threshold_share = 0.7
-instructions = "Smallest safe change, in the ticket's scope only. Follow the repo ladder (no change > existing capability > stdlib > installed dep > minimal new code > new dep) and prefer deletion to addition: pre-v1 with no external users, break and delete freely — no compat shims, migration code, deprecation wrappers, or speculative options/abstractions no ticket asked for. Never simplify away the load-bearing guards: PII/MONA confinement, k-anonymity/disclosure control, determinism/byte-identity, JSON-contract validation, fail-fast. If the work grows past the ticket, do less and file a proposal instead."
+instructions = "Smallest safe change, in the ticket's scope only. Follow the repo ladder (no change > existing capability > stdlib > installed dep > minimal new code > new dep) and prefer deletion to addition: pre-v1 with no external users, break and delete freely — no compat shims, migration code, deprecation wrappers, or speculative options/abstractions no ticket asked for. Never simplify away the load-bearing guards: PII/MONA confinement, k-anonymity/disclosure control, determinism/byte-identity, JSON-contract validation, fail-fast. If the work grows past the ticket, do less and file a proposal instead. If the ticket changes rendered reg_webapp frontend UI: load the repo skill reg-webapp-frontend-design before authoring, and before declaring the candidate run reg-webapp-design-reviewer in a clean subagent and fix or explicitly dismiss what it finds."
 
 # Plan-first tickets need the planning role. Without it, such a ticket waits
 # for the operator instead of planning itself.
@@ -215,6 +215,19 @@ max_priority = "P3"
 # identity — model/effort stay what the review is recorded against.
 codex_speed = "fast"
 
+# The ui profile is the default panel plus an instructed design reviewer
+# (Y-488): the claude reviewer runs the repo's rendered-UI review skill in the
+# operator environment, where the app can boot and screenshots are real.
+# Selected via [workflows.ui] on tickets that change rendered frontend UI.
+[checks.review.profiles.ui]
+reviewers = [
+  "codex:gpt-5.6-sol:high",
+  { reviewer = "claude:claude-fable-5:high", instructions = "This candidate changes reg_webapp frontend UI. Load .claude/skills/reg-webapp-design-reviewer/SKILL.md from the checkout and follow it: boot the app with the run-reg-webapp dev.sh one-shot helpers, screenshot the changed routes at the checklist viewports, and judge the rendered result plus the frontend diff against the skill's checklist (layout, responsiveness, accessibility visuals, design-system/token discipline, component reuse). File visual defects as findings with route, viewport, and element. If the app fails to boot or screenshots cannot be produced, file a P1 finding saying exactly that — never report a clean result without screenshot evidence." },
+]
+blocking = "P1"
+max_priority = "P3"
+codex_speed = "fast"
+
 # A workflow is a named binding of the knobs above, never a step language. It
 # states three: role names the worker role its lanes run as, review names one
 # of the profiles above -- or "none" for no review at all -- and checks is
@@ -226,6 +239,14 @@ codex_speed = "fast"
 [workflows.default]
 role = "implementation"
 review = "default"
+checks = "all"
+
+# The ui workflow is the default lane with the design-instructed review panel.
+# Select it when filing any ticket that changes rendered frontend UI; a
+# mis-filed ticket loses only the visual review — every gate still runs.
+[workflows.ui]
+role = "implementation"
+review = "ui"
 checks = "all"
 
 # The light workflow is the everyday lane for simple work, selected one ticket
