@@ -211,6 +211,9 @@ timeout_minutes = 30
 reviewers = ["codex:gpt-5.6-sol:high"]
 blocking = "P1"
 max_priority = "P3"
+# Fast service tier for the codex reviewers only (Y-493): a queue, not an
+# identity — model/effort stay what the review is recorded against.
+codex_speed = "fast"
 
 # A workflow is a named binding of the knobs above, never a step language. It
 # states three: role names the worker role its lanes run as, review names one
