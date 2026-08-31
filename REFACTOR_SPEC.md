@@ -180,10 +180,15 @@ network, no catalog lookup: order metadata plus provenance (steward, catalog/DB
 versions, project identity/hash) plus resolved entries, each carrying the logical
 coordinate (`provider,register,variant,variable`), the requested period, and the
 physical coordinate (`edition,table,column`). Serialization is deterministic (sorted
-keys, stable entry order). Extraction output is one UTF-8 CSV per variant + period unit
-(e.g. `LISA_Individ_2019.csv`); the naming convention is pinned in the order contract,
-not improvised by the extractor. A human-readable table rendering of the manifest may
-exist as a derived view for the executing data manager; the JSON is the contract.
+keys, stable entry order). Extraction output is one UTF-8 CSV per (variant, edition
+segment), named in **slug spelling** derived from the manifest entry (e.g.
+`lisa_individer-15plus_2019.csv`; a multi-period range segment renders `lo..hi` and
+extracts whole as one file — v1 has no row filter, so a range is never split per year).
+The naming convention is pinned in the order contract, not improvised by the extractor;
+steward display casing is not carried in the manifest (decided 2026-08-31, A-28 — re-add
+only if a steward-side consumer concretely needs display-cased filenames). A
+human-readable table rendering of the manifest may exist as a derived view for the
+executing data manager; the JSON is the contract.
 
 Rules:
 
