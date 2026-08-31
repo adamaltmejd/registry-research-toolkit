@@ -324,6 +324,17 @@ def test_rejects_unreadable_toml(tmp_path) -> None:
     assert excinfo.value.exit_code == EXIT_CONFIG
 
 
+def test_rejects_a_non_utf8_inventory(tmp_path) -> None:
+    """TOML is UTF-8 by definition; a mis-encoded file is unreadable input on
+    the documented path, not an uncaught `UnicodeDecodeError`."""
+    path = tmp_path / "inventory.toml"
+    path.write_bytes(b'version = 1\nsteward = "swecov"\n# \xff\xfe not utf-8\n')
+    with pytest.raises(RegMetaError) as excinfo:
+        load_inventory(path)
+    assert excinfo.value.code == "inventory_toml_unreadable"
+    assert excinfo.value.exit_code == EXIT_CONFIG
+
+
 def test_edition_bounds_rejects_a_non_period_token() -> None:
     with pytest.raises(FqidError):
         edition_bounds("2019-2020")

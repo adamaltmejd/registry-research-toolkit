@@ -380,12 +380,15 @@ def load_inventory(path: Path) -> DeliveryInventory:
     build/CI gate, not this structural pass."""
     try:
         raw = tomllib.loads(path.read_text(encoding="utf-8"))
-    except (OSError, tomllib.TOMLDecodeError) as exc:
+    # `UnicodeDecodeError` alongside the OSError/TOMLDecodeError pair: TOML is
+    # UTF-8 by definition, so a mis-encoded inventory is unreadable input on the
+    # same documented path — not an uncaught traceback out of `read_text`.
+    except (OSError, UnicodeDecodeError, tomllib.TOMLDecodeError) as exc:
         raise _inventory_error(
             "inventory_toml_unreadable",
             f"Could not read delivery inventory {path}: {exc}",
-            "Fix the TOML syntax (see reg_meta/DESIGN.md → Steward delivery "
-            "inventory for the format).",
+            "The inventory must be UTF-8 TOML (see reg_meta/DESIGN.md → Steward "
+            "delivery inventory for the format).",
         ) from exc
     try:
         return DeliveryInventory.model_validate(raw)
