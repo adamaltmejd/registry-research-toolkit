@@ -315,6 +315,22 @@ build_artifacts = [
   "__pycache__",
   "scripts/__pycache__",
   "scripts/tests/__pycache__",
+  # Full per-package spray from an in-clone full-suite run (enumerated from a
+  # main checkout 2026-08-31 after Y-13/1's retarget stopped on the reg_webapp
+  # one; .gitignore's `__pycache__/` classifies each as an ignored directory).
+  "reg_meta/src/reg_meta/__pycache__",
+  "reg_meta/tests/__pycache__",
+  "reg_meta_build/src/reg_meta_build/__pycache__",
+  "reg_meta_build/src/reg_meta_build/ir/__pycache__",
+  "reg_meta_build/src/reg_meta_build/sources/__pycache__",
+  "reg_meta_build/tests/__pycache__",
+  "reg_meta_build/input_data/swecov/__pycache__",
+  "reg_schema/src/reg_schema/__pycache__",
+  "reg_schema/tests/__pycache__",
+  "reg_webapp/backend/scripts/__pycache__",
+  "reg_webapp/backend/src/reg_webapp/__pycache__",
+  "reg_webapp/backend/src/reg_webapp/routes/__pycache__",
+  "reg_webapp/backend/tests/__pycache__",
   ".pytest_cache",
   ".ruff_cache",
   # Hypothesis example DB, written by in-clone property-test runs (.gitignore
