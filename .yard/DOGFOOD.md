@@ -261,3 +261,31 @@ follow-up trims. Observations:
 - `codex_speed = "fast"` on the default profile: config loaded (digest 0d1c863b3b1d),
   preflight all 9 proven. No review has run on the fast tier yet — latency/quality
   observations to follow with the next lane.
+
+## 2026-08-31 — design review wired into yard (Y-488 exercised at config level)
+
+- Built the layering settled in the design-review thread: `[checks.review.profiles.ui]` =
+  default codex panel + an instructed claude reviewer pointing at
+  `reg-webapp-design-reviewer`; `[workflows.ui]` selects it; the implementation role's
+  instructions gained the in-lane self-check clause. The Y-488 table shape
+  (`{ reviewer = "...", instructions = "..." }`) parsed and loaded first try; the
+  per-reviewer form is exactly right for one instructed reviewer beside an uninstructed
+  codex panel-mate.
+- **Preflight earned its keep again — and found a real yard bug.** With the ui profile
+  loaded, preflight demanded `reviewer:claude` and reported "no authenticated session"
+  although `claude auth status --json` in my shell says loggedIn:true. Root cause,
+  verified by env bisection + reading the source: the reviewer env is built from a
+  positive allowlist (PATH, HOME, SHELL, USER, LOGNAME, TMPDIR, TERM, TZ, LANG, LC\_\*)
+  over the **daemon's ambient env — and the daemon's own env floor is just HOME+PATH**
+  (ps eww shows nothing else). On darwin, Claude Code resolves its keychain session only
+  with USER present (`env -i HOME=… PATH=… claude auth status` → loggedIn:false; add
+  USER → true). So the allowlist names USER but the daemon has none to pass, and every
+  claude-engine reviewer run would fail auth the same way. Suggested fix: the daemon
+  keeps (or derives via getpwuid) USER/LOGNAME in its own floor — the allowlist is
+  right, the ambient it filters is too bare.
+- The probe's failure text ("run `claude auth login` as this user") is actively
+  misleading here — the user IS logged in; the session is invisible only to the daemon's
+  env. A probe that knows it is on darwin and has no USER could say so.
+- Not yet knowable: whether the unmet `reviewer:claude` requirement blocks admission
+  globally or only ui-workflow tickets. Nothing is ready on the board; the next
+  default-workflow ticket settles it (rollback if global: comment out the ui profile).
