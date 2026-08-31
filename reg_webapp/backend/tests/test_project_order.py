@@ -22,7 +22,7 @@ from __future__ import annotations
 import json
 
 import pytest
-from _steward_helpers import CLEAN_SOURCES, write_steward
+from _steward_helpers import CLEAN_SOURCES, write_global, write_steward
 from fastapi.testclient import TestClient
 from reg_meta.order import OrderManifest
 from reg_webapp.app import create_app
@@ -101,6 +101,49 @@ def test_named_steward_without_an_inventory_fails_at_boot(
 
     with (
         pytest.raises(FileNotFoundError, match="inventory.toml"),
+        TestClient(create_app()),
+    ):
+        pass
+
+
+# Well-formed, and declaring the deployment's own steward — so the only thing
+# wrong with it is that it EXISTS (see the boot guard below).
+GLOBAL_INVENTORY = """\
+version = 1
+steward = "global"
+
+[[table]]
+id = "LISA_Individ_2018.csv"
+edition = 2018
+
+[[table.column]]
+name = "Kon"
+[[table.column.mapping]]
+register_variant = "scb/lisa/individer-15plus"
+variable = "scb/lisa/kon"
+"""
+
+
+def test_global_deployment_with_an_inventory_fails_at_boot(
+    catalog_db, tmp_path, monkeypatch
+):
+    """The global deployment stays on §12's fallback UNCONDITIONALLY. Loading a
+    stray ``inventory.toml`` would silently switch it into steward-inventory
+    mode, narrowing the full universe it exists to serve down to whatever that
+    file happens to list — a mode change nobody asked for, from a file nobody
+    referenced. §12 keeps the fallback until a physical global inventory is
+    introduced deliberately, so until then the file is a misconfiguration and
+    boot says so."""
+    stewards = tmp_path / "stewards"
+    write_global(stewards)
+    (stewards / "global" / "inventory.toml").write_text(
+        GLOBAL_INVENTORY, encoding="utf-8"
+    )
+    monkeypatch.setenv("REG_WEBAPP_STEWARDS_DIR", str(stewards))
+    monkeypatch.setenv("REG_WEBAPP_STEWARD", "global")
+
+    with (
+        pytest.raises(ValueError, match="takes no delivery inventory"),
         TestClient(create_app()),
     ):
         pass

@@ -1840,15 +1840,17 @@ things:
 
 - **The deployment's inventory**, read once at boot by
   `stewards.load_delivery_inventory` from `stewards/<id>/inventory.toml` and parked on
-  `app.state.inventory`. An absent inventory is §12's global-deployment fallback
-  (`inventory=None`, taken directly by the materializer) **only for the `global`
-  deployment — the one with no steward configured**. Everything else fails startup (fail
-  fast): a NAMED steward with no inventory, a malformed inventory, or one declaring a
-  different steward than the directory it sits in. A named steward booting into the
-  fallback would reject every one of its own projects as a confusing `steward_mismatch`
-  (the fallback demands `steward == "global"`) from a server that reported itself
-  healthy — the deployment error would be deferred to, and paid by, each researcher in
-  turn.
+  `app.state.inventory`. The `global` deployment — the one with no steward configured —
+  takes §12's global-deployment fallback (`inventory=None`, handed straight to the
+  materializer) **unconditionally**; every other shape fails startup (fail fast): a
+  NAMED steward with no inventory, the `global` deployment WITH one, a malformed
+  inventory, or one declaring a different steward than the directory it sits in. A named
+  steward booting into the fallback would reject every one of its own projects as a
+  confusing `steward_mismatch` (the fallback demands `steward == "global"`) from a
+  server that reported itself healthy — the deployment error would be deferred to, and
+  paid by, each researcher in turn. Conversely, loading a stray inventory under `global`
+  would silently swap the full universe it exists to serve for whatever that file lists;
+  §12 keeps the fallback until a physical global inventory is introduced deliberately.
 - **The download**: the 200 body is `OrderManifest.to_json()` VERBATIM (the handler
   returns a raw `Response`, which FastAPI passes through without re-serializing), so the
   SPA download and `reg-meta order` hand the steward byte-identical files — §12's

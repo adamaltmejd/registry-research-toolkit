@@ -7,9 +7,10 @@ catalog_index.py). A steward is configured by ``reg_webapp/stewards/<id>/``:
 - ``steward.project_data.json`` — the catalog filter (optional). Its
   *absence* selects full-universe mode — the special ``global`` deployment.
 - ``inventory.toml`` — the steward's delivery inventory, loaded at boot for the
-  order materializer. REQUIRED for a named steward (absent → boot fails). Only
-  the ``global`` deployment may omit it, and there its *absence* selects §12's
-  global-deployment fallback (``inventory=None``).
+  order materializer. REQUIRED for a named steward (absent → boot fails), and
+  FORBIDDEN for the ``global`` deployment (present → boot fails): global takes
+  §12's global-deployment fallback (``inventory=None``) unconditionally, until a
+  physical global inventory is introduced deliberately.
 
 ``load_steward`` reads ``steward.toml`` (identity) and detects the project
 file's presence. ``load_catalog_index`` (A5.2b-i) actually parses + validates
@@ -266,14 +267,21 @@ def load_delivery_inventory(
     physical delivery topology (``reg_meta.inventory``).
 
     Returns ``None`` ONLY for the ``global`` deployment — the one with no
-    steward configured, whose absent inventory is REFACTOR_SPEC.md §12's
+    steward configured, which takes REFACTOR_SPEC.md §12's
     **global-deployment fallback**: the exact ``inventory=None``
     ``materialize_order`` takes, not a degraded mode this adapter invents.
-    DB-free, so the lifespan can read it outside the boot connection.
+    Global takes that path UNCONDITIONALLY — §12 keeps the fallback until a
+    physical global inventory is introduced deliberately, so the presence of one
+    is a misconfiguration, not a mode switch. DB-free, so the lifespan can read
+    it outside the boot connection.
 
     Fail fast (CLAUDE.md) on a misconfigured deployment, in the same posture as
     ``load_steward``'s missing-config and id-vs-directory checks:
 
+    - The ``global`` deployment WITH an ``inventory.toml`` raises ``ValueError``.
+      Loading it would silently swap that deployment out of the fallback and
+      into steward-inventory mode — narrowing the full universe it exists to
+      serve down to whatever the stray file happens to list.
     - A NAMED steward with no ``inventory.toml`` raises ``FileNotFoundError``.
       Booting it into the global fallback instead would leave every one of that
       steward's projects blocked on ``steward_mismatch`` (the fallback demands
@@ -288,16 +296,24 @@ def load_delivery_inventory(
       ``steward_mismatch``.
     """
     path = (root or _stewards_dir()) / steward.id / STEWARD_INVENTORY
-    if not path.is_file():
-        if steward.id != DEFAULT_STEWARD_ID:
-            raise FileNotFoundError(
-                f"delivery inventory not found: {path} — the {steward.id!r} "
-                "deployment must declare what it delivers before it can "
-                "materialize orders. Author the inventory (see reg_meta/DESIGN.md "
-                "→ Steward delivery inventory); only the 'global' deployment may "
-                "run without one (REFACTOR_SPEC.md §12's global fallback)."
+    if steward.id == DEFAULT_STEWARD_ID:
+        if path.is_file():
+            raise ValueError(
+                f"{path}: the {DEFAULT_STEWARD_ID!r} deployment takes no "
+                "delivery inventory — it serves reg_meta's full universe over "
+                "REFACTOR_SPEC.md §12's global-deployment fallback. Remove the "
+                "file, or move it to the named steward's directory that delivers "
+                "those tables."
             )
         return None
+    if not path.is_file():
+        raise FileNotFoundError(
+            f"delivery inventory not found: {path} — the {steward.id!r} "
+            "deployment must declare what it delivers before it can "
+            "materialize orders. Author the inventory (see reg_meta/DESIGN.md "
+            "→ Steward delivery inventory); only the 'global' deployment runs "
+            "without one (REFACTOR_SPEC.md §12's global fallback)."
+        )
     inventory = load_inventory(path)
     if inventory.steward != steward.id:
         raise ValueError(
