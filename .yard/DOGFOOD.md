@@ -235,3 +235,29 @@ follow-up trims. Observations:
 - Costs: Y-4 $1.83 · Y-5 $0.83 (light) · Y-6 $1.15 · Y-7 $1.67 · Y-8 $0.66 (light) · Y-9
   $1.60. Concurrency 2 worked; the serialization point is the operator read, not the
   machinery.
+
+## 2026-08-31 — v0.10.1 → v0.10.3 (skipped 0.10.2), codex fast tier on
+
+- Update ritual is now routine and fast: release download + SHA256 verify + `install` +
+  `yard daemon restart`. Store opened unchanged (schema 40), zero migration friction
+  across two versions at once.
+- **Y-488 (0.10.2) is our design-review thread answered point-for-point** — per-reviewer
+  `instructions` on a profile entry, in the per-reviewer (not per-profile) form we asked
+  for, with the 4 KiB cap settled at config load rather than lane time. Not yet
+  exercised; will wire a `ui` profile + workflow when the first UI ticket lands.
+- Cross-repo coupling seam handled well: the release notes named the exact agent-skills
+  commit (fe73c38) the new report contract pairs with, and preflight's autoreview probe
+  now demands `--codex-speed` exactly because our profile names it — the usage line
+  visibly grew after the config landed. Requirement-follows-config is the right shape.
+- **`yard sync` flagged the stale daemon config itself** ("configuration differs from
+  canonical main; run `yard daemon restart`") with the restart recipe inline — caught me
+  between commit and restart. Excellent.
+- Papercut (mine, but the surface allows it): editing `.yard/config.toml` in the working
+  tree and restarting does nothing — the daemon reads canonical. The restart output
+  prints the config digest, but nothing says "your working tree differs from what I
+  loaded" at restart time; only the later `yard sync` did. A one-line warning on
+  `daemon restart` when the working config differs from the loaded one would close the
+  gap sync happened to catch.
+- `codex_speed = "fast"` on the default profile: config loaded (digest 0d1c863b3b1d),
+  preflight all 9 proven. No review has run on the fast tier yet — latency/quality
+  observations to follow with the next lane.
