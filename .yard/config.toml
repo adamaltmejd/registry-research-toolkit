@@ -51,18 +51,20 @@ dockerfile = ".yard/Dockerfile"
 # better default it looks like -- a repair round reasons better from a current
 # brief than from stale plans and old tool output it is still carrying. Raise it
 # if your work genuinely needs a bigger window.
-# The profile below is quality-first: the strongest model this backend offers,
-# at high effort, with subagents on. It is the setting for a ticket whose
-# difficulty you cannot bound in advance. Simple work you still mean to land is
-# what the light role and the light workflow further down are for, and they are
-# selected per ticket, so this dial stays where hard work needs it. Yard meters
-# no cost, enforces no budget, and quotes no price; every model turn here is
-# billed by the provider whose CLI ran it, and their usage reporting is the only
-# account of it.
+# The profile below is quality-first: Opus at xhigh effort, with subagents on.
+# Fable is the stronger model, but implementation is by far this board's
+# highest-token role, and xhigh -- the documented sweet spot for coding and
+# agentic work -- earns more here than Fable's 2x per-token price would. It is
+# the setting for a ticket whose difficulty you cannot bound in advance. Simple
+# work you still mean to land is what the light role and the light workflow
+# further down are for, and they are selected per ticket, so this dial stays
+# where hard work needs it. Yard meters no cost, enforces no budget, and quotes
+# no price; every model turn here is billed by the provider whose CLI ran it,
+# and their usage reporting is the only account of it.
 [roles.implementation]
 backend = "claude"
 model = "claude-opus-5"
-effort = "high"
+effort = "xhigh"
 access = "writable"
 tools = { subagents = true }
 inactivity_timeout_minutes = 0
@@ -84,7 +86,7 @@ instructions = "Smallest safe change, in the ticket's scope only. Follow the rep
 # scaffold reads as a contract and size is a signal read after the fact.
 [roles.planning]
 backend = "claude"
-model = "claude-fable-5"
+model = "claude-fable-5-1"
 effort = "high"
 instructions = "Plan against this repository's CLAUDE.md conventions and each package's DESIGN.md; name the package(s) each ticket touches. This project is shedding overengineering: delete or defer behavior before splitting it, and split only what is independently useful — answer a frightening size by shrinking the scope, never by subdividing it into a backlog. Every ticket names its consumer and the observable behavior they get. Problems that have not happened are not requirements, and this single-maintainer research tool is not an adversarial environment."
 
@@ -92,7 +94,7 @@ instructions = "Plan against this repository's CLAUDE.md conventions and each pa
 # the implementation role. Without it, the lane stops for the operator.
 [roles.conflict]
 backend = "claude"
-model = "claude-fable-5"
+model = "claude-opus-5"
 effort = "high"
 access = "writable"
 tools = { subagents = true }
@@ -222,7 +224,7 @@ codex_speed = "fast"
 [checks.review.profiles.ui]
 reviewers = [
   "codex:gpt-5.6-sol:high",
-  { reviewer = "claude:claude-fable-5:high", instructions = "This candidate changes reg_webapp frontend UI. Load .claude/skills/reg-webapp-design-reviewer/SKILL.md from the checkout and follow it: boot the app with the run-reg-webapp dev.sh one-shot helpers, screenshot the changed routes at the checklist viewports, and judge the rendered result plus the frontend diff against the skill's checklist (layout, responsiveness, accessibility visuals, design-system/token discipline, component reuse). File visual defects as findings with route, viewport, and element. If the app fails to boot or screenshots cannot be produced, file a P1 finding saying exactly that — never report a clean result without screenshot evidence." },
+  { reviewer = "claude:claude-opus-5:high", instructions = "This candidate changes reg_webapp frontend UI. Load .claude/skills/reg-webapp-design-reviewer/SKILL.md from the checkout and follow it: boot the app with the run-reg-webapp dev.sh one-shot helpers, screenshot the changed routes at the checklist viewports, and judge the rendered result plus the frontend diff against the skill's checklist (layout, responsiveness, accessibility visuals, design-system/token discipline, component reuse). File visual defects as findings with route, viewport, and element. If the app fails to boot or screenshots cannot be produced, file a P1 finding saying exactly that — never report a clean result without screenshot evidence." },
 ]
 blocking = "P1"
 max_priority = "P3"
