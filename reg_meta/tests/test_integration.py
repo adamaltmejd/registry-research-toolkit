@@ -21,10 +21,25 @@ pytestmark = pytest.mark.integration
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 
+# Both external images carry a readable exact tag PLUS its immutable multi-arch
+# manifest digest, matching the workspace baseline (reg_webapp/Dockerfile,
+# .yard/Dockerfile): python 3.14.7 and uv 0.12.6. Floating `python:3.14-slim` /
+# `uv:latest` made this test drift with whatever uv shipped that week, which is
+# how the workspace-source rejection below landed as a surprise failure; bump
+# both halves deliberately, with the rest of the baseline.
+#
+# `--no-sources` makes uv ignore the root pyproject's `[tool.uv.sources]` and
+# resolve reg_meta's dependencies from the registry instead. That IS this test's
+# boundary: the local reg_meta source must install the way a published-package
+# consumer gets it. The root pyproject stays in the context precisely so the
+# install is proven to hold in the presence of the workspace config — the answer
+# to `reg-schema = { workspace = true }` is to ignore the source, not to copy
+# reg_schema in, which would install the local tree and hide whether reg_meta's
+# published metadata resolves at all.
 DOCKERFILE = textwrap.dedent("""\
-    FROM python:3.14-slim
+    FROM python:3.14.7-slim-bookworm@sha256:9ab8d9c8514b44f90cf0029dd42fdd7e9e211e639c8b995304cc04568dee900f
 
-    COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
+    COPY --from=ghcr.io/astral-sh/uv:0.12.6@sha256:88bc6eb1ccd4b82efd0e1b530caffabddf50dc2bf612e66c14ea25b8ee8a4d3d /uv /usr/local/bin/uv
 
     WORKDIR /src
     COPY . .
@@ -32,7 +47,7 @@ DOCKERFILE = textwrap.dedent("""\
     RUN uv venv /opt/venv
     ENV VIRTUAL_ENV=/opt/venv
     ENV PATH="/opt/venv/bin:$PATH"
-    RUN uv pip install "./reg_meta"
+    RUN uv pip install --no-sources "./reg_meta"
 """)
 
 IMAGE_TAG = "reg-meta-integration-test"
