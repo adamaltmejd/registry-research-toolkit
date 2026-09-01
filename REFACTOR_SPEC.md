@@ -156,7 +156,22 @@ Each physical column has zero or more semantic mappings. A mapping names
 it corresponds to. Zero mappings keep an unresolved physical column in the coverage
 denominator without admitting or ordering it. Several mappings let one physical
 table/column serve multiple register variants (the existing combined Utrikeshandel table
-does); several tables may independently map to the same logical coordinate.
+does); several tables may map the same logical coordinate over **disjoint** editions
+(the ordinary annual series).
+
+**One-to-one resolution invariant (ratified 2026-09-01).** Every admitted
+`(register_variant, variable, representation, period)` cell resolves to exactly **one**
+physical `(table, column)` — the extraction tool never chooses between sources.
+Inventory validation (and therefore the compiled steward artifact's build) **errors**
+whenever two mappings could serve the same cell: same variant + variable, same
+representation — where a `null` representation conflates with any explicit one, since
+`null` means "the concept's single representation" — and overlapping editions, whether
+across tables or across columns of one table. The inventory describes **current holdings
+only**: a superseded delivery (a cumulative re-delivery replacing an earlier snapshot,
+e.g. the dated `FHM_NVR_Covid*` series) is discarded at curation, and this validation
+error is the supersession worklist — the generator must fail for review on each conflict
+rather than auto-picking a survivor (a filename date is not proof of supersession).
+Zero-column cells are not errors; they are simply not admitted.
 
 The public, version-controlled inventory is the steward source of truth and is compiled
 into the released steward artifact. Derive exact edition-aware admission, coverage
