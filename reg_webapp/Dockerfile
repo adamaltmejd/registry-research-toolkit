@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:1.7
+# syntax=docker/dockerfile:1.26
 
 # reg_webapp deployment image (REFACTOR_SPEC.md §6.5 — Deployment).
 #
@@ -30,7 +30,7 @@
 # reverse proxy to serve. This image bakes dist/ at /opt/reg_webapp/spa so a
 # single-container deploy can point any static server at it; the production edge
 # (Cloudflare) does the deep-link → index.html rewrite.
-FROM oven/bun:1.3.14-alpine AS frontend
+FROM oven/bun:1.4.0-alpine AS frontend
 
 WORKDIR /build/frontend
 
@@ -61,8 +61,8 @@ RUN bun run gen:types && bun run build
 # make hand-built download URLs fragile. A steward flavor then replaces only
 # `reg_meta.db` from a private zstd URL; `reg_meta_docs.db` stays the public
 # release asset for the same tag.
-FROM python:3.14.5-slim-bookworm AS regmeta-db
-COPY --from=ghcr.io/astral-sh/uv:0.11.23 /uv /usr/local/bin/uv
+FROM python:3.14.7-slim-bookworm AS regmeta-db
+COPY --from=ghcr.io/astral-sh/uv:0.12.6 /uv /usr/local/bin/uv
 
 ENV UV_LINK_MODE=copy \
     UV_NO_INSTALLER_METADATA=1
@@ -252,8 +252,8 @@ EOF
 # matches) and copy a version-pinned uv binary off its official image. uv's own
 # combined `uv:<ver>-python<x>-bookworm-slim` tags don't pin the uv version and
 # python jointly the way we need, so we compose the pin ourselves.
-FROM python:3.14.5-slim-bookworm AS backend
-COPY --from=ghcr.io/astral-sh/uv:0.11.23 /uv /usr/local/bin/uv
+FROM python:3.14.7-slim-bookworm AS backend
+COPY --from=ghcr.io/astral-sh/uv:0.12.6 /uv /usr/local/bin/uv
 
 # Deterministic install: bytecode-compile ahead of time, copy (not symlink) into
 # .venv so the venv is self-contained when copied to the runtime stage.
@@ -292,7 +292,7 @@ RUN uv sync --frozen --no-dev --package reg-webapp
 # python:slim (no uv) — runtime needs only the interpreter + the baked .venv.
 # Pinned to the same 3.14 minor the backend stage built against so the venv's
 # absolute interpreter path resolves.
-FROM python:3.14.5-slim-bookworm AS runtime
+FROM python:3.14.7-slim-bookworm AS runtime
 
 # Non-root runtime user (the API needs no write access to anything it ships).
 RUN groupadd --system app && useradd --system --gid app --home /app app

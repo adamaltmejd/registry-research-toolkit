@@ -28,8 +28,10 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@v7.0.0
-      - uses: astral-sh/setup-uv@v8.2.0
+      - uses: actions/checkout@v7.0.1
+      - uses: astral-sh/setup-uv@v10.0.1
+        with:
+          version: "0.12.6"
       - run: uv sync --frozen
       # Both opt-in flags: --run-integration (all Docker tests) and --run-release
       # (the subset that downloads a published release asset). Serial, NOT

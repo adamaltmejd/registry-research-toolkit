@@ -17,8 +17,10 @@ jobs:
       contents: read
       id-token: write
     steps:
-      - uses: actions/checkout@v7.0.0
-      - uses: astral-sh/setup-uv@v8.2.0
+      - uses: actions/checkout@v7.0.1
+      - uses: astral-sh/setup-uv@v10.0.1
+        with:
+          version: "0.12.6"
 
       # reg_meta_build ships no release assets (the prebuilt reg_meta.db /
       # reg_meta_docs.db assets attach to the `reg_meta` release, not this

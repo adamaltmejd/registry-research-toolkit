@@ -17,8 +17,10 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7.0.0
-      - uses: astral-sh/setup-uv@v8.2.0
+      - uses: actions/checkout@v7.0.1
+      - uses: astral-sh/setup-uv@v10.0.1
+        with:
+          version: "0.12.6"
       - run: uv sync --frozen
       - run: uv run ruff check
       - run: uv run ruff format --check
@@ -33,21 +35,25 @@ jobs:
       # deliberately/frequently. Baseline triage landed (scripts/tests excluded,
       # structural.py validator-narrow noise suppressed via [tool.ty.overrides]
       # in pyproject.toml); the check is now blocking.
-      - run: uvx --from ty==0.0.72 ty check
+      - run: uvx --from ty==0.0.74 ty check
 
   check-versions:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7.0.0
-      - uses: astral-sh/setup-uv@v8.2.0
+      - uses: actions/checkout@v7.0.1
+      - uses: astral-sh/setup-uv@v10.0.1
+        with:
+          version: "0.12.6"
       - run: uv sync --frozen
       - run: bash scripts/check_versions.sh
 
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7.0.0
-      - uses: astral-sh/setup-uv@v8.2.0
+      - uses: actions/checkout@v7.0.1
+      - uses: astral-sh/setup-uv@v10.0.1
+        with:
+          version: "0.12.6"
       - run: uv sync --frozen
       - run: uv run python -m pytest -m "not integration"
 
@@ -56,8 +62,8 @@ jobs:
     outputs:
       webapp: ${{ steps.filter.outputs.webapp }}
     steps:
-      - uses: actions/checkout@v7.0.0
-      - uses: dorny/paths-filter@v4.0.1
+      - uses: actions/checkout@v7.0.1
+      - uses: dorny/paths-filter@v4.0.3
         id: filter
         with:
           filters: |
@@ -75,8 +81,10 @@ jobs:
       run:
         working-directory: reg_webapp/frontend
     steps:
-      - uses: actions/checkout@v7.0.0
+      - uses: actions/checkout@v7.0.1
       - uses: oven-sh/setup-bun@v2.2.0
+        with:
+          bun-version: "1.4.0"
       - run: bun install --frozen-lockfile
       - run: bun run check
       - run: bun run lint
@@ -86,7 +94,7 @@ jobs:
       # so the ~90 MB download is a one-time cost, not per-run.
       - name: Cache Playwright browser
         id: playwright-cache
-        uses: actions/cache@v5.0.5
+        uses: actions/cache@v6.1.0
         with:
           path: ~/.cache/ms-playwright
           key: ${{ runner.os }}-playwright-${{ hashFiles('reg_webapp/frontend/bun.lock') }}

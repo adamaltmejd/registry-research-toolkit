@@ -13,22 +13,22 @@
     "gen:types": "openapi-typescript ../backend/openapi.json -o src/lib/api-types.ts"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.5.8",
+    "@biomejs/biome": "2.5.10",
     "@sveltejs/vite-plugin-svelte": "7.3.0",
     "@typescript/native": "npm:typescript@7",
-    "@vitest/browser-playwright": "4.1.10",
+    "@vitest/browser-playwright": "4.1.11",
     "fake-indexeddb": "6.2.5",
     "jsdom": "30.0.1",
     "openapi-typescript": "7.13.0",
     "playwright": "1.62.1",
-    "svelte": "5.56.9",
+    "svelte": "5.56.10",
     "svelte-check": "4.7.6",
     "typescript": "~6.0.3",
-    "vite": "8.2.1",
-    "vitest": "4.1.10",
+    "vite": "8.2.2",
+    "vitest": "4.1.11",
     "vitest-browser-svelte": "3.0.0"
   },
   "dependencies": {
-    "bits-ui": "2.18.1"
+    "bits-ui": "2.19.0"
   }
 }

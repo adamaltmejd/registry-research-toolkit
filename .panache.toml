@@ -1,5 +1,5 @@
 # Markdown formatter + linter (replaces markdownlint-cli2). Run via
-# `uvx --from panache-cli==3.4.0 panache` (pinned — 7-day release-age policy;
+# `uvx --from panache-cli==3.6.1 panache` (pinned — 7-day release-age policy;
 # keep in sync with .pre-commit-config.yaml and scripts/parse_lisa_docs.py).
 # gfm flavor uniformly: GitHub-rendered hand-written docs and the generated LISA docs both
 # use standard markdown links (the parser emits [X](X.md), not Obsidian [[wiki-links]]).

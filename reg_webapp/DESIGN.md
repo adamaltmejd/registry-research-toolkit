@@ -946,7 +946,7 @@ the JS/CSS/HTML parts of `.svelte` but does **not** yet parse Svelte control-flo
 - The codegen'd `src/lib/api-types.ts` is excluded from Biome entirely (codegen output,
   never hand-formatted).
 
-**UI behavior layer: Bits UI** (`bits-ui@2.18.1`, the Svelte-5-runes major) is the
+**UI behavior layer: Bits UI** (`bits-ui@2.19.0`, the Svelte-5-runes major) is the
 sanctioned headless-primitives library for a11y-critical widgets — comboboxes, menus,
 dialogs. It provides behavior + ARIA with no bundled styles; the app's scoped CSS and
 design-token set supply all visual styling. Stop hand-rolling widgets that Bits UI

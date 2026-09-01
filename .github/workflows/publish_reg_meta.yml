@@ -17,8 +17,10 @@ jobs:
       contents: read
       id-token: write
     steps:
-      - uses: actions/checkout@v7.0.0
-      - uses: astral-sh/setup-uv@v8.2.0
+      - uses: actions/checkout@v7.0.1
+      - uses: astral-sh/setup-uv@v10.0.1
+        with:
+          version: "0.12.6"
 
       # Smoke-test the release's DB assets before pushing to PyPI. There is no
       # pypi-environment approval pause; the release must stay draft until

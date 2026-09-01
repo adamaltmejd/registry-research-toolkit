@@ -157,9 +157,9 @@ uv sync --frozen --offline --no-install-workspace
 uv sync --frozen --offline --no-build-isolation
 uv run ruff check
 uv run ruff format --check
-uvx --offline --from ty==0.0.72 ty check
-uvx --offline --from panache-cli==3.4.0 panache format --check .
-uvx --offline --from panache-cli==3.4.0 panache lint .
+uvx --offline --from ty==0.0.74 ty check
+uvx --offline --from panache-cli==3.6.1 panache format --check .
+uvx --offline --from panache-cli==3.6.1 panache lint .
 bash scripts/check_versions.sh
 ' '''
 timeout_minutes = 20

@@ -56,8 +56,8 @@ RUN cd /opt/warm \
     && uv sync --frozen --no-install-workspace \
     && rm -rf /opt/warm/.venv \
     # Tool envs for the pinned checkers (keep versions == the CI/CLAUDE.md pins):
-    && uvx --from ty==0.0.72 ty --version \
-    && uvx --from panache-cli==3.4.0 panache --version \
+    && uvx --from ty==0.0.74 ty --version \
+    && uvx --from panache-cli==3.6.1 panache --version \
     && chmod -R a+rwX /opt/uv
 
 # --- Frontend warm layer: keyed on the frontend manifest + lockfile. ---

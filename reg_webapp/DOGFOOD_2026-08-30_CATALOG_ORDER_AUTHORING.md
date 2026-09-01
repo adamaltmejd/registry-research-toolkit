@@ -1,9 +1,9 @@
 # `catalog.swecov.se` researcher dogfooding report
 
-Date: 2026-08-30  
-Surface: live `https://catalog.swecov.se/` in Chrome  
-Repository head during review: `2d988f676d0a`  
-Live catalog footer: `reg_meta v0.39.1`, schema `6.7.0`, built 2026-08-22  
+Date: 2026-08-30\
+Surface: live `https://catalog.swecov.se/` in Chrome\
+Repository head during review: `2d988f676d0a`\
+Live catalog footer: `reg_meta v0.39.1`, schema `6.7.0`, built 2026-08-22\
 Exported project schema: `2.0.0`
 
 This is a point-in-time product report, not an implementation tracker. It records an
