@@ -30,10 +30,11 @@ RUN apt-get update \
 # Pinned digest = node 24.20.0.
 COPY --from=node:24-bookworm-slim@sha256:ba849c60be29959425b8734d57b8b4b7d56f98edd9504c9af091d5281095a71e /usr/local/bin/node /usr/local/bin/node
 
-# Pinned toolchain binaries. Move these pins deliberately, with the repo's own
-# uv/bun versions (uv: brew-installed on the host; bun: reg_webapp toolchain).
-COPY --from=ghcr.io/astral-sh/uv:0.12.6 /uv /uvx /usr/local/bin/
-COPY --from=oven/bun:1.4.0 /usr/local/bin/bun /usr/local/bin/bun
+# Pinned toolchain binaries, tag + immutable multi-arch digest like the images
+# above. Move these pins deliberately, with the repo's own uv/bun versions
+# (uv: brew-installed on the host; bun: reg_webapp toolchain).
+COPY --from=ghcr.io/astral-sh/uv:0.12.6@sha256:88bc6eb1ccd4b82efd0e1b530caffabddf50dc2bf612e66c14ea25b8ee8a4d3d /uv /uvx /usr/local/bin/
+COPY --from=oven/bun:1.4.0@sha256:5ff609364c049b54eb0ff560ec96319729a972078ef2c755d758f0c6ef89c2d6 /usr/local/bin/bun /usr/local/bin/bun
 RUN ln -s /usr/local/bin/bun /usr/local/bin/bunx
 
 # --- Python warm layer: keyed on workspace manifests + lockfile only. ---

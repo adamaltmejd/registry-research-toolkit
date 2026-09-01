@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:1.26
+# syntax=docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
 
 # reg_webapp deployment image (REFACTOR_SPEC.md §6.5 — Deployment).
 #
@@ -15,8 +15,12 @@
 # (3) uv installs the Python backend + workspace deps, (4) a lean runtime that
 # serves the JSON API with uvicorn behind an entrypoint smoke gate.
 #
-# Base images are pinned by tag (not :latest) for deterministic rebuilds. Bump
-# the tags deliberately; floating tags would make image content non-reproducible.
+# Every external image — the syntax frontend, each FROM base, and the uv tool
+# image — is pinned as a readable exact tag PLUS its immutable multi-arch
+# manifest digest, so a rebuild resolves byte-identical content even after the
+# tag is republished. Bump both halves together, and resolve the digest from
+# the exact tag you name; a tag alone is mutable and would make image content
+# non-reproducible.
 
 # ---------------------------------------------------------------------------
 # Stage 1 — frontend: build the Svelte SPA with bun.
@@ -30,7 +34,7 @@
 # reverse proxy to serve. This image bakes dist/ at /opt/reg_webapp/spa so a
 # single-container deploy can point any static server at it; the production edge
 # (Cloudflare) does the deep-link → index.html rewrite.
-FROM oven/bun:1.4.0-alpine AS frontend
+FROM oven/bun:1.4.0-alpine@sha256:07235578f79ef8c6f97d94aee7938e76f5cdba5f21ae5dbfdd3d3d38058437eb AS frontend
 
 WORKDIR /build/frontend
 
@@ -61,8 +65,8 @@ RUN bun run gen:types && bun run build
 # make hand-built download URLs fragile. A steward flavor then replaces only
 # `reg_meta.db` from a private zstd URL; `reg_meta_docs.db` stays the public
 # release asset for the same tag.
-FROM python:3.14.7-slim-bookworm AS regmeta-db
-COPY --from=ghcr.io/astral-sh/uv:0.12.6 /uv /usr/local/bin/uv
+FROM python:3.14.7-slim-bookworm@sha256:9ab8d9c8514b44f90cf0029dd42fdd7e9e211e639c8b995304cc04568dee900f AS regmeta-db
+COPY --from=ghcr.io/astral-sh/uv:0.12.6@sha256:88bc6eb1ccd4b82efd0e1b530caffabddf50dc2bf612e66c14ea25b8ee8a4d3d /uv /usr/local/bin/uv
 
 ENV UV_LINK_MODE=copy \
     UV_NO_INSTALLER_METADATA=1
@@ -252,8 +256,8 @@ EOF
 # matches) and copy a version-pinned uv binary off its official image. uv's own
 # combined `uv:<ver>-python<x>-bookworm-slim` tags don't pin the uv version and
 # python jointly the way we need, so we compose the pin ourselves.
-FROM python:3.14.7-slim-bookworm AS backend
-COPY --from=ghcr.io/astral-sh/uv:0.12.6 /uv /usr/local/bin/uv
+FROM python:3.14.7-slim-bookworm@sha256:9ab8d9c8514b44f90cf0029dd42fdd7e9e211e639c8b995304cc04568dee900f AS backend
+COPY --from=ghcr.io/astral-sh/uv:0.12.6@sha256:88bc6eb1ccd4b82efd0e1b530caffabddf50dc2bf612e66c14ea25b8ee8a4d3d /uv /usr/local/bin/uv
 
 # Deterministic install: bytecode-compile ahead of time, copy (not symlink) into
 # .venv so the venv is self-contained when copied to the runtime stage.
@@ -292,7 +296,7 @@ RUN uv sync --frozen --no-dev --package reg-webapp
 # python:slim (no uv) — runtime needs only the interpreter + the baked .venv.
 # Pinned to the same 3.14 minor the backend stage built against so the venv's
 # absolute interpreter path resolves.
-FROM python:3.14.7-slim-bookworm AS runtime
+FROM python:3.14.7-slim-bookworm@sha256:9ab8d9c8514b44f90cf0029dd42fdd7e9e211e639c8b995304cc04568dee900f AS runtime
 
 # Non-root runtime user (the API needs no write access to anything it ships).
 RUN groupadd --system app && useradd --system --gid app --home /app app
