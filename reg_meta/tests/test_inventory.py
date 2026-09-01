@@ -613,3 +613,105 @@ representation = "Ssyk4"
 """
     inventory = load_inventory(_write(tmp_path, text))
     assert len(inventory.tables) == 2
+
+
+# ── §12 disjoint-partition arm ─────────────────────────────────────────────
+#
+# Some registers arrive as several tables partitioned by SUB-POPULATION within
+# one edition (the `Arb_`/`Soc_AGIIndivid` reporter streams below), deliberately
+# unified as ONE user-facing variant. The one-to-one invariant then holds per
+# `(cell × partition)`: distinct labels are shards, everything else is a
+# conflict. Labels are explicit curated facts, never inferred, so a true
+# re-delivery cannot hide behind them.
+
+
+def _agi_shards(first: str, second: str) -> str:
+    """The two AGI reporter streams mapping one cell over one edition, each
+    `[[table]]` carrying the given `partition` line (`""` for none)."""
+    return f"""
+version = 1
+steward = "swecov"
+
+[[table]]
+id = "Arb_AGIIndivid_2021-03.csv"
+edition = "2021-03"
+{first}
+[[table.column]]
+name = "Belopp"
+[[table.column.mapping]]
+register_variant = "skv/agi/individuppgifter-agi"
+variable = "skv/agi/utbetalt-belopp"
+
+[[table]]
+id = "Soc_AGIIndivid_2021-03.csv"
+edition = "2021-03"
+{second}
+[[table.column]]
+name = "Belopp"
+[[table.column.mapping]]
+register_variant = "skv/agi/individuppgifter-agi"
+variable = "skv/agi/utbetalt-belopp"
+"""
+
+
+def test_accepts_distinct_partitions_of_one_cell(tmp_path) -> None:
+    """The motivating shape: two reporter streams of one edition mapping the
+    same coordinate. Distinct labels make them shards, not a conflict — and the
+    materializer emits both, one extraction file each."""
+    inventory = load_inventory(
+        _write(tmp_path, _agi_shards('partition = "arb"', 'partition = "soc"'))
+    )
+    assert [(t.id, t.partition) for t in inventory.tables] == [
+        ("Arb_AGIIndivid_2021-03.csv", "arb"),
+        ("Soc_AGIIndivid_2021-03.csv", "soc"),
+    ]
+
+
+def test_rejects_two_tables_sharing_one_partition_label(tmp_path) -> None:
+    """The same shard delivered twice is the ordinary supersession conflict: a
+    partition label separates cells only when the two labels DIFFER."""
+    with pytest.raises(RegMetaError) as excinfo:
+        load_inventory(
+            _write(tmp_path, _agi_shards('partition = "arb"', 'partition = "arb"'))
+        )
+    message = excinfo.value.message
+    assert (
+        "table['Arb_AGIIndivid_2021-03.csv'].column['Belopp'] (no representation) "
+        "and table['Soc_AGIIndivid_2021-03.csv'].column['Belopp'] "
+        "(no representation) both map skv/agi/individuppgifter-agi "
+        "skv/agi/utbetalt-belopp over 2021-03" in message
+    )
+    # Same shard twice is a supersession decision, not a labelling slip, so the
+    # line carries the standing supersession remediation and no label hint.
+    assert "carries a `partition` label" not in message
+    assert "filename date is not proof of supersession" in message
+
+
+def test_rejects_a_partition_label_opposite_an_unlabelled_table(tmp_path) -> None:
+    """An unlabelled table claims the WHOLE population of its edition, so it
+    necessarily overlaps a shard of it. §12 requires the label on both sides,
+    and the conflict line says so — one side labelled is the diagnostic case
+    where a curated split was left half-stated."""
+    with pytest.raises(RegMetaError) as excinfo:
+        load_inventory(_write(tmp_path, _agi_shards('partition = "arb"', "")))
+    message = excinfo.value.message
+    assert "both map skv/agi/individuppgifter-agi skv/agi/utbetalt-belopp" in message
+    assert (
+        "only one of these carries a `partition` label; label both when they "
+        "are genuinely disjoint shards of one sub-population split" in message
+    )
+
+
+def test_rejects_a_non_slug_partition_label(tmp_path) -> None:
+    """A label becomes a filename token, so it rides the shared slug grammar —
+    and the error names the `partition` slot the author has to fix."""
+    with pytest.raises(RegMetaError) as excinfo:
+        load_inventory(
+            _write(
+                tmp_path, _agi_shards('partition = "Arb Stream"', 'partition = "soc"')
+            )
+        )
+    assert (
+        "table['Arb_AGIIndivid_2021-03.csv'].partition: Value error, invalid "
+        "slug in partition: 'Arb Stream'" in excinfo.value.message
+    )

@@ -3012,7 +3012,7 @@
       },
       "PhysicalCoordinate": {
         "additionalProperties": false,
-        "description": "What the steward delivers: the entry's physical coordinate.\n\n`table` is the inventory's opaque exact identifier (a delivery filename or a\nschema-qualified SQL table), `column` its literal case-preserving physical\ncolumn, and `edition` the table's curated edition rendered canonically (a\nperiod token, an explicit `lo..hi` range, or a comma-joined list for an\ninterrupted series).\n\nIn \u00a712's global-deployment fallback there is no physical topology: `table`\nis blank, `column` carries the resolved canonical column, and `edition`\nequals the entry's requested period.",
+        "description": "What the steward delivers: the entry's physical coordinate.\n\n`table` is the inventory's opaque exact identifier (a delivery filename or a\nschema-qualified SQL table), `column` its literal case-preserving physical\ncolumn, and `edition` the table's curated edition rendered canonically (a\nperiod token, an explicit `lo..hi` range, or a comma-joined list for an\ninterrupted series).\n\n`partition` is the table's \u00a712 disjoint-partition label when it carries one\n\u2014 the shard of the edition's population this table delivers \u2014 so the\nextractor can see it; it is absent from the JSON otherwise. Extraction\npreserves delivery topology: what goes in as two partitions comes out as two\nfiles, distinguished by the partition token `extraction_filenames` adds.\n\nIn \u00a712's global-deployment fallback there is no physical topology: `table`\nis blank, `column` carries the resolved canonical column, `edition` equals\nthe entry's requested period, and there is no partition.",
         "properties": {
           "column": {
             "title": "Column",
@@ -3021,6 +3021,17 @@
           "edition": {
             "title": "Edition",
             "type": "string"
+          },
+          "partition": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Partition"
           },
           "table": {
             "title": "Table",

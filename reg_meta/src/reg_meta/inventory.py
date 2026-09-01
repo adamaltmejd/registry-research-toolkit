@@ -7,9 +7,10 @@ module is that contract — the typed models plus `load_inventory`, the structur
 validator maintainers (and, later, the inventory generator) run before an
 inventory is committed. Its load-bearing rule is §12's one-to-one resolution
 invariant: every admitted `(register_variant, variable, representation, period)`
-cell resolves to exactly one physical `(table, column)`, so the extraction tool
-never chooses between sources. REFACTOR_SPEC.md §12 is the decision text; the
-format is documented in DESIGN.md → Steward delivery inventory.
+cell resolves to exactly one physical `(table, column)` — per §12's
+disjoint-partition arm, per `(cell × partition)` — so the extraction tool never
+chooses between sources. REFACTOR_SPEC.md §12 is the decision text; the format
+is documented in DESIGN.md → Steward delivery inventory.
 
 Deliberately reg_schema-free: the contract needs only reg_meta's own period
 grammar (`fqid.period_token_to_bounds`) and FQID parser, so the `reg_meta →
@@ -208,6 +209,33 @@ def _representations_conflate(left: str | None, right: str | None) -> bool:
     return left is None or right is None or left == right
 
 
+def _partitions_separate(left: str | None, right: str | None) -> bool:
+    """Do two tables carry DISTINCT §12 partition labels — i.e. are they shards
+    of one sub-population split rather than two claims on one cell?
+
+    Only two explicit, different labels separate. `None` on either side does
+    not: an unlabelled table states the whole population of its edition, so it
+    necessarily overlaps any shard of it. Equal labels do not either — the same
+    shard delivered twice is the ordinary supersession conflict."""
+    return left is not None and right is not None and left != right
+
+
+def _partition_hint(left: str | None, right: str | None) -> str:
+    """The remediation suffix for a conflict where exactly ONE side is labelled.
+
+    That mix is the diagnostic case: the curator already recognized a §12
+    partition split on one table and left the other unlabelled, so the fix is a
+    label rather than a supersession discard. Two unlabelled tables are
+    indistinguishable from an uncurated re-delivery, so they get the error's
+    standing supersession remediation instead."""
+    if (left is None) == (right is None):
+        return ""
+    return (
+        " — only one of these carries a `partition` label; label both when they "
+        "are genuinely disjoint shards of one sub-population split"
+    )
+
+
 def _location(table_id: str, column_name: str) -> str:
     """One physical location in the author-facing spelling `_error_path` uses,
     for messages a root validator cannot attach a location to."""
@@ -316,12 +344,30 @@ class InventoryTable(_InventoryModel):
     `id` is verbatim and opaque — an exact delivery filename
     (`LISA_Individ_2019.csv`) or a schema-qualified SQL table
     (`dbo.SoS_Patientregister`). It is never parsed for meaning here; a table
-    whose name carries no period still requires an explicit curated
-    `edition`."""
+    whose name carries no period still requires an explicit curated `edition`.
+
+    `partition` is §12's optional disjoint-partition label: a short slug naming
+    which sub-population shard of one edition this table carries (a survey
+    stratum, a reporter stream, a municipality). It is an explicit curated fact,
+    never inferred — so a true re-delivery cannot hide behind a partition
+    without a reviewable curation line saying so — and it is an inventory/order
+    concept only, never a catalog one."""
 
     id: str = Field(min_length=1)
     edition: Edition
+    partition: str | None = None
     columns: tuple[InventoryColumn, ...] = Field(alias="column")
+
+    @field_validator("partition")
+    @classmethod
+    def _check_partition(cls, value: str | None) -> str | None:
+        """A partition label rides the shared slug grammar, like every other
+        slug-shaped coordinate — it becomes a filename token in
+        `order.extraction_filenames`, so it must be lowercase and
+        period-shape-free (`over70` is legal, `70plus` and `2019` are not)."""
+        if value is not None:
+            validate_slug(value, "partition")
+        return value
 
     @field_validator("edition", mode="before")
     @classmethod
@@ -369,6 +415,11 @@ class InventoryTable(_InventoryModel):
                 )
             seen.add(column.name)
         return self
+
+
+# One mapping's physical placement, as `_check_one_to_one_resolution` compares
+# them: `(table id, column name, representation, edition bounds, partition)`.
+_Placement = tuple[str, str, str | None, tuple[_Interval, ...], str | None]
 
 
 class DeliveryInventory(_InventoryModel):
@@ -444,6 +495,16 @@ class DeliveryInventory(_InventoryModel):
         coordinate over DISJOINT editions stays legal: that is the ordinary
         annual series.
 
+        DISJOINT-PARTITION ARM (§12): the invariant holds per `(cell ×
+        partition)`, so two tables carrying DISTINCT `partition` labels never
+        conflict — they are shards of one sub-population split (survey strata,
+        reporter streams, per-municipality deliveries), unified as one
+        user-facing variant and extracted as one file each. Everything else
+        still conflicts: equal labels, and a label opposite an unlabelled table
+        (which claims the whole population, so it necessarily overlaps the
+        shard). Two columns of ONE table share its label, so the
+        across-columns arm is untouched.
+
         Every conflicting pair is reported in one pass with both locations, the
         coordinate and the overlapping period: the error IS the maintainer's
         supersession worklist. There is deliberately no auto-pick-latest arm —
@@ -457,27 +518,37 @@ class DeliveryInventory(_InventoryModel):
         O(n²) — the largest realistic group is one variable's annual series, a
         few dozen editions.
         """
-        located: dict[
-            tuple[str, str], list[tuple[str, str, str | None, tuple[_Interval, ...]]]
-        ] = {}
+        located: dict[tuple[str, str], list[_Placement]] = {}
         for table in self.tables:
             bounds = edition_bounds(table.edition)
             for column in table.columns:
                 for mapping in column.mappings:
                     key = (mapping.register_variant, str(mapping.variable))
                     located.setdefault(key, []).append(
-                        (table.id, column.name, mapping.representation, bounds)
+                        (
+                            table.id,
+                            column.name,
+                            mapping.representation,
+                            bounds,
+                            table.partition,
+                        )
                     )
         conflicts: list[str] = []
         reported: set[tuple[str, ...]] = set()
         for (variant, variable), placements in located.items():
-            for index, (a_table, a_column, a_rep, a_bounds) in enumerate(placements):
-                for b_table, b_column, b_rep, b_bounds in placements[index + 1 :]:
+            for index, (a_table, a_column, a_rep, a_bounds, a_part) in enumerate(
+                placements
+            ):
+                for b_table, b_column, b_rep, b_bounds, b_part in placements[
+                    index + 1 :
+                ]:
                     if (a_table, a_column) == (b_table, b_column):
                         # One location serving one cell IS the invariant; a
                         # repeated triple there is `InventoryColumn`'s error.
                         continue
                     if not _representations_conflate(a_rep, b_rep):
+                        continue
+                    if _partitions_separate(a_part, b_part):
                         continue
                     overlap = _overlap(a_bounds, b_bounds)
                     if not overlap:
@@ -496,6 +567,7 @@ class DeliveryInventory(_InventoryModel):
                         f"{_location(b_table, b_column)} "
                         f"({_representation_label(b_rep)}) both map "
                         f"{variant} {variable} over {_render(overlap)}"
+                        + _partition_hint(a_part, b_part)
                     )
         if conflicts:
             raise ValueError(

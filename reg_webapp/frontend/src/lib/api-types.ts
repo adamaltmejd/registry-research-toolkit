@@ -2157,15 +2157,23 @@ export interface components {
          *     period token, an explicit `lo..hi` range, or a comma-joined list for an
          *     interrupted series).
          *
+         *     `partition` is the table's §12 disjoint-partition label when it carries one
+         *     — the shard of the edition's population this table delivers — so the
+         *     extractor can see it; it is absent from the JSON otherwise. Extraction
+         *     preserves delivery topology: what goes in as two partitions comes out as two
+         *     files, distinguished by the partition token `extraction_filenames` adds.
+         *
          *     In §12's global-deployment fallback there is no physical topology: `table`
-         *     is blank, `column` carries the resolved canonical column, and `edition`
-         *     equals the entry's requested period.
+         *     is blank, `column` carries the resolved canonical column, `edition` equals
+         *     the entry's requested period, and there is no partition.
          */
         PhysicalCoordinate: {
             /** Column */
             column: string;
             /** Edition */
             edition: string;
+            /** Partition */
+            partition?: string | null;
             /** Table */
             table: string;
         };

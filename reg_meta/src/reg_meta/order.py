@@ -43,16 +43,19 @@ Pipeline, per `sources[*].bindings[*]` in project declaration order:
    blocks the WHOLE order with the exact gaps — overlap alone never yields a
    partial manifest. There is no table CHOOSING here and none is needed: §12's
    one-to-one resolution invariant, enforced by `inventory.py`, guarantees a
-   valid inventory offers at most one `(table, column)` per cell instant, so
-   several contributions to one slice are always disjoint pieces of it (the
-   annual series). The unqualified-mapping block above survives that invariant
-   because the inventory validator is DB-blind: a lone unqualified mapping is
-   structurally fine, and only the catalog knows the binding's representation
-   changed across the request.
-4. **Emission.** Every matching table is emitted whole (v1 has no table chooser
-   and no row filter — the §12 `simplify:` stands). Entries keep project
-   source/binding order; the fan-out within a binding sorts by table, canonical
-   edition, then physical column.
+   valid inventory offers at most one `(table, column)` per cell instant PER
+   PARTITION, so several contributions to one slice are either disjoint pieces
+   of it (the annual series) or distinct partitions of it (the sub-population
+   split), and both are wanted whole. The unqualified-mapping block above
+   survives that invariant because the inventory validator is DB-blind: a lone
+   unqualified mapping is structurally fine, and only the catalog knows the
+   binding's representation changed across the request.
+4. **Emission.** Every matching table is emitted whole, every partition
+   included (v1 has no table chooser, no population field and no row filter —
+   the §12 `simplify:` stands). Entries keep project source/binding order; the
+   fan-out within a binding sorts by table, canonical edition, then physical
+   column. A partitioned entry carries its label, and `extraction_filenames`
+   gives it its own output file.
 
 Fail-closed and one-pass: a blocking result enumerates EVERY finding, so a
 researcher fixes the whole order at once instead of one gap per round trip.
@@ -161,13 +164,20 @@ class PhysicalCoordinate(_OrderModel):
     period token, an explicit `lo..hi` range, or a comma-joined list for an
     interrupted series).
 
+    `partition` is the table's §12 disjoint-partition label when it carries one
+    — the shard of the edition's population this table delivers — so the
+    extractor can see it; it is absent from the JSON otherwise. Extraction
+    preserves delivery topology: what goes in as two partitions comes out as two
+    files, distinguished by the partition token `extraction_filenames` adds.
+
     In §12's global-deployment fallback there is no physical topology: `table`
-    is blank, `column` carries the resolved canonical column, and `edition`
-    equals the entry's requested period."""
+    is blank, `column` carries the resolved canonical column, `edition` equals
+    the entry's requested period, and there is no partition."""
 
     edition: str
     table: str
     column: str
+    partition: str | None = None
 
 
 class OrderEntry(_OrderModel):
@@ -231,10 +241,18 @@ class OrderManifest(_OrderModel):
         """The canonical serialization: sorted keys, stable entry order, UTF-8,
         trailing newline. Deterministic — two runs over the same project,
         inventory and DB produce byte-identical output, which is what lets the
-        FastAPI and CLI adapters be compared byte-for-byte (§12)."""
+        FastAPI and CLI adapters be compared byte-for-byte (§12).
+
+        `exclude_none` is the spelling of an absent optional: an unpartitioned
+        entry omits `partition` entirely rather than carrying an explicit
+        `null`, so an inventory with no partitions serializes exactly as it did
+        before the arm existed. Every other manifest field is required, and any
+        future optional one must accept the same "absent means None" reading
+        (both boundaries validate the same models, and absent restores the
+        default on the way back in)."""
         return (
             json.dumps(
-                self.model_dump(mode="json"),
+                self.model_dump(mode="json", exclude_none=True),
                 sort_keys=True,
                 indent=2,
                 ensure_ascii=False,
@@ -281,8 +299,9 @@ class OrderResult(_OrderModel):
 
 def extraction_filenames(entry: OrderEntry) -> tuple[str, ...]:
     """The extraction output file name(s) for `entry` — one UTF-8 CSV per
-    variant + period unit (§12 pins the convention in the order contract so the
-    extractor never improvises it), e.g. `lisa_individer-15plus_2019.csv`.
+    variant + partition + period unit (§12 pins the convention in the order
+    contract so the extractor never improvises it), e.g.
+    `lisa_individer-15plus_2019.csv`.
 
     A deterministic function of the entry alone: register + variant slugs from
     the logical coordinate, one file per segment of the physical edition (an
@@ -290,14 +309,23 @@ def extraction_filenames(entry: OrderEntry) -> tuple[str, ...]:
     entry carries `edition = requested_period`, so the same rule gives it one
     file per requested period segment.
 
+    A partitioned entry inserts its label after the variant slug
+    (`agi_individuppgifter-agi_arb_2021-03.csv`), which is what keeps two
+    partitions of one (variant, edition segment) from colliding into one file —
+    §12 extracts them separately because shard identity (reporter stream,
+    municipality) may not exist as a column, so a union would destroy it. An
+    unpartitioned entry renders exactly as before the arm existed.
+
     simplify: names use the reg_meta SLUG spelling (`lisa_individer-15plus_…`),
     not the steward's display casing (§12's illustrative `LISA_Individ_2019` is
     not derivable from a slug); a non-grammar edition segment renders as its
     `lo..hi` range. Revisit when a steward's extractor needs its own casing —
     the rule lives here, so it changes in one place.
     """
+    partition = entry.physical.partition
+    shard = f"{partition}_" if partition is not None else ""
     return tuple(
-        f"{entry.logical.register_name}_{entry.logical.variant}_{unit}.csv"
+        f"{entry.logical.register_name}_{entry.logical.variant}_{shard}{unit}.csv"
         for unit in entry.physical.edition.split(",")
     )
 
@@ -805,6 +833,9 @@ def _materialize_binding(
     # the clipped request, then emit.
     contributions: dict[tuple[str, str, str], list[_Interval]] = {}
     editions: dict[tuple[str, str, str], tuple[_Interval, ...]] = {}
+    # §12 partition label per contributing table; absent for the global
+    # fallback, which has no physical topology to shard.
+    partitions: dict[tuple[str, str, str], str | None] = {}
     blocked = False
     for lo, hi, column in slices:
         matched = False
@@ -838,6 +869,7 @@ def _materialize_binding(
                         continue
                     key = (table.id, inv_column.name, column)
                     editions[key] = bounds
+                    partitions[key] = table.partition
                     contributions.setdefault(key, []).extend(overlaps)
                     covered.extend(overlaps)
         if not matched:
@@ -891,6 +923,7 @@ def _materialize_binding(
                     edition=_render(editions[key]),
                     table=table_id,
                     column=physical_column,
+                    partition=partitions.get(key),
                 ),
             )
         )

@@ -675,6 +675,8 @@ steward = "swecov"                # the deployment this inventory belongs to
 id = "LISA_Individ_2019.csv"      # opaque EXACT identifier: a delivery filename, or a
                                   # schema-qualified SQL table (`dbo.Patientregister`)
 edition = 2019                    # ONE explicit finite period — never "_default"
+partition = "mikro"               # OPTIONAL §12 shard label (a slug) — present only
+                                  # when this edition is split by sub-population
 
 [[table.column]]
 name = "Kon"                      # literal, case-preserving physical column
@@ -705,24 +707,45 @@ name = "LopNr"                    # zero mappings = unresolved, but still invent
   mappings let one column serve several variants (the combined Utrikeshandel table); and
   several tables may map the same logical coordinate over **disjoint** editions — the
   ordinary annual series (`LISA_Individ_2019.csv` + `LISA_Individ_2020.csv`).
+- **Optional `partition` label (§12's disjoint-partition arm, ratified 2026-09-01).**
+  Some registers arrive as several tables partitioned by **sub-population within one
+  edition** — survey strata (`ITftg_Mikro`/`ITftg_Stora`), reporter streams
+  (`Arb_`/`Soc_AGIIndivid`), administrative splits (`NDR_adults` over/under 70),
+  per-municipality deliveries (SÄBO) — and are deliberately unified as ONE user-facing
+  variant: nothing semantic differs across the shards, and no researcher should have to
+  know delivery trivia to get the whole register. A table may therefore carry a short
+  slug naming which shard it is. It rides the shared slug grammar, so it must start with
+  a letter and may not be period-shaped (`over70` is legal, `70plus` and `2019` are not)
+  — it becomes a filename token in `order.extraction_filenames`. Labels are explicit
+  curated facts, **never inferred**, so a true re-delivery cannot hide behind a
+  partition without a reviewable curation line saying so. Partitions are an
+  inventory/order-layer concept only, **never a catalog concept**: there is no
+  population field, no table chooser, and nothing partition-shaped on any browse or
+  catalog surface.
 - **One-to-one resolution invariant (§12, ratified 2026-09-01).** Every admitted
   `(register_variant, variable, representation, period)` cell resolves to exactly
-  **one** physical `(table, column)`: the extraction tool never chooses between sources,
-  and the materializer emits every matching table whole, so two mappings serving one
-  cell would order the same observations twice from two layouts. Validation therefore
-  **errors** whenever two mappings could serve one cell — same variant + variable,
-  conflating representations (a `null` representation means "the concept's single
-  representation", so it conflates with any explicit one and with another `null`; two
-  DIFFERENT explicit representations are two cells and stay legal), and overlapping
-  editions, whether across tables or across two columns of one table. A repeated
-  identical mapping triple inside one column is rejected too. The inventory states
-  **current holdings only**: a superseded delivery (a cumulative re-delivery replacing
-  an earlier snapshot, e.g. the dated `FHM_NVR_Covid*` series) is discarded at curation,
-  and this error — naming both physical locations, the coordinate and the overlapping
-  period — IS the maintainer's supersession worklist. There is deliberately no
-  auto-pick-latest arm: a filename date is not proof of supersession, so the validator
-  fails for review and the curator decides. Zero-column cells are not errors; they are
-  simply not admitted.
+  **one** physical `(table, column)` **per partition**: the extraction tool never
+  chooses between sources, and the materializer emits every matching table whole, so two
+  mappings serving one cell would order the same observations twice from two layouts.
+  Validation therefore **errors** whenever two mappings could serve one cell — same
+  variant + variable, conflating representations (a `null` representation means "the
+  concept's single representation", so it conflates with any explicit one and with
+  another `null`; two DIFFERENT explicit representations are two cells and stay legal),
+  and overlapping editions, whether across tables or across two columns of one table —
+  **unless the two tables carry DISTINCT `partition` labels**, which makes them shards
+  of one sub-population split rather than two claims on one cell. Everything else still
+  conflicts: equal labels are the same shard delivered twice, and an unlabelled table
+  claims the whole population of its edition, so it necessarily overlaps any shard of it
+  (that half-labelled case says so in the conflict line, since the fix is a label rather
+  than a supersession discard). Two columns of one table share its label, so the
+  across-columns arm is unaffected. A repeated identical mapping triple inside one
+  column is rejected too. The inventory states **current holdings only**: a superseded
+  delivery (a cumulative re-delivery replacing an earlier snapshot, e.g. the dated
+  `FHM_NVR_Covid*` series) is discarded at curation, and this error — naming both
+  physical locations, the coordinate and the overlapping period — IS the maintainer's
+  supersession worklist. There is deliberately no auto-pick-latest arm: a filename date
+  is not proof of supersession, so the validator fails for review and the curator
+  decides. Zero-column cells are not errors; they are simply not admitted.
 
 **Validator.** `load_inventory(path)` parses the TOML and returns the frozen Pydantic
 models (`DeliveryInventory` → `InventoryTable` → `InventoryColumn` → `ColumnMapping`),
@@ -798,19 +821,25 @@ Per `sources[*].bindings[*]`, in project declaration order:
    slice no mapping serves blocks with `mapping_missing`. Overlap alone never buys a
    partial manifest. The materializer never CHOOSES between tables and needs no chooser:
    §12's one-to-one resolution invariant (previous section) means a valid inventory
-   offers at most one `(table, column)` per cell instant, so the several contributions
-   one slice can collect are always disjoint pieces of it. The `mapping_ambiguous` block
-   survives that invariant because the inventory validator is DB-blind — a lone
-   unqualified mapping is structurally valid, and only the catalog knows the binding's
-   representation changed across the request. In global-fallback mode the slice's own
-   canonical column serves it under a blank table, so the slice covers itself exactly
-   and the same gate runs unchanged — what canonical resolution did not deliver has
-   already blocked upstream as an unresolved, unavailable or ambiguous binding.
-4. **Emission.** Every matching table is emitted whole — v1 has no table chooser and no
-   row filter (the §12 `simplify:` stands, with SWECOV's
-   one-large-SQL-table-per-register delivery as the upgrade trigger). Entries preserve
-   project source/binding order; the fan-out inside a binding sorts by table, canonical
-   edition, then physical column.
+   offers at most one `(table, column)` per cell instant **per partition**, so the
+   several contributions one slice can collect are either disjoint pieces of it (the
+   annual series) or distinct partitions of it (the sub-population split), and both are
+   wanted whole. Coverage needs no partition arm of its own: contributions already union
+   across matching tables, and partitions are simply more matching tables. The
+   `mapping_ambiguous` block survives that invariant because the inventory validator is
+   DB-blind — a lone unqualified mapping is structurally valid, and only the catalog
+   knows the binding's representation changed across the request. In global-fallback
+   mode the slice's own canonical column serves it under a blank table, so the slice
+   covers itself exactly and the same gate runs unchanged — what canonical resolution
+   did not deliver has already blocked upstream as an unresolved, unavailable or
+   ambiguous binding.
+4. **Emission.** Every matching table is emitted whole, **every partition included** —
+   v1 has no table chooser, no population field and no row filter (the §12 `simplify:`
+   stands, with SWECOV's one-large-SQL-table-per-register delivery as the upgrade
+   trigger). Entries preserve project source/binding order; the fan-out inside a binding
+   sorts by table, canonical edition, then physical column. A partitioned table's entry
+   carries its label on the physical coordinate, so extraction preserves delivery
+   topology: what goes in as two tables comes out as two files.
 
 **Fail-closed, one pass.** A blocking result enumerates every finding across every
 binding — `steward_mismatch`, `project_empty`, `period_not_orderable`,
@@ -833,7 +862,12 @@ version / declared reg_meta version / SHA-256 of the project's canonical JSON, p
 catalog DB's `schema_version` and `import_date`), the resolved entries — logical
 coordinate (`provider,register,variant,variable` + the canonical representation), the
 availability-clipped `requested_period`, and the physical coordinate
-(`edition`,`table`,`column`) — and the informational clips. It is machine-written here
+(`edition`,`table`,`column`, plus the table's `partition` label when it has one) — and
+the informational clips. `partition` is the manifest's only optional field: an absent
+key IS the "no partition" spelling (`to_json` serializes with `exclude_none`), so an
+inventory that uses no partitions produces exactly the bytes it did before the arm
+existed, and any future optional field must accept the same reading. This shape change
+stays within version 1 under the in-definition rule above. It is machine-written here
 and machine-read offline by the steward-side extract system, so it is self-contained: no
 network, no catalog lookup at extract time. Both boundaries validate against the same
 frozen `extra="forbid"` models. `to_json()` is the canonical serialization (sorted keys,
@@ -841,8 +875,12 @@ stable entry order, trailing newline); repeated runs over the same inputs are
 byte-identical. Periods render through the shared grammar's inverse
 (`period_token_for_bounds`), so a manifest speaks the same period spelling as a project
 period and an inventory edition. `extraction_filenames(entry)` pins §12's output-naming
-rule — one UTF-8 CSV per variant + period unit — in the contract rather than leaving it
-to the extractor.
+rule — one UTF-8 CSV per variant + partition + period unit — in the contract rather than
+leaving it to the extractor. A partitioned entry inserts its label after the variant
+slug (`agi_individuppgifter-agi_arb_2021-03.csv`), which is what keeps two partitions of
+one (variant, edition segment) from colliding into one file; §12 extracts them
+separately rather than unioning them, because shard identity (reporter stream,
+municipality) may not exist as a column, so a union would destroy information.
 
 Pure domain code: no FastAPI, no filesystem writes, no timestamps (the only time-shaped
 manifest values come from the DB manifest and the project). A global-fallback entry is
