@@ -171,7 +171,33 @@ only**: a superseded delivery (a cumulative re-delivery replacing an earlier sna
 e.g. the dated `FHM_NVR_Covid*` series) is discarded at curation, and this validation
 error is the supersession worklist — the generator must fail for review on each conflict
 rather than auto-picking a survivor (a filename date is not proof of supersession).
-Zero-column cells are not errors; they are simply not admitted.
+Zero-column cells are not errors; they are simply not admitted. A **special-purpose
+sub-extract** — data already held, re-delivered at another level of detail for a narrow
+purpose (the `RTB_SaBo_*` extracts, the `SWECOV_SOS_*_comorb` comorbidity tables) — is
+likewise excluded from the order surface at curation, under its own exclusion reason
+class distinct from supersession (ratified 2026-09-01).
+
+**Disjoint-partition arm (ratified 2026-09-01).** Some registers arrive as several
+tables partitioned by sub-population **within one edition** — survey strata
+(`ITftg_Mikro`/`ITftg_Stora`), reporter streams (`Arb_`/`Soc_AGIIndivid`),
+administrative splits (`NDR_adults` over/under 70), per-municipality deliveries (SÄBO) —
+and are deliberately unified as **one** user-facing variant: nothing semantic differs
+across the shards, and no researcher should have to know delivery trivia to get the
+whole register. Partitions are therefore an inventory/order-layer concept, never a
+catalog concept. An inventory table may carry an optional `partition` label (a short
+slug). The one-to-one invariant then holds per `(cell × partition)`: two tables mapping
+the same cell over overlapping editions conflict **unless** they carry distinct
+partition labels. Labels are explicit curated facts, never inferred — so a true
+redelivery cannot hide behind partitions without a reviewable curation line saying so.
+The materializer matches every partition of a cell, and **extraction preserves delivery
+topology: what goes in as two tables comes out as two files** — one output file per
+contributing inventory table, the filename gaining a partition token
+(`agi_individuppgifter-agi_arb_2021-03.csv`). Never a union: shard identity (reporter
+stream, municipality) may not exist as a column, so concatenation would destroy
+information; an identity-redundant split merely costs the researcher one concatenation
+they can always do themselves. Under the invariant, "one file per (ordered variant,
+edition segment, partition)" and "one file per table" coincide; a combined table backing
+several ordered variants still emits per ordered variant.
 
 The public, version-controlled inventory is the steward source of truth and is compiled
 into the released steward artifact. Derive exact edition-aware admission, coverage
@@ -196,14 +222,15 @@ versions, project identity/hash) plus resolved entries, each carrying the logica
 coordinate (`provider,register,variant,variable`), the requested period, and the
 physical coordinate (`edition,table,column`). Serialization is deterministic (sorted
 keys, stable entry order). Extraction output is one UTF-8 CSV per (variant, edition
-segment), named in **slug spelling** derived from the manifest entry (e.g.
-`lisa_individer-15plus_2019.csv`; a multi-period range segment renders `lo..hi` and
-extracts whole as one file — v1 has no row filter, so a range is never split per year).
-The naming convention is pinned in the order contract, not improvised by the extractor;
-steward display casing is not carried in the manifest (decided 2026-08-31, A-28 — re-add
-only if a steward-side consumer concretely needs display-cased filenames). A
-human-readable table rendering of the manifest may exist as a derived view for the
-executing data manager; the JSON is the contract.
+segment, partition), named in **slug spelling** derived from the manifest entry (e.g.
+`lisa_individer-15plus_2019.csv`; a partitioned table adds its partition token; a
+multi-period range segment renders `lo..hi` and extracts whole as one file — v1 has no
+row filter, so a range is never split per year). The naming convention is pinned in the
+order contract, not improvised by the extractor; steward display casing is not carried
+in the manifest (decided 2026-08-31, A-28 — re-add only if a steward-side consumer
+concretely needs display-cased filenames). A human-readable table rendering of the
+manifest may exist as a derived view for the executing data manager; the JSON is the
+contract.
 
 Rules:
 
@@ -236,7 +263,8 @@ Rules:
   subperiod **within a column's availability window** blocks the entire order with the
   exact gaps; overlap alone never permits a partial manifest;
 - after that coverage gate passes, emit every table matching at least one slice by
-  default; v1 has no table chooser and no separate population field;
+  default — every partition included; v1 has no table chooser and no separate population
+  field;
 - a matching multi-period table is ordered whole, even when its matched slice covers
   only a subset of the table's edition;
 - steward entries carry the literal physical `table` and physical `column`. The
