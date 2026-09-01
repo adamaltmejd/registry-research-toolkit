@@ -41,7 +41,14 @@ Pipeline, per `sources[*].bindings[*]` in project declaration order:
    claiming one column is two representations (a table that cannot overlap is
    inert). Any subperiod of the availability-clipped request left uncovered
    blocks the WHOLE order with the exact gaps — overlap alone never yields a
-   partial manifest.
+   partial manifest. There is no table CHOOSING here and none is needed: §12's
+   one-to-one resolution invariant, enforced by `inventory.py`, guarantees a
+   valid inventory offers at most one `(table, column)` per cell instant, so
+   several contributions to one slice are always disjoint pieces of it (the
+   annual series). The unqualified-mapping block above survives that invariant
+   because the inventory validator is DB-blind: a lone unqualified mapping is
+   structurally fine, and only the catalog knows the binding's representation
+   changed across the request.
 4. **Emission.** Every matching table is emitted whole (v1 has no table chooser
    and no row filter — the §12 `simplify:` stands). Entries keep project
    source/binding order; the fan-out within a binding sorts by table, canonical
@@ -76,14 +83,19 @@ from reg_schema.structural import validate_structural
 from .catalog import Catalog
 from .db import get_manifest
 from .errors import EXIT_CONFIG, RegMetaError
-from .fqid import (
-    Fqid,
-    FqidError,
-    parse,
-    period_token_for_bounds,
-    snap_to_real_month_end,
+from .fqid import Fqid, FqidError, parse, snap_to_real_month_end
+
+# The interval/period primitives live in `inventory.py` (which cannot import
+# this module): an edition, a requested period, an availability clip and a
+# resolution conflict all expand and render through one grammar.
+from .inventory import (
+    EditionRange,
+    _intersect,
+    _Interval,
+    _render,
+    _render_interval,
+    edition_bounds,
 )
-from .inventory import EditionRange, edition_bounds
 
 if TYPE_CHECKING:
     import sqlite3
@@ -105,10 +117,6 @@ ORDER_MANIFEST_VERSION = 1
 # provenance gate below compares `ProjectData.steward` against it exactly as it
 # does against a real inventory's steward.
 GLOBAL_STEWARD = "global"
-
-# An inclusive ISO `(lo, hi)` date interval — the currency of every clip,
-# slice, edition and coverage computation below.
-_Interval = tuple[str, str]
 
 
 class _OrderModel(BaseModel):
@@ -295,6 +303,10 @@ def extraction_filenames(entry: OrderEntry) -> tuple[str, ...]:
 
 
 # ── interval algebra over inclusive ISO date strings ────────────────────────
+#
+# The day-arithmetic half (adjacency joining, gaps) lives here because only the
+# coverage gate needs it; intersection and period rendering live in
+# `inventory.py`, which shares them with the §12 conflict validator.
 
 
 def _next_day(iso: str) -> str:
@@ -319,11 +331,6 @@ def _merge(intervals: list[_Interval]) -> tuple[_Interval, ...]:
         else:
             merged.append((lo, hi))
     return tuple(merged)
-
-
-def _intersect(a: _Interval, b: _Interval) -> _Interval | None:
-    lo, hi = max(a[0], b[0]), min(a[1], b[1])
-    return (lo, hi) if lo <= hi else None
 
 
 def _gaps(
@@ -359,33 +366,6 @@ def _prev_day(iso: str) -> str:
     return (
         date.fromisoformat(snap_to_real_month_end(iso)) - timedelta(days=1)
     ).isoformat()
-
-
-def _render(intervals: tuple[_Interval, ...]) -> str:
-    """Canonical period rendering, reusing the shared grammar's inverse
-    (`period_token_for_bounds`): the coarsest exact token per interval
-    (`2019`, `2019-Q3`), an explicit `lo..hi` range when no single token
-    expands to it, and the comma-joined wire form for a disjoint series — the
-    same grammar `Source.period` and an inventory `edition` are authored in."""
-    return ",".join(_render_interval(lo, hi) for lo, hi in intervals)
-
-
-def _render_interval(lo: str, hi: str) -> str:
-    token = period_token_for_bounds(lo, hi)
-    if ".." not in token:
-        return token
-    # A multi-year span has no single token; render the ENDPOINTS as tokens so
-    # a whole-year range reads `2019..2020` (the authored range spelling) rather
-    # than `2019-01-01..2020-12-31`. Each endpoint token is exact — a year token
-    # is used only when the bound really is that year's first/last day — so the
-    # rendering still expands back to exactly `(lo, hi)`.
-    return f"{_boundary_token(lo, start=True)}..{_boundary_token(hi, start=False)}"
-
-
-def _boundary_token(iso: str, *, start: bool) -> str:
-    if iso.endswith("-01-01" if start else "-12-31"):
-        return iso[:4]
-    return iso
 
 
 def _requested_intervals(period: Period) -> tuple[_Interval, ...]:

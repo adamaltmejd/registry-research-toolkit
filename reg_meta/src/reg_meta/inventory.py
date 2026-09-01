@@ -5,8 +5,11 @@ period). What a steward actually delivers is separate data: exact tables, one
 explicit physical edition per table, and literal physical column names. This
 module is that contract — the typed models plus `load_inventory`, the structural
 validator maintainers (and, later, the inventory generator) run before an
-inventory is committed. REFACTOR_SPEC.md §12 is the decision text; the format is
-documented in DESIGN.md → Steward delivery inventory.
+inventory is committed. Its load-bearing rule is §12's one-to-one resolution
+invariant: every admitted `(register_variant, variable, representation, period)`
+cell resolves to exactly one physical `(table, column)`, so the extraction tool
+never chooses between sources. REFACTOR_SPEC.md §12 is the decision text; the
+format is documented in DESIGN.md → Steward delivery inventory.
 
 Deliberately reg_schema-free: the contract needs only reg_meta's own period
 grammar (`fqid.period_token_to_bounds`) and FQID parser, so the `reg_meta →
@@ -33,6 +36,7 @@ from .fqid import (
     DEFAULT_VARIANT_SLUG,
     Fqid,
     FqidKind,
+    period_token_for_bounds,
     period_token_to_bounds,
     validate_slug,
 )
@@ -138,6 +142,86 @@ def edition_bounds(edition: Edition) -> tuple[tuple[str, str], ...]:
     return tuple(bounds)
 
 
+# ── interval algebra and period rendering over inclusive ISO dates ──────────
+#
+# Shared with `order.py`, which imports these: an inventory edition, a project
+# period, an availability window and a §12 resolution conflict must all expand
+# and render through ONE grammar, so a clip, an overlap and an edition can never
+# disagree about bounds or spelling.
+
+# An inclusive ISO `(lo, hi)` date interval — the currency of every edition,
+# overlap, clip and coverage computation.
+_Interval = tuple[str, str]
+
+
+def _intersect(a: _Interval, b: _Interval) -> _Interval | None:
+    lo, hi = max(a[0], b[0]), min(a[1], b[1])
+    return (lo, hi) if lo <= hi else None
+
+
+def _render(intervals: tuple[_Interval, ...]) -> str:
+    """Canonical period rendering, reusing the shared grammar's inverse
+    (`period_token_for_bounds`): the coarsest exact token per interval
+    (`2019`, `2019-Q3`), an explicit `lo..hi` range when no single token
+    expands to it, and the comma-joined wire form for a disjoint series — the
+    same grammar `Source.period` and an inventory `edition` are authored in."""
+    return ",".join(_render_interval(lo, hi) for lo, hi in intervals)
+
+
+def _render_interval(lo: str, hi: str) -> str:
+    token = period_token_for_bounds(lo, hi)
+    if ".." not in token:
+        return token
+    # A multi-year span has no single token; render the ENDPOINTS as tokens so
+    # a whole-year range reads `2019..2020` (the authored range spelling) rather
+    # than `2019-01-01..2020-12-31`. Each endpoint token is exact — a year token
+    # is used only when the bound really is that year's first/last day — so the
+    # rendering still expands back to exactly `(lo, hi)`.
+    return f"{_boundary_token(lo, start=True)}..{_boundary_token(hi, start=False)}"
+
+
+def _boundary_token(iso: str, *, start: bool) -> str:
+    if iso.endswith("-01-01" if start else "-12-31"):
+        return iso[:4]
+    return iso
+
+
+def _overlap(
+    a: tuple[_Interval, ...], b: tuple[_Interval, ...]
+) -> tuple[_Interval, ...]:
+    """The intervals two editions share, over `edition_bounds` output. Both
+    sides are ascending and non-overlapping (`edition_bounds` enforces it), so
+    the result is too and renders in period order."""
+    return tuple(x for left in a for right in b if (x := _intersect(left, right)))
+
+
+def _representations_conflate(left: str | None, right: str | None) -> bool:
+    """Do two mapping representations describe the SAME cell (§12)?
+
+    Equal explicit representations do. So does a `None` on either side: `None`
+    asserts "the concept's single representation", so it conflates with any
+    explicit one — and with another `None`. Two DIFFERENT explicit
+    representations are different cells (parallel representations, or the two
+    ends of a rename), which `order.py`'s slicing and `Binding.representation`
+    already choose between; the inventory must not second-guess that with
+    period arithmetic."""
+    return left is None or right is None or left == right
+
+
+def _location(table_id: str, column_name: str) -> str:
+    """One physical location in the author-facing spelling `_error_path` uses,
+    for messages a root validator cannot attach a location to."""
+    return f"table[{table_id!r}].column[{column_name!r}]"
+
+
+def _representation_label(representation: str | None) -> str:
+    return (
+        f"representation {representation!r}"
+        if representation is not None
+        else "no representation"
+    )
+
+
 class ColumnMapping(_InventoryModel):
     """One semantic mapping of a physical column: which logical coordinate this
     column IS.
@@ -204,6 +288,25 @@ class InventoryColumn(_InventoryModel):
 
     name: str = Field(min_length=1)
     mappings: tuple[ColumnMapping, ...] = Field(default=(), alias="mapping")
+
+    @model_validator(mode="after")
+    def _check_unique_mappings(self) -> InventoryColumn:
+        """The same `(register_variant, variable, representation)` triple twice
+        under one column states one cell twice — a generator or merge slip, not
+        a second holding, and the degenerate case of §12's one-to-one
+        resolution invariant (the cross-location arm is
+        `DeliveryInventory._check_one_to_one_resolution`)."""
+        seen: set[ColumnMapping] = set()
+        for mapping in self.mappings:
+            if mapping in seen:
+                raise ValueError(
+                    f"duplicate mapping {mapping.register_variant} "
+                    f"{mapping.variable!s} "
+                    f"({_representation_label(mapping.representation)}) — state "
+                    "each logical coordinate once per column"
+                )
+            seen.add(mapping)
+        return self
 
 
 class InventoryTable(_InventoryModel):
@@ -309,8 +412,10 @@ class DeliveryInventory(_InventoryModel):
     def _check_unique_tables(self) -> DeliveryInventory:
         """Each physical table is declared once: the identifier is exact, and
         one table carries exactly one edition, so a repeated id is an ambiguous
-        edition rather than a second table. Several DIFFERENT tables mapping to
-        the same logical coordinate stays legal (§12)."""
+        edition rather than a second table. Several DIFFERENT tables mapping the
+        same logical coordinate over DISJOINT editions stays legal — the
+        ordinary annual series (`_check_one_to_one_resolution` owns the
+        overlapping case)."""
         seen: set[str] = set()
         for table in self.tables:
             if table.id in seen:
@@ -319,6 +424,89 @@ class DeliveryInventory(_InventoryModel):
                     "and carries exactly one edition"
                 )
             seen.add(table.id)
+        return self
+
+    @model_validator(mode="after")
+    def _check_one_to_one_resolution(self) -> DeliveryInventory:
+        """§12's ONE-TO-ONE RESOLUTION INVARIANT (ratified 2026-09-01): every
+        admitted `(register_variant, variable, representation, period)` cell
+        resolves to exactly ONE physical `(table, column)`. Two mappings that
+        could each serve one cell are an error here, because the extraction tool
+        never chooses between sources — the materializer matches every mapping
+        that fits and emits its table whole, so a conflict orders the same
+        observations twice from two layouts.
+
+        Two mappings at DIFFERENT physical locations conflict when their
+        editions overlap AND their representations conflate
+        (`_representations_conflate`) — across tables (the cumulative
+        `FHM_NVR_Covid*` re-delivery) or across two columns of one table (whose
+        single edition always overlaps itself). Several tables mapping one
+        coordinate over DISJOINT editions stays legal: that is the ordinary
+        annual series.
+
+        Every conflicting pair is reported in one pass with both locations, the
+        coordinate and the overlapping period: the error IS the maintainer's
+        supersession worklist. There is deliberately no auto-pick-latest arm —
+        a filename date is not proof of supersession, so the curator discards
+        the superseded delivery and the inventory keeps stating CURRENT
+        holdings only (§12).
+
+        Cost: mappings are grouped by `(register_variant, variable)` and
+        compared pairwise only WITHIN a group, so a SWECOV-sized inventory
+        (thousands of mappings across many variables) never pays a global
+        O(n²) — the largest realistic group is one variable's annual series, a
+        few dozen editions.
+        """
+        located: dict[
+            tuple[str, str], list[tuple[str, str, str | None, tuple[_Interval, ...]]]
+        ] = {}
+        for table in self.tables:
+            bounds = edition_bounds(table.edition)
+            for column in table.columns:
+                for mapping in column.mappings:
+                    key = (mapping.register_variant, str(mapping.variable))
+                    located.setdefault(key, []).append(
+                        (table.id, column.name, mapping.representation, bounds)
+                    )
+        conflicts: list[str] = []
+        reported: set[tuple[str, ...]] = set()
+        for (variant, variable), placements in located.items():
+            for index, (a_table, a_column, a_rep, a_bounds) in enumerate(placements):
+                for b_table, b_column, b_rep, b_bounds in placements[index + 1 :]:
+                    if (a_table, a_column) == (b_table, b_column):
+                        # One location serving one cell IS the invariant; a
+                        # repeated triple there is `InventoryColumn`'s error.
+                        continue
+                    if not _representations_conflate(a_rep, b_rep):
+                        continue
+                    overlap = _overlap(a_bounds, b_bounds)
+                    if not overlap:
+                        continue
+                    pair = (variant, variable, a_table, a_column, b_table, b_column)
+                    if pair in reported:
+                        # Two locations conflicting over one coordinate is ONE
+                        # curation decision, whatever mix of representations
+                        # spelled it (a column carrying both an unqualified and
+                        # an explicit mapping conflates twice with one opposite).
+                        continue
+                    reported.add(pair)
+                    conflicts.append(
+                        f"{_location(a_table, a_column)} "
+                        f"({_representation_label(a_rep)}) and "
+                        f"{_location(b_table, b_column)} "
+                        f"({_representation_label(b_rep)}) both map "
+                        f"{variant} {variable} over {_render(overlap)}"
+                    )
+        if conflicts:
+            raise ValueError(
+                "a cell must resolve to exactly one physical (table, column), "
+                "but these mappings could each serve the same cell:\n"
+                + "\n".join(f"    {line}" for line in conflicts)
+                + "\n  An inventory states CURRENT holdings only: discard the "
+                "superseded delivery at curation instead of choosing here (a "
+                "filename date is not proof of supersession) — REFACTOR_SPEC.md "
+                "§12."
+            )
         return self
 
 
