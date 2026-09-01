@@ -706,22 +706,23 @@ name = "LopNr"                    # zero mappings = unresolved, but still invent
   several tables may map the same logical coordinate over **disjoint** editions — the
   ordinary annual series (`LISA_Individ_2019.csv` + `LISA_Individ_2020.csv`).
 - **One-to-one resolution invariant (§12, ratified 2026-09-01).** Every admitted
-  `(register_variant, variable, representation, period)` cell resolves to exactly **one**
-  physical `(table, column)`: the extraction tool never chooses between sources, and the
-  materializer emits every matching table whole, so two mappings serving one cell would
-  order the same observations twice from two layouts. Validation therefore **errors**
-  whenever two mappings could serve one cell — same variant + variable, conflating
-  representations (a `null` representation means "the concept's single representation",
-  so it conflates with any explicit one and with another `null`; two DIFFERENT explicit
-  representations are two cells and stay legal), and overlapping editions, whether across
-  tables or across two columns of one table. A repeated identical mapping triple inside
-  one column is rejected too. The inventory states **current holdings only**: a
-  superseded delivery (a cumulative re-delivery replacing an earlier snapshot, e.g. the
-  dated `FHM_NVR_Covid*` series) is discarded at curation, and this error — naming both
-  physical locations, the coordinate and the overlapping period — IS the maintainer's
-  supersession worklist. There is deliberately no auto-pick-latest arm: a filename date
-  is not proof of supersession, so the validator fails for review and the curator
-  decides. Zero-column cells are not errors; they are simply not admitted.
+  `(register_variant, variable, representation, period)` cell resolves to exactly
+  **one** physical `(table, column)`: the extraction tool never chooses between sources,
+  and the materializer emits every matching table whole, so two mappings serving one
+  cell would order the same observations twice from two layouts. Validation therefore
+  **errors** whenever two mappings could serve one cell — same variant + variable,
+  conflating representations (a `null` representation means "the concept's single
+  representation", so it conflates with any explicit one and with another `null`; two
+  DIFFERENT explicit representations are two cells and stay legal), and overlapping
+  editions, whether across tables or across two columns of one table. A repeated
+  identical mapping triple inside one column is rejected too. The inventory states
+  **current holdings only**: a superseded delivery (a cumulative re-delivery replacing
+  an earlier snapshot, e.g. the dated `FHM_NVR_Covid*` series) is discarded at curation,
+  and this error — naming both physical locations, the coordinate and the overlapping
+  period — IS the maintainer's supersession worklist. There is deliberately no
+  auto-pick-latest arm: a filename date is not proof of supersession, so the validator
+  fails for review and the curator decides. Zero-column cells are not errors; they are
+  simply not admitted.
 
 **Validator.** `load_inventory(path)` parses the TOML and returns the frozen Pydantic
 models (`DeliveryInventory` → `InventoryTable` → `InventoryColumn` → `ColumnMapping`),
@@ -795,17 +796,16 @@ Per `sources[*].bindings[*]`, in project declaration order:
    cannot make anything ambiguous. Any subperiod of the availability-clipped request
    left uncovered blocks the WHOLE order with the exact gap (`coverage_gap`), and a
    slice no mapping serves blocks with `mapping_missing`. Overlap alone never buys a
-   partial manifest. The materializer never CHOOSES between tables and needs no
-   chooser: §12's one-to-one resolution invariant (previous section) means a valid
-   inventory offers at most one `(table, column)` per cell instant, so the several
-   contributions one slice can collect are always disjoint pieces of it. The
-   `mapping_ambiguous` block survives that invariant because the inventory validator is
-   DB-blind — a lone unqualified mapping is structurally valid, and only the catalog
-   knows the binding's representation changed across the request. In global-fallback
-   mode the slice's own canonical column serves it under a blank table, so the slice
-   covers itself exactly and the same gate runs unchanged — what canonical resolution
-   did not deliver has already blocked upstream as an unresolved, unavailable or
-   ambiguous binding.
+   partial manifest. The materializer never CHOOSES between tables and needs no chooser:
+   §12's one-to-one resolution invariant (previous section) means a valid inventory
+   offers at most one `(table, column)` per cell instant, so the several contributions
+   one slice can collect are always disjoint pieces of it. The `mapping_ambiguous` block
+   survives that invariant because the inventory validator is DB-blind — a lone
+   unqualified mapping is structurally valid, and only the catalog knows the binding's
+   representation changed across the request. In global-fallback mode the slice's own
+   canonical column serves it under a blank table, so the slice covers itself exactly
+   and the same gate runs unchanged — what canonical resolution did not deliver has
+   already blocked upstream as an unresolved, unavailable or ambiguous binding.
 4. **Emission.** Every matching table is emitted whole — v1 has no table chooser and no
    row filter (the §12 `simplify:` stands, with SWECOV's
    one-large-SQL-table-per-register delivery as the upgrade trigger). Entries preserve
