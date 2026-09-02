@@ -1185,6 +1185,7 @@ def test_narrow_refs_drops_fqid_none_and_unheld():
         bindings_by_variant={
             "scb/lisa/individer-15plus": frozenset({("scb/lisa/kon", "Kon")})
         },
+        periods_by_coordinate={},
         period_range_by_register={"scb/lisa": ("2018-01-01", "2018-12-31")},
         drift_warnings=(),
     )

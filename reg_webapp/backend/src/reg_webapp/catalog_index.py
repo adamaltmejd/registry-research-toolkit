@@ -15,7 +15,8 @@ some inventory mapping states it. An inventory column with NO mapping admits
 nothing — it stays in the physical coverage denominator without becoming
 authorable or orderable.
 
-Two maps (derived directly from the inventory's ``tables → columns → mappings``):
+Three maps (derived directly from the inventory's ``tables → columns →
+mappings``):
 
 - ``bindings_by_variant`` — ``register_variant coordinate`` (the 3-part
   ``<provider>/<register>/<variant>`` string) → ``frozenset`` of
@@ -31,13 +32,23 @@ Two maps (derived directly from the inventory's ``tables → columns → mapping
   when it means "the concept's SINGLE representation" (§12) — never a wildcard —
   so that case is resolved against the catalog over the table's edition bounds,
   which is what the researcher side compares against.
+- ``periods_by_coordinate`` — the full §12 coordinate
+  ``(register_variant, binding FQID, resolved delivery column)`` → the
+  ascending, non-overlapping union of the EDITION BOUNDS of every table
+  stating it. This is the coordinate's ADMITTED PERIOD: an inventory mapping
+  states not just *what* the steward holds but *when*, and that "when" is
+  per coordinate, not per register — one variant can be delivered 1990-2010 and
+  its successor 2011-, in the same register. Abutting editions collapse (a
+  column in a yearly table since 1990 is ONE interval, not thirty), disjoint
+  ones do not: a coordinate delivered in 2018 and again in 2020 has a real 2019
+  hole, and flattening that to an outer span is exactly the loss this map
+  exists to prevent.
 - ``period_range_by_register`` — ``register FQID`` (2-segment
-  ``<provider>/<register>``) → the inclusive ISO ``(lo, hi)`` span of the
-  EDITION BOUNDS of every table contributing ≥1 admitted mapping to that
-  register. Edition-aware by construction (a table edition is always one
-  explicit finite period, never ``"_default"``). Best-effort span for UI
-  hinting, NOT a validity gate (the semantic validator's per-binding
-  ``period_outside_state_validity`` is the gate).
+  ``<provider>/<register>``) → the outer inclusive ISO ``(lo, hi)`` of its
+  coordinates' intervals. The coarse, gap-free PROJECTION of
+  ``periods_by_coordinate``, for UI hinting only — NOT a validity gate (the
+  semantic validator's per-binding ``period_outside_state_validity`` is the
+  gate).
 
 The index also derives steward-filtered ``/api/stats`` counts. Variables de-dupe
 by binding FQID (not delivery column), while registers come from the inventory's
@@ -58,16 +69,27 @@ so ``/api/context`` can surface a "catalog drift" banner.
 from __future__ import annotations
 
 from dataclasses import dataclass
+from datetime import date, timedelta
 from functools import cached_property
 from typing import TYPE_CHECKING
 
 from reg_meta.catalog import CatalogSizes
 from reg_meta.errors import RegMetaError
+from reg_meta.fqid import snap_to_real_month_end
 from reg_meta.inventory import edition_bounds
 
 if TYPE_CHECKING:
     from reg_meta.catalog import Catalog
     from reg_meta.inventory import ColumnMapping, DeliveryInventory
+
+# One admitted §12 coordinate — `(register_variant, binding FQID, resolved
+# delivery column)`. The `representation` slot holds the RESOLVED column for the
+# same reason `bindings_by_variant` does (see module docstring), so the two maps
+# are keyed alike.
+Coordinate = tuple[str, str, str | None]
+
+# An inclusive ISO `(lo, hi)` date interval, `reg_meta.inventory`'s currency.
+Interval = tuple[str, str]
 
 
 @dataclass(frozen=True)
@@ -103,6 +125,7 @@ class CatalogIndex:
     fields only, never the cached attributes, so neither is perturbed."""
 
     bindings_by_variant: dict[str, frozenset[tuple[str, str | None]]]
+    periods_by_coordinate: dict[Coordinate, tuple[Interval, ...]]
     period_range_by_register: dict[str, tuple[str, str]]
     drift_warnings: tuple[DriftWarning, ...]
 
@@ -144,6 +167,16 @@ class CatalogIndex:
         return {fqid: frozenset(cols) for fqid, cols in by_fqid.items()}
 
     @cached_property
+    def _held_columns_by_variant(self) -> dict[tuple[str, str], frozenset[str | None]]:
+        """The held delivery columns grouped by ``(variant coordinate, FQID)``,
+        built ONCE. Backs the O(1) ``held_columns_for_variant`` lookup."""
+        by_key: dict[tuple[str, str], set[str | None]] = {}
+        for variant_coord, bindings in self.bindings_by_variant.items():
+            for fqid, column in bindings:
+                by_key.setdefault((variant_coord, fqid), set()).add(column)
+        return {key: frozenset(cols) for key, cols in by_key.items()}
+
+    @cached_property
     def _variant_coords_by_register(self) -> dict[str, frozenset[str]]:
         """The non-empty variant coordinates grouped by their 2-segment register
         FQID, built ONCE. A variant slot admitting nothing is EXCLUDED, mirroring
@@ -160,19 +193,40 @@ class CatalogIndex:
         ANY variant in the index (#206: admission is column-based — see module
         docstring). ``fqid`` is the bare 3-segment binding FQID (no ``@version``
         pin to normalize away — that grammar is retired); ``column`` is the
-        RESOLVED ``delivery_column_name`` on the caller's side. Backs
-        ``fqid_outside_steward_catalog`` /
-        ``representation_outside_steward_catalog`` (semantic.py)."""
+        RESOLVED ``delivery_column_name`` on the caller's side.
+
+        DISCOVERY grain, deliberately variant-blind: the browse and search
+        surfaces (#859) list what the steward holds *anywhere* and carry their
+        own variant axis (``held_variant_coords_for_register``). A project's
+        source names ONE variant, so its admission goes through the
+        variant-scoped ``held_columns_for_variant`` instead."""
         return (fqid, column) in self._admitted_pairs
 
     def held_columns(self, fqid: str) -> frozenset[str | None]:
-        """The delivery columns this steward holds for ``fqid``, across all
-        variants. Empty ⇔ the FQID is not in the inventory at all (the
-        ``fqid_outside_steward_catalog`` case); non-empty without containing the
+        """The delivery columns this steward holds for ``fqid`` across ALL
+        variants — the discovery-grain union backing the browse/search column
+        narrowing, with the same variant-blindness rationale as ``admits``."""
+        return self._held_columns_by_fqid.get(fqid, frozenset())
+
+    def held_columns_for_variant(
+        self, fqid: str, variant_coord: str
+    ) -> frozenset[str | None]:
+        """The delivery columns this steward holds for ``fqid`` UNDER
+        ``variant_coord`` — the admission-grain probe.
+
+        A coordinate is admitted iff some inventory mapping states it, and a
+        mapping states a ``register_variant`` (§12), so this consults that exact
+        variant's holdings and never the cross-variant union: a steward whose
+        inventory maps ``kon`` only under ``individer-15plus`` does NOT supply it
+        to a project sourcing ``individer-16plus``, and admitting it would ship
+        an order for a column the steward cannot deliver.
+
+        Empty ⇔ the steward holds no column of the concept under this variant
+        (the ``fqid_outside_steward_catalog`` case); non-empty without the
         researcher's resolved column is the ``representation_outside_steward_
         catalog`` case, and this set is what its message enumerates ("available
-        from this steward as … only")."""
-        return self._held_columns_by_fqid.get(fqid, frozenset())
+        there as … only")."""
+        return self._held_columns_by_variant.get((variant_coord, fqid), frozenset())
 
     @cached_property
     def admitted_variable_fqids(self) -> frozenset[str]:
@@ -245,15 +299,13 @@ def build_catalog_index(inventory: DeliveryInventory, catalog: Catalog) -> Catal
     one) builds with zero DB access.
     """
     bindings_by_variant: dict[str, set[tuple[str, str | None]]] = {}
-    span_by_register: dict[str, tuple[str, str]] = {}
+    intervals_by_coordinate: dict[Coordinate, list[Interval]] = {}
     drift: list[DriftWarning] = []
 
     for table in inventory.tables:
         # Validated at load (`InventoryTable._check_finite_edition`), so this
-        # cannot raise here. The intervals are ascending and non-overlapping, so
-        # the edition's outer bounds are the first lo and the last hi.
+        # cannot raise here.
         bounds = edition_bounds(table.edition)
-        edition_lo, edition_hi = bounds[0][0], bounds[-1][1]
         for column in table.columns:
             for mapping in column.mappings:
                 columns: frozenset[str | None] | None
@@ -269,22 +321,69 @@ def build_catalog_index(inventory: DeliveryInventory, catalog: Catalog) -> Catal
                     )
                     continue
                 variant_coord = mapping.register_variant
+                fqid = str(mapping.variable)
                 bindings_by_variant.setdefault(variant_coord, set()).update(
-                    (str(mapping.variable), resolved) for resolved in columns
+                    (fqid, resolved) for resolved in columns
                 )
-                register_fqid = "/".join(variant_coord.split("/")[:2])
-                span = span_by_register.get(register_fqid)
-                span_by_register[register_fqid] = (
-                    (edition_lo, edition_hi)
-                    if span is None
-                    else (min(span[0], edition_lo), max(span[1], edition_hi))
-                )
+                for resolved in columns:
+                    intervals_by_coordinate.setdefault(
+                        (variant_coord, fqid, resolved), []
+                    ).extend(bounds)
 
+    periods_by_coordinate = {
+        coordinate: _merged(intervals)
+        for coordinate, intervals in intervals_by_coordinate.items()
+    }
     return CatalogIndex(
         bindings_by_variant={k: frozenset(v) for k, v in bindings_by_variant.items()},
-        period_range_by_register=span_by_register,
+        periods_by_coordinate=periods_by_coordinate,
+        period_range_by_register=_register_spans(periods_by_coordinate),
         drift_warnings=tuple(drift),
     )
+
+
+def _merged(intervals: list[Interval]) -> tuple[Interval, ...]:
+    """The ascending, non-overlapping union of inclusive ISO intervals.
+
+    Intervals that overlap OR abut collapse; a gap of even one day keeps them
+    apart. The abutment test needs real `date` arithmetic, so the upper bound is
+    snapped first: `edition_bounds` inherits the period grammar's over-counted
+    non-leap `YYYY-02-29` (intentional there — the resolver's overlap test is
+    lexical). Only the comparison is snapped; the interval is STORED as
+    `edition_bounds` produced it, so a stored bound and a project period still
+    expand through the one grammar.
+    """
+    merged: list[Interval] = []
+    for lo, hi in sorted(intervals):
+        previous = merged[-1] if merged else None
+        if previous is not None and lo <= _day_after(previous[1]):
+            merged[-1] = (previous[0], max(previous[1], hi))
+        else:
+            merged.append((lo, hi))
+    return tuple(merged)
+
+
+def _day_after(iso: str) -> str:
+    return (
+        date.fromisoformat(snap_to_real_month_end(iso)) + timedelta(days=1)
+    ).isoformat()
+
+
+def _register_spans(
+    periods_by_coordinate: dict[Coordinate, tuple[Interval, ...]],
+) -> dict[str, tuple[str, str]]:
+    """Collapse the per-coordinate intervals to one outer ISO span per 2-segment
+    register FQID — ``period_range_by_register``. Lossy BY DESIGN (it is the UI
+    hint, not the gate); ``periods_by_coordinate`` keeps the exact intervals."""
+    spans: dict[str, tuple[str, str]] = {}
+    for (variant_coord, _fqid, _column), intervals in periods_by_coordinate.items():
+        register_fqid = "/".join(variant_coord.split("/")[:2])
+        lo, hi = intervals[0][0], intervals[-1][1]
+        span = spans.get(register_fqid)
+        spans[register_fqid] = (
+            (lo, hi) if span is None else (min(span[0], lo), max(span[1], hi))
+        )
+    return spans
 
 
 def _resolved_columns(

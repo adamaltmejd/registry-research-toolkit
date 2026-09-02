@@ -1400,6 +1400,93 @@ def test_resolved_column_mismatch_across_sequential_rename(renamed_column_catalo
     assert result.ok
 
 
+# ── admission is scoped to the SOURCE's register_variant ────────────────────
+# An inventory mapping states a whole `(register_variant, variable,
+# representation)` coordinate (§12), so holding a concept under one variant
+# admits nothing under another — even when both resolve to the identical column.
+
+
+@pytest.fixture
+def two_variant_catalog():
+    """`scb/lisa/kon` delivered under TWO variants — the seeded
+    `individer-15plus` plus a parallel `individer-16plus` — at the SAME `Kon`
+    column, so the variant is the only thing that differs between the two
+    sources below."""
+    from _slugged_db import add_state, add_variant, build_slugged_db
+
+    conn = build_slugged_db()
+    add_variant(
+        conn,
+        register_variant_id=11,
+        register_id=1,
+        slug="individer-16plus",
+        name="Individer 16+",
+    )
+    add_state(
+        conn,
+        register_id=1,
+        variable_slug="kon",
+        register_variant_id=11,
+        valid_from="2018-01-01",
+        valid_to="9999-12-31",
+        delivery_column_name="Kon",
+    )
+    conn.commit()
+    try:
+        yield Catalog(conn)
+    finally:
+        conn.close()
+
+
+def test_admission_is_scoped_to_the_source_variant(two_variant_catalog):
+    # The steward's inventory maps `kon` under `individer-15plus` ONLY.
+    index = _catalog_index([_KON_HOLDING], two_variant_catalog)
+
+    held = validate_semantic(
+        _project([_kon_repr_source(None)]), two_variant_catalog, index=index
+    )
+    assert "fqid_outside_steward_catalog" not in {i.code for i in held.issues}
+
+    # Same concept, same resolved column, DIFFERENT variant — the steward does
+    # not supply it there, and a cross-variant union would have admitted it.
+    result = validate_semantic(
+        _project(
+            [
+                {
+                    **_kon_repr_source(None),
+                    "register_variant": "scb/lisa/individer-16plus",
+                }
+            ]
+        ),
+        two_variant_catalog,
+        index=index,
+    )
+    issue = next(i for i in result.issues if i.code == "fqid_outside_steward_catalog")
+    assert issue.level == "warning"
+    assert issue.path == "/sources/0/bindings/0/variable"
+    assert "scb/lisa/individer-16plus" in issue.message, issue.message
+    # The binding itself resolves cleanly at the other variant — nothing but
+    # admission separates the two calls.
+    assert "period_outside_state_validity" not in {i.code for i in result.issues}
+    assert result.ok
+
+
+def test_unresolved_variant_skips_admission(catalog, kon_only_index):
+    # A variant reg_meta itself does not know already earns `fqid_unresolved`;
+    # answering "the steward doesn't supply it there" on top is derivative noise
+    # (holdings are keyed BY variant, so there is nothing truthful to say).
+    source = {
+        "name": "s",
+        "register_variant": "scb/lisa/nosuchvariant",
+        "period": 2018,
+        "bindings": [{"variable": "scb/lisa/kon", "type": "categorical"}],
+    }
+    result = validate_semantic(_project([source]), catalog, index=kon_only_index)
+    codes = {i.code for i in result.issues}
+    assert "fqid_unresolved" in codes
+    assert "fqid_outside_steward_catalog" not in codes
+
+
 # ── #307: the period LIST form (interrupted series) ──────────────────────────
 # Structural validation guarantees the list is non-empty, sorted, and disjoint
 # before this layer runs; semantic resolution is PER SEGMENT

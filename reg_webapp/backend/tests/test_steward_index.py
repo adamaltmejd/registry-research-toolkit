@@ -6,10 +6,11 @@ catalog_index.py).
 Covers:
 
 (a) the committed ``inventory.toml`` filters the universe (register_variant coord
-    → admitted ``(FQID, resolved delivery column)`` pairs, edition-aware period
-    spans, unmapped columns admitting nothing);
-(b) ``CatalogIndex.admits`` — the membership probe ``fqid_outside_steward_catalog``
-    (A5.2b-ii) consults;
+    → admitted ``(FQID, resolved delivery column)`` pairs, the per-coordinate
+    union of edition intervals and its coarse per-register projection, unmapped
+    columns admitting nothing);
+(b) the membership probes ``fqid_outside_steward_catalog`` (A5.2b-ii) consults —
+    variant-scoped for admission, variant-blind for discovery;
 (c) **boot-survives-drift**: an inventory mapping reg_meta has drifted out from
     under still BOOTS — the coordinate drops from the index, a drift warning is
     recorded, ``app.state.catalog_index`` is populated, and ``/api/context``
@@ -182,15 +183,95 @@ def test_register_span_unions_every_contributing_edition(catalog):
     assert index.catalog_period_span == (2018, 2020)
 
 
+def test_coordinate_periods_merge_abutting_editions(catalog):
+    """The per-coordinate map retains the UNION of its tables' edition bounds,
+    not just an outer span. Consecutive annual editions really are one continuous
+    run, so they collapse into a single interval."""
+    index = _catalog_index(
+        [
+            ("scb/lisa/individer-15plus", "scb/lisa/kon", "Kon", "2018"),
+            ("scb/lisa/individer-15plus", "scb/lisa/kon", "Kon", "2019"),
+        ],
+        catalog,
+    )
+
+    assert index.periods_by_coordinate == {
+        ("scb/lisa/individer-15plus", "scb/lisa/kon", "Kon"): (
+            ("2018-01-01", "2019-12-31"),
+        )
+    }
+
+
+def test_coordinate_periods_keep_a_real_gap(catalog):
+    """A coordinate delivered in 2018 and again in 2020 was NOT delivered in
+    2019. The register-wide span cannot express that hole; the per-coordinate
+    union must, because it is what the order lane slices against."""
+    index = _catalog_index(
+        [
+            ("scb/lisa/individer-15plus", "scb/lisa/kon", "Kon", "2018"),
+            ("scb/lisa/individer-15plus", "scb/lisa/kon", "Kon", "2020"),
+        ],
+        catalog,
+    )
+
+    assert index.periods_by_coordinate[
+        ("scb/lisa/individer-15plus", "scb/lisa/kon", "Kon")
+    ] == (("2018-01-01", "2018-12-31"), ("2020-01-01", "2020-12-31"))
+    # The coarse projection flattens the hole — which is exactly why it is a UI
+    # hint and the per-coordinate intervals are the retained truth.
+    assert index.period_range_by_register == {"scb/lisa": ("2018-01-01", "2020-12-31")}
+
+
+def test_coordinate_periods_are_keyed_per_coordinate_not_per_register(catalog):
+    """Two variants of ONE register can be delivered over different editions —
+    the reason the intervals are keyed by the whole §12 coordinate."""
+    index = _catalog_index(
+        [
+            ("scb/rams/standard", "scb/rams/syss", "Syss", "2018"),
+            ("scb/rams/quarterly", "scb/rams/syss", "Syss", "2020"),
+        ],
+        catalog,
+    )
+
+    assert index.periods_by_coordinate == {
+        ("scb/rams/standard", "scb/rams/syss", "Syss"): (("2018-01-01", "2018-12-31"),),
+        ("scb/rams/quarterly", "scb/rams/syss", "Syss"): (
+            ("2020-01-01", "2020-12-31"),
+        ),
+    }
+    assert index.period_range_by_register == {"scb/rams": ("2018-01-01", "2020-12-31")}
+
+
 def test_catalog_period_span_is_null_when_nothing_is_admitted():
     index = CatalogIndex(
-        bindings_by_variant={}, period_range_by_register={}, drift_warnings=()
+        bindings_by_variant={},
+        periods_by_coordinate={},
+        period_range_by_register={},
+        drift_warnings=(),
     )
 
     assert index.catalog_period_span is None
 
 
 # ── (b) membership probe (fqid_outside_steward_catalog backing) ────────────
+
+
+def test_held_columns_for_variant_never_unions_across_variants(catalog):
+    """Admission grain: a mapping states a `(register_variant, variable,
+    representation)` coordinate, so a concept held under one variant is held
+    under THAT variant only. `held_columns` stays a cross-variant union on
+    purpose — it backs the browse/search listings, which carry their own variant
+    axis."""
+    index = _catalog_index(_CLEAN_HOLDINGS, catalog)
+
+    assert index.held_columns_for_variant(
+        "scb/lisa/kon", "scb/lisa/individer-15plus"
+    ) == frozenset({"Kon"})
+    assert (
+        index.held_columns_for_variant("scb/lisa/kon", "scb/lisa/individer-16plus")
+        == frozenset()
+    )
+    assert index.held_columns("scb/lisa/kon") == frozenset({"Kon"})
 
 
 def test_index_admits_known_and_rejects_unknown(catalog):
@@ -217,6 +298,7 @@ def test_catalog_sizes_de_dupes_binding_columns():
             ),
             "sos/patient/_default": frozenset({("sos/patient/diagnos", None)}),
         },
+        periods_by_coordinate={},
         period_range_by_register={
             "scb/lisa": ("2018-01-01", "2018-12-31"),
             "sos/patient": ("2020-01-01", "2020-12-31"),
@@ -236,6 +318,7 @@ def test_held_variant_coords_excludes_empty_slot():
             "scb/lisa/individer-15plus": frozenset({("scb/lisa/kon", "Kon")}),
             "scb/lisa/empty": frozenset(),
         },
+        periods_by_coordinate={},
         period_range_by_register={"scb/lisa": ("2018-01-01", "2018-12-31")},
         drift_warnings=(),
     )

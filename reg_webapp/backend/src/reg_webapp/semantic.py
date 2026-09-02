@@ -17,9 +17,12 @@ calls it per-request with an in-handler connection.
 There is ONE caller: the researcher path (``POST /api/project/validate``), where
 an unresolved FQID is a blocking ``error``. It runs the COLUMN-based steward
 admission check (#206) when an ``index`` (the loaded ``CatalogIndex``) is
-supplied: a RESOLVED FQID whose concept the steward holds no column of emits
-``fqid_outside_steward_catalog``, and one whose RESOLVED delivery column the
-steward does not hold emits ``representation_outside_steward_catalog`` — both
+supplied, probing the source's OWN ``register_variant``: a steward's inventory
+states whole ``(register_variant, variable, representation)`` coordinates, so
+holding a concept under one variant admits nothing under another. A RESOLVED
+FQID the steward holds no column of under that variant emits
+``fqid_outside_steward_catalog``, and one whose RESOLVED delivery column it does
+not hold there emits ``representation_outside_steward_catalog`` — both
 non-blocking ``warning``s (the column is real reg_meta-wide but this filtered
 deployment does not supply it). The ``global`` deployment's ``index`` is ``None``
 (no filter), so it never emits the codes.
@@ -88,10 +91,11 @@ def validate_semantic(
     Never opens a connection — the caller owns the ``Catalog``'s lifetime.
 
     ``index`` is the loaded steward ``CatalogIndex``: when supplied, a RESOLVED
-    binding outside it yields ``fqid_outside_steward_catalog`` (no column of the
-    concept held) or ``representation_outside_steward_catalog`` (concept held,
-    but not the binding's resolved column) — both warnings. ``None`` (the
-    ``global`` deployment) never emits them.
+    binding outside it — under the source's OWN ``register_variant`` — yields
+    ``fqid_outside_steward_catalog`` (no column of the concept held there) or
+    ``representation_outside_steward_catalog`` (concept held, but not the
+    binding's resolved column) — both warnings. ``None`` (the ``global``
+    deployment) never emits them.
     """
     issues: list[ValidationIssue] = []
     for s_idx, source in enumerate(project.sources):
@@ -482,13 +486,22 @@ def _check_binding(
     # FILTERED steward deployment supplies only a subset of that universe. Runs
     # AFTER the period check because admission compares RESOLVED delivery columns
     # (the binding's `resolved_columns`), which only the period resolution knows.
-    # `index=None` (the steward-load path AND the `global` deployment) never emits
-    # either code. Admission keying stays variant-agnostic and on the literal
-    # binding FQID (a curated same_as sibling names a DIFFERENT column, so under
+    # `index=None` (the `global` deployment) never emits either code, and an
+    # UNRESOLVED variant skips the probe entirely: holdings are keyed BY variant,
+    # so asking about one reg_meta itself does not know would answer "the steward
+    # doesn't supply it" on top of the `fqid_unresolved` that variant already
+    # earned — the same derivative noise the period probe skips for.
+    # Admission keys on the source's variant coordinate and the LITERAL binding
+    # FQID (a curated same_as sibling names a DIFFERENT column, so under
     # column-holdings semantics warning on it is correct, not a keying artifact).
-    if index is not None:
+    if index is not None and variant_ok:
         _check_steward_admission(
-            binding.variable, var_path, resolved_columns, index, issues
+            binding.variable,
+            source.register_variant,
+            var_path,
+            resolved_columns,
+            index,
+            issues,
         )
     _check_value_set(binding, bbase, catalog, issues)
 
@@ -889,41 +902,50 @@ def _format_columns(columns: frozenset[str | None]) -> str:
 
 def _check_steward_admission(
     variable: str,
+    variant_coord: str,
     var_path: str,
     resolved_columns: frozenset[str | None] | None,
     index: CatalogIndex,
     issues: list[ValidationIssue],
 ) -> None:
-    """Column-based steward admission (#206). Two distinct findings, both
-    non-blocking ``warning``s (the "what would my project look like under
-    steward X?" feature relies on them enumerating, not blocking):
+    """Column-based steward admission (#206), scoped to the source's variant.
+
+    An inventory mapping states a whole ``(register_variant, variable,
+    representation)`` coordinate (§12), so the probe consults ``variant_coord``'s
+    holdings and NOT the cross-variant union: a steward that maps `kon` only
+    under `individer-15plus` does not supply it to a project sourcing
+    `individer-16plus`, and admitting it would let an order through for a column
+    the steward cannot deliver.
+
+    Two distinct findings, both non-blocking ``warning``s (the "what would my
+    project look like under steward X?" feature relies on them enumerating, not
+    blocking):
 
     - ``fqid_outside_steward_catalog`` — the steward holds NO column of this
-      concept at all (the FQID appears nowhere in the index).
-    - ``representation_outside_steward_catalog`` — the steward holds the
-      concept, but not the column this binding resolves to; the message
-      enumerates what the steward DOES hold ("SSYK at 1-digit only" is the
-      actionable form of "not available").
+      concept under this variant.
+    - ``representation_outside_steward_catalog`` — it holds the concept there,
+      but not the column this binding resolves to; the message enumerates what
+      the steward DOES hold ("SSYK at 1-digit only" is the actionable form of
+      "not available").
 
     ``resolved_columns=None`` means the binding's own column is indeterminate
     (period/representation/ambiguity issues already reported) — only the
     FQID-level check can run; the column-level check stays silent."""
-    held = index.held_columns(variable)
+    held = index.held_columns_for_variant(variable, variant_coord)
     if not held:
         issues.append(
             _issue(
                 "fqid_outside_steward_catalog",
                 "warning",
                 var_path,
-                f"binding {variable!r} resolves in reg_meta but is outside "
-                "this deployment's steward catalog — the steward does not supply it",
+                f"binding {variable!r} resolves in reg_meta but is outside this "
+                f"deployment's steward catalog under {variant_coord} — the "
+                "steward does not supply it there",
             )
         )
         return
     if resolved_columns is None:
         return
-    # Equivalent to probing `index.admits(variable, c)` per column: for one FQID,
-    # pair-admission across variants ⇔ membership in the held-column union.
     missing = resolved_columns - held
     if missing:
         issues.append(
@@ -932,8 +954,9 @@ def _check_steward_admission(
                 "warning",
                 var_path,
                 f"binding {variable!r} resolves to representation "
-                f"{_format_columns(missing)}, which this steward does not supply — "
-                f"available from this steward as {_format_columns(held)} only",
+                f"{_format_columns(missing)}, which this steward does not supply "
+                f"under {variant_coord} — available there as "
+                f"{_format_columns(held)} only",
             )
         )
 

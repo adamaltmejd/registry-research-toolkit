@@ -760,7 +760,7 @@ The in-memory **`CatalogIndex`** is built once at boot (`build_catalog_index`, f
 loaded inventory) and held on `app.state` for the process lifetime. It is the filter
 that scopes a steward deployment to a subset of reg_meta's universe. It is an internal
 frozen `@dataclass` (never a response body — only response models are Pydantic; webapp
-internals are dataclasses), carrying two maps derived from the inventory's
+internals are dataclasses), carrying three maps derived from the inventory's
 `tables → columns → mappings`:
 
 - `bindings_by_variant` — `register_variant` coordinate → frozenset of admitted
@@ -778,12 +778,23 @@ internals are dataclasses), carrying two maps derived from the inventory's
   resolved against the catalog over the table's edition bounds, so a mapping authored
   before reg_meta grew a sibling column still compares equal to a researcher who must
   now pin.
-- `period_range_by_register` — register FQID → the inclusive ISO `(lo, hi)` span of the
-  **edition bounds** of every table contributing an admitted mapping to that register.
-  Edition-aware by construction (an inventory edition is always one explicit finite
-  period, never `_default`). Best-effort span for UI hinting **only**, NOT a validity
-  gate (the semantic validator's per-binding `period_outside_state_validity` is the
-  gate).
+- `periods_by_coordinate` — the whole §12 coordinate
+  `(register_variant, binding FQID, resolved delivery column)` → the ascending,
+  non-overlapping union of the **edition bounds** of every table stating it. A mapping
+  states not only *what* the steward holds but *when*, and that "when" is per
+  coordinate: one variant of a register can run 1990–2010 and its successor 2011–.
+  Abutting editions collapse (a column in a yearly table since 1990 is one interval, not
+  thirty), disjoint ones do **not** — the committed SWECOV inventory has 1614
+  coordinates with a real hole (the biennial innovation survey delivers 2002, 2004, 2006
+  …), and flattening those to an outer span is precisely the loss this map exists to
+  prevent. Retained for the order lane (Y-31); the validator does **not** gate on it
+  today, because projects still carry the `_default` period sentinel.
+- `period_range_by_register` — register FQID → the outer inclusive ISO `(lo, hi)` of its
+  coordinates' intervals. Edition-aware by construction (an inventory edition is always
+  one explicit finite period, never `_default`), but gap-free by construction too: it is
+  the coarse **projection** of `periods_by_coordinate`, a best-effort span for UI
+  hinting **only**, NOT a validity gate (the semantic validator's per-binding
+  `period_outside_state_validity` is the gate).
 
 The `global` deployment (no inventory) has **no** index (`None`); the catalog endpoints
 pass through to reg_meta's full universe.
@@ -834,11 +845,12 @@ for the same set after boost so a curated pin the steward does not hold is dropp
 
 *Performance.* The derived projections (`admitted_variable_fqids`,
 `held_register_fqids`, `held_provider_slugs`, `_admitted_pairs`,
-`_held_columns_by_fqid`, `_variant_coords_by_register`) are `functools.cached_property`:
-each is computed from `bindings_by_variant` on first access and memoized for the process
-lifetime. `cached_property` coexists with `@dataclass(frozen=True)` because the value is
-written into `__dict__` (no `__slots__`), bypassing the frozen `__setattr__`; the
-generated `__hash__` / `__eq__` read declared fields only.
+`_held_columns_by_fqid`, `_held_columns_by_variant`, `_variant_coords_by_register`) are
+`functools.cached_property`: each is computed from `bindings_by_variant` on first access
+and memoized for the process lifetime. `cached_property` coexists with
+`@dataclass(frozen=True)` because the value is written into `__dict__` (no `__slots__`),
+bypassing the frozen `__setattr__`; the generated `__hash__` / `__eq__` read declared
+fields only.
 
 **Boot-availability vs. drift.** A *structural* break in the committed inventory
 (malformed TOML, an unknown key, a `_default` edition, a §12 one-to-one resolution
@@ -1865,23 +1877,31 @@ emits one of two **warnings** (not errors): `fqid_outside_steward_catalog` when 
 steward holds *no* column of the concept, and the distinct
 `representation_outside_steward_catalog` when the steward holds the concept but not the
 column the binding **resolves** to — its message enumerates what the steward *does* hold
-("available from this steward as 'Ssyk1' only" is the actionable form of "not
-available"). These are warnings during editing so an uploaded project can be inspected,
-but `/order` does not consume them: the materializer runs its own fail-closed
-inventory/resolution gate and blocks these conditions with its own findings, so a
-steward-catalog warning never silently becomes an order. There is no cross- steward
-preview, retarget, or one-click mutation feature: the active deployment is the
-validation target, and the user edits and re-uploads the JSON if they intend to change
-it. The current check is wired into `/api/project/validate`: `routes/project.py` threads
-`app.state.catalog_index` into `validate_semantic` via `run_in_threadpool`; it runs
-**after** the per-binding period resolution because the researcher side's resolved
-columns are what `CatalogIndex.admits(fqid, column)` compares (when those are
+("available there as 'Ssyk1' only" is the actionable form of "not available"). These are
+warnings during editing so an uploaded project can be inspected, but `/order` does not
+consume them: the materializer runs its own fail-closed inventory/resolution gate and
+blocks these conditions with its own findings, so a steward-catalog warning never
+silently becomes an order. There is no cross- steward preview, retarget, or one-click
+mutation feature: the active deployment is the validation target, and the user edits and
+re-uploads the JSON if they intend to change it. The current check is wired into
+`/api/project/validate`: `routes/project.py` threads `app.state.catalog_index` into
+`validate_semantic` via `run_in_threadpool`; it runs **after** the per-binding period
+resolution because the researcher side's resolved columns are what
+`CatalogIndex.held_columns_for_variant(fqid, variant)` compares (when those are
 indeterminate — unresolved period, unknown pinned representation, ambiguous multi-column
 binding — the binding already carries its own error and only the FQID-level arm runs).
-The `global` deployment (index `None`) never emits either code. Admission keying stays
-variant-agnostic and on the literal binding FQID: a curated same_as sibling (e.g.
-`kon→syss`) names a *different* physical column, so warning on it is correct under
-holdings semantics, not a keying artifact.
+The `global` deployment (index `None`) never emits either code, and an unresolved
+`register_variant` skips the probe entirely (it already earned `fqid_unresolved`;
+holdings are keyed *by* variant, so there is nothing truthful left to say). Admission
+keys on the **source's variant coordinate** — a mapping states a whole
+`(register_variant, variable, representation)` coordinate, so holding `kon` under
+`individer-15plus` admits nothing under `individer-16plus`, and the cross-variant union
+would let an order through for a column the steward cannot deliver. It keys on the
+literal binding FQID: a curated same_as sibling (e.g. `kon→syss`) names a *different*
+physical column, so warning on it is correct under holdings semantics, not a keying
+artifact. The variant-blind `admits` / `held_columns` probes remain the **discovery**
+grain, backing the browse and search listings, which carry their own variant axis
+(`held_variant_coords_for_register`).
 
 ## Cost protection (`limits.py`)
 

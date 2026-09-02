@@ -38,6 +38,7 @@ def test_context_returns_200_and_shape(
 def test_catalog_period_span_clamps_to_vintage_year():
     index = CatalogIndex(
         bindings_by_variant={},
+        periods_by_coordinate={},
         period_range_by_register={"scb/lisa": ("1995-01-01", "2030-12-31")},
         drift_warnings=(),
     )
