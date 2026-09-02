@@ -488,3 +488,19 @@ mode the wake-driven loop exists to prevent. Usage refusals should exit non-zero
   no conflict execution can start at all now (cheaper than 0.12.0's fail-after-rebase,
   but absolute). The registration check needs the same per-kind expectation the
   advertisement got. Y-29/6 held at the stop.
+
+## 2026-09-02 — 0.12.3: the grant fix works, but the conflict path's evidence writer never produces retarget.log
+
+- Y-29/7/e3 under 0.12.3: the conflict worker resolved the retarget and its
+  `lane_propose` was ACCEPTED ("Retarget resolved and committed. Branch yard/Y-29-7 is
+  now d2c0c33 + the two candidate commits") — the Y-538/0.12.3 chain is proven good. The
+  execution still ends `conflict-handoff-failed` with
+  `evidence input is not a regular file: …/e3/retarget.log`: the daemon's finalization
+  expects a retarget.log the conflict path never writes (the execution dir holds only
+  transcript.jsonl), so a SUCCESSFUL resolution is discarded at evidence collection —
+  twice (g1 ~$6.6, g2 re-ran the whole session). This was the masked second defect
+  visible since 0.12.0 behind the capability refusal; the daemon log records nothing
+  about it. Asks: write the log (or drop the requirement) on the conflict path, and
+  surface the finalization error itself rather than the evidence-collection symptom.
+  Lane held at the stop again; the resolution commits exist on the lane branch each time
+  and are discarded each time.
