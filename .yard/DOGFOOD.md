@@ -478,3 +478,13 @@ mode the wake-driven loop exists to prevent. Usage refusals should exit non-zero
   conflicted retarget board-wide is currently unresolvable; each attempt burns the full
   rebase before failing. Y-29/5 is held at the stop (costs nothing) pending a switchyard
   fix.
+
+- **0.12.2 follow-up**: the Y-538 fix has a second half that regressed. A fully
+  0.12.2-native conflict execution (Y-29/6/e3, admitted post-upgrade) fails at MCP
+  registration:
+  `init frame omitted mcp__yard__lane_report_too_large, mcp__yard__lane_publish_plan`.
+  The per-kind `tools/list` narrowing correctly withholds those from a conflict
+  execution, but the registration validator still requires the full worker tool set — so
+  no conflict execution can start at all now (cheaper than 0.12.0's fail-after-rebase,
+  but absolute). The registration check needs the same per-kind expectation the
+  advertisement got. Y-29/6 held at the stop.
