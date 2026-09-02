@@ -114,6 +114,28 @@ definition = "Datum då diagnosen fastställdes."
 data_type = "date"
 is_sensitive = true
 
+# From the laboratory notification (confirmed in SWECOV holdings: FHM_SMINET,
+# FHM_SMI_FALL, FHM_LAB_ANM). Central for testing-behavior outcomes.
+[[register.variable]]
+name = "Provtagningsdatum"
+column = "provtagningsdatum"
+definition = "Datum då provet togs (från laboratorieanmälan)."
+data_type = "date"
+is_sensitive = true
+
+# FOHM's derived reporting date (confirmed in SWECOV holdings: FHM_SMINET,
+# FHM_SMI_FALL).
+[[register.variable]]
+name = "Statistikdatum"
+column = "statistikdatum"
+definition = """
+Härlett statistikdatum för fallet enligt FOHM:s prioritetsordning: \
+provtagningsdatum om det finns, annars diagnosdatum, annars anmälningsdatum. \
+FOHM:s standarddatum för statistikredovisning.\
+"""
+data_type = "date"
+is_sensitive = true
+
 [[register.variable]]
 name = "Sannolikt smittland"
 column = "smittland"
@@ -207,6 +229,21 @@ name = "Satsnummer"
 column = "satsnummer"
 definition = "Vaccinets sats-/batchnummer."
 data_type = "text"
+
+# Register-level metadata: NVR stores NPL-id (per the NVR API spec). SWECOV
+# deliberately dropped it from its current delivery (FHM_NVR_Covid_20240422 —
+# not needed), so it is orderable only if FoHM re-delivers; steward coverage is
+# the inventory's concern, not this catalog's.
+[[register.variable]]
+name = "NPL-id"
+column = "nplid"
+definition = """
+Vaccinets NPL-id (Nationellt produktregister för läkemedel) — identifierar det \
+administrerade preparatet på produktnivå.\
+"""
+data_type = "text"
+is_sensitive = true
+valid_from = "2021-01-01"  # covid-19-rapportering fr.o.m. 2021
 
 [[register.variable]]
 name = "Dosnummer"
