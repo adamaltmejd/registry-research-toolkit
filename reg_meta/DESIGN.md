@@ -792,18 +792,29 @@ skip would read as missing evidence where a deselection reads as out of scope. T
 gate is therefore the hard line; the pytest is the maintainer's early warning, run with
 `--run-release` when regenerating the inventory or cutting a release.
 
-- **Resolution is read the way the ORDER PATH reads it**, never re-derived. A gate
-  stricter than `order._materialize_binding` would fail a deployment over holdings it
-  can actually serve, so a direct slug miss still gets `Catalog`'s curated
-  `variable_same_as` fallback, and the representation universe is `variable_state`'s
-  denormalized alias UNION the `variable_alias_window` rows `_expand_state_windows`
-  expands a state into (a monthly-family or co-delivered column exists ONLY there).
+- **Resolution is read the way the ORDER PATH reads it**, never re-derived —
+  symmetrically. A gate STRICTER than `order._materialize_binding` fails a deployment
+  over holdings it can actually serve; a gate LOOSER lets one boot on holdings it
+  cannot, which is the failure this whole check exists to prevent. So a direct slug miss
+  still gets `Catalog`'s curated `variable_same_as` fallback, and the representation
+  universe is what `Catalog._expand_state_windows` would emit — NOT `variable_state`
+  unioned with `variable_alias_window`. A window row is not an independent
+  representation: it expands a state only when it is contained in that state's validity
+  *and* that state's own delivery column participates in the contained set, and
+  otherwise the state stands on its own column while its windows deliver nothing.
+  `_expanded_columns` mirrors exactly those two conditions (the resolver's third, window
+  ∩ requested period, is trivially true here — the gate reads the whole history).
+  Reading the tables as a flat union would bless an orphaned, non-contained or
+  non-participating window and pass a mapping `resolve_at` cannot fill.
 - **Bulk, because it runs at every boot.** An inventory carries tens of thousands of
-  mappings, so the lookups are one streaming scan each, filtered against the inventory's
-  own coordinates — the working set is the inventory's, not the catalog's (SWECOV's
-  36.5k mappings check in ~0.1s). The binding and representation grains share a scan,
-  since a representation is a narrowing of its binding. Only the same_as fallback, rare
-  by construction, goes through `Catalog` per coordinate.
+  mappings, so each lookup is one streaming scan filtered against the inventory's own
+  coordinates — the working set is the inventory's, not the catalog's (SWECOV's 36.5k
+  mappings check in ~0.1s). The binding and representation grains share the state/window
+  pair of scans, since a representation is a narrowing of its binding. Only the same_as
+  fallback, rare by construction, goes through `Catalog` per coordinate — and it is
+  wrapped (`_aliased_states`), because a raised coordinate must not cost the run every
+  other finding: the gate owes both consumers a COMPLETE grouped report, so a resolution
+  failure counts as no states and lands as `binding_unavailable`.
 - **Findings group by the failing COORDINATE, not the mapping occurrence** — one renamed
   variant slug is one finding over N mappings, which is the unit a maintainer repairs.
   Each carries `mapping_count` and a capped sample of `table[...].column[...]` locations

@@ -19,7 +19,15 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 import pytest
-from _slugged_db import add_state, add_variable, add_variant, build_slugged_db
+from _slugged_db import (
+    add_register,
+    add_state,
+    add_variable,
+    add_variant,
+    build_slugged_db,
+)
+from reg_meta.catalog import Catalog
+from reg_meta.errors import EXIT_NOT_FOUND, RegMetaError
 from reg_meta.inventory import load_inventory
 from reg_meta.inventory_check import check_inventory, unresolved_message
 
@@ -57,6 +65,39 @@ def _inventory(tmp_path: Path, text: str) -> DeliveryInventory:
     path = tmp_path / "inventory.toml"
     path.write_text(text, encoding="utf-8")
     return load_inventory(path)
+
+
+def _add_window(
+    conn: sqlite3.Connection,
+    *,
+    variable_slug: str,
+    register_variant_id: int,
+    column: str,
+    valid_from: str = "2018-01-01",
+    valid_to: str = "9999-12-31",
+) -> None:
+    """One raw `variable_alias_window` row (#319/#945). Raw because the point of
+    these tests is what the RESOLVER does with window rows the build would not
+    normally emit."""
+    conn.execute(
+        "INSERT INTO variable_alias_window (variable_id, register_variant_id, "
+        "delivery_column_name, valid_from, valid_to) "
+        "SELECT variable_id, ?, ?, ?, ? FROM variable WHERE slug = ?",
+        (register_variant_id, column, valid_from, valid_to, variable_slug),
+    )
+    conn.commit()
+
+
+def _resolver_columns(
+    conn: sqlite3.Connection, fqid: str, variant: str
+) -> set[str | None]:
+    """What `Catalog.resolve_at` ACTUALLY delivers — the authority these tests
+    hold `check_inventory` against, so a mirror that drifts from the resolver
+    fails here rather than passing on its own reading."""
+    return {
+        state.delivery_column_name
+        for state in Catalog(conn).resolve_at(fqid, "_default", variant=variant)
+    }
 
 
 @pytest.fixture
@@ -201,6 +242,76 @@ def test_a_window_only_representation_resolves(conn, tmp_path) -> None:
     )
 
 
+def test_an_orphaned_alias_window_is_not_a_delivered_representation(
+    conn, tmp_path
+) -> None:
+    """A `variable_alias_window` row is NOT an independent representation — the
+    resolver only ever expands it into a `variable_state`, so a window at a
+    variant carrying no state delivers nothing. Reading the two tables as a flat
+    union would bless this mapping and let the deployment boot on a binding
+    `resolve_at` cannot fill."""
+    _add_window(conn, variable_slug="yrke", register_variant_id=11, column="Ssyk3")
+    assert _resolver_columns(conn, "scb/lisa/yrke", "individer-20plus") == set()
+
+    findings = check_inventory(
+        _inventory(
+            tmp_path, CLEAN_INVENTORY.replace("individer-15plus", "individer-20plus")
+        ),
+        conn,
+    )
+    assert [f.code for f in findings] == ["binding_unavailable"] * 2
+    assert "scb/lisa/individer-20plus scb/lisa/yrke" in {f.coordinate for f in findings}
+
+
+def test_alias_windows_that_do_not_carry_the_state_column_deliver_nothing(
+    conn, tmp_path
+) -> None:
+    """#945 expansion is conditional: a state expands into its windows only when
+    its OWN delivery column participates in them. Here it does not, so the
+    resolver emits the base column alone and the windows are not orderable —
+    the gate must agree."""
+    for column in ("Ssyk3_A", "Ssyk3_B"):
+        _add_window(
+            conn,
+            variable_slug="yrke",
+            register_variant_id=10,
+            column=column,
+            valid_to="2020-12-31",
+        )
+    assert _resolver_columns(conn, "scb/lisa/yrke", "individer-15plus") == {"Ssyk3"}
+
+    assert check_inventory(_inventory(tmp_path, CLEAN_INVENTORY), conn) == ()
+    (finding,) = check_inventory(
+        _inventory(tmp_path, CLEAN_INVENTORY.replace('"Ssyk3"', '"Ssyk3_A"')), conn
+    )
+    assert finding.code == "representation_unresolved"
+    assert finding.coordinate == "scb/lisa/individer-15plus scb/lisa/yrke Ssyk3_A"
+
+
+def test_an_alias_window_outside_its_state_validity_is_not_delivered(
+    conn, tmp_path
+) -> None:
+    """A window expands only the state that CONTAINS it. `yrke`'s state runs
+    2018..2020, so a 2021 window belongs to no state and delivers nothing —
+    the base column still stands."""
+    _add_window(
+        conn,
+        variable_slug="yrke",
+        register_variant_id=10,
+        column="Ssyk9",
+        valid_from="2021-01-01",
+        valid_to="2021-12-31",
+    )
+    assert _resolver_columns(conn, "scb/lisa/yrke", "individer-15plus") == {"Ssyk3"}
+
+    assert check_inventory(_inventory(tmp_path, CLEAN_INVENTORY), conn) == ()
+    (finding,) = check_inventory(
+        _inventory(tmp_path, CLEAN_INVENTORY.replace('"Ssyk3"', '"Ssyk9"')), conn
+    )
+    assert finding.code == "representation_unresolved"
+    assert finding.coordinate == "scb/lisa/individer-15plus scb/lisa/yrke Ssyk9"
+
+
 def test_a_same_as_aliased_variable_resolves(conn, tmp_path) -> None:
     """A binding FQID that misses the direct slug lookup but resolves through a
     curated `variable_same_as` edge is exactly what the order path resolves, so
@@ -311,6 +422,70 @@ def test_an_aliased_variable_at_a_variant_it_never_reaches_is_reported(
     )
     assert finding.code == "binding_unavailable"
     assert finding.coordinate == "scb/lisa/individer-20plus scb/lisa/konkod"
+
+
+def test_a_cross_register_alias_at_a_variant_its_target_lacks_is_reported(
+    conn, tmp_path
+) -> None:
+    """A `variable_same_as` edge is cross-register by construction, so the
+    target register uses its own variant slugs and need not carry the
+    coordinate's at all. That is a finding about one pair, never an exception
+    that costs the run every other finding."""
+    add_register(conn, register_id=2, slug="bef", name="Befolkning")
+    add_variant(
+        conn, register_variant_id=20, register_id=2, slug="folkbokforda", name="F"
+    )
+    add_variable(conn, register_id=2, var_id=77, name="Kön", slug="konkod")
+    add_state(
+        conn,
+        register_id=2,
+        variable_slug="konkod",
+        register_variant_id=20,
+        delivery_column_name="Kon",
+    )
+    conn.execute(
+        "INSERT INTO variable_same_as "
+        "(a_provider, a_register, a_variable, b_provider, b_register, b_variable) "
+        "VALUES ('scb','lisa','konkod','scb','bef','konkod')"
+    )
+    conn.commit()
+
+    findings = check_inventory(
+        _inventory(tmp_path, CLEAN_INVENTORY.replace("lisa/kon", "lisa/konkod")), conn
+    )
+    assert [f.code for f in findings] == ["binding_unavailable"]
+    assert findings[0].coordinate == "scb/lisa/individer-15plus scb/lisa/konkod"
+
+
+def test_a_raising_alias_resolution_is_a_finding_not_an_abort(
+    conn, tmp_path, monkeypatch
+) -> None:
+    """`resolve_at` raises on a corrupt catalog (a state whose register_variant
+    lost its slug). The gate owes both its consumers a COMPLETE grouped report,
+    so one raised coordinate must not take the whole run down — it becomes the
+    `binding_unavailable` it is, and boot still refuses to serve it."""
+    conn.execute(
+        "INSERT INTO variable_same_as "
+        "(a_provider, a_register, a_variable, b_provider, b_register, b_variable) "
+        "VALUES ('scb','lisa','konkod','scb','lisa','kon')"
+    )
+    conn.commit()
+
+    def _raise(*_args: object, **_kwargs: object) -> list[object]:
+        raise RegMetaError(
+            exit_code=EXIT_NOT_FOUND,
+            code="state_variant_unresolved",
+            error_class="query",
+            message="register_variant has no slug",
+            remediation="Rebuild the reg_meta DB.",
+        )
+
+    monkeypatch.setattr(Catalog, "resolve_at", _raise)
+    findings = check_inventory(
+        _inventory(tmp_path, CLEAN_INVENTORY.replace("lisa/kon", "lisa/konkod")), conn
+    )
+    assert [f.code for f in findings] == ["binding_unavailable"]
+    assert findings[0].coordinate == "scb/lisa/individer-15plus scb/lisa/konkod"
 
 
 def test_an_unresolved_variant_does_not_cascade_into_its_cells(conn, tmp_path) -> None:

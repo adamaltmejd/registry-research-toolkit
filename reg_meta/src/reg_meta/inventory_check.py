@@ -118,6 +118,8 @@ class _Uses:
 # mapping that pins a representation states a cell.
 _Pair = tuple[str, str]
 _Cell = tuple[str, str, str]
+# The same binding at the DB's own grain: `(variable_id, register_variant_id)`.
+_PairIds = tuple[int, int]
 
 
 def check_inventory(
@@ -213,26 +215,16 @@ def check_inventory(
             # (`"_default"`, no period filter) with the same variant narrowing
             # the materializer applies. Rare: same_as is curator-authored and
             # tiny.
-            aliased_states[pair] = catalog.resolve_at(
-                variable, "_default", variant=coordinate.split("/")[2]
-            )
+            aliased_states[pair] = _aliased_states(catalog, variable, coordinate)
             continue
         variable_id = variable_ids.get(variable)
         if variable_id is None:
             continue  # already reported at the variable grain
         pair_probes[pair] = (variable_id, register_variant_id)
 
-    cell_probes: dict[_Cell, tuple[int, int, str]] = {}
-    for cell in cells:
-        key = pair_probes.get(cell[:2])
-        if key is not None:  # else aliased, or reported at a coarser grain
-            cell_probes[cell] = (*key, cell[2])
-
-    delivered_pairs, delivered_cells = _delivered(
-        conn, set(pair_probes.values()), set(cell_probes.values())
-    )
+    delivered = _delivered(conn, set(pair_probes.values()))
     unavailable = sorted(
-        [pair for pair, key in pair_probes.items() if key not in delivered_pairs]
+        [pair for pair, key in pair_probes.items() if key not in delivered]
         + [pair for pair, states in aliased_states.items() if not states]
     )
     for pair in unavailable:
@@ -241,21 +233,26 @@ def check_inventory(
             _finding(
                 "binding_unavailable",
                 " ".join(pair),
-                f"variable {variable} has no state at {coordinate}, so the "
-                "catalog never delivers this binding there",
+                f"the catalog resolves no state for variable {variable} at "
+                f"{coordinate}, so it never delivers this binding there",
                 pairs[pair],
             )
         )
 
     stranded = set(unavailable)
-    unresolved: list[_Cell] = [
-        cell
-        for cell, key in cell_probes.items()
-        if key not in delivered_cells and cell[:2] not in stranded
-    ]
+    unresolved: list[_Cell] = []
     for cell in cells:
-        states = aliased_states.get(cell[:2])
-        if states and not any(s.delivery_column_name == cell[2] for s in states):
+        coordinate, variable, representation = cell
+        pair = (coordinate, variable)
+        if pair in stranded:
+            continue  # already reported at the binding grain; don't cascade
+        key = pair_probes.get(pair)
+        if key is not None:
+            if representation not in delivered[key]:
+                unresolved.append(cell)
+        elif (states := aliased_states.get(pair)) is not None and not any(
+            state.delivery_column_name == representation for state in states
+        ):
             unresolved.append(cell)
     for cell in sorted(unresolved):
         coordinate, variable, representation = cell
@@ -349,42 +346,102 @@ def _variable_ids(conn: sqlite3.Connection, wanted: set[str]) -> dict[str, int]:
 
 
 def _delivered(
-    conn: sqlite3.Connection,
-    pairs: set[tuple[int, int]],
-    cells: set[tuple[int, int, str]],
-) -> tuple[set[tuple[int, int]], set[tuple[int, int, str]]]:
-    """Which of the `(variable_id, register_variant_id)` pairs the catalog
-    carries a state for, and which of the `(…, delivery_column_name)` cells it
-    delivers under that name — both grains from ONE scan, since a cell is a
-    narrowing of its pair.
+    conn: sqlite3.Connection, pairs: set[_PairIds]
+) -> dict[_PairIds, frozenset[str]]:
+    """For each pair of `pairs` the catalog carries a state for, the delivery
+    column names the resolver would produce over the whole history.
 
-    The resolver's universe is `variable_state`'s denormalized latest alias
-    UNION the `variable_alias_window` rows `Catalog._expand_state_windows`
-    expands a state into — a monthly-family (#319) or multi-alias (#945) column
-    exists ONLY in the window table, so reading `variable_state` alone would
-    strand a mapping the order path resolves. A state with NO delivery column
-    still makes its binding REACHABLE (whether an unqualified binding is
+    A pair ABSENT from the result is one no `variable_state` row pairs — the
+    binding is unreachable. A pair mapped to an EMPTY set is reachable but
+    delivers no column (its states all carry a NULL `delivery_column_name`);
+    that is still a reachable binding, because whether an unqualified binding is
     orderable across a given period is the representation grain, which only the
-    order path can decide), so the pair arm keeps it while the cell arm does
-    not. Filtered while streaming, like the lookups above."""
-    found_pairs: set[tuple[int, int]] = set()
-    found_cells: set[tuple[int, int, str]] = set()
-    if not pairs:
-        return found_pairs, found_cells
-    for variable_id, register_variant_id, column in conn.execute(
-        "SELECT variable_id, register_variant_id, delivery_column_name "
-        "FROM variable_state "
-        "UNION ALL "
-        "SELECT variable_id, register_variant_id, delivery_column_name "
-        "FROM variable_alias_window"
+    order path can decide.
+
+    `variable_alias_window` is read the way its ONLY reader reads it
+    (`Catalog._expand_state_windows`), never as a flat union: a window row is
+    not an independently delivered representation. It expands a state only when
+    it is CONTAINED in that state's validity AND that state's own delivery
+    column participates in the contained set; otherwise the state stands on its
+    own column and its windows deliver nothing. Unioning the two tables would
+    bless an orphaned, non-contained or non-participating window as deliverable
+    and let a deployment boot on a mapping `resolve_at` cannot fill — the exact
+    false pass this gate exists to prevent.
+
+    Two streaming scans, filtered against the inventory's own pairs, so the
+    working set stays the inventory's and not the catalog's."""
+    states: dict[_PairIds, list[tuple[str, str, str | None]]] = {}
+    for variable_id, register_variant_id, valid_from, valid_to, column in conn.execute(
+        "SELECT variable_id, register_variant_id, valid_from, valid_to, "
+        "delivery_column_name FROM variable_state"
     ):
         pair = (variable_id, register_variant_id)
-        if pair not in pairs:
-            continue
-        found_pairs.add(pair)
-        if column is not None and (cell := (*pair, column)) in cells:
-            found_cells.add(cell)
-    return found_pairs, found_cells
+        if pair in pairs:
+            states.setdefault(pair, []).append((valid_from, valid_to, column))
+    if not states:
+        return {}
+    windows: dict[_PairIds, list[tuple[str, str, str]]] = {}
+    for variable_id, register_variant_id, column, valid_from, valid_to in conn.execute(
+        "SELECT variable_id, register_variant_id, delivery_column_name, "
+        "valid_from, valid_to FROM variable_alias_window"
+    ):
+        pair = (variable_id, register_variant_id)
+        if pair in states:
+            windows.setdefault(pair, []).append((column, valid_from, valid_to))
+    return {
+        pair: _expanded_columns(state_rows, windows.get(pair, []))
+        for pair, state_rows in states.items()
+    }
+
+
+def _expanded_columns(
+    states: list[tuple[str, str, str | None]],
+    windows: list[tuple[str, str, str]],
+) -> frozenset[str]:
+    """`Catalog._expand_state_windows`'s delivery columns for one pair.
+
+    The gate reads the WHOLE history (`"_default"`, no period filter), so the
+    resolver's window ∩ requested-bounds test is trivially true and is not
+    mirrored — every contained window is in range. What is mirrored is the
+    containment and participation pair of conditions, which is what decides
+    whether a state expands into its windows or stands on its own column."""
+    columns: set[str] = set()
+    for valid_from, valid_to, column in states:
+        contained = [w for w in windows if valid_from <= w[1] and w[2] <= valid_to]
+        if (
+            contained
+            and column is not None
+            and any(w[0].lower() == column.lower() for w in contained)
+        ):
+            # The state's own column participates, so the state EXPANDS: the
+            # contained windows REPLACE it, the base column returning as the
+            # window that matched it — in that window's own spelling.
+            columns.update(w[0] for w in contained)
+        elif column is not None:
+            # No window contained by this state, or none carrying its column:
+            # the state stands on its own and its windows deliver nothing.
+            columns.add(column)
+    return frozenset(columns)
+
+
+def _aliased_states(
+    catalog: Catalog, fqid: str, coordinate: str
+) -> list[VariableState]:
+    """The states an aliased binding resolves to at `coordinate`, over the whole
+    history — `resolve_at`'s own variant narrowing, which is what the order path
+    applies.
+
+    A resolution failure counts as NO states, never an abort. A same_as edge is
+    cross-register by construction, so the target's shape is not the
+    coordinate's, and this gate owes its two consumers a COMPLETE grouped report
+    — one raised coordinate must not cost the boot failure and the maintainer's
+    pytest every other finding in the run. The pair is then reported as
+    `binding_unavailable`, which is what it is however the resolution failed,
+    and boot still refuses to serve it."""
+    try:
+        return catalog.resolve_at(fqid, "_default", variant=coordinate.split("/")[2])
+    except RegMetaError:
+        return []
 
 
 def _resolves(catalog: Catalog, fqid: str) -> bool:
