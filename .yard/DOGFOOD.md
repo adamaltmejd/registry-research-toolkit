@@ -469,3 +469,12 @@ mode the wake-driven loop exists to prevent. Usage refusals should exit non-zero
   the evidence-collection symptom; don't charge a full redo when the failure is the
   handoff, not the resolution. Operator recovery that worked: abandon (candidate
   retained) + `yard lane replay` as a fresh 0.12.0-native attempt.
+
+- **Update (decisive)**: a fresh, fully 0.12.0-native attempt (`yard lane replay` →
+  Y-29/5, admitted and executed entirely under the new daemon and store schema) hits the
+  IDENTICAL `lane_propose` capability refusal on its conflict resolution. Not migration
+  debris — a live 0.12.0 defect: the conflict worker's capability grant does not cover
+  the method its own handoff calls (rename drift in the worker boundary?). Every
+  conflicted retarget board-wide is currently unresolvable; each attempt burns the full
+  rebase before failing. Y-29/5 is held at the stop (costs nothing) pending a switchyard
+  fix.
