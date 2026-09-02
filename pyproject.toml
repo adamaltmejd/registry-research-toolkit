@@ -111,6 +111,10 @@ package = false
 # ~/.config/uv/uv.toml would discard the committed lock on plain `uv run` and
 # re-resolve against PyPI.
 exclude-newer = "7 days"
+# The release-age guard above is a third-party supply-chain hold. reg-schema is this
+# workspace's own package, published by its own workflow, and reg_meta's Docker
+# integration test resolves it from PyPI under this config — so it is exempt.
+exclude-newer-package = { reg-schema = "2100-01-01T00:00:00Z" }
 
 [tool.uv.sources]
 reg-meta = { workspace = true }

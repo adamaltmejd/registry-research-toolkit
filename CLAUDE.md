@@ -93,7 +93,9 @@ simplification reads as intent and a deferral can't silently rot.
   `pyproject.toml` `[tool.uv]`, recorded in `uv.lock`'s `[options]` block. It applies on
   every checkout with no global uv config needed. Don't remove either side: dropping the
   pyproject setting makes plain `uv run` discard the committed lock on checkouts without
-  a matching global config.
+  a matching global config. The guard is for third-party supply-chain risk; `reg-schema`
+  is this workspace's own package, published by its own workflow, so it's exempted via
+  `exclude-newer-package` in the same `[tool.uv]` block.
 - The workspace floor is uniformly `>=3.14` (ruff `target-version = py314` to match),
   after a coordinated bump (#682, 2026-06-22).
 - A repo-root `.python-version` pins the interpreter to `3.14` so that **project-less
