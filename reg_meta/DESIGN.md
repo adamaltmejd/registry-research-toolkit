@@ -916,6 +916,35 @@ canonical serialization IS the artifact. Omitting `--inventory` is the same
 `inventory=None` global fallback the webapp's global deployment passes, not a degraded
 CLI mode.
 
+**Deferred (ratified 2026-09-02): companion tables.** Steward deliveries carry
+reference/crosswalk tables that are useful — sometimes essential — beside certain
+registers but are not register data: value/label lookups (VaraText beside IVP, the
+klartext code lists), coding-scheme crosswalks (skolkod↔skolenhetskod), and
+pseudonym-bearing linkage tables (the FEK `PeOrgNr`↔`FENr` key tables, the person-level
+`LopNrByte` key-change table). Today the SWECOV generator lookup-skips them; read that
+state as *awaiting this mechanism*, not as a decision to exclude. The settled design,
+built when the first real extraction needs a companion file:
+
+- **Two mechanisms, split by cardinality and kind.** A small closed code set is CATALOG
+  work — mint it as a value set/classification (browsable, versioned, exported by the
+  existing complete-code export); its MONA table copy needs no ordering surface. A large
+  lookup (university course-name lists run to several 100k rows — a dataset, not a value
+  set) or any crosswalk/key table is a PHYSICAL COMPANION: a table-level
+  `companion_of = "<provider>/<register>"` in the delivery inventory. No mappings, no
+  `(variant, variable, period)` coordinates, no researcher choice — any order touching
+  that register ships its companion tables as extra output files automatically.
+- **Sensitive vs public is an access fact, not a mechanism fact.** A pseudonym-bearing
+  crosswalk is linkage microdata only the steward can deliver, so it must be a
+  companion; a public reference table may be one purely for delivery convenience.
+- **Contract implication.** A companion manifest entry has no logical coordinate, so
+  this is a manifest-shape change (version 1 is still in definition — see above) plus a
+  materializer arm, one lane's worth.
+- **Open question, decide at build time:** `LopNrByte` companions the *steward* (every
+  person-keyed order may need it), not any one register — and making it orderable at all
+  may deserve a deliberate access decision rather than an automatic ride-along. The
+  FEK_JE and SaBo key tables are parked behind this mechanism (deliberately NOT minted
+  as flavor linkage variants).
+
 ## Value sets are year-projected
 
 `Vardemangder.csv` is the historical union — every code that ever applied to a variable
