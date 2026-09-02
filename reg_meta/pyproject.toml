@@ -19,9 +19,11 @@ classifiers = [
 ]
 # `reg-schema` is the dependency REFACTOR_SPEC.md §12 sanctions: the shared order
 # materializer (`order.py`) consumes `ProjectData`, and the decision was to take
-# this edge rather than create a third package for one function. It resolves via
-# [tool.uv.sources] in the workspace root, so the floor is a convention pin
-# (cf. reg_webapp), not a PyPI resolution.
+# this edge rather than create a third package for one function. In the published
+# wheel this floor is a real PyPI resolution — `uv tool install reg-meta` fetches
+# `reg-schema` from the index (published by publish_reg_schema.yml), so a release
+# that raises the floor must publish reg_schema first. [tool.uv.sources] in the
+# workspace root only overrides that resolution for in-repo work.
 dependencies = [
     "pydantic>=2.13.4",
     "reg-schema>=2.0.0",

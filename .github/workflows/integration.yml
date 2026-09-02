@@ -11,8 +11,9 @@ name: Integration (Docker)
 # `-m "not integration"`. This workflow is the only automated home for the
 # release-asset-dependent path.
 on:
-  # Weekly drift catch (base image, uv, GitHub Releases availability). Off the
-  # top of the hour — GitHub delays/drops crons scheduled at :00 under load.
+  # Weekly drift catch (GitHub Releases availability only — the base image and
+  # uv are digest-pinned since Y-25). Off the top of the hour — GitHub
+  # delays/drops crons scheduled at :00 under load.
   schedule:
     - cron: "17 6 * * 1"
   # Called by publish_reg_meta.yml after a reg_meta/v* release is published, to

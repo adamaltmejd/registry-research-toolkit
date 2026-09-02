@@ -1,0 +1,36 @@
+name: Publish reg_schema to PyPI
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  ci:
+    if: startsWith(github.event.release.tag_name, 'reg_schema/v')
+    uses: ./.github/workflows/ci.yml
+
+  publish:
+    needs: ci
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: astral-sh/setup-uv@v10.0.1
+        with:
+          version: "0.12.6"
+
+      # reg_schema ships nothing but the wheel — no DB release assets, no doc
+      # DB, no container image — and it has no CLI entry point, so importing
+      # the package and printing `__version__` is the whole smoke test. It
+      # confirms the module imports and carries the version the tag was cut
+      # against (scripts/check_versions.sh checks that pairing in the `ci` job).
+      - name: Smoke test import
+        run: |
+          uv sync --frozen
+          uv run python -c "import reg_schema; print(reg_schema.__version__)"
+
+      - run: uv build reg_schema/ --out-dir dist/
+      - uses: pypa/gh-action-pypi-publish@v1.14.2

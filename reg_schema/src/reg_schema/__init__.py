@@ -50,3 +50,5 @@ __all__ = [
     "ValidationResult",
     "validate_structural",
 ]
+
+__version__ = "2.0.0"

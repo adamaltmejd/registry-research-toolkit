@@ -110,6 +110,7 @@ Dependency graph (acyclic):
 
 ```text
 reg_meta_build → reg_meta
+reg_meta       → reg_schema
 reg_webapp     → reg_meta, reg_schema
 reg_schema     → (none)
 ```

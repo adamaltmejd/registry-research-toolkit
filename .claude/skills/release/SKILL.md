@@ -1,14 +1,15 @@
 ---
 name: release
 description: >-
-  Create and publish a release. Usage: /release [package] <patch|minor|major>
+  Create and publish a release for reg_meta, reg_meta_build, or reg_schema. Usage:
+  /release [package] <patch|minor|major>
 disable-model-invocation: false
 argument-hint: "[package] <patch|minor|major>"
 ---
 
 # Release pipeline
 
-Create and publish a release for one or both PyPI packages.
+Create and publish a release for one or more of the PyPI packages.
 
 **Never start a release unless the user explicitly asks for one.** This skill may be
 invoked via `/release` or merely referenced in conversation — either way, do not proceed
@@ -22,6 +23,7 @@ versions.
   | -------------- | ------------------------------- | ----------------------------------------------- | --------------------------------------------------------------------------------------------- |
   | reg_meta       | `reg_meta/pyproject.toml`       | `reg_meta/src/reg_meta/__init__.py`             | `publish_reg_meta.yml` (unattended — `pypi` environment review gate removed 2026-06-10)       |
   | reg_meta_build | `reg_meta_build/pyproject.toml` | `reg_meta_build/src/reg_meta_build/__init__.py` | `publish_reg_meta_build.yml` (unattended — `pypi` environment review gate removed 2026-06-10) |
+  | reg_schema     | `reg_schema/pyproject.toml`     | `reg_schema/src/reg_schema/__init__.py`         | `publish_reg_schema.yml` (unattended — same gate-free `pypi` environment)                     |
 
 reg_meta_build is the build pipeline that produces `reg_meta`'s SQLite assets. It has
 its own PyPI release on the `reg_meta_build/v*` tag but ships no DB release assets
@@ -31,10 +33,23 @@ already satisfied by the published reg_meta, so either publish order resolves �
 release raises the floor to the new reg_meta, publish reg_meta first and verify it is on
 PyPI before publishing the builder.
 
-`reg_schema` is a library with `reg_schema/pyproject.toml` only — no checked
-`__version__` and no publish workflow exist yet. It is **not** a current /release
-target. Before any first PyPI release of it, stop and add or confirm the publish path
-rather than silently shipping a package with no workflow.
+`reg_schema` is the `project_data.json` schema library. It releases on the
+`reg_schema/v*` tag through `publish_reg_schema.yml` and ships **nothing but the wheel**
+— no DB release assets and no doc DB — so step 8 and the step 11 catalog refresh do not
+apply to it. It is **upstream of both `reg_meta`** (a `reg-schema>=` floor in reg_meta's
+pyproject, currently `>=2.0.0`) **and `reg_webapp`**. As with reg_meta_build above, an
+already-satisfied floor resolves in either order — but when a release raises reg_meta's
+`reg-schema` floor, publish reg_schema **first** and confirm the version-specific PyPI
+JSON is a 200 before publishing reg_meta, or the reg_meta wheel lands unresolvable for
+`uv tool install reg-meta`:
+
+```sh
+curl -s -o /dev/null -w '%{http_code}\n' https://pypi.org/pypi/reg-schema/X.Y.Z/json
+```
+
+reg_schema has never been published, so its **first** release also needs the
+`reg-schema` trusted publisher (this repo + `publish_reg_schema.yml` + the `pypi`
+environment) registered on PyPI before the upload step can authenticate.
 
 ## Validation
 
