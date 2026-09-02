@@ -97961,6 +97961,1030 @@ name = "Region"
 name = "Statistikdatum"
 
 [[table]]
+id = "FK_AKTIVITETSTOD_lev4"
+edition = { from = 2015, to = 2025 }
+
+[[table.column]]
+name = "BELOPP"
+
+[[table.column.mapping]]
+register_variant = "fk/aktivitetsstod/_default"
+variable = "fk/aktivitetsstod/belopp"
+representation = "belopp"
+
+[[table.column]]
+name = "FROM_DATUM"
+
+[[table.column]]
+name = "P1105_LopNr_PersonNr"
+
+[[table.column]]
+name = "TOM_DATUM"
+
+[[table.column]]
+name = "UTTAGET_MANAD"
+
+[[table]]
+id = "FK_BAB_lev4"
+edition = { from = 2015, to = 2024 }
+
+[[table.column]]
+name = "P1105_LopNr_PersonNr"
+
+[[table.column]]
+name = "Utb_manad"
+
+[[table.column]]
+name = "belopp"
+
+[[table.column.mapping]]
+register_variant = "fk/barnbidrag/_default"
+variable = "fk/barnbidrag/belopp"
+representation = "belopp"
+
+[[table]]
+id = "FK_BOSTADSBIDRAG_lev4"
+edition = { from = 2018, to = 2025 }
+
+[[table.column]]
+name = "BELOPP"
+
+[[table.column.mapping]]
+register_variant = "fk/bostadsbidrag/_default"
+variable = "fk/bostadsbidrag/belopp"
+representation = "belopp"
+
+[[table.column]]
+name = "BELOPP_TILLAGGSBIDRAG"
+
+[[table.column]]
+name = "P1105_LopNr_Medsokande_PersonNr"
+
+[[table.column]]
+name = "P1105_LopNr_Sokande_PersonNr"
+
+[[table.column]]
+name = "UTBETALNINGSMANAD"
+
+[[table.column.mapping]]
+register_variant = "fk/bostadsbidrag/_default"
+variable = "fk/bostadsbidrag/utbetalningsmanad"
+representation = "utbetalningsmanad"
+
+[[table.column]]
+name = "UTBETALNINGSPERIOD_FROMDAT"
+
+[[table.column]]
+name = "UTBETALNINGSPERIOD_TOMDAT"
+
+[[table]]
+id = "FK_BOSTADSERSATTNING_lev4"
+edition = { from = 2015, to = "2025-06" }
+
+[[table.column]]
+name = "BELOPP"
+
+[[table.column.mapping]]
+register_variant = "fk/bostadsersattning/_default"
+variable = "fk/bostadsersattning/belopp"
+representation = "belopp"
+
+[[table.column]]
+name = "ERSATTNING_FROM"
+
+[[table.column]]
+name = "ERSATTNING_TOM"
+
+[[table.column]]
+name = "P1105_LopNr_PersonNr"
+
+[[table.column]]
+name = "UTTAG_MANAD"
+
+[[table]]
+id = "FK_BOSTADSTILLAGG_lev4"
+edition = { from = 2015, to = "2025-06" }
+
+[[table.column]]
+name = "BELOPP"
+
+[[table.column.mapping]]
+register_variant = "fk/bostadstillagg/_default"
+variable = "fk/bostadstillagg/belopp"
+representation = "belopp"
+
+[[table.column]]
+name = "FROMDAT"
+
+[[table.column]]
+name = "P1105_LopNr_PersonNr"
+
+[[table.column]]
+name = "TOMDAT"
+
+[[table.column]]
+name = "UTTAG_MANAD"
+
+[[table]]
+id = "FK_DELFALL1_1_SA_lev4"
+edition = { from = 1992, to = 2025 }
+
+[[table.column]]
+name = "DELFORMAN"
+
+[[table.column.mapping]]
+register_variant = "fk/sjuk-aktivitetsersattning/delfall-1-1"
+variable = "fk/sjuk-aktivitetsersattning/delforman"
+representation = "Delforman"
+
+[[table.column]]
+name = "DELFORMAN_KOD"
+
+[[table.column.mapping]]
+register_variant = "fk/sjuk-aktivitetsersattning/delfall-1-1"
+variable = "fk/sjuk-aktivitetsersattning/delforman-kod"
+representation = "Delforman_kod"
+
+[[table.column]]
+name = "DEL_BELOPP_BRUTTO"
+
+[[table.column.mapping]]
+register_variant = "fk/sjuk-aktivitetsersattning/delfall-1-1"
+variable = "fk/sjuk-aktivitetsersattning/del-belopp-brutto"
+representation = "Del_belopp_brutto"
+
+[[table.column]]
+name = "DEL_BELOPP_GAR_BRUTTO"
+
+[[table.column.mapping]]
+register_variant = "fk/sjuk-aktivitetsersattning/delfall-1-1"
+variable = "fk/sjuk-aktivitetsersattning/del-belopp-gar-brutto"
+representation = "Del_belopp_gar_brutto"
+
+[[table.column]]
+name = "DEL_BELOPP_INK_BRUTTO"
+
+[[table.column.mapping]]
+register_variant = "fk/sjuk-aktivitetsersattning/delfall-1-1"
+variable = "fk/sjuk-aktivitetsersattning/del-belopp-ink-brutto"
+representation = "Del_belopp_ink_brutto"
+
+[[table.column]]
+name = "DEL_DAGAR_BRUTTO"
+
+[[table.column.mapping]]
+register_variant = "fk/sjuk-aktivitetsersattning/delfall-1-1"
+variable = "fk/sjuk-aktivitetsersattning/del-dagar-brutto"
+representation = "Del_dagar_brutto"
+
+[[table.column]]
+name = "DEL_DAGAR_NETTO"
+
+[[table.column.mapping]]
+register_variant = "fk/sjuk-aktivitetsersattning/delfall-1-1"
+variable = "fk/sjuk-aktivitetsersattning/del-dagar-netto"
+representation = "Del_dagar_netto"
+
+[[table.column]]
+name = "DEL_FROM_DATUM"
+
+[[table.column.mapping]]
+register_variant = "fk/sjuk-aktivitetsersattning/delfall-1-1"
+variable = "fk/sjuk-aktivitetsersattning/del-from-datum"
+representation = "Del_from_datum"
+
+[[table.column]]
+name = "DEL_TOM_DATUM"
+
+[[table.column.mapping]]
+register_variant = "fk/sjuk-aktivitetsersattning/delfall-1-1"
+variable = "fk/sjuk-aktivitetsersattning/del-tom-datum"
+representation = "Del_tom_datum"
+
+[[table.column]]
+name = "DIAGNOS1"
+
+[[table.column.mapping]]
+register_variant = "fk/sjuk-aktivitetsersattning/delfall-1-1"
+variable = "fk/sjuk-aktivitetsersattning/diagnos1"
+representation = "Diagnos1"
+
+[[table.column]]
+name = "DIAGNOS1_KOD"
+
+[[table.column.mapping]]
+register_variant = "fk/sjuk-aktivitetsersattning/delfall-1-1"
+variable = "fk/sjuk-aktivitetsersattning/diagnos1-kod"
+representation = "Diagnos1_kod"
+
+[[table.column]]
+name = "DIAGNOS2"
+
+[[table.column.mapping]]
+register_variant = "fk/sjuk-aktivitetsersattning/delfall-1-1"
+variable = "fk/sjuk-aktivitetsersattning/diagnos2"
+representation = "Diagnos2"
+
+[[table.column]]
+name = "DIAGNOS2_KOD"
+
+[[table.column.mapping]]
+register_variant = "fk/sjuk-aktivitetsersattning/delfall-1-1"
+variable = "fk/sjuk-aktivitetsersattning/diagnos2-kod"
+representation = "Diagnos2_kod"
+
+[[table.column]]
+name = "FALL_FROM_DATUM"
+
+[[table.column.mapping]]
+register_variant = "fk/sjuk-aktivitetsersattning/delfall-1-1"
+variable = "fk/sjuk-aktivitetsersattning/fall-from-datum"
+representation = "Fall_from_datum"
+
+[[table.column]]
+name = "FALL_TOM_DATUM"
+
+[[table.column.mapping]]
+register_variant = "fk/sjuk-aktivitetsersattning/delfall-1-1"
+variable = "fk/sjuk-aktivitetsersattning/fall-tom-datum"
+representation = "Fall_tom_datum"
+
+[[table.column]]
+name = "FORMAN"
+
+[[table.column.mapping]]
+register_variant = "fk/sjuk-aktivitetsersattning/delfall-1-1"
+variable = "fk/sjuk-aktivitetsersattning/forman"
+representation = "Forman"
+
+[[table.column]]
+name = "FORMAN_KOD"
+
+[[table.column.mapping]]
+register_variant = "fk/sjuk-aktivitetsersattning/delfall-1-1"
+variable = "fk/sjuk-aktivitetsersattning/forman-kod"
+representation = "Forman_kod"
+
+[[table.column]]
+name = "MANADER"
+
+[[table.column.mapping]]
+register_variant = "fk/sjuk-aktivitetsersattning/delfall-1-1"
+variable = "fk/sjuk-aktivitetsersattning/manader"
+representation = "Manader"
+
+[[table.column]]
+name = "MANBELOPP"
+
+[[table.column.mapping]]
+register_variant = "fk/sjuk-aktivitetsersattning/delfall-1-1"
+variable = "fk/sjuk-aktivitetsersattning/manbelopp"
+representation = "Manbelopp"
+
+[[table.column]]
+name = "OMFATTNING"
+
+[[table.column.mapping]]
+register_variant = "fk/sjuk-aktivitetsersattning/delfall-1-1"
+variable = "fk/sjuk-aktivitetsersattning/omfattning"
+representation = "Omfattning"
+
+[[table.column]]
+name = "P1105_LopNr_PersonNr"
+
+[[table]]
+id = "FK_DELFALL4_1_SJP_lev4"
+edition = { from = 2012, to = 2025 }
+
+[[table.column]]
+name = "DAGBELOPP"
+
+[[table.column.mapping]]
+register_variant = "fk/sjukpenning/delfall-4-1"
+variable = "fk/sjukpenning/dagbelopp"
+representation = "Dagbelopp"
+
+[[table.column]]
+name = "DELFORMAN1"
+
+[[table.column.mapping]]
+register_variant = "fk/sjukpenning/delfall-4-1"
+variable = "fk/sjukpenning/delforman1"
+representation = "Delforman1"
+
+[[table.column]]
+name = "DELFORMAN1_KOD"
+
+[[table.column.mapping]]
+register_variant = "fk/sjukpenning/delfall-4-1"
+variable = "fk/sjukpenning/delforman1-kod"
+representation = "Delforman1_kod"
+
+[[table.column]]
+name = "DELFORMAN2"
+
+[[table.column.mapping]]
+register_variant = "fk/sjukpenning/delfall-4-1"
+variable = "fk/sjukpenning/delforman2"
+representation = "Delforman2"
+
+[[table.column]]
+name = "DELFORMAN2_KOD"
+
+[[table.column.mapping]]
+register_variant = "fk/sjukpenning/delfall-4-1"
+variable = "fk/sjukpenning/delforman2-kod"
+representation = "Delforman2_kod"
+
+[[table.column]]
+name = "DEL_BELOPP_BRUTTO"
+
+[[table.column.mapping]]
+register_variant = "fk/sjukpenning/delfall-4-1"
+variable = "fk/sjukpenning/del-belopp-brutto"
+representation = "Del_belopp_brutto"
+
+[[table.column]]
+name = "DEL_DAGAR_BRUTTO"
+
+[[table.column.mapping]]
+register_variant = "fk/sjukpenning/delfall-4-1"
+variable = "fk/sjukpenning/del-dagar-brutto"
+representation = "Del_dagar_brutto"
+
+[[table.column]]
+name = "DEL_DAGAR_NETTO"
+
+[[table.column.mapping]]
+register_variant = "fk/sjukpenning/delfall-4-1"
+variable = "fk/sjukpenning/del-dagar-netto"
+representation = "Del_dagar_netto"
+
+[[table.column]]
+name = "DEL_DAGAR_TOT"
+
+[[table.column.mapping]]
+register_variant = "fk/sjukpenning/delfall-4-1"
+variable = "fk/sjukpenning/del-dagar-tot"
+representation = "Del_dagar_tot"
+
+[[table.column]]
+name = "DEL_FROM_DATUM"
+
+[[table.column.mapping]]
+register_variant = "fk/sjukpenning/delfall-4-1"
+variable = "fk/sjukpenning/del-from-datum"
+representation = "Del_from_datum"
+
+[[table.column]]
+name = "DEL_TOM_DATUM"
+
+[[table.column.mapping]]
+register_variant = "fk/sjukpenning/delfall-4-1"
+variable = "fk/sjukpenning/del-tom-datum"
+representation = "Del_tom_datum"
+
+[[table.column]]
+name = "DIAGNOS"
+
+[[table.column]]
+name = "DIAGNOS_KOD"
+
+[[table.column]]
+name = "FALL_DAGAR_TOT"
+
+[[table.column.mapping]]
+register_variant = "fk/sjukpenning/delfall-4-1"
+variable = "fk/sjukpenning/fall-dagar-tot"
+representation = "Fall_dagar_tot"
+
+[[table.column]]
+name = "FALL_FROM_DATUM"
+
+[[table.column.mapping]]
+register_variant = "fk/sjukpenning/delfall-4-1"
+variable = "fk/sjukpenning/fall-from-datum"
+representation = "Fall_from_datum"
+
+[[table.column]]
+name = "FALL_FROM_DATUM2"
+
+[[table.column.mapping]]
+register_variant = "fk/sjukpenning/delfall-4-1"
+variable = "fk/sjukpenning/sjukfall-startdatum"
+representation = "Fall_from_datum2"
+
+[[table.column]]
+name = "FALL_TOM_DATUM"
+
+[[table.column.mapping]]
+register_variant = "fk/sjukpenning/delfall-4-1"
+variable = "fk/sjukpenning/fall-tom-datum"
+representation = "Fall_tom_datum"
+
+[[table.column]]
+name = "FORSAKRADTYP"
+
+[[table.column.mapping]]
+register_variant = "fk/sjukpenning/delfall-4-1"
+variable = "fk/sjukpenning/forsakradtyp"
+representation = "Forsakradtyp"
+
+[[table.column]]
+name = "FORSAKRADTYP_KOD"
+
+[[table.column.mapping]]
+register_variant = "fk/sjukpenning/delfall-4-1"
+variable = "fk/sjukpenning/forsakradtyp-kod"
+representation = "Forsakradtyp_kod"
+
+[[table.column]]
+name = "Fullstandig_DIAGNOS_KOD"
+
+[[table.column]]
+name = "Fullstandig_diagnos"
+
+[[table.column]]
+name = "INKOMSTTYP"
+
+[[table.column.mapping]]
+register_variant = "fk/sjukpenning/delfall-4-1"
+variable = "fk/sjukpenning/inkomsttyp"
+representation = "Inkomsttyp"
+
+[[table.column]]
+name = "INKOMSTTYP_KOD"
+
+[[table.column.mapping]]
+register_variant = "fk/sjukpenning/delfall-4-1"
+variable = "fk/sjukpenning/inkomsttyp-kod"
+representation = "Inkomsttyp_kod"
+
+[[table.column]]
+name = "OMFATTNING"
+
+[[table.column.mapping]]
+register_variant = "fk/sjukpenning/delfall-4-1"
+variable = "fk/sjukpenning/omfattning"
+representation = "Omfattning"
+
+[[table.column]]
+name = "P1105_LopNr_PersonNr"
+
+[[table]]
+id = "FK_ETABLERINGSERSATTNING_lev4"
+edition = { from = 2015, to = 2024 }
+
+[[table.column]]
+name = "BELOPP"
+
+[[table.column.mapping]]
+register_variant = "fk/etableringsersattning/_default"
+variable = "fk/etableringsersattning/belopp"
+representation = "belopp"
+
+[[table.column]]
+name = "ERSATTNING_FROM"
+
+[[table.column]]
+name = "ERSATTNING_TOM"
+
+[[table.column]]
+name = "P1105_LopNr_PersonNr"
+
+[[table.column]]
+name = "UTTAG_MANAD"
+
+[[table]]
+id = "FK_ETABLERINGSTILLAGG_lev4"
+edition = { from = 2015, to = "2025-06" }
+
+[[table.column]]
+name = "BELOPP"
+
+[[table.column.mapping]]
+register_variant = "fk/etableringstillagg/_default"
+variable = "fk/etableringstillagg/belopp"
+representation = "belopp"
+
+[[table.column]]
+name = "ERSATTNING_FROM"
+
+[[table.column]]
+name = "ERSATTNING_TOM"
+
+[[table.column]]
+name = "P1105_LopNr_PersonNr"
+
+[[table.column]]
+name = "UTTAG_MANAD"
+
+[[table]]
+id = "FK_FP_DELFALL1_lev4"
+edition = { from = 2014, to = 2024 }
+
+[[table.column]]
+name = "DAGTYP"
+
+[[table.column.mapping]]
+register_variant = "fk/foraldrapenning/fp-delfall1"
+variable = "fk/foraldrapenning/dagtyp"
+representation = "DAGTYP"
+
+[[table.column]]
+name = "DELFALL_BELOPP"
+
+[[table.column.mapping]]
+register_variant = "fk/foraldrapenning/fp-delfall1"
+variable = "fk/foraldrapenning/delfall-belopp"
+representation = "DELFALL_BELOPP"
+
+[[table.column]]
+name = "DELFALL_BRUTTODAGAR"
+
+[[table.column.mapping]]
+register_variant = "fk/foraldrapenning/fp-delfall1"
+variable = "fk/foraldrapenning/delfall-bruttodagar"
+representation = "DELFALL_BRUTTODAGAR"
+
+[[table.column]]
+name = "DELFALL_NETTODAGAR"
+
+[[table.column.mapping]]
+register_variant = "fk/foraldrapenning/fp-delfall1"
+variable = "fk/foraldrapenning/delfall-nettodagar"
+representation = "DELFALL_NETTODAGAR"
+
+[[table.column]]
+name = "DEL_FROM_DATUM"
+
+[[table.column.mapping]]
+register_variant = "fk/foraldrapenning/fp-delfall1"
+variable = "fk/foraldrapenning/del-from-datum"
+representation = "DEL_FROM_DATUM"
+
+[[table.column]]
+name = "DEL_TOM_DATUM"
+
+[[table.column.mapping]]
+register_variant = "fk/foraldrapenning/fp-delfall1"
+variable = "fk/foraldrapenning/del-tom-datum"
+representation = "DEL_TOM_DATUM"
+
+[[table.column]]
+name = "FALL_BELOPP"
+
+[[table.column.mapping]]
+register_variant = "fk/foraldrapenning/fp-delfall1"
+variable = "fk/foraldrapenning/fall-belopp"
+representation = "FALL_BELOPP"
+
+[[table.column]]
+name = "FALL_BRUTTODAGAR"
+
+[[table.column.mapping]]
+register_variant = "fk/foraldrapenning/fp-delfall1"
+variable = "fk/foraldrapenning/fall-bruttodagar"
+representation = "FALL_BRUTTODAGAR"
+
+[[table.column]]
+name = "FALL_FROM_DATUM"
+
+[[table.column.mapping]]
+register_variant = "fk/foraldrapenning/fp-delfall1"
+variable = "fk/foraldrapenning/fall-from-datum"
+representation = "FALL_FROM_DATUM"
+
+[[table.column]]
+name = "FALL_NETTODAGAR"
+
+[[table.column.mapping]]
+register_variant = "fk/foraldrapenning/fp-delfall1"
+variable = "fk/foraldrapenning/fall-nettodagar"
+representation = "FALL_NETTODAGAR"
+
+[[table.column]]
+name = "FALL_TOM_DATUM"
+
+[[table.column.mapping]]
+register_variant = "fk/foraldrapenning/fp-delfall1"
+variable = "fk/foraldrapenning/fall-tom-datum"
+representation = "FALL_TOM_DATUM"
+
+[[table.column]]
+name = "FODDAT_BARN"
+
+[[table.column.mapping]]
+register_variant = "fk/foraldrapenning/fp-delfall1"
+variable = "fk/foraldrapenning/foddat-barn"
+representation = "FODDAT_BARN"
+
+[[table.column]]
+name = "NIVA"
+
+[[table.column.mapping]]
+register_variant = "fk/foraldrapenning/fp-delfall1"
+variable = "fk/foraldrapenning/niva"
+representation = "NIVA"
+
+[[table.column]]
+name = "OMFATTNING"
+
+[[table.column.mapping]]
+register_variant = "fk/foraldrapenning/fp-delfall1"
+variable = "fk/foraldrapenning/omfattning"
+representation = "OMFATTNING"
+
+[[table.column]]
+name = "P1105_LopNr_Barn_PersonNr"
+
+[[table.column]]
+name = "P1105_LopNr_PersonNr"
+
+[[table]]
+id = "FK_HE_lev4"
+edition = { from = 2015, to = 2024 }
+
+[[table.column]]
+name = "P1105_LopNr_PersonNr"
+
+[[table.column]]
+name = "Utbetalningsmanad"
+
+[[table.column.mapping]]
+register_variant = "fk/handikappersattning/_default"
+variable = "fk/handikappersattning/utbetalningsmanad"
+representation = "utbetalningsmanad"
+
+[[table.column]]
+name = "Utbetalningsperiod_fromdat"
+
+[[table.column]]
+name = "Utbetalningsperiod_tomdat"
+
+[[table.column]]
+name = "belopp"
+
+[[table.column.mapping]]
+register_variant = "fk/handikappersattning/_default"
+variable = "fk/handikappersattning/belopp"
+representation = "belopp"
+
+[[table.column]]
+name = "omfattning"
+
+[[table.column.mapping]]
+register_variant = "fk/handikappersattning/_default"
+variable = "fk/handikappersattning/omfattning"
+representation = "omfattning"
+
+[[table]]
+id = "FK_MEKBBARN_lev4"
+edition = { from = 2018, to = 2024 }
+
+[[table.column]]
+name = "P1105_LopNr_Barn_PersonNr"
+
+[[table.column]]
+name = "P1105_LopNr_PersonNr"
+
+[[table.column]]
+name = "Utbetalningsmanad"
+
+[[table.column.mapping]]
+register_variant = "fk/merkostnadsersattning/barn"
+variable = "fk/merkostnadsersattning/utbetalningsmanad"
+representation = "Utbetalningsmanad"
+
+[[table.column]]
+name = "Utbetalningsperiod_fromdat"
+
+[[table.column]]
+name = "Utbetalningsperiod_tomdat"
+
+[[table]]
+id = "FK_MEKB_lev4"
+edition = { from = 2018, to = 2024 }
+partition = "barn"
+
+[[table.column]]
+name = "Omfattning"
+
+[[table.column]]
+name = "P1105_LopNr_PersonNr"
+
+[[table.column]]
+name = "Utbetalningsmanad"
+
+[[table.column.mapping]]
+register_variant = "fk/merkostnadsersattning/mottagare"
+variable = "fk/merkostnadsersattning/utbetalningsmanad"
+representation = "Utbetalningsmanad"
+
+[[table.column]]
+name = "Utbetalningsperiod_fromdat"
+
+[[table.column]]
+name = "Utbetalningsperiod_tomdat"
+
+[[table.column]]
+name = "belopp"
+
+[[table.column.mapping]]
+register_variant = "fk/merkostnadsersattning/mottagare"
+variable = "fk/merkostnadsersattning/belopp"
+representation = "Belopp"
+
+[[table]]
+id = "FK_MEKV_lev4"
+edition = { from = 2019, to = 2025 }
+partition = "vuxna"
+
+[[table.column]]
+name = "Omfattning"
+
+[[table.column]]
+name = "P1105_LopNr_PersonNr"
+
+[[table.column]]
+name = "Utbetalningsmanad"
+
+[[table.column.mapping]]
+register_variant = "fk/merkostnadsersattning/mottagare"
+variable = "fk/merkostnadsersattning/utbetalningsmanad"
+representation = "Utbetalningsmanad"
+
+[[table.column]]
+name = "Utbetalningsperiod_fromdat"
+
+[[table.column]]
+name = "Utbetalningsperiod_tomdat"
+
+[[table.column]]
+name = "belopp"
+
+[[table.column.mapping]]
+register_variant = "fk/merkostnadsersattning/mottagare"
+variable = "fk/merkostnadsersattning/belopp"
+representation = "Belopp"
+
+[[table]]
+id = "FK_OMVBARN_lev4"
+edition = { from = 2019, to = 2025 }
+
+[[table.column]]
+name = "P1105_LopNr_Barn_PersonNr"
+
+[[table.column]]
+name = "P1105_LopNr_PersonNr"
+
+[[table.column]]
+name = "Utbetalningsmanad"
+
+[[table.column.mapping]]
+register_variant = "fk/omvardnadsbidrag/barn"
+variable = "fk/omvardnadsbidrag/utbetalningsmanad"
+representation = "Utbetalningsmanad"
+
+[[table.column]]
+name = "Utbetalningsperiod_fromdat"
+
+[[table.column]]
+name = "Utbetalningsperiod_tomdat"
+
+[[table]]
+id = "FK_OMV_lev4"
+edition = { from = 2019, to = 2025 }
+
+[[table.column]]
+name = "Omfattning"
+
+[[table.column]]
+name = "P1105_LopNr_PersonNr"
+
+[[table.column]]
+name = "Utbetalningsmanad"
+
+[[table.column.mapping]]
+register_variant = "fk/omvardnadsbidrag/mottagare"
+variable = "fk/omvardnadsbidrag/utbetalningsmanad"
+representation = "Utbetalningsmanad"
+
+[[table.column]]
+name = "Utbetalningsperiod_fromdat"
+
+[[table.column]]
+name = "Utbetalningsperiod_tomdat"
+
+[[table.column]]
+name = "belopp"
+
+[[table.column.mapping]]
+register_variant = "fk/omvardnadsbidrag/mottagare"
+variable = "fk/omvardnadsbidrag/belopp"
+representation = "Belopp"
+
+[[table]]
+id = "FK_SMITTBARARPENNING_lev4"
+edition = { from = 2015, to = 2024 }
+
+[[table.column]]
+name = "Belopp"
+
+[[table.column.mapping]]
+register_variant = "fk/smittbararpenning/_default"
+variable = "fk/smittbararpenning/belopp"
+representation = "belopp"
+
+[[table.column]]
+name = "ERSATTNFROM"
+
+[[table.column]]
+name = "ERSATTNTOM"
+
+[[table.column]]
+name = "P1105_LopNr_PersonNr"
+
+[[table.column]]
+name = "UTBETALNINGSMANAD"
+
+[[table.column.mapping]]
+register_variant = "fk/smittbararpenning/_default"
+variable = "fk/smittbararpenning/utbetalningsmanad"
+representation = "utbetalningsmanad"
+
+[[table]]
+id = "FK_TFP_DELFALL_lev4"
+edition = { from = 2015, to = 2024 }
+
+[[table.column]]
+name = "DELFORMAN"
+
+[[table.column]]
+name = "DELFORMAN_KOD"
+
+[[table.column]]
+name = "DEL_BELOPP"
+
+[[table.column.mapping]]
+register_variant = "fk/tillfallig-foraldrapenning/delfall1-1-8"
+variable = "fk/tillfallig-foraldrapenning/del-belopp"
+representation = "DEL_BELOPP"
+
+[[table.column]]
+name = "DEL_BRUTTODAGAR"
+
+[[table.column.mapping]]
+register_variant = "fk/tillfallig-foraldrapenning/delfall1-1-8"
+variable = "fk/tillfallig-foraldrapenning/del-bruttodagar"
+representation = "DEL_BRUTTODAGAR"
+
+[[table.column]]
+name = "DEL_FROM_DATUM"
+
+[[table.column.mapping]]
+register_variant = "fk/tillfallig-foraldrapenning/delfall1-1-8"
+variable = "fk/tillfallig-foraldrapenning/del-from-datum"
+representation = "DEL_FROM_DATUM"
+
+[[table.column]]
+name = "DEL_NETTODAGAR"
+
+[[table.column.mapping]]
+register_variant = "fk/tillfallig-foraldrapenning/delfall1-1-8"
+variable = "fk/tillfallig-foraldrapenning/del-nettodagar"
+representation = "DEL_NETTODAGAR"
+
+[[table.column]]
+name = "DEL_TOM_DATUM"
+
+[[table.column.mapping]]
+register_variant = "fk/tillfallig-foraldrapenning/delfall1-1-8"
+variable = "fk/tillfallig-foraldrapenning/del-tom-datum"
+representation = "DEL_TOM_DATUM"
+
+[[table.column]]
+name = "FALL_FROM_DATUM"
+
+[[table.column.mapping]]
+register_variant = "fk/tillfallig-foraldrapenning/delfall1-1-8"
+variable = "fk/tillfallig-foraldrapenning/fall-from-datum"
+representation = "FALL_FROM_DATUM"
+
+[[table.column]]
+name = "FALL_TOM_DATUM"
+
+[[table.column.mapping]]
+register_variant = "fk/tillfallig-foraldrapenning/delfall1-1-8"
+variable = "fk/tillfallig-foraldrapenning/fall-tom-datum"
+representation = "FALL_TOM_DATUM"
+
+[[table.column]]
+name = "OMFATTNING"
+
+[[table.column.mapping]]
+register_variant = "fk/tillfallig-foraldrapenning/delfall1-1-8"
+variable = "fk/tillfallig-foraldrapenning/omfattning"
+representation = "OMFATTNING"
+
+[[table.column]]
+name = "P1105_LopNr_Barn_PersonNr"
+
+[[table.column]]
+name = "P1105_LopNr_PersonNr"
+
+[[table]]
+id = "FK_UHS_lev4"
+edition = { from = 2018, to = 2025 }
+
+[[table.column]]
+name = "Belopp"
+
+[[table.column.mapping]]
+register_variant = "fk/underhallsstod/utbetalningar-barn"
+variable = "fk/underhallsstod/belopp"
+representation = "BELOPP"
+
+[[table.column]]
+name = "P1105_LopNr_Barn_PersonNr"
+
+[[table.column]]
+name = "P1105_LopNr_Bidragsmottagare_PersonNr"
+
+[[table.column]]
+name = "Utbetalningsmanad"
+
+[[table.column]]
+name = "Utbetalningsperiod_fromdat"
+
+[[table.column]]
+name = "Utbetalningsperiod_tomdat"
+
+[[table]]
+id = "FK_UTVECKLINGSERSATTNING_lev4"
+edition = { from = 2015, to = 2025 }
+
+[[table.column]]
+name = "BELOPP"
+
+[[table.column.mapping]]
+register_variant = "fk/utvecklingsersattning/_default"
+variable = "fk/utvecklingsersattning/belopp"
+representation = "belopp"
+
+[[table.column]]
+name = "FROM_DATUM"
+
+[[table.column]]
+name = "P1105_LopNr_PersonNr"
+
+[[table.column]]
+name = "TOM_DATUM"
+
+[[table.column]]
+name = "UTTAGET_MANAD"
+
+[[table]]
+id = "FK_VB_lev4"
+edition = { from = 2015, to = 2022 }
+
+[[table.column]]
+name = "NIVA_MERKOST"
+
+[[table.column]]
+name = "P1105_LopNr_PersonNr"
+
+[[table.column]]
+name = "Utbetalningsmanad"
+
+[[table.column.mapping]]
+register_variant = "fk/vardbidrag/_default"
+variable = "fk/vardbidrag/utbetalningsmanad"
+representation = "utbetalningsmanad"
+
+[[table.column]]
+name = "Utbetalningsperiod_fromdat"
+
+[[table.column]]
+name = "Utbetalningsperiod_tomdat"
+
+[[table.column]]
+name = "belopp"
+
+[[table.column.mapping]]
+register_variant = "fk/vardbidrag/_default"
+variable = "fk/vardbidrag/belopp"
+representation = "belopp"
+
+[[table.column]]
+name = "omfattning"
+
+[[table.column.mapping]]
+register_variant = "fk/vardbidrag/_default"
+variable = "fk/vardbidrag/omfattning"
+representation = "omfattning"
+
+[[table]]
 id = "FlerGen_Adopforaldrar_20241231"
 edition = 2024
 
@@ -143896,6 +144920,3627 @@ name = "Utflyttnings_datum"
 register_variant = "sabo/adresser/_default"
 variable = "sabo/adresser/utflyttnings-datum"
 representation = "Utflyttnings_datum"
+
+[[table]]
+id = "GDB_Ast1990"
+edition = 1990
+partition = "ast"
+
+[[table.column]]
+name = "AstKommun"
+
+[[table.column]]
+name = "AstNr"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "P1105_LopNr_CfarNr"
+
+[[table.column]]
+name = "P1105_LopNr_PeOrgNr"
+
+[[table]]
+id = "GDB_Ast1991"
+edition = 1991
+partition = "ast"
+
+[[table.column]]
+name = "AstKommun"
+
+[[table.column]]
+name = "AstNr"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "P1105_LopNr_CfarNr"
+
+[[table.column]]
+name = "P1105_LopNr_PeOrgNr"
+
+[[table]]
+id = "GDB_Ast1992"
+edition = 1992
+partition = "ast"
+
+[[table.column]]
+name = "AstKommun"
+
+[[table.column]]
+name = "AstNr"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "P1105_LopNr_CfarNr"
+
+[[table.column]]
+name = "P1105_LopNr_PeOrgNr"
+
+[[table]]
+id = "GDB_Ast1993"
+edition = 1993
+partition = "ast"
+
+[[table.column]]
+name = "AstKommun"
+
+[[table.column]]
+name = "AstNr"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "P1105_LopNr_CfarNr"
+
+[[table.column]]
+name = "P1105_LopNr_PeOrgNr"
+
+[[table]]
+id = "GDB_Ast1994"
+edition = 1994
+partition = "ast"
+
+[[table.column]]
+name = "AstKommun"
+
+[[table.column]]
+name = "AstNr"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "P1105_LopNr_CfarNr"
+
+[[table.column]]
+name = "P1105_LopNr_PeOrgNr"
+
+[[table]]
+id = "GDB_Ast1995"
+edition = 1995
+partition = "ast"
+
+[[table.column]]
+name = "AstKommun"
+
+[[table.column]]
+name = "AstNr"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "P1105_LopNr_CfarNr"
+
+[[table.column]]
+name = "P1105_LopNr_PeOrgNr"
+
+[[table]]
+id = "GDB_Ast1996"
+edition = 1996
+partition = "ast"
+
+[[table.column]]
+name = "AstKommun"
+
+[[table.column]]
+name = "AstNr"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "P1105_LopNr_CfarNr"
+
+[[table.column]]
+name = "P1105_LopNr_PeOrgNr"
+
+[[table]]
+id = "GDB_Ast1997"
+edition = 1997
+partition = "ast"
+
+[[table.column]]
+name = "AstKommun"
+
+[[table.column]]
+name = "AstNr"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "P1105_LopNr_CfarNr"
+
+[[table.column]]
+name = "P1105_LopNr_PeOrgNr"
+
+[[table]]
+id = "GDB_Ast1998"
+edition = 1998
+partition = "ast"
+
+[[table.column]]
+name = "AstKommun"
+
+[[table.column]]
+name = "AstNr"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "P1105_LopNr_CfarNr"
+
+[[table.column]]
+name = "P1105_LopNr_PeOrgNr"
+
+[[table]]
+id = "GDB_Ast1999"
+edition = 1999
+partition = "ast"
+
+[[table.column]]
+name = "AstKommun"
+
+[[table.column]]
+name = "AstNr"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "P1105_LopNr_CfarNr"
+
+[[table.column]]
+name = "P1105_LopNr_PeOrgNr"
+
+[[table]]
+id = "GDB_Ast2000"
+edition = 2000
+partition = "ast"
+
+[[table.column]]
+name = "AstKommun"
+
+[[table.column]]
+name = "AstNr"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "P1105_LopNr_CfarNr"
+
+[[table.column]]
+name = "P1105_LopNr_PeOrgNr"
+
+[[table]]
+id = "GDB_Ast2001"
+edition = 2001
+partition = "ast"
+
+[[table.column]]
+name = "AstKommun"
+
+[[table.column]]
+name = "AstNr"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "P1105_LopNr_CfarNr"
+
+[[table.column]]
+name = "P1105_LopNr_PeOrgNr"
+
+[[table]]
+id = "GDB_Ast2002"
+edition = 2002
+partition = "ast"
+
+[[table.column]]
+name = "AstKommun"
+
+[[table.column]]
+name = "AstNr"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "P1105_LopNr_CfarNr"
+
+[[table.column]]
+name = "P1105_LopNr_PeOrgNr"
+
+[[table]]
+id = "GDB_Ast2003"
+edition = 2003
+partition = "ast"
+
+[[table.column]]
+name = "AstKommun"
+
+[[table.column]]
+name = "AstNr"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "P1105_LopNr_CfarNr"
+
+[[table.column]]
+name = "P1105_LopNr_PeOrgNr"
+
+[[table]]
+id = "GDB_Ast2004"
+edition = 2004
+partition = "ast"
+
+[[table.column]]
+name = "AstKommun"
+
+[[table.column]]
+name = "AstNr"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "P1105_LopNr_CfarNr"
+
+[[table.column]]
+name = "P1105_LopNr_PeOrgNr"
+
+[[table]]
+id = "GDB_Ast2005"
+edition = 2005
+partition = "ast"
+
+[[table.column]]
+name = "AstKommun"
+
+[[table.column]]
+name = "AstNr"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "P1105_LopNr_CfarNr"
+
+[[table.column]]
+name = "P1105_LopNr_PeOrgNr"
+
+[[table]]
+id = "GDB_Ast2006"
+edition = 2006
+partition = "ast"
+
+[[table.column]]
+name = "AstKommun"
+
+[[table.column]]
+name = "AstNr"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "P1105_LopNr_CfarNr"
+
+[[table.column]]
+name = "P1105_LopNr_PeOrgNr"
+
+[[table]]
+id = "GDB_Ast2007"
+edition = 2007
+partition = "ast"
+
+[[table.column]]
+name = "AstKommun"
+
+[[table.column]]
+name = "AstNr"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "P1105_LopNr_CfarNr"
+
+[[table.column]]
+name = "P1105_LopNr_PeOrgNr"
+
+[[table]]
+id = "GDB_Ast2008"
+edition = 2008
+partition = "ast"
+
+[[table.column]]
+name = "AstKommun"
+
+[[table.column]]
+name = "AstNr"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "P1105_LopNr_CfarNr"
+
+[[table.column]]
+name = "P1105_LopNr_PeOrgNr"
+
+[[table]]
+id = "GDB_Ast2009"
+edition = 2009
+partition = "ast"
+
+[[table.column]]
+name = "AstKommun"
+
+[[table.column]]
+name = "AstNr"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "P1105_LopNr_CfarNr"
+
+[[table.column]]
+name = "P1105_LopNr_PeOrgNr"
+
+[[table]]
+id = "GDB_Ast2010"
+edition = 2010
+partition = "ast"
+
+[[table.column]]
+name = "AstKommun"
+
+[[table.column]]
+name = "AstNr"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "P1105_LopNr_CfarNr"
+
+[[table.column]]
+name = "P1105_LopNr_PeOrgNr"
+
+[[table]]
+id = "GDB_Ast2011"
+edition = 2011
+partition = "ast"
+
+[[table.column]]
+name = "AstKommun"
+
+[[table.column]]
+name = "AstNr"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "P1105_LopNr_CfarNr"
+
+[[table.column]]
+name = "P1105_LopNr_PeOrgNr"
+
+[[table]]
+id = "GDB_Ast2012"
+edition = 2012
+partition = "ast"
+
+[[table.column]]
+name = "AstKommun"
+
+[[table.column]]
+name = "AstNr"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "P1105_LopNr_CfarNr"
+
+[[table.column]]
+name = "P1105_LopNr_PeOrgNr"
+
+[[table]]
+id = "GDB_Ast2013"
+edition = 2013
+partition = "ast"
+
+[[table.column]]
+name = "AstKommun"
+
+[[table.column]]
+name = "AstNr"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "P1105_LopNr_CfarNr"
+
+[[table.column]]
+name = "P1105_LopNr_PeOrgNr"
+
+[[table]]
+id = "GDB_Ast2014"
+edition = 2014
+partition = "ast"
+
+[[table.column]]
+name = "AstKommun"
+
+[[table.column]]
+name = "AstNr"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "P1105_LopNr_CfarNr"
+
+[[table.column]]
+name = "P1105_LopNr_PeOrgNr"
+
+[[table]]
+id = "GDB_Ast2015"
+edition = 2015
+partition = "ast"
+
+[[table.column]]
+name = "AstKommun"
+
+[[table.column]]
+name = "AstNr"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "P1105_LopNr_CfarNr"
+
+[[table.column]]
+name = "P1105_LopNr_PeOrgNr"
+
+[[table]]
+id = "GDB_Ast2016"
+edition = 2016
+partition = "ast"
+
+[[table.column]]
+name = "AstKommun"
+
+[[table.column]]
+name = "AstNr"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "P1105_LopNr_CfarNr"
+
+[[table.column]]
+name = "P1105_LopNr_PeOrgNr"
+
+[[table]]
+id = "GDB_Ast2017"
+edition = 2017
+partition = "ast"
+
+[[table.column]]
+name = "AstKommun"
+
+[[table.column]]
+name = "AstNr"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "P1105_LopNr_CfarNr"
+
+[[table.column]]
+name = "P1105_LopNr_PeOrgNr"
+
+[[table]]
+id = "GDB_Ast2018"
+edition = 2018
+partition = "ast"
+
+[[table.column]]
+name = "AstKommun"
+
+[[table.column]]
+name = "AstNr"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "P1105_LopNr_CfarNr"
+
+[[table.column]]
+name = "P1105_LopNr_PeOrgNr"
+
+[[table]]
+id = "GDB_Ast2019"
+edition = 2019
+partition = "ast"
+
+[[table.column]]
+name = "AstKommun"
+
+[[table.column]]
+name = "AstNr"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "P1105_LopNr_CfarNr"
+
+[[table.column]]
+name = "P1105_LopNr_PeOrgNr"
+
+[[table]]
+id = "GDB_Ast2020"
+edition = 2020
+partition = "ast"
+
+[[table.column]]
+name = "AstKommun"
+
+[[table.column]]
+name = "AstNr"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "P1105_LopNr_CfarNr"
+
+[[table.column]]
+name = "P1105_LopNr_PeOrgNr"
+
+[[table]]
+id = "GDB_Ast2021"
+edition = 2021
+partition = "ast"
+
+[[table.column]]
+name = "AstKommun"
+
+[[table.column]]
+name = "AstNr"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "P1105_LopNr_CfarNr"
+
+[[table.column]]
+name = "P1105_LopNr_PeOrgNr"
+
+[[table]]
+id = "GDB_Ast2022"
+edition = 2022
+partition = "ast"
+
+[[table.column]]
+name = "AstKommun"
+
+[[table.column]]
+name = "AstNr"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "P1105_LopNr_CfarNr"
+
+[[table.column]]
+name = "P1105_LopNr_PeOrgNr"
+
+[[table]]
+id = "GDB_Ast2023"
+edition = 2023
+partition = "ast"
+
+[[table.column]]
+name = "AstKommun"
+
+[[table.column]]
+name = "AstNr"
+
+[[table.column]]
+name = "DeSO_2018"
+
+[[table.column]]
+name = "P1105_LopNr_CfarNr"
+
+[[table.column]]
+name = "P1105_LopNr_PeOrgNr"
+
+[[table]]
+id = "GDB_Ast_250m_1990"
+edition = 1990
+partition = "ast-250m"
+
+[[table.column]]
+name = "AstKommun"
+
+[[table.column]]
+name = "AstNr"
+
+[[table.column]]
+name = "AstRuta250swX"
+
+[[table.column]]
+name = "AstRuta250swY"
+
+[[table.column]]
+name = "P1105_Lopnr_CfarNr"
+
+[[table.column]]
+name = "P1105_Lopnr_PeOrgNr"
+
+[[table]]
+id = "GDB_Ast_250m_1991"
+edition = 1991
+partition = "ast-250m"
+
+[[table.column]]
+name = "AstKommun"
+
+[[table.column]]
+name = "AstNr"
+
+[[table.column]]
+name = "AstRuta250swX"
+
+[[table.column]]
+name = "AstRuta250swY"
+
+[[table.column]]
+name = "P1105_Lopnr_CfarNr"
+
+[[table.column]]
+name = "P1105_Lopnr_PeOrgNr"
+
+[[table]]
+id = "GDB_Ast_250m_1992"
+edition = 1992
+partition = "ast-250m"
+
+[[table.column]]
+name = "AstKommun"
+
+[[table.column]]
+name = "AstNr"
+
+[[table.column]]
+name = "AstRuta250swX"
+
+[[table.column]]
+name = "AstRuta250swY"
+
+[[table.column]]
+name = "P1105_Lopnr_CfarNr"
+
+[[table.column]]
+name = "P1105_Lopnr_PeOrgNr"
+
+[[table]]
+id = "GDB_Ast_250m_1993"
+edition = 1993
+partition = "ast-250m"
+
+[[table.column]]
+name = "AstKommun"
+
+[[table.column]]
+name = "AstNr"
+
+[[table.column]]
+name = "AstRuta250swX"
+
+[[table.column]]
+name = "AstRuta250swY"
+
+[[table.column]]
+name = "P1105_Lopnr_CfarNr"
+
+[[table.column]]
+name = "P1105_Lopnr_PeOrgNr"
+
+[[table]]
+id = "GDB_Ast_250m_1994"
+edition = 1994
+partition = "ast-250m"
+
+[[table.column]]
+name = "AstKommun"
+
+[[table.column]]
+name = "AstNr"
+
+[[table.column]]
+name = "AstRuta250swX"
+
+[[table.column]]
+name = "AstRuta250swY"
+
+[[table.column]]
+name = "P1105_Lopnr_CfarNr"
+
+[[table.column]]
+name = "P1105_Lopnr_PeOrgNr"
+
+[[table]]
+id = "GDB_Ast_250m_1995"
+edition = 1995
+partition = "ast-250m"
+
+[[table.column]]
+name = "AstKommun"
+
+[[table.column]]
+name = "AstNr"
+
+[[table.column]]
+name = "AstRuta250swX"
+
+[[table.column]]
+name = "AstRuta250swY"
+
+[[table.column]]
+name = "P1105_Lopnr_CfarNr"
+
+[[table.column]]
+name = "P1105_Lopnr_PeOrgNr"
+
+[[table]]
+id = "GDB_Ast_250m_1996"
+edition = 1996
+partition = "ast-250m"
+
+[[table.column]]
+name = "AstKommun"
+
+[[table.column]]
+name = "AstNr"
+
+[[table.column]]
+name = "AstRuta250swX"
+
+[[table.column]]
+name = "AstRuta250swY"
+
+[[table.column]]
+name = "P1105_Lopnr_CfarNr"
+
+[[table.column]]
+name = "P1105_Lopnr_PeOrgNr"
+
+[[table]]
+id = "GDB_Ast_250m_1997"
+edition = 1997
+partition = "ast-250m"
+
+[[table.column]]
+name = "AstKommun"
+
+[[table.column]]
+name = "AstNr"
+
+[[table.column]]
+name = "AstRuta250swX"
+
+[[table.column]]
+name = "AstRuta250swY"
+
+[[table.column]]
+name = "P1105_Lopnr_CfarNr"
+
+[[table.column]]
+name = "P1105_Lopnr_PeOrgNr"
+
+[[table]]
+id = "GDB_Ast_250m_1998"
+edition = 1998
+partition = "ast-250m"
+
+[[table.column]]
+name = "AstKommun"
+
+[[table.column]]
+name = "AstNr"
+
+[[table.column]]
+name = "AstRuta250swX"
+
+[[table.column]]
+name = "AstRuta250swY"
+
+[[table.column]]
+name = "P1105_Lopnr_CfarNr"
+
+[[table.column]]
+name = "P1105_Lopnr_PeOrgNr"
+
+[[table]]
+id = "GDB_Ast_250m_1999"
+edition = 1999
+partition = "ast-250m"
+
+[[table.column]]
+name = "AstKommun"
+
+[[table.column]]
+name = "AstNr"
+
+[[table.column]]
+name = "AstRuta250swX"
+
+[[table.column]]
+name = "AstRuta250swY"
+
+[[table.column]]
+name = "P1105_Lopnr_CfarNr"
+
+[[table.column]]
+name = "P1105_Lopnr_PeOrgNr"
+
+[[table]]
+id = "GDB_Ast_250m_2000"
+edition = 2000
+partition = "ast-250m"
+
+[[table.column]]
+name = "AstKommun"
+
+[[table.column]]
+name = "AstNr"
+
+[[table.column]]
+name = "AstRuta250swX"
+
+[[table.column]]
+name = "AstRuta250swY"
+
+[[table.column]]
+name = "P1105_Lopnr_CfarNr"
+
+[[table.column]]
+name = "P1105_Lopnr_PeOrgNr"
+
+[[table]]
+id = "GDB_Ast_250m_2001"
+edition = 2001
+partition = "ast-250m"
+
+[[table.column]]
+name = "AstKommun"
+
+[[table.column]]
+name = "AstNr"
+
+[[table.column]]
+name = "AstRuta250swX"
+
+[[table.column]]
+name = "AstRuta250swY"
+
+[[table.column]]
+name = "P1105_Lopnr_CfarNr"
+
+[[table.column]]
+name = "P1105_Lopnr_PeOrgNr"
+
+[[table]]
+id = "GDB_Ast_250m_2002"
+edition = 2002
+partition = "ast-250m"
+
+[[table.column]]
+name = "AstKommun"
+
+[[table.column]]
+name = "AstNr"
+
+[[table.column]]
+name = "AstRuta250swX"
+
+[[table.column]]
+name = "AstRuta250swY"
+
+[[table.column]]
+name = "P1105_Lopnr_CfarNr"
+
+[[table.column]]
+name = "P1105_Lopnr_PeOrgNr"
+
+[[table]]
+id = "GDB_Ast_250m_2003"
+edition = 2003
+partition = "ast-250m"
+
+[[table.column]]
+name = "AstKommun"
+
+[[table.column]]
+name = "AstNr"
+
+[[table.column]]
+name = "AstRuta250swX"
+
+[[table.column]]
+name = "AstRuta250swY"
+
+[[table.column]]
+name = "P1105_Lopnr_CfarNr"
+
+[[table.column]]
+name = "P1105_Lopnr_PeOrgNr"
+
+[[table]]
+id = "GDB_Ast_250m_2004"
+edition = 2004
+partition = "ast-250m"
+
+[[table.column]]
+name = "AstKommun"
+
+[[table.column]]
+name = "AstNr"
+
+[[table.column]]
+name = "AstRuta250swX"
+
+[[table.column]]
+name = "AstRuta250swY"
+
+[[table.column]]
+name = "P1105_Lopnr_CfarNr"
+
+[[table.column]]
+name = "P1105_Lopnr_PeOrgNr"
+
+[[table]]
+id = "GDB_Ast_250m_2005"
+edition = 2005
+partition = "ast-250m"
+
+[[table.column]]
+name = "AstKommun"
+
+[[table.column]]
+name = "AstNr"
+
+[[table.column]]
+name = "AstRuta250swX"
+
+[[table.column]]
+name = "AstRuta250swY"
+
+[[table.column]]
+name = "P1105_Lopnr_CfarNr"
+
+[[table.column]]
+name = "P1105_Lopnr_PeOrgNr"
+
+[[table]]
+id = "GDB_Ast_250m_2006"
+edition = 2006
+partition = "ast-250m"
+
+[[table.column]]
+name = "AstKommun"
+
+[[table.column]]
+name = "AstNr"
+
+[[table.column]]
+name = "AstRuta250swX"
+
+[[table.column]]
+name = "AstRuta250swY"
+
+[[table.column]]
+name = "P1105_Lopnr_CfarNr"
+
+[[table.column]]
+name = "P1105_Lopnr_PeOrgNr"
+
+[[table]]
+id = "GDB_Ast_250m_2007"
+edition = 2007
+partition = "ast-250m"
+
+[[table.column]]
+name = "AstKommun"
+
+[[table.column]]
+name = "AstNr"
+
+[[table.column]]
+name = "AstRuta250swX"
+
+[[table.column]]
+name = "AstRuta250swY"
+
+[[table.column]]
+name = "P1105_Lopnr_CfarNr"
+
+[[table.column]]
+name = "P1105_Lopnr_PeOrgNr"
+
+[[table]]
+id = "GDB_Ast_250m_2008"
+edition = 2008
+partition = "ast-250m"
+
+[[table.column]]
+name = "AstKommun"
+
+[[table.column]]
+name = "AstNr"
+
+[[table.column]]
+name = "AstRuta250swX"
+
+[[table.column]]
+name = "AstRuta250swY"
+
+[[table.column]]
+name = "P1105_Lopnr_CfarNr"
+
+[[table.column]]
+name = "P1105_Lopnr_PeOrgNr"
+
+[[table]]
+id = "GDB_Ast_250m_2009"
+edition = 2009
+partition = "ast-250m"
+
+[[table.column]]
+name = "AstKommun"
+
+[[table.column]]
+name = "AstNr"
+
+[[table.column]]
+name = "AstRuta250swX"
+
+[[table.column]]
+name = "AstRuta250swY"
+
+[[table.column]]
+name = "P1105_Lopnr_CfarNr"
+
+[[table.column]]
+name = "P1105_Lopnr_PeOrgNr"
+
+[[table]]
+id = "GDB_Ast_250m_2010"
+edition = 2010
+partition = "ast-250m"
+
+[[table.column]]
+name = "AstKommun"
+
+[[table.column]]
+name = "AstNr"
+
+[[table.column]]
+name = "AstRuta250swX"
+
+[[table.column]]
+name = "AstRuta250swY"
+
+[[table.column]]
+name = "P1105_Lopnr_CfarNr"
+
+[[table.column]]
+name = "P1105_Lopnr_PeOrgNr"
+
+[[table]]
+id = "GDB_Ast_250m_2011"
+edition = 2011
+partition = "ast-250m"
+
+[[table.column]]
+name = "AstKommun"
+
+[[table.column]]
+name = "AstNr"
+
+[[table.column]]
+name = "AstRuta250swX"
+
+[[table.column]]
+name = "AstRuta250swY"
+
+[[table.column]]
+name = "P1105_Lopnr_CfarNr"
+
+[[table.column]]
+name = "P1105_Lopnr_PeOrgNr"
+
+[[table]]
+id = "GDB_Ast_250m_2012"
+edition = 2012
+partition = "ast-250m"
+
+[[table.column]]
+name = "AstKommun"
+
+[[table.column]]
+name = "AstNr"
+
+[[table.column]]
+name = "AstRuta250swX"
+
+[[table.column]]
+name = "AstRuta250swY"
+
+[[table.column]]
+name = "P1105_Lopnr_CfarNr"
+
+[[table.column]]
+name = "P1105_Lopnr_PeOrgNr"
+
+[[table]]
+id = "GDB_Ast_250m_2013"
+edition = 2013
+partition = "ast-250m"
+
+[[table.column]]
+name = "AstKommun"
+
+[[table.column]]
+name = "AstNr"
+
+[[table.column]]
+name = "AstRuta250swX"
+
+[[table.column]]
+name = "AstRuta250swY"
+
+[[table.column]]
+name = "P1105_Lopnr_CfarNr"
+
+[[table.column]]
+name = "P1105_Lopnr_PeOrgNr"
+
+[[table]]
+id = "GDB_Ast_250m_2014"
+edition = 2014
+partition = "ast-250m"
+
+[[table.column]]
+name = "AstKommun"
+
+[[table.column]]
+name = "AstNr"
+
+[[table.column]]
+name = "AstRuta250swX"
+
+[[table.column]]
+name = "AstRuta250swY"
+
+[[table.column]]
+name = "P1105_Lopnr_CfarNr"
+
+[[table.column]]
+name = "P1105_Lopnr_PeOrgNr"
+
+[[table]]
+id = "GDB_Ast_250m_2015"
+edition = 2015
+partition = "ast-250m"
+
+[[table.column]]
+name = "AstKommun"
+
+[[table.column]]
+name = "AstNr"
+
+[[table.column]]
+name = "AstRuta250swX"
+
+[[table.column]]
+name = "AstRuta250swY"
+
+[[table.column]]
+name = "P1105_Lopnr_CfarNr"
+
+[[table.column]]
+name = "P1105_Lopnr_PeOrgNr"
+
+[[table]]
+id = "GDB_Ast_250m_2016"
+edition = 2016
+partition = "ast-250m"
+
+[[table.column]]
+name = "AstKommun"
+
+[[table.column]]
+name = "AstNr"
+
+[[table.column]]
+name = "AstRuta250swX"
+
+[[table.column]]
+name = "AstRuta250swY"
+
+[[table.column]]
+name = "P1105_Lopnr_CfarNr"
+
+[[table.column]]
+name = "P1105_Lopnr_PeOrgNr"
+
+[[table]]
+id = "GDB_Ast_250m_2017"
+edition = 2017
+partition = "ast-250m"
+
+[[table.column]]
+name = "AstKommun"
+
+[[table.column]]
+name = "AstNr"
+
+[[table.column]]
+name = "AstRuta250swX"
+
+[[table.column]]
+name = "AstRuta250swY"
+
+[[table.column]]
+name = "P1105_Lopnr_CfarNr"
+
+[[table.column]]
+name = "P1105_Lopnr_PeOrgNr"
+
+[[table]]
+id = "GDB_Ast_250m_2018"
+edition = 2018
+partition = "ast-250m"
+
+[[table.column]]
+name = "AstKommun"
+
+[[table.column]]
+name = "AstNr"
+
+[[table.column]]
+name = "AstRuta250swX"
+
+[[table.column]]
+name = "AstRuta250swY"
+
+[[table.column]]
+name = "P1105_Lopnr_CfarNr"
+
+[[table.column]]
+name = "P1105_Lopnr_PeOrgNr"
+
+[[table]]
+id = "GDB_Ast_250m_2019"
+edition = 2019
+partition = "ast-250m"
+
+[[table.column]]
+name = "AstKommun"
+
+[[table.column]]
+name = "AstNr"
+
+[[table.column]]
+name = "AstRuta250swX"
+
+[[table.column]]
+name = "AstRuta250swY"
+
+[[table.column]]
+name = "P1105_Lopnr_CfarNr"
+
+[[table.column]]
+name = "P1105_Lopnr_PeOrgNr"
+
+[[table]]
+id = "GDB_Ast_250m_2020"
+edition = 2020
+partition = "ast-250m"
+
+[[table.column]]
+name = "AstKommun"
+
+[[table.column]]
+name = "AstNr"
+
+[[table.column]]
+name = "AstRuta250swX"
+
+[[table.column]]
+name = "AstRuta250swY"
+
+[[table.column]]
+name = "P1105_Lopnr_CfarNr"
+
+[[table.column]]
+name = "P1105_Lopnr_PeOrgNr"
+
+[[table]]
+id = "GDB_Ast_250m_2021"
+edition = 2021
+partition = "ast-250m"
+
+[[table.column]]
+name = "AstKommun"
+
+[[table.column]]
+name = "AstNr"
+
+[[table.column]]
+name = "AstRuta250swX"
+
+[[table.column]]
+name = "AstRuta250swY"
+
+[[table.column]]
+name = "P1105_Lopnr_CfarNr"
+
+[[table.column]]
+name = "P1105_Lopnr_PeOrgNr"
+
+[[table]]
+id = "GDB_Ast_250m_2022"
+edition = 2022
+partition = "ast-250m"
+
+[[table.column]]
+name = "AstKommun"
+
+[[table.column]]
+name = "AstNr"
+
+[[table.column]]
+name = "AstRuta250swX"
+
+[[table.column]]
+name = "AstRuta250swY"
+
+[[table.column]]
+name = "P1105_Lopnr_CfarNr"
+
+[[table.column]]
+name = "P1105_Lopnr_PeOrgNr"
+
+[[table]]
+id = "GDB_Ast_250m_2023"
+edition = 2023
+partition = "ast-250m"
+
+[[table.column]]
+name = "AstKommun"
+
+[[table.column]]
+name = "AstNr"
+
+[[table.column]]
+name = "AstRuta250swX"
+
+[[table.column]]
+name = "AstRuta250swY"
+
+[[table.column]]
+name = "P1105_Lopnr_CfarNr"
+
+[[table.column]]
+name = "P1105_Lopnr_PeOrgNr"
+
+[[table]]
+id = "GDB_Ind1990"
+edition = 1990
+partition = "ind"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "P1105_Lopnr_PersonNr"
+
+[[table]]
+id = "GDB_Ind1991"
+edition = 1991
+partition = "ind"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "P1105_Lopnr_PersonNr"
+
+[[table]]
+id = "GDB_Ind1992"
+edition = 1992
+partition = "ind"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "P1105_Lopnr_PersonNr"
+
+[[table]]
+id = "GDB_Ind1993"
+edition = 1993
+partition = "ind"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "P1105_Lopnr_PersonNr"
+
+[[table]]
+id = "GDB_Ind1994"
+edition = 1994
+partition = "ind"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "P1105_Lopnr_PersonNr"
+
+[[table]]
+id = "GDB_Ind1995"
+edition = 1995
+partition = "ind"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "P1105_Lopnr_PersonNr"
+
+[[table]]
+id = "GDB_Ind1996"
+edition = 1996
+partition = "ind"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "P1105_Lopnr_PersonNr"
+
+[[table]]
+id = "GDB_Ind1997"
+edition = 1997
+partition = "ind"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "P1105_Lopnr_PersonNr"
+
+[[table]]
+id = "GDB_Ind1998"
+edition = 1998
+partition = "ind"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "P1105_Lopnr_PersonNr"
+
+[[table]]
+id = "GDB_Ind1999"
+edition = 1999
+partition = "ind"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "P1105_Lopnr_PersonNr"
+
+[[table]]
+id = "GDB_Ind2000"
+edition = 2000
+partition = "ind"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "P1105_Lopnr_PersonNr"
+
+[[table]]
+id = "GDB_Ind2001"
+edition = 2001
+partition = "ind"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "P1105_Lopnr_PersonNr"
+
+[[table]]
+id = "GDB_Ind2002"
+edition = 2002
+partition = "ind"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "P1105_Lopnr_PersonNr"
+
+[[table]]
+id = "GDB_Ind2003"
+edition = 2003
+partition = "ind"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "P1105_Lopnr_PersonNr"
+
+[[table]]
+id = "GDB_Ind2004"
+edition = 2004
+partition = "ind"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "P1105_Lopnr_PersonNr"
+
+[[table]]
+id = "GDB_Ind2005"
+edition = 2005
+partition = "ind"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "P1105_Lopnr_PersonNr"
+
+[[table]]
+id = "GDB_Ind2006"
+edition = 2006
+partition = "ind"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "P1105_Lopnr_PersonNr"
+
+[[table]]
+id = "GDB_Ind2007"
+edition = 2007
+partition = "ind"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "P1105_Lopnr_PersonNr"
+
+[[table]]
+id = "GDB_Ind2008"
+edition = 2008
+partition = "ind"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "P1105_Lopnr_PersonNr"
+
+[[table]]
+id = "GDB_Ind2009"
+edition = 2009
+partition = "ind"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "P1105_Lopnr_PersonNr"
+
+[[table]]
+id = "GDB_Ind2010"
+edition = 2010
+partition = "ind"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "P1105_Lopnr_PersonNr"
+
+[[table]]
+id = "GDB_Ind2011"
+edition = 2011
+partition = "ind"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "P1105_Lopnr_PersonNr"
+
+[[table]]
+id = "GDB_Ind2012"
+edition = 2012
+partition = "ind"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "P1105_Lopnr_PersonNr"
+
+[[table]]
+id = "GDB_Ind2013"
+edition = 2013
+partition = "ind"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "P1105_Lopnr_PersonNr"
+
+[[table]]
+id = "GDB_Ind2014"
+edition = 2014
+partition = "ind"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "P1105_Lopnr_PersonNr"
+
+[[table]]
+id = "GDB_Ind2015"
+edition = 2015
+partition = "ind"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "P1105_Lopnr_PersonNr"
+
+[[table]]
+id = "GDB_Ind2016"
+edition = 2016
+partition = "ind"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "P1105_Lopnr_PersonNr"
+
+[[table]]
+id = "GDB_Ind2017"
+edition = 2017
+partition = "ind"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "P1105_Lopnr_PersonNr"
+
+[[table]]
+id = "GDB_Ind2018"
+edition = 2018
+partition = "ind"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "P1105_Lopnr_PersonNr"
+
+[[table]]
+id = "GDB_Ind2019"
+edition = 2019
+partition = "ind"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "P1105_Lopnr_PersonNr"
+
+[[table]]
+id = "GDB_Ind2020"
+edition = 2020
+partition = "ind"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "P1105_Lopnr_PersonNr"
+
+[[table]]
+id = "GDB_Ind2021"
+edition = 2021
+partition = "ind"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "P1105_Lopnr_PersonNr"
+
+[[table]]
+id = "GDB_Ind2022"
+edition = 2022
+partition = "ind"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "P1105_Lopnr_PersonNr"
+
+[[table]]
+id = "GDB_Ind2023"
+edition = 2023
+partition = "ind"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "P1105_Lopnr_PersonNr"
+
+[[table]]
+id = "GDB_Ind2024"
+edition = 2024
+partition = "ind"
+
+[[table.column]]
+name = "DeSO_2018"
+
+[[table.column]]
+name = "DeSO_2025"
+
+[[table.column]]
+name = "P1105_Lopnr_PersonNr"
+
+[[table]]
+id = "GDB_Ind_250m_1990"
+edition = 1990
+partition = "ind-250m"
+
+[[table.column]]
+name = "P1105_Lopnr_PersonNr"
+
+[[table.column]]
+name = "Ruta250swX"
+
+[[table.column]]
+name = "Ruta250swY"
+
+[[table]]
+id = "GDB_Ind_250m_1991"
+edition = 1991
+partition = "ind-250m"
+
+[[table.column]]
+name = "P1105_Lopnr_PersonNr"
+
+[[table.column]]
+name = "Ruta250swX"
+
+[[table.column]]
+name = "Ruta250swY"
+
+[[table]]
+id = "GDB_Ind_250m_1992"
+edition = 1992
+partition = "ind-250m"
+
+[[table.column]]
+name = "P1105_Lopnr_PersonNr"
+
+[[table.column]]
+name = "Ruta250swX"
+
+[[table.column]]
+name = "Ruta250swY"
+
+[[table]]
+id = "GDB_Ind_250m_1993"
+edition = 1993
+partition = "ind-250m"
+
+[[table.column]]
+name = "P1105_Lopnr_PersonNr"
+
+[[table.column]]
+name = "Ruta250swX"
+
+[[table.column]]
+name = "Ruta250swY"
+
+[[table]]
+id = "GDB_Ind_250m_1994"
+edition = 1994
+partition = "ind-250m"
+
+[[table.column]]
+name = "P1105_Lopnr_PersonNr"
+
+[[table.column]]
+name = "Ruta250swX"
+
+[[table.column]]
+name = "Ruta250swY"
+
+[[table]]
+id = "GDB_Ind_250m_1995"
+edition = 1995
+partition = "ind-250m"
+
+[[table.column]]
+name = "P1105_Lopnr_PersonNr"
+
+[[table.column]]
+name = "Ruta250swX"
+
+[[table.column]]
+name = "Ruta250swY"
+
+[[table]]
+id = "GDB_Ind_250m_1996"
+edition = 1996
+partition = "ind-250m"
+
+[[table.column]]
+name = "P1105_Lopnr_PersonNr"
+
+[[table.column]]
+name = "Ruta250swX"
+
+[[table.column]]
+name = "Ruta250swY"
+
+[[table]]
+id = "GDB_Ind_250m_1997"
+edition = 1997
+partition = "ind-250m"
+
+[[table.column]]
+name = "P1105_Lopnr_PersonNr"
+
+[[table.column]]
+name = "Ruta250swX"
+
+[[table.column]]
+name = "Ruta250swY"
+
+[[table]]
+id = "GDB_Ind_250m_1998"
+edition = 1998
+partition = "ind-250m"
+
+[[table.column]]
+name = "P1105_Lopnr_PersonNr"
+
+[[table.column]]
+name = "Ruta250swX"
+
+[[table.column]]
+name = "Ruta250swY"
+
+[[table]]
+id = "GDB_Ind_250m_1999"
+edition = 1999
+partition = "ind-250m"
+
+[[table.column]]
+name = "P1105_Lopnr_PersonNr"
+
+[[table.column]]
+name = "Ruta250swX"
+
+[[table.column]]
+name = "Ruta250swY"
+
+[[table]]
+id = "GDB_Ind_250m_2000"
+edition = 2000
+partition = "ind-250m"
+
+[[table.column]]
+name = "P1105_Lopnr_PersonNr"
+
+[[table.column]]
+name = "Ruta250swX"
+
+[[table.column]]
+name = "Ruta250swY"
+
+[[table]]
+id = "GDB_Ind_250m_2001"
+edition = 2001
+partition = "ind-250m"
+
+[[table.column]]
+name = "P1105_Lopnr_PersonNr"
+
+[[table.column]]
+name = "Ruta250swX"
+
+[[table.column]]
+name = "Ruta250swY"
+
+[[table]]
+id = "GDB_Ind_250m_2002"
+edition = 2002
+partition = "ind-250m"
+
+[[table.column]]
+name = "P1105_Lopnr_PersonNr"
+
+[[table.column]]
+name = "Ruta250swX"
+
+[[table.column]]
+name = "Ruta250swY"
+
+[[table]]
+id = "GDB_Ind_250m_2003"
+edition = 2003
+partition = "ind-250m"
+
+[[table.column]]
+name = "P1105_Lopnr_PersonNr"
+
+[[table.column]]
+name = "Ruta250swX"
+
+[[table.column]]
+name = "Ruta250swY"
+
+[[table]]
+id = "GDB_Ind_250m_2004"
+edition = 2004
+partition = "ind-250m"
+
+[[table.column]]
+name = "P1105_Lopnr_PersonNr"
+
+[[table.column]]
+name = "Ruta250swX"
+
+[[table.column]]
+name = "Ruta250swY"
+
+[[table]]
+id = "GDB_Ind_250m_2005"
+edition = 2005
+partition = "ind-250m"
+
+[[table.column]]
+name = "P1105_Lopnr_PersonNr"
+
+[[table.column]]
+name = "Ruta250swX"
+
+[[table.column]]
+name = "Ruta250swY"
+
+[[table]]
+id = "GDB_Ind_250m_2006"
+edition = 2006
+partition = "ind-250m"
+
+[[table.column]]
+name = "P1105_Lopnr_PersonNr"
+
+[[table.column]]
+name = "Ruta250swX"
+
+[[table.column]]
+name = "Ruta250swY"
+
+[[table]]
+id = "GDB_Ind_250m_2007"
+edition = 2007
+partition = "ind-250m"
+
+[[table.column]]
+name = "P1105_Lopnr_PersonNr"
+
+[[table.column]]
+name = "Ruta250swX"
+
+[[table.column]]
+name = "Ruta250swY"
+
+[[table]]
+id = "GDB_Ind_250m_2008"
+edition = 2008
+partition = "ind-250m"
+
+[[table.column]]
+name = "P1105_Lopnr_PersonNr"
+
+[[table.column]]
+name = "Ruta250swX"
+
+[[table.column]]
+name = "Ruta250swY"
+
+[[table]]
+id = "GDB_Ind_250m_2009"
+edition = 2009
+partition = "ind-250m"
+
+[[table.column]]
+name = "P1105_Lopnr_PersonNr"
+
+[[table.column]]
+name = "Ruta250swX"
+
+[[table.column]]
+name = "Ruta250swY"
+
+[[table]]
+id = "GDB_Ind_250m_2010"
+edition = 2010
+partition = "ind-250m"
+
+[[table.column]]
+name = "P1105_Lopnr_PersonNr"
+
+[[table.column]]
+name = "Ruta250swX"
+
+[[table.column]]
+name = "Ruta250swY"
+
+[[table]]
+id = "GDB_Ind_250m_2011"
+edition = 2011
+partition = "ind-250m"
+
+[[table.column]]
+name = "P1105_Lopnr_PersonNr"
+
+[[table.column]]
+name = "Ruta250swX"
+
+[[table.column]]
+name = "Ruta250swY"
+
+[[table]]
+id = "GDB_Ind_250m_2012"
+edition = 2012
+partition = "ind-250m"
+
+[[table.column]]
+name = "P1105_Lopnr_PersonNr"
+
+[[table.column]]
+name = "Ruta250swX"
+
+[[table.column]]
+name = "Ruta250swY"
+
+[[table]]
+id = "GDB_Ind_250m_2013"
+edition = 2013
+partition = "ind-250m"
+
+[[table.column]]
+name = "P1105_Lopnr_PersonNr"
+
+[[table.column]]
+name = "Ruta250swX"
+
+[[table.column]]
+name = "Ruta250swY"
+
+[[table]]
+id = "GDB_Ind_250m_2014"
+edition = 2014
+partition = "ind-250m"
+
+[[table.column]]
+name = "P1105_Lopnr_PersonNr"
+
+[[table.column]]
+name = "Ruta250swX"
+
+[[table.column]]
+name = "Ruta250swY"
+
+[[table]]
+id = "GDB_Ind_250m_2015"
+edition = 2015
+partition = "ind-250m"
+
+[[table.column]]
+name = "P1105_Lopnr_PersonNr"
+
+[[table.column]]
+name = "Ruta250swX"
+
+[[table.column]]
+name = "Ruta250swY"
+
+[[table]]
+id = "GDB_Ind_250m_2016"
+edition = 2016
+partition = "ind-250m"
+
+[[table.column]]
+name = "P1105_Lopnr_PersonNr"
+
+[[table.column]]
+name = "Ruta250swX"
+
+[[table.column]]
+name = "Ruta250swY"
+
+[[table]]
+id = "GDB_Ind_250m_2017"
+edition = 2017
+partition = "ind-250m"
+
+[[table.column]]
+name = "P1105_Lopnr_PersonNr"
+
+[[table.column]]
+name = "Ruta250swX"
+
+[[table.column]]
+name = "Ruta250swY"
+
+[[table]]
+id = "GDB_Ind_250m_2018"
+edition = 2018
+partition = "ind-250m"
+
+[[table.column]]
+name = "P1105_Lopnr_PersonNr"
+
+[[table.column]]
+name = "Ruta250swX"
+
+[[table.column]]
+name = "Ruta250swY"
+
+[[table]]
+id = "GDB_Ind_250m_2019"
+edition = 2019
+partition = "ind-250m"
+
+[[table.column]]
+name = "P1105_Lopnr_PersonNr"
+
+[[table.column]]
+name = "Ruta250swX"
+
+[[table.column]]
+name = "Ruta250swY"
+
+[[table]]
+id = "GDB_Ind_250m_2020"
+edition = 2020
+partition = "ind-250m"
+
+[[table.column]]
+name = "P1105_Lopnr_PersonNr"
+
+[[table.column]]
+name = "Ruta250swX"
+
+[[table.column]]
+name = "Ruta250swY"
+
+[[table]]
+id = "GDB_Ind_250m_2021"
+edition = 2021
+partition = "ind-250m"
+
+[[table.column]]
+name = "P1105_Lopnr_PersonNr"
+
+[[table.column]]
+name = "Ruta250swX"
+
+[[table.column]]
+name = "Ruta250swY"
+
+[[table]]
+id = "GDB_Ind_250m_2022"
+edition = 2022
+partition = "ind-250m"
+
+[[table.column]]
+name = "P1105_Lopnr_PersonNr"
+
+[[table.column]]
+name = "Ruta250swX"
+
+[[table.column]]
+name = "Ruta250swY"
+
+[[table]]
+id = "GDB_Ind_250m_2023"
+edition = 2023
+partition = "ind-250m"
+
+[[table.column]]
+name = "P1105_Lopnr_PersonNr"
+
+[[table.column]]
+name = "Ruta250swX"
+
+[[table.column]]
+name = "Ruta250swY"
+
+[[table]]
+id = "GDB_Ind_250m_2024"
+edition = 2024
+partition = "ind-250m"
+
+[[table.column]]
+name = "P1105_Lopnr_PersonNr"
+
+[[table.column]]
+name = "Ruta250swX"
+
+[[table.column]]
+name = "Ruta250swY"
+
+[[table]]
+id = "GDB_Skolor1990"
+edition = 1990
+partition = "skolor"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "Kommun"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/kommun"
+representation = "Kommun"
+
+[[table.column]]
+name = "P1105_Lopnr_skolkod"
+
+[[table.column]]
+name = "Skolform"
+
+[[table]]
+id = "GDB_Skolor1991"
+edition = 1991
+partition = "skolor"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "Kommun"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/kommun"
+representation = "Kommun"
+
+[[table.column]]
+name = "P1105_Lopnr_skolkod"
+
+[[table.column]]
+name = "Skolform"
+
+[[table]]
+id = "GDB_Skolor1992"
+edition = 1992
+partition = "skolor"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "Kommun"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/kommun"
+representation = "Kommun"
+
+[[table.column]]
+name = "P1105_Lopnr_skolkod"
+
+[[table.column]]
+name = "Skolform"
+
+[[table]]
+id = "GDB_Skolor1993"
+edition = 1993
+partition = "skolor"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "Kommun"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/kommun"
+representation = "Kommun"
+
+[[table.column]]
+name = "P1105_Lopnr_skolkod"
+
+[[table.column]]
+name = "Skolform"
+
+[[table]]
+id = "GDB_Skolor1994"
+edition = 1994
+partition = "skolor"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "Kommun"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/kommun"
+representation = "Kommun"
+
+[[table.column]]
+name = "P1105_Lopnr_skolkod"
+
+[[table.column]]
+name = "Skolform"
+
+[[table]]
+id = "GDB_Skolor1995"
+edition = 1995
+partition = "skolor"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "Kommun"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/kommun"
+representation = "Kommun"
+
+[[table.column]]
+name = "P1105_Lopnr_skolkod"
+
+[[table.column]]
+name = "Skolform"
+
+[[table]]
+id = "GDB_Skolor1996"
+edition = 1996
+partition = "skolor"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "Kommun"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/kommun"
+representation = "Kommun"
+
+[[table.column]]
+name = "P1105_Lopnr_skolkod"
+
+[[table.column]]
+name = "Skolform"
+
+[[table]]
+id = "GDB_Skolor1997"
+edition = 1997
+partition = "skolor"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "Kommun"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/kommun"
+representation = "Kommun"
+
+[[table.column]]
+name = "P1105_Lopnr_skolkod"
+
+[[table.column]]
+name = "Skolform"
+
+[[table]]
+id = "GDB_Skolor1998"
+edition = 1998
+partition = "skolor"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "Kommun"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/kommun"
+representation = "Kommun"
+
+[[table.column]]
+name = "P1105_Lopnr_skolkod"
+
+[[table.column]]
+name = "Skolform"
+
+[[table]]
+id = "GDB_Skolor1999"
+edition = 1999
+partition = "skolor"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "Kommun"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/kommun"
+representation = "Kommun"
+
+[[table.column]]
+name = "P1105_Lopnr_skolkod"
+
+[[table.column]]
+name = "Skolform"
+
+[[table]]
+id = "GDB_Skolor2000"
+edition = 2000
+partition = "skolor"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "Kommun"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/kommun"
+representation = "Kommun"
+
+[[table.column]]
+name = "P1105_Lopnr_skolkod"
+
+[[table.column]]
+name = "Skolform"
+
+[[table]]
+id = "GDB_Skolor2001"
+edition = 2001
+partition = "skolor"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "Kommun"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/kommun"
+representation = "Kommun"
+
+[[table.column]]
+name = "P1105_Lopnr_skolkod"
+
+[[table.column]]
+name = "Skolform"
+
+[[table]]
+id = "GDB_Skolor2002"
+edition = 2002
+partition = "skolor"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "Kommun"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/kommun"
+representation = "Kommun"
+
+[[table.column]]
+name = "P1105_Lopnr_skolkod"
+
+[[table.column]]
+name = "Skolform"
+
+[[table]]
+id = "GDB_Skolor2003"
+edition = 2003
+partition = "skolor"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "Kommun"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/kommun"
+representation = "Kommun"
+
+[[table.column]]
+name = "P1105_Lopnr_skolkod"
+
+[[table.column]]
+name = "Skolform"
+
+[[table]]
+id = "GDB_Skolor2004"
+edition = 2004
+partition = "skolor"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "Kommun"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/kommun"
+representation = "Kommun"
+
+[[table.column]]
+name = "P1105_Lopnr_skolkod"
+
+[[table.column]]
+name = "Skolform"
+
+[[table]]
+id = "GDB_Skolor2005"
+edition = 2005
+partition = "skolor"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "Kommun"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/kommun"
+representation = "Kommun"
+
+[[table.column]]
+name = "P1105_Lopnr_skolkod"
+
+[[table.column]]
+name = "Skolform"
+
+[[table]]
+id = "GDB_Skolor2006"
+edition = 2006
+partition = "skolor"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "Kommun"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/kommun"
+representation = "Kommun"
+
+[[table.column]]
+name = "P1105_Lopnr_skolkod"
+
+[[table.column]]
+name = "Skolform"
+
+[[table]]
+id = "GDB_Skolor2007"
+edition = 2007
+partition = "skolor"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "Kommun"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/kommun"
+representation = "Kommun"
+
+[[table.column]]
+name = "P1105_Lopnr_skolkod"
+
+[[table.column]]
+name = "Skolform"
+
+[[table]]
+id = "GDB_Skolor2008"
+edition = 2008
+partition = "skolor"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "Kommun"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/kommun"
+representation = "Kommun"
+
+[[table.column]]
+name = "P1105_Lopnr_skolkod"
+
+[[table.column]]
+name = "Skolform"
+
+[[table]]
+id = "GDB_Skolor2009"
+edition = 2009
+partition = "skolor"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "Kommun"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/kommun"
+representation = "Kommun"
+
+[[table.column]]
+name = "P1105_Lopnr_skolkod"
+
+[[table.column]]
+name = "Skolform"
+
+[[table]]
+id = "GDB_Skolor2010"
+edition = 2010
+partition = "skolor"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "Kommun"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/kommun"
+representation = "Kommun"
+
+[[table.column]]
+name = "P1105_Lopnr_skolkod"
+
+[[table.column]]
+name = "Skolform"
+
+[[table]]
+id = "GDB_Skolor2011"
+edition = 2011
+partition = "skolor"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "Kommun"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/kommun"
+representation = "Kommun"
+
+[[table.column]]
+name = "P1105_Lopnr_skolkod"
+
+[[table.column]]
+name = "Skolform"
+
+[[table]]
+id = "GDB_Skolor2012"
+edition = 2012
+partition = "skolor"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "Kommun"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/kommun"
+representation = "Kommun"
+
+[[table.column]]
+name = "P1105_Lopnr_skolkod"
+
+[[table.column]]
+name = "Skolform"
+
+[[table]]
+id = "GDB_Skolor2013"
+edition = 2013
+partition = "skolor"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "Kommun"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/kommun"
+representation = "Kommun"
+
+[[table.column]]
+name = "P1105_Lopnr_skolenhetskod"
+
+[[table.column]]
+name = "P1105_Lopnr_skolkod"
+
+[[table.column]]
+name = "Skolform"
+
+[[table]]
+id = "GDB_Skolor2014"
+edition = 2014
+partition = "skolor"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "Kommun"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/kommun"
+representation = "Kommun"
+
+[[table.column]]
+name = "P1105_Lopnr_skolenhetskod"
+
+[[table.column]]
+name = "Skolform"
+
+[[table]]
+id = "GDB_Skolor2015"
+edition = 2015
+partition = "skolor"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "Kommun"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/kommun"
+representation = "Kommun"
+
+[[table.column]]
+name = "P1105_Lopnr_skolenhetskod"
+
+[[table.column]]
+name = "Skolform"
+
+[[table]]
+id = "GDB_Skolor2016"
+edition = 2016
+partition = "skolor"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "Kommun"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/kommun"
+representation = "Kommun"
+
+[[table.column]]
+name = "P1105_Lopnr_skolenhetskod"
+
+[[table.column]]
+name = "Skolform"
+
+[[table]]
+id = "GDB_Skolor2017"
+edition = 2017
+partition = "skolor"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "Kommun"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/kommun"
+representation = "Kommun"
+
+[[table.column]]
+name = "P1105_Lopnr_skolenhetskod"
+
+[[table.column]]
+name = "Skolform"
+
+[[table]]
+id = "GDB_Skolor2018"
+edition = 2018
+partition = "skolor"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "Kommun"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/kommun"
+representation = "Kommun"
+
+[[table.column]]
+name = "P1105_Lopnr_skolenhetskod"
+
+[[table.column]]
+name = "Skolform"
+
+[[table]]
+id = "GDB_Skolor2019"
+edition = 2019
+partition = "skolor"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "Kommun"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/kommun"
+representation = "Kommun"
+
+[[table.column]]
+name = "P1105_Lopnr_skolenhetskod"
+
+[[table.column]]
+name = "Skolform"
+
+[[table]]
+id = "GDB_Skolor2020"
+edition = 2020
+partition = "skolor"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "Kommun"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/kommun"
+representation = "Kommun"
+
+[[table.column]]
+name = "P1105_Lopnr_skolenhetskod"
+
+[[table.column]]
+name = "Skolform"
+
+[[table]]
+id = "GDB_Skolor2021"
+edition = 2021
+partition = "skolor"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "Kommun"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/kommun"
+representation = "Kommun"
+
+[[table.column]]
+name = "P1105_Lopnr_skolenhetskod"
+
+[[table.column]]
+name = "Skolform"
+
+[[table]]
+id = "GDB_Skolor2022"
+edition = 2022
+partition = "skolor"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "Kommun"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/kommun"
+representation = "Kommun"
+
+[[table.column]]
+name = "P1105_Lopnr_skolenhetskod"
+
+[[table.column]]
+name = "Skolform"
+
+[[table]]
+id = "GDB_Skolor2023"
+edition = 2023
+partition = "skolor"
+
+[[table.column]]
+name = "DeSO"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/deso"
+representation = "DeSO"
+
+[[table.column]]
+name = "Kommun"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/kommun"
+representation = "Kommun"
+
+[[table.column]]
+name = "P1105_Lopnr_skolenhetskod"
+
+[[table.column]]
+name = "Skolform"
+
+[[table]]
+id = "GDB_Skolor2024"
+edition = 2024
+partition = "skolor"
+
+[[table.column]]
+name = "DeSO_2018"
+
+[[table.column]]
+name = "DeSO_2025"
+
+[[table.column]]
+name = "Kommun"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/adresser-fastigheter"
+variable = "scb/gdb/kommun"
+representation = "Kommun"
+
+[[table.column]]
+name = "P1105_Lopnr_skolenhetskod"
+
+[[table.column]]
+name = "Skolform"
 
 [[table]]
 id = "GravReg_Gravniva_lev2"

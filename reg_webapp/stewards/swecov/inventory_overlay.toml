@@ -3167,3 +3167,1529 @@ label = "pa-telefon"
 [[partition]]
 table = "Inera_VPTU_Coronadata"
 label = "vptu-corona"
+
+
+# ── DECIDED (maintainer-approved 2026-09-02): FK lev4 register_variant assignments.
+# Evidence per entry: FK order sheets ("SWECOV FK data 2025.xlsx",
+# "Bilaga 1 Variabellista.docx"), the MiDAS TFP prototyp workbook, and each
+# table's column vocabulary in the holdings CSV; drafted against the fk/*
+# variant model in input_data/Forsakringskassan/fk.toml. Deliberately absent:
+#   FK_VBBARN_lev4 — waits for a proper fk/vardbidrag barn variant (build-side
+#     fk.toml work + release); assigning it to _default alongside FK_VB_lev4
+#     would conflate two row grains (recipient rows vs child-linkage rows).
+#   FK_ASE_lev4 — undecided until a MONA probe settles ERS_MANAD semantics
+#     (paid-month vs ongoing-decision month); no per-month payments product
+#     exists in fk/assistansersattning.
+
+# evidence: order sheet row "Aktivitetsstöd"; cols (Lopnr, BELOPP, FROM_DATUM, TOM_DATUM, UTTAGET_MANAD) = aktivitetsstod _default variable set in fk.toml
+[[assign]]
+table = "FK_AKTIVITETSTOD_lev4"
+register_variant = "fk/aktivitetsstod/_default"
+
+# evidence: order sheet row "Barnbidrag" (FK_BARNBIDRAG_lev3 same vocab); cols (Lopnr, belopp, Utb_manad) = Bilaga 1 "Barnbidrag: Löpnummer Utbetalningsmånad Belopp"
+[[assign]]
+table = "FK_BAB_lev4"
+register_variant = "fk/barnbidrag/_default"
+
+# evidence: order sheet row "Bostadsbidrag"; cols (Sokande+Medsokande Lopnr, BELOPP, BELOPP_TILLAGGSBIDRAG, UTBETALNINGSMANAD, period from/tom) match bostadsbidrag delivery (FK_BOSTBIDRAG_lev3 vocab)
+[[assign]]
+table = "FK_BOSTADSBIDRAG_lev4"
+register_variant = "fk/bostadsbidrag/_default"
+
+# evidence: order sheet row "Bostadsersättning"; identical vocab to FK_bostadsersattning_lev2 (BELOPP, ERSATTNING_FROM/TOM, UTTAG_MANAD)
+[[assign]]
+table = "FK_BOSTADSERSATTNING_lev4"
+register_variant = "fk/bostadsersattning/_default"
+
+# evidence: order sheet row "Bostadstillägg"; vocab (BELOPP, FROMDAT, TOMDAT, UTTAG_MANAD) = FK_STORE_BOSTADSTILLAGG_lev3
+[[assign]]
+table = "FK_BOSTADSTILLAGG_lev4"
+register_variant = "fk/bostadstillagg/_default"
+
+# evidence: exact-name MiDAS coordinate (SA Delfall 1-1); FALL_*/DEL_* + DELFORMAN + DIAGNOS1/2 vocab per MiDAS förtidspension/SA docs
+[[assign]]
+table = "FK_DELFALL1_1_SA_lev4"
+register_variant = "fk/sjuk-aktivitetsersattning/delfall-1-1"
+
+# evidence: exact-name MiDAS coordinate (SJP Delfall 4-1); FALL_*/DEL_* + DELFORMAN1/2 + FORSAKRADTYP + INKOMSTTYP vocab per MiDAS Sjukpenning v1.02 PDF
+[[assign]]
+table = "FK_DELFALL4_1_SJP_lev4"
+register_variant = "fk/sjukpenning/delfall-4-1"
+
+# evidence: order sheet row "Etableringsersättning"; vocab (BELOPP, ERSATTNING_FROM/TOM, UTTAG_MANAD) = FK_etableringsersattning_lev2
+[[assign]]
+table = "FK_ETABLERINGSERSATTNING_lev4"
+register_variant = "fk/etableringsersattning/_default"
+
+# evidence: order sheet row "Etableringstillägg"; vocab (BELOPP, ERSATTNING_FROM/TOM, UTTAG_MANAD) = FK_etableringstillagg_lev2
+[[assign]]
+table = "FK_ETABLERINGSTILLAGG_lev4"
+register_variant = "fk/etableringstillagg/_default"
+
+# evidence: exact-name MiDAS coordinate FP_Delfall1 (paid föräldrapenning, not skattad FL: has DELFALL_BELOPP, NIVA, DAGTYP); vocab = FK_FP_DELFALL2020_2022_lev3 / midas-foraldrapenning PM
+[[assign]]
+table = "FK_FP_DELFALL1_lev4"
+register_variant = "fk/foraldrapenning/fp-delfall1"
+
+# evidence: order sheet row "Handikappersättning" = FK_HE_lev3; Bilaga 1 "Handikappersättning: Löpnummer Utbetalningsmånad period Belopp Omfattning"
+[[assign]]
+table = "FK_HE_lev4"
+register_variant = "fk/handikappersattning/_default"
+
+# evidence: order sheet "Merkostnadsersättning för barn" (recipient rows, has belopp+omfattning, no barn-lopnr) -> Tabell 1 Mottagare; barn-recipient shard (vuxna shard = FK_MEKV_lev4, partition labels needed)
+[[assign]]
+table = "FK_MEKB_lev4"
+register_variant = "fk/merkostnadsersattning/mottagare"
+
+# evidence: order sheet "Merkostnadsersättning för barn" child-linkage table (Lopnr + Lopnr_barn + Utbetalningsmanad + period, no belopp) -> Tabell 2 Barn variable set in fk.toml
+[[assign]]
+table = "FK_MEKBBARN_lev4"
+register_variant = "fk/merkostnadsersattning/barn"
+
+# evidence: order sheet "Merkostnadsersättning för vuxna" (recipient rows, belopp+omfattning) -> Tabell 1 Mottagare; vuxna shard (barn shard = FK_MEKB_lev4, partition labels needed)
+[[assign]]
+table = "FK_MEKV_lev4"
+register_variant = "fk/merkostnadsersattning/mottagare"
+
+# evidence: order sheet "Omvårdnadsbidrag" recipient table (belopp mottagare-only per fk.toml variable model; no barn-lopnr)
+[[assign]]
+table = "FK_OMV_lev4"
+register_variant = "fk/omvardnadsbidrag/mottagare"
+
+# evidence: order sheet "Omvårdnadsbidrag" child-linkage table (Lopnr + Lopnr_barn + Utbetalningsmanad + period) -> Tabell 2 Barn (Lopnr_barn is barn/beviljanden/avslag-only; only barn has Utbetalningsmanad)
+[[assign]]
+table = "FK_OMVBARN_lev4"
+register_variant = "fk/omvardnadsbidrag/barn"
+
+# evidence: order sheet row "Smittbärarpenning" = FK_SMITTBP_lev3 vocab (Belopp, ERSATTNFROM/TOM, UTBETALNINGSMANAD)
+[[assign]]
+table = "FK_SMITTBARARPENNING_lev4"
+register_variant = "fk/smittbararpenning/_default"
+
+# evidence: MiDAS TFP prototyp xlsx — Delfall1_1_8 (mottagare perspective, delfall by Typ-Barn-Omfattning) = exactly (PERSID, PERSID_BARN, TTP/DELFORMAN, OMFATTNING, DEL_*, FALL_FROM/TOM); Delfall2_* is barn-perspective with comma-list "bm" mottagare, which this table's single PersonNr column is not
+[[assign]]
+table = "FK_TFP_DELFALL_lev4"
+register_variant = "fk/tillfallig-foraldrapenning/delfall1-1-8"
+
+# evidence: Bilaga 1 "Underhållsstöd/bidrag: Löpnummer Löpnummer barn Utbetalningsmånad period Belopp"; per-barn payment grain w/ plain BELOPP + ersättningsperiod matches fk.toml utbetalningar-barn (utbetalningar-manad has BELOPP_BM/BELOPP_BARN and no period cols)
+[[assign]]
+table = "FK_UHS_lev4"
+register_variant = "fk/underhallsstod/utbetalningar-barn"
+
+# evidence: order sheet row "Utvecklingsersättning"; vocab (BELOPP, FROM_DATUM, TOM_DATUM, UTTAGET_MANAD) = FK_utvecklingsersattning_lev2
+[[assign]]
+table = "FK_UTVECKLINGSERSATTNING_lev4"
+register_variant = "fk/utvecklingsersattning/_default"
+
+# evidence: order sheet row "Vårdbidrag" = FK_VB_lev3 vocab (belopp, NIVA_MERKOST, omfattning, Utbetalningsmanad, period); vardbidrag has a single _default variant covering both recipient and barn columns
+[[assign]]
+table = "FK_VB_lev4"
+register_variant = "fk/vardbidrag/_default"
+
+# FK_MEKB/FK_MEKV are the barn/vuxna population shards of one variant
+# (merkostnadsersattning/mottagare) with overlapping editions — §12 disjoint
+# partitions, opaque labels.
+[[partition]]
+table = "FK_MEKB_lev4"
+label = "barn"
+
+[[partition]]
+table = "FK_MEKV_lev4"
+label = "vuxna"
+
+# ── DECIDED (maintainer-approved 2026-09-02): all 173 GDB geocoded-extract
+# tables → scb/gdb/adresser-fastigheter, the only GDB variant carrying the
+# source material (DeSO, RegSO, address coordinates; entity key uuid-adr).
+# These are SWECOV extracts (entity-lopnr → DeSO / 250 m ruta), not verbatim
+# GDB deliveries — "closest catalog home" ruling, incl. GDB_Skolor despite its
+# catalog-homeless school-unit key (skolkod→skolenhetskod). Five name-pattern
+# groups (Ind, Ind_250m, Ast, Ast_250m, Skolor × ~35 years); same-year groups
+# share mapped columns (DeSO etc.), so each group carries a §12 partition
+# label below.
+
+[[assign]]
+table = "GDB_Ast1990"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ast1991"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ast1992"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ast1993"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ast1994"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ast1995"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ast1996"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ast1997"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ast1998"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ast1999"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ast2000"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ast2001"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ast2002"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ast2003"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ast2004"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ast2005"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ast2006"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ast2007"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ast2008"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ast2009"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ast2010"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ast2011"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ast2012"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ast2013"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ast2014"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ast2015"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ast2016"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ast2017"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ast2018"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ast2019"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ast2020"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ast2021"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ast2022"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ast2023"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ast_250m_1990"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ast_250m_1991"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ast_250m_1992"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ast_250m_1993"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ast_250m_1994"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ast_250m_1995"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ast_250m_1996"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ast_250m_1997"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ast_250m_1998"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ast_250m_1999"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ast_250m_2000"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ast_250m_2001"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ast_250m_2002"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ast_250m_2003"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ast_250m_2004"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ast_250m_2005"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ast_250m_2006"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ast_250m_2007"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ast_250m_2008"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ast_250m_2009"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ast_250m_2010"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ast_250m_2011"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ast_250m_2012"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ast_250m_2013"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ast_250m_2014"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ast_250m_2015"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ast_250m_2016"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ast_250m_2017"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ast_250m_2018"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ast_250m_2019"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ast_250m_2020"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ast_250m_2021"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ast_250m_2022"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ast_250m_2023"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ind1990"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ind1991"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ind1992"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ind1993"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ind1994"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ind1995"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ind1996"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ind1997"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ind1998"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ind1999"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ind2000"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ind2001"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ind2002"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ind2003"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ind2004"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ind2005"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ind2006"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ind2007"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ind2008"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ind2009"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ind2010"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ind2011"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ind2012"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ind2013"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ind2014"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ind2015"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ind2016"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ind2017"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ind2018"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ind2019"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ind2020"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ind2021"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ind2022"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ind2023"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ind2024"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ind_250m_1990"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ind_250m_1991"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ind_250m_1992"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ind_250m_1993"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ind_250m_1994"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ind_250m_1995"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ind_250m_1996"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ind_250m_1997"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ind_250m_1998"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ind_250m_1999"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ind_250m_2000"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ind_250m_2001"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ind_250m_2002"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ind_250m_2003"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ind_250m_2004"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ind_250m_2005"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ind_250m_2006"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ind_250m_2007"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ind_250m_2008"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ind_250m_2009"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ind_250m_2010"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ind_250m_2011"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ind_250m_2012"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ind_250m_2013"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ind_250m_2014"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ind_250m_2015"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ind_250m_2016"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ind_250m_2017"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ind_250m_2018"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ind_250m_2019"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ind_250m_2020"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ind_250m_2021"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ind_250m_2022"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ind_250m_2023"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Ind_250m_2024"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Skolor1990"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Skolor1991"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Skolor1992"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Skolor1993"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Skolor1994"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Skolor1995"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Skolor1996"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Skolor1997"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Skolor1998"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Skolor1999"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Skolor2000"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Skolor2001"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Skolor2002"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Skolor2003"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Skolor2004"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Skolor2005"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Skolor2006"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Skolor2007"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Skolor2008"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Skolor2009"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Skolor2010"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Skolor2011"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Skolor2012"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Skolor2013"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Skolor2014"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Skolor2015"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Skolor2016"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Skolor2017"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Skolor2018"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Skolor2019"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Skolor2020"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Skolor2021"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Skolor2022"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Skolor2023"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+[[assign]]
+table = "GDB_Skolor2024"
+register_variant = "scb/gdb/adresser-fastigheter"
+
+# GDB group partitions (unit populations: individer / arbetsstallen / skolor,
+# each also as a 250 m-ruta shard).
+
+[[partition]]
+table = "GDB_Ast1990"
+label = "ast"
+
+[[partition]]
+table = "GDB_Ast1991"
+label = "ast"
+
+[[partition]]
+table = "GDB_Ast1992"
+label = "ast"
+
+[[partition]]
+table = "GDB_Ast1993"
+label = "ast"
+
+[[partition]]
+table = "GDB_Ast1994"
+label = "ast"
+
+[[partition]]
+table = "GDB_Ast1995"
+label = "ast"
+
+[[partition]]
+table = "GDB_Ast1996"
+label = "ast"
+
+[[partition]]
+table = "GDB_Ast1997"
+label = "ast"
+
+[[partition]]
+table = "GDB_Ast1998"
+label = "ast"
+
+[[partition]]
+table = "GDB_Ast1999"
+label = "ast"
+
+[[partition]]
+table = "GDB_Ast2000"
+label = "ast"
+
+[[partition]]
+table = "GDB_Ast2001"
+label = "ast"
+
+[[partition]]
+table = "GDB_Ast2002"
+label = "ast"
+
+[[partition]]
+table = "GDB_Ast2003"
+label = "ast"
+
+[[partition]]
+table = "GDB_Ast2004"
+label = "ast"
+
+[[partition]]
+table = "GDB_Ast2005"
+label = "ast"
+
+[[partition]]
+table = "GDB_Ast2006"
+label = "ast"
+
+[[partition]]
+table = "GDB_Ast2007"
+label = "ast"
+
+[[partition]]
+table = "GDB_Ast2008"
+label = "ast"
+
+[[partition]]
+table = "GDB_Ast2009"
+label = "ast"
+
+[[partition]]
+table = "GDB_Ast2010"
+label = "ast"
+
+[[partition]]
+table = "GDB_Ast2011"
+label = "ast"
+
+[[partition]]
+table = "GDB_Ast2012"
+label = "ast"
+
+[[partition]]
+table = "GDB_Ast2013"
+label = "ast"
+
+[[partition]]
+table = "GDB_Ast2014"
+label = "ast"
+
+[[partition]]
+table = "GDB_Ast2015"
+label = "ast"
+
+[[partition]]
+table = "GDB_Ast2016"
+label = "ast"
+
+[[partition]]
+table = "GDB_Ast2017"
+label = "ast"
+
+[[partition]]
+table = "GDB_Ast2018"
+label = "ast"
+
+[[partition]]
+table = "GDB_Ast2019"
+label = "ast"
+
+[[partition]]
+table = "GDB_Ast2020"
+label = "ast"
+
+[[partition]]
+table = "GDB_Ast2021"
+label = "ast"
+
+[[partition]]
+table = "GDB_Ast2022"
+label = "ast"
+
+[[partition]]
+table = "GDB_Ast2023"
+label = "ast"
+
+[[partition]]
+table = "GDB_Ast_250m_1990"
+label = "ast-250m"
+
+[[partition]]
+table = "GDB_Ast_250m_1991"
+label = "ast-250m"
+
+[[partition]]
+table = "GDB_Ast_250m_1992"
+label = "ast-250m"
+
+[[partition]]
+table = "GDB_Ast_250m_1993"
+label = "ast-250m"
+
+[[partition]]
+table = "GDB_Ast_250m_1994"
+label = "ast-250m"
+
+[[partition]]
+table = "GDB_Ast_250m_1995"
+label = "ast-250m"
+
+[[partition]]
+table = "GDB_Ast_250m_1996"
+label = "ast-250m"
+
+[[partition]]
+table = "GDB_Ast_250m_1997"
+label = "ast-250m"
+
+[[partition]]
+table = "GDB_Ast_250m_1998"
+label = "ast-250m"
+
+[[partition]]
+table = "GDB_Ast_250m_1999"
+label = "ast-250m"
+
+[[partition]]
+table = "GDB_Ast_250m_2000"
+label = "ast-250m"
+
+[[partition]]
+table = "GDB_Ast_250m_2001"
+label = "ast-250m"
+
+[[partition]]
+table = "GDB_Ast_250m_2002"
+label = "ast-250m"
+
+[[partition]]
+table = "GDB_Ast_250m_2003"
+label = "ast-250m"
+
+[[partition]]
+table = "GDB_Ast_250m_2004"
+label = "ast-250m"
+
+[[partition]]
+table = "GDB_Ast_250m_2005"
+label = "ast-250m"
+
+[[partition]]
+table = "GDB_Ast_250m_2006"
+label = "ast-250m"
+
+[[partition]]
+table = "GDB_Ast_250m_2007"
+label = "ast-250m"
+
+[[partition]]
+table = "GDB_Ast_250m_2008"
+label = "ast-250m"
+
+[[partition]]
+table = "GDB_Ast_250m_2009"
+label = "ast-250m"
+
+[[partition]]
+table = "GDB_Ast_250m_2010"
+label = "ast-250m"
+
+[[partition]]
+table = "GDB_Ast_250m_2011"
+label = "ast-250m"
+
+[[partition]]
+table = "GDB_Ast_250m_2012"
+label = "ast-250m"
+
+[[partition]]
+table = "GDB_Ast_250m_2013"
+label = "ast-250m"
+
+[[partition]]
+table = "GDB_Ast_250m_2014"
+label = "ast-250m"
+
+[[partition]]
+table = "GDB_Ast_250m_2015"
+label = "ast-250m"
+
+[[partition]]
+table = "GDB_Ast_250m_2016"
+label = "ast-250m"
+
+[[partition]]
+table = "GDB_Ast_250m_2017"
+label = "ast-250m"
+
+[[partition]]
+table = "GDB_Ast_250m_2018"
+label = "ast-250m"
+
+[[partition]]
+table = "GDB_Ast_250m_2019"
+label = "ast-250m"
+
+[[partition]]
+table = "GDB_Ast_250m_2020"
+label = "ast-250m"
+
+[[partition]]
+table = "GDB_Ast_250m_2021"
+label = "ast-250m"
+
+[[partition]]
+table = "GDB_Ast_250m_2022"
+label = "ast-250m"
+
+[[partition]]
+table = "GDB_Ast_250m_2023"
+label = "ast-250m"
+
+[[partition]]
+table = "GDB_Ind1990"
+label = "ind"
+
+[[partition]]
+table = "GDB_Ind1991"
+label = "ind"
+
+[[partition]]
+table = "GDB_Ind1992"
+label = "ind"
+
+[[partition]]
+table = "GDB_Ind1993"
+label = "ind"
+
+[[partition]]
+table = "GDB_Ind1994"
+label = "ind"
+
+[[partition]]
+table = "GDB_Ind1995"
+label = "ind"
+
+[[partition]]
+table = "GDB_Ind1996"
+label = "ind"
+
+[[partition]]
+table = "GDB_Ind1997"
+label = "ind"
+
+[[partition]]
+table = "GDB_Ind1998"
+label = "ind"
+
+[[partition]]
+table = "GDB_Ind1999"
+label = "ind"
+
+[[partition]]
+table = "GDB_Ind2000"
+label = "ind"
+
+[[partition]]
+table = "GDB_Ind2001"
+label = "ind"
+
+[[partition]]
+table = "GDB_Ind2002"
+label = "ind"
+
+[[partition]]
+table = "GDB_Ind2003"
+label = "ind"
+
+[[partition]]
+table = "GDB_Ind2004"
+label = "ind"
+
+[[partition]]
+table = "GDB_Ind2005"
+label = "ind"
+
+[[partition]]
+table = "GDB_Ind2006"
+label = "ind"
+
+[[partition]]
+table = "GDB_Ind2007"
+label = "ind"
+
+[[partition]]
+table = "GDB_Ind2008"
+label = "ind"
+
+[[partition]]
+table = "GDB_Ind2009"
+label = "ind"
+
+[[partition]]
+table = "GDB_Ind2010"
+label = "ind"
+
+[[partition]]
+table = "GDB_Ind2011"
+label = "ind"
+
+[[partition]]
+table = "GDB_Ind2012"
+label = "ind"
+
+[[partition]]
+table = "GDB_Ind2013"
+label = "ind"
+
+[[partition]]
+table = "GDB_Ind2014"
+label = "ind"
+
+[[partition]]
+table = "GDB_Ind2015"
+label = "ind"
+
+[[partition]]
+table = "GDB_Ind2016"
+label = "ind"
+
+[[partition]]
+table = "GDB_Ind2017"
+label = "ind"
+
+[[partition]]
+table = "GDB_Ind2018"
+label = "ind"
+
+[[partition]]
+table = "GDB_Ind2019"
+label = "ind"
+
+[[partition]]
+table = "GDB_Ind2020"
+label = "ind"
+
+[[partition]]
+table = "GDB_Ind2021"
+label = "ind"
+
+[[partition]]
+table = "GDB_Ind2022"
+label = "ind"
+
+[[partition]]
+table = "GDB_Ind2023"
+label = "ind"
+
+[[partition]]
+table = "GDB_Ind2024"
+label = "ind"
+
+[[partition]]
+table = "GDB_Ind_250m_1990"
+label = "ind-250m"
+
+[[partition]]
+table = "GDB_Ind_250m_1991"
+label = "ind-250m"
+
+[[partition]]
+table = "GDB_Ind_250m_1992"
+label = "ind-250m"
+
+[[partition]]
+table = "GDB_Ind_250m_1993"
+label = "ind-250m"
+
+[[partition]]
+table = "GDB_Ind_250m_1994"
+label = "ind-250m"
+
+[[partition]]
+table = "GDB_Ind_250m_1995"
+label = "ind-250m"
+
+[[partition]]
+table = "GDB_Ind_250m_1996"
+label = "ind-250m"
+
+[[partition]]
+table = "GDB_Ind_250m_1997"
+label = "ind-250m"
+
+[[partition]]
+table = "GDB_Ind_250m_1998"
+label = "ind-250m"
+
+[[partition]]
+table = "GDB_Ind_250m_1999"
+label = "ind-250m"
+
+[[partition]]
+table = "GDB_Ind_250m_2000"
+label = "ind-250m"
+
+[[partition]]
+table = "GDB_Ind_250m_2001"
+label = "ind-250m"
+
+[[partition]]
+table = "GDB_Ind_250m_2002"
+label = "ind-250m"
+
+[[partition]]
+table = "GDB_Ind_250m_2003"
+label = "ind-250m"
+
+[[partition]]
+table = "GDB_Ind_250m_2004"
+label = "ind-250m"
+
+[[partition]]
+table = "GDB_Ind_250m_2005"
+label = "ind-250m"
+
+[[partition]]
+table = "GDB_Ind_250m_2006"
+label = "ind-250m"
+
+[[partition]]
+table = "GDB_Ind_250m_2007"
+label = "ind-250m"
+
+[[partition]]
+table = "GDB_Ind_250m_2008"
+label = "ind-250m"
+
+[[partition]]
+table = "GDB_Ind_250m_2009"
+label = "ind-250m"
+
+[[partition]]
+table = "GDB_Ind_250m_2010"
+label = "ind-250m"
+
+[[partition]]
+table = "GDB_Ind_250m_2011"
+label = "ind-250m"
+
+[[partition]]
+table = "GDB_Ind_250m_2012"
+label = "ind-250m"
+
+[[partition]]
+table = "GDB_Ind_250m_2013"
+label = "ind-250m"
+
+[[partition]]
+table = "GDB_Ind_250m_2014"
+label = "ind-250m"
+
+[[partition]]
+table = "GDB_Ind_250m_2015"
+label = "ind-250m"
+
+[[partition]]
+table = "GDB_Ind_250m_2016"
+label = "ind-250m"
+
+[[partition]]
+table = "GDB_Ind_250m_2017"
+label = "ind-250m"
+
+[[partition]]
+table = "GDB_Ind_250m_2018"
+label = "ind-250m"
+
+[[partition]]
+table = "GDB_Ind_250m_2019"
+label = "ind-250m"
+
+[[partition]]
+table = "GDB_Ind_250m_2020"
+label = "ind-250m"
+
+[[partition]]
+table = "GDB_Ind_250m_2021"
+label = "ind-250m"
+
+[[partition]]
+table = "GDB_Ind_250m_2022"
+label = "ind-250m"
+
+[[partition]]
+table = "GDB_Ind_250m_2023"
+label = "ind-250m"
+
+[[partition]]
+table = "GDB_Ind_250m_2024"
+label = "ind-250m"
+
+[[partition]]
+table = "GDB_Skolor1990"
+label = "skolor"
+
+[[partition]]
+table = "GDB_Skolor1991"
+label = "skolor"
+
+[[partition]]
+table = "GDB_Skolor1992"
+label = "skolor"
+
+[[partition]]
+table = "GDB_Skolor1993"
+label = "skolor"
+
+[[partition]]
+table = "GDB_Skolor1994"
+label = "skolor"
+
+[[partition]]
+table = "GDB_Skolor1995"
+label = "skolor"
+
+[[partition]]
+table = "GDB_Skolor1996"
+label = "skolor"
+
+[[partition]]
+table = "GDB_Skolor1997"
+label = "skolor"
+
+[[partition]]
+table = "GDB_Skolor1998"
+label = "skolor"
+
+[[partition]]
+table = "GDB_Skolor1999"
+label = "skolor"
+
+[[partition]]
+table = "GDB_Skolor2000"
+label = "skolor"
+
+[[partition]]
+table = "GDB_Skolor2001"
+label = "skolor"
+
+[[partition]]
+table = "GDB_Skolor2002"
+label = "skolor"
+
+[[partition]]
+table = "GDB_Skolor2003"
+label = "skolor"
+
+[[partition]]
+table = "GDB_Skolor2004"
+label = "skolor"
+
+[[partition]]
+table = "GDB_Skolor2005"
+label = "skolor"
+
+[[partition]]
+table = "GDB_Skolor2006"
+label = "skolor"
+
+[[partition]]
+table = "GDB_Skolor2007"
+label = "skolor"
+
+[[partition]]
+table = "GDB_Skolor2008"
+label = "skolor"
+
+[[partition]]
+table = "GDB_Skolor2009"
+label = "skolor"
+
+[[partition]]
+table = "GDB_Skolor2010"
+label = "skolor"
+
+[[partition]]
+table = "GDB_Skolor2011"
+label = "skolor"
+
+[[partition]]
+table = "GDB_Skolor2012"
+label = "skolor"
+
+[[partition]]
+table = "GDB_Skolor2013"
+label = "skolor"
+
+[[partition]]
+table = "GDB_Skolor2014"
+label = "skolor"
+
+[[partition]]
+table = "GDB_Skolor2015"
+label = "skolor"
+
+[[partition]]
+table = "GDB_Skolor2016"
+label = "skolor"
+
+[[partition]]
+table = "GDB_Skolor2017"
+label = "skolor"
+
+[[partition]]
+table = "GDB_Skolor2018"
+label = "skolor"
+
+[[partition]]
+table = "GDB_Skolor2019"
+label = "skolor"
+
+[[partition]]
+table = "GDB_Skolor2020"
+label = "skolor"
+
+[[partition]]
+table = "GDB_Skolor2021"
+label = "skolor"
+
+[[partition]]
+table = "GDB_Skolor2022"
+label = "skolor"
+
+[[partition]]
+table = "GDB_Skolor2023"
+label = "skolor"
+
+[[partition]]
+table = "GDB_Skolor2024"
+label = "skolor"
