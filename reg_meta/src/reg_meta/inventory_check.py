@@ -46,6 +46,7 @@ from .inventory import _location
 if TYPE_CHECKING:
     import sqlite3
 
+    from .catalog import VariableState
     from .inventory import DeliveryInventory
 
 # How many physical locations one finding names. A renamed provider slug strands
@@ -59,6 +60,19 @@ _MAX_LOCATIONS = 5
 _MAX_RENDERED = 20
 
 
+# The four grains a coordinate can strand at, coarse to fine.
+# `binding_unavailable` borrows the ORDER PATH's own name for it
+# (`order._materialize_binding`): the variant and the variable each exist, but
+# the catalog carries no state pairing them, so no request could ever fill that
+# mapping.
+_FindingCode = Literal[
+    "variant_unresolved",
+    "variable_unresolved",
+    "binding_unavailable",
+    "representation_unresolved",
+]
+
+
 class InventoryFinding(BaseModel):
     """One inventory coordinate the catalog DB cannot resolve.
 
@@ -69,9 +83,7 @@ class InventoryFinding(BaseModel):
 
     model_config = ConfigDict(frozen=True, extra="forbid")
 
-    code: Literal[
-        "variant_unresolved", "variable_unresolved", "representation_unresolved"
-    ]
+    code: _FindingCode
     coordinate: str
     message: str
     mapping_count: int
@@ -101,7 +113,10 @@ class _Uses:
             self.locations.append(location)
 
 
-# One `(register_variant, variable FQID, representation)` cell of the inventory.
+# One `(register_variant, variable FQID)` binding of the inventory, and the
+# `(…, representation)` cell that narrows it. EVERY mapping states a pair; only a
+# mapping that pins a representation states a cell.
+_Pair = tuple[str, str]
 _Cell = tuple[str, str, str]
 
 
@@ -112,28 +127,34 @@ def check_inventory(
 
     Empty when the inventory is consistent with the catalog the deployment
     serves — the passing baseline. Deterministic: findings come grouped by code
-    (variant, then variable, then representation) and sorted by coordinate
-    within each group, so two runs over the same inputs produce the same report.
+    (variant, then variable, then binding, then representation) and sorted by
+    coordinate within each group, so two runs over the same inputs produce the
+    same report.
 
-    A mapping that omits `representation` gets no representation check: §12's
-    single-representation arm is request-dependent (the binding must resolve to
-    ONE canonical representation across the requested period), which only the
-    order pass can decide — `order._materialize_binding`'s `unqualified_ok`
-    owns it.
+    A mapping that omits `representation` skips the representation check ONLY:
+    which canonical representation an unqualified binding resolves to is
+    request-dependent (§12's single-representation arm is decided across the
+    requested period, and `order._materialize_binding`'s `unqualified_ok` owns
+    it), but that the binding is delivered at its declared variant at all is
+    not — every mapping is checked at that grain.
     """
     variants: dict[str, _Uses] = {}
     variables: dict[str, _Uses] = {}
+    pairs: dict[_Pair, _Uses] = {}
     cells: dict[_Cell, _Uses] = {}
     for table in inventory.tables:
         for column in table.columns:
             location = _location(table.id, column.name)
             for mapping in column.mappings:
                 variable = str(mapping.variable)
+                pair = (mapping.register_variant, variable)
                 variants.setdefault(mapping.register_variant, _Uses()).record(location)
                 variables.setdefault(variable, _Uses()).record(location)
+                pairs.setdefault(pair, _Uses()).record(location)
                 if mapping.representation is not None:
-                    cell = (mapping.register_variant, variable, mapping.representation)
-                    cells.setdefault(cell, _Uses()).record(location)
+                    cells.setdefault((*pair, mapping.representation), _Uses()).record(
+                        location
+                    )
 
     variant_ids = _variant_ids(conn, set(variants))
     variable_ids = _variable_ids(conn, set(variables))
@@ -172,30 +193,70 @@ def check_inventory(
             )
         )
 
-    unresolved: list[_Cell] = []
-    probes: list[tuple[_Cell, tuple[int, int, str]]] = []
-    for cell in cells:
-        coordinate, variable, representation = cell
+    # The PAIRING, checked for every mapping — an existing variable and an
+    # existing variant can still be a binding the catalog never delivers, when
+    # the variable's states all live under other variants. The order path calls
+    # that `binding_unavailable`; here it holds at every period, so no request
+    # could ever fill the mapping.
+    aliased_states: dict[_Pair, list[VariableState]] = {}
+    pair_probes: dict[_Pair, tuple[int, int]] = {}
+    for pair in pairs:
+        coordinate, variable = pair
         register_variant_id = variant_ids.get(coordinate)
         if register_variant_id is None:
             continue  # already reported at the variant grain; don't cascade
         if variable in aliased:
             # A same_as target sits under ANOTHER register, so its states carry
             # that register's variants, not this coordinate's. Rather than
-            # re-derive where an aliased variable's representations live, ask
-            # the order path itself. Rare: same_as is curator-authored and tiny.
-            if not _aliased_representation_resolves(
-                catalog, variable, coordinate, representation
-            ):
-                unresolved.append(cell)
+            # re-derive where an aliased variable's states live, ask the order
+            # path itself, once per pair — `resolve_at` over the whole history
+            # (`"_default"`, no period filter) with the same variant narrowing
+            # the materializer applies. Rare: same_as is curator-authored and
+            # tiny.
+            aliased_states[pair] = catalog.resolve_at(
+                variable, "_default", variant=coordinate.split("/")[2]
+            )
             continue
         variable_id = variable_ids.get(variable)
         if variable_id is None:
             continue  # already reported at the variable grain
-        probes.append((cell, (variable_id, register_variant_id, representation)))
+        pair_probes[pair] = (variable_id, register_variant_id)
 
-    resolvable = _resolvable_representations(conn, {key for _, key in probes})
-    unresolved.extend(cell for cell, key in probes if key not in resolvable)
+    cell_probes: dict[_Cell, tuple[int, int, str]] = {}
+    for cell in cells:
+        key = pair_probes.get(cell[:2])
+        if key is not None:  # else aliased, or reported at a coarser grain
+            cell_probes[cell] = (*key, cell[2])
+
+    delivered_pairs, delivered_cells = _delivered(
+        conn, set(pair_probes.values()), set(cell_probes.values())
+    )
+    unavailable = sorted(
+        [pair for pair, key in pair_probes.items() if key not in delivered_pairs]
+        + [pair for pair, states in aliased_states.items() if not states]
+    )
+    for pair in unavailable:
+        coordinate, variable = pair
+        findings.append(
+            _finding(
+                "binding_unavailable",
+                " ".join(pair),
+                f"variable {variable} has no state at {coordinate}, so the "
+                "catalog never delivers this binding there",
+                pairs[pair],
+            )
+        )
+
+    stranded = set(unavailable)
+    unresolved: list[_Cell] = [
+        cell
+        for cell, key in cell_probes.items()
+        if key not in delivered_cells and cell[:2] not in stranded
+    ]
+    for cell in cells:
+        states = aliased_states.get(cell[:2])
+        if states and not any(s.delivery_column_name == cell[2] for s in states):
+            unresolved.append(cell)
     for cell in sorted(unresolved):
         coordinate, variable, representation = cell
         findings.append(
@@ -235,9 +296,7 @@ def unresolved_message(findings: tuple[InventoryFinding, ...]) -> str:
 
 
 def _finding(
-    code: Literal[
-        "variant_unresolved", "variable_unresolved", "representation_unresolved"
-    ],
+    code: _FindingCode,
     coordinate: str,
     message: str,
     uses: _Uses,
@@ -289,31 +348,43 @@ def _variable_ids(conn: sqlite3.Connection, wanted: set[str]) -> dict[str, int]:
     }
 
 
-def _resolvable_representations(
-    conn: sqlite3.Connection, wanted: set[tuple[int, int, str]]
-) -> set[tuple[int, int, str]]:
-    """Which `(variable_id, register_variant_id, delivery_column_name)` triples
-    of `wanted` the catalog actually offers.
+def _delivered(
+    conn: sqlite3.Connection,
+    pairs: set[tuple[int, int]],
+    cells: set[tuple[int, int, str]],
+) -> tuple[set[tuple[int, int]], set[tuple[int, int, str]]]:
+    """Which of the `(variable_id, register_variant_id)` pairs the catalog
+    carries a state for, and which of the `(…, delivery_column_name)` cells it
+    delivers under that name — both grains from ONE scan, since a cell is a
+    narrowing of its pair.
 
-    The resolver's representation universe is `variable_state`'s denormalized
-    latest alias UNION the `variable_alias_window` rows
-    `Catalog._expand_state_windows` expands a state into — a monthly-family
-    (#319) or multi-alias (#945) column exists ONLY in the window table, so
-    reading `variable_state` alone would strand a mapping the order path
-    resolves. Filtered while streaming, like the lookups above."""
-    if not wanted:
-        return set()
-    return {
-        key
-        for row in conn.execute(
-            "SELECT variable_id, register_variant_id, delivery_column_name "
-            "FROM variable_state WHERE delivery_column_name IS NOT NULL "
-            "UNION ALL "
-            "SELECT variable_id, register_variant_id, delivery_column_name "
-            "FROM variable_alias_window"
-        )
-        if (key := (row[0], row[1], row[2])) in wanted
-    }
+    The resolver's universe is `variable_state`'s denormalized latest alias
+    UNION the `variable_alias_window` rows `Catalog._expand_state_windows`
+    expands a state into — a monthly-family (#319) or multi-alias (#945) column
+    exists ONLY in the window table, so reading `variable_state` alone would
+    strand a mapping the order path resolves. A state with NO delivery column
+    still makes its binding REACHABLE (whether an unqualified binding is
+    orderable across a given period is the representation grain, which only the
+    order path can decide), so the pair arm keeps it while the cell arm does
+    not. Filtered while streaming, like the lookups above."""
+    found_pairs: set[tuple[int, int]] = set()
+    found_cells: set[tuple[int, int, str]] = set()
+    if not pairs:
+        return found_pairs, found_cells
+    for variable_id, register_variant_id, column in conn.execute(
+        "SELECT variable_id, register_variant_id, delivery_column_name "
+        "FROM variable_state "
+        "UNION ALL "
+        "SELECT variable_id, register_variant_id, delivery_column_name "
+        "FROM variable_alias_window"
+    ):
+        pair = (variable_id, register_variant_id)
+        if pair not in pairs:
+            continue
+        found_pairs.add(pair)
+        if column is not None and (cell := (*pair, column)) in cells:
+            found_cells.add(cell)
+    return found_pairs, found_cells
 
 
 def _resolves(catalog: Catalog, fqid: str) -> bool:
@@ -325,13 +396,3 @@ def _resolves(catalog: Catalog, fqid: str) -> bool:
     except RegMetaError:
         return False
     return True
-
-
-def _aliased_representation_resolves(
-    catalog: Catalog, fqid: str, coordinate: str, representation: str
-) -> bool:
-    """Is `representation` a delivery column of an aliased `fqid` at
-    `coordinate`? `resolve_at` over the whole history (`"_default"`, no period
-    filter) is exactly what the order path calls, variant narrowing included."""
-    states = catalog.resolve_at(fqid, "_default", variant=coordinate.split("/")[2])
-    return any(state.delivery_column_name == representation for state in states)

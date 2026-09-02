@@ -10,6 +10,8 @@ DB.
 The catalog fixture is one LISA variant delivering two concepts: `kon` (the
 plain single-column case, co-delivered under a second alias `Konkod` through the
 `variable_alias_window` expansion the resolver applies) and `yrke` (`Ssyk3`).
+A second variant, `individer-20plus`, exists but delivers nothing — the variant
+an inventory can name legally while no binding under it is reachable.
 """
 
 from __future__ import annotations
@@ -17,7 +19,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 import pytest
-from _slugged_db import add_state, add_variable, build_slugged_db
+from _slugged_db import add_state, add_variable, add_variant, build_slugged_db
 from reg_meta.inventory import load_inventory
 from reg_meta.inventory_check import check_inventory, unresolved_message
 
@@ -60,8 +62,18 @@ def _inventory(tmp_path: Path, text: str) -> DeliveryInventory:
 @pytest.fixture
 def conn() -> sqlite3.Connection:
     """The synthetic catalog: `scb/lisa/individer-15plus` delivering `Kon`
-    (plus its co-delivered `Konkod` alias) and `Ssyk3`."""
+    (plus its co-delivered `Konkod` alias) and `Ssyk3`, alongside the empty
+    variant `scb/lisa/individer-20plus`."""
     db = build_slugged_db()
+    # A real variant with no `variable_state` under it: the catalog knows the
+    # coordinate, but no binding is delivered there.
+    add_variant(
+        db,
+        register_variant_id=11,
+        register_id=1,
+        slug="individer-20plus",
+        name="Individer 20+",
+    )
     add_variable(db, register_id=1, var_id=46, name="Yrke", slug="yrke")
     add_state(
         db,
@@ -209,14 +221,7 @@ def test_a_same_as_aliased_variable_resolves(conn, tmp_path) -> None:
     )
 
 
-def test_a_mapping_without_a_representation_takes_no_representation_check(
-    conn, tmp_path
-) -> None:
-    """§12's single-representation arm is request-dependent — only the order
-    pass can decide whether the binding resolves to ONE representation across a
-    requested period — so an unqualified mapping is checked at the variant and
-    variable grains only, physical column name notwithstanding."""
-    unqualified = """
+UNQUALIFIED_INVENTORY = """
 version = 1
 steward = "swecov"
 
@@ -230,7 +235,82 @@ name = "SomeColumnTheCatalogNeverNames"
 register_variant = "scb/lisa/individer-15plus"
 variable = "scb/lisa/kon"
 """
-    assert check_inventory(_inventory(tmp_path, unqualified), conn) == ()
+
+
+def test_a_mapping_without_a_representation_takes_no_representation_check(
+    conn, tmp_path
+) -> None:
+    """§12's single-representation arm is request-dependent — only the order
+    pass can decide whether the binding resolves to ONE representation across a
+    requested period — so an unqualified mapping's physical column name is not
+    checked against the catalog's delivery columns."""
+    assert check_inventory(_inventory(tmp_path, UNQUALIFIED_INVENTORY), conn) == ()
+
+
+def test_a_mapping_without_a_representation_still_checks_its_binding(
+    conn, tmp_path
+) -> None:
+    """Skipping the representation check must not skip the PAIRING. `kon` is a
+    real variable and `individer-20plus` a real variant, but the catalog carries
+    no state pairing them — the order path could never fill this mapping at any
+    period, so the gate must not let a steward boot on it."""
+    (finding,) = check_inventory(
+        _inventory(
+            tmp_path,
+            UNQUALIFIED_INVENTORY.replace("individer-15plus", "individer-20plus"),
+        ),
+        conn,
+    )
+    assert finding.code == "binding_unavailable"
+    assert finding.coordinate == "scb/lisa/individer-20plus scb/lisa/kon"
+    assert finding.mapping_count == 1
+    assert finding.locations == (
+        "table['LISA_Individ_2018.csv'].column['SomeColumnTheCatalogNeverNames']",
+    )
+
+
+def test_an_unavailable_binding_does_not_cascade_into_its_representation(
+    conn, tmp_path
+) -> None:
+    """A qualified mapping at an unreachable variant is ONE finding at the
+    binding grain. Reporting the representation too would name a second repair
+    for damage that has one cause."""
+    findings = check_inventory(
+        _inventory(
+            tmp_path, CLEAN_INVENTORY.replace("individer-15plus", "individer-20plus")
+        ),
+        conn,
+    )
+    assert [f.code for f in findings] == ["binding_unavailable"] * 2
+    assert [f.coordinate for f in findings] == [
+        "scb/lisa/individer-20plus scb/lisa/kon",
+        "scb/lisa/individer-20plus scb/lisa/yrke",
+    ]
+
+
+def test_an_aliased_variable_at_a_variant_it_never_reaches_is_reported(
+    conn, tmp_path
+) -> None:
+    """The same_as arm answers the pairing too: `konkod` resolves through the
+    curated edge to `kon`, which has no state at `individer-20plus`, so the
+    binding is unavailable rather than silently accepted."""
+    conn.execute(
+        "INSERT INTO variable_same_as "
+        "(a_provider, a_register, a_variable, b_provider, b_register, b_variable) "
+        "VALUES ('scb','lisa','konkod','scb','lisa','kon')"
+    )
+    conn.commit()
+    (finding,) = check_inventory(
+        _inventory(
+            tmp_path,
+            UNQUALIFIED_INVENTORY.replace(
+                "individer-15plus", "individer-20plus"
+            ).replace("lisa/kon", "lisa/konkod"),
+        ),
+        conn,
+    )
+    assert finding.code == "binding_unavailable"
+    assert finding.coordinate == "scb/lisa/individer-20plus scb/lisa/konkod"
 
 
 def test_an_unresolved_variant_does_not_cascade_into_its_cells(conn, tmp_path) -> None:
@@ -247,9 +327,9 @@ def test_an_unresolved_variant_does_not_cascade_into_its_cells(conn, tmp_path) -
 
 
 def test_findings_are_grouped_by_code_and_deterministic(conn, tmp_path) -> None:
-    """Grouped variant → variable → representation, sorted by coordinate within
-    each group, and byte-identical across runs — a gate whose report reorders
-    cannot be diffed against a previous release."""
+    """Grouped variant → variable → binding → representation, sorted by
+    coordinate within each group, and byte-identical across runs — a gate whose
+    report reorders cannot be diffed against a previous release."""
     broken = """
 version = 1
 steward = "swecov"
@@ -278,12 +358,20 @@ name = "Alder"
 register_variant = "scb/lisa/gone"
 variable = "scb/lisa/kon"
 representation = "Kon"
+
+[[table.column]]
+name = "Yrke20"
+[[table.column.mapping]]
+register_variant = "scb/lisa/individer-20plus"
+variable = "scb/lisa/yrke"
+representation = "Ssyk3"
 """
     inventory = _inventory(tmp_path, broken)
     findings = check_inventory(inventory, conn)
     assert [f.code for f in findings] == [
         "variant_unresolved",
         "variable_unresolved",
+        "binding_unavailable",
         "representation_unresolved",
     ]
     assert check_inventory(inventory, conn) == findings

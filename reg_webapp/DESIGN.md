@@ -1866,11 +1866,12 @@ things:
   (`stewards.check_delivery_inventory` over `reg_meta.inventory_check`): §12's standing
   inventory ↔ DB consistency gate, which fails startup when any mapping's
   `(register_variant, variable FQID, representation)` does not resolve against the DB
-  this deployment serves. The flavored DB and the committed inventory are cut separately
-  and pre-v1 slug churn is legal, so they CAN drift — and unlike the steward CATALOG
-  above there is no drift downgrade here: a dropped binding merely narrows the browse,
-  while an unresolvable inventory mapping is a holdings claim about a coordinate that
-  does not exist. The rules and the report shape live in `reg_meta/DESIGN.md` →
+  this deployment serves — a mapping that pins no representation still has its binding
+  checked at its declared variant. The flavored DB and the committed inventory are cut
+  separately and pre-v1 slug churn is legal, so they CAN drift — and unlike the steward
+  CATALOG above there is no drift downgrade here: a dropped binding merely narrows the
+  browse, while an unresolvable inventory mapping is a holdings claim about a coordinate
+  that does not exist. The rules and the report shape live in `reg_meta/DESIGN.md` →
   "Consistency gate against the catalog DB (`inventory_check.py`)".
 - **The download**: the 200 body is `OrderManifest.to_json()` VERBATIM (the handler
   returns a raw `Response`, which FastAPI passes through without re-serializing), so the

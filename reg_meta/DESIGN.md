@@ -796,20 +796,29 @@ otherwise — CI has no release DB, so the boot gate is the hard line).
   denormalized alias UNION the `variable_alias_window` rows `_expand_state_windows`
   expands a state into (a monthly-family or co-delivered column exists ONLY there).
 - **Bulk, because it runs at every boot.** An inventory carries tens of thousands of
-  mappings, so the three lookups are one streaming scan each, filtered against the
-  inventory's own coordinates — the working set is the inventory's, not the catalog's
-  (SWECOV's 36.5k mappings check in ~0.1s). Only the same_as fallback, rare by
-  construction, goes through `Catalog` per coordinate.
+  mappings, so the lookups are one streaming scan each, filtered against the inventory's
+  own coordinates — the working set is the inventory's, not the catalog's (SWECOV's
+  36.5k mappings check in ~0.1s). The binding and representation grains share a scan,
+  since a representation is a narrowing of its binding. Only the same_as fallback, rare
+  by construction, goes through `Catalog` per coordinate.
 - **Findings group by the failing COORDINATE, not the mapping occurrence** — one renamed
   variant slug is one finding over N mappings, which is the unit a maintainer repairs.
   Each carries `mapping_count` and a capped sample of `table[...].column[...]` locations
   in the validator's own author-facing spelling. Output is deterministic: grouped by
-  code (variant → variable → representation), sorted by coordinate within each group, so
-  two releases' reports diff.
-- **A mapping that omits `representation` gets no representation check.** §12's
+  code (variant → variable → binding → representation, coarse to fine), sorted by
+  coordinate within each group, so two releases' reports diff. A coordinate reported at
+  a coarser grain does not cascade into the finer ones — one cause, one repair.
+- **Every mapping is checked at four grains — variant, variable, binding, and (when it
+  pins one) representation.** The `binding_unavailable` grain is the pairing: an
+  existing variable and an existing variant can still be a binding the catalog carries
+  no state for, because the variable's states all live under other variants. The name is
+  the order path's own for it, and here it holds at every period, so no request could
+  ever fill the mapping.
+- **A mapping that omits `representation` skips the representation check only.** §12's
   single-representation arm is request-dependent — whether the binding resolves to ONE
   canonical representation across a requested period is `order.py`'s `unqualified_ok`
-  decision, not a static property of the catalog.
+  decision, not a static property of the catalog. That the binding is *delivered at its
+  declared variant at all* is static, so an unqualified mapping is still checked there.
 
 ## Order materializer and manifest (`order.py`)
 
