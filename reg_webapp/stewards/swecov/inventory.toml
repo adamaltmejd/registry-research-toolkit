@@ -97985,6 +97985,16 @@ name = "TOM_DATUM"
 name = "UTTAGET_MANAD"
 
 [[table]]
+id = "FK_ASE_lev4"
+edition = { from = 2015, to = 2024 }
+
+[[table.column]]
+name = "ERS_MANAD"
+
+[[table.column]]
+name = "P1105_LopNr_PersonNr"
+
+[[table]]
 id = "FK_BAB_lev4"
 edition = { from = 2015, to = 2024 }
 
@@ -148543,8 +148553,361 @@ name = "P1105_Lopnr_skolenhetskod"
 name = "Skolform"
 
 [[table]]
+id = "GravReg_Barn_barnets_atgarder_forsta_28_dagarna_lev2"
+edition = { from = 2014, to = 2025 }
+
+[[table.column]]
+name = "atgardskod_barnets_atgarder"
+
+[[table.column.mapping]]
+register_variant = "graviditetsregistret/graviditetsregistret/_default"
+variable = "graviditetsregistret/graviditetsregistret/atgardskod-barnets-atgarder"
+representation = "atgardskod_barnets_atgarder"
+
+[[table.column]]
+name = "bordnr"
+
+[[table.column]]
+name = "glopnr"
+
+[[table.column]]
+name = "startdatum_barnets_atgarder"
+
+[[table.column.mapping]]
+register_variant = "graviditetsregistret/graviditetsregistret/_default"
+variable = "graviditetsregistret/graviditetsregistret/startdatum-barnets-atgarder"
+representation = "startdatum_barnets_atgarder"
+
+[[table]]
+id = "GravReg_Barn_barnets_diagnoser_forsta_28_dagarna_lev2"
+edition = { from = 2014, to = 2022 }
+
+[[table.column]]
+name = "bordnr"
+
+[[table.column]]
+name = "diagnoskod_barnets_diagnoser"
+
+[[table.column.mapping]]
+register_variant = "graviditetsregistret/graviditetsregistret/_default"
+variable = "graviditetsregistret/graviditetsregistret/diagnoskod-barnets-diagnoser"
+representation = "diagnoskod_barnets_diagnoser"
+
+[[table.column]]
+name = "glopnr"
+
+[[table.column]]
+name = "startdatum_barnets_diagnoser"
+
+[[table.column.mapping]]
+register_variant = "graviditetsregistret/graviditetsregistret/_default"
+variable = "graviditetsregistret/graviditetsregistret/startdatum-barnets-diagnoser"
+representation = "startdatum_barnets_diagnoser"
+
+[[table]]
+id = "GravReg_Barn_lev2"
+edition = { from = 2014, to = 2025 }
+
+[[table.column]]
+name = "P1105_LopNr_PersonNr_Barn"
+
+[[table.column.mapping]]
+register_variant = "graviditetsregistret/graviditetsregistret/_default"
+variable = "graviditetsregistret/graviditetsregistret/personnr-barn"
+representation = "PersonNr_Barn"
+
+[[table.column]]
+name = "amning"
+
+[[table.column.mapping]]
+register_variant = "graviditetsregistret/graviditetsregistret/_default"
+variable = "graviditetsregistret/graviditetsregistret/amning"
+representation = "amning"
+
+[[table.column]]
+name = "antal_bord"
+
+[[table.column.mapping]]
+register_variant = "graviditetsregistret/graviditetsregistret/_default"
+variable = "graviditetsregistret/graviditetsregistret/antal-bord"
+representation = "antal_bord"
+
+[[table.column]]
+name = "apgar_10_min"
+
+[[table.column.mapping]]
+register_variant = "graviditetsregistret/graviditetsregistret/_default"
+variable = "graviditetsregistret/graviditetsregistret/apgar-10-min"
+representation = "apgar_10_min"
+
+[[table.column]]
+name = "apgar_1_min"
+
+[[table.column.mapping]]
+register_variant = "graviditetsregistret/graviditetsregistret/_default"
+variable = "graviditetsregistret/graviditetsregistret/apgar-1-min"
+representation = "apgar_1_min"
+
+[[table.column]]
+name = "apgar_4_5_min"
+
+[[table.column.mapping]]
+register_variant = "graviditetsregistret/graviditetsregistret/_default"
+variable = "graviditetsregistret/graviditetsregistret/apgar-4-5-min"
+representation = "apgar_4_5_min"
+
+[[table.column]]
+name = "apgar_5_min"
+
+[[table.column.mapping]]
+register_variant = "graviditetsregistret/graviditetsregistret/_default"
+variable = "graviditetsregistret/graviditetsregistret/apgar-5-min"
+representation = "apgar_5_min"
+
+[[table.column]]
+name = "avled_datum"
+
+[[table.column.mapping]]
+register_variant = "graviditetsregistret/graviditetsregistret/_default"
+variable = "graviditetsregistret/graviditetsregistret/avled-datum"
+representation = "avled_datum"
+
+[[table.column]]
+name = "barnets_atgarder_rad"
+
+[[table.column.mapping]]
+register_variant = "graviditetsregistret/graviditetsregistret/_default"
+variable = "graviditetsregistret/graviditetsregistret/barnets-atgarder-rad"
+representation = "barnets_atgarder_rad"
+
+[[table.column]]
+name = "barnets_diagnoser_rad"
+
+[[table.column.mapping]]
+register_variant = "graviditetsregistret/graviditetsregistret/_default"
+variable = "graviditetsregistret/graviditetsregistret/barnets-diagnoser-rad"
+representation = "barnets_diagnoser_rad"
+
+[[table.column]]
+name = "bordnr"
+
+[[table.column.mapping]]
+register_variant = "graviditetsregistret/graviditetsregistret/_default"
+variable = "graviditetsregistret/graviditetsregistret/bordnr"
+representation = "bordnr"
+
+[[table.column]]
+name = "dodfott"
+
+[[table.column.mapping]]
+register_variant = "graviditetsregistret/graviditetsregistret/_default"
+variable = "graviditetsregistret/graviditetsregistret/dodfott"
+representation = "dodfott"
+
+[[table.column]]
+name = "fodelsedatum"
+
+[[table.column.mapping]]
+register_variant = "graviditetsregistret/graviditetsregistret/_default"
+variable = "graviditetsregistret/graviditetsregistret/fodelsedatum"
+representation = "fodelsedatum"
+
+[[table.column]]
+name = "fodelselangd_cm"
+
+[[table.column.mapping]]
+register_variant = "graviditetsregistret/graviditetsregistret/_default"
+variable = "graviditetsregistret/graviditetsregistret/fodelselangd-cm"
+representation = "fodelselangd_cm"
+
+[[table.column]]
+name = "fodelsevikt_g"
+
+[[table.column.mapping]]
+register_variant = "graviditetsregistret/graviditetsregistret/_default"
+variable = "graviditetsregistret/graviditetsregistret/fodelsevikt-g"
+representation = "fodelsevikt_g"
+
+[[table.column]]
+name = "forvantad_fodelsevikt_g"
+
+[[table.column.mapping]]
+register_variant = "graviditetsregistret/graviditetsregistret/_default"
+variable = "graviditetsregistret/graviditetsregistret/forvantad-fodelsevikt-g"
+representation = "forvantad_fodelsevikt_g"
+
+[[table.column]]
+name = "gl_d_barn"
+
+[[table.column.mapping]]
+register_variant = "graviditetsregistret/graviditetsregistret/_default"
+variable = "graviditetsregistret/graviditetsregistret/gl-d-barn"
+representation = "gl_d_barn"
+
+[[table.column]]
+name = "gl_v_barn"
+
+[[table.column.mapping]]
+register_variant = "graviditetsregistret/graviditetsregistret/_default"
+variable = "graviditetsregistret/graviditetsregistret/gl-v-barn"
+representation = "gl_v_barn"
+
+[[table.column]]
+name = "glopnr"
+
+[[table.column]]
+name = "huvudomfang_cm"
+
+[[table.column.mapping]]
+register_variant = "graviditetsregistret/graviditetsregistret/_default"
+variable = "graviditetsregistret/graviditetsregistret/huvudomfang-cm"
+representation = "huvudomfang_cm"
+
+[[table.column]]
+name = "kejsarsnitt"
+
+[[table.column.mapping]]
+register_variant = "graviditetsregistret/graviditetsregistret/_default"
+variable = "graviditetsregistret/graviditetsregistret/kejsarsnitt"
+representation = "kejsarsnitt"
+
+[[table.column]]
+name = "kon"
+
+[[table.column.mapping]]
+register_variant = "graviditetsregistret/graviditetsregistret/_default"
+variable = "graviditetsregistret/graviditetsregistret/kon"
+representation = "kon"
+
+[[table.column]]
+name = "region_barn"
+
+[[table.column.mapping]]
+register_variant = "graviditetsregistret/graviditetsregistret/_default"
+variable = "graviditetsregistret/graviditetsregistret/region-barn"
+representation = "region_barn"
+
+[[table.column]]
+name = "smartlindring_epidural"
+
+[[table.column.mapping]]
+register_variant = "graviditetsregistret/graviditetsregistret/_default"
+variable = "graviditetsregistret/graviditetsregistret/smartlindring-epidural"
+representation = "smartlindring_epidural"
+
+[[table.column]]
+name = "smartlindring_infiltration"
+
+[[table.column.mapping]]
+register_variant = "graviditetsregistret/graviditetsregistret/_default"
+variable = "graviditetsregistret/graviditetsregistret/smartlindring-infiltration"
+representation = "smartlindring_infiltration"
+
+[[table.column]]
+name = "smartlindring_pcb"
+
+[[table.column.mapping]]
+register_variant = "graviditetsregistret/graviditetsregistret/_default"
+variable = "graviditetsregistret/graviditetsregistret/smartlindring-pcb"
+representation = "smartlindring_pcb"
+
+[[table.column]]
+name = "smartlindring_pdb"
+
+[[table.column.mapping]]
+register_variant = "graviditetsregistret/graviditetsregistret/_default"
+variable = "graviditetsregistret/graviditetsregistret/smartlindring-pdb"
+representation = "smartlindring_pdb"
+
+[[table.column]]
+name = "smartlindring_spinal"
+
+[[table.column.mapping]]
+register_variant = "graviditetsregistret/graviditetsregistret/_default"
+variable = "graviditetsregistret/graviditetsregistret/smartlindring-spinal"
+representation = "smartlindring_spinal"
+
+[[table.column]]
+name = "tillmatning"
+
+[[table.column.mapping]]
+register_variant = "graviditetsregistret/graviditetsregistret/_default"
+variable = "graviditetsregistret/graviditetsregistret/tillmatning"
+representation = "tillmatning"
+
+[[table.column]]
+name = "vikt_avvikelse_perc"
+
+[[table.column.mapping]]
+register_variant = "graviditetsregistret/graviditetsregistret/_default"
+variable = "graviditetsregistret/graviditetsregistret/vikt-avvikelse-perc"
+representation = "vikt_avvikelse_perc"
+
+[[table.column]]
+name = "viktgrupp"
+
+[[table.column.mapping]]
+register_variant = "graviditetsregistret/graviditetsregistret/_default"
+variable = "graviditetsregistret/graviditetsregistret/viktgrupp"
+representation = "viktgrupp"
+
+[[table.column]]
+name = "viktgrupp_per_500g"
+
+[[table.column.mapping]]
+register_variant = "graviditetsregistret/graviditetsregistret/_default"
+variable = "graviditetsregistret/graviditetsregistret/viktgrupp-per-500g"
+representation = "viktgrupp_per_500g"
+
+[[table]]
+id = "GravReg_Fv1_moderns_atgarder_lev2"
+edition = { from = 2019, to = 2025 }
+
+[[table.column]]
+name = "atgardskod_moderns_atgarder"
+
+[[table.column.mapping]]
+register_variant = "graviditetsregistret/graviditetsregistret/_default"
+variable = "graviditetsregistret/graviditetsregistret/atgardskod-moderns-atgarder"
+representation = "atgardskod_moderns_atgarder"
+
+[[table.column]]
+name = "glopnr"
+
+[[table.column]]
+name = "startdatum_moderns_atgarder"
+
+[[table.column.mapping]]
+register_variant = "graviditetsregistret/graviditetsregistret/_default"
+variable = "graviditetsregistret/graviditetsregistret/startdatum-moderns-atgarder"
+representation = "startdatum_moderns_atgarder"
+
+[[table]]
+id = "GravReg_Fv1_moderns_diagnoser_lev2"
+edition = { from = 2014, to = 2025 }
+
+[[table.column]]
+name = "diagnoskod_moderns_diagnoser"
+
+[[table.column.mapping]]
+register_variant = "graviditetsregistret/graviditetsregistret/_default"
+variable = "graviditetsregistret/graviditetsregistret/diagnoskod-moderns-diagnoser"
+representation = "diagnoskod_moderns_diagnoser"
+
+[[table.column]]
+name = "glopnr"
+
+[[table.column]]
+name = "startdatum_moderns_diagnoser"
+
+[[table.column.mapping]]
+register_variant = "graviditetsregistret/graviditetsregistret/_default"
+variable = "graviditetsregistret/graviditetsregistret/startdatum-moderns-diagnoser"
+representation = "startdatum_moderns_diagnoser"
+
+[[table]]
 id = "GravReg_Gravniva_lev2"
-edition = [{ from = 2005, to = 2006 }, { from = 2008, to = 2022 }]
+edition = { from = 2013, to = 2024 }
 
 [[table.column]]
 name = "alkohol_audit_poang"
@@ -149705,6 +150068,40 @@ name = "vikt_inskrivning_kg"
 register_variant = "graviditetsregistret/graviditetsregistret/_default"
 variable = "graviditetsregistret/graviditetsregistret/vikt-inskrivning-kg"
 representation = "vikt_inskrivning_kg"
+
+[[table]]
+id = "GravReg_Pop_lev2"
+edition = { from = 2014, to = 2025 }
+
+[[table.column]]
+name = "P1105_LopNr_PersonNr_Barn"
+
+[[table.column]]
+name = "P1105_LopNr_PersonNr_Mor"
+
+[[table.column.mapping]]
+register_variant = "graviditetsregistret/graviditetsregistret/_default"
+variable = "graviditetsregistret/graviditetsregistret/personnr-mor"
+representation = "PersonNr_Mor"
+
+[[table.column]]
+name = "flagga_index_datum_forsta_journalforda"
+
+[[table.column.mapping]]
+register_variant = "graviditetsregistret/graviditetsregistret/_default"
+variable = "graviditetsregistret/graviditetsregistret/flagga-index-datum-forsta-journalforda"
+representation = "flagga_index_datum_forsta_journalforda"
+
+[[table.column]]
+name = "glopnr"
+
+[[table.column]]
+name = "index_date"
+
+[[table.column.mapping]]
+register_variant = "graviditetsregistret/graviditetsregistret/_default"
+variable = "graviditetsregistret/graviditetsregistret/index-date"
+representation = "index_date"
 
 [[table]]
 id = "Grund_Fkl_Fth_2008"

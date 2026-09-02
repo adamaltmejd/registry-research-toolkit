@@ -1490,10 +1490,14 @@ edition = { from = 2015, to = 2022 }
 table = "GbgKom_Aldreboende"
 edition = { from = 2019, to = 2021 }
 
-# evidence: [ofrivillig_barnloshet_ar] (varchar), 362 dated rows of 1,260,161
+# evidence: probe round 1 across 12 date columns (inskrivningsdatum
+# 2013-08..2024-01, registreringsdatum_insk ..2024-04, bp/forlossning
+# 2014..2022/2023); register founded ~2013. Supersedes the earlier
+# [ofrivillig_barnloshet_ar]-derived 2005-2022 range (362 dated rows of
+# 1,260,161 — free-text noise, maintainer-confirmed wrong 2026-09-02).
 [[edition]]
 table = "GravReg_Gravniva_lev2"
-edition = [{ from = 2005, to = 2006 }, { from = 2008, to = 2022 }]
+edition = { from = 2013, to = 2024 }
 
 # evidence: [year] (float), 9,045 dated rows of 9,045
 [[edition]]
@@ -3177,9 +3181,8 @@ label = "vptu-corona"
 #   FK_VBBARN_lev4 — waits for a proper fk/vardbidrag barn variant (build-side
 #     fk.toml work + release); assigning it to _default alongside FK_VB_lev4
 #     would conflate two row grains (recipient rows vs child-linkage rows).
-#   FK_ASE_lev4 — undecided until a MONA probe settles ERS_MANAD semantics
-#     (paid-month vs ongoing-decision month); no per-month payments product
-#     exists in fk/assistansersattning.
+#   (FK_ASE_lev4 was undecided here pending probe evidence; settled below —
+#     see its own DECIDED block.)
 
 # evidence: order sheet row "Aktivitetsstöd"; cols (Lopnr, BELOPP, FROM_DATUM, TOM_DATUM, UTTAGET_MANAD) = aktivitetsstod _default variable set in fk.toml
 [[assign]]
@@ -4693,3 +4696,88 @@ label = "skolor"
 [[partition]]
 table = "GDB_Skolor2024"
 label = "skolor"
+
+# ── DECIDED (maintainer-approved 2026-09-02, probe round 1 evidence): FK_ASE +
+# GravReg lev2 editions. FK_ASE ERS_MANAD is a complete monthly series
+# (120 values, 201501..202412, smooth ~16k/month) — the pågående-beslut stock
+# signature, spanning both catalog regimes, hence the dual assign. GravReg
+# ranges are per-table probe date spans (TOP-200-biased: true coverage ⊇
+# shown); Barn_lev2 and Pop_lev2 carry the batch range by sibling inference
+# (no usable date column; row counts ≈ the Gravniva cohort).
+
+[[assign]]
+table = "FK_ASE_lev4"
+register_variant = ["fk/assistansersattning/pagaende-beslut-2002-201809", "fk/assistansersattning/pagaende-beslut-201810"]
+
+# evidence: [startdatum_barnets_atgarder] 2014-09..2025-04
+[[edition]]
+table = "GravReg_Barn_barnets_atgarder_forsta_28_dagarna_lev2"
+edition = { from = 2014, to = 2025 }
+
+# evidence: [startdatum_barnets_diagnoser] 2014-01..2022-07
+[[edition]]
+table = "GravReg_Barn_barnets_diagnoser_forsta_28_dagarna_lev2"
+edition = { from = 2014, to = 2022 }
+
+# evidence: [startdatum_moderns_atgarder] 2019-06..2025-04
+[[edition]]
+table = "GravReg_Fv1_moderns_atgarder_lev2"
+edition = { from = 2019, to = 2025 }
+
+# evidence: [startdatum_moderns_diagnoser] 2014-09..2025-01
+[[edition]]
+table = "GravReg_Fv1_moderns_diagnoser_lev2"
+edition = { from = 2014, to = 2025 }
+
+# sibling inference: no usable date column (avled_datum fully suppressed);
+# 1,279,062 rows ≈ the Gravniva cohort — batch range
+[[edition]]
+table = "GravReg_Barn_lev2"
+edition = { from = 2014, to = 2025 }
+
+# sibling inference: only a boolean flag column; 1,279,061 rows ≈ the
+# Gravniva cohort — batch range
+[[edition]]
+table = "GravReg_Pop_lev2"
+edition = { from = 2014, to = 2025 }
+
+# GravReg lev2 join-key unmaps (same class as the NDR/SIR/SCRCR key unmaps):
+# every lev2 table carries the pregnancy key glopnr, the barn tables share
+# bordnr and PersonNr_Barn. Keep each key mapped in its primary table only —
+# glopnr in Gravniva (core cohort), bordnr + PersonNr_Barn in Barn_lev2 —
+# and unmap the copies; the columns stay inventoried as join material.
+[[unmap]]
+table = "GravReg_Barn_barnets_atgarder_forsta_28_dagarna_lev2"
+column = "glopnr"
+
+[[unmap]]
+table = "GravReg_Barn_barnets_atgarder_forsta_28_dagarna_lev2"
+column = "bordnr"
+
+[[unmap]]
+table = "GravReg_Barn_barnets_diagnoser_forsta_28_dagarna_lev2"
+column = "glopnr"
+
+[[unmap]]
+table = "GravReg_Barn_barnets_diagnoser_forsta_28_dagarna_lev2"
+column = "bordnr"
+
+[[unmap]]
+table = "GravReg_Barn_lev2"
+column = "glopnr"
+
+[[unmap]]
+table = "GravReg_Fv1_moderns_atgarder_lev2"
+column = "glopnr"
+
+[[unmap]]
+table = "GravReg_Fv1_moderns_diagnoser_lev2"
+column = "glopnr"
+
+[[unmap]]
+table = "GravReg_Pop_lev2"
+column = "glopnr"
+
+[[unmap]]
+table = "GravReg_Pop_lev2"
+column = "P1105_LopNr_PersonNr_Barn"
