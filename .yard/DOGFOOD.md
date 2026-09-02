@@ -412,3 +412,26 @@ mode the wake-driven loop exists to prevent. Usage refusals should exit non-zero
   ticket whose current attempt has landed should not be auto-admitted again just because
   a later-added dependency cleared; at minimum the operator should be asked, since
   "landed but still open" is precisely the blocksCompletion shape Yard itself creates.
+
+## 2026-09-02 — vendored worker-CLI pin silently refuses a configured model; the only exit re-admits into the same failure
+
+- `roles.planning.model = "claude-fable-5-1"` died at admission twice (Y-29/1, Y-29/2)
+  with
+  `provider-error: Claude Code 2.1.236 does not support this model; version 2.1.251 or newer is required. Run 'claude update'`.
+  Three papercuts stacked:
+  1. The error's remediation is wrong for Yard: the worker runs the **vendored** CLI
+     (`claudePin("2.1.236")` baked into yard 0.11.0, published to `.yard/local/tools/`),
+     so `claude update` on the host — already at 2.1.258 — changes nothing, and neither
+     does a daemon restart. The operator only finds the real cause via
+     `daemon preflight --full` (`worker-cli:claude ... 2.1.236`).
+  2. The `worker-failed` item offers exactly one exit, `abandon` — and abandoning an
+     unparked ticket re-admits a fresh attempt into the identical refusal within
+     milliseconds. Nothing suggests parking first or flags that the failure is
+     environmental (deterministic, config-caused) rather than transient.
+  3. There is no config knob or env override for the pin, so the only recoveries are
+     "change the role's model" or "release a new yard". Asks: bump the pin (2.1.258+),
+     validate configured models against the vendored CLI's support at config load or
+     preflight (fail at `yard daemon restart`, not per-attempt), and let a deterministic
+     provider refusal park the ticket instead of looping.
+- Operator workaround: planning role moved to `claude-opus-5` with a revert-trigger
+  comment in config.toml.

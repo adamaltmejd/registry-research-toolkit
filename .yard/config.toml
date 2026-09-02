@@ -86,7 +86,11 @@ instructions = "Smallest safe change, in the ticket's scope only. Follow the rep
 # scaffold reads as a contract and size is a signal read after the fact.
 [roles.planning]
 backend = "claude"
-model = "claude-fable-5-1"
+# Wanted: claude-fable-5-1. Yard 0.11.0 vendors Claude Code 2.1.236 as the
+# worker CLI, which refuses that model (needs >= 2.1.251) — Y-29/1 and Y-29/2
+# both died at admission on it. Restore fable-5-1 when yard's vendored CLI pin
+# reaches 2.1.251+.
+model = "claude-opus-5"
 effort = "high"
 instructions = "Plan against this repository's CLAUDE.md conventions and each package's DESIGN.md; name the package(s) each ticket touches. This project is shedding overengineering: delete or defer behavior before splitting it, and split only what is independently useful — answer a frightening size by shrinking the scope, never by subdividing it into a backlog. Every ticket names its consumer and the observable behavior they get. Problems that have not happened are not requirements, and this single-maintainer research tool is not an adversarial environment."
 
