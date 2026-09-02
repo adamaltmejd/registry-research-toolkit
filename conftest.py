@@ -14,12 +14,13 @@ import pytest
 # marker name -> CLI flag description
 OPTIONAL_MARKERS: dict[str, str] = {
     "integration": "run Docker-based integration tests",
-    # Subset of integration tests that additionally download a PUBLISHED GitHub
-    # release asset. Gated separately so the pre-push hook (which opts into
+    # Tests that need a PUBLISHED release asset: either downloaded from GitHub
+    # (a subset of the Docker integration tests) or already fetched and pointed
+    # at by the runner (the §12 inventory ↔ flavored-DB gate, which needs no
+    # Docker). Gated separately so the pre-push hook (which opts into
     # `integration` as a hard Docker gate) does NOT block a push when a release
-    # is merely owed — these belong in a post-release / scheduled CI job that
-    # passes both --run-integration and --run-release.
-    "release": "run integration tests that download a published release asset",
+    # is merely owed — these belong in a post-release / scheduled CI job.
+    "release": "run tests that need a published release asset",
 }
 
 

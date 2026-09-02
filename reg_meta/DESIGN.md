@@ -785,9 +785,12 @@ against an open catalog DB; empty is the passing baseline.
 Two consumers, one implementation: the named-steward webapp boot runs it fail-fast on
 its own boot connection (`reg_webapp.stewards.check_delivery_inventory` — a deployment
 must never *serve* an inventory its DB cannot resolve), and the maintainer's pytest runs
-it over the committed inventory whenever a real flavored DB is pointed at by
-`REG_META_DB` (`reg_webapp/backend/tests/test_steward_swecov.py`, skipped cleanly
-otherwise — CI has no release DB, so the boot gate is the hard line).
+it over the committed inventory against the flavored DB `REG_META_DB` points at
+(`reg_webapp/backend/tests/test_steward_swecov.py`). That test is `release`-marked, so
+the default gate DESELECTS it rather than skipping it — CI has no flavored DB, and a
+skip would read as missing evidence where a deselection reads as out of scope. The boot
+gate is therefore the hard line; the pytest is the maintainer's early warning, run with
+`--run-release` when regenerating the inventory or cutting a release.
 
 - **Resolution is read the way the ORDER PATH reads it**, never re-derived. A gate
   stricter than `order._materialize_binding` would fail a deployment over holdings it

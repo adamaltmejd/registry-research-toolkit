@@ -9,10 +9,18 @@ source's register, a pinned representation, no duplicate bindings). A corrupt or
 schema-drifted regenerate fails here.
 
 The one DB-BACKED test is REFACTOR_SPEC.md §12's inventory ↔ DB consistency
-gate over the committed `inventory.toml`, run whenever the runner points
-`REG_META_DB` at a real flavored DB and skipped cleanly when it does not (CI has
-no release DB). It is the maintainer's gate when regenerating the inventory or
-cutting a reg_meta release; the webapp boot gate is the hard line.
+gate over the committed `inventory.toml`. It carries the `release` marker: the
+flavored DB is a release asset, so the default gate (`-m "not integration and
+not release"`) DESELECTS it rather than skipping it — a deselected test never
+enters the JUnit report, while a skipped one reads as missing evidence. The
+maintainer runs it when regenerating the inventory or cutting a reg_meta
+release:
+
+    REG_META_DB=<extend-db output dir> pytest --run-release -m release
+
+Opting in and then finding no DB is a misconfigured run, not a clean pass, so
+the fixture FAILS there instead of skipping. The webapp boot gate is the hard
+line; this is the maintainer's early warning.
 """
 
 from __future__ import annotations
@@ -125,25 +133,29 @@ def test_stale_hreg_grouping_source_is_removed(
 
 @pytest.fixture(scope="module")
 def flavored_conn():
-    """A read-only connection to the flavored SWECOV catalog DB, or a skip.
+    """A read-only connection to the flavored SWECOV catalog DB.
 
     The deployment's reg_meta asset IS the flavored `extend-db` output, pointed
     at by `REG_META_DB` (REFACTOR_SPEC.md §11), so that env var is the seam
     here too — the inventory binds steward-only providers (`swecov`,
     `region-*`, …) that the plain global release DB does not contain, and
     checking against the wrong DB would report the whole flavor as stranded.
-    Unset means "no flavored DB at hand" (CI, and any checkout using the
-    default global asset): skip. A PRESENT but schema-incompatible DB is not a
-    skip — `open_db` raises, exactly as boot would."""
+
+    Nothing here skips. The `release` marker on the only test using this
+    fixture is what keeps the flavored DB optional, so reaching this code means
+    the runner asked for the gate — an unset `REG_META_DB`, a path naming no
+    DB, or a schema-incompatible one (`open_db` raises, exactly as boot would)
+    are all misconfigured runs, and a skip would report the gate as clean
+    without ever having run it."""
     db_dir = os.environ.get("REG_META_DB")
     if not db_dir:
-        pytest.skip(
+        pytest.fail(
             "no flavored SWECOV DB: set REG_META_DB to the extend-db output dir "
             "(see stewards/swecov/README.md) to run the §12 consistency gate"
         )
     db_path = reg_meta.db.db_path_from_args(db_dir)
     if not db_path.is_file():
-        pytest.skip(f"REG_META_DB names no catalog DB at {db_path}")
+        pytest.fail(f"REG_META_DB names no catalog DB at {db_path}")
     conn = reg_meta.db.open_db(db_path)
     try:
         yield conn
@@ -151,6 +163,7 @@ def flavored_conn():
         conn.close()
 
 
+@pytest.mark.release
 def test_every_inventory_mapping_resolves_against_the_flavored_db(
     flavored_conn,
 ) -> None:
@@ -158,7 +171,11 @@ def test_every_inventory_mapping_resolves_against_the_flavored_db(
     `(register_variant, variable FQID, representation)` resolves against the DB
     the SWECOV deployment serves. Zero unresolved mappings is the baseline — a
     catalog release that renames a slug strands mappings silently otherwise,
-    and the deployment would refuse to boot."""
+    and the deployment would refuse to boot.
+
+    `release`-marked because the flavored DB is a release asset: the default
+    gate deselects this test, and `--run-release` with `REG_META_DB` set runs
+    it."""
     findings = check_inventory(
         load_inventory(_SWECOV / "inventory.toml"), flavored_conn
     )

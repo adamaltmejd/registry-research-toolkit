@@ -37,7 +37,7 @@ testpaths = [
 ]
 markers = [
   "integration: full pipeline tests requiring Docker",
-  "release: integration tests that download a published GitHub release asset",
+  "release: tests needing a published release asset — downloaded from GitHub, or an already-fetched one the runner points at",
 ]
 
 [tool.ruff]
