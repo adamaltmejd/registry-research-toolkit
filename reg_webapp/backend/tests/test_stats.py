@@ -46,14 +46,7 @@ def test_stats_uses_steward_index_for_filtered_catalog(
     write_steward(
         stewards,
         "ifau",
-        [
-            {
-                "name": "lisa",
-                "register_variant": "scb/lisa/individer-15plus",
-                "period": 2018,
-                "bindings": [{"variable": "scb/lisa/kon", "type": "categorical"}],
-            }
-        ],
+        [("scb/lisa/individer-15plus", "scb/lisa/kon", "Kon", "2018")],
     )
 
     with TestClient(create_app()) as client:

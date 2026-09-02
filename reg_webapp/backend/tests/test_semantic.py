@@ -4,8 +4,8 @@ See DESIGN.md → Semantic validation (semantic.py). Covers: a clean spec → no
 issues; an unresolvable ``register_variant`` →
 ``fqid_unresolved``; an unresolvable binding ``variable`` → ``fqid_unresolved``;
 an out-of-validity period → ``period_outside_state_validity``; a missing
-``value_set`` → ``value_set_missing``; and the researcher-vs-steward caller
-level split (error vs warning) for the three downgraded codes.
+``value_set`` → ``value_set_missing``; and the column-based steward-admission
+warnings a loaded ``CatalogIndex`` adds.
 
 The fixture DB resolves ``scb/lisa/individer-15plus`` (variant) with binding
 ``scb/lisa/kon`` (state ``2018-01-01..9999-12-31``, value set) and the
@@ -16,9 +16,9 @@ from __future__ import annotations
 
 import pytest
 import reg_meta.db
+from _steward_helpers import catalog_index as _catalog_index
 from reg_meta.catalog import Catalog
 from reg_schema.project_data import ProjectData
-from reg_webapp.catalog_index import build_catalog_index
 from reg_webapp.semantic import period_display, validate_semantic
 
 
@@ -80,14 +80,14 @@ _CLEAN_SOURCE = {
 
 
 def test_clean_spec_has_no_issues(catalog):
-    result = validate_semantic(_project([_CLEAN_SOURCE]), catalog, caller="researcher")
+    result = validate_semantic(_project([_CLEAN_SOURCE]), catalog)
     assert result.ok
     assert result.issues == ()
 
 
 def test_unresolvable_register_variant_is_fqid_unresolved(catalog):
     source = {**_CLEAN_SOURCE, "register_variant": "scb/lisa/nosuchvariant"}
-    result = validate_semantic(_project([source]), catalog, caller="researcher")
+    result = validate_semantic(_project([source]), catalog)
     codes = {(i.code, i.level, i.path) for i in result.issues}
     assert (
         "fqid_unresolved",
@@ -105,7 +105,7 @@ def test_unresolvable_register_prefix_is_fqid_unresolved(catalog):
         "period": 2018,
         "bindings": [{"variable": "scb/nosuchregister/x", "type": "categorical"}],
     }
-    result = validate_semantic(_project([source]), catalog, caller="researcher")
+    result = validate_semantic(_project([source]), catalog)
     rv_issue = next(i for i in result.issues if i.path == "/sources/0/register_variant")
     assert rv_issue.code == "fqid_unresolved"
 
@@ -117,7 +117,7 @@ def test_unresolvable_binding_variable_is_fqid_unresolved(catalog):
         "period": 2018,
         "bindings": [{"variable": "scb/lisa/nosuchvar", "type": "categorical"}],
     }
-    result = validate_semantic(_project([source]), catalog, caller="researcher")
+    result = validate_semantic(_project([source]), catalog)
     issue = next(i for i in result.issues if i.path == "/sources/0/bindings/0/variable")
     assert issue.code == "fqid_unresolved"
     assert issue.level == "error"
@@ -126,7 +126,7 @@ def test_unresolvable_binding_variable_is_fqid_unresolved(catalog):
 def test_period_outside_state_validity(catalog):
     # kon's only state is 2018-01-01..9999-12-31; 2015 precedes it.
     source = {**_CLEAN_SOURCE, "period": 2015}
-    result = validate_semantic(_project([source]), catalog, caller="researcher")
+    result = validate_semantic(_project([source]), catalog)
     issue = next(i for i in result.issues if i.code == "period_outside_state_validity")
     assert issue.level == "error"
     assert issue.path == "/sources/0/bindings/0/variable"
@@ -145,7 +145,7 @@ def test_value_set_missing(catalog):
             }
         ],
     }
-    result = validate_semantic(_project([source]), catalog, caller="researcher")
+    result = validate_semantic(_project([source]), catalog)
     issue = next(i for i in result.issues if i.code == "value_set_missing")
     assert issue.level == "error"
     assert issue.path == "/sources/0/bindings/0/value_set"
@@ -153,7 +153,7 @@ def test_value_set_missing(catalog):
 
 def test_variable_replaced_hint_after_effective_year(catalog):
     source = {**_CLEAN_SOURCE, "period": 2020}
-    result = validate_semantic(_project([source]), catalog, caller="researcher")
+    result = validate_semantic(_project([source]), catalog)
     issue = next(i for i in result.issues if i.code == "variable_replaced")
     assert issue.level == "info"
     assert issue.path == "/sources/0/bindings/0/variable"
@@ -163,7 +163,7 @@ def test_variable_replaced_hint_after_effective_year(catalog):
 
 
 def test_variable_replaced_hint_skips_period_before_effective_year(catalog):
-    result = validate_semantic(_project([_CLEAN_SOURCE]), catalog, caller="researcher")
+    result = validate_semantic(_project([_CLEAN_SOURCE]), catalog)
     assert {i.code for i in result.issues} == set()
     assert result.ok
 
@@ -175,9 +175,7 @@ def test_deprecated_traversal_hint_for_deprecated_variable():
     conn.execute("UPDATE variable SET deprecated = 1 WHERE slug = 'kon'")
     conn.commit()
     try:
-        result = validate_semantic(
-            _project([_CLEAN_SOURCE]), Catalog(conn), caller="researcher"
-        )
+        result = validate_semantic(_project([_CLEAN_SOURCE]), Catalog(conn))
     finally:
         conn.close()
     issue = next(i for i in result.issues if i.code == "deprecated_traversal")
@@ -187,59 +185,12 @@ def test_deprecated_traversal_hint_for_deprecated_variable():
     assert result.ok
 
 
-@pytest.mark.parametrize(
-    ("source_patch", "code"),
-    [
-        ({"register_variant": "scb/lisa/nosuchvariant"}, "fqid_unresolved"),
-        ({"period": 2015}, "period_outside_state_validity"),
-    ],
-)
-def test_steward_caller_downgrades_error_to_warning(catalog, source_patch, code):
-    """Caller context: the three reg_meta-backed codes are blocking errors
-    for the researcher path but downgrade to warnings on the steward-catalog load
-    path (so a deployment boots through reg_meta drift)."""
-    source = {**_CLEAN_SOURCE, **source_patch}
-    project = _project([source])
-
-    researcher = validate_semantic(project, catalog, caller="researcher")
-    steward = validate_semantic(project, catalog, caller="steward")
-
-    r_issue = next(i for i in researcher.issues if i.code == code)
-    s_issue = next(i for i in steward.issues if i.code == code)
-    assert r_issue.level == "error"
-    assert s_issue.level == "warning"
-    # The researcher path blocks; the steward path stays ok=True (the binding
-    # drops from the index instead — that's catalog_index.py's job).
-    assert not researcher.ok
-    assert steward.ok
-
-
-def test_value_set_missing_downgrades_for_steward(catalog):
-    source = {
-        "name": "s",
-        "register_variant": "scb/lisa/individer-15plus",
-        "period": 2018,
-        "bindings": [
-            {
-                "variable": "scb/lisa/kon",
-                "type": "categorical",
-                "value_set": "class/nosuchclass",
-            }
-        ],
-    }
-    result = validate_semantic(_project([source]), catalog, caller="steward")
-    issue = next(i for i in result.issues if i.code == "value_set_missing")
-    assert issue.level == "warning"
-    assert result.ok
-
-
 def test_sos_provider_resolves_clean(catalog):
     # Smoke that an unrelated valid-but-unused source doesn't false-positive: a
     # second clean source alongside the first stays issue-free.
     result = validate_semantic(
         _project([_CLEAN_SOURCE, {**_CLEAN_SOURCE, "name": "lisa-2018-b"}]),
         catalog,
-        caller="researcher",
     )
     assert result.ok
 
@@ -294,9 +245,7 @@ def test_bare_binding_with_codelivered_versions_is_ambiguous(multiversion_catalo
         "period": 2018,
         "bindings": [{"variable": "scb/lisa/kon", "type": "categorical"}],
     }
-    result = validate_semantic(
-        _project([source]), multiversion_catalog, caller="researcher"
-    )
+    result = validate_semantic(_project([source]), multiversion_catalog)
     issue = next(
         i for i in result.issues if i.code == "binding_value_set_version_ambiguous"
     )
@@ -346,9 +295,7 @@ def test_same_value_set_two_labels_is_not_ambiguous(same_value_set_catalog):
         "period": 2018,
         "bindings": [{"variable": "scb/lisa/kon", "type": "categorical"}],
     }
-    result = validate_semantic(
-        _project([source]), same_value_set_catalog, caller="researcher"
-    )
+    result = validate_semantic(_project([source]), same_value_set_catalog)
     codes = {i.code for i in result.issues}
     assert "binding_value_set_version_ambiguous" not in codes
 
@@ -401,9 +348,7 @@ def _repr_source(representation=None):
 def test_multi_representation_without_representation_is_ambiguous(
     multi_representation_catalog,
 ):
-    result = validate_semantic(
-        _project([_repr_source()]), multi_representation_catalog, caller="researcher"
-    )
+    result = validate_semantic(_project([_repr_source()]), multi_representation_catalog)
     issue = next(
         i for i in result.issues if i.code == "binding_value_set_version_ambiguous"
     )
@@ -418,7 +363,6 @@ def test_representation_picks_one_column(multi_representation_catalog):
     result = validate_semantic(
         _project([_repr_source("kon_detalj")]),
         multi_representation_catalog,
-        caller="researcher",
     )
     codes = {i.code for i in result.issues}
     assert "binding_value_set_version_ambiguous" not in codes
@@ -429,25 +373,10 @@ def test_unknown_representation_is_flagged(multi_representation_catalog):
     result = validate_semantic(
         _project([_repr_source("nope")]),
         multi_representation_catalog,
-        caller="researcher",
     )
     issue = next(i for i in result.issues if i.code == "binding_representation_unknown")
     assert issue.level == "error"
     assert "nope" in issue.message
-
-
-def test_unknown_representation_downgrades_for_steward(multi_representation_catalog):
-    # A steward committed a representation a newer reg_meta build no longer
-    # delivers as a column → drift: downgraded to warning (the binding drops from
-    # the index) instead of crashing boot (boot-availability invariant).
-    result = validate_semantic(
-        _project([_repr_source("nope")]),
-        multi_representation_catalog,
-        caller="steward",
-    )
-    issue = next(i for i in result.issues if i.code == "binding_representation_unknown")
-    assert issue.level == "warning"
-    assert result.ok
 
 
 # ── A version TRANSITION (sequential, non-overlapping) is drift, NOT a
@@ -495,9 +424,7 @@ def test_range_crossing_version_transition_is_drift_not_ambiguous(transition_cat
         "period": {"from": 2014, "to": 2018},  # spans the 2015→2016 re-version
         "bindings": [{"variable": "scb/lisa/kon", "type": "categorical"}],
     }
-    result = validate_semantic(
-        _project([source]), transition_catalog, caller="researcher"
-    )
+    result = validate_semantic(_project([source]), transition_catalog)
     codes = {i.code for i in result.issues}
     assert "binding_value_set_version_ambiguous" not in codes  # NOT co-delivered
     assert "binding_state_drifts_within_period" in codes
@@ -520,9 +447,7 @@ def test_default_period_over_version_history_is_not_ambiguous(transition_catalog
         "period": "_default",
         "bindings": [{"variable": "scb/lisa/kon", "type": "categorical"}],
     }
-    result = validate_semantic(
-        _project([source]), transition_catalog, caller="researcher"
-    )
+    result = validate_semantic(_project([source]), transition_catalog)
     assert "binding_value_set_version_ambiguous" not in {i.code for i in result.issues}
     assert result.ok
 
@@ -566,9 +491,7 @@ def test_range_crossing_column_rename_is_drift_not_ambiguous(column_rename_catal
         "period": {"from": 2014, "to": 2018},  # spans the 2015→2016 rename
         "bindings": [{"variable": "scb/lisa/kon", "type": "categorical"}],
     }
-    result = validate_semantic(
-        _project([source]), column_rename_catalog, caller="researcher"
-    )
+    result = validate_semantic(_project([source]), column_rename_catalog)
     codes = {i.code for i in result.issues}
     assert "binding_value_set_version_ambiguous" not in codes
     assert "binding_state_drifts_within_period" in codes
@@ -622,9 +545,7 @@ def test_representation_under_covering_range_is_drift(uneven_representation_cata
             }
         ],
     }
-    result = validate_semantic(
-        _project([source]), uneven_representation_catalog, caller="researcher"
-    )
+    result = validate_semantic(_project([source]), uneven_representation_catalog)
     codes = {i.code for i in result.issues}
     assert "binding_value_set_version_ambiguous" not in codes
     assert "binding_state_drifts_within_period" in codes
@@ -646,9 +567,7 @@ def test_representation_under_covering_default_is_drift(uneven_representation_ca
             }
         ],
     }
-    result = validate_semantic(
-        _project([source]), uneven_representation_catalog, caller="researcher"
-    )
+    result = validate_semantic(_project([source]), uneven_representation_catalog)
     codes = {i.code for i in result.issues}
     assert "binding_value_set_version_ambiguous" not in codes
     assert "binding_state_drifts_within_period" in codes
@@ -722,9 +641,7 @@ def test_representation_internal_gap_in_range_is_drift(
             }
         ],
     }
-    result = validate_semantic(
-        _project([source]), representation_internal_gap_catalog, caller="researcher"
-    )
+    result = validate_semantic(_project([source]), representation_internal_gap_catalog)
     codes = {i.code for i in result.issues}
     assert "binding_state_drifts_within_period" in codes
     assert "binding_value_set_version_ambiguous" not in codes
@@ -749,9 +666,7 @@ def test_representation_internal_gap_in_default_is_drift(
             }
         ],
     }
-    result = validate_semantic(
-        _project([source]), representation_internal_gap_catalog, caller="researcher"
-    )
+    result = validate_semantic(_project([source]), representation_internal_gap_catalog)
     drift = [
         i
         for i in result.issues
@@ -781,9 +696,7 @@ def test_representation_internal_gap_in_list_range_segment_is_drift(
             }
         ],
     }
-    result = validate_semantic(
-        _project([source]), representation_internal_gap_catalog, caller="researcher"
-    )
+    result = validate_semantic(_project([source]), representation_internal_gap_catalog)
     drift = [
         i
         for i in result.issues
@@ -812,9 +725,7 @@ def test_representation_full_coverage_range_is_no_drift(
             }
         ],
     }
-    result = validate_semantic(
-        _project([source]), representation_internal_gap_catalog, caller="researcher"
-    )
+    result = validate_semantic(_project([source]), representation_internal_gap_catalog)
     codes = {i.code for i in result.issues}
     assert "binding_state_drifts_within_period" not in codes
     assert result.ok
@@ -838,9 +749,7 @@ def test_representation_full_default_coverage_to_open_end_is_no_drift(
             }
         ],
     }
-    result = validate_semantic(
-        _project([source]), uneven_representation_catalog, caller="researcher"
-    )
+    result = validate_semantic(_project([source]), uneven_representation_catalog)
     assert result.issues == ()
     assert result.ok
 
@@ -892,9 +801,7 @@ def test_representation_gap_in_list_year_segment_is_drift(
             }
         ],
     }
-    result = validate_semantic(
-        _project([source]), list_year_segment_gap_catalog, caller="researcher"
-    )
+    result = validate_semantic(_project([source]), list_year_segment_gap_catalog)
     drift = [
         i
         for i in result.issues
@@ -943,9 +850,7 @@ def test_representation_default_with_synthesized_feb_end_does_not_crash(
             }
         ],
     }
-    result = validate_semantic(
-        _project([source]), synthesized_feb_end_catalog, caller="researcher"
-    )
+    result = validate_semantic(_project([source]), synthesized_feb_end_catalog)
     assert result.issues == ()
     assert result.ok
 
@@ -966,7 +871,7 @@ def test_representation_default_merged_family_uses_expanded_windows(catalog):
             }
         ],
     }
-    result = validate_semantic(_project([source]), catalog, caller="researcher")
+    result = validate_semantic(_project([source]), catalog)
     drift = [
         i
         for i in result.issues
@@ -1000,7 +905,6 @@ def test_range_fully_covered_has_no_partial_finding(catalog):
     result = validate_semantic(
         _project([_kon_source({"from": 2019, "to": 2021})]),
         catalog,
-        caller="researcher",
     )
     codes = {i.code for i in result.issues}
     assert "range_period_partially_covered" not in codes
@@ -1012,7 +916,6 @@ def test_range_partially_covered_is_flagged(catalog):
     result = validate_semantic(
         _project([_kon_source({"from": 2010, "to": 2020})]),
         catalog,
-        caller="researcher",
     )
     issue = next(i for i in result.issues if i.code == "range_period_partially_covered")
     assert issue.level == "info"
@@ -1029,7 +932,6 @@ def test_zero_coverage_is_only_period_outside_state_validity(catalog):
     result = validate_semantic(
         _project([_kon_source({"from": 2010, "to": 2015})]),
         catalog,
-        caller="researcher",
     )
     codes = {i.code for i in result.issues}
     assert "period_outside_state_validity" in codes
@@ -1038,34 +940,15 @@ def test_zero_coverage_is_only_period_outside_state_validity(catalog):
 
 def test_point_period_has_no_partial_finding(catalog):
     # A point period is a single instant — no requested span to under-cover.
-    result = validate_semantic(
-        _project([_kon_source(2018)]), catalog, caller="researcher"
-    )
+    result = validate_semantic(_project([_kon_source(2018)]), catalog)
     assert "range_period_partially_covered" not in {i.code for i in result.issues}
 
 
 def test_default_period_has_no_partial_finding(catalog):
     # `_default` means "the full history" — there is no author-requested window to
     # compare against, so the whole-concept partial-coverage check must not fire.
-    result = validate_semantic(
-        _project([_kon_source("_default")]), catalog, caller="researcher"
-    )
+    result = validate_semantic(_project([_kon_source("_default")]), catalog)
     assert "range_period_partially_covered" not in {i.code for i in result.issues}
-
-
-def test_partial_coverage_does_not_drop_binding_from_steward_index(catalog):
-    # The finding is `info` for both callers, so it must NOT drop the binding from
-    # the steward catalog index — a partially-covered binding is still usable for the
-    # covered sub-range. (A `warning` here would wrongly drop it; catalog_index.py
-    # keys its DROP on warning level.)
-    project = _project([_kon_source({"from": 2010, "to": 2020})])
-    result = validate_semantic(project, catalog, caller="steward")
-    issue = next(i for i in result.issues if i.code == "range_period_partially_covered")
-    assert issue.level == "info"
-    assert result.ok
-
-    index = build_catalog_index(project, result.issues, catalog)
-    assert index.admits("scb/lisa/kon", "Kon")
 
 
 @pytest.fixture
@@ -1101,7 +984,6 @@ def test_internal_gap_in_range_is_flagged(internal_gap_catalog):
     result = validate_semantic(
         _project([_kon_source({"from": 2010, "to": 2018})]),
         internal_gap_catalog,
-        caller="researcher",
     )
     issue = next(i for i in result.issues if i.code == "range_period_partially_covered")
     assert "2013-01-01..2015-12-31" in issue.message
@@ -1114,7 +996,6 @@ def test_day_adjacent_windows_leave_no_gap(internal_gap_catalog):
     result = validate_semantic(
         _project([_kon_source({"from": 2016, "to": 2018})]),
         internal_gap_catalog,
-        caller="researcher",
     )
     assert "range_period_partially_covered" not in {i.code for i in result.issues}
 
@@ -1142,7 +1023,7 @@ def test_valid_period_token_to_endpoint_is_accepted(catalog, good_endpoint):
     # endpoint and intersects kon's 2018-01-01..9999-12-31 state, so the range is
     # FULLY covered: no `invalid_period`, no spurious phantom Feb-29 gap, usable.
     source = _kon_source({"from": 2019, "to": good_endpoint})
-    result = validate_semantic(_project([source]), catalog, caller="researcher")
+    result = validate_semantic(_project([source]), catalog)
     codes = {i.code for i in result.issues}
     assert "invalid_period" not in codes, codes
     assert "range_period_partially_covered" not in codes, codes
@@ -1158,7 +1039,6 @@ def test_non_leap_feb_to_endpoint_gap_is_snapped_not_phantom(catalog):
     result = validate_semantic(
         _project([_kon_source({"from": 2017, "to": "2019-02"})]),
         catalog,
-        caller="researcher",
     )
     issue = next(i for i in result.issues if i.code == "range_period_partially_covered")
     assert "2017-01-01..2017-12-31" in issue.message, issue.message
@@ -1170,9 +1050,9 @@ def test_non_leap_feb_to_endpoint_gap_is_snapped_not_phantom(catalog):
 # ── #227: fqid_outside_steward_catalog (steward catalog filter) ─────────────
 # Given the loaded steward `CatalogIndex`, the researcher path flags a RESOLVED
 # FQID outside the steward's filtered subset as a non-blocking warning. The
-# steward-load path and the `global` deployment (index=None) never emit it. The
-# fixture DB resolves both `scb/lisa/kon` and `scb/rams/syss`; an index built from
-# a kon-only steward project admits the former but not the latter.
+# `global` deployment (index=None) never emits it. The fixture DB resolves both
+# `scb/lisa/kon` and `scb/rams/syss`; an index built from a kon-only delivery
+# inventory admits the former but not the latter.
 
 _RAMS_SOURCE = {
     "name": "rams",
@@ -1182,24 +1062,22 @@ _RAMS_SOURCE = {
 }
 
 
+_KON_HOLDING = ("scb/lisa/individer-15plus", "scb/lisa/kon", "Kon", "2018")
+
+
 @pytest.fixture
 def kon_only_index(catalog):
     """A steward `CatalogIndex` admitting ONLY `scb/lisa/kon` (built from a
-    one-source steward project). `scb/rams/syss` resolves reg_meta-wide but is NOT
-    admitted by this index."""
-    project = _project([_CLEAN_SOURCE])
-    result = validate_semantic(project, catalog, caller="steward")
-    assert result.ok
-    index = build_catalog_index(project, result.issues, catalog)
+    one-mapping delivery inventory). `scb/rams/syss` resolves reg_meta-wide but is
+    NOT admitted by this index."""
+    index = _catalog_index([_KON_HOLDING], catalog)
     assert index.admits("scb/lisa/kon", "Kon")
     assert not index.admits("scb/rams/syss", "Syss")
     return index
 
 
 def test_resolvable_unadmitted_fqid_is_outside_steward_catalog(catalog, kon_only_index):
-    result = validate_semantic(
-        _project([_RAMS_SOURCE]), catalog, caller="researcher", index=kon_only_index
-    )
+    result = validate_semantic(_project([_RAMS_SOURCE]), catalog, index=kon_only_index)
     outside = [i for i in result.issues if i.code == "fqid_outside_steward_catalog"]
     assert len(outside) == 1
     assert outside[0].level == "warning"
@@ -1241,19 +1119,7 @@ def test_outside_steward_catalog_warns_per_unadmitted_binding(two_lisa_var_catal
     # `/sources/<i>/bindings/<j>/variable` path. The index admits only `kon`, so the
     # admitted `kon` (source 0 binding 0) stays silent while the unadmitted `alder`
     # warns at both its source-0/binding-1 and source-1/binding-0 positions.
-    steward = _project(
-        [
-            {
-                "name": "lisa",
-                "register_variant": "scb/lisa/individer-15plus",
-                "period": 2018,
-                "bindings": [{"variable": "scb/lisa/kon", "type": "categorical"}],
-            }
-        ]
-    )
-    sresult = validate_semantic(steward, two_lisa_var_catalog, caller="steward")
-    assert sresult.ok
-    index = build_catalog_index(steward, sresult.issues, two_lisa_var_catalog)
+    index = _catalog_index([_KON_HOLDING], two_lisa_var_catalog)
     assert index.admits("scb/lisa/kon", "Kon")
     assert not index.admits("scb/lisa/alder", "Alder")
 
@@ -1276,9 +1142,7 @@ def test_outside_steward_catalog_warns_per_unadmitted_binding(two_lisa_var_catal
             },
         ]
     )
-    result = validate_semantic(
-        researcher, two_lisa_var_catalog, caller="researcher", index=index
-    )
+    result = validate_semantic(researcher, two_lisa_var_catalog, index=index)
     outside = [i for i in result.issues if i.code == "fqid_outside_steward_catalog"]
     assert len(outside) == 2
     assert {i.path for i in outside} == {
@@ -1298,10 +1162,9 @@ def test_outside_steward_catalog_coexists_with_period_check(catalog):
     # all history and can't be made period-invalid, so the period-bounded binding
     # here is `kon` (state 2018+); the index therefore admits `syss`, leaving `kon`
     # unadmitted.)
-    steward = _project([_RAMS_SOURCE])
-    sresult = validate_semantic(steward, catalog, caller="steward")
-    assert sresult.ok
-    index = build_catalog_index(steward, sresult.issues, catalog)
+    index = _catalog_index(
+        [("scb/rams/standard", "scb/rams/syss", "Syss", "2019")], catalog
+    )
     assert index.admits("scb/rams/syss", "Syss")
     assert not index.admits("scb/lisa/kon", "Kon")
 
@@ -1309,7 +1172,6 @@ def test_outside_steward_catalog_coexists_with_period_check(catalog):
     result = validate_semantic(
         _project([{**_CLEAN_SOURCE, "period": 2015}]),
         catalog,
-        caller="researcher",
         index=index,
     )
     by_code = {i.code: i for i in result.issues}
@@ -1323,9 +1185,7 @@ def test_outside_steward_catalog_coexists_with_period_check(catalog):
 
 
 def test_admitted_fqid_has_no_outside_steward_catalog(catalog, kon_only_index):
-    result = validate_semantic(
-        _project([_CLEAN_SOURCE]), catalog, caller="researcher", index=kon_only_index
-    )
+    result = validate_semantic(_project([_CLEAN_SOURCE]), catalog, index=kon_only_index)
     assert "fqid_outside_steward_catalog" not in {i.code for i in result.issues}
     assert result.ok
 
@@ -1333,7 +1193,7 @@ def test_admitted_fqid_has_no_outside_steward_catalog(catalog, kon_only_index):
 def test_no_index_never_emits_outside_steward_catalog(catalog):
     # `index` defaults to None (the `global` deployment): the filter never fires,
     # even for an FQID outside any steward's catalog.
-    result = validate_semantic(_project([_RAMS_SOURCE]), catalog, caller="researcher")
+    result = validate_semantic(_project([_RAMS_SOURCE]), catalog)
     assert "fqid_outside_steward_catalog" not in {i.code for i in result.issues}
     assert result.ok
 
@@ -1347,9 +1207,7 @@ def test_unresolvable_fqid_not_also_outside_catalog(catalog, kon_only_index):
         "period": 2018,
         "bindings": [{"variable": "scb/lisa/nosuchvar", "type": "categorical"}],
     }
-    result = validate_semantic(
-        _project([source]), catalog, caller="researcher", index=kon_only_index
-    )
+    result = validate_semantic(_project([source]), catalog, index=kon_only_index)
     codes = {i.code for i in result.issues}
     assert "fqid_unresolved" in codes
     assert "fqid_outside_steward_catalog" not in codes
@@ -1407,12 +1265,10 @@ def _kon_repr_source(representation: str | None) -> dict:
 
 @pytest.fixture
 def kon_basic_only_index(two_repr_catalog):
-    """A steward holding `kon` at the `Kon` column ONLY (its catalog pins
-    `representation: "Kon"` — required, the concept is multi-representation)."""
-    steward = _project([_kon_repr_source("Kon")])
-    sresult = validate_semantic(steward, two_repr_catalog, caller="steward")
-    assert sresult.ok and sresult.issues == ()
-    index = build_catalog_index(steward, sresult.issues, two_repr_catalog)
+    """A steward holding `kon` at the `Kon` column ONLY (its inventory mapping
+    states `representation = "Kon"` — required, the concept is
+    multi-representation)."""
+    index = _catalog_index([_KON_HOLDING], two_repr_catalog)
     assert index.bindings_by_variant["scb/lisa/individer-15plus"] == frozenset(
         {("scb/lisa/kon", "Kon")}
     )
@@ -1428,7 +1284,6 @@ def test_sibling_representation_outside_steward_catalog(
     result = validate_semantic(
         _project([_kon_repr_source("KonDetailed")]),
         two_repr_catalog,
-        caller="researcher",
         index=kon_basic_only_index,
     )
     by_code = {i.code: i for i in result.issues}
@@ -1446,7 +1301,6 @@ def test_matching_representation_is_admitted(two_repr_catalog, kon_basic_only_in
     result = validate_semantic(
         _project([_kon_repr_source("Kon")]),
         two_repr_catalog,
-        caller="researcher",
         index=kon_basic_only_index,
     )
     codes = {i.code for i in result.issues}
@@ -1465,7 +1319,6 @@ def test_ambiguous_binding_skips_representation_admission(
     result = validate_semantic(
         _project([_kon_repr_source(None)]),
         two_repr_catalog,
-        caller="researcher",
         index=kon_basic_only_index,
     )
     codes = {i.code for i in result.issues}
@@ -1486,9 +1339,7 @@ def test_steward_none_vs_researcher_pin_compare_equal_on_resolved_column(
         **_CLEAN_SOURCE,
         "bindings": [{**_CLEAN_SOURCE["bindings"][0], "representation": "Kon"}],
     }
-    result = validate_semantic(
-        _project([source]), catalog, caller="researcher", index=kon_only_index
-    )
+    result = validate_semantic(_project([source]), catalog, index=kon_only_index)
     codes = {i.code for i in result.issues}
     assert "representation_outside_steward_catalog" not in codes
     assert "fqid_outside_steward_catalog" not in codes
@@ -1526,21 +1377,20 @@ def renamed_column_catalog():
 def test_resolved_column_mismatch_across_sequential_rename(renamed_column_catalog):
     # Neither side pins a `representation` (legal — one column per instant), yet
     # admission still catches the mismatch because BOTH sides resolve to columns:
-    # the steward's 2018 catalog holds `Kon`; the researcher's 2020 binding
-    # resolves to the renamed `KonNy`. Raw-string matching (None vs None) would
-    # falsely admit it.
-    steward = _project([_kon_repr_source(None)])  # period 2018 → column `Kon`
-    sresult = validate_semantic(steward, renamed_column_catalog, caller="steward")
-    assert sresult.ok and sresult.issues == ()
-    index = build_catalog_index(steward, sresult.issues, renamed_column_catalog)
+    # the steward's 2018-edition mapping resolves to `Kon`; the researcher's 2020
+    # binding resolves to the renamed `KonNy`. Raw-string matching (None vs None)
+    # would falsely admit it.
+    index = _catalog_index(
+        [("scb/lisa/individer-15plus", "scb/lisa/kon", None, "2018")],
+        renamed_column_catalog,
+    )
     assert index.bindings_by_variant["scb/lisa/individer-15plus"] == frozenset(
         {("scb/lisa/kon", "Kon")}
     )
+    assert index.drift_warnings == ()
 
     researcher = _project([{**_kon_repr_source(None), "period": 2020}])
-    result = validate_semantic(
-        researcher, renamed_column_catalog, caller="researcher", index=index
-    )
+    result = validate_semantic(researcher, renamed_column_catalog, index=index)
     by_code = {i.code: i for i in result.issues}
     issue = by_code["representation_outside_steward_catalog"]
     assert issue.level == "warning"
@@ -1566,7 +1416,6 @@ def test_list_period_clean_resolves_with_replacement_hint(catalog):
     result = validate_semantic(
         _project([_kon_source([2018, {"from": 2019, "to": 2020}])]),
         catalog,
-        caller="researcher",
     )
     assert [i.code for i in result.issues] == ["variable_replaced"]
     assert result.ok
@@ -1578,7 +1427,6 @@ def test_list_period_uncovered_segment_errors_per_segment(catalog):
     result = validate_semantic(
         _project([_kon_source([{"from": 2010, "to": 2012}, 2018])]),
         catalog,
-        caller="researcher",
     )
     outside = [i for i in result.issues if i.code == "period_outside_state_validity"]
     assert len(outside) == 1
@@ -1592,7 +1440,6 @@ def test_list_period_two_uncovered_segments_error_each(catalog):
     result = validate_semantic(
         _project([_kon_source([2015, 2016, 2018])]),
         catalog,
-        caller="researcher",
     )
     outside = [i for i in result.issues if i.code == "period_outside_state_validity"]
     assert len(outside) == 2
@@ -1609,7 +1456,6 @@ def test_list_period_partial_coverage_names_the_segment(catalog):
             [_kon_source([{"from": 2017, "to": 2019}, {"from": 2021, "to": 2022}])]
         ),
         catalog,
-        caller="researcher",
     )
     partial = [i for i in result.issues if i.code == "range_period_partially_covered"]
     assert len(partial) == 1
@@ -1628,28 +1474,11 @@ def test_list_period_segments_on_distinct_states_report_drift(internal_gap_catal
             [_kon_source([{"from": 2010, "to": 2012}, {"from": 2016, "to": 2018}])]
         ),
         internal_gap_catalog,
-        caller="researcher",
     )
     drift = [i for i in result.issues if i.code == "binding_state_drifts_within_period"]
     assert len(drift) == 1
     assert "spans 2 states" in drift[0].message
     assert result.ok
-
-
-def test_list_period_steward_index_resolves_columns(catalog):
-    # A steward catalog may itself use the list form: the kept binding's
-    # columns resolve per segment and union into the (FQID, column) pairs.
-    project = _project([_kon_source([2018, {"from": 2019, "to": 2020}])])
-    result = validate_semantic(project, catalog, caller="steward")
-    assert result.ok
-    assert [i.code for i in result.issues] == ["variable_replaced"]
-    index = build_catalog_index(project, result.issues, catalog)
-    assert index.bindings_by_variant["scb/lisa/individer-15plus"] == frozenset(
-        {("scb/lisa/kon", "Kon")}
-    )
-    # The best-effort register span covers every explicit segment so steward UI
-    # bounds do not silently hide later list-period holdings.
-    assert index.period_range_by_register["scb/lisa"] == ("2018", "2020")
 
 
 @pytest.fixture
@@ -1692,7 +1521,6 @@ def test_list_period_no_false_ambiguity_across_segment_gap(gap_overlap_catalog):
     result = validate_semantic(
         _project([_kon_source([2010, 2020])]),
         gap_overlap_catalog,
-        caller="researcher",
     )
     codes = {i.code for i in result.issues}
     assert "binding_value_set_version_ambiguous" not in codes
@@ -1707,7 +1535,6 @@ def test_scalar_range_through_the_overlap_is_still_ambiguous(gap_overlap_catalog
     result = validate_semantic(
         _project([_kon_source({"from": 2010, "to": 2020})]),
         gap_overlap_catalog,
-        caller="researcher",
     )
     by_code = {i.code: i for i in result.issues}
     assert "binding_value_set_version_ambiguous" in by_code
@@ -1770,9 +1597,7 @@ def test_pinned_representation_missing_middle_segment_is_flagged(
             }
         ],
     }
-    result = validate_semantic(
-        _project([source]), middle_segment_sibling_catalog, caller="researcher"
-    )
+    result = validate_semantic(_project([source]), middle_segment_sibling_catalog)
     drift = [
         i
         for i in result.issues

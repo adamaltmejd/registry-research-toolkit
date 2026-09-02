@@ -4,53 +4,39 @@ See DESIGN.md → Steward layering and the in-memory catalog index (stewards.py 
 catalog_index.py). A steward is configured by ``reg_webapp/stewards/<id>/``:
 
 - ``steward.toml`` — identity and branding (required).
-- ``steward.project_data.json`` — the catalog filter (optional). Its
-  *absence* selects full-universe mode — the special ``global`` deployment.
-- ``inventory.toml`` — the steward's delivery inventory, loaded at boot for the
-  order materializer. REQUIRED for a named steward (absent → boot fails), and
-  FORBIDDEN for the ``global`` deployment (present → boot fails): global takes
-  §12's global-deployment fallback (``inventory=None``) unconditionally, until a
-  physical global inventory is introduced deliberately.
+- ``inventory.toml`` — the steward's delivery inventory: the SINGLE source of
+  truth for what the deployment holds (REFACTOR_SPEC.md §12). It is both the
+  catalog filter (``catalog_index.build_catalog_index`` derives admission from
+  it) and the order materializer's physical delivery topology. REQUIRED for a
+  named steward (absent → boot fails), and FORBIDDEN for the ``global``
+  deployment (present → boot fails): global takes §12's global-deployment
+  fallback (``inventory=None``, no filter, reg_meta's full universe)
+  unconditionally, until a physical global inventory is introduced deliberately.
 
-``load_steward`` reads ``steward.toml`` (identity) and detects the project
-file's presence. ``load_catalog_index`` (A5.2b-i) actually parses + validates
-that project file against a live reg_meta ``Catalog`` and builds the
-in-memory index — called once at FastAPI startup with the boot connection (see
-``app.py``). The two are split because index-building needs the reg_meta DB,
-which only exists once the lifespan opens it. ``load_delivery_inventory`` is a
-third, DB-free boot read (see ``reg_meta/DESIGN.md`` → Steward delivery
-inventory); ``check_delivery_inventory`` is its DB-backed half, run on the same
-boot connection.
+``load_steward`` reads ``steward.toml`` (identity); ``load_delivery_inventory``
+is a second, DB-free boot read (see ``reg_meta/DESIGN.md`` → Steward delivery
+inventory) whose result the lifespan feeds to ``build_catalog_index``.
+``check_delivery_inventory`` is that read's DB-backed half, run on the same boot
+connection.
 """
 
 from __future__ import annotations
 
-import json
 import logging
 import os
 import tomllib
 from dataclasses import dataclass
 from pathlib import Path
 from time import perf_counter
-from typing import TYPE_CHECKING, cast
+from typing import TYPE_CHECKING
 
-from pydantic import ValidationError
 from reg_meta.inventory import load_inventory
 from reg_meta.inventory_check import check_inventory, unresolved_message
-from reg_schema.project_data import ProjectData
-from reg_schema.structural import validate_structural
-
-from .catalog_index import build_catalog_index
-from .semantic import validate_semantic
-from .steward_catalog import StewardBootCatalog
 
 if TYPE_CHECKING:
     import sqlite3
 
-    from reg_meta.catalog import Catalog
     from reg_meta.inventory import DeliveryInventory
-
-    from .catalog_index import CatalogIndex
 
 # stewards/ is a sibling of backend/ and frontend/ (see DESIGN.md → Layout). The
 # default resolves it relative to this module — parents[3] is the reg_webapp/
@@ -71,7 +57,6 @@ def _stewards_dir() -> Path:
 
 
 STEWARD_TOML = "steward.toml"
-STEWARD_PROJECT_DATA = "steward.project_data.json"
 STEWARD_INVENTORY = "inventory.toml"
 
 DEFAULT_STEWARD_ID = "global"
@@ -89,35 +74,22 @@ def _selected_steward_id() -> str:
     return os.environ.get("REG_WEBAPP_STEWARD", DEFAULT_STEWARD_ID)
 
 
-class StewardCatalogError(ValueError):
-    """A steward's committed ``steward.project_data.json`` is itself broken —
-    malformed JSON or a STRUCTURAL (see reg_schema/DESIGN.md → Structural rules
-    and issue codes) violation. Distinct from reg_meta *drift* (semantic
-    warnings, see DESIGN.md → Semantic validation (semantic.py)), which does NOT
-    raise: drift is a
-    steward-vs-reg_meta version skew the deployment boots through (bindings drop,
-    warnings surface). A structural break is a misconfigured deployment — fail
-    fast (CLAUDE.md), it can't be reasoned about as drift."""
-
-
 @dataclass(frozen=True)
 class Steward:
-    """A loaded steward config.
+    """A loaded steward config — identity and branding only.
 
-    ``has_catalog_filter`` is False for the ``global`` deployment (no
-    ``steward.project_data.json`` → full universe). ``load_catalog_index`` reads
-    + validates the project file when this is True.
+    What the deployment HOLDS is the delivery inventory's business
+    (``load_delivery_inventory``), not this record's.
     """
 
     id: str
     name: str
     long_name: str
     hostname: str
-    has_catalog_filter: bool
 
 
 def load_steward(steward_id: str | None = None, *, root: Path | None = None) -> Steward:
-    """Load ``steward.toml`` for ``steward_id`` and detect the catalog filter.
+    """Load ``steward.toml`` for ``steward_id``.
 
     ``steward_id`` defaults to ``_selected_steward_id()`` (the
     ``REG_WEBAPP_STEWARD`` env or ``global``) so the lifespan picks up the
@@ -153,122 +125,16 @@ def load_steward(steward_id: str | None = None, *, root: Path | None = None) -> 
         name=data["name"],
         long_name=data["long_name"],
         hostname=data["hostname"],
-        has_catalog_filter=(base / STEWARD_PROJECT_DATA).is_file(),
     )
-
-
-def load_catalog_index(
-    steward: Steward, catalog: Catalog, *, root: Path | None = None
-) -> CatalogIndex | None:
-    """Load + validate ``steward.project_data.json`` and build the index.
-
-    Returns ``None`` for the ``global`` deployment (``has_catalog_filter=False``)
-    — no filter, reg_meta's full universe. Otherwise:
-
-    1. parse the JSON (malformed → ``StewardCatalogError``, fail fast);
-    2. run ``validate_structural`` — a STRUCTURAL error means the steward
-       committed a broken file → ``StewardCatalogError`` (fail fast; this is NOT
-       drift);
-    3. construct the ``reg_schema.ProjectData`` model (structurally valid, so it
-       builds);
-    4. run ``validate_semantic`` in **steward-caller** mode — ``fqid_unresolved``
-       / ``value_set_missing`` / ``period_outside_state_validity`` are downgraded
-       to ``warning``, so reg_meta drift does NOT crash startup;
-    5. build the index, DROPPING bindings the validator warned on, and carry the
-       warnings for ``/api/context``.
-
-    ⚠️ Boot-availability: a steward catalog referencing an FQID reg_meta
-    no longer admits must still BOOT. The steward-mode downgrade keeps
-    ``result.ok`` True even when bindings drop, so we key on the WARNINGS list
-    (not ``.ok``) — ``build_catalog_index`` drops the flagged bindings and the
-    drift surfaces via ``/api/context``.
-    """
-    if not steward.has_catalog_filter:
-        return None
-
-    base = (root or _stewards_dir()) / steward.id
-    project_path = base / STEWARD_PROJECT_DATA
-    start = perf_counter()
-    try:
-        raw = json.loads(project_path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError) as exc:
-        raise StewardCatalogError(
-            f"{project_path}: could not read/parse steward catalog: {exc}"
-        ) from exc
-    json_seconds = perf_counter() - start
-
-    phase_start = perf_counter()
-    structural = validate_structural(raw)
-    structural_seconds = perf_counter() - phase_start
-    if not structural.ok:
-        errors = [i for i in structural.issues if i.level == "error"]
-        raise StewardCatalogError(
-            f"{project_path}: steward catalog is structurally invalid "
-            f"({len(errors)} error(s)): "
-            + "; ".join(f"{i.code}@{i.path}" for i in errors)
-        )
-
-    # validate_structural passed, but the reg_schema models are `extra="forbid"`
-    # and validate_structural does NOT flag an unrecognized key on a nested Source /
-    # Binding — so model_validate can still raise on a typo'd field. That's a broken
-    # committed catalog (user error), so fail fast with a CLEAR StewardCatalogError,
-    # not an opaque pydantic traceback out of the FastAPI lifespan.
-    phase_start = perf_counter()
-    try:
-        project = ProjectData.model_validate(raw)
-    except ValidationError as exc:
-        raise StewardCatalogError(
-            f"{project_path}: steward catalog passed structural validation but "
-            f"failed model construction (an unrecognized or invalid field?): {exc}"
-        ) from exc
-    model_seconds = perf_counter() - phase_start
-
-    boot_adapter = StewardBootCatalog(catalog)
-    boot_adapter.preload_project(project)
-    boot_catalog = cast("Catalog", boot_adapter)
-
-    # Steward-caller mode: the three reg_meta-DRIFT codes downgrade
-    # error→warning so the deployment boots through reg_meta evolution (those
-    # bindings drop from the index + surface as drift; ok stays True). Any OTHER
-    # remaining error — e.g. a bare binding_value_set_version_ambiguous the steward
-    # must pin — means the committed catalog is genuinely INVALID: fail fast like a
-    # structural break (CLAUDE.md), don't boot a catalog-with-errors as if valid
-    # (that would admit the broken binding to the index and never surface it).
-    phase_start = perf_counter()
-    result = validate_semantic(project, boot_catalog, caller="steward")
-    semantic_seconds = perf_counter() - phase_start
-    if not result.ok:
-        errors = [i for i in result.issues if i.level == "error"]
-        raise StewardCatalogError(
-            f"{project_path}: steward catalog has unresolved semantic error(s) "
-            "after reg_meta-drift downgrades — fix the catalog (e.g. pin an "
-            "ambiguous binding's @<version>): "
-            + "; ".join(f"{i.code}@{i.path}" for i in errors)
-        )
-    phase_start = perf_counter()
-    index = build_catalog_index(project, result.issues, boot_catalog)
-    index_seconds = perf_counter() - phase_start
-    logger.info(
-        "loaded steward catalog %s: json=%.3fs structural=%.3fs model=%.3fs "
-        "semantic=%.3fs index=%.3fs warnings=%d variants=%d bindings=%d",
-        steward.id,
-        json_seconds,
-        structural_seconds,
-        model_seconds,
-        semantic_seconds,
-        index_seconds,
-        sum(1 for issue in result.issues if issue.level == "warning"),
-        len(index.bindings_by_variant),
-        sum(len(bindings) for bindings in index.bindings_by_variant.values()),
-    )
-    return index
 
 
 def load_delivery_inventory(
     steward: Steward, *, root: Path | None = None
 ) -> DeliveryInventory | None:
-    """Load this deployment's ``inventory.toml`` — the order materializer's
-    physical delivery topology (``reg_meta.inventory``).
+    """Load this deployment's ``inventory.toml`` — the steward's holdings
+    statement (``reg_meta.inventory``): the catalog filter
+    ``catalog_index.build_catalog_index`` derives admission from, and the order
+    materializer's physical delivery topology.
 
     Returns ``None`` ONLY for the ``global`` deployment — the one with no
     steward configured, which takes REFACTOR_SPEC.md §12's
@@ -343,9 +209,10 @@ def check_delivery_inventory(
     ``ValueError`` in the same fail-fast posture as ``load_delivery_inventory``
     (CLAUDE.md), rather than being deferred to each researcher in turn.
 
-    Unlike the steward CATALOG, there is no drift downgrade here: a dropped
-    binding degrades the browse, but an unresolvable inventory mapping is a
-    holdings statement about a coordinate that does not exist.
+    Unlike the catalog INDEX this same inventory builds, there is no drift
+    downgrade here: a dropped mapping degrades the browse, but an unresolvable
+    inventory coordinate is a holdings statement about something that does not
+    exist.
     """
     start = perf_counter()
     findings = check_inventory(inventory, conn)

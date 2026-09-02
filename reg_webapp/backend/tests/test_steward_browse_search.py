@@ -28,26 +28,21 @@ import sqlite3
 from typing import TYPE_CHECKING
 
 import pytest
-from _steward_helpers import write_steward as _write_steward
+from _steward_helpers import Holding, write_steward as _write_steward
 from fastapi.testclient import TestClient
 from reg_webapp.app import create_app
 from reg_webapp.catalog_index import CatalogIndex
 from reg_webapp.routes.catalog import _narrow_refs_to_held
 
 if TYPE_CHECKING:
-    from collections.abc import Iterator
+    from collections.abc import Iterator, Sequence
     from pathlib import Path
 
 
 # The steward holds ONLY scb/lisa/kon — so scb/rams (and lisa's other bindings)
 # are out of catalog, and the sun classification family stays catalog-global.
-_HELD_SOURCES = [
-    {
-        "name": "lisa",
-        "register_variant": "scb/lisa/individer-15plus",
-        "period": 2018,
-        "bindings": [{"variable": "scb/lisa/kon", "type": "categorical"}],
-    }
+_HELD_HOLDINGS = [
+    ("scb/lisa/individer-15plus", "scb/lisa/kon", None, "2018"),
 ]
 
 
@@ -58,7 +53,7 @@ def steward_client(
     """A booted app filtered to the ``ifau`` steward holding only scb/lisa/kon,
     pointed at the shared ``catalog_db`` fixture."""
     stewards = tmp_path / "stewards"
-    _write_steward(stewards, "ifau", _HELD_SOURCES)
+    _write_steward(stewards, "ifau", _HELD_HOLDINGS)
     monkeypatch.setenv("REG_WEBAPP_STEWARDS_DIR", str(stewards))
     monkeypatch.setenv("REG_WEBAPP_STEWARD", "ifau")
     with TestClient(create_app()) as client:
@@ -67,10 +62,10 @@ def steward_client(
         yield client
 
 
-def _booted(stewards: Path, steward_id: str, sources: list[dict]) -> TestClient:
-    """Boot a filtered-steward app for `steward_id` holding `sources` (the env seam
-    + index-built sanity). Caller wraps in a `with`."""
-    _write_steward(stewards, steward_id, sources)
+def _booted(stewards: Path, steward_id: str, holdings: Sequence[Holding]) -> TestClient:
+    """Boot a filtered-steward app whose inventory states `holdings` (the env
+    seam + index-built sanity). Caller wraps in a `with`."""
+    _write_steward(stewards, steward_id, holdings)
     return TestClient(create_app())
 
 
@@ -89,12 +84,7 @@ def syss_client(
         stewards,
         "ifau",
         [
-            {
-                "name": "rams",
-                "register_variant": "scb/rams/standard",
-                "period": 2019,
-                "bindings": [{"variable": "scb/rams/syss", "type": "numeric"}],
-            }
+            ("scb/rams/standard", "scb/rams/syss", None, "2019"),
         ],
     ) as client:
         assert client.app.state.catalog_index is not None
@@ -115,18 +105,8 @@ def both_client(
         stewards,
         "ifau",
         [
-            {
-                "name": "lisa",
-                "register_variant": "scb/lisa/individer-15plus",
-                "period": 2018,
-                "bindings": [{"variable": "scb/lisa/kon", "type": "categorical"}],
-            },
-            {
-                "name": "rams",
-                "register_variant": "scb/rams/standard",
-                "period": 2019,
-                "bindings": [{"variable": "scb/rams/syss", "type": "numeric"}],
-            },
+            ("scb/lisa/individer-15plus", "scb/lisa/kon", None, "2018"),
+            ("scb/rams/standard", "scb/rams/syss", None, "2019"),
         ],
     ) as client:
         assert client.app.state.catalog_index is not None
@@ -148,18 +128,7 @@ def lonfink_jan_client(
         stewards,
         "ifau",
         [
-            {
-                "name": "lisa",
-                "register_variant": "scb/lisa/individer-15plus",
-                "period": 2018,
-                "bindings": [
-                    {
-                        "variable": "scb/lisa/lonfink",
-                        "type": "numeric",
-                        "representation": "LonFinkJan",
-                    }
-                ],
-            }
+            ("scb/lisa/individer-15plus", "scb/lisa/lonfink", "LonFinkJan", "2018"),
         ],
     ) as client:
         assert client.app.state.catalog_index is not None
@@ -182,23 +151,8 @@ def lonfink_rep_both_client(
         stewards,
         "ifau",
         [
-            {
-                "name": "lisa",
-                "register_variant": "scb/lisa/individer-15plus",
-                "period": 2018,
-                "bindings": [
-                    {
-                        "variable": "scb/lisa/lonfink",
-                        "type": "numeric",
-                        "representation": "LonFinkJan",
-                    },
-                    {
-                        "variable": "scb/lisa/lonfink",
-                        "type": "numeric",
-                        "representation": "LonFinkFeb",
-                    },
-                ],
-            }
+            ("scb/lisa/individer-15plus", "scb/lisa/lonfink", "LonFinkJan", "2018"),
+            ("scb/lisa/individer-15plus", "scb/lisa/lonfink", "LonFinkFeb", "2018"),
         ],
     ) as client:
         assert client.app.state.catalog_index is not None
@@ -221,18 +175,7 @@ def lonfink_rep_jan_client(
         stewards,
         "ifau",
         [
-            {
-                "name": "lisa",
-                "register_variant": "scb/lisa/individer-15plus",
-                "period": 2018,
-                "bindings": [
-                    {
-                        "variable": "scb/lisa/lonfink",
-                        "type": "numeric",
-                        "representation": "LonFinkJan",
-                    }
-                ],
-            }
+            ("scb/lisa/individer-15plus", "scb/lisa/lonfink", "LonFinkJan", "2018"),
         ],
     ) as client:
         assert client.app.state.catalog_index is not None
@@ -737,18 +680,7 @@ def test_search_backfills_after_all_unheld_group_drop(
         stewards,
         "ifau",
         [
-            {
-                "name": "lisa",
-                "register_variant": "scb/lisa/individer-15plus",
-                "period": 2018,
-                "bindings": [
-                    {
-                        "variable": "scb/lisa/lonfink",
-                        "type": "numeric",
-                        "representation": "LonFinkJan",
-                    }
-                ],
-            }
+            ("scb/lisa/individer-15plus", "scb/lisa/lonfink", "LonFinkJan", "2018"),
         ],
     ) as client:
         body = client.get("/api/search?q=Backfill&type=variable&limit=1").json()
@@ -865,18 +797,7 @@ def test_partial_column_hold_coverage_uses_held_column(
         stewards,
         "ifau",
         [
-            {
-                "name": "lisa",
-                "register_variant": "scb/lisa/individer-15plus",
-                "period": 2020,
-                "bindings": [
-                    {
-                        "variable": "scb/lisa/disp",
-                        "type": "numeric",
-                        "representation": "CDISP5",
-                    }
-                ],
-            }
+            ("scb/lisa/individer-15plus", "scb/lisa/disp", "CDISP5", "2020"),
         ],
     ) as client:
         provider = client.get("/api/catalog/scb").json()
@@ -908,12 +829,7 @@ def test_unnamed_column_hold_coverage_uses_variable_fallback(
         stewards,
         "ifau",
         [
-            {
-                "name": "lisa",
-                "register_variant": "scb/lisa/individer-15plus",
-                "period": 2018,
-                "bindings": [{"variable": "scb/lisa/unnamed", "type": "numeric"}],
-            }
+            ("scb/lisa/individer-15plus", "scb/lisa/unnamed", None, "2018"),
         ],
     ) as client:
         provider = client.get("/api/catalog/scb").json()
@@ -966,12 +882,7 @@ def test_indexed_steward_tags_ignore_unheld_group_siblings(
         stewards,
         "ifau",
         [
-            {
-                "name": "lisa",
-                "register_variant": "scb/lisa/individer-15plus",
-                "period": 2018,
-                "bindings": [{"variable": "scb/lisa/helduntagged", "type": "numeric"}],
-            }
+            ("scb/lisa/individer-15plus", "scb/lisa/helduntagged", None, "2018"),
         ],
     ) as client:
         assert client.app.state.catalog_index is not None
@@ -1001,23 +912,18 @@ def test_indexed_steward_leaf_tags_require_target_representation_member(
         stewards,
         "ifau",
         [
-            {
-                "name": "lisa",
-                "register_variant": "scb/lisa/individer-15plus",
-                "period": 2018,
-                "bindings": [
-                    {
-                        "variable": "scb/lisa/targetrep",
-                        "type": "numeric",
-                        "representation": "TargetHeldColumn",
-                    },
-                    {
-                        "variable": "scb/lisa/heldtaggedsibling",
-                        "type": "numeric",
-                        "representation": "HeldTaggedSibling",
-                    },
-                ],
-            }
+            (
+                "scb/lisa/individer-15plus",
+                "scb/lisa/targetrep",
+                "TargetHeldColumn",
+                "2018",
+            ),
+            (
+                "scb/lisa/individer-15plus",
+                "scb/lisa/heldtaggedsibling",
+                "HeldTaggedSibling",
+                "2018",
+            ),
         ],
     ) as client:
         assert client.app.state.catalog_index is not None
@@ -1044,12 +950,7 @@ def test_indexed_same_as_alias_leaf_keeps_canonical_direct_tags(
         stewards,
         "ifau",
         [
-            {
-                "name": "lisa",
-                "register_variant": "scb/lisa/individer-15plus",
-                "period": 2018,
-                "bindings": [{"variable": "scb/lisa/kon-alias", "type": "numeric"}],
-            }
+            ("scb/lisa/individer-15plus", "scb/lisa/kon-alias", None, "2018"),
         ],
     ) as client:
         assert client.app.state.catalog_index is not None
@@ -1109,12 +1010,7 @@ def test_binding_graph_keeps_held_same_as_alias_focus(
         stewards,
         "ifau",
         [
-            {
-                "name": "lisa",
-                "register_variant": "scb/lisa/individer-15plus",
-                "period": 2018,
-                "bindings": [{"variable": "scb/lisa/kon-alias", "type": "numeric"}],
-            }
+            ("scb/lisa/individer-15plus", "scb/lisa/kon-alias", None, "2018"),
         ],
     ) as client:
         body = client.get("/api/catalog/scb/lisa/kon-alias/graph").json()
@@ -1155,24 +1051,8 @@ def test_lineage_and_warnings_narrow_to_held_consumer_column(
         stewards,
         "ifau",
         [
-            {
-                "name": "lisa",
-                "register_variant": "scb/lisa/individer-15plus",
-                "period": 2020,
-                "bindings": [
-                    {
-                        "variable": "scb/lisa/disp",
-                        "type": "numeric",
-                        "representation": "CDISP5",
-                    }
-                ],
-            },
-            {
-                "name": "rams",
-                "register_variant": "scb/rams/standard",
-                "period": 2020,
-                "bindings": [{"variable": "scb/rams/syss", "type": "numeric"}],
-            },
+            ("scb/lisa/individer-15plus", "scb/lisa/disp", "CDISP5", "2020"),
+            ("scb/rams/standard", "scb/rams/syss", None, "2020"),
         ],
     ) as client:
         lineage = client.get("/api/catalog/scb/lisa/disp/lineage").json()
@@ -1305,7 +1185,7 @@ def test_narrow_refs_drops_fqid_none_and_unheld():
         bindings_by_variant={
             "scb/lisa/individer-15plus": frozenset({("scb/lisa/kon", "Kon")})
         },
-        period_range_by_register={"scb/lisa": ("2018", "2018")},
+        period_range_by_register={"scb/lisa": ("2018-01-01", "2018-12-31")},
         drift_warnings=(),
     )
     refs = [_StubRef("scb/lisa/kon"), _StubRef(None), _StubRef("scb/rams/syss")]

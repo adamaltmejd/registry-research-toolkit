@@ -512,7 +512,7 @@ def test_narrow_variable_leaf_columns_treats_none_as_concrete_column():
                 {("scb/lisa/kon", None), ("scb/lisa/kon", "Kon")}
             )
         },
-        period_range_by_register={"scb/lisa": ("2018", "2018")},
+        period_range_by_register={"scb/lisa": ("2018-01-01", "2018-12-31")},
         drift_warnings=(),
     )
     result = VariableSearchResult(
@@ -536,7 +536,7 @@ def test_filtered_variable_search_passes_delivery_scope_into_full_backfill_query
         bindings_by_variant={
             "scb/lisa/individer-15plus": frozenset({("scb/lisa/kon", "Kon")})
         },
-        period_range_by_register={"scb/lisa": ("2018", "2018")},
+        period_range_by_register={"scb/lisa": ("2018-01-01", "2018-12-31")},
         drift_warnings=(),
     )
     client.app.state.catalog_index = index

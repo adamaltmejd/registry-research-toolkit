@@ -2,11 +2,18 @@
 
 from __future__ import annotations
 
-import json
+import tomllib
 from typing import TYPE_CHECKING
 
+from reg_meta.inventory import DeliveryInventory
+from reg_webapp.catalog_index import build_catalog_index
+
 if TYPE_CHECKING:
+    from collections.abc import Sequence
     from pathlib import Path
+
+    from reg_meta.catalog import Catalog
+    from reg_webapp.catalog_index import CatalogIndex
 
 IFAU_TOML = """\
 id = "ifau"
@@ -15,91 +22,72 @@ long_name = "Institute for Evaluation of Labour Market and Education Policy"
 hostname = "ifau.example.org"
 """
 
-
-def steward_project(sources: list[dict]) -> dict:
-    return {
-        "schema_version": "2.0.0",
-        "steward": "ifau",
-        "reg_meta_version": "5.1.0",
-        "name": "ifau-catalog",
-        "sources": sources,
-    }
-
+# One admitted holding: (register_variant coordinate, binding FQID,
+# representation — the canonical `delivery_column_name`, or None for "the
+# concept's single representation" — and the table's edition).
+Holding = tuple[str, str, str | None, str]
 
 # The fixture DB resolves scb/lisa/individer-15plus (binding scb/lisa/kon, state
-# 2018+) and scb/rams/standard (binding scb/rams/syss).
-CLEAN_SOURCES = [
-    {
-        "name": "lisa",
-        "register_variant": "scb/lisa/individer-15plus",
-        "period": 2018,
-        "bindings": [
-            {
-                "variable": "scb/lisa/kon",
-                "type": "categorical",
-                "value_set": "class/sun2020",
-            }
-        ],
-    },
-    {
-        "name": "rams",
-        "register_variant": "scb/rams/standard",
-        "period": 2019,
-        "bindings": [{"variable": "scb/rams/syss", "type": "numeric"}],
-    },
+# 2018+, column "Kon") and scb/rams/standard (binding scb/rams/syss, column
+# "Syss").
+CLEAN_HOLDINGS: list[Holding] = [
+    ("scb/lisa/individer-15plus", "scb/lisa/kon", "Kon", "2018"),
+    ("scb/rams/standard", "scb/rams/syss", "Syss", "2019"),
 ]
 
 
-# A named steward must ship a delivery inventory or the deployment refuses to
-# boot (stewards.load_delivery_inventory), so a written test steward is only a
-# COMPLETE deployment with one. Minimal but valid: reg_meta's loader is DB-free,
-# so this need only be well-formed — it covers CLEAN_SOURCES' two holdings.
-IFAU_INVENTORY = """\
-version = 1
-steward = "ifau"
+def inventory_toml(holdings: Sequence[Holding], *, steward: str = "ifau") -> str:
+    """Render a minimal delivery inventory stating ``holdings``.
 
-[[table]]
-id = "LISA_Individ_2018.csv"
-edition = 2018
-
-[[table.column]]
-name = "Kon"
-[[table.column.mapping]]
-register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/kon"
-
-[[table]]
-id = "RAMS_2019.csv"
-edition = 2019
-
-[[table.column]]
-name = "Syss"
-[[table.column.mapping]]
-register_variant = "scb/rams/standard"
-variable = "scb/rams/syss"
-"""
+    One table per holding, so each carries its own edition and the §12
+    one-to-one resolution invariant is satisfied by construction as long as the
+    holdings name distinct ``(variant, variable, representation)`` coordinates.
+    The physical column name is deliberately NOT the representation (it is
+    prefixed): a steward's literal delivery spelling and reg_meta's canonical
+    ``delivery_column_name`` are different things, and the index must admit the
+    latter.
+    """
+    lines = ["version = 1", f'steward = "{steward}"']
+    for idx, (variant, variable, representation, edition) in enumerate(holdings):
+        lines += [
+            "",
+            "[[table]]",
+            f'id = "T{idx}_{edition}.csv"',
+            f'edition = "{edition}"',
+            "",
+            "[[table.column]]",
+            f'name = "P{idx}_{variable.rsplit("/", 1)[1]}"',
+            "[[table.column.mapping]]",
+            f'register_variant = "{variant}"',
+            f'variable = "{variable}"',
+        ]
+        if representation is not None:
+            lines.append(f'representation = "{representation}"')
+    return "\n".join(lines) + "\n"
 
 
 def write_steward(
     stewards_dir: Path,
     steward_id: str,
-    sources: list[dict],
+    holdings: Sequence[Holding],
     *,
     inventory: bool = True,
 ) -> None:
     """Write a complete named-steward deployment directory.
 
-    ``inventory=False`` writes the INCOMPLETE one — the deployment that must
-    fail at boot (see ``test_project_order`` → the named-steward boot guard).
+    A named steward is configured by ``steward.toml`` (identity) plus
+    ``inventory.toml`` (its holdings — both the catalog filter and the order
+    topology). ``inventory=False`` writes the INCOMPLETE one — the deployment
+    that must fail at boot (see ``test_project_order`` → the named-steward boot
+    guard).
     """
     base = stewards_dir / steward_id
     base.mkdir(parents=True)
     (base / "steward.toml").write_text(IFAU_TOML, encoding="utf-8")
-    (base / "steward.project_data.json").write_text(
-        json.dumps(steward_project(sources)), encoding="utf-8"
-    )
     if inventory:
-        (base / "inventory.toml").write_text(IFAU_INVENTORY, encoding="utf-8")
+        (base / "inventory.toml").write_text(
+            inventory_toml(holdings, steward=steward_id), encoding="utf-8"
+        )
 
 
 def write_global(stewards_dir: Path) -> None:
@@ -110,3 +98,14 @@ def write_global(stewards_dir: Path) -> None:
         'hostname = "global.example.org"\n',
         encoding="utf-8",
     )
+
+
+def catalog_index(
+    holdings: Sequence[Holding], catalog: Catalog, *, steward: str = "ifau"
+) -> CatalogIndex:
+    """The boot index a steward stating ``holdings`` would build — the same
+    ``model_validate`` ``load_inventory`` runs, without a file on disk."""
+    inventory = DeliveryInventory.model_validate(
+        tomllib.loads(inventory_toml(holdings, steward=steward))
+    )
+    return build_catalog_index(inventory, catalog)

@@ -97,8 +97,8 @@ registry-research-toolkit/
     frontend/       # Svelte 5 + Vite (bun)
     stewards/
       global/       # steward.toml only (full universe)
-      ifau/         # steward.toml + steward.project_data.json   [PLANNED]
-      swecov/       # steward.toml + current steward.project_data.json
+      ifau/         # steward.toml + inventory.toml               [PLANNED]
+      swecov/       # steward.toml + current inventory.toml
 ```
 
 > The `reg_monabundle` and `mock_data_wizard` packages have been archived to

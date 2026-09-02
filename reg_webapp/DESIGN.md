@@ -628,15 +628,14 @@ use. Those are full-universe, browse-addressable counts: slugged providers, slug
 registers, and slugged variables under slugged registers. A FILTERED steward uses the
 boot-time in-memory `CatalogIndex` instead, so the landing-page stats reflect only that
 steward's catalog. The index is column-based for admission, so stats de-dupe variables
-by binding FQID rather than resolved delivery column; registers come from valid steward
-sources plus any kept binding's parent register. Drift-dropped bindings do not inflate
-the variable count.
+by binding FQID rather than resolved delivery column; registers come from the
+inventory's period spans plus any admitted mapping's parent register. Drift-dropped
+mappings do not inflate the variable count.
 
 ETag + Cache-Control ride the generic `ETagMiddleware` (a GET read). `/api/stats` uses
 the short `public, max-age=60, must-revalidate` tier: for a filtered deployment the body
-depends on `steward.project_data.json`, so a same-id steward catalog redeploy must get a
-prompt revalidation opportunity instead of letting the browser serve a stale count for
-24h.
+depends on `inventory.toml`, so a same-id steward inventory redeploy must get a prompt
+revalidation opportunity instead of letting the browser serve a stale count for 24h.
 
 ## ETag / Cache-Control (`etag.py` + `middleware.py`)
 
@@ -745,31 +744,24 @@ zero FCP/LCP savings from removing it.
 
 ## Steward layering and the in-memory catalog index (`stewards.py` + `catalog_index.py`)
 
-A steward currently ships `stewards/<id>/steward.toml` (identity/branding, required)
-plus an optional `steward.project_data.json` (the catalog filter). The **`global`**
-steward ships only `steward.toml` — the *absence* of the project file means
-full-universe mode (no filter, reg_meta's whole catalog). The loader
-(`stewards.load_steward`) detects that absence via `has_catalog_filter`.
+A steward ships `stewards/<id>/steward.toml` (identity/branding) plus `inventory.toml` —
+its **delivery inventory**, the single source of truth for what the deployment holds
+(`reg_meta.inventory`, `REFACTOR_SPEC.md` §12). Each table has one explicit finite
+edition and literal physical columns, and each column has zero or more mappings to
+`(register_variant, variable FQID, canonical representation)`. Unmapped columns remain
+in the physical coverage denominator without becoming admitted or orderable; several
+mappings let a combined table serve several variants. That one inventory derives
+edition-aware admission, browse unions and normalized order output — there is no second
+holdings model. The **`global`** steward ships only `steward.toml`: the *absence* of an
+inventory means full-universe mode (no filter, reg_meta's whole catalog), and a stray
+one there is a boot failure, not a mode switch (`stewards.load_delivery_inventory`).
 
-**Current implementation, not the v1 target.** Reusing `project_data.json` made the
-first filter cheap to validate, but it is lossy: project `Source.name` is an internal
-handle, its period may span many deliveries, and the generated steward file collapses
-physical table and edition identity into `(register_variant, FQID, column)` admission.
-The v1 boundary is a public steward delivery inventory: each table has one explicit
-finite edition and literal physical columns, and each column has zero or more mappings
-to `(register_variant, variable FQID, canonical representation)`. Unmapped columns
-remain in the physical coverage denominator without becoming orderable; multiple
-mappings allow a combined table to serve several variants. That one inventory must
-derive exact edition-aware admission, browse unions, coverage, and normalized order
-output. See the durable order contract below and `REFACTOR_SPEC.md` §12.
-
-The in-memory **`CatalogIndex`** is built once at boot (`load_catalog_index`, with the
-boot connection) and held on `app.state` for the process lifetime. It is the filter that
-scopes a steward deployment to a subset of reg_meta's universe. It is an internal frozen
-`@dataclass` (never a response body — only response models are Pydantic; webapp
-internals are dataclasses), carrying two maps derived from the steward project's
-`sources[]` (building needs the same live `Catalog` the boot validation ran against —
-see column resolution below):
+The in-memory **`CatalogIndex`** is built once at boot (`build_catalog_index`, from the
+loaded inventory) and held on `app.state` for the process lifetime. It is the filter
+that scopes a steward deployment to a subset of reg_meta's universe. It is an internal
+frozen `@dataclass` (never a response body — only response models are Pydantic; webapp
+internals are dataclasses), carrying two maps derived from the inventory's
+`tables → columns → mappings`:
 
 - `bindings_by_variant` — `register_variant` coordinate → frozenset of admitted
   `(binding FQID, resolved delivery column)` pairs. **Admission is column-based** (#206,
@@ -778,21 +770,23 @@ see column resolution below):
   bare-FQID admission cannot express "this steward has SSYK, but only at the 1-digit
   level". The FQID side is the bare 3-segment binding FQID (no `@version` pin to
   normalize away — that grammar is retired); the column side is the **resolved**
-  `delivery_column_name` of the steward binding's states (its `representation` when
-  pinned; every column its states deliver otherwise — a sequential rename inside the
-  steward's period contributes one pair per column), never the raw `representation`
-  string. Resolving both sides at their own validation time means a steward catalog
-  authored as `representation: None` back when the concept had one column still compares
-  equal to a researcher who must now pin (reg_meta grew a sibling column). `None` is
-  **not** a wildcard — it resolves to the unique column it denoted (pre-v1, no compat
-  layers).
-- `period_range_by_register` — register FQID → best-effort `(lo, hi)` period span for UI
-  hinting **only**, NOT a validity gate (the semantic validator's per-binding
-  `period_outside_state_validity` is the gate; mixed period grammars don't sort cleanly
-  as strings).
+  `delivery_column_name`. A mapping's `representation` IS that canonical token — never
+  the physical `column.name`, which is the steward's own literal delivery spelling — so
+  an explicit representation is admitted verbatim and boot performs **zero** catalog
+  resolution (every SWECOV mapping is explicit). A `representation` of `None` states
+  "the concept's *single* representation" (§12) and is **not** a wildcard: it is
+  resolved against the catalog over the table's edition bounds, so a mapping authored
+  before reg_meta grew a sibling column still compares equal to a researcher who must
+  now pin.
+- `period_range_by_register` — register FQID → the inclusive ISO `(lo, hi)` span of the
+  **edition bounds** of every table contributing an admitted mapping to that register.
+  Edition-aware by construction (an inventory edition is always one explicit finite
+  period, never `_default`). Best-effort span for UI hinting **only**, NOT a validity
+  gate (the semantic validator's per-binding `period_outside_state_validity` is the
+  gate).
 
-The `global` deployment (`has_catalog_filter=False`) has **no** index (`None`); the
-catalog endpoints pass through to reg_meta's full universe.
+The `global` deployment (no inventory) has **no** index (`None`); the catalog endpoints
+pass through to reg_meta's full universe.
 
 **Browse and search scoping (#859).** The `CatalogIndex` now also scopes the **catalog
 browse** (`/api/catalog/*`) and **search** (`/api/search`) discovery surfaces for a
@@ -824,9 +818,9 @@ their state lists, same-as metadata, and edges to held FQIDs/columns. Classifica
 graphs remain catalog-global.
 
 *Classification pass-through (decision 2).* Classifications and codes are
-catalog-global. A steward `project_data` holds only variable bindings, so there is no
-holdings basis to scope reference data. Classification routes (`class/…`) and the codes
-arm of search pass through unfiltered for all steward deployments.
+catalog-global. A steward inventory maps only variable columns, so there is no holdings
+basis to scope reference data. Classification routes (`class/…`) and the codes arm of
+search pass through unfiltered for all steward deployments.
 
 *Search.* `/api/search` passes `admitted_variable_fqids | held_register_fqids` as the
 `fqids` allow-list to `reg_meta.queries.search`. This restricts register and variable
@@ -846,21 +840,22 @@ lifetime. `cached_property` coexists with `@dataclass(frozen=True)` because the 
 written into `__dict__` (no `__slots__`), bypassing the frozen `__setattr__`; the
 generated `__hash__` / `__eq__` read declared fields only.
 
-**Steward-load drift downgrade.** Loading a steward catalog runs the same
-`validate_semantic` (below) in **steward-caller** mode. A reg_meta-drift resolution
-failure (`fqid_unresolved` / `value_set_missing` / `period_outside_state_validity` /
-`binding_representation_unknown`) is downgraded error → warning so the deployment
-**boots through** reg_meta evolving out from under a steward's committed catalog: the
-affected bindings are DROPPED from the index (unauthorable until the steward updates)
-and the warnings ride on `/api/context` so the SPA can show a "catalog drift" banner.
-Because the downgrade keeps `result.ok` True, the loader keys on the **warnings list**,
-not `.ok`. A *structural* break in the committed catalog (malformed JSON, an
-unexpected/typo'd field that survives structural but fails model construction) is
-**not** drift — it's a misconfigured deployment, so it fails fast
-(`StewardCatalogError`). A residual *semantic* error that survives the drift downgrades
-(e.g. a still-ambiguous `binding_value_set_version_ambiguous`, which stays an error
-because it's an author-time choice, not drift) also fails the boot — don't admit a
-broken binding to the index and never surface it.
+**Boot-availability vs. drift.** A *structural* break in the committed inventory
+(malformed TOML, an unknown key, a `_default` edition, a §12 one-to-one resolution
+conflict) is a misconfigured deployment, so `load_inventory` fails fast before the DB is
+even opened. reg_meta **drift** is different and must NOT crash startup: a
+`representation = None` mapping whose FQID no longer resolves (`fqid_unresolved`), or
+which reg_meta delivers no state for over the table's edition
+(`period_outside_state_validity`), is DROPPED from the index — unauthorable until the
+steward regenerates — and recorded in `drift_warnings`, which ride on `/api/context` so
+the SPA can show a "catalog drift" banner. An **explicit** representation is trusted
+verbatim by the index build; what checks it against the flavored DB is §12's
+inventory↔DB consistency gate, which runs on the same boot connection right after the
+index is built (see "The deployment's inventory" under the order adapter). The two
+divide by PERIOD: the gate is period-agnostic, so a coordinate the catalog does not name
+at all fails startup there — including the `fqid_unresolved` misses the index just
+recorded — and the `period_outside_state_validity` arm is the drift that actually
+reaches a booted deployment.
 
 Filtered browse responses narrow concept-group members to held bindings/columns, then
 recompute group tags and inherited binding tags from those surviving members. A steward
@@ -872,13 +867,13 @@ hostname, rebuild). `REG_WEBAPP_STEWARD` selects which steward a process serves;
 (the `stewards/` sibling doesn't exist there). SWECOV is the first proving steward and
 stays in-repo while testing the model, but that is not the release distribution shape:
 before v1, extract SWECOV into its own steward repo/system and keep that system copyable
-for later steward deployments. A real filtered steward catalog now ships:
-`stewards/swecov/steward.project_data.json` (column-based admission against the flavored
-reg_meta DB; see `stewards/swecov/README.md` for provenance and coverage), and its
-`data.swecov.se` deployment is wired. Remaining v1 work is the delivery-inventory
-replacement and extraction to the steward-owned system. The SPA catalog-authoring mode
-and a `reg-meta-build steward-diff` CLI are deferred post-v1; see `REFACTOR_SPEC.md`. V1
-deliberately has no generic per-steward extension surface.
+for later steward deployments. A real filtered steward inventory now ships:
+`stewards/swecov/inventory.toml` (column-based admission derived from the delivery
+topology; see `stewards/swecov/README.md` for provenance and coverage), and its
+`data.swecov.se` deployment is wired. Remaining v1 work is extraction to the
+steward-owned system. The SPA catalog-authoring mode and a `reg-meta-build steward-diff`
+CLI are deferred post-v1; see `REFACTOR_SPEC.md`. V1 deliberately has no generic
+per-steward extension surface.
 
 ## Pydantic boundary
 
@@ -1751,11 +1746,12 @@ things:
   `(register_variant, variable FQID, representation)` does not resolve against the DB
   this deployment serves — a mapping that pins no representation still has its binding
   checked at its declared variant. The flavored DB and the committed inventory are cut
-  separately and pre-v1 slug churn is legal, so they CAN drift — and unlike the steward
-  CATALOG above there is no drift downgrade here: a dropped binding merely narrows the
-  browse, while an unresolvable inventory mapping is a holdings claim about a coordinate
-  that does not exist. The rules and the report shape live in `reg_meta/DESIGN.md` →
-  "Consistency gate against the catalog DB (`inventory_check.py`)".
+  separately and pre-v1 slug churn is legal, so they CAN drift — and unlike the catalog
+  INDEX the same inventory builds there is no drift downgrade here: a mapping the index
+  drops for its table's edition merely narrows the browse, while a coordinate the
+  catalog does not name at all is a holdings claim about something that does not exist.
+  The rules and the report shape live in `reg_meta/DESIGN.md` → "Consistency gate
+  against the catalog DB (`inventory_check.py`)".
 - **The download**: the 200 body is `OrderManifest.to_json()` VERBATIM (the handler
   returns a raw `Response`, which FastAPI passes through without re-serializing), so the
   SPA download and `reg-meta order` hand the steward byte-identical files — §12's
@@ -1786,8 +1782,7 @@ every divergence. The common window will never become hidden inheritance, and an
 explicit apply-to-all action will rewrite only sources with an overlap.
 
 Shared `reg_meta` project code still has to absorb the semantic pass (`semantic.py`
-below); `REFACTOR_SPEC.md` §12 tracks that, plus removal of `StewardBootCatalog` and the
-`steward.project_data.json` filter.
+below); `REFACTOR_SPEC.md` §12 tracks that.
 
 **Connection model = per-request open ON ONE THREAD** (the locked cross-thread guard).
 `/validate` and `/order` are `async` only to read the body off the wire; the blocking
@@ -1858,20 +1853,10 @@ defensive backstop (`binding_value_set_version_ambiguous` on ≥2 distinct `valu
 on **one** column) should be unreachable against a clean catalog — the reg_meta build
 enforces one value set per `(variable, variant, period, delivery_column)`.
 
-**Caller context — researcher vs steward.** The `caller` flag drives the level mapping,
-NOT a different rule set. The **researcher** path (`POST /api/project/validate`) keeps
-unresolved-FQID-class codes as blocking **errors** (fix before extract). The
-**steward-catalog load** path (boot) **downgrades** `fqid_unresolved`,
-`value_set_missing`, `period_outside_state_validity`, and
-`binding_representation_unknown` from error → warning, so the deployment boots through
-reg_meta drift (those bindings drop from the index; see the steward section).
-`binding_value_set_version_ambiguous` deliberately stays strict on both paths — it's an
-author-time choice, not drift.
-
 **Onboarding.** Stewards declare a subset of what reg_meta knows; data without an FQID
 can't be authored (no `{display_name + type, no FQID}` escape hatch in v1). New
 variables/registers/classifications onboard via slug-TOML PRs against `reg_meta_build`;
-once the next reg_meta release lands, the steward adds them to their catalog.
+once the next reg_meta release lands, the steward adds them to their inventory.
 
 **Steward catalog filtering — `fqid_outside_steward_catalog` /
 `representation_outside_steward_catalog`.** When a researcher's project references a

@@ -1,15 +1,20 @@
-"""Structural regression guard for the committed SWECOV steward catalog.
+"""Regression guard for the committed SWECOV delivery inventory.
 
-The catalog (`reg_webapp/stewards/swecov/`) is generated against a flavored
-reg_meta DB (see its README). A FULL boot/admission check needs that DB and is
-the maintainer's real-data validation, not a CI fixture — so this guards the
-committed artifact WITHOUT a DB: it must load as a steward, pass structural
-validation, and be self-consistent (well-formed FQIDs, every binding under its
-source's register, a pinned representation, no duplicate bindings). A corrupt or
-schema-drifted regenerate fails here.
+The inventory (`reg_webapp/stewards/swecov/inventory.toml`) is generated against
+a flavored reg_meta DB (see its README). A FULL boot needs that DB and is the
+maintainer's real-data validation, not a CI fixture — so this guards the
+committed artifact with what CI *can* run: it must load as a steward, parse
+through `reg_meta.inventory`'s structural contract (including §12's one-to-one
+resolution invariant), and build the boot admission index.
+
+The index build is the load-bearing part: every SWECOV mapping states an
+explicit `representation`, which IS reg_meta's canonical
+`delivery_column_name`, so the whole 36k-mapping admission set is derived with
+**zero** catalog access. That is why this runs against no DB at all — and why
+booting the deployment costs a TOML parse rather than thousands of resolutions.
 
 The one DB-BACKED test is REFACTOR_SPEC.md §12's inventory ↔ DB consistency
-gate over the committed `inventory.toml`. It carries the `release` marker: the
+gate over the same committed inventory. It carries the `release` marker: the
 flavored DB is a release asset, so the default gate (`-m "not integration and
 not release"`) DESELECTS it rather than skipping it — a deselected test never
 enters the JUnit report, while a skipped one reads as missing evidence. The
@@ -25,110 +30,83 @@ line; this is the maintainer's early warning.
 
 from __future__ import annotations
 
-import json
 import os
 from pathlib import Path
 
 import pytest
 import reg_meta.db
-from reg_meta.inventory import load_inventory
+from reg_meta.inventory import DeliveryInventory, load_inventory
 from reg_meta.inventory_check import check_inventory, unresolved_message
-from reg_schema.project_data import ProjectData
-from reg_schema.structural import validate_structural
+from reg_webapp.catalog_index import build_catalog_index
 
-from reg_webapp.stewards import load_steward
+from reg_webapp.stewards import load_delivery_inventory, load_steward
 
 _STEWARDS_DIR = Path(__file__).resolve().parents[2] / "stewards"
 _SWECOV = _STEWARDS_DIR / "swecov"
 
 
-def test_swecov_steward_toml_loads() -> None:
-    steward = load_steward("swecov", root=_STEWARDS_DIR)
-    assert steward.id == "swecov"
-    assert steward.has_catalog_filter  # ships a steward.project_data.json
+class _NoCatalog:
+    """A catalog that fails the test if the index build touches it."""
+
+    def __getattr__(self, name: str):
+        raise AssertionError(f"index build touched the catalog: {name}")
 
 
 @pytest.fixture(scope="module")
-def project() -> ProjectData:
-    raw = (_SWECOV / "steward.project_data.json").read_text(encoding="utf-8")
-    data = json.loads(raw)
-    result = validate_structural(data)
-    errors = [i for i in result.issues if i.level == "error"]
-    assert not errors, f"structural errors: {[(i.code, i.path) for i in errors]}"
-    return ProjectData.model_validate(data)
+def inventory() -> DeliveryInventory:
+    # Module-scoped: the committed inventory is ~7 MB, so parse it once.
+    return load_inventory(_SWECOV / "inventory.toml")
 
 
-def test_catalog_shape(project: ProjectData) -> None:
-    assert project.steward == "swecov"
-    assert project.sources, "catalog must declare at least one source"
-    assert not project.panels, "a steward catalog is sources-only (no panels)"
+def test_swecov_steward_loads_with_its_inventory() -> None:
+    steward = load_steward("swecov", root=_STEWARDS_DIR)
+    assert steward.id == "swecov"
+    # The named steward's boot read — absent/mis-stewarded would raise here.
+    assert load_delivery_inventory(steward, root=_STEWARDS_DIR) is not None
 
 
-def test_bindings_are_self_consistent(project: ProjectData) -> None:
-    seen: set[tuple[str, str, str | None]] = set()
-    for source in project.sources:
-        coord = source.register_variant.split("/")
-        assert len(coord) == 3, (
-            f"register_variant not 3-part: {source.register_variant}"
-        )
-        reg_prefix = "/".join(coord[:2])
-        assert source.bindings, f"source {source.name} has no bindings"
-        for binding in source.bindings:
-            fqid = binding.variable.split("/")
-            assert len(fqid) == 3, f"binding FQID not 3-part: {binding.variable}"
-            # A binding lives under its source's register (#206 admission coord).
-            assert "/".join(fqid[:2]) == reg_prefix, (
-                f"binding {binding.variable} outside register {reg_prefix}"
-            )
-            # The generator pins the resolved delivery column on every binding —
-            # the load-bearing property that keeps `_default` resolution
-            # unambiguous (no co-existing-column drift).
-            assert binding.representation, (
-                f"binding {binding.variable} missing representation"
-            )
-            key = (source.register_variant, binding.variable, binding.representation)
-            assert key not in seen, f"duplicate binding {key}"
-            seen.add(key)
+def test_inventory_shape(inventory: DeliveryInventory) -> None:
+    assert inventory.steward == "swecov"
+    assert inventory.tables, "inventory must declare at least one table"
 
 
-def test_stale_hreg_grouping_source_is_removed(
-    project: ProjectData,
+def test_every_mapping_pins_its_representation(inventory: DeliveryInventory) -> None:
+    """The generator pins the resolved delivery column on every mapping — the
+    load-bearing property that makes admission exact without a DB round-trip
+    (and keeps the null-representation "concept's single representation" arm
+    unused for this steward)."""
+    unpinned = [
+        f"{table.id}.{column.name}"
+        for table in inventory.tables
+        for column in table.columns
+        for mapping in column.mappings
+        if mapping.representation is None
+    ]
+    assert not unpinned, f"mappings with no representation: {unpinned[:5]}"
+
+
+def test_index_builds_green_with_no_catalog_access(
+    inventory: DeliveryInventory,
 ) -> None:
-    bindings = {
-        (source.register_variant, binding.variable, binding.representation)
-        for source in project.sources
-        for binding in source.bindings
-    }
-    source_names = {source.name for source in project.sources}
+    """Observable behavior 3: the deployment's admission set is derived from the
+    committed inventory alone — non-empty, drift-free, and DB-free."""
+    index = build_catalog_index(inventory, _NoCatalog())
 
-    assert "swecov.hreg-sun-groupings._default" not in source_names
-    assert not any(
-        variant == "swecov/hreg-sun-groupings/_default"
-        or variable.startswith("swecov/hreg-sun-groupings/")
-        for variant, variable, _representation in bindings
-    )
-    assert {
-        (
-            "swecov/adress-sarskilt-boende/_default",
-            "swecov/adress-sarskilt-boende/personnr",
-            "personnr",
-        ),
-        (
-            "swecov/adress-sarskilt-boende/_default",
-            "swecov/adress-sarskilt-boende/utdadr2",
-            "UtdAdr2",
-        ),
-        (
-            "swecov/population/_default",
-            "swecov/population/personnr",
-            "PersonNr",
-        ),
-        (
-            "swecov/population/_default",
-            "swecov/population/indexpop",
-            "IndexPop",
-        ),
-    } <= bindings
+    assert index.drift_warnings == ()
+    assert index.admitted_variable_fqids
+    assert index.held_provider_slugs
+    span = index.catalog_period_span
+    assert span is not None and span[0] <= span[1]
+
+
+def test_known_holdings_are_admitted(inventory: DeliveryInventory) -> None:
+    index = build_catalog_index(inventory, _NoCatalog())
+
+    assert index.admits("swecov/population/personnr", "PersonNr")
+    assert index.admits("swecov/population/indexpop", "IndexPop")
+    assert index.admits("swecov/adress-sarskilt-boende/utdadr2", "UtdAdr2")
+    # The stale hreg-sun-groupings register must stay out of the catalog.
+    assert not index.admits_register("swecov/hreg-sun-groupings")
 
 
 @pytest.fixture(scope="module")
@@ -165,7 +143,7 @@ def flavored_conn():
 
 @pytest.mark.release
 def test_every_inventory_mapping_resolves_against_the_flavored_db(
-    flavored_conn,
+    inventory: DeliveryInventory, flavored_conn
 ) -> None:
     """§12's standing gate over the committed inventory: every mapping's
     `(register_variant, variable FQID, representation)` resolves against the DB
@@ -176,7 +154,5 @@ def test_every_inventory_mapping_resolves_against_the_flavored_db(
     `release`-marked because the flavored DB is a release asset: the default
     gate deselects this test, and `--run-release` with `REG_META_DB` set runs
     it."""
-    findings = check_inventory(
-        load_inventory(_SWECOV / "inventory.toml"), flavored_conn
-    )
+    findings = check_inventory(inventory, flavored_conn)
     assert not findings, unresolved_message(findings)

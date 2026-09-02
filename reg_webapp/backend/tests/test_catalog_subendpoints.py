@@ -198,7 +198,7 @@ def test_steward_graph_narrowing_drops_unheld_representation_edge_columns():
         bindings_by_variant={
             "scb/lisa/individer-15plus": frozenset({(_KON, "BorgNr")})
         },
-        period_range_by_register={"scb/lisa": ("2010", "2014")},
+        period_range_by_register={"scb/lisa": ("2010-01-01", "2014-12-31")},
         drift_warnings=(),
     )
     node = VariableGraphNode(

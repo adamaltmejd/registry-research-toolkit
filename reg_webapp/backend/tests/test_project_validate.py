@@ -20,11 +20,10 @@ classification ``class/sun2020``.
 
 from __future__ import annotations
 
-import json
 from concurrent.futures import ThreadPoolExecutor
 
 import pytest
-from _steward_helpers import IFAU_INVENTORY
+from _steward_helpers import write_steward
 from fastapi.testclient import TestClient
 from reg_webapp.app import create_app
 
@@ -319,52 +318,17 @@ def test_concurrent_validate_no_cross_thread_error(unthrottled_client):
 # The default `client` fixture boots the `global` steward (no index), so this
 # needs its own env-seam client (mirrors test_steward_index.py's seam).
 
-_IFAU_TOML = """\
-id = "ifau"
-name = "IFAU"
-long_name = "Institute for Evaluation of Labour Market and Education Policy"
-hostname = "ifau.example.org"
-"""
-
 
 @pytest.fixture
 def filtered_client(catalog_db, tmp_path, monkeypatch):
-    """A client whose app boots the `ifau` steward with a catalog admitting ONLY
-    `scb/lisa/kon`, so a researcher FQID outside it (`scb/rams/syss`) trips the
-    steward filter."""
-    base = tmp_path / "stewards" / "ifau"
-    base.mkdir(parents=True)
-    (base / "steward.toml").write_text(_IFAU_TOML, encoding="utf-8")
-    (base / "steward.project_data.json").write_text(
-        json.dumps(
-            {
-                "schema_version": "2.0.0",
-                "steward": "ifau",
-                "reg_meta_version": "5.1.0",
-                "name": "ifau-catalog",
-                "sources": [
-                    {
-                        "name": "lisa",
-                        "register_variant": "scb/lisa/individer-15plus",
-                        "period": 2018,
-                        "bindings": [
-                            {
-                                "variable": "scb/lisa/kon",
-                                "type": "categorical",
-                                "value_set": "class/sun2020",
-                            }
-                        ],
-                    }
-                ],
-            }
-        ),
-        encoding="utf-8",
+    """A client whose app boots the `ifau` steward with a delivery inventory
+    admitting ONLY `scb/lisa/kon`, so a researcher FQID outside it
+    (`scb/rams/syss`) trips the steward filter."""
+    stewards = tmp_path / "stewards"
+    write_steward(
+        stewards, "ifau", [("scb/lisa/individer-15plus", "scb/lisa/kon", "Kon", "2018")]
     )
-    # A named steward must ship a delivery inventory or the deployment refuses
-    # to boot (stewards.load_delivery_inventory) — irrelevant to validation,
-    # required to get a client at all.
-    (base / "inventory.toml").write_text(IFAU_INVENTORY, encoding="utf-8")
-    monkeypatch.setenv("REG_WEBAPP_STEWARDS_DIR", str(tmp_path / "stewards"))
+    monkeypatch.setenv("REG_WEBAPP_STEWARDS_DIR", str(stewards))
     monkeypatch.setenv("REG_WEBAPP_STEWARD", "ifau")
     with TestClient(create_app()) as c:
         yield c

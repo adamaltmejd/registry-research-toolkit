@@ -46,8 +46,9 @@ def get_context(request: Request) -> ContextResponse:
     manifest = request.app.state.manifest
     steward = request.app.state.steward
     # The in-memory index (None for the global deployment) carries the
-    # boot-time steward-catalog drift warnings. Surface them so the SPA
-    # can show a "catalog drift" banner; empty for global / an up-to-date catalog.
+    # boot-time inventory-vs-reg_meta drift warnings. Surface them so the SPA
+    # can show a "catalog drift" banner; empty for global / an up-to-date
+    # inventory.
     index = request.app.state.catalog_index
     drift = [] if index is None else index.drift_warnings
     vintage_year = int(manifest["import_date"][:4])

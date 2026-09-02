@@ -12,30 +12,17 @@ DB is (the webapp backend, and any local tool that has loaded reg_meta).
 It emits the same frozen ``reg_schema.ValidationIssue`` shape the other layers
 do — composition is tuple concatenation, no merge semantics. It takes a
 ``Catalog`` (never opens a connection): A5.2b-ii's ``POST /api/project/validate``
-calls it per-request with an in-handler connection; the steward catalog load
-(``stewards.py``) calls it at boot with the boot connection.
+calls it per-request with an in-handler connection.
 
-**Caller context (researcher-project vs steward-catalog).** The
-``caller`` flag drives the level mapping. For the *researcher* path
-(``POST /api/project/validate``) unresolved FQIDs are blocking ``error``s. For
-the *steward-catalog load* path (FastAPI startup) ``fqid_unresolved``,
-``value_set_missing``, ``period_outside_state_validity``, and
-``binding_representation_unknown`` are downgraded ``error`` → ``warning`` so the
-deployment doesn't fail to start when reg_meta evolves out from under a steward's
-committed catalog; the affected bindings are then dropped from the in-memory
-index (``catalog_index.py``), but ``ok`` stays True, so the caller must inspect
-the warnings, not just ``ok``.
-
-The *researcher* path additionally runs the COLUMN-based steward admission
-check (#206) when an ``index`` (the loaded ``CatalogIndex``) is supplied: a
-RESOLVED FQID whose concept the steward holds no column of emits
+There is ONE caller: the researcher path (``POST /api/project/validate``), where
+an unresolved FQID is a blocking ``error``. It runs the COLUMN-based steward
+admission check (#206) when an ``index`` (the loaded ``CatalogIndex``) is
+supplied: a RESOLVED FQID whose concept the steward holds no column of emits
 ``fqid_outside_steward_catalog``, and one whose RESOLVED delivery column the
 steward does not hold emits ``representation_outside_steward_catalog`` — both
 non-blocking ``warning``s (the column is real reg_meta-wide but this filtered
-deployment does not supply it). The steward-catalog load path passes NO
-``index`` (it BUILDS the index from its own validated project afterward), and
-the ``global`` deployment's ``index`` is ``None`` (no filter), so neither ever
-emits the codes.
+deployment does not supply it). The ``global`` deployment's ``index`` is ``None``
+(no filter), so it never emits the codes.
 
 Inputs are the ``reg_schema`` Pydantic models (``ProjectData`` / ``Source`` /
 ``Binding``), which the webapp constructs only AFTER ``validate_structural``
@@ -86,72 +73,42 @@ if TYPE_CHECKING:
 
     from reg_webapp.catalog_index import CatalogIndex
 
-Caller = Literal["researcher", "steward"]
-
-# Caller-context: these codes downgrade error → warning on the
-# steward-catalog load path so a deployment boots through reg_meta drift (the
-# affected bindings drop from the in-memory index instead of crashing startup).
-# The researcher path keeps them as errors. The split is a level *mapping* by
-# caller, NOT a different rule set (same codes, different level mapping).
-# `binding_representation_unknown` belongs here for the same reason as
-# `period_outside_state_validity`: a steward pinned a representation that a newer
-# reg_meta build no longer delivers as a column — drift, not an author error.
-# `binding_value_set_version_ambiguous` deliberately stays strict (an author-time
-# choice, not drift).
-_STEWARD_DOWNGRADED: frozenset[str] = frozenset(
-    {
-        "fqid_unresolved",
-        "value_set_missing",
-        "period_outside_state_validity",
-        "binding_representation_unknown",
-    }
-)
-
 
 def validate_semantic(
     project: ProjectData,
     catalog: Catalog,
     *,
-    caller: Caller,
     index: CatalogIndex | None = None,
 ) -> ValidationResult:
     """Run semantic rules over ``project`` against ``catalog``.
 
     Walks ``sources[*].register_variant``, each ``sources[*].bindings[*]``
     (``variable`` + ``value_set``), resolving against the live ``Catalog``.
-    Returns a ``ValidationResult`` whose ``issues`` carry the codes at the
-    level dictated by ``caller`` (see module docstring). Never opens a connection
-    — the caller owns the ``Catalog``'s lifetime.
+    Returns a ``ValidationResult`` carrying the issues (see module docstring).
+    Never opens a connection — the caller owns the ``Catalog``'s lifetime.
 
-    ``index`` is the loaded steward ``CatalogIndex`` (researcher path only): when
-    supplied, a RESOLVED binding outside it yields ``fqid_outside_steward_catalog``
-    (no column of the concept held) or ``representation_outside_steward_catalog``
-    (concept held, but not the binding's resolved column) — both warnings.
-    ``None`` (the steward-load path and the ``global`` deployment) never emits
-    them.
+    ``index`` is the loaded steward ``CatalogIndex``: when supplied, a RESOLVED
+    binding outside it yields ``fqid_outside_steward_catalog`` (no column of the
+    concept held) or ``representation_outside_steward_catalog`` (concept held,
+    but not the binding's resolved column) — both warnings. ``None`` (the
+    ``global`` deployment) never emits them.
     """
     issues: list[ValidationIssue] = []
     for s_idx, source in enumerate(project.sources):
-        _check_source(source, s_idx, catalog, caller, index, issues)
+        _check_source(source, s_idx, catalog, index, issues)
     return ValidationResult(issues=tuple(issues))
 
 
 def _issue(
     code: str,
-    base_level: Literal["error", "warning", "info"],
-    caller: Caller,
+    level: Literal["error", "warning", "info"],
     path: str,
     message: str,
     *,
     successor_fqid: str | None = None,
 ) -> ValidationIssue:
-    """Build an issue, applying the steward error→warning downgrade.
-
-    Only the three ``_STEWARD_DOWNGRADED`` codes flip, and only on the steward
-    path; ``info`` issues and the researcher path pass through unchanged."""
-    level = base_level
-    if caller == "steward" and base_level == "error" and code in _STEWARD_DOWNGRADED:
-        level = "warning"
+    """Positional shorthand for a ``ValidationIssue``, code first — the order the
+    rules below read in."""
     return ValidationIssue(
         level=level,
         code=code,
@@ -165,7 +122,6 @@ def _check_source(
     source: Source,
     s_idx: int,
     catalog: Catalog,
-    caller: Caller,
     index: CatalogIndex | None,
     issues: list[ValidationIssue],
 ) -> None:
@@ -178,21 +134,16 @@ def _check_source(
     # provider/register prefix to a known register and the variant slug to a
     # `register_variant` row via `list_variants` (the variant browse axis). A
     # missing register OR variant is `fqid_unresolved`.
-    variant_ok = _check_register_variant(
-        source.register_variant, base, catalog, caller, issues
-    )
+    variant_ok = _check_register_variant(source.register_variant, base, catalog, issues)
 
     for b_idx, binding in enumerate(source.bindings):
-        _check_binding(
-            binding, source, base, b_idx, variant_ok, catalog, caller, index, issues
-        )
+        _check_binding(binding, source, base, b_idx, variant_ok, catalog, index, issues)
 
 
 def _check_register_variant(
     register_variant: str,
     base: str,
     catalog: Catalog,
-    caller: Caller,
     issues: list[ValidationIssue],
 ) -> bool:
     """Resolve a `<provider>/<register>/<variant>` coordinate. Returns True when
@@ -208,7 +159,6 @@ def _check_register_variant(
             _issue(
                 "fqid_unresolved",
                 "error",
-                caller,
                 path,
                 f"register_variant {register_variant!r} is not a 3-part coordinate",
             )
@@ -223,7 +173,6 @@ def _check_register_variant(
             _issue(
                 "fqid_unresolved",
                 "error",
-                caller,
                 path,
                 f"register_variant {register_variant!r} resolves to no register "
                 "or no variants in reg_meta",
@@ -235,7 +184,6 @@ def _check_register_variant(
             _issue(
                 "fqid_unresolved",
                 "error",
-                caller,
                 path,
                 f"variant {variant!r} is not a known variant of "
                 f"{provider}/{register} (known: {sorted(variant_slugs)})",
@@ -475,7 +423,6 @@ def _check_binding(
     b_idx: int,
     variant_ok: bool,
     catalog: Catalog,
-    caller: Caller,
     index: CatalogIndex | None,
     issues: list[ValidationIssue],
 ) -> None:
@@ -494,7 +441,6 @@ def _check_binding(
             _issue(
                 "fqid_unresolved",
                 "error",
-                caller,
                 var_path,
                 f"binding variable {binding.variable!r} is not a parseable FQID",
             )
@@ -507,7 +453,6 @@ def _check_binding(
             _issue(
                 "fqid_unresolved",
                 "error",
-                caller,
                 var_path,
                 f"binding variable {binding.variable!r} resolves to no variable "
                 "in reg_meta",
@@ -516,10 +461,10 @@ def _check_binding(
         # The variable doesn't resolve, so the PERIOD probe is meaningless — skip
         # it. The value_set (an independent `class/<slug>` FQID) can still be broken
         # on its own, so validate it before returning.
-        _check_value_set(binding, bbase, catalog, caller, issues)
+        _check_value_set(binding, bbase, catalog, issues)
         return
 
-    _check_binding_hints(binding, source, var_path, resolved, caller, issues)
+    _check_binding_hints(binding, source, var_path, resolved, issues)
 
     resolved_columns = _check_binding_period(
         binding,
@@ -529,7 +474,6 @@ def _check_binding(
         variant_ok,
         parsed,
         catalog,
-        caller,
         issues,
     )
     # STEWARD CATALOG FILTER (#227, column-based per #206). The FQID resolves
@@ -544,9 +488,9 @@ def _check_binding(
     # column-holdings semantics warning on it is correct, not a keying artifact).
     if index is not None:
         _check_steward_admission(
-            binding.variable, var_path, resolved_columns, index, caller, issues
+            binding.variable, var_path, resolved_columns, index, issues
         )
-    _check_value_set(binding, bbase, catalog, caller, issues)
+    _check_value_set(binding, bbase, catalog, issues)
 
 
 def _check_binding_hints(
@@ -554,7 +498,6 @@ def _check_binding_hints(
     source: Source,
     var_path: str,
     resolved,
-    caller: Caller,
     issues: list[ValidationIssue],
 ) -> None:
     """Non-blocking semantic hints that require resolved variable metadata."""
@@ -563,7 +506,6 @@ def _check_binding_hints(
             _issue(
                 "deprecated_traversal",
                 "info",
-                caller,
                 var_path,
                 f"binding {binding.variable!r} resolves to a deprecated catalog "
                 "variable; prefer a current successor when one is available",
@@ -586,7 +528,6 @@ def _check_binding_hints(
             _issue(
                 "variable_replaced",
                 "info",
-                caller,
                 var_path,
                 f"binding {binding.variable!r} has replacement {target!r}{effective} "
                 f"by requested period {period_display(source.period)}",
@@ -603,7 +544,6 @@ def _check_binding_period(
     variant_ok: bool,
     parsed: Fqid,
     catalog: Catalog,
-    caller: Caller,
     issues: list[ValidationIssue],
 ) -> frozenset[str | None] | None:
     """The binding must resolve to a `variable_state` at the source's
@@ -715,7 +655,6 @@ def _check_binding_period(
                     _issue(
                         "range_period_partially_covered",
                         "info",
-                        caller,
                         var_path,
                         f"binding {binding.variable!r} covers only part of "
                         f"requested range {period_display(segment)} at "
@@ -733,7 +672,6 @@ def _check_binding_period(
                 _issue(
                     "period_outside_state_validity",
                     "error",
-                    caller,
                     var_path,
                     f"binding {binding.variable!r} has no state covering "
                     f"{source.register_variant} at period "
@@ -764,7 +702,6 @@ def _check_binding_period(
                 _issue(
                     "binding_representation_unknown",
                     "error",
-                    caller,
                     var_path,
                     f"binding {binding.variable!r} representation "
                     f"{binding.representation!r} is not a delivery column at "
@@ -819,7 +756,6 @@ def _check_binding_period(
                 _issue(
                     "binding_state_drifts_within_period",
                     "info",
-                    caller,
                     var_path,
                     f"binding {binding.variable!r} representation "
                     f"{binding.representation!r} covers only part of period "
@@ -841,7 +777,6 @@ def _check_binding_period(
                     _issue(
                         "binding_state_drifts_within_period",
                         "info",
-                        caller,
                         var_path,
                         f"binding {binding.variable!r} representation "
                         f"{binding.representation!r} has no state at period "
@@ -882,7 +817,6 @@ def _check_binding_period(
             _issue(
                 "binding_value_set_version_ambiguous",
                 "error",
-                caller,
                 var_path,
                 f"binding {binding.variable!r} resolves to {len(coexisting)} "
                 f"co-existing representations {coexisting} at "
@@ -911,7 +845,6 @@ def _check_binding_period(
             _issue(
                 "binding_value_set_version_ambiguous",
                 "error",
-                caller,
                 var_path,
                 f"binding {binding.variable!r} resolves to several co-delivered "
                 f"value sets {sorted(labels.values())} on one column at "
@@ -932,7 +865,6 @@ def _check_binding_period(
             _issue(
                 "binding_state_drifts_within_period",
                 "info",
-                caller,
                 var_path,
                 f"binding {binding.variable!r} spans {len(states)} states across a "
                 f"transition within period {period_display(source.period)}",
@@ -960,7 +892,6 @@ def _check_steward_admission(
     var_path: str,
     resolved_columns: frozenset[str | None] | None,
     index: CatalogIndex,
-    caller: Caller,
     issues: list[ValidationIssue],
 ) -> None:
     """Column-based steward admission (#206). Two distinct findings, both
@@ -983,7 +914,6 @@ def _check_steward_admission(
             _issue(
                 "fqid_outside_steward_catalog",
                 "warning",
-                caller,
                 var_path,
                 f"binding {variable!r} resolves in reg_meta but is outside "
                 "this deployment's steward catalog — the steward does not supply it",
@@ -1000,7 +930,6 @@ def _check_steward_admission(
             _issue(
                 "representation_outside_steward_catalog",
                 "warning",
-                caller,
                 var_path,
                 f"binding {variable!r} resolves to representation "
                 f"{_format_columns(missing)}, which this steward does not supply — "
@@ -1013,7 +942,6 @@ def _check_value_set(
     binding: Binding,
     bbase: str,
     catalog: Catalog,
-    caller: Caller,
     issues: list[ValidationIssue],
 ) -> None:
     """A binding's `value_set` (a `class/<slug>` FQID) must resolve to a
@@ -1028,7 +956,6 @@ def _check_value_set(
             _issue(
                 "value_set_missing",
                 "error",
-                caller,
                 vs_path,
                 f"value_set {binding.value_set!r} is not a parseable FQID",
             )
@@ -1041,7 +968,6 @@ def _check_value_set(
             _issue(
                 "value_set_missing",
                 "error",
-                caller,
                 vs_path,
                 f"value_set {binding.value_set!r} resolves to no classification "
                 "in reg_meta",

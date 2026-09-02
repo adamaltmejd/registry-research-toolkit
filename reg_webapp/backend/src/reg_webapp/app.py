@@ -24,6 +24,7 @@ from reg_meta.catalog import Catalog
 from reg_meta.errors import RegMetaError
 
 from . import __version__
+from .catalog_index import build_catalog_index
 from .limits import (
     RATE_LIMIT_PER_MINUTE,
     BodySizeLimitMiddleware,
@@ -31,12 +32,7 @@ from .limits import (
 )
 from .middleware import ETagMiddleware
 from .routes import catalog, context, docs, project, search, stats
-from .stewards import (
-    check_delivery_inventory,
-    load_catalog_index,
-    load_delivery_inventory,
-    load_steward,
-)
+from .stewards import check_delivery_inventory, load_delivery_inventory, load_steward
 
 if TYPE_CHECKING:
     from collections.abc import AsyncIterator
@@ -72,14 +68,14 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     # misconfigured deployment, and doing it first means that raise can't leak the
     # just-opened connection.
     steward = load_steward()
-    # The order materializer's physical delivery topology, read ONCE at boot
-    # (an authored file, no DB). `None` is REFACTOR_SPEC.md §12's
-    # global-deployment fallback, which `materialize_order` takes directly —
-    # see routes/project.py `/order`. A NAMED steward has no fallback: a
-    # missing, malformed or mis-stewarded inventory raises here, failing startup
-    # rather than blocking every researcher's order on a healthy-looking server.
-    # Read BEFORE the connection opens, for the same reason `load_steward` is:
-    # DB-free, so that raise can't leak a just-opened connection.
+    # The steward's holdings statement, read ONCE at boot (an authored file, no
+    # DB) and BEFORE the connection opens, so a misconfigured deployment raises
+    # without a connection to leak. It is both the catalog filter and the order
+    # materializer's delivery topology. `None` is REFACTOR_SPEC.md §12's
+    # global-deployment fallback, which `materialize_order` takes directly — see
+    # routes/project.py `/order`. A NAMED steward has no fallback: a missing,
+    # malformed or mis-stewarded inventory raises here, failing startup rather
+    # than blocking every researcher's order on a healthy-looking server.
     inventory = load_delivery_inventory(steward)
     conn = reg_meta.db.open_db(db_path)
     try:
@@ -88,18 +84,18 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
         # connection, BEFORE it closes. Boot is single-threaded, so the
         # per-request open-a-fresh-conn rule (which guards the sync-handler
         # threadpool) does NOT apply here — reusing the boot conn is correct.
-        # A reg_meta-drift'd steward catalog still BOOTS: the steward-mode
-        # downgrade (see DESIGN.md → Semantic validation (semantic.py)) turns
-        # unresolved FQIDs into warnings, drops the
-        # affected bindings from the index, and surfaces the drift on
-        # /api/context — it does NOT crash startup. `None` for the global
-        # deployment (no filter, full universe).
-        catalog_index = load_catalog_index(steward, Catalog(conn))
+        # An inventory mapping reg_meta has drifted out from under still BOOTS:
+        # it drops from the index and surfaces on /api/context as a drift
+        # warning, it does NOT crash startup. `None` for the global deployment
+        # (no inventory → no filter, full universe).
+        catalog_index = (
+            None if inventory is None else build_catalog_index(inventory, Catalog(conn))
+        )
         # §12's inventory ↔ DB consistency gate, on the same boot connection:
         # a steward deployment must never SERVE an inventory this DB cannot
-        # resolve. Unlike the steward catalog above there is no drift
-        # downgrade — an unresolvable mapping is a holdings claim about a
-        # coordinate that does not exist, so it fails startup.
+        # resolve. Unlike the index build above there is no drift downgrade —
+        # an unresolvable coordinate is a holdings claim about something that
+        # does not exist, so it fails startup.
         if inventory is not None:
             check_delivery_inventory(steward, inventory, conn)
     finally:

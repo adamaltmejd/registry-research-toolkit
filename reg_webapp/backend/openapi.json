@@ -378,7 +378,7 @@
         "type": "object"
       },
       "CatalogDriftWarning": {
-        "description": "One boot-time steward-catalog drift warning.\n\nEmitted when the steward's committed ``steward.project_data.json`` references\nan FQID reg_meta no longer admits: the steward-mode semantic validator\ndowngrades the miss to a warning, the binding drops from the in-memory index,\nand this carries the warning to the SPA so it can show a \"catalog drift\"\nbanner. ``code`` is the ValidationIssue code (``fqid_unresolved`` /\n``value_set_missing`` / ``period_outside_state_validity``); ``path`` is the\nJSON pointer into the steward catalog. Always empty for the ``global``\ndeployment (no filter).",
+        "description": "One boot-time steward-catalog drift warning.\n\nEmitted when the steward's committed ``inventory.toml`` states a coordinate\nreg_meta no longer admits: the mapping drops from the in-memory index and\nthis carries the miss to the SPA so it can show a \"catalog drift\" banner.\n``code`` is ``fqid_unresolved`` (the variable resolves to nothing) or\n``period_outside_state_validity`` (it resolves, but reg_meta delivers no\nstate over the table's edition); ``path`` locates the offending\n``table[\u2026].column[\u2026]`` in the inventory. Always empty for the ``global``\ndeployment (no inventory, no filter).",
         "properties": {
           "code": {
             "title": "Code",

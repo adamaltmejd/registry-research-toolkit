@@ -54,11 +54,9 @@ def semantic_issues(
     catalog: Catalog,
     index: CatalogIndex | None,
 ) -> list[ValidationIssue]:
-    """The §6.8.3 reg_meta-backed semantic layer (researcher caller). Takes an
+    """The §6.8.3 reg_meta-backed semantic layer. Takes an
     already-built ``ProjectData`` (the caller owns the model-build error policy)
     and a live ``Catalog`` (the caller owns the connection lifetime). ``index`` is
     the deployment's steward ``CatalogIndex`` (``None`` for ``global``), threaded in
     for the column-based steward-admission warnings."""
-    return list(
-        validate_semantic(project, catalog, caller="researcher", index=index).issues
-    )
+    return list(validate_semantic(project, catalog, index=index).issues)

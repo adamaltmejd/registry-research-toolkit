@@ -22,7 +22,7 @@ from __future__ import annotations
 import json
 
 import pytest
-from _steward_helpers import CLEAN_SOURCES, write_global, write_steward
+from _steward_helpers import CLEAN_HOLDINGS, write_global, write_steward
 from fastapi.testclient import TestClient
 from reg_meta.order import OrderManifest
 from reg_webapp.app import create_app
@@ -95,7 +95,7 @@ def test_named_steward_without_an_inventory_fails_at_boot(
     deferred to, and paid by, each researcher in turn. So it fails at boot,
     naming the file to author (fail fast, like ``load_steward``'s own checks)."""
     stewards = tmp_path / "stewards"
-    write_steward(stewards, "ifau", CLEAN_SOURCES, inventory=False)
+    write_steward(stewards, "ifau", CLEAN_HOLDINGS, inventory=False)
     monkeypatch.setenv("REG_WEBAPP_STEWARDS_DIR", str(stewards))
     monkeypatch.setenv("REG_WEBAPP_STEWARD", "ifau")
 
@@ -180,7 +180,7 @@ def test_named_steward_with_an_unresolvable_inventory_fails_at_boot(
     is pinned by ``reg_meta/tests/test_inventory_check.py``; what belongs here
     is that boot RUNS it and fails."""
     stewards = tmp_path / "stewards"
-    write_steward(stewards, "ifau", CLEAN_SOURCES)
+    write_steward(stewards, "ifau", CLEAN_HOLDINGS)
     (stewards / "ifau" / "inventory.toml").write_text(
         STRANDED_INVENTORY, encoding="utf-8"
     )

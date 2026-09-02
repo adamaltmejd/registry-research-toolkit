@@ -826,14 +826,14 @@ export interface components {
          * CatalogDriftWarning
          * @description One boot-time steward-catalog drift warning.
          *
-         *     Emitted when the steward's committed ``steward.project_data.json`` references
-         *     an FQID reg_meta no longer admits: the steward-mode semantic validator
-         *     downgrades the miss to a warning, the binding drops from the in-memory index,
-         *     and this carries the warning to the SPA so it can show a "catalog drift"
-         *     banner. ``code`` is the ValidationIssue code (``fqid_unresolved`` /
-         *     ``value_set_missing`` / ``period_outside_state_validity``); ``path`` is the
-         *     JSON pointer into the steward catalog. Always empty for the ``global``
-         *     deployment (no filter).
+         *     Emitted when the steward's committed ``inventory.toml`` states a coordinate
+         *     reg_meta no longer admits: the mapping drops from the in-memory index and
+         *     this carries the miss to the SPA so it can show a "catalog drift" banner.
+         *     ``code`` is ``fqid_unresolved`` (the variable resolves to nothing) or
+         *     ``period_outside_state_validity`` (it resolves, but reg_meta delivers no
+         *     state over the table's edition); ``path`` locates the offending
+         *     ``table[…].column[…]`` in the inventory. Always empty for the ``global``
+         *     deployment (no inventory, no filter).
          */
         CatalogDriftWarning: {
             /** Code */
