@@ -384,9 +384,9 @@ deferred to 8d (which runs **after** 8c): if 8a **rebuilt** the main DB it is al
 this release's draft (`reg_meta/vX.Y.Z`); if 8a is **copying it forward**, pull it from
 the copy-forward source `reg_meta/v<prev>` instead — it is not on the draft yet. Either
 way the base is a fetched file, not 8a's temp dir. It is the same flavored DB step 11
-regenerates the steward catalog against — 8c builds it from the release's main asset
-**before publish**, step 11 from the published release after. Checkpoint WAL→DELETE
-(self-contained single file, same invariant as 8a):
+regenerates the steward delivery inventory against — 8c builds it from the release's
+main asset **before publish**, step 11 from the published release after. Checkpoint
+WAL→DELETE (self-contained single file, same invariant as 8a):
 
 ```sh
 set -euo pipefail
@@ -505,36 +505,39 @@ change can strand it silently until this gate. Fix the test on main and re-valid
 If the package has no publish workflow, report the release is done after the tag is
 created.
 
-### 11. Refresh steward catalogs (reg_meta releases)
+### 11. Refresh steward delivery inventories (reg_meta releases)
 
-reg_meta only, and **after** the release is published and deployment is monitored.
-Steward catalogs are built against the reg_meta DB, so a new reg_meta release can drift
-any committed `reg_webapp/stewards/<id>/steward.project_data.json` whose
-`reg_meta_version` predates the new tag (slug churn, new content, overlap fixes). The
-webapp boots through the drift, so this is coverage hygiene — regenerate the stale
-catalogs so they track the just-published release.
+reg_meta only, and **after** the release is published and deployment is monitored. A
+steward's committed delivery inventory (`reg_webapp/stewards/<id>/inventory.toml`, the
+§12 order-boundary artifact) maps holdings to catalog coordinates, so a new reg_meta
+release can strand its mappings (slug churn, new content, overlap fixes). Unlike the
+retired `steward.project_data.json`, the inventory carries **no version stamp and no
+staleness criterion — regenerate unconditionally** for every steward that has one
+(decision 2026-09-02: regeneration is cheap and deterministic, so an always-run beats a
+staleness check nobody maintains). This is not optional hygiene: a named-steward
+deployment **fails at boot** on an inventory its DB cannot resolve
+(`reg_meta.inventory_check`), so a stranded inventory blocks the next deploy.
 
-**Why after publish (not before):** a steward catalog is a `reg_webapp` **deploy**
-artifact, not part of the tagged PyPI / DB-asset release. It is **image-affecting** —
+**Why after publish (not before):** the inventory is a `reg_webapp` **deploy** artifact,
+not part of the tagged PyPI / DB-asset release. It is **image-affecting** —
 `.github/workflows/container-build.yml` watches `reg_webapp/stewards/**`, and the
 container bakes the DB asset of the **newest *published*** `reg_meta/v*` release (it
-resolves `gh release list … reg_meta/v*`, asset-blind by newest tag). So the catalog
-must be generated against the **published** release's shipped asset. Pushing the
-regenerated catalog *before* the new release is published would deploy the new catalog
-against the **old** baked DB — inconsistent prod (catalog references content the baked
-DB lacks) until a later dispatch rebuilds against the new asset. Publishing first, then
-refreshing, keeps the deployed catalog and baked DB in lockstep.
+resolves `gh release list … reg_meta/v*`, asset-blind by newest tag). So the inventory
+must be generated against the **published** release's shipped asset. Pushing a
+regenerated inventory *before* the new release is published would deploy it against the
+**old** baked DB — and the boot-time consistency gate turns that inconsistency into a
+refused deploy. Publishing first, then refreshing, keeps the deployed inventory and
+baked DB in lockstep.
 
 Land the regen as its **own commit pushed to `origin/main`** — separate from the
 version-bump commit, which was already tagged in step 7. `origin/main` advancing past
-the tag is expected and harmless; the catalog ships on the next webapp deploy.
+the tag is expected and harmless; the inventory ships on the next webapp deploy.
 
-Loop over **every** `reg_webapp/stewards/*/steward.project_data.json` (do not
-special-case any one steward); for each whose `reg_meta_version` is older than the new
-`reg_meta/vX.Y.Z`:
+For **every** `reg_webapp/stewards/*/inventory.toml` (do not special-case any one
+steward; today only swecov has one):
 
-- **download the steward's shipped flavored asset** (not a local rebuild) so the catalog
-  matches exactly what the container bakes — for swecov that is
+- **download the steward's shipped flavored asset** (not a local rebuild) so the
+  inventory matches exactly what the container bakes — for swecov that is
   `reg_meta_swecov.db.zst`, the very file 8c uploaded and `build-swecov-image` bakes as
   `data.swecov.se`'s DB. Generating against a local `extend-db` rebuild re-introduces
   the drift this asset exists to prevent: the untracked `flavor_inventory.json` can
@@ -550,27 +553,40 @@ special-case any one steward); for each whose `reg_meta_version` is older than t
   zstd -d "$base_dir/reg_meta_swecov.db.zst" -o "$base_dir/reg_meta.db"
   ```
 
-- regenerate the catalog per `reg_webapp/stewards/<id>/README.md` **against that
-  flavored DB** (`--db "$base_dir/reg_meta.db"`) so its `reg_meta_version` records the
-  published `reg_meta/vX.Y.Z`. The shipped asset already carries the steward's flavor
-  providers, so **no `extend-db` overlay is needed** — dropping that local step is
-  exactly how using the shipped asset removes the drift risk. **Pass the release tag to
-  the generator explicitly** — swecov's `build_catalog.py steward` takes a required
-  `--reg-meta-version reg_meta/vX.Y.Z` that stamps that field; older copies defaulted it
-  to a fixed tag and **silently downgraded** the stamp (caught in 0.25.0). And when you
-  run from a worktree, pass `--out <this-checkout>/reg_webapp/stewards/<id>` — the
-  generator's default output dir is its own repo root (the main checkout), not the
-  worktree, so the regen would otherwise land outside your release branch;
+- regenerate the inventory **against that flavored DB** — for swecov, from
+  `reg_meta_build/input_data/swecov/` (the generator is tracked; its holdings CSV is
+  confidential and maintainer-local):
 
-- review the coverage/binding diff (catalog size, representation pins, co-delivery
-  prune) before accepting it;
+  ```sh
+  uv run python build_catalog.py --csv <holdings CSV> --db "$base_dir/reg_meta.db" inventory
+  ```
 
-- commit the regenerated catalog(s) as their own commit, `git push origin HEAD:main`,
-  and verify it landed on `origin/main`.
+  The emitter re-reads the committed `inventory_overlay.toml` (the curation policy —
+  never regenerated, only hand-curated) and rewrites `inventory.toml`. When you run from
+  a worktree, make sure the output lands in **that worktree's**
+  `reg_webapp/stewards/<id>/` — the generator's default output dir is its own repo root
+  (the main checkout), not the worktree;
 
-The catalog generator and its confidential inputs are untracked/maintainer-local, so in
-a non-maintainer or CI environment they are absent — **skip with a note** when they are.
-The staleness alert then tracks the residual drift until a maintainer regenerates.
+- **prove the regen against the shipped asset** with the §12 consistency pytest — the
+  same check the deployment runs at boot:
+
+  ```sh
+  REG_META_DB="$base_dir" uv run python -m pytest --run-release reg_webapp/backend/tests/test_steward_swecov.py
+  ```
+
+  A failure means the release stranded coordinates the mechanical regen cannot fix —
+  slug renames needing `inventory_overlay.toml` curation. **Curate before pushing**: a
+  stranded inventory on main makes the next swecov deploy fail at boot, by design;
+
+- review the diff (table/edition/mapping counts, unmapped deltas) before accepting it;
+
+- commit the regenerated inventory(ies) as their own commit,
+  `git push origin HEAD:main`, and verify it landed on `origin/main`.
+
+The generator is tracked, but its holdings CSV inputs are untracked/maintainer-local, so
+in a non-maintainer or CI environment they are absent — **skip with a note** when they
+are. The boot-time consistency gate then blocks any swecov deploy until a maintainer
+regenerates.
 
 ## Error recovery
 
