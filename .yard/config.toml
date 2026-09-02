@@ -344,4 +344,8 @@ build_artifacts = [
   ".hypothesis",
   "reg_webapp/frontend/node_modules",
   "reg_webapp/frontend/dist",
+  # svelte-check --tsgo emission cache, left by an in-clone `bun run check`
+  # (frontend/.gitignore matches the directory: `.svelte-check/`). First
+  # tripped a Y-29/4 retarget.
+  "reg_webapp/frontend/.svelte-check",
 ]
