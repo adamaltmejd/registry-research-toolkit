@@ -31,7 +31,12 @@ from .limits import (
 )
 from .middleware import ETagMiddleware
 from .routes import catalog, context, docs, project, search, stats
-from .stewards import load_catalog_index, load_delivery_inventory, load_steward
+from .stewards import (
+    check_delivery_inventory,
+    load_catalog_index,
+    load_delivery_inventory,
+    load_steward,
+)
 
 if TYPE_CHECKING:
     from collections.abc import AsyncIterator
@@ -67,6 +72,15 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     # misconfigured deployment, and doing it first means that raise can't leak the
     # just-opened connection.
     steward = load_steward()
+    # The order materializer's physical delivery topology, read ONCE at boot
+    # (an authored file, no DB). `None` is REFACTOR_SPEC.md §12's
+    # global-deployment fallback, which `materialize_order` takes directly —
+    # see routes/project.py `/order`. A NAMED steward has no fallback: a
+    # missing, malformed or mis-stewarded inventory raises here, failing startup
+    # rather than blocking every researcher's order on a healthy-looking server.
+    # Read BEFORE the connection opens, for the same reason `load_steward` is:
+    # DB-free, so that raise can't leak a just-opened connection.
+    inventory = load_delivery_inventory(steward)
     conn = reg_meta.db.open_db(db_path)
     try:
         manifest = reg_meta.db.get_manifest(conn)
@@ -81,6 +95,13 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
         # /api/context — it does NOT crash startup. `None` for the global
         # deployment (no filter, full universe).
         catalog_index = load_catalog_index(steward, Catalog(conn))
+        # §12's inventory ↔ DB consistency gate, on the same boot connection:
+        # a steward deployment must never SERVE an inventory this DB cannot
+        # resolve. Unlike the steward catalog above there is no drift
+        # downgrade — an unresolvable mapping is a holdings claim about a
+        # coordinate that does not exist, so it fails startup.
+        if inventory is not None:
+            check_delivery_inventory(steward, inventory, conn)
     finally:
         conn.close()
     if missing := [key for key in _REQUIRED_MANIFEST_KEYS if key not in manifest]:
@@ -90,13 +111,7 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     app.state.manifest = manifest
     app.state.steward = steward
     app.state.catalog_index = catalog_index
-    # The order materializer's physical delivery topology, read ONCE at boot
-    # (an authored file, no DB). `None` is REFACTOR_SPEC.md §12's
-    # global-deployment fallback, which `materialize_order` takes directly —
-    # see routes/project.py `/order`. A NAMED steward has no fallback: a
-    # missing, malformed or mis-stewarded inventory raises here, failing startup
-    # rather than blocking every researcher's order on a healthy-looking server.
-    app.state.inventory = load_delivery_inventory(steward)
+    app.state.inventory = inventory
     # The catalog routes open a FRESH read-only connection PER REQUEST from this
     # boot-resolved path (the connection model is locked: a shared sqlite3 conn
     # isn't safe across FastAPI's sync-handler threadpool). The schema was

@@ -763,16 +763,53 @@ that list is the maintainer's worklist). Structurally empty input is rejected to
 inventory declares at least one table, and a table at least one column. This file is the
 steward's authoritative holdings statement, so an empty one is a mis-generated or
 half-authored file, never a claim to deliver nothing; accepting it would silently zero
-out admission, coverage, and browse unions. Inventory ↔ reg_meta DB consistency (does
-each mapping's `(register_variant, variable, representation)` resolve against the
-flavored DB?) is a standing build/CI gate, deliberately NOT part of this structural pass
-— the validator is pure domain code with no DB access.
+out admission, coverage, and browse unions. Inventory ↔ reg_meta DB consistency is
+deliberately NOT part of this structural pass — the validator is pure domain code with
+no DB access; it is `inventory_check.py` below.
 
 The models are `reg_schema`-free: the contract needs only reg_meta's own period grammar
 and FQID parser. (`order.py` takes the `reg_meta → reg_schema` dependency §12 sanctions;
 the inventory contract itself does not need it.) `EditionRange` mirrors reg_schema's
 `PeriodRange` wire shape (`from`/`to`, `from_` attr with a `"from"` alias), so a project
 period and an inventory edition expand through one grammar without a converter.
+
+### Consistency gate against the catalog DB (`inventory_check.py`)
+
+§12's other half: a structurally perfect inventory still strands mappings when the DB
+under it moves. Pre-v1 slug churn is legal, so a catalog release that renames a slug
+leaves every mapping naming it well-formed and meaningless — the failure is silent, and
+it surfaces as blocked orders and holdings claims about coordinates that no longer
+exist. `check_inventory(inventory, conn)` returns every coordinate that does not resolve
+against an open catalog DB; empty is the passing baseline.
+
+Two consumers, one implementation: the named-steward webapp boot runs it fail-fast on
+its own boot connection (`reg_webapp.stewards.check_delivery_inventory` — a deployment
+must never *serve* an inventory its DB cannot resolve), and the maintainer's pytest runs
+it over the committed inventory whenever a real flavored DB is pointed at by
+`REG_META_DB` (`reg_webapp/backend/tests/test_steward_swecov.py`, skipped cleanly
+otherwise — CI has no release DB, so the boot gate is the hard line).
+
+- **Resolution is read the way the ORDER PATH reads it**, never re-derived. A gate
+  stricter than `order._materialize_binding` would fail a deployment over holdings it
+  can actually serve, so a direct slug miss still gets `Catalog`'s curated
+  `variable_same_as` fallback, and the representation universe is `variable_state`'s
+  denormalized alias UNION the `variable_alias_window` rows `_expand_state_windows`
+  expands a state into (a monthly-family or co-delivered column exists ONLY there).
+- **Bulk, because it runs at every boot.** An inventory carries tens of thousands of
+  mappings, so the three lookups are one streaming scan each, filtered against the
+  inventory's own coordinates — the working set is the inventory's, not the catalog's
+  (SWECOV's 36.5k mappings check in ~0.1s). Only the same_as fallback, rare by
+  construction, goes through `Catalog` per coordinate.
+- **Findings group by the failing COORDINATE, not the mapping occurrence** — one renamed
+  variant slug is one finding over N mappings, which is the unit a maintainer repairs.
+  Each carries `mapping_count` and a capped sample of `table[...].column[...]` locations
+  in the validator's own author-facing spelling. Output is deterministic: grouped by
+  code (variant → variable → representation), sorted by coordinate within each group, so
+  two releases' reports diff.
+- **A mapping that omits `representation` gets no representation check.** §12's
+  single-representation arm is request-dependent — whether the binding resolves to ONE
+  canonical representation across a requested period is `order.py`'s `unqualified_ok`
+  decision, not a static property of the catalog.
 
 ## Order materializer and manifest (`order.py`)
 

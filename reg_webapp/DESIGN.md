@@ -1861,7 +1861,17 @@ things:
   server that reported itself healthy — the deployment error would be deferred to, and
   paid by, each researcher in turn. Conversely, loading a stray inventory under `global`
   would silently swap the full universe it exists to serve for whatever that file lists;
-  §12 keeps the fallback until a physical global inventory is introduced deliberately.
+  §12 keeps the fallback until a physical global inventory is introduced deliberately. A
+  named steward's inventory is then checked AGAINST THE BOOT CONNECTION
+  (`stewards.check_delivery_inventory` over `reg_meta.inventory_check`): §12's standing
+  inventory ↔ DB consistency gate, which fails startup when any mapping's
+  `(register_variant, variable FQID, representation)` does not resolve against the DB
+  this deployment serves. The flavored DB and the committed inventory are cut separately
+  and pre-v1 slug churn is legal, so they CAN drift — and unlike the steward CATALOG
+  above there is no drift downgrade here: a dropped binding merely narrows the browse,
+  while an unresolvable inventory mapping is a holdings claim about a coordinate that
+  does not exist. The rules and the report shape live in `reg_meta/DESIGN.md` →
+  "Consistency gate against the catalog DB (`inventory_check.py`)".
 - **The download**: the 200 body is `OrderManifest.to_json()` VERBATIM (the handler
   returns a raw `Response`, which FastAPI passes through without re-serializing), so the
   SPA download and `reg-meta order` hand the steward byte-identical files — §12's

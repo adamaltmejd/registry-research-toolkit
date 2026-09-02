@@ -309,8 +309,11 @@ will need period-column `WHERE` clauses later.
 Completion: ~~define and validate the delivery-inventory contract~~ (shipped); emit
 SWECOV's public table/edition/column grounding from the maintainer holdings' exact
 `Table` column (retain `Vy` as grounding/audit evidence, not as the authoritative table
-identifier); batch-check its mappings against the flavored DB; derive the steward index
-from it;
+identifier); ~~batch-check its mappings against the flavored DB~~ (shipped —
+`reg_meta.inventory_check.check_inventory`, wired fail-fast at named-steward webapp boot
+and as a maintainer pytest over the committed inventory; the standing gate is the BOOT
+gate, since CI has no flavored DB to check against and the pytest skips without one);
+derive the steward index from it;
 ~~replace the provisional seven-column renderer with the shared materializer;
 expose identical results through web and CLI paths~~
 (shipped — `POST /api/project/order` and `reg-meta order` are thin adapters over

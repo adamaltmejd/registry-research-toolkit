@@ -19,7 +19,8 @@ in-memory index — called once at FastAPI startup with the boot connection (see
 ``app.py``). The two are split because index-building needs the reg_meta DB,
 which only exists once the lifespan opens it. ``load_delivery_inventory`` is a
 third, DB-free boot read (see ``reg_meta/DESIGN.md`` → Steward delivery
-inventory).
+inventory); ``check_delivery_inventory`` is its DB-backed half, run on the same
+boot connection.
 """
 
 from __future__ import annotations
@@ -35,6 +36,7 @@ from typing import TYPE_CHECKING, cast
 
 from pydantic import ValidationError
 from reg_meta.inventory import load_inventory
+from reg_meta.inventory_check import check_inventory, unresolved_message
 from reg_schema.project_data import ProjectData
 from reg_schema.structural import validate_structural
 
@@ -43,6 +45,8 @@ from .semantic import validate_semantic
 from .steward_catalog import StewardBootCatalog
 
 if TYPE_CHECKING:
+    import sqlite3
+
     from reg_meta.catalog import Catalog
     from reg_meta.inventory import DeliveryInventory
 
@@ -321,3 +325,38 @@ def load_delivery_inventory(
             f"deployment steward {steward.id!r}"
         )
     return inventory
+
+
+def check_delivery_inventory(
+    steward: Steward, inventory: DeliveryInventory, conn: sqlite3.Connection
+) -> None:
+    """Fail boot when this deployment's inventory names coordinates its own
+    catalog DB cannot resolve (REFACTOR_SPEC.md §12's standing consistency
+    gate; the check itself is ``reg_meta.inventory_check``).
+
+    A steward deployment must never SERVE an inventory its DB cannot resolve.
+    The flavored DB and the committed inventory are cut separately and pre-v1
+    slug churn is legal, so they CAN drift: a catalog release that renames a
+    slug leaves the inventory well-formed and silently stranded — every
+    affected order blocked, and admission/coverage stated over holdings the
+    catalog no longer names. That is a misconfigured deployment, so it raises
+    ``ValueError`` in the same fail-fast posture as ``load_delivery_inventory``
+    (CLAUDE.md), rather than being deferred to each researcher in turn.
+
+    Unlike the steward CATALOG, there is no drift downgrade here: a dropped
+    binding degrades the browse, but an unresolvable inventory mapping is a
+    holdings statement about a coordinate that does not exist.
+    """
+    start = perf_counter()
+    findings = check_inventory(inventory, conn)
+    if findings:
+        raise ValueError(
+            f"steward {steward.id!r} inventory does not resolve against the "
+            f"catalog DB this deployment serves: {unresolved_message(findings)}"
+        )
+    logger.info(
+        "checked steward inventory %s against the catalog: %d tables, %.3fs",
+        steward.id,
+        len(inventory.tables),
+        perf_counter() - start,
+    )

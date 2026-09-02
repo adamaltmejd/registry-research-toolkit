@@ -149,6 +149,51 @@ def test_global_deployment_with_an_inventory_fails_at_boot(
         pass
 
 
+# Well-formed, well-stewarded, and naming a variant coordinate the fixture
+# catalog does not have — the shape a catalog release leaves behind when it
+# renames a slug out from under a committed inventory (pre-v1 slug churn is
+# legal).
+STRANDED_INVENTORY = """\
+version = 1
+steward = "ifau"
+
+[[table]]
+id = "LISA_Individ_2018.csv"
+edition = 2018
+
+[[table.column]]
+name = "Kon"
+[[table.column.mapping]]
+register_variant = "scb/lisa/individer-16plus"
+variable = "scb/lisa/kon"
+"""
+
+
+def test_named_steward_with_an_unresolvable_inventory_fails_at_boot(
+    catalog_db, tmp_path, monkeypatch
+):
+    """REFACTOR_SPEC.md §12's inventory ↔ DB consistency gate at the boot seam:
+    a steward deployment must never SERVE an inventory its own catalog DB
+    cannot resolve. The file is structurally valid, so ``load_inventory`` is
+    happy — only the DB knows the coordinate is gone, and every order against
+    it would block from a server that reported itself healthy. The check itself
+    is pinned by ``reg_meta/tests/test_inventory_check.py``; what belongs here
+    is that boot RUNS it and fails."""
+    stewards = tmp_path / "stewards"
+    write_steward(stewards, "ifau", CLEAN_SOURCES)
+    (stewards / "ifau" / "inventory.toml").write_text(
+        STRANDED_INVENTORY, encoding="utf-8"
+    )
+    monkeypatch.setenv("REG_WEBAPP_STEWARDS_DIR", str(stewards))
+    monkeypatch.setenv("REG_WEBAPP_STEWARD", "ifau")
+
+    with (
+        pytest.raises(ValueError, match="scb/lisa/individer-16plus"),
+        TestClient(create_app()),
+    ):
+        pass
+
+
 def test_deterministic(client):
     """Same spec → byte-identical manifest (no timestamps, stable order)."""
     a = client.post("/api/project/order", json=_spec()).text
