@@ -435,3 +435,19 @@ mode the wake-driven loop exists to prevent. Usage refusals should exit non-zero
      provider refusal park the ticket instead of looping.
 - Operator workaround: planning role moved to `claude-opus-5` with a revert-trigger
   comment in config.toml.
+
+## 2026-09-02 — chunked autoreview reports crash yard's parser: large diffs are unreviewable
+
+- Y-29/4's candidate deletes the 1.1 MB `steward.project_data.json`, so autoreview
+  (agent-skills @ fe73c380) chunked the review into 3 passes and wrote its report with a
+  top-level `pass_reports` key. Yard 0.11.0's report schema is strict and rejects it
+  (`unrecognized_keys: pass_reports`), so the execution errors with no verdict — twice,
+  deterministically — even though the review itself completed and found two P1s (visible
+  only in `review-tool.log`). Any candidate big enough to chunk can never record a
+  review under this pairing; re-run loops forever. Asks: parse the chunked shape (or at
+  least passthrough unknown keys and read the merged findings, which are present in the
+  same report), and surface "report unparseable but review completed with N findings"
+  instead of a bare error. Operator workaround: read the findings out of
+  `review-tool.log` and hand them to the worker as a nudge — which works but records no
+  review verdict, so the lane cannot reach approval-needed until yard or autoreview
+  moves.
