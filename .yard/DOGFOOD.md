@@ -451,3 +451,21 @@ mode the wake-driven loop exists to prevent. Usage refusals should exit non-zero
   `review-tool.log` and hand them to the worker as a nudge — which works but records no
   review verdict, so the lane cannot reach approval-needed until yard or autoreview
   moves.
+
+## 2026-09-02 — 0.12.0: conflict worker's handoff refused `lane_propose`; the rebase burns each retry
+
+- Y-29/4's retarget conflict (3 files, vs the landed Y-30) went to the conflict role,
+  which resolved it perfectly — clean rebase, empty porcelain, target an ancestor of
+  HEAD — and then had its handoff refused:
+  `worker capability does not grant method "lane_propose" (I-1)`. The daemon then
+  reported `conflict-handoff-failed` with
+  `evidence input is not a regular file: …/retarget.log` (only `transcript.jsonl`
+  exists), which points at evidence collection rather than at the real refusal buried
+  mid-transcript. Twice, deterministically, under the 0.12.0 daemon (the attempt itself
+  predates the store migration — possibly the capability record migrated wrong). Each
+  `yard lane start` retry starts from a FRESH clone (the prior session's rebased commits
+  are gone), so every retry re-spends the whole ~$3.9 rebase before failing the same
+  way. Asks: surface the capability refusal as the attention item's reason instead of
+  the evidence-collection symptom; don't charge a full redo when the failure is the
+  handoff, not the resolution. Operator recovery that worked: abandon (candidate
+  retained) + `yard lane replay` as a fresh 0.12.0-native attempt.
