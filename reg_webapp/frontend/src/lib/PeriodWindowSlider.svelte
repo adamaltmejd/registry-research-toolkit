@@ -520,8 +520,8 @@ const coverageThrough = $derived(
     border-radius: 2px;
     background: repeating-linear-gradient(
       45deg,
-      #d9a441 0,
-      #d9a441 3px,
+      var(--warn) 0,
+      var(--warn) 3px,
       transparent 3px,
       transparent 6px
     );
@@ -548,7 +548,7 @@ const coverageThrough = $derived(
   .deviation.user,
   .deviation.availability,
   .deviation.sub-annual {
-    color: #92600a; /* amber — matches the picker's advisory tone */
+    color: var(--warn); /* the picker's advisory tone */
   }
   .deviation.sub-annual code {
     font-size: 0.95em;

@@ -1085,6 +1085,17 @@ geometry/interaction tokens (`--space-*`, `--radius`, `--focus-ring`,
 `--surface-hover`/`-selected`) fold into the role set; the bare palette
 (`--border`/`--accent`/`--surface`) is replaced, not kept in parallel.
 
+**Enforced deterministically** by `frontend/src/style_tokens.test.ts` (part of
+`bun run test`, so it runs in the `reg-webapp-frontend` CI job and the yard `frontend`
+gate with no extra wiring): every `<style>` block in every `.svelte` under `src/` must
+be free of raw color literals (hex, `rgb()`, `hsl()`, `oklch()`, …) and raw
+`font-family` stacks — a literal that renders identically today still escapes the
+`[data-theme="dark"]` remap. `mask-image` declarations are exempt by rule (a mask is
+alpha geometry, not palette). This exists because biome does not lint `<style>` blocks
+inside `.svelte`, and because a screenshot cannot see a token bypass. It is a source
+check only: it says nothing about hierarchy, copy, layout, or whether the right token
+was chosen.
+
 `main.ts` is the SPA entrypoint, but the `*.browser.test.ts` suite renders components
 directly via `vitest-browser-svelte` and does **not** evaluate `main.ts` — so
 `tokens.css` must **also** be imported from the Vitest browser setup (the `setupFiles`

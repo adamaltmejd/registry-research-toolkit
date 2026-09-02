@@ -146,7 +146,7 @@ const classes = $derived(
 
   :global(.ui-btn.variant-danger) {
     background: var(--err);
-    color: #ffffff;
+    color: var(--accent-fg);
   }
   :global(.ui-btn.variant-danger:hover:not(:disabled)) {
     background: color-mix(in srgb, var(--err) 85%, black);

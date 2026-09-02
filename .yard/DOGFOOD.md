@@ -368,3 +368,23 @@ mode the wake-driven loop exists to prevent. Usage refusals should exit non-zero
   specifically, the re-run exit seems like the primary answer and abandon the
   destructive one; offering only abandon invites exactly the
   healthy-attempt-stopped-on-a-misreading failure the skill warns about.
+- 2026-09-02, investigating deterministic UI checks: needed to run the `frontend` gate
+  against a working tree without admitting a lane. There is no `yard` verb for that, so
+  the run was reconstructed by hand — `docker build -f .yard/Dockerfile`, then
+  `docker run --network none` with the config.toml command and the documented env floor
+  re-typed. Worked, but the image Yard actually uses is not discoverable
+  (`docker images` lists `yard-gate-local`/`yard-gate-node24`, `docker image inspect` of
+  those names errors — an uncertain mapping between Docker contexts), so a local gate
+  run cannot claim to be the same image a lane sees. A
+  `yard check run <gate> [--tree PATH]` that reuses the daemon's image and env would
+  remove the guesswork.
+
+## 2026-09-02 — decision memos arrive as `ticket.create` proposals
+
+- Y-25's worker correctly stopped at a defect outside its scope and filed A-45 as a
+  `blocksCompletion` proposal — but the only shape available was `ticket.create`, so the
+  memo ("here are three options for the operator") became parked ticket Y-26 whose body
+  was a menu, not a brief. A worker handed that body would have had to choose the design
+  itself. The operator had to rewrite the whole body before unparking, which is fine
+  once, but a "decision needed" proposal kind (question + options, resolved by the
+  operator into zero or more tickets) would match what the worker actually produced.

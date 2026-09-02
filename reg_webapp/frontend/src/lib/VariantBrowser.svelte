@@ -229,7 +229,7 @@ function objectTypeRows(objectType: {
     background: var(--surface);
   }
   .slug {
-    font-family: ui-monospace, monospace;
+    font-family: var(--font-mono);
     font-weight: 600;
   }
   .family-name {
