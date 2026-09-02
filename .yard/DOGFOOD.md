@@ -388,3 +388,27 @@ mode the wake-driven loop exists to prevent. Usage refusals should exit non-zero
   itself. The operator had to rewrite the whole body before unparking, which is fine
   once, but a "decision needed" proposal kind (question + options, resolved by the
   operator into zero or more tickets) would match what the worker actually produced.
+
+## 2026-09-02 — Y-26/1: gate image build has its own hidden 15-minute clock
+
+- The `frontend` gate on Y-26/1 failed with `docker build … [timed out after 900000ms]`.
+  That 900 s is not `timeout_minutes` (20 on this gate) — it is an image-build limit
+  nothing in `config.toml` names. The candidate touched `reg_meta/pyproject.toml` (a
+  comment), which is a COPY key for the Python warm layer, so every layer after it
+  rebuilt from the network. A manual
+  `git archive HEAD | docker build -f .yard/Dockerfile -` of the same Dockerfile
+  completed in about two minutes, so the gate hit a transient stall, not a slow build —
+  but the attention item reads exactly like a candidate gate failure. Two asks: name the
+  image-build timeout in config (or reuse the gate's), and in the gate-failed item say
+  "image build" vs "gate command" up front so the operator knows the diff was never
+  exercised.
+
+## 2026-09-02 — a landed ticket left open re-admits itself the moment its blocker lands
+
+- Y-25/1 landed on 2026-09-01, but the ticket stayed `open` with a `depends_on Y-26`
+  (the worker's blocksCompletion proposal). When Y-26 landed, the scheduler saw a ready
+  ticket and admitted Y-25/2 — a fresh Opus/xhigh attempt for work that was already on
+  main. Caught within a minute (park → stop → abandon → done), 38 s of worker time. A
+  ticket whose current attempt has landed should not be auto-admitted again just because
+  a later-added dependency cleared; at minimum the operator should be asked, since
+  "landed but still open" is precisely the blocksCompletion shape Yard itself creates.
