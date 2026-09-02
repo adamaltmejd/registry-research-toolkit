@@ -1,0 +1,3169 @@
+# SWECOV delivery-inventory curation overlay (REFACTOR_SPEC.md §12).
+#
+# POLICY side of the inventory build: the holdings CSV
+# (input_data/swecov/SWECOV_variables_full_<date>.csv, untracked) is the
+# maintainer's own re-extractable listing of everything CURRENTLY ON MONA —
+# superseded snapshots included, so it is never hand-edited. This file carries
+# every curation decision instead; `build_catalog.py inventory` computes
+# reality ∩ policy and emits the committed `inventory.toml` next to this file.
+# Entries naming tables no longer in the CSV are flagged stale by the emitter.
+#
+# Sections:
+#   [[exclude]]  table, reason
+#       Discard a superseded delivery. The §12 one-to-one validator turns any
+#       still-overlapping pair into a red build — each conflict line gets an
+#       exclude (or an edition fix) here, with the rationale in `reason`.
+#   [[edition]]  table, edition
+#       Explicit edition for a table whose name yields zero or several period
+#       tokens. `edition` uses the shared period grammar: a year int, a token
+#       string ("2019-Q3", "HT2020"), an inline range { from = ..., to = ... },
+#       or a list of those for an interrupted series.
+#   [[partition]] table, label
+#       §12 disjoint-partition label (a slug): names which sub-population
+#       shard of one edition this table carries (survey stratum, reporter
+#       stream, municipality). Distinct labels legalize overlapping tables of
+#       one cell; extraction emits one file per shard. Explicit curated facts,
+#       never inferred — label BOTH sides of a split.
+#   [[assign]]   table, register_variant
+#       Variant coordinate(s) (<provider>/<register>/<variant>, string or
+#       list) for a table the curated MAPPING/disposition cannot place —
+#       residue-provider deliveries (FHM_*, FK_*, …) and grafted holdings.
+
+# ── supersessions (maintainer-confirmed 2026-09-01) ─────────────────────────
+
+[[exclude]]
+table = "FHM_NVR_Covid"
+reason = "cumulative NVR covid re-delivery; superseded by FHM_NVR_Covid_20240422"
+
+[[exclude]]
+table = "FHM_NVR_Covid_20230316"
+reason = "cumulative NVR covid re-delivery; superseded by FHM_NVR_Covid_20240422"
+
+# ── DECIDED (maintainer-approved 2026-09-01): mechanical translation of the drop rules in the
+# maintainer's MONA-side get_all_variables.R (the full→curated CSV filter,
+# lines 182-205) — the pre-existing supersession policy, moved into the
+# committed overlay so §12 owns it. APPROVED by maintainer 2026-09-01.
+
+[[exclude]]
+table = "AGIHuvud202101_Prel"
+reason = "preliminary delivery; the definitive table is canonical (get_all_variables.R drop: 'Preliminary tables')"
+
+[[exclude]]
+table = "AGIHuvud202102_Prel"
+reason = "preliminary delivery; the definitive table is canonical (get_all_variables.R drop: 'Preliminary tables')"
+
+[[exclude]]
+table = "AGIHuvud202103_Prel"
+reason = "preliminary delivery; the definitive table is canonical (get_all_variables.R drop: 'Preliminary tables')"
+
+[[exclude]]
+table = "AGIHuvud202104_Prel"
+reason = "preliminary delivery; the definitive table is canonical (get_all_variables.R drop: 'Preliminary tables')"
+
+[[exclude]]
+table = "AGIHuvud202105_Prel"
+reason = "preliminary delivery; the definitive table is canonical (get_all_variables.R drop: 'Preliminary tables')"
+
+[[exclude]]
+table = "AGIHuvud202106_Prel"
+reason = "preliminary delivery; the definitive table is canonical (get_all_variables.R drop: 'Preliminary tables')"
+
+[[exclude]]
+table = "AGIHuvud202107_Prel"
+reason = "preliminary delivery; the definitive table is canonical (get_all_variables.R drop: 'Preliminary tables')"
+
+[[exclude]]
+table = "Arb_AGIIndivid202101_Prel"
+reason = "preliminary delivery; the definitive table is canonical (get_all_variables.R drop: 'Preliminary tables')"
+
+[[exclude]]
+table = "Arb_AGIIndivid202102_Prel"
+reason = "preliminary delivery; the definitive table is canonical (get_all_variables.R drop: 'Preliminary tables')"
+
+[[exclude]]
+table = "Arb_AGIIndivid202103_Prel"
+reason = "preliminary delivery; the definitive table is canonical (get_all_variables.R drop: 'Preliminary tables')"
+
+[[exclude]]
+table = "Arb_AGIIndivid202104_Prel"
+reason = "preliminary delivery; the definitive table is canonical (get_all_variables.R drop: 'Preliminary tables')"
+
+[[exclude]]
+table = "Arb_AGIIndivid202105_Prel"
+reason = "preliminary delivery; the definitive table is canonical (get_all_variables.R drop: 'Preliminary tables')"
+
+[[exclude]]
+table = "Arb_AGIIndivid202106_Prel"
+reason = "preliminary delivery; the definitive table is canonical (get_all_variables.R drop: 'Preliminary tables')"
+
+[[exclude]]
+table = "Arb_AGIIndivid202107_Prel"
+reason = "preliminary delivery; the definitive table is canonical (get_all_variables.R drop: 'Preliminary tables')"
+
+[[exclude]]
+table = "DodaFlode_2021_20210331"
+reason = "temporary flow table (get_all_variables.R drop: 'Temporary flow tables')"
+
+[[exclude]]
+table = "DodaFlode_2021_20210630"
+reason = "temporary flow table (get_all_variables.R drop: 'Temporary flow tables')"
+
+[[exclude]]
+table = "Doda_20201231"
+reason = "superseded annual stock snapshot; only the latest (_20241231) is current (get_all_variables.R drop: 'Old population files')"
+
+[[exclude]]
+table = "Doda_20211231"
+reason = "superseded annual stock snapshot; only the latest (_20241231) is current (get_all_variables.R drop: 'Old population files')"
+
+[[exclude]]
+table = "Doda_20221231"
+reason = "superseded annual stock snapshot; only the latest (_20241231) is current (get_all_variables.R drop: 'Old population files')"
+
+[[exclude]]
+table = "EmigranterFlode_2021_20210331"
+reason = "temporary flow table (get_all_variables.R drop: 'Temporary flow tables')"
+
+[[exclude]]
+table = "EmigranterFlode_2021_20210630"
+reason = "temporary flow table (get_all_variables.R drop: 'Temporary flow tables')"
+
+[[exclude]]
+table = "emigranter_20201231"
+reason = "superseded annual stock snapshot; only the latest (_20241231) is current (get_all_variables.R drop: 'Old population files')"
+
+[[exclude]]
+table = "emigranter_20211231"
+reason = "superseded annual stock snapshot; only the latest (_20241231) is current (get_all_variables.R drop: 'Old population files')"
+
+[[exclude]]
+table = "emigranter_20221231"
+reason = "superseded annual stock snapshot; only the latest (_20241231) is current (get_all_variables.R drop: 'Old population files')"
+
+[[exclude]]
+table = "FHM_SMINET"
+reason = "superseded SmiNet delivery; FHM_SMI_FALL/FHM_KLIN_ANM/FHM_LAB_ANM are canonical (get_all_variables.R drop)"
+
+[[exclude]]
+table = "FK_aktivitetsstod_lev2"
+reason = "FK access-tier lev2/lev3 duplicate of the lev4 delivery / helper key (get_all_variables.R drop)"
+
+[[exclude]]
+table = "FK_ARBETSSK_YRKESSKADELIVR_lev3"
+reason = "FK access-tier lev2/lev3 duplicate of the lev4 delivery / helper key (get_all_variables.R drop)"
+
+[[exclude]]
+table = "FK_ASE_lev3"
+reason = "FK access-tier lev2/lev3 duplicate of the lev4 delivery / helper key (get_all_variables.R drop)"
+
+[[exclude]]
+table = "FK_assistansersattning_lev2"
+reason = "FK access-tier lev2/lev3 duplicate of the lev4 delivery / helper key (get_all_variables.R drop)"
+
+[[exclude]]
+table = "FK_barnbidrag_lev2"
+reason = "FK access-tier lev2/lev3 duplicate of the lev4 delivery / helper key (get_all_variables.R drop)"
+
+[[exclude]]
+table = "FK_BARNBIDRAG_lev3"
+reason = "FK access-tier lev2/lev3 duplicate of the lev4 delivery / helper key (get_all_variables.R drop)"
+
+[[exclude]]
+table = "FK_bobutbet_lev2"
+reason = "FK access-tier lev2/lev3 duplicate of the lev4 delivery / helper key (get_all_variables.R drop)"
+
+[[exclude]]
+table = "FK_bostadsersattning_lev2"
+reason = "FK access-tier lev2/lev3 duplicate of the lev4 delivery / helper key (get_all_variables.R drop)"
+
+[[exclude]]
+table = "FK_bostadstillagg_lev2"
+reason = "FK access-tier lev2/lev3 duplicate of the lev4 delivery / helper key (get_all_variables.R drop)"
+
+[[exclude]]
+table = "FK_BOSTBIDRAG_lev3"
+reason = "FK access-tier lev2/lev3 duplicate of the lev4 delivery / helper key (get_all_variables.R drop)"
+
+[[exclude]]
+table = "FK_delfall1_1_sa_lev2"
+reason = "FK access-tier lev2/lev3 duplicate of the lev4 delivery / helper key (get_all_variables.R drop)"
+
+[[exclude]]
+table = "FK_DELFALL1_1_SA_lev3"
+reason = "FK access-tier lev2/lev3 duplicate of the lev4 delivery / helper key (get_all_variables.R drop)"
+
+[[exclude]]
+table = "FK_delfall4_1_sjp_lev2"
+reason = "FK access-tier lev2/lev3 duplicate of the lev4 delivery / helper key (get_all_variables.R drop)"
+
+[[exclude]]
+table = "FK_DELFALL4_1_SJP_lev3"
+reason = "FK access-tier lev2/lev3 duplicate of the lev4 delivery / helper key (get_all_variables.R drop)"
+
+[[exclude]]
+table = "FK_EHS_ORGNR_lev3"
+reason = "FK access-tier lev2/lev3 duplicate of the lev4 delivery / helper key (get_all_variables.R drop)"
+
+[[exclude]]
+table = "FK_ersattningkarens_lev2"
+reason = "FK access-tier lev2/lev3 duplicate of the lev4 delivery / helper key (get_all_variables.R drop)"
+
+[[exclude]]
+table = "FK_etableringsersattning_lev2"
+reason = "FK access-tier lev2/lev3 duplicate of the lev4 delivery / helper key (get_all_variables.R drop)"
+
+[[exclude]]
+table = "FK_etableringstillagg_lev2"
+reason = "FK access-tier lev2/lev3 duplicate of the lev4 delivery / helper key (get_all_variables.R drop)"
+
+[[exclude]]
+table = "FK_extra_nyckel"
+reason = "FK access-tier lev2/lev3 duplicate of the lev4 delivery / helper key (get_all_variables.R drop)"
+
+[[exclude]]
+table = "FK_fpdelfall_lev2"
+reason = "FK access-tier lev2/lev3 duplicate of the lev4 delivery / helper key (get_all_variables.R drop)"
+
+[[exclude]]
+table = "FK_fputbet_lev2"
+reason = "FK access-tier lev2/lev3 duplicate of the lev4 delivery / helper key (get_all_variables.R drop)"
+
+[[exclude]]
+table = "FK_FPUTBET_lev3"
+reason = "FK access-tier lev2/lev3 duplicate of the lev4 delivery / helper key (get_all_variables.R drop)"
+
+[[exclude]]
+table = "FK_FP_DELFALL2020_2022_lev3"
+reason = "FK access-tier lev2/lev3 duplicate of the lev4 delivery / helper key (get_all_variables.R drop)"
+
+[[exclude]]
+table = "FK_gputbet_lev2"
+reason = "FK access-tier lev2/lev3 duplicate of the lev4 delivery / helper key (get_all_variables.R drop)"
+
+[[exclude]]
+table = "FK_GRAVIDITETSPENNING_lev3"
+reason = "FK access-tier lev2/lev3 duplicate of the lev4 delivery / helper key (get_all_variables.R drop)"
+
+[[exclude]]
+table = "FK_he_lev2"
+reason = "FK access-tier lev2/lev3 duplicate of the lev4 delivery / helper key (get_all_variables.R drop)"
+
+[[exclude]]
+table = "FK_HE_lev3"
+reason = "FK access-tier lev2/lev3 duplicate of the lev4 delivery / helper key (get_all_variables.R drop)"
+
+[[exclude]]
+table = "FK_KARENS_lev3"
+reason = "FK access-tier lev2/lev3 duplicate of the lev4 delivery / helper key (get_all_variables.R drop)"
+
+[[exclude]]
+table = "FK_livranta_arbetsskadeersattning_lev2"
+reason = "FK access-tier lev2/lev3 duplicate of the lev4 delivery / helper key (get_all_variables.R drop)"
+
+[[exclude]]
+table = "FK_mekbbarn_lev2"
+reason = "FK access-tier lev2/lev3 duplicate of the lev4 delivery / helper key (get_all_variables.R drop)"
+
+[[exclude]]
+table = "FK_MEKBBARN_lev3"
+reason = "FK access-tier lev2/lev3 duplicate of the lev4 delivery / helper key (get_all_variables.R drop)"
+
+[[exclude]]
+table = "FK_mekb_lev2"
+reason = "FK access-tier lev2/lev3 duplicate of the lev4 delivery / helper key (get_all_variables.R drop)"
+
+[[exclude]]
+table = "FK_MEKB_lev3"
+reason = "FK access-tier lev2/lev3 duplicate of the lev4 delivery / helper key (get_all_variables.R drop)"
+
+[[exclude]]
+table = "FK_mekv_lev2"
+reason = "FK access-tier lev2/lev3 duplicate of the lev4 delivery / helper key (get_all_variables.R drop)"
+
+[[exclude]]
+table = "FK_MEKV_lev3"
+reason = "FK access-tier lev2/lev3 duplicate of the lev4 delivery / helper key (get_all_variables.R drop)"
+
+[[exclude]]
+table = "FK_narstandepenning_lev2"
+reason = "FK access-tier lev2/lev3 duplicate of the lev4 delivery / helper key (get_all_variables.R drop)"
+
+[[exclude]]
+table = "FK_NARSTANDEPENNING_lev3"
+reason = "FK access-tier lev2/lev3 duplicate of the lev4 delivery / helper key (get_all_variables.R drop)"
+
+[[exclude]]
+table = "FK_omvbarn_lev2"
+reason = "FK access-tier lev2/lev3 duplicate of the lev4 delivery / helper key (get_all_variables.R drop)"
+
+[[exclude]]
+table = "FK_OMVBARN_lev3"
+reason = "FK access-tier lev2/lev3 duplicate of the lev4 delivery / helper key (get_all_variables.R drop)"
+
+[[exclude]]
+table = "FK_omv_lev2"
+reason = "FK access-tier lev2/lev3 duplicate of the lev4 delivery / helper key (get_all_variables.R drop)"
+
+[[exclude]]
+table = "FK_OMV_lev3"
+reason = "FK access-tier lev2/lev3 duplicate of the lev4 delivery / helper key (get_all_variables.R drop)"
+
+[[exclude]]
+table = "FK_riskgrupper_lev2"
+reason = "FK access-tier lev2/lev3 duplicate of the lev4 delivery / helper key (get_all_variables.R drop)"
+
+[[exclude]]
+table = "FK_RISKGRUPPER_lev3"
+reason = "FK access-tier lev2/lev3 duplicate of the lev4 delivery / helper key (get_all_variables.R drop)"
+
+[[exclude]]
+table = "FK_sjukpenning_rehab_lev2"
+reason = "FK access-tier lev2/lev3 duplicate of the lev4 delivery / helper key (get_all_variables.R drop)"
+
+[[exclude]]
+table = "FK_sjuk_aktivitetsersattning_lev2"
+reason = "FK access-tier lev2/lev3 duplicate of the lev4 delivery / helper key (get_all_variables.R drop)"
+
+[[exclude]]
+table = "FK_smittbararpenning_lev2"
+reason = "FK access-tier lev2/lev3 duplicate of the lev4 delivery / helper key (get_all_variables.R drop)"
+
+[[exclude]]
+table = "FK_SMITTBP_lev3"
+reason = "FK access-tier lev2/lev3 duplicate of the lev4 delivery / helper key (get_all_variables.R drop)"
+
+[[exclude]]
+table = "FK_STORE_AKTIVITETSTOD_lev3"
+reason = "FK access-tier lev2/lev3 duplicate of the lev4 delivery / helper key (get_all_variables.R drop)"
+
+[[exclude]]
+table = "FK_STORE_BOSTADERS_lev3"
+reason = "FK access-tier lev2/lev3 duplicate of the lev4 delivery / helper key (get_all_variables.R drop)"
+
+[[exclude]]
+table = "FK_STORE_BOSTADSTILLAGG_lev3"
+reason = "FK access-tier lev2/lev3 duplicate of the lev4 delivery / helper key (get_all_variables.R drop)"
+
+[[exclude]]
+table = "FK_STORE_ETABLERINGSERS_lev3"
+reason = "FK access-tier lev2/lev3 duplicate of the lev4 delivery / helper key (get_all_variables.R drop)"
+
+[[exclude]]
+table = "FK_STORE_ETABLERINGSTILL_lev3"
+reason = "FK access-tier lev2/lev3 duplicate of the lev4 delivery / helper key (get_all_variables.R drop)"
+
+[[exclude]]
+table = "FK_STORE_SJP_lev3"
+reason = "FK access-tier lev2/lev3 duplicate of the lev4 delivery / helper key (get_all_variables.R drop)"
+
+[[exclude]]
+table = "FK_STORE_SSA_lev3"
+reason = "FK access-tier lev2/lev3 duplicate of the lev4 delivery / helper key (get_all_variables.R drop)"
+
+[[exclude]]
+table = "FK_STORE_UTVECKLINGSERS_lev3"
+reason = "FK access-tier lev2/lev3 duplicate of the lev4 delivery / helper key (get_all_variables.R drop)"
+
+[[exclude]]
+table = "FK_TFP_lev3"
+reason = "FK access-tier lev2/lev3 duplicate of the lev4 delivery / helper key (get_all_variables.R drop)"
+
+[[exclude]]
+table = "FK_tfp_lev_lev2"
+reason = "FK access-tier lev2/lev3 duplicate of the lev4 delivery / helper key (get_all_variables.R drop)"
+
+[[exclude]]
+table = "FK_tfp_uppslag_delforman_lev2"
+reason = "FK access-tier lev2/lev3 duplicate of the lev4 delivery / helper key (get_all_variables.R drop)"
+
+[[exclude]]
+table = "FK_uhsutbet_lev2"
+reason = "FK access-tier lev2/lev3 duplicate of the lev4 delivery / helper key (get_all_variables.R drop)"
+
+[[exclude]]
+table = "FK_UNDERHSTOD_lev3"
+reason = "FK access-tier lev2/lev3 duplicate of the lev4 delivery / helper key (get_all_variables.R drop)"
+
+[[exclude]]
+table = "FK_utvecklingsersattning_lev2"
+reason = "FK access-tier lev2/lev3 duplicate of the lev4 delivery / helper key (get_all_variables.R drop)"
+
+[[exclude]]
+table = "FK_vbbarn_lev2"
+reason = "FK access-tier lev2/lev3 duplicate of the lev4 delivery / helper key (get_all_variables.R drop)"
+
+[[exclude]]
+table = "FK_VBBARN_lev3"
+reason = "FK access-tier lev2/lev3 duplicate of the lev4 delivery / helper key (get_all_variables.R drop)"
+
+[[exclude]]
+table = "FK_vb_lev2"
+reason = "FK access-tier lev2/lev3 duplicate of the lev4 delivery / helper key (get_all_variables.R drop)"
+
+[[exclude]]
+table = "FK_VB_lev3"
+reason = "FK access-tier lev2/lev3 duplicate of the lev4 delivery / helper key (get_all_variables.R drop)"
+
+[[exclude]]
+table = "FlerGen_Adopforaldrar_20201231"
+reason = "superseded annual stock snapshot; only the latest (_20241231) is current (get_all_variables.R drop: 'Old population files')"
+
+[[exclude]]
+table = "FlerGen_Adopforaldrar_20211231"
+reason = "superseded annual stock snapshot; only the latest (_20241231) is current (get_all_variables.R drop: 'Old population files')"
+
+[[exclude]]
+table = "FlerGen_Adopforaldrar_20221231"
+reason = "superseded annual stock snapshot; only the latest (_20241231) is current (get_all_variables.R drop: 'Old population files')"
+
+[[exclude]]
+table = "FlerGen_Bioforaldrar_20201231"
+reason = "superseded annual stock snapshot; only the latest (_20241231) is current (get_all_variables.R drop: 'Old population files')"
+
+[[exclude]]
+table = "FlerGen_Bioforaldrar_20211231"
+reason = "superseded annual stock snapshot; only the latest (_20241231) is current (get_all_variables.R drop: 'Old population files')"
+
+[[exclude]]
+table = "FlerGen_Bioforaldrar_20221231"
+reason = "superseded annual stock snapshot; only the latest (_20241231) is current (get_all_variables.R drop: 'Old population files')"
+
+[[exclude]]
+table = "Fodelseuppg_20201231"
+reason = "superseded annual stock snapshot; only the latest (_20241231) is current (get_all_variables.R drop: 'Old population files')"
+
+[[exclude]]
+table = "Fodelseuppg_20211231"
+reason = "superseded annual stock snapshot; only the latest (_20241231) is current (get_all_variables.R drop: 'Old population files')"
+
+[[exclude]]
+table = "Fodelseuppg_20221231"
+reason = "superseded annual stock snapshot; only the latest (_20241231) is current (get_all_variables.R drop: 'Old population files')"
+
+[[exclude]]
+table = "GravReg_Barn"
+reason = "superseded GravReg delivery; the _lev2 tables are canonical (get_all_variables.R drop: 'Old GravReg')"
+
+[[exclude]]
+table = "GravReg_Barn_barnets_atgarder_forsta_28_dagarna"
+reason = "superseded GravReg delivery; the _lev2 tables are canonical (get_all_variables.R drop: 'Old GravReg')"
+
+[[exclude]]
+table = "GravReg_Barn_barnets_diagnoser_forsta_28_dagarna"
+reason = "superseded GravReg delivery; the _lev2 tables are canonical (get_all_variables.R drop: 'Old GravReg')"
+
+[[exclude]]
+table = "GravReg_Fv1_moderns_atgarder"
+reason = "superseded GravReg delivery; the _lev2 tables are canonical (get_all_variables.R drop: 'Old GravReg')"
+
+[[exclude]]
+table = "GravReg_Fv1_moderns_diagnoser"
+reason = "superseded GravReg delivery; the _lev2 tables are canonical (get_all_variables.R drop: 'Old GravReg')"
+
+[[exclude]]
+table = "GravReg_Gravniva"
+reason = "superseded GravReg delivery; the _lev2 tables are canonical (get_all_variables.R drop: 'Old GravReg')"
+
+[[exclude]]
+table = "GravReg_Pop"
+reason = "superseded GravReg delivery; the _lev2 tables are canonical (get_all_variables.R drop: 'Old GravReg')"
+
+[[exclude]]
+table = "Hreg_Examina"
+reason = "superseded HREG delivery (get_all_variables.R drop: 'Old HREG')"
+
+[[exclude]]
+table = "Hreg_H_hsk"
+reason = "superseded HREG delivery (get_all_variables.R drop: 'Old HREG')"
+
+[[exclude]]
+table = "Hreg_Poang"
+reason = "superseded HREG delivery (get_all_variables.R drop: 'Old HREG')"
+
+[[exclude]]
+table = "Hreg_Reg"
+reason = "superseded HREG delivery (get_all_variables.R drop: 'Old HREG')"
+
+[[exclude]]
+table = "Hreg_Sok"
+reason = "superseded HREG delivery (get_all_variables.R drop: 'Old HREG')"
+
+[[exclude]]
+table = "HushallPerson_2020_Kv1"
+reason = "temporary quarterly table (get_all_variables.R drop: 'Temporary quarterly data')"
+
+[[exclude]]
+table = "HushallPerson_2020_Kv2"
+reason = "temporary quarterly table (get_all_variables.R drop: 'Temporary quarterly data')"
+
+[[exclude]]
+table = "HushallPerson_2020_Kv3"
+reason = "temporary quarterly table (get_all_variables.R drop: 'Temporary quarterly data')"
+
+[[exclude]]
+table = "HushallPerson_2021_Kv1"
+reason = "temporary quarterly table (get_all_variables.R drop: 'Temporary quarterly data')"
+
+[[exclude]]
+table = "HushallPerson_2021_kv2"
+reason = "temporary quarterly table (get_all_variables.R drop: 'Temporary quarterly data')"
+
+[[exclude]]
+table = "ImmigranterFlode_2021_20210331"
+reason = "temporary flow table (get_all_variables.R drop: 'Temporary flow tables')"
+
+[[exclude]]
+table = "ImmigranterFlode_2021_20210630"
+reason = "temporary flow table (get_all_variables.R drop: 'Temporary flow tables')"
+
+[[exclude]]
+table = "immigranter_20201231"
+reason = "superseded annual stock snapshot; only the latest (_20241231) is current (get_all_variables.R drop: 'Old population files')"
+
+[[exclude]]
+table = "immigranter_20211231"
+reason = "superseded annual stock snapshot; only the latest (_20241231) is current (get_all_variables.R drop: 'Old population files')"
+
+[[exclude]]
+table = "immigranter_20221231"
+reason = "superseded annual stock snapshot; only the latest (_20241231) is current (get_all_variables.R drop: 'Old population files')"
+
+[[exclude]]
+table = "InrFlyttFlode2021_Kv1"
+reason = "temporary quarterly table (get_all_variables.R drop: 'Temporary quarterly data')"
+
+[[exclude]]
+table = "InrFlyttFlode2021_kv2"
+reason = "temporary quarterly table (get_all_variables.R drop: 'Temporary quarterly data')"
+
+[[exclude]]
+table = "IVP_2020_prel"
+reason = "preliminary delivery; the definitive table is canonical (get_all_variables.R drop: 'Preliminary tables')"
+
+[[exclude]]
+table = "IVP_2020_VaraText_prel"
+reason = "preliminary delivery; the definitive table is canonical (get_all_variables.R drop: 'Preliminary tables')"
+
+[[exclude]]
+table = "KTA_2020_individmodellen_211011"
+reason = "superseded KTA delivery vintage (get_all_variables.R drop)"
+
+[[exclude]]
+table = "KTA_2020_individmodellen_220110"
+reason = "superseded KTA delivery vintage (get_all_variables.R drop)"
+
+[[exclude]]
+table = "KTA_2020_transaktionsmodellen_220110"
+reason = "superseded KTA delivery vintage (get_all_variables.R drop)"
+
+[[exclude]]
+table = "KTA_20210418"
+reason = "superseded KTA delivery vintage (get_all_variables.R drop)"
+
+[[exclude]]
+table = "KTA_2021_individmodellen_211011"
+reason = "superseded KTA delivery vintage (get_all_variables.R drop)"
+
+[[exclude]]
+table = "KTA_2021_individmodellen_220110"
+reason = "superseded KTA delivery vintage (get_all_variables.R drop)"
+
+[[exclude]]
+table = "KTA_2021_transaktionsmodellen_220110"
+reason = "superseded KTA delivery vintage (get_all_variables.R drop)"
+
+[[exclude]]
+table = "LopNrByte_20211231"
+reason = "superseded annual stock snapshot; only the latest (_20241231) is current (get_all_variables.R drop: 'Old population files')"
+
+[[exclude]]
+table = "LopNrByte_20221231"
+reason = "superseded annual stock snapshot; only the latest (_20241231) is current (get_all_variables.R drop: 'Old population files')"
+
+[[exclude]]
+table = "LopNrByte_20231231"
+reason = "superseded annual stock snapshot; only the latest (_20241231) is current (get_all_variables.R drop: 'Old population files')"
+
+[[exclude]]
+table = "lreg_14_15"
+reason = "old lararregistret version (get_all_variables.R drop)"
+
+[[exclude]]
+table = "lreg_15_16"
+reason = "old lararregistret version (get_all_variables.R drop)"
+
+[[exclude]]
+table = "lreg_16_17"
+reason = "old lararregistret version (get_all_variables.R drop)"
+
+[[exclude]]
+table = "lreg_17_18"
+reason = "old lararregistret version (get_all_variables.R drop)"
+
+[[exclude]]
+table = "lreg_18_19"
+reason = "old lararregistret version (get_all_variables.R drop)"
+
+[[exclude]]
+table = "lreg_19_20"
+reason = "old lararregistret version (get_all_variables.R drop)"
+
+[[exclude]]
+table = "lreg_20_21"
+reason = "old lararregistret version (get_all_variables.R drop)"
+
+[[exclude]]
+table = "lreg_21_22"
+reason = "old lararregistret version (get_all_variables.R drop)"
+
+[[exclude]]
+table = "lreg_22_23"
+reason = "old lararregistret version (get_all_variables.R drop)"
+
+[[exclude]]
+table = "LV_Handlagda"
+reason = "superseded Lakemedelsverket delivery (get_all_variables.R drop)"
+
+[[exclude]]
+table = "LV_WF"
+reason = "superseded Lakemedelsverket delivery (get_all_variables.R drop)"
+
+[[exclude]]
+table = "Moms_2019_prel20210421"
+reason = "preliminary delivery; the definitive table is canonical (get_all_variables.R drop: 'Preliminary tables')"
+
+[[exclude]]
+table = "Moms_2020_prel20210421"
+reason = "preliminary delivery; the definitive table is canonical (get_all_variables.R drop: 'Preliminary tables')"
+
+[[exclude]]
+table = "Moms_2020_prel20220502"
+reason = "preliminary delivery; the definitive table is canonical (get_all_variables.R drop: 'Preliminary tables')"
+
+[[exclude]]
+table = "Moms_2021_prel20210421"
+reason = "preliminary delivery; the definitive table is canonical (get_all_variables.R drop: 'Preliminary tables')"
+
+[[exclude]]
+table = "Moms_2021_prel20220502"
+reason = "preliminary delivery; the definitive table is canonical (get_all_variables.R drop: 'Preliminary tables')"
+
+[[exclude]]
+table = "Moms_2021_prel20230615"
+reason = "preliminary delivery; the definitive table is canonical (get_all_variables.R drop: 'Preliminary tables')"
+
+[[exclude]]
+table = "Moms_2022_prel20230615"
+reason = "preliminary delivery; the definitive table is canonical (get_all_variables.R drop: 'Preliminary tables')"
+
+[[exclude]]
+table = "Moms_2023_prel20250626"
+reason = "preliminary delivery; the definitive table is canonical (get_all_variables.R drop: 'Preliminary tables')"
+
+[[exclude]]
+table = "Moms_2024_prel20250626"
+reason = "preliminary delivery; the definitive table is canonical (get_all_variables.R drop: 'Preliminary tables')"
+
+[[exclude]]
+table = "Population_PersonNr_20201231"
+reason = "superseded annual stock snapshot; only the latest (_20241231) is current (get_all_variables.R drop: 'Old population files')"
+
+[[exclude]]
+table = "Population_PersonNr_20211231"
+reason = "superseded annual stock snapshot; only the latest (_20241231) is current (get_all_variables.R drop: 'Old population files')"
+
+[[exclude]]
+table = "Population_PersonNr_20221231"
+reason = "superseded annual stock snapshot; only the latest (_20241231) is current (get_all_variables.R drop: 'Old population files')"
+
+[[exclude]]
+table = "Population_PersonNr_20231231"
+reason = "superseded annual stock snapshot; only the latest (_20241231) is current (get_all_variables.R drop: 'Old population files')"
+
+[[exclude]]
+table = "RegSthlm_ovr_2015"
+reason = "raw pre-processing delivery; the SWECOV_* processed table is canonical (get_all_variables.R drop: RAW/OLD details)"
+
+[[exclude]]
+table = "RegSthlm_ovr_2016"
+reason = "raw pre-processing delivery; the SWECOV_* processed table is canonical (get_all_variables.R drop: RAW/OLD details)"
+
+[[exclude]]
+table = "RegSthlm_ovr_2017"
+reason = "raw pre-processing delivery; the SWECOV_* processed table is canonical (get_all_variables.R drop: RAW/OLD details)"
+
+[[exclude]]
+table = "RegSthlm_ovr_2018"
+reason = "raw pre-processing delivery; the SWECOV_* processed table is canonical (get_all_variables.R drop: RAW/OLD details)"
+
+[[exclude]]
+table = "RegSthlm_ovr_2019"
+reason = "raw pre-processing delivery; the SWECOV_* processed table is canonical (get_all_variables.R drop: RAW/OLD details)"
+
+[[exclude]]
+table = "RegSthlm_ovr_2020"
+reason = "raw pre-processing delivery; the SWECOV_* processed table is canonical (get_all_variables.R drop: RAW/OLD details)"
+
+[[exclude]]
+table = "RegSthlm_ovr_2021"
+reason = "raw pre-processing delivery; the SWECOV_* processed table is canonical (get_all_variables.R drop: RAW/OLD details)"
+
+[[exclude]]
+table = "RegSthlm_ovr_2022"
+reason = "raw pre-processing delivery; the SWECOV_* processed table is canonical (get_all_variables.R drop: RAW/OLD details)"
+
+[[exclude]]
+table = "RegSthlm_ovr_2023"
+reason = "raw pre-processing delivery; the SWECOV_* processed table is canonical (get_all_variables.R drop: RAW/OLD details)"
+
+[[exclude]]
+table = "rsvd_2016"
+reason = "raw pre-processing delivery; the SWECOV_* processed table is canonical (get_all_variables.R drop: RAW/OLD details)"
+
+[[exclude]]
+table = "rsvd_2017"
+reason = "raw pre-processing delivery; the SWECOV_* processed table is canonical (get_all_variables.R drop: RAW/OLD details)"
+
+[[exclude]]
+table = "rsvd_2018"
+reason = "raw pre-processing delivery; the SWECOV_* processed table is canonical (get_all_variables.R drop: RAW/OLD details)"
+
+[[exclude]]
+table = "rsvd_2019"
+reason = "raw pre-processing delivery; the SWECOV_* processed table is canonical (get_all_variables.R drop: RAW/OLD details)"
+
+[[exclude]]
+table = "rsvd_2020"
+reason = "raw pre-processing delivery; the SWECOV_* processed table is canonical (get_all_variables.R drop: RAW/OLD details)"
+
+[[exclude]]
+table = "rsvd_2021"
+reason = "raw pre-processing delivery; the SWECOV_* processed table is canonical (get_all_variables.R drop: RAW/OLD details)"
+
+[[exclude]]
+table = "rsvd_2022"
+reason = "raw pre-processing delivery; the SWECOV_* processed table is canonical (get_all_variables.R drop: RAW/OLD details)"
+
+[[exclude]]
+table = "rsvd_2023"
+reason = "raw pre-processing delivery; the SWECOV_* processed table is canonical (get_all_variables.R drop: RAW/OLD details)"
+
+[[exclude]]
+table = "RTB_SaBo_InrFlyttFlode2021_Kv1"
+reason = "temporary quarterly table (get_all_variables.R drop: 'Temporary quarterly data')"
+
+[[exclude]]
+table = "RTB_SaBo_InrFlyttFlode2021_kv2"
+reason = "temporary quarterly table (get_all_variables.R drop: 'Temporary quarterly data')"
+
+[[exclude]]
+table = "Soc_AGIIndivid202101_Prel"
+reason = "preliminary delivery; the definitive table is canonical (get_all_variables.R drop: 'Preliminary tables')"
+
+[[exclude]]
+table = "Soc_AGIIndivid202102_Prel"
+reason = "preliminary delivery; the definitive table is canonical (get_all_variables.R drop: 'Preliminary tables')"
+
+[[exclude]]
+table = "Soc_AGIIndivid202103_Prel"
+reason = "preliminary delivery; the definitive table is canonical (get_all_variables.R drop: 'Preliminary tables')"
+
+[[exclude]]
+table = "Soc_AGIIndivid202104_Prel"
+reason = "preliminary delivery; the definitive table is canonical (get_all_variables.R drop: 'Preliminary tables')"
+
+[[exclude]]
+table = "Soc_AGIIndivid202105_Prel"
+reason = "preliminary delivery; the definitive table is canonical (get_all_variables.R drop: 'Preliminary tables')"
+
+[[exclude]]
+table = "Soc_AGIIndivid202106_Prel"
+reason = "preliminary delivery; the definitive table is canonical (get_all_variables.R drop: 'Preliminary tables')"
+
+[[exclude]]
+table = "Soc_AGIIndivid202107_Prel"
+reason = "preliminary delivery; the definitive table is canonical (get_all_variables.R drop: 'Preliminary tables')"
+
+[[exclude]]
+table = "SoS_BU_INSATS_1516_ENGANG"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_BU_INSATS_1719_ENGANG"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_bu_insats_2020_lev3"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_BU_PLAC_1516_ENGANG"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_BU_PLAC_1719_ENGANG"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_bu_plac_2020_lev3"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_R_BU_INS_TOT_LEV5"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_R_BU_PLAC_TOT_LEV5"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_R_CAN_LEV6"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_R_CAN_TOT_LEV5"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_R_DORS_ENGANG"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_r_dors_hermes_lev3"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_R_DORS_KLEV4"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_r_dors_lev3"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_R_DORS_LEV6"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_R_DORS_TOT_LEV5"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_R_EKB_BISTMOTT_ENGR"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_R_EKB_BISTM_KLEV4"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_R_EKB_HUSHALL_ENGR"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_R_EKB_HUSH_KLEV4"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_R_EKB_MAN_BM_LEV6"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_R_EKB_MAN_BM_TOT_LEV5"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_R_EKB_MAN_HH_LEV6"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_R_EKB_MAN_HH_TOT_LEV5"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_R_HSL_INSATS_KLEV4"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_R_HSL_LEV6"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_R_HSL_PERS_ENGANG"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_R_HSL_PERS_KLEV4"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_R_HSL_TOT_LEV5"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_R_LMED_KLEV4"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_R_LMED_PR_2005_LEV5"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_R_LMED_PR_2006_LEV5"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_R_LMED_PR_2007_LEV5"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_R_LMED_PR_2008_LEV5"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_R_LMED_PR_2009_LEV5"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_R_LMED_PR_2010_LEV5"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_R_LMED_PR_2011_LEV5"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_R_LMED_PR_2012_LEV5"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_R_LMED_PR_2013_LEV5"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_R_LMED_PR_2014_LEV5"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_R_LMED_PR_2015_LEV5"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_R_LMED_PR_2016_LEV5"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_R_LMED_PR_2017_LEV5"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_R_LMED_PR_2018_LEV5"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_R_LMED_PR_2019_LEV5"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_R_LMED_PR_2020_LEV5"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_R_LMED_PR_2021_LEV5"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_R_LMED_PR_2022_LEV5"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_R_LMED_TOT_1970_LEV5"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_R_LMED_TOT_2000_LEV5"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_R_LMED_TOT_2004_LEV5"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_R_LMED_TOT_2005_LEV5"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_R_LMED_TOT_2006_LEV5"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_R_LMED_TOT_2007_LEV5"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_R_LMED_TOT_2008_LEV5"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_R_LMED_TOT_2009_LEV5"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_R_LMED_TOT_2010_LEV5"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_R_LMED_TOT_2011_LEV5"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_R_LMED_TOT_2012_LEV5"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_R_LMED_TOT_2013_LEV5"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_R_LMED_TOT_2014_LEV5"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_R_LMED_TOT_2015_LEV5"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_R_LMED_TOT_2016_LEV5"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_R_LMED_TOT_2017_LEV5"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_R_LMED_TOT_2018_LEV5"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_R_LMED_TOT_2019_LEV5"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_R_LMED_TOT_2020_LEV5"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_R_LMED_TOT_2021_LEV5"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_R_LMED_TOT_2022_LEV5"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_R_LMED_TOT_2023_LEV6"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_R_LSS_ENGANG"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_r_lss_lev3"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_R_LSS_LEV6"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_R_LSS_TOT_LEV5"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_R_PAR_OV_KLEV4"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_R_PAR_OV_LEV6"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_R_PAR_OV_PR_LEV5"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_R_PAR_OV_TOT_LEV5"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_R_PAR_SV_KLEV4"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_R_PAR_SV_LEV6"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_R_PAR_SV_PR_LEV5"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_R_PAR_SV_TOT_LEV5"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_R_SOL_INCR_KLEV4"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_R_SOL_KLEV4"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_R_SOL_LEV6"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_R_SOL_TOT_LEV5"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_S_R_SOL_ENGANG"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_TTTT_R_COV_PAR_SV"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_TTTT_R_PAR_OV_ENGANG"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_tttt_r_par_ov_lev3"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_TTTT_R_PAR_SV_ENGANG"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_tttt_r_par_sv_lev3"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_T_R_CAN"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_T_R_HSL_INSATS_ENGANG"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_t_r_hsl_insats_lev3"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "SoS_T_R_LMED_ENGANG"
+reason = "raw/unorganized SoS delivery; SWECOV_SOS_* processed tables are canonical (get_all_variables.R drop: 'Socialstyrelsen not organized')"
+
+[[exclude]]
+table = "UHV_2020_rev_maj"
+reason = "superseded UHV revision (get_all_variables.R drop: 'Old revisions')"
+
+[[exclude]]
+table = "UHV_2020_rev_okt"
+reason = "superseded UHV revision (get_all_variables.R drop: 'Old revisions')"
+
+[[exclude]]
+table = "UHV_2024_rev_maj"
+reason = "superseded UHV revision (get_all_variables.R drop: 'Old revisions')"
+
+[[exclude]]
+table = "VGR_Primarvard_2015"
+reason = "raw pre-processing delivery; the SWECOV_* processed table is canonical (get_all_variables.R drop: RAW/OLD details)"
+
+[[exclude]]
+table = "VGR_Primarvard_2016"
+reason = "raw pre-processing delivery; the SWECOV_* processed table is canonical (get_all_variables.R drop: RAW/OLD details)"
+
+[[exclude]]
+table = "VGR_Primarvard_2017"
+reason = "raw pre-processing delivery; the SWECOV_* processed table is canonical (get_all_variables.R drop: RAW/OLD details)"
+
+[[exclude]]
+table = "VGR_Primarvard_2018"
+reason = "raw pre-processing delivery; the SWECOV_* processed table is canonical (get_all_variables.R drop: RAW/OLD details)"
+
+[[exclude]]
+table = "VGR_Primarvard_2019"
+reason = "raw pre-processing delivery; the SWECOV_* processed table is canonical (get_all_variables.R drop: RAW/OLD details)"
+
+[[exclude]]
+table = "VGR_Primarvard_2020"
+reason = "raw pre-processing delivery; the SWECOV_* processed table is canonical (get_all_variables.R drop: RAW/OLD details)"
+
+[[exclude]]
+table = "VGR_Primarvard_2021"
+reason = "raw pre-processing delivery; the SWECOV_* processed table is canonical (get_all_variables.R drop: RAW/OLD details)"
+
+[[exclude]]
+table = "VGR_Primarvard_2022"
+reason = "raw pre-processing delivery; the SWECOV_* processed table is canonical (get_all_variables.R drop: RAW/OLD details)"
+
+[[exclude]]
+table = "VGR_Primarvard_2023"
+reason = "raw pre-processing delivery; the SWECOV_* processed table is canonical (get_all_variables.R drop: RAW/OLD details)"
+
+[[exclude]]
+table = "VGR_PV_Diagnoser_2015"
+reason = "raw pre-processing delivery; the SWECOV_* processed table is canonical (get_all_variables.R drop: RAW/OLD details)"
+
+[[exclude]]
+table = "VGR_PV_Diagnoser_2016"
+reason = "raw pre-processing delivery; the SWECOV_* processed table is canonical (get_all_variables.R drop: RAW/OLD details)"
+
+[[exclude]]
+table = "VGR_PV_Diagnoser_2017"
+reason = "raw pre-processing delivery; the SWECOV_* processed table is canonical (get_all_variables.R drop: RAW/OLD details)"
+
+[[exclude]]
+table = "VGR_PV_Diagnoser_2018"
+reason = "raw pre-processing delivery; the SWECOV_* processed table is canonical (get_all_variables.R drop: RAW/OLD details)"
+
+[[exclude]]
+table = "VGR_PV_Diagnoser_2019"
+reason = "raw pre-processing delivery; the SWECOV_* processed table is canonical (get_all_variables.R drop: RAW/OLD details)"
+
+[[exclude]]
+table = "VGR_PV_Diagnoser_2020"
+reason = "raw pre-processing delivery; the SWECOV_* processed table is canonical (get_all_variables.R drop: RAW/OLD details)"
+
+[[exclude]]
+table = "VGR_PV_Diagnoser_2021"
+reason = "raw pre-processing delivery; the SWECOV_* processed table is canonical (get_all_variables.R drop: RAW/OLD details)"
+
+[[exclude]]
+table = "VGR_PV_Diagnoser_2022"
+reason = "raw pre-processing delivery; the SWECOV_* processed table is canonical (get_all_variables.R drop: RAW/OLD details)"
+
+[[exclude]]
+table = "VGR_PV_Diagnoser_2023"
+reason = "raw pre-processing delivery; the SWECOV_* processed table is canonical (get_all_variables.R drop: RAW/OLD details)"
+
+# ── DECIDED (maintainer-approved 2026-09-01, MONA probe evidence): supersessions confirmed by
+# row counts + coverage (231208 ⊇ 230210 in every pair). APPROVED by maintainer 2026-09-01.
+
+[[exclude]]
+table = "KTA_2020_individmodellen_230210"
+reason = "superseded by KTA_2020_individmodellen_231208 (probe: 231208 row count >= 230210 in every pair)"
+
+[[exclude]]
+table = "KTA_2020_transaktionsmodellen_230210"
+reason = "superseded by KTA_2020_transaktionsmodellen_231208 (probe: 231208 row count >= 230210 in every pair)"
+
+[[exclude]]
+table = "KTA_2021_individmodellen_230210"
+reason = "superseded by KTA_2021_individmodellen_231208 (probe: 231208 row count >= 230210 in every pair)"
+
+[[exclude]]
+table = "KTA_2021_transaktionsmodellen_230210"
+reason = "superseded by KTA_2021_transaktionsmodellen_231208 (probe: 231208 row count >= 230210 in every pair)"
+
+# ── DECIDED (maintainer-approved 2026-09-01, MONA probe evidence): editions derived from the
+# period distributions (dominant time column; noise years below
+# max(5, 0.05%) trimmed; ragged boundary years get month endpoints).
+# APPROVED by maintainer 2026-09-01. NOTE the Swedbank entries OVERRIDE a wrong name-derived
+# edition: an 8-digit token in these names is the DELIVERY date (20210520),
+# not coverage — probe shows V01 holds 2019, V02/V03 hold 2020.
+
+# evidence: [YEAR], delivery 20210520 holds 2019 data
+[[edition]]
+table = "Swedbank_V01_20210520"
+edition = 2019
+
+# evidence: [YEAR], delivery 20210520 holds 2020 data
+[[edition]]
+table = "Swedbank_V02_20210520"
+edition = 2020
+
+# evidence: [YEAR], delivery 20210520 holds 2020 data
+[[edition]]
+table = "Swedbank_V03_20210520"
+edition = 2020
+
+# name-derived (term-pair / year-range table names; no probe time column):
+
+[[edition]]
+table = "Distansutb_grund_HT20_VT21"
+edition = ["HT2020", "VT2021"]
+
+[[edition]]
+table = "Distansutb_grund_HT21_VT22"
+edition = ["HT2021", "VT2022"]
+
+[[edition]]
+table = "Distansutb_gymn_HT20_VT21"
+edition = ["HT2020", "VT2021"]
+
+[[edition]]
+table = "Distansutb_gymn_HT21_VT22"
+edition = ["HT2021", "VT2022"]
+
+[[edition]]
+table = "PV_1997_2010"
+edition = { from = 1997, to = 2010 }
+
+# evidence: [AKT_DAT] (date), 66,348,532 dated rows of 66,348,532; noise years trimmed: [1969, 1970, 1971, 1972, 1973, 1974, 1975, 1976, 1977, 1978, 1979, 1980, 1981, 1982, 1983, 1984, 1985, 1986, 1987, 1988, 1989, 1990]
+[[edition]]
+table = "AMS_HIST_AKTSO"
+edition = { from = 1991, to = 2020 }
+
+# evidence: [AKT_DAT] (date), 22,193,797 dated rows of 22,193,797; noise years trimmed: [1976, 1977, 1978, 1979, 1980, 1981, 1982, 1983, 1984, 1985, 1986, 1987, 1988, 1989, 1990, 1991, 1995, 1996]
+[[edition]]
+table = "AMS_HIST_AKTSO_2021_20230726"
+edition = [{ from = 1992, to = 1994 }, { from = 1997, to = 2023 }]
+
+# evidence: [INTR_DAT] (date), 2,563,958 dated rows of 2,563,958
+[[edition]]
+table = "AMS_INSPER"
+edition = { from = 2015, to = 2020 }
+
+# evidence: [INTR_DAT] (date), 1,002,779 dated rows of 1,002,779
+[[edition]]
+table = "AMS_INSPER_2021_20230726"
+edition = { from = 2021, to = 2023 }
+
+# evidence: [INTR_DAT] (date), 9,274,184 dated rows of 9,274,184
+[[edition]]
+table = "AMS_SOKATPER"
+edition = { from = 2015, to = 2020 }
+
+# evidence: [INTR_DAT] (date), 3,227,817 dated rows of 3,227,817
+[[edition]]
+table = "AMS_SOKATPER_2021_20230726"
+edition = { from = 2021, to = 2023 }
+
+# evidence: [Provdatum] (date), 3,605 dated rows of 3,605
+[[edition]]
+table = "FHM_CovidWGS"
+edition = { from = 2020, to = 2021 }
+
+# evidence: [Diariedatum] (date), 1,169,999 dated rows of 1,169,999; noise years trimmed: [2024]
+[[edition]]
+table = "FHM_KLIN_ANM"
+edition = { from = 2020, to = 2023 }
+
+# evidence: [Registreringsdatum] (date), 3,378,259 dated rows of 3,378,259
+[[edition]]
+table = "FHM_LAB_ANM"
+edition = { from = 2020, to = 2024 }
+
+# evidence: [vaccination_date] (date), 14,475,516 dated rows of 14,475,516
+[[edition]]
+table = "FHM_NVR_Barn"
+edition = { from = 2013, to = 2024 }
+
+# evidence: [Statistikdatum] (date), 2,728,032 dated rows of 2,728,032
+[[edition]]
+table = "FHM_SMI_FALL"
+edition = { from = 2020, to = 2024 }
+
+# evidence: [UTTAGET_MANAD] (datetime2), 18,629,870 dated rows of 18,629,870
+[[edition]]
+table = "FK_AKTIVITETSTOD_lev4"
+edition = { from = 2015, to = 2025 }
+
+# evidence: [ERS_MANAD] (float), 1,731,997 dated rows of 1,731,997
+[[edition]]
+table = "FK_ASE_lev4"
+edition = { from = 2015, to = 2024 }
+
+# evidence: [Utb_manad] (float), 172,592,262 dated rows of 172,592,262
+[[edition]]
+table = "FK_BAB_lev4"
+edition = { from = 2015, to = 2024 }
+
+# evidence: [UTBETALNINGSMANAD] (date), 12,237,574 dated rows of 12,237,574
+[[edition]]
+table = "FK_BOSTADSBIDRAG_lev4"
+edition = { from = 2018, to = 2025 }
+
+# evidence: [UTTAG_MANAD] (varchar), 707,073 dated rows of 707,073
+[[edition]]
+table = "FK_BOSTADSERSATTNING_lev4"
+edition = { from = 2015, to = "2025-06" }
+
+# evidence: [UTTAG_MANAD] (varchar), 54,712,075 dated rows of 54,712,075
+[[edition]]
+table = "FK_BOSTADSTILLAGG_lev4"
+edition = { from = 2015, to = "2025-06" }
+
+# evidence: [DEL_FROM_DATUM] (date), 8,608,453 dated rows of 8,608,453; noise years trimmed: [1971, 1972, 1973, 1974, 1975, 1976, 1977, 1978, 1979, 1980, 1981, 1982, 1983, 1984, 1985, 1986, 1987, 1988, 1989, 1990, 1991]
+[[edition]]
+table = "FK_DELFALL1_1_SA_lev4"
+edition = { from = 1992, to = 2025 }
+
+# evidence: [DEL_FROM_DATUM] (date), 22,150,949 dated rows of 22,150,949; noise years trimmed: [2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011]
+[[edition]]
+table = "FK_DELFALL4_1_SJP_lev4"
+edition = { from = 2012, to = 2025 }
+
+# evidence: [ERSATTNING_TOM] (datetime2), 4,027,187 dated rows of 4,027,187
+[[edition]]
+table = "FK_ETABLERINGSERSATTNING_lev4"
+edition = { from = 2015, to = 2024 }
+
+# evidence: [UTTAG_MANAD] (varchar), 1,424,880 dated rows of 1,424,880
+[[edition]]
+table = "FK_ETABLERINGSTILLAGG_lev4"
+edition = { from = 2015, to = "2025-06" }
+
+# evidence: [FALL_FROM_DATUM] (date), 130,789,167 dated rows of 130,789,167; noise years trimmed: [2009, 2010, 2011, 2012, 2013]
+[[edition]]
+table = "FK_FP_DELFALL1_lev4"
+edition = { from = 2014, to = 2024 }
+
+# evidence: [Utbetalningsperiod_tomdat] (date), 6,548,133 dated rows of 6,548,133; noise years trimmed: [2025]
+[[edition]]
+table = "FK_HE_lev4"
+edition = { from = 2015, to = 2024 }
+
+# evidence: [Utbetalningsperiod_fromdat] (date), 108,988 dated rows of 108,988
+[[edition]]
+table = "FK_MEKBBARN_lev4"
+edition = { from = 2018, to = 2024 }
+
+# evidence: [Utbetalningsperiod_fromdat] (date), 81,649 dated rows of 81,649
+[[edition]]
+table = "FK_MEKB_lev4"
+edition = { from = 2018, to = 2024 }
+
+# evidence: [Utbetalningsperiod_tomdat] (date), 573,665 dated rows of 573,665; noise years trimmed: [2018]
+[[edition]]
+table = "FK_MEKV_lev4"
+edition = { from = 2019, to = 2025 }
+
+# evidence: [Utbetalningsperiod_tomdat] (date), 4,481,333 dated rows of 4,481,333; noise years trimmed: [2018]
+[[edition]]
+table = "FK_OMVBARN_lev4"
+edition = { from = 2019, to = 2025 }
+
+# evidence: [Utbetalningsperiod_tomdat] (date), 3,839,523 dated rows of 3,839,523; noise years trimmed: [2018]
+[[edition]]
+table = "FK_OMV_lev4"
+edition = { from = 2019, to = 2025 }
+
+# evidence: [ERSATTNTOM] (datetime2), 10,086,427 dated rows of 10,086,428; noise years trimmed: [2025]
+[[edition]]
+table = "FK_SMITTBARARPENNING_lev4"
+edition = { from = 2015, to = 2024 }
+
+# evidence: [DEL_FROM_DATUM] (date), 50,468,591 dated rows of 50,468,591; noise years trimmed: [2012, 2013, 2014, 2025]
+[[edition]]
+table = "FK_TFP_DELFALL_lev4"
+edition = { from = 2015, to = 2024 }
+
+# evidence: [Utbetalningsperiod_tomdat] (date), 14,865,515 dated rows of 14,865,515
+[[edition]]
+table = "FK_UHS_lev4"
+edition = { from = 2018, to = 2025 }
+
+# evidence: [UTTAGET_MANAD] (datetime2), 2,003,322 dated rows of 2,003,322
+[[edition]]
+table = "FK_UTVECKLINGSERSATTNING_lev4"
+edition = { from = 2015, to = 2025 }
+
+# evidence: [Utbetalningsperiod_tomdat] (date), 4,686,356 dated rows of 4,686,356; noise years trimmed: [2023, 2024]
+[[edition]]
+table = "FK_VBBARN_lev4"
+edition = { from = 2015, to = 2022 }
+
+# evidence: [Utbetalningsperiod_tomdat] (date), 4,123,781 dated rows of 4,123,781; noise years trimmed: [2023, 2024]
+[[edition]]
+table = "FK_VB_lev4"
+edition = { from = 2015, to = 2022 }
+
+# evidence: [Beräkningsdatum_from] (date), 7,617 dated rows of 7,617
+[[edition]]
+table = "GbgKom_Aldreboende"
+edition = { from = 2019, to = 2021 }
+
+# evidence: [ofrivillig_barnloshet_ar] (varchar), 362 dated rows of 1,260,161
+[[edition]]
+table = "GravReg_Gravniva_lev2"
+edition = [{ from = 2005, to = 2006 }, { from = 2008, to = 2022 }]
+
+# evidence: [year] (float), 9,045 dated rows of 9,045
+[[edition]]
+table = "GU_ss_fr"
+edition = { from = 2018, to = 2020 }
+
+# evidence: [Ar] (char), 40,831,043 dated rows of 40,831,043
+[[edition]]
+table = "Hreg_Poang_1993_2022"
+edition = { from = 1993, to = 2022 }
+
+# evidence: [Ar] (char), 5,522,836 dated rows of 5,522,836
+[[edition]]
+table = "Hreg_Poang_2022_2024"
+edition = { from = 2022, to = 2024 }
+
+# evidence: [Ar] (char), 1,417,959 dated rows of 1,417,959
+[[edition]]
+table = "Hreg_Reg_1990_1993"
+edition = { from = 1990, to = 1993 }
+
+# evidence: [Ar] (char), 42,201,099 dated rows of 42,201,099
+[[edition]]
+table = "Hreg_Reg_1993_2022"
+edition = { from = 1993, to = 2022 }
+
+# evidence: [Ar] (char), 5,474,028 dated rows of 5,474,028
+[[edition]]
+table = "Hreg_Reg_2022_2024"
+edition = { from = 2022, to = 2024 }
+
+# evidence: [Ar] (char), 25,845,414 dated rows of 25,845,414
+[[edition]]
+table = "Hreg_Sok_2015_2022"
+edition = { from = 2015, to = 2022 }
+
+# evidence: [Ar] (char), 9,969,204 dated rows of 9,969,204
+[[edition]]
+table = "Hreg_Sok_2022_2024"
+edition = { from = 2022, to = 2024 }
+
+# evidence: [regdatum] (datetime2), 17,745,112 dated rows of 17,745,119; noise years trimmed: [1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013]
+[[edition]]
+table = "IFA_Beslut"
+edition = { from = 2014, to = 2021 }
+
+# evidence: [regdatum] (datetime2), 22,926,991 dated rows of 22,926,998; noise years trimmed: [1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013]
+[[edition]]
+table = "IFA_Beslut_Lev3"
+edition = { from = 2014, to = 2023 }
+
+# evidence: [regdatum] (datetime2), 5,660,831 dated rows of 5,660,831
+[[edition]]
+table = "IFA_Deltidsveckor_Lev2"
+edition = { from = 2017, to = 2021 }
+
+# evidence: [regdatum] (datetime2), 6,664,849 dated rows of 6,664,849
+[[edition]]
+table = "IFA_Deltidsveckor_Lev3"
+edition = { from = 2017, to = 2023 }
+
+# evidence: [regdatum] (datetime2), 2,194,391 dated rows of 2,194,394; noise years trimmed: [1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002]
+[[edition]]
+table = "IFA_Diverse_Lev2"
+edition = { from = 2003, to = 2021 }
+
+# evidence: [regdatum] (datetime2), 2,387,804 dated rows of 2,387,807; noise years trimmed: [1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2023]
+[[edition]]
+table = "IFA_Diverse_Lev3"
+edition = { from = 2003, to = 2022 }
+
+# evidence: [arbvillk] (date), 1,110,480 dated rows of 1,110,486; noise years trimmed: [1990, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007]
+[[edition]]
+table = "IFA_Ersperiod_Lev2"
+edition = { from = 2008, to = 2021 }
+
+# evidence: [ersperiodfrom] (date), 6,518,035 dated rows of 6,518,053; noise years trimmed: [1900, 1911, 1928, 1930, 1964, 1969, 1970, 1973, 1974, 1975, 1976, 1977, 1978, 1979, 1980, 1981, 1982, 1983, 1984]
+[[edition]]
+table = "IFA_Ersperiod_Lev3"
+edition = { from = 1985, to = 2023 }
+
+# evidence: [datum_f] (datetime2), 1,225 dated rows of 1,225
+[[edition]]
+table = "IFA_KKvecka_Lev2"
+edition = { from = 1998, to = 2021 }
+
+# evidence: [datum_m] (datetime2), 6,530 dated rows of 9,265
+[[edition]]
+table = "IFA_KKvecka_Lev3"
+edition = { from = 1901, to = 2026 }
+
+# evidence: [medlemfrom] (date), 994,778 dated rows of 994,782; noise years trimmed: [1963, 1965, 1966, 1967, 1968, 1969, 1970]
+[[edition]]
+table = "IFA_Medlemskap_Lev2"
+edition = { from = 1971, to = 2021 }
+
+# evidence: [medlemfrom] (date), 1,132,979 dated rows of 1,132,983; noise years trimmed: [1963, 1965, 1966, 1967, 1968, 1969, 1970, 1971]
+[[edition]]
+table = "IFA_Medlemskap_Lev3"
+edition = { from = 1972, to = 2023 }
+
+# evidence: [utbetdatum] (date), 14,455,514 dated rows of 14,455,514
+[[edition]]
+table = "IFA_Utbet_2015_2017_Lev2"
+edition = { from = 2015, to = 2017 }
+
+# evidence: [utbetdatum] (date), 10,039,226 dated rows of 10,039,226
+[[edition]]
+table = "IFA_Utbet_2018_2019_Lev2"
+edition = { from = 2018, to = 2019 }
+
+# evidence: [utbetdatum] (date), 13,673,832 dated rows of 13,673,832
+[[edition]]
+table = "IFA_Utbet_2020_2021_Lev2"
+edition = { from = 2020, to = 2021 }
+
+# evidence: [utbetdatum] (date), 45,023,935 dated rows of 45,023,935
+[[edition]]
+table = "IFA_Utbet_Lev3"
+edition = { from = 2015, to = 2023 }
+
+# evidence: [OrderCreatedDateTime] (datetime2), 5,650,368 dated rows of 5,650,368
+[[edition]]
+table = "Inera_CK_EP"
+edition = { from = 2020, to = 2021 }
+
+# evidence: [OrderCreatedDateTime] (datetime2), 9,742,368 dated rows of 9,742,368
+[[edition]]
+table = "Inera_EgenProvhantering"
+edition = { from = 2020, to = 2023 }
+
+# evidence: [Beslutsdatum] (date), 33,602 dated rows of 33,602
+[[edition]]
+table = "LansstyrelsenVG_LOK01"
+edition = { from = 2020, to = 2021 }
+
+# evidence: [RcvDate] (date), 243,732 dated rows of 243,732
+[[edition]]
+table = "LV_mla_2005010"
+edition = { from = 2005, to = 2019 }
+
+# evidence: [RcvDate] (date), 539,203 dated rows of 539,203
+[[edition]]
+table = "LV_mla_2020010"
+edition = { from = 2020, to = 2024 }
+
+# evidence: [FOM_DAT] (date), 3,396 dated rows of 3,404; noise years trimmed: [2000, 2002, 2004, 2005, 2006]
+[[edition]]
+table = "MalmoStad"
+edition = { from = 2007, to = 2020 }
+
+# evidence: [I_DiagnosisDate] (date), 25,338 dated rows of 25,346; noise years trimmed: [1900, 1978, 1979, 1980, 1981]
+[[edition]]
+table = "NDR_incidence"
+edition = { from = 1982, to = 2024 }
+
+# evidence: [Datum] (date), 194,574 dated rows of 194,574; noise years trimmed: [2011]
+[[edition]]
+table = "RD_Vaccinering_Pandemrix"
+edition = { from = 2009, to = 2010 }
+
+# evidence: [dateForDose1] (date), 176,462 dated rows of 176,620; noise years trimmed: [1999, 2000, 2006, 2008, 2011, 2016, 2018, 2019]
+[[edition]]
+table = "RegGavleborg_Vaccinering_Pandemrix"
+edition = { from = 2009, to = 2010 }
+
+# evidence: [Vaccinationsdatum] (date), 260,454 dated rows of 260,464; noise years trimmed: [1909, 2001, 2006, 2008, 2011, 2012, 2013, 2014]
+[[edition]]
+table = "RJL_Vaccinering_Pandemrix"
+edition = { from = 2009, to = 2010 }
+
+# evidence: [VACCINE_DATE] (date), 89,192 dated rows of 89,192; noise years trimmed: [2011]
+[[edition]]
+table = "RKL_Vaccinering_Pandemrix"
+edition = { from = 2009, to = 2010 }
+
+# evidence: [Vaccinationsdatum] (date), 74,244 dated rows of 74,244
+[[edition]]
+table = "RK_Vaccinering"
+edition = { from = 2009, to = 2010 }
+
+# evidence: [datum] (date), 147,487 dated rows of 147,490; noise years trimmed: [2011]
+[[edition]]
+table = "RN_Vaccinering_Pandemrix"
+edition = { from = 2009, to = 2010 }
+
+# evidence: [Ar] (int), 320,970 dated rows of 320,970; noise years trimmed: [2011]
+[[edition]]
+table = "RO_Vaccinering_Pandemrix"
+edition = { from = 2009, to = 2010 }
+
+# evidence: [Vaccinationsdatum] (date), 221,867 dated rows of 221,868; noise years trimmed: [2001]
+[[edition]]
+table = "RU_Vaccinationsjournaler"
+edition = { from = 2009, to = 2010 }
+
+# evidence: [Vaccinationsdatum] (date), 130,721 dated rows of 130,721; noise years trimmed: [2011]
+[[edition]]
+table = "RV_Vaccinering_Pandemrix"
+edition = { from = 2009, to = 2010 }
+
+# evidence: [R2_mdtrtgronddat] (date), 10,203 dated rows of 10,484; noise years trimmed: [2001, 2008, 2009]
+[[edition]]
+table = "SCRCR_id2759_rad"
+edition = { from = 2017, to = 2024 }
+
+# evidence: [A2_opdat] (date), 28,800 dated rows of 28,800
+[[edition]]
+table = "SCRCR_id2759_rot"
+edition = { from = 2019, to = 2023 }
+
+# evidence: [PERIOD_FROM] (varchar), 15,301 dated rows of 15,301
+[[edition]]
+table = "SKV_anstand_tillf_aterk"
+edition = { from = "2020-03", to = "2021-05" }
+
+# evidence: [PERIOD_FROM] (varchar), 165,335 dated rows of 165,335
+[[edition]]
+table = "SKV_anstand_tillf_beviljat"
+edition = { from = "2020-03", to = "2021-05" }
+
+# evidence: [PERIOD_FROM] (varchar), 112,772 dated rows of 112,772
+[[edition]]
+table = "SKV_anstand_tillf_upphort"
+edition = { from = "2020-04", to = "2021-05" }
+
+# evidence: [PERIOD_FROM] (varchar), 10,653,188 dated rows of 10,653,188
+[[edition]]
+table = "SKV_Moms"
+edition = { from = 2019, to = "2021-05" }
+
+# evidence: [BEVILJAT_DATUM] (date), 79,356 dated rows of 79,356
+[[edition]]
+table = "SKV_omststod_beviljat"
+edition = { from = 2020, to = 2021 }
+
+# evidence: [BESLUTSDATUM] (date), 223,513 dated rows of 223,513
+[[edition]]
+table = "SKV_reducerad_egenavg"
+edition = 2021
+
+# evidence: [VtfStartTidpunkt] (datetime2), 11,110 dated rows of 11,110
+[[edition]]
+table = "SoS_R_SIR_SIRI_KLEV4"
+edition = { from = 2020, to = 2022 }
+
+# evidence: [UtskrTidpunkt] (datetime2), 11,083 dated rows of 11,083
+[[edition]]
+table = "SoS_R_SIR_VTF_KLEV4"
+edition = { from = 2020, to = 2022 }
+
+# evidence: [BESL_DAT] (date), 22,052 dated rows of 22,060; noise years trimmed: [2009, 2010, 2011, 2012]
+[[edition]]
+table = "SthlmKom_SBF_VOB"
+edition = { from = 2013, to = 2021 }
+
+# evidence: [year] (varchar), 94,974,142 dated rows of 94,974,142
+[[edition]]
+table = "SWECOV_PRIMARY_CARE_SKANE"
+edition = { from = 2016, to = 2023 }
+
+# evidence: [year] (varchar), 116,347,325 dated rows of 116,347,325
+[[edition]]
+table = "SWECOV_PRIMARY_CARE_STHLM"
+edition = { from = 2015, to = 2023 }
+
+# evidence: [year] (varchar), 138,957,916 dated rows of 138,957,916
+[[edition]]
+table = "SWECOV_PRIMARY_CARE_VGR_DIA"
+edition = { from = 2015, to = 2023 }
+
+# evidence: [year] (varchar), 135,291,419 dated rows of 135,291,419
+[[edition]]
+table = "SWECOV_PRIMARY_CARE_VGR_PV"
+edition = { from = 2015, to = 2023 }
+
+# evidence: [INSATS_BESLUT_DATUM] (date), 114,350 dated rows of 114,356; noise years trimmed: [1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006]
+[[edition]]
+table = "SWECOV_SOS_BARN_INSATS"
+edition = { from = 2007, to = 2021 }
+
+# evidence: [PLAC_START_DATUM] (date), 153,534 dated rows of 153,537; noise years trimmed: [2001, 2002, 2003, 2004, 2005, 2006, 2007]
+[[edition]]
+table = "SWECOV_SOS_BARN_PLACERING"
+edition = { from = 2008, to = 2021 }
+
+# evidence: [AR] (float), 1,564,085 dated rows of 1,564,085
+[[edition]]
+table = "SWECOV_SOS_CANCER"
+edition = { from = 2005, to = 2022 }
+
+# evidence: [AR] (float), 1,743,809 dated rows of 1,743,809
+[[edition]]
+table = "SWECOV_SOS_DORS"
+edition = { from = 2005, to = 2023 }
+
+# evidence: [AR] (float), 11,800,110 dated rows of 11,800,110
+[[edition]]
+table = "SWECOV_SOS_EKB_HUSH"
+edition = { from = 2015, to = 2023 }
+
+# evidence: [AR] (float), 15,237,952 dated rows of 15,237,952
+[[edition]]
+table = "SWECOV_SOS_EKB_PERS"
+edition = { from = 2015, to = 2023 }
+
+# evidence: [AR] (float), 3,236,808 dated rows of 3,236,808
+[[edition]]
+table = "SWECOV_SOS_HSL_PERS"
+edition = { from = 2016, to = 2023 }
+
+# evidence: [EDATUM] (date), 2,023,067,414 dated rows of 2,023,067,419; noise years trimmed: [1970, 2000, 2004]
+[[edition]]
+table = "SWECOV_SOS_LMED"
+edition = { from = 2005, to = 2023 }
+
+# evidence: [AR] (float), 672,650 dated rows of 672,650
+[[edition]]
+table = "SWECOV_SOS_LSS"
+edition = { from = 2015, to = 2023 }
+
+# evidence: [AR] (float), 227,812,259 dated rows of 227,812,259
+[[edition]]
+table = "SWECOV_SOS_OV"
+edition = { from = 2005, to = 2023 }
+
+# evidence: [AR] (smallint), 63,480,592 dated rows of 63,480,592
+[[edition]]
+table = "SWECOV_SOS_OV_comorb"
+edition = { from = 2005, to = 2023 }
+
+# evidence: [PERIOD] (float), 25,866,070 dated rows of 25,866,070
+[[edition]]
+table = "SWECOV_SOS_SOL"
+edition = { from = 2018, to = 2023 }
+
+# evidence: [AR] (float), 28,125,081 dated rows of 28,125,081
+[[edition]]
+table = "SWECOV_SOS_SV"
+edition = { from = 2005, to = 2023 }
+
+# evidence: [AR] (smallint), 17,627,955 dated rows of 17,627,955; noise years trimmed: [2025]
+[[edition]]
+table = "SWECOV_SOS_SV_comorb"
+edition = { from = 2005, to = 2024 }
+
+# evidence: [Date] (date), 499,999 dated rows of 499,999
+[[edition]]
+table = "Swedbank_V01"
+edition = 2020
+
+# evidence: [Date] (date), 499,991 dated rows of 499,991
+[[edition]]
+table = "Swedbank_V02"
+edition = 2020
+
+# evidence: [Date] (date), 499,999 dated rows of 499,999
+[[edition]]
+table = "Swedbank_V03"
+edition = 2020
+
+# evidence: [Date] (date), 500,001 dated rows of 500,001
+[[edition]]
+table = "Swedbank_V04"
+edition = 2020
+
+# evidence: [Date] (date), 499,999 dated rows of 499,999
+[[edition]]
+table = "Swedbank_V05"
+edition = 2020
+
+# evidence: [Date] (date), 500,001 dated rows of 500,001
+[[edition]]
+table = "Swedbank_V06"
+edition = 2020
+
+# evidence: [Date] (date), 500,000 dated rows of 500,000
+[[edition]]
+table = "Swedbank_V07"
+edition = 2020
+
+# evidence: [Date] (date), 500,000 dated rows of 500,000
+[[edition]]
+table = "Swedbank_V08"
+edition = 2020
+
+# evidence: [Date] (date), 500,001 dated rows of 500,001
+[[edition]]
+table = "Swedbank_V09"
+edition = 2020
+
+# evidence: [Date] (date), 499,999 dated rows of 499,999
+[[edition]]
+table = "Swedbank_V10"
+edition = 2020
+
+# evidence: [Date] (date), 450,427 dated rows of 450,427
+[[edition]]
+table = "Swedbank_V11"
+edition = 2020
+
+# evidence: [Year] (float), 33,353 dated rows of 33,354
+[[edition]]
+table = "Swedbank_V12"
+edition = 2019
+
+# evidence: [Year] (float), 33,229 dated rows of 33,230
+[[edition]]
+table = "Swedbank_V13"
+edition = 2020
+
+# evidence: [Year] (float), 33,404 dated rows of 33,405
+[[edition]]
+table = "Swedbank_V14"
+edition = 2019
+
+# evidence: [Year] (float), 33,376 dated rows of 33,377
+[[edition]]
+table = "Swedbank_V15"
+edition = 2020
+
+# evidence: [Year] (float), 33,320 dated rows of 33,321
+[[edition]]
+table = "Swedbank_V16"
+edition = 2019
+
+# evidence: [Year] (float), 33,387 dated rows of 33,388
+[[edition]]
+table = "Swedbank_V17"
+edition = 2020
+
+# ── DECIDED (maintainer, 2026-09-01): special-purpose sub-extracts — data
+# already held, re-delivered at another level of detail for a narrow purpose.
+# Excluded from the order surface; NOT supersessions (REFACTOR_SPEC.md §12).
+
+[[exclude]]
+table = "RTB_SaBo_InrFlyttFlode2015"
+reason = "special-purpose sub-extract of InrFlyttFlode2015 (SABO residents' moves); SABO-specific extras await the steward flavor"
+
+[[exclude]]
+table = "RTB_SaBo_InrFlyttFlode2016"
+reason = "special-purpose sub-extract of InrFlyttFlode2016 (SABO residents' moves); SABO-specific extras await the steward flavor"
+
+[[exclude]]
+table = "RTB_SaBo_InrFlyttFlode2017"
+reason = "special-purpose sub-extract of InrFlyttFlode2017 (SABO residents' moves); SABO-specific extras await the steward flavor"
+
+[[exclude]]
+table = "RTB_SaBo_InrFlyttFlode2018"
+reason = "special-purpose sub-extract of InrFlyttFlode2018 (SABO residents' moves); SABO-specific extras await the steward flavor"
+
+[[exclude]]
+table = "RTB_SaBo_InrFlyttFlode2019"
+reason = "special-purpose sub-extract of InrFlyttFlode2019 (SABO residents' moves); SABO-specific extras await the steward flavor"
+
+[[exclude]]
+table = "RTB_SaBo_InrFlyttFlode2020"
+reason = "special-purpose sub-extract of InrFlyttFlode2020 (SABO residents' moves); SABO-specific extras await the steward flavor"
+
+[[exclude]]
+table = "SWECOV_SOS_SV_comorb"
+reason = "special-purpose sub-extract: derived comorbidity view over SWECOV_SOS_SV"
+
+[[exclude]]
+table = "SWECOV_SOS_OV_comorb"
+reason = "special-purpose sub-extract: derived comorbidity view over SWECOV_SOS_OV"
+
+# ── DECIDED (maintainer-approved 2026-09-01): §12 disjoint-partition labels for the ratified
+# population-split families (default spellings — landed reg_meta partition
+# arm, Y-27). APPROVED by maintainer 2026-09-01. Prel tables are already excluded,
+# so only _Def AGI streams get labels.
+
+# AGI employer reporter stream
+[[partition]]
+table = "Arb_AGIIndivid201901_Def"
+label = "arb"
+
+# AGI employer reporter stream
+[[partition]]
+table = "Arb_AGIIndivid201902_Def"
+label = "arb"
+
+# AGI employer reporter stream
+[[partition]]
+table = "Arb_AGIIndivid201903_Def"
+label = "arb"
+
+# AGI employer reporter stream
+[[partition]]
+table = "Arb_AGIIndivid201904_Def"
+label = "arb"
+
+# AGI employer reporter stream
+[[partition]]
+table = "Arb_AGIIndivid201905_Def"
+label = "arb"
+
+# AGI employer reporter stream
+[[partition]]
+table = "Arb_AGIIndivid201906_Def"
+label = "arb"
+
+# AGI employer reporter stream
+[[partition]]
+table = "Arb_AGIIndivid201907_Def"
+label = "arb"
+
+# AGI employer reporter stream
+[[partition]]
+table = "Arb_AGIIndivid201908_Def"
+label = "arb"
+
+# AGI employer reporter stream
+[[partition]]
+table = "Arb_AGIIndivid201909_Def"
+label = "arb"
+
+# AGI employer reporter stream
+[[partition]]
+table = "Arb_AGIIndivid201910_Def"
+label = "arb"
+
+# AGI employer reporter stream
+[[partition]]
+table = "Arb_AGIIndivid201911_Def"
+label = "arb"
+
+# AGI employer reporter stream
+[[partition]]
+table = "Arb_AGIIndivid201912_Def"
+label = "arb"
+
+# AGI employer reporter stream
+[[partition]]
+table = "Arb_AGIIndivid202001_Def"
+label = "arb"
+
+# AGI employer reporter stream
+[[partition]]
+table = "Arb_AGIIndivid202002_Def"
+label = "arb"
+
+# AGI employer reporter stream
+[[partition]]
+table = "Arb_AGIIndivid202003_Def"
+label = "arb"
+
+# AGI employer reporter stream
+[[partition]]
+table = "Arb_AGIIndivid202004_Def"
+label = "arb"
+
+# AGI employer reporter stream
+[[partition]]
+table = "Arb_AGIIndivid202005_Def"
+label = "arb"
+
+# AGI employer reporter stream
+[[partition]]
+table = "Arb_AGIIndivid202006_Def"
+label = "arb"
+
+# AGI employer reporter stream
+[[partition]]
+table = "Arb_AGIIndivid202007_Def"
+label = "arb"
+
+# AGI employer reporter stream
+[[partition]]
+table = "Arb_AGIIndivid202008_Def"
+label = "arb"
+
+# AGI employer reporter stream
+[[partition]]
+table = "Arb_AGIIndivid202009_Def"
+label = "arb"
+
+# AGI employer reporter stream
+[[partition]]
+table = "Arb_AGIIndivid202010_Def"
+label = "arb"
+
+# AGI employer reporter stream
+[[partition]]
+table = "Arb_AGIIndivid202011_Def"
+label = "arb"
+
+# AGI employer reporter stream
+[[partition]]
+table = "Arb_AGIIndivid202012_Def"
+label = "arb"
+
+# AGI employer reporter stream
+[[partition]]
+table = "Arb_AGIIndivid202101_Def"
+label = "arb"
+
+# AGI employer reporter stream
+[[partition]]
+table = "Arb_AGIIndivid202101_Prel"
+label = "arb"
+
+# AGI employer reporter stream
+[[partition]]
+table = "Arb_AGIIndivid202102_Def"
+label = "arb"
+
+# AGI employer reporter stream
+[[partition]]
+table = "Arb_AGIIndivid202102_Prel"
+label = "arb"
+
+# AGI employer reporter stream
+[[partition]]
+table = "Arb_AGIIndivid202103_Def"
+label = "arb"
+
+# AGI employer reporter stream
+[[partition]]
+table = "Arb_AGIIndivid202103_Prel"
+label = "arb"
+
+# AGI employer reporter stream
+[[partition]]
+table = "Arb_AGIIndivid202104_Def"
+label = "arb"
+
+# AGI employer reporter stream
+[[partition]]
+table = "Arb_AGIIndivid202104_Prel"
+label = "arb"
+
+# AGI employer reporter stream
+[[partition]]
+table = "Arb_AGIIndivid202105_Def"
+label = "arb"
+
+# AGI employer reporter stream
+[[partition]]
+table = "Arb_AGIIndivid202105_Prel"
+label = "arb"
+
+# AGI employer reporter stream
+[[partition]]
+table = "Arb_AGIIndivid202106_Def"
+label = "arb"
+
+# AGI employer reporter stream
+[[partition]]
+table = "Arb_AGIIndivid202106_Prel"
+label = "arb"
+
+# AGI employer reporter stream
+[[partition]]
+table = "Arb_AGIIndivid202107_Def"
+label = "arb"
+
+# AGI employer reporter stream
+[[partition]]
+table = "Arb_AGIIndivid202107_Prel"
+label = "arb"
+
+# AGI employer reporter stream
+[[partition]]
+table = "Arb_AGIIndivid202108_Def"
+label = "arb"
+
+# AGI employer reporter stream
+[[partition]]
+table = "Arb_AGIIndivid202109_Def"
+label = "arb"
+
+# AGI employer reporter stream
+[[partition]]
+table = "Arb_AGIIndivid202110_Def"
+label = "arb"
+
+# AGI employer reporter stream
+[[partition]]
+table = "Arb_AGIIndivid202111_Def"
+label = "arb"
+
+# AGI employer reporter stream
+[[partition]]
+table = "Arb_AGIIndivid202112_Def"
+label = "arb"
+
+# AGI employer reporter stream
+[[partition]]
+table = "Arb_AGIIndivid202201_Def"
+label = "arb"
+
+# AGI employer reporter stream
+[[partition]]
+table = "Arb_AGIIndivid202202_Def"
+label = "arb"
+
+# AGI employer reporter stream
+[[partition]]
+table = "Arb_AGIIndivid202203_Def"
+label = "arb"
+
+# AGI employer reporter stream
+[[partition]]
+table = "Arb_AGIIndivid202204_Def"
+label = "arb"
+
+# AGI employer reporter stream
+[[partition]]
+table = "Arb_AGIIndivid202205_Def"
+label = "arb"
+
+# AGI employer reporter stream
+[[partition]]
+table = "Arb_AGIIndivid202206_Def"
+label = "arb"
+
+# AGI employer reporter stream
+[[partition]]
+table = "Arb_AGIIndivid202207_Def"
+label = "arb"
+
+# AGI employer reporter stream
+[[partition]]
+table = "Arb_AGIIndivid202208_Def"
+label = "arb"
+
+# AGI employer reporter stream
+[[partition]]
+table = "Arb_AGIIndivid202209_Def"
+label = "arb"
+
+# AGI employer reporter stream
+[[partition]]
+table = "Arb_AGIIndivid202210_Def"
+label = "arb"
+
+# AGI employer reporter stream
+[[partition]]
+table = "Arb_AGIIndivid202211_Def"
+label = "arb"
+
+# AGI employer reporter stream
+[[partition]]
+table = "Arb_AGIIndivid202212_Def"
+label = "arb"
+
+# AGI employer reporter stream
+[[partition]]
+table = "Arb_AGIIndivid202301_Def"
+label = "arb"
+
+# AGI employer reporter stream
+[[partition]]
+table = "Arb_AGIIndivid202302_Def"
+label = "arb"
+
+# AGI employer reporter stream
+[[partition]]
+table = "Arb_AGIIndivid202303_Def"
+label = "arb"
+
+# AGI employer reporter stream
+[[partition]]
+table = "Arb_AGIIndivid202304_Def"
+label = "arb"
+
+# AGI employer reporter stream
+[[partition]]
+table = "Arb_AGIIndivid202305_Def"
+label = "arb"
+
+# AGI employer reporter stream
+[[partition]]
+table = "Arb_AGIIndivid202306_Def"
+label = "arb"
+
+# AGI employer reporter stream
+[[partition]]
+table = "Arb_AGIIndivid202307_Def"
+label = "arb"
+
+# AGI employer reporter stream
+[[partition]]
+table = "Arb_AGIIndivid202308_Def"
+label = "arb"
+
+# AGI employer reporter stream
+[[partition]]
+table = "Arb_AGIIndivid202309_Def"
+label = "arb"
+
+# AGI employer reporter stream
+[[partition]]
+table = "Arb_AGIIndivid202310_Def"
+label = "arb"
+
+# AGI employer reporter stream
+[[partition]]
+table = "Arb_AGIIndivid202311_Def"
+label = "arb"
+
+# AGI employer reporter stream
+[[partition]]
+table = "Arb_AGIIndivid202312_Def"
+label = "arb"
+
+# IT survey micro-firm stratum
+[[partition]]
+table = "ITftg_Mikro_2013"
+label = "mikro"
+
+# IT survey micro-firm stratum
+[[partition]]
+table = "ITftg_Mikro_2014"
+label = "mikro"
+
+# IT survey micro-firm stratum
+[[partition]]
+table = "ITftg_Mikro_2015"
+label = "mikro"
+
+# IT survey micro-firm stratum
+[[partition]]
+table = "ITftg_Mikro_2016"
+label = "mikro"
+
+# IT survey micro-firm stratum
+[[partition]]
+table = "ITftg_Mikro_2017"
+label = "mikro"
+
+# IT survey micro-firm stratum
+[[partition]]
+table = "ITftg_Mikro_2018"
+label = "mikro"
+
+# IT survey micro-firm stratum
+[[partition]]
+table = "ITftg_Mikro_2019"
+label = "mikro"
+
+# IT survey micro-firm stratum
+[[partition]]
+table = "ITftg_Mikro_2020"
+label = "mikro"
+
+# IT survey large-firm stratum
+[[partition]]
+table = "ITftg_Stora_2013"
+label = "stora"
+
+# IT survey large-firm stratum
+[[partition]]
+table = "ITftg_Stora_2014"
+label = "stora"
+
+# IT survey large-firm stratum
+[[partition]]
+table = "ITftg_Stora_2015"
+label = "stora"
+
+# IT survey large-firm stratum
+[[partition]]
+table = "ITftg_Stora_2016"
+label = "stora"
+
+# IT survey large-firm stratum
+[[partition]]
+table = "ITftg_Stora_2017"
+label = "stora"
+
+# IT survey large-firm stratum
+[[partition]]
+table = "ITftg_Stora_2018"
+label = "stora"
+
+# IT survey large-firm stratum
+[[partition]]
+table = "ITftg_Stora_2019"
+label = "stora"
+
+# IT survey large-firm stratum
+[[partition]]
+table = "ITftg_Stora_2020"
+label = "stora"
+
+# SABO patients, Malmo stad delivery
+[[partition]]
+table = "MalmoStad"
+label = "malmo"
+
+# NDR administrative age split
+[[partition]]
+table = "NDR_adults_2010_over_70"
+label = "over70"
+
+# NDR administrative age split
+[[partition]]
+table = "NDR_adults_2010_under_70"
+label = "under70"
+
+# AGI benefit-payer reporter stream
+[[partition]]
+table = "Soc_AGIIndivid201901_Def"
+label = "soc"
+
+# AGI benefit-payer reporter stream
+[[partition]]
+table = "Soc_AGIIndivid201902_Def"
+label = "soc"
+
+# AGI benefit-payer reporter stream
+[[partition]]
+table = "Soc_AGIIndivid201903_Def"
+label = "soc"
+
+# AGI benefit-payer reporter stream
+[[partition]]
+table = "Soc_AGIIndivid201904_Def"
+label = "soc"
+
+# AGI benefit-payer reporter stream
+[[partition]]
+table = "Soc_AGIIndivid201905_Def"
+label = "soc"
+
+# AGI benefit-payer reporter stream
+[[partition]]
+table = "Soc_AGIIndivid201906_Def"
+label = "soc"
+
+# AGI benefit-payer reporter stream
+[[partition]]
+table = "Soc_AGIIndivid201907_Def"
+label = "soc"
+
+# AGI benefit-payer reporter stream
+[[partition]]
+table = "Soc_AGIIndivid201908_Def"
+label = "soc"
+
+# AGI benefit-payer reporter stream
+[[partition]]
+table = "Soc_AGIIndivid201909_Def"
+label = "soc"
+
+# AGI benefit-payer reporter stream
+[[partition]]
+table = "Soc_AGIIndivid201910_Def"
+label = "soc"
+
+# AGI benefit-payer reporter stream
+[[partition]]
+table = "Soc_AGIIndivid201911_Def"
+label = "soc"
+
+# AGI benefit-payer reporter stream
+[[partition]]
+table = "Soc_AGIIndivid201912_Def"
+label = "soc"
+
+# AGI benefit-payer reporter stream
+[[partition]]
+table = "Soc_AGIIndivid202001_Def"
+label = "soc"
+
+# AGI benefit-payer reporter stream
+[[partition]]
+table = "Soc_AGIIndivid202002_Def"
+label = "soc"
+
+# AGI benefit-payer reporter stream
+[[partition]]
+table = "Soc_AGIIndivid202003_Def"
+label = "soc"
+
+# AGI benefit-payer reporter stream
+[[partition]]
+table = "Soc_AGIIndivid202004_Def"
+label = "soc"
+
+# AGI benefit-payer reporter stream
+[[partition]]
+table = "Soc_AGIIndivid202005_Def"
+label = "soc"
+
+# AGI benefit-payer reporter stream
+[[partition]]
+table = "Soc_AGIIndivid202006_Def"
+label = "soc"
+
+# AGI benefit-payer reporter stream
+[[partition]]
+table = "Soc_AGIIndivid202007_Def"
+label = "soc"
+
+# AGI benefit-payer reporter stream
+[[partition]]
+table = "Soc_AGIIndivid202008_Def"
+label = "soc"
+
+# AGI benefit-payer reporter stream
+[[partition]]
+table = "Soc_AGIIndivid202009_Def"
+label = "soc"
+
+# AGI benefit-payer reporter stream
+[[partition]]
+table = "Soc_AGIIndivid202010_Def"
+label = "soc"
+
+# AGI benefit-payer reporter stream
+[[partition]]
+table = "Soc_AGIIndivid202011_Def"
+label = "soc"
+
+# AGI benefit-payer reporter stream
+[[partition]]
+table = "Soc_AGIIndivid202012_Def"
+label = "soc"
+
+# AGI benefit-payer reporter stream
+[[partition]]
+table = "Soc_AGIIndivid202101_Def"
+label = "soc"
+
+# AGI benefit-payer reporter stream
+[[partition]]
+table = "Soc_AGIIndivid202101_Prel"
+label = "soc"
+
+# AGI benefit-payer reporter stream
+[[partition]]
+table = "Soc_AGIIndivid202102_Def"
+label = "soc"
+
+# AGI benefit-payer reporter stream
+[[partition]]
+table = "Soc_AGIIndivid202102_Prel"
+label = "soc"
+
+# AGI benefit-payer reporter stream
+[[partition]]
+table = "Soc_AGIIndivid202103_Def"
+label = "soc"
+
+# AGI benefit-payer reporter stream
+[[partition]]
+table = "Soc_AGIIndivid202103_Prel"
+label = "soc"
+
+# AGI benefit-payer reporter stream
+[[partition]]
+table = "Soc_AGIIndivid202104_Def"
+label = "soc"
+
+# AGI benefit-payer reporter stream
+[[partition]]
+table = "Soc_AGIIndivid202104_Prel"
+label = "soc"
+
+# AGI benefit-payer reporter stream
+[[partition]]
+table = "Soc_AGIIndivid202105_Def"
+label = "soc"
+
+# AGI benefit-payer reporter stream
+[[partition]]
+table = "Soc_AGIIndivid202105_Prel"
+label = "soc"
+
+# AGI benefit-payer reporter stream
+[[partition]]
+table = "Soc_AGIIndivid202106_Def"
+label = "soc"
+
+# AGI benefit-payer reporter stream
+[[partition]]
+table = "Soc_AGIIndivid202106_Prel"
+label = "soc"
+
+# AGI benefit-payer reporter stream
+[[partition]]
+table = "Soc_AGIIndivid202107_Def"
+label = "soc"
+
+# AGI benefit-payer reporter stream
+[[partition]]
+table = "Soc_AGIIndivid202107_Prel"
+label = "soc"
+
+# AGI benefit-payer reporter stream
+[[partition]]
+table = "Soc_AGIIndivid202108_Def"
+label = "soc"
+
+# AGI benefit-payer reporter stream
+[[partition]]
+table = "Soc_AGIIndivid202109_Def"
+label = "soc"
+
+# AGI benefit-payer reporter stream
+[[partition]]
+table = "Soc_AGIIndivid202110_Def"
+label = "soc"
+
+# AGI benefit-payer reporter stream
+[[partition]]
+table = "Soc_AGIIndivid202111_Def"
+label = "soc"
+
+# AGI benefit-payer reporter stream
+[[partition]]
+table = "Soc_AGIIndivid202112_Def"
+label = "soc"
+
+# AGI benefit-payer reporter stream
+[[partition]]
+table = "Soc_AGIIndivid202201_Def"
+label = "soc"
+
+# AGI benefit-payer reporter stream
+[[partition]]
+table = "Soc_AGIIndivid202202_Def"
+label = "soc"
+
+# AGI benefit-payer reporter stream
+[[partition]]
+table = "Soc_AGIIndivid202203_Def"
+label = "soc"
+
+# AGI benefit-payer reporter stream
+[[partition]]
+table = "Soc_AGIIndivid202204_Def"
+label = "soc"
+
+# AGI benefit-payer reporter stream
+[[partition]]
+table = "Soc_AGIIndivid202205_Def"
+label = "soc"
+
+# AGI benefit-payer reporter stream
+[[partition]]
+table = "Soc_AGIIndivid202206_Def"
+label = "soc"
+
+# AGI benefit-payer reporter stream
+[[partition]]
+table = "Soc_AGIIndivid202207_Def"
+label = "soc"
+
+# AGI benefit-payer reporter stream
+[[partition]]
+table = "Soc_AGIIndivid202208_Def"
+label = "soc"
+
+# AGI benefit-payer reporter stream
+[[partition]]
+table = "Soc_AGIIndivid202209_Def"
+label = "soc"
+
+# AGI benefit-payer reporter stream
+[[partition]]
+table = "Soc_AGIIndivid202210_Def"
+label = "soc"
+
+# AGI benefit-payer reporter stream
+[[partition]]
+table = "Soc_AGIIndivid202211_Def"
+label = "soc"
+
+# AGI benefit-payer reporter stream
+[[partition]]
+table = "Soc_AGIIndivid202212_Def"
+label = "soc"
+
+# AGI benefit-payer reporter stream
+[[partition]]
+table = "Soc_AGIIndivid202301_Def"
+label = "soc"
+
+# AGI benefit-payer reporter stream
+[[partition]]
+table = "Soc_AGIIndivid202302_Def"
+label = "soc"
+
+# AGI benefit-payer reporter stream
+[[partition]]
+table = "Soc_AGIIndivid202303_Def"
+label = "soc"
+
+# AGI benefit-payer reporter stream
+[[partition]]
+table = "Soc_AGIIndivid202304_Def"
+label = "soc"
+
+# AGI benefit-payer reporter stream
+[[partition]]
+table = "Soc_AGIIndivid202305_Def"
+label = "soc"
+
+# AGI benefit-payer reporter stream
+[[partition]]
+table = "Soc_AGIIndivid202306_Def"
+label = "soc"
+
+# AGI benefit-payer reporter stream
+[[partition]]
+table = "Soc_AGIIndivid202307_Def"
+label = "soc"
+
+# AGI benefit-payer reporter stream
+[[partition]]
+table = "Soc_AGIIndivid202308_Def"
+label = "soc"
+
+# AGI benefit-payer reporter stream
+[[partition]]
+table = "Soc_AGIIndivid202309_Def"
+label = "soc"
+
+# AGI benefit-payer reporter stream
+[[partition]]
+table = "Soc_AGIIndivid202310_Def"
+label = "soc"
+
+# AGI benefit-payer reporter stream
+[[partition]]
+table = "Soc_AGIIndivid202311_Def"
+label = "soc"
+
+# AGI benefit-payer reporter stream
+[[partition]]
+table = "Soc_AGIIndivid202312_Def"
+label = "soc"
+
+# SABO patients, Stockholms kommun delivery
+[[partition]]
+table = "SthlmKom_SBF_VOB"
+label = "sthlm"
+
+# ── DECIDED (maintainer 2026-09-01): IFA access tiers — keep Lev3 only.
+# Probe: Lev3 ⊇ Lev2 everywhere (Ersperiod 1985-2023/6.5M vs 2008-2021/1.1M;
+# Utbet 45M vs 38M across the year-splits; Beslut_Lev3 2014-2023/22.9M vs
+# IFA_Beslut 17.7M + the From2018/Tom2017 splits). Mirrors the FK keep-lev4
+# rule. Kept: IFA_Beslut_Lev3, IFA_Deltidsveckor_Lev3, IFA_Diverse_Lev3,
+# IFA_Ersperiod_Lev3, IFA_Kassakod_Lev3, IFA_KKvecka_Lev3, IFA_Medlemskap_Lev3,
+# IFA_Utbet_Lev3.
+
+[[exclude]]
+table = "IFA_Beslut"
+reason = "IAF access-tier duplicate; the Lev3 delivery is a strict superset (keep-Lev3, mirrors FK keep-lev4)"
+
+[[exclude]]
+table = "IFA_Beslut_From2018_Lev2"
+reason = "IAF access-tier duplicate; the Lev3 delivery is a strict superset (keep-Lev3, mirrors FK keep-lev4)"
+
+[[exclude]]
+table = "IFA_Beslut_Tom2017_Lev2"
+reason = "IAF access-tier duplicate; the Lev3 delivery is a strict superset (keep-Lev3, mirrors FK keep-lev4)"
+
+[[exclude]]
+table = "IFA_Deltidsveckor_Lev2"
+reason = "IAF access-tier duplicate; the Lev3 delivery is a strict superset (keep-Lev3, mirrors FK keep-lev4)"
+
+[[exclude]]
+table = "IFA_Diverse_Lev2"
+reason = "IAF access-tier duplicate; the Lev3 delivery is a strict superset (keep-Lev3, mirrors FK keep-lev4)"
+
+[[exclude]]
+table = "IFA_Ersperiod_Lev2"
+reason = "IAF access-tier duplicate; the Lev3 delivery is a strict superset (keep-Lev3, mirrors FK keep-lev4)"
+
+[[exclude]]
+table = "IFA_Kassakod"
+reason = "IAF access-tier duplicate; the Lev3 delivery is a strict superset (keep-Lev3, mirrors FK keep-lev4)"
+
+[[exclude]]
+table = "IFA_Kassakod_Lev2"
+reason = "IAF access-tier duplicate; the Lev3 delivery is a strict superset (keep-Lev3, mirrors FK keep-lev4)"
+
+[[exclude]]
+table = "IFA_KKvecka_Lev2"
+reason = "IAF access-tier duplicate; the Lev3 delivery is a strict superset (keep-Lev3, mirrors FK keep-lev4)"
+
+[[exclude]]
+table = "IFA_Medlemskap_Lev2"
+reason = "IAF access-tier duplicate; the Lev3 delivery is a strict superset (keep-Lev3, mirrors FK keep-lev4)"
+
+[[exclude]]
+table = "IFA_Utbet_2015_2017_Lev2"
+reason = "IAF access-tier duplicate; the Lev3 delivery is a strict superset (keep-Lev3, mirrors FK keep-lev4)"
+
+[[exclude]]
+table = "IFA_Utbet_2018_2019_Lev2"
+reason = "IAF access-tier duplicate; the Lev3 delivery is a strict superset (keep-Lev3, mirrors FK keep-lev4)"
+
+[[exclude]]
+table = "IFA_Utbet_2020_2021_Lev2"
+reason = "IAF access-tier duplicate; the Lev3 delivery is a strict superset (keep-Lev3, mirrors FK keep-lev4)"
+
+# ── DECIDED (maintainer 2026-09-01): FE ver1 = PRELIMINARY delivery, ver2 =
+# the final update; ver1s were retained only for replicability (now ended).
+
+[[exclude]]
+table = "FE2018_ver1"
+reason = "preliminary FEK delivery (ver1), updated by the final FE2018_ver2; retained on MONA only for a replication need that has ended (maintainer 2026-09-01)"
+
+[[exclude]]
+table = "FE2019_ver1"
+reason = "preliminary FEK delivery (ver1), updated by the final FE2019_ver2; retained on MONA only for a replication need that has ended (maintainer 2026-09-01)"
+
+[[exclude]]
+table = "FE2020_ver1"
+reason = "preliminary FEK delivery (ver1), updated by the final FE2020_ver2; retained on MONA only for a replication need that has ended (maintainer 2026-09-01)"
+
+# ── DECIDED (maintainer 2026-09-01): AMS 2021-vintage twin covers from its
+# name's coverage-start year; the stray pre-2021 dates in AKT_DAT are noise.
+# (INSPER/SOKATPER twins already probe to { from = 2021, to = 2023 }.)
+# Overrides the probe-derived entry above (last edition entry per table wins).
+
+[[edition]]
+table = "AMS_HIST_AKTSO_2021_20230726"
+edition = { from = 2021, to = 2023 }
+
+# ── DECIDED (maintainer 2026-09-02): Hreg boundary-year trims — BOTH deliveries stay
+# included and orderable; the trim only decides which table SERVES the shared
+# boundary year (newer delivery owns it, as the later and presumably revised
+# one). Confirmed: newer owns the boundary year (if the
+# older delivery proves authoritative for its final year, flip here).
+
+[[edition]]
+table = "Hreg_Reg_1990_1993"
+edition = { from = 1990, to = 1992 }
+
+[[edition]]
+table = "Hreg_Reg_1993_2022"
+edition = { from = 1993, to = 2021 }
+
+[[edition]]
+table = "Hreg_Sok_2015_2022"
+edition = { from = 2015, to = 2021 }
+
+[[edition]]
+table = "Hreg_Poang_1993_2022"
+edition = { from = 1993, to = 2021 }
+
+# Hreg_Examina name-range editions, same PROPOSED newer-owns-2022 boundary rule
+# as the trims above (no probe time column; ranges from the table names).
+
+[[edition]]
+table = "Hreg_Examina_1990_2022"
+edition = { from = 1990, to = 2021 }
+
+[[edition]]
+table = "Hreg_Examina_2022_2024"
+edition = { from = 2022, to = 2024 }
+
+# ── DECIDED (maintainer 2026-09-02): FOHM table→register assigns — the holdings CSV's
+# own Detail column names the register (NVR Covid / NVR Barnvaccin / SmiNet);
+# CovidWGS has no fohm register yet and stays on the worklist.
+# Confirmed by maintainer 2026-09-02.
+
+[[assign]]
+table = "FHM_NVR_Covid_20240422"
+register_variant = "fohm/nvr/_default"
+
+[[assign]]
+table = "FHM_NVR_Barn"
+register_variant = "fohm/nvr/_default"
+
+[[assign]]
+table = "FHM_SMI_FALL"
+register_variant = "fohm/sminet/_default"
+
+[[assign]]
+table = "FHM_KLIN_ANM"
+register_variant = "fohm/sminet/_default"
+
+[[assign]]
+table = "FHM_LAB_ANM"
+register_variant = "fohm/sminet/_default"
+
+# ── DECIDED (maintainer 2026-09-02): UHT access tier — keep UHT_Lev2 for the
+# overlapping years; plain UHT stays the sole holdings for 2004-2012 and
+# 2022-2024 (Lev2 was only delivered 2013-2021).
+
+[[exclude]]
+table = "UHT_2013"
+reason = "UHT access-tier duplicate of UHT_Lev2_2013 (keep-Lev2 for overlapping years)"
+
+[[exclude]]
+table = "UHT_2014"
+reason = "UHT access-tier duplicate of UHT_Lev2_2014 (keep-Lev2 for overlapping years)"
+
+[[exclude]]
+table = "UHT_2015"
+reason = "UHT access-tier duplicate of UHT_Lev2_2015 (keep-Lev2 for overlapping years)"
+
+[[exclude]]
+table = "UHT_2016"
+reason = "UHT access-tier duplicate of UHT_Lev2_2016 (keep-Lev2 for overlapping years)"
+
+[[exclude]]
+table = "UHT_2017"
+reason = "UHT access-tier duplicate of UHT_Lev2_2017 (keep-Lev2 for overlapping years)"
+
+[[exclude]]
+table = "UHT_2018"
+reason = "UHT access-tier duplicate of UHT_Lev2_2018 (keep-Lev2 for overlapping years)"
+
+[[exclude]]
+table = "UHT_2019"
+reason = "UHT access-tier duplicate of UHT_Lev2_2019 (keep-Lev2 for overlapping years)"
+
+[[exclude]]
+table = "UHT_2020"
+reason = "UHT access-tier duplicate of UHT_Lev2_2020 (keep-Lev2 for overlapping years)"
+
+[[exclude]]
+table = "UHT_2021"
+reason = "UHT access-tier duplicate of UHT_Lev2_2021 (keep-Lev2 for overlapping years)"
+
+# ── DECIDED (maintainer 2026-09-02): SmiNet — the merged per-case table
+# (FHM_SMI_FALL) is all researchers need; the raw notification streams leave
+# the order surface.
+
+[[exclude]]
+table = "FHM_KLIN_ANM"
+reason = "raw clinical-notification stream; FHM_SMI_FALL (merged per-case) is canonical"
+
+[[exclude]]
+table = "FHM_LAB_ANM"
+reason = "raw laboratory-notification stream; FHM_SMI_FALL (merged per-case) is canonical"
+
+# ── DECIDED (maintainer 2026-09-02): GbgKom SÄBO care forms are disjoint
+# sub-population shards of one variant (§12 partitions).
+
+[[partition]]
+table = "GbgKom_Aldreboende"
+label = "aldreboende"
+
+[[partition]]
+table = "GbgKom_Korttids2019"
+label = "korttids"
+
+[[partition]]
+table = "GbgKom_Korttids2020"
+label = "korttids"
+
+[[partition]]
+table = "GbgKom_Korttids2021"
+label = "korttids"
+
+# ── DECIDED (2026-09-02): editions from the maintainer's own overview document
+# ("Overview of data in SWECOV_final_20251016.docx", General/) — the
+# authoritative coverage statements for tables whose names and data carry no
+# usable period. SIR ATG/DIA and SCRCR neoadj are aligned with their
+# probe-dated sibling tables.
+
+# Riksarkivet military enlistment 1969-1997 (Pliktverket 1997-2010 already set)
+[[edition]]
+table = "RA_Insark"
+edition = { from = 1969, to = 1997 }
+
+# Telia mobility: 2019-01-01 .. 2021-05-09
+[[edition]]
+table = "Telia_ODM"
+edition = { from = "2019-01", to = "2021-05" }
+
+# Inera/1177: 2019-2023
+[[edition]]
+table = "Inera_1177paTelefon"
+edition = { from = 2019, to = 2023 }
+
+[[edition]]
+table = "Inera_VPTU_Coronadata"
+edition = { from = 2019, to = 2023 }
+
+# Skatteverket: tax payments 2019-2021; pandemic support applications 2020-2021
+[[edition]]
+table = "SKV_ag_skatt"
+edition = { from = 2019, to = 2021 }
+
+[[edition]]
+table = "SKV_anstand_tillf_ansokan"
+edition = { from = 2020, to = 2021 }
+
+[[edition]]
+table = "SKV_omststod_ansokt"
+edition = { from = 2020, to = 2021 }
+
+[[edition]]
+table = "SKV_omststod_avslag"
+edition = { from = 2020, to = 2021 }
+
+# SIR procedure/diagnosis tables: aligned with probe-dated SIRI/VTF siblings
+[[edition]]
+table = "SoS_R_SIR_ATG_KLEV4"
+edition = { from = 2020, to = 2022 }
+
+[[edition]]
+table = "SoS_R_SIR_DIA_KLEV4"
+edition = { from = 2020, to = 2022 }
+
+# SCRCR neoadjuvant-therapy table: aligned with probe-dated rad/rot siblings
+[[edition]]
+table = "SCRCR_id2759_neoadj"
+edition = { from = 2019, to = 2023 }
+
+# ── DECIDED (maintainer 2026-09-02): aux-table join-key unmaps — the five
+# aspect-table overlaps collide only on join keys/year columns; the main table
+# owns the shared variable, the aux table's duplicate key mapping is
+# suppressed. The aux table still ships whole (keys included) whenever its own
+# columns are ordered. EKB household↔person is noted as a future catalog
+# variant split; the AR unmap is orthogonal to that.
+
+[[unmap]]
+table = "FDB_AE_Ng_2023"
+column = "P1105_Lopnr_cfarnr"
+
+[[unmap]]
+table = "FDB_AE_Ng_2024"
+column = "P1105_Lopnr_cfarnr"
+
+[[unmap]]
+table = "NDR_incidence"
+column = "P1105_LopNr_PersonNr"
+
+[[unmap]]
+table = "SCRCR_id2759_rad"
+column = "tum_id"
+
+[[unmap]]
+table = "SoS_R_SIR_SIRI_KLEV4"
+column = "lopnrSiri"
+
+[[unmap]]
+table = "SWECOV_SOS_EKB_HUSH"
+column = "AR"
+
+# ── DECIDED (maintainer 2026-09-02): Swedbank views + Inera ordering systems
+# are §12 PARTITIONS, not variants (supersedes the 2026-09-01 variant-split
+# ruling): "users will always want everything (in a group) when they order" —
+# the partition test verbatim. The slicing dimension of the Swedbank views is
+# deliberately NOT modeled (labels are opaque); each view is a disjoint slice
+# and extraction ships every view as its own file. No flavor regen needed.
+
+[[partition]]
+table = "Swedbank_V01"
+label = "v01"
+
+[[partition]]
+table = "Swedbank_V01_20210520"
+label = "v01-20210520"
+
+[[partition]]
+table = "Swedbank_V02"
+label = "v02"
+
+[[partition]]
+table = "Swedbank_V02_20210520"
+label = "v02-20210520"
+
+[[partition]]
+table = "Swedbank_V03"
+label = "v03"
+
+[[partition]]
+table = "Swedbank_V03_20210520"
+label = "v03-20210520"
+
+[[partition]]
+table = "Swedbank_V04"
+label = "v04"
+
+[[partition]]
+table = "Swedbank_V04_20210520"
+label = "v04-20210520"
+
+[[partition]]
+table = "Swedbank_V05"
+label = "v05"
+
+[[partition]]
+table = "Swedbank_V06"
+label = "v06"
+
+[[partition]]
+table = "Swedbank_V07"
+label = "v07"
+
+[[partition]]
+table = "Swedbank_V08"
+label = "v08"
+
+[[partition]]
+table = "Swedbank_V09"
+label = "v09"
+
+[[partition]]
+table = "Swedbank_V10"
+label = "v10"
+
+[[partition]]
+table = "Swedbank_V11"
+label = "v11"
+
+[[partition]]
+table = "Swedbank_V12"
+label = "v12"
+
+[[partition]]
+table = "Swedbank_V13"
+label = "v13"
+
+[[partition]]
+table = "Swedbank_V14"
+label = "v14"
+
+[[partition]]
+table = "Swedbank_V15"
+label = "v15"
+
+[[partition]]
+table = "Swedbank_V16"
+label = "v16"
+
+[[partition]]
+table = "Swedbank_V17"
+label = "v17"
+
+# Inera: two disjoint test-ordering channels of bestallda-prover.
+
+[[partition]]
+table = "Inera_CK_EP"
+label = "ck-ep"
+
+[[partition]]
+table = "Inera_EgenProvhantering"
+label = "egen-provhantering"
+
+# Mechanical extensions of the join-key rule above (same aux tables, more
+# shared keys surfaced once their editions landed): rot owns tum_id also vs
+# neoadj; VTF owns lopnrSiri also vs ATG/DIA; PERS owns MANAD too.
+
+[[unmap]]
+table = "SCRCR_id2759_neoadj"
+column = "tum_id"
+
+[[unmap]]
+table = "SoS_R_SIR_ATG_KLEV4"
+column = "lopnrSiri"
+
+[[unmap]]
+table = "SoS_R_SIR_DIA_KLEV4"
+column = "lopnrSiri"
+
+[[unmap]]
+table = "SWECOV_SOS_EKB_HUSH"
+column = "MANAD"
+
+# 1177 call streams are disjoint call sets (maintainer 2026-09-02) — the last
+# partition family; ordering samtal ships both files.
+
+[[partition]]
+table = "Inera_1177paTelefon"
+label = "pa-telefon"
+
+[[partition]]
+table = "Inera_VPTU_Coronadata"
+label = "vptu-corona"
