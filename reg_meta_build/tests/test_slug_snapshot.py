@@ -36,12 +36,37 @@ if TYPE_CHECKING:
     from pathlib import Path
 
 
+_GIT_TRUST_KEY = "safe.directory"
+
+
 def _git_env() -> dict[str, str]:
     """Environment for git subprocesses with all GIT_* vars stripped, so git
     discovers the repo from cwd alone. Git hooks export GIT_DIR / GIT_INDEX_FILE
     / GIT_WORK_TREE into the hook process; inheriting them would redirect these
-    cwd-scoped calls at the hook's repo instead of the intended one."""
-    return {k: v for k, v in os.environ.items() if not k.startswith("GIT_")}
+    cwd-scoped calls at the hook's repo instead of the intended one.
+
+    The one exception is the inherited ``safe.directory`` config, re-emitted as a
+    dense GIT_CONFIG_COUNT/KEY_n/VALUE_n block: a container gate hands the suite
+    the checkout's ownership trust ONLY that way (the mount can be owned by a
+    different uid than the one running the tests), and scrubbing it too made
+    every call here exit 128 "detected dubious ownership" — which the reader
+    below cannot tell from "no work tree", so the guard skipped itself. Trust
+    passes through with the scope it was given; every other inherited config
+    entry is dropped along with the routing variables."""
+    env = {k: v for k, v in os.environ.items() if not k.startswith("GIT_")}
+    count = os.environ.get("GIT_CONFIG_COUNT", "")
+    trusted = [
+        os.environ[f"GIT_CONFIG_VALUE_{i}"]
+        for i in range(int(count) if count.isdigit() else 0)
+        if os.environ.get(f"GIT_CONFIG_KEY_{i}", "").casefold() == _GIT_TRUST_KEY
+        and f"GIT_CONFIG_VALUE_{i}" in os.environ
+    ]
+    if trusted:
+        env["GIT_CONFIG_COUNT"] = str(len(trusted))
+        for n, value in enumerate(trusted):
+            env[f"GIT_CONFIG_KEY_{n}"] = _GIT_TRUST_KEY
+            env[f"GIT_CONFIG_VALUE_{n}"] = value
+    return env
 
 
 def _all_slug_dirs() -> list:
@@ -510,4 +535,82 @@ def test_guard_isolated_from_inherited_git_dir(tmp_path, monkeypatch):
     # points the calls at the outer repo (unborn HEAD / no such committed file) →
     # the guard returns None, not []. The cross-repo redirect is what the scrub
     # fixes — and only this test makes that CI-catchable.
+    assert _untracked_pinned_autos(inner) == []
+
+
+def test_scoped_trust_survives_the_routing_scrub(tmp_path, monkeypatch):
+    """The container gate supplies the checkout's ownership trust only as
+    GIT_CONFIG_COUNT/KEY_n/VALUE_n ``safe.directory`` (Docker Desktop exposes the
+    mount as 0:0 while the gate runs as another uid), so a scrub that dropped
+    every GIT_* var made each call here exit 128 "detected dubious ownership" —
+    read as "not a work tree", which skipped the guard and cost the gate its
+    evidence. That trust must survive the scrub with the scope it was given,
+    while an inherited routing environment — the hook's GIT_DIR/GIT_INDEX_FILE,
+    and a routing key riding in the same config block — still cannot retarget
+    the inspection."""
+    outer = tmp_path / "outer"
+    outer.mkdir()
+    subprocess.run(
+        ["git", "init"], cwd=outer, capture_output=True, check=True, env=_git_env()
+    )
+    # `fk` is pinned (curating) and its auto file is COMMITTED here, so a
+    # cwd-discovered git owes nothing; a retargeted one reads outer's unborn HEAD.
+    inner = tmp_path / "inner"
+    inner.mkdir()
+    subprocess.run(
+        ["git", "init"], cwd=inner, capture_output=True, check=True, env=_git_env()
+    )
+    _write_provider_with_auto(inner, "fk", "curating")
+    subprocess.run(
+        ["git", "add", "-A"], cwd=inner, capture_output=True, check=True, env=_git_env()
+    )
+    subprocess.run(
+        [
+            "git",
+            "-c",
+            "user.email=test@example.com",
+            "-c",
+            "user.name=test",
+            "commit",
+            "-m",
+            "pin fk auto",
+        ],
+        cwd=inner,
+        capture_output=True,
+        check=True,
+        env=_git_env(),
+    )
+
+    monkeypatch.setenv("GIT_DIR", str(outer / ".git"))
+    monkeypatch.setenv("GIT_INDEX_FILE", str(outer / ".git" / "index"))
+    monkeypatch.setenv("GIT_CONFIG_COUNT", "2")
+    monkeypatch.setenv("GIT_CONFIG_KEY_0", "core.worktree")
+    monkeypatch.setenv("GIT_CONFIG_VALUE_0", str(outer))
+    monkeypatch.setenv("GIT_CONFIG_KEY_1", "safe.directory")
+    monkeypatch.setenv("GIT_CONFIG_VALUE_1", str(inner))
+
+    # The scoped trust reaches git (renumbered to a dense block — a sparse one
+    # makes git refuse the whole environment), and carries the given path, not a
+    # `*` wildcard.
+    trusted = subprocess.run(
+        ["git", "config", "--get", _GIT_TRUST_KEY],
+        cwd=inner,
+        capture_output=True,
+        text=True,
+        check=True,
+        env=_git_env(),
+    )
+    assert trusted.stdout.strip() == str(inner)
+    # The routing key inherited alongside it does not.
+    routed = subprocess.run(
+        ["git", "config", "--get", "core.worktree"],
+        cwd=inner,
+        capture_output=True,
+        text=True,
+        check=False,  # nonzero = unset, which is the assertion
+        env=_git_env(),
+    )
+    assert routed.returncode != 0
+    # And the guard still reads inner's OWN committed tree: it sees the committed
+    # fk.auto.toml → nothing owed. A retarget at outer would return None instead.
     assert _untracked_pinned_autos(inner) == []
