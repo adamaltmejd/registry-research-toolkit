@@ -194,10 +194,12 @@ async function onFilePicked(event: Event): Promise<void> {
       result={projectStore.validation}
       status={projectStore.validationStatus}
       requestError={projectStore.requestError}
+      requestErrorSource={projectStore.requestErrorSource}
       orderFindings={projectStore.orderFindings}
       windowHints={coverageHints}
       {sources}
       onRetry={() => projectStore.validate()}
+      onRetryOrder={() => projectStore.downloadOrder()}
     />
   {/if}
 </article>

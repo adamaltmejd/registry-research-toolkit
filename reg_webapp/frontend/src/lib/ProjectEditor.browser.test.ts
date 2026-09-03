@@ -260,4 +260,60 @@ describe("ProjectEditor renders the ValidationPanel", () => {
       expect(projectStore.validationStatus).toBe("ok");
     });
   });
+
+  it("offers no validation retry when it was the ORDER request that failed", async () => {
+    // The banner's retry belongs to the request that failed. A blocked order is a
+    // verdict on THIS draft: "Retry validation" re-runs a validation that already
+    // passes, which clears the block and re-enables the download the materializer
+    // just refused. Queried synchronously — the automatic re-validate is 300ms out
+    // and would clear the banner on its own.
+    seedSources(["scb/lisa/v1"]);
+    vi.mocked(fetch).mockImplementation((async (url: string) =>
+      String(url).includes("/project/order")
+        ? {
+            ok: false,
+            status: 422,
+            json: async () => ({
+              detail: "order blocked by 1 finding: …",
+              findings: [
+                {
+                  code: "variable_unresolved",
+                  message: "scb/lisa/v1/var does not resolve in the catalog",
+                  source: null,
+                  variable: "scb/lisa/v1/var",
+                  period: null,
+                },
+              ],
+            }),
+            headers: new Headers(),
+          }
+        : {
+            ok: true,
+            status: 200,
+            json: async () => ({ ok: true, issues: [] }),
+          }) as unknown as typeof fetch);
+
+    await projectStore.validate();
+    await projectStore.downloadOrder();
+    await render(ProjectEditor, { regMetaVersion: "1.0.0", steward: "global" });
+
+    expect(
+      page.getByText("the materializer produced no order").query(),
+    ).not.toBeNull();
+    expect(
+      page.getByRole("button", { name: "Retry validation" }).query(),
+    ).toBeNull();
+    // Nor a re-POST of the order: the findings are a verdict on this draft.
+    expect(
+      page.getByRole("button", { name: "Retry download" }).query(),
+    ).toBeNull();
+    // …and the download stays closed on the draft the materializer refused.
+    expect(
+      (
+        page
+          .getByRole("button", { name: "Download order.json" })
+          .query() as HTMLButtonElement | null
+      )?.disabled,
+    ).toBe(true);
+  });
 });

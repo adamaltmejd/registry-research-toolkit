@@ -36,6 +36,7 @@ describe("ValidationPanel — researcher-language findings", () => {
       result: DRIFT_RESULT,
       status: "warnings",
       requestError: null,
+      requestErrorSource: null,
       windowHints: [],
       sources: SOURCES,
     });
@@ -69,6 +70,7 @@ describe("ValidationPanel — researcher-language findings", () => {
       result: DRIFT_RESULT,
       status: "warnings",
       requestError: null,
+      requestErrorSource: null,
       windowHints: [],
       sources: SOURCES,
     });
@@ -97,6 +99,7 @@ describe("ValidationPanel — researcher-language findings", () => {
       },
       status: "errors",
       requestError: null,
+      requestErrorSource: null,
       windowHints: [],
       sources: SOURCES,
     });
@@ -121,6 +124,7 @@ describe("ValidationPanel — researcher-language findings", () => {
         result: DRIFT_RESULT,
         status: "warnings",
         requestError: null,
+        requestErrorSource: null,
         windowHints: [],
         sources: SOURCES,
       });
@@ -153,6 +157,7 @@ describe("ValidationPanel — researcher-language findings", () => {
       },
       status: "errors",
       requestError: null,
+      requestErrorSource: null,
       windowHints: [],
       sources: SOURCES,
     });
@@ -169,6 +174,7 @@ describe("ValidationPanel — researcher-language findings", () => {
       result: null,
       status: "checking",
       requestError: null,
+      requestErrorSource: null,
       windowHints: [],
       sources: SOURCES,
     });
@@ -184,6 +190,7 @@ describe("ValidationPanel — researcher-language findings", () => {
       result: { ok: true, issues: [] },
       status: "ok",
       requestError: null,
+      requestErrorSource: null,
       windowHints: [
         {
           label: "Source 'lisa_main'",
@@ -215,6 +222,7 @@ describe("ValidationPanel — researcher-language findings", () => {
       result: null,
       status: "unchecked",
       requestError: "request body is not a JSON object",
+      requestErrorSource: "validate",
       windowHints: [],
       sources: SOURCES,
       onRetry,
@@ -224,6 +232,81 @@ describe("ValidationPanel — researcher-language findings", () => {
     await expect.element(retry).toBeVisible();
     await retry.click();
     expect(onRetry).toHaveBeenCalledOnce();
+  });
+
+  it("offers NO retry at all for a blocked order (retrying either request would change nothing)", async () => {
+    // The block came from `/order`, so "Retry validation" would not retry the
+    // failed request: it re-runs the validation that already passes, clears this
+    // banner and re-enables a download the materializer refuses again. Re-POSTing
+    // `/order` is no better — the findings are a verdict on THIS draft. The
+    // findings say what to change; changing it re-validates on its own.
+    const onRetry = vi.fn();
+    const onRetryOrder = vi.fn();
+    await render(ValidationPanel, {
+      result: { ok: true, issues: [] },
+      status: "ok",
+      requestError: "order blocked by 1 finding: …",
+      requestErrorSource: "order",
+      orderFindings: [
+        {
+          code: "steward_mismatch",
+          message: "project steward 'swecov' does not match 'global'",
+          source: null,
+          variable: null,
+          period: null,
+        },
+      ],
+      windowHints: [],
+      sources: SOURCES,
+      onRetry,
+      onRetryOrder,
+    });
+
+    await expect
+      .element(page.getByText("the materializer produced no order"))
+      .toBeVisible();
+    expect(
+      page.getByRole("button", { name: "Retry validation" }).query(),
+    ).toBeNull();
+    expect(
+      page.getByRole("button", { name: "Retry download" }).query(),
+    ).toBeNull();
+    expect(onRetry).not.toHaveBeenCalled();
+    expect(onRetryOrder).not.toHaveBeenCalled();
+  });
+
+  it("retries the DOWNLOAD, not the validation, for an order request that failed with no findings", async () => {
+    // The order transport case (a network failure, the body cap, a 5xx): the
+    // backend never answered, so there is no verdict to act on and re-POSTing
+    // `/order` is the real retry. It carries no findings, so the source is the
+    // only thing that says where it came from.
+    const onRetry = vi.fn();
+    const onRetryOrder = vi.fn();
+    await render(ValidationPanel, {
+      result: { ok: true, issues: [] },
+      status: "ok",
+      requestError: "project_data.json is too large",
+      requestErrorSource: "order",
+      windowHints: [],
+      sources: SOURCES,
+      onRetry,
+      onRetryOrder,
+    });
+
+    // The banner still states what went wrong…
+    await expect
+      .element(page.getByText("project_data.json is too large"))
+      .toBeVisible();
+    // …and the action re-runs the request that failed, never the validation
+    // (which would clear this banner and re-open the download gate).
+    expect(
+      page.getByRole("button", { name: "Retry validation" }).query(),
+    ).toBeNull();
+    const retry = page.getByRole("button", { name: "Retry download" });
+    await expect.element(retry).toBeVisible();
+    await retry.click();
+    expect(onRetryOrder).toHaveBeenCalledOnce();
+    expect(onRetry).not.toHaveBeenCalled();
   });
 
   it("yields the green summary to a standing request error (a blocked order, §12)", async () => {
@@ -236,6 +319,7 @@ describe("ValidationPanel — researcher-language findings", () => {
       status: "ok",
       requestError:
         "order blocked by 1 finding: steward_mismatch: project steward 'swecov' does not match the deployment steward 'global'",
+      requestErrorSource: "order",
       windowHints: [],
       sources: SOURCES,
     });
@@ -254,6 +338,7 @@ describe("ValidationPanel — researcher-language findings", () => {
       result: { ok: true, issues: [] },
       status: "ok",
       requestError: "order blocked by 2 findings: …",
+      requestErrorSource: "order",
       orderFindings: [
         {
           code: "variable_unresolved",
@@ -305,6 +390,7 @@ describe("ValidationPanel — researcher-language findings", () => {
       result: { ok: true, issues: [] },
       status: "ok",
       requestError: "order blocked by 1 finding: …",
+      requestErrorSource: "order",
       orderFindings: [
         {
           code: "coverage_gap",
@@ -343,6 +429,7 @@ describe("ValidationPanel — researcher-language findings", () => {
       },
       status: "errors",
       requestError: null,
+      requestErrorSource: null,
       windowHints: [],
       sources: [
         {
@@ -409,6 +496,7 @@ describe("ValidationPanel — researcher-language findings", () => {
       result: { ok: false, issues: [] },
       status: "errors",
       requestError: null,
+      requestErrorSource: null,
       windowHints: [
         {
           label: "Source 'dup'",

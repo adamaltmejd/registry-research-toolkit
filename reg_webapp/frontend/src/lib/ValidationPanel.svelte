@@ -1,7 +1,10 @@
 <script lang="ts">
 import type { OrderFinding, ValidationResultModel } from "./api";
 import type { SafeSource } from "./project_data";
-import type { ValidationStatus } from "./project_store.svelte";
+import type {
+  RequestErrorSource,
+  ValidationStatus,
+} from "./project_store.svelte";
 import { Button } from "./ui";
 import {
   codeLabel,
@@ -28,20 +31,30 @@ const {
   result,
   status,
   requestError,
+  requestErrorSource,
   orderFindings = [],
   windowHints,
   sources,
   onRetry,
+  onRetryOrder,
 } = $props<{
   result: ValidationResultModel | null;
   status: ValidationStatus;
   requestError: string | null;
+  /** WHICH request `requestError` came from — the discriminator the retry
+   * affordance below is gated on. */
+  requestErrorSource: RequestErrorSource | null;
   /** A blocked order's findings (`/order`'s 422). Rendered in the SAME per-finding
    * shape as a validation issue — they are findings, not a message. */
   orderFindings?: readonly OrderFinding[];
   windowHints: readonly WindowCoverageHint[];
   sources: readonly SafeSource[];
+  /** Re-runs `/validate`. Offered ONLY for a failed validation REQUEST — see the
+   * banner below. */
   onRetry?: () => void;
+  /** Re-POSTs `/order`. Offered ONLY for an order request the backend never
+   * answered — see the banner below. */
+  onRetryOrder?: () => void;
 }>();
 
 // Scroll the located card into view and flash it. Imperative (not a binding):
@@ -127,9 +140,24 @@ const LEVEL_LABEL: Record<Level, string> = {
           {requestError}
         {/if}
       </span>
-      {#if onRetry}
+      <!-- The retry belongs to the request that FAILED — which is what the SOURCE
+           says, and what `orderFindings` alone cannot (an order transport failure
+           and the gate's finding-less 422 carry no findings either). So a failed
+           `/validate` retries the validation, a failed `/order` retries the order,
+           and NEITHER is offered for a blocked order: findings are the
+           materializer's VERDICT on this draft, and re-running either request
+           changes nothing about the draft. (Retrying the VALIDATION there is the
+           actively wrong one — it comes back green, clears this banner and reopens
+           the download gate on a project the next POST blocks identically.) The
+           draft has to change, which the findings below name and which
+           re-validates — reopening the gate — by itself. -->
+      {#if onRetry && requestErrorSource === "validate"}
         <Button variant="default" size="sm" onclick={onRetry}>
           Retry validation
+        </Button>
+      {:else if onRetryOrder && requestErrorSource === "order" && orderFindings.length === 0}
+        <Button variant="default" size="sm" onclick={onRetryOrder}>
+          Retry download
         </Button>
       {/if}
     </div>

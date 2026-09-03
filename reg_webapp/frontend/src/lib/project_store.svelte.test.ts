@@ -287,6 +287,9 @@ describe("validate (200 ok:false vs 4xx split + stale-response guard)", () => {
     const r = await projectStore.validate();
     expect(r).toBeNull();
     expect(projectStore.requestError).toBe("request body is not a JSON object");
+    // The failed request WAS the validation, so the banner's retry is a real
+    // retry of it (the only case that earns one).
+    expect(projectStore.requestErrorSource).toBe("validate");
     expect(projectStore.validation).toBeNull();
     expect(projectStore.validationStatus).toBe("unchecked");
   });
@@ -1182,15 +1185,19 @@ describe("a blocked order (§12)", () => {
 
     expect(projectStore.requestError).toContain("steward_mismatch");
     expect(projectStore.canDownloadOrder).toBe(false);
+    // …and the banner knows WHICH request said no, so it never offers to retry
+    // the validation instead (that would clear the block — see the panel).
+    expect(projectStore.requestErrorSource).toBe("order");
     // The last /validate result is untouched — the block is an ORDER verdict,
     // not a validation one; the panel just stops announcing it (see
     // ValidationPanel: the summary yields to a standing request error).
     expect(projectStore.validation?.ok).toBe(true);
 
-    // Re-validating (an edit, or the banner's retry) clears the error and
-    // reopens the gate — the block is not sticky past a change.
+    // Re-validating (which any edit triggers) clears the error and reopens the
+    // gate — the block is not sticky past a change.
     await projectStore.validate();
     expect(projectStore.requestError).toBeNull();
+    expect(projectStore.requestErrorSource).toBeNull();
     expect(projectStore.canDownloadOrder).toBe(true);
   });
 
@@ -1250,7 +1257,7 @@ describe("a blocked order (§12)", () => {
     expect(projectStore.orderFindings).toEqual([]);
   });
 
-  it("carries no findings for a request error that is not a blocked order", async () => {
+  it("names /order as the source of a transport failure that carries no findings", async () => {
     stubFetch(async (url) =>
       String(url).includes("/project/order")
         ? {
@@ -1271,6 +1278,10 @@ describe("a blocked order (§12)", () => {
 
     expect(projectStore.requestError).toContain("too large");
     expect(projectStore.orderFindings).toEqual([]);
+    // The findings are empty, so they cannot say where this came from — the
+    // source is what keeps the panel from offering a validation retry for an
+    // order failure (Y-21).
+    expect(projectStore.requestErrorSource).toBe("order");
   });
 
   it("discards a blocked-order 422 that lands after a mid-flight draft edit", async () => {
@@ -1312,5 +1323,6 @@ describe("a blocked order (§12)", () => {
 
     expect(projectStore.requestError).toBeNull();
     expect(projectStore.orderFindings).toEqual([]);
+    expect(projectStore.requestErrorSource).toBeNull();
   });
 });

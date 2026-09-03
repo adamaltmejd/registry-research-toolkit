@@ -236,6 +236,17 @@ let validation = $state<ValidationResultModel | null>(null);
  * 4xx ApiError message) — distinct from a 200 `ok:false` issue list. */
 let requestError = $state<string | null>(null);
 
+/** WHICH request produced the standing `requestError` — so the banner retries the
+ * request that FAILED and never the other one. "Retry validation" after an
+ * `/order` failure is the wrong affordance twice over: it does not re-run the
+ * request that failed, and it comes back green, clearing the block and reopening
+ * the download gate on a draft the materializer never stopped rejecting. NOT
+ * derivable from `orderFindings` — an `/order` failure carries findings only
+ * when the backend got far enough to produce them (a transport failure, the body
+ * cap and the gate's finding-less 422 are all order errors with none). */
+export type RequestErrorSource = "validate" | "order";
+let requestErrorSource = $state<RequestErrorSource | null>(null);
+
 /** The typed findings of the last BLOCKED order (`/order`'s 422 body), if that is
  * what set `requestError`. A fail-closed order is not a sentence — it is a finding
  * list, and the panel renders each one like a validation issue. Empty for every
@@ -243,12 +254,15 @@ let requestError = $state<string | null>(null);
 let orderFindings = $state<OrderFinding[]>([]);
 
 /** Move the request-error channel as ONE unit. A standing banner over stale
- * findings, or findings with no banner, would each misreport the same request. */
+ * findings, findings with no banner, or a banner whose source names the wrong
+ * request would each misreport the same request. */
 function setRequestError(
   message: string | null,
+  source: RequestErrorSource | null = null,
   findings: readonly OrderFinding[] = [],
 ): void {
   requestError = message;
+  requestErrorSource = source;
   orderFindings = [...findings];
 }
 
@@ -414,6 +428,11 @@ export const projectStore = {
   },
   get requestError() {
     return requestError;
+  },
+  /** Which request the standing `requestError` came from — the banner offers a
+   * validation retry for `/validate`'s own failure and for nothing else. */
+  get requestErrorSource() {
+    return requestErrorSource;
   },
   /** The blocked order's findings, rendered under the request-error banner. */
   get orderFindings() {
@@ -606,7 +625,7 @@ export const projectStore = {
         } catch (e) {
           if (draft === target && validationGeneration === targetGeneration) {
             validation = null;
-            setRequestError(errMessage(e));
+            setRequestError(errMessage(e), "validate");
           }
           latestResult = null;
         }
@@ -640,7 +659,7 @@ export const projectStore = {
       await downloadOrderManifest(target as ProjectDataBody);
     } catch (e) {
       if (draft === target && validationGeneration === targetGeneration) {
-        setRequestError(errMessage(e), orderFindingsFromError(e));
+        setRequestError(errMessage(e), "order", orderFindingsFromError(e));
       }
     } finally {
       orderBusy = false;
