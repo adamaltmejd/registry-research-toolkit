@@ -226,7 +226,6 @@ reviewer = "claude:claude-opus-5:high"
 context = [
   ".claude/skills/reg-webapp-design-reviewer/SKILL.md",
   "reg_webapp/DESIGN.md",
-  "reg_webapp/frontend/src/tokens.css",
 ]
 instructions = "Review this reg_webapp frontend candidate using only the diff and supplied context files. Judge markup, styles, copy, component states, keyboard focus and interaction semantics against the source-visible checklist, design-system contract and semantic tokens. Check accessibility, component reuse, responsive rules and error-state affordances where the supplied source supports a conclusion. The supplied skill's rendering, self-check and rendered-evidence reporting procedures belong to the implementation worker and operator; they do not apply to this seat. Do not claim rendered verification or raise findings merely because this seat has no rendered evidence. Report concrete defects supported by the supplied source, with file and line, severity, user impact and the smallest correction; distinguish established defects from behavior the available context cannot establish."
 
