@@ -219,13 +219,16 @@ panel = ["codex"]
 [checks.review.reviewers.codex]
 reviewer = "codex:gpt-5.6-sol:high"
 
-# The instructed design reviewer (Y-488): runs the repo's rendered-UI review
-# skill in the operator environment, where the app can boot and screenshots
-# are real. Selected via [workflows.ui] on tickets that change rendered
-# frontend UI.
+# The design seat judges source against the supplied design contracts. Rendered
+# checks belong to workers and gates; the operator judges their visual evidence.
 [checks.review.reviewers.design]
 reviewer = "claude:claude-opus-5:high"
-instructions = "This candidate changes reg_webapp frontend UI. Load .claude/skills/reg-webapp-design-reviewer/SKILL.md from the checkout and follow it: boot the app with the run-reg-webapp dev.sh one-shot helpers, screenshot the changed routes at the checklist viewports, and judge the rendered result plus the frontend diff against the skill's checklist (layout, responsiveness, accessibility visuals, design-system/token discipline, component reuse). File visual defects as findings with route, viewport, and element. If the app fails to boot or screenshots cannot be produced, file a P1 finding saying exactly that — never report a clean result without screenshot evidence."
+context = [
+  ".claude/skills/reg-webapp-design-reviewer/SKILL.md",
+  "reg_webapp/DESIGN.md",
+  "reg_webapp/frontend/src/tokens.css",
+]
+instructions = "Review this reg_webapp frontend candidate using only the diff and supplied context files. Judge markup, styles, copy, component states, keyboard focus and interaction semantics against the source-visible checklist, design-system contract and semantic tokens. Check accessibility, component reuse, responsive rules and error-state affordances where the supplied source supports a conclusion. The supplied skill's rendering, self-check and rendered-evidence reporting procedures belong to the implementation worker and operator; they do not apply to this seat. Do not claim rendered verification or raise findings merely because this seat has no rendered evidence. Report concrete defects supported by the supplied source, with file and line, severity, user impact and the smallest correction; distinguish established defects from behavior the available context cannot establish."
 
 # A workflow is a named binding of the knobs above, never a step language. It
 # states three: role names the worker role its lanes run as, review is a list
@@ -240,9 +243,8 @@ role = "implementation"
 review = ["codex"]
 checks = "all"
 
-# The ui workflow is the default lane with the design-instructed review panel.
-# Select it when filing any ticket that changes rendered frontend UI; a
-# mis-filed ticket loses only the visual review — every gate still runs.
+# The ui workflow adds source-level design review to the default code seat.
+# Select it for rendered frontend changes; the operator owns visual judgment.
 [workflows.ui]
 role = "implementation"
 review = ["codex", "design"]
