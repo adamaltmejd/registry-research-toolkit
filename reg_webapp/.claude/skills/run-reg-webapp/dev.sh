@@ -11,6 +11,11 @@
 #                          down, exit with the driver's status. For agent visual
 #                          verification: random ports + guaranteed cleanup, so it
 #                          never collides and never leaks a server.
+#   dev.sh flows <out-dir> ONE-SHOT — start, run the Playwright driver `flows`
+#                          (the /project error+retry cases at four viewports),
+#                          tear down, exit with the driver's status. The PNGs
+#                          land in <out-dir> — the yard gate passes it
+#                          $YARD_ARTIFACT_DIR.
 #   dev.sh shot [viewport...] <route>...
 #                          ONE-SHOT — screenshot each route, tear down, exit.
 #                          Viewport flags before the routes capture responsive
@@ -41,6 +46,19 @@ shot)
 	mode=shot
 	shift
 	;;
+flows)
+	mode=flows
+	shift
+	# The output directory is a contract (the gate's declared artifact names land
+	# in it), so require it up front and hand the driver an ABSOLUTE path — it
+	# runs with the frontend as its cwd.
+	[ "$#" -eq 1 ] || {
+		echo "dev: 'flows' needs exactly one argument, the output directory" >&2
+		exit 2
+	}
+	mkdir -p "$1" || exit 1
+	out_dir=$(cd "$1" && pwd) || exit 1
+	;;
 preview)
 	# preview_start (.claude/launch.json) entry point: same blocking servers as
 	# `serve`, but the frontend binds the MCP-assigned $PORT (see port selection
@@ -50,7 +68,7 @@ preview)
 	;;
 "") mode=serve ;;
 *)
-	echo "usage: dev.sh [smoke | shot [--mobile|--tablet|--desktop|--all|--viewport WxH]... <route>... | preview]" >&2
+	echo "usage: dev.sh [smoke | shot [--mobile|--tablet|--desktop|--all|--viewport WxH]... <route>... | flows <out-dir> | preview]" >&2
 	exit 2
 	;;
 esac
@@ -185,6 +203,14 @@ smoke)
 	echo "dev: smoke on $dev_url (auto-teardown on exit)" >&2
 	(cd reg_webapp/frontend && REG_WEBAPP_DEV_URL="$dev_url" \
 		bun ../.claude/skills/run-reg-webapp/driver.mjs smoke)
+	exit $?
+	;;
+flows)
+	# One-shot, like smoke: the driver owns the cases + their assertions, and the
+	# EXIT trap tears both servers (and their process groups) down either way.
+	echo "dev: flows on $dev_url → $out_dir (auto-teardown on exit)" >&2
+	(cd reg_webapp/frontend && REG_WEBAPP_DEV_URL="$dev_url" \
+		bun ../.claude/skills/run-reg-webapp/driver.mjs flows "$out_dir")
 	exit $?
 	;;
 shot)

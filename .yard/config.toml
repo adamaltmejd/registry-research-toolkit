@@ -122,7 +122,9 @@ inactivity_timeout_minutes = 0
 total_work_timeout_minutes = 360
 instructions = "Smallest safe change, in the ticket's scope only; match the conventions of the code you are changing. No scope beyond the ticket — if more is needed, file a proposal. Before declaring the candidate, make one simplification pass over your own diff (the /simplify skill if available): reuse what exists, drop what the ticket did not ask for, then re-run the checks."
 
-# Each [checks.<name>] section defines a gate every candidate must pass.
+# Each [checks.<name>] section defines a gate, and each workflow's checks key
+# (see [workflows.*] below) selects which gates its candidates must pass — a
+# gate no workflow lists runs nowhere.
 # command runs the gate and timeout_minutes limits one run. environment is
 # "container" or "host": container gates have no credentials and no network,
 # and a host gate must also name the platform and architecture it needs.
@@ -196,6 +198,60 @@ git diff --exit-code -- src/lib/api-types.ts
 ' '''
 timeout_minutes = 30
 
+# The rendered project error/retry evidence (Y-34), selected by the `ui`
+# workflow only. It drives the CANDIDATE's own app — a fresh backend on the
+# synthetic catalog fixture DB the backend tests build, plus the Vite dev server
+# — through three /project scenarios at four viewports (12 cases) and keeps one
+# PNG per settled state for the operator's visual judgment. No model runs here:
+# the driver asserts the behavior, `artifacts` retains the pictures.
+#
+# Provisioning mirrors the gates above (offline two-step `uv sync`, the baked
+# node_modules, /opt/pw-browsers), plus two things dev.sh needs: the candidate's
+# own `.venv/bin` on PATH (it shells out to `python3` to pick free ports; the
+# image has no system Python), and the worktree-bootstrap fingerprints stamped
+# so dev.sh's self-provision call is a no-op fast path instead of a swallowed,
+# network-dependent `uv sync` / `bun install` we would then have to trust.
+#
+# `artifacts` names exactly the files the driver writes into $YARD_ARTIFACT_DIR;
+# a missing or oversize one is a gate error, so the case list and this list are
+# one contract. Retained paths are on `yard lane show` — open the PNGs, they are
+# the evidence this gate exists to produce.
+[checks.project-flows]
+command = '''sh -ec '
+export UV_CACHE_DIR=/opt/uv/cache UV_PYTHON_INSTALL_DIR=/opt/uv/python UV_LINK_MODE=copy
+uv sync --frozen --offline --no-install-workspace
+uv sync --frozen --offline --no-build-isolation
+cp -a /opt/frontend/node_modules reg_webapp/frontend/
+cksum < uv.lock | cut -d" " -f1 > .venv/.wt-provisioned
+cksum < reg_webapp/frontend/bun.lock | cut -d" " -f1 > reg_webapp/frontend/node_modules/.wt-provisioned
+export PATH="$PWD/.venv/bin:$PATH" PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers
+db=$(mktemp -d)
+python3 reg_webapp/.claude/skills/run-reg-webapp/catalog_fixture_db.py "$db"
+echo "candidate HEAD $(git rev-parse HEAD)"
+REG_META_DB="$db" bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh flows "$YARD_ARTIFACT_DIR"
+ls -l "$YARD_ARTIFACT_DIR"
+du -sk "$YARD_ARTIFACT_DIR"
+' '''
+timeout_minutes = 30
+artifacts = [
+  "project-blocked-375x812.png",
+  "project-blocked-768x1024.png",
+  "project-blocked-1280x900.png",
+  "project-blocked-1920x1080.png",
+  "order-error-375x812.png",
+  "order-error-768x1024.png",
+  "order-error-1280x900.png",
+  "order-error-1920x1080.png",
+  "order-recovered-375x812.png",
+  "order-recovered-768x1024.png",
+  "order-recovered-1280x900.png",
+  "order-recovered-1920x1080.png",
+  "validation-error-375x812.png",
+  "validation-error-768x1024.png",
+  "validation-error-1280x900.png",
+  "validation-error-1920x1080.png",
+]
+
 # Review runs on every candidate. max_gate_repair_rounds limits repairs after
 # gate failures, max_rounds limits repairs after blocking review findings, and
 # timeout_minutes limits one review run. blocking sets the repair threshold and
@@ -243,22 +299,26 @@ instructions = "Review this reg_webapp frontend candidate using only the diff an
 [workflows.default]
 role = "implementation"
 review = ["codex"]
-checks = "all"
+# The three CI-mirroring gates, listed rather than "all": a gate is added for
+# the workflow that needs it (project-flows below), and an unrelated candidate
+# must not acquire a rendered browser gate just by existing.
+checks = ["lint", "test", "frontend"]
 
-# The ui workflow adds source-level design review to the default code seat.
-# Select it for rendered frontend changes; the operator owns visual judgment.
+# The ui workflow adds source-level design review to the default code seat AND
+# the rendered project-flows gate. Select it for rendered frontend changes; the
+# operator owns visual judgment, and project-flows is what hands them pictures.
 [workflows.ui]
 role = "implementation"
 review = ["codex", "design"]
-checks = "all"
+checks = ["lint", "test", "frontend", "project-flows"]
 
 # The light workflow is the everyday lane for simple work, selected one ticket
-# at a time: the role above, every gate, and no review. Skipping the review
+# at a time: the role above, the CI gates, and no review. Skipping the review
 # panel is its one economy, and it is the right one for a rename, a message, or
 # a small fix -- work where a panel would cost more than it catches. The gates
-# are not part of that economy: checks = "all" means a candidate you might land
-# has passed the same CI as any other, because a candidate no gate has seen is
-# not light, it is unverified.
+# are not part of that economy: a light candidate you might land has passed the
+# same CI as any other, because a candidate no gate has seen is not light, it is
+# unverified.
 # A review of "none" means no review execution is ever started for such a lane
 # -- its checks still run, its candidate is still yours to approve, and it is
 # never eligible for automatic merging, which requires a clean current review.
@@ -270,7 +330,7 @@ checks = "all"
 [workflows.light]
 role = "light"
 review = "none"
-checks = "all"
+checks = ["lint", "test", "frontend"]
 
 # concurrency limits how many ready tickets run at once.
 [scheduler]
