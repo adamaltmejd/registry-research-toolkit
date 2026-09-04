@@ -71,7 +71,7 @@ inactivity_timeout_minutes = 0
 total_work_timeout_minutes = 360
 context_limit_tokens = 300000
 compaction_threshold_share = 0.7
-instructions = "Smallest safe change, in the ticket's scope only. Follow the repo ladder (no change > existing capability > stdlib > installed dep > minimal new code > new dep) and prefer deletion to addition: pre-v1 with no external users, break and delete freely — no compat shims, migration code, deprecation wrappers, or speculative options/abstractions no ticket asked for. Never simplify away the load-bearing guards: PII/MONA confinement, k-anonymity/disclosure control, determinism/byte-identity, JSON-contract validation, fail-fast. If the work grows past the ticket, do less and file a proposal instead. If the ticket changes rendered reg_webapp frontend UI: load the repo skill reg-webapp-frontend-design before authoring, and before declaring the candidate run reg-webapp-design-reviewer in a clean subagent and fix or explicitly dismiss what it finds."
+instructions = "Smallest safe change, in the ticket's scope only. Follow the repo ladder (no change > existing capability > stdlib > installed dep > minimal new code > new dep) and prefer deletion to addition: pre-v1 with no external users, break and delete freely — no compat shims, migration code, deprecation wrappers, or speculative options/abstractions no ticket asked for. Never simplify away the load-bearing guards: PII/MONA confinement, k-anonymity/disclosure control, determinism/byte-identity, JSON-contract validation, fail-fast. If the work grows past the ticket, do less and file a proposal instead. Before declaring the candidate, once your own checks pass: run the /simplify skill over the candidate diff in a clean subagent (reuse, simplification, efficiency, altitude — quality only, no behavior change), apply what it finds, and re-run the checks; if the skill is unavailable, do that pass yourself. If the ticket changes rendered reg_webapp frontend UI: load the repo skill reg-webapp-frontend-design before authoring (if the Skill tool does not list it, read .claude/skills/reg-webapp-frontend-design/SKILL.md), and before declaring the candidate run reg-webapp-design-reviewer (.claude/skills/reg-webapp-design-reviewer/SKILL.md) in a clean subagent and fix or explicitly dismiss what it finds."
 
 # Plan-first tickets need the planning role. Without it, such a ticket waits
 # for the operator instead of planning itself.
@@ -120,7 +120,7 @@ access = "writable"
 tools = { subagents = false }
 inactivity_timeout_minutes = 0
 total_work_timeout_minutes = 360
-instructions = "Smallest safe change, in the ticket's scope only; match the conventions of the code you are changing. No scope beyond the ticket — if more is needed, file a proposal."
+instructions = "Smallest safe change, in the ticket's scope only; match the conventions of the code you are changing. No scope beyond the ticket — if more is needed, file a proposal. Before declaring the candidate, make one simplification pass over your own diff (the /simplify skill if available): reuse what exists, drop what the ticket did not ask for, then re-run the checks."
 
 # Each [checks.<name>] section defines a gate every candidate must pass.
 # command runs the gate and timeout_minutes limits one run. environment is
@@ -221,11 +221,14 @@ reviewer = "codex:gpt-5.6-sol:high"
 
 # The design seat judges source against the supplied design contracts. Rendered
 # checks belong to workers and gates; the operator judges their visual evidence.
+# Context is the reviewer skill plus the frontend design language
+# (reg_webapp/frontend/DESIGN.md, ~15 KB), not the 178 KB engineering doc, and
+# never src/tokens.css — autoreview rejects that filename as sensitive.
 [checks.review.reviewers.design]
 reviewer = "claude:claude-opus-5:high"
 context = [
   ".claude/skills/reg-webapp-design-reviewer/SKILL.md",
-  "reg_webapp/DESIGN.md",
+  "reg_webapp/frontend/DESIGN.md",
 ]
 instructions = "Review this reg_webapp frontend candidate using only the diff and supplied context files. Judge markup, styles, copy, component states, keyboard focus and interaction semantics against the source-visible checklist, design-system contract and semantic tokens. Check accessibility, component reuse, responsive rules and error-state affordances where the supplied source supports a conclusion. The supplied skill's rendering, self-check and rendered-evidence reporting procedures belong to the implementation worker and operator; they do not apply to this seat. Do not claim rendered verification or raise findings merely because this seat has no rendered evidence. Report concrete defects supported by the supplied source, with file and line, severity, user impact and the smallest correction; distinguish established defects from behavior the available context cannot establish."
 

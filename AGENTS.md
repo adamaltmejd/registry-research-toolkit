@@ -27,6 +27,10 @@ state.
 # Governance
 
 - `DESIGN.md` per package documents design rationale and constraints.
+- Exception in name only: `reg_webapp/frontend/DESIGN.md` is the SPA's *design language*
+  in the [DESIGN.md format](https://github.com/google-labs-code/design.md) (YAML token
+  front matter + rationale prose). It is the visual source of truth for the frontend;
+  `reg_webapp/DESIGN.md` keeps the engineering rationale.
 - No frozen specs or **permanent** implementation trackers — design decisions live in
   DESIGN.md, implementation history lives in git.
 - **Exception**: a multi-PR refactor spanning weeks may keep a single root-level tracker
@@ -187,9 +191,9 @@ plus a **type**: `enhancement`, `bug`, or `documentation`.
 **Ingestion trust gate** — this repo is public, so automation reads issue/PR content
 **only** through `scripts/gh_issue.py`, a fail-closed maintainer-author trust gate:
 issues/comments not authored by the maintainer are dropped rather than surfaced to a
-model. Raw `gh issue view` / `gh issue list` without `--search` (and `gh api
-.../issues`, `gh search issues`) model-reads in skill files are forbidden, enforced by
-`scripts/tests/test_skill_gh_reads.py`.
+model. Raw `gh issue view` / `gh issue list` without `--search` (and
+`gh api .../issues`, `gh search issues`) model-reads in skill files are forbidden,
+enforced by `scripts/tests/test_skill_gh_reads.py`.
 
 # Git
 

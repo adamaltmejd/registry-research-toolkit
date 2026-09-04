@@ -1043,47 +1043,23 @@ redesign is the natural migration window.
 
 ## Visual language (design system)
 
-#689 chose the **foundation** (Bits UI behavior + Svelte scoped CSS +
-CSS-custom-property tokens, no Tailwind). This section defines the **language** that
-foundation expresses — so every migrated page and every new redesign-wave component
-converges on one look instead of re-deciding type, color, and density per `<style>`
-block. It is the source of truth the token file and the primitive set implement.
+The design language — palette, type, layout, elevation, shapes, component styling, and
+the do's and don'ts — lives in **`frontend/DESIGN.md`**, a
+[DESIGN.md-format](https://github.com/google-labs-code/design.md) file whose YAML front
+matter is the normative token set and whose prose is the rationale.
+`frontend/src/tokens.css` implements those tokens as CSS custom properties of the same
+names, and the frontend test suite fails when they disagree. On any conflict about how
+something looks, `frontend/DESIGN.md` wins over this file; this file keeps the
+engineering decisions (the two-layer token architecture below, primitives' ARIA and API
+contracts, tests).
 
-**Committed direction (decided 2026-06-26).** A *modern data-tool / dashboard* aesthetic
-— the Linear/Observable lineage: an app shell, dense legible tables, keyboard-first
-interaction, subtle surfaces, one confident accent. *Confidently branded* (a clear point
-of view in service of the researcher's task, not maximalist decoration) and
-*light-first, dark-ready* (tokens authored as semantic roles so dark mode is a later
-additive theme, never a retrofit). The audience is academic researchers and data
-stewards working dense Swedish register metadata; the design optimizes for clarity and
-information density over editorial flourish.
-
-This supersedes the MVP look: `system-ui` everywhere, a single `#2563eb` accent on flat
-white, a 56rem centered ribbon, and 35 components each hand-styling cards/panels/tables
-in private `<style>` blocks off a \~6-color token stub.
-
-### Token architecture
-
-Two layers, semantic roles only consumed by components:
-
-- **Primitive ramps** — raw scales: `--gray-1..12` (graphite neutrals), `--rost-1..12`
-  (brand), and the categorical/semantic hues. Components **never** reference these
-  directly.
-- **Semantic roles** — what components use: `--bg`, `--surface`, `--surface-raised`,
-  `--surface-sunken`, `--text`, `--text-muted`, `--text-faint`, `--border`,
-  `--border-strong`, `--accent`, `--accent-fg`, `--accent-bg`, `--accent-ink`, the
-  categorical-ink family `--cat-reg-ink` / `--cat-var-ink` / `--cat-code-ink` /
-  `--cat-class-ink` / `--cat-group-ink`, the facet-axis data roles `--facet-axis-*` /
-  `--facet-axis-*-ink` (AA-cleared text stops — see § Color), the data-viz edge role
-  `--viz-edge-succession` (an AA-legible stroke/fill, not a text stop — see § Color),
-  plus the status roles below. Dark mode is a single `[data-theme="dark"]` block that
-  remaps these roles to dark primitive stops — no component CSS changes.
-
-The tokens move out of `App.svelte`'s `:global(:root)` (the #689 spike stub) into a
-global `frontend/src/tokens.css` imported once in `main.ts`. The stub's
-geometry/interaction tokens (`--space-*`, `--radius`, `--focus-ring`,
-`--surface-hover`/`-selected`) fold into the role set; the bare palette
-(`--border`/`--accent`/`--surface`) is replaced, not kept in parallel.
+Two layers, semantic roles only consumed by components: **primitive ramps**
+(`--gray-1..12` and the fixed status/categorical/data hues — never referenced by a
+component) and **semantic roles** (`--bg`, `--surface*`, `--text*`, `--border*`,
+`--accent*`, the status, `--cat-*`, `--facet-axis-*` and `--viz-edge-*` roles, plus
+geometry, elevation, focus and motion). Dark mode and the planned per-provider themes
+are role remaps under `[data-theme]` / `[data-provider]` — no component CSS changes. The
+tokens live in `frontend/src/tokens.css`, imported once in `main.ts`.
 
 **Enforced deterministically** by `frontend/src/style_tokens.test.ts` (part of
 `bun run test`, so it runs in the `reg-webapp-frontend` CI job and the yard `frontend`
@@ -1102,99 +1078,6 @@ directly via `vitest-browser-svelte` and does **not** evaluate `main.ts` — so
 path in `vite.config.ts`'s `browser` project). Otherwise token-dependent component
 styling runs without the design-system variables/fonts and either breaks or silently
 skips visual regressions.
-
-### Typography
-
-Self-hosted (woff2 in the bundle — no third-party CDN dependency in a research tool;
-both faces are OFL):
-
-- **Schibsted Grotesk** — UI + display. A Scandinavian media-house grotesque:
-  domain-authentic, characterful, and distinct from the `Inter`/`Roboto`/`Space Grotesk`
-  defaults the frontend-design guidance and #689 both warn against.
-- **IBM Plex Mono** — every code, FQID, slug, year, and value-set code. The catalog is
-  full of machine identifiers; they get a mono face consistently (the MVP already
-  half-did this).
-
-Type scale as roles (`--text-display`, `--text-h1..h3`, `--text-body`, `--text-sm`,
-`--text-micro`) with a tracked, uppercase **micro-label** style for table headers and
-section eyebrows — the device that gives the dashboard look its hierarchy without heavy
-headings.
-
-### Color
-
-Graphite ink on a warm off-white (`--bg` \~`#fafaf8`, surfaces toward white). Brand
-accent is **Rost `#B8552A`** (a Falu-red-adjacent warm rust).
-
-**The accent-vs-status rule (load-bearing — a warm brand forces it):** the brand accent
-paints **only interactive chrome** — links, primary buttons, selection, focus ring,
-active nav. It is **never** a status color. Every validation/status state is (a)
-chromatically *cooler* than the brand so it can't be mistaken for it, and (b) paired
-with a **glyph**, never hue alone:
-
-- error → cherry red `--err` `#C42B2B` (✕)
-- warning → cool ochre `--warn` `#7A5C00` (▲) — deliberately yellower/cooler than rost
-- info → slate `--info` `#3A6B8C` (i)
-- success → green `--ok` `#1E7A3C`
-
-These are the **text/glyph foreground** values: each clears WCAG AA (≥4.5:1) on the
-off-white/white surfaces, since status appears as small labels and glyphs. The lighter
-fill/badge tints (the soft backgrounds behind a status row) are separate ramp stops, not
-these foregrounds — never use a fill tint as text color.
-
-A separate small **categorical** palette tags result/node *type* (`REG` teal, `VAR`
-indigo, `CODE` gold, classification, group) in search and listings. It is its own
-sub-system — never reuse the brand accent or the status colors for type identity, or
-"this is a variable" and "this is selected/an error" collide. The raw `--cat-*` hues are
-the **fill and border** values (the 10 % tint backgrounds). For TEXT, each hue has a
-corresponding `--cat-*-ink` stop — `color-mix(in srgb, var(--cat-*) 85%, black)` — that
-darkens it enough to clear WCAG AA on those tint backgrounds (teal and gold fall just
-under 4.5:1 as plain text on their own tint). This mirrors `--accent-ink` for the brand.
-Components always use the ink stop for any categorical label text; fill/border use the
-raw hue.
-
-A separate **facet-axis** palette tags concept-group dimensions in member/filter pills.
-It is a data-encoding sub-system: deterministic within the declared axis set
-(stable-name hash plus collision resolution), value-only in visible text, and separate
-from node-type, status, and brand chrome. The visible value pill gets the axis color;
-the axis label remains in the fieldset legend, `title`, and screen-reader text so hue is
-not the only carrier of meaning.
-
-A separate **data-viz edge** palette (`--viz-edge-*`, added under #810, landed via PR
-#794) colors relationship marks in the history/graph view — data, not chrome, so it
-never borrows the brand accent (collides with "is selected") or a status hue (an edge
-isn't an error/warning). It ships one role, `--viz-edge-succession`: a desaturated steel
-for the directed predecessor→successor edge, cooler than the Rost accent and darker than
-the `--cat-var` indigo so the three never read as the same mark (≈4.6:1 on `--surface`,
-an AA-legible hairline/arrow), with its own lightened dark-theme stop shipped alongside
-the light one rather than waiting on the dark-seam role remap. The sub-system's earlier
-"succession vs related" scope is now succession-only — #800 retired the `related` edge
-kind entirely. `ClassificationEditionGraph` and `RepresentationPicker` (graph mode)
-consume the role directly with no hardcoded colors.
-
-### Geometry, elevation, motion
-
-- `--space-*` rhythm (0.25rem base), `--radius` (`--radius-sm` \~5px controls, \~8px
-  panels).
-- A small **elevation** scale: flat sunken surfaces, a hairline `--border`, and a single
-  soft shadow token for raised panels/cards/popovers. No heavy drop shadows.
-- `--focus-ring` keeps the #689 accessible-outline intent, retinted to the brand.
-- Motion budget is small and functional (popover/disclosure transitions, \~120–180ms),
-  not decorative — consistent with the data-tool restraint.
-
-### Surface & layout language
-
-- **App shell** replaces the centered 56rem ribbon: a persistent left **rail** (brand,
-  primary nav, contextual facets — keeps all 8 providers reachable), a **topbar**
-  (breadcrumb + a command bar promoting the existing `SearchOmnibox`), and a wide
-  content canvas. The command-bar shortcut is platform-adaptive — `Meta/Ctrl+K`,
-  displayed as `⌘K` on macOS and `Ctrl+K` elsewhere (never bind/label Mac-only). This
-  fixes the "cramped *and* empty" failure mode of the narrow column on dense pages.
-- **Panels** are the unit of grouping: a header (micro-label title + optional
-  meta/badge) over a body. **DataTable** is the workhorse — uppercase micro-label
-  headers, right-aligned mono numerics, zebra-free hairline rows, hover +
-  keyboard-selected states.
-- Density is tuned for scanning long lists (registers, variables, value-set codes,
-  search results), not for marketing whitespace.
 
 ### Shared primitives (Bits UI behavior + scoped CSS)
 

@@ -346,6 +346,8 @@ plan argues well for crossing them.
   papercuts — in `.yard/DOGFOOD.md` (see AGENTS.md / CLAUDE.md, "Yard").
 - **File UI-changing tickets with `--workflow ui`.** Any ticket that changes rendered
   reg_webapp frontend UI should be filed on the `ui` workflow, which adds the
-  design-instructed review panel on top of the default lane. A mis-filed ticket loses
-  only that visual review — every gate still runs. Everything else stays on `default` or
-  `light` as before.
+  source-only design seat (reviewer skill + `reg_webapp/frontend/DESIGN.md` as context)
+  beside the code seat. Rendered evidence comes from the worker's in-lane self-check and
+  from you before approval, never from a seat. A mis-filed ticket loses only that design
+  review — every gate still runs. Everything else stays on `default` or `light` as
+  before.
