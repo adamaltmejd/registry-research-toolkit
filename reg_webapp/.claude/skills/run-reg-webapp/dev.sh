@@ -28,6 +28,14 @@
 #                          $PORT so preview_start attaches to OUR vite and parallel
 #                          sessions don't collide. Not meant to be run by hand.
 #
+# Leading flag (before the mode), works with every mode:
+#   --fixture-db           serve a DETERMINISTIC SYNTHETIC catalog instead of the
+#                          resolved reg_meta DB: build the fixture DB pair
+#                          (backend/scripts/fixture_db.py — the same builder the
+#                          backend tests use) into a temp dir, export it as
+#                          REG_META_DB, and delete it on exit. For a container /
+#                          checkout where no released DB is reachable.
+#
 # Ports are automatic (two of these never collide); pin with BACKEND_PORT /
 # FRONTEND_PORT if you need to know them up front.
 set -uo pipefail
@@ -35,6 +43,16 @@ set -uo pipefail
 # cleanup() kill the WHOLE tree (the frontend subshell AND the bun→vite grandchild
 # it spawns), not just the direct child. Without this, vite leaks on teardown.
 set -m
+
+# Leading global flag, consumed before the mode word so every mode accepts it.
+# `fixture_db_dir` is the built temp dir (empty when the flag is absent); cleanup()
+# removes it, so it must be defined before the trap is installed.
+fixture_db=""
+fixture_db_dir=""
+if [ "${1:-}" = "--fixture-db" ]; then
+	fixture_db=1
+	shift
+fi
 
 mode=serve
 case "${1:-}" in
@@ -68,7 +86,7 @@ preview)
 	;;
 "") mode=serve ;;
 *)
-	echo "usage: dev.sh [smoke | shot [--mobile|--tablet|--desktop|--all|--viewport WxH]... <route>... | flows <out-dir> | preview]" >&2
+	echo "usage: dev.sh [--fixture-db] [smoke | shot [--mobile|--tablet|--desktop|--all|--viewport WxH]... <route>... | flows <out-dir> | preview]" >&2
 	exit 2
 	;;
 esac
@@ -155,10 +173,27 @@ cleanup() {
 	if [ ${#pids[@]} -gt 0 ]; then
 		for p in "${pids[@]}"; do kill -- -"$p" 2>/dev/null; done
 	fi
+	# The --fixture-db scratch DB pair is per-run and rebuildable — never leave it
+	# behind (it's ~0.6 MB of temp per invocation).
+	if [ -n "$fixture_db_dir" ]; then rm -rf "$fixture_db_dir"; fi
 }
 # Tear both servers down on ANY exit — including the one-shot smoke/shot paths, so
 # they never leak a dev server (the failure mode that motivated this mode).
 trap cleanup INT TERM EXIT
+
+# --fixture-db: build the deterministic synthetic reg_meta DB pair (catalog +
+# docs) into a temp dir and point BOTH servers at it via REG_META_DB — reg_meta's
+# highest-precedence DB dir, so it wins over whatever the environment resolves.
+# Built AFTER the trap so a failure mid-build still gets the dir removed.
+if [ -n "$fixture_db" ]; then
+	fixture_db_dir=$(mktemp -d "${TMPDIR:-/tmp}/reg-webapp-fixture-db.XXXXXX") || exit 1
+	if ! .venv/bin/python reg_webapp/backend/scripts/fixture_db.py "$fixture_db_dir" >/dev/null; then
+		echo "dev: --fixture-db build failed — see output above." >&2
+		exit 1
+	fi
+	export REG_META_DB="$fixture_db_dir"
+	echo "dev: --fixture-db serving a synthetic catalog from $fixture_db_dir" >&2
+fi
 
 # .venv/bin/uvicorn (not `uv run`) binds THIS checkout's venv directly.
 .venv/bin/uvicorn reg_webapp.app:create_app --factory --port "$backend_port" &

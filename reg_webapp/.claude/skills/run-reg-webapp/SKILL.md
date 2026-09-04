@@ -87,10 +87,10 @@ REG_META_DB="$db" bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh flows /tm
 ```
 
 The flows assert against the synthetic catalog those two lines set up (`scb/lisa/kon` at
-variant `individer-15plus` → column `Kon`), which `catalog_fixture_db.py` builds with
-the backend tests' own fixture builder — not a released DB. A nonzero exit is a failed
-assertion, an unexpected JS page error, horizontal overflow at some viewport, or a
-server that never started; the servers are torn down either way.
+variant `individer-15plus` → column `Kon`), which `catalog_fixture_db.py` builds with the
+shared fixture builder (`backend/scripts/fixture_db.py`, below) — not a released DB. A
+nonzero exit is a failed assertion, an unexpected JS page error, horizontal overflow at
+some viewport, or a server that never started; the servers are torn down either way.
 
 In yard this is the `project-flows` gate (`.yard/config.toml`, selected by the `ui`
 workflow), which hands the driver `$YARD_ARTIFACT_DIR` as the output directory and
@@ -102,10 +102,11 @@ viewport, request counts, candidate HEAD).
 
 **Verifying against unreleased DB content (custom DB).** `dev.sh` renders against
 whatever DB `reg_meta` resolves, and `$REG_META_DB` (a *directory*) wins over the
-installed default (see Prerequisites) — `dev.sh` never sets it, so it inherits the
-caller's env. So to verify a change whose rendering depends on DB content not yet in the
-installed/released DB — a `build-db` / curation change, e.g. an earlier PR in the same
-lane — build a scratch DB and point the dev server at it; **no release required**:
+installed default (see Prerequisites) — `dev.sh` only sets it under `--fixture-db`
+(below); otherwise it inherits the caller's env. So to verify a change whose rendering
+depends on DB content not yet in the installed/released DB — a `build-db` / curation
+change, e.g. an earlier PR in the same lane — build a scratch DB and point the dev
+server at it; **no release required**:
 
 ```sh
 db_dir="$(mktemp -d "${TMPDIR:-/tmp}/regmeta-verify.XXXXXX")"
@@ -116,6 +117,28 @@ REG_META_DB="$db_dir" bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh shot 
 (Verified: a non-default `REG_META_DB` directory renders correctly through `dev.sh`.)
 Don't assume the installed/last-released DB is the only one the dev server can serve —
 it's the default, not a constraint.
+
+**Verifying without a released DB (`--fixture-db`).** Where no reg_meta DB is reachable
+at all — an agent container, a fresh clone, CI — pass `--fixture-db` before the mode and
+`dev.sh` serves a *synthetic* catalog instead: it runs `backend/scripts/fixture_db.py`
+(the same builder the backend tests' `catalog_db` / `docs_db` fixtures use) into a temp
+directory, exports it as `REG_META_DB` for both servers, and deletes it on exit. Content
+is fixed — no seed, no clock — so the DB pair is byte-identical run to run and a
+screenshot diff means a code change, not catalog drift. It is small but populated enough
+that every route the design-reviewer skill walks renders rows: `/`, `/catalog`,
+providers `fk` (register `midas`) and `scb` (`lisa` / `rams`), bindings like
+`/catalog/scb/lisa/kon` (value set, succession, lineage), the groups
+`/catalog/group/scb/rams/ink` and `/catalog/group/class/sun`, `/search?q=kon`,
+`/project`, and `/doc/Kon.md`. `smoke` drills it end to end.
+
+```sh
+bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh --fixture-db smoke
+bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh --fixture-db shot --all /catalog
+bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh --fixture-db          # interactive
+```
+
+Use it to verify *layout and interaction*, not catalog realism: the fixture has a
+handful of rows, so density/overflow questions still want a real or scratch DB.
 
 **Interactive (humans).** `dev.sh` with no args starts the same auto-free-port servers
 and stays up until Ctrl-C (which tears both down). It prints the URLs — open the
