@@ -25,12 +25,14 @@ a command's own help, the help is right and this file is stale. What this file a
 the part that is judgment rather than reference — what to do when the board wakes you,
 and what each answer costs.
 
-**Every decision here can spend money.** Unparking a ticket, accepting a proposal,
-starting a ticket that has no attempt underway, nudging a worker, rejecting a candidate,
-abandoning an attempt: each one starts, resumes or restarts a model session inside a
-container. A ticket filed `--parked` is the cost boundary — file parked whenever you
-mean to read the ticket before anything starts working it, because an unparked ready
-ticket is admitted within milliseconds of the command returning.
+**Most decisions here spend money, and not all of them the same way.** Unparking a
+ticket, accepting a proposal that creates a ready one, or starting one with no attempt
+underway admits work: a fresh attempt at full worker spend. Nudging a worker or
+rejecting a candidate buys another round of the attempt already running, plus the review
+and gates that run again on what it produces. Abandoning starts no model by itself —
+what it costs is the admission that follows, because an unparked ready ticket is
+admitted within milliseconds (§6). A ticket filed `--parked` is the cost boundary: file
+parked whenever you mean to read the ticket before anything starts working it.
 
 ## 1. The loop is wake-driven, and you re-arm it after every decision
 
@@ -150,6 +152,16 @@ threshold, and advisory findings mean it saw things it chose not to block on. A 
 narrower still: it proves what that workflow's checks assert about that tree. Neither of
 them approves anything. You do, and the ticket is what you approve against.
 
+**A candidate that changes rendered UI is approved on pictures you opened.** On the `ui`
+workflow, `yard lane show` prints the `project-flows` gate's retained PNGs. Open them,
+and check the `candidate HEAD` in that execution's log against the head you are about to
+pass to `--expect-head`. Then judge the pictures, and their route, state and viewport
+coverage of the diff, under `.claude/skills/reg-webapp-design-reviewer/SKILL.md` — whose
+rendered-evidence contract is also what that gate is not evidence for: it renders the
+`/project` states it names, not every route a candidate touches. Where the candidate
+changed a surface the gate never rendered, render it yourself under that skill before
+you approve. A passing design seat is not visual verification: it reads source only.
+
 **Approve is not landing.** The command returning 0 means the candidate was approved;
 landing is its own outcome, and it reaches you as the terminal wake carrying `landed`
 and the head. Take the landing from Git rather than from an exit status: `yard sync`
@@ -225,7 +237,8 @@ Three answers, in the order to reach for them:
 A ticket you have decided not to do, with an attempt already underway, retires in one
 order and only one:
 
-1. **`yard ticket park ID -m "<why>"`** — out of automatic admission.
+1. **`yard ticket park ID -m "<why>"`**, unless it is parked already — out of automatic
+   admission.
 2. **`yard lane stop ATTEMPT --expect-generation N`**, if an execution is still running.
    `yard lane abandon` refuses a running attempt rather than racing it.
 3. **`yard lane abandon ATTEMPT -m "<why>"`** — ends the attempt, scrapping it and its
@@ -260,17 +273,20 @@ commit and `yard sync`; or you put what matters in the fresh ticket's body as br
 and let its worker integrate it under review. Whichever way it enters, it enters through
 a supported path — never by reaching into a lane workspace (§2).
 
-**A decision that changes what the reviewer would enforce retires the ticket.** When you
-ratify a contract or a design that moves the premise the work is judged against, do not
-amend the body to match: park, stop, abandon, then file a fresh ticket written under the
-new contract, naming the abandoned attempt so its keepable work can be salvaged by the
-recipe above. The amendment does not travel — the brief was frozen at admission and the
-review history was argued under the old premise, so the reviewer goes on enforcing the
-superseded design against a revision that disclaims it. That is §3 from the far side:
-the ticket is what the candidate is judged against, and one that changed underneath a
-live lane is judged against both. One lane paid a strip round and a residual acceptance,
-about half its spend, to escape an amendment a fresh ticket would have avoided. Edits to
-a live ticket are for clarifications that leave the premise standing.
+**Amend or replace is decided by the use case, not the mechanism.** An edit does reach
+the reviewer: it carries the ticket to a new revision and review is taken at the current
+one, so a review queued or finished against the superseded body stops standing as this
+candidate's evidence, and the candidate needs a current review before you can approve
+it. Read `yard ticket edit --help` for what it retires and which guards it takes, and
+`yard lane nudge --help` for the neighbouring verb: a nudge is guidance for the worker,
+not a change to what the candidate is judged against.
+
+**Amend** when the consumer and the observable behavior stay what the ticket already
+names — a clarification, a narrowing, a question the body left open: the attempt's work
+is still the right work, so edit, and read the new candidate under §3. **Replace** when
+a ratified contract or design changes either: no edit makes this attempt the right work,
+so park, stop, abandon, then file a fresh ticket under the new premise, naming the
+abandoned attempt so its keepable work can be salvaged by the recipe above.
 
 ## 7. Filing work: one lane's worth, for a use case somebody has
 
@@ -347,7 +363,10 @@ plan argues well for crossing them.
 - **File UI-changing tickets with `--workflow ui`.** Any ticket that changes rendered
   reg_webapp frontend UI should be filed on the `ui` workflow, which adds the
   source-only design seat (reviewer skill + `reg_webapp/frontend/DESIGN.md` as context)
-  beside the code seat. Rendered evidence comes from the worker's in-lane self-check and
-  from you before approval, never from a seat. A mis-filed ticket loses only that design
-  review — every gate still runs. Everything else stays on `default` or `light` as
+  and the `project-flows` gate that renders the candidate and retains the screenshots,
+  beside the code seat. Rendered evidence comes from that gate, the worker's in-lane
+  self-check and you before approval — never from a seat. No other workflow binds either
+  of them, so a mis-filed ticket loses the design review *and* every retained picture.
+  Read the workflow's own `checks` list (`yard workflow list`, or `.yard/config.toml`)
+  rather than assume a gate ran. Everything else stays on `default` or `light` as
   before.
