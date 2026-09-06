@@ -1,0 +1,6 @@
+interface:
+  display_name: "Registry Webapp Design Reviewer"
+  short_description: "Review a reg_webapp candidate against the design language"
+  default_prompt: "Use $reg-webapp-design-reviewer to review a reg_webapp frontend candidate against the committed design language."
+policy:
+  allow_implicit_invocation: true

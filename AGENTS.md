@@ -160,6 +160,9 @@ the cross-package invariants and each `<package>/DESIGN.md` for the detail;
   `reg-webapp` config for `preview_start` (its entry point is `dev.sh preview`, so
   `autoPort` makes parallel sessions collision-free and the proxy is auto-wired); for
   one-shot screenshots use `dev.sh smoke` / `dev.sh shot`.
+- `reg_webapp` frontend work follows the design language in
+  `reg_webapp/frontend/DESIGN.md`: author with the `reg-webapp-frontend-design` skill
+  and judge the result with `reg-webapp-design-reviewer`.
 
 # Lint and test
 

@@ -17,6 +17,9 @@ The backend opens the real reg_meta DB read-only at its default path (or the
 For the full dev setup (this server + the Vite SPA on :5173 + a Playwright smoke
 driver), see the `/run-reg-webapp` skill at `../.claude/skills/run-reg-webapp/SKILL.md`.
 
+SPA changes follow the design language in `../frontend/DESIGN.md`, authored with the
+`reg-webapp-frontend-design` skill and judged with `reg-webapp-design-reviewer`.
+
 ## OpenAPI snapshot
 
 `openapi.json` is committed and snapshot-tested. Regenerate after any API change:

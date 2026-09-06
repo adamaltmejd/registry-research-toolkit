@@ -1,182 +1,274 @@
 ---
 name: reg-webapp-design-reviewer
 description: >-
-  Registry Research Toolkit `reg_webapp` rendered-UI review skill. Use for repo-local
-  rendered-output PR gates, visual verification, screenshot-based layout review,
-  responsive checks, accessibility visual checks, and UI regression review after
-  implementation. This is the post-implementation reviewer counterpart to
-  `reg-webapp-frontend-design` and is deliberately named to avoid generic
-  `web-design-reviewer` skills.
+  Registry Research Toolkit `reg_webapp` design review skill. Use to judge a frontend
+  candidate against the design language in `reg_webapp/frontend/DESIGN.md`: a source
+  review any reader of the diff can perform (token discipline, primitive reuse, ARIA and
+  focus, copy, responsive rules, error/empty affordances) and, with a checkout, a
+  four-width rendered review. This is the post-implementation counterpart to
+  `reg-webapp-frontend-design`.
 ---
 
-# Reg Webapp Design Reviewer
+# Reg webapp design reviewer
 
-Review rendered `reg_webapp` changes against the Registry Research Toolkit visual and
-accessibility contract. This is a post-implementation reviewer skill, not an authoring
-or design-planning skill. Use `reg-webapp-frontend-design` before building new UI; use
-this skill after implementation for the rendered visual gate.
+Judge a `reg_webapp` frontend candidate against the committed design language. The skill
+has two parts and they need different inputs:
 
-## Who Runs This, And As What
+- **Source review** — decidable from the diff plus `reg_webapp/frontend/DESIGN.md`.
+- **Rendered review** — needs a checkout, a browser and screenshots.
 
-Two consumers, one contract. Invoke this repo-local skill by its full name,
-`reg-webapp-design-reviewer`; do not substitute a generic `web-design-reviewer` skill.
+Run the part your inputs support and say in the report which one you ran. Authoring
+happens before this skill, under `reg-webapp-frontend-design`.
 
-- **In-lane self-check (authoring layer).** A yard implementation worker whose ticket
-  changes rendered UI runs this skill before declaring its candidate — in a clean
-  subagent whose prompt is only the changed routes, the diff, and this skill, so the
-  judgment does not inherit the implementing session's rationalizations. The worker
+## Who runs this
+
+Three consumers, one contract.
+
+- **The implementation worker's in-lane self-check.** A worker whose ticket changes
+  rendered UI runs both parts before declaring its candidate — in a clean subagent whose
+  prompt is the ticket and attempt, the changed routes, the diff and this skill, so the
+  judgment does not inherit the implementing session's rationalizations. The worker then
   fixes or explicitly dismisses every finding; the subagent reports, it does not
   rewrite.
-- **Review seat (judgment layer).** Yard's `ui` review profile carries a claude reviewer
-  instructed to run this skill in the operator environment. Its findings enter the
-  review report with priorities; blocking findings drive repair rounds. This is the
-  independent pass — the self-check above does not substitute for it.
+- **The design review seat.** Its inputs are the candidate diff and two context files:
+  this skill and `reg_webapp/frontend/DESIGN.md`. It has no checkout, no browser and no
+  screenshots. It runs **the source review only** — it does not read further files, does
+  not render, never claims rendered verification, and never raises a finding merely
+  because rendered evidence is absent. Its report uses the source-only format below.
+- **The operator.** Renders the surfaces the candidate changes and judges them before
+  approval. Neither a worker self-check nor a source review substitutes for that.
 
-In both seats the honesty rule is absolute: if the app fails to boot or screenshots
-cannot be produced, that is a `P1` finding saying exactly that. Never report a clean
-result without screenshot evidence. Manual spot screenshots, `bun` checks, or a
-non-rendered code skim do not substitute for this pass.
+## The contract
 
-Required output in either seat:
+`reg_webapp/frontend/DESIGN.md` is normative for how the app looks: its front matter is
+the token set, its prose says why the values exist and how to apply them. Judge the diff
+against that file, not against the code around it. The app is mid-transition to the Ink
+palette, so an untouched neighbour still carrying the old warm accent, `--rost-*` ramp
+stops or tracked-uppercase eyebrows is pending the restyle ticket (Y-37), not a defect
+this candidate introduced. New and reworked source is held to DESIGN.md.
 
-- changed route(s) or URL(s) reviewed;
-- exact render command or preview URL used;
-- viewports tested;
-- screenshots or render proof inspected (local paths);
-- findings grouped by severity;
-- every finding fixed or dismissed with a reason.
+## Source review
 
-## Inputs
+### Token discipline
 
-Start from the PR/branch/diff, issue, implementer notes, or route list. If no route is
-given, derive the smallest stable route from the changed files and nearby tests.
+Components consume **semantic roles only** — never primitive ramp stops (`--gray-*`,
+`--rost-*`, a raw status or categorical hue) and never a literal, which can render
+identically today and still break the role contract that makes a dark or per-provider
+theme a pure remap. The `style_tokens` test already fails a candidate on raw color
+literals and font stacks inside a `<style>` block, so the yield here is what it cannot
+see: a ramp stop read through `var()`, a one-off px spacing/radius/shadow value, and the
+wrong role chosen for the job.
 
-Common routes:
+The full role set, as the custom properties the source reads:
 
-- `/`
-- `/catalog`
-- `/catalog/<fqid>`
-- `/catalog/group/<provider>/<register>/<key>`
-- `/catalog/group/class/<key>`
-- `/search?q=...`
-- `/project`
-- `/doc/<identifier>`
+- Surfaces and ink — `--bg`, `--surface`, `--surface-raised`, `--surface-sunken`,
+  `--surface-hover`, `--surface-selected`, `--text`, `--text-muted`, `--text-faint`,
+  `--border`, `--border-strong`, `--scrim`, `--elevation-raised`, `--focus-ring`.
+- Chrome — `--accent`, `--accent-fg`, `--accent-bg`, `--accent-ink`.
+- Status — `--err`, `--warn`, `--info`, `--ok` and their `-bg` fill tints.
+- Categorical node type — `--cat-reg|var|code|class|group` and their `-ink` label stops.
+- Data encodings — `--facet-axis-0..5` (and `-ink`), `--viz-edge-succession`.
+- Geometry and type — `--space-1..4`, `--radius-sm`, `--radius`, `--font-ui`,
+  `--font-mono`, `--text-display|h1|h2|h3|body|sm|micro`, `--motion-fast`.
 
-If the rendered behavior depends on unreleased DB content, get the scratch DB directory
-from the ticket or the build-db output and pass it as `REG_META_DB`; otherwise the
-dev.sh helpers fetch the released DB themselves.
+The four color sub-systems are disjoint; borrowing across them is a finding.
 
-## Rendering
+- The accent is ink and paints interactive chrome only — links, primary buttons,
+  selection, focus ring, active nav. It is never a status or emphasis color, and
+  accent-colored *text* on a tint takes `--accent-ink`, not `--accent`. At most one
+  `primary` button per view.
+- Status meaning always travels with a glyph **and** text; hue alone is never the
+  carrier, and a `-bg` tint is never a text color.
+- Categorical type tags what a node *is*; it never doubles as status or selection.
+- Facet axes and viz edges are data — not chrome, not status.
 
-Prefer the one-shot helper from the repo root:
+### Primitive reuse
+
+Changed views compose the shared primitives — `Panel`, `DataTable`, `Breadcrumbs`,
+`Tag`, `Button`, `KeyValue`, `Skeleton`, `EmptyState`, plus `AppShell`. A hand-rolled
+near-duplicate of one — a bespoke table, button, tag, empty state or key-value list,
+visible in the diff as new markup with its own scoped CSS — is at least a `P2`.
+
+### Behavior layer
+
+Accessibility-critical widgets (combobox, command/listbox, menu, dialog, popover,
+tooltip, slider, tabs, accordion) come from Bits UI (`bits-ui`), styled with scoped CSS
+reading roles. A hand-rolled widget Bits UI covers is at least a `P2`; so is a Bits UI
+usage that ships one-off visual styling instead of roles.
+
+### ARIA and focus semantics
+
+- Focus is visible via `:focus-visible { box-shadow: var(--focus-ring); }` in the
+  component's **own** scoped CSS; no global stylesheet owns focus.
+- Every interactive element is reachable and operable from the keyboard — a click-only
+  handler on a non-interactive element is a finding.
+- `DataTable`'s settled decisions are not re-litigated: explicit unconditional ARIA
+  roles; ARIA-grid selection (per-row tab stops, not roving tabindex); `framed` tables
+  never wrapped in a `Panel`; the first column primary by position; `mono`/`numeric`
+  column flags for identifiers and measures.
+- Screen-reader-only content uses the `.visually-hidden` utility, never `display: none`;
+  `display: contents` strips roles from the accessibility tree.
+
+### Copy and labels
+
+Sentence case at normal tracking for labels, headings and buttons — no tracked-uppercase
+eyebrows, numbered section markers, middle-dot meta strings or trailing arrows. Mono is
+for machine identifiers only (FQIDs, slugs, value-set codes, years, counts, versions),
+never for labels or body copy. Name things by what a researcher recognizes — registers,
+variables, value sets, projects — never by internals, and keep an action's name the same
+through its whole flow ("Add to project", not "Submit"). Errors say what went wrong and
+how to fix it, without apologising.
+
+### Responsive rules
+
+The contract is 375, 768, 1280 and 1920 px, composed from the existing 48 rem
+breakpoint. Source-visible violations: a new breakpoint; a fixed px width that cannot
+fit 375 px; a padded 100 %-width element without `box-sizing: border-box`; an identifier
+column with no wrap or scroll rule; a bespoke media-query stack where `DataTable`'s
+stacked-card behavior exists. Whether a page actually overflows is a rendered question —
+the CSS rule is a source one.
+
+### Error, empty and loading affordances
+
+A fetching surface in the diff carries three states in source: `Skeleton` with
+`aria-busy` while loading, `EmptyState` naming the next action when empty, and an error
+banner (status tint fill, status foreground text, leading glyph). A new view that
+renders only the happy path is at least a `P2`.
+
+## Rendered review
+
+Needs a checkout and a browser — the worker's self-check and the operator. Skip this
+part entirely if you have neither.
+
+### Render
+
+From the repo root. `dev.sh` picks free ports, runs the Playwright driver against them,
+and tears both servers down on exit:
 
 ```sh
-bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh shot --all --viewport 1920x1080 <route>
-bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh smoke
-REG_META_DB="$db_dir" bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh shot --all --viewport 1920x1080 <route>
+bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh --fixture-db shot --all <route>
+REG_META_DB="$db_dir" bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh shot --all <route>
+bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh --fixture-db smoke
 ```
 
-Use `shot --all --viewport 1920x1080` for responsive screenshots unless the route is
-demonstrably desktop-only. Use `smoke` only as an additive broad-flow check for catalog
-browsing or app-shell changes; smoke alone captures the default desktop viewport and is
-not enough for the formal visual review. Screenshots land in `/tmp/reg-webapp-shots/`;
-include these local paths and a concise proof payload in the report. `/tmp` is purged,
-so the report's route/viewport/element descriptions must stand on their own — never
-commit screenshots to the branch.
+`--all` is the four-width contract (375 / 768 / 1280 / 1920); use it unless the route is
+demonstrably desktop-only. `--fixture-db` builds a deterministic synthetic catalog and
+needs nothing installed; pass `REG_META_DB=<db_dir>` instead when the rendered behavior
+depends on specific catalog content. `smoke` is a catalog-browsing flow at the default
+desktop viewport only — it does not stand in for the four widths.
 
-Browser automation should inspect screenshots and, when available, DOM/accessibility
-snapshots and console output. Do not rely on `bun run lint/check/test/build`; those do
-not render pixels.
+`dev.sh` prints the checkout it resolved, the full HEAD, and the unique output directory
+of that invocation as its first line:
 
-## Review Checklist
+```
+dev: repo /path/to/checkout HEAD 0123456789abcdef… shots /tmp/reg-webapp-shots.C8VNZN
+```
 
-Check the app as a dense registry research tool, not a marketing site.
+Quote it. Every invocation gets its own directory and `/tmp` is purged, so a path
+without a description of what the image showed is not evidence — and screenshots are
+never committed to the branch.
 
-- App shell: navigation, breadcrumbs, page titles, scroll containers, focus order.
-- Catalog/search surfaces: long FQIDs, register names, Swedish labels, code values,
-  filters, result density, empty/error/loading states.
-- Project authoring: form layout, validation findings, dirty/disabled states, keyboard
-  paths, popovers/dialogs, selected rows.
-- Layout: no unintended horizontal page overflow, overlap, clipping, unstable wrapping,
-  or clipped table/card content at mobile `375px`, tablet `768px`, desktop `1280px`, and
-  wide `1920px`.
-- Responsiveness: shared table-like results should keep headers accessible and become
-  deliberate stacked/card rows on narrow screens.
-- Accessibility visuals: visible focus rings, contrast, accessible names, label
-  association, status meaning conveyed by text/glyphs rather than color alone.
-- Design system: styling consistency and component reuse per the section below; no new
-  one-off palettes, hero-style sections, decorative gradients/orbs, heavy shadows, or
-  oversized cards.
-- Render health: no blank screens, stuck `aria-busy="true"` loading states, obvious JS
-  errors, missing critical assets, or screenshots captured before content settled.
+If no route is given, derive the smallest stable route from the changed files and nearby
+tests. Common routes: `/`, `/catalog`, `/catalog/<fqid>`,
+`/catalog/group/<provider>/<register>/<key>`, `/catalog/group/class/<key>`,
+`/search?q=...`, `/project`, `/doc/<identifier>`.
 
-## Styling Consistency And Component Reuse
+### Inspect
 
-The coherence baseline is the repo design system, not general taste. Before judging
-consistency, read the "Visual language (design system)" section of
-`reg_webapp/DESIGN.md`, the semantic tokens in `reg_webapp/frontend/src/tokens.css`, and
-the shared primitives in `reg_webapp/frontend/src/lib/ui/` (Breadcrumbs, Button,
-DataTable, EmptyState, KeyValue, Panel, Skeleton, Tag, plus `utilities.css`:
-`.micro-label`, `.visually-hidden`).
+**Open the images.** Claim inspection only of images you actually opened, at the
+viewport each was captured at. Read the DOM/accessibility snapshot and console output
+alongside them where the tooling offers those.
 
-Screenshots alone cannot catch token bypass, so also read the PR's frontend diff:
+- Render health: no blank screens, no stuck `aria-busy="true"`, no JS errors, no missing
+  assets, no capture taken before content settled.
+- Layout at each width: no horizontal page overflow, overlap, clipping, unstable
+  wrapping or clipped table/card content.
+- Density: the app reads as a dense research tool — no hero sections, decorative
+  gradients or orbs, oversized cards, cards inside cards, or stock imagery.
+- Accessibility visuals: visible focus rings, contrast, status meaning carried by glyph
+  and text rather than hue.
+- Cross-route coherence: render at least one untouched sibling route beside the changed
+  one and compare type scale, spacing rhythm and table/card/tag treatment. Flag
+  divergence from the surrounding app, allowing for views the restyle ticket has not
+  reached.
 
-- Component reuse: changed views compose the existing `lib/ui` primitives. A hand-rolled
-  near-duplicate of an existing primitive — a bespoke table, button, tag, empty state,
-  or key-value list — is at least a `P2`.
-- Behavior layer: a11y-critical widgets (comboboxes, menus, dialogs, popovers, sliders)
-  come from Bits UI (`bits-ui`, the sanctioned headless-primitives dep — see
-  `reg_webapp/DESIGN.md` § UI primitives), styled with scoped CSS reading semantic
-  tokens. A hand-rolled widget Bits UI covers is at least a `P2`; so is a Bits UI usage
-  that ships its own one-off visual styling instead of tokens.
-- Token discipline: flag raw hex/rgb/oklch colors, one-off px spacing/radius/shadow
-  values, or new font stacks where a semantic token exists (`--surface*`, `--border*`,
-  `--accent*`, `--text-*`, `--space-*`, `--radius*`, `--font-*`, `--micro-label-*`,
-  `--focus-ring`, `--elevation-*`). A hardcoded value can render identically today and
-  still break the light-first, dark-ready token contract.
-- Cross-route coherence: render at least one untouched sibling route alongside the
-  changed route and compare type scale, spacing rhythm, and table/card/tag treatment;
-  flag divergence from surrounding pages, not just defects within the changed route.
+`bun run lint/check/build` render nothing. The browser component tests (`bun run test`)
+do render in Chromium, but they exercise primitives in isolation: they are not app-level
+route and state coverage, and they are not visual inspection.
 
-## Findings And Fixes
+### When rendering is unavailable
 
-Mark blockers as `P1`, meaningful UX defects as `P2`, and minor polish as `P3`.
+If the app will not boot, the driver fails, or the environment has no browser, the
+outcome is **blocked** — not a product finding. Report the exact command, the observed
+cause (quote the failing line; the driver names the Chromium launch rung it reached,
+e.g. `driver: chromium launched (no-sandbox)`), and what stayed unverified. A blocked
+rendered review also cannot support a clean visual approval. Raise a product `P1` only
+where the evidence in hand establishes a candidate defect with that user impact.
 
-In the self-check subagent or the review seat, report findings; do not silently rewrite
-broad UI. If explicitly responsible for fixes (the implementing worker acting on its
-subagent's report), make the smallest source change, follow existing components/tokens,
-then re-render the affected route and update the report.
+### Author iteration vs. gate evidence
 
-Dismiss a finding only with a concrete reason, such as "existing behavior outside this
-PR", "intended clipping", or "route not affected by this diff".
+Fill every field of the rendered template below, and report the routes, states and
+viewports you actually inspected — not the ones the command could have produced. Author
+iteration captures and retained candidate gate evidence are different things: say which
+you are reporting. The `project-flows` gate covers its named `/project` error and retry
+scenarios — it is not evidence for a catalog, search or new-view change. Operator
+approval needs evidence for the surfaces the candidate actually changes.
 
-## Report Format
+## Severity, findings and fixes
+
+`P1` blocks, `P2` is a meaningful UX or contract defect, `P3` is polish. Report
+findings; do not silently rewrite broad UI. If you are responsible for fixes — the
+implementing worker acting on its subagent's report — make the smallest source change,
+follow the existing primitives and roles, then re-render the affected route and update
+the report.
+
+Dismiss a finding only with a concrete reason: "existing behavior outside this
+candidate", "intended clipping", "route not touched by this diff", "pending the restyle
+ticket".
+
+## Report format
+
+Source-only — the design seat, or anyone without a checkout:
 
 ```markdown
-# Reg Webapp Design Review Results
+# Reg webapp design review — source
 
-## Summary
-
-- Ticket/branch: <ticket id, branch, or diff reviewed>
-- Routes: <reviewed route(s)>
-- Render command or URL: <command/URL>
-- Viewports: <tested viewports>
-- Local screenshots inspected: <paths under /tmp/reg-webapp-shots/ or other local paths>
-- Result: <pass / findings fixed / findings dismissed / blocked>
+- Candidate: <ticket, branch, or diff reviewed>
+- Basis: diff + reg_webapp/frontend/DESIGN.md. Not rendered; no visual claim.
+- Result: <no source findings / findings>
 
 ## Findings
 
 ### [P1|P2|P3] <title>
 
-- Page: <route>
-- Viewport: <width>
+- File and line: <path:line>
+- Rule: <the DESIGN.md rule or checklist item>
+- Issue: <what the source establishes>
+- Recommendation: <smallest correction>
+```
+
+Rendered — the worker's self-check, the operator:
+
+```markdown
+# Reg webapp design review — rendered
+
+- Candidate: <ticket/attempt, branch, full HEAD>
+- Checkout: <path dev.sh resolved>
+- Gate execution: <gate and execution, or n/a>
+- Command: <exact command>
+- Routes and states inspected: <routes/states actually opened>
+- Viewports inspected: <widths actually opened>
+- Output directory: <dir dev.sh printed>; retained: <artifact paths, or none>
+- Uncovered changed surfaces: <surfaces, or none>
+- Result: <pass / findings fixed / findings dismissed / blocked: cause>
+
+## Findings
+
+### [P1|P2|P3] <title>
+
+- Route and viewport: <route @ width>
 - Element: <selector or description>
-- Issue: <what is visibly wrong>
+- Issue: <what is visibly wrong, described so it stands without the image>
 - Recommendation: <smallest practical fix>
 - Status: <fixed / dismissed with reason / needs owner>
-
-## Final Note
-
-reg-webapp-design-reviewer: <pass / blocked>; routes=<routes>; viewports=<viewports>;
-local_screenshots=<paths>; findings=<none / fixed / dismissed>.
 ```
