@@ -59,7 +59,10 @@ literals and font stacks inside a `<style>` block, so the yield here is what it 
 see: a ramp stop read through `var()`, a one-off px spacing/radius/shadow value, and the
 wrong role chosen for the job.
 
-The full role set, as the custom properties the source reads:
+The roles the source reads, by sub-system. This is representative, not exhaustive — the
+tree carries roles beyond it (the label roles `--micro-label-size` and
+`--micro-label-tracking` among them), so an unfamiliar `--role` name is not itself a
+finding; a literal or a ramp stop is:
 
 - Surfaces and ink — `--bg`, `--surface`, `--surface-raised`, `--surface-sunken`,
   `--surface-hover`, `--surface-selected`, `--text`, `--text-muted`, `--text-faint`,
@@ -151,11 +154,15 @@ REG_META_DB="$db_dir" bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh shot 
 bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh --fixture-db smoke
 ```
 
-`--all` is the four-width contract (375 / 768 / 1280 / 1920); use it unless the route is
-demonstrably desktop-only. `--fixture-db` builds a deterministic synthetic catalog and
-needs nothing installed; pass `REG_META_DB=<db_dir>` instead when the rendered behavior
-depends on specific catalog content. `smoke` is a catalog-browsing flow at the default
-desktop viewport only — it does not stand in for the four widths.
+`--all` is the four-width contract (375 / 768 / 1280 / 1920) and it applies to every
+rendered change; there is no desktop-only exception. `--fixture-db` builds a
+deterministic synthetic catalog, so no released catalog DB is needed — `dev.sh` still
+needs the provisioned venv, the frontend dependencies and Playwright's Chromium, whose
+exact provisioning path is in the Prerequisites and Setup sections of
+`reg_webapp/.claude/skills/run-reg-webapp/SKILL.md`. Pass `REG_META_DB=<db_dir>` instead
+when the rendered behavior depends on specific catalog content. `smoke` is a
+catalog-browsing flow at the default desktop viewport only — it does not stand in for
+the four widths.
 
 `dev.sh` prints the checkout it resolved, the full HEAD, and the unique output directory
 of that invocation as its first line:
