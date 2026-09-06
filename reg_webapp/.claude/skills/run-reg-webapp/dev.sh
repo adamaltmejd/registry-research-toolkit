@@ -170,6 +170,12 @@ shots_dir=""
 if [ "$mode" = smoke ] || [ "$mode" = shot ]; then
 	shots_dir=${REG_WEBAPP_SHOTS:-$(mktemp -d "${TMPDIR:-/tmp}/reg-webapp-shots.XXXXXX")} || exit 1
 	mkdir -p "$shots_dir" || exit 1
+	# ABSOLUTE from here on, because the two ends disagree otherwise: a relative
+	# REG_WEBAPP_SHOTS resolves against the repo root here (our cwd) but against
+	# reg_webapp/frontend in the driver, so the run would report one directory and
+	# write the PNGs into another. Resolve once, after the mkdir that guarantees it
+	# exists, and both the report and the driver get the same path.
+	shots_dir=$(cd "$shots_dir" && pwd) || exit 1
 	export REG_WEBAPP_SHOTS="$shots_dir"
 fi
 

@@ -83,38 +83,40 @@ const SHOTS =
     : null;
 if (SHOTS) mkdirSync(SHOTS, { recursive: true });
 
-// A LADDER, not a retry: the two environments that block a plain launch each need
-// DIFFERENT args, so every stage is tried once and the first that starts wins.
-//   1. default — an ordinary multi-process launch with the sandbox on.
-//   2. --no-sandbox — a Linux CONTAINER (the Yard lane image) has no user-namespace
-//      grant for Chromium's sandbox helper, so the helper cannot start; multi-process
-//      Chromium is otherwise healthy there, so only the sandbox is dropped.
-//   3. --single-process — a sandboxed agent SHELL (codex `-s workspace-write`
+// A LADDER, not a retry: each rung gives up something the one above it keeps, so
+// every rung is tried once and the first that starts wins. `chromiumSandbox` is
+// stated EXPLICITLY on every rung — playwright pushes `--no-sandbox` itself unless
+// the option is exactly `true`, so an unstated rung is an unsandboxed one and the
+// top two would be the same launch under two names.
+//   1. sandboxed — an ordinary multi-process launch with Chromium's own sandbox on:
+//      what a real browser does, so it is what we try first.
+//   2. no-sandbox — a Linux CONTAINER (the Yard lane image) runs as a uid with no
+//      user-namespace grant, so the sandbox helper cannot start; multi-process
+//      Chromium is otherwise healthy there, so ONLY the sandbox is dropped.
+//   3. single-process — a sandboxed agent SHELL (codex `-s workspace-write`
 //      seatbelt, Claude Code's sandboxed Bash) has no mach-register grant, so
 //      multi-process Chromium's `bootstrap_check_in … (1100)` rendezvous is denied and
 //      the renderer/GPU children never attach. One process has no children to
 //      register. Unsupported/best-effort per Chromium — revisit on Playwright bumps
 //      (issue #1049).
-// Each stage's OWN error is kept: when the ladder runs out, reporting only the last
-// failure would hide why the earlier, higher-fidelity stages were rejected.
+// Each rung's OWN error is kept: when the ladder runs out, reporting only the last
+// failure would hide why the earlier, higher-fidelity rungs were rejected.
 const LAUNCH_LADDER = [
-  { stage: "default", args: [] },
-  { stage: "no-sandbox", args: ["--no-sandbox"] },
+  { stage: "sandboxed", options: { chromiumSandbox: true } },
+  { stage: "no-sandbox", options: { chromiumSandbox: false } },
   {
     stage: "single-process",
-    args: [
-      "--single-process",
-      "--no-sandbox",
-      "--disable-gpu",
-      "--disable-crash-reporter",
-    ],
+    options: {
+      chromiumSandbox: false,
+      args: ["--single-process", "--disable-gpu", "--disable-crash-reporter"],
+    },
   },
 ];
 async function launchBrowser() {
   const failures = [];
-  for (const { stage, args } of LAUNCH_LADDER) {
+  for (const { stage, options } of LAUNCH_LADDER) {
     try {
-      const launched = await chromium.launch({ args });
+      const launched = await chromium.launch(options);
       console.error(`driver: chromium launched (${stage})`);
       return launched;
     } catch (e) {

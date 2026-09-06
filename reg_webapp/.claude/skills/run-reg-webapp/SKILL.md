@@ -63,7 +63,10 @@ your cwd — as its first line:
 dev: repo /path/to/checkout HEAD 0123456789abcdef… shots /tmp/reg-webapp-shots.C8VNZN
 ```
 
-Set `REG_WEBAPP_SHOTS=<dir>` to collect a run into a directory you own instead.
+Set `REG_WEBAPP_SHOTS=<dir>` to collect a run into a directory you own instead. A
+relative `<dir>` is taken relative to the **repo root** (the checkout `dev.sh` resolved,
+not your cwd); the reported line always shows the absolute path, and that is the path
+the PNGs are written to.
 
 **Responsive screenshots (`shot` viewports).** `shot` defaults to a 1280×900 desktop
 viewport; viewport flags before the routes capture other breakpoints:
@@ -86,12 +89,13 @@ non-desktop shots get a `-<label>` suffix (e.g. `_catalog_scb_lisa-mobile.png`,
 under the gates' `env -i` environment (no system `python3`, `HOME` wherever the runner
 puts it): free ports come from this checkout's `.venv/bin/python`, and the driver honors
 `PLAYWRIGHT_BROWSERS_PATH`, defaulting to the image's baked `/opt/pw-browsers` when it
-is unset. Chromium is launched up a ladder — default, then `--no-sandbox` multi-process
-(a container with no user-namespace grant for the sandbox helper), then
-`--single-process` (a sandboxed agent shell, issue #1049) — and stderr names the stage
-that rendered, e.g. `driver: chromium launched (no-sandbox)`. Quote that line as
-evidence. A lane must provision first the way the gates do (offline `uv sync`,
-`cp -a /opt/frontend/node_modules reg_webapp/frontend/`).
+is unset. Chromium is launched up a ladder — `sandboxed` (Chromium's own sandbox on),
+then `no-sandbox` multi-process (a container running as a uid with no user-namespace
+grant for the sandbox helper), then `single-process` (a sandboxed agent shell, issue
+#1049) — and stderr names the rung that rendered, e.g.
+`driver: chromium launched (no-sandbox)`, which is the one a lane container gets. Quote
+that line as evidence. A lane must provision first the way the gates do (offline
+`uv sync`, `cp -a /opt/frontend/node_modules reg_webapp/frontend/`).
 
 **Project error/retry flows (`flows`) — what the `project-flows` yard gate runs.** One
 command drives the whole `/project` error+retry evidence set: three scenarios (an empty
@@ -250,7 +254,7 @@ includes the Playwright browser project).
 - Backend exits at boot complaining about the DB/schema → no resolvable reg_meta DB, or
   one with a stale `SCHEMA_VERSION`. Use `--fixture-db`, or install/refresh a DB per
   Prerequisites.
-- Chromium fails to launch → if every stage of the launch ladder (above) failed, the
-  driver reports each stage's own error, unabridged — read the FIRST one, it is the
-  failure of the highest-fidelity launch. In a sandboxed shell prefer `dev.sh smoke` /
-  `shot` over `preview_start`, which has no ladder.
+- Chromium fails to launch → if every rung of the launch ladder (above) failed, the
+  driver reports each rung's own error, unabridged — read the FIRST one, it is the
+  failure of the sandboxed launch. In a sandboxed shell prefer `dev.sh smoke` / `shot`
+  over `preview_start`, which has no ladder.
