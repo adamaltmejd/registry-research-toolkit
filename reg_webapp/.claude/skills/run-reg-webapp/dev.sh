@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 # Run the reg_webapp dev servers on auto-selected FREE ports — works in any
-# checkout (main or git worktree) with no port collisions. Picks a free backend
-# and frontend port, points the Vite /api proxy at the backend via
-# REG_WEBAPP_BACKEND_URL, and starts both from THIS checkout's .venv (so a
-# worktree serves its own code, not main's).
+# checkout (main, a git worktree, a Yard lane container) with no port
+# collisions. Picks a free backend and frontend port, points the Vite /api proxy
+# at the backend via REG_WEBAPP_BACKEND_URL, and starts both from the .venv of
+# THIS SCRIPT's own checkout — resolved from this file's path, never from the
+# caller's cwd, so an absolute-path launch from elsewhere still serves the
+# checkout the script belongs to.
 #
 # Modes:
 #   dev.sh                 interactive — start both servers and block (Ctrl-C stops).
@@ -20,9 +22,10 @@
 #                          ONE-SHOT — screenshot each route, tear down, exit.
 #                          Viewport flags before the routes capture responsive
 #                          breakpoints (default desktop): --mobile (375x812),
-#                          --tablet (768x1024), --desktop (1280x900), --all (the
-#                          three), or --viewport WxH (repeatable). Each viewport ×
-#                          route is shot; non-desktop shots get a `-<label>` suffix.
+#                          --tablet (768x1024), --desktop (1280x900), --wide
+#                          (1920x1080), --all (the four), or --viewport WxH
+#                          (repeatable). Each viewport × route is shot; non-desktop
+#                          shots get a `-<label>` suffix.
 #   dev.sh preview         preview_start entry point (.claude/launch.json) — like
 #                          interactive serve, but the frontend binds the MCP-assigned
 #                          $PORT so preview_start attaches to OUR vite and parallel
@@ -37,7 +40,11 @@
 #                          checkout where no released DB is reachable.
 #
 # Ports are automatic (two of these never collide); pin with BACKEND_PORT /
-# FRONTEND_PORT if you need to know them up front.
+# FRONTEND_PORT if you need to know them up front. smoke/shot screenshots land in
+# a UNIQUE per-invocation directory under /tmp — printed on startup, and kept
+# after teardown because the pictures are the evidence — unless REG_WEBAPP_SHOTS
+# names a directory of your own. So concurrent lanes, and the operator, never
+# overwrite each other's captures.
 set -uo pipefail
 # Job control so each background server runs in its OWN process group — lets
 # cleanup() kill the WHOLE tree (the frontend subshell AND the bun→vite grandchild
@@ -86,7 +93,7 @@ preview)
 	;;
 "") mode=serve ;;
 *)
-	echo "usage: dev.sh [--fixture-db] [smoke | shot [--mobile|--tablet|--desktop|--all|--viewport WxH]... <route>... | flows <out-dir> | preview]" >&2
+	echo "usage: dev.sh [--fixture-db] [smoke | shot [--mobile|--tablet|--desktop|--wide|--all|--viewport WxH]... <route>... | flows <out-dir> | preview]" >&2
 	exit 2
 	;;
 esac
@@ -98,12 +105,14 @@ viewports=()
 if [ "$mode" = shot ]; then
 	while [ "$#" -gt 0 ]; do
 		case "$1" in
-		--mobile | --tablet | --desktop)
+		--mobile | --tablet | --desktop | --wide)
 			viewports+=("${1#--}")
 			shift
 			;;
 		--all)
-			viewports+=(mobile tablet desktop)
+			# The four widths the design-reviewer skill judges, so its contract
+			# needs no extra flag here.
+			viewports+=(mobile tablet desktop wide)
 			shift
 			;;
 		--viewport)
@@ -137,7 +146,11 @@ if [ "$mode" = shot ] && [ "$#" -eq 0 ]; then
 	exit 2 # validate before booting servers
 fi
 
-root=$(git rev-parse --show-toplevel 2>/dev/null || echo "$PWD")
+# THIS script's checkout (…/reg_webapp/.claude/skills/run-reg-webapp/dev.sh → repo
+# root), not the caller's cwd: an operator or a sibling lane running a candidate's
+# absolute dev.sh must get the candidate's servers, never whichever checkout they
+# happened to be standing in.
+root=$(cd "$(dirname "${BASH_SOURCE[0]}")/../../../.." && pwd) || exit 1
 cd "$root" || exit 1
 
 # Self-provision so this works standalone (humans, fresh clones) even without the
@@ -151,7 +164,22 @@ if [ ! -x ".venv/bin/uvicorn" ]; then
 	exit 1
 fi
 
-freeport() { python3 -c 'import socket;s=socket.socket();s.bind(("127.0.0.1",0));print(s.getsockname()[1]);s.close()'; }
+# The per-invocation shots directory (see the header). Deliberately NOT removed
+# by cleanup() — the pictures outliving the servers is the point.
+shots_dir=""
+if [ "$mode" = smoke ] || [ "$mode" = shot ]; then
+	shots_dir=${REG_WEBAPP_SHOTS:-$(mktemp -d "${TMPDIR:-/tmp}/reg-webapp-shots.XXXXXX")} || exit 1
+	mkdir -p "$shots_dir" || exit 1
+	export REG_WEBAPP_SHOTS="$shots_dir"
+fi
+
+# Provenance, first thing in the transcript: WHICH checkout is being served, at
+# WHICH commit, and where this run's evidence lands.
+echo "dev: repo $root HEAD $(git -C "$root" rev-parse HEAD 2>/dev/null || echo unknown)${shots_dir:+ shots $shots_dir}" >&2
+
+# .venv/bin/python, not a system `python3`: the lane/gate image ships no system
+# Python, and this checkout's venv is already required (checked above).
+freeport() { .venv/bin/python -c 'import socket;s=socket.socket();s.bind(("127.0.0.1",0));print(s.getsockname()[1]);s.close()'; }
 backend_port=${BACKEND_PORT:-$(freeport)}
 if [ "$mode" = preview ]; then
 	# preview_start assigns the frontend port via $PORT (autoPort always exports it,

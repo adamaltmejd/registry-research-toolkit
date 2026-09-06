@@ -8,18 +8,30 @@
 //
 // Commands (default: `smoke`):
 //   smoke               root loads, catalog tree renders, drill into the first
-//                       provider → register → variable, screenshot each step
+//                       provider → register → variable, narrow the period
+//                       slider, screenshot each step
 //   shot <url-path>     open a path (e.g. /catalog/scb/lisa) and screenshot it
 //   eval <url-path> <js> open a path, evaluate JS in the page, print the result
 //   flows <out-dir>     the /project error+retry gate: three scenarios × four
 //                       viewports, each in a fresh context, PNGs → <out-dir>
 //
-// smoke/shot/eval screenshots land in /tmp/reg-webapp-shots/; `flows` writes
-// only into its explicit <out-dir> (the gate passes $YARD_ARTIFACT_DIR). Servers
-// must already be running (backend :8000 + vite :5173) — see SKILL.md.
-import { mkdirSync, readFileSync } from "node:fs";
+// smoke/shot screenshots land in $REG_WEBAPP_SHOTS — dev.sh sets it to the one
+// directory that invocation owns, and a direct run gets a fresh one under /tmp;
+// `flows` writes only into its explicit <out-dir> (the gate passes
+// $YARD_ARTIFACT_DIR). The servers must already be running on whichever free
+// ports dev.sh picked, with REG_WEBAPP_DEV_URL pointing here — see SKILL.md.
+import { existsSync, mkdirSync, mkdtempSync, readFileSync } from "node:fs";
 import { createRequire } from "node:module";
+import { tmpdir } from "node:os";
 import { join } from "node:path";
+
+// Where playwright looks for its browsers. An explicit PLAYWRIGHT_BROWSERS_PATH
+// always wins; inside the lane image Chromium is baked at /opt/pw-browsers,
+// outside any HOME the run may have been given, so default to it when it exists.
+// Set BEFORE requiring playwright — the registry reads this at import time.
+if (!process.env.PLAYWRIGHT_BROWSERS_PATH && existsSync("/opt/pw-browsers")) {
+  process.env.PLAYWRIGHT_BROWSERS_PATH = "/opt/pw-browsers";
+}
 
 // Resolve playwright from the CWD (reg_webapp/frontend), not from this file's
 // directory — bun/node resolve imports relative to the importing file, and the
@@ -28,19 +40,18 @@ const require = createRequire(join(process.cwd(), "package.json"));
 const { chromium } = require("playwright");
 
 const BASE = process.env.REG_WEBAPP_DEV_URL ?? "http://localhost:5173";
-const SHOTS = "/tmp/reg-webapp-shots";
-mkdirSync(SHOTS, { recursive: true });
 
 // Screenshot viewport. Default `desktop` (the historical 1280x900). Override via
-// REG_WEBAPP_VIEWPORT: a named preset (mobile/tablet/desktop) or raw "WxH" (e.g.
-// "414x896"). dev.sh's `shot --mobile/--tablet/--all/--viewport` sets this per run
-// so the free-port path can capture responsive breakpoints without the fixed-port
-// preview server. The label is suffixed onto non-desktop screenshot names so a
-// multi-viewport run doesn't clobber the desktop shot.
+// REG_WEBAPP_VIEWPORT: a named preset (mobile/tablet/desktop/wide) or raw "WxH"
+// (e.g. "414x896"). dev.sh's `shot --mobile/--wide/--all/--viewport` sets this per
+// run so the free-port path can capture responsive breakpoints without the
+// fixed-port preview server. The label is suffixed onto non-desktop screenshot
+// names so a multi-viewport run doesn't clobber the desktop shot.
 const VIEWPORTS = {
   mobile: { width: 375, height: 812 },
   tablet: { width: 768, height: 1024 },
   desktop: { width: 1280, height: 900 },
+  wide: { width: 1920, height: 1080 },
 };
 function resolveViewport(spec) {
   if (!spec) return { ...VIEWPORTS.desktop, label: "desktop" };
@@ -48,7 +59,7 @@ function resolveViewport(spec) {
   const m = /^(\d+)x(\d+)$/.exec(spec);
   if (!m) {
     throw new Error(
-      `bad REG_WEBAPP_VIEWPORT "${spec}" — use mobile|tablet|desktop or WxH`,
+      `bad REG_WEBAPP_VIEWPORT "${spec}" — use mobile|tablet|desktop|wide or WxH`,
     );
   }
   return { width: Number(m[1]), height: Number(m[2]), label: spec };
@@ -57,53 +68,60 @@ const viewport = resolveViewport(process.env.REG_WEBAPP_VIEWPORT);
 
 const [cmd = "smoke", ...rest] = process.argv.slice(2);
 
-// smoke/shot/eval keep the fixed /tmp shots dir; `flows` writes ONLY into the
-// directory it is handed (the gate hands it $YARD_ARTIFACT_DIR, whose exact
-// filenames are a declared contract), so an absent argument is an error rather
-// than a silent fallback.
+// Where the images go. `flows` writes ONLY into the directory it is handed (the
+// gate hands it $YARD_ARTIFACT_DIR, whose exact filenames are a declared
+// contract), so an absent argument is an error rather than a silent fallback.
 const outDir = cmd === "flows" ? rest[0] : null;
 if (cmd === "flows" && !outDir) {
   throw new Error("flows: needs an output directory, e.g. flows $YARD_ARTIFACT_DIR");
 }
+// Only the shooting commands mint a directory (see the header): `flows` has its
+// <out-dir> and `eval` captures nothing, so neither leaves an empty one behind.
+const SHOTS =
+  cmd === "smoke" || cmd === "shot"
+    ? (process.env.REG_WEBAPP_SHOTS ?? mkdtempSync(join(tmpdir(), "reg-webapp-shots.")))
+    : null;
+if (SHOTS) mkdirSync(SHOTS, { recursive: true });
 
-// Two chromium.launch failure classes are worth a retry before we give up (issue #1049):
-//   1. A TRANSIENT MachPortRendezvous name collision — a crashed prior attempt plus PID
-//      reuse leaves a stale rendezvous name, so the very next multi-process launch fails
-//      but an immediate retry at FULL fidelity heals it. Retry once in normal mode first.
-//   2. A sandboxed agent shell (codex `-s workspace-write` seatbelt, Claude Code's
-//      sandboxed Bash — same seatbelt profile design) denies multi-process Chromium's
-//      Mach `bootstrap_check_in … (1100)`: those seatbelts have no mach-register grant, so
-//      the renderer/GPU child process rendezvous can't complete. `--single-process` skips
-//      the Mach rendezvous entirely (one process, no children to register) and is
-//      empirically proven to launch under the real codex seatbelt. This is a hard,
-//      deterministic block, not a transient one, so it needs the arg change, not a plain
-//      retry. Caveat: `--single-process` is unsupported/best-effort per Chromium — revisit
-//      on Playwright bumps in case the flag's behavior changes.
-const SINGLE_PROCESS_ARGS = [
-  "--single-process",
-  "--no-sandbox",
-  "--disable-gpu",
-  "--disable-crash-reporter",
+// A LADDER, not a retry: the two environments that block a plain launch each need
+// DIFFERENT args, so every stage is tried once and the first that starts wins.
+//   1. default — an ordinary multi-process launch with the sandbox on.
+//   2. --no-sandbox — a Linux CONTAINER (the Yard lane image) has no user-namespace
+//      grant for Chromium's sandbox helper, so the helper cannot start; multi-process
+//      Chromium is otherwise healthy there, so only the sandbox is dropped.
+//   3. --single-process — a sandboxed agent SHELL (codex `-s workspace-write`
+//      seatbelt, Claude Code's sandboxed Bash) has no mach-register grant, so
+//      multi-process Chromium's `bootstrap_check_in … (1100)` rendezvous is denied and
+//      the renderer/GPU children never attach. One process has no children to
+//      register. Unsupported/best-effort per Chromium — revisit on Playwright bumps
+//      (issue #1049).
+// Each stage's OWN error is kept: when the ladder runs out, reporting only the last
+// failure would hide why the earlier, higher-fidelity stages were rejected.
+const LAUNCH_LADDER = [
+  { stage: "default", args: [] },
+  { stage: "no-sandbox", args: ["--no-sandbox"] },
+  {
+    stage: "single-process",
+    args: [
+      "--single-process",
+      "--no-sandbox",
+      "--disable-gpu",
+      "--disable-crash-reporter",
+    ],
+  },
 ];
 async function launchBrowser() {
-  try {
-    return await chromium.launch();
-  } catch {
-    // Stage 1: retry once in normal (multi-process) mode to heal a transient rendezvous
-    // collision at full fidelity.
-    console.error(
-      "driver: normal relaunch after failed launch (transient Mach-port collision?)",
-    );
+  const failures = [];
+  for (const { stage, args } of LAUNCH_LADDER) {
     try {
-      return await chromium.launch();
-    } catch {
-      // Stage 2: retry once in single-process mode for the sandboxed-shell seatbelt denial.
-      console.error(
-        "driver: single-process fallback engaged (sandboxed shell, issue #1049)",
-      );
-      return await chromium.launch({ args: SINGLE_PROCESS_ARGS });
+      const launched = await chromium.launch({ args });
+      console.error(`driver: chromium launched (${stage})`);
+      return launched;
+    } catch (e) {
+      failures.push(`${stage}: ${e.message}`);
     }
   }
+  throw new Error(`driver: chromium would not launch\n${failures.join("\n\n")}`);
 }
 const browser = await launchBrowser();
 
@@ -150,15 +168,21 @@ async function shot(name) {
 // and can collide with catalog content). Wait for the last one to clear.
 async function settled(page) {
   await page.waitForLoadState("networkidle");
-  await page.waitForFunction(
-    () => !document.querySelector('[aria-busy="true"]'),
-    { timeout: 10_000 },
-  );
+  // `null` is the page-function ARGUMENT slot: waitForFunction takes
+  // (fn, arg, options), so options passed second are silently the argument and
+  // the timeout never applies.
+  await page.waitForFunction(() => !document.querySelector('[aria-busy="true"]'), null, {
+    timeout: 10_000,
+  });
 }
 
 async function open(page, path) {
   const resp = await page.goto(BASE + path, { waitUntil: "networkidle" });
   console.log(`GET ${path} → ${resp.status()}`);
+}
+
+function check(condition, message) {
+  if (!condition) throw new Error(message);
 }
 
 // ── `flows`: the /project error + retry gate ────────────────────────────────
@@ -167,20 +191,19 @@ async function open(page, path) {
 // the REAL backend (the caller points it at a synthetic catalog DB through
 // REG_META_DB — see catalog_fixture_db.py). Only the failing request of each
 // case is injected: everything else is the actual app answering. The 16 PNGs
-// these write are the artifact contract declared in .yard/config.toml, so their
-// names are spelled here once and nowhere else.
+// these write are the artifact contract declared in .yard/config.toml, and the
+// filenames carry the size — so the sizes are the `shot` presets above, spelled
+// once (frontend/DESIGN.md designs for exactly these four widths). Named one by
+// one, not Object.values: a fifth preset must not silently turn 12 cases into 15
+// and invalidate the declared artifact list.
 const FLOW_VIEWPORTS = [
-  { width: 375, height: 812 },
-  { width: 768, height: 1024 },
-  { width: 1280, height: 900 },
-  { width: 1920, height: 1080 },
+  VIEWPORTS.mobile,
+  VIEWPORTS.tablet,
+  VIEWPORTS.desktop,
+  VIEWPORTS.wide,
 ];
 const VALIDATE_PATH = "/api/project/validate";
 const ORDER_PATH = "/api/project/order";
-
-function check(condition, message) {
-  if (!condition) throw new Error(message);
-}
 
 /** Is this a POST of `path`? (Requests, and a response's own request.) */
 function posts(request, path) {
@@ -533,6 +556,7 @@ try {
     console.log(JSON.stringify(await page.evaluate(rest[1] ?? "null"), null, 2));
   } else if (cmd === "smoke") {
     await open(page, "/catalog");
+    await settled(page); // the FIRST capture is a settled view too, not a placeholder
     await shot("01-root");
     // Drill three levels (provider → register → variable) by clicking the first
     // link STRICTLY DEEPER than the current path each round — `a[href^="/catalog"]`
@@ -547,16 +571,38 @@ try {
       console.log(`clicked → ${href} (now at ${new URL(page.url()).pathname})`);
       await shot(name);
     }
-    // Real form interaction: the binding page's Period → Resolve flow. Assert
-    // the narrowing actually happened — settled() alone would pass on a silent
-    // no-op resolve.
-    await page.locator("input").first().fill("2022");
-    await page.getByRole("button", { name: "Apply" }).click();
-    await settled(page);
+    // Real form interaction: the leaf's Period control — a labelled dual-thumb
+    // year slider. Drive it the way a keyboard researcher does (one ArrowRight
+    // tick on "From year", which the thumbs hard-clamp to the subject's own
+    // coverage, so the result is always a range the catalog actually delivers),
+    // then Apply and assert BOTH what the app wrote to the URL and what it shows.
+    // Scoped to the leaf's slider group: the header's project-window slider
+    // carries the same two thumb labels.
+    const periodSlider = page.getByRole("group", { name: "Period window (years)" });
+    const fromYear = periodSlider.getByLabel("From year");
+    const seededFrom = Number(await fromYear.inputValue());
+    const to = Number(await periodSlider.getByLabel("To year").inputValue());
+    check(
+      seededFrom < to,
+      `period slider seeded a single year (${seededFrom}) — no range to narrow`,
+    );
+    await fromYear.press("ArrowRight");
+    const from = Number(await fromYear.inputValue());
+    check(from === seededFrom + 1, `From year did not step: ${seededFrom} → ${from}`);
+    const period = `${from}..${to}`;
+    await page.getByRole("button", { name: "Apply period" }).click();
     await page.waitForFunction(
-      () => document.body.innerText.includes("narrowed to 2022"),
+      (wire) => new URLSearchParams(location.search).get("period") === wire,
+      period,
       { timeout: 10_000 },
     );
+    await settled(page);
+    await page.waitForFunction(
+      (wire) => document.body.innerText.includes(`narrowed to ${wire}`),
+      period,
+      { timeout: 10_000 },
+    );
+    console.log(`period ${seededFrom}..${to} → ${period} at ${page.url()}`);
     await shot("04b-period-resolved");
     // Deep-link reload: a cold load of the current nested path must render the
     // same view (vite's SPA fallback in dev; the edge worker in production).

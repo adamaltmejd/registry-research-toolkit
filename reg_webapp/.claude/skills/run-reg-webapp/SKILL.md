@@ -7,68 +7,91 @@ description: Run, screenshot, and drive the reg_webapp dev setup (FastAPI backen
 
 # Run reg_webapp locally
 
-Two dev servers (FastAPI on :8000, Vite on :5173 with an `/api` proxy) plus a Playwright
-driver that loads the SPA, drills through the catalog, exercises the period-resolve
-form, and screenshots each step. All paths below are relative to **`reg_webapp/`**;
-commands were verified on macOS against a real reg_meta DB.
+Two dev servers — a FastAPI backend, and Vite serving the SPA with an `/api` proxy
+pointed at that backend — plus a Playwright driver that loads the SPA, drills through
+the catalog, exercises the period slider, and screenshots each step. `dev.sh` picks a
+FREE port for each server on every run, so nothing here is pinned to a port.
+
+This skill is a helper you invoke by its explicit repo path, not a skill the root loader
+discovers: it lives under `reg_webapp/.claude/skills/`, which is nested and therefore
+not walked. Every command below starts at the **repo root**.
 
 ## Prerequisites
 
 - `uv` and `bun` (repo-standard toolchain — see root CLAUDE.md).
-- A reg_meta DB where `reg_meta.db.db_path_from_args(None)` resolves (`REG_META_DB` >
-  XDG, e.g. `~/.local/share/reg_meta/reg_meta.db`). A maintainer's `build-db` output
-  works; without one, `uv run reg-meta update` fetches the latest release DB pair (not
-  exercised here — a local DB existed).
-- Playwright's Chromium. The frontend's vitest-browser setup already installs it
-  (`~/Library/Caches/ms-playwright/chromium-*`); if missing:
-  `bunx playwright install chromium` from `frontend/`.
+- Playwright's Chromium. The frontend's vitest-browser setup already installs it; if
+  missing: `(cd reg_webapp/frontend && bunx playwright install chromium)`.
+- A catalog to serve. `--fixture-db` builds a synthetic one and needs nothing installed
+  — that is the default path below. Serving a real catalog instead needs a DB where
+  `reg_meta.db.db_path_from_args(None)` resolves (`REG_META_DB` > XDG, e.g.
+  `~/.local/share/reg_meta/reg_meta.db`).
 
 ## Setup
 
-From the **repo root** (uv workspace) and the frontend:
-
 ```sh
 uv sync --frozen
-cd reg_webapp/frontend && bun install --frozen-lockfile
+(cd reg_webapp/frontend && bun install --frozen-lockfile)
 ```
 
 No SPA build needed for dev — Vite serves source. Regenerate API types only after a
-contract change (`bun run gen:types`; CI pins drift).
+contract change (`(cd reg_webapp/frontend && bun run gen:types)`; CI pins drift).
 
 ## Run
 
 **Visual verification (agents) — one-shot driver modes.** `dev.sh smoke` / `dev.sh shot`
 pick free ports, run the Playwright driver against them, and **tear both servers down on
-exit** — no port collisions, no leaked dev servers. This is the path the PR pipeline's
-visual-verification step uses; exit status is the driver's:
+exit** — no port collisions, no leaked dev servers. Exit status is the driver's:
 
 ```sh
-bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh smoke                   # full smoke flow
-bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh shot /catalog/scb/lisa  # specific route(s)
+bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh --fixture-db smoke
+bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh --fixture-db shot /catalog/scb/lisa
 ```
 
-`smoke` loads `/catalog`, clicks provider → register → variable, fills the period input
-with `2022` and clicks **Apply** (expects "narrowed to 2022"), then cold-reloads the
-deep link. Screenshots land in `/tmp/reg-webapp-shots/` (`01-root` …
-`05-deep-link-reload`; `shot` writes `_<route>.png`) — **look at them**.
+`smoke` loads `/catalog`, clicks provider → register → variable, narrows the leaf's
+**Period** slider by one year from the keyboard and presses **Apply period** — asserting
+both the `?period=` the app writes and the "narrowed to …" the page then shows — and
+finally cold-reloads the deep link. Its steps land as `01-root` … `05-deep-link-reload`;
+`shot` writes `_<route>.png`. **Look at them.**
+
+**Where the pictures go.** One UNIQUE directory per invocation, under `/tmp`: every
+route × viewport of that run shares it, two concurrent runs cannot overwrite each other,
+and it outlives the servers so the images stay inspectable. `dev.sh` prints it —
+together with the full HEAD, and the checkout it resolved from its OWN path rather than
+your cwd — as its first line:
+
+```
+dev: repo /path/to/checkout HEAD 0123456789abcdef… shots /tmp/reg-webapp-shots.C8VNZN
+```
+
+Set `REG_WEBAPP_SHOTS=<dir>` to collect a run into a directory you own instead.
 
 **Responsive screenshots (`shot` viewports).** `shot` defaults to a 1280×900 desktop
-viewport, but viewport flags before the routes capture other breakpoints — this is how
-the free-port path does responsive/mobile visual checks (no fixed-port preview server
-needed):
+viewport; viewport flags before the routes capture other breakpoints:
 
 ```sh
-# one route, three breakpoints (375 / 768 / 1280)
-bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh shot --all /catalog/scb/lisa
+# one route, four breakpoints (375 / 768 / 1280 / 1920)
+bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh --fixture-db shot --all /catalog/scb/lisa
 # just mobile + tablet, or an exact size
-bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh shot --mobile --tablet /catalog
-bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh shot --viewport 414x896 /catalog
+bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh --fixture-db shot --mobile --tablet /catalog
+bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh --fixture-db shot --viewport 414x896 /catalog
 ```
 
-Presets: `--mobile` (375×812), `--tablet` (768×1024), `--desktop` (1280×900), `--all`
-(the three), `--viewport WxH` (repeatable). Each viewport × route is shot; non-desktop
-shots get a `-<label>` suffix (e.g. `_catalog_scb_lisa-mobile.png`, `…-414x896.png`) so
-they don't clobber the desktop shot.
+Presets: `--mobile` (375×812), `--tablet` (768×1024), `--desktop` (1280×900), `--wide`
+(1920×1080), `--all` (the four — the widths the design-reviewer skill judges, so `--all`
+alone satisfies it), `--viewport WxH` (repeatable). Each viewport × route is shot;
+non-desktop shots get a `-<label>` suffix (e.g. `_catalog_scb_lisa-mobile.png`,
+`…-wide.png`, `…-414x896.png`) so they don't clobber the desktop shot.
+
+**Inside a Yard lane.** The same commands work unchanged in the `.yard/Dockerfile` image
+under the gates' `env -i` environment (no system `python3`, `HOME` wherever the runner
+puts it): free ports come from this checkout's `.venv/bin/python`, and the driver honors
+`PLAYWRIGHT_BROWSERS_PATH`, defaulting to the image's baked `/opt/pw-browsers` when it
+is unset. Chromium is launched up a ladder — default, then `--no-sandbox` multi-process
+(a container with no user-namespace grant for the sandbox helper), then
+`--single-process` (a sandboxed agent shell, issue #1049) — and stderr names the stage
+that rendered, e.g. `driver: chromium launched (no-sandbox)`. Quote that line as
+evidence. A lane must provision first the way the gates do (offline `uv sync`,
+`cp -a /opt/frontend/node_modules reg_webapp/frontend/`).
 
 **Project error/retry flows (`flows`) — what the `project-flows` yard gate runs.** One
 command drives the whole `/project` error+retry evidence set: three scenarios (an empty
@@ -88,29 +111,49 @@ REG_META_DB="$db" bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh flows /tm
 
 The flows assert against the synthetic catalog those two lines set up (`scb/lisa/kon` at
 variant `individer-15plus` → column `Kon`), which `catalog_fixture_db.py` builds with
-the shared fixture builder (`backend/scripts/fixture_db.py`, below) — not a released DB.
-A nonzero exit is a failed assertion, an unexpected JS page error, horizontal overflow
-at some viewport, or a server that never started; the servers are torn down either way.
+the shared fixture builder (`reg_webapp/backend/scripts/fixture_db.py`, below) — not a
+released DB. A nonzero exit is a failed assertion, an unexpected JS page error,
+horizontal overflow at some viewport, or a server that never started; the servers are
+torn down either way.
 
 In yard this is the `project-flows` gate (`.yard/config.toml`, selected by the `ui`
 workflow), which hands the driver `$YARD_ARTIFACT_DIR` as the output directory and
-declares those 16 filenames as its artifacts. **Reaching the images as operator:**
-`yard lane show <lane>` prints the retained artifact paths for the execution — they
-outlive the container and view cleanup, so open the PNGs there and judge them against
-`reg_webapp/frontend/DESIGN.md`. The gate log carries the rest (route, scenario,
-viewport, request counts, candidate HEAD).
+declares those 16 filenames as its artifacts. Unlike the ephemeral `/tmp` captures
+above, these are **retained**: `yard lane show <lane>` prints the artifact paths for the
+execution — they outlive the container and view cleanup, so open the PNGs there and
+judge them against `reg_webapp/frontend/DESIGN.md`. The gate log carries the rest
+(route, scenario, viewport, request counts, candidate HEAD).
 
-**Verifying against unreleased DB content (custom DB).** `dev.sh` renders against
-whatever DB `reg_meta` resolves, and `$REG_META_DB` (a *directory*) wins over the
-installed default (see Prerequisites) — `dev.sh` only sets it under `--fixture-db`
-(below); otherwise it inherits the caller's env. So to verify a change whose rendering
-depends on DB content not yet in the installed/released DB — a `build-db` / curation
-change, e.g. an earlier PR in the same lane — build a scratch DB and point the dev
+**Deterministic UI verification (`--fixture-db`) — the default.** Pass `--fixture-db`
+before the mode and `dev.sh` serves a *synthetic* catalog: it runs
+`reg_webapp/backend/scripts/fixture_db.py` (the same builder the backend tests'
+`catalog_db` / `docs_db` fixtures use) into a temp directory, exports it as
+`REG_META_DB` for both servers, and deletes it on exit. Content is fixed — no seed, no
+clock — so the DB pair is byte-identical run to run and a screenshot diff means a code
+change, not catalog drift. It is small but populated enough that every route the
+design-reviewer skill walks renders rows: `/`, `/catalog`, providers `fk` (register
+`midas`) and `scb` (`lisa` / `rams`), bindings like `/catalog/scb/lisa/kon` (value set,
+succession, lineage), the groups `/catalog/group/scb/rams/ink` and
+`/catalog/group/class/sun`, `/search?q=kon`, `/project`, and `/doc/Kon.md`. `smoke`
+drills it end to end.
+
+```sh
+bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh --fixture-db          # interactive
+```
+
+Use it to verify *layout and interaction*, not catalog realism: the fixture has a
+handful of rows, so density/overflow questions want a real or scratch DB instead.
+
+**Alternative: a released or custom `REG_META_DB`.** Without `--fixture-db`, `dev.sh`
+renders against whatever DB `reg_meta` resolves and inherits the caller's `REG_META_DB`
+(a *directory*), which wins over the installed default (see Prerequisites). So a change
+whose rendering depends on DB content not yet in the installed/released DB — a
+`build-db` / curation change — is verified by building a scratch DB and pointing the dev
 server at it; **no release required**:
 
 ```sh
 db_dir="$(mktemp -d "${TMPDIR:-/tmp}/regmeta-verify.XXXXXX")"
-reg-meta-build --db "$db_dir" build-db --input-dir <seed>   # the merge gate builds this anyway
+reg-meta-build --db "$db_dir" build-db --input-dir <seed>
 REG_META_DB="$db_dir" bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh shot <route>
 ```
 
@@ -118,53 +161,19 @@ REG_META_DB="$db_dir" bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh shot 
 Don't assume the installed/last-released DB is the only one the dev server can serve —
 it's the default, not a constraint.
 
-**Verifying without a released DB (`--fixture-db`).** Where no reg_meta DB is reachable
-at all — an agent container, a fresh clone, CI — pass `--fixture-db` before the mode and
-`dev.sh` serves a *synthetic* catalog instead: it runs `backend/scripts/fixture_db.py`
-(the same builder the backend tests' `catalog_db` / `docs_db` fixtures use) into a temp
-directory, exports it as `REG_META_DB` for both servers, and deletes it on exit. Content
-is fixed — no seed, no clock — so the DB pair is byte-identical run to run and a
-screenshot diff means a code change, not catalog drift. It is small but populated enough
-that every route the design-reviewer skill walks renders rows: `/`, `/catalog`,
-providers `fk` (register `midas`) and `scb` (`lisa` / `rams`), bindings like
-`/catalog/scb/lisa/kon` (value set, succession, lineage), the groups
-`/catalog/group/scb/rams/ink` and `/catalog/group/class/sun`, `/search?q=kon`,
-`/project`, and `/doc/Kon.md`. `smoke` drills it end to end.
-
-```sh
-bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh --fixture-db smoke
-bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh --fixture-db shot --all /catalog
-bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh --fixture-db          # interactive
-```
-
-Use it to verify *layout and interaction*, not catalog realism: the fixture has a
-handful of rows, so density/overflow questions still want a real or scratch DB.
-
-**Interactive (humans).** `dev.sh` with no args starts the same auto-free-port servers
+**Interactive (humans).** `dev.sh` with no mode starts the same auto-free-port servers
 and stays up until Ctrl-C (which tears both down). It prints the URLs — open the
 frontend in a browser, backend API docs at `<backend>/docs`. Ports are automatic, so
 parallel worktrees / lanes never collide; pin with `BACKEND_PORT=… FRONTEND_PORT=…` if
-needed.
+you need to know them up front.
 
 ```sh
 bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh
 ```
 
-**Manual (escape hatch).** Only when you need long-lived background servers for custom
-driving — fixed ports, and **you** must tear down (prefer the modes above, which do it
-for you):
+## Parallel instances (concurrent worktrees / lanes)
 
-```sh
-uv run uvicorn reg_webapp.app:create_app --factory --port 8000 &
-(cd reg_webapp/frontend && bun run dev) &
-curl -s -o /dev/null -w '%{http_code}\n' http://localhost:5173/api/context  # 200 ⇒ proxy ok
-(cd reg_webapp/frontend && bun ../.claude/skills/run-reg-webapp/driver.mjs eval / "document.title")
-lsof -ti :8000 -ti :5173 | xargs kill   # don't forget this
-```
-
-## Parallel instances (concurrent worktrees / PR lanes)
-
-Both runners are now collision-free across parallel sessions — pick by need:
+Both runners are collision-free across parallel sessions — pick by need:
 
 - **`preview_start` (interactive poking).** `.claude/launch.json` has a single
   `reg-webapp` config with `autoPort: true` whose entry point is `dev.sh preview`. The
@@ -172,46 +181,54 @@ Both runners are now collision-free across parallel sessions — pick by need:
   keeps the configured 5173) and `dev.sh preview` binds exactly that, then starts the
   backend on its own private free port and points the Vite `/api` proxy at it via
   `REG_WEBAPP_BACKEND_URL`. So two sessions each get a distinct frontend **and** backend
-  port and a correctly-wired proxy — no `:8000`/`:5173` collision, no cross-talk. (This
-  replaced the old two-config `autoPort: false` setup, which collided because a static
-  launch config can't inject the backend's chosen port into the frontend.)
-  `preview_start` starts both servers under one `serverId`; the browser attaches to the
-  frontend, and the backend is reached through the `/api` proxy (it has no standalone
-  preview entry — for raw backend/`/docs` poking use the manual escape hatch above).
-- **`dev.sh smoke` / `dev.sh shot` (visual verification / screenshots).** Free ports,
-  guaranteed teardown, `shot --all` for responsive breakpoints — the PR-pipeline path.
+  port and a correctly-wired proxy — no collision, no cross-talk. (This replaced the old
+  two-config `autoPort: false` setup, which collided because a static launch config
+  can't inject the backend's chosen port into the frontend.) `preview_start` starts both
+  servers under one `serverId`; the browser attaches to the frontend, and the backend is
+  reached through the `/api` proxy.
+- **`dev.sh smoke` / `dev.sh shot` (visual verification / screenshots).** Free ports, a
+  per-invocation screenshot directory, guaranteed teardown, `shot --all` for the four
+  responsive breakpoints. This is the path to reach for.
 
 In a worktree both run from the checkout's own `.venv` (the `preview` entry routes
-through `dev.sh`, which `cd`s to `git rev-parse --show-toplevel` and launches from
+through `dev.sh`, which resolves the repo root from its own path and launches from
 `.venv/bin/uvicorn`), so a worktree serves ITS code, not main's — the historical
 "`preview_start` serves main" footgun is gone now that the entry point is `dev.sh`.
 
-## Direct invocation (backend-only PRs)
+## Direct invocation (backend-only changes)
 
 Most backend changes don't need the SPA at all: the pytest suite runs against a fixture
 DB (no real reg_meta DB required) — `uv run python -m pytest reg_webapp/` from the repo
-root. Frontend unit/component tests: `bun run test` from `frontend/` (vitest, includes
-the Playwright browser project).
+root. Frontend unit/component tests: `(cd reg_webapp/frontend && bun run test)` (vitest,
+includes the Playwright browser project).
 
 ## Gotchas
 
 - **`networkidle` is not "rendered".** Svelte swaps in fetched data after the network
   settles; a screenshot taken straight after navigation captures the loading
   placeholder. The driver's `settled()` waits for every `[aria-busy="true"]` element to
-  clear — use it after every navigation/click. The attribute is the contract: each
-  loading placeholder in `frontend/src/lib/*.svelte` carries `aria-busy="true"`, so new
-  loading states must too (don't make the driver key on UI copy like "Loading…").
+  clear — use it after every navigation/click, including before the first capture. The
+  attribute is the contract: each loading placeholder in
+  `reg_webapp/frontend/src/lib/*.svelte` carries `aria-busy="true"`, so new loading
+  states must too (don't make the driver key on UI copy like "Loading…").
+- **`waitForFunction` takes `(fn, arg, options)`.** Options passed as the second
+  argument are silently the page-function ARGUMENT, so the timeout never applies. Pass
+  `null` for the argument slot.
 - **The first `a[href^="/catalog"]` is the header nav link** (it goes to `/catalog`, not
   deeper). To drill the tree, click the first link strictly deeper than the current path
   (`a[href^="<current>/"]`) — that's what `smoke` does.
-- **The driver must run from `frontend/`** — bun resolves imports relative to the
-  importing file, so the driver `createRequire`s playwright from the CWD. From anywhere
-  else: `Cannot find package 'playwright'`.
+- **Both year sliders label their thumbs "From year" / "To year"** — the header's
+  project window and the leaf's period control share one primitive. Scope to the one you
+  mean by its group (`Period window (years)` vs `Project window (years)`), the way
+  `smoke` does, or the locator is ambiguous.
+- **The driver must run from `reg_webapp/frontend/`** — bun resolves imports relative to
+  the importing file, so the driver `createRequire`s playwright from the CWD. From
+  anywhere else: `Cannot find package 'playwright'`. (`dev.sh` does this for you.)
 - **HEAD requests 405** by design (routes register GET only; see DESIGN.md → ETag).
   Probe with `curl` GETs, not `-I`.
 - The Vite proxy defaults to `http://localhost:8000` but honors `REG_WEBAPP_BACKEND_URL`
-  (`frontend/vite.config.ts`) — `dev.sh` sets it automatically; it only matters if you
-  start Vite by hand against a non-default backend port.
+  (`reg_webapp/frontend/vite.config.ts`) — `dev.sh` sets it automatically; it only
+  matters if you start Vite by hand against a non-default backend port.
 - **Git worktrees are auto-provisioned.** A `SessionStart` hook
   (`.claude/hooks/worktree_bootstrap.sh`) gives the checkout its OWN `.venv` (editable
   installs resolve to the worktree, not main) and `node_modules` — it runs `uv sync` +
@@ -221,25 +238,19 @@ the Playwright browser project).
   own `.venv`, so a worktree serves ITS code. (Deliberately NOT a `WorktreeCreate` hook:
   that event *replaces* git's worktree creation — a provisioner there would abort it.)
   The historical footgun — a `uv run` / `preview_start` started with the **main**
-  checkout as cwd served main's source (bit an agent 2026-06-11) — is closed now that
-  `preview_start` routes through `dev.sh preview`, which `cd`s to its own toplevel and
-  launches from that checkout's `.venv` (verified: the preview ran with cwd = the
-  worktree and served the worktree's `.venv`). `dev.sh` is still the right tool for any
-  one-shot/screenshot work.
+  checkout as cwd served main's source (bit an agent 2026-06-11) — is closed by the
+  `dev.sh preview` entry point (see Parallel instances above).
 
 ## Troubleshooting
 
 - `Cannot find package 'playwright'` → you ran the driver outside
-  `reg_webapp/frontend/`. `cd` there first.
+  `reg_webapp/frontend/`. `cd` there first, or use `dev.sh`.
 - Screenshot shows breadcrumbs + `Loading…` only → data fetch hadn't landed; re-run (the
-  driver now waits via `settled()`), or raise its 10s timeout.
+  driver waits via `settled()`), or raise its 10s timeout.
 - Backend exits at boot complaining about the DB/schema → no resolvable reg_meta DB, or
-  one with a stale `SCHEMA_VERSION`; install/refresh per Prerequisites.
-- Chromium fails to launch with `bootstrap_check_in … Permission denied (1100)` (the
-  `MachPortRendezvousServer` signature) → either a transient Mach rendezvous-name
-  collision, or a sandboxed agent shell (codex `workspace-write` seatbelt, Claude Code's
-  sandboxed Bash) with no mach-register grant. `dev.sh smoke` / `shot` self-heal via the
-  driver's staged relaunch (normal retry, then `--single-process`) — stderr says which
-  stage rendered; single-process is the sandboxed-shell mode (issue #1049). In a
-  sandboxed shell, prefer `dev.sh smoke` / `shot` over `preview_start` — the preview
-  path has no such fallback.
+  one with a stale `SCHEMA_VERSION`. Use `--fixture-db`, or install/refresh a DB per
+  Prerequisites.
+- Chromium fails to launch → if every stage of the launch ladder (above) failed, the
+  driver reports each stage's own error, unabridged — read the FIRST one, it is the
+  failure of the highest-fidelity launch. In a sandboxed shell prefer `dev.sh smoke` /
+  `shot` over `preview_start`, which has no ladder.
