@@ -26,13 +26,15 @@ the part that is judgment rather than reference — what to do when the board wa
 and what each answer costs.
 
 **Most decisions here spend money, and not all of them the same way.** Unparking a
-ticket, accepting a proposal that creates a ready one, or starting one with no attempt
-underway admits work: a fresh attempt at full worker spend. Nudging a worker or
-rejecting a candidate buys another round of the attempt already running, plus the review
-and gates that run again on what it produces. Abandoning starts no model by itself —
-what it costs is the admission that follows, because an unparked ready ticket is
-admitted within milliseconds (§6). A ticket filed `--parked` is the cost boundary: file
-parked whenever you mean to read the ticket before anything starts working it.
+ticket, accepting a proposal that creates one, or starting one can admit fresh work — a
+new attempt at full worker spend — when the ticket is ready with no attempt active. A
+blocked ticket, or one whose attempt is still live, need not admit anything, so take the
+act from the answer line rather than from the verb (§2). Nudging a worker or rejecting a
+candidate can buy another round of the attempt already running, and whatever review and
+gates re-run on what that round produces. Abandoning starts no model by itself — what it
+can cost is the admission that follows, because an unparked ready ticket is admitted
+within milliseconds (§6). A ticket filed `--parked` is the cost boundary: file parked
+whenever you mean to read the ticket before anything starts working it.
 
 ## 1. The loop is wake-driven, and you re-arm it after every decision
 
@@ -281,12 +283,15 @@ it. Read `yard ticket edit --help` for what it retires and which guards it takes
 `yard lane nudge --help` for the neighbouring verb: a nudge is guidance for the worker,
 not a change to what the candidate is judged against.
 
-**Amend** when the consumer and the observable behavior stay what the ticket already
-names — a clarification, a narrowing, a question the body left open: the attempt's work
-is still the right work, so edit, and read the new candidate under §3. **Replace** when
-a ratified contract or design changes either: no edit makes this attempt the right work,
-so park, stop, abandon, then file a fresh ticket under the new premise, naming the
-abandoned attempt so its keepable work can be salvaged by the recipe above.
+**Amend** when the ticket's use case survives the change — a clarification, a narrowing,
+a question the body left open, a ratified contract or design decision this candidate's
+work still fits: the work is worth keeping, so edit, let review be taken at the new
+revision, and read the candidate under §3. **Replace** when the use case itself is
+replaced, or the work no longer fits the one the ticket now names: file a fresh ticket
+under the new premise, and retire this one by the order above, naming the abandoned
+attempt so its keepable work can be salvaged. Ratifying a contract does not decide this
+by itself — ask whether the candidate's work still serves the ticket, and reach for
+park-stop-abandon only when the answer is no.
 
 ## 7. Filing work: one lane's worth, for a use case somebody has
 
@@ -365,8 +370,10 @@ plan argues well for crossing them.
   source-only design seat (reviewer skill + `reg_webapp/frontend/DESIGN.md` as context)
   and the `project-flows` gate that renders the candidate and retains the screenshots,
   beside the code seat. Rendered evidence comes from that gate, the worker's in-lane
-  self-check and you before approval — never from a seat. No other workflow binds either
-  of them, so a mis-filed ticket loses the design review *and* every retained picture.
-  Read the workflow's own `checks` list (`yard workflow list`, or `.yard/config.toml`)
-  rather than assume a gate ran. Everything else stays on `default` or `light` as
-  before.
+  self-check and you before approval — never from a seat. The gate renders the
+  `/project` retry states it names and retains those PNGs; targeted evidence for the
+  surface this candidate changed is still required under §3. No other workflow binds
+  either of them, so a mis-filed ticket loses the design review *and* every retained
+  picture. Read the workflow's own `checks` list (`yard workflow list`, or
+  `.yard/config.toml`) rather than assume a gate ran. Everything else stays on `default`
+  or `light` as before.
