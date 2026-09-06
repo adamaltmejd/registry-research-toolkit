@@ -234,7 +234,7 @@ const breadcrumbItems = $derived(routeBreadcrumbs(route));
   }
   .banner.error {
     background: var(--err-bg);
-    border: 1px solid var(--red-border);
+    border: 1px solid var(--err-border);
   }
   /* AppShell's canvas grows through the viewport remainder. Keep the routed
      region as its flexible body so asynchronous pages replace content inside a

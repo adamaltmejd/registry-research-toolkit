@@ -397,6 +397,7 @@ function selectEdition(value: string): void {
     padding-bottom: var(--space-1);
     border-bottom: 1px solid var(--border);
     font-size: var(--text-h3);
+    font-weight: var(--heading-weight);
   }
   .edition-tabs :global(.edition-tab-list) {
     display: flex;

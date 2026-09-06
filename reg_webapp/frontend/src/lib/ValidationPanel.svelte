@@ -308,7 +308,7 @@ const LEVEL_LABEL: Record<Level, string> = {
     justify-content: space-between;
     gap: var(--space-3);
     background: var(--err-bg);
-    border: 1px solid var(--red-border);
+    border: 1px solid var(--err-border);
   }
   .summary {
     font-weight: 600;
@@ -334,12 +334,15 @@ const LEVEL_LABEL: Record<Level, string> = {
   }
   .summary.fail {
     background: var(--err-bg);
-    border: 1px solid var(--red-border);
+    border: 1px solid var(--err-border);
     color: var(--err);
   }
   .group {
     margin-top: var(--space-4);
   }
+  /* This h4 carries `.micro-label` in the markup — it is a label, not a heading
+     level — so it must NOT declare a weight here: a scoped rule out-specifies
+     the global utility and would override the label weight. */
   .group h4 {
     margin: 0 0 var(--space-2);
   }
@@ -438,6 +441,6 @@ const LEVEL_LABEL: Record<Level, string> = {
   /* The catalog target is a machine FQID/coordinate → mono, like every identifier. */
   .catalog-link code {
     font-family: var(--font-mono);
-    font-size: 0.9em;
+    font-size: var(--text-mono);
   }
 </style>

@@ -42,26 +42,25 @@ Three consumers, one contract.
 
 `reg_webapp/frontend/DESIGN.md` is normative for how the app looks: its front matter is
 the token set, its prose says why the values exist and how to apply them. Judge the diff
-against that file, not against the code around it. The app is mid-transition to the Ink
-palette, so an untouched neighbour still carrying the old warm accent, `--rost-*` ramp
-stops or tracked-uppercase eyebrows is pending the restyle ticket (Y-37), not a defect
-this candidate introduced. New and reworked source is held to DESIGN.md.
+against that file, not against the code around it: it outranks the older styling notes
+in the sibling `reg_webapp/DESIGN.md`, and all source — new, reworked and untouched — is
+held to it.
 
 ## Source review
 
 ### Token discipline
 
-Components consume **semantic roles only** — never primitive ramp stops (`--gray-*`,
-`--rost-*`, a raw status or categorical hue) and never a literal, which can render
-identically today and still break the role contract that makes a dark or per-provider
-theme a pure remap. The `style_tokens` test already fails a candidate on raw color
-literals and font stacks inside a `<style>` block, so the yield here is what it cannot
-see: a ramp stop read through `var()`, a one-off px spacing/radius/shadow value, and the
-wrong role chosen for the job.
+Components consume **semantic roles only** — never primitive ramp stops (`--gray-*`, a
+raw status or categorical hue) and never a literal, which can render identically today
+and still break the role contract that makes a dark or per-provider theme a pure remap.
+The `style_tokens` test already fails a candidate on raw color literals and font stacks
+inside a `<style>` block, so the yield here is what it cannot see: a ramp stop read
+through `var()`, a one-off px spacing/radius/shadow value, and the wrong role chosen for
+the job.
 
 The roles the source reads, by sub-system. This is representative, not exhaustive — the
 tree carries roles beyond it (the label roles `--micro-label-size` and
-`--micro-label-tracking` among them), so an unfamiliar `--role` name is not itself a
+`--micro-label-weight` among them), so an unfamiliar `--role` name is not itself a
 finding; a literal or a ramp stop is:
 
 - Surfaces and ink — `--bg`, `--surface`, `--surface-raised`, `--surface-sunken`,
@@ -196,8 +195,7 @@ alongside them where the tooling offers those.
   and text rather than hue.
 - Cross-route coherence: render at least one untouched sibling route beside the changed
   one and compare type scale, spacing rhythm and table/card/tag treatment. Flag
-  divergence from the surrounding app, allowing for views the restyle ticket has not
-  reached.
+  divergence from the surrounding app.
 
 `bun run lint/check/build` render nothing. The browser component tests (`bun run test`)
 do render in Chromium, but they exercise primitives in isolation: they are not app-level
@@ -230,8 +228,7 @@ follow the existing primitives and roles, then re-render the affected route and 
 the report.
 
 Dismiss a finding only with a concrete reason: "existing behavior outside this
-candidate", "intended clipping", "route not touched by this diff", "pending the restyle
-ticket".
+candidate", "intended clipping", "route not touched by this diff".
 
 ## Report format
 

@@ -2011,7 +2011,7 @@ function codingsVaryHref(
 </script>
 
 <!-- The delivery COLUMN chip (#678): the main selection signal, rendered as a small
-     categorical pill (mono text + a subtle --cat-var tint, distinct from the rost
+     categorical pill (mono text + a subtle --cat-var tint, distinct from the ink
      selection accent) wherever a delivery column shows. When `href` is set (a single-
      column variable's IDENTITY chip in the group view), the chip is a NAVIGATION LINK
      to that variable's leaf page — clicking it navigates (via the SPA router, see
@@ -2198,9 +2198,8 @@ function codingsVaryHref(
   >
 {/snippet}
 
-<!-- One dimension FILTER fieldset (#908/#1121): a tracked micro-label naming the
-     dimension KIND (an axis label, "Population", or "Coding") over value-only
-     pill-checkboxes. Facet dimensions carry a deterministic axis tint so values from
+<!-- One dimension FILTER fieldset (#908/#1121): a micro-label naming the dimension
+     KIND (an axis label, "Population", or "Coding") over value-only pill-checkboxes. Facet dimensions carry a deterministic axis tint so values from
      the same axis read as one family; non-facet row dimensions stay neutral.
      Multi-select within a dimension (OR), AND across dimensions. Filter-only: it
      narrows the visible rows, never the selection or the commit. -->
@@ -2213,7 +2212,7 @@ function codingsVaryHref(
       : undefined}
   >
     <legend>
-      <span class="dim-kind">{dim.label}</span>
+      <span class="micro-label dim-kind">{dim.label}</span>
     </legend>
     <div class="filter-options">
       {#each dim.values as v (v.value)}
@@ -2378,7 +2377,7 @@ function codingsVaryHref(
                         <span class="graph-slug">{leafSlug(rn.node.fqid)}</span>
                       {/if}
                       {#if focused}
-                        <span class="graph-viewed">viewed</span>
+                        <span class="graph-viewed">Viewed</span>
                       {/if}
                       <span class="visually-hidden">{graphLaneA11y(rn)}</span>
                     </span>
@@ -2664,10 +2663,10 @@ function codingsVaryHref(
                     <code class="register-prefix">{band.registerPrefix}</code>
                   {/if}
                   {#if band.isIdentifier}
-                    <span class="badge" title="Identifier">id</span>
+                    <span class="badge" title="Identifier">ID</span>
                   {/if}
                   {#if band.isSensitive}
-                    <span class="badge sensitive" title="Sensitive">sensitive</span
+                    <span class="badge sensitive" title="Sensitive">Sensitive</span
                     >
                   {/if}
                   {#if stage !== "none"}
@@ -2759,10 +2758,10 @@ function codingsVaryHref(
                 <code class="register-prefix">{band.registerPrefix}</code>
               {/if}
               {#if band.isIdentifier}
-                <span class="badge" title="Identifier">id</span>
+                <span class="badge" title="Identifier">ID</span>
               {/if}
               {#if band.isSensitive}
-                <span class="badge sensitive" title="Sensitive">sensitive</span>
+                <span class="badge sensitive" title="Sensitive">Sensitive</span>
               {/if}
               {#if empty}
                 <span class="empty-note">No columns</span>
@@ -2999,7 +2998,7 @@ function codingsVaryHref(
     border-bottom: 1px solid var(--border);
     background: var(--surface-sunken);
     font-size: var(--text-sm);
-    font-weight: 600;
+    font-weight: var(--heading-weight);
     color: var(--text-muted);
   }
   .graph-timeline {
@@ -3162,6 +3161,7 @@ function codingsVaryHref(
   }
   a.graph-name:hover {
     color: var(--accent);
+    text-decoration: underline;
   }
   a.graph-name:focus-visible {
     outline: none;
@@ -3185,8 +3185,6 @@ function codingsVaryHref(
     color: var(--accent-ink);
     font-size: 0.6rem;
     font-weight: 600;
-    letter-spacing: 0.03em;
-    text-transform: uppercase;
   }
   .graph-same-as {
     display: flex;
@@ -3333,8 +3331,8 @@ function codingsVaryHref(
      A quiet strip of per-dimension fieldsets above the column list. NEUTRAL
      throughout — no `--cat-*` type palette (that sub-system tags result/node TYPE;
      reusing it here would read a facet/coding value as a CODE/REG chip). Dimension
-     identity is carried by TEXT (the legend's tracked micro-label), never hue —
-     mirroring the #819 ConceptGroupNavigator. */
+     identity is carried by TEXT (the legend's micro-label), never hue — mirroring
+     the #819 ConceptGroupNavigator. */
   .dim-filters {
     display: flex;
     flex-wrap: wrap;
@@ -3353,16 +3351,6 @@ function codingsVaryHref(
   }
   .dim-filter legend {
     padding: 0 var(--space-1);
-  }
-  /* The dimension-KIND eyebrow: a tracked uppercase micro-label naming the dimension
-     (an axis label, "Population", or "Coding"). The design system's hierarchy device
-     — it reads as a section label, not a value. */
-  .dim-kind {
-    font-size: var(--text-micro);
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    font-weight: 600;
-    color: var(--text-muted);
   }
   .filter-options {
     display: flex;
@@ -3390,6 +3378,10 @@ function codingsVaryHref(
     border-color: color-mix(in srgb, var(--facet-axis-hue) 30%, transparent);
     background: color-mix(in srgb, var(--facet-axis-hue) 5%, var(--surface));
   }
+  /* The dimension-KIND legend (an axis label, "Population", "Coding") is the
+     label level itself, so the markup wears the `.micro-label` utility and
+     `.dim-kind` survives only as the hook this axis tint re-colors it through
+     — a scoped class out-specifies the global utility, so the color wins. */
   .dim-filter.facet-axis .dim-kind {
     color: var(--facet-axis-ink);
   }
@@ -3486,7 +3478,7 @@ function codingsVaryHref(
 
   /* The name-CLUSTER heading (#901): a quiet group label over the bands of one
      concept name in a heterogeneous group, de-duplicating the name that used to lead
-     every band. A small, muted, uppercase-ish label — NOT the bold band identity and
+     every band. A small, muted section label — NOT the bold band identity and
      NOT a link (a concept name spans variables). It sits a touch tinted so the eye
      reads it as a section divider above its distinguisher-led rows. */
   .cluster-head {
@@ -3502,7 +3494,7 @@ function codingsVaryHref(
   .cluster-head h3 {
     margin: 0;
     font-size: 0.82rem;
-    font-weight: 600;
+    font-weight: var(--heading-weight);
     color: var(--text-muted);
     letter-spacing: 0.01em;
   }
@@ -3807,7 +3799,7 @@ function codingsVaryHref(
   /* The DELIVERY COLUMN chip (#678): the main selection signal, a small categorical
      pill in the --cat-var hue (the "variable"/column dimension tint), tuned like the
      Tag primitive — 10% fill + 35% border + the AA-cleared --cat-var-ink text. A
-     DISTINCT, recognizable "column" mark, deliberately NOT the rost --accent/-bg
+     DISTINCT, recognizable "column" mark, deliberately NOT the ink --accent/-bg
      (which mean "selected"). Light/dark-safe via color-mix. */
   .col-chip {
     font-family: var(--font-mono);
@@ -3859,8 +3851,6 @@ function codingsVaryHref(
   }
   .badge {
     font-size: 0.7rem;
-    text-transform: uppercase;
-    letter-spacing: 0.03em;
     padding: 0.1rem 0.4rem;
     border: 1px solid var(--border);
     border-radius: 999px;
@@ -3935,6 +3925,7 @@ function codingsVaryHref(
   }
   .history-link:hover {
     color: var(--accent);
+    text-decoration: underline;
   }
   .history-link:focus-visible {
     outline: none;

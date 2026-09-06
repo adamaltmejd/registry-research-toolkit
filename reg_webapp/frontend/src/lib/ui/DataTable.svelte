@@ -2,8 +2,8 @@
 import type { Snippet } from "svelte";
 import type { Column } from "./types";
 
-// The workhorse table (#804 / DESIGN.md → DataTable): uppercase micro-label
-// headers, right-aligned mono numerics, zebra-free hairline rows, hover state.
+// The workhorse table (#804 / DESIGN.md → DataTable): label-level headers,
+// right-aligned mono numerics, zebra-free hairline rows, hover state.
 //
 // Column-definition API: `columns` describes each column (key/label/align/mono/
 // numeric/width); `rows` are the row objects. A `numeric` column right-aligns +
@@ -386,20 +386,18 @@ function onkeydown(event: KeyboardEvent, row: Row): void {
     td.first {
       min-width: 0;
     }
-    /* Non-primary cells show their column micro-label, styled like the <th> the
-       card hides. Decorative (aria-hidden via being CSS-generated content): the
+    /* Non-primary cells show their column label, styled like the <th> the card
+       hides. Decorative (aria-hidden via being CSS-generated content): the
        columnheader still reaches screen readers from the visually-hidden thead.
-       The eyebrow props are duplicated from the `.micro-label` utility (#836)
+       The label props are duplicated from the `.micro-label` utility (#836)
        rather than shared: a CSS-generated `::before` pseudo-element can't take a
-       class, and plain CSS has no mixin — so this is the one eyebrow that keeps
-       its own copy. Keep it in sync with `.micro-label` in lib/ui/utilities.css. */
+       class, and plain CSS has no mixin — so this is the one label that keeps its
+       own copy. Keep it in sync with `.micro-label` in lib/ui/utilities.css. */
     td:not(.first)::before {
       content: attr(data-label);
       display: block;
       font-size: var(--micro-label-size);
-      letter-spacing: var(--micro-label-tracking);
-      text-transform: uppercase;
-      font-weight: 600;
+      font-weight: var(--micro-label-weight);
       color: var(--text-muted);
     }
     /* An empty cell (e.g. a register with no Description/purpose — the consumer's

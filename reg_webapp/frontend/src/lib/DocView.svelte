@@ -71,6 +71,7 @@ const doc = $derived(resource.data);
 <style>
   .doc-view h2 {
     margin-bottom: 0.5rem;
+    font-weight: var(--heading-weight);
   }
   .meta {
     display: grid;

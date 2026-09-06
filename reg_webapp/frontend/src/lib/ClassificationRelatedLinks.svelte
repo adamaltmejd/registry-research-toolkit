@@ -65,6 +65,7 @@ function classRefHref(ref: { fqid: string | null; slug: string }): string {
   .derived-links h3 {
     margin: 0 0 var(--space-3);
     font-size: var(--text-h3);
+    font-weight: var(--heading-weight);
     line-height: 1.25;
   }
   .derived-block + .derived-block {

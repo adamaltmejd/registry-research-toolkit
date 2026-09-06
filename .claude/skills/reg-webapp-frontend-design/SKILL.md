@@ -50,10 +50,10 @@ replaced.
   its name in a catalog that is mostly identifiers. Mono is for identifiers only — never
   for labels, headings or body copy.
 - **Tracked-uppercase eyebrows are retired.** Labels and headings are sentence case at
-  normal tracking; hierarchy comes from size and weight, not decoration. The tree still
-  carries the old `.micro-label` utility and the warm `--rost-*` ramp stops pending the
-  restyle ticket (Y-37) — legacy, not a pattern to copy. Numbered section markers,
-  middle-dot meta strings and trailing arrows stay out too.
+  normal tracking; hierarchy comes from size and weight, not decoration. The
+  `.micro-label` utility is that label level — sentence case and muted, composing the
+  `typography.label` role from `frontend/DESIGN.md` — not an eyebrow to re-track.
+  Numbered section markers, middle-dot meta strings and trailing arrows stay out too.
 
 ## Read first (in this order)
 
@@ -63,8 +63,8 @@ replaced.
 2. `reg_webapp/DESIGN.md` → "UI primitives — Bits UI + scoped CSS" for the bake-off
    rationale, "Frontend toolchain" for the lint/check/codegen setup, and "SPA routing +
    production fallback" if the change touches routing.
-3. `reg_webapp/frontend/src/tokens.css` — the roles as implemented, and what still lags
-   DESIGN.md pending the restyle.
+3. `reg_webapp/frontend/src/tokens.css` — the roles as implemented, which
+   `src/design_md.test.ts` holds to the DESIGN.md front matter.
 4. `reg_webapp/frontend/src/lib/ui/` — the primitive barrel (`index.ts`, `types.ts`)
    plus the one or two primitives closest to what you are building.
 5. The closest existing view under `frontend/src/lib/` and its `*.browser.test.ts` —
@@ -112,10 +112,9 @@ decision (#632) is the canonical mistake; the #689 bake-off is the adoption rati
 
 The values live in `reg_webapp/frontend/DESIGN.md`; these are the rules that use them.
 
-- Components consume **semantic roles only** — never primitive ramp stops (`--gray-*`,
-  `--rost-*`, a raw status or categorical hue) and never a literal. That discipline is
-  what makes the deferred dark theme and the planned per-provider themes a pure role
-  remap.
+- Components consume **semantic roles only** — never primitive ramp stops (`--gray-*`, a
+  raw status or categorical hue) and never a literal. That discipline is what makes the
+  deferred dark theme and the planned per-provider themes a pure role remap.
 - **Chrome:** the accent is ink, and it paints interactive chrome ONLY — links, primary
   buttons, selection, focus ring, active nav. One `primary` Button per view; the rest
   are `default`/`ghost`. Accent-colored **text** on a tint or surface uses

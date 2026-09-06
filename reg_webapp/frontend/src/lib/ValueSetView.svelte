@@ -710,7 +710,7 @@ function usageVariantLabel(variant: string): string | null {
   /* The variant slug is a machine identifier → mono (DESIGN.md). */
   .vs-usage-variant {
     font-family: var(--font-mono);
-    font-size: 0.9em;
+    font-size: var(--text-mono);
   }
   .vs-change-list {
     flex-basis: 100%;

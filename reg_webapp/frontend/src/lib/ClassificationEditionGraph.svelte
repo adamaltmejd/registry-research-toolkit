@@ -281,10 +281,10 @@ function editionLabel(node: ClassificationGraphNode): string {
                 </span>
                 <span class="edition-tags">
                   {#if focused}
-                    <span class="edition-viewed">viewed</span>
+                    <span class="edition-viewed">Viewed</span>
                   {/if}
                   {#if node.is_current}
-                    <span class="edition-current">current</span>
+                    <span class="edition-current">Current</span>
                   {/if}
                 </span>
               </div>
@@ -316,6 +316,7 @@ function editionLabel(node: ClassificationGraphNode): string {
     padding-bottom: var(--space-1);
     border-bottom: 1px solid var(--border);
     font-size: var(--text-h3);
+    font-weight: var(--heading-weight);
   }
   .edition-cluster + .edition-cluster {
     margin-top: var(--space-4);
@@ -325,7 +326,7 @@ function editionLabel(node: ClassificationGraphNode): string {
   .edition-cluster-heading {
     margin: 0 0 var(--space-2);
     font-size: var(--text-sm);
-    font-weight: 600;
+    font-weight: var(--heading-weight);
     color: var(--text-muted);
   }
   .edition-scroll {
@@ -413,6 +414,7 @@ function editionLabel(node: ClassificationGraphNode): string {
   }
   a.edition-name:hover {
     color: var(--accent);
+    text-decoration: underline;
   }
   a.edition-name:focus-visible {
     outline: none;
@@ -432,9 +434,7 @@ function editionLabel(node: ClassificationGraphNode): string {
     border-radius: var(--radius-sm);
     font-size: 0.58rem;
     font-weight: 600;
-    letter-spacing: 0.03em;
     line-height: 1.45;
-    text-transform: uppercase;
   }
   .edition-viewed {
     background: color-mix(in srgb, var(--accent) 12%, transparent);

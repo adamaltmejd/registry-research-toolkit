@@ -1358,6 +1358,7 @@ function closeSearch(): void {
   }
   .search-heading h2 {
     margin: 0;
+    font-weight: var(--heading-weight);
   }
   .close-search {
     padding: var(--space-1) var(--space-2);
@@ -1428,7 +1429,7 @@ function closeSearch(): void {
     border-bottom: 1px solid var(--border);
     background: var(--surface);
     font-size: var(--text-sm);
-    font-weight: 600;
+    font-weight: var(--heading-weight);
     color: var(--text-muted);
   }
   .code-system-heading a {

@@ -6,7 +6,7 @@
 // architecture). Listed in vite.config.ts's browser `setupFiles` AFTER
 // vitest-browser-svelte (which injects render/cleanup). The `.micro-label`
 // utility (#836) is a sibling global stylesheet, imported the same way so a
-// component's eyebrow header (DataTable th, Panel title, KeyValue dt) renders
+// component's label header (DataTable th, Panel title, KeyValue dt) renders
 // with its styling under test just as it does in the app.
 import "./tokens.css";
 import "./lib/ui/utilities.css";

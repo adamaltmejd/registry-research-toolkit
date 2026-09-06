@@ -420,7 +420,7 @@ function groupedByBucketPrefix(list: Code[]): CodeLayout | null {
     /* A value-set code — a machine identifier, so mono-faced (DESIGN.md). */
     font-family: var(--font-mono);
     color: var(--text-muted);
-    font-size: 0.9em;
+    font-size: var(--text-mono);
   }
   .code-label {
     flex: 1;

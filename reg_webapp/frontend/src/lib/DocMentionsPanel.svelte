@@ -151,6 +151,7 @@ function sourceLabel(url: string, title?: string | null): string {
     margin: 0 0 0.5rem;
     padding-bottom: 0.25rem;
     border-bottom: 1px solid var(--border);
+    font-weight: var(--heading-weight);
   }
   .fuzzy-note {
     margin: 0 0 0.5rem;

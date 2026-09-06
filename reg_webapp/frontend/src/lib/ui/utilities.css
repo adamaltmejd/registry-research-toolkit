@@ -1,17 +1,16 @@
 /* Shared cross-component utilities (#836).
 
-   `.micro-label` — the tracked-uppercase eyebrow (table headers / section
-   eyebrows / meta-term labels), composing the --micro-label-* tokens. It's
-   CROSS-component (DataTable th, Panel title, KeyValue dt, section eyebrows,
-   …), so it can't be component-owned the way a primitive's `:global(.ui-btn)`
-   is — it lives in a plain global stylesheet, imported once in main.ts after
-   tokens.css. Being a plain global file (NOT a Svelte <style>), the rule is
-   written directly — no `:global()` wrapper needed. */
+   `.micro-label` — the label level (DESIGN.md → typography.label): the small,
+   muted, SENTENCE-CASE label at normal tracking used for table headers, panel
+   titles, rail section names and meta terms, composing the --micro-label-*
+   tokens. It's CROSS-component (DataTable th, Panel title, KeyValue dt, section
+   labels, …), so it can't be component-owned the way a primitive's
+   `:global(.ui-btn)` is — it lives in a plain global stylesheet, imported once
+   in main.ts after tokens.css. Being a plain global file (NOT a Svelte <style>),
+   the rule is written directly — no `:global()` wrapper needed. */
 .micro-label {
   font-size: var(--micro-label-size);
-  letter-spacing: var(--micro-label-tracking);
-  text-transform: uppercase;
-  font-weight: 600;
+  font-weight: var(--micro-label-weight);
   color: var(--text-muted);
 }
 

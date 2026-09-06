@@ -113,6 +113,7 @@ const anySection = $derived(showProvenance || showWarnings);
     margin: 0 0 0.5rem;
     padding-bottom: 0.25rem;
     border-bottom: 1px solid var(--border);
+    font-weight: var(--heading-weight);
   }
   .source-register {
     margin: 0 0 0.5rem;

@@ -56,6 +56,11 @@ export default defineConfig({
           name: "unit",
           environment: "jsdom",
           include: ["src/**/*.test.ts"],
+          // Vitest blanks every CSS import by default. src/design_md.test.ts
+          // reads tokens.css as TEXT (`?raw`) to check it against DESIGN.md, so
+          // that one file must survive the blanking — nothing here evaluates it
+          // as a stylesheet.
+          css: { include: [/tokens\.css/] },
           // Component tests belong to the `browser` project below — exclude them
           // here (their `.browser.test.ts` suffix also matches `*.test.ts`). A
           // custom `exclude` REPLACES Vitest's default (node_modules, .git), so

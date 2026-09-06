@@ -122,8 +122,10 @@ const classes = $derived(
     background: var(--accent);
     color: var(--accent-fg);
   }
+  /* The accent is ink, so the danger variant's darkening has nowhere to go
+     here — lift the fill toward white instead (white text stays 11:1). */
   :global(.ui-btn.variant-primary:hover:not(:disabled)) {
-    background: var(--accent-ink);
+    background: color-mix(in srgb, var(--accent) 85%, white);
   }
 
   :global(.ui-btn.variant-default) {

@@ -84,6 +84,7 @@ function sourceHost(doc: RelatedDocument): string {
     margin: 0 0 0.5rem;
     padding-bottom: 0.25rem;
     border-bottom: 1px solid var(--border);
+    font-weight: var(--heading-weight);
   }
   .documents {
     list-style: none;

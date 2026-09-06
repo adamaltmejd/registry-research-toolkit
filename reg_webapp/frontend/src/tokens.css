@@ -1,8 +1,11 @@
 /* ───────────────────────────────────────────────────────────────────────────
-   reg_webapp design tokens — the canonical design-system layer (#801 / #802).
+   reg_webapp design tokens — the CSS implementation of the design language in
+   reg_webapp/frontend/DESIGN.md. That file is the source of truth for every
+   value below (its YAML front matter is normative), and src/design_md.test.ts
+   fails when the two disagree: change the spec first, then this file.
 
-   Two-layer architecture (see reg_webapp/DESIGN.md → "Visual language"):
-     1. PRIMITIVE RAMPS  (--gray-*, --rost-*, status/categorical hues) — raw
+   Two-layer architecture (DESIGN.md → "Colors"):
+     1. PRIMITIVE RAMPS  (--gray-*, the categorical and data hues) — raw
         scales. Components must NEVER reference a primitive directly.
      2. SEMANTIC ROLES   (--bg, --surface, --text, --accent, --err, …) — the
         ONLY layer components read. Dark mode is a pure remap of these roles
@@ -158,50 +161,23 @@
      LAYER 1 — PRIMITIVE RAMPS (never referenced by components)
      ════════════════════════════════════════════════════════════════════════ */
 
-  /* Warm graphite neutrals: ink (1) → off-white (12). */
-  --gray-1: #1a1a18;
-  --gray-2: #2b2b28;
-  --gray-3: #3d3d39;
-  --gray-4: #51514c;
-  --gray-5: #6b6b64;
-  --gray-6: #71716a;
-  --gray-7: #a09f96;
-  --gray-8: #c0bfb6;
-  --gray-9: #d7d6cd;
-  --gray-10: #e7e6de;
-  --gray-11: #f2f1ea;
-  --gray-12: #fafaf8;
-
-  /* Brand rust ramp around Rost #B8552A (dark → light tint). */
-  --rost-1: #3a190c;
-  --rost-2: #532413;
-  --rost-3: #6e311b;
-  --rost-4: #8a3f22;
-  --rost-5: #a44b29;
-  --rost-6: #b8552a;
-  --rost-7: #c66c44;
-  --rost-8: #d4886a;
-  --rost-9: #e3aa93;
-  --rost-10: #efccbd;
-  --rost-11: #f7e5dc;
-  --rost-12: #fcf3ee;
-
-  /* Status hues — a dark AA-cleared foreground stop + a light fill stop each.
-     Status is chromatically COOLER than the warm brand (DESIGN.md accent-vs-
-     status rule) so it can never read as brand chrome. */
-  --red-fg: #c42b2b;
-  --red-bg: #fdecec;
-  --red-border: #f0a8a8; /* cool red hairline for error banners/badges */
-  --ochre-fg: #7a5c00;
-  --ochre-bg: #f7f0d8;
-  --slate-fg: #3a6b8c;
-  --slate-bg: #e6eef4;
-  --green-fg: #1e7a3c;
-  --green-bg: #e3f3e8;
+  /* Neutral ramp — ink (1) → paper (12). */
+  --gray-1: #151618;
+  --gray-2: #232527;
+  --gray-3: #34373a;
+  --gray-4: #474a4e;
+  --gray-5: #5f6368;
+  --gray-6: #6b6f74;
+  --gray-7: #9a9ea3;
+  --gray-8: #b9bbc0;
+  --gray-9: #dcdde0;
+  --gray-10: #e6e6e5;
+  --gray-11: #efefee;
+  --gray-12: #f7f7f6;
 
   /* Categorical palette — tags result/node TYPE (REG/VAR/CODE/classification/
-     group). Its own sub-system: never reuse the brand accent or status hues
-     for type identity, or "is a variable" and "is selected/an error" collide. */
+     group). Its own sub-system: never reuse the accent or status hues for type
+     identity, or "is a variable" and "is selected/an error" collide. */
   --cat-reg: #1f7a7a; /* teal — registers */
   --cat-var: #4b4b9e; /* indigo — variables */
   --cat-code: #9a6b1a; /* gold — value-set codes */
@@ -209,7 +185,7 @@
   --cat-group: #2f6b3f; /* moss — concept groups */
 
   /* Facet-axis data palette — concept-group dimensions, NOT node type, status,
-     or brand chrome. Muted hues let rows/pills show "same axis family" without
+     or chrome. Muted hues let rows/pills show "same axis family" without
      colliding with selection or validation semantics. */
   --facet-axis-0: #4f6f8f; /* steel */
   --facet-axis-1: #6f7c3f; /* olive */
@@ -223,7 +199,7 @@
      ════════════════════════════════════════════════════════════════════════ */
 
   /* Backgrounds & surfaces. */
-  --bg: var(--gray-12); /* warm off-white page (~#fafaf8) */
+  --bg: var(--gray-12); /* neutral paper */
   --surface: #ffffff;
   --surface-raised: #ffffff;
   --surface-sunken: var(--gray-11);
@@ -237,19 +213,18 @@
   --border: var(--gray-9);
   --border-strong: var(--gray-8);
 
-  /* Brand accent — interactive chrome ONLY (links, primary buttons, selection,
-     focus, active nav). NEVER a status color (DESIGN.md accent-vs-status). */
-  /* The #801-locked brand: fills, borders, links-on-surface, focus, active
-     chrome. NOT for accent-colored text on a soft tint — use --accent-ink. */
-  --accent: var(--rost-6); /* #B8552A */
-  --accent-fg: #ffffff; /* text/icon on an accent fill */
-  --accent-bg: var(--rost-12); /* soft rost tint (replaces old blue #eff4ff) */
-  /* Accent-COLORED TEXT on a soft tint/surface. The warm brand (#B8552A) lacks
-     contrast headroom — it's only 4.39:1 on --accent-bg, below WCAG AA (4.5:1)
-     for normal text — so accent text on a tint needs a darker ink. rost-5
-     (#a44b29) clears AA on the tint (≈5.3:1) and on white (≈5.8:1). --accent
-     stays the chrome/fill brand; this role is text-only. */
-  --accent-ink: var(--rost-5); /* #a44b29 */
+  /* Accent — interactive chrome ONLY (links, primary buttons, selection, focus,
+     active nav). NEVER a status color (DESIGN.md accent-vs-status). The accent
+     is INK: the base is monochrome and every chromatic value is spent on
+     meaning. A per-provider theme (deferred) is a remap of the accent roles and
+     nothing else, so keep the seam this narrow. */
+  --accent: var(--gray-1); /* fills, borders, links, focus, active chrome */
+  --accent-fg: #ffffff; /* text/icon on an accent fill (18:1) */
+  --accent-bg: var(--gray-10); /* the tint an accent mark sits on */
+  /* Accent-COLORED TEXT on a soft tint/surface — the role for callers that
+     already distinguish fill from text. Both resolve to ink in this theme; the
+     split is what lets a re-tint give text its own AA-cleared stop. */
+  --accent-ink: var(--gray-1);
 
   /* Categorical TEXT stops — the AA-cleared text ink per categorical hue,
      mirroring --accent-ink. The raw --cat-* hues (Layer 1) are tuned as FILLS;
@@ -277,26 +252,28 @@
   /* Data-viz EDGE encoding (#810) — graph-relation marks, NOT chrome. The
      history graph draws relationship edges between nodes; an edge is DATA, so
      (like --cat-*) it gets its own viz sub-system and must never borrow the
-     brand accent (then "is selected" and "is a succession edge" collide) or a
-     status hue (an edge isn't an error/warning). One relation kind:
+     accent (then "is selected" and "is a succession edge" collide) or a status
+     hue (an edge isn't an error/warning). One relation kind:
        - succession (DIRECTED, the chronological predecessor→successor flow): a
-         desaturated steel that reads as a connective flow line, cooler/quieter
-         than the warm Rost brand and darker than the cat-var indigo so the two
-         never read as the same mark. ≈4.6:1 on --surface — an AA-legible
-         hairline/arrow. */
+         desaturated steel that reads as a connective flow line, quieter than
+         the ink accent and darker than the cat-var indigo so the two never read
+         as the same mark. ≈4.6:1 on --surface — an AA-legible hairline/arrow. */
   --viz-edge-succession: #4a6b86; /* desaturated steel — directed flow */
 
   /* Status roles — AA-cleared FOREGROUND values (text/glyph). Each is paired
      with a glyph in the UI, never hue alone. The *-bg roles are SEPARATE fill
-     tints for badges/rows — never use a fill tint as a text color. */
-  --err: var(--red-fg);
-  --err-bg: var(--red-bg);
-  --warn: var(--ochre-fg);
-  --warn-bg: var(--ochre-bg);
-  --info: var(--slate-fg);
-  --info-bg: var(--slate-bg);
-  --ok: var(--green-fg);
-  --ok-bg: var(--green-bg);
+     tints for badges/rows — never use a fill tint as a text color. The only
+     chromatic chrome in the system: the accent is ink, so a status hue can
+     never read as chrome. */
+  --err: #b3261e;
+  --err-bg: #fbe9e7;
+  --err-border: #f0a8a8; /* the error hairline on banners/badges */
+  --warn: #7a5c00;
+  --warn-bg: #f7f0d8;
+  --info: #2f5f8f;
+  --info-bg: #e6eef7;
+  --ok: #1e7a3c;
+  --ok-bg: #e3f3e8;
 
   /* ── Typography ──────────────────────────────────────────────────────── */
   --font-ui:
@@ -312,14 +289,22 @@
   --text-h3: 1.125rem;
   --text-body: 1rem;
   --text-sm: 0.85rem;
-  --text-micro: 0.72rem;
+  --text-micro: 0.75rem;
+  /* Mono sets optically larger than the UI face at the same size, so an
+     identifier running inline with UI text steps down. Relative on purpose: it
+     scales with whatever level the identifier sits in. */
+  --text-mono: 0.92em;
 
-  /* Tracked uppercase micro-label convention (table headers / section eyebrows
-     — the device that gives the dashboard look its hierarchy). The utility
-     class itself is later children's work; these are the size+tracking tokens
-     it composes. */
+  /* The scale spends three weights: headings, body copy (which body-sm and the
+     mono face inherit from the page), and the label level below. Hierarchy
+     comes from size and weight, never from case or tracking. */
+  --heading-weight: 600;
+  --body-weight: 400;
+
+  /* The label level (DESIGN.md → typography.label), composed by the
+     `.micro-label` utility in lib/ui/utilities.css. */
   --micro-label-size: var(--text-micro);
-  --micro-label-tracking: 0.06em;
+  --micro-label-weight: 500;
 
   /* ── Geometry ────────────────────────────────────────────────────────── */
   --space-1: 0.25rem;
@@ -332,18 +317,21 @@
   /* ── Elevation ───────────────────────────────────────────────────────── */
   /* One soft shadow for raised panels/cards/popovers. No heavy drop shadows. */
   --elevation-raised:
-    0 1px 2px rgba(26, 26, 24, 0.06), 0 2px 8px rgba(26, 26, 24, 0.08);
+    0 1px 2px rgba(21, 22, 24, 0.06), 0 2px 8px rgba(21, 22, 24, 0.08);
   /* Modal/drawer backdrop overlay (the mobile drawer scrim). Mixed from the
-     darkest graphite stop so a later dark-mode remap can re-tint it via the
-     ramp, not a literal. */
+     darkest ramp stop so a later dark-mode remap can re-tint it via the ramp,
+     not a literal. */
   --scrim: color-mix(in srgb, var(--gray-1) 40%, transparent);
 
   /* ── Interaction states ──────────────────────────────────────────────── */
-  /* Accessible keyboard focus outline, retinted to the brand: a 2px accent
-     ring over an accent-tint offset (an outline, not a color-only shift). */
+  /* Accessible keyboard focus outline: a 2px --accent-bg gap under a 3px ink
+     line (an outline, not a color-only shift), so it stays visible on an
+     ink-filled control too. */
   --focus-ring: 0 0 0 2px var(--accent-bg), 0 0 0 3px var(--accent);
   --surface-hover: var(--gray-11);
-  --surface-selected: var(--accent-bg);
+  /* Selection is one ramp stop darker than hover, and always pairs with the
+     3px ink bar on the leading edge — never tint alone. */
+  --surface-selected: var(--gray-10);
 
   /* ── Motion ──────────────────────────────────────────────────────────── */
   /* Small + functional (popover/disclosure transitions), not decorative. */
@@ -358,6 +346,7 @@ body {
   margin: 0;
   font-family: var(--font-ui);
   font-size: var(--text-body);
+  font-weight: var(--body-weight);
   background-color: var(--bg);
   color: var(--text);
   line-height: 1.5;

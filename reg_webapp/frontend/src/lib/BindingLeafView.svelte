@@ -814,7 +814,7 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
 
 <style>
   .via code {
-    font-size: 0.9em;
+    font-size: var(--text-mono);
   }
   /* #670: the member-distinguishing qualifier + group context link, sitting just
      under the shared concept header. Two inline pieces separated by a thin

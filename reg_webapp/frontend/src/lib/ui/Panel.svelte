@@ -3,8 +3,8 @@ import type { Snippet } from "svelte";
 
 // The unit of grouping (#804 / DESIGN.md → Panels): a header (micro-label
 // title + optional meta/badge) over a body, on a raised surface card. The
-// header title uses the tracked uppercase micro-label convention — the device
-// that gives the dashboard look its hierarchy without heavy headings.
+// header title uses the label level — hierarchy from size and weight, not from
+// a heavy heading.
 //
 // `title` is a string OR a snippet (a title may carry a mono identifier). The
 // optional `meta` snippet rides the header's trailing edge (a count Tag, an

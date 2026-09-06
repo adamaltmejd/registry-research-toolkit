@@ -88,6 +88,7 @@ const entries = [
   .hero h1 {
     margin: 0;
     font-size: 1.6rem;
+    font-weight: var(--heading-weight);
   }
   .tagline {
     margin: 0;

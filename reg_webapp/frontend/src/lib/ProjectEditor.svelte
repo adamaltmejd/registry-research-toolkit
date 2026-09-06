@@ -218,6 +218,7 @@ async function onFilePicked(event: Event): Promise<void> {
     display: flex;
     align-items: baseline;
     gap: var(--space-3);
+    font-weight: var(--heading-weight);
   }
   /* The "unsaved" cue — warning tone (advisory), never the brand accent. */
   .dirty {
@@ -245,7 +246,7 @@ async function onFilePicked(event: Event): Promise<void> {
   }
   .banner.error {
     background: var(--err-bg);
-    border: 1px solid var(--red-border);
+    border: 1px solid var(--err-border);
   }
   .fields {
     display: flex;

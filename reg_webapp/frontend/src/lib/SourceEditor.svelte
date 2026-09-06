@@ -178,6 +178,7 @@ const metaRows = $derived([
   }
   .source-head h3 {
     margin: 0;
+    font-weight: var(--heading-weight);
     display: flex;
     align-items: baseline;
     gap: var(--space-2);
@@ -193,6 +194,7 @@ const metaRows = $derived([
   }
   .bindings h4 {
     margin: 0 0 var(--space-2);
+    font-weight: var(--heading-weight);
   }
   .binding-list {
     list-style: none;

@@ -62,6 +62,7 @@ let {
   .subject-header h2 {
     margin: 0;
     font-size: var(--text-h1);
+    font-weight: var(--heading-weight);
     line-height: 1.2;
   }
   /* The fqid identifier line under the title — a mono machine identifier, muted. */
