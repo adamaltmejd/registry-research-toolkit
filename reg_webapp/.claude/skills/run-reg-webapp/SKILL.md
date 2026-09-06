@@ -87,10 +87,10 @@ REG_META_DB="$db" bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh flows /tm
 ```
 
 The flows assert against the synthetic catalog those two lines set up (`scb/lisa/kon` at
-variant `individer-15plus` → column `Kon`), which `catalog_fixture_db.py` builds with the
-shared fixture builder (`backend/scripts/fixture_db.py`, below) — not a released DB. A
-nonzero exit is a failed assertion, an unexpected JS page error, horizontal overflow at
-some viewport, or a server that never started; the servers are torn down either way.
+variant `individer-15plus` → column `Kon`), which `catalog_fixture_db.py` builds with
+the shared fixture builder (`backend/scripts/fixture_db.py`, below) — not a released DB.
+A nonzero exit is a failed assertion, an unexpected JS page error, horizontal overflow
+at some viewport, or a server that never started; the servers are torn down either way.
 
 In yard this is the `project-flows` gate (`.yard/config.toml`, selected by the `ui`
 workflow), which hands the driver `$YARD_ARTIFACT_DIR` as the output directory and
