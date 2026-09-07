@@ -288,14 +288,16 @@ def test_empty_project_is_blocked_not_a_header_only_manifest(client):
     assert [f["code"] for f in body["findings"]] == ["project_empty"]
 
 
-def test_structurally_invalid_spec_is_422(client):
+@pytest.mark.parametrize("period", ["notaperiod", "_default"])
+def test_structurally_invalid_spec_is_422(client, period):
     """The shared gate (`order.project_from_raw`) runs before materialization: a
     Pydantic-valid but structurally invalid spec (a bad period token — a `str`,
-    so the model accepts it) is a 422, not a manifest of a bad provider order."""
-    spec = _spec()
-    spec["sources"][0]["period"] = "notaperiod"
+    so the model accepts it) is a 422, not a manifest of a bad provider order.
+    The retired whole-history `_default` sentinel is now one of those tokens."""
+    spec = _spec(period=period)
     resp = client.post("/api/project/order", json=spec)
     assert resp.status_code == 422, f"bad period → {resp.status_code}"
+    assert "entries" not in resp.json()
 
 
 def test_unknown_root_field_is_422_at_structural_gate(client):

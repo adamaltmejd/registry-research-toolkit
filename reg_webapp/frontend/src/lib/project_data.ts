@@ -44,10 +44,10 @@ export type PeriodSegment =
   | string
   | { from: number | string; to: number | string };
 
-/** A `Source.period` value: a segment, the `"_default"` sentinel (rides the
- * string arm), or a LIST of segments — an interrupted series (#307; the
- * backend enforces non-empty, sorted ascending, non-overlapping). Kept loose —
- * the server is the canonical period validator. */
+/** A `Source.period` value: a segment, or a LIST of segments — an interrupted
+ * series (#307; the backend enforces non-empty, sorted ascending,
+ * non-overlapping). Kept loose — the server is the canonical period
+ * validator. */
 export type Period = PeriodSegment | PeriodSegment[];
 
 /** The optional global study window (the "project window", #611 → Period model).
@@ -88,8 +88,8 @@ export interface ProjectData {
   [key: string]: unknown;
 }
 
-/** The Model A `schema_version` a NEW draft is seeded with (reg_schema 2.0.0). */
-export const MODEL_A_SCHEMA_VERSION = "2.0.0";
+/** The Model A `schema_version` a NEW draft is seeded with (reg_schema 3.0.0). */
+export const MODEL_A_SCHEMA_VERSION = "3.0.0";
 
 /** The 6 ColumnType values (reg_schema `ColumnType` `Literal`). The
  * BindingEditor's type `<select>` + the type-conditional advanced-field gating key

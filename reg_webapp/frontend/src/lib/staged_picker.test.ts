@@ -372,7 +372,68 @@ describe("committedPickerRows", () => {
     expect(committed.has(pickerRowKey(b, rows[1]))).toBe(false);
   });
 
-  it("treats a default source period as full-history for null representations", () => {
+  it("counts every null-representation row the source period spans", () => {
+    const rows = [
+      row({
+        key: "ind::OLD",
+        column: "OLD",
+        representation: "OLD",
+        from: "1981-01-01",
+        to: "1985-12-31",
+        windows: [{ from: "1981-01-01", to: "1985-12-31" }],
+        period: "1981 - 1985",
+        wirePeriod: "1981..1985",
+        renamedColumns: [],
+      }),
+      row({
+        key: "ind::NEW",
+        column: "NEW",
+        representation: "NEW",
+        from: "1986-01-01",
+        to: "1995-12-31",
+        windows: [{ from: "1986-01-01", to: "1995-12-31" }],
+        period: "1986 - 1995",
+        wirePeriod: "1986..1995",
+        renamedColumns: [],
+      }),
+    ];
+    const b = band(rows);
+    const draft: ProjectData = {
+      schema_version: "2.0.0",
+      reg_meta_version: "reg_meta/v1.0.0",
+      steward: "global",
+      name: "",
+      sources: [
+        {
+          name: "LISA",
+          register_variant: "scb/lisa/ind",
+          period: { from: 1981, to: 1995 },
+          bindings: [
+            {
+              variable: "scb/lisa/dinf",
+              type: "numeric",
+              representation: null,
+            },
+          ],
+        },
+      ],
+    };
+
+    const committed = committedPickerRows(draft, [b]);
+
+    expect(committed.get(pickerRowKey(b, rows[0]))).toEqual(
+      expect.objectContaining({ representation: null }),
+    );
+    expect(committed.get(pickerRowKey(b, rows[1]))).toEqual(
+      expect.objectContaining({ representation: null }),
+    );
+  });
+
+  it("gives an imported `_default` source no null-representation coverage", () => {
+    // A file written before the sentinel was retired can still carry it, but it
+    // is no longer a project period: it denotes no bounds, so it can overlap no
+    // row. The picker must not read it as covering everything (an OMITTED
+    // `representation` takes the same null path as the explicit null here).
     const rows = [
       row({
         key: "ind::OLD",
@@ -421,12 +482,7 @@ describe("committedPickerRows", () => {
 
     const committed = committedPickerRows(draft, [b]);
 
-    expect(committed.get(pickerRowKey(b, rows[0]))).toEqual(
-      expect.objectContaining({ representation: null }),
-    );
-    expect(committed.get(pickerRowKey(b, rows[1]))).toEqual(
-      expect.objectContaining({ representation: null }),
-    );
+    expect(committed.size).toBe(0);
   });
 
   it("skips malformed draft source slots instead of crashing", () => {
@@ -499,13 +555,13 @@ describe("periodChangesWithStagedAdds", () => {
     ]);
   });
 
-  it("preserves default period replacements instead of narrowing them to staged adds", () => {
+  it("keeps a wider period change instead of narrowing it to the staged add", () => {
     expect(
       periodChangesWithStagedAdds(
         [
           {
             registerVariant: "scb/lisa/ind",
-            period: "_default",
+            period: { from: 2000, to: 2020 },
           },
         ],
         [
@@ -518,7 +574,7 @@ describe("periodChangesWithStagedAdds", () => {
     ).toEqual([
       {
         registerVariant: "scb/lisa/ind",
-        period: "_default",
+        period: { from: 2000, to: 2020 },
       },
     ]);
   });
@@ -611,7 +667,7 @@ describe("finalSourcePeriodsForStagedAdds", () => {
       [
         {
           registerVariant: "scb/lisa/ind",
-          period: "_default",
+          period: { from: 2010, to: 2015 },
         },
       ],
       [
@@ -622,7 +678,9 @@ describe("finalSourcePeriodsForStagedAdds", () => {
       ],
     );
 
-    expect(periods.get("scb/lisa/ind")).toBe("_default");
+    // The change wins outright: without it the add would have coalesced onto the
+    // existing 2000 into a two-segment list.
+    expect(periods.get("scb/lisa/ind")).toEqual({ from: 2010, to: 2015 });
   });
 
   it("keeps duplicate register variants aligned with the source that apply will update", () => {
@@ -693,7 +751,7 @@ describe("nullBindingCommittedRowKeys", () => {
         variable: "scb/lisa/dinf",
         representation: null,
         sourceName: "LISA",
-        sourcePeriod: "_default",
+        sourcePeriod: 2020,
       },
       {
         key: pickerRowKey(b, rows[1]),
@@ -701,7 +759,7 @@ describe("nullBindingCommittedRowKeys", () => {
         variable: "scb/lisa/dinf",
         representation: null,
         sourceName: "LISA",
-        sourcePeriod: "_default",
+        sourcePeriod: 2020,
       },
       {
         key: pickerRowKey(b, rows[2]),
@@ -709,7 +767,7 @@ describe("nullBindingCommittedRowKeys", () => {
         variable: "scb/lisa/dinf",
         representation: null,
         sourceName: "LISA",
-        sourcePeriod: "_default",
+        sourcePeriod: 2020,
       },
     ];
 

@@ -349,15 +349,10 @@ describe("windowCoverageHints", () => {
     ]);
   });
 
-  it("skips token, _default, and malformed periods rather than guessing coverage or crashing", () => {
+  it("skips token and malformed periods rather than guessing coverage or crashing", () => {
     expect(
       windowCoverageHints({ from: 2000, to: 2020 }, [
         { name: "term", register_variant: "scb/hst/v1", period: "HT2018" },
-        {
-          name: "default",
-          register_variant: "scb/lisa/v1",
-          period: "_default",
-        },
         {
           name: "mixed",
           register_variant: "scb/lisa/v1",

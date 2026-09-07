@@ -659,9 +659,21 @@ class TestBlockingFindings:
             (c.variable, c.requested_period, c.ordered_period) for c in result.clips
         ] == [("scb/lisa/disponibel-inkomst", "2018..2020", "2019..2020")]
 
-    def test_default_period_is_not_orderable(self, conn, inventory) -> None:
+    @pytest.mark.parametrize(
+        "period",
+        [
+            pytest.param(PeriodRange(from_=2020, to=2018), id="inverted-range"),
+            pytest.param("nope", id="malformed-token"),
+        ],
+    )
+    def test_a_period_that_cannot_be_expanded_is_not_orderable(
+        self, conn, inventory, period
+    ) -> None:
+        # Fail-closed backstop for a period the structural gate does not reject
+        # (a SCALAR inverted range) or that reaches the materializer unvalidated:
+        # no orderable interval means no manifest, never a guessed window.
         result = materialize_order(
-            _project("scb/lisa/kon", period="_default"), inventory, conn
+            _project("scb/lisa/kon", period=period), inventory, conn
         )
 
         assert result.manifest is None
@@ -1039,19 +1051,23 @@ class TestCliAdapter:
             "project_unreadable"
         )
 
+    @pytest.mark.parametrize("period", ["notaperiod", "_default"])
     def test_structurally_invalid_project_exits_config(
-        self, conn, tmp_path, capsys
+        self, conn, tmp_path, capsys, period
     ) -> None:
         """The shared gate runs before the DB is even opened: a model-valid but
-        structurally invalid spec (a bad period token) never materializes."""
+        structurally invalid spec (a bad period token — the retired
+        whole-history sentinel is now one of those) never materializes."""
         import json
 
         project = self._project_file(tmp_path)
         spec = json.loads(project.read_text(encoding="utf-8"))
-        spec["sources"][0]["period"] = "notaperiod"
+        spec["sources"][0]["period"] = period
         project.write_text(json.dumps(spec), encoding="utf-8")
 
         code = run(["order", str(project), "--db", self._db_dir(conn, tmp_path)])
 
         assert code == EXIT_CONFIG
-        assert json.loads(capsys.readouterr().out)["error"]["code"] == "project_invalid"
+        payload = json.loads(capsys.readouterr().out)
+        assert payload["error"]["code"] == "project_invalid"
+        assert "entries" not in payload

@@ -41,7 +41,7 @@ let fileInput: HTMLInputElement;
 function onNew(): void {
   // c-i: a new project seeds this deployment's reg_meta release tag + its own
   // steward id (both from /api/context); the steward PICKER is c-ii. The
-  // Model A schema gate is baked into the skeleton (`schema_version` 2.0.0);
+  // Model A schema gate is baked into the skeleton (`MODEL_A_SCHEMA_VERSION`);
   // the release tag records the deployment's current catalog package.
   projectStore.newProject({
     reg_meta_version: regMetaReleaseTag(regMetaVersion),

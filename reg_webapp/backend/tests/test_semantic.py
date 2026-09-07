@@ -36,7 +36,6 @@ def catalog(catalog_db):
     [
         (2018, "2018"),
         ("HT2020", "HT2020"),
-        ("_default", "_default"),
     ],
 )
 def test_period_display_scalar(period, expected):
@@ -381,9 +380,9 @@ def test_unknown_representation_is_flagged(multi_representation_catalog):
 
 # ── A version TRANSITION (sequential, non-overlapping) is drift, NOT a
 # co-delivery ambiguity. resolve_at returns every state whose validity intersects
-# the period, so a range / `_default` period crossing a re-version matches several
-# SEQUENTIAL states; their distinct version labels must NOT trip the (blocking)
-# ambiguity error — only OVERLAPPING (co-delivered) versions do.
+# the period, so a range period crossing a re-version matches several SEQUENTIAL
+# states; their distinct version labels must NOT trip the (blocking) ambiguity
+# error — only OVERLAPPING (co-delivered) versions do.
 
 
 @pytest.fixture
@@ -436,20 +435,6 @@ def test_range_crossing_version_transition_is_drift_not_ambiguous(transition_cat
     )
     assert "2014..2018" in drift.message, drift.message
     assert "PeriodRange" not in drift.message and "from_=" not in drift.message
-
-
-def test_default_period_over_version_history_is_not_ambiguous(transition_catalog):
-    # `_default` returns the full (sequential) history; distinct labels across
-    # non-overlapping states must NOT trip the ambiguity error.
-    source = {
-        "name": "s",
-        "register_variant": "scb/lisa/individer-15plus",
-        "period": "_default",
-        "bindings": [{"variable": "scb/lisa/kon", "type": "categorical"}],
-    }
-    result = validate_semantic(_project([source]), transition_catalog)
-    assert "binding_value_set_version_ambiguous" not in {i.code for i in result.issues}
-    assert result.ok
 
 
 @pytest.fixture
@@ -552,28 +537,6 @@ def test_representation_under_covering_range_is_drift(uneven_representation_cata
     assert result.ok
 
 
-def test_representation_under_covering_default_is_drift(uneven_representation_catalog):
-    # `_default` returns the full history (kon 2010+), so picking kon_detalj (2018+)
-    # under-covers it too — the coverage check must treat `_default` like a range.
-    source = {
-        "name": "s",
-        "register_variant": "scb/lisa/individer-15plus",
-        "period": "_default",
-        "bindings": [
-            {
-                "variable": "scb/lisa/kon",
-                "type": "categorical",
-                "representation": "kon_detalj",
-            }
-        ],
-    }
-    result = validate_semantic(_project([source]), uneven_representation_catalog)
-    codes = {i.code for i in result.issues}
-    assert "binding_value_set_version_ambiguous" not in codes
-    assert "binding_state_drifts_within_period" in codes
-    assert result.ok
-
-
 @pytest.fixture
 def representation_internal_gap_catalog():
     """The PINNED column `kon` is delivered in TWO disjoint windows (2010-2012 and
@@ -648,36 +611,6 @@ def test_representation_internal_gap_in_range_is_drift(
     assert result.ok
 
 
-def test_representation_internal_gap_in_default_is_drift(
-    representation_internal_gap_catalog,
-):
-    # #465: `_default` compares the pinned column against the full state history.
-    # The upper bound is the open-end sentinel, so this also exercises the
-    # sentinel-safe gap cursor.
-    source = {
-        "name": "s",
-        "register_variant": "scb/lisa/individer-15plus",
-        "period": "_default",
-        "bindings": [
-            {
-                "variable": "scb/lisa/kon",
-                "type": "categorical",
-                "representation": "kon",
-            }
-        ],
-    }
-    result = validate_semantic(_project([source]), representation_internal_gap_catalog)
-    drift = [
-        i
-        for i in result.issues
-        if i.code == "binding_state_drifts_within_period"
-        and "covers only part of period _default" in i.message
-    ]
-    assert len(drift) == 1
-    assert "binding_value_set_version_ambiguous" not in {i.code for i in result.issues}
-    assert result.ok
-
-
 def test_representation_internal_gap_in_list_range_segment_is_drift(
     representation_internal_gap_catalog,
 ):
@@ -731,16 +664,16 @@ def test_representation_full_coverage_range_is_no_drift(
     assert result.ok
 
 
-def test_representation_full_default_coverage_to_open_end_is_no_drift(
+def test_representation_full_coverage_to_open_end_is_no_drift(
     uneven_representation_catalog,
 ):
-    # Pinning the long-lived column covers the `_default` bounds through
-    # 9999-12-31. This guards both overflow and a spurious one-day trailing gap at
-    # the open-end sentinel.
+    # Pinning the long-lived column covers the requested range inside an
+    # open-ended (`9999-12-31`) state. This guards both overflow and a spurious
+    # one-day trailing gap at the open-end sentinel.
     source = {
         "name": "s",
         "register_variant": "scb/lisa/individer-15plus",
-        "period": "_default",
+        "period": {"from": 2010, "to": 2020},
         "bindings": [
             {
                 "variable": "scb/lisa/kon",
@@ -835,13 +768,13 @@ def synthesized_feb_end_catalog():
         conn.close()
 
 
-def test_representation_default_with_synthesized_feb_end_does_not_crash(
+def test_representation_with_synthesized_feb_end_does_not_crash(
     synthesized_feb_end_catalog,
 ):
     source = {
         "name": "s",
         "register_variant": "scb/lisa/individer-15plus",
-        "period": "_default",
+        "period": {"from": 2019, "to": 2019},
         "bindings": [
             {
                 "variable": "scb/lisa/kon",
@@ -851,18 +784,23 @@ def test_representation_default_with_synthesized_feb_end_does_not_crash(
         ],
     }
     result = validate_semantic(_project([source]), synthesized_feb_end_catalog)
-    assert result.issues == ()
+    # The state's non-calendar `2019-02-29` upper bound is snapped, so the gap
+    # math runs: the concept simply under-covers the requested year (info).
+    assert [(i.code, i.level) for i in result.issues] == [
+        ("range_period_partially_covered", "info")
+    ]
     assert result.ok
 
 
-def test_representation_default_merged_family_uses_expanded_windows(catalog):
+def test_representation_merged_family_uses_expanded_windows(catalog):
     # #319/#465: lonfink is one annual state expanded into Jan/Feb/Mars windows
-    # sharing the same state_id. `_default` must compare the expanded windows, not
-    # collapse them by state_id before checking a pinned representation.
+    # sharing the same state_id. A range spanning them must compare the expanded
+    # windows, not collapse them by state_id before checking a pinned
+    # representation (collapsed, the annual state would look fully covering).
     source = {
         "name": "s",
         "register_variant": "scb/lisa/individer-15plus",
-        "period": "_default",
+        "period": {"from": "2018-01", "to": "2018-03"},
         "bindings": [
             {
                 "variable": "scb/lisa/lonfink",
@@ -876,7 +814,7 @@ def test_representation_default_merged_family_uses_expanded_windows(catalog):
         i
         for i in result.issues
         if i.code == "binding_state_drifts_within_period"
-        and "covers only part of period _default" in i.message
+        and "covers only part of period 2018-01..2018-03" in i.message
     ]
     assert len(drift) == 1
     assert result.ok
@@ -941,13 +879,6 @@ def test_zero_coverage_is_only_period_outside_state_validity(catalog):
 def test_point_period_has_no_partial_finding(catalog):
     # A point period is a single instant — no requested span to under-cover.
     result = validate_semantic(_project([_kon_source(2018)]), catalog)
-    assert "range_period_partially_covered" not in {i.code for i in result.issues}
-
-
-def test_default_period_has_no_partial_finding(catalog):
-    # `_default` means "the full history" — there is no author-requested window to
-    # compare against, so the whole-concept partial-coverage check must not fire.
-    result = validate_semantic(_project([_kon_source("_default")]), catalog)
     assert "range_period_partially_covered" not in {i.code for i in result.issues}
 
 

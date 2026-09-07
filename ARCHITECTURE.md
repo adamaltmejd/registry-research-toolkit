@@ -173,8 +173,9 @@ mechanisms are documented in the owning DESIGN.md and only summarized here.
   `[tool.uv.sources]` in the workspace, and exact pins would force monorepo-wide
   lockstep without enabling out-of-workspace builds. `reg_meta_build` releases
   independently (it produces the DB asset `reg_meta` fetches). Schema breakage is
-  signalled by `project_data.json`'s `schema_version` (major 2 = Model A); per the
-  compatibility policy below, v1 ships no migration shims.
+  signalled by `project_data.json`'s `schema_version` (major 2+ = Model A — 3 since
+  `Source.period` became finite-only); per the compatibility policy below, v1 ships no
+  migration shims.
 
 ## API style
 

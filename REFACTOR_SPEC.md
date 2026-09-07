@@ -234,10 +234,9 @@ contract.
 
 Rules:
 
-- every researcher project declares an explicit requested period. Once the
-  pseudo-project steward filter is removed, remove `"_default"` from
-  `ProjectData.Source.period` rather than preserving a structurally valid but
-  non-orderable project state;
+- every researcher project declares an explicit requested period. `"_default"` was
+  removed from `ProjectData.Source.period` once the pseudo-project steward filter was,
+  rather than preserving a structurally valid but non-orderable project state;
 - the SPA's common study window is an authoring default, not hidden schema inheritance.
   When a source has any overlap, adding it persists the full available intersection by
   default, preserving every disjoint segment. With no overlap, block the add and explain

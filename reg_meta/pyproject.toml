@@ -26,7 +26,7 @@ classifiers = [
 # workspace root only overrides that resolution for in-repo work.
 dependencies = [
     "pydantic>=2.13.4",
-    "reg-schema>=2.0.0",
+    "reg-schema>=3.0.0",
     "zstandard>=0.23",
 ]
 

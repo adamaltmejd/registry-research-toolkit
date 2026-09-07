@@ -77,8 +77,8 @@ const LIST_SEP = ",";
 const DEFAULT_SENTINEL = "_default";
 
 /** One period SEGMENT looks valid: a single token or a `<token>..<token>`
- * range. `_default` is NOT a segment (it is the whole-history sentinel, only
- * legal at the top level — mirrors the backend's list-member rule). */
+ * range. `_default` is NOT a segment (the catalog `?period` takes the
+ * whole-history sentinel whole-value-only — mirrors `period_param.py`). */
 function looksLikeSegment(value: string): boolean {
   if (value.includes(RANGE_SEP)) {
     const parts = value.split(RANGE_SEP);
@@ -127,16 +127,16 @@ function periodSegmentBounds(segment: string): PeriodBounds | null {
 }
 
 /** Strict client-side mirror for places that write `?period` directly into
- * project_data. Unlike `looksLikePeriod`, this enforces the backend's list-level
- * sorted/non-overlap invariant so grammar-looking values such as `2020,2019`
- * stay presentation-only until the user fixes them. */
+ * project_data. Unlike `looksLikePeriod` (the CATALOG wire grammar, sentinel
+ * included), every member here must expand to FINITE bounds — which is exactly
+ * what keeps `_default` out: it is browse state, not a `Source.period`. This
+ * also enforces the backend's list-level sorted/non-overlap invariant so
+ * grammar-looking values such as `2020,2019` stay presentation-only until the
+ * user fixes them. */
 export function isStructurallyValidPeriodWire(raw: string): boolean {
   const value = raw.trim();
   if (!looksLikePeriod(value)) {
     return false;
-  }
-  if (value === DEFAULT_SENTINEL) {
-    return true;
   }
   let previousTo: string | null = null;
   for (const member of value.split(LIST_SEP)) {
@@ -321,15 +321,14 @@ export function periodRangeEndpoints(wire: string): [string, string] | null {
 }
 
 /** Convert a structured `Source.period` (int | token-string | {from,to} |
- * "_default" | segment list) into the wire `?period` string (a bare year, a
- * `from..to` range, a token, `_default`, or — for the #307 list form — the
- * comma-joined member wires, `2005..2010,2015..2020`). Returns `null` when the
- * period can't form a resolvable query (blank / malformed / a list with a
- * malformed member) — the picker then can't derive-on-pick and shows its "set
- * the period" hint. The ONE wire for display, round-trip, AND resolve: the
- * catalog `?period=` accepts the comma form since #340 (per-segment resolve,
- * state_id-deduped union). ADVISORY shaping only; the backend is the
- * canonical period validator. */
+ * segment list) into the wire `?period` string (a bare year, a `from..to`
+ * range, a token, or — for the #307 list form — the comma-joined member wires,
+ * `2005..2010,2015..2020`). Returns `null` when the period can't form a
+ * resolvable query (blank / malformed / a list with a malformed member) — the
+ * picker then can't derive-on-pick and shows its "set the period" hint. The ONE
+ * wire for display, round-trip, AND resolve: the catalog `?period=` accepts the
+ * comma form since #340 (per-segment resolve, state_id-deduped union). ADVISORY
+ * shaping only; the backend is the canonical period validator. */
 export function periodToWire(period: Period): string | null {
   if (Array.isArray(period)) {
     if (period.length === 0) {
@@ -375,9 +374,8 @@ export function periodToWire(period: Period): string | null {
  *   - a comma-joined LIST wire (`"2005..2010,2015..2020"`, the #307
  *     interrupted-series form) → an array of segments, each member shaped by
  *     the same scalar rules (a blank member rides through as the raw string);
- *   - anything else — a non-year token (`"HT2018"`, `"2019-03"`), a `_default`
- *     sentinel, or a malformed multi-`..` string — rides through as the raw
- *     single-token string.
+ *   - anything else — a non-year token (`"HT2018"`, `"2019-03"`) or a malformed
+ *     multi-`..` string — rides through as the raw single-token string.
  * A null/blank wire string yields `""` (the fresh-source unset period: PR B's
  * unresolved marker + amber hint then guide the user). ADVISORY shaping only — the
  * backend is the canonical period validator. */
@@ -437,14 +435,14 @@ function yearInt(raw: string): number | null {
 // (not `(variant, period)`), so a second add of the same variant with a DISJOINT
 // window EXTENDS the source's period into the #307 interrupted-series list form
 // rather than minting a duplicate source. This is pure year-grammar arithmetic;
-// the token/sub-annual/`_default` grammars are NOT coalesceable here (a
-// mixed-grain sort is undefined — the documented footgun), so a period touching
-// any of those is REPLACED wholesale by the incoming window instead.
+// the token/sub-annual grammars are NOT coalesceable here (a mixed-grain sort is
+// undefined — the documented footgun), so a period touching any of those is
+// REPLACED wholesale by the incoming window instead.
 
 /** One year endpoint as an int, accepting BOTH a year `number` and a
  * numeric-string grammar year (`"2020"` → 2020 — the structural grammar +
  * `periodToWire` accept string year endpoints, so `Source.period` validly carries
- * them). A NON-year token string (`"HT2020"`, `"2020-Q3"`, `"_default"`) → null.
+ * them). A NON-year token string (`"HT2020"`, `"2020-Q3"`) → null.
  * `grammarYear` bounds the string arm to 19xx/20xx so a typo like `"202"` stays
  * disqualifying. */
 function yearEndpointInt(value: number | string): number | null {
@@ -454,12 +452,13 @@ function yearEndpointInt(value: number | string): number | null {
   return grammarYear(value);
 }
 
-/** One year interval `[lo, hi]` (inclusive, ascending) a year-only period segment
- * denotes — or `null` when the segment is NOT pure year grammar (a non-year token
- * string, `_default`, or a range with a non-year endpoint). A bare year int/string
- * → `[y, y]`; a `{from, to}` of two grammar years (int OR numeric-string) → that
- * span. A numeric-string year (`"2020"`) parses like the int form (both are valid
- * `Source.period` year shapes); anything not a 19xx/20xx year disqualifies. */
+/** One year interval `[lo, hi]` (inclusive, ascending) a year-only period
+ * segment denotes — or `null` when the segment is NOT pure year grammar (a
+ * non-year token string, or a range with a non-year endpoint). A bare year
+ * int/string → `[y, y]`; a `{from, to}` of two grammar years (int OR
+ * numeric-string) → that span. A numeric-string year (`"2020"`) parses like the
+ * int form (both are valid `Source.period` year shapes); anything not a
+ * 19xx/20xx year disqualifies. */
 function yearIntervalOf(segment: PeriodSegment): [number, number] | null {
   if (typeof segment === "number" || typeof segment === "string") {
     const y = yearEndpointInt(segment);
@@ -477,8 +476,8 @@ function yearIntervalOf(segment: PeriodSegment): [number, number] | null {
 }
 
 /** The year intervals of a whole period, or `null` when ANY segment is not pure
- * year grammar (so the caller falls back to REPLACE — a single token/`_default`
- * poisons the coalesce, same all-or-nothing rule as `periodWireBounds`). */
+ * year grammar (so the caller falls back to REPLACE — a single token poisons the
+ * coalesce, same all-or-nothing rule as `periodWireBounds`). */
 function yearIntervalsOf(period: Period): [number, number][] | null {
   const segments = Array.isArray(period) ? period : [period];
   const intervals: [number, number][] = [];
@@ -515,8 +514,8 @@ function coalesceYearIntervals(
 }
 
 /** The year intervals of a whole `Source.period` when every segment is
- * year-shaped, coalesced and sorted. Token periods (`HT2020`, `2020-Q3`,
- * `_default`) are intentionally skipped rather than guessed. */
+ * year-shaped, coalesced and sorted. Token periods (`HT2020`, `2020-Q3`) are
+ * intentionally skipped rather than guessed. */
 export function periodYearIntervals(period: Period): StudyWindow[] | null {
   const intervals = yearIntervalsOf(period);
   if (intervals === null || intervals.length === 0) {
@@ -527,7 +526,7 @@ export function periodYearIntervals(period: Period): StudyWindow[] | null {
 
 /** The outer year bounds of a whole `Source.period` when every segment is
  * year-shaped (ints and `{from,to}` year ranges), else `null`. Used by the
- * project-cart outer-bound hint. Token periods (`HT2020`, `2020-Q3`, `_default`) are
+ * project-cart outer-bound hint. Token periods (`HT2020`, `2020-Q3`) are
  * intentionally skipped rather than guessed. */
 export function periodYearCoverage(period: Period): StudyWindow | null {
   const intervals = periodYearIntervals(period);
@@ -561,13 +560,13 @@ function isEmptyPeriod(period: Period): boolean {
 
 /**
  * Merge an `incoming` window into an `existing` source period (#992). When BOTH
- * are pure year grammar (year ints / year ranges, no tokens / `_default`),
- * coalesce their intervals into a single sorted-ascending, non-overlapping,
- * adjacency-merged list (reg_schema requires list periods sorted + disjoint) — a
- * lone surviving interval collapses to a scalar, matching how `periodFromWire`
- * represents a single segment. When EITHER side uses token grammar or `_default`,
- * a coalesce is undefined (mixed-grain sort), so REPLACE with `incoming` — the
- * user's most recent explicit window wins. Pure — unit-tested in `period.test.ts`.
+ * are pure year grammar (year ints / year ranges, no tokens), coalesce their
+ * intervals into a single sorted-ascending, non-overlapping, adjacency-merged
+ * list (reg_schema requires list periods sorted + disjoint) — a lone surviving
+ * interval collapses to a scalar, matching how `periodFromWire` represents a
+ * single segment. When EITHER side uses token grammar, a coalesce is undefined
+ * (mixed-grain sort), so REPLACE with `incoming` — the user's most recent
+ * explicit window wins. Pure — unit-tested in `period.test.ts`.
  */
 export function mergePeriods(existing: Period, incoming: Period): Period {
   // An UNSET incoming period must not wipe a valid existing one (a catalog row with
@@ -591,27 +590,19 @@ export function mergePeriods(existing: Period, incoming: Period): Period {
   return segments.length === 1 ? segments[0] : segments;
 }
 
-interface BoundedPeriodSegment {
+export interface BoundedPeriodSegment {
   wire: string;
   bounds: PeriodBounds;
 }
 
 /** Extend source-period coverage to include both periods. This keeps
- * `mergePeriods`' token/default replacement contract for callers that really want
+ * `mergePeriods`' token replacement contract for callers that really want
  * "latest explicit period wins", while staged source accumulation can preserve
  * every selected token/list window it resolves bindings against. */
 export function periodCoverageUnion(
   existing: Period,
   incoming: Period,
 ): Period {
-  const existingWire = periodToWire(existing);
-  const incomingWire = periodToWire(incoming);
-  if (existingWire === DEFAULT_SENTINEL) {
-    return existing;
-  }
-  if (incomingWire === DEFAULT_SENTINEL) {
-    return incoming;
-  }
   const existingYears = yearIntervalsOf(existing);
   const incomingYears = yearIntervalsOf(incoming);
   if (existingYears !== null && incomingYears !== null) {
@@ -623,9 +614,16 @@ export function periodCoverageUnion(
   );
 }
 
-function boundedPeriodSegments(period: Period): BoundedPeriodSegment[] | null {
+/** Every segment of a `Source.period` paired with the inclusive ISO bounds it
+ * denotes, or `null` when the period has no resolvable wire or ANY member fails
+ * to expand (the same all-or-nothing rule as `periodWireBounds`). This is the
+ * one place the wire-split/segment-bounds walk lives — `staged_picker` reuses
+ * it for row-overlap tests. */
+export function boundedPeriodSegments(
+  period: Period,
+): BoundedPeriodSegment[] | null {
   const wire = periodToWire(period);
-  if (!wire || wire === DEFAULT_SENTINEL) {
+  if (!wire) {
     return null;
   }
   const segments: BoundedPeriodSegment[] = [];

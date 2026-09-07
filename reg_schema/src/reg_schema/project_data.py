@@ -87,18 +87,17 @@ class PeriodRange(_Model):
 
 
 # One contiguous piece of a ``Source.period``: bare year, period-token string,
-# or explicit range. The ``"_default"`` snapshot sentinel is a plain string at
-# the top level only — it is NOT a legal list member (structural rule).
+# or explicit range. The ``str`` arm carries the period-token forms; the
+# structural validator owns that grammar (the model only sees a string).
 PeriodSegment = int | str | PeriodRange
 
-# ``Source.period``: a single segment, the ``"_default"`` sentinel (rides the
-# ``str`` arm), or a LIST of segments — an interrupted series (#307, e.g.
+# ``Source.period``: a single segment, or a LIST of segments — an interrupted
+# series (#307, e.g.
 # ``[{"from": 2005, "to": 2010}, {"from": 2015, "to": 2020}]``). The list form
 # keeps one source = one register extraction (panel keys / binding sets are not
 # duplicated across pseudo-sources). Structural rules for the list: non-empty,
-# members are segments (no ``_default``, no nesting), sorted ascending and
-# non-overlapping (adjacency allowed — the wire form stays canonical). Always
-# required.
+# members are segments (no nesting), sorted ascending and non-overlapping
+# (adjacency allowed — the wire form stays canonical). Always required.
 Period = PeriodSegment | tuple[PeriodSegment, ...]
 
 

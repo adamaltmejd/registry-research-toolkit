@@ -291,8 +291,7 @@ def _is_classification_fqid(value: object) -> bool:
 # reg_meta side): the regex only bounds the day 01-31, so an impossible day like
 # `2019-02-29` (non-leap) is rejected by the extra ``date.fromisoformat`` check.
 # The cross-grammar parity test (reg_webapp/backend/tests/test_period_grammar_parity.py)
-# locks the two together. The snapshot sentinel ``_default`` is matched separately
-# (it is not a token form).
+# locks the two together.
 _YEAR = r"(?:19|20)\d{2}"
 _MONTH = r"(?:0[1-9]|1[0-2])"
 _DAY = r"(?:0[1-9]|[12]\d|3[01])"
@@ -313,7 +312,7 @@ def _is_int_literal(value: object) -> bool:
 
 
 def _is_period_endpoint(value: object) -> bool:
-    """A period int or period-token string (range endpoints; no ``_default``)."""
+    """A period int or period-token string (range endpoints)."""
     if _is_int_literal(value):
         return True
     if not (isinstance(value, str) and _PERIOD_TOKEN.match(value)):
@@ -403,8 +402,8 @@ def _is_period_segment(value: object) -> bool:
     """One contiguous piece of a ``Source.period``: an int year, a period
     token, or a ``{"from","to"}`` range — the single definition of "segment"
     the list rule keys on (mirrors the ``PeriodSegment`` alias on the Pydantic
-    side). ``"_default"`` and nested lists are NOT segments; a new top-level
-    period form must be added here deliberately to become list-legal."""
+    side). A nested list is NOT a segment; a new top-level period form must be
+    added here deliberately to become list-legal."""
     return _is_period_endpoint(value) or _is_period_range_obj(value)
 
 
@@ -417,8 +416,7 @@ def _check_period_list(
 
     - non-empty;
     - every member is a period SEGMENT — an int year, a period token, or a
-      ``{"from","to"}`` range. ``"_default"`` (whole-history makes no sense as
-      one piece of a series) and nested lists are not segments;
+      ``{"from","to"}`` range. Nested lists are not segments;
     - members are SORTED ascending by their lower bound and NON-OVERLAPPING
       (each member's upper bound lexically below the next member's lower
       bound). Adjacent segments (``2005..2010, 2011..2015``) are allowed — the
@@ -451,8 +449,8 @@ def _check_period_list(
                 "invalid_period",
                 f"{path}/{i}",
                 "period list member must be an int year, a period-token string, "
-                "or a {'from','to'} range object ('_default' and nested lists "
-                "are not segments)",
+                "or a {'from','to'} range object (a nested list is not a "
+                "segment)",
             )
         )
     if not members_ok:
@@ -501,9 +499,9 @@ def _check_period_list(
 
 
 def _check_period(period: object, base: str, issues: list[ValidationIssue]) -> None:
-    """Validate ``Source.period``: int / period-token / range / sentinel / list."""
+    """Validate ``Source.period``: int / period-token / range / list."""
     path = f"{base}/period"
-    if _is_period_endpoint(period) or period == "_default":
+    if _is_period_endpoint(period):
         return
     if isinstance(period, str):
         issues.append(
@@ -512,7 +510,7 @@ def _check_period(period: object, base: str, issues: list[ValidationIssue]) -> N
                 path,
                 f"period string {period!r} must match a period grammar form "
                 "(YYYY, YYYY-MM, YYYY-MM-DD, HTYYYY, VTYYYY, YYYY-Q[1-4], "
-                "YYYY-H[12]) or the snapshot sentinel '_default'",
+                "YYYY-H[12])",
             )
         )
         return

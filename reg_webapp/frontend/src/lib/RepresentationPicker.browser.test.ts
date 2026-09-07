@@ -3450,7 +3450,7 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
             variable: band.key,
             representation: null,
             sourceName: "Source",
-            sourcePeriod: "_default",
+            sourcePeriod: 2020,
           },
         ];
       }),

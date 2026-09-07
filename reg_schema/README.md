@@ -10,7 +10,7 @@ direction.
 
 ## Status
 
-v2.0.0 — Model A grammar. The surface: the §6.8.0 cross-runtime contract
+v3.0.0 — Model A grammar. The surface: the §6.8.0 cross-runtime contract
 (`ValidationIssue`, `ValidationResult`), the Pydantic v2 models (`ProjectData`,
 `Source`, `Binding`, `Panel`, `PanelMember`, `Period`, `PeriodRange`, `LiteralPeriod`,
 plus the `EntityKey` / `TimeKey` / `TimePoint` aliases), and the unified

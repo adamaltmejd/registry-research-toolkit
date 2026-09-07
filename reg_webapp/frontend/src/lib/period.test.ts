@@ -31,7 +31,6 @@ describe("periodToWire (Source.period → ?period wire string)", () => {
   it("a token string → trimmed; blank → null", () => {
     expect(periodToWire("2020-Q1")).toBe("2020-Q1");
     expect(periodToWire("  2019  ")).toBe("2019");
-    expect(periodToWire("_default")).toBe("_default");
     expect(periodToWire("")).toBeNull();
     expect(periodToWire("   ")).toBeNull();
   });
@@ -77,7 +76,6 @@ describe("periodFromWire (?period wire string → Source.period, C1 prefill)", (
   it("a non-year token rides through as the raw string (token mode)", () => {
     expect(periodFromWire("HT2018")).toBe("HT2018");
     expect(periodFromWire("2019-03")).toBe("2019-03");
-    expect(periodFromWire("_default")).toBe("_default");
   });
 
   it("a token-endpoint range becomes the {from,to} object (the only valid range shape for Source.period)", () => {
@@ -245,11 +243,17 @@ describe("looksLikePeriod (advisory period grammar)", () => {
 });
 
 describe("isStructurallyValidPeriodWire", () => {
-  it("accepts sorted non-overlapping period wires and the default sentinel", () => {
+  it("accepts sorted non-overlapping period wires", () => {
     expect(isStructurallyValidPeriodWire("2020")).toBe(true);
     expect(isStructurallyValidPeriodWire("2019-03..2019-06")).toBe(true);
     expect(isStructurallyValidPeriodWire("2005..2010,2015..2020")).toBe(true);
-    expect(isStructurallyValidPeriodWire("_default")).toBe(true);
+  });
+
+  it("rejects the whole-history sentinel — a project period is finite", () => {
+    // `_default` stays a valid CATALOG browse wire (`looksLikePeriod`), but it
+    // is not a `Source.period` any more, so nothing may write it into a draft.
+    expect(looksLikePeriod("_default")).toBe(true);
+    expect(isStructurallyValidPeriodWire("_default")).toBe(false);
   });
 
   it("rejects grammar-looking lists that are unsorted or overlapping", () => {
@@ -853,9 +857,8 @@ describe("periodYearCoverage", () => {
     });
   });
 
-  it("returns null for token, _default, and mixed-token periods", () => {
+  it("returns null for token and mixed-token periods", () => {
     expect(periodYearCoverage("HT2020")).toBeNull();
-    expect(periodYearCoverage("_default")).toBeNull();
     expect(periodYearCoverage([2018, "2020-Q3"])).toBeNull();
   });
 });
@@ -874,9 +877,8 @@ describe("periodYearIntervals", () => {
     ]);
   });
 
-  it("returns null for token, _default, and mixed-token periods", () => {
+  it("returns null for token and mixed-token periods", () => {
     expect(periodYearIntervals("HT2020")).toBeNull();
-    expect(periodYearIntervals("_default")).toBeNull();
     expect(periodYearIntervals([2018, "2020-Q3"])).toBeNull();
   });
 });
@@ -937,14 +939,6 @@ describe("mergePeriods (#992 find-or-create period extension)", () => {
     expect(mergePeriods("HT2020", 2018)).toBe(2018);
     expect(mergePeriods(2018, "HT2020")).toBe("HT2020");
     expect(mergePeriods("VT2020", "HT2021")).toBe("HT2021");
-  });
-
-  it("REPLACES with incoming when EITHER side is _default", () => {
-    expect(mergePeriods("_default", { from: 2010, to: 2015 })).toEqual({
-      from: 2010,
-      to: 2015,
-    });
-    expect(mergePeriods(2010, "_default")).toBe("_default");
   });
 
   it("REPLACES when a range endpoint is a non-year token (mixed grammar)", () => {

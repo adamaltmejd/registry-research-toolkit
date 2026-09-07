@@ -103,9 +103,10 @@ def test_source_coerces_bindings_list_to_tuple() -> None:
 
 
 def test_source_accepts_period_forms() -> None:
-    # int, period-token string, snapshot sentinel, and range object all
-    # construct (the Period union).
-    for period in (2018, "2018-01", "_default"):
+    # int, period-token string, and range object all construct (the Period
+    # union). The model does not check the token grammar — that separation is
+    # deliberate (see reg_schema/DESIGN.md -> Two layers).
+    for period in (2018, "2018-01"):
         src = Source(
             name="s",
             register_variant="scb/lisa/individer-15plus",

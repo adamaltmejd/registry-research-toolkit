@@ -797,8 +797,9 @@ internals are dataclasses), carrying three maps derived from the inventory's
   not thirty), disjoint ones do **not** — the committed SWECOV inventory has 1614
   coordinates with a real hole (the biennial innovation survey delivers 2002, 2004, 2006
   …), and flattening those to an outer span is precisely the loss this map exists to
-  prevent. Retained for the order lane (Y-31); the validator does **not** gate on it
-  today, because projects still carry the `_default` period sentinel.
+  prevent. Retained for the order lane; the semantic validator does **not** gate on it —
+  period coverage against the steward's physical deliveries is the order materializer's
+  job (REFACTOR_SPEC.md §12).
 - `period_range_by_register` — register FQID → the outer inclusive ISO `(lo, hi)` of its
   coordinates' intervals. Edition-aware by construction (an inventory edition is always
   one explicit finite period, never `_default`), but gap-free by construction too: it is
@@ -1834,24 +1835,23 @@ Rules, walking each source's `register_variant` + every binding:
   (3-segment FQID) resolves to a known variable (following `same_as` links —
   `Catalog.resolve` does that). Unresolved → `fqid_unresolved` (error).
 - The binding resolves to a covering `variable_state` at the source's variant AND
-  period. None → `period_outside_state_validity` (error). A range / `_default` period
-  crossing a state transition (sequential, non-overlapping states) →
+  period. None → `period_outside_state_validity` (error). A range period crossing a
+  state transition (sequential, non-overlapping states) →
   `binding_state_drifts_within_period` (info); the same `(info)` code also fires when a
   pinned `representation` column under-covers the requested range vs a sibling column
   that delivers the shortfall — a leading/trailing gap or **internal** gap inside an
-  explicit range, `_default`'s full-history bounds, or a segment of a list period
-  (#342/#465, gap-based). A **#307 list period** (interrupted series; structurally
-  sorted + disjoint, wire form comma-joined — `2005..2010,2015..2020`) resolves **per
-  segment**: `period_outside_state_validity` and `range_period_partially_covered` fire
-  per uncovered/under-covered segment (naming it), and the PER-INSTANT probes —
-  co-existence/ambiguity, the co-delivered-value-set backstop, the pinned
-  representation's presence — also run per segment (the whole-series union would
-  false-positive on windows overlapping only BETWEEN segments). Only the series-level
-  properties — the resolved columns for steward admission and the sequential-drift info
-  — use the compound-key-deduped union of every segment's states. `Catalog.resolve_at`
-  never sees the list form; since #340 the catalog `?period=` query accepts the comma
-  wire by doing the same per-segment resolve + union in the route (see The `?period`
-  query above).
+  explicit range or a segment of a list period (#342/#465, gap-based). A **#307 list
+  period** (interrupted series; structurally sorted + disjoint, wire form comma-joined —
+  `2005..2010,2015..2020`) resolves **per segment**: `period_outside_state_validity` and
+  `range_period_partially_covered` fire per uncovered/under-covered segment (naming it),
+  and the PER-INSTANT probes — co-existence/ambiguity, the co-delivered-value-set
+  backstop, the pinned representation's presence — also run per segment (the
+  whole-series union would false-positive on windows overlapping only BETWEEN segments).
+  Only the series-level properties — the resolved columns for steward admission and the
+  sequential-drift info — use the compound-key-deduped union of every segment's states.
+  `Catalog.resolve_at` never sees the list form; since #340 the catalog `?period=` query
+  accepts the comma wire by doing the same per-segment resolve + union in the route (see
+  The `?period` query above).
 - Resolved variable metadata can emit non-blocking hints. `deprecated_traversal` (info)
   fires when the binding resolves to a variable marked deprecated; the binding remains
   valid. `variable_replaced` (info) fires when a `variable_replaced_by` edge is
@@ -1984,13 +1984,12 @@ the same variant land in the same source regardless of period; a disjoint window
 folded into the existing source's period via `mergePeriods` (`period.ts`) rather than
 minting a second source: when both periods are pure year grammar it coalesces into the
 sorted, disjoint #307 list form (adjacency-merging touching/overlapping intervals),
-otherwise (either side is token grammar or `_default`) it REPLACES with the incoming
-period, since mixed-grain union has no defined sort. `applyStagedDiff` is now the SOLE
-catalog→project mutation path (the store's earlier single-pick `addFromCatalog` handoff
-was dead since #992/#993 and was deleted in #1104). `updateField` (the project's own
-`name` / `window`) and `removeSource`/`removeBinding` are the only other mutators the
-cart UI calls — a source's own name and period are no longer directly editable in the
-cart.
+otherwise (either side is token grammar) it REPLACES with the incoming period, since
+mixed-grain union has no defined sort. `applyStagedDiff` is now the SOLE catalog→project
+mutation path (the store's earlier single-pick `addFromCatalog` handoff was dead since
+#992/#993 and was deleted in #1104). `updateField` (the project's own `name` / `window`)
+and `removeSource`/`removeBinding` are the only other mutators the cart UI calls — a
+source's own name and period are no longer directly editable in the cart.
 
 ## Browser storage + project-file persistence (the SPA store)
 
@@ -2009,14 +2008,15 @@ rune store holding one draft per session.
   `storeSchemaVersion` (distinct from the project's `schema_version`); `load` restores
   only on a match, else discards the stale-schema draft. This is the store's record
   shape, bumped only when the persisted shape changes.
-- **Project-file version gate.** Model A files carry `schema_version` MAJOR **2**
-  (reg_schema `2.0.0`) plus the deployment's `reg_meta_version` release tag. The SPA
-  **hard-rejects** a file whose `schema_version` major is **1** (pre-Model-A) with a
-  blocking open-error — no migration, pre-v1 policy. The `reg_meta` package may still be
-  `reg_meta/v0.x` while the schema is Model A, so `reg_meta_version` major is not a
-  pre-Model-A signal. (`schema_version` major 1 is the *rejected* pre-Model-A value, not
-  Model A.) Any other version is a neutral no-op: the backend stays the canonical
-  validator.
+- **Project-file version gate.** Model A files carry the reg_schema MAJOR — **3** since
+  `Source.period` became finite-only (reg_schema `3.0.0`), and the major **2** files
+  written before it are still Model A — plus the deployment's `reg_meta_version` release
+  tag. The SPA **hard-rejects** a file whose `schema_version` major is **1**
+  (pre-Model-A) with a blocking open-error — no migration, pre-v1 policy. The `reg_meta`
+  package may still be `reg_meta/v0.x` while the schema is Model A, so
+  `reg_meta_version` major is not a pre-Model-A signal. (`schema_version` major 1 is the
+  *rejected* pre-Model-A value, not Model A.) Any other version — including the seeded
+  major **3** — is a neutral no-op: the backend stays the canonical validator.
 - **Unsaved-changes warning.** A `dirty` flag derives from the draft diverging from the
   last DOWNLOAD baseline (`lastDownloaded`); a `beforeunload` listener prompts on a
   tab/window close with a dirty draft. The store drives the write endpoints (validate /

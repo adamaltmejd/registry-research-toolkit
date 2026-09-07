@@ -45,7 +45,7 @@ describe("newProjectData", () => {
       name: "",
       sources: [],
     });
-    expect(MODEL_A_SCHEMA_VERSION).toBe("2.0.0");
+    expect(MODEL_A_SCHEMA_VERSION).toBe("3.0.0");
   });
 });
 

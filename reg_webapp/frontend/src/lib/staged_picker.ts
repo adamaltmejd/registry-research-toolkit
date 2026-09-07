@@ -8,10 +8,10 @@ import {
   windowsOverlapWindow,
 } from "./catalog";
 import {
+  boundedPeriodSegments,
   type PeriodBounds,
   periodCoverageUnion,
   periodToWire,
-  periodWireBounds,
 } from "./period";
 import {
   isPlainObject,
@@ -92,22 +92,6 @@ function bindingRepresentation(binding: unknown): string | null {
     : null;
 }
 
-function periodBoundsSegments(period: Period): PeriodBounds[] | null {
-  const wire = periodToWire(period);
-  if (!wire || wire === "_default") {
-    return null;
-  }
-  const segments: PeriodBounds[] = [];
-  for (const part of wire.split(",")) {
-    const bounds = periodWireBounds(part);
-    if (!bounds) {
-      return null;
-    }
-    segments.push(bounds);
-  }
-  return segments.length > 0 ? segments : null;
-}
-
 function boundsOverlap(a: PeriodBounds, b: PeriodBounds): boolean {
   return a.from <= b.to && b.from <= a.to;
 }
@@ -120,16 +104,13 @@ function rowWindowBounds(row: PickerRepresentation): PeriodBounds[] {
 }
 
 function rowOverlapsPeriod(row: PickerRepresentation, period: Period): boolean {
-  if (periodToWire(period) === "_default") {
-    return true;
-  }
-  const sourceBounds = periodBoundsSegments(period);
-  if (!sourceBounds) {
+  const segments = boundedPeriodSegments(period);
+  if (!segments) {
     return false;
   }
   const windows = rowWindowBounds(row);
-  return sourceBounds.some((sourceWindow) =>
-    windows.some((rowWindow) => boundsOverlap(sourceWindow, rowWindow)),
+  return segments.some((segment) =>
+    windows.some((rowWindow) => boundsOverlap(segment.bounds, rowWindow)),
   );
 }
 

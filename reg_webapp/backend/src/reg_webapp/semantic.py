@@ -202,14 +202,14 @@ def period_display(period: SchemaPeriod) -> str:
     order manifest, never a Python ``repr``.
 
     A ``PeriodRange`` renders as ``"<from>..<to>"`` (literal ``..``, matching the
-    ``?period=`` range form a researcher already sees in the URL); int / str
-    (incl. the ``"_default"`` sentinel) → ``str()``; the LIST form (#307,
-    an interrupted series) comma-joins its members — ``2005..2010,2015..2020``
-    is the decided wire grammar for a disjoint period set (the catalog
-    ``?period=`` query does NOT accept it yet; project-schema support came
-    first). We deliberately use the wire grammar rather than the ``repr`` so
-    messages that travel through the API to CLI consumers and the SPA findings
-    panel read as ``2015..2020``, not ``PeriodRange(from_=2015, to=2020)``."""
+    ``?period=`` range form a researcher already sees in the URL); int / str →
+    ``str()``; the LIST form (#307, an interrupted series) comma-joins its
+    members — ``2005..2010,2015..2020`` is the decided wire grammar for a
+    disjoint period set (the catalog ``?period=`` query does NOT accept it yet;
+    project-schema support came first). We deliberately use the wire grammar
+    rather than the ``repr`` so messages that travel through the API to CLI
+    consumers and the SPA findings panel read as ``2015..2020``, not
+    ``PeriodRange(from_=2015, to=2020)``."""
     if isinstance(period, (int, str)):
         return str(period)
     if isinstance(period, tuple):
@@ -233,8 +233,7 @@ def period_for_resolve(period: int | str | PeriodRange) -> Period:
     the #307 list form — never the list itself; callers iterate
     `period_segments`) into the polymorphic `Period` `Catalog.resolve_at`
     expects (`int | str | dict`). A `PeriodRange` becomes a `{"from", "to"}`
-    dict; int / str pass through (the `_default` sentinel rides through as a
-    plain str — `resolve_at` treats it as no-period-filter)."""
+    dict; int / str pass through."""
     if isinstance(period, (int, str)):
         return period
     # PeriodRange: `from_` is the Python-safe alias of the wire key `from`.
@@ -264,52 +263,35 @@ def _requested_range_bounds(period: PeriodRange) -> tuple[str, str]:
     return lo, snap_to_real_month_end(hi)
 
 
-def _period_segment_bounds(period: int | str | PeriodRange) -> tuple[str, str] | None:
-    """Inclusive ISO bounds for one source-period segment, or None for `_default`.
+def _period_segment_bounds(period: int | str | PeriodRange) -> tuple[str, str]:
+    """Inclusive ISO bounds for one source-period segment.
 
-    The scalar `int | str` arms are intentionally used only when the caller is
-    already iterating a LIST period: standalone scalar periods keep their older
+    The COVERAGE checks reach for the scalar `int | str` arms only while they
+    are iterating a LIST period: standalone scalar periods keep their older
     point/token semantics for representation drift, while a list segment names a
-    requested interval whose leading/trailing representation gaps can be lost."""
+    requested interval whose leading/trailing representation gaps can be lost.
+    (Year extraction for replacement gating is grain-independent, so
+    `_period_end_year` below uses every arm.)"""
     if isinstance(period, PeriodRange):
         return _requested_range_bounds(period)
-    if period == "_default":
-        return None
     lo, hi = _endpoint_bounds(period)
     return lo, snap_to_real_month_end(hi)
 
 
-def _period_end_year(period: SchemaPeriod) -> int | None:
-    """Latest requested year for replacement-hint gating.
-
-    ``None`` means `_default`/full-history: any dated successor is relevant.
-    """
-    if period == "_default":
-        return None
+def _period_end_year(period: SchemaPeriod) -> int:
+    """Latest requested year for replacement-hint gating."""
     if isinstance(period, tuple):
-        ends = [_period_end_year(segment) for segment in period]
-        finite = [end for end in ends if end is not None]
-        return max(finite) if finite else None
-    if isinstance(period, int):
-        return period
-    if isinstance(period, str):
-        _lo, hi = period_token_to_bounds(period)
-        return int(hi[:4])
-    _lo, hi = _requested_range_bounds(period)
-    return int(hi[:4])
+        return max(_period_end_year(segment) for segment in period)
+    return int(_period_segment_bounds(period)[1][:4])
 
 
 def _replacement_applies(effective_year: int | None, period: SchemaPeriod) -> bool:
     """Whether a succession edge is effective by the requested period."""
     if effective_year is None:
-        return period == "_default"
-    end_year = _period_end_year(period)
-    return end_year is None or effective_year <= end_year
-
-
-def _state_union_bounds(states) -> tuple[str, str]:
-    """Inclusive ISO bounds spanning a non-empty set of variable states."""
-    return min(s.valid_from for s in states), max(s.valid_to for s in states)
+        # An undated succession is not tied to any requested year, so it never
+        # qualifies against a concrete period.
+        return False
+    return effective_year <= _period_end_year(period)
 
 
 def _has_codelivered_versions(states) -> bool:
@@ -642,10 +624,8 @@ def _check_binding_period(
         # coverage of a segment is `period_outside_state_validity` below; this
         # fires only on a PROPER gap inside a requested range. Scoped to an
         # explicit `PeriodRange` segment: a point/token segment is a single
-        # instant (no requested span to under-cover) and `_default` means "the
-        # full history", which has no author-requested window to compare
-        # against. This is distinct from #204's
-        # `binding_state_drifts_within_period`, which is about the CHOSEN
+        # instant (no requested span to under-cover). This is distinct from
+        # #204's `binding_state_drifts_within_period`, which is about the CHOSEN
         # representation under-covering vs a SIBLING column that DOES deliver
         # the gap.
         #
@@ -727,8 +707,8 @@ def _check_binding_period(
         # only intersecting states, so narrowing to `matched` can silently drop a
         # sub-range the column doesn't cover (e.g. SSYK5 from 2014 under a 2010–2020
         # binding → 2010–2013 lost). Surface it as info. A point int/token period
-        # keeps its older point/token behavior; explicit ranges, `_default`
-        # full-history bounds, and all segments of a list have spans to compare.
+        # keeps its older point/token behavior; explicit ranges and all segments
+        # of a list have spans to compare.
         #
         # Comparing only OUTER bounds misses an INTERNAL gap: a column delivering
         # 2010–2012 AND 2018–9999 (two disjoint states) can have the same
@@ -740,19 +720,12 @@ def _check_binding_period(
         # are checked independently; a segment with NO pinned state stays owned by
         # the per-segment presence loop below to avoid double-reporting.
         under_covered_periods: list[tuple[int | str | PeriodRange, str]] = []
-        if source.period == "_default":
-            lo, hi = _state_union_bounds(states)
-            if _representation_under_covers(matched, states, lo, hi):
-                under_covered_periods.append((source.period, ""))
-        elif isinstance(source.period, PeriodRange):
+        if isinstance(source.period, PeriodRange):
             lo, hi = _requested_range_bounds(source.period)
             if _representation_under_covers(matched, states, lo, hi):
                 under_covered_periods.append((source.period, ""))
         elif isinstance(source.period, tuple):
             for segment, seg_states in per_segment:
-                bounds = _period_segment_bounds(segment)
-                if bounds is None:
-                    continue
                 seg_matched = [
                     s
                     for s in seg_states
@@ -760,7 +733,7 @@ def _check_binding_period(
                 ]
                 if not seg_matched:
                     continue
-                lo, hi = bounds
+                lo, hi = _period_segment_bounds(segment)
                 if _representation_under_covers(seg_matched, seg_states, lo, hi):
                     under_covered_periods.append((segment, series_context))
 
@@ -869,10 +842,10 @@ def _check_binding_period(
         # denotes, so the resolved columns are still good for admission.
         return frozenset(s.delivery_column_name for s in states)
 
-    # Drift (info): a range / `_default` period crossing a state transition
-    # resolves to several SEQUENTIAL states (non-overlapping windows) on ONE column,
-    # possibly differing on version label (a re-version) or shape — informational;
-    # the resolver returns the per-state subsets at extract time.
+    # Drift (info): a range period crossing a state transition resolves to
+    # several SEQUENTIAL states (non-overlapping windows) on ONE column, possibly
+    # differing on version label (a re-version) or shape — informational; the
+    # resolver returns the per-state subsets at extract time.
     if len(states) > 1:
         issues.append(
             _issue(

@@ -1,4 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { MODEL_A_SCHEMA_VERSION } from "./project_data";
 import {
   checkVersionGate,
   initPersistence,
@@ -122,7 +123,7 @@ describe("newProject", () => {
   it("loads a clean Model A skeleton (not dirty)", () => {
     projectStore.newProject(SEED);
     expect(projectStore.draft).not.toBeNull();
-    expect(projectStore.draft?.schema_version).toBe("2.0.0");
+    expect(projectStore.draft?.schema_version).toBe(MODEL_A_SCHEMA_VERSION);
     expect(projectStore.draft?.reg_meta_version).toBe("reg_meta/v1.0.0");
     expect(projectStore.dirty).toBe(false);
     expect(projectStore.openError).toBeNull();
@@ -138,7 +139,7 @@ describe("newProject", () => {
     await projectStore.openFromFile(jsonFile(raw));
 
     expect(projectStore.openError).toBeNull();
-    expect(projectStore.draft?.schema_version).toBe("2.0.0");
+    expect(projectStore.draft?.schema_version).toBe(MODEL_A_SCHEMA_VERSION);
     expect(projectStore.draft?.reg_meta_version).toBe("reg_meta/v0.34.0");
     expect(projectStore.dirty).toBe(false);
   });
@@ -573,6 +574,40 @@ describe("applyStagedDiff (#992 — one atomic commit path)", () => {
     expect(
       projectStore.draft?.sources[0].bindings.map((b) => b.variable),
     ).toEqual(["scb/hst/kon", "scb/hst/alder", "scb/hst/inkomst"]);
+  });
+
+  it("a finite add REPLACES an imported `_default` source period", async () => {
+    // The retired sentinel is not a project period, so the coverage union has no
+    // full-history branch to absorb into: staging a finite window onto an
+    // imported `_default` source commits the finite window, not `_default`.
+    await projectStore.openFromFile(
+      jsonFile(
+        JSON.stringify({
+          schema_version: "2.0.0",
+          steward: "global",
+          reg_meta_version: "reg_meta/v1.0.0",
+          name: "imported",
+          sources: [
+            {
+              name: "LISA",
+              register_variant: "scb/lisa/v1",
+              period: "_default",
+              bindings: [{ variable: "scb/lisa/kon", type: "categorical" }],
+            },
+          ],
+        }),
+      ),
+    );
+
+    projectStore.applyStagedDiff({
+      adds: [add("scb/lisa/v1", "scb/lisa/alder", { from: 2010, to: 2015 })],
+    });
+
+    expect(projectStore.draft?.sources).toHaveLength(1);
+    expect(projectStore.draft?.sources[0].period).toEqual({
+      from: 2010,
+      to: 2015,
+    });
   });
 
   it("the add-path duplicate guard makes a re-add of the SAME (variant, variable, representation) a no-op (one binding, not two)", () => {

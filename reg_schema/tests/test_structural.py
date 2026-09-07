@@ -344,10 +344,13 @@ def test_period_token_strings_are_ok() -> None:
         assert result.ok, (period, result.issues)
 
 
-def test_period_snapshot_sentinel_is_ok() -> None:
+def test_period_snapshot_sentinel_is_invalid_period() -> None:
+    # Every project period is a concrete requested period (REFACTOR_SPEC.md
+    # §12): the retired whole-history sentinel is now an ordinary bad token.
     spec = _spec()
     spec["sources"][0]["period"] = "_default"
-    assert validate_structural(spec).ok
+    result = validate_structural(spec)
+    assert _at(result, "invalid_period") == ["/sources/0/period"]
 
 
 def test_period_range_object_is_ok() -> None:
@@ -454,14 +457,6 @@ def test_period_empty_list_is_invalid() -> None:
     spec["sources"][0]["period"] = []
     result = validate_structural(spec)
     assert _at(result, "invalid_period") == ["/sources/0/period"]
-
-
-def test_period_list_default_member_is_invalid() -> None:
-    # `_default` is whole-history — it makes no sense as one piece of a series.
-    spec = _spec()
-    spec["sources"][0]["period"] = [2018, "_default"]
-    result = validate_structural(spec)
-    assert _at(result, "invalid_period") == ["/sources/0/period/1"]
 
 
 def test_period_list_nested_list_member_is_invalid() -> None:

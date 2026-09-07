@@ -401,9 +401,10 @@ def _requested_intervals(period: Period) -> tuple[_Interval, ...]:
     expansion an inventory edition uses (`inventory.edition_bounds`), so a
     project period and a physical edition can never disagree about bounds.
 
-    Raises `ValueError` / `TypeError` for a period that is not orderable —
-    notably the `"_default"` sentinel, which §12 removes from `Source.period`:
-    a project with no explicit requested period cannot be ordered."""
+    Raises `ValueError` / `TypeError` for a period that is not orderable — a
+    malformed segment type, an unparseable token, or an inverted range. §12
+    requires every project period to be explicit and finite, so a period that
+    expands to no interval is a blocking finding, never a guessed window."""
     segments = period if isinstance(period, tuple) else (period,)
     converted: list[EditionSegment] = []
     for segment in segments:
