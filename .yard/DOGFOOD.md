@@ -504,3 +504,219 @@ mode the wake-driven loop exists to prevent. Usage refusals should exit non-zero
   surface the finalization error itself rather than the evidence-collection symptom.
   Lane held at the stop again; the resolution commits exist on the lane branch each time
   and are discarded each time.
+
+## 2026-09-03–04 — Preflight repair and UI retry trial
+
+- The verified 0.13.0 upgrade preserved the store, configuration, admission state and
+  Y-29/7 stop. Preflight correctly rejected a skipped Python test: `_git_env()` in
+  `test_slug_snapshot.py` removed Yard's scoped `safe.directory=/workspace` settings,
+  then hid Git's ownership refusal as an unavailable checkout. The same gate environment
+  existed in 0.12.3; this was a project helper defect exposed by verification. Y-32
+  preserved trust while stripping routing variables and landed `68fe1a5`. Fresh
+  preflight passed 14/14 requirements, including 3,712 Python tests with no skips.
+- Y-21 reproduced the empty-draft failure against the real backend: `/order` returned
+  `422 project_empty`, then Retry validation cleared the block without another order
+  request. The repair keeps validation and order failures separate and adds Retry
+  download for transport failures. A real browser recovered an `order.json` after the
+  route was restored; structured 422 findings remained blocking.
+- Independent review first stopped at A-71: Claude reported authentication failure
+  despite a valid host login. Yard already had an identity floor; the decisive
+  reproduction was Bun 1.4.0 returning username `unknown` from `os.userInfo()` when
+  USER/LOGNAME were absent. `/usr/bin/id -un` restored the correct identity. An isolated
+  patch and regression test were retained but never installed. The official 0.13.2
+  daemon later authenticated its actual review child successfully, without credential
+  rotation or a local patch.
+- The original design-seat instructions required tools unavailable to autoreview's
+  isolated source reviewers. The maintainer's revised contract resolved that mismatch:
+  source-only review seats, deterministic Playwright gates, and operator visual
+  judgment. This superseded the proposed visual autoreview mode. Y-33's host-check
+  workaround was closed before admission because it would restore operator credentials
+  across the host gate boundary and duplicate review orchestration.
+- Autoreview also refused optional `tokens.css` context as a sensitive filename before
+  invoking Claude. Removing that optional context resolved preparation; no filter was
+  weakened. The generic missing-report summary required opening `review-tool.log` to
+  find the cause. Codex's repeated claim that `canDownloadOrder` blocked the retry was
+  rejected against the exact method and observed download; a later review was clean.
+- Y-21 landed `6aea8f4` after real independent review and candidate gates: 1,285
+  frontend and 3,712 Python tests, plus lint/type/build checks. Accepted the bounded
+  limitation that finding-less deterministic order errors can offer an ineffective
+  retry; speculative source omission was declined, and browser regression coverage went
+  to Y-34. Final retry images were retained at 375/1280 only; earlier blocked/catalog
+  images covered four widths. No final 768/1920 retry image payload was retained. Those
+  were worker images, not evidence from the later browser gate.
+- The visual re-review also noted that the retry removes its local banner while only the
+  distant main CTA shows progress. That P3 was retained, not reported as repaired.
+- Worker papercuts remain distinct from daemon failures: `Skill` returned unknown for
+  present repo skills, recovered by reading canonical paths; `thinking_tokens` crowded
+  useful calls out of `lane tail`; and an asynchronous visual subagent was followed by
+  screenshot polling and an unconditional ten-minute sleep after it had finished. The
+  first in-container render used a scratch launcher because bare `python3` was absent
+  from PATH. It proved the synthetic fallback, not the default launcher.
+
+## 2026-09-04–05 — Design guidance, browser evidence and memory diagnostics
+
+- The SPA's `frontend/DESIGN.md` became the design-language authority, including the Ink
+  palette and sentence case. Pointing review context at that roughly 15 KB source
+  replaced the 178 KB engineering document; inline role names avoided the `tokens.css`
+  refusal. `/simplify` lives in implementation-role instructions because Yard workflows
+  have no separate pass stage. A clean subagent can run it, but the board has no
+  distinct execution/evidence boundary; the light role must run it inline. Reconsider a
+  first-class pass when a reviewer returns a candidate for work that pass should have
+  removed.
+- A config restart cancelled Y-35/1/e1 after eight minutes and left a stopped attempt
+  without an attention item or visible status exit. Its own guarded
+  `lane start Y-35/1 --expect-generation 1` resumed implementation without a new
+  attempt. Remaining request: report cancelled executions and their resume exits, and
+  make the resulting stops actionable. Later restart-protection checks do not establish
+  this attention/discoverability issue is fixed.
+- Verified 0.13.3 protected the existing daemon when sandboxed `/bin/ps` inspection was
+  unavailable. Authorized restart succeeded. Disposable Y-39 proved preparation refused
+  sensitive context before any reviewer/model invocation, but `lane show` omitted the
+  explanation because no real invocation existed. The report requested bounded redacted
+  preparation evidence. A suggested `grep -c` dry-run probe counted documentation twice;
+  that was a verification-prompt error, not incompatible autoreview support.
+- Y-34 waited for supported PNG retention, then added three project retry flows at four
+  widths. Review caught two screenshots taken before busy markers cleared. Candidate and
+  base frontend failures produced useful `gate-fails-on-base` evidence and guarded
+  exits. Docker positively recorded an OOM for the base failure; the candidate timeout
+  had no recorded OOM. Temporarily raising concurrency from two to three had reduced
+  container memory from a computed 3,489 MiB to an observed 2,617 MiB without swap.
+- Restored concurrency two in `d717f8f` and replayed the same attempt. Y-34 landed
+  `d1de368` after 1,285 frontend tests, 3,712 Python tests, other gates and all 12
+  browser cases. All 16 declared PNGs survived container teardown and were opened at
+  widths 375/768/1280/1920. Final reviewers incorrectly requested a concurrency
+  restoration already present on the new base; the approval disposition cited both base
+  and candidate. No assertion or gate was weakened.
+- Ordinary gate teardown initially lost OOM accounting that worker failures retained.
+  Verified 0.13.5 added gate/base diagnostics and uncapped memory by default. This Mac's
+  real containers showed Memory=0 and MemorySwap=0; no LXC setting was changed.
+  Released-source checks passed 112 unit tests and three lifecycle regressions, covering
+  cap settings, preparation redaction and positive/unknown OOM evidence without inducing
+  host OOM. Live Y-40 reproduced the earlier preparation refusal with visible excerpts
+  and zero reviewer usage, resolving Y-39's excerpt gap.
+- Both diagnostic candidates were retired without landing. The temporary third slot was
+  removed; final product/config content matched `d1de368`. Full 0.13.5 preflight passed
+  17/17 with process-inspection access and all four gates, including 12 browser cases.
+  Docker-off preflight correctly marked gates unrun. The tiny diagnostic worker still
+  spent minutes on its configured simplify pass and looking for Yard source: worker
+  orchestration overhead, not autoreview spend. Use a narrower supported diagnostic role
+  or replay route if one becomes available.
+
+## 2026-09-06 — UI skills integration and parked audit tickets
+
+- Y-35's old-base checks missed a newer project-flow fixture consumer of the helper it
+  removed. A narrow integration repair was required before approval. During that repair,
+  0.13.5 accepted a conflict nudge, finished the worker at `439141a`, then repeatedly
+  failed persistence with `is a conflict execution`. `beginQueuedTurn` excluded conflict
+  although `requestNudge` accepted it. Saved the completed diff and used the guarded
+  stop path to deliver the held message; no manual state edit or restart. Continuation
+  creates a fresh staged clone, so the small resolution had to be repeated.
+- Y-35/2 then landed `a8e1ea1`, with clean review, all three gates and 3,713 Python
+  tests. Independent final-head host flows passed 12 cases/16 screenshots under normal
+  Chromium permissions. The sandbox single-process fallback crashed opening its second
+  context. This recovery concerns Y-35; Y-29/7's older `retarget.log` stop remained
+  untouched. Later 0.14.0 source checks passed eight conflict continuation/nudge cases,
+  including resolution preservation; they did not exercise a live Y-29 recovery.
+- Y-36 landed `b276a77` with launcher isolation, four-width capture, smoke interactions
+  and cleanup fixes. Independent final-head host checks covered concurrent captures,
+  invocation from another cwd, relative output paths, owned-process cleanup and survival
+  of an unrelated listener. Container checks used `no-sandbox`; host checks used the
+  sandboxed stage. Opposite source-review advice about "default first" reflected an
+  ambiguous brief; the operator disposed of the advisory using the explicit repair and
+  observed behavior. It was not a zero-finding review or a new Yard lifecycle defect.
+- Y-38 landed `345a63f` with canonical shared design skills, accurate consumer
+  boundaries and candidate/coverage evidence. Walkthroughs removed a desktop-only
+  exception, an overclaimed exhaustive role list and an overbroad fixture promise. Final
+  advisories were disposed of against DESIGN.md. A-83's screenshot proposal was covered
+  here, but its ancillary claim that the project-flow PATH export was redundant was
+  wrong: that gate still calls `python3` for `catalog_fixture_db.py`. Preserve the PATH
+  setup.
+- Y-41 landed `967e848`, correcting workflow coverage, approval evidence and the
+  obsolete claim that ticket edits never reach reviewers. The worker image lacks Yard
+  CLI help; the operator verified those claims on the host. Documentation briefs should
+  name that boundary. Final review was clean; 23 independent alias/ingestion checks
+  passed.
+- Y-37 landed `a701215` with Ink styling and design-parity checks after narrow repairs.
+  The operator opened 32 final-head images across eight routes and four widths; parity
+  checks and deliberate mutation checks established the guard's behavior. Synthetic
+  coverage omits ID/Sensitive badges; pre-existing layout/contrast observations were not
+  established as restyle regressions. This batch does not prove complete UI conformance
+  or real-catalog behavior. Final source review passed the P1 threshold with advisories;
+  accepted limits include literal-white hover debt before future theme work, incomplete
+  error-border token coverage and pre-existing graph badge geometry. A-86's unrelated
+  build/release proposal and A-91's broader layout/accessibility bundle were declined
+  from scope with retained dispositions.
+- Filed Y-42–Y-55 atomically parked: four `ui` workflows, three plan-first tickets and
+  explicit dependencies. Readback verified every body/workflow/dependency; no lane
+  started. Reused Y-29/Y-31 instead of duplicating inventory work. List/new JSON
+  includes complete bodies, so project only needed fields in summaries and keep full
+  receipts separately. Cold watch returning the existing Y-29 attention was expected
+  catch-up, not a new stop.
+
+## 2026-09-07 — Upgrade reports, generated guidance and 0.14.1 retests
+
+- Verified 0.14.0's release, stopped-store backup and schema 42→43 migration. All 55
+  ticket records and Y-29/7 remained unchanged. Warm preflight passed 17/17, all four
+  gates and both actual reviewer seats' no-model preparation probes; all 14 newly filed
+  tickets remained parked. Two findings survived investigation: the cold CLI lost its
+  result at 300.158 seconds while daemon gates finished, and synthetic instant
+  transitions exposed tied execution-end ordering already present in 0.13.5. No live
+  ordering failure or new release regression was established.
+- An initial local builder handoff was superseded by upstream issues after open/closed
+  duplicate searches. All three are fixed in 0.14.1: [#48 preflight
+  timeout](https://github.com/adamaltmejd/switchyard/issues/48), [#49 timestamp
+  ordering](https://github.com/adamaltmejd/switchyard/issues/49) and [#50 proposal
+  timing](https://github.com/adamaltmejd/switchyard/issues/50). The last report
+  concerned advice to wait for an origin lane that a ticket-edit proposal itself stops;
+  no live stuck lane was claimed.
+- Submission used the live Report form's fields through authenticated GitHub CLI, with
+  full bodies read back through the maintainer-author trust gate. The initially absent
+  `report` label appeared on successful submission; that is not an outstanding defect.
+  After browser login, the form and attribution were inspected without submitting again.
+  At the maintainer's request, `filed-by:codex` was created/applied to all three issues;
+  the author account and credentials stayed unchanged. Archived OPEN receipts describe
+  submission-time status, not current issue disposition.
+- The upgrade first retained a customized skill, then inspected `yard init`'s offered
+  patch. The final approach replaces the selective fork with the exact generated
+  template and moves project policy to `.yard/OPERATOR.md`. AGENTS.md/CLAUDE.md require
+  both, with project policy taking precedence; the Codex alias remains one routine. Only
+  generated skill paths are exempt from Panache. Preserve local admission/cleanup,
+  disclosure, determinism, UI evidence and reporting rules, and review version-specific
+  corrections at upgrades. Exact template matching restores `matchesTemplate=true` as a
+  drift signal.
+- Installed official 0.14.1 at `3798a98cf30979b2ed6e21e2041a5f5839fd195c`, verified
+  against its checksum/contract/CI evidence. Schema 43 and configuration were unchanged.
+  Live preflight passed 17/17: 3,718 Python tests, 1,287 frontend tests,
+  lint/type/version checks and 12 browser-flow cases at four widths. Those preflight
+  PNGs were not separately retained or reviewed. The pinned Claude executable passed
+  checksum and offline `--version` checks in the exact image; no live model session
+  tested provider acceptance.
+- Independent #48 retest used the actual native CLI against a synthetic socket: valid
+  JSON, exit 0 at 310.237 seconds, with a parallel timeout control. This is separate
+  from the real-gate preflight. Pinned Bun 1.4.0 passed six client-boundary/cancellation
+  tests, 21 check tests, three original frozen-clock reproductions and two ordering
+  guards. Twenty fresh host Bun 1.4.2 processes passed 420/420 check cases. The host
+  raw-fetch timeout control differed; it passed under release-pinned Bun. Initial long
+  probes hit the scratch harness's 120-second limit and passed with its supported
+  400-second limit. These setup observations are not native-release failures or new
+  reports.
+- Applied the 0.14.1 init patch: exact stamped template and alias verified, 23 existing
+  skill alias/ingestion tests passed, policy format/lint passed, and mirrored agent
+  files remained identical. Upstream now explicitly handles stopping ticket-edit
+  proposals; removed only the redundant local timing correction. The earlier local fork
+  is obsolete.
+- During upgrade verification, all 55 ticket records and the complete Y-29/7 response
+  stayed identical; Y-42–Y-55 remained parked and original admissions were restored. No
+  paid model session, toolkit candidate change, deployment or MONA run was made. Y-29/7
+  remains stopped at A-68, generation 2; newer conflict-source tests and Y-35's recovery
+  do not establish its recovery. Its pre-0.14.0 store and old binary remain in
+  `/Users/adam/.local/state/yard-upgrade-backups/registry-research-toolkit-20260907-pre-v0.14.0/`.
+
+Detailed reports, submission receipts and raw evidence are retained under the ignored,
+host-only `archive/reports/yard/` directory. Key records are
+`2026-09-04-v0.13.2-verification.md`, `2026-09-04-v0.13.3-verification.md`,
+`2026-09-05-v0.13.5-verification.md`, `2026-09-06-ui-skills-completion.md`,
+`2026-09-06-yard-conflict-nudge.md` and the `2026-09-07-v0.14.{0,1}-verification.md`
+reports. They are local supporting evidence, not tracked deliverables; upstream issues
+are the submitted handoff. The complete pre-condensation log is retained alongside them
+at `cleanup-2026-09-07/original/.yard/DOGFOOD.md`.
