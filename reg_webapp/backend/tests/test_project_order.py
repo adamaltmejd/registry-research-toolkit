@@ -36,7 +36,7 @@ def client(catalog_db):
 
 def _spec(*, steward: str = "global", period: object = 2018) -> dict:
     return {
-        "schema_version": "2.0.0",
+        "schema_version": "3.0.0",
         "steward": steward,
         "reg_meta_version": "5.1.0",
         "name": "test",
@@ -276,6 +276,45 @@ def test_invalid_spec_422_carries_no_findings(client):
     body = client.post("/api/project/order", json=spec).json()
     assert body["findings"] == []
     assert body["detail"]
+
+
+@pytest.mark.parametrize(
+    "version", ["1.0.0", "2.0.0", "3.0.1", "3.1.0", "99.0.0", "not-a-version"]
+)
+def test_unsupported_version_is_rejected_by_every_consumer(
+    client, catalog_db, tmp_path, capsys, version
+):
+    """§12's equal-surfaces rule, applied to the supported-version decision: ONE
+    project written for another schema contract, every consumer that reads a raw
+    project, one answer — and no manifest anywhere. The CLI's error message and
+    the adapter's 422 detail are the same words because both render reg_meta's
+    single decision (``order.schema_version_issue``). The SUPPORTED fixture's own
+    agreement across these surfaces is ``test_byte_identical_to_the_cli_adapter``
+    (both spell `_spec()`'s current ``schema_version``)."""
+    from reg_meta.cli import run
+    from reg_meta.errors import EXIT_CONFIG
+
+    spec = _spec()
+    spec["schema_version"] = version
+
+    validated = client.post("/api/project/validate", json=spec).json()
+    assert validated["ok"] is False
+    assert [i["code"] for i in validated["issues"]] == ["unsupported_schema_version"]
+
+    ordered = client.post("/api/project/order", json=spec)
+    assert ordered.status_code == 422
+    body = ordered.json()
+    assert body["findings"] == []
+    assert "entries" not in body
+    assert version in body["detail"]
+
+    project_path = tmp_path / "project_data.json"
+    project_path.write_text(json.dumps(spec), encoding="utf-8")
+    exit_code = run(["order", str(project_path), "--db", str(catalog_db.parent)])
+    assert exit_code == EXIT_CONFIG
+    cli_error = json.loads(capsys.readouterr().out)["error"]
+    assert cli_error["code"] == "unsupported_schema_version"
+    assert cli_error["message"] == body["detail"]
 
 
 def test_empty_project_is_blocked_not_a_header_only_manifest(client):

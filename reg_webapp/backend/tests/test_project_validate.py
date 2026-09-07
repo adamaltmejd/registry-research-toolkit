@@ -9,6 +9,8 @@ Covers the status discipline that defines this endpoint:
 - an extra/typo key on any CLOSED object (ProjectData/Source/Binding/Panel/member)
   → 200 with the structural ``unexpected_field`` issue (NOT 500);
 - malformed JSON / duplicate keys / non-object body → 4xx (a malformed REQUEST);
+- an unsupported ``schema_version`` → 200 with that ONE issue (the layers below it
+  read the document as the current contract, so they do not run);
 - the two-layer concatenation (structural ⧺ semantic);
 - a concurrency smoke test (the cross-thread sqlite P1 the sequential TestClient
   default MASKS — see ``test_catalog_browse``).
@@ -46,7 +48,7 @@ def unthrottled_client(catalog_db):
 
 def _clean_spec() -> dict:
     return {
-        "schema_version": "2.0.0",
+        "schema_version": "3.0.0",
         "steward": "ifau",
         "reg_meta_version": "5.1.0",
         "name": "test",
@@ -73,6 +75,32 @@ def test_clean_spec_is_ok(client):
     body = resp.json()
     assert body["ok"] is True
     assert body["issues"] == []
+
+
+@pytest.mark.parametrize(
+    "version", ["1.0.0", "2.0.0", "3.0.1", "3.1.0", "99.0.0", "not-a-version"]
+)
+def test_unsupported_schema_version_is_the_only_issue(client, version):
+    """A project written for another schema contract is diagnosed as that, and
+    nothing else: the layers below read it as the CURRENT contract, so they would
+    answer a foreign schema with noise (or, worse, silence). Still a 200 — this
+    endpoint DIAGNOSES, it does not reject requests. The decision itself is
+    reg_meta's shared ``order.schema_version_issue``, so ``/order`` and the CLI
+    reject exactly these fixtures."""
+    spec = _clean_spec()
+    spec["schema_version"] = version
+    # Also structurally broken: the version answer still arrives alone.
+    spec["sources"][0]["period"] = "notaperiod"
+
+    resp = client.post("/api/project/validate", json=spec)
+
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["ok"] is False
+    assert [(i["code"], i["path"], i["level"]) for i in body["issues"]] == [
+        ("unsupported_schema_version", "/schema_version", "error")
+    ]
+    assert version in body["issues"][0]["message"]
 
 
 def test_openapi_documents_closed_canonical_project_root(client):
@@ -336,7 +364,7 @@ def filtered_client(catalog_db, tmp_path, monkeypatch):
 
 def test_fqid_outside_steward_catalog_via_filtered_client(filtered_client):
     spec = {
-        "schema_version": "2.0.0",
+        "schema_version": "3.0.0",
         "steward": "ifau",
         "reg_meta_version": "5.1.0",
         "name": "test",

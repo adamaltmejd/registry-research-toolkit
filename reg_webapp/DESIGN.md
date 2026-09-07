@@ -1737,9 +1737,13 @@ boundary unchanged.
 - **`/validate` status discipline.** A spec that FAILS validation is a *successful
   validation response* — **HTTP 200 with `ok=false` + the issues**. 4xx is reserved for
   a malformed REQUEST (non-JSON, duplicate JSON keys, a too-deeply-nested or non-object
-  body, an oversized body). It runs the §6.8.0 two-layer composition (structural →
-  semantic) and returns the **concatenated** issue list; the DB-free structural layer
-  runs first, so a structurally-rejected body costs no DB hit.
+  body, an oversized body). It runs the §6.8.0 composition (supported version →
+  structural → semantic) and returns the **concatenated** issue list; the DB-free layers
+  run first, so a rejected body costs no DB hit. The supported-version decision is
+  reg_meta's shared `order.schema_version_issue` — the same one `/order` and
+  `reg-meta order` gate on, so a project written for another schema contract gets one
+  answer from every consumer — and it returns **alone**: the layers under it read the
+  document as the current contract, which is the claim it just rejected.
 - **`/order`** materializes the JSON order manifest and serves it as an `order.json`
   download (see below). Unlike `/validate`, it **gates** first: you cannot materialize
   an order from an invalid spec → 422.
@@ -2024,14 +2028,16 @@ rune store holding one draft per session.
   only on a match, else discards the stale-schema draft. This is the store's record
   shape, bumped only when the persisted shape changes.
 - **Project-file version gate.** Model A files carry the reg_schema MAJOR — **3** since
-  `Source.period` became finite-only (reg_schema `3.0.0`), and the major **2** files
-  written before it are still Model A — plus the deployment's `reg_meta_version` release
-  tag. The SPA **hard-rejects** a file whose `schema_version` major is **1**
-  (pre-Model-A) with a blocking open-error — no migration, pre-v1 policy. The `reg_meta`
-  package may still be `reg_meta/v0.x` while the schema is Model A, so
-  `reg_meta_version` major is not a pre-Model-A signal. (`schema_version` major 1 is the
-  *rejected* pre-Model-A value, not Model A.) Any other version — including the seeded
-  major **3** — is a neutral no-op: the backend stays the canonical validator.
+  `Source.period` became finite-only (reg_schema `3.0.0`); the major **2** files written
+  before it are Model A too, but the BACKEND reads `3.0.0` EXACTLY
+  (`order.schema_version_issue`), so it answers them `unsupported_schema_version` like
+  any other foreign contract. Plus the deployment's `reg_meta_version` release tag. The
+  SPA **hard-rejects** a file whose `schema_version` major is **1** (pre-Model-A) with a
+  blocking open-error — no migration, pre-v1 policy. The `reg_meta` package may still be
+  `reg_meta/v0.x` while the schema is Model A, so `reg_meta_version` major is not a
+  pre-Model-A signal. (`schema_version` major 1 is the *rejected* pre-Model-A value, not
+  Model A.) Any other version — including the seeded major **3** — is a neutral no-op:
+  the backend stays the canonical validator.
 - **Unsaved-changes warning.** A `dirty` flag derives from the draft diverging from the
   last DOWNLOAD baseline (`lastDownloaded`); a `beforeunload` listener prompts on a
   tab/window close with a dirty draft. The store drives the write endpoints (validate /

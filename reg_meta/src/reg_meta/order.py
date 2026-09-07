@@ -6,7 +6,10 @@ steward's PHYSICAL delivery topology. This module is the one place the two meet:
 steward inventory plus an open reg_meta DB into either a complete physical order
 manifest or a fail-closed result naming every gap. It is shared domain code —
 the FastAPI endpoint and the CLI/plugin are thin adapters over this function, so
-both emit byte-identical results (§12).
+both emit byte-identical results (§12). The raw-project ingress door they share
+lives here too, and its supported-version half (`schema_version_issue`) is shared
+one step wider still — with the webapp's `/api/project/validate`, which reads no
+order.
 
 `inventory=None` selects §12's confirmed GLOBAL-DEPLOYMENT FALLBACK: the global
 deployment has no physical inventory, so canonical resolution alone grounds the
@@ -82,6 +85,10 @@ from pydantic import BaseModel, ConfigDict, Field, ValidationError
 # explicitly ruled out.
 from reg_schema.project_data import PeriodRange, ProjectData
 from reg_schema.structural import validate_structural
+from reg_schema.validation import ValidationIssue
+
+# The package itself, for `__version__` — see `SUPPORTED_SCHEMA_VERSION` below.
+import reg_schema
 
 from .catalog import Catalog
 from .db import get_manifest
@@ -113,6 +120,11 @@ if TYPE_CHECKING:
 # pre-v1 there is no migration path (CLAUDE.md → maturity), and both boundaries
 # (this writer, the steward-side extract reader) validate against the models.
 ORDER_MANIFEST_VERSION = 1
+
+# The `project_data.json` contract this build reads — `reg_schema`'s own
+# declaration, never re-spelled as a literal here. `schema_version_issue` below
+# decides against it, by exact equality.
+SUPPORTED_SCHEMA_VERSION = reg_schema.__version__
 
 # The deployment a `None` inventory is: the full-universe global deployment,
 # which has no physical delivery topology (§12's fallback). It is a value of
@@ -528,16 +540,29 @@ def load_project(path: Path) -> ProjectData:
 
 
 def project_from_raw(raw: dict[str, Any]) -> ProjectData:
-    """Structurally gate `raw` and build the model `materialize_order` takes.
+    """Version-gate and structurally gate `raw`, then build the model
+    `materialize_order` takes.
 
-    The `ProjectData` model enforces field TYPES only, while the structural
+    The supported-version decision (`schema_version_issue`) runs FIRST: every
+    layer under it reads the document as the CURRENT contract, so a foreign
+    schema is named as such instead of arriving as structural noise — or, for a
+    project the current rules happen to accept, as a manifest.
+
+    The `ProjectData` model then enforces field TYPES only, while the structural
     rules (FQID shape, period grammar, the binding/source-prefix match) live in
-    `reg_schema.validate_structural` — so without this gate a model-valid but
+    `reg_schema.validate_structural` — so without that gate a model-valid but
     structurally invalid spec would materialize a bad provider order. Both
     adapters go through here, so both reject the same specs with the same
     words. Fail-closed: an invalid spec raises `RegMetaError`
-    (`project_invalid`, EXIT_CONFIG) naming every structural error, never a
-    partial order."""
+    (`unsupported_schema_version` / `project_invalid`, EXIT_CONFIG) naming every
+    structural error, never a partial order."""
+    unsupported = schema_version_issue(raw)
+    if unsupported is not None:
+        raise _order_config_error(
+            unsupported.code,
+            unsupported.message,
+            "See reg_schema/DESIGN.md for the current `project_data.json` contract.",
+        )
     structural = validate_structural(raw)
     if not structural.ok:
         errors = [issue for issue in structural.issues if issue.level == "error"]
@@ -561,6 +586,41 @@ def project_from_raw(raw: dict[str, Any]) -> ProjectData:
             "Fix the reported field (an order is materialized only from a valid "
             "project).",
         ) from exc
+
+
+def schema_version_issue(raw: dict[str, Any]) -> ValidationIssue | None:
+    """The ONE supported-version decision every SERVER-SIDE consumer of a raw
+    project applies: `project_from_raw` above (both order adapters) and the
+    webapp's `/api/project/validate`, which needs the finding as an ISSUE rather
+    than a raise. (The SPA keeps its own partial open-time gate over a file the
+    researcher picks; the backend stays the canonical answer.) Returns `None`
+    when the project is on the contract this build reads.
+
+    Supported = EXACTLY `SUPPORTED_SCHEMA_VERSION`: `reg_schema` delegates the
+    acceptance decision here and specifies no compatible range, so there is no
+    window to widen it with. Every other string — an older major, a newer minor,
+    a different patch, no version shape at all — names a contract this build does
+    not read. Nothing is migrated or reinterpreted: the answer is yes or a
+    diagnostic.
+
+    An ABSENT or non-string `schema_version` is deliberately not this layer's
+    call — that is a malformed document, and `validate_structural` already
+    reports it precisely (`missing_required_field` / `invalid_field_type`)."""
+    version = raw.get("schema_version")
+    # The non-string half of this test is the carve-out above, not a verdict.
+    if not isinstance(version, str) or version == SUPPORTED_SCHEMA_VERSION:
+        return None
+    return ValidationIssue(
+        level="error",
+        code="unsupported_schema_version",
+        path="/schema_version",
+        message=(
+            f"project schema_version {version!r} is not supported: this build "
+            f"reads project_data.json schema {SUPPORTED_SCHEMA_VERSION} exactly. "
+            "Re-author the project against the current schema; there is no "
+            "migration path."
+        ),
+    )
 
 
 def blocked_message(result: OrderResult) -> str:

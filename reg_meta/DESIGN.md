@@ -963,6 +963,25 @@ re-type live here too, beside the materializer:
   provider order. An invalid spec raises `RegMetaError` (`project_invalid` /
   `project_unreadable`, `EXIT_CONFIG`), so both adapters reject the same specs with the
   same words.
+- `schema_version_issue(raw)` is the door's FIRST question and the one piece of it
+  shared beyond ordering: is this project written for the contract this build reads?
+  Supported is EXACTLY `SUPPORTED_SCHEMA_VERSION` — `reg_schema.__version__` itself,
+  never a second spelling. There is no acceptance window to widen it with: reg_schema
+  delegates the decision to this consumer and specifies no compatible range, and
+  `_check_schema_compat`'s major/minor rule governs a DIFFERENT contract (the catalog DB
+  this code opens, not the document a researcher authored). Anything else — an old
+  major, a newer minor, a different patch, an unparseable string — is one
+  `unsupported_schema_version` error naming the claim and the contract, raised
+  (`EXIT_CONFIG`) before any layer interprets the document as the current schema, so a
+  foreign project is never answered with structural noise or a manifest. Nothing is
+  migrated or reinterpreted; pre-v1 carries no migration path. An ABSENT or non-string
+  `schema_version` is deliberately left to `validate_structural`'s precise
+  `missing_required_field` / `invalid_field_type` — that is a malformed document, not a
+  version claim. The webapp's `/api/project/validate` reuses this same function for its
+  200 diagnostic (it needs the `ValidationIssue`, not the raise), so every SERVER-SIDE
+  consumer of a raw project gives one answer. (The SPA's own open-time gate is a
+  separate, partial pre-flight on the file a researcher picks, not this decision — see
+  reg_webapp/DESIGN.md → "Project-file version gate"; the backend stays canonical.)
 - `blocked_message(result)` renders every blocking finding, in the materializer's own
   accumulation order, each prefixed with the source/variable/period it names. The
   fail-closed path is byte-identical across adapters too, not just a produced manifest.

@@ -24,14 +24,16 @@ from typing import TYPE_CHECKING
 import pytest
 from _slugged_db import add_state, add_variable, build_slugged_db
 from reg_meta.cli import run
-from reg_meta.errors import EXIT_CONFIG, EXIT_NO_MATCH
+from reg_meta.errors import EXIT_CONFIG, EXIT_NO_MATCH, RegMetaError
 from reg_meta.inventory import load_inventory
 from reg_meta.order import (
     ORDER_MANIFEST_VERSION,
+    SUPPORTED_SCHEMA_VERSION,
     OrderManifest,
     extraction_filenames,
     load_project,
     materialize_order,
+    project_from_raw,
 )
 from reg_schema.project_data import Binding, PeriodRange, ProjectData, Source
 
@@ -270,7 +272,7 @@ def _project(
     representation: str | None = None,
 ) -> ProjectData:
     return ProjectData(
-        schema_version="1.0.0",
+        schema_version=SUPPORTED_SCHEMA_VERSION,
         steward=steward,
         reg_meta_version="0.39.1",
         name="Synthetic order",
@@ -292,6 +294,26 @@ def _project(
             ),
         ),
     )
+
+
+def _raw_project(**over) -> dict:
+    """`_project` as the RAW dict the adapter door actually takes
+    (`project_from_raw`, and `reg-meta order`'s file). `**over` replaces
+    top-level keys — `schema_version` is the one the gate tests vary."""
+    return {
+        "schema_version": SUPPORTED_SCHEMA_VERSION,
+        "steward": "global",
+        "reg_meta_version": "0.39.1",
+        "name": "Synthetic order",
+        "sources": [
+            {
+                "name": "lisa",
+                "register_variant": _VARIANT,
+                "period": {"from": 2018, "to": 2020},
+                "bindings": [{"variable": "scb/lisa/kon", "type": "categorical"}],
+            }
+        ],
+    } | over
 
 
 def _codes(result) -> list[str]:
@@ -909,6 +931,81 @@ class TestIntervalAlgebra:
         )
 
 
+class TestSupportedSchemaVersion:
+    """`project_from_raw`'s supported-version decision — the ONE place any
+    consumer decides whether a raw project claims the contract this build reads.
+
+    Synthetic fixtures only: `_raw_project`, the same well-shaped finite-period
+    project the CLI cases order, with `schema_version` as the sole variable. The
+    webapp's `/validate` and `/order` reuse this decision
+    (`order.schema_version_issue`), so the fixtures that reject here reject there
+    — pinned in `reg_webapp/backend/tests/test_project_order.py`.
+    """
+
+    def test_supported_version_is_reg_schemas_own_declaration(self) -> None:
+        """Never a second spelling of the contract version: the gate reads the
+        schema package's declaration, so the two cannot drift."""
+        import reg_schema
+
+        assert SUPPORTED_SCHEMA_VERSION == reg_schema.__version__ == "3.0.0"
+
+    def test_the_current_contract_is_accepted(self) -> None:
+        """The ONE accepted claim: exact equality, nothing around it."""
+        project = project_from_raw(
+            _raw_project(schema_version=SUPPORTED_SCHEMA_VERSION)
+        )
+
+        assert project.schema_version == SUPPORTED_SCHEMA_VERSION
+
+    @pytest.mark.parametrize(
+        "version",
+        ["1.0.0", "2.0.0", "3.0.1", "3.1.0", "99.0.0", "not-a-version", "3.0"],
+    )
+    def test_every_other_version_is_rejected(self, version) -> None:
+        """Old majors, a neighbouring patch, an unreleased minor, an unknown major
+        and an unparseable version alike — nothing but the current contract is
+        read: one stable code, and a message naming both the rejected claim and
+        the contract this build reads."""
+        with pytest.raises(RegMetaError) as exc_info:
+            project_from_raw(_raw_project(schema_version=version))
+
+        error = exc_info.value
+        assert error.code == "unsupported_schema_version"
+        assert error.exit_code == EXIT_CONFIG
+        assert version in error.message
+        assert SUPPORTED_SCHEMA_VERSION in error.message
+
+    def test_the_version_decision_precedes_structural_interpretation(self) -> None:
+        """A project written for another contract is named as such, not reported
+        as a pile of structural noise from reading it as the current one."""
+        broken = _raw_project(schema_version="1.0.0")
+        broken["sources"][0]["period"] = "notaperiod"
+
+        with pytest.raises(RegMetaError) as exc_info:
+            project_from_raw(broken)
+
+        assert exc_info.value.code == "unsupported_schema_version"
+        assert "invalid_period" not in exc_info.value.message
+
+    @pytest.mark.parametrize("value", [None, 3])
+    def test_an_absent_or_mistyped_version_keeps_its_structural_error(
+        self, value
+    ) -> None:
+        """Not this layer's call: no `schema_version` string is a malformed
+        DOCUMENT, and the structural layer already says so precisely."""
+        raw = _raw_project()
+        if value is None:
+            del raw["schema_version"]
+        else:
+            raw["schema_version"] = value
+
+        with pytest.raises(RegMetaError) as exc_info:
+            project_from_raw(raw)
+
+        assert exc_info.value.code == "project_invalid"
+        assert "@/schema_version" in exc_info.value.message
+
+
 class TestCliAdapter:
     """`reg-meta order` — the CLI adapter over `materialize_order`.
 
@@ -941,23 +1038,8 @@ class TestCliAdapter:
     def _project_file(tmp_path: Path, path_name: str = "project_data.json", **over):
         import json
 
-        spec = {
-            "schema_version": "2.0.0",
-            "steward": "global",
-            "reg_meta_version": "0.39.1",
-            "name": "Synthetic order",
-            "sources": [
-                {
-                    "name": "lisa",
-                    "register_variant": _VARIANT,
-                    "period": {"from": 2018, "to": 2020},
-                    "bindings": [{"variable": "scb/lisa/kon", "type": "categorical"}],
-                }
-            ],
-        }
-        spec.update(over)
         path = tmp_path / path_name
-        path.write_text(json.dumps(spec), encoding="utf-8")
+        path.write_text(json.dumps(_raw_project(**over)), encoding="utf-8")
         return path
 
     def test_stdout_carries_the_manifest_bytes_verbatim(
@@ -1070,4 +1152,21 @@ class TestCliAdapter:
         assert code == EXIT_CONFIG
         payload = json.loads(capsys.readouterr().out)
         assert payload["error"]["code"] == "project_invalid"
+        assert "entries" not in payload
+
+    def test_unsupported_schema_version_exits_config_writing_no_manifest(
+        self, conn, tmp_path, capsys
+    ) -> None:
+        """A project written for another schema contract is rejected at the same
+        shared door, before the DB is opened: the error envelope, never a
+        manifest for a spec this build cannot read."""
+        import json
+
+        project = self._project_file(tmp_path, schema_version="1.0.0")
+
+        code = run(["order", str(project), "--db", self._db_dir(conn, tmp_path)])
+
+        assert code == EXIT_CONFIG
+        payload = json.loads(capsys.readouterr().out)
+        assert payload["error"]["code"] == "unsupported_schema_version"
         assert "entries" not in payload

@@ -634,7 +634,7 @@ try {
     );
     const deployment = JSON.parse(contextBody);
     const project = {
-      schema_version: "2.0.0",
+      schema_version: "3.0.0",
       steward: deployment.steward.id,
       reg_meta_version: `reg_meta/v${deployment.webapp.reg_meta_version}`,
       name: "Synthetic order flow",

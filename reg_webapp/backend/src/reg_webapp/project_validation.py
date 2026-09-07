@@ -1,9 +1,11 @@
 """Shared project-write validation composition (``routes/project.py``).
 
 The reg_meta-backed ``/api/project/validate`` endpoint runs the §6.8.0 layered
-composition over a raw ``project_data.json`` — the reg_schema structural layer +
-the reg_meta-backed semantic layer — and returns a 200 diagnostic. This module
-owns the shared semantic piece so a NEW layer is added in ONE place.
+composition over a raw ``project_data.json`` — reg_meta's supported-version
+decision (``order.schema_version_issue``) + the reg_schema structural layer + the
+reg_meta-backed semantic layer — and returns a 200 diagnostic. This module owns
+the shared SEMANTIC piece so a new semantic rule is added in ONE place; the other
+two layers need nothing from here.
 
 The reg_meta connection helper lives here too (``per_request_conn``) — the LOCKED
 cross-thread-safety pattern: open + query + close on ONE thread (the threadpool

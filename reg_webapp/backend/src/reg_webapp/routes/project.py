@@ -3,9 +3,12 @@
 See DESIGN.md → Project-write surface (routes/project.py).
 Two endpoints:
 
-- ``POST /api/project/validate`` — runs the two-layer validator over a
-  raw ``project_data.json`` and returns the CONCATENATED issue list (structural
-  ⧺ semantic) as a ``ValidationResultModel``.
+- ``POST /api/project/validate`` — runs the validator over a raw
+  ``project_data.json`` and returns the CONCATENATED issue list (structural ⧺
+  semantic) as a ``ValidationResultModel``. A ``schema_version`` this build does
+  not read is answered by that one issue alone (``order.schema_version_issue``,
+  shared with ``/order`` and the CLI), before any layer interprets the document
+  as the current contract.
 - ``POST /api/project/order`` — materializes the JSON order manifest through
   reg_meta's shared ``order.materialize_order`` and serves it as an
   ``order.json`` download; anything that is not an order is a 422 carrying the
@@ -50,6 +53,7 @@ from reg_meta.order import (
     blocked_message,
     materialize_order,
     project_from_raw,
+    schema_version_issue,
 )
 from reg_schema.project_data import ProjectData
 from reg_schema.structural import validate_structural
@@ -203,15 +207,20 @@ async def validate_project(request: Request) -> ValidationResultModel:
 def _validate_blocking(
     db_path: Path, raw: dict[str, Any], index: CatalogIndex | None
 ) -> ValidationResultModel:
-    """The two-layer composition, run on a threadpool thread (off the
+    """The layered composition, run on a threadpool thread (off the
     event loop). Layer order (DB-free first, so a structurally-rejected body costs
-    no DB hit): structural → (model build + semantic). When structural fails we SKIP
-    the model build + semantic step (they assume a structurally valid spec).
+    no DB hit): supported version → structural → (model build + semantic). When
+    structural fails we SKIP the model build + semantic step (they assume a
+    structurally valid spec).
 
     ``index`` is the deployment's loaded steward ``CatalogIndex`` (``None`` for the
     ``global`` deployment), threaded into the semantic layer for the steward
     catalog filter (``fqid_outside_steward_catalog`` /
     ``representation_outside_steward_catalog``)."""
+    unsupported = schema_version_issue(raw)
+    if unsupported is not None:
+        return _to_result_model(ValidationResult(issues=(unsupported,)))
+
     issues: list[ValidationIssue] = []
     structural = validate_structural(raw)
     issues.extend(structural.issues)

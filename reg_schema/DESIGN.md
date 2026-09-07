@@ -117,15 +117,17 @@ silently-weakened `ok` (returning `True` for a result that should block) is high
 the cost of one extra check on a 3-value frozenset.
 
 **`schema_version` is not value-checked here.** The structural layer only requires
-`schema_version` to be a present, non-null string — it does **not** reject a v0.x
-(`"1.x.x"`) value. The "Model A files carry the reg_schema major (`3` since
-`Source.period` became finite-only); v0.x is hard-rejected, no migration code" policy is
-enforced by the consumer that loads the file (the SPA / CLI in `reg_webapp`), not by
-`validate_structural`. Reason: the version-acceptance window is a deployment concern
-(which schema a given app build understands), whereas this layer is the version-agnostic
-shape checker shared by every runtime. Same split for `reg_meta_version`: required as a
-non-null string here; drift against the actually-loaded reg_meta DB is a §6.8.3 semantic
-concern.
+`schema_version` to be a present, non-null string — it does **not** compare it to any
+version. That belongs to the consumer that loads the file:
+`reg_meta.order.schema_version_issue`, the ONE decision the order adapters and the
+webapp's `/api/project/validate` share (see reg_meta/DESIGN.md → "Order materializer and
+manifest"), which accepts EXACTLY `reg_schema.__version__` — the contract version's one
+spelling, read rather than re-declared. This layer names no compatible range for it to
+widen: the acceptance window is delegated whole, and none is specified anywhere here.
+Reason: the version-acceptance window is a deployment concern (which schema a given app
+build understands), whereas this layer is the version-agnostic shape checker shared by
+every runtime. Same split for `reg_meta_version`: required as a non-null string here;
+drift against the actually-loaded reg_meta DB is a §6.8.3 semantic concern.
 
 ## Dependency direction
 
@@ -278,6 +280,13 @@ here so the stable-code registry is complete and the SPA can map them:
 (The `panel_inheritance_unresolvable` code is **not** in this live set — its kit-build
 check is deferred to the from-scratch MONA rebuild, see above and `REFACTOR_SPEC.md`
 §8/9/10a; tracked in #707, archived #699.)
+
+One further code belongs to the stable registry without belonging to either layer:
+`unsupported_schema_version` (error, path `/schema_version`) is raised by the shared
+consumer ingress `reg_meta.order.schema_version_issue` — the supported-version policy
+described under "What this layer does NOT validate" above — and never by
+`validate_structural`. A consumer emits it INSTEAD of the layers below it, since those
+read the document as the current contract.
 
 ## Why no FQID parser dependency
 

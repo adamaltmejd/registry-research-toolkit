@@ -55,7 +55,7 @@ def _project(sources: list[dict]) -> ProjectData:
     """Build a structurally valid ProjectData around the given sources."""
     return ProjectData.model_validate(
         {
-            "schema_version": "2.0.0",
+            "schema_version": "3.0.0",
             "steward": "ifau",
             "reg_meta_version": "5.1.0",
             "name": "test",
