@@ -34,15 +34,21 @@ mappings``):
   which is what the researcher side compares against.
 - ``periods_by_coordinate`` — the full §12 coordinate
   ``(register_variant, binding FQID, resolved delivery column)`` → the
-  ascending, non-overlapping union of the EDITION BOUNDS of every table
-  stating it. This is the coordinate's ADMITTED PERIOD: an inventory mapping
-  states not just *what* the steward holds but *when*, and that "when" is
-  per coordinate, not per register — one variant can be delivered 1990-2010 and
-  its successor 2011-, in the same register. Abutting editions collapse (a
-  column in a yearly table since 1990 is ONE interval, not thirty), disjoint
-  ones do not: a coordinate delivered in 2018 and again in 2020 has a real 2019
-  hole, and flattening that to an outer span is exactly the loss this map
-  exists to prevent.
+  ascending, non-overlapping union of the intervals every table stating it
+  holds it OVER. For an explicit ``representation`` that is the table's whole
+  EDITION BOUNDS (the steward's own claim, trusted verbatim); for a
+  ``representation = None`` mapping it is those bounds CLIPPED to each resolved
+  column's own state windows, because one edition can span a rename and each
+  column is held only over its share of it (a 2018-2020 table whose column was
+  renamed in 2020 admits the old spelling in 2018 and the new one in 2020,
+  never either across the whole run). This is the coordinate's ADMITTED PERIOD:
+  an inventory mapping states not just *what* the steward holds but *when*, and
+  that "when" is per coordinate, not per register — one variant can be
+  delivered 1990-2010 and its successor 2011-, in the same register. Abutting
+  intervals collapse (a column in a yearly table since 1990 is ONE interval,
+  not thirty), disjoint ones do not: a coordinate delivered in 2018 and again
+  in 2020 has a real 2019 hole, and flattening that to an outer span is exactly
+  the loss this map exists to prevent.
 - ``period_range_by_register`` — ``register FQID`` (2-segment
   ``<provider>/<register>``) → the outer inclusive ISO ``(lo, hi)`` of its
   coordinates' intervals. The coarse, gap-free PROJECTION of
@@ -76,7 +82,14 @@ from typing import TYPE_CHECKING
 from reg_meta.catalog import CatalogSizes
 from reg_meta.errors import RegMetaError
 from reg_meta.fqid import snap_to_real_month_end
-from reg_meta.inventory import edition_bounds
+
+# `_intersect` is the interval primitive `order.py` clips a state's availability
+# window against a table edition with (see reg_meta/order.py — the interval
+# primitives live in `inventory.py` so an edition, a project period and an
+# availability clip expand through ONE grammar). A null-representation mapping's
+# admitted period is exactly that clip, so it goes through the same helper
+# rather than a second, drifting copy of it.
+from reg_meta.inventory import _intersect, edition_bounds
 
 if TYPE_CHECKING:
     from reg_meta.catalog import Catalog
@@ -294,7 +307,7 @@ def build_catalog_index(inventory: DeliveryInventory, catalog: Catalog) -> Catal
     it is inventoried for coverage but admits nothing (§12).
 
     ``catalog`` is needed ONLY to resolve a ``representation = None`` mapping
-    (see ``_resolved_columns``); an explicit representation IS the resolved
+    (see ``_admitted_intervals``); an explicit representation IS the resolved
     ``delivery_column_name``, so an all-explicit inventory (the committed swecov
     one) builds with zero DB access.
     """
@@ -308,27 +321,31 @@ def build_catalog_index(inventory: DeliveryInventory, catalog: Catalog) -> Catal
         bounds = edition_bounds(table.edition)
         for column in table.columns:
             for mapping in column.mappings:
-                columns: frozenset[str | None] | None
+                # Per RESOLVED column, the intervals of this table's edition the
+                # steward holds it over — never one shared interval set, or a
+                # rename inside the edition would admit both spellings over the
+                # whole of it.
+                admitted: dict[str | None, list[Interval]] | None
                 if mapping.representation is not None:
-                    columns = frozenset({mapping.representation})
+                    admitted = {mapping.representation: list(bounds)}
                 else:
-                    columns = _resolved_columns(mapping, bounds, catalog)
-                if not columns:
+                    admitted = _admitted_intervals(mapping, bounds, catalog)
+                if not admitted:
                     drift.append(
                         _drift_warning(
-                            table.id, column.name, mapping, unresolved=columns is None
+                            table.id, column.name, mapping, unresolved=admitted is None
                         )
                     )
                     continue
                 variant_coord = mapping.register_variant
                 fqid = str(mapping.variable)
                 bindings_by_variant.setdefault(variant_coord, set()).update(
-                    (fqid, resolved) for resolved in columns
+                    (fqid, resolved) for resolved in admitted
                 )
-                for resolved in columns:
+                for resolved, intervals in admitted.items():
                     intervals_by_coordinate.setdefault(
                         (variant_coord, fqid, resolved), []
-                    ).extend(bounds)
+                    ).extend(intervals)
 
     periods_by_coordinate = {
         coordinate: _merged(intervals)
@@ -386,12 +403,13 @@ def _register_spans(
     return spans
 
 
-def _resolved_columns(
+def _admitted_intervals(
     mapping: ColumnMapping,
-    bounds: tuple[tuple[str, str], ...],
+    bounds: tuple[Interval, ...],
     catalog: Catalog,
-) -> frozenset[str | None] | None:
-    """The delivery columns a ``representation = None`` mapping denotes.
+) -> dict[str | None, list[Interval]] | None:
+    """The delivery columns a ``representation = None`` mapping denotes, EACH
+    with the intervals of the table's edition it is actually delivered over.
 
     ``None`` means "the concept's SINGLE representation" (§12), never a wildcard,
     so it must be resolved to the column(s) reg_meta actually delivers for that
@@ -400,21 +418,41 @@ def _resolved_columns(
     carrying no ``delivery_column_name`` keeps ``None`` as its column token,
     matching a researcher resolution of the same state.
 
-    Returns ``None`` when the FQID itself no longer resolves, and an EMPTY set
+    The resolution is per COLUMN, not per edition: one edition can span a
+    rename, so ``resolve_at`` can answer with several columns and each is held
+    only where its own state window reaches. Every column therefore keeps the
+    clip of its state window against the edition interval it was found in —
+    ``order.py``'s STEP 1+2 availability clip, over an edition instead of a
+    requested period. Clipping per column also covers what per-segment
+    resolution alone cannot: a single CONTINUOUS edition (``2018..2020``) is one
+    interval, and only the state windows inside it separate the old spelling
+    from the new. A segment no state reaches contributes nothing, so an edition
+    that starts before the concept does is admitted from its first delivered day
+    onwards, not from the edition's.
+
+    Returns ``None`` when the FQID itself no longer resolves, and an EMPTY dict
     when it resolves but no state covers the edition — the two drift codes the
     caller distinguishes.
     """
     variant = mapping.register_variant.split("/")[2]
-    columns: set[str | None] = set()
-    for lo, hi in bounds:
+    admitted: dict[str | None, list[Interval]] = {}
+    for edition in bounds:
         try:
             states = catalog.resolve_at(
-                mapping.variable, {"from": lo, "to": hi}, variant=variant
+                mapping.variable,
+                {"from": edition[0], "to": edition[1]},
+                variant=variant,
             )
         except RegMetaError:
             return None
-        columns.update(state.delivery_column_name for state in states)
-    return frozenset(columns)
+        for state in states:
+            # The state's own window, built exactly as `order.py`'s availability
+            # clip builds it. The EDITION side is deliberately left unsnapped:
+            # an interval is stored as `edition_bounds` produced it (`_merged`).
+            window = (state.valid_from, snap_to_real_month_end(state.valid_to))
+            if (held := _intersect(window, edition)) is not None:
+                admitted.setdefault(state.delivery_column_name, []).append(held)
+    return admitted
 
 
 def _drift_warning(

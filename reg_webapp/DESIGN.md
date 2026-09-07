@@ -777,14 +777,24 @@ internals are dataclasses), carrying three maps derived from the inventory's
   "the concept's *single* representation" (§12) and is **not** a wildcard: it is
   resolved against the catalog over the table's edition bounds, so a mapping authored
   before reg_meta grew a sibling column still compares equal to a researcher who must
-  now pin.
+  now pin. One edition can span a **rename**, so that resolution can answer with several
+  columns — each admitted only over its own share of the edition (next bullet).
 - `periods_by_coordinate` — the whole §12 coordinate
   `(register_variant, binding FQID, resolved delivery column)` → the ascending,
-  non-overlapping union of the **edition bounds** of every table stating it. A mapping
-  states not only *what* the steward holds but *when*, and that "when" is per
+  non-overlapping union of the intervals every table stating it holds it *over*: the
+  table's whole **edition bounds** for an explicit `representation` (the steward's own
+  claim, trusted verbatim), and those bounds **clipped to the resolved column's state
+  windows** for a `representation = None` mapping — `order.py`'s availability clip, run
+  against an edition instead of a requested period. The clip is what keeps admission
+  exact where the edition is coarser than the delivery: a table spanning a rename holds
+  the old spelling before it and the new one after, never either across the whole run
+  (and clipping per column, not per edition segment, is the only form that also splits a
+  single *continuous* edition at the rename), while a table whose edition starts before
+  the concept does is admitted from its first delivered day, not the edition's. A
+  mapping states not only *what* the steward holds but *when*, and that "when" is per
   coordinate: one variant of a register can run 1990–2010 and its successor 2011–.
-  Abutting editions collapse (a column in a yearly table since 1990 is one interval, not
-  thirty), disjoint ones do **not** — the committed SWECOV inventory has 1614
+  Abutting intervals collapse (a column in a yearly table since 1990 is one interval,
+  not thirty), disjoint ones do **not** — the committed SWECOV inventory has 1614
   coordinates with a real hole (the biennial innovation survey delivers 2002, 2004, 2006
   …), and flattening those to an outer span is precisely the loss this map exists to
   prevent. Retained for the order lane (Y-31); the validator does **not** gate on it

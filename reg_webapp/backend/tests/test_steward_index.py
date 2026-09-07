@@ -7,8 +7,9 @@ Covers:
 
 (a) the committed ``inventory.toml`` filters the universe (register_variant coord
     → admitted ``(FQID, resolved delivery column)`` pairs, the per-coordinate
-    union of edition intervals and its coarse per-register projection, unmapped
-    columns admitting nothing);
+    union of edition intervals — clipped, for a ``representation = None``
+    mapping, to each resolved column's own state windows — and its coarse
+    per-register projection, unmapped columns admitting nothing);
 (b) the membership probes ``fqid_outside_steward_catalog`` (A5.2b-ii) consults —
     variant-scoped for admission, variant-blind for discovery;
 (c) **boot-survives-drift**: an inventory mapping reg_meta has drifted out from
@@ -32,6 +33,7 @@ from typing import TYPE_CHECKING
 
 import pytest
 import reg_meta.db
+from _slugged_db import add_state, build_slugged_db
 from _steward_helpers import (
     CLEAN_HOLDINGS as _CLEAN_HOLDINGS,
     catalog_index as _catalog_index,
@@ -57,8 +59,58 @@ def catalog(catalog_db):
         conn.close()
 
 
+@pytest.fixture
+def renamed_column_catalog():
+    """A catalog carrying a RENAME: ``scb/lisa/kon`` is delivered as ``Kon``
+    through 2018 and as ``KonNy`` from 2019 on.
+
+    Its own hand-built slugged DB rather than the shared ``catalog_db`` fixture:
+    the rename is the point (one binding, two canonical representations in
+    disjoint state windows), and no other test wants it in the browse fixtures.
+    """
+    conn = build_slugged_db()
+    # The stock fixture state is `Kon` from 2018, open-ended; close it at the
+    # rename and continue the concept under the new spelling.
+    conn.execute("UPDATE variable_state SET valid_to = '2018-12-31'")
+    add_state(
+        conn,
+        register_id=1,
+        variable_slug="kon",
+        register_variant_id=10,
+        valid_from="2019-01-01",
+        delivery_column_name="KonNy",
+    )
+    conn.commit()
+    try:
+        yield Catalog(conn)
+    finally:
+        conn.close()
+
+
 def _inventory(toml: str) -> DeliveryInventory:
     return DeliveryInventory.model_validate(tomllib.loads(toml))
+
+
+# One table, one physical column, ONE `representation = None` mapping — the arm
+# that must be resolved against the catalog. Only the edition varies, so each
+# test below states just the edition shape it is about.
+_NULL_MAPPING_TABLE = """\
+version = 1
+steward = "ifau"
+
+[[table]]
+id = "LISA_Individ.csv"
+edition = {edition}
+
+[[table.column]]
+name = "P1105_Kon"
+[[table.column.mapping]]
+register_variant = "scb/lisa/individer-15plus"
+variable = "scb/lisa/kon"
+"""
+
+_KON = ("scb/lisa/individer-15plus", "scb/lisa/kon", "Kon")
+_KON_NY = ("scb/lisa/individer-15plus", "scb/lisa/kon", "KonNy")
 
 
 # ── (a) the inventory filters the universe ─────────────────────────────────
@@ -240,6 +292,71 @@ def test_coordinate_periods_are_keyed_per_coordinate_not_per_register(catalog):
         ),
     }
     assert index.period_range_by_register == {"scb/rams": ("2018-01-01", "2020-12-31")}
+
+
+def test_disjoint_editions_hold_each_column_only_where_it_is_delivered(
+    renamed_column_catalog,
+):
+    """A table delivered in 2018 AND 2020, across a rename: the steward holds
+    the OLD spelling in 2018 and the NEW one in 2020, and nothing else.
+
+    Resolving the mapping to a bare set of columns loses which segment each was
+    found in, and every column then inherits every edition interval — admitting
+    a `KonNy` column in a 2018 delivery that has none, and a retired `Kon` in
+    2020. Exact admission is the whole point of the per-coordinate map.
+    """
+    index = build_catalog_index(
+        _inventory(_NULL_MAPPING_TABLE.format(edition="[2018, 2020]")),
+        renamed_column_catalog,
+    )
+
+    assert index.periods_by_coordinate == {
+        _KON: (("2018-01-01", "2018-12-31"),),
+        _KON_NY: (("2020-01-01", "2020-12-31"),),
+    }
+    assert index.drift_warnings == ()
+
+
+def test_a_continuous_edition_splits_at_the_rename(renamed_column_catalog):
+    """The same rename under ONE continuous edition — the case per-segment
+    resolution cannot reach.
+
+    `{ from = 2018, to = 2020 }` is a SINGLE edition interval, so segmenting the
+    edition separates nothing; only clipping each resolved column against its
+    own state window puts the boundary where the rename is. The union still
+    covers the whole edition (the concept is delivered throughout), split at the
+    day the spelling changed.
+    """
+    index = build_catalog_index(
+        _inventory(_NULL_MAPPING_TABLE.format(edition="{ from = 2018, to = 2020 }")),
+        renamed_column_catalog,
+    )
+
+    assert index.periods_by_coordinate == {
+        _KON: (("2018-01-01", "2018-12-31"),),
+        _KON_NY: (("2019-01-01", "2020-12-31"),),
+    }
+    assert index.drift_warnings == ()
+
+
+def test_an_edition_segment_no_state_covers_is_not_admitted(catalog):
+    """`scb/lisa/kon`'s only state begins in 2018, so a table delivered in 2015
+    AND 2018 states a holding reg_meta backs in 2018 ONLY.
+
+    The uncovered segment must not ride along on the covered one: it would admit
+    a year the steward cannot deliver and drag the register's browse span (and
+    the deployment-wide year span behind it) three years too far back. Partial
+    coverage is NOT drift — the mapping resolves and is admitted; only a mapping
+    that resolves nowhere in the edition warns.
+    """
+    index = build_catalog_index(
+        _inventory(_NULL_MAPPING_TABLE.format(edition="[2015, 2018]")), catalog
+    )
+
+    assert index.periods_by_coordinate == {_KON: (("2018-01-01", "2018-12-31"),)}
+    assert index.period_range_by_register == {"scb/lisa": ("2018-01-01", "2018-12-31")}
+    assert index.catalog_period_span == (2018, 2018)
+    assert index.drift_warnings == ()
 
 
 def test_catalog_period_span_is_null_when_nothing_is_admitted():
