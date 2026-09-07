@@ -108,6 +108,12 @@ export class IndexedDBPersistence implements ProjectPersistence {
             req.onsuccess = () =>
               resolve(req.result as StoredDraft | undefined);
             req.onerror = () => reject(req.error ?? new Error("load failed"));
+            // As on save: an abort raises no request error, so without this the
+            // promise never settles — and the restore gate a catalog Add awaits
+            // (`projectStore.restored`) would hang the next pick instead of
+            // degrading to in-memory authoring.
+            txn.onabort = () =>
+              reject(txn.error ?? new Error("load txn aborted"));
           },
         );
         return restoredDraft(record, this.schemaVersion);

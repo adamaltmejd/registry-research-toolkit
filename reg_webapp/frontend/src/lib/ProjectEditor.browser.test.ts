@@ -213,13 +213,14 @@ describe("ProjectEditor stable keys (middle-remove keeps the right survivors)", 
 });
 
 describe("ProjectEditor renders the ValidationPanel", () => {
-  it("shows the automatic validation status (the panel is present)", async () => {
+  it("shows the current validation status (the panel is present)", async () => {
+    // The automatic validation runs on the APP-owned draft lifecycle (App.svelte),
+    // not on this route — the cart renders whatever verdict the store holds.
     seedSources(["scb/lisa/v1"]);
+    await projectStore.validate();
     await render(ProjectEditor, { regMetaVersion: "1.0.0", steward: "global" });
 
-    await expect
-      .element(page.getByText("Checking the current project…"))
-      .toBeVisible();
+    await expect.element(page.getByText(/Valid — no errors\./)).toBeVisible();
   });
 
   it("passes project-window coverage hints into the panel", async () => {

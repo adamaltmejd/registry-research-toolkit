@@ -97,15 +97,17 @@ grant for the sandbox helper), then `single-process` (a sandboxed agent shell, i
 that line as evidence. A lane must provision first the way the gates do (offline
 `uv sync`, `cp -a /opt/frontend/node_modules reg_webapp/frontend/`).
 
-**Project error/retry flows (`flows`) — what the `project-flows` yard gate runs.** One
-command drives the whole `/project` error+retry evidence set: three scenarios (an empty
-project the backend blocks, an order request that fails in transport and is retried, a
-validation request that fails and is retried) at 375×812, 768×1024, 1280×900 and
-1920×1080 — 12 cases, each in a fresh browser context against the real backend, with
-only the one failing request injected. It asserts the behavior (real 422 +
-`project_empty`, which retry the banner offers, a real `order.json` download whose
-manifest entry matches the synthetic catalog, the request counts behind a recovery) and
-writes 16 PNGs into the directory you name:
+**Project flows (`flows`) — what the `project-flows` yard gate runs.** One command
+drives the whole project evidence set: four scenarios — an empty project the backend
+blocks, an order request that fails in transport and is retried, a validation request
+that fails and is retried, and a draft authored from a catalog leaf (picked, reloaded,
+recovered, then extended by a further pick on a cold catalog entry) — at 375×812,
+768×1024, 1280×900 and 1920×1080 — 16 cases, each in a fresh browser context against the
+real backend, with one failing request injected per error scenario and none into the
+draft one. It asserts the behavior (real 422 + `project_empty`, which retry the banner
+offers, a real `order.json` download whose manifest entry matches the synthetic catalog,
+the request counts behind a recovery, and what the browser's own IndexedDB holds across
+reloads) and writes 24 PNGs into the directory you name:
 
 ```sh
 db="$(mktemp -d)"
@@ -114,15 +116,15 @@ REG_META_DB="$db" bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh flows /tm
 ```
 
 The flows assert against the synthetic catalog those two lines set up (`scb/lisa/kon` at
-variant `individer-15plus` → column `Kon`), which `catalog_fixture_db.py` builds with
-the shared fixture builder (`reg_webapp/backend/scripts/fixture_db.py`, below) — not a
-released DB. A nonzero exit is a failed assertion, an unexpected JS page error,
-horizontal overflow at some viewport, or a server that never started; the servers are
-torn down either way.
+variant `individer-15plus` → column `Kon`, and `scb/rams/syss` → column `Syss` for the
+catalog-draft case's second pick), which `catalog_fixture_db.py` builds with the shared
+fixture builder (`reg_webapp/backend/scripts/fixture_db.py`, below) — not a released DB.
+A nonzero exit is a failed assertion, an unexpected JS page error, horizontal overflow
+at some viewport, or a server that never started; the servers are torn down either way.
 
 In yard this is the `project-flows` gate (`.yard/config.toml`, selected by the `ui`
 workflow), which hands the driver `$YARD_ARTIFACT_DIR` as the output directory and
-declares those 16 filenames as its artifacts. Unlike the ephemeral `/tmp` captures
+declares those 24 filenames as its artifacts. Unlike the ephemeral `/tmp` captures
 above, these are **retained**: `yard lane show <lane>` prints the artifact paths for the
 execution — they outlive the container and view cleanup, so open the PNGs there and
 judge them against `reg_webapp/frontend/DESIGN.md`. The gate log carries the rest

@@ -198,12 +198,14 @@ git diff --exit-code -- src/lib/api-types.ts
 ' '''
 timeout_minutes = 30
 
-# The rendered project error/retry evidence (Y-34), selected by the `ui`
-# workflow only. It drives the CANDIDATE's own app — a fresh backend on the
-# synthetic catalog fixture DB the backend tests build, plus the Vite dev server
-# — through three /project scenarios at four viewports (12 cases) and keeps one
-# PNG per settled state for the operator's visual judgment. No model runs here:
-# the driver asserts the behavior, `artifacts` retains the pictures.
+# The rendered project evidence (Y-34), selected by the `ui` workflow only. It
+# drives the CANDIDATE's own app — a fresh backend on the synthetic catalog
+# fixture DB the backend tests build, plus the Vite dev server — through three
+# /project error/retry scenarios and the catalog-authored draft flow (Y-42:
+# pick from a catalog leaf, reload, recover, extend on a cold entry) at four
+# viewports (16 cases), and keeps one PNG per settled state for the operator's
+# visual judgment. No model runs here: the driver asserts the behavior,
+# `artifacts` retains the pictures.
 #
 # Provisioning mirrors the gates above (offline two-step `uv sync`, the baked
 # node_modules, /opt/pw-browsers), plus two things dev.sh needs: the candidate's
@@ -250,6 +252,14 @@ artifacts = [
   "validation-error-768x1024.png",
   "validation-error-1280x900.png",
   "validation-error-1920x1080.png",
+  "catalog-pick-375x812.png",
+  "catalog-pick-768x1024.png",
+  "catalog-pick-1280x900.png",
+  "catalog-pick-1920x1080.png",
+  "project-restored-375x812.png",
+  "project-restored-768x1024.png",
+  "project-restored-1280x900.png",
+  "project-restored-1920x1080.png",
 ]
 
 # Review runs on every candidate. max_gate_repair_rounds limits repairs after

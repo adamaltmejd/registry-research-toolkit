@@ -154,7 +154,7 @@ class InMemoryPersistence implements ProjectPersistence {
 let persistence: ProjectPersistence = new InMemoryPersistence();
 
 /** Swap the persistence impl (A5.4's IndexedDB drop-in). Called before
- * `initPersistence` so the load-at-init uses the new impl. */
+ * `initDraftLifecycle` so the load-at-init uses the new impl. */
 export function setPersistence(impl: ProjectPersistence): void {
   persistence = impl;
 }
@@ -162,6 +162,12 @@ export function setPersistence(impl: ProjectPersistence): void {
 /** The single autosave key (one draft per session). Exported as the single source
  * of truth so `main.ts` wires the IndexedDB load key from it (A5.4). */
 export const AUTOSAVE_KEY = "current";
+
+/** Backs `projectStore.restored` (which documents the gate). Reassigned by
+ * `initDraftLifecycle`, and already-resolved until then — a consumer mounted
+ * without the lifecycle (a component test) must not await a restore that will
+ * never happen. */
+let restored: Promise<void> = Promise.resolve();
 
 // ── The store ───────────────────────────────────────────────────────────────
 
@@ -455,6 +461,14 @@ export const projectStore = {
   },
   get validationStatus() {
     return validationStatus;
+  },
+  /** Resolves once the load-at-init restore has settled. Catalog authoring
+   * awaits it before creating or mutating a draft: a cold entry at /catalog
+   * would otherwise read the still-empty store, mint a SECOND project on Add,
+   * and autosave it over the saved one. Not reactive by design — a one-shot
+   * lifecycle gate, not rendered state. */
+  get restored() {
+    return restored;
   },
 
   // ── Stable client-side ids (issue #200 — keys for the editor each-blocks) ──
@@ -853,38 +867,55 @@ function newSource(
   return { name, register_variant: registerVariant, period, bindings };
 }
 
-// ── Autosave + load-at-init (the A5.4 persistence wiring) ────────────────────
+// ── The draft lifecycle: restore + autosave + automatic validation ───────────
 
 /**
- * Wire the debounced autosave `$effect` + the load-at-init. MUST be called inside
- * a reactive root (a component init or an `$effect.root`) — it registers an
- * `$effect`. c-i: the autosave writes to the in-memory stub; the load-at-init
- * returns null (no restore). A5.4 swaps in the IndexedDB impl and snapshots the
- * draft at the persistence boundary (a live $state proxy is not
- * structured-cloneable — see the save call below).
+ * Wire the load-at-init restore, the debounced autosave `$effect` and the
+ * automatic validation. MUST be called inside a reactive root (a component init
+ * or an `$effect.root`) — it registers `$effect`s. A5.4's IndexedDB impl is
+ * swapped in via `setPersistence` before this runs; the draft is snapshotted at
+ * the persistence boundary (a live $state proxy is not structured-cloneable —
+ * see the save call below).
  *
- * Returns the (already-pending) load promise so a caller can await the
- * (currently no-op) restore if it wants to. The debounce timer is cleared on
- * teardown so a pending save doesn't fire after unmount.
+ * APPLICATION-owned: called ONCE, at the app's reactive root (`App.svelte`), and
+ * never by a route. The draft outlives every route — it is authored from the
+ * catalog and read at /project — so a route-owned lifecycle both loses the
+ * catalog-authored draft (nothing restores or autosaves until /project is
+ * visited) and, once a second caller exists, registers a duplicate set of
+ * effects that autosave and validate the same edit twice.
+ *
+ * The restore is exposed as `projectStore.restored`, which catalog authoring
+ * awaits before it creates or mutates a draft. The debounce timers are cleared
+ * on teardown so a pending save doesn't fire after unmount.
  */
-export function initPersistence(): Promise<void> {
-  // Load-at-init: restore the most-recent draft (null in c-i → no restore). Only
-  // restore onto an empty store so we never clobber an in-progress new/open.
-  const loaded = persistence.load().then((restored) => {
-    if (restored != null && draft == null) {
-      // Atomic replacement: compute the mirror before assigning `draft` so a throw
-      // can't leave a restored draft with a stale/empty mirror inside this `.then()`.
-      const ids = buildIds(restored);
-      draft = restored;
-      validationGeneration += 1;
-      sourceIds = ids;
-      // Do NOT reset lastDownloaded here: a restored autosave draft has NOT been
-      // downloaded to the durable project_data.json this session, so it must read
-      // as DIRTY (unsaved-changes warning). lastDownloaded stays null →
-      // dirty=true → the header indicator + beforeunload warning fire. IndexedDB
-      // autosave is recovery, not the durable file.
-    }
-  });
+export function initDraftLifecycle(): void {
+  // Load-at-init: restore the most-recent draft. Only restore onto an EMPTY
+  // store, so a late restore never overwrites a deliberate new/open — both set
+  // the draft synchronously, so a non-null draft here means the user has already
+  // acted and their document wins.
+  // A REJECTED load degrades to "no restore": the gate below must settle for
+  // authoring to proceed, so a broken IndexedDB (private mode, quota, a blocked
+  // open) leaves the researcher authoring in memory — with the file download
+  // still the durable copy — rather than wedged on a promise that never
+  // resolves.
+  restored = persistence
+    .load()
+    .catch(() => null)
+    .then((loaded) => {
+      if (loaded != null && draft == null) {
+        // Atomic replacement: compute the mirror before assigning `draft` so a throw
+        // can't leave a restored draft with a stale/empty mirror inside this `.then()`.
+        const ids = buildIds(loaded);
+        draft = loaded;
+        validationGeneration += 1;
+        sourceIds = ids;
+        // Do NOT reset lastDownloaded here: a restored autosave draft has NOT been
+        // downloaded to the durable project_data.json this session, so it must read
+        // as DIRTY (unsaved-changes warning). lastDownloaded stays null →
+        // dirty=true → the header indicator + beforeunload warning fire. IndexedDB
+        // autosave is recovery, not the durable file.
+      }
+    });
 
   // Debounced autosave: re-runs whenever `draft` changes (the `$effect` tracks the
   // `serializeProjectData(draft)` read). Debounced ~500ms so a burst of edits
@@ -930,6 +961,4 @@ export function initPersistence(): Promise<void> {
       validationScheduled = false;
     };
   });
-
-  return loaded;
 }

@@ -1,6 +1,6 @@
 <script lang="ts">
 import { regMetaReleaseTag, safeSourceSlots } from "./project_data";
-import { initPersistence, projectStore } from "./project_store.svelte";
+import { projectStore } from "./project_store.svelte";
 import SourceEditor from "./SourceEditor.svelte";
 import { Button, EmptyState, KeyValue, type KeyValueRow, Panel } from "./ui";
 import ValidationPanel from "./ValidationPanel.svelte";
@@ -29,10 +29,6 @@ const { regMetaVersion, steward } = $props<{
   regMetaVersion: string;
   steward: string;
 }>();
-
-// Wire the debounced autosave + load-at-init (registers an $effect, so it must run
-// at component init inside the reactive root).
-initPersistence();
 
 // A hidden <input type=file> driven by the toolbar "Open" button. Resetting its
 // value after each pick lets re-opening the SAME file fire `change` again.

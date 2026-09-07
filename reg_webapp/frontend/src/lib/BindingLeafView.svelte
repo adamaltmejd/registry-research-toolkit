@@ -503,6 +503,10 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
   ) {
     return true;
   }
+  // The draft lifecycle is application-owned and its restore is ASYNCHRONOUS: on a
+  // cold entry at a catalog route the store is still empty while IndexedDB is read.
+  // Wait for it to settle, or this Add mints a SECOND project over the saved one.
+  await projectStore.restored;
   if (projectStore.draft === null && payload.adds.length > 0) {
     projectStore.newProject({
       reg_meta_version: regMetaReleaseTag(regMetaVersion),

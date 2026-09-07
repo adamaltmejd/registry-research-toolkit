@@ -380,6 +380,43 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     );
   });
 
+  it("holds an Apply until the app-owned draft restore has settled", async () => {
+    // The same gate BindingLeafView's Add awaits (App.svelte owns the draft
+    // lifecycle, and its restore is asynchronous): a group Apply committed while
+    // IndexedDB is still being read would write into a draft the restore is about
+    // to replace, forking the researcher's saved project.
+    vi.mocked(getConceptGroup).mockResolvedValue(node());
+    vi.mocked(getConceptGroupGraph).mockResolvedValue(twoSingleColGraph());
+    mockResolveColumns({ "scb/rams/inkjan": ["Inkjan"] });
+
+    const { promise: gate, resolve: release } = Promise.withResolvers<void>();
+    const restoring = vi.spyOn(projectStore, "restored", "get");
+    restoring.mockReturnValue(gate);
+    try {
+      await renderGroup();
+
+      await page.getByRole("checkbox", { name: /Inkjan/ }).click();
+      await page
+        .getByRole("button", {
+          name: /Add to project|Remove from project|Apply changes/,
+        })
+        .click();
+
+      // Still restoring: the pick is held, not committed.
+      await expect
+        .element(page.getByRole("button", { name: "Applying..." }))
+        .toBeVisible();
+      expect(projectStore.draft?.sources).toHaveLength(0);
+
+      release();
+      await vi.waitFor(() => {
+        expect(projectStore.draft?.sources).toHaveLength(1);
+      });
+    } finally {
+      restoring.mockRestore();
+    }
+  });
+
   // #678 finding 3: an active ?period is HONORED on add (the committed source carries
   // the user's narrowed window, not the row's full span).
   it("commits the row span INTERSECTED with the active ?period, not the full span", async () => {

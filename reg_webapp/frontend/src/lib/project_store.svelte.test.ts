@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { MODEL_A_SCHEMA_VERSION } from "./project_data";
 import {
   checkVersionGate,
-  initPersistence,
+  initDraftLifecycle,
   type ProjectPersistence,
   projectStore,
   type StagedAdd,
@@ -394,7 +394,7 @@ describe("persistence wiring (the A5.4 swap point)", () => {
     projectStore.updateField("name", "persisted-name-check");
 
     const stop = $effect.root(() => {
-      initPersistence();
+      initDraftLifecycle();
     });
     // The autosave is debounced — nothing yet.
     expect(saves).toHaveLength(0);
@@ -413,22 +413,6 @@ describe("persistence wiring (the A5.4 swap point)", () => {
     );
     stop();
     vi.useRealTimers();
-  });
-
-  it("load-at-init returns null in c-i (no restore)", async () => {
-    const fake: ProjectPersistence = {
-      save: () => Promise.resolve(),
-      load: vi.fn(() => Promise.resolve(null)),
-    };
-    setPersistence(fake);
-    let loaded: Promise<void>;
-    const stop = $effect.root(() => {
-      loaded = initPersistence();
-    });
-    // biome-ignore lint/style/noNonNullAssertion: assigned synchronously in the root.
-    await loaded!;
-    expect(fake.load).toHaveBeenCalled();
-    stop();
   });
 
   it("auto-validates the current draft after the debounce", async () => {
@@ -451,7 +435,7 @@ describe("persistence wiring (the A5.4 swap point)", () => {
     projectStore.newProject(SEED);
 
     const stop = $effect.root(() => {
-      initPersistence();
+      initDraftLifecycle();
     });
     await Promise.resolve();
     expect(projectStore.validationStatus).toBe("checking");
@@ -851,7 +835,7 @@ describe("applyStagedDiff (#992 — one atomic commit path)", () => {
     });
     projectStore.newProject(SEED);
     const stop = $effect.root(() => {
-      initPersistence();
+      initDraftLifecycle();
     });
     await vi.advanceTimersByTimeAsync(600);
     saves.length = 0; // ignore the newProject autosave

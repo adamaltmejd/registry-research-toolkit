@@ -739,6 +739,42 @@ describe("BindingLeafView representation picker (#678)", () => {
     );
   });
 
+  it("holds an Add until the app-owned draft restore has settled", async () => {
+    // The draft lifecycle is application-owned (App.svelte) and its restore is
+    // ASYNCHRONOUS: on a cold entry at a catalog route the store is still empty
+    // while IndexedDB is read. A pick committed in that window would mint a second
+    // project and later overwrite the saved one, so the Add awaits the gate.
+    const { promise: gate, resolve: release } = Promise.withResolvers<void>();
+    const restoring = vi.spyOn(projectStore, "restored", "get");
+    restoring.mockReturnValue(gate);
+    try {
+      await render(BindingLeafView, {
+        fqidPath: "scb/lisa/kon",
+        node: node(pickerStates),
+        regMetaVersion: SEED.regMetaVersion,
+        steward: SEED.steward,
+        windowMinYear: SEED.windowMinYear,
+        vintageYear: 2024,
+      });
+
+      await page.getByRole("checkbox", { name: /Kon/ }).click();
+      await page.getByRole("button", { name: "Add to project" }).click();
+
+      // Still restoring: the pick is held, not committed.
+      await expect
+        .element(page.getByRole("button", { name: "Applying..." }))
+        .toBeVisible();
+      expect(projectStore.draft?.sources).toHaveLength(0);
+
+      release();
+      await vi.waitFor(() => {
+        expect(projectStore.draft?.sources).toHaveLength(1);
+      });
+    } finally {
+      restoring.mockRestore();
+    }
+  });
+
   it("applying one folded variant-family row adds each concrete era source", async () => {
     vi.mocked(getCatalogNode).mockImplementation(async (_fqid, params) => {
       const variant =

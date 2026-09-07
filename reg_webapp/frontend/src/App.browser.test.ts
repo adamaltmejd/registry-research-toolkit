@@ -3,7 +3,14 @@ import { page } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
 import App from "./App.svelte";
 import type { CatalogStats, Context, RootResponse } from "./lib/api";
-import { getCatalogRoot, getContext, getStats } from "./lib/api";
+import {
+  getCatalogRoot,
+  getContext,
+  getStats,
+  validateProject,
+} from "./lib/api";
+import type { ProjectData } from "./lib/project_data";
+import { projectStore, setPersistence } from "./lib/project_store.svelte";
 import { router } from "./lib/router.svelte";
 
 vi.mock("./lib/api", async (importOriginal) => {
@@ -13,6 +20,7 @@ vi.mock("./lib/api", async (importOriginal) => {
     getCatalogRoot: vi.fn(),
     getContext: vi.fn(),
     getStats: vi.fn(),
+    validateProject: vi.fn(),
   };
 });
 
@@ -46,6 +54,8 @@ beforeEach(() => {
     registers: 2,
     variables: 3,
   } satisfies CatalogStats);
+  vi.mocked(validateProject).mockReset();
+  vi.mocked(validateProject).mockResolvedValue({ ok: true, issues: [] });
 });
 
 afterEach(() => {
@@ -75,5 +85,57 @@ describe("App viewport geometry", () => {
     expect(document.documentElement.scrollHeight).toBeLessThanOrEqual(
       document.documentElement.clientHeight,
     );
+  });
+});
+
+describe("App owns the draft lifecycle", () => {
+  it("autosaves and validates a draft authored away from /project, once", async () => {
+    // The lifecycle belongs to the app root, not to /project: a draft authored
+    // from a catalog page is restored, autosaved and validated on every route —
+    // and visiting /project afterwards must not start a SECOND instance that
+    // saves and validates the same edit twice.
+    const saves: string[] = [];
+    setPersistence({
+      save: (_key: string, draft: ProjectData) => {
+        saves.push(String(draft.name));
+        return Promise.resolve();
+      },
+      load: () => Promise.resolve(null),
+    });
+
+    router.navigate("/catalog");
+    await render(App);
+    await projectStore.restored;
+
+    projectStore.newProject({
+      reg_meta_version: "reg_meta/v1.0.0",
+      steward: "global",
+    });
+    projectStore.updateField("name", "picked-from-the-catalog");
+
+    await vi.waitFor(
+      () => {
+        expect(saves).toEqual(["picked-from-the-catalog"]);
+      },
+      { timeout: 3000 },
+    );
+    expect(validateProject).toHaveBeenCalledTimes(1);
+
+    router.navigate("/project");
+    await expect
+      .element(page.getByRole("heading", { name: /picked-from-the-catalog/ }))
+      .toBeVisible();
+
+    projectStore.updateField("name", "renamed-on-project");
+    await vi.waitFor(
+      () => {
+        expect(saves).toEqual([
+          "picked-from-the-catalog",
+          "renamed-on-project",
+        ]);
+      },
+      { timeout: 3000 },
+    );
+    expect(validateProject).toHaveBeenCalledTimes(2);
   });
 });

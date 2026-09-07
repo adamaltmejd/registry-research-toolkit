@@ -12,7 +12,8 @@
 //                       slider, screenshot each step
 //   shot <url-path>     open a path (e.g. /catalog/scb/lisa) and screenshot it
 //   eval <url-path> <js> open a path, evaluate JS in the page, print the result
-//   flows <out-dir>     the /project error+retry gate: three scenarios × four
+//   flows <out-dir>     the project gate: four scenarios (three /project
+//                       error+retry, one catalog-authored draft) × four
 //                       viewports, each in a fresh context, PNGs → <out-dir>
 //
 // smoke/shot screenshots land in $REG_WEBAPP_SHOTS — dev.sh sets it to the one
@@ -187,17 +188,18 @@ function check(condition, message) {
   if (!condition) throw new Error(message);
 }
 
-// ── `flows`: the /project error + retry gate ────────────────────────────────
+// ── `flows`: the project error/retry + catalog-draft gate ───────────────────
 //
-// Three scenarios × four viewports = 12 cases, each in a FRESH context against
+// Four scenarios × four viewports = 16 cases, each in a FRESH context against
 // the REAL backend (the caller points it at a synthetic catalog DB through
-// REG_META_DB — see catalog_fixture_db.py). Only the failing request of each
-// case is injected: everything else is the actual app answering. The 16 PNGs
-// these write are the artifact contract declared in .yard/config.toml, and the
-// filenames carry the size — so the sizes are the `shot` presets above, spelled
-// once (frontend/DESIGN.md designs for exactly these four widths). Named one by
-// one, not Object.values: a fifth preset must not silently turn 12 cases into 15
-// and invalidate the declared artifact list.
+// REG_META_DB — see catalog_fixture_db.py). The three error scenarios inject
+// exactly one failing request and the draft scenario injects none: everything
+// else is the actual app answering — including the browser's own IndexedDB, which
+// the catalog-draft case reloads against. The 24 PNGs these write are the artifact
+// contract declared in .yard/config.toml, and the filenames carry the size — so the
+// sizes are the `shot` presets above, spelled once (frontend/DESIGN.md designs for
+// exactly these four widths). Named one by one, not Object.values: a fifth preset
+// must not silently turn 16 cases into 20 and invalidate the declared artifact list.
 const FLOW_VIEWPORTS = [
   VIEWPORTS.mobile,
   VIEWPORTS.tablet,
@@ -243,6 +245,52 @@ function openProjectFile(page, project) {
     mimeType: "application/json",
     buffer: Buffer.from(`${JSON.stringify(project, null, 2)}\n`, "utf8"),
   });
+}
+
+/** Stage a delivery column in the catalog picker and commit it to the project —
+ * the researcher's only add path (both picker shapes wrap their checkbox in the
+ * row/cell label, so the column name is its accessible name). */
+async function addColumn(page, column) {
+  await page.getByRole("checkbox", { name: new RegExp(`^${column}\\b`) }).check();
+  await page.getByRole("button", { name: "Add to project" }).click();
+}
+
+/** The autosaved draft as IndexedDB actually holds it (`null` until the debounced
+ * write lands), read in the page: the catalog flow's whole contract is that the
+ * draft is durable BEFORE /project is ever opened, and the UI cannot show that. */
+async function autosavedDraft() {
+  const done = (request) =>
+    new Promise((resolve, reject) => {
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => reject(request.error ?? new Error("IndexedDB read failed"));
+    });
+  const db = await done(indexedDB.open("reg_webapp_projects"));
+  try {
+    if (!db.objectStoreNames.contains("drafts")) return null;
+    const store = db.transaction("drafts", "readonly").objectStore("drafts");
+    return (await done(store.get("current")))?.draft ?? null;
+  } finally {
+    db.close();
+  }
+}
+
+/** Wait until the autosave has written exactly `want` (register variants, in
+ * order). POLLED, not slept: an Apply is several draft mutations (the project is
+ * created, then the picks commit once their periods resolve) and the write lands
+ * ~500ms after the LAST of them, so the first record on disk may be a skeleton.
+ * Its own loop rather than waitForFunction so a timeout reports what the draft
+ * actually held — the line an operator triages a red gate from. */
+async function draftSaved(page, want) {
+  const wanted = JSON.stringify(want);
+  const deadline = Date.now() + 15_000;
+  let held = "null";
+  do {
+    const stored = await page.evaluate(autosavedDraft);
+    held = JSON.stringify((stored?.sources ?? []).map((s) => s.register_variant));
+    if (held === wanted) return;
+    await page.waitForTimeout(250);
+  } while (Date.now() < deadline);
+  throw new Error(`autosaved draft holds ${held}, wanted ${wanted}`);
 }
 
 /** Tab until `locator` holds focus — a REAL keyboard focus, so the shot shows
@@ -455,9 +503,69 @@ async function validationRetryCase(page, counts, shoot, project) {
   check(counts.order === 0, `the validation retry POSTed /order ${counts.order} time(s)`);
 }
 
+/** Scenario 4 — the CATALOG-authored draft. The project lifecycle belongs to the
+ * app, not to /project: a column picked from a catalog leaf must autosave, survive
+ * a reload, and be EXTENDED (never forked) by a further pick made on a cold
+ * catalog entry. Drives the real IndexedDB — the store is empty on every cold
+ * load here, so nothing but the restore can produce these results. */
+async function catalogDraftCase(page, counts, shoot) {
+  // (1) A catalog leaf at a chosen period, on a fresh browser context, with
+  //     /project never opened.
+  const green = validated(page);
+  await addColumn(page, "Kon");
+  await green;
+  await settled(page);
+  // The leaf's own confirmation, rather than the rail's project chip: the rail is
+  // an off-canvas drawer at the narrow viewports this case also runs at.
+  await page.getByRole("status").filter({ hasText: "Applied +1 column" }).waitFor();
+  await shoot("catalog-pick");
+
+  // (2) The autosave is the recovery contract, and it must not wait for /project.
+  await draftSaved(page, ["scb/lisa/individer-15plus"]);
+
+  // (3) Navigate away (pushState, no reload) — the draft belongs to the app, so
+  // leaving the authoring route neither drops it nor stops the lifecycle.
+  await page.locator('a[href="/catalog/scb/rams/syss"]').first().click();
+  await settled(page);
+
+  // (4) RELOAD: a cold /project recovers the same project.
+  await open(page, "/project");
+  await settled(page);
+  await page.getByRole("heading", { name: "Sources (1)" }).waitFor();
+  // Substring, first match: the cart labels a known variant ("Individer (…)")
+  // around the coordinate, and the same coordinate also names the source card.
+  await page.getByText("scb/lisa/individer-15plus").first().waitFor();
+
+  // (5) A COLD catalog entry with a saved project: the restored draft is what the
+  // automatic validation runs on (away from /project), and the next pick EXTENDS
+  // it instead of creating a second project over the saved one.
+  const restoredGreen = validated(page);
+  await open(page, "/catalog/scb/rams/syss?period=2019");
+  await restoredGreen;
+  await settled(page);
+  const picked = validated(page);
+  await addColumn(page, "Syss");
+  await picked;
+  await settled(page);
+  // Extended, not forked: the saved source is still first, the new pick after it.
+  await draftSaved(page, ["scb/lisa/individer-15plus", "scb/rams/standard"]);
+
+  // (6) The recovered project, reloaded once more, carries both picks — and is
+  //     the same VALID project the researcher authored, not a salvaged fragment.
+  await open(page, "/project");
+  await settled(page);
+  await page.getByRole("heading", { name: "Sources (2)" }).waitFor();
+  await page.getByText("scb/rams/standard").first().waitFor();
+  await checkValid(projectUi(page), "the recovered project must validate clean");
+  check(counts.order === 0, `the draft flow POSTed /order ${counts.order} time(s)`);
+  await shoot("project-restored");
+}
+
 /** Run one case in its own context: fresh storage, its own request ledger, its
- * own page-error ledger — and close the context whatever happens. */
-async function runCase(viewport, name, body) {
+ * own page-error ledger — and close the context whatever happens. `route` is
+ * where the case starts (the /project scenarios' default; the catalog-authored
+ * draft starts on a catalog leaf, which is the whole point of it). */
+async function runCase(viewport, name, body, route = "/project") {
   const label = `${viewport.width}x${viewport.height}`;
   const context = await browser.newContext({ viewport });
   const page = await context.newPage();
@@ -471,7 +579,7 @@ async function runCase(viewport, name, body) {
     if (posts(r.request(), ORDER_PATH) && r.status() === 200) counts.orderOk += 1;
   });
   try {
-    await open(page, "/project");
+    await open(page, route);
     await settled(page);
     await body(page, counts, (shot) => capture(page, `${shot}-${label}`));
     check(
@@ -479,12 +587,12 @@ async function runCase(viewport, name, body) {
       `${name} ${label}: page errors: ${pageErrors.join(" | ")}`,
     );
     console.log(
-      `flows: OK ${name} ${label} route=/project ` +
+      `flows: OK ${name} ${label} route=${route} ` +
         `validate=${counts.validate} order=${counts.order} ` +
         `order200=${counts.orderOk} injected-failures=${counts.injected}`,
     );
   } catch (e) {
-    console.log(`flows: FAIL ${name} ${label} route=/project — ${e.message}`);
+    console.log(`flows: FAIL ${name} ${label} route=${route} — ${e.message}`);
     throw e;
   } finally {
     await context.close();
@@ -547,8 +655,17 @@ try {
       await runCase(viewport, "validation-retry", (p, c, shoot) =>
         validationRetryCase(p, c, shoot, project),
       );
+      // The one case that does NOT start at /project: the draft is authored from
+      // a catalog leaf, which is exactly the lifecycle the /project cases cannot
+      // reach.
+      await runCase(
+        viewport,
+        "catalog-draft",
+        catalogDraftCase,
+        "/catalog/scb/lisa/kon?period=2018",
+      );
     }
-    console.log("flows: OK — 12 cases, 16 shots");
+    console.log("flows: OK — 16 cases, 24 shots");
   } else if (cmd === "shot") {
     await open(page, rest[0] ?? "/");
     await settled(page);

@@ -1999,11 +1999,24 @@ email/git-sharing handles collaboration (server-side projects are a possible v2
 feature). The authoring store (`project_store.svelte.ts`) is a module-singleton Svelte 5
 rune store holding one draft per session.
 
+- **An APPLICATION-owned lifecycle.** `initDraftLifecycle()` wires the restore, the
+  autosave and the automatic validation, and is called **once**, at the app's reactive
+  root (`App.svelte`) — never by a route. The draft is authored from the catalog and
+  only read at `/project`, so a route-owned lifecycle both loses a catalog-authored
+  draft (nothing restores or autosaves until `/project` is visited) and, with a second
+  caller, saves and validates each edit twice. The restore is asynchronous, so it is
+  exposed as `projectStore.restored` and the catalog's Add path **awaits** it before it
+  creates or mutates a draft: without that gate, a cold entry at `/catalog` reads the
+  still-empty store, mints a second project, and later overwrites the saved one. Only a
+  restore onto an empty store applies, so a late restore never overwrites a deliberate
+  new/open.
 - **Autosave to IndexedDB** (`indexeddb_persistence.ts`) over the raw IndexedDB API (no
   `idb` dep — keeps the frontend dep surface lean) via a debounced (\~500ms) `$effect`.
   **Graceful degradation is mandatory**: in private mode / disabled storage / quota
   failures, `save` resolves and `load` resolves `null` so the app keeps working
-  in-memory — autosave NEVER rejects or crashes the effect.
+  in-memory — autosave NEVER rejects or crashes the effect. A restore that fails anyway
+  settles the gate as "no restore" rather than rejecting it, so a broken IndexedDB
+  degrades to in-memory authoring instead of wedging the next pick.
 - **Store-schema stamping + gate.** Each persisted draft is stamped with the store's own
   `storeSchemaVersion` (distinct from the project's `schema_version`); `load` restores
   only on a match, else discards the stale-schema draft. This is the store's record

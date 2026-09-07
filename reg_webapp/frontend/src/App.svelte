@@ -10,19 +10,26 @@ import { routeBreadcrumbs } from "./lib/catalog";
 import DocView from "./lib/DocView.svelte";
 import Home from "./lib/Home.svelte";
 import ProjectEditor from "./lib/ProjectEditor.svelte";
-import { projectStore } from "./lib/project_store.svelte";
+import { initDraftLifecycle, projectStore } from "./lib/project_store.svelte";
 import { link, router } from "./lib/router.svelte";
 import SearchView from "./lib/SearchView.svelte";
 import { windowStore } from "./lib/window.svelte";
 
-// The app root: owns the deployment context (GET /api/context), the
-// beforeunload guard, the drift/error banners, the routed <main> switch, and the
-// citation footer. The chrome (left rail + topbar command bar) is delegated to
-// AppShell (#803); App passes the context-derived props down and the routed
-// content in as the shell's `children`. Internal <a> clicks are intercepted at
-// the root container so navigation is pushState (no full reload).
+// The app root: owns the deployment context (GET /api/context), the DRAFT
+// LIFECYCLE, the beforeunload guard, the drift/error banners, the routed <main>
+// switch, and the citation footer. The chrome (left rail + topbar command bar)
+// is delegated to AppShell (#803); App passes the context-derived props down and
+// the routed content in as the shell's `children`. Internal <a> clicks are
+// intercepted at the root container so navigation is pushState (no full reload).
 let context = $state<Context | null>(null);
 let contextError = $state<string | null>(null);
+
+// Restore, debounced autosave and automatic validation are wired ONCE here, at
+// the application's reactive root — the draft is authored from the catalog and
+// only read at /project, so its lifecycle can't belong to a route. Called at
+// component init (it registers $effects) and never anywhere else: a second
+// caller would autosave and validate every edit twice.
+initDraftLifecycle();
 
 // The deployment context is app-global and immutable for the session — fetch
 // once at mount (not an $effect that could re-run). Also wire the beforeunload
