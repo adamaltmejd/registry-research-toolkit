@@ -88,17 +88,17 @@ Four content-synced FTS5 indexes power search:
   `description`. Searched via `search(..., type="classification")` (#350), the catalog
   discovery surface. Catalog-scoped: a `--register` scope excludes it, and so does a
   `--years` scope — a classification carries no validity window, so a version filter
-  can't confirm one in range (the vintage lives in the slug, not a comparable
-  column). Both scopes turn the arm off before its candidate query. **Code-aware
-  surfacing** (#393 item 5): a **code-shaped** query (digit + length ≥ 3, e.g. "C12",
-  "F32") ALSO surfaces the classifications that CONTAIN a matching code — exact OR
-  prefix on `value_code.code` joined through `classification_code` — so "find the
-  classification for this code" works even with no NAME match. This arm uses the RAW
-  query (not the FTS index), is catalog-scoped (excluded under `--register` and
-  `--years`, like the name arm), dedupes against the name-FTS hits (a both-ways match is emitted once, as
-  its name hit), and is ranked AFTER all name hits (a positive `fts_rank` base vs the
-  name arm's negative bm25; exact-containing classifications first within the block).
-  The `classification_code` JOIN inherently excludes context-less codes, so no separate
+  can't confirm one in range (the vintage lives in the slug, not a comparable column).
+  Both scopes turn the arm off before its candidate query. **Code-aware surfacing**
+  (#393 item 5): a **code-shaped** query (digit + length ≥ 3, e.g. "C12", "F32") ALSO
+  surfaces the classifications that CONTAIN a matching code — exact OR prefix on
+  `value_code.code` joined through `classification_code` — so "find the classification
+  for this code" works even with no NAME match. This arm uses the RAW query (not the FTS
+  index), is catalog-scoped (excluded under `--register` and `--years`, like the name
+  arm), dedupes against the name-FTS hits (a both-ways match is emitted once, as its
+  name hit), and is ranked AFTER all name hits (a positive `fts_rank` base vs the name
+  arm's negative bm25; exact-containing classifications first within the block). The
+  `classification_code` JOIN inherently excludes context-less codes, so no separate
   owner filter is needed (unlike the value arm's direct `value_code` lookup, #478).
 - **`value_code_fts`** (#352) — indexes value `label` ONLY (codes are matched
   separately, see below). Searched via `search(..., field="value", type="value")`, which
