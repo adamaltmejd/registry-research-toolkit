@@ -97,17 +97,17 @@ grant for the sandbox helper), then `single-process` (a sandboxed agent shell, i
 that line as evidence. A lane must provision first the way the gates do (offline
 `uv sync`, `cp -a /opt/frontend/node_modules reg_webapp/frontend/`).
 
-**Project flows (`flows`) — what the `project-flows` yard gate runs.** One command
-drives the whole project evidence set: four scenarios — an empty project the backend
-blocks, an order request that fails in transport and is retried, a validation request
-that fails and is retried, and a draft authored from a catalog leaf (picked, reloaded,
-recovered, then extended by a further pick on a cold catalog entry) — at 375×812,
-768×1024, 1280×900 and 1920×1080 — 16 cases, each in a fresh browser context against the
-real backend, with one failing request injected per error scenario and none into the
-draft one. It asserts the behavior (real 422 + `project_empty`, which retry the banner
-offers, a real `order.json` download whose manifest entry matches the synthetic catalog,
-the request counts behind a recovery, and what the browser's own IndexedDB holds across
-reloads) and writes 24 PNGs into the directory you name:
+**Project flows (`flows`) — what the `project-flows` and `catalog-flows` yard gates
+run.** One command drives the whole project evidence set: four scenarios — an empty
+project the backend blocks, an order request that fails in transport and is retried, a
+validation request that fails and is retried, and a draft authored from a catalog leaf
+(picked, reloaded, recovered, then extended by a further pick on a cold catalog entry) —
+at 375×812, 768×1024, 1280×900 and 1920×1080 — 16 cases, each in a fresh browser context
+against the real backend, with one failing request injected per error scenario and none
+into the draft one. It asserts the behavior (real 422 + `project_empty`, which retry the
+banner offers, a real `order.json` download whose manifest entry matches the synthetic
+catalog, the request counts behind a recovery, and what the browser's own IndexedDB
+holds across reloads) and writes 24 PNGs into the directory you name:
 
 ```sh
 db="$(mktemp -d)"
@@ -122,13 +122,22 @@ fixture builder (`reg_webapp/backend/scripts/fixture_db.py`, below) — not a re
 A nonzero exit is a failed assertion, an unexpected JS page error, horizontal overflow
 at some viewport, or a server that never started; the servers are torn down either way.
 
-In yard this is the `project-flows` gate (`.yard/config.toml`, selected by the `ui`
-workflow), which hands the driver `$YARD_ARTIFACT_DIR` as the output directory and
-declares those 24 filenames as its artifacts. Unlike the ephemeral `/tmp` captures
-above, these are **retained**: `yard lane show <lane>` prints the artifact paths for the
-execution — they outlive the container and view cleanup, so open the PNGs there and
-judge them against `reg_webapp/frontend/DESIGN.md`. The gate log carries the rest
-(route, scenario, viewport, request counts, candidate HEAD).
+Naming scenarios after the output directory runs just those —
+`dev.sh flows <dir> blocked-order order-retry validation-retry`, or
+`dev.sh flows <dir> catalog-draft`. The bare form above runs all four and is the local
+verification invocation; the names exist for the gates.
+
+In yard this is **two** gates (`.yard/config.toml`, both selected by the `ui` workflow),
+each handed `$YARD_ARTIFACT_DIR` as its output directory: `project-flows` runs the three
+`/project` scenarios and declares their 16 filenames, `catalog-flows` runs
+`catalog-draft` and declares its 8. The split is an artifact-list limit, not a
+distinction of concern — a gate declares at most 16 filenames and the four scenarios
+write 24 — and each gate names its own scenarios so neither runs the other's cases.
+Unlike the ephemeral `/tmp` captures above, these are **retained**:
+`yard lane show <lane>` prints the artifact paths for the execution — they outlive the
+container and view cleanup, so open the PNGs there and judge them against
+`reg_webapp/frontend/DESIGN.md`. The gate log carries the rest (route, scenario,
+viewport, request counts, candidate HEAD).
 
 **Deterministic UI verification (`--fixture-db`) — the default.** Pass `--fixture-db`
 before the mode and `dev.sh` serves a *synthetic* catalog: it runs

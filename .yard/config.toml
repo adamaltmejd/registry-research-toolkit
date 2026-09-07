@@ -198,14 +198,19 @@ git diff --exit-code -- src/lib/api-types.ts
 ' '''
 timeout_minutes = 30
 
-# The rendered project evidence (Y-34), selected by the `ui` workflow only. It
-# drives the CANDIDATE's own app — a fresh backend on the synthetic catalog
-# fixture DB the backend tests build, plus the Vite dev server — through three
-# /project error/retry scenarios and the catalog-authored draft flow (Y-42:
-# pick from a catalog leaf, reload, recover, extend on a cold entry) at four
-# viewports (16 cases), and keeps one PNG per settled state for the operator's
-# visual judgment. No model runs here: the driver asserts the behavior,
-# `artifacts` retains the pictures.
+# The rendered /project error/retry evidence (Y-34), selected by the `ui`
+# workflow only. It drives the CANDIDATE's own app — a fresh backend on the
+# synthetic catalog fixture DB the backend tests build, plus the Vite dev server
+# — through three /project scenarios at four viewports (12 cases) and keeps one
+# PNG per settled state for the operator's visual judgment. No model runs here:
+# the driver asserts the behavior, `artifacts` retains the pictures.
+#
+# The driver's fourth scenario, the catalog-authored draft (Y-42), is the
+# SEPARATE `catalog-flows` gate below, and each gate names the scenarios it runs
+# so neither pays for the other's cases. They are two gates rather than one
+# because `artifacts` accepts at most 16 filenames and the four scenarios write
+# 24; `dev.sh flows <dir>` with no scenario names still runs all four, which is
+# how the flow is verified locally.
 #
 # Provisioning mirrors the gates above (offline two-step `uv sync`, the baked
 # node_modules, /opt/pw-browsers), plus two things dev.sh needs: the candidate's
@@ -230,7 +235,7 @@ export PATH="$PWD/.venv/bin:$PATH" PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers
 db=$(mktemp -d)
 python3 reg_webapp/.claude/skills/run-reg-webapp/catalog_fixture_db.py "$db"
 echo "candidate HEAD $(git rev-parse HEAD)"
-REG_META_DB="$db" bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh flows "$YARD_ARTIFACT_DIR"
+REG_META_DB="$db" bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh flows "$YARD_ARTIFACT_DIR" blocked-order order-retry validation-retry
 ls -l "$YARD_ARTIFACT_DIR"
 du -sk "$YARD_ARTIFACT_DIR"
 ' '''
@@ -252,6 +257,35 @@ artifacts = [
   "validation-error-768x1024.png",
   "validation-error-1280x900.png",
   "validation-error-1920x1080.png",
+]
+
+# The rendered catalog-authored draft evidence (Y-42), selected by the `ui`
+# workflow alongside `project-flows`. Same driver, same provisioning, one
+# scenario: pick a column from a catalog leaf with /project never opened, leave
+# the route, reload into /project and recover the draft, then extend it with a
+# second pick made on a cold catalog entry — at the same four viewports (4
+# cases). It is its own gate purely because `artifacts` holds at most 16
+# filenames; the shots are the operator's evidence that a draft authored away
+# from /project survives, and the driver asserts the behavior behind them
+# (including what the browser's own IndexedDB holds across the reloads).
+[checks.catalog-flows]
+command = '''sh -ec '
+export UV_CACHE_DIR=/opt/uv/cache UV_PYTHON_INSTALL_DIR=/opt/uv/python UV_LINK_MODE=copy
+uv sync --frozen --offline --no-install-workspace
+uv sync --frozen --offline --no-build-isolation
+cp -a /opt/frontend/node_modules reg_webapp/frontend/
+cksum < uv.lock | cut -d" " -f1 > .venv/.wt-provisioned
+cksum < reg_webapp/frontend/bun.lock | cut -d" " -f1 > reg_webapp/frontend/node_modules/.wt-provisioned
+export PATH="$PWD/.venv/bin:$PATH" PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers
+db=$(mktemp -d)
+python3 reg_webapp/.claude/skills/run-reg-webapp/catalog_fixture_db.py "$db"
+echo "candidate HEAD $(git rev-parse HEAD)"
+REG_META_DB="$db" bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh flows "$YARD_ARTIFACT_DIR" catalog-draft
+ls -l "$YARD_ARTIFACT_DIR"
+du -sk "$YARD_ARTIFACT_DIR"
+' '''
+timeout_minutes = 30
+artifacts = [
   "catalog-pick-375x812.png",
   "catalog-pick-768x1024.png",
   "catalog-pick-1280x900.png",
@@ -315,12 +349,13 @@ review = ["codex"]
 checks = ["lint", "test", "frontend"]
 
 # The ui workflow adds source-level design review to the default code seat AND
-# the rendered project-flows gate. Select it for rendered frontend changes; the
-# operator owns visual judgment, and project-flows is what hands them pictures.
+# the two rendered flow gates. Select it for rendered frontend changes; the
+# operator owns visual judgment, and project-flows / catalog-flows are what hand
+# them pictures — one gate per artifact list, not per concern.
 [workflows.ui]
 role = "implementation"
 review = ["codex", "design"]
-checks = ["lint", "test", "frontend", "project-flows"]
+checks = ["lint", "test", "frontend", "project-flows", "catalog-flows"]
 
 # The light workflow is the everyday lane for simple work, selected one ticket
 # at a time: the role above, the CI gates, and no review. Skipping the review

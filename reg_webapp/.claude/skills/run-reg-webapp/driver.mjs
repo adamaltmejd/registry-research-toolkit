@@ -12,9 +12,11 @@
 //                       slider, screenshot each step
 //   shot <url-path>     open a path (e.g. /catalog/scb/lisa) and screenshot it
 //   eval <url-path> <js> open a path, evaluate JS in the page, print the result
-//   flows <out-dir>     the project gate: four scenarios (three /project
+//   flows <out-dir> [scenario...]
+//                       the project gates: four scenarios (three /project
 //                       error+retry, one catalog-authored draft) × four
-//                       viewports, each in a fresh context, PNGs → <out-dir>
+//                       viewports, each in a fresh context, PNGs → <out-dir>.
+//                       Named scenarios run just those; no names runs all four.
 //
 // smoke/shot screenshots land in $REG_WEBAPP_SHOTS — dev.sh sets it to the one
 // directory that invocation owns, and a direct run gets a fresh one under /tmp;
@@ -76,6 +78,8 @@ const outDir = cmd === "flows" ? rest[0] : null;
 if (cmd === "flows" && !outDir) {
   throw new Error("flows: needs an output directory, e.g. flows $YARD_ARTIFACT_DIR");
 }
+// Scenario names after the out-dir, empty for "all of them" (see the dispatch).
+const selection = cmd === "flows" ? rest.slice(1) : [];
 // Only the shooting commands mint a directory (see the header): `flows` has its
 // <out-dir> and `eval` captures nothing, so neither leaves an empty one behind.
 const SHOTS =
@@ -188,18 +192,26 @@ function check(condition, message) {
   if (!condition) throw new Error(message);
 }
 
-// ── `flows`: the project error/retry + catalog-draft gate ───────────────────
+// ── `flows`: the project error/retry + catalog-draft gates ──────────────────
 //
 // Four scenarios × four viewports = 16 cases, each in a FRESH context against
 // the REAL backend (the caller points it at a synthetic catalog DB through
 // REG_META_DB — see catalog_fixture_db.py). The three error scenarios inject
 // exactly one failing request and the draft scenario injects none: everything
 // else is the actual app answering — including the browser's own IndexedDB, which
-// the catalog-draft case reloads against. The 24 PNGs these write are the artifact
-// contract declared in .yard/config.toml, and the filenames carry the size — so the
-// sizes are the `shot` presets above, spelled once (frontend/DESIGN.md designs for
-// exactly these four widths). Named one by one, not Object.values: a fifth preset
-// must not silently turn 16 cases into 20 and invalidate the declared artifact list.
+// the catalog-draft case reloads against.
+//
+// The 24 PNGs these write are an artifact contract declared in .yard/config.toml,
+// split across TWO gates because a yard gate declares at most 16 filenames:
+// `project-flows` names the three /project scenarios (16 PNGs) and
+// `catalog-flows` names `catalog-draft` (8). That is what the scenario argument
+// in the dispatch below is for — a bare `flows <out-dir>` still runs all four,
+// which is the local verification invocation.
+//
+// The filenames carry the size — so the sizes are the `shot` presets above,
+// spelled once (frontend/DESIGN.md designs for exactly these four widths). Named
+// one by one, not Object.values: a fifth preset must not silently turn 16 cases
+// into 20 and invalidate the declared artifact lists.
 const FLOW_VIEWPORTS = [
   VIEWPORTS.mobile,
   VIEWPORTS.tablet,
@@ -645,27 +657,50 @@ try {
         `reg_meta=${deployment.webapp.reg_meta_version} ` +
         `catalog=${deployment.reg_meta.schema_version}@${deployment.reg_meta.import_date}`,
     );
-    for (const viewport of FLOW_VIEWPORTS) {
-      // blockedOrderCase already has runCase's `body` signature; the other two
-      // bind the shared project (and its expected manifest) into theirs.
-      await runCase(viewport, "blocked-order", blockedOrderCase);
-      await runCase(viewport, "order-retry", (p, c, shoot) =>
-        orderRetryCase(p, c, shoot, project, expected),
-      );
-      await runCase(viewport, "validation-retry", (p, c, shoot) =>
-        validationRetryCase(p, c, shoot, project),
-      );
+    // The scenarios by name, with the `route` each starts on (default /project)
+    // and the number of PNGs it writes per viewport. `blockedOrderCase` already
+    // has runCase's `body` signature; the two recovery cases bind the shared
+    // project (and its expected manifest) into theirs.
+    const scenarios = {
+      "blocked-order": { shots: 1, run: blockedOrderCase },
+      "order-retry": {
+        shots: 2,
+        run: (p, c, shoot) => orderRetryCase(p, c, shoot, project, expected),
+      },
+      "validation-retry": {
+        shots: 1,
+        run: (p, c, shoot) => validationRetryCase(p, c, shoot, project),
+      },
       // The one case that does NOT start at /project: the draft is authored from
       // a catalog leaf, which is exactly the lifecycle the /project cases cannot
       // reach.
-      await runCase(
-        viewport,
-        "catalog-draft",
-        catalogDraftCase,
-        "/catalog/scb/lisa/kon?period=2018",
+      "catalog-draft": {
+        shots: 2,
+        route: "/catalog/scb/lisa/kon?period=2018",
+        run: catalogDraftCase,
+      },
+    };
+    for (const name of selection) {
+      check(
+        name in scenarios,
+        `flows: unknown scenario "${name}" — pick from ${Object.keys(scenarios).join(", ")}`,
       );
     }
-    console.log("flows: OK — 16 cases, 24 shots");
+    // No names = every scenario, which is the local verification invocation. The
+    // two yard gates each name their own subset instead: a gate declares at most
+    // 16 artifact filenames, and all four scenarios write 24.
+    const names = selection.length > 0 ? selection : Object.keys(scenarios);
+    for (const viewport of FLOW_VIEWPORTS) {
+      for (const name of names) {
+        const { run, route } = scenarios[name];
+        await runCase(viewport, name, run, route);
+      }
+    }
+    const shots = names.reduce((n, name) => n + scenarios[name].shots, 0);
+    console.log(
+      `flows: OK — ${names.length * FLOW_VIEWPORTS.length} cases, ` +
+        `${shots * FLOW_VIEWPORTS.length} shots`,
+    );
   } else if (cmd === "shot") {
     await open(page, rest[0] ?? "/");
     await settled(page);

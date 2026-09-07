@@ -31,17 +31,18 @@ worker, reviewer or plan argues for broader work.
 - **Record dogfooding.** Keep observed Yard problems and papercuts in
   [DOGFOOD.md](DOGFOOD.md), including anything that wastes time or tokens.
 - **File rendered frontend changes with `--workflow ui`.** This adds the source-only
-  design seat and the `project-flows` gate with retained screenshots alongside the code
-  seat. No other workflow binds both. Read `yard workflow list` or `.yard/config.toml`
-  for the actual checks; do not assume all workflows run all gates. Other work uses
-  `default` or `light` as appropriate.
+  design seat and the rendered flow gates (`project-flows`, `catalog-flows`) with
+  retained screenshots alongside the code seat. No other workflow binds both. Read
+  `yard workflow list` or `.yard/config.toml` for the actual checks; do not assume all
+  workflows run all gates. Other work uses `default` or `light` as appropriate.
 
 ## UI approval evidence
 
 A candidate that changes rendered UI is approved on pictures you opened. On the `ui`
-workflow, `yard lane show` prints the `project-flows` gate's retained PNGs. Open them
-and match the `candidate HEAD` in that execution's log to the full head you will pass to
-`--expect-head`.
+workflow, `yard lane show` prints the retained PNGs of both flow gates — `project-flows`
+(the /project error and retry states) and `catalog-flows` (the catalog-authored draft).
+Open them and match the `candidate HEAD` in those executions' logs to the full head you
+will pass to `--expect-head`.
 
 Judge the pictures and their route, state and viewport coverage under the [design review
 skill](../.claude/skills/reg-webapp-design-reviewer/SKILL.md). The gate renders the
