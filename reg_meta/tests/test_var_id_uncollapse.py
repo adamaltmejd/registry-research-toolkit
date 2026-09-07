@@ -9,8 +9,8 @@ None key, so the three consumers each dropped or mis-handled the siblings:
     matching ONE local column to a non-SCB registry column marked the whole
     None-keyed bucket "matched", suppressing the siblings from
     `missing_from_registry`.
-  - `search --years` (`_filter_search_by_years`): a None `var_id` fell through to
-    the register-wide branch (kept if the REGISTER had any state in range), so a
+  - `search --years`: a None `var_id` fell through to the year filter's
+    register-wide branch (kept if the REGISTER had any state in range), so a
     non-SCB variable NOT covering the filtered year was wrongly kept on a
     sibling's state.
 

@@ -357,6 +357,43 @@ def _state_overlaps_years(
     )
 
 
+def _year_scope_filter(
+    year_range: tuple[int | None, int | None] | None,
+    source: str,
+    correlation: str,
+) -> tuple[str, list[int]]:
+    """SQL twin of `_state_overlaps_years`: an ``AND EXISTS (...)`` fragment plus
+    its bound parameters, or ``("", [])`` when no year scope was requested.
+
+    Every search arm applies this INSIDE its candidate query, before that query's
+    LIMIT: a bounded prefix filtered afterwards loses every eligible row sitting
+    behind a long run of ineligible ones. `source` is the EXISTS ``FROM`` clause,
+    reaching a `variable_state` aliased `vs`; `correlation` ties it to the outer
+    row, so eligibility stays at the grain of the row it filters — a variable hit
+    by its OWN states (#474: `var_id` is NULL for every non-SCB variable, so only
+    `variable_id` separates siblings), a register hit by ANY of its variables', a
+    concept group by its MEMBERS'. Correlate on the EARLIEST alias the outer query
+    holds — `va.variable_id` / `vf.rowid` / `v.variable_id` are the same key by
+    inner join, and the earliest one lets SQLite reject an ineligible row before
+    resolving the rest of it. An omitted bound simply drops its condition, which
+    is what widening it to the `9999`/`0` sentinel means."""
+    if year_range is None:
+        return "", []
+    lo, hi = year_range
+    conditions = [correlation]
+    params: list[int] = []
+    if hi is not None:
+        conditions.append("CAST(substr(vs.valid_from, 1, 4) AS INTEGER) <= ?")
+        params.append(hi)
+    if lo is not None:
+        conditions.append("CAST(substr(vs.valid_to, 1, 4) AS INTEGER) >= ?")
+        params.append(lo)
+    return (
+        f" AND EXISTS (SELECT 1 FROM {source} WHERE " + " AND ".join(conditions) + ") ",
+        params,
+    )
+
+
 # ---------------------------------------------------------------------------
 # Search
 # ---------------------------------------------------------------------------
@@ -517,91 +554,6 @@ def _escape_like(s: str) -> str:
     return s.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
 
 
-def _filter_search_by_years(
-    conn: sqlite3.Connection,
-    results: list[dict[str, Any]],
-    years: str,
-) -> list[dict[str, Any]]:
-    """Filter search results to those with versions in the given year range."""
-    year_lo, year_hi = parse_year_range(years)
-    if not results:
-        return results
-
-    # Collect the variable hits to year-filter at VARIABLE granularity and the
-    # register hits to filter register-wide (#474). A variable hit carries its
-    # unique `_variable_id`; the displayed `var_id` is NULL for every non-SCB
-    # variable, so keying on it folded every non-SCB hit into the register-level
-    # branch (kept if ANY sibling overlapped). `_variable_id` filters each hit by
-    # its OWN states. Non-variable hits (register / classification / code) carry
-    # no `_variable_id`.
-    var_ids_to_check: set[int] = set()
-    reg_only_ids: set[int] = set()
-    for r in results:
-        rid = r.get("register_id")
-        variable_id = r.get("_variable_id")
-        if variable_id is not None:
-            var_ids_to_check.add(variable_id)
-        elif rid is not None:
-            reg_only_ids.add(rid)
-
-    # A2.6: edition years come from `variable_state` validity windows now (the
-    # register_version table is dropped before ship). A variable is in-range if
-    # any of its states' validity window overlaps the year range.
-    valid_var_ids: set[int] = set()
-    if var_ids_to_check:
-        placeholders = ",".join("?" * len(var_ids_to_check))
-        rows = conn.execute(
-            "SELECT DISTINCT vs.variable_id, vs.valid_from, vs.valid_to "
-            "FROM variable_state vs "
-            f"WHERE vs.variable_id IN ({placeholders})",
-            list(var_ids_to_check),
-        ).fetchall()
-        for row in rows:
-            if _state_overlaps_years(
-                row["valid_from"], row["valid_to"], year_lo, year_hi
-            ):
-                valid_var_ids.add(row["variable_id"])
-
-    # For register-type results: check if register has any state in range.
-    valid_reg_ids: set[int] = set()
-    if reg_only_ids:
-        placeholders = ",".join("?" * len(reg_only_ids))
-        rows = conn.execute(
-            "SELECT DISTINCT v.register_id, vs.valid_from, vs.valid_to "
-            "FROM variable_state vs "
-            "JOIN variable v ON vs.variable_id = v.variable_id "
-            f"WHERE v.register_id IN ({placeholders})",
-            list(reg_only_ids),
-        ).fetchall()
-        for row in rows:
-            if _state_overlaps_years(
-                row["valid_from"], row["valid_to"], year_lo, year_hi
-            ):
-                valid_reg_ids.add(row["register_id"])
-
-    filtered = []
-    for r in results:
-        rid = r.get("register_id")
-        variable_id = r.get("_variable_id")
-        if variable_id is not None:
-            # Variable hit — filtered by its OWN states (#474), not register-wide.
-            if variable_id in valid_var_ids:
-                filtered.append(r)
-        elif rid is not None:
-            if rid in valid_reg_ids:
-                filtered.append(r)
-        elif r.get("type") == "classification":
-            # Classifications carry no register/state validity window (#350), so a
-            # --years filter (a version/validity filter) can't confirm them in
-            # range — exclude rather than return as unfilterable false positives
-            # (Codex P2). The vintage lives in the slug, not a comparable column;
-            # vintage-year filtering is future work.
-            continue
-        else:
-            filtered.append(r)
-    return filtered
-
-
 def search(
     conn: sqlite3.Connection,
     query: str,
@@ -687,6 +639,15 @@ def search(
     non-value surfaces. Filtering happens before pagination so split callers get
     independent pages and counts.
 
+    ``years`` ("2010", "2010-2015", "2010-", "-2015") keeps the entities whose
+    `variable_state` validity window overlaps the range — per variable for a
+    variable/varname/datacolumn hit, register-wide for a register hit, through the
+    members for a concept-group label hit. Every arm applies it inside its own
+    candidate query, BEFORE that query's bounded LIMIT, so an eligible match sitting
+    behind a long run of ineligible ones stays reachable. Classification and
+    value/code surfaces carry no validity window: classification arms are skipped
+    entirely under a year scope, and the value arm is unaffected by it.
+
     ``classification_as_of_year`` overrides the DB manifest's classification
     succession policy year for tests and controlled release checks. ``None`` uses
     the committed DB policy.
@@ -732,6 +693,9 @@ def search(
             message="Search limit must be at least 1.",
             remediation="Pass --limit with a positive integer.",
         )
+
+    # Parsed ONCE here and handed to every arm that can scope by it.
+    year_range = parse_year_range(years) if years else None
 
     context = _search_context(
         conn,
@@ -826,10 +790,23 @@ def search(
     # FTS indexes contribute nothing.
     fts_query = _fts_match_query(query)
 
+    # BOTH classification surfaces — the name-FTS arm and the code-containment arm
+    # (#393 item 5) — are off under the same two scopes. Classifications are
+    # catalog-scoped (no register), so a `--register` scope excludes them (`reg_ids`
+    # set means "registers only"); and they carry no register/state validity window
+    # (#350), so a `--years` filter (a version/validity filter) can't confirm one in
+    # range. Under `--years` they are SKIPPED rather than run and discarded —
+    # returning them would be unfilterable false positives (Codex P2), and dropping
+    # them after the SQL LIMIT would spend the bounded prefix on rows that can never
+    # survive. The vintage lives in the slug, not a comparable column; vintage-year
+    # filtering is future work.
+    classification_surfaces_on = reg_ids is None and year_range is None
+
     # Classifications surfaced by the name-FTS arm, plus caller-excluded identities;
-    # the code-containment arm (#393 item 5) excludes both before its SQL LIMIT.
+    # the code-containment arm excludes both before its SQL LIMIT. That arm is the
+    # only reader, so this prefetch is gated on the same scopes it is.
     classification_name_ids: set[int] = set()
-    if exclude_fqids is not None:
+    if classification_surfaces_on and exclude_fqids is not None:
         classification_name_ids.update(
             row["id"]
             for row in conn.execute(
@@ -841,7 +818,12 @@ def search(
     if field in ("datacolumn", "all") and type in ("variable", "all"):
         add_candidates(
             _search_datacolumns(
-                conn, like_pattern, reg_ids, fold_candidate_limit, branch_offset
+                conn,
+                like_pattern,
+                reg_ids,
+                fold_candidate_limit,
+                branch_offset,
+                year_range=year_range,
             ),
             fold_candidate_limit,
         )
@@ -849,7 +831,12 @@ def search(
     if field in ("varname", "all") and type in ("variable", "all"):
         add_candidates(
             _search_varnames(
-                conn, like_pattern, reg_ids, fold_candidate_limit, branch_offset
+                conn,
+                like_pattern,
+                reg_ids,
+                fold_candidate_limit,
+                branch_offset,
+                year_range=year_range,
             ),
             fold_candidate_limit,
         )
@@ -865,6 +852,7 @@ def search(
                     exclude_fqids is not None,
                     entity_candidate_limit,
                     branch_offset,
+                    year_range=year_range,
                 ),
                 entity_candidate_limit,
             )
@@ -878,12 +866,11 @@ def search(
                     restrict_fqids=fqids is not None,
                     limit=entity_candidate_limit,
                     offset=branch_offset,
+                    year_range=year_range,
                 ),
                 entity_candidate_limit,
             )
-        # Classifications are catalog-scoped (no register), so a `--register` scope
-        # excludes them — `reg_ids` set means "registers only".
-        if type in ("classification", "all") and reg_ids is None:
+        if type in ("classification", "all") and classification_surfaces_on:
             cls_rows = _search_classifications(
                 conn,
                 fts_query,
@@ -899,12 +886,12 @@ def search(
     # so "find the classification for this code" works even with no NAME match.
     # SEPARATE top-level block (NOT under the `fts_query is not None` gate): it
     # matches the RAW code against `value_code.code`, not the FTS index. Ranked
-    # AFTER the name-FTS hits (positive vs negative `fts_rank`) and catalog-scoped
-    # — excluded under a `--register` scope, exactly like the name-FTS arm.
+    # AFTER the name-FTS hits (positive vs negative `fts_rank`) and off under the
+    # same scopes as the name-FTS arm.
     if (
         field in ("description", "all")
         and type in ("classification", "all")
-        and reg_ids is None
+        and classification_surfaces_on
         and _is_code_shaped(query)
     ):
         add_candidates(
@@ -923,7 +910,9 @@ def search(
     # "code"` rows. Gated on `value`/`all` field AND a non-`register`-only type
     # scope (a `register` type request wants register leaves, not codes). Returns
     # a bounded, in-scope prefix like every other arm; the deterministic merged
-    # ordering below owns continuation.
+    # ordering below owns continuation. A code/label pair has no validity window of
+    # its own, so `--years` does not narrow this arm — it never did, and there is
+    # nothing to push before the LIMIT here.
     if field in ("value", "all") and type in ("value", "all"):
         add_candidates(
             _search_values_fts(
@@ -945,9 +934,6 @@ def search(
         all_results = [r for r in all_results if r["type"] in _CLASSIFICATION_TYPES]
     elif type == "value":
         all_results = [r for r in all_results if r["type"] in _VALUE_TYPES]
-
-    if years:
-        all_results = _filter_search_by_years(conn, all_results, years)
 
     # #859: a filtered-steward allow-list restricts the REGISTER and VARIABLE leaf
     # surfaces to held navigable FQIDs, BEFORE folding and BEFORE the total/slice
@@ -977,8 +963,8 @@ def search(
         # group — `_search_group_labels` is the only path that finds it. A group
         # has no validity window of its own, so --years applies through its
         # MEMBERS: a variable-kind label hit needs at least one member state
-        # overlapping the range (member hits were already year-filtered above;
-        # this guards the label-only path). Classification groups are exempt —
+        # overlapping the range (the leaf arms year-scope their own candidates;
+        # this covers the label-only path). Classification groups are exempt —
         # their members carry no delivery windows.
         # `fts_query is not None` == the query has a real searchable token. Gate
         # label folding on it so an empty / punctuation-only query doesn't turn
@@ -990,7 +976,7 @@ def search(
                 like_pattern,
                 reg_ids,
                 type=type,
-                year_range=parse_year_range(years) if years else None,
+                year_range=year_range,
                 limit=fold_candidate_limit,
                 offset=branch_offset,
             )
@@ -1387,6 +1373,8 @@ def _search_datacolumns(
     reg_ids: set[int] | None,
     limit: int,
     offset: int,
+    *,
+    year_range: tuple[int | None, int | None] | None,
 ) -> list[dict[str, Any]]:
     # Aliased SELECT so both `variable.name` and `register.name` land under
     # distinct row keys after the glossary rename (see DESIGN.md → Glossary and Swedish↔English crosswalk) collapsed them to a single
@@ -1399,6 +1387,9 @@ def _search_datacolumns(
     if reg_ids:
         register_filter = " AND v.register_id IN (" + _in_placeholders(reg_ids) + ") "
         register_params = sorted(reg_ids)
+    year_filter, year_params = _year_scope_filter(
+        year_range, "variable_state vs", "vs.variable_id = va.variable_id"
+    )
     rows = conn.execute(
         "SELECT DISTINCT va.delivery_column_name, v.register_id, v.variable_id, "
         "" + _VAR_ID_V + ", "
@@ -1408,8 +1399,9 @@ def _search_datacolumns(
         "JOIN register r ON v.register_id = r.register_id "
         "WHERE va.delivery_column_name LIKE ? ESCAPE '\\' "
         + register_filter
+        + year_filter
         + "ORDER BY va.delivery_column_name, v.register_id, v.variable_id LIMIT ? OFFSET ?",
-        (like_pattern, *register_params, limit, offset),
+        (like_pattern, *register_params, *year_params, limit, offset),
     ).fetchall()
     results = []
     for r in rows:
@@ -1436,12 +1428,17 @@ def _search_varnames(
     reg_ids: set[int] | None,
     limit: int,
     offset: int,
+    *,
+    year_range: tuple[int | None, int | None] | None,
 ) -> list[dict[str, Any]]:
     register_filter = ""
     register_params: list[int] = []
     if reg_ids:
         register_filter = " AND v.register_id IN (" + _in_placeholders(reg_ids) + ") "
         register_params = sorted(reg_ids)
+    year_filter, year_params = _year_scope_filter(
+        year_range, "variable_state vs", "vs.variable_id = v.variable_id"
+    )
     rows = conn.execute(
         "SELECT v.register_id, v.variable_id, "
         "" + _VAR_ID_V + ", "
@@ -1450,8 +1447,9 @@ def _search_varnames(
         "JOIN register r ON v.register_id = r.register_id "
         "WHERE v.name LIKE ? ESCAPE '\\' "
         + register_filter
+        + year_filter
         + "ORDER BY v.name, v.register_id, v.variable_id LIMIT ? OFFSET ?",
-        (like_pattern, *register_params, limit, offset),
+        (like_pattern, *register_params, *year_params, limit, offset),
     ).fetchall()
     results = []
     for r in rows:
@@ -1479,6 +1477,8 @@ def _search_description_registers(
     exclude_fqids: bool,
     limit: int,
     offset: int,
+    *,
+    year_range: tuple[int | None, int | None] | None,
 ) -> list[dict[str, Any]]:
     # register_fts now mirrors the renamed columns: `name` + `purpose`.
     # `registerrubrik` was dropped per the glossary rename (see DESIGN.md → Glossary and Swedish↔English crosswalk).
@@ -1491,6 +1491,11 @@ def _search_description_registers(
     if reg_ids:
         register_filter = " AND rf.register_id IN (" + _in_placeholders(reg_ids) + ") "
         register_params = sorted(reg_ids)
+    year_filter, year_params = _year_scope_filter(
+        year_range,
+        "variable_state vs JOIN variable v_year ON v_year.variable_id = vs.variable_id",
+        "v_year.register_id = rf.register_id",
+    )
     rows = conn.execute(
         "SELECT rf.register_id, rf.name, rf.purpose, rf.rank, "
         "r.slug AS register_slug, p.slug AS provider_slug "
@@ -1511,8 +1516,9 @@ def _search_description_registers(
             else ""
         )
         + register_filter
+        + year_filter
         + "ORDER BY rf.rank, rf.register_id LIMIT ? OFFSET ?",
-        (query, *register_params, limit, offset),
+        (query, *register_params, *year_params, limit, offset),
     ).fetchall()
     results = []
     for r in rows:
@@ -1542,6 +1548,7 @@ def _search_description_variables(
     restrict_fqids: bool,
     limit: int,
     offset: int,
+    year_range: tuple[int | None, int | None] | None,
 ) -> list[dict[str, Any]]:
     # `variable_fts` is content-synced to `variable` (content_rowid='rowid', and
     # `variable_id` is the INTEGER PRIMARY KEY rowid alias), so `vf.rowid` IS
@@ -1554,6 +1561,9 @@ def _search_description_variables(
     if reg_ids:
         register_filter = " AND vf.register_id IN (" + _in_placeholders(reg_ids) + ") "
         register_params = sorted(reg_ids)
+    year_filter, year_params = _year_scope_filter(
+        year_range, "variable_state vs", "vs.variable_id = vf.rowid"
+    )
     rows = conn.execute(
         "SELECT vf.register_id, vf.rowid AS variable_id, "
         "" + _VAR_ID_VF + ", "
@@ -1575,8 +1585,9 @@ def _search_description_variables(
             else ""
         )
         + register_filter
+        + year_filter
         + "ORDER BY rank, vf.rowid LIMIT ? OFFSET ?",
-        (query, *register_params, limit, offset),
+        (query, *register_params, *year_params, limit, offset),
     ).fetchall()
     ranking_delivery_columns = _delivery_column_names_for_variables(
         conn,
@@ -2329,7 +2340,7 @@ def _search_group_labels(
     reg_ids: set[int] | None,
     *,
     type: str,
-    year_range: tuple[int | None, int | None] | None = None,
+    year_range: tuple[int | None, int | None] | None,
     limit: int,
     offset: int,
 ) -> list[sqlite3.Row]:
@@ -2363,21 +2374,13 @@ def _search_group_labels(
     elif type == "classification":
         filters.append("g.kind = 'classification'")
     if year_range is not None:
-        lo, hi = year_range
         filters.append("g.kind = 'variable'")
-        state_filters = ["cgv.group_id = g.group_id"]
-        if hi is not None:
-            state_filters.append("CAST(substr(vs.valid_from, 1, 4) AS INTEGER) <= ?")
-            params.append(hi)
-        if lo is not None:
-            state_filters.append("CAST(substr(vs.valid_to, 1, 4) AS INTEGER) >= ?")
-            params.append(lo)
-        filters.append(
-            "EXISTS (SELECT 1 FROM concept_group_variable cgv "
-            "JOIN variable_state vs ON vs.variable_id = cgv.variable_id WHERE "
-            + " AND ".join(state_filters)
-            + ")"
-        )
+    year_filter, year_params = _year_scope_filter(
+        year_range,
+        "concept_group_variable cgv "
+        "JOIN variable_state vs ON vs.variable_id = cgv.variable_id",
+        "cgv.group_id = g.group_id",
+    )
     return conn.execute(
         "SELECT g.group_id, g.kind, g.group_key, g.label, g.source, "
         "g.register_id, r.name AS register_name "
@@ -2386,8 +2389,9 @@ def _search_group_labels(
         "WHERE "
         + " AND ".join(f"({item})" for item in filters)
         + " "
+        + year_filter
         + "ORDER BY g.kind, g.group_key, g.group_id LIMIT ? OFFSET ?",
-        (*params, limit, offset),
+        (*params, *year_params, limit, offset),
     ).fetchall()
 
 

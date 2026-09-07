@@ -2062,7 +2062,7 @@ class TestGetSchemaFoldedWindowNotSharded:
 
 
 class TestSearchYearOverlap:
-    """_filter_search_by_years uses window overlap, not the opening year."""
+    """`search --years` uses window overlap, not the opening year."""
 
     def test_var_pair_kept_for_mid_year_of_multi_year_state(self):
         from reg_meta.queries import search
