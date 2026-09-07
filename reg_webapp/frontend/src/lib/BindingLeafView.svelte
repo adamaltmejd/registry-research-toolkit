@@ -493,6 +493,16 @@ async function stagedAdd(
   };
 }
 
+/** Flipped by the `$effect` teardown when this view is destroyed — the
+ * cancellation idiom `asyncResource` uses internally, so a pick still waiting on
+ * the restore gate below is abandoned rather than committed into a draft from a
+ * page the researcher has navigated away from. This effect reads nothing, so it
+ * never re-runs: the flag means destroyed, not "inputs changed". */
+let unmounted = false;
+$effect(() => () => {
+  unmounted = true;
+});
+
 /** Apply the staged diff through ONE synchronous store mutation. Adds carry final
  * binding fields from the picker row, so the project is unchanged until Apply. */
 async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
@@ -506,7 +516,14 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
   // The draft lifecycle is application-owned and its restore is ASYNCHRONOUS: on a
   // cold entry at a catalog route the store is still empty while IndexedDB is read.
   // Wait for it to settle, or this Add mints a SECOND project over the saved one.
+  // The wait is unbounded, so the pick stays bound to the project it was staged
+  // against: a New/Open (or leaving the page) while it is pending means the
+  // researcher moved on, and these rows are not a pick against the replacement.
+  const stagedAgainst = projectStore.replacementGeneration;
   await projectStore.restored;
+  if (unmounted || projectStore.replacementGeneration !== stagedAgainst) {
+    return false;
+  }
   if (projectStore.draft === null && payload.adds.length > 0) {
     projectStore.newProject({
       reg_meta_version: regMetaReleaseTag(regMetaVersion),

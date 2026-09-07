@@ -417,6 +417,87 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     }
   });
 
+  it("discards a queued Apply when the researcher replaces the project meanwhile", async () => {
+    // The gate's wait is UNBOUNDED, so the pick stays bound to the project it was
+    // staged against: a deliberate New (or Open) while the Apply is queued means
+    // the researcher moved on, and committing these rows into the replacement
+    // would append a pick to a document they never picked from.
+    vi.mocked(getConceptGroup).mockResolvedValue(node());
+    vi.mocked(getConceptGroupGraph).mockResolvedValue(twoSingleColGraph());
+    mockResolveColumns({ "scb/rams/inkjan": ["Inkjan"] });
+
+    const { promise: gate, resolve: release } = Promise.withResolvers<void>();
+    const restoring = vi.spyOn(projectStore, "restored", "get");
+    restoring.mockReturnValue(gate);
+    try {
+      await renderGroup();
+
+      await page.getByRole("checkbox", { name: /Inkjan/ }).click();
+      await page
+        .getByRole("button", {
+          name: /Add to project|Remove from project|Apply changes/,
+        })
+        .click();
+      await expect
+        .element(page.getByRole("button", { name: "Applying..." }))
+        .toBeVisible();
+
+      projectStore.newProject({
+        reg_meta_version: "reg_meta/v1.0.0",
+        steward: "global",
+      });
+      projectStore.updateField("name", "deliberate");
+
+      release();
+      // The commit settles (the button leaves its applying state) having applied
+      // NOTHING — the replacement project is exactly as the researcher made it.
+      await expect
+        .element(page.getByRole("button", { name: "Add to project" }))
+        .toBeVisible();
+      expect(projectStore.draft?.name).toBe("deliberate");
+      expect(projectStore.draft?.sources).toHaveLength(0);
+    } finally {
+      restoring.mockRestore();
+    }
+  });
+
+  it("discards a queued Apply when the researcher navigates away meanwhile", async () => {
+    // Same wait, the other way out of it: the group page is gone before the gate
+    // settles, so the late continuation must not mutate the draft from a page the
+    // researcher has left.
+    vi.mocked(getConceptGroup).mockResolvedValue(node());
+    vi.mocked(getConceptGroupGraph).mockResolvedValue(twoSingleColGraph());
+    mockResolveColumns({ "scb/rams/inkjan": ["Inkjan"] });
+
+    const { promise: gate, resolve: release } = Promise.withResolvers<void>();
+    const restoring = vi.spyOn(projectStore, "restored", "get");
+    restoring.mockReturnValue(gate);
+    try {
+      const view = await renderGroup();
+
+      await page.getByRole("checkbox", { name: /Inkjan/ }).click();
+      await page
+        .getByRole("button", {
+          name: /Add to project|Remove from project|Apply changes/,
+        })
+        .click();
+      await expect
+        .element(page.getByRole("button", { name: "Applying..." }))
+        .toBeVisible();
+
+      view.unmount();
+      release();
+      // A fixed wait, not `vi.waitFor`: the assertion is that NOTHING happens, and
+      // an unguarded Apply needs several microtask hops (its add resolutions)
+      // to reach the mutation — a poll would pass on the first tick, before the
+      // continuation it is meant to catch has run.
+      await new Promise((r) => setTimeout(r, 100));
+      expect(projectStore.draft?.sources).toHaveLength(0);
+    } finally {
+      restoring.mockRestore();
+    }
+  });
+
   // #678 finding 3: an active ?period is HONORED on add (the committed source carries
   // the user's narrowed window, not the row's full span).
   it("commits the row span INTERSECTED with the active ?period, not the full span", async () => {

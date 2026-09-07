@@ -2009,7 +2009,9 @@ rune store holding one draft per session.
   creates or mutates a draft: without that gate, a cold entry at `/catalog` reads the
   still-empty store, mints a second project, and later overwrites the saved one. Only a
   restore onto an empty store applies, so a late restore never overwrites a deliberate
-  new/open.
+  new/open — and, symmetrically, a pick queued behind the gate stays bound to the
+  project it was staged against: it is discarded (never applied) if a deliberate
+  new/open replaced that project, or the authoring page was left, while it waited.
 - **Autosave to IndexedDB** (`indexeddb_persistence.ts`) over the raw IndexedDB API (no
   `idb` dep — keeps the frontend dep surface lean) via a debounced (\~500ms) `$effect`.
   **Graceful degradation is mandatory**: in private mode / disabled storage / quota

@@ -775,6 +775,85 @@ describe("BindingLeafView representation picker (#678)", () => {
     }
   });
 
+  it("discards a queued Add when the researcher replaces the project meanwhile", async () => {
+    // The gate's wait is UNBOUNDED, so the pick stays bound to the project it was
+    // staged against: a deliberate New (or Open) while the Add is queued means the
+    // researcher moved on, and committing these rows into the replacement would
+    // append a pick to a document they never picked from.
+    const { promise: gate, resolve: release } = Promise.withResolvers<void>();
+    const restoring = vi.spyOn(projectStore, "restored", "get");
+    restoring.mockReturnValue(gate);
+    try {
+      await render(BindingLeafView, {
+        fqidPath: "scb/lisa/kon",
+        node: node(pickerStates),
+        regMetaVersion: SEED.regMetaVersion,
+        steward: SEED.steward,
+        windowMinYear: SEED.windowMinYear,
+        vintageYear: 2024,
+      });
+
+      await page.getByRole("checkbox", { name: /Kon/ }).click();
+      await page.getByRole("button", { name: "Add to project" }).click();
+      await expect
+        .element(page.getByRole("button", { name: "Applying..." }))
+        .toBeVisible();
+
+      projectStore.newProject({
+        reg_meta_version: "reg_meta/v1.0.0",
+        steward: "global",
+      });
+      projectStore.updateField("name", "deliberate");
+
+      release();
+      // The commit settles (the button leaves its applying state) having applied
+      // NOTHING — the replacement project is exactly as the researcher made it.
+      await expect
+        .element(page.getByRole("button", { name: "Add to project" }))
+        .toBeVisible();
+      expect(projectStore.draft?.name).toBe("deliberate");
+      expect(projectStore.draft?.sources).toHaveLength(0);
+    } finally {
+      restoring.mockRestore();
+    }
+  });
+
+  it("discards a queued Add when the researcher navigates away meanwhile", async () => {
+    // Same wait, the other way out of it: the leaf is gone before the gate
+    // settles, so the late continuation must not mutate the draft from a page the
+    // researcher has left.
+    const { promise: gate, resolve: release } = Promise.withResolvers<void>();
+    const restoring = vi.spyOn(projectStore, "restored", "get");
+    restoring.mockReturnValue(gate);
+    try {
+      const view = await render(BindingLeafView, {
+        fqidPath: "scb/lisa/kon",
+        node: node(pickerStates),
+        regMetaVersion: SEED.regMetaVersion,
+        steward: SEED.steward,
+        windowMinYear: SEED.windowMinYear,
+        vintageYear: 2024,
+      });
+
+      await page.getByRole("checkbox", { name: /Kon/ }).click();
+      await page.getByRole("button", { name: "Add to project" }).click();
+      await expect
+        .element(page.getByRole("button", { name: "Applying..." }))
+        .toBeVisible();
+
+      view.unmount();
+      release();
+      // A fixed wait, not `vi.waitFor`: the assertion is that NOTHING happens, and
+      // an unguarded Add needs several microtask hops (its add resolutions)
+      // to reach the mutation — a poll would pass on the first tick, before the
+      // continuation it is meant to catch has run.
+      await new Promise((r) => setTimeout(r, 100));
+      expect(projectStore.draft?.sources).toHaveLength(0);
+    } finally {
+      restoring.mockRestore();
+    }
+  });
+
   it("applying one folded variant-family row adds each concrete era source", async () => {
     vi.mocked(getCatalogNode).mockImplementation(async (_fqid, params) => {
       const variant =

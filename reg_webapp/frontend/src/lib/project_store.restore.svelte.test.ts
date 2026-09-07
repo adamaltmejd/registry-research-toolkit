@@ -56,12 +56,17 @@ describe("draft restore + the authoring gate", () => {
       save: () => Promise.resolve(),
       load: () => Promise.resolve(savedDraft("recovered")),
     });
+    const replacements = projectStore.replacementGeneration;
     const stop = $effect.root(() => {
       initDraftLifecycle();
     });
 
     await projectStore.restored;
     expect(projectStore.draft?.name).toBe("recovered");
+    // A restore is NOT a deliberate replacement. Catalog authoring discards a pick
+    // queued behind the gate when this counter moves, so a bump here would throw
+    // away the very cold-entry Add the restore exists to serve.
+    expect(projectStore.replacementGeneration).toBe(replacements);
     // Recovery is not the durable copy: a restored draft has not been downloaded
     // this session, so it reads as dirty (the unsaved-changes warning).
     expect(projectStore.dirty).toBe(true);
@@ -78,13 +83,16 @@ describe("draft restore + the authoring gate", () => {
       initDraftLifecycle();
     });
 
-    // The researcher acts while the restore is still in flight.
+    // The researcher acts while the restore is still in flight — a deliberate
+    // replacement, which a pick queued behind the gate keys off.
+    const replacements = projectStore.replacementGeneration;
     projectStore.newProject(SEED);
     projectStore.updateField("name", "deliberate");
     release(savedDraft("late-restore"));
 
     await projectStore.restored;
     expect(projectStore.draft?.name).toBe("deliberate");
+    expect(projectStore.replacementGeneration).toBe(replacements + 1);
     stop();
   });
 

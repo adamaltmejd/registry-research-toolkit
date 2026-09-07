@@ -293,6 +293,10 @@ let validationQueued = false;
  * responses even when a future edit reuses the same object shape. */
 let validationGeneration = 0;
 
+/** Backs `projectStore.replacementGeneration` (which documents the gate check).
+ * Bumped by New and Open only — NOT the restore, NOT an edit. */
+let replacementGeneration = 0;
+
 /** The dirty flag: the draft has diverged from the last download. */
 const dirty = $derived(
   draft != null && serializeProjectData(draft) !== lastDownloaded,
@@ -470,6 +474,16 @@ export const projectStore = {
   get restored() {
     return restored;
   },
+  /** The deliberate-replacement counter. `restored` is awaited BEFORE a pick
+   * reads the draft, and that wait is unbounded — so catalog authoring reads
+   * this first and discards the pick if it moved: a New or an Open while the
+   * gate was pending replaced the project the pick was staged against, and
+   * appending to the replacement corrupts a document the researcher never
+   * picked from. The restore itself does NOT bump it, so a cold-entry Add still
+   * lands on the draft it recovered. */
+  get replacementGeneration() {
+    return replacementGeneration;
+  },
 
   // ── Stable client-side ids (issue #200 — keys for the editor each-blocks) ──
   // Positional accessors so the `{#each}` blocks key on a STABLE id rather than the
@@ -518,6 +532,7 @@ export const projectStore = {
     const ids = buildIds(next);
     draft = next;
     validationGeneration += 1;
+    replacementGeneration += 1;
     sourceIds = ids;
     lastDownloaded = serializeProjectData(next);
     validation = null;
@@ -566,6 +581,7 @@ export const projectStore = {
     const ids = buildIds(opened);
     draft = opened;
     validationGeneration += 1;
+    replacementGeneration += 1;
     sourceIds = ids;
     lastDownloaded = serializeProjectData(opened);
     validation = null;
