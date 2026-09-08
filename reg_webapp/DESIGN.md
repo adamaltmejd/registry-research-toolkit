@@ -285,7 +285,12 @@ value set — a state id can never read a coding it does not belong to. Not stew
 code→label metadata is public, on the same footing as the classification codes already
 served. The SPA's `ValueSetCodes` panel owns the paging, the filter and the loading /
 error+retry / empty states, and is mounted only where a code table is actually shown — a
-closed disclosure issues no request. Inside it the shared `CodeList` renders each page
+closed disclosure issues no request. "Shown" means the state HAS a coding, not that the
+coding has members: a `value_set_id` with `code_count` 0 shows its size on the row and
+says "This value set has no codes" in place — no disclosure, since there is nothing to
+open, and no read, since the leaf already counted it. An empty coding and no coding at
+all are different facts, and a reader who cannot tell them apart is left guessing
+whether the page failed. Inside the panel the shared `CodeList` renders each page
 verbatim: a server page is a WINDOW, so the viewer's own filter and its large-list
 grouping are suppressed there — grouping a partial page would group the wrong thing, and
 a set that drills down on a classification page reads as a flat bounded list here.
@@ -296,11 +301,19 @@ semantics unchanged.
 One consequence in the SPA worth naming: `distinctValueSets` used to synthesize a
 cross-state conformance rollup whose mismatch count was the size of the deduped union of
 its states' mismatch lists. Those lists are per-state on-demand relations now, so no
-single read could produce that number; the entry reports the LOUDEST stored verdict
-instead (severed before kept, then the largest mismatch count) together with the
-`conformanceSource` state its list is read by. For a plain value set every state's
-verdict is the same verdict, so this is byte-identical; across a classification
-edition's several value sets it reports the worst offender rather than a synthetic sum.
+single read could produce that number. The entry therefore carries `conformances` — one
+STORED verdict per distinct list, each with the state its list is read by and the
+variants/period it was recorded over, rendered as its own notice inside the entry. Nothing
+a state warned about is dropped by the grouping: a classification edition spanning two
+codings keeps both lists, side by side and separately openable. What IS collapsed is
+repetition — one entry per (coding, declared classification) pair, because the build
+gate derives both the verdict and its mismatch list from exactly those two
+(`reg_meta_build/classifications.py` matches the state's value-set members against the
+declared edition's valid codes), so an era of yearly states over one coding shares one
+list and reports it once. The window on that notice covers the states that CARRY the
+verdict, which is often narrower than the coding's own usage window, so it is labelled
+"recorded for" rather than left to be read as the era. Every count shown describes the
+one list its disclosure opens.
 
 **301 redirect for renamed/dead slugs (#355 PART 2; register grain added in #412;
 `?period` and sub-endpoints added in #411; classification grain added in #571).** When a

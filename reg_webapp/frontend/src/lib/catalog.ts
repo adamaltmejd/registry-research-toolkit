@@ -2304,9 +2304,10 @@ export interface ValueSetVariantUsage {
 export interface DistinctValueSet {
   key: string;
   classificationSlug: string | null;
-  /** The ONE stored verdict that speaks for the entry, with the state its
-   * mismatch list is read by. Null when no state declares a classification. */
-  conformance: RepresentativeConformance | null;
+  /** Every distinct stored verdict the entry's states carry, each with the state
+   * its mismatch list is read by and the variants/window it was recorded over.
+   * Empty when no state declares a classification. */
+  conformances: StateConformance[];
   versionLabel: string;
   /** The coding's IDENTITY — what the bounded code-list request is keyed on.
    * Null for a state with no value set. */
@@ -2456,71 +2457,78 @@ function valueSetDedupKey(s: VariableStateModel): string {
     : `id/${s.value_set_id ?? "none"}`;
 }
 
-function conformanceNeedsNotice(c: ClassificationConformanceModel): boolean {
+/** Whether a stored verdict says something the reader must see: a SEVERED
+ * declaration (the reason those codes are not a classification link at all), or
+ * codes that fall outside the classification the state declares. A clean "kept"
+ * verdict adds nothing to the classification link already rendered. */
+export function conformanceNeedsNotice(
+  c: ClassificationConformanceModel,
+): boolean {
   return c.status === "severed" || c.nonconforming_code_count > 0;
 }
 
-/** A stored conformance verdict plus the state it was stored against — the key
- * the mismatch list is read by (`/api/value-sets/{valueSetId}/codes?state=`).
- * `valueSetId` is null only for the pathological case of a conformance row on a
- * state with no coding, which has no mismatch list to open. One object, because
- * a verdict with no state to read its list by is not renderable. */
-export interface RepresentativeConformance {
+/** A stored conformance verdict, the state its mismatch list is read by
+ * (`/api/value-sets/{valueSetId}/codes?state=`), and the coding / variants /
+ * window it was RECORDED over — what tells one of an entry's verdicts from
+ * another (a classification edition's two codings can warn over the SAME period,
+ * so the period alone would not). `spans` collapses ONLY the states carrying this
+ * verdict, so it is usually narrower than the entry's own usage window — the view
+ * says "recorded for" so the two cannot be read as the same claim. `valueSetId`
+ * is null only for the pathological case of a conformance row on a state with no
+ * coding, which has no mismatch list to open. */
+export interface StateConformance {
   verdict: ClassificationConformanceModel;
   stateId: number;
   valueSetId: number | null;
+  versionLabel: string;
+  variants: string[];
+  spans: ValueSetSpan[];
 }
 
-/** How loudly a verdict needs saying: a severed classification outranks a kept
- * one, and within a status the larger mismatch count leads. */
-function conformanceOutranks(
-  candidate: ClassificationConformanceModel,
-  incumbent: ClassificationConformanceModel,
-): boolean {
-  const candidateSevered = candidate.status === "severed";
-  if (candidateSevered !== (incumbent.status === "severed")) {
-    return candidateSevered;
-  }
-  return (
-    candidate.nonconforming_code_count > incumbent.nonconforming_code_count
-  );
-}
-
-/** The ONE stored conformance row that speaks for a distinct value set: the
- * LOUDEST verdict among its states (severed before kept, then the largest
- * mismatch count), or — when no state warns — the first verdict there is, so a
- * clean "kept" still reports.
+/** EVERY distinct stored conformance verdict in a group — one per (coding,
+ * declared classification) pair, since a state's stored mismatch list is a
+ * function of exactly those two (the build gate matches the state's value-set
+ * members against the declared edition's codes). States sharing both share the
+ * list, so collapsing them loses nothing and a long era of yearly states reports
+ * once; two codings under one classification edition keep BOTH lists, each read
+ * by its own state.
  *
- * Deliberately a STORED row rather than a cross-state rollup: the mismatch list
- * behind it is a per-state relation read on demand, so a synthesized row would
- * name counts no single fetch could produce. Within a plain value set every
- * state's verdict is the same verdict (same members, same declared
- * classification); across a classification edition's several value sets this
- * reports the worst of them rather than an average of all. */
-function representativeConformance(
-  states: VariableStateModel[],
-): RepresentativeConformance | null {
-  let fallback: RepresentativeConformance | null = null;
-  let worst: RepresentativeConformance | null = null;
+ * Deliberately NOT a synthesized rollup: the mismatch lists are per-state
+ * on-demand relations now, so a merged row would name counts no single read could
+ * produce — every count here describes the one list its disclosure opens. Which
+ * of them warrant a notice is the view's call (`conformanceNeedsNotice`); this
+ * stays the complete set. */
+function groupConformances(states: VariableStateModel[]): StateConformance[] {
+  const byList = new Map<
+    string,
+    { verdict: ClassificationConformanceModel; states: VariableStateModel[] }
+  >();
   for (const s of states) {
     const verdict = s.classification_conformance;
     if (verdict == null) {
       continue;
     }
-    const candidate = {
-      verdict,
-      stateId: s.state_id,
-      valueSetId: s.value_set_id,
-    };
-    fallback ??= candidate;
-    if (!conformanceNeedsNotice(verdict)) {
-      continue;
-    }
-    if (worst === null || conformanceOutranks(verdict, worst.verdict)) {
-      worst = candidate;
+    const key = `${s.value_set_id ?? "none"}\u0000${verdict.declared_classification_slug}`;
+    const seen = byList.get(key);
+    if (seen) {
+      seen.states.push(s);
+    } else {
+      byList.set(key, { verdict, states: [s] });
     }
   }
-  return worst ?? fallback;
+  return [...byList.values()].map(({ verdict, states: recorded }) => {
+    const rep = recorded[0];
+    return {
+      verdict,
+      stateId: rep.state_id,
+      valueSetId: rep.value_set_id,
+      versionLabel: rep.value_set_version_label,
+      variants: [...new Set(recorded.map((s) => s.variant))],
+      // Time-adjacency only, across EVERY variant that carries the verdict: the
+      // notice speaks for the coding, not for one variant's delivery of it.
+      spans: collapseSpans(recorded),
+    };
+  });
 }
 
 /** Project a variable's multi-state set into DISTINCT value sets (#668), deduped
@@ -2546,7 +2554,7 @@ export function distinctValueSets(
   }
   return [...byKey.entries()].map(([key, group]) => {
     const rep = group[0];
-    const conformance = representativeConformance(group);
+    const conformances = groupConformances(group);
     const byVariant = statesByVariant(group);
     const usages: ValueSetVariantUsage[] = [...byVariant.entries()].map(
       ([variant, ss]) => ({
@@ -2577,7 +2585,7 @@ export function distinctValueSets(
     return {
       key,
       classificationSlug: rep.classification_slug ?? null,
-      conformance,
+      conformances,
       versionLabel: rep.value_set_version_label,
       valueSetId: rep.value_set_id,
       summary: rep.value_set_summary,

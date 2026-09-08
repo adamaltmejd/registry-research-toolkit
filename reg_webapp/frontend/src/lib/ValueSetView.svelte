@@ -2,13 +2,14 @@
 import type { DenseIntegerRangeModel, VariableStateModel } from "./api";
 import {
   catalogHref,
+  conformanceNeedsNotice,
   type DistinctValueSet,
   distinctValueSets,
   formatStateWindow,
   formatWindow,
   humanizeClassificationSlug,
   matchesFilter,
-  type RepresentativeConformance,
+  type StateConformance,
   type ValueSetTechnicalChange,
   valueSetKeyForColumn,
   windowTitle,
@@ -300,6 +301,17 @@ function usageVariantLabel(variant: string): string | null {
   return variant === "_default" ? null : variant;
 }
 
+function conformanceVariants(source: StateConformance): string[] {
+  return source.variants.filter((v) => usageVariantLabel(v) !== null);
+}
+
+/** What a notice's scope line has to add. `coding` names the value set the
+ * verdict speaks for — set only where an entry groups SEVERAL codings (a
+ * classification edition), since on a plain row that would just repeat the row's
+ * own heading. A null scope drops the line entirely: the single-state detail
+ * already lists the state's variant, window and coding above it. */
+type ConformanceScope = { coding: string | null };
+
 // The reader's toggle → `openPanels`; `openPanels` → the `open` attribute. An
 // attribute rather than `bind:open` because the key is an `{@const}` inside the
 // each block, and a binding's teardown reads that derived after the row is gone.
@@ -329,52 +341,72 @@ function trackDisclosure(key: string, event: Event): void {
   </p>
 {/snippet}
 
-<!-- `source` is the state the verdict was STORED against — the key its mismatch
-     list is read by, since that list is a per-state on-demand relation now. -->
-{#snippet conformanceNotice(source: RepresentativeConformance)}
+<!-- ONE stored verdict: `source` names the state it was stored against — the key
+     its mismatch list is read by, since that list is a per-state on-demand relation
+     now. A grouped entry renders one of these PER distinct verdict, so `scope` says
+     which coding/variants/period each speaks for; the single-state detail states all
+     three above already and passes null. Verdicts that say nothing (a clean "kept")
+     render nothing at all, so every call site can hand over the whole set. -->
+{#snippet conformanceNotice(source: StateConformance, scope: ConformanceScope | null)}
   {@const conf = source.verdict}
-  <div class:severed={conf.status === "severed"} class="conformance-notice">
-    {#if conf.status === "severed"}
-      <p>
-        Declared coding
-        <a href={catalogHref(`class/${conf.declared_classification_slug}`)}>
-          {humanizeClassificationSlug(conf.declared_classification_slug)}
-        </a>
-        severed: {overlapPercent(conf.overlap)} of checked codes match this
-        classification.
-      </p>
-    {:else if conf.nonconforming_code_count > 0}
-      <p>
-        Declared coding
-        <a href={catalogHref(`class/${conf.declared_classification_slug}`)}>
-          {humanizeClassificationSlug(conf.declared_classification_slug)}
-        </a>
-        kept, but {conf.nonconforming_code_count}
-        {conf.nonconforming_code_count === 1 ? "code is" : "codes are"} not part
-        of this classification.
-      </p>
-    {/if}
-    {#if conf.nonconforming_code_count > 0 && source.valueSetId !== null}
-      {@const panelKey = `mismatch:${source.stateId}`}
-      <details
-        open={openPanels[panelKey] ?? false}
-        ontoggle={(e) => trackDisclosure(panelKey, e)}
-      >
-        <summary>
-          Nonconforming codes ({conf.nonconforming_code_count})
-        </summary>
-        {#if openPanels[panelKey]}
-          <ValueSetCodes
-            valueSetId={source.valueSetId}
-            stateId={source.stateId}
-            codeCount={conf.nonconforming_code_count}
-            filterLabel="Filter nonconforming codes"
-            filterPlaceholder="Filter nonconforming codes…"
-          />
+  {#if conformanceNeedsNotice(conf)}
+    <div class:severed={conf.status === "severed"} class="conformance-notice">
+      {#if conf.status === "severed"}
+        <p>
+          Declared classification
+          <a href={catalogHref(`class/${conf.declared_classification_slug}`)}>
+            {humanizeClassificationSlug(conf.declared_classification_slug)}
+          </a>
+          severed: {overlapPercent(conf.overlap)} of checked codes match this
+          classification.
+        </p>
+      {:else if conf.nonconforming_code_count > 0}
+        <p>
+          Declared classification
+          <a href={catalogHref(`class/${conf.declared_classification_slug}`)}>
+            {humanizeClassificationSlug(conf.declared_classification_slug)}
+          </a>
+          kept, but {conf.nonconforming_code_count}
+          {conf.nonconforming_code_count === 1 ? "code is" : "codes are"} not part
+          of this classification.
+        </p>
+      {/if}
+      {#if scope}
+        <!-- The years the verdict was RECORDED over — the states that carry it, which
+             is often narrower than the coding's own usage window two lines above. Said
+             in words so the two windows cannot be read as the same claim. -->
+        {@const period = usageWindowLabels(source.spans).join(", ")}
+        {@const variants = conformanceVariants(source)}
+        {#if scope.coding || period || variants.length > 0}
+          <p class="conformance-scope">
+            {#if scope.coding}<span>{scope.coding}</span>{/if}
+            {#if period}<span class="muted">recorded for {period}</span>{/if}
+            {#each variants as v (v)}<code class="vs-usage-variant">{v}</code>{/each}
+          </p>
         {/if}
-      </details>
-    {/if}
-  </div>
+      {/if}
+      {#if conf.nonconforming_code_count > 0 && source.valueSetId !== null}
+        {@const panelKey = `mismatch:${source.stateId}`}
+        <details
+          open={openPanels[panelKey] ?? false}
+          ontoggle={(e) => trackDisclosure(panelKey, e)}
+        >
+          <summary>
+            Nonconforming codes ({conf.nonconforming_code_count})
+          </summary>
+          {#if openPanels[panelKey]}
+            <ValueSetCodes
+              valueSetId={source.valueSetId}
+              stateId={source.stateId}
+              codeCount={conf.nonconforming_code_count}
+              filterLabel="Filter nonconforming codes"
+              filterPlaceholder="Filter nonconforming codes…"
+            />
+          {/if}
+        </details>
+      {/if}
+    </div>
+  {/if}
 {/snippet}
 
 <!-- #668: which variants / period spans use a distinct value set — one line per
@@ -438,14 +470,14 @@ function trackDisclosure(key: string, event: Event): void {
       </a>
       classification.
     </p>
-    {#if vs.conformance && vs.conformance.verdict.nonconforming_code_count > 0}
-      {@render conformanceNotice(vs.conformance)}
-    {/if}
+    {#each vs.conformances as c (c.stateId)}
+      {@render conformanceNotice(c, { coding: c.versionLabel })}
+    {/each}
   {:else}
-    {#if vs.conformance}
-      {@render conformanceNotice(vs.conformance)}
-    {/if}
-    {#if vs.valueSetId !== null && vs.summary && vs.summary.code_count > 0}
+    {#each vs.conformances as c (c.stateId)}
+      {@render conformanceNotice(c, { coding: null })}
+    {/each}
+    {#if vs.valueSetId !== null && vs.summary}
       {#if vs.summary.integer_range}
         {@render denseIntegerRange(vs.summary.integer_range, vs.summary.code_count)}
       {:else}
@@ -466,7 +498,7 @@ function trackDisclosure(key: string, event: Event): void {
         </a>
       {:else}
         <span class="vs-label">{valueSetLabel(vs)}</span>
-        {#if vs.summary && vs.summary.code_count > 0}
+        {#if vs.summary}
           <span class="muted vs-count">({vs.summary.code_count})</span>
         {/if}
         {#if vs.summary?.integer_range}
@@ -484,15 +516,21 @@ function trackDisclosure(key: string, event: Event): void {
       </button>
     </div>
     {@render usage(vs)}
-    {#if vs.conformance && (vs.conformance.verdict.status === "severed" || vs.conformance.verdict.nonconforming_code_count > 0)}
-      {@render conformanceNotice(vs.conformance)}
-    {/if}
-    {#if !vs.classificationSlug && vs.valueSetId !== null && vs.summary && vs.summary.code_count > 0}
+    {#each vs.conformances as c (c.stateId)}
+      {@render conformanceNotice(c, {
+        coding: vs.classificationSlug ? c.versionLabel : null,
+      })}
+    {/each}
+    {#if !vs.classificationSlug && vs.valueSetId !== null && vs.summary}
       <!-- #310: inspect a plain value set's codes inline, without isolating —
            and only once opened (Y-46), so a long history of codings costs one
            bounded read of the ONE the reader asked for. -->
       {#if vs.summary.integer_range}
         {@render denseIntegerRange(vs.summary.integer_range, vs.summary.code_count)}
+      {:else if vs.summary.code_count === 0}
+        <!-- A known-empty coding: one sentence, and nothing to open for it. Still
+             the shared panel's wording, so "empty" reads the same everywhere. -->
+        {@render valueSetTable(vs.valueSetId, 0)}
       {:else}
         {@const panelKey = `codes:${vs.key}`}
         <details
@@ -543,15 +581,21 @@ function trackDisclosure(key: string, event: Event): void {
       {/if}
     </dl>
 
-    {#if s.classification_conformance && (s.classification_conformance.status === "severed" || s.classification_conformance.nonconforming_code_count > 0)}
-      {@render conformanceNotice({
-        verdict: s.classification_conformance,
-        stateId: s.state_id,
-        valueSetId: s.value_set_id,
-      })}
+    {#if s.classification_conformance}
+      {@render conformanceNotice(
+        {
+          verdict: s.classification_conformance,
+          stateId: s.state_id,
+          valueSetId: s.value_set_id,
+          versionLabel: s.value_set_version_label,
+          variants: [s.variant],
+          spans: [{ from: s.valid_from, to: s.valid_to }],
+        },
+        null,
+      )}
     {/if}
 
-    {#if s.value_set_id !== null && s.value_set_summary && s.value_set_summary.code_count > 0}
+    {#if s.value_set_id !== null && s.value_set_summary}
       {@const summary = s.value_set_summary}
       <h4 class="vs-heading">
         Value set <span class="muted">({summary.code_count})</span>
@@ -606,7 +650,7 @@ function trackDisclosure(key: string, event: Event): void {
           </a>
         {:else}
           {valueSetLabel(vs)}
-          {#if vs.summary && vs.summary.code_count > 0}
+          {#if vs.summary}
             <span class="muted">({vs.summary.code_count})</span>
           {/if}
           {#if vs.summary?.integer_range}
@@ -825,12 +869,28 @@ function trackDisclosure(key: string, event: Event): void {
   .conformance-notice p {
     margin: 0;
   }
+  /* Which coding / variants / period this verdict was stored for — the line that
+     tells one of an entry's several verdicts from another. */
+  .conformance-scope {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--space-2);
+    margin-top: var(--space-1);
+  }
   .conformance-notice details {
     margin-top: var(--space-1);
   }
   .conformance-notice summary {
     cursor: pointer;
     color: var(--accent);
+  }
+  /* The system's ring, not the UA outline these disclosures would otherwise fall
+     back to — the code panel inside them already focuses that way. */
+  summary:focus-visible {
+    box-shadow: var(--focus-ring);
+    border-radius: var(--radius-sm);
+    outline: none;
   }
   .vs-usage-heading {
     margin: var(--space-3) 0 0.3rem;

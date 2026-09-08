@@ -8,9 +8,10 @@ mismatch-list read keyed by state, the not-found mapping, and the property the
 ticket is about — an initial binding payload whose size does not follow its
 codings' cardinality.
 
-The fixture's `scb/lisa/forsamling` is the synthetic many-state binding: 73 states
+The fixture's `scb/lisa/forsamling` is the synthetic many-state binding: 74 states
 over five shared codings (400 / 400 / 600 members, one empty, one absent) plus a
-dense integer coding and two stored conformance verdicts.
+dense integer coding and three stored conformance verdicts — two of them on the two
+codings ONE classification era spans.
 """
 
 from __future__ import annotations
@@ -67,11 +68,13 @@ def test_paging_walks_the_whole_set_without_gaps_or_repeats(client):
 
 
 def test_filter_applies_to_the_complete_set_before_the_page(client):
-    # "0033" matches exactly one member of 600; a filter applied AFTER paging
-    # would find it only for a caller who had already walked to its page.
-    body = _codes(client, _DISTRICT, q="0033", offset=0)
+    # "0433" matches exactly one member of 600, and it sits on the THIRD page
+    # (index 432): a filter applied after the window would miss it entirely for a
+    # first-page caller, so this is the read that proves the composition order.
+    body = _codes(client, _DISTRICT, q="0433", offset=0)
     assert body["total"] == 1
-    assert [c["code"] for c in body["codes"]] == ["9020033"]
+    assert [c["code"] for c in body["codes"]] == ["9020433"]
+    assert _codes(client, _DISTRICT)["codes"][-1]["code"] < "9020433"
     # And the total is the FILTERED total, so "1 of 600" is true.
     wide = _codes(client, _DISTRICT, q="Distrikt 000")
     assert wide["total"] == 9
@@ -182,8 +185,8 @@ class TestBindingPayloadIndependence:
 
     def test_every_state_survives_with_its_identity_and_summary(self, client):
         states = _states(client)
-        # The seeded history: 73 states over five codings.
-        assert len(states) == 73
+        # The seeded history: 74 states over five codings.
+        assert len(states) == 74
         assert {s["value_set_id"] for s in states} == {900, 901, 902, 903, 904, None}
         for state in states:
             assert state["value_set"] is None
@@ -209,7 +212,7 @@ class TestBindingPayloadIndependence:
         ]
         assert {v["status"] for v in verdicts} == {"kept", "severed"}
         assert all(v["nonconforming_codes"] == [] for v in verdicts)
-        assert sorted(v["nonconforming_code_count"] for v in verdicts) == [3, 5]
+        assert sorted(v["nonconforming_code_count"] for v in verdicts) == [3, 4, 5]
 
     def test_the_payload_does_not_grow_with_code_cardinality(self, client):
         # 1511 members across the history's codings; embedding them per state
@@ -221,8 +224,11 @@ class TestBindingPayloadIndependence:
         body = client.get(
             "/api/catalog/scb/lisa/forsamling", params={"period": 2010}
         ).json()
-        [state] = body["states"]
-        assert state["value_set_id"] == 902
+        # 2010 delivers two co-delivered columns over different codings; both
+        # narrow to the same summary-only shape.
+        assert {s["value_set_id"] for s in body["states"]} == {900, 902}
+        assert all(s["value_set"] is None for s in body["states"])
+        state = next(s for s in body["states"] if s["value_set_id"] == 902)
         assert state["value_set"] is None
         assert state["value_set_summary"]["code_count"] == 600
         assert state["classification_conformance"]["status"] == "kept"

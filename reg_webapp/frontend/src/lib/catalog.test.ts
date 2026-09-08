@@ -21,6 +21,7 @@ import {
   clusterBands,
   coexistingColumns,
   commonLabelStem,
+  conformanceNeedsNotice,
   coverageFromStates,
   DATA_BROWSER_LABEL,
   deriveType,
@@ -3734,12 +3735,12 @@ describe("distinctValueSets (#668 — value-set-centric fold)", () => {
     ]);
   });
 
-  it("speaks for a collapsed edition with its LOUDEST stored verdict", () => {
-    // Y-46: the entry reports one STORED row, not a synthesized rollup — the
-    // mismatch list behind it is a per-state relation read on demand, so a
-    // summed row would name counts no single read could produce. Severed leads,
-    // then the largest mismatch count; the entry names the state (and
-    // coding) that list is read by.
+  it("keeps warning-bearing conformance when classification states collapse", () => {
+    // The pre-Y-46 regression, re-stated for on-demand mismatch lists: an edition
+    // whose codings warn SEPARATELY (X on one, Y on the next) must not lose either
+    // list to the grouping. The lists are per-state relations now, so the entry
+    // carries one READ KEY per distinct verdict — (state, coding) — instead of a
+    // merged array, and every count describes the one list its key opens.
     const cleanConformance = {
       declared_classification_slug: "lkf1980",
       declared_classification_short_name: "LKF1980",
@@ -3757,13 +3758,15 @@ describe("distinctValueSets (#668 — value-set-centric fold)", () => {
       matched_code_count: 2,
       nonconforming_code_count: 1,
       overlap: 2 / 3,
+      nonconforming_codes: [{ code: "X", label: "Extra" }],
     };
-    const louderConformance = {
+    const laterWarningConformance = {
       ...cleanConformance,
-      checked_code_count: 9,
-      matched_code_count: 5,
-      nonconforming_code_count: 4,
-      overlap: 5 / 9,
+      checked_code_count: 4,
+      matched_code_count: 3,
+      nonconforming_code_count: 1,
+      overlap: 3 / 4,
+      nonconforming_codes: [{ code: "Y", label: "Later extra" }],
     };
     const states = [
       state({
@@ -3773,34 +3776,123 @@ describe("distinctValueSets (#668 — value-set-centric fold)", () => {
         classification_conformance: cleanConformance,
         variant: "doda",
         valid_from: "1980-01-01",
+        valid_to: "1980-12-31",
       }),
       state({
         state_id: 11,
         value_set_id: 101,
+        value_set_version_label: "LKF 1980 rev A",
         classification_slug: "lkf1980",
         classification_conformance: warningConformance,
         variant: "fodda",
         valid_from: "1981-01-01",
+        valid_to: "1981-12-31",
       }),
       state({
         state_id: 12,
         value_set_id: 102,
+        value_set_version_label: "LKF 1980 rev B",
         classification_slug: "lkf1980",
-        classification_conformance: louderConformance,
+        classification_conformance: laterWarningConformance,
         variant: "flytt",
         valid_from: "1982-01-01",
+        valid_to: "1982-12-31",
       }),
     ];
     const vs = distinctValueSets(states);
     expect(vs).toHaveLength(1);
-    expect(vs[0].conformance).toEqual({
-      verdict: louderConformance,
-      stateId: 12,
-      valueSetId: 102,
-    });
+    // Every distinct verdict survives the collapse — each with the state and
+    // coding that reads its list, and the period/variants it was recorded over.
+    expect(vs[0].conformances).toEqual([
+      {
+        verdict: cleanConformance,
+        stateId: 10,
+        valueSetId: 100,
+        versionLabel: "",
+        variants: ["doda"],
+        spans: [{ from: "1980-01-01", to: "1980-12-31" }],
+      },
+      {
+        verdict: warningConformance,
+        stateId: 11,
+        valueSetId: 101,
+        versionLabel: "LKF 1980 rev A",
+        variants: ["fodda"],
+        spans: [{ from: "1981-01-01", to: "1981-12-31" }],
+      },
+      {
+        verdict: laterWarningConformance,
+        stateId: 12,
+        valueSetId: 102,
+        versionLabel: "LKF 1980 rev B",
+        variants: ["flytt"],
+        spans: [{ from: "1982-01-01", to: "1982-12-31" }],
+      },
+    ]);
+    // BOTH warning lists stay reachable — X's and Y's are DISTINCT reads, and
+    // each count describes its own (the baseline reported one merged verdict).
+    const warning = vs[0].conformances.filter((c) =>
+      conformanceNeedsNotice(c.verdict),
+    );
+    expect(warning.map((c) => c.verdict.nonconforming_codes[0].code)).toEqual([
+      "X",
+      "Y",
+    ]);
+    expect(warning.map((c) => c.verdict.nonconforming_code_count)).toEqual([
+      1, 1,
+    ]);
   });
 
-  it("a severed verdict outranks a louder kept one, and a clean one still reports", () => {
+  it("reports one verdict per (coding, declared classification), covering its states", () => {
+    // The stored mismatch list is a function of the coding and the declared
+    // edition, so an era of yearly states over ONE coding is ONE list — reported
+    // once, labelled with the whole window and every variant that carries it.
+    const verdict = {
+      declared_classification_slug: "sun2020",
+      declared_classification_short_name: "SUN 2020",
+      declared_classification_name: "SUN 2020",
+      status: "kept" as const,
+      checked_code_count: 600,
+      matched_code_count: 597,
+      nonconforming_code_count: 3,
+      overlap: 0.995,
+      nonconforming_codes: [],
+    };
+    const vs = distinctValueSets([
+      state({
+        state_id: 30,
+        value_set_id: 902,
+        value_set_version_label: "Församling 2006",
+        classification_slug: "sun2020",
+        classification_conformance: verdict,
+        variant: "doda",
+        valid_from: "2006-01-01",
+        valid_to: "2006-12-31",
+      }),
+      state({
+        state_id: 31,
+        value_set_id: 902,
+        value_set_version_label: "Församling 2006",
+        classification_slug: "sun2020",
+        classification_conformance: verdict,
+        variant: "fodda",
+        valid_from: "2007-01-01",
+        valid_to: "2019-12-31",
+      }),
+    ]);
+    expect(vs[0].conformances).toEqual([
+      {
+        verdict,
+        stateId: 30,
+        valueSetId: 902,
+        versionLabel: "Församling 2006",
+        variants: ["doda", "fodda"],
+        spans: [{ from: "2006-01-01", to: "2019-12-31" }],
+      },
+    ]);
+  });
+
+  it("keeps a severed verdict beside a kept one, and carries the quiet ones", () => {
     const kept = {
       declared_classification_slug: "lkf1980",
       declared_classification_short_name: "LKF1980",
@@ -3834,13 +3926,16 @@ describe("distinctValueSets (#668 — value-set-centric fold)", () => {
         classification_conformance: severed,
       }),
     ]);
-    expect(vs[0].conformance).toEqual({
-      verdict: severed,
-      stateId: 11,
-      valueSetId: 101,
-    });
+    // The louder verdict does not silence the other one: both lists stay open.
+    expect(vs[0].conformances.map((c) => c.stateId)).toEqual([10, 11]);
+    expect(vs[0].conformances.map((c) => c.verdict.status)).toEqual([
+      "kept",
+      "severed",
+    ]);
 
-    // No state warns → the first verdict there is, so "kept, clean" still shows.
+    // A clean verdict is carried too — it simply has nothing to say. WHICH
+    // verdicts speak is `conformanceNeedsNotice`, one rule in one place, not a
+    // filter baked into the projection.
     const clean = { ...kept, nonconforming_code_count: 0, overlap: 1 };
     const quiet = distinctValueSets([
       state({
@@ -3849,12 +3944,17 @@ describe("distinctValueSets (#668 — value-set-centric fold)", () => {
         classification_slug: "lkf1980",
         classification_conformance: clean,
       }),
+      state({
+        state_id: 21,
+        value_set_id: 101,
+        classification_slug: "lkf1980",
+        classification_conformance: clean,
+      }),
     ]);
-    expect(quiet[0].conformance).toEqual({
-      verdict: clean,
-      stateId: 20,
-      valueSetId: 100,
-    });
+    expect(quiet[0].conformances.map((c) => c.stateId)).toEqual([20, 21]);
+    expect(
+      quiet[0].conformances.some((c) => conformanceNeedsNotice(c.verdict)),
+    ).toBe(false);
   });
 
   it("buckets a null value_set_id as its own 'no value set' entry", () => {

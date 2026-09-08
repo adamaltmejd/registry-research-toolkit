@@ -89,6 +89,21 @@ const carried = $derived(
 
 const resource = asyncResource((signal) => {
   void attempt;
+  // The leaf already counted this set: a known-empty coding has no page to ask
+  // for, and the filter box (which is what could ask for a different count) is
+  // not shown below the threshold. Answer it here rather than spend a round trip
+  // and a skeleton on being told zero.
+  if (codeCount === 0) {
+    return Promise.resolve({
+      value_set_id: valueSetId,
+      state_id: stateId,
+      q: "",
+      total: 0,
+      offset: 0,
+      limit: PAGE_SIZE,
+      codes: [],
+    });
+  }
   return getValueSetCodes(
     valueSetId,
     {

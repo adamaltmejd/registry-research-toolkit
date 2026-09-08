@@ -314,6 +314,144 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
     await expect.element(page.getByText("Extra code")).toBeVisible();
   });
 
+  it("keeps EVERY warning state's mismatch list reachable after the collapse", async () => {
+    // One classification edition, two codings, a DIFFERENT stored list on each.
+    // The row collapses them (M13) — the lists must not collapse with them, and
+    // each disclosure's count must describe the list it opens.
+    const conformance = {
+      declared_classification_slug: "lkf2007",
+      declared_classification_short_name: "LKF2007",
+      declared_classification_name: "Kommun historisk",
+      status: "kept" as const,
+      checked_code_count: 3,
+      matched_code_count: 2,
+      nonconforming_code_count: 1,
+      overlap: 2 / 3,
+      nonconforming_codes: [],
+    };
+    await render(ValueSetView, {
+      states: [
+        state({
+          ...classState,
+          state_id: 11,
+          value_set_id: 101,
+          value_set_version_label: "LKF 2007 rev A",
+          variant: "fodda",
+          valid_from: "1981-01-01",
+          valid_to: "1981-12-31",
+          classification_conformance: conformance,
+          value_set_summary: coding(101, [{ code: "X", label: "Extra" }], {
+            stateId: 11,
+          }),
+        }),
+        state({
+          ...classState,
+          state_id: 12,
+          value_set_id: 102,
+          value_set_version_label: "LKF 2007 rev B",
+          variant: "flytt",
+          valid_from: "1982-01-01",
+          valid_to: "1982-12-31",
+          classification_conformance: {
+            ...conformance,
+            checked_code_count: 4,
+            matched_code_count: 2,
+            nonconforming_code_count: 2,
+          },
+          value_set_summary: coding(
+            102,
+            [
+              { code: "Y", label: "Later extra" },
+              { code: "Z", label: "Later still" },
+            ],
+            { stateId: 12 },
+          ),
+        }),
+        plainState,
+      ],
+      narrowed: false,
+    });
+    // ONE row for the edition, but one notice per stored verdict — each labelled
+    // with the period/variant it was stored for.
+    const notices = [...document.querySelectorAll(".conformance-notice")];
+    expect(notices).toHaveLength(2);
+    expect(
+      notices.map((n) =>
+        n
+          .querySelector(".conformance-scope")
+          ?.textContent?.replace(/\s+/g, " ")
+          .trim(),
+      ),
+    ).toEqual([
+      "LKF 2007 rev A recorded for 1981 fodda",
+      "LKF 2007 rev B recorded for 1982 flytt",
+    ]);
+
+    // Both lists open, each from its own state — X here, Y and Z there.
+    await page.getByText("Nonconforming codes (1)").click();
+    await expect
+      .element(page.getByText("Extra", { exact: true }))
+      .toBeVisible();
+    await page.getByText("Nonconforming codes (2)").click();
+    await expect.element(page.getByText("Later extra")).toBeVisible();
+    await expect.element(page.getByText("Later still")).toBeVisible();
+    // Each list is read by ITS OWN state — no disclosure reads another's coding.
+    const read = new Set(
+      vi
+        .mocked(getValueSetCodes)
+        .mock.calls.map(([id, opts]) => `${id}:${opts.state}`),
+    );
+    expect([...read].sort()).toEqual(["101:11", "102:12"]);
+  });
+
+  it("an empty coding says so; a state with NO coding stays silent", async () => {
+    // The two are different facts and must not read alike: a known-empty coding
+    // reports its size and explains itself, while a state that delivers free text
+    // has no code surface at all.
+    await render(ValueSetView, {
+      states: [
+        state({
+          state_id: 40,
+          value_set_id: 903,
+          value_set_version_label: "Församling tom",
+          variant: "doda",
+          valid_from: "2020-01-01",
+          valid_to: "2021-12-31",
+          value_set_summary: coding(903, []),
+        }),
+        state({
+          state_id: 41,
+          value_set_id: null,
+          value_set_version_label: "Fritext",
+          variant: "doda",
+          valid_from: "2022-01-01",
+          valid_to: "2023-12-31",
+        }),
+        plainState,
+      ],
+      narrowed: false,
+    });
+    // The empty coding's size is on its row, not hidden behind the disclosure.
+    const rows = [...document.querySelectorAll(".vs-list li")];
+    const empty = rows.find((li) =>
+      li.textContent?.includes("Församling tom"),
+    ) as HTMLElement;
+    expect(empty.querySelector(".vs-count")?.textContent).toBe("(0)");
+    const free = rows.find((li) =>
+      li.textContent?.includes("Fritext"),
+    ) as HTMLElement;
+    expect(free.querySelector(".vs-count")).toBeNull();
+    expect(free.querySelector("details")).toBeNull();
+
+    // It explains itself in place: an empty coding has nothing to open, and
+    // nothing to read either — the leaf already counted it.
+    expect(empty.querySelector("details")).toBeNull();
+    await expect
+      .element(page.getByText("This value set has no codes."))
+      .toBeVisible();
+    expect(vi.mocked(getValueSetCodes)).not.toHaveBeenCalled();
+  });
+
   it("shows severed classification evidence on the plain value-set row", async () => {
     await render(ValueSetView, {
       states: [

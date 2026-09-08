@@ -450,8 +450,9 @@ def _seed_many_state_binding(
     large code sets — plus the edge shapes a code panel has to render: a coding
     with NO members, a state with NO coding at all, a dense integer coding, two
     distinct codings under ONE version label, and stored classification
-    conformance mismatches (one kept, one severed) whose code lists are read per
-    state rather than embedded."""
+    conformance mismatches (one severed, and two kept over the two codings ONE
+    classification era spans) whose code lists are read per state rather than
+    embedded."""
     add_variable(
         src,
         register_id=1,
@@ -511,9 +512,28 @@ def _seed_many_state_binding(
         value_set_version_label="Kodnummer",
     )
 
-    # Stored conformance: one SEVERED verdict on a plain coding and one KEPT
-    # verdict on the classification-tagged era. Their mismatch code lists live in
-    # `classification_conformance_code` and are read per state on demand.
+    # A co-delivered column over an OLDER coding inside the SAME classification
+    # era: what makes an edition's collapsed row carry TWO stored mismatch lists
+    # (one per coding). Each has to stay separately reachable — collapsing the row
+    # must not collapse the evidence.
+    parallel_state = add_state(
+        src,
+        register_id=1,
+        variable_slug="forsamling",
+        register_variant_id=10,
+        valid_from="2006-01-01",
+        valid_to="2019-12-31",
+        data_type="char",
+        delivery_column_name="ForsamlingHist",
+        value_set_id=900,
+        value_set_version_label="Församling historisk",
+        classification_id=sun2020,
+    )
+
+    # Stored conformance: one SEVERED verdict on a plain coding and two KEPT
+    # verdicts on the classification-tagged era's two codings. Their mismatch code
+    # lists live in `classification_conformance_code` and are read per state on
+    # demand.
     _seed_conformance(
         src,
         state_id=states[1995],
@@ -531,6 +551,15 @@ def _seed_many_state_binding(
         checked=600,
         matched=597,
         codes=[c for c, _ in _parish_codes(902)[:3]],
+    )
+    _seed_conformance(
+        src,
+        state_id=parallel_state,
+        classification_id=sun2020,
+        status="kept",
+        checked=400,
+        matched=396,
+        codes=[c for c, _ in _parish_codes(900)[:4]],
     )
 
 

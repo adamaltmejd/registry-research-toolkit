@@ -671,6 +671,36 @@ class TestPopulateClassifications:
             ("2", "Kvinna"),
         ]
 
+        # The gate derives BOTH the verdict and the mismatch list from exactly
+        # (state's value-set members, declared classification's valid codes) — the
+        # state id only groups the rows. reg_webapp's value-set view leans on that:
+        # it reports one verdict per (coding, declared classification) and reads ONE
+        # of the group's states for the list, which stays lossless only while two
+        # states over the same coding agree code for code. Pinned here, in the
+        # package that owns the derivation.
+        per_state = conn.execute(
+            "SELECT cc.state_id, vs.value_set_id, cc.status, cc.checked_code_count, "
+            "cc.matched_code_count, cc.nonconforming_code_count, cc.overlap "
+            "FROM classification_conformance cc "
+            "JOIN variable_state vs ON vs.state_id = cc.state_id "
+            "JOIN classification c ON c.id = cc.declared_classification_id "
+            "WHERE c.short_name = 'TESTKON' "
+            "ORDER BY cc.state_id"
+        ).fetchall()
+        assert len(per_state) == 2
+        assert per_state[0]["value_set_id"] == per_state[1]["value_set_id"]
+        assert len({tuple(r)[1:] for r in per_state}) == 1
+        lists: dict[int, list[str]] = {}
+        for row in conn.execute(
+            "SELECT ccc.state_id, vc.code "
+            "FROM classification_conformance_code ccc "
+            "JOIN value_code vc ON vc.code_id = ccc.code_id "
+            "ORDER BY ccc.state_id, vc.code"
+        ).fetchall():
+            lists.setdefault(row["state_id"], []).append(row["code"])
+        assert len(lists) == 2
+        assert len({tuple(codes) for codes in lists.values()}) == 1
+
     def test_low_overlap_declared_classification_is_severed(self, tmp_path: Path):
         """A declared CSV-backed classification below the overlap floor is
         cleared from variable_state but keeps durable conformance evidence."""

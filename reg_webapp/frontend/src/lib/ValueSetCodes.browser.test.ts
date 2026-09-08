@@ -102,6 +102,9 @@ describe("ValueSetCodes — the bounded code read", () => {
     await expect
       .element(page.getByText("This value set has no codes."))
       .toBeVisible();
+    // A set the leaf already counted as empty is answered here: no page to ask
+    // for, so no request and no skeleton before the sentence.
+    expect(vi.mocked(getValueSetCodes)).not.toHaveBeenCalled();
 
     serve(members(8));
     await render(ValueSetCodes, { valueSetId: 8, codeCount: 8 });
