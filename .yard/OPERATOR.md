@@ -117,6 +117,6 @@ specialized design skills separate.
 Use `yard project show` to check provenance and template equality. `yard init` offers
 the update patch; read its help and effects first, because it can start the daemon and
 admit ready tickets. Review the patch before applying it, then recheck this policy and
-verify `matchesTemplate=true` and `linked=true` for all three skills. The generated
-skills are excluded from Panache so normal formatting preserves those bytes. This file
-remains formatted and linted normally.
+verify `matchesTemplate=true` and `link.state="linked"` for all three skills. The
+generated skills are excluded from Panache so normal formatting preserves those bytes.
+This file remains formatted and linted normally.

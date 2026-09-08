@@ -1096,12 +1096,12 @@ the board retained 45 done/16 open before the next batch was admitted.
 stores `yard-operator`, `yard-file` and `yard-drive` as real files under
 `.agents/skills/`, with `.claude/skills/<name>` as the relative alias — the reverse of
 the prior direction. The skills were generated with the official binary in a disposable
-empty project, `matchesTemplate=true` and `linked=true` checked for all three, and only
-that disposable daemon was stopped; this proves scaffold bytes, not a full preflight.
-This repo adopted the three generated files unmodified, moved the pre-existing real
-`.claude/skills/yard-operator` directory to its new canonical `.agents` path, and
-updated the Claude/Codex aliases, `AGENTS.md`/`CLAUDE.md`, `.yard/OPERATOR.md` and
-`.panache.toml`'s excludes to match.
+empty project, `matchesTemplate=true` and `link.state="linked"` checked for all three,
+and only that disposable daemon was stopped; this proves scaffold bytes, not a full
+preflight. This repo adopted the three generated files unmodified, moved the
+pre-existing real `.claude/skills/yard-operator` directory to its new canonical
+`.agents` path, and updated the Claude/Codex aliases, `AGENTS.md`/`CLAUDE.md`,
+`.yard/OPERATOR.md` and `.panache.toml`'s excludes to match.
 
 Y-61 and Y-48 are now running; Y-53 was selected as the third product ticket, based on
 fresh synthetic case-matching/bootstrap reproductions and current draft-lifecycle source

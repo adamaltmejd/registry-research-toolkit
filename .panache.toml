@@ -7,7 +7,7 @@
 flavor = "gfm"
 
 # _raw is untracked marker output; CLAUDE.md/AGENTS.md are agent config, not rendered docs.
-# The generated Yard routine and its Codex aliases retain upstream bytes for drift checks.
+# The generated Yard routine and its Claude aliases retain upstream bytes for drift checks.
 extend-exclude = [
   "reg_meta_build/docs/_raw/",
   "CLAUDE.md",
