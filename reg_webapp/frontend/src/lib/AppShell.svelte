@@ -1,4 +1,5 @@
 <script lang="ts">
+import { Dialog } from "bits-ui";
 import type { Snippet } from "svelte";
 import { getCatalogRoot } from "./api";
 import { asyncResource } from "./async.svelte";
@@ -68,14 +69,47 @@ const route = $derived(router.route);
 const root = asyncResource(() => getCatalogRoot());
 const providers = $derived(root.data?.children ?? []);
 
-// The mobile drawer open state. Closed by default; the topbar hamburger toggles
-// it, and any navigation closes it (an $effect on the route) so a facet click
-// doesn't leave the overlay covering the freshly-routed page.
+// The mobile drawer open state, bound to the Bits UI Dialog below (which owns
+// every other way it closes: Escape, a click or focus outside, and the return of
+// focus to the toggle). Closed by default; three things beyond the dialog's own
+// dismissals close it, below.
 let drawerOpen = $state(false);
+
+// 1. A navigation, so the drawer isn't left covering the freshly-routed page.
 $effect(() => {
-  // Re-run on route change; close the drawer after a navigation.
+  // The bare read is the dependency: re-run on every route change.
   route;
   drawerOpen = false;
+});
+
+// 2. Activating one of the drawer's OWN links, which is not the same thing: a
+// link to the route already showing is a no-op for the router (it never
+// re-assigns `route`), so the effect above never runs and the drawer would
+// stand over the page the researcher just asked to see. Delegated from the
+// drawer rather than written on each link, so a link added to the rail later
+// inherits it — and so the desktop rail, which renders the same markup with no
+// drawer to close, carries nothing.
+function closeOnLinkActivation(event: MouseEvent): void {
+  if ((event.target as Element | null)?.closest("a[href]")) {
+    drawerOpen = false;
+  }
+}
+
+// 3. Growing past the shell's 48rem breakpoint, where the persistent rail takes
+// over: the drawer must not stay open as a modal over the desktop layout, still
+// holding focus, aria-modal, and the page behind it locked from scrolling and
+// from the pointer.
+// The query is the same condition as the media query at the foot of this file:
+// the breakpoint has one value, and moving it means moving both.
+const mobile = window.matchMedia("(max-width: 48rem)");
+$effect(() => {
+  const closeOnDesktop = () => {
+    if (!mobile.matches) {
+      drawerOpen = false;
+    }
+  };
+  mobile.addEventListener("change", closeOnDesktop);
+  return () => mobile.removeEventListener("change", closeOnDesktop);
 });
 
 // Whether the data-browser nav item is "active" — any catalog/group route. The
@@ -131,147 +165,176 @@ function plural(count: number, singular: string, pluralLabel: string): string {
 }
 </script>
 
-<div class="shell" class:drawer-open={drawerOpen}>
-  <!-- The rail. On desktop it's the persistent left column; on mobile it's an
-       off-canvas drawer revealed by the topbar toggle (the `.drawer-open` class
-       on the shell slides it in). -->
-  <aside id="app-rail" class="rail" aria-label="Primary">
-    <div class="brand">
-      <a href="/" class="brand-home">
-        {#if steward}
-          {steward.long_name}
-        {:else}
-          Register Research Catalog
-        {/if}
-      </a>
+<!-- The rail's contents, written once and rendered by both rails — the
+     persistent desktop one and the ≤48rem drawer. Only ever one of them is
+     DISPLAYED: below the breakpoint the media query at the foot of this file
+     takes the persistent rail out of the layout and the accessibility tree, and
+     above it the drawer's toggle is hidden so the dialog can't be opened. -->
+{#snippet railBody()}
+  <div class="brand">
+    <a href="/" class="brand-home">
       {#if steward}
-        <span class="brand-id">{steward.id}</span>
-      {/if}
-    </div>
-
-    <nav class="primary-nav" aria-label="Sections">
-      <a
-        href="/catalog"
-        class="nav-item"
-        class:active={dataBrowserActive}
-        aria-current={isCurrent(dataBrowserActive)}>{DATA_BROWSER_LABEL}</a>
-      <a
-        href="/project"
-        class="project-chip"
-        class:active={route.name === "project"}
-        class:empty={projectDraft == null}
-        aria-current={isCurrent(route.name === "project")}
-        aria-label={`Project: ${projectTitle}, ${plural(projectSourceCount, "source", "sources")} and ${plural(projectColumnCount, "column", "columns")}, ${STATUS_LABEL[projectStatus]}${projectStore.dirty ? ", unsaved changes" : ""}`}
-      >
-        <span class="project-chip-head">
-          <span class="micro-label project-chip-label">Project</span>
-          {#if projectStore.dirty}
-            <span class="project-dirty">Unsaved</span>
-          {/if}
-        </span>
-        <span class="project-chip-title">{projectTitle}</span>
-        <span class="project-chip-meta">
-          <span>
-            {plural(projectSourceCount, "source", "sources")} · {plural(projectColumnCount, "column", "columns")}
-          </span>
-          <span class={`project-status ${projectStatus}`}>
-            <span class="project-status-dot" aria-hidden="true"></span>
-            {STATUS_LABEL[projectStatus]}
-          </span>
-        </span>
-      </a>
-    </nav>
-
-    <!-- The project-window slider: a global control, rendered ONCE here in the
-         rail (so it's reachable on every route, and inside the drawer on mobile).
-         Its label matches the "Providers" facets-label style. -->
-    <div class="rail-window">
-      <p class="micro-label rail-window-label">Study window</p>
-      <YearWindowSlider
-        min={windowMin}
-        max={windowMax}
-        window={windowValue}
-        onchange={onWindowChange}
-        onclear={onWindowClear}
-      />
-    </div>
-
-    <!-- Contextual facets: the full provider list, reachable on every route.
-         Inside the shell's `use:link` ancestor (App's root), so these route via
-         pushState like any internal link. -->
-    <nav class="facets" aria-label="Providers">
-      <p class="micro-label facets-label">Providers</p>
-      {#if root.loading}
-        <p class="facets-note" aria-busy="true">Loading…</p>
-      {:else if root.error}
-        <p class="facets-note error" role="alert">Failed to load providers.</p>
+        {steward.long_name}
       {:else}
-        <ul class="facet-list">
-          {#each providers as child (child.fqid)}
-            {@const active =
-              route.name === "catalog-node" &&
-              (route.fqidPath === child.fqid ||
-                route.fqidPath.startsWith(`${child.fqid}/`))}
-            <li>
-              <a
-                href={catalogHref(child.fqid)}
-                class="facet"
-                class:active
-                title={child.fqid}
-                aria-current={isCurrent(active)}>{facetLabel(child)}</a>
-            </li>
-          {/each}
-        </ul>
+        Register Research Catalog
       {/if}
-    </nav>
-  </aside>
-
-  <!-- A click-catching scrim behind the open mobile drawer; closing it taps out.
-       aria-hidden + a plain button label keep it out of the reading order while
-       still keyboard-dismissible. -->
-  {#if drawerOpen}
-    <button
-      type="button"
-      class="scrim"
-      aria-label="Close menu"
-      onclick={() => (drawerOpen = false)}
-    ></button>
-  {/if}
-
-  <div class="frame">
-    <header class="topbar">
-      <button
-        type="button"
-        class="menu-toggle"
-        aria-label="Open menu"
-        aria-controls="app-rail"
-        aria-expanded={drawerOpen}
-        onclick={() => (drawerOpen = !drawerOpen)}
-      >
-        <span class="menu-glyph" aria-hidden="true">☰</span>
-      </button>
-
-      <!-- Wrapper we control so we can hide the breadcrumb on mobile (it crowds
-           the 375px topbar row; the rail + routed page header carry context
-           there). Don't restyle the shared Breadcrumbs primitive for this. -->
-      <div class="topbar-crumbs">
-        <Breadcrumbs items={breadcrumbs} />
-      </div>
-
-      <div class="command">
-        <SearchOmnibox />
-      </div>
-    </header>
-
-    <main class="canvas">
-      {@render children()}
-    </main>
+    </a>
+    {#if steward}
+      <span class="brand-id">{steward.id}</span>
+    {/if}
   </div>
-</div>
+
+  <nav class="primary-nav" aria-label="Sections">
+    <a
+      href="/catalog"
+      class="nav-item"
+      class:active={dataBrowserActive}
+      aria-current={isCurrent(dataBrowserActive)}>{DATA_BROWSER_LABEL}</a>
+    <a
+      href="/project"
+      class="project-chip"
+      class:active={route.name === "project"}
+      class:empty={projectDraft == null}
+      aria-current={isCurrent(route.name === "project")}
+      aria-label={`Project: ${projectTitle}, ${plural(projectSourceCount, "source", "sources")} and ${plural(projectColumnCount, "column", "columns")}, ${STATUS_LABEL[projectStatus]}${projectStore.dirty ? ", unsaved changes" : ""}`}
+    >
+      <span class="project-chip-head">
+        <span class="micro-label project-chip-label">Project</span>
+        {#if projectStore.dirty}
+          <span class="project-dirty">Unsaved</span>
+        {/if}
+      </span>
+      <span class="project-chip-title">{projectTitle}</span>
+      <span class="project-chip-meta">
+        <span>
+          {plural(projectSourceCount, "source", "sources")} · {plural(projectColumnCount, "column", "columns")}
+        </span>
+        <span class={`project-status ${projectStatus}`}>
+          <span class="project-status-dot" aria-hidden="true"></span>
+          {STATUS_LABEL[projectStatus]}
+        </span>
+      </span>
+    </a>
+  </nav>
+
+  <!-- The project-window slider: a global control, rendered ONCE here in the
+       rail (so it's reachable on every route, and inside the drawer on mobile).
+       Its label matches the "Providers" facets-label style. -->
+  <div class="rail-window">
+    <p class="micro-label rail-window-label">Study window</p>
+    <YearWindowSlider
+      min={windowMin}
+      max={windowMax}
+      window={windowValue}
+      onchange={onWindowChange}
+      onclear={onWindowClear}
+    />
+  </div>
+
+  <!-- Contextual facets: the full provider list, reachable on every route.
+       Inside the shell's `use:link` ancestor (App's root), so these route via
+       pushState like any internal link. -->
+  <nav class="facets" aria-label="Providers">
+    <p class="micro-label facets-label">Providers</p>
+    {#if root.loading}
+      <p class="facets-note" aria-busy="true">Loading…</p>
+    {:else if root.error}
+      <p class="facets-note error" role="alert">Failed to load providers.</p>
+    {:else}
+      <ul class="facet-list">
+        {#each providers as child (child.fqid)}
+          {@const active =
+            route.name === "catalog-node" &&
+            (route.fqidPath === child.fqid ||
+              route.fqidPath.startsWith(`${child.fqid}/`))}
+          <li>
+            <a
+              href={catalogHref(child.fqid)}
+              class="facet"
+              class:active
+              title={child.fqid}
+              aria-current={isCurrent(active)}>{facetLabel(child)}</a>
+          </li>
+        {/each}
+      </ul>
+    {/if}
+  </nav>
+{/snippet}
+
+<!-- Bits UI's Dialog carries the drawer's modal semantics: role="dialog" +
+     aria-modal, the trigger's aria-expanded/aria-controls, focus into the drawer
+     on open, focus contained while it stands, Escape and outside-interaction
+     dismissal, and the return of focus to the toggle. NOT portalled: App
+     delegates SPA link clicks from a `use:link` root (router.svelte.ts), and a
+     drawer moved to <body> would leave that root — its links would reload the
+     page instead of routing. -->
+<Dialog.Root bind:open={drawerOpen}>
+  <div class="shell">
+    <!-- The persistent desktop rail. Below the breakpoint it is `display: none`
+         (see the media query) and the drawer is the only rail. -->
+    <aside class="rail" aria-label="Primary">
+      {@render railBody()}
+    </aside>
+
+    <!-- The dimmer behind the open drawer. Purely visual: Bits UI dismisses on
+         an outside interaction, so this is no longer a control of its own. -->
+    <Dialog.Overlay>
+      {#snippet child({ props })}
+        <div {...props} class="drawer-scrim"></div>
+      {/snippet}
+    </Dialog.Overlay>
+
+    <Dialog.Content>
+      {#snippet child({ props })}
+        <div
+          {...props}
+          class="rail drawer"
+          aria-label="Menu"
+          onclick={closeOnLinkActivation}
+        >
+          {@render railBody()}
+        </div>
+      {/snippet}
+    </Dialog.Content>
+
+    <div class="frame">
+      <header class="topbar">
+        <Dialog.Trigger>
+          {#snippet child({ props })}
+            <button
+              {...props}
+              type="button"
+              class="menu-toggle"
+              aria-label="Open menu"
+            >
+              <span class="menu-glyph" aria-hidden="true">☰</span>
+            </button>
+          {/snippet}
+        </Dialog.Trigger>
+
+        <!-- Wrapper we control so we can hide the breadcrumb on mobile (it
+             crowds the 375px topbar row; the rail + routed page header carry
+             context there). Don't restyle the shared Breadcrumbs primitive. -->
+        <div class="topbar-crumbs">
+          <Breadcrumbs items={breadcrumbs} />
+        </div>
+
+        <div class="command">
+          <SearchOmnibox />
+        </div>
+      </header>
+
+      <main class="canvas">
+        {@render children()}
+      </main>
+    </div>
+  </div>
+</Dialog.Root>
 
 <style>
-  /* Two columns on desktop: a fixed-width rail + a fluid frame. The rail becomes
-     an off-canvas drawer below the mobile breakpoint (see the media query). */
+  /* Two columns on desktop: a fixed-width rail + a fluid frame. Below the mobile
+     breakpoint the media query at the end hides the rail and the drawer (styled
+     just above it) takes over. */
   .shell {
     display: grid;
     grid-template-columns: 16rem minmax(0, 1fr);
@@ -574,14 +637,42 @@ function plural(count: number, singular: string, pluralLabel: string): string {
     padding: var(--space-4);
   }
 
-  .scrim {
-    display: none;
+  /* ── Mobile drawer ─────────────────────────────────────────────────────── */
+  /* The drawer and its scrim are only ever in the DOM while the dialog is open,
+     and only the mobile-only toggle opens it — so these need no media query. The
+     layers are the ones DESIGN.md assigns: scrim 55, drawer 60, both under the
+     modal dialog's 70/71. Like that dialog, the drawer appears without a
+     transition. */
+  .drawer-scrim {
+    /* Covers only the content EXPOSED beside the drawer. The inset is the
+       drawer's declared `width`; the drawer is content-box (like the rail it
+       is), so it paints its padding and border ~25px further right and hides
+       that much of this layer — harmlessly, since it is opaque and on top. Bits
+       UI locks pointer events to the drawer and this layer while the dialog
+       stands, so this is also the surface a dismissing pointer lands on; keeping
+       it off the drawer keeps that pointer, and this layer's own centre, out of
+       the drawer's hit-area. */
+    position: fixed;
+    inset: 0 0 0 min(20rem, 85vw);
+    z-index: 55;
+    background: var(--scrim);
+  }
+  .drawer {
+    position: fixed;
+    inset: 0 auto 0 0;
+    z-index: 60;
+    width: min(20rem, 85vw);
+    overflow-y: auto;
+    /* DESIGN.md gives the drawer edge the strong hairline (the persistent rail
+       keeps the plain one): this edge is read against a scrim, not a page. */
+    border-right-color: var(--border-strong);
+    box-shadow: var(--elevation-raised);
   }
 
-  /* ── Mobile: rail → off-canvas drawer ──────────────────────────────────── */
+  /* ── Mobile: rail → drawer ─────────────────────────────────────────────── */
   @media (max-width: 48rem) {
     .shell {
-      /* Single column; the rail leaves the flow and overlays as a drawer. */
+      /* Single column; the persistent rail goes away and the drawer overlays. */
       grid-template-columns: minmax(0, 1fr);
     }
     .menu-toggle {
@@ -593,45 +684,11 @@ function plural(count: number, singular: string, pluralLabel: string): string {
     .topbar-crumbs {
       display: none;
     }
-    .rail {
-      position: fixed;
-      inset: 0 auto 0 0;
-      z-index: 60;
-      width: min(20rem, 85vw);
-      max-width: 85vw;
-      overflow-y: auto;
-      /* Off-canvas by default; `.drawer-open` slides it in. `visibility: hidden`
-         on the closed rail removes its links from the tab order and the a11y
-         tree (a translateX-only off-canvas element stays focusable, so a keyboard
-         user would tab into invisible off-screen links). `visibility` still
-         allows the transform transition — unlike `display: none`, which would
-         kill the slide — so we transition it alongside the transform. */
-      visibility: hidden;
-      transform: translateX(-100%);
-      transition:
-        transform var(--motion-fast) ease-out,
-        visibility var(--motion-fast) ease-out;
-      box-shadow: var(--elevation-raised);
-    }
-    .drawer-open .rail {
-      visibility: visible;
-      transform: translateX(0);
-    }
-    .scrim {
-      /* The click-out dimmer covers only the content EXPOSED beside the open
-         drawer (its left edge starts at the rail's right edge), not the whole
-         viewport. The opaque rail (z-60) already hides what's under it, so a
-         full-bleed scrim there would only add a dead zone where the rail
-         intercepts a click meant to dismiss — leaving the scrim's own hit-area
-         (and its center) reliably on top of the exposed canvas. */
-      display: block;
-      position: fixed;
-      inset: 0 0 0 min(20rem, 85vw);
-      z-index: 55;
-      border: 0;
-      padding: 0;
-      background: var(--scrim);
-      cursor: pointer;
+    /* The persistent rail is desktop-only: below the breakpoint the drawer is
+       the only rail, so this one leaves the layout AND the accessibility tree
+       rather than lurking off-canvas as a second copy of every link. */
+    .rail:not(.drawer) {
+      display: none;
     }
   }
 </style>

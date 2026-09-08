@@ -1,6 +1,6 @@
 import { createRawSnippet } from "svelte";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { page } from "vitest/browser";
+import { page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
 import AppShell from "./AppShell.svelte";
 import type { RootResponse } from "./api";
@@ -8,7 +8,7 @@ import { getCatalogRoot } from "./api";
 import { DATA_BROWSER_LABEL } from "./catalog";
 import type { ProjectData } from "./project_data";
 import { projectStore } from "./project_store.svelte";
-import { router } from "./router.svelte";
+import { link, router } from "./router.svelte";
 
 // Stub ONLY the catalog-root GET (the shell's provider-facet fetch); keep the
 // rest of api.ts real — mirrors SearchOmnibox's partial-mock pattern (override
@@ -72,13 +72,19 @@ afterEach(() => {
 });
 
 // The browser-test viewport is 414px — below the 48rem drawer breakpoint — so the
-// rail renders as the CLOSED off-canvas drawer, whose links are `visibility:
-// hidden` (out of the tab order + a11y tree until opened). So any test asserting
-// rail content (facets / primary nav) must OPEN the drawer first, exercising the
-// only state where the rail is reachable on mobile. Desktop keeps the rail always
-// visible (the media query doesn't apply there).
+// persistent rail is `display: none` and the drawer is the only rail. The drawer
+// is a Bits UI Dialog: it is in the document ONLY while it is open. So any test
+// asserting rail content (facets / primary nav) must OPEN it first, exercising
+// the only state where the rail is reachable on mobile. Desktop keeps the rail
+// always visible (the media query doesn't apply there).
+//
+// The desktop rail is still in the DOM here, just `display: none`. Role queries
+// skip it; a bare text query would match both copies, so ask the drawer.
+const menuToggle = () => page.getByRole("button", { name: "Open menu" });
+const drawer = () => page.getByRole("dialog", { name: "Menu" });
+
 async function openDrawer(): Promise<void> {
-  await page.getByRole("button", { name: "Open menu" }).click();
+  await menuToggle().click();
 }
 
 describe("AppShell — provider facets", () => {
@@ -133,8 +139,10 @@ describe("AppShell — project chip", () => {
     const chip = page.getByRole("link", { name: /^Project: No project/ });
     await expect.element(chip).toBeVisible();
     await expect.element(chip).toHaveAttribute("href", "/project");
-    await expect.element(page.getByText("0 sources · 0 columns")).toBeVisible();
-    await expect.element(page.getByText("Unchecked")).toBeVisible();
+    await expect
+      .element(drawer().getByText("0 sources · 0 columns"))
+      .toBeVisible();
+    await expect.element(drawer().getByText("Unchecked")).toBeVisible();
   });
 
   it("shows project name, counts, and validation status from the store", async () => {
@@ -186,8 +194,10 @@ describe("AppShell — project chip", () => {
     await expect
       .element(page.getByRole("link", { name: /unsaved changes/i }))
       .toBeVisible();
-    await expect.element(page.getByText("2 sources · 3 columns")).toBeVisible();
-    await expect.element(page.getByText("Warnings")).toBeVisible();
+    await expect
+      .element(drawer().getByText("2 sources · 3 columns"))
+      .toBeVisible();
+    await expect.element(drawer().getByText("Warnings")).toBeVisible();
   });
 
   it("tolerates malformed source slots while showing counts", async () => {
@@ -219,42 +229,191 @@ describe("AppShell — project chip", () => {
     await expect
       .element(page.getByRole("link", { name: /^Project: Malformed project/ }))
       .toBeVisible();
-    await expect.element(page.getByText("2 sources · 1 column")).toBeVisible();
+    await expect
+      .element(drawer().getByText("2 sources · 1 column"))
+      .toBeVisible();
   });
 });
 
 describe("AppShell — mobile drawer", () => {
-  it("toggles open via the hamburger and closes via the scrim", async () => {
-    await render(AppShell, minimalProps());
+  it("opens on the hamburger and closes on a pointer outside it", async () => {
+    const { container } = await render(AppShell, minimalProps());
 
-    const toggle = page.getByRole("button", { name: "Open menu" });
+    const toggle = menuToggle();
     await expect.element(toggle).toHaveAttribute("aria-expanded", "false");
-    // The scrim only exists while the drawer is open.
-    expect(page.getByRole("button", { name: "Close menu" }).query()).toBeNull();
+    // The drawer exists only while it is open.
+    expect(drawer().query()).toBeNull();
 
     await toggle.click();
+    await expect.element(drawer()).toBeVisible();
     await expect.element(toggle).toHaveAttribute("aria-expanded", "true");
-    const scrim = page.getByRole("button", { name: "Close menu" });
-    await expect.element(scrim).toBeVisible();
 
-    await scrim.click();
+    // The dimmer covers the exposed content beside the drawer, and that is where
+    // a dismissing pointer lands — the tap-out the hand-written scrim button did.
+    const scrim = container.querySelector(".drawer-scrim");
+    expect(scrim).not.toBeNull();
+    await page.elementLocator(scrim as Element).click();
+
+    await expect.element(drawer()).not.toBeInTheDocument();
     await expect.element(toggle).toHaveAttribute("aria-expanded", "false");
-    await expect
-      .element(page.getByRole("button", { name: "Close menu" }))
-      .not.toBeInTheDocument();
   });
 
-  it("closes the drawer when the route changes (the close-on-navigate $effect)", async () => {
+  it("opens from the keyboard, contains focus, and hands it back on Escape", async () => {
     await render(AppShell, minimalProps());
 
-    const toggle = page.getByRole("button", { name: "Open menu" });
-    await toggle.click();
-    await expect.element(toggle).toHaveAttribute("aria-expanded", "true");
+    const toggle = menuToggle();
+    toggle.element().focus();
+    await userEvent.keyboard("{Enter}");
+    await expect.element(drawer()).toBeVisible();
+    // Wait for the facets so the drawer holds its full set of controls before
+    // the tab traversal below counts on them.
+    await expect
+      .element(drawer().getByRole("link", { name: "sos" }))
+      .toBeVisible();
 
-    // A navigation must close the open drawer so the overlay doesn't cover the
-    // freshly-routed page.
-    router.navigate("/project");
+    const panel = drawer().element();
+    // Focus ENTERS the drawer — it does not stay on the toggle the drawer covers.
+    await vi.waitFor(() => {
+      expect(panel.contains(document.activeElement)).toBe(true);
+    });
+
+    // The background controls the ticket names — the toggle under the drawer and
+    // the catalog search beside it — are outside the panel, so "every Tab stop is
+    // inside the panel" is exactly the claim that Tab never reaches them.
+    const search = page.getByRole("textbox", { name: "Search the catalog" });
+    expect(panel.contains(toggle.element())).toBe(false);
+    expect(panel.contains(search.element())).toBe(false);
+
+    // Tab past the last of the drawer's stops: every one is a drawer control,
+    // and the traversal wraps rather than escaping into the page behind.
+    const visited = new Set<Element>();
+    for (let i = 0; i < 8; i++) {
+      await userEvent.keyboard("{Tab}");
+      const active = document.activeElement;
+      expect(panel.contains(active)).toBe(true);
+      if (active != null) {
+        visited.add(active);
+      }
+    }
+    // The traversal really moved — a trap that pinned focus to one control would
+    // satisfy the containment assertions above but not this.
+    expect(visited.size).toBeGreaterThan(1);
+
+    await userEvent.keyboard("{Escape}");
+
+    await expect.element(drawer()).not.toBeInTheDocument();
     await expect.element(toggle).toHaveAttribute("aria-expanded", "false");
+    await vi.waitFor(() => {
+      expect(document.activeElement).toBe(toggle.element());
+    });
+  });
+
+  it("closes when the route changes underneath it", async () => {
+    await render(AppShell, minimalProps());
+
+    const toggle = menuToggle();
+    await toggle.click();
+    await expect.element(drawer()).toBeVisible();
+
+    // Not every navigation comes from one of the drawer's own links — browser
+    // back/forward moves the route with the drawer standing, and it must not be
+    // left covering the page that arrives.
+    router.navigate("/project");
+
+    await expect.element(drawer()).not.toBeInTheDocument();
+    await expect.element(toggle).toHaveAttribute("aria-expanded", "false");
+  });
+
+  it("closes when a drawer link points at the route already showing", async () => {
+    setUrl("/catalog");
+    const { container } = await render(AppShell, minimalProps());
+    link(container as HTMLElement);
+
+    await openDrawer();
+    await drawer().getByRole("link", { name: DATA_BROWSER_LABEL }).click();
+
+    // The router no-ops a navigation to the URL already showing, so the route
+    // never changes — and the drawer still has to get out of the way of the page
+    // the researcher just asked for.
+    expect(window.location.pathname).toBe("/catalog");
+    expect(router.route.name).toBe("root");
+    await expect.element(drawer()).not.toBeInTheDocument();
+    await expect
+      .element(menuToggle())
+      .toHaveAttribute("aria-expanded", "false");
+  });
+
+  it("closes when the viewport grows past the drawer breakpoint", async () => {
+    // Pin the precondition: this suite renders below the 48rem breakpoint, where
+    // the drawer IS the rail (mirrors SourceEditor/SearchView).
+    expect(window.matchMedia("(max-width: 48rem)").matches).toBe(true);
+    const mobile = { width: window.innerWidth, height: window.innerHeight };
+
+    try {
+      await render(AppShell, minimalProps());
+      await openDrawer();
+      await expect.element(drawer()).toBeVisible();
+      // The dialog is modal: it locks the page behind it.
+      expect(getComputedStyle(document.body).overflow).toBe("hidden");
+      expect(getComputedStyle(document.body).pointerEvents).toBe("none");
+
+      await page.viewport(1280, 900);
+      await vi.waitFor(() => {
+        expect(window.matchMedia("(max-width: 48rem)").matches).toBe(false);
+      });
+
+      // Above the breakpoint the persistent rail is the rail, so the drawer must
+      // not stand over it — and closing it is what releases the modal
+      // restrictions the dialog put on the page behind.
+      await expect.element(drawer()).not.toBeInTheDocument();
+      await expect
+        .element(page.getByRole("complementary", { name: "Primary" }))
+        .toBeVisible();
+      await vi.waitFor(() => {
+        // The page behind is usable again — the modal held the body's scrolling
+        // AND its pointer events, and a close that kept either would leave the
+        // desktop layout dead.
+        expect(getComputedStyle(document.body).overflow).not.toBe("hidden");
+        expect(getComputedStyle(document.body).pointerEvents).not.toBe("none");
+      });
+
+      // Back below the breakpoint: the drawer starts closed rather than
+      // reappearing where it was left.
+      await page.viewport(mobile.width, mobile.height);
+      await vi.waitFor(() => {
+        expect(window.matchMedia("(max-width: 48rem)").matches).toBe(true);
+      });
+      expect(drawer().query()).toBeNull();
+      await expect
+        .element(menuToggle())
+        .toHaveAttribute("aria-expanded", "false");
+    } finally {
+      // A failed assertion above must not leak a desktop viewport into the
+      // cases that follow.
+      await page.viewport(mobile.width, mobile.height);
+    }
+  });
+
+  it("closes when a drawer link navigates (the close-on-navigate $effect)", async () => {
+    const { container } = await render(AppShell, minimalProps());
+    // The shell relies on App's `use:link` root to pushState-route its links;
+    // rendered on its own it has no such ancestor, so give it one — otherwise a
+    // facet click leaves the page instead of routing.
+    link(container as HTMLElement);
+
+    await openDrawer();
+    await drawer().getByRole("link", { name: "sos" }).click();
+
+    // A navigation must close the drawer so it doesn't cover the freshly routed
+    // page, and focus must come back to the control that opened it.
+    expect(router.route.name).toBe("catalog-node");
+    await expect.element(drawer()).not.toBeInTheDocument();
+    await expect
+      .element(menuToggle())
+      .toHaveAttribute("aria-expanded", "false");
+    await vi.waitFor(() => {
+      expect(document.activeElement).toBe(menuToggle().element());
+    });
   });
 });
 
