@@ -118,23 +118,26 @@ $effect(() => {
 
 // LIVE input: update the buffer (smooth drag/keyboard step), clamped to the
 // selectable range so a thumb can't enter the not-selectable region, and
-// non-crossing.
+// non-crossing. Then write the resolved value back to the input the event came
+// from, because a one-way `value={from}` CANNOT heal itself: the browser has
+// already moved that input's own value, and a move the clamp REJECTS leaves
+// `from`/`to` unchanged, so nothing re-renders (and Svelte's value write memoizes
+// the last value IT set — it can't know the browser moved the DOM value
+// underneath it). Without the write-back the thumb, and the `aria-valuenow` a
+// screen reader announces off it, keep the year the clamp just refused while the
+// buffer every consumer reads says otherwise — however often the move repeats.
 function onFrom(event: Event): void {
-  const v = clamp(
-    Number((event.currentTarget as HTMLInputElement).value),
-    selLo,
-    selHi,
-  );
+  const input = event.currentTarget as HTMLInputElement;
+  const v = clamp(Number(input.value), selLo, selHi);
   from = Math.min(v, to ?? selHi); // never cross past `to`
+  input.value = String(from);
   onLiveInput?.();
 }
 function onTo(event: Event): void {
-  const v = clamp(
-    Number((event.currentTarget as HTMLInputElement).value),
-    selLo,
-    selHi,
-  );
+  const input = event.currentTarget as HTMLInputElement;
+  const v = clamp(Number(input.value), selLo, selHi);
   to = Math.max(v, from ?? selLo); // never cross before `from`
+  input.value = String(to);
   onLiveInput?.();
 }
 </script>

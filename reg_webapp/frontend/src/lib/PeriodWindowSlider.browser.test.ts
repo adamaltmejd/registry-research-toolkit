@@ -357,6 +357,38 @@ describe("PeriodWindowSlider", () => {
       .toHaveValue("1995");
   });
 
+  it("a REJECTED move keeps the thumbs, the readout and the emitted range in agreement", async () => {
+    // The synthetic catalog's finite 2018 leaf: coverage 2018–2018 on a
+    // 1960–2020 track, both thumbs already on the single delivered year. Home on
+    // From and End on To are rejected by the coverage clamp — so the pending
+    // range stays 2018–2018, and the thumbs (what a screen reader announces, and
+    // what Apply submits) must say the same.
+    const onchange = vi.fn<(next: StudyWindow) => void>();
+    const screen = await render(PeriodWindowSlider, {
+      ...base,
+      min: 1960,
+      max: 2020,
+      coverage: { from: 2018, to: 2018 } as Coverage,
+      selection: { from: 2018, to: 2018 },
+      window: { from: 2018, to: 2018 },
+      onchange,
+      onreset: vi.fn(),
+    });
+    await screen.getByRole("slider", { name: "From year" }).fill("1960");
+    await screen.getByRole("slider", { name: "To year" }).fill("2020");
+    await expect
+      .element(screen.getByRole("slider", { name: "From year" }))
+      .toHaveValue("2018");
+    await expect
+      .element(screen.getByRole("slider", { name: "To year" }))
+      .toHaveValue("2018");
+    // `exact` so the readout is matched, not the "data 2018–2018" coverage span.
+    await expect
+      .element(screen.getByText("2018–2018", { exact: true }))
+      .toBeVisible();
+    expect(onchange).toHaveBeenLastCalledWith({ from: 2018, to: 2018 });
+  });
+
   it("open-ended coverage: 'coverage through <vintage>' names the delivery ceiling (M21/#671)", async () => {
     // An open-ended coverage end reads as an ellipsis in the raw readout; the
     // note names the vintage-projected ceiling so the bound is explained.

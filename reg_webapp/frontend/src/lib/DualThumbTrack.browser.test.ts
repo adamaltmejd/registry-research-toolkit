@@ -83,6 +83,23 @@ describe("DualThumbTrack", () => {
     await expect.element(toThumb).toHaveValue("2000");
   });
 
+  it("a REJECTED move leaves no stale native value, and repeating it doesn't either", async () => {
+    const screen = await render(DualThumbTrack, {
+      ...base,
+      // Both thumbs already coincident: every further From step is rejected.
+      selection: { from: 2010, to: 2010 },
+    });
+    const fromThumb = screen.getByRole("slider", { name: "From year" });
+    const el = (await fromThumb.element()) as HTMLInputElement;
+    // The clamp discards these steps, so the reactive value never changes and
+    // nothing re-renders — the browser's OWN value must still be walked back, or
+    // the thumb and the announced year drift away from the selection.
+    inputTick(el, 2011);
+    await expect.element(fromThumb).toHaveValue("2010");
+    inputTick(el, 2012);
+    await expect.element(fromThumb).toHaveValue("2010");
+  });
+
   it("onLiveInput fires on every input tick; onCommit only on change (release)", async () => {
     const onLiveInput = vi.fn();
     const onCommit = vi.fn();
@@ -151,6 +168,26 @@ describe("DualThumbTrack", () => {
       const toThumb = screen.getByRole("slider", { name: "To year" });
       // Drag To up to 2020 → clamped DOWN to the selectable ceiling 2015.
       await toThumb.fill("2020");
+      await expect.element(toThumb).toHaveValue("2015");
+    });
+
+    it("a move REJECTED by the selectable bound leaves no stale native value, at either thumb", async () => {
+      const screen = await render(DualThumbTrack, {
+        ...base, // 1990–2020
+        selectableMin: 1995,
+        selectableMax: 2015,
+        selection: { from: 1995, to: 2015 }, // both already ON their limit
+      });
+      const fromThumb = screen.getByRole("slider", { name: "From year" });
+      const toThumb = screen.getByRole("slider", { name: "To year" });
+      const fromEl = (await fromThumb.element()) as HTMLInputElement;
+      const toEl = (await toThumb.element()) as HTMLInputElement;
+      // Home on From / End on To jump to the TRACK edge; the coverage clamp
+      // rejects both without changing the value, so the native inputs would keep
+      // the un-selectable year they were driven to.
+      inputTick(fromEl, 1990);
+      await expect.element(fromThumb).toHaveValue("1995");
+      inputTick(toEl, 2020);
       await expect.element(toThumb).toHaveValue("2015");
     });
 
