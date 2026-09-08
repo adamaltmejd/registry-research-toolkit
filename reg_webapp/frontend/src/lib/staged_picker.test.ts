@@ -3,6 +3,7 @@ import type { PickerRepresentation } from "./catalog";
 import type { ProjectData } from "./project_data";
 import {
   committedPickerRows,
+  finalAddPeriodWires,
   finalSourcePeriodsForStagedAdds,
   nullBindingCommittedRowKeys,
   periodChangesWithStagedAdds,
@@ -629,6 +630,61 @@ describe("periodChangesWithStagedAdds", () => {
         period: ["2020-Q1", "2020-Q2", "2020-Q3"],
       },
     ]);
+  });
+});
+
+describe("finalAddPeriodWires", () => {
+  it("resolves each add at the final source period it commits under", () => {
+    expect(
+      finalAddPeriodWires(
+        [{ registerVariant: "scb/lisa/ind", period: 2000 }],
+        [],
+        [
+          { registerVariant: "scb/lisa/ind", period: { from: 2010, to: 2015 } },
+          { registerVariant: "scb/rams/std", period: 2019 },
+        ],
+      ),
+    ).toEqual(["2000,2010..2015", "2019"]);
+  });
+
+  it("refuses the batch when an add has no period of its own", () => {
+    // The open-ended row picked with no `?period` and no project window: its
+    // `rowAddPeriod` is unset, and there is no source period to inherit — so the
+    // pick would author `period: ""` and an underivable binding type.
+    expect(
+      finalAddPeriodWires(
+        [],
+        [],
+        [
+          { registerVariant: "scb/lisa/ind", period: 2019 },
+          { registerVariant: "scb/rams/std", period: "" },
+        ],
+      ),
+    ).toBeNull();
+  });
+
+  it("refuses the batch when an add resolves to a non-finite period", () => {
+    // `_default` is browse state, never a `Source.period` — the same rule
+    // `isStructurallyValidPeriodWire` enforces everywhere a `?period` is committed.
+    expect(
+      finalAddPeriodWires(
+        [],
+        [],
+        [{ registerVariant: "scb/lisa/ind", period: "_default" }],
+      ),
+    ).toBeNull();
+  });
+
+  it("takes a period-less add's period from the source it extends", () => {
+    // The source already carries one, so the union is finite and the pick resolves
+    // there — a valid add the refusal must not catch.
+    expect(
+      finalAddPeriodWires(
+        [{ registerVariant: "scb/lisa/ind", period: 2018 }],
+        [],
+        [{ registerVariant: "scb/lisa/ind", period: "" }],
+      ),
+    ).toEqual(["2018"]);
   });
 });
 

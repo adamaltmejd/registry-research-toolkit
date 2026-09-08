@@ -185,6 +185,22 @@ function twoSingleColGraph(): RelationshipGraph {
   ]);
 }
 
+/** A one-member graph whose only column is delivered OPEN-ENDED: with no `?period`
+ * and no project window a pick on it resolves no finite period (Y-58, the group
+ * page's half of the leaf's failure). */
+function openEndedGraph(): RelationshipGraph {
+  return graph([
+    vnode("scb/rams/inkjan", [
+      gstate({
+        variant: "individer",
+        delivery_column_name: "Inkjan",
+        valid_from: "2018-01-01",
+        valid_to: "9999-12-31",
+      }),
+    ]),
+  ]);
+}
+
 /** A two-member graph where each member has TWO genuinely CO-EXISTING (overlapping
  * windows) columns → each renders as a thin subheading over its parallel column rows.
  * The windows OVERLAP (both 2010–2020) on purpose: parallel columns stay co-equal rows,
@@ -378,6 +394,84 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
         }),
       ]),
     );
+  });
+
+  // Y-58, the same failure as the binding leaf's: a group reached without a
+  // `?period` narrows nothing, so a pick on an open-ended column has no finite
+  // period to author and must be refused rather than written as `period: ""`.
+  it("refuses a pick that resolves no finite period, leaving the draft unchanged", async () => {
+    vi.mocked(getConceptGroup).mockResolvedValue(node());
+    vi.mocked(getConceptGroupGraph).mockResolvedValue(openEndedGraph());
+    mockResolveColumns({ "scb/rams/inkjan": ["Inkjan"] });
+
+    await renderGroup();
+
+    const jan = page.getByRole("checkbox", { name: /Inkjan/ });
+    await expect.element(jan).toBeVisible();
+    await jan.click();
+    await page.getByRole("button", { name: "Add to project" }).click();
+
+    await expect
+      .element(page.getByText(/Apply a period before adding/))
+      .toBeVisible();
+    expect(projectStore.draft?.sources).toHaveLength(0);
+    await expect.element(page.getByText(/^Applied/)).not.toBeInTheDocument();
+
+    // Recoverable the same two ways as the leaf's: resolving the group retires the
+    // notice, and so does clearing the staging it refused.
+    router.navigate("/catalog/group/scb/rams/ink?period=2018");
+    await expect
+      .element(page.getByText(/Apply a period before adding/))
+      .not.toBeInTheDocument();
+  });
+
+  it("retires the refusal when the staging behind it is cleared", async () => {
+    vi.mocked(getConceptGroup).mockResolvedValue(node());
+    vi.mocked(getConceptGroupGraph).mockResolvedValue(openEndedGraph());
+    mockResolveColumns({ "scb/rams/inkjan": ["Inkjan"] });
+
+    await renderGroup();
+
+    const jan = page.getByRole("checkbox", { name: /Inkjan/ });
+    await expect.element(jan).toBeVisible();
+    await jan.click();
+    await page.getByRole("button", { name: "Add to project" }).click();
+    await expect
+      .element(page.getByText(/Apply a period before adding/))
+      .toBeVisible();
+
+    await jan.click();
+    await expect
+      .element(page.getByText(/Apply a period before adding/))
+      .not.toBeInTheDocument();
+  });
+
+  it("commits the same pick once a `?period` resolves it (the finite control)", async () => {
+    vi.mocked(getConceptGroup).mockResolvedValue(node());
+    vi.mocked(getConceptGroupGraph).mockResolvedValue(openEndedGraph());
+    mockResolveColumns({ "scb/rams/inkjan": ["Inkjan"] });
+    router.navigate("/catalog/group/scb/rams/ink?period=2018");
+
+    await renderGroup();
+
+    const jan = page.getByRole("checkbox", { name: /Inkjan/ });
+    await expect.element(jan).toBeVisible();
+    await jan.click();
+    await page.getByRole("button", { name: "Add to project" }).click();
+
+    await expect.element(page.getByText(/\+1 column/)).toBeVisible();
+    expect(projectStore.draft?.sources).toEqual([
+      expect.objectContaining({
+        register_variant: "scb/rams/individer",
+        period: 2018,
+        bindings: [
+          expect.objectContaining({
+            variable: "scb/rams/inkjan",
+            type: "numeric",
+          }),
+        ],
+      }),
+    ]);
   });
 
   it("holds an Apply until the app-owned draft restore has settled", async () => {

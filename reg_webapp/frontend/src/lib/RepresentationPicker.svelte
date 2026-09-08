@@ -210,8 +210,9 @@ let {
   onapply: (
     payload: PickerApplyPayload,
   ) => PickerApplyResult | Promise<PickerApplyResult>;
-  /** Notify the host when a user starts a new staged diff, so page-level applied
-   * confirmations do not sit beside conflicting staged status. */
+  /** Notify the host whether a staged diff is now pending, so page-level status
+   * (an applied confirmation, a refused-apply notice) never sits beside staging
+   * that contradicts it — including when a Reset or an uncheck empties the diff. */
   onstagechange?: (hasDiff: boolean) => void;
 } = $props();
 
@@ -580,9 +581,7 @@ const applyLabel = $derived.by(() => {
 });
 
 $effect(() => {
-  if (diffCount > 0) {
-    onstagechange?.(true);
-  }
+  onstagechange?.(diffCount > 0);
 });
 
 async function commit(): Promise<void> {

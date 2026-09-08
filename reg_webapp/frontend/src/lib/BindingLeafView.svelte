@@ -33,7 +33,6 @@ import {
   isStructurallyValidPeriodWire,
   nextResolutionQuery,
   periodFromWire,
-  periodToWire,
   VALUE_SET_VERSION_NONE,
 } from "./period";
 import { regMetaReleaseTag } from "./project_data";
@@ -46,7 +45,7 @@ import { router } from "./router.svelte";
 import SubjectView from "./SubjectView.svelte";
 import {
   committedPickerRows,
-  finalSourcePeriodsForStagedAdds,
+  finalAddPeriodWires,
   periodChangesWithStagedAdds,
   rowAddSegments,
   type StagedPickerBand,
@@ -437,6 +436,11 @@ let applyOutcome = $state<{
   periodChanged: number;
 } | null>(null);
 
+/** Set when an Apply was refused because a staged add resolved no finite period
+ * (drives the inline notice). Retired by a resolution change (the effect below)
+ * and by any staging change, so it never outlives the pick it refused. */
+let periodRequired = $state(false);
+
 // A fresh resolution / leaf change clears the stale confirmation. Tracking
 // `fqidPath` (the navigation key) re-invalidates on a leaf change independent of
 // the parent's `{#key route.fqidPath}` remount, so a stale confirmation can never
@@ -447,6 +451,7 @@ $effect(() => {
   void params.value_set_version;
   void fqidPath;
   applyOutcome = null;
+  periodRequired = false;
 });
 
 function stagedAddCandidates(selection: PickerSelection) {
@@ -469,7 +474,7 @@ type StagedAddCandidate = ReturnType<typeof stagedAddCandidates>[number];
 
 async function stagedAdd(
   candidate: StagedAddCandidate,
-  resolvePeriodWire: string | null,
+  resolvePeriodWire: string,
 ) {
   const { band, row } = candidate.selection;
   let resolution: BindingResolution;
@@ -524,6 +529,24 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
   if (unmounted || projectStore.replacementGeneration !== stagedAgainst) {
     return false;
   }
+  // Every add commits under a FINITE period — the one it also resolves its binding
+  // metadata at. A row delivered open-ended, picked with neither a `?period` nor a
+  // project window to clip it to, has none: applying it would author `period: ""`
+  // and an underivable `type: ""` onto a draft that autosaves before /project is
+  // ever opened. Refuse BEFORE any mutation (a null draft is not even minted);
+  // returning false keeps the picker's staging, so an Apply that authored nothing
+  // never looks like one that did.
+  const candidates = payload.adds.flatMap(stagedAddCandidates);
+  const addPeriods = finalAddPeriodWires(
+    sourcePeriodsFromDraft(projectStore.draft),
+    payload.periodChanges,
+    candidates,
+  );
+  if (addPeriods === null) {
+    periodRequired = true;
+    return false;
+  }
+  periodRequired = false;
   if (projectStore.draft === null && payload.adds.length > 0) {
     projectStore.newProject({
       reg_meta_version: regMetaReleaseTag(regMetaVersion),
@@ -531,21 +554,8 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
     });
   }
   const target = projectStore.draft;
-  const candidates = payload.adds.flatMap(stagedAddCandidates);
-  const finalPeriods = finalSourcePeriodsForStagedAdds(
-    sourcePeriodsFromDraft(target),
-    payload.periodChanges,
-    candidates,
-  );
   const adds = await Promise.all(
-    candidates.map((candidate) =>
-      stagedAdd(
-        candidate,
-        periodToWire(
-          finalPeriods.get(candidate.registerVariant) ?? candidate.period,
-        ),
-      ),
-    ),
+    candidates.map((candidate, i) => stagedAdd(candidate, addPeriods[i])),
   );
   if (projectStore.draft !== target) {
     return false;
@@ -676,6 +686,9 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
       {vintageYear}
       onapply={applyStaged}
       onstagechange={(hasDiff) => {
+        // Clearing the staging retires the refusal too (there is no longer a pick
+        // to author), so the notice can never outlive the diff it described.
+        periodRequired = false;
         if (hasDiff) {
           applyOutcome = null;
         }
@@ -683,7 +696,20 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
     />
   {/if}
 
-  {#if applyOutcome}
+  {#if periodRequired}
+    <!-- The Apply was refused because a staged column resolved no finite period, so
+         nothing was authored. A status row (frontend/DESIGN.md → Banners and status
+         rows): warn tint, glyph first, and copy naming the control that fixes it.
+         Applying a period re-resolves this view, which clears the picker's staging
+         — hence "select and add again" rather than a bare retry. -->
+    <p class="page-add">
+      <span class="add-blocked" role="alert">
+        <span aria-hidden="true">▲</span>
+        Apply a period before adding — press Apply under Period above, then select
+        and add again.
+      </span>
+    </p>
+  {:else if applyOutcome}
     <p class="page-add">
       <span class="add-confirm" role="status">
         Applied
@@ -932,6 +958,16 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
     align-items: baseline;
     gap: 0.6rem;
     margin: 0.75rem 0;
+  }
+  .add-blocked {
+    display: inline-flex;
+    align-items: baseline;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-sm);
+    background: var(--warn-bg);
+    color: var(--warn);
+    font-size: var(--text-sm);
   }
   .add-confirm {
     font-size: 0.85rem;

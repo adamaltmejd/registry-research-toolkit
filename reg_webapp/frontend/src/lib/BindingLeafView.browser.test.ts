@@ -196,6 +196,20 @@ const foldedVariantStates = [
   }),
 ];
 
+/** The fixture catalog's own `scb/lisa/kon`: ONE delivery column, delivered
+ * OPEN-ENDED from 2018. With no `?period` and no project window there is nothing
+ * finite to clip it to, so the pick resolves no period at all (Y-58). */
+const openEndedStates = [
+  state({
+    state_id: 1,
+    variant: "individer-15plus",
+    delivery_column_name: "Kon",
+    valid_from: "2018-01-01",
+    valid_to: "9999-12-31",
+    value_set_id: 7,
+  }),
+];
+
 const singleWithStructural = [
   state({
     state_id: 1,
@@ -1348,6 +1362,144 @@ describe("BindingLeafView representation picker (#678)", () => {
           expect.objectContaining({
             variable: "scb/lisa/kon",
             representation: null,
+          }),
+        ],
+      }),
+    );
+  });
+
+  // Y-58: ordinary browsing reaches the leaf with NO query string, so nothing has
+  // narrowed the open-ended row to a finite period. The Add must refuse instead of
+  // authoring `period: ""` plus the `type: ""` the resolve cannot derive — a source
+  // the API rejects, autosaved before /project is ever opened.
+  it("refuses a pick that resolves no finite period, leaving the draft unchanged", async () => {
+    vi.mocked(getCatalogNode).mockResolvedValue(
+      statesResponse(openEndedStates),
+    );
+
+    await render(BindingLeafView, {
+      fqidPath: "scb/lisa/kon",
+      node: node(openEndedStates),
+      ...SEED,
+      vintageYear: 2024,
+    });
+
+    const kon = page.getByRole("checkbox", { name: /Kon/ });
+    await expect.element(kon).toBeVisible();
+    await kon.click();
+    await page.getByRole("button", { name: "Add to project" }).click();
+
+    await expect
+      .element(page.getByText(/Apply a period before adding/))
+      .toBeVisible();
+    expect(projectStore.draft?.sources).toHaveLength(0);
+    await expect.element(page.getByText(/^Applied/)).not.toBeInTheDocument();
+
+    // Recoverable: resolving the leaf retires the notice, so the researcher is not
+    // left staring at a warning the page has already answered.
+    router.navigate("/catalog/scb/lisa/kon?period=2018");
+    await expect
+      .element(page.getByText(/Apply a period before adding/))
+      .not.toBeInTheDocument();
+  });
+
+  it("retires the refusal when the staging behind it is cleared", async () => {
+    // Unchecking the column (like the picker's Reset) empties the staged diff, so
+    // the refusal has nothing left to describe — it must go with it rather than sit
+    // on the page as a warning about a pick that no longer exists.
+    vi.mocked(getCatalogNode).mockResolvedValue(
+      statesResponse(openEndedStates),
+    );
+
+    await render(BindingLeafView, {
+      fqidPath: "scb/lisa/kon",
+      node: node(openEndedStates),
+      ...SEED,
+      vintageYear: 2024,
+    });
+
+    const kon = page.getByRole("checkbox", { name: /Kon/ });
+    await expect.element(kon).toBeVisible();
+    await kon.click();
+    await page.getByRole("button", { name: "Add to project" }).click();
+    await expect
+      .element(page.getByText(/Apply a period before adding/))
+      .toBeVisible();
+
+    await kon.click();
+    await expect
+      .element(page.getByText(/Apply a period before adding/))
+      .not.toBeInTheDocument();
+  });
+
+  it("commits the same pick once a `?period` resolves it (the finite control)", async () => {
+    // The ticket's finite control: the identical open-ended row, picked with
+    // `?period=2018`, resolves 2018 and the categorical type the refused Add could
+    // not derive. Applying a period re-resolves the view and clears the picker's
+    // staging, so this picks at the resolved route — the way the researcher does
+    // after following the notice.
+    vi.mocked(getCatalogNode).mockResolvedValue(
+      statesResponse(openEndedStates),
+    );
+    router.navigate("/catalog/scb/lisa/kon?period=2018");
+
+    await render(BindingLeafView, {
+      fqidPath: "scb/lisa/kon",
+      node: node(openEndedStates),
+      ...SEED,
+      vintageYear: 2024,
+    });
+
+    const kon = page.getByRole("checkbox", { name: /Kon/ });
+    await expect.element(kon).toBeVisible();
+    await kon.click();
+    await page.getByRole("button", { name: "Add to project" }).click();
+
+    await expect.element(page.getByText(/\+1 column/)).toBeVisible();
+    expect(projectStore.draft?.sources).toEqual([
+      expect.objectContaining({
+        register_variant: "scb/lisa/individer-15plus",
+        period: 2018,
+        bindings: [
+          expect.objectContaining({
+            variable: "scb/lisa/kon",
+            type: "categorical",
+            display_name: "Kon",
+          }),
+        ],
+      }),
+    ]);
+  });
+
+  it("commits a period-less pick under the project's own study window", async () => {
+    // The window IS a resolvable finite period, so the same open-ended row commits
+    // clipped to it — the refusal must not reach a pick with valid context.
+    vi.mocked(getCatalogNode).mockResolvedValue(
+      statesResponse(openEndedStates),
+    );
+    windowStore.set({ from: 2018, to: 2020 });
+
+    await render(BindingLeafView, {
+      fqidPath: "scb/lisa/kon",
+      node: node(openEndedStates),
+      ...SEED,
+      vintageYear: 2024,
+    });
+
+    const kon = page.getByRole("checkbox", { name: /Kon/ });
+    await expect.element(kon).toBeVisible();
+    await kon.click();
+    await page.getByRole("button", { name: "Add to project" }).click();
+
+    await expect.element(page.getByText(/\+1 column/)).toBeVisible();
+    expect(projectStore.draft?.sources[0]).toEqual(
+      expect.objectContaining({
+        register_variant: "scb/lisa/individer-15plus",
+        period: { from: 2018, to: 2020 },
+        bindings: [
+          expect.objectContaining({
+            variable: "scb/lisa/kon",
+            type: "categorical",
           }),
         ],
       }),

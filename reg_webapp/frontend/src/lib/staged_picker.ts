@@ -9,6 +9,7 @@ import {
 } from "./catalog";
 import {
   boundedPeriodSegments,
+  isStructurallyValidPeriodWire,
   type PeriodBounds,
   periodCoverageUnion,
   periodToWire,
@@ -349,6 +350,30 @@ export function periodChangesWithStagedAdds(
       period: periodCoverageUnion(change.period, addPeriod),
     };
   });
+}
+
+/** The wire period each staged add resolves its binding at and commits under, in
+ * `adds` order — or null when ANY of them has no valid FINITE period. A picker row
+ * with an open-ended delivery window, picked with neither a `?period` nor a project
+ * window to clip it to, resolves no period at all: committing it would author
+ * `period: ""` and a `type: ""` the resolve cannot derive, which only the backend
+ * validator would catch. All-or-nothing so one such row can't half-apply a batch —
+ * the caller keeps the draft unchanged and asks for a period instead. */
+export function finalAddPeriodWires(
+  existing: Iterable<PickerSourcePeriod>,
+  changes: readonly StagedPeriodChange[],
+  adds: readonly PickerAddPeriod[],
+): string[] | null {
+  const periods = finalSourcePeriodsForStagedAdds(existing, changes, adds);
+  const wires: string[] = [];
+  for (const add of adds) {
+    const wire = periodToWire(periods.get(add.registerVariant) ?? add.period);
+    if (wire === null || !isStructurallyValidPeriodWire(wire)) {
+      return null;
+    }
+    wires.push(wire);
+  }
+  return wires;
 }
 
 export function finalSourcePeriodsForStagedAdds(

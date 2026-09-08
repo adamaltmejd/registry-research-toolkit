@@ -192,20 +192,20 @@ function check(condition, message) {
   if (!condition) throw new Error(message);
 }
 
-// ── `flows`: the project error/retry + catalog-draft gates ──────────────────
+// ── `flows`: the project error/retry + catalog gates ────────────────────────
 //
-// Four scenarios × four viewports = 16 cases, each in a FRESH context against
+// Five scenarios × four viewports = 20 cases, each in a FRESH context against
 // the REAL backend (the caller points it at a synthetic catalog DB through
 // REG_META_DB — see catalog_fixture_db.py). The three error scenarios inject
-// exactly one failing request and the draft scenario injects none: everything
-// else is the actual app answering — including the browser's own IndexedDB, which
-// the catalog-draft case reloads against.
+// exactly one failing request and the two catalog scenarios inject none:
+// everything else is the actual app answering — including the browser's own
+// IndexedDB, which the catalog cases read back.
 //
-// The 24 PNGs these write are an artifact contract declared in .yard/config.toml,
+// The 32 PNGs these write are an artifact contract declared in .yard/config.toml,
 // split across TWO gates because a yard gate declares at most 16 filenames:
 // `project-flows` names the three /project scenarios (16 PNGs) and
-// `catalog-flows` names `catalog-draft` (8). That is what the scenario argument
-// in the dispatch below is for — a bare `flows <out-dir>` still runs all four,
+// `catalog-flows` the two catalog ones (16). That is what the scenario argument
+// in the dispatch below is for — a bare `flows <out-dir>` still runs all five,
 // which is the local verification invocation.
 //
 // The filenames carry the size — so the sizes are the `shot` presets above,
@@ -573,6 +573,71 @@ async function catalogDraftCase(page, counts, shoot) {
   await shoot("project-restored");
 }
 
+/** Scenario 5 — the pick with NO period. Ordinary browsing reaches a leaf without a
+ * query string, and `scb/lisa/kon` is delivered open-ended, so a column added there
+ * has no finite period to author: the source would carry `period: ""` and a binding
+ * `type: ""` the resolve could not derive — autosaved before /project is ever opened
+ * and rejected by the API. The Add must refuse, keep the draft untouched, say what
+ * the researcher has to choose, and stay recoverable: choosing 2018 in the leaf's own
+ * Period control and adding again authors the real source. */
+async function catalogPeriodRequiredCase(page, counts, shoot) {
+  // (1) Add with no period chosen. Settle on EITHER outcome — the refusal notice or
+  //     the applied confirmation — so the shot is the state the app actually reached
+  //     and the checks below are what make it the right one.
+  await addColumn(page, "Kon");
+  await page.waitForFunction(
+    () => /Apply a period|Applied \+/.test(document.body.innerText),
+    null,
+    { timeout: 10_000 },
+  );
+  await settled(page);
+  await shoot("catalog-no-period");
+  await page.getByRole("alert").filter({ hasText: "Apply a period" }).waitFor();
+  check(
+    (await page.getByRole("status").filter({ hasText: "Applied" }).count()) === 0,
+    "the refused Add reported a successful apply",
+  );
+
+  // (2) The draft is untouched: no project was minted, so nothing validates and
+  //     nothing reaches IndexedDB (the autosave debounce is ~500ms).
+  await page.waitForTimeout(1500);
+  const stored = await page.evaluate(autosavedDraft);
+  check(
+    stored === null && counts.validate === 0,
+    `the refused Add autosaved ${JSON.stringify(stored)} and POSTed ` +
+      `${counts.validate} validation(s)`,
+  );
+
+  // (3) Recover through the control the notice names: 2018, then pick and add
+  //     again. Applying a period re-resolves the leaf, which clears the picker's
+  //     staging — so this really is a fresh pick, which is why the notice says to
+  //     select again rather than just retry.
+  const periodSlider = page.getByRole("group", { name: "Period window (years)" });
+  await periodSlider.getByLabel("To year").fill("2018");
+  await periodSlider.getByLabel("From year").fill("2018");
+  await page.getByRole("button", { name: "Apply period" }).click();
+  await page.waitForFunction(
+    () => new URLSearchParams(location.search).get("period") === "2018",
+    null,
+    { timeout: 10_000 },
+  );
+  await settled(page);
+  const green = validated(page);
+  await addColumn(page, "Kon");
+  await green;
+  await settled(page);
+  await page.getByRole("status").filter({ hasText: "Applied +1 column" }).waitFor();
+  await shoot("catalog-period-recovered");
+
+  // (4) The metadata the refused Add could not resolve, as the autosave holds it.
+  await draftSaved(page, ["scb/lisa/individer-15plus"]);
+  const [source] = (await page.evaluate(autosavedDraft)).sources;
+  check(
+    source.period === 2018 && source.bindings[0]?.type === "categorical",
+    `the recovered source authored ${JSON.stringify(source)}`,
+  );
+}
+
 /** Run one case in its own context: fresh storage, its own request ledger, its
  * own page-error ledger — and close the context whatever happens. `route` is
  * where the case starts (the /project scenarios' default; the catalog-authored
@@ -679,6 +744,13 @@ try {
         route: "/catalog/scb/lisa/kon?period=2018",
         run: catalogDraftCase,
       },
+      // The same leaf as ordinary browsing reaches it — NO query string, so no
+      // period is chosen and the pick has none to author under.
+      "catalog-period-required": {
+        shots: 2,
+        route: "/catalog/scb/lisa/kon",
+        run: catalogPeriodRequiredCase,
+      },
     };
     for (const name of selection) {
       check(
@@ -688,7 +760,7 @@ try {
     }
     // No names = every scenario, which is the local verification invocation. The
     // two yard gates each name their own subset instead: a gate declares at most
-    // 16 artifact filenames, and all four scenarios write 24.
+    // 16 artifact filenames, and all five scenarios write 32.
     const names = selection.length > 0 ? selection : Object.keys(scenarios);
     for (const viewport of FLOW_VIEWPORTS) {
       for (const name of names) {

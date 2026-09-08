@@ -205,12 +205,12 @@ timeout_minutes = 30
 # PNG per settled state for the operator's visual judgment. No model runs here:
 # the driver asserts the behavior, `artifacts` retains the pictures.
 #
-# The driver's fourth scenario, the catalog-authored draft (Y-42), is the
-# SEPARATE `catalog-flows` gate below, and each gate names the scenarios it runs
-# so neither pays for the other's cases. They are two gates rather than one
-# because `artifacts` accepts at most 16 filenames and the four scenarios write
-# 24; `dev.sh flows <dir>` with no scenario names still runs all four, which is
-# how the flow is verified locally.
+# The driver's two CATALOG scenarios (the authored draft, Y-42, and the pick with
+# no period chosen, Y-58) are the SEPARATE `catalog-flows` gate below, and each
+# gate names the scenarios it runs so neither pays for the other's cases. They are
+# two gates rather than one because `artifacts` accepts at most 16 filenames and
+# the five scenarios write 32; `dev.sh flows <dir>` with no scenario names still
+# runs all five, which is how the flow is verified locally.
 #
 # Provisioning mirrors the gates above (offline two-step `uv sync`, the baked
 # node_modules, /opt/pw-browsers), plus two things dev.sh needs: the candidate's
@@ -259,15 +259,18 @@ artifacts = [
   "validation-error-1920x1080.png",
 ]
 
-# The rendered catalog-authored draft evidence (Y-42), selected by the `ui`
-# workflow alongside `project-flows`. Same driver, same provisioning, one
-# scenario: pick a column from a catalog leaf with /project never opened, leave
-# the route, reload into /project and recover the draft, then extend it with a
-# second pick made on a cold catalog entry — at the same four viewports (4
-# cases). It is its own gate purely because `artifacts` holds at most 16
-# filenames; the shots are the operator's evidence that a draft authored away
-# from /project survives, and the driver asserts the behavior behind them
-# (including what the browser's own IndexedDB holds across the reloads).
+# The rendered CATALOG evidence, selected by the `ui` workflow alongside
+# `project-flows`. Same driver, same provisioning, two scenarios at the same four
+# viewports (8 cases): the authored draft (Y-42) picks a column from a catalog leaf
+# with /project never opened, leaves the route, reloads into /project and recovers
+# the draft, then extends it with a second pick made on a cold catalog entry; the
+# period-required pick (Y-58) enters the same leaf the way ordinary browsing does
+# — no query string — and must refuse a column it can give no finite period,
+# recovering when 2018 is chosen. It is its own gate purely because `artifacts`
+# holds at most 16 filenames; the shots are the operator's evidence that a draft
+# authored away from /project survives and that no pick authors an invalid source,
+# and the driver asserts the behavior behind them (including what the browser's own
+# IndexedDB holds across the reloads, and what it does NOT hold after a refusal).
 [checks.catalog-flows]
 command = '''sh -ec '
 export UV_CACHE_DIR=/opt/uv/cache UV_PYTHON_INSTALL_DIR=/opt/uv/python UV_LINK_MODE=copy
@@ -280,7 +283,7 @@ export PATH="$PWD/.venv/bin:$PATH" PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers
 db=$(mktemp -d)
 python3 reg_webapp/.claude/skills/run-reg-webapp/catalog_fixture_db.py "$db"
 echo "candidate HEAD $(git rev-parse HEAD)"
-REG_META_DB="$db" bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh flows "$YARD_ARTIFACT_DIR" catalog-draft
+REG_META_DB="$db" bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh flows "$YARD_ARTIFACT_DIR" catalog-draft catalog-period-required
 ls -l "$YARD_ARTIFACT_DIR"
 du -sk "$YARD_ARTIFACT_DIR"
 ' '''
@@ -294,6 +297,14 @@ artifacts = [
   "project-restored-768x1024.png",
   "project-restored-1280x900.png",
   "project-restored-1920x1080.png",
+  "catalog-no-period-375x812.png",
+  "catalog-no-period-768x1024.png",
+  "catalog-no-period-1280x900.png",
+  "catalog-no-period-1920x1080.png",
+  "catalog-period-recovered-375x812.png",
+  "catalog-period-recovered-768x1024.png",
+  "catalog-period-recovered-1280x900.png",
+  "catalog-period-recovered-1920x1080.png",
 ]
 
 # Review runs on every candidate. max_gate_repair_rounds limits repairs after
