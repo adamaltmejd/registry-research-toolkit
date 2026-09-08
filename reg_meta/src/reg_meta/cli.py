@@ -548,7 +548,10 @@ def _build_parser() -> argparse.ArgumentParser:
         description=(
             "Map data-file column names to official variable definitions.\n"
             "Each column gets status 'matched' or 'no_match'. Matches include\n"
-            "var_id, variable_name, and register_id.\n\n"
+            "fqid, var_id, variable_name, and register_id.\n\n"
+            "One column can match several variables — split siblings share a\n"
+            "var_id and differ only by fqid. Check the match count if you need\n"
+            "a unique variable.\n\n"
             "Uses exact alias lookup only — no fuzzy matching. For discovery,\n"
             "use `search --field datacolumn` instead.\n\n"
             "Examples:\n"
@@ -2279,30 +2282,23 @@ def _write_payload(
     elif key == ("resolve", None):
         rows = []
         for col in data.get("columns", []):
-            if col["matches"]:
-                for m in col["matches"]:
-                    rows.append(
-                        {
-                            "column": col["column_name"],
-                            "status": col["status"],
-                            "register_id": m.get("register_id", ""),
-                            "var_id": m.get("var_id", ""),
-                            "variable_name": m.get("variable_name", ""),
-                        }
-                    )
-            else:
+            # A no_match column still gets its row: the empty match blanks every
+            # variable field. `fqid` is the only one that separates the several
+            # matches a split alias returns.
+            for m in col["matches"] or [{}]:
                 rows.append(
                     {
                         "column": col["column_name"],
                         "status": col["status"],
-                        "register_id": "",
-                        "var_id": "",
-                        "variable_name": "",
+                        "fqid": m.get("fqid", ""),
+                        "register_id": m.get("register_id", ""),
+                        "var_id": m.get("var_id", ""),
+                        "variable_name": m.get("variable_name", ""),
                     }
                 )
         write_formatted(
             rows,
-            ["column", "status", "register_id", "var_id", "variable_name"],
+            ["column", "status", "fqid", "register_id", "var_id", "variable_name"],
             output_path,
             fmt=fmt,
             fmt_explicit=fmt_explicit,

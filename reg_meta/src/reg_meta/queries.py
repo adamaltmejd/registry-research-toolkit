@@ -4297,45 +4297,57 @@ def resolve(
     """Resolve column names to variables via exact alias lookup.
 
     Returns a list of dicts, one per input column, each with
-    "column_name", "status", and "matches" keys.
+    "column_name", "status", and "matches" keys. A column can carry SEVERAL
+    matches — split siblings share an alias and a `var_id`, and are told apart
+    by the canonical binding `fqid` each match carries.
     """
     reg_ids: list[int] | None = None
     if register:
         reg_ids = require_register_ids(conn, register)
+
+    register_filter = ""
+    register_params: list[int] = []
+    if reg_ids:
+        register_filter = " AND v.register_id IN (" + _in_placeholders(reg_ids) + ") "
+        register_params = sorted(reg_ids)
+
+    # A2.7: `variable_alias` is variable_id-keyed; join straight to `variable`.
+    # `var_id` is the variable's `provider_key`.
+    # Group on `v.variable_id`, the canonical identity: A2.2 split siblings
+    # SHARE (register_id, provider_key), so grouping on that pair returned one
+    # match for two real variables. A variable can hold several alias rows
+    # folding to the queried column (one per delivering variant, or case
+    # spellings); `MIN` picks its representative spelling deterministically.
+    exact_sql = (
+        "SELECT MIN(va.delivery_column_name) AS delivery_column_name, "
+        "v.register_id, " + _VAR_ID_V + ", v.name AS variable_name, "
+        "p.slug AS provider_slug, r.slug AS register_slug, "
+        "v.slug AS variable_slug "
+        "FROM variable_alias va "
+        "JOIN variable v ON va.variable_id = v.variable_id "
+        "JOIN register r ON r.register_id = v.register_id "
+        "JOIN provider p ON p.provider_id = r.provider_id "
+        "WHERE py_lower(va.delivery_column_name) = ? "
+        + register_filter
+        + "GROUP BY v.variable_id "
+        "ORDER BY v.register_id, v.provider_key, v.variable_id"
+    )
 
     results: list[dict[str, Any]] = []
 
     for col in columns:
         col_lower = col.lower()
 
-        # A2.7: `variable_alias` is variable_id-keyed; join straight to
-        # `variable`. `var_id` is the variable's `provider_key`.
-        if reg_ids:
-            ph = _in_placeholders(reg_ids)
-            exact_rows = conn.execute(
-                "SELECT va.delivery_column_name, v.register_id, "
-                "" + _VAR_ID_V + ", v.name AS variable_name "
-                f"FROM variable_alias va "
-                f"JOIN variable v ON va.variable_id = v.variable_id "
-                f"WHERE py_lower(va.delivery_column_name) = ? AND v.register_id IN ({ph}) "
-                f"GROUP BY v.register_id, v.provider_key "
-                f"ORDER BY v.register_id, v.provider_key",
-                [col_lower, *reg_ids],
-            ).fetchall()
-        else:
-            exact_rows = conn.execute(
-                "SELECT va.delivery_column_name, v.register_id, "
-                "" + _VAR_ID_V + ", v.name AS variable_name "
-                "FROM variable_alias va "
-                "JOIN variable v ON va.variable_id = v.variable_id "
-                "WHERE py_lower(va.delivery_column_name) = ? "
-                "GROUP BY v.register_id, v.provider_key "
-                "ORDER BY v.register_id, v.provider_key",
-                (col_lower,),
-            ).fetchall()
+        exact_rows = conn.execute(exact_sql, [col_lower, *register_params]).fetchall()
 
         matches = [
             {
+                "fqid": try_emit(
+                    Fqid.binding_fqid,
+                    r["provider_slug"],
+                    r["register_slug"],
+                    r["variable_slug"],
+                ),
                 "var_id": r["var_id"],
                 "variable_name": r["variable_name"],
                 "matched_column": r["delivery_column_name"],

@@ -1126,6 +1126,23 @@ class TestGetCodedVariables:
 # ---------------------------------------------------------------------------
 
 
+def _split_sibling_db():
+    """Slugged DB whose register 1 holds TWO variables under provider_key 44,
+    both named `Kön` and both delivering the column `Kon` — the A2.2 split
+    geometry (siblings share a `provider_key`; only the slug differs)."""
+    from _slugged_db import add_variable, build_slugged_db
+
+    conn = build_slugged_db()
+    add_variable(conn, register_id=1, var_id=44, name="Kön", slug="kon-2")
+    conn.execute(
+        "INSERT INTO variable_alias "
+        "(variable_id, register_variant_id, delivery_column_name) "
+        "SELECT variable_id, 10, 'Kon' FROM variable WHERE slug = 'kon-2'"
+    )
+    conn.commit()
+    return conn
+
+
 class TestResolve:
     def test_exact_match(self, db_path: str):
         data, code = _run_json(["--db", db_path, "resolve", "--columns", "Kon"])
@@ -1142,6 +1159,8 @@ class TestResolve:
         col = data["data"]["columns"][0]
         assert col["status"] == "matched"
         assert all(m["register_id"] == 1 for m in col["matches"])
+        # Nothing is split in the fixture register, so the match stays unique.
+        assert len(col["matches"]) == 1
 
     def test_cross_register(self, db_path: str):
         data, _code = _run_json(["--db", db_path, "resolve", "--columns", "Kon"])
@@ -1231,6 +1250,75 @@ class TestResolve:
         results = resolve(conn, ["ägare"])
         assert results[0]["status"] == "matched"
         assert results[0]["matches"][0]["matched_column"] == "Ägare"
+
+    def test_match_carries_canonical_fqid(self, db_path: str):
+        """The canonical binding FQID is the identity a caller navigates by —
+        register_id/var_id/name do not distinguish split siblings."""
+        data, _ = _run_json(["--db", db_path, "resolve", "--columns", "Kon"])
+        match = data["data"]["columns"][0]["matches"][0]
+        assert match["fqid"] == "scb/testreg/kon"
+
+    def test_table_output_shows_fqid(self, db_path: str, capsys):
+        """The human-readable renderer must carry the fqid too — split siblings
+        share every other displayed field."""
+        code = run(
+            ["--format", "table", "--db", db_path, "resolve", "--columns", "Kon"]
+        )
+        assert code == 0
+        out = capsys.readouterr().out
+        assert "fqid" in out
+        assert "scb/testreg/kon" in out
+
+    def test_split_siblings_both_survive(self):
+        """Y-47 regression: an A2.2 split leaves sibling variables that SHARE
+        (register_id, provider_key) and name. Grouping the alias lookup on that
+        pair returned ONE match for two real variables, so a caller needing a
+        unique variable could not see the ambiguity. Grouping on the canonical
+        `variable_id` keeps both, distinguished by their FQIDs.
+
+        Fails on the pre-Y-47 query: one match, `matches[0]["fqid"]` a single
+        sibling."""
+        from reg_meta.queries import resolve
+
+        conn = _split_sibling_db()
+        for scope in (None, "LISA"):
+            results = resolve(conn, ["Kon"], register=scope)
+            matches = results[0]["matches"]
+            assert results[0]["status"] == "matched"
+            # Both siblings, in stable variable_id order; every other displayed
+            # field is identical, so only the FQID tells them apart.
+            assert [m["fqid"] for m in matches] == ["scb/lisa/kon", "scb/lisa/kon-2"]
+            assert {m["var_id"] for m in matches} == {44}
+
+    def test_unslugged_siblings_still_dedupe_by_variable_id(self):
+        """A variable with no slug is not FQID-addressable (`fqid: None`, the
+        `try_emit` convention). The siblings must still come back separately —
+        the dedupe key is `variable_id`, never the FQID."""
+        from reg_meta.queries import resolve
+
+        conn = _split_sibling_db()
+        conn.execute("UPDATE variable SET slug = NULL")
+        conn.commit()
+        matches = resolve(conn, ["Kon"])[0]["matches"]
+        assert [m["fqid"] for m in matches] == [None, None]
+
+    def test_repeated_alias_does_not_duplicate_variable(self):
+        """One variable delivering the same column under several alias rows
+        (per variant, or a case spelling) is still ONE match, carrying one
+        deterministic representative spelling."""
+        from _slugged_db import build_slugged_db
+        from reg_meta.queries import resolve
+
+        conn = build_slugged_db()
+        conn.execute(
+            "INSERT INTO variable_alias "
+            "(variable_id, register_variant_id, delivery_column_name) "
+            "SELECT variable_id, 10, 'KON' FROM variable WHERE slug = 'kon'"
+        )
+        conn.commit()
+        matches = resolve(conn, ["kon"])[0]["matches"]
+        assert [m["fqid"] for m in matches] == ["scb/lisa/kon"]
+        assert matches[0]["matched_column"] == "KON"
 
 
 # ---------------------------------------------------------------------------
