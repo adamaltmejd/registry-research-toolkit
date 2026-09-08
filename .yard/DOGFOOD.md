@@ -1166,3 +1166,30 @@ committed persistence test lacks a real reload (independent verification covered
 candidate instead), cancelling a valid Open can retain a dismissible old error banner,
 and the confirmation copy mentions a last download even for a draft that was never
 downloaded.
+
+## 2026-09-08: `lane reject`'s refusal names approval; `lane nudge` is the workaround
+
+While Y-16/1/e5 was running review of candidate
+`0a9fdf9440f5feaca9d9e3a893a372ccebb49503`,
+`yard lane reject Y-16/1 --expect-head 0a9fdf9440f5feaca9d9e3a893a372ccebb49503 -m <repair notes>`
+refused with exit 1 and
+`error: Y-16/1/e5 is running; approval requires a quiescent lane`. No rejection was
+recorded. The quiescence guard worked correctly; the papercut is that the error named
+approval after an attempted rejection, and installed `lane reject --help` omits the
+running-execution prerequisite. These are separate facts: no lost decision, unexpected
+work, corruption or guard failure was observed.
+
+After reading `lane nudge --help`,
+`yard lane nudge Y-16/1/e5 --expect-generation 1 -m <repair notes>` successfully queued
+the same existing-scope repair guidance, preserved the active review and candidate, and
+reported `waiting: "check"`. This is the supported way to request a repair round after
+the current review completes; it does not interrupt that review, and it queues a later
+implementation round that can spend for it — it is not a cost-free message to a running
+model.
+
+Open and closed upstream issue searches found no exact duplicate; related closed
+[#52](https://github.com/adamaltmejd/switchyard/issues/52) and
+[#57](https://github.com/adamaltmejd/switchyard/issues/57) cover other failures and were
+not reused. No upstream report was filed for this wording papercut. Raw evidence and the
+intake are local-only under `archive/reports/yard/2026-09-08-continuation/`, notably
+`Y-16-reject-quiescence-intake.md` and `Y-16-bounds-nudge.json`.
