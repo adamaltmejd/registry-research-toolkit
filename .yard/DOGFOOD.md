@@ -1154,8 +1154,8 @@ The batch selected alongside the 0.14.5 upgrade landed on main at
 `a27af17a4e50d7ce78e8197d03b23ad66a5bc7c4`. Each was read via host candidate/diff,
 approved at its exact full head, and verified after sync. The board settled quiet at
 cursor 35677 with 49 done and 13 parked, no active or ready tickets. No push,
-deployment, real corpus build or MONA run occurred; the user's local preview kept
-running separately throughout.
+deployment, real corpus build or MONA run occurred. The user's local preview remains
+running separately.
 
 Y-48's final six gates passed, including 3,767 Python tests and 1,323 frontend tests.
 Independent synthetic browser verification covered 44 cases plus four delayed-read
