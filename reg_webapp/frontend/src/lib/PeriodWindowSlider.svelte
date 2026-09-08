@@ -24,7 +24,12 @@
 
 import { untrack } from "svelte";
 import DualThumbTrack from "./DualThumbTrack.svelte";
-import { type Coverage, notDeliveredGaps, sameYearWindow } from "./period";
+import {
+  type Coverage,
+  coverageBandEdges,
+  notDeliveredGaps,
+  sameYearWindow,
+} from "./period";
 import type { StudyWindow } from "./project_data";
 
 interface Props {
@@ -143,23 +148,12 @@ const effectiveCoverage = $derived<Coverage | null>(
     : { from: coverage.from, to: coverage.to ?? vintageYear ?? max },
 );
 
-// The resolved band edges (#671) — the single source both the solid coverage band
-// and its greyed `unavailable` complement read, so they can never drift (Fix E).
-// Open sides resolve to the track edges (open start → `min`, open end → `max`,
-// after `effectiveCoverage` has already vintage-projected a finite open end).
-// Fix D (defensive): an INVERTED effective coverage (`from > to` — e.g. a register
-// first delivered 2025 on a 2024-vintage catalog → effectiveCoverage {2025, 2024})
-// would give the band a negative width and make the unavailable regions overlap /
-// the hard-clamp degenerate. Treat it as "no band" (null) so the geometry degrades
-// cleanly to no-band / no-clamp rather than emitting negative-width cells.
-const bandEdges = $derived.by<{ from: number; to: number } | null>(() => {
-  if (effectiveCoverage === null) {
-    return null;
-  }
-  const bandFrom = effectiveCoverage.from ?? min;
-  const bandTo = effectiveCoverage.to ?? max;
-  return bandFrom > bandTo ? null : { from: bandFrom, to: bandTo };
-});
+// The resolved band edges (#671) — the single source the solid coverage band, its
+// greyed `unavailable` complement and the thumb hard-clamp all read, so they can
+// never drift (Fix E). Built ON `effectiveCoverage`, so the open-end → vintage
+// projection above stays spelled once; the edge resolution and the inverted-band
+// null (Fix D) are `coverageBandEdges`.
+const bandEdges = $derived(coverageBandEdges(effectiveCoverage, min, max));
 
 // The coverage (available-data) band — a solid track segment; the not-delivered
 // gaps draw OVER the selection fill as greyed cells. An open start extends the

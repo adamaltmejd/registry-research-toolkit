@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   clampYearWindow,
+  coverageBandEdges,
   intersectCoverageWindow,
   isStructurallyValidPeriodWire,
   looksLikePeriod,
@@ -983,5 +984,43 @@ describe("mergePeriods (#992 find-or-create period extension)", () => {
       from: 2010,
       to: 2015,
     });
+  });
+});
+
+describe("coverageBandEdges (#671 selectable band / #631 vintage cap)", () => {
+  it("a finite coverage is its own band", () => {
+    expect(
+      coverageBandEdges({ from: 1995, to: 2008 }, 1960, 2026, 2024),
+    ).toEqual({ from: 1995, to: 2008 });
+  });
+
+  it("an open START runs to the track floor", () => {
+    expect(
+      coverageBandEdges({ from: null, to: 2008 }, 1960, 2026, 2024),
+    ).toEqual({ from: 1960, to: 2008 });
+  });
+
+  it("an open END stops at the vintage, not the track edge (#631)", () => {
+    expect(
+      coverageBandEdges({ from: 1995, to: null }, 1960, 2026, 2024),
+    ).toEqual({ from: 1995, to: 2024 });
+  });
+
+  it("without a vintage an open END falls back to the track edge", () => {
+    expect(coverageBandEdges({ from: 1995, to: null }, 1960, 2026)).toEqual({
+      from: 1995,
+      to: 2026,
+    });
+  });
+
+  it("no coverage is no band", () => {
+    expect(coverageBandEdges(null, 1960, 2026, 2024)).toBeNull();
+  });
+
+  it("an INVERTED band is no band (Fix D: no draw, no clamp)", () => {
+    // First delivered 2025, still delivered, on a 2024-vintage catalog.
+    expect(
+      coverageBandEdges({ from: 2025, to: null }, 1960, 2026, 2024),
+    ).toBeNull();
   });
 });

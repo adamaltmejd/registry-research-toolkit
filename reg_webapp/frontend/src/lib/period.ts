@@ -409,25 +409,15 @@ function segmentFromWire(value: string): PeriodSegment {
       // reg_schema's string arm is single-token-only, so a raw range string
       // (scalar OR #307 list member) would fail `invalid_period`.
       return {
-        from: yearInt(parts[0]) ?? parts[0].trim(),
-        to: yearInt(parts[1]) ?? parts[1].trim(),
+        from: grammarYear(parts[0]) ?? parts[0].trim(),
+        to: grammarYear(parts[1]) ?? parts[1].trim(),
       };
     }
     return value;
   }
-  const year = yearInt(value);
+  const year = grammarYear(value);
   // A bare integer year → the single-year `number` arm (from=to in the editor).
   return year !== null ? year : value;
-}
-
-/** Parse a string as a bare GRAMMAR year (19xx/20xx), else null. Stricter than
- * "any integer" on purpose: an int Source.period passes reg_schema's int-literal
- * arm unchecked, so coercing a typo like "202" to int 202 would slip a nonsense
- * year past the structural gate — left as a string, the grammar check flags it
- * (review on #308). */
-function yearInt(raw: string): number | null {
-  const trimmed = raw.trim();
-  return /^(?:19|20)\d{2}$/.test(trimmed) ? Number.parseInt(trimmed, 10) : null;
 }
 
 // ── Period merge (#992 find-or-create by variant) ────────────────────────────
@@ -767,8 +757,14 @@ export function yearWindowFromWire(
   return { from, to };
 }
 
-/** Parse a string as a bare grammar year (19xx/20xx) → its int, else null. */
-function grammarYear(raw: string): number | null {
+/** Parse a string as a bare GRAMMAR year (19xx/20xx) → its int, else null. The
+ * single spelling of "is this text a year the wire accepts": the wire parsing and
+ * seeding here, and the PeriodPicker's exact year fields. Stricter than "any
+ * integer" on purpose — an int `Source.period` passes reg_schema's int-literal
+ * arm unchecked, so coercing a typo like "202" to int 202 would slip a nonsense
+ * year past the structural gate; left as a string, the grammar check flags it
+ * (review on #308). */
+export function grammarYear(raw: string): number | null {
   const trimmed = raw.trim();
   return /^(?:19|20)\d{2}$/.test(trimmed) ? Number.parseInt(trimmed, 10) : null;
 }
@@ -822,18 +818,43 @@ export interface Coverage {
   to: number | null;
 }
 
+/** The COVERAGE BAND of an availability track: the inclusive year span the
+ * subject actually delivers, resolved against the track edges (an open START
+ * runs to `min`) and the catalog vintage (an open END stops at `vintageYear` —
+ * the catalog only knows delivery up to its own vintage, #631; falls back to
+ * `max` for callers that don't cap). `null` when there is no coverage, or when
+ * the resolved band INVERTS (`from > to` — e.g. a register first delivered 2025
+ * on a 2024-vintage catalog): an inverted band is no band at all, so the track
+ * draws nothing and clamps nothing rather than emitting a negative-width cell.
+ *
+ * This span is the SELECTABLE year range of the period control: the slider
+ * passes it to DualThumbTrack's `selectableMin/Max` (#671 hard clamp) and the
+ * picker validates its exact year entry against it, so a typed year and a
+ * dragged thumb reach exactly the same years. */
+export function coverageBandEdges(
+  coverage: Coverage | null,
+  min: number,
+  max: number,
+  vintageYear?: number,
+): StudyWindow | null {
+  if (coverage === null) {
+    return null;
+  }
+  const from = coverage.from ?? min;
+  const to = coverage.to ?? vintageYear ?? max;
+  return from > to ? null : { from, to };
+}
+
 /** The seed window for the availability slider when there is no explicit
  * `?period` to honour (#671): the part of the data COVERAGE the project window
  * actually frames, so a variable's true coverage shows UP FRONT rather than the
  * full 1960–vintage span reading as available. Pure (no runes) — unit-tested in
  * `period.test.ts`.
  *
- * Sides resolve against the supplied fallbacks, which the caller passes as the
- * EFFECTIVE coverage edges (open coverage end → the vintage; open coverage start
- * → the slider floor) so an open-sided coverage still yields a finite seed:
- *   - coverage start = `coverage.from ?? fallbackMin`;
- *   - coverage end   = `coverage.to   ?? fallbackMax`.
- * Then:
+ * The coverage side is `coverageBandEdges` above, resolved against the supplied
+ * fallbacks — which the caller passes as the EFFECTIVE coverage edges (open
+ * coverage end → the vintage; open coverage start → the slider floor), so an
+ * open-sided coverage still yields a finite seed. Then:
  *   - WITH a `window`: the intersection `[max(covStart, window.from),
  *     min(covEnd, window.to)]` — the window narrowed to where data exists. When
  *     the window lies WHOLLY outside coverage the intersection inverts; we clamp
@@ -846,39 +867,33 @@ export interface Coverage {
  *     that would regress the seed and Apply to `fallbackMin..vintage`); only
  *     no-window + no-coverage falls to the full `[fallbackMin, fallbackMax]`
  *     bounds (nothing to narrow to).
- *   - INVERTED effective coverage (`covFrom > covTo` after the fallbacks resolve,
- *     e.g. open-ended coverage `{from:2025, to:null}` on a 2024-vintage catalog →
- *     covFrom 2025 > covTo 2024): treated as NO coverage, so the seed is the
- *     window (else the full bounds) rather than a manufactured `Math.min..Math.max`
- *     span that would include no-data years. This MIRRORS PeriodWindowSlider's
- *     `bandEdges` (Fix D), which nulls an inverted band (no band, no clamp) — so
- *     the seed and the slider agree on "no selectable no-data span". */
+ *   - INVERTED effective coverage (e.g. open-ended coverage `{from:2025,
+ *     to:null}` on a 2024-vintage catalog → 2025 > 2024): `coverageBandEdges`
+ *     nulls it (Fix D — no band, no clamp), so the seed is the window (else the
+ *     full bounds) rather than a manufactured span over no-data years. Reading
+ *     the same function is what keeps the seed and the slider agreed on "no
+ *     selectable no-data span". */
 export function intersectCoverageWindow(
   coverage: Coverage | null,
   window: StudyWindow | null,
   fallbackMin: number,
   fallbackMax: number,
 ): StudyWindow {
-  if (coverage === null) {
-    return window ?? { from: fallbackMin, to: fallbackMax };
-  }
-  const covFrom = coverage.from ?? fallbackMin;
-  const covTo = coverage.to ?? fallbackMax;
-  // Inverted effective coverage = no coverage (mirrors the slider's `bandEdges`
-  // Fix D): seed from the window, else the full bounds — never a manufactured
-  // span over no-data years.
-  if (covFrom > covTo) {
+  // No coverage — or an INVERTED one, which is no band at all — seeds from the
+  // window, else the full bounds: never a manufactured span over no-data years.
+  const band = coverageBandEdges(coverage, fallbackMin, fallbackMax);
+  if (band === null) {
     return window ?? { from: fallbackMin, to: fallbackMax };
   }
   if (window === null) {
-    return { from: Math.min(covFrom, covTo), to: Math.max(covFrom, covTo) };
+    return band;
   }
-  const from = Math.max(covFrom, window.from);
-  const to = Math.min(covTo, window.to);
+  const from = Math.max(band.from, window.from);
+  const to = Math.min(band.to, window.to);
   // A window wholly outside coverage inverts (from > to): snap to the nearest
   // coverage edge so the seed is a covered year, never an inverted/empty span.
   if (from > to) {
-    const edge = window.to < covFrom ? covFrom : covTo;
+    const edge = window.to < band.from ? band.from : band.to;
     return { from: edge, to: edge };
   }
   return { from, to };

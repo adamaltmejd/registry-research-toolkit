@@ -4,6 +4,8 @@ import {
   type Coverage,
   clampYearPeriodWire,
   clampYearWindow,
+  coverageBandEdges,
+  grammarYear,
   intersectCoverageWindow,
   yearWindowFromWire,
   yearWindowRepresentable,
@@ -16,6 +18,17 @@ import type { StudyWindow } from "./project_data";
 // server-side `?period` wire grammar still accepts richer values (terms,
 // `_default`, comma lists), but this UI no longer authors them. A non-year active
 // value renders as read-only text with Clear and is never silently rewritten.
+//
+// Two authoring paths, ONE pending selection (Y-16). The slider's thumbs cannot
+// express a range whose bounds must move THROUGH each other — DualThumbTrack's
+// non-crossing clamp means 2019..2020 → 2022 only works if the To thumb moves
+// first, and the other order silently submits 2020..2022. The exact YEAR FIELDS
+// beside it read both bounds together, so a single year or a range lands in one
+// Apply whichever bound the user types first, and an entry that doesn't parse,
+// crosses, or falls outside the selectable years is REFUSED with the reason
+// instead of being clamped into a different requested range. Both paths write the
+// same `pending` window, which the slider (and its aria-live readout) shows, so
+// what Apply will submit is on screen before it is submitted.
 let {
   period,
   window = null,
@@ -43,6 +56,10 @@ let {
   /** Emitted when the clear button is pressed (drop `?period`). */
   onclear: () => void;
 } = $props();
+
+/** Instance-scoped ids so the year fields keep real `<label for>` pairs even with
+ * more than one picker mounted. */
+const uid = $props.id();
 
 // The slider's open-ended ceiling (#631). Undefined only before `/api/context`
 // resolves; fall back to wall-clock so a pre-context leaf still renders.
@@ -144,49 +161,181 @@ const seededSelection = $derived<StudyWindow>(
     ),
 );
 
-/** The clamped slider selection shown to the user. */
-const sliderSelection = $derived<StudyWindow>(
-  clampYearWindow(seededSelection, sliderBounds.min, sliderBounds.max),
-);
-
-// The slider's live selection (null until the user moves a thumb). Re-armed on
+// The picker's PENDING selection — the value Apply submits, written by a thumb
+// drag AND by a valid exact year entry (null until the user changes something, so
+// an untouched Apply still submits the seeded default). Re-armed on
 // URL/window/coverage/ceiling re-seed by the effect below.
-let sliderWire = $state<string | null>(null);
+let pending = $state<StudyWindow | null>(null);
+
+/** The clamped selection shown to the user: the pending value while one is live,
+ * else the seeded default. */
+const sliderSelection = $derived<StudyWindow>(
+  clampYearWindow(
+    pending ?? seededSelection,
+    sliderBounds.min,
+    sliderBounds.max,
+  ),
+);
 
 /** Whether the slider shows a real user-meaningful selection. */
 const hasSliderSelection = $derived(
-  activeYearSelection !== null || sliderWire !== null,
+  activeYearSelection !== null || pending !== null,
 );
 
 /** Whether the user has actually chosen a year-window value distinct from the
  * project window. The untouched coverage-clamped default seed is not a user
  * deviation. */
-const userChosen = $derived(periodWindow !== null || sliderWire !== null);
+const userChosen = $derived(periodWindow !== null || pending !== null);
 
 $effect(() => {
-  // Re-arm the slider buffer on URL, window, coverage, or ceiling changes. This
-  // prevents a stale dragged value from surviving a re-seed and being submitted
-  // instead of the newly displayed selection.
+  // Re-arm the pending buffer and the year fields on URL, window, coverage, or
+  // ceiling changes. This prevents a stale dragged/typed value from surviving a
+  // re-seed and being submitted instead of the newly displayed selection.
   void period;
   void activeYearSelection;
   void ceilingYear;
   void seededSelection;
-  sliderWire = null;
+  pending = null;
+  entry = null;
+  entryCommitted = false;
 });
 
-/** Whether `coverage` yields a usable non-inverted seed. */
-const effectiveCoverageUsable = $derived(
-  boundedCoverage !== null &&
-    (boundedCoverage.from ?? sliderBounds.min) <=
-      (boundedCoverage.to ?? ceilingYear),
+// ── Exact year entry (Y-16) ──────────────────────────────────────────────────
+
+/** The raw text of the two year fields, or null while they MIRROR the pending
+ * selection. Kept as text so a refused entry stays on screen exactly as typed
+ * rather than being rewritten into some other range. */
+let entry = $state<{ from: string; to: string } | null>(null);
+/** Whether the entry has been committed (blur, Enter, or Apply) — a half-typed
+ * year must not announce a refusal on every keystroke. */
+let entryCommitted = $state(false);
+
+const entryFrom = $derived(entry?.from ?? String(sliderSelection.from));
+const entryTo = $derived(entry?.to ?? String(sliderSelection.to));
+
+/** The subject's coverage band over this track — the span the slider passes to
+ * the thumbs' hard clamp (#671), null when there is no coverage or it inverts. */
+const coverageBand = $derived(
+  coverageBandEdges(
+    boundedCoverage,
+    sliderBounds.min,
+    sliderBounds.max,
+    ceilingYear,
+  ),
 );
 
-function applySlider(): void {
-  let wire: string | null = sliderWire;
+/** The years the exact entry may name: that same band, else the full rendered
+ * track. Holding the fields to the SAME span as the thumbs is what preserves the
+ * coverage / steward-bound / vintage constraints — the fields are a second way to
+ * author the same selection, not a way around it. */
+const entryBounds = $derived<StudyWindow>(
+  coverageBand ?? { from: sliderBounds.min, to: sliderBounds.max },
+);
+
+/** Any four-digit run → its int, else null. WIDER than the wire's `grammarYear`
+ * (19xx/20xx) so the fields can tell "not a year" from "not a year we hold". */
+function fourDigitYear(raw: string): number | null {
+  const trimmed = raw.trim();
+  return /^\d{4}$/.test(trimmed) ? Number.parseInt(trimmed, 10) : null;
+}
+
+/** The entry resolved: the year window it names, or why it names none — with the
+ * field(s) that refusal is about, so the hairline marks the year at fault rather
+ * than both. Null while the fields still mirror the pending selection. */
+const entryResolution = $derived.by<
+  | { window: StudyWindow }
+  | { problem: string; at: { from: boolean; to: boolean } }
+  | null
+>(() => {
+  if (entry === null) {
+    return null;
+  }
+  const from = fourDigitYear(entry.from);
+  const to = fourDigitYear(entry.to);
+  if (from === null || to === null) {
+    return {
+      problem: `${from === null ? "From" : "To"} must be a four-digit year, like ${entryBounds.from}.`,
+      at: { from: from === null, to: to === null },
+    };
+  }
+  // A four-digit year outside the wire's own century range (`2100`, `1899`) is
+  // out of RANGE, not badly typed — telling the user it isn't four digits would
+  // contradict what they just typed.
+  const inBand = (raw: string, year: number) =>
+    grammarYear(raw) !== null &&
+    year >= entryBounds.from &&
+    year <= entryBounds.to;
+  const at = { from: !inBand(entry.from, from), to: !inBand(entry.to, to) };
+  const band = `${entryBounds.from}–${entryBounds.to}`;
+  if (at.from && at.to) {
+    return {
+      problem: `${from} and ${to} are outside ${band} — pick years in that range.`,
+      at,
+    };
+  }
+  if (at.from || at.to) {
+    return {
+      problem: `${at.from ? from : to} is outside ${band} — pick a year in that range.`,
+      at,
+    };
+  }
+  if (from > to) {
+    // The pair, not either year on its own.
+    return {
+      problem: `From ${from} is after To ${to} — enter From at or before To.`,
+      at: { from: true, to: true },
+    };
+  }
+  return { window: { from, to } };
+});
+
+// The two arms of that union, so the narrowing is spelled once for the three
+// places that read it.
+const entryProblem = $derived(
+  entryResolution !== null && "problem" in entryResolution
+    ? entryResolution
+    : null,
+);
+const entryWindow = $derived(
+  entryResolution !== null && "window" in entryResolution
+    ? entryResolution.window
+    : null,
+);
+
+/** The refusal to show, once the entry has been committed. */
+const entryRefusal = $derived(entryCommitted ? entryProblem : null);
+/** The refusal line is only described-by while it actually says something. */
+const problemId = $derived(
+  entryRefusal === null ? undefined : `${uid}-problem`,
+);
+
+function editEntry(side: "from" | "to", value: string): void {
+  entry =
+    side === "from"
+      ? { from: value, to: entryTo }
+      : { from: entryFrom, to: value };
+  // A valid entry becomes the pending selection at once, so the slider and its
+  // readout show the range Apply would submit. A refused one leaves the pending
+  // selection alone — nothing is applied behind the user's back.
+  if (entryWindow !== null) {
+    pending = entryWindow;
+  }
+}
+
+/** Whether `coverage` yields a usable non-inverted seed. */
+const effectiveCoverageUsable = $derived(coverageBand !== null);
+
+function apply(): void {
+  if (entryProblem !== null) {
+    // Explain the refusal instead of submitting some other range.
+    entryCommitted = true;
+    return;
+  }
+  let wire: string | null = pending === null ? null : yearWindowToWire(pending);
   // A token/list/default active period is valid URL state but not represented by
   // the year slider. Rendering it must not rewrite the URL just because the user
-  // accepts the fallback slider projection; only an actual thumb move replaces it
-  // with a year-window wire.
+  // accepts the fallback slider projection; only an actual thumb move or exact
+  // entry replaces it with a year-window wire.
   if (wire === null && subAnnualPeriod !== null) {
     return;
   }
@@ -211,7 +360,7 @@ function resetToWindow(): void {
 
 function submit(event: SubmitEvent): void {
   event.preventDefault();
-  applySlider();
+  apply();
 }
 </script>
 
@@ -220,8 +369,8 @@ function submit(event: SubmitEvent): void {
     <span class="title micro-label" id="period-label">Period</span>
   </div>
 
-  {#key period}
-    <div class="slider-row">
+  <div class="slider-row">
+    {#key period}
       <PeriodWindowSlider
         min={sliderBounds.min}
         max={sliderBounds.max}
@@ -232,26 +381,77 @@ function submit(event: SubmitEvent): void {
         {subAnnualPeriod}
         hasSelection={hasSliderSelection}
         {userChosen}
-        onchange={(next) => (sliderWire = yearWindowToWire(next))}
+        onchange={(next) => {
+          pending = next;
+          // The thumbs are now the pending selection, so the fields go back to
+          // mirroring it (and drop any refusal they were carrying).
+          entry = null;
+          entryCommitted = false;
+        }}
         onreset={() => resetToWindow()}
       />
-      <div class="actions">
-        <button
-          type="button"
-          class="apply"
-          aria-label="Apply period"
-          onclick={() => applySlider()}
-        >
-          Apply
-        </button>
-        {#if period !== null}
-          <button type="button" class="clear" onclick={() => onclear()}>
-            Clear
-          </button>
-        {/if}
-      </div>
+    {/key}
+    <!-- The EXACT entry, OUTSIDE the `{#key}`: the fields hold their own state,
+         so re-keying on `period` would silently discard what is in them. The
+         effect above re-arms them deliberately instead. (The catalog route also
+         remounts this whole card while the leaf reloads, so an Apply still costs
+         focus — pre-existing, and not what this placement is about.) -->
+    <div class="exact" role="group" aria-label="Exact years">
+      <label class="micro-label" for="{uid}-from">From</label>
+      <input
+        id="{uid}-from"
+        class="year"
+        type="text"
+        inputmode="numeric"
+        autocomplete="off"
+        value={entryFrom}
+        aria-invalid={entryRefusal?.at.from === true}
+        aria-describedby={problemId}
+        oninput={(event) => editEntry("from", event.currentTarget.value)}
+        onchange={() => (entryCommitted = true)}
+      />
+      <label class="micro-label" for="{uid}-to">To</label>
+      <input
+        id="{uid}-to"
+        class="year"
+        type="text"
+        inputmode="numeric"
+        autocomplete="off"
+        value={entryTo}
+        aria-invalid={entryRefusal?.at.to === true}
+        aria-describedby={problemId}
+        oninput={(event) => editEntry("to", event.currentTarget.value)}
+        onchange={() => (entryCommitted = true)}
+      />
     </div>
-  {/key}
+    <div class="actions">
+      <button type="submit" class="apply" aria-label="Apply period">
+        Apply
+      </button>
+      {#if period !== null}
+        <button type="button" class="clear" onclick={() => onclear()}>
+          Clear
+        </button>
+      {/if}
+    </div>
+  </div>
+
+  <!-- The refusal line. Rendered ALWAYS, so a refusal lands in a live region
+       that already existed rather than one that appears with it (empty, it
+       holds no line box — just its own top margin). Plain err-role text with a
+       leading glyph, matching the slider's own advisory lines directly above it
+       rather than minting a banner inside the card. -->
+  <p
+    class="problem"
+    class:refused={entryRefusal !== null}
+    id="{uid}-problem"
+    role="status"
+  >
+    {#if entryRefusal !== null}
+      <span aria-hidden="true">✕</span>
+      {entryRefusal.problem}
+    {/if}
+  </p>
 </form>
 
 <style>
@@ -275,6 +475,35 @@ function submit(event: SubmitEvent): void {
     align-items: flex-end;
     gap: var(--space-3);
   }
+  .exact {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+  .exact label {
+    white-space: nowrap;
+  }
+  .year {
+    box-sizing: border-box;
+    width: 5rem;
+    padding: var(--space-1) var(--space-2);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    color: var(--text);
+    /* A year is a machine identifier (DESIGN.md → Typography): mono, tabular. */
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    font-variant-numeric: tabular-nums;
+  }
+  .year:focus-visible {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+  }
+  .year[aria-invalid="true"] {
+    border-color: var(--err);
+  }
   .actions {
     display: flex;
     gap: var(--space-2);
@@ -296,5 +525,22 @@ function submit(event: SubmitEvent): void {
   button.apply:hover,
   button.clear:hover {
     filter: brightness(0.95);
+  }
+  .problem {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-2);
+    margin: var(--space-2) 0 0;
+    color: var(--err);
+    font-size: var(--text-sm);
+  }
+  /* A refusal is a status ROW: the status tint as fill, the status foreground as
+     text, the glyph first (DESIGN.md → Banners and status rows). Only while it
+     says something — empty, the line keeps no fill and no height. */
+  .problem.refused {
+    padding: var(--space-1) var(--space-2);
+    border: 1px solid var(--err-border);
+    border-radius: var(--radius-sm);
+    background: var(--err-bg);
   }
 </style>
