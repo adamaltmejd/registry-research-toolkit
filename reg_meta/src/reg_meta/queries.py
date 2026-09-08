@@ -2366,8 +2366,8 @@ def _search_group_labels(
     ):
         return []
     filters = [
-        "py_lower(g.label) LIKE py_lower(?) ESCAPE '\\' "
-        "OR g.group_key LIKE ? ESCAPE '\\'"
+        "(py_lower(g.label) LIKE py_lower(?) ESCAPE '\\' "
+        "OR g.group_key LIKE ? ESCAPE '\\')"
     ]
     params: list[Any] = [like_pattern, like_pattern]
     if reg_ids:
