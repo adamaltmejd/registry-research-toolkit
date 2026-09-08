@@ -1383,4 +1383,49 @@ describe("PeriodPicker — exact year entry (Y-16)", () => {
       .element(screen.getByText("2022–2022", { exact: true }))
       .toBeVisible();
   });
+
+  // A re-render is not a re-seed. Both consumers rebuild these props from derived
+  // state — the leaf's `coverageFromStates(node.states)`, the group's
+  // `unionCoverage` over its selectable bands, a window store that rewrites the
+  // same span — so an unrelated recompute hands the picker equal-but-NEW objects
+  // while the user is mid-entry. Nothing on screen moved, so nothing the user is
+  // authoring may be thrown away.
+  const CHURN = {
+    period: null,
+    window: { from: 2000, to: 2010 } as StudyWindow,
+    coverage: { from: 1995, to: 2008 } as Coverage,
+  };
+
+  it("keeps a half-typed entry through a re-render that only changes object identity", async () => {
+    const onsubmit = vi.fn<(period: string) => void>();
+    const props = { ...CHURN, onsubmit, onclear: vi.fn() };
+    const screen = await render(PeriodPicker, props);
+    const { from, to, apply } = fields(screen);
+    await from.fill("2002");
+    await to.fill("2006");
+    // Same values, new objects — as a parent recompute delivers them.
+    await screen.rerender({
+      ...props,
+      window: { from: 2000, to: 2010 },
+      coverage: { from: 1995, to: 2008 },
+    });
+    await expect.element(from).toHaveValue("2002");
+    await expect.element(to).toHaveValue("2006");
+    await apply.click();
+    expect(onsubmit).toHaveBeenLastCalledWith("2002..2006");
+  });
+
+  it("keeps a dragged pending value through the same identity-only re-render", async () => {
+    const onsubmit = vi.fn<(period: string) => void>();
+    const props = { ...CHURN, onsubmit, onclear: vi.fn() };
+    const screen = await render(PeriodPicker, props);
+    await screen.getByRole("slider", { name: "From year" }).fill("2004");
+    await screen.rerender({
+      ...props,
+      window: { from: 2000, to: 2010 },
+      coverage: { from: 1995, to: 2008 },
+    });
+    await screen.getByRole("button", { name: "Apply period" }).click();
+    expect(onsubmit).toHaveBeenLastCalledWith("2004..2008");
+  });
 });

@@ -7,6 +7,7 @@ import {
   coverageBandEdges,
   grammarYear,
   intersectCoverageWindow,
+  sameYearWindow,
   yearWindowFromWire,
   yearWindowRepresentable,
   yearWindowToWire,
@@ -187,14 +188,43 @@ const hasSliderSelection = $derived(
  * deviation. */
 const userChosen = $derived(periodWindow !== null || pending !== null);
 
+/** The seed the thumbs and the fields are currently armed against, kept as a
+ * VALUE. The seed inputs are all props, but two of them are rebuilt as fresh
+ * objects by consumers that recompute for unrelated reasons — the leaf's
+ * `coverageFromStates(node.states)`, the group's `unionCoverage` over its
+ * selectable bands, a window-store write of the same span. Those hand this
+ * component new identities without moving anything on screen, so an identity
+ * test would re-arm and silently wipe a year half-typed. Plain, not `$state`:
+ * nothing renders from it. */
+let armedSeed: {
+  period: string | null;
+  active: StudyWindow | null;
+  ceiling: number;
+  seed: StudyWindow;
+} | null = null;
+
 $effect(() => {
-  // Re-arm the pending buffer and the year fields on URL, window, coverage, or
-  // ceiling changes. This prevents a stale dragged/typed value from surviving a
-  // re-seed and being submitted instead of the newly displayed selection.
-  void period;
-  void activeYearSelection;
-  void ceilingYear;
-  void seededSelection;
+  // Re-arm the pending buffer and the year fields when the URL, window, coverage
+  // or ceiling actually MOVES the seeded selection — and only then. This
+  // prevents a stale dragged/typed value from surviving a re-seed and being
+  // submitted instead of the newly displayed selection, without letting a
+  // re-render that changes nothing throw away work in progress.
+  const next = {
+    period,
+    active: activeYearSelection,
+    ceiling: ceilingYear,
+    seed: seededSelection,
+  };
+  if (
+    armedSeed !== null &&
+    armedSeed.period === next.period &&
+    armedSeed.ceiling === next.ceiling &&
+    sameYearWindow(armedSeed.active, next.active) &&
+    sameYearWindow(armedSeed.seed, next.seed)
+  ) {
+    return;
+  }
+  armedSeed = next;
   pending = null;
   entry = null;
   entryCommitted = false;
