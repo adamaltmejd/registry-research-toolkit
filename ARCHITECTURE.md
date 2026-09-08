@@ -61,26 +61,26 @@ registers/variables on top of a released global DB).
 A web application (FastAPI + Svelte SPA), designed for three steward-scoped flavours off
 one image, that lets researchers browse a catalog, author a per-project variable list,
 and export it as a data order. The human SPA and agent/CLI are equal v1 product
-surfaces. The current CLI covers catalog metadata, not project validate/order yet; §12's
-shared materializer closes that parity gap rather than duplicating the workflow. The SPA
-will call it through FastAPI; the agent/CLI v1 path will load the versioned catalog DB
-and public delivery inventory locally and emit byte-identical results without depending
-on a deployed API.
+surfaces: `POST /api/project/order` and `reg-meta order` are both thin adapters over the
+same `reg_meta.order.materialize_order`, pinned byte-identical by a cross-adapter test.
+`reg-meta` ships no separate `validate` subcommand — an invalid or blocked project fails
+`reg-meta order` closed with its findings, exit 17 — while the SPA validates the draft
+automatically on every edit.
 
 The unifying research-intent artifact is **`project_data.json`** — written by the
-webapp, consumed by future exporters and the planned MONA runner rebuild. Its schema and
-structural validator are `reg_schema` ([`reg_schema/DESIGN.md`](reg_schema/DESIGN.md)).
-It deliberately does not encode physical filenames or SQL tables. The v1 steward
-boundary will add a separate public delivery inventory
-(`table + edition → literal columns → zero-or-more logical mappings`); joining a
-project, reg_meta resolution, and that optional inventory will produce one normalized
-order manifest for both web and CLI consumers. See `REFACTOR_SPEC.md` §12.
+webapp, consumed by the shared materializer above and the planned MONA runner rebuild.
+Its schema and structural validator are `reg_schema`
+([`reg_schema/DESIGN.md`](reg_schema/DESIGN.md)). It deliberately does not encode
+physical filenames or SQL tables. A steward's public delivery inventory
+(`table + edition → literal columns → zero-or-more logical mappings`) joins a project
+and reg_meta resolution to produce one normalized, versioned JSON order manifest for
+both web and CLI consumers (shipped for `global`/`swecov`; `ifau` not yet authored). See
+`REFACTOR_SPEC.md` §12.
 
-Current shipped coverage is explore metadata → author a variable list → provisional
-seven-column binding CSV. The normalized physical delivery manifest remains v1 work; the
-former mock-data bootstrap is archived pending the from-scratch MONA rebuild. Population
-definition (a predicate over base registers, executed only inside MONA) is deliberately
-out of scope.
+Current shipped coverage is browse/search the catalog → choose variables and periods →
+automatic validation → the versioned JSON order manifest. The former mock-data bootstrap
+is archived pending the from-scratch MONA rebuild. Population definition (a predicate
+over base registers, executed only inside MONA) is deliberately out of scope.
 
 ## Package layout
 

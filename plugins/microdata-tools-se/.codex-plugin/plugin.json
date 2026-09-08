@@ -1,6 +1,6 @@
 {
   "name": "microdata-tools-se",
-  "description": "Tooling for working with Swedish administrative register microdata — metadata search and MONA project scaffolding.",
+  "description": "Tooling for working with Swedish administrative register microdata — metadata search via reg-meta.",
   "version": "0.1.1",
   "author": {
     "name": "Adam Altmejd",
@@ -14,17 +14,16 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "Microdata Tools SE",
-    "shortDescription": "SCB metadata search and MONA project scaffolding",
-    "longDescription": "Use local Swedish microdata workflow tools to query SCB registry metadata with reg-meta and scaffold MONA projects with mock-data guardrails.",
+    "shortDescription": "SCB metadata search",
+    "longDescription": "Use local Swedish microdata workflow tools to query SCB registry metadata with reg-meta.",
     "developerName": "Adam Altmejd",
     "category": "research",
-    "capabilities": ["Interactive", "Write"],
+    "capabilities": ["Interactive"],
     "websiteURL": "https://github.com/adamaltmejd/registry-research-toolkit/tree/main/plugins/microdata-tools-se",
     "privacyPolicyURL": "https://github.com/adamaltmejd/registry-research-toolkit/blob/main/plugins/microdata-tools-se/PRIVACY.md",
     "termsOfServiceURL": "https://github.com/adamaltmejd/registry-research-toolkit/blob/main/plugins/microdata-tools-se/TERMS.md",
     "defaultPrompt": [
-      "Find the definition and value codes for a Swedish register variable.",
-      "Scaffold a local MONA project workspace with mock-data guardrails."
+      "Find the definition and value codes for a Swedish register variable."
     ],
     "brandColor": "#005AA0",
     "screenshots": []

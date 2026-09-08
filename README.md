@@ -52,9 +52,9 @@ codex plugin marketplace add adamaltmejd/registry-research-toolkit
 
 then install `microdata-tools-se` from the plugin marketplace UI.
 
-This bundles two skills — `/microdata-tools-se:register-metadata-search` and
-`/microdata-tools-se:init-mona-project` — and keeps them updated through the plugin
-host. The skills use the underlying CLIs below; install those once per machine.
+This bundles the `/microdata-tools-se:register-metadata-search` skill and keeps it
+updated through the plugin host. The skill uses the underlying CLI below; install it
+once per machine.
 
 ### CLIs
 

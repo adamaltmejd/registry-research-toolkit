@@ -8,8 +8,6 @@ workspace you give them access to.
 
 - `register-metadata-search` queries register metadata through the local `reg-meta` CLI.
   That database contains schema metadata, not microdata.
-- `init-mona-project` scaffolds local project files and invokes the local
-  `mock-data-wizard` CLI for MONA mock-data workflows.
 - The plugin is designed so that row-level MONA data must not leave MONA. Only aggregate
   statistics may be exported, and the researcher remains responsible for reviewing every
   export before it leaves MONA.

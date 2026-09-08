@@ -2055,10 +2055,10 @@ after the fact (e.g. the author widens the period); that drift is the **server
 validator's job** to surface (`range_period_partially_covered` for a widening past
 availability, `period_outside_state_validity` when nothing is left,
 `binding_state_drifts_within_period` across a transition — see § Semantic validation) —
-the auto-validate flow that will run this on every edit is the sibling #994 (not yet
-landed as of #992/#993). `ValidationPanel` carries a "Fix in catalog" link on each
-finding that resolves a catalog coordinate, so the remediation path is always back to
-the catalog, never a cart-side patch.
+the auto-validate flow that surfaces this on every edit is the sibling #994 (shipped —
+see § "Browser storage + project-file persistence" below). `ValidationPanel` carries a
+"Fix in catalog" link on each finding that resolves a catalog coordinate, so the
+remediation path is always back to the catalog, never a cart-side patch.
 
 Opened project files are held **verbatim** in the store so serialize/validate see the
 same malformed structure the backend diagnoses. The SPA's read side uses one
