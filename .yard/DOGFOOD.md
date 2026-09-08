@@ -1125,3 +1125,44 @@ for it.
 
 Local-only release/state receipts are retained under
 `archive/reports/yard/2026-09-08-v0.14.5-evidence/`.
+
+## 2026-09-08: Proposal acceptance wording follow-up
+
+Filed [#60](https://github.com/adamaltmejd/switchyard/issues/60) for the remaining
+proposal-acceptance wording in the generated `yard-file` skill. The routine correctly
+starts with recorded-command execution, then categorically says acceptance creates
+tickets and recommends `--parked` without the creation-only qualification. Its later
+`ticket.edit` example and the CLI help establish the missing distinction: acceptance can
+edit an existing ticket, and `--parked` refuses commands that create none.
+
+Verified the installed v0.14.5 skill reports `matchesTemplate: true`; apart from its
+generated version-stamp line, its contents match the exact tagged source. This is a
+documentation inconsistency, not a reproduced runtime failure. The existing CLI guard is
+correct. No proposal was accepted to manufacture a failure. The report references closed
+#50, whose settle-first fix remains valid; the maintainer requested a separate report
+for this remaining wording. Submitted with `report` and `filed-by:codex`, then read back
+through the trust gate with an exact body match. Local-only report and readback receipts
+are in `archive/reports/yard/2026-09-08-v0.14.5-evidence/`.
+
+## 2026-09-08: Y-61/Y-62/Y-53/Y-48 batch complete
+
+The batch selected alongside the 0.14.5 upgrade landed on main at
+`a27af17a4e50d7ce78e8197d03b23ad66a5bc7c4`: Y-61 concept-group case matching at
+`95bb969ec7fadb196beabe722edf9e9442eee836`, Y-62 generated-skill adoption at
+`649206684095aa81e3bf6bf77f08c0ae82661036`, Y-53 bootstrap validation at
+`b45c7e20149dc71d24c96669af75ca02b09c5e72`, and Y-48 safe draft replacement at
+`a27af17a4e50d7ce78e8197d03b23ad66a5bc7c4`. Each was read via host candidate/diff,
+approved at its exact full head, and verified after sync. The board settled quiet at
+cursor 35677 with 49 done and 13 parked, no active or ready tickets. No push,
+deployment, real corpus build or MONA run occurred; the user's local preview kept
+running separately throughout.
+
+Y-48's final six gates passed, including 3,767 Python tests and 1,323 frontend tests.
+Independent synthetic browser verification covered 44 cases plus four delayed-read
+sequences, real local validation and IndexedDB reload, 16 actual downloads compared with
+expected documents, and 61 opened screenshots; the operator also opened all 40 retained
+gate PNGs. The final candidate preserved three explicitly accepted advisories: the
+committed persistence test lacks a real reload (independent verification covered this
+candidate instead), cancelling a valid Open can retain a dismissible old error banner,
+and the confirmation copy mentions a last download even for a draft that was never
+downloaded.
