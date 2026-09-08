@@ -2035,10 +2035,9 @@ surface**. `/project` is a read-only **cart** — `ProjectEditor` / `SourceEdito
 `BindingEditor` display each source's variant coordinate, period, and bindings
 (variable, pinned representation) and offer only delete-per-row, the project's own name,
 and the New/Open/Download project_data.json/Download order.json actions — validation
-runs automatically on every edit, with no separate Validate action; a failed order
-download offers only a transport-failure retry. There is no in-cart field editing: a
-wrong variable, period, or representation gets fixed by picking again from the catalog
-subject page, not by editing the cart row. `CatalogPicker.svelte`,
+runs automatically on every edit, with no separate Validate action. There is no in-cart
+field editing: a wrong variable, period, or representation gets fixed by picking again
+from the catalog subject page, not by editing the cart row. `CatalogPicker.svelte`,
 `PeriodEditor.svelte`, and `FieldIssues.svelte` — the in-cart editing UI — were deleted
 along with the store methods that only existed to serve them (`addSource`, `addBinding`,
 `updateSource`, `updateBinding`, `applyPickedBinding`, `bindingDerivation`).
