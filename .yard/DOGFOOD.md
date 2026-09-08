@@ -712,11 +712,371 @@ mode the wake-driven loop exists to prevent. Usage refusals should exit non-zero
   do not establish its recovery. Its pre-0.14.0 store and old binary remain in
   `/Users/adam/.local/state/yard-upgrade-backups/registry-research-toolkit-20260907-pre-v0.14.0/`.
 
+## 2026-09-07 — Y-29 guarded retry stops before conflict work
+
+- Copied A-68's offered exit, `yard lane start Y-29/7/e3 --expect-generation 2`, after
+  verifying the current 0.14.1 CLI, daemon and project policy. It reported
+  `re-running conflict resolution; no new attempt`. The immediately re-armed watch
+  produced A-95 at seq 26504: generation 3 failed with
+  `invalid Git branch name: "yard/Y-29-7"`. Direct Git validation accepts that name. The
+  candidate head and reported usage totals stayed unchanged. This existing attempt
+  predates 0.14.x; the observation does not establish a new release regression or the
+  underlying Git failure. Filed upstream
+  [#51](https://github.com/adamaltmejd/switchyard/issues/51) with the exact output and a
+  source lead that distinguishes the hidden Git cause from the reported branch error.
+- A-95 offers only abandonment. Left the active attempt and retained candidate intact;
+  no retry was invented and no daemon-owned state was edited. Y-31 remains blocked on
+  Y-29, and all parked tickets remain parked. The final watch returned quiet at 26504.
+- Diagnostic papercut: `yard lane tail Y-29/7/e3 --current-generation` returns exit 2
+  from `lane.state`'s ID schema, although help accepts execution IDs and `lane show`
+  resolves this one. The attempt-ID form returns exit 0. Reproduced twice, confirmed the
+  CLI/method mismatch against the exact release source, and filed separate
+  [#52](https://github.com/adamaltmejd/switchyard/issues/52). Both reports followed
+  open/closed duplicate searches and use `report` plus `filed-by:codex`.
+- Read-only Y-31 review identified scope clarifications for its eventual admission:
+  remove the project-source sentinel exception from structural validation, preserve
+  catalog full-history queries and generic order guards, and align project-writing
+  frontend helpers and version declarations. No ticket edit or tests were run.
+  Local-only receipts, report bodies and the scope note are in
+  `archive/reports/yard/2026-09-07-y29-retry/`.
+
+## 2026-09-07 — 0.14.2 restores diagnostics and reaches review
+
+- Installed official 0.14.2 at `4371fb3e5474386f7ebfa7315db1a780ba219b5e` after matching
+  its binary, checksum, release contract and successful CI run 34131493850. Restarted
+  the project daemon through its supported command. Schema 43, configuration digest and
+  every ticket record stayed unchanged. The current generated operator body still
+  reports `matchesTemplate=true`; no content update was needed. Kept the old binary in
+  the temporary upgrade directory. Admissions were held during the upgrade.
+- Confirmed [#52](https://github.com/adamaltmejd/switchyard/issues/52) live: execution
+  and attempt tail forms now return the same 993057-byte conflict transcript, and the
+  same empty current-generation suffix at its correct boundary. Added verified retest
+  comments to #52 and [#51](https://github.com/adamaltmejd/switchyard/issues/51).
+- The g3→g4 retry now reported Git's actual `[cancelled]` failure. The six-hour
+  total-work window still started on September 2; g4 failed during preparation after 26
+  ms. Exact-source investigation found conflict timeouts take an abort-only path that
+  loses the timeout reason and the corresponding nudge exit. The old attention still
+  listed only abandonment, despite the supported start/nudge commands. Filed
+  [#53](https://github.com/adamaltmejd/switchyard/issues/53), then used the guarded
+  nudge to renew the window. g5 reached a real provider round and completed conflict
+  resolution; e5 then retargeted onto current main, producing candidate `330d577b` on
+  base `24a50dfc`. No attempt was abandoned and no daemon-owned state was edited.
+- Review e6 reached three real passes over a 1424163-byte bundle, largely because the
+  ticket deletes the obsolete steward JSON. Autoreview produced `pass_reports`, which
+  Yard's strict schema rejects on the false assumption branch review cannot chunk. The
+  lane stopped at A-97 with review error, not a passing review. Filed
+  [#54](https://github.com/adamaltmejd/switchyard/issues/54) with the installed tool's
+  clean commit and retained output. Did not strip evidence or rerun an identical review.
+- The retained review also found a candidate defect. An independent synthetic audit
+  against the exact index blob reproduced null-representation columns receiving sibling
+  intervals and gaps, plus a falsely widened browse-year span. This does not establish
+  over-ordering: the coordinate-period map is not the order materializer's input. Used
+  A-97's guarded repair exit with narrow interval-association and regression-test
+  guidance. Product repair remains separate from #54's upstream review integration.
+- The repair produced `13eb35d322a973b028a023e199ed19412d911617`. All three independent
+  synthetic cases now pass, including disjoint rename years and a real availability gap
+  inside a continuous edition. The audited index and test blobs match the host diff; the
+  full diff is capped inside the obsolete JSON deletion. The worker reports 3,714 tests
+  passed, six skipped, and clean lint, format and type checks. That full suite was not
+  independently repeated.
+- Review e7 completed all three passes with zero findings and tool exit 0, but the same
+  `pass_reports` rejection raised A-98 at seq 27470. Added and read back the clean
+  reproduction on #54. Yard gates have not run; the candidate is unapproved. Preserve it
+  for the offered `yard lane start Y-29/7/e7 --expect-generation 1` after the
+  integration fix. Admissions are restored, all 20 parked tickets remain parked, Y-31
+  remains blocked on Y-29, and canonical/local main remain `24a50dfc`. Watch cursor:
+  `27471`.
+- These were focused live retests, not a repeat of the full preflight suite. The
+  worker's local checks, Yard's completed retarget, and the failed review are distinct
+  evidence. Local-only release, lane, history, issue-readback and diagnostic receipts
+  are in `archive/reports/yard/2026-09-07-v0.14.2-evidence/`.
+
+## 2026-09-07 — 0.14.3 accepts chunked review and lands Y-29 and Y-31
+
+- Installed official 0.14.3 at `5ab03815878bca835de6f218123b1247e7a194dd`, matching the
+  binary checksum, release contract and successful CI run 34138868110. CLI and restarted
+  daemon agree; schema 43, configuration, all 57 tickets and the complete retained lane
+  view were unchanged across installation. Operator template still matches. The old
+  0.14.2 executable is retained in the temporary upgrade directory.
+- Retried A-98's guarded review exit. New review e8 accepted all three `pass_reports`
+  with no parse error, retained its finding and overall incorrect verdict, and passed
+  under the configured threshold with one P2 advisory. All candidate gates then passed:
+  frontend (1,287 tests, build and generated contract), lint/types, and test (3,716
+  tests, no failures or skips). This directly verifies
+  [#54](https://github.com/adamaltmejd/switchyard/issues/54); the retest comment was
+  read back through the trust gate.
+- Advisory a1 claimed merging overlapping editions ending at year 9999 overflows.
+  Independent validated construction rejects that year before index building: the
+  authored grammar is 1900–2099, and null-representation states are clipped to those
+  edition bounds. Maximum-valid 2099 overlaps pass for explicit and null mappings.
+  Recorded the false-positive disposition in the approval, with widening the authored
+  year grammar as the revisit condition. No speculative repair or follow-up was filed.
+- Independent candidate checks passed 183 tests (one release test deselected), with the
+  three earlier rename/gap regressions still passing. All changed source and test blobs
+  were accounted for; the host diff cap cuts only the intentional 39,557-line legacy
+  JSON deletion. Frontend changes are generated comments only. Approved exact head
+  `13eb35d322a973b028a023e199ed19412d911617`; the terminal wake at 27676 reported
+  landed, and `yard sync` plus local Git confirmed that head. The first sandboxed sync
+  could not spawn `/bin/ps`; the same supported command succeeded with
+  process-inspection permission. This is a host sandbox boundary, not a release
+  regression.
+- [#53](https://github.com/adamaltmejd/switchyard/issues/53) also has focused
+  verification at the exact released source: five isolated tests, 27 assertions, cover
+  expired planning/conflict timeout classification and printed exits, the existing
+  implementation deadline, nudge renewal and retry anchor preservation. No live expired
+  execution was fabricated or retried. Submitted that bounded result and read it back.
+  No full preflight or live SWECOV/flavored-DB deployment validation was run.
+- Y-31 was already selected and became ready after Y-29 landed. Corrected its brief from
+  revision 4 to 5: remove only researcher-project sentinel handling, preserve
+  full-history catalog queries and generic order guards, and align project-writing
+  helpers and version declarations without absorbing Y-50. Selected the UI workflow for
+  the project-writing control states, then restored admissions. All 20 previously parked
+  tickets remain parked. Local-only receipts are in
+  `archive/reports/yard/2026-09-07-v0.14.3-evidence/`.
+- Operator visibility remains noisy on a long implementation. Y-31's first progress note
+  arrived after 18 minutes and was truncated before its verification summary. A plain
+  `lane show --json` produced roughly 62,000 tokens, including raw provider frames;
+  selecting fields locally and reading transcript deltas made it usable. The transcript
+  showed ongoing work, so this was not evidence of a stalled lane. A compact
+  candidate/status response and shorter worker progress notes would reduce operator
+  overhead without dropping retained evidence.
+- Y-31 initially used 2.1.0 for a breaking change to a published schema. Guided it to
+  3.0.0 with matching consumer floors, lockfile and new-project seed, preserving the
+  existing version gate and leaving Y-50 parked. This was a candidate correction, not a
+  Yard defect.
+- The worker-completion boundary returned the same session to remove ignored
+  `node_modules`, despite its build-artifact declaration. This matches the README's
+  dependency-tree exception, but the recovery prompt says ignored build artifacts need
+  no action and labels Yard's augmented listing as ordinary Git output. Filed
+  [#55](https://github.com/adamaltmejd/switchyard/issues/55) for the prompt and comment
+  inconsistency and read it back exactly. The worker removed its own copied tree; no
+  candidate-cleanliness guard was weakened. The cleanup generation cost about nine
+  minutes and $1.69, without evidence attributing all of that to the wording.
+- Independent Y-31 audit at `46966f1` matched 272 finite-period semantic comparisons
+  over ten synthetic catalogs. Root browser checks passed at 375, 768, 1280 and 1920
+  widths: imported sentinel draft rejected, full-history catalog still usable, and an
+  explicit finite study window produces a valid finite project add. Requested two small
+  missing permanent regressions through a guarded nudge: no committed coverage from an
+  imported sentinel, and finite staged add replacing that sentinel. An initial no-window
+  browser alarm was corrected after source review: the unresolved add behavior predates
+  this candidate and is outside Y-31.
+- The final test-only amendment produced `87d4c8a`. Round-2 code review was clean, but
+  the design seat invented stale `>=2.0.0` specifiers outside the lockfile diff and
+  blocked the candidate. Direct `uv lock --check` and `uv sync --locked` both passed at
+  the exact head; the claimed entries do not exist. The first design round had
+  explicitly recognized the editable-member lock format. Its separate P3 invalid-input
+  concern is already excluded by the documented structural gate and permanent
+  route/shape tests. No code change was warranted for either finding.
+- Automatic repair g5 then failed before starting: a 30-second Docker info probe timed
+  out. The same daemon answered in 0.34 seconds afterward. A-100 printed only
+  abandonment, although supported retry/nudge handlers and retained-review adjudication
+  remained available. Source inspection established the standard `approve --residual`
+  path for this terminal worker and exact review; A-101 records the false-positive
+  evidence, resolves the stop, and queues every gate without approving landing. Filed
+  and exactly read back [#56](https://github.com/adamaltmejd/switchyard/issues/56) for
+  missing recovery exits. Retry/nudge were not exercised here; the reported recovery
+  used review e6, with the full candidate-head guard. No workspace edits, abandoned
+  attempt or weakened gate.
+- Y-31 final gates passed at `87d4c8acfbfa3cd405b0c91c787401921712ceff`: frontend 1,289
+  tests plus build/codegen; lint/types/versions; project-flows 12 cases; Python 3,713
+  tests with no failures, errors or skips. Opened all 16 retained e9 PNGs and matched
+  its logged full HEAD, plus 16 focused exact-head catalog/project captures, all at
+  375/768/1280/1920 widths. Recorded the existing graph-label clipping as outside this
+  candidate. Review e6 remains visibly failed with the evidence-backed A-101
+  disposition; no fabricated clean verdict or waived gate.
+- Approved the exact head after the host reads. Terminal wake 28326 confirmed landing;
+  supported sync and local Git confirmed it reached main. Final quiet cursor 28337: no
+  active lanes or attention, admissions enabled, 37 done and 20 parked/open. Park states
+  and reasons are unchanged; only Y-29/Y-31 records changed from the upgrade baseline.
+  Local-only final receipts are in the 0.14.3 evidence archive and verification report.
+  No deployment, package publication, MONA execution or real-data processing.
+
 Detailed reports, submission receipts and raw evidence are retained under the ignored,
 host-only `archive/reports/yard/` directory. Key records are
 `2026-09-04-v0.13.2-verification.md`, `2026-09-04-v0.13.3-verification.md`,
 `2026-09-05-v0.13.5-verification.md`, `2026-09-06-ui-skills-completion.md`,
-`2026-09-06-yard-conflict-nudge.md` and the `2026-09-07-v0.14.{0,1}-verification.md`
+`2026-09-06-yard-conflict-nudge.md` and the `2026-09-07-v0.14.{0,1,2,3}-verification.md`
 reports. They are local supporting evidence, not tracked deliverables; upstream issues
 are the submitted handoff. The complete pre-condensation log is retained alongside them
 at `cleanup-2026-09-07/original/.yard/DOGFOOD.md`.
+
+## 2026-09-07 — parked-ticket reassessment and restart
+
+Reassessed all 20 parked tickets at `87d4c8a` before admission. Nine briefs needed
+current-contract or workflow corrections: Y-14–18, Y-22, Y-46, Y-48 and Y-50. Y-15's old
+bug premise contradicted a later deliberate partial-picker guard; Y-17 and Y-22 partly
+described work that had since landed. Guarded edits preserved parking and were read back
+exactly. This supports rechecking old briefs rather than admitting a batch merely
+because its dependencies are done.
+
+Unparked Y-42 and Y-43 into the existing two worker slots, with a cursor watch after
+each decision. Fresh synthetic/browser probes reconfirmed both failures. Y-50 is
+prepared to follow, with its project-flow fixture aligned to the 3.0.0 contract.
+Detailed decisions and verification receipts are local-only under
+`archive/reports/yard/2026-09-07-ticket-reevaluation.md` and
+`archive/reports/yard/2026-09-07-unpark-evidence/`.
+
+Y-43 landed at `567767f` after two clean reviews and passing gates. A Markdown wrap miss
+in the worker's first candidate triggered an automatic repair and another full
+review/gate cycle; the repair changed no code or test bytes. The independent operator
+audit transferred its results by verified tree identity rather than rerunning them.
+
+Y-42's first committed candidate (`13fc749`) added eight catalog screenshots to an
+existing 16-file gate. Candidate intake refused the resulting 24-file declaration at
+`candidate-config` (A-107). Yard's 16-file bound is documented; the useful inspection
+gap was that `lane show` exposed the rejected head but `lane diff` answered "has no
+candidate." The guarded nudge exit resumed the same attempt for a harness/config-only
+repair, preserving all 24 images in two checks. This incident required no manual lane
+state or workspace edits. Detailed receipts remain in the local-only unpark evidence.
+
+The config-stop inspection gap is filed as [Switchyard
+#57](https://github.com/adamaltmejd/switchyard/issues/57), with the recorded base/head,
+null candidate, and exact `lane diff` refusal. The artifact limit itself is documented
+and was not reported as a defect. The split-gate repair produced candidate `8540851`,
+but retargeting onto the landed Y43 head then stopped on the worker's ignored
+`.vitest-attachments` output. Its printed exits offer retarget retry or abandonment; the
+retry cannot remove the output. Read-only source investigation established the replay
+recovery below without touching daemon-owned files. Separately, independent component
+verification found that a pending catalog Add can mutate a deliberate New project after
+the component unmounts. This required repair before Y42 approval; it is distinct from
+the parked New/Open replacement-confirmation policy.
+
+A-108 recovered through park, abandon, and explicit replay. Y-42/2 replayed `8540851`
+onto the landed Y43 base and produced `4b2e2c1` for fresh review without an
+implementation model turn. Source-checked `nudge`, `reject`, `stop`, and ticket-edit
+guards offered no implementer return from this terminal retarget. This is a recovery
+limitation, not the hidden-exit bug in #56: the guard correctly refused undeclared
+ignored output and replay was supported. No new upstream issue was filed. The acceptance
+clarification carries the independently reproduced pending-Apply race into the new
+review; both New and successful Open reproduce in both catalog writers.
+
+During Y-42/2's mandatory simplify review, the implementation worker continued applying
+review findings and committed `98d3e50`. A reviewer assigned to read only saw that
+shared tree change, attributed it to an unauthorized agent, and actively reset the
+commit to `4b2e2c1`, reverted DESIGN.md and test refinements, and restored its earlier
+six-file view. The transcript records those mutations explicitly. This is a
+provider/subagent instruction violation in a shared worker checkout, not a demonstrated
+Yard state-store defect. It exposes a practical hazard in concurrent implementation and
+read-only review: a verbal read-only assignment did not constrain writes. The operator
+queued a reconciliation nudge, then used the guarded stop on e1 generation 2; verified
+cancellation resumed e1 generation 3 with that guidance. No operator touched lane files.
+The worker reconciled the intended patch, restored its commit, reran focused checks and
+negative regression checks, removed generated artifacts, and handed off the clean
+candidate. An announced commit alone was not evidence of the final tree. Raw transcript
+slices and public decision receipts are retained locally.
+
+Y-42/2 landed at `98d3e50` after both review seats and all five gates passed: 1,298
+frontend tests, 3,721 Python tests, lint/type/build checks, and 16 flow cases with 24
+retained PNGs. The operator opened those images plus 40 independent leaf/group/project
+and sibling images at all four widths. Independent tests awaited cancellation of all
+four queued-Add New/Open races. Two speculative review advisories were dismissed after
+reading the unchanged source: duplicate additions already merge and blocked IndexedDB
+open already rejects. The clipped graph metadata also appeared in the baseline image;
+Y-14's parked brief now carries the concrete reproduction, and A-105's broad cleanup
+batch was rejected. A-106 was rejected pending an observed lost-window interaction.
+
+Supported sync verified the same landed head in the working checkout. Its first attempt
+hit the host sandbox's process-identity restriction; the authorized retry passed. The
+idle unsupervised daemon was restarted to load the landed catalog-flow gate, then Y-50
+was unparked at revision 2. Its attempt starts from `98d3e50` with both rendered gates;
+the existing brief already names the stale 2.0.0 happy-path fixture to update.
+
+A-104 was independently reproduced again on the landed app: a fresh no-query Kon pick
+autosaves an empty period and type, while the `?period=2018` control validates. Current
+validation reports two precise errors, correcting the proposal's earlier four-error
+count. Accepted it parked as Y-58, then narrowed its brief and selected `ui` without
+admission. The requested behavior uses the existing finite-period contract and requires
+period selection when no valid context resolves it; it introduces no vintage default or
+full-history policy. This remains separate from Y-42's completed persistence repair.
+
+Y-50's progress note exposed an inferred compatibility window: same major, older minor,
+patch ignored, justified by the separate SQLite DB rule. The project-file contract
+delegates version acceptance to consumers but does not define that window. Narrowed the
+ticket to exact equality with the canonical `reg_schema.__version__`, read revision 4
+back, then queued the same guarded guidance for the worker's next round. Existing
+ingress work remains useful, so this is an amendment within the attempt. This records a
+scope clarification, not a Yard defect. Both decisions were immediately followed by
+watches.
+
+Y-50/1 landed at `98b51f6` on 2026-09-08 after both review seats and all five gates
+passed (3,746 Python tests, 1,298 frontend tests, lint/type/build and sixteen flow
+cases). Its supported flow fixture now uses 3.0.0. The root operator opened 24 retained
+gate PNGs and sixteen independent schema-flow captures at all four widths. The separate
+audit passed eighteen consumer cases, 295 focused tests and supported-output byte
+identity against the baseline. A low-confidence review advisory guessed that an import
+would violate isort; the actual lint gate and an independent targeted Ruff check both
+disproved it. No repair or residual-risk acceptance was needed.
+
+The independent browser harness completed three widths, then hit HTTP 429 on the fourth
+because it exceeded the normal write quota. Resuming only that width after the window
+passed; the limiter was not changed. This is harness pacing, not a Yard/product defect.
+The raw schema-code heading remains minor copy polish under the existing additive-code
+fallback. Full local-only receipts and rendered review are in the unpark evidence.
+Terminal landing, supported sync and the working Git head all agree. The selected
+Y-42/Y-43/Y-50 batch is complete; final watch cursor 30099 is quiet with 40 done and 18
+parked tickets, no active lanes or attention items. Existing dirty DOGFOOD work remains
+preserved; no second writer to main was introduced.
+
+## 2026-09-08: Invoke the built-in simplify pass directly
+
+The Y-42/2 transcript contains the actual Claude Code 2.1.263 `/simplify` prompt: launch
+four review agents, wait for all four, then apply accepted quality fixes. Our
+implementation-role instruction added an outer clean subagent; the worker assigned that
+subagent findings-only work while continuing to edit the same checkout. This mixed the
+built-in skill's editing role with a read-only assignment. The observed reset happened
+inside the implementation turn, not during Yard's formal autoreview.
+
+The maintainer selected direct invocation as the minimal trial. Y-59/1 changed only
+`roles.implementation.instructions`: invoke `/simplify` in the implementation session,
+do not delegate its invocation, let its own review and fix phases finish, then rerun
+checks. The separate UI design reviewer, light role, autoreview, gates and workflows
+remain unchanged. A custom skill or review harness was not introduced.
+
+Y-59/1 landed at `1c9dcdc` after the light workflow's frontend, lint and test gates
+passed, including 3,746 Python tests. No autoreview ran under that workflow. The
+operator read the exact diff and verified that both TOML versions parse and every other
+configuration value is identical. Supported sync initially hit the sandbox's `/bin/ps`
+process-identity restriction; its authorized retry passed. Restarting the idle,
+unsupervised daemon loaded the candidate configuration digest and cleared the restart
+warning. This verifies the instruction change is loaded; behavior under the updated
+implementation role remains to be observed on a subsequent lane.
+
+## 2026-09-08: Upgrade to 0.14.4 and select the next batch
+
+Installed official Yard 0.14.4 at `3c087bcc837a295f0b35492602349a71e2fe95f2` after
+matching the executable digest to `SHA256SUMS`, its release contract and successful CI
+run 34188453251. The CLI and restarted project daemon agree. All ticket records, schema
+43 and the loaded configuration digest stayed unchanged; the existing operator routine
+still reports `matchesTemplate=true`. The previous executable is retained in the
+temporary upgrade directory. No full preflight or live failure was fabricated for this
+patch release.
+
+Six focused released-source regressions passed with 24 assertions: #55's cleanup
+wording, #56's pre-start classification and guarded relaunch, and #57's unverified,
+verified and missing-head diff cases. The CLI fixtures required process-inspection
+permission after the sandbox blocked `/bin/ps`; the identical focused rerun passed.
+These are synthetic source checks with stubbed integrations, not live incident
+reproductions or a repeat of the full release suite.
+
+Searched open and closed upstream reports and filed two remaining improvements:
+[#58](https://github.com/adamaltmejd/switchyard/issues/58) requests earlier feedback for
+undeclared ignored worker output, before the implementation cleanup continuation ends;
+[#59](https://github.com/adamaltmejd/switchyard/issues/59) requests structured
+individual lane detail without embedded provider frames. The first preserves the
+existing artifact policy and retarget guard; the second preserves explicit transcript
+access and reuses the existing detail surface. Both acknowledge existing workarounds and
+distinguish the 0.14.3 observations from exact 0.14.4 source inspection. Submitted
+bodies were read back through the maintainer-author trust gate and matched exactly.
+
+Reassessed all 18 parked briefs. Selected Y-58, Y-52 and Y-51 for the next bounded
+batch: unresolved catalog picks, atomic live-catalog publication, and Swedish
+case-insensitive direct-name search. Source inspection reconfirmed the first two; an
+in-memory query against both actual name-search functions reproduced `kön` matching and
+`KÖN` missing the same synthetic `Kön` metadata. Their implementation files are
+separate. Y-58 uses `ui`; Y-52 and Y-51 use `default`. Removed only Y-58's stale
+parked-for-later sentence before admission. Y-15's deliberate partial-picker policy and
+Y-18's unproven ranking premise remain outside this batch.
+
+Release receipts, exact issue readbacks and bounded verification evidence are retained
+locally under `archive/reports/yard/2026-09-08-v0.14.4-evidence/`. The accumulated log
+is being preserved through Yard before the selected implementation tickets are admitted.
