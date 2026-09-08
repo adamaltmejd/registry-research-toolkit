@@ -834,12 +834,28 @@ class TestBlockingFindings:
     def test_steward_mismatch_blocks_before_anything_resolves(
         self, conn, inventory
     ) -> None:
+        """The message is the researcher's whole correction — the steward this
+        project records, the one this deployment serves, where to order it
+        instead, and that its provenance is theirs to change, not the
+        application's — with no internal design document to look up. It is
+        pinned verbatim HERE, once: the adapters render it and the SPA's
+        fixtures mimic it, but this is where the wording lives."""
         project = _project("scb/lisa/kon", steward="ifau")
 
         result = materialize_order(project, inventory, conn)
 
         assert result.manifest is None
         assert _codes(result) == ["steward_mismatch"]
+        (finding,) = result.findings
+        # Coordinates stay separate from the prose — a steward mismatch is a
+        # whole-project finding, so it names none.
+        assert (finding.source, finding.variable, finding.period) == (None, None, None)
+        assert finding.message == (
+            "this project's steward is 'ifau' and this deployment serves the "
+            "'swecov' steward; order the project from the deployment that "
+            "serves 'ifau'. Its steward is provenance — no deployment rewrites "
+            "it to match its own"
+        )
 
     def test_empty_project_produces_no_header_only_manifest(
         self, conn, inventory

@@ -687,15 +687,18 @@ def materialize_order(
     `validate_semantic`)."""
     steward = GLOBAL_STEWARD if inventory is None else inventory.steward
     if project.steward != steward:
+        # §12: provenance is checked before anything resolves, and retargeting
+        # is deliberately not an application feature — the rule the message's
+        # closing sentence states in the researcher's own terms.
         return _blocked(
             OrderFinding(
                 code="steward_mismatch",
                 message=(
-                    f"project steward {project.steward!r} does not match the "
-                    f"deployment steward {steward!r}; a project is validated "
-                    "against the deployment it is uploaded to, and provenance "
-                    "retargeting is not an application feature "
-                    "(REFACTOR_SPEC.md §12)"
+                    f"this project's steward is {project.steward!r} and this "
+                    f"deployment serves the {steward!r} steward; order the "
+                    f"project from the deployment that serves "
+                    f"{project.steward!r}. Its steward is provenance — no "
+                    "deployment rewrites it to match its own"
                 ),
             )
         )

@@ -17,6 +17,23 @@ const SOURCES = [
   },
 ];
 
+// The materializer's own steward-mismatch copy, verbatim (reg_meta/order.py) —
+// this panel is where a researcher reads it, so the fixture is the real sentence
+// rather than a stand-in. The wording itself is pinned in
+// reg_meta/tests/test_order.py; what this file shows is how it renders.
+const STEWARD_MISMATCH = {
+  code: "steward_mismatch",
+  message:
+    "this project's steward is 'swecov' and this deployment serves the 'global' steward; order the project from the deployment that serves 'swecov'. Its steward is provenance — no deployment rewrites it to match its own",
+  source: null,
+  variable: null,
+  period: null,
+};
+
+// `blocked_message`'s one-line flattening of the finding above — the 422 detail
+// the store parks in `requestError`.
+const STEWARD_MISMATCH_DETAIL = `order blocked by 1 finding: ${STEWARD_MISMATCH.code}: ${STEWARD_MISMATCH.message}`;
+
 const DRIFT_RESULT = {
   ok: true,
   issues: [
@@ -245,17 +262,9 @@ describe("ValidationPanel — researcher-language findings", () => {
     await render(ValidationPanel, {
       result: { ok: true, issues: [] },
       status: "ok",
-      requestError: "order blocked by 1 finding: …",
+      requestError: STEWARD_MISMATCH_DETAIL,
       requestErrorSource: "order",
-      orderFindings: [
-        {
-          code: "steward_mismatch",
-          message: "project steward 'swecov' does not match 'global'",
-          source: null,
-          variable: null,
-          period: null,
-        },
-      ],
+      orderFindings: [STEWARD_MISMATCH],
       windowHints: [],
       sources: SOURCES,
       onRetry,
@@ -265,6 +274,12 @@ describe("ValidationPanel — researcher-language findings", () => {
     await expect
       .element(page.getByText("the materializer produced no order"))
       .toBeVisible();
+    // The finding is the message; the flattened one-liner the 422 also carries
+    // is NOT repeated above it (the banner states the verdict once).
+    await expect
+      .element(page.getByText(STEWARD_MISMATCH.message, { exact: false }))
+      .toBeVisible();
+    expect(document.body.textContent).not.toContain(STEWARD_MISMATCH_DETAIL);
     expect(
       page.getByRole("button", { name: "Retry validation" }).query(),
     ).toBeNull();
@@ -317,8 +332,7 @@ describe("ValidationPanel — researcher-language findings", () => {
     await render(ValidationPanel, {
       result: { ok: true, issues: [] },
       status: "ok",
-      requestError:
-        "order blocked by 1 finding: steward_mismatch: project steward 'swecov' does not match the deployment steward 'global'",
+      requestError: STEWARD_MISMATCH_DETAIL,
       requestErrorSource: "order",
       windowHints: [],
       sources: SOURCES,
@@ -347,13 +361,7 @@ describe("ValidationPanel — researcher-language findings", () => {
           variable: "scb/lisa/adeldag",
           period: null,
         },
-        {
-          code: "steward_mismatch",
-          message: "project steward 'swecov' does not match 'global'",
-          source: null,
-          variable: null,
-          period: null,
-        },
+        STEWARD_MISMATCH,
       ],
       windowHints: [],
       sources: SOURCES,
@@ -381,8 +389,12 @@ describe("ValidationPanel — researcher-language findings", () => {
     await expect
       .element(page.getByText("Source 'lisa_main' → binding scb/lisa/adeldag"))
       .toBeVisible();
-    // A project-level finding names no coordinate, so it simply has no locator.
+    // A project-level finding names no coordinate, so it simply has no locator —
+    // just its title and the message that carries the correction.
     await expect.element(page.getByText("Steward mismatch")).toBeVisible();
+    await expect
+      .element(page.getByText(STEWARD_MISMATCH.message, { exact: false }))
+      .toBeVisible();
   });
 
   it("shows a coverage finding's exact offending period", async () => {

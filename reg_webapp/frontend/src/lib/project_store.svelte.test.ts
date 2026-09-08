@@ -1177,13 +1177,11 @@ describe("a blocked order (§12)", () => {
             ok: false,
             status: 422,
             json: async () => ({
-              detail:
-                "order blocked by 1 finding: steward_mismatch: project steward 'swecov' does not match the deployment steward 'global'",
+              detail: "order blocked by 1 finding: steward_mismatch: …",
               findings: [
                 {
                   code: "steward_mismatch",
-                  message:
-                    "project steward 'swecov' does not match the deployment steward 'global'",
+                  message: "this project belongs to another deployment",
                   source: null,
                   variable: null,
                   period: null,

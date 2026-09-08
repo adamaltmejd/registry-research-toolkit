@@ -260,15 +260,46 @@ def test_byte_identical_to_the_cli_adapter(client, catalog_db, tmp_path, capsys)
     assert cli_manifest == web_manifest
 
 
-def test_blocked_order_is_422_not_a_200_manifest(client):
+def test_blocked_order_is_422_not_a_200_manifest_and_reads_the_same_on_the_cli(
+    client, catalog_db, tmp_path, capsys
+):
     """A fail-closed blocked order is NOT an order: a 422 naming every finding,
     never a 200 with a partial manifest. Here the project's steward provenance
-    does not match the deployment's (§12 blocks retargeting)."""
-    resp = client.post("/api/project/order", json=_spec(steward="swecov"))
+    does not match the deployment's (§12 blocks retargeting).
+
+    §12's byte-identical-adapters rule covers this path too, so ``reg-meta
+    order``'s error envelope carries the SAME single line — both render
+    ``order.blocked_message``. The WORDING is the materializer's, pinned once in
+    ``reg_meta/tests/test_order.py``; what belongs here is the flattening rule
+    (code + message, one line) and the coordinates surviving as data beside it."""
+    from reg_meta.cli import run
+    from reg_meta.errors import EXIT_NO_MATCH
+
+    spec = _spec(steward="swecov")
+    resp = client.post("/api/project/order", json=spec)
     assert resp.status_code == 422
     body = resp.json()
-    assert "steward_mismatch" in body["detail"]
-    assert "order blocked" in body["detail"]
+
+    (finding,) = body["findings"]
+    assert finding["code"] == "steward_mismatch"
+    # Whole-project finding: no coordinate to name, and none invented.
+    assert (finding["source"], finding["variable"], finding["period"]) == (
+        None,
+        None,
+        None,
+    )
+    assert body["detail"] == (
+        f"order blocked by 1 finding: {finding['code']}: {finding['message']}"
+    )
+    # One line: this string is read inside a JSON envelope and inside the SPA's
+    # banner, where an embedded newline is an escape sequence / collapsed space.
+    assert "\n" not in body["detail"]
+
+    project_path = tmp_path / "project_data.json"
+    project_path.write_text(json.dumps(spec), encoding="utf-8")
+    exit_code = run(["order", str(project_path), "--db", str(catalog_db.parent)])
+    assert exit_code == EXIT_NO_MATCH
+    assert json.loads(capsys.readouterr().out)["error"]["message"] == body["detail"]
 
 
 def test_blocked_order_carries_the_findings_as_data(client):
