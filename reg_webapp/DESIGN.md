@@ -2034,12 +2034,14 @@ The project editor was rebuilt around one rule: **the catalog is the only author
 surface**. `/project` is a read-only **cart** — `ProjectEditor` / `SourceEditor` /
 `BindingEditor` display each source's variant coordinate, period, and bindings
 (variable, pinned representation) and offer only delete-per-row, the project's own name,
-and the Open/Download/Validate/Order actions. There is no in-cart field editing: a wrong
-variable, period, or representation gets fixed by picking again from the catalog subject
-page, not by editing the cart row. `CatalogPicker.svelte`, `PeriodEditor.svelte`, and
-`FieldIssues.svelte` — the in-cart editing UI — were deleted along with the store
-methods that only existed to serve them (`addSource`, `addBinding`, `updateSource`,
-`updateBinding`, `applyPickedBinding`, `bindingDerivation`).
+and the New/Open/Download project_data.json/Download order.json actions — validation
+runs automatically on every edit, with no separate Validate action; a failed order
+download offers only a transport-failure retry. There is no in-cart field editing: a
+wrong variable, period, or representation gets fixed by picking again from the catalog
+subject page, not by editing the cart row. `CatalogPicker.svelte`,
+`PeriodEditor.svelte`, and `FieldIssues.svelte` — the in-cart editing UI — were deleted
+along with the store methods that only existed to serve them (`addSource`, `addBinding`,
+`updateSource`, `updateBinding`, `applyPickedBinding`, `bindingDerivation`).
 
 This retires the \~400-line client-side **re-derivation engine** (`bindingDerivations` /
 `rederiveGen` / `rederiveSource` / `applyResolution` / `applyDerivedResult` and the

@@ -63,8 +63,9 @@ one image, that lets researchers browse a catalog, author a per-project variable
 and export it as a data order. The human SPA and agent/CLI are equal v1 product
 surfaces: `POST /api/project/order` and `reg-meta order` are both thin adapters over the
 same `reg_meta.order.materialize_order`, pinned byte-identical by a cross-adapter test.
-`reg-meta` ships no separate `validate` subcommand — an invalid or blocked project fails
-`reg-meta order` closed with its findings, exit 17 — while the SPA validates the draft
+`reg-meta` ships no separate `validate` subcommand — `reg-meta order` fails closed on
+any bad input, exit 10 for an unreadable/invalid project or inventory and exit 17 for a
+project that materializes but is blocked by findings — while the SPA validates the draft
 automatically on every edit.
 
 The unifying research-intent artifact is **`project_data.json`** — written by the
