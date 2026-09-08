@@ -1765,10 +1765,17 @@ def get_binding_lineage_warnings(
 # times. This is where the members are actually read, one bounded page at a time,
 # for the panel the researcher opens.
 #
-# NOT steward-gated: a value set is public code→label metadata addressed by its own
-# id (the same footing as a classification's codes, which pass the steward gate
-# through untouched), and the id is only reachable from a leaf the gate already
-# admitted.
+# NOT steward-gated, and its integer ids are enumerable BY DESIGN. A value set's
+# code→label members — and the stored mismatch list `?state=` reads — are
+# catalog-global REFERENCE data, the same footing as a classification's codes, which
+# pass the steward gate through untouched (DESIGN.md → Classification pass-through
+# (decision 2)). A steward inventory maps the variable COLUMNS that steward delivers;
+# it does not describe the code vocabularies those columns draw on, so there is no
+# holdings basis to scope this read by: seeing a binding is not what authorizes
+# reading a coding, and not seeing one is no reason to withhold it. That policy is
+# the reason for the pass-through — never an assumption that an id is hard to guess
+# or only reachable from an admitted leaf. What this route DOES enforce is the exact
+# state/value-set pairing below: a state id can never read a coding it does not carry.
 
 # Page sizes: a default that covers the ordinary coding in one request, and a
 # ceiling that keeps a hand-written `?limit` from asking for a whole LKF edition.

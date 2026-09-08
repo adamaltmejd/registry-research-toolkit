@@ -281,22 +281,25 @@ substring, `%`/`_` literal), because SQLite's LIKE folds neither non-ASCII case 
 diacritics and an "N of M" that disagreed with the in-browser filters would be a lie.
 `?state=` switches the read to that state's stored `classification_conformance_code`
 mismatch list, and is refused with a 404 unless the state actually carries the requested
-value set — a state id can never read a coding it does not belong to. Not steward-gated:
-code→label metadata is public, on the same footing as the classification codes already
-served. The SPA's `ValueSetCodes` panel owns the paging, the filter and the loading /
-error+retry / empty states, and is mounted only where a code table is actually shown — a
-closed disclosure issues no request. "Shown" means the state HAS a coding, not that the
-coding has members: a `value_set_id` with `code_count` 0 shows its size on the row and
-says "This value set has no codes" in place — no disclosure, since there is nothing to
-open, and no read, since the leaf already counted it. An empty coding and no coding at
-all are different facts, and a reader who cannot tell them apart is left guessing
-whether the page failed. Inside the panel the shared `CodeList` renders each page
-verbatim: a server page is a WINDOW, so the viewer's own filter and its large-list
-grouping are suppressed there — grouping a partial page would group the wrong thing, and
-a set that drills down on a classification page reads as a flat bounded list here.
-Typing is debounced into one read, because this filter scans the whole set server-side.
-`Catalog.resolve`, `/states` and the complete exports keep their full-membership
-semantics unchanged.
+value set — a state id can never read a coding it does not belong to. Not steward-gated,
+and its ids are enumerable by design: value-set members and these stored mismatch lists
+are catalog-global reference data, on the same footing as the classification codes
+already served (→ Classification pass-through (decision 2)). Holding a binding is not
+what authorizes reading a coding, so the pass-through rests on that policy and not on an
+id being hard to guess. The SPA's `ValueSetCodes` panel owns the paging, the filter and
+the loading / error+retry / empty states, and is mounted only where a code table is
+actually shown — a closed disclosure issues no request. "Shown" means the state HAS a
+coding, not that the coding has members: a `value_set_id` with `code_count` 0 shows its
+size on the row and says "This value set has no codes" in place — no disclosure, since
+there is nothing to open, and no read, since the leaf already counted it. An empty
+coding and no coding at all are different facts, and a reader who cannot tell them apart
+is left guessing whether the page failed. Inside the panel the shared `CodeList` renders
+each page verbatim: a server page is a WINDOW, so the viewer's own filter and its
+large-list grouping are suppressed there — grouping a partial page would group the wrong
+thing, and a set that drills down on a classification page reads as a flat bounded list
+here. Typing is debounced into one read, because this filter scans the whole set
+server-side. `Catalog.resolve`, `/states` and the complete exports keep their
+full-membership semantics unchanged.
 
 One consequence in the SPA worth naming: `distinctValueSets` used to synthesize a
 cross-state conformance rollup whose mismatch count was the size of the deduped union of
@@ -901,8 +904,9 @@ graphs remain catalog-global.
 
 *Classification pass-through (decision 2).* Classifications and codes are
 catalog-global. A steward inventory maps only variable columns, so there is no holdings
-basis to scope reference data. Classification routes (`class/…`) and the codes arm of
-search pass through unfiltered for all steward deployments.
+basis to scope reference data. Classification routes (`class/…`), the bounded value-set
+code read (`/api/value-sets/{id}/codes`, including its `?state=` mismatch list) and the
+codes arm of search pass through unfiltered for all steward deployments.
 
 *Search.* `/api/search` passes `admitted_variable_fqids | held_register_fqids` as the
 `fqids` allow-list to `reg_meta.queries.search`. This restricts register and variable
