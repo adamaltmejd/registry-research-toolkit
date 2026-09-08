@@ -589,7 +589,7 @@ export const projectStore = {
     requestReplacement(newDraft(seed));
   },
 
-  /** Open, through the policy — `project` is what `readProjectFile` ACCEPTED, so
+  /** Open, through the policy — `project` is what `parseProjectText` ACCEPTED, so
    * every check that can reject a file has already run and a rejected one never
    * raises the question. */
   requestOpenProject(project: ProjectData): void {
@@ -613,7 +613,7 @@ export const projectStore = {
 
   // ── Lifecycle ─────────────────────────────────────────────────────────────
 
-  /** The commit half of an Open — `readProjectFile` is its ingress, and the
+  /** The commit half of an Open — `parseProjectText` is its ingress, and the
    * replacement policy above is what sits between the two. */
   loadProject,
 
@@ -625,18 +625,20 @@ export const projectStore = {
   },
 
   /**
-   * The file ingress: parse → guard non-object → `checkVersionGate`. Returns the
-   * accepted dict VERBATIM (including invalid unknown root keys — the backend is
-   * the structural validator, and a structurally broken draft must still open for
-   * repair), or `null` after setting the blocking `openError`.
+   * The file ingress: parse → guard non-object → `checkVersionGate`. Takes the
+   * file's TEXT, not the `File`: reading the bytes is asynchronous, and this call
+   * is what raises the blocking `openError`, so the caller has to be able to drop
+   * a superseded read BEFORE it runs. Returns the accepted dict VERBATIM
+   * (including invalid unknown root keys — the backend is the structural
+   * validator, and a structurally broken draft must still open for repair), or
+   * `null` after setting that `openError`.
    *
    * Reads NOTHING into the store: a rejected file leaves the current draft and
    * its autosaved recovery copy untouched, and an accepted one only becomes the
    * draft once `loadProject` commits it — which is what lets the replacement
    * policy sit between the two halves.
    */
-  async readProjectFile(file: File): Promise<ProjectData | null> {
-    const text = await file.text();
+  parseProjectText(text: string): ProjectData | null {
     let parsed: unknown;
     try {
       parsed = JSON.parse(text);

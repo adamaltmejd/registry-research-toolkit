@@ -2051,13 +2051,17 @@ rune store holding one draft per session.
   `AlertDialog`, the app's only modal) offering cancel / download-then-replace / replace
   anyway, and the replacement runs only on a confirm. Nothing about the draft moves
   while that answer is pending, so a cancel leaves the draft and its autosave untouched.
-  Open PARSES first (`readProjectFile` — JSON, top-level object, version gate) and asks
+  Open PARSES first (`parseProjectText` — JSON, top-level object, version gate) and asks
   only once the file is one that could be loaded: a cancelled file picker, a
   parse/version rejection, or a refused replacement all leave the current draft exactly
   as it was. A restored autosave stays dirty (a recovery copy is not a downloaded one),
   so it gets the same confirmation — the flag is never cleared to skip the policy. The
   pending project is dropped when `/project` unmounts, so an unanswered question can
-  never outlive the page that asks it.
+  never outlive the page that asks it. Reading a picked file's bytes is the one
+  asynchronous step, and `/project` carries a generation counter that a New, a newer
+  Open and its own teardown all bump: a read that loses that race is dropped BEFORE the
+  ingress runs, since the ingress is what raises the open-error — otherwise a stale file
+  could still replace a newer decision, or put a stale banner over it.
 
 Note: v1 is **one draft per SPA session** (a single IndexedDB key), not a multi-project
 list — a new or opened project replaces the current draft, deliberately (above).

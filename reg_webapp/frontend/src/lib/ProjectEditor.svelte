@@ -36,12 +36,18 @@ const { regMetaVersion, steward } = $props<{
 // value after each pick lets re-opening the SAME file fire `change` again.
 let fileInput: HTMLInputElement;
 
+// Reading a picked file's bytes is asynchronous, and anything the researcher does
+// meanwhile SUPERSEDES that read: a New or a newer Open makes it the wrong answer,
+// and this page's teardown leaves nobody to answer it. Bumping this retires one.
+let readGeneration = 0;
+
 // New and Open are the app's only deliberate replacements of a loaded project,
 // and both go through the store's replacement policy (`requestNewProject` /
 // `requestOpenProject`): with a dirty draft it holds the incoming project and
 // this page renders the confirmation below; with a clean one (or none) it
 // replaces straight away.
 function onNew(): void {
+  readGeneration += 1;
   // c-i: a new project seeds this deployment's reg_meta release tag + its own
   // steward id (both from /api/context); the steward PICKER is c-ii. The
   // Model A schema gate is baked into the skeleton (`MODEL_A_SCHEMA_VERSION`);
@@ -59,9 +65,15 @@ async function onFilePicked(event: Event): Promise<void> {
   if (!file) {
     return; // the file picker was cancelled — nothing was asked for
   }
+  const generation = ++readGeneration;
+  const text = await file.text();
+  if (generation !== readGeneration) {
+    return; // a newer New/Open, or this page going away, retired this read
+  }
   // Parse and version-check BEFORE asking to replace anything: a file that can't
-  // be opened must raise the open-error banner, never the replacement question.
-  const parsed = await projectStore.readProjectFile(file);
+  // be opened must raise the open-error banner, never the replacement question —
+  // and the guard above must precede it, because it is what raises that banner.
+  const parsed = projectStore.parseProjectText(text);
   if (parsed != null) {
     projectStore.requestOpenProject(parsed);
   }
@@ -81,7 +93,10 @@ function downloadThenReplace(): void {
 // made in the meantime commits normally (a PENDING replacement bumps no
 // `replacementGeneration`), and coming back to /project would re-raise a stale
 // question whose confirm destroys the newly picked work.
-onDestroy(() => projectStore.cancelReplacement());
+onDestroy(() => {
+  readGeneration += 1;
+  projectStore.cancelReplacement();
+});
 </script>
 
 <article class="editor">

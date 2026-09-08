@@ -33,18 +33,13 @@ function add(
   };
 }
 
-/** Build a File from a string for `openFile` (jsdom provides `File`/`Blob`,
- * and `File.prototype.text()` resolves the contents). */
-function jsonFile(text: string): File {
-  return new File([text], "project_data.json", { type: "application/json" });
-}
-
 /** Both halves of an Open in one call: the file ingress, then the commit of what
  * it accepted. The toolbar keeps them apart so the deliberate-replacement
- * confirmation can sit between them; a caller that has already decided the
- * current draft may go wants the pair. */
-async function openFile(file: File): Promise<void> {
-  const parsed = await projectStore.readProjectFile(file);
+ * confirmation can sit between them (and so a superseded read is dropped before
+ * the ingress runs); a caller that has already decided the current draft may go
+ * wants the pair. */
+function openFile(json: string): void {
+  const parsed = projectStore.parseProjectText(json);
   if (parsed != null) {
     projectStore.loadProject(parsed);
   }
@@ -147,7 +142,7 @@ describe("newProject", () => {
     });
     const raw = JSON.stringify(projectStore.draft);
 
-    await openFile(jsonFile(raw));
+    openFile(raw);
 
     expect(projectStore.openError).toBeNull();
     expect(projectStore.draft?.schema_version).toBe(MODEL_A_SCHEMA_VERSION);
@@ -212,7 +207,7 @@ describe("the file-open ingress + commit", () => {
       typo_object: { nested: true },
       typo_scalar: 7,
     };
-    await openFile(jsonFile(JSON.stringify(raw)));
+    openFile(JSON.stringify(raw));
     expect(projectStore.openError).toBeNull();
     expect(projectStore.draft?.name).toBe("opened");
     // Invalid values + known panels survive on the raw draft.
@@ -252,19 +247,19 @@ describe("the file-open ingress + commit", () => {
   it("rejects a non-object top level (a JSON array) with an open error, no load", async () => {
     projectStore.newProject(SEED);
     const before = projectStore.draft;
-    await openFile(jsonFile("[1, 2, 3]"));
+    openFile("[1, 2, 3]");
     expect(projectStore.openError).toMatch(/object/i);
     expect(projectStore.draft).toBe(before); // existing draft untouched
   });
 
   it("rejects unparseable JSON with a parse error, no load", async () => {
     projectStore.newProject(SEED);
-    await openFile(jsonFile("{ not json"));
+    openFile("{ not json");
     expect(projectStore.openError).toMatch(/json/i);
   });
 
   it("clearOpenError dismisses the banner", async () => {
-    await openFile(jsonFile("[]"));
+    openFile("[]");
     expect(projectStore.openError).not.toBeNull();
     projectStore.clearOpenError();
     expect(projectStore.openError).toBeNull();
@@ -575,23 +570,21 @@ describe("applyStagedDiff (#992 — one atomic commit path)", () => {
     // The retired sentinel is not a project period, so the coverage union has no
     // full-history branch to absorb into: staging a finite window onto an
     // imported `_default` source commits the finite window, not `_default`.
-    await openFile(
-      jsonFile(
-        JSON.stringify({
-          schema_version: "2.0.0",
-          steward: "global",
-          reg_meta_version: "reg_meta/v1.0.0",
-          name: "imported",
-          sources: [
-            {
-              name: "LISA",
-              register_variant: "scb/lisa/v1",
-              period: "_default",
-              bindings: [{ variable: "scb/lisa/kon", type: "categorical" }],
-            },
-          ],
-        }),
-      ),
+    openFile(
+      JSON.stringify({
+        schema_version: "2.0.0",
+        steward: "global",
+        reg_meta_version: "reg_meta/v1.0.0",
+        name: "imported",
+        sources: [
+          {
+            name: "LISA",
+            register_variant: "scb/lisa/v1",
+            period: "_default",
+            bindings: [{ variable: "scb/lisa/kon", type: "categorical" }],
+          },
+        ],
+      }),
     );
 
     projectStore.applyStagedDiff({
@@ -945,7 +938,7 @@ describe("stable client-side ids (issue #200)", () => {
         },
       ],
     };
-    await openFile(jsonFile(JSON.stringify(raw)));
+    openFile(JSON.stringify(raw));
     // Distinct, defined ids for the opened source + its two bindings.
     expect(projectStore.sourceId(0)).toBeTruthy();
     expect(projectStore.bindingId(0, 0)).toBeTruthy();
@@ -983,9 +976,7 @@ describe("stable client-side ids (issue #200)", () => {
       projectStore.newProject(SEED);
       projectStore.updateField("name", "prior");
 
-      await expect(
-        openFile(jsonFile(JSON.stringify(raw))),
-      ).resolves.toBeUndefined();
+      expect(() => openFile(JSON.stringify(raw))).not.toThrow();
 
       // Clean open: the malformed-but-loadable draft is in, error channels are clear.
       expect(projectStore.openError).toBeNull();
@@ -1029,7 +1020,7 @@ describe("stable client-side ids (issue #200)", () => {
           },
         ],
       };
-      await openFile(jsonFile(JSON.stringify(raw)));
+      openFile(JSON.stringify(raw));
       expect(projectStore.openError).toBeNull();
 
       // A batch that never NAMES the null slot's (empty) register_variant: add a new

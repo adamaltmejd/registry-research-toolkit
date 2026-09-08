@@ -51,10 +51,8 @@ const NULL_SLOT = JSON.stringify({
 /** Load `json` straight into the store — the file ingress plus the commit, with
  * no replacement confirmation between them (the cases below start from a CLEAN
  * draft, which the policy replaces without asking anyway). */
-async function openFile(json: string): Promise<void> {
-  const parsed = await projectStore.readProjectFile(
-    new File([json], "project_data.json"),
-  );
+function openFile(json: string): void {
+  const parsed = projectStore.parseProjectText(json);
   expect(parsed).not.toBeNull();
   projectStore.loadProject(parsed as ProjectData);
 }
@@ -147,7 +145,7 @@ describe("ProjectEditor cart — read-only, no add affordances", () => {
   });
 
   it("coerces a non-array sources to empty and renders without crashing", async () => {
-    await openFile(MALFORMED);
+    openFile(MALFORMED);
     await render(ProjectEditor, { regMetaVersion: "1.0.0", steward: "global" });
 
     // The loaded draft renders (name heading) — no crash on the non-array.
@@ -168,7 +166,7 @@ describe("ProjectEditor cart — read-only, no add affordances", () => {
   });
 
   it("renders a null source slot as a degraded card without crashing, keeping the valid source and the slot count", async () => {
-    await openFile(NULL_SLOT);
+    openFile(NULL_SLOT);
     await render(ProjectEditor, { regMetaVersion: "1.0.0", steward: "global" });
 
     // The loaded draft renders (name heading) — no crash on the null slot.
@@ -419,6 +417,30 @@ function captureDownloads(): { name: string; text: () => Promise<string> }[] {
   return started;
 }
 
+/** Pick `json` the way the toolbar does, but hold its bytes until the returned
+ * release is called — the deterministic form of a slow read, which suspends the
+ * change handler mid-Open and lets the test decide what happens while it waits.
+ * `json` is named once and stands in for both the picked file and its held bytes:
+ * the stub is what the handler actually reads, and resolving it purely through
+ * microtasks (never a real `Blob` read) is what makes `flush` below sufficient.
+ * It replaces `Blob.prototype.text`, where `File#text()` resolves, because that
+ * survives the DataTransfer round-trip a pick makes; `vi.restoreAllMocks()` puts
+ * the prototype back after each case. */
+function pickHeldFile(container: HTMLElement, json: string): () => void {
+  const { promise: held, resolve: release } = Promise.withResolvers<void>();
+  vi.spyOn(Blob.prototype, "text").mockReturnValue(held.then(() => json));
+  pickFile(container, json);
+  return release;
+}
+
+/** Let a released read and everything it triggers run out — a macrotask lands
+ * after the whole microtask queue has drained, so this is ordering, not a wait. */
+function flush(): Promise<void> {
+  return new Promise((resolve) => {
+    setTimeout(resolve, 0);
+  });
+}
+
 describe("ProjectEditor — replacing a dirty draft is deliberate", () => {
   it("New asks first, and a cancel leaves the draft exactly as it was", async () => {
     seedDirtyDraft();
@@ -523,6 +545,93 @@ describe("ProjectEditor — replacing a dirty draft is deliberate", () => {
     expect(replaceDialog().query()).toBeNull();
     expect(projectStore.openError).toBeNull();
     expect(projectStore.draft).toBe(before);
+  });
+
+  // A file's bytes arrive asynchronously. Everything below releases them LATE, so
+  // the read loses the race it would otherwise win — and a read that lost must
+  // change nothing: not the draft, not the pending question, not the recovery
+  // copy, not the error banner.
+
+  it("a New raised while a file is still reading keeps its own answer", async () => {
+    seedDirtyDraft();
+    const { container } = await render(ProjectEditor, {
+      regMetaVersion: "1.0.0",
+      steward: "global",
+    });
+    const release = pickHeldFile(container, OPENABLE); // the read suspends
+    await page.getByRole("button", { name: "New", exact: true }).click();
+    await expect.element(replaceDialog()).toBeVisible();
+
+    release(); // …and the file arrives while the New's question stands
+    await flush();
+
+    // The question on screen is still the New's, so answering it must give the
+    // empty project that was asked about — not the file that lost the race.
+    await replaceDialog()
+      .getByRole("button", { name: "Replace without downloading" })
+      .click();
+    expect(projectStore.draft?.name).toBe("");
+    expect(projectStore.openError).toBeNull();
+  });
+
+  it("a rejected file raises no banner once its read is superseded", async () => {
+    seedDirtyDraft();
+    const { container } = await render(ProjectEditor, {
+      regMetaVersion: "1.0.0",
+      steward: "global",
+    });
+    const release = pickHeldFile(container, PRE_MODEL_A);
+    await page.getByRole("button", { name: "New", exact: true }).click();
+    await expect.element(replaceDialog()).toBeVisible();
+
+    release();
+    await flush();
+
+    // The ingress is what raises the open-error, so the guard has to sit BEFORE
+    // it: a stale banner over a newer decision is the same defect as a stale
+    // draft, and a guard placed only in front of the commit would let it through.
+    expect(projectStore.openError).toBeNull();
+    await expect.element(replaceDialog()).toBeVisible();
+  });
+
+  it("a file that arrives after the page is gone changes nothing", async () => {
+    seedDirtyDraft();
+    const { container, unmount } = await render(ProjectEditor, {
+      regMetaVersion: "1.0.0",
+      steward: "global",
+    });
+    const release = pickHeldFile(container, OPENABLE);
+    const before = projectStore.draft;
+    await unmount();
+    release();
+    await flush();
+
+    // Nobody is left to ask, so nothing may be asked: no question waiting to
+    // reappear on the way back to /project, and the draft — with the recovery
+    // copy that mirrors it — exactly as the researcher left it.
+    expect(projectStore.replacementPending).toBe(false);
+    expect(projectStore.draft).toBe(before);
+    expect(projectStore.draft?.name).toBe("In progress");
+    expect(projectStore.openError).toBeNull();
+  });
+
+  it("an older read cannot overtake the project that replaced it", async () => {
+    // From a CLEAN draft the policy replaces without asking, so the New is
+    // ACCEPTED outright — and the file still in flight must not undo it.
+    const { container } = await render(ProjectEditor, {
+      regMetaVersion: "1.0.0",
+      steward: "global",
+    });
+    const release = pickHeldFile(container, OPENABLE);
+    await page.getByRole("button", { name: "New", exact: true }).click();
+    const replaced = projectStore.draft;
+
+    release();
+    await flush();
+
+    expect(projectStore.draft).toBe(replaced);
+    expect(projectStore.replacementPending).toBe(false);
+    expect(projectStore.openError).toBeNull();
   });
 
   it("offers the durable copy as the way out: download, then replace", async () => {

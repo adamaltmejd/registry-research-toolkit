@@ -224,21 +224,16 @@ describe("browse-time window seeded on draft creation (#629 item 3)", () => {
 
   it("OPENING a project keeps its OWN window — the fallback never overwrites it", async () => {
     const { projectStore } = await freshStores({ from: 1970, to: 1980 });
-    const file = new File(
-      [
-        JSON.stringify({
-          schema_version: "2.0.0",
-          steward: "global",
-          reg_meta_version: "reg_meta/v1.0.0",
-          name: "opened",
-          sources: [],
-          window: { from: 1995, to: 2005 },
-        }),
-      ],
-      "project_data.json",
-      { type: "application/json" },
+    const parsed = projectStore.parseProjectText(
+      JSON.stringify({
+        schema_version: "2.0.0",
+        steward: "global",
+        reg_meta_version: "reg_meta/v1.0.0",
+        name: "opened",
+        sources: [],
+        window: { from: 1995, to: 2005 },
+      }),
     );
-    const parsed = await projectStore.readProjectFile(file);
     expect(parsed).not.toBeNull();
     projectStore.loadProject(parsed as ProjectData);
     // The opened file's own window wins; the fallback is not seeded over it

@@ -193,28 +193,22 @@ describe("AppShell — project chip", () => {
   it("tolerates malformed source slots while showing counts", async () => {
     // The two halves of an Open: the file ingress, then the commit (the toolbar
     // puts the replacement confirmation between them).
-    const parsed = await projectStore.readProjectFile(
-      new File(
-        [
-          JSON.stringify({
-            schema_version: "2.0.0",
-            steward: "global",
-            reg_meta_version: "reg_meta/v1.0.0",
-            name: "Malformed project",
-            sources: [
-              null,
-              {
-                name: "LISA",
-                register_variant: "scb/lisa/v1",
-                period: 2018,
-                bindings: [{ variable: "scb/lisa/kon", type: "categorical" }],
-              },
-            ],
-          }),
+    const parsed = projectStore.parseProjectText(
+      JSON.stringify({
+        schema_version: "2.0.0",
+        steward: "global",
+        reg_meta_version: "reg_meta/v1.0.0",
+        name: "Malformed project",
+        sources: [
+          null,
+          {
+            name: "LISA",
+            register_variant: "scb/lisa/v1",
+            period: 2018,
+            bindings: [{ variable: "scb/lisa/kon", type: "categorical" }],
+          },
         ],
-        "project_data.json",
-        { type: "application/json" },
-      ),
+      }),
     );
     expect(parsed).not.toBeNull();
     projectStore.loadProject(parsed as ProjectData);
