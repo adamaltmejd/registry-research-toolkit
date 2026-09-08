@@ -10,6 +10,7 @@ import type {
 } from "./api";
 import {
   facetAxisStyle,
+  OPEN_ENDED_VALID_TO,
   type PickerRepresentation,
   type PickerStateInput,
   pickerRepresentations,
@@ -3904,23 +3905,32 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
 });
 
 // Y-14: a researcher choosing a delivery representation must be able to tell two
-// register variants apart. `Kon` over 2018 in two populations is the case: with
-// distinct curator names the names do it (the shipped behavior), and when a curator
-// gave both the SAME name the concrete family slug does.
-describe("RepresentationPicker two-variant row identity (Y-14)", () => {
+// register variants apart. `Kon` over 2018 in coexisting populations is the case:
+// with distinct curator names the names do it (the shipped behavior), and when a
+// curator gave two of them the SAME name the concrete family slug does.
+describe("RepresentationPicker coexisting-variant row identity (Y-14)", () => {
   const PERIOD = { valid_from: "2018-01-01", valid_to: "2018-12-31" } as const;
   // The two curator namings the ticket turns on: names that already differ, and one
   // name on both populations.
   const DISTINCT: [string, string] = ["Individer 15+", "Individer 16+"];
   const ALIKE: [string, string] = ["Individer", "Individer"];
+  // …and a third naming where one curator name IS another population's slug.
+  const NAME_IS_SLUG = ["Individer", "Individer", "individer-15plus"] as const;
+  // The concrete populations the curator names, in fixture order.
+  const VARIANTS = [
+    "individer-15plus",
+    "individer-16plus",
+    "individer-17plus",
+  ] as const;
 
-  /** ONE delivery column (or one each) over the same period in TWO populations, named
-   * by the curator as given — two distinct names, or the same name twice — as a band
-   * AND the matching one-node graph: two runs on one lane, the shape the ticket's own
+  /** ONE delivery column over the same period in AS MANY populations as `labels`
+   * names, named by the curator as given — distinct names, one name twice, or a name
+   * that is another population's slug — as a band AND the matching one-node graph:
+   * coexisting runs on one lane, the shape the ticket's own
    * `/catalog/scb/lisa/kon?period=2018` leaf has, so the picker prefers its time-band
    * mode. One spec builds both, so the rows and the cells cannot drift apart. */
-  function twoVariantFixture(
-    labels: [string, string],
+  function variantFixture(
+    labels: readonly string[],
     over: {
       period?: { valid_from: string; valid_to: string };
       coding?: string;
@@ -3928,10 +3938,10 @@ describe("RepresentationPicker two-variant row identity (Y-14)", () => {
   ): { bands: PickerBand[]; graph: RelationshipGraph } {
     const period = over.period ?? PERIOD;
     const coding = over.coding ?? "";
-    const populations = [
-      { variant: "individer-15plus", label: labels[0] },
-      { variant: "individer-16plus", label: labels[1] },
-    ];
+    const populations = labels.map((label, i) => ({
+      variant: VARIANTS[i],
+      label,
+    }));
     return {
       bands: [
         {
@@ -3977,7 +3987,7 @@ describe("RepresentationPicker two-variant row identity (Y-14)", () => {
 
   it("distinct curator names identify the rows on their own — no slug added", async () => {
     await render(RepresentationPicker, {
-      bands: twoVariantFixture(["Individer 15+", "Individer 16+"]).bands,
+      bands: variantFixture(["Individer 15+", "Individer 16+"]).bands,
       ...PROPS,
     });
 
@@ -3995,7 +4005,7 @@ describe("RepresentationPicker two-variant row identity (Y-14)", () => {
 
   it("identical curator names fall back to the variant slug, visibly and in the accessible name", async () => {
     await render(RepresentationPicker, {
-      bands: twoVariantFixture(["Individer", "Individer"]).bands,
+      bands: variantFixture(["Individer", "Individer"]).bands,
       ...PROPS,
     });
 
@@ -4031,7 +4041,7 @@ describe("RepresentationPicker two-variant row identity (Y-14)", () => {
   it("stages the picked row's own variant when the two names are identical", async () => {
     const onapply = vi.fn();
     await render(RepresentationPicker, {
-      bands: twoVariantFixture(["Individer", "Individer"]).bands,
+      bands: variantFixture(["Individer", "Individer"]).bands,
       ...PROPS,
       onapply,
     });
@@ -4066,11 +4076,14 @@ describe("RepresentationPicker two-variant row identity (Y-14)", () => {
   const CODING = "SCB kön";
   const SYSS = "scb/rams/syss";
 
-  function coexistingGraphFixture(labels: [string, string]): {
+  function coexistingGraphFixture(
+    labels: readonly string[],
+    period: { valid_from: string; valid_to: string } = WIDE,
+  ): {
     bands: PickerBand[];
     graph: RelationshipGraph;
   } {
-    const base = twoVariantFixture(labels, { period: WIDE, coding: CODING });
+    const base = variantFixture(labels, { period, coding: CODING });
     return {
       bands: [
         ...base.bands,
@@ -4112,14 +4125,18 @@ describe("RepresentationPicker two-variant row identity (Y-14)", () => {
   }
 
   /** Render that graph and assert, at every width the design language covers, that the
-   * two coexisting cells read differently, paint their distinguishing text in full,
-   * and keep their own sub-row while the succession connector stays on the lanes. */
+   * coexisting cells read differently, paint their distinguishing text in full, and
+   * keep their own sub-row while the succession connector stays on the lanes. */
   async function expectGraphCellsIdentify(
-    labels: [string, string],
-    populations: [string, string],
+    labels: readonly string[],
+    populations: readonly string[],
+    over: {
+      period?: { valid_from: string; valid_to: string };
+      window?: string;
+    } = {},
   ): Promise<void> {
     await render(RepresentationPicker, {
-      ...coexistingGraphFixture(labels),
+      ...coexistingGraphFixture(labels, over.period),
       ...PROPS,
     });
     await graphPickerRendered();
@@ -4127,17 +4144,17 @@ describe("RepresentationPicker two-variant row identity (Y-14)", () => {
     // the fix.
     expect(document.querySelector(".col-list")).toBeNull();
     const cellText = (population: string) =>
-      `Kon ${population} ${CODING} 2000 – 2022`;
+      `Kon ${population} ${CODING} ${over.window ?? "2000 – 2022"}`;
+    // No complete label may stand for two of the choices — the whole point.
+    const expected = populations.map(cellText);
+    expect(new Set(expected).size).toBe(expected.length);
 
     await atEveryWidth(async () => {
       await vi.waitFor(() => {
         expect(lanes()).toHaveLength(2);
         // Each cell names the population behind it, so no two selectable cells
         // read alike.
-        expect(texts(".graph-cell", lanes()[0])).toEqual([
-          cellText(populations[0]),
-          cellText(populations[1]),
-        ]);
+        expect(texts(".graph-cell", lanes()[0])).toEqual(expected);
       });
       const konLane = lanes()[0];
       const laneBox = konLane.getBoundingClientRect();
@@ -4163,7 +4180,9 @@ describe("RepresentationPicker two-variant row identity (Y-14)", () => {
         expect(cell.box.top).toBeGreaterThanOrEqual(laneBox.top);
         expect(cell.box.bottom).toBeLessThanOrEqual(laneBox.bottom);
       }
-      expect(cells[0].box.bottom).toBeLessThanOrEqual(cells[1].box.top);
+      for (const [i, next] of cells.slice(1).entries()) {
+        expect(cells[i].box.bottom).toBeLessThanOrEqual(next.box.top);
+      }
 
       // The succession connector still runs between the two lane centres.
       const successor = lanes()[1].getBoundingClientRect();
@@ -4195,6 +4214,40 @@ describe("RepresentationPicker two-variant row identity (Y-14)", () => {
 
   it("falls back to the variant slug on graph cells when the two names are IDENTICAL", async () => {
     await expectGraphCellsIdentify(ALIKE, [
+      "individer-15plus",
+      "individer-16plus",
+    ]);
+  });
+
+  it("falls back to the variant slug on EVERY cell when a curator name IS another population's slug", async () => {
+    // Three coexisting populations, one column, one coding, one window: the first two
+    // share a name, so they show their slugs — and the third's curator name IS the
+    // first's slug, so name-or-key decided per cell would paint two cells
+    // "Kon individer-15plus since 2018". The whole collision group yields to the keys.
+    await expectGraphCellsIdentify(NAME_IS_SLUG, [...VARIANTS], {
+      period: { valid_from: "2018-01-01", valid_to: OPEN_ENDED_VALID_TO },
+      window: "since 2018",
+    });
+    // All three read as the machine identity they are, so none is mistaken for a
+    // curator's name.
+    expect(texts(".graph-cell .variant-key")).toEqual([...VARIANTS]);
+  });
+
+  it("leaves the LIST rows of that three-population case as they already read", async () => {
+    // The list projection is unambiguous for this fixture without any change: the two
+    // rows a curator named alike carry their slug beside that name, and the third
+    // shows the name it was given. The graph fix must not disturb it.
+    await render(RepresentationPicker, {
+      bands: variantFixture(NAME_IS_SLUG).bands,
+      ...PROPS,
+    });
+
+    expect(texts(ROWS)).toEqual([
+      "Individer individer-15plus 2018",
+      "Individer individer-16plus 2018",
+      "individer-15plus 2018",
+    ]);
+    expect(texts(".col-row.nested .variant-key")).toEqual([
       "individer-15plus",
       "individer-16plus",
     ]);
@@ -4256,7 +4309,7 @@ describe("RepresentationPicker two-variant row identity (Y-14)", () => {
     // the text that would tell them apart, so the picker uses the list — the same
     // GEOMETRY fallback an unreadably narrow codings cell takes, not a naming rule.
     await render(RepresentationPicker, {
-      ...twoVariantFixture(DISTINCT),
+      ...variantFixture(DISTINCT),
       ...PROPS,
     });
 

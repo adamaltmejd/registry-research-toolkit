@@ -1821,8 +1821,9 @@ function graphCellTitle(
  * that read exactly alike, in visible text and in accessible name. Give back the
  * smallest text that tells exactly those cells apart: the curator's family NAME, or
  * (where two families share that name, the rows `pickerLabeling` hands a `variantKey`)
- * the family KEY. Cells that already read apart keep their label untouched, and two
- * cells of ONE row are one choice, not an ambiguity. */
+ * the family KEY — and the KEYS throughout when a name and a key collide in turn.
+ * Cells that already read apart keep their label untouched, and two cells of ONE row
+ * are one choice, not an ambiguity. */
 function graphCellPopulations(
   band: PickerBand | null,
   cells: readonly RunCell[],
@@ -1839,17 +1840,31 @@ function graphCellPopulations(
   const ambiguous = collidingLabels(
     bound.map((b) => [rowKey(b.match.band, b.match.row), b.reads]),
   );
-  const colliding = bound
-    .filter((b) => ambiguous.has(b.reads))
-    .map((b) => ({
-      cell: b.cell,
-      family: pickerRowVariantFamily(b.match.row),
-      name: pickerRowVariantFamilyLabel(b.match.row),
+  // Each ambiguous READING is a collision group of its own: cells that read apart
+  // are already told apart, whatever population text the others end up carrying.
+  for (const reads of ambiguous) {
+    const group = bound
+      .filter((b) => b.reads === reads)
+      .map((b) => ({
+        cell: b.cell,
+        family: pickerRowVariantFamily(b.match.row),
+        name: pickerRowVariantFamilyLabel(b.match.row),
+      }));
+    const sharedNames = collidingLabels(group.map((c) => [c.family, c.name]));
+    const chosen = group.map((c) => ({
+      ...c,
+      text: sharedNames.has(c.name) ? c.family : c.name,
     }));
-  const sharedNames = collidingLabels(colliding.map((c) => [c.family, c.name]));
-  for (const c of colliding) {
-    const isKey = sharedNames.has(c.name);
-    populations.set(c.cell, { text: isKey ? c.family : c.name, isKey });
+    // A family key is itself text a curator could have named ANOTHER family with, so
+    // a name and a key can still read alike after that choice. There is nothing under
+    // the keys to fall back on — they ARE the identities — so when the chosen texts
+    // still collide, every cell of the group shows its own key.
+    const keyed =
+      collidingLabels(chosen.map((c) => [c.family, c.text])).size > 0;
+    for (const c of chosen) {
+      const text = keyed ? c.family : c.text;
+      populations.set(c.cell, { text, isKey: text === c.family });
+    }
   }
   return populations;
 }
