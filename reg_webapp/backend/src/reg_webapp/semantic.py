@@ -62,7 +62,7 @@ from reg_schema.project_data import PeriodRange
 from reg_schema.validation import ValidationIssue, ValidationResult
 
 if TYPE_CHECKING:
-    from reg_meta.catalog import Catalog, Period, VariableState
+    from reg_meta.catalog import Catalog, Period, VariableIdentity, VariableState
     from reg_meta.fqid import Fqid
 
     # reg_schema's Source.period union (incl. the #307 list form) is aliased
@@ -416,9 +416,12 @@ def _check_binding(
     var_path = f"{bbase}/variable"
 
     # The binding FQID must resolve to a known variable (following
-    # `same_as` curated links — `Catalog.resolve` does that internally). The
-    # binding FQID is a bare 3-segment variable (the `@version` pin is retired —
-    # the value set is determined by the resolved `(variable, variant, period)`).
+    # `same_as` curated links — `Catalog.variable_identity` does that
+    # internally, the same way `resolve` does, without hydrating the variable's
+    # historical states and their code lists: this layer reads identity and
+    # succession only). The binding FQID is a bare 3-segment variable (the
+    # `@version` pin is retired — the value set is determined by the resolved
+    # `(variable, variant, period)`).
     try:
         parsed = parse(binding.variable)
     except FqidError:
@@ -433,7 +436,7 @@ def _check_binding(
         )
         return
     try:
-        resolved = catalog.resolve(parsed)
+        identity = catalog.variable_identity(parsed)
     except RegMetaError:
         issues.append(
             _issue(
@@ -450,7 +453,7 @@ def _check_binding(
         _check_value_set(binding, bbase, catalog, issues)
         return
 
-    _check_binding_hints(binding, source, var_path, resolved, issues)
+    _check_binding_hints(binding, source, var_path, identity, issues)
 
     resolved_columns = _check_binding_period(
         binding,
@@ -492,11 +495,11 @@ def _check_binding_hints(
     binding: Binding,
     source: Source,
     var_path: str,
-    resolved,
+    identity: VariableIdentity,
     issues: list[ValidationIssue],
 ) -> None:
     """Non-blocking semantic hints that require resolved variable metadata."""
-    if resolved.deprecated:
+    if identity.deprecated:
         issues.append(
             _issue(
                 "deprecated_traversal",
@@ -507,7 +510,7 @@ def _check_binding_hints(
             )
         )
 
-    for successor in resolved.replaced_by:
+    for successor in identity.replaced_by:
         if not _replacement_applies(successor.effective_year, source.period):
             continue
         successor_fqid = str(successor.fqid) if successor.fqid is not None else None
@@ -603,7 +606,12 @@ def _check_binding_period(
     for segment in segments:
         try:
             seg_states = catalog.resolve_at(
-                parsed, period_for_resolve(segment), variant=variant
+                parsed,
+                period_for_resolve(segment),
+                variant=variant,
+                # State METADATA only: the checks below read windows, columns,
+                # `value_set_id` and version labels — never code membership.
+                with_codes=False,
             )
         except RegMetaError:
             # resolve_at only raises when the binding FQID doesn't resolve —

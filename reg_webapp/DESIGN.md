@@ -1837,7 +1837,7 @@ Rules, walking each source's `register_variant` + every binding:
 
 - The `register_variant` coordinate resolves to a known variant; the binding `variable`
   (3-segment FQID) resolves to a known variable (following `same_as` links —
-  `Catalog.resolve` does that). Unresolved → `fqid_unresolved` (error).
+  `Catalog.variable_identity` does that). Unresolved → `fqid_unresolved` (error).
 - The binding resolves to a covering `variable_state` at the source's variant AND
   period. None → `period_outside_state_validity` (error). A range period crossing a
   state transition (sequential, non-overlapping states) →
@@ -1863,6 +1863,16 @@ Rules, walking each source's `register_variant` + every binding:
   successor resolves to a binding FQID.
 - The binding's `value_set` (a `class/<slug>` FQID) resolves to a known classification →
   else `value_set_missing` (error).
+
+**This layer reads identity and state metadata, never code membership.** So it takes the
+narrow reg_meta reads (see `reg_meta/DESIGN.md` → Catalog API surface):
+`Catalog.variable_identity` for the FQID and its replacement hints, and
+`resolve_at(..., with_codes=False)` for the states. The full `resolve` would hydrate
+every historical state's code list to answer a question about one period — on a
+geography variable whose yearly states share one large code list that is most of the
+request. Diagnostics are unchanged: aliases, expanded monthly windows, representation
+identity (`state_id`, `delivery_column_name`, `valid_from`) and code-set identity
+(`value_set_id`) all come from the same code path.
 
 **Representation, not `@version`.** A FQID names one concept, but a concept may carry
 several **co-existing delivery columns** at the same instant — parallel representations

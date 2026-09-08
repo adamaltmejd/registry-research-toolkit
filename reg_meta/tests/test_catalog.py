@@ -931,6 +931,83 @@ class TestResolveVariableLongitudinal:
         assert state.variant_family_label == "Individer"
 
 
+def _traced(conn: sqlite3.Connection) -> list[str]:
+    """Collect the SQL statements `conn` executes from now on."""
+    statements: list[str] = []
+    conn.set_trace_callback(statements.append)
+    return statements
+
+
+class TestVariableIdentity:
+    """`variable_identity` — the identity + succession half of the `resolve`
+    binding arm, without the state history (and so without its code lists)."""
+
+    def test_direct_hit_matches_resolve(self, slugged_conn: sqlite3.Connection) -> None:
+        cat = Catalog(slugged_conn)
+        TestEdgeAccessors._seed_replaced_by(slugged_conn, effective_year=2001)
+        full = cat.resolve(_KON)
+        assert isinstance(full, ResolvedVariable)
+        identity = cat.variable_identity(_KON)
+        assert str(identity.fqid) == _KON
+        assert identity.canonical_fqid == full.canonical_fqid
+        assert identity.via_same_as is None
+        assert identity.deprecated is full.deprecated is False
+        assert identity.replaced_by == full.replaced_by
+
+    def test_deprecated_flag_round_trips(
+        self, slugged_conn: sqlite3.Connection
+    ) -> None:
+        slugged_conn.execute("UPDATE variable SET deprecated = 1 WHERE slug = 'kon'")
+        slugged_conn.commit()
+        assert Catalog(slugged_conn).variable_identity(_KON).deprecated is True
+
+    def test_same_as_alias_reports_target_identity_and_edges(
+        self, slugged_conn: sqlite3.Connection
+    ) -> None:
+        # The alias resolves to `kon`: canonical + edges are the TARGET's, the
+        # caller's FQID is preserved, and `via_same_as` carries the path — the
+        # `resolve` semantics `_check_binding_hints` relies on.
+        TestSameAsTraversal._add_var_edge(
+            slugged_conn,
+            a=("scb", "lisa", "kon"),
+            b=("scb", "lisa", "civilstand-legacy"),
+        )
+        TestEdgeAccessors._seed_replaced_by(slugged_conn)
+        cat = Catalog(slugged_conn)
+        full = cat.resolve("scb/lisa/civilstand-legacy")
+        assert isinstance(full, ResolvedVariable)
+        identity = cat.variable_identity("scb/lisa/civilstand-legacy")
+        assert str(identity.fqid) == "scb/lisa/civilstand-legacy"
+        assert str(identity.canonical_fqid) == _KON
+        assert identity.via_same_as == full.via_same_as
+        assert identity.replaced_by == full.replaced_by
+
+    def test_unknown_binding_raises_fqid_not_found(
+        self, slugged_conn: sqlite3.Connection
+    ) -> None:
+        with pytest.raises(RegMetaError) as exc:
+            Catalog(slugged_conn).variable_identity("scb/lisa/nonexistent")
+        assert exc.value.code == "fqid_not_found"
+
+    def test_non_binding_fqid_raises_usage(
+        self, slugged_conn: sqlite3.Connection
+    ) -> None:
+        with pytest.raises(RegMetaError) as exc:
+            Catalog(slugged_conn).variable_identity("class/sun2020")
+        assert exc.value.code == "not_a_binding_fqid"
+
+    def test_reads_no_state_or_code_row(self, slugged_conn: sqlite3.Connection) -> None:
+        # The point of the method, and what makes its cost independent of how
+        # long the variable's history is: neither table is touched at all.
+        statements = _traced(slugged_conn)
+        Catalog(slugged_conn).variable_identity(_KON)
+        assert not [
+            sql
+            for sql in statements
+            if "variable_state" in sql or "value_set_member" in sql
+        ]
+
+
 class TestResolveAt:
     """see DESIGN.md → Catalog API surface: `resolve_at` — period/variant/version-narrowed list of states."""
 
@@ -965,6 +1042,80 @@ class TestResolveAt:
         )
         conn.commit()
         return conn
+
+    @staticmethod
+    def _coded_state_db(*, windowed: bool) -> sqlite3.Connection:
+        """The `kon` fixture with a value set on its state plus a conformance
+        report carrying one nonconforming code — the two per-state CODE LISTS.
+        `windowed` adds monthly alias windows so the expansion path is covered.
+        """
+        conn = build_slugged_db()
+        add_value_set(conn, value_set_id=3, codes=[("1", "Man"), ("2", "Kvinna")])
+        cls_id = conn.execute(
+            "SELECT id FROM classification WHERE slug = 'sun2020'"
+        ).fetchone()[0]
+        # Replace the fixture's auto-seeded base state with one carrying both
+        # code lists' keys, so `kon` still has exactly one state in 2018.
+        conn.execute("DELETE FROM variable_state")
+        state_id = add_state(
+            conn,
+            register_id=1,
+            variable_slug="kon",
+            register_variant_id=10,
+            valid_from="2018-01-01",
+            delivery_column_name="Kon",
+            value_set_id=3,
+            classification_id=cls_id,
+        )
+        conn.execute(
+            "INSERT INTO classification_conformance (state_id, "
+            "declared_classification_id, status, checked_code_count, "
+            "matched_code_count, nonconforming_code_count, overlap) "
+            "VALUES (?, ?, 'kept', 2, 1, 1, 0.5)",
+            (state_id, cls_id),
+        )
+        conn.execute(
+            "INSERT INTO classification_conformance_code (state_id, code_id) "
+            "SELECT ?, code_id FROM value_code WHERE code = '2'",
+            (state_id,),
+        )
+        if windowed:
+            conn.executemany(
+                "INSERT INTO variable_alias_window (variable_id, "
+                "register_variant_id, delivery_column_name, valid_from, valid_to) "
+                "VALUES ((SELECT variable_id FROM variable WHERE slug = 'kon'), "
+                "10, ?, ?, ?)",
+                [
+                    ("Kon", "2018-01-01", "2018-01-31"),
+                    ("Kon_feb", "2018-02-01", "2018-02-28"),
+                ],
+            )
+        conn.commit()
+        return conn
+
+    @pytest.mark.parametrize("windowed", [False, True])
+    def test_with_codes_false_is_metadata_only(self, windowed: bool) -> None:
+        # Same states, same identities/windows — only the two code lists drop
+        # out, and neither of their queries runs.
+        conn = self._coded_state_db(windowed=windowed)
+        cat = Catalog(conn)
+        full = cat.resolve_at(_KON, 2018, variant="individer-15plus")
+        assert len(full) == (2 if windowed else 1)
+        assert all(s.value_set is not None for s in full)
+        assert all(s.classification_conformance is not None for s in full)
+
+        statements = _traced(conn)
+        lean = cat.resolve_at(_KON, 2018, variant="individer-15plus", with_codes=False)
+        assert lean == [
+            s.model_copy(update={"value_set": None, "classification_conformance": None})
+            for s in full
+        ]
+        assert all(s.value_set_id == 3 for s in lean)
+        assert not [
+            sql
+            for sql in statements
+            if "value_set_member" in sql or "classification_conformance_code" in sql
+        ]
 
     def test_int_year(self, slugged_conn: sqlite3.Connection) -> None:
         states = Catalog(slugged_conn).resolve_at(

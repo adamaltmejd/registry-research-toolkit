@@ -580,8 +580,10 @@ class VariableState(_CatalogModel):
     value_set_version_label: str
     value_set_id: int | None
     # `ValueSetMember` (code, label) entries for `value_set_id`, hydrated eagerly
-    # when non-NULL. None when the state carries no value set. Eager (frozen model
-    # favors it); typical per-state code fan-out is small.
+    # when non-NULL. None when the state carries no value set OR the caller asked
+    # for state metadata only (`resolve_at(..., with_codes=False)`) — `value_set_id`
+    # is the code-set identity either way. Eager (frozen model favors it); typical
+    # per-state code fan-out is small.
     value_set: tuple[ValueSetMember, ...] | None
     # Variable-grain `variable.is_identifier` denormalized onto every state via a
     # JOIN (constant across a variable's states), so consumers with no
@@ -931,6 +933,26 @@ class ResolvedVariable(_CatalogModel):
 ResolvedEntity = (
     ResolvedProvider | ResolvedRegister | ResolvedVariable | ResolvedClassification
 )
+
+
+class VariableIdentity(_CatalogModel):
+    """Who a binding FQID resolves to, plus its replacement hints — the narrow
+    half of `ResolvedVariable`, with NO state history (see DESIGN.md → Catalog
+    API surface). Returned by `variable_identity`, not by `resolve` (it is not a
+    `ResolvedEntity` arm): a consumer that reads only identity and succession
+    should not pay for hydrating every historical state's code list."""
+
+    # The caller's 3-segment binding FQID, and the CANONICAL binding FQID of the
+    # variable it resolved to — same meanings as on `ResolvedVariable`.
+    fqid: Fqid
+    canonical_fqid: Fqid
+    deprecated: bool
+    # OUTBOUND successors, keyed off the RESOLVED variable's triple (like
+    # `ResolvedVariable.replaced_by`, so a same_as alias reports its target's).
+    replaced_by: tuple[VariableRef, ...]
+    # Traversal path (3-segment binding FQIDs) when resolved via `same_as`; None
+    # on a direct hit.
+    via_same_as: tuple[Fqid, ...] | None = None
 
 
 def _not_found(fqid: Fqid) -> RegMetaError:
@@ -2432,9 +2454,10 @@ class Catalog:
             return None
         return period_token_for_bounds(valid_from, valid_to)
 
-    def _row_to_state(self, row: sqlite3.Row) -> VariableState:
+    def _row_to_state(self, row: sqlite3.Row, *, with_codes: bool) -> VariableState:
         """Build a `VariableState` from a `variable_state` row, tagging it with
-        its variant slug and hydrating its value set."""
+        its variant slug and hydrating its value set. `with_codes=False` skips
+        the two per-state code-list queries — see `resolve_at`."""
         rvid = row["register_variant_id"]
         variant = self._variant_slug(rvid)
         if variant is None:
@@ -2468,10 +2491,14 @@ class Catalog:
             operational_definition=row["operational_definition"],
             value_set_version_label=row["value_set_version_label"],
             value_set_id=row["value_set_id"],
-            value_set=self._value_set_codes(row["value_set_id"]),
+            value_set=(
+                self._value_set_codes(row["value_set_id"]) if with_codes else None
+            ),
             is_identifier=bool(row["is_identifier"]),
             classification_slug=row["classification_slug"],
-            classification_conformance=self._classification_conformance_for_state(row),
+            classification_conformance=(
+                self._classification_conformance_for_state(row) if with_codes else None
+            ),
             period_token=self._period_token_for_window(
                 row["valid_from"], row["valid_to"]
             ),
@@ -2508,6 +2535,8 @@ class Catalog:
         variable_id: int,
         rows: list[sqlite3.Row],
         bounds: tuple[str, str] | None,
+        *,
+        with_codes: bool = True,
     ) -> list[VariableState]:
         """Map period-filtered `variable_state` rows to `VariableState`s, expanding
         stored alias windows that overlap `bounds`.
@@ -2522,11 +2551,11 @@ class Catalog:
         valid_from)."""
         windows_by_variant = self._variable_windows(variable_id)
         if not windows_by_variant:
-            return [self._row_to_state(r) for r in rows]
+            return [self._row_to_state(r, with_codes=with_codes) for r in rows]
         lo, hi = bounds if bounds is not None else ("0001-01-01", "9999-12-31")
         out: list[VariableState] = []
         for row in rows:
-            base = self._row_to_state(row)
+            base = self._row_to_state(row, with_codes=with_codes)
             windows = windows_by_variant.get(row["register_variant_id"], [])
             # Windows belonging to THIS state. Overlapping states can exist; a
             # state expands only if its own representative column participates
@@ -2906,6 +2935,31 @@ class Catalog:
 
     # ── A2.5 public period-resolution + edge-traversal API (see DESIGN.md → Catalog API surface) ──
 
+    def variable_identity(self, fqid: str | Fqid) -> VariableIdentity:
+        """Identity + replacement hints for a binding FQID, WITHOUT the state
+        history (see DESIGN.md → Catalog API surface).
+
+        Resolves exactly like the `resolve` binding arm — direct slug hit or
+        `same_as` traversal, same `fqid_not_found` / `not_a_binding_fqid`
+        errors, edges keyed off the RESOLVED variable's triple — but stops at
+        the variable row's own metadata and outbound succession edges: it reads
+        no `variable_state` row and no code list, so its cost is independent of
+        how long the variable's history is."""
+        parsed = self._parse_binding(fqid)
+        resolved = self._resolve_variable_identity(parsed)
+        if resolved is None:
+            raise _not_found(parsed)
+        var, via_same_as = resolved
+        meta = self._lookup_variable_meta(var["variable_id"])
+        triple = (meta["provider_slug"], meta["register_slug"], meta["slug"])
+        return VariableIdentity(
+            fqid=parsed,
+            canonical_fqid=Fqid.binding_fqid(*triple),
+            deprecated=bool(meta["deprecated"]),
+            replaced_by=self._successor_edges(*triple),
+            via_same_as=via_same_as,
+        )
+
     def resolve_at(
         self,
         fqid: str | Fqid,
@@ -2913,6 +2967,7 @@ class Catalog:
         *,
         variant: str | None = None,
         value_set_version: str | None = None,
+        with_codes: bool = True,
     ) -> list[VariableState]:
         """Point/range resolution (see DESIGN.md → Catalog API surface): the `VariableState`s whose validity
         intersects `period`, chronological ascending. Length 1 for the common
@@ -2925,6 +2980,12 @@ class Catalog:
         {"from","to"}, or "_default" (no period filter). `variant` narrows to one
         variant (the Source's `register_variant`); `value_set_version` narrows
         multi-vintage results to a single state by `value_set_version_label`.
+
+        `with_codes=False` returns state METADATA only: the per-state code lists
+        (`value_set`, and the conformance report's nonconforming codes) stay
+        None and their queries never run, so the query work scales with the
+        states in range rather than with their code cardinality. Everything else — window
+        expansion, identity, `value_set_id`, ordering — is the same code path.
         """
         parsed = self._parse_binding(fqid)
         resolved = self._resolve_variable_identity(parsed)
@@ -2932,11 +2993,12 @@ class Catalog:
             raise _not_found(parsed)
         var, _ = resolved
         variable_id = var["variable_id"]
-        meta = self._lookup_variable_meta(variable_id)
 
         register_variant_id: int | None = None
         if variant is not None:
-            rvid = self._resolve_variant_id(meta["register_id"], variant)
+            # `var` already carries the resolved variable's own `register_id`
+            # (the same row `_lookup_variable_meta` would re-read).
+            rvid = self._resolve_variant_id(var["register_id"], variant)
             if isinstance(rvid, _Missing):
                 return []  # variant slug names no variant under this register
             register_variant_id = rvid
@@ -2946,6 +3008,7 @@ class Catalog:
             variable_id,
             self._states_in_bounds(variable_id, register_variant_id, bounds),
             bounds,
+            with_codes=with_codes,
         )
         if value_set_version is not None:
             states = [

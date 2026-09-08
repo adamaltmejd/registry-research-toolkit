@@ -1626,3 +1626,99 @@ def test_pinned_representation_missing_middle_segment_is_flagged(
     assert "segment of 2010,2015,2020" in drift[0].message
     # Non-blocking (info): the covered segments still extract.
     assert result.ok
+
+
+# ── Validation cost: required states, not code cardinality ──────────────────
+#
+# The consumer is `POST /api/project/validate` for an ordinary geography
+# binding: one variable delivered under several variants with a state per year,
+# every state pointing at the SAME large code list. Validation reads identity
+# and state metadata only, so no code membership may be loaded for it and no
+# state outside the requested period may be hydrated. (`_states_in_bounds`
+# still SELECTs the variable's metadata history and filters the bounds in
+# Python — that read is unchanged here; what this test pins is that neither
+# unrequested history nor a shared code list adds per-row query work.)
+
+_GEOGRAPHY_SHAPES = ((3, 2), (3, 2000), (40, 2000))
+
+_GEOGRAPHY_SOURCE = {
+    "name": "rtb-2000",
+    "register_variant": "scb/rtb/personer",
+    "period": 2000,
+    "bindings": [
+        {
+            "variable": "scb/rtb/forsamling",
+            "type": "categorical",
+            "value_set": "class/sun2020",
+        }
+    ],
+}
+
+
+def _geography_conn(n_states: int, n_codes: int):
+    """`scb/rtb/forsamling` delivered under two variants with `n_states` yearly
+    states each, all sharing ONE value set of `n_codes` codes."""
+    from _slugged_db import (
+        add_register,
+        add_state,
+        add_value_set,
+        add_variable,
+        add_variant,
+        build_slugged_db,
+    )
+
+    conn = build_slugged_db()
+    add_register(conn, register_id=2, slug="rtb", name="RTB")
+    add_variable(conn, register_id=2, var_id=99, name="Församling", slug="forsamling")
+    add_value_set(
+        conn,
+        value_set_id=7,
+        codes=[(f"{i:05d}", f"Församling {i}") for i in range(n_codes)],
+    )
+    for register_variant_id, slug in ((20, "personer"), (21, "hushall")):
+        add_variant(
+            conn,
+            register_variant_id=register_variant_id,
+            register_id=2,
+            slug=slug,
+            name=slug.title(),
+        )
+        for year in range(2000, 2000 + n_states):
+            add_state(
+                conn,
+                register_id=2,
+                variable_slug="forsamling",
+                register_variant_id=register_variant_id,
+                valid_from=f"{year}-01-01",
+                valid_to=f"{year}-12-31",
+                delivery_column_name="Forsamling",
+                value_set_id=7,
+            )
+    conn.commit()
+    return conn
+
+
+def test_geography_binding_validates_without_loading_code_lists():
+    # One statement count for every shape: growing the shared code list or the
+    # state history the requested period does NOT need must not add query work.
+    counts: dict[tuple[int, int], int] = {}
+    for shape in _GEOGRAPHY_SHAPES:
+        conn = _geography_conn(*shape)
+        catalog = Catalog(conn)  # constructed before tracing: boot, not validation
+        statements: list[str] = []
+        conn.set_trace_callback(statements.append)
+        try:
+            result = validate_semantic(_project([_GEOGRAPHY_SOURCE]), catalog)
+        finally:
+            conn.set_trace_callback(None)
+            conn.close()
+        assert result.issues == ()
+        assert not [
+            sql
+            for sql in statements
+            if "value_set_member" in sql
+            or "value_code" in sql
+            or "classification_conformance_code" in sql
+        ], f"{shape} loaded code lists"
+        counts[shape] = len(statements)
+    assert len(set(counts.values())) == 1, counts

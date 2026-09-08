@@ -422,6 +422,21 @@ resolving raises `fqid_not_found`. The method signatures are the reference in
 `catalog.py` itself; the webapp's `/api/catalog/*` shape derives directly from this
 surface (see `reg_webapp/DESIGN.md`).
 
+**Narrow reads for consumers that don't want the codes.** The binding arm is
+history-hydrating by construction: `resolve` builds every state, and each state costs a
+value-set code-list query. Two entry points serve a consumer that reads identity and
+state *metadata* only — project validation is the one that asks for them (see
+`reg_webapp/DESIGN.md` → Current semantic validation); other metadata-only readers still
+take the default hydration. `variable_identity(fqid)` returns a `VariableIdentity` —
+canonical FQID, `deprecated`, `replaced_by`, `via_same_as` — resolving through the same
+`same_as` traversal and raising the same errors as `resolve`, but stopping before the
+states. `resolve_at(..., with_codes=False)` runs the ordinary period/variant resolution
+and skips only the two per-state CODE-LIST queries (`value_set` members and the
+conformance report's nonconforming codes), leaving those two fields None; `value_set_id`
+still carries the code-set identity. Both reuse the canonical identity and window
+expansion — there is no second resolver — so a narrow read's query work scales with the
+identities and states asked for, not with how many codes they share.
+
 The catalog return shapes — and, as of #701 (2026-06-23), the search return shapes in
 `search.py` — are frozen Pydantic v2 models on a shared `_CatalogModel` base
 (`BaseModel` with `frozen=True, populate_by_name=True, extra="forbid"`). This mirrors
