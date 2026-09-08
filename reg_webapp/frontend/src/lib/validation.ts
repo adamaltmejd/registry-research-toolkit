@@ -215,7 +215,10 @@ export const KNOWN_CODES: Record<string, CodeInfo> = {
     hint: "info",
   },
   range_period_partially_covered: {
-    label: "The requested range has a sub-range no variable state covers",
+    // Intersection semantics (§12): the clipped part IS ordered, so this reports
+    // what is available rather than a fault. It also covers a #307 list period's
+    // uncovered segment, so the label must not read as "one continuous range".
+    label: "The binding is available for only part of the requested period",
     hint: "info",
   },
   deprecated_traversal: {

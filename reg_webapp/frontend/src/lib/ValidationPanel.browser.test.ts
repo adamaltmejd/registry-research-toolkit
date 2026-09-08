@@ -34,6 +34,10 @@ const STEWARD_MISMATCH = {
 // the store parks in `requestError`.
 const STEWARD_MISMATCH_DETAIL = `order blocked by 1 finding: ${STEWARD_MISMATCH.code}: ${STEWARD_MISMATCH.message}`;
 
+/** The line the panel adds under a clean verdict — asserted present on a green
+ * result and ABSENT under a standing request error, so it lives in one place. */
+const ORDER_NOTE = "Generating order.json runs its own order checks.";
+
 const DRIFT_RESULT = {
   ok: true,
   issues: [
@@ -202,6 +206,98 @@ describe("ValidationPanel — researcher-language findings", () => {
     expect(document.querySelector('[aria-busy="true"]')).not.toBeNull();
   });
 
+  // What the green status CLAIMS (Y-17). Validation and order materialization are
+  // separate checks — a draft that passes here can still be blocked there — so the
+  // summary names the check that completed (the draft, against the project rules
+  // and the catalog metadata its bindings resolve through) and the order checks are
+  // named by the file that runs them, instead of a bare "no errors" the researcher
+  // can read as "the study is ready to order".
+  it("names the completed draft check and points the order checks at order.json", async () => {
+    await render(ValidationPanel, {
+      result: { ok: true, issues: [] },
+      status: "ok",
+      requestError: null,
+      requestErrorSource: null,
+      windowHints: [],
+      sources: SOURCES,
+    });
+
+    await expect
+      .element(page.getByRole("status"))
+      .toHaveTextContent(
+        /^Draft valid — project rules and catalog metadata checked\.$/,
+      );
+    // The order check is the SEPARATE pass, and it is named by the artifact that
+    // runs it — but it is NOT re-announced: only the verdict is a live status.
+    await expect.element(page.getByText(ORDER_NOTE)).toBeVisible();
+    expect(document.querySelectorAll('[role="status"]')).toHaveLength(1);
+    // No claim of completeness, and no bare "no errors".
+    expect(document.body.textContent).not.toContain("no errors");
+  });
+
+  // The WARNING label, on the partial-availability clip that now reads as one (Y-45
+  // widened the same code to disjoint requested periods): §12 orders the part that
+  // IS available, so the label reports availability rather than a fault, and says
+  // nothing about continuous ranges. The code, the info level, the diagnostic path
+  // and the requested/ordered message are the stable part — only the label moved.
+  it("labels a clean result with notes, reading its partial-availability clip as information", async () => {
+    await render(ValidationPanel, {
+      result: {
+        ok: true,
+        issues: [
+          {
+            level: "info" as const,
+            code: "range_period_partially_covered",
+            path: "/sources/0/bindings/0/period",
+            message:
+              "binding 'scb/lisa/adeldag' requested 2005..2010,2015..2020, ordered 2015..2020",
+          },
+        ],
+      },
+      // An info-only result is still the store's `warnings` status (any non-empty
+      // issue list is) — this case pins the CLIP's copy, not that mapping.
+      status: "warnings",
+      requestError: null,
+      requestErrorSource: null,
+      windowHints: [],
+      sources: SOURCES,
+    });
+
+    await expect
+      .element(
+        page.getByText(
+          "The binding is available for only part of the requested period",
+        ),
+      )
+      .toBeVisible();
+    await expect
+      .element(page.getByText("range_period_partially_covered"))
+      .toBeVisible();
+    // Grouped under Info, and the detailed requested/ordered periods survive.
+    await expect.element(page.getByText("Info (1)")).toBeVisible();
+    await expect
+      .element(
+        page.getByText(
+          "binding 'scb/lisa/adeldag' requested 2005..2010,2015..2020, ordered 2015..2020",
+        ),
+      )
+      .toBeVisible();
+    // Nothing here reads as an error: the draft still validates, with its note
+    // counted, and the order checks are still named as the ones left to run.
+    await expect
+      .element(page.getByRole("status"))
+      .toHaveTextContent(
+        /^Draft valid with warnings — project rules and catalog metadata checked\. \(1 non-blocking note\.\)$/,
+      );
+    await expect.element(page.getByText(ORDER_NOTE)).toBeVisible();
+    // …and they are named BELOW the notes, so the count reads onto its own group
+    // rather than onto the sentence in between.
+    const shown = document.body.textContent ?? "";
+    expect(shown.indexOf(ORDER_NOTE)).toBeGreaterThan(
+      shown.indexOf("Info (1)"),
+    );
+  });
+
   it("shows project-window coverage hints without mixing them into validation issues", async () => {
     await render(ValidationPanel, {
       result: { ok: true, issues: [] },
@@ -326,9 +422,9 @@ describe("ValidationPanel — researcher-language findings", () => {
 
   it("yields the green summary to a standing request error (a blocked order, §12)", async () => {
     // `/order` fail-closes projects that VALIDATE clean, so the last green
-    // result can coexist with an order block. Announcing both — "Request
-    // failed" directly above "Valid — no errors." — tells the researcher two
-    // contradictory things at once, so the banner is the only status shown.
+    // result can coexist with an order block. Announcing both — the block
+    // directly above "Draft valid" — tells the researcher two contradictory
+    // things at once, so the banner is the only status shown.
     await render(ValidationPanel, {
       result: { ok: true, issues: [] },
       status: "ok",
@@ -339,7 +435,10 @@ describe("ValidationPanel — researcher-language findings", () => {
     });
 
     await expect.element(page.getByText(/steward_mismatch/)).toBeVisible();
-    expect(document.body.textContent).not.toContain("no errors");
+    // Neither the verdict nor the order-check note the green branch carries: the
+    // order checks just ran, and this is what they said.
+    expect(document.body.textContent).not.toContain("Draft valid");
+    expect(document.body.textContent).not.toContain(ORDER_NOTE);
   });
 
   it("renders each order finding like a validation issue, located by its coordinates (§12)", async () => {
@@ -395,6 +494,8 @@ describe("ValidationPanel — researcher-language findings", () => {
     await expect
       .element(page.getByText(STEWARD_MISMATCH.message, { exact: false }))
       .toBeVisible();
+    // Every finding, and no green verdict over them (the result IS still ok).
+    expect(document.body.textContent).not.toContain("Draft valid");
   });
 
   it("shows a coverage finding's exact offending period", async () => {

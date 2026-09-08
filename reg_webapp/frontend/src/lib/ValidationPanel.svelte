@@ -201,8 +201,8 @@ const LEVEL_LABEL: Record<Level, string> = {
 
   <!-- The summary is suppressed while a request error stands: `/order` can
        fail-close a project that VALIDATES clean (a steward-provenance mismatch,
-       an uncovered period), and "Valid — no errors." directly under "Request
-       failed" tells the researcher two contradictory things at once. -->
+       an uncovered period), and "Draft valid" directly under "Order blocked"
+       tells the researcher two contradictory things at once. -->
   {#if requestError}
     <!-- the banner above is the current status -->
   {:else if status === "checking"}
@@ -217,12 +217,14 @@ const LEVEL_LABEL: Record<Level, string> = {
       role="status"
     >
       {#if result.ok}
-        {status === "warnings" ? "Valid with warnings" : "Valid"} — no errors.
+        <!-- Names the check that COMPLETED, not a state of readiness: nothing here
+             says the study is complete, and the order is its own check below. -->
+        {status === "warnings" ? "Draft valid with warnings" : "Draft valid"} — project rules and catalog metadata checked.
         {#if result.issues.length > 0}
           ({result.issues.length} non-blocking {result.issues.length === 1 ? "note" : "notes"}.)
         {/if}
       {:else}
-        Not valid — {grouped.error.length}
+        Draft not valid — {grouped.error.length}
         {grouped.error.length === 1 ? "error" : "errors"}.
       {/if}
     </p>
@@ -254,6 +256,14 @@ const LEVEL_LABEL: Record<Level, string> = {
         </div>
       {/if}
     {/each}
+    {#if result.ok}
+      <!-- Order materialization is a SEPARATE check (§12): a draft that validates
+           clean here can still be blocked there, and the banner above is where that
+           verdict lands. Below the findings because it is what the NEXT step does —
+           muted, and deliberately outside the live region so it isn't re-announced
+           on every keystroke. -->
+      <p class="muted">Generating <code>order.json</code> runs its own order checks.</p>
+    {/if}
   {/if}
 
   {#if windowHints.length > 0}

@@ -221,12 +221,19 @@ onDestroy(() => {
         disabled={!projectStore.canDownloadOrder}
         title={projectStore.canDownloadOrder
           ? "Download the order manifest"
-          : "Waiting for a valid project"}
+          : "Not available yet — see the validation results below"}
         onclick={() => projectStore.downloadOrder()}
       >
         {projectStore.orderBusy ? "Downloading…" : "Download order.json"}
       </Button>
     </div>
+    <!-- The two downloads hand over DIFFERENT artifacts, said VISIBLY (a hover
+         title reaches neither the touch widths nor the keyboard) and in the shape
+         the home screen above already uses. -->
+    <p class="muted">
+      <code>project_data.json</code> is the editable project draft;
+      <code>order.json</code> is the order manifest generated from it.
+    </p>
 
     <!-- Top-level fields. `name` is the one editable field (the label a researcher
          always sets); `steward` / `reg_meta_version` / `schema_version` are read-only

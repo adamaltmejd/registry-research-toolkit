@@ -141,10 +141,13 @@ const projectTitle = $derived.by(() => {
 });
 const projectStatus = $derived(projectStore.validationStatus);
 
+// Same vocabulary as the ValidationPanel's verdict: the chip rides along on every
+// route, so a bare "Valid" beside a blocked order would claim more than the check
+// that actually completed (it validated the DRAFT, not the order).
 const STATUS_LABEL: Record<ValidationStatus, string> = {
   unchecked: "Unchecked",
   checking: "Checking",
-  ok: "Valid",
+  ok: "Draft valid",
   warnings: "Warnings",
   errors: "Errors",
 };

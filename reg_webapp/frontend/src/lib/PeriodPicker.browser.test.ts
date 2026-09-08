@@ -1266,6 +1266,45 @@ describe("PeriodPicker — exact year entry (Y-16)", () => {
       .toBeVisible();
   });
 
+  it("names BOTH fields when neither holds a year (Y-17)", async () => {
+    const onsubmit = vi.fn<(period: string) => void>();
+    const screen = await render(PeriodPicker, {
+      ...EXACT,
+      onsubmit,
+      onclear: vi.fn(),
+    });
+    const { from, to, apply } = fields(screen);
+    // Clear both and press Apply — the reported case. Both hairlines go red and
+    // both share ONE description, so naming only From leaves To unexplained.
+    await from.fill("");
+    await to.fill("");
+    await apply.click();
+    expect(onsubmit).not.toHaveBeenCalled();
+    await expect.element(from).toHaveAttribute("aria-invalid", "true");
+    await expect.element(to).toHaveAttribute("aria-invalid", "true");
+    await expect
+      .element(
+        screen.getByText(
+          "From and To must each be a four-digit year, like 2015.",
+        ),
+      )
+      .toBeVisible();
+    // That one description is what BOTH fields point at — the reason it has to
+    // name both of them.
+    const described = from.element().getAttribute("aria-describedby") ?? "";
+    expect(document.getElementById(described)?.textContent).toContain(
+      "From and To",
+    );
+    await expect.element(to).toHaveAttribute("aria-describedby", described);
+
+    // Completing one side alone leaves the other's refusal on its own field.
+    await from.fill("2016");
+    await expect
+      .element(screen.getByText("To must be a four-digit year, like 2015."))
+      .toBeVisible();
+    await expect.element(from).toHaveAttribute("aria-invalid", "false");
+  });
+
   it("refuses a FOUR-digit year outside the wire's centuries as out of range", async () => {
     const onsubmit = vi.fn<(period: string) => void>();
     const screen = await render(PeriodPicker, {

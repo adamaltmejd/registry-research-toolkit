@@ -298,10 +298,15 @@ const entryResolution = $derived.by<
   const from = fourDigitYear(entry.from);
   const to = fourDigitYear(entry.to);
   if (from === null || to === null) {
-    return {
-      problem: `${from === null ? "From" : "To"} must be a four-digit year, like ${selectableYears.from}.`,
-      at: { from: from === null, to: to === null },
-    };
+    // Phrased off `at`, like the out-of-band refusals below, so the line can only
+    // name the fields it marks: clearing the pair and pressing Apply must not
+    // explain only From while To's hairline is red too.
+    const at = { from: from === null, to: to === null };
+    const year = `four-digit year, like ${selectableYears.from}.`;
+    if (at.from && at.to) {
+      return { problem: `From and To must each be a ${year}`, at };
+    }
+    return { problem: `${at.from ? "From" : "To"} must be a ${year}`, at };
   }
   // A four-digit year outside the wire's own century range (`2100`, `1899`) is
   // out of RANGE, not badly typed — telling the user it isn't four digits would

@@ -131,12 +131,28 @@ describe("ProjectEditor cart — read-only, no add affordances", () => {
 
     // Validation now runs automatically; the toolbar keeps only the downloads.
     expect(page.getByRole("button", { name: "Validate" }).query()).toBeNull();
+    // Both keep their file name, and a VISIBLE line says which artifact each one
+    // hands over (a hover title would miss the touch widths and the keyboard).
     await expect
       .element(page.getByRole("button", { name: "Download project_data.json" }))
       .toBeVisible();
+    const order = page.getByRole("button", { name: "Download order.json" });
+    await expect.element(order).toBeVisible();
     await expect
-      .element(page.getByRole("button", { name: "Download order.json" }))
+      .element(
+        page.getByText(
+          "project_data.json is the editable project draft; order.json is the order manifest generated from it.",
+        ),
+      )
       .toBeVisible();
+    // Nothing has validated this draft yet, so the order download points at the
+    // results rather than naming a reason that could contradict them.
+    await expect
+      .element(order)
+      .toHaveAttribute(
+        "title",
+        "Not available yet — see the validation results below",
+      );
 
     // The one editable field — the project name — writes through updateField.
     const nameInput = page.getByRole("textbox", { name: "Name" });
@@ -233,7 +249,11 @@ describe("ProjectEditor renders the ValidationPanel", () => {
     await projectStore.validate();
     await render(ProjectEditor, { regMetaVersion: "1.0.0", steward: "global" });
 
-    await expect.element(page.getByText(/Valid — no errors\./)).toBeVisible();
+    // The panel owns the exact wording (ValidationPanel.browser.test.ts); here it
+    // only has to be the clean verdict rather than the old one-word "Valid".
+    await expect
+      .element(page.getByRole("status"))
+      .toHaveTextContent(/^Draft valid/);
   });
 
   it("passes project-window coverage hints into the panel", async () => {

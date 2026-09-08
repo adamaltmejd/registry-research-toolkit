@@ -200,6 +200,38 @@ describe("AppShell — project chip", () => {
     await expect.element(drawer().getByText("Warnings")).toBeVisible();
   });
 
+  it("names the completed check in the chip when the draft validates clean", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => ({
+        ok: true,
+        status: 200,
+        json: async () => ({ ok: true, issues: [] }),
+      })),
+    );
+    projectStore.newProject({
+      reg_meta_version: "reg_meta/v1.0.0",
+      steward: "global",
+    });
+    projectStore.applyStagedDiff({
+      adds: [
+        {
+          registerVariant: "scb/lisa/v1",
+          period: 2018,
+          binding: { variable: "scb/lisa/kon", type: "categorical" },
+        },
+      ],
+    });
+    await projectStore.validate();
+
+    await render(AppShell, minimalProps());
+    await openDrawer();
+
+    // The panel's vocabulary, not a bare "Valid": the chip rides along on every
+    // route, including one showing a blocked order.
+    await expect.element(drawer().getByText("Draft valid")).toBeVisible();
+  });
+
   it("tolerates malformed source slots while showing counts", async () => {
     // The two halves of an Open: the file ingress, then the commit (the toolbar
     // puts the replacement confirmation between them).

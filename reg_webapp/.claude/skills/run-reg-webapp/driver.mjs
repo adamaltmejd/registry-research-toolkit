@@ -337,12 +337,14 @@ async function capture(page, name) {
   console.log(`flows: shot ${file}`);
 }
 
-// The two summaries ValidationPanel.svelte renders for a clean result: "Valid —
-// no errors." and "Valid with warnings — no errors." (a non-blocking notes count
-// may follow). Anchored on the whole phrase, so neither the failing branch
-// ("Not valid — N errors.") nor the in-flight one ("Checking the current
-// project…") can slip through the way a bare "Valid" prefix test allows.
-const VALID_SUMMARY = /^Valid( with warnings)?\s+—\s+no errors\./;
+// The two summaries ValidationPanel.svelte renders for a clean result: "Draft
+// valid — project rules and catalog metadata checked." and its "Draft valid with
+// warnings" twin (a non-blocking notes count may follow). Anchored on the whole
+// phrase, so neither the failing branch ("Draft not valid — N errors.") nor the
+// in-flight one ("Checking the current project…") can slip through the way a bare
+// "Draft valid" prefix test allows.
+const VALID_SUMMARY =
+  /^Draft valid( with warnings)?\s+—\s+project rules and catalog metadata checked\./;
 
 /** Assert the panel is showing a clean verdict, quoting what it showed instead. */
 async function checkValid(ui, why) {
