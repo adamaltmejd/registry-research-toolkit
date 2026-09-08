@@ -168,7 +168,9 @@ def _build_parser() -> argparse.ArgumentParser:
             "before the slug TOMLs exist (see DESIGN.md → Slug immutability). "
             "Implies `--slug-dir` is ignored; the resulting DB has empty slug "
             "columns and is intended only as input to `seed-slugs`, not for "
-            "downstream queries that depend on FQIDs."
+            "downstream queries that depend on FQIDs. Post-build validation "
+            "still runs (no `--no-validate` needed): only the corpus-volume "
+            "floors of the producer passes this flag skips are omitted."
         ),
     )
     build_p.add_argument(
@@ -767,7 +769,9 @@ def _build_parser() -> argparse.ArgumentParser:
 # ---------------------------------------------------------------------------
 
 
-def _build_validate_hook(slug_dir: Path | None) -> Callable[[Path], None]:
+def _build_validate_hook(
+    slug_dir: Path | None, *, bootstrap: bool = False
+) -> Callable[[Path], None]:
     """Return a build_db pre_rename_hook that runs the post-build validator
     against the staging DB and raises on failure. Defined as a helper so the
     closure stays narrowly scoped.
@@ -776,10 +780,16 @@ def _build_validate_hook(slug_dir: Path | None) -> Callable[[Path], None]:
     provider-specific corpus-volume gates apply here (synthetic CI uses
     ``corpus=False``). ``slug_dir`` is the SAME resolved curation dir the build
     loaded, threaded through so the mandatory entity-key curation gate (#546) can
-    read the curated ``[variable]`` pins."""
+    read the curated ``[variable]`` pins.
+
+    ``bootstrap`` is the build's own ``--skip-slugs`` flag: it tells the validator
+    which producer passes this build deliberately omitted, so the bootstrap
+    workflow validates for real instead of needing ``--no-validate``."""
 
     def hook(staging_db: Path) -> None:
-        validation = validate_built_db(staging_db, corpus=True, slug_dir=slug_dir)
+        validation = validate_built_db(
+            staging_db, corpus=True, bootstrap=bootstrap, slug_dir=slug_dir
+        )
         sys.stderr.write(validation.format_report() + "\n")
         sys.stderr.flush()
         if validation.failures:
@@ -821,7 +831,11 @@ def _cmd_build_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
 
     providers = tuple(p.strip() for p in args.providers.split(",") if p.strip())
 
-    pre_rename_hook = None if args.no_validate else _build_validate_hook(slug_dir)
+    pre_rename_hook = (
+        None
+        if args.no_validate
+        else _build_validate_hook(slug_dir, bootstrap=args.skip_slugs)
+    )
     result = build_db(
         input_dir=Path(args.input_dir),
         db_dir=db_dir,

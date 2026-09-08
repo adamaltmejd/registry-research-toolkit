@@ -12,11 +12,20 @@ from __future__ import annotations
 
 import json
 import sqlite3
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 import pytest
+from _csv_fixtures import write_scb_input
 from _shared_fixtures import connect_built_db
+from reg_meta.db import DB_FILENAME
+from reg_meta.errors import RegMetaError
+from reg_meta_build.db import build_db
 from reg_meta_build.validate import validate_built_db
+
+from reg_meta_build import validate as validate_mod
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 
 class TestValidateModule:
@@ -1727,16 +1736,6 @@ class TestBuildDbValidateFlag:
         run must not leave the staging DB installed at `<db_dir>/reg_meta.db`.
         Pre-populates the install path with a sentinel, builds with a hook
         that always fails, and asserts the sentinel is preserved."""
-        import sys as _sys
-
-        _sys.path.insert(0, str(Path(__file__).parent))
-        from _csv_fixtures import write_scb_input
-        from reg_meta.db import DB_FILENAME
-        from reg_meta.errors import RegMetaError
-        from reg_meta_build.db import build_db
-
-        from reg_meta_build import validate as validate_mod
-
         input_dir = tmp_path / "input"
         db_dir = tmp_path / "db"
         input_dir.mkdir()
@@ -1752,6 +1751,7 @@ class TestBuildDbValidateFlag:
             *,
             corpus: bool = False,
             flavored: bool = False,
+            bootstrap: bool = False,
             slug_dir: Path | None = None,
         ) -> validate_mod.ValidationResult:
             r = validate_mod.ValidationResult()
@@ -1778,6 +1778,162 @@ class TestBuildDbValidateFlag:
         assert sentinel.read_bytes() == sentinel_bytes
         tmp_file = sentinel.with_suffix(".db.tmp")
         assert not tmp_file.exists()
+
+
+@pytest.fixture(scope="module")
+def bootstrap_db(tmp_path_factory: pytest.TempPathFactory) -> Path:
+    """A synthetic bootstrap build: the documented `--skip-slugs` DB a maintainer
+    produces so `seed-slugs` has something to read before the slug TOMLs exist.
+    Every slug-dependent producer pass is skipped, so the derivations those
+    passes feed are absent by construction."""
+    tmp_path = tmp_path_factory.mktemp("bootstrap")
+    input_dir = tmp_path / "input"
+    db_dir = tmp_path / "db"
+    write_scb_input(input_dir)
+    build_db(
+        input_dir=input_dir, db_dir=db_dir, skip_classifications=True, skip_slugs=True
+    )
+    return db_dir / DB_FILENAME
+
+
+class TestBootstrapValidation:
+    """`validate_built_db(bootstrap=True)` — the `--skip-slugs` build validates
+    against the producers it actually ran."""
+
+    def test_bootstrap_build_passes_its_validator(self, bootstrap_db: Path):
+        """The advertised bootstrap workflow completes under the real
+        (`corpus=True`) publication validator — no `--no-validate` needed — and
+        each omitted floor says so in its own section, naming the derivation that
+        is intentionally unavailable."""
+        result = validate_built_db(bootstrap_db, corpus=True, bootstrap=True)
+        assert result.passed, result.failures
+        skips = [
+            ln.text for ln in result.lines if "--skip-slugs bootstrap build" in ln.text
+        ]
+        for derivation in (
+            "family merge did not run",
+            "the concept-group derivation did not run",
+            "the succession derivation did not run",
+            "the lift did not run",
+        ):
+            assert any(derivation in skip for skip in skips), (derivation, skips)
+
+    def test_producer_floors_still_fire_without_the_flag(self, bootstrap_db: Path):
+        """The floors are omitted for the bootstrap build ONLY: the same DB
+        validated as an ordinary complete build fails every producer floor whose
+        output is missing. Pins the exact set `bootstrap=True` drops."""
+        skipped_producer_floors = (  # one FAIL substring per dropped floor
+            "family-merge regression",
+            "edge derivation collapse",
+            "no curated concept groups",
+            "vintage-chain derivation regression",
+            "vintage-lift derivation regression",
+        )
+        result = validate_built_db(bootstrap_db, corpus=True)
+        assert "--skip-slugs bootstrap build" not in result.format_report()
+        for floor in skipped_producer_floors:
+            assert any(floor in f for f in result.failures), (floor, result.failures)
+
+    def test_producer_independent_corpus_floors_survive(
+        self, bootstrap_db: Path, tmp_path: Path
+    ):
+        """`bootstrap=True` drops the floors of the SKIPPED passes, not the
+        corpus gate: `_populate_fts` runs in a bootstrap build, so its
+        indexed-label floor still bites."""
+        empty_index = tmp_path / "no-fts.db"
+        empty_index.write_bytes(bootstrap_db.read_bytes())
+        conn = connect_built_db(empty_index)
+        conn.execute("INSERT INTO value_code_fts(value_code_fts) VALUES('delete-all')")
+        conn.commit()
+        conn.close()
+
+        result = validate_built_db(empty_index, corpus=True, bootstrap=True)
+        assert any("value_code_fts is EMPTY" in f for f in result.failures), (
+            result.failures
+        )
+
+    def test_structural_corruption_blocks_publication(self, tmp_path: Path):
+        """A relaxed floor does not relax its section's STRUCTURAL half: corrupt
+        an alias-window invariant in the staging DB of a bootstrap build and the
+        validate hook still refuses to publish it."""
+        from reg_meta_build import cli as cli_mod
+
+        input_dir = tmp_path / "input"
+        db_dir = tmp_path / "db"
+        write_scb_input(input_dir)
+        validate = cli_mod._build_validate_hook(None, bootstrap=True)
+
+        def corrupt_then_validate(staging_db: Path) -> None:
+            conn = connect_built_db(staging_db)
+            alias = conn.execute(
+                "SELECT variable_id, register_variant_id, delivery_column_name "
+                "FROM variable_alias LIMIT 1"
+            ).fetchone()
+            conn.execute(
+                "INSERT INTO variable_alias_window (variable_id, "
+                "register_variant_id, delivery_column_name, valid_from, valid_to) "
+                "VALUES (?, ?, ?, ?, ?)",
+                (*alias, "2020-12-31", "2020-01-01"),
+            )
+            conn.commit()
+            conn.close()
+            validate(staging_db)
+
+        with pytest.raises(RegMetaError) as exc_info:
+            build_db(
+                input_dir=input_dir,
+                db_dir=db_dir,
+                skip_classifications=True,
+                skip_slugs=True,
+                pre_rename_hook=corrupt_then_validate,
+            )
+        assert exc_info.value.code == "validation_failed"
+        assert "valid_from > valid_to" in exc_info.value.message
+        assert not (db_dir / DB_FILENAME).exists()
+
+
+class TestBuildDbBootstrapWiring:
+    """`build-db --skip-slugs` reaches the validator as bootstrap intent."""
+
+    @pytest.mark.parametrize("skip_slugs", [True, False])
+    def test_skip_slugs_declares_the_build_to_the_validator(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, skip_slugs: bool
+    ):
+        """The flag the maintainer types is what the validator is told: parse the
+        real argv, stub the build itself, and read the kwargs the installed
+        pre-rename hook hands `validate_built_db`. `corpus` stays True either way —
+        build-db is the real maintainer build in both modes."""
+        from reg_meta_build import cli as cli_mod
+
+        seen: dict[str, object] = {}
+
+        def record(_db_path: Path, **kwargs) -> validate_mod.ValidationResult:
+            seen.update(kwargs)
+            return validate_mod.ValidationResult()
+
+        def fake_build_db(**kwargs):
+            kwargs["pre_rename_hook"](tmp_path / "staging.db")
+            return {"import_date": "2026-01-01"}
+
+        monkeypatch.setattr(cli_mod, "validate_built_db", record)
+        monkeypatch.setattr(cli_mod, "build_db", fake_build_db)
+        argv = [
+            "--db",
+            str(tmp_path / "out"),
+            "build-db",
+            "--input-dir",
+            str(tmp_path / "input"),
+            "--slug-dir",
+            str(tmp_path / "slugs"),
+        ]
+        if skip_slugs:
+            argv.append("--skip-slugs")
+        _envelope, exit_code = cli_mod._cmd_build_db(
+            cli_mod._build_parser().parse_args(argv)
+        )
+        assert exit_code == 0
+        assert seen["bootstrap"] is skip_slugs
+        assert seen["corpus"] is True
 
 
 class TestConceptGroupChecks:

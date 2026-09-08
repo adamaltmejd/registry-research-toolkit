@@ -2602,6 +2602,19 @@ groups span scb and sos: a thin-provider-only build (e.g. `--providers fk`) incl
 neither legitimately has no curated groups and skips the floor, while any scb or sos
 build still floors it.
 
+**Bootstrap builds (`--skip-slugs`).** The same producer-dependent floors — the
+edge-group and curated-group floors here, the succession floor, the vintage-lift floor
+and the merged-family floor — are omitted on a `--skip-slugs` build, which `build-db`
+declares to the validator as `validate_built_db(bootstrap=True)`. That build
+deliberately skips every slug-dependent producer pass, so those floors would measure
+derivations it was told not to produce. Nothing else relaxes: the whole
+structural/FK/contract suite runs, and so do the corpus floors those passes don't feed
+(SOS volume, value-code search) — the documented bootstrap-then-`seed-slugs` workflow
+validates for real rather than needing `--no-validate`. Each floor reports its own skip
+line naming the pass that did not run, exactly as the #595/#600 gates above do, so the
+relaxation is never silent. The concept-group section's assert-empty token guard is not
+a volume floor and stays armed.
+
 ## Delivery-list enrichment (#365)
 
 `delivery_enrichment.py` applies a maintainer-curated overlay of catalog facts extracted
