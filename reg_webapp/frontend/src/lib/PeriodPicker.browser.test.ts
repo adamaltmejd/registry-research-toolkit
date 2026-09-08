@@ -1428,4 +1428,110 @@ describe("PeriodPicker — exact year entry (Y-16)", () => {
     await screen.getByRole("button", { name: "Apply period" }).click();
     expect(onsubmit).toHaveBeenLastCalledWith("2004..2008");
   });
+
+  // A moved SELECTABLE BAND is a re-seed even when the seeded years stand still.
+  // Coverage narrowing by one year, or hard steward bounds arriving, leaves
+  // `?period`, the active window, the ceiling AND the seed all equal — so the
+  // value comparison that protects the churn cases above holds — while the years
+  // the user may actually pick move under an already-authored value. That value is
+  // stale: it re-seeds, and Apply sends what the readout, the thumbs and the
+  // fields show. It is never clamped into a nearby range (the silent clamp this
+  // ticket removes) and never submitted from behind the display.
+  const BAND = { ...CHURN, vintageYear: 2026 };
+
+  /** Drag both thumbs to the coverage floor..2006 — legal now, not after. */
+  async function dragToFloor(
+    screen: Awaited<ReturnType<typeof render<typeof PeriodPicker>>>,
+  ): Promise<void> {
+    await screen.getByRole("slider", { name: "From year" }).fill("1995");
+    await screen.getByRole("slider", { name: "To year" }).fill("2006");
+    await expect
+      .element(screen.getByText("1995–2006", { exact: true }))
+      .toBeVisible();
+  }
+
+  it("re-seeds a dragged window the moved COVERAGE floor no longer allows", async () => {
+    const onsubmit = vi.fn<(period: string) => void>();
+    const props = { ...BAND, onsubmit, onclear: vi.fn() };
+    const screen = await render(PeriodPicker, props);
+    const { from, to, apply } = fields(screen);
+    await dragToFloor(screen);
+    // Coverage now starts in 1996. Period, window, ceiling and the window∩coverage
+    // seed (2000–2008) are all unchanged — only the selectable band moved.
+    await screen.rerender({ ...props, coverage: { from: 1996, to: 2008 } });
+    // The 1995 the user dragged to is no longer selectable, so the picker is back
+    // on its seed — in the readout, the thumbs and the fields alike.
+    await expect
+      .element(screen.getByText("2000–2008", { exact: true }))
+      .toBeVisible();
+    await expect
+      .element(screen.getByRole("slider", { name: "From year" }))
+      .toHaveValue("2000");
+    await expect.element(from).toHaveValue("2000");
+    await expect.element(to).toHaveValue("2008");
+    // …and Apply submits that, not the sub-floor drag.
+    await apply.click();
+    expect(onsubmit).toHaveBeenLastCalledWith("2000..2008");
+  });
+
+  it("re-seeds a dragged window an arriving STEWARD floor forbids (#1037)", async () => {
+    const onsubmit = vi.fn<(period: string) => void>();
+    const props = { ...BAND, onsubmit, onclear: vi.fn() };
+    const screen = await render(PeriodPicker, props);
+    const { from, to, apply } = fields(screen);
+    await dragToFloor(screen);
+    // Hard steward bounds arrive (a deployment floor of 2000), clipping coverage
+    // to 2000–2008. Period, active window, ceiling and seed still all match.
+    await screen.rerender({
+      ...props,
+      windowMinYear: 2000,
+      enforcePeriodBounds: true,
+    });
+    await expect
+      .element(screen.getByText("2000–2008", { exact: true }))
+      .toBeVisible();
+    await expect.element(from).toHaveValue("2000");
+    await expect.element(to).toHaveValue("2008");
+    // The whole point: no Apply may cross the steward floor, and none may submit
+    // something other than what the readout and the fields show.
+    await apply.click();
+    expect(onsubmit).toHaveBeenLastCalledWith("2000..2008");
+  });
+
+  it("re-seeds a TYPED entry the moved floor invalidates, and never re-submits it", async () => {
+    const onsubmit = vi.fn<(period: string) => void>();
+    const props = { ...BAND, onsubmit, onclear: vi.fn() };
+    const screen = await render(PeriodPicker, props);
+    const { from, to, apply } = fields(screen);
+    await from.fill("1995");
+    await to.fill("2006");
+    await screen.rerender({ ...props, coverage: { from: 1996, to: 2008 } });
+    // The typed pair went with the band it was typed against: the fields mirror
+    // the re-seeded selection again…
+    await expect.element(from).toHaveValue("2000");
+    await expect.element(to).toHaveValue("2008");
+    // …and Apply sends that, not the sub-floor pair it was carrying. (A FRESH
+    // below-floor entry is still refused, with the reason — see the band and
+    // steward-bound refusals above.)
+    await apply.click();
+    expect(onsubmit).toHaveBeenLastCalledWith("2000..2008");
+  });
+
+  it("re-seeds on a WIDENED band too — the key is the band's value, not one edge", async () => {
+    const onsubmit = vi.fn<(period: string) => void>();
+    const props = { ...BAND, onsubmit, onclear: vi.fn() };
+    const screen = await render(PeriodPicker, props);
+    await dragToFloor(screen);
+    // Coverage back to 1990 — the drag would still be selectable, but the band
+    // MOVED, which only happens when the subject or the deployment bounds change
+    // underneath (a leaf navigation shares the URL; Fix C). The buffer belongs to
+    // the band it was authored against either way, so it re-seeds here too rather
+    // than carrying the previous leaf's span into this one.
+    await screen.rerender({ ...props, coverage: { from: 1990, to: 2008 } });
+    await expect
+      .element(screen.getByText("2000–2008", { exact: true }))
+      .toBeVisible();
+    await screen.getByRole("button", { name: "Apply period" }).click();
+    expect(onsubmit).toHaveBeenLastCalledWith("2000..2008");
+  });
 });

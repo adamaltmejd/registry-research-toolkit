@@ -28,8 +28,9 @@ import type { StudyWindow } from "./project_data";
 // Apply whichever bound the user types first, and an entry that doesn't parse,
 // crosses, or falls outside the selectable years is REFUSED with the reason
 // instead of being clamped into a different requested range. Both paths write the
-// same `pending` window, which the slider (and its aria-live readout) shows, so
-// what Apply will submit is on screen before it is submitted.
+// same `pending` window, which the slider (and its aria-live readout) shows, and
+// Apply submits that DISPLAYED selection — so a range authored against selectable
+// years that have since moved re-seeds instead of riding out behind the screen.
 let {
   period,
   window = null,
@@ -162,14 +163,36 @@ const seededSelection = $derived<StudyWindow>(
     ),
 );
 
-// The picker's PENDING selection — the value Apply submits, written by a thumb
-// drag AND by a valid exact year entry (null until the user changes something, so
-// an untouched Apply still submits the seeded default). Re-armed on
-// URL/window/coverage/ceiling re-seed by the effect below.
+/** The subject's coverage band over this track — the span the slider passes to
+ * the thumbs' hard clamp (#671), null when there is no coverage or it inverts. */
+const coverageBand = $derived(
+  coverageBandEdges(
+    boundedCoverage,
+    sliderBounds.min,
+    sliderBounds.max,
+    ceilingYear,
+  ),
+);
+
+/** The years a selection may name: that band, else the full rendered track. ONE
+ * legal span behind every authoring path — the thumbs' hard clamp (#671), the
+ * exact fields' refusal, and the re-arm below — is what preserves the coverage /
+ * steward-bound / vintage constraints. The fields are a second way to author the
+ * same selection, not a way around it. */
+const selectableYears = $derived<StudyWindow>(
+  coverageBand ?? { from: sliderBounds.min, to: sliderBounds.max },
+);
+
+// The picker's PENDING selection, written by a thumb drag AND by a valid exact
+// year entry (null until the user changes something, so an untouched Apply still
+// submits the seeded default). Re-armed by the effect below; read for the wire
+// only through `sliderSelection`, so Apply can never send a value the user was
+// not shown.
 let pending = $state<StudyWindow | null>(null);
 
-/** The clamped selection shown to the user: the pending value while one is live,
- * else the seeded default. */
+/** The clamped selection shown to the user — the readout, the thumbs and the
+ * fields all follow it, and Apply submits it: the pending value while one is
+ * live, else the seeded default. */
 const sliderSelection = $derived<StudyWindow>(
   clampYearWindow(
     pending ?? seededSelection,
@@ -188,39 +211,50 @@ const hasSliderSelection = $derived(
  * deviation. */
 const userChosen = $derived(periodWindow !== null || pending !== null);
 
-/** The seed the thumbs and the fields are currently armed against, kept as a
- * VALUE. The seed inputs are all props, but two of them are rebuilt as fresh
- * objects by consumers that recompute for unrelated reasons — the leaf's
+/** What the thumbs and the fields are currently armed against, kept as a VALUE.
+ * The inputs are all props, but two of them are rebuilt as fresh objects by
+ * consumers that recompute for unrelated reasons — the leaf's
  * `coverageFromStates(node.states)`, the group's `unionCoverage` over its
  * selectable bands, a window-store write of the same span. Those hand this
- * component new identities without moving anything on screen, so an identity
- * test would re-arm and silently wipe a year half-typed. Plain, not `$state`:
- * nothing renders from it. */
+ * component new identities without moving anything on screen, so an identity test
+ * would re-arm and silently wipe a year half-typed. Plain, not `$state`: nothing
+ * renders from it. */
 let armedSeed: {
   period: string | null;
   active: StudyWindow | null;
   ceiling: number;
   seed: StudyWindow;
+  selectable: StudyWindow;
 } | null = null;
 
 $effect(() => {
   // Re-arm the pending buffer and the year fields when the URL, window, coverage
-  // or ceiling actually MOVES the seeded selection — and only then. This
-  // prevents a stale dragged/typed value from surviving a re-seed and being
-  // submitted instead of the newly displayed selection, without letting a
-  // re-render that changes nothing throw away work in progress.
+  // or ceiling actually MOVES the seeded selection or the years a selection may
+  // name — and only then. This prevents a stale dragged/typed value from
+  // surviving a re-seed and being submitted instead of the newly displayed
+  // selection, without letting a re-render that changes nothing throw away work
+  // in progress.
+  //
+  // The SELECTABLE span is part of that key because it moves on its own: coverage
+  // narrowing by a year, or hard steward bounds arriving (#1037), leaves the URL,
+  // the window, the ceiling and the seed all equal while the years the user may
+  // pick shift under an already-authored value. That value is no longer authorable
+  // — and clamping it into the new span would submit a range nobody asked for,
+  // the silent clamp this control exists to remove — so it re-seeds.
   const next = {
     period,
     active: activeYearSelection,
     ceiling: ceilingYear,
     seed: seededSelection,
+    selectable: selectableYears,
   };
   if (
     armedSeed !== null &&
     armedSeed.period === next.period &&
     armedSeed.ceiling === next.ceiling &&
     sameYearWindow(armedSeed.active, next.active) &&
-    sameYearWindow(armedSeed.seed, next.seed)
+    sameYearWindow(armedSeed.seed, next.seed) &&
+    sameYearWindow(armedSeed.selectable, next.selectable)
   ) {
     return;
   }
@@ -242,25 +276,6 @@ let entryCommitted = $state(false);
 
 const entryFrom = $derived(entry?.from ?? String(sliderSelection.from));
 const entryTo = $derived(entry?.to ?? String(sliderSelection.to));
-
-/** The subject's coverage band over this track — the span the slider passes to
- * the thumbs' hard clamp (#671), null when there is no coverage or it inverts. */
-const coverageBand = $derived(
-  coverageBandEdges(
-    boundedCoverage,
-    sliderBounds.min,
-    sliderBounds.max,
-    ceilingYear,
-  ),
-);
-
-/** The years the exact entry may name: that same band, else the full rendered
- * track. Holding the fields to the SAME span as the thumbs is what preserves the
- * coverage / steward-bound / vintage constraints — the fields are a second way to
- * author the same selection, not a way around it. */
-const entryBounds = $derived<StudyWindow>(
-  coverageBand ?? { from: sliderBounds.min, to: sliderBounds.max },
-);
 
 /** Any four-digit run → its int, else null. WIDER than the wire's `grammarYear`
  * (19xx/20xx) so the fields can tell "not a year" from "not a year we hold". */
@@ -284,7 +299,7 @@ const entryResolution = $derived.by<
   const to = fourDigitYear(entry.to);
   if (from === null || to === null) {
     return {
-      problem: `${from === null ? "From" : "To"} must be a four-digit year, like ${entryBounds.from}.`,
+      problem: `${from === null ? "From" : "To"} must be a four-digit year, like ${selectableYears.from}.`,
       at: { from: from === null, to: to === null },
     };
   }
@@ -293,10 +308,10 @@ const entryResolution = $derived.by<
   // contradict what they just typed.
   const inBand = (raw: string, year: number) =>
     grammarYear(raw) !== null &&
-    year >= entryBounds.from &&
-    year <= entryBounds.to;
+    year >= selectableYears.from &&
+    year <= selectableYears.to;
   const at = { from: !inBand(entry.from, from), to: !inBand(entry.to, to) };
-  const band = `${entryBounds.from}–${entryBounds.to}`;
+  const band = `${selectableYears.from}–${selectableYears.to}`;
   if (at.from && at.to) {
     return {
       problem: `${from} and ${to} are outside ${band} — pick years in that range.`,
@@ -352,32 +367,34 @@ function editEntry(side: "from" | "to", value: string): void {
   }
 }
 
-/** Whether `coverage` yields a usable non-inverted seed. */
-const effectiveCoverageUsable = $derived(coverageBand !== null);
-
 function apply(): void {
   if (entryProblem !== null) {
     // Explain the refusal instead of submitting some other range.
     entryCommitted = true;
     return;
   }
-  let wire: string | null = pending === null ? null : yearWindowToWire(pending);
-  // A token/list/default active period is valid URL state but not represented by
-  // the year slider. Rendering it must not rewrite the URL just because the user
-  // accepts the fallback slider projection; only an actual thumb move or exact
-  // entry replaces it with a year-window wire.
-  if (wire === null && subAnnualPeriod !== null) {
-    return;
+  if (pending === null) {
+    // A token/list/default active period is valid URL state but not represented
+    // by the year slider. Rendering it must not rewrite the URL just because the
+    // user accepts the fallback slider projection; only an actual thumb move or
+    // exact entry replaces it with a year-window wire.
+    if (subAnnualPeriod !== null) {
+      return;
+    }
+    // Nothing to narrow to at all: no selection, no window, no usable coverage.
+    if (
+      activeYearSelection === null &&
+      window === null &&
+      coverageBand === null
+    ) {
+      return;
+    }
   }
-  if (
-    wire === null &&
-    (activeYearSelection !== null || window !== null || effectiveCoverageUsable)
-  ) {
-    wire = yearWindowToWire(seededSelection);
-  }
-  if (wire !== null) {
-    onsubmit(wire);
-  }
+  // Submit the DISPLAYED selection, never the raw buffer behind it. The readout,
+  // the thumbs and the fields all render `sliderSelection`, so the wire is the
+  // range the user was looking at — a bound the current track has moved cannot
+  // ride out under a stale `pending`.
+  onsubmit(yearWindowToWire(sliderSelection));
 }
 
 function resetToWindow(): void {
