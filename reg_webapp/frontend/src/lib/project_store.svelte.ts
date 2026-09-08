@@ -297,6 +297,13 @@ let validationGeneration = 0;
  * Bumped by New and Open only — NOT the restore, NOT an edit. */
 let replacementGeneration = 0;
 
+/** The project waiting to become the draft, once the researcher has agreed to
+ * lose the one it replaces — `null` when nothing is pending. Held as the finished
+ * DATA (never a callback), so nothing about the current draft moves while it
+ * waits and a cancel is just dropping this value. `$state.raw`: it is committed
+ * whole by `loadProject`, which proxies it then. */
+let pendingReplacement = $state.raw<ProjectData | null>(null);
+
 /** The dirty flag: the draft has diverged from the last download. */
 const dirty = $derived(
   draft != null && serializeProjectData(draft) !== lastDownloaded,
@@ -345,6 +352,64 @@ function setDraft(next: ProjectData): void {
   draft = next;
   validationGeneration += 1;
   validation = null;
+}
+
+/** Load `next` as the whole current project — the ONE wholesale replacement both
+ * New and a successful Open commit through, so the two can never drift on what a
+ * replacement resets.
+ *
+ * Atomic: the id mirror is computed BEFORE any store state moves, so a throw
+ * can't leave a malformed draft loaded while `lastDownloaded` / `validation` /
+ * `openError` still describe the previous document (a stale `validatedClean`
+ * would keep the order download enabled). `buildIds` is guarded never to throw,
+ * but the order is the durable invariant. The dirty baseline is `next`
+ * re-serialized through OUR serializer — never an opened file's raw text — so a
+ * freshly loaded, unedited draft is CLEAN even when the file's own formatting
+ * differs from our pretty-print. */
+function loadProject(next: ProjectData): void {
+  const ids = buildIds(next);
+  draft = next;
+  validationGeneration += 1;
+  replacementGeneration += 1;
+  sourceIds = ids;
+  lastDownloaded = serializeProjectData(next);
+  validation = null;
+  openError = null;
+  setRequestError(null);
+}
+
+/** Build the fresh Model A draft `newProject` / a New commits — WITHOUT loading it.
+ *
+ * #629 item 3: carry the browse-time window into a project created FROM BROWSING
+ * (i.e. no draft was open). A window set while browsing lives on the no-draft
+ * localStorage fallback; reading it through `windowStore.fallback` (the single
+ * read path — no direct localStorage reach) seeds `draft.window` so it isn't
+ * silently dropped on create. Guard on `draft === null`: "New" from WITHIN an
+ * active project must NOT inherit the fallback — that fallback is the STALE
+ * browse-time value (active-draft window writes/clears don't touch it), so seeding
+ * it would silently hand the fresh project an old window. From within a draft the
+ * new project starts windowless (full history) unless the user sets one.
+ * Open/restore keep their OWN window (they bypass this). A `null` fallback leaves
+ * the key absent. */
+function newDraft(seed: ProjectSeed): ProjectData {
+  const next = newProjectData(seed);
+  const fromBrowsing = draft === null;
+  const seedWindow = windowStore.fallback;
+  if (fromBrowsing && seedWindow !== null) {
+    next.window = seedWindow;
+  }
+  return next;
+}
+
+/** The deliberate-replacement gate (see the policy section on `projectStore`):
+ * commit `next` now when nothing would be lost, otherwise hold it for the
+ * researcher's answer. */
+function requestReplacement(next: ProjectData): void {
+  if (dirty) {
+    pendingReplacement = next;
+    return;
+  }
+  loadProject(next);
 }
 
 /** Whether a binding of `variable` carrying `bRep` matches `wantRep` under the
@@ -504,89 +569,92 @@ export const projectStore = {
     return sourceIds[sourceIndex]?.bindings[bindingIndex] ?? `i${bindingIndex}`;
   },
 
+  // ── Deliberate replacement (the ONE policy New and Open share) ─────────────
+  //
+  // Replacing a DIRTY draft destroys the only copy the researcher has: the
+  // autosave holds ONE draft under ONE key, so the replacement's first autosave
+  // overwrites the recovery copy, and `beforeunload` never runs for an in-app
+  // action. So New and a successful Open both ask first, through this one gate —
+  // a clean draft (or none at all) replaces straight away, since there is nothing
+  // to lose. A draft restored from the autosave is dirty by design (recovery is
+  // not the durable download), so the policy covers it too.
+
+  /** True while a replacement is waiting on the researcher's answer. */
+  get replacementPending() {
+    return pendingReplacement !== null;
+  },
+
+  /** New, through the policy. */
+  requestNewProject(seed: ProjectSeed): void {
+    requestReplacement(newDraft(seed));
+  },
+
+  /** Open, through the policy — `project` is what `readProjectFile` ACCEPTED, so
+   * every check that can reject a file has already run and a rejected one never
+   * raises the question. */
+  requestOpenProject(project: ProjectData): void {
+    requestReplacement(project);
+  },
+
+  /** Commit the held replacement. */
+  confirmReplacement(): void {
+    const next = pendingReplacement;
+    pendingReplacement = null;
+    if (next != null) {
+      loadProject(next);
+    }
+  },
+
+  /** Drop it instead, leaving the current draft — and its autosaved recovery
+   * copy — exactly as they were. */
+  cancelReplacement(): void {
+    pendingReplacement = null;
+  },
+
   // ── Lifecycle ─────────────────────────────────────────────────────────────
+
+  /** The commit half of an Open — `readProjectFile` is its ingress, and the
+   * replacement policy above is what sits between the two. */
+  loadProject,
 
   /** Start a fresh Model A draft (clears any open error + stale validation). The
    * baseline is the new skeleton serialized, so a brand-new project is NOT dirty
    * until edited. */
   newProject(seed: ProjectSeed): void {
-    const next = newProjectData(seed);
-    // #629 item 3: carry the browse-time window into a project created FROM
-    // BROWSING (i.e. no draft was open). A window set while browsing lives on the
-    // no-draft localStorage fallback; reading it through `windowStore.fallback`
-    // (the single read path — no direct localStorage reach) seeds `draft.window`
-    // so it isn't silently dropped on create. Guard on `draft === null`: "New"
-    // from WITHIN an active project must NOT inherit the fallback — that fallback
-    // is the STALE browse-time value (active-draft window writes/clears don't
-    // touch it), so seeding it would silently hand the fresh project an old
-    // window. From within a draft the new project starts windowless (full
-    // history) unless the user sets one. Open/restore keep their OWN window (they
-    // bypass newProject). A `null` fallback leaves the key absent.
-    const fromBrowsing = draft === null;
-    const seedWindow = windowStore.fallback;
-    if (fromBrowsing && seedWindow !== null) {
-      next.window = seedWindow;
-    }
-    // Atomic replacement (compute the mirror before mutating store state) — the
-    // skeleton is always well-formed here, but this matches openFromFile/restore.
-    const ids = buildIds(next);
-    draft = next;
-    validationGeneration += 1;
-    replacementGeneration += 1;
-    sourceIds = ids;
-    lastDownloaded = serializeProjectData(next);
-    validation = null;
-    openError = null;
-    setRequestError(null);
+    loadProject(newDraft(seed));
   },
 
   /**
-   * Open a `project_data.json` File. Parse → guard non-object → `checkVersionGate`.
-   * On accept: load the parsed dict VERBATIM (including invalid unknown root keys)
-   * and set the dirty baseline (`lastDownloaded`) to the draft
-   * re-serialized through OUR serializer — NOT the file's raw text — so a
-   * freshly-opened, unedited draft is CLEAN even when the file's own formatting
-   * differs from our pretty-print. On a parse error or a gate failure: set
-   * `openError` and do NOT load (the existing draft, if any, is untouched).
+   * The file ingress: parse → guard non-object → `checkVersionGate`. Returns the
+   * accepted dict VERBATIM (including invalid unknown root keys — the backend is
+   * the structural validator, and a structurally broken draft must still open for
+   * repair), or `null` after setting the blocking `openError`.
+   *
+   * Reads NOTHING into the store: a rejected file leaves the current draft and
+   * its autosaved recovery copy untouched, and an accepted one only becomes the
+   * draft once `loadProject` commits it — which is what lets the replacement
+   * policy sit between the two halves.
    */
-  async openFromFile(file: File): Promise<void> {
+  async readProjectFile(file: File): Promise<ProjectData | null> {
     const text = await file.text();
     let parsed: unknown;
     try {
       parsed = JSON.parse(text);
     } catch {
       openError = "Not valid JSON — could not parse the file.";
-      return;
+      return null;
     }
     if (!isPlainObject(parsed)) {
       openError = "project_data.json must be a JSON object at the top level.";
-      return;
+      return null;
     }
     const obj = parsed as ProjectDataBody;
     const gate = checkVersionGate(obj);
     if (!gate.ok) {
       openError = gate.reason ?? "This project file cannot be opened.";
-      return;
+      return null;
     }
-    // Load verbatim. The dirty baseline is the draft re-serialized through OUR
-    // serializer (not the file's raw text): that way an unedited open compares
-    // equal to itself even when the file's formatting differs from our
-    // pretty-print, so a freshly-opened draft is not spuriously dirty.
-    // Compute the id mirror BEFORE mutating any store state so the replacement is
-    // atomic: a throw here would otherwise leave a malformed draft loaded while
-    // lastDownloaded/validation/openError still belong to the previous document
-    // (stale validatedClean keeps the order download enabled). buildIds is
-    // guarded never to throw, but the atomic order is the durable invariant.
-    const opened = obj as ProjectData;
-    const ids = buildIds(opened);
-    draft = opened;
-    validationGeneration += 1;
-    replacementGeneration += 1;
-    sourceIds = ids;
-    lastDownloaded = serializeProjectData(opened);
-    validation = null;
-    openError = null;
-    setRequestError(null);
+    return obj as ProjectData;
   },
 
   /** Dismiss the open-error banner. */

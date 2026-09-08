@@ -1,4 +1,6 @@
 <script lang="ts">
+import { AlertDialog } from "bits-ui";
+import { onDestroy } from "svelte";
 import { regMetaReleaseTag, safeSourceSlots } from "./project_data";
 import { projectStore } from "./project_store.svelte";
 import SourceEditor from "./SourceEditor.svelte";
@@ -34,12 +36,17 @@ const { regMetaVersion, steward } = $props<{
 // value after each pick lets re-opening the SAME file fire `change` again.
 let fileInput: HTMLInputElement;
 
+// New and Open are the app's only deliberate replacements of a loaded project,
+// and both go through the store's replacement policy (`requestNewProject` /
+// `requestOpenProject`): with a dirty draft it holds the incoming project and
+// this page renders the confirmation below; with a clean one (or none) it
+// replaces straight away.
 function onNew(): void {
   // c-i: a new project seeds this deployment's reg_meta release tag + its own
   // steward id (both from /api/context); the steward PICKER is c-ii. The
   // Model A schema gate is baked into the skeleton (`MODEL_A_SCHEMA_VERSION`);
   // the release tag records the deployment's current catalog package.
-  projectStore.newProject({
+  projectStore.requestNewProject({
     reg_meta_version: regMetaReleaseTag(regMetaVersion),
     steward,
   });
@@ -49,10 +56,32 @@ async function onFilePicked(event: Event): Promise<void> {
   const input = event.currentTarget as HTMLInputElement;
   const file = input.files?.[0];
   input.value = ""; // allow re-picking the same file
-  if (file) {
-    await projectStore.openFromFile(file);
+  if (!file) {
+    return; // the file picker was cancelled — nothing was asked for
+  }
+  // Parse and version-check BEFORE asking to replace anything: a file that can't
+  // be opened must raise the open-error banner, never the replacement question.
+  const parsed = await projectStore.readProjectFile(file);
+  if (parsed != null) {
+    projectStore.requestOpenProject(parsed);
   }
 }
+
+/** Keep the durable copy, then carry out the held replacement — the recovery
+ * half of the confirmation. `downloadProject` writes the file and re-baselines
+ * the draft, so nothing is lost by the replacement that follows. */
+function downloadThenReplace(): void {
+  projectStore.downloadProject();
+  projectStore.confirmReplacement();
+}
+
+// This page is the only surface that asks the question, and it unmounts on a
+// route change (`{#if route.name === "project"}`) — so drop any unanswered
+// replacement with it. Left standing it would outlive its dialog: a catalog pick
+// made in the meantime commits normally (a PENDING replacement bumps no
+// `replacementGeneration`), and coming back to /project would re-raise a stale
+// question whose confirm destroys the newly picked work.
+onDestroy(() => projectStore.cancelReplacement());
 </script>
 
 <article class="editor">
@@ -63,6 +92,47 @@ async function onFilePicked(event: Event): Promise<void> {
     onchange={onFilePicked}
     hidden
   />
+
+  <!-- The confirmation for a deliberate replacement of a DIRTY draft (New, or a
+       parsed-and-accepted Open). Bits UI's AlertDialog carries the modal
+       semantics: role="alertdialog", the title/description wiring, the focus trap
+       and the return of focus to whatever was focused when it opened. Its
+       `interactOutsideBehavior` default ("ignore") is right here — a stray click
+       on the scrim must not answer a question about losing work; Escape and
+       Cancel both keep the draft. -->
+  <AlertDialog.Root
+    open={projectStore.replacementPending}
+    onOpenChange={(open) => {
+      if (!open) {
+        projectStore.cancelReplacement();
+      }
+    }}
+  >
+    <AlertDialog.Portal>
+      <AlertDialog.Overlay class="replace-scrim" />
+      <AlertDialog.Content class="replace-dialog">
+        <AlertDialog.Title class="replace-title">
+          Replace the current project?
+        </AlertDialog.Title>
+        <AlertDialog.Description class="replace-body">
+          {projectStore.draft?.name || "Untitled project"} has unsaved changes
+          since its last download. Your browser keeps one recovery copy, and the
+          replacement overwrites it.
+        </AlertDialog.Description>
+        <div class="replace-actions">
+          <Button variant="default" onclick={() => projectStore.cancelReplacement()}>
+            Cancel
+          </Button>
+          <Button variant="default" onclick={downloadThenReplace}>
+            Download project_data.json
+          </Button>
+          <Button variant="danger" onclick={() => projectStore.confirmReplacement()}>
+            Replace without downloading
+          </Button>
+        </div>
+      </AlertDialog.Content>
+    </AlertDialog.Portal>
+  </AlertDialog.Root>
 
   {#if projectStore.openError}
     <p class="banner error" role="alert">
@@ -270,5 +340,58 @@ async function onFilePicked(event: Event): Promise<void> {
     display: flex;
     flex-direction: column;
     gap: var(--space-4);
+  }
+
+  /* The replacement confirmation. Bits UI portals it to <body>, so its classes
+     land outside this component's scope — hence `:global`, namespaced the way
+     `ui/Button.svelte` namespaces `.ui-btn`. */
+  /* Above every layer the shell stacks (its drawer is 60, that drawer's own
+     scrim 55) — a modal the app can paint through is not a modal. Both are
+     portalled to <body>, so they share the root stacking context with those. */
+  :global(.replace-scrim) {
+    position: fixed;
+    inset: 0;
+    z-index: 70;
+    background: var(--scrim);
+  }
+  :global(.replace-dialog) {
+    position: fixed;
+    /* Centred on the wide canvas; at 375px the inset margin governs and the
+       dialog fills the width minus that margin — where the three actions wrap.
+       35rem is what fits them on one row from 768 up. A long project name in the
+       description scrolls rather than pushing the actions past the viewport. */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: min(35rem, calc(100vw - var(--space-4) * 2));
+    max-height: calc(100vh - var(--space-4) * 2);
+    overflow-y: auto;
+    z-index: 71;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: var(--space-4);
+    background: var(--surface-raised);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--elevation-raised);
+  }
+  :global(.replace-dialog:focus-visible) {
+    outline: none;
+    box-shadow: var(--focus-ring);
+  }
+  :global(.replace-title) {
+    font-size: var(--text-h3);
+    font-weight: var(--heading-weight);
+  }
+  :global(.replace-body) {
+    color: var(--text-muted);
+  }
+  :global(.replace-actions) {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: var(--space-2);
   }
 </style>

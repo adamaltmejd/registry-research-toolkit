@@ -15,13 +15,13 @@
 #                          never collides and never leaks a server.
 #   dev.sh flows <out-dir> [scenario...]
 #                          ONE-SHOT — start, run the Playwright driver `flows`
-#                          (the /project error+retry cases and the
-#                          catalog-authored draft case, at four viewports), tear
-#                          down, exit with the driver's status. The PNGs land in
-#                          <out-dir> — each yard gate passes it
-#                          $YARD_ARTIFACT_DIR and names the scenarios it retains
-#                          the PNGs for; no names runs all four, which is the
-#                          local verification invocation.
+#                          (the /project error+retry cases, the catalog-authored
+#                          draft cases and the deliberate-replacement case, at
+#                          four viewports), tear down, exit with the driver's
+#                          status. The PNGs land in <out-dir> — each yard gate
+#                          passes it $YARD_ARTIFACT_DIR and names the scenarios
+#                          it retains the PNGs for; no names runs all six, which
+#                          is the local verification invocation.
 #   dev.sh shot [viewport...] <route>...
 #                          ONE-SHOT — screenshot each route, tear down, exit.
 #                          Viewport flags before the routes capture responsive

@@ -13,10 +13,11 @@
 //   shot <url-path>     open a path (e.g. /catalog/scb/lisa) and screenshot it
 //   eval <url-path> <js> open a path, evaluate JS in the page, print the result
 //   flows <out-dir> [scenario...]
-//                       the project gates: four scenarios (three /project
-//                       error+retry, one catalog-authored draft) × four
-//                       viewports, each in a fresh context, PNGs → <out-dir>.
-//                       Named scenarios run just those; no names runs all four.
+//                       the project gates: six scenarios (three /project
+//                       error+retry, two catalog, one deliberate replacement)
+//                       × four viewports, each in a fresh context, PNGs →
+//                       <out-dir>. Named scenarios run just those; no names
+//                       runs all six.
 //
 // smoke/shot screenshots land in $REG_WEBAPP_SHOTS — dev.sh sets it to the one
 // directory that invocation owns, and a direct run gets a fresh one under /tmp;
@@ -194,19 +195,20 @@ function check(condition, message) {
 
 // ── `flows`: the project error/retry + catalog gates ────────────────────────
 //
-// Five scenarios × four viewports = 20 cases, each in a FRESH context against
+// Six scenarios × four viewports = 24 cases, each in a FRESH context against
 // the REAL backend (the caller points it at a synthetic catalog DB through
 // REG_META_DB — see catalog_fixture_db.py). The three error scenarios inject
-// exactly one failing request and the two catalog scenarios inject none:
-// everything else is the actual app answering — including the browser's own
-// IndexedDB, which the catalog cases read back.
+// exactly one failing request and the other three inject none: everything else
+// is the actual app answering — including the browser's own IndexedDB, which the
+// catalog cases read back.
 //
-// The 32 PNGs these write are an artifact contract declared in .yard/config.toml,
-// split across TWO gates because a yard gate declares at most 16 filenames:
-// `project-flows` names the three /project scenarios (16 PNGs) and
-// `catalog-flows` the two catalog ones (16). That is what the scenario argument
-// in the dispatch below is for — a bare `flows <out-dir>` still runs all five,
-// which is the local verification invocation.
+// The 40 PNGs these write are an artifact contract declared in .yard/config.toml,
+// split across THREE gates because a yard gate declares at most 16 filenames:
+// `project-flows` names the three /project error+retry scenarios (16 PNGs),
+// `catalog-flows` the two catalog ones (16) and `replace-flows` the
+// deliberate-replacement one (8). That is what the scenario argument in the
+// dispatch below is for — a bare `flows <out-dir>` still runs all six, which is
+// the local verification invocation.
 //
 // The filenames carry the size — so the sizes are the `shot` presets above,
 // spelled once (frontend/DESIGN.md designs for exactly these four widths). Named
@@ -305,11 +307,15 @@ async function draftSaved(page, want) {
   throw new Error(`autosaved draft holds ${held}, wanted ${wanted}`);
 }
 
+/** Whether `locator` currently holds the document focus. */
+const focused = (locator) =>
+  locator.evaluate((el) => el === document.activeElement);
+
 /** Tab until `locator` holds focus — a REAL keyboard focus, so the shot shows
  * the :focus-visible ring (a programmatic .focus() does not paint one). */
 async function tabTo(page, locator, what) {
   for (let i = 0; i < 80; i += 1) {
-    if (await locator.evaluate((el) => el === document.activeElement)) return;
+    if (await focused(locator)) return;
     await page.keyboard.press("Tab");
   }
   throw new Error(`flows: ${what} never took keyboard focus`);
@@ -638,6 +644,78 @@ async function catalogPeriodRequiredCase(page, counts, shoot) {
   );
 }
 
+/** Scenario 6 — replacing an EDITED draft is deliberate. New and a successful
+ * Open both destroy the loaded project, and the browser keeps ONE recovery copy
+ * under one autosave key, so both ask the same question first; a cancel leaves
+ * the draft (and that copy) exactly as they were. Rendered because the
+ * confirmation is the surface the operator judges. */
+async function replaceConfirmCase(page, shoot, project) {
+  const ui = projectUi(page);
+  const dialog = page.getByRole("alertdialog", {
+    name: "Replace the current project?",
+  });
+  const cancel = dialog.getByRole("button", { name: "Cancel" });
+  const replace = dialog.getByRole("button", { name: "Replace without downloading" });
+  const newProject = page.getByRole("button", { name: "New", exact: true });
+  const edited = page.getByRole("heading", { name: /In progress/ });
+
+  // An edited draft — created here, then named — i.e. work worth losing.
+  let green = validated(page);
+  await page.getByRole("button", { name: "New project" }).click();
+  await green;
+  green = validated(page);
+  await page.getByRole("textbox", { name: "Name" }).fill("In progress");
+  await green;
+  await settled(page);
+  await checkValid(ui, "the edited draft must validate clean before it is replaced");
+
+  // (1) New asks first, naming what is at stake.
+  await newProject.click();
+  await dialog.waitFor();
+  check(
+    (await dialog.getAttribute("aria-modal")) === "true",
+    "the replacement confirmation must be a modal alert dialog",
+  );
+  check(
+    (await dialog.innerText()).includes("In progress"),
+    "the confirmation must name the project it would replace",
+  );
+  // Tab to Cancel: a REAL keyboard focus inside the trap, so the shot carries the
+  // focus ring as well as the dialog.
+  await tabTo(page, cancel, "Cancel");
+  await settled(page);
+  await shoot("replace-confirm");
+
+  // (2) Cancelled: the edited draft is still loaded, and focus comes back.
+  await cancel.click();
+  await dialog.waitFor({ state: "detached" });
+  await edited.waitFor();
+  check(
+    await focused(newProject),
+    "focus must return to the control that opened the confirmation",
+  );
+
+  // (3) A successful Open asks the SAME question — after the file parsed, and
+  // before anything of it is loaded.
+  green = validated(page);
+  await openProjectFile(page, project);
+  await dialog.waitFor();
+  await edited.waitFor();
+  check(
+    (await page.getByRole("heading", { name: project.name }).count()) === 0,
+    "the picked file must not load while the confirmation still stands",
+  );
+
+  // (4) Confirmed: the file is loaded, and the project it replaced is gone.
+  await replace.click();
+  await green;
+  await dialog.waitFor({ state: "detached" });
+  await page.getByRole("heading", { name: project.name }).waitFor();
+  await settled(page);
+  await checkValid(ui, "the opened project must validate clean once it is loaded");
+  await shoot("replace-opened");
+}
+
 /** Run one case in its own context: fresh storage, its own request ledger, its
  * own page-error ledger — and close the context whatever happens. `route` is
  * where the case starts (the /project scenarios' default; the catalog-authored
@@ -751,6 +829,12 @@ try {
         route: "/catalog/scb/lisa/kon",
         run: catalogPeriodRequiredCase,
       },
+      // Opens the SAME synthetic project as the recovery cases — the file whose
+      // arrival has to wait for the researcher's answer.
+      "replace-confirm": {
+        shots: 2,
+        run: (p, _c, shoot) => replaceConfirmCase(p, shoot, project),
+      },
     };
     for (const name of selection) {
       check(
@@ -759,8 +843,8 @@ try {
       );
     }
     // No names = every scenario, which is the local verification invocation. The
-    // two yard gates each name their own subset instead: a gate declares at most
-    // 16 artifact filenames, and all five scenarios write 32.
+    // three yard gates each name their own subset instead: a gate declares at most
+    // 16 artifact filenames, and all six scenarios write 40.
     const names = selection.length > 0 ? selection : Object.keys(scenarios);
     for (const viewport of FLOW_VIEWPORTS) {
       for (const name of names) {

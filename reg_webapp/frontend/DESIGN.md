@@ -298,6 +298,11 @@ edge). One soft shadow token (`elevation-raised`) for popovers, menus and the mo
 drawer; nothing else casts a shadow. A 40 % ink scrim sits behind dialogs and the
 drawer. No glows, gradients, blobs, textures or glass.
 
+Stacking runs bottom-up: in-page positioned bits (1-4), the mobile drawer's scrim (55)
+and the drawer itself (60), then a modal dialog's scrim (70) and the dialog (71). A
+dialog is portalled to `<body>`, so it shares the root stacking context with the shell
+and must name a layer above it — a modal the app can paint through is not a modal.
+
 ## Shapes
 
 Two radii: `sm` 5 px on controls (buttons, inputs, chips, tags) and `md` 8 px on panels

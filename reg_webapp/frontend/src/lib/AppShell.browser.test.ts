@@ -6,6 +6,7 @@ import AppShell from "./AppShell.svelte";
 import type { RootResponse } from "./api";
 import { getCatalogRoot } from "./api";
 import { DATA_BROWSER_LABEL } from "./catalog";
+import type { ProjectData } from "./project_data";
 import { projectStore } from "./project_store.svelte";
 import { router } from "./router.svelte";
 
@@ -190,7 +191,9 @@ describe("AppShell — project chip", () => {
   });
 
   it("tolerates malformed source slots while showing counts", async () => {
-    await projectStore.openFromFile(
+    // The two halves of an Open: the file ingress, then the commit (the toolbar
+    // puts the replacement confirmation between them).
+    const parsed = await projectStore.readProjectFile(
       new File(
         [
           JSON.stringify({
@@ -213,6 +216,8 @@ describe("AppShell — project chip", () => {
         { type: "application/json" },
       ),
     );
+    expect(parsed).not.toBeNull();
+    projectStore.loadProject(parsed as ProjectData);
 
     await render(AppShell, minimalProps());
     await openDrawer();

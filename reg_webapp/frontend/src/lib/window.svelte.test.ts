@@ -1,5 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { type StudyWindow, serializeProjectData } from "./project_data";
+import {
+  type ProjectData,
+  type StudyWindow,
+  serializeProjectData,
+} from "./project_data";
 import { projectStore } from "./project_store.svelte";
 import { windowStore } from "./window.svelte";
 
@@ -234,9 +238,11 @@ describe("browse-time window seeded on draft creation (#629 item 3)", () => {
       "project_data.json",
       { type: "application/json" },
     );
-    await projectStore.openFromFile(file);
+    const parsed = await projectStore.readProjectFile(file);
+    expect(parsed).not.toBeNull();
+    projectStore.loadProject(parsed as ProjectData);
     // The opened file's own window wins; the fallback is not seeded over it
-    // (openFromFile bypasses the newProject seed entirely).
+    // (an open bypasses the newProject seed entirely).
     expect(projectStore.draft?.window).toEqual({ from: 1995, to: 2005 });
   });
 });

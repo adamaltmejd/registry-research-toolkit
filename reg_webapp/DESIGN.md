@@ -2043,9 +2043,24 @@ rune store holding one draft per session.
   tab/window close with a dirty draft. The store drives the write endpoints (validate /
   order download) through `lib/api.ts`; it is NOT a structural validator (the backend is
   canonical).
+- **Deliberate replacement of a dirty draft.** `beforeunload` covers leaving the tab; it
+  does NOT run for the in-app New and Open, which replace the draft *and* the single
+  IndexedDB recovery copy behind it. Both therefore go through one policy
+  (`requestNewProject` / `requestOpenProject`, which hold the incoming project as DATA —
+  never a callback): over a dirty draft they raise a single confirmation (a Bits UI
+  `AlertDialog`, the app's only modal) offering cancel / download-then-replace / replace
+  anyway, and the replacement runs only on a confirm. Nothing about the draft moves
+  while that answer is pending, so a cancel leaves the draft and its autosave untouched.
+  Open PARSES first (`readProjectFile` — JSON, top-level object, version gate) and asks
+  only once the file is one that could be loaded: a cancelled file picker, a
+  parse/version rejection, or a refused replacement all leave the current draft exactly
+  as it was. A restored autosave stays dirty (a recovery copy is not a downloaded one),
+  so it gets the same confirmation — the flag is never cleared to skip the policy. The
+  pending project is dropped when `/project` unmounts, so an unanswered question can
+  never outlive the page that asks it.
 
 Note: v1 is **one draft per SPA session** (a single IndexedDB key), not a multi-project
-list — opening a file replaces the current draft.
+list — a new or opened project replaces the current draft, deliberately (above).
 
 ## Project-window store (`window.svelte.ts`) (#614/#611)
 
@@ -2105,10 +2120,10 @@ from that browse state rather than silently reverting to full history. `newProje
 invoked while a draft is already active (the "New" button inside a project) does NOT
 seed: the fallback is the stale no-draft value (active-draft window writes/clears don't
 update it), so the new project starts windowless (full history) unless the user sets
-one. An opened project (`openFromFile` / restore) keeps its own `window` unchanged. The
-rail slider also exposes an explicit ✕ clear control that writes `null` back to the
-store, making full history reachable at any time after the first interaction. Filtered
-steward deployments seed the rail and per-page picker bounds from
+one. An opened project (an open / restore) keeps its own `window` unchanged. The rail
+slider also exposes an explicit ✕ clear control that writes `null` back to the store,
+making full history reachable at any time after the first interaction. Filtered steward
+deployments seed the rail and per-page picker bounds from
 `/api/context.steward.catalog_period_span` (#1037), a best-effort year span derived from
 the steward index and clamped to the catalog vintage. The global deployment and
 unparseable steward periods fall back to the fixed 1960 → catalog-vintage bounds.

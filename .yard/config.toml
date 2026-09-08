@@ -307,6 +307,43 @@ artifacts = [
   "catalog-period-recovered-1920x1080.png",
 ]
 
+# The rendered DELIBERATE-REPLACEMENT evidence (Y-48), selected by the `ui`
+# workflow alongside the two gates above. Same driver, same provisioning, one
+# scenario at the same four viewports (4 cases): an edited draft is replaced on
+# purpose — New raises the confirmation over the work it would destroy, a cancel
+# keeps the draft and returns focus to the button that opened it, and an Open
+# raises the SAME confirmation once the file has parsed, loading it only on a
+# confirm. Its own gate for the same reason `catalog-flows` is: `artifacts` holds
+# at most 16 filenames. The shots are the operator's evidence for the one modal
+# surface this app has; the driver asserts the behavior behind them.
+[checks.replace-flows]
+command = '''sh -ec '
+export UV_CACHE_DIR=/opt/uv/cache UV_PYTHON_INSTALL_DIR=/opt/uv/python UV_LINK_MODE=copy
+uv sync --frozen --offline --no-install-workspace
+uv sync --frozen --offline --no-build-isolation
+cp -a /opt/frontend/node_modules reg_webapp/frontend/
+cksum < uv.lock | cut -d" " -f1 > .venv/.wt-provisioned
+cksum < reg_webapp/frontend/bun.lock | cut -d" " -f1 > reg_webapp/frontend/node_modules/.wt-provisioned
+export PATH="$PWD/.venv/bin:$PATH" PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers
+db=$(mktemp -d)
+python3 reg_webapp/.claude/skills/run-reg-webapp/catalog_fixture_db.py "$db"
+echo "candidate HEAD $(git rev-parse HEAD)"
+REG_META_DB="$db" bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh flows "$YARD_ARTIFACT_DIR" replace-confirm
+ls -l "$YARD_ARTIFACT_DIR"
+du -sk "$YARD_ARTIFACT_DIR"
+' '''
+timeout_minutes = 30
+artifacts = [
+  "replace-confirm-375x812.png",
+  "replace-confirm-768x1024.png",
+  "replace-confirm-1280x900.png",
+  "replace-confirm-1920x1080.png",
+  "replace-opened-375x812.png",
+  "replace-opened-768x1024.png",
+  "replace-opened-1280x900.png",
+  "replace-opened-1920x1080.png",
+]
+
 # Review runs on every candidate. max_gate_repair_rounds limits repairs after
 # gate failures, max_rounds limits repairs after blocking review findings, and
 # timeout_minutes limits one review run. blocking sets the repair threshold and
@@ -360,13 +397,14 @@ review = ["codex"]
 checks = ["lint", "test", "frontend"]
 
 # The ui workflow adds source-level design review to the default code seat AND
-# the two rendered flow gates. Select it for rendered frontend changes; the
-# operator owns visual judgment, and project-flows / catalog-flows are what hand
-# them pictures — one gate per artifact list, not per concern.
+# the three rendered flow gates. Select it for rendered frontend changes; the
+# operator owns visual judgment, and project-flows / catalog-flows /
+# replace-flows are what hand them pictures — one gate per artifact list, not
+# per concern.
 [workflows.ui]
 role = "implementation"
 review = ["codex", "design"]
-checks = ["lint", "test", "frontend", "project-flows", "catalog-flows"]
+checks = ["lint", "test", "frontend", "project-flows", "catalog-flows", "replace-flows"]
 
 # The light workflow is the everyday lane for simple work, selected one ticket
 # at a time: the role above, the CI gates, and no review. Skipping the review
