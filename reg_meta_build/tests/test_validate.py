@@ -1936,6 +1936,90 @@ class TestBuildDbBootstrapWiring:
         assert seen["corpus"] is True
 
 
+class TestBootstrapIgnoresSlugDir:
+    """`--skip-slugs` advertises `--slug-dir` as ignored; the publication
+    validator that runs after the build honors that too."""
+
+    @staticmethod
+    def _malformed_slug_dir(tmp_path: Path) -> Path:
+        """A curation dir a maintainer left mid-edit: the first glob of it raises
+        `slug_toml_unreadable`, so any read at all is observable."""
+        slug_dir = tmp_path / "slugs"
+        slug_dir.mkdir()
+        (slug_dir / "scb.toml").write_text(
+            '[register.\nslug = "testreg"\n', encoding="utf-8"
+        )
+        return slug_dir
+
+    def test_bootstrap_cli_publishes_despite_malformed_ignored_toml(
+        self,
+        tmp_path: Path,
+        monkeypatch: pytest.MonkeyPatch,
+        capsys: pytest.CaptureFixture[str],
+    ):
+        """The advertised bootstrap invocation, from real argv: the build logs
+        that it skipped the slug TOMLs, so the validator must not then open the
+        dir the flag ignores. Previously that read failed publication with
+        `slug_toml_unreadable` after every producer pass had already run."""
+        from reg_meta_build import cli as cli_mod, db as db_mod
+
+        input_dir = tmp_path / "input"
+        db_dir = tmp_path / "db"
+        write_scb_input(input_dir)
+        # build-db always seeds classifications (no `--skip-classifications` on
+        # the CLI), so point the seed at a synthetic one — the repo seed needs the
+        # real classification CSVs.
+        cls_dir = input_dir / "classifications"
+        cls_dir.mkdir(parents=True, exist_ok=True)
+        (cls_dir / "testkon.csv").write_text(
+            "vardekod,vardebenamning\n1,Man\n2,Kvinna\n", encoding="utf-8"
+        )
+        seed = tmp_path / "classifications.toml"
+        seed.write_text(
+            '[[classification]]\nshort_name = "TESTKON"\nname = "Test"\n'
+            'valid_codes_file = "testkon.csv"\nvardemangdsversion = ["Kön"]\n',
+            encoding="utf-8",
+        )
+        monkeypatch.setattr(db_mod, "repo_seed_path", lambda: seed)
+
+        exit_code = cli_mod.run(
+            [
+                "--db",
+                str(db_dir),
+                "build-db",
+                "--input-dir",
+                str(input_dir),
+                "--providers",
+                "scb",
+                "--skip-slugs",
+                "--slug-dir",
+                str(self._malformed_slug_dir(tmp_path)),
+            ]
+        )
+
+        assert exit_code == 0
+        assert (db_dir / DB_FILENAME).exists()
+        assert (
+            "entity-key curation gate skipped — --skip-slugs bootstrap build"
+            in capsys.readouterr().err
+        )
+
+    @pytest.mark.parametrize("flavored", [False, True], ids=["global", "flavored"])
+    def test_non_bootstrap_validation_still_reads_the_curation(
+        self, bootstrap_db: Path, tmp_path: Path, flavored: bool
+    ):
+        """Only the bootstrap build ignores the dir. A global or flavored
+        validation still opens it for the mandatory entity-key gate (#546/#559),
+        so the same unreadable TOML is still fatal there."""
+        with pytest.raises(RegMetaError) as exc_info:
+            validate_built_db(
+                bootstrap_db,
+                flavored=flavored,
+                slug_dir=self._malformed_slug_dir(tmp_path),
+            )
+        assert exc_info.value.code == "slug_toml_unreadable"
+
+
 class TestConceptGroupChecks:
     """#303 `_check_concept_groups` — exercised against NON-EMPTY group tables
     so CI covers the invariants (the e2e fixture build derives zero groups:

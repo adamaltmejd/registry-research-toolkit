@@ -2434,7 +2434,9 @@ on the real build (`corpus=True`, i.e. a maintainer's `build-db` without
 `iter_entity_key_variables` (and derive both the curated slug map and the optional
 steward register-id scope via `_entity_key_curation_basis`), so they enforce the
 identical set. Synthetic CI (`corpus=False`, `slug_dir=None`) skips the gate — the
-fixtures carry no curated slug dir.
+fixtures carry no curated slug dir — and so does a `--skip-slugs` bootstrap build
+(`bootstrap=True`), before it reads `slug_dir` at all: the slug population that writes
+`panel_entity_key` never ran, and the flag documents `--slug-dir` as ignored.
 
 **Chicken-and-egg:** when a new register variant with a `panel_entity_key` is onboarded,
 the first gated `build-db` will fail the entity-key gate because the pin doesn't exist
@@ -2614,6 +2616,11 @@ validates for real rather than needing `--no-validate`. Each floor reports its o
 line naming the pass that did not run, exactly as the #595/#600 gates above do, so the
 relaxation is never silent. The concept-group section's assert-empty token guard is not
 a volume floor and stays armed.
+
+`bootstrap=True` also skips the mandatory entity-key curation gate (see Entity-key slug
+freeze above), and skips it BEFORE the `slug_dir` glob — the flag documents `--slug-dir`
+as ignored, so an unreadable TOML in that dir must not fail publication. Global and
+flavored builds read the dir and enforce the pins unchanged.
 
 ## Delivery-list enrichment (#365)
 

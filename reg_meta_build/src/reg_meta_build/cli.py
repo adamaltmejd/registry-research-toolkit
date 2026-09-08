@@ -169,8 +169,8 @@ def _build_parser() -> argparse.ArgumentParser:
             "Implies `--slug-dir` is ignored; the resulting DB has empty slug "
             "columns and is intended only as input to `seed-slugs`, not for "
             "downstream queries that depend on FQIDs. Post-build validation "
-            "still runs (no `--no-validate` needed): only the corpus-volume "
-            "floors of the producer passes this flag skips are omitted."
+            "still runs (no `--no-validate` needed): only the checks of the "
+            "producer passes this flag skips are omitted."
         ),
     )
     build_p.add_argument(
@@ -784,7 +784,9 @@ def _build_validate_hook(
 
     ``bootstrap`` is the build's own ``--skip-slugs`` flag: it tells the validator
     which producer passes this build deliberately omitted, so the bootstrap
-    workflow validates for real instead of needing ``--no-validate``."""
+    workflow validates for real instead of needing ``--no-validate``. It also
+    leaves ``slug_dir`` unread, keeping the flag's own promise (see
+    ``_check_entity_key_vars_curated``)."""
 
     def hook(staging_db: Path) -> None:
         validation = validate_built_db(

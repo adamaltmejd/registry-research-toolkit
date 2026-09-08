@@ -178,7 +178,9 @@ def validate_built_db(
     corpus volume floors measuring those passes' output — merged sub-annual
     alias-window families, concept groups (edge and curated), classification
     succession, the variable vintage lift — skip themselves, each reporting the
-    omission in its own section the way the #595 SCB gate does. Nothing else
+    omission in its own section the way the #595 SCB gate does. It also skips the
+    entity-key curation gate, whose ``panel_entity_key`` subject that same slug
+    population writes (see ``_check_entity_key_vars_curated``). Nothing else
     relaxes: the full structural / FK / contract suite runs, and so do the
     producer-INDEPENDENT corpus floors (SOS volume, value-code search) — a
     bootstrap build is still a real maintainer build, so the advertised workflow
@@ -220,7 +222,7 @@ def validate_built_db(
         _check_panel_refs_resolve(conn, result, tables)
         _check_panel_refs_have_states(conn, result, tables)
         _check_entity_key_vars_curated(
-            conn, result, tables, slug_dir, flavored=flavored
+            conn, result, tables, slug_dir, flavored=flavored, bootstrap=bootstrap
         )
         _check_minted_id_bands(conn, result, tables, flavored=flavored)
         _check_canonical_attach_band(conn, result, tables)
@@ -1002,6 +1004,7 @@ def _check_entity_key_vars_curated(
     slug_dir: Path | None,
     *,
     flavored: bool = False,
+    bootstrap: bool = False,
 ) -> None:
     """#546/#554: every panel entity-key variable must carry a curated
     ``[variable]`` slug pin so the slug its ``panel_entity_key`` ref binds to
@@ -1038,8 +1041,20 @@ def _check_entity_key_vars_curated(
     ``slug_dir is None`` (synthetic CI, direct ``validate_built_db(corpus=False)``
     calls) SKIPS the gate — there's no curated dir to read. Local imports dodge
     any build-time import cycle (the pattern this module already uses for
-    build-side helpers)."""
+    build-side helpers).
+
+    ``bootstrap`` (``--skip-slugs``) skips the gate too: ``populate_slugs`` writes
+    ``panel_entity_key`` and is one of the passes that build omits, so no variant
+    can carry an entity key. The skip must come BEFORE the ``slug_dir`` read —
+    ``--skip-slugs`` documents ``--slug-dir`` as ignored, so an unreadable TOML in
+    it must not fail publication (``slug_toml_unreadable``)."""
     result.section("[panel: entity-key variables are curated]")
+    if bootstrap:
+        result.ok(
+            "entity-key curation gate skipped — --skip-slugs bootstrap build "
+            "(slug population did not run, so no variant carries an entity key)"
+        )
+        return
     if slug_dir is None:
         result.ok("entity-key curation gate skipped (no slug_dir)")
         return
