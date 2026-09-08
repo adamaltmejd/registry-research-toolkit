@@ -391,6 +391,34 @@ function pickFile(container: HTMLElement, json: string | null): void {
   input.dispatchEvent(new Event("change", { bubbles: true }));
 }
 
+/** Capture the downloads the page starts, without one actually being saved.
+ * `triggerDownload` clicks a transient `<a download>` pointing at an object URL,
+ * so this stubs the same two object-URL calls the store suite's download test
+ * stubs — plus the anchor click, which in a real browser would save a file — and
+ * keeps the blob behind each URL so the WRITTEN BYTES can be read back. */
+function captureDownloads(): { name: string; text: () => Promise<string> }[] {
+  const blobs = new Map<string, Blob>();
+  let issued = 0;
+  vi.spyOn(URL, "createObjectURL").mockImplementation((blob) => {
+    issued += 1;
+    const url = `blob:captured/${issued}`;
+    blobs.set(url, blob as Blob);
+    return url;
+  });
+  vi.spyOn(URL, "revokeObjectURL").mockImplementation(() => {});
+
+  const started: { name: string; text: () => Promise<string> }[] = [];
+  vi.spyOn(HTMLAnchorElement.prototype, "click").mockImplementation(function (
+    this: HTMLAnchorElement,
+  ) {
+    const blob = blobs.get(this.getAttribute("href") ?? "");
+    if (blob != null) {
+      started.push({ name: this.download, text: () => blob.text() });
+    }
+  });
+  return started;
+}
+
 describe("ProjectEditor — replacing a dirty draft is deliberate", () => {
   it("New asks first, and a cancel leaves the draft exactly as it was", async () => {
     seedDirtyDraft();
@@ -499,6 +527,7 @@ describe("ProjectEditor — replacing a dirty draft is deliberate", () => {
 
   it("offers the durable copy as the way out: download, then replace", async () => {
     seedDirtyDraft();
+    const downloads = captureDownloads();
     await render(ProjectEditor, { regMetaVersion: "1.0.0", steward: "global" });
 
     await page.getByRole("button", { name: "New", exact: true }).click();
@@ -506,8 +535,20 @@ describe("ProjectEditor — replacing a dirty draft is deliberate", () => {
       .getByRole("button", { name: "Download project_data.json" })
       .click();
 
-    // The download re-baselines the draft it wrote, and the held replacement
-    // then goes through — the researcher keeps the copy AND gets the new project.
+    // The durable copy is the whole point of this way out, so assert the FILE:
+    // one download of project_data.json, holding the draft that was about to be
+    // destroyed — its edited name and its picked source. Asserting only that the
+    // store went clean and the dialog closed would pass on a download that wrote
+    // nothing at all, or one that wrote the empty replacement instead.
+    expect(downloads).toHaveLength(1);
+    expect(downloads[0].name).toBe("project_data.json");
+    const written = JSON.parse(await downloads[0].text());
+    expect(written.name).toBe("In progress");
+    expect(written.sources).toHaveLength(1);
+    expect(written.sources[0].register_variant).toBe("scb/lisa/v1");
+
+    // Only then does the held replacement go through — the researcher keeps the
+    // copy AND gets the new project.
     expect(projectStore.draft?.name).toBe("");
     expect(projectStore.dirty).toBe(false);
     expect(replaceDialog().query()).toBeNull();
