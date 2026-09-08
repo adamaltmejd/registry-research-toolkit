@@ -207,6 +207,57 @@ function clickFilter(value: string): void {
   pill.click();
 }
 
+/** The one element matching `sel`, or a failure naming it — a missing node must fail
+ * loudly rather than pass every geometry assertion below as a 0. */
+function one<T extends Element>(sel: string, within: ParentNode = document): T {
+  const found = within.querySelector<T>(sel);
+  if (!found) {
+    throw new Error(`missing ${sel}`);
+  }
+  return found;
+}
+
+function lanes(): HTMLElement[] {
+  return [...document.querySelectorAll<HTMLElement>(".graph-lane")];
+}
+
+/** The visible text of everything matching `sel`, whitespace-collapsed. */
+function texts(sel: string, within: ParentNode = document): string[] {
+  return [...within.querySelectorAll(sel)].map((el) =>
+    (el.textContent ?? "").replace(/\s+/g, " ").trim(),
+  );
+}
+
+/** Run `check` at each width the design language covers, restoring the viewport
+ * afterwards so a failure cannot leak one into the specs that follow. */
+async function atEveryWidth(
+  check: (width: number, height: number) => Promise<void>,
+): Promise<void> {
+  const viewport = { width: window.innerWidth, height: window.innerHeight };
+  try {
+    for (const [width, height] of [
+      [375, 812],
+      [768, 1024],
+      [1280, 900],
+      [1920, 1080],
+    ]) {
+      await page.viewport(width, height);
+      await check(width, height);
+    }
+  } finally {
+    await page.viewport(viewport.width, viewport.height);
+  }
+}
+
+/** Wait until the picker has rendered its graph/time-band mode. */
+async function graphPickerRendered(): Promise<void> {
+  await vi.waitFor(() => {
+    if (!document.querySelector(".graph-picker")) {
+      throw new Error("graph picker not rendered");
+    }
+  });
+}
+
 function styleAttr(el: HTMLElement): string {
   return (el.getAttribute("style") ?? "").replace(/;$/, "");
 }
@@ -2665,22 +2716,6 @@ describe("RepresentationPicker graph mode (#904)", () => {
   it("keeps a viewed lane's name, slug, Viewed marker and same-as links inside the lane at every width", async () => {
     const konFqid = "scb/lisa/kon";
     const sysFqid = "scb/rams/syss";
-    const viewport = { width: window.innerWidth, height: window.innerHeight };
-    /** The one element matching `sel`, or a failure naming it — a missing node must
-     * fail loudly here rather than pass every geometry assertion below as a 0. */
-    const one = <T extends Element>(
-      sel: string,
-      within: ParentNode = document,
-    ) => {
-      const found = within.querySelector<T>(sel);
-      if (!found) {
-        throw new Error(`missing ${sel}`);
-      }
-      return found;
-    };
-    const lanes = () => [
-      ...document.querySelectorAll<HTMLElement>(".graph-lane"),
-    ];
     await render(RepresentationPicker, {
       bands: [
         {
@@ -2729,75 +2764,64 @@ describe("RepresentationPicker graph mode (#904)", () => {
       }
     });
 
-    try {
-      for (const [width, height] of [
-        [375, 812],
-        [768, 1024],
-        [1280, 900],
-        [1920, 1080],
-      ]) {
-        await page.viewport(width, height);
-        // The lane budgets a MEASURED gutter, so let the resize settle before the
-        // geometry is read.
-        await vi.waitFor(() => {
-          expect(lanes()).toHaveLength(2);
-          const timeline =
-            one<HTMLElement>(".graph-timeline").getBoundingClientRect();
-          for (const lane of lanes()) {
-            const laneBox = lane.getBoundingClientRect();
-            // Every gutter line the lane renders — including the "also in" links
-            // of the viewed lane — sits inside the lane, so nothing is clipped by
-            // the timeline and nothing is drawn over the next lane.
-            const lines = [
-              ...lane.querySelectorAll<HTMLElement>(
-                ".graph-name, .graph-slug, .graph-viewed, .graph-same-as",
-              ),
-            ];
-            expect(lines.length).toBeGreaterThan(0);
-            for (const line of lines) {
-              const box = line.getBoundingClientRect();
-              expect(box.height).toBeGreaterThan(0);
-              expect(box.top).toBeGreaterThanOrEqual(laneBox.top);
-              expect(box.bottom).toBeLessThanOrEqual(laneBox.bottom);
-              expect(box.bottom).toBeLessThanOrEqual(timeline.bottom);
-            }
+    await atEveryWidth(async () => {
+      // The lane budgets a MEASURED gutter, so let the resize settle before the
+      // geometry is read.
+      await vi.waitFor(() => {
+        expect(lanes()).toHaveLength(2);
+        const timeline =
+          one<HTMLElement>(".graph-timeline").getBoundingClientRect();
+        for (const lane of lanes()) {
+          const laneBox = lane.getBoundingClientRect();
+          // Every gutter line the lane renders — including the "also in" links
+          // of the viewed lane — sits inside the lane, so nothing is clipped by
+          // the timeline and nothing is drawn over the next lane.
+          const lines = [
+            ...lane.querySelectorAll<HTMLElement>(
+              ".graph-name, .graph-slug, .graph-viewed, .graph-same-as",
+            ),
+          ];
+          expect(lines.length).toBeGreaterThan(0);
+          for (const line of lines) {
+            const box = line.getBoundingClientRect();
+            expect(box.height).toBeGreaterThan(0);
+            expect(box.top).toBeGreaterThanOrEqual(laneBox.top);
+            expect(box.bottom).toBeLessThanOrEqual(laneBox.bottom);
+            expect(box.bottom).toBeLessThanOrEqual(timeline.bottom);
           }
-        });
+        }
+      });
 
-        const [viewed, successor] = lanes();
-        const first = viewed.getBoundingClientRect();
-        const second = successor.getBoundingClientRect();
-        // The lanes still tile the stack exactly — a lane grown for its gutter
-        // moves the next one down rather than overlapping it.
-        expect(second.top).toBeCloseTo(first.bottom, 0);
+      const [viewed, successor] = lanes();
+      const first = viewed.getBoundingClientRect();
+      const second = successor.getBoundingClientRect();
+      // The lanes still tile the stack exactly — a lane grown for its gutter
+      // moves the next one down rather than overlapping it.
+      expect(second.top).toBeCloseTo(first.bottom, 0);
 
-        // …and the cells and the succession connector stay on their lanes: the
-        // viewed lane's cell is centred in it, and the edge runs between the two
-        // lane centres.
-        const cell = one<HTMLElement>(
-          ".graph-cell",
-          viewed,
-        ).getBoundingClientRect();
-        expect(cell.top + cell.height / 2).toBeCloseTo(
-          first.top + first.height / 2,
-          0,
-        );
-        const line = one<SVGLineElement>(".graph-edge");
-        const lanesTop =
-          one<HTMLElement>(".graph-lanes").getBoundingClientRect().top;
-        expect(Number(line.getAttribute("y1")) + lanesTop).toBeCloseTo(
-          first.top + first.height / 2,
-          0,
-        );
-        expect(Number(line.getAttribute("y2")) + lanesTop).toBeCloseTo(
-          second.top + second.height / 2,
-          0,
-        );
-      }
-    } finally {
-      // A failed assertion above must not leak a viewport into the cases that follow.
-      await page.viewport(viewport.width, viewport.height);
-    }
+      // …and the cells and the succession connector stay on their lanes: the
+      // viewed lane's cell is centred in it, and the edge runs between the two
+      // lane centres.
+      const cell = one<HTMLElement>(
+        ".graph-cell",
+        viewed,
+      ).getBoundingClientRect();
+      expect(cell.top + cell.height / 2).toBeCloseTo(
+        first.top + first.height / 2,
+        0,
+      );
+      const line = one<SVGLineElement>(".graph-edge");
+      const lanesTop =
+        one<HTMLElement>(".graph-lanes").getBoundingClientRect().top;
+      expect(Number(line.getAttribute("y1")) + lanesTop).toBeCloseTo(
+        first.top + first.height / 2,
+        0,
+      );
+      expect(Number(line.getAttribute("y2")) + lanesTop).toBeCloseTo(
+        second.top + second.height / 2,
+        0,
+      );
+    });
   });
 });
 
@@ -3885,6 +3909,10 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
 // gave both the SAME name the concrete family slug does.
 describe("RepresentationPicker two-variant row identity (Y-14)", () => {
   const PERIOD = { valid_from: "2018-01-01", valid_to: "2018-12-31" } as const;
+  // The two curator namings the ticket turns on: names that already differ, and one
+  // name on both populations.
+  const DISTINCT: [string, string] = ["Individer 15+", "Individer 16+"];
+  const ALIKE: [string, string] = ["Individer", "Individer"];
 
   /** ONE delivery column (or one each) over the same period in TWO populations, named
    * by the curator as given — two distinct names, or the same name twice — as a band
@@ -3893,11 +3921,16 @@ describe("RepresentationPicker two-variant row identity (Y-14)", () => {
    * mode. One spec builds both, so the rows and the cells cannot drift apart. */
   function twoVariantFixture(
     labels: [string, string],
-    columns: [string, string] = ["Kon", "Kon"],
+    over: {
+      period?: { valid_from: string; valid_to: string };
+      coding?: string;
+    } = {},
   ): { bands: PickerBand[]; graph: RelationshipGraph } {
+    const period = over.period ?? PERIOD;
+    const coding = over.coding ?? "";
     const populations = [
-      { variant: "individer-15plus", label: labels[0], column: columns[0] },
-      { variant: "individer-16plus", label: labels[1], column: columns[1] },
+      { variant: "individer-15plus", label: labels[0] },
+      { variant: "individer-16plus", label: labels[1] },
     ];
     return {
       bands: [
@@ -3910,10 +3943,10 @@ describe("RepresentationPicker two-variant row identity (Y-14)", () => {
               state_id: i + 1,
               variant: p.variant,
               variant_label: p.label,
-              delivery_column_name: p.column,
-              value_set_version_label: "",
+              delivery_column_name: "Kon",
+              value_set_version_label: coding,
               value_set_id: null,
-              ...PERIOD,
+              ...period,
             })),
           ),
         } satisfies PickerBand,
@@ -3928,8 +3961,9 @@ describe("RepresentationPicker two-variant row identity (Y-14)", () => {
                 representation_run_id: i + 1,
                 variant: p.variant,
                 variant_label: p.label,
-                delivery_column_name: p.column,
-                ...PERIOD,
+                delivery_column_name: "Kon",
+                value_set_version_label: coding,
+                ...period,
               }),
             ),
           }),
@@ -3937,13 +3971,6 @@ describe("RepresentationPicker two-variant row identity (Y-14)", () => {
         focus_id: "scb/lisa/kon",
       }),
     };
-  }
-
-  /** The visible text of everything matching `sel`, whitespace-collapsed. */
-  function texts(sel: string): string[] {
-    return [...document.querySelectorAll(sel)].map((el) =>
-      (el.textContent ?? "").replace(/\s+/g, " ").trim(),
-    );
   }
 
   const ROWS = ".col-row.nested .row-btn";
@@ -4026,51 +4053,220 @@ describe("RepresentationPicker two-variant row identity (Y-14)", () => {
     expect(onapply.mock.calls[0][0].adds[0].row.column).toBe("Kon");
   });
 
-  it("leaves graph mode for the list when only the variant key tells the rows apart", async () => {
+  // ── The same choice in GRAPH mode (Y-14 rev 6) ────────────────────────────────
+  // A graph cell reads as its column, coding and window — never as the POPULATION
+  // delivering it — so two coexisting variants of one variable project onto two
+  // separately selectable cells that read exactly alike, whatever the curator named
+  // them. These fixtures are the ticket's shape with a window WIDE enough for the
+  // graph to paint a cell's context (a one-year run floors to `CELL_MIN_W` and has
+  // room for none), plus a successor lane so the succession context stays under test.
+  const WIDE = { valid_from: "2000-01-01", valid_to: "2022-12-31" } as const;
+  // Both populations deliver the column under ONE coding, so nothing but the
+  // population itself can tell the two cells apart.
+  const CODING = "SCB kön";
+  const SYSS = "scb/rams/syss";
+
+  function coexistingGraphFixture(labels: [string, string]): {
+    bands: PickerBand[];
+    graph: RelationshipGraph;
+  } {
+    const base = twoVariantFixture(labels, { period: WIDE, coding: CODING });
+    return {
+      bands: [
+        ...base.bands,
+        {
+          key: SYSS,
+          name: "Sysselsättning",
+          registerPrefix: "scb/rams",
+          rows: [
+            row({
+              column: "Syss",
+              from: "2023-01-01",
+              to: "2026-12-31",
+              period: "2023 – 2026",
+              windows: [{ from: "2023-01-01", to: "2026-12-31" }],
+            }),
+          ],
+        } satisfies PickerBand,
+      ],
+      graph: graph({
+        nodes: [
+          ...base.graph.nodes,
+          graphNode(SYSS, {
+            label: "Sysselsättning",
+            states: [
+              graphState({
+                state_id: 3,
+                representation_run_id: 3,
+                delivery_column_name: "Syss",
+                valid_from: "2023-01-01",
+                valid_to: "2026-12-31",
+              }),
+            ],
+          }),
+        ],
+        edges: [edge("scb/lisa/kon", SYSS)],
+        focus_id: "scb/lisa/kon",
+      }),
+    };
+  }
+
+  /** Render that graph and assert, at every width the design language covers, that the
+   * two coexisting cells read differently, paint their distinguishing text in full,
+   * and keep their own sub-row while the succession connector stays on the lanes. */
+  async function expectGraphCellsIdentify(
+    labels: [string, string],
+    populations: [string, string],
+  ): Promise<void> {
     await render(RepresentationPicker, {
-      ...twoVariantFixture(["Individer", "Individer"]),
+      ...coexistingGraphFixture(labels),
+      ...PROPS,
+    });
+    await graphPickerRendered();
+    // Graph mode, not the list: the succession context the graph exists for survives
+    // the fix.
+    expect(document.querySelector(".col-list")).toBeNull();
+    const cellText = (population: string) =>
+      `Kon ${population} ${CODING} 2000 – 2022`;
+
+    await atEveryWidth(async () => {
+      await vi.waitFor(() => {
+        expect(lanes()).toHaveLength(2);
+        // Each cell names the population behind it, so no two selectable cells
+        // read alike.
+        expect(texts(".graph-cell", lanes()[0])).toEqual([
+          cellText(populations[0]),
+          cellText(populations[1]),
+        ]);
+      });
+      const konLane = lanes()[0];
+      const laneBox = konLane.getBoundingClientRect();
+      const cells = [
+        ...konLane.querySelectorAll<HTMLElement>(".graph-cell"),
+      ].map((c) => ({ el: c, box: c.getBoundingClientRect() }));
+      for (const [i, cell] of cells.entries()) {
+        // The distinguishing text is painted WHOLE inside its cell — the cell
+        // clips its overflow, so a text that doesn't fit would silently leave the
+        // two cells identical again.
+        const label = one<HTMLElement>(
+          ".graph-cell-variant, .variant-key",
+          cell.el,
+        );
+        const box = label.getBoundingClientRect();
+        expect(label.textContent?.trim()).toBe(populations[i]);
+        expect(label.scrollWidth).toBeLessThanOrEqual(label.clientWidth + 1);
+        expect(box.left).toBeGreaterThanOrEqual(cell.box.left);
+        expect(box.right).toBeLessThanOrEqual(cell.box.right);
+        expect(box.top).toBeGreaterThanOrEqual(cell.box.top);
+        expect(box.bottom).toBeLessThanOrEqual(cell.box.bottom);
+        // …on its own sub-row, inside the lane it belongs to.
+        expect(cell.box.top).toBeGreaterThanOrEqual(laneBox.top);
+        expect(cell.box.bottom).toBeLessThanOrEqual(laneBox.bottom);
+      }
+      expect(cells[0].box.bottom).toBeLessThanOrEqual(cells[1].box.top);
+
+      // The succession connector still runs between the two lane centres.
+      const successor = lanes()[1].getBoundingClientRect();
+      const line = one<SVGLineElement>(".graph-edge");
+      const lanesTop =
+        one<HTMLElement>(".graph-lanes").getBoundingClientRect().top;
+      expect(Number(line.getAttribute("y1")) + lanesTop).toBeCloseTo(
+        laneBox.top + laneBox.height / 2,
+        0,
+      );
+      expect(Number(line.getAttribute("y2")) + lanesTop).toBeCloseTo(
+        successor.top + successor.height / 2,
+        0,
+      );
+
+      // Both choices are reachable BY NAME, so the two cells differ to a screen
+      // reader and to the keyboard, not only in pixels.
+      for (const population of populations) {
+        await expect
+          .element(page.getByRole("checkbox", { name: cellText(population) }))
+          .toBeVisible();
+      }
+    });
+  }
+
+  it("names the population on graph cells two DISTINCT variants would otherwise share", async () => {
+    await expectGraphCellsIdentify(DISTINCT, DISTINCT);
+  });
+
+  it("falls back to the variant slug on graph cells when the two names are IDENTICAL", async () => {
+    await expectGraphCellsIdentify(ALIKE, [
+      "individer-15plus",
+      "individer-16plus",
+    ]);
+  });
+
+  it.each([
+    {
+      labels: DISTINCT,
+      population: "Individer 15+",
+      variant: "individer-15plus",
+    },
+    {
+      labels: DISTINCT,
+      population: "Individer 16+",
+      variant: "individer-16plus",
+    },
+    {
+      labels: ALIKE,
+      population: "individer-15plus",
+      variant: "individer-15plus",
+    },
+    {
+      labels: ALIKE,
+      population: "individer-16plus",
+      variant: "individer-16plus",
+    },
+  ])(
+    "stages the graph cell picked by its own name ($population)",
+    async ({ labels, population, variant }) => {
+      const onapply = vi.fn();
+      await render(RepresentationPicker, {
+        ...coexistingGraphFixture(labels),
+        ...PROPS,
+        onapply,
+      });
+      await graphPickerRendered();
+
+      await page
+        .getByRole("checkbox", {
+          name: `Kon ${population} ${CODING} 2000 – 2022`,
+        })
+        .click();
+      await page
+        .getByRole("button", {
+          name: /Add to project|Remove from project|Apply changes/,
+        })
+        .click();
+      // The cell-to-row binding is untouched: the cell the user can finally tell
+      // apart stages ITS OWN concrete variant and column.
+      expect(onapply).toHaveBeenCalledTimes(1);
+      expect(onapply.mock.calls[0][0].adds).toHaveLength(1);
+      expect(onapply.mock.calls[0][0].adds[0].row.variant).toBe(variant);
+      expect(onapply.mock.calls[0][0].adds[0].row.column).toBe("Kon");
+    },
+  );
+
+  it("keeps the picker in the list when a cell is too narrow to name its population", async () => {
+    // Distinct names, one-year runs: the cells floor to `CELL_MIN_W` with no room for
+    // the text that would tell them apart, so the picker uses the list — the same
+    // GEOMETRY fallback an unreadably narrow codings cell takes, not a naming rule.
+    await render(RepresentationPicker, {
+      ...twoVariantFixture(DISTINCT),
       ...PROPS,
     });
 
-    // A graph cell carries the column, the coding and the window — never the
-    // population — so these two rows would be two identical checkboxes there. The
-    // picker uses the list, which can show the distinguishing family key.
     await vi.waitFor(() => {
       if (!document.querySelector(".col-list")) {
         throw new Error("list picker not rendered");
       }
     });
     expect(document.querySelector(".graph-picker")).toBeNull();
-    expect(texts(ROWS)).toEqual([
-      "Individer individer-15plus 2018",
-      "Individer individer-16plus 2018",
-    ]);
-    await expect
-      .element(
-        page.getByRole("checkbox", { name: "Individer individer-15plus 2018" }),
-      )
-      .toBeVisible();
-  });
-
-  it("keeps graph mode when the delivery column already tells the two rows apart", async () => {
-    await render(RepresentationPicker, {
-      ...twoVariantFixture(["Individer", "Individer"], ["Kon", "Sni"]),
-      ...PROPS,
-    });
-
-    // Same two curator names, but each population delivers its own column: the rows
-    // need no key, so the graph keeps its succession context.
-    await vi.waitFor(() => {
-      if (!document.querySelector(".graph-picker")) {
-        throw new Error("graph picker not rendered");
-      }
-    });
-    await expect
-      .element(page.getByRole("checkbox", { name: /Kon/ }))
-      .toBeVisible();
-    await expect
-      .element(page.getByRole("checkbox", { name: /Sni/ }))
-      .toBeVisible();
+    expect(texts(ROWS)).toEqual(["Individer 15+ 2018", "Individer 16+ 2018"]);
   });
 });
 

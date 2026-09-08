@@ -1621,9 +1621,11 @@ export function pickerRowVariantFamilyLabel(row: PickerRepresentation): string {
  * that therefore identifies nothing on its own. A curator variant name is not unique,
  * so two variant families can share one, and a picker row (or a variant filter value)
  * showing only that name would stand for either. The picker puts the concrete identity
- * back on exactly these — `pickerLabeling`'s `variantKey` and `pickerFilterDimensions`'
- * variant values — and leaves every other label alone. */
-function collidingLabels(
+ * back on exactly these — `pickerLabeling`'s `variantKey`, `pickerFilterDimensions`'
+ * variant values, and graph mode's cells (which read as column, coding and window, so
+ * two populations delivering alike collide there too) — and leaves every other label
+ * alone. */
+export function collidingLabels(
   pairs: Iterable<readonly [identity: string, label: string]>,
 ): Set<string> {
   const byLabel = new Map<string, Set<string>>();

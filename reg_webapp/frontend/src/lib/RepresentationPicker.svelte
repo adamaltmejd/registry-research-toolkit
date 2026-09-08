@@ -10,6 +10,7 @@ import {
   type BandLabel,
   catalogHref,
   clusterBands,
+  collidingLabels,
   encodeCodesParam,
   facetAxisStyle,
   facetLabelJoin,
@@ -19,6 +20,7 @@ import {
   pickerFilterDimensions,
   pickerLabeling,
   pickerRowPasses,
+  pickerRowVariantFamily,
   pickerRowVariantFamilyLabel,
   representationInWindow,
   rowFacet,
@@ -37,7 +39,6 @@ import {
   type ResolvedEdge,
   type RunCell,
   resolveEdges,
-  type VariableLane,
   type YearScale,
   yearScaleOf,
 } from "./picker_graph";
@@ -839,6 +840,11 @@ const GRAPH_LANE_BASE_H = 58;
 const GRAPH_ROW_H = 46;
 const GRAPH_CELL_H = 40;
 const GRAPH_CODINGS_NUDGE_MIN_READABLE_W = 160;
+/** A per-character px budget for `--text-micro` text (0.75rem; the mono face advances
+ * 0.6em ≈ 7.2px there, the UI face less). Used ONLY to ask whether a cell is wide
+ * enough to SHOW the population text it needs — never to lay anything out, and the
+ * rendered text is the authority: it is clipped, not reflowed, if this runs short. */
+const GRAPH_CELL_TEXT_CHAR_W = 8;
 
 function variableGraphNodes(g: RelationshipGraph): VariableGraphNode[] {
   return g.nodes.filter((n): n is VariableGraphNode => n.kind === "variable");
@@ -1005,6 +1011,12 @@ function graphCellWidthForScale(
   );
 }
 
+/** The width a cell needs to paint `text` beside its fixed chrome — checkbox, column
+ * chip, window and gaps, which is what `CELL_MIN_W` already budgets. */
+function graphCellContextW(text: string): number {
+  return CELL_MIN_W + text.length * GRAPH_CELL_TEXT_CHAR_W;
+}
+
 function graphReadableWithCurrentRows(g: RelationshipGraph): boolean {
   const scale = yearScaleOf(g, vintageYear);
   for (const band of graphBands) {
@@ -1014,18 +1026,25 @@ function graphReadableWithCurrentRows(g: RelationshipGraph): boolean {
     if (!node) {
       return false;
     }
-    for (const cell of cellsOf(node)) {
+    const cells = cellsOf(node);
+    const populations = graphCellPopulations(band, cells);
+    for (const cell of cells) {
       const matches = graphCellCandidates(band, cell);
       if (matches.length !== 1) {
         continue;
       }
       const match = matches[0];
       const column = match.columns[0];
+      const width = graphCellWidthForScale(cell, scale);
       if (
         column &&
         match.row.codingsVary &&
-        graphCellWidthForScale(cell, scale) < GRAPH_CODINGS_NUDGE_MIN_READABLE_W
+        width < GRAPH_CODINGS_NUDGE_MIN_READABLE_W
       ) {
+        return false;
+      }
+      const population = populations.get(cell);
+      if (population && width < graphCellContextW(population.text)) {
         return false;
       }
     }
@@ -1107,19 +1126,6 @@ function graphCoversEveryPickerRow(g: RelationshipGraph): boolean {
   }
   return graphBands.every((band) =>
     band.rows.every((row) => coveredRows.has(rowKey(band, row))),
-  );
-}
-
-/** A graph cell identifies its row by delivery column, coding label and window — never
- * by the POPULATION that delivers it. So two variant families a curator named alike
- * (the rows `pickerLabeling` hands a `variantKey`, Y-14) project onto cells with the
- * same visible text and the same accessible name, and the graph is no longer a
- * lossless picture of the choice. Fall back to the list, whose rows carry that
- * distinguishing family key — the same way an unreadably narrow codings cell falls
- * back rather than dropping the context it needs. */
-function graphDistinguishesEveryPickerRow(): boolean {
-  return [...labelingByBand.values()].every((labeling) =>
-    labeling.rows.every((r) => r.variantKey === null),
   );
 }
 
@@ -1251,7 +1257,6 @@ function graphFitsPicker(g: RelationshipGraph): boolean {
     cellCount <= GRAPH_MAX_CELLS &&
     graphCoversEveryPickerRow(renderGraph) &&
     graphReadableWithCurrentRows(renderGraph) &&
-    graphDistinguishesEveryPickerRow() &&
     graphFocusIsNavigable(g)
   );
 }
@@ -1401,10 +1406,9 @@ function graphBandForNode(node: VariableGraphNode): PickerBand | null {
 }
 
 function graphCellMatch(
-  lane: VariableLane,
+  band: PickerBand | null,
   cell: RunCell,
 ): GraphCellMatch | null {
-  const band = graphBandForNode(lane.node);
   if (!band) {
     return null;
   }
@@ -1432,6 +1436,10 @@ function graphCellInWindow(cell: RunCell): boolean {
   return from <= window[1] && window[0] <= to;
 }
 
+/** The smallest text a graph cell must add to identify its row, and whether that text
+ * is the machine KEY (rendered mono, like the list row's) rather than a curator name. */
+type GraphCellPopulation = { text: string; isKey: boolean };
+
 type GraphLaneItem =
   | {
       kind: "cell";
@@ -1439,6 +1447,7 @@ type GraphLaneItem =
       match: GraphCellMatch | null;
       index: number;
       rowIndex: number;
+      population: GraphCellPopulation | null;
     }
   | {
       kind: "row";
@@ -1452,13 +1461,22 @@ function graphLaneItems(rn: RenderNode): GraphLaneItem[] {
     return [];
   }
   const band = graphBandForNode(rn.node);
+  const populations = graphCellPopulations(band, rn.cells);
   const matchedRows = new Set<string>();
   const items: GraphLaneItem[] = [];
   for (const [index, cell] of rn.cells.entries()) {
-    const match = graphCellMatch(rn, cell);
+    const match = graphCellMatch(band, cell);
+    const population = populations.get(cell) ?? null;
     if (match) {
       matchedRows.add(rowKey(match.band, match.row));
-      items.push({ kind: "cell", cell, match, index, rowIndex: cell.row });
+      items.push({
+        kind: "cell",
+        cell,
+        match,
+        index,
+        rowIndex: cell.row,
+        population,
+      });
     } else if (
       graphMemberHrefs == null &&
       (!band || band.rows.length === 0 || cell.columns.length === 0)
@@ -1469,6 +1487,7 @@ function graphLaneItems(rn: RenderNode): GraphLaneItem[] {
         match: null,
         index,
         rowIndex: cell.row,
+        population,
       });
     }
   }
@@ -1783,12 +1802,56 @@ function graphCellDisplayWindow(
     : cell.window;
 }
 
-function graphCellTitle(cell: RunCell, match: GraphCellMatch): string {
+function graphCellTitle(
+  cell: RunCell,
+  match: GraphCellMatch,
+  population?: string,
+): string {
   const column = match.column;
   const sub = graphCellSubLabel(cell, column);
-  return [column, sub || null, graphCellDisplayWindow(cell, match)]
+  return [column, population, sub || null, graphCellDisplayWindow(cell, match)]
     .filter(Boolean)
     .join(" · ");
+}
+
+/** The population TEXT each of a lane's cells must SHOW to identify the row it toggles
+ * (Y-14), by cell. A cell reads as its column, coding and window — never as the
+ * POPULATION delivering it — so two coexisting variant families delivering one column
+ * with one coding over the same years project onto two separately selectable cells
+ * that read exactly alike, in visible text and in accessible name. Give back the
+ * smallest text that tells exactly those cells apart: the curator's family NAME, or
+ * (where two families share that name, the rows `pickerLabeling` hands a `variantKey`)
+ * the family KEY. Cells that already read apart keep their label untouched, and two
+ * cells of ONE row are one choice, not an ambiguity. */
+function graphCellPopulations(
+  band: PickerBand | null,
+  cells: readonly RunCell[],
+): Map<RunCell, GraphCellPopulation> {
+  const populations = new Map<RunCell, GraphCellPopulation>();
+  if (cells.length < 2) {
+    return populations; // one cell on the lane — nothing it could be confused with
+  }
+  const bound = cells.flatMap((cell) => {
+    const match = graphCellMatch(band, cell);
+    // What the cell reads as BEFORE any population text — the collision key.
+    return match ? [{ cell, match, reads: graphCellTitle(cell, match) }] : [];
+  });
+  const ambiguous = collidingLabels(
+    bound.map((b) => [rowKey(b.match.band, b.match.row), b.reads]),
+  );
+  const colliding = bound
+    .filter((b) => ambiguous.has(b.reads))
+    .map((b) => ({
+      cell: b.cell,
+      family: pickerRowVariantFamily(b.match.row),
+      name: pickerRowVariantFamilyLabel(b.match.row),
+    }));
+  const sharedNames = collidingLabels(colliding.map((c) => [c.family, c.name]));
+  for (const c of colliding) {
+    const isKey = sharedNames.has(c.name);
+    populations.set(c.cell, { text: isKey ? c.family : c.name, isKey });
+  }
+  return populations;
 }
 
 function graphRenameHint(match: GraphCellMatch): string[] {
@@ -2469,6 +2532,7 @@ function codingsVaryHref(
                           {@const stage = rowStage(band, row)}
                           {@const inWindow = graphCellInWindow(cell)}
                           {@const cellSub = graphCellSubLabel(cell, column)}
+                          {@const population = item.population}
                           {@const facetMarkers = rowFacetMarkers(band, column)}
                           <label
                             class="graph-cell"
@@ -2480,7 +2544,7 @@ function codingsVaryHref(
                             class:open-start={cell.openStart}
                             class:open-end={cell.openEnd}
                             style={`left:${left}px; width:${width}px; top:${cellTopValue}px`}
-                            title={graphCellTitle(cell, item.match)}
+                            title={graphCellTitle(cell, item.match, population?.text)}
                           >
                             <input
                               type="checkbox"
@@ -2491,8 +2555,19 @@ function codingsVaryHref(
                             />
                             <span class="graph-cell-main">
                               {@render colChip(column)}
-                              {#if cellSub}
-                                <span class="graph-cell-sub">{cellSub}</span>
+                              {#if cellSub || population}
+                                <span class="graph-cell-context">
+                                  {#if population?.isKey}
+                                    {@render variantKeyTag(population.text)}
+                                  {:else if population}
+                                    <span class="graph-cell-variant"
+                                      >{population.text}</span
+                                    >
+                                  {/if}
+                                  {#if cellSub}
+                                    <span class="graph-cell-sub">{cellSub}</span>
+                                  {/if}
+                                </span>
                               {/if}
                               {#if facetMarkers.length > 0}
                                 <span class="facet-markers graph-facet-markers">
@@ -3314,6 +3389,8 @@ function codingsVaryHref(
   }
   .graph-cell.staged-remove .graph-cell-main,
   .graph-cell.staged-remove .graph-cell-window,
+  .graph-cell.staged-remove .graph-cell-variant,
+  .graph-cell.staged-remove .variant-key,
   .graph-cell.staged-remove .col-chip {
     text-decoration: line-through;
     text-decoration-thickness: 1px;
@@ -3367,7 +3444,8 @@ function codingsVaryHref(
     white-space: nowrap;
   }
   .graph-cell-sub,
-  .graph-cell-window {
+  .graph-cell-window,
+  .graph-cell-variant {
     color: var(--text-muted);
     font-size: var(--text-micro);
     font-variant-numeric: tabular-nums;
@@ -3380,6 +3458,25 @@ function codingsVaryHref(
   .graph-cell .codings-vary,
   .graph-cell .late-warn {
     flex: 0 0 auto;
+  }
+  /* The population behind two cells that would otherwise read alike (Y-14) shares the
+     cell's context line with the coding label, so the cell stays two lines tall. The
+     identity LEADS that line — the timeline scrolls horizontally at 375, so the text
+     telling the two choices apart must sit at the cell's own edge, not off-screen —
+     and it never wraps or shrinks; the coding, which both cells share anyway,
+     ellipsizes first. A cell too narrow to paint the identity keeps the picker in list
+     mode rather than clipping it. */
+  .graph-cell-context {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-2);
+    min-width: 0;
+  }
+  .graph-cell .variant-key,
+  .graph-cell-variant {
+    flex: 0 0 auto;
+    white-space: nowrap;
+    overflow-wrap: normal;
   }
   .graph-fallback {
     position: absolute;
