@@ -1743,10 +1743,12 @@ def _overlap_db():
     per-window markers for the assertions."""
     import sqlite3
 
+    from reg_meta.db import register_py_lower
     from reg_meta_build.db import DDL, seed_providers
 
     conn = sqlite3.connect(":memory:")
     conn.row_factory = sqlite3.Row
+    register_py_lower(conn)  # `search`'s LIKE arms fold with it; `open_db` registers it
     conn.executescript(DDL)
     seed_providers(conn)
     conn.execute(

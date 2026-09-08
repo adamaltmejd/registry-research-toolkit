@@ -786,8 +786,9 @@ def search(
     # MATCH expression built from the raw query — quoted prefix terms that
     # neutralize FTS operators and won't error on stray syntax (see
     # `_fts_match_query`). LIKE paths use an escaped substring pattern so user
-    # `%` / `_` input stays literal. None = the query had no usable token, so the
-    # FTS indexes contribute nothing.
+    # `%` / `_` input stays literal; the two direct arms additionally fold BOTH
+    # sides through `py_lower` (see DESIGN.md → FTS5 configuration). None = the
+    # query had no usable token, so the FTS indexes contribute nothing.
     fts_query = _fts_match_query(query)
 
     # BOTH classification surfaces — the name-FTS arm and the code-containment arm
@@ -1397,7 +1398,7 @@ def _search_datacolumns(
         "FROM variable_alias va "
         "JOIN variable v ON va.variable_id = v.variable_id "
         "JOIN register r ON v.register_id = r.register_id "
-        "WHERE va.delivery_column_name LIKE ? ESCAPE '\\' "
+        "WHERE py_lower(va.delivery_column_name) LIKE py_lower(?) ESCAPE '\\' "
         + register_filter
         + year_filter
         + "ORDER BY va.delivery_column_name, v.register_id, v.variable_id LIMIT ? OFFSET ?",
@@ -1445,7 +1446,7 @@ def _search_varnames(
         "v.name AS variable_name, r.name AS register_name "
         "FROM variable v "
         "JOIN register r ON v.register_id = r.register_id "
-        "WHERE v.name LIKE ? ESCAPE '\\' "
+        "WHERE py_lower(v.name) LIKE py_lower(?) ESCAPE '\\' "
         + register_filter
         + year_filter
         + "ORDER BY v.name, v.register_id, v.variable_id LIMIT ? OFFSET ?",

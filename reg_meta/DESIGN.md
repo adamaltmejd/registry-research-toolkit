@@ -140,7 +140,12 @@ which (1) neutralizes FTS5 operators so stray syntax can't raise, and (2) prefix
 ("ink" → "inkomst"). `unicode61` folds diacritics on BOTH the index and the query side
 (å→a), so callers pass the query through unfolded. The LIKE-based fields
 (datacolumn/varname/value, and concept-group label folding) bind escaped LIKE patterns
-so `%` and `_` in the user query match literally rather than as wildcards. Each
+so `%` and `_` in the user query match literally rather than as wildcards. The two
+direct arms (`varname` on `variable.name`, `datacolumn` on
+`variable_alias.delivery_column_name`) compare through `py_lower` on BOTH sides:
+SQLite's own LIKE case-insensitivity is ASCII-only, so `KÖN` would otherwise miss the
+`Kön` that `kön` matches. That folds CASE only, not diacritics — unlike the FTS
+side, `kon` still does not match `Kön` on those arms. Each
 register/variable/classification result row carries its navigable `fqid`.
 
 The docs index (`doc_queries.doc_search`, a separate `reg_meta_docs.db` FTS index) uses

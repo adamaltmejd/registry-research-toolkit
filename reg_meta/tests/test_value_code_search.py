@@ -17,6 +17,7 @@ from base64 import urlsafe_b64decode, urlsafe_b64encode
 from typing import TYPE_CHECKING
 
 import pytest
+from reg_meta.db import register_py_lower
 from reg_meta.errors import RegMetaError
 from reg_meta.queries import search
 
@@ -71,6 +72,7 @@ def conn() -> Iterator[sqlite3.Connection]:
 
     c = sqlite3.connect(":memory:")
     c.row_factory = sqlite3.Row
+    register_py_lower(c)  # `search`'s LIKE arms fold with it; `open_db` registers it
     c.executescript(DDL)
     seed_providers(c)
     try:
