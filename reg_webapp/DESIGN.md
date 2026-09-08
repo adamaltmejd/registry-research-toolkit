@@ -303,11 +303,11 @@ cross-state conformance rollup whose mismatch count was the size of the deduped 
 its states' mismatch lists. Those lists are per-state on-demand relations now, so no
 single read could produce that number. The entry therefore carries `conformances` — one
 STORED verdict per distinct list, each with the state its list is read by and the
-variants/period it was recorded over, rendered as its own notice inside the entry. Nothing
-a state warned about is dropped by the grouping: a classification edition spanning two
-codings keeps both lists, side by side and separately openable. What IS collapsed is
-repetition — one entry per (coding, declared classification) pair, because the build
-gate derives both the verdict and its mismatch list from exactly those two
+variants/period it was recorded over, rendered as its own notice inside the entry.
+Nothing a state warned about is dropped by the grouping: a classification edition
+spanning two codings keeps both lists, side by side and separately openable. What IS
+collapsed is repetition — one entry per (coding, declared classification) pair, because
+the build gate derives both the verdict and its mismatch list from exactly those two
 (`reg_meta_build/classifications.py` matches the state's value-set members against the
 declared edition's valid codes), so an era of yearly states over one coding shares one
 list and reports it once. The window on that notice covers the states that CARRY the
