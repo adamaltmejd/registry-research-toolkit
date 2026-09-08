@@ -1,34 +1,16 @@
 ---
-name: yard-operator
-description: Operate a Yard project — hold the wake-driven loop across every decision, answer a stopped lane through the exits its attention item names, read a candidate before approving it, decide proposals and advisory findings, retire a ticket in the order that sticks, and file work at one lane's size for a use case somebody actually has. Load this whenever you are asked to operate, drive, run, watch, or babysit a Yard board, when you are about to file tickets for one, or when you are about to answer a `yard status` attention item.
+name: yard-drive
+description: Drive a Yard board — hold the wake-driven loop across every decision, answer a stopped lane through the exits its attention item names, read a candidate before approving it, dispose of advisory findings, and retire a ticket in the order that sticks. Load this whenever you are asked to operate, drive, run, watch or babysit a Yard board, or when you are about to answer a `yard status` attention item.
 ---
-<!-- yard-scaffold: yard 0.14.1 (commit 3798a98cf30979b2ed6e21e2041a5f5839fd195c) -->
+<!-- yard-scaffold: yard 0.14.5 (commit ad728ad7cd88cf2ebd3e198d7783595a8d2dbae8) -->
 
-# /yard-operator
+# /yard-drive
 
 You are operating a Yard project: the side of the loop that decides. Yard files,
 schedules, runs, reviews, gates and lands the work. What you own is the
 decisions between those steps, and the attention that notices there is one to
-take.
-
-**Yard's own reference is the authority on what a command does.** `yard help
-<noun>` — `ticket`, `lane`, `plan`, `proposal`, `project`, `daemon`, `status` —
-and every verb's own `--help`, which names its arguments, its guards, what
-running it sets in motion, and what each exit code means. Where the Yard serving
-this project ships them, its `README.md` is the loop end to end and `DESIGN.md`
-is why it has that shape. This file does not restate any of them and must not
-contradict them: if it seems to disagree with a command's own help, the help is
-right and this file is stale. What this file adds is the part that is judgment
-rather than reference — what to do when the board wakes you, and what each
-answer costs.
-
-**Every decision here can spend money.** Unparking a ticket, accepting a
-proposal, starting a ticket that has no attempt underway, nudging a worker,
-rejecting a candidate, abandoning an attempt: each one starts, resumes or
-restarts a model session inside a container. A ticket filed `--parked` is the
-cost boundary — file parked whenever you mean to read the ticket before
-anything starts working it, because an unparked ready ticket is admitted within
-milliseconds of the command returning.
+take. This file is what to do when the board wakes you; `yard-file` is what to
+do when a decision here produces a ticket.
 
 ## 1. The loop is wake-driven, and you re-arm it after every decision
 
@@ -177,55 +159,10 @@ If the read does not convince you, `yard lane reject ID -m "<what to change>"
 notes are the round it runs, so they are required, and rejecting is only the
 decision: approve and reject are what record one about a candidate, and neither
 ends anything. Ending an attempt is a lifecycle act, not a verdict — `yard lane
-abandon` scraps the attempt and its workspace, and §6 is the order it belongs
+abandon` scraps the attempt and its workspace, and §5 is the order it belongs
 in. A rejection is cheap beside a landing somebody has to revert.
 
-## 4. Proposals are decided by the admission rule
-
-Workers cannot write the backlog. What they can do is propose — a follow-up
-ticket, a promoted advisory finding — and a proposal is inert until you decide
-it. The decision is entirely yours, and it has one rule:
-
-**Accept what a named failure admits; reject the rest.** A proposal earns a
-ticket when it serves a concrete failure that actually happened or a real use
-case somebody has. It does not earn one for being a good idea, for speculative
-extensibility, for symmetry with something that already exists, or for hardening
-beyond the trust model the project actually has. Where the project states its
-own admission rule, that one governs — and it is stricter than your instinct.
-
-**When you reject, the reason is the artifact.** `yard proposal reject A-N -m
-REASON` requires it and keeps it in history, so write the condition that would
-re-admit the proposal: *"no observed failure; re-file if a lane ever lands with X
-unset."* A rejection carrying its re-admission condition is a decision the next
-operator can act on. A rejection that says "not now" throws the reasoning away
-and guarantees the same proposal returns having taught nobody anything.
-
-`yard proposal accept A-N ...` runs each recorded command against current state,
-in the order you list them, and one transaction covers the acceptance and its
-command. It creates real tickets — and a created ticket that is ready is
-admitted, so a worker and its spend start on the way out of the command. Accept
-a batch because you decided each member, not to clear the board.
-
-**`--parked` is that same cost boundary, drawn at the decision.** `yard proposal
-accept A-N --parked` creates the ticket parked in the acceptance's own
-transaction, so no admission pass ever sees it ready. Use it whenever the
-proposal is worth keeping but the ticket must wait — its preconditions do not
-hold yet, you mean to edit the body first, or you want to gate it behind other
-work — and unpark it when it is ready to be worked. Parking afterwards is a
-race you can lose: the scheduler admits within milliseconds, and a worker that
-starts on a ticket nothing can satisfy yet spends real money to stop unchanged.
-
-**Decide a follow-up proposal after its origin lane settles.** While that
-lane's review round is still running, its next repair can implement the
-proposal's own scope — the round that surfaced the finding is the one most
-likely to fix it — and the ticket you accepted is then redundant, parked or
-not. Wait for the lane to land or end, read what it actually did, and decide
-the proposal against that. The exception is a proposal the lane is itself
-waiting on: a `ticket.edit` proposal stops its attempt at
-`ticket-edit-proposed` until you decide it (§6), so waiting for that lane to
-settle is waiting for yourself. Decide it now, either way.
-
-## 5. Advisory findings: land, repair, or ticket
+## 4. Advisory findings: land, repair, or ticket
 
 Advisory findings never block, and they are usually not work to build. An
 advisory finding is what the reviewer saw and chose not to block on — its
@@ -252,10 +189,10 @@ Three answers, in the order to reach for them:
 - **Ticket the rest.** `yard proposal promote LANE a1` files that finding as a
   durable follow-up proposal so it outlives the report it was found in. Filing
   alone changes nothing; `--accept` also runs the command that creates the
-  ticket, with the admission cost that implies. Either way, §4's rule decides
-  it, exactly like any other proposal.
+  ticket, with the admission cost that implies. Either way, the proposal is
+  decided by the admission rule in `yard-file`, exactly like any other.
 
-## 6. Retiring a ticket: park, abandon, done — in that order
+## 5. Retiring a ticket: park, abandon, done — in that order
 
 A ticket you have decided not to do, with an attempt already underway, retires
 in one order and only one:
@@ -309,6 +246,8 @@ a design that moves the premise far enough that the work in flight is wrong
 rather than unfinished, that is a retirement and not an amendment: park, stop,
 abandon, then file a fresh ticket written under the new contract, naming the
 abandoned attempt so its keepable work can be salvaged by the recipe above.
+That ticket is filed the way `yard-file` says every ticket is, at one lane's
+size and in the body shape it states.
 Amend when the worker can carry on from what it has; retire when it cannot. Past
 the approval neither is offered: an approved candidate that is landing refuses
 the edit, because the decision binds the exact candidate it was taken on — let
@@ -329,72 +268,9 @@ is told to propose a `ticket.edit` rather than build against it, and that
 proposal stops the attempt at a `ticket-edit-proposed` item: it finishes the
 turn it is in and waits for you. `yard proposal accept A-N` releases it with the
 next round reading the edited body, `yard proposal reject A-N -m REASON`
-releases it with the next round reading the unchanged one. Either answer
-releases it; leaving it undecided is an attempt sitting idle.
-
-## 7. Filing work: one lane's worth, for a use case somebody has
-
-Filing is a decision like every other one here, and it is the cheapest one to
-get right: scope you never file costs nothing, while scope that reaches a worker
-costs a container, a review, and every round the two of them spend converging on
-it.
-
-- **A ticket is one lane's worth of work.** One cohesive change a worker can
-  carry to a candidate you can read in one sitting. Work that crosses several
-  boundaries at once is not a large ticket, it is a sequence you have not
-  written down yet, and a lane handed it converges slowly if at all — the worst
-  recorded against this loop took fourteen worker generations and nine reviews
-  for a single ticket.
-- **Plan-first decomposes and investigates; it does not make big work
-  legitimate.** A plan-first ticket buys a read-only planner that reports what
-  the work actually is before a writer starts. It is not a licence for a ticket
-  you already know is oversized, and a plan that answers "too big" with a child
-  backlog has told you the ticket was wrong — not that the backlog is right.
-- **Every ticket names the use case it serves**: who the consumer is, and what
-  observable behavior they get. A ticket that cannot name one is a ticket nobody
-  can tell is finished. This is §4's admission rule, applied where the work
-  starts rather than where a proposal arrives.
-- **Problems that have not happened are not requirements.** Hostile input nobody
-  sends, extensibility nobody asked for, a migration for a schema nobody has:
-  leave it out, and file it if it ever happens.
-- **A single-user tool is not an adversarial environment.** The threat model is
-  the deployment's, not the worst one you can imagine. One project's first
-  backlog reached 119 tickets, and its parser ticket answered a frightening size
-  estimate by splitting hostile-filesystem machinery off — for a consumer that
-  needed a read-only scan. A frightening size is a signal that the scope is
-  wrong, not that it needs dividing: delete or defer behavior first, and split
-  only what is independently useful.
-
-Where plans keep arriving carrying scope no ticket asked for, `instructions` on
-the role in `.yard/config.toml` is where this project's own ceilings go — a size
-ceiling, or the plan document its tickets are planned against. Yard's own frozen
-prompts already ask every plan for its consumer, its minimum behavior, its
-inferred assumptions and its exclusions; what is true of this project only is
-yours to state there.
-
-## 8. When Yard itself misbehaves, report it upstream
-
-A lane that stops, a review that finds fault, a proposal you reject: those are
-the loop working, and the sections above answer them. What they do not answer
-is Yard doing something its own help or README says it does not do — a
-command that fails on a state it should handle, an exit that refuses when the
-guard held, a report that contradicts what Git shows. That is not this
-project's work to fix, and no ticket here can carry it.
-
-File it as a report on Yard's own repository, through the form under its
-issues page, one observation per report. Search the open and closed issues
-first and add your evidence to a match rather than filing a twin. Give the
-raw output the form asks for — the command, the wake or status lines, the
-daemon log excerpt — redacted of tokens and private paths, so that somebody
-without your machine can investigate from the report alone. Your diagnosis is
-welcome as a lead and is read as one; the observation is what the report is
-for.
-
-A report is intake, not a ticket, and filing one admits nothing. Yard's
-builder reads it, files the work it holds up, and closes the issue naming the
-commit and the first release that carries the fix. Meanwhile, work around it
-here and note the workaround on the report: a stopped lane still has its
-exits, and §2 still applies.
+releases it with the next round reading the unchanged one — and `yard-file` is
+what decides which, as it decides every proposal. Either answer releases it;
+leaving it undecided is an attempt sitting idle.
 
 ## When to stop and ask
 

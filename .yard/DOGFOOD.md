@@ -1080,3 +1080,48 @@ Y-18's unproven ranking premise remain outside this batch.
 Release receipts, exact issue readbacks and bounded verification evidence are retained
 locally under `archive/reports/yard/2026-09-08-v0.14.4-evidence/`. The accumulated log
 is being preserved through Yard before the selected implementation tickets are admitted.
+
+## 2026-09-08: Upgrade to 0.14.5 and adopt the generated skills
+
+Installed official Yard 0.14.5 at `ad728ad7cd88cf2ebd3e198d7783595a8d2dbae8` after
+matching the executable digest
+`36c4a7d953f6b739d2fb34df0cf6bdfe9eabc7b1891576eb3e4859f3791e347f` to the GitHub asset
+digests, `SHA256SUMS` and the release contract, and confirming release workflow
+34210647957 passed on the exact tagged head (Linux, Darwin, Docker contract). The CLI
+and restarted daemon agree; schema 43 and the loaded configuration digest
+`3804f566d804f4888f301936fba1f9991072cd6b466d9ab4fbcaec3860b2714f` stayed unchanged, and
+the board retained 45 done/16 open before the next batch was admitted.
+
+`yard init` moved the generated Yard routine's canonical location: the scaffold now
+stores `yard-operator`, `yard-file` and `yard-drive` as real files under
+`.agents/skills/`, with `.claude/skills/<name>` as the relative alias — the reverse of
+the prior direction. The skills were generated with the official binary in a disposable
+empty project, `matchesTemplate=true` and `linked=true` checked for all three, and only
+that disposable daemon was stopped; this proves scaffold bytes, not a full preflight.
+This repo adopted the three generated files unmodified, moved the pre-existing real
+`.claude/skills/yard-operator` directory to its new canonical `.agents` path, and
+updated the Claude/Codex aliases, `AGENTS.md`/`CLAUDE.md`, `.yard/OPERATOR.md` and
+`.panache.toml`'s excludes to match.
+
+Y-61 and Y-48 are now running; Y-53 was selected as the third product ticket, based on
+fresh synthetic case-matching/bootstrap reproductions and current draft-lifecycle source
+evidence. [#59](https://github.com/adamaltmejd/switchyard/issues/59) was also
+live-retested while Y-61/1 ran: the lane detail JSON was 27638 bytes with 16 normalized
+progress entries and no raw provider frames.
+[#58](https://github.com/adamaltmejd/switchyard/issues/58) has not been live-reproduced.
+Eight focused released-source tests passed with 90 assertions and both issues' bounded
+v0.14.5 retest results were posted and read back exactly
+([#58](https://github.com/adamaltmejd/switchyard/issues/58#issuecomment-5583171034),
+[#59](https://github.com/adamaltmejd/switchyard/issues/59#issuecomment-5583173056)); #58
+remains source/synthetic verification, #59 additionally has the live lane-detail sample
+above, and no new real-provider cleanup incident was manufactured.
+
+Y-61's first autoreview (candidate `5297ebcb3c1592d0340f5dce9d0a5bb77f6c9b29`) reported
+a P1 SQL-precedence finding that turned out to be a false positive: the flagged function
+already wraps every WHERE term through the existing join. Repairing it and rereviewing
+cost an extra worker/review round for no actual scoping leak — recorded as a
+review-quality papercut, not a Yard lifecycle regression. No upstream issue was filed
+for it.
+
+Local-only release/state receipts are retained under
+`archive/reports/yard/2026-09-08-v0.14.5-evidence/`.

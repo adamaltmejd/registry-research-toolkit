@@ -1,10 +1,12 @@
 # Yard project policy
 
 Read this file together with the generated [Yard operator
-skill](../.claude/skills/yard-operator/SKILL.md) before operating this project. These
-project rules take precedence over the generic routine. Yard's current command help
-remains authoritative about effects, guards and supported exits. Paths mentioned below
-are relative to the repository root unless linked otherwise.
+skill](../.agents/skills/yard-operator/SKILL.md), which loads
+[`yard-file`](../.agents/skills/yard-file/SKILL.md) and
+[`yard-drive`](../.agents/skills/yard-drive/SKILL.md) in turn, before operating this
+project. These project rules take precedence over the generic routine. Yard's current
+command help remains authoritative about effects, guards and supported exits. Paths
+mentioned below are relative to the repository root unless linked otherwise.
 
 ## Admission and workflows
 
@@ -86,7 +88,7 @@ Keep raw logs, verification reports and submission receipts in the already ignor
 `archive/reports/yard/`. Commit concise outcomes in DOGFOOD.md; label references to
 local archived evidence as local-only paths.
 
-## Temporary corrections for Yard 0.14.1
+## Temporary corrections for Yard 0.14.5
 
 These qualify wording in the shipped routine. Recheck them at each Yard upgrade and
 remove each correction once upstream covers it accurately.
@@ -106,13 +108,15 @@ remove each correction once upstream covers it accurately.
 
 ## Updating the upstream routine
 
-Keep `.claude/skills/yard-operator/SKILL.md` exactly as the installed Yard generates it,
-including its stamp and formatting. `.agents/skills/yard-operator` remains a relative
-symlink to that directory. Put project policy and temporary corrections here, and keep
-the existing specialized design skills separate.
+Keep `.agents/skills/{yard-operator,yard-file,yard-drive}/SKILL.md` exactly as the
+installed Yard generates them, including their stamps and formatting.
+`.claude/skills/{yard-operator,yard-file,yard-drive}` remain relative symlinks to those
+directories. Put project policy and temporary corrections here, and keep the existing
+specialized design skills separate.
 
 Use `yard project show` to check provenance and template equality. `yard init` offers
 the update patch; read its help and effects first, because it can start the daemon and
 admit ready tickets. Review the patch before applying it, then recheck this policy and
-verify `matchesTemplate=true`. The generated skill is excluded from Panache so normal
-formatting preserves those bytes. This file remains formatted and linted normally.
+verify `matchesTemplate=true` and `linked=true` for all three skills. The generated
+skills are excluded from Panache so normal formatting preserves those bytes. This file
+remains formatted and linted normally.

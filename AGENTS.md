@@ -222,12 +222,14 @@ driven by an agent operator, and **the agent working this repo is that operator*
 driving the board (filing tickets, answering attention items, approving/rejecting
 candidates), load the `yard-operator` skill (`/yard-operator` in Claude Code,
 `$yard-operator` in Codex) and read [.yard/OPERATOR.md](.yard/OPERATOR.md) before acting.
-The project policy takes precedence over the generic routine. Keep
-`.claude/skills/yard-operator/SKILL.md` exactly as `yard init` generates it; put local
-rules and temporary upstream corrections in `.yard/OPERATOR.md` instead.
-`.agents/skills/yard-operator` is a relative symlink to the generated skill directory,
-so both catalogs serve one routine. Project config is `.yard/config.toml`; its gates
-mirror `.github/workflows/ci.yml`.
+`yard-operator` is the entry to two skills it loads in turn: `yard-file` for filing and
+admitting work, `yard-drive` for answering the board. The project policy takes precedence
+over the generic routine. Keep
+`.agents/skills/{yard-operator,yard-file,yard-drive}/SKILL.md` exactly as `yard init`
+generates them; put local rules and temporary upstream corrections in `.yard/OPERATOR.md`
+instead. `.claude/skills/{yard-operator,yard-file,yard-drive}` are relative symlinks to the
+generated skill directories, so both catalogs serve one routine. Project config is
+`.yard/config.toml`; its gates mirror `.github/workflows/ci.yml`.
 
 **Yard is the primary build pathway.** New work runs as Yard tickets; manual builds
 remain for special cases (releases, real-seed `build-db` verification). Keep main to a
