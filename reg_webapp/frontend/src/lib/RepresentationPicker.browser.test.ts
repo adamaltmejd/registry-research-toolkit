@@ -89,14 +89,30 @@ function graph(over: Partial<RelationshipGraph> = {}): RelationshipGraph {
   return { nodes: [], edges: [], focus_id: null, ...over };
 }
 
-function edge(source: string, target: string): GraphEdge {
+function edge(
+  source: string,
+  target: string,
+  over: Partial<GraphEdge> = {},
+): GraphEdge {
   return {
     id: `${source}->${target}`,
     kind: "succession",
     source,
     target,
     label: null,
+    ...over,
   };
+}
+
+/** Do two painted boxes share more than `slack` px of area in BOTH axes — i.e. does
+ * one paint over the other? */
+function overlaps(a: DOMRect, b: DOMRect, slack = 0.5): boolean {
+  return (
+    a.left < b.right - slack &&
+    b.left < a.right - slack &&
+    a.top < b.bottom - slack &&
+    b.top < a.bottom - slack
+  );
 }
 
 /** A multi-axis representation group: one band, three delivery-column rows, each a
@@ -217,6 +233,10 @@ function one<T extends Element>(sel: string, within: ParentNode = document): T {
   }
   return found;
 }
+
+/** `GRAPH_LANE_GAP`: the space the lane stack keeps between two lanes, which is
+ * where an edge annotation is drawn. */
+const LANE_GAP = 8;
 
 function lanes(): HTMLElement[] {
   return [...document.querySelectorAll<HTMLElement>(".graph-lane")];
@@ -2796,9 +2816,10 @@ describe("RepresentationPicker graph mode (#904)", () => {
       const [viewed, successor] = lanes();
       const first = viewed.getBoundingClientRect();
       const second = successor.getBoundingClientRect();
-      // The lanes still tile the stack exactly — a lane grown for its gutter
+      // The lanes still stack in order, separated by exactly the band an edge
+      // annotation rides in (`GRAPH_LANE_GAP`) — a lane grown for its gutter
       // moves the next one down rather than overlapping it.
-      expect(second.top).toBeCloseTo(first.bottom, 0);
+      expect(second.top).toBeCloseTo(first.bottom + LANE_GAP, 0);
 
       // …and the cells and the succession connector stay on their lanes: the
       // viewed lane's cell is centred in it, and the edge runs between the two
@@ -4078,11 +4099,15 @@ describe("RepresentationPicker coexisting-variant row identity (Y-14)", () => {
 
   function coexistingGraphFixture(
     labels: readonly string[],
-    period: { valid_from: string; valid_to: string } = WIDE,
+    over: {
+      period?: { valid_from: string; valid_to: string };
+      edge?: Partial<GraphEdge>;
+    } = {},
   ): {
     bands: PickerBand[];
     graph: RelationshipGraph;
   } {
+    const period = over.period ?? WIDE;
     const base = variantFixture(labels, { period, coding: CODING });
     return {
       bands: [
@@ -4092,12 +4117,16 @@ describe("RepresentationPicker coexisting-variant row identity (Y-14)", () => {
           name: "Sysselsättning",
           registerPrefix: "scb/rams",
           rows: [
+            // The successor runs long enough to paint its own column chip on one
+            // line: a chip floored to the minimum cell width stacks its glyphs
+            // (A-143), which would put chip pixels outside their cell and make this
+            // fixture prove that instead of what it is for.
             row({
               column: "Syss",
               from: "2023-01-01",
-              to: "2026-12-31",
-              period: "2023 – 2026",
-              windows: [{ from: "2023-01-01", to: "2026-12-31" }],
+              to: "2036-12-31",
+              period: "2023 – 2036",
+              windows: [{ from: "2023-01-01", to: "2036-12-31" }],
             }),
           ],
         } satisfies PickerBand,
@@ -4113,12 +4142,12 @@ describe("RepresentationPicker coexisting-variant row identity (Y-14)", () => {
                 representation_run_id: 3,
                 delivery_column_name: "Syss",
                 valid_from: "2023-01-01",
-                valid_to: "2026-12-31",
+                valid_to: "2036-12-31",
               }),
             ],
           }),
         ],
-        edges: [edge("scb/lisa/kon", SYSS)],
+        edges: [edge("scb/lisa/kon", SYSS, over.edge)],
         focus_id: "scb/lisa/kon",
       }),
     };
@@ -4136,7 +4165,7 @@ describe("RepresentationPicker coexisting-variant row identity (Y-14)", () => {
     } = {},
   ): Promise<void> {
     await render(RepresentationPicker, {
-      ...coexistingGraphFixture(labels, over.period),
+      ...coexistingGraphFixture(labels, { period: over.period }),
       ...PROPS,
     });
     await graphPickerRendered();
@@ -4304,6 +4333,57 @@ describe("RepresentationPicker coexisting-variant row identity (Y-14)", () => {
     },
   );
 
+  // ── The annotation the lane's own succession draws over those cells ───────────
+  // A labelled edge floats over the track at the connector. With the population line
+  // in them, the cells fill their whole 40px box, so an annotation drawn at the
+  // midpoint of the two CELL centres paints over the first cell's column chip — the
+  // reported regression. The annotation rides the band between the lanes instead.
+  const ANNOTATION = {
+    label: "Kon → Syss",
+    effective_year: 2019,
+  } satisfies Partial<GraphEdge>;
+
+  it("keeps the lane's succession annotation clear of every cell it names", async () => {
+    await render(RepresentationPicker, {
+      ...coexistingGraphFixture(ALIKE, { edge: ANNOTATION }),
+      ...PROPS,
+    });
+    await graphPickerRendered();
+    await document.fonts.ready;
+
+    await atEveryWidth(async () => {
+      const reason = await vi.waitFor(() => {
+        const el = one<HTMLElement>(".graph-reason");
+        expect(el.getBoundingClientRect().width).toBeGreaterThan(0);
+        return el;
+      });
+      // The annotation is the lane's real succession context, still rendered…
+      expect(reason.textContent?.trim()).toBe("Kon → Syss · 2019");
+      const box = reason.getBoundingClientRect();
+      // …inside the timeline, and over NOTHING a cell has to show: its column
+      // chip, the population identity beside the coding, and the period.
+      const timeline =
+        one<HTMLElement>(".graph-timeline").getBoundingClientRect();
+      expect(box.top).toBeGreaterThanOrEqual(timeline.top);
+      expect(box.bottom).toBeLessThanOrEqual(timeline.bottom);
+      const painted = [
+        ...document.querySelectorAll<HTMLElement>(
+          ".graph-cell .col-chip, .graph-cell-context, .graph-cell-window",
+        ),
+      ];
+      expect(painted.length).toBeGreaterThan(0);
+      for (const part of painted) {
+        expect(overlaps(box, part.getBoundingClientRect())).toBe(false);
+      }
+      // The cells it runs between still tile their lane in order.
+      const cells = [
+        ...lanes()[0].querySelectorAll<HTMLElement>(".graph-cell"),
+      ].map((c) => c.getBoundingClientRect());
+      expect(cells).toHaveLength(2);
+      expect(cells[0].bottom).toBeLessThanOrEqual(cells[1].top);
+    });
+  });
+
   it("keeps the picker in the list when a cell is too narrow to name its population", async () => {
     // Distinct names, one-year runs: the cells floor to `CELL_MIN_W` with no room for
     // the text that would tell them apart, so the picker uses the list — the same
@@ -4320,6 +4400,82 @@ describe("RepresentationPicker coexisting-variant row identity (Y-14)", () => {
     });
     expect(document.querySelector(".graph-picker")).toBeNull();
     expect(texts(ROWS)).toEqual(["Individer 15+ 2018", "Individer 16+ 2018"]);
+  });
+
+  it("leaves graph mode when the curator names differ only past the cell's edge", async () => {
+    // Two names that share a 40-character head and differ only in the last letter.
+    // The identity text does not wrap or ellipsize, so a cell wide enough by the
+    // fixed per-character budget the picker used to apply still clips both names to
+    // the same visible prefix and paints them over the period. Only the browser,
+    // measuring the real font, can tell — and here it says the graph cannot show
+    // the choice, so the list does.
+    const head = "W".repeat(40);
+    const labels = [`${head}A`, `${head}B`];
+    const variants = ["a", "b"];
+    const period = {
+      valid_from: "2000-01-01",
+      valid_to: "2024-12-31",
+    } as const;
+    await render(RepresentationPicker, {
+      bands: [
+        {
+          key: "scb/lisa/kon",
+          name: "Kön",
+          registerPrefix: "scb/lisa",
+          rows: pickerRepresentations(
+            labels.map((label, i) => ({
+              state_id: i + 1,
+              variant: variants[i],
+              variant_label: label,
+              delivery_column_name: "Kon",
+              value_set_version_label: "",
+              value_set_id: null,
+              ...period,
+            })),
+          ),
+        } satisfies PickerBand,
+      ],
+      graph: graph({
+        nodes: [
+          graphNode("scb/lisa/kon", {
+            label: "Kön",
+            states: labels.map((label, i) =>
+              graphState({
+                state_id: i + 1,
+                representation_run_id: i + 1,
+                variant: variants[i],
+                variant_label: label,
+                delivery_column_name: "Kon",
+                ...period,
+              }),
+            ),
+          }),
+        ],
+        edges: [],
+        focus_id: "scb/lisa/kon",
+      }),
+      ...PROPS,
+    });
+    await document.fonts.ready;
+
+    await vi.waitFor(() => {
+      if (!document.querySelector(".col-list")) {
+        throw new Error("list picker not rendered");
+      }
+    });
+    expect(document.querySelector(".graph-picker")).toBeNull();
+    // Both choices read to their distinguishing last letter, painted whole inside
+    // their row — no ancestor clips them — and each carries the period.
+    const rows = texts(ROWS);
+    expect(rows).toEqual([`${head}A 2000 – 2024`, `${head}B 2000 – 2024`]);
+    for (const el of document.querySelectorAll<HTMLElement>(ROWS)) {
+      const box = el.getBoundingClientRect();
+      for (const line of el.querySelectorAll<HTMLElement>("*")) {
+        const lineBox = line.getBoundingClientRect();
+        expect(line.scrollWidth).toBeLessThanOrEqual(line.clientWidth + 1);
+        expect(lineBox.right).toBeLessThanOrEqual(box.right + 1);
+      }
+    }
   });
 });
 

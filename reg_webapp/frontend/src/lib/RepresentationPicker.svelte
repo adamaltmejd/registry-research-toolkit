@@ -840,11 +840,12 @@ const GRAPH_LANE_BASE_H = 58;
 const GRAPH_ROW_H = 46;
 const GRAPH_CELL_H = 40;
 const GRAPH_CODINGS_NUDGE_MIN_READABLE_W = 160;
-/** A per-character px budget for `--text-micro` text (0.75rem; the mono face advances
- * 0.6em ≈ 7.2px there, the UI face less). Used ONLY to ask whether a cell is wide
- * enough to SHOW the population text it needs — never to lay anything out, and the
- * rendered text is the authority: it is clipped, not reflowed, if this runs short. */
-const GRAPH_CELL_TEXT_CHAR_W = 8;
+/** The space between two lanes. A lane centres its cells with `(58 - 40) / 2` of slack
+ * above and below, and an edge annotation floats over the track on the boundary
+ * between two lanes (`graphEdgeLabelTop`) — so this gap is what turns the two slacks
+ * into a band the annotation fits INSIDE, clear of the cells whose own text now fills
+ * their whole box (Y-14). */
+const GRAPH_LANE_GAP = 8;
 
 function variableGraphNodes(g: RelationshipGraph): VariableGraphNode[] {
   return g.nodes.filter((n): n is VariableGraphNode => n.kind === "variable");
@@ -1011,24 +1012,22 @@ function graphCellWidthForScale(
   );
 }
 
-/** The width a cell needs to paint `text` beside its fixed chrome — checkbox, column
- * chip, window and gaps, which is what `CELL_MIN_W` already budgets. */
-function graphCellContextW(text: string): number {
-  return CELL_MIN_W + text.length * GRAPH_CELL_TEXT_CHAR_W;
+/** The graph node a band renders on, if the graph carries one. */
+function graphNodeForBand(
+  g: RelationshipGraph,
+  band: PickerBand,
+): VariableGraphNode | undefined {
+  return variableGraphNodes(g).find((n) => graphNodeMatchesKey(n, band.key));
 }
 
 function graphReadableWithCurrentRows(g: RelationshipGraph): boolean {
   const scale = yearScaleOf(g, vintageYear);
   for (const band of graphBands) {
-    const node = variableGraphNodes(g).find((n) =>
-      graphNodeMatchesKey(n, band.key),
-    );
+    const node = graphNodeForBand(g, band);
     if (!node) {
       return false;
     }
-    const cells = cellsOf(node);
-    const populations = graphCellPopulations(band, cells);
-    for (const cell of cells) {
+    for (const cell of cellsOf(node)) {
       const matches = graphCellCandidates(band, cell);
       if (matches.length !== 1) {
         continue;
@@ -1043,13 +1042,61 @@ function graphReadableWithCurrentRows(g: RelationshipGraph): boolean {
       ) {
         return false;
       }
-      const population = populations.get(cell);
-      if (population && width < graphCellContextW(population.text)) {
-        return false;
-      }
     }
   }
   return true;
+}
+
+/** Everything a lane's selectable cells will PAINT, each with the width it is painted
+ * at — the whole input to a FIT. `graphUnfitPaint` latches on this string, so one
+ * paint is measured once and a changed content or scale is measured afresh. The
+ * transient staging chrome is deliberately NOT in it: a cell that fitted must not
+ * drop the whole picker out of graph mode the moment it is staged. */
+function graphPaintSignature(g: RelationshipGraph): string {
+  const scale = yearScaleOf(g, vintageYear);
+  const painted: string[] = [];
+  for (const band of graphBands) {
+    const node = graphNodeForBand(g, band);
+    if (!node) {
+      continue;
+    }
+    const cells = cellsOf(node);
+    const populations = graphCellPopulations(band, cells);
+    for (const cell of cells) {
+      const match = graphCellMatch(band, cell);
+      if (match) {
+        const text = graphCellTitle(cell, match, populations.get(cell)?.text);
+        painted.push(
+          `${text}@${Math.round(graphCellWidthForScale(cell, scale))}`,
+        );
+      }
+    }
+  }
+  return painted.join("|");
+}
+
+/** Does any cell FAIL to show the population identity that tells it from its
+ * neighbours? That text is `nowrap` and does not shrink — two populations differing
+ * only in their tail would otherwise paint the same clipped prefix — so it runs past
+ * the stack that holds it, over the effective period beside it and into the cell's
+ * clip. Whether it does is a question about GLYPHS: only the browser, with the real
+ * font, can answer it, and no per-character estimate stands in (`--text-micro` in the
+ * UI face runs past 11px a character on capitals, and the element's own scroll width
+ * cannot see it — the element is as wide as its text and it is the ANCESTOR that
+ * clips). Cells carrying no identity are not asked: their chip, coding and period
+ * shrink and ellipsize as they always have. */
+function graphIdentityOverflows(root: HTMLElement): boolean {
+  const identities = root.querySelectorAll<HTMLElement>(
+    "label.graph-cell .graph-cell-variant, label.graph-cell .variant-key",
+  );
+  return [...identities].some((identity) => {
+    const stack = identity.closest(".graph-cell-main");
+    return (
+      stack != null &&
+      identity.getBoundingClientRect().right >
+        stack.getBoundingClientRect().right + 1
+    );
+  });
 }
 
 /** Strict graph-mode gate: selectable graph cells render only when they are a
@@ -1239,11 +1286,10 @@ function graphForVisibleRows(g: RelationshipGraph): RelationshipGraph | null {
   };
 }
 
-function graphFitsPicker(g: RelationshipGraph): boolean {
-  const renderGraph = graphForVisibleRows(g);
-  if (!renderGraph) {
-    return false;
-  }
+function graphFitsPicker(
+  g: RelationshipGraph,
+  renderGraph: RelationshipGraph,
+): boolean {
   const variableNodes = variableGraphNodes(renderGraph);
   const cellCount = variableNodes.reduce(
     (n, node) => n + cellsOf(node).length,
@@ -1261,13 +1307,46 @@ function graphFitsPicker(g: RelationshipGraph): boolean {
   );
 }
 
-const useGraphMode = $derived(graph != null && graphFitsPicker(graph));
-const graphRenderGraph = $derived.by((): RelationshipGraph | null => {
-  if (!useGraphMode || !graph) {
-    return null;
+/** The `graphPaintSignature` whose cells did not fit when the browser measured them,
+ * or null while nothing has failed. Set once per paint, and only ever by the
+ * measurement below. */
+let graphUnfitPaint = $state<string | null>(null);
+let graphPickerEl = $state<HTMLElement | null>(null);
+/** The graph reduced to the rows the picker actually offers — the one projection the
+ * gate, the fit measurement and the renderer all judge. */
+const graphVisibleRows = $derived(graph ? graphForVisibleRows(graph) : null);
+const graphPaintKey = $derived(
+  graphVisibleRows ? graphPaintSignature(graphVisibleRows) : "",
+);
+const useGraphMode = $derived(
+  graph != null &&
+    graphVisibleRows != null &&
+    graphUnfitPaint !== graphPaintKey &&
+    graphFitsPicker(graph, graphVisibleRows),
+);
+
+// Measure the painted cells and fall back to the LIST when their text does not fit —
+// the existing geometry fallback, decided by the browser instead of by an estimate.
+// Re-measured once the web font has loaded, because the fallback face is narrower.
+$effect(() => {
+  const key = graphPaintKey;
+  const root = graphPickerEl;
+  if (!root) {
+    return;
   }
-  return graphForVisibleRows(graph);
+  let live = true;
+  const measure = () => {
+    if (live && graphIdentityOverflows(root)) {
+      graphUnfitPaint = key;
+    }
+  };
+  measure();
+  void document.fonts?.ready.then(measure);
+  return () => {
+    live = false;
+  };
 });
+const graphRenderGraph = $derived(useGraphMode ? graphVisibleRows : null);
 const graphScale = $derived<YearScale | null>(
   graphRenderGraph ? yearScaleOf(graphRenderGraph, vintageYear) : null,
 );
@@ -1355,7 +1434,7 @@ const graphClusters = $derived.by((): GraphRenderCluster[] => {
       const rowCount = graphLaneDisplayRowCount(rn);
       const height = graphLaneBoxHeight(rn, rowCount);
       const box = { rn, top, height, center: top + height / 2, rowCount };
-      top += height;
+      top += height + GRAPH_LANE_GAP;
       return box;
     });
     return {
@@ -1363,7 +1442,7 @@ const graphClusters = $derived.by((): GraphRenderCluster[] => {
       edges: [] as ResolvedEdge[],
       lanes,
       byId: new Map(lanes.map((l) => [l.rn.node.id, l])),
-      height: top,
+      height: Math.max(0, top - GRAPH_LANE_GAP),
     };
   });
   const clusterOfNode = new Map<string, number>();
@@ -1711,6 +1790,26 @@ function graphEdgeLabelLeft(segment: GraphEdgeSegment): number {
   return Math.max(GRAPH_GUTTER_W + 6, (segment.x1 + segment.x2) / 2 + 6);
 }
 
+/** Where an edge's annotation floats. It is drawn OVER the track, so it has to sit
+ * where no cell is: the band between two lanes, which is their two slacks plus
+ * `GRAPH_LANE_GAP` and is the only horizontal strip the layout keeps clear. The
+ * midpoint of the two CELL centres — where it used to sit — is that band only while
+ * both lanes hold one centred row; it slides onto a cell as soon as a lane packs a
+ * second row or its gutter makes it taller, and the cell's text now fills the cell's
+ * whole box (Y-14). An edge whose ends are on ONE lane keeps the midpoint: there it
+ * rides the gap BETWEEN two cells, not over them. */
+function graphEdgeLabelTop(
+  segment: GraphEdgeSegment,
+  source: GraphLaneBox,
+  target: GraphLaneBox,
+): number {
+  if (source.rn.node.id === target.rn.node.id) {
+    return (segment.y1 + segment.y2) / 2;
+  }
+  // The lower lane's top, less half the gap: the centre of the band above it.
+  return Math.max(source.top, target.top) - GRAPH_LANE_GAP / 2;
+}
+
 function graphEdgeLabelAnchor(
   edge: ResolvedEdge,
   source: GraphLaneBox,
@@ -1722,7 +1821,7 @@ function graphEdgeLabelAnchor(
   }
   return {
     left: graphEdgeLabelLeft(segment),
-    top: (segment.y1 + segment.y2) / 2,
+    top: graphEdgeLabelTop(segment, source, target),
   };
 }
 
@@ -2372,7 +2471,12 @@ function codingsVaryHref(
 {/snippet}
 
 {#snippet graphPicker()}
-  <div class="graph-picker" role="group" aria-label="Graph column picker">
+  <div
+    class="graph-picker"
+    role="group"
+    aria-label="Graph column picker"
+    bind:this={graphPickerEl}
+  >
     {#each graphClusters as { cluster, edges: cEdges, lanes, byId, height: stackH }, ci (cluster.groupKey ?? `u${ci}`)}
       <div class="graph-cluster">
         {#if cluster.label}
