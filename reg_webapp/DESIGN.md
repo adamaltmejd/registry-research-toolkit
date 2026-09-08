@@ -462,21 +462,24 @@ keeps continuation errors local to the group.
 `top_results` is presentation-only and never paginates. Today: `top_results` (#393 items
 6/7 — optional, all-scope-only, and emitted only when multiple candidates compete; built
 from the already-prepared typed rows, exact identifier/name/code matches first, then
-type priors register → variable/group → classification → code), `registers`, `variables`
-(leaf hits ⧺ folded concept groups), `classifications` (leaf hits ⧺ folded
-classification-succession rows (`type: "classification_succession"`, #571 — a query that
-hits ≥2 editions of the same chain collapses to one
-`ClassificationSuccessionSearchResult` keyed on the terminal edition, carrying the full
-`editions` chain and `matched_count`) ⧺ folded umbrella concept-group rows
-(`type: "group"`, #516 — e.g. `group:sun`)), and `codes` (#352 — value-label hits
-annotated with their owning variables/classifications). The reserved docs arm remains
-unused by global search; docs stay on the separate `/api/docs/*` endpoints and item-page
-hooks. The SPA must tolerate an unknown `group` value (skip it) so a new group can ship
-before the SPA renders it (the same payload-skew tolerance the `?period` additive fields
-rely on). Each result carries its navigable `fqid` and a `rank: float` (the FTS rank the
-CLI's doc-merge interleaves by, #701); results within a group are pre-sorted by FTS rank
-before grouping, so the SPA may ignore `rank` — it is present on the wire as the shared
-sort key.
+type priors register → variable/group → classification → code; a code row earns *prefix*
+authority from its code identifier only, its label and owning code system counting as
+identity on an exact match alone, so a topical term that merely starts an incidental
+value label cannot displace the register or variable carrying that term in its purpose
+or definition), `registers`, `variables` (leaf hits ⧺ folded concept groups),
+`classifications` (leaf hits ⧺ folded classification-succession rows
+(`type: "classification_succession"`, #571 — a query that hits ≥2 editions of the same
+chain collapses to one `ClassificationSuccessionSearchResult` keyed on the terminal
+edition, carrying the full `editions` chain and `matched_count`) ⧺ folded umbrella
+concept-group rows (`type: "group"`, #516 — e.g. `group:sun`)), and `codes` (#352 —
+value-label hits annotated with their owning variables/classifications). The reserved
+docs arm remains unused by global search; docs stay on the separate `/api/docs/*`
+endpoints and item-page hooks. The SPA must tolerate an unknown `group` value (skip it)
+so a new group can ship before the SPA renders it (the same payload-skew tolerance the
+`?period` additive fields rely on). Each result carries its navigable `fqid` and a
+`rank: float` (the FTS rank the CLI's doc-merge interleaves by, #701); results within a
+group are pre-sorted by FTS rank before grouping, so the SPA may ignore `rank` — it is
+present on the wire as the shared sort key.
 
 - **One reg_meta call per group**: register/variable/classification via the FTS
   `field="description"` path; **codes (#352) via the `field="value", type="value"`

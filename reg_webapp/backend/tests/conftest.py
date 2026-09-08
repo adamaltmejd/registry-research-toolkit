@@ -113,3 +113,19 @@ def docs_db(catalog_db: Path) -> Path:
     docs_path = catalog_db.parent / reg_meta.doc_db.DOC_DB_FILENAME
     fixture_db.build_docs_fixture_db(docs_path)
     return docs_path
+
+
+@pytest.fixture
+def topical_catalog_db(catalog_db: Path) -> Path:
+    """``catalog_db`` plus the topical ranking scenario (``fixture_db``): one
+    register purpose and one variable name/definition carrying a topic, and six
+    value codes whose labels merely BEGIN with it. Seeded here rather than in
+    ``build_catalog_fixture_db`` so the pair ``dev.sh --fixture-db`` builds — and
+    the UI gates screenshot — stays byte-identical."""
+    conn = sqlite3.connect(catalog_db)
+    try:
+        fixture_db.seed_topical_rows(conn)
+        conn.commit()
+    finally:
+        conn.close()
+    return catalog_db

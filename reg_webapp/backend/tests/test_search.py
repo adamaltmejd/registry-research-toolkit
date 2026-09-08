@@ -1022,6 +1022,170 @@ def test_best_bet_score_folds_diacritics_for_exact_matches():
     assert _best_bet_score("kon", variable) >= 1000
 
 
+def test_best_bet_score_scores_a_code_label_prefix_as_type_prior_only():
+    code = CodeSearchResult(
+        code="C900",
+        label="covid test testing provtagning incidental klassifikationsetikett 0",
+        classification_count=1,
+        variable_count=0,
+        rank=0.0,
+    )
+
+    # The label merely BEGINS with the query → no prefix authority (type prior
+    # only), so it cannot outscore a register (40) or variable (30) hit.
+    assert _best_bet_score("covid", code) == 10
+    # The code IDENTIFIER keeps both signals.
+    assert _best_bet_score("C9", code) == 110
+    assert _best_bet_score("c900", code) == 1010
+
+
+def test_best_bet_score_keeps_the_exact_whole_code_label():
+    code = CodeSearchResult(
+        code="1", label="Man", classification_count=1, variable_count=0, rank=0.0
+    )
+
+    assert _best_bet_score("man", code) == 1010
+
+
+# ── topical ranking vs incidental code labels (Y-18) ─────────────────────────
+#
+# Driven through the route against the `topical_catalog_db` fixture: the topic
+# sits in the scb/rams PURPOSE and in a variable NAME + DEFINITION, and six value
+# codes merely BEGIN their labels with it. The text is invented for this fixture,
+# not a claim about any real register's terms.
+
+
+_TOPICAL_REGISTER = "register:scb/rams"
+_TOPICAL_VARIABLE = "variable:scb/rams/covidanalys"
+
+
+@pytest.fixture
+def topical_client(topical_catalog_db):
+    with TestClient(create_app()) as c:
+        yield c
+
+
+def _row_ids(body: dict, name: str) -> list[str]:
+    """One group's rows as ``type:identifier``, in wire order."""
+    return [
+        f"code:{r['code']}" if r["type"] == "code" else f"{r['type']}:{r.get('fqid')}"
+        for r in _group(body, name)["results"]
+    ]
+
+
+@pytest.mark.parametrize(
+    ("query", "expected_top"),
+    [
+        # `covidanalys` is an identifier PREFIX of the variable, so it leads; the
+        # register's purpose match follows. Both precede the incidental codes.
+        ("covid", [_TOPICAL_VARIABLE, _TOPICAL_REGISTER, "code:C900"]),
+        ("covid test", [_TOPICAL_REGISTER, _TOPICAL_VARIABLE, "code:C900"]),
+        # Non-prefix label matches — these already led before the label prefix
+        # signal was withdrawn, and must keep doing so.
+        ("testing", [_TOPICAL_REGISTER, _TOPICAL_VARIABLE, "code:C900"]),
+        ("provtagning", [_TOPICAL_REGISTER, _TOPICAL_VARIABLE, "code:C900"]),
+    ],
+)
+def test_topical_top_results_lead_with_register_and_variable(
+    topical_client, query, expected_top
+):
+    body = topical_client.get("/api/search", params={"q": query}).json()
+    # The precondition the ranking assertion rests on: ranking cannot promote what
+    # retrieval never returned, so a failure HERE is a match gap, not a ranking
+    # one. It doubles as the reorder-only check — the codes keep their own pages.
+    assert _row_ids(body, "registers") == [_TOPICAL_REGISTER]
+    assert _row_ids(body, "variables") == [_TOPICAL_VARIABLE]
+    assert _row_ids(body, "classification_codes") == [
+        "code:C900",
+        "code:C901",
+        "code:C902",
+    ]
+    assert _row_ids(body, "register_value_sets") == [
+        "code:L900",
+        "code:L901",
+        "code:L902",
+    ]
+
+    assert _row_ids(body, "top_results") == expected_top
+
+
+def test_topical_query_keeps_bounded_continuation(topical_client):
+    first = topical_client.get(
+        "/api/search", params={"q": "covid test", "limit": 1}
+    ).json()
+    codes = _group(first, "classification_codes")
+    assert _row_ids(first, "classification_codes") == ["code:C900"]
+    assert codes["has_more"] and codes["next_cursor"]
+
+    second = topical_client.get(
+        "/api/search",
+        params={
+            "q": "covid test",
+            "limit": 1,
+            "type": "classification_code",
+            "cursor": codes["next_cursor"],
+        },
+    ).json()
+    assert _row_ids(second, "classification_codes") == ["code:C901"]
+
+
+def test_topical_query_keeps_a_golden_pin_first(topical_client, monkeypatch):
+    monkeypatch.setattr(
+        golden,
+        "_PINS",
+        {
+            ("covid test", "classification"): _Pin(
+                query="covid test",
+                group="classification",
+                fqids=("class/sun2020",),
+                note=None,
+            )
+        },
+    )
+
+    body = topical_client.get("/api/search", params={"q": "covid test"}).json()
+    assert _row_ids(body, "top_results")[0] == "classification:class/sun2020"
+
+
+@pytest.mark.parametrize(
+    ("query", "expected_first"),
+    # The exact code IDENTIFIER and the exact whole LABEL both keep their lead
+    # over the objects they pull in — only the label PREFIX signal was withdrawn.
+    [("C900", "code:C900"), ("Man", "code:1")],
+)
+def test_exact_code_match_still_leads_top_results(
+    topical_client, query, expected_first
+):
+    body = topical_client.get("/api/search", params={"q": query}).json()
+    assert _row_ids(body, "top_results")[0] == expected_first
+
+
+def test_exact_variable_identifier_still_resolves_its_variable(topical_client):
+    # `CovidAnalys04` is the variable's delivery column: it resolves the variable
+    # and nothing else — no incidental code rides along on an identifier query.
+    body = topical_client.get("/api/search", params={"q": "CovidAnalys04"}).json()
+    assert _row_ids(body, "variables") == [_TOPICAL_VARIABLE]
+    assert _row_ids(body, "classification_codes") == []
+    assert _row_ids(body, "register_value_sets") == []
+
+
+@pytest.mark.parametrize("client_fixture", ["client", "topical_client"])
+def test_unaffected_query_matches_the_unseeded_catalog(request, client_fixture):
+    # The control the topical rows must not disturb: same wire order either way.
+    body = (
+        request.getfixturevalue(client_fixture)
+        .get("/api/search", params={"q": "Kön"})
+        .json()
+    )
+    assert {g["group"]: _row_ids(body, g["group"]) for g in body["groups"]} == {
+        "registers": [],
+        "variables": ["variable:scb/lisa/kon"],
+        "classifications": [],
+        "classification_codes": [],
+        "register_value_sets": [],
+    }
+
+
 # ── golden-boost: curated-pin injection (#393 item 4 / #311) ─────────────────
 #
 # The synthetic catalog fixture has no scb/lisa-for-sysselsättning / sos/par

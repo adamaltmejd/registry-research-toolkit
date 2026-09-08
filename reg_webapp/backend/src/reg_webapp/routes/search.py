@@ -229,7 +229,15 @@ def _best_bet_score(query: str, result: SearchResult) -> int:
     if not folded_query or not identity_texts:
         return _type_prior(result)
     exact = any(text == folded_query for text in identity_texts)
-    prefix = any(text.startswith(folded_query) for text in identity_texts)
+    # A code's PREFIX authority is its `code` alone: its label and its owning
+    # `code_system` are descriptive text a topical term can start by accident,
+    # which would otherwise outscore the register or variable carrying that term
+    # in its purpose or definition. `exact` above still reads the whole identity,
+    # so an exact label ("Man" — the researcher naming the value) keeps its signal.
+    prefix_texts = (
+        (_fold_match_text(result.code),) if result.type == "code" else identity_texts
+    )
+    prefix = any(text.startswith(folded_query) for text in prefix_texts)
     return (
         _type_prior(result)
         + (1000 if exact else 0)
@@ -359,6 +367,12 @@ def _best_bets(
     score is only a presentation ordering layer: exact identifier/name/code hits
     outrank type priors, and type priors favor register → variable → classification
     → code for broad topical terms. Ties preserve the stable group/result order.
+
+    A code row's prefix authority is narrowed to its code identifier — see
+    `_best_bet_score`. reg_meta's `_search_identity_score` goes further and gives a
+    code row no identity boost at all, for a different reason: its value/code SQL
+    already publishes a final rank this layer does not see. Here the exact-label
+    signal is worth keeping, so only the prefix half is withdrawn.
     """
     by_key: dict[str, _TopCandidate] = {}
     for group_order, group in enumerate(groups):

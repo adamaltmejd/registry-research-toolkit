@@ -333,6 +333,97 @@ def _seed_code_variable_map(src: sqlite3.Connection) -> None:
     )
 
 
+# The topic the Y-18 ranking fixture puts in a register purpose, a variable
+# name/definition AND the head of six incidental value-code labels. INVENTED text
+# for that fixture, not a claim about any real register's terms.
+_TOPIC = "covid test testing provtagning"
+
+
+def seed_topical_rows(src: sqlite3.Connection) -> None:
+    """Layer the Y-18 topical ranking scenario onto a built catalog fixture.
+
+    Deliberately NOT called by `build_catalog_fixture_db`: only the backend's
+    `topical_catalog_db` fixture seeds it, so the pair `dev.sh --fixture-db`
+    builds (and the UI gates screenshot) stays byte-identical. Reproduces a
+    researcher's topical search where the intended register/variable competes
+    with value codes whose LABELS merely begin with the same term.
+    """
+    ensure_slugged_db_importable()
+    from _slugged_db import add_state, add_value_set, add_variable
+
+    variant_id = 20  # scb/rams `standard`
+    value_set_id = 2
+    delivery_column = "CovidAnalys04"
+
+    # The register carries the topic in its PURPOSE and the variable in its
+    # NAME + DEFINITION — the "present definition/name match" the codes displace.
+    src.execute(
+        "UPDATE register SET purpose = ? WHERE slug = 'rams'",
+        (f"Sysselsättning samt {_TOPIC} på arbetsmarknaden.",),
+    )
+    add_variable(
+        src, register_id=2, var_id=78, name="Antal covid analyser", slug="covidanalys"
+    )
+    src.execute(
+        "UPDATE variable SET definition = ? WHERE slug = 'covidanalys'",
+        (f"Antal analyser per månad: {_TOPIC}.",),
+    )
+    add_state(
+        src,
+        register_id=2,
+        variable_slug="covidanalys",
+        register_variant_id=variant_id,
+        delivery_column_name=delivery_column,
+        value_set_id=value_set_id,
+    )
+    variable_id = src.execute(
+        "SELECT variable_id FROM variable WHERE slug = 'covidanalys'"
+    ).fetchone()[0]
+    # `variable_fts`'s delivery_column_names (and the search result's own chips)
+    # read `variable_alias`, so the exact-identifier control needs the alias row.
+    src.execute(
+        "INSERT INTO variable_alias "
+        "(variable_id, register_variant_id, delivery_column_name) VALUES (?, ?, ?)",
+        (variable_id, variant_id, delivery_column),
+    )
+
+    # Two incidental code sets whose LABELS begin with the topic, one per value
+    # group: a `classification_code` row makes a code classification-owned, a bare
+    # `mapping_count > 0` makes it register-local (same split as
+    # `_seed_code_variable_map`).
+    icd10_id = src.execute(
+        "SELECT id FROM classification WHERE slug = 'icd-10-se'"
+    ).fetchone()[0]
+    for ordinal, code in enumerate(("C900", "C901", "C902")):
+        code_id = src.execute(
+            "INSERT INTO value_code (code, label, mapping_count) VALUES (?, ?, 0)",
+            (code, f"{_TOPIC} incidental klassifikationsetikett {ordinal}"),
+        ).lastrowid
+        src.execute(
+            "INSERT INTO classification_code "
+            "(classification_id, code_id, level, is_valid) VALUES (?, ?, NULL, 1)",
+            (icd10_id, code_id),
+        )
+    add_value_set(
+        src,
+        value_set_id=value_set_id,
+        codes=[
+            (code, f"{_TOPIC} incidental värdemängdsetikett {ordinal}")
+            for ordinal, code in enumerate(("L900", "L901", "L902"))
+        ],
+    )
+    src.execute(
+        "INSERT INTO code_variable_map (code_id, variable_id) "
+        "SELECT code_id, ? FROM value_set_member WHERE value_set_id = ?",
+        (variable_id, value_set_id),
+    )
+    src.execute(
+        "UPDATE value_code SET mapping_count = ("
+        "SELECT COUNT(*) FROM code_variable_map WHERE code_id = value_code.code_id)"
+    )
+    _rebuild_fts(src)
+
+
 def _seed_merged_family(src: sqlite3.Connection, add_variable, add_state) -> None:
     """Seed a MERGED monthly-family variable (#319) on scb/lisa: one variable
     `lonfink` with ONE annual 2018 state + three month columns in `variable_alias`
