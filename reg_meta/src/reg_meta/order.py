@@ -20,18 +20,23 @@ column in `column`, and `edition` equal to that slice's requested period.
 
 Pipeline, per `sources[*].bindings[*]` in project declaration order:
 
-1. **Availability clip.** A source period means "these columns, wherever each is
-   available inside this window" (§12 intersection semantics). Each binding is
-   clipped to its own documented availability — the union of its
-   `variable_state` windows at the source's variant — so a column delivered only
-   for a suffix of the window does not widen the order into a cross-product.
-   Every clip is reported per binding (`OrderResult.clips`, and on the manifest
-   itself when one is produced), never silently, and never as an error.
-2. **Representation slicing.** The clipped request is partitioned into slices of
-   constant canonical representation (`delivery_column_name`), via
-   `Catalog.resolve_at` — the resolution logic is not re-derived here. Two
-   columns co-existing at one instant with no `Binding.representation` pin is
-   ambiguity, and blocks.
+1+2. **Availability clip and representation slicing** — `resolve_binding`, the
+   SHARED pass. A source period means "these columns, wherever each is available
+   inside this window" (§12 intersection semantics). Each binding is clipped to
+   its own documented availability — the union of its `variable_state` windows at
+   the source's variant — so a column delivered only for a suffix of the window
+   does not widen the order into a cross-product; the clipped request is then
+   partitioned into slices of constant canonical representation
+   (`delivery_column_name`), via `Catalog.resolve_at` — the resolution logic is
+   not re-derived here. Two columns co-existing at one instant with no
+   `Binding.representation` pin is ambiguity, and blocks. Every clip is reported
+   per binding (`OrderResult.clips`, and on the manifest itself when one is
+   produced), never silently, and never as an error. The webapp's
+   `/api/project/validate` calls `resolve_binding` too, so validation and
+   ordering answer the availability question ONCE, and a clip alone is
+   informational on both sides. It is not a clean bill of health: the same
+   binding can still block here on representation ambiguity, and below on the
+   steward's coverage gate.
 3. **Steward matching + coverage gate.** A table matches a slice only when one
    of its columns carries a mapping matching `(register_variant, variable,
    representation)` AND its physical edition overlaps THAT slice; the edition
@@ -90,7 +95,7 @@ from reg_schema.validation import ValidationIssue
 # The package itself, for `__version__` — see `SUPPORTED_SCHEMA_VERSION` below.
 import reg_schema
 
-from .catalog import Catalog
+from .catalog import Catalog, VariableState
 from .db import get_manifest
 from .errors import EXIT_CONFIG, RegMetaError
 from .fqid import Fqid, FqidError, parse, snap_to_real_month_end
@@ -309,6 +314,54 @@ class OrderResult(_OrderModel):
         return self.manifest is not None
 
 
+class StateWindow(_OrderModel):
+    """One kept `variable_state` and the parts of the requested period it is
+    actually available for — its validity window ∩ the request, merged.
+
+    `intervals` is what makes a per-INSTANT property (two value sets delivered at
+    the same requested moment) answerable without re-deriving the clip: a state
+    whose validity overlaps another's only inside a HOLE of a disjoint request
+    never co-delivers with it, because no requested instant sees both."""
+
+    state: VariableState
+    intervals: tuple[_Interval, ...]
+
+
+class BindingResolution(_OrderModel):
+    """What one binding resolves to inside one requested period — the SHARED
+    availability/slicing facts `materialize_order` and the webapp's
+    `/api/project/validate` both read (`resolve_binding`, steps 1+2).
+
+    `finding` is the blocking reason there is nothing orderable here, or `None`.
+    A resolution can carry BOTH a `clip` and a `finding`: §12 reports every clip
+    per binding, never silently, and a blocked researcher needs to see the
+    clipped window the finding is stated against.
+
+    Not a wire model — nothing serializes a `BindingResolution`; it rides
+    `_OrderModel` for the frozen/fail-loud construction the rest of the module
+    has."""
+
+    # The rendered request these facts are stated against, for issue messages.
+    requested_period: str
+    # The states kept: overlapping the request, narrowed to `representation`
+    # when the binding pins one, in the resolver's chronological order.
+    states: tuple[StateWindow, ...]
+    # `(lo, hi, delivery_column_name)` — the request partitioned into windows of
+    # constant canonical representation, sorted.
+    slices: tuple[tuple[str, str, str], ...]
+    # Where the binding is available inside the request: the slices' merged
+    # union. Equal to the request exactly when nothing was clipped away.
+    availability: tuple[_Interval, ...]
+    clip: ClipReport | None
+    finding: OrderFinding | None
+
+    @property
+    def columns(self) -> frozenset[str]:
+        """The canonical delivery columns the slices resolve to — >1 only across
+        a sequential rename (co-existing columns block as ambiguity)."""
+        return frozenset(column for _lo, _hi, column in self.slices)
+
+
 def extraction_filenames(entry: OrderEntry) -> tuple[str, ...]:
     """The extraction output file name(s) for `entry` — one UTF-8 CSV per
     variant + partition + period unit (§12 pins the convention in the order
@@ -408,7 +461,7 @@ def _prev_day(iso: str) -> str:
     ).isoformat()
 
 
-def _requested_intervals(period: Period) -> tuple[_Interval, ...]:
+def requested_intervals(period: Period) -> tuple[_Interval, ...]:
     """Expand a `Source.period` into inclusive ISO intervals through the SAME
     expansion an inventory edition uses (`inventory.edition_bounds`), so a
     project period and a physical edition can never disagree about bounds.
@@ -440,6 +493,177 @@ def _requested_intervals(period: Period) -> tuple[_Interval, ...]:
             (lo, snap_to_real_month_end(hi))
             for lo, hi in edition_bounds(tuple(converted))
         ]
+    )
+
+
+# ── shared availability/slicing pass (steps 1+2) ────────────────────────────
+
+
+def resolve_binding(
+    catalog: Catalog,
+    source: Source,
+    binding: Binding,
+    requested: tuple[_Interval, ...],
+) -> BindingResolution:
+    """Resolve one binding inside `requested` (from `requested_intervals`) —
+    §12's steps 1+2, and the ONE place the availability question is answered.
+
+    `materialize_order` consumes the slices to match the steward's topology;
+    the webapp's `/api/project/validate` consumes the same facts to report
+    them, so the two never disagree about what is available. §12 intersection
+    semantics: each selected binding is requested wherever it is available
+    inside the source window, so availability NARROWER than the request is a
+    reported clip, and only availability that is empty everywhere in the request
+    blocks (`binding_unavailable`). A clip alone is informational — the same
+    binding can still block below on representation ambiguity, and steps 3+4
+    still gate its physical coverage.
+
+    Everything decided here is decided over the states that actually intersect
+    a REQUESTED interval. A column living entirely inside a hole of a disjoint
+    request is not available, is not evidence the binding exists in the request,
+    and is not a co-existing representation: no requested instant sees it."""
+    rendered = _render(requested)
+
+    def blocked(
+        code: str, message: str, period: str | None = None
+    ) -> BindingResolution:
+        return BindingResolution(
+            requested_period=rendered,
+            states=(),
+            slices=(),
+            availability=(),
+            clip=None,
+            finding=OrderFinding(
+                code=code,
+                message=message,
+                source=source.name,
+                variable=binding.variable,
+                period=period,
+            ),
+        )
+
+    # Resolve PER REQUESTED SEGMENT. `resolve_at` is the canonical resolver and
+    # its monthly-family arm (#319) falls back to the annual claim when no alias
+    # window intersects THAT query's bounds; one query over the request's outer
+    # span would find a January window, skip the fallback, and silently drop a
+    # requested March the steward does deliver. Segments union on the compound
+    # window identity `(state_id, delivery column, valid_from)` — one annual
+    # state expands into 12 same-`state_id` month windows, so keying on
+    # `state_id` alone would collapse 11 of them, while a state reaching two
+    # segments must stay ONE state carrying both.
+    resolved: dict[
+        tuple[int, str | None, str], tuple[VariableState, list[_Interval]]
+    ] = {}
+    try:
+        for req in requested:
+            for state in catalog.resolve_at(
+                binding.variable,
+                {"from": req[0], "to": req[1]},
+                variant=source.register_variant.split("/")[2],
+                # State METADATA only: nothing below reads code membership, and
+                # the webapp's validate path must not hydrate a geography
+                # variable's code lists to answer a question about its windows.
+                with_codes=False,
+            ):
+                window = (state.valid_from, snap_to_real_month_end(state.valid_to))
+                overlap = _intersect(window, req)
+                if overlap is None:
+                    continue
+                key = (state.state_id, state.delivery_column_name, state.valid_from)
+                resolved.setdefault(key, (state, []))[1].append(overlap)
+    except (FqidError, RegMetaError) as exc:
+        return blocked(
+            "variable_unresolved",
+            f"binding {binding.variable!r} does not resolve against the "
+            f"catalog at {source.register_variant}: {exc}",
+        )
+
+    kept: list[StateWindow] = []
+    by_column: dict[str, list[_Interval]] = {}
+    # The columns delivered somewhere the researcher actually asked. Only states
+    # intersecting a requested interval reach here, so this is what the binding
+    # exists as IN THE REQUEST — never a column that lives in a hole.
+    offered: set[str] = set()
+    for state, overlaps in resolved.values():
+        if state.delivery_column_name is None:
+            return blocked(
+                "representation_unresolved",
+                f"binding {binding.variable!r} resolves to a state with no "
+                f"delivery column at {source.register_variant}; an unresolved "
+                "representation cannot be ordered",
+                _render(_merge(overlaps)),
+            )
+        offered.add(state.delivery_column_name)
+        if (
+            binding.representation is not None
+            and state.delivery_column_name != binding.representation
+        ):
+            continue
+        kept.append(StateWindow(state=state, intervals=_merge(overlaps)))
+        by_column.setdefault(state.delivery_column_name, []).extend(overlaps)
+
+    if not by_column:
+        # A pin names no delivered column, but only where something IS delivered:
+        # with nothing available anywhere in the request the binding is simply
+        # unavailable, whatever it pins.
+        if binding.representation is not None and offered:
+            return blocked(
+                "representation_unknown",
+                f"binding {binding.variable!r} pins representation "
+                f"{binding.representation!r}, which is not a delivery column at "
+                f"{source.register_variant} in {rendered} "
+                f"(available: {sorted(offered)})",
+                rendered,
+            )
+        return blocked(
+            "binding_unavailable",
+            f"binding {binding.variable!r} has no state covering "
+            f"{source.register_variant} anywhere in {rendered}",
+            rendered,
+        )
+
+    slices = tuple(
+        sorted(
+            (lo, hi, column)
+            for column, intervals in by_column.items()
+            for lo, hi in _merge(intervals)
+        )
+    )
+    # The clip is decided BEFORE the ambiguity gate: a binding that is both
+    # clipped and ambiguous must surface both, since §12 reports every clip per
+    # binding, never silently, and the finding is stated against the clipped
+    # window the researcher has to reason about.
+    availability = _merge([(lo, hi) for lo, hi, _ in slices])
+    clip = (
+        ClipReport(
+            source=source.name,
+            variable=binding.variable,
+            requested_period=rendered,
+            ordered_period=_render(availability),
+        )
+        if availability != requested
+        else None
+    )
+    finding = None
+    if overlapping := _coexisting_columns(slices):
+        finding = OrderFinding(
+            code="representation_ambiguous",
+            message=(
+                f"binding {binding.variable!r} resolves to co-existing "
+                f"representations {overlapping} at {source.register_variant}; "
+                "pin one with `representation` — a manifest never guesses"
+            ),
+            source=source.name,
+            variable=binding.variable,
+            period=rendered,
+        )
+    return BindingResolution(
+        requested_period=rendered,
+        states=tuple(kept),
+        slices=slices,
+        availability=availability,
+        clip=clip,
+        finding=finding,
     )
 
 
@@ -707,7 +931,7 @@ def _materialize_source(
     findings: list[OrderFinding],
 ) -> None:
     try:
-        requested = _requested_intervals(source.period)
+        requested = requested_intervals(source.period)
     # `FqidError` subclasses `ValueError`; `TypeError` covers a non-period
     # segment type. Either way the source has no orderable period.
     except (TypeError, ValueError) as exc:
@@ -719,25 +943,15 @@ def _materialize_source(
             )
         )
         return
-    variant = source.register_variant.split("/")[2]
     for binding in source.bindings:
         _materialize_binding(
-            binding,
-            source,
-            variant,
-            requested,
-            inventory,
-            catalog,
-            entries,
-            clips,
-            findings,
+            binding, source, requested, inventory, catalog, entries, clips, findings
         )
 
 
 def _materialize_binding(
     binding: Binding,
     source: Source,
-    variant: str,
     requested: tuple[_Interval, ...],
     inventory: DeliveryInventory | None,
     catalog: Catalog,
@@ -756,100 +970,18 @@ def _materialize_binding(
             )
         )
 
-    try:
-        parsed = parse(binding.variable)
-        states = [
-            state
-            for interval in requested
-            for state in catalog.resolve_at(
-                parsed, {"from": interval[0], "to": interval[1]}, variant=variant
-            )
-        ]
-    except (FqidError, RegMetaError) as exc:
-        finding(
-            "variable_unresolved",
-            f"binding {binding.variable!r} does not resolve against the "
-            f"catalog at {source.register_variant}: {exc}",
-        )
+    # STEP 1+2, shared with `/api/project/validate`.
+    resolution = resolve_binding(catalog, source, binding, requested)
+    if resolution.clip is not None:
+        clips.append(resolution.clip)
+    if resolution.finding is not None:
+        findings.append(resolution.finding)
         return
-
-    # STEP 1+2: availability clip and representation slicing in one pass — each
-    # state contributes its window ∩ the request under its canonical column.
-    by_column: dict[str, list[_Interval]] = {}
-    for state in states:
-        window = (state.valid_from, snap_to_real_month_end(state.valid_to))
-        overlaps = [x for req in requested if (x := _intersect(window, req))]
-        if not overlaps:
-            continue
-        if state.delivery_column_name is None:
-            finding(
-                "representation_unresolved",
-                f"binding {binding.variable!r} resolves to a state with no "
-                f"delivery column at {source.register_variant}; an unresolved "
-                "representation cannot be ordered",
-                _render(_merge(overlaps)),
-            )
-            return
-        if (
-            binding.representation is not None
-            and state.delivery_column_name != binding.representation
-        ):
-            continue
-        by_column.setdefault(state.delivery_column_name, []).extend(overlaps)
-
-    if not by_column:
-        available = sorted(
-            {s.delivery_column_name for s in states if s.delivery_column_name}
-        )
-        if binding.representation is not None and states:
-            finding(
-                "representation_unknown",
-                f"binding {binding.variable!r} pins representation "
-                f"{binding.representation!r}, which is not a delivery column at "
-                f"{source.register_variant} in {_render(requested)} "
-                f"(available: {available})",
-                _render(requested),
-            )
-        else:
-            finding(
-                "binding_unavailable",
-                f"binding {binding.variable!r} has no state covering "
-                f"{source.register_variant} anywhere in {_render(requested)}",
-                _render(requested),
-            )
-        return
-
-    slices = tuple(
-        sorted(
-            (lo, hi, column)
-            for column, intervals in by_column.items()
-            for lo, hi in _merge(intervals)
-        )
-    )
-    # The clip is reported BEFORE the ambiguity gate: a binding that is both
-    # clipped and ambiguous must surface both, since §12 reports every clip per
-    # binding, never silently, and the finding is stated against the clipped
-    # window the researcher has to reason about.
-    availability = _merge([(lo, hi) for lo, hi, _ in slices])
-    if availability != requested:
-        clips.append(
-            ClipReport(
-                source=source.name,
-                variable=binding.variable,
-                requested_period=_render(requested),
-                ordered_period=_render(availability),
-            )
-        )
-
-    if overlapping := _coexisting_columns(slices):
-        finding(
-            "representation_ambiguous",
-            f"binding {binding.variable!r} resolves to co-existing "
-            f"representations {overlapping} at {source.register_variant}; pin "
-            "one with `representation` — a manifest never guesses",
-            _render(requested),
-        )
-        return
+    slices = resolution.slices
+    availability = resolution.availability
+    # `resolve_binding` resolved the FQID, so parsing it cannot raise here; the
+    # inventory's mappings are keyed by `Fqid`, not by the raw string.
+    parsed = parse(binding.variable)
 
     # An inventory mapping may omit `representation` — §12's "the concept has a
     # single representation" arm. That is only unambiguous when the binding
@@ -857,7 +989,7 @@ def _materialize_binding(
     # it changed, an unqualified mapping cannot say WHICH slice its column is,
     # so it matches nothing and blocks: a manifest never claims one physical
     # column represents two canonical representations.
-    representations = sorted(by_column)
+    representations = sorted(resolution.columns)
     unqualified_ok = len(representations) == 1
     if inventory is not None and not unqualified_ok:
         blocked_by_unqualified = False
@@ -885,7 +1017,7 @@ def _materialize_binding(
                     f"`representation`, but the binding delivers "
                     f"{representations} across the request; qualify the mapping "
                     "with the canonical representation its column carries",
-                    _render(requested),
+                    resolution.requested_period,
                 )
         if blocked_by_unqualified:
             return
@@ -963,7 +1095,7 @@ def _materialize_binding(
         for key, intervals in contributions.items():
             editions[key] = _merge(intervals)
 
-    provider, register, _ = source.register_variant.split("/")
+    provider, register, variant = source.register_variant.split("/")
     for key, intervals in sorted(
         contributions.items(),
         key=lambda item: (item[0][0], editions[item[0]], item[0][1]),

@@ -84,6 +84,48 @@ def test_manifest_grounds_the_global_fallback_entry(client):
     assert entry.physical.edition == "2018"
 
 
+def test_disjoint_period_orders_the_available_part(client):
+    """Y-45 regression, the order side of
+    `test_project_validate.test_disjoint_period_with_partial_availability_is_orderable`:
+    `scb/lisa/kon` exists from 2018, so `[2010, 2018]` orders its 2018 half and
+    reports the clip. Both endpoints run the same `resolve_binding` pass, so
+    what validation calls orderable is exactly what materializes here."""
+    resp = client.post("/api/project/order", json=_spec(period=[2010, 2018]))
+    assert resp.status_code == 200, resp.text
+    manifest = OrderManifest.model_validate(json.loads(resp.text))
+    (entry,) = manifest.entries
+    assert entry.requested_period == "2018"
+    assert entry.physical.column == "Kon"
+    (clip,) = manifest.clips
+    assert clip.variable == "scb/lisa/kon"
+    assert clip.requested_period == "2010,2018"
+    assert clip.ordered_period == "2018"
+
+
+def test_month_without_an_alias_window_orders(client):
+    """Y-45 repair: `lonfink` is one annual 2018 claim expanded into Jan/Feb/Mars
+    column windows (#319); April has no window, so `resolve_at` falls back to the
+    annual claim — per QUERY. Resolving the request as one outer span would find
+    January's window, skip that fallback, and silently drop April from the
+    MANIFEST, changing what the steward extracts merely because January was added
+    to the request."""
+    spec = _spec(period=["2018-01", "2018-04"])
+    spec["sources"][0]["bindings"] = [
+        {
+            "variable": "scb/lisa/lonfink",
+            "type": "numeric",
+            "representation": "LonFinkJan",
+        }
+    ]
+    resp = client.post("/api/project/order", json=spec)
+    assert resp.status_code == 200, resp.text
+    manifest = OrderManifest.model_validate(json.loads(resp.text))
+    assert manifest.clips == ()
+    (entry,) = manifest.entries
+    assert entry.requested_period == "2018-01,2018-04"
+    assert entry.physical.column == "LonFinkJan"
+
+
 def test_named_steward_without_an_inventory_fails_at_boot(
     catalog_db, tmp_path, monkeypatch
 ):

@@ -169,6 +169,78 @@ def test_extra_key_is_unexpected_field_not_500(client):
     assert "unexpected_field" in codes, codes
 
 
+def test_disjoint_period_with_partial_availability_is_orderable(client):
+    """Y-45 regression: `scb/lisa/kon` exists from 2018, so the disjoint request
+    `[2010, 2018]` is available for its 2018 half. Under §12 intersection
+    semantics that is an INFO clip (the shared `resolve_binding` pass the order
+    materializer runs reaches the same verdict), never
+    `period_outside_state_validity` — the SPA must not block an order the
+    materializer accepts. `test_project_order.py` asserts the order side."""
+    spec = _clean_spec()
+    spec["sources"][0]["period"] = [2010, 2018]
+    resp = client.post("/api/project/validate", json=spec)
+    assert resp.status_code == 200, resp.status_code
+    body = resp.json()
+    assert body["ok"] is True, body["issues"]
+    clips = [i for i in body["issues"] if i["code"] == "range_period_partially_covered"]
+    assert len(clips) == 1, body["issues"]
+    assert clips[0]["level"] == "info"
+    assert "it is ordered for 2018" in clips[0]["message"]
+
+
+def test_the_enclosing_range_is_clipped_the_same_way(client):
+    """The same span asked for as a RANGE is clipped, not blocked, exactly like
+    the list above — the inconsistency Y-45 removed. (Availability is what the
+    two spellings agree on; a range also asks for the list's holes, so it can
+    still see ambiguity the list does not.)"""
+    spec = _clean_spec()
+    spec["sources"][0]["period"] = {"from": 2010, "to": 2018}
+    body = client.post("/api/project/validate", json=spec).json()
+    assert body["ok"] is True, body["issues"]
+    assert [i["code"] for i in body["issues"]] == ["range_period_partially_covered"]
+
+
+def _lonfink_spec(period: object, representation: str) -> dict:
+    """The merged monthly-family variable (#319): ONE annual 2018 claim expanded
+    into Jan/Feb/Mars column windows, with no window for any later month."""
+    spec = _clean_spec()
+    spec["sources"][0]["period"] = period
+    spec["sources"][0]["bindings"] = [
+        {
+            "variable": "scb/lisa/lonfink",
+            "type": "numeric",
+            "representation": representation,
+        }
+    ]
+    return spec
+
+
+def test_unknown_pin_offers_only_columns_in_the_requested_period(client):
+    """Y-45 repair: `LonFinkFeb` is delivered only in February, which this
+    request SKIPS. The pin is unknown, and the remediation list must name what
+    the binding delivers where it was actually asked — offering a column no
+    requested instant can extract sends the researcher to a dead end."""
+    spec = _lonfink_spec(["2018-01", "2018-03"], "LonFinkFeb")
+    body = client.post("/api/project/validate", json=spec).json()
+    assert body["ok"] is False
+    unknown = [
+        i for i in body["issues"] if i["code"] == "binding_representation_unknown"
+    ]
+    assert len(unknown) == 1, body["issues"]
+    assert "available: ['LonFinkJan', 'LonFinkMars']" in unknown[0]["message"]
+
+
+def test_month_without_an_alias_window_is_not_reported_as_clipped(client):
+    """Y-45 repair: April has no column window, so `resolve_at` falls back to
+    the annual claim for it — but only when April is resolved on its own terms.
+    Asking for January as well must not cost April its coverage, here or in the
+    manifest (`test_project_order.test_month_without_an_alias_window_orders`)."""
+    spec = _lonfink_spec(["2018-01", "2018-04"], "LonFinkJan")
+    body = client.post("/api/project/validate", json=spec).json()
+    assert body["ok"] is True, body["issues"]
+    assert [i["code"] for i in body["issues"]] == []
+
+
 def test_calendar_invalid_period_is_structural_200_not_500(client):
     """#239 regression: a calendar-impossible day (`2019-02-29`, non-leap) is now
     rejected at the STRUCTURAL layer (`invalid_period`), so the retired #238

@@ -228,8 +228,10 @@ export const KNOWN_CODES: Record<string, CodeInfo> = {
   },
   // ── order materializer (§12) ──────────────────────────────────────────────
   // Every one BLOCKS the order: the materializer is fail-closed and emits a
-  // manifest or findings, never a partial order. They reach the panel from
-  // `/order`'s 422, not from `/validate`.
+  // manifest or findings, never a partial order. Most reach the panel from
+  // `/order`'s 422 — but `/validate` runs the materializer's own availability
+  // pass, so `period_not_orderable` and `representation_unresolved` can arrive
+  // from either endpoint under these same names.
   // Short CLASSIFIERS, not sentences: an order finding's own message already
   // states the case WITH its coordinates in it, so a title paraphrasing it costs
   // a line and adds nothing (the structural/semantic labels above lead rows

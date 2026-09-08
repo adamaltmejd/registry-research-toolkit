@@ -19,7 +19,7 @@ import reg_meta.db
 from _steward_helpers import catalog_index as _catalog_index
 from reg_meta.catalog import Catalog
 from reg_schema.project_data import ProjectData
-from reg_webapp.semantic import period_display, validate_semantic
+from reg_webapp.semantic import validate_semantic
 
 
 @pytest.fixture
@@ -29,26 +29,6 @@ def catalog(catalog_db):
         yield Catalog(conn)
     finally:
         conn.close()
-
-
-@pytest.mark.parametrize(
-    ("period", "expected"),
-    [
-        (2018, "2018"),
-        ("HT2020", "HT2020"),
-    ],
-)
-def test_period_display_scalar(period, expected):
-    assert period_display(period) == expected
-
-
-def test_period_display_range_is_wire_form_not_repr():
-    from reg_schema.project_data import PeriodRange
-
-    pr = PeriodRange.model_validate({"from": 2015, "to": 2020})
-    rendered = period_display(pr)
-    assert rendered == "2015..2020"
-    assert "PeriodRange" not in rendered and "from_=" not in rendered
 
 
 def _project(sources: list[dict]) -> ProjectData:
@@ -227,6 +207,7 @@ def multiversion_catalog():
         register_variant_id=10,
         valid_from="2018-01-01",
         valid_to="9999-12-31",
+        delivery_column_name="Kon",  # the SAME column — co-delivery, not parallel
         value_set_version_label="sun2000",
         value_set_id=702,
     )
@@ -275,6 +256,7 @@ def same_value_set_catalog():
         register_variant_id=10,
         valid_from="2018-01-01",
         valid_to="9999-12-31",
+        delivery_column_name="Kon",  # the SAME column, as in a real re-label
         value_set_version_label="LKF 2004",  # different label, SAME value set
         value_set_id=701,
     )
@@ -407,6 +389,7 @@ def transition_catalog():
         register_variant_id=10,
         valid_from="2010-01-01",
         valid_to="2015-12-31",
+        delivery_column_name="Kon",  # a re-version keeps the column
         value_set_version_label="sun2000",
     )
     conn.commit()
@@ -515,9 +498,10 @@ def uneven_representation_catalog():
         conn.close()
 
 
-def test_representation_under_covering_range_is_drift(uneven_representation_catalog):
-    # Range 2010-2020 picking `kon_detalj` (only 2018+) leaves 2010-2017 uncovered
-    # vs the `kon` column — an info coverage note, not a blocking error.
+def test_representation_under_covering_range_is_clipped(uneven_representation_catalog):
+    # Range 2010-2020 picking `kon_detalj` (only 2018+) is the §12 availability
+    # clip: the pin is requested where it is available, so validation reports the
+    # window the order will carry — informationally, never as an error.
     source = {
         "name": "s",
         "register_variant": "scb/lisa/individer-15plus",
@@ -531,9 +515,10 @@ def test_representation_under_covering_range_is_drift(uneven_representation_cata
         ],
     }
     result = validate_semantic(_project([source]), uneven_representation_catalog)
-    codes = {i.code for i in result.issues}
-    assert "binding_value_set_version_ambiguous" not in codes
-    assert "binding_state_drifts_within_period" in codes
+    clip = next(i for i in result.issues if i.code == "range_period_partially_covered")
+    assert clip.level == "info"
+    assert "ordered for 2018..2020" in clip.message, clip.message
+    assert "binding_value_set_version_ambiguous" not in {i.code for i in result.issues}
     assert result.ok
 
 
@@ -586,12 +571,12 @@ def representation_internal_gap_catalog():
         conn.close()
 
 
-def test_representation_internal_gap_in_range_is_drift(
+def test_representation_internal_gap_in_range_is_clipped(
     representation_internal_gap_catalog,
 ):
-    # #342: the pinned `kon` column is gapped 2013-2017 (a sibling fills it). Outer
-    # bounds match the full set, so this is the case that is SILENT on `main`; the
-    # gap-based check must flag the internal under-coverage as info (non-blocking).
+    # #342: the pinned `kon` column is gapped 2013-2017 (a sibling fills it), so
+    # the clip is INTERNAL — outer bounds alone would miss it. The ordered period
+    # names both eras, which is exactly what the order manifest carries.
     source = {
         "name": "s",
         "register_variant": "scb/lisa/individer-15plus",
@@ -605,18 +590,19 @@ def test_representation_internal_gap_in_range_is_drift(
         ],
     }
     result = validate_semantic(_project([source]), representation_internal_gap_catalog)
-    codes = {i.code for i in result.issues}
-    assert "binding_state_drifts_within_period" in codes
-    assert "binding_value_set_version_ambiguous" not in codes
+    clip = next(i for i in result.issues if i.code == "range_period_partially_covered")
+    assert clip.level == "info"
+    assert "ordered for 2010..2012,2018..2020" in clip.message, clip.message
+    assert "binding_value_set_version_ambiguous" not in {i.code for i in result.issues}
     assert result.ok
 
 
-def test_representation_internal_gap_in_list_range_segment_is_drift(
+def test_representation_internal_gap_in_list_range_segment_is_clipped(
     representation_internal_gap_catalog,
 ):
-    # #465: a list segment can be a range. The pin covers the segment's outer
-    # bounds but leaves the 2013-2017 middle to a sibling column, so the old
-    # per-segment presence loop is not enough.
+    # #465: a list segment can be a range, and the clip spans the whole request
+    # rather than being reported per segment — one clip for one request, which is
+    # the point of the shared pass.
     source = {
         "name": "s",
         "register_variant": "scb/lisa/individer-15plus",
@@ -630,14 +616,10 @@ def test_representation_internal_gap_in_list_range_segment_is_drift(
         ],
     }
     result = validate_semantic(_project([source]), representation_internal_gap_catalog)
-    drift = [
-        i
-        for i in result.issues
-        if i.code == "binding_state_drifts_within_period"
-        and "covers only part of period 2010..2020" in i.message
-    ]
-    assert len(drift) == 1
-    assert "segment of 2010..2020,2022" in drift[0].message
+    clip = [i for i in result.issues if i.code == "range_period_partially_covered"]
+    assert len(clip) == 1
+    assert "requested period 2010..2020,2022" in clip[0].message, clip[0].message
+    assert "ordered for 2010..2012,2018..2020,2022" in clip[0].message, clip[0].message
     assert result.ok
 
 
@@ -716,12 +698,12 @@ def list_year_segment_gap_catalog():
         conn.close()
 
 
-def test_representation_gap_in_list_year_segment_is_drift(
+def test_representation_gap_in_list_year_segment_is_clipped(
     list_year_segment_gap_catalog,
 ):
-    # The 2020 segment is an interval, even though it is encoded as an int member
-    # of the list. Pinning `kon` would silently omit Jan-Jun 2020 without the
-    # per-segment gap comparison.
+    # A year member of a list is an INTERVAL, not an instant: pinning `kon`
+    # (delivered from July 2020) clips away Jan-Jun 2020, and the ordered period
+    # says so to the day rather than rounding the year in.
     source = {
         "name": "s",
         "register_variant": "scb/lisa/individer-15plus",
@@ -735,14 +717,9 @@ def test_representation_gap_in_list_year_segment_is_drift(
         ],
     }
     result = validate_semantic(_project([source]), list_year_segment_gap_catalog)
-    drift = [
-        i
-        for i in result.issues
-        if i.code == "binding_state_drifts_within_period"
-        and "covers only part of period 2020" in i.message
-    ]
-    assert len(drift) == 1
-    assert "segment of 2020,2021" in drift[0].message
+    clip = [i for i in result.issues if i.code == "range_period_partially_covered"]
+    assert len(clip) == 1
+    assert "ordered for 2020-07-01..2021" in clip[0].message, clip[0].message
     assert result.ok
 
 
@@ -810,13 +787,13 @@ def test_representation_merged_family_uses_expanded_windows(catalog):
         ],
     }
     result = validate_semantic(_project([source]), catalog)
-    drift = [
-        i
-        for i in result.issues
-        if i.code == "binding_state_drifts_within_period"
-        and "covers only part of period 2018-01..2018-03" in i.message
-    ]
-    assert len(drift) == 1
+    clip = [i for i in result.issues if i.code == "range_period_partially_covered"]
+    assert len(clip) == 1
+    # The request renders through the shared grammar, so it canonicalizes to
+    # the coarsest exact token (`2018-01..2018-03` IS `2018-Q1`) — the same
+    # spelling the order manifest carries.
+    assert "requested period 2018-Q1" in clip[0].message, clip[0].message
+    assert "ordered for 2018-03" in clip[0].message, clip[0].message
     assert result.ok
 
 
@@ -850,7 +827,7 @@ def test_range_fully_covered_has_no_partial_finding(catalog):
 
 
 def test_range_partially_covered_is_flagged(catalog):
-    # kon first delivered 2018; a 2010-2020 binding leaves 2010-2017 uncovered.
+    # kon first delivered 2018; a 2010-2020 binding is clipped to 2018-2020.
     result = validate_semantic(
         _project([_kon_source({"from": 2010, "to": 2020})]),
         catalog,
@@ -858,9 +835,11 @@ def test_range_partially_covered_is_flagged(catalog):
     issue = next(i for i in result.issues if i.code == "range_period_partially_covered")
     assert issue.level == "info"
     assert issue.path == "/sources/0/bindings/0/variable"
-    # The reported gap is the leading uncovered span, inclusive ISO bounds.
-    assert "2010-01-01..2017-12-31" in issue.message
-    # Info is non-blocking: the covered sub-range still extracts.
+    # The report names the period the ORDER will carry, in the manifest's own
+    # spelling — not a gap the researcher has to subtract themselves.
+    assert "requested period 2010..2020" in issue.message, issue.message
+    assert "ordered for 2018..2020" in issue.message, issue.message
+    # Info is non-blocking: the available sub-range still orders.
     assert result.ok
 
 
@@ -902,6 +881,7 @@ def internal_gap_catalog():
         register_variant_id=10,
         valid_from="2010-01-01",
         valid_to="2012-12-31",
+        delivery_column_name="Kon",  # the same column, delivered in two eras
     )
     conn.commit()
     try:
@@ -911,13 +891,14 @@ def internal_gap_catalog():
 
 
 def test_internal_gap_in_range_is_flagged(internal_gap_catalog):
-    # Range 2010-2018 over a concept with a 2013-2015 hole → exactly that gap.
+    # Range 2010-2018 over a concept with a 2013-2015 hole → the ordered period
+    # is the disjoint pair, so the hole is named by what it interrupts.
     result = validate_semantic(
         _project([_kon_source({"from": 2010, "to": 2018})]),
         internal_gap_catalog,
     )
     issue = next(i for i in result.issues if i.code == "range_period_partially_covered")
-    assert "2013-01-01..2015-12-31" in issue.message
+    assert "ordered for 2010..2012,2016..2018" in issue.message, issue.message
     assert result.ok
 
 
@@ -972,8 +953,8 @@ def test_non_leap_feb_to_endpoint_gap_is_snapped_not_phantom(catalog):
         catalog,
     )
     issue = next(i for i in result.issues if i.code == "range_period_partially_covered")
-    assert "2017-01-01..2017-12-31" in issue.message, issue.message
-    # No spurious Feb-29 phantom gap leaked in.
+    assert "ordered for 2018..2019-02-28" in issue.message, issue.message
+    # No impossible Feb-29 leaked into either endpoint.
     assert "2019-02-29" not in issue.message, issue.message
     assert result.ok
 
@@ -1420,10 +1401,13 @@ def test_unresolved_variant_skips_admission(catalog, kon_only_index):
 
 # ── #307: the period LIST form (interrupted series) ──────────────────────────
 # Structural validation guarantees the list is non-empty, sorted, and disjoint
-# before this layer runs; semantic resolution is PER SEGMENT
-# (`period_outside_state_validity` / `range_period_partially_covered` name the
-# segment) while the representation/ambiguity/drift checks run on the
-# compound-key-deduped union of every segment's states.
+# before this layer runs. The shared pass then treats the list as ONE request
+# with holes, not a series of independent ones: it reports one
+# `range_period_partially_covered` for the whole request rather than one per
+# segment. The holes stay real, though — the request is NOT its enclosing range:
+# a window overlapping only inside a HOLE is never co-existence, and segments are
+# resolved on their own terms so one cannot suppress another's canonical
+# fallback.
 
 
 def test_list_period_clean_resolves_with_replacement_hint(catalog):
@@ -1439,36 +1423,44 @@ def test_list_period_clean_resolves_with_replacement_hint(catalog):
     assert result.ok
 
 
-def test_list_period_uncovered_segment_errors_per_segment(catalog):
-    # kon's state starts 2018: the 2010..2012 segment has NO covering state →
-    # one error naming that segment; the covered 2018 segment contributes none.
+def test_list_period_uncovered_segment_is_clipped_not_an_error(catalog):
+    # Y-45: kon's state starts 2018, so the 2010..2012 segment simply is not
+    # available — under §12 intersection semantics the request is CLIPPED to
+    # where the binding exists and the order carries 2018. A segment the
+    # materializer drops must not be an error the SPA blocks the order on.
     result = validate_semantic(
         _project([_kon_source([{"from": 2010, "to": 2012}, 2018])]),
         catalog,
     )
-    outside = [i for i in result.issues if i.code == "period_outside_state_validity"]
-    assert len(outside) == 1
-    assert "2010..2012" in outside[0].message
-    assert "segment of 2010..2012,2018" in outside[0].message
-    assert not result.ok
+    assert "period_outside_state_validity" not in {i.code for i in result.issues}
+    clip = [i for i in result.issues if i.code == "range_period_partially_covered"]
+    assert len(clip) == 1
+    assert "requested period 2010..2012,2018" in clip[0].message, clip[0].message
+    assert "ordered for 2018" in clip[0].message, clip[0].message
+    assert result.ok
 
 
-def test_list_period_two_uncovered_segments_error_each(catalog):
-    # Every uncovered segment gets its own error (per-segment feedback).
+def test_list_period_reports_one_clip_for_the_whole_request(catalog):
+    # Several unavailable segments are ONE clip stating the whole ordered
+    # period, not one finding per segment: the researcher fixes the period
+    # against what the order will actually carry.
     result = validate_semantic(
         _project([_kon_source([2015, 2016, 2018])]),
         catalog,
     )
-    outside = [i for i in result.issues if i.code == "period_outside_state_validity"]
-    assert len(outside) == 2
-    assert any("2015" in i.message for i in outside)
-    assert any("2016" in i.message for i in outside)
+    clip = [i for i in result.issues if i.code == "range_period_partially_covered"]
+    assert len(clip) == 1
+    # 2015 and 2016 are day-adjacent, so the request is the merged
+    # `2015..2016,2018` — two windows, not three.
+    assert "requested period 2015..2016,2018" in clip[0].message, clip[0].message
+    assert "ordered for 2018" in clip[0].message, clip[0].message
+    assert result.ok
 
 
-def test_list_period_partial_coverage_names_the_segment(catalog):
-    # kon starts 2018: the 2017..2019 segment is PARTIALLY covered (2017 gap);
-    # the 2021..2022 segment is fully covered. One info, naming the under-
-    # covered segment, with the whole-series context appended.
+def test_list_period_partial_coverage_names_the_ordered_period(catalog):
+    # kon starts 2018: the 2017..2019 segment is partly available and the
+    # 2021..2022 segment fully. One info, naming the disjoint window that
+    # survives the clip.
     result = validate_semantic(
         _project(
             [_kon_source([{"from": 2017, "to": 2019}, {"from": 2021, "to": 2022}])]
@@ -1477,9 +1469,8 @@ def test_list_period_partial_coverage_names_the_segment(catalog):
     )
     partial = [i for i in result.issues if i.code == "range_period_partially_covered"]
     assert len(partial) == 1
-    assert "2017..2019" in partial[0].message
-    assert "2017-01-01..2017-12-31" in partial[0].message
-    assert "segment of 2017..2019,2021..2022" in partial[0].message
+    assert "requested period 2017..2019,2021..2022" in partial[0].message
+    assert "ordered for 2018..2019,2021..2022" in partial[0].message
     assert result.ok
 
 
@@ -1598,13 +1589,12 @@ def middle_segment_sibling_catalog():
         conn.close()
 
 
-def test_pinned_representation_missing_middle_segment_is_flagged(
+def test_pinned_representation_missing_middle_segment_is_clipped(
     middle_segment_sibling_catalog,
 ):
-    # Codex P2 (#334): the pin exists at the outer segments, so the
-    # outer-bounds comparison is silent — but the 2015 extract would be
-    # silently empty for the pinned column. The per-segment presence check
-    # surfaces it as the same drift info, naming the segment.
+    # The pin exists at the outer segments only, so the middle segment's 2015
+    # extract would be empty for that column. The ordered period drops it, which
+    # is both the report and what the manifest will say.
     source = {
         **_kon_source([2010, 2015, 2020]),
         "bindings": [
@@ -1616,15 +1606,11 @@ def test_pinned_representation_missing_middle_segment_is_flagged(
         ],
     }
     result = validate_semantic(_project([source]), middle_segment_sibling_catalog)
-    drift = [
-        i
-        for i in result.issues
-        if i.code == "binding_state_drifts_within_period"
-        and "no state at period 2015" in i.message
-    ]
-    assert len(drift) == 1
-    assert "segment of 2010,2015,2020" in drift[0].message
-    # Non-blocking (info): the covered segments still extract.
+    clip = [i for i in result.issues if i.code == "range_period_partially_covered"]
+    assert len(clip) == 1
+    assert "requested period 2010,2015,2020" in clip[0].message, clip[0].message
+    assert "ordered for 2010,2020" in clip[0].message, clip[0].message
+    # Non-blocking (info): the available segments still order.
     assert result.ok
 
 

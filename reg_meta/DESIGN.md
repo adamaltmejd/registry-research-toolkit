@@ -890,7 +890,20 @@ Per `sources[*].bindings[*]`, in project declaration order:
    constant canonical representation (`delivery_column_name`). A sequential rename fans
    out into two slices; two columns valid at the SAME instant with no
    `Binding.representation` pin is ambiguity and blocks. Resolution logic is not
-   re-derived here — `resolve_at` is the source.
+   re-derived here — `resolve_at` is the source, called once per REQUESTED SEGMENT. Its
+   monthly-family fallback (#319 — a month with no column window keeps the annual claim)
+   is decided per query, so resolving a disjoint request as one outer span would let one
+   segment's window suppress another segment's fallback and drop coverage the steward
+   does deliver. Segments union on the compound window identity
+   `(state_id, delivery column, valid_from)`, so a state reaching two segments stays one
+   state. Steps 1 and 2 together are one function, `resolve_binding`, and it is
+   **shared**: the webapp's `/api/project/validate` calls it and only translates its
+   facts into issues, so the two never disagree about what is available and a clip alone
+   is never a validation error. A clip is not a clean bill of health, though — the same
+   binding can still block on representation ambiguity, and validation consumes
+   availability and slicing ONLY: steps 3 and 4 are the steward's physical topology and
+   do not run there, so a clean validation is a resolvable project, never a proof of
+   physical order readiness.
 3. **Steward matching + coverage gate.** A table matches a slice only when one of its
    columns carries a mapping matching `(register_variant, variable, representation)` AND
    its edition overlaps THAT slice; the edition contributes only its overlap. A mapping

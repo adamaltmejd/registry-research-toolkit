@@ -1840,8 +1840,11 @@ def get_catalog_node(
                     if redirect is not None:
                         return redirect
                 # Resolve PER SEGMENT (#340) — `resolve_at` never sees the #307
-                # list form (mirrors `semantic._check_binding_period`). The union
-                # dedupes by the COMPOUND (state_id, delivery_column_name,
+                # list form, and its monthly-family fallback is decided per
+                # query, so one segment's window must not suppress another
+                # segment's (the shared `order.resolve_binding` pass resolves
+                # the same way). The union dedupes by the COMPOUND
+                # (state_id, delivery_column_name,
                 # valid_from): one state can intersect several segments, AND a
                 # merged monthly-family variable (#319) expands one annual state
                 # into 12 same-state_id per-month windows — keying on state_id

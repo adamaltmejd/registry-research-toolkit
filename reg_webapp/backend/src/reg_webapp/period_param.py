@@ -138,9 +138,10 @@ def parse_period_query(raw: str) -> list[Period]:
     comma-joined list form (``2005..2010,2015..2020``) yields one ``Period``
     per member, a scalar value a one-segment list. The catalog route resolves
     per segment and unions the states deduped by ``state_id`` —
-    ``Catalog.resolve_at`` never sees the list form, mirroring the semantic
-    validator's per-segment iteration (#340; also keeps the list grammar out
-    of the separately-released reg_meta).
+    ``Catalog.resolve_at`` never sees the list form (#340; keeps the list
+    grammar out of the separately-released reg_meta). The shared
+    ``order.resolve_binding`` pass resolves per segment too, for the same
+    reason: ``resolve_at``'s monthly-family fallback is decided per query.
 
     Member rules mirror reg_schema's list rules SYNTACTICALLY: no empty
     members, and ``_default`` is whole-value-only (the full-history sentinel

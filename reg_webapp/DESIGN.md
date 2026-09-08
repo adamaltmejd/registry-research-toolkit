@@ -248,12 +248,15 @@ segment**, returning the compound-key-deduped union — keyed on
 (#319) expands one annual state into 12 same-`state_id` per-month windows (keying on
 `state_id` alone would collapse 11 of them): `parse_period_query` splits the wire into
 segments and the handler calls `resolve_at` once per segment — `resolve_at` never sees
-the list form (keeps the list grammar out of the separately-released reg_meta, mirroring
-`semantic.py`'s per-segment iteration). `?variant` narrows to one variant;
-`?value_set_version` narrows to one vintage (a read-only browse filter matched against
-`value_set_version_label` by `resolve_at`, **not** a path pin). The period query is
-**ignored** on non-binding kinds (the register / provider / classification node resolves
-normally). An absent `?period` still returns the FULL embedded leaf.
+the list form (keeps the list grammar out of the separately-released reg_meta). This
+browse read is its own, but it resolves the way the shared `order.resolve_binding` pass
+does and for the same reason: `resolve_at`'s monthly-family fallback is decided per
+query, so one segment's window must not suppress another segment's fallback (see Current
+semantic validation). `?variant` narrows to one variant; `?value_set_version` narrows to
+one vintage (a read-only browse filter matched against `value_set_version_label` by
+`resolve_at`, **not** a path pin). The period query is **ignored** on non-binding kinds
+(the register / provider / classification node resolves normally). An absent `?period`
+still returns the FULL embedded leaf.
 
 **301 redirect for renamed/dead slugs (#355 PART 2; register grain added in #412;
 `?period` and sub-endpoints added in #411; classification grain added in #571).** When a
@@ -1829,33 +1832,44 @@ leaves connection ownership to its caller.
 
 This location is provisional. Order materialization has already moved to shared
 `reg_meta` project code (`order.py`, above), which is what lets the FastAPI SPA adapter
-and the local CLI execute one implementation; semantic validation follows on the same
-path. `reg_schema` remains independent; the dependency direction is
-`reg_meta -> reg_schema`, never the reverse.
+and the local CLI execute one implementation; the availability/representation-slicing
+decisions have followed it there (`order.resolve_binding`, consumed below), and the rest
+of semantic validation follows on the same path. `reg_schema` remains independent; the
+dependency direction is `reg_meta -> reg_schema`, never the reverse.
 
 Rules, walking each source's `register_variant` + every binding:
 
 - The `register_variant` coordinate resolves to a known variant; the binding `variable`
   (3-segment FQID) resolves to a known variable (following `same_as` links —
   `Catalog.variable_identity` does that). Unresolved → `fqid_unresolved` (error).
-- The binding resolves to a covering `variable_state` at the source's variant AND
-  period. None → `period_outside_state_validity` (error). A range period crossing a
-  state transition (sequential, non-overlapping states) →
-  `binding_state_drifts_within_period` (info); the same `(info)` code also fires when a
-  pinned `representation` column under-covers the requested range vs a sibling column
-  that delivers the shortfall — a leading/trailing gap or **internal** gap inside an
-  explicit range or a segment of a list period (#342/#465, gap-based). A **#307 list
-  period** (interrupted series; structurally sorted + disjoint, wire form comma-joined —
-  `2005..2010,2015..2020`) resolves **per segment**: `period_outside_state_validity` and
-  `range_period_partially_covered` fire per uncovered/under-covered segment (naming it),
-  and the PER-INSTANT probes — co-existence/ambiguity, the co-delivered-value-set
-  backstop, the pinned representation's presence — also run per segment (the
-  whole-series union would false-positive on windows overlapping only BETWEEN segments).
-  Only the series-level properties — the resolved columns for steward admission and the
-  sequential-drift info — use the compound-key-deduped union of every segment's states.
-  `Catalog.resolve_at` never sees the list form; since #340 the catalog `?period=` query
-  accepts the comma wire by doing the same per-segment resolve + union in the route (see
-  The `?period` query above).
+- **Availability is not decided here.** The source period is expanded
+  (`order.requested_intervals`) and each binding resolved by the SHARED reg_meta pass
+  the order materializer runs (`order.resolve_binding` — steps 1+2 in
+  `reg_meta/DESIGN.md` → Order materializer); this layer only translates those facts
+  into issues, so the two never disagree about what is available. §12 is intersection
+  semantics: a binding is requested wherever it IS available inside the source window,
+  so narrower availability — a leading/trailing shortfall, an **internal** gap, or a
+  pinned `representation` that covers only part of the request — is an informational
+  clip (`range_period_partially_covered`, naming the period actually ordered), never an
+  error by itself. A clip is not a clean bill of health: the same binding can still
+  block on representation/value-set ambiguity here, and on the steward's coverage gate
+  at order time. A **#307 list period** (interrupted series; structurally sorted +
+  disjoint, wire form comma-joined — `2005..2010,2015..2020`) is one request with holes,
+  not a series of independent ones: it reports ONE clip for the whole request, and its
+  holes are genuinely absent from the question — a request that skips a year is NOT
+  equivalent to the range enclosing it, since a column co-existing only inside a hole is
+  not ambiguity and a column delivered only inside a hole is not availability.
+  Availability empty across the whole request still blocks. The pass's blocking findings
+  map onto this surface's codes — `variable_unresolved` → `fqid_unresolved`,
+  `binding_unavailable` → `period_outside_state_validity`, `representation_unknown` →
+  `binding_representation_unknown`, `representation_ambiguous` →
+  `binding_value_set_version_ambiguous`, and `representation_unresolved` under its own
+  name. The kept states still carry the request instants they are available for, so the
+  per-instant probes (the co-delivered-value-set backstop) keep segment precision
+  without re-deriving the clip, and `binding_state_drifts_within_period` (info) reports
+  a request spanning a sequential state transition. Steps 3+4 of the materializer (the
+  steward's physical topology and its coverage gate) do NOT run here: a clean validation
+  is a resolvable project, never a proof of physical order readiness.
 - Resolved variable metadata can emit non-blocking hints. `deprecated_traversal` (info)
   fires when the binding resolves to a variable marked deprecated; the binding remains
   valid. `variable_replaced` (info) fires when a `variable_replaced_by` edge is
@@ -1866,23 +1880,25 @@ Rules, walking each source's `register_variant` + every binding:
 
 **This layer reads identity and state metadata, never code membership.** So it takes the
 narrow reg_meta reads (see `reg_meta/DESIGN.md` → Catalog API surface):
-`Catalog.variable_identity` for the FQID and its replacement hints, and
-`resolve_at(..., with_codes=False)` for the states. The full `resolve` would hydrate
-every historical state's code list to answer a question about one period — on a
-geography variable whose yearly states share one large code list that is most of the
-request. Diagnostics are unchanged: aliases, expanded monthly windows, representation
-identity (`state_id`, `delivery_column_name`, `valid_from`) and code-set identity
-(`value_set_id`) all come from the same code path.
+`Catalog.variable_identity` for the FQID and its replacement hints, and (inside the
+shared pass) `resolve_at(..., with_codes=False)` for the states. The full `resolve`
+would hydrate every historical state's code list to answer a question about one period —
+on a geography variable whose yearly states share one large code list that is most of
+the request. Diagnostics are unchanged: aliases, expanded monthly windows,
+representation identity (`state_id`, `delivery_column_name`, `valid_from`) and code-set
+identity (`value_set_id`) all come from the same code path.
 
 **Representation, not `@version`.** A FQID names one concept, but a concept may carry
 several **co-existing delivery columns** at the same instant — parallel representations
 (SSYK 3/4/5-digit, age brackets). When ≥2 distinct delivery columns co-exist
-(overlapping validity windows) and the binding sets no `representation`, the extract
-would pull more than one column → `binding_value_set_version_ambiguous` (error); the
-author must pick one via `Binding.representation` (the delivery column name; the SPA
-offers a chooser). This is exactly the job the retired `@version` pin used to do, now
-keyed on the delivery column. A `representation` reg_meta no longer delivers as a column
-→ `binding_representation_unknown` (error). Crucially, the co-existence test keys on
+(overlapping windows inside the REQUESTED instants — the shared pass's test, so a
+sibling that overlaps only in a hole of a list period is not co-existence) and the
+binding sets no `representation`, the extract would pull more than one column →
+`binding_value_set_version_ambiguous` (error); the author must pick one via
+`Binding.representation` (the delivery column name; the SPA offers a chooser). This is
+exactly the job the retired `@version` pin used to do, now keyed on the delivery column.
+A `representation` reg_meta no longer delivers as a column →
+`binding_representation_unknown` (error). Crucially, the co-existence test keys on
 **overlapping** windows: distinct columns in *non*-overlapping windows are a sequential
 rename (drift), NOT ambiguity, and must not demand a `representation`. A separate
 defensive backstop (`binding_value_set_version_ambiguous` on ≥2 distinct `value_set_id`s
@@ -1972,12 +1988,13 @@ stages concrete `(period, variant, representation)` rows with final `type` /
 mutation. Nothing re-derives afterwards, so there is no provenance state to track and no
 clobber decision to get wrong. A source's bindings can go stale relative to its period
 after the fact (e.g. the author widens the period); that drift is the **server
-validator's job** to surface (`period_outside_state_validity` /
-`binding_state_drifts_within_period`, see § Semantic validation) — the auto-validate
-flow that will run this on every edit is the sibling #994 (not yet landed as of
-#992/#993). `ValidationPanel` carries a "Fix in catalog" link on each finding that
-resolves a catalog coordinate, so the remediation path is always back to the catalog,
-never a cart-side patch.
+validator's job** to surface (`range_period_partially_covered` for a widening past
+availability, `period_outside_state_validity` when nothing is left,
+`binding_state_drifts_within_period` across a transition — see § Semantic validation) —
+the auto-validate flow that will run this on every edit is the sibling #994 (not yet
+landed as of #992/#993). `ValidationPanel` carries a "Fix in catalog" link on each
+finding that resolves a catalog coordinate, so the remediation path is always back to
+the catalog, never a cart-side patch.
 
 Opened project files are held **verbatim** in the store so serialize/validate see the
 same malformed structure the backend diagnoses. The SPA's read side uses one
