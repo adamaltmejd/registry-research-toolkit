@@ -97,6 +97,7 @@ from reg_webapp.models import (
     RootResponse,
     StatesResponse,
     SuccessorsResponse,
+    ValueSetCodesResponse,
     VariantsRef,
     VariantsResponse,
 )
@@ -109,6 +110,7 @@ from reg_webapp.period_param import (
     parse_value_set_version,
     parse_variant,
 )
+from reg_webapp.query_input import clamp_limit, matches_filter, validate_text_query
 
 if TYPE_CHECKING:
     import sqlite3
@@ -1127,7 +1129,15 @@ def _resolve_to_node(
     `_require_admitted`). This function keeps ONLY child-narrowing; classifications
     pass through (decision 2)."""
     try:
-        resolved = catalog.resolve(fqid)
+        # The binding arm takes the LIGHT hydration: full history and every
+        # coding reference, but the members of a state's value set are read
+        # separately (`/value-sets/{id}/codes`) rather than embedded once per
+        # state that shares them. Every other kind resolves as before.
+        resolved = (
+            catalog.resolve_binding(fqid, with_codes=False, with_code_summary=True)
+            if fqid.kind is FqidKind.VARIABLE_BINDING
+            else catalog.resolve(fqid)
+        )
     except RegMetaError as exc:
         _http_404_if_not_found(exc)
         raise  # unreachable; _http_404_if_not_found re-raises non-404s
@@ -1748,6 +1758,81 @@ def get_binding_lineage_warnings(
     return LineageWarningsResponse(binding=str(parsed), lineage_warnings=warnings)
 
 
+# ── Bounded value-set code reads (#Y-46) ────────────────────────────────────
+# The binding leaf and its `?period` subset carry each state's value_set_id and a
+# cardinality-independent `value_set_summary`, NOT the members — a variable whose
+# 290 states share a few large codings would otherwise embed those codings 290
+# times. This is where the members are actually read, one bounded page at a time,
+# for the panel the researcher opens.
+#
+# NOT steward-gated: a value set is public code→label metadata addressed by its own
+# id (the same footing as a classification's codes, which pass the steward gate
+# through untouched), and the id is only reachable from a leaf the gate already
+# admitted.
+
+# Page sizes: a default that covers the ordinary coding in one request, and a
+# ceiling that keeps a hand-written `?limit` from asking for a whole LKF edition.
+_VALUE_SET_CODES_DEFAULT_LIMIT = 200
+_VALUE_SET_CODES_MAX_LIMIT = 1000
+
+
+def _validated_code_limit(limit: int = _VALUE_SET_CODES_DEFAULT_LIMIT) -> int:
+    """``?limit`` page size, clamped to [1, _VALUE_SET_CODES_MAX_LIMIT] — the
+    clamp-don't-422 convention the other paged reads use."""
+    return clamp_limit(limit, maximum=_VALUE_SET_CODES_MAX_LIMIT)
+
+
+@router.get("/value-sets/{value_set_id}/codes", response_model=ValueSetCodesResponse)
+def get_value_set_codes(
+    request: Request,
+    value_set_id: int,
+    state: int | None = None,
+    q: str = "",
+    offset: int = 0,
+    limit: int = Depends(_validated_code_limit),
+) -> ValueSetCodesResponse:
+    """One bounded page of value set `value_set_id`'s (code, label) membership.
+
+    `?state=<state_id>` reads that state's STORED classification mismatch list
+    instead (`classification_conformance_code`) — the same code→label contract, so
+    the panel that renders a value set renders a mismatch list unchanged. The state
+    must carry this value set, so a state id can never read a coding it does not
+    belong to.
+
+    `?q` filters (diacritic-blind substring over code AND label, the SPA's own
+    `foldText` rule) BEFORE `?offset`/`?limit`, and `total` reports the filtered
+    count — a page is a window onto the whole matching set, never a filter over one
+    page. Codes are code/label-ordered, so paging is stable. An unknown value set —
+    or a state that does not carry it — is a 404: the panel is reached from a state
+    that named both, so neither is a plausible browse target to redirect."""
+    validate_text_query(q)
+    offset = max(0, offset)
+    with _catalog_conn(request) as conn:
+        catalog = Catalog(conn)
+        if state is None:
+            codes = catalog.value_set_codes(value_set_id)
+            missing = f"no value set {value_set_id} in this catalog"
+        else:
+            codes = catalog.state_nonconforming_codes(state, value_set_id)
+            missing = f"state {state} does not carry value set {value_set_id}"
+    if codes is None:
+        raise HTTPException(status_code=404, detail=missing)
+    matched = (
+        tuple(c for c in codes if matches_filter(q, c.code, c.label))
+        if q.strip()
+        else codes
+    )
+    return ValueSetCodesResponse(
+        value_set_id=value_set_id,
+        state_id=state,
+        q=q,
+        total=len(matched),
+        offset=offset,
+        limit=limit,
+        codes=matched[offset : offset + limit],
+    )
+
+
 # The catch-all — MUST be the last route declared in this router (see seam above).
 # Response is the discriminated `CatalogNode` union OR — on a binding leaf with a
 # `?period` query — a `StatesResponse` (the resolve_at subset, uniform with
@@ -1859,6 +1944,11 @@ def get_catalog_node(
                             segment,
                             variant=variant,
                             value_set_version=resolved_vsv,
+                            # Same light hydration as the no-period leaf: the
+                            # narrowed subset is the same states, so it must not
+                            # embed what the full node no longer does.
+                            with_codes=False,
+                            with_code_summary=True,
                         ):
                             states_by_id.setdefault(
                                 (s.state_id, s.delivery_column_name, s.valid_from), s

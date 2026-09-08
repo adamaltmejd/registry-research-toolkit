@@ -1822,6 +1822,26 @@
         "title": "ContextResponse",
         "type": "object"
       },
+      "DenseIntegerRange": {
+        "additionalProperties": false,
+        "description": "The inclusive integer span of a value set whose members ARE the integers in\nit (see `Catalog.value_set_summary`) \u2014 an age or year-count coding a consumer\nrenders as a range instead of a thousand-row table.",
+        "properties": {
+          "max": {
+            "title": "Max",
+            "type": "integer"
+          },
+          "min": {
+            "title": "Min",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "min",
+          "max"
+        ],
+        "title": "DenseIntegerRange",
+        "type": "object"
+      },
       "DimensionsResponse": {
         "description": "`GET /api/catalog/{fqid}/dimensions` (#489) \u2014 the concept-group\ndimension memberships containing this binding's variable (the\n'pick your variant' facet groups: level / population / rank / \u2026). A\n`ConceptGroupSummary` per containing group; empty when the variable is in\nno group.",
         "properties": {
@@ -4332,6 +4352,59 @@
         "title": "ValidationResultModel",
         "type": "object"
       },
+      "ValueSetCodesResponse": {
+        "description": "`GET /api/value-sets/{value_set_id}/codes` \u2014 ONE bounded page of a value\nset's (code, label) membership, or (with `?state=`) of one state's stored\nclassification mismatch list.\n\nThe binding leaf and its `?period` subset carry only `value_set_summary` per\nstate, so the code panel reads the actual codes here when it is opened. `total`\nis the count AFTER `?q` and BEFORE the page window, so a caller knows how much\nis left without walking it; `codes` is code/label-ordered, the same order\nreg_meta hydrates a value set in.",
+        "properties": {
+          "codes": {
+            "items": {
+              "$ref": "#/components/schemas/ValueSetMember"
+            },
+            "title": "Codes",
+            "type": "array"
+          },
+          "limit": {
+            "title": "Limit",
+            "type": "integer"
+          },
+          "offset": {
+            "title": "Offset",
+            "type": "integer"
+          },
+          "q": {
+            "title": "Q",
+            "type": "string"
+          },
+          "state_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "State Id"
+          },
+          "total": {
+            "title": "Total",
+            "type": "integer"
+          },
+          "value_set_id": {
+            "title": "Value Set Id",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "value_set_id",
+          "q",
+          "total",
+          "offset",
+          "limit",
+          "codes"
+        ],
+        "title": "ValueSetCodesResponse",
+        "type": "object"
+      },
       "ValueSetMember": {
         "additionalProperties": false,
         "description": "One (code, label) entry in a state's value set (#681). Was a bare\n`(code, label)` tuple inside `VariableState.value_set`; promoted to a model so\nthe wire serializes named objects (`{\"code\": ..., \"label\": ...}`) rather than a\n2-element array. The codes/labels are PUBLIC value-set strings, not row-level\ndata.",
@@ -4350,6 +4423,31 @@
           "label"
         ],
         "title": "ValueSetMember",
+        "type": "object"
+      },
+      "ValueSetSummary": {
+        "additionalProperties": false,
+        "description": "Cardinality-independent PRESENTATION facts about a value set's membership:\nhow many codes it has, and \u2014 when those codes form a dense integer run \u2014 the\nspan they cover. Computed once per distinct `value_set_id` per `Catalog`\ninstance; see `Catalog.value_set_summary`.",
+        "properties": {
+          "code_count": {
+            "title": "Code Count",
+            "type": "integer"
+          },
+          "integer_range": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/DenseIntegerRange"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "code_count"
+        ],
+        "title": "ValueSetSummary",
         "type": "object"
       },
       "VariableCoverage": {
@@ -4964,6 +5062,16 @@
               }
             ],
             "title": "Value Set Id"
+          },
+          "value_set_summary": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ValueSetSummary"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "value_set_version_label": {
             "title": "Value Set Version Label",
@@ -6369,6 +6477,92 @@
           }
         },
         "summary": "Get Stats"
+      }
+    },
+    "/api/value-sets/{value_set_id}/codes": {
+      "get": {
+        "description": "One bounded page of value set `value_set_id`'s (code, label) membership.\n\n`?state=<state_id>` reads that state's STORED classification mismatch list\ninstead (`classification_conformance_code`) \u2014 the same code\u2192label contract, so\nthe panel that renders a value set renders a mismatch list unchanged. The state\nmust carry this value set, so a state id can never read a coding it does not\nbelong to.\n\n`?q` filters (diacritic-blind substring over code AND label, the SPA's own\n`foldText` rule) BEFORE `?offset`/`?limit`, and `total` reports the filtered\ncount \u2014 a page is a window onto the whole matching set, never a filter over one\npage. Codes are code/label-ordered, so paging is stable. An unknown value set \u2014\nor a state that does not carry it \u2014 is a 404: the panel is reached from a state\nthat named both, so neither is a plausible browse target to redirect.",
+        "operationId": "get_value_set_codes_api_value_sets__value_set_id__codes_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "value_set_id",
+            "required": true,
+            "schema": {
+              "title": "Value Set Id",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "state",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "State"
+            }
+          },
+          {
+            "in": "query",
+            "name": "q",
+            "required": false,
+            "schema": {
+              "default": "",
+              "title": "Q",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "title": "Offset",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 200,
+              "title": "Limit",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValueSetCodesResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Value Set Codes"
       }
     }
   }

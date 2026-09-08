@@ -6,12 +6,14 @@
 // bindable so the parent's $derived filtered list stays the source of truth.
 //
 // `shown`/`total` drive the "12 of 740" count — shown only while filtering (a
-// non-empty query) so the unfiltered list reads as the plain full list.
+// non-empty query) so the unfiltered list reads as the plain full list. A `null`
+// `shown` means the match count is not known yet (a server-paged list with a
+// request in flight); the count is then withheld rather than guessed.
 
 interface Props {
   value: string;
   total: number;
-  shown: number;
+  shown: number | null;
   placeholder?: string;
   // Autofocus on mount — the pickers want the cursor in the filter the moment
   // they open (it's the single worst authoring blocker without it). Browse pages
@@ -45,7 +47,7 @@ const filtering = $derived(value.trim().length > 0);
       }
     }}
   />
-  {#if filtering}
+  {#if filtering && shown !== null}
     <span class="filter-count" aria-live="polite">{shown} of {total}</span>
   {/if}
 </div>

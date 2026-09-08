@@ -1,7 +1,8 @@
-import { describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
-import type { VariableStateModel } from "./api";
+import type { ValueSetMemberModel, VariableStateModel } from "./api";
+import { getValueSetCodes } from "./api";
 import ValueSetView from "./ValueSetView.svelte";
 
 // The pure value-set / coding viewer (#905 — extracted from the retired StatesView,
@@ -13,6 +14,53 @@ import ValueSetView from "./ValueSetView.svelte";
 // nudge) seeds the isolation via `focusColumn`. Single-state detail + the empty
 // mode are unchanged. NO resolution (variant / value-set version) plumbing — the
 // picker owns that now.
+
+// Y-46: the states carry each coding's IDENTITY and a cardinality-independent
+// summary, never its members — so the code tables here are BOUNDED READS. The
+// stub below serves them out of a per-test registry, filtering and windowing in
+// the same order the route does (filter the whole set, then page it).
+vi.mock("./api", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("./api")>();
+  return { ...actual, getValueSetCodes: vi.fn() };
+});
+
+const CODES = new Map<string, ValueSetMemberModel[]>();
+
+/** Register a coding's members with the stubbed read and return the SUMMARY the
+ * state carries in their place. `stateId` registers a state's stored
+ * classification-mismatch list instead of the value set's own membership. */
+function coding(
+  valueSetId: number,
+  codes: ValueSetMemberModel[],
+  opts: { stateId?: number; integerRange?: { min: number; max: number } } = {},
+): VariableStateModel["value_set_summary"] {
+  CODES.set(`${valueSetId}:${opts.stateId ?? ""}`, codes);
+  return { code_count: codes.length, integer_range: opts.integerRange ?? null };
+}
+
+beforeEach(() => {
+  vi.mocked(getValueSetCodes).mockReset();
+  vi.mocked(getValueSetCodes).mockImplementation(
+    async (valueSetId, { state = null, q = "", offset = 0, limit = 200 }) => {
+      const all = CODES.get(`${valueSetId}:${state ?? ""}`) ?? [];
+      const needle = q.trim().toLowerCase();
+      const matched = all.filter(
+        (c) =>
+          c.code.toLowerCase().includes(needle) ||
+          c.label.toLowerCase().includes(needle),
+      );
+      return {
+        value_set_id: valueSetId,
+        state_id: state,
+        q,
+        total: matched.length,
+        offset,
+        limit,
+        codes: matched.slice(offset, offset + limit),
+      };
+    },
+  );
+});
 
 // Minimal VariableStateModel — only the fields ValueSetView reads.
 function state(over: Partial<VariableStateModel>): VariableStateModel {
@@ -30,6 +78,7 @@ function state(over: Partial<VariableStateModel>): VariableStateModel {
     value_set_version_label: "",
     value_set_id: null,
     value_set: null,
+    value_set_summary: null,
     is_identifier: false,
     classification_slug: null,
     classification_conformance: null,
@@ -66,10 +115,10 @@ const plainState = state({
   variant: "fodda",
   valid_from: "1961-01-01",
   valid_to: "1967-12-31",
-  value_set: [
+  value_set_summary: coding(200, [
     { code: "0114", label: "Upplands Väsby" },
     { code: "0115", label: "Vallentuna" },
-  ],
+  ]),
 });
 const ageState = state({
   state_id: 5,
@@ -79,10 +128,14 @@ const ageState = state({
   variant: "personer",
   valid_from: "2000-01-01",
   valid_to: "2000-12-31",
-  value_set: Array.from({ length: 21 }, (_, age) => ({
-    code: String(age),
-    label: `${age} år`,
-  })),
+  value_set_summary: coding(
+    500,
+    Array.from({ length: 21 }, (_, age) => ({
+      code: String(age),
+      label: `${age} år`,
+    })),
+    { integerRange: { min: 0, max: 20 } },
+  ),
 });
 
 describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () => {
@@ -106,10 +159,10 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
         value_set_version_label: "vald/inte vald",
         delivery_column_name: "fedunsatreason_1",
         operational_definition: "Education was not relevant to work",
-        value_set: [
+        value_set_summary: coding(500, [
           { code: "0", label: "Inte vald" },
           { code: "1", label: "Vald" },
-        ],
+        ]),
       }),
       state({
         state_id: 11,
@@ -117,10 +170,10 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
         value_set_version_label: "vald/inte vald",
         delivery_column_name: "fedunsatreason_2",
         operational_definition: "Education was too theoretical",
-        value_set: [
+        value_set_summary: coding(500, [
           { code: "0", label: "Inte vald" },
           { code: "1", label: "Vald" },
-        ],
+        ]),
       }),
     ];
 
@@ -147,10 +200,10 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
         operational_definition: "January expanded state",
         valid_from: "2020-01-01",
         valid_to: "2020-01-31",
-        value_set: [
+        value_set_summary: coding(600, [
           { code: "0", label: "No" },
           { code: "1", label: "Yes" },
-        ],
+        ]),
       }),
       state({
         state_id: 20,
@@ -160,10 +213,10 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
         operational_definition: "February expanded state",
         valid_from: "2020-02-01",
         valid_to: "2020-02-29",
-        value_set: [
+        value_set_summary: coding(600, [
           { code: "0", label: "No" },
           { code: "1", label: "Yes" },
-        ],
+        ]),
       }),
     ];
 
@@ -190,10 +243,10 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
         operational_definition: "Early definition",
         valid_from: "2010-01-01",
         valid_to: "2010-12-31",
-        value_set: [
+        value_set_summary: coding(700, [
           { code: "0", label: "No" },
           { code: "1", label: "Yes" },
-        ],
+        ]),
       }),
       state({
         state_id: 31,
@@ -203,10 +256,10 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
         operational_definition: "Later definition",
         valid_from: "2011-01-01",
         valid_to: "2011-12-31",
-        value_set: [
+        value_set_summary: coding(700, [
           { code: "0", label: "No" },
           { code: "1", label: "Yes" },
-        ],
+        ]),
       }),
     ];
 
@@ -243,8 +296,11 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
             matched_code_count: 2,
             nonconforming_code_count: 1,
             overlap: 2 / 3,
-            nonconforming_codes: [{ code: "X", label: "Extra code" }],
+            nonconforming_codes: [],
           },
+          value_set_summary: coding(100, [{ code: "X", label: "Extra code" }], {
+            stateId: 1,
+          }),
         }),
         plainState,
       ],
@@ -264,10 +320,10 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
         state({
           value_set_id: 300,
           value_set_version_label: "ISCED F 2013",
-          value_set: [
+          value_set_summary: coding(300, [
             { code: "13", label: "Datavetenskap" },
             { code: "1a", label: "Pedagogik" },
-          ],
+          ]),
           classification_conformance: {
             declared_classification_slug: "isced-f2013",
             declared_classification_short_name: "ISCED-F 2013",
@@ -277,7 +333,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
             matched_code_count: 1,
             nonconforming_code_count: 24,
             overlap: 0.04,
-            nonconforming_codes: [{ code: "13", label: "Datavetenskap" }],
+            nonconforming_codes: [],
           },
         }),
         plainState,
@@ -309,6 +365,35 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
     await expect.element(summary).toBeVisible();
     await summary.click();
     await expect.element(page.getByText("Upplands Väsby")).toBeVisible();
+  });
+
+  it("shuts an open code disclosure when the states are re-resolved", async () => {
+    // A `?period` Apply refetches this view WITHOUT remounting it. The open map is
+    // cleared with the rest of the local view state, and the twisty is BOUND to it,
+    // so the row closes with it — an expanded row over an unmounted panel would
+    // read as "this coding has no codes".
+    const { rerender } = await render(ValueSetView, {
+      states: [plainState, classState],
+      narrowed: false,
+    });
+    await page.getByText("Values (2)").click();
+    await expect.element(page.getByText("Upplands Väsby")).toBeVisible();
+
+    // A refetch yields NEW state objects, as an Apply does.
+    await rerender({
+      states: [{ ...plainState }, { ...classState }],
+      narrowed: true,
+    });
+    await expect
+      .element(page.getByText("Upplands Väsby"))
+      .not.toBeInTheDocument();
+    expect([...document.querySelectorAll("details")].some((d) => d.open)).toBe(
+      false,
+    );
+    // Let the shut panel's last read land before the harness tears the tree down:
+    // resolving onto an unmounted tree is harmless (the browser transition logs
+    // nothing) but Svelte notes it as an inert-derived read in the NEXT test.
+    await new Promise((resolve) => setTimeout(resolve, 50));
   });
 
   it("a dense integer value set renders as a range, not an expandable code dump", async () => {
@@ -442,7 +527,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
       value_set_id: 300,
       value_set_version_label: "Codeless",
       variant: "a",
-      value_set: null,
+      value_set_summary: null,
     });
     const other = state({
       state_id: 2,
@@ -567,7 +652,10 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
         state({
           variant: "doda",
           value_set_version_label: "Kommun historisk",
-          value_set: [{ code: "0114", label: "Upplands Väsby" }],
+          value_set_id: 900,
+          value_set_summary: coding(900, [
+            { code: "0114", label: "Upplands Väsby" },
+          ]),
         }),
       ],
       narrowed: false,
@@ -589,7 +677,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
           value_set_version_label: "",
           valid_from: "0001-01-01",
           valid_to: "9999-12-31",
-          value_set: null,
+          value_set_summary: null,
         }),
       ],
       narrowed: false,
@@ -656,7 +744,10 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
     const lone = state({
       variant: "doda",
       value_set_version_label: "Kommun historisk",
-      value_set: [{ code: "0114", label: "Upplands Väsby" }],
+      value_set_id: 900,
+      value_set_summary: coding(900, [
+        { code: "0114", label: "Upplands Väsby" },
+      ]),
       valid_from: "2007-01-01",
       valid_to: "2010-12-31",
     });
@@ -686,7 +777,10 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
     const lone = state({
       variant: "doda",
       value_set_version_label: "Kommun historisk",
-      value_set: [{ code: "0114", label: "Upplands Väsby" }],
+      value_set_id: 900,
+      value_set_summary: coding(900, [
+        { code: "0114", label: "Upplands Väsby" },
+      ]),
       valid_from: "2007-01-01",
       valid_to: "2010-12-31",
     });

@@ -45,7 +45,7 @@ from reg_webapp.models import (
     RelatedDocument,
     RelatedDocumentsResponse,
 )
-from reg_webapp.query_input import validate_text_query
+from reg_webapp.query_input import clamp_limit, validate_text_query
 
 if TYPE_CHECKING:
     from reg_meta.doc_db import RelatedDocument as RegMetaRelatedDocument
@@ -60,7 +60,7 @@ _EXCERPT_CHARS = 500
 
 def _validated_limit(limit: int = _DEFAULT_LIMIT) -> int:
     """``?limit`` display cap, clamped to [1, _MAX_LIMIT] (not 422'd)."""
-    return max(1, min(limit, _MAX_LIMIT))
+    return clamp_limit(limit, maximum=_MAX_LIMIT)
 
 
 def _validated_register(register: str | None = None) -> str | None:

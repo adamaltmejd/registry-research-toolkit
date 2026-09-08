@@ -1,21 +1,20 @@
 <script lang="ts">
-import type { VariableStateModel } from "./api";
-import CodeList from "./CodeList.svelte";
+import type { DenseIntegerRangeModel, VariableStateModel } from "./api";
 import {
   catalogHref,
-  type DenseIntegerValueSetRange,
   type DistinctValueSet,
-  denseIntegerValueSetRange,
   distinctValueSets,
   formatStateWindow,
   formatWindow,
   humanizeClassificationSlug,
   matchesFilter,
+  type RepresentativeConformance,
   type ValueSetTechnicalChange,
   valueSetKeyForColumn,
   windowTitle,
 } from "./catalog";
 import FilterInput from "./FilterInput.svelte";
+import ValueSetCodes from "./ValueSetCodes.svelte";
 
 // The PURE value-set / coding viewer for a variable's `variable_state` rows
 // (extracted from the retired StatesView — #905). Presentation ONLY: it never
@@ -129,10 +128,19 @@ const ambiguousLabels = $derived.by(() => {
 // isolation to the value set that column resolves to (#905).
 let isolatedKey = $state<string | null>(null);
 let filter = $state("");
+// Which code disclosures the reader has OPENED, by panel key (Y-46). The states
+// no longer carry their codes, so a `<details>` that is shut must hold no
+// ValueSetCodes at all — mounting one is what issues the request. It also DRIVES
+// each `<details open>`, so resetting the map with the rest of the local view
+// state shuts the twisty too: a re-resolve (an `?period` Apply, which refetches
+// this view without remounting it) can't leave a row expanded over an unmounted
+// panel.
+let openPanels = $state<Record<string, boolean>>({});
 $effect(() => {
   void states;
   void scopeStates;
   void focusVariant;
+  openPanels = {};
   // A deep-link `?codes=<variant>::<column>` seeds the isolation to that ROW's
   // (variant-scoped, latest-era) distinct value set; absent / unmatched → the default
   // union. `focusVariant` narrows to the clicked row's coding when a column is shared
@@ -291,29 +299,40 @@ function usageWindowLabels(
 function usageVariantLabel(variant: string): string | null {
   return variant === "_default" ? null : variant;
 }
+
+// The reader's toggle → `openPanels`; `openPanels` → the `open` attribute. An
+// attribute rather than `bind:open` because the key is an `{@const}` inside the
+// each block, and a binding's teardown reads that derived after the row is gone.
+function trackDisclosure(key: string, event: Event): void {
+  openPanels[key] = (event.currentTarget as HTMLDetailsElement).open;
+}
 </script>
 
 <!-- The (code, label) viewer — the SAME rendering for the detail mode and a
-     list row's inline expansion (#310). The shared CodeList (#638 PR3): a
-     variable value set is a code→label set, identical to a classification's
-     codes, so it renders through the unified viewer (which owns the
-     size-dependent filter + large-list collapse). -->
-{#snippet valueSetTable(valueSet: NonNullable<VariableStateModel["value_set"]>)}
-  <CodeList
-    codes={valueSet}
+     list row's inline expansion (#310), now READ ON DEMAND (Y-46): the states
+     carry each coding's id and size, not its members, so the panel fetches its
+     own bounded pages (and owns their loading / error / empty states) around the
+     shared CodeList (#638 PR3). -->
+{#snippet valueSetTable(valueSetId: number, codeCount: number)}
+  <ValueSetCodes
+    {valueSetId}
+    {codeCount}
     filterLabel="Filter value set"
     filterPlaceholder="Filter value set…"
   />
 {/snippet}
 
-{#snippet denseIntegerRange(range: DenseIntegerValueSetRange)}
+{#snippet denseIntegerRange(range: DenseIntegerRangeModel, count: number)}
   <p class="vs-numeric-range">
     Integer values <code>{range.min}</code>-<code>{range.max}</code>
-    <span class="muted">({range.count} values)</span>
+    <span class="muted">({count} values)</span>
   </p>
 {/snippet}
 
-{#snippet conformanceNotice(conf: NonNullable<VariableStateModel["classification_conformance"]>)}
+<!-- `source` is the state the verdict was STORED against — the key its mismatch
+     list is read by, since that list is a per-state on-demand relation now. -->
+{#snippet conformanceNotice(source: RepresentativeConformance)}
+  {@const conf = source.verdict}
   <div class:severed={conf.status === "severed"} class="conformance-notice">
     {#if conf.status === "severed"}
       <p>
@@ -335,16 +354,24 @@ function usageVariantLabel(variant: string): string | null {
         of this classification.
       </p>
     {/if}
-    {#if conf.nonconforming_codes.length > 0}
-      <details>
+    {#if conf.nonconforming_code_count > 0 && source.valueSetId !== null}
+      {@const panelKey = `mismatch:${source.stateId}`}
+      <details
+        open={openPanels[panelKey] ?? false}
+        ontoggle={(e) => trackDisclosure(panelKey, e)}
+      >
         <summary>
-          Nonconforming codes ({conf.nonconforming_codes.length})
+          Nonconforming codes ({conf.nonconforming_code_count})
         </summary>
-        <CodeList
-          codes={conf.nonconforming_codes}
-          filterLabel="Filter nonconforming codes"
-          filterPlaceholder="Filter nonconforming codes…"
-        />
+        {#if openPanels[panelKey]}
+          <ValueSetCodes
+            valueSetId={source.valueSetId}
+            stateId={source.stateId}
+            codeCount={conf.nonconforming_code_count}
+            filterLabel="Filter nonconforming codes"
+            filterPlaceholder="Filter nonconforming codes…"
+          />
+        {/if}
       </details>
     {/if}
   </div>
@@ -411,22 +438,19 @@ function usageVariantLabel(variant: string): string | null {
       </a>
       classification.
     </p>
-    {#if vs.classificationConformance && vs.classificationConformance.nonconforming_code_count > 0}
-      {@render conformanceNotice(vs.classificationConformance)}
-    {/if}
-  {:else if vs.valueSet && vs.valueSet.length > 0}
-    {@const range = denseIntegerValueSetRange(vs.valueSet)}
-    {#if vs.classificationConformance}
-      {@render conformanceNotice(vs.classificationConformance)}
-    {/if}
-    {#if range}
-      {@render denseIntegerRange(range)}
-    {:else}
-      {@render valueSetTable(vs.valueSet)}
+    {#if vs.conformance && vs.conformance.verdict.nonconforming_code_count > 0}
+      {@render conformanceNotice(vs.conformance)}
     {/if}
   {:else}
-    {#if vs.classificationConformance}
-      {@render conformanceNotice(vs.classificationConformance)}
+    {#if vs.conformance}
+      {@render conformanceNotice(vs.conformance)}
+    {/if}
+    {#if vs.valueSetId !== null && vs.summary && vs.summary.code_count > 0}
+      {#if vs.summary.integer_range}
+        {@render denseIntegerRange(vs.summary.integer_range, vs.summary.code_count)}
+      {:else}
+        {@render valueSetTable(vs.valueSetId, vs.summary.code_count)}
+      {/if}
     {/if}
   {/if}
 {/snippet}
@@ -441,13 +465,14 @@ function usageVariantLabel(variant: string): string | null {
           = {humanizeClassificationSlug(vs.classificationSlug)}
         </a>
       {:else}
-        {@const range = denseIntegerValueSetRange(vs.valueSet)}
         <span class="vs-label">{valueSetLabel(vs)}</span>
-        {#if vs.valueSet && vs.valueSet.length > 0}
-          <span class="muted vs-count">({vs.valueSet.length})</span>
+        {#if vs.summary && vs.summary.code_count > 0}
+          <span class="muted vs-count">({vs.summary.code_count})</span>
         {/if}
-        {#if range}
-          <span class="muted vs-range">{range.min}-{range.max}</span>
+        {#if vs.summary?.integer_range}
+          <span class="muted vs-range">
+            {vs.summary.integer_range.min}-{vs.summary.integer_range.max}
+          </span>
         {/if}
       {/if}
       <button
@@ -459,18 +484,26 @@ function usageVariantLabel(variant: string): string | null {
       </button>
     </div>
     {@render usage(vs)}
-    {#if vs.classificationConformance && (vs.classificationConformance.status === "severed" || vs.classificationConformance.nonconforming_code_count > 0)}
-      {@render conformanceNotice(vs.classificationConformance)}
+    {#if vs.conformance && (vs.conformance.verdict.status === "severed" || vs.conformance.verdict.nonconforming_code_count > 0)}
+      {@render conformanceNotice(vs.conformance)}
     {/if}
-    {#if !vs.classificationSlug && vs.valueSet && vs.valueSet.length > 0}
-      {@const range = denseIntegerValueSetRange(vs.valueSet)}
-      <!-- #310: inspect a plain value set's codes inline, without isolating. -->
-      {#if range}
-        {@render denseIntegerRange(range)}
+    {#if !vs.classificationSlug && vs.valueSetId !== null && vs.summary && vs.summary.code_count > 0}
+      <!-- #310: inspect a plain value set's codes inline, without isolating —
+           and only once opened (Y-46), so a long history of codings costs one
+           bounded read of the ONE the reader asked for. -->
+      {#if vs.summary.integer_range}
+        {@render denseIntegerRange(vs.summary.integer_range, vs.summary.code_count)}
       {:else}
-        <details class="vs-codes">
-          <summary>Values ({vs.valueSet.length})</summary>
-          {@render valueSetTable(vs.valueSet)}
+        {@const panelKey = `codes:${vs.key}`}
+        <details
+          class="vs-codes"
+          open={openPanels[panelKey] ?? false}
+          ontoggle={(e) => trackDisclosure(panelKey, e)}
+        >
+          <summary>Values ({vs.summary.code_count})</summary>
+          {#if openPanels[panelKey]}
+            {@render valueSetTable(vs.valueSetId, vs.summary.code_count)}
+          {/if}
         </details>
       {/if}
     {/if}
@@ -511,18 +544,22 @@ function usageVariantLabel(variant: string): string | null {
     </dl>
 
     {#if s.classification_conformance && (s.classification_conformance.status === "severed" || s.classification_conformance.nonconforming_code_count > 0)}
-      {@render conformanceNotice(s.classification_conformance)}
+      {@render conformanceNotice({
+        verdict: s.classification_conformance,
+        stateId: s.state_id,
+        valueSetId: s.value_set_id,
+      })}
     {/if}
 
-    {#if s.value_set && s.value_set.length > 0}
-      {@const range = denseIntegerValueSetRange(s.value_set)}
+    {#if s.value_set_id !== null && s.value_set_summary && s.value_set_summary.code_count > 0}
+      {@const summary = s.value_set_summary}
       <h4 class="vs-heading">
-        Value set <span class="muted">({s.value_set.length})</span>
+        Value set <span class="muted">({summary.code_count})</span>
       </h4>
-      {#if range}
-        {@render denseIntegerRange(range)}
+      {#if summary.integer_range}
+        {@render denseIntegerRange(summary.integer_range, summary.code_count)}
       {:else}
-        {@render valueSetTable(s.value_set)}
+        {@render valueSetTable(s.value_set_id, summary.code_count)}
       {/if}
     {/if}
   </div>
@@ -568,13 +605,14 @@ function usageVariantLabel(variant: string): string | null {
             = {humanizeClassificationSlug(vs.classificationSlug)}
           </a>
         {:else}
-          {@const range = denseIntegerValueSetRange(vs.valueSet)}
           {valueSetLabel(vs)}
-          {#if vs.valueSet && vs.valueSet.length > 0}
-            <span class="muted">({vs.valueSet.length})</span>
+          {#if vs.summary && vs.summary.code_count > 0}
+            <span class="muted">({vs.summary.code_count})</span>
           {/if}
-          {#if range}
-            <span class="muted vs-range">{range.min}-{range.max}</span>
+          {#if vs.summary?.integer_range}
+            <span class="muted vs-range">
+              {vs.summary.integer_range.min}-{vs.summary.integer_range.max}
+            </span>
           {/if}
         {/if}
       </h4>

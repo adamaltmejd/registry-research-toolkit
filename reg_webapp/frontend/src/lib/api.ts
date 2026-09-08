@@ -227,6 +227,13 @@ export type BindingChild = Schemas["BindingChild"];
  * reg_webapp/DESIGN.md → Catalog router structure). */
 export type BindingNodeData = Schemas["BindingNode"];
 export type VariableStateModel = Schemas["VariableState"];
+/** One bounded page of a value set's (code, label) membership — what the code
+ * panel reads, since the binding leaf carries only each state's `value_set_id`
+ * and `value_set_summary` (Y-46). */
+export type ValueSetCodesResponse = Schemas["ValueSetCodesResponse"];
+export type ValueSetMemberModel = Schemas["ValueSetMember"];
+export type ValueSetSummaryModel = Schemas["ValueSetSummary"];
+export type DenseIntegerRangeModel = Schemas["DenseIntegerRange"];
 export type VariableRefModel = Schemas["VariableRef"];
 /** One edition in a variable's embedded FULL succession timeline (#582) — the
  * variable-grain dual of `ClassificationChainEdition`. The chain arrives
@@ -446,6 +453,41 @@ export function getBindingLineageWarnings(
 ): Promise<LineageWarningsResponse> {
   return apiGet<LineageWarningsResponse>(
     `/catalog/${encodeFqid(fqidPath)}/lineage_warnings`,
+  );
+}
+
+/** One page of value set `valueSetId`'s codes. `state` switches the read to that
+ * state's stored classification MISMATCH list (same code→label shape); the state
+ * must carry this value set or the server 404s. `q` filters the WHOLE set before
+ * the page window and `total` counts the matches, so paging never turns into
+ * filtering one page. */
+export function getValueSetCodes(
+  valueSetId: number,
+  params: {
+    state?: number | null;
+    q?: string;
+    offset?: number;
+    limit?: number;
+  },
+  options?: { signal?: AbortSignal },
+): Promise<ValueSetCodesResponse> {
+  const query = new URLSearchParams();
+  if (params.state != null) {
+    query.set("state", String(params.state));
+  }
+  if (params.q) {
+    query.set("q", params.q);
+  }
+  if (params.offset) {
+    query.set("offset", String(params.offset));
+  }
+  if (params.limit != null) {
+    query.set("limit", String(params.limit));
+  }
+  const suffix = query.size > 0 ? `?${query}` : "";
+  return apiGet<ValueSetCodesResponse>(
+    `/value-sets/${valueSetId}/codes${suffix}`,
+    options,
   );
 }
 

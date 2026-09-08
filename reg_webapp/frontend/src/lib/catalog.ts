@@ -716,85 +716,7 @@ interface TypeDerivationState {
   data_type?: string | null;
   is_identifier?: boolean;
   value_set_id?: number | null;
-  value_set?: VariableStateModel["value_set"];
-}
-
-type ValueSetMember = NonNullable<VariableStateModel["value_set"]>[number];
-
-export interface DenseIntegerValueSetRange {
-  min: number;
-  max: number;
-  count: number;
-}
-
-const DENSE_INTEGER_VALUE_SET_MIN_COUNT = 10;
-const DENSE_INTEGER_VALUE_SET_MIN_DENSITY = 0.9;
-const INTEGER_CODE_RE = /^-?(0|[1-9]\d*)$/;
-
-function parseCanonicalIntegerCode(code: string): number | null {
-  const trimmed = code.trim();
-  if (!INTEGER_CODE_RE.test(trimmed)) {
-    return null;
-  }
-  const value = Number(trimmed);
-  return Number.isSafeInteger(value) ? value : null;
-}
-
-function integerLabelMatchesCode(
-  label: string | null | undefined,
-  code: string,
-): boolean {
-  const trimmed = (label ?? "").trim().toLowerCase();
-  if (trimmed === "") {
-    return true;
-  }
-  const value = String(parseCanonicalIntegerCode(code));
-  return (
-    trimmed === value ||
-    trimmed === `${value} år` ||
-    trimmed === `${value} ar` ||
-    trimmed === `${value} year` ||
-    trimmed === `${value} years` ||
-    trimmed === `${value} yr` ||
-    trimmed === `${value} yrs` ||
-    trimmed === `age ${value}` ||
-    trimmed === `ålder ${value}`
-  );
-}
-
-export function denseIntegerValueSetRange(
-  valueSet:
-    | readonly Pick<ValueSetMember, "code" | "label">[]
-    | null
-    | undefined,
-): DenseIntegerValueSetRange | null {
-  if (!valueSet || valueSet.length < DENSE_INTEGER_VALUE_SET_MIN_COUNT) {
-    return null;
-  }
-  const values: number[] = [];
-  const seen = new Set<number>();
-  for (const member of valueSet) {
-    const value = parseCanonicalIntegerCode(member.code);
-    if (
-      value === null ||
-      seen.has(value) ||
-      !integerLabelMatchesCode(member.label, member.code)
-    ) {
-      return null;
-    }
-    values.push(value);
-    seen.add(value);
-  }
-  values.sort((a, b) => a - b);
-  const span = values[values.length - 1] - values[0] + 1;
-  if (values.length / span < DENSE_INTEGER_VALUE_SET_MIN_DENSITY) {
-    return null;
-  }
-  return {
-    min: values[0],
-    max: values[values.length - 1],
-    count: values.length,
-  };
+  value_set_summary?: VariableStateModel["value_set_summary"];
 }
 
 export function deriveType(state: TypeDerivationState | undefined): string {
@@ -807,10 +729,13 @@ export function deriveType(state: TypeDerivationState | undefined): string {
   if (state.is_identifier) {
     return "id";
   }
-  if (denseIntegerValueSetRange(state.value_set) !== null) {
+  // A dense integer coding (age 0..110) is a MEASURE, not a category. The
+  // denseness test runs server-side now — the leaf carries the verdict, not the
+  // members it was computed from.
+  if (state.value_set_summary?.integer_range) {
     return "numeric";
   }
-  if (state.value_set_id != null || (state.value_set?.length ?? 0) > 0) {
+  if (state.value_set_id != null) {
     return "categorical";
   }
   const norm = (state.data_type ?? "").trim().toLowerCase();
@@ -864,10 +789,10 @@ export function formatDataType(
  *
  * `validTo` is the representative state's `valid_to` (ISO `YYYY-MM-DD`,
  * `9999-12-31` for open-ended) — the latest-era ranking key (see
- * `representationsFromStates`). `codingKey` is a content hash of the value-set
- * (sorted `code|label` pairs + version label); two reps with the same
- * `codingKey` are coding-identical parallel deliveries (the UT0290/UT0280 case)
- * the chooser can COLLAPSE rather than present as a flat choice. */
+ * `representationsFromStates`). `codingKey` identifies the coding's CONTENT (see
+ * `codingKeyOf`); two reps with the same `codingKey` are coding-identical
+ * parallel deliveries (the UT0290/UT0280 case) the chooser can COLLAPSE rather
+ * than present as a flat choice. */
 export interface Representation {
   column: string;
   label: string;
@@ -877,17 +802,17 @@ export interface Representation {
   codingKey: string;
 }
 
-/** A stable content key for a state's coding — sorted `code|label` pairs plus the
+/** A stable content key for a state's coding — its `value_set_id` plus the
  * value-set version label. Two coexisting columns with the same key carry the
- * IDENTICAL coding (same value-set content + label), so the chooser collapses
- * them (primary + reveal-alternates) instead of forcing a co-equal choice.
- * Code-less states key on `"<label>|no-codes"` so two code-less columns with the
- * same label also collapse. */
+ * IDENTICAL coding, so the chooser collapses them (primary + reveal-alternates)
+ * instead of forcing a co-equal choice. The id IS the content: `value_set` rows
+ * are content-addressed on a UNIQUE sha256 of their sorted (code, label) pairs
+ * (reg_meta_build DDL), so equal ids mean an equal member set, labels included —
+ * which is why this key needs no members to compare. Code-less states key on
+ * `"<label>|no-codes"` so two code-less columns with the same label also
+ * collapse. */
 function codingKeyOf(s: VariableStateModel): string {
-  const members = s.value_set
-    ? s.value_set.map((m) => `${m.code}=${m.label}`).sort()
-    : ["no-codes"];
-  return `${s.value_set_version_label}|${members.join(",")}`;
+  return `${s.value_set_version_label}|${s.value_set_id ?? "no-codes"}`;
 }
 
 /** The DISTINCT delivery columns among `states` that genuinely CO-EXIST — a column
@@ -980,7 +905,7 @@ export function representationsFromStates(
   const toRep = (s: VariableStateModel): Representation => ({
     column: s.delivery_column_name as string,
     label: s.value_set_version_label,
-    codeCount: s.value_set?.length ?? null,
+    codeCount: s.value_set_summary?.code_count ?? null,
     classificationSlug: s.classification_slug ?? null,
     validTo: maxValidTo.get(s.delivery_column_name as string) as string,
     codingKey: codingKeyOf(s),
@@ -2379,9 +2304,16 @@ export interface ValueSetVariantUsage {
 export interface DistinctValueSet {
   key: string;
   classificationSlug: string | null;
-  classificationConformance: VariableStateModel["classification_conformance"];
+  /** The ONE stored verdict that speaks for the entry, with the state its
+   * mismatch list is read by. Null when no state declares a classification. */
+  conformance: RepresentativeConformance | null;
   versionLabel: string;
-  valueSet: NonNullable<VariableStateModel["value_set"]> | null;
+  /** The coding's IDENTITY — what the bounded code-list request is keyed on.
+   * Null for a state with no value set. */
+  valueSetId: number | null;
+  /** Cardinality-independent facts about that coding (count, dense-integer
+   * span). Null when there is no value set. */
+  summary: VariableStateModel["value_set_summary"];
   dataType: string | null;
   dataLength: string | null;
   usages: ValueSetVariantUsage[];
@@ -2528,54 +2460,67 @@ function conformanceNeedsNotice(c: ClassificationConformanceModel): boolean {
   return c.status === "severed" || c.nonconforming_code_count > 0;
 }
 
-function codeListKey(code: { code: string; label: string }): string {
-  return `${code.code}\u0000${code.label}`;
+/** A stored conformance verdict plus the state it was stored against — the key
+ * the mismatch list is read by (`/api/value-sets/{valueSetId}/codes?state=`).
+ * `valueSetId` is null only for the pathological case of a conformance row on a
+ * state with no coding, which has no mismatch list to open. One object, because
+ * a verdict with no state to read its list by is not renderable. */
+export interface RepresentativeConformance {
+  verdict: ClassificationConformanceModel;
+  stateId: number;
+  valueSetId: number | null;
 }
 
+/** How loudly a verdict needs saying: a severed classification outranks a kept
+ * one, and within a status the larger mismatch count leads. */
+function conformanceOutranks(
+  candidate: ClassificationConformanceModel,
+  incumbent: ClassificationConformanceModel,
+): boolean {
+  const candidateSevered = candidate.status === "severed";
+  if (candidateSevered !== (incumbent.status === "severed")) {
+    return candidateSevered;
+  }
+  return (
+    candidate.nonconforming_code_count > incumbent.nonconforming_code_count
+  );
+}
+
+/** The ONE stored conformance row that speaks for a distinct value set: the
+ * LOUDEST verdict among its states (severed before kept, then the largest
+ * mismatch count), or — when no state warns — the first verdict there is, so a
+ * clean "kept" still reports.
+ *
+ * Deliberately a STORED row rather than a cross-state rollup: the mismatch list
+ * behind it is a per-state relation read on demand, so a synthesized row would
+ * name counts no single fetch could produce. Within a plain value set every
+ * state's verdict is the same verdict (same members, same declared
+ * classification); across a classification edition's several value sets this
+ * reports the worst of them rather than an average of all. */
 function representativeConformance(
   states: VariableStateModel[],
-): VariableStateModel["classification_conformance"] {
-  const rows = states
-    .map((s) => s.classification_conformance)
-    .filter((c) => c != null);
-  const warningRows = rows.filter(conformanceNeedsNotice);
-  if (warningRows.length === 0) {
-    return rows[0] ?? null;
-  }
-  if (warningRows.length === 1) {
-    return warningRows[0];
-  }
-  const first = warningRows[0];
-  const nonconformingCodes = new Map<
-    string,
-    (typeof first.nonconforming_codes)[number]
-  >();
-  for (const row of warningRows) {
-    for (const code of row.nonconforming_codes) {
-      nonconformingCodes.set(codeListKey(code), code);
+): RepresentativeConformance | null {
+  let fallback: RepresentativeConformance | null = null;
+  let worst: RepresentativeConformance | null = null;
+  for (const s of states) {
+    const verdict = s.classification_conformance;
+    if (verdict == null) {
+      continue;
+    }
+    const candidate = {
+      verdict,
+      stateId: s.state_id,
+      valueSetId: s.value_set_id,
+    };
+    fallback ??= candidate;
+    if (!conformanceNeedsNotice(verdict)) {
+      continue;
+    }
+    if (worst === null || conformanceOutranks(verdict, worst.verdict)) {
+      worst = candidate;
     }
   }
-  const checked = warningRows.reduce(
-    (sum, row) => sum + row.checked_code_count,
-    0,
-  );
-  const matched = warningRows.reduce(
-    (sum, row) => sum + row.matched_code_count,
-    0,
-  );
-  return {
-    ...first,
-    status: warningRows.some((row) => row.status === "severed")
-      ? "severed"
-      : "kept",
-    checked_code_count: checked,
-    matched_code_count: matched,
-    nonconforming_code_count: nonconformingCodes.size,
-    overlap: checked === 0 ? first.overlap : matched / checked,
-    nonconforming_codes: [...nonconformingCodes.values()].sort(
-      (a, b) => a.code.localeCompare(b.code) || a.label.localeCompare(b.label),
-    ),
-  };
+  return worst ?? fallback;
 }
 
 /** Project a variable's multi-state set into DISTINCT value sets (#668), deduped
@@ -2601,6 +2546,7 @@ export function distinctValueSets(
   }
   return [...byKey.entries()].map(([key, group]) => {
     const rep = group[0];
+    const conformance = representativeConformance(group);
     const byVariant = statesByVariant(group);
     const usages: ValueSetVariantUsage[] = [...byVariant.entries()].map(
       ([variant, ss]) => ({
@@ -2631,9 +2577,10 @@ export function distinctValueSets(
     return {
       key,
       classificationSlug: rep.classification_slug ?? null,
-      classificationConformance: representativeConformance(group),
+      conformance,
       versionLabel: rep.value_set_version_label,
-      valueSet: rep.value_set,
+      valueSetId: rep.value_set_id,
+      summary: rep.value_set_summary,
       dataType: rep.data_type,
       dataLength: rep.data_length,
       usages,

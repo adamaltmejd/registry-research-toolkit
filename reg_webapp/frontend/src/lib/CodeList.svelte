@@ -1,3 +1,11 @@
+<script module lang="ts">
+// Below this many codes the filter box is hidden — per the maintainer: pointless
+// for a handful of items (a small classification or short value set). At or above
+// it, the FilterInput appears. Exported because ValueSetCodes owns the filter for
+// a SERVER-paged set and has to show it at exactly the same size.
+export const CODE_FILTER_THRESHOLD = 5;
+</script>
+
 <script lang="ts">
 import { Accordion, Collapsible } from "bits-ui";
 import { matchesFilter } from "./catalog";
@@ -45,21 +53,23 @@ let {
   codes,
   filterLabel = "Filter codes",
   filterPlaceholder = "Filter codes…",
+  paged = false,
 }: {
   codes: Code[];
   filterLabel?: string;
   filterPlaceholder?: string;
+  /** The caller already filtered and bounded `codes` (ValueSetCodes reads one
+   * server page of a value set at a time). Render them verbatim: no second
+   * filter to compete with the caller's, and no size collapse — a page is
+   * already the bound, and grouping a partial page would group the wrong thing. */
+  paged?: boolean;
 } = $props();
 
-// Below this many codes the filter box is hidden — per the maintainer: pointless
-// for a handful of items (a small classification or short value set). At or above
-// it, the FilterInput appears.
-const CODE_FILTER_THRESHOLD = 5;
 const COLLAPSE_THRESHOLD = 50;
 const FLAT_PREVIEW_LIMIT = 50;
 const MIN_GROUP_COUNT = 2;
 const EXPLICIT_PREFIX_SCAN_LIMIT = 2000;
-const showFilter = $derived(codes.length >= CODE_FILTER_THRESHOLD);
+const showFilter = $derived(!paged && codes.length >= CODE_FILTER_THRESHOLD);
 
 // In-memory type-to-filter over code + label (matchesFilter folds diacritics and
 // treats an empty needle as match-all — the unfiltered full list). Reset when the
@@ -77,7 +87,9 @@ const shown = $derived(
   codes.filter((c) => matchesFilter(filter, c.code, c.label)),
 );
 const filtering = $derived(filter.trim().length > 0);
-const layout = $derived(layoutFor(shown, filtering));
+const layout = $derived(
+  paged ? { kind: "flat" as const, codes } : layoutFor(shown, filtering),
+);
 
 function codeLevel(code: Code): number | null {
   return typeof code.level === "number" && Number.isFinite(code.level)

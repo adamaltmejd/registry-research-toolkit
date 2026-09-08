@@ -14,6 +14,7 @@ path that enumerated per-edition bindings — are gone (see DESIGN.md → FQID g
 from __future__ import annotations
 
 import json
+import re
 from collections import deque
 from typing import TYPE_CHECKING, Literal, TypeVar, cast
 
@@ -41,7 +42,7 @@ from .fqid import (
 
 if TYPE_CHECKING:
     import sqlite3
-    from collections.abc import Callable, Iterable
+    from collections.abc import Callable, Iterable, Sequence
     from pathlib import Path
 
     from .graph import RelationshipGraph
@@ -516,6 +517,97 @@ class ValueSetMember(_CatalogModel):
     label: str
 
 
+class DenseIntegerRange(_CatalogModel):
+    """The inclusive integer span of a value set whose members ARE the integers in
+    it (see `Catalog.value_set_summary`) — an age or year-count coding a consumer
+    renders as a range instead of a thousand-row table."""
+
+    min: int
+    max: int
+
+
+class ValueSetSummary(_CatalogModel):
+    """Cardinality-independent PRESENTATION facts about a value set's membership:
+    how many codes it has, and — when those codes form a dense integer run — the
+    span they cover. Computed once per distinct `value_set_id` per `Catalog`
+    instance; see `Catalog.value_set_summary`."""
+
+    code_count: int
+    # Set only for a dense integer coding; None for an ordinary categorical set.
+    integer_range: DenseIntegerRange | None = None
+
+
+# A value set whose codes ARE the integers they enumerate (age 0..110, year
+# counts) is a RANGE, not a table — these thresholds decide when to say so. At
+# least this many members (a handful of numeric codes reads fine as a table)…
+_DENSE_INTEGER_MIN_COUNT = 10
+# …and at least this share of the span they cover actually present (a few gaps
+# are still a range; a sparse scatter of numbers is not).
+_DENSE_INTEGER_MIN_DENSITY = 0.9
+# Canonical decimal integers only: no leading zeros, no plus sign, no separators
+# — `01` and `1` would otherwise collapse to one value with two codes.
+_INTEGER_CODE_RE = re.compile(r"^-?(0|[1-9][0-9]*)$")
+# JS `Number.isSafeInteger`'s bound. Consumers of this summary are JSON clients,
+# so a value they could not round-trip exactly is not a dense-range candidate.
+_MAX_SAFE_INTEGER = 2**53 - 1
+
+
+def _canonical_integer_code(code: str) -> int | None:
+    """The integer a value-set CODE denotes, or None when the code is not a
+    canonical, exactly-representable decimal integer."""
+    trimmed = code.strip()
+    if not _INTEGER_CODE_RE.match(trimmed):
+        return None
+    value = int(trimmed)
+    return value if abs(value) <= _MAX_SAFE_INTEGER else None
+
+
+def _integer_label_restates_code(label: str, value: int) -> bool:
+    """Whether a member's LABEL says nothing beyond its integer code — blank, the
+    bare number, or one of the age/year phrasings the SCB codings use. A label
+    carrying real meaning (`3 = Uppsala län`) disqualifies the set from the range
+    rendering: the labels are the content, so they must stay a table."""
+    trimmed = label.strip().lower()
+    if trimmed == "":
+        return True
+    return trimmed in {
+        f"{value}",
+        f"{value} år",
+        f"{value} ar",
+        f"{value} year",
+        f"{value} years",
+        f"{value} yr",
+        f"{value} yrs",
+        f"age {value}",
+        f"ålder {value}",
+    }
+
+
+def dense_integer_range(
+    members: Sequence[ValueSetMember],
+) -> DenseIntegerRange | None:
+    """The inclusive span of a value set that is a DENSE RUN OF INTEGERS — enough
+    members, every code a distinct canonical integer, every label restating its own
+    code, and the values covering enough of their own span. None for everything
+    else, which is every ordinary categorical coding."""
+    if len(members) < _DENSE_INTEGER_MIN_COUNT:
+        return None
+    seen: set[int] = set()
+    for member in members:
+        value = _canonical_integer_code(member.code)
+        if (
+            value is None
+            or value in seen
+            or not _integer_label_restates_code(member.label, value)
+        ):
+            return None
+        seen.add(value)
+    lo, hi = min(seen), max(seen)
+    if len(seen) / (hi - lo + 1) < _DENSE_INTEGER_MIN_DENSITY:
+        return None
+    return DenseIntegerRange(min=lo, max=hi)
+
+
 class ClassificationConformance(_CatalogModel):
     """Per-state value-set/classification conformance (#656).
 
@@ -585,6 +677,11 @@ class VariableState(_CatalogModel):
     # is the code-set identity either way. Eager (frozen model favors it); typical
     # per-state code fan-out is small.
     value_set: tuple[ValueSetMember, ...] | None
+    # Cardinality-independent presentation facts about `value_set_id`'s membership
+    # (count + dense-integer span), populated ONLY for a caller that asked for them
+    # (`with_code_summary=True`) and None otherwise — including under the default
+    # full hydration, where `value_set` already carries the members.
+    value_set_summary: ValueSetSummary | None = None
     # Variable-grain `variable.is_identifier` denormalized onto every state via a
     # JOIN (constant across a variable's states), so consumers with no
     # ResolvedVariable in scope (the `resolve_at` / `/states` paths) can still
@@ -1055,6 +1152,11 @@ class Catalog:
         self._var_same_as_sources: frozenset[tuple[str, str, str]] | None = None
         self._class_same_as_sources: frozenset[tuple[str, str]] | None = None
         self._variant_family_cache: dict[int, dict[str, _VariantFamilyInfo]] = {}
+        # `value_set_summary` memo. A variable's states SHARE value sets (one
+        # geography coding across 290 yearly states), so the membership scan the
+        # summary needs runs once per DISTINCT value set for the life of this
+        # Catalog rather than once per state.
+        self._value_set_summaries: dict[int, ValueSetSummary] = {}
 
     @classmethod
     def open(
@@ -2115,19 +2217,37 @@ class Catalog:
             tags=tuple(self.tags_for_register(fqid)),
         )
 
-    def _resolve_binding(self, fqid: Fqid) -> ResolvedVariable:
+    def resolve_binding(
+        self,
+        fqid: str | Fqid,
+        *,
+        with_codes: bool = True,
+        with_code_summary: bool = False,
+    ) -> ResolvedVariable:
         """Longitudinal resolution (see DESIGN.md → Catalog API surface). The 3-segment binding FQID selects
         ONE `variable` row by register-unique slug (exact match, no
         derive-at-resolve); from it we gather the shared metadata, the full
         `variable_state` history (each tagged with its variant), and the
         variable-grain edges. Period-independent — period narrowing lives in
         `resolve_at`.
+
+        This IS `resolve`'s binding arm; it is public so a consumer that needs
+        the whole record but not every state's code list can say so. The two
+        hydration keywords mean exactly what they mean on `resolve_at`, and the
+        defaults are `resolve`'s own — full codes, no summary.
         """
-        resolved = self._resolve_variable_identity(fqid)
+        parsed = self._parse_binding(fqid)
+        resolved = self._resolve_variable_identity(parsed)
         if resolved is None:
-            raise _not_found(fqid)
+            raise _not_found(parsed)
         var, via_same_as = resolved
-        return self._build_resolved_variable(fqid, var, via_same_as)
+        return self._build_resolved_variable(
+            parsed,
+            var,
+            via_same_as,
+            with_codes=with_codes,
+            with_code_summary=with_code_summary,
+        )
 
     def _var_same_as_source_keys(self) -> frozenset[tuple[str, str, str]]:
         if self._var_same_as_sources is None:
@@ -2206,7 +2326,13 @@ class Catalog:
         return None
 
     def _build_resolved_variable(
-        self, fqid: Fqid, var: sqlite3.Row, via_same_as: tuple[Fqid, ...] | None
+        self,
+        fqid: Fqid,
+        var: sqlite3.Row,
+        via_same_as: tuple[Fqid, ...] | None,
+        *,
+        with_codes: bool,
+        with_code_summary: bool,
     ) -> ResolvedVariable:
         """Assemble a `ResolvedVariable` from a resolved `variable` row: shared
         metadata + full chronological state history + variable-grain edges. The
@@ -2239,7 +2365,11 @@ class Catalog:
             related_documents=self._related_documents_for_register(
                 meta["register_slug"]
             ),
-            states=self._states_for_variable(var["variable_id"]),
+            states=self._states_for_variable(
+                var["variable_id"],
+                with_codes=with_codes,
+                with_code_summary=with_code_summary,
+            ),
             same_as=edges["same_as"],
             replaced_by=edges["replaced_by"],
             lineage=edges["lineage"],
@@ -2410,23 +2540,80 @@ class Catalog:
         ).fetchall()
         return tuple(ValueSetMember(code=r["code"], label=r["label"]) for r in rows)
 
+    def value_set_summary(self, value_set_id: int) -> ValueSetSummary:
+        """Cardinality-independent presentation facts about a value set's
+        membership — the code count, and the integer span when the codes ARE a
+        dense integer run. Memoized per distinct `value_set_id` for this
+        Catalog's lifetime, so a history whose states share one coding pays for
+        ONE membership scan; an unknown id summarizes as an empty set."""
+        cached = self._value_set_summaries.get(value_set_id)
+        if cached is not None:
+            return cached
+        # simplify: reads the whole membership to count it and test denseness.
+        # One scan per distinct set per request; index or denormalize a stored
+        # count if a single request starts touching thousands of distinct sets.
+        members = self._value_set_codes(value_set_id) or ()
+        summary = ValueSetSummary(
+            code_count=len(members), integer_range=dense_integer_range(members)
+        )
+        self._value_set_summaries[value_set_id] = summary
+        return summary
+
+    def value_set_codes(self, value_set_id: int) -> tuple[ValueSetMember, ...] | None:
+        """The FULL (code, label) membership of a value set, code/label-ordered —
+        the explicit read behind a bounded code-list request. None when no such
+        `value_set` row exists, which a caller distinguishes from a value set
+        that really has no members."""
+        exists = self._conn.execute(
+            "SELECT 1 FROM value_set WHERE value_set_id = ?", (value_set_id,)
+        ).fetchone()
+        if exists is None:
+            return None
+        return self._value_set_codes(value_set_id)
+
+    def state_nonconforming_codes(
+        self, state_id: int, value_set_id: int
+    ) -> tuple[ValueSetMember, ...] | None:
+        """The stored classification MISMATCH list for one `variable_state`, in
+        the same code/label order as a value set's members. None when the state
+        does not exist or does not carry `value_set_id` — the caller passes the
+        value set it is asking about, so a state id can never read a coding it
+        does not belong to."""
+        owned = self._conn.execute(
+            "SELECT 1 FROM variable_state WHERE state_id = ? AND value_set_id = ?",
+            (state_id, value_set_id),
+        ).fetchone()
+        if owned is None:
+            return None
+        return tuple(
+            ValueSetMember(code=r["code"], label=r["label"])
+            for r in self._nonconforming_code_rows(state_id)
+        )
+
+    def _nonconforming_code_rows(self, state_id: int) -> list[sqlite3.Row]:
+        return self._conn.execute(
+            "SELECT vc.code, vc.label "
+            "FROM classification_conformance_code ccc "
+            "JOIN value_code vc ON vc.code_id = ccc.code_id "
+            "WHERE ccc.state_id = ? "
+            "ORDER BY vc.code, vc.label",
+            (state_id,),
+        ).fetchall()
+
     def _classification_conformance_for_state(
-        self, row: sqlite3.Row
+        self, row: sqlite3.Row, *, with_codes: bool
     ) -> ClassificationConformance | None:
-        """Hydrate the state-local classification conformance warning, if any."""
+        """Hydrate the state-local classification conformance warning, if any.
+        `with_codes=False` keeps the stored verdict, declaration and counts but
+        leaves `nonconforming_codes` empty — the mismatch list is then read on
+        demand through `state_nonconforming_codes`, and
+        `nonconforming_code_count` is what says whether there is one."""
         if row["conformance_status"] is None:
             return None
-        if row["nonconforming_code_count"] == 0:
+        if row["nonconforming_code_count"] == 0 or not with_codes:
             code_rows = ()
         else:
-            code_rows = self._conn.execute(
-                "SELECT vc.code, vc.label "
-                "FROM classification_conformance_code ccc "
-                "JOIN value_code vc ON vc.code_id = ccc.code_id "
-                "WHERE ccc.state_id = ? "
-                "ORDER BY vc.code, vc.label",
-                (row["state_id"],),
-            ).fetchall()
+            code_rows = self._nonconforming_code_rows(row["state_id"])
         return ClassificationConformance(
             declared_classification_slug=row["declared_classification_slug"],
             declared_classification_short_name=row[
@@ -2454,10 +2641,13 @@ class Catalog:
             return None
         return period_token_for_bounds(valid_from, valid_to)
 
-    def _row_to_state(self, row: sqlite3.Row, *, with_codes: bool) -> VariableState:
+    def _row_to_state(
+        self, row: sqlite3.Row, *, with_codes: bool, with_code_summary: bool
+    ) -> VariableState:
         """Build a `VariableState` from a `variable_state` row, tagging it with
         its variant slug and hydrating its value set. `with_codes=False` skips
-        the two per-state code-list queries — see `resolve_at`."""
+        the two per-state code-list queries; `with_code_summary=True` adds the
+        memoized per-value-set summary instead — see `resolve_at`."""
         rvid = row["register_variant_id"]
         variant = self._variant_slug(rvid)
         if variant is None:
@@ -2494,21 +2684,34 @@ class Catalog:
             value_set=(
                 self._value_set_codes(row["value_set_id"]) if with_codes else None
             ),
+            value_set_summary=(
+                self.value_set_summary(row["value_set_id"])
+                if with_code_summary and row["value_set_id"] is not None
+                else None
+            ),
             is_identifier=bool(row["is_identifier"]),
             classification_slug=row["classification_slug"],
             classification_conformance=(
-                self._classification_conformance_for_state(row) if with_codes else None
+                self._classification_conformance_for_state(row, with_codes=with_codes)
+                if with_codes or with_code_summary
+                else None
             ),
             period_token=self._period_token_for_window(
                 row["valid_from"], row["valid_to"]
             ),
         )
 
-    def _states_for_variable(self, variable_id: int) -> tuple[VariableState, ...]:
+    def _states_for_variable(
+        self, variable_id: int, *, with_codes: bool, with_code_summary: bool
+    ) -> tuple[VariableState, ...]:
         """Full chronological state history for a variable (all variants)."""
         return tuple(
             self._expand_state_windows(
-                variable_id, self._states_in_bounds(variable_id, None, None), None
+                variable_id,
+                self._states_in_bounds(variable_id, None, None),
+                None,
+                with_codes=with_codes,
+                with_code_summary=with_code_summary,
             )
         )
 
@@ -2537,6 +2740,7 @@ class Catalog:
         bounds: tuple[str, str] | None,
         *,
         with_codes: bool = True,
+        with_code_summary: bool = False,
     ) -> list[VariableState]:
         """Map period-filtered `variable_state` rows to `VariableState`s, expanding
         stored alias windows that overlap `bounds`.
@@ -2549,13 +2753,19 @@ class Catalog:
         `delivery_column_name` + `valid_from`/`valid_to` are overridden. The
         per-window identity is the compound (state_id, delivery_column_name,
         valid_from)."""
+
+        def to_state(row: sqlite3.Row) -> VariableState:
+            return self._row_to_state(
+                row, with_codes=with_codes, with_code_summary=with_code_summary
+            )
+
         windows_by_variant = self._variable_windows(variable_id)
         if not windows_by_variant:
-            return [self._row_to_state(r, with_codes=with_codes) for r in rows]
+            return [to_state(r) for r in rows]
         lo, hi = bounds if bounds is not None else ("0001-01-01", "9999-12-31")
         out: list[VariableState] = []
         for row in rows:
-            base = self._row_to_state(row, with_codes=with_codes)
+            base = to_state(row)
             windows = windows_by_variant.get(row["register_variant_id"], [])
             # Windows belonging to THIS state. Overlapping states can exist; a
             # state expands only if its own representative column participates
@@ -2968,6 +3178,7 @@ class Catalog:
         variant: str | None = None,
         value_set_version: str | None = None,
         with_codes: bool = True,
+        with_code_summary: bool = False,
     ) -> list[VariableState]:
         """Point/range resolution (see DESIGN.md → Catalog API surface): the `VariableState`s whose validity
         intersects `period`, chronological ascending. Length 1 for the common
@@ -2986,6 +3197,13 @@ class Catalog:
         None and their queries never run, so the query work scales with the
         states in range rather than with their code cardinality. Everything else — window
         expansion, identity, `value_set_id`, ordering — is the same code path.
+
+        `with_code_summary=True` adds back what a PRESENTATION consumer loses
+        with the codes: `value_set_summary` per state (memoized per distinct
+        value set, so shared codings are scanned once) and the stored
+        conformance verdict/declaration/counts with an empty mismatch list. It
+        is an explicit opt-in — `with_codes=False` alone stays exactly as narrow
+        as it was.
         """
         parsed = self._parse_binding(fqid)
         resolved = self._resolve_variable_identity(parsed)
@@ -3009,6 +3227,7 @@ class Catalog:
             self._states_in_bounds(variable_id, register_variant_id, bounds),
             bounds,
             with_codes=with_codes,
+            with_code_summary=with_code_summary,
         )
         if value_set_version is not None:
             states = [
@@ -3018,11 +3237,11 @@ class Catalog:
 
     def states(self, fqid: str | Fqid) -> list[VariableState]:
         """see DESIGN.md → Catalog API surface: the variable's full state history (≡ `resolve(fqid).states`)."""
-        # Route through _parse_binding (like the edge accessors) so a non-binding
-        # FQID fails with the structured `not_a_binding_fqid` error instead of a
-        # raw AttributeError off a ResolvedRegister/etc. (reg_webapp wants a 4xx, not 500; see reg_webapp/DESIGN.md → Catalog router structure).
-        parsed = self._parse_binding(fqid)
-        return list(self._resolve_binding(parsed).states)
+        # `resolve_binding` parses, so a non-binding FQID fails with the structured
+        # `not_a_binding_fqid` error rather than a raw AttributeError off a
+        # ResolvedRegister/etc. (reg_webapp wants a 4xx, not a 500; see
+        # reg_webapp/DESIGN.md → Catalog router structure).
+        return list(self.resolve_binding(fqid).states)
 
     def predecessors(self, fqid: str | Fqid) -> list[VariableRef]:
         """see DESIGN.md → Catalog API surface: variables this binding's variable replaced (inbound succession)."""
@@ -3555,8 +3774,7 @@ class Catalog:
         domain predicates live in `graph.py`; this is the thin entry point."""
         from . import graph  # local: graph.py imports catalog (one-directional)
 
-        parsed = self._parse_binding(fqid)
-        resolved = self._resolve_binding(parsed)
+        resolved = self.resolve_binding(fqid)
         return graph.graph_for_fqid(self, resolved)
 
     def graph_for_classification_fqid(self, fqid: str | Fqid) -> RelationshipGraph:
@@ -3923,6 +4141,6 @@ class Catalog:
 _DISPATCH = {
     FqidKind.PROVIDER: Catalog._resolve_provider,
     FqidKind.REGISTER: Catalog._resolve_register,
-    FqidKind.VARIABLE_BINDING: Catalog._resolve_binding,
+    FqidKind.VARIABLE_BINDING: Catalog.resolve_binding,
     FqidKind.CLASSIFICATION: Catalog._resolve_classification,
 }

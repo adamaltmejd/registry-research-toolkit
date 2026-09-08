@@ -88,8 +88,13 @@ def test_register_node_lists_bindings_and_variants_ref(client):
     assert body["kind"] == "register"
     assert body["fqid"] == "scb/lisa"
     bindings = [c for c in body["children"] if c["kind"] == "binding"]
-    # `lonfink` is the merged monthly-family binding (#319) seeded alongside `kon`.
-    assert {b["fqid"] for b in bindings} == {"scb/lisa/kon", "scb/lisa/lonfink"}
+    # `lonfink` is the merged monthly-family binding (#319) seeded alongside `kon`;
+    # `forsamling` is the many-state / shared-coding binding (Y-46).
+    assert {b["fqid"] for b in bindings} == {
+        "scb/lisa/kon",
+        "scb/lisa/lonfink",
+        "scb/lisa/forsamling",
+    }
     # The variant-browser slot (A5.2a, wired): carries the navigable register_fqid.
     variants_refs = [c for c in body["children"] if c["kind"] == "variants-ref"]
     assert len(variants_refs) == 1
@@ -116,11 +121,12 @@ def test_binding_leaf_embeds_full_record(client):
     # finite period token — the field is None (the SPA renders "since
     # valid_from").
     assert state["period_token"] is None
-    # The value set is hydrated as (code, label) objects.
-    assert state["value_set"] == [
-        {"code": "1", "label": "Man"},
-        {"code": "2", "label": "Kvinna"},
-    ]
+    # Y-46: the leaf carries the coding's IDENTITY and a cardinality-independent
+    # summary, never its members — those come from
+    # `/api/value-sets/{id}/codes` when the code panel is opened.
+    assert state["value_set_id"] == 1
+    assert state["value_set"] is None
+    assert state["value_set_summary"] == {"code_count": 2, "integer_range": None}
     # #892/#932: the per-(split-)variable distinguishing text is serialized on the
     # binding leaf. The fixture kon row leaves it empty → None; the field is always
     # present (proves the resolve→node wiring).

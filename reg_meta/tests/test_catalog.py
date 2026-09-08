@@ -23,13 +23,16 @@ from reg_meta.catalog import (
     ClassificationDerivedFromRef,
     ClassificationEdition,
     ClassificationRef,
+    DenseIntegerRange,
     GroupAxis,
     ResolvedClassification,
     ResolvedProvider,
     ResolvedRegister,
     ResolvedVariable,
     ValueSetMember,
+    ValueSetSummary,
     VariableEdition,
+    dense_integer_range,
 )
 from reg_meta.doc_db import DOC_SCHEMA_VERSION
 from reg_meta.errors import RegMetaError
@@ -2431,6 +2434,196 @@ class TestResolvedVariableGroupRef:
         assert r.group == BindingGroupRef(
             provider="scb", register="rtb", key="rtbdemog"
         )
+
+
+class TestDenseIntegerRange:
+    """`dense_integer_range` — the "these codes ARE the integers" test behind
+    `ValueSetSummary.integer_range`. Lives here (not in the browser) because the
+    verdict now ships in the binding payload: the members it reads are exactly
+    what the leaf no longer carries."""
+
+    @staticmethod
+    def _members(pairs: list[tuple[str, str]]) -> list[ValueSetMember]:
+        return [ValueSetMember(code=c, label=lbl) for c, lbl in pairs]
+
+    def test_contiguous_age_run(self) -> None:
+        members = self._members([(str(age), f"{age} år") for age in range(12)])
+        assert dense_integer_range(members) == DenseIntegerRange(min=0, max=11)
+
+    def test_small_gaps_are_still_a_run(self) -> None:
+        ages = [0, 1, 2, 3, 4, 5, 7, 8, 9, 10, 11]
+        members = self._members([(str(a), f"{a} år") for a in ages])
+        assert dense_integer_range(members) == DenseIntegerRange(min=0, max=11)
+
+    def test_too_few_members_stay_a_table(self) -> None:
+        assert (
+            dense_integer_range(self._members([(str(a), "") for a in range(9)])) is None
+        )
+
+    def test_sparse_scatter_is_not_a_run(self) -> None:
+        evens = [(str(v), str(v)) for v in range(0, 20, 2)]
+        assert dense_integer_range(self._members(evens)) is None
+
+    def test_leading_zero_codes_are_not_canonical_integers(self) -> None:
+        padded = [(f"{v:02d}", str(v)) for v in range(10)]
+        assert dense_integer_range(self._members(padded)) is None
+
+    def test_meaningful_labels_stay_a_table(self) -> None:
+        # The labels ARE the content — rendering "0-9" would erase them.
+        labelled = [(str(v), f"Category {v}") for v in range(10)]
+        assert dense_integer_range(self._members(labelled)) is None
+
+    def test_duplicate_values_are_rejected(self) -> None:
+        # ` 7` and `7` denote one value with two codes: a set that cannot be a
+        # faithful run.
+        dupes = [(str(v), str(v)) for v in range(11)] + [(" 7", "7")]
+        assert dense_integer_range(self._members(dupes)) is None
+
+    def test_values_beyond_exact_json_round_trip_are_rejected(self) -> None:
+        huge = 2**53
+        members = self._members([(str(huge + v), str(huge + v)) for v in range(11)])
+        assert dense_integer_range(members) is None
+
+    def test_negative_and_alternate_age_phrasings(self) -> None:
+        members = self._members(
+            [(str(v), f"age {v}" if v % 2 else f"{v} years") for v in range(-5, 6)]
+        )
+        assert dense_integer_range(members) == DenseIntegerRange(min=-5, max=5)
+
+
+class TestBoundedCodeReads:
+    """The narrow reads that replace the embedded per-state code lists (Y-46):
+    the per-value-set summary, the full membership behind the bounded route, and
+    the per-state classification mismatch list."""
+
+    @staticmethod
+    def _shared_coding_db(*, states: int) -> sqlite3.Connection:
+        """`kon` with `states` yearly states that all carry ONE value set — the
+        shape the ticket is about (290 states, a handful of codings)."""
+        conn = build_slugged_db()
+        add_value_set(
+            conn,
+            value_set_id=3,
+            codes=[(str(age), f"{age} år") for age in range(20)],
+        )
+        conn.execute("DELETE FROM variable_state")
+        for year in range(2000, 2000 + states):
+            add_state(
+                conn,
+                register_id=1,
+                variable_slug="kon",
+                register_variant_id=10,
+                valid_from=f"{year}-01-01",
+                valid_to=f"{year}-12-31",
+                delivery_column_name="Kon",
+                value_set_id=3,
+            )
+        conn.commit()
+        return conn
+
+    def test_summary_is_the_membership_without_the_members(self) -> None:
+        cat = Catalog(self._shared_coding_db(states=1))
+        assert cat.value_set_summary(3) == ValueSetSummary(
+            code_count=20, integer_range=DenseIntegerRange(min=0, max=19)
+        )
+
+    def test_summary_scans_a_shared_coding_once_for_the_whole_history(self) -> None:
+        # The acceptance property: 40 states over one coding cost ONE membership
+        # scan, so the initial payload's work is independent of how many states
+        # reference it (and of how many codes it has, beyond that one read).
+        conn = self._shared_coding_db(states=40)
+        cat = Catalog(conn)
+        statements = _traced(conn)
+        states = cat.resolve_binding(_KON, with_codes=False, with_code_summary=True)
+        assert len(states.states) == 40
+        assert all(s.value_set_summary is not None for s in states.states)
+        assert len([sql for sql in statements if "value_set_member" in sql]) == 1
+
+    def test_unknown_value_set_is_not_an_empty_one(self) -> None:
+        cat = Catalog(self._shared_coding_db(states=1))
+        # Code order, so a bounded page is a stable slice of a stable list.
+        assert cat.value_set_codes(3) == tuple(
+            ValueSetMember(code=code, label=f"{code} år")
+            for code in sorted(str(age) for age in range(20))
+        )
+        assert cat.value_set_codes(9999) is None
+
+    def test_mismatch_list_is_refused_for_a_state_that_lacks_the_coding(self) -> None:
+        conn = TestResolveAt._coded_state_db(windowed=False)
+        state_id = conn.execute("SELECT state_id FROM variable_state").fetchone()[0]
+        cat = Catalog(conn)
+        assert cat.state_nonconforming_codes(state_id, 3) == (
+            ValueSetMember(code="2", label="Kvinna"),
+        )
+        # The state carries value set 3, not 4 — so 4 cannot be read through it.
+        assert cat.state_nonconforming_codes(state_id, 4) is None
+        assert cat.state_nonconforming_codes(999, 3) is None
+
+
+class TestCodeSummaryHydration:
+    """`with_code_summary` — the explicit web opt-in that keeps a binding payload
+    independent of code cardinality while preserving every state reference."""
+
+    def test_summary_replaces_the_members_and_keeps_the_verdict(self) -> None:
+        conn = TestResolveAt._coded_state_db(windowed=False)
+        cat = Catalog(conn)
+        [state] = cat.resolve_at(
+            _KON,
+            2018,
+            variant="individer-15plus",
+            with_codes=False,
+            with_code_summary=True,
+        )
+        assert state.value_set is None
+        assert state.value_set_id == 3
+        assert state.value_set_summary == ValueSetSummary(
+            code_count=2, integer_range=None
+        )
+        # The stored conformance verdict survives; only its mismatch LIST moves
+        # to the on-demand read, and the count is what says there is one.
+        conformance = state.classification_conformance
+        assert conformance is not None
+        assert conformance.status == "kept"
+        assert conformance.nonconforming_code_count == 1
+        assert conformance.nonconforming_codes == ()
+
+    def test_with_codes_false_alone_stays_exactly_as_narrow(self) -> None:
+        # The Y-44 guarantee: no summary is added implicitly, and neither
+        # per-state code query runs.
+        conn = TestResolveAt._coded_state_db(windowed=False)
+        cat = Catalog(conn)
+        statements = _traced(conn)
+        [state] = cat.resolve_at(
+            _KON, 2018, variant="individer-15plus", with_codes=False
+        )
+        assert state.value_set is None
+        assert state.value_set_summary is None
+        assert state.classification_conformance is None
+        assert not [
+            sql
+            for sql in statements
+            if "value_set_member" in sql or "classification_conformance_code" in sql
+        ]
+
+    def test_full_resolution_keeps_its_complete_default_semantics(self) -> None:
+        # `Catalog.resolve` / `Catalog.states` are unchanged: members embedded,
+        # mismatch list embedded, no summary.
+        conn = TestResolveAt._coded_state_db(windowed=False)
+        cat = Catalog(conn)
+        resolved = cat.resolve(_KON)
+        assert isinstance(resolved, ResolvedVariable)
+        [state] = resolved.states
+        assert state.value_set == (
+            ValueSetMember(code="1", label="Man"),
+            ValueSetMember(code="2", label="Kvinna"),
+        )
+        assert state.value_set_summary is None
+        conformance = state.classification_conformance
+        assert conformance is not None
+        assert conformance.nonconforming_codes == (
+            ValueSetMember(code="2", label="Kvinna"),
+        )
+        assert cat.states(_KON) == list(resolved.states)
 
 
 class TestClassificationCodes:

@@ -37,7 +37,7 @@ from reg_webapp.models import (
     TopSearchGroup,
     VariableSearchGroup,
 )
-from reg_webapp.query_input import validate_text_query
+from reg_webapp.query_input import clamp_limit, validate_text_query
 
 if TYPE_CHECKING:
     from reg_meta.search import (
@@ -79,7 +79,7 @@ def _search_boundary(*args: Any, **kwargs: Any) -> SearchResults:
 def _validated_limit(limit: int = _DEFAULT_LIMIT) -> int:
     """``?limit`` gate: per-group display cap. Clamped to [1, _MAX_LIMIT] rather
     than 422'd — a researcher nudging the number shouldn't hit an error wall."""
-    return max(1, min(limit, _MAX_LIMIT))
+    return clamp_limit(limit, maximum=_MAX_LIMIT)
 
 
 def _rank_codes(results: list[CodeSearchResult]) -> list[CodeSearchResult]:

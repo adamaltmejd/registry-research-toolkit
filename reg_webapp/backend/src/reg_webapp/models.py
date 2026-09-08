@@ -25,6 +25,7 @@ from reg_meta.catalog import (
     LineageWarning,
     RegisterCoverage,
     TagMembership,
+    ValueSetMember,
     VariableCoverage,
     VariableEdition,
     VariableRef,
@@ -491,6 +492,28 @@ class StatesResponse(BaseModel):
 
     binding: str
     states: list[VariableState]
+
+
+class ValueSetCodesResponse(BaseModel):
+    """`GET /api/value-sets/{value_set_id}/codes` — ONE bounded page of a value
+    set's (code, label) membership, or (with `?state=`) of one state's stored
+    classification mismatch list.
+
+    The binding leaf and its `?period` subset carry only `value_set_summary` per
+    state, so the code panel reads the actual codes here when it is opened. `total`
+    is the count AFTER `?q` and BEFORE the page window, so a caller knows how much
+    is left without walking it; `codes` is code/label-ordered, the same order
+    reg_meta hydrates a value set in."""
+
+    value_set_id: int
+    # Echoes `?state=` when the page is a state's mismatch list, else None.
+    state_id: int | None = None
+    # The `?q` the page was filtered by (empty = unfiltered).
+    q: str
+    total: int
+    offset: int
+    limit: int
+    codes: list[ValueSetMember]
 
 
 class PredecessorsResponse(BaseModel):

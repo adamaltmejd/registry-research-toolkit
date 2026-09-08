@@ -433,9 +433,34 @@ canonical FQID, `deprecated`, `replaced_by`, `via_same_as` — resolving through
 states. `resolve_at(..., with_codes=False)` runs the ordinary period/variant resolution
 and skips only the two per-state CODE-LIST queries (`value_set` members and the
 conformance report's nonconforming codes), leaving those two fields None; `value_set_id`
-still carries the code-set identity. Both reuse the canonical identity and window
-expansion — there is no second resolver — so a narrow read's query work scales with the
-identities and states asked for, not with how many codes they share.
+still carries the code-set identity. `resolve_binding(fqid, ...)` IS `resolve`'s binding
+arm, public so the same two hydration keywords reach the period-less whole record. Both
+reuse the canonical identity and window expansion — there is no second resolver — so a
+narrow read's query work scales with the identities and states asked for, not with how
+many codes they share.
+
+**Presentation summaries and the reads that replace the members** (Y-46, 2026-09-08). A
+consumer that RENDERS a coding needs two facts the members carry incidentally: how many
+there are, and whether they are a dense integer run (an age or code-number coding that
+reads as `0-110`, not as a 111-row table). `with_code_summary=True` — a second, explicit
+keyword on `resolve_at` / `resolve_binding`, never implied by `with_codes=False` — fills
+`VariableState.value_set_summary` with exactly those, plus the stored conformance
+verdict/declaration/counts with an EMPTY `nonconforming_codes`.
+`Catalog.value_set_summary` memoizes per distinct `value_set_id` for the Catalog's
+lifetime, so a history whose 290 states share one coding pays for one membership scan
+rather than 290. `dense_integer_range` is the denseness test itself: enough members,
+every code a distinct canonical decimal integer inside JS's safe-integer range, every
+label restating its own code, and the values covering enough of their own span — a set
+whose labels carry meaning stays a table.
+
+The members themselves are then read explicitly and narrowly:
+`Catalog.value_set_codes(value_set_id)` is the full membership of ONE coding (None for
+an unknown id, distinguishing it from a coding with no members), and
+`Catalog.state_nonconforming_codes(state_id, value_set_id)` is one state's stored
+classification mismatch list, refused (None) unless that state actually carries that
+coding. `Catalog.resolve`, `Catalog.states`, the `/states` export and
+`reg-meta get values` are untouched: their default is still the complete record, members
+embedded.
 
 The catalog return shapes — and, as of #701 (2026-06-23), the search return shapes in
 `search.py` — are frozen Pydantic v2 models on a shared `_CatalogModel` base

@@ -640,6 +640,39 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/value-sets/{value_set_id}/codes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Value Set Codes
+         * @description One bounded page of value set `value_set_id`'s (code, label) membership.
+         *
+         *     `?state=<state_id>` reads that state's STORED classification mismatch list
+         *     instead (`classification_conformance_code`) — the same code→label contract, so
+         *     the panel that renders a value set renders a mismatch list unchanged. The state
+         *     must carry this value set, so a state id can never read a coding it does not
+         *     belong to.
+         *
+         *     `?q` filters (diacritic-blind substring over code AND label, the SPA's own
+         *     `foldText` rule) BEFORE `?offset`/`?limit`, and `total` reports the filtered
+         *     count — a page is a window onto the whole matching set, never a filter over one
+         *     page. Codes are code/label-ordered, so paging is stable. An unknown value set —
+         *     or a state that does not carry it — is a 404: the panel is reached from a state
+         *     that named both, so neither is a plausible browse target to redirect.
+         */
+        get: operations["get_value_set_codes_api_value_sets__value_set_id__codes_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -1592,6 +1625,18 @@ export interface components {
             reg_meta: components["schemas"]["RegMetaInfo"];
             steward: components["schemas"]["StewardInfo"];
             webapp: components["schemas"]["WebappInfo"];
+        };
+        /**
+         * DenseIntegerRange
+         * @description The inclusive integer span of a value set whose members ARE the integers in
+         *     it (see `Catalog.value_set_summary`) — an age or year-count coding a consumer
+         *     renders as a range instead of a thousand-row table.
+         */
+        DenseIntegerRange: {
+            /** Max */
+            max: number;
+            /** Min */
+            min: number;
         };
         /**
          * DimensionsResponse
@@ -2767,6 +2812,34 @@ export interface components {
             ok: boolean;
         };
         /**
+         * ValueSetCodesResponse
+         * @description `GET /api/value-sets/{value_set_id}/codes` — ONE bounded page of a value
+         *     set's (code, label) membership, or (with `?state=`) of one state's stored
+         *     classification mismatch list.
+         *
+         *     The binding leaf and its `?period` subset carry only `value_set_summary` per
+         *     state, so the code panel reads the actual codes here when it is opened. `total`
+         *     is the count AFTER `?q` and BEFORE the page window, so a caller knows how much
+         *     is left without walking it; `codes` is code/label-ordered, the same order
+         *     reg_meta hydrates a value set in.
+         */
+        ValueSetCodesResponse: {
+            /** Codes */
+            codes: components["schemas"]["ValueSetMember"][];
+            /** Limit */
+            limit: number;
+            /** Offset */
+            offset: number;
+            /** Q */
+            q: string;
+            /** State Id */
+            state_id?: number | null;
+            /** Total */
+            total: number;
+            /** Value Set Id */
+            value_set_id: number;
+        };
+        /**
          * ValueSetMember
          * @description One (code, label) entry in a state's value set (#681). Was a bare
          *     `(code, label)` tuple inside `VariableState.value_set`; promoted to a model so
@@ -2779,6 +2852,18 @@ export interface components {
             code: string;
             /** Label */
             label: string;
+        };
+        /**
+         * ValueSetSummary
+         * @description Cardinality-independent PRESENTATION facts about a value set's membership:
+         *     how many codes it has, and — when those codes form a dense integer run — the
+         *     span they cover. Computed once per distinct `value_set_id` per `Catalog`
+         *     instance; see `Catalog.value_set_summary`.
+         */
+        ValueSetSummary: {
+            /** Code Count */
+            code_count: number;
+            integer_range?: components["schemas"]["DenseIntegerRange"] | null;
         };
         /**
          * VariableCoverage
@@ -3046,6 +3131,7 @@ export interface components {
             value_set: components["schemas"]["ValueSetMember"][] | null;
             /** Value Set Id */
             value_set_id: number | null;
+            value_set_summary?: components["schemas"]["ValueSetSummary"] | null;
             /** Value Set Version Label */
             value_set_version_label: string;
             /** Variant */
@@ -3863,6 +3949,42 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["CatalogSizes"];
+                };
+            };
+        };
+    };
+    get_value_set_codes_api_value_sets__value_set_id__codes_get: {
+        parameters: {
+            query?: {
+                state?: number | null;
+                q?: string;
+                offset?: number;
+                limit?: number;
+            };
+            header?: never;
+            path: {
+                value_set_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ValueSetCodesResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };

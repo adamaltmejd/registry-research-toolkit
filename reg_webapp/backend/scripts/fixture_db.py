@@ -157,6 +157,7 @@ def build_catalog_fixture_db(db_path: Path) -> None:
     _seed_code_variable_map(src)
     _seed_merged_family(src, add_variable, add_state)
     _seed_representation_group(src)
+    _seed_many_state_binding(src, add_variable, add_state, add_value_set)
     _rebuild_fts(src)
     _stamp_manifest(src)
 
@@ -412,6 +413,157 @@ def _seed_representation_group(src: sqlite3.Connection) -> None:
             "(member_id, axis, value, label) VALUES (?, 'month', ?, ?)",
             (cur.lastrowid, value, label),
         )
+
+
+# The synthetic many-state binding (Y-46). Its point is CARDINALITY: many states
+# over a handful of large SHARED codings, which is what makes an initial binding
+# payload that embeds every state's members explode (the real
+# `scb/rtb/forsamling` shipped 24 MB of mostly-repeated codes). Kept as ids so the
+# seeder and its tests name the same sets.
+_PARISH_VALUE_SETS = {
+    # (value_set_id, code count, label prefix) — 900/901 share a VERSION LABEL and
+    # differ only by content, so the leaf has to disambiguate them by span.
+    900: (400, "Församling"),
+    901: (400, "Socken"),
+    902: (600, "Distrikt"),
+}
+# A coding with no members at all, and a dense integer one — the two shapes that
+# render as something OTHER than a code table.
+_EMPTY_VALUE_SET = 903
+_AGE_VALUE_SET = 904
+
+
+def _parish_codes(value_set_id: int) -> list[tuple[str, str]]:
+    count, prefix = _PARISH_VALUE_SETS[value_set_id]
+    # `value_code` is UNIQUE on (code, label), so each set gets its own namespace.
+    return [
+        (f"{value_set_id}{n:04d}", f"{prefix} {n:04d}") for n in range(1, count + 1)
+    ]
+
+
+def _seed_many_state_binding(
+    src: sqlite3.Connection, add_variable, add_state, add_value_set
+) -> None:
+    """Seed `scb/lisa/forsamling`: 72 yearly states sharing five codings (Y-46).
+
+    The shape the ticket is about — a long history whose states repeat a few
+    large code sets — plus the edge shapes a code panel has to render: a coding
+    with NO members, a state with NO coding at all, a dense integer coding, two
+    distinct codings under ONE version label, and stored classification
+    conformance mismatches (one kept, one severed) whose code lists are read per
+    state rather than embedded."""
+    add_variable(
+        src,
+        register_id=1,
+        var_id=960,
+        name="Församling",
+        slug="forsamling",
+        operational_definition="Parish of registration at year end.",
+    )
+    for value_set_id in _PARISH_VALUE_SETS:
+        add_value_set(src, value_set_id=value_set_id, codes=_parish_codes(value_set_id))
+    add_value_set(src, value_set_id=_EMPTY_VALUE_SET, codes=[])
+    add_value_set(
+        src,
+        value_set_id=_AGE_VALUE_SET,
+        codes=[(str(age), f"{age} år") for age in range(111)],
+    )
+
+    sun2020 = src.execute(
+        "SELECT id FROM classification WHERE slug = 'sun2020'"
+    ).fetchone()[0]
+    # (first year, last year, value_set_id, version label, classification_id)
+    eras = [
+        (1952, 1990, 900, "Församling historisk", None),
+        (1991, 2005, 901, "Församling historisk", None),
+        (2006, 2019, 902, "Församling 2006", sun2020),
+        (2020, 2021, _EMPTY_VALUE_SET, "Församling tom", None),
+        (2022, 2023, None, "Fritext", None),
+    ]
+    states: dict[int, int] = {}
+    for first, last, value_set_id, label, classification_id in eras:
+        for year in range(first, last + 1):
+            states[year] = add_state(
+                src,
+                register_id=1,
+                variable_slug="forsamling",
+                register_variant_id=10,
+                valid_from=f"{year}-01-01",
+                valid_to=f"{year}-12-31",
+                data_type="char",
+                delivery_column_name="Forsamling",
+                value_set_id=value_set_id,
+                value_set_version_label=label,
+                classification_id=classification_id,
+            )
+    # A dense integer coding on its own state, so the leaf has a coding that
+    # renders as a RANGE rather than a 111-row table.
+    add_state(
+        src,
+        register_id=1,
+        variable_slug="forsamling",
+        register_variant_id=10,
+        valid_from="1930-01-01",
+        valid_to="1951-12-31",
+        data_type="int",
+        delivery_column_name="ForsamlingKod",
+        value_set_id=_AGE_VALUE_SET,
+        value_set_version_label="Kodnummer",
+    )
+
+    # Stored conformance: one SEVERED verdict on a plain coding and one KEPT
+    # verdict on the classification-tagged era. Their mismatch code lists live in
+    # `classification_conformance_code` and are read per state on demand.
+    _seed_conformance(
+        src,
+        state_id=states[1995],
+        classification_id=sun2020,
+        status="severed",
+        checked=400,
+        matched=16,
+        codes=[c for c, _ in _parish_codes(901)[:5]],
+    )
+    _seed_conformance(
+        src,
+        state_id=states[2010],
+        classification_id=sun2020,
+        status="kept",
+        checked=600,
+        matched=597,
+        codes=[c for c, _ in _parish_codes(902)[:3]],
+    )
+
+
+def _seed_conformance(
+    src: sqlite3.Connection,
+    *,
+    state_id: int,
+    classification_id: int,
+    status: str,
+    checked: int,
+    matched: int,
+    codes: list[str],
+) -> None:
+    src.execute(
+        "INSERT INTO classification_conformance (state_id, "
+        "declared_classification_id, status, checked_code_count, "
+        "matched_code_count, nonconforming_code_count, overlap) "
+        "VALUES (?, ?, ?, ?, ?, ?, ?)",
+        (
+            state_id,
+            classification_id,
+            status,
+            checked,
+            matched,
+            len(codes),
+            matched / checked,
+        ),
+    )
+    src.executemany(
+        "INSERT INTO classification_conformance_code (state_id, code_id) "
+        "SELECT ?, code_id FROM value_code WHERE code = ?",
+        [(state_id, code) for code in codes],
+    )
 
 
 def _seed_kon_edges(src: sqlite3.Connection) -> None:

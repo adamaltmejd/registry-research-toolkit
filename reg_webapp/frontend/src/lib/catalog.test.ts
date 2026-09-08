@@ -23,7 +23,6 @@ import {
   commonLabelStem,
   coverageFromStates,
   DATA_BROWSER_LABEL,
-  denseIntegerValueSetRange,
   deriveType,
   distinctValueSets,
   encodeCodesParam,
@@ -93,6 +92,7 @@ function state(over: Partial<VariableStateModel>): VariableStateModel {
     value_set_version_label: "",
     value_set_id: null,
     value_set: null,
+    value_set_summary: null,
     is_identifier: false,
     classification_slug: null,
     classification_conformance: null,
@@ -472,23 +472,28 @@ describe("deriveType", () => {
     expect(
       deriveType(
         state({
-          value_set: [
-            { code: "1", label: "x" },
-          ] as VariableStateModel["value_set"],
+          value_set_id: 5,
+          value_set_summary: { code_count: 1, integer_range: null },
           data_type: "char",
         }),
       ),
     ).toBe("categorical");
   });
 
+  // The denseness verdict is the SERVER's now (reg_meta `dense_integer_range`,
+  // tested there over the members) — the leaf carries it, so here we only check
+  // that a state carrying one is read as a measure rather than a category.
   it("dense integer age value sets stay numeric, not categorical", () => {
-    const ageValues = Array.from({ length: 111 }, (_, age) => ({
-      code: String(age),
-      label: `${age} år`,
-    })) as VariableStateModel["value_set"];
     expect(
       deriveType(
-        state({ value_set_id: 5, value_set: ageValues, data_type: "char" }),
+        state({
+          value_set_id: 5,
+          value_set_summary: {
+            code_count: 111,
+            integer_range: { min: 0, max: 110 },
+          },
+          data_type: "char",
+        }),
       ),
     ).toBe("numeric");
   });
@@ -498,10 +503,7 @@ describe("deriveType", () => {
       deriveType(
         state({
           value_set_id: 5,
-          value_set: [
-            { code: "0", label: "No" },
-            { code: "1", label: "Yes" },
-          ] as VariableStateModel["value_set"],
+          value_set_summary: { code_count: 2, integer_range: null },
           data_type: "int",
         }),
       ),
@@ -510,10 +512,7 @@ describe("deriveType", () => {
       deriveType(
         state({
           value_set_id: 6,
-          value_set: Array.from({ length: 10 }, (_, value) => ({
-            code: String(value),
-            label: `Category ${value}`,
-          })) as VariableStateModel["value_set"],
+          value_set_summary: { code_count: 10, integer_range: null },
           data_type: "int",
         }),
       ),
@@ -564,57 +563,6 @@ describe("deriveType", () => {
   });
 });
 
-describe("denseIntegerValueSetRange", () => {
-  it("recognizes contiguous age-like integer codes", () => {
-    expect(
-      denseIntegerValueSetRange(
-        Array.from({ length: 12 }, (_, age) => ({
-          code: String(age),
-          label: `${age} år`,
-        })),
-      ),
-    ).toEqual({ min: 0, max: 11, count: 12 });
-  });
-
-  it("recognizes dense age-like integer codes with small gaps", () => {
-    expect(
-      denseIntegerValueSetRange(
-        [0, 1, 2, 3, 4, 5, 7, 8, 9, 10, 11].map((age) => ({
-          code: String(age),
-          label: `${age} år`,
-        })),
-      ),
-    ).toEqual({ min: 0, max: 11, count: 11 });
-  });
-
-  it("rejects sparse, leading-zero, and arbitrary-label codebooks", () => {
-    expect(
-      denseIntegerValueSetRange(
-        [0, 2, 4, 6, 8, 10, 12, 14, 16, 18].map((value) => ({
-          code: String(value),
-          label: String(value),
-        })),
-      ),
-    ).toBeNull();
-    expect(
-      denseIntegerValueSetRange(
-        Array.from({ length: 10 }, (_, value) => ({
-          code: String(value).padStart(2, "0"),
-          label: String(value),
-        })),
-      ),
-    ).toBeNull();
-    expect(
-      denseIntegerValueSetRange(
-        Array.from({ length: 10 }, (_, value) => ({
-          code: String(value),
-          label: `Category ${value}`,
-        })),
-      ),
-    ).toBeNull();
-  });
-});
-
 describe("formatDataType", () => {
   it("drops a meaningless length (the bigint(0) artifact)", () => {
     expect(formatDataType("bigint", "0")).toBe("bigint");
@@ -651,7 +599,8 @@ describe("representationsFromStates", () => {
         valid_from: "2000-01-01",
         valid_to: "2010-12-31",
         value_set_version_label: "5-års intervall",
-        value_set: [{ code: "1", label: "a" }] as never,
+        value_set_id: 71,
+        value_set_summary: { code_count: 1, integer_range: null },
         classification_slug: "lkf2007",
       }),
       state({
@@ -659,7 +608,7 @@ describe("representationsFromStates", () => {
         valid_from: "2005-01-01",
         valid_to: "2015-12-31",
         value_set_version_label: "10-års intervall",
-        value_set: null,
+        value_set_id: null,
       }),
       // a second state on the same column collapses to the first — the rep's
       // classificationSlug stays the representative's (here null on the later
@@ -676,8 +625,8 @@ describe("representationsFromStates", () => {
       classificationSlug: "lkf2007",
       validTo: "2010-12-31",
     });
-    // codingKey = version label + sorted "code=label" pairs (content hash).
-    expect(reps[1].codingKey).toContain("1=a");
+    // codingKey = version label + the content-addressed value-set id.
+    expect(reps[1].codingKey).toBe("5-års intervall|71");
     expect(reps[0].codeCount).toBeNull();
     // agrupp2's representative state is code-less → null classification slug.
     expect(reps[0].classificationSlug).toBeNull();
@@ -788,24 +737,23 @@ describe("representationsFromStates", () => {
 });
 
 describe("representationsCollapse", () => {
-  const coding = (
-    column: string,
-    label: string,
-    value_set: { code: string; label: string }[] | null,
-  ) =>
+  // A coding is IDENTIFIED by `value_set_id`: the rows are content-addressed on
+  // a UNIQUE hash of their sorted (code, label) pairs, so equal ids mean equal
+  // members — which is why the leaf no longer ships them.
+  const coding = (column: string, label: string, value_set_id: number | null) =>
     state({
       delivery_column_name: column,
       valid_from: "1980-01-01",
       valid_to: "1987-12-31",
       value_set_version_label: label,
-      value_set: value_set as never,
+      value_set_id,
     });
 
   it("collapses coding-identical coexisting columns (UT0290/UT0280)", () => {
     // Same value-set content + label, two columns → collapse to primary + reveal.
     const reps = representationsFromStates([
-      coding("UT0290", "Ja nej 1", [{ code: "1", label: "Ja" }]),
-      coding("UT0280", "Ja nej 1", [{ code: "1", label: "Ja" }]),
+      coding("UT0290", "Ja nej 1", 1197),
+      coding("UT0280", "Ja nej 1", 1197),
     ]);
     expect(reps).toHaveLength(2);
     expect(representationsCollapse(reps)).toBe(true);
@@ -813,11 +761,8 @@ describe("representationsCollapse", () => {
 
   it("does NOT collapse genuinely distinct codings (SSYK 3/4/5-digit)", () => {
     const reps = representationsFromStates([
-      coding("ssyk3", "3-siffer", [{ code: "1", label: "a" }]),
-      coding("ssyk5", "5-siffer", [
-        { code: "1", label: "a" },
-        { code: "11", label: "b" },
-      ]),
+      coding("ssyk3", "3-siffer", 31),
+      coding("ssyk5", "5-siffer", 55),
     ]);
     expect(representationsCollapse(reps)).toBe(false);
   });
@@ -3789,7 +3734,12 @@ describe("distinctValueSets (#668 — value-set-centric fold)", () => {
     ]);
   });
 
-  it("keeps warning-bearing conformance when classification states collapse", () => {
+  it("speaks for a collapsed edition with its LOUDEST stored verdict", () => {
+    // Y-46: the entry reports one STORED row, not a synthesized rollup — the
+    // mismatch list behind it is a per-state relation read on demand, so a
+    // summed row would name counts no single read could produce. Severed leads,
+    // then the largest mismatch count; the entry names the state (and
+    // coding) that list is read by.
     const cleanConformance = {
       declared_classification_slug: "lkf1980",
       declared_classification_short_name: "LKF1980",
@@ -3807,18 +3757,17 @@ describe("distinctValueSets (#668 — value-set-centric fold)", () => {
       matched_code_count: 2,
       nonconforming_code_count: 1,
       overlap: 2 / 3,
-      nonconforming_codes: [{ code: "X", label: "Extra" }],
     };
-    const laterWarningConformance = {
+    const louderConformance = {
       ...cleanConformance,
-      checked_code_count: 4,
-      matched_code_count: 3,
-      nonconforming_code_count: 1,
-      overlap: 3 / 4,
-      nonconforming_codes: [{ code: "Y", label: "Later extra" }],
+      checked_code_count: 9,
+      matched_code_count: 5,
+      nonconforming_code_count: 4,
+      overlap: 5 / 9,
     };
     const states = [
       state({
+        state_id: 10,
         value_set_id: 100,
         classification_slug: "lkf1980",
         classification_conformance: cleanConformance,
@@ -3826,6 +3775,7 @@ describe("distinctValueSets (#668 — value-set-centric fold)", () => {
         valid_from: "1980-01-01",
       }),
       state({
+        state_id: 11,
         value_set_id: 101,
         classification_slug: "lkf1980",
         classification_conformance: warningConformance,
@@ -3833,24 +3783,77 @@ describe("distinctValueSets (#668 — value-set-centric fold)", () => {
         valid_from: "1981-01-01",
       }),
       state({
+        state_id: 12,
         value_set_id: 102,
         classification_slug: "lkf1980",
-        classification_conformance: laterWarningConformance,
+        classification_conformance: louderConformance,
         variant: "flytt",
         valid_from: "1982-01-01",
       }),
     ];
     const vs = distinctValueSets(states);
     expect(vs).toHaveLength(1);
-    expect(vs[0].classificationConformance).toMatchObject({
-      status: "kept",
-      checked_code_count: 7,
-      matched_code_count: 5,
-      nonconforming_code_count: 2,
-      nonconforming_codes: [
-        { code: "X", label: "Extra" },
-        { code: "Y", label: "Later extra" },
-      ],
+    expect(vs[0].conformance).toEqual({
+      verdict: louderConformance,
+      stateId: 12,
+      valueSetId: 102,
+    });
+  });
+
+  it("a severed verdict outranks a louder kept one, and a clean one still reports", () => {
+    const kept = {
+      declared_classification_slug: "lkf1980",
+      declared_classification_short_name: "LKF1980",
+      declared_classification_name: "LKF 1980",
+      status: "kept" as const,
+      checked_code_count: 40,
+      matched_code_count: 10,
+      nonconforming_code_count: 30,
+      overlap: 0.25,
+      nonconforming_codes: [],
+    };
+    const severed = {
+      ...kept,
+      status: "severed" as const,
+      checked_code_count: 5,
+      matched_code_count: 4,
+      nonconforming_code_count: 1,
+      overlap: 0.8,
+    };
+    const vs = distinctValueSets([
+      state({
+        state_id: 10,
+        value_set_id: 100,
+        classification_slug: "lkf1980",
+        classification_conformance: kept,
+      }),
+      state({
+        state_id: 11,
+        value_set_id: 101,
+        classification_slug: "lkf1980",
+        classification_conformance: severed,
+      }),
+    ]);
+    expect(vs[0].conformance).toEqual({
+      verdict: severed,
+      stateId: 11,
+      valueSetId: 101,
+    });
+
+    // No state warns → the first verdict there is, so "kept, clean" still shows.
+    const clean = { ...kept, nonconforming_code_count: 0, overlap: 1 };
+    const quiet = distinctValueSets([
+      state({
+        state_id: 20,
+        value_set_id: 100,
+        classification_slug: "lkf1980",
+        classification_conformance: clean,
+      }),
+    ]);
+    expect(quiet[0].conformance).toEqual({
+      verdict: clean,
+      stateId: 20,
+      valueSetId: 100,
     });
   });
 

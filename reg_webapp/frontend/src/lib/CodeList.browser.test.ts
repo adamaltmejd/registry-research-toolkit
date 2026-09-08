@@ -358,4 +358,19 @@ describe("CodeList — unified value-set / code viewer (#638 PR3)", () => {
       .element(page.getByRole("textbox", { name: "Filter codes" }))
       .not.toBeInTheDocument();
   });
+
+  it("renders a caller-paged page verbatim: no rival filter, no collapse", async () => {
+    // Y-46: ValueSetCodes filters and bounds a value set SERVER-side, so its
+    // pages arrive already narrowed. A second filter here would silently search
+    // only the loaded page, and grouping a partial page would group the wrong
+    // thing — `paged` suppresses both.
+    await render(CodeList, { codes: codes(200), paged: true });
+    expect(document.querySelectorAll(".code-row")).toHaveLength(200);
+    await expect
+      .element(page.getByRole("textbox", { name: "Filter codes" }))
+      .not.toBeInTheDocument();
+    await expect
+      .element(page.getByText("Showing first 50 of 200 codes."))
+      .not.toBeInTheDocument();
+  });
 });
