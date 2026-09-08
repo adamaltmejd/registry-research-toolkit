@@ -1110,6 +1110,19 @@ function graphCoversEveryPickerRow(g: RelationshipGraph): boolean {
   );
 }
 
+/** A graph cell identifies its row by delivery column, coding label and window — never
+ * by the POPULATION that delivers it. So two variant families a curator named alike
+ * (the rows `pickerLabeling` hands a `variantKey`, Y-14) project onto cells with the
+ * same visible text and the same accessible name, and the graph is no longer a
+ * lossless picture of the choice. Fall back to the list, whose rows carry that
+ * distinguishing family key — the same way an unreadably narrow codings cell falls
+ * back rather than dropping the context it needs. */
+function graphDistinguishesEveryPickerRow(): boolean {
+  return [...labelingByBand.values()].every((labeling) =>
+    labeling.rows.every((r) => r.variantKey === null),
+  );
+}
+
 function graphHasDrawableContext(g: RelationshipGraph): boolean {
   if (resolveEdges(g).length > 0) {
     return true;
@@ -1238,6 +1251,7 @@ function graphFitsPicker(g: RelationshipGraph): boolean {
     cellCount <= GRAPH_MAX_CELLS &&
     graphCoversEveryPickerRow(renderGraph) &&
     graphReadableWithCurrentRows(renderGraph) &&
+    graphDistinguishesEveryPickerRow() &&
     graphFocusIsNavigable(g)
   );
 }
@@ -1299,16 +1313,42 @@ function graphLaneHeight(rowCount: number): number {
   return GRAPH_LANE_BASE_H;
 }
 
+/** The measured BORDER box of each lane's gutter stack (the variable's name, its
+ * slug, the Viewed marker and the "also in" links — plus the gutter's own vertical
+ * padding, which the stack carries so one measurement is the whole budget), keyed by
+ * node id. The stack is what varies: the name wraps to a second line at some labels
+ * and the metadata lines are conditional, so only the browser knows how tall a gutter
+ * really is. `graphLaneBoxHeight` budgets it, which is what keeps a viewed lane's
+ * "also in" line inside the lane instead of under the next one or under
+ * `.graph-timeline`'s clip (Y-14). */
+let graphGutterBoxes = $state<Record<string, ResizeObserverSize[]>>({});
+
+/** A lane's box: tall enough for its packed cell rows AND for what its gutter
+ * renders, the fractional stack rounded UP so a part-pixel line is never shaved. An
+ * unmeasured stack (the first paint) contributes nothing, so the lane starts at its
+ * cell height and settles once the browser reports the stack. */
+function graphLaneBoxHeight(rn: RenderNode, rowCount: number): number {
+  const stack = graphGutterBoxes[rn.node.id]?.[0]?.blockSize ?? 0;
+  return Math.max(graphLaneHeight(rowCount), Math.ceil(stack));
+}
+
+/** The graph's node clusters and its resolved edges — a function of the render graph
+ * and the scale alone. Kept OUT of `graphClusters` so a gutter measurement re-sizes
+ * the lane boxes without rebuilding every `RenderNode` (and re-running every lane's
+ * and cell's derived markup with it). */
+const graphNodeClusters = $derived(
+  graphRenderGraph ? clustersOf(graphRenderGraph, graphScale) : [],
+);
+const graphResolvedEdges = $derived(
+  graphRenderGraph ? resolveEdges(graphRenderGraph) : [],
+);
+
 const graphClusters = $derived.by((): GraphRenderCluster[] => {
-  if (!graphRenderGraph) {
-    return [];
-  }
-  const clusters = clustersOf(graphRenderGraph, graphScale);
-  const out = clusters.map((cluster) => {
+  const out = graphNodeClusters.map((cluster) => {
     let top = 0;
     const lanes = cluster.nodes.map((rn) => {
       const rowCount = graphLaneDisplayRowCount(rn);
-      const height = graphLaneHeight(rowCount);
+      const height = graphLaneBoxHeight(rn, rowCount);
       const box = { rn, top, height, center: top + height / 2, rowCount };
       top += height;
       return box;
@@ -1327,7 +1367,7 @@ const graphClusters = $derived.by((): GraphRenderCluster[] => {
       clusterOfNode.set(rn.node.id, i);
     }
   });
-  for (const edge of resolveEdges(graphRenderGraph)) {
+  for (const edge of graphResolvedEdges) {
     const source = clusterOfNode.get(edge.source.id);
     const target = clusterOfNode.get(edge.target.id);
     if (source !== undefined && source === target) {
@@ -1337,16 +1377,17 @@ const graphClusters = $derived.by((): GraphRenderCluster[] => {
   return out;
 });
 
+/** A cell's top within its lane box: the packed cell stack CENTRED in the box, then
+ * offset by the cell's packed row. The box can be taller than the cells when the
+ * gutter needs the room (`graphLaneBoxHeight`), and the lane marker and the succession
+ * connectors meet the box's centre — so the cells centre on it too. */
 function graphCellTop(
   laneHeight: number,
   row: number,
   rowCount: number,
 ): number {
-  if (rowCount <= 1) {
-    return (laneHeight - GRAPH_CELL_H) / 2;
-  }
-  const inset = (GRAPH_LANE_BASE_H - GRAPH_CELL_H) / 2;
-  return inset + row * GRAPH_ROW_H;
+  const slack = (laneHeight - graphLaneHeight(rowCount)) / 2;
+  return slack + (GRAPH_LANE_BASE_H - GRAPH_CELL_H) / 2 + row * GRAPH_ROW_H;
 }
 
 function graphBandForNode(node: VariableGraphNode): PickerBand | null {
@@ -2223,10 +2264,21 @@ function codingsVaryHref(
             onchange={() => toggleFilter(dim.key, v.value)}
           />
           <span>{v.label}</span>
+          {#if v.sharedLabel}
+            <!-- Two populations a curator named alike: the value's own family key
+                 tells the pills apart, as it does on the rows they narrow to. -->
+            {@render variantKeyTag(v.value)}
+          {/if}
         </label>
       {/each}
     </div>
   </fieldset>
+{/snippet}
+
+<!-- The variant-family KEY behind a curator name two populations share (Y-14): the
+     concrete identity, quiet and mono, beside the name it disambiguates. -->
+{#snippet variantKeyTag(key: string)}
+  <code class="variant-key" title={`Variant ${key}`}>{key}</code>
 {/snippet}
 
 {#snippet facetMarker(m: { name: string; axis: string; value: string })}
@@ -2362,7 +2414,13 @@ function codingsVaryHref(
                 >
                   <div class="graph-gutter">
                     <span class="graph-marker" class:focused></span>
-                    <span class="graph-gutter-text">
+                    <!-- The gutter's whole text stack is ONE measured box: the lane
+                         above sizes itself to `graphGutterBoxes`, so every line here
+                         stays inside the lane at every width. -->
+                    <span
+                      class="graph-gutter-text"
+                      bind:borderBoxSize={graphGutterBoxes[rn.node.id]}
+                    >
                       {#if href}
                         <a class="graph-name" {href} title={rn.node.label}
                           >{graphNodeLabel(rn)}</a
@@ -2379,17 +2437,17 @@ function codingsVaryHref(
                         <span class="graph-viewed">Viewed</span>
                       {/if}
                       <span class="visually-hidden">{graphLaneA11y(rn)}</span>
+                      {#if rn.kind === "variable" && rn.node.same_as.length > 0}
+                        <span class="graph-same-as">
+                          <span class="graph-sa-prefix">also in</span>
+                          {#each rn.node.same_as as sa (sa.fqid)}
+                            <a class="graph-sa-chip" href={catalogHref(sa.fqid)}
+                              >{sa.register}</a
+                            >
+                          {/each}
+                        </span>
+                      {/if}
                     </span>
-                    {#if rn.kind === "variable" && rn.node.same_as.length > 0}
-                      <span class="graph-same-as">
-                        <span class="graph-sa-prefix">also in</span>
-                        {#each rn.node.same_as as sa (sa.fqid)}
-                          <a class="graph-sa-chip" href={catalogHref(sa.fqid)}
-                            >{sa.register}</a
-                          >
-                        {/each}
-                      </span>
-                    {/if}
                   </div>
 
                   <div class="graph-track" style={`width:${graphTrackW}px`}>
@@ -2889,6 +2947,11 @@ function codingsVaryHref(
                     {:else}
                       <span class="primary">{label?.primary.text}</span>
                     {/if}
+                    {#if label?.variantKey}
+                      <!-- The family slug is the smallest text that keeps these rows —
+                           and the accessible names of their checkboxes — distinct. -->
+                      {@render variantKeyTag(label.variantKey)}
+                    {/if}
                     {#if stage !== "none"}
                       {@render stageTag(stage)}
                     {/if}
@@ -3112,11 +3175,10 @@ function codingsVaryHref(
     max-width: var(--graph-gutter-w);
     min-width: 0;
     box-sizing: border-box;
-    padding: var(--space-2) var(--space-3);
+    padding: 0 var(--space-3);
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: 2px;
     background: var(--surface);
     border-right: 1px solid var(--border);
   }
@@ -3140,11 +3202,16 @@ function codingsVaryHref(
     border-color: var(--accent);
     background: var(--accent);
   }
+  /* The measured text stack: one box the lane can size itself to, so the name, slug,
+     Viewed marker and "also in" links are never clipped by the timeline or laid over
+     the next lane. The gutter's vertical padding lives HERE so that one measurement is
+     the lane's whole gutter budget — no second copy of the token in the sizing JS. */
   .graph-gutter-text {
     display: flex;
     flex-direction: column;
     gap: 1px;
     min-width: 0;
+    padding: var(--space-2) 0;
   }
   .graph-name {
     color: var(--text);
@@ -3847,6 +3914,17 @@ function codingsVaryHref(
     font-family: var(--font-mono);
     font-size: 0.8rem;
     color: var(--text-muted);
+  }
+  /* The variant-family slug behind two identically-named populations: a quiet mono
+     identifier beside the name it disambiguates, never a second label. The weight is
+     pinned because a SELECTED filter pill sets 600 — the one slug must not read
+     heavier there than on the row it narrows to, and only 400/500 mono faces ship. */
+  .variant-key {
+    font-family: var(--font-mono);
+    font-size: var(--text-micro);
+    font-weight: 400;
+    color: var(--text-muted);
+    overflow-wrap: anywhere;
   }
   .badge {
     font-size: 0.7rem;

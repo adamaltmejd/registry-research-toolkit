@@ -2486,6 +2486,82 @@ describe("pickerLabeling (#678 1b adaptive labels)", () => {
       "Snöskotrar",
       "Släpvagnar",
     ]);
+    // Distinct names identify the rows on their own — no slug is added (Y-14).
+    expect(rows.every((r) => r.variantKey === null)).toBe(true);
+  });
+
+  it("two variants a curator named ALIKE keep their family slug as the distinguisher (Y-14)", () => {
+    // Same column, same period, same coding: the curator name is the only text the
+    // rows would carry, and it is the SAME on both — identical rows. The concrete
+    // family identity comes back as `variantKey` on exactly those rows.
+    const { column, rows } = pickerLabeling([
+      rep({
+        variant: "individer-15plus",
+        variantLabel: "Individer",
+        column: "Kon",
+      }),
+      rep({
+        variant: "individer-16plus",
+        variantLabel: "Individer",
+        column: "Kon",
+      }),
+    ]);
+    // The shared column stays hoisted context, not per-row repetition.
+    expect(column).toBe("Kon");
+    expect(rows.map((r) => r.primary.text)).toEqual(["Individer", "Individer"]);
+    expect(rows.map((r) => r.variantKey)).toEqual([
+      "individer-15plus",
+      "individer-16plus",
+    ]);
+  });
+
+  it("marks only the COLLIDING labels when a third variant is named distinctly (Y-14)", () => {
+    const { rows } = pickerLabeling([
+      rep({ variant: "v15", variantLabel: "Individer", column: "Kon" }),
+      rep({ variant: "v16", variantLabel: "Individer", column: "Kon" }),
+      rep({ variant: "fam", variantLabel: "Familjer", column: "Kon" }),
+    ]);
+    expect(rows.map((r) => r.variantKey)).toEqual(["v15", "v16", null]);
+  });
+
+  it("leaves the slug off when the delivery COLUMN already tells the two variants apart (Y-14)", () => {
+    // Same curator name, but the rows lead with their differing column: they already
+    // read differently, so adding the slug would repeat identity the row has.
+    const { rows } = pickerLabeling([
+      rep({
+        variant: "individer-15plus",
+        variantLabel: "Individer",
+        column: "Kon",
+      }),
+      rep({
+        variant: "individer-16plus",
+        variantLabel: "Individer",
+        column: "Sni",
+      }),
+    ]);
+    expect(rows.map((r) => r.primary.text)).toEqual(["Kon", "Sni"]);
+    expect(rows.every((r) => r.variantKey === null)).toBe(true);
+  });
+
+  it("distinguishes a FOLDED variant family by its family key, not by a member variant (Y-14)", () => {
+    // The first row is a folded family (#376) whose current member is `-16plus`; the
+    // second is a different population the curator named alike. The row stands for the
+    // FAMILY, so the family key — the identity behind the shared label — marks it.
+    const { rows } = pickerLabeling([
+      rep({
+        variant: "individer-16plus",
+        variantLabel: "Individer, 16 plus",
+        variantFamily: "individer-15plus",
+        variantFamilyLabel: "Individer",
+        column: "Kon",
+      }),
+      rep({ variant: "hushall", variantLabel: "Individer", column: "Kon" }),
+    ]);
+    expect(rows.map((r) => r.primary.text)).toEqual(["Individer", "Individer"]);
+    expect(rows.map((r) => r.variantKey)).toEqual([
+      "individer-15plus",
+      "hushall",
+    ]);
   });
 
   it("fordonsreg empty-label shape: a value-set label constant except on empty rows is omitted (#959)", () => {
@@ -2717,6 +2793,37 @@ describe("pickerFilterDimensions / pickerRowPasses (#908)", () => {
     expect(dims[1].values.map((v) => v.value)).toEqual([
       "SNI 2002",
       "SNI 2007",
+    ]);
+  });
+
+  it("keeps two variant filter values distinct when a curator named them alike (Y-14)", () => {
+    // The pills name the same two choices the rows do, so an identical curator name
+    // has to be qualified in both places — the family key does it here too.
+    const bands = [
+      {
+        rows: [
+          row({
+            variant: "individer-15plus",
+            variantLabel: "Individer",
+            column: "Kon",
+          }),
+        ],
+      },
+      {
+        rows: [
+          row({
+            variant: "individer-16plus",
+            variantLabel: "Individer",
+            column: "Kon",
+          }),
+        ],
+      },
+    ];
+    const [variantDim] = pickerFilterDimensions(bands, []);
+    expect(variantDim.kind).toBe("variant");
+    expect(variantDim.values).toEqual([
+      { value: "individer-15plus", label: "Individer", sharedLabel: true },
+      { value: "individer-16plus", label: "Individer", sharedLabel: true },
     ]);
   });
 

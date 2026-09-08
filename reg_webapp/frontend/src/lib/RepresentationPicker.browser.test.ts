@@ -2656,6 +2656,149 @@ describe("RepresentationPicker graph mode (#904)", () => {
     expect(document.querySelector(".graph-picker")).toBeNull();
     expect(visibleColumns().slice(0, 2)).toEqual(["C0", "C1"]);
   });
+
+  // Y-14: the reproduced lane — the VIEWED leaf (`/catalog/scb/lisa/kon?period=2018`
+  // after adding Kon) carries four gutter lines (name, slug, "Viewed", "also in
+  // rams") in a lane sized only for its cells, so `.graph-timeline`'s clip cut the
+  // last line off and the lane above ran into its neighbour. The lane now budgets
+  // its measured gutter, at every width the design language covers.
+  it("keeps a viewed lane's name, slug, Viewed marker and same-as links inside the lane at every width", async () => {
+    const konFqid = "scb/lisa/kon";
+    const sysFqid = "scb/rams/syss";
+    const viewport = { width: window.innerWidth, height: window.innerHeight };
+    /** The one element matching `sel`, or a failure naming it — a missing node must
+     * fail loudly here rather than pass every geometry assertion below as a 0. */
+    const one = <T extends Element>(
+      sel: string,
+      within: ParentNode = document,
+    ) => {
+      const found = within.querySelector<T>(sel);
+      if (!found) {
+        throw new Error(`missing ${sel}`);
+      }
+      return found;
+    };
+    const lanes = () => [
+      ...document.querySelectorAll<HTMLElement>(".graph-lane"),
+    ];
+    await render(RepresentationPicker, {
+      bands: [
+        {
+          key: konFqid,
+          name: "Kön",
+          registerPrefix: "scb/lisa",
+          rows: [row({ column: "Kon" })],
+        } satisfies PickerBand,
+      ],
+      graph: graph({
+        nodes: [
+          graphNode(konFqid, {
+            // The leaf shape: no concept group, so the lane leads with the
+            // variable's NAME over its slug (the wrapping case), not the slug alone.
+            label: "Kön",
+            group_key: null,
+            group_label: null,
+            states: [graphState({ delivery_column_name: "Kon" })],
+            same_as: [{ fqid: "scb/rams/kon", register: "rams" }],
+          }),
+          graphNode(sysFqid, {
+            label: "Sysselsättningsstatus för individ",
+            group_key: null,
+            group_label: null,
+            states: [
+              graphState({
+                state_id: 2,
+                representation_run_id: 2,
+                delivery_column_name: "Syss",
+                valid_from: "2011-01-01",
+                valid_to: "9999-12-31",
+              }),
+            ],
+          }),
+        ],
+        edges: [edge(konFqid, sysFqid)],
+        focus_id: konFqid,
+      }),
+      ...PROPS,
+      focusKey: konFqid,
+    });
+
+    await vi.waitFor(() => {
+      if (!document.querySelector(".graph-same-as")) {
+        throw new Error("graph picker not rendered");
+      }
+    });
+
+    try {
+      for (const [width, height] of [
+        [375, 812],
+        [768, 1024],
+        [1280, 900],
+        [1920, 1080],
+      ]) {
+        await page.viewport(width, height);
+        // The lane budgets a MEASURED gutter, so let the resize settle before the
+        // geometry is read.
+        await vi.waitFor(() => {
+          expect(lanes()).toHaveLength(2);
+          const timeline =
+            one<HTMLElement>(".graph-timeline").getBoundingClientRect();
+          for (const lane of lanes()) {
+            const laneBox = lane.getBoundingClientRect();
+            // Every gutter line the lane renders — including the "also in" links
+            // of the viewed lane — sits inside the lane, so nothing is clipped by
+            // the timeline and nothing is drawn over the next lane.
+            const lines = [
+              ...lane.querySelectorAll<HTMLElement>(
+                ".graph-name, .graph-slug, .graph-viewed, .graph-same-as",
+              ),
+            ];
+            expect(lines.length).toBeGreaterThan(0);
+            for (const line of lines) {
+              const box = line.getBoundingClientRect();
+              expect(box.height).toBeGreaterThan(0);
+              expect(box.top).toBeGreaterThanOrEqual(laneBox.top);
+              expect(box.bottom).toBeLessThanOrEqual(laneBox.bottom);
+              expect(box.bottom).toBeLessThanOrEqual(timeline.bottom);
+            }
+          }
+        });
+
+        const [viewed, successor] = lanes();
+        const first = viewed.getBoundingClientRect();
+        const second = successor.getBoundingClientRect();
+        // The lanes still tile the stack exactly — a lane grown for its gutter
+        // moves the next one down rather than overlapping it.
+        expect(second.top).toBeCloseTo(first.bottom, 0);
+
+        // …and the cells and the succession connector stay on their lanes: the
+        // viewed lane's cell is centred in it, and the edge runs between the two
+        // lane centres.
+        const cell = one<HTMLElement>(
+          ".graph-cell",
+          viewed,
+        ).getBoundingClientRect();
+        expect(cell.top + cell.height / 2).toBeCloseTo(
+          first.top + first.height / 2,
+          0,
+        );
+        const line = one<SVGLineElement>(".graph-edge");
+        const lanesTop =
+          one<HTMLElement>(".graph-lanes").getBoundingClientRect().top;
+        expect(Number(line.getAttribute("y1")) + lanesTop).toBeCloseTo(
+          first.top + first.height / 2,
+          0,
+        );
+        expect(Number(line.getAttribute("y2")) + lanesTop).toBeCloseTo(
+          second.top + second.height / 2,
+          0,
+        );
+      }
+    } finally {
+      // A failed assertion above must not leak a viewport into the cases that follow.
+      await page.viewport(viewport.width, viewport.height);
+    }
+  });
 });
 
 describe("RepresentationPicker dimension marking + filters (#908)", () => {
@@ -3733,6 +3876,201 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
       ]);
     });
     expect(document.body.textContent).not.toContain("op def");
+  });
+});
+
+// Y-14: a researcher choosing a delivery representation must be able to tell two
+// register variants apart. `Kon` over 2018 in two populations is the case: with
+// distinct curator names the names do it (the shipped behavior), and when a curator
+// gave both the SAME name the concrete family slug does.
+describe("RepresentationPicker two-variant row identity (Y-14)", () => {
+  const PERIOD = { valid_from: "2018-01-01", valid_to: "2018-12-31" } as const;
+
+  /** ONE delivery column (or one each) over the same period in TWO populations, named
+   * by the curator as given — two distinct names, or the same name twice — as a band
+   * AND the matching one-node graph: two runs on one lane, the shape the ticket's own
+   * `/catalog/scb/lisa/kon?period=2018` leaf has, so the picker prefers its time-band
+   * mode. One spec builds both, so the rows and the cells cannot drift apart. */
+  function twoVariantFixture(
+    labels: [string, string],
+    columns: [string, string] = ["Kon", "Kon"],
+  ): { bands: PickerBand[]; graph: RelationshipGraph } {
+    const populations = [
+      { variant: "individer-15plus", label: labels[0], column: columns[0] },
+      { variant: "individer-16plus", label: labels[1], column: columns[1] },
+    ];
+    return {
+      bands: [
+        {
+          key: "scb/lisa/kon",
+          name: "Kön",
+          registerPrefix: "scb/lisa",
+          rows: pickerRepresentations(
+            populations.map((p, i) => ({
+              state_id: i + 1,
+              variant: p.variant,
+              variant_label: p.label,
+              delivery_column_name: p.column,
+              value_set_version_label: "",
+              value_set_id: null,
+              ...PERIOD,
+            })),
+          ),
+        } satisfies PickerBand,
+      ],
+      graph: graph({
+        nodes: [
+          graphNode("scb/lisa/kon", {
+            label: "Kön",
+            states: populations.map((p, i) =>
+              graphState({
+                state_id: i + 1,
+                representation_run_id: i + 1,
+                variant: p.variant,
+                variant_label: p.label,
+                delivery_column_name: p.column,
+                ...PERIOD,
+              }),
+            ),
+          }),
+        ],
+        focus_id: "scb/lisa/kon",
+      }),
+    };
+  }
+
+  /** The visible text of everything matching `sel`, whitespace-collapsed. */
+  function texts(sel: string): string[] {
+    return [...document.querySelectorAll(sel)].map((el) =>
+      (el.textContent ?? "").replace(/\s+/g, " ").trim(),
+    );
+  }
+
+  const ROWS = ".col-row.nested .row-btn";
+
+  it("distinct curator names identify the rows on their own — no slug added", async () => {
+    await render(RepresentationPicker, {
+      bands: twoVariantFixture(["Individer 15+", "Individer 16+"]).bands,
+      ...PROPS,
+    });
+
+    expect(texts(ROWS)).toEqual(["Individer 15+ 2018", "Individer 16+ 2018"]);
+    // The adaptive labeling is untouched: the shared column stays hoisted context
+    // and no row repeats an identifier it doesn't need.
+    expect(document.querySelector(".variant-key")).toBeNull();
+    await expect
+      .element(page.getByRole("checkbox", { name: "Individer 15+ 2018" }))
+      .toBeVisible();
+    await expect
+      .element(page.getByRole("checkbox", { name: "Individer 16+ 2018" }))
+      .toBeVisible();
+  });
+
+  it("identical curator names fall back to the variant slug, visibly and in the accessible name", async () => {
+    await render(RepresentationPicker, {
+      bands: twoVariantFixture(["Individer", "Individer"]).bands,
+      ...PROPS,
+    });
+
+    // Without the slug both rows read "Individer 2018" — the same choice twice.
+    expect(texts(ROWS)).toEqual([
+      "Individer individer-15plus 2018",
+      "Individer individer-16plus 2018",
+    ]);
+    expect(texts(".col-row.nested .variant-key")).toEqual([
+      "individer-15plus",
+      "individer-16plus",
+    ]);
+    // Each checkbox is reachable BY NAME — the keyboard/screen-reader identity of
+    // the two choices differs, not just their pixels.
+    await expect
+      .element(
+        page.getByRole("checkbox", { name: "Individer individer-15plus 2018" }),
+      )
+      .toBeVisible();
+    await expect
+      .element(
+        page.getByRole("checkbox", { name: "Individer individer-16plus 2018" }),
+      )
+      .toBeVisible();
+    // The variant FILTER offers the same two choices, so its values carry the same
+    // distinguisher rather than two pills reading "Individer".
+    expect(texts(".dim-filters .filter-pill")).toEqual([
+      "Individer individer-15plus",
+      "Individer individer-16plus",
+    ]);
+  });
+
+  it("stages the picked row's own variant when the two names are identical", async () => {
+    const onapply = vi.fn();
+    await render(RepresentationPicker, {
+      bands: twoVariantFixture(["Individer", "Individer"]).bands,
+      ...PROPS,
+      onapply,
+    });
+
+    await page
+      .getByRole("checkbox", { name: "Individer individer-16plus 2018" })
+      .click();
+    await page
+      .getByRole("button", {
+        name: /Add to project|Remove from project|Apply changes/,
+      })
+      .click();
+    expect(onapply).toHaveBeenCalledTimes(1);
+    // Row-to-binding matching is unchanged: the label only got clearer.
+    expect(onapply.mock.calls[0][0].adds).toHaveLength(1);
+    expect(onapply.mock.calls[0][0].adds[0].row.variant).toBe(
+      "individer-16plus",
+    );
+    expect(onapply.mock.calls[0][0].adds[0].row.column).toBe("Kon");
+  });
+
+  it("leaves graph mode for the list when only the variant key tells the rows apart", async () => {
+    await render(RepresentationPicker, {
+      ...twoVariantFixture(["Individer", "Individer"]),
+      ...PROPS,
+    });
+
+    // A graph cell carries the column, the coding and the window — never the
+    // population — so these two rows would be two identical checkboxes there. The
+    // picker uses the list, which can show the distinguishing family key.
+    await vi.waitFor(() => {
+      if (!document.querySelector(".col-list")) {
+        throw new Error("list picker not rendered");
+      }
+    });
+    expect(document.querySelector(".graph-picker")).toBeNull();
+    expect(texts(ROWS)).toEqual([
+      "Individer individer-15plus 2018",
+      "Individer individer-16plus 2018",
+    ]);
+    await expect
+      .element(
+        page.getByRole("checkbox", { name: "Individer individer-15plus 2018" }),
+      )
+      .toBeVisible();
+  });
+
+  it("keeps graph mode when the delivery column already tells the two rows apart", async () => {
+    await render(RepresentationPicker, {
+      ...twoVariantFixture(["Individer", "Individer"], ["Kon", "Sni"]),
+      ...PROPS,
+    });
+
+    // Same two curator names, but each population delivers its own column: the rows
+    // need no key, so the graph keeps its succession context.
+    await vi.waitFor(() => {
+      if (!document.querySelector(".graph-picker")) {
+        throw new Error("graph picker not rendered");
+      }
+    });
+    await expect
+      .element(page.getByRole("checkbox", { name: /Kon/ }))
+      .toBeVisible();
+    await expect
+      .element(page.getByRole("checkbox", { name: /Sni/ }))
+      .toBeVisible();
   });
 });
 

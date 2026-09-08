@@ -1571,6 +1571,14 @@ export interface PickerRowLabel {
   key: string;
   primary: { text: string; mono: boolean };
   qualifiers: string[];
+  /** The row's own variant-family SLUG, set ONLY when another row's whole visible
+   * projection reads exactly the same: curator names are not unique, so two variant
+   * families delivering one column over one period project onto two rows with
+   * identical visible text (and identical accessible names). The slug is the concrete
+   * identity behind `pickerRowVariantFamilyLabel`, so it is the smallest text that
+   * tells them apart (Y-14); null on every row the other dimensions already
+   * distinguish. */
+  variantKey: string | null;
   period: string | null;
 }
 
@@ -1607,6 +1615,30 @@ export function pickerRowVariantFamily(row: PickerRepresentation): string {
 
 export function pickerRowVariantFamilyLabel(row: PickerRepresentation): string {
   return row.variantFamilyLabel ?? row.variantLabel;
+}
+
+/** The display TEXT that TWO OR MORE distinct identities in `pairs` carry — the text
+ * that therefore identifies nothing on its own. A curator variant name is not unique,
+ * so two variant families can share one, and a picker row (or a variant filter value)
+ * showing only that name would stand for either. The picker puts the concrete identity
+ * back on exactly these — `pickerLabeling`'s `variantKey` and `pickerFilterDimensions`'
+ * variant values — and leaves every other label alone. */
+function collidingLabels(
+  pairs: Iterable<readonly [identity: string, label: string]>,
+): Set<string> {
+  const byLabel = new Map<string, Set<string>>();
+  for (const [identity, label] of pairs) {
+    const identities = byLabel.get(label) ?? new Set<string>();
+    identities.add(identity);
+    byLabel.set(label, identities);
+  }
+  const shared = new Set<string>();
+  for (const [label, identities] of byLabel) {
+    if (identities.size > 1) {
+      shared.add(label);
+    }
+  }
+  return shared;
 }
 
 /** The longest leading WORD-SEQUENCE (whitespace-split) shared by a MAJORITY
@@ -1719,7 +1751,7 @@ export function pickerLabeling(
     headerContext.push(stem);
   }
 
-  const labelRows = rows.map((r): PickerRowLabel => {
+  const projected = rows.map((r) => {
     // The varying dimensions, in display priority. Each is a candidate label.
     // Variance is keyed on the slug (`variant`, the identity), but the DISPLAYED
     // text is the variant's `variantLabel` (the curator name, slug-fallback).
@@ -1749,15 +1781,38 @@ export function pickerLabeling(
         : r.variant
           ? { text: pickerRowVariantFamilyLabel(r), mono: false }
           : { text: "—", mono: false });
-    return {
+    const label: PickerRowLabel = {
       key: r.key,
       primary,
       qualifiers: varying.slice(1).map((d) => d.text),
+      variantKey: null,
       period: periodVaries ? r.period : null,
+    };
+    return {
+      label,
+      family: pickerRowVariantFamily(r),
+      // Everything this row will SHOW, field by field (joined on a character no label
+      // can contain, so two rows match only field for field).
+      text: [label.primary.text, ...label.qualifiers, label.period ?? ""].join(
+        "\u0000",
+      ),
     };
   });
 
-  return { column, headerContext, rows: labelRows };
+  // A row shows only what VARIES, so two variant families a curator named alike vary
+  // in nothing they show — their rows read exactly alike. Give those rows their family
+  // slug back (see `variantKey`); a constant variant can't collide, and every row the
+  // other dimensions already tell apart keeps its label untouched.
+  if (variantVaries) {
+    const ambiguous = collidingLabels(projected.map((p) => [p.family, p.text]));
+    for (const p of projected) {
+      if (ambiguous.has(p.text)) {
+        p.label.variantKey = p.family;
+      }
+    }
+  }
+
+  return { column, headerContext, rows: projected.map((p) => p.label) };
 }
 
 // ── Picker dimension marking + filtering (#908) ──────────────────────────────
@@ -1792,7 +1847,15 @@ export interface PickerDimension {
    * selection state, this is the value-lookup key. */
   axis?: string;
   label: string;
-  values: { value: string; label: string }[];
+  values: {
+    value: string;
+    label: string;
+    /** Whether another value of this dimension carries the SAME `label` — then the
+     * picker shows this value's own key beside it, the distinguisher
+     * `PickerRowLabel.variantKey` puts on the rows the value narrows to (Y-14). Only a
+     * variant dimension sets it: elsewhere the value IS its label. */
+    sharedLabel?: boolean;
+  }[];
 }
 
 /** The facet a ROW carries on `axis` — looked up PER-COLUMN first, then BAND-LEVEL
@@ -1889,13 +1952,25 @@ export function pickerFilterDimensions(
       }
     }
     if (variantSeen.size >= 2) {
+      // Two families a curator named alike would otherwise be two identical filter
+      // values; the family key is the smallest text that tells them apart, exactly as
+      // it does on the rows they narrow to (`PickerRowLabel.variantKey`). Values with
+      // the same label then order by that key, so the strip stays deterministic.
+      const shared = collidingLabels(variantSeen.entries());
       out.push({
         kind: "variant",
         key: "variant",
         label: "Variant",
         values: [...variantSeen.entries()]
-          .map(([value, label]) => ({ value, label }))
-          .sort((a, b) => a.label.localeCompare(b.label)),
+          .map(([value, label]) =>
+            shared.has(label)
+              ? { value, label, sharedLabel: true }
+              : { value, label },
+          )
+          .sort(
+            (a, b) =>
+              a.label.localeCompare(b.label) || a.value.localeCompare(b.value),
+          ),
       });
     }
 
