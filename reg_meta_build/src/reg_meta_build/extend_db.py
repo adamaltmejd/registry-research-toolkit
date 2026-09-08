@@ -794,9 +794,9 @@ def extend_db(
 
     Mirrors ``build_db``'s file discipline: copy the base DB to a ``.tmp``,
     insert on the copy (``foreign_keys=OFF`` during inserts, FK-check before
-    commit), run ``pre_rename_hook`` against the tmp, then atomically rotate +
-    rename into place. No VACUUM (the overlay is insert-only — see the commit
-    block). The base DB is a READ-ONLY input, never mutated.
+    commit), run ``pre_rename_hook`` against the tmp, then ``publish_db`` it
+    into place. No VACUUM (the overlay is insert-only — see the commit block).
+    The base DB is a READ-ONLY input, never mutated.
 
     ``steward`` selects the steward slug dir
     (``reg_meta_build/fqid_slugs/<steward>/`` from a repo checkout) unless
@@ -809,7 +809,7 @@ def extend_db(
         _populate_fts,
         _progress,
         _unlink_wal_sidecars,
-        rotate_db_to_prev,
+        publish_db,
     )
     from .fqid_slugs import populate_slugs, populate_variable_slugs
 
@@ -826,10 +826,10 @@ def extend_db(
             remediation="Pass --base-db pointing at a released reg_meta.db.",
         )
 
-    # The base DB is a READ-ONLY input, but the end-of-run `rotate_db_to_prev`
-    # moves whatever sits at the output path aside — so if `--base-db` resolves
-    # to the output `reg_meta.db`, that rotate would silently move the "read-only"
-    # base. Reject the overlap up front.
+    # The base DB is a READ-ONLY input, but the end-of-run publication replaces
+    # whatever sits at the output path — so if `--base-db` resolves to the output
+    # `reg_meta.db`, that publish would silently overwrite the "read-only" base.
+    # Reject the overlap up front.
     if base_db == (db_dir / DB_FILENAME):
         raise RegMetaError(
             exit_code=EXIT_CONFIG,
@@ -961,9 +961,7 @@ def extend_db(
             _unlink_wal_sidecars(tmp_path)
             raise
 
-    _unlink_wal_sidecars(tmp_path)
-    rotate_db_to_prev(final_path)
-    tmp_path.rename(final_path)
+    publish_db(tmp_path, final_path)
     _progress(f"Flavored database written to {final_path}")
 
     # The contract return is the int counts dict; `db_path` rides alongside for

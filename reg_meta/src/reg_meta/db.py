@@ -425,8 +425,9 @@ def open_db(
     # inode in place — `reg-meta update` installs via tmp-file + atomic rename
     # (a reader holding the old inode keeps reading a consistent, now-unlinked
     # file), and the only other writer, maintainer-local `reg-meta-build build-db`,
-    # ALSO writes a `.db.tmp` and renames it over the default path
-    # (reg_meta_build.db.build_db: `tmp_path.rename(final_path)`). No code path
+    # ALSO writes a `.db.tmp` and replaces the default path with it
+    # (reg_meta_build.db.publish_db: one `Path.replace` onto the live name, after
+    # the replaced generation is hard-linked aside to `.prev`). No code path
     # mutates the live inode under a reader, so the immutability contract holds.
     conn = sqlite3.connect(f"file:{db_path}?mode=ro&immutable=1", uri=True)
     conn.row_factory = sqlite3.Row

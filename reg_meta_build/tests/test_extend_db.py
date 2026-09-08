@@ -23,7 +23,7 @@ from typing import TYPE_CHECKING
 
 import pytest
 from _csv_fixtures import write_scb_input
-from _shared_fixtures import _write_fixture_slug_dir
+from _shared_fixtures import _write_fixture_slug_dir, fail_replace_onto
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta_build.db import build_db
 from reg_meta_build.extend_db import (
@@ -1156,8 +1156,8 @@ class TestFailurePaths:
         assert exc.value.code == "extend_base_db_not_found"
 
     def test_base_db_equals_output_path(self, tmp_path: Path, global_db: Path) -> None:
-        # If --base-db resolves to <db_dir>/reg_meta.db, the end-of-run rotate
-        # would move the "read-only" base aside — reject up front.
+        # If --base-db resolves to <db_dir>/reg_meta.db, the end-of-run publish
+        # would overwrite the "read-only" base — reject up front.
         import shutil
 
         out = tmp_path / "out"
@@ -1212,9 +1212,35 @@ class TestFailurePaths:
                 pre_rename_hook=hook,
             )
         # The staging tmp is removed and no final DB was written (nothing to
-        # rotate — this is a first overlay into a fresh dir).
+        # preserve — this is a first overlay into a fresh dir).
         assert not (out / "reg_meta.db.tmp").exists()
         assert not (out / "reg_meta.db").exists()
+
+    def test_failed_final_replacement_keeps_live_db(
+        self, tmp_path: Path, global_db: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """Y-52: extend publishes through the same `publish_db` as build, so a
+        failing final replacement leaves the live flavored DB at its own path
+        with its original bytes."""
+        inv_path = tmp_path / "inv.json"
+        inv_path.write_text(json.dumps(_base_inventory()), encoding="utf-8")
+        out = tmp_path / "out"
+        out.mkdir()
+        live = out / "reg_meta.db"
+        live_bytes = b"LIVE-FLAVORED-GENERATION-MUST-SURVIVE"
+        live.write_bytes(live_bytes)
+        fail_replace_onto(monkeypatch, live)
+
+        with pytest.raises(OSError, match="injected replacement failure"):
+            extend_db(
+                base_db=global_db,
+                inventory_path=inv_path,
+                db_dir=out,
+                steward=_STEWARD,
+                skip_slugs=True,
+            )
+
+        assert live.read_bytes() == live_bytes
 
     def test_skip_slugs_leaves_null_slugs(
         self, tmp_path: Path, global_db: Path

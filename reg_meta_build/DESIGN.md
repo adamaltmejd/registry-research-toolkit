@@ -696,13 +696,17 @@ catalog:
   (`adapter_warning`, the `IRWarning` sink). (Source-file checksums and row counts are
   not duplicated here — they live in the shipped `import_manifest`.)
 
-Both the universal and provenance DBs rotate one generation on rebuild
-(`rotate_db_to_prev`): `reg_meta.db` → `reg_meta.db.prev`, evicting any prior `.prev`.
-No auto-cleanup of older generations — a maintainer who wants to keep more than one
-`mv`s the `.prev` aside. The provenance write is wrapped non-fatally: a provenance
-failure must not flip the build exit code. Confinement is enforced cross-package — The
-provenance DB is build-side only — the future MONA runner reads only `reg_schema`
-validated `project_data.json`, not the catalog or provenance DBs (see ARCHITECTURE.md).
+Both the universal and provenance DBs are published by the same `publish_db`: the live
+generation is hard-linked aside to `<db>.prev` (evicting any prior `.prev`) and the
+staged build is then installed by ONE atomic `Path.replace`. The live name never
+disappears — a backup or replacement failure leaves the previous generation in place
+under its own name, which a rotate-then-rename could not (its window left the live name
+absent with only `.prev` and the staging file on disk). No auto-cleanup of older
+generations — a maintainer who wants to keep more than one `mv`s the `.prev` aside. The
+provenance write is wrapped non-fatally: a provenance failure must not flip the build
+exit code. Confinement is enforced cross-package — The provenance DB is build-side only
+— the future MONA runner reads only `reg_schema` validated `project_data.json`, not the
+catalog or provenance DBs (see ARCHITECTURE.md).
 
 ## Deterministic ID minting
 
@@ -763,8 +767,9 @@ build time). Two properties keep it cheap without changing output:
   schema — PRAGMAs are per-database and do not propagate to a database attached after
   they were set; `journal_mode` also requires autocommit, so a `commit()` precedes the
   staging PRAGMAs). This is safe **only** because the build writes to a temp file and
-  atomically renames on success, unlinking it on any failure — there is nothing to
-  crash-recover. Never reuse this connection config to open the published DB.
+  atomically replaces the live DB with it on success, unlinking it on any failure —
+  there is nothing to crash-recover. Never reuse this connection config to open the
+  published DB.
 
 `--timing` (or `REG_META_BUILD_TIMING=1`) emits per-stage `[timing] <stage>: <s>` lines
 to stderr — a profiler-free way to see where build time goes. Off by default.
@@ -2759,8 +2764,9 @@ input, never mutated), then runs an insert-only overlay on the copy:
    entity-key curation gate runs against the steward slug dir, scoped to the steward
    providers it covers. The CLI resolves the steward slug dir once and passes the same
    value to both `extend_db` and the hook.
-6. **Atomic rotate + rename** into `<db_dir>/reg_meta.db` (same `rotate_db_to_prev`
-   discipline as `build-db`). No VACUUM — the overlay is insert-only; nothing is freed.
+6. **Publish** into `<db_dir>/reg_meta.db` via the same `publish_db` as `build-db` (back
+   the live generation up to `.prev`, then one atomic replace). No VACUUM — the overlay
+   is insert-only; nothing is freed.
 
 No `SCHEMA_VERSION` bump — rows on existing tables only.
 

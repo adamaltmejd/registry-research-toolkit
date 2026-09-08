@@ -1494,8 +1494,8 @@ def create_empty_provenance_db(path: Path) -> None:
 
     Applies `PROVENANCE_DDL` and nothing else; `write_provenance_db` is the
     populating variant A4.2 wires into the build. Refuses to overwrite an
-    existing file — callers must `rotate_db_to_prev` first — to keep the
-    rotation contract obvious.
+    existing file — callers write a staging path and `publish_db` it — to keep
+    the publication contract obvious.
     """
     if path.exists():
         raise RegMetaError(
@@ -1503,7 +1503,7 @@ def create_empty_provenance_db(path: Path) -> None:
             code="provenance_db_exists",
             error_class="configuration",
             message=f"Provenance DB already exists: {path}",
-            remediation="Call rotate_db_to_prev first, or delete the file.",
+            remediation="Write a staging path and publish it, or delete the file.",
         )
     conn = sqlite3.connect(path)
     try:
@@ -1519,7 +1519,7 @@ def write_provenance_db(path: Path, payload: dict[str, Any]) -> None:
     `payload` is the dict `materialize()` collects (provenance IR objects,
     warning IR objects, the SCB register-name map) plus the finalized
     universal-DB sha256/path the caller stamps in after the swap. Refuses to
-    overwrite (rotate first), mirroring
+    overwrite (write a staging path, then `publish_db` it), mirroring
     `create_empty_provenance_db`. The caller wraps this in a non-fatal
     try/except: a provenance write failure must NOT flip the build exit code,
     since the universal DB is already swapped in.
@@ -1530,7 +1530,7 @@ def write_provenance_db(path: Path, payload: dict[str, Any]) -> None:
             code="provenance_db_exists",
             error_class="configuration",
             message=f"Provenance DB already exists: {path}",
-            remediation="Call rotate_db_to_prev first, or delete the file.",
+            remediation="Write a staging path and publish it, or delete the file.",
         )
     conn = sqlite3.connect(path)
     try:
@@ -1570,37 +1570,49 @@ def write_provenance_db(path: Path, payload: dict[str, Any]) -> None:
         conn.close()
 
 
-def rotate_db_to_prev(db_path: Path) -> None:
-    """Rename `<db_path>` to `<db_path>.prev`, evicting any prior `.prev`.
-
-    Used before the materializer writes the new universal DB / provenance
-    DB so a single previous generation survives a rebuild. No auto-cleanup
-    of older generations — maintainers `mv` the `.prev` aside if they
-    want to keep more than one.
-
-    No-op if `<db_path>` does not exist (first-ever build).
-    """
-    if not db_path.exists():
-        return
-    prev_path = db_path.with_suffix(db_path.suffix + ".prev")
-    # Drop the previous-generation file if present — single-generation
-    # rotation, per spec. SCB rebuilds are coarse, so an explicit "you
-    # asked for this" rename overwrite is fine.
-    if prev_path.exists():
-        prev_path.unlink()
-    db_path.rename(prev_path)
-
-
 def _unlink_wal_sidecars(db_path: Path) -> None:
     """Remove a SQLite DB's WAL `-wal`/`-shm` sidecar files if present.
 
     A clean `close()` deletes them, but a subsequent read-only open
     (`open_db(..., mode=ro)`) re-creates them, and a read-only close leaves
-    them on disk. They must be cleared before an atomic base-file rename,
+    them on disk. They must be cleared before an atomic base-file replace,
     which moves only `<db>` and would otherwise orphan `<db>-wal`/`<db>-shm`.
     """
     for sidecar in ("-wal", "-shm"):
         db_path.with_name(db_path.name + sidecar).unlink(missing_ok=True)
+
+
+def publish_db(tmp_path: Path, final_path: Path) -> None:
+    """Install the staged DB at `tmp_path` as the live DB at `final_path`.
+
+    The single publication step shared by `build_db` (universal + provenance)
+    and `extend_db`. Callers finish building and validating the staged file
+    first; this only publishes it.
+
+    The live name must never disappear: readers hold `<final_path>` while a
+    maintainer rebuilds, so the previous generation is preserved by
+    HARD-LINKING it aside to `<final_path>.prev` — the published file is
+    immutable and a link is O(1) on a multi-GB DB — and the new generation is
+    then installed by ONE atomic `Path.replace`. Both failure modes leave the
+    live DB present with its original bytes: a failing backup raises before
+    the replace, and a failing replace never touched the live name.
+
+    `.prev` keeps a single previous generation (any prior one is evicted), with
+    no auto-cleanup of older ones — maintainers `mv` the `.prev` aside if they
+    want to keep more than one. It is the weaker promise: a failure after the
+    eviction leaves it missing or holding the still-live generation, and the
+    re-run restores it. The live DB is what must survive.
+
+    The staged file's WAL sidecars are dropped first (see
+    `_unlink_wal_sidecars`) — the post-build validator's read-only open leaves
+    them behind, and the replace moves only the base file.
+    """
+    _unlink_wal_sidecars(tmp_path)
+    if final_path.exists():
+        prev_path = final_path.with_name(final_path.name + ".prev")
+        prev_path.unlink(missing_ok=True)
+        prev_path.hardlink_to(final_path)
+    tmp_path.replace(final_path)
 
 
 # ---------------------------------------------------------------------------
@@ -5132,13 +5144,14 @@ def build_db(
         staging_path.unlink()
 
     conn = sqlite3.connect(tmp_path)
-    # The build writes to a temp file and atomically renames on success,
-    # unlinking it on ANY failure (see `finally` below) — there is nothing to
-    # crash-recover, so journaling + fsync buy the artifact nothing. journal_mode
-    # OFF + synchronous OFF drop both (the bulk of the ~10% wall win is removed
-    # fsync/journal I/O); the page-cache bump keeps the heavy index maintenance
-    # and DISTINCT/ORDER-BY sorts off disk. Safe ONLY because of temp-then-rename
-    # — do not copy this config to a connection that opens the published DB.
+    # The build writes to a temp file and atomically replaces the live DB with
+    # it on success, unlinking it on ANY failure (see `finally` below) — there is
+    # nothing to crash-recover, so journaling + fsync buy the artifact nothing.
+    # journal_mode OFF + synchronous OFF drop both (the bulk of the ~10% wall win
+    # is removed fsync/journal I/O); the page-cache bump keeps the heavy index
+    # maintenance and DISTINCT/ORDER-BY sorts off disk. Safe ONLY because of
+    # temp-then-publish — do not copy this config to a connection that opens the
+    # published DB.
     conn.execute("PRAGMA journal_mode=OFF")
     conn.execute("PRAGMA synchronous=OFF")
     conn.execute(f"PRAGMA cache_size={_BUILD_PAGE_CACHE_KIB}")  # ~2 GiB main page cache
@@ -5331,7 +5344,7 @@ def build_db(
             tmp_path.unlink(missing_ok=True)
 
     # Pre-rename hook runs against the staging DB so a failing check
-    # can abort *before* the atomic rename replaces the installed DB.
+    # can abort *before* the publication replaces the installed DB.
     # If the hook raises, drop the tmp file and let the prior DB stand.
     if pre_rename_hook is not None:
         try:
@@ -5341,33 +5354,21 @@ def build_db(
             _unlink_wal_sidecars(tmp_path)
             raise
 
-    # The build connection's clean close deletes the WAL `-wal`/`-shm` sidecars,
-    # but the post-build validator re-opens the tmp DB read-only and SQLite
-    # re-creates them — a read-only close then leaves them on disk. The atomic
-    # rename below moves only the base file, so without this they orphan in the
-    # DB dir as `<db>.tmp-wal`/`<db>.tmp-shm`. (Drop them whether or not a hook
-    # ran; it's a no-op when none did.)
-    _unlink_wal_sidecars(tmp_path)
-
-    # Rotate the prior universal DB aside before the atomic replace
-    # (single-generation `.prev`, no auto-cleanup).
-    rotate_db_to_prev(final_path)
-    tmp_path.rename(final_path)
+    publish_db(tmp_path, final_path)
 
     # Sibling provenance DB population (A4.2). Runs AFTER the universal swap so
-    # build_manifest can carry the FINALIZED universal-DB sha256. Mirrors the
-    # universal DB's atomicity: populate a tmp file → rotate the prior live
-    # provenance DB aside → rename the tmp into place. The provenance DB is a
-    # SEPARATE file dbdiff never opens, so none of this touches the gate.
+    # build_manifest can carry the FINALIZED universal-DB sha256, and publishes
+    # the same way. The provenance DB is a SEPARATE file dbdiff never opens, so
+    # none of this touches the gate.
     #
     # Wrapped in try/except: this runs AFTER the universal DB has already been
     # swapped in, so any failure here (disk full, perms, a provenance write
     # bug) must NOT flip the build's exit code — the primary artifact already
     # succeeded. Surface as a warning instead; the provenance DB is cheap to
     # recreate by re-running the build. (Known limitation: on a REBUILD, a
-    # failure before the rotate leaves the PRIOR live provenance DB in place,
-    # now stale vs the new universal generation, until the re-run — acceptable
-    # for maintainer-only debug data; A4.4+ may harden the failure path.)
+    # failure leaves the PRIOR live provenance DB in place, now stale vs the new
+    # universal generation, until the re-run — acceptable for maintainer-only
+    # debug data.)
     provenance_path = db_dir / PROVENANCE_DB_FILENAME
     provenance_tmp = provenance_path.with_suffix(".db.tmp")
     try:
@@ -5391,8 +5392,7 @@ def build_db(
         # failure never poisons the already-swapped universal DB.
         if provenance_pre_rename_hook is not None:
             provenance_pre_rename_hook(provenance_tmp)
-        rotate_db_to_prev(provenance_path)
-        provenance_tmp.rename(provenance_path)
+        publish_db(provenance_tmp, provenance_path)
     except Exception as e:  # noqa: BLE001 — provenance is non-fatal; the
         # universal DB is already swapped in. Catch BROADLY (not just
         # OSError/RegMetaError): a provenance write bug must never flip the

@@ -21,6 +21,7 @@ from _csv_fixtures import (
     write_csv,
     write_scb_input,
 )
+from _shared_fixtures import fail_replace_onto
 from reg_meta.db import SCHEMA_VERSION, get_manifest, open_db
 from reg_meta.errors import RegMetaError
 from reg_meta.queries import extract_year
@@ -136,7 +137,7 @@ class TestBuildDb:
     def test_validator_open_leaves_no_wal_sidecars(self, tmp_path: Path):
         # The build connection's clean close deletes the WAL `-wal`/`-shm`
         # sidecars, but the post-build validator re-opens the tmp DB read-only
-        # and SQLite re-creates them; the atomic rename moves only the base
+        # and SQLite re-creates them; the atomic replace moves only the base
         # file, so without cleanup they orphan as `reg_meta.db.tmp-wal`/`-shm`.
         # The shared `fixture_db` passes no hook, so it can't catch this — drive
         # build_db with a read-only-opening hook (the real CLI path).
@@ -914,6 +915,33 @@ class TestBuildDb:
             skip_slugs=True,
         )
         assert Path(result2["db_path"]).exists()
+
+    def test_failed_final_replacement_keeps_live_db(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ):
+        """Y-52: `build_db` publishes through `publish_db`, so a failing final
+        replacement leaves the live catalog at its own path with its original
+        bytes."""
+        input_dir = tmp_path / "input"
+        db_dir = tmp_path / "db"
+        input_dir.mkdir()
+        db_dir.mkdir()
+        write_scb_input(input_dir)
+
+        live = db_dir / "reg_meta.db"
+        live_bytes = b"LIVE-GENERATION-MUST-SURVIVE"
+        live.write_bytes(live_bytes)
+        fail_replace_onto(monkeypatch, live)
+
+        with pytest.raises(OSError, match="injected replacement failure"):
+            build_db(
+                input_dir=input_dir,
+                db_dir=db_dir,
+                skip_classifications=True,
+                skip_slugs=True,
+            )
+
+        assert live.read_bytes() == live_bytes
 
 
 class TestBuildDbErrors:
@@ -4518,9 +4546,10 @@ class TestReplacedByEdges:
             conn.close()
 
 
-class TestProvenanceDbRotation:
-    """A4.2: the universal DB and the sibling provenance DB rotate to `.prev`
-    in lockstep, and a provenance-write failure never poisons the universal DB.
+class TestProvenanceDbPublication:
+    """A4.2: the universal DB and the sibling provenance DB keep their prior
+    generation at `.prev` in lockstep, and a provenance-write failure never
+    poisons the universal DB.
     """
 
     def _build_once(self, input_dir: Path, db_dir: Path, **kwargs) -> None:
@@ -4532,7 +4561,7 @@ class TestProvenanceDbRotation:
             **kwargs,
         )
 
-    def test_both_dbs_rotate_in_lockstep(self, tmp_path: Path) -> None:
+    def test_both_dbs_keep_prior_generation_in_lockstep(self, tmp_path: Path) -> None:
         input_dir = tmp_path / "input"
         db_dir = tmp_path / "db"
         write_scb_input(input_dir)
@@ -4543,14 +4572,14 @@ class TestProvenanceDbRotation:
         gen1_universal = universal.read_bytes()
         gen1_prov = prov.read_bytes()
 
-        # Second build rotates gen-1 aside into `.prev`.
+        # Second build preserves gen-1 at `.prev`.
         self._build_once(input_dir, db_dir)
         universal_prev = db_dir / "reg_meta.db.prev"
         prov_prev = db_dir / "reg_meta.provenance.db.prev"
 
         assert universal.exists() and prov.exists()
         assert universal_prev.exists() and prov_prev.exists()
-        # `.prev` carries gen-1 (rotation moved gen-1 aside, not gen-2).
+        # `.prev` carries gen-1 (the generation replaced, not the new one).
         assert universal_prev.read_bytes() == gen1_universal
         assert prov_prev.read_bytes() == gen1_prov
 

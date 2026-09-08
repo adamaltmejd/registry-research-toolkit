@@ -1,12 +1,13 @@
 """Contract tests for the A1.3 IR module + adapter scaffolding.
 
 These tests verify only the scaffolding: import surface, round-trip,
-Protocol conformance, provenance DB schema, and `.prev` rotation.
+Protocol conformance, provenance DB schema, and DB publication.
 Concrete adapter wiring lives in later stages (A4.x).
 """
 
 from __future__ import annotations
 
+import os
 import sqlite3
 from datetime import date
 from typing import TYPE_CHECKING, Protocol, get_type_hints, runtime_checkable
@@ -17,7 +18,7 @@ from reg_meta.errors import RegMetaError
 from reg_meta_build.db import (
     PROVENANCE_DB_FILENAME,
     create_empty_provenance_db,
-    rotate_db_to_prev,
+    publish_db,
 )
 from reg_meta_build.ir import (
     IRClassification,
@@ -301,33 +302,83 @@ def test_irobject_union_covers_every_ir_class() -> None:
     )
 
 
-def test_rotate_db_to_prev_renames_existing_file(tmp_path: Path) -> None:
-    db = tmp_path / "reg_meta.db"
-    db.write_bytes(b"current generation")
-
-    rotate_db_to_prev(db)
-
-    assert not db.exists()
-    assert (tmp_path / "reg_meta.db.prev").read_bytes() == b"current generation"
-
-
-def test_rotate_db_to_prev_evicts_older_prev(tmp_path: Path) -> None:
-    """A second rotation overwrites the previous `.prev` — single-generation."""
-    db = tmp_path / "reg_meta.db"
+def test_publish_db_installs_new_bytes_and_keeps_prior_generation(
+    tmp_path: Path,
+) -> None:
+    """The live path carries the staged bytes; `.prev` carries the generation it
+    replaced, evicting whatever older `.prev` was there — single-generation."""
+    live = tmp_path / "reg_meta.db"
     prev = tmp_path / "reg_meta.db.prev"
-    db.write_bytes(b"gen-2")
+    staged = tmp_path / "reg_meta.db.tmp"
+    live.write_bytes(b"gen-2")
     prev.write_bytes(b"gen-1-old")
+    staged.write_bytes(b"gen-3")
 
-    rotate_db_to_prev(db)
+    publish_db(staged, live)
 
-    assert not db.exists()
+    assert live.read_bytes() == b"gen-3"
     assert prev.read_bytes() == b"gen-2"
+    assert not staged.exists()
 
 
-def test_rotate_db_to_prev_no_op_when_missing(tmp_path: Path) -> None:
-    """First-ever build: nothing to rotate, no error."""
-    rotate_db_to_prev(tmp_path / "does_not_exist.db")
-    assert not (tmp_path / "does_not_exist.db.prev").exists()
+def test_publish_db_first_generation_writes_no_prev(tmp_path: Path) -> None:
+    """First-ever build: nothing live to preserve, no error, no `.prev`."""
+    live = tmp_path / "reg_meta.db"
+    staged = tmp_path / "reg_meta.db.tmp"
+    staged.write_bytes(b"gen-1")
+
+    publish_db(staged, live)
+
+    assert live.read_bytes() == b"gen-1"
+    assert not (tmp_path / "reg_meta.db.prev").exists()
+
+
+def test_publish_db_backup_failure_leaves_live_db_intact(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Y-52: a failing backup must abort BEFORE the replace — the live catalog
+    keeps its name and its original bytes, and readers never see it absent."""
+    live = tmp_path / "reg_meta.db"
+    staged = tmp_path / "reg_meta.db.tmp"
+    live.write_bytes(b"live generation")
+    staged.write_bytes(b"new generation")
+
+    def _boom(*_args: object, **_kwargs: object) -> None:
+        raise OSError("injected backup failure")
+
+    # `Path.hardlink_to` resolves `os.link` at call time, so this reaches the
+    # backup step inside `publish_db`.
+    monkeypatch.setattr(os, "link", _boom)
+
+    with pytest.raises(OSError, match="injected backup failure"):
+        publish_db(staged, live)
+
+    assert live.read_bytes() == b"live generation"
+
+
+def test_publish_db_replace_failure_leaves_live_db_intact(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Y-52: a failing final replacement must not have moved the live catalog
+    out of the way first — the old rotate-then-rename left the live name absent
+    with only `.prev` + staging on disk."""
+    live = tmp_path / "reg_meta.db"
+    staged = tmp_path / "reg_meta.db.tmp"
+    live.write_bytes(b"live generation")
+    staged.write_bytes(b"new generation")
+
+    def _boom(*_args: object, **_kwargs: object) -> None:
+        raise OSError("injected replace failure")
+
+    # `Path.replace` resolves `os.replace` at call time (same seam as the
+    # backup test above).
+    monkeypatch.setattr(os, "replace", _boom)
+
+    with pytest.raises(OSError, match="injected replace failure"):
+        publish_db(staged, live)
+
+    assert live.read_bytes() == b"live generation"
+    assert staged.read_bytes() == b"new generation"
 
 
 def test_create_empty_provenance_db_schema(tmp_path: Path) -> None:
@@ -371,7 +422,7 @@ def test_create_empty_provenance_db_schema(tmp_path: Path) -> None:
 
 
 def test_create_empty_provenance_db_refuses_to_overwrite(tmp_path: Path) -> None:
-    """The helper refuses to clobber an existing file — caller must rotate first."""
+    """The helper refuses to clobber an existing file — caller stages + publishes."""
     path = tmp_path / PROVENANCE_DB_FILENAME
     create_empty_provenance_db(path)
     # RegMetaError is a dataclass-based Exception with an empty str(); the

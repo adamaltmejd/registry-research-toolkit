@@ -4,6 +4,7 @@ suites. Both conftests import these via the on-`sys.path` bare-name path
 
 from __future__ import annotations
 
+import os
 import sqlite3
 from typing import TYPE_CHECKING
 
@@ -27,6 +28,25 @@ def connect_built_db(db: Path | str) -> sqlite3.Connection:
     conn = sqlite3.connect(str(db))
     register_py_lower(conn)
     return conn
+
+
+def fail_replace_onto(monkeypatch: pytest.MonkeyPatch, live: Path) -> None:
+    """Make the final publication replacement onto `live` fail (Y-52).
+
+    `db.publish_db` installs a staged DB with one `Path.replace`, which
+    delegates to `os.replace` — so patching that, keyed on the destination,
+    injects the replacement failure and leaves every other replace alone.
+    The raised message is `injected replacement failure`.
+    """
+    real_replace = os.replace
+    live_target = str(live.resolve())
+
+    def _fail_on_live(src, dst, **kwargs):
+        if os.fspath(dst) == live_target:
+            raise OSError("injected replacement failure")
+        return real_replace(src, dst, **kwargs)
+
+    monkeypatch.setattr(os, "replace", _fail_on_live)
 
 
 @pytest.fixture(scope="session", autouse=True)
