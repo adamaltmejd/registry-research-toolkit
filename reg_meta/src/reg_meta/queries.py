@@ -786,9 +786,9 @@ def search(
     # MATCH expression built from the raw query — quoted prefix terms that
     # neutralize FTS operators and won't error on stray syntax (see
     # `_fts_match_query`). LIKE paths use an escaped substring pattern so user
-    # `%` / `_` input stays literal; the two direct arms additionally fold BOTH
-    # sides through `py_lower` (see DESIGN.md → FTS5 configuration). None = the
-    # query had no usable token, so the FTS indexes contribute nothing.
+    # `%` / `_` input stays literal; the arms over authored text additionally
+    # fold BOTH sides through `py_lower` (see DESIGN.md → FTS5 configuration).
+    # None = the query had no usable token, so the FTS indexes contribute nothing.
     fts_query = _fts_match_query(query)
 
     # BOTH classification surfaces — the name-FTS arm and the code-containment arm
@@ -2356,12 +2356,19 @@ def _search_group_labels(
     (they carry no validity window). `type == "register"` excludes groups
     entirely; `type == "classification"` excludes variable groups. Under a
     `year_range` (--years), a variable group needs at least one member state
-    overlapping the range — the group itself has no validity window."""
+    overlapping the range — the group itself has no validity window.
+
+    The LABEL is authored text, so it folds through `py_lower` like the other
+    authored-text arms (see the `like_pattern` note in `search`); the ASCII
+    `group_key` beside it stays on SQLite's own LIKE."""
     if type in ("register", "value") or (
         type == "classification" and year_range is not None
     ):
         return []
-    filters = ["(g.label LIKE ? ESCAPE '\\' OR g.group_key LIKE ? ESCAPE '\\')"]
+    filters = [
+        "py_lower(g.label) LIKE py_lower(?) ESCAPE '\\' "
+        "OR g.group_key LIKE ? ESCAPE '\\'"
+    ]
     params: list[Any] = [like_pattern, like_pattern]
     if reg_ids:
         filters.append(

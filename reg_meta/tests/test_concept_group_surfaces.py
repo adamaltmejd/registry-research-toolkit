@@ -286,6 +286,18 @@ class TestSearchFolding:
         assert group.matched_count == 0
         assert group.member_count == 3
 
+    def test_group_label_matches_in_any_swedish_case(self) -> None:
+        conn = _seeded_conn()
+        # 'per månad' is label-only text, so this exercises the label arm alone.
+        # SQLite's own LIKE case-insensitivity is ASCII-only, which used to let
+        # 'per månad' find the family while 'PER MÅNAD' found nothing.
+        for query in ("per månad", "PER MÅNAD", "Per Månad"):
+            results = search(conn, query, field="varname").results
+            assert [r.type for r in results] == ["group"], query
+            (group,) = results
+            assert group.group_key == "agiink", query
+            assert group.label_matched is True, query
+
     def test_group_label_like_metacharacters_match_literally(self) -> None:
         conn = _seeded_conn()
         groups = (
