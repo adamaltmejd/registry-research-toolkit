@@ -635,6 +635,12 @@ jobs:
       cancel-in-progress: false
     steps:
       - uses: actions/checkout@v7.0.1
+      # Node as well as bun: `openapi-typescript` and `vite` are
+      # `#!/usr/bin/env node` launchers, so the runner's ambient node would
+      # otherwise build the deployed bundle. Same pin as ci.yml.
+      - uses: actions/setup-node@v7.0.0
+        with:
+          node-version: "26.8.1"
       # Pinned to the same bun `reg_webapp/Dockerfile`'s frontend stage uses —
       # bump both together. A floating toolchain here would make the production
       # SPA bundle non-reproducible while the image-baked copy stays pinned.
@@ -722,6 +728,9 @@ jobs:
       cancel-in-progress: false
     steps:
       - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-node@v7.0.0
+        with:
+          node-version: "26.8.1"
       - uses: oven-sh/setup-bun@v2.2.0
         with:
           bun-version: "1.4.2"

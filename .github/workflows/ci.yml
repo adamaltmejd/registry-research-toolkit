@@ -82,6 +82,14 @@ jobs:
         working-directory: reg_webapp/frontend
     steps:
       - uses: actions/checkout@v7.0.1
+      # The frontend bins (biome, svelte-check, vitest, vite, openapi-typescript)
+      # are `#!/usr/bin/env node` launchers, so bun does not decide the runtime
+      # they get: without this step the gates run on whatever node the runner
+      # happens to ship, and stop exercising the one `.yard/Dockerfile` bakes.
+      # Pinned to that exact version — bump both together.
+      - uses: actions/setup-node@v7.0.0
+        with:
+          node-version: "26.8.1"
       - uses: oven-sh/setup-bun@v2.2.0
         with:
           bun-version: "1.4.2"
