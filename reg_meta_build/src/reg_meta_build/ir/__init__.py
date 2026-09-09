@@ -172,33 +172,18 @@ class IRVariableAlias(_IRBase):
 
 
 class IRValueCode(_IRBase):
-    # The universal `value_code.code_id` (explicit PK, per the IRAdapter
-    # contract). value_code is deduplicated by (code, label) across all
-    # value_sets, so the same code_id recurs across IRValueSets that share a
-    # code — the materializer INSERT-OR-IGNOREs value_code on this PK and writes
-    # one value_set_member (value_set_id, code_id) per appearance.
+    # NOT part of the emitted stream: the value tables are adapter-written, not
+    # IR-carried (see DESIGN.md → Materializer). This is the SOS adapter's
+    # carrier for a state's PENDING code list, buffered until the survivor write
+    # — so `code_id` / `value_set_id` are placeholder zeros that
+    # `_ensure_value_set` assigns at write-back, when it dedups `value_code` by
+    # (code, label) and writes one `value_set_member` row per appearance.
     code_id: int
     value_set_id: int
     code: str
     label: str
     valid_from: str | None  # per-code temporal validity (ISO 8601)
     valid_to: str | None
-
-
-class IRValueSet(_IRBase):
-    value_set_id: int
-    # Raw 32-byte SHA-256 digest of the normalized code list; dedup key.
-    # Materializer writes this verbatim into universal
-    # `value_set.member_hash`, which is a BLOB with
-    # `CHECK (length(member_hash) = 32)`. Adapters compute via
-    # `reg_meta_build.db._value_set_hash` (which returns `bytes`); the
-    # IR contract carries raw bytes to keep wire and storage encodings
-    # identical — no hex encode/decode at the boundary.
-    member_hash: bytes
-    # Set when this value_set is a (possibly year-projected) subset of a
-    # named classification:
-    classification_id: int | None
-    codes: tuple[IRValueCode, ...]
 
 
 class IRClassification(_IRBase):
@@ -267,7 +252,6 @@ __all__ = [
     "IRRegister",
     "IRReplacedByEdge",
     "IRValueCode",
-    "IRValueSet",
     "IRVariable",
     "IRVariableAlias",
     "IRVariableState",

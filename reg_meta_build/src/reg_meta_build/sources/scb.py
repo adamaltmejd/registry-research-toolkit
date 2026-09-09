@@ -32,7 +32,7 @@ import sqlite3
 import tempfile
 from collections import Counter, defaultdict
 from dataclasses import dataclass, field
-from itertools import combinations, groupby, pairwise
+from itertools import combinations, pairwise
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
@@ -72,8 +72,6 @@ from reg_meta_build.edition_bounds import edition_bounds as _edition_bounds
 from reg_meta_build.ir import (
     IRDeliveryProvenance,
     IRRegister,
-    IRValueCode,
-    IRValueSet,
     IRVariable,
     IRVariableAlias,
     IRVariableState,
@@ -4280,8 +4278,8 @@ class SCBAdapter:
 
         ``source_dir`` is the ``SCB/`` directory (containing
         Registerinformation.csv and the enrichment files). Yields in
-        FK-topological order: registers → variants → value_sets (+codes) →
-        variables → variable_states → aliases → provenance/warnings.
+        FK-topological order: registers → variants → variables →
+        variable_states → aliases → provenance/warnings.
         (No IRClassification / IRLineageEdge / IRReplacedByEdge: in A4.1 those
         stay materializer-derived; the adapter emits the subset above.)
 
@@ -4298,13 +4296,11 @@ class SCBAdapter:
         the stored sentinels (`9999-12-31` / `''`); the materializer's
         None→sentinel reconciliation is idempotent on them. ``IRVariableState``
         now carries ``delivery_column_name``; the full historical column set rides
-        on ``IRVariableAlias`` (``_emit_variable_aliases``). ``IRValueSet`` /
-        ``IRValueCode`` are emitted faithfully but the value tables stay
-        adapter-written in A4.3a (content-shared; see ``_reinsert_core_graph_from_ir``).
-        ``IRValueSet.classification_id`` stays None — classifications run in
-        ``materialize()`` AFTER emit, so the adapter cannot know it; the
-        ``variable_state.classification_id`` backfill reads the post-classification
-        ``variable_instance`` scratch instead.
+        on ``IRVariableAlias`` (``_emit_variable_aliases``). The value tables
+        (``value_set`` / ``value_code`` / ``value_set_member``) carry no IR
+        object: they are content-shared across providers and stay adapter-written
+        (see ``_reinsert_core_graph_from_ir``), so a state's ``value_set_id``
+        points at rows this adapter wrote directly to ``conn``.
         """
         conn = self.conn
         scb_dir = source_dir
@@ -4470,7 +4466,6 @@ class SCBAdapter:
         # back guarantees the emitted IR matches the materialized catalog.
         yield from self._emit_registers()
         yield from self._emit_variants()
-        yield from self._emit_value_sets()
         yield from self._emit_variables()
         yield from self._emit_variable_states()
         yield from self._emit_variable_aliases()
@@ -4512,49 +4507,6 @@ class SCBAdapter:
                 slug=row[2] or "",
                 name=row[3],
                 description=row[4],
-            )
-
-    def _emit_value_sets(self) -> Iterator[IRObject]:
-        # Lockstep over two value_set_id-ordered cursors so the whole member
-        # corpus (~millions of rows on a real build) is never held in memory:
-        # group the members on the fly and advance them in step with the
-        # value_set cursor. Both queries ORDER BY value_set_id, so one ordered
-        # pass over each suffices. (The legacy build minted value_sets via
-        # on-disk staging; a dict read-back would reintroduce a ~GB spike.)
-        member_groups = groupby(
-            self.conn.execute(
-                "SELECT vsm.value_set_id, vsm.code_id, vc.code, vc.label "
-                "FROM value_set_member vsm "
-                "JOIN value_code vc ON vc.code_id = vsm.code_id "
-                "ORDER BY vsm.value_set_id, vsm.code_id"
-            ),
-            key=lambda r: r[0],
-        )
-        pending = next(member_groups, None)
-        for vsid, member_hash in self.conn.execute(
-            "SELECT value_set_id, member_hash FROM value_set ORDER BY value_set_id"
-        ):
-            codes: tuple[IRValueCode, ...] = ()
-            if pending is not None and pending[0] == vsid:
-                # Consume this group fully BEFORE advancing the groupby iterator
-                # — groupby invalidates the sub-iterator on the next() below.
-                codes = tuple(
-                    IRValueCode(
-                        code_id=r[1],
-                        value_set_id=vsid,
-                        code=r[2],
-                        label=r[3],
-                        valid_from=None,
-                        valid_to=None,
-                    )
-                    for r in pending[1]
-                )
-                pending = next(member_groups, None)
-            yield IRValueSet(
-                value_set_id=vsid,
-                member_hash=member_hash,
-                classification_id=None,
-                codes=codes,
             )
 
     def _emit_variables(self) -> Iterator[IRObject]:

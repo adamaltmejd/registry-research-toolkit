@@ -49,7 +49,6 @@ from reg_meta_build.ir import (
     IRRegister,
     IRReplacedByEdge,
     IRValueCode,
-    IRValueSet,
     IRVariable,
     IRVariableAlias,
     IRVariableState,
@@ -69,7 +68,6 @@ IRObject = (
     | IRVariable
     | IRVariableState
     | IRVariableAlias
-    | IRValueSet
     | IRValueCode
     | IRClassification
     | IRLineageEdge
@@ -99,18 +97,24 @@ class IRAdapter(Protocol):
           1. ``IRRegister``        (all)
           2. ``IRClassification``  (all; reference for value-set linkage)
           3. ``IRVariant``         (FK → register)
-          4. ``IRValueSet`` (+ nested ``IRValueCode``; referenced by states)
-          5. ``IRVariable``        (FK → register, optional source_register_id)
-          6. ``IRVariableState`` / ``IRVariableAlias`` (FK → variable + variant
+          4. ``IRVariable``        (FK → register, optional source_register_id)
+          5. ``IRVariableState`` / ``IRVariableAlias`` (FK → variable + variant
              [+ value_set for states])
-          7. ``IRLineageEdge`` / ``IRReplacedByEdge``
-          8. ``IRWarning`` / ``IRDeliveryProvenance`` (order-free sinks)
+          6. ``IRLineageEdge`` / ``IRReplacedByEdge``
+          7. ``IRWarning`` / ``IRDeliveryProvenance`` (order-free sinks)
 
         The order constrains only the types an adapter actually emits — an
         adapter MAY emit a subset (e.g. in A4.1 ``SCBAdapter`` leaves
         ``IRClassification`` and ``IRLineageEdge`` materializer-derived and does
         not emit them). Conformance is about ordering what you do emit, not
         emitting every type.
+
+        No adapter emits a value-set object: the value tables (``value_set`` /
+        ``value_code`` / ``value_set_member``) are content-addressed and shared
+        across providers by content, so each adapter writes them DIRECTLY and a
+        state's ``value_set_id`` points at rows that already exist (see
+        DESIGN.md → Materializer). ``IRValueCode`` is a leaf model the SOS
+        adapter buffers on the way to that write, never a stream object.
 
         Every IR ``*_id`` field is an explicit int the adapter bakes in the
         provider's native ID-assignment order; emit order is independent of ID

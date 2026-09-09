@@ -77,7 +77,6 @@ from .id import _MINT_BIT
 from .ir import (
     IRDeliveryProvenance,
     IRRegister,
-    IRValueSet,
     IRVariable,
     IRVariableAlias,
     IRVariableState,
@@ -4132,10 +4131,11 @@ def materialize(
     # small: ~240k objects on the real corpus (42k variables + 118k states + 80k
     # aliases, low-hundreds of MB), DWARFED by the build's dominant memory (the
     # 102M-row Vardemangder import + 515k-cvid coalesce). The genuinely huge
-    # stream — value_set/value_code/value_set_member — is NOT buffered (the
-    # IRValueSet branch below is a no-op; the adapter streams it). The real 102M
-    # build completes without OOM. (Codex P2 — buffering is inherent to strategy
-    # 2; streaming/disk-staging would be a redesign for a non-issue here.)
+    # tables — value_set/value_code/value_set_member — never enter this loop at
+    # all: no IR object carries them, they stay adapter-written (see
+    # `_reinsert_core_graph_from_ir` for why). The real 102M build completes
+    # without OOM. (Codex P2 — buffering is inherent to strategy 2;
+    # streaming/disk-staging would be a redesign for a non-issue here.)
     registers: list[IRRegister] = []
     variants: list[IRVariant] = []
     variables: list[IRVariable] = []
@@ -4186,13 +4186,6 @@ def materialize(
                 variables.append(obj)
             elif isinstance(obj, IRVariableState):
                 states.append(obj)
-            elif isinstance(obj, IRValueSet):
-                # value_set / value_code / value_set_member are adapter-written
-                # (content-addressed, PROVIDER-SHARED BY CONTENT). SCB writes
-                # them directly; SOS writes them via INSERT OR IGNORE + read-back
-                # so an identical code list collapses onto SCB's row. Nothing to
-                # collect here.
-                pass
             elif isinstance(obj, IRVariableAlias):
                 aliases.append(obj)
             elif isinstance(obj, IRWarning):
@@ -4779,7 +4772,7 @@ def materialize(
     # A4.4e: SCB feed of the provider-blind `classification_candidate` table.
     # `populate_classifications` tags `variable_instance.classification_id` by
     # `value_set_version_label`, AFTER the SCB adapter emits (so the adapter
-    # cannot carry it on IRValueSet) — `variable_instance` is the home of SCB
+    # cannot carry it on the IR) — `variable_instance` is the home of SCB
     # classification linkage. Each cvid carries its OWNING `variable_id` (stamped
     # by `_coalesce_variable_states` from the triage's ground truth), so the
     # projection below attributes each candidate to the right split sibling — no

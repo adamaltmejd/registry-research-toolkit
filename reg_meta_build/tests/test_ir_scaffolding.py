@@ -27,7 +27,6 @@ from reg_meta_build.ir import (
     IRRegister,
     IRReplacedByEdge,
     IRValueCode,
-    IRValueSet,
     IRVariable,
     IRVariableAlias,
     IRVariableState,
@@ -114,28 +113,6 @@ _IR_FACTORIES: dict[str, tuple[type[BaseModel], dict[str, object]]] = {
             "label": "Man",
             "valid_from": None,
             "valid_to": None,
-        },
-    ),
-    "IRValueSet": (
-        IRValueSet,
-        {
-            "value_set_id": 50,
-            # 32-byte raw SHA-256 digest (matches the universal
-            # `value_set.member_hash` BLOB column's CHECK constraint).
-            "member_hash": bytes.fromhex(
-                "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
-            ),
-            "classification_id": None,
-            "codes": (
-                IRValueCode(
-                    code_id=7,
-                    value_set_id=50,
-                    code="1",
-                    label="Man",
-                    valid_from=None,
-                    valid_to=None,
-                ),
-            ),
         },
     ),
     "IRClassification": (

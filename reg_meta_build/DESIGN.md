@@ -523,9 +523,11 @@ Build-time only: never imported by `reg_meta` runtime or the webapp. Treat
   per-delivery `Datatyp`) and **non-splitting** for a value-set-bearing state — see the
   *State-identity rule (#526)* under *Build-time triage (SCB)*; the displayed value is
   the latest era's.
-- `IRValueSet.member_hash` is raw 32 bytes (not hex) — wire and storage encodings stay
-  identical, no encode/decode at the boundary. The materializer writes it verbatim into
-  `value_set.member_hash` (a BLOB with `CHECK length = 32`).
+- **No adapter emits a value-set object**: `value_set` / `value_code` /
+  `value_set_member` are adapter-written (see *Materializer* below), so a state's
+  `value_set_id` points at rows the adapter already wrote. `IRValueCode` survives only
+  as the SOS adapter's in-memory carrier for a state's pending code list, with
+  placeholder ids that `_ensure_value_set` assigns at write-back.
 
 **Adapter** (`sources/<provider>.py`, implementing the `IRAdapter` protocol in
 `sources/__init__.py`). Reads the provider's native format and emits IR. Provider quirks
@@ -606,11 +608,11 @@ are normalized *here*, never leaked downstream:
   a real code list exists is never acceptable.
 
 `emit()` yields IR in FK-topological order (register → classification → variant →
-value_set → variable → state/alias → edges → warning/provenance sinks) so the
-materializer can insert in stream order with FK targets always present. The order
-constrains only the types an adapter actually emits — an adapter MAY emit a subset
-(`SCBAdapter` leaves classifications and lineage materializer-derived). Every `*_id` is
-an explicit int the adapter bakes in; emit order is independent of ID assignment.
+variable → state/alias → edges → warning/provenance sinks) so the materializer can
+insert in stream order with FK targets always present. The order constrains only the
+types an adapter actually emits — an adapter MAY emit a subset (`SCBAdapter` leaves
+classifications and lineage materializer-derived). Every `*_id` is an explicit int the
+adapter bakes in; emit order is independent of ID assignment.
 
 Thin curated providers (FOHM today, Försäkringskassan/Skatteverket/IAF to follow) share
 the one `CuratedAdapter` instead of a per-agency module — see *Curated thin providers*

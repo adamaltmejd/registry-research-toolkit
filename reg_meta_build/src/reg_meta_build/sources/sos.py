@@ -1546,8 +1546,9 @@ class SOSAdapter:
 
     def emit(self, source_dir: Path) -> Iterator[IRObject]:
         """Parse the `Socialstyrelsen/` workbooks under ``source_dir`` and emit
-        IR objects in FK-topological order (register -> variant -> value_set ->
-        variable -> state/alias -> related-to -> provenance/warnings).
+        IR objects in FK-topological order (register -> variant -> variable ->
+        state/alias -> related-to -> provenance/warnings). The value tables are
+        written directly, not emitted (`_ensure_value_set`).
 
         Unreadable workbooks become an `IRWarning` (not a build abort): each
         `.xlsx` parses in its own try/except so one corrupt delivery can't sink
@@ -1974,8 +1975,9 @@ class SOSAdapter:
         classification: str | None,
         has_kodlista_sheet: bool = False,
     ) -> Iterator[IRObject]:
-        """Emit IRVariableState(+IRValueSet/IRValueCode) + IRVariableAlias for
-        each (member, resolved-era windowed value-set) of a variable.
+        """Emit IRVariableState + IRVariableAlias for each (member,
+        resolved-era windowed value-set) of a variable, writing each surviving
+        state's value set into the value tables directly (`_ensure_value_set`).
 
         Two members of a MERGED variable can resolve to the same variant + same
         `valid_from` (e.g. a variable name appearing under a duplicate
