@@ -836,9 +836,13 @@ async function periodFocusCase(page, counts, shoot) {
   const from = page.getByRole("textbox", { name: "From" });
   const to = page.getByRole("textbox", { name: "To" });
   const apply = page.getByRole("button", { name: "Apply period" });
-  /** Retype a year field's whole content the way a keyboard user does. */
+  /** Retype a year field's whole content the way a keyboard user does. Select All
+   * is `ControlOrMeta`, Playwright's platform-neutral modifier: a literal
+   * `Control+A` on macOS is "move to line start", not a selection, so the typed
+   * year concatenated onto the old one (20222019) and the Apply never asked for
+   * the period the case waits on. */
   const retype = async (year) => {
-    await page.keyboard.press("Control+A");
+    await page.keyboard.press("ControlOrMeta+A");
     await page.keyboard.type(year);
   };
 
