@@ -20,6 +20,11 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends \
        ca-certificates git \
        ripgrep jq curl file diffutils patch tar xz-utils zstd unzip coreutils \
+       # libatomic1: the node copied in below links libatomic.so.1, which
+       # debian:stable-slim does not ship. Without it every `#!/usr/bin/env
+       # node` launcher — playwright's install CLI included — dies at load
+       # time. The node 24 this replaced did not link it.
+       libatomic1 \
     && install -d -m 1777 /yard/state/tmp \
     && rm -rf /var/lib/apt/lists/*
 
@@ -30,6 +35,8 @@ RUN apt-get update \
 # homes that run these tools pin this same version: CI (`actions/setup-node`)
 # and the production SPA build (`reg_webapp/Dockerfile`).
 # The major is chosen deliberately, not held to whichever line is LTS.
+# A major bump can add runtime libraries to the apt line above — read the new
+# binary's dynamic dependencies before pinning it.
 COPY --from=node:26.8.1-bookworm-slim@sha256:367679cf9792759492a486e4aa4b421764d71a9546a6dae8aab81a99eb797b3e /usr/local/bin/node /usr/local/bin/node
 
 # Pinned toolchain binaries, tag + immutable multi-arch digest like the images
