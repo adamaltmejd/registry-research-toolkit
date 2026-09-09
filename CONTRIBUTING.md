@@ -13,11 +13,17 @@ uv sync --group dev
 ```bash
 uv run python -m pytest                            # unit tests only
 uv run python -m pytest --run-integration           # include Docker integration tests
+uv run python -m pytest --run-integration --install-mode workspace
 ```
 
 Expensive test suites are gated behind `--run-<name>` flags. To add a new category, add
 an entry to `OPTIONAL_MARKERS` in `conftest.py` and decorate tests with
 `@pytest.mark.<name>`.
+
+`--install-mode` picks which installation the Docker module builds. `registry` (the
+default) installs reg_meta alone with every dependency resolved from PyPI, so it is red
+for as long as a sibling release is owed; `workspace` builds this checkout's reg_schema
+and reg_meta wheels and installs both. The pre-push hook uses `workspace`.
 
 ## Linting
 

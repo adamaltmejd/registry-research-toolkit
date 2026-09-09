@@ -1,15 +1,15 @@
 name: Integration (Docker)
 
-# Server-side home for the Docker integration test
-# (reg_meta/tests/test_integration.py): it installs reg_meta into a clean
+# Server-side home for the release-asset-dependent tests. The Docker half
+# (reg_meta/tests/test_integration.py) installs reg_meta into a clean
 # python:3.14-slim container and exercises install → `reg-meta update`
-# (downloads the DB from GitHub Releases) → query. It needs Docker AND a
-# published release asset matching the current SCHEMA_VERSION, so it deliberately
-# does NOT run on push/PR — a red X on unrelated work when a release is merely
-# owed would be noise. The same tests run locally as a pre-push gate
-# (.pre-commit-config.yaml, --run-integration only); CI's `test` job runs
-# `-m "not integration"`. This workflow is the only automated home for the
-# release-asset-dependent path.
+# (downloads the DB from GitHub Releases) → query; the non-Docker half is
+# reg_webapp's §12 inventory ↔ flavored-DB consistency gate. Both need a
+# published release asset matching the current SCHEMA_VERSION, so this workflow
+# deliberately does NOT run on push/PR — a red X on unrelated work when a
+# release is merely owed would be noise. The Docker tests also run locally as a
+# pre-push gate (.pre-commit-config.yaml, `--run-integration --install-mode
+# workspace`); CI's `test` job runs `-m "not integration"`.
 on:
   # Weekly drift catch (GitHub Releases availability only — the base image and
   # uv are digest-pinned since Y-25). Off the top of the hour — GitHub
@@ -34,13 +34,86 @@ jobs:
         with:
           version: "0.12.11"
       - run: uv sync --frozen
+      # The `-m "integration or release"` selection below includes reg_webapp's
+      # §12 inventory ↔ flavored-DB consistency gate
+      # (test_steward_swecov.py::test_every_inventory_mapping_resolves_against_the_flavored_db),
+      # whose fixture hard-FAILS unless REG_META_DB names the SWECOV-flavored DB
+      # — deliberately, because a skip would report the gate as clean without
+      # ever running it. So this job has to provision that asset for the
+      # selection to be runnable at all.
+      #
+      # It must come from the EXACT release under test: the reg_meta/v* release
+      # that called this workflow (a `workflow_call` inherits the CALLER's
+      # `github` context, so `event.release.tag_name` is that tag), or — for
+      # schedule/dispatch runs — the newest published reg_meta/v* release,
+      # resolved the same way container-build.yml resolves its bake tag, plus
+      # `--exclude-drafts`: a draft carries no published assets, and a release
+      # sits in draft for the whole of the release skill's step 8. (That flag is
+      # a deliberate divergence from container-build's resolver, not drift.) NOT
+      # GitHub's `latest`, which is newest across all three packages and would
+      # hand back a reg_schema/v* or reg_meta_build/v* release.
+      #
+      # The SHA-256 digest GitHub records for the asset is verified BEFORE
+      # decompression. A missing or duplicated asset, a malformed or mismatched
+      # digest, a schema-incompatible DB (`open_db` raises, exactly as boot
+      # would) and unresolved mappings all fail this job. There is deliberately
+      # no fallback to an older flavored asset, to the global DB or to synthetic
+      # data — each would turn the gate green against something the SWECOV
+      # deployment never serves.
+      - name: Provision the release's flavored SWECOV DB
+        id: swecov-db
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TRIGGER_TAG: ${{ github.event_name == 'release' && github.event.release.tag_name || '' }}
+        run: |
+          set -euo pipefail
+          tag="$TRIGGER_TAG"
+          if [ -z "$tag" ]; then
+            tag=$(gh release list --repo "$GITHUB_REPOSITORY" --limit 100 --exclude-drafts \
+              --json tagName -q '[.[].tagName | select(startswith("reg_meta/v"))][0] // empty')
+          fi
+          [ -n "$tag" ] || { echo "::error::no published reg_meta/v* release to take the SWECOV asset from"; exit 1; }
+          echo "SWECOV flavored DB source release: $tag"
+          digest=$(gh release view "$tag" --repo "$GITHUB_REPOSITORY" --json assets \
+            --jq '[.assets[] | select(.name == "reg_meta_swecov.db.zst") | .digest]
+                  | if length == 1 then .[0] else "" end' | tr 'A-Z' 'a-z')
+          if ! printf '%s' "$digest" | grep -Eq '^sha256:[0-9a-f]{64}$'; then
+            echo "::error::release $tag has no single sha256-digested reg_meta_swecov.db.zst asset"
+            exit 1
+          fi
+          db_dir="$RUNNER_TEMP/swecov-db"
+          mkdir -p "$db_dir"
+          gh release download "$tag" --repo "$GITHUB_REPOSITORY" \
+            --pattern reg_meta_swecov.db.zst --dir "$db_dir"
+          zst="$db_dir/reg_meta_swecov.db.zst"
+          actual="sha256:$(sha256sum "$zst" | cut -d ' ' -f 1)"
+          if [ "$actual" != "$digest" ]; then
+            echo "::error::reg_meta_swecov.db.zst digest mismatch: $actual != $digest"
+            exit 1
+          fi
+          uv run python - "$zst" "$db_dir/reg_meta.db" <<'PY'
+          import sys
+          from pathlib import Path
+
+          import zstandard
+
+          src, dest = (Path(arg) for arg in sys.argv[1:3])
+          with src.open("rb") as fh, dest.open("wb") as out:
+              zstandard.ZstdDecompressor().copy_stream(fh, out)
+          PY
+          rm "$zst"
+          echo "db_dir=$db_dir" >> "$GITHUB_OUTPUT"
       # Both opt-in flags: --run-integration (all Docker tests) and --run-release
-      # (the subset that downloads a published release asset). Serial, NOT
-      # `-n auto`: the module-scoped image fixture builds the container once;
-      # xdist would rebuild it per worker. GITHUB_TOKEN authenticates the
-      # in-container `reg-meta update` GitHub API call (forwarded by
-      # _docker_run) — the unauthenticated 60/hr-per-IP limit is easily
-      # exhausted from shared runner IPs.
+      # (the subset that needs a published release asset). Serial, NOT `-n auto`:
+      # the module-scoped image fixture builds the container once; xdist would
+      # rebuild it per worker. GITHUB_TOKEN authenticates the in-container
+      # `reg-meta update` GitHub API call (forwarded by _docker_run) — the
+      # unauthenticated 60/hr-per-IP limit is easily exhausted from shared runner
+      # IPs. REG_META_DB points the §12 gate at the flavored DB provisioned above.
+      #
+      # `--install-mode registry` is explicit even though it is the module's
+      # default: this job is the post-publish check of the PUBLISHED consumer's
+      # install, so reg_schema must come from PyPI, never from the checkout.
       #
       # A failure during a release-owed window (main's SCHEMA_VERSION past the
       # newest published asset) is expected and informative — a release-drift
@@ -49,4 +122,7 @@ jobs:
       - name: Run Docker integration + release tests
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: uv run python -m pytest --run-integration --run-release -m "integration or release"
+          REG_META_DB: ${{ steps.swecov-db.outputs.db_dir }}
+        run: |
+          uv run python -m pytest --run-integration --run-release \
+            --install-mode registry -m "integration or release"

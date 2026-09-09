@@ -36,19 +36,40 @@ PyPI before publishing the builder.
 `reg_schema/v*` tag through `publish_reg_schema.yml` and ships **nothing but the wheel**
 — no DB release assets and no doc DB — so step 8 and the step 11 catalog refresh do not
 apply to it. It is **upstream of both `reg_meta`** (a `reg-schema>=` floor in reg_meta's
-pyproject, currently `>=2.0.0`) **and `reg_webapp`**. As with reg_meta_build above, an
-already-satisfied floor resolves in either order — but when a release raises reg_meta's
-`reg-schema` floor, publish reg_schema **first** and confirm the version-specific PyPI
-JSON is a 200 before publishing reg_meta, or the reg_meta wheel lands unresolvable for
-`uv tool install reg-meta`:
+pyproject) **and `reg_webapp`**. Read that floor out of the package metadata, which is
+authoritative — never a version quoted in this skill:
+
+```sh
+grep 'reg-schema>=' reg_meta/pyproject.toml
+```
+
+As with reg_meta_build above, an already-satisfied floor resolves in either order — but
+when a release raises reg_meta's `reg-schema` floor, publish reg_schema **first** and
+confirm the version-specific PyPI JSON is a 200 before publishing reg_meta, or the
+reg_meta wheel lands unresolvable for `uv tool install reg-meta`:
 
 ```sh
 curl -s -o /dev/null -w '%{http_code}\n' https://pypi.org/pypi/reg-schema/X.Y.Z/json
 ```
 
-reg_schema has never been published, so its **first** release also needs the
-`reg-schema` trusted publisher (this repo + `publish_reg_schema.yml` + the `pypi`
-environment) registered on PyPI before the upload step can authenticate.
+## Two packaging phases
+
+`main` and PyPI are held to different standards, and the release flow depends on the
+difference:
+
+- **`main` may carry coherent unpublished sibling changes.** A schema bump lands on main
+  with reg_meta's raised floor in the same push, and the schema publisher only runs
+  *after* that push and its GitHub release. So the pre-push gate (step 6) runs the
+  reg_meta Docker module in `--install-mode workspace`: it builds this checkout's
+  reg_schema **and** reg_meta wheels in a pinned container and installs both. Green
+  means the two sources are mutually installable. It is **not** evidence that reg-schema
+  is on PyPI.
+- **A dependent package may not reach PyPI until its declared dependencies resolve
+  there.** That is the `registry` mode of the same module (reg_schema kept out of the
+  build context, `uv pip install --no-sources ./reg_meta`), run as a preflight before
+  the reg_meta draft is published (step 8e) and repeated as a blocking step inside
+  `publish_reg_meta.yml` before its upload. The server-side copy can only start once the
+  release is public, so the local preflight is what gates that earlier visibility.
 
 ## Validation
 
@@ -184,6 +205,10 @@ commit touches `pyproject.toml` and `__init__.py`, which the gate's
 **Docker must be running** or the push is blocked — start it and push again, never
 bypass with `--no-verify`. (The release-marked `test_update_and_query`, which downloads
 the published asset, is carved off pre-push and runs only post-publish — see step 10.)
+
+This gate runs `--install-mode workspace` (see Two packaging phases): it proves this
+checkout's reg_schema and reg_meta wheels install together, so a schema bump can land on
+main before its release. Reaching PyPI is a separate gate — step 8e for reg_meta.
 
 ### 7. Create draft GitHub release
 
@@ -454,6 +479,24 @@ them (#343 for the two `reg-meta update` assets; #1091 for `reg_meta_swecov.db.z
 gh release view reg_meta/vX.Y.Z --json assets --jq '.assets[].name'
 ```
 
+Then run the **registry-install preflight** — the second of the Two packaging phases,
+and the only one that can see PyPI. First confirm the `reg-schema` floor reg_meta
+declares is actually on the index (the version-specific PyPI JSON must be a 200; a
+reg_schema release published minutes ago needs a beat), then build a clean container
+holding reg_meta alone and install it with the registry as the only source:
+
+```sh
+uv run python -m pytest reg_meta/tests/test_integration.py \
+  --run-integration --install-mode registry -m "not release"
+```
+
+**A failure stops the publication.** `--draft=false` is what makes the tag public, and
+`publish_reg_meta.yml` repeats this same check as a blocking step before its upload —
+but a server-side workflow can only start *after* that visibility, so this local run is
+the gate on it. Do not publish past a red one: fix the ordering (publish reg_schema
+first, wait for PyPI) and re-run. A PyPI version is immutable, so an unresolvable
+reg_meta wheel cannot be withdrawn, only superseded.
+
 ### 9. Publish the draft release
 
 This is what fires the publish workflow.
@@ -492,14 +535,19 @@ done
 ```
 
 **reg_meta post-publish gate:** `publish_reg_meta.yml` calls `integration.yml`
-(`workflow_call`) after publishing, running the **release-marked** Docker test
-(`test_update_and_query`) against the just-published asset. If the `publish` job is
-green but the `integration` job is red, **the publish succeeded** — PyPI and the assets
-are fine; the failure is in the release test (e.g. it still calls a CLI flag a refactor
-renamed). This test is carved off pre-push and never runs on push/PR, so a CLI-surface
-change can strand it silently until this gate. Fix the test on main and re-validate with
-`gh workflow run integration.yml --ref main` (then watch that dispatched run). Do
-**not** re-release a working package over a stale test.
+(`workflow_call`) after publishing. That job runs the **release-marked** Docker test
+(`test_update_and_query`) against the just-published asset, plus the §12 inventory ↔
+flavored-DB consistency gate against `reg_meta_swecov.db.zst` from *this* release
+(digest-verified, provisioned as `REG_META_DB`). It installs the **tagged source** with
+its dependencies resolved from the registry (`--install-mode registry`) — not the wheel
+just uploaded to PyPI — so what it proves is that a registry-resolved reg_meta fetches
+and queries this release's assets. If the `publish` job is green but the `integration`
+job is red, **the publish succeeded** — PyPI and the assets are fine; the failure is in
+the release test (e.g. it still calls a CLI flag a refactor renamed) or in the committed
+inventory (step 11's territory). This test is carved off pre-push and never runs on
+push/PR, so a CLI-surface change can strand it silently until this gate. Fix the test on
+main and re-validate with `gh workflow run integration.yml --ref main` (then watch that
+dispatched run). Do **not** re-release a working package over a stale test.
 
 If the package has no publish workflow, report the release is done after the tag is
 created.

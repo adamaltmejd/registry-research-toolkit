@@ -68,9 +68,22 @@ repos:
       # groups; see test_repo_curation_tomls.py / test_slug_snapshot.py) and
       # .json (openapi snapshot, fixtures) — skipping only pushes confined to
       # docs/markdown/workflow-YAML (over the whole push range).
+      #
+      # --install-mode workspace picks the Docker module's SOURCE-COHERENCE
+      # boundary: the container builds this checkout's reg_schema AND reg_meta
+      # wheels and installs both, so the packaging gate is hard on every push
+      # even while main carries a coherent sibling bump that isn't on PyPI yet
+      # (reg_meta's `reg-schema` floor can legitimately name an unpublished
+      # version — the schema publisher only runs after this same push and its
+      # GitHub release). A green push therefore says the two packages are
+      # mutually installable; it says NOTHING about PyPI availability. The
+      # registry boundary (the module's default mode, `--no-sources`, reg_schema
+      # kept out of the build context) is checked where it is actually load-
+      # bearing: the release skill's pre-publication preflight and
+      # publish_reg_meta.yml's blocking step before the PyPI upload.
       - id: pytest
         name: pytest (parallel, pre-push)
-        entry: uv run python -m pytest -n auto -q --run-integration
+        entry: uv run python -m pytest -n auto -q --run-integration --install-mode workspace
         language: system
         pass_filenames: false
         files: \.(py|toml|json)$

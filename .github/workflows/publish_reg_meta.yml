@@ -55,15 +55,35 @@ jobs:
             exit 1
           fi
 
+      # Registry-install preflight — the last gate before an immutable upload.
+      # reg_meta's `reg-schema` floor is a real PyPI resolution for anyone
+      # running `uv tool install reg-meta`, so this builds a clean container
+      # holding reg_meta alone (no local reg_schema in the build context) and
+      # installs it with `--no-sources`. If the declared floor does not resolve
+      # from the index, the step exits non-zero and nothing is uploaded — the
+      # PyPI version would otherwise be permanently uninstallable. This repeats
+      # the check the release skill runs locally before the draft is published;
+      # a server-side workflow can only start after that GitHub visibility, so
+      # both exist. `-m "not release"` deselects test_update_and_query: the
+      # release's own assets are smoke-tested above, and the clean-container
+      # download runs post-publish (the `integration` job below).
+      - name: Verify reg_meta installs from the registry in a clean container
+        run: |
+          uv run python -m pytest reg_meta/tests/test_integration.py \
+            --run-integration --install-mode registry -m "not release"
+
       - run: uv build reg_meta/ --out-dir dist/
       - uses: pypa/gh-action-pypi-publish@v1.14.2
 
   # Post-release end-to-end smoke: install reg_meta into a clean Docker container
   # and run the full install → `reg-meta update` (downloads this release's DB) →
   # query pipeline. Stronger than the `publish` job's in-runner verify above
-  # (clean container, only the package installed — the real user path). Inherits
-  # the reg_meta/v* gate via `needs: publish` (publish needs the tag-gated `ci`
-  # job), so it never fires for reg_meta_build/v* releases.
+  # (clean container, only the package installed — the real user path). It
+  # installs the TAGGED SOURCE with its dependencies resolved from the registry,
+  # not the wheel just uploaded to PyPI; what it proves is that a
+  # registry-resolved reg_meta can fetch and query this release's assets.
+  # Inherits the reg_meta/v* gate via `needs: publish` (publish needs the
+  # tag-gated `ci` job), so it never fires for reg_meta_build/v* releases.
   integration:
     needs: publish
     uses: ./.github/workflows/integration.yml
