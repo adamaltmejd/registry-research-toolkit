@@ -2842,6 +2842,16 @@ An undeclared provider on a register, an inverted validity window, a duplicate s
 uniqueness key, or `base == output` are all `EXIT_CONFIG` structural errors — the
 overlay's content is steward-only, so there is no lenient `unresolved` count.
 
+The nesting is **delivery-shaped** (like SCB's per-variant sheets), but variable
+identity is register-scoped (reg_meta/DESIGN.md → "Why the variant is a coordinate, not
+an identity level"): a variable `key` that several of a register's variants list is
+**pooled** by the insert writer into ONE `variable` row, and each listing variant
+contributes its own `variable_state` + `variable_alias`. The load boundary
+(`_reject_divergent_pooled_variables`) makes listings that disagree on a variable-level
+attribute (`name`, `definition`, `description`, `is_identifier`, `is_sensitive`) an
+`EXIT_CONFIG` structural error naming the register, key and field — the pooled row
+carries one of each, and first-wins would silently drop the rest.
+
 ### Per-steward slug snapshot
 
 The steward slug dir lives at `fqid_slugs/<steward>/` (e.g. `fqid_slugs/swecov/`),

@@ -76,7 +76,10 @@ Operation kinds
    ``variable_alias`` row (the ``variable_alias ⊇ state columns`` invariant — an
    intrinsic part of defining the steward variable, NOT an alias onto a global
    variable). The register's ``provider`` must be defined in ``providers[]`` or
-   already live in the DB.
+   already live in the DB. The nesting is delivery-shaped, but variable identity
+   is REGISTER-scoped: a key that several of a register's variants list is
+   POOLED into one ``variable`` row, with one state + alias per listing variant.
+   Listings that disagree on a variable-level attribute are a structural defect.
 
 Discipline
 ----------
@@ -95,7 +98,7 @@ from __future__ import annotations
 import json
 import shutil
 import sqlite3
-from dataclasses import dataclass
+from dataclasses import dataclass, fields
 from typing import TYPE_CHECKING, Any
 
 from reg_meta.db import DB_FILENAME
@@ -372,7 +375,7 @@ def _load_register(obj: dict, idx: int) -> InvRegister:
             f"extend-db inventory {ctx} ({provider}/{key}) needs at least one variant.",
             'Give `"variants": [ { "key": "_default", ... } ]`.',
         )
-    return InvRegister(
+    register = InvRegister(
         provider=provider,
         key=key,
         name=_require_str(obj, "name", ctx),
@@ -382,6 +385,8 @@ def _load_register(obj: dict, idx: int) -> InvRegister:
             _load_variant(v, provider, key, i) for i, v in enumerate(variants_raw)
         ),
     )
+    _reject_divergent_pooled_variables(register)
+    return register
 
 
 def _load_variant(obj: dict, provider: str, reg_key: str, idx: int) -> InvVariant:
@@ -483,6 +488,45 @@ def _reject_duplicate_state_keys(states: tuple[InvState, ...], context: str) -> 
                 "contract.",
             )
         seen.add(key)
+
+
+# The variable-level attributes a pooled variable carries exactly one of —
+# DERIVED from `InvVariable` so a field added there can't silently escape the
+# guard below. `key` is the pooling key itself; `states` is the per-variant
+# delivery detail, and each listing variant contributes its own.
+_POOLED_VARIABLE_FIELDS = tuple(
+    f.name for f in fields(InvVariable) if f.name not in ("key", "states")
+)
+
+
+def _reject_divergent_pooled_variables(reg: InvRegister) -> None:
+    """A variable key listed by several variants of ONE register is one
+    register-scoped variable delivered by each of them (reg_meta/DESIGN.md →
+    "Why the variant is a coordinate, not an identity level"), so
+    ``_insert_core_graph`` pools the listings into a single ``variable`` row.
+    That row carries exactly one of each variable-level attribute, and picking
+    first-wins would silently drop the others — so require the listings to agree.
+    """
+    seen: dict[str, tuple[str, InvVariable]] = {}
+    for variant in reg.variants:
+        for var in variant.variables:
+            prior = seen.get(var.key)
+            if prior is None:
+                seen[var.key] = (variant.key, var)
+                continue
+            prior_variant_key, prior_var = prior
+            for field in _POOLED_VARIABLE_FIELDS:
+                first, other = getattr(prior_var, field), getattr(var, field)
+                if first != other:
+                    raise _cfg_error(
+                        f"extend-db inventory register {reg.provider}/{reg.key} "
+                        f"lists variable {var.key!r} in variants "
+                        f"{prior_variant_key!r} and {variant.key!r} with different "
+                        f"`{field}`: {first!r} vs {other!r}.",
+                        "A key listed by several variants is ONE register-scoped "
+                        "variable — give every listing identical variable-level "
+                        "attributes (only `states` may differ per variant).",
+                    )
 
 
 def _reject_duplicate_provider_slugs(providers: tuple[InvProvider, ...]) -> None:
@@ -604,6 +648,7 @@ def _insert_core_graph(
         )
         counts["registers"] += 1
 
+        pooled_variable_ids: dict[str, int] = {}
         for variant in reg.variants:
             register_variant_id = mint("variant", reg.provider, reg.key, variant.key)
             conn.execute(
@@ -615,32 +660,42 @@ def _insert_core_graph(
             counts["variants"] += 1
 
             for var in variant.variables:
-                variable_id = mint(
-                    "variable", reg.provider, reg.key, variant.key, var.key
-                )
-                conn.execute(
-                    "INSERT INTO variable "
-                    "(variable_id, register_id, provider_key, slug, name, "
-                    " definition, description, operational_definition, "
-                    " source_register_text, "
-                    " measurement_unit, source_register_id, source_label, "
-                    " is_sensitive, is_identifier) "
-                    # operational_definition NULL: a steward inventory carries no
-                    # SCB-style per-column operational definition (#892).
-                    "VALUES (?, ?, ?, NULL, ?, ?, ?, NULL, NULL, NULL, NULL, ?, ?, ?)",
-                    (
-                        variable_id,
-                        register_id,
-                        var.key,  # provider_key: the steward's variable key
-                        var.name,
-                        var.definition,
-                        var.description,
-                        source_label,
-                        int(var.is_sensitive),
-                        int(var.is_identifier),
-                    ),
-                )
-                counts["variables"] += 1
+                # A variable is REGISTER-scoped, so a key several variants list is
+                # ONE row minted WITHOUT the variant — each listing variant then
+                # contributes only its own state + alias below. Minting with the
+                # variant made every delivery its own variable, which
+                # `populate_variable_slugs` read as split siblings and suffixed
+                # `-2`, `-3`. `_reject_divergent_pooled_variables` has already
+                # proved the listings' variable-level attributes agree, so the
+                # first listing's values are the pooled row's.
+                variable_id = pooled_variable_ids.get(var.key)
+                if variable_id is None:
+                    variable_id = mint("variable", reg.provider, reg.key, var.key)
+                    pooled_variable_ids[var.key] = variable_id
+                    conn.execute(
+                        "INSERT INTO variable "
+                        "(variable_id, register_id, provider_key, slug, name, "
+                        " definition, description, operational_definition, "
+                        " source_register_text, "
+                        " measurement_unit, source_register_id, source_label, "
+                        " is_sensitive, is_identifier) "
+                        # operational_definition NULL: a steward inventory carries
+                        # no SCB-style per-column operational definition (#892).
+                        "VALUES "
+                        "(?, ?, ?, NULL, ?, ?, ?, NULL, NULL, NULL, NULL, ?, ?, ?)",
+                        (
+                            variable_id,
+                            register_id,
+                            var.key,  # provider_key: the steward's variable key
+                            var.name,
+                            var.definition,
+                            var.description,
+                            source_label,
+                            int(var.is_sensitive),
+                            int(var.is_identifier),
+                        ),
+                    )
+                    counts["variables"] += 1
 
                 for state in var.states:
                     valid_from, valid_to = _expand_window(

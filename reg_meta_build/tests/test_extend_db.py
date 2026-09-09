@@ -49,9 +49,53 @@ _BANK = "swedbank"
 # ── inventory fixtures ─────────────────────────────────────────────────────────
 
 
+def _pooled_variable_register() -> dict:
+    """A steward register whose TWO variants both list the variable key
+    `personnr`. The variant is a delivery coordinate, not an identity level
+    (reg_meta/DESIGN.md → "Why the variant is a coordinate, not an identity
+    level"), so the overlay pools these into ONE variable with a state + alias
+    per delivering variant — the `personnr` / `personnr-2` defect."""
+
+    def _personnr() -> dict:
+        return {
+            "key": "personnr",
+            "name": "Personnummer",
+            "definition": None,
+            "description": None,
+            "is_identifier": True,
+            "is_sensitive": True,
+            "states": [
+                {
+                    "column": "PersonNr",
+                    "data_type": "varchar",
+                    "valid_from": None,
+                    "valid_to": None,
+                }
+            ],
+        }
+
+    return {
+        "provider": _BANK,
+        "key": "kunder",
+        "name": "Kunder",
+        "purpose": None,
+        "description": None,
+        "variants": [
+            {
+                "key": key,
+                "name": name,
+                "description": None,
+                "variables": [_personnr()],
+            }
+            for key, name in (("privat", "Privatkunder"), ("foretag", "Företagskunder"))
+        ],
+    }
+
+
 def _base_inventory() -> dict:
     """A steward-only inventory: one new provider with a register/variant and
-    two variables. No global-entity enrichment (grafts/aliases) — that is
+    two variables, plus a second register that delivers one variable key from
+    two variants. No global-entity enrichment (grafts/aliases) — that is
     global-build work, not flavor content."""
     return {
         "steward": _STEWARD,
@@ -105,7 +149,8 @@ def _base_inventory() -> dict:
                         ],
                     }
                 ],
-            }
+            },
+            _pooled_variable_register(),
         ],
     }
 
@@ -133,8 +178,13 @@ def _steward_register_ids() -> dict[str, int]:
         "provider": mint("provider", _BANK),
         "register": mint("register", _BANK, "transaktioner"),
         "variant": mint("variant", _BANK, "transaktioner", "_default"),
-        "var_belopp": mint("variable", _BANK, "transaktioner", "_default", "belopp"),
-        "var_kontonr": mint("variable", _BANK, "transaktioner", "_default", "kontonr"),
+        # A variable is register-scoped — the variant is NOT part of its identity.
+        "var_belopp": mint("variable", _BANK, "transaktioner", "belopp"),
+        "var_kontonr": mint("variable", _BANK, "transaktioner", "kontonr"),
+        "pooled_register": mint("register", _BANK, "kunder"),
+        "pooled_privat": mint("variant", _BANK, "kunder", "privat"),
+        "pooled_foretag": mint("variant", _BANK, "kunder", "foretag"),
+        "var_personnr": mint("variable", _BANK, "kunder", "personnr"),
     }
 
 
@@ -182,17 +232,31 @@ def _overlapping_representation_inventory() -> dict:
     return inv
 
 
-def _write_steward_slug_dir(slug_dir: Path) -> None:
+def _write_steward_slug_dir(
+    slug_dir: Path, *, panel_entity_key: str | None = None
+) -> None:
     """Author a steward slug dir keyed on the minted ids: a `swedbank.toml`
-    register/variant slug entry + empty snapshot. No variable entries — the new
-    variables auto-slug incrementally. No freeze.toml ⇒ the steward zone defaults
-    to churning (#470), which is the regenerate-each-build overlay posture."""
+    register/variant slug entry per inventory row + empty snapshot. No variable
+    entries — the new variables auto-slug incrementally. No freeze.toml ⇒ the
+    steward zone defaults to churning (#470), which is the regenerate-each-build
+    overlay posture.
+
+    `panel_entity_key` (a resolved variable slug) puts a `panel_entity_key` on the
+    transaktioner variant, so the overlaid DB carries a STEWARD entity-key
+    variable the flavored curation gate must enforce (#559)."""
     ids = _steward_register_ids()
+    panel = f'panel_entity_key = "{panel_entity_key}"\n' if panel_entity_key else ""
     (slug_dir / ".snapshot.json").write_text("{}\n", encoding="utf-8")
     (slug_dir / f"{_BANK}.toml").write_text(
         f'[register."{ids["register"]}"]\nslug = "transaktioner"\n'
         f'[register_variant."{ids["register"]}.{ids["variant"]}"]\n'
-        'slug = "transaktioner-default"\n',
+        'slug = "transaktioner-default"\n'
+        f"{panel}"
+        f'[register."{ids["pooled_register"]}"]\nslug = "kunder"\n'
+        f'[register_variant."{ids["pooled_register"]}.{ids["pooled_privat"]}"]\n'
+        'slug = "kunder-privat"\n'
+        f'[register_variant."{ids["pooled_register"]}.{ids["pooled_foretag"]}"]\n'
+        'slug = "kunder-foretag"\n',
         encoding="utf-8",
     )
 
@@ -283,10 +347,11 @@ class TestOverlayInserts:
     ) -> None:
         counts, out = _run_extend(tmp_path, global_db, _base_inventory())
         assert counts["providers"] == 1
-        assert counts["registers"] == 1
-        assert counts["variants"] == 1
-        assert counts["variables"] == 2
-        assert counts["states"] == 2
+        assert counts["registers"] == 2
+        assert counts["variants"] == 3
+        # `personnr` is ONE pooled variable over its two delivering variants.
+        assert counts["variables"] == 3
+        assert counts["states"] == 4
         conn = sqlite3.connect(out)
         ids = _steward_register_ids()
 
@@ -358,8 +423,9 @@ class TestOverlayInserts:
         self, tmp_path: Path, global_db: Path
     ) -> None:
         counts, out = _run_extend(tmp_path, global_db, _multistate_inventory())
-        assert counts["variables"] == 2
-        assert counts["states"] == 3
+        # belopp (2 states) + kontonr, plus the base's pooled personnr (2 states).
+        assert counts["variables"] == 3
+        assert counts["states"] == 5
 
         conn = sqlite3.connect(out)
         ids = _steward_register_ids()
@@ -381,14 +447,46 @@ class TestOverlayInserts:
         }
         assert aliases == {"BELOPP", "BELOPP_SEK"}
 
+    def test_variable_listed_by_two_variants_is_one_pooled_variable(
+        self, tmp_path: Path, global_db: Path
+    ) -> None:
+        _, out = _run_extend(tmp_path, global_db, _base_inventory())
+        conn = sqlite3.connect(out)
+        ids = _steward_register_ids()
+
+        # ONE variable row for the register, however many variants list the key.
+        assert conn.execute(
+            "SELECT count(*) FROM variable WHERE register_id = ?",
+            (ids["pooled_register"],),
+        ).fetchone() == (1,)
+
+        # One state per delivering variant, each carrying its own coordinate.
+        states = conn.execute(
+            "SELECT register_variant_id, delivery_column_name FROM variable_state "
+            "WHERE variable_id = ?",
+            (ids["var_personnr"],),
+        ).fetchall()
+        assert set(states) == {
+            (ids["pooled_privat"], "PersonNr"),
+            (ids["pooled_foretag"], "PersonNr"),
+        }
+
+        # ...and one alias row per variant (the PK carries register_variant_id).
+        aliases = conn.execute(
+            "SELECT register_variant_id FROM variable_alias WHERE variable_id = ?",
+            (ids["var_personnr"],),
+        ).fetchall()
+        assert set(aliases) == {(ids["pooled_privat"],), (ids["pooled_foretag"],)}
+
     def test_overlapping_representations_use_state_discriminator(
         self, tmp_path: Path, global_db: Path
     ) -> None:
         counts, out = _run_extend(
             tmp_path, global_db, _overlapping_representation_inventory()
         )
-        assert counts["variables"] == 2
-        assert counts["states"] == 3
+        # belopp (2 states) + kontonr, plus the base's pooled personnr (2 states).
+        assert counts["variables"] == 3
+        assert counts["states"] == 5
 
         conn = sqlite3.connect(out)
         ids = _steward_register_ids()
@@ -408,8 +506,8 @@ class TestOverlayInserts:
     ) -> None:
         _run_extend(tmp_path, global_db, _base_inventory())
         ids = _steward_register_ids()
-        for key in ("provider", "register", "variant", "var_belopp", "var_kontonr"):
-            assert ids[key] >= _MINT_BIT
+        for key in ids:
+            assert ids[key] >= _MINT_BIT, key
 
 
 # ── no-clobber + base-DB immutability ────────────────────────────────────────
@@ -496,6 +594,24 @@ class TestSlugs:
         assert None not in slugs
         assert len(slugs) == 2  # belopp, kontonr both got distinct slugs
 
+    def test_pooled_variable_slug_is_unsuffixed(
+        self, tmp_path: Path, global_db: Path
+    ) -> None:
+        # The key its two variants both list is one variable, so
+        # `populate_variable_slugs` sees no split sibling to uniquify against —
+        # no `personnr-2` is minted.
+        _, out = _run_extend(tmp_path, global_db, _base_inventory())
+        conn = sqlite3.connect(out)
+        ids = _steward_register_ids()
+        slugs = [
+            r[0]
+            for r in conn.execute(
+                "SELECT slug FROM variable WHERE register_id = ?",
+                (ids["pooled_register"],),
+            )
+        ]
+        assert slugs == ["personnr"]
+
     def test_steward_auto_toml_written(self, tmp_path: Path, global_db: Path) -> None:
         inv_path = tmp_path / "inventory.json"
         inv_path.write_text(json.dumps(_base_inventory()), encoding="utf-8")
@@ -581,7 +697,7 @@ class TestFlavoredValidation:
         # validate=True runs the flavored validator as the pre_rename_hook; it
         # raises on failure, so reaching here means it passed.
         counts, out = _run_extend(tmp_path, global_db, _base_inventory(), validate=True)
-        assert counts["variables"] == 2
+        assert counts["variables"] == 3
         result = validate_built_db(out, flavored=True)
         assert not result.failures, result.failures
 
@@ -1001,6 +1117,27 @@ class TestLoader:
             load_inventory(path)
         assert exc.value.exit_code == EXIT_CONFIG
 
+    def test_divergent_pooled_variable_attribute_is_config_error(
+        self, tmp_path: Path
+    ) -> None:
+        # Two variants of one register list `x`, disagreeing on `name`. The
+        # pooled variable row carries exactly one name, so this is a structural
+        # defect naming the register, key and field — never a silent first-wins.
+        reg = _reg_stub("swedbank", "tx")
+        second = _reg_stub("swedbank", "tx")["variants"][0]
+        second["key"] = "v2"
+        second["variables"][0]["name"] = "Other"
+        reg["variants"].append(second)
+        inv = {"steward": "swecov", "source_label": "x", "registers": [reg]}
+        path = tmp_path / "inv.json"
+        path.write_text(json.dumps(inv), encoding="utf-8")
+        with pytest.raises(RegMetaError) as exc:
+            load_inventory(path)
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert "swedbank/tx" in exc.value.message
+        assert "'x'" in exc.value.message
+        assert "`name`" in exc.value.message
+
     def test_non_object_root_is_config_error(self, tmp_path: Path) -> None:
         # A JSON array (or any non-object) root must fail strict load.
         path = tmp_path / "inv.json"
@@ -1342,22 +1479,6 @@ class TestFailurePaths:
 # ── flavored entity-key curation gate (#559) ─────────────────────────────────
 
 
-def _write_steward_slug_dir_with_panel(slug_dir: Path, entity_key_slug: str) -> None:
-    """`_write_steward_slug_dir` + a `panel_entity_key` on the variant pointing at
-    `entity_key_slug` (the belopp var's resolved slug). The variant entry sets the
-    panel key so the overlaid DB carries a STEWARD entity-key variable the flavored
-    gate must enforce."""
-    ids = _steward_register_ids()
-    (slug_dir / ".snapshot.json").write_text("{}\n", encoding="utf-8")
-    (slug_dir / f"{_BANK}.toml").write_text(
-        f'[register."{ids["register"]}"]\nslug = "transaktioner"\n'
-        f'[register_variant."{ids["register"]}.{ids["variant"]}"]\n'
-        'slug = "transaktioner-default"\n'
-        f'panel_entity_key = "{entity_key_slug}"\n',
-        encoding="utf-8",
-    )
-
-
 class TestFlavoredEntityKeyGate:
     """#559: the flavored extend-db validate path runs the entity-key curation
     gate scoped to the steward providers, end-to-end through the real
@@ -1377,7 +1498,7 @@ class TestFlavoredEntityKeyGate:
         inv_path.write_text(json.dumps(_base_inventory()), encoding="utf-8")
         slug_dir = tmp_path / "panel-sslug"
         slug_dir.mkdir()
-        _write_steward_slug_dir_with_panel(slug_dir, belopp_slug)
+        _write_steward_slug_dir(slug_dir, panel_entity_key=belopp_slug)
         out_dir = tmp_path / "panel-out"
         out_dir.mkdir()
         extend_db(
@@ -1667,7 +1788,7 @@ class TestCli:
         data = envelope["data"]
         for key in ("providers", "registers", "variants", "variables", "states"):
             assert key in data
-        assert data["variables"] == 2
+        assert data["variables"] == 3
         assert "db_path" in data
         assert data["db_path"] == str(out_dir / "reg_meta.db")
 
@@ -1697,4 +1818,4 @@ class TestCli:
         )
         envelope, exit_code = _cmd_extend_db(args)
         assert exit_code == 0
-        assert envelope["data"]["variables"] == 2
+        assert envelope["data"]["variables"] == 3
