@@ -4469,7 +4469,6 @@ class SCBAdapter:
         yield from self._emit_variables()
         yield from self._emit_variable_states()
         yield from self._emit_variable_aliases()
-        yield from self._emit_replaced_by_edges()
         yield from self._emit_provenance()
         yield from self._emit_warnings()
 
@@ -4594,13 +4593,6 @@ class SCBAdapter:
                 register_variant_id=register_variant_id,
                 delivery_column_name=column,
             )
-
-    def _emit_replaced_by_edges(self) -> Iterator[IRObject]:
-        # Variable-grain succession is derived by the materializer from the
-        # adapter-written `timeseries_event`; A4.1 has no variable-grain
-        # replaced_by IR carrier wired through, so nothing is emitted here yet
-        # (G3 — register/variant/variable replaced_by stays materializer-side).
-        return iter(())
 
     def _emit_provenance(self) -> Iterator[IRObject]:
         # One IRDeliveryProvenance per register_variant, carrying the
