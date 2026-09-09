@@ -1278,3 +1278,26 @@ agents"](https://github.com/adamaltmejd/switchyard/issues/64); trust-gate-read a
 with no upstream fix claimed. Local-only sanitized raw excerpts, the 119-call ledger,
 the native wait receipt, source references and exact publication/readback are under
 `archive/reports/yard/2026-09-08-goal-completion/Y-17-wait-loop-triage/`.
+
+## 2026-09-09: gate-image failure omits the actionable build diagnostic
+
+Y-71/1/e5 on Yard 0.14.5 failed while preparing the `catalog-flows` image at candidate
+`ca5210946565582ee27c753e6ba097d2b8ac52c8`. Attention A-177 and the retained gate log
+showed `docker build --quiet`, Docker exit 1 and the Playwright install step's inner
+exit 127, but omitted the runtime cause. The gate command had not run. An additional
+build of the exact candidate with `--progress=plain` exposed Node's missing
+`libatomic.so.1`; cached earlier layers were reused. Adding that library fixed the
+project image, and the final candidate passed all gates.
+
+The installed binary confirms that `buildImage()` requests quiet output and its
+subprocess helper captures bounded stdout and stderr, but the failure exception carries
+stderr only. No output-to-evidence callback is supplied for this image build. This
+establishes the capture path, not which stream carried the missing-library message in
+the original quiet run; only the plain retry retained that diagnostic.
+
+Retain actionable output from both streams and link it from image-preparation failures.
+A synthetic Dockerfile that prints to each stream and exits 127 should leave both
+messages in bounded evidence. Local-only evidence is under
+`archive/reports/releases/2026-09-09/`: `Y-71-gate-failure.json`,
+`Y-71-e5-gate-diagnostic.log`, `yard-image-check/ca52109/yard-build.log` and
+`yard-gate-diagnostic-source.json`. No external report was filed for this incident.
