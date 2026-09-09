@@ -36,6 +36,15 @@
 # (Cloudflare) does the deep-link → index.html rewrite.
 FROM oven/bun:1.4.2-alpine@sha256:d888c0ae6c86d7866ff10c5aafdd9077b36aee6455b33dd270fb93c0dd5cef6f AS frontend
 
+# node: the frontend tools' launchers (`openapi-typescript`, `vite`) are
+# `#!/usr/bin/env node` scripts, and this base answers them itself — it ships
+# `/usr/local/bun-node-fallback-bin/node -> bun`, last on the image PATH — so
+# without this COPY the shipped bundle is built by bun's runtime, the one
+# runtime no gate exercises. Copy in the node CI and `.yard/Dockerfile` pin;
+# /usr/local/bin precedes that fallback dir. Alpine (musl) build to match this
+# base, whose libstdc++/libgcc/musl are all that binary needs.
+COPY --from=node:26.8.1-alpine@sha256:2d984a15c9b54fd0aeb608b8e0d0d83529eb34d2966db27a1fb4f1edc3d298a3 /usr/local/bin/node /usr/local/bin/node
+
 WORKDIR /build/frontend
 
 # Install deps against the committed lockfile first (cache layer keyed on the

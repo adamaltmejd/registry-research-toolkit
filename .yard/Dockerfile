@@ -24,9 +24,11 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 # node: the frontend tools' launchers (biome, svelte-check, vitest, vite,
-# openapi-typescript) are `#!/usr/bin/env node` scripts — bun alone does not
-# satisfy them (CI is green only because GitHub runners ship system node), and
-# Debian's node 20 trips an undici incompatibility in the vitest jsdom teardown.
+# openapi-typescript) are `#!/usr/bin/env node` scripts — given no node on PATH
+# bun does not fail but runs them on its own runtime instead, and Debian's node
+# 20 trips an undici incompatibility in the vitest jsdom teardown. The other two
+# homes that run these tools pin this same version: CI (`actions/setup-node`)
+# and the production SPA build (`reg_webapp/Dockerfile`).
 # The major is chosen deliberately, not held to whichever line is LTS.
 COPY --from=node:26.8.1-bookworm-slim@sha256:367679cf9792759492a486e4aa4b421764d71a9546a6dae8aab81a99eb797b3e /usr/local/bin/node /usr/local/bin/node
 
