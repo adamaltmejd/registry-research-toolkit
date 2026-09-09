@@ -235,6 +235,21 @@ function onTo(event: Event): void {
     /* Above the `to` thumb so a coincident pair stays draggable apart. */
     z-index: 2;
   }
+  /* The KNOB carries the focus ring, not the input: both inputs are transparent
+     overlays spanning the whole track, so the browser's own outline draws the
+     same rectangle around the rail whichever thumb holds focus — a keyboard user
+     can see that the slider is focused but not which end, nor where it sits. Two
+     rules, not one list: an unknown pseudo-element invalidates the whole
+     selector, so the WebKit and Gecko spellings cannot share one. */
+  .thumb:focus-visible {
+    outline: none;
+  }
+  .thumb:focus-visible::-webkit-slider-thumb {
+    box-shadow: var(--focus-ring);
+  }
+  .thumb:focus-visible::-moz-range-thumb {
+    box-shadow: var(--focus-ring);
+  }
   .thumb::-webkit-slider-runnable-track {
     background: none;
   }

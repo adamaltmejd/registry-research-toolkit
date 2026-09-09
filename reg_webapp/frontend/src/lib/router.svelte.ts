@@ -129,16 +129,23 @@ export function parseRoute(pathname: string): Route {
 /** Reactive current route. Svelte 5 rune state — components read `router.route`
  * and re-render on navigation. A module-level singleton: one router per SPA. */
 class Router {
-  route = $state<Route>(parseRoute(window.location.pathname));
+  /** The location this router is showing, split into its two reactive halves.
+   * `route` is DERIVED, not assigned: `parseRoute` is pure in the pathname, so a
+   * query-only navigation leaves the pathname — and therefore the route OBJECT —
+   * untouched, with no invariant to maintain by hand. That identity matters as
+   * much as the value: handing consumers a structurally equal replacement
+   * invalidates every route-derived prop, which refetched the query-independent
+   * catalog node and remounted the article around the leaf's period card,
+   * dropping the researcher's keyboard focus to the document body mid-Apply
+   * (Y-65; see reg_webapp/DESIGN.md → SPA routing). */
+  private pathname = $state<string>(window.location.pathname);
+  route: Route = $derived(parseRoute(this.pathname));
   /** The reactive `?query` string (with leading `?`, or empty). DISTINCT from
-   * `route`, which is keyed on the PATHNAME only: a same-path/new-`?period`
-   * navigation produces a structurally-equal `Route` (so `route` doesn't change
-   * and `{#key route.fqidPath}` doesn't remount), but the resolution state lives
-   * in the query (see reg_webapp/DESIGN.md → Catalog router structure; A5.3b's
-   * single source of truth — deep-linkable /
-   * shareable / back-forward-correct). Components read `getQueryParam("period")`
-   * etc. and re-fetch when it changes. Kept in sync with the URL in BOTH the
-   * popstate handler AND inside `navigate` after `pushState`. */
+   * `route`, which is keyed on the PATHNAME only: the resolution state lives in
+   * the query (see reg_webapp/DESIGN.md → Catalog router structure; A5.3b's
+   * single source of truth — deep-linkable / shareable / back-forward-correct),
+   * and it is what a same-path/new-`?period` navigation moves. Components read
+   * `getQueryParam("period")` etc. and re-fetch when it changes. */
   search = $state<string>(window.location.search);
   /** Where the search view's close control returns. Updated only when entering
    * `/search` from a non-search route, so query refinements on `/search` do not
@@ -147,12 +154,21 @@ class Router {
 
   constructor() {
     window.addEventListener("popstate", () => {
-      this.route = parseRoute(window.location.pathname);
-      this.search = window.location.search;
+      this.syncLocation();
       if (this.route.name === "search") {
         this.searchReturnUrl = this.searchReturnUrlFromState();
       }
     });
+  }
+
+  /** Re-sync both reactive halves off `window.location` — the one place that
+   * reads the browser's location, called from the popstate handler AND from `go`
+   * after its push/replace. Assigning an unchanged pathname is not a change, so
+   * the derived `route` (and everything keyed on it) survives an Apply on the
+   * catalog leaf's period control untouched. */
+  private syncLocation(): void {
+    this.pathname = window.location.pathname;
+    this.search = window.location.search;
   }
 
   /** Navigate to `url` (path + optional `?query`/`#hash`) via pushState (no
@@ -190,8 +206,7 @@ class Router {
     } else {
       window.history.pushState(nextState, "", url);
     }
-    this.route = parseRoute(window.location.pathname);
-    this.search = window.location.search;
+    this.syncLocation();
   }
 
   private nextHistoryState(nextRoute: Route, current: string): AppHistoryState {

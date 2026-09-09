@@ -77,8 +77,12 @@ let drawerOpen = $state(false);
 
 // 1. A navigation, so the drawer isn't left covering the freshly-routed page.
 $effect(() => {
-  // The bare read is the dependency: re-run on every route change.
+  // The bare reads are the dependency: re-run on every navigation. BOTH halves
+  // of the location, because `route` moves only when the pathname does (Y-65) —
+  // browser back/forward between two `?period`s on one leaf is a navigation the
+  // drawer must not stand through either.
   route;
+  router.search;
   drawerOpen = false;
 });
 

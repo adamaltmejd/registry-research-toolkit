@@ -13,11 +13,11 @@
 //   shot <url-path>     open a path (e.g. /catalog/scb/lisa) and screenshot it
 //   eval <url-path> <js> open a path, evaluate JS in the page, print the result
 //   flows <out-dir> [scenario...]
-//                       the project gates: six scenarios (three /project
-//                       error+retry, two catalog, one deliberate replacement)
+//                       the project gates: eight scenarios (three /project
+//                       error+retry, four catalog, one deliberate replacement)
 //                       × four viewports, each in a fresh context, PNGs →
 //                       <out-dir>. Named scenarios run just those; no names
-//                       runs all six.
+//                       runs all eight.
 //
 // smoke/shot screenshots land in $REG_WEBAPP_SHOTS — dev.sh sets it to the one
 // directory that invocation owns, and a direct run gets a fresh one under /tmp;
@@ -195,21 +195,22 @@ function check(condition, message) {
 
 // ── `flows`: the project error/retry + catalog gates ────────────────────────
 //
-// Seven scenarios × four viewports = 28 cases, each in a FRESH context against
+// Eight scenarios × four viewports = 32 cases, each in a FRESH context against
 // the REAL backend (the caller points it at a synthetic catalog DB through
 // REG_META_DB — see catalog_fixture_db.py). The three error scenarios inject
-// exactly one failing request and the other four inject none: everything else
+// exactly one failing request and the other five inject none: everything else
 // is the actual app answering — including the browser's own IndexedDB, which the
 // catalog cases read back.
 //
-// These write 52 PNGs. 40 of them are artifact contracts declared in
+// These write 64 PNGs. 40 of them are artifact contracts declared in
 // .yard/config.toml, split across gates because a yard gate declares at most 16
 // filenames: `project-flows` names the three /project error+retry scenarios (16
 // PNGs), `catalog-flows` two catalog ones (16) and `replace-flows` the
-// deliberate-replacement one (8). The remaining 12 are `catalog-source-period`,
-// which has no gate yet — the gate list is the operator's. That is what the
-// scenario argument in the dispatch below is for — a bare `flows <out-dir>` still
-// runs all seven, which is the local verification invocation.
+// deliberate-replacement one (8). The remaining 24 are `catalog-source-period`
+// (12) and `catalog-period-focus` (12), which have no gate yet — the gate list is
+// the operator's. That is what the scenario argument in the dispatch below is
+// for — a bare `flows <out-dir>` still runs all eight, which is the local
+// verification invocation.
 //
 // The filenames carry the size — so the sizes are the `shot` presets above,
 // spelled once (frontend/DESIGN.md designs for exactly these four widths). Named
@@ -237,6 +238,46 @@ function validated(page) {
   );
 }
 
+/** Wait until the URL's applied `?period` reads `wire` — how every Apply path
+ * here knows the router has written the navigation the control triggered. */
+function periodApplied(page, wire) {
+  return page.waitForFunction(
+    (want) => new URLSearchParams(location.search).get("period") === want,
+    wire,
+    { timeout: 10_000 },
+  );
+}
+
+/** Hold every `?period` resolve open until the returned `release()` lets it
+ * through. Nothing is faked — the real request is forwarded, just late — so a
+ * case can act WHILE one is genuinely in flight; against a localhost backend that
+ * answers in single-digit milliseconds there is otherwise no in-flight moment to
+ * act in. Gated on a promise rather than a timer: the overlap is then a fact
+ * rather than a race the clock usually wins, and it costs no wall time. */
+async function holdPeriodResolve(page) {
+  const pattern = /\/api\/catalog\/.*period=/;
+  let open;
+  const held = new Promise((resolve) => {
+    open = resolve;
+  });
+  // `release()` waits for the requests it let go before removing the route:
+  // unrouting one that a handler is still holding hands it to the fallback, and
+  // the handler's own `continue()` then loses the race ("Route is already
+  // handled!") — noise on stderr for work the case is about to assert on.
+  const forwarded = new Set();
+  const handler = (route) => {
+    const done = held.then(() => route.continue());
+    forwarded.add(done);
+    return done;
+  };
+  await page.route(pattern, handler);
+  return async () => {
+    open();
+    await Promise.all(forwarded);
+    await page.unroute(pattern, handler);
+  };
+}
+
 /** Fail every request to `path` in transport (counting each injection), and
  * hand back the restore that puts the real route back. page.route globs match
  * the whole URL, hence the `**` prefix on the pathname `posts()` compares
@@ -262,11 +303,15 @@ function openProjectFile(page, project) {
   });
 }
 
+/** The catalog picker's checkbox for `column` — both picker shapes wrap it in the
+ * row/cell label, so the column name is its accessible name. */
+const columnCheckbox = (page, column) =>
+  page.getByRole("checkbox", { name: new RegExp(`^${column}\\b`) });
+
 /** Stage a delivery column in the catalog picker and commit it to the project —
- * the researcher's only add path (both picker shapes wrap their checkbox in the
- * row/cell label, so the column name is its accessible name). */
+ * the researcher's only add path. */
 async function addColumn(page, column) {
-  await page.getByRole("checkbox", { name: new RegExp(`^${column}\\b`) }).check();
+  await columnCheckbox(page, column).check();
   await page.getByRole("button", { name: "Add to project" }).click();
 }
 
@@ -297,7 +342,8 @@ async function autosavedDraft() {
  * their periods resolve) and the write lands ~500ms after the LAST of them, so the
  * first record on disk may be a skeleton. Its own loop rather than waitForFunction
  * so a timeout reports what the draft actually held — the line an operator triages
- * a red gate from. */
+ * a red gate from. Returns the matching record, so a caller that needs more of it
+ * than the shape does not read IndexedDB a second time. */
 async function draftSaved(page, want, shape = (s) => s.register_variant) {
   const wanted = JSON.stringify(want);
   const deadline = Date.now() + 15_000;
@@ -305,7 +351,7 @@ async function draftSaved(page, want, shape = (s) => s.register_variant) {
   do {
     const stored = await page.evaluate(autosavedDraft);
     held = JSON.stringify((stored?.sources ?? []).map(shape));
-    if (held === wanted) return;
+    if (held === wanted) return stored;
     await page.waitForTimeout(250);
   } while (Date.now() < deadline);
   throw new Error(`autosaved draft holds ${held}, wanted ${wanted}`);
@@ -316,13 +362,45 @@ const focused = (locator) =>
   locator.evaluate((el) => el === document.activeElement);
 
 /** Tab until `locator` holds focus — a REAL keyboard focus, so the shot shows
- * the :focus-visible ring (a programmatic .focus() does not paint one). */
-async function tabTo(page, locator, what) {
+ * the :focus-visible ring (a programmatic .focus() does not paint one). `key` is
+ * "Shift+Tab" to walk backwards, for a control the focus has already passed. */
+async function tabTo(page, locator, what, key = "Tab") {
   for (let i = 0; i < 80; i += 1) {
     if (await focused(locator)) return;
-    await page.keyboard.press("Tab");
+    await page.keyboard.press(key);
   }
   throw new Error(`flows: ${what} never took keyboard focus`);
+}
+
+/** What the document is focusing, and whether that focus is VISIBLE: the element
+ * itself, its `:focus-visible` state and the ring it is actually painting. Read
+ * off `document.activeElement` rather than a locator, because the question after
+ * an Apply is where focus WENT — naming an element up front would assume it. */
+function focusState(page) {
+  return page.evaluate(() => {
+    // `<body>` is reported like any other element (it is where a lost focus
+    // lands), so every caller reads the same shape.
+    const el = document.activeElement ?? document.body;
+    return {
+      at: `${el.tagName.toLowerCase()}${el.id ? `#${el.id}` : ""}`,
+      name: el.getAttribute("aria-label") ?? el.labels?.[0]?.textContent ?? "",
+      value: el.value ?? "",
+      inPeriodCard: el.closest("form.period-picker") !== null,
+      visible: el.matches(":focus-visible"),
+      ring: getComputedStyle(el).boxShadow,
+    };
+  });
+}
+
+/** Assert the period card holds a VISIBLE keyboard focus — the ring is the whole
+ * point (a focused control nobody can see is the defect, one element over).
+ * Deliberately the app's OWN `--focus-ring` box-shadow: the browser's default
+ * outline is what the filled Apply button already had, invisible on its ink. */
+function checkFocusRing(state, why) {
+  check(
+    state.inPeriodCard && state.visible && state.ring !== "none",
+    `${why} — focus is ${JSON.stringify(state)}`,
+  );
 }
 
 /** One artifact: assert the layout fits the viewport, then write the PNG into
@@ -628,11 +706,7 @@ async function catalogPeriodRequiredCase(page, counts, shoot) {
   await periodSlider.getByLabel("To year").fill("2018");
   await periodSlider.getByLabel("From year").fill("2018");
   await page.getByRole("button", { name: "Apply period" }).click();
-  await page.waitForFunction(
-    () => new URLSearchParams(location.search).get("period") === "2018",
-    null,
-    { timeout: 10_000 },
-  );
+  await periodApplied(page, "2018");
   await settled(page);
   const green = validated(page);
   await addColumn(page, "Kon");
@@ -745,6 +819,139 @@ async function sourcePeriodCase(page, counts, shoot, project) {
     counts.validate > 0 && counts.order === 0,
     `the correction POSTed ${counts.validate} validation(s) and ` +
       `${counts.order} order(s)`,
+  );
+}
+
+/** Scenario 8 — the period card KEEPS keyboard focus across an Apply (Y-65). A
+ * keyboard researcher adjusting the catalog period repeatedly through the From
+ * and To fields used to lose focus to the document body on every Apply, because
+ * the applied `?period` moved the router's route object and remounted the article
+ * the card lives in (reg_webapp/DESIGN.md → SPA routing). All three keyboard
+ * Apply paths are driven here — Enter in a year field, Enter on the Apply button
+ * the next Tab reaches, and Enter on an arrowed slider thumb — and the shots are
+ * the evidence that the focus ring is still on screen afterwards. The draft the
+ * leaf authored first is the guard on the other side: browsing the period must
+ * not rewrite it. */
+async function periodFocusCase(page, counts, shoot) {
+  const from = page.getByRole("textbox", { name: "From" });
+  const to = page.getByRole("textbox", { name: "To" });
+  const apply = page.getByRole("button", { name: "Apply period" });
+  /** Retype a year field's whole content the way a keyboard user does. */
+  const retype = async (year) => {
+    await page.keyboard.press("Control+A");
+    await page.keyboard.type(year);
+  };
+
+  // (1) Arriving at the leaf focuses nothing — a period control that grabbed the
+  //     focus on navigation would be a worse bug than the one being fixed.
+  const arrival = await focusState(page);
+  check(
+    arrival.at === "body",
+    `the leaf focused ${JSON.stringify(arrival)} on arrival`,
+  );
+
+  //     Then a pick, so the browse-period edits below have a draft to leave alone.
+  const green = validated(page);
+  await addColumn(page, "Kon");
+  await green;
+  await settled(page);
+  const draft = await draftSaved(page, ["scb/lisa/individer-15plus"]);
+  const authored = JSON.stringify(draft.sources);
+  const validations = counts.validate;
+
+  // (2) Type a valid pair and press Enter. Tabbed to, never .focus()ed — a
+  //     programmatic focus paints no ring, and the ring is what is being fixed.
+  await tabTo(page, from, "the From year field");
+  await retype("2018");
+  await page.keyboard.press("Tab");
+  check(await focused(to), "Tab from From did not reach the To year field");
+  await retype("2021");
+  await page.keyboard.press("Enter");
+  await periodApplied(page, "2018..2021");
+  await settled(page);
+  const typed = await focusState(page);
+  checkFocusRing(typed, "Enter in the To field lost the period card's focus");
+  check(
+    typed.value === "2021",
+    `the focused field holds ${JSON.stringify(typed.value)}, not the typed 2021`,
+  );
+  await page.getByText("narrowed to 2018..2021").waitFor();
+  await shoot("catalog-period-focus-typed");
+
+  // (3) The Tab order is intact and its next stop is Apply, so KEYBOARD-activating
+  //     it is the second Apply path — and it keeps a visible focus too. Focus is
+  //     still in the To field, which the Enter above neither moved nor cleared.
+  await retype("2020");
+  await page.keyboard.press("Tab");
+  check(await focused(apply), "Tab from the To field did not reach Apply period");
+  await page.keyboard.press("Enter");
+  await periodApplied(page, "2018..2020");
+  await settled(page);
+  const applied = await focusState(page);
+  checkFocusRing(applied, "activating Apply from the keyboard lost its focus");
+  check(
+    applied.name === "Apply period",
+    `focus after the keyboard Apply is on ${JSON.stringify(applied.name)}`,
+  );
+  await page.getByText("narrowed to 2018..2020").waitFor();
+  await shoot("catalog-period-focus-applied");
+
+  // (4) The card's THIRD keyboard Apply path: a slider thumb, arrowed and then
+  //     submitted with Enter. Its ring is declared on the knob pseudo-element
+  //     (the inputs are transparent overlays spanning the whole track, so a ring
+  //     on the input frames the rail and names neither end) — and no browser
+  //     reports a computed style for that pseudo, so the SHOT is the ring's
+  //     evidence and the check below is that the thumb still holds a visible
+  //     keyboard focus at all.
+  //     Scoped to the card: the desktop widths also render the project-window
+  //     slider in the header, which labels its own thumbs the same way.
+  const fromThumb = page
+    .locator("form.period-picker")
+    .getByRole("slider", { name: "From year" });
+  await tabTo(page, fromThumb, "the From year thumb", "Shift+Tab");
+  // Rightwards: the leaf's coverage opens at 2018, where the thumb already sits,
+  // and a step into the floor would apply the period already showing.
+  await page.keyboard.press("ArrowRight");
+  await page.keyboard.press("Enter");
+  await periodApplied(page, "2019..2020");
+  await settled(page);
+  const thumbed = await focusState(page);
+  check(
+    thumbed.inPeriodCard && thumbed.visible && thumbed.name === "From year",
+    `Enter on the From year thumb left focus at ${JSON.stringify(thumbed)}`,
+  );
+  await page.getByText("narrowed to 2019..2020").waitFor();
+  await shoot("catalog-period-focus-thumb");
+
+  // (5) A researcher who moves on DURING the request is not pulled back. The
+  //     resolve is held until they have moved, so the overlap is a fact and not a
+  //     race, and the column row is where they moved to — a control the leaf has
+  //     at every width.
+  const release = await holdPeriodResolve(page);
+  const elsewhere = columnCheckbox(page, "Kon");
+  await tabTo(page, to, "the To year field");
+  await retype("2021");
+  const resolved = page.waitForResponse((r) => r.url().includes("period=2019..2021"));
+  await page.keyboard.press("Enter");
+  await elsewhere.focus();
+  await release();
+  await resolved;
+  await settled(page);
+  const moved = await focusState(page);
+  check(
+    moved.inPeriodCard === false,
+    `focus was pulled back to ${JSON.stringify(moved)} after the researcher left`,
+  );
+
+  // (6) What the browse-period edits authored: nothing. The draft is the one the
+  //     pick made, and no further validation was asked for. `settled` already
+  //     waited out the network; this is the autosave debounce (~500ms) on top.
+  await page.waitForTimeout(600);
+  const held = JSON.stringify((await page.evaluate(autosavedDraft)).sources);
+  check(
+    held === authored && counts.validate === validations,
+    `browsing the period rewrote the draft to ${held} (was ${authored}) and ` +
+      `POSTed ${counts.validate - validations} extra validation(s)`,
   );
 }
 
@@ -980,6 +1187,14 @@ try {
         shots: 3,
         run: (p, c, shoot) => sourcePeriodCase(p, c, shoot, twoSourceProject),
       },
+      // The SAME leaf the reported focus loss was found on, entered the way a
+      // shared link reaches it — with a period already applied, so every Apply
+      // below is a period CHANGE.
+      "catalog-period-focus": {
+        shots: 3,
+        route: "/catalog/scb/lisa/kon?period=2019..2020",
+        run: periodFocusCase,
+      },
     };
     for (const name of selection) {
       check(
@@ -989,7 +1204,7 @@ try {
     }
     // No names = every scenario, which is the local verification invocation. The
     // yard gates each name their own subset instead: a gate declares at most
-    // 16 artifact filenames, and all seven scenarios write 52.
+    // 16 artifact filenames, and all eight scenarios write 64.
     const names = selection.length > 0 ? selection : Object.keys(scenarios);
     for (const viewport of FLOW_VIEWPORTS) {
       for (const name of names) {
@@ -1046,11 +1261,7 @@ try {
     check(from === seededFrom + 1, `From year did not step: ${seededFrom} → ${from}`);
     const period = `${from}..${to}`;
     await page.getByRole("button", { name: "Apply period" }).click();
-    await page.waitForFunction(
-      (wire) => new URLSearchParams(location.search).get("period") === wire,
-      period,
-      { timeout: 10_000 },
-    );
+    await periodApplied(page, period);
     await settled(page);
     await page.waitForFunction(
       (wire) => document.body.innerText.includes(`narrowed to ${wire}`),

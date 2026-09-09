@@ -1285,6 +1285,15 @@ compiles): it reads `window.location.pathname`, navigates via `history.pushState
 handles `popstate`, and intercepts internal `<a>` clicks (the `link` action) so
 navigation doesn't full-reload.
 
+`route` is re-parsed — and so re-assigned — only when the **pathname** moves. A
+query-only navigation (Apply on a catalog leaf's period card) parses to the same route,
+and handing consumers a fresh object would invalidate every route-derived prop: the
+query-independent catalog node refetches and the article remounts around the card the
+researcher is typing in, dropping keyboard focus to the document body mid-Apply (Y-65).
+What such a navigation does move is `search`, which the resolution fetches read. A
+*genuine* refetch still swaps in the loading branch and takes its subtree with it — the
+invariant removes the spurious refetch, not the teardown.
+
 - **Dev** serving Just Works: the Vite dev server's default `appType: 'spa'` rewrites
   unknown paths to `index.html`, and `vite.config.ts` proxies `/api` to the backend on
   `:8000`. Deep-linking to `/catalog/...` in `bun run dev` works.

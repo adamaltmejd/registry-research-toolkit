@@ -356,6 +356,23 @@ describe("AppShell — mobile drawer", () => {
     await expect.element(toggle).toHaveAttribute("aria-expanded", "false");
   });
 
+  it("closes when only the QUERY changes underneath it (Y-65)", async () => {
+    setUrl("/catalog/scb/lisa/kon?period=2019..2020");
+    await render(AppShell, minimalProps());
+
+    const toggle = menuToggle();
+    await toggle.click();
+    await expect.element(drawer()).toBeVisible();
+
+    // A back/forward between two applied periods on one leaf is a navigation
+    // too, and the route object deliberately does NOT move for it (Y-65) — so
+    // the drawer's close has to watch the query as well as the path.
+    router.navigate("/catalog/scb/lisa/kon?period=2018..2021");
+
+    await expect.element(drawer()).not.toBeInTheDocument();
+    await expect.element(toggle).toHaveAttribute("aria-expanded", "false");
+  });
+
   it("closes when a drawer link points at the route already showing", async () => {
     setUrl("/catalog");
     const { container } = await render(AppShell, minimalProps());

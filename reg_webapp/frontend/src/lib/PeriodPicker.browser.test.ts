@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
+import { userEvent } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
 import PeriodPicker from "./PeriodPicker.svelte";
 import type { Coverage } from "./period";
@@ -1027,28 +1028,29 @@ describe("PeriodPicker — window slider (#615)", () => {
 // path: both bounds are read together on Apply, so the ORDER the user types them
 // in cannot change the submitted wire, and an entry that crosses or falls outside
 // the selectable years is refused with a reason instead of clamped.
-describe("PeriodPicker — exact year entry (Y-16)", () => {
-  // A leaf still being delivered (open-ended coverage from 2015) on a 2024
-  // catalog, narrowed to 2019..2020 — the reported starting state. Selectable
-  // years are the coverage band 2015–2024, for the thumbs and the fields alike.
-  const EXACT = {
-    period: "2019..2020",
-    window: null,
-    coverage: { from: 2015, to: null } as Coverage,
-    vintageYear: 2024,
+// A leaf still being delivered (open-ended coverage from 2015) on a 2024
+// catalog, narrowed to 2019..2020 — the reported starting state of both the
+// exact-entry (Y-16) and the keyboard-focus (Y-65) cases below. Selectable years
+// are the coverage band 2015–2024, for the thumbs and the fields alike.
+const EXACT = {
+  period: "2019..2020",
+  window: null,
+  coverage: { from: 2015, to: null } as Coverage,
+  vintageYear: 2024,
+};
+
+/** The three controls these cases drive, off one render. */
+function fields(
+  screen: Awaited<ReturnType<typeof render<typeof PeriodPicker>>>,
+) {
+  return {
+    from: screen.getByRole("textbox", { name: "From" }),
+    to: screen.getByRole("textbox", { name: "To" }),
+    apply: screen.getByRole("button", { name: "Apply period" }),
   };
+}
 
-  /** The three controls these cases drive, off one render. */
-  function fields(
-    screen: Awaited<ReturnType<typeof render<typeof PeriodPicker>>>,
-  ) {
-    return {
-      from: screen.getByRole("textbox", { name: "From" }),
-      to: screen.getByRole("textbox", { name: "To" }),
-      apply: screen.getByRole("button", { name: "Apply period" }),
-    };
-  }
-
+describe("PeriodPicker — exact year entry (Y-16)", () => {
   it("collapses a range to a single year — the reported LOWER-FIRST sequence", async () => {
     const onsubmit = vi.fn<(period: string) => void>();
     const screen = await render(PeriodPicker, {
@@ -1572,5 +1574,48 @@ describe("PeriodPicker — exact year entry (Y-16)", () => {
       .toBeVisible();
     await screen.getByRole("button", { name: "Apply period" }).click();
     expect(onsubmit).toHaveBeenLastCalledWith("2000..2008");
+  });
+});
+
+// The reported Y-65 flow: a keyboard researcher adjusts the period repeatedly
+// through the From and To fields on /catalog/scb/lisa/kon?period=2019..2020. The
+// route no longer remounts the card around them (the router keeps its route
+// object across a query-only navigation), so what has to hold here is the
+// picker's own half: applying a period must not remount anything INSIDE the card
+// either, or the control that submitted loses focus just the same.
+describe("PeriodPicker — keyboard focus across an applied period (Y-65)", () => {
+  it("submits the typed pair on Enter and the field keeps focus and value when it arrives back", async () => {
+    const onsubmit = vi.fn<(period: string) => void>();
+    const props = { ...EXACT, onsubmit, onclear: vi.fn() };
+    const screen = await render(PeriodPicker, props);
+    const { from, to } = fields(screen);
+    await from.fill("2018");
+    await to.fill("2021");
+    const field = to.element() as HTMLInputElement;
+    field.focus();
+    // Enter in a year field is the implicit submit of the card's own form — the
+    // Apply path this consumer actually uses.
+    await userEvent.keyboard("{Enter}");
+    expect(onsubmit).toHaveBeenLastCalledWith("2018..2021");
+
+    // The consumer writes the URL and the applied period arrives back as a prop.
+    await screen.rerender({ ...props, period: "2018..2021" });
+    expect(to.element()).toBe(field);
+    expect(document.activeElement).toBe(field);
+    await expect.element(to).toHaveValue("2021");
+  });
+
+  it("keeps the slider thumbs mounted across the same arrival, so a thumb Apply holds focus", async () => {
+    const props = { ...EXACT, onsubmit: vi.fn(), onclear: vi.fn() };
+    const screen = await render(PeriodPicker, props);
+    const thumb = screen.getByRole("slider", { name: "From year" });
+    const knob = thumb.element() as HTMLInputElement;
+    knob.focus();
+    await screen.rerender({ ...props, period: "2018..2021" });
+    // The SAME node, re-seeded in place by DualThumbTrack's controlled re-sync —
+    // not a fresh one that took the focus with it when the old one went away.
+    expect(thumb.element()).toBe(knob);
+    expect(document.activeElement).toBe(knob);
+    await expect.element(thumb).toHaveValue("2018");
   });
 });

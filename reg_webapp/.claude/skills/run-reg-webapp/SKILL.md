@@ -98,20 +98,24 @@ that line as evidence. A lane must provision first the way the gates do (offline
 `uv sync`, `cp -a /opt/frontend/node_modules reg_webapp/frontend/`).
 
 **Project flows (`flows`) — what the `project-flows`, `catalog-flows` and
-`replace-flows` yard gates run.** One command drives the whole project evidence set: six
+`replace-flows` yard gates run.** One command drives the whole project evidence set: eight
 scenarios — an empty project the backend blocks, an order request that fails in
 transport and is retried, a validation request that fails and is retried, a draft
 authored from a catalog leaf (picked, reloaded, recovered, then extended by a further
 pick on a cold catalog entry), a pick made on that leaf with no period chosen (refused,
-then recovered by choosing 2018), and an edited draft replaced deliberately (New raises
+then recovered by choosing 2018), an edited draft replaced deliberately (New raises
 the confirmation, a cancel keeps the draft, an Open raises the same one and a confirm
-loads the file) — at 375×812, 768×1024, 1280×900 and 1920×1080 — 24 cases, each in a
+loads the file), one named source's period corrected from the catalog leaf, and a
+keyboard researcher re-applying the leaf's period from the year fields, from Apply and
+from a slider thumb
+— at 375×812, 768×1024, 1280×900 and 1920×1080 — 32 cases, each in a
 fresh browser context against the real backend, with one failing request injected per
-error scenario and none into the other three. It asserts the behavior (real 422 +
+error scenario and none into the other five. It asserts the behavior (real 422 +
 `project_empty`, which retry the banner offers, a real `order.json` download whose
 manifest entry matches the synthetic catalog, the request counts behind a recovery, the
-modal semantics and focus return of the replacement confirmation, and what the browser's
-own IndexedDB holds across reloads — and does not hold after a refusal) and writes 40
+modal semantics and focus return of the replacement confirmation, where the keyboard
+focus and its visible ring sit once an Apply has resolved, and what the browser's
+own IndexedDB holds across reloads — and does not hold after a refusal) and writes 64
 PNGs into the directory you name:
 
 ```sh
@@ -129,9 +133,9 @@ at some viewport, or a server that never started; the servers are torn down eith
 
 Naming scenarios after the output directory runs just those —
 `dev.sh flows <dir> blocked-order order-retry validation-retry`,
-`dev.sh flows <dir> catalog-draft catalog-period-required`, or
-`dev.sh flows <dir> replace-confirm`. The bare form above runs all six and is the local
-verification invocation; the names exist for the gates.
+`dev.sh flows <dir> catalog-draft catalog-period-required catalog-source-period
+catalog-period-focus`, or `dev.sh flows <dir> replace-confirm`. The bare form above runs
+all eight and is the local verification invocation; the names exist for the gates.
 
 In yard this is **three** gates (`.yard/config.toml`, all selected by the `ui`
 workflow), each handed `$YARD_ARTIFACT_DIR` as its output directory: `project-flows`
@@ -139,7 +143,9 @@ runs the three `/project` error+retry scenarios and declares their 16 filenames,
 `catalog-flows` runs the two catalog ones and declares their 16, and `replace-flows`
 runs the deliberate-replacement one and declares its 8. The split is an artifact-list
 limit, not a distinction of concern — a gate declares at most 16 filenames and the six
-scenarios write 40 — and each gate names its own scenarios so none runs another's cases.
+gated scenarios write 40 — and each gate names its own scenarios so none runs another's
+cases. `catalog-source-period` and `catalog-period-focus` have no gate yet: run them
+locally and read their 24 PNGs from the `/tmp` directory you name.
 Unlike the ephemeral `/tmp` captures above, these are **retained**:
 `yard lane show <lane>` prints the artifact paths for the execution — they outlive the
 container and view cleanup, so open the PNGs there and judge them against

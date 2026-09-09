@@ -422,32 +422,32 @@ function submit(event: SubmitEvent): void {
   </div>
 
   <div class="slider-row">
-    {#key period}
-      <PeriodWindowSlider
-        min={sliderBounds.min}
-        max={sliderBounds.max}
-        selection={sliderSelection}
-        window={boundedWindow}
-        coverage={boundedCoverage}
-        vintageYear={ceilingYear}
-        {subAnnualPeriod}
-        hasSelection={hasSliderSelection}
-        {userChosen}
-        onchange={(next) => {
-          pending = next;
-          // The thumbs are now the pending selection, so the fields go back to
-          // mirroring it (and drop any refusal they were carrying).
-          entry = null;
-          entryCommitted = false;
-        }}
-        onreset={() => resetToWindow()}
-      />
-    {/key}
-    <!-- The EXACT entry, OUTSIDE the `{#key}`: the fields hold their own state,
-         so re-keying on `period` would silently discard what is in them. The
-         effect above re-arms them deliberately instead. (The catalog route also
-         remounts this whole card while the leaf reloads, so an Apply still costs
-         focus — pre-existing, and not what this placement is about.) -->
+    <!-- NOTHING in this card is remounted when the applied `?period` changes
+         (Y-65). The thumbs are a CONTROLLED buffer — DualThumbTrack re-seeds
+         `from`/`to` from `selection` whenever it moves — so the `{#key period}`
+         that used to wrap them re-seeded what was already re-seeding itself, and
+         cost the keyboard focus of whoever pressed Enter on a thumb to apply. The
+         exact fields were never inside it for the same reason in reverse: they
+         hold their own state, which the effect above re-arms deliberately. -->
+    <PeriodWindowSlider
+      min={sliderBounds.min}
+      max={sliderBounds.max}
+      selection={sliderSelection}
+      window={boundedWindow}
+      coverage={boundedCoverage}
+      vintageYear={ceilingYear}
+      {subAnnualPeriod}
+      hasSelection={hasSliderSelection}
+      {userChosen}
+      onchange={(next) => {
+        pending = next;
+        // The thumbs are now the pending selection, so the fields go back to
+        // mirroring it (and drop any refusal they were carrying).
+        entry = null;
+        entryCommitted = false;
+      }}
+      onreset={() => resetToWindow()}
+    />
     <div class="exact" role="group" aria-label="Exact years">
       <label class="micro-label" for="{uid}-from">From</label>
       <input
@@ -577,6 +577,14 @@ function submit(event: SubmitEvent): void {
   button.apply:hover,
   button.clear:hover {
     filter: brightness(0.95);
+  }
+  /* The card keeps keyboard focus across an Apply (Y-65), so the control that
+     submitted it has to SHOW that it still holds it — the browser's own ring is
+     ink-on-ink over the filled Apply. Same offset ring the year fields paint. */
+  button.apply:focus-visible,
+  button.clear:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
   }
   .problem {
     display: flex;

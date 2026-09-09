@@ -254,4 +254,41 @@ describe("DualThumbTrack", () => {
         .toHaveAttribute("aria-valuemin", "1995");
     });
   });
+
+  // The period card keeps keyboard focus across an Apply (Y-65), so a thumb that
+  // holds it has to SHOW that — and on the KNOB. Both inputs are transparent
+  // overlays spanning the whole track, so a ring on the input itself (the
+  // browser's own outline included) is one rectangle around the rail, identical
+  // whichever thumb is focused.
+  it("paints the focus ring on the focused thumb's knob, not around the track", async () => {
+    const screen = await render(DualThumbTrack, {
+      ...base,
+      selection: { from: 2000, to: 2010 },
+    });
+    const thumb = screen
+      .getByRole("slider", { name: "From year" })
+      .element() as HTMLInputElement;
+    thumb.focus();
+    expect(thumb.matches(":focus-visible")).toBe(true);
+    // The input's own ring is off: it spans the whole track, so it says the
+    // slider is focused but not which thumb, nor where it sits.
+    expect(getComputedStyle(thumb).outlineStyle).toBe("none");
+    // …and the ring is declared on the KNOB instead — asserted off the rule
+    // text because no browser reports a computed style for a slider-thumb
+    // pseudo-element (`getComputedStyle(el, "::-webkit-slider-thumb")` answers
+    // for the element itself). ONE rule, though the source carries both vendor
+    // spellings so neither engine gets `outline: none` with nothing in its
+    // place: a browser discards the rule whose pseudo-element it doesn't know,
+    // so Gecko's never reaches this CSSOM. The rendered proof that the ring
+    // paints is the four-width `catalog-period-focus-thumb` shot.
+    const knobRings = [...document.styleSheets]
+      .flatMap((sheet) => [...sheet.cssRules])
+      .map((rule) => rule.cssText)
+      .filter((text) =>
+        /:focus-visible::(-webkit-slider-thumb|-moz-range-thumb).*--focus-ring/.test(
+          text,
+        ),
+      );
+    expect(knobRings).toHaveLength(1);
+  });
 });
