@@ -106,15 +106,10 @@ rules.not-subscriptable = "ignore"
 
 [tool.uv]
 package = false
-# Project-level 7-day minimum release age (supply-chain guard). uv records this in
-# uv.lock's [options] block; without it, checkouts lacking the maintainer's global
-# ~/.config/uv/uv.toml would discard the committed lock on plain `uv run` and
-# re-resolve against PyPI.
-exclude-newer = "7 days"
-# The release-age guard above is a third-party supply-chain hold. reg-schema is this
-# workspace's own package, published by its own workflow, and reg_meta's Docker
-# integration test resolves it from PyPI under this config — so it is exempt.
-exclude-newer-package = { reg-schema = "2100-01-01T00:00:00Z" }
+# Explicit `false`, not omitted: an absent key inherits a global
+# ~/.config/uv/uv.toml `exclude-newer`, which makes plain `uv run` discard the
+# committed lock and re-resolve to older versions than the ones locked here.
+exclude-newer = false
 
 [tool.uv.sources]
 reg-meta = { workspace = true }

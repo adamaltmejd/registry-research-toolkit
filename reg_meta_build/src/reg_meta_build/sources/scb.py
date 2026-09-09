@@ -1629,9 +1629,7 @@ def _apply_fold(
         ).strip("-")
         for gk in by_col[col]:
             grp = groups[gk]
-            if not _fold_token_from_grain(gk[7]) and not (
-                grp.value_set_version_label or ""
-            ):
+            if not _fold_token_from_grain(gk[7]) and not grp.value_set_version_label:
                 res.labels[gk] = suffix
     # Fold slug hint: the shared stem. Validate through derive_variable_slug so
     # a digit-leading / all-digit / reserved stem (`2501`/`2502` → `250`) is

@@ -253,7 +253,7 @@ describe("ProjectEditor renders the ValidationPanel", () => {
     // only has to be the clean verdict rather than the old one-word "Valid".
     await expect
       .element(page.getByRole("status"))
-      .toHaveTextContent(/^Draft valid/);
+      .toMatchTextContent(/^Draft valid/);
   });
 
   it("passes project-window coverage hints into the panel", async () => {

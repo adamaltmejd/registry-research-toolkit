@@ -1,6 +1,5 @@
-# Supply-chain guard: refuse to resolve npm packages published less than
-# 7 days ago (mirrors the uv exclude-newer="7 days" rule used for Python
-# deps). No effect on `bun install --frozen-lockfile` (CI) — it gates
-# resolution during `bun update` / unpinned installs.
+# No minimum release age (mirrors the root pyproject's uv `exclude-newer =
+# false`). Explicit 0, not omitted: an absent key inherits a global bunfig.toml
+# waiting period, which resolves differently from the committed bun.lock.
 [install]
-minimumReleaseAge = 604800
+minimumReleaseAge = 0

@@ -453,7 +453,7 @@ jobs:
       - uses: superfly/flyctl-actions/setup-flyctl@1.6
         if: steps.head.outputs.skip != 'true'
         with:
-          version: "0.4.91"
+          version: "0.4.101"
       # Two gates guard a bad image: the container entrypoint runs the smoke
       # gate before uvicorn serves (a bad image exits non-zero), and fly.toml's
       # /api/context HTTP check must pass before flyctl reports success.
@@ -550,7 +550,7 @@ jobs:
       - uses: superfly/flyctl-actions/setup-flyctl@1.6
         if: steps.head.outputs.skip != 'true'
         with:
-          version: "0.4.91"
+          version: "0.4.101"
       - if: steps.head.outputs.skip != 'true'
         run: >-
           flyctl deploy
@@ -635,13 +635,12 @@ jobs:
       cancel-in-progress: false
     steps:
       - uses: actions/checkout@v7.0.1
-      # Pinned to the same bun the Dockerfile's frontend stage uses
-      # (oven/bun:1.4.0-alpine) — bump both together. A floating toolchain
-      # here would make the production SPA bundle non-reproducible while the
-      # image-baked copy stays pinned.
+      # Pinned to the same bun `reg_webapp/Dockerfile`'s frontend stage uses —
+      # bump both together. A floating toolchain here would make the production
+      # SPA bundle non-reproducible while the image-baked copy stays pinned.
       - uses: oven-sh/setup-bun@v2.2.0
         with:
-          bun-version: "1.4.0"
+          bun-version: "1.4.2"
       - run: bun install --frozen-lockfile
         working-directory: reg_webapp/frontend
       # Same build sequence as the Dockerfile's frontend stage: regenerate
@@ -667,7 +666,7 @@ jobs:
       # (data-only reg_meta release) still busts the cache.
       - if: steps.head.outputs.skip != 'true'
         run: >-
-          bunx wrangler@4.125.0 deploy --config reg_webapp/edge/wrangler.jsonc
+          bunx wrangler@4.130.0 deploy --config reg_webapp/edge/wrangler.jsonc
           --var DEPLOY_VERSION:${{ github.event_name == 'workflow_dispatch' && format('{0}-{1}', github.sha, github.run_id) || github.sha }}
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
@@ -725,7 +724,7 @@ jobs:
       - uses: actions/checkout@v7.0.1
       - uses: oven-sh/setup-bun@v2.2.0
         with:
-          bun-version: "1.4.0"
+          bun-version: "1.4.2"
       - run: bun install --frozen-lockfile
         working-directory: reg_webapp/frontend
       - run: bun run gen:types && bun run build
@@ -742,7 +741,7 @@ jobs:
           fi
       - if: steps.head.outputs.skip != 'true'
         run: >-
-          bunx wrangler@4.125.0 deploy --config reg_webapp/edge/wrangler.swecov.jsonc
+          bunx wrangler@4.130.0 deploy --config reg_webapp/edge/wrangler.swecov.jsonc
           --var DEPLOY_VERSION:${{ github.event_name == 'workflow_dispatch' && format('{0}-{1}', github.sha, github.run_id) || github.sha }}
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}

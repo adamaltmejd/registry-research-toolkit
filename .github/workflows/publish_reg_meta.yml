@@ -20,7 +20,7 @@ jobs:
       - uses: actions/checkout@v7.0.1
       - uses: astral-sh/setup-uv@v10.0.1
         with:
-          version: "0.12.6"
+          version: "0.12.11"
 
       # Smoke-test the release's DB assets before pushing to PyPI. There is no
       # pypi-environment approval pause; the release must stay draft until

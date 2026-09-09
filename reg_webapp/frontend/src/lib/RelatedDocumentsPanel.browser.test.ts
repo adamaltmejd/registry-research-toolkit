@@ -44,7 +44,7 @@ describe("RelatedDocumentsPanel (#742/#967)", () => {
 
     await expect
       .element(page.getByRole("alert"))
-      .toHaveTextContent("Failed to load source documents");
+      .toMatchTextContent("Failed to load source documents");
     await expect
       .element(page.getByRole("heading", { name: "Source documents" }))
       .toBeVisible();

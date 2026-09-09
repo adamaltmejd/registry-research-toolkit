@@ -20,7 +20,7 @@ jobs:
       - uses: actions/checkout@v7.0.1
       - uses: astral-sh/setup-uv@v10.0.1
         with:
-          version: "0.12.6"
+          version: "0.12.11"
 
       # reg_schema ships nothing but the wheel — no DB release assets, no doc
       # DB, no container image — and it has no CLI entry point, so importing

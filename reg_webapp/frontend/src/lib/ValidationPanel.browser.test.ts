@@ -224,7 +224,7 @@ describe("ValidationPanel — researcher-language findings", () => {
 
     await expect
       .element(page.getByRole("status"))
-      .toHaveTextContent(
+      .toMatchTextContent(
         /^Draft valid — project rules and catalog metadata checked\.$/,
       );
     // The order check is the SEPARATE pass, and it is named by the artifact that
@@ -286,7 +286,7 @@ describe("ValidationPanel — researcher-language findings", () => {
     // counted, and the order checks are still named as the ones left to run.
     await expect
       .element(page.getByRole("status"))
-      .toHaveTextContent(
+      .toMatchTextContent(
         /^Draft valid with warnings — project rules and catalog metadata checked\. \(1 non-blocking note\.\)$/,
       );
     await expect.element(page.getByText(ORDER_NOTE)).toBeVisible();

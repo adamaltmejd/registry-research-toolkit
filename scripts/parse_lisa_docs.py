@@ -1399,9 +1399,9 @@ def _panache_format(out_dir: Path) -> None:
         print("WARNING: uvx not found; skipping panache format pass", file=sys.stderr)
         return
     print(f"Formatting {out_dir} with panache...")
-    # Pinned (7-day release-age policy); keep in sync with .pre-commit-config.yaml.
+    # Pinned; see .panache.toml for why, and for the bump ritual.
     subprocess.run(
-        ["uvx", "--from", "panache-cli==3.6.1", "panache", "format", str(out_dir)],
+        ["uvx", "--from", "panache-cli==3.9.0", "panache", "format", str(out_dir)],
         check=True,
     )
 

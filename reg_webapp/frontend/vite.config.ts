@@ -87,6 +87,10 @@ export default defineConfig({
               launchOptions: { args: chromiumLaunchArgs },
             }),
             headless: true,
+            // Vitest 5 flipped `locators.exact` to true. This suite locates by
+            // the sentence a user reads, inside elements that also carry
+            // decoration, and passes `exact: true` per call where it means it.
+            locators: { exact: false },
             instances: [{ browser: "chromium" }],
           },
         },

@@ -27,14 +27,14 @@ RUN apt-get update \
 # openapi-typescript) are `#!/usr/bin/env node` scripts — bun alone does not
 # satisfy them (CI is green only because GitHub runners ship system node), and
 # Debian's node 20 trips an undici incompatibility in the vitest jsdom teardown.
-# Pinned digest = node 24.20.0.
-COPY --from=node:24-bookworm-slim@sha256:ba849c60be29959425b8734d57b8b4b7d56f98edd9504c9af091d5281095a71e /usr/local/bin/node /usr/local/bin/node
+# The major is chosen deliberately, not held to whichever line is LTS.
+COPY --from=node:26.8.1-bookworm-slim@sha256:367679cf9792759492a486e4aa4b421764d71a9546a6dae8aab81a99eb797b3e /usr/local/bin/node /usr/local/bin/node
 
 # Pinned toolchain binaries, tag + immutable multi-arch digest like the images
 # above. Move these pins deliberately, with the repo's own uv/bun versions
 # (uv: brew-installed on the host; bun: reg_webapp toolchain).
-COPY --from=ghcr.io/astral-sh/uv:0.12.6@sha256:88bc6eb1ccd4b82efd0e1b530caffabddf50dc2bf612e66c14ea25b8ee8a4d3d /uv /uvx /usr/local/bin/
-COPY --from=oven/bun:1.4.0@sha256:5ff609364c049b54eb0ff560ec96319729a972078ef2c755d758f0c6ef89c2d6 /usr/local/bin/bun /usr/local/bin/bun
+COPY --from=ghcr.io/astral-sh/uv:0.12.11@sha256:79c6f4776b851471cc73b7d21d0cc834bb94383c292e83640d27eff512864df7 /uv /uvx /usr/local/bin/
+COPY --from=oven/bun:1.4.2@sha256:9114c058aeae42162ee16dd5084b95fe9473970bb6bcb5b232ab1630f0546895 /usr/local/bin/bun /usr/local/bin/bun
 RUN ln -s /usr/local/bin/bun /usr/local/bin/bunx
 
 # --- Python warm layer: keyed on workspace manifests + lockfile only. ---
@@ -57,8 +57,8 @@ RUN cd /opt/warm \
     && uv sync --frozen --no-install-workspace \
     && rm -rf /opt/warm/.venv \
     # Tool envs for the pinned checkers (keep versions == the CI/CLAUDE.md pins):
-    && uvx --from ty==0.0.74 ty --version \
-    && uvx --from panache-cli==3.6.1 panache --version \
+    && uvx --from ty==0.0.79 ty --version \
+    && uvx --from panache-cli==3.9.0 panache --version \
     && chmod -R a+rwX /opt/uv
 
 # --- Frontend warm layer: keyed on the frontend manifest + lockfile. ---

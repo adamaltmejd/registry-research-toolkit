@@ -68,7 +68,7 @@ describe("DocMentionsPanel (#402)", () => {
 
     await expect
       .element(page.getByRole("alert"))
-      .toHaveTextContent("Failed to load parsed documentation");
+      .toMatchTextContent("Failed to load parsed documentation");
     await expect
       .element(page.getByRole("heading", { name: "Parsed documentation" }))
       .toBeVisible();

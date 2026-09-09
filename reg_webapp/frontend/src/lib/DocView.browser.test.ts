@@ -54,7 +54,7 @@ describe("DocView (#394)", () => {
 
     await expect
       .element(page.getByRole("alert"))
-      .toHaveTextContent("no documentation for 'x'");
+      .toMatchTextContent("no documentation for 'x'");
     await expect
       .element(page.getByText(/coverage is LISA-only today/))
       .toBeVisible();
@@ -146,7 +146,7 @@ describe("DocView (#394)", () => {
 
     await expect
       .element(page.getByRole("alert"))
-      .toHaveTextContent("internal error");
+      .toMatchTextContent("internal error");
     await expect.element(page.getByText(/LISA-only/)).not.toBeInTheDocument();
   });
 });

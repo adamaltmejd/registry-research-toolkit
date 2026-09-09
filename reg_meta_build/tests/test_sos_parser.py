@@ -58,8 +58,8 @@ def test_as_int_handles_common_shapes() -> None:
 def test_as_date_accepts_datetime_and_date() -> None:
     from datetime import date, datetime
 
-    # noqa'd naive datetime is the point: openpyxl yields tz-naive cell values,
-    # and _as_date must accept exactly that shape.
+    # The suppressed naive datetime is the point: openpyxl yields tz-naive cell
+    # values, and _as_date must accept exactly that shape.
     assert _as_date(datetime(2026, 3, 26)) == date(2026, 3, 26)  # noqa: DTZ001
     assert _as_date(date(2026, 3, 26)) == date(2026, 3, 26)
     assert _as_date("2026-03-26") is None  # strings aren't implicitly parsed

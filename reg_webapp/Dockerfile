@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
+# syntax=docker/dockerfile:1.27@sha256:bde3983e9c939224420ddaf6b784cc30e09b035a4dea01f581230c50809f372e
 
 # reg_webapp deployment image (REFACTOR_SPEC.md §6.5 — Deployment).
 #
@@ -34,7 +34,7 @@
 # reverse proxy to serve. This image bakes dist/ at /opt/reg_webapp/spa so a
 # single-container deploy can point any static server at it; the production edge
 # (Cloudflare) does the deep-link → index.html rewrite.
-FROM oven/bun:1.4.0-alpine@sha256:07235578f79ef8c6f97d94aee7938e76f5cdba5f21ae5dbfdd3d3d38058437eb AS frontend
+FROM oven/bun:1.4.2-alpine@sha256:d888c0ae6c86d7866ff10c5aafdd9077b36aee6455b33dd270fb93c0dd5cef6f AS frontend
 
 WORKDIR /build/frontend
 
@@ -66,7 +66,7 @@ RUN bun run gen:types && bun run build
 # `reg_meta.db` from a private zstd URL; `reg_meta_docs.db` stays the public
 # release asset for the same tag.
 FROM python:3.14.7-slim-bookworm@sha256:9ab8d9c8514b44f90cf0029dd42fdd7e9e211e639c8b995304cc04568dee900f AS regmeta-db
-COPY --from=ghcr.io/astral-sh/uv:0.12.6@sha256:88bc6eb1ccd4b82efd0e1b530caffabddf50dc2bf612e66c14ea25b8ee8a4d3d /uv /usr/local/bin/uv
+COPY --from=ghcr.io/astral-sh/uv:0.12.11@sha256:79c6f4776b851471cc73b7d21d0cc834bb94383c292e83640d27eff512864df7 /uv /usr/local/bin/uv
 
 ENV UV_LINK_MODE=copy \
     UV_NO_INSTALLER_METADATA=1
@@ -95,8 +95,8 @@ RUN uv sync --frozen --no-dev --package reg-meta
 # 5.2.0); rebuilding after a reg_meta bump re-bakes the matching pair.
 #
 # Invoke the venv's reg-meta binary by ABSOLUTE PATH (NOT `uv run`, which would
-# re-sync: re-resolving the lockfile drops the global exclude-newer 7-day
-# release-age guard and reinstalls the dev group + all workspace members).
+# re-sync: re-resolving the lockfile reinstalls the dev group and all workspace
+# members into this runtime image).
 #
 # REG_META_TAG is a cache-bust knob: a DATA-only reg_meta release reuses the same
 # code/lockfile, so the bake layer's cache key would otherwise never change and a
@@ -257,7 +257,7 @@ EOF
 # combined `uv:<ver>-python<x>-bookworm-slim` tags don't pin the uv version and
 # python jointly the way we need, so we compose the pin ourselves.
 FROM python:3.14.7-slim-bookworm@sha256:9ab8d9c8514b44f90cf0029dd42fdd7e9e211e639c8b995304cc04568dee900f AS backend
-COPY --from=ghcr.io/astral-sh/uv:0.12.6@sha256:88bc6eb1ccd4b82efd0e1b530caffabddf50dc2bf612e66c14ea25b8ee8a4d3d /uv /usr/local/bin/uv
+COPY --from=ghcr.io/astral-sh/uv:0.12.11@sha256:79c6f4776b851471cc73b7d21d0cc834bb94383c292e83640d27eff512864df7 /uv /usr/local/bin/uv
 
 # Deterministic install: bytecode-compile ahead of time, copy (not symlink) into
 # .venv so the venv is self-contained when copied to the runtime stage.

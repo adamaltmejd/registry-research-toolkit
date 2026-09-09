@@ -93,13 +93,10 @@ simplification reads as intent and a deferral can't silently rot.
 - One-off tools (not project deps): `uvx --from <package> <tool>` — e.g.
   `uvx --from pre-commit==4.6.2 pre-commit run --all-files`.
 - Refresh lockfile with `uv lock --upgrade`; CI uses `uv sync --frozen`.
-- 7-day minimum release age is project policy: `exclude-newer = "7 days"` in the root
-  `pyproject.toml` `[tool.uv]`, recorded in `uv.lock`'s `[options]` block. It applies on
-  every checkout with no global uv config needed. Don't remove either side: dropping the
-  pyproject setting makes plain `uv run` discard the committed lock on checkouts without
-  a matching global config. The guard is for third-party supply-chain risk; `reg-schema`
-  is this workspace's own package, published by its own workflow, so it's exempted via
-  `exclude-newer-package` in the same `[tool.uv]` block.
+- No minimum release age: `exclude-newer = false` in the root `pyproject.toml`
+  `[tool.uv]`, `minimumReleaseAge = 0` in `reg_webapp/frontend/bunfig.toml`. Keep both
+  written out — deleting a key inherits the checkout's global uv/bun waiting period
+  instead; the comment at each key says what that breaks.
 - The workspace floor is uniformly `>=3.14` (ruff `target-version = py314` to match),
   after a coordinated bump (#682, 2026-06-22).
 - A repo-root `.python-version` pins the interpreter to `3.14` so that **project-less
@@ -147,7 +144,7 @@ the cross-package invariants and each `<package>/DESIGN.md` for the detail;
   (dev-only) is used for property-based tests on invariant-heavy surfaces
   (`test_*_properties.py` in `reg_meta` and `reg_meta_build`), additive to the
   example/snapshot suites.
-- **Type checking**: `uvx --from ty==0.0.74 ty check` (Astral, beta). Blocking in CI;
+- **Type checking**: `uvx --from ty==0.0.79 ty check` (Astral, beta). Blocking in CI;
   pinned via `uvx` so CI, pre-commit, and cached Codex environments use the same
   checker. `ty` moves quickly, so bump this pin deliberately/frequently. Not a dev dep —
   keep `pyproject.toml` clean.
@@ -168,9 +165,9 @@ the cross-package invariants and each `<package>/DESIGN.md` for the detail;
 
 - `uv run ruff check` — python lint
 - `uv run ruff format --check` — python format check
-- `uvx --from panache-cli==3.6.1 panache format --check .` — markdown format check
+- `uvx --from panache-cli==3.9.0 panache format --check .` — markdown format check
   (config in `.panache.toml`; drop `--check` to fix)
-- `uvx --from panache-cli==3.6.1 panache lint .` — markdown lint
+- `uvx --from panache-cli==3.9.0 panache lint .` — markdown lint
 - `uv run python -m pytest` — all tests (pytest discovers per-package via root pyproject
   `testpaths`)
 - `uv run python -m pytest reg_meta/` — narrow to a single package
