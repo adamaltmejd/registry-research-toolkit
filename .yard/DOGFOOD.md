@@ -1190,6 +1190,85 @@ model.
 Open and closed upstream issue searches found no exact duplicate; related closed
 [#52](https://github.com/adamaltmejd/switchyard/issues/52) and
 [#57](https://github.com/adamaltmejd/switchyard/issues/57) cover other failures and were
-not reused. No upstream report was filed for this wording papercut. Raw evidence and the
-intake are local-only under `archive/reports/yard/2026-09-08-continuation/`, notably
+not reused. Filed [#61 "lane reject names approval in its quiescence refusal and omits
+the prerequisite from help"](https://github.com/adamaltmejd/switchyard/issues/61) for
+this wording papercut. Raw evidence and the intake are local-only under
+`archive/reports/yard/2026-09-08-continuation/`, notably
 `Y-16-reject-quiescence-intake.md` and `Y-16-bounds-nudge.json`.
+
+Upstream disposition (not locally retested): the maintainer closed #61, reporting it
+landed as Y-627 at `08e2fd7`, first carried in v0.14.6.
+
+## 2026-09-08: `lane tail`'s default operator view is dominated by thinking-token frames
+
+On official Yard 0.14.5, the default operator view from
+`yard lane tail Y-14/1 --current-generation` (neither `--raw` nor `--json`) produced 795
+lines / 149,444 UTF-8 bytes: 453 `thinking_tokens` frames, 19 `rate_limit_event` frames,
+and 6 each of `task_started` and `task_notification` frames. Thinking-token counters are
+57% of the lines. Useful worker/tool output remains present; this is noise in default
+presentation, not evidence of worker failure, lost output or incorrect lane state. The
+request keeps raw access and useful status events. Closed
+[#59](https://github.com/adamaltmejd/switchyard/issues/59) concerned `lane show` JSON
+shaping and closed [#52](https://github.com/adamaltmejd/switchyard/issues/52) concerned
+execution-ID selection, so neither is claimed regressed.
+
+Filed [#62 "lane tail default operator view prints thinking-token bookkeeping
+frames"](https://github.com/adamaltmejd/switchyard/issues/62). Raw evidence and
+publication receipts are local-only under
+`archive/reports/yard/2026-09-08-goal-completion/`, notably
+`Y-14-tail-noise-publication.json`, `Y-14-tail-noise-observation.txt` and
+`Y-14-tail-noise-observation.json`.
+
+Upstream disposition (not locally retested): the maintainer closed #62, reporting it
+landed as Y-628 at `2f4bd8f`, first carried in v0.14.6.
+
+## 2026-09-08: screenshot `Read` exceeds the provider NDJSON limit and leaves only abandonment
+
+Y-46/2/e1 generation 4 stopped with "Docker output consumer failed: provider NDJSON
+record exceeded 1048576 bytes" immediately after a screenshot `Read`. The retained
+provider-session result contains two identical 623,600-character base64 copies of a
+467,700-byte PNG (1172 by 1999), exceeding the 1 MiB record bound; the rejected stdout
+record itself was not retained, so the stored result corroborates the image-envelope
+evidence rather than captures the failing stdout. Host attention offered only
+abandonment. Read-only release-source and container-quiescence checks established a
+supported same-session path: a guarded nudge with the existing repair brief plus bounded
+image-preview guidance resumed the same attempt as generation 5, and fresh worker
+activity, an unchanged retained head and no open attention were verified. This is a
+recovery, not a completed repair. No attempt abandonment, lane-workspace editing or
+guard removal occurred.
+
+Filed [#63 "Screenshot Read exceeds the provider NDJSON limit and leaves only
+abandonment"](https://github.com/adamaltmejd/switchyard/issues/63); now closed, with no
+local retest claimed. Raw evidence and readback are local-only under
+`archive/reports/yard/2026-09-08-goal-completion/Y-46-ndjson-failure/` and
+`switchyard-63-1959-trusted.json`.
+
+Upstream disposition (not locally retested): the maintainer reports Y-629 at `a2f32de`
+raises the provider NDJSON record bound to 16 MiB and the frame queue to two records;
+and Y-630 at `5a97f9f` classifies provider-record-oversized as a transient failure and
+exposes the guarded same-session lane start exit beside abandonment. Both are first
+carried in v0.14.6; the nudge recovery documented above remains valid regardless.
+
+## 2026-09-08: Claude workers spend repeated tool calls on no-op waits for review agents
+
+Two bounded top-level provider-frame samples on Yard 0.14.5 / Claude Code 2.1.263 /
+claude-opus-5 xhigh show 54 `Bash echo waiting` calls in Y-17/1/e1 g1
+(22:24:12.963-22:26:40.427 UTC, 147.464 seconds) and 65
+`echo waiting`/`echo yield-1..64` calls in Y-22/1/e1 g1 (22:26:40.386-22:29:19.627 UTC,
+159.241 seconds). These 119 calls are sample counts, not final totals. Y-22 had earlier
+successfully used `TaskOutput(block=true, timeout=60000)`, returning `running`/timeout
+after 60.093 seconds, so no missing wait capability is established. Both waits later
+ended and useful work resumed; Y-22 declared candidate
+`5715fb294ba696f31c54276914a2327f3d64dcb7` and entered formal review. This records extra
+model/tool interactions and transcript noise; monetary cost, daemon deadlock and causal
+attribution were not established. The foreground-only Yard finish instruction alongside
+asynchronous provider Agent guidance is only a possible contributor. No worker
+interruption or extra nudge round was requested: nudge delivers after the active round
+and cannot change its current wait. Assistant-frame Monitor-like text is not attributed
+to a fabricated or Yard-generated event.
+
+Filed [#64 "Claude workers spend repeated tool calls on no-op waits for review
+agents"](https://github.com/adamaltmejd/switchyard/issues/64); trust-gate-read as open,
+with no upstream fix claimed. Local-only sanitized raw excerpts, the 119-call ledger,
+the native wait receipt, source references and exact publication/readback are under
+`archive/reports/yard/2026-09-08-goal-completion/Y-17-wait-loop-triage/`.
