@@ -15,6 +15,7 @@ import {
   type PickerStateInput,
   pickerRepresentations,
 } from "./catalog";
+import { CELL_MIN_W } from "./picker_graph";
 import {
   expectApplyDisabled,
   expectStagedAddColumnVisible,
@@ -113,6 +114,15 @@ function overlaps(a: DOMRect, b: DOMRect, slack = 0.5): boolean {
     a.top < b.bottom - slack &&
     b.top < a.bottom - slack
   );
+}
+
+/** The boxes the element's own TEXT actually paints in — one per line box, read off a
+ * range over the text rather than off the element, whose box is as tall as however many
+ * lines the text broke into and says nothing about where the glyphs landed. */
+function glyphLines(el: Element): DOMRect[] {
+  const range = document.createRange();
+  range.selectNodeContents(el);
+  return [...range.getClientRects()];
 }
 
 /** A multi-axis representation group: one band, three delivery-column rows, each a
@@ -4033,10 +4043,12 @@ describe("RepresentationPicker coexisting-variant row identity (Y-14)", () => {
     over: {
       period?: { valid_from: string; valid_to: string };
       coding?: string;
+      column?: string;
     } = {},
   ): { bands: PickerBand[]; graph: RelationshipGraph } {
     const period = over.period ?? PERIOD;
     const coding = over.coding ?? "";
+    const column = over.column ?? "Kon";
     const populations = labels.map((label, i) => ({
       variant: VARIANTS[i],
       label,
@@ -4052,7 +4064,7 @@ describe("RepresentationPicker coexisting-variant row identity (Y-14)", () => {
               state_id: i + 1,
               variant: p.variant,
               variant_label: p.label,
-              delivery_column_name: "Kon",
+              delivery_column_name: column,
               value_set_version_label: coding,
               value_set_id: null,
               ...period,
@@ -4070,7 +4082,7 @@ describe("RepresentationPicker coexisting-variant row identity (Y-14)", () => {
                 representation_run_id: i + 1,
                 variant: p.variant,
                 variant_label: p.label,
-                delivery_column_name: "Kon",
+                delivery_column_name: column,
                 value_set_version_label: coding,
                 ...period,
               }),
@@ -4195,16 +4207,15 @@ describe("RepresentationPicker coexisting-variant row identity (Y-14)", () => {
           name: "Sysselsättning",
           registerPrefix: "scb/rams",
           rows: [
-            // The successor runs long enough to paint its own column chip on one
-            // line: a chip floored to the minimum cell width stacks its glyphs
-            // (A-143), which would put chip pixels outside their cell and make this
-            // fixture prove that instead of what it is for.
+            // A SHORT successor: four years of run floor to `CELL_MIN_W`, the narrowest
+            // cell the graph draws, which is where the column chip has the least room
+            // to paint itself (Y-68).
             row({
               column: "Syss",
               from: "2023-01-01",
-              to: "2036-12-31",
-              period: "2023 – 2036",
-              windows: [{ from: "2023-01-01", to: "2036-12-31" }],
+              to: "2026-12-31",
+              period: "2023 – 2026",
+              windows: [{ from: "2023-01-01", to: "2026-12-31" }],
             }),
           ],
         } satisfies PickerBand,
@@ -4220,7 +4231,7 @@ describe("RepresentationPicker coexisting-variant row identity (Y-14)", () => {
                 representation_run_id: 3,
                 delivery_column_name: "Syss",
                 valid_from: "2023-01-01",
-                valid_to: "2036-12-31",
+                valid_to: "2026-12-31",
               }),
             ],
           }),
@@ -4554,6 +4565,199 @@ describe("RepresentationPicker coexisting-variant row identity (Y-14)", () => {
         expect(lineBox.right).toBeLessThanOrEqual(box.right + 1);
       }
     }
+  });
+
+  // ── The column chip in a MINIMUM-WIDTH graph cell (Y-68) ──────────────────────
+  // The Syss successor above runs four years, so its cell floors to `CELL_MIN_W` — the
+  // narrowest cell the graph draws, and the least room the delivery-column chip ever
+  // gets. One population here, so nothing but the fit is under test.
+  const ONE_POPULATION = ["Individer 15+"] as const;
+
+  /** Render the graph whose successor cell floors to `CELL_MIN_W`, then wait for it to
+   * paint in the font the geometry below is measured in. */
+  async function renderMinWidthCell(
+    over: Partial<typeof PROPS> = {},
+  ): Promise<void> {
+    await render(RepresentationPicker, {
+      ...coexistingGraphFixture(ONE_POPULATION),
+      ...PROPS,
+      ...over,
+    });
+    await graphPickerRendered();
+    await document.fonts.ready;
+  }
+
+  /** The one selectable cell on lane `i` — lane 1 carries the minimum-width cell. */
+  function cellOnLane(i: number): HTMLElement {
+    return one<HTMLElement>("label.graph-cell", lanes()[i]);
+  }
+
+  it("paints a minimum-width cell's delivery column on ONE line inside its cell", async () => {
+    await renderMinWidthCell();
+
+    await atEveryWidth(async () => {
+      await vi.waitFor(() => {
+        expect(lanes()).toHaveLength(2);
+      });
+      // Still the succession graph the cell belongs to, not the list it falls back to.
+      expect(document.querySelector(".col-list")).toBeNull();
+      const cell = cellOnLane(1);
+      const cellBox = cell.getBoundingClientRect();
+      expect(cellBox.width).toBe(CELL_MIN_W);
+      const chip = one<HTMLElement>(".col-chip", cell);
+      expect(chip.textContent).toBe("Syss");
+      // What the browser PAINTED, read off the text: one line box, not one per glyph…
+      const lines = glyphLines(chip);
+      expect(lines).toHaveLength(1);
+      // …and every painted glyph inside the ancestor that clips it, top and bottom
+      // included — the 40px-TALL cell is where the stacked first and last letters went.
+      expect(lines[0].left).toBeGreaterThanOrEqual(cellBox.left);
+      expect(lines[0].right).toBeLessThanOrEqual(cellBox.right);
+      expect(lines[0].top).toBeGreaterThanOrEqual(cellBox.top);
+      expect(lines[0].bottom).toBeLessThanOrEqual(cellBox.bottom);
+      // The chip is not merely clipped INTO the cell: its pill fits the stack that
+      // holds it, and the period that yielded the width starts clear of it.
+      const chipBox = chip.getBoundingClientRect();
+      const stack = one<HTMLElement>(".graph-cell-main", cell);
+      expect(chipBox.right).toBeLessThanOrEqual(
+        stack.getBoundingClientRect().right + 1,
+      );
+      const period = one<HTMLElement>(".graph-cell-window", cell);
+      expect(period.getBoundingClientRect().left).toBeGreaterThanOrEqual(
+        chipBox.right,
+      );
+      // The period truncates where it always did, with its description still whole.
+      expect(period.textContent).toBe("2023 – 2026");
+      expect(cell.title).toBe("Syss · 2023 – 2026");
+    });
+  });
+
+  it("leaves an ordinary WIDE cell painting its column, coding and period in full", async () => {
+    await renderMinWidthCell();
+
+    await atEveryWidth(async () => {
+      await vi.waitFor(() => {
+        expect(lanes()).toHaveLength(2);
+      });
+      const cell = cellOnLane(0);
+      const cellBox = cell.getBoundingClientRect();
+      expect(cellBox.width).toBeGreaterThan(CELL_MIN_W);
+      const chip = one<HTMLElement>(".col-chip", cell);
+      expect(chip.textContent).toBe("Kon");
+      const lines = glyphLines(chip);
+      expect(lines).toHaveLength(1);
+      expect(lines[0].left).toBeGreaterThanOrEqual(cellBox.left);
+      expect(lines[0].right).toBeLessThanOrEqual(cellBox.right);
+      expect(lines[0].top).toBeGreaterThanOrEqual(cellBox.top);
+      expect(lines[0].bottom).toBeLessThanOrEqual(cellBox.bottom);
+      // A cell with room over truncates nothing beside the column either.
+      for (const sel of [".graph-cell-sub", ".graph-cell-window"]) {
+        const el = one<HTMLElement>(sel, cell);
+        expect(el.scrollWidth).toBeLessThanOrEqual(el.clientWidth + 1);
+      }
+    });
+  });
+
+  it("adds the minimum-width cell's own binding over its own period", async () => {
+    const onapply = vi.fn();
+    await renderMinWidthCell({ onapply });
+
+    // The cell is reachable by the name it now paints, and its checkbox is the native
+    // control the keyboard already reaches.
+    const checkbox = page.getByRole("checkbox", { name: "Syss 2023 – 2026" });
+    await expect.element(checkbox).toBeVisible();
+    await checkbox.click();
+    await page
+      .getByRole("button", {
+        name: /Add to project|Remove from project|Apply changes/,
+      })
+      .click();
+
+    expect(onapply).toHaveBeenCalledTimes(1);
+    const { adds } = onapply.mock.calls[0][0];
+    expect(adds).toHaveLength(1);
+    // The cell whose column is finally readable stages THAT column's binding, over the
+    // four years it actually runs — the fit correction moved no target.
+    expect(pickerRowKey(adds[0].band, adds[0].row)).toBe(
+      "scb/rams/v::scb/rams/syss::Syss",
+    );
+    expect(adds[0].row.column).toBe("Syss");
+    expect(adds[0].row.from).toBe("2023-01-01");
+    expect(adds[0].row.to).toBe("2026-12-31");
+    expect(adds[0].row.period).toBe("2023 – 2026");
+  });
+
+  it("keeps the LIST row breaking a long column name the graph cell keeps whole", async () => {
+    // The one-line rule is scoped to a graph cell. Outside it the shared chip still
+    // breaks a long unbroken column anywhere, which is what a 375px list row needs.
+    const column = "SYSSELSATTNINGSSTATUS_FOR_INDIVID_ARSMEDELVARDE";
+    await render(RepresentationPicker, {
+      bands: [
+        {
+          key: SYSS,
+          name: "Sysselsättning",
+          registerPrefix: "scb/rams",
+          rows: [row({ column }), row({ column: "Syss", key: "v::Syss" })],
+        } satisfies PickerBand,
+      ],
+      ...PROPS,
+    });
+    await document.fonts.ready;
+    const chip = await vi.waitFor(() => {
+      const found = [
+        ...document.querySelectorAll<HTMLElement>(".col-list .col-chip"),
+      ].find((c) => c.textContent === column);
+      if (!found) {
+        throw new Error(`missing list chip for ${column}`);
+      }
+      return found;
+    });
+    const listRow = chip.closest<HTMLElement>(".col-row");
+    if (!listRow) {
+      throw new Error("list chip outside a column row");
+    }
+
+    await atEveryWidth(async (width) => {
+      const lines = glyphLines(chip);
+      // However it breaks, it breaks INSIDE its row — the list never scrolls sideways.
+      for (const line of lines) {
+        expect(line.right).toBeLessThanOrEqual(
+          listRow.getBoundingClientRect().right + 1,
+        );
+      }
+      // …and at the narrowest width breaking is the only way it fits, which is the
+      // wrapping the graph-cell rule must not have taken from the list.
+      if (width === 375) {
+        expect(lines.length).toBeGreaterThan(1);
+      }
+    });
+  });
+
+  it("keeps the LIST fallback when a delivery column outgrows its cell", async () => {
+    // The stack keeping its column keeps it even where the column is wider than the
+    // cell, so the identity under it can sit inside the stack and STILL be cut off by
+    // the cell — two populations clipped to one visible prefix, the ambiguity the
+    // geometry fallback exists to refuse. It reads the box that clips, not the stack
+    // alone.
+    const labels = [
+      "Individer 15 ar och aldre A",
+      "Individer 15 ar och aldre B",
+    ];
+    await render(RepresentationPicker, {
+      ...variantFixture(labels, {
+        coding: CODING,
+        column: "SYSSELSATTNINGSSTATUS_FOR_INDIVID",
+      }),
+      ...PROPS,
+    });
+
+    await vi.waitFor(() => {
+      if (!document.querySelector(".col-list")) {
+        throw new Error("list picker not rendered");
+      }
+    });
+    expect(document.querySelector(".graph-picker")).toBeNull();
+    expect(texts(ROWS)).toEqual(labels.map((label) => `${label} 2018`));
   });
 });
 

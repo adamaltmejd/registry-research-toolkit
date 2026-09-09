@@ -1109,11 +1109,18 @@ function graphIdentityOverflows(root: HTMLElement): boolean {
   );
   return [...identities].some((identity) => {
     const stack = identity.closest(".graph-cell-main");
-    return (
-      stack != null &&
-      identity.getBoundingClientRect().right >
-        stack.getBoundingClientRect().right + 1
+    const cell = identity.closest(".graph-cell");
+    if (stack == null || cell == null) {
+      return false;
+    }
+    // Both edges bound it. The stack is the one the identity paints OVER — the period
+    // sits beyond it — but a stack keeping a delivery column wider than its own cell
+    // (Y-68) reaches past the cell, and the cell is what actually clips.
+    const readableRight = Math.min(
+      stack.getBoundingClientRect().right,
+      cell.getBoundingClientRect().right,
     );
+    return identity.getBoundingClientRect().right > readableRight + 1;
   });
 }
 
@@ -3583,6 +3590,24 @@ function codingsVaryHref(
     min-width: 0;
     flex: 1 1 auto;
   }
+  /* A stack led by a DELIVERY COLUMN keeps it — the one thing a researcher reads before
+     adding the run. In a minimum-width cell (a short run floors to `CELL_MIN_W`) the
+     stack shrank alongside the period beside it until the shared chip had a few px,
+     where its `overflow-wrap: anywhere` stacked `Syss` one glyph per line and the
+     40px-tall cell clipped the first and the last (Y-68). The period, already ellipsized, gives up
+     that width instead. The context cell one lane down leads with a LABEL rather than a
+     chip — containing its only line would leave that stack no width at all — so it keeps
+     the shared shrink it was designed around. */
+  .graph-cell-main:has(> .col-chip) {
+    min-width: min-content;
+  }
+  /* Which leaves the chip the only line that SIZES the stack: the coding ellipsizes
+     inside it and the population identity RUNS PAST it — exactly what
+     `graphIdentityOverflows` measures to leave graph mode. Size containment is what
+     keeps their text out of the stack's own minimum. */
+  .graph-cell-main:has(> .col-chip) > :not(.col-chip) {
+    contain: inline-size;
+  }
   .graph-cell-sub,
   .graph-cell-window,
   .graph-unavailable-label {
@@ -3619,6 +3644,11 @@ function codingsVaryHref(
     gap: var(--space-2);
     min-width: 0;
   }
+  /* Shared text a 40px-tall cell cannot afford to break. The column chip joins the
+     identity tags here: the wrapping a LIST row needs for a long name stacked `Syss` one
+     glyph per line in a minimum-width cell (Y-68). The list keeps `overflow-wrap:
+     anywhere`. */
+  .graph-cell .col-chip,
   .graph-cell .variant-key,
   .graph-cell-variant {
     flex: 0 0 auto;
