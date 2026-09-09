@@ -3509,6 +3509,84 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
     await expectApplyDisabled();
   });
 
+  it("freezes staging while the host reviews a source period, keeping the picks", async () => {
+    // Y-15: a source-period correction and this picker's staging are the same
+    // draft, so they take turns. `locked` is the host's half of that: the picker
+    // goes as quiet as it does during its own Apply, and the staged picks WAIT —
+    // they are the researcher's, not the correction's to discard.
+    const onapply = vi.fn();
+    const { rerender } = await render(RepresentationPicker, {
+      bands: [multiAxisBand()],
+      axes: AXES,
+      ...PROPS,
+      onapply,
+    });
+
+    await page.getByRole("checkbox", { name: /DIN1/ }).click();
+    await expectStagedAddColumnVisible();
+
+    await rerender({
+      bands: [multiAxisBand()],
+      axes: AXES,
+      ...PROPS,
+      locked: true,
+      onapply,
+    });
+
+    await expect
+      .element(page.getByRole("checkbox", { name: /DIN2/ }))
+      .toBeDisabled();
+    await expect
+      .element(page.getByRole("button", { name: "Reset" }))
+      .toBeDisabled();
+    await expectApplyDisabled();
+    await expectStagedAddColumnVisible();
+    // Inert controls that say nothing are just broken ones: the reason sits beside
+    // them, not only in the footer of a picker that may be pages long.
+    await expect
+      .element(page.getByText(/A source period review is open/))
+      .toBeVisible();
+
+    await rerender({
+      bands: [multiAxisBand()],
+      axes: AXES,
+      ...PROPS,
+      locked: false,
+      onapply,
+    });
+
+    await expect
+      .element(page.getByText(/A source period review is open/))
+      .not.toBeInTheDocument();
+    await expectStagedAddColumnVisible();
+    await expect
+      .element(
+        page.getByRole("button", { name: /Add to project|Apply changes/ }),
+      )
+      .toBeEnabled();
+    expect(onapply).not.toHaveBeenCalled();
+  });
+
+  it("retracts its staged report when it unmounts", async () => {
+    // The host MIRRORS this report to hold the source-period correction off while
+    // columns are staged. This picker is conditional — a browse narrowing that
+    // leaves the page with no rows unmounts it — so a report only ever raised while
+    // mounted would latch that mirror on with nothing left to reset it.
+    const onstagechange = vi.fn();
+    const view = await render(RepresentationPicker, {
+      bands: [multiAxisBand()],
+      axes: AXES,
+      ...PROPS,
+      onstagechange,
+    });
+
+    await page.getByRole("checkbox", { name: /DIN1/ }).click();
+    await expect.poll(() => onstagechange.mock.calls.at(-1)?.[0]).toBe(true);
+
+    view.unmount();
+    expect(onstagechange.mock.calls.at(-1)?.[0]).toBe(false);
+  });
+
   it("does not stage period-only source changes from a partial picker", async () => {
     const onapply = vi.fn();
     const band = multiAxisBand();

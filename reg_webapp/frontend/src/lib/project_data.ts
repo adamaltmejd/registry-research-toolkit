@@ -196,6 +196,16 @@ export function sourceBindingsMalformed(source: unknown): boolean {
   );
 }
 
+/** A stable text image of ONE source slot — the complete stored value, every
+ * binding field and every unmapped key included. Two images compare equal exactly
+ * when the source has not changed, which is what lets a reviewed source-period
+ * correction refuse to land on a source that moved after the researcher reviewed
+ * it (`projectStore.applySourcePeriodReview`). Insertion order is preserved by the
+ * immutable mutators here, so a re-spread of an unchanged source images the same. */
+export function sourceSnapshot(source: unknown): string {
+  return JSON.stringify(source ?? null);
+}
+
 // ── Immutable top-level edits ───────────────────────────────────────────────
 // Every mutator returns a NEW object (shallow clone + replaced slice) so the
 // store can swap the `$state` reference and `dirty` recomputes. Unmapped keys on

@@ -33,6 +33,7 @@ import RepresentationPicker, {
   type PickerSelection,
 } from "./RepresentationPicker.svelte";
 import { router } from "./router.svelte";
+import SourcePeriodCorrection from "./SourcePeriodCorrection.svelte";
 import SubjectView from "./SubjectView.svelte";
 import {
   committedPickerRows,
@@ -41,6 +42,7 @@ import {
   rowAddSegments,
   type StagedPickerBand,
   sourcePeriodsFromDraft,
+  sourcePeriodTargets,
   stagedRemoveForCommitted,
 } from "./staged_picker";
 import TechnicalDetails from "./TechnicalDetails.svelte";
@@ -654,6 +656,18 @@ const committedRows = $derived(
   }),
 );
 
+/** The draft's sources on this group's register variants (predecessor bands
+ * included) — the catalog's explicit source-period correction targets (Y-15). Named
+ * sources, so a draft carrying two of them on one variant offers both and corrects
+ * only the one chosen. */
+const periodTargets = $derived(
+  sourcePeriodTargets(projectStore.draft, selectableBands),
+);
+/** The two halves of the correction's mutual exclusion with the picker's staging —
+ * the contract itself is documented on `SourcePeriodCorrection`'s props. */
+let pickerStaged = $state(false);
+let correctionOpen = $state(false);
+
 /** Write `?period` to the group URL (preserving the pathname + any `?member=` focus
  * hint), which the reactive query picks up. A null period drops `?period`. NO
  * refetch — `getConceptGroup` takes no period; the value only drives the per-row
@@ -917,11 +931,13 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
         {graph}
         {graphMemberHrefs}
         {vintageYear}
+        locked={correctionOpen}
         onapply={applyStaged}
         onstagechange={(hasDiff) => {
           // Clearing the staging retires the refusal too (there is no longer a pick
           // to author), so the notice can never outlive the diff it described.
           periodRequired = false;
+          pickerStaged = hasDiff;
           if (hasDiff) {
             applyOutcome = null;
           }
@@ -967,6 +983,22 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
         </span>
       </p>
     {/if}
+
+    <!-- Y-15: the explicit source-period correction, deliberately NOT part of the
+         picker above (see the component). -->
+    <SourcePeriodCorrection
+      targets={periodTargets}
+      disabled={pickerStaged}
+      onreviewchange={(open) => {
+        correctionOpen = open;
+        if (open) {
+          applyOutcome = null;
+        }
+      }}
+      onapplied={() => {
+        applyOutcome = { added: 0, removed: 0, periodChanged: 1 };
+      }}
+    />
   {/snippet}
 
   <SubjectView title={`Variable group: ${node.label}`} {description} {picker} />

@@ -2087,6 +2087,27 @@ mutation path (the store's earlier single-pick `addFromCatalog` handoff was dead
 and `removeSource`/`removeBinding` are the only other mutators the cart UI calls — a
 source's own name and period are no longer directly editable in the cart.
 
+The one **period correction** the cart model allows is still catalog-side and still
+explicit (Y-15): `SourcePeriodCorrection.svelte` lists the draft's sources on the
+catalog page's own register variants and, on request, opens a review of ONE of them —
+its name, its full coordinate, its stored period and EVERY binding it carries, including
+bindings that page does not show — before `applySourcePeriodReview` commits a
+period-only `applyStagedDiff`. Ordinary browsing still stages nothing: changing years,
+filtering rows or following a `?period` link leaves the draft alone, and
+`RepresentationPicker` keeps deriving `periodChanges = []` because a partial leaf/group
+cannot infer a source-wide rewrite from the columns it happens to show. The correction
+is keyed by source **name** as well as coordinate — a draft may carry several
+differently named sources on one register variant (reg_schema makes names unique, not
+variants), and a correction moves only the one it names. It is its own diff, never
+unioned with staged adds (the two lock each other out), and the review carries the
+reviewed source's complete value plus the draft's `replacementGeneration`. Both are
+re-checked through one predicate, `sourcePeriodReviewCurrent` — by the open review's own
+staleness notice, and last of all by the write itself, immediately before it mutates. A
+source that moved, or a project that was replaced, under an open review invalidates it
+instead of being overwritten; a page that merely stopped covering the source does not,
+because the predicate reads the draft rather than the page. Coverage and type drift
+after the correction stay the server validator's job, as above.
+
 ## Browser storage + project-file persistence (the SPA store)
 
 Project files live in the **browser** during a session and as JSON in the user's git

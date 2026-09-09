@@ -47,8 +47,11 @@ import {
   removeSource,
   type Source,
   safeSourceBindings,
+  safeSourceName,
   safeSourceRegisterVariant,
+  safeSourceSlots,
   serializeProjectData,
+  sourceSnapshot,
   uniqueSourceName,
   updateField,
 } from "./project_data";
@@ -473,9 +476,34 @@ export interface StagedRemove {
   representation?: string | null;
 }
 
-/** Replace a source's period wholesale. */
+/** Replace ONE NAMED source's period wholesale. Keyed by the draft source `name`
+ * as well as the coordinate, NOT by `registerVariant` alone: a draft may carry
+ * several differently named sources on one register variant (an imported spec
+ * routinely does), and a correction must move only the one it names. Source names
+ * are structurally unique (reg_schema `duplicate_source_name`); variants are not. */
 export interface StagedPeriodChange {
+  sourceName: string;
   registerVariant: string;
+  period: Period;
+}
+
+/** WHICH source a correction was reviewed from, and when: the named source, its
+ * coordinate, the COMPLETE value it had while the researcher looked at it, and the
+ * draft generation it belonged to. `sourcePeriodReviewCurrent` answers whether the
+ * loaded draft still matches — asked by the review's own staleness notice and, last
+ * of all, by the write. */
+export interface SourcePeriodReviewTarget {
+  sourceName: string;
+  registerVariant: string;
+  /** `sourceSnapshot` of the target source when the review opened. */
+  snapshot: string;
+  /** `projectStore.replacementGeneration` when the review opened. */
+  replacementGeneration: number;
+}
+
+/** A REVIEWED source-period correction: the target it was approved from, plus the
+ * period it proposes. */
+export interface SourcePeriodReview extends SourcePeriodReviewTarget {
   period: Period;
 }
 
@@ -816,7 +844,9 @@ export const projectStore = {
    *   (b) adds     — find-or-create the source by `register_variant` ALONE, extend the
    *                  source period to cover the add's period, append the binding
    *                  unless the duplicate guard says it is already present;
-   *   (c) periodChanges — replace the matching source's `period` wholesale;
+   *   (c) periodChanges — replace the NAMED source's `period` wholesale (keyed on
+   *                  `name` + `register_variant`, so a duplicate-variant sibling
+   *                  source keeps its own period);
    *   (d) prune    — drop a source only when this batch removed from it AND it is now
    *                  empty. Deferred to LAST (not folded into removes) so a remove+add
    *                  of the SAME register_variant in one batch preserves the source's
@@ -892,9 +922,12 @@ export const projectStore = {
       );
     }
 
-    // (c) period changes → replace the matching source's period wholesale.
+    // (c) period changes → replace the NAMED source's period wholesale. Keyed on
+    //     name AND coordinate: two differently named sources can share one
+    //     register_variant, and a correction moves only the source it names.
     for (const change of diff.periodChange ?? []) {
       sources = sources.map((s) =>
+        safeSourceName(s) === change.sourceName &&
         safeSourceRegisterVariant(s) === change.registerVariant
           ? { ...s, period: change.period }
           : s,
@@ -918,6 +951,59 @@ export const projectStore = {
     const ids = buildIds(next);
     setDraft(next);
     sourceIds = ids;
+  },
+
+  /**
+   * Commit ONE reviewed source-period correction — the catalog's explicit "Change
+   * source period" action — as its OWN period-only `applyStagedDiff`, never unioned
+   * with staged adds (`periodChangesWithStagedAdds` widens a change to cover the
+   * adds committed beside it; a correction has none beside it, so what the
+   * researcher reviewed is exactly what lands).
+   *
+   * Returns false WITHOUT mutating when the draft has been replaced since the
+   * review opened, or the named source is gone or is no longer the value that was
+   * reviewed (its period, its bindings or any other field moved). The caller then
+   * asks for a fresh review rather than writing a period onto a source nobody
+   * looked at. The re-check is the LAST thing before the mutation, so an awaited
+   * restore in between cannot open a window.
+   */
+  applySourcePeriodReview(review: SourcePeriodReview): boolean {
+    if (!projectStore.sourcePeriodReviewCurrent(review)) {
+      return false;
+    }
+    projectStore.applyStagedDiff({
+      periodChange: [
+        {
+          sourceName: review.sourceName,
+          registerVariant: review.registerVariant,
+          period: review.period,
+        },
+      ],
+    });
+    return true;
+  },
+
+  /**
+   * Whether the loaded draft still carries the exact source `target` was reviewed
+   * from — same project, same named source at the same coordinate, byte-identical
+   * value. The predicate `applySourcePeriodReview` refuses on, exported so the open
+   * review can render its staleness from THE DRAFT: a catalog page narrows what it
+   * shows as the researcher browses, and a source that scrolls off a page has not
+   * moved.
+   */
+  sourcePeriodReviewCurrent(target: SourcePeriodReviewTarget): boolean {
+    // Generation first: a replaced project settles it without scanning or
+    // re-serializing anything, and this runs on every draft edit while a review
+    // is open.
+    if (replacementGeneration !== target.replacementGeneration) {
+      return false;
+    }
+    const source = safeSourceSlots(draft?.sources).find(
+      (s) =>
+        safeSourceName(s) === target.sourceName &&
+        safeSourceRegisterVariant(s) === target.registerVariant,
+    );
+    return source != null && sourceSnapshot(source) === target.snapshot;
   },
 };
 

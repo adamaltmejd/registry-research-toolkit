@@ -195,20 +195,21 @@ function check(condition, message) {
 
 // ── `flows`: the project error/retry + catalog gates ────────────────────────
 //
-// Six scenarios × four viewports = 24 cases, each in a FRESH context against
+// Seven scenarios × four viewports = 28 cases, each in a FRESH context against
 // the REAL backend (the caller points it at a synthetic catalog DB through
 // REG_META_DB — see catalog_fixture_db.py). The three error scenarios inject
-// exactly one failing request and the other three inject none: everything else
+// exactly one failing request and the other four inject none: everything else
 // is the actual app answering — including the browser's own IndexedDB, which the
 // catalog cases read back.
 //
-// The 40 PNGs these write are an artifact contract declared in .yard/config.toml,
-// split across THREE gates because a yard gate declares at most 16 filenames:
-// `project-flows` names the three /project error+retry scenarios (16 PNGs),
-// `catalog-flows` the two catalog ones (16) and `replace-flows` the
-// deliberate-replacement one (8). That is what the scenario argument in the
-// dispatch below is for — a bare `flows <out-dir>` still runs all six, which is
-// the local verification invocation.
+// These write 52 PNGs. 40 of them are artifact contracts declared in
+// .yard/config.toml, split across gates because a yard gate declares at most 16
+// filenames: `project-flows` names the three /project error+retry scenarios (16
+// PNGs), `catalog-flows` two catalog ones (16) and `replace-flows` the
+// deliberate-replacement one (8). The remaining 12 are `catalog-source-period`,
+// which has no gate yet — the gate list is the operator's. That is what the
+// scenario argument in the dispatch below is for — a bare `flows <out-dir>` still
+// runs all seven, which is the local verification invocation.
 //
 // The filenames carry the size — so the sizes are the `shot` presets above,
 // spelled once (frontend/DESIGN.md designs for exactly these four widths). Named
@@ -288,19 +289,22 @@ async function autosavedDraft() {
   }
 }
 
-/** Wait until the autosave has written exactly `want` (register variants, in
- * order). POLLED, not slept: an Apply is several draft mutations (the project is
- * created, then the picks commit once their periods resolve) and the write lands
- * ~500ms after the LAST of them, so the first record on disk may be a skeleton.
- * Its own loop rather than waitForFunction so a timeout reports what the draft
- * actually held — the line an operator triages a red gate from. */
-async function draftSaved(page, want) {
+/** Wait until the autosave has written exactly `want` — the draft's sources under
+ * `shape`, in order (register variants by default; the source-period case shapes
+ * name + period + bindings, which is what a correction moves and what its two
+ * same-variant sources cannot be told apart by). POLLED, not slept: an Apply is
+ * several draft mutations (the project is created, then the picks commit once
+ * their periods resolve) and the write lands ~500ms after the LAST of them, so the
+ * first record on disk may be a skeleton. Its own loop rather than waitForFunction
+ * so a timeout reports what the draft actually held — the line an operator triages
+ * a red gate from. */
+async function draftSaved(page, want, shape = (s) => s.register_variant) {
   const wanted = JSON.stringify(want);
   const deadline = Date.now() + 15_000;
   let held = "null";
   do {
     const stored = await page.evaluate(autosavedDraft);
-    held = JSON.stringify((stored?.sources ?? []).map((s) => s.register_variant));
+    held = JSON.stringify((stored?.sources ?? []).map(shape));
     if (held === wanted) return;
     await page.waitForTimeout(250);
   } while (Date.now() < deadline);
@@ -646,7 +650,105 @@ async function catalogPeriodRequiredCase(page, counts, shoot) {
   );
 }
 
-/** Scenario 6 — replacing an EDITED draft is deliberate. New and a successful
+/** Scenario 6 — the catalog-side SOURCE-PERIOD CORRECTION (Y-15). A researcher
+ * fixes ONE existing named source's requested period without deleting and
+ * rebuilding it. The project opened here carries two differently named sources on
+ * the SAME register variant — the shape the catalog's own add path cannot author
+ * (it finds-or-creates by variant) and the one only a source name tells apart —
+ * and the correction must move exactly the source it names, keeping that name and
+ * every binding, including the column this leaf never shows. Rendered because the
+ * review, its refusal and its result are the surface the operator judges.
+ */
+async function sourcePeriodCase(page, counts, shoot, project) {
+  const proposed = page.getByRole("textbox", { name: "New period" });
+  const apply = page.getByRole("button", {
+    name: "Apply source period for lisa-core",
+    exact: true,
+  });
+
+  // (1) Open the two-source project, and let the autosave hold it.
+  let green = validated(page);
+  await openProjectFile(page, project);
+  await green;
+  await settled(page);
+  await page.getByRole("heading", { name: project.name }).waitFor();
+  const variant = "scb/lisa/individer-15plus";
+  await draftSaved(page, [variant, variant]);
+
+  // (2) The leaf as ORDINARY BROWSING reaches it: no query string, so no period
+  //     is chosen. Nothing is staged and no review is open — a correction is an
+  //     explicit action, never a consequence of where the researcher browsed.
+  green = validated(page);
+  await open(page, "/catalog/scb/lisa/kon");
+  await green;
+  await settled(page);
+  check(
+    (await proposed.count()) === 0,
+    "browsing to the leaf opened a source-period review on its own",
+  );
+
+  // (3) The review names its target and shows what a SOURCE-wide rewrite touches:
+  //     the stored period, and every column on that source — Forsamling included,
+  //     which this leaf does not list.
+  await page
+    .getByRole("button", {
+      name: "Change source period for lisa-core",
+      exact: true,
+    })
+    .click();
+  await page.getByText("Columns on this source (2)").waitFor();
+  await page.getByText("scb/lisa/forsamling").waitFor();
+  await shoot("catalog-source-period-review");
+
+  // (4) An unsorted list is not a period: the same structural grammar the rest of
+  //     the app writes periods through refuses it, and Apply stays unavailable.
+  await proposed.fill("2020,2019");
+  await page.getByText("isn't a usable period").waitFor();
+  check(
+    await apply.isDisabled(),
+    "an invalid period left the source-period Apply enabled",
+  );
+  await shoot("catalog-source-period-invalid");
+
+  // (5) The correction: ONE deliberate period-only diff, applied explicitly.
+  green = validated(page);
+  await proposed.fill("2018..2019");
+  check(
+    await apply.isEnabled(),
+    "the reviewed period-only correction left Apply disabled",
+  );
+  await apply.click();
+  await green;
+  await settled(page);
+  await page
+    .getByRole("status")
+    .filter({ hasText: "Applied 1 period change" })
+    .waitFor();
+  await shoot("catalog-source-period-applied");
+
+  // (6) What the browser's own IndexedDB holds: the named source moved, keeping
+  //     its name and BOTH bindings, and the sibling on the same variant is
+  //     exactly as it was opened.
+  await draftSaved(
+    page,
+    [
+      [
+        "lisa-core",
+        { from: 2018, to: 2019 },
+        ["scb/lisa/kon", "scb/lisa/forsamling"],
+      ],
+      ["lisa-lonfink", 2018, ["scb/lisa/lonfink"]],
+    ],
+    (s) => [s.name, s.period, s.bindings.map((b) => b.variable)],
+  );
+  check(
+    counts.validate > 0 && counts.order === 0,
+    `the correction POSTed ${counts.validate} validation(s) and ` +
+      `${counts.order} order(s)`,
+  );
+}
+
+/** Scenario 7 — replacing an EDITED draft is deliberate. New and a successful
  * Open both destroy the loaded project, and the browser keeps ONE recovery copy
  * under one autosave key, so both ask the same question first; a cancel leaves
  * the draft (and that copy) exactly as they were. Rendered because the
@@ -792,6 +894,41 @@ try {
         },
       ],
     };
+    // The source-period correction's project (Y-15): TWO differently named sources
+    // on ONE register variant — a shape the catalog's add path cannot author, and
+    // the reason a correction is keyed by source name. `lisa-core` carries the
+    // leaf's own Kon plus Forsamling, which that leaf never shows.
+    const twoSourceProject = {
+      ...project,
+      name: "Synthetic source period",
+      sources: [
+        {
+          name: "lisa-core",
+          register_variant: "scb/lisa/individer-15plus",
+          period: { from: 2018, to: 2020 },
+          bindings: [
+            { variable: "scb/lisa/kon", type: "categorical", representation: "Kon" },
+            {
+              variable: "scb/lisa/forsamling",
+              type: "categorical",
+              representation: "Forsamling",
+            },
+          ],
+        },
+        {
+          name: "lisa-lonfink",
+          register_variant: "scb/lisa/individer-15plus",
+          period: 2018,
+          bindings: [
+            {
+              variable: "scb/lisa/lonfink",
+              type: "numeric",
+              representation: "LonFinkJan",
+            },
+          ],
+        },
+      ],
+    };
     const expected = {
       mode: "global_fallback",
       steward: deployment.steward.id,
@@ -837,6 +974,12 @@ try {
         shots: 2,
         run: (p, _c, shoot) => replaceConfirmCase(p, shoot, project),
       },
+      // Opens the TWO-SOURCE project, then corrects one named source's period
+      // from the catalog leaf — which is where the correction lives.
+      "catalog-source-period": {
+        shots: 3,
+        run: (p, c, shoot) => sourcePeriodCase(p, c, shoot, twoSourceProject),
+      },
     };
     for (const name of selection) {
       check(
@@ -845,8 +988,8 @@ try {
       );
     }
     // No names = every scenario, which is the local verification invocation. The
-    // three yard gates each name their own subset instead: a gate declares at most
-    // 16 artifact filenames, and all six scenarios write 40.
+    // yard gates each name their own subset instead: a gate declares at most
+    // 16 artifact filenames, and all seven scenarios write 52.
     const names = selection.length > 0 ? selection : Object.keys(scenarios);
     for (const viewport of FLOW_VIEWPORTS) {
       for (const name of names) {

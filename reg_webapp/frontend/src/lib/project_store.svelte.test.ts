@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { MODEL_A_SCHEMA_VERSION } from "./project_data";
+import { MODEL_A_SCHEMA_VERSION, sourceSnapshot } from "./project_data";
 import {
   checkVersionGate,
   initDraftLifecycle,
@@ -811,14 +811,18 @@ describe("applyStagedDiff (#992 — one atomic commit path)", () => {
     expect(projectStore.draft?.sources).toHaveLength(0);
   });
 
-  it("periodChange replaces the matching source's period wholesale", () => {
+  it("periodChange replaces the NAMED source's period wholesale", () => {
     projectStore.newProject(SEED);
     projectStore.applyStagedDiff({
       adds: [add("scb/lisa/v1", "scb/lisa/kon", 2018)],
     });
     projectStore.applyStagedDiff({
       periodChange: [
-        { registerVariant: "scb/lisa/v1", period: { from: 2010, to: 2020 } },
+        {
+          sourceName: "LISA",
+          registerVariant: "scb/lisa/v1",
+          period: { from: 2010, to: 2020 },
+        },
       ],
     });
     expect(projectStore.draft?.sources[0].period).toEqual({
@@ -1034,6 +1038,7 @@ describe("stable client-side ids (issue #200)", () => {
           ],
           periodChange: [
             {
+              sourceName: "lisa",
               registerVariant: "scb/lisa/v1",
               period: { from: 2010, to: 2020 },
             },
@@ -1343,5 +1348,179 @@ describe("a blocked order (§12)", () => {
     expect(projectStore.requestError).toBeNull();
     expect(projectStore.orderFindings).toEqual([]);
     expect(projectStore.requestErrorSource).toBeNull();
+  });
+});
+
+describe("applySourcePeriodReview (Y-15 — the reviewed source-period correction)", () => {
+  /** A draft with TWO differently named sources on ONE register variant, the
+   * shape only an imported spec produces (the catalog's add path finds-or-creates
+   * by variant). `LISA` carries a binding this leaf shows (Kon) and one it does
+   * not (alder); `LISA_2` is the sibling that must not move. */
+  function twoSourceDraft(): void {
+    projectStore.newProject(SEED);
+    projectStore.updateField("sources", [
+      {
+        name: "LISA",
+        register_variant: "scb/lisa/individer",
+        period: { from: 2010, to: 2015 },
+        bindings: [
+          {
+            variable: "scb/lisa/kon",
+            type: "categorical",
+            representation: "Kon",
+          },
+          { variable: "scb/lisa/alder", type: "numeric" },
+        ],
+      },
+      {
+        name: "LISA_2",
+        register_variant: "scb/lisa/individer",
+        period: 2009,
+        bindings: [{ variable: "scb/lisa/kon", type: "categorical" }],
+      },
+    ]);
+  }
+
+  /** A review of `sourceName`'s current value, proposing `period`. */
+  function review(sourceName: string, period: StagedAdd["period"]) {
+    const source = (projectStore.draft?.sources ?? []).find(
+      (s) => s.name === sourceName,
+    );
+    return {
+      sourceName,
+      registerVariant: "scb/lisa/individer",
+      period,
+      snapshot: sourceSnapshot($state.snapshot(source)),
+      replacementGeneration: projectStore.replacementGeneration,
+    };
+  }
+
+  it("rewrites ONLY the named source, preserving its name and every binding", () => {
+    twoSourceDraft();
+    const sibling = structuredClone(
+      $state.snapshot(projectStore.draft?.sources[1]),
+    );
+
+    expect(
+      projectStore.applySourcePeriodReview(
+        review("LISA", { from: 2012, to: 2014 }),
+      ),
+    ).toBe(true);
+
+    expect($state.snapshot(projectStore.draft?.sources[0])).toEqual({
+      name: "LISA",
+      register_variant: "scb/lisa/individer",
+      period: { from: 2012, to: 2014 },
+      bindings: [
+        {
+          variable: "scb/lisa/kon",
+          type: "categorical",
+          representation: "Kon",
+        },
+        { variable: "scb/lisa/alder", type: "numeric" },
+      ],
+    });
+    // The differently named source on the SAME variant is byte-identical.
+    expect($state.snapshot(projectStore.draft?.sources[1])).toEqual(sibling);
+  });
+
+  it("refuses a review whose source moved, without mutating anything", () => {
+    twoSourceDraft();
+    const stale = review("LISA", { from: 2012, to: 2014 });
+    // The researcher (or a picker Apply) changes the reviewed source underneath.
+    projectStore.applyStagedDiff({
+      adds: [add("scb/lisa/individer", "scb/lisa/inkomst", 2016)],
+    });
+    const before = structuredClone($state.snapshot(projectStore.draft));
+
+    expect(projectStore.applySourcePeriodReview(stale)).toBe(false);
+    expect($state.snapshot(projectStore.draft)).toEqual(before);
+  });
+
+  it("refuses a review whose source is gone", () => {
+    twoSourceDraft();
+    const stale = review("LISA", { from: 2012, to: 2014 });
+    projectStore.removeSource(0);
+
+    expect(projectStore.applySourcePeriodReview(stale)).toBe(false);
+    expect(projectStore.draft?.sources).toHaveLength(1);
+  });
+
+  it("refuses a review from a project that has since been replaced", () => {
+    twoSourceDraft();
+    const stale = review("LISA", { from: 2012, to: 2014 });
+    // A New/Open bumps `replacementGeneration`; the reviewed source could well
+    // exist identically in the replacement, and this review is still not its.
+    projectStore.newProject(SEED);
+    projectStore.updateField("sources", [
+      {
+        name: "LISA",
+        register_variant: "scb/lisa/individer",
+        period: { from: 2010, to: 2015 },
+        bindings: [
+          {
+            variable: "scb/lisa/kon",
+            type: "categorical",
+            representation: "Kon",
+          },
+          { variable: "scb/lisa/alder", type: "numeric" },
+        ],
+      },
+    ]);
+
+    expect(projectStore.applySourcePeriodReview(stale)).toBe(false);
+    expect(projectStore.draft?.sources[0].period).toEqual({
+      from: 2010,
+      to: 2015,
+    });
+  });
+
+  it("commits ONE mutation that autosaves once and validates the new period", async () => {
+    vi.useFakeTimers();
+    const saves: unknown[] = [];
+    const bodies: { sources: { name: string; period: unknown }[] }[] = [];
+    setPersistence({
+      save: (_k, d) => {
+        saves.push(d);
+        return Promise.resolve();
+      },
+      load: () => Promise.resolve(null),
+    });
+    stubFetch(async (_url, init) => {
+      if (init?.body != null) {
+        bodies.push(JSON.parse(init.body as string));
+      }
+      return {
+        ok: true,
+        status: 200,
+        json: async () => ({ ok: true, issues: [] }),
+      };
+    });
+    twoSourceDraft();
+    const stop = $effect.root(() => {
+      initDraftLifecycle();
+    });
+    await vi.advanceTimersByTimeAsync(600);
+    saves.length = 0;
+    bodies.length = 0;
+
+    expect(
+      projectStore.applySourcePeriodReview(
+        review("LISA", { from: 2012, to: 2014 }),
+      ),
+    ).toBe(true);
+    await vi.advanceTimersByTimeAsync(600);
+
+    // One draft replacement → one autosave write and one automatic validation,
+    // both carrying the corrected period on the named source alone.
+    expect(saves).toHaveLength(1);
+    expect(bodies).toHaveLength(1);
+    expect(bodies[0].sources.map((s) => [s.name, s.period])).toEqual([
+      ["LISA", { from: 2012, to: 2014 }],
+      ["LISA_2", 2009],
+    ]);
+
+    stop();
+    vi.useRealTimers();
   });
 });
