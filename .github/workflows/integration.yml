@@ -76,7 +76,7 @@ jobs:
           echo "SWECOV flavored DB source release: $tag"
           digest=$(gh release view "$tag" --repo "$GITHUB_REPOSITORY" --json assets \
             --jq '[.assets[] | select(.name == "reg_meta_swecov.db.zst") | .digest]
-                  | if length == 1 then .[0] else "" end' | tr 'A-Z' 'a-z')
+                  | if length == 1 then .[0] else "" end' | tr '[:upper:]' '[:lower:]')
           if ! printf '%s' "$digest" | grep -Eq '^sha256:[0-9a-f]{64}$'; then
             echo "::error::release $tag has no single sha256-digested reg_meta_swecov.db.zst asset"
             exit 1

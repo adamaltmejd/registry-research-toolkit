@@ -542,12 +542,24 @@ flavored-DB consistency gate against `reg_meta_swecov.db.zst` from *this* releas
 its dependencies resolved from the registry (`--install-mode registry`) — not the wheel
 just uploaded to PyPI — so what it proves is that a registry-resolved reg_meta fetches
 and queries this release's assets. If the `publish` job is green but the `integration`
-job is red, **the publish succeeded** — PyPI and the assets are fine; the failure is in
-the release test (e.g. it still calls a CLI flag a refactor renamed) or in the committed
-inventory (step 11's territory). This test is carved off pre-push and never runs on
-push/PR, so a CLI-surface change can strand it silently until this gate. Fix the test on
-main and re-validate with `gh workflow run integration.yml --ref main` (then watch that
-dispatched run). Do **not** re-release a working package over a stale test.
+job is red, **the PyPI upload succeeded** — and a PyPI version is immutable, so do not
+delete or re-release it over this. Beyond the upload, a green `publish` job certifies
+only the two `reg-meta update` assets its pre-upload smoke test exercises; nothing there
+looks at `reg_meta_swecov.db.zst`. Read the step that actually failed:
+
+- **Provision the release's flavored SWECOV DB** — `reg_meta_swecov.db.zst` is missing,
+  duplicated, or its recorded/actual SHA-256 disagree. An asset problem: fix the release
+  (step 8) and re-run.
+- **`test_update_and_query`** — the release's `reg-meta update` assets, or a CLI surface
+  a refactor renamed.
+- **the §12 consistency gate** — a schema-incompatible flavored DB, or an inventory
+  mapping that no longer resolves (step 11's territory).
+
+The Docker tests are carved off pre-push and never run on push/PR, so a CLI-surface
+change can strand them silently until this gate. Fix the cause — on main, or on the
+release's assets — and re-validate with `gh workflow run integration.yml --ref main`
+(then watch that dispatched run). Do **not** re-release a working package over a stale
+test.
 
 If the package has no publish workflow, report the release is done after the tag is
 created.

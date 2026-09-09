@@ -105,9 +105,9 @@ CONTEXT_IGNORE = shutil.ignore_patterns(
 IMAGE_TAG = "reg-meta-integration-test"
 
 # PEP 610: pip/uv write `direct_url.json` into the .dist-info of a distribution
-# installed from a local path or URL, and omit it for one resolved from an
-# index. It is therefore the installed-tree evidence of WHERE reg_schema came
-# from — unlike the install command's text, which proves only what we asked for.
+# installed from a local path or URL, and omit it for one resolved by NAME. It
+# is therefore installed-tree evidence of HOW reg_schema got there — unlike the
+# install command's text, which proves only what we asked for.
 SCHEMA_PROVENANCE_PY = (
     "import importlib.metadata as m; "
     'print(m.distribution("reg-schema").read_text("direct_url.json") or "")'
@@ -251,13 +251,19 @@ def test_installed_dependencies_are_satisfied(docker: str, image: str):
 
 
 def test_installed_schema_provenance(docker: str, image: str, install_mode: str):
-    """The installed reg_schema came from where the mode says it must.
+    """The installed reg_schema was installed the way its mode requires.
 
-    Registry mode has no `direct_url.json`, which is only true of an
-    index-resolved distribution; workspace mode has one naming the local wheel
-    built in the container. This is the assertion that keeps `registry` honest:
-    a local-wheel or alternate-index fallback sneaked into that mode would
-    leave the command string unchanged and fail here.
+    Workspace mode's has a `direct_url.json` naming the local wheel built in
+    the container; registry mode's has none, because uv resolved `reg-schema`
+    by NAME. A named resolution is all PEP 610 records — not which index served
+    it: an extra index, or `--no-index --find-links`, would leave no
+    `direct_url.json` either. "The registry" means PyPI here because of the
+    setup — clean container, default index, no index configuration in the image
+    or the install step — not because of this assertion.
+
+    What this does catch is a direct local-wheel or URL install of reg_schema
+    sneaking into registry mode, which would leave the install command's text
+    unchanged while making the mode's guarantee vacuous.
     """
     result = _docker_run(
         docker, image, f"python -c {shlex.quote(SCHEMA_PROVENANCE_PY)}"
@@ -269,7 +275,7 @@ def test_installed_schema_provenance(docker: str, image: str, install_mode: str)
         assert url.startswith("file://") and url.endswith(".whl"), direct_url
     else:
         assert not direct_url, (
-            f"reg-schema was not resolved from the registry: {direct_url}"
+            f"reg-schema was installed directly, not resolved by name: {direct_url}"
         )
 
 
