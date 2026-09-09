@@ -97954,11 +97954,21 @@ name = "P1105_LopNr_PersonNr"
 [[table.column]]
 name = "Provtagningsdatum"
 
+[[table.column.mapping]]
+register_variant = "fohm/sminet/_default"
+variable = "fohm/sminet/provtagningsdatum"
+representation = "provtagningsdatum"
+
 [[table.column]]
 name = "Region"
 
 [[table.column]]
 name = "Statistikdatum"
+
+[[table.column.mapping]]
+register_variant = "fohm/sminet/_default"
+variable = "fohm/sminet/statistikdatum"
+representation = "statistikdatum"
 
 [[table]]
 id = "FK_AKTIVITETSTOD_lev4"
@@ -248381,9 +248391,6 @@ name = "FodelseArMan"
 register_variant = "swecov/population/_default"
 variable = "swecov/population/fodelsearman"
 representation = "FodelseArMan"
-
-[[table.column]]
-name = "FodelseArManDag"
 
 [[table.column]]
 name = "Foralder"
