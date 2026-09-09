@@ -1196,8 +1196,10 @@ this wording papercut. Raw evidence and the intake are local-only under
 `archive/reports/yard/2026-09-08-continuation/`, notably
 `Y-16-reject-quiescence-intake.md` and `Y-16-bounds-nudge.json`.
 
-Upstream disposition (not locally retested): the maintainer closed #61, reporting it
-landed as Y-627 at `08e2fd7`, first carried in v0.14.6.
+Upstream disposition: the maintainer closed #61, reporting it landed as Y-627 at
+`08e2fd7`, with v0.14.6 named as the planned first release. The operator host remains on
+v0.14.5; this fix has not been locally retested, and no release availability, upgrade or
+restart was verified.
 
 ## 2026-09-08: `lane tail`'s default operator view is dominated by thinking-token frames
 
@@ -1219,8 +1221,10 @@ publication receipts are local-only under
 `Y-14-tail-noise-publication.json`, `Y-14-tail-noise-observation.txt` and
 `Y-14-tail-noise-observation.json`.
 
-Upstream disposition (not locally retested): the maintainer closed #62, reporting it
-landed as Y-628 at `2f4bd8f`, first carried in v0.14.6.
+Upstream disposition: the maintainer closed #62, reporting it landed as Y-628 at
+`2f4bd8f`, with v0.14.6 named as the planned first release. The operator host remains on
+v0.14.5; this fix has not been locally retested, and no release availability, upgrade or
+restart was verified.
 
 ## 2026-09-08: screenshot `Read` exceeds the provider NDJSON limit and leaves only abandonment
 
@@ -1243,11 +1247,13 @@ local retest claimed. Raw evidence and readback are local-only under
 `archive/reports/yard/2026-09-08-goal-completion/Y-46-ndjson-failure/` and
 `switchyard-63-1959-trusted.json`.
 
-Upstream disposition (not locally retested): the maintainer reports Y-629 at `a2f32de`
-raises the provider NDJSON record bound to 16 MiB and the frame queue to two records;
-and Y-630 at `5a97f9f` classifies provider-record-oversized as a transient failure and
-exposes the guarded same-session lane start exit beside abandonment. Both are first
-carried in v0.14.6; the nudge recovery documented above remains valid regardless.
+Upstream disposition: the maintainer reports Y-629 at `a2f32de` raises the provider
+NDJSON record bound to 16 MiB and the frame queue to two records; and Y-630 at `5a97f9f`
+classifies provider-record-oversized as a transient failure and exposes the guarded
+same-session lane start exit beside abandonment. Both name v0.14.6 as the planned first
+release. The operator host remains on v0.14.5; these fixes have not been locally
+retested, and no release availability, upgrade or restart was verified. The nudge
+recovery documented above remains valid regardless.
 
 ## 2026-09-08: Claude workers spend repeated tool calls on no-op waits for review agents
 
