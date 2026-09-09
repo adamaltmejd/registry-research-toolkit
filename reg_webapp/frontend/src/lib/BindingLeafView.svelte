@@ -835,7 +835,12 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
         {focusVariant}
       />
     {:else}
-      <p class="muted" aria-busy="true">Loading states…</p>
+      <!-- Y-65: the route now keeps its subtree across a query-only navigation, so
+           CatalogNodeView's announced loading branch no longer runs for an applied
+           `?period` — this line inherits the announcement it used to make. Hence
+           `role="status"` BESIDE the `aria-busy` every loading line carries: the
+           same pairing that branch (and ValidationPanel's checking line) uses. -->
+      <p class="muted" role="status" aria-busy="true">Loading states…</p>
     {/if}
   </section>
 {/snippet}

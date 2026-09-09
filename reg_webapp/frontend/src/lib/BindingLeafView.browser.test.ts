@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { page } from "vitest/browser";
+import { page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
 import type {
   BindingNodeData,
@@ -3083,5 +3083,57 @@ describe("BindingLeafView source-period correction (Y-15)", () => {
     await expect
       .element(page.getByRole("checkbox", { name: /Sni/ }))
       .toBeEnabled();
+  });
+});
+
+// The leaf half of Y-65: applying a period no longer remounts the catalog subtree
+// around the researcher, so the field that applied it keeps focus — and the route's
+// own announced loading branch (CatalogNodeView's `aria-live` placeholder) no longer
+// runs. The pending resolve has to announce itself, without disturbing that focus.
+describe("BindingLeafView — the applied period's pending resolve (Y-65)", () => {
+  it("announces the in-flight states load while the field that applied keeps focus", async () => {
+    router.navigate("/catalog/scb/lisa/kon?period=2019..2020");
+    await render(BindingLeafView, {
+      fqidPath: "scb/lisa/kon",
+      node: node(pickerStates),
+      regMetaVersion: SEED.regMetaVersion,
+      steward: SEED.steward,
+      windowMinYear: SEED.windowMinYear,
+      vintageYear: 2024,
+    });
+    // By ROLE: what has to hold is the computed live region, not one attribute
+    // spelling of it. Filtered because the picker footer is a status line too.
+    const loading = page
+      .getByRole("status")
+      .filter({ hasText: "Loading states…" });
+    const from = page.getByRole("textbox", { name: "From" });
+    await expect.element(from).toHaveValue("2019");
+    // The ARRIVAL's own resolve has to land first, or the in-flight line asserted
+    // below could be that one rather than the Apply's.
+    await expect.element(loading).not.toBeInTheDocument();
+
+    // Hold the resolve the Apply triggers, so its in-flight moment is observable.
+    const { promise: resolving, resolve: finishResolve } =
+      Promise.withResolvers<StatesResponse>();
+    vi.mocked(getCatalogNode).mockReturnValue(resolving as never);
+
+    await from.fill("2018");
+    const field = from.element() as HTMLInputElement;
+    field.focus();
+    // Enter in a year field is the card's implicit submit — the keyboard Apply.
+    await userEvent.keyboard("{Enter}");
+
+    // In flight: the pending period speaks…
+    await expect.element(loading).toBeVisible();
+    expect(loading.element().getAttribute("aria-busy")).toBe("true");
+    // …and the field that applied it still holds focus, and its typed value: the
+    // card was never remounted around the researcher.
+    expect(document.activeElement).toBe(field);
+    expect(field.value).toBe("2018");
+    expect(window.location.search).toBe("?period=2018..2020");
+
+    finishResolve(statesResponse(pickerStates.slice(1)));
+    await expect.element(loading).not.toBeInTheDocument();
+    expect(document.activeElement).toBe(field);
   });
 });
