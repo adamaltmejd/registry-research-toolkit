@@ -78,6 +78,10 @@ from .split_sibling_suspects import (
     infer_split_sibling_suspects,
     render_suspects_toml,
 )
+from .succession_candidates import (
+    infer_succession_candidates,
+    render_succession_toml,
+)
 from .validate import validate_built_db
 from .variable_same_as import (
     infer_same_as_candidates,
@@ -717,6 +721,50 @@ def _build_parser() -> argparse.ArgumentParser:
         help=(
             "Write the suspect worklist TOML to this path. Without it the JSON counts "
             "summary still prints; the TOML is included in the payload."
+        ),
+    )
+
+    succession_p = sub.add_parser(
+        "succession-candidates",
+        help="Emit the succession-candidate curation worklist (maintainer review).",
+        description=(
+            "Emit the SUCCESSION-candidate worklist from a BUILT DB: pairs of\n"
+            "catalog variables that look like consecutive ERAS of one delivered\n"
+            "column. A candidate pair is two variable_state rows in ONE register\n"
+            "(any variant coordinate) whose windows are disjoint and ADJACENT (the\n"
+            "later valid_from is the day, or the year, after the earlier valid_to)\n"
+            "and either the SAME delivery column under two SCB var_ids\n"
+            "(cross_var_id — a re-minted variable) or two split-container siblings\n"
+            "of one var_id whose columns DIFFER (split_rename — a never-co-delivered\n"
+            "rename). A pair already joined by a variable/representation replaced_by\n"
+            "edge in either direction is skipped, and so is a CO-DELIVERED pair —\n"
+            "that is split-sibling-suspects' territory (#918 gates ON co-delivery;\n"
+            "this gates it out). Reads a built DB; NEVER mutates it and NOTHING is\n"
+            "materialized.\n\n"
+            "SCB variable identity is (register_id, var_id) and there is no automatic\n"
+            "pooling across var_ids, so a never-co-delivered rename becomes two\n"
+            "unrelated browse rows for one column. The designed fix is a curated\n"
+            "replaced_by edge; this is the diagnostic that finds the candidates.\n\n"
+            "The JSON summary reports the total plus per-register and per-kind counts.\n"
+            "-o/--output-toml writes the candidates as `[[edge]]` tables in the EXACT\n"
+            "curation/relations.toml grammar (variable grain for cross_var_id;\n"
+            "representation grain — from_column / to_column / variant — for\n"
+            "split_rename), preceded by evidence comments, so a CONFIRMED candidate\n"
+            "copies across verbatim. NOTHING loads the emitted file: the maintainer\n"
+            "curates relations.toml by hand.\n\n"
+            "Examples:\n"
+            "  reg-meta-build --db <built-db> succession-candidates -o /tmp/succ.toml\n"
+            "  reg-meta-build --db <built-db> succession-candidates  # counts only"
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    succession_p.add_argument(
+        "-o",
+        "--output-toml",
+        default=None,
+        help=(
+            "Write the candidate worklist TOML to this path. Without it the JSON "
+            "counts summary still prints; the TOML is included in the payload."
         ),
     )
 
@@ -1641,6 +1689,40 @@ def _cmd_split_sibling_suspects(
     ), 0
 
 
+def _cmd_succession_candidates(
+    args: argparse.Namespace,
+) -> tuple[dict[str, Any], int]:
+    start = time.perf_counter()
+    db = db_path_from_args(args.db)
+    # Schema-checked open: the diagnostic reads current-schema tables (variable,
+    # variable_state, variable_replaced_by, representation_replaced_by), so a stale
+    # DB should fail fast with the standard actionable schema-mismatch error — same
+    # as the split-sibling-suspects command.
+    conn = open_db(db)
+    try:
+        result = infer_succession_candidates(conn)
+    finally:
+        conn.close()
+
+    toml = render_succession_toml(result)
+
+    data: dict[str, Any] = {
+        "total": result.total,
+        "per_register_counts": result.per_register_counts,
+        "per_kind_counts": result.per_kind_counts,
+    }
+    _emit_toml(args.output_toml, toml, data)
+
+    duration_ms = int((time.perf_counter() - start) * 1000)
+    return success_envelope(
+        command="succession-candidates",
+        args_payload={"output_toml": args.output_toml},
+        db_info=None,
+        data=data,
+        duration_ms=duration_ms,
+    ), 0
+
+
 def _cmd_doc_coverage(
     args: argparse.Namespace,
 ) -> tuple[dict[str, Any], int]:
@@ -1699,6 +1781,7 @@ COMMAND_DISPATCH: dict[
     "concept-group-candidates": _cmd_concept_group_candidates,
     "classification-residue": _cmd_classification_residue,
     "split-sibling-suspects": _cmd_split_sibling_suspects,
+    "succession-candidates": _cmd_succession_candidates,
     "doc-coverage": _cmd_doc_coverage,
 }
 
@@ -1755,6 +1838,10 @@ _COMMAND_OVERVIEW: list[tuple[str, str]] = [
     (
         "split-sibling-suspects [-o TOML]",
         "Emit the #918 split-sibling curation worklist (maintainer review).",
+    ),
+    (
+        "succession-candidates [-o TOML]",
+        "Emit the succession-candidate curation worklist (maintainer review).",
     ),
     (
         "doc-coverage [-o TOML]",
