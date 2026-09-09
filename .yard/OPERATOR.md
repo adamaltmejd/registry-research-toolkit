@@ -52,9 +52,11 @@ Before a manual merge or direct release push:
 1. Coordinate with any active operator. Record whether admissions are already paused.
    Read current `yard pause --help`, then pause new admissions for the integration
    window. Pause does not stop existing lanes or prevent explicit lane starts. The
-   owning operator must finish or resolve every active attempt, including stopped,
-   approval-needed and already-approved/landing attempts; an idle execution is not an
-   empty board. Do not abandon useful work to obtain an integration window.
+   owning operator holds retries and decisions through the handoff. Wait for running
+   executions and approved/landing candidates to settle. Stopped attempts may remain
+   only after verifying their executions are terminal, no continuation or landing is
+   queued, and their operator holds the next action. Preserve their candidates and
+   workspaces; do not abandon useful work to obtain an empty board.
 2. From the main checkout, use supported `yard sync` to bring in completed Yard work.
    Reconcile origin/main without force or history rewriting. Rebase/update the manual
    branch onto that common head and refresh any checks/review invalidated by the change.
