@@ -17,6 +17,32 @@ without clear intent to release. Stop and ask if the package or bump level is am
 **major bumps require explicit confirmation** after showing the current and planned
 versions.
 
+## Direct execution and dependency handoff
+
+Run this workflow directly in a task-owned worktree, without a Yard ticket or lane.
+Before advancing main, follow the shared [manual integration
+handoff](../../../.yard/OPERATOR.md#manual-integration). Keep its coordinated
+integration window through the sequential release pushes; Yard pause alone does not
+quiesce existing lanes.
+
+Start from the verified source revision. When a dependency upgrade was also requested,
+[upgrade-deps](../upgrade-deps/SKILL.md) owns that upgrade and its compatibility fixes
+first; consume its integrated head and verification evidence. Do not start a new
+dependency refresh as an incidental publication step. Reuse unchanged source/asset
+verification where applicable; the publication, registry installation and shipped-asset
+checks below still apply to each release. If a declared dependency needs an unpublished
+sibling, name the prerequisite package/version before publishing. Obtain authorization
+only if that prerequisite is outside the user's existing release request; do not
+silently expand a package-specific release or repeat approval already given. Preparation
+can continue while a required publication decision is pending.
+
+Repair blocking packaging or publisher-workflow problems directly within release
+preparation. Keep non-bump fixes in separate commits with focused verification and
+independent review; manual PRs retain the maintainer-review and CI requirement.
+Unrelated product changes remain outside the release. Once the repaired source is
+integrated, continue this pipeline from the affected check. If a draft or tag already
+exists, follow Error recovery below first so publication uses the repaired revision.
+
 ## Packages
 
   | Package        | pyproject.toml                  | `__init__.py`                                   | Publish workflow                                                                              |
@@ -178,6 +204,9 @@ This pytest is a fast per-package pre-flight; the **full** suite runs at push ti
 6). If anything fails, stop and fix. Do not release broken code.
 
 ### 6. Commit and push
+
+Complete the manual integration handoff above before the first main push. Keep the same
+coordination through subsequent package and inventory pushes.
 
 Before committing, verify that all non-bump changes are already committed in their own
 commits. The bump commit must contain **only** version-bump files — `pyproject.toml`,
@@ -654,6 +683,12 @@ regenerates.
   retry the release creation.
 - If the release was created but CI fails **before** PyPI publication: delete the
   release and tag, fix the issue, and start over from the verified bump (step 6).
+- If source changes after draft/tag creation: first verify the version is unpublished on
+  PyPI. Recreate the unpublished release and tag from the verified repaired
+  `origin/main` revision (steps 6–7), refresh the notes, and replace assets invalidated
+  by the repair. Re-run the applicable publication preflights at that same revision. A
+  passing check on a newer worktree does not validate an older release target. If PyPI
+  publication already succeeded, follow the immutable-version rule below instead.
 - If a tag already exists for the target version: a previous attempt went wrong.
   Investigate before proceeding.
 - If `build-db` or `build-docs` fails: fix the issue before publishing. The draft

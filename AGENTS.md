@@ -199,9 +199,13 @@ enforced by `scripts/tests/test_skill_gh_reads.py`.
 
 - Never run `git commit --no-verify`, `git commit -n`, or `git push --no-verify`. If a
   pre-commit hook fails, fix the underlying issue rather than bypassing.
-- Yard (below) is the build pathway. Manual git work is for special cases only —
-  releases (`/release`), real-seed `build-db` verification, deploy/infra — and a manual
-  PR then needs green CI and the maintainer's own review before it merges.
+- Yard (below) is the product-development pathway. Dependency maintenance uses
+  [upgrade-deps](.agents/skills/upgrade-deps/SKILL.md) directly, including necessary
+  compatibility fixes. Releases use [release](.agents/skills/release/SKILL.md) directly;
+  real-seed `build-db` verification and deploy/infra are also manual exceptions. A
+  manual PR needs green CI and the maintainer's own review before it merges. Follow the
+  [manual integration handoff](.yard/OPERATOR.md#manual-integration) to keep main and
+  Yard canonical aligned.
 
 # Layout
 
@@ -218,20 +222,22 @@ Development runs through [Switchyard](https://github.com/adamaltmejd/switchyard)
 driven by an agent operator, and **the agent working this repo is that operator** — when
 driving the board (filing tickets, answering attention items, approving/rejecting
 candidates), load the `yard-operator` skill (`/yard-operator` in Claude Code,
-`$yard-operator` in Codex) and read [.yard/OPERATOR.md](.yard/OPERATOR.md) before acting.
-`yard-operator` is the entry to two skills it loads in turn: `yard-file` for filing and
-admitting work, `yard-drive` for answering the board. The project policy takes precedence
-over the generic routine. Keep
+`$yard-operator` in Codex) and read [.yard/OPERATOR.md](.yard/OPERATOR.md) before
+acting. `yard-operator` is the entry to two skills it loads in turn: `yard-file` for
+filing and admitting work, `yard-drive` for answering the board. The project policy
+takes precedence over the generic routine. Keep
 `.agents/skills/{yard-operator,yard-file,yard-drive}/SKILL.md` exactly as `yard init`
-generates them; put local rules and temporary upstream corrections in `.yard/OPERATOR.md`
-instead. `.claude/skills/{yard-operator,yard-file,yard-drive}` are relative symlinks to the
-generated skill directories, so both catalogs serve one routine. Project config is
-`.yard/config.toml`; its gates mirror `.github/workflows/ci.yml`.
+generates them; put local rules and temporary upstream corrections in
+`.yard/OPERATOR.md` instead. `.claude/skills/{yard-operator,yard-file,yard-drive}` are
+relative symlinks to the generated skill directories, so both catalogs serve one
+routine. Project config is `.yard/config.toml`; its gates mirror
+`.github/workflows/ci.yml`.
 
-**Yard is the primary build pathway.** New work runs as Yard tickets; manual builds
-remain for special cases (releases, real-seed `build-db` verification). Keep main to a
-single write path: Yard lands on its local canonical main, and a second writer produces
-diverged heads that `yard sync` will refuse.
+**Yard is the primary product-development pathway.** New product work runs as Yard
+tickets; the manual exceptions above use their direct workflows. Dependency upgrades and
+releases do not need a Yard ticket. Keep main to a single write path: Yard lands on its
+local canonical main, and an uncoordinated second writer produces diverged heads that
+`yard sync` will refuse.
 
 **Dogfooding**: Yard is the maintainer's own project under active development, and this
 repo is its testbed. While operating it, keep a running log in `.yard/DOGFOOD.md` of

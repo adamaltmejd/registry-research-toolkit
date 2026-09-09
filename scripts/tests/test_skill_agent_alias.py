@@ -10,7 +10,8 @@ Two link directions exist:
 
 - `yard init` scaffolds the generated Yard routine (`yard-operator`, `yard-file`,
   `yard-drive`) under `.agents/skills/`, so `.claude/skills/<name>` is the alias —
-  `.claude/skills/<name>` → `../../.agents/skills/<name>`.
+  `.claude/skills/<name>` → `../../.agents/skills/<name>`. The hand-authored
+  `upgrade-deps` maintenance skill uses that same direction.
 - The specialized design skills are hand-authored under `.claude/skills/`, so
   `.agents/skills/<name>` is the alias — `.agents/skills/<name>` → `../../.claude/skills/<name>`.
 
@@ -36,6 +37,7 @@ _SKILLS = {
     "yard-operator": (".agents", ".claude"),
     "yard-file": (".agents", ".claude"),
     "yard-drive": (".agents", ".claude"),
+    "upgrade-deps": (".agents", ".claude"),
 }
 
 

@@ -24,8 +24,10 @@ worker, reviewer or plan argues for broader work.
 - **Preserve the load-bearing guards.** Never accept or approve a simplification that
   drops PII/MONA confinement, k-anonymity/disclosure control, determinism/byte-identity,
   JSON-contract validation or fail-fast behavior.
-- **Use Yard for development and integration.** Manual work is limited to the special
-  cases in [AGENTS.md](../AGENTS.md). Generic advice to apply a retained diff, commit
+- **Use Yard for product development.** Dependency upgrades and releases run through
+  their direct skills under the manual exceptions in [AGENTS.md](../AGENTS.md),
+  including necessary compatibility and release-preparation repairs. Their final
+  integration follows the handoff below. Generic advice to apply a retained diff, commit
   and sync does not authorize a second writer to main. Replay work on its existing
   ticket through Yard; for a different ticket, carry the useful diff as briefing for its
   worker to integrate under review. The retired pre-Yard GitHub coordination machinery
@@ -37,6 +39,40 @@ worker, reviewer or plan argues for broader work.
   retained screenshots alongside the code seat. No other workflow binds both. Read
   `yard workflow list` or `.yard/config.toml` for the actual checks; do not assume all
   workflows run all gates. Other work uses `default` or `light` as appropriate.
+
+## Manual integration
+
+Dependency maintenance and release preparation can proceed in an isolated worktree while
+Yard operates elsewhere. A manual PR still requires green CI and the maintainer's
+review. Use the existing skills for verification; this handoff coordinates the one
+writer to main, without adding a Yard implementation/review lane.
+
+Before a manual merge or direct release push:
+
+1. Coordinate with any active operator. Record whether admissions are already paused.
+   Read current `yard pause --help`, then pause new admissions for the integration
+   window. Pause does not stop existing lanes or prevent explicit lane starts. The
+   owning operator holds retries and decisions through the handoff. Wait for running
+   executions and approved/landing candidates to settle. Stopped attempts may remain
+   only after verifying their executions are terminal, no continuation or landing is
+   queued, and their operator holds the next action. Preserve their candidates and
+   workspaces; do not abandon useful work to obtain an empty board.
+2. From the main checkout, use supported `yard sync` to bring in completed Yard work.
+   Reconcile origin/main without force or history rewriting. Rebase/update the manual
+   branch onto that common head and refresh any checks/review invalidated by the change.
+   Do not merge while the local canonical target and origin are divergent.
+3. Perform the reviewed manual merge, or the release skill's version-only push, while
+   the integration window is held. Fast-forward the main checkout to origin/main, run
+   `yard sync` to import it into canonical, and verify all three heads agree.
+4. Check `yard status` for changed configuration or a required daemon restart before new
+   work starts. Restore admissions only if this workflow paused them; preserve a
+   pre-existing pause. If reconciliation fails, leave the pause in place and report the
+   exact state rather than letting two writers continue.
+
+After each Yard mutation, re-arm the cursor watch as the operator routine requires. For
+a multi-package release, retain the coordinated window across its source pushes and
+required deployment checks; do not let another writer invalidate its main-head checks
+between packages. Worktree preparation alone needs no admission pause.
 
 ## UI approval evidence
 
