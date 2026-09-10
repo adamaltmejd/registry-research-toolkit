@@ -178,6 +178,14 @@ let appliedYears = $state<StudyWindow | null>(null);
  * looking at, which the store re-checks the write against. Plain, not `$state`:
  * nothing renders from it. */
 let editedFrom: SourcePeriodEditTarget | null = null;
+/** Flipped by the `$effect` teardown when this card goes away, so an Apply still
+ * waiting on the restore gate in `applyPeriod` is abandoned rather than written
+ * behind the researcher's back (the same idiom the catalog views use for a staged
+ * Apply). This effect reads nothing, so it never re-runs. */
+let unmounted = false;
+$effect(() => () => {
+  unmounted = true;
+});
 
 const fromText = $derived(
   entry?.from ?? (storedYears ? String(storedYears.from) : ""),
@@ -293,7 +301,7 @@ function editYear(side: "from" | "to", value: string): void {
  * are re-armed on the source as it NOW stands — after a refusal that is the whole
  * point, since the source moved and the next Apply has to be made against a value
  * the researcher can see, so the alert says the years were reset. */
-function applyPeriod(): void {
+async function applyPeriod(): Promise<void> {
   // Committing FIRST is what makes a refused Apply say why: years that name no
   // window leave `proposedWire` null, so the write below is skipped and the
   // refusal line renders instead.
@@ -304,6 +312,16 @@ function applyPeriod(): void {
     return;
   }
   const written = yearWindowFromWire(wire);
+  // The draft lifecycle is application-owned and its restore is ASYNCHRONOUS, so
+  // this waits for it exactly as the catalog's Add path does: the store re-checks
+  // the edit against the draft it finds, and that check is only worth anything
+  // once the draft it reads is the SETTLED one. The wait is unbounded, so a card
+  // gone by the time it returns — the researcher left /project — abandons the
+  // write rather than landing it on a page nobody is looking at.
+  await projectStore.restored;
+  if (unmounted) {
+    return;
+  }
   writeRefused = !projectStore.applySourcePeriodEdit({
     ...target,
     period: periodFromWire(wire),
@@ -459,7 +477,7 @@ function confirmRemove(): void {
           class="period-entry"
           onsubmit={(event) => {
             event.preventDefault();
-            applyPeriod();
+            void applyPeriod();
           }}
         >
           <div class="years" role="group" aria-label={periodGroupLabel}>

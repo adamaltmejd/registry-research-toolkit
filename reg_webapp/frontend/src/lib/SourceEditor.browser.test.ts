@@ -825,6 +825,66 @@ describe("SourceEditor source period (Y-81)", () => {
     expect(projectStore.draft?.sources?.[0]?.bindings).toHaveLength(2);
   });
 
+  // The draft lifecycle is APPLICATION-owned and its restore is ASYNCHRONOUS, so
+  // the card waits on the same gate the catalog's Add waits on: the store checks
+  // an edit against the draft it FINDS, and a write issued while the restore is in
+  // flight is checked against a draft the lifecycle has not finished loading.
+  it("holds the write until the app-owned draft restore has settled", async () => {
+    const source = seedSource(2020);
+    const { promise: gate, resolve: release } = Promise.withResolvers<void>();
+    const restoring = vi.spyOn(projectStore, "restored", "get");
+    restoring.mockReturnValue(gate);
+    try {
+      await renderCard(source);
+
+      await page.getByRole("textbox", { name: "From" }).fill("1990");
+      await page.getByRole("button", { name: /Apply period/ }).click();
+
+      // Still restoring: nothing written, and nothing announced either. A fixed
+      // wait, not `vi.waitFor`: the assertion is that NOTHING happens, and a poll
+      // would pass on its first tick, before the continuation it is meant to catch
+      // has run.
+      await new Promise((r) => setTimeout(r, 100));
+      expect(projectStore.draft?.sources?.[0]?.period).toBe(2020);
+      expect(page.getByText(/Period set to/).query()).toBeNull();
+
+      // …and once the gate opens it lands, checked against the settled draft.
+      release();
+      await expect
+        .element(page.getByText("Period set to 1990–2020."))
+        .toBeVisible();
+      expect(projectStore.draft?.sources?.[0]?.period).toEqual({
+        from: 1990,
+        to: 2020,
+      });
+    } finally {
+      restoring.mockRestore();
+    }
+  });
+
+  it("drops a held write whose card left the page meanwhile", async () => {
+    // Same wait, the other way out of it: the gate's wait is UNBOUNDED, so a card
+    // gone before it settles — the researcher left /project — must not have its
+    // late continuation write into the draft behind them.
+    const source = seedSource(2020);
+    const { promise: gate, resolve: release } = Promise.withResolvers<void>();
+    const restoring = vi.spyOn(projectStore, "restored", "get");
+    restoring.mockReturnValue(gate);
+    try {
+      const view = await renderCard(source);
+
+      await page.getByRole("textbox", { name: "From" }).fill("1990");
+      await page.getByRole("button", { name: /Apply period/ }).click();
+      view.unmount();
+      release();
+
+      await new Promise((r) => setTimeout(r, 100));
+      expect(projectStore.draft?.sources?.[0]?.period).toBe(2020);
+    } finally {
+      restoring.mockRestore();
+    }
+  });
+
   // A period the year fields cannot express — a token, or the #307 comma list two
   // disjoint picks merge into. Collapsing it into a span would order years nobody
   // asked for, so the card shows it as it stands.
