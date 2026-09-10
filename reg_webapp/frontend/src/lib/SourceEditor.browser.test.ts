@@ -1,7 +1,15 @@
 import type { ComponentProps } from "svelte";
-import { beforeEach, describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
+import type {
+  CatalogNode,
+  RootResponse,
+  StatesResponse,
+  VariantsResponse,
+} from "./api";
+import { getCatalogNode, getCatalogRoot, getRegisterVariants } from "./api";
+import { resetCatalogNames } from "./catalog_names.svelte";
 import type { Source } from "./project_data";
 import { projectStore } from "./project_store.svelte";
 import SourceEditor from "./SourceEditor.svelte";
@@ -11,6 +19,88 @@ import SourceEditor from "./SourceEditor.svelte";
 // delete only. No name / register_variant inputs, no variant picker, no
 // PeriodEditor. Y-75: the card is titled by its REGISTER (the thing the researcher
 // picked), the columns are called columns, and dropping a whole source asks first.
+// Y-80: that title is the register and variant AS THE CATALOG NAMES THEM, read from
+// the catalog (the draft holds only the coordinate), never a slug rule.
+
+// Stub the three catalog GETs the card's names come from; keep the rest of api.ts
+// real (the types + path helpers `catalog.ts` uses) — the partial-mock pattern
+// `VariantBrowser` / `CatalogNodeView` use for the same reads.
+vi.mock("./api", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("./api")>();
+  return {
+    ...actual,
+    getCatalogNode: vi.fn(),
+    getCatalogRoot: vi.fn(),
+    getRegisterVariants: vi.fn(),
+  };
+});
+
+/** The catalog root as a deployment serving `providers` (the shell's facet list,
+ * and what decides whether a card's title carries its provider). */
+function rootResponse(
+  ...providers: { fqid: string; name: string }[]
+): RootResponse {
+  return {
+    kind: "root",
+    children: providers.map(({ fqid, name }) => ({
+      kind: "provider",
+      fqid,
+      name,
+    })),
+  } as unknown as RootResponse;
+}
+
+/** A register entry carrying its curated display name — "LISA", "MiDAS": the word
+ * the register's own catalog page is headed with. */
+function registerNode(fqid: string, name: string | null) {
+  return { kind: "register", fqid, name, purpose: null, coverage: null };
+}
+
+/** A provider node listing the registers it owns — the read the card's register
+ * word comes from (one light payload per provider, not one register node each). */
+function providerNode(
+  fqid: string,
+  ...registers: ReturnType<typeof registerNode>[]
+): CatalogNode {
+  return {
+    kind: "provider",
+    fqid,
+    name: fqid,
+    children: registers,
+  } as unknown as CatalogNode;
+}
+
+/** A register's variant list, as `GET /{provider}/{register}/variants` returns it. */
+function variantsResponse(
+  ...variants: { slug: string; name?: string | null }[]
+): VariantsResponse {
+  return { variants } as unknown as VariantsResponse;
+}
+
+/** The LISA fixture every case starts from: a single-provider deployment whose
+ * `scb/lisa` register delivers the two individual-frame variants of one succession
+ * family plus the workplace frame. A case that needs another register/deployment
+ * overrides the mock it cares about. */
+function stubCatalog(): void {
+  vi.mocked(getCatalogRoot).mockResolvedValue(
+    rootResponse({ fqid: "scb", name: "Statistiska Centralbyrån" }),
+  );
+  vi.mocked(getCatalogNode).mockImplementation(async (fqid) =>
+    fqid === "scb"
+      ? providerNode("scb", registerNode("scb/lisa", "LISA"))
+      : // The columns' own leaf resolve (BindingEditor.browser.test.ts owns it):
+        // nothing covering, so the rows show their FQID alone.
+        ({ states: [] } as unknown as StatesResponse),
+  );
+  vi.mocked(getRegisterVariants).mockResolvedValue(
+    variantsResponse(
+      { slug: "v1", name: "Individer 15+" },
+      { slug: "individer-15plus", name: "Individer, 15 år och äldre" },
+      { slug: "individer-16plus", name: "Individer, 16 år och äldre" },
+      { slug: "arbetsstallen", name: "Arbetsställen" },
+    ),
+  );
+}
 
 beforeEach(() => {
   // projectStore is a module singleton; start each test from a fresh draft so the
@@ -19,6 +109,13 @@ beforeEach(() => {
     reg_meta_version: "reg_meta/v1.0.0",
     steward: "global",
   });
+  // The name cache is a session singleton too — a case stubbing a different
+  // catalog for the same coordinate must not read the previous case's answer.
+  resetCatalogNames();
+  vi.mocked(getCatalogNode).mockReset();
+  vi.mocked(getCatalogRoot).mockReset();
+  vi.mocked(getRegisterVariants).mockReset();
+  stubCatalog();
 });
 
 /** The card under test, always at index 0 of the fresh draft above. Every case
@@ -67,18 +164,28 @@ describe("SourceEditor read-only cart card", () => {
   // Y-75: `name` is a generated join key — three variants of one register mint
   // `LISA`, `LISA_2`, `LISA_3`, which name nothing a researcher picked. The card is
   // titled by the REGISTER; the name stays visible as a detail because panels and
-  // `OrderEntry.source` join on it.
-  it("titles the card with its register, keeping the generated name as a detail", async () => {
+  // `OrderEntry.source` join on it. Y-80: by the register's CATALOG name.
+  it("titles the card with its register and variant, keeping the generated name as a detail", async () => {
     const source = {
       name: "LISA_2",
-      register_variant: "scb/lisa/individer-15plus",
+      register_variant: "scb/lisa/individer-16plus",
       period: 2020,
       bindings: [{ variable: "scb/lisa/kon", type: "categorical" }],
     } as Source;
     await renderCard(source);
 
     await expect
-      .element(page.getByRole("heading", { name: "LISA", exact: true }))
+      .element(
+        page.getByRole("heading", {
+          name: "LISA · Individer, 16 år och äldre",
+          exact: true,
+        }),
+      )
+      .toBeVisible();
+    // The concrete variant the source extracts stays on the card, in mono.
+    await expect.element(page.getByText("Register variant")).toBeVisible();
+    await expect
+      .element(page.getByText("scb/lisa/individer-16plus", { exact: true }))
       .toBeVisible();
     // The generated name is not the title, and it has not left the card either.
     await expect.element(page.getByText("Source name")).toBeVisible();
@@ -87,7 +194,96 @@ describe("SourceEditor read-only cart card", () => {
       .toBeVisible();
   });
 
-  it("qualifies the register title with its provider where the deployment has more than one", async () => {
+  it("names a variant with no family too, from the same catalog read", async () => {
+    // Y-80's complaint in one case: before, only LISA's individual frame had a
+    // label at all and every other variant read as a bare coordinate.
+    const source = {
+      name: "LISA_3",
+      register_variant: "scb/lisa/arbetsstallen",
+      period: 2020,
+      bindings: [],
+    } as unknown as Source;
+    await renderCard(source);
+
+    await expect
+      .element(
+        page.getByRole("heading", {
+          name: "LISA · Arbetsställen",
+          exact: true,
+        }),
+      )
+      .toBeVisible();
+    // ONE catalog read per register, however many cards ask for it.
+    expect(vi.mocked(getRegisterVariants).mock.calls).toHaveLength(1);
+  });
+
+  it("reads two sources of one variant family as one family with a changed frame", async () => {
+    // reg_meta derives a family label as the common leading stem of its members'
+    // names, so each member's own name already leads with the family word: the two
+    // cards line up on "Individer" and differ in the frame.
+    const older = {
+      name: "LISA",
+      register_variant: "scb/lisa/individer-16plus",
+      period: { from: 1990, to: 2009 },
+      bindings: [],
+    } as unknown as Source;
+    const newer = {
+      name: "LISA_2",
+      register_variant: "scb/lisa/individer-15plus",
+      period: { from: 2010, to: 2020 },
+      bindings: [],
+    } as unknown as Source;
+    const view = await renderCard(older);
+    await expect
+      .element(
+        page.getByRole("heading", {
+          name: "LISA · Individer, 16 år och äldre",
+          exact: true,
+        }),
+      )
+      .toBeVisible();
+    view.unmount();
+
+    await renderCard(newer);
+    await expect
+      .element(
+        page.getByRole("heading", {
+          name: "LISA · Individer, 15 år och äldre",
+          exact: true,
+        }),
+      )
+      .toBeVisible();
+  });
+
+  it("titles a `_default` variant with the register alone", async () => {
+    // `_default` is the whole-register default, not a population anyone picked.
+    vi.mocked(getCatalogNode).mockResolvedValue(
+      providerNode("fk", registerNode("fk/midas", "MiDAS")),
+    );
+    vi.mocked(getRegisterVariants).mockResolvedValue(
+      variantsResponse({ slug: "_default", name: null }),
+    );
+    const source = {
+      name: "MIDAS",
+      register_variant: "fk/midas/_default",
+      period: 2020,
+      bindings: [],
+    } as unknown as Source;
+    await renderCard(source);
+
+    // The catalog's spelling, not the slug uppercased: "MiDAS", never "MIDAS".
+    await expect
+      .element(page.getByRole("heading", { name: "MiDAS", exact: true }))
+      .toBeVisible();
+  });
+
+  it("qualifies the title with the provider NAME where the deployment has more than one", async () => {
+    vi.mocked(getCatalogRoot).mockResolvedValue(
+      rootResponse(
+        { fqid: "scb", name: "Statistiska Centralbyrån" },
+        { fqid: "fk", name: "Försäkringskassan" },
+      ),
+    );
     const source = {
       name: "LISA",
       register_variant: "scb/lisa/individer-15plus",
@@ -97,22 +293,82 @@ describe("SourceEditor read-only cart card", () => {
     await renderCard(source, { providerQualified: true });
 
     await expect
-      .element(page.getByRole("heading", { name: "SCB LISA", exact: true }))
+      .element(
+        page.getByRole("heading", {
+          name: "Statistiska Centralbyrån · LISA · Individer, 15 år och äldre",
+          exact: true,
+        }),
+      )
       .toBeVisible();
+    // The rail's own spelling — never `slug.toUpperCase()`.
+    expect(document.body.textContent).not.toContain("SCB LISA");
   });
 
-  it("shows the LISA family label without hiding the concrete source variant", async () => {
+  it("shows the coordinate ALONE, exactly once, while the names are unavailable", async () => {
+    // Offline, or a coordinate outside this steward's catalog: the card must stay
+    // readable and must not invent a word. The title falls back to the coordinate,
+    // and the detail row does not then repeat it.
+    vi.mocked(getCatalogNode).mockRejectedValue(new Error("offline"));
+    vi.mocked(getRegisterVariants).mockRejectedValue(new Error("offline"));
     const source = {
-      name: "lisa_old",
-      register_variant: "scb/lisa/individer-16plus",
-      period: { from: 1990, to: 2009 },
-      bindings: [{ variable: "scb/lisa/kon", type: "categorical" }],
-    } as Source;
+      name: "LISA",
+      register_variant: "scb/lisa/individer-15plus",
+      period: 2020,
+      bindings: [],
+    } as unknown as Source;
     await renderCard(source);
 
     await expect
-      .element(page.getByText("Individer (scb/lisa/individer-16plus)"))
+      .element(
+        page.getByRole("heading", {
+          name: "scb/lisa/individer-15plus",
+          exact: true,
+        }),
+      )
       .toBeVisible();
+    expect(
+      await page.getByText("scb/lisa/individer-15plus", { exact: true }).all(),
+    ).toHaveLength(1);
+    expect(page.getByText("Register variant").query()).toBeNull();
+    // A coordinate standing in for a name is still a machine identifier: mono, like
+    // every other FQID the app shows, and said ONCE in the button's name too.
+    const heading = document.querySelector<HTMLElement>(".source-head h3");
+    expect(getComputedStyle(heading as HTMLElement).fontFamily).toContain(
+      "mono",
+    );
+    await expect
+      .element(
+        page.getByRole("button", {
+          name: "Remove source scb/lisa/individer-15plus",
+          exact: true,
+        }),
+      )
+      .toBeVisible();
+  });
+
+  it("falls back to the coordinate when the register is named but its variants are not", async () => {
+    // Half a name is worse than none: "LISA" alone is how a `_default` source reads,
+    // and two variants of one register would title identically. The card says the
+    // coordinate until it can say the whole name.
+    vi.mocked(getRegisterVariants).mockRejectedValue(new Error("offline"));
+    const source = {
+      // Not named "LISA": the register's word must be absent from the whole card.
+      name: "s1",
+      register_variant: "scb/lisa/individer-15plus",
+      period: 2020,
+      bindings: [],
+    } as unknown as Source;
+    await renderCard(source);
+
+    await expect
+      .element(
+        page.getByRole("heading", {
+          name: "scb/lisa/individer-15plus",
+          exact: true,
+        }),
+      )
+      .toBeVisible();
+    expect(page.getByText("LISA", { exact: true }).query()).toBeNull();
   });
 
   it("shows the '(no period)' fallback for a null period", async () => {
@@ -158,7 +414,7 @@ describe("SourceEditor read-only cart card", () => {
     const dialog = page.getByRole("alertdialog");
     await expect
       .element(dialog)
-      .toMatchTextContent(/Remove LISA and its 2 columns\?/);
+      .toMatchTextContent(/Remove LISA · Individer 15\+ and its 2 columns\?/);
     // Nothing has gone yet — the question is the whole effect of the first click.
     expect(projectStore.draft?.sources).toHaveLength(2);
 
@@ -187,9 +443,7 @@ describe("SourceEditor read-only cart card", () => {
 
     await page.getByRole("button", { name: "Remove source" }).click();
     const dialog = page.getByRole("alertdialog");
-    await expect
-      .element(dialog)
-      .toMatchTextContent(/Remove LISA and its 1 column\?/);
+    await expect.element(dialog).toMatchTextContent(/and its 1 column\?/);
     await dialog.getByRole("button", { name: "Remove source" }).click();
 
     // The store dropped source 0 (scb/lisa/v1); scb/rtb/v1 survives.
@@ -225,6 +479,8 @@ describe("SourceEditor read-only cart card", () => {
     await expect
       .element(page.getByRole("button", { name: /Remove source/ }))
       .toBeVisible();
+    // A malformed slot names no coordinate, so it asks the catalog nothing.
+    expect(vi.mocked(getCatalogNode).mock.calls).toHaveLength(0);
   });
 
   it("counts and empties in COLUMNS, the word the rest of the app uses", async () => {
@@ -274,11 +530,16 @@ describe("SourceEditor read-only cart card", () => {
     // clipped/overflowed the card. `min-width: 0` + `overflow-wrap: anywhere` at
     // those boundaries must let each wrap in-card. Y-75 moved the source NAME out of
     // the heading and into the card's mono detail rows, so the long name is asserted
-    // there now.
+    // there now. Y-80 puts the catalog's own register name in the heading — a
+    // curated name can be long and unbroken too.
+    const longRegisterName =
+      "Longitudinell_integrationsdatabas_for_sjukforsakrings_och_arbetsmarknadsstudier";
+    vi.mocked(getCatalogNode).mockResolvedValue(
+      providerNode("scb", registerNode("scb/lisa", longRegisterName)),
+    );
     const source = {
       name: "a_very_long_source_name_that_would_not_normally_wrap_on_its_own",
-      register_variant:
-        "scb/a_very_long_register_slug_that_would_not_wrap_either/v1",
+      register_variant: "scb/lisa/v1",
       period: 2020,
       bindings: [
         {
@@ -309,10 +570,11 @@ describe("SourceEditor read-only cart card", () => {
     // their full content width, so their OWN scrollWidth == clientWidth even while
     // overflowing the card — the overflow shows up on the bounded parent. This mirrors
     // the SearchView #808/#806 regression, which checks the `.cols-1` grid container.
-    const heading = document.querySelector<HTMLElement>(".source-head h3");
-    expect(heading?.textContent).toContain(
-      "A_VERY_LONG_REGISTER_SLUG_THAT_WOULD_NOT_WRAP_EITHER",
-    );
+    await expect
+      .element(
+        page.getByRole("heading", { name: new RegExp(longRegisterName) }),
+      )
+      .toBeVisible();
     const sourceHead = document.querySelector<HTMLElement>(".source-head");
     expect(sourceHead?.scrollWidth ?? 0).toBeLessThanOrEqual(
       (sourceHead?.clientWidth ?? 0) + 1,

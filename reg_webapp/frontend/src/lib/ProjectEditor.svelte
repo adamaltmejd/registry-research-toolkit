@@ -1,7 +1,5 @@
 <script lang="ts">
 import { onDestroy } from "svelte";
-import { getStats } from "./api";
-import { asyncResource } from "./async.svelte";
 import { regMetaReleaseTag, safeSourceSlots } from "./project_data";
 import { projectStore } from "./project_store.svelte";
 import SourceEditor from "./SourceEditor.svelte";
@@ -35,9 +33,13 @@ import { windowCoverageHints } from "./validation";
 // shown read-only. Validation runs automatically against the current draft, so the
 // order download is gated on the current backend result instead of a manual
 // Validate click.
-const { regMetaVersion, steward } = $props<{
+const { regMetaVersion, steward, providerQualified } = $props<{
   regMetaVersion: string;
   steward: string;
+  /** Whether this deployment serves more than one provider, so a source card's
+   * title carries its provider. A deployment fact, read once at the app root and
+   * passed down like `steward` — this page fetches nothing of its own. */
+  providerQualified: boolean;
 }>();
 
 // A hidden <input type=file> driven by the toolbar "Open" button. Resetting its
@@ -94,16 +96,6 @@ function downloadThenReplace(): void {
   projectStore.downloadProject();
   projectStore.confirmReplacement();
 }
-
-// A source card titles itself with its REGISTER ("LISA"). On a deployment serving
-// more than one provider a bare register slug can name two registers, so the title
-// carries its provider there ("SCB LISA") and not on a single-provider one, where
-// the prefix is noise on every card. `/api/stats` is the steward-FILTERED count of
-// what this deployment serves (the same read the landing page makes); until it
-// resolves the cards title unqualified, which is what a one-provider deployment —
-// the case the prefix would be noise on — shows anyway.
-const stats = asyncResource(() => getStats());
-const providerQualified = $derived((stats.data?.providers ?? 1) > 1);
 
 // This page is the only surface that asks the question, and it unmounts on a
 // route change (`{#if route.name === "project"}`) — so drop any unanswered

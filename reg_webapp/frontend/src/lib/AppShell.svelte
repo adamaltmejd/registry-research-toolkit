@@ -1,9 +1,8 @@
 <script lang="ts">
 import { Dialog } from "bits-ui";
 import type { Snippet } from "svelte";
-import { getCatalogRoot } from "./api";
-import { asyncResource } from "./async.svelte";
 import { catalogHref, DATA_BROWSER_LABEL } from "./catalog";
+import { catalogRootChildren } from "./catalog_names.svelte";
 import {
   type StudyWindow,
   safeSourceBindings,
@@ -64,10 +63,12 @@ let {
 const route = $derived(router.route);
 
 // The contextual provider facets — every provider + the classification-root
-// sentinel, the same catalog root the CatalogRoot page renders. Fetched here so
-// the facets are reachable on EVERY route, not just `/catalog`.
-const root = asyncResource(() => getCatalogRoot());
-const providers = $derived(root.data?.children ?? []);
+// sentinel, the same catalog root the CatalogRoot page renders. Read on EVERY
+// route (not just `/catalog`) so the facets are always reachable, and through the
+// shared name cache, which is also where a cart source card gets its provider
+// word: the app reads `/api/catalog` once, not once per consumer.
+const root = $derived(catalogRootChildren());
+const providers = $derived(root.value ?? []);
 
 // The mobile drawer open state, bound to the Bits UI Dialog below (which owns
 // every other way it closes: Escape, a click or focus outside, and the return of
@@ -245,7 +246,9 @@ function plural(count: number, singular: string, pluralLabel: string): string {
     <p class="micro-label facets-label">Providers</p>
     {#if root.loading}
       <p class="facets-note" aria-busy="true">Loading…</p>
-    {:else if root.error}
+      <!-- Settled with nothing = the read failed; a catalog with no providers
+           settles as `[]` and falls through to the (empty) list below. -->
+    {:else if root.value === null}
       <p class="facets-note error" role="alert">Failed to load providers.</p>
     {:else}
       <ul class="facet-list">

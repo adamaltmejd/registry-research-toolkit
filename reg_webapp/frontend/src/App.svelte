@@ -7,6 +7,7 @@ import CatalogRoot from "./lib/CatalogRoot.svelte";
 import ClassificationGroupView from "./lib/ClassificationGroupView.svelte";
 import ConceptGroupView from "./lib/ConceptGroupView.svelte";
 import { routeBreadcrumbs } from "./lib/catalog";
+import { providerQualified } from "./lib/catalog_names.svelte";
 import DocView from "./lib/DocView.svelte";
 import Home from "./lib/Home.svelte";
 import ProjectEditor from "./lib/ProjectEditor.svelte";
@@ -98,6 +99,13 @@ $effect(() => {
 // The route-derived topbar breadcrumb (#803). Structural only — raw slug labels;
 // the routed page owns its rich, display-name header.
 const breadcrumbItems = $derived(routeBreadcrumbs(route));
+
+// Whether this deployment serves more than one provider — a deployment fact, read
+// HERE (from the same catalog root the shell's provider rail reads, so it costs no
+// extra request) and passed down like `steward`, never fetched by a route. A cart
+// source card titles itself with its register; where two providers can each own a
+// register of that name, the title carries the provider too.
+const qualified = $derived(providerQualified());
 </script>
 
 <!-- Click interception is delegated from the root container via the `link`
@@ -185,7 +193,7 @@ const breadcrumbItems = $derived(routeBreadcrumbs(route));
              register changes. -->
         <VariantBrowser registerFqid={`${route.provider}/${route.register}`} />
       {:else if route.name === "project"}
-        <ProjectEditor {regMetaVersion} {steward} />
+        <ProjectEditor {regMetaVersion} {steward} providerQualified={qualified} />
       {:else if route.name === "search"}
         <SearchView />
       {:else if route.name === "doc"}

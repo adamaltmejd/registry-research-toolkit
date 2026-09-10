@@ -1,3 +1,4 @@
+import type { ComponentProps } from "svelte";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
@@ -57,6 +58,21 @@ function openFile(json: string): void {
   projectStore.loadProject(parsed as ProjectData);
 }
 
+/** The cart under test. Every case renders it with the same deployment props —
+ * the ones App.svelte reads once and passes down (`steward` / `regMetaVersion` /
+ * whether the deployment serves more than one provider) — so a case that
+ * overrides one says so and nothing else. */
+function renderEditor(
+  overrides: Partial<ComponentProps<typeof ProjectEditor>> = {},
+) {
+  return render(ProjectEditor, {
+    regMetaVersion: "1.0.0",
+    steward: "global",
+    providerQualified: false,
+    ...overrides,
+  });
+}
+
 /** Seed a draft of `n` sources by register variant, each a single categorical
  * binding — the cart's read-only content (adds funnel through the staged-diff
  * commit path, since the editor no longer mutates directly). */
@@ -94,7 +110,7 @@ afterEach(() => {
 describe("ProjectEditor cart — read-only, no add affordances", () => {
   it("renders picked sources read-only with no Add source / Add binding buttons", async () => {
     seedSources(["scb/lisa/v1", "scb/rtb/v1"]);
-    await render(ProjectEditor, { regMetaVersion: "1.0.0", steward: "global" });
+    await renderEditor();
 
     // The two sources' coordinates show read-only.
     await expect
@@ -118,7 +134,7 @@ describe("ProjectEditor cart — read-only, no add affordances", () => {
 
   it("shows the browse-to-add empty state when there are no sources", async () => {
     projectStore.newProject(SEED);
-    await render(ProjectEditor, { regMetaVersion: "1.0.0", steward: "global" });
+    await renderEditor();
 
     await expect
       .element(page.getByText(/Browse the catalog to add data/))
@@ -127,7 +143,7 @@ describe("ProjectEditor cart — read-only, no add affordances", () => {
 
   it("keeps name edit + downloads and retires the manual Validate button", async () => {
     seedSources(["scb/lisa/v1"]);
-    await render(ProjectEditor, { regMetaVersion: "1.0.0", steward: "global" });
+    await renderEditor();
 
     // Validation now runs automatically; the toolbar keeps only the downloads.
     expect(page.getByRole("button", { name: "Validate" }).query()).toBeNull();
@@ -167,7 +183,7 @@ describe("ProjectEditor cart — read-only, no add affordances", () => {
   // draft keeps every field.
   it("keeps the file's provenance in a page footer, not the working column", async () => {
     seedSources(["scb/lisa/v1"]);
-    await render(ProjectEditor, { regMetaVersion: "1.0.0", steward: "global" });
+    await renderEditor();
 
     const footer = document.querySelector<HTMLElement>("footer.provenance");
     expect(footer).not.toBeNull();
@@ -190,7 +206,7 @@ describe("ProjectEditor cart — read-only, no add affordances", () => {
 
   it("coerces a non-array sources to empty and renders without crashing", async () => {
     openFile(MALFORMED);
-    await render(ProjectEditor, { regMetaVersion: "1.0.0", steward: "global" });
+    await renderEditor();
 
     // The loaded draft renders (name heading) — no crash on the non-array.
     await expect
@@ -211,7 +227,7 @@ describe("ProjectEditor cart — read-only, no add affordances", () => {
 
   it("renders a null source slot as a degraded card without crashing, keeping the valid source and the slot count", async () => {
     openFile(NULL_SLOT);
-    await render(ProjectEditor, { regMetaVersion: "1.0.0", steward: "global" });
+    await renderEditor();
 
     // The loaded draft renders (name heading) — no crash on the null slot.
     await expect
@@ -245,7 +261,7 @@ describe("ProjectEditor cart — read-only, no add affordances", () => {
 describe("ProjectEditor stable keys (middle-remove keeps the right survivors)", () => {
   it("removing the MIDDLE source leaves the outer survivors showing their OWN coordinate", async () => {
     seedSources(["scb/lisa/v1", "scb/rtb/v1", "scb/uht/v1"]);
-    await render(ProjectEditor, { regMetaVersion: "1.0.0", steward: "global" });
+    await renderEditor();
 
     // Sanity: three source cards.
     expect(
@@ -280,7 +296,7 @@ describe("ProjectEditor renders the ValidationPanel", () => {
     // not on this route — the cart renders whatever verdict the store holds.
     seedSources(["scb/lisa/v1"]);
     await projectStore.validate();
-    await render(ProjectEditor, { regMetaVersion: "1.0.0", steward: "global" });
+    await renderEditor();
 
     // The panel owns the exact wording (ValidationPanel.browser.test.ts); here it
     // only has to be the clean verdict rather than the old one-word "Valid".
@@ -292,7 +308,7 @@ describe("ProjectEditor renders the ValidationPanel", () => {
   it("passes project-window coverage hints into the panel", async () => {
     seedSources(["scb/lisa/v1"]);
     projectStore.updateField("window", { from: 2010, to: 2020 });
-    await render(ProjectEditor, { regMetaVersion: "1.0.0", steward: "global" });
+    await renderEditor();
 
     await expect
       .element(page.getByText(/does not cover .* within your study window/))
@@ -317,7 +333,7 @@ describe("ProjectEditor renders the ValidationPanel", () => {
       } as Response);
 
     await projectStore.validate();
-    await render(ProjectEditor, { regMetaVersion: "1.0.0", steward: "global" });
+    await renderEditor();
 
     const retry = page.getByRole("button", { name: "Retry validation" });
     await expect.element(retry).toBeVisible();
@@ -362,7 +378,7 @@ describe("ProjectEditor renders the ValidationPanel", () => {
 
     await projectStore.validate();
     await projectStore.downloadOrder();
-    await render(ProjectEditor, { regMetaVersion: "1.0.0", steward: "global" });
+    await renderEditor();
 
     expect(
       page.getByText("the materializer produced no order").query(),
@@ -497,7 +513,7 @@ function flush(): Promise<void> {
 describe("ProjectEditor — replacing a dirty draft is deliberate", () => {
   it("New asks first, and a cancel leaves the draft exactly as it was", async () => {
     seedDirtyDraft();
-    await render(ProjectEditor, { regMetaVersion: "1.0.0", steward: "global" });
+    await renderEditor();
     const before = projectStore.draft;
 
     await page.getByRole("button", { name: "New", exact: true }).click();
@@ -514,7 +530,7 @@ describe("ProjectEditor — replacing a dirty draft is deliberate", () => {
 
   it("New replaces the draft once the researcher confirms", async () => {
     seedDirtyDraft();
-    await render(ProjectEditor, { regMetaVersion: "1.0.0", steward: "global" });
+    await renderEditor();
 
     await page.getByRole("button", { name: "New", exact: true }).click();
     await replaceDialog()
@@ -530,10 +546,7 @@ describe("ProjectEditor — replacing a dirty draft is deliberate", () => {
 
   it("a successful Open asks the same question — a cancel never loads the file", async () => {
     seedDirtyDraft();
-    const { container } = await render(ProjectEditor, {
-      regMetaVersion: "1.0.0",
-      steward: "global",
-    });
+    const { container } = await renderEditor();
 
     pickFile(container, OPENABLE);
     await expect.element(replaceDialog()).toBeVisible();
@@ -545,10 +558,7 @@ describe("ProjectEditor — replacing a dirty draft is deliberate", () => {
 
   it("a successful Open loads the file once the researcher confirms", async () => {
     seedDirtyDraft();
-    const { container } = await render(ProjectEditor, {
-      regMetaVersion: "1.0.0",
-      steward: "global",
-    });
+    const { container } = await renderEditor();
 
     pickFile(container, OPENABLE);
     await expect.element(replaceDialog()).toBeVisible();
@@ -566,10 +576,7 @@ describe("ProjectEditor — replacing a dirty draft is deliberate", () => {
     // Parse and version are both decided BEFORE anything is replaced, so an
     // unopenable file leaves the current draft — and its recovery copy — standing.
     seedDirtyDraft();
-    const { container } = await render(ProjectEditor, {
-      regMetaVersion: "1.0.0",
-      steward: "global",
-    });
+    const { container } = await renderEditor();
 
     pickFile(container, "{ not json");
     await expect.element(page.getByText(/Not valid JSON/)).toBeVisible();
@@ -584,10 +591,7 @@ describe("ProjectEditor — replacing a dirty draft is deliberate", () => {
 
   it("a cancelled file picker changes nothing", async () => {
     seedDirtyDraft();
-    const { container } = await render(ProjectEditor, {
-      regMetaVersion: "1.0.0",
-      steward: "global",
-    });
+    const { container } = await renderEditor();
     const before = projectStore.draft;
 
     pickFile(container, null);
@@ -607,10 +611,7 @@ describe("ProjectEditor — replacing a dirty draft is deliberate", () => {
 
   it("a New raised while a file is still reading keeps its own answer", async () => {
     seedDirtyDraft();
-    const { container } = await render(ProjectEditor, {
-      regMetaVersion: "1.0.0",
-      steward: "global",
-    });
+    const { container } = await renderEditor();
     const release = pickHeldFile(container, OPENABLE); // the read suspends
     await page.getByRole("button", { name: "New", exact: true }).click();
     await expect.element(replaceDialog()).toBeVisible();
@@ -629,10 +630,7 @@ describe("ProjectEditor — replacing a dirty draft is deliberate", () => {
 
   it("a rejected file raises no banner once its read is superseded", async () => {
     seedDirtyDraft();
-    const { container } = await render(ProjectEditor, {
-      regMetaVersion: "1.0.0",
-      steward: "global",
-    });
+    const { container } = await renderEditor();
     const release = pickHeldFile(container, PRE_MODEL_A);
     await page.getByRole("button", { name: "New", exact: true }).click();
     await expect.element(replaceDialog()).toBeVisible();
@@ -649,10 +647,7 @@ describe("ProjectEditor — replacing a dirty draft is deliberate", () => {
 
   it("a file that arrives after the page is gone changes nothing", async () => {
     seedDirtyDraft();
-    const { container, unmount } = await render(ProjectEditor, {
-      regMetaVersion: "1.0.0",
-      steward: "global",
-    });
+    const { container, unmount } = await renderEditor();
     const release = pickHeldFile(container, OPENABLE);
     const before = projectStore.draft;
     await unmount();
@@ -671,10 +666,7 @@ describe("ProjectEditor — replacing a dirty draft is deliberate", () => {
   it("an older read cannot overtake the project that replaced it", async () => {
     // From a CLEAN draft the policy replaces without asking, so the New is
     // ACCEPTED outright — and the file still in flight must not undo it.
-    const { container } = await render(ProjectEditor, {
-      regMetaVersion: "1.0.0",
-      steward: "global",
-    });
+    const { container } = await renderEditor();
     const release = pickHeldFile(container, OPENABLE);
     await page.getByRole("button", { name: "New", exact: true }).click();
     const replaced = projectStore.draft;
@@ -690,7 +682,7 @@ describe("ProjectEditor — replacing a dirty draft is deliberate", () => {
   it("offers the durable copy as the way out: download, then replace", async () => {
     seedDirtyDraft();
     const downloads = captureDownloads();
-    await render(ProjectEditor, { regMetaVersion: "1.0.0", steward: "global" });
+    await renderEditor();
 
     await page.getByRole("button", { name: "New", exact: true }).click();
     await replaceDialog()
@@ -721,10 +713,7 @@ describe("ProjectEditor — replacing a dirty draft is deliberate", () => {
     // its dialog: work picked in the catalog meanwhile would then be destroyed by
     // a confirm of the stale replacement on the way back.
     seedDirtyDraft();
-    const { unmount } = await render(ProjectEditor, {
-      regMetaVersion: "1.0.0",
-      steward: "global",
-    });
+    const { unmount } = await renderEditor();
 
     await page.getByRole("button", { name: "New", exact: true }).click();
     expect(projectStore.replacementPending).toBe(true);
@@ -736,7 +725,7 @@ describe("ProjectEditor — replacing a dirty draft is deliberate", () => {
 
   it("carries the alert-dialog semantics and returns focus to the control that opened it", async () => {
     seedDirtyDraft();
-    await render(ProjectEditor, { regMetaVersion: "1.0.0", steward: "global" });
+    await renderEditor();
     const newButton = page.getByRole("button", { name: "New", exact: true });
     await newButton.click();
 

@@ -4,6 +4,7 @@ import type {
   GraphState,
   StatesResponse,
   VariableStateModel,
+  VariantsResponse,
 } from "./api";
 import type {
   PickerBandFacets,
@@ -24,6 +25,7 @@ import {
   conformanceNeedsNotice,
   coverageFromStates,
   DATA_BROWSER_LABEL,
+  deliveryColumnNamesFromStates,
   deriveType,
   distinctValueSets,
   encodeCodesParam,
@@ -61,8 +63,9 @@ import {
   routeBreadcrumbs,
   rowAddPeriod,
   rowFacet,
+  sourceCardTitle,
   valueSetKeyForColumn,
-  variantDisplayLabel,
+  variantCardName,
   variantsHref,
   windowTitle,
   YEARLESS_VALID_FROM,
@@ -1963,18 +1966,6 @@ describe("pickerRepresentations (#678 direct picker)", () => {
     expect(new Set([familyKey, oldKey, newKey]).size).toBe(3);
   });
 
-  it("cart display labels known LISA individer families without hiding the coordinate", () => {
-    expect(variantDisplayLabel("scb/lisa/individer-16plus")).toBe(
-      "Individer (scb/lisa/individer-16plus)",
-    );
-    expect(variantDisplayLabel("scb/lisa/individer-15plus")).toBe(
-      "Individer (scb/lisa/individer-15plus)",
-    );
-    expect(variantDisplayLabel("scb/lisa/arbetsstallen")).toBe(
-      "scb/lisa/arbetsstallen",
-    );
-  });
-
   // ── #902 part 2: collapse an intra-variable SEQUENTIAL RENAME ────────────────
   it("collapses a non-overlapping rename chain into ONE row led by the LATEST column", () => {
     // disponibel-inkomst-familj-2: DINF (1981) → DINF83 (1984–85) → DINF84 (1986–87)
@@ -2200,6 +2191,150 @@ describe("coexistingColumns (#902 shared overlap leaf)", () => {
       },
     ]);
     expect([...set].sort()).toEqual(["A", "B"]);
+  });
+});
+
+// Y-80: the cart holds coordinates, so it NAMES a source and its columns from the
+// catalog. These are the pure leaves that shape those names; the reads that feed
+// them are `catalog_names.svelte.ts`.
+describe("sourceCardTitle (the cart's source-card title)", () => {
+  it("reads register then variant, in the catalog's own words", () => {
+    expect(
+      sourceCardTitle(
+        { register: "LISA", variant: "Individer, 16 år och äldre" },
+        "scb/lisa/individer-16plus",
+      ),
+    ).toBe("LISA · Individer, 16 år och äldre");
+  });
+
+  it("shows the register alone when the variant names no population", () => {
+    // `_default` contributes no variant word (see `variantCardName`/`sourceNames`).
+    expect(
+      sourceCardTitle(
+        { register: "MiDAS", variant: null },
+        "fk/midas/_default",
+      ),
+    ).toBe("MiDAS");
+  });
+
+  it("qualifies with the provider name where the deployment serves more than one", () => {
+    expect(
+      sourceCardTitle(
+        {
+          provider: "Försäkringskassan",
+          register: "MiDAS",
+          variant: "Standard",
+        },
+        "fk/midas/standard",
+      ),
+    ).toBe("Försäkringskassan · MiDAS · Standard");
+  });
+
+  it("falls back to the raw coordinate while the register has no name", () => {
+    // Loading, failed, or outside this deployment's catalog — one answer for all
+    // three: the coordinate the card already holds, never an invented word.
+    expect(sourceCardTitle({}, "scb/lisa/individer-16plus")).toBe(
+      "scb/lisa/individer-16plus",
+    );
+    expect(
+      sourceCardTitle(
+        { provider: "Statistiska Centralbyrån", register: null },
+        "scb/lisa/individer-16plus",
+      ),
+    ).toBe("scb/lisa/individer-16plus");
+  });
+});
+
+describe("variantCardName (the concrete variant a source extracts)", () => {
+  const variants = [
+    { slug: "individer-16plus", name: "Individer, 16 år och äldre" },
+    { slug: "arbetsstallen", name: null, display_group: "Arbetsställen" },
+    { slug: "nameless", name: null, display_group: null },
+  ] as VariantsResponse["variants"];
+
+  it("prefers the curated name, then the display group, then the slug", () => {
+    expect(variantCardName(variants, "individer-16plus")).toBe(
+      "Individer, 16 år och äldre",
+    );
+    expect(variantCardName(variants, "arbetsstallen")).toBe("Arbetsställen");
+    expect(variantCardName(variants, "nameless")).toBe("nameless");
+  });
+
+  it("names no population for `_default` — but that is not the same as failing to name one", () => {
+    // `_default` is the whole-register default, not a user-facing population
+    // (#673) — the register's own name already says it, so there is no word to add…
+    expect(variantCardName(variants, "_default")).toBe("");
+    // …whereas a list that does not name the slug (it never landed, or the register
+    // does not deliver it) has said nothing at all, and the caller must be able to
+    // tell that apart rather than title the card as if it were a `_default` source.
+    expect(variantCardName(variants, "gone")).toBeNull();
+    expect(variantCardName([], "individer-16plus")).toBeNull();
+  });
+});
+
+describe("deliveryColumnNamesFromStates (the cart's unpinned column name)", () => {
+  it("names the one column covering the source's period", () => {
+    expect(
+      deliveryColumnNamesFromStates([
+        state({
+          delivery_column_name: "Kon",
+          valid_from: "2010-01-01",
+          valid_to: "9999-12-31",
+        }),
+      ]),
+    ).toEqual(["Kon"]);
+  });
+
+  it("leads a rename within the period with the CURRENT column, superseded ones after", () => {
+    // DINF → DINF83 → DINF86 over non-overlapping eras is ONE column renamed, the
+    // same fold the picker's own rows present.
+    expect(
+      deliveryColumnNamesFromStates([
+        state({
+          delivery_column_name: "DINF83",
+          valid_from: "1984-01-01",
+          valid_to: "1985-12-31",
+        }),
+        state({
+          delivery_column_name: "DINF",
+          valid_from: "1981-01-01",
+          valid_to: "1983-12-31",
+        }),
+        state({
+          delivery_column_name: "DINF86",
+          valid_from: "1990-01-01",
+          valid_to: "9999-12-31",
+        }),
+      ]),
+    ).toEqual(["DINF86", "DINF83", "DINF"]);
+  });
+
+  it("names nothing when co-existing columns leave a choice the file must pin", () => {
+    // Two columns valid at the same instant: the cart may not pick one of them for
+    // the researcher, so the row falls back to its FQID.
+    expect(
+      deliveryColumnNamesFromStates([
+        state({
+          delivery_column_name: "Ssyk3",
+          valid_from: "2010-01-01",
+          valid_to: "2020-12-31",
+        }),
+        state({
+          delivery_column_name: "Ssyk4",
+          valid_from: "2012-01-01",
+          valid_to: "2020-12-31",
+        }),
+      ]),
+    ).toEqual([]);
+  });
+
+  it("skips states carrying no delivery column, and names nothing for none", () => {
+    expect(deliveryColumnNamesFromStates([])).toEqual([]);
+    expect(
+      deliveryColumnNamesFromStates([
+        state({ delivery_column_name: null, valid_to: "9999-12-31" }),
+      ]),
+    ).toEqual([]);
   });
 });
 

@@ -6,6 +6,7 @@
 // that assert what a RELOAD would recover need this shape to have a real restore
 // and a real autosave behind them.
 
+import { providerQualified } from "./catalog_names.svelte";
 import ProjectEditor from "./ProjectEditor.svelte";
 import { initDraftLifecycle } from "./project_store.svelte";
 
@@ -15,6 +16,9 @@ const { regMetaVersion, steward } = $props<{
 }>();
 
 initDraftLifecycle();
+
+// Read here, exactly as App.svelte reads it — the page never reads it itself.
+const qualified = $derived(providerQualified());
 </script>
 
-<ProjectEditor {regMetaVersion} {steward} />
+<ProjectEditor {regMetaVersion} {steward} providerQualified={qualified} />

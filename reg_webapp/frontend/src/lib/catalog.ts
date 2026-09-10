@@ -19,6 +19,7 @@ import {
   type StatesResponse,
   type VariableGraphNode,
   type VariableStateModel,
+  type VariantsResponse,
 } from "./api";
 import {
   type Coverage,
@@ -28,7 +29,7 @@ import {
   periodWireBounds,
   VALUE_SET_VERSION_NONE,
 } from "./period";
-import { type Binding, defaultSourceName } from "./project_data";
+import type { Binding } from "./project_data";
 import type { Route } from "./router.svelte";
 import type { BreadcrumbItem } from "./ui/types";
 
@@ -677,44 +678,121 @@ export function registerPrefixOf(registerVariant: string): string {
   return segs.length >= 2 ? `${segs[0]}/${segs[1]}` : "";
 }
 
-/** The TITLE of a source card in the cart: the REGISTER the source delivers from,
- * uppercased — `scb/lisa/individer-15plus` → `"LISA"` (Swedish register stubs are
- * mostly acronyms). That uppercasing is `defaultSourceName`'s, deliberately: the
- * generated source `name` the card shows as a detail row is built from the same
- * rule, and the two must not drift. `qualifyProvider` prefixes the provider
- * (`"SCB LISA"`) for a deployment serving MORE THAN ONE provider, where a bare
- * register slug can name two registers; on a single-provider deployment the prefix
- * is noise. `""` when the coordinate carries no register segment — the caller
- * renders its own fallback. NOT the source's `name`: that is a generated join key
- * (`LISA_2`), never the thing the researcher picked. */
-export function sourceRegisterTitle(
-  registerVariant: string,
-  qualifyProvider: boolean,
+/** The TITLE of a source card in the cart: the register the source delivers from
+ * and the concrete variant it extracts, in the CATALOG's own words —
+ * `{register: "LISA", variant: "Individer, 16 år och äldre"}` → `"LISA · Individer,
+ * 16 år och äldre"`. `provider` is the catalog's provider NAME, passed only where
+ * the deployment serves more than one provider (a bare register name can stand for
+ * two registers there); `variant` is absent for a `_default` variant, which names
+ * no population — the register alone is then the whole title.
+ *
+ * Falls back to `coordinate` (the raw `register_variant`) whenever the register has
+ * no name: while the catalog read is in flight, when it failed, and for a
+ * coordinate outside this deployment's catalog. A machine coordinate is honest
+ * there; an invented word would not be. NOT the source's `name`: that is a
+ * generated join key (`LISA_2`), never the thing the researcher picked. */
+export function sourceCardTitle(
+  names: {
+    provider?: string | null;
+    register?: string | null;
+    variant?: string | null;
+  },
+  coordinate: string,
 ): string {
-  const register = defaultSourceName(registerVariant);
-  if (!register) {
-    return "";
+  if (!names.register?.trim()) {
+    return coordinate;
   }
-  const provider = fqidSegments(registerVariant)[0];
-  return qualifyProvider && provider
-    ? `${provider.toUpperCase()} ${register}`
-    : register;
+  return [names.provider, names.register, names.variant]
+    .map((word) => word?.trim() ?? "")
+    .filter((word) => word !== "")
+    .join(" · ");
 }
 
-/** The display label for a source's `register_variant` coordinate — the ONE place
- * the cart renders a variant. Family folds can add a friendly label, but the concrete
- * coordinate must stay visible because project sources still extract concrete
- * register variants. */
-export function variantDisplayLabel(registerVariant: string): string {
-  const [provider, register, variant] = fqidSegments(registerVariant);
-  if (
-    provider === "scb" &&
-    register === "lisa" &&
-    (variant === "individer-15plus" || variant === "individer-16plus")
-  ) {
-    return `Individer (${registerVariant})`;
+/** The display word for the concrete `variant` slug among a register's `variants`
+ * (the `/variants` browser's own `name ?? display_group ?? slug` labelling).
+ *
+ * The EMPTY string for `_default`, which is not a user-facing variant (#673): it is
+ * the stored/synthesized whole-register default, so the register's own name already
+ * says everything it would. Null is the other answer — this list does not name that
+ * slug, because it did not land or because the register does not deliver it — and
+ * the two must stay apart: a card that could not name its variant would otherwise
+ * read exactly like a `_default` one, and two variants of a register would title
+ * identically.
+ *
+ * A variant in a succession FAMILY needs no separate family word: reg_meta derives
+ * `variant_family_label` as the common leading stem of the members' own labels
+ * ("Individer" out of "Individer, 15 år och äldre" / "Individer, 16 år och äldre"),
+ * so each member's name already reads family first and population second — two
+ * sources from one family read as one family with a changed frame on their own. */
+export function variantCardName(
+  variants: readonly VariantsResponse["variants"][number][],
+  variant: string,
+): string | null {
+  if (variant === "_default") {
+    return "";
   }
-  return registerVariant;
+  const summary = variants.find((v) => v.slug === variant);
+  return summary ? variantLabel(summary) : null;
+}
+
+/** How a register variant is SPELLED, wherever the app shows one: its curated
+ * name, else the group it is delivered under, else the slug it is keyed by. The
+ * single home for that fallback chain — the register's variant surfaces
+ * (`variants.ts`) and the cart's source card must not drift into two spellings of
+ * one variant. */
+export function variantLabel(
+  variant: VariantsResponse["variants"][number],
+): string {
+  return variant.name ?? variant.display_group ?? variant.slug;
+}
+
+/** The delivery column NAMES a variable resolves to over a source's own period,
+ * NEWEST era first — the name a cart row leads with when the file itself names no
+ * column, which is the ORDINARY case (a pick writes `representation: null` when the
+ * variable resolves to one column, issue #992, and writes no `display_name` at all).
+ *
+ * One column covering the period → that one name. A column RENAMED within the
+ * period (distinct columns over non-overlapping eras) → the CURRENT name first and
+ * the superseded ones after it, the same progression `pickerRow` folds for the
+ * picker's own rows. Genuinely CO-EXISTING columns (`coexistingColumns`) are a
+ * choice the file has to pin, not a name this row may lead with, so they resolve to
+ * `[]` — the row falls back to its FQID rather than picking one of them for the
+ * researcher. Pure — unit-tested. */
+export function deliveryColumnNamesFromStates(
+  states: readonly VariableStateModel[],
+): string[] {
+  if (coexistingColumns(states).size >= 2) {
+    return [];
+  }
+  return [...latestEraByColumn(states).entries()]
+    .sort(
+      ([aColumn, aEra], [bColumn, bEra]) =>
+        bEra.localeCompare(aEra) || aColumn.localeCompare(bColumn),
+    )
+    .map(([column]) => column);
+}
+
+/** Each delivery column's LATEST era among `states`: `max(valid_to)` over the
+ * column's own states, columns with no delivery name skipped. The ranking key both
+ * era-ordered folds share (`representationsFromStates` for the picker's chooser,
+ * `deliveryColumnNamesFromStates` for the cart row), single-sourced here because a
+ * later state can extend a column past the window of the first one seen — read one
+ * state per column and the two would disagree about which column is current. */
+function latestEraByColumn(
+  states: readonly VariableStateModel[],
+): Map<string, string> {
+  const eraByColumn = new Map<string, string>();
+  for (const s of states) {
+    const column = s.delivery_column_name;
+    if (!column) {
+      continue;
+    }
+    const era = eraByColumn.get(column);
+    if (era === undefined || s.valid_to > era) {
+      eraByColumn.set(column, s.valid_to);
+    }
+  }
+  return eraByColumn;
 }
 
 // ── Variable-state derivation (the CatalogPicker derive-on-pick) ─────────────
@@ -931,23 +1009,15 @@ export function representationsFromStates(
   states: VariableStateModel[],
 ): Representation[] {
   const byColumn = new Map<string, VariableStateModel>();
-  // A column's latest era = max(valid_to) over ALL its states; the first-seen
-  // state supplies label/codeCount/slug/codingKey but NOT the ranking era (a
-  // later state can extend the column past the representative's window).
-  const maxValidTo = new Map<string, string>();
   for (const s of states) {
     const col = s.delivery_column_name;
-    if (!col) {
-      continue;
-    }
-    if (!byColumn.has(col)) {
+    if (col && !byColumn.has(col)) {
       byColumn.set(col, s);
     }
-    const prev = maxValidTo.get(col);
-    if (prev === undefined || s.valid_to > prev) {
-      maxValidTo.set(col, s.valid_to);
-    }
   }
+  // The first-seen state supplies label/codeCount/slug/codingKey but NOT the
+  // ranking era — that is the column's own latest, shared with the cart's fold.
+  const maxValidTo = latestEraByColumn(states);
   // label / codeCount / classificationSlug / codingKey are sourced from the
   // representative (first-seen) state per column; validTo is the column's
   // latest era (max over its states) for ranking.

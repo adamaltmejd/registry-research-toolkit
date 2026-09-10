@@ -1,6 +1,5 @@
 <script lang="ts">
 import { tick } from "svelte";
-import { variantDisplayLabel } from "./catalog";
 import { isStructurallyValidPeriodWire, periodFromWire } from "./period";
 import {
   projectStore,
@@ -157,13 +156,6 @@ function periodDisplay(wire: string): Display {
     : { text: wire, mono: true };
 }
 
-/** A register variant as displayed: #376's variant-FAMILY labels are prose, so only
- * the raw coordinate is set as one. */
-function variantDisplay(registerVariant: string): Display {
-  const text = variantDisplayLabel(registerVariant);
-  return { text, mono: text === registerVariant };
-}
-
 /** The reviewed source's current period, as displayed. */
 const currentPeriod = $derived(periodDisplay(reviewed?.periodWire ?? ""));
 
@@ -171,9 +163,8 @@ const reviewRows = $derived.by((): KeyValueRow[] => {
   if (reviewed === null) {
     return [];
   }
-  const variant = variantDisplay(reviewed.registerVariant);
   return [
-    { label: "Register variant", value: variant.text, mono: variant.mono },
+    { label: "Register variant", value: reviewed.registerVariant, mono: true },
     {
       label: "Current period",
       value: currentPeriod.text,
@@ -186,7 +177,7 @@ const reviewRows = $derived.by((): KeyValueRow[] => {
  * opens from — the display strings are derived from it, never re-derived later. */
 type SourceRow = {
   name: string;
-  variant: Display;
+  variant: string;
   period: Display;
   columns: number;
   target: SourcePeriodTarget;
@@ -194,7 +185,7 @@ type SourceRow = {
 
 const sourceColumns: Column<SourceRow>[] = [
   { key: "name", label: "Source" },
-  { key: "variant", label: "Register variant" },
+  { key: "variant", label: "Register variant", mono: true },
   { key: "period", label: "Period" },
   { key: "columns", label: "Columns", numeric: true },
   { key: "target", label: "Action" },
@@ -204,7 +195,7 @@ const sourceRows = $derived(
   targets.map(
     (target): SourceRow => ({
       name: displayName(target.sourceName),
-      variant: variantDisplay(target.registerVariant),
+      variant: target.registerVariant,
       period: periodDisplay(target.periodWire),
       columns: target.bindings.length,
       target,
@@ -412,7 +403,7 @@ async function apply(): Promise<void> {
           {#if column.key === "name"}
             {row.name}
           {:else if column.key === "variant"}
-            <span class:mono={row.variant.mono}>{row.variant.text}</span>
+            {row.variant}
           {:else if column.key === "period"}
             <span class:mono={row.period.mono}>{row.period.text}</span>
           {:else if column.key === "columns"}

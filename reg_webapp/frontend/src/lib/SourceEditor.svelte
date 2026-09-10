@@ -1,6 +1,7 @@
 <script lang="ts">
 import BindingEditor from "./BindingEditor.svelte";
-import { sourceRegisterTitle, variantDisplayLabel } from "./catalog";
+import { fqidSegments, sourceCardTitle } from "./catalog";
+import { sourceNames } from "./catalog_names.svelte";
 import { periodToWire } from "./period";
 import {
   type Period,
@@ -39,8 +40,10 @@ const { sourceIndex, source, issues, providerQualified } = $props<{
   sourceIndex: number;
   source: SafeSource;
   issues: ValidationIssue[];
-  /** Whether this deployment serves more than one provider, so the card's register
-   * title carries its provider ("SCB LISA"). ProjectEditor reads the count. */
+  /** Whether this deployment serves more than one provider, so the card's title
+   * carries the provider too ("Statistiska Centralbyrån · LISA · Individer, 16 år
+   * och äldre"). A deployment fact, read once in `App.svelte` and threaded down
+   * like `steward` — no route fetches it. */
   providerQualified: boolean;
 }>();
 
@@ -49,19 +52,36 @@ const rolledUp = $derived(issuesUnderPointer(issues, sourcePtr));
 const errorCount = $derived(rolledUp.filter((i) => i.level === "error").length);
 
 const registerVariant = $derived(safeSourceRegisterVariant(source));
-const registerVariantLabel = $derived(variantDisplayLabel(registerVariant));
 
-// The card's TITLE is the REGISTER this source delivers from — what the researcher
-// picked. The source's `name` is a generated join key (`LISA`, `LISA_2`, `LISA_3`
-// for three variants of one register), so it titles nothing; it stays visible as a
-// detail row below because panels join on it.
+// The card's TITLE is the REGISTER this source delivers from and the concrete
+// VARIANT it extracts, in the catalog's own words ("LISA · Individer, 16 år och
+// äldre") — what the researcher picked, spelled as every other route spells it.
+// The names live only in the catalog, so they are READ from it (cached per
+// register); until they land the raw coordinate is the title. The source's `name`
+// is a generated join key (`LISA`, `LISA_2`, `LISA_3` for three variants of one
+// register), so it titles nothing; it stays visible as a detail row below because
+// panels join on it.
+const names = $derived(sourceNames(registerVariant));
 const sourceMalformed = $derived(source === null);
 const sourceTitle = $derived(
   sourceMalformed
     ? "(malformed source)"
-    : sourceRegisterTitle(registerVariant, providerQualified) ||
-        "(no register)",
+    : sourceCardTitle(
+        {
+          provider: providerQualified ? names.provider : null,
+          register: names.register,
+          variant: names.variant,
+        },
+        registerVariant,
+      ) || "(no register)",
 );
+// The title has fallen back to the raw coordinate: while the names are in flight,
+// and wherever they cannot be read at all. It is then a machine identifier standing
+// in for a name, so it takes the machine face and prints only once on the card.
+const titleIsCoordinate = $derived(sourceTitle === registerVariant);
+// The concrete variant the source extracts, for the columns' own catalog resolve:
+// a column's default name is the one delivered at THIS variant and period.
+const variantSlug = $derived(fqidSegments(registerVariant)[2] ?? "");
 
 // Defensive: a malformed opened spec may carry `bindings` as a non-array. Show an
 // inline note instead of the list (full-replace-with-guards, maintainer decision)
@@ -77,15 +97,15 @@ const periodDisplay = $derived(
 
 // The read-only coordinate rows, rendered through the shared KeyValue primitive
 // (#804) — same metadata-row styling ProjectEditor uses. The register_variant is a
-// machine FQID coordinate (mono), routed through `variantDisplayLabel` so #376's
-// variant-family labels swap in at one seam. `name` is the panel/order join key
-// (reg_meta `OrderEntry.source`) — a machine identifier, so mono.
+// machine FQID coordinate (mono): the source extracts that CONCRETE variant, so it
+// stays on the card even once the title names it in words — but only then, because
+// a title that has fallen back to the coordinate would otherwise print it twice.
+// `name` is the panel/order join key (reg_meta `OrderEntry.source`) — a machine
+// identifier, so mono.
 const metaRows = $derived([
-  {
-    label: "Register variant",
-    value: registerVariantLabel,
-    mono: registerVariantLabel === registerVariant,
-  },
+  ...(titleIsCoordinate
+    ? []
+    : [{ label: "Register variant", value: registerVariant, mono: true }]),
   { label: "Period", value: periodDisplay ?? "(no period)" },
   {
     label: "Source name",
@@ -115,7 +135,13 @@ function confirmRemove(): void {
   aria-label="Source {sourceIndex + 1}"
 >
   <header class="source-head">
-    <h3>
+    <!-- `aria-busy` while the catalog names are in flight: the title is showing the
+         coordinate as a stand-in, and the screenshot driver waits on it (see
+         frontend/DESIGN.md → loading surfaces). -->
+    <h3
+      class:mono={titleIsCoordinate}
+      aria-busy={names.loading ? "true" : undefined}
+    >
       {sourceTitle}
       {#if errorCount > 0}
         <!-- Status badge: cool error tone + ✕ glyph (aria-hidden); the count text
@@ -129,11 +155,12 @@ function confirmRemove(): void {
     <!-- Per-source accessible name so a screen-reader controls list disambiguates
          the delete buttons (visible text kept as the label prefix — label-in-name).
          Two sources on the SAME register share a title, so the concrete coordinate
-         — what actually differs between them — rides along in the name. -->
+         — what actually differs between them — rides along in the name, unless the
+         title already IS that coordinate. -->
     <Button
       variant="danger"
       size="sm"
-      aria-label={`Remove source ${sourceTitle}${registerVariant ? ` (${registerVariant})` : ""}`}
+      aria-label={`Remove source ${sourceTitle}${registerVariant && !titleIsCoordinate ? ` (${registerVariant})` : ""}`}
       onclick={() => {
         removeOpen = true;
       }}
@@ -195,10 +222,16 @@ function confirmRemove(): void {
                The id lives only in the store, never in the draft. -->
           {#each bindings as binding, j (projectStore.bindingId(sourceIndex, j))}
             <li>
+              <!-- The source's own (variant, period) travels with the row: a
+                   column's default name is the one delivered THERE, so the row
+                   resolves it at this source's coordinate, not the variable's
+                   whole history. -->
               <BindingEditor
                 sourceIndex={sourceIndex}
                 bindingIndex={j}
                 binding={binding}
+                variant={variantSlug}
+                period={periodDisplay}
               />
             </li>
           {/each}
@@ -255,6 +288,12 @@ function confirmRemove(): void {
        shrink and the badge is not squeezed (#1110). */
     min-width: 0;
     overflow-wrap: anywhere;
+  }
+  /* A title that has fallen back to the raw `register_variant` is an identifier, not
+     a name: mono, like every other FQID in the app, so a reader can tell the two
+     apart at a glance (DESIGN.md → Typography). */
+  .source-head h3.mono {
+    font-family: var(--font-mono);
   }
   .bindings h4 {
     margin: 0 0 var(--space-2);

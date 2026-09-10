@@ -1,5 +1,6 @@
 <script lang="ts">
 import { catalogHref } from "./catalog";
+import { columnNames, UNASKED } from "./catalog_names.svelte";
 import type { Binding } from "./project_data";
 import { projectStore } from "./project_store.svelte";
 import { Button } from "./ui";
@@ -10,10 +11,14 @@ import { bindingAnchorId } from "./validation";
 // column" only. Editing a binding — variable, type, display_name, representation —
 // happens by re-picking in the catalog browser (the cart shows the cart, it doesn't
 // edit it). See reg_webapp/DESIGN.md and issue #991.
-const { sourceIndex, bindingIndex, binding } = $props<{
+const { sourceIndex, bindingIndex, binding, variant, period } = $props<{
   sourceIndex: number;
   bindingIndex: number;
   binding: Binding;
+  /** The owning source's concrete variant slug and its stored period (wire form,
+   * null when it has none) — where this column's default name is resolved. */
+  variant: string;
+  period: string | null;
 }>();
 
 // A binding field coerced to a display string (non-string → "").
@@ -24,18 +29,33 @@ function strField(field: keyof Binding): string {
 const variable = $derived(strField("variable"));
 
 // The row LEADS with the delivery column — that is what the researcher ordered and
-// what lands in the extract — but only where the FILE names it: the pinned
-// `representation` when the pick chose between co-existing columns, else an explicit
-// `display_name` where a hand-authored spec sets one. Carrying NEITHER is the
-// ORDINARY case, not a broken one — a pick writes neither, and neither does a
-// project_data.json authored outside this app (DESIGN.md § the cart model). Such a
-// binding's column name is the reg_meta default, which lives in the CATALOG, and this
-// read-only cart issues no catalog request — so the row leads with the FQID it was
-// picked from rather than a placeholder. Stamping a name here is not this row's job.
-const columnName = $derived(
-  strField("representation") || strField("display_name"),
+// what lands in the extract. Where the FILE names it, the file wins: an explicit
+// `display_name` first (reg_schema makes it the binding's OUTPUT column name, so it
+// wins even over a pinned `representation`), then the `representation` a pick pins
+// when it chose between co-existing columns.
+//
+// Carrying NEITHER is the ORDINARY case, not a broken one — a pick writes neither
+// (`representation: null` when the variable resolves to one column, issue #992),
+// and neither does a project_data.json authored outside this app. That column's name
+// is the reg_meta default at the source's (variant, period), which lives only in the
+// CATALOG — so the row resolves it there, through the same leaf resolve the picker
+// runs on a pick, cached per (fqid, period, variant) so a hundred-column cart asks
+// once. Nothing resolvable (no period, an unreachable backend, a coordinate outside
+// this steward's catalog) keeps today's answer: the FQID it was picked from, never
+// an invented placeholder. Nothing here is written back to the draft.
+const fileColumn = $derived(
+  strField("display_name") || strField("representation"),
 );
-// What the delete button calls this row: whichever of the two the row shows.
+const resolved = $derived(
+  fileColumn ? UNASKED : columnNames(variable, period, variant),
+);
+const resolvedNames = $derived(resolved.value ?? []);
+const columnName = $derived(fileColumn || resolvedNames[0] || "");
+// A column RENAMED within the source's period resolves to several names: the
+// current one leads, and the superseded ones trail it OLDEST-first so the hint
+// reads as a progression — the order the picker's own "was X, Y" hint uses.
+const supersededColumns = $derived(resolvedNames.slice(1).reverse());
+// What the delete button calls this row: the column it shows, else the variable.
 const columnLabel = $derived(columnName || variable);
 </script>
 
@@ -43,9 +63,19 @@ const columnLabel = $derived(columnName || variable);
      `bindingAnchorId`); `.locate-flash` (defined globally in SourceEditor) briefly
      highlights it. -->
 <div class="binding" id={bindingAnchorId(sourceIndex, bindingIndex)}>
-  <div class="binding-body">
+  <!-- `aria-busy` while the column's catalog name is in flight: the row is showing
+       its FQID alone as a stand-in, and the screenshot driver waits on it. -->
+  <div class="binding-body" aria-busy={resolved.loading ? "true" : undefined}>
     {#if columnName}
       <span class="column-name">{columnName}</span>
+    {/if}
+    <!-- The superseded names of a rename — quiet, after the current one, as the
+         picker's own rows say it. The columns are identifiers and take the machine
+         face; the word that introduces them is copy and does not. -->
+    {#if supersededColumns.length > 0}
+      <span class="rename-hint"
+        >was <span class="superseded">{supersededColumns.join(", ")}</span></span
+      >
     {/if}
     <!-- The variable is a machine FQID → mono and demoted under the column name (the
          row's own subject when there is none), linked to its catalog subject page:
@@ -96,6 +126,18 @@ const columnLabel = $derived(columnName || variable);
     font-weight: 600;
     min-width: 0;
     overflow-wrap: anywhere;
+  }
+  /* The superseded delivery columns of a rename: quiet — they name the same column
+     under an earlier name, not another column to order — with the columns themselves
+     in mono, as the picker's own rename hint sets them. */
+  .rename-hint {
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+  .superseded {
+    font-family: var(--font-mono);
   }
   /* The variable is a machine FQID — mono, like every code/identifier, and small
      because it is where the column came from, not the subject of the row. Its link

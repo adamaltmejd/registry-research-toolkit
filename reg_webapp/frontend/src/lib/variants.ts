@@ -18,7 +18,7 @@
  * called only by the route page.
  */
 import type { VariantsResponse } from "./api";
-import { labelSuffix } from "./catalog";
+import { labelSuffix, variantLabel } from "./catalog";
 
 /** One `register_variant` sub-resource row (reg_meta's `VariantSummary`). */
 export type Variant = VariantsResponse["variants"][number];
@@ -75,11 +75,6 @@ export interface VersionBlock {
   count: number;
   /** The run's first version; every member repeats its text. */
   version: Version;
-}
-
-/** A variant's own display label, in the order the catalog fills them. */
-function variantLabel(variant: Variant): string {
-  return variant.name ?? variant.display_group ?? variant.slug;
 }
 
 /** `display_group` duplicates `name` for most variants (SCB delivers them

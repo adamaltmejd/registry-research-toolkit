@@ -2057,6 +2057,26 @@ from the catalog subject page, not by editing the cart row. `CatalogPicker.svelt
 along with the store methods that only existed to serve them (`addSource`, `addBinding`,
 `updateSource`, `updateBinding`, `applyPickedBinding`, `bindingDerivation`).
 
+A cart row holds **coordinates, not words** — a `register_variant`, a variable FQID, and
+a `representation` only where a pick had to choose between co-existing columns — so the
+words a researcher recognizes are READ from the catalog (Y-80). A source card is titled
+`<register> · <variant>` in the catalog's own spellings ("LISA · Individer, 16 år och
+äldre"; the register alone for a `_default` variant, which names no population), never
+the slug uppercased, and qualified with the provider's name only where the deployment
+serves more than one provider — a fact `App.svelte` reads ONCE and threads down like
+`steward`. The coordinate itself stays on the card, in small mono. A column row leads
+with the delivery column it orders: an explicit `display_name` first (reg_schema makes
+it the binding's OUTPUT column name, so it wins even over a pinned `representation`),
+then the pinned `representation`, otherwise the name resolved from the catalog at THAT
+source's `(variant, period)` — where a column was renamed inside the period the current
+name leads and the superseded ones trail it in mono. Every such read goes through
+`catalog_names.svelte.ts`, a module-singleton cache keyed per read (the catalog root;
+one per provider, which names every register it owns; one per register's variant list;
+one per `(fqid, period, variant)`), so a hundred-column cart issues each request once
+and a re-render issues none; the shell's own facet rail reads the root through it too. A read in flight or a failed one leaves the row showing the coordinate
+it already holds — a machine coordinate is honest where an invented name is not — and
+nothing read is ever written back into the draft.
+
 This retires the \~400-line client-side **re-derivation engine** (`bindingDerivations` /
 `rederiveGen` / `rederiveSource` / `applyResolution` / `applyDerivedResult` and the
 per-binding `BindingDerivation` provenance markers) that used to re-resolve every
