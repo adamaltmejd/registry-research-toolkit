@@ -23,8 +23,9 @@ Stages (each a subcommand, deterministic, no network):
   every downstream consumer (steward catalog emission, reg_meta flavor
   ingest, alias curation) reads.
 
-This script lives untracked next to its confidential inputs by decision
-(2026-06-12): only the final steward catalog output is committed.
+This script is TRACKED (force-added 2026-09-02) and maintainer-run: it lives
+next to its confidential inputs, which stay untracked along with everything it
+writes to `derived/`. Only its committed catalog outputs leave this directory.
 
 Run from this directory::
 
@@ -1592,10 +1593,13 @@ def cmd_grafts(args: argparse.Namespace) -> None:
 # per real-world source organization (per-org), one provider slug each.
 
 # (enriched-JSON key, provider_slug, provider_name, register_key, register_name,
-#  variant_key, variant_slug). Single-variant registers use the `_default`
-#  variant slug (matches the global catalog convention); a register named by
-#  several entries (Inera 1177) accretes one variant per entry.
-_FLAVOR_DISPOSITION: list[tuple[str, str, str, str, str, str, str]] = [
+#  variant_key, variant_slug, variant_name). Single-variant registers use the
+#  `_default` variant slug (matches the global catalog convention) and repeat the
+#  register name as the variant name; a register named by several entries (Inera
+#  1177, Skatteverket's schemes, Tillväxtverket's delivery models) accretes one
+#  variant per entry, each naming its own delivery. Exactly one entry names a
+#  given (provider, register, variant) — a second is fatal in `cmd_flavor`.
+_FLAVOR_DISPOSITION: list[tuple[str, str, str, str, str, str, str, str]] = [
     # Commercial deliveries — no global home by construction.
     (
         "Swedbank",
@@ -1605,6 +1609,7 @@ _FLAVOR_DISPOSITION: list[tuple[str, str, str, str, str, str, str]] = [
         "Konsumtionsstatistik",
         "_default",
         "_default",
+        "Konsumtionsstatistik",
     ),
     (
         "Telia",
@@ -1614,6 +1619,7 @@ _FLAVOR_DISPOSITION: list[tuple[str, str, str, str, str, str, str]] = [
         "Mobilitetsdata",
         "_default",
         "_default",
+        "Mobilitetsdata",
     ),
     # Regional primary care (region-owned, not a national register).
     (
@@ -1624,6 +1630,7 @@ _FLAVOR_DISPOSITION: list[tuple[str, str, str, str, str, str, str]] = [
         "Primärvård",
         "_default",
         "_default",
+        "Primärvård",
     ),
     (
         "Primary care/Stockholm",
@@ -1633,6 +1640,7 @@ _FLAVOR_DISPOSITION: list[tuple[str, str, str, str, str, str, str]] = [
         "Primärvård",
         "_default",
         "_default",
+        "Primärvård",
     ),
     (
         "Primary care/VGR - Primärvård",
@@ -1642,6 +1650,7 @@ _FLAVOR_DISPOSITION: list[tuple[str, str, str, str, str, str, str]] = [
         "Primärvård",
         "_default",
         "_default",
+        "Primärvård",
     ),
     (
         "Primary care/VGR - Diagnoser",
@@ -1651,6 +1660,7 @@ _FLAVOR_DISPOSITION: list[tuple[str, str, str, str, str, str, str]] = [
         "Primärvård – diagnoser",
         "_default",
         "_default",
+        "Primärvård – diagnoser",
     ),
     # Municipal special-housing (SÄBO) deliveries.
     (
@@ -1661,6 +1671,7 @@ _FLAVOR_DISPOSITION: list[tuple[str, str, str, str, str, str, str]] = [
         "SÄBO-adresser",
         "_default",
         "_default",
+        "SÄBO-adresser",
     ),
     (
         "SÄBO/Patients",
@@ -1670,6 +1681,7 @@ _FLAVOR_DISPOSITION: list[tuple[str, str, str, str, str, str, str]] = [
         "SÄBO-patienter",
         "_default",
         "_default",
+        "SÄBO-patienter",
     ),
     # Pandemrix vaccination deliveries — one provider per delivering region.
     (
@@ -1680,6 +1692,7 @@ _FLAVOR_DISPOSITION: list[tuple[str, str, str, str, str, str, str]] = [
         "Pandemrix-vaccinationer",
         "_default",
         "_default",
+        "Pandemrix-vaccinationer",
     ),
     (
         "Pandemrix vaccinations/Region Gävleborg",
@@ -1689,6 +1702,7 @@ _FLAVOR_DISPOSITION: list[tuple[str, str, str, str, str, str, str]] = [
         "Pandemrix-vaccinationer",
         "_default",
         "_default",
+        "Pandemrix-vaccinationer",
     ),
     (
         "Pandemrix vaccinations/Region Jönköping",
@@ -1698,6 +1712,7 @@ _FLAVOR_DISPOSITION: list[tuple[str, str, str, str, str, str, str]] = [
         "Pandemrix-vaccinationer",
         "_default",
         "_default",
+        "Pandemrix-vaccinationer",
     ),
     (
         "Pandemrix vaccinations/Region Kalmar Län",
@@ -1707,6 +1722,7 @@ _FLAVOR_DISPOSITION: list[tuple[str, str, str, str, str, str, str]] = [
         "Pandemrix-vaccinationer",
         "_default",
         "_default",
+        "Pandemrix-vaccinationer",
     ),
     (
         "Pandemrix vaccinations/Region Kronoberg",
@@ -1716,6 +1732,7 @@ _FLAVOR_DISPOSITION: list[tuple[str, str, str, str, str, str, str]] = [
         "Pandemrix-vaccinationer",
         "_default",
         "_default",
+        "Pandemrix-vaccinationer",
     ),
     (
         "Pandemrix vaccinations/Region Norrbotten",
@@ -1725,6 +1742,7 @@ _FLAVOR_DISPOSITION: list[tuple[str, str, str, str, str, str, str]] = [
         "Pandemrix-vaccinationer",
         "_default",
         "_default",
+        "Pandemrix-vaccinationer",
     ),
     (
         "Pandemrix vaccinations/Region Uppsala",
@@ -1734,6 +1752,7 @@ _FLAVOR_DISPOSITION: list[tuple[str, str, str, str, str, str, str]] = [
         "Pandemrix-vaccinationer",
         "_default",
         "_default",
+        "Pandemrix-vaccinationer",
     ),
     (
         "Pandemrix vaccinations/Region Värmland",
@@ -1743,6 +1762,7 @@ _FLAVOR_DISPOSITION: list[tuple[str, str, str, str, str, str, str]] = [
         "Pandemrix-vaccinationer",
         "_default",
         "_default",
+        "Pandemrix-vaccinationer",
     ),
     (
         "Pandemrix vaccinations/Region Västerbotten",
@@ -1752,6 +1772,7 @@ _FLAVOR_DISPOSITION: list[tuple[str, str, str, str, str, str, str]] = [
         "Pandemrix-vaccinationer",
         "_default",
         "_default",
+        "Pandemrix-vaccinationer",
     ),
     (
         "Pandemrix vaccinations/Region Östergötland",
@@ -1761,6 +1782,7 @@ _FLAVOR_DISPOSITION: list[tuple[str, str, str, str, str, str, str]] = [
         "Pandemrix-vaccinationer",
         "_default",
         "_default",
+        "Pandemrix-vaccinationer",
     ),
     # Inera / 1177 Vårdguiden — one register, a variant per delivery. Register
     # key/slug must be letter-leading (slug grammar ^[a-z]...), so "vardguiden"
@@ -1773,6 +1795,7 @@ _FLAVOR_DISPOSITION: list[tuple[str, str, str, str, str, str, str]] = [
         "1177 Vårdguiden",
         "samtal",
         "samtal",
+        "Samtal 1177",
     ),
     (
         "Inera/1177/Ordered tests",
@@ -1782,6 +1805,7 @@ _FLAVOR_DISPOSITION: list[tuple[str, str, str, str, str, str, str]] = [
         "1177 Vårdguiden",
         "bestallda-prover",
         "bestallda-prover",
+        "Beställda prover",
     ),
     # National quality registers — no SCB/SOS catalog home.
     (
@@ -1792,6 +1816,7 @@ _FLAVOR_DISPOSITION: list[tuple[str, str, str, str, str, str, str]] = [
         "Kolorektalcancerregistret",
         "_default",
         "_default",
+        "Kolorektalcancerregistret",
     ),
     (
         "Quality register/Graviditetsregistret",
@@ -1801,6 +1826,7 @@ _FLAVOR_DISPOSITION: list[tuple[str, str, str, str, str, str, str]] = [
         "Graviditetsregistret",
         "_default",
         "_default",
+        "Graviditetsregistret",
     ),
     (
         "Quality register/NDR",
@@ -1810,6 +1836,7 @@ _FLAVOR_DISPOSITION: list[tuple[str, str, str, str, str, str, str]] = [
         "Nationella diabetesregistret",
         "_default",
         "_default",
+        "Nationella diabetesregistret",
     ),
     (
         "Socialstyrelsen/Intensivvårdsregistret",
@@ -1819,6 +1846,7 @@ _FLAVOR_DISPOSITION: list[tuple[str, str, str, str, str, str, str]] = [
         "Svenska Intensivvårdsregistret",
         "_default",
         "_default",
+        "Svenska Intensivvårdsregistret",
     ),
     (
         "SOS Alarm",
@@ -1828,6 +1856,7 @@ _FLAVOR_DISPOSITION: list[tuple[str, str, str, str, str, str, str]] = [
         "Ambulanslarm",
         "_default",
         "_default",
+        "Ambulanslarm",
     ),
     # SWECOV-constructed columns on top of RTB — only the Källa-empty columns
     # survive _flavor_variables (the Källa=RTB ones are canonical, routed to the
@@ -1842,6 +1871,7 @@ _FLAVOR_DISPOSITION: list[tuple[str, str, str, str, str, str, str]] = [
         "Populationsspine (konstruerad)",
         "_default",
         "_default",
+        "Populationsspine (konstruerad)",
     ),
     (
         "RTB/Adress särskilt boende",
@@ -1851,6 +1881,7 @@ _FLAVOR_DISPOSITION: list[tuple[str, str, str, str, str, str, str]] = [
         "Adress särskilt boende",
         "_default",
         "_default",
+        "Adress särskilt boende",
     ),
     # Skatteverket COVID-19 business-support delivery (SKV_*). The single
     # ("Skatteverket", "") holding carries 10 physical tables = 5 schemes; each
@@ -1865,6 +1896,7 @@ _FLAVOR_DISPOSITION: list[tuple[str, str, str, str, str, str, str]] = [
         "Omställningsstöd",
         "ansokt",
         "ansokt",
+        "Ansökt",
     ),
     (
         "Skatteverket",
@@ -1874,6 +1906,7 @@ _FLAVOR_DISPOSITION: list[tuple[str, str, str, str, str, str, str]] = [
         "Omställningsstöd",
         "beviljat",
         "beviljat",
+        "Beviljat",
     ),
     (
         "Skatteverket",
@@ -1883,6 +1916,7 @@ _FLAVOR_DISPOSITION: list[tuple[str, str, str, str, str, str, str]] = [
         "Omställningsstöd",
         "avslag",
         "avslag",
+        "Avslag",
     ),
     (
         "Skatteverket",
@@ -1892,6 +1926,7 @@ _FLAVOR_DISPOSITION: list[tuple[str, str, str, str, str, str, str]] = [
         "Tillfälligt anstånd med skatteinbetalning",
         "ansokt",
         "ansokt",
+        "Ansökt",
     ),
     (
         "Skatteverket",
@@ -1901,6 +1936,7 @@ _FLAVOR_DISPOSITION: list[tuple[str, str, str, str, str, str, str]] = [
         "Tillfälligt anstånd med skatteinbetalning",
         "beviljat",
         "beviljat",
+        "Beviljat",
     ),
     (
         "Skatteverket",
@@ -1910,6 +1946,7 @@ _FLAVOR_DISPOSITION: list[tuple[str, str, str, str, str, str, str]] = [
         "Tillfälligt anstånd med skatteinbetalning",
         "upphort",
         "upphort",
+        "Upphört",
     ),
     (
         "Skatteverket",
@@ -1919,6 +1956,7 @@ _FLAVOR_DISPOSITION: list[tuple[str, str, str, str, str, str, str]] = [
         "Tillfälligt anstånd med skatteinbetalning",
         "aterkallat",
         "aterkallat",
+        "Återkallat",
     ),
     (
         "Skatteverket",
@@ -1928,6 +1966,7 @@ _FLAVOR_DISPOSITION: list[tuple[str, str, str, str, str, str, str]] = [
         "Uppgifter från arbetsgivardeklaration",
         "_default",
         "_default",
+        "Uppgifter från arbetsgivardeklaration",
     ),
     (
         "Skatteverket",
@@ -1937,6 +1976,7 @@ _FLAVOR_DISPOSITION: list[tuple[str, str, str, str, str, str, str]] = [
         "Reducerad egenavgift inkomstår 2020",
         "_default",
         "_default",
+        "Reducerad egenavgift inkomstår 2020",
     ),
     (
         "Skatteverket",
@@ -1946,6 +1986,7 @@ _FLAVOR_DISPOSITION: list[tuple[str, str, str, str, str, str, str]] = [
         "Uppgifter från momsdeklaration",
         "_default",
         "_default",
+        "Uppgifter från momsdeklaration",
     ),
     # Tillväxtverket korttidsarbete (KTA) — COVID-19 short-time-work support,
     # reported FROM Tillväxtverket (Källa = "Inrapporterat från Tillväxtverket",
@@ -1959,6 +2000,7 @@ _FLAVOR_DISPOSITION: list[tuple[str, str, str, str, str, str, str]] = [
         "Korttidsarbete (KTA)",
         "individer",
         "individer",
+        "Individer",
     ),
     (
         "Korttidsarbete/Transaktioner",
@@ -1968,6 +2010,7 @@ _FLAVOR_DISPOSITION: list[tuple[str, str, str, str, str, str, str]] = [
         "Korttidsarbete (KTA)",
         "transaktioner",
         "transaktioner",
+        "Transaktioner",
     ),
     # Arbetsförmedlingen (AMS) — jobseeker administrative delivery (AMS_*), no SCB/SOS
     # home (#443/#444 routed these to the flavor, not global; #365 needs them for 100%
@@ -1983,6 +2026,7 @@ _FLAVOR_DISPOSITION: list[tuple[str, str, str, str, str, str, str]] = [
         "Aktivitet och sökandekategori (AKTSO)",
         "_default",
         "_default",
+        "Aktivitet och sökandekategori (AKTSO)",
     ),
     (
         "Arbetsförmedlingen",
@@ -1992,6 +2036,7 @@ _FLAVOR_DISPOSITION: list[tuple[str, str, str, str, str, str, str]] = [
         "Inskrivningsperioder (INSPER)",
         "_default",
         "_default",
+        "Inskrivningsperioder (INSPER)",
     ),
     (
         "Arbetsförmedlingen",
@@ -2001,6 +2046,7 @@ _FLAVOR_DISPOSITION: list[tuple[str, str, str, str, str, str, str]] = [
         "Sökandekategoriperioder (SOKATPER)",
         "_default",
         "_default",
+        "Sökandekategoriperioder (SOKATPER)",
     ),
     # IAF (Inspektionen för arbetslöshetsförsäkringen) — unemployment-insurance (a-kassa)
     # administrative delivery (IFA_*). One ("IAF", "") holding bundles 8 distinct tables
@@ -2014,6 +2060,7 @@ _FLAVOR_DISPOSITION: list[tuple[str, str, str, str, str, str, str]] = [
         "Beslut",
         "_default",
         "_default",
+        "Beslut",
     ),
     (
         "IAF",
@@ -2023,6 +2070,7 @@ _FLAVOR_DISPOSITION: list[tuple[str, str, str, str, str, str, str]] = [
         "Diverse beslut",
         "_default",
         "_default",
+        "Diverse beslut",
     ),
     (
         "IAF",
@@ -2032,6 +2080,7 @@ _FLAVOR_DISPOSITION: list[tuple[str, str, str, str, str, str, str]] = [
         "Ersättningsperioder",
         "_default",
         "_default",
+        "Ersättningsperioder",
     ),
     (
         "IAF",
@@ -2041,6 +2090,7 @@ _FLAVOR_DISPOSITION: list[tuple[str, str, str, str, str, str, str]] = [
         "Utbetalningar",
         "_default",
         "_default",
+        "Utbetalningar",
     ),
     (
         "IAF",
@@ -2050,6 +2100,7 @@ _FLAVOR_DISPOSITION: list[tuple[str, str, str, str, str, str, str]] = [
         "Medlemskap i a-kassa",
         "_default",
         "_default",
+        "Medlemskap i a-kassa",
     ),
     (
         "IAF",
@@ -2059,6 +2110,7 @@ _FLAVOR_DISPOSITION: list[tuple[str, str, str, str, str, str, str]] = [
         "Kassakoder (a-kassor)",
         "_default",
         "_default",
+        "Kassakoder (a-kassor)",
     ),
     (
         "IAF",
@@ -2068,6 +2120,7 @@ _FLAVOR_DISPOSITION: list[tuple[str, str, str, str, str, str, str]] = [
         "Kassakortsveckor",
         "_default",
         "_default",
+        "Kassakortsveckor",
     ),
     (
         "IAF",
@@ -2077,6 +2130,7 @@ _FLAVOR_DISPOSITION: list[tuple[str, str, str, str, str, str, str]] = [
         "Deltidsveckor",
         "_default",
         "_default",
+        "Deltidsveckor",
     ),
 ]
 
@@ -2174,17 +2228,23 @@ def _flavor_variables(columns: list[dict]) -> list[dict]:
     precisely steward-flavor content, so such columns are KEPT in the flavor rather
     than routed to a graft target that doesn't exist (#443).
 
-    Surviving columns are deduped by their normalized form (`norm_col`:
-    lopnr-stripped, upper-cased) so case/spelling-case variants across delivery
-    vintages collapse to one logical variable. The pseudonym `P<n>_LopNr_` prefix
-    is stripped from the catalog `column`/`name` using the same
-    `_ANY_LOPNR_PREFIX` that produced the `normalized` dedup key (it is an
+    Surviving columns are GROUPED by their `_norm_alnum` fold (lopnr-stripped,
+    NFKD-transliterated, upper-cased, non-alphanumerics dropped), so the vintage
+    spellings one delivery uses for one column — `Covid-19 antikroppar` and
+    `Covid_19_antikroppar` — become ONE variable. Each distinct physical column in
+    a group keeps its own `states` entry, hence its own `variable_alias` row, so
+    every literal delivery column stays orderable (README → "Near-duplicate
+    physical columns"); the key, name and description come from the first-seen
+    spelling. A pair that differs in LETTERS (`AVERAGE_SPENDING` /
+    `AVERAGE_SPENDINGS`) folds to two forms and stays two variables — grouping
+    those is a curation call, not a mechanical one. The pseudonym
+    `P<n>_LopNr_` prefix is stripped from the catalog `column`/`name` using the
+    same `_ANY_LOPNR_PREFIX` that produced the `normalized` fold input (it is an
     order-template artifact, not a column identity — see #365); a stripped column
     flags `is_identifier`. Validity is left open: delivery coverage is a project
     selection, not a register fact."""
-    seen_norm: set[str] = set()
-    seen_keys: set[str] = set()
-    variables: list[dict] = []
+    # fold -> {physical column: its enriched entry}, first-seen first.
+    groups: dict[str, dict[str, dict]] = {}
     for col in sorted(columns, key=lambda c: c["name"]):
         kalla = col.get("kalla")
         if kalla and not _PROVENANCE_KALLA.match(kalla):
@@ -2192,42 +2252,41 @@ def _flavor_variables(columns: list[dict]) -> list[dict]:
             # A provenance phrase ("Inrapporterat från …") is steward-reported data
             # with no canonical home -> keep it in the flavor (see docstring, #443).
             continue
-        raw = col["name"]
-        norm = col["normalized"]
-        if norm in seen_norm:
-            continue
-        seen_norm.add(norm)
-        logical = _ANY_LOPNR_PREFIX.sub("", raw).strip()
+        logical = _ANY_LOPNR_PREFIX.sub("", col["name"]).strip()
         if not logical:
             continue
-        key = _kebab(norm) or f"v{len(variables)}"
-        while key in seen_keys:
-            key = f"{key}-{len(seen_keys)}"
-        seen_keys.add(key)
+        groups.setdefault(_norm_alnum(col["normalized"]), {}).setdefault(logical, col)
+
+    variables: list[dict] = []
+    for spellings in groups.values():
+        first_column, first_entry = next(iter(spellings.items()))
+        # Multistate inventory contract (#981): the delivery column and its window
+        # live in a `states` list, not flat on the variable.
+        states: list[dict] = [
+            {
+                "column": column,
+                "data_type": entry.get("data_type") or None,
+                "valid_from": None,
+                "valid_to": None,
+            }
+            for column, entry in spellings.items()
+        ]
+        for state in states[1:]:
+            # A grouped spelling shares the first one's open window, so the literal
+            # column is its `variable_state` discriminator — without it extend-db
+            # rejects the pair on its (valid_from, value_set_version_label) key.
+            # The first-seen spelling stays unlabelled, so its state id (minted from
+            # the label) survives a later delivery adding another spelling.
+            state["value_set_version_label"] = state["column"]
         variables.append(
             {
-                "key": key,
-                "name": logical,
+                "key": _kebab(first_entry["normalized"]) or f"v{len(variables)}",
+                "name": first_column,
                 "definition": None,
-                "description": col.get("description") or None,
-                "is_identifier": bool(_ANY_LOPNR_PREFIX.match(raw)),
+                "description": first_entry.get("description") or None,
+                "is_identifier": bool(_ANY_LOPNR_PREFIX.match(first_entry["name"])),
                 "is_sensitive": False,
-                # Multistate inventory contract (#981): the delivery column and
-                # its window live in a `states` list, not flat on the variable.
-                # The generator keeps one logical column per variable (columns are
-                # deduped by `norm_col` above), so this is a single open-range
-                # state. Vintage-spelling grouping into multi-state variables is
-                # future generator work (README → Coverage); until then each
-                # variable is one state. Validity is left open: delivery coverage
-                # is a project selection, not a register fact.
-                "states": [
-                    {
-                        "column": logical,
-                        "data_type": col.get("data_type") or None,
-                        "valid_from": None,
-                        "valid_to": None,
-                    }
-                ],
+                "states": states,
             }
         )
     return variables
@@ -2257,6 +2316,7 @@ def cmd_flavor(args: argparse.Namespace) -> None:
         reg_name,
         var_key,
         var_slug,
+        var_name,
     ) in _FLAVOR_DISPOSITION:
         holding = enriched.get(key)
         if holding is None:
@@ -2313,7 +2373,7 @@ def cmd_flavor(args: argparse.Namespace) -> None:
             )
         reg["_variants"][var_key] = {
             "key": var_key,
-            "name": reg_name,
+            "name": var_name,
             "description": None,
             "variables": variables,
         }

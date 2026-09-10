@@ -109,11 +109,12 @@ unchanged.
 **Partially shipped.** The `swecov` steward catalog shipped in #365 PR3:
 `reg_webapp/stewards/swecov/steward.project_data.json` is committed (column-based
 admission, 67.0% physical-column coverage; see `reg_webapp/stewards/swecov/README.md`).
-The `steward` subcommand of the untracked `input_data/swecov/build_catalog.py` generates
-it against the flavored reg_meta DB. Admission keying (#206) closed with that PR. SWECOV
-is the proving steward for pre-v1 testing, so its catalog/config live in this repo for
-now. That is not the release architecture: before v1 release, extract SWECOV to its own
-steward repo/system and make that system copyable for future stewards.
+The `steward` subcommand of the tracked, maintainer-run
+`input_data/swecov/build_catalog.py` generates it against the flavored reg_meta DB.
+Admission keying (#206) closed with that PR. SWECOV is the proving steward for pre-v1
+testing, so its catalog/config live in this repo for now. That is not the release
+architecture: before v1 release, extract SWECOV to its own steward repo/system and make
+that system copyable for future stewards.
 
 #365 PR4 wiring: `data.swecov.se` is the SWECOV hostname, served by a separate Fly app
 (`reg-webapp-swecov`) behind the same Cloudflare Workers pattern as the global catalog.

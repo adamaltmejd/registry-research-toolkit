@@ -25,10 +25,11 @@ built by `reg-meta-build extend-db`).
 
 ## How it is generated
 
-The generator is the `inventory` subcommand of the untracked, maintainer-local
+The generator is the `inventory` subcommand of the tracked, maintainer-run
 `reg_meta_build/input_data/swecov/build_catalog.py` (it lives next to its confidential
-SWECOV inputs; only this output is committed — same pattern as the `flavor` subcommand,
-#421). To regenerate after a reg_meta release or a flavor change:
+SWECOV inputs, which stay untracked along with its `derived/` outputs; only this output
+is committed — same pattern as the `flavor` subcommand, #421). To regenerate after a
+reg_meta release or a flavor change:
 
 ```sh
 # 1. build the flavored DB (released global + SWECOV flavor providers)
@@ -74,7 +75,9 @@ pruned co-delivered value-set columns.
 
 Near-duplicate physical columns (`AVERAGE_SPENDING`/`AVERAGE_SPENDINGS`,
 `Covid-19 antikroppar`/`Covid_19_antikroppar`) must never be collapsed away: each
-literal delivery column remains orderable. Approved vintage-spelling groupings are
-represented as one steward variable with multiple `variable_state` / `variable_alias`
-rows in the flavored DB; uncurated pairs remain separate generated variables until the
-maintainer-local generator groups them.
+literal delivery column remains orderable. The `flavor` pass groups spellings that
+differ only in punctuation, case or diacritics — `Covid-19 antikroppar` /
+`Covid_19_antikroppar` — into one steward variable carrying a `variable_state` /
+`variable_alias` row per literal column in the flavored DB. Pairs that differ in letters
+(`AVERAGE_SPENDING`/`AVERAGE_SPENDINGS`) fold to different forms, so they stay separate
+generated variables until the maintainer groups them.
