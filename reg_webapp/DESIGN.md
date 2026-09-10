@@ -755,10 +755,16 @@ columns — ticking `ForvErs`, `ForvInk`, `Kon` and `Alder` in the list beats op
 variable pages to add one column each.
 
 - **The tick grain is the column NAME the list shows** (`catalog.ts`
-  `deliveryColumnRows`), which fans out to ONE staged add per *(variable, concrete
-  `register_variant`, column)* through `rowAddSegments` — the same per-concrete-segment
-  fan-out (#376) the variable page performs. Each row is single-segment and unfolded, so
-  a tick authors exactly what the variable page's own row for that variant would.
+  `deliveryColumnRows`); the COMMIT grain is the variable's own picker row. A tick names
+  a column, an Add maps that name onto the rows the variable's own page builds
+  (`variablePickerRows` → `rowCoversColumn`), and `rowAddSegments` fans each of those
+  out to ONE staged add per *(variable, concrete `register_variant`, column)* — the same
+  per-concrete-segment fan-out (#376) the variable page performs. So the file a tick
+  authors is the file that page authors, and the two grades of row the page holds (see
+  the two bullets below) never leave it. The chip lens rides along: the rows are built
+  from the states of the variants the ticked column was SHOWN under, which is the part a
+  `?variant` modifier plays on the variable's own page (`narrowStatesByModifier`) — so a
+  tick made under a lens can never author a variant the researcher filtered away.
 - **The staging stack is shared, not copied.** `staged_picker.ts` owns the whole staged
   add → resolve → commit sequence (`stagedAddCandidates` → `applyStagedPicks`,
   committing through `projectStore.applyStagedDiff`), and `StagedAddStatus.svelte` is
@@ -790,18 +796,27 @@ variable pages to add one column each.
   1990–2020. Printing that year range is what the list wants and costs no fetch per
   listed variable — committing it would claim years the column was never delivered in.
   So an Add re-reads each ticked VARIABLE's own states (`catalog.ts`
-  `exactDeliveryColumnRows`, one GET per ticked variable, on top of the per-add resolve)
-  and stages rows over the exact eras, which commit as the #307 comma-union exactly as
-  the variable page's do. A variable whose states can't be read refuses the whole batch
+  `variablePickerRows`, one GET per ticked variable, on top of the per-add resolve) and
+  stages rows over the exact eras, which commit as the #307 comma-union exactly as the
+  variable page's do. A variable whose states can't be read refuses the whole batch
   rather than falling back to the aggregate. The two grades can DISAGREE — a window
   inside an interruption passes a tick that only ever saw the aggregate — so the Add
   applies the window gate again to the rows that come back, and the confirmation counts
   the columns that actually committed. A batch left with nothing authors nothing and
   names the window it found empty.
-- **Fidelity limit, deliberate**: a sequential RENAME. The list ticks each column name
-  on its own (that is what Y-82 shows, and the name is what a researcher hunts for),
-  where the leaf folds the chain into one `representation: null` row over the union. The
-  finer surface is one click away and is linked from the same row.
+- **A sequential RENAME is listed twice and committed once.** The list names every
+  column a variable was delivered under, so `CDISP` and `CDISP5` are two tickable rows
+  (that is what Y-82 shows, and the name is what a researcher hunts for). The variable's
+  own page folds that chain into ONE `representation: null` row over the union (#902) —
+  pinning either name would break the other's era — and an Add commits THAT row: both
+  names map onto it (`rowCoversColumn`) and stage it once, whether one of them is ticked
+  or both. Two consequences worth knowing. A tick of the retired name commits the fold's
+  window-clipped union, which reaches into the surviving name's era — that is the
+  representation the variable has, and per-period resolution reads the right column per
+  year; afterwards BOTH names read as in the project, which is the same fact stated on
+  the list. And the confirmation counts the ticked COLUMNS, not the rows: ticking both
+  names of one chain says "+2 columns" over the one binding they share, because two
+  columns is what the researcher ticked.
 - **The action bar is not sticky.** App's `.routed` is an `overflow-x: auto` scroll
   container so wide tables scroll horizontally, and that makes it the sticky scrollport:
   a `position: sticky; bottom: 0` bar there pins to a box that never scrolls vertically

@@ -7,6 +7,7 @@ import {
   pickerRowVariantFamily,
   resolveBindingAt,
   rowAddPeriod,
+  rowCoversColumn,
   windowsAddPeriod,
   windowsOverlapWindow,
 } from "./catalog";
@@ -237,10 +238,7 @@ function rowMatchesBinding(
 ): boolean {
   const representation = bindingRepresentation(binding);
   if (representation !== null) {
-    return (
-      representation === row.column ||
-      row.renamedColumns.includes(representation)
-    );
+    return rowCoversColumn(row, representation);
   }
   return rowOverlapsPeriod(row, sourcePeriod);
 }

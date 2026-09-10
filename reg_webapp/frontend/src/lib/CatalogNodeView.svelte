@@ -22,7 +22,6 @@ import {
   classGroupHref,
   countFoldedMembers,
   deliveryColumnRows,
-  exactDeliveryColumnRows,
   foldGroupedRows,
   type GroupedRow,
   groupFilterKeys,
@@ -36,6 +35,8 @@ import {
   pickerWindowYears,
   rankFilter,
   registerPrefixOf,
+  rowCoversColumn,
+  variablePickerRows,
   variantLabel,
 } from "./catalog";
 import FilterInput from "./FilterInput.svelte";
@@ -565,7 +566,7 @@ const COLUMN_STATES_UNREAD_MESSAGE =
 
 /** The refusal when the EXACT eras put every ticked column outside the study window.
  * The tick gate reads the list's aggregate coverage, which cannot show an
- * interruption (`exactDeliveryColumnRows`): a column delivered 1990–1999 and again
+ * interruption (`variablePickerRows`): a column delivered 1990–1999 and again
  * 2010–2021 reads there as one unbroken span, so a window inside the gap passes the
  * tick and turns out to have nothing to commit. Names the window it found empty, and
  * the one control this page can move. */
@@ -606,36 +607,60 @@ const committedColumns = $derived.by((): Set<string> => {
   return committed;
 });
 
+/** One listed variable's share of the staged batch: the ticked delivery-column
+ * NAMES, and the concrete variants the list showed them under. Names rather than the
+ * list's own rows, because an Add commits the variable's own rows instead (see
+ * `variablePickerRows`), which a name can share with another name. */
+interface TickedVariable {
+  band: StagedPickerBand;
+  columns: Set<string>;
+  variants: Set<string>;
+}
+
 // The staged batch, derived from the LIVE list rather than from the tick set: a
 // tick whose column the variant lens has since hidden, or the study window has moved
 // off, contributes nothing — so the count on the bar and what the button adds always
 // describe the same page.
-const stagedPicks = $derived.by((): StagedPick[] => {
-  const picks: StagedPick[] = [];
+const stagedTicks = $derived.by((): TickedVariable[] => {
+  const ticked: TickedVariable[] = [];
   for (const band of pickerBands) {
+    const columns = new Set<string>();
+    const variants = new Set<string>();
     for (const column of columnsByFqid.get(band.key) ?? []) {
       if (!selectedColumns.has(columnKey(band.key, column.name))) {
         continue;
       }
       for (const row of column.rows) {
         if (rowDeliversInScope(row, addScope)) {
-          picks.push({ band, row });
+          columns.add(column.name);
+          variants.add(row.variant);
         }
       }
     }
+    if (columns.size > 0) {
+      ticked.push({ band, columns, variants });
+    }
   }
-  return picks;
+  return ticked;
 });
 
-/** How many listed COLUMNS a set of picks covers — the unit this page counts in, at
- * both ends of an Add: one tick of a column two variants deliver is ONE column and
- * two picks. ONE rule, so the bar's promise and the confirmation cannot phrase the
- * same batch differently (`stagedDiffSummary`'s rule, applied to the count itself). */
-function pickedColumns(picks: readonly StagedPick[]): number {
-  return new Set(picks.map((pick) => columnKey(pick.band.key, pick.row.column)))
-    .size;
+/** How many listed COLUMNS a batch stands for — the unit this page counts in, at
+ * BOTH ends of an Add, so the bar's promise and the confirmation cannot phrase the
+ * same batch differently. The rows are never the unit: a column two variants deliver
+ * is one column and two adds, and a renamed column ticked under both its names is two
+ * columns and one add. */
+function countColumns(
+  batch: Iterable<{ band: StagedPickerBand; columns: Iterable<string> }>,
+): number {
+  const keys = new Set<string>();
+  for (const { band, columns } of batch) {
+    for (const column of columns) {
+      keys.add(columnKey(band.key, column));
+    }
+  }
+  return keys.size;
 }
-const stagedColumns = $derived(pickedColumns(stagedPicks));
+const stagedColumns = $derived(countColumns(stagedTicks));
 
 /** "1 column" / "3 columns" — the bar's count and its button say the same thing. */
 const columnCount = $derived(
@@ -658,56 +683,68 @@ $effect(() => () => {
   unmounted = true;
 });
 
-/** The staged picks with every DISPLAY row replaced by the one built from its
- * variable's own states, so an add commits the exact delivery eras and not the
- * list's aggregate (which cannot show the gap between two eras — see
- * `exactDeliveryColumnRows`). Matched on `pickerRowKey`, the STAGING identity: what
- * commits is provably the row the researcher ticked and the "In project" marker
- * reads, not a lookalike.
+/** A staged row and the TICKED column names it commits — one for an ordinary column,
+ * two when a #902 rename chain was ticked under both of its names. Carrying them is
+ * what lets the confirmation count in the bar's unit (`countColumns`) without asking
+ * the mapping question a second time. */
+interface ExactPick extends StagedPick {
+  columns: string[];
+}
+
+/** The rows an Add commits: each ticked column NAME mapped onto the picker rows the
+ * variable's OWN PAGE builds — which is what makes an add from the register list
+ * author the file a leaf add authors (`variablePickerRows` holds the why).
  *
  * Null refuses the WHOLE batch: a variable whose states can't be read, or that no
- * longer delivers the ticked row, must not fall back to the approximated window.
+ * longer delivers a ticked column, must not fall back to the list's approximation.
  * simplify: one GET per ticked VARIABLE, in parallel — a column ticked under two
  * variants, or two columns of one variable, share the one read. */
 async function exactPicks(
-  picks: readonly StagedPick[],
-): Promise<StagedPick[] | null> {
-  const bands = new Map(picks.map((pick) => [pick.band.key, pick.band]));
-  let exactRows: Map<string, PickerRepresentation>;
+  ticked: readonly TickedVariable[],
+): Promise<ExactPick[] | null> {
   try {
-    const fetched = await Promise.all(
-      [...bands.values()].map(async (band) =>
-        (await exactDeliveryColumnRows(band.key)).map(
-          (row) => [pickerRowKey(band, row), row] as const,
-        ),
-      ),
+    const staged = await Promise.all(
+      ticked.map(async ({ band, columns, variants }) => {
+        const rows = await variablePickerRows(band.key, variants);
+        // Keyed by ROW — they all come from the one call above, so a rename chain
+        // ticked under both its names lands on the one row they share, staged once
+        // and carrying both names, exactly as the variable's own page stages it.
+        const picks = new Map<PickerRepresentation, ExactPick>();
+        for (const column of columns) {
+          const covering = rows.filter((row) => rowCoversColumn(row, column));
+          if (covering.length === 0) {
+            // The list names a column the variable's own states do not deliver: the
+            // two disagree, and nothing here can tell which one is stale.
+            throw new Error(`${band.key} no longer delivers ${column}`);
+          }
+          for (const row of covering) {
+            const pick = picks.get(row) ?? { band, row, columns: [] };
+            pick.columns.push(column);
+            picks.set(row, pick);
+          }
+        }
+        return [...picks.values()];
+      }),
     );
-    exactRows = new Map(fetched.flat());
+    return staged.flat();
   } catch {
     return null;
   }
-  const exact: StagedPick[] = [];
-  for (const pick of picks) {
-    const row = exactRows.get(pickerRowKey(pick.band, pick.row));
-    if (row === undefined) {
-      return null;
-    }
-    exact.push({ band: pick.band, row });
-  }
-  return exact;
 }
 
 async function addSelected(): Promise<void> {
-  // Bind the batch to the project AND the scope it was staged against: the exact-era
-  // reads below are a round trip, and a New/Open in the rail or a drag of the study
-  // window during it means these picks are no longer a pick against the project — or
-  // under the window — the researcher pressed Add on. `applyStagedPicks` runs the same
-  // replacement guard, but only from the moment IT is called, which is after this read.
+  // Bind the batch to the ticks, the project AND the scope it was staged against: the
+  // per-variable reads below are a round trip, and a New/Open in the rail or a drag of
+  // the study window during it means what comes back is no longer a pick against the
+  // project — or under the window — the researcher pressed Add on. `applyStagedPicks`
+  // runs the same replacement guard, but only from the moment IT is called, which is
+  // after this read.
   const stagedAgainst = projectStore.replacementGeneration;
   const scope = addScope;
+  const ticked = stagedTicks;
   applying = true;
   try {
-    const exact = await exactPicks(stagedPicks);
+    const exact = await exactPicks(ticked);
     if (unmounted || projectStore.replacementGeneration !== stagedAgainst) {
       // Abandoned mid-read, before anything was authored. The verdict on a batch
       // staged against a project that is gone says nothing about the next Add.
@@ -720,9 +757,9 @@ async function addSelected(): Promise<void> {
     }
     // The exact eras can disagree with the aggregate coverage the tick gate read, so
     // apply the same gate to what came back: only rows really delivered inside the
-    // window commit, and the confirmation counts the columns they belong to.
+    // window commit, and only the ticked columns they cover are reported as added.
     const adds = exact.filter((pick) => rowDeliversInScope(pick.row, scope));
-    const columns = pickedColumns(adds);
+    const columns = countColumns(adds);
     if (columns === 0) {
       addRefusal = outOfWindowMessage(scopeYears(scope));
       return;
@@ -738,10 +775,9 @@ async function addSelected(): Promise<void> {
     addRefusal =
       result.kind === "period-required" ? ADD_WINDOW_REQUIRED_MESSAGE : null;
     if (result.kind === "applied") {
-      // Confirm in the unit the button promised — the COLUMNS that committed, not
-      // the rows they fanned out to: one tick of a column two variants deliver
-      // stages two adds, and "+2 columns" would not be the move the researcher
-      // just made.
+      // Confirm in the unit the button promised — the ticked COLUMNS that committed,
+      // never the rows: one tick of a column two variants deliver stages two adds, and
+      // "+2 columns" would not be the move the researcher just made.
       applyOutcome = result.outcome && {
         added: columns,
         removed: 0,

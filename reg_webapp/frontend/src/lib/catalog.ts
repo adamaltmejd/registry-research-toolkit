@@ -1193,7 +1193,7 @@ export interface PickerRepresentation {
    * Only as exact as the states the row was built from. A row built off the register
    * list's aggregate coverage (`deliveryColumnRows`) has one window per (variant,
    * column) and CANNOT show an interruption — display grade. Before committing such
-   * a row, rebuild it over the variable's own states (`exactDeliveryColumnRows`). */
+   * a row, rebuild it over the variable's own states (`variablePickerRows`). */
   windows: { from: string; to: string }[];
   /** Concrete variant segments that back this displayed row. Ordinary rows have
    * exactly one segment; folded variant-family rows have one per concrete variant,
@@ -1540,6 +1540,19 @@ export function pickerRepresentations(
   return out;
 }
 
+/** Whether a picker row DELIVERS a delivery column NAME: its own leading column, or
+ * one of the earlier names a #902 rename fold collapsed into it. The map from a
+ * surface that lists column NAMES (the register list's rows — Y-83) onto the folded
+ * rows that actually commit, and the same test `rowMatchesBinding` applies to a
+ * pinned `representation`. `RepresentationPicker`'s graph cells spell the rule out
+ * inline, because they need the covered names in row order, not a yes/no. */
+export function rowCoversColumn(
+  row: PickerRepresentation,
+  column: string,
+): boolean {
+  return row.column === column || row.renamedColumns.includes(column);
+}
+
 /** Build ONE picker row from a column-group's states (#902): an ordinary single
  * column's states, OR several SEQUENTIAL-RENAME columns of one variant+variant folded
  * together (`pickerRepresentations` decides which). The row leads with the LATEST-era
@@ -1682,18 +1695,16 @@ function pickerVariantSegments(
  * segments, the #902 rename fold) by construction instead of by a copy that can
  * drift from `pickerRow`. One call is one column of one variable and each delivery
  * a distinct variant, so nothing folds: every row comes back SINGLE-SEGMENT and
- * unfolded. That is what this surface wants — the register list shows each
- * delivered column NAME on its own line (Y-82: that is the name a researcher hunts
- * for), so a sequential rename stays two tickable rows here, and ticking both
- * commits both column names where the leaf's folded row would commit one
- * `representation: null` over the union span.
+ * unfolded. That is what a LISTING wants — the register list shows each delivered
+ * column NAME on its own line (Y-82: that is the name a researcher hunts for), so a
+ * sequential rename is two tickable rows here where the variable's own page shows
+ * one folded row.
  *
- * One delivery in, one window out — so the caller decides how exact the windows
- * are. The register LIST passes `BindingChild.deliveries`, whose coverage is the
- * MIN/MAX aggregate per (variant, column): display grade, and enough to print a
- * year range for free. An ADD passes one delivery per real state
- * (`exactDeliveryColumnRows`), because the aggregate reads a column delivered in
- * SEPARATE eras as ONE span and would commit the gap years between them.
+ * DISPLAY GRADE, and display only. The coverage the list passes is the MIN/MAX
+ * aggregate per (variant, column), which cannot express an interruption, and one row
+ * per column name is not what a rename COMMITS (#902). An Add maps these rows' ticked
+ * names onto the variable's own rows instead (`variablePickerRows`), so what the
+ * register page authors is what the leaf page authors.
  *
  * The label/value-set fields go in empty: this surface identifies a row by its
  * COLUMN, and nothing on the register page renders a variant label or a coding. */
@@ -1720,46 +1731,44 @@ export function deliveryColumnRows(
   );
 }
 
-/** The same rows `deliveryColumnRows` gives the register list, rebuilt from the
- * variable's OWN states so their windows are its EXACT delivery eras (Y-83).
+/** The picker rows the VARIABLE'S OWN PAGE builds, for an Add made from the
+ * register list (Y-83): `pickerRepresentations` over the variable's own states,
+ * narrowed to the variants the list showed the ticked columns under. The list renders
+ * `deliveryColumnRows` but COMMITS these, so an add made from it authors the file the
+ * leaf page authors — two properties the list's own rows cannot have:
  *
- * The list can only build them from the aggregate coverage, which cannot express an
- * interruption (see `deliveryColumnRows`). Printing a year range off that is fine;
- * COMMITTING it is not — the source would claim years the column was never delivered
- * in, where the variable's own page commits the eras as the #307 comma-union. So an
- * Add re-reads the states, and the list pays no fetch per listed variable.
+ *   - the EXACT delivery eras. The list can only build rows from the aggregate
+ *     coverage, which cannot express an interruption. Printing a year range off that
+ *     is fine; committing it would claim years the column was never delivered in,
+ *     where the states commit the eras as the #307 comma-union.
+ *   - the #902 RENAME FOLD. A variable delivered as `CDISP` and then `CDISP5` is ONE
+ *     representation over the union, committing `representation: null` so per-period
+ *     resolution picks the right column per year — pinning either name would break the
+ *     other's era. The list still LISTS both names (Y-82: the name is what a
+ *     researcher hunts for); `rowCoversColumn` maps a tick of either onto the row.
+ *
+ * `variants` plays the part the `?variant` modifier plays on the leaf
+ * (`narrowStatesByModifier`): the fold sees the states of the variants the ticked rows
+ * stood for and no others. Not wider — the whole register's variants would fold in a
+ * variant that delivers only columns the researcher never ticked, and every segment of
+ * a folded row is authored (#376). Not narrower, or a chip lens would be the only
+ * thing standing between a tick and a variant it filtered away.
  *
  * Rejects when the FQID is not a binding leaf, so a caller refuses its batch rather
  * than committing an approximated period.
  * simplify: one GET per ticked VARIABLE — not per column, and not per add (which
  * still resolves its own). A researcher ticks a few dozen columns per action; give
  * the register response the exact windows if a LISTING surface ever needs them. */
-export async function exactDeliveryColumnRows(
+export async function variablePickerRows(
   fqid: string,
+  variants: ReadonlySet<string>,
 ): Promise<PickerRepresentation[]> {
   const node = narrowCatalogNode(await getCatalogNode(fqid));
   if (node?.kind !== "binding") {
     throw new Error(`${fqid} is not a binding leaf`);
   }
-  // One call per COLUMN, as the list makes them: a call that saw two would fold the
-  // #902 rename, which this surface deliberately keeps as two tickable rows.
-  // `latestEraByColumn`'s keys are the variable's distinct NAMED delivery columns.
-  return [...latestEraByColumn(node.states).keys()].flatMap((column) =>
-    deliveryColumnRows(
-      column,
-      // One state = one delivery window, so `deliveryWindows` fuses the contiguous
-      // runs and keeps the real gaps — where the aggregate has already lost them.
-      node.states
-        .filter((state) => state.delivery_column_name === column)
-        .map((state) => ({
-          variant: state.variant,
-          coverage: {
-            coverage_from: state.valid_from,
-            coverage_to: state.valid_to,
-            open_ended: state.valid_to === OPEN_ENDED_VALID_TO,
-          },
-        })),
-    ),
+  return pickerRepresentations(
+    node.states.filter((state) => variants.has(state.variant)),
   );
 }
 

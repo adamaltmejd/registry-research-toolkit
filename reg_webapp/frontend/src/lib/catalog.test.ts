@@ -1599,28 +1599,6 @@ describe("deliveryColumnRows (Y-83 register-list picks)", () => {
     ]);
   });
 
-  it("keeps a real gap when fed one delivery per state, and fuses the contiguous run", () => {
-    // What `exactDeliveryColumnRows` passes: the variable's OWN states, one
-    // delivery each. Two eras with a decade between them stay two windows and
-    // commit as the #307 comma-union; the two adjacent states of the later era
-    // fuse into one. The list's MIN/MAX aggregate could only say "1990..2021".
-    const era = (from: string, to: string) => ({
-      variant: "individer-15plus",
-      coverage: { coverage_from: from, coverage_to: to, open_ended: false },
-    });
-    const [row] = deliveryColumnRows("ForvErs", [
-      era("1990-01-01", "1999-12-31"),
-      era("2010-01-01", "2015-12-31"),
-      era("2016-01-01", "2021-12-31"),
-    ]);
-
-    expect(row.windows).toEqual([
-      { from: "1990-01-01", to: "1999-12-31" },
-      { from: "2010-01-01", to: "2021-12-31" },
-    ]);
-    expect(row.wirePeriod).toBe("1990..1999,2010..2021");
-  });
-
   it("reads a delivery with no known start as unbounded on that side", () => {
     const [row] = deliveryColumnRows("Kon", [
       {

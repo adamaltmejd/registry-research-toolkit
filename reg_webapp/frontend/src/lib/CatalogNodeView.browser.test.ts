@@ -1368,6 +1368,75 @@ describe("CatalogNodeView register arm: add columns (Y-83)", () => {
     ]);
   });
 
+  it("commits a sequentially renamed column as the ONE row its variable's page commits", async () => {
+    mockRegisterAndResolve(columnedRegisterNode(1));
+    windowStore.set({ from: 2015, to: 2022 });
+
+    await renderRegister();
+    await expect.element(page.getByText("Kön")).toBeVisible();
+
+    // `disp` is delivered as CDISP through 2019 and as CDISP5 from 2020 — a
+    // sequential RENAME, which the list still lists under both names (Y-82: the name
+    // is what a researcher hunts for) where the variable's own page shows the ONE
+    // folded row (#902).
+    await tickColumn("CDISP 1968–2019");
+    await tickColumn("CDISP5 2020–");
+    await expect.element(page.getByText("2 columns selected")).toBeVisible();
+
+    await page
+      .getByRole("button", { name: "Add 2 columns to project" })
+      .click();
+
+    // Both ticked columns are confirmed — that is what the researcher ticked — and
+    // they commit as ONE binding over the window-clipped union, exactly as the leaf
+    // page commits its folded row. Never one pinned binding per column name: pinning
+    // either would break the other's era.
+    await expect.element(page.getByText("Applied +2 columns")).toBeVisible();
+    expect(projectStore.draft?.sources).toEqual([
+      expect.objectContaining({
+        register_variant: "scb/lisa/individer-15plus",
+        period: { from: 2015, to: 2022 },
+        bindings: [
+          expect.objectContaining({
+            variable: "scb/lisa/disp",
+            representation: null,
+          }),
+        ],
+      }),
+    ]);
+  });
+
+  it("commits the whole rename when only one of its names is ticked", async () => {
+    mockRegisterAndResolve(columnedRegisterNode(1));
+    windowStore.set({ from: 2015, to: 2022 });
+
+    await renderRegister();
+    await expect.element(page.getByText("Kön")).toBeVisible();
+
+    // One tick of the RETIRED name is still a pick of the variable's one folded row:
+    // it commits the same 2015–2022 the variable's own page commits, where per-period
+    // resolution reads CDISP through 2019 and CDISP5 after it. A period stopping at
+    // 2019 would be a row this variable has not had since #902 folded it.
+    await tickColumn("CDISP 1968–2019");
+    await page.getByRole("button", { name: "Add 1 column to project" }).click();
+
+    await expect.element(page.getByText("Applied +1 column")).toBeVisible();
+    expect(projectStore.draft?.sources[0]?.period).toEqual({
+      from: 2015,
+      to: 2022,
+    });
+    // The list's other name for it reads as in the project too — one representation,
+    // both of its names.
+    await expect
+      .element(
+        page.getByRole("checkbox", {
+          name: "CDISP5 2020– In project",
+          exact: true,
+        }),
+      )
+      .not.toBeChecked();
+  });
+
   it("refuses the whole batch when a ticked variable's states can't be read", async () => {
     const node = columnedRegisterNode(1);
     vi.mocked(getCatalogNode).mockImplementation(async (fqid) => {
