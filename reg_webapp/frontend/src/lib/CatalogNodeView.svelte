@@ -48,6 +48,7 @@ import {
   applyStagedPicks,
   committedPickerRows,
   pickerRowKey,
+  rowDeliversInScope,
   type StagedApplyOutcome,
   type StagedPick,
   type StagedPickerBand,
@@ -363,8 +364,7 @@ $effect(() => {
   filter = "";
   selectedVariants = new Set();
   selectedColumns = new Set();
-  periodRequired = false;
-  columnsUnread = false;
+  addRefusal = null;
   applyOutcome = null;
 });
 
@@ -524,6 +524,13 @@ const addScope = $derived({
   period: null,
   window: pickerWindowYears(null, boundedProjectWindow),
 });
+/** A scope's window in years — how a row and a refusal name it ("1990–2021"). */
+function scopeYears(scope: { window?: [number, number] | null }): string {
+  return scope.window
+    ? yearsLabel({ from: scope.window[0], to: scope.window[1] })
+    : "";
+}
+const windowYears = $derived(scopeYears(addScope));
 
 // Which listed columns are ALREADY in the draft — keyed by `pickerRowKey`, the
 // staging identity, so the marker is read from the same match the commit is.
@@ -539,8 +546,10 @@ function columnKey(fqid: string, name: string): string {
 
 let selectedColumns = $state(new Set<string>());
 let applying = $state(false);
-let periodRequired = $state(false);
-let columnsUnread = $state(false);
+/** Why the last Add authored NOTHING, or null. ONE slot rather than a flag per
+ * gate: every Add ends by setting it — to a reason, or to null — so a verdict about
+ * one batch can never outlive the batch it refused. */
+let addRefusal = $state<string | null>(null);
 let applyOutcome = $state<StagedApplyOutcome | null>(null);
 
 /** The refusal when an Add could not read a ticked variable's states, so the exact
@@ -554,16 +563,15 @@ let applyOutcome = $state<StagedApplyOutcome | null>(null);
 const COLUMN_STATES_UNREAD_MESSAGE =
   "Could not read the delivery years for a ticked column, so nothing was added — add again, or reload the page if it keeps failing.";
 
-/** The refusal line the bar shows, if any. Each Add sets BOTH gates' verdicts, so at
- * most one is ever true: whichever refused, the batch was declined whole and the
- * draft is untouched. */
-const addBlocked = $derived(
-  periodRequired
-    ? ADD_WINDOW_REQUIRED_MESSAGE
-    : columnsUnread
-      ? COLUMN_STATES_UNREAD_MESSAGE
-      : null,
-);
+/** The refusal when the EXACT eras put every ticked column outside the study window.
+ * The tick gate reads the list's aggregate coverage, which cannot show an
+ * interruption (`exactDeliveryColumnRows`): a column delivered 1990–1999 and again
+ * 2010–2021 reads there as one unbroken span, so a window inside the gap passes the
+ * tick and turns out to have nothing to commit. Names the window it found empty, and
+ * the one control this page can move. */
+function outOfWindowMessage(years: string): string {
+  return `No ticked column was delivered in ${years}, so nothing was added — set the study window in the rail to years they were delivered, then add again.`;
+}
 
 function toggleColumn(fqid: string, name: string): void {
   const next = new Set(selectedColumns);
@@ -599,37 +607,48 @@ const committedColumns = $derived.by((): Set<string> => {
 });
 
 // The staged batch, derived from the LIVE list rather than from the tick set: a
-// tick whose column the variant lens has since hidden contributes nothing, so the
-// count on the bar and what the button adds always describe the same page.
-const staged = $derived.by((): { picks: StagedPick[]; columns: number } => {
+// tick whose column the variant lens has since hidden, or the study window has moved
+// off, contributes nothing — so the count on the bar and what the button adds always
+// describe the same page.
+const stagedPicks = $derived.by((): StagedPick[] => {
   const picks: StagedPick[] = [];
-  let columns = 0;
   for (const band of pickerBands) {
     for (const column of columnsByFqid.get(band.key) ?? []) {
       if (!selectedColumns.has(columnKey(band.key, column.name))) {
         continue;
       }
-      columns += 1;
       for (const row of column.rows) {
-        picks.push({ band, row });
+        if (rowDeliversInScope(row, addScope)) {
+          picks.push({ band, row });
+        }
       }
     }
   }
-  return { picks, columns };
+  return picks;
 });
+
+/** How many listed COLUMNS a set of picks covers — the unit this page counts in, at
+ * both ends of an Add: one tick of a column two variants deliver is ONE column and
+ * two picks. ONE rule, so the bar's promise and the confirmation cannot phrase the
+ * same batch differently (`stagedDiffSummary`'s rule, applied to the count itself). */
+function pickedColumns(picks: readonly StagedPick[]): number {
+  return new Set(picks.map((pick) => columnKey(pick.band.key, pick.row.column)))
+    .size;
+}
+const stagedColumns = $derived(pickedColumns(stagedPicks));
 
 /** "1 column" / "3 columns" — the bar's count and its button say the same thing. */
 const columnCount = $derived(
-  `${staged.columns} ${staged.columns === 1 ? "column" : "columns"}`,
+  `${stagedColumns} ${stagedColumns === 1 ? "column" : "columns"}`,
 );
 
-// Setting the study window is exactly what a refused add asked for, so the refusal
-// retires with it and never outlives the pick it refused (the leaf's rule for its
-// own period control). Only the refusal: the ticks survive, so "add again" is one
-// press — which is why this is its own effect and not part of the clear above.
+// Moving the window retires the last refusal (see `addRefusal`) — for two of the
+// three it is exactly what the refusal asked for. Only the refusal: the ticks
+// survive, so "add again" is one press, which is why this is its own effect rather
+// than part of the route-change clear above.
 $effect(() => {
   void windowStore.value;
-  periodRequired = false;
+  addRefusal = null;
 });
 
 // Leaving the page mid-add abandons the batch rather than committing it into a
@@ -679,30 +698,50 @@ async function exactPicks(
 }
 
 async function addSelected(): Promise<void> {
-  const columns = staged.columns;
+  // Bind the batch to the project AND the scope it was staged against: the exact-era
+  // reads below are a round trip, and a New/Open in the rail or a drag of the study
+  // window during it means these picks are no longer a pick against the project — or
+  // under the window — the researcher pressed Add on. `applyStagedPicks` runs the same
+  // replacement guard, but only from the moment IT is called, which is after this read.
+  const stagedAgainst = projectStore.replacementGeneration;
+  const scope = addScope;
   applying = true;
   try {
-    const picks = await exactPicks(staged.picks);
-    columnsUnread = picks === null;
-    if (picks === null) {
-      // This attempt was refused HERE, so the period gate's verdict on the last
-      // one is stale — leaving it set would show a nudge about the wrong refusal.
-      periodRequired = false;
+    const exact = await exactPicks(stagedPicks);
+    if (unmounted || projectStore.replacementGeneration !== stagedAgainst) {
+      // Abandoned mid-read, before anything was authored. The verdict on a batch
+      // staged against a project that is gone says nothing about the next Add.
+      addRefusal = null;
+      return;
+    }
+    if (exact === null) {
+      addRefusal = COLUMN_STATES_UNREAD_MESSAGE;
+      return;
+    }
+    // The exact eras can disagree with the aggregate coverage the tick gate read, so
+    // apply the same gate to what came back: only rows really delivered inside the
+    // window commit, and the confirmation counts the columns they belong to.
+    const adds = exact.filter((pick) => rowDeliversInScope(pick.row, scope));
+    const columns = pickedColumns(adds);
+    if (columns === 0) {
+      addRefusal = outOfWindowMessage(scopeYears(scope));
       return;
     }
     const result = await applyStagedPicks(
-      { adds: picks, removes: [], periodChanges: [] },
+      { adds, removes: [], periodChanges: [] },
       {
-        scope: addScope,
+        scope,
         seed: { regMetaVersion, steward },
         cancelled: () => unmounted,
       },
     );
-    periodRequired = result.kind === "period-required";
+    addRefusal =
+      result.kind === "period-required" ? ADD_WINDOW_REQUIRED_MESSAGE : null;
     if (result.kind === "applied") {
-      // Confirm in the unit the button promised — TICKED columns, not the rows
-      // they fanned out to: one tick of a column two variants deliver stages two
-      // adds, and "+2 columns" would not be the move the researcher just made.
+      // Confirm in the unit the button promised — the COLUMNS that committed, not
+      // the rows they fanned out to: one tick of a column two variants deliver
+      // stages two adds, and "+2 columns" would not be the move the researcher
+      // just made.
       applyOutcome = result.outcome && {
         added: columns,
         removed: 0,
@@ -903,32 +942,57 @@ async function addSelected(): Promise<void> {
                      them), so only leaf rows are tickable. -->
                 {#if row.kind === "leaf"}
                   {#each row.columns as col (col.name)}
+                    {@const addable = col.rows.some((r) =>
+                      rowDeliversInScope(r, addScope),
+                    )}
                     <!-- The tick and the name it adds are ONE target (Y-83): the
                          label carries the checkbox, so the name a researcher is
                          already reading is what they click — and the "In project"
-                         state rides inside it, so it wraps with the column it
-                         describes and joins the tick's accessible name. -->
-                    <label class="delivery-column">
+                         state (or the reason there is nothing to add) rides inside
+                         it, so it wraps with the column it describes and joins the
+                         tick's accessible name. -->
+                    <label class="delivery-column" class:out-of-window={!addable}>
                       <input
                         class="cbox"
                         type="checkbox"
-                        checked={selectedColumns.has(columnKey(row.fqid, col.name))}
-                        disabled={applying}
+                        checked={addable &&
+                          selectedColumns.has(columnKey(row.fqid, col.name))}
+                        disabled={applying || !addable}
                         onchange={() => toggleColumn(row.fqid, col.name)}
                       />
-                      {col.name}
-                      {#if col.years}
-                        <span class="column-years">{col.years}</span>
-                      {/if}
-                      {#if committedColumns.has(columnKey(row.fqid, col.name))}
-                        <!-- Already in the draft. It stays TICKABLE: adding it
-                             again folds into the same source and changes nothing
-                             (`applyStagedDiff`'s duplicate-binding guard). -->
-                        <Tag tone="info">
-                          {#snippet glyph()}i{/snippet}
-                          In project
-                        </Tag>
-                      {/if}
+                      <!-- Name, era and markers are ONE wrapping line beside the
+                           tick, so at 375 a marker that will not fit drops under the
+                           NAME it qualifies instead of under the checkbox, where it
+                           would read as the next row's. -->
+                      <span class="column-line">
+                        {col.name}
+                        {#if col.years}
+                          <span class="column-years">{col.years}</span>
+                        {/if}
+                        {#if committedColumns.has(columnKey(row.fqid, col.name))}
+                          <!-- Already in the draft. It stays TICKABLE: adding it
+                               again folds into the same source and changes nothing
+                               (`applyStagedDiff`'s duplicate-binding guard). -->
+                          <Tag tone="info">
+                            {#snippet glyph()}i{/snippet}
+                            In project
+                          </Tag>
+                        {/if}
+                        {#if !addable}
+                          <!-- The study window IS this page's period, so a column
+                               delivered wholly outside it has nothing to commit. The
+                               tick is disabled and the reason stands beside it —
+                               naming the window, the only control that lifts this.
+                               Independent of "In project": a column added under an
+                               earlier window is still in the draft, and must not
+                               stop saying so because the window has moved. -->
+                          <Tag>
+                            Not delivered in <span class="window-years"
+                              >{windowYears}</span
+                            >
+                          </Tag>
+                        {/if}
+                      </span>
                     </label>
                   {/each}
                 {/if}
@@ -971,19 +1035,19 @@ async function addSelected(): Promise<void> {
              container changed — a whole-app move, left to its own change. -->
         <div class="add-bar">
           <span class="add-count" role="status">
-            {staged.columns === 0
+            {stagedColumns === 0
               ? "Tick a delivery column to add it to the project."
               : `${columnCount} selected`}
           </span>
           <Button
             variant="primary"
             size="sm"
-            disabled={staged.columns === 0 || !seedReady || applying}
+            disabled={stagedColumns === 0 || !seedReady || applying}
             onclick={addSelected}
           >
             {#if applying}
               Adding…
-            {:else if staged.columns === 0}
+            {:else if stagedColumns === 0}
               Add columns to project
             {:else}
               Add {columnCount} to project
@@ -992,7 +1056,7 @@ async function addSelected(): Promise<void> {
         </div>
         <StagedAddStatus
           outcome={applyOutcome}
-          blocked={addBlocked}
+          blocked={addRefusal}
         />
       {:else}
         <Panel title="Variables">
@@ -1175,19 +1239,48 @@ async function addSelected(): Promise<void> {
      (a year is a machine identifier, like the Variants panel's Years column
      below) and are merely dimmed, so the name a researcher hunts for leads.
      The whole line is the Y-83 tick target, so it also carries the pointer. */
-  .delivery-column {
+  .delivery-column,
+  .column-line {
     display: flex;
     flex-wrap: wrap;
     align-items: baseline;
     gap: var(--space-2);
+  }
+  .delivery-column {
     /* Pin the NAME against DataTable's stacked-card rule, which mutes every
        non-primary cell: below 48rem that flattened the name and its years to one
        grey and the column a researcher is hunting for stopped leading. */
     color: var(--text);
     cursor: pointer;
   }
+  .column-line {
+    /* Takes the row's remaining width and wraps WITHIN itself, so the tick keeps its
+       own column and a marker that will not fit drops under the name, not the tick. */
+    flex: 1 1 0;
+    min-width: 0;
+  }
   .column-years {
     color: var(--text-muted);
+  }
+  /* A column the study window has moved off: its tick is disabled, so the whole
+     line steps back and stops offering the pointer. The reason is the tag beside
+     it — carried by text, never by the tint alone. */
+  .delivery-column.out-of-window {
+    color: var(--text-muted);
+    cursor: default;
+  }
+  /* This cell is mono because it lists identifiers, and a tag in it is COPY — two
+     words of English. `Tag` declares no face of its own (frontend/DESIGN.md binds
+     the primitive to mono), so a mono-faced context sets the UI face on its own
+     usage rather than re-facing every tag in the app. */
+  .delivery-column :global(.tag) {
+    font-family: var(--font-ui);
+  }
+  /* The years inside that copy are an identifier, like the delivery years beside
+     them (frontend/DESIGN.md → Typography): the sentence is UI-faced, the span is
+     not. */
+  .delivery-column .window-years {
+    font-family: var(--font-mono);
   }
   /* The add bar under the list: the selected count, then the single primary Add.
      Same shape as the picker footer on the variable pages, so the two authoring

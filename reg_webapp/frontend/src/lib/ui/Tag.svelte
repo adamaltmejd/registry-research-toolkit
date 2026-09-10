@@ -18,6 +18,11 @@ import type { PlainTone, StatusTone } from "./types";
 // context — the tone (color) and the glyph (`aria-hidden`) are visual-only, so an
 // assistive-tech user gets only the label.
 //
+// The base sets NO font-family: a tag takes its context's face (frontend/DESIGN.md
+// binds the tag primitive to mono). A tag label is usually COPY, so a context that is
+// mono because it lists identifiers sets --font-ui on its OWN usage — CatalogNodeView's
+// delivery-column cell and SourceEditor's coordinate heading both do. Setting the UI
+// face here instead would re-face every tag in the app to fix those two.
 // `mono` faces code-like tags (a value-set code shown as a tag) in --font-mono.
 // A single component (not a separate Badge): a count/status pill and a type tag
 // differ only by tone + glyph, so a `tone` prop spans both with no semantic split.
@@ -44,10 +49,6 @@ let { tone = "neutral", mono = false, glyph, children }: Props = $props();
     gap: var(--space-1);
     padding: 0.1em 0.5em;
     border-radius: var(--radius-sm);
-    /* A tag label is COPY, so it sets the UI face rather than inheriting: a tag
-       inside a mono-faced cell (the register list) would otherwise render two
-       words of English in the identifier face. `mono` is the opt-in below. */
-    font-family: var(--font-ui);
     font-size: var(--text-sm);
     line-height: 1;
     white-space: nowrap;

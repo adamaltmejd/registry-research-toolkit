@@ -168,6 +168,28 @@ function relevantSegments(
   };
 }
 
+/** Whether a picker row has a delivery era inside `scope`'s add window — the gate a
+ * host must apply when that window IS the only period it can commit under.
+ * `rowAddSegments` deliberately FALLS BACK to a row's whole span where the window
+ * clips it to nothing, so a subject page's explicitly-picked dimmed row still commits
+ * something; that page has a Period control to say what. The register list (Y-83) has
+ * none — the study window is the only period there is — so inheriting that fallback
+ * would author years the researcher never asked for, and it refuses the row instead.
+ * Reads the add window through the SAME `addWindowBounds` derivation `relevantSegments`
+ * does (#678: a sub-annual `?period` wins over the year window), so a gate and the
+ * commit it gates can never disagree about which window a row was judged against. With
+ * no window nothing is clipped, every row passes, and `finalAddPeriodWires` is the one
+ * that asks for a period. */
+export function rowDeliversInScope(
+  row: PickerRepresentation,
+  scope: PickerCommitScope,
+): boolean {
+  return windowsOverlapWindow(
+    row.windows,
+    addWindowBounds(scope.period, scope.window ?? null),
+  );
+}
+
 function rowRelevantSegments(
   row: PickerRepresentation,
   scope: PickerCommitScope,
@@ -568,7 +590,13 @@ async function stagedAdd(
  * so what an add commits under is what the page showed. `cancelled` reports that
  * the host is gone (its `$effect` teardown), which abandons a pick still waiting
  * on the restore gate rather than committing it into a draft from a page the
- * researcher has navigated away from. */
+ * researcher has navigated away from.
+ *
+ * The replacement guard below starts HERE, when this call does. A host that reads
+ * anything asynchronously between the press and this call (the register list re-reads
+ * each ticked variable's delivery eras) has a window this guard cannot see, and must
+ * capture `projectStore.replacementGeneration` at the PRESS and abandon its own batch
+ * if it moved — as `CatalogNodeView.addSelected` does. */
 export async function applyStagedPicks(
   payload: StagedApplyPayload,
   ctx: {

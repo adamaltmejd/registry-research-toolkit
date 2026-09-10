@@ -1154,16 +1154,23 @@ function columnedLeafNode(
 }
 
 /** The browse GET returns the register node; each ticked variable's own GET returns
- * its states, and the staged adds' `?period` GETs resolve to one state each. */
+ * its states, and the staged adds' `?period` GETs resolve to one state each. `hold`
+ * keeps the per-variable read pending until it settles, so a case can land something
+ * (a New) while an Add's exact-era reads are still in flight. */
 function mockRegisterAndResolve(
   node: CatalogNode,
   eras: Record<string, [string, string][]> = {},
+  hold?: Promise<void>,
 ): void {
   const children = (node as unknown as { children: ColumnedChild[] }).children;
   vi.mocked(getCatalogNode).mockImplementation(async (fqid, params) => {
     if (!params?.period) {
       const child = children.find((c) => c.fqid === fqid);
-      return child === undefined ? node : columnedLeafNode(child, eras);
+      if (child === undefined) {
+        return node;
+      }
+      await hold;
+      return columnedLeafNode(child, eras);
     }
     const variant = typeof params.variant === "string" ? params.variant : "";
     return {
@@ -1296,6 +1303,7 @@ describe("CatalogNodeView register arm: add columns (Y-83)", () => {
 
   it("stages what the variant lens shows, one add per delivering variant", async () => {
     mockRegisterAndResolve(splitColumnRegisterNode());
+    vi.mocked(getRegisterVariants).mockResolvedValue(lisaVariants());
     windowStore.set({ from: 2018, to: 2023 });
 
     await renderRegister();
@@ -1311,6 +1319,27 @@ describe("CatalogNodeView register arm: add columns (Y-83)", () => {
     expect(
       projectStore.draft?.sources.map((source) => source.register_variant),
     ).toEqual(["scb/lisa/individer-15plus", "scb/lisa/individer-16plus"]);
+  });
+
+  it("stages only the lensed variant of a column two variants deliver", async () => {
+    mockRegisterAndResolve(splitColumnRegisterNode());
+    vi.mocked(getRegisterVariants).mockResolvedValue(lisaVariants());
+    windowStore.set({ from: 2018, to: 2023 });
+
+    await renderRegister();
+    await expect.element(page.getByText("Kön")).toBeVisible();
+
+    // The chip narrows the LIST, and a tick stages exactly what the row now
+    // shows: the same `Kon` under ONE variant authors that variant's source
+    // alone, where the unlensed tick above authored both.
+    await clickVariantChip("Individer, 15 år och äldre");
+    await tickColumn("Kon");
+    await page.getByRole("button", { name: "Add 1 column to project" }).click();
+
+    await expect.element(page.getByText("Applied +1 column")).toBeVisible();
+    expect(
+      projectStore.draft?.sources.map((source) => source.register_variant),
+    ).toEqual(["scb/lisa/individer-15plus"]);
   });
 
   it("commits an interrupted column as its real eras, not the list's aggregate span", async () => {
@@ -1360,6 +1389,129 @@ describe("CatalogNodeView register arm: add columns (Y-83)", () => {
       .element(page.getByText(/Could not read the delivery years/))
       .toBeVisible();
     expect(projectStore.draft?.sources).toEqual([]);
+  });
+
+  it("refuses a column the study window has moved off, on its own row", async () => {
+    mockRegisterAndResolve(columnedRegisterNode(1));
+    // The list shows every column the register ever delivered. `ForvErs` ended in
+    // 2021, so under a 2022–2024 window it has no era to commit and no period to
+    // commit it under — the study window is this page's only period control.
+    windowStore.set({ from: 2022, to: 2024 });
+
+    await renderRegister();
+    await expect.element(page.getByText("Kön")).toBeVisible();
+
+    // The reason rides inside the tick's own label, so it is in its accessible
+    // name — and the tick itself is not offered.
+    const forvErs = page.getByRole("checkbox", {
+      name: "ForvErs Not delivered in 2022–2024",
+      exact: true,
+    });
+    await expect.element(forvErs).toBeDisabled();
+    await expect.element(forvErs).not.toBeChecked();
+    // Nothing is staged, so nothing can be reported as applied and no project is
+    // minted for an empty diff.
+    await expect
+      .element(page.getByRole("button", { name: "Add columns to project" }))
+      .toBeDisabled();
+    expect(projectStore.draft?.sources).toEqual([]);
+  });
+
+  it("counts only the columns that committed when the real eras miss the window", async () => {
+    // The list reads `ForvErs` as 1990–2021, so a 2000–2005 window passes the tick.
+    // Its real eras stop in 1999 and resume in 2010, and the window falls in the gap
+    // — where `CDISP` (1968–2019) really is delivered.
+    mockRegisterAndResolve(columnedRegisterNode(1), {
+      "scb/lisa/forvink-ers::ForvErs": [
+        ["1990-01-01", "1999-12-31"],
+        ["2010-01-01", "2021-12-31"],
+      ],
+    });
+    windowStore.set({ from: 2000, to: 2005 });
+
+    await renderRegister();
+    await expect.element(page.getByText("Kön")).toBeVisible();
+    await tickColumn("ForvErs");
+    await tickColumn("CDISP 1968–2019");
+    await expect.element(page.getByText("2 columns selected")).toBeVisible();
+
+    await page
+      .getByRole("button", { name: "Add 2 columns to project" })
+      .click();
+
+    // The confirmation counts what was authored, not what was ticked: the aggregate
+    // the bar could see said two, the states said one.
+    await expect.element(page.getByText("Applied +1 column")).toBeVisible();
+    expect(projectStore.draft?.sources).toEqual([
+      expect.objectContaining({
+        register_variant: "scb/lisa/individer-15plus",
+        period: { from: 2000, to: 2005 },
+        bindings: [expect.objectContaining({ variable: "scb/lisa/disp" })],
+      }),
+    ]);
+  });
+
+  it("authors nothing when the real eras miss the window for every ticked column", async () => {
+    mockRegisterAndResolve(columnedRegisterNode(1), {
+      "scb/lisa/forvink-ers::ForvErs": [
+        ["1990-01-01", "1999-12-31"],
+        ["2010-01-01", "2021-12-31"],
+      ],
+    });
+    windowStore.set({ from: 2000, to: 2005 });
+
+    await renderRegister();
+    await expect.element(page.getByText("Kön")).toBeVisible();
+    await tickColumn("ForvErs");
+    await page.getByRole("button", { name: "Add 1 column to project" }).click();
+
+    // Nothing left to commit once the aggregate gave way to the states, so the batch
+    // is refused whole rather than committing the span it was never delivered over.
+    await expect
+      .element(page.getByText(/No ticked column was delivered in 2000–2005/))
+      .toBeVisible();
+    expect(projectStore.draft?.sources).toEqual([]);
+  });
+
+  it("abandons a batch whose project is replaced while the eras are read", async () => {
+    let releaseStates = (): void => {};
+    // The per-variable read an Add makes, held open so a New can land while the batch
+    // is still in flight.
+    mockRegisterAndResolve(
+      columnedRegisterNode(1),
+      {},
+      new Promise<void>((resolve) => {
+        releaseStates = resolve;
+      }),
+    );
+    windowStore.set({ from: 2018, to: 2023 });
+
+    await renderRegister();
+    await expect.element(page.getByText("Kön")).toBeVisible();
+    await tickColumn("Kon");
+    await page.getByRole("button", { name: "Add 1 column to project" }).click();
+    await expect
+      .element(page.getByRole("button", { name: "Adding…" }))
+      .toBeVisible();
+
+    // A New replaces the project the pick was staged against — appending to the
+    // replacement would corrupt a document the researcher never picked from.
+    projectStore.newProject({
+      reg_meta_version: "reg_meta/v1.0.0",
+      steward: "global",
+    });
+    releaseStates();
+
+    await expect
+      .element(page.getByRole("button", { name: "Adding…" }))
+      .not.toBeInTheDocument();
+    expect(projectStore.draft?.sources).toEqual([]);
+    // Abandoned, not refused: nothing was authored and nothing is claimed either
+    // way, and the tick survives for an Add against the project now open.
+    await expect.element(page.getByText(/Applied/)).not.toBeInTheDocument();
+    await expect
+      .element(page.getByRole("checkbox", { name: "Kon", exact: true }))
+      .toBeChecked();
   });
 });
 

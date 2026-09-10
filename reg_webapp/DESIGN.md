@@ -770,9 +770,20 @@ variable pages to add one column each.
   belongs to a subject page), so an add is clipped to the rail's window, and without one
   an open-ended column has no finite period to commit — the batch is refused whole
   before the store is touched, exactly as on a leaf. The nudge
-  (`ADD_WINDOW_REQUIRED_MESSAGE`) names the one control this page has, and retires the
-  moment that control is used: setting the window clears the refusal but keeps the
-  ticks, so "add again" is one press.
+  (`ADD_WINDOW_REQUIRED_MESSAGE`) names the one control this page has. Every refusal the
+  page shows is a verdict on ONE Add under the window it was made under, so all of them
+  retire the moment the window moves — one `addRefusal` slot rather than a flag per
+  gate, so a verdict can never outlive the batch it refused. The refusal only: the ticks
+  survive, so "add again" is one press.
+- **A column the window has moved off is not tickable.** The list names every column the
+  register ever delivered, so a window later (or earlier) than a column's whole history
+  leaves it nothing to commit. Its tick is disabled and the row carries the reason. A
+  subject page's picker only DIMS such a row and still lets it be picked, and
+  `rowAddSegments` deliberately FALLS BACK to a row's whole span when the window clips
+  it to nothing so that pick still adds something — that page has a Period control to
+  say what. Here the window is the only period there is, so inheriting that fallback
+  would author years the researcher never asked for: the page refuses the row before
+  staging it, and the bar's count never promises a column an Add cannot commit.
 - **The list's windows are display grade; an add re-reads the states.** `deliveries`
   carries a MIN/MAX coverage per (variant, column), which cannot express an
   interruption: a column delivered 1990–1999 and again 2010–2020 reads there as
@@ -782,7 +793,11 @@ variable pages to add one column each.
   `exactDeliveryColumnRows`, one GET per ticked variable, on top of the per-add resolve)
   and stages rows over the exact eras, which commit as the #307 comma-union exactly as
   the variable page's do. A variable whose states can't be read refuses the whole batch
-  rather than falling back to the aggregate.
+  rather than falling back to the aggregate. The two grades can DISAGREE — a window
+  inside an interruption passes a tick that only ever saw the aggregate — so the Add
+  applies the window gate again to the rows that come back, and the confirmation counts
+  the columns that actually committed. A batch left with nothing authors nothing and
+  names the window it found empty.
 - **Fidelity limit, deliberate**: a sequential RENAME. The list ticks each column name
   on its own (that is what Y-82 shows, and the name is what a researcher hunts for),
   where the leaf folds the chain into one `representation: null` row over the union. The
@@ -1334,6 +1349,15 @@ Load-bearing decisions downstream children (#806–#809) must not re-litigate:
   label clears AA without per-component overrides. Status tones **require** a leading
   `glyph` snippet (the accent-vs-status rule: hue alone is never sufficient); the glyph
   is `aria-hidden`, so status meaning must also appear in the label text.
+- **`Tag` declares no font-family.** `frontend/DESIGN.md`'s front matter binds the tag
+  primitive to the mono face, so the base `.tag` rule sets none and a tag takes its
+  context's. A tag LABEL is usually English copy ("In project", "3 errors"), so the two
+  contexts that are mono because they list identifiers — the register list's
+  delivery-column cell and `SourceEditor`'s coordinate heading — set `--font-ui` on
+  their OWN `:global(.tag)` usage. Putting the UI face on the base instead would re-face
+  every tag in the app to fix those two, so the missing declaration is the decision, not
+  an oversight. That the contract says mono while most call sites are copy is unresolved
+  and filed as a follow-up.
 - **Focus-ring convention.** Every interactive primitive applies
   `:focus-visible { box-shadow: var(--focus-ring) }` in its own scoped CSS — no global
   stylesheet owns this.
@@ -2315,7 +2339,11 @@ rune store holding one draft per session.
   restore onto an empty store applies, so a late restore never overwrites a deliberate
   new/open — and, symmetrically, a pick queued behind the gate stays bound to the
   project it was staged against: it is discarded (never applied) if a deliberate
-  new/open replaced that project, or the authoring page was left, while it waited.
+  new/open replaced that project, or the authoring page was left, while it waited. The
+  generation is captured at the PRESS, not when the store call starts — a page that
+  reads anything asynchronously first (the register list re-reads each ticked variable's
+  delivery eras) would otherwise leave a window in which a new/open lands unseen and the
+  pick commits into the replacement after all.
 - **Autosave to IndexedDB** (`indexeddb_persistence.ts`) over the raw IndexedDB API (no
   `idb` dep — keeps the frontend dep surface lean) via a debounced (\~500ms) `$effect`.
   **Graceful degradation is mandatory**: in private mode / disabled storage / quota
