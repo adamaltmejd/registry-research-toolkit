@@ -172,6 +172,22 @@ def _reg_stub(provider: str, key: str) -> dict:
     }
 
 
+def _reg_stub_with_state(state: dict) -> dict:
+    """`_reg_stub` whose single variable carries `state` — exercises the
+    state-level structural guards."""
+    reg = _reg_stub("p", "k")
+    reg["variants"][0]["variables"][0]["states"] = [state]
+    return reg
+
+
+def _bad_aliases(value: object):
+    """A `test_structural_defects_fail` mutation putting `value` in a state's
+    `aliases`."""
+    return lambda d: d.update(
+        registers=[_reg_stub_with_state({"column": "C", "aliases": value})]
+    )
+
+
 def _steward_register_ids() -> dict[str, int]:
     """Deterministic minted ids for the base inventory's steward graph."""
     return {
@@ -209,25 +225,19 @@ def _multistate_inventory() -> dict:
     return inv
 
 
-def _overlapping_representation_inventory() -> dict:
-    """One steward variable with two co-existing delivery-column states."""
+def _co_delivered_alias_inventory() -> dict:
+    """One steward variable whose ONE delivery window ships its column under
+    three spellings — the `Covid-19 antikroppar` / `Covid_19_antikroppar` shape."""
     inv = _base_inventory()
     variables = inv["registers"][0]["variants"][0]["variables"]
     variables[0]["states"] = [
         {
-            "column": "AVERAGE_SPENDING",
+            "column": "BELOPP",
             "data_type": "float",
-            "value_set_version_label": "average-spending",
-            "valid_from": None,
+            "aliases": ["BELOPP_SEK", "Belopp-SEK"],
+            "valid_from": "2018",
             "valid_to": None,
-        },
-        {
-            "column": "AVERAGE_SPENDINGS",
-            "data_type": "float",
-            "value_set_version_label": "average-spendings",
-            "valid_from": None,
-            "valid_to": None,
-        },
+        }
     ]
     return inv
 
@@ -393,6 +403,13 @@ class TestOverlayInserts:
             ).fetchone()
             assert alias is not None
 
+        # ...and no alias WINDOW without co-delivered `aliases`: an ordinary
+        # steward state keeps the resolver's 1:1 path.
+        assert conn.execute(
+            "SELECT COUNT(*) FROM variable_alias_window WHERE variable_id >= ?",
+            (_MINT_BIT,),
+        ).fetchone() == (0,)
+
     def test_flags_and_validity_window_round_trip(
         self, tmp_path: Path, global_db: Path
     ) -> None:
@@ -478,27 +495,46 @@ class TestOverlayInserts:
         ).fetchall()
         assert set(aliases) == {(ids["pooled_privat"],), (ids["pooled_foretag"],)}
 
-    def test_overlapping_representations_use_state_discriminator(
+    def test_co_delivered_aliases_are_one_state_with_alias_windows(
         self, tmp_path: Path, global_db: Path
     ) -> None:
-        counts, out = _run_extend(
-            tmp_path, global_db, _overlapping_representation_inventory()
-        )
-        # belopp (2 states) + kontonr, plus the base's pooled personnr (2 states).
+        """Every co-delivered column becomes an orderable representation of the
+        ONE state, and `value_set_version_label` stays empty — it ships and
+        renders as a value-set version."""
+        counts, out = _run_extend(tmp_path, global_db, _co_delivered_alias_inventory())
+        # belopp (ONE state, 3 columns) + kontonr, plus the pooled personnr's 2.
         assert counts["variables"] == 3
-        assert counts["states"] == 5
+        assert counts["states"] == 4
 
         conn = sqlite3.connect(out)
         ids = _steward_register_ids()
         states = conn.execute(
-            "SELECT delivery_column_name, value_set_version_label "
-            "FROM variable_state WHERE variable_id = ? "
-            "ORDER BY value_set_version_label",
+            "SELECT delivery_column_name, valid_from, valid_to, "
+            "value_set_version_label FROM variable_state WHERE variable_id = ?",
             (ids["var_belopp"],),
         ).fetchall()
-        assert states == [
-            ("AVERAGE_SPENDING", "average-spending"),
-            ("AVERAGE_SPENDINGS", "average-spendings"),
+        assert states == [("BELOPP", "2018-01-01", "9999-12-31", "")]
+
+        aliases = {
+            r[0]
+            for r in conn.execute(
+                "SELECT delivery_column_name FROM variable_alias WHERE variable_id = ?",
+                (ids["var_belopp"],),
+            )
+        }
+        assert aliases == {"BELOPP", "BELOPP_SEK", "Belopp-SEK"}
+
+        # Including the state's own column, without which the resolver hides it.
+        windows = conn.execute(
+            "SELECT delivery_column_name, valid_from, valid_to "
+            "FROM variable_alias_window WHERE variable_id = ? AND "
+            "register_variant_id = ? ORDER BY delivery_column_name",
+            (ids["var_belopp"], ids["variant"]),
+        ).fetchall()
+        assert windows == [
+            ("BELOPP", "2018-01-01", "9999-12-31"),
+            ("BELOPP_SEK", "2018-01-01", "9999-12-31"),
+            ("Belopp-SEK", "2018-01-01", "9999-12-31"),
         ]
 
     def test_steward_provider_id_in_high_band(
@@ -695,8 +731,12 @@ class TestFlavoredValidation:
         self, tmp_path: Path, global_db: Path
     ) -> None:
         # validate=True runs the flavored validator as the pre_rename_hook; it
-        # raises on failure, so reaching here means it passed.
-        counts, out = _run_extend(tmp_path, global_db, _base_inventory(), validate=True)
+        # raises on failure, so reaching here means it passed. The co-delivered
+        # inventory is the one overlaid, so the alias-window closure checks run
+        # against real window rows.
+        counts, out = _run_extend(
+            tmp_path, global_db, _co_delivered_alias_inventory(), validate=True
+        )
         assert counts["variables"] == 3
         result = validate_built_db(out, flavored=True)
         assert not result.failures, result.failures
@@ -1106,6 +1146,13 @@ class TestLoader:
                     _reg_stub("p", "k"),
                 ]
             ),
+            # A state's `aliases` are its co-delivered physical columns: a list
+            # of distinct non-empty strings, none of them the state's own column
+            # (the writer already emits that one's alias + window row).
+            _bad_aliases("C2"),
+            _bad_aliases([" "]),
+            _bad_aliases(["C"]),
+            _bad_aliases(["C2", "C2"]),
         ],
     )
     def test_structural_defects_fail(self, tmp_path: Path, mutate) -> None:
@@ -1183,6 +1230,23 @@ class TestLoader:
             load_inventory(path)
         assert exc.value.exit_code == EXIT_CONFIG
         assert "duplicate state key" in exc.value.message
+        # The remedy for two spellings of ONE window is `aliases`, not a fake
+        # `value_set_version_label` — which ships and renders as a value-set
+        # version, and splits the picker's codings.
+        assert "`aliases`" in exc.value.remediation
+
+    def test_state_aliases_are_stripped(self, tmp_path: Path) -> None:
+        inv = {
+            "steward": "swecov",
+            "source_label": "x",
+            "registers": [
+                _reg_stub_with_state({"column": "C", "aliases": [" C_2 ", "C-2"]})
+            ],
+        }
+        path = tmp_path / "inv.json"
+        path.write_text(json.dumps(inv), encoding="utf-8")
+        state = load_inventory(path).registers[0].variants[0].variables[0].states[0]
+        assert state.aliases == ("C_2", "C-2")
 
     def test_duplicate_state_valid_from_allowed_with_discriminator(
         self, tmp_path: Path

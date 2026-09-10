@@ -2231,11 +2231,12 @@ def _flavor_variables(columns: list[dict]) -> list[dict]:
     Surviving columns are GROUPED by their `_norm_alnum` fold (lopnr-stripped,
     NFKD-transliterated, upper-cased, non-alphanumerics dropped), so the vintage
     spellings one delivery uses for one column — `Covid-19 antikroppar` and
-    `Covid_19_antikroppar` — become ONE variable. Each distinct physical column in
-    a group keeps its own `states` entry, hence its own `variable_alias` row, so
+    `Covid_19_antikroppar` — become ONE variable. The spellings are co-delivered in
+    one window, so the group is ONE state whose `aliases` carry the other physical
+    columns; extend-db gives each column its own `variable_alias` + window row, so
     every literal delivery column stays orderable (README → "Near-duplicate
-    physical columns"); the key, name and description come from the first-seen
-    spelling. A pair that differs in LETTERS (`AVERAGE_SPENDING` /
+    physical columns"). The key, name, description and `data_type` come from the
+    first-seen spelling. A pair that differs in LETTERS (`AVERAGE_SPENDING` /
     `AVERAGE_SPENDINGS`) folds to two forms and stays two variables — grouping
     those is a curation call, not a mechanical one. The pseudonym
     `P<n>_LopNr_` prefix is stripped from the catalog `column`/`name` using the
@@ -2262,22 +2263,16 @@ def _flavor_variables(columns: list[dict]) -> list[dict]:
         first_column, first_entry = next(iter(spellings.items()))
         # Multistate inventory contract (#981): the delivery column and its window
         # live in a `states` list, not flat on the variable.
-        states: list[dict] = [
-            {
-                "column": column,
-                "data_type": entry.get("data_type") or None,
-                "valid_from": None,
-                "valid_to": None,
-            }
-            for column, entry in spellings.items()
-        ]
-        for state in states[1:]:
-            # A grouped spelling shares the first one's open window, so the literal
-            # column is its `variable_state` discriminator — without it extend-db
-            # rejects the pair on its (valid_from, value_set_version_label) key.
-            # The first-seen spelling stays unlabelled, so its state id (minted from
-            # the label) survives a later delivery adding another spelling.
-            state["value_set_version_label"] = state["column"]
+        state: dict = {
+            "column": first_column,
+            "data_type": first_entry.get("data_type") or None,
+            "valid_from": None,
+            "valid_to": None,
+        }
+        if aliases := list(spellings)[1:]:
+            # The other spellings are co-delivered, so they ride as `aliases` of
+            # this one state — see the docstring.
+            state["aliases"] = aliases
         variables.append(
             {
                 "key": _kebab(first_entry["normalized"]) or f"v{len(variables)}",
@@ -2286,7 +2281,7 @@ def _flavor_variables(columns: list[dict]) -> list[dict]:
                 "description": first_entry.get("description") or None,
                 "is_identifier": bool(_ANY_LOPNR_PREFIX.match(first_entry["name"])),
                 "is_sensitive": False,
-                "states": states,
+                "states": [state],
             }
         )
     return variables

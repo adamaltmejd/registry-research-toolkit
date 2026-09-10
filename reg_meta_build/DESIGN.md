@@ -2772,8 +2772,11 @@ input, never mutated), then runs an insert-only overlay on the copy:
    `source_label` field for provenance. Each inventory variable has a non-empty `states`
    array, so a steward delivery rename can stay one variable with multiple literal
    delivery-column states. Each state's delivery column also inserts a `variable_alias`
-   row, preserving the `variable_alias ⊇ state delivery columns` invariant. Overlapping
-   states use `value_set_version_label` as the existing `variable_state` discriminator.
+   row, preserving the `variable_alias ⊇ state delivery columns` invariant. A state's
+   co-delivered `aliases` stay ONE state and additionally insert a
+   `variable_alias_window` row per column of that state, its own included — the #945
+   shape above — so each literal spelling resolves as its own representation instead of
+   needing a fake `value_set_version_label`.
 3. **Slug** the new rows using `populate_slugs(strict=False)` for registers/variants
    (the steward TOML covers only the inserted rows; global rows keep their published
    slugs untouched) and `populate_variable_slugs(incremental=True)` for variables
@@ -2826,6 +2829,7 @@ No `SCHEMA_VERSION` bump — rows on existing tables only.
               "states": [
                 {
                   "column": "BELOPP", "data_type": "float",
+                  "aliases": ["BELOPP_SEK"],
                   "value_set_version_label": "",
                   "valid_from": null, "valid_to": null
                 }
@@ -2844,11 +2848,14 @@ Top-level keys: `steward` and `source_label` (both required strings); `providers
 Per-level key sets are closed (`_reject_unknown_keys`); a variable `key` must not
 contain `.` (it becomes `variable.provider_key`, whose slug source-ID grammar uses `.`
 as a segment separator), and each variable needs at least one `states` entry. A state
-needs `column`, may carry `data_type` and validity bounds, and may set
-`value_set_version_label` to disambiguate overlapping same-start representation states.
-An undeclared provider on a register, an inverted validity window, a duplicate state
-uniqueness key, or `base == output` are all `EXIT_CONFIG` structural errors — the
-overlay's content is steward-only, so there is no lenient `unresolved` count.
+needs `column`, may carry `data_type` and validity bounds, may list in `aliases` the
+distinct physical columns co-delivered with its own in that window
+(`Covid-19 antikroppar` / `Covid_19_antikroppar` is one state with an alias, not a state
+each), and may set `value_set_version_label` to disambiguate value-set versions that
+share a `valid_from`. An undeclared provider on a register, an inverted validity window,
+a delivery column repeated within a state, a duplicate state uniqueness key, or
+`base == output` are all `EXIT_CONFIG` structural errors — the overlay's content is
+steward-only, so there is no lenient `unresolved` count.
 
 The nesting is **delivery-shaped** (like SCB's per-variant sheets), but variable
 identity is register-scoped (reg_meta/DESIGN.md → "Why the variant is a coordinate, not

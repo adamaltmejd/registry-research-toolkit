@@ -45,6 +45,7 @@ Inventory JSON contract
                   "states": [
                     {
                       "column": "BELOPP", "data_type": "float",
+                      "aliases": ["BELOPP_SEK"],
                       "valid_from": null, "valid_to": null
                     }
                   ]
@@ -75,11 +76,17 @@ Operation kinds
    states instead of duplicate variables. Every state's column also gets a
    ``variable_alias`` row (the ``variable_alias ⊇ state columns`` invariant — an
    intrinsic part of defining the steward variable, NOT an alias onto a global
-   variable). The register's ``provider`` must be defined in ``providers[]`` or
-   already live in the DB. The nesting is delivery-shaped, but variable identity
-   is REGISTER-scoped: a key that several of a register's variants list is
-   POOLED into one ``variable`` row, with one state + alias per listing variant.
-   Listings that disagree on a variable-level attribute are a structural defect.
+   variable). A state's optional ``aliases`` are the columns CO-DELIVERED with
+   its own in that one window (the same delivery spelled two ways): they stay
+   ONE state, and every column of that state — its own included — also gets a
+   ``variable_alias_window`` row, the shape #945 writes for a global multi-alias
+   state, so each literal column is an orderable representation instead of a
+   fake ``value_set_version_label``. The register's ``provider`` must be defined
+   in ``providers[]`` or already live in the DB. The nesting is delivery-shaped,
+   but variable identity is REGISTER-scoped: a key that several of a register's
+   variants list is POOLED into one ``variable`` row, with one state + alias per
+   listing variant. Listings that disagree on a variable-level attribute are a
+   structural defect.
 
 Discipline
 ----------
@@ -174,6 +181,13 @@ class InvState:
     value_set_version_label: str
     valid_from: str | None
     valid_to: str | None
+    aliases: tuple[str, ...]
+
+    @property
+    def columns(self) -> tuple[str, ...]:
+        """Every physical column this ONE delivery window ships: the state's own
+        first, then its co-delivered ``aliases``."""
+        return (self.column, *self.aliases)
 
 
 @dataclass(frozen=True)
@@ -253,6 +267,21 @@ def _opt_str(obj: dict, field: str, context: str) -> str | None:
     return stripped or None
 
 
+def _opt_str_list(obj: dict, field: str, context: str) -> tuple[str, ...]:
+    raw = obj.get(field)
+    if raw is None:
+        return ()
+    if not isinstance(raw, list) or not all(
+        isinstance(v, str) and v.strip() for v in raw
+    ):
+        raise _cfg_error(
+            f"extend-db inventory {context} `{field}` must be a list of non-empty "
+            f"strings, got {raw!r}.",
+            f'Give `"{field}": ["<value>", ...]` or omit it.',
+        )
+    return tuple(v.strip() for v in raw)
+
+
 def _opt_bool(obj: dict, field: str, context: str) -> bool:
     value = obj.get(field, False)
     if not isinstance(value, bool):
@@ -296,6 +325,7 @@ _STATE_KEYS = frozenset(
         "value_set_version_label",
         "valid_from",
         "valid_to",
+        "aliases",
     }
 )
 
@@ -457,13 +487,30 @@ def _load_state(obj: dict, variable_ctx: str, idx: int) -> InvState:
     ctx = f"{variable_ctx}.states[{idx}]"
     _reject_unknown_keys(obj, _STATE_KEYS, ctx)
     label = _opt_str(obj, "value_set_version_label", ctx) or ""
-    return InvState(
+    state = InvState(
         column=_require_str(obj, "column", ctx),
         data_type=_opt_str(obj, "data_type", ctx),
         value_set_version_label=label,
         valid_from=_opt_str(obj, "valid_from", ctx),
         valid_to=_opt_str(obj, "valid_to", ctx),
+        aliases=_opt_str_list(obj, "aliases", ctx),
     )
+    _reject_repeated_state_columns(state, ctx)
+    return state
+
+
+def _reject_repeated_state_columns(state: InvState, context: str) -> None:
+    """Each of the window's columns gets one ``variable_alias`` row, so a column
+    listed twice — or an ``aliases`` entry repeating the state's own ``column``
+    — is a producer defect, not a row to silently fold."""
+    seen: set[str] = set()
+    for column in state.columns:
+        if column in seen:
+            raise _cfg_error(
+                f"extend-db inventory {context} repeats delivery column {column!r}.",
+                "List each co-delivered column once, and not the state's own `column`.",
+            )
+        seen.add(column)
 
 
 def _reject_duplicate_state_keys(states: tuple[InvState, ...], context: str) -> None:
@@ -483,9 +530,10 @@ def _reject_duplicate_state_keys(states: tuple[InvState, ...], context: str) -> 
             raise _cfg_error(
                 f"extend-db inventory {context} has duplicate state key "
                 f"(valid_from={valid_from!r}, value_set_version_label={label!r}).",
-                "Give the state a distinct valid_from or "
-                "`value_set_version_label`, matching variable_state's uniqueness "
-                "contract.",
+                "Co-delivered spellings of ONE window belong in that state's "
+                "`aliases`; a distinct window or value-set version takes a "
+                "distinct `valid_from` / `value_set_version_label`, matching "
+                "variable_state's uniqueness contract.",
             )
         seen.add(key)
 
@@ -733,12 +781,26 @@ def _insert_core_graph(
                     # Preserve the `variable_alias ⊇ state delivery columns`
                     # invariant: every state column is also an alias row. A
                     # recurring column across disjoint states needs only one alias.
-                    conn.execute(
+                    alias_rows = [
+                        (variable_id, register_variant_id, c) for c in state.columns
+                    ]
+                    conn.executemany(
                         "INSERT OR IGNORE INTO variable_alias "
                         "(variable_id, register_variant_id, delivery_column_name) "
                         "VALUES (?, ?, ?)",
-                        (variable_id, register_variant_id, state.column),
+                        alias_rows,
                     )
+                    if state.aliases:
+                        # Co-delivered columns are representations of this state,
+                        # so they get the #945 window rows — the primary included
+                        # (the resolver hides a state whose own column has none).
+                        conn.executemany(
+                            "INSERT OR IGNORE INTO variable_alias_window "
+                            "(variable_id, register_variant_id, "
+                            " delivery_column_name, valid_from, valid_to) "
+                            "VALUES (?, ?, ?, ?, ?)",
+                            [(*row, valid_from, valid_to) for row in alias_rows],
+                        )
     return counts
 
 

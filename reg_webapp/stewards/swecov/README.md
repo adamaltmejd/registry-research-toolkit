@@ -77,7 +77,7 @@ Near-duplicate physical columns (`AVERAGE_SPENDING`/`AVERAGE_SPENDINGS`,
 `Covid-19 antikroppar`/`Covid_19_antikroppar`) must never be collapsed away: each
 literal delivery column remains orderable. The `flavor` pass groups spellings that
 differ only in punctuation, case or diacritics — `Covid-19 antikroppar` /
-`Covid_19_antikroppar` — into one steward variable carrying a `variable_state` /
-`variable_alias` row per literal column in the flavored DB. Pairs that differ in letters
-(`AVERAGE_SPENDING`/`AVERAGE_SPENDINGS`) fold to different forms, so they stay separate
-generated variables until the maintainer groups them.
+`Covid_19_antikroppar` — into one steward variable whose single co-delivery state keeps
+every literal spelling as its own orderable representation in the flavored DB. Pairs
+that differ in letters (`AVERAGE_SPENDING`/`AVERAGE_SPENDINGS`) fold to different forms,
+so they stay separate generated variables until the maintainer groups them.

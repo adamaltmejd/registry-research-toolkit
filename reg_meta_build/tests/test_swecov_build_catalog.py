@@ -40,12 +40,13 @@ def _column(name: str, **extra: str) -> dict:
 # --- _flavor_variables: vintage-spelling grouping ----------------------------
 
 
-def test_spelling_variants_become_one_variable_with_a_state_each() -> None:
+def test_spelling_variants_become_one_state_carrying_the_other_columns() -> None:
     """The two Covid spellings of `inera/vardguiden/bestallda-prover`.
 
-    They differ only in punctuation, so they are ONE steward variable — but each
-    literal delivery column keeps a `states` entry (hence a `variable_alias` row)
-    so it stays orderable (steward README → "Near-duplicate physical columns").
+    They differ only in punctuation, so they are ONE steward variable — and they
+    are CO-DELIVERED, so they are ONE state whose `aliases` carry the other
+    literal column (extend-db gives each its own `variable_alias` + window row,
+    keeping it orderable: steward README → "Near-duplicate physical columns").
     """
     variables = build_catalog._flavor_variables(
         [
@@ -63,7 +64,12 @@ def test_spelling_variants_become_one_variable_with_a_state_each() -> None:
     ]
     # No physical column disappears: the pseudonym prefix is an order-template
     # artifact, so `PERSONNR` is the column and the variable is an identifier.
-    assert {s["column"] for v in variables for s in v["states"]} == {
+    assert {
+        column
+        for v in variables
+        for s in v["states"]
+        for column in (s["column"], *s.get("aliases", ()))
+    } == {
         "Covid-19 antikroppar",
         "Covid_19_antikroppar",
         "PERSONNR",
@@ -71,18 +77,16 @@ def test_spelling_variants_become_one_variable_with_a_state_each() -> None:
     }
     assert [v["is_identifier"] for v in variables] == [False, True, False]
     covid = variables[0]
-    # Key, name and description come from the first-seen spelling.
+    # Key, name, description and data_type come from the first-seen spelling.
     assert covid["name"] == "Covid-19 antikroppar"
     assert covid["description"] == "IgG"
-    assert [s["column"] for s in covid["states"]] == [
-        "Covid-19 antikroppar",
-        "Covid_19_antikroppar",
-    ]
-    # Both states carry the same open window, so the grouped spelling takes the
-    # literal column as its discriminator — extend-db rejects a colliding state
-    # key — while the first-seen spelling stays unlabelled.
+    # ONE state: the spellings are co-delivered, so the other one is an alias —
+    # not a second state needing a fake `value_set_version_label` to survive
+    # extend-db's (valid_from, value_set_version_label) uniqueness key.
+    assert len(covid["states"]) == 1
+    assert covid["states"][0]["column"] == "Covid-19 antikroppar"
+    assert covid["states"][0]["aliases"] == ["Covid_19_antikroppar"]
     assert "value_set_version_label" not in covid["states"][0]
-    assert covid["states"][1]["value_set_version_label"] == "Covid_19_antikroppar"
     assert covid["states"][0]["data_type"] == "varchar"
     # A single-spelling variable stays an undiscriminated single state.
     assert variables[2]["states"] == [
@@ -214,7 +218,8 @@ def test_a_default_variant_keeps_the_register_name(flavor_inventory: dict) -> No
 def test_the_emitted_inventory_loads_under_the_extend_db_contract(
     flavor_inventory_path: Path,
 ) -> None:
-    """A grouped variable's states must survive `extend-db`'s duplicate-state gate."""
+    """A grouped variable's one state must carry the other spelling as an alias
+    the `extend-db` contract admits."""
     inventory = load_inventory(flavor_inventory_path)
     register = next(
         r for r in inventory.registers if (r.provider, r.key) == ("inera", "vardguiden")
@@ -222,9 +227,8 @@ def test_the_emitted_inventory_loads_under_the_extend_db_contract(
     variant = next(v for v in register.variants if v.key == "bestallda-prover")
     covid = next(v for v in variant.variables if v.key == "covid-19-antikroppar")
 
-    assert [s.column for s in covid.states] == [
-        "Covid-19 antikroppar",
-        "Covid_19_antikroppar",
+    assert [(s.column, s.aliases) for s in covid.states] == [
+        ("Covid-19 antikroppar", ("Covid_19_antikroppar",))
     ]
 
 
