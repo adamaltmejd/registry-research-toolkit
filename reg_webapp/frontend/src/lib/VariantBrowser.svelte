@@ -1,79 +1,42 @@
 <script lang="ts">
-import { getRegisterVariants, type VariantsResponse } from "./api";
+import { getRegisterVariants } from "./api";
 import { asyncResource } from "./async.svelte";
-import { KeyValue, type KeyValueRow } from "./ui";
+import { catalogHref } from "./catalog";
+import SubjectView from "./SubjectView.svelte";
+import { Button, EmptyState, KeyValue, type KeyValueRow, Skeleton } from "./ui";
+import { foldVersions, groupVariants, showsDistinctGroup } from "./variants";
 
-// The variant axis is a register SUB-RESOURCE (NOT an FQID path segment; see
-// reg_meta/DESIGN.md → Two-level variable model). A5.3a DISPLAYS the variants for
-// a register; the selection + the
-// period/state resolution that consumes `?variant` is A5.3b (which makes these
-// interactive and wires them to `resolve_at`).
+// The register's variants PAGE (Y-79): `/catalog/<provider>/<register>/variants`,
+// the route behind the register page's compact `VariantsSummary`. The variant
+// axis is a register SUB-RESOURCE (NOT an FQID path segment; see reg_meta/DESIGN.md
+// → Two-level variable model), so it has its own fixed-shape route rather than a
+// catalog node. A5.3a DISPLAYS the variants for a register; the selection + the
+// period/state resolution that consumes `?variant` is A5.3b.
+//
+// Versions are FOLDED (`variants.ts`): SCB delivers one `register_version` per
+// year, so LISA's seven variants carry 105 of them, each repeating the previous
+// one's prose with the year moved on. A run that says the same thing renders as
+// ONE block spanning its years; a changed description, population or object type
+// opens the next block, which is the only part a reader came for.
+//
+// Unlike the register page's summary, this page does NOT hide a `_default`
+// variant (#673/M4): the summary suppresses itself because a `_default`-only
+// register has no variant axis worth a section, but its `register_version` prose
+// is real and this deep-linkable page is the only place it can be read.
 const { registerFqid }: { registerFqid: string } = $props();
 
 const variants = asyncResource(() => getRegisterVariants(registerFqid));
-type VariantSummary = VariantsResponse["variants"][number];
-
-interface VariantGroup {
-  key: string;
-  label: string;
-  primary: VariantSummary;
-  variants: VariantSummary[];
-  isFamily: boolean;
-}
-
-// The non-`_default` variants (#673/M4): `_default` is NOT a user-facing variant
-// — it's a STORED variant for some registers (LSS/BU/SOL) and the synthesized
-// default for others. A register whose only "variant" is `_default` (or that has
-// none) has no real variant axis, so the whole section is suppressed (no useless
-// "Variants" heading). A register with ≥1 real variant renders the FULL list
-// unchanged — `_default` is NOT filtered out of a mixed list (out of scope).
-const realVariants = $derived(
-  variants.data?.variants.filter((v) => v.slug !== "_default") ?? [],
+// Fold in the derived, not in the template: `foldKey` stringifies every version
+// body, so folding under `{#each}` would re-walk the whole wall on each render.
+const entries = $derived(
+  groupVariants(variants.data?.variants ?? []).map((group) => ({
+    ...group,
+    segments: group.segments.map((segment) => ({
+      ...segment,
+      blocks: foldVersions(segment.variant.versions ?? []),
+    })),
+  })),
 );
-const variantGroups = $derived(groupVariants(variants.data?.variants ?? []));
-
-function variantLabel(variant: VariantSummary): string {
-  return variant.name ?? variant.display_group ?? variant.slug;
-}
-
-function groupVariants(rawVariants: readonly VariantSummary[]): VariantGroup[] {
-  const grouped = new Map<string, VariantGroup>();
-  for (const variant of rawVariants) {
-    const key = variant.variant_family ?? variant.slug;
-    const existing = grouped.get(key);
-    if (existing) {
-      existing.variants.push(variant);
-      existing.isFamily = existing.isFamily || variant.variant_family != null;
-      if (!existing.label && variant.variant_family_label) {
-        existing.label = variant.variant_family_label;
-      }
-      continue;
-    }
-    grouped.set(key, {
-      key,
-      label: variant.variant_family_label ?? variantLabel(variant),
-      primary: variant,
-      variants: [variant],
-      isFamily: variant.variant_family != null,
-    });
-  }
-  return [...grouped.values()];
-}
-
-function concreteVariantList(group: VariantGroup): string {
-  return group.variants.map((variant) => variant.slug).join(" / ");
-}
-
-// `display_group` duplicates `name` for most variants (SCB delivers them
-// identical), so show it only when it ADDS information. Compare trimmed: some
-// source rows carry trailing-whitespace noise on one side ("…AGI/KU " vs
-// "…AGI/KU") that a strict !== would treat as a difference, re-printing the name.
-function showsDistinctGroup(
-  name: string | null | undefined,
-  group: string | null | undefined,
-): boolean {
-  return !!group && group.trim() !== (name ?? "").trim();
-}
 
 function rows(...rows: KeyValueRow[]): KeyValueRow[] {
   return rows.filter((row) => row.value);
@@ -102,7 +65,12 @@ function populationRows(population: {
     { label: "Name", value: population.name },
     { label: "Definition", value: population.definition ?? undefined },
     { label: "Comment", value: population.comment ?? undefined },
-    { label: "Date range", value: population.date_range ?? undefined },
+    // A bare delivery year — mono, like every other year on the page.
+    {
+      label: "Date range",
+      value: population.date_range ?? undefined,
+      mono: true,
+    },
   );
 }
 
@@ -117,139 +85,156 @@ function objectTypeRows(objectType: {
 }
 </script>
 
-<!-- #673/M4: render the section ONLY when there's a real (non-`_default`)
-     variant, or an error. While loading, render nothing (the variants are a
-     secondary affordance — no "Loading variants…" flash); a register with no
-     real variant (empty list OR `_default`-only) renders nothing at all (no
-     section, no heading, no "No variants." text). -->
-{#if variants.error || realVariants.length > 0}
-  <section class="variants" aria-labelledby="variants-heading">
-    <h3 id="variants-heading">Variants</h3>
-    {#if variants.error}
-      <p class="error" role="alert">Failed to load variants: {variants.error}</p>
-    {:else}
-      <ul class="variant-list">
-        {#each variantGroups as group (group.key)}
-          <li>
-            <div class={group.isFamily ? "variant-family" : "variant"}>
-              {#if group.isFamily}
-                <span class="name family-name">{group.label}</span>
-                <span class="group">{concreteVariantList(group)}</span>
-              {:else}
-                {@const variant = group.primary}
-                <span class="slug">{variant.slug}</span>
-                {#if variant.name}<span class="name">{variant.name}</span>{/if}
-                <!-- Omit display_group when it just repeats `name` (the common case;
-                     "Arbetsställen Arbetsställen") — trimmed compare, see the helper. -->
-                {#if showsDistinctGroup(variant.name, variant.display_group)}
-                  <span class="group">{variant.display_group}</span>
-                {/if}
+<!-- The page rides `SubjectView` for the article wrapper + title/fqid header
+     every catalog subject page shares; the variant list is its leading section,
+     so it goes in the `description` slot (the same loose use as the
+     classification-group route). -->
+{#snippet body()}
+  {#if variants.loading}
+    <div class="loading" aria-busy="true" aria-live="polite">
+      <p class="muted">Loading variants…</p>
+      <Skeleton count={3} />
+    </div>
+  {:else if variants.error}
+    <p class="error" role="alert">Failed to load variants: {variants.error}</p>
+  {:else if entries.length === 0}
+    <!-- A register with no slugged variant has no variant axis at all — say so
+         and point back at the register rather than leaving a bare page. -->
+    <EmptyState title="No variants for this register.">
+      {#snippet action()}
+        <Button href={catalogHref(registerFqid)}>Back to the register</Button>
+      {/snippet}
+    </EmptyState>
+  {:else}
+    <ul class="variant-list">
+      {#each entries as entry (entry.key)}
+        <li class="variant-entry">
+          <h3 class="entry-name">{entry.label}</h3>
+          {#if entry.isFamily}
+            <!-- A curated succession family reads as ONE variant with a changed
+                 frame: its segments name what the family label doesn't already
+                 say, plus the years each was delivered. -->
+            <p class="entry-meta">
+              {#each entry.segments as segment, i (segment.variant.slug)}
+                {#if i > 0}{" · "}{/if}{segment.name}
+                <span class="years">{segment.span}</span>
+              {/each}
+            </p>
+          {:else if showsDistinctGroup(entry.segments[0].variant.name, entry.segments[0].variant.display_group)}
+            <!-- Omit display_group when it just repeats `name` (the common case;
+                 "Arbetsställen Arbetsställen") — trimmed compare, see the helper. -->
+            <p class="entry-meta">{entry.segments[0].variant.display_group}</p>
+          {/if}
+          {#each entry.segments as segment (segment.variant.slug)}
+            <section class="segment">
+              <!-- The concrete coordinate a project source extracts. The years
+                   live on the folded blocks below (and, for a family, in the
+                   segments line above), so the slug is all this line owes. -->
+              <h4 class="segment-id">
+                <code class="slug">{segment.variant.slug}</code>
+              </h4>
+              {#if segment.variant.description}
+                <p class="desc muted">{segment.variant.description}</p>
               {/if}
-            </div>
-            {#each group.variants as variant (variant.slug)}
-              {#if group.isFamily}
-                <p class="desc muted">
-                  <span class="slug">{variant.slug}</span>
-                  {#if variant.name}<span> · {variant.name}</span>{/if}
-                </p>
-              {/if}
-              {#if variant.description}
-                <p class="desc muted">{variant.description}</p>
-              {/if}
-              {#if variant.versions && variant.versions.length > 0}
-                <div class="version-list">
-                  {#each variant.versions as version, index}
-                    {@const vRows = versionRows(version)}
-                    {@const populations = version.populations ?? []}
-                    {@const objectTypes = version.object_types ?? []}
-                    <section class="version-meta">
-                      <h4 class="version-title">
-                        <span class="micro-label">Version</span>
-                        <span class="version-name">{version.name ?? `#${index + 1}`}</span>
-                      </h4>
-                      {#if vRows.length > 0}
-                        <KeyValue rows={vRows} />
-                      {/if}
-                      {#if populations.length > 0}
-                        <div class="metadata-group">
-                          <h5 class="micro-label metadata-heading">Population</h5>
-                          {#each populations as population}
-                            <KeyValue rows={populationRows(population)} />
-                          {/each}
-                        </div>
-                      {/if}
-                      {#if objectTypes.length > 0}
-                        <div class="metadata-group">
-                          <h5 class="micro-label metadata-heading">Object type</h5>
-                          {#each objectTypes as objectType}
-                            <KeyValue rows={objectTypeRows(objectType)} />
-                          {/each}
-                        </div>
-                      {/if}
-                    </section>
-                  {/each}
-                </div>
-              {/if}
-            {/each}
-          </li>
-        {/each}
-      </ul>
-    {/if}
-  </section>
-{/if}
+              {#each segment.blocks as block}
+                {@const vRows = versionRows(block.version)}
+                {@const populations = block.version.populations ?? []}
+                {@const objectTypes = block.version.object_types ?? []}
+                <section class="version-meta">
+                  <h5 class="version-title">
+                    <span class="micro-label"
+                      >{block.count === 1 ? "Version" : "Versions"}</span
+                    >
+                    <span class="version-name">{block.label}</span>
+                  </h5>
+                  {#if block.count > 1 && block.version.name}
+                    <!-- The block spans years but prints ONE delivery's text
+                         verbatim (years inside it included), so name which. -->
+                    <p class="as-delivered muted">
+                      Wording as delivered for <code>{block.version.name}</code>.
+                    </p>
+                  {/if}
+                  {#if vRows.length > 0}
+                    <KeyValue rows={vRows} />
+                  {/if}
+                  {#if populations.length > 0}
+                    <div class="metadata-group">
+                      <h6 class="micro-label metadata-heading">Population</h6>
+                      {#each populations as population}
+                        <KeyValue rows={populationRows(population)} />
+                      {/each}
+                    </div>
+                  {/if}
+                  {#if objectTypes.length > 0}
+                    <div class="metadata-group">
+                      <h6 class="micro-label metadata-heading">Object type</h6>
+                      {#each objectTypes as objectType}
+                        <KeyValue rows={objectTypeRows(objectType)} />
+                      {/each}
+                    </div>
+                  {/if}
+                </section>
+              {/each}
+            </section>
+          {/each}
+        </li>
+      {/each}
+    </ul>
+  {/if}
+{/snippet}
+
+<SubjectView title="Variants" fqid={registerFqid} description={body} />
 
 <style>
-  .variants {
-    margin-top: 1.5rem;
+  .loading {
+    display: grid;
+    gap: var(--space-3);
   }
   .variant-list {
     list-style: none;
     padding: 0;
     margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+    display: grid;
+    /* Entries must separate MORE than the segments inside one entry
+       (`.segment`, --space-3), or a family runs into its neighbour. */
+    gap: calc(var(--space-4) * 1.5);
   }
-  .variant {
-    display: flex;
-    align-items: baseline;
-    gap: 0.75rem;
-    padding: 0.4rem 0.6rem;
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    background: var(--surface);
+  /* The page is nothing but register-version prose, so the ENTRY carries the
+     measure: without it a description runs ~155 characters at 1920. */
+  .variant-entry {
+    max-width: 70ch;
   }
-  .variant-family {
-    display: flex;
-    align-items: baseline;
-    gap: 0.75rem;
-    padding: 0.4rem 0.6rem;
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    background: var(--surface);
+  .entry-name {
+    margin: 0;
+    font-size: var(--text-h3);
+    font-weight: var(--heading-weight);
+  }
+  .entry-meta {
+    margin: var(--space-1) 0 0;
+    color: var(--text-muted);
+    font-size: var(--text-sm);
+  }
+  /* A year is a machine value even inside a prose segments line. */
+  .years {
+    font-family: var(--font-mono);
+  }
+  .segment {
+    margin-top: var(--space-3);
+  }
+  .segment-id {
+    margin: 0;
+    font-size: var(--text-sm);
+    font-weight: var(--heading-weight);
   }
   .slug {
     font-family: var(--font-mono);
-    font-weight: 600;
-  }
-  .family-name {
-    font-weight: 600;
-  }
-  .group {
-    margin-left: auto;
-    color: var(--text-muted);
-    font-size: 0.85em;
   }
   .desc {
-    margin: 0.2rem 0 0 0.6rem;
-    font-size: 0.9em;
-  }
-  .version-list {
-    margin: var(--space-3) 0 0 var(--space-2);
-    display: grid;
-    gap: var(--space-3);
+    margin: var(--space-1) 0 0;
+    font-size: var(--text-sm);
   }
   .version-meta {
+    margin-top: var(--space-3);
     padding-left: var(--space-3);
     border-left: 2px solid var(--border);
   }
@@ -258,11 +243,19 @@ function objectTypeRows(objectType: {
     display: flex;
     align-items: baseline;
     gap: var(--space-2);
+    font-size: var(--text-sm);
+    font-weight: var(--heading-weight);
   }
   .version-name {
     font-family: var(--font-mono);
-    font-size: var(--text-sm);
     color: var(--text);
+  }
+  .as-delivered {
+    margin: 0 0 var(--space-2);
+    font-size: var(--text-sm);
+  }
+  .as-delivered code {
+    font-family: var(--font-mono);
   }
   .metadata-group {
     margin-top: var(--space-3);

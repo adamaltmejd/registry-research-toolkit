@@ -139,8 +139,11 @@ discriminated union without the variant being an FQID.
 
 The `/variants` payload includes the variant's compact display metadata plus nested
 `versions` with register-version description/measurement prose and population/object
-type rows. The SPA renders that prose under each real variant; `_default`-only and empty
-variant lists still suppress the whole variant section.
+type rows. The SPA renders that prose on its OWN route (`VariantBrowser` at
+`/catalog/<provider>/<register>/variants`, Y-79), not on the register page, which shows
+only a compact summary (`VariantsSummary`: one row per variant family with its name,
+concrete slugs and year span) over a link to it. `_default`-only and empty variant lists
+still suppress that whole summary section.
 
 Plus two **concept-group subject routes**, both declared above the catch-all:
 
@@ -614,7 +617,7 @@ query logic beyond plumbing + the response policy.
   `RelatedDocumentsPanel` on register pages only, using the bare register slug. These
   are rehosted register/register-version source PDFs with provenance, not variable-level
   evidence, so `BindingLeafView.svelte` must not inherit them onto every variable page.
-  It renders after the register's `VariantBrowser` so source PDFs stay at the end of the
+  It renders after the register's `VariantsSummary` so source PDFs stay at the end of the
   register page. The panel is another independent docs failure domain: loading/error
   render inline; absent docs DB, no curated rows, or an empty register result omits the
   whole section. Each row links the title to `/api/docs/file/{register}/{filename}` and
@@ -1279,8 +1282,11 @@ threaded down from `App.svelte`. It writes through `windowStore`
 
 The SPA (`frontend/`) browses the catalog read-only with **path-based routing**: clean
 URLs mirror the API (`/catalog`, `/catalog/scb/lisa`, `/catalog/scb/lisa/kon`,
-`/catalog/class/<slug>`). The router is hand-rolled — no routing-library dep — in
-`src/lib/router.svelte.ts` (a `.svelte.ts` module so its reactive `$state` route
+`/catalog/scb/lisa/variants`, `/catalog/class/<slug>`). The register sub-resource keeps
+the API's own shape: a 3-seg path with a literal `variants` tail parses to the `variants`
+route (the token is reserved in the variable slot at build time, so no variable FQID can
+shadow it), never to a catalog node. The router is hand-rolled — no routing-library dep
+— in `src/lib/router.svelte.ts` (a `.svelte.ts` module so its reactive `$state` route
 compiles): it reads `window.location.pathname`, navigates via `history.pushState`,
 handles `popstate`, and intercepts internal `<a>` clicks (the `link` action) so
 navigation doesn't full-reload.

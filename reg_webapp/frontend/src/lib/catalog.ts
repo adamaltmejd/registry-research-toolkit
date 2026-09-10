@@ -537,6 +537,14 @@ export function groupHref(registerFqid: string, key: string): string {
   return conceptGroupPath(provider ?? "", register ?? "", key);
 }
 
+/** The href for a register's variants page (Y-79): the fixed
+ * `/catalog/<provider>/<register>/variants` route, which mirrors the API's own
+ * register sub-resource. `registerFqid` is the 2-seg `provider/register`,
+ * encoded per segment the way `catalogHref` encodes. */
+export function variantsHref(registerFqid: string): string {
+  return `${catalogHref(registerFqid)}/variants`;
+}
+
 /** The href for a classification-umbrella SUBJECT page (#756): the fixed
  * `/catalog/group/class/<key>` route — the classification sibling of `groupHref`.
  * A classification umbrella is catalog-global (no provider/register), so it takes
@@ -577,6 +585,24 @@ export function breadcrumbs(
   }));
 }
 
+/** The shared trail for a route that hangs off a register but is NOT an FQID
+ * node: browser root → provider → register (each individually linked, the same
+ * per-segment idiom as `catalog-node`) → the route's own un-linked tail. Used by
+ * the concept-group and variants routes. */
+function registerTrail(
+  browserRoot: BreadcrumbItem,
+  provider: string,
+  register: string,
+  tail: BreadcrumbItem,
+): BreadcrumbItem[] {
+  return [
+    browserRoot,
+    { label: provider, href: catalogHref(provider) },
+    { label: register, href: catalogHref(`${provider}/${register}`) },
+    tail,
+  ];
+}
+
 /** The topbar breadcrumb trail for a route (#803), as `Breadcrumbs` items (the
  * last item is the current page — no `href`). STRUCTURAL only: labels are the
  * raw slug segments (the routed page owns its rich, display-name header) and the
@@ -609,24 +635,23 @@ export function routeBreadcrumbs(route: Route): BreadcrumbItem[] {
       ];
     }
     case "group":
-      // Split provider and register into separate, individually-linked crumbs
-      // (#887) — same per-segment idiom as `catalog-node`; the group key is the
-      // current page (no href).
-      return [
-        browserRoot,
-        { label: route.provider, href: catalogHref(route.provider) },
-        {
-          label: route.register,
-          href: catalogHref(`${route.provider}/${route.register}`),
-        },
-        { label: route.key },
-      ];
+      // Provider and register are separate, individually-linked crumbs (#887);
+      // the group key is the current page (no href).
+      return registerTrail(browserRoot, route.provider, route.register, {
+        label: route.key,
+      });
     case "class-group":
       return [
         browserRoot,
         { label: "class", href: catalogHref("class") },
         { label: route.key },
       ];
+    case "variants":
+      // The register's variants sub-resource (Y-79) — the literal `variants`
+      // tail is the current page (no href).
+      return registerTrail(browserRoot, route.provider, route.register, {
+        label: "variants",
+      });
     case "search":
       return [{ label: "Search" }];
     case "project":

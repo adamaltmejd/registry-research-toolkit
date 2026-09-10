@@ -63,6 +63,7 @@ import {
   rowFacet,
   valueSetKeyForColumn,
   variantDisplayLabel,
+  variantsHref,
   windowTitle,
   YEARLESS_VALID_FROM,
   yearOf,
@@ -290,6 +291,17 @@ describe("catalogHref", () => {
   });
 });
 
+describe("variantsHref", () => {
+  it("builds the register's variants page route from a 2-seg register fqid", () => {
+    // Y-79: the SPA route mirrors the API's own register sub-resource path.
+    expect(variantsHref("scb/lisa")).toBe("/catalog/scb/lisa/variants");
+  });
+
+  it("percent-encodes each segment the same way catalogHref does", () => {
+    expect(variantsHref("scb/lisä")).toBe("/catalog/scb/lis%C3%A4/variants");
+  });
+});
+
 describe("groupHref", () => {
   it("builds the /catalog/group/<provider>/<register>/<key> route from a 2-seg register fqid", () => {
     // #673: the register-arm group rows link to the group SUBJECT page (a fixed
@@ -389,6 +401,19 @@ describe("routeBreadcrumbs", () => {
       href: catalogHref("scb/lisa"),
     });
     expect(trail[3]).toEqual({ label: "ink" });
+  });
+
+  it("variants → browser root + split provider/register hops + the un-linked tail", () => {
+    const trail = routeBreadcrumbs({
+      name: "variants",
+      provider: "scb",
+      register: "lisa",
+    });
+    expect(trail).toHaveLength(4);
+    expect(trail[0]).toEqual(browserRoot);
+    expect(trail[1]).toEqual({ label: "scb", href: catalogHref("scb") });
+    expect(trail[2]).toEqual({ label: "lisa", href: catalogHref("scb/lisa") });
+    expect(trail[3]).toEqual({ label: "variants" });
   });
 
   it("class-group → browser root + a linked class hop + the un-linked key", () => {

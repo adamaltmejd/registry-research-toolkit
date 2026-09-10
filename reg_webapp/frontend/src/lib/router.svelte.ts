@@ -1,7 +1,8 @@
 /**
  * A tiny hand-rolled, path-based client router (no routing-library dep). URLs
  * mirror the API: `/catalog` (root), `/catalog/scb/lisa` (register),
- * `/catalog/scb/lisa/kon` (binding leaf), `/catalog/class/<slug>`. Navigation is
+ * `/catalog/scb/lisa/kon` (binding leaf), `/catalog/scb/lisa/variants` (the
+ * register's variants sub-resource), `/catalog/class/<slug>`. Navigation is
  * `history.pushState`; back/forward is `popstate`; internal `<a>` clicks are
  * intercepted so they don't full-reload.
  *
@@ -34,6 +35,11 @@ export type Route =
   // classification umbrella (e.g. the SUN umbrella, key `sun`) is catalog-global
   // (no provider/register), so it carries only the `key`.
   | { name: "class-group"; key: string }
+  // `variants` is a register's variants page (Y-79):
+  // `/catalog/<provider>/<register>/variants`. The variant axis is a register
+  // SUB-RESOURCE, not an FQID segment — the same fixed 3-seg shape with a
+  // literal `variants` tail the API declares above its catch-all.
+  | { name: "variants"; provider: string; register: string }
   | { name: "project" }
   | { name: "search" }
   // `doc` is the minimal documentation viewer (#394); `identifier` is the doc
@@ -120,6 +126,13 @@ export function parseRoute(pathname: string): Route {
         register: segs[2],
         key: segs.slice(3).join("/"),
       };
+    }
+    // The register's variants page (Y-79): the fixed 3-seg
+    // `<provider>/<register>/variants` shape the API declares above its
+    // catch-all. `variants` is reserved in the variable slot of the slug grammar
+    // at build time, so no variable FQID can shadow it.
+    if (segs.length === 3 && segs[2] === "variants") {
+      return { name: "variants", provider: segs[0], register: segs[1] };
     }
     return { name: "catalog-node", fqidPath: segs.join("/") };
   }

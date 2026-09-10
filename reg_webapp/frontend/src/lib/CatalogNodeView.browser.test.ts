@@ -10,6 +10,11 @@ import {
   getRelatedDocuments,
 } from "./api";
 import CatalogNodeView from "./CatalogNodeView.svelte";
+import {
+  datedVersions,
+  variant,
+  variantsResponse,
+} from "./variants-test-helpers";
 
 // CatalogNodeView fetches one node via `getCatalogNode(fqidPath)` and switches on
 // `kind`. Mock that single GET (mirrors ConceptGroupView's api-mock style); keep
@@ -197,21 +202,9 @@ beforeEach(() => {
     edges: [],
     focus_id: null,
   });
-  vi.mocked(getRegisterVariants).mockResolvedValue({
-    register: "scb/lisa",
-    variants: [
-      {
-        slug: "_default",
-        name: null,
-        display_group: null,
-        description: null,
-        panel_entity_key: null,
-        panel_time_grain: null,
-        panel_time_key: null,
-        versions: [],
-      },
-    ],
-  });
+  vi.mocked(getRegisterVariants).mockResolvedValue(
+    variantsResponse(variant("_default")),
+  );
   vi.mocked(getRelatedDocuments).mockResolvedValue({
     kind: "related-documents",
     ingested: true,
@@ -399,21 +392,9 @@ describe("CatalogNodeView register arm", () => {
 
   it("renders register-grain source documents on register pages (#967)", async () => {
     vi.mocked(getCatalogNode).mockResolvedValue(registerNode());
-    vi.mocked(getRegisterVariants).mockResolvedValue({
-      register: "scb/lisa",
-      variants: [
-        {
-          slug: "combined",
-          name: "Combined register",
-          display_group: null,
-          description: null,
-          panel_entity_key: null,
-          panel_time_grain: null,
-          panel_time_key: null,
-          versions: [],
-        },
-      ],
-    });
+    vi.mocked(getRegisterVariants).mockResolvedValue(
+      variantsResponse(variant("combined", { name: "Combined register" })),
+    );
     vi.mocked(getRelatedDocuments).mockResolvedValue({
       kind: "related-documents",
       ingested: true,
@@ -464,6 +445,51 @@ describe("CatalogNodeView register arm", () => {
         Node.DOCUMENT_POSITION_FOLLOWING,
     ).toBeTruthy();
     expect(getRelatedDocuments).toHaveBeenCalledWith("lisa", expect.anything());
+  });
+
+  it("summarises the variants instead of the version wall, and links to their page (Y-79)", async () => {
+    // The documents-panel-last ordering rides the #967 test above, which asserts
+    // it through the same `#variants-heading` anchor this section still carries.
+    vi.mocked(getCatalogNode).mockResolvedValue(registerNode());
+    vi.mocked(getRegisterVariants).mockResolvedValue(
+      variantsResponse(
+        variant("individer-15plus", {
+          name: "Individer, 15 år och äldre",
+          variant_family: "individer-15plus",
+          variant_family_label: "Individer",
+          versions: datedVersions(2010),
+        }),
+        variant("individer-16plus", {
+          name: "Individer, 16 år och äldre",
+          variant_family: "individer-15plus",
+          variant_family_label: "Individer",
+          versions: datedVersions(1990),
+        }),
+      ),
+    );
+
+    const { container } = await render(CatalogNodeView, {
+      fqidPath: "scb/lisa",
+      regMetaVersion: "test",
+      steward: "global",
+      windowMinYear: 1960,
+      vintageYear: 2024,
+    });
+
+    // ONE row for the family: its label, both concrete slugs, its year span.
+    await expect
+      .element(page.getByRole("heading", { name: "Variants" }))
+      .toBeVisible();
+    expect(
+      container.querySelectorAll("section.variants tbody tr"),
+    ).toHaveLength(1);
+    await expect.element(page.getByText("1990–2010")).toBeVisible();
+    // The version wall no longer renders inline — its prose lives on the page
+    // the summary links to.
+    expect(container.querySelectorAll("section.version-meta")).toHaveLength(0);
+    await expect
+      .element(page.getByRole("link", { name: "All variant details" }))
+      .toHaveAttribute("href", "/catalog/scb/lisa/variants");
   });
 
   it("renders grouped variables as framed table subject links without the group-key pill", async () => {

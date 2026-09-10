@@ -114,6 +114,36 @@ describe("parseRoute", () => {
     });
   });
 
+  it("parses the register's variants page (Y-79)", () => {
+    // `/catalog/<provider>/<register>/variants` is the register SUB-RESOURCE —
+    // the same fixed 3-seg shape the API declares above its catch-all, NOT an
+    // FQID path (which would resolve a variable slugged `variants`).
+    expect(parseRoute("/catalog/scb/lisa/variants")).toEqual({
+      name: "variants",
+      provider: "scb",
+      register: "lisa",
+    });
+    expect(parseRoute("/catalog/scb/lisa/variants/")).toEqual({
+      name: "variants",
+      provider: "scb",
+      register: "lisa",
+    });
+  });
+
+  it("only treats a 3-seg `variants` tail as the variants page (Y-79)", () => {
+    // A 2-seg `/catalog/scb/variants` is a register FQID under the `scb`
+    // provider, and a 4-seg path with a `variants` tail is a deeper FQID —
+    // neither is the register sub-resource.
+    expect(parseRoute("/catalog/scb/variants")).toEqual({
+      name: "catalog-node",
+      fqidPath: "scb/variants",
+    });
+    expect(parseRoute("/catalog/scb/lisa/kon/variants")).toEqual({
+      name: "catalog-node",
+      fqidPath: "scb/lisa/kon/variants",
+    });
+  });
+
   it("parses the /project authoring route (A5.3c)", () => {
     expect(parseRoute("/project")).toEqual({ name: "project" });
     expect(parseRoute("/project/")).toEqual({ name: "project" }); // trailing slash

@@ -13,6 +13,7 @@ import ProjectEditor from "./lib/ProjectEditor.svelte";
 import { initDraftLifecycle, projectStore } from "./lib/project_store.svelte";
 import { link, router } from "./lib/router.svelte";
 import SearchView from "./lib/SearchView.svelte";
+import VariantBrowser from "./lib/VariantBrowser.svelte";
 import { windowStore } from "./lib/window.svelte";
 
 // The app root: owns the deployment context (GET /api/context), the DRAFT
@@ -178,6 +179,11 @@ const breadcrumbItems = $derived(routeBreadcrumbs(route));
         {#key route.key}
           <ClassificationGroupView key={route.key} />
         {/key}
+      {:else if route.name === "variants"}
+        <!-- Y-79: the register's variants page. Unkeyed — the view holds no
+             local state, and its `asyncResource` already refetches when the
+             register changes. -->
+        <VariantBrowser registerFqid={`${route.provider}/${route.register}`} />
       {:else if route.name === "project"}
         <ProjectEditor {regMetaVersion} {steward} />
       {:else if route.name === "search"}

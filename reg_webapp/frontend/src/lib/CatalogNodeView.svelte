@@ -30,7 +30,7 @@ import {
 import FilterInput from "./FilterInput.svelte";
 import RelatedDocumentsPanel from "./RelatedDocumentsPanel.svelte";
 import { type Column, DataTable, EmptyState, Panel, Skeleton, Tag } from "./ui";
-import VariantBrowser from "./VariantBrowser.svelte";
+import VariantsSummary from "./VariantsSummary.svelte";
 
 // The provider arm renders its register list as a real DataTable: a Register
 // (name → catalog link) column and a Description (the purpose blurb, 2-line
@@ -209,10 +209,10 @@ let {
 
 const resource = asyncResource(() => getCatalogNode(fqidPath));
 // A browsable path resolves to a `kind`-tagged CatalogNode. A SUB-ENDPOINT path
-// (e.g. a deep-link to `.../states` or `.../variants`) hits that endpoint and
-// returns a no-`kind` StatesResponse/VariantsResponse — narrow it OUT of `node`
-// (so the kind-switch type-checks) and flag it as `notBrowsable` so we render a
-// clear message instead of a blank page.
+// (e.g. a deep-link to `.../states`) hits that endpoint and returns a no-`kind`
+// StatesResponse — narrow it OUT of `node` (so the kind-switch type-checks) and
+// flag it as `notBrowsable` so we render a clear message instead of a blank
+// page. (`.../variants` is its own SPA route now, Y-79, so it never lands here.)
 const node = $derived(narrowCatalogNode(resource.data));
 const notBrowsable = $derived(
   resource.data !== null && !isCatalogNode(resource.data),
@@ -384,7 +384,7 @@ $effect(() => {
           <EmptyState title="No variables." />
         </Panel>
       {/if}
-      <VariantBrowser registerFqid={node.fqid} />
+      <VariantsSummary registerFqid={node.fqid} />
       <RelatedDocumentsPanel register={leafSlug(node.fqid)} />
     {:else if node.kind === "binding"}
       <!-- Pass the full node down: this no-query browse fetch already resolved
@@ -474,9 +474,8 @@ $effect(() => {
   </article>
 {:else if notBrowsable}
   <!-- A no-`kind` response: a deep-link to a SUB-ENDPOINT path (e.g.
-       `.../states`, `.../variants`) hits that endpoint and returns a
-       StatesResponse/VariantsResponse, not a browsable node. Render a clear
-       message instead of a blank page. -->
+       `.../states`) hits that endpoint and returns a StatesResponse, not a
+       browsable node. Render a clear message instead of a blank page. -->
   <p class="error" role="alert">
     <code>{fqidPath}</code> isn't a browsable catalog node.
   </p>
