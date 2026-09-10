@@ -3342,13 +3342,38 @@ describe("clusterBands (#901 de-duplicate member presentation)", () => {
     ]);
   });
 
-  it("a singleton-name member still earns its own heading", () => {
-    // A name that appears once is its own cluster — with several distinct names the
-    // group still shows headings, so that singleton renders its name once uniformly.
+  it("an ALL-SINGLETON group shows NO headings and leads each band with its name", () => {
+    // The antal-barn shape: every member carries a DISTINCT name, so a heading per
+    // cluster is one heading over one row, thirty times over. No name REPEATS → no
+    // headings, and the whole group labels together, each band led by its own name
+    // (the one identity that tells the rows apart).
     const { clusters, showClusterHeadings } = clusterBands(
       [
         band({ name: "Disponibel inkomst", distinguisher: "CDISP" }),
         band({ name: "Delkomponent", distinguisher: "DIND" }),
+      ],
+      id,
+    );
+    expect(showClusterHeadings).toBe(false);
+    expect(clusters).toHaveLength(1);
+    expect(clusters[0].bands.map((b) => b.name)).toEqual([
+      "Disponibel inkomst",
+      "Delkomponent",
+    ]);
+    expect(clusters[0].labeling.bands.map((b) => b.primary.text)).toEqual([
+      "Disponibel inkomst",
+      "Delkomponent",
+    ]);
+  });
+
+  it("a singleton-name member earns its own heading once another name REPEATS", () => {
+    // Headings are on (one name maps to two bands), so the name that appears ONCE
+    // renders as a heading too — every name shown in the same place, uniformly.
+    const { clusters, showClusterHeadings } = clusterBands(
+      [
+        band({ name: "Disponibel inkomst", distinguisher: "CDISP" }),
+        band({ name: "Delkomponent", distinguisher: "DIND" }),
+        band({ name: "Disponibel inkomst", distinguisher: "CDISPHB" }),
       ],
       id,
     );
@@ -3357,7 +3382,7 @@ describe("clusterBands (#901 de-duplicate member presentation)", () => {
       "Disponibel inkomst",
       "Delkomponent",
     ]);
-    expect(clusters.every((c) => c.bands.length === 1)).toBe(true);
+    expect(clusters.map((c) => c.bands.length)).toEqual([2, 1]);
   });
 
   it("a lone multi-column band in a heading group leads with its distinguisher, not the (heading) name (#901)", () => {
@@ -3375,6 +3400,7 @@ describe("clusterBands (#901 de-duplicate member presentation)", () => {
           distinguisherIsColumn: false,
         }),
         band({ name: "Disponibel inkomst", distinguisher: "CDISP" }),
+        band({ name: "Disponibel inkomst", distinguisher: "CDISPHB" }),
       ],
       id,
     );

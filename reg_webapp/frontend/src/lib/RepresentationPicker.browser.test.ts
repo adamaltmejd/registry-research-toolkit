@@ -337,6 +337,50 @@ describe("RepresentationPicker graph mode (#904)", () => {
     };
   }
 
+  /** A one-column variable whose delivery column was RENAMED mid-life (OLD → NEW):
+   * TWO representation runs, and so graph context on an edge-less graph. `…Band` is
+   * the picker row it offers; `…Node` the matching graph node. */
+  function renamedRunBand(fqid: string, name: string): PickerBand {
+    return {
+      key: fqid,
+      name,
+      registerPrefix: "scb/lisa",
+      rows: [
+        row({
+          column: "NEW",
+          representation: null,
+          renamedColumns: ["OLD"],
+          from: "2000-01-01",
+          to: "2020-12-31",
+          windows: [
+            { from: "2000-01-01", to: "2009-12-31" },
+            { from: "2010-01-01", to: "2020-12-31" },
+          ],
+          period: "2000 – 2020",
+        }),
+      ],
+    };
+  }
+
+  function renamedRunNode(fqid: string): VariableGraphNode {
+    return graphNode(fqid, {
+      states: [
+        graphState({
+          delivery_column_name: "OLD",
+          valid_from: "2000-01-01",
+          valid_to: "2009-12-31",
+        }),
+        graphState({
+          state_id: 2,
+          representation_run_id: 2,
+          delivery_column_name: "NEW",
+          valid_from: "2010-01-01",
+          valid_to: "2020-12-31",
+        }),
+      ],
+    });
+  }
+
   it("uses the graph/time-band picker for a small edge-bearing variable graph", async () => {
     const onapply = vi.fn();
     const fixture = smallSuccessionFixture();
@@ -688,46 +732,9 @@ describe("RepresentationPicker graph mode (#904)", () => {
   it("renders edge-less selectable multi-run leaf graphs", async () => {
     const aFqid = "scb/lisa/renamed";
     await render(RepresentationPicker, {
-      bands: [
-        {
-          key: aFqid,
-          name: "Renamed leaf",
-          registerPrefix: "scb/lisa",
-          rows: [
-            row({
-              column: "NEW",
-              representation: null,
-              renamedColumns: ["OLD"],
-              from: "2000-01-01",
-              to: "2020-12-31",
-              windows: [
-                { from: "2000-01-01", to: "2009-12-31" },
-                { from: "2010-01-01", to: "2020-12-31" },
-              ],
-              period: "2000 – 2020",
-            }),
-          ],
-        } satisfies PickerBand,
-      ],
+      bands: [renamedRunBand(aFqid, "Renamed leaf")],
       graph: graph({
-        nodes: [
-          graphNode(aFqid, {
-            states: [
-              graphState({
-                delivery_column_name: "OLD",
-                valid_from: "2000-01-01",
-                valid_to: "2009-12-31",
-              }),
-              graphState({
-                state_id: 2,
-                representation_run_id: 2,
-                delivery_column_name: "NEW",
-                valid_from: "2010-01-01",
-                valid_to: "2020-12-31",
-              }),
-            ],
-          }),
-        ],
+        nodes: [renamedRunNode(aFqid)],
         edges: [],
         focus_id: aFqid,
       }),
@@ -749,49 +756,67 @@ describe("RepresentationPicker graph mode (#904)", () => {
       .toBeVisible();
   });
 
-  it("draws same-variable representation edges between graph cells", async () => {
-    const aFqid = "scb/lisa/renamed";
+  it("renders an edge-less GROUP graph the same way (Y-78)", async () => {
+    // The `person-orgnr` group: several members, no succession edge between them YET.
+    // The era context a member's own leaf page draws — its runs laid out in time — is
+    // the same context on the group page, so the group draws it too rather than
+    // dropping to the list only because the graph carries no edge.
+    const renamedFqid = "scb/lisa/person-orgnr";
+    const otherFqid = "scb/lisa/person-orgnr-2";
     await render(RepresentationPicker, {
       bands: [
         {
-          key: aFqid,
-          name: "Renamed leaf",
+          ...renamedRunBand(renamedFqid, "Person-orgnr"),
+          href: "/catalog/scb/lisa/person-orgnr",
+        },
+        {
+          key: otherFqid,
+          name: "Person-orgnr 2",
           registerPrefix: "scb/lisa",
-          rows: [
-            row({
-              column: "NEW",
-              representation: null,
-              renamedColumns: ["OLD"],
-              from: "2000-01-01",
-              to: "2020-12-31",
-              windows: [
-                { from: "2000-01-01", to: "2009-12-31" },
-                { from: "2010-01-01", to: "2020-12-31" },
-              ],
-              period: "2000 – 2020",
-            }),
-          ],
+          href: "/catalog/scb/lisa/person-orgnr-2",
+          rows: [row({ column: "ORG" })],
         } satisfies PickerBand,
       ],
+      graphMemberHrefs: {
+        [renamedFqid]: "/catalog/scb/lisa/person-orgnr",
+        [otherFqid]: "/catalog/scb/lisa/person-orgnr-2",
+      },
       graph: graph({
         nodes: [
-          graphNode(aFqid, {
-            states: [
-              graphState({
-                delivery_column_name: "OLD",
-                valid_from: "2000-01-01",
-                valid_to: "2009-12-31",
-              }),
-              graphState({
-                state_id: 2,
-                representation_run_id: 2,
-                delivery_column_name: "NEW",
-                valid_from: "2010-01-01",
-                valid_to: "2020-12-31",
-              }),
-            ],
+          renamedRunNode(renamedFqid),
+          graphNode(otherFqid, {
+            states: [graphState({ delivery_column_name: "ORG" })],
           }),
         ],
+        edges: [],
+        focus_id: null,
+      }),
+      ...PROPS,
+    });
+
+    await vi.waitFor(() => {
+      const graphText =
+        document.querySelector(".graph-picker")?.textContent ?? "";
+      if (!graphText.includes("OLD") || !graphText.includes("ORG")) {
+        throw new Error(`edge-less group graph not rendered: ${graphText}`);
+      }
+    });
+    expect(document.querySelector(".col-list")).toBeNull();
+    // Still selectable, and still the group's own members only.
+    await expect
+      .element(page.getByRole("checkbox", { name: /^OLD\b/ }))
+      .toBeVisible();
+    await expect
+      .element(page.getByRole("checkbox", { name: /^ORG\b/ }))
+      .toBeVisible();
+  });
+
+  it("draws same-variable representation edges between graph cells", async () => {
+    const aFqid = "scb/lisa/renamed";
+    await render(RepresentationPicker, {
+      bands: [renamedRunBand(aFqid, "Renamed leaf")],
+      graph: graph({
+        nodes: [renamedRunNode(aFqid)],
         edges: [
           {
             id: "repr-old-new",
@@ -873,24 +898,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
       ],
       axes: AXES,
       graph: graph({
-        nodes: [
-          graphNode(aFqid, {
-            states: [
-              graphState({
-                delivery_column_name: "OLD",
-                valid_from: "2000-01-01",
-                valid_to: "2009-12-31",
-              }),
-              graphState({
-                state_id: 2,
-                representation_run_id: 2,
-                delivery_column_name: "NEW",
-                valid_from: "2010-01-01",
-                valid_to: "2020-12-31",
-              }),
-            ],
-          }),
-        ],
+        nodes: [renamedRunNode(aFqid)],
         edges: [
           {
             id: "repr-old-new",
@@ -1699,7 +1707,9 @@ describe("RepresentationPicker graph mode (#904)", () => {
     expect(visibleColumns()).toEqual(["MEMBER", "NEXT"]);
     expect(document.body.textContent).not.toContain("HIDDEN");
 
-    await page.getByRole("checkbox", { name: /^MEMBER\b/ }).click();
+    // Two distinct, never-repeated names → no cluster headings, so each list row is
+    // led by its variable NAME ahead of the column chip (Y-78).
+    await page.getByRole("checkbox", { name: /^A MEMBER\b/ }).click();
     await page
       .getByRole("button", {
         name: /Add to project|Remove from project|Apply changes/,

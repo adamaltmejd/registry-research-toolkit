@@ -260,8 +260,13 @@ const memberColumnsByFqid = $derived.by(() => {
   return map;
 });
 
-const suppressRowDimensionFilters = $derived(
-  (node?.axes.length ?? 0) === 0 || node?.source === "curated",
+/** Expose the picker's row-level `Variant`/`Coding` filters (#908)? Everywhere
+ * except a CURATED group that declares axes — there the curated axes ARE the
+ * authoritative browse facets. Without axes the row dimensions are the only filters
+ * the page has, the same ones each member's leaf page offers, and the picker already
+ * emits each one solely when it discriminates. */
+const showRowDimensionFilters = $derived(
+  !(node?.source === "curated" && node.axes.length > 0),
 );
 
 const foldSuccessionBands = true;
@@ -922,7 +927,7 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
       <RepresentationPicker
         {bands}
         axes={node.axes}
-        includeRowDimensionFilters={!suppressRowDimensionFilters}
+        includeRowDimensionFilters={showRowDimensionFilters}
         window={pickerWindow}
         canAdd={seedReady}
         {committedRows}

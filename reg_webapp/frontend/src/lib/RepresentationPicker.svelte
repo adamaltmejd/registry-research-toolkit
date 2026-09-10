@@ -667,10 +667,11 @@ function bandIdentity(b: PickerBand): BandIdentity {
  * GLOBAL `nameVaries` true, so every band led with its (repeated) name and buried the
  * real distinguisher. Clustering by name first lets the existing per-band labeling run
  * per cluster — inside a cluster the name is constant, so each band leads with its
- * facet → column/slug exactly as it already does for a homogeneous group. With one
- * cluster (all members share the name, or the lone leaf) `showClusterHeadings` is
- * false → render as today (the name is already the page title); with several, each
- * name renders ONCE as a group heading over its distinguisher-led bands. */
+ * facet → column/slug exactly as it already does for a homogeneous group. Headings are
+ * shown only where a name actually REPEATS: with one cluster (all members share the
+ * name, or the lone leaf) or with every name distinct, `showClusterHeadings` is false
+ * → the bands render as one whole list, each led by its own name (the name is already
+ * the page title where it is constant). */
 // Cluster + label the FILTERED bands (#908) so the adaptive labeling adapts to the
 // VISIBLE rows (e.g. once a filter leaves a band one column, its labels re-collapse).
 const clustered = $derived(clusterBands(filteredBands, bandIdentity));
@@ -827,10 +828,10 @@ function bandView(band: PickerBand, id: BandLabel, showPrefix: boolean) {
 }
 
 /** The render model per NAME-CLUSTER (#901): the cluster's heading name + whether to
- * show cluster headings at all (more than one cluster), and each member band's view
+ * show cluster headings at all (a name that repeats), and each member band's view
  * labeled by THAT cluster's `bandLabeling` (so each leads with its within-cluster
- * distinguisher, the name hoisted to the heading). One cluster → no headings, rendered
- * exactly as today. */
+ * distinguisher, the name hoisted to the heading). No headings → one cluster over
+ * every band, rendered as a plain list. */
 const view = $derived(
   clustered.clusters.map((cluster) => ({
     name: cluster.name,
@@ -1201,15 +1202,18 @@ function graphCoversEveryPickerRow(g: RelationshipGraph): boolean {
   );
 }
 
+/** Is there anything for the graph to SHOW beyond what the list already says? An edge
+ * is context by itself; without one, a node carries context when it was renamed across
+ * registers (`same_as`) or delivers over several representation runs. Read the same way
+ * on a group page as on a leaf — an edge-less group (`scb/lisa/person-orgnr`, whose
+ * members carry no succession edge yet) draws the same era context its members' own
+ * pages draw. The fit gates below still decide whether that graph is drawable HERE. */
 function graphHasDrawableContext(g: RelationshipGraph): boolean {
   if (resolveEdges(g).length > 0) {
     return true;
   }
-  return (
-    graphMemberHrefs == null &&
-    variableGraphNodes(g).some(
-      (node) => node.same_as.length > 0 || cellsOf(node).length > 1,
-    )
+  return variableGraphNodes(g).some(
+    (node) => cellsOf(node).length > 1 || node.same_as.length > 0,
   );
 }
 

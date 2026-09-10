@@ -312,13 +312,14 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     expect(rows).toHaveLength(2);
     expect(document.querySelectorAll("li.subhead")).toHaveLength(0);
 
-    // The two members carry DISTINCT names → one name-CLUSTER each (#901), so each
-    // name renders ONCE as a group heading and its band leads with its delivery
-    // COLUMN (the name hoisted to the heading), not the repeated name.
-    const headings = [...document.querySelectorAll(".cluster-head h3")].map(
-      (h) => h.textContent?.trim(),
-    );
-    expect(headings).toEqual(["Inkomst januari", "Inkomst februari"]);
+    // The two members carry DISTINCT names, so no name REPEATS and a heading each
+    // would be one heading over one row (Y-78). No cluster chrome: each row leads with
+    // its own name, beside the delivery-column chip.
+    expect(document.querySelectorAll(".cluster-head")).toHaveLength(0);
+    const primaries = [
+      ...document.querySelectorAll(".col-row.single .primary"),
+    ].map((el) => el.textContent?.trim());
+    expect(primaries).toEqual(["Inkomst januari", "Inkomst februari"]);
 
     // Each row is a selectable checkbox named by the member's delivery COLUMN.
     await expect
@@ -749,13 +750,12 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     await renderGroup();
 
     // The inkjan subheading's select-all toggle selects BOTH its columns at once.
-    // Members have distinct NAMES here → one name-CLUSTER each (#901), and a lone
-    // multi-column band in a heading cluster leads with its SLUG distinguisher (the
-    // name is hoisted to the heading, not repeated on the subheading), so the aria
-    // label is keyed on the member slug.
+    // Members have distinct NAMES here and neither repeats → no cluster headings
+    // (Y-78), so each subheading leads with its own variable name and the aria label
+    // is keyed on that name.
     const janSelectAll = await vi.waitFor(() => {
       const el = document.querySelector<HTMLInputElement>(
-        'input[aria-label="Select all columns of inkjan"]',
+        'input[aria-label="Select all columns of Inkomst januari"]',
       );
       if (!el) {
         throw new Error("inkjan select-all not yet rendered");
@@ -997,15 +997,12 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     await renderGroup();
 
     // inkjan's single-column row checkbox is named by its delivery COLUMN (#901),
-    // its name now leading the cluster heading instead.
+    // its name leading the row.
     await expect
       .element(page.getByRole("checkbox", { name: /Inkjan/ }))
       .toBeVisible();
-    // Both members carry distinct names → a heading each (#901).
-    const headings = [...document.querySelectorAll(".cluster-head h3")].map(
-      (h) => h.textContent?.trim(),
-    );
-    expect(headings).toEqual(["Inkomst januari", "Inkomst februari"]);
+    // Both names are distinct and neither repeats → no cluster headings (Y-78).
+    expect(document.querySelectorAll(".cluster-head")).toHaveLength(0);
     // inkfeb is not dropped: it renders its (graph-node-less) band with the quiet
     // "No columns" marker and no checkbox.
     await expect
@@ -1154,14 +1151,17 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
         throw new Error("subheadings not yet rendered");
       }
     });
-    // The members have distinct NAMES → one name-CLUSTER each (#901); a lone
-    // multi-column band in a heading cluster is slug-led (the name is in the heading),
-    // so the select-all aria label is keyed on the member slug.
+    // The members have distinct NAMES that never repeat → no cluster headings (Y-78),
+    // so each subheading is name-led and the select-all aria label is keyed on it.
     const inkjanSub = document
-      .querySelector('input[aria-label="Select all columns of inkjan"]')
+      .querySelector(
+        'input[aria-label="Select all columns of Inkomst januari"]',
+      )
       ?.closest("li.subhead");
     const inkfebSub = document
-      .querySelector('input[aria-label="Select all columns of inkfeb"]')
+      .querySelector(
+        'input[aria-label="Select all columns of Inkomst februari"]',
+      )
       ?.closest("li.subhead");
     // inkjan: all columns out → the subheading greys.
     expect(inkjanSub?.classList.contains("dimmed")).toBe(true);
@@ -1786,7 +1786,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     // (off the title link) toggles every column of that variable.
     const inkjanRow = await vi.waitFor(() => {
       const cb = document.querySelector<HTMLInputElement>(
-        'input[aria-label="Select all columns of inkjan"]',
+        'input[aria-label="Select all columns of Inkomst januari"]',
       );
       const label = cb?.closest("label.subhead-label");
       if (!label) {
@@ -1818,7 +1818,9 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
 
     const inkjanSub = await vi.waitFor(() => {
       const li = document
-        .querySelector('input[aria-label="Select all columns of inkjan"]')
+        .querySelector(
+          'input[aria-label="Select all columns of Inkomst januari"]',
+        )
         ?.closest("li.subhead");
       if (!li) {
         throw new Error("inkjan subhead not yet rendered");
@@ -1962,7 +1964,9 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
       .element()
       .closest(".row-btn") as Element;
     const inkjanLabel = document
-      .querySelector('input[aria-label="Select all columns of inkjan"]')
+      .querySelector(
+        'input[aria-label="Select all columns of Inkomst januari"]',
+      )
       ?.closest("label.subhead-label") as HTMLLabelElement;
 
     // Normalize first (the real Chromium cursor may already sit over a row from a
@@ -2022,7 +2026,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
       .not.toBeInTheDocument();
     expect(
       document.querySelector<HTMLInputElement>(
-        'input[aria-label="Select all columns of inkjan"]',
+        'input[aria-label="Select all columns of Inkomst januari"]',
       )?.checked,
     ).toBe(false);
   });
@@ -2823,25 +2827,41 @@ describe("ConceptGroupView picker dimension filters (#908/#931)", () => {
     expect(await filterLegends()).toEqual(["Level", "Variant", "Coding"]);
   });
 
-  it("does not turn coding labels into filters on axis-less variable groups", async () => {
+  /** The `person-orgnr` shape: no curated axes at all. */
+  function axisLessNode(
+    overrides: Partial<ConceptGroupNodeData> = {},
+  ): ConceptGroupNodeData {
+    return dimensionNode({
+      axes: [],
+      members: [
+        { fqid: "scb/rams/old", name: "Old", facets: [], coverage: null },
+        { fqid: "scb/rams/new", name: "New", facets: [], coverage: null },
+      ],
+      ...overrides,
+    });
+  }
+
+  it("keeps Variant/Coding filters on an axis-less group (Y-78)", async () => {
+    // Without axes the row dimensions are the ONLY filters the page has — the same
+    // ones each member's own leaf page offers — so suppressing them left the group
+    // page with no way to narrow at all.
+    vi.mocked(getConceptGroup).mockResolvedValue(axisLessNode());
+    vi.mocked(getConceptGroupGraph).mockResolvedValue(dimensionGraph());
+
+    await renderGroup({
+      provider: "scb",
+      register: "rams",
+      key: "dimensioned",
+    });
+
+    expect(await filterLegends()).toEqual(["Variant", "Coding"]);
+  });
+
+  it("keeps them on a CURATED group with no axes either (Y-78)", async () => {
+    // Suppression is for curated groups whose declared axes ARE the browse facets;
+    // with no axes declared there is nothing authoritative to defer to.
     vi.mocked(getConceptGroup).mockResolvedValue(
-      dimensionNode({
-        axes: [],
-        members: [
-          {
-            fqid: "scb/rams/old",
-            name: "Old",
-            facets: [],
-            coverage: null,
-          },
-          {
-            fqid: "scb/rams/new",
-            name: "New",
-            facets: [],
-            coverage: null,
-          },
-        ],
-      }),
+      axisLessNode({ source: "curated" }),
     );
     vi.mocked(getConceptGroupGraph).mockResolvedValue(dimensionGraph());
 
@@ -2851,12 +2871,7 @@ describe("ConceptGroupView picker dimension filters (#908/#931)", () => {
       key: "dimensioned",
     });
 
-    await vi.waitFor(() => {
-      if (!document.querySelector(".col-row.single")) {
-        throw new Error("rows not yet rendered");
-      }
-    });
-    expect(document.querySelector(".dim-filters")).toBeNull();
+    expect(await filterLegends()).toEqual(["Variant", "Coding"]);
   });
 
   it("shows only declared axes on curated group pages", async () => {
