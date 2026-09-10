@@ -42,7 +42,6 @@ import RepresentationPicker, {
   type PickerSelection,
 } from "./RepresentationPicker.svelte";
 import { router } from "./router.svelte";
-import SourcePeriodCorrection from "./SourcePeriodCorrection.svelte";
 import SubjectView from "./SubjectView.svelte";
 import {
   ADD_PERIOD_REQUIRED_MESSAGE,
@@ -52,7 +51,6 @@ import {
   rowAddSegments,
   type StagedPickerBand,
   sourcePeriodsFromDraft,
-  sourcePeriodTargets,
   stagedRemoveForCommitted,
 } from "./staged_picker";
 import TechnicalDetails from "./TechnicalDetails.svelte";
@@ -432,17 +430,6 @@ const committedRows = $derived(
   }),
 );
 
-/** The draft's sources on this leaf's register variants — the catalog's explicit
- * source-period correction targets (Y-15). Named sources, so a draft carrying two
- * of them on one variant offers both and corrects only the one chosen. */
-const periodTargets = $derived(
-  sourcePeriodTargets(projectStore.draft, pickerBands),
-);
-/** The two halves of the correction's mutual exclusion with the picker's staging —
- * the contract itself is documented on `SourcePeriodCorrection`'s props. */
-let pickerStaged = $state(false);
-let correctionOpen = $state(false);
-
 /** The applied outcome (drives the inline confirmation). */
 let applyOutcome = $state<{
   added: number;
@@ -698,13 +685,11 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
       activePeriod={activePickerPeriod}
       graph={graphReady ? graph : null}
       {vintageYear}
-      locked={correctionOpen}
       onapply={applyStaged}
       onstagechange={(hasDiff) => {
         // Clearing the staging retires the refusal too (there is no longer a pick
         // to author), so the notice can never outlive the diff it described.
         periodRequired = false;
-        pickerStaged = hasDiff;
         if (hasDiff) {
           applyOutcome = null;
         }
@@ -749,22 +734,6 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
       </span>
     </p>
   {/if}
-
-  <!-- Y-15: the explicit source-period correction, deliberately NOT part of the
-       picker above (see the component). -->
-  <SourcePeriodCorrection
-    targets={periodTargets}
-    disabled={pickerStaged}
-    onreviewchange={(open) => {
-      correctionOpen = open;
-      if (open) {
-        applyOutcome = null;
-      }
-    }}
-    onapplied={() => {
-      applyOutcome = { added: 0, removed: 0, periodChanged: 1 };
-    }}
-  />
 
   {#if params.period && (params.variant || params.value_set_version)}
     <!-- Active narrowing modifiers, each clearable — so narrowing to one state

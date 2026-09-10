@@ -11,13 +11,7 @@ import type {
 } from "./api";
 import { getCatalogNode, getConceptGroup, getConceptGroupGraph } from "./api";
 import ConceptGroupView from "./ConceptGroupView.svelte";
-import {
-  applySourcePeriod,
-  changeSourcePeriod,
-  expectApplyDisabled,
-  newPeriodInput,
-  sourceShapes,
-} from "./picker-test-helpers";
+import { expectApplyDisabled } from "./picker-test-helpers";
 import { projectStore } from "./project_store.svelte";
 import { router } from "./router.svelte";
 import { windowStore } from "./window.svelte";
@@ -706,8 +700,13 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
       .element(page.getByText("No staged changes"))
       .not.toBeInTheDocument();
     await expectApplyDisabled();
-    // Nor does the link open a review: a correction is an explicit action (Y-15).
-    await expect.element(newPeriodInput()).not.toBeInTheDocument();
+    // Nor does the group page offer any way to rewrite that period: since Y-81 a
+    // source's period is edited on its /project card, never from the catalog.
+    await expect
+      .element(
+        page.getByRole("heading", { name: "Project sources on this page" }),
+      )
+      .not.toBeInTheDocument();
     expect(projectStore.draft?.sources[0]?.period).toEqual({
       from: 2010,
       to: 2015,
@@ -3512,88 +3511,5 @@ describe("ConceptGroupView inter-variable succession fold (#902)", () => {
     expect(link.getAttribute("href")).toBe("/catalog/scb/iot/dispink-old");
     // …but with NO year label when the edge carries no effective year.
     expect(document.querySelector(".history-until")).toBeNull();
-  });
-});
-
-// ── Y-15: the explicit catalog-side source-period correction ─────────────────
-//
-// The group page hosts the same correction as the leaf, and shows the same thing
-// the group itself cannot: the target is a NAMED source, and a source period
-// covers EVERY binding on that source — including columns this group never lists.
-describe("ConceptGroupView source-period correction (Y-15)", () => {
-  /** `RAMS` (2010..2015) with the group's own Inkjan plus `scb/rams/fordon`, which
-   * this group never shows; and `RAMS_2`, a differently named source on the SAME
-   * register variant, which only the source name tells apart. */
-  function seedTwoSources(): void {
-    projectStore.updateField("sources", [
-      {
-        name: "RAMS",
-        register_variant: "scb/rams/individer",
-        period: { from: 2010, to: 2015 },
-        bindings: [
-          { variable: "scb/rams/inkjan", type: "numeric" },
-          { variable: "scb/rams/fordon", type: "numeric" },
-        ],
-      },
-      {
-        name: "RAMS_2",
-        register_variant: "scb/rams/individer",
-        period: 2009,
-        bindings: [{ variable: "scb/rams/inkjan", type: "numeric" }],
-      },
-    ]);
-  }
-
-  async function renderSeeded() {
-    vi.mocked(getConceptGroup).mockResolvedValue(node());
-    vi.mocked(getConceptGroupGraph).mockResolvedValue(twoSingleColGraph());
-    mockResolveColumns({ "scb/rams/inkjan": ["Inkjan"] });
-    seedTwoSources();
-    return await renderGroup();
-  }
-
-  it("reviews every column on the named source, including one this group never shows", async () => {
-    await renderSeeded();
-    await changeSourcePeriod("RAMS").click();
-
-    await expect
-      .element(page.getByText("Columns on this source (2)"))
-      .toBeVisible();
-    await expect.element(page.getByText("scb/rams/fordon")).toBeVisible();
-    await expect.element(newPeriodInput()).toHaveValue("2010..2015");
-
-    await newPeriodInput().fill("2012..2014");
-    await applySourcePeriod("RAMS").click();
-
-    await expect.element(page.getByText(/1 period change/)).toBeVisible();
-    expect(sourceShapes()).toEqual([
-      [
-        "RAMS",
-        { from: 2012, to: 2014 },
-        ["scb/rams/inkjan", "scb/rams/fordon"],
-      ],
-      ["RAMS_2", 2009, ["scb/rams/inkjan"]],
-    ]);
-  });
-
-  it("moves only the sibling when the sibling is the source chosen", async () => {
-    await renderSeeded();
-    await changeSourcePeriod("RAMS_2").click();
-
-    await expect
-      .element(page.getByText("Columns on this source (1)"))
-      .toBeVisible();
-    await newPeriodInput().fill("2011");
-    await applySourcePeriod("RAMS_2").click();
-
-    await expect.element(page.getByText(/1 period change/)).toBeVisible();
-    expect(sourceShapes()).toEqual([
-      [
-        "RAMS",
-        { from: 2010, to: 2015 },
-        ["scb/rams/inkjan", "scb/rams/fordon"],
-      ],
-      ["RAMS_2", 2011, ["scb/rams/inkjan"]],
-    ]);
   });
 });

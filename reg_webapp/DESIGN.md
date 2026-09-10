@@ -2091,15 +2091,16 @@ the edge.
 ## Browse-only authoring: the data-order cart model (#991, #992/#993)
 
 The project editor was rebuilt around one rule: **the catalog is the only authoring
-surface**. `/project` is a read-only **cart** — `ProjectEditor` / `SourceEditor` /
+surface**. `/project` is a **cart** — it shows what has been picked and authors nothing
+of its own but a source's **period** (Y-81, below). `ProjectEditor` / `SourceEditor` /
 `BindingEditor` display each source's variant coordinate, period, and bindings
-(variable, pinned representation) and offer only delete-per-row, the project's own name,
-and the New/Open/Download project_data.json/Download order.json actions — validation
-runs automatically on every edit, with no separate Validate action. There is no in-cart
-field editing: a wrong variable, period, or representation gets fixed by picking again
-from the catalog subject page, not by editing the cart row. `CatalogPicker.svelte`,
-`PeriodEditor.svelte`, and `FieldIssues.svelte` — the in-cart editing UI — were deleted
-along with the store methods that only existed to serve them (`addSource`, `addBinding`,
+(variable, pinned representation) and offer only delete-per-row, that period, the
+project's own name, and the New/Open/Download project_data.json/Download order.json
+actions — validation runs automatically on every edit, with no separate Validate action.
+A wrong variable, variant or representation gets fixed by picking again from the catalog
+subject page, not by editing the cart row. `CatalogPicker.svelte`, `PeriodEditor.svelte`,
+and `FieldIssues.svelte` — the general in-cart editing UI — were deleted along with the
+store methods that only existed to serve them (`addSource`, `addBinding`,
 `updateSource`, `updateBinding`, `applyPickedBinding`, `bindingDerivation`).
 
 A cart row holds **coordinates, not words** — a `register_variant`, a variable FQID, and
@@ -2181,30 +2182,42 @@ sorted, disjoint #307 list form (adjacency-merging touching/overlapping interval
 otherwise (either side is token grammar) it REPLACES with the incoming period, since
 mixed-grain union has no defined sort. `applyStagedDiff` is now the SOLE catalog→project
 mutation path (the store's earlier single-pick `addFromCatalog` handoff was dead since
-#992/#993 and was deleted in #1104). `updateField` (the project's own `name` / `window`)
-and `removeSource`/`removeBinding` are the only other mutators the cart UI calls — a
-source's own name and period are no longer directly editable in the cart.
+#992/#993 and was deleted in #1104). `updateField` (the project's own `name` / `window`),
+`removeSource`/`removeBinding` and `applySourcePeriodEdit` are the only other mutators
+the cart UI calls — a source's own generated `name` is not editable anywhere.
 
-The one **period correction** the cart model allows is still catalog-side and still
-explicit (Y-15): `SourcePeriodCorrection.svelte` lists the draft's sources on the
-catalog page's own register variants and, on request, opens a review of ONE of them —
-its name, its full coordinate, its stored period and EVERY binding it carries, including
-bindings that page does not show — before `applySourcePeriodReview` commits a
-period-only `applyStagedDiff`. Ordinary browsing still stages nothing: changing years,
-filtering rows or following a `?period` link leaves the draft alone, and
-`RepresentationPicker` keeps deriving `periodChanges = []` because a partial leaf/group
-cannot infer a source-wide rewrite from the columns it happens to show. The correction
-is keyed by source **name** as well as coordinate — a draft may carry several
-differently named sources on one register variant (reg_schema makes names unique, not
-variants), and a correction moves only the one it names. It is its own diff, never
-unioned with staged adds (the two lock each other out), and the review carries the
-reviewed source's complete value plus the draft's `replacementGeneration`. Both are
-re-checked through one predicate, `sourcePeriodReviewCurrent` — by the open review's own
-staleness notice, and last of all by the write itself, immediately before it mutates. A
-source that moved, or a project that was replaced, under an open review invalidates it
-instead of being overwritten; a page that merely stopped covering the source does not,
-because the predicate reads the draft rather than the page. Coverage and type drift
-after the correction stay the server validator's job, as above.
+Bindings, variant and representation are written once at PICK time; a source's
+**period** is the one field the cart edits (Y-81). It is a field of the SOURCE rather
+than of any single pick — a study window of 2005..2020 with one register reaching back
+to 1990 is an ordinary order — and the `/project` source card is the only surface that
+shows a source WHOLE: its full coordinate, its stored period and every column it
+carries, including columns no one catalog page lists. That is what a source-wide rewrite
+has to be looked at against, so that is where it is made. The card authors it in the
+catalog's own period vocabulary — two exact-year fields and one Apply, the same entry
+`PeriodPicker` carries beside its slider — and writes back through the same wire shaping
+a pick uses (a bare year when the bounds meet, `{from, to}` otherwise). A period the
+year fields cannot express (a token like `HT2018`, or the #307 comma list two disjoint
+picks merge into) is shown as it stands and never silently collapsed into a span. Where
+the period differs from the project's `window` the card MARKS it ("Differs from study
+window 2005–2020"): the window is an authoring seed, not an inheritance (reg_schema puts
+`period` on `Source` alone), so divergence is shown rather than warned about — whether
+the window is actually left uncovered is a validation finding and has one.
+
+The rewrite goes through `applySourcePeriodEdit`, keyed by source **name** as well as
+coordinate: a draft may carry several differently named sources on one register variant
+(reg_schema makes names unique, not variants), and an edit moves only the one it names.
+It is its own period-only `applyStagedDiff`, never unioned with staged adds, and it
+carries the edited source's complete value plus the draft's `replacementGeneration`.
+Both are re-checked through one store-internal predicate immediately before the write:
+a source that moved, or a project that was replaced, under an open edit refuses the
+write instead of overwriting it, and the card says so. Ordinary browsing still stages
+nothing — changing years, filtering rows or following a `?period` link
+leaves the draft alone, and `RepresentationPicker` keeps deriving `periodChanges = []`
+because a partial leaf/group cannot infer a source-wide rewrite from the columns it
+happens to show. Coverage and type drift after the edit stay the server validator's job,
+as above. (Y-81 retired the catalog-side Y-15 correction that used to do this from a
+"Project sources on this page" box on every leaf and group page: the catalog surface
+had to re-state a source the cart already shows whole, and nobody found it there.)
 
 ## Browser storage + project-file persistence (the SPA store)
 

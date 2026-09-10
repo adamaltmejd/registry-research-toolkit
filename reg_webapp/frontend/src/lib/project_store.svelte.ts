@@ -479,7 +479,7 @@ export interface StagedRemove {
 /** Replace ONE NAMED source's period wholesale. Keyed by the draft source `name`
  * as well as the coordinate, NOT by `registerVariant` alone: a draft may carry
  * several differently named sources on one register variant (an imported spec
- * routinely does), and a correction must move only the one it names. Source names
+ * routinely does), and a period edit must move only the one it names. Source names
  * are structurally unique (reg_schema `duplicate_source_name`); variants are not. */
 export interface StagedPeriodChange {
   sourceName: string;
@@ -487,23 +487,22 @@ export interface StagedPeriodChange {
   period: Period;
 }
 
-/** WHICH source a correction was reviewed from, and when: the named source, its
- * coordinate, the COMPLETE value it had while the researcher looked at it, and the
- * draft generation it belonged to. `sourcePeriodReviewCurrent` answers whether the
- * loaded draft still matches — asked by the review's own staleness notice and, last
- * of all, by the write. */
-export interface SourcePeriodReviewTarget {
+/** WHICH source a period edit started from, and when: the named source, its
+ * coordinate, the COMPLETE value it had when the researcher started editing, and
+ * the draft generation it belonged to. `editTargetCurrent` answers whether the
+ * loaded draft still matches, immediately before the write. */
+export interface SourcePeriodEditTarget {
   sourceName: string;
   registerVariant: string;
-  /** `sourceSnapshot` of the target source when the review opened. */
+  /** `sourceSnapshot` of the target source when the edit began. */
   snapshot: string;
-  /** `projectStore.replacementGeneration` when the review opened. */
+  /** `projectStore.replacementGeneration` when the edit began. */
   replacementGeneration: number;
 }
 
-/** A REVIEWED source-period correction: the target it was approved from, plus the
- * period it proposes. */
-export interface SourcePeriodReview extends SourcePeriodReviewTarget {
+/** A CONFIRMED source-period edit: the source it was started from, plus the period
+ * it proposes. */
+export interface SourcePeriodEdit extends SourcePeriodEditTarget {
   period: Period;
 }
 
@@ -800,7 +799,7 @@ export const projectStore = {
   // (`sourceIds`) in lockstep (issue #200) — a bypass desyncs it and resurrects the
   // wrong-instance bug class. `updateField` rebuilds the mirror when handed
   // `sources`; `removeSource`/`removeBinding` patch it positionally; `applyStagedDiff`
-  // rebuilds it once for the whole batch.
+  // rebuilds it once for the whole batch — and only when that batch is structural.
 
   updateField<K extends keyof ProjectData>(
     key: K,
@@ -924,7 +923,7 @@ export const projectStore = {
 
     // (c) period changes → replace the NAMED source's period wholesale. Keyed on
     //     name AND coordinate: two differently named sources can share one
-    //     register_variant, and a correction moves only the source it names.
+    //     register_variant, and a period edit moves only the source it names.
     for (const change of diff.periodChange ?? []) {
       sources = sources.map((s) =>
         safeSourceName(s) === change.sourceName &&
@@ -947,65 +946,73 @@ export const projectStore = {
 
     // Atomic replacement: compute the next draft + rebuilt mirror BEFORE assigning
     // either (like open/new), so autosave + the id mirror fire/rebuild ONCE.
+    //
+    // Only a STRUCTURAL batch changes WHICH sources exist (an add, a remove, or the
+    // prune a remove can trigger). A period-only batch maps the sources 1:1 onto the
+    // array the mirror already describes, so it keeps the mirror — the mirror's own
+    // rule, "an update leaves the id in place". Minting fresh ids for untouched
+    // sources remounts every source card, throwing away what the card that asked for
+    // the edit holds: its confirmation of the write it just made.
     const next = { ...draft, sources };
-    const ids = buildIds(next);
+    const structural =
+      (diff.adds?.length ?? 0) > 0 || (diff.removes?.length ?? 0) > 0;
+    const ids = structural ? buildIds(next) : null;
     setDraft(next);
-    sourceIds = ids;
+    if (ids !== null) {
+      sourceIds = ids;
+    }
   },
 
   /**
-   * Commit ONE reviewed source-period correction — the catalog's explicit "Change
-   * source period" action — as its OWN period-only `applyStagedDiff`, never unioned
-   * with staged adds (`periodChangesWithStagedAdds` widens a change to cover the
-   * adds committed beside it; a correction has none beside it, so what the
-   * researcher reviewed is exactly what lands).
+   * Commit ONE confirmed source-period edit — the cart card's "Apply period"
+   * action — as its OWN period-only `applyStagedDiff`, never unioned with staged
+   * adds (`periodChangesWithStagedAdds` widens a change to cover the adds
+   * committed beside it; an edit has none beside it, so what the researcher
+   * confirmed is exactly what lands).
    *
-   * Returns false WITHOUT mutating when the draft has been replaced since the
-   * review opened, or the named source is gone or is no longer the value that was
-   * reviewed (its period, its bindings or any other field moved). The caller then
-   * asks for a fresh review rather than writing a period onto a source nobody
+   * Returns false WITHOUT mutating when the draft has been replaced since the edit
+   * began, or the named source is gone or is no longer the value it started from
+   * (its period, its bindings or any other field moved). The caller then asks for
+   * the edit to be made again rather than writing a period onto a source nobody
    * looked at. The re-check is the LAST thing before the mutation, so an awaited
    * restore in between cannot open a window.
    */
-  applySourcePeriodReview(review: SourcePeriodReview): boolean {
-    if (!projectStore.sourcePeriodReviewCurrent(review)) {
+  applySourcePeriodEdit(edit: SourcePeriodEdit): boolean {
+    if (!editTargetCurrent(edit)) {
       return false;
     }
     projectStore.applyStagedDiff({
       periodChange: [
         {
-          sourceName: review.sourceName,
-          registerVariant: review.registerVariant,
-          period: review.period,
+          sourceName: edit.sourceName,
+          registerVariant: edit.registerVariant,
+          period: edit.period,
         },
       ],
     });
     return true;
   },
-
-  /**
-   * Whether the loaded draft still carries the exact source `target` was reviewed
-   * from — same project, same named source at the same coordinate, byte-identical
-   * value. The predicate `applySourcePeriodReview` refuses on, exported so the open
-   * review can render its staleness from THE DRAFT: a catalog page narrows what it
-   * shows as the researcher browses, and a source that scrolls off a page has not
-   * moved.
-   */
-  sourcePeriodReviewCurrent(target: SourcePeriodReviewTarget): boolean {
-    // Generation first: a replaced project settles it without scanning or
-    // re-serializing anything, and this runs on every draft edit while a review
-    // is open.
-    if (replacementGeneration !== target.replacementGeneration) {
-      return false;
-    }
-    const source = safeSourceSlots(draft?.sources).find(
-      (s) =>
-        safeSourceName(s) === target.sourceName &&
-        safeSourceRegisterVariant(s) === target.registerVariant,
-    );
-    return source != null && sourceSnapshot(source) === target.snapshot;
-  },
 };
+
+/**
+ * Whether the loaded draft still carries the exact source `target` was edited from
+ * — same project, same named source at the same coordinate, byte-identical value.
+ * The predicate `applySourcePeriodEdit` refuses on, and its only caller: the card
+ * reads the refusal off that method's return, so this is store-internal.
+ */
+function editTargetCurrent(target: SourcePeriodEditTarget): boolean {
+  // Generation first: a replaced project settles it without scanning or
+  // re-serializing anything.
+  if (replacementGeneration !== target.replacementGeneration) {
+    return false;
+  }
+  const source = safeSourceSlots(draft?.sources).find(
+    (s) =>
+      safeSourceName(s) === target.sourceName &&
+      safeSourceRegisterVariant(s) === target.registerVariant,
+  );
+  return source != null && sourceSnapshot(source) === target.snapshot;
+}
 
 // ── applyStagedDiff helpers ──────────────────────────────────────────────────
 

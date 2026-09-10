@@ -299,9 +299,15 @@ describe("ProjectEditor renders the ValidationPanel", () => {
     await renderEditor();
 
     // The panel owns the exact wording (ValidationPanel.browser.test.ts); here it
-    // only has to be the clean verdict rather than the old one-word "Valid".
+    // only has to be the clean verdict rather than the old one-word "Valid". Scoped
+    // to the panel: each source card carries its own status line for the period
+    // entry's refusals (Y-81), so the page has more than one.
     await expect
-      .element(page.getByRole("status"))
+      .element(
+        page
+          .getByRole("region", { name: "Validation results" })
+          .getByRole("status"),
+      )
       .toMatchTextContent(/^Draft valid/);
   });
 

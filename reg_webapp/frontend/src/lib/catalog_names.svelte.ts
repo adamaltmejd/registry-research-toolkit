@@ -68,6 +68,10 @@ const PENDING: Read<never> = { value: null, loading: true };
  * so it too holds a stable identity. */
 export const UNASKED: Read<never> = { value: null, loading: false };
 
+/** Which CACHE the in-flight reads belong to — bumped by every reset, so a read
+ * started before one cannot write into the cache that replaced it. */
+let generation = 0;
+
 /** The cached read for `key`, STARTING it on first ask. Repeat asks (a re-render,
  * a second card on the same register) get the same entry and issue no request. */
 function read<T>(key: string, fetcher: () => Promise<T>): Read<T> {
@@ -76,18 +80,25 @@ function read<T>(key: string, fetcher: () => Promise<T>): Read<T> {
     return hit;
   }
   reads[key] = PENDING;
+  const startedIn = generation;
   const settle = (value: T | null) => {
-    reads = { ...reads, [key]: { value, loading: false } };
+    // A read the reset abandoned settles into nothing: repopulating the fresh
+    // cache with the previous one's answer would hand a case the response the
+    // case before it stubbed.
+    if (startedIn === generation) {
+      reads = { ...reads, [key]: { value, loading: false } };
+    }
   };
   // A failed name read is not an error surface — see the module comment.
   fetcher().then(settle, () => settle(null));
   return PENDING;
 }
 
-/** Drop every cached read. The test seam: the cache is a session singleton, so a
- * case that stubs a DIFFERENT catalog response for the same coordinate must start
- * from an empty one. */
+/** Drop every cached read, in-flight ones included. The test seam: the cache is a
+ * session singleton, so a case that stubs a DIFFERENT catalog response for the
+ * same coordinate must start from an empty one. */
 export function resetCatalogNames(): void {
+  generation += 1;
   reads = {};
 }
 
@@ -197,20 +208,20 @@ export function sourceNames(registerVariant: string): SourceNames {
  * The same `?period`+`?variant` leaf resolve the picker runs on a pick
  * (`resolveBindingAt`), cached per `(fqid, period, variant)` so two columns of one
  * source, and every re-render of either, share the one request. A source with no
- * period cannot be resolved at all (the resolve needs one) and issues none. */
+ * period cannot be resolved at all (the resolve needs one) and issues none — nor
+ * can one with no VARIANT (a `register_variant` of fewer than 3 segments, which
+ * only a malformed draft carries): resolving the variable across every variant
+ * would name a column this source does not deliver. */
 export function columnNames(
   fqid: string,
   period: string | null,
   variant: string,
 ): Read<string[]> {
-  if (!fqid || !period) {
+  if (!fqid || !period || !variant) {
     return UNASKED;
   }
   return read(`resolve:${fqid}?${period}&${variant}`, async () => {
-    const resolved = await getCatalogNode(fqid, {
-      period,
-      variant: variant || undefined,
-    });
+    const resolved = await getCatalogNode(fqid, { period, variant });
     return isCatalogNode(resolved)
       ? []
       : deliveryColumnNamesFromStates(resolved.states ?? []);

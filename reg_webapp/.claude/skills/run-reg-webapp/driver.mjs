@@ -206,7 +206,7 @@ function check(condition, message) {
 // .yard/config.toml, split across gates because a yard gate declares at most 16
 // filenames: `project-flows` names the three /project error+retry scenarios (16
 // PNGs), `catalog-flows` two catalog ones (16) and `replace-flows` the
-// deliberate-replacement one (8). The remaining 24 are `catalog-source-period`
+// deliberate-replacement one (8). The remaining 24 are `project-source-period`
 // (12) and `catalog-period-focus` (12), which have no gate yet — the gate list is
 // the operator's. That is what the scenario argument in the dispatch below is
 // for — a bare `flows <out-dir>` still runs all eight, which is the local
@@ -336,7 +336,7 @@ async function autosavedDraft() {
 
 /** Wait until the autosave has written exactly `want` — the draft's sources under
  * `shape`, in order (register variants by default; the source-period case shapes
- * name + period + bindings, which is what a correction moves and what its two
+ * name + period + bindings, which is what a period edit moves and what its two
  * same-variant sources cannot be told apart by). POLLED, not slept: an Apply is
  * several draft mutations (the project is created, then the picks commit once
  * their periods resolve) and the write lands ~500ms after the LAST of them, so the
@@ -723,24 +723,20 @@ async function catalogPeriodRequiredCase(page, counts, shoot) {
   );
 }
 
-/** Scenario 6 — the catalog-side SOURCE-PERIOD CORRECTION (Y-15). A researcher
- * fixes ONE existing named source's requested period without deleting and
- * rebuilding it. The project opened here carries two differently named sources on
- * the SAME register variant — the shape the catalog's own add path cannot author
- * (it finds-or-creates by variant) and the one only a source name tells apart —
- * and the correction must move exactly the source it names, keeping that name and
- * every binding, including the column this leaf never shows. Rendered because the
- * review, its refusal and its result are the surface the operator judges.
+/** Scenario 6 — the source's PERIOD, edited on its /project card (Y-81). A
+ * researcher whose study window is 2018..2020 wants ONE source to reach back to
+ * 2015, without deleting and rebuilding it. The project opened here carries two
+ * differently named sources on the SAME register variant — the shape the catalog's
+ * add path cannot author (it finds-or-creates by variant), and the one only a
+ * source NAME tells apart — so the edit must move exactly the card it was made on,
+ * keeping that name and every column, Forsamling included. The card is where this
+ * lives because it is the only surface that shows a source WHOLE, which is what a
+ * source-wide rewrite has to be looked at against. Rendered because the card, its
+ * refusal and the deviation it then carries are the surface the operator judges.
  */
 async function sourcePeriodCase(page, counts, shoot, project) {
-  const proposed = page.getByRole("textbox", { name: "New period" });
-  const apply = page.getByRole("button", {
-    name: "Apply source period for lisa-core",
-    exact: true,
-  });
-
   // (1) Open the two-source project, and let the autosave hold it.
-  let green = validated(page);
+  const green = validated(page);
   await openProjectFile(page, project);
   await green;
   await settled(page);
@@ -748,66 +744,53 @@ async function sourcePeriodCase(page, counts, shoot, project) {
   const variant = "scb/lisa/individer-15plus";
   await draftSaved(page, [variant, variant]);
 
-  // (2) The leaf as ORDINARY BROWSING reaches it: no query string, so no period
-  //     is chosen. Nothing is staged and no review is open — a correction is an
-  //     explicit action, never a consequence of where the researcher browsed.
-  green = validated(page);
-  await open(page, "/catalog/scb/lisa/kon");
-  await green;
-  await settled(page);
-  check(
-    (await proposed.count()) === 0,
-    "browsing to the leaf opened a source-period review on its own",
-  );
+  // The card of the source named `lisa-core`. The two sources share a register, a
+  // variant and therefore a heading, so the card's own region is what tells them
+  // apart — the same thing the source name does in the draft.
+  const card = page.getByRole("region", { name: "Source 1" });
+  const from = card.getByRole("textbox", { name: "From" });
+  const to = card.getByRole("textbox", { name: "To" });
+  const apply = card.getByRole("button", { name: /^Apply period/ });
 
-  // (3) The review names its target and shows what a SOURCE-wide rewrite touches:
-  //     the stored period, and every column on that source — Forsamling included,
-  //     which this leaf does not list.
-  await page
-    .getByRole("button", {
-      name: "Change source period for lisa-core",
-      exact: true,
-    })
-    .click();
-  await page.getByText("Columns on this source (2)").waitFor();
-  await page.getByText("scb/lisa/forsamling").waitFor();
-  await shoot("catalog-source-period-review");
+  // (2) The card shows the source WHOLE: its name, its stored period armed in the
+  //     year fields, and every column on it — Forsamling included, which no single
+  //     catalog page lists beside Kon.
+  await card.getByText("lisa-core").waitFor();
+  await card.getByText("scb/lisa/forsamling").waitFor();
+  const armed = `${await from.inputValue()}..${await to.inputValue()}`;
+  check(armed === "2018..2020", `the card armed its year fields at ${armed}`);
+  await shoot("project-source-period-card");
 
-  // (4) An unsorted list is not a period: the same structural grammar the rest of
-  //     the app writes periods through refuses it, and Apply stays unavailable.
-  await proposed.fill("2020,2019");
-  await page.getByText("isn't a usable period").waitFor();
-  check(
-    await apply.isDisabled(),
-    "an invalid period left the source-period Apply enabled",
-  );
-  await shoot("catalog-source-period-invalid");
-
-  // (5) The correction: ONE deliberate period-only diff, applied explicitly.
-  green = validated(page);
-  await proposed.fill("2018..2019");
-  check(
-    await apply.isEnabled(),
-    "the reviewed period-only correction left Apply disabled",
-  );
+  // (3) Years that name no range are refused, with the field at fault marked and
+  //     nothing written. Apply stays LIVE so the click explains itself, rather than
+  //     leaving a dead button and no reason.
+  await from.fill("2030");
   await apply.click();
-  await green;
-  await settled(page);
-  await page
-    .getByRole("status")
-    .filter({ hasText: "Applied 1 period change" })
-    .waitFor();
-  await shoot("catalog-source-period-applied");
+  await card.getByText(/From 2030 is after To 2020/).waitFor();
+  check(await apply.isEnabled(), "the refused entry left Apply dead");
+  await shoot("project-source-period-refused");
 
-  // (6) What the browser's own IndexedDB holds: the named source moved, keeping
-  //     its name and BOTH bindings, and the sibling on the same variant is
-  //     exactly as it was opened.
+  // (4) The edit: ONE period-only diff, applied explicitly, revalidated at once.
+  const revalidated = validated(page);
+  await from.fill("2015");
+  await apply.click();
+  await revalidated;
+  await settled(page);
+  // The source now reaches past the study window, and the card MARKS that rather
+  // than warning about it: the window is an authoring seed, and a source that
+  // deliberately covers more is an ordinary order.
+  await card.getByText("Differs from study window 2018–2020").waitFor();
+  await shoot("project-source-period-applied");
+
+  // (5) What the browser's own IndexedDB holds: the edited source moved, keeping
+  //     its name and BOTH bindings, and the sibling on the same variant is exactly
+  //     as it was opened.
   await draftSaved(
     page,
     [
       [
         "lisa-core",
-        { from: 2018, to: 2019 },
+        { from: 2015, to: 2020 },
         ["scb/lisa/kon", "scb/lisa/forsamling"],
       ],
       ["lisa-lonfink", 2018, ["scb/lisa/lonfink"]],
@@ -816,7 +799,7 @@ async function sourcePeriodCase(page, counts, shoot, project) {
   );
   check(
     counts.validate > 0 && counts.order === 0,
-    `the correction POSTed ${counts.validate} validation(s) and ` +
+    `the period edit POSTed ${counts.validate} validation(s) and ` +
       `${counts.order} order(s)`,
   );
 }
@@ -1104,13 +1087,15 @@ try {
         },
       ],
     };
-    // The source-period correction's project (Y-15): TWO differently named sources
-    // on ONE register variant — a shape the catalog's add path cannot author, and
-    // the reason a correction is keyed by source name. `lisa-core` carries the
-    // leaf's own Kon plus Forsamling, which that leaf never shows.
+    // The source-period edit's project (Y-81): TWO differently named sources on
+    // ONE register variant — a shape the catalog's add path cannot author, and the
+    // reason the edit is keyed by source name. `lisa-core` carries Kon plus
+    // Forsamling, which no single catalog page lists beside it. The study window is
+    // what the edited period then deviates from.
     const twoSourceProject = {
       ...project,
       name: "Synthetic source period",
+      window: { from: 2018, to: 2020 },
       sources: [
         {
           name: "lisa-core",
@@ -1184,9 +1169,9 @@ try {
         shots: 2,
         run: (p, _c, shoot) => replaceConfirmCase(p, shoot, project),
       },
-      // Opens the TWO-SOURCE project, then corrects one named source's period
-      // from the catalog leaf — which is where the correction lives.
-      "catalog-source-period": {
+      // Opens the TWO-SOURCE project and edits one named source's period on its
+      // own /project card — the only surface that shows a source whole.
+      "project-source-period": {
         shots: 3,
         run: (p, c, shoot) => sourcePeriodCase(p, c, shoot, twoSourceProject),
       },

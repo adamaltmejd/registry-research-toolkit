@@ -1,7 +1,12 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { CatalogNode, RootResponse, VariantsResponse } from "./api";
 import { getCatalogNode, getCatalogRoot, getRegisterVariants } from "./api";
-import { resetCatalogNames, sourceNames } from "./catalog_names.svelte";
+import {
+  columnNames,
+  resetCatalogNames,
+  sourceNames,
+  UNASKED,
+} from "./catalog_names.svelte";
 
 // Y-80: the cart holds coordinates, so the words come from the catalog. These
 // cases pin `sourceNames`' ALL-OR-NOTHING contract — a card says the coordinate it
@@ -110,5 +115,66 @@ describe("sourceNames (the words behind a source's coordinate)", () => {
     expect(names.provider).toBeNull();
     expect(names.register).toBeNull();
     expect(names.variant).toBeNull();
+  });
+});
+
+describe("columnNames (the delivery column a binding's variable resolves to)", () => {
+  it("asks nothing for a coordinate carrying no variant", () => {
+    // A `register_variant` of fewer than 3 segments — only a malformed draft has
+    // one — leaves the card with an empty variant slug. Resolving the variable
+    // WITHOUT it answers over every variant of the register, so the row would
+    // lead with a delivery column this source does not deliver.
+    expect(columnNames("scb/lisa/kon", "2020", "")).toBe(UNASKED);
+    expect(vi.mocked(getCatalogNode).mock.calls).toHaveLength(0);
+  });
+
+  it("resolves at the source's own (period, variant)", async () => {
+    vi.mocked(getCatalogNode).mockResolvedValue({
+      states: [],
+    } as unknown as CatalogNode);
+
+    columnNames("scb/lisa/kon", "1990..2020", "arbetsstallen");
+
+    await vi.waitFor(() =>
+      expect(
+        columnNames("scb/lisa/kon", "1990..2020", "arbetsstallen").loading,
+      ).toBe(false),
+    );
+    expect(vi.mocked(getCatalogNode).mock.calls).toEqual([
+      ["scb/lisa/kon", { period: "1990..2020", variant: "arbetsstallen" }],
+    ]);
+  });
+});
+
+describe("resetCatalogNames", () => {
+  it("keeps a read that was in flight when the cache was reset out of it", async () => {
+    // The browser suites reset in `beforeEach`; a read the previous case started
+    // must not land in the next case's cache and answer it with the previous
+    // case's stub.
+    let landStale!: (response: VariantsResponse) => void;
+    vi.mocked(getRegisterVariants).mockReturnValue(
+      new Promise<VariantsResponse>((resolve) => {
+        landStale = resolve;
+      }),
+    );
+    sourceNames(COORDINATE);
+    expect(sourceNames(COORDINATE).loading).toBe(true);
+
+    resetCatalogNames();
+    vi.mocked(getRegisterVariants).mockResolvedValue({
+      variants: [{ slug: "individer-16plus", name: "Individer, 16+" }],
+    } as unknown as VariantsResponse);
+    expect((await settledNames()).variant).toBe("Individer, 16+");
+
+    // The abandoned read lands only now, on a cache that has already answered
+    // from its own request. A macrotask hop drains the microtasks its settle
+    // rides on, so this asserts AFTER the abandoned read had its chance at the
+    // cache rather than merely before it took one.
+    landStale({
+      variants: [{ slug: "individer-16plus", name: "Stale, from before" }],
+    } as unknown as VariantsResponse);
+    await new Promise((resolve) => setTimeout(resolve, 0));
+
+    expect(sourceNames(COORDINATE).variant).toBe("Individer, 16+");
   });
 });

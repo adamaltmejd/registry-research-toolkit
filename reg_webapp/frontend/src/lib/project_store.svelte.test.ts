@@ -951,6 +951,30 @@ describe("stable client-side ids (issue #200)", () => {
     expect(projectStore.sourceId(1)).toBe(id2);
   });
 
+  it("keeps EVERY id in place across a period-only batch (an update is not a remount)", () => {
+    seedThreeSources();
+    const ids = [0, 1, 2].map((i) => projectStore.sourceId(i));
+    const binding = projectStore.bindingId(1, 1);
+    projectStore.applyStagedDiff({
+      periodChange: [
+        {
+          sourceName: projectStore.draft?.sources?.[1]?.name as string,
+          registerVariant: "scb/r1/v1",
+          period: { from: 1990, to: 2020 },
+        },
+      ],
+    });
+    expect(projectStore.draft?.sources?.[1]?.period).toEqual({
+      from: 1990,
+      to: 2020,
+    });
+    // A period-only batch maps the sources 1:1 onto the array the mirror already
+    // describes, so the mirror stands. Rebuilding it would remount every source
+    // card — including the one that asked for this write.
+    expect([0, 1, 2].map((i) => projectStore.sourceId(i))).toEqual(ids);
+    expect(projectStore.bindingId(1, 1)).toBe(binding);
+  });
+
   it("keeps a survivor binding's id stable across a MIDDLE binding remove", () => {
     projectStore.newProject(SEED);
     projectStore.applyStagedDiff({
@@ -1394,11 +1418,11 @@ describe("a blocked order (§12)", () => {
   });
 });
 
-describe("applySourcePeriodReview (Y-15 — the reviewed source-period correction)", () => {
+describe("applySourcePeriodEdit (Y-81 — the cart card's period-only rewrite)", () => {
   /** A draft with TWO differently named sources on ONE register variant, the
    * shape only an imported spec produces (the catalog's add path finds-or-creates
-   * by variant). `LISA` carries a binding this leaf shows (Kon) and one it does
-   * not (alder); `LISA_2` is the sibling that must not move. */
+   * by variant). `LISA` carries two columns; `LISA_2` is the sibling that must
+   * not move. */
   function twoSourceDraft(): void {
     projectStore.newProject(SEED);
     projectStore.updateField("sources", [
@@ -1424,8 +1448,8 @@ describe("applySourcePeriodReview (Y-15 — the reviewed source-period correctio
     ]);
   }
 
-  /** A review of `sourceName`'s current value, proposing `period`. */
-  function review(sourceName: string, period: StagedAdd["period"]) {
+  /** An edit of `sourceName` started from its current value, proposing `period`. */
+  function edit(sourceName: string, period: StagedAdd["period"]) {
     const source = (projectStore.draft?.sources ?? []).find(
       (s) => s.name === sourceName,
     );
@@ -1445,8 +1469,8 @@ describe("applySourcePeriodReview (Y-15 — the reviewed source-period correctio
     );
 
     expect(
-      projectStore.applySourcePeriodReview(
-        review("LISA", { from: 2012, to: 2014 }),
+      projectStore.applySourcePeriodEdit(
+        edit("LISA", { from: 2012, to: 2014 }),
       ),
     ).toBe(true);
 
@@ -1467,33 +1491,33 @@ describe("applySourcePeriodReview (Y-15 — the reviewed source-period correctio
     expect($state.snapshot(projectStore.draft?.sources[1])).toEqual(sibling);
   });
 
-  it("refuses a review whose source moved, without mutating anything", () => {
+  it("refuses an edit whose source moved, without mutating anything", () => {
     twoSourceDraft();
-    const stale = review("LISA", { from: 2012, to: 2014 });
-    // The researcher (or a picker Apply) changes the reviewed source underneath.
+    const stale = edit("LISA", { from: 2012, to: 2014 });
+    // The researcher (or a picker Apply) changes the edited source underneath.
     projectStore.applyStagedDiff({
       adds: [add("scb/lisa/individer", "scb/lisa/inkomst", 2016)],
     });
     const before = structuredClone($state.snapshot(projectStore.draft));
 
-    expect(projectStore.applySourcePeriodReview(stale)).toBe(false);
+    expect(projectStore.applySourcePeriodEdit(stale)).toBe(false);
     expect($state.snapshot(projectStore.draft)).toEqual(before);
   });
 
-  it("refuses a review whose source is gone", () => {
+  it("refuses an edit whose source is gone", () => {
     twoSourceDraft();
-    const stale = review("LISA", { from: 2012, to: 2014 });
+    const stale = edit("LISA", { from: 2012, to: 2014 });
     projectStore.removeSource(0);
 
-    expect(projectStore.applySourcePeriodReview(stale)).toBe(false);
+    expect(projectStore.applySourcePeriodEdit(stale)).toBe(false);
     expect(projectStore.draft?.sources).toHaveLength(1);
   });
 
-  it("refuses a review from a project that has since been replaced", () => {
+  it("refuses an edit from a project that has since been replaced", () => {
     twoSourceDraft();
-    const stale = review("LISA", { from: 2012, to: 2014 });
-    // A New/Open bumps `replacementGeneration`; the reviewed source could well
-    // exist identically in the replacement, and this review is still not its.
+    const stale = edit("LISA", { from: 2012, to: 2014 });
+    // A New/Open bumps `replacementGeneration`; the edited source could well
+    // exist identically in the replacement, and this edit is still not its.
     projectStore.newProject(SEED);
     projectStore.updateField("sources", [
       {
@@ -1511,7 +1535,7 @@ describe("applySourcePeriodReview (Y-15 — the reviewed source-period correctio
       },
     ]);
 
-    expect(projectStore.applySourcePeriodReview(stale)).toBe(false);
+    expect(projectStore.applySourcePeriodEdit(stale)).toBe(false);
     expect(projectStore.draft?.sources[0].period).toEqual({
       from: 2010,
       to: 2015,
@@ -1548,8 +1572,8 @@ describe("applySourcePeriodReview (Y-15 — the reviewed source-period correctio
     bodies.length = 0;
 
     expect(
-      projectStore.applySourcePeriodReview(
-        review("LISA", { from: 2012, to: 2014 }),
+      projectStore.applySourcePeriodEdit(
+        edit("LISA", { from: 2012, to: 2014 }),
       ),
     ).toBe(true);
     await vi.advanceTimersByTimeAsync(600);

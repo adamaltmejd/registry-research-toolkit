@@ -105,9 +105,9 @@ authored from a catalog leaf (picked, reloaded, recovered, then extended by a fu
 pick on a cold catalog entry), a pick made on that leaf with no period chosen (refused,
 then recovered by choosing 2018), an edited draft replaced deliberately (New raises the
 confirmation, a cancel keeps the draft, an Open raises the same one and a confirm loads
-the file), one named source's period corrected from the catalog leaf, and a keyboard
-researcher re-applying the leaf's period from the year fields, from Apply and from a
-slider thumb — at 375×812, 768×1024, 1280×900 and 1920×1080 — 32 cases, each in a fresh
+the file), one named source's period edited on its own /project card, and a keyboard
+researcher re-applying the catalog leaf's period from the year fields, from Apply and
+from a slider thumb — at 375×812, 768×1024, 1280×900 and 1920×1080 — 32 cases, each in a fresh
 browser context against the real backend, with one failing request injected per error
 scenario and none into the other five. It asserts the behavior (real 422 +
 `project_empty`, which retry the banner offers, a real `order.json` download whose
@@ -132,7 +132,7 @@ at some viewport, or a server that never started; the servers are torn down eith
 
 Naming scenarios after the output directory runs just those —
 `dev.sh flows <dir> blocked-order order-retry validation-retry`,
-`dev.sh flows <dir> catalog-draft catalog-period-required catalog-source-period catalog-period-focus`,
+`dev.sh flows <dir> catalog-draft catalog-period-required project-source-period catalog-period-focus`,
 or `dev.sh flows <dir> replace-confirm`. The bare form above runs all eight and is the
 local verification invocation; the names exist for the gates.
 
@@ -143,7 +143,7 @@ runs the three `/project` error+retry scenarios and declares their 16 filenames,
 runs the deliberate-replacement one and declares its 8. The split is an artifact-list
 limit, not a distinction of concern — a gate declares at most 16 filenames and the six
 gated scenarios write 40 — and each gate names its own scenarios so none runs another's
-cases. `catalog-source-period` and `catalog-period-focus` have no gate yet: run them
+cases. `project-source-period` and `catalog-period-focus` have no gate yet: run them
 locally and read their 24 PNGs from the `/tmp` directory you name. Unlike the ephemeral
 `/tmp` captures above, these are **retained**: `yard lane show <lane>` prints the
 artifact paths for the execution — they outlive the container and view cleanup, so open

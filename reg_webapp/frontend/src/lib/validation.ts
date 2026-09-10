@@ -32,6 +32,7 @@ import {
   safeSourceName,
   safeSourcePeriod,
   safeSourceRegisterVariant,
+  safeStudyWindow,
 } from "./project_data";
 
 export type ValidationIssue = components["schemas"]["ValidationIssueModel"];
@@ -398,14 +399,10 @@ function uncoveredStudyWindowIntervals(
  * gently points the user back to the register page to stage an extension. Token
  * periods are skipped because mixed-grain coverage is not safely comparable. */
 export function windowCoverageHints(
-  window: StudyWindow | null | undefined,
+  window: StudyWindow | null,
   sources: readonly SafeSource[],
 ): WindowCoverageHint[] {
-  if (
-    window == null ||
-    !Number.isInteger(window.from) ||
-    !Number.isInteger(window.to)
-  ) {
+  if (window === null) {
     return [];
   }
   const hints: WindowCoverageHint[] = [];

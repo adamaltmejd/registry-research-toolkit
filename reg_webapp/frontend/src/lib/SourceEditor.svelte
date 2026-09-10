@@ -2,17 +2,29 @@
 import BindingEditor from "./BindingEditor.svelte";
 import { fqidSegments, sourceCardHeading } from "./catalog";
 import { sourceNames } from "./catalog_names.svelte";
-import { periodToWire } from "./period";
+import {
+  grammarYear,
+  periodFromWire,
+  periodToWire,
+  sameYearWindow,
+  yearWindowFromWire,
+  yearWindowToWire,
+} from "./period";
 import {
   type Period,
   type SafeSource,
+  type StudyWindow,
   safeSourceBindings,
   safeSourceName,
   safeSourcePeriod,
   safeSourceRegisterVariant,
   sourceBindingsMalformed,
+  sourceSnapshot,
 } from "./project_data";
-import { projectStore } from "./project_store.svelte";
+import {
+  projectStore,
+  type SourcePeriodEditTarget,
+} from "./project_store.svelte";
 import {
   Button,
   ConfirmDialog,
@@ -28,15 +40,16 @@ import {
   type ValidationIssue,
 } from "./validation";
 
-// READ-ONLY source card in the #991 data-order cart: the cart SHOWS what has been
-// picked (a register and the columns taken from it) and supports delete +
-// navigate-out only — adding or changing data happens in the catalog browser, not
-// here. So this card DISPLAYS the register it delivers from, its
-// register_variant / period / name, and offers "Remove source"; it carries no
-// inputs, pickers, or PeriodEditor. The header still rolls up all errors under
-// `/sources/{i}` as a badge (fixes are reached via the ValidationPanel's catalog
-// link). See reg_webapp/DESIGN.md and issue #991.
-const { sourceIndex, source, issues, providerQualified } = $props<{
+// The source card of the #991 data-order cart: the cart SHOWS what has been picked
+// (a register and the columns taken from it) and supports delete + navigate-out —
+// a wrong variable, variant or representation is fixed by picking again in the
+// catalog, never by editing the row. The ONE exception is this source's PERIOD
+// (Y-81): it is a field of the source rather than of any pick, and this card is the
+// only surface that shows a source whole — its full coordinate and every binding it
+// carries — which is what a source-wide period rewrite has to be looked at against.
+// The header still rolls up all errors under `/sources/{i}` as a badge (fixes are
+// reached via the ValidationPanel's catalog link). See reg_webapp/DESIGN.md.
+const { sourceIndex, source, issues, providerQualified, studyWindow } = $props<{
   sourceIndex: number;
   source: SafeSource;
   issues: ValidationIssue[];
@@ -45,7 +58,16 @@ const { sourceIndex, source, issues, providerQualified } = $props<{
    * can stand for two registers there. A deployment fact, read once in
    * `App.svelte` and threaded down like `steward` — no route fetches it. */
   providerQualified: boolean;
+  /** The project's own study window, or null when none is set — what this
+   * source's period is MARKED against when the two differ. An authoring seed,
+   * never an inheritance (reg_schema/DESIGN.md): each source keeps its own
+   * concrete period, so divergence is shown rather than hidden. */
+  studyWindow: StudyWindow | null;
 }>();
+
+/** Instance-scoped ids, so every card's period fields keep real `<label for>`
+ * pairs on a page that renders one card per source. */
+const uid = $props.id();
 
 const sourcePtr = $derived(jsonPointer(["sources", sourceIndex]));
 const rolledUp = $derived(issuesUnderPointer(issues, sourcePtr));
@@ -94,13 +116,11 @@ const variantSlug = $derived(fqidSegments(registerVariant)[2] ?? "");
 const bindings = $derived(safeSourceBindings(source));
 const bindingsMalformed = $derived(sourceBindingsMalformed(source));
 
-// The period as a read-only display string (list-period aware — `periodToWire`
-// already joins list segments); null → the "(no period)" fallback.
-const periodDisplay = $derived(
-  periodToWire(safeSourcePeriod(source) as Period),
-);
+// The stored period as its WIRE string (list-period aware — `periodToWire` already
+// joins list segments); null when the source carries none or an unshapeable one.
+const periodWire = $derived(periodToWire(safeSourcePeriod(source) as Period));
 
-// The read-only coordinate rows, rendered through the shared KeyValue primitive
+// The coordinate rows, rendered through the shared KeyValue primitive
 // (#804) — same metadata-row styling ProjectEditor uses. The provider heads them
 // where the deployment has more than one: it is a word, not an identifier, so it
 // takes no mono, and the label is what tells it from the variant in the title. The
@@ -115,13 +135,184 @@ const metaRows = $derived([
   ...(titleIsCoordinate
     ? []
     : [{ label: "Register variant", value: registerVariant, mono: true }]),
-  { label: "Period", value: periodDisplay ?? "(no period)" },
   {
     label: "Source name",
     value: safeSourceName(source) || "(unnamed source)",
     mono: true,
   },
 ] satisfies KeyValueRow[]);
+
+// ── The source's period (Y-81) ───────────────────────────────────────────────
+//
+// Authored in the catalog's own period vocabulary: a YEAR RANGE, the one grammar
+// the catalog's `PeriodPicker` authors, written back through the same wire shaping
+// a pick uses (`periodFromWire(yearWindowToWire(…))` — a bare year when the two
+// bounds meet, the `{from, to}` object otherwise). A period the year fields cannot
+// express — a token like `HT2018`, or the #307 comma list two disjoint picks merge
+// into — is shown as it stands and never silently rewritten into a span, exactly as
+// the catalog's picker leaves one alone.
+
+/** The stored period as a year window, or null when it is absent, a token or a
+ * segment list. */
+const storedYears = $derived(yearWindowFromWire(periodWire));
+/** Whether the year fields can author THIS source's period. A source with no period
+ * yet is authored by them too; it is what a source is missing, not another grammar. */
+const yearsEditable = $derived(periodWire === null || storedYears !== null);
+
+/** The two fields as TYPED, or null while they mirror the stored period. Kept as
+ * text so a refused entry stays on screen as it was typed rather than being
+ * rewritten into some other range. */
+let entry = $state<{ from: string; to: string } | null>(null);
+/** Whether the entry has been committed (blur or Apply) — a half-typed year must
+ * not announce a refusal on every keystroke. */
+let entryCommitted = $state(false);
+/** The last Apply was refused because the SOURCE moved under the edit — a different
+ * thing from `entryRefusal`, which is the years themselves being unusable. */
+let writeRefused = $state(false);
+/** The period a landed write set, until the next keystroke retires it. A form that
+ * says nothing on success leaves the researcher to infer it from a greyed button —
+ * and where the new period neither crosses the study window nor changes a finding,
+ * there is nothing else on the card that moves. */
+let appliedYears = $state<StudyWindow | null>(null);
+/** The source as it stood when this edit began — the value the researcher was
+ * looking at, which the store re-checks the write against. Plain, not `$state`:
+ * nothing renders from it. */
+let editedFrom: SourcePeriodEditTarget | null = null;
+
+const fromText = $derived(
+  entry?.from ?? (storedYears ? String(storedYears.from) : ""),
+);
+const toText = $derived(
+  entry?.to ?? (storedYears ? String(storedYears.to) : ""),
+);
+
+/** The entry resolved: the year window it names, or why it names none — with the
+ * field(s) that refusal is about, so the hairline marks the year at fault rather
+ * than both. Null while the fields still mirror the stored period. */
+const entryResolution = $derived.by<
+  | { years: StudyWindow }
+  | { problem: string; at: { from: boolean; to: boolean } }
+  | null
+>(() => {
+  if (entry === null) {
+    return null;
+  }
+  // `grammarYear` is the wire's OWN year rule (19xx/20xx), the same one the
+  // catalog's exact-year fields and `periodFromWire` are written against — so a
+  // year these fields accept is a year the period wire can carry.
+  const from = grammarYear(entry.from);
+  const to = grammarYear(entry.to);
+  const at = { from: from === null, to: to === null };
+  if (from === null || to === null) {
+    // Word for word the catalog picker's own refusal (`PeriodPicker`), naming the
+    // century range instead of an example year: a cart card has no coverage band to
+    // draw an exemplar from.
+    const rule = "a four-digit year, 1900 to 2099.";
+    if (at.from && at.to) {
+      return { problem: `From and To must each be ${rule}`, at };
+    }
+    return { problem: `${at.from ? "From" : "To"} must be ${rule}`, at };
+  }
+  if (from > to) {
+    // The pair, not either year on its own.
+    return {
+      problem: `From ${from} is after To ${to} — enter From at or before To.`,
+      at: { from: true, to: true },
+    };
+  }
+  return { years: { from, to } };
+});
+
+const entryProblem = $derived(
+  entryResolution !== null && "problem" in entryResolution
+    ? entryResolution
+    : null,
+);
+/** The refusal to show, once the entry has been committed. */
+const entryRefusal = $derived(entryCommitted ? entryProblem : null);
+/** The refusal line is only described-by while it actually says something. */
+const problemId = $derived(
+  entryRefusal === null ? undefined : `${uid}-problem`,
+);
+/** The wire the entry would write, or null when it names no window / no change. */
+const proposedWire = $derived.by(() => {
+  if (entryResolution === null || !("years" in entryResolution)) {
+    return null;
+  }
+  const wire = yearWindowToWire(entryResolution.years);
+  return wire === periodWire ? null : wire;
+});
+/** The confirmation a landed write leaves in the refusal's own region — one line
+ * that is either explaining a refusal or reporting a write, never both. */
+const appliedLabel = $derived(
+  appliedYears === null
+    ? null
+    : appliedYears.from === appliedYears.to
+      ? `Period set to ${appliedYears.from}.`
+      : `Period set to ${appliedYears.from}–${appliedYears.to}.`,
+);
+
+/** The study window this source's period is MARKED against, or null when there is
+ * nothing to mark — the whole point of a per-source period is that it MAY differ,
+ * so the card says when it does instead of flagging it. A source with no period at
+ * all differs from nothing; that it has none is the validator's finding, not this
+ * marker's. Compared through `sameYearWindow`, the shared user-deviation predicate,
+ * so a period is judged by the span it covers rather than by how the wire spells it
+ * (a stored `{from: 2020, to: 2020}` is the same span as a window of 2020). */
+const deviation = $derived(
+  studyWindow !== null &&
+    periodWire !== null &&
+    !sameYearWindow(storedYears, studyWindow)
+    ? studyWindow
+    : null,
+);
+
+function editYear(side: "from" | "to", value: string): void {
+  if (entry === null) {
+    // The edit starts HERE: capture the source as it is, so a write onto a source
+    // that has moved since — a column removed from this very card, a project
+    // replaced — is refused rather than landing on a value nobody looked at.
+    editedFrom = {
+      sourceName: safeSourceName(source),
+      registerVariant,
+      snapshot: sourceSnapshot(source),
+      replacementGeneration: projectStore.replacementGeneration,
+    };
+    writeRefused = false;
+    appliedYears = null;
+  }
+  // The buffer starts as what the fields were SHOWING — the stored period on the
+  // first keystroke, the previous entry after that. `fromText`/`toText` already say
+  // which, so the seed is not spelled a second time here.
+  const base = entry ?? { from: fromText, to: toText };
+  entry = side === "from" ? { ...base, from: value } : { ...base, to: value };
+}
+
+/** Commit the edited period: ONE period-only diff through the store's guarded
+ * `applySourcePeriodEdit`, never unioned with anything else. Either way the fields
+ * are re-armed on the source as it NOW stands — after a refusal that is the whole
+ * point, since the source moved and the next Apply has to be made against a value
+ * the researcher can see, so the alert says the years were reset. */
+function applyPeriod(): void {
+  // Committing FIRST is what makes a refused Apply say why: years that name no
+  // window leave `proposedWire` null, so the write below is skipped and the
+  // refusal line renders instead.
+  entryCommitted = true;
+  const target = editedFrom;
+  const wire = proposedWire;
+  if (target === null || wire === null) {
+    return;
+  }
+  const written = yearWindowFromWire(wire);
+  writeRefused = !projectStore.applySourcePeriodEdit({
+    ...target,
+    period: periodFromWire(wire),
+  });
+  appliedYears = writeRefused ? null : written;
+  entry = null;
+  entryCommitted = false;
+  editedFrom = null;
+}
 
 // The removal question and the delete button's accessible name are SENTENCES, and
 // they name this source in words rather than reciting the heading and the line
@@ -138,16 +329,28 @@ const removeQuestion = $derived(
     ? `Remove the ${heading} source${variantName ? ` (${variantName})` : ""} and its ${columnCount}?`
     : `Remove this source and its ${columnCount}?`,
 );
-// Two sources on the SAME register share a heading, and two in one succession
-// family differ by a few words of frame — so the concrete coordinate rides along
-// in the button's name, the one thing that always differs. Not where the heading
-// already IS that coordinate.
+// How the card NAMES this source inside a per-source button label. Two sources on
+// the SAME register share a heading, and two in one succession family differ by a
+// few words of frame — so the concrete coordinate rides along, the one thing that
+// (short of two sources on one variant) differs. Not where the heading already IS
+// that coordinate. Spelled ONCE, because both per-source buttons interpolate it and
+// two spellings would let one card be named two ways.
+const cardName = $derived(
+  `${heading}${variantName ? `, ${variantName}` : ""}${
+    titleIsCoordinate ? "" : ` (${registerVariant})`
+  }`,
+);
 const removeLabel = $derived(
-  identified
-    ? `Remove source ${heading}${variantName ? `, ${variantName}` : ""}${
-        titleIsCoordinate ? "" : ` (${registerVariant})`
-      }`
-    : undefined,
+  identified ? `Remove source ${cardName}` : undefined,
+);
+const applyPeriodLabel = $derived(
+  identified ? `Apply period for ${cardName}` : undefined,
+);
+/** The year pair's accessible name. Every card contributes a field labelled "From"
+ * and one labelled "To"; naming the GROUP per source tells them apart in a flat
+ * form-field list without touching the visible labels the fields are named by. */
+const periodGroupLabel = $derived(
+  identified ? `Period for ${cardName}` : "Period",
 );
 
 // Removing a source takes its whole column list with it, and nothing in the cart
@@ -241,6 +444,123 @@ function confirmRemove(): void {
   {:else}
     <KeyValue rows={metaRows} />
 
+    <!-- The PERIOD: the one field the cart edits (Y-81). A year range, in the
+         catalog's own vocabulary — two exact-year fields and one Apply, the same
+         entry the catalog's period card carries beside its slider. There is no
+         slider here: a cart card knows no data-coverage track to draw one against,
+         and the years are what the researcher already has in mind. -->
+    <div class="source-period">
+      <span class="micro-label">Period</span>
+      {#if yearsEditable}
+        <!-- A form, so Enter in either field applies the period — the catalog's
+             period card commits its years the same way, and a change the keyboard
+             can only finish by tabbing to a button is not finished. -->
+        <form
+          class="period-entry"
+          onsubmit={(event) => {
+            event.preventDefault();
+            applyPeriod();
+          }}
+        >
+          <div class="years" role="group" aria-label={periodGroupLabel}>
+            <label class="micro-label" for="{uid}-from">From</label>
+            <input
+              id="{uid}-from"
+              class="year"
+              type="text"
+              inputmode="numeric"
+              autocomplete="off"
+              value={fromText}
+              placeholder="yyyy"
+              aria-invalid={entryRefusal?.at.from === true}
+              aria-describedby={problemId}
+              oninput={(event) => editYear("from", event.currentTarget.value)}
+              onchange={() => {
+                entryCommitted = true;
+              }}
+            />
+            <label class="micro-label" for="{uid}-to">To</label>
+            <input
+              id="{uid}-to"
+              class="year"
+              type="text"
+              inputmode="numeric"
+              autocomplete="off"
+              value={toText}
+              placeholder="yyyy"
+              aria-invalid={entryRefusal?.at.to === true}
+              aria-describedby={problemId}
+              oninput={(event) => editYear("to", event.currentTarget.value)}
+              onchange={() => {
+                entryCommitted = true;
+              }}
+            />
+          </div>
+          <!-- Named per source, so a screen-reader controls list tells one card's
+               Apply from the next's — the same disambiguation the Remove button
+               takes, and by the same words.
+
+               NEVER disabled, as the catalog's own period card commits its years:
+               clicking a refused entry explains the refusal instead of leaving a dead
+               button and no reason, and an Apply that disables itself the moment it
+               succeeds blurs the keyboard that pressed it back to the top of the
+               page. An Apply with nothing to do is a no-op. -->
+          <Button type="submit" size="sm" aria-label={applyPeriodLabel}>
+            Apply period
+          </Button>
+        </form>
+      {:else}
+        <!-- A token period, or the #307 comma list two disjoint picks merge into:
+             the year fields cannot express it, and collapsing it into a span would
+             order years nobody asked for. It stands as it is. -->
+        <p class="period-fixed">
+          <span class="mono">{periodWire}</span>
+          <span class="fixed-note">
+            The From and To fields can't express this period — change it in
+            <code>project_data.json</code> and open the file again.
+          </span>
+        </p>
+      {/if}
+
+      <!-- Rendered ALWAYS, so a refusal lands in a live region that already existed
+           rather than one that appears with it (matching the catalog period card's
+           own refusal line). It carries the CONFIRMATION too: a write and the
+           refusal it fixes are the same line changing, not a second one appearing. -->
+      <p
+        class="problem"
+        class:refused={entryRefusal !== null}
+        class:applied={entryRefusal === null && appliedLabel !== null}
+        id="{uid}-problem"
+        role="status"
+      >
+        {#if entryRefusal !== null}
+          <span aria-hidden="true">✕</span>
+          {entryRefusal.problem}
+        {:else if appliedLabel !== null}
+          <span aria-hidden="true">✓</span>
+          {appliedLabel}
+        {/if}
+      </p>
+
+      {#if writeRefused}
+        <p class="stale" role="alert">
+          <span aria-hidden="true">▲</span>
+          This source changed while you were editing, so its period was not changed.
+          The years now show what the source holds — enter them again and apply.
+        </p>
+      {/if}
+
+      {#if deviation}
+        <!-- The window is an authoring SEED, not an inheritance (reg_schema/DESIGN.md):
+             a source may deliberately cover more or less. So this MARKS the
+             divergence rather than warning about it — whether the study window is
+             actually left uncovered is a validation finding, and it has one. -->
+        <p class="deviation">
+          Differs from study window {deviation.from}–{deviation.to}
+        </p>
+      {/if}
+    </div>
+
     <!-- The cart says COLUMNS: a binding is one delivery column of the order, and
          that is the word the rail and the researcher already use. The mono
          `bindings` below is deliberately NOT renamed — it is the project_data.json
@@ -272,7 +592,7 @@ function confirmRemove(): void {
                 bindingIndex={j}
                 binding={binding}
                 variant={variantSlug}
-                period={periodDisplay}
+                period={periodWire}
               />
             </li>
           {/each}
@@ -355,6 +675,130 @@ function confirmRemove(): void {
      apart at a glance (DESIGN.md → Typography). */
   .source-head h3.mono {
     font-family: var(--font-mono);
+  }
+  /* The period control: the same entry the catalog's period card carries, on the
+     card's own spacing rhythm rather than in a second bordered box (cards inside
+     cards, DESIGN.md), and on the SAME two columns `KeyValue` lays the rows above it
+     on, so the card keeps ONE term column — the label sits where Provider does, the
+     control where its value does. The control is compound (an entry row, then
+     whatever it has to say), so everything after the label stacks in the value
+     column. */
+  .source-period {
+    display: grid;
+    grid-template-columns: minmax(8rem, max-content) 1fr;
+    gap: var(--space-1) var(--space-3);
+  }
+  .source-period > :not(.micro-label) {
+    grid-column: 2;
+  }
+  /* Narrow: a value column 8rem in cannot hold two year fields and an Apply without
+     clipping them, so the label goes back above a full-width control — at the shell's
+     own collapse breakpoint. */
+  @media (max-width: 48rem) {
+    .source-period {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-1);
+    }
+  }
+  .period-entry {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2) var(--space-3);
+  }
+  .years {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+  .years label {
+    white-space: nowrap;
+  }
+  /* The exact-year field, as the catalog's own period entry sets it. */
+  .year {
+    box-sizing: border-box;
+    width: 5rem;
+    padding: var(--space-1) var(--space-2);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    color: var(--text);
+    /* A year is a machine identifier (DESIGN.md → Typography): mono, tabular. */
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    font-variant-numeric: tabular-nums;
+  }
+  .year:focus-visible {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+  }
+  .year[aria-invalid="true"] {
+    border-color: var(--err);
+  }
+  /* A period the year fields cannot author: the wire itself (a machine value, so
+     mono) with the reason beside it, at the muted metadata weight. */
+  .period-fixed {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--space-1) var(--space-2);
+    margin: 0;
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+  .period-fixed .mono {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+  }
+  .fixed-note {
+    color: var(--text-muted);
+    font-size: var(--text-sm);
+  }
+  /* Small, but NOT muted: this is a standing fact about the source the researcher
+     asked to see, not metadata to skim past (DESIGN.md → Colors). */
+  .deviation {
+    margin: 0;
+    color: var(--text);
+    font-size: var(--text-sm);
+  }
+  /* Status ROWS: the status tint as fill, the status foreground as text, the glyph
+     first (frontend/DESIGN.md → Banners and status rows). The refusal line keeps no
+     fill and no height while it says nothing. */
+  .problem {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-2);
+    margin: 0;
+    color: var(--err);
+    font-size: var(--text-sm);
+  }
+  .problem.refused {
+    padding: var(--space-1) var(--space-2);
+    border: 1px solid var(--err-border);
+    border-radius: var(--radius-sm);
+    background: var(--err-bg);
+  }
+  /* The same row, reporting rather than refusing — the cool OK roles, as
+     ValidationPanel's clean verdict wears them. */
+  .problem.applied {
+    padding: var(--space-1) var(--space-2);
+    border: 1px solid var(--ok);
+    border-radius: var(--radius-sm);
+    background: var(--ok-bg);
+    color: var(--ok);
+  }
+  .stale {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-2);
+    margin: 0;
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-sm);
+    background: var(--warn-bg);
+    color: var(--warn);
+    font-size: var(--text-sm);
   }
   .bindings h4 {
     margin: 0 0 var(--space-2);

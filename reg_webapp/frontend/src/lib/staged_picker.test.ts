@@ -10,7 +10,6 @@ import {
   pickerRowKey,
   rowAddSegments,
   type StagedPickerBand,
-  sourcePeriodTargets,
   stagedRemoveForCommitted,
 } from "./staged_picker";
 
@@ -888,118 +887,5 @@ describe("rowAddSegments (#376 per-concrete-segment fan-out)", () => {
         periodWire: "1995..2000",
       },
     ]);
-  });
-});
-
-describe("sourcePeriodTargets", () => {
-  /** A draft carrying TWO differently named sources on one register variant — the
-   * shape an imported spec routinely has, and the one a source-period correction
-   * must tell apart (source names are structurally unique; variants are not). */
-  function twoSourceDraft(): ProjectData {
-    return {
-      schema_version: "3.0.0",
-      reg_meta_version: "reg_meta/v1.0.0",
-      steward: "global",
-      name: "",
-      sources: [
-        {
-          name: "LISA",
-          register_variant: "scb/lisa/individer",
-          period: { from: 2010, to: 2015 },
-          bindings: [
-            {
-              variable: "scb/lisa/kon",
-              type: "categorical",
-              representation: "Kon",
-            },
-            { variable: "scb/lisa/alder", type: "numeric" },
-          ],
-        },
-        {
-          name: "LISA_HIST",
-          register_variant: "scb/lisa/individer",
-          period: 2009,
-          bindings: [{ variable: "scb/lisa/kon", type: "categorical" }],
-        },
-        {
-          name: "RAMS",
-          register_variant: "scb/rams/standard",
-          period: 2019,
-          bindings: [{ variable: "scb/rams/syss", type: "categorical" }],
-        },
-      ],
-    };
-  }
-
-  const konBand: StagedPickerBand = {
-    key: "scb/lisa/kon",
-    registerPrefix: "scb/lisa",
-    rows: [row({ key: "individer::Kon", variant: "individer", column: "Kon" })],
-  };
-
-  it("offers BOTH named sources on a shared variant, with every binding each carries", () => {
-    expect(sourcePeriodTargets(twoSourceDraft(), [konBand])).toEqual([
-      {
-        sourceName: "LISA",
-        registerVariant: "scb/lisa/individer",
-        periodWire: "2010..2015",
-        // `scb/lisa/alder` is NOT on this leaf — the review still lists it,
-        // because the period it rewrites is source-wide.
-        bindings: [
-          { variable: "scb/lisa/kon", representation: "Kon" },
-          { variable: "scb/lisa/alder", representation: null },
-        ],
-        snapshot: expect.any(String),
-      },
-      {
-        sourceName: "LISA_HIST",
-        registerVariant: "scb/lisa/individer",
-        periodWire: "2009",
-        bindings: [{ variable: "scb/lisa/kon", representation: null }],
-        snapshot: expect.any(String),
-      },
-    ]);
-  });
-
-  it("images each source's COMPLETE value, so a sibling's snapshot is its own", () => {
-    const [lisa, hist] = sourcePeriodTargets(twoSourceDraft(), [konBand]);
-    expect(lisa.snapshot).toContain("2010");
-    expect(lisa.snapshot).not.toBe(hist.snapshot);
-    // The image covers every binding field, not just the ones the review lists —
-    // a changed `type` must invalidate a review as surely as a changed period.
-    const retyped = twoSourceDraft();
-    retyped.sources[0].bindings[1].type = "opaque";
-    expect(sourcePeriodTargets(retyped, [konBand])[0].snapshot).not.toBe(
-      lisa.snapshot,
-    );
-  });
-
-  it("skips sources on variants this page does not cover", () => {
-    expect(
-      sourcePeriodTargets(twoSourceDraft(), [konBand]).map(
-        (t) => t.registerVariant,
-      ),
-    ).not.toContain("scb/rams/standard");
-  });
-
-  it("covers every concrete segment of a folded family row", () => {
-    const draft = twoSourceDraft();
-    draft.sources = [
-      {
-        name: "LISA 1990-2009",
-        register_variant: "scb/lisa/individer-16plus",
-        period: { from: 1990, to: 2009 },
-        bindings: [{ variable: "scb/lisa/kon", type: "categorical" }],
-      },
-    ];
-    expect(
-      sourcePeriodTargets(draft, [band([foldedFamilyRow()])]).map(
-        (t) => t.sourceName,
-      ),
-    ).toEqual(["LISA 1990-2009"]);
-  });
-
-  it("is empty for a null draft", () => {
-    expect(sourcePeriodTargets(null, [konBand])).toEqual([]);
   });
 });

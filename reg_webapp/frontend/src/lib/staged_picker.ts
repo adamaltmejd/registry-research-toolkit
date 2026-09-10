@@ -23,7 +23,6 @@ import {
   safeSourcePeriod,
   safeSourceRegisterVariant,
   safeSourceSlots,
-  sourceSnapshot,
 } from "./project_data";
 import type { StagedPeriodChange, StagedRemove } from "./project_store.svelte";
 
@@ -276,68 +275,6 @@ export function committedPickerRows(
     }
   }
   return committed;
-}
-
-/** One binding of a correctable source, as the review lists it. */
-export interface SourcePeriodBinding {
-  variable: string;
-  representation: string | null;
-}
-
-/** One draft source a catalog page can correct the period of: the NAMED source, its
- * full register-variant coordinate, its current period as a wire string, EVERY
- * binding it carries (including the ones this leaf/group does not show), and the
- * complete-value image a review is re-checked against. */
-export interface SourcePeriodTarget {
-  sourceName: string;
-  registerVariant: string;
-  /** The stored period as a wire string; `""` when it has none/an unshapeable one. */
-  periodWire: string;
-  bindings: SourcePeriodBinding[];
-  snapshot: string;
-}
-
-/** The draft's sources on the concrete register variants `bands` cover — the targets
- * the catalog's source-period correction offers. Several differently NAMED sources on
- * ONE variant are several targets: a source period is source-wide, so the correction
- * names the source, never the variant. The bands' full concrete fan-out is reused
- * (`rowVariantSegments`), so a folded family's predecessor era is covered too. */
-export function sourcePeriodTargets(
-  draft: ProjectData | null,
-  bands: readonly StagedPickerBand[],
-): SourcePeriodTarget[] {
-  const sources = safeSourceSlots(draft?.sources);
-  if (sources.length === 0) {
-    // The ordinary catalog-browsing state: no draft, nothing to correct — and no
-    // reason to walk the bands' whole segment fan-out to discover that.
-    return [];
-  }
-  const covered = new Set<string>();
-  for (const band of bands) {
-    for (const row of band.rows) {
-      for (const segment of rowVariantSegments(row)) {
-        covered.add(rowRegisterVariantForVariant(band, segment.variant));
-      }
-    }
-  }
-  const targets: SourcePeriodTarget[] = [];
-  for (const source of sources) {
-    const registerVariant = safeSourceRegisterVariant(source);
-    if (!covered.has(registerVariant)) {
-      continue;
-    }
-    targets.push({
-      sourceName: safeSourceName(source),
-      registerVariant,
-      periodWire: periodToWire(sourcePeriod(source)) ?? "",
-      bindings: safeSourceBindings(source).map((binding) => ({
-        variable: bindingVariable(binding),
-        representation: bindingRepresentation(binding),
-      })),
-      snapshot: sourceSnapshot(source),
-    });
-  }
-  return targets;
 }
 
 export function sourcePeriodsFromDraft(

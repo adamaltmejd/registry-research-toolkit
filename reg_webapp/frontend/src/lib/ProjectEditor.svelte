@@ -1,6 +1,10 @@
 <script lang="ts">
 import { onDestroy } from "svelte";
-import { regMetaReleaseTag, safeSourceSlots } from "./project_data";
+import {
+  regMetaReleaseTag,
+  safeSourceSlots,
+  safeStudyWindow,
+} from "./project_data";
 import { projectStore } from "./project_store.svelte";
 import SourceEditor from "./SourceEditor.svelte";
 import {
@@ -177,7 +181,12 @@ onDestroy(() => {
     <!-- Read-side safe source slots preserve array positions for degraded cards
          while the draft itself stays verbatim for serialize/validate. -->
     {@const sources = safeSourceSlots(draft.sources)}
-    {@const coverageHints = windowCoverageHints(draft.window, sources)}
+    <!-- The draft is held VERBATIM, so its `window` is coerced once here, at the
+         same boundary `sources` is — then threaded to both readers (the coverage
+         hints, and each card's own deviation marker) rather than re-coerced by
+         either. -->
+    {@const studyWindow = safeStudyWindow(draft.window)}
+    {@const coverageHints = windowCoverageHints(studyWindow, sources)}
     <header class="editor-head">
       <h2>
         {draft.name || "Untitled project"}
@@ -251,6 +260,7 @@ onDestroy(() => {
                 source={source}
                 issues={projectStore.validation?.issues ?? []}
                 {providerQualified}
+                {studyWindow}
               />
             {/each}
           </div>

@@ -167,6 +167,20 @@ export function safeSourceSlots(sources: unknown): SafeSource[] {
   return Array.isArray(sources) ? sources.map(asSafeSource) : [];
 }
 
+/** The draft's study window when it is a usable year pair, else null — an opened
+ * spec is held verbatim, so `window` can be absent or malformed. The read side's
+ * one coercion of it, done once at the `/project` boundary (beside
+ * `safeSourceSlots`) and threaded to both readers: the coverage hints and the
+ * source card's deviation marker. */
+export function safeStudyWindow(window: unknown): StudyWindow | null {
+  const safe = isPlainObject(window) ? window : null;
+  return safe != null &&
+    Number.isInteger(safe.from) &&
+    Number.isInteger(safe.to)
+    ? (safe as unknown as StudyWindow)
+    : null;
+}
+
 export function safeSourceName(source: unknown): string {
   const safe = asSafeSource(source);
   return typeof safe?.name === "string" ? safe.name : "";
@@ -198,9 +212,9 @@ export function sourceBindingsMalformed(source: unknown): boolean {
 
 /** A stable text image of ONE source slot — the complete stored value, every
  * binding field and every unmapped key included. Two images compare equal exactly
- * when the source has not changed, which is what lets a reviewed source-period
- * correction refuse to land on a source that moved after the researcher reviewed
- * it (`projectStore.applySourcePeriodReview`). Insertion order is preserved by the
+ * when the source has not changed, which is what lets an edited source period
+ * refuse to land on a source that moved after the researcher looked at it
+ * (`projectStore.applySourcePeriodEdit`). Insertion order is preserved by the
  * immutable mutators here, so a re-spread of an unchanged source images the same. */
 export function sourceSnapshot(source: unknown): string {
   return JSON.stringify(source ?? null);

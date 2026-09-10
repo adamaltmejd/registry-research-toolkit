@@ -10,15 +10,16 @@ import type {
 } from "./api";
 import { getCatalogNode, getCatalogRoot, getRegisterVariants } from "./api";
 import { resetCatalogNames } from "./catalog_names.svelte";
-import type { Source } from "./project_data";
+import type { Period, Source } from "./project_data";
 import { projectStore } from "./project_store.svelte";
 import SourceEditor from "./SourceEditor.svelte";
 
-// #991/#993: SourceEditor is the READ-ONLY cart source card — it DISPLAYS the
-// register it delivers from, its coordinate/period/name and its columns, and offers
-// delete only. No name / register_variant inputs, no variant picker, no
-// PeriodEditor. Y-75: the card is titled by its REGISTER (the thing the researcher
-// picked), the columns are called columns, and dropping a whole source asks first.
+// #991/#993: SourceEditor is the cart source card — it DISPLAYS the register it
+// delivers from, its coordinate/name and its columns, and offers delete only. No
+// name / register_variant inputs, no variant picker. Y-81: its one EDITABLE field is
+// the source's PERIOD, authored as a year range. Y-75: the card is titled by its
+// REGISTER (the thing the researcher picked), the columns are called columns, and
+// dropping a whole source asks first.
 // Y-80: the register and the variant are AS THE CATALOG NAMES THEM, read from the
 // catalog (the draft holds only the coordinate) and never a slug rule — and they are
 // composed as separate elements, not strung into one dot-joined heading.
@@ -132,12 +133,13 @@ function renderCard(
     source,
     issues: [],
     providerQualified: false,
+    studyWindow: null,
     ...overrides,
   });
 }
 
-describe("SourceEditor read-only cart card", () => {
-  it("displays the register_variant + period read-only, with no inputs or pickers", async () => {
+describe("SourceEditor cart card", () => {
+  it("displays the register_variant read-only, with the period as its one field", async () => {
     const source = {
       name: "lisa_main",
       register_variant: "scb/lisa/v1",
@@ -146,14 +148,21 @@ describe("SourceEditor read-only cart card", () => {
     } as Source;
     await renderCard(source);
 
-    // The coordinate + period are shown…
+    // The coordinate is shown read-only…
     await expect.element(page.getByText("scb/lisa/v1")).toBeVisible();
-    await expect.element(page.getByText("2020")).toBeVisible();
+    // …the period as the two year fields that author it (Y-81)…
+    await expect
+      .element(page.getByRole("textbox", { name: "From" }))
+      .toHaveValue("2020");
+    await expect
+      .element(page.getByRole("textbox", { name: "To" }))
+      .toHaveValue("2020");
     // …the column's variable is shown…
     await expect.element(page.getByText("scb/lisa/kon")).toBeVisible();
 
-    // …and there are NO editing affordances: no textboxes, no "Pick variant".
-    expect(page.getByRole("textbox").query()).toBeNull();
+    // …and those two years are the WHOLE of the card's authoring: no name field, no
+    // "Pick variant", no way to add a column from the cart.
+    expect(page.getByRole("textbox").elements()).toHaveLength(2);
     expect(
       page.getByRole("button", { name: /Pick variant/ }).query(),
     ).toBeNull();
@@ -401,7 +410,7 @@ describe("SourceEditor read-only cart card", () => {
     expect(page.getByText("LISA", { exact: true }).query()).toBeNull();
   });
 
-  it("shows the '(no period)' fallback for a null period", async () => {
+  it("arms the year fields empty for a source carrying no period yet", async () => {
     const source = {
       name: "s",
       register_variant: "scb/lisa/v1",
@@ -410,7 +419,22 @@ describe("SourceEditor read-only cart card", () => {
     } as unknown as Source;
     await renderCard(source);
 
-    await expect.element(page.getByText("(no period)")).toBeVisible();
+    // A missing period is not another grammar — it is what this source lacks, so the
+    // same two fields author it, empty. Apply stays live — a dead button explains
+    // nothing — and does nothing at all until the fields name a range.
+    await expect
+      .element(page.getByRole("textbox", { name: "From" }))
+      .toHaveValue("");
+    await expect
+      .element(page.getByRole("textbox", { name: "To" }))
+      .toHaveValue("");
+    await page.getByRole("button", { name: /Apply period/ }).click();
+    await expect
+      .element(page.getByRole("textbox", { name: "From" }))
+      .toHaveValue("");
+    expect(page.getByText(/must be a four-digit year/).elements()).toHaveLength(
+      0,
+    );
   });
 
   // Y-75: a whole source is the register plus every column taken from it, and
@@ -656,5 +680,188 @@ describe("SourceEditor read-only cart card", () => {
     });
 
     await expect.element(page.getByText("1 error")).toBeVisible();
+  });
+});
+
+// ── Y-81: the source's period, edited on the card ────────────────────────────
+//
+// A researcher whose study window is 2005–2020 wants ONE source to reach back to
+// 1990. The period is a field of the SOURCE, not of any single pick, and this card
+// is the only surface that shows a source whole — its coordinate and every column
+// it carries — so it is the one field the cart authors. The rewrite goes through
+// the store's guarded, period-only path (`project_store.svelte.test.ts` owns its
+// semantics); what is pinned here is the card's half: the entry, the deviation
+// marker, and the refusal when the source moved underneath.
+describe("SourceEditor source period (Y-81)", () => {
+  /** A one-column LISA Arbetsställen source IN THE DRAFT — the store's staleness
+   * guard re-reads the draft, so a card edited against a detached object would be
+   * refused every time. Returns the slot to render. */
+  function seedSource(period: Period): Source {
+    projectStore.applyStagedDiff({
+      adds: [
+        {
+          registerVariant: "scb/lisa/arbetsstallen",
+          period,
+          binding: { variable: "scb/lisa/kon", type: "categorical" },
+        },
+      ],
+    });
+    return projectStore.draft?.sources?.[0] as Source;
+  }
+
+  it("rewrites this source's period and nothing else", async () => {
+    const source = seedSource(2020);
+    await renderCard(source);
+
+    await page.getByRole("textbox", { name: "From" }).fill("1990");
+    await page.getByRole("button", { name: /Apply period/ }).click();
+
+    // The write says so: a form that changed nothing visible and reported nothing
+    // leaves the researcher guessing whether Apply did anything.
+    await expect
+      .element(page.getByText("Period set to 1990–2020."))
+      .toBeVisible();
+    // The span moved; the column list and the source itself did not — a period-only
+    // diff, never unioned with anything staged.
+    expect(projectStore.draft?.sources?.[0]?.period).toEqual({
+      from: 1990,
+      to: 2020,
+    });
+    expect(projectStore.draft?.sources?.[0]?.bindings).toHaveLength(1);
+    expect(projectStore.draft?.sources).toHaveLength(1);
+  });
+
+  it("refuses years that name no range, saying which field is at fault", async () => {
+    const source = seedSource(2020);
+    await renderCard(source);
+
+    await page.getByRole("textbox", { name: "From" }).fill("2030");
+    await page.getByRole("button", { name: /Apply period/ }).click();
+
+    await expect
+      .element(page.getByText(/From 2030 is after To 2020/))
+      .toBeVisible();
+    // The refusal wrote nothing, and the years stay as typed so the researcher can
+    // see what was refused.
+    expect(projectStore.draft?.sources?.[0]?.period).toBe(2020);
+    await expect
+      .element(page.getByRole("textbox", { name: "From" }))
+      .toHaveValue("2030");
+  });
+
+  // The window is an authoring SEED, not an inheritance: a source may deliberately
+  // cover more or less, so a divergence is MARKED, never warned about.
+  it("marks a period that differs from the study window", async () => {
+    const source = {
+      name: "LISA",
+      register_variant: "scb/lisa/arbetsstallen",
+      period: { from: 1990, to: 2020 },
+      bindings: [],
+    } as unknown as Source;
+    await renderCard(source, { studyWindow: { from: 2005, to: 2020 } });
+
+    await expect
+      .element(page.getByText("Differs from study window 2005–2020"))
+      .toBeVisible();
+  });
+
+  it("marks nothing when the period matches the study window", async () => {
+    const source = {
+      name: "LISA",
+      register_variant: "scb/lisa/arbetsstallen",
+      period: { from: 2005, to: 2020 },
+      bindings: [],
+    } as unknown as Source;
+    await renderCard(source, { studyWindow: { from: 2005, to: 2020 } });
+
+    await expect
+      .element(page.getByRole("textbox", { name: "From" }))
+      .toHaveValue("2005");
+    expect(page.getByText(/Differs from study window/).query()).toBeNull();
+  });
+
+  // The marker compares SPANS, not spellings: a hand-authored single-year source
+  // writes `{from, to}` where a pick writes the bare year, and the two cover the
+  // same one year. Marking that as a divergence would send a researcher looking
+  // for a difference that isn't there.
+  it("marks nothing for a one-year period spelled as a range", async () => {
+    const source = {
+      name: "LISA",
+      register_variant: "scb/lisa/arbetsstallen",
+      period: { from: 2020, to: 2020 },
+      bindings: [],
+    } as unknown as Source;
+    await renderCard(source, { studyWindow: { from: 2020, to: 2020 } });
+
+    await expect
+      .element(page.getByRole("textbox", { name: "To" }))
+      .toHaveValue("2020");
+    expect(page.getByText(/Differs from study window/).query()).toBeNull();
+  });
+
+  it("refuses an Apply whose source moved under the edit", async () => {
+    const source = seedSource(2020);
+    await renderCard(source);
+
+    await page.getByRole("textbox", { name: "From" }).fill("1990");
+    // …and the draft moves underneath: another column joins this very source, so
+    // the source the researcher was looking at is not the one on the draft now.
+    projectStore.applyStagedDiff({
+      adds: [
+        {
+          registerVariant: "scb/lisa/arbetsstallen",
+          period: 2020,
+          binding: { variable: "scb/lisa/alder", type: "opaque" },
+        },
+      ],
+    });
+    await page.getByRole("button", { name: /Apply period/ }).click();
+
+    await expect
+      .element(page.getByRole("alert"))
+      .toMatchTextContent(/This source changed while you were editing/);
+    // The competing write stands; the refused edit wrote nothing over it.
+    expect(projectStore.draft?.sources?.[0]?.period).toBe(2020);
+    expect(projectStore.draft?.sources?.[0]?.bindings).toHaveLength(2);
+  });
+
+  // A period the year fields cannot express — a token, or the #307 comma list two
+  // disjoint picks merge into. Collapsing it into a span would order years nobody
+  // asked for, so the card shows it as it stands.
+  it("leaves a period that is not a single year range alone", async () => {
+    const source = {
+      name: "LISA",
+      register_variant: "scb/lisa/arbetsstallen",
+      period: [2019, 2021],
+      bindings: [],
+    } as unknown as Source;
+    await renderCard(source);
+
+    await expect.element(page.getByText("2019,2021")).toBeVisible();
+    await expect
+      .element(page.getByText(/can't express this period/))
+      .toBeVisible();
+    expect(page.getByRole("textbox").elements()).toHaveLength(0);
+  });
+
+  // Y-80 rider: the column rows resolve their default name at THIS source's own
+  // (variant, period) — the card threads both into BindingEditor, and they have to
+  // reach the catalog GET as the wire `?period=` / `?variant=` a catalog URL spells.
+  it("resolves its columns at its own variant and period, in wire form", async () => {
+    const source = {
+      name: "LISA",
+      register_variant: "scb/lisa/arbetsstallen",
+      period: { from: 1990, to: 2020 },
+      bindings: [{ variable: "scb/lisa/kon", type: "categorical" }],
+    } as Source;
+    await renderCard(source);
+
+    await expect.element(page.getByText("scb/lisa/kon")).toBeVisible();
+    await vi.waitFor(() => {
+      expect(vi.mocked(getCatalogNode).mock.calls).toContainEqual([
+        "scb/lisa/kon",
+        { period: "1990..2020", variant: "arbetsstallen" },
+      ]);
+    });
   });
 });

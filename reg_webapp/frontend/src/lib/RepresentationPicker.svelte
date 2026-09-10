@@ -165,7 +165,6 @@ let {
   graph = null,
   graphMemberHrefs = null,
   vintageYear,
-  locked = false,
   onapply,
   onstagechange,
 }: {
@@ -206,13 +205,6 @@ let {
   graphMemberHrefs?: Readonly<Record<string, string>> | null;
   /** Catalog vintage ceiling for open-ended graph cells. */
   vintageYear?: number;
-  /** An EXTERNAL activity lock: the host holds a source-period correction under
-   * review, which owns the draft until it is applied or reset. Staging and Apply
-   * are unavailable while it is true — exactly as during this picker's own Apply.
-   * Whatever is staged is PRESERVED, never discarded: today's hosts only lock an
-   * empty picker (they refuse to open a review over staged rows), so this is the
-   * component's promise about the state, not a description of theirs. */
-  locked?: boolean;
   /** Commit the staged diff. The parent maps add rows to final `StagedAdd` payloads
    * and calls `projectStore.applyStagedDiff` once. Return false when an async parent
    * guard rejects the apply so local staging remains visible. */
@@ -230,11 +222,9 @@ let {
  * checkbox state is derived from committed project state plus these two sets. */
 let stagedAddKeys = $state(new Set<string>());
 let stagedRemoveKeys = $state(new Set<string>());
+/** True while this picker's own Apply is in flight: staging and Apply are both
+ * unavailable until it settles. */
 let applying = $state(false);
-/** Staging and Apply are unavailable while THIS picker applies, and while the host
- * holds a source-period correction under review (`locked`) — the two are the same
- * "the draft is not yours to stage against right now" state, so they gate together. */
-const busy = $derived(applying || locked);
 /** The active filter selection (#908): dimension key → set of selected values. An
  * empty / absent set imposes no constraint (the initial all-empty state shows every
  * row). Reassigned (not mutated) so the `$state` record/Set stay reactive. Reset
@@ -466,7 +456,7 @@ function setRowDesired(
 
 /** Toggle one column's desired project membership. */
 function toggleRow(band: PickerBand, row: PickerRepresentation): void {
-  if (busy || !rowCanToggle(band, row)) {
+  if (applying || !rowCanToggle(band, row)) {
     return;
   }
   const adds = new Set(stagedAddKeys);
@@ -489,7 +479,7 @@ function someOfBandSelected(band: PickerBand): boolean {
 /** Select or clear every column of one variable in a single move (the per-variable
  * "select all columns of <identity>" affordance). */
 function toggleBand(band: PickerBand): void {
-  if (busy) {
+  if (applying) {
     return;
   }
   const adds = new Set(stagedAddKeys);
@@ -537,7 +527,7 @@ const someSelected = $derived(
 /** Select or clear every VISIBLE column in one move — leaving any hidden-but-selected
  * row's selection untouched (clear removes only the visible keys). */
 function toggleAll(): void {
-  if (busy) {
+  if (applying) {
     return;
   }
   const adds = new Set(stagedAddKeys);
@@ -596,15 +586,15 @@ const applyLabel = $derived.by(() => {
 $effect(() => {
   onstagechange?.(diffCount > 0);
 });
-/** The host MIRRORS that report to lock the source-period correction against this
- * picker's staging. This picker is CONDITIONAL — a browse narrowing that leaves the
- * page with no rows unmounts it — so a report only ever raised while mounted would
- * latch the mirror on with nothing left to reset it. Retract it on the way out.
- * Reads nothing, so it never re-runs (and never retracts a live diff). */
+/** The host retires its own period-required refusal on that report. This picker is
+ * CONDITIONAL — a browse narrowing that leaves the page with no rows unmounts it —
+ * so a notice raised while mounted would outlive the picker it described. Retract
+ * on the way out. Reads nothing, so it never re-runs (and never retracts a live
+ * diff). */
 $effect(() => () => onstagechange?.(false));
 
 async function commit(): Promise<void> {
-  if (!canApply || busy) {
+  if (!canApply || applying) {
     return;
   }
   applying = true;
@@ -2342,7 +2332,7 @@ function codingsVaryHref(
                       <input
                         type="checkbox"
                         class="cbox"
-                        disabled={busy || !rowCanToggle(predecessorBand, row)}
+                        disabled={applying || !rowCanToggle(predecessorBand, row)}
                         checked={checked}
                         onchange={() => toggleRow(predecessorBand, row)}
                       />
@@ -2695,7 +2685,7 @@ function codingsVaryHref(
                             <input
                               type="checkbox"
                               class="cbox"
-                              disabled={busy || !rowCanToggle(band, row)}
+                              disabled={applying || !rowCanToggle(band, row)}
                               checked={checked}
                               onchange={() => toggleRow(band, row)}
                             />
@@ -2832,16 +2822,6 @@ function codingsVaryHref(
     </div>
   {/if}
 
-  {#if locked}
-    <!-- Every control below is inert while a source-period correction is under review
-         (the other half of that mutual exclusion — the correction is `disabled` while
-         THIS picker holds staged rows). Said HERE, beside the controls it explains: a
-         long picker puts its footer well below the fold. -->
-    <p class="locked-note" role="status">
-      A source period review is open — apply or reset it below to select columns.
-    </p>
-  {/if}
-
   {#if anyFilterActive && visibleRows === 0}
     <p class="no-match" role="status">No columns match the active filters.</p>
   {/if}
@@ -2867,7 +2847,7 @@ function codingsVaryHref(
             checked={allSelected}
             indeterminate={someSelected && !allSelected}
             aria-label="Select all columns"
-            disabled={busy}
+            disabled={applying}
             onchange={toggleAll}
           />
           <span>Select all columns</span>
@@ -2929,7 +2909,7 @@ function codingsVaryHref(
               <input
                 type="checkbox"
                 class="cbox"
-                disabled={busy || !rowCanToggle(band, row)}
+                disabled={applying || !rowCanToggle(band, row)}
                 checked={checked}
                 onchange={() => toggleRow(band, row)}
               />
@@ -3104,7 +3084,7 @@ function codingsVaryHref(
                   indeterminate={someOfBandSelected(band) &&
                     !allOfBandSelected(band)}
                   aria-label={`Select all columns of ${v.primary.text}`}
-                  disabled={busy}
+                  disabled={applying}
                   onchange={() => toggleBand(band)}
                 />
                 <!-- The title + description share ONE wrapping line: when they fit they
@@ -3165,7 +3145,7 @@ function codingsVaryHref(
                 <input
                   type="checkbox"
                   class="cbox"
-                  disabled={busy || !rowCanToggle(band, row)}
+                  disabled={applying || !rowCanToggle(band, row)}
                   checked={checked}
                   onchange={() => toggleRow(band, row)}
                 />
@@ -3245,7 +3225,7 @@ function codingsVaryHref(
         type="button"
         variant="default"
         size="sm"
-        disabled={busy}
+        disabled={applying}
         onclick={resetStaging}
       >
         Reset
@@ -3255,7 +3235,7 @@ function codingsVaryHref(
       type="button"
       variant="primary"
       size="sm"
-      disabled={!canApply || busy}
+      disabled={!canApply || applying}
       onclick={commit}
     >
       {applying ? "Applying..." : applyLabel}
@@ -3755,10 +3735,8 @@ function codingsVaryHref(
     outline: none;
     box-shadow: var(--focus-ring);
   }
-  /* The two quiet full-width notices on the picker surface: every column filtered
-     out, and the picker held inert by an open source-period review. */
-  .no-match,
-  .locked-note {
+  /* The quiet full-width notice on the picker surface: every column filtered out. */
+  .no-match {
     margin: 0;
     padding: var(--space-3) var(--space-3);
     font-size: var(--text-sm);
@@ -4055,9 +4033,9 @@ function codingsVaryHref(
     -webkit-appearance: none;
     cursor: pointer;
   }
-  /* Inert (an apply in flight, or a source-period review open): the app's disabled
-     treatment — dim the box and drop the pointer affordance, so one that cannot be
-     toggled does not look like one that can. */
+  /* Inert while an apply is in flight: the app's disabled treatment — dim the box
+     and drop the pointer affordance, so one that cannot be toggled does not look
+     like one that can. */
   .cbox:disabled {
     opacity: 0.5;
     cursor: not-allowed;
