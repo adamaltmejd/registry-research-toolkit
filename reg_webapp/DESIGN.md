@@ -747,6 +747,45 @@ joins SQLite drives from `variable_state` and scans the WHOLE table instead of s
   renders the chips under their slugs, because losing the lens costs more than a
   machine-readable label. Chip order is by slug.
 
+### Adding columns from the register list (Y-83)
+
+The register list is an AUTHORING surface: every delivery column it names carries a
+tick, and one action adds them all. The consumer is the researcher who knows LISA by its
+columns — ticking `ForvErs`, `ForvInk`, `Kon` and `Alder` in the list beats opening four
+variable pages to add one column each.
+
+- **The tick grain is the column NAME the list shows** (`catalog.ts`
+  `deliveryColumnRows`), which fans out to ONE staged add per *(variable, concrete
+  `register_variant`, column)* through `rowAddSegments` — the same per-concrete-segment
+  fan-out (#376) the variable page performs. Each row is single-segment and unfolded, so
+  a tick authors exactly what the variable page's own row for that variant would.
+- **The staging stack is shared, not copied.** `staged_picker.ts` owns the whole
+  staged add → resolve → commit sequence (`stagedAddCandidates` → `applyStagedPicks`,
+  committing through `projectStore.applyStagedDiff`), and `StagedAddStatus.svelte` is the
+  one confirmation/refusal row. The binding leaf, the concept group and the register list
+  are hosts: they own their own selection and scope and nothing else. It was two copies
+  of the same forty lines before this ticket — the leaf-helper duplication CLAUDE.md
+  names.
+- **The study window IS the period here.** The list carries no Period control (that
+  belongs to a subject page), so an add is clipped to the rail's window, and without one
+  an open-ended column has no finite period to commit — the batch is refused whole
+  before the store is touched, exactly as on a leaf. The nudge
+  (`ADD_WINDOW_REQUIRED_MESSAGE`) names the one control this page has, and retires the
+  moment that control is used: setting the window clears the refusal but keeps the
+  ticks, so "add again" is one press.
+- **Fidelity limit, deliberate**: `deliveries` carries a MIN/MAX coverage per (variant,
+  column), so a column delivered in SEPARATE eras commits its UNION span from the list,
+  where the variable page — which holds the states — carves the gap years out as the
+  #307 comma-union. Same for a sequential RENAME: the list ticks each column name on its
+  own (that is what Y-82 shows, and the name is what a researcher hunts for), where the
+  leaf folds the chain into one `representation: null` row over the union. The finer
+  surface is one click away and is linked from the same row.
+- **The action bar is not sticky.** App's `.routed` is an `overflow-x: auto` scroll
+  container so wide tables scroll horizontally, and that makes it the sticky scrollport:
+  a `position: sticky; bottom: 0` bar there pins to a box that never scrolls vertically
+  instead of to the viewport. The bar sits under the list until that container changes,
+  which is a whole-app move rather than a register-page one.
+
 ## Catalog stats (`routes/stats.py`, #675)
 
 `GET /api/stats` returns the headline catalog-size counts
@@ -1312,6 +1351,16 @@ Load-bearing decisions downstream children (#806–#809) must not re-litigate:
   is sr-only only under `@media (max-width: 48rem)`, so it cannot apply the
   (unconditional) class and keeps a media-scoped inline copy held identical to the
   utility — the sr-only analog of the `td::before` micro-label exception.
+- **`.cbox` global utility.** The app's checkbox face, in `lib/ui/utilities.css`. Every
+  tick in the app is a real native `<input type="checkbox">` — the role, the keyboard
+  control and the `:checked`/`:indeterminate` states are the platform's — and this class
+  strips the OS chrome (`appearance: none`) and repaints the box in roles: `--border` on
+  `--surface`, an `--accent` fill with an `--accent-fg` check when checked, the app's
+  `--focus-ring` on `:focus-visible`, the app's dim when disabled. Without it a tick
+  renders in the browser's own blue, a hue no theme can remap. It was
+  `RepresentationPicker`'s scoped CSS until the register list grew ticks of its own
+  (Y-83): a second consumer makes it cross-component, so it moved here rather than being
+  re-typed — the same reason `.micro-label` lives here.
 
 ### Migration discipline
 

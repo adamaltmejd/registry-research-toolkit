@@ -1,7 +1,14 @@
-import { describe, expect, it } from "vitest";
-import type { PickerRepresentation } from "./catalog";
-import type { ProjectData } from "./project_data";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { getCatalogNode, type VariableStateModel } from "./api";
 import {
+  deliveryColumnRows,
+  type PickerRepresentation,
+  pickerRepresentations,
+} from "./catalog";
+import type { ProjectData } from "./project_data";
+import { projectStore } from "./project_store.svelte";
+import {
+  applyStagedPicks,
   committedPickerRows,
   finalAddPeriodWires,
   finalSourcePeriodsForStagedAdds,
@@ -9,9 +16,18 @@ import {
   periodChangesWithStagedAdds,
   pickerRowKey,
   rowAddSegments,
+  type StagedPick,
   type StagedPickerBand,
+  stagedAddCandidates,
   stagedRemoveForCommitted,
 } from "./staged_picker";
+
+// Only the ONE call the staging stack makes on its own — `resolveBindingAt`'s
+// `?period` resolve, one GET per staged add. Everything else in ./api stays real.
+vi.mock("./api", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("./api")>()),
+  getCatalogNode: vi.fn(),
+}));
 
 /** A folded LISA `individer` family row: one displayed row standing for two concrete
  * `register_variant`s (`individer-16plus` predecessor era + `individer-15plus`
@@ -887,5 +903,234 @@ describe("rowAddSegments (#376 per-concrete-segment fan-out)", () => {
         periodWire: "1995..2000",
       },
     ]);
+  });
+});
+
+// ── The shared staged add → resolve → commit stack (Y-83) ────────────────────
+// Hoisted out of the binding leaf + concept group so the register list could use
+// it too; these cover the seam the three hosts now share.
+
+/** A minimal `VariableStateModel` — the fields the row enumeration + the type
+ * derivation read. */
+function leafState(over: Partial<VariableStateModel>): VariableStateModel {
+  return {
+    state_id: 1,
+    variant: "individer",
+    variant_label: null,
+    register_variant_id: 1,
+    valid_from: "1990-01-01",
+    valid_to: "2023-12-31",
+    data_type: "int",
+    data_length: null,
+    delivery_column_name: "Kon",
+    source_register_text: null,
+    value_set_version_label: "",
+    value_set_id: 7,
+    value_set: null,
+    is_identifier: false,
+    classification_slug: null,
+    ...over,
+  };
+}
+
+/** The same two deliveries as `konStates`, in the aggregate form the REGISTER
+ * list receives them (`BindingChild.deliveries`: one MIN/MAX coverage per
+ * (variant, column)). */
+const konDeliveries = [
+  {
+    variant: "hushall",
+    coverage: {
+      coverage_from: "1990-01-01",
+      coverage_to: "2023-12-31",
+      open_ended: false,
+    },
+  },
+  {
+    variant: "individer",
+    coverage: {
+      coverage_from: "1990-01-01",
+      coverage_to: "2023-12-31",
+      open_ended: false,
+    },
+  },
+];
+
+/** `Kon` as the VARIABLE page sees it: one state per delivering variant. Two
+ * PARALLEL variants, so the leaf enumerates two rows — the same two the register
+ * list's one tickable column stands for. */
+const konStates = [
+  leafState({ state_id: 1, variant: "hushall" }),
+  leafState({ state_id: 2, variant: "individer" }),
+];
+
+const konBandKey = "scb/lisa/kon";
+
+function konBandOf(rows: PickerRepresentation[]): StagedPickerBand {
+  return { key: konBandKey, registerPrefix: "scb/lisa", rows };
+}
+
+function picksOf(bandRows: PickerRepresentation[]): StagedPick[] {
+  const b = konBandOf(bandRows);
+  return b.rows.map((row) => ({ band: b, row }));
+}
+
+const SEED = { regMetaVersion: "reg_meta/v1.0.0", steward: "global" };
+
+/** Resolve every `?period` GET to the picked variant's own state, so the staged
+ * binding derives a concrete type (the #991 write-once shape). */
+function stubResolve(states: VariableStateModel[]): void {
+  vi.mocked(getCatalogNode).mockImplementation(async (_fqid, params) => {
+    const variant = typeof params?.variant === "string" ? params.variant : "";
+    return {
+      states: states.filter((s) => !variant || s.variant === variant),
+    } as never;
+  });
+}
+
+afterEach(() => {
+  vi.restoreAllMocks();
+});
+
+describe("stagedAddCandidates", () => {
+  it("fans a folded family row out to one candidate per concrete era", () => {
+    const b = band([foldedFamilyRow()]);
+    expect(
+      stagedAddCandidates({ band: b, row: b.rows[0] }, {}).map((c) => [
+        c.registerVariant,
+        c.periodWire,
+        c.period,
+      ]),
+    ).toEqual([
+      ["scb/lisa/individer-16plus", "1990..2009", { from: 1990, to: 2009 }],
+      ["scb/lisa/individer-15plus", "2010..2023", { from: 2010, to: 2023 }],
+    ]);
+  });
+
+  it("stages a register-list column exactly as the variable page's own rows do", () => {
+    // The Y-83 claim, at the staging seam: the register list's ONE tickable
+    // `Kon` column and the variable page's TWO variant rows fan out to the same
+    // (register_variant, period) adds, so the two surfaces author the same thing.
+    const scope = { period: null, window: [2018, 2023] as [number, number] };
+    const fields = (picks: StagedPick[]) =>
+      picks.flatMap((pick) =>
+        stagedAddCandidates(pick, scope).map((c) => [
+          c.registerVariant,
+          c.periodWire,
+        ]),
+      );
+    expect(fields(picksOf(deliveryColumnRows("Kon", konDeliveries)))).toEqual(
+      fields(picksOf(pickerRepresentations(konStates))),
+    );
+  });
+});
+
+describe("applyStagedPicks", () => {
+  it("commits a register-list pick to the same project_data.json as the leaf's", async () => {
+    stubResolve(konStates);
+    const scope = { period: null, window: [2018, 2023] as [number, number] };
+    const ctx = { scope, seed: SEED, cancelled: () => false };
+
+    projectStore.newProject({
+      reg_meta_version: SEED.regMetaVersion,
+      steward: SEED.steward,
+    });
+    const fromLeaf = await applyStagedPicks(
+      {
+        adds: picksOf(pickerRepresentations(konStates)),
+        removes: [],
+        periodChanges: [],
+      },
+      ctx,
+    );
+    const leafDraft = JSON.stringify(projectStore.draft);
+
+    projectStore.newProject({
+      reg_meta_version: SEED.regMetaVersion,
+      steward: SEED.steward,
+    });
+    const fromRegister = await applyStagedPicks(
+      {
+        adds: picksOf(deliveryColumnRows("Kon", konDeliveries)),
+        removes: [],
+        periodChanges: [],
+      },
+      ctx,
+    );
+
+    expect(fromLeaf).toEqual({
+      kind: "applied",
+      outcome: { added: 2, removed: 0, periodChanged: 0 },
+    });
+    expect(fromRegister).toEqual(fromLeaf);
+    expect(JSON.stringify(projectStore.draft)).toBe(leafDraft);
+  });
+
+  it("refuses the whole batch, unmutated, when an add resolves no finite period", async () => {
+    stubResolve(konStates);
+    // Delivered open-ended and no window to clip it to: there is no finite period
+    // to commit or to resolve the binding at, so the batch is refused BEFORE the
+    // store is touched — never a half-authored `period: ""` source (Y-58).
+    const openEnded = deliveryColumnRows("Kon", [
+      {
+        variant: "individer",
+        coverage: {
+          coverage_from: "2018-01-01",
+          coverage_to: null,
+          open_ended: true,
+        },
+      },
+    ]);
+    projectStore.newProject({
+      reg_meta_version: SEED.regMetaVersion,
+      steward: SEED.steward,
+    });
+    const before = JSON.stringify(projectStore.draft);
+
+    const result = await applyStagedPicks(
+      { adds: picksOf(openEnded), removes: [], periodChanges: [] },
+      {
+        scope: { period: null, window: null },
+        seed: SEED,
+        cancelled: () => false,
+      },
+    );
+
+    expect(result).toEqual({ kind: "period-required" });
+    expect(JSON.stringify(projectStore.draft)).toBe(before);
+    expect(getCatalogNode).not.toHaveBeenCalled();
+  });
+
+  it("abandons a pick whose host is gone rather than authoring into a draft it left", async () => {
+    stubResolve(konStates);
+    projectStore.newProject({
+      reg_meta_version: SEED.regMetaVersion,
+      steward: SEED.steward,
+    });
+    const before = JSON.stringify(projectStore.draft);
+
+    const result = await applyStagedPicks(
+      {
+        adds: picksOf(deliveryColumnRows("Kon", konDeliveries)),
+        removes: [],
+        periodChanges: [],
+      },
+      {
+        scope: { period: null, window: [2018, 2023] },
+        seed: SEED,
+        cancelled: () => true,
+      },
+    );
+
+    expect(result).toEqual({ kind: "abandoned" });
+    expect(JSON.stringify(projectStore.draft)).toBe(before);
+  });
+
+  it("has nothing to confirm for an empty batch", async () => {
+    expect(
+      await applyStagedPicks(
+        { adds: [], removes: [], periodChanges: [] },
+        { scope: {}, seed: SEED, cancelled: () => false },
+      ),
+    ).toEqual({ kind: "applied", outcome: null });
   });
 });

@@ -10,8 +10,6 @@ import {
 } from "./api";
 import { asyncResource } from "./async.svelte";
 import {
-  type BindingResolution,
-  bindingFieldsFromResolution,
   coverageFromStates,
   formatDataType,
   fqidSegments,
@@ -22,7 +20,6 @@ import {
   pickerWindowYears,
   qualifierFromFocus,
   registerPrefixOf,
-  resolveBindingAt,
 } from "./catalog";
 import DocMentionsPanel from "./DocMentionsPanel.svelte";
 import LineageDetails from "./LineageDetails.svelte";
@@ -32,26 +29,20 @@ import {
   clampYearWindow,
   isStructurallyValidPeriodWire,
   nextResolutionQuery,
-  periodFromWire,
   VALUE_SET_VERSION_NONE,
 } from "./period";
-import { regMetaReleaseTag } from "./project_data";
 import { projectStore } from "./project_store.svelte";
 import RepresentationPicker, {
   type PickerApplyPayload,
-  type PickerSelection,
 } from "./RepresentationPicker.svelte";
 import { router } from "./router.svelte";
+import StagedAddStatus from "./StagedAddStatus.svelte";
 import SubjectView from "./SubjectView.svelte";
 import {
   ADD_PERIOD_REQUIRED_MESSAGE,
+  applyStagedPicks,
   committedPickerRows,
-  finalAddPeriodWires,
-  periodChangesWithStagedAdds,
-  rowAddSegments,
-  type StagedPickerBand,
-  sourcePeriodsFromDraft,
-  stagedRemoveForCommitted,
+  type StagedApplyOutcome,
 } from "./staged_picker";
 import TechnicalDetails from "./TechnicalDetails.svelte";
 import { Tag } from "./ui";
@@ -431,11 +422,7 @@ const committedRows = $derived(
 );
 
 /** The applied outcome (drives the inline confirmation). */
-let applyOutcome = $state<{
-  added: number;
-  removed: number;
-  periodChanged: number;
-} | null>(null);
+let applyOutcome = $state<StagedApplyOutcome | null>(null);
 
 /** Set when an Apply was refused because a staged add resolved no finite period
  * (drives the inline notice). Retired by a resolution change (the effect below)
@@ -455,129 +442,30 @@ $effect(() => {
   periodRequired = false;
 });
 
-function stagedAddCandidates(selection: PickerSelection) {
-  // Fan out to ONE staged add per concrete `register_variant` the row's active scope
-  // touches (#376) — the per-concrete-segment invariant lives in `rowAddSegments`, not
-  // re-derived here (see catalog.ts's PickerRepresentation seam note).
-  return rowAddSegments(selection.band as StagedPickerBand, selection.row, {
-    period: activePickerPeriod,
-    window: pickerWindow,
-  }).map((segment) => ({
-    selection,
-    variant: segment.variant,
-    registerVariant: segment.registerVariant,
-    periodWire: segment.periodWire,
-    period: periodFromWire(segment.periodWire),
-  }));
-}
-
-type StagedAddCandidate = ReturnType<typeof stagedAddCandidates>[number];
-
-async function stagedAdd(
-  candidate: StagedAddCandidate,
-  resolvePeriodWire: string,
-) {
-  const { band, row } = candidate.selection;
-  let resolution: BindingResolution;
-  try {
-    resolution = await resolveBindingAt(
-      band.key,
-      resolvePeriodWire,
-      candidate.variant,
-    );
-  } catch {
-    resolution = { kind: "unresolved" as const, reason: "no-states" as const };
-  }
-  return {
-    registerVariant: candidate.registerVariant,
-    period: candidate.period,
-    binding: bindingFieldsFromResolution(
-      band.key,
-      resolution,
-      row.representation,
-    ),
-  };
-}
-
 /** Flipped by the `$effect` teardown when this view is destroyed — the
  * cancellation idiom `asyncResource` uses internally, so a pick still waiting on
- * the restore gate below is abandoned rather than committed into a draft from a
- * page the researcher has navigated away from. This effect reads nothing, so it
- * never re-runs: the flag means destroyed, not "inputs changed". */
+ * the restore gate is abandoned rather than committed into a draft from a page
+ * the researcher has navigated away from. This effect reads nothing, so it never
+ * re-runs: the flag means destroyed, not "inputs changed". */
 let unmounted = false;
 $effect(() => () => {
   unmounted = true;
 });
 
-/** Apply the staged diff through ONE synchronous store mutation. Adds carry final
- * binding fields from the picker row, so the project is unchanged until Apply. */
+/** Apply the staged diff through the shared staging stack (`staged_picker.ts`),
+ * which owns the fan-out, the resolve and the ONE store mutation; this view owns
+ * only the lines it says about the result. */
 async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
-  if (
-    payload.adds.length === 0 &&
-    payload.removes.length === 0 &&
-    payload.periodChanges.length === 0
-  ) {
-    return true;
-  }
-  // The draft lifecycle is application-owned and its restore is ASYNCHRONOUS: on a
-  // cold entry at a catalog route the store is still empty while IndexedDB is read.
-  // Wait for it to settle, or this Add mints a SECOND project over the saved one.
-  // The wait is unbounded, so the pick stays bound to the project it was staged
-  // against: a New/Open (or leaving the page) while it is pending means the
-  // researcher moved on, and these rows are not a pick against the replacement.
-  const stagedAgainst = projectStore.replacementGeneration;
-  await projectStore.restored;
-  if (unmounted || projectStore.replacementGeneration !== stagedAgainst) {
-    return false;
-  }
-  // Every add commits under a FINITE period — the one it also resolves its binding
-  // metadata at. A row delivered open-ended, picked with neither a `?period` nor a
-  // project window to clip it to, has none: applying it would author `period: ""`
-  // and an underivable `type: ""` onto a draft that autosaves before /project is
-  // ever opened. Refuse BEFORE any mutation (a null draft is not even minted);
-  // returning false keeps the picker's staging, so an Apply that authored nothing
-  // never looks like one that did.
-  const candidates = payload.adds.flatMap(stagedAddCandidates);
-  const addPeriods = finalAddPeriodWires(
-    sourcePeriodsFromDraft(projectStore.draft),
-    payload.periodChanges,
-    candidates,
-  );
-  if (addPeriods === null) {
-    periodRequired = true;
-    return false;
-  }
-  periodRequired = false;
-  if (projectStore.draft === null && payload.adds.length > 0) {
-    projectStore.newProject({
-      reg_meta_version: regMetaReleaseTag(regMetaVersion),
-      steward,
-    });
-  }
-  const target = projectStore.draft;
-  const adds = await Promise.all(
-    candidates.map((candidate, i) => stagedAdd(candidate, addPeriods[i])),
-  );
-  if (projectStore.draft !== target) {
-    return false;
-  }
-  const removes = payload.removes.flatMap((r) =>
-    stagedRemoveForCommitted(r.committed),
-  );
-  projectStore.applyStagedDiff({
-    adds,
-    removes,
-    periodChange: periodChangesWithStagedAdds(
-      payload.periodChanges,
-      candidates,
-    ),
+  const result = await applyStagedPicks(payload, {
+    scope: { period: activePickerPeriod, window: pickerWindow },
+    seed: { regMetaVersion, steward },
+    cancelled: () => unmounted,
   });
-  applyOutcome = {
-    added: payload.adds.length,
-    removed: removes.length,
-    periodChanged: payload.periodChanges.length,
-  };
-  return true;
+  periodRequired = result.kind === "period-required";
+  if (result.kind === "applied") {
+    applyOutcome = result.outcome;
+  }
+  return result.kind === "applied";
 }
 </script>
 
@@ -697,43 +585,12 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
     />
   {/if}
 
-  {#if periodRequired}
-    <!-- The Apply was refused because a staged column resolved no finite period, so
-         nothing was authored. A status row (frontend/DESIGN.md → Banners and status
-         rows): warn tint, glyph first, and copy naming the control that fixes it.
-         Applying a period re-resolves this view, which clears the picker's staging
-         — hence "select and add again" rather than a bare retry. -->
-    <p class="page-add">
-      <span class="add-blocked" role="alert">
-        <span aria-hidden="true">▲</span>
-        {ADD_PERIOD_REQUIRED_MESSAGE}
-      </span>
-    </p>
-  {:else if applyOutcome}
-    <p class="page-add">
-      <span class="add-confirm" role="status">
-        Applied
-        {[
-          applyOutcome.added > 0
-            ? `+${applyOutcome.added} ${applyOutcome.added === 1 ? "column" : "columns"}`
-            : null,
-          applyOutcome.removed > 0
-            ? `-${applyOutcome.removed} ${applyOutcome.removed === 1 ? "column" : "columns"}`
-            : null,
-          applyOutcome.periodChanged > 0
-            ? `${applyOutcome.periodChanged} ${
-                applyOutcome.periodChanged === 1
-                  ? "period change"
-                  : "period changes"
-              }`
-            : null,
-        ]
-          .filter(Boolean)
-          .join(" · ")}
-        — <a href="/project">view</a>
-      </span>
-    </p>
-  {/if}
+  <!-- Applying a period re-resolves this view, which clears the picker's staging —
+       hence the refusal's "select and add again" rather than a bare retry. -->
+  <StagedAddStatus
+    outcome={applyOutcome}
+    blocked={periodRequired ? ADD_PERIOD_REQUIRED_MESSAGE : null}
+  />
 
   {#if params.period && (params.variant || params.value_set_version)}
     <!-- Active narrowing modifiers, each clearable — so narrowing to one state
@@ -955,28 +812,6 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
   }
   .modifier-chip:hover {
     background: var(--surface);
-  }
-  /* #678: the add-confirmation line (the picker owns the Add button now). */
-  .page-add {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: 0.6rem;
-    margin: 0.75rem 0;
-  }
-  .add-blocked {
-    display: inline-flex;
-    align-items: baseline;
-    gap: var(--space-2);
-    padding: var(--space-2) var(--space-3);
-    border-radius: var(--radius-sm);
-    background: var(--warn-bg);
-    color: var(--warn);
-    font-size: var(--text-sm);
-  }
-  .add-confirm {
-    font-size: 0.85rem;
-    color: var(--accent);
   }
   @media (max-width: 48rem) {
     .meta {

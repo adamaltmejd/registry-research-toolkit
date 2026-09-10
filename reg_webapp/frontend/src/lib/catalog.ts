@@ -1663,6 +1663,57 @@ function pickerVariantSegments(
     });
 }
 
+/** The picker rows for ONE delivery column of a register-list row (Y-83): one row
+ * per VARIANT that delivers the column under that name, in the order the register
+ * response lists them (variant slug). Adding a ticked column from the register page
+ * therefore stages exactly the per-(variable, variant, column) sources the
+ * variable's own page stages — `rowAddSegments` fans each row out to its one
+ * concrete `register_variant`, as it does for an unfolded leaf row.
+ *
+ * Built by feeding the register's coverages through `pickerRepresentations` as
+ * synthetic states rather than by assembling rows here: `PickerStateInput` is
+ * ALREADY the widened shape a second source feeds (the group graph — see its
+ * doc), so the register list inherits the row rules (key format, window union,
+ * segments, the #902 rename fold) by construction instead of by a copy that can
+ * drift from `pickerRow`. One call is one column of one variable and each delivery
+ * a distinct variant, so nothing folds: every row comes back SINGLE-SEGMENT and
+ * unfolded. That is what this surface wants — the register list shows each
+ * delivered column NAME on its own line (Y-82: that is the name a researcher hunts
+ * for), so a sequential rename stays two tickable rows here, and ticking both
+ * commits both column names where the leaf's folded row would commit one
+ * `representation: null` over the union span.
+ *
+ * The windows come from `BindingChild.deliveries`, whose coverage is the MIN/MAX
+ * aggregate per (variant, column) — so a column delivered in SEPARATE eras reads
+ * here as ONE span and commits the gap years between them, where the leaf (which
+ * holds the states) carves them out as a comma-union. Deliberate: the exact windows
+ * would cost a states fetch per listed variable.
+ *
+ * The label/value-set fields go in empty: this surface identifies a row by its
+ * COLUMN, and nothing on the register page renders a variant label or a coding. */
+export function deliveryColumnRows(
+  column: string,
+  deliveries: readonly { variant: string; coverage: MemberCoverage }[],
+): PickerRepresentation[] {
+  return pickerRepresentations(
+    deliveries.map((delivery, index) => ({
+      state_id: index,
+      variant: delivery.variant,
+      variant_label: null,
+      delivery_column_name: column,
+      value_set_version_label: "",
+      value_set_id: null,
+      // A null `coverage_from` is "start unknown" and a null/open-ended
+      // `coverage_to` is "still delivered" — the same nullable bounds a graph state
+      // carries, normalized to the catalog sentinels by `pickerRepresentations`.
+      valid_from: delivery.coverage.coverage_from ?? null,
+      valid_to: delivery.coverage.open_ended
+        ? null
+        : (delivery.coverage.coverage_to ?? null),
+    })),
+  );
+}
+
 /** Narrow `pickerRepresentations`' input states to the SAME subset an active
  * `?variant` / `?value_set_version` modifier scopes to (#678 finding): when the
  * leaf is opened with such a modifier (the "Narrowed by" chip), the picker rows

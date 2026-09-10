@@ -21,6 +21,7 @@ import {
   catalogHref,
   classGroupHref,
   countFoldedMembers,
+  deliveryColumnRows,
   foldGroupedRows,
   type GroupedRow,
   groupFilterKeys,
@@ -30,12 +31,26 @@ import {
   narrowCatalogNode,
   narrowGroupsToMembers,
   nodeLabel,
+  type PickerRepresentation,
+  pickerWindowYears,
   rankFilter,
+  registerPrefixOf,
   variantLabel,
 } from "./catalog";
 import FilterInput from "./FilterInput.svelte";
-import type { Coverage } from "./period";
+import { type Coverage, clampYearWindow } from "./period";
+import { projectStore } from "./project_store.svelte";
 import RelatedDocumentsPanel from "./RelatedDocumentsPanel.svelte";
+import StagedAddStatus from "./StagedAddStatus.svelte";
+import {
+  ADD_WINDOW_REQUIRED_MESSAGE,
+  applyStagedPicks,
+  committedPickerRows,
+  pickerRowKey,
+  type StagedApplyOutcome,
+  type StagedPick,
+  type StagedPickerBand,
+} from "./staged_picker";
 import {
   Button,
   type Column,
@@ -47,6 +62,7 @@ import {
   Tag,
 } from "./ui";
 import VariantsSummary from "./VariantsSummary.svelte";
+import { windowStore } from "./window.svelte";
 
 // The provider arm renders its register list as a real DataTable: a Register
 // (name → catalog link) column and a Description (the purpose blurb, 2-line
@@ -65,8 +81,13 @@ const registerColumns: Column<RegisterRow>[] = [
 /** One delivery column beside a variable (Y-82): the name SCB delivers it under
  * — what a researcher who knows LISA by its columns is hunting for — and the
  * years that name was delivered, shown only when the variable has more than one
- * (there the years say WHICH era each name belongs to). */
-type DeliveryColumn = { name: string; years: string };
+ * (there the years say WHICH era each name belongs to). Y-83 adds the picker
+ * `rows` its checkbox stages — one per variant that delivers the name. */
+type DeliveryColumn = {
+  name: string;
+  years: string;
+  rows: PickerRepresentation[];
+};
 
 type VariableBrowseRow =
   | {
@@ -172,6 +193,7 @@ function deliveryColumns(child: BindingChild): DeliveryColumn[] {
       .map(([name, deliveries]) => ({
         name,
         span: memberCoverageUnion(deliveries.map((d) => d.coverage)),
+        rows: deliveryColumnRows(name, deliveries),
       }))
       .sort(
         (a, b) =>
@@ -181,9 +203,10 @@ function deliveryColumns(child: BindingChild): DeliveryColumn[] {
       // A lone column needs no era label — there is nothing to tell it apart
       // from. Decided here, where the count is known, so the cell just renders
       // whatever `years` holds.
-      .map(({ name, span }) => ({
+      .map(({ name, span, rows }) => ({
         name,
         years: byName.size > 1 ? yearsLabel(span) : "",
+        rows,
       }))
   );
 }
@@ -338,6 +361,9 @@ $effect(() => {
   void fqidPath;
   filter = "";
   selectedVariants = new Set();
+  selectedColumns = new Set();
+  periodRequired = false;
+  applyOutcome = null;
 });
 
 function toggleVariant(variant: string): void {
@@ -455,6 +481,169 @@ const narrowedRows = $derived(
         narrowGroupsToMembers(registerGroups, lensedChildren),
       ),
 );
+
+// ── Y-83: add delivery columns straight from the register list ───────────────
+// A researcher who knows LISA by its columns ticks ForvErs, ForvInk, Kon and
+// Alder here and adds all four in one action, instead of opening four variable
+// pages. The staging stack is the leaf's (`staged_picker.ts`): this page owns only
+// its own selection + scope, and every add still lands through
+// `projectStore.applyStagedDiff` (DESIGN.md -> Browse-only authoring).
+//
+// One BAND per listed variable, its rows being every delivery column's per-variant
+// rows — so a tick stages one add per (variable, concrete variant, column), the
+// same fan-out `rowAddSegments` performs for a variable's own page. Built off the
+// LENSED children, so an active variant chip narrows what a tick adds to exactly
+// what the row shows.
+const pickerBands = $derived.by((): StagedPickerBand[] =>
+  lensedChildren.map((child) => ({
+    key: child.fqid,
+    registerPrefix: registerPrefixOf(child.fqid),
+    rows: (columnsByFqid.get(child.fqid) ?? []).flatMap(
+      (column) => column.rows,
+    ),
+  })),
+);
+
+// The deployment seed is ready once /api/context has populated BOTH fields: an
+// implicit project created with an empty seed is never re-seeded, so the add stays
+// disabled until it lands (sub-second) — as on the leaf.
+const seedReady = $derived(regMetaVersion !== "" && steward !== "");
+
+// The register list carries NO period control of its own, so the study window IS
+// the add's period: every add is clipped to it, and without one an open-ended
+// column has no finite period to commit — `applyStagedPicks` refuses the batch and
+// the nudge points at the rail's window.
+const boundedProjectWindow = $derived(
+  windowStore.value === null || !enforcePeriodBounds
+    ? windowStore.value
+    : clampYearWindow(windowStore.value, windowMinYear, windowMaxYear),
+);
+const addScope = $derived({
+  period: null,
+  window: pickerWindowYears(null, boundedProjectWindow),
+});
+
+// Which listed columns are ALREADY in the draft — keyed by `pickerRowKey`, the
+// staging identity, so the marker is read from the same match the commit is.
+const committedRows = $derived(
+  committedPickerRows(projectStore.draft, pickerBands, addScope),
+);
+
+/** The tick identity: a delivery column of one variable. Deliberately NOT the
+ * picker row key — one tick covers every variant that delivers the name. */
+function columnKey(fqid: string, name: string): string {
+  return `${fqid}::${name}`;
+}
+
+let selectedColumns = $state(new Set<string>());
+let applying = $state(false);
+let periodRequired = $state(false);
+let applyOutcome = $state<StagedApplyOutcome | null>(null);
+
+function toggleColumn(fqid: string, name: string): void {
+  const next = new Set(selectedColumns);
+  if (!next.delete(columnKey(fqid, name))) {
+    next.add(columnKey(fqid, name));
+  }
+  // Reassign so the `$state` proxy tracks the change (as `toggleVariant`).
+  selectedColumns = next;
+}
+
+/** Which listed columns are ALREADY fully in the draft, by tick identity. Read off
+ * `committedPickerRows` — the same match the commit is — and a column counts only
+ * when EVERY variant's row for it is committed: partial cover (one variant added
+ * from its own page) reads as NOT added, so the tick still has something to do.
+ * Computed once per draft change rather than per rendered cell, and skipped
+ * outright while nothing is committed (the ordinary browsing state). */
+const committedColumns = $derived.by((): Set<string> => {
+  const committed = new Set<string>();
+  if (committedRows.size === 0) {
+    return committed;
+  }
+  for (const band of pickerBands) {
+    for (const column of columnsByFqid.get(band.key) ?? []) {
+      if (
+        column.rows.length > 0 &&
+        column.rows.every((row) => committedRows.has(pickerRowKey(band, row)))
+      ) {
+        committed.add(columnKey(band.key, column.name));
+      }
+    }
+  }
+  return committed;
+});
+
+// The staged batch, derived from the LIVE list rather than from the tick set: a
+// tick whose column the variant lens has since hidden contributes nothing, so the
+// count on the bar and what the button adds always describe the same page.
+const staged = $derived.by((): { picks: StagedPick[]; columns: number } => {
+  const picks: StagedPick[] = [];
+  let columns = 0;
+  for (const band of pickerBands) {
+    for (const column of columnsByFqid.get(band.key) ?? []) {
+      if (!selectedColumns.has(columnKey(band.key, column.name))) {
+        continue;
+      }
+      columns += 1;
+      for (const row of column.rows) {
+        picks.push({ band, row });
+      }
+    }
+  }
+  return { picks, columns };
+});
+
+/** "1 column" / "3 columns" — the bar's count and its button say the same thing. */
+const columnCount = $derived(
+  `${staged.columns} ${staged.columns === 1 ? "column" : "columns"}`,
+);
+
+// Setting the study window is exactly what a refused add asked for, so the refusal
+// retires with it and never outlives the pick it refused (the leaf's rule for its
+// own period control). Only the refusal: the ticks survive, so "add again" is one
+// press — which is why this is its own effect and not part of the clear above.
+$effect(() => {
+  void windowStore.value;
+  periodRequired = false;
+});
+
+// Leaving the page mid-add abandons the batch rather than committing it into a
+// draft the researcher has navigated away from (the leaf's own guard).
+let unmounted = false;
+$effect(() => () => {
+  unmounted = true;
+});
+
+async function addSelected(): Promise<void> {
+  const columns = staged.columns;
+  applying = true;
+  try {
+    const result = await applyStagedPicks(
+      { adds: staged.picks, removes: [], periodChanges: [] },
+      {
+        scope: addScope,
+        seed: { regMetaVersion, steward },
+        cancelled: () => unmounted,
+      },
+    );
+    periodRequired = result.kind === "period-required";
+    if (result.kind === "applied") {
+      // Confirm in the unit the button promised — TICKED columns, not the rows
+      // they fanned out to: one tick of a column two variants deliver stages two
+      // adds, and "+2 columns" would not be the move the researcher just made.
+      applyOutcome = result.outcome && {
+        added: columns,
+        removed: 0,
+        periodChanged: 0,
+      };
+      // The ticks are consumed: the columns now read as in the project, and a
+      // second press can't re-add what the first one committed.
+      selectedColumns = new Set();
+    }
+  } finally {
+    applying = false;
+  }
+}
 </script>
 
 {#if resource.loading}
@@ -636,15 +825,41 @@ const narrowedRows = $derived(
                 <!-- Y-82: the delivery column names, one per line. The years ride
                      along only when a variable has SEVERAL — there they say which
                      era each name belongs to (`ForvErs` 1990–2021, then
-                     `ForvErsNetto`); a single column needs no disambiguation. -->
-                {#each row.columns as col (col.name)}
-                  <span class="delivery-column">
-                    {col.name}
-                    {#if col.years}
-                      <span class="column-years">{col.years}</span>
-                    {/if}
-                  </span>
-                {/each}
+                     `ForvErsNetto`); a single column needs no disambiguation.
+                     Y-83: each name is also the TICK that adds it to the project.
+                     A group row names no column of its own (its members carry
+                     them), so only leaf rows are tickable. -->
+                {#if row.kind === "leaf"}
+                  {#each row.columns as col (col.name)}
+                    <!-- The tick and the name it adds are ONE target (Y-83): the
+                         label carries the checkbox, so the name a researcher is
+                         already reading is what they click — and the "In project"
+                         state rides inside it, so it wraps with the column it
+                         describes and joins the tick's accessible name. -->
+                    <label class="delivery-column">
+                      <input
+                        class="cbox"
+                        type="checkbox"
+                        checked={selectedColumns.has(columnKey(row.fqid, col.name))}
+                        disabled={applying}
+                        onchange={() => toggleColumn(row.fqid, col.name)}
+                      />
+                      {col.name}
+                      {#if col.years}
+                        <span class="column-years">{col.years}</span>
+                      {/if}
+                      {#if committedColumns.has(columnKey(row.fqid, col.name))}
+                        <!-- Already in the draft. It stays TICKABLE: adding it
+                             again folds into the same source and changes nothing
+                             (`applyStagedDiff`'s duplicate-binding guard). -->
+                        <Tag tone="info">
+                          {#snippet glyph()}i{/snippet}
+                          In project
+                        </Tag>
+                      {/if}
+                    </label>
+                  {/each}
+                {/if}
               {:else if row.kind === "group"}
                 <!-- #673 (M6): register-arm group rows link to their subject page.
                      Browse-link rows omit the slug pill; picker disclosure rows keep it. -->
@@ -675,6 +890,38 @@ const narrowedRows = $derived(
             />
           </Panel>
         {/if}
+        <!-- The add bar (Y-83). It stays mounted through a filter that empties the
+             list, so ticks made across several searches are still countable and
+             addable. Y-83 asked for a STICKY bar: App's routed region is an
+             `overflow-x: auto` scroll container, which becomes the sticky
+             scrollport, so `bottom: 0` pins to a box that never scrolls
+             vertically rather than to the viewport. Pinning it needs that
+             container changed — a whole-app move, left to its own change. -->
+        <div class="add-bar">
+          <span class="add-count" role="status">
+            {staged.columns === 0
+              ? "Tick a delivery column to add it to the project."
+              : `${columnCount} selected`}
+          </span>
+          <Button
+            variant="primary"
+            size="sm"
+            disabled={staged.columns === 0 || !seedReady || applying}
+            onclick={addSelected}
+          >
+            {#if applying}
+              Adding…
+            {:else if staged.columns === 0}
+              Add columns to project
+            {:else}
+              Add {columnCount} to project
+            {/if}
+          </Button>
+        </div>
+        <StagedAddStatus
+          outcome={applyOutcome}
+          blocked={periodRequired ? ADD_WINDOW_REQUIRED_MESSAGE : null}
+        />
       {:else}
         <Panel title="Variables">
           <EmptyState title="No variables." />
@@ -854,15 +1101,39 @@ const narrowedRows = $derived(
   /* One delivery column per line in the (mono-faced) column cell. The years —
      shown when a variable has several columns — stay in the cell's mono face
      (a year is a machine identifier, like the Variants panel's Years column
-     below) and are merely dimmed, so the name a researcher hunts for leads. */
+     below) and are merely dimmed, so the name a researcher hunts for leads.
+     The whole line is the Y-83 tick target, so it also carries the pointer. */
   .delivery-column {
-    display: block;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--space-2);
     /* Pin the NAME against DataTable's stacked-card rule, which mutes every
        non-primary cell: below 48rem that flattened the name and its years to one
        grey and the column a researcher is hunting for stopped leading. */
     color: var(--text);
+    cursor: pointer;
   }
   .column-years {
+    color: var(--text-muted);
+  }
+  /* The add bar under the list: the selected count, then the single primary Add.
+     Same shape as the picker footer on the variable pages, so the two authoring
+     surfaces read as one control. */
+  .add-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3);
+    margin-top: var(--space-3);
+    padding: var(--space-2) var(--space-3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+  }
+  .add-count {
+    margin-right: auto;
+    font-size: var(--text-sm);
     color: var(--text-muted);
   }
   /* Browse-list name links (inside DataTable cells) — the NAME is primary.

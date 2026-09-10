@@ -124,8 +124,9 @@ REG_META_DB="$db" bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh flows /tm
 ```
 
 The flows assert against the synthetic catalog those two lines set up (`scb/lisa/kon` at
-variant `individer-15plus` → column `Kon`, and `scb/rams/syss` → column `Syss` for the
-catalog-draft case's second pick), which `catalog_fixture_db.py` builds with the shared
+variant `individer-15plus` → column `Kon`, `scb/rams/syss` → column `Syss` for the
+catalog-draft case's second pick, and `scb/lisa/forsamling` → column `Forsamling` for the
+one it ticks off the register list), which `catalog_fixture_db.py` builds with the shared
 fixture builder (`reg_webapp/backend/scripts/fixture_db.py`, below) — not a released DB.
 A nonzero exit is a failed assertion, an unexpected JS page error, horizontal overflow
 at some viewport, or a server that never started; the servers are torn down either way.

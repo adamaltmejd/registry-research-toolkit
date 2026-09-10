@@ -49,6 +49,7 @@ import {
   type PickerCommittedRow,
   pickerRowKey,
   type StagedPickerBand,
+  stagedDiffSummary,
 } from "./staged_picker";
 import { Button, FilterChip, Tag } from "./ui";
 
@@ -2148,24 +2149,14 @@ const hiddenSelectedCount = $derived.by((): number => {
 });
 
 const footerLabel = $derived.by(() => {
-  const parts: string[] = [];
-  if (selectedCount > 0) {
-    parts.push(
-      `+${selectedCount} ${selectedCount === 1 ? "column" : "columns"}`,
-    );
-  }
-  if (removeCount > 0) {
-    parts.push(`-${removeCount} ${removeCount === 1 ? "column" : "columns"}`);
-  }
-  if (periodChangeCount > 0) {
-    parts.push(
-      `${periodChangeCount} ${periodChangeCount === 1 ? "period change" : "period changes"}`,
-    );
-  }
-  if (parts.length === 0) {
+  const label = stagedDiffSummary({
+    added: selectedCount,
+    removed: removeCount,
+    periodChanged: periodChangeCount,
+  });
+  if (label === "") {
     return "";
   }
-  const label = parts.join(" · ");
   return (
     label +
     (hiddenSelectedCount > 0
@@ -4013,70 +4004,6 @@ function codingsVaryHref(
   }
   .select-all-row .select-all.selected {
     color: var(--text);
-  }
-
-  /* The shared checkbox visual — every box is now a real native <input> (the row's
-     keyboard control AND the select-all), styled identically: same size / border /
-     radius. OS chrome is stripped so the shared box + pseudo-element show through. The
-     check itself is a single CENTERED pseudo-element (a rotated stub with a right +
-     bottom border), never the old crossing-gradient X. */
-  .cbox {
-    position: relative;
-    flex: 0 0 auto;
-    width: 1rem;
-    height: 1rem;
-    margin: 0;
-    border: 1px solid var(--border);
-    border-radius: 3px;
-    background: var(--surface);
-    appearance: none;
-    -webkit-appearance: none;
-    cursor: pointer;
-  }
-  /* Inert while an apply is in flight: the app's disabled treatment — dim the box
-     and drop the pointer affordance, so one that cannot be toggled does not look
-     like one that can. */
-  .cbox:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-  .cbox:focus-visible {
-    outline: none;
-    box-shadow: var(--focus-ring);
-  }
-  /* FULL selection → the accent fill + the centered check. Indeterminate is NOT here:
-     a partial box keeps the default surface bg + border, with only a visible dash. */
-  input.cbox:checked {
-    border-color: var(--accent);
-    background: var(--accent);
-  }
-  /* The CENTERED checkmark: a short rotated stub (border-right + border-bottom)
-     positioned at the box centre and nudged so the corner sits centred. Drawn only on
-     a :checked input (full selection). */
-  input.cbox:checked::after {
-    content: "";
-    position: absolute;
-    left: 50%;
-    top: 48%;
-    width: 0.25rem;
-    height: 0.5rem;
-    border: solid var(--accent-fg);
-    border-width: 0 2px 2px 0;
-    transform: translate(-50%, -55%) rotate(45deg);
-  }
-  /* The indeterminate (partial-selection) visual: NO accent fill — the box keeps its
-     surface bg + border — with a clearly visible centred --accent dash drawn ON that
-     unfilled box. :indeterminate beats :checked so a partial box never draws a check. */
-  input.cbox:indeterminate::after {
-    content: "";
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    width: 0.55rem;
-    height: 2px;
-    border: none;
-    background: var(--accent);
-    transform: translate(-50%, -50%);
   }
 
   .row-main {

@@ -607,8 +607,10 @@ async function validationRetryCase(page, counts, shoot, project) {
 /** Scenario 4 — the CATALOG-authored draft. The project lifecycle belongs to the
  * app, not to /project: a column picked from a catalog leaf must autosave, survive
  * a reload, and be EXTENDED (never forked) by a further pick made on a cold
- * catalog entry. Drives the real IndexedDB — the store is empty on every cold
- * load here, so nothing but the restore can produce these results. */
+ * catalog entry — or ticked straight off the REGISTER LIST (Y-83), the other
+ * surface that authors through the same staged add. Drives the real IndexedDB —
+ * the store is empty on every cold load here, so nothing but the restore can
+ * produce these results. */
 async function catalogDraftCase(page, counts, shoot) {
   // (1) A catalog leaf at a chosen period, on a fresh browser context, with
   //     /project never opened.
@@ -651,7 +653,31 @@ async function catalogDraftCase(page, counts, shoot) {
   // Extended, not forked: the saved source is still first, the new pick after it.
   await draftSaved(page, ["scb/lisa/individer-15plus", "scb/rams/standard"]);
 
-  // (6) The recovered project, reloaded once more, carries both picks — and is
+  // (6) The REGISTER LIST as an authoring surface (Y-83). A researcher who knows
+  //     LISA by its delivery columns ticks one straight from the list — no
+  //     variable page opened — and it lands through the same staged add the leaf
+  //     uses: the LISA source it already authored is EXTENDED (its period widening
+  //     to cover the column's own span), never forked into a second one.
+  const listed = validated(page);
+  await open(page, "/catalog/scb/lisa");
+  await listed;
+  await settled(page);
+  const fromList = validated(page);
+  await columnCheckbox(page, "Forsamling").check();
+  await page.getByRole("button", { name: "Add 1 column to project" }).click();
+  await fromList;
+  await settled(page);
+  await page.getByRole("status").filter({ hasText: "Applied +1 column" }).waitFor();
+  // Shaped by BINDING COUNT, not just the coordinate: the register-list add lands
+  // in the source the leaf already authored, so a coordinate-only wait would pass
+  // on the PREVIOUS autosave and race the debounced write of this one.
+  await draftSaved(
+    page,
+    ["scb/lisa/individer-15plus:2", "scb/rams/standard:1"],
+    (s) => `${s.register_variant}:${s.bindings.length}`,
+  );
+
+  // (7) The recovered project, reloaded once more, carries every pick — and is
   //     the same VALID project the researcher authored, not a salvaged fragment.
   await open(page, "/project");
   await settled(page);

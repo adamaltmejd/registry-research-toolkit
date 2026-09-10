@@ -26,6 +26,7 @@ import {
   coverageFromStates,
   DATA_BROWSER_LABEL,
   deliveryColumnNamesFromStates,
+  deliveryColumnRows,
   deriveType,
   distinctValueSets,
   encodeCodesParam,
@@ -1557,6 +1558,62 @@ describe("narrowStatesByModifier (#678: picker honors the active narrowing)", ()
       VALUE_SET_VERSION_NONE,
     );
     expect(narrowed.map((s) => s.variant)).toEqual(["personbilar"]);
+  });
+});
+
+describe("deliveryColumnRows (Y-83 register-list picks)", () => {
+  it("stages one unfolded row per delivering variant, over that variant's own span", () => {
+    const rows = deliveryColumnRows("Kon", [
+      {
+        variant: "individer-16plus",
+        coverage: {
+          coverage_from: "1990-01-01",
+          coverage_to: "2009-12-31",
+          open_ended: false,
+        },
+      },
+      {
+        variant: "individer-15plus",
+        coverage: {
+          coverage_from: "2010-01-01",
+          coverage_to: null,
+          open_ended: true,
+        },
+      },
+    ]);
+
+    expect(rows.map((r) => [r.key, r.wirePeriod])).toEqual([
+      ["individer-16plus::Kon", "1990..2009"],
+      // Still delivered: no finite end, so no wire period of its own — an add
+      // needs the study window to clip it (the Y-58 period gate).
+      ["individer-15plus::Kon", null],
+    ]);
+    // Each row stands for its OWN variant only: one segment each, never a fold,
+    // so a tick fans out to one source per variant (#376).
+    expect(
+      rows.map((r) => r.variantSegments?.map((seg) => seg.variant)),
+    ).toEqual([["individer-16plus"], ["individer-15plus"]]);
+    expect(rows.map((r) => [r.representation, r.renamedColumns])).toEqual([
+      ["Kon", []],
+      ["Kon", []],
+    ]);
+  });
+
+  it("reads a delivery with no known start as unbounded on that side", () => {
+    const [row] = deliveryColumnRows("Kon", [
+      {
+        variant: "individer",
+        coverage: {
+          coverage_from: null,
+          coverage_to: "2009-12-31",
+          open_ended: false,
+        },
+      },
+    ]);
+
+    expect(row.from).toBe("0001-01-01");
+    expect(row.period).toBe("until 2009");
+    expect(row.wirePeriod).toBeNull();
   });
 });
 

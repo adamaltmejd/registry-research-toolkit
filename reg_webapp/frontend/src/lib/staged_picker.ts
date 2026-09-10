@@ -1,8 +1,11 @@
 import {
   addWindowBounds,
+  type BindingResolution,
+  bindingFieldsFromResolution,
   type PickerRepresentation,
   type PickerVariantSegment,
   pickerRowVariantFamily,
+  resolveBindingAt,
   rowAddPeriod,
   windowsAddPeriod,
   windowsOverlapWindow,
@@ -12,19 +15,26 @@ import {
   isStructurallyValidPeriodWire,
   type PeriodBounds,
   periodCoverageUnion,
+  periodFromWire,
   periodToWire,
 } from "./period";
 import {
   isPlainObject,
   type Period,
   type ProjectData,
+  regMetaReleaseTag,
   safeSourceBindings,
   safeSourceName,
   safeSourcePeriod,
   safeSourceRegisterVariant,
   safeSourceSlots,
 } from "./project_data";
-import type { StagedPeriodChange, StagedRemove } from "./project_store.svelte";
+import {
+  projectStore,
+  type StagedAdd,
+  type StagedPeriodChange,
+  type StagedRemove,
+} from "./project_store.svelte";
 
 export interface StagedPickerBand {
   key: string;
@@ -220,6 +230,12 @@ export function committedPickerRows(
 ): Map<string, PickerCommittedRow> {
   const committed = new Map<string, PickerCommittedRow>();
   const sources = safeSourceSlots(draft?.sources);
+  if (sources.length === 0) {
+    // Nothing is committed anywhere, so no row can be — and the ordinary
+    // catalog-browsing state (no draft) should not pay for a whole register list
+    // of key + segment work to discover that.
+    return committed;
+  }
   for (const band of bands) {
     for (const row of band.rows) {
       const rowKey = pickerRowKey(band, row);
@@ -358,6 +374,12 @@ export function periodChangesWithStagedAdds(
 export const ADD_PERIOD_REQUIRED_MESSAGE =
   "Apply a period before adding — set the study window in the rail, or press Apply under Period above, then select and add again.";
 
+/** The same refusal on a page that carries NO Period control of its own — the
+ * register list (Y-83), where the study window is the only way out. Same gate,
+ * same opening words; it just doesn't name a control this page hasn't got. */
+export const ADD_WINDOW_REQUIRED_MESSAGE =
+  "Apply a period before adding — set the study window in the rail, then add again.";
+
 /** The wire period each staged add resolves its binding at and commits under, in
  * `adds` order — or null when ANY of them has no valid FINITE period. A picker row
  * with an open-ended delivery window, picked with neither a `?period` nor a project
@@ -407,4 +429,218 @@ export function finalSourcePeriodsForStagedAdds(
     periods.set(change.registerVariant, change.period);
   }
   return periods;
+}
+
+// ── The staged add → resolve → commit stack (Y-83) ───────────────────────────
+// ONE home for what the binding leaf, the concept group and the register page all
+// do with a set of picked rows: fan each row out to its concrete register
+// variants, resolve every add's binding fields at the period it commits under, and
+// write the whole batch through `projectStore.applyStagedDiff`. It was three
+// copies of the same forty lines; the hosts now own only their own `$state`
+// (the confirmation / refusal lines) and their scope.
+
+/** One picked row as a host hands it over: the band it belongs to and the row. The
+ * fields are the ones staging reads, so every host's richer band/row types
+ * (`PickerBand`, the register page's own bands) satisfy it structurally. */
+export interface StagedPick {
+  band: StagedPickerBand;
+  row: PickerRepresentation;
+}
+
+/** The batch one Apply commits: rows to add, committed rows to remove, and
+ * source-period changes to fold in. */
+export interface StagedApplyPayload {
+  adds: readonly StagedPick[];
+  removes: readonly { committed: PickerCommittedRow }[];
+  periodChanges: readonly StagedPeriodChange[];
+}
+
+/** The deployment seed a pristine store needs to mint the project the picks land
+ * in (C1: threaded from `/api/context` through the page). */
+export interface StagedApplySeed {
+  regMetaVersion: string;
+  steward: string;
+}
+
+/** What an Apply did, for the host's inline confirmation — or `null` when the
+ * batch was empty (nothing to confirm). */
+export interface StagedApplyOutcome {
+  added: number;
+  removed: number;
+  periodChanged: number;
+}
+
+/** A staged diff in words — "+2 columns · -1 column · 1 period change", only the
+ * parts that are non-zero, "" for an empty diff. ONE formatter so the picker footer
+ * (what an Apply WILL do) and a page's confirmation (what it DID) can never phrase
+ * the same three counts differently. */
+export function stagedDiffSummary(counts: StagedApplyOutcome): string {
+  const parts: string[] = [];
+  if (counts.added > 0) {
+    parts.push(`+${counts.added} ${counts.added === 1 ? "column" : "columns"}`);
+  }
+  if (counts.removed > 0) {
+    parts.push(
+      `-${counts.removed} ${counts.removed === 1 ? "column" : "columns"}`,
+    );
+  }
+  if (counts.periodChanged > 0) {
+    parts.push(
+      `${counts.periodChanged} ${counts.periodChanged === 1 ? "period change" : "period changes"}`,
+    );
+  }
+  return parts.join(" · ");
+}
+
+/** The three ways an Apply can end:
+ *  - `applied` — the diff is committed (the host clears its staging);
+ *  - `period-required` — refused BEFORE any mutation because an add resolved no
+ *    finite period (the host shows `ADD_PERIOD_REQUIRED_MESSAGE` and keeps the
+ *    staging, so an Apply that authored nothing never looks like one that did);
+ *  - `abandoned` — the page was left, or the draft replaced, while the picks were
+ *    in flight; nothing was written. */
+export type StagedApplyResult =
+  | { kind: "applied"; outcome: StagedApplyOutcome | null }
+  | { kind: "period-required" }
+  | { kind: "abandoned" };
+
+/** One staged add, resolved down to a concrete `register_variant` + period. */
+export interface StagedAddCandidate {
+  pick: StagedPick;
+  variant: string;
+  registerVariant: string;
+  periodWire: string | null;
+  period: Period;
+}
+
+/** Fan ONE picked row out to a staged add per concrete `register_variant` its
+ * active scope touches (#376) — the per-concrete-segment invariant lives in
+ * `rowAddSegments`, never re-derived per host (see catalog.ts's
+ * `PickerRepresentation` seam note). */
+export function stagedAddCandidates(
+  pick: StagedPick,
+  scope: PickerCommitScope,
+): StagedAddCandidate[] {
+  return rowAddSegments(pick.band, pick.row, scope).map((segment) => ({
+    pick,
+    variant: segment.variant,
+    registerVariant: segment.registerVariant,
+    periodWire: segment.periodWire,
+    period: periodFromWire(segment.periodWire),
+  }));
+}
+
+/** Resolve ONE candidate's binding fields at the period it commits under. A failed
+ * resolve is `unresolved`, which authors `type: ""` for the backend validator to
+ * flag rather than a synthesized-valid binding.
+ * simplify: one GET per add. A researcher picks a few dozen columns per action, so
+ * the batch is tens of parallel requests; give the catalog a bulk resolve if a
+ * single action ever stages hundreds. */
+async function stagedAdd(
+  candidate: StagedAddCandidate,
+  resolvePeriodWire: string,
+): Promise<StagedAdd> {
+  const { band, row } = candidate.pick;
+  let resolution: BindingResolution;
+  try {
+    resolution = await resolveBindingAt(
+      band.key,
+      resolvePeriodWire,
+      candidate.variant,
+    );
+  } catch {
+    resolution = { kind: "unresolved" as const, reason: "no-states" as const };
+  }
+  return {
+    registerVariant: candidate.registerVariant,
+    period: candidate.period,
+    binding: bindingFieldsFromResolution(
+      band.key,
+      resolution,
+      row.representation,
+      { pinRepresentation: row.pinRepresentation === true },
+    ),
+  };
+}
+
+/** Commit a staged batch through ONE synchronous store mutation. `scope` is the
+ * host's active (period, window) — the same one its `committedPickerRows` reads,
+ * so what an add commits under is what the page showed. `cancelled` reports that
+ * the host is gone (its `$effect` teardown), which abandons a pick still waiting
+ * on the restore gate rather than committing it into a draft from a page the
+ * researcher has navigated away from. */
+export async function applyStagedPicks(
+  payload: StagedApplyPayload,
+  ctx: {
+    scope: PickerCommitScope;
+    seed: StagedApplySeed;
+    cancelled: () => boolean;
+  },
+): Promise<StagedApplyResult> {
+  if (
+    payload.adds.length === 0 &&
+    payload.removes.length === 0 &&
+    payload.periodChanges.length === 0
+  ) {
+    return { kind: "applied", outcome: null };
+  }
+  // The draft lifecycle is application-owned and its restore is ASYNCHRONOUS: on a
+  // cold entry at a catalog route the store is still empty while IndexedDB is read.
+  // Wait for it to settle, or this Add mints a SECOND project over the saved one.
+  // The wait is unbounded, so the pick stays bound to the project it was staged
+  // against: a New/Open (or leaving the page) while it is pending means the
+  // researcher moved on, and these rows are not a pick against the replacement.
+  const stagedAgainst = projectStore.replacementGeneration;
+  await projectStore.restored;
+  if (ctx.cancelled() || projectStore.replacementGeneration !== stagedAgainst) {
+    return { kind: "abandoned" };
+  }
+  // Every add commits under a FINITE period — the one it also resolves its binding
+  // metadata at. A row delivered open-ended, picked with neither a `?period` nor a
+  // project window to clip it to, has none: applying it would author `period: ""`
+  // and an underivable `type: ""` onto a draft that autosaves before /project is
+  // ever opened. Refuse BEFORE any mutation (a null draft is not even minted).
+  const candidates = payload.adds.flatMap((pick) =>
+    stagedAddCandidates(pick, ctx.scope),
+  );
+  const addPeriods = finalAddPeriodWires(
+    sourcePeriodsFromDraft(projectStore.draft),
+    payload.periodChanges,
+    candidates,
+  );
+  if (addPeriods === null) {
+    return { kind: "period-required" };
+  }
+  if (projectStore.draft === null && payload.adds.length > 0) {
+    projectStore.newProject({
+      reg_meta_version: regMetaReleaseTag(ctx.seed.regMetaVersion),
+      steward: ctx.seed.steward,
+    });
+  }
+  const target = projectStore.draft;
+  const adds = await Promise.all(
+    candidates.map((candidate, i) => stagedAdd(candidate, addPeriods[i])),
+  );
+  if (projectStore.draft !== target) {
+    return { kind: "abandoned" };
+  }
+  const removes = payload.removes.flatMap((r) =>
+    stagedRemoveForCommitted(r.committed),
+  );
+  projectStore.applyStagedDiff({
+    adds,
+    removes,
+    periodChange: periodChangesWithStagedAdds(
+      payload.periodChanges,
+      candidates,
+    ),
+  });
+  return {
+    kind: "applied",
+    outcome: {
+      added: payload.adds.length,
+      removed: removes.length,
+      periodChanged: payload.periodChanges.length,
+    },
+  };
 }

@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
-import type { CatalogNode } from "./api";
+import type { CatalogNode, StatesResponse, VariableStateModel } from "./api";
 import {
   getCatalogNode,
   getClassificationGroup,
@@ -10,11 +10,13 @@ import {
   getRelatedDocuments,
 } from "./api";
 import CatalogNodeView from "./CatalogNodeView.svelte";
+import { projectStore } from "./project_store.svelte";
 import {
   datedVersions,
   variant,
   variantsResponse,
 } from "./variants-test-helpers";
+import { windowStore } from "./window.svelte";
 
 // CatalogNodeView fetches one node via `getCatalogNode(fqidPath)` and switches on
 // `kind`. Mock that single GET (mirrors ConceptGroupView's api-mock style); keep
@@ -422,6 +424,14 @@ beforeEach(() => {
     register: "lisa",
     documents: [],
   });
+  // Both stores are module singletons: clear the browse-time window fallback, then
+  // open a fresh empty draft — the state a catalog page authors into. A fresh draft
+  // seeds its window from that (now empty) fallback, so each case starts windowless.
+  windowStore.set(null);
+  projectStore.newProject({
+    reg_meta_version: "reg_meta/v1.0.0",
+    steward: "global",
+  });
 });
 
 describe("CatalogNodeView loading geometry", () => {
@@ -544,9 +554,11 @@ function variableRows(container: Element): [string, string][] {
 /** Toggle a variant chip by the NAME it reads as — clicking the chip label, as a
  * pointer does: the checkbox it wraps is visually hidden (present for the keyboard
  * and assistive tech). Waits for the name first: the chips read slugs until the
- * register's variants land. */
+ * register's variants land. EXACT: the list's own delivery-column ticks (Y-83) are
+ * checkboxes too, and a chip's slug is a prefix of a column name often enough
+ * (`foretag` / `ForetagNr`) that a substring match is ambiguous. */
 async function clickVariantChip(name: string): Promise<void> {
-  const checkbox = page.getByRole("checkbox", { name });
+  const checkbox = page.getByRole("checkbox", { name, exact: true });
   await expect.element(checkbox).toBeInTheDocument();
   checkbox.element().closest<HTMLLabelElement>("label")?.click();
 }
@@ -898,9 +910,11 @@ describe("CatalogNodeView register arm", () => {
 
     await expect.element(page.getByText("Kon", { exact: true })).toBeVisible();
     expect(container.querySelector(".variant-filter")).toBeNull();
-    expect(container.querySelectorAll('input[type="checkbox"]')).toHaveLength(
-      0,
-    );
+    // Scoped to the chip strip: the list's own delivery-column ticks (Y-83) are
+    // checkboxes, and they are there whether or not the register has a variant axis.
+    expect(
+      container.querySelectorAll('.variant-filters input[type="checkbox"]'),
+    ).toHaveLength(0);
   });
 
   it("makes a variable leaf-row link keyboard-focusable inside the table cell", async () => {
@@ -1073,6 +1087,189 @@ describe("CatalogNodeView register arm", () => {
     ).toBe(true);
     expect(groupLink?.closest(".panel")).toBeNull();
     expect(groupLink?.querySelector(".group-key")).toBeNull();
+  });
+});
+
+// ── Y-83: adding delivery columns straight from the register list ────────────
+// The register page is an authoring surface now: each delivery column carries a
+// tick, and one action adds every ticked column to the project through the same
+// staged add → resolve → commit stack the variable pages use.
+
+/** The `?period` resolve one staged add makes — a categorical state under the
+ * variant it was staged for. */
+function resolvedState(variant: string, column: string): VariableStateModel {
+  return {
+    state_id: 1,
+    variant,
+    variant_label: null,
+    register_variant_id: 1,
+    valid_from: "1990-01-01",
+    valid_to: "9999-12-31",
+    data_type: "int",
+    data_length: null,
+    delivery_column_name: column,
+    source_register_text: null,
+    value_set_version_label: "",
+    value_set_id: 7,
+    value_set: null,
+    is_identifier: false,
+    classification_slug: null,
+  };
+}
+
+/** The browse GET returns the register node; the staged adds' `?period` GETs
+ * resolve to one state each, so a committed binding carries a real type. */
+function mockRegisterAndResolve(node: CatalogNode): void {
+  vi.mocked(getCatalogNode).mockImplementation(async (fqid, params) => {
+    if (!params?.period) {
+      return node;
+    }
+    const variant = typeof params.variant === "string" ? params.variant : "";
+    return {
+      states: [resolvedState(variant, fqid.split("/").at(-1) ?? "")],
+    } as unknown as StatesResponse;
+  });
+}
+
+async function renderRegister() {
+  return await render(CatalogNodeView, {
+    fqidPath: "scb/lisa",
+    regMetaVersion: "test",
+    steward: "global",
+    windowMinYear: 1960,
+    vintageYear: 2024,
+  });
+}
+
+/** Tick a delivery column by the name the list shows it under. */
+async function tickColumn(name: string): Promise<void> {
+  await page.getByRole("checkbox", { name, exact: true }).click();
+}
+
+describe("CatalogNodeView register arm: add columns (Y-83)", () => {
+  it("adds every ticked column to the draft in one action", async () => {
+    mockRegisterAndResolve(columnedRegisterNode(1));
+    windowStore.set({ from: 2018, to: 2023 });
+
+    await renderRegister();
+    await expect.element(page.getByText("Kön")).toBeVisible();
+
+    // Two columns of two DIFFERENT variables, ticked from the list itself — the
+    // researcher never opens either variable's page.
+    await tickColumn("Kon");
+    await tickColumn("ForvErs");
+    await expect.element(page.getByText("2 columns selected")).toBeVisible();
+
+    await page
+      .getByRole("button", { name: "Add 2 columns to project" })
+      .click();
+
+    await expect.element(page.getByText("Applied +2 columns")).toBeVisible();
+    // ONE source: both adds land on the same register variant, its period the
+    // union of the two window-clipped spans (`Kon` 2018–2023, `ForvErs` 2018–2021).
+    expect(projectStore.draft?.sources).toEqual([
+      expect.objectContaining({
+        register_variant: "scb/lisa/individer-15plus",
+        period: { from: 2018, to: 2023 },
+        bindings: [
+          expect.objectContaining({
+            variable: "scb/lisa/kon",
+            type: "categorical",
+          }),
+          expect.objectContaining({
+            variable: "scb/lisa/forvink-ers",
+            type: "categorical",
+          }),
+        ],
+      }),
+    ]);
+  });
+
+  it("shows an added column as in the project, unticked, and re-ticking it changes nothing", async () => {
+    mockRegisterAndResolve(columnedRegisterNode(1));
+    windowStore.set({ from: 2018, to: 2023 });
+
+    await renderRegister();
+    await expect.element(page.getByText("Kön")).toBeVisible();
+    await tickColumn("Kon");
+    await page.getByRole("button", { name: "Add 1 column to project" }).click();
+
+    // The tick is consumed and the column now reads as part of the project — the
+    // state rides inside the tick's own label, so it is in its accessible name.
+    await expect
+      .element(
+        page.getByRole("checkbox", { name: "Kon In project", exact: true }),
+      )
+      .not.toBeChecked();
+    const committed = JSON.stringify(projectStore.draft);
+
+    // Ticking it again is a no-op: the same add folds into the source it is
+    // already in (`applyStagedDiff`'s duplicate-binding guard).
+    await tickColumn("Kon In project");
+    await page.getByRole("button", { name: "Add 1 column to project" }).click();
+    await expect.element(page.getByText("Applied +1 column")).toBeVisible();
+    expect(JSON.stringify(projectStore.draft)).toBe(committed);
+  });
+
+  it("refuses an open-ended column with no study window, and says which control fixes it", async () => {
+    mockRegisterAndResolve(columnedRegisterNode(1));
+
+    await renderRegister();
+    await expect.element(page.getByText("Kön")).toBeVisible();
+
+    // `Kon` is delivered open-ended (2018–). With no study window there is no
+    // finite period to commit it under, so the batch is refused whole — and the
+    // nudge names the rail's window, the only period control this page has.
+    await tickColumn("Kon");
+    await page.getByRole("button", { name: "Add 1 column to project" }).click();
+
+    await expect
+      .element(page.getByText(/Apply a period before adding/))
+      .toBeVisible();
+    await expect
+      .element(page.getByText(/set the study window in the rail/))
+      .toBeVisible();
+    expect(projectStore.draft?.sources).toEqual([]);
+  });
+
+  it("retires the study-window nudge once the window is set, keeping the ticks", async () => {
+    mockRegisterAndResolve(columnedRegisterNode(1));
+
+    await renderRegister();
+    await expect.element(page.getByText("Kön")).toBeVisible();
+    await tickColumn("Kon");
+    await page.getByRole("button", { name: "Add 1 column to project" }).click();
+    await expect
+      .element(page.getByText(/Apply a period before adding/))
+      .toBeVisible();
+
+    // Doing what the nudge asked retires it, so the refusal never outlives the
+    // pick it refused — and the tick survives, so "add again" is one press.
+    windowStore.set({ from: 2018, to: 2023 });
+    await expect
+      .element(page.getByText(/Apply a period before adding/))
+      .not.toBeInTheDocument();
+    await page.getByRole("button", { name: "Add 1 column to project" }).click();
+    await expect.element(page.getByText("Applied +1 column")).toBeVisible();
+  });
+
+  it("stages what the variant lens shows, one add per delivering variant", async () => {
+    mockRegisterAndResolve(splitColumnRegisterNode());
+    windowStore.set({ from: 2018, to: 2023 });
+
+    await renderRegister();
+    await expect.element(page.getByText("Kön")).toBeVisible();
+
+    // `Kon` is delivered by BOTH variants under one name: one tick, one add per
+    // concrete register variant (#376), so both sources are authored — and the
+    // confirmation still counts the ONE column the researcher ticked.
+    await tickColumn("Kon");
+    await page.getByRole("button", { name: "Add 1 column to project" }).click();
+
+    await expect.element(page.getByText("Applied +1 column")).toBeVisible();
+    expect(
+      projectStore.draft?.sources.map((source) => source.register_variant),
+    ).toEqual(["scb/lisa/individer-15plus", "scb/lisa/individer-16plus"]);
   });
 });
 

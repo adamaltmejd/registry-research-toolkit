@@ -44,6 +44,10 @@ let { tone = "neutral", mono = false, glyph, children }: Props = $props();
     gap: var(--space-1);
     padding: 0.1em 0.5em;
     border-radius: var(--radius-sm);
+    /* A tag label is COPY, so it sets the UI face rather than inheriting: a tag
+       inside a mono-faced cell (the register list) would otherwise render two
+       words of English in the identifier face. `mono` is the opt-in below. */
+    font-family: var(--font-ui);
     font-size: var(--text-sm);
     line-height: 1;
     white-space: nowrap;
