@@ -2073,9 +2073,10 @@ name leads and the superseded ones trail it in mono. Every such read goes throug
 `catalog_names.svelte.ts`, a module-singleton cache keyed per read (the catalog root;
 one per provider, which names every register it owns; one per register's variant list;
 one per `(fqid, period, variant)`), so a hundred-column cart issues each request once
-and a re-render issues none; the shell's own facet rail reads the root through it too. A read in flight or a failed one leaves the row showing the coordinate
-it already holds — a machine coordinate is honest where an invented name is not — and
-nothing read is ever written back into the draft.
+and a re-render issues none; the shell's own facet rail reads the root through it too. A
+read in flight or a failed one leaves the row showing the coordinate it already holds —
+a machine coordinate is honest where an invented name is not — and nothing read is ever
+written back into the draft.
 
 This retires the \~400-line client-side **re-derivation engine** (`bindingDerivations` /
 `rederiveGen` / `rederiveSource` / `applyResolution` / `applyDerivedResult` and the
