@@ -1125,6 +1125,41 @@ describe("applyStagedPicks", () => {
     expect(JSON.stringify(projectStore.draft)).toBe(before);
   });
 
+  it("abandons a batch whose host left WHILE its bindings resolved", async () => {
+    // The teardown lands AFTER the pre-resolve gate has already let the batch
+    // through, and leaves the draft untouched — so the draft identity beside it
+    // cannot see it, and only asking `cancelled` a second time can.
+    let gone = false;
+    vi.mocked(getCatalogNode).mockImplementation(async (_fqid, params) => {
+      gone = true;
+      const variant = typeof params?.variant === "string" ? params.variant : "";
+      return {
+        states: konStates.filter((s) => !variant || s.variant === variant),
+      } as never;
+    });
+    projectStore.newProject({
+      reg_meta_version: SEED.regMetaVersion,
+      steward: SEED.steward,
+    });
+    const before = JSON.stringify(projectStore.draft);
+
+    const result = await applyStagedPicks(
+      {
+        adds: picksOf(deliveryColumnRows("Kon", konDeliveries)),
+        removes: [],
+        periodChanges: [],
+      },
+      {
+        scope: { period: null, window: [2018, 2023] },
+        seed: SEED,
+        cancelled: () => gone,
+      },
+    );
+
+    expect(result).toEqual({ kind: "abandoned" });
+    expect(JSON.stringify(projectStore.draft)).toBe(before);
+  });
+
   it("has nothing to confirm for an empty batch", async () => {
     expect(
       await applyStagedPicks(

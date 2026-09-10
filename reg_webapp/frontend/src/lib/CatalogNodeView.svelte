@@ -683,6 +683,26 @@ $effect(() => () => {
   unmounted = true;
 });
 
+/** The gate a batch runs at every await: whether it STILL describes the page it was
+ * pressed on. Captured at the press, because all three of its inputs can move under
+ * an Add — the host can unmount, the rail can New/Open, and the STUDY WINDOW can be
+ * dragged. The window is one of the three because it is this page's period control
+ * and it lives in the rail, which an Add does not disable: moving it while the reads
+ * are out would otherwise commit the batch under the years the researcher just left,
+ * beside a list already redrawn for the years they chose.
+ *
+ * A closure rather than captured values threaded through, so the call sites — after
+ * the era reads, and inside `applyStagedPicks`, whose binding resolves are one more
+ * round trip the window outlives — cannot ask different questions. */
+function batchGuard(): () => boolean {
+  const stagedAgainst = projectStore.replacementGeneration;
+  const stagedYears = windowYears;
+  return () =>
+    unmounted ||
+    projectStore.replacementGeneration !== stagedAgainst ||
+    windowYears !== stagedYears;
+}
+
 /** A staged row and the TICKED column names it commits — one for an ordinary column,
  * two when a #902 rename chain was ticked under both of its names. Carrying them is
  * what lets the confirmation count in the bar's unit (`countColumns`) without asking
@@ -733,21 +753,22 @@ async function exactPicks(
 }
 
 async function addSelected(): Promise<void> {
-  // Bind the batch to the ticks, the project AND the scope it was staged against: the
-  // per-variable reads below are a round trip, and a New/Open in the rail or a drag of
-  // the study window during it means what comes back is no longer a pick against the
-  // project — or under the window — the researcher pressed Add on. `applyStagedPicks`
-  // runs the same replacement guard, but only from the moment IT is called, which is
-  // after this read.
-  const stagedAgainst = projectStore.replacementGeneration;
+  // Bind the batch to the ticks AND to the page it was pressed on: the per-variable
+  // reads below are a round trip, and a New/Open in the rail or a drag of the study
+  // window during it means what comes back is no longer a pick against the project —
+  // or under the window — the researcher pressed Add on (`batchGuard`).
+  // `applyStagedPicks` runs the same guard, but only from the moment IT is called,
+  // which is after this read.
+  const lapsed = batchGuard();
   const scope = addScope;
   const ticked = stagedTicks;
   applying = true;
   try {
     const exact = await exactPicks(ticked);
-    if (unmounted || projectStore.replacementGeneration !== stagedAgainst) {
+    if (lapsed()) {
       // Abandoned mid-read, before anything was authored. The verdict on a batch
-      // staged against a project that is gone says nothing about the next Add.
+      // staged against a project — or a window — that is gone says nothing about the
+      // next Add, and the ticks survive for one against what is on screen now.
       addRefusal = null;
       return;
     }
@@ -769,7 +790,7 @@ async function addSelected(): Promise<void> {
       {
         scope,
         seed: { regMetaVersion, steward },
-        cancelled: () => unmounted,
+        cancelled: lapsed,
       },
     );
     addRefusal =

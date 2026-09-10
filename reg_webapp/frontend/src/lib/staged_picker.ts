@@ -585,10 +585,12 @@ async function stagedAdd(
 
 /** Commit a staged batch through ONE synchronous store mutation. `scope` is the
  * host's active (period, window) — the same one its `committedPickerRows` reads,
- * so what an add commits under is what the page showed. `cancelled` reports that
- * the host is gone (its `$effect` teardown), which abandons a pick still waiting
- * on the restore gate rather than committing it into a draft from a page the
- * researcher has navigated away from.
+ * so what an add commits under is what the page showed. `cancelled` reports that the
+ * batch no longer describes that page — the host is gone (its `$effect` teardown), or
+ * a control the host left usable has moved `scope` out from under it. It is asked at
+ * BOTH of the awaits below (the restore gate, then the binding resolves), because a
+ * pick that waits is a pick the researcher can walk away from mid-wait, and neither
+ * wait may end in a commit into a page they have left behind.
  *
  * The replacement guard below starts HERE, when this call does. A host that reads
  * anything asynchronously between the press and this call (the register list re-reads
@@ -637,18 +639,23 @@ export async function applyStagedPicks(
   if (addPeriods === null) {
     return { kind: "period-required" };
   }
+  const target = projectStore.draft;
+  const adds = await Promise.all(
+    candidates.map((candidate, i) => stagedAdd(candidate, addPeriods[i])),
+  );
+  // One resolve GET per add, so the host can go — or the scope it staged under can
+  // move — WHILE they are in flight, which the gate above ran too early to see: the
+  // draft is untouched by either, so its identity alone would let the batch through.
+  // The mint waits until after this gate, so an abandoned batch cannot leave a fresh
+  // empty project as its only trace.
+  if (ctx.cancelled() || projectStore.draft !== target) {
+    return { kind: "abandoned" };
+  }
   if (projectStore.draft === null && payload.adds.length > 0) {
     projectStore.newProject({
       reg_meta_version: regMetaReleaseTag(ctx.seed.regMetaVersion),
       steward: ctx.seed.steward,
     });
-  }
-  const target = projectStore.draft;
-  const adds = await Promise.all(
-    candidates.map((candidate, i) => stagedAdd(candidate, addPeriods[i])),
-  );
-  if (projectStore.draft !== target) {
-    return { kind: "abandoned" };
   }
   const removes = payload.removes.flatMap((r) =>
     stagedRemoveForCommitted(r.committed),

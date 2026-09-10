@@ -780,7 +780,13 @@ variable pages to add one column each.
   page shows is a verdict on ONE Add under the window it was made under, so all of them
   retire the moment the window moves — one `addRefusal` slot rather than a flag per
   gate, so a verdict can never outlive the batch it refused. The refusal only: the ticks
-  survive, so "add again" is one press.
+  survive, so "add again" is one press. An Add is bound to the window it was pressed
+  under for its whole round trip — the rail is not disabled while the era reads and the
+  per-add resolves are out, so a window moved mid-Add ABANDONS the batch (`batchGuard`,
+  asked again after every await, `applyStagedPicks`'s own included) rather than
+  committing it under years the researcher has already left, beside a list redrawn for
+  the years they chose. Abandoned, not refused: nothing is authored, nothing is claimed,
+  and the ticks survive for an Add under the window now on screen.
 - **A column the window has moved off is not tickable.** The list names every column the
   register ever delivered, so a window later (or earlier) than a column's whole history
   leaves it nothing to commit. Its tick is disabled and the row carries the reason. A

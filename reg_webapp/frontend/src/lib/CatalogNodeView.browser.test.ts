@@ -1542,6 +1542,43 @@ describe("CatalogNodeView register arm: add columns (Y-83)", () => {
     expect(projectStore.draft?.sources).toEqual([]);
   });
 
+  it("abandons a batch whose study window moves while the eras are read", async () => {
+    let releaseStates = (): void => {};
+    mockRegisterAndResolve(
+      columnedRegisterNode(1),
+      {},
+      new Promise<void>((resolve) => {
+        releaseStates = resolve;
+      }),
+    );
+    windowStore.set({ from: 2018, to: 2023 });
+
+    await renderRegister();
+    await expect.element(page.getByText("Kön")).toBeVisible();
+    await tickColumn("Kon");
+    await page.getByRole("button", { name: "Add 1 column to project" }).click();
+    await expect
+      .element(page.getByRole("button", { name: "Adding…" }))
+      .toBeVisible();
+
+    // The rail's window is not disabled by an Add, and it IS this page's period:
+    // moving it mid-read makes the pending batch a pick under years the researcher
+    // has already left, so it is abandoned rather than committed as 2018–2023.
+    windowStore.set({ from: 2019, to: 2023 });
+    releaseStates();
+
+    await expect
+      .element(page.getByRole("button", { name: "Adding…" }))
+      .not.toBeInTheDocument();
+    expect(projectStore.draft?.sources).toEqual([]);
+    // Abandoned, not refused — and the tick survives, so the Add the new window
+    // asks for is one press.
+    await expect.element(page.getByText(/Applied/)).not.toBeInTheDocument();
+    await expect
+      .element(page.getByRole("checkbox", { name: "Kon", exact: true }))
+      .toBeChecked();
+  });
+
   it("abandons a batch whose project is replaced while the eras are read", async () => {
     let releaseStates = (): void => {};
     // The per-variable read an Add makes, held open so a New can land while the batch
