@@ -343,6 +343,125 @@ to = "scb/lisa/agi3faman"
 effective_year = 2019
 note = "FÅMANS (rank 3) source switched from kontrolluppgift to arbetsgivardeklaration (AGI) in 2019"
 
+# ── LISA RAMS → BAS: the årgång 2022 re-mint (Y-88) ──
+#    From årgång 2022 LISA's arbetsmarknadsvariabler come from Befolkningens
+#    arbetsmarknadsstatus (BAS) instead of RAMS
+#    (`reg_meta_build/docs/lisa/_changelog-2022.md` § "Ny källa för
+#    arbetsmarknadsvariabler"). BAS carries no aktiv/passiv status for
+#    egenföretagare and adds utländsk beskattad lön to the förvärvsarbete income
+#    variables (same file, § "Inkomst av förvärvskälla"), so SCB re-minted the
+#    affected variables under new VarIds while keeping the delivery column and the
+#    variant: `Org_AntalPers` (foretag), `ForvInk` and `ForvErs`
+#    (individer-15plus) each read as two unrelated browse rows without an edge.
+#    Variable grain — the whole variable is superseded, not one of its columns.
+[[edge]]
+type = "replaced_by"
+from = "scb/lisa/antal-anstallda-ku"
+to = "scb/lisa/antal-anstallda"
+effective_year = 2022
+note = "Antal anställda dropped the kontrolluppgift basis when LISA's arbetsmarknadsvariabler moved from RAMS to BAS in 2022"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/lisa/forvink-aktiv"
+to = "scb/lisa/forvink"
+effective_year = 2022
+note = "Summa inkomst av förvärvskälla lost its aktiv-näringsverksamhet restriction in 2022: BAS carries no aktiv/passiv status for egenföretagare"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/lisa/forvink-ers-aktiv"
+to = "scb/lisa/forvink-ers"
+effective_year = 2022
+note = "Förvärvsinkomst och arbetsrelaterade ersättningar lost its aktiv-näringsverksamhet restriction in 2022: BAS carries no aktiv/passiv status for egenföretagare"
+
+#    Huvudsaklig inkomstkälla made the same RAMS → BAS step as a COLUMN rename
+#    inside VarId 37828: same changelog, § "Huvudsaklig inkomstkälla och
+#    Arbetsrelaterad inkomstnivå i BAS ersätter RAKS", whose mapping table takes
+#    `Raks_HuvInkKalla` (Registerbaserad aktivitetsstatistik, 1993–2021) to
+#    `HuvInkKalla` (BAS, 2022–) and prints both code sets — the nine RAKS classes
+#    are recut into eight BAS ones, so this is succession, not identity.
+#    Representation grain, scoped to the one variant the two eras are delivered in.
+[[edge]]
+type = "replaced_by"
+from = "scb/lisa/raks-huvinkkalla"
+to = "scb/lisa/huvudsaklig-inkomstkalla"
+from_column = "Raks_HuvInkKalla"
+to_column = "HuvInkKalla"
+variant = "individer-15plus"
+effective_year = 2022
+note = "Huvudsaklig inkomstkälla moved from RAKS to BAS in 2022 (Raks_HuvInkKalla → HuvInkKalla), recutting the nine RAKS classes into eight BAS classes"
+
+# ── LISA sysselsättningsstatus: justerad metod 2011 → 2019 (Y-88) ──
+#    The same 2019 KU → AGI source switch as the näringsgren and FÅMANS edges
+#    above, seen in the status column
+#    (`reg_meta_build/docs/lisa/_changelog-2019.md` § "Förvärvsarbetande"): the
+#    column is re-cut as `SyssStat19`, "Sysselsättningsstatus enligt justerad
+#    metod 2019". The code set moves with the source: classes 5/6 read "AGI från
+#    arbetsgivare" where `SyssStat11` read "kontrolluppgift från arbetsgivare",
+#    and class 8 (förvärvsarbetande 75-) is new
+#    (`reg_meta_build/docs/lisa/_changelog-2022.md` § "Sysselsättningsstatus och
+#    Befolkningens arbetsmarknadsstatus"). One VarId (63), two
+#    never-co-delivered columns — representation grain.
+[[edge]]
+type = "replaced_by"
+from = "scb/lisa/sysselsattningsstatus-november"
+to = "scb/lisa/syssstat19"
+from_column = "SyssStat11"
+to_column = "SyssStat19"
+variant = "individer-15plus"
+effective_year = 2019
+note = "Sysselsättningsstatus, november moved from justerad metod 2011 to justerad metod 2019 when AGI replaced kontrolluppgift as the RAMS source"
+
+# ── LISA 2016 `_LISA` header renames: CfarNr / PeOrgNr (Y-88) ──
+#    Through årgång 2015 the individ variants delivered the workplace and company
+#    keys twice: LISA's own `CfarNr` / `PeOrgNr` beside the CO-DELIVERED
+#    Sysselsättningsregister columns `CfarNrSreg` / `PeOrgNrSreg` — a parallel
+#    reading, so the Sreg → `_LISA` pairings the diagnostic also emits are NOT
+#    renames and are not modeled here. From årgång 2016 the Sreg siblings stop
+#    and the surviving column carries the `_LISA` suffix. The documentation names
+#    the column `CfarNr_LISA` / `PeOrgNr_LISA` across the whole 1990–2017 span
+#    (`reg_meta_build/docs/lisa/_appendix-year-coverage.md`, Bilaga 9), so the
+#    2016 step is a delivery-header rename, not a new measure. Representation
+#    grain and VARIANT-SCOPED: `arbetsstallen` and `foretag` keep delivering the
+#    unsuffixed headers through 2023, so a variable-grain edge would assert a
+#    rename that never happened there.
+[[edge]]
+type = "replaced_by"
+from = "scb/lisa/cfar-nummer"
+to = "scb/lisa/cfar-nummer-2"
+from_column = "CfarNr"
+to_column = "CfarNr_LISA"
+variant = "individer-15plus"
+effective_year = 2016
+note = "LISA arbetsställe delivery column renamed CfarNr → CfarNr_LISA in the individ variant from årgång 2016"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/lisa/person-orgnr"
+to = "scb/lisa/person-orgnr-2"
+from_column = "PeOrgNr"
+to_column = "PeOrgNr_LISA"
+variant = "individer-15plus"
+effective_year = 2016
+note = "LISA företag delivery column renamed PeOrgNr → PeOrgNr_LISA in the individ variant from årgång 2016"
+
+# ── LISA ESeG: yrkesbaserad → europeisk socioekonomisk gruppering (Y-88) ──
+#    The `ESeG` column is delivered by VarId 29960 ("Yrkesbaserad socioekonomisk
+#    gruppering", 2015) and then by VarId 35848 ("Europeisk socioekonomisk
+#    gruppering", 2016) — never together. ESeG itself was presented in late 2016
+#    and is derived from ISCO-08 via SSYK 2012
+#    (`reg_meta_build/docs/lisa/ESeG.md`), so the 2016 re-mint restates the
+#    yrkesbaserad grouping as the European standard: the two carry the same
+#    1.1–9.9 grouping structure and the 2016 era drops the predecessor's `0`
+#    (Ej aktuellt) class. Variable grain.
+[[edge]]
+type = "replaced_by"
+from = "scb/lisa/yrkesbaserad-seg"
+to = "scb/lisa/eseg"
+effective_year = 2016
+note = "Yrkesbaserad socioekonomisk gruppering restated as the European ESeG standard (ISCO-08 via SSYK 2012) from årgång 2016"
+
 # ── KSju näringsgren: grouped-SNI 2009 column → NgGr1 (#875) ──
 #    The 2009 `lgrp` sibling is the grouped-SNI predecessor of `NgGr1`
 #    (2010–11). This is representation-grain because the succession is between

@@ -1939,8 +1939,8 @@ class TestMovedEdges:
         # #846 RTB PNR → PersonNr representation-grain rename edge + 2 #846 FRIDA
         # firm-key variant-scoped gap-fill round-trip edges + 1 #376 LISA
         # register_variant succession edge + 3 #1122 LISA FÅMANS KU→AGI source
-        # succession edges.
-        assert len(rel.replaced_by) == 55
+        # succession edges + 8 Y-88 curated LISA succession edges.
+        assert len(rel.replaced_by) == 63
         # #508 (615) + #737 (232) = 847 curated same_as identity edges; all
         # variable-grain with a non-empty note; max connected component stays
         # ≤32 FQIDs.
@@ -1972,6 +1972,81 @@ class TestMovedEdges:
             ("scb/lisa/ku2faman", "scb/lisa/agi2faman", 2019),
             ("scb/lisa/ku3faman", "scb/lisa/agi3faman", 2019),
         }
+        # Y-88's curated LISA round, read off the succession-candidates worklist
+        # as `(predecessor, successor, from_column, to_column, variant, year)` —
+        # a tuple that also carries the GRAIN each edge landed at. Four
+        # `cross_var_id` re-mints are VARIABLE-grain (one measure recut under a
+        # new SCB VarId: no columns, hence no variant scope); four
+        # never-co-delivered renames are REPRESENTATION-grain, scoped to the
+        # individ variant, since LISA's other variants keep delivering the
+        # predecessor column.
+        y88_expected = {
+            (
+                "scb/lisa/antal-anstallda-ku",
+                "scb/lisa/antal-anstallda",
+                None,
+                None,
+                "",
+                2022,
+            ),
+            ("scb/lisa/forvink-aktiv", "scb/lisa/forvink", None, None, "", 2022),
+            (
+                "scb/lisa/forvink-ers-aktiv",
+                "scb/lisa/forvink-ers",
+                None,
+                None,
+                "",
+                2022,
+            ),
+            ("scb/lisa/yrkesbaserad-seg", "scb/lisa/eseg", None, None, "", 2016),
+            (
+                "scb/lisa/raks-huvinkkalla",
+                "scb/lisa/huvudsaklig-inkomstkalla",
+                "Raks_HuvInkKalla",
+                "HuvInkKalla",
+                "individer-15plus",
+                2022,
+            ),
+            (
+                "scb/lisa/sysselsattningsstatus-november",
+                "scb/lisa/syssstat19",
+                "SyssStat11",
+                "SyssStat19",
+                "individer-15plus",
+                2019,
+            ),
+            (
+                "scb/lisa/cfar-nummer",
+                "scb/lisa/cfar-nummer-2",
+                "CfarNr",
+                "CfarNr_LISA",
+                "individer-15plus",
+                2016,
+            ),
+            (
+                "scb/lisa/person-orgnr",
+                "scb/lisa/person-orgnr-2",
+                "PeOrgNr",
+                "PeOrgNr_LISA",
+                "individer-15plus",
+                2016,
+            ),
+        }
+        y88_predecessors = {pred for pred, *_ in y88_expected}
+        y88 = [e for e in rel.replaced_by if str(e.predecessor) in y88_predecessors]
+        assert {
+            (
+                str(e.predecessor),
+                str(e.successor),
+                e.predecessor_column,
+                e.successor_column,
+                e.variant,
+                e.effective_year,
+            )
+            for e in y88
+        } == y88_expected
+        # `note` is optional on a replaced_by edge; a curation round owes one.
+        assert all(e.note for e in y88)
         # The #579 1→many classification split: one predecessor, three successors
         # (all three SUN 2000 dimensions), parsed as `class/<slug>` (CLASSIFICATION
         # grain).
