@@ -107,9 +107,9 @@ then recovered by choosing 2018), an edited draft replaced deliberately (New rai
 confirmation, a cancel keeps the draft, an Open raises the same one and a confirm loads
 the file), one named source's period edited on its own /project card, and a keyboard
 researcher re-applying the catalog leaf's period from the year fields, from Apply and
-from a slider thumb — at 375×812, 768×1024, 1280×900 and 1920×1080 — 32 cases, each in a fresh
-browser context against the real backend, with one failing request injected per error
-scenario and none into the other five. It asserts the behavior (real 422 +
+from a slider thumb — at 375×812, 768×1024, 1280×900 and 1920×1080 — 32 cases, each in a
+fresh browser context against the real backend, with one failing request injected per
+error scenario and none into the other five. It asserts the behavior (real 422 +
 `project_empty`, which retry the banner offers, a real `order.json` download whose
 manifest entry matches the synthetic catalog, the request counts behind a recovery, the
 modal semantics and focus return of the replacement confirmation, where the keyboard

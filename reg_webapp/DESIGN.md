@@ -2098,10 +2098,11 @@ of its own but a source's **period** (Y-81, below). `ProjectEditor` / `SourceEdi
 project's own name, and the New/Open/Download project_data.json/Download order.json
 actions — validation runs automatically on every edit, with no separate Validate action.
 A wrong variable, variant or representation gets fixed by picking again from the catalog
-subject page, not by editing the cart row. `CatalogPicker.svelte`, `PeriodEditor.svelte`,
-and `FieldIssues.svelte` — the general in-cart editing UI — were deleted along with the
-store methods that only existed to serve them (`addSource`, `addBinding`,
-`updateSource`, `updateBinding`, `applyPickedBinding`, `bindingDerivation`).
+subject page, not by editing the cart row. `CatalogPicker.svelte`,
+`PeriodEditor.svelte`, and `FieldIssues.svelte` — the general in-cart editing UI — were
+deleted along with the store methods that only existed to serve them (`addSource`,
+`addBinding`, `updateSource`, `updateBinding`, `applyPickedBinding`,
+`bindingDerivation`).
 
 A cart row holds **coordinates, not words** — a `register_variant`, a variable FQID, and
 a `representation` only where a pick had to choose between co-existing columns — so the
@@ -2182,9 +2183,9 @@ sorted, disjoint #307 list form (adjacency-merging touching/overlapping interval
 otherwise (either side is token grammar) it REPLACES with the incoming period, since
 mixed-grain union has no defined sort. `applyStagedDiff` is now the SOLE catalog→project
 mutation path (the store's earlier single-pick `addFromCatalog` handoff was dead since
-#992/#993 and was deleted in #1104). `updateField` (the project's own `name` / `window`),
-`removeSource`/`removeBinding` and `applySourcePeriodEdit` are the only other mutators
-the cart UI calls — a source's own generated `name` is not editable anywhere.
+#992/#993 and was deleted in #1104). `updateField` (the project's own `name` /
+`window`), `removeSource`/`removeBinding` and `applySourcePeriodEdit` are the only other
+mutators the cart UI calls — a source's own generated `name` is not editable anywhere.
 
 Bindings, variant and representation are written once at PICK time; a source's
 **period** is the one field the cart edits (Y-81). It is a field of the SOURCE rather
@@ -2208,16 +2209,16 @@ coordinate: a draft may carry several differently named sources on one register 
 (reg_schema makes names unique, not variants), and an edit moves only the one it names.
 It is its own period-only `applyStagedDiff`, never unioned with staged adds, and it
 carries the edited source's complete value plus the draft's `replacementGeneration`.
-Both are re-checked through one store-internal predicate immediately before the write:
-a source that moved, or a project that was replaced, under an open edit refuses the
-write instead of overwriting it, and the card says so. Ordinary browsing still stages
-nothing — changing years, filtering rows or following a `?period` link
-leaves the draft alone, and `RepresentationPicker` keeps deriving `periodChanges = []`
-because a partial leaf/group cannot infer a source-wide rewrite from the columns it
-happens to show. Coverage and type drift after the edit stay the server validator's job,
-as above. (Y-81 retired the catalog-side Y-15 correction that used to do this from a
-"Project sources on this page" box on every leaf and group page: the catalog surface
-had to re-state a source the cart already shows whole, and nobody found it there.)
+Both are re-checked through one store-internal predicate immediately before the write: a
+source that moved, or a project that was replaced, under an open edit refuses the write
+instead of overwriting it, and the card says so. Ordinary browsing still stages nothing
+— changing years, filtering rows or following a `?period` link leaves the draft alone,
+and `RepresentationPicker` keeps deriving `periodChanges = []` because a partial
+leaf/group cannot infer a source-wide rewrite from the columns it happens to show.
+Coverage and type drift after the edit stay the server validator's job, as above. (Y-81
+retired the catalog-side Y-15 correction that used to do this from a "Project sources on
+this page" box on every leaf and group page: the catalog surface had to re-state a
+source the cart already shows whole, and nobody found it there.)
 
 ## Browser storage + project-file persistence (the SPA store)
 
