@@ -2058,17 +2058,26 @@ binding whenever its source's period or variant changed, with a clobber-vs-keep
 heuristic to decide whether a re-derived value should overwrite an author's edit. Under
 the cart model every field is **written once, at pick time**: the subject-page picker
 stages concrete `(period, variant, representation)` rows with final `type` /
-`display_name` / `representation`, then `applyStagedDiff` commits the diff in one
-mutation. Nothing re-derives afterwards, so there is no provenance state to track and no
-clobber decision to get wrong. A source's bindings can go stale relative to its period
-after the fact (e.g. the author widens the period); that drift is the **server
-validator's job** to surface (`range_period_partially_covered` for a widening past
-availability, `period_outside_state_validity` when nothing is left,
+`representation`, then `applyStagedDiff` commits the diff in one mutation. Nothing
+re-derives afterwards, so there is no provenance state to track and no clobber decision
+to get wrong. A source's bindings can go stale relative to its period after the fact
+(e.g. the author widens the period); that drift is the **server validator's job** to
+surface (`range_period_partially_covered` for a widening past availability,
+`period_outside_state_validity` when nothing is left,
 `binding_state_drifts_within_period` across a transition — see § Semantic validation) —
 the auto-validate flow that surfaces this on every edit is the sibling #994 (shipped —
 see § "Browser storage + project-file persistence" below). `ValidationPanel` carries a
 "Fix in catalog" link on each finding that resolves a catalog coordinate, so the
 remediation path is always back to the catalog, never a cart-side patch.
+
+The one field a pick does NOT write is `display_name`, which it leaves **absent**. The
+field is optional — an absent one resolves to the reg_meta default from `variable_alias`
+— and stamping the delivery column onto it made two disjoint-era bindings of one
+physical column (`forvink-ers-aktiv` 1990..2021 and `forvink-ers` 2022..2023, both
+`ForvErs`) collide under reg_schema's per-source `display_name_collision`, though the
+two never coexist. The rule is deliberately left as it is rather than made period-aware:
+the structural layer cannot see periods by design, and the rule still earns its place on
+hand-authored specs that set explicit names.
 
 Opened project files are held **verbatim** in the store so serialize/validate see the
 same malformed structure the backend diagnoses. The SPA's read side uses one

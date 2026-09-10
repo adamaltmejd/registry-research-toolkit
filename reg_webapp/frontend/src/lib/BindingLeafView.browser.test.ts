@@ -736,23 +736,17 @@ describe("BindingLeafView representation picker (#678)", () => {
         expect.objectContaining({
           register_variant: "scb/lisa/individer",
           period: { from: 2010, to: 2015 },
+          // Exact binding objects, not `objectContaining`: a pick writes the
+          // resolved type + representation and no `display_name` (Y-76).
           bindings: [
-            expect.objectContaining({
-              variable: "scb/lisa/kon",
-              representation: null,
-              display_name: "Kon",
-            }),
+            { variable: "scb/lisa/kon", type: "opaque", representation: null },
           ],
         }),
         expect.objectContaining({
           register_variant: "scb/lisa/arbetsstallen",
           period: { from: 2018, to: 2020 },
           bindings: [
-            expect.objectContaining({
-              variable: "scb/lisa/kon",
-              representation: null,
-              display_name: "Sni",
-            }),
+            { variable: "scb/lisa/kon", type: "opaque", representation: null },
           ],
         }),
       ]),
@@ -913,28 +907,24 @@ describe("BindingLeafView representation picker (#678)", () => {
       "scb/lisa/individer-15plus",
       "scb/lisa/individer-16plus",
     ]);
-    expect(sourcesByVariant.get("scb/lisa/individer-16plus")).toMatchObject({
-      period: { from: 1990, to: 2009 },
-      bindings: [
-        expect.objectContaining({
-          variable: "scb/lisa/kon",
-          type: "numeric",
-          representation: null,
-          display_name: "Kon",
-        }),
-      ],
-    });
-    expect(sourcesByVariant.get("scb/lisa/individer-15plus")).toMatchObject({
-      period: { from: 2010, to: 2023 },
-      bindings: [
-        expect.objectContaining({
-          variable: "scb/lisa/kon",
-          type: "numeric",
-          representation: null,
-          display_name: "Kon",
-        }),
-      ],
-    });
+    // `objectContaining` (not `toMatchObject`) so the bindings compare exactly: a
+    // pick writes no `display_name` (Y-76).
+    expect(sourcesByVariant.get("scb/lisa/individer-16plus")).toEqual(
+      expect.objectContaining({
+        period: { from: 1990, to: 2009 },
+        bindings: [
+          { variable: "scb/lisa/kon", type: "numeric", representation: null },
+        ],
+      }),
+    );
+    expect(sourcesByVariant.get("scb/lisa/individer-15plus")).toEqual(
+      expect.objectContaining({
+        period: { from: 2010, to: 2023 },
+        bindings: [
+          { variable: "scb/lisa/kon", type: "numeric", representation: null },
+        ],
+      }),
+    );
   });
 
   it("applying a dimmed folded family row falls back to concrete segment spans", async () => {
@@ -1470,11 +1460,11 @@ describe("BindingLeafView representation picker (#678)", () => {
         register_variant: "scb/lisa/individer-15plus",
         period: 2018,
         bindings: [
-          expect.objectContaining({
+          {
             variable: "scb/lisa/kon",
             type: "categorical",
-            display_name: "Kon",
-          }),
+            representation: null,
+          },
         ],
       }),
     ]);

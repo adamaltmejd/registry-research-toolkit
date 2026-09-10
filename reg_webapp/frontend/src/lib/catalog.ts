@@ -3010,17 +3010,12 @@ export function memberCoverageUnion(
 export type UnresolvedReason = "period-unset" | "no-states" | "not-a-leaf";
 
 /** The outcome of resolving one binding's variable at a (period, variant).
- *  - `derived`: a single representation → type + display-name default ready to apply.
+ *  - `derived`: a single representation → the type ready to apply.
  *  - `ambiguous`: >1 co-existing delivery column → the staged picker must supply
  *    the chosen representation.
  *  - `unresolved`: resolution impossible (no period / no covering state). */
 export type BindingResolution =
-  | {
-      kind: "derived";
-      type: string;
-      displayNameDefault: string | null;
-      representation: string | null;
-    }
+  | { kind: "derived"; type: string }
   | { kind: "ambiguous"; fqid: string; states: VariableStateModel[] }
   | { kind: "unresolved"; reason: UnresolvedReason };
 
@@ -3038,7 +3033,7 @@ export interface BindingFieldOptions {
  * (the resolve needs a period). A leaf that yields no covering state is
  * `no-states`; a non-leaf payload is `not-a-leaf` (shouldn't happen with
  * `?period`). >1 co-existing representation is `ambiguous` (deferred to the picker
- * chooser); exactly one is `derived` with the prefill. A network/422 throws — the
+ * chooser); exactly one is `derived` with the resolved type. A network/422 throws — the
  * caller owns the error surface. */
 export async function resolveBindingAt(
   fqid: string,
@@ -3062,31 +3057,27 @@ export async function resolveBindingAt(
   if (reps.length > 1) {
     return { kind: "ambiguous", fqid, states: resolved.states };
   }
-  const first = resolved.states[0];
-  return {
-    kind: "derived",
-    type: deriveType(first),
-    displayNameDefault: first.delivery_column_name ?? null,
-    representation: null,
-  };
+  return { kind: "derived", type: deriveType(resolved.states[0]) };
 }
 
 /** Map a `resolveBindingAt` result to a binding's FINAL fields (the #991 write-once
- * model — resolve once, write the concrete type/display/representation, no marker).
+ * model — resolve once, write the concrete type/representation, no marker).
  * Honors the #991 null-when-unambiguous convention (issue #992) unless the caller marks
- * a representation-grained group member as explicitly pinned.
+ * a representation-grained group member as explicitly pinned. A pick never writes
+ * `display_name` (it is optional and consumers resolve the default from
+ * `variable_alias` — see reg_webapp/DESIGN.md § the cart model for why stamping it
+ * collided).
  *   - `derived` (exactly ONE delivery column at the (period, variant)) → the resolved
- *     type + display default, and `representation: null` unless `pinRepresentation`
- *     carries an explicit non-null column. A pinned derived mismatch keeps the resolved
- *     type (structurally valid) but stores the requested display/representation column.
+ *     type, and `representation: null` unless `pinRepresentation` carries an explicit
+ *     non-null column. A pinned derived mismatch keeps the resolved type (structurally
+ *     valid) but stores the requested representation column.
  *   - `ambiguous` + the payload pins one of the genuinely co-existing columns → that
- *     column's derived type + its `delivery_column_name` display + the pinned
- *     representation.
+ *     column's derived type + the pinned representation.
  *   - `ambiguous` (null / non-matching representation) OR `unresolved` → type `""`
  *     (NOT `"opaque"`). A resolve failure / unresolved add must not synthesize a valid
- *     opaque binding; the backend validator must flag it instead. With
- *     `pinRepresentation`, the exact requested column stays on the binding so validation
- *     reports that column's coverage gap rather than a sibling substitution. */
+ *     opaque binding; the backend validator must flag it instead. The exact requested
+ *     representation stays on the binding so validation reports that column's coverage
+ *     gap rather than a sibling substitution. */
 export function bindingFieldsFromResolution(
   variable: string,
   resolution: BindingResolution,
@@ -3094,48 +3085,15 @@ export function bindingFieldsFromResolution(
   options: BindingFieldOptions = {},
 ): Binding {
   if (resolution.kind === "derived") {
-    if (options.pinRepresentation && representation != null) {
-      const binding: Binding = {
-        variable,
-        type: resolution.type,
-        display_name: representation,
-        representation,
-      };
-      return binding;
-    }
-    const binding: Binding = {
-      variable,
-      type: resolution.type,
-      representation: null,
-    };
-    if (resolution.displayNameDefault != null) {
-      binding.display_name = resolution.displayNameDefault;
-    }
-    return binding;
-  }
-  if (resolution.kind === "ambiguous") {
-    const chosen =
-      representation != null
-        ? resolution.states.find(
-            (s) => s.delivery_column_name === representation,
-          )
-        : undefined;
-    if (chosen) {
-      return {
-        variable,
-        type: deriveType(chosen),
-        display_name: chosen.delivery_column_name ?? representation,
-        representation,
-      };
-    }
-  }
-  if (options.pinRepresentation && representation != null) {
     return {
       variable,
-      type: "",
-      display_name: representation,
-      representation,
+      type: resolution.type,
+      representation: options.pinRepresentation ? representation : null,
     };
   }
-  return { variable, type: "", representation };
+  const chosen =
+    resolution.kind === "ambiguous" && representation != null
+      ? resolution.states.find((s) => s.delivery_column_name === representation)
+      : undefined;
+  return { variable, type: chosen ? deriveType(chosen) : "", representation };
 }

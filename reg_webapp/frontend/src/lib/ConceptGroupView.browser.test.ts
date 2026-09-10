@@ -891,13 +891,14 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     expect(projectStore.draft?.sources[0]).toEqual(
       expect.objectContaining({
         register_variant: "scb/rams/individer",
+        // Exact binding object: a pick writes the resolved type + the pinned
+        // representation and no `display_name` (Y-76).
         bindings: [
-          expect.objectContaining({
+          {
             variable: "scb/rams/dispink",
             type: "numeric",
-            display_name: "CDISP5",
             representation: "CDISP5",
-          }),
+          },
         ],
       }),
     );
@@ -945,14 +946,11 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
       .click();
 
     await expect.element(page.getByText(/\+1 column/)).toBeVisible();
-    expect(projectStore.draft?.sources[0]?.bindings[0]).toEqual(
-      expect.objectContaining({
-        variable: "scb/rams/solo",
-        type: "numeric",
-        display_name: "SOLO",
-        representation: null,
-      }),
-    );
+    expect(projectStore.draft?.sources[0]?.bindings[0]).toEqual({
+      variable: "scb/rams/solo",
+      type: "numeric",
+      representation: null,
+    });
   });
 
   it("the global select-all grabs every column of the concept", async () => {

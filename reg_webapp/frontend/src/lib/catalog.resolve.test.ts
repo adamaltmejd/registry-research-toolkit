@@ -50,19 +50,14 @@ describe("resolveBindingAt", () => {
     expect(getCatalogNode).not.toHaveBeenCalled();
   });
 
-  it("a covering single-rep state → derived (type + display default + null rep)", async () => {
+  it("a covering single-rep state → derived (the resolved type)", async () => {
     vi.mocked(getCatalogNode).mockResolvedValue(
       statesResponse([
         state({ delivery_column_name: "Lon", data_type: "int" }),
       ]),
     );
     const r = await resolveBindingAt("scb/lisa/lon", "2015", "v1");
-    expect(r).toEqual({
-      kind: "derived",
-      type: "numeric",
-      displayNameDefault: "Lon",
-      representation: null,
-    });
+    expect(r).toEqual({ kind: "derived", type: "numeric" });
     // The (period, variant) rode the resolve query.
     expect(getCatalogNode).toHaveBeenCalledWith("scb/lisa/lon", {
       period: "2015",
@@ -121,23 +116,19 @@ describe("resolveBindingAt", () => {
   });
 });
 
+// The expectations below are EXACT objects, not `objectContaining`: every arm writes
+// `representation` and leaves `display_name` absent (Y-76).
 describe("bindingFieldsFromResolution", () => {
   it("keeps ordinary single-column derived picks unpinned", () => {
     expect(
       bindingFieldsFromResolution(
         "scb/lisa/kon",
-        {
-          kind: "derived",
-          type: "numeric",
-          displayNameDefault: "Kon",
-          representation: null,
-        },
+        { kind: "derived", type: "numeric" },
         "Kon",
       ),
     ).toEqual({
       variable: "scb/lisa/kon",
       type: "numeric",
-      display_name: "Kon",
       representation: null,
     });
   });
@@ -146,40 +137,34 @@ describe("bindingFieldsFromResolution", () => {
     expect(
       bindingFieldsFromResolution(
         "scb/iot/dispink",
-        {
-          kind: "derived",
-          type: "numeric",
-          displayNameDefault: "CDISP",
-          representation: null,
-        },
+        { kind: "derived", type: "numeric" },
         "CDISP5",
         { pinRepresentation: true },
       ),
     ).toEqual({
       variable: "scb/iot/dispink",
       type: "numeric",
-      display_name: "CDISP5",
       representation: "CDISP5",
     });
   });
 
-  it("pins an explicit representation-grained pick with derived fields when that column resolves", () => {
+  it("takes the chosen column's type when the picker resolves an ambiguous pick", () => {
     expect(
       bindingFieldsFromResolution(
         "scb/iot/dispink",
         {
-          kind: "derived",
-          type: "numeric",
-          displayNameDefault: "CDISP5",
-          representation: null,
+          kind: "ambiguous",
+          fqid: "scb/iot/dispink",
+          states: [
+            state({ delivery_column_name: "CDISP", data_type: "char" }),
+            state({ delivery_column_name: "CDISP5", data_type: "int" }),
+          ],
         },
         "CDISP5",
-        { pinRepresentation: true },
       ),
     ).toEqual({
       variable: "scb/iot/dispink",
       type: "numeric",
-      display_name: "CDISP5",
       representation: "CDISP5",
     });
   });

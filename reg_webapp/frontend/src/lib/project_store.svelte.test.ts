@@ -1,4 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { bindingFieldsFromResolution } from "./catalog";
 import { MODEL_A_SCHEMA_VERSION, sourceSnapshot } from "./project_data";
 import {
   checkVersionGate,
@@ -478,7 +479,9 @@ describe("applyStagedDiff (#992 — one atomic commit path)", () => {
     expect(projectStore.draft?.sources[0].name).toBe("LISA");
   });
 
-  it("commits the write-once final fields verbatim (type + display_name + representation)", () => {
+  // The store is field-agnostic: it commits what it is handed. A catalog pick hands it
+  // no `display_name` (Y-76, below); a hand-authored one still rides through here.
+  it("commits the staged final fields verbatim (type + display_name + representation)", () => {
     projectStore.newProject(SEED);
     projectStore.applyStagedDiff({
       adds: [
@@ -496,6 +499,46 @@ describe("applyStagedDiff (#992 — one atomic commit path)", () => {
       display_name: "Ssyk3",
       representation: "Ssyk3",
     });
+  });
+
+  it("commits two disjoint-era picks of ONE physical column with nothing to collide (Y-76)", () => {
+    // `scb/lisa/forvink-ers-aktiv` (ForvErs, 1990..2021) and `scb/lisa/forvink-ers`
+    // (ForvErs, 2022..2023) are the same LISA column across editions, added to ONE
+    // source. Both bindings come from the real pick-time derivation, so neither
+    // carries the `display_name` that reg_schema's period-blind per-source
+    // `display_name_collision` would have collided.
+    projectStore.newProject(SEED);
+    const pick = (variable: string, period: StagedAdd["period"]): StagedAdd =>
+      add(
+        "scb/lisa/individer",
+        variable,
+        period,
+        bindingFieldsFromResolution(
+          variable,
+          { kind: "derived", type: "numeric" },
+          "ForvErs",
+        ),
+      );
+    projectStore.applyStagedDiff({
+      adds: [
+        pick("scb/lisa/forvink-ers-aktiv", { from: 1990, to: 2021 }),
+        pick("scb/lisa/forvink-ers", { from: 2022, to: 2023 }),
+      ],
+    });
+
+    expect(projectStore.draft?.sources).toHaveLength(1);
+    expect(projectStore.draft?.sources[0].bindings).toEqual([
+      {
+        variable: "scb/lisa/forvink-ers-aktiv",
+        type: "numeric",
+        representation: null,
+      },
+      {
+        variable: "scb/lisa/forvink-ers",
+        type: "numeric",
+        representation: null,
+      },
+    ]);
   });
 
   it("merges a disjoint year window into the existing source's period (coalesce, sorted, disjoint)", () => {
