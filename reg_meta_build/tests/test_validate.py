@@ -1758,11 +1758,15 @@ class TestBuildDbValidateFlag:
             r.fail("synthetic invariant breach")
             return r
 
+        # Import cli first so its `validate_built_db` re-export binds to the
+        # real function before either patch below records an "original" —
+        # otherwise an out-of-order first import here leaks the fake into
+        # cli permanently for the rest of the worker process.
+        from reg_meta_build import cli as cli_mod
+
         monkeypatch.setattr(validate_mod, "validate_built_db", always_fail)
         # Also patch the re-export in the build CLI module so the handler
         # closure sees the fake.
-        from reg_meta_build import cli as cli_mod
-
         monkeypatch.setattr(cli_mod, "validate_built_db", always_fail)
 
         with pytest.raises(RegMetaError) as exc_info:
