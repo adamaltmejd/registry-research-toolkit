@@ -141,6 +141,40 @@ export function distinctMemberCount(
   return new Set(members.map((m) => m.fqid)).size;
 }
 
+/** Rebuild `groups` over the members present in `items`, dropping the groups that no
+ * longer fold anything (Y-82). A group row STANDS IN for its members — its
+ * count, its filter keys and the navigator it expands to all answer for them —
+ * so a lens over the members has to be applied HERE, before `foldGroupedRows`,
+ * and not to the folded rows: a row kept because ONE member survived still
+ * counts and indexes the members that did not.
+ *
+ * A group of one is dropped too. Its lone survivor is then in no group, so
+ * `foldGroupedRows` renders it as its own leaf row — the variable itself, under
+ * its own delivery column — instead of a group row standing in for nobody else
+ * and reading "1 variables".
+ *
+ * `groups` is optional at runtime for the same reason `foldGroupedRows`'s is: a
+ * cached pre-`groups` payload can still reach a fresh SPA. Degrade to no groups
+ * rather than crash the browse.
+ *
+ * Takes the `items` list rather than a set of FQIDs so a caller hands the SAME
+ * list to this and to `foldGroupedRows` — the two must agree about what is
+ * present, and a separately built key set is a way for them not to. */
+export function narrowGroupsToMembers(
+  groups: readonly ConceptGroup[] | undefined,
+  items: readonly { fqid: string }[],
+): ConceptGroup[] {
+  const present = new Set(items.map((item) => item.fqid));
+  const narrowed: ConceptGroup[] = [];
+  for (const group of groups ?? []) {
+    const members = group.members.filter((m) => present.has(m.fqid));
+    if (distinctMemberCount(members) > 1) {
+      narrowed.push({ ...group, members });
+    }
+  }
+  return narrowed;
+}
+
 /** The filterable text of a group row: its own label/key plus every member's
  * name/FQID/leaf slug — so filtering for a member (e.g. "maj") still surfaces
  * the group that folded it, AND a member-slug hunt (e.g. "inkjan" for
@@ -152,6 +186,11 @@ export function distinctMemberCount(
  * (#322). */
 export function groupFilterKeys(
   group: ConceptGroup,
+  /** Y-82: a member's delivery column NAMES, looked up by FQID. A folded row
+   * answers for its members, so a variable must stay findable by the column it
+   * is delivered under after it joins a group. Supplied by the host because the
+   * names come from the register payload, not from the group. */
+  columnNames: (fqid: string) => string[],
 ): (string | null | undefined)[] {
   return [
     group.label,
@@ -165,6 +204,7 @@ export function groupFilterKeys(
       // name/fqid (which they SHARE across the variable). Index those too so a
       // target-hunt for a column or a facet label surfaces the folding group.
       m.delivery_column,
+      ...columnNames(m.fqid),
       ...m.facets.flatMap((f) => [f.label, f.value]),
     ]),
   ];

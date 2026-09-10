@@ -1,6 +1,7 @@
 """Coverage aggregates over `variable_state` (#351): `Catalog`
 `register_variable_coverage` / `register_column_coverage` /
-`register_unnamed_column_coverage` / `provider_register_coverage`.
+`register_unnamed_column_coverage` / `provider_register_coverage`, plus the
+`(variant, column)`-grained `register_variable_deliveries` (Y-82).
 
 Query-time aggregates (no materialized columns — see reg_webapp/DESIGN.md →
 Coverage aggregates). Covers the open-ended sentinel mapping, a finite window, and
@@ -20,7 +21,7 @@ sys.path.insert(
     0, str(Path(__file__).resolve().parents[2] / "reg_meta_build" / "tests")
 )
 
-from _slugged_db import add_state, add_variable, build_slugged_db
+from _slugged_db import add_state, add_variable, add_variant, build_slugged_db
 
 if TYPE_CHECKING:
     import sqlite3
@@ -167,6 +168,80 @@ def test_register_column_coverage_distinct_windows() -> None:
     var_cov = Catalog(conn).register_variable_coverage("scb", "lisa")
     assert var_cov["disp"].coverage_from == "1900-01-01"
     assert var_cov["disp"].coverage_to == "2024-12-31"
+
+
+def test_register_variable_deliveries() -> None:
+    """Y-82: the per-variable `(variant, column)` listing the register page reads.
+    Each pair carries its OWN window (a renamed column gets its era, not the
+    variable's union), a variant delivering the variable under no column name is
+    kept with `column = None`, a stateless variable is absent, and a NULL-slug
+    variant is excluded (it is no `?variant=` coordinate — as `list_variants`)."""
+    conn = build_slugged_db()  # scb/lisa/kon under `individer-15plus` (id 10)
+    add_variant(
+        conn, register_variant_id=11, register_id=1, slug="arbetsstallen", name="Arb"
+    )
+    conn.execute(
+        "INSERT INTO register_variant (register_variant_id, register_id, slug, name) "
+        "VALUES (12, 1, NULL, 'Unslugged')"
+    )
+    # A renamed column: ForvErs 1990–2021, ForvErsNetto 2022– (same variant).
+    add_variable(conn, register_id=1, var_id=500, name="Förvärvsinkomst", slug="forv")
+    add_state(
+        conn,
+        register_id=1,
+        variable_slug="forv",
+        register_variant_id=10,
+        valid_from="1990-01-01",
+        valid_to="2021-12-31",
+        delivery_column_name="ForvErs",
+    )
+    add_state(
+        conn,
+        register_id=1,
+        variable_slug="forv",
+        register_variant_id=10,
+        valid_from="2022-01-01",
+        delivery_column_name="ForvErsNetto",
+    )
+    # The same variable ALSO delivered by a second variant, and (in a third,
+    # unslugged one) under no column name at all.
+    add_state(
+        conn,
+        register_id=1,
+        variable_slug="forv",
+        register_variant_id=11,
+        valid_from="2010-01-01",
+        valid_to="2015-12-31",
+        delivery_column_name=None,
+    )
+    add_state(
+        conn,
+        register_id=1,
+        variable_slug="forv",
+        register_variant_id=12,
+        valid_from="2010-01-01",
+        delivery_column_name="Unslugged",
+    )
+    add_variable(conn, register_id=1, var_id=501, name="Stateless", slug="nostate")
+
+    deliveries = Catalog(conn).register_variable_deliveries("scb", "lisa")
+
+    assert "nostate" not in deliveries
+    assert [(d.variant, d.column) for d in deliveries["kon"]] == [
+        ("individer-15plus", "Kon")
+    ]
+    # (slug, variant, column)-ordered; the NULL-slug variant's row is gone.
+    assert [(d.variant, d.column) for d in deliveries["forv"]] == [
+        ("arbetsstallen", None),
+        ("individer-15plus", "ForvErs"),
+        ("individer-15plus", "ForvErsNetto"),
+    ]
+    by_column = {d.column: d.coverage for d in deliveries["forv"]}
+    assert by_column["ForvErs"].coverage_from == "1990-01-01"
+    assert by_column["ForvErs"].coverage_to == "2021-12-31"
+    assert by_column["ForvErsNetto"].coverage_from == "2022-01-01"
+    assert by_column["ForvErsNetto"].open_ended is True
+    assert by_column[None].coverage_to == "2015-12-31"
 
 
 def test_coverage_bounds_mapping() -> None:

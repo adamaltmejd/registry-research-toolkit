@@ -19,6 +19,7 @@ export interface NavigatorMember {
 <script lang="ts" generics="M extends NavigatorMember">
 import type { Snippet } from "svelte";
 import { axisValues, memberFacet, memberKey } from "./catalog";
+import FilterChip from "./ui/FilterChip.svelte";
 import Tag from "./ui/Tag.svelte";
 
 // ── The N-axis facet navigator (#819) ────────────────────────────────────────
@@ -127,15 +128,12 @@ const visibleMembers = $derived(
       <legend>{label}</legend>
       <div class="filter-options">
         {#each values as v (v.value)}
-          <label class="filter-pill" class:on={isSelected(axis, v.value)}>
-            <input
-              class="visually-hidden"
-              type="checkbox"
-              checked={isSelected(axis, v.value)}
-              onchange={() => toggleFilter(axis, v.value)}
-            />
+          <FilterChip
+            selected={isSelected(axis, v.value)}
+            onToggle={() => toggleFilter(axis, v.value)}
+          >
             <span>{v.label}</span>
-          </label>
+          </FilterChip>
         {/each}
       </div>
     </fieldset>
@@ -224,34 +222,6 @@ const visibleMembers = $derived(
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-1);
-  }
-  /* A filter pill: a checkbox styled as a selectable neutral chip. The native
-     input is visually hidden (the `.visually-hidden` utility in lib/ui/utilities.css)
-     but kept in the DOM (a11y / keyboard / labelled), and the `.on` class paints the
-     selected state with the brand accent (the selection cue, distinct from the
-     neutral resting chip). */
-  .filter-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-1);
-    padding: 0.1em 0.5em;
-    border: 1px solid var(--border);
-    border-radius: 1rem;
-    font-size: var(--text-sm);
-    cursor: pointer;
-    user-select: none;
-    background: var(--surface);
-    color: var(--text);
-  }
-  .filter-pill.on {
-    background: var(--accent-bg);
-    border-color: var(--accent);
-    color: var(--accent-ink);
-    font-weight: 600;
-  }
-  /* Keyboard focus ring on the (hidden) input projects onto its pill label. */
-  .filter-pill:focus-within {
-    box-shadow: var(--focus-ring);
   }
   .clear-filters {
     align-self: center;

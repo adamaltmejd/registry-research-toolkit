@@ -9,6 +9,7 @@ export { default as Button } from "./Button.svelte";
 export { default as ConfirmDialog } from "./ConfirmDialog.svelte";
 export { default as DataTable } from "./DataTable.svelte";
 export { default as EmptyState } from "./EmptyState.svelte";
+export { default as FilterChip } from "./FilterChip.svelte";
 export { default as KeyValue } from "./KeyValue.svelte";
 export { default as Panel } from "./Panel.svelte";
 export { default as Skeleton } from "./Skeleton.svelte";

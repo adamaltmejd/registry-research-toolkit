@@ -50,7 +50,7 @@ import {
   pickerRowKey,
   type StagedPickerBand,
 } from "./staged_picker";
-import { Button, Tag } from "./ui";
+import { Button, FilterChip, Tag } from "./ui";
 
 // The direct COLUMN picker (#678 redesign): ONE compact, integrated list of a
 // concept's delivery columns with a staged diff footer whose commit label follows the
@@ -2445,7 +2445,8 @@ function codingsVaryHref(
 {/snippet}
 
 <!-- One dimension FILTER fieldset (#908/#1121): a micro-label naming the dimension
-     KIND (an axis label, "Population", or "Coding") over value-only pill-checkboxes. Facet dimensions carry a deterministic axis tint so values from
+     KIND (an axis label, "Population", or "Coding") over value-only `ui/FilterChip`
+     checkboxes. Facet dimensions carry a deterministic axis tint so values from
      the same axis read as one family; non-facet row dimensions stay neutral.
      Multi-select within a dimension (OR), AND across dimensions. Filter-only: it
      narrows the visible rows, never the selection or the commit. -->
@@ -2462,20 +2463,17 @@ function codingsVaryHref(
     </legend>
     <div class="filter-options">
       {#each dim.values as v (v.value)}
-        <label class="filter-pill" class:on={isFilterOn(dim.key, v.value)}>
-          <input
-            class="visually-hidden"
-            type="checkbox"
-            checked={isFilterOn(dim.key, v.value)}
-            onchange={() => toggleFilter(dim.key, v.value)}
-          />
+        <FilterChip
+          selected={isFilterOn(dim.key, v.value)}
+          onToggle={() => toggleFilter(dim.key, v.value)}
+        >
           <span>{v.label}</span>
           {#if v.sharedLabel}
             <!-- Two populations a curator named alike: the value's own family key
-                 tells the pills apart, as it does on the rows they narrow to. -->
+                 tells the chips apart, as it does on the rows they narrow to. -->
             {@render variantKeyTag(v.value)}
           {/if}
-        </label>
+        </FilterChip>
       {/each}
     </div>
   </fieldset>
@@ -3701,23 +3699,6 @@ function codingsVaryHref(
     flex-wrap: wrap;
     gap: var(--space-1);
   }
-  /* A filter pill: a checkbox styled as a selectable neutral chip (the #819 navigator
-     pattern). The native input is visually hidden (the `.visually-hidden` global
-     utility) but kept in the DOM for keyboard + a11y + labelling; `.on` paints the
-     selected state with the brand accent (the one interactive-chrome use). */
-  .filter-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-1);
-    padding: 0.1em 0.5em;
-    border: 1px solid var(--border);
-    border-radius: 1rem;
-    font-size: var(--text-sm);
-    cursor: pointer;
-    user-select: none;
-    background: var(--surface);
-    color: var(--text);
-  }
   .dim-filter.facet-axis {
     border-color: color-mix(in srgb, var(--facet-axis-hue) 30%, transparent);
     background: color-mix(in srgb, var(--facet-axis-hue) 5%, var(--surface));
@@ -3729,25 +3710,21 @@ function codingsVaryHref(
   .dim-filter.facet-axis .dim-kind {
     color: var(--facet-axis-ink);
   }
-  .dim-filter.facet-axis .filter-pill {
+  /* A FACET dimension's chips carry its deterministic axis tint (a data encoding,
+     DESIGN.md → Color), so they read as one family; the shared `ui/FilterChip`
+     stays neutral for everyone else. The chip is that component's own element, so
+     this host tint reaches it through `:global` on the descendant part only —
+     `.dim-filter.facet-axis` is still scoped here. `.on` keeps its accent
+     selection cue in the axis hue. */
+  .dim-filter.facet-axis :global(.ui-chip) {
     border-color: color-mix(in srgb, var(--facet-axis-hue) 30%, transparent);
     background: color-mix(in srgb, var(--facet-axis-hue) 10%, var(--surface));
     color: var(--facet-axis-ink);
   }
-  .filter-pill.on {
-    background: var(--accent-bg);
-    border-color: var(--accent);
-    color: var(--accent-ink);
-    font-weight: 600;
-  }
-  .dim-filter.facet-axis .filter-pill.on {
+  .dim-filter.facet-axis :global(.ui-chip.on) {
     border-color: color-mix(in srgb, var(--facet-axis-hue) 60%, transparent);
     background: color-mix(in srgb, var(--facet-axis-hue) 22%, var(--surface));
     color: var(--facet-axis-ink);
-  }
-  /* Keyboard focus ring on the (hidden) input projects onto its pill label. */
-  .filter-pill:focus-within {
-    box-shadow: var(--focus-ring);
   }
   .dim-filters-status {
     display: flex;
@@ -4204,7 +4181,7 @@ function codingsVaryHref(
   }
   /* The variant-family slug behind two identically-named populations: a quiet mono
      identifier beside the name it disambiguates, never a second label. The weight is
-     pinned because a SELECTED filter pill sets 600 — the one slug must not read
+     pinned because a SELECTED filter chip sets 600 — the one slug must not read
      heavier there than on the row it narrows to, and only 400/500 mono faces ship. */
   .variant-key {
     font-family: var(--font-mono);

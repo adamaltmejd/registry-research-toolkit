@@ -1,6 +1,5 @@
 <script lang="ts">
-import { getRegisterVariants } from "./api";
-import { asyncResource } from "./async.svelte";
+import type { VariantsResponse } from "./api";
 import { variantsHref } from "./catalog";
 import { type Column, DataTable } from "./ui";
 import { groupVariants } from "./variants";
@@ -19,7 +18,20 @@ import { groupVariants } from "./variants";
 // "Variants" heading, no link to a page with nothing on it). A register with ≥1
 // real variant renders the FULL list — `_default` is NOT filtered out of a mixed
 // list (out of scope).
-const { registerFqid }: { registerFqid: string } = $props();
+//
+// Presentational: `CatalogNodeView` owns the fetch (Y-82). The register page's
+// variant chips name their variants out of the same list, and one page must not
+// GET it twice — nor risk two spellings of one variant.
+const {
+  registerFqid,
+  variants,
+  error = null,
+}: {
+  registerFqid: string;
+  /** The register's variants, or null while the page's fetch is in flight. */
+  variants: VariantsResponse | null;
+  error?: string | null;
+} = $props();
 
 interface VariantRow {
   name: string;
@@ -35,12 +47,11 @@ const columns: Column<VariantRow>[] = [
   { key: "years", label: "Years", mono: true, align: "end" },
 ];
 
-const variants = asyncResource(() => getRegisterVariants(registerFqid));
 const hasRealVariant = $derived(
-  variants.data?.variants.some((v) => v.slug !== "_default") ?? false,
+  variants?.variants.some((v) => v.slug !== "_default") ?? false,
 );
 const rows = $derived(
-  groupVariants(variants.data?.variants ?? []).map((group) => ({
+  groupVariants(variants?.variants ?? []).map((group) => ({
     name: group.label,
     slugs: group.segments.map((segment) => segment.variant.slug),
     years: group.span,
@@ -53,11 +64,11 @@ const rows = $derived(
      secondary affordance — no "Loading variants…" flash); a register with no
      real variant (empty list OR `_default`-only) renders nothing at all (no
      section, no heading, no "No variants." text). -->
-{#if variants.error || hasRealVariant}
+{#if error || hasRealVariant}
   <section class="variants" aria-labelledby="variants-heading">
     <h3 id="variants-heading">Variants</h3>
-    {#if variants.error}
-      <p class="error" role="alert">Failed to load variants: {variants.error}</p>
+    {#if error}
+      <p class="error" role="alert">Failed to load variants: {error}</p>
     {:else}
       <DataTable framed {columns} {rows}>
         {#snippet cell(row, column)}

@@ -221,6 +221,10 @@ export type CatalogNode =
 /** A binding child under a register node — a thin (fqid, name) entry, NOT the
  * embedded longitudinal record (that lives on the binding LEAF, `BindingNode`). */
 export type BindingChild = Schemas["BindingChild"];
+/** One `(variant, delivery column)` a register child is delivered under (Y-82),
+ * with that pair's own window. The register page names the columns beside each
+ * variable and filters the list on the variants. */
+export type VariableDeliveryModel = Schemas["VariableDelivery"];
 
 /** The binding-leaf node (3-seg) the catch-all returns WITHOUT a query — the
  * variable's full embedded longitudinal record (states + edges; see

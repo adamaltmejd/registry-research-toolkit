@@ -27,6 +27,7 @@ from reg_meta.catalog import (
     TagMembership,
     ValueSetMember,
     VariableCoverage,
+    VariableDelivery,
     VariableEdition,
     VariableRef,
     VariableState,
@@ -238,12 +239,19 @@ class ClassificationNode(BaseModel):
 class BindingChild(BaseModel):
     """A binding child under a register node — a thin (fqid, name) entry, NOT
     the embedded longitudinal record (that is only on the binding LEAF response).
-    `coverage` (#351) is the per-variable study-window aggregate."""
+    `coverage` (#351) is the per-variable study-window aggregate.
+
+    `deliveries` (Y-82) is every `(variant, delivery column)` the variable is
+    delivered under, each with its own window — the column names a researcher
+    knows the variable by, and the variants the register page's chips filter on.
+    Empty for a variable with no states; a filtered steward keeps only its held
+    columns, the same held-column semantics `coverage` follows."""
 
     kind: Literal["binding"] = "binding"
     fqid: str
     name: str | None = None
     coverage: VariableCoverage | None = None
+    deliveries: list[VariableDelivery] = Field(default_factory=list)
 
 
 class VariantsRef(BaseModel):

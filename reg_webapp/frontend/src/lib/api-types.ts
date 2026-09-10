@@ -753,9 +753,17 @@ export interface components {
          * @description A binding child under a register node — a thin (fqid, name) entry, NOT
          *     the embedded longitudinal record (that is only on the binding LEAF response).
          *     `coverage` (#351) is the per-variable study-window aggregate.
+         *
+         *     `deliveries` (Y-82) is every `(variant, delivery column)` the variable is
+         *     delivered under, each with its own window — the column names a researcher
+         *     knows the variable by, and the variants the register page's chips filter on.
+         *     Empty for a variable with no states; a filtered steward keeps only its held
+         *     columns, the same held-column semantics `coverage` follows.
          */
         BindingChild: {
             coverage?: components["schemas"]["VariableCoverage"] | null;
+            /** Deliveries */
+            deliveries?: components["schemas"]["VariableDelivery"][];
             /** Fqid */
             fqid: string;
             /**
@@ -2884,6 +2892,24 @@ export interface components {
             open_ended: boolean;
             /** State Count */
             state_count: number;
+        };
+        /**
+         * VariableDelivery
+         * @description One `(variant, delivery column)` a variable is delivered under (Y-82),
+         *     with that pair's own window as a `VariableCoverage`. A register browse row
+         *     reads the column names a researcher knows the variable by (LISA's `ForvErs`)
+         *     and the variants that deliver it, without resolving every state.
+         *
+         *     `column` is None for a state SCB named no delivery column for — the variant
+         *     still delivers the variable, so the row keeps it (unlike
+         *     `register_column_coverage`, whose per-column keys can't express it).
+         */
+        VariableDelivery: {
+            /** Column */
+            column: string | null;
+            coverage: components["schemas"]["VariableCoverage"];
+            /** Variant */
+            variant: string;
         };
         /**
          * VariableEdition

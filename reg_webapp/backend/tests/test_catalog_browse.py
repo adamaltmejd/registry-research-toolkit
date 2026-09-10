@@ -101,6 +101,64 @@ def test_register_node_lists_bindings_and_variants_ref(client):
     assert variants_refs[0]["register_fqid"] == "scb/lisa"
 
 
+def test_register_children_carry_their_delivery_columns(client):
+    """Y-82: each binding child names the `(variant, column)` pairs it is
+    delivered under, with each pair's OWN window — the columns the register page
+    shows beside the variable (and filters on) and the variants its chips narrow
+    by. `kon` is delivered as `Kon` by the single `individer-15plus` variant."""
+    body = client.get("/api/catalog/scb/lisa").json()
+    by_fqid = {c["fqid"]: c for c in body["children"] if c["kind"] == "binding"}
+    assert by_fqid["scb/lisa/kon"]["deliveries"] == [
+        {
+            "variant": "individer-15plus",
+            "column": "Kon",
+            "coverage": {
+                "coverage_from": "2018-01-01",
+                "coverage_to": None,
+                "open_ended": True,
+                "state_count": 1,
+            },
+        }
+    ]
+
+
+def test_register_children_carry_every_delivering_variant(catalog_db):
+    """Y-82: a variable delivered by TWO variants carries both, each with the
+    column and window of that delivery — the register page's chip source. Seeds a
+    second lisa variant delivering a renamed `disp` column."""
+    with sqlite3.connect(catalog_db) as conn:
+        conn.execute(
+            "INSERT INTO register_variant (register_variant_id, register_id, slug, "
+            "name) VALUES (11, 1, 'individer-16plus', 'Individer 16+')"
+        )
+        conn.execute(
+            "INSERT INTO variable (variable_id, register_id, provider_key, name, slug) "
+            "VALUES (940, 1, '940', 'Disponibel inkomst', 'disp')"
+        )
+        conn.execute(
+            "INSERT INTO variable_state (variable_id, register_variant_id, valid_from, "
+            "valid_to, data_type, delivery_column_name) "
+            "VALUES (940, 10, '1968-01-01', '2019-12-31', 'int', 'CDISP')"
+        )
+        conn.execute(
+            "INSERT INTO variable_state (variable_id, register_variant_id, valid_from, "
+            "valid_to, data_type, delivery_column_name) "
+            "VALUES (940, 11, '2020-01-01', '9999-12-31', 'int', 'CDISP5')"
+        )
+
+    with TestClient(create_app()) as client:
+        body = client.get("/api/catalog/scb/lisa").json()
+
+    disp = next(c for c in body["children"] if c.get("fqid") == "scb/lisa/disp")
+    assert [(d["variant"], d["column"]) for d in disp["deliveries"]] == [
+        ("individer-15plus", "CDISP"),
+        ("individer-16plus", "CDISP5"),
+    ]
+    # Each delivery keeps its own window, not the variable's 1968– union.
+    assert disp["deliveries"][0]["coverage"]["coverage_to"] == "2019-12-31"
+    assert disp["deliveries"][1]["coverage"]["open_ended"] is True
+
+
 def test_binding_leaf_embeds_full_record(client):
     resp = client.get("/api/catalog/scb/lisa/kon")
     assert resp.status_code == 200

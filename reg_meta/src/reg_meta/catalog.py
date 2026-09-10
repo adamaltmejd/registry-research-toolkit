@@ -209,6 +209,21 @@ class VariableCoverage(_CatalogModel):
     state_count: int
 
 
+class VariableDelivery(_CatalogModel):
+    """One `(variant, delivery column)` a variable is delivered under (Y-82),
+    with that pair's own window as a `VariableCoverage`. A register browse row
+    reads the column names a researcher knows the variable by (LISA's `ForvErs`)
+    and the variants that deliver it, without resolving every state.
+
+    `column` is None for a state SCB named no delivery column for — the variant
+    still delivers the variable, so the row keeps it (unlike
+    `register_column_coverage`, whose per-column keys can't express it)."""
+
+    variant: str
+    column: str | None
+    coverage: VariableCoverage
+
+
 class RegisterCoverage(_CatalogModel):
     """Coverage aggregate for one register (#351): `variable_count` is its
     slugged (browsable) variables; the span is over ALL their states.
@@ -1360,6 +1375,64 @@ class Catalog:
                 coverage_to=cov_to,
                 open_ended=open_ended,
                 state_count=r["nstates"],
+            )
+        return out
+
+    def register_variable_deliveries(
+        self, provider_slug: str, register_slug: str
+    ) -> dict[str, list[VariableDelivery]]:
+        """Per-variable delivery listing for a register (Y-82), keyed by variable
+        slug (the binding-FQID leaf, so the webapp zips it onto each
+        `list_bindings` child).
+
+        `register_column_coverage`'s GROUP BY with the delivering VARIANT carried
+        and NULL columns KEPT: the register page needs the column names a variable
+        is delivered under (its filter matches them) and the variants that deliver
+        it (its variant chips), which the column-keyed sibling can express for
+        neither. Rows are ordered `(slug, variant, column)` so the payload is
+        deterministic. A NULL-slug variant is excluded — it isn't browse-
+        addressable, so it can't be a `?variant=` coordinate either (symmetric
+        with `list_variants`).
+
+        Both joins are LEFT, as in `register_variable_coverage`, purely to pin the
+        JOIN ORDER: with inner joins SQLite drives from `variable_state` and
+        `SCAN`s it whole — every state row in the catalog, not just this
+        register's. The two `IS NOT NULL` predicates restore inner-join semantics
+        (a stateless variable and an unslugged variant both drop out), so the
+        result is identical and the plan becomes a per-register
+        `SEARCH vs USING INDEX idx_variable_state_variable`."""
+        rows = self._conn.execute(
+            "SELECT v.slug AS slug, rv.slug AS variant, "
+            "vs.delivery_column_name AS col, "
+            "MIN(vs.valid_from) AS cov_from, MAX(vs.valid_to) AS cov_to, "
+            "COUNT(vs.state_id) AS nstates "
+            "FROM variable v "
+            "JOIN register r ON v.register_id = r.register_id "
+            "JOIN provider p ON r.provider_id = p.provider_id "
+            "LEFT JOIN variable_state vs ON vs.variable_id = v.variable_id "
+            "LEFT JOIN register_variant rv "
+            "  ON rv.register_variant_id = vs.register_variant_id "
+            "WHERE p.slug = ? AND r.slug = ? AND v.slug IS NOT NULL "
+            "  AND rv.slug IS NOT NULL "
+            "GROUP BY v.variable_id, rv.register_variant_id, "
+            "  vs.delivery_column_name "
+            "ORDER BY v.slug, rv.slug, vs.delivery_column_name",
+            (provider_slug, register_slug),
+        ).fetchall()
+        out: dict[str, list[VariableDelivery]] = {}
+        for r in rows:
+            cov_from, cov_to, open_ended = _coverage_bounds(r["cov_from"], r["cov_to"])
+            out.setdefault(r["slug"], []).append(
+                VariableDelivery(
+                    variant=r["variant"],
+                    column=r["col"],
+                    coverage=VariableCoverage(
+                        coverage_from=cov_from,
+                        coverage_to=cov_to,
+                        open_ended=open_ended,
+                        state_count=r["nstates"],
+                    ),
+                )
             )
         return out
 

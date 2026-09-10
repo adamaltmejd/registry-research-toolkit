@@ -28,7 +28,8 @@ def test_provider_children_carry_register_coverage(client):
     assert lisa["open_ended"] is True  # kon state is open-ended
     assert lisa["coverage_to"] is None
     rams = by_fqid["scb/rams"]["coverage"]
-    assert rams["variable_count"] == 3  # syss + inkjan + inkfeb (all slugged)
+    # syss + syss-kv (the quarterly-only variable, Y-82) + inkjan + inkfeb
+    assert rams["variable_count"] == 4
 
 
 def test_register_children_carry_variable_coverage(client):

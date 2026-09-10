@@ -5,7 +5,10 @@ import {
   type ClassificationNodeData,
   type ConceptGroup,
   getCatalogNode,
+  getRegisterVariants,
   isCatalogNode,
+  type VariableDeliveryModel,
+  type VariantsResponse,
 } from "./api";
 import { asyncResource } from "./async.svelte";
 import BindingLeafView from "./BindingLeafView.svelte";
@@ -23,13 +26,26 @@ import {
   groupFilterKeys,
   groupHref,
   leafSlug,
+  memberCoverageUnion,
   narrowCatalogNode,
+  narrowGroupsToMembers,
   nodeLabel,
   rankFilter,
+  variantLabel,
 } from "./catalog";
 import FilterInput from "./FilterInput.svelte";
+import type { Coverage } from "./period";
 import RelatedDocumentsPanel from "./RelatedDocumentsPanel.svelte";
-import { type Column, DataTable, EmptyState, Panel, Skeleton, Tag } from "./ui";
+import {
+  Button,
+  type Column,
+  DataTable,
+  EmptyState,
+  FilterChip,
+  Panel,
+  Skeleton,
+  Tag,
+} from "./ui";
 import VariantsSummary from "./VariantsSummary.svelte";
 
 // The provider arm renders its register list as a real DataTable: a Register
@@ -46,6 +62,12 @@ const registerColumns: Column<RegisterRow>[] = [
   { key: "purpose", label: "Description" },
 ];
 
+/** One delivery column beside a variable (Y-82): the name SCB delivers it under
+ * — what a researcher who knows LISA by its columns is hunting for — and the
+ * years that name was delivered, shown only when the variable has more than one
+ * (there the years say WHICH era each name belongs to). */
+type DeliveryColumn = { name: string; years: string };
+
 type VariableBrowseRow =
   | {
       id: string;
@@ -53,16 +75,21 @@ type VariableBrowseRow =
       group: ConceptGroup;
       label: string;
       href: string;
+      /** A group row names no column: its members carry their own, shown in the
+       * facet navigator the row expands to. */
+      columns: DeliveryColumn[];
     }
   | {
       id: string;
       kind: "leaf";
       fqid: string;
       label: string;
+      columns: DeliveryColumn[];
     };
 
 const variableColumns: Column<VariableBrowseRow>[] = [
   { key: "label", label: "Variable" },
+  { key: "columns", label: "Delivery column", mono: true },
 ];
 
 type ClassificationBrowseRow =
@@ -99,6 +126,7 @@ const classificationColumns: Column<ClassificationBrowseRow>[] = [
 function variableBrowseRows(
   rows: GroupedRow<BindingChild>[],
   registerFqid: string,
+  columnsByFqid: Map<string, DeliveryColumn[]>,
 ): VariableBrowseRow[] {
   return rows.map((row) =>
     row.kind === "group"
@@ -108,14 +136,73 @@ function variableBrowseRows(
           group: row.group,
           label: row.group.label,
           href: groupHref(registerFqid, row.group.key),
+          columns: [],
         }
       : {
           id: row.item.fqid,
           kind: "leaf",
           fqid: row.item.fqid,
           label: row.item.name ?? row.item.fqid,
+          columns: columnsByFqid.get(row.item.fqid) ?? [],
         },
   );
+}
+
+/** A register child's delivery columns, de-duplicated by NAME across the
+ * variants that deliver it (one name = one column of the register, whichever
+ * variants ship it) and carrying the union of those deliveries' windows. A
+ * state SCB named no column for contributes nothing to name. Reads whatever
+ * deliveries the child carries, so a child already narrowed by the chip lens
+ * names only that variant's columns. */
+function deliveryColumns(child: BindingChild): DeliveryColumn[] {
+  const byName = new Map<string, VariableDeliveryModel[]>();
+  for (const delivery of child.deliveries ?? []) {
+    if (delivery.column == null) {
+      continue;
+    }
+    const named = byName.get(delivery.column);
+    if (named) {
+      named.push(delivery);
+    } else {
+      byName.set(delivery.column, [delivery]);
+    }
+  }
+  return (
+    [...byName]
+      .map(([name, deliveries]) => ({
+        name,
+        span: memberCoverageUnion(deliveries.map((d) => d.coverage)),
+      }))
+      .sort(
+        (a, b) =>
+          (a.span?.from ?? END) - (b.span?.from ?? END) ||
+          a.name.localeCompare(b.name),
+      )
+      // A lone column needs no era label — there is nothing to tell it apart
+      // from. Decided here, where the count is known, so the cell just renders
+      // whatever `years` holds.
+      .map(({ name, span }) => ({
+        name,
+        years: byName.size > 1 ? yearsLabel(span) : "",
+      }))
+  );
+}
+
+/** Sort key for a column whose window has no finite start: it prints no years,
+ * so it can't join the chronological run — it goes last. */
+const END = Number.POSITIVE_INFINITY;
+
+/** A delivery window as years: "2018", "1990–2021", or "2022–" while still
+ * delivered. Empty when the span has no finite start — the years would say
+ * nothing then, so the column name stands alone. */
+function yearsLabel(span: Coverage | null): string {
+  if (!span || span.from === null) {
+    return "";
+  }
+  if (span.to === null) {
+    return `${span.from}–`;
+  }
+  return span.from === span.to ? `${span.from}` : `${span.from}–${span.to}`;
 }
 
 function classificationBrowseRows(
@@ -241,12 +328,133 @@ function classificationTabFocusFqid(node: ClassificationNodeData): string {
 // needle leaves the incoming alphabetical order untouched. matchesFilter folds
 // diacritics.
 let filter = $state("");
+// The register arm's variant chips (Y-82): multi-select, OR within the
+// selection, the same interaction as the group page's per-axis facet filters.
+// Filter-only — it narrows what the list shows, never the project.
+let selectedVariants = $state(new Set<string>());
 $effect(() => {
   // `fqidPath` is the navigation key — touching it here clears the filter when
   // the route changes (the component is reused across catalog paths).
   void fqidPath;
   filter = "";
+  selectedVariants = new Set();
 });
+
+function toggleVariant(variant: string): void {
+  const next = new Set(selectedVariants);
+  if (!next.delete(variant)) {
+    next.add(variant);
+  }
+  // Reassign so the `$state` proxy tracks the change (as ConceptGroupNavigator).
+  selectedVariants = next;
+}
+
+/** Lift the variant lens — the way back to the whole register. Leaves the text
+ * filter alone, which is why the control says "variant filter". */
+function clearVariants(): void {
+  selectedVariants = new Set();
+}
+
+// Everything the register arm derives from the node, hoisted OUT of the template
+// so it is computed once per node instead of once per keystroke: the text filter
+// re-runs its whole `{@const}` chain on every character, and none of this depends
+// on what was typed. (Empty for every other node kind — `bindingChildren` returns
+// [] unless the node is a register.)
+const registerChildren = $derived(node ? bindingChildren(node) : []);
+const registerGroups = $derived(
+  node && node.kind === "register" ? node.groups : undefined,
+);
+
+// The register's variants, fetched ONCE for the page and handed to the Variants
+// section below as well: the chips must spell a variant the way that section
+// does, and two fetches of one list is two chances to drift. Every other node
+// kind resolves to null without a request.
+const variantsResource = asyncResource(
+  (): Promise<VariantsResponse | null> =>
+    node && node.kind === "register"
+      ? getRegisterVariants(node.fqid)
+      : Promise.resolve(null),
+);
+/** How a variant is SPELLED on its chip: its catalog name — the word the Variants
+ * section uses. The slug is the fallback, for the moment before that list lands
+ * and for a slug this list does not name. */
+const variantNames = $derived(
+  new Map(
+    (variantsResource.data?.variants ?? []).map((v) => [
+      v.slug,
+      variantLabel(v),
+    ]),
+  ),
+);
+
+// The variants that deliver at least one of this register's variables — the chip
+// set, read off the children rather than the register's variant list so a chip
+// can never narrow the list to nothing. A register delivered by ONE variant has
+// no variant axis to filter on, so it shows no chips. Ordered by SLUG, which is
+// stable across the variant fetch: naming a chip must not move it.
+const registerVariants = $derived.by(() => {
+  const seen = new Set<string>();
+  for (const child of registerChildren) {
+    for (const delivery of child.deliveries ?? []) {
+      seen.add(delivery.variant);
+    }
+  }
+  return [...seen].sort();
+});
+
+// The chip lens, applied ONCE and to the data: each surviving child keeps only the
+// selected variants' deliveries (OR within the selection), and a child none of
+// them delivers is dropped. Everything downstream — the rows, the column cells,
+// the filter keys — then reads one already-narrowed list and never has to know
+// that variants exist. An empty selection is the whole register, untouched.
+const lensedChildren = $derived.by(() => {
+  if (selectedVariants.size === 0) {
+    return registerChildren;
+  }
+  const kept: BindingChild[] = [];
+  for (const child of registerChildren) {
+    const deliveries = (child.deliveries ?? []).filter((d) =>
+      selectedVariants.has(d.variant),
+    );
+    if (deliveries.length > 0) {
+      kept.push({ ...child, deliveries });
+    }
+  }
+  return kept;
+});
+
+// The delivery columns per child, off the LENSED children — so the cell and the
+// filter's column keys both say only what the selected variants deliver. The
+// filter reads them on every keystroke (twice per row — match, then rank) and the
+// surviving rows render them.
+const columnsByFqid = $derived(
+  new Map(lensedChildren.map((child) => [child.fqid, deliveryColumns(child)])),
+);
+
+/** A child's delivery column NAMES, for the filter's match keys. */
+function columnNames(fqid: string): string[] {
+  return (columnsByFqid.get(fqid) ?? []).map((column) => column.name);
+}
+
+// #303 concept-group folding: grouped bindings become one expandable group row,
+// ungrouped bindings stay leaf rows. `registerRows` folds the WHOLE register —
+// the "of N" the readouts count against. `narrowedRows` folds the chip lens: the
+// lens narrows the CHILDREN and the groups' members FIRST, so a surviving group
+// row counts and indexes only what the selected variants deliver, and a group
+// left with one member gives way to that member's own leaf row. The text
+// filter ranks what is left, in the template, because only IT changes per
+// keystroke.
+const registerRows = $derived(
+  foldGroupedRows(registerChildren, registerGroups),
+);
+const narrowedRows = $derived(
+  selectedVariants.size === 0
+    ? registerRows
+    : foldGroupedRows(
+        lensedChildren,
+        narrowGroupsToMembers(registerGroups, lensedChildren),
+      ),
+);
 </script>
 
 {#if resource.loading}
@@ -320,14 +528,19 @@ $effect(() => {
         </Panel>
       {/if}
     {:else if node.kind === "register"}
-      <!-- #303 concept-group folding: grouped bindings render as one expandable
-           group row (ConceptGroupRow); ungrouped bindings stay leaf rows. The
-           flat `children` list is complete — `foldGroupedRows` hides members. -->
-      {@const rows = foldGroupedRows(bindingChildren(node), node.groups)}
-      {@const filteredRows = rankFilter(rows, filter, (row) =>
+      <!-- The rows are folded and variant-narrowed in the script (both depend on
+           the node, not on the needle); only the TEXT ranking belongs here, where
+           it re-runs per keystroke. Y-82: it matches DELIVERY COLUMN names too,
+           so a researcher who knows LISA as `ForvErs` finds `forvink-ers`. -->
+      {@const filteredRows = rankFilter(narrowedRows, filter, (row) =>
         row.kind === "group"
-          ? groupFilterKeys(row.group)
-          : [leafSlug(row.item.fqid), row.item.fqid, row.item.name],
+          ? groupFilterKeys(row.group, columnNames)
+          : [
+              leafSlug(row.item.fqid),
+              row.item.fqid,
+              row.item.name,
+              ...columnNames(row.item.fqid),
+            ],
       )}
       <h2>{nodeLabel(node)}</h2>
       {#if node.purpose}<p class="purpose-text">{node.purpose}</p>{/if}
@@ -338,18 +551,79 @@ $effect(() => {
           {/each}
         </div>
       {/if}
-      {#if rows.length > 0}
+      {#if registerRows.length > 0}
+        {#if registerVariants.length > 1}
+          <!-- Y-82: a register delivered by SEVERAL variants gets a chip per
+               variant, so a researcher can read the list as the one variant they
+               will order from. A chip READS as the variant's catalog name — the
+               word the Variants section below spells it with — while its identity
+               stays the `?variant=` slug. Value-only chips, like the picker's
+               dimension filters. -->
+          <div class="variant-filters">
+            <fieldset class="variant-filter">
+              <legend><span class="micro-label">Variant</span></legend>
+              {#if variantsResource.loading}
+                <!-- A chip can only be NAMED once the variant list lands. Painting
+                     the slug first and swapping to the name re-flows the strip
+                     under the pointer, so hold its shape instead. On a FAILED
+                     load the chips render their slugs and the lens keeps working
+                     — losing the filter would cost more than a machine-readable
+                     label, and the Variants section below reports the failure. -->
+                <div class="filter-options" aria-busy="true">
+                  <Skeleton width="16rem" />
+                </div>
+              {:else}
+                <div class="filter-options">
+                  {#each registerVariants as variant (variant)}
+                    <FilterChip
+                      selected={selectedVariants.has(variant)}
+                      onToggle={() => toggleVariant(variant)}
+                    >
+                      {variantNames.get(variant) ?? variant}
+                    </FilterChip>
+                  {/each}
+                </div>
+              {/if}
+            </fieldset>
+            <!-- The live region is mounted WITH the strip and left empty until a
+                 chip is on: a region inserted together with its first text is not
+                 announced, so the first narrowing — the one that matters — would
+                 pass in silence. It has something to say because the chips narrow
+                 silently otherwise: with the text box empty FilterInput shows no
+                 "x of y". While typing, FilterInput reports the SAME pair (its
+                 `shown` is already the post-chip count), so this one steps aside
+                 rather than say it twice. -->
+            <div class="variant-status">
+              <span aria-live="polite">
+                {#if selectedVariants.size > 0 && !filter.trim()}
+                  Showing {countFoldedMembers(filteredRows)} of {countFoldedMembers(
+                    registerRows,
+                  )} variables
+                {/if}
+              </span>
+              {#if selectedVariants.size > 0}
+                <Button size="sm" onclick={clearVariants}>
+                  Clear variant filter
+                </Button>
+              {/if}
+            </div>
+          </div>
+        {/if}
         <!-- Counts stay in VARIABLE units after folding (a group row counts its
              members), so the "x of y" readout still reflects register size. -->
         <FilterInput
           bind:value={filter}
-          total={countFoldedMembers(rows)}
+          total={countFoldedMembers(registerRows)}
           shown={countFoldedMembers(filteredRows)}
           placeholder="Filter variables…"
           label="Filter variables"
         />
         {#if filteredRows.length > 0}
-          {@const variableRows = variableBrowseRows(filteredRows, node.fqid)}
+          {@const variableRows = variableBrowseRows(
+            filteredRows,
+            node.fqid,
+            columnsByFqid,
+          )}
           <DataTable
             framed
             columns={variableColumns}
@@ -357,8 +631,21 @@ $effect(() => {
             getRowId={browseRowId}
             rowNavigation
           >
-            {#snippet cell(row)}
-              {#if row.kind === "group"}
+            {#snippet cell(row, column)}
+              {#if column.key === "columns"}
+                <!-- Y-82: the delivery column names, one per line. The years ride
+                     along only when a variable has SEVERAL — there they say which
+                     era each name belongs to (`ForvErs` 1990–2021, then
+                     `ForvErsNetto`); a single column needs no disambiguation. -->
+                {#each row.columns as col (col.name)}
+                  <span class="delivery-column">
+                    {col.name}
+                    {#if col.years}
+                      <span class="column-years">{col.years}</span>
+                    {/if}
+                  </span>
+                {/each}
+              {:else if row.kind === "group"}
                 <!-- #673 (M6): register-arm group rows link to their subject page.
                      Browse-link rows omit the slug pill; picker disclosure rows keep it. -->
                 <ConceptGroupRow
@@ -376,7 +663,16 @@ $effect(() => {
           </DataTable>
         {:else}
           <Panel title="Variables">
-            <EmptyState title={`No variables match “${filter}”`} />
+            <!-- Only the text filter can empty the list: every chip is read off a
+                 variant that DELIVERS something, so a selection always keeps a
+                 row. The chips can still be narrowing what was searched,
+                 though, so the copy points back at the strip that lifts them. -->
+            <EmptyState
+              title={`No variables match “${filter}”`}
+              description={selectedVariants.size > 0
+                ? "The variant filter above is also narrowing this list."
+                : undefined}
+            />
           </Panel>
         {/if}
       {:else}
@@ -384,7 +680,11 @@ $effect(() => {
           <EmptyState title="No variables." />
         </Panel>
       {/if}
-      <VariantsSummary registerFqid={node.fqid} />
+      <VariantsSummary
+        registerFqid={node.fqid}
+        variants={variantsResource.data}
+        error={variantsResource.error}
+      />
       <RelatedDocumentsPanel register={leafSlug(node.fqid)} />
     {:else if node.kind === "binding"}
       <!-- Pass the full node down: this no-query browse fetch already resolved
@@ -514,6 +814,56 @@ $effect(() => {
     flex-wrap: wrap;
     gap: var(--space-2);
     margin: 0.5rem 0 1rem;
+  }
+  /* The register arm's variant chip strip (Y-82) — one fieldset, its legend
+     naming the axis in TEXT (never hue), over `ui/FilterChip` checkboxes. Same
+     shape as the group page's per-axis filters, at one axis. */
+  .variant-filters {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3);
+    margin: 0 0 var(--space-3);
+  }
+  .variant-filter {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: var(--space-2) var(--space-3) var(--space-3);
+    margin: 0;
+    /* Hug the chips: a bare fieldset is block-level, so at 1920 it would frame a
+       canvas-wide box around a handful of chips. */
+    inline-size: fit-content;
+    min-inline-size: 0;
+  }
+  .variant-filter legend {
+    padding: 0 var(--space-1);
+  }
+  .filter-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1);
+  }
+  .variant-status {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+  }
+  /* One delivery column per line in the (mono-faced) column cell. The years —
+     shown when a variable has several columns — stay in the cell's mono face
+     (a year is a machine identifier, like the Variants panel's Years column
+     below) and are merely dimmed, so the name a researcher hunts for leads. */
+  .delivery-column {
+    display: block;
+    /* Pin the NAME against DataTable's stacked-card rule, which mutes every
+       non-primary cell: below 48rem that flattened the name and its years to one
+       grey and the column a researcher is hunting for stopped leading. */
+    color: var(--text);
+  }
+  .column-years {
+    color: var(--text-muted);
   }
   /* Browse-list name links (inside DataTable cells) — the NAME is primary.
      Long-name breaking comes from DataTable's cell-level `overflow-wrap:

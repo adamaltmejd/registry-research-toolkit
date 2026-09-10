@@ -683,6 +683,51 @@ QUERY PLAN reports `USING COVERING INDEX`).
   signal is span + counts; cadence is a follow-up (a defined source or a build-time
   field) — not shipped here.
 
+### Per-variable deliveries (Y-82)
+
+A register-child also carries `deliveries`: the `(variant, delivery column)` pairs that
+deliver the variable, each with that pair's own `VariableCoverage` window. It answers
+the two questions the coverage span can't — *which variant delivers this?* and *what
+column name does a researcher know it by?* (LISA's `forvink-ers` is `ForvErs` on paper).
+One more GROUP BY in the same query-time family
+(`Catalog.register_variable_deliveries`), grouped by
+`(variable, register_variant, delivery_column_name)` over the same `variable_state` rows
+and behind the same ETag/edge cache — no new endpoint, no build-time materialization.
+Selecting `delivery_column_name` puts it outside `idx_variable_state_coverage` (as it
+does its `register_column_coverage` sibling), so it reaches the row rather than being
+satisfied index-only; both joins are LEFT to pin the join order, because with inner
+joins SQLite drives from `variable_state` and scans the WHOLE table instead of searching
+`idx_variable_state_variable` per register.
+
+- `column` is None for a state SCB named no delivery column for. The variant still
+  delivers the variable, so the row is KEPT — unlike `register_column_coverage`, whose
+  per-column keys can't express a NULL key. Variants with a NULL slug are excluded
+  (symmetric with `Catalog.list_variants`: an unslugged variant isn't addressable).
+- **Steward semantics**: for a filtered steward the deliveries are narrowed to
+  `CatalogIndex.held_columns(fqid)` — the SAME held-column set the coverage recompute
+  uses — so a partial-column hold names only the columns that steward actually holds.
+  The index's grain is variant-blind, so the filter is on the column, not on the
+  variant.
+- **Additive**: `deliveries` defaults to `[]` and is populated only in the register
+  listing payload; the SPA must tolerate its absence (a register node's own payload, or
+  a child that predates the field).
+- **The SPA's variant lens** (`CatalogNodeView`): the chips narrow the CHILDREN and the
+  concept groups' members before `foldGroupedRows` (`narrowGroupsToMembers`), never the
+  folded rows. A group row stands in for its members, so its count and its filter keys
+  must answer for the delivered ones only; a lens that leaves a group with one member
+  drops the group, and that member renders as its own leaf row. (The lens ends at the
+  row: `groupHref` carries no variant, so the subject page it links to is unnarrowed.)
+  The delivery-column cell and the filter's column keys read the SELECTED variants'
+  deliveries too, so a narrowed list never shows — or matches on — a column that variant
+  does not deliver. The chip set is read off the deliveries rather than the register's
+  declared variants, so no chip can narrow the list to nothing.
+- A chip is NAMED from `GET {register}/variants`, which `CatalogNodeView` fetches once
+  and hands down to `VariantsSummary`: one page, one request, one spelling of a variant.
+  The strip holds a skeleton until that list lands rather than painting slugs and
+  swapping to names, which would re-flow it under the pointer; a FAILED load still
+  renders the chips under their slugs, because losing the lens costs more than a
+  machine-readable label. Chip order is by slug.
+
 ## Catalog stats (`routes/stats.py`, #675)
 
 `GET /api/stats` returns the headline catalog-size counts

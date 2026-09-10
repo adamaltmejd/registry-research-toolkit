@@ -265,7 +265,7 @@ describe("ConceptGroupRow >2-axis navigator (#819 PR2)", () => {
     // axes). Scope the click to the filter fieldsets (the member rows carry the
     // same label text).
     const exkl = [
-      ...container.querySelectorAll("fieldset.axis-filter label.filter-pill"),
+      ...container.querySelectorAll("fieldset.axis-filter label.ui-chip"),
     ].find((l) => l.textContent?.trim() === "Exkl. kapitalvinst") as
       | HTMLLabelElement
       | undefined;

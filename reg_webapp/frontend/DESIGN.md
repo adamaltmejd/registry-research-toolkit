@@ -315,7 +315,8 @@ highlight.
 Behavior comes from Bits UI (the sanctioned headless primitives dependency); visuals
 come from scoped CSS reading semantic roles. The shared primitives live in `src/lib/ui/`
 and are composed before anything new is styled: `Panel`, `DataTable`, `Breadcrumbs`,
-`Tag`, `Button`, `KeyValue`, `Skeleton`, `EmptyState`, plus `AppShell` in `src/lib/`.
+`Tag`, `Button`, `FilterChip`, `KeyValue`, `Skeleton`, `EmptyState`, plus `AppShell` in
+`src/lib/`.
 
 - **Buttons:** `primary` is ink-filled with white text and there is at most one per
   view; `default` is a white surface with a hairline border; `ghost` is borderless ink
@@ -324,6 +325,12 @@ and are composed before anything new is styled: `Panel`, `DataTable`, `Breadcrum
 - **Tags:** mono, `sm` radius, a hairline border in the tone's hue. Chrome tones
   (`neutral`, `accent`), categorical type tones (`reg`/`var`/`code`/`class`/`group`),
   and status tones (`error`/`warn`/`info`/`ok`) that require a leading glyph.
+- **Filter chips (`FilterChip`):** the multi-select control above a filtered list — a
+  real checkbox behind a `sm`-radius face (never a pill), accent-tinted when on. It is a
+  LENS: toggling narrows what is shown, never the project. Use it for a bounded set of
+  known values; reach for the text filter when the set is open. A chip reads as the
+  value's own words — the name a researcher recognizes, not the slug that keys it; a
+  machine identifier joins it only to tell apart two values a curator named alike.
 - **Tables (`DataTable`):** explicit ARIA roles, label-level headers, mono/numeric
   column flags, `framed` when the table is the whole surface (never inside a `Panel`),
   stacked cards below 48 rem with the header row kept in the accessibility tree.

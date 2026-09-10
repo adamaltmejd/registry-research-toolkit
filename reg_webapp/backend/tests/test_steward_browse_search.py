@@ -820,6 +820,30 @@ def test_partial_column_hold_coverage_uses_held_column(
     }
 
 
+def test_partial_column_hold_deliveries_name_only_held_column(
+    catalog_db: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    """Y-82: a partial-column steward's register row names ONLY its held column —
+    the same held-column semantics `coverage` follows. The `disp` variable is
+    delivered as CDISP + CDISP5; this steward holds CDISP5 alone, so CDISP must
+    not appear beside the variable (it cannot order it)."""
+    _seed_partial_column_lineage(catalog_db)
+    stewards = _set_steward_env(tmp_path, monkeypatch)
+    with _booted(
+        stewards,
+        "ifau",
+        [
+            ("scb/lisa/individer-15plus", "scb/lisa/disp", "CDISP5", "2020"),
+        ],
+    ) as client:
+        register = client.get("/api/catalog/scb/lisa").json()
+
+    disp = next(c for c in register["children"] if c.get("fqid") == "scb/lisa/disp")
+    assert [(d["variant"], d["column"]) for d in disp["deliveries"]] == [
+        ("individer-15plus", "CDISP5")
+    ]
+
+
 def test_unnamed_column_hold_coverage_uses_variable_fallback(
     catalog_db: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ):

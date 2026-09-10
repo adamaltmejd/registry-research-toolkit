@@ -52,6 +52,7 @@ from reg_meta.catalog import (
     ResolvedVariable,
     TagMembership,
     VariableCoverage,
+    VariableDelivery,
     VariableState,
 )
 from reg_meta.errors import EXIT_NOT_FOUND, EXIT_USAGE, RegMetaError
@@ -992,7 +993,9 @@ def _register_response(
             provider_slug, register_slug
         )
 
-        def coverage_for(variable_slug: str) -> VariableCoverage | None:
+        def coverage_for(
+            variable_slug: str, held_columns: frozenset[str | None] | None
+        ) -> VariableCoverage | None:
             return variable_coverage.get(variable_slug)
 
     else:
@@ -1001,27 +1004,58 @@ def _register_response(
             provider_slug, register_slug
         )
 
-        def coverage_for(variable_slug: str) -> VariableCoverage | None:
-            held_columns = index.held_columns(
-                f"{provider_slug}/{register_slug}/{variable_slug}"
-            )
+        def coverage_for(
+            variable_slug: str, held_columns: frozenset[str | None] | None
+        ) -> VariableCoverage | None:
+            # Narrowing only: this branch runs exactly when `index` is not None,
+            # and `held_columns_for` returns a set on that path.
+            assert held_columns is not None
             return _held_variable_coverage(
                 column_coverage, unnamed_coverage, variable_slug, held_columns
             )
 
+    # Y-82 deliveries: the `(variant, delivery column)` pairs each variable is
+    # delivered under, from ONE more GROUP BY over `variable_state`. A filtered
+    # steward keeps only its held columns — the SAME held-column set `coverage_for`
+    # narrows with, resolved once per binding below, so a partial-column steward's
+    # row names only the columns it can deliver.
+    deliveries = catalog.register_variable_deliveries(provider_slug, register_slug)
+
+    def deliveries_for(
+        variable_slug: str, held_columns: frozenset[str | None] | None
+    ) -> list[VariableDelivery]:
+        rows = deliveries.get(variable_slug, [])
+        if held_columns is None:
+            return rows
+        return [d for d in rows if d.column in held_columns]
+
+    def held_columns_for(variable_slug: str) -> frozenset[str | None] | None:
+        """This steward's held delivery columns for a variable, or None on the
+        unfiltered path. One lookup per binding, shared by both readers."""
+        if index is None:
+            return None
+        return index.held_columns(f"{provider_slug}/{register_slug}/{variable_slug}")
+
     # A register's children are its bindings PLUS a `variants` reference
     # stub (the declared A5.2 variant-browser slot — a link, not data).
-    children: list[RegisterChild] = [
-        BindingChild(
-            fqid=str(b.fqid),
-            name=b.name,
-            # b.fqid.variable is always set for a binding summary; the guard keeps
-            # the dict key str-typed. reg_meta's `VariableCoverage` passes straight
-            # through (#681).
-            coverage=coverage_for(b.fqid.variable) if b.fqid.variable else None,
+    children: list[RegisterChild] = []
+    for b in bindings:
+        # b.fqid.variable is always set for a binding summary; the guard keeps the
+        # dict key str-typed. reg_meta's `VariableCoverage` passes straight
+        # through (#681).
+        variable_slug = b.fqid.variable
+        if variable_slug is None:
+            children.append(BindingChild(fqid=str(b.fqid), name=b.name))
+            continue
+        held = held_columns_for(variable_slug)
+        children.append(
+            BindingChild(
+                fqid=str(b.fqid),
+                name=b.name,
+                coverage=coverage_for(variable_slug, held),
+                deliveries=deliveries_for(variable_slug, held),
+            )
         )
-        for b in bindings
-    ]
     children.append(VariantsRef(register_fqid=str(resolved.fqid)))
     return RegisterResponse(
         fqid=str(resolved.fqid),

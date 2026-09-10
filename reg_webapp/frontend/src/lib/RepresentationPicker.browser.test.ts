@@ -222,16 +222,17 @@ function visibleColumns(): (string | undefined)[] {
   );
 }
 
-/** Click a filter PILL (a labelled checkbox inside a `.dim-filter` fieldset) by its
- * value text — scoped to `.dim-filters` so it never hits a row checkbox. */
+/** Click a filter CHIP (a `ui/FilterChip` labelled checkbox inside a `.dim-filter`
+ * fieldset) by its value text — scoped to `.dim-filters` so it never hits a row
+ * checkbox. */
 function clickFilter(value: string): void {
-  const pill = [...document.querySelectorAll(".dim-filters .filter-pill")].find(
-    (p) => p.textContent?.trim() === value,
+  const chip = [...document.querySelectorAll(".dim-filters .ui-chip")].find(
+    (c) => c.textContent?.trim() === value,
   ) as HTMLElement | undefined;
-  if (!pill) {
-    throw new Error(`filter pill not found: ${value}`);
+  if (!chip) {
+    throw new Error(`filter chip not found: ${value}`);
   }
-  pill.click();
+  chip.click();
 }
 
 /** The one element matching `sel`, or a failure naming it — a missing node must fail
@@ -4152,8 +4153,8 @@ describe("RepresentationPicker coexisting-variant row identity (Y-14)", () => {
       )
       .toBeVisible();
     // The variant FILTER offers the same two choices, so its values carry the same
-    // distinguisher rather than two pills reading "Individer".
-    expect(texts(".dim-filters .filter-pill")).toEqual([
+    // distinguisher rather than two chips reading "Individer".
+    expect(texts(".dim-filters .ui-chip")).toEqual([
       "Individer individer-15plus",
       "Individer individer-16plus",
     ]);

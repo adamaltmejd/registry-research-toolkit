@@ -132,10 +132,221 @@ function providerNode(): CatalogNode {
   } as unknown as CatalogNode;
 }
 
+/** One `(variant, column)` delivery on a register child (Y-82). `to` null with
+ * `open` true is a still-delivered window. */
+function delivery(
+  variant: string,
+  column: string,
+  from: string,
+  to: string | null,
+) {
+  return {
+    variant,
+    column,
+    coverage: {
+      coverage_from: from,
+      coverage_to: to,
+      open_ended: to === null,
+      state_count: 1,
+    },
+  };
+}
+
+// A register node whose children carry Y-82 `deliveries` — the LISA shape the
+// ticket names: `forvink-ers` is delivered as `ForvErs` (a name its slug does not
+// contain), `forversnetto` as `ForvErsNetto`, `disp` under TWO columns across a
+// rename, and `arbetsstalle` under a SECOND variant. `variants` selects how many
+// variants the register is delivered by: one (no chips) or both (chips).
+function columnedRegisterNode(variants: 1 | 2): CatalogNode {
+  const children = [
+    {
+      kind: "binding",
+      fqid: "scb/lisa/kon",
+      name: "Kön",
+      deliveries: [delivery("individer-15plus", "Kon", "2018-01-01", null)],
+    },
+    {
+      kind: "binding",
+      fqid: "scb/lisa/forvink-ers",
+      name: "Förvärvsinkomst",
+      deliveries: [
+        delivery("individer-15plus", "ForvErs", "1990-01-01", "2021-12-31"),
+      ],
+    },
+    {
+      kind: "binding",
+      fqid: "scb/lisa/forversnetto",
+      name: "Förvärvsinkomst netto",
+      deliveries: [
+        delivery("individer-15plus", "ForvErsNetto", "2011-01-01", null),
+      ],
+    },
+    {
+      kind: "binding",
+      fqid: "scb/lisa/disp",
+      name: "Disponibel inkomst",
+      deliveries: [
+        delivery("individer-15plus", "CDISP", "1968-01-01", "2019-12-31"),
+        delivery("individer-15plus", "CDISP5", "2020-01-01", null),
+      ],
+    },
+  ];
+  if (variants === 2) {
+    children.push({
+      kind: "binding",
+      fqid: "scb/lisa/arbetsstalle",
+      name: "Arbetsställe",
+      deliveries: [delivery("arbetsstallen", "ArbstNr", "2005-01-01", null)],
+    });
+  }
+  return {
+    kind: "register",
+    fqid: "scb/lisa",
+    name: "LISA",
+    children,
+  } as unknown as CatalogNode;
+}
+
+/** The variants the Y-82 fixtures are delivered by, NAMED — the chips read as
+ * these words, not as the slugs that key them. */
+function lisaVariants() {
+  return variantsResponse(
+    variant("individer-15plus", { name: "Individer, 15 år och äldre" }),
+    variant("individer-16plus", { name: "Individer, 16 år och äldre" }),
+    variant("arbetsstallen", { name: "Arbetsställen" }),
+  );
+}
+
+// One variable delivered under a DIFFERENT column by each variant — the ticket's
+// `disp` shape (`CDISP` then `CDISP5`), split so that no single variant ships
+// both. `kon` is delivered by both variants under one name, so the register has
+// two chips whichever way the lens goes.
+function splitColumnRegisterNode(): CatalogNode {
+  return {
+    kind: "register",
+    fqid: "scb/lisa",
+    name: "LISA",
+    children: [
+      {
+        kind: "binding",
+        fqid: "scb/lisa/kon",
+        name: "Kön",
+        deliveries: [
+          delivery("individer-15plus", "Kon", "1990-01-01", null),
+          delivery("individer-16plus", "Kon", "1990-01-01", null),
+        ],
+      },
+      {
+        kind: "binding",
+        fqid: "scb/lisa/disp",
+        name: "Disponibel inkomst",
+        deliveries: [
+          delivery("individer-16plus", "CDISP", "1968-01-01", "2019-12-31"),
+          delivery("individer-15plus", "CDISP5", "2020-01-01", null),
+        ],
+      },
+    ],
+  } as unknown as CatalogNode;
+}
+
+// A concept group whose members SPLIT across variants: `kon` + `disp` are
+// `individer-15plus`, `arbetsstalle` is `arbetsstallen`, and the ungrouped
+// `foretag` is a variant of its own — so a lens can leave the group with two
+// members, with one, or with none.
+function splitVariantGroupRegisterNode(): CatalogNode {
+  return {
+    kind: "register",
+    fqid: "scb/lisa",
+    name: "LISA",
+    children: [
+      {
+        kind: "binding",
+        fqid: "scb/lisa/kon",
+        name: "Kön",
+        deliveries: [delivery("individer-15plus", "Kon", "2018-01-01", null)],
+      },
+      {
+        kind: "binding",
+        fqid: "scb/lisa/disp",
+        name: "Disponibel inkomst",
+        deliveries: [delivery("individer-15plus", "CDISP", "1968-01-01", null)],
+      },
+      {
+        kind: "binding",
+        fqid: "scb/lisa/arbetsstalle",
+        name: "Arbetsställe",
+        deliveries: [delivery("arbetsstallen", "ArbstNr", "2005-01-01", null)],
+      },
+      {
+        kind: "binding",
+        fqid: "scb/lisa/foretag",
+        name: "Företag",
+        deliveries: [delivery("foretag", "ForetagNr", "2005-01-01", null)],
+      },
+    ],
+    groups: [
+      {
+        key: "inkomstbegrepp",
+        label: "Inkomstbegrepp",
+        source: "token",
+        axes: [{ name: "begrepp", label: "Begrepp" }],
+        members: [
+          {
+            fqid: "scb/lisa/kon",
+            name: "Kön",
+            facets: [{ axis: "begrepp", value: "kon", label: "Kön" }],
+          },
+          {
+            fqid: "scb/lisa/disp",
+            name: "Disponibel inkomst",
+            facets: [{ axis: "begrepp", value: "disp", label: "Disponibel" }],
+          },
+          {
+            fqid: "scb/lisa/arbetsstalle",
+            name: "Arbetsställe",
+            facets: [
+              { axis: "begrepp", value: "arbst", label: "Arbetsställe" },
+            ],
+          },
+        ],
+      },
+    ],
+  } as unknown as CatalogNode;
+}
+
+// The same register with `kon` + `disp` FOLDED into one concept-group row (#303).
+// The row stands in for its members, so the column filter has to reach through it.
+function groupedColumnRegisterNode(): CatalogNode {
+  return {
+    ...(columnedRegisterNode(1) as unknown as Record<string, unknown>),
+    groups: [
+      {
+        key: "inkomstbegrepp",
+        label: "Inkomstbegrepp",
+        source: "token",
+        axes: [{ name: "begrepp", label: "Begrepp" }],
+        members: [
+          {
+            fqid: "scb/lisa/kon",
+            name: "Kön",
+            facets: [{ axis: "begrepp", value: "kon", label: "Kön" }],
+          },
+          {
+            fqid: "scb/lisa/disp",
+            name: "Disponibel inkomst",
+            facets: [{ axis: "begrepp", value: "disp", label: "Disponibel" }],
+          },
+        ],
+      },
+    ],
+  } as unknown as CatalogNode;
+}
+
 // A register node (`scb/lisa`) with three ungrouped binding-variable children and
 // NO `groups` (so `foldGroupedRows` — which tolerates absent groups — yields three
-// all-leaf rows). Shaped like RegisterResponse → BindingChild children; the #806
-// register arm renders these leaf names in a single-column list.
+// all-leaf rows). Its children carry no `deliveries` either, which the register arm
+// must tolerate the same way (a payload from before the field existed).
+// Shaped like RegisterResponse → BindingChild children.
 function registerNode(): CatalogNode {
   return {
     kind: "register",
@@ -314,6 +525,32 @@ describe("CatalogNodeView provider arm", () => {
   });
 });
 
+const cellText = (cell: Element | undefined | null): string =>
+  (cell?.textContent ?? "").replace(/\s+/g, " ").trim();
+
+/** The rendered variable list as `[variable, its delivery columns]` pairs — the
+ * column cell's entries joined, since each is its own line. Scoped to the
+ * variable table: the Variants section below renders a DataTable of its own. */
+function variableRows(container: Element): [string, string][] {
+  const table = [...container.querySelectorAll("table.data-table")].find(
+    (t) => !t.closest("section.variants"),
+  );
+  return [...(table?.querySelectorAll("tbody tr") ?? [])].map((row) => [
+    cellText(row.querySelector("td")),
+    [...row.querySelectorAll(".delivery-column")].map(cellText).join(", "),
+  ]);
+}
+
+/** Toggle a variant chip by the NAME it reads as — clicking the chip label, as a
+ * pointer does: the checkbox it wraps is visually hidden (present for the keyboard
+ * and assistive tech). Waits for the name first: the chips read slugs until the
+ * register's variants land. */
+async function clickVariantChip(name: string): Promise<void> {
+  const checkbox = page.getByRole("checkbox", { name });
+  await expect.element(checkbox).toBeInTheDocument();
+  checkbox.element().closest<HTMLLabelElement>("label")?.click();
+}
+
 describe("CatalogNodeView register arm", () => {
   it("renders each ungrouped variable as a framed DataTable row", async () => {
     vi.mocked(getCatalogNode).mockResolvedValue(registerNode());
@@ -343,6 +580,327 @@ describe("CatalogNodeView register arm", () => {
         row.textContent?.trim(),
       ),
     ).toEqual(["Alpha", "Beta", "Gamma"]);
+  });
+
+  it("names the delivery columns beside each variable, dated only where there are several (Y-82)", async () => {
+    vi.mocked(getCatalogNode).mockResolvedValue(columnedRegisterNode(1));
+
+    const { container } = await render(CatalogNodeView, {
+      fqidPath: "scb/lisa",
+      regMetaVersion: "test",
+      steward: "global",
+      windowMinYear: 1960,
+      vintageYear: 2024,
+    });
+
+    await expect
+      .element(page.getByRole("columnheader", { name: "Delivery column" }))
+      .toBeVisible();
+    // A one-column variable reads as its column name alone; the two-column one
+    // dates each name, so a researcher can tell which era delivers which.
+    expect(variableRows(container)).toEqual([
+      ["Kön", "Kon"],
+      ["Förvärvsinkomst", "ForvErs"],
+      ["Förvärvsinkomst netto", "ForvErsNetto"],
+      ["Disponibel inkomst", "CDISP 1968–2019, CDISP5 2020–"],
+    ]);
+  });
+
+  it("filters on delivery column names, case-insensitively (Y-82)", async () => {
+    vi.mocked(getCatalogNode).mockResolvedValue(columnedRegisterNode(1));
+
+    const { container } = await render(CatalogNodeView, {
+      fqidPath: "scb/lisa",
+      regMetaVersion: "test",
+      steward: "global",
+      windowMinYear: 1960,
+      vintageYear: 2024,
+    });
+
+    await page
+      .getByRole("textbox", { name: /Filter variables/i })
+      .fill("forvers");
+
+    // `forversnetto` matched on its slug before; `forvink-ers` is reachable only
+    // through its `ForvErs` column — the miss this ticket is about.
+    expect(variableRows(container).map(([name]) => name)).toEqual([
+      "Förvärvsinkomst",
+      "Förvärvsinkomst netto",
+    ]);
+    await expect.element(page.getByText("2 of 4")).toBeVisible();
+  });
+
+  it("narrows the list to a selected variant's variables (Y-82)", async () => {
+    vi.mocked(getCatalogNode).mockResolvedValue(columnedRegisterNode(2));
+    vi.mocked(getRegisterVariants).mockResolvedValue(lisaVariants());
+
+    const { container } = await render(CatalogNodeView, {
+      fqidPath: "scb/lisa",
+      regMetaVersion: "test",
+      steward: "global",
+      windowMinYear: 1960,
+      vintageYear: 2024,
+    });
+
+    // Each chip is a real checkbox, named by the variant's catalog NAME — the
+    // word the Variants section below spells it with, not its `?variant=` slug.
+    await expect
+      .element(page.getByRole("checkbox", { name: "Arbetsställen" }))
+      .toBeInTheDocument();
+    await expect
+      .element(
+        page.getByRole("checkbox", { name: "Individer, 15 år och äldre" }),
+      )
+      .toBeInTheDocument();
+
+    await clickVariantChip("Arbetsställen");
+
+    // With the text box empty FilterInput shows no "x of y", so the chip strip
+    // says what it hid — otherwise the list would shrink silently.
+    await expect
+      .element(page.getByText("Showing 1 of 5 variables"))
+      .toBeVisible();
+    expect(variableRows(container).map(([name]) => name)).toEqual([
+      "Arbetsställe",
+    ]);
+
+    // Multi-select: adding the other variant widens the list back out.
+    await clickVariantChip("Individer, 15 år och äldre");
+    await expect
+      .element(page.getByText("Showing 5 of 5 variables"))
+      .toBeVisible();
+    expect(variableRows(container)).toHaveLength(5);
+  });
+
+  it("lifts the variant lens from the chip strip (Y-82)", async () => {
+    vi.mocked(getCatalogNode).mockResolvedValue(columnedRegisterNode(2));
+    vi.mocked(getRegisterVariants).mockResolvedValue(lisaVariants());
+
+    const { container } = await render(CatalogNodeView, {
+      fqidPath: "scb/lisa",
+      regMetaVersion: "test",
+      steward: "global",
+      windowMinYear: 1960,
+      vintageYear: 2024,
+    });
+
+    // No lens, no escape hatch — the control appears with the selection.
+    await expect.element(page.getByText("Kon", { exact: true })).toBeVisible();
+    expect(
+      page.getByRole("button", { name: "Clear variant filter" }).elements(),
+    ).toHaveLength(0);
+    // The readout it shares a row with is mounted EMPTY, though: a live region
+    // inserted with its first text is never announced.
+    expect(
+      container.querySelector('[aria-live="polite"]')?.textContent?.trim(),
+    ).toBe("");
+
+    await clickVariantChip("Arbetsställen");
+    await page.getByRole("button", { name: "Clear variant filter" }).click();
+
+    await expect.element(page.getByRole("link", { name: "Kön" })).toBeVisible();
+    expect(variableRows(container)).toHaveLength(5);
+    expect(
+      container.querySelector<HTMLInputElement>(
+        'input[type="checkbox"]:checked',
+      ),
+    ).toBeNull();
+  });
+
+  it("says the variant lens is also narrowing an empty result (Y-82)", async () => {
+    vi.mocked(getCatalogNode).mockResolvedValue(columnedRegisterNode(2));
+    vi.mocked(getRegisterVariants).mockResolvedValue(lisaVariants());
+
+    const { container } = await render(CatalogNodeView, {
+      fqidPath: "scb/lisa",
+      regMetaVersion: "test",
+      steward: "global",
+      windowMinYear: 1960,
+      vintageYear: 2024,
+    });
+
+    await expect.element(page.getByText("Kon", { exact: true })).toBeVisible();
+    await clickVariantChip("Arbetsställen");
+    await page.getByRole("textbox", { name: /Filter variables/i }).fill("kon");
+
+    // `kon` matches a variable the OTHER variant delivers, so the miss is the
+    // chips' doing as much as the text's — the empty state has to say so and
+    // point at the strip that lifts them, not blame the search term alone.
+    await expect
+      .element(page.getByText("No variables match “kon”"))
+      .toBeVisible();
+    await expect
+      .element(
+        page.getByText("The variant filter above is also narrowing this list."),
+      )
+      .toBeVisible();
+
+    // That strip is still on screen, so the way out is one click from here.
+    await page.getByRole("button", { name: "Clear variant filter" }).click();
+    expect(variableRows(container).map(([name]) => name)).toEqual(["Kön"]);
+  });
+
+  it("reads a variable's columns as the SELECTED variant delivers them (Y-82)", async () => {
+    vi.mocked(getCatalogNode).mockResolvedValue(splitColumnRegisterNode());
+    vi.mocked(getRegisterVariants).mockResolvedValue(lisaVariants());
+
+    const { container } = await render(CatalogNodeView, {
+      fqidPath: "scb/lisa",
+      regMetaVersion: "test",
+      steward: "global",
+      windowMinYear: 1960,
+      vintageYear: 2024,
+    });
+
+    // Unlensed, the cell is the whole register: both eras of the rename.
+    await expect.element(page.getByText("Kon", { exact: true })).toBeVisible();
+    expect(variableRows(container)).toEqual([
+      ["Kön", "Kon"],
+      ["Disponibel inkomst", "CDISP 1968–2019, CDISP5 2020–"],
+    ]);
+
+    // Under a lens the cell is that ONE variant's delivery — a researcher reading
+    // the list as the variant they will order from must not be shown, and must
+    // not be able to order, a column it never delivers.
+    await clickVariantChip("Individer, 15 år och äldre");
+    expect(variableRows(container)).toEqual([
+      ["Kön", "Kon"],
+      ["Disponibel inkomst", "CDISP5"],
+    ]);
+
+    // …and the filter indexes the same narrowed set: `CDISP5` is not a column
+    // `individer-16plus` delivers, so it must not surface `disp` under it.
+    await clickVariantChip("Individer, 15 år och äldre");
+    await clickVariantChip("Individer, 16 år och äldre");
+    expect(variableRows(container)).toEqual([
+      ["Kön", "Kon"],
+      ["Disponibel inkomst", "CDISP"],
+    ]);
+    await page
+      .getByRole("textbox", { name: /Filter variables/i })
+      .fill("cdisp5");
+    await expect
+      .element(page.getByText("No variables match “cdisp5”"))
+      .toBeVisible();
+  });
+
+  it("folds a group row over only the members the lens delivers (Y-82)", async () => {
+    vi.mocked(getCatalogNode).mockResolvedValue(
+      splitVariantGroupRegisterNode(),
+    );
+    vi.mocked(getRegisterVariants).mockResolvedValue(lisaVariants());
+
+    const { container } = await render(CatalogNodeView, {
+      fqidPath: "scb/lisa",
+      regMetaVersion: "test",
+      steward: "global",
+      windowMinYear: 1960,
+      vintageYear: 2024,
+    });
+
+    // Unlensed: the group folds all three of its members.
+    await expect
+      .element(page.getByRole("link", { name: /Inkomstbegrepp/ }))
+      .toBeVisible();
+    expect(variableRows(container).map(([name]) => name)).toEqual([
+      "Inkomstbegrepp 3 variables",
+      "Företag",
+    ]);
+
+    // A group row STANDS IN for its members, so the lens has to reach inside it:
+    // `arbetsstalle` is gone from the count…
+    await clickVariantChip("Individer, 15 år och äldre");
+    await expect
+      .element(page.getByText("Showing 2 of 4 variables"))
+      .toBeVisible();
+    expect(variableRows(container).map(([name]) => name)).toEqual([
+      "Inkomstbegrepp 2 variables",
+    ]);
+
+    // …and from the row's filter keys with it — otherwise the row would still
+    // surface for a variable this variant never delivers.
+    await page
+      .getByRole("textbox", { name: /Filter variables/i })
+      .fill("arbetsstalle");
+    await expect
+      .element(page.getByText("No variables match “arbetsstalle”"))
+      .toBeVisible();
+  });
+
+  it("drops a group row whose last delivered member the lens takes (Y-82)", async () => {
+    vi.mocked(getCatalogNode).mockResolvedValue(
+      splitVariantGroupRegisterNode(),
+    );
+    vi.mocked(getRegisterVariants).mockResolvedValue(lisaVariants());
+
+    const { container } = await render(CatalogNodeView, {
+      fqidPath: "scb/lisa",
+      regMetaVersion: "test",
+      steward: "global",
+      windowMinYear: 1960,
+      vintageYear: 2024,
+    });
+
+    await expect
+      .element(page.getByRole("link", { name: /Inkomstbegrepp/ }))
+      .toBeVisible();
+
+    // `foretag` delivers no member of the group: the row goes with its last one.
+    await clickVariantChip("foretag");
+    await expect
+      .element(page.getByText("Showing 1 of 4 variables"))
+      .toBeVisible();
+    expect(variableRows(container)).toEqual([["Företag", "ForetagNr"]]);
+
+    // A lens that leaves ONE member leaves no group either — a group row standing
+    // in for nobody else is just its member, so the member's own row takes over,
+    // delivery column and all.
+    await clickVariantChip("foretag");
+    await clickVariantChip("Arbetsställen");
+    await expect
+      .element(page.getByText("Showing 1 of 4 variables"))
+      .toBeVisible();
+    expect(variableRows(container)).toEqual([["Arbetsställe", "ArbstNr"]]);
+  });
+
+  it("finds a FOLDED variable by its delivery column name (Y-82)", async () => {
+    vi.mocked(getCatalogNode).mockResolvedValue(groupedColumnRegisterNode());
+
+    const { container } = await render(CatalogNodeView, {
+      fqidPath: "scb/lisa",
+      regMetaVersion: "test",
+      steward: "global",
+      windowMinYear: 1960,
+      vintageYear: 2024,
+    });
+
+    await page
+      .getByRole("textbox", { name: /Filter variables/i })
+      .fill("cdisp5");
+
+    // `CDISP5` is `disp`'s SECOND column name — it appears in no slug, fqid or
+    // label, so the group row can only surface through its members' columns.
+    expect(variableRows(container).map(([name]) => name)).toEqual([
+      "Inkomstbegrepp 2 variables",
+    ]);
+  });
+
+  it("shows no variant chips for a single-variant register (Y-82)", async () => {
+    vi.mocked(getCatalogNode).mockResolvedValue(columnedRegisterNode(1));
+
+    const { container } = await render(CatalogNodeView, {
+      fqidPath: "scb/lisa",
+      regMetaVersion: "test",
+      steward: "global",
+      windowMinYear: 1960,
+      vintageYear: 2024,
+    });
+
+    await expect.element(page.getByText("Kon", { exact: true })).toBeVisible();
+    expect(container.querySelector(".variant-filter")).toBeNull();
+    expect(container.querySelectorAll('input[type="checkbox"]')).toHaveLength(
+      0,
+    );
   });
 
   it("makes a variable leaf-row link keyboard-focusable inside the table cell", async () => {

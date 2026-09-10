@@ -1,7 +1,6 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
-import { getRegisterVariants } from "./api";
 import VariantsSummary from "./VariantsSummary.svelte";
 import {
   datedVersions,
@@ -9,14 +8,9 @@ import {
   variantsResponse,
 } from "./variants-test-helpers";
 
-vi.mock("./api", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("./api")>();
-  return { ...actual, getRegisterVariants: vi.fn() };
-});
-
-beforeEach(() => {
-  vi.mocked(getRegisterVariants).mockReset();
-});
+// Presentational since Y-82 — `CatalogNodeView` fetches the list once for the page
+// (its variant chips name their variants out of it) and hands it down, so these
+// render with the response as a prop instead of mocking the GET.
 
 /** The slug lines of every row, in render order. */
 function slugsOf(container: HTMLElement): string[] {
@@ -27,30 +21,29 @@ function slugsOf(container: HTMLElement): string[] {
 
 describe("VariantsSummary — one row per variant family (Y-79)", () => {
   it("folds a family into one row with its slugs, span and a link to the page", async () => {
-    vi.mocked(getRegisterVariants).mockResolvedValue(
-      variantsResponse(
-        // Slug order out of the catalog puts the successor first.
-        variant("individer-15plus", {
-          name: "Individer, 15 år och äldre",
-          variant_family: "individer-15plus",
-          variant_family_label: "Individer",
-          versions: datedVersions(2010, 2023),
-        }),
-        variant("individer-16plus", {
-          name: "Individer, 16 år och äldre",
-          variant_family: "individer-15plus",
-          variant_family_label: "Individer",
-          versions: datedVersions(1990, 2009),
-        }),
-        variant("arbetsstallen", {
-          name: "Arbetsställen",
-          versions: datedVersions(2005, 2023),
-        }),
-      ),
+    const variants = variantsResponse(
+      // Slug order out of the catalog puts the successor first.
+      variant("individer-15plus", {
+        name: "Individer, 15 år och äldre",
+        variant_family: "individer-15plus",
+        variant_family_label: "Individer",
+        versions: datedVersions(2010, 2023),
+      }),
+      variant("individer-16plus", {
+        name: "Individer, 16 år och äldre",
+        variant_family: "individer-15plus",
+        variant_family_label: "Individer",
+        versions: datedVersions(1990, 2009),
+      }),
+      variant("arbetsstallen", {
+        name: "Arbetsställen",
+        versions: datedVersions(2005, 2023),
+      }),
     );
 
     const { container } = await render(VariantsSummary, {
       registerFqid: "scb/lisa",
+      variants,
     });
 
     await expect
@@ -73,12 +66,11 @@ describe("VariantsSummary — one row per variant family (Y-79)", () => {
   });
 
   it("leaves the year cell empty for a variant with no dated versions", async () => {
-    vi.mocked(getRegisterVariants).mockResolvedValue(
-      variantsResponse(variant("combined", { name: "Combined register" })),
-    );
-
     const { container } = await render(VariantsSummary, {
       registerFqid: "scb/lisa",
+      variants: variantsResponse(
+        variant("combined", { name: "Combined register" }),
+      ),
     });
 
     await expect
@@ -89,9 +81,11 @@ describe("VariantsSummary — one row per variant family (Y-79)", () => {
   });
 
   it("surfaces a failed load as an alert", async () => {
-    vi.mocked(getRegisterVariants).mockRejectedValue(new Error("boom"));
-
-    await render(VariantsSummary, { registerFqid: "scb/lisa" });
+    await render(VariantsSummary, {
+      registerFqid: "scb/lisa",
+      variants: null,
+      error: "Error: boom",
+    });
 
     await expect
       .element(page.getByRole("alert"))
@@ -105,12 +99,9 @@ describe("VariantsSummary — hide the section without a real variant (#673/M4)"
     // registers and the synthesized default for others). A register whose only
     // "variant" is _default has no real variant axis → no section, no heading,
     // no link to a page with nothing on it.
-    vi.mocked(getRegisterVariants).mockResolvedValue(
-      variantsResponse(variant("_default")),
-    );
-
     const { container } = await render(VariantsSummary, {
       registerFqid: "scb/sol",
+      variants: variantsResponse(variant("_default")),
     });
 
     expect(
@@ -123,10 +114,9 @@ describe("VariantsSummary — hide the section without a real variant (#673/M4)"
   });
 
   it("renders NOTHING for an empty variant list", async () => {
-    vi.mocked(getRegisterVariants).mockResolvedValue(variantsResponse());
-
     const { container } = await render(VariantsSummary, {
       registerFqid: "scb/empty",
+      variants: variantsResponse(),
     });
 
     expect(
@@ -141,15 +131,12 @@ describe("VariantsSummary — hide the section without a real variant (#673/M4)"
     // ≥1 real variant → render the FULL list unchanged; _default is NOT filtered
     // out of a mixed list (out of scope), so it still appears alongside the real
     // one — only the all-_default/empty cases suppress the section.
-    vi.mocked(getRegisterVariants).mockResolvedValue(
-      variantsResponse(
+    const { container } = await render(VariantsSummary, {
+      registerFqid: "scb/lisa",
+      variants: variantsResponse(
         variant("individer", { name: "Individer" }),
         variant("_default"),
       ),
-    );
-
-    const { container } = await render(VariantsSummary, {
-      registerFqid: "scb/lisa",
     });
 
     await expect

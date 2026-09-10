@@ -833,6 +833,7 @@ import {
   groupFilterKeys,
   memberAt,
   membersHaveUniqueCoords,
+  narrowGroupsToMembers,
 } from "./catalog";
 
 /** A minimal `VariableGraphNode` — only the fields the #670 focus-node header
@@ -900,9 +901,72 @@ describe("foldGroupedRows", () => {
   });
 });
 
+describe("narrowGroupsToMembers (Y-82 variant lens)", () => {
+  const threeMember = group({
+    members: [
+      ...group({}).members,
+      {
+        fqid: "scb/lisa/inkmar",
+        name: "Inkomst i mars",
+        facets: [{ axis: "month", value: "03", label: "mars" }],
+      },
+    ],
+  });
+
+  it("rebuilds a group over the present members, so its count and keys narrow with it", () => {
+    const [narrowed] = narrowGroupsToMembers(
+      [threeMember],
+      [{ fqid: "scb/lisa/inkjan" }, { fqid: "scb/lisa/inkmar" }],
+    );
+    expect(narrowed.members.map((m) => m.fqid)).toEqual([
+      "scb/lisa/inkjan",
+      "scb/lisa/inkmar",
+    ]);
+    // The row answers for its members: a member the lens dropped must not stay
+    // findable through the row that folded it.
+    expect(groupFilterKeys(narrowed, () => [])).not.toContain(
+      "Inkomst i februari",
+    );
+  });
+
+  it("drops a group the lens leaves with one member — that member is a leaf row", () => {
+    expect(
+      narrowGroupsToMembers([threeMember], [{ fqid: "scb/lisa/inkjan" }]),
+    ).toEqual([]);
+  });
+
+  it("drops a group the lens empties", () => {
+    expect(narrowGroupsToMembers([threeMember], [])).toEqual([]);
+  });
+
+  it("counts DISTINCT members, so a representation group of one variable goes too", () => {
+    // #819: representation members share one `fqid` across delivery columns —
+    // two members on one variable are still one variable, not a group.
+    const rep = group({
+      members: [
+        { fqid: "scb/lisa/disp", name: "Disp", facets: [] },
+        { fqid: "scb/lisa/disp", name: "Disp", facets: [] },
+      ],
+    });
+    expect(narrowGroupsToMembers([rep], [{ fqid: "scb/lisa/disp" }])).toEqual(
+      [],
+    );
+  });
+
+  it("leaves a fully delivered group alone", () => {
+    expect(
+      narrowGroupsToMembers([threeMember], threeMember.members)[0].members,
+    ).toHaveLength(3);
+  });
+});
+
 describe("groupFilterKeys", () => {
+  /** The register page supplies real delivery columns (Y-82); these cases are
+   * about the group's OWN keys, so they hand it nothing. */
+  const noColumns = (): string[] => [];
+
   it("carries the label/key plus every member's name, FQID, leaf slug, delivery column, and facet label/value (#322, #674, #819)", () => {
-    expect(groupFilterKeys(group({}))).toEqual([
+    expect(groupFilterKeys(group({}), noColumns)).toEqual([
       "Inkomst",
       "ink",
       // januari member: name, fqid, leaf slug, (no delivery column), facet label+value
@@ -958,17 +1022,29 @@ describe("groupFilterKeys", () => {
         },
       ],
     } as unknown as Partial<ConceptGroup>);
-    const keys = groupFilterKeys(repGroup);
+    const keys = groupFilterKeys(repGroup, noColumns);
     expect(keys).toContain("CDISP5");
     expect(keys).toContain("Exkl. kapitalvinst");
     // And rankFilter actually surfaces the group on those needles.
     const rows = [{ id: "other" }, { id: "disp-group", group: repGroup }];
     const keysOf = (r: (typeof rows)[number]): (string | null | undefined)[] =>
-      "group" in r && r.group ? groupFilterKeys(r.group) : ["unrelated"];
+      "group" in r && r.group
+        ? groupFilterKeys(r.group, noColumns)
+        : ["unrelated"];
     expect(rankFilter(rows, "CDISP5", keysOf)[0].id).toBe("disp-group");
     expect(rankFilter(rows, "exkl. kapitalvinst", keysOf)[0].id).toBe(
       "disp-group",
     );
+  });
+
+  it("indexes a member's Y-82 delivery column names so a folded variable stays findable by column", () => {
+    // `forvink-ers` is delivered as `ForvErs` — a name in neither its slug nor
+    // its label. Folding it into a group must not hide it from that needle.
+    const keys = groupFilterKeys(group({}), (fqid) =>
+      fqid === "scb/lisa/inkjan" ? ["ForvErs", "ForvErsNetto"] : [],
+    );
+    expect(keys).toContain("ForvErs");
+    expect(keys).toContain("ForvErsNetto");
   });
 
   it("ranks the folding group at exact/prefix tier on a member-slug needle (#674)", () => {
@@ -982,7 +1058,7 @@ describe("groupFilterKeys", () => {
       { id: "ink-group", group: group({}) },
     ];
     const keysOf = (r: Row): (string | null | undefined)[] =>
-      r.group ? groupFilterKeys(r.group) : [`zzz-inkjan-zzz`];
+      r.group ? groupFilterKeys(r.group, noColumns) : [`zzz-inkjan-zzz`];
     const ranked = rankFilter(rows, "inkjan", keysOf);
     expect(ranked[0].id).toBe("ink-group");
   });

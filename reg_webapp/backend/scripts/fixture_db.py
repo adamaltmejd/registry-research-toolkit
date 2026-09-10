@@ -141,6 +141,21 @@ def build_catalog_fixture_db(db_path: Path) -> None:
         register_variant_id=20,
         delivery_column_name="Syss",
     )
+    # Y-82: a variable ONLY the `quarterly` variant delivers, so `scb/rams` is a
+    # register whose variables arrive from two variants — the shape the register
+    # page's variant filter chips exist for. Without it no fixture route renders
+    # them (single-variant registers deliberately show none).
+    add_variable(
+        src, register_id=2, var_id=78, name="Sysselsättning kvartal", slug="syss-kv"
+    )
+    add_state(
+        src,
+        register_id=2,
+        variable_slug="syss-kv",
+        register_variant_id=21,
+        valid_from="2005-01-01",
+        delivery_column_name="SyssKv",
+    )
     # A curated same_as edge kon→syss so the kon leaf embeds a same_as ref.
     src.execute(
         "INSERT INTO variable_same_as "
