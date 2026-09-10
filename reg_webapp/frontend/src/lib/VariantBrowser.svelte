@@ -113,14 +113,19 @@ function objectTypeRows(objectType: {
           {#if entry.isFamily}
             <!-- A curated succession family reads as ONE variant with a changed
                  frame: its segments name what the family label doesn't already
-                 say, plus the years each was delivered. -->
-            <p class="entry-meta">
-              {#each entry.segments as segment, i (segment.variant.slug)}
-                {#if i > 0}{" · "}{/if}{segment.name}
-                <span class="years">{segment.span}</span>
+                 say, plus the years each was delivered. One LINE per segment —
+                 the boundary between two frames is markup, not a separator
+                 glyph, so it survives a narrow width and reads as two items to
+                 a screen reader. -->
+            <ul class="entry-segments">
+              {#each entry.segments as segment (segment.variant.slug)}
+                <li>
+                  {segment.name}
+                  <span class="years">{segment.span}</span>
+                </li>
               {/each}
-            </p>
-          {:else if showsDistinctGroup(entry.segments[0].variant.name, entry.segments[0].variant.display_group)}
+            </ul>
+          {:else if showsDistinctGroup(entry.label, entry.segments[0].variant.display_group)}
             <!-- Omit display_group when it just repeats `name` (the common case;
                  "Arbetsställen Arbetsställen") — trimmed compare, see the helper. -->
             <p class="entry-meta">{entry.segments[0].variant.display_group}</p>
@@ -129,7 +134,7 @@ function objectTypeRows(objectType: {
             <section class="segment">
               <!-- The concrete coordinate a project source extracts. The years
                    live on the folded blocks below (and, for a family, in the
-                   segments line above), so the slug is all this line owes. -->
+                   segments list above), so the slug is all this line owes. -->
               <h4 class="segment-id">
                 <code class="slug">{segment.variant.slug}</code>
               </h4>
@@ -209,12 +214,17 @@ function objectTypeRows(objectType: {
     font-size: var(--text-h3);
     font-weight: var(--heading-weight);
   }
-  .entry-meta {
+  .entry-meta,
+  .entry-segments {
     margin: var(--space-1) 0 0;
     color: var(--text-muted);
     font-size: var(--text-sm);
   }
-  /* A year is a machine value even inside a prose segments line. */
+  .entry-segments {
+    list-style: none;
+    padding: 0;
+  }
+  /* A year is a machine value wherever it lands. */
   .years {
     font-family: var(--font-mono);
   }

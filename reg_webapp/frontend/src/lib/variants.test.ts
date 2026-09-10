@@ -50,17 +50,47 @@ describe("foldVersions", () => {
     ]);
   });
 
-  it("passes over a delivery that carries no text, so it can't split a run", () => {
+  it("lets a delivery with no text terminate the run it interrupts", () => {
     const blocks = foldVersions([
       lisaVersion(2018, "16 år och äldre"),
       ...datedVersions(2019),
       lisaVersion(2020, "16 år och äldre"),
     ]);
 
-    expect(blocks).toHaveLength(1);
-    expect(blocks[0].label).toBe("2018–2020");
-    // The skipped delivery is not counted as a member of the run.
-    expect(blocks[0].count).toBe(2);
+    // 2019 carried no wording, so 2018 and 2020 must NOT fold across it: one
+    // 2018–2020 block would assert 2019 said what they said.
+    expect(blocks.map((block) => [block.label, block.count])).toEqual([
+      ["2018", 1],
+      ["2019", 1],
+      ["2020", 1],
+    ]);
+  });
+
+  it("keeps a text-free delivery as a block of its own, with nothing under it", () => {
+    // The delivery happened and a reader may be looking for it by name; it just
+    // has no wording to print — and none to fold with, in either direction.
+    const blocks = foldVersions(datedVersions(2018, 2019));
+
+    expect(blocks.map((block) => [block.label, block.count])).toEqual([
+      ["2018", 1],
+      ["2019", 1],
+    ]);
+    expect(blocks[0].version.description).toBeNull();
+    expect(blocks[0].version.populations).toEqual([]);
+  });
+
+  it("keeps two deliveries apart when their names differ by more than a year", () => {
+    // Identical prose, distinct deliveries. Only a YEAR difference folds:
+    // collapsing these would print one name for both.
+    const blocks = foldVersions([
+      { ...lisaVersion(2007, "16 år och äldre"), name: "Preliminär 2007" },
+      { ...lisaVersion(2007, "16 år och äldre"), name: "Slutlig 2007" },
+    ]);
+
+    expect(blocks.map((block) => block.version.name)).toEqual([
+      "Preliminär 2007",
+      "Slutlig 2007",
+    ]);
   });
 
   it("labels a lone delivery with its own year, and an undated one by name", () => {
@@ -75,15 +105,18 @@ describe("foldVersions", () => {
   });
 
   it("does not mistake a longer digit run for a year", () => {
-    // Mirrors reg_meta's `extract_year`: `12019` and `20190101` are not years,
-    // so two deliveries naming them are NOT year-equivalent and stay apart.
+    // Mirrors reg_meta's `extract_year`: `20190101` and `20200101` carry no
+    // year, so these two are NOT year-equivalent — two blocks, each labelled by
+    // the name its delivery came under.
     const blocks = foldVersions([
       { ...lisaVersion(2007, "16 år och äldre"), name: "20190101" },
       { ...lisaVersion(2007, "16 år och äldre"), name: "20200101" },
     ]);
 
-    expect(blocks).toHaveLength(1);
-    expect(blocks[0].label).toBe("20190101");
+    expect(blocks.map((block) => block.label)).toEqual([
+      "20190101",
+      "20200101",
+    ]);
   });
 });
 

@@ -8,9 +8,9 @@
  * measurement information, population and object type with only the year moved
  * on. Folding is DISPLAY-only: consecutive versions whose text is identical once
  * their years are normalized collapse into ONE block carrying the run's year
- * range, and a genuinely changed text opens the next block. Nothing here reads
- * or rewrites `register_version` content, and the delivered order is the block
- * order.
+ * range, and a genuinely changed text — or a delivery there is nothing to
+ * compare — opens the next block. Nothing here reads or rewrites
+ * `register_version` content, and the delivered order is the block order.
  *
  * Split in two so the register page pays only for what it shows: `groupVariants`
  * walks the variant rows and their version NAMES (cheap — it's what the summary
@@ -84,14 +84,16 @@ function variantLabel(variant: Variant): string {
 
 /** `display_group` duplicates `name` for most variants (SCB delivers them
  * identical), so a surface shows it only when it ADDS information. Compare
- * trimmed: some source rows carry trailing-whitespace noise on one side
- * ("…AGI/KU " vs "…AGI/KU") that a strict !== would treat as a difference,
- * re-printing the name. */
+ * against what the surface ALREADY rendered, not against `name`: a variant with
+ * no name is headed by its `display_group` (`variantLabel`), which a `name`
+ * comparison would then print a second time. Compare trimmed: some source rows
+ * carry trailing-whitespace noise on one side ("…AGI/KU " vs "…AGI/KU") that a
+ * strict !== would treat as a difference. */
 export function showsDistinctGroup(
-  name: string | null | undefined,
+  shown: string | null | undefined,
   group: string | null | undefined,
 ): boolean {
-  return !!group && group.trim() !== (name ?? "").trim();
+  return !!group && group.trim() !== (shown ?? "").trim();
 }
 
 /** Group a register's variants into browse entries, family members together.
@@ -129,7 +131,7 @@ export function groupVariants(variants: readonly Variant[]): VariantGroup[] {
   }
   return [...grouped.values()].map((entry) => {
     // The catalog orders variants by SLUG, which reads a family back-to-front
-    // ("15 år och äldre 2010–2023 · 16 år och äldre 1990–2009"). Order the
+    // (the 2010–2023 frame above the 1990–2009 one it replaced). Order the
     // segments by the year they were first delivered instead; a variant whose
     // versions name no year keeps its slug order, last.
     entry.members.sort((a, b) => firstYear(a.years) - firstYear(b.years));
@@ -148,25 +150,28 @@ export function groupVariants(variants: readonly Variant[]): VariantGroup[] {
 }
 
 /** Fold a variant's versions into blocks: consecutive versions whose text is
- * identical after year normalization become one block spanning their years. */
+ * identical after year normalization become one block spanning their years, and
+ * a version with no text to compare stands alone. */
 export function foldVersions(versions: readonly Version[]): VersionBlock[] {
-  /** A run under construction: the fold key it matches, plus the years and
-   * count its members contribute to the block. */
+  /** A run under construction: the fold key it matches — `null` for a delivery
+   * that can fold with nothing — plus the years and count its members
+   * contribute to the block. */
   interface VersionRun {
-    key: string;
+    key: string | null;
     version: Version;
     years: number[];
     count: number;
   }
   const runs: VersionRun[] = [];
   for (const version of versions) {
-    if (!hasText(version)) {
-      continue;
-    }
-    const key = foldKey(version);
+    // A delivery carrying no text says nothing two neighbours could agree on,
+    // so it folds with nothing AND terminates the run it interrupts: folding
+    // 2018 and 2020 across a text-free 2019 would assert that 2019 repeated a
+    // wording it never carried.
+    const key = hasText(version) ? foldKey(version) : null;
     const year = versionYear(version);
     const open = runs.at(-1);
-    if (open?.key === key) {
+    if (key !== null && open?.key === key) {
       open.count += 1;
       if (year !== null) {
         open.years.push(year);
@@ -182,11 +187,12 @@ export function foldVersions(versions: readonly Version[]): VersionBlock[] {
   }));
 }
 
-/** Whether a version says anything at all. One that carries only a name has
- * nothing to render — and, folded, would split an otherwise unchanged run in
- * two for no visible reason. reg_meta drops text-less population/object_type
- * rows for the same reason (`_has_text`, `catalog.py`); this is that rule one
- * level up. The variant's SPAN still counts the delivery (`variantYears`). */
+/** Whether a version says anything a reader could compare. A delivery carrying
+ * only a name is still a delivery — someone looking for "2019" must find it —
+ * so it gets its own (bodyless) block; what it can't do is fold, in either
+ * direction. reg_meta drops text-less population/object_type rows outright
+ * (`_has_text`, `catalog.py`), but there the row IS the text; here the row is
+ * the delivery. */
 function hasText(version: Version): boolean {
   return (
     !!version.description?.trim() ||
@@ -228,12 +234,17 @@ function yearRange(years: readonly number[]): string {
   return from === to ? `${from}` : `${from}–${to}`;
 }
 
-/** Every text field of a version with its years masked, so two deliveries that
- * differ ONLY in the year they name compare equal. Populations and object types
+/** Every text field of a version — its NAME included — with the years masked,
+ * so two deliveries that differ ONLY in the year they name compare equal. A
+ * year is the ONLY difference that folds: names that differ by anything else
+ * ("Preliminär" / "Slutlig", "20190101" / "20200101" — 9 `register_version`
+ * names in the corpus carry no year at all) are separate deliveries, and
+ * collapsing them would print one name for both. Populations and object types
  * ride the same key: a changed frame — the one thing worth reading in a wall of
  * repeats — opens a new block instead of folding away. */
 function foldKey(version: Version): string {
   return JSON.stringify([
+    version.name,
     version.description,
     version.measurement_information,
     (version.populations ?? []).map((population) => [

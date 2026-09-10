@@ -126,6 +126,98 @@ describe("VariantBrowser — folded versions (Y-79)", () => {
     // Nothing was folded, so there is no "which delivery is this" caveat.
     expect(container.querySelectorAll("p.as-delivered")).toHaveLength(0);
   });
+
+  it("renders every population and object type of a version, repeated names included", async () => {
+    // One delivery can carry two frames, and reg_meta may deliver both under
+    // the SAME name — the metadata loops are unkeyed precisely because a name
+    // is not an identity here, so neither row may collapse into the other.
+    vi.mocked(getRegisterVariants).mockResolvedValue(
+      variantsResponse(
+        variant("standard", {
+          name: "Standard",
+          versions: [
+            {
+              name: "2019",
+              description: "RAMS 2019 description",
+              measurement_information: "RAMS measurement information",
+              populations: [
+                {
+                  name: "Employees",
+                  definition: "People with employment income",
+                  comment: "Fixture population note",
+                  date_range: "2019",
+                },
+                {
+                  name: "Employees",
+                  definition: "People with employment income, second frame",
+                  comment: "Repeated name should not duplicate a Svelte key",
+                  date_range: "2020",
+                },
+              ],
+              object_types: [
+                { name: "Person", definition: "Individual worker" },
+                {
+                  name: "Person",
+                  definition: "Individual worker, second frame",
+                },
+              ],
+            },
+          ],
+        }),
+      ),
+    );
+
+    await render(VariantBrowser, { registerFqid: "scb/rams" });
+
+    await expect.element(page.getByText("RAMS 2019 description")).toBeVisible();
+    await expect
+      .element(page.getByText("RAMS measurement information"))
+      .toBeVisible();
+    await expect
+      .element(page.getByRole("heading", { name: "Population" }))
+      .toBeVisible();
+    expect(await page.getByText("Employees").all()).toHaveLength(2);
+    await expect
+      .element(page.getByText("People with employment income, second frame"))
+      .toBeVisible();
+    await expect
+      .element(page.getByRole("heading", { name: "Object type" }))
+      .toBeVisible();
+    expect(await page.getByText("Person").all()).toHaveLength(2);
+    await expect
+      .element(page.getByText("Individual worker, second frame"))
+      .toBeVisible();
+  });
+
+  it("keeps a text-free delivery visible instead of folding its neighbours across it", async () => {
+    vi.mocked(getRegisterVariants).mockResolvedValue(
+      variantsResponse(
+        variant("standard", {
+          name: "Standard",
+          versions: [
+            lisaVersion(2018, "16 år och äldre"),
+            // Delivered, named, but carrying no wording of its own.
+            ...datedVersions(2019),
+            lisaVersion(2020, "16 år och äldre"),
+          ],
+        }),
+      ),
+    );
+
+    const { container } = await render(VariantBrowser, {
+      registerFqid: "scb/lisa",
+    });
+
+    // 2019 is still there to be found…
+    for (const year of ["2018", "2019", "2020"]) {
+      await expect
+        .element(page.getByRole("heading", { name: `Version ${year}` }))
+        .toBeVisible();
+    }
+    // …and its neighbours did not fold across it into one 2018–2020 block that
+    // would put words in its mouth.
+    expect(container.querySelectorAll("section.version-meta")).toHaveLength(3);
+  });
 });
 
 describe("VariantBrowser — variant family segments (#376/Y-79)", () => {
@@ -166,12 +258,15 @@ describe("VariantBrowser — variant family segments (#376/Y-79)", () => {
       .element(page.getByRole("heading", { name: "Individer", exact: true }))
       .toBeVisible();
     expect(container.querySelectorAll("li.variant-entry")).toHaveLength(1);
-    // Its segments, oldest first, each with the years it was delivered.
-    await expect
-      .element(
-        page.getByText("16 år och äldre 1990–1991 · 15 år och äldre 2010–2011"),
-      )
-      .toBeVisible();
+    // Its segments, oldest first, each on its OWN line with the years it was
+    // delivered — the boundary is markup, not a separator glyph.
+    const segments = [...container.querySelectorAll("ul.entry-segments > li")];
+    expect(
+      segments.map((li) => li.textContent?.replace(/\s+/g, " ").trim()),
+    ).toEqual(["16 år och äldre 1990–1991", "15 år och äldre 2010–2011"]);
+    expect(
+      segments.map((li) => li.querySelector("span.years")?.textContent),
+    ).toEqual(["1990–1991", "2010–2011"]);
     // Both concrete slugs stay visible — a project source extracts one of them.
     await expect
       .element(page.getByText("individer-16plus", { exact: true }))
@@ -214,6 +309,31 @@ describe("VariantBrowser — variant family segments (#376/Y-79)", () => {
     const matches = page.getByText("Arbetsställen", { exact: true });
     await expect.element(matches).toBeVisible();
     expect(await matches.all()).toHaveLength(1);
+  });
+
+  it("heads a variant that has no name with its display_group, printed once", async () => {
+    vi.mocked(getRegisterVariants).mockResolvedValue(
+      variantsResponse(
+        variant("kuagg", {
+          // No `name`, so the entry heading itself falls back to the group —
+          // which must not then print a second time as the entry's meta line.
+          display_group: "KUAGG aggregat",
+          versions: datedVersions(2004),
+        }),
+      ),
+    );
+
+    const { container } = await render(VariantBrowser, {
+      registerFqid: "scb/lsum",
+    });
+
+    await expect
+      .element(page.getByRole("heading", { name: "KUAGG aggregat" }))
+      .toBeVisible();
+    expect(
+      await page.getByText("KUAGG aggregat", { exact: true }).all(),
+    ).toHaveLength(1);
+    expect(container.querySelectorAll("p.entry-meta")).toHaveLength(0);
   });
 
   it("shows display_group when it genuinely differs from the name", async () => {
