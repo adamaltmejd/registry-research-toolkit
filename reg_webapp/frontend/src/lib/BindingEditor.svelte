@@ -23,14 +23,15 @@ function strField(field: keyof Binding): string {
 }
 const variable = $derived(strField("variable"));
 
-// The row LEADS with the delivery column, because that is what the researcher
-// ordered and what lands in the extract: the pinned `representation` when the pick
-// chose between co-existing columns, else the `display_name` the picker resolved
-// and wrote at pick time (`bindingFieldsFromResolution` — the column the catalog
-// says this variable is delivered as). A binding carrying NEITHER is not broken —
-// a project_data.json authored outside this app has neither field and still orders
-// — it just has no column name of its own, so the FQID it was picked from leads
-// instead of a placeholder. Stamping a name here is not this row's job.
+// The row LEADS with the delivery column — that is what the researcher ordered and
+// what lands in the extract — but only where the FILE names it: the pinned
+// `representation` when the pick chose between co-existing columns, else an explicit
+// `display_name` where a hand-authored spec sets one. Carrying NEITHER is the
+// ORDINARY case, not a broken one — a pick writes neither, and neither does a
+// project_data.json authored outside this app (DESIGN.md § the cart model). Such a
+// binding's column name is the reg_meta default, which lives in the CATALOG, and this
+// read-only cart issues no catalog request — so the row leads with the FQID it was
+// picked from rather than a placeholder. Stamping a name here is not this row's job.
 const columnName = $derived(
   strField("representation") || strField("display_name"),
 );

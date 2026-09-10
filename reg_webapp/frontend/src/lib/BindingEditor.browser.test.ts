@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
 import BindingEditor from "./BindingEditor.svelte";
+import { bindingFieldsFromResolution } from "./catalog";
 import type { Binding } from "./project_data";
 import { projectStore } from "./project_store.svelte";
 
@@ -23,11 +24,15 @@ beforeEach(() => {
       {
         registerVariant: "scb/lisa/v1",
         period: 2020,
-        binding: {
-          variable: "scb/lisa/kon",
-          type: "categorical",
-          representation: "Kon",
-        },
+        // A fixture standing for a PICK is built by the picker's own mapping, so the
+        // pinned-column row cannot drift from what a pick writes (fixtures standing
+        // for a hand-authored file stay literals below).
+        binding: bindingFieldsFromResolution(
+          "scb/lisa/kon",
+          { kind: "derived", type: "categorical" },
+          "Kon",
+          { pinRepresentation: true },
+        ),
       },
     ],
   });
@@ -58,9 +63,9 @@ describe("BindingEditor read-only cart row", () => {
     expect(page.getByText("Advanced").query()).toBeNull();
   });
 
-  it("falls back to the resolved default column when no representation is pinned", async () => {
-    // What the picker writes for an unambiguous pick (`bindingFieldsFromResolution`
-    // → `display_name` = the resolved `delivery_column_name`, `representation` null).
+  it("leads with an explicit display_name where a file sets one", async () => {
+    // A hand-authored spec may set an explicit `display_name`; reg_schema makes it
+    // that binding's output column name, so it is the column the row leads with.
     const binding = {
       variable: "scb/lisa/adeldag",
       type: "opaque",
@@ -81,21 +86,25 @@ describe("BindingEditor read-only cart row", () => {
       .toBeVisible();
   });
 
-  it("leads with the variable FQID when the row carries no column name", async () => {
-    // A project_data.json authored outside this app carries neither field — and is
-    // still a valid, orderable draft. So the row leads with what the file DOES say
-    // (the FQID it was picked from) rather than a placeholder; nothing here invents
-    // a column name.
-    const binding = {
-      variable: "scb/lisa/kon",
-      type: "",
-    } as unknown as Binding;
+  it("leads with the variable FQID for a pick that names no column", async () => {
+    // The ORDINARY pick, through the picker's own mapping: ONE delivery column at
+    // the (variant, period) leaves `representation` null and no `display_name`, so
+    // the file names no column and the resolved default ("Kon") stays in the
+    // catalog this cart never reads. A project_data.json authored outside this app
+    // carries neither field either — one branch, so one test. The row leads with
+    // what the file DOES say rather than a placeholder; nothing here invents a name.
+    const binding = bindingFieldsFromResolution(
+      "scb/lisa/kon",
+      { kind: "derived", type: "categorical" },
+      "Kon",
+    );
     await render(BindingEditor, {
       sourceIndex: 0,
       bindingIndex: 0,
       binding,
     });
 
+    expect(page.getByText("Kon", { exact: true }).query()).toBeNull();
     expect(document.body.textContent).not.toContain("(no column name)");
     await expect
       .element(page.getByRole("link", { name: "scb/lisa/kon" }))
