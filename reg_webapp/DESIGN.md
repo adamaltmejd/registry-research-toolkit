@@ -759,13 +759,13 @@ variable pages to add one column each.
   `register_variant`, column)* through `rowAddSegments` — the same per-concrete-segment
   fan-out (#376) the variable page performs. Each row is single-segment and unfolded, so
   a tick authors exactly what the variable page's own row for that variant would.
-- **The staging stack is shared, not copied.** `staged_picker.ts` owns the whole
-  staged add → resolve → commit sequence (`stagedAddCandidates` → `applyStagedPicks`,
-  committing through `projectStore.applyStagedDiff`), and `StagedAddStatus.svelte` is the
-  one confirmation/refusal row. The binding leaf, the concept group and the register list
-  are hosts: they own their own selection and scope and nothing else. It was two copies
-  of the same forty lines before this ticket — the leaf-helper duplication CLAUDE.md
-  names.
+- **The staging stack is shared, not copied.** `staged_picker.ts` owns the whole staged
+  add → resolve → commit sequence (`stagedAddCandidates` → `applyStagedPicks`,
+  committing through `projectStore.applyStagedDiff`), and `StagedAddStatus.svelte` is
+  the one confirmation/refusal row. The binding leaf, the concept group and the register
+  list are hosts: they own their own selection and scope and nothing else. It was two
+  copies of the same forty lines before this ticket — the leaf-helper duplication
+  CLAUDE.md names.
 - **The study window IS the period here.** The list carries no Period control (that
   belongs to a subject page), so an add is clipped to the rail's window, and without one
   an open-ended column has no finite period to commit — the batch is refused whole
