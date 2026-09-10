@@ -19,8 +19,9 @@ import SourceEditor from "./SourceEditor.svelte";
 // delete only. No name / register_variant inputs, no variant picker, no
 // PeriodEditor. Y-75: the card is titled by its REGISTER (the thing the researcher
 // picked), the columns are called columns, and dropping a whole source asks first.
-// Y-80: that title is the register and variant AS THE CATALOG NAMES THEM, read from
-// the catalog (the draft holds only the coordinate), never a slug rule.
+// Y-80: the register and the variant are AS THE CATALOG NAMES THEM, read from the
+// catalog (the draft holds only the coordinate) and never a slug rule — and they are
+// composed as separate elements, not strung into one dot-joined heading.
 
 // Stub the three catalog GETs the card's names come from; keep the rest of api.ts
 // real (the types + path helpers `catalog.ts` uses) — the partial-mock pattern
@@ -165,7 +166,7 @@ describe("SourceEditor read-only cart card", () => {
   // `LISA`, `LISA_2`, `LISA_3`, which name nothing a researcher picked. The card is
   // titled by the REGISTER; the name stays visible as a detail because panels and
   // `OrderEntry.source` join on it. Y-80: by the register's CATALOG name.
-  it("titles the card with its register and variant, keeping the generated name as a detail", async () => {
+  it("heads the card with its register, qualified by its variant, keeping the generated name as a detail", async () => {
     const source = {
       name: "LISA_2",
       register_variant: "scb/lisa/individer-16plus",
@@ -175,9 +176,23 @@ describe("SourceEditor read-only cart card", () => {
     await renderCard(source);
 
     await expect
+      .element(page.getByRole("heading", { name: "LISA", exact: true }))
+      .toBeVisible();
+    // The variant that names the population qualifies the heading as its OWN
+    // element under it — nothing on the card strings the two into one line.
+    await expect
+      .element(page.getByText("Individer, 16 år och äldre", { exact: true }))
+      .toBeVisible();
+    expect(document.body.textContent).not.toContain("·");
+    // One provider in this deployment: the register name is unambiguous, so the
+    // card does not spend a row on the word every card would carry.
+    expect(page.getByText("Provider", { exact: true }).query()).toBeNull();
+    // The delete button says the same thing as a sentence, with the coordinate
+    // along to tell two cards on one register apart.
+    await expect
       .element(
-        page.getByRole("heading", {
-          name: "LISA · Individer, 16 år och äldre",
+        page.getByRole("button", {
+          name: "Remove source LISA, Individer, 16 år och äldre (scb/lisa/individer-16plus)",
           exact: true,
         }),
       )
@@ -206,15 +221,11 @@ describe("SourceEditor read-only cart card", () => {
     await renderCard(source);
 
     await expect
-      .element(
-        page.getByRole("heading", {
-          name: "LISA · Arbetsställen",
-          exact: true,
-        }),
-      )
+      .element(page.getByRole("heading", { name: "LISA", exact: true }))
       .toBeVisible();
-    // ONE catalog read per register, however many cards ask for it.
-    expect(vi.mocked(getRegisterVariants).mock.calls).toHaveLength(1);
+    await expect
+      .element(page.getByText("Arbetsställen", { exact: true }))
+      .toBeVisible();
   });
 
   it("reads two sources of one variant family as one family with a changed frame", async () => {
@@ -235,24 +246,24 @@ describe("SourceEditor read-only cart card", () => {
     } as unknown as Source;
     const view = await renderCard(older);
     await expect
-      .element(
-        page.getByRole("heading", {
-          name: "LISA · Individer, 16 år och äldre",
-          exact: true,
-        }),
-      )
+      .element(page.getByRole("heading", { name: "LISA", exact: true }))
+      .toBeVisible();
+    await expect
+      .element(page.getByText("Individer, 16 år och äldre", { exact: true }))
       .toBeVisible();
     view.unmount();
 
     await renderCard(newer);
     await expect
-      .element(
-        page.getByRole("heading", {
-          name: "LISA · Individer, 15 år och äldre",
-          exact: true,
-        }),
-      )
+      .element(page.getByRole("heading", { name: "LISA", exact: true }))
       .toBeVisible();
+    await expect
+      .element(page.getByText("Individer, 15 år och äldre", { exact: true }))
+      .toBeVisible();
+    // ONE variants read for the register both cards sit on: the name cache is keyed
+    // per register, so the second card — and every re-render of either — asks
+    // nothing. A cart of a hundred columns on one register makes this one request.
+    expect(vi.mocked(getRegisterVariants).mock.calls).toHaveLength(1);
   });
 
   it("titles a `_default` variant with the register alone", async () => {
@@ -275,9 +286,19 @@ describe("SourceEditor read-only cart card", () => {
     await expect
       .element(page.getByRole("heading", { name: "MiDAS", exact: true }))
       .toBeVisible();
+    // Naming no population, it adds no qualifying line — and none to the button.
+    expect(document.querySelector(".source-variant")).toBeNull();
+    await expect
+      .element(
+        page.getByRole("button", {
+          name: "Remove source MiDAS (fk/midas/_default)",
+          exact: true,
+        }),
+      )
+      .toBeVisible();
   });
 
-  it("qualifies the title with the provider NAME where the deployment has more than one", async () => {
+  it("names the provider that owns the register where the deployment has more than one", async () => {
     vi.mocked(getCatalogRoot).mockResolvedValue(
       rootResponse(
         { fqid: "scb", name: "Statistiska Centralbyrån" },
@@ -292,16 +313,25 @@ describe("SourceEditor read-only cart card", () => {
     } as unknown as Source;
     await renderCard(source, { providerQualified: true });
 
+    // The register still HEADS the card, qualified by the variant that names the
+    // population. The provider that OWNS it is an attribute of the register rather
+    // than part of the pick, so it joins the card's other named attributes as a
+    // LABELLED row — nothing on the card is a second unlabelled qualifier line.
     await expect
-      .element(
-        page.getByRole("heading", {
-          name: "Statistiska Centralbyrån · LISA · Individer, 15 år och äldre",
-          exact: true,
-        }),
-      )
+      .element(page.getByRole("heading", { name: "LISA", exact: true }))
       .toBeVisible();
-    // The rail's own spelling — never `slug.toUpperCase()`.
+    await expect
+      .element(page.getByText("Provider", { exact: true }))
+      .toBeVisible();
+    await expect
+      .element(page.getByText("Statistiska Centralbyrån", { exact: true }))
+      .toBeVisible();
+    await expect
+      .element(page.getByText("Individer, 15 år och äldre", { exact: true }))
+      .toBeVisible();
+    // The rail's own spelling — never `slug.toUpperCase()` — and never dot-strung.
     expect(document.body.textContent).not.toContain("SCB LISA");
+    expect(document.body.textContent).not.toContain("·");
   });
 
   it("shows the coordinate ALONE, exactly once, while the names are unavailable", async () => {
@@ -414,7 +444,9 @@ describe("SourceEditor read-only cart card", () => {
     const dialog = page.getByRole("alertdialog");
     await expect
       .element(dialog)
-      .toMatchTextContent(/Remove LISA · Individer 15\+ and its 2 columns\?/);
+      .toMatchTextContent(
+        /Remove the LISA source \(Individer 15\+\) and its 2 columns\?/,
+      );
     // Nothing has gone yet — the question is the whole effect of the first click.
     expect(projectStore.draft?.sources).toHaveLength(2);
 

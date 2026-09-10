@@ -108,10 +108,16 @@ export function catalogRootChildren(): Read<RootResponse["children"]> {
  * register name need its provider", and `/api/stats` remains the deployment's own
  * headline count on `/`. */
 export function providerQualified(): boolean {
-  const providers = (catalogRootChildren().value ?? []).filter(
-    (child) => child.kind === "provider",
-  );
-  return providers.length > 1;
+  return providersOf(catalogRootChildren()).length > 1;
+}
+
+/** The PROVIDER nodes of a root read — the root also carries the classification
+ * sentinel, which owns no register and qualifies no name. One spelling, so the
+ * count above and the gate in `sourceNames` cannot drift apart. */
+function providersOf(
+  root: Read<RootResponse["children"]>,
+): RootResponse["children"] {
+  return (root.value ?? []).filter((child) => child.kind === "provider");
 }
 
 /** The display names of one source's `register_variant` coordinate — all null until
@@ -151,16 +157,31 @@ export function sourceNames(registerVariant: string): SourceNames {
     return response.variants ?? [];
   });
   const loading = root.loading || registersRead.loading || variantsRead.loading;
+  // Trimmed to null, so "no name" is ONE condition: the heading falls back to the
+  // coordinate on a blank register name, and the gate below has to agree with it
+  // or the card shows a coordinate heading with a variant line beside it.
   const registerName =
-    (registersRead.value ?? []).find((r) => r.fqid === registerFqid)?.name ??
-    null;
+    (registersRead.value ?? [])
+      .find((r) => r.fqid === registerFqid)
+      ?.name?.trim() || null;
   const variantName = variantCardName(variantsRead.value ?? [], variant);
-  const named = !loading && registerName !== null && variantName !== null;
+  const providers = providersOf(root);
+  const providerName =
+    providers.find((child) => child.fqid === provider)?.name ?? null;
+  // The ROOT is part of the all-or-nothing: where the deployment serves more than
+  // one provider the title CARRIES the provider, so a root that failed — or that
+  // does not list this coordinate's provider — leaves the name incomplete, and an
+  // unqualified "MiDAS" would read as the unambiguous register of a
+  // single-provider deployment. `loading` already covers the root still being in
+  // flight; `root.value === null` covers it having settled with nothing.
+  const named =
+    !loading &&
+    root.value !== null &&
+    registerName !== null &&
+    variantName !== null &&
+    (providers.length < 2 || providerName !== null);
   return {
-    provider: named
-      ? ((root.value ?? []).find((child) => child.fqid === provider)?.name ??
-        null)
-      : null,
+    provider: named ? providerName : null,
     register: named ? registerName : null,
     // `_default` is named, and names no population — it contributes no word (#673).
     variant: named ? variantName || null : null,

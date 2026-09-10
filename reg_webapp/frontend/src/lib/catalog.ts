@@ -678,34 +678,26 @@ export function registerPrefixOf(registerVariant: string): string {
   return segs.length >= 2 ? `${segs[0]}/${segs[1]}` : "";
 }
 
-/** The TITLE of a source card in the cart: the register the source delivers from
- * and the concrete variant it extracts, in the CATALOG's own words —
- * `{register: "LISA", variant: "Individer, 16 år och äldre"}` → `"LISA · Individer,
- * 16 år och äldre"`. `provider` is the catalog's provider NAME, passed only where
- * the deployment serves more than one provider (a bare register name can stand for
- * two registers there); `variant` is absent for a `_default` variant, which names
- * no population — the register alone is then the whole title.
+/** The HEADING of a source card in the cart: the register the source delivers
+ * from, in the CATALOG's own word — `"LISA"`, `"MiDAS"`, never the slug
+ * uppercased, and never the source's `name`, which is a generated join key
+ * (`LISA_2`) rather than the thing the researcher picked.
+ *
+ * The rest of the title — the variant that names the population, and the provider
+ * where the deployment serves more than one — qualifies this heading as its own
+ * element beside it. The card composes them in MARKUP, not into one joined string:
+ * frontend/DESIGN.md rules out middle-dot meta strings, and separate lines survive
+ * a 375px width and read as separate things to a screen reader.
  *
  * Falls back to `coordinate` (the raw `register_variant`) whenever the register has
  * no name: while the catalog read is in flight, when it failed, and for a
  * coordinate outside this deployment's catalog. A machine coordinate is honest
- * there; an invented word would not be. NOT the source's `name`: that is a
- * generated join key (`LISA_2`), never the thing the researcher picked. */
-export function sourceCardTitle(
-  names: {
-    provider?: string | null;
-    register?: string | null;
-    variant?: string | null;
-  },
+ * there; an invented word would not be. */
+export function sourceCardHeading(
+  register: string | null | undefined,
   coordinate: string,
 ): string {
-  if (!names.register?.trim()) {
-    return coordinate;
-  }
-  return [names.provider, names.register, names.variant]
-    .map((word) => word?.trim() ?? "")
-    .filter((word) => word !== "")
-    .join(" · ");
+  return register?.trim() || coordinate;
 }
 
 /** The display word for the concrete `variant` slug among a register's `variants`

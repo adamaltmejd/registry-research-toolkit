@@ -6,6 +6,7 @@ import AppShell from "./AppShell.svelte";
 import type { RootResponse } from "./api";
 import { getCatalogRoot } from "./api";
 import { DATA_BROWSER_LABEL } from "./catalog";
+import { resetCatalogNames } from "./catalog_names.svelte";
 import type { ProjectData } from "./project_data";
 import { projectStore } from "./project_store.svelte";
 import { link, router } from "./router.svelte";
@@ -62,6 +63,9 @@ function setUrl(path: string): void {
 
 beforeEach(() => {
   setUrl("/");
+  // The rail reads the root through the shared name cache, a session singleton:
+  // a case that stubs a different answer must not be served the previous one.
+  resetCatalogNames();
   vi.mocked(getCatalogRoot).mockReset();
   vi.mocked(getCatalogRoot).mockResolvedValue(rootResponse("scb", "sos"));
 });
@@ -99,6 +103,24 @@ describe("AppShell — provider facets", () => {
     await expect
       .element(facets.getByRole("link", { name: "sos" }))
       .toBeVisible();
+  });
+
+  it("says the facets failed when the catalog root read fails", async () => {
+    // The rail's three states hang off ONE cached read: in flight, settled with a
+    // list (empty included — a catalog with no providers is not a failure), and
+    // settled with nothing, which is the only thing a failed read leaves behind.
+    // Y-80 moved that read into the name cache, so the error branch keys on
+    // `value === null` rather than on an `asyncResource` error string.
+    vi.mocked(getCatalogRoot).mockRejectedValue(new Error("offline"));
+    await render(AppShell, minimalProps());
+    await openDrawer();
+
+    const facets = page.getByRole("navigation", { name: "Providers" });
+    await expect.element(facets.getByRole("alert")).toBeVisible();
+    await expect
+      .element(facets.getByText("Failed to load providers."))
+      .toBeVisible();
+    expect(facets.getByRole("link").query()).toBeNull();
   });
 });
 

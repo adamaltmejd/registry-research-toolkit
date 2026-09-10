@@ -2059,24 +2059,32 @@ along with the store methods that only existed to serve them (`addSource`, `addB
 
 A cart row holds **coordinates, not words** — a `register_variant`, a variable FQID, and
 a `representation` only where a pick had to choose between co-existing columns — so the
-words a researcher recognizes are READ from the catalog (Y-80). A source card is titled
-`<register> · <variant>` in the catalog's own spellings ("LISA · Individer, 16 år och
-äldre"; the register alone for a `_default` variant, which names no population), never
-the slug uppercased, and qualified with the provider's name only where the deployment
-serves more than one provider — a fact `App.svelte` reads ONCE and threads down like
-`steward`. The coordinate itself stays on the card, in small mono. A column row leads
-with the delivery column it orders: an explicit `display_name` first (reg_schema makes
-it the binding's OUTPUT column name, so it wins even over a pinned `representation`),
-then the pinned `representation`, otherwise the name resolved from the catalog at THAT
-source's `(variant, period)` — where a column was renamed inside the period the current
-name leads and the superseded ones trail it in mono. Every such read goes through
-`catalog_names.svelte.ts`, a module-singleton cache keyed per read (the catalog root;
-one per provider, which names every register it owns; one per register's variant list;
-one per `(fqid, period, variant)`), so a hundred-column cart issues each request once
-and a re-render issues none; the shell's own facet rail reads the root through it too. A
-read in flight or a failed one leaves the row showing the coordinate it already holds —
-a machine coordinate is honest where an invented name is not — and nothing read is ever
-written back into the draft.
+words a researcher recognizes are READ from the catalog (Y-80). A source card is HEADED
+by its register in the catalog's own spelling ("LISA", "MiDAS" — never the slug
+uppercased), with the variant that names the population on its own line under the
+heading: the title is COMPOSED in markup, never strung into one `A · B · C` line, which
+frontend/DESIGN.md rules out. A `_default` variant names no population, so the register
+heads the card alone. The owning PROVIDER is not part of that title — it is an attribute
+of the register rather than something the researcher picked, and a second unlabelled
+line under the heading could not be told from the variant — so it heads the card's
+`KeyValue` metadata rows, labelled, and only where the deployment serves more than one
+provider: a fact `App.svelte` reads ONCE and threads down like `steward`. The removal
+dialog and the delete button's accessible name say the same thing as SENTENCES ("Remove
+the LISA source (Individer, 16 år och äldre) and its 2 columns?") rather than reciting
+the heading block. The coordinate itself stays on the card, in small mono. A column row
+leads with the delivery column it orders: an explicit `display_name` first (reg_schema
+makes it the binding's OUTPUT column name, so it wins even over a pinned
+`representation`), then the pinned `representation`, otherwise the name resolved from
+the catalog at THAT source's `(variant, period)` — where a column was renamed inside the
+period the current name leads and the superseded ones trail it in mono. Every such read
+goes through `catalog_names.svelte.ts`, a module-singleton cache keyed per read (the
+catalog root; one per provider, which names every register it owns; one per register's
+variant list; one per `(fqid, period, variant)`), so a hundred-column cart issues each
+request once and a re-render issues none; the shell's own facet rail reads the root
+through it too. A read in flight or a failed one — the root among them, since it is what
+says whether a register name needs its provider — leaves the row showing the coordinate
+it already holds: a machine coordinate is honest where an invented name is not. Nothing
+read is ever written back into the draft.
 
 This retires the \~400-line client-side **re-derivation engine** (`bindingDerivations` /
 `rederiveGen` / `rederiveSource` / `applyResolution` / `applyDerivedResult` and the

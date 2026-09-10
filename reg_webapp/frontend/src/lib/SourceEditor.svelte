@@ -1,6 +1,6 @@
 <script lang="ts">
 import BindingEditor from "./BindingEditor.svelte";
-import { fqidSegments, sourceCardTitle } from "./catalog";
+import { fqidSegments, sourceCardHeading } from "./catalog";
 import { sourceNames } from "./catalog_names.svelte";
 import { periodToWire } from "./period";
 import {
@@ -40,10 +40,10 @@ const { sourceIndex, source, issues, providerQualified } = $props<{
   sourceIndex: number;
   source: SafeSource;
   issues: ValidationIssue[];
-  /** Whether this deployment serves more than one provider, so the card's title
-   * carries the provider too ("Statistiska Centralbyrån · LISA · Individer, 16 år
-   * och äldre"). A deployment fact, read once in `App.svelte` and threaded down
-   * like `steward` — no route fetches it. */
+  /** Whether this deployment serves more than one provider, so the card names
+   * the provider that owns the register above its heading: a bare register name
+   * can stand for two registers there. A deployment fact, read once in
+   * `App.svelte` and threaded down like `steward` — no route fetches it. */
   providerQualified: boolean;
 }>();
 
@@ -53,32 +53,37 @@ const errorCount = $derived(rolledUp.filter((i) => i.level === "error").length);
 
 const registerVariant = $derived(safeSourceRegisterVariant(source));
 
-// The card's TITLE is the REGISTER this source delivers from and the concrete
-// VARIANT it extracts, in the catalog's own words ("LISA · Individer, 16 år och
-// äldre") — what the researcher picked, spelled as every other route spells it.
-// The names live only in the catalog, so they are READ from it (cached per
-// register); until they land the raw coordinate is the title. The source's `name`
-// is a generated join key (`LISA`, `LISA_2`, `LISA_3` for three variants of one
-// register), so it titles nothing; it stays visible as a detail row below because
-// panels join on it.
+// The card is HEADED by the REGISTER this source delivers from and qualified by the
+// concrete VARIANT it extracts, in the catalog's own words — what the researcher
+// picked, spelled as every other route spells it. The names live only in the
+// catalog, so they are READ from it (cached per register); until they land the raw
+// coordinate heads the card. The source's `name` is a generated join key (`LISA`,
+// `LISA_2`, `LISA_3` for three variants of one register), so it titles nothing; it
+// stays visible as a detail row below because panels join on it.
 const names = $derived(sourceNames(registerVariant));
 const sourceMalformed = $derived(source === null);
-const sourceTitle = $derived(
+const heading = $derived(
   sourceMalformed
     ? "(malformed source)"
-    : sourceCardTitle(
-        {
-          provider: providerQualified ? names.provider : null,
-          register: names.register,
-          variant: names.variant,
-        },
-        registerVariant,
-      ) || "(no register)",
+    : sourceCardHeading(names.register, registerVariant) || "(no register)",
 );
-// The title has fallen back to the raw coordinate: while the names are in flight,
+// The variant that names the POPULATION this source extracts: the one qualifier
+// that belongs in the title, under the heading, because it is what the researcher
+// picked alongside the register (the variant browser's own heading-plus-meta
+// shape). Absent until the whole name has landed — `sourceNames` is
+// all-or-nothing — so it cannot appear beside a coordinate heading.
+const variantName = $derived(names.variant);
+// The provider that OWNS the register is a different kind of thing: an attribute
+// of the register, not part of what was picked, and only worth saying where the
+// deployment serves more than one (elsewhere it is the same word on every card).
+// So it goes where this card puts its other named attributes — a labelled metadata
+// row — rather than as a second unlabelled line no reader could tell from the
+// variant.
+const providerName = $derived(providerQualified ? names.provider : null);
+// The heading has fallen back to the raw coordinate: while the names are in flight,
 // and wherever they cannot be read at all. It is then a machine identifier standing
 // in for a name, so it takes the machine face and prints only once on the card.
-const titleIsCoordinate = $derived(sourceTitle === registerVariant);
+const titleIsCoordinate = $derived(heading === registerVariant);
 // The concrete variant the source extracts, for the columns' own catalog resolve:
 // a column's default name is the one delivered at THIS variant and period.
 const variantSlug = $derived(fqidSegments(registerVariant)[2] ?? "");
@@ -96,13 +101,17 @@ const periodDisplay = $derived(
 );
 
 // The read-only coordinate rows, rendered through the shared KeyValue primitive
-// (#804) — same metadata-row styling ProjectEditor uses. The register_variant is a
-// machine FQID coordinate (mono): the source extracts that CONCRETE variant, so it
-// stays on the card even once the title names it in words — but only then, because
-// a title that has fallen back to the coordinate would otherwise print it twice.
+// (#804) — same metadata-row styling ProjectEditor uses. The provider heads them
+// where the deployment has more than one: it is a word, not an identifier, so it
+// takes no mono, and the label is what tells it from the variant in the title. The
+// register_variant is a machine FQID coordinate (mono): the source extracts that
+// CONCRETE variant, so it stays on the card even once the heading names it in
+// words — but only then, because a heading that has fallen back to the coordinate
+// would print it twice.
 // `name` is the panel/order join key (reg_meta `OrderEntry.source`) — a machine
 // identifier, so mono.
 const metaRows = $derived([
+  ...(providerName ? [{ label: "Provider", value: providerName }] : []),
   ...(titleIsCoordinate
     ? []
     : [{ label: "Register variant", value: registerVariant, mono: true }]),
@@ -113,6 +122,33 @@ const metaRows = $derived([
     mono: true,
   },
 ] satisfies KeyValueRow[]);
+
+// The removal question and the delete button's accessible name are SENTENCES, and
+// they name this source in words rather than reciting the heading and the line
+// under it: a heading is layout, copy is prose. A malformed slot, or a source
+// carrying no coordinate at all, has no words to be named by — the question then
+// says "this source", which the card around it already places, and the button
+// keeps its visible text as its whole name.
+const identified = $derived(!sourceMalformed && registerVariant !== "");
+const columnCount = $derived(
+  `${bindings.length} column${bindings.length === 1 ? "" : "s"}`,
+);
+const removeQuestion = $derived(
+  identified
+    ? `Remove the ${heading} source${variantName ? ` (${variantName})` : ""} and its ${columnCount}?`
+    : `Remove this source and its ${columnCount}?`,
+);
+// Two sources on the SAME register share a heading, and two in one succession
+// family differ by a few words of frame — so the concrete coordinate rides along
+// in the button's name, the one thing that always differs. Not where the heading
+// already IS that coordinate.
+const removeLabel = $derived(
+  identified
+    ? `Remove source ${heading}${variantName ? `, ${variantName}` : ""}${
+        titleIsCoordinate ? "" : ` (${registerVariant})`
+      }`
+    : undefined,
+);
 
 // Removing a source takes its whole column list with it, and nothing in the cart
 // puts them back (re-picking happens in the catalog), so it ASKS first — naming the
@@ -135,32 +171,37 @@ function confirmRemove(): void {
   aria-label="Source {sourceIndex + 1}"
 >
   <header class="source-head">
-    <!-- `aria-busy` while the catalog names are in flight: the title is showing the
-         coordinate as a stand-in, and the screenshot driver waits on it (see
+    <!-- The title is COMPOSED, not joined: the register HEADS the card and the
+         variant that names the population sits under it — two elements rather than
+         one dot-strung line (frontend/DESIGN.md rules out middle-dot meta strings).
+         They wrap independently at 375px and reach a screen reader as two things.
+         `aria-busy` covers the whole block while the catalog names are in flight:
+         the heading is showing the coordinate as a stand-in and the variant line is
+         not there yet, and the screenshot driver waits on it (see
          frontend/DESIGN.md → loading surfaces). -->
-    <h3
-      class:mono={titleIsCoordinate}
-      aria-busy={names.loading ? "true" : undefined}
-    >
-      {sourceTitle}
-      {#if errorCount > 0}
-        <!-- Status badge: cool error tone + ✕ glyph (aria-hidden); the count text
-             carries the meaning for assistive tech (DESIGN.md accent-vs-status). -->
-        <Tag tone="error">
-          {#snippet glyph()}✕{/snippet}
-          {errorCount} error{errorCount === 1 ? "" : "s"}
-        </Tag>
+    <div class="source-title" aria-busy={names.loading ? "true" : undefined}>
+      <h3 class:mono={titleIsCoordinate}>
+        {heading}
+        {#if errorCount > 0}
+          <!-- Status badge: cool error tone + ✕ glyph (aria-hidden); the count text
+               carries the meaning for assistive tech (DESIGN.md accent-vs-status). -->
+          <Tag tone="error">
+            {#snippet glyph()}✕{/snippet}
+            {errorCount} error{errorCount === 1 ? "" : "s"}
+          </Tag>
+        {/if}
+      </h3>
+      {#if variantName}
+        <p class="source-variant">{variantName}</p>
       {/if}
-    </h3>
+    </div>
     <!-- Per-source accessible name so a screen-reader controls list disambiguates
          the delete buttons (visible text kept as the label prefix — label-in-name).
-         Two sources on the SAME register share a title, so the concrete coordinate
-         — what actually differs between them — rides along in the name, unless the
-         title already IS that coordinate. -->
+         It is a sentence, not the heading block read back: see `removeLabel`. -->
     <Button
       variant="danger"
       size="sm"
-      aria-label={`Remove source ${sourceTitle}${registerVariant && !titleIsCoordinate ? ` (${registerVariant})` : ""}`}
+      aria-label={removeLabel}
       onclick={() => {
         removeOpen = true;
       }}
@@ -171,7 +212,7 @@ function confirmRemove(): void {
 
   <ConfirmDialog
     bind:open={removeOpen}
-    title={`Remove ${sourceTitle} and its ${bindings.length} column${bindings.length === 1 ? "" : "s"}?`}
+    title={removeQuestion}
   >
     {#snippet description()}
       The source leaves this project with every column it carries. Pick them again
@@ -273,20 +314,40 @@ function confirmRemove(): void {
     justify-content: space-between;
     gap: var(--space-3);
   }
+  /* The title block: the register heading with its variant line stacked under it on
+     the spacing rhythm. The heading stays FIRST, so `.source-head`'s baseline
+     alignment still puts the Remove button on the heading's own line. As a flex
+     child of `.source-head` this block defaults to `min-width: auto`, so a long
+     unbroken register name would refuse to shrink and overflow the card on mobile;
+     `min-width: 0` lets it shrink (#1110). */
+  .source-title {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    min-width: 0;
+  }
   .source-head h3 {
     margin: 0;
     font-weight: var(--heading-weight);
     display: flex;
     align-items: baseline;
     gap: var(--space-2);
-    /* As a flex child of `.source-head` the h3 defaults to `min-width: auto`, so a
-       long unbroken source name would refuse to shrink and overflow the card on
-       mobile. `min-width: 0` lets it shrink; `overflow-wrap: anywhere` (inherited by
-       the name text run, which itself becomes an anonymous flex item here) lowers
-       the text's min-content contribution so it breaks within the heading instead of
-       clipping. The error Tag sits in its own flex item, so the name absorbs the
-       shrink and the badge is not squeezed (#1110). */
+    /* `min-width: 0` + `overflow-wrap: anywhere` (inherited by the name text run,
+       which itself becomes an anonymous flex item here) lower the text's min-content
+       contribution so a long unbroken register name breaks within the heading
+       instead of clipping. The error Tag sits in its own flex item, so the name
+       absorbs the shrink and the badge is not squeezed (#1110). */
     min-width: 0;
+    overflow-wrap: anywhere;
+  }
+  /* The variant that names the POPULATION: a qualifier of the heading, not the
+     card's subject — muted at the small size, the treatment the variant browser
+     gives a variant's own metadata line under its name. It is a word, so it never
+     takes the machine face, even under a heading that has fallen back to one. */
+  .source-variant {
+    margin: 0;
+    font-size: var(--text-sm);
+    color: var(--text-muted);
     overflow-wrap: anywhere;
   }
   /* A title that has fallen back to the raw `register_variant` is an identifier, not

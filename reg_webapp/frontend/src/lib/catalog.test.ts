@@ -63,7 +63,7 @@ import {
   routeBreadcrumbs,
   rowAddPeriod,
   rowFacet,
-  sourceCardTitle,
+  sourceCardHeading,
   valueSetKeyForColumn,
   variantCardName,
   variantsHref,
@@ -2197,51 +2197,30 @@ describe("coexistingColumns (#902 shared overlap leaf)", () => {
 // Y-80: the cart holds coordinates, so it NAMES a source and its columns from the
 // catalog. These are the pure leaves that shape those names; the reads that feed
 // them are `catalog_names.svelte.ts`.
-describe("sourceCardTitle (the cart's source-card title)", () => {
-  it("reads register then variant, in the catalog's own words", () => {
-    expect(
-      sourceCardTitle(
-        { register: "LISA", variant: "Individer, 16 år och äldre" },
-        "scb/lisa/individer-16plus",
-      ),
-    ).toBe("LISA · Individer, 16 år och äldre");
-  });
-
-  it("shows the register alone when the variant names no population", () => {
-    // `_default` contributes no variant word (see `variantCardName`/`sourceNames`).
-    expect(
-      sourceCardTitle(
-        { register: "MiDAS", variant: null },
-        "fk/midas/_default",
-      ),
-    ).toBe("MiDAS");
-  });
-
-  it("qualifies with the provider name where the deployment serves more than one", () => {
-    expect(
-      sourceCardTitle(
-        {
-          provider: "Försäkringskassan",
-          register: "MiDAS",
-          variant: "Standard",
-        },
-        "fk/midas/standard",
-      ),
-    ).toBe("Försäkringskassan · MiDAS · Standard");
+describe("sourceCardHeading (the cart's source-card heading)", () => {
+  // The heading is the REGISTER and nothing else: the variant that names the
+  // population and, where the deployment needs it, the provider are their own
+  // elements on the card, composed in markup rather than strung into one line
+  // (frontend/DESIGN.md rules out middle-dot meta strings). So this helper takes
+  // one word and answers with one word.
+  it("is the register, in the catalog's own spelling", () => {
+    expect(sourceCardHeading("LISA", "scb/lisa/individer-16plus")).toBe("LISA");
+    // The catalog's spelling, never the slug uppercased.
+    expect(sourceCardHeading("MiDAS", "fk/midas/_default")).toBe("MiDAS");
   });
 
   it("falls back to the raw coordinate while the register has no name", () => {
     // Loading, failed, or outside this deployment's catalog — one answer for all
     // three: the coordinate the card already holds, never an invented word.
-    expect(sourceCardTitle({}, "scb/lisa/individer-16plus")).toBe(
+    expect(sourceCardHeading(null, "scb/lisa/individer-16plus")).toBe(
       "scb/lisa/individer-16plus",
     );
-    expect(
-      sourceCardTitle(
-        { provider: "Statistiska Centralbyrån", register: null },
-        "scb/lisa/individer-16plus",
-      ),
-    ).toBe("scb/lisa/individer-16plus");
+    expect(sourceCardHeading(undefined, "scb/lisa/individer-16plus")).toBe(
+      "scb/lisa/individer-16plus",
+    );
+    expect(sourceCardHeading("   ", "scb/lisa/individer-16plus")).toBe(
+      "scb/lisa/individer-16plus",
+    );
   });
 });
 
