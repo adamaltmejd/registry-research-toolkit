@@ -145,6 +145,14 @@ def test_register_children_carry_every_delivering_variant(catalog_db):
             "valid_to, data_type, delivery_column_name) "
             "VALUES (940, 11, '2020-01-01', '9999-12-31', 'int', 'CDISP5')"
         )
+        # Every state column is a `variable_alias` row too (the shipped DB's
+        # invariant), so this also holds the Y-93 alias pass to ONE delivery per
+        # state column rather than a duplicate beside it.
+        conn.executemany(
+            "INSERT INTO variable_alias (variable_id, register_variant_id, "
+            "delivery_column_name) VALUES (940, ?, ?)",
+            [(10, "CDISP"), (11, "CDISP5")],
+        )
 
     with TestClient(create_app()) as client:
         body = client.get("/api/catalog/scb/lisa").json()
@@ -157,6 +165,33 @@ def test_register_children_carry_every_delivering_variant(catalog_db):
     # Each delivery keeps its own window, not the variable's 1968– union.
     assert disp["deliveries"][0]["coverage"]["coverage_to"] == "2019-12-31"
     assert disp["deliveries"][1]["coverage"]["open_ended"] is True
+
+
+def test_register_children_carry_alias_backed_delivery_columns(client):
+    """Y-93: a column carried as `variable_alias` + `variable_alias_window` and
+    never as a state is a delivery too. The fixture's merged monthly family
+    (#319) `lonfink` holds ONE annual state on `LonFinkJan`; the register page
+    names all three month columns with their month windows, so a researcher
+    typing `LonFinkMars` in the filter finds the variable."""
+    body = client.get("/api/catalog/scb/lisa").json()
+    by_fqid = {c["fqid"]: c for c in body["children"] if c["kind"] == "binding"}
+    lonfink = by_fqid["scb/lisa/lonfink"]["deliveries"]
+    # Each month column carries its OWN window, not the annual state's — the
+    # state's own column included (its windows replace the base claim, as the
+    # binding leaf's `_expand_state_windows` reads it).
+    assert [
+        (
+            d["variant"],
+            d["column"],
+            d["coverage"]["coverage_from"],
+            d["coverage"]["coverage_to"],
+        )
+        for d in lonfink
+    ] == [
+        ("individer-15plus", "LonFinkFeb", "2018-02-01", "2018-02-28"),
+        ("individer-15plus", "LonFinkJan", "2018-01-01", "2018-01-31"),
+        ("individer-15plus", "LonFinkMars", "2018-03-01", "2018-03-31"),
+    ]
 
 
 def test_binding_leaf_embeds_full_record(client):

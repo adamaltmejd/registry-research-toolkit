@@ -244,6 +244,109 @@ def test_register_variable_deliveries() -> None:
     assert by_column[None].coverage_to == "2015-12-31"
 
 
+def _add_alias(
+    conn: sqlite3.Connection,
+    *,
+    variable_slug: str,
+    column: str,
+    windows: tuple[tuple[str, str], ...] = (),
+) -> None:
+    """One raw `variable_alias` row on the fixture's variant, plus its
+    `variable_alias_window` rows — the delivery-column history
+    `register_variable_deliveries` reads beside `variable_state`. Raw, like the
+    other window fixtures: the build writes these in the #319 family merge and
+    the #945 multi-alias expansion, not through a helper."""
+    variable_id = conn.execute(
+        "SELECT variable_id FROM variable WHERE slug = ?", (variable_slug,)
+    ).fetchone()[0]
+    conn.execute(
+        "INSERT OR IGNORE INTO variable_alias "
+        "(variable_id, register_variant_id, delivery_column_name) VALUES (?, 10, ?)",
+        (variable_id, column),
+    )
+    conn.executemany(
+        "INSERT INTO variable_alias_window (variable_id, register_variant_id, "
+        "delivery_column_name, valid_from, valid_to) VALUES (?, 10, ?, ?, ?)",
+        [(variable_id, column, lo, hi) for lo, hi in windows],
+    )
+
+
+def test_register_variable_deliveries_alias_backed_columns() -> None:
+    """Y-93: a column that exists only in `variable_alias` is a delivery too, so
+    the researcher who knows the variable by that name finds it. `lonfink` is
+    delivered as `LonFink` (the state's own column), `LonFinkFeb` (a #319 month
+    column, carried as alias windows alone) and `LonFinkHist` (an alias with no
+    windows) — three deliveries, each with its own coverage."""
+    conn = build_slugged_db()
+    add_variable(conn, register_id=1, var_id=600, name="Lon per manad", slug="lonfink")
+    add_state(
+        conn,
+        register_id=1,
+        variable_slug="lonfink",
+        register_variant_id=10,
+        valid_from="2018-01-01",
+        delivery_column_name="LonFink",
+    )
+    _add_alias(conn, variable_slug="lonfink", column="LonFink")
+    _add_alias(
+        conn,
+        variable_slug="lonfink",
+        column="LonFinkFeb",
+        windows=(("2018-02-01", "2018-02-28"), ("2019-02-01", "2019-02-28")),
+    )
+    _add_alias(conn, variable_slug="lonfink", column="LonFinkHist")
+
+    deliveries = Catalog(conn).register_variable_deliveries("scb", "lisa")
+
+    assert [(d.variant, d.column) for d in deliveries["lonfink"]] == [
+        ("individer-15plus", "LonFink"),
+        ("individer-15plus", "LonFinkFeb"),
+        ("individer-15plus", "LonFinkHist"),
+    ]
+    by_column = {d.column: d.coverage for d in deliveries["lonfink"]}
+    # The state's own column keeps its state window.
+    assert by_column["LonFink"].coverage_from == "2018-01-01"
+    assert by_column["LonFink"].open_ended is True
+    assert by_column["LonFink"].state_count == 1
+    # The windowed alias is delivered over ITS windows, not the state's.
+    assert by_column["LonFinkFeb"].coverage_from == "2018-02-01"
+    assert by_column["LonFinkFeb"].coverage_to == "2019-02-28"
+    assert by_column["LonFinkFeb"].open_ended is False
+    assert by_column["LonFinkFeb"].state_count == 2
+    # The unwindowed alias takes the owning state's window in that variant.
+    assert by_column["LonFinkHist"] == by_column["LonFink"]
+
+
+def test_register_variable_deliveries_state_column_that_is_also_an_alias() -> None:
+    """Y-93 (#945): a state whose own column ALSO carries alias windows — beside
+    a co-delivered spelling that exists nowhere in `variable_state` — is ONE
+    delivery, not two. A case twin of a listed column is that same column
+    (`py_lower`, the delivery-column rule), so it adds nothing either."""
+    conn = build_slugged_db()  # scb/lisa/kon: one open-ended state on `Kon`
+    _add_alias(
+        conn,
+        variable_slug="kon",
+        column="Kon",
+        windows=(("2018-01-01", "9999-12-31"),),
+    )
+    _add_alias(
+        conn,
+        variable_slug="kon",
+        column="Konkod",
+        windows=(("2018-01-01", "9999-12-31"),),
+    )
+    _add_alias(conn, variable_slug="kon", column="KON")
+
+    deliveries = Catalog(conn).register_variable_deliveries("scb", "lisa")
+
+    assert [(d.variant, d.column) for d in deliveries["kon"]] == [
+        ("individer-15plus", "Kon"),
+        ("individer-15plus", "Konkod"),
+    ]
+    assert deliveries["kon"][1].coverage.coverage_from == "2018-01-01"
+    assert deliveries["kon"][1].coverage.open_ended is True
+
+
 def test_coverage_bounds_mapping() -> None:
     # (coverage_from, coverage_to, open_ended).
     assert _coverage_bounds("2010-01-01", "9999-12-31") == ("2010-01-01", None, True)

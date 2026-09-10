@@ -703,6 +703,25 @@ joins SQLite drives from `variable_state` and scans the WHOLE table instead of s
   delivers the variable, so the row is KEPT — unlike `register_column_coverage`, whose
   per-column keys can't express a NULL key. Variants with a NULL slug are excluded
   (symmetric with `Catalog.list_variants`: an unslugged variant isn't addressable).
+- **Alias-backed columns (Y-93)**: `variable_state` names only the state's own column,
+  so a #319 monthly family (`LonFinkJan` … `LonFinkDec`) or a #945 co-delivered spelling
+  was absent from the listing and the filter found nothing under the name the researcher
+  knows. Two more reads — one aggregate over `variable_alias_window`, one listing of
+  `variable_alias`, each with the same LEFT-JOIN pinning and its own per-register
+  `SEARCH` — add them with the coverage each column is delivered over: a windowed column
+  over ITS windows, which replace the base state's claim where the two name the same
+  column (as `Catalog._expand_state_windows` expands it for the binding leaf); a column
+  with no window over the variant's states. Both are joined to `variable`, never to each
+  other: joining the window table to the alias table costs the join-order pinning and
+  the plan degrades to a catalog-wide `SCAN v`. This is the `get_datacolumns` view of
+  "delivered under" — every column of the alias history is a name to be found by — and
+  NOT the resolver's: a browse row names columns rather than promising a resolution,
+  which is why it keeps a window no state contains where `_expand_state_windows` drops
+  it (what a steward can actually deliver is the boot gate's question, and that one
+  reads the resolver — see reg_meta/DESIGN.md → Consistency gate against the catalog
+  DB). Columns are identified case-insensitively (`py_lower`, the rule the build
+  validates `variable_alias ⊇ state columns` with), so an alias that only re-spells a
+  listed column is that one delivery.
 - **Steward semantics**: for a filtered steward the deliveries are narrowed to
   `CatalogIndex.held_columns(fqid)` — the SAME held-column set the coverage recompute
   uses — so a partial-column hold names only the columns that steward actually holds.

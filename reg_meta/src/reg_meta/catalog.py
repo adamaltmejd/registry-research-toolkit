@@ -1389,19 +1389,41 @@ class Catalog:
         and NULL columns KEPT: the register page needs the column names a variable
         is delivered under (its filter matches them) and the variants that deliver
         it (its variant chips), which the column-keyed sibling can express for
-        neither. Rows are ordered `(slug, variant, column)` so the payload is
-        deterministic. A NULL-slug variant is excluded — it isn't browse-
-        addressable, so it can't be a `?variant=` coordinate either (symmetric
-        with `list_variants`).
+        neither. A NULL-slug variant is excluded — it isn't browse-addressable, so
+        it can't be a `?variant=` coordinate either (symmetric with
+        `list_variants`).
 
-        Both joins are LEFT, as in `register_variable_coverage`, purely to pin the
-        JOIN ORDER: with inner joins SQLite drives from `variable_state` and
-        `SCAN`s it whole — every state row in the catalog, not just this
-        register's. The two `IS NOT NULL` predicates restore inner-join semantics
-        (a stateless variable and an unslugged variant both drop out), so the
-        result is identical and the plan becomes a per-register
-        `SEARCH vs USING INDEX idx_variable_state_variable`."""
-        rows = self._conn.execute(
+        Y-93: `variable_state` names only the state's own column, so an
+        ALIAS-backed one — a #319 monthly family (`LonFinkJan` … `LonFinkDec`), a
+        #945 co-delivered spelling — was absent from the listing, and the
+        researcher who knows the variable by that name found nothing. Two more
+        per-register reads add them, with the coverage each column is delivered
+        over: a windowed alias over its own `variable_alias_window` rows (which
+        REPLACE the base state's claim when the alias IS the state's own column,
+        as `_expand_state_windows` expands it for the binding leaf), an alias with
+        no windows over the variant's states. This is the `get_datacolumns` view
+        of "delivered under" — every column of the alias history is a name to be
+        found by — and NOT the resolver's: unlike `_expand_state_windows` it does
+        not drop a window that no state contains, because a browse row names
+        columns rather than promising a resolution (what a steward can actually
+        deliver is `check_inventory`'s question, and it reads the resolver).
+        Columns are identified case-INSENSITIVELY (`py_lower`'s rule, which the
+        build validates `variable_alias ⊇ state columns` with), so an alias that
+        only re-spells a listed column is that one delivery, not a second.
+
+        Every join is LEFT, as in `register_variable_coverage`, purely to pin the
+        JOIN ORDER: with inner joins SQLite drives from the state / alias table
+        and `SCAN`s it whole — every row in the catalog, not just this register's.
+        The `IS NOT NULL` predicates restore inner-join semantics (a stateless
+        variable, an alias-less variable and an unslugged variant all drop out),
+        so the result is identical and each plan is a per-register `SEARCH v USING
+        COVERING INDEX idx_variable_slug` over its own indexed child. Joining the
+        window table to the alias table instead of to `variable` costs that
+        pinning (measured: `SCAN v` catalog-wide), so the windows are read as
+        their own aggregate and folded onto the columns here. Row order is
+        established by the final sort, not by SQL: the alias pass appends columns
+        no `ORDER BY` could have placed."""
+        state_rows = self._conn.execute(
             "SELECT v.slug AS slug, rv.slug AS variant, "
             "vs.delivery_column_name AS col, "
             "MIN(vs.valid_from) AS cov_from, MAX(vs.valid_to) AS cov_to, "
@@ -1415,25 +1437,106 @@ class Catalog:
             "WHERE p.slug = ? AND r.slug = ? AND v.slug IS NOT NULL "
             "  AND rv.slug IS NOT NULL "
             "GROUP BY v.variable_id, rv.register_variant_id, "
-            "  vs.delivery_column_name "
-            "ORDER BY v.slug, rv.slug, vs.delivery_column_name",
+            "  vs.delivery_column_name",
             (provider_slug, register_slug),
         ).fetchall()
-        out: dict[str, list[VariableDelivery]] = {}
-        for r in rows:
-            cov_from, cov_to, open_ended = _coverage_bounds(r["cov_from"], r["cov_to"])
-            out.setdefault(r["slug"], []).append(
-                VariableDelivery(
-                    variant=r["variant"],
-                    column=r["col"],
-                    coverage=VariableCoverage(
-                        coverage_from=cov_from,
-                        coverage_to=cov_to,
-                        open_ended=open_ended,
-                        state_count=r["nstates"],
-                    ),
-                )
+        window_rows = self._conn.execute(
+            "SELECT v.slug AS slug, rv.slug AS variant, "
+            "w.delivery_column_name AS col, "
+            "MIN(w.valid_from) AS cov_from, MAX(w.valid_to) AS cov_to, "
+            "COUNT(*) AS nwindows "
+            "FROM variable v "
+            "JOIN register r ON v.register_id = r.register_id "
+            "JOIN provider p ON r.provider_id = p.provider_id "
+            "LEFT JOIN variable_alias_window w ON w.variable_id = v.variable_id "
+            "LEFT JOIN register_variant rv "
+            "  ON rv.register_variant_id = w.register_variant_id "
+            "WHERE p.slug = ? AND r.slug = ? AND v.slug IS NOT NULL "
+            "  AND rv.slug IS NOT NULL AND w.delivery_column_name IS NOT NULL "
+            "GROUP BY v.variable_id, rv.register_variant_id, "
+            "  w.delivery_column_name",
+            (provider_slug, register_slug),
+        ).fetchall()
+        alias_rows = self._conn.execute(
+            "SELECT v.slug AS slug, rv.slug AS variant, "
+            "va.delivery_column_name AS col "
+            "FROM variable v "
+            "JOIN register r ON v.register_id = r.register_id "
+            "JOIN provider p ON r.provider_id = p.provider_id "
+            "LEFT JOIN variable_alias va ON va.variable_id = v.variable_id "
+            "LEFT JOIN register_variant rv "
+            "  ON rv.register_variant_id = va.register_variant_id "
+            "WHERE p.slug = ? AND r.slug = ? AND v.slug IS NOT NULL "
+            "  AND rv.slug IS NOT NULL AND va.delivery_column_name IS NOT NULL",
+            (provider_slug, register_slug),
+        ).fetchall()
+
+        # (slug, variant) -> {delivery column -> (cov_from, cov_to, count)}: the
+        # state grain first (exact spelling, as `register_column_coverage` keys
+        # it), widened by the two alias passes below.
+        columns: dict[
+            tuple[str, str], dict[str | None, tuple[str | None, str | None, int]]
+        ] = {}
+        # That variant's span over ALL its states — what an alias with no windows
+        # of its own is delivered over. Built from the state rows alone, so an
+        # added alias column can never widen it.
+        spans: dict[tuple[str, str], tuple[str, str, int]] = {}
+        for r in state_rows:
+            key = (r["slug"], r["variant"])
+            columns.setdefault(key, {})[r["col"]] = (
+                r["cov_from"],
+                r["cov_to"],
+                r["nstates"],
             )
+            prev = spans.get(key, (r["cov_from"], r["cov_to"], 0))
+            spans[key] = (
+                min(prev[0], r["cov_from"]),
+                max(prev[1], r["cov_to"]),
+                prev[2] + r["nstates"],
+            )
+        # Case-folded column -> the spelling already listed for that variant.
+        listed: dict[tuple[str, str], dict[str, str]] = {
+            key: {col.lower(): col for col in cols if col is not None}
+            for key, cols in columns.items()
+        }
+        # A column's own windows are the coverage it is delivered over, replacing
+        # the state's claim where the two name the same column.
+        for r in window_rows:
+            key = (r["slug"], r["variant"])
+            column = listed.setdefault(key, {}).setdefault(r["col"].lower(), r["col"])
+            columns.setdefault(key, {})[column] = (
+                r["cov_from"],
+                r["cov_to"],
+                r["nwindows"],
+            )
+        # What the alias history adds beyond those: a column with no window of its
+        # own, delivered over the variant's states.
+        for r in alias_rows:
+            key = (r["slug"], r["variant"])
+            column = listed.setdefault(key, {}).setdefault(r["col"].lower(), r["col"])
+            columns.setdefault(key, {}).setdefault(
+                column, spans.get(key, (None, None, 0))
+            )
+
+        out: dict[str, list[VariableDelivery]] = {}
+        for (slug, variant), variant_columns in sorted(columns.items()):
+            # A NULL column sorts first, where Y-82's SQL ORDER BY put it.
+            for column, (raw_from, raw_to, count) in sorted(
+                variant_columns.items(), key=lambda kv: (kv[0] is not None, kv[0] or "")
+            ):
+                cov_from, cov_to, open_ended = _coverage_bounds(raw_from, raw_to)
+                out.setdefault(slug, []).append(
+                    VariableDelivery(
+                        variant=variant,
+                        column=column,
+                        coverage=VariableCoverage(
+                            coverage_from=cov_from,
+                            coverage_to=cov_to,
+                            open_ended=open_ended,
+                            state_count=count,
+                        ),
+                    )
+                )
         return out
 
     def register_unnamed_column_coverage(
