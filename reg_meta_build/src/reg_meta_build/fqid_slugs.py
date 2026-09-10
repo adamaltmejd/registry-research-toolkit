@@ -22,7 +22,7 @@ import tomllib
 import unicodedata
 from collections import Counter, defaultdict
 from dataclasses import dataclass
-from itertools import groupby
+from itertools import combinations, groupby
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Literal, cast, get_args
 
@@ -37,7 +37,7 @@ from .id import is_canonical_scb
 
 if TYPE_CHECKING:
     import sqlite3
-    from collections.abc import Callable, Iterator, Mapping
+    from collections.abc import Callable, Iterator, Mapping, Sequence
 
 # A2.6: `register_version` is gone — the FQID grammar has no version segment;
 # version slugs are no longer curated or persisted, and the build-time
@@ -1958,6 +1958,72 @@ def _split_sibling_disc(
     return disc
 
 
+def _eras_overlap(per_variable: Sequence[list[tuple[str, str]]]) -> bool:
+    """Whether any two ``(valid_from, valid_to)`` windows from DIFFERENT variables
+    overlap. Both bounds are inclusive; a variable's own windows are never
+    compared with each other (multi-vintage states of one variable legitimately
+    share a window).
+
+    Bounds are the full-date ``YYYY-MM-DD`` storage contract (open-ended states
+    carry the ``9999-12-31`` sentinel, never NULL), so the comparison is lexical
+    and chronologically correct. Quadratic, over the states of the two or three
+    variables that share one column in a register.
+    """
+    return any(
+        a_from <= b_to and b_from <= a_to
+        for a, b in combinations(per_variable, 2)
+        for a_from, a_to in a
+        for b_from, b_to in b
+    )
+
+
+def _era_column_slugs(
+    conn: sqlite3.Connection, contested: Mapping[str, list[int]]
+) -> dict[int, str]:
+    """variable_id → column-derived slug for same-column variables whose delivery
+    eras never overlap. ``contested`` maps a column slug to the ≥2 first-sight
+    variables in one register deriving it.
+
+    One column can be delivered by two variables in DISJOINT eras — LISA's
+    ``ForvErs`` is var 31395 (1990–2021) and var 47670 (2022–2023, after SCB
+    re-minted the definition). That is two eras of one column, not a naming
+    conflict, so the set stays on the kolumnnamn arm: the earliest-starting
+    variable keeps the bare column slug and every later era takes ``<column
+    slug>-<its earliest valid_from year>`` (``forvers``, ``forvers-2022``). LISA's
+    ``anninkf`` / ``anninkf04`` / ``anninkf18`` chain is the same shape where SCB
+    minted the era suffix in the column itself. A set whose windows overlap
+    ANYWHERE is a genuine conflict and is omitted — the caller then sees the
+    unchanged shared column slug and falls to the name arm.
+
+    ALL of a variable's states carry its era, whether or not they name a delivery
+    column; every member has at least one (its column slug came from one).
+    Disjointness makes the order total: two variables sharing an earliest
+    ``valid_from`` would overlap there (``CHECK (valid_to >= valid_from)``), so
+    the bare slug always has exactly one claimant.
+    """
+    wanted = [vid for vids in contested.values() for vid in vids]
+    if not wanted:
+        return {}
+    windows: dict[int, list[tuple[str, str]]] = defaultdict(list)
+    for variable_id, valid_from, valid_to in conn.execute(
+        "SELECT variable_id, valid_from, valid_to FROM variable_state "
+        f"WHERE variable_id IN ({','.join('?' * len(wanted))})",
+        wanted,
+    ):
+        windows[variable_id].append((valid_from, valid_to))
+
+    era: dict[int, str] = {}
+    for column_slug, vids in contested.items():
+        if _eras_overlap([windows[vid] for vid in vids]):
+            continue
+        starts = {vid: min(f for f, _t in windows[vid]) for vid in vids}
+        first, *later = sorted(vids, key=starts.__getitem__)
+        era[first] = column_slug
+        for vid in later:
+            era[vid] = f"{column_slug}-{starts[vid][:4]}"
+    return era
+
+
 def populate_variable_slugs(
     conn: sqlite3.Connection,
     slug_dir: Path,
@@ -2017,7 +2083,8 @@ def populate_variable_slugs(
        column (#139's split-sibling discriminator basis — siblings share a name,
        so name collides and they route here).
     4. **kolumnnamn-derived**, when register-unique among first-sight variables
-       (the short, common case: ``kon``).
+       (the short, common case: ``kon``) — or shared only with disjoint-era
+       siblings, each re-based onto its era slug (:func:`_era_column_slugs`).
     5. **name-derived** (length-capped, :func:`_name_slug`) — when the
        kolumnnamn slug collides, is generic, or is absent.
     6. **``v<provider_key>``** last resort.
@@ -2327,8 +2394,9 @@ def populate_variable_slugs(
                     )
 
             # Pass 2: kolumnnamn-slug frequency among first-sight variables.
-            # A kol slug is usable directly only if exactly one pending variable
-            # derives it and it isn't already taken by a curated/auto slug.
+            # A kol slug is usable directly if exactly one pending variable
+            # derives it (or the sharers deliver it in disjoint eras, below) and
+            # it isn't already taken by a curated/auto slug.
             # Drifters (#143) are excluded from `kol_freq`: they won't claim
             # a latest-column slug, so they mustn't block a stable-column sibling
             # that legitimately wants it (a drifter's last column can equal an
@@ -2347,6 +2415,24 @@ def populate_variable_slugs(
                 vid: _name_slug(nm) for vid, _pk, nm, _k, _ek, drift in pending if drift
             }
             name_freq = Counter(s for s in name_slug_of.values() if s is not None)
+
+            # A shared kol slug is only a conflict when the sharers deliver it at
+            # the SAME time. Re-base a set that shares one column in DISJOINT eras
+            # onto its era slugs (`_era_column_slugs` — bare for the earliest,
+            # start-year-suffixed for the rest), so the kolumnnamn arm below sees
+            # each member as a register-unique column basis and `used`-checks it
+            # at assignment time like any other. A set that overlaps anywhere, or
+            # whose bare slug is already reserved by a curated/auto slug, is left
+            # sharing its column slug and falls to the name arm whole.
+            contested: dict[str, list[int]] = defaultdict(list)
+            for vid, _pk, _nm, _k, _ek, drift in pending:
+                ks = kol_slug[vid]
+                if not drift and ks is not None and kol_freq[ks] > 1 and ks not in used:
+                    contested[ks].append(vid)
+            for vid, era_base in _era_column_slugs(conn, contested).items():
+                kol_freq[kol_slug[vid]] -= 1
+                kol_slug[vid] = era_base
+                kol_freq[era_base] += 1
 
             # Pass 3: assign first-sight slugs via the fallback chain. `kind`
             # records WHICH arm produced the base (A4.4a provenance); it tracks

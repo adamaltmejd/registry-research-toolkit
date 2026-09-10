@@ -2059,7 +2059,15 @@ scales. The chain, first match wins:
 4. **kolumnnamn-derived** — register-unique latest **sluggable** column (the short,
    common case: `kon`). Columns that reject to NULL (reserved tokens / period-shaped /
    empty) are skipped (#547), so a non-drift variable doesn't lose a real earlier column
-   to a junk latest one. "Latest" = highest `valid_to`, lexically smallest on ties.
+   to a junk latest one. "Latest" = highest `valid_to`, lexically smallest on ties. *Era
+   rule*: two first-sight variables sharing a column are only a conflict when they
+   deliver it at the same time. When their `variable_state` windows are pairwise
+   disjoint, the earliest-starting one keeps the bare column slug and every later era is
+   re-based onto `<column slug>-<its earliest valid_from year>`, so both stay on this
+   arm and out of the curation worklist — LISA's `ForvErs` is `forvers` (var 31395,
+   1990–2021) and `forvers-2022` (var 47670, after SCB re-minted the definition), the
+   shape SCB itself minted in the `anninkf` / `anninkf04` / `anninkf18` columns. A set
+   that overlaps anywhere is a genuine conflict and falls to the name arm below.
 5. **name-derived**, length-capped to 60 chars on a hyphen boundary (`_name_slug`) —
    when the kolumnnamn slug collides, is generic, or is absent.
 6. **`v<provider_key>`** last resort (`v881`), prefixed to satisfy the leading-letter

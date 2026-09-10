@@ -1484,17 +1484,28 @@ class TestPopulateVariableSlugs:
         return row[0] if row else None
 
     @staticmethod
-    def _add_variable(conn: sqlite3.Connection, *, var_id: int, name: str, kol: str):
-        vid = conn.execute(
-            "INSERT INTO variable (register_id, provider_key, name) VALUES (1, ?, ?)",
-            (str(var_id), name),
-        ).lastrowid
-        conn.execute(
-            "INSERT INTO variable_state (variable_id, register_variant_id, "
-            "valid_from, valid_to, data_type, delivery_column_name) "
-            "VALUES (?, 10, '2018-01-01', '9999-12-31', 'int', ?)",
-            (vid, kol),
-        )
+    def _add_variable(
+        conn: sqlite3.Connection,
+        *,
+        var_id: int,
+        name: str,
+        kol: str,
+        eras: tuple[tuple[str, str], ...] = (("2018-01-01", "9999-12-31"),),
+    ):
+        """Variable + one `kol` state per era. The default era matches the fixture
+        variable's, so two variables sharing a column overlap unless a test says
+        otherwise."""
+        add_variable(conn, register_id=1, var_id=var_id, name=name)
+        for valid_from, valid_to in eras:
+            add_state(
+                conn,
+                register_id=1,
+                var_id=var_id,
+                register_variant_id=10,
+                valid_from=valid_from,
+                valid_to=valid_to,
+                delivery_column_name=kol,
+            )
         conn.commit()
 
     def test_auto_derives_and_persists(self, tmp_path: Path) -> None:
@@ -1668,6 +1679,83 @@ class TestPopulateVariableSlugs:
         d = self._slug_dir(tmp_path)
         populate_variable_slugs(conn, d)
         assert self._stored_slug(conn, 44) == "sysselsattning"
+
+    def test_disjoint_eras_share_the_column_slug(self, tmp_path: Path) -> None:
+        # LISA's `ForvErs`: var 31395 delivers it 1990–2021, var 47670 2022–2023
+        # (SCB re-minted the definition). Two eras of ONE column are not a naming
+        # conflict, so the column arm still applies — the earlier era takes the
+        # bare `forvers`, the later one carries its start year. The register-unique
+        # `ForvErsNetto` keeps its own short slug.
+        conn = self._db(kol="ForvErsNetto", name="Förvärvsinkomst netto")
+        self._add_variable(
+            conn,
+            var_id=31395,
+            name="Förvärvsinkomst",
+            kol="ForvErs",
+            # Two states that overlap EACH OTHER (a multi-vintage era): only
+            # cross-variable windows are compared, and the earliest start wins.
+            eras=(("1990-01-01", "2005-12-31"), ("2000-01-01", "2021-12-31")),
+        )
+        self._add_variable(
+            conn,
+            var_id=47670,
+            name="Förvärvsinkomst",  # identical name: only the era arm can split these
+            kol="ForvErs",
+            eras=(("2022-01-01", "2023-12-31"),),
+        )
+        d = self._slug_dir(tmp_path)
+        populate_variable_slugs(conn, d)
+        assert self._stored_slug(conn, 31395) == "forvers"
+        assert self._stored_slug(conn, 47670) == "forvers-2022"
+        assert self._stored_slug(conn, 44) == "forversnetto"
+        # Both are kolumnnamn-class: not name-fallback, not `+disambiguated`.
+        deriv = read_auto_derivations(d / f"scb{AUTO_FILE_SUFFIX}")
+        assert deriv["1.31395"] == "kolumnnamn"
+        assert deriv["1.47670"] == "kolumnnamn"
+
+    def test_overlapping_eras_still_fall_back_to_name(self, tmp_path: Path) -> None:
+        # Same column delivered at the SAME time by two variables is a genuine
+        # conflict — unchanged behavior, both fall to the name arm.
+        conn = self._db(kol="ForvErsNetto", name="Förvärvsinkomst netto")
+        self._add_variable(
+            conn,
+            var_id=31395,
+            name="Förvärvsinkomst",
+            kol="ForvErs",
+            eras=(("1990-01-01", "2021-12-31"),),
+        )
+        self._add_variable(
+            conn,
+            var_id=47670,
+            name="Förvärvsinkomst brutto",
+            kol="ForvErs",
+            eras=(("2010-01-01", "2023-12-31"),),  # overlaps 2010–2021
+        )
+        d = self._slug_dir(tmp_path)
+        populate_variable_slugs(conn, d)
+        assert self._stored_slug(conn, 31395) == "forvarvsinkomst"
+        assert self._stored_slug(conn, 47670) == "forvarvsinkomst-brutto"
+        deriv = read_auto_derivations(d / f"scb{AUTO_FILE_SUFFIX}")
+        assert deriv["1.31395"] == "name-fallback"
+        assert deriv["1.47670"] == "name-fallback"
+
+    def test_era_chain_ordered_by_earliest_start(self, tmp_path: Path) -> None:
+        # Three eras of one column, inserted OUT of chronological order: the
+        # bare slug follows the earliest `valid_from`, not the insertion order.
+        conn = self._db(kol="ForvErsNetto", name="Förvärvsinkomst netto")
+        for var_id, era in (
+            (3, ("2018-01-01", "9999-12-31")),
+            (1, ("1990-01-01", "2003-12-31")),
+            (2, ("2004-01-01", "2017-12-31")),
+        ):
+            self._add_variable(
+                conn, var_id=var_id, name="Förvärvsinkomst", kol="ForvErs", eras=(era,)
+            )
+        d = self._slug_dir(tmp_path)
+        populate_variable_slugs(conn, d)
+        assert self._stored_slug(conn, 1) == "forvers"
+        assert self._stored_slug(conn, 2) == "forvers-2004"
+        assert self._stored_slug(conn, 3) == "forvers-2018"
 
     def test_multiple_eras_single_slug(self, tmp_path: Path) -> None:
         # variable.slug is register-scoped (one row per variable), so multiple
