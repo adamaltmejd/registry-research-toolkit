@@ -773,13 +773,20 @@ variable pages to add one column each.
   (`ADD_WINDOW_REQUIRED_MESSAGE`) names the one control this page has, and retires the
   moment that control is used: setting the window clears the refusal but keeps the
   ticks, so "add again" is one press.
-- **Fidelity limit, deliberate**: `deliveries` carries a MIN/MAX coverage per (variant,
-  column), so a column delivered in SEPARATE eras commits its UNION span from the list,
-  where the variable page — which holds the states — carves the gap years out as the
-  #307 comma-union. Same for a sequential RENAME: the list ticks each column name on its
-  own (that is what Y-82 shows, and the name is what a researcher hunts for), where the
-  leaf folds the chain into one `representation: null` row over the union. The finer
-  surface is one click away and is linked from the same row.
+- **The list's windows are display grade; an add re-reads the states.** `deliveries`
+  carries a MIN/MAX coverage per (variant, column), which cannot express an
+  interruption: a column delivered 1990–1999 and again 2010–2020 reads there as
+  1990–2020. Printing that year range is what the list wants and costs no fetch per
+  listed variable — committing it would claim years the column was never delivered in.
+  So an Add re-reads each ticked VARIABLE's own states (`catalog.ts`
+  `exactDeliveryColumnRows`, one GET per ticked variable, on top of the per-add resolve)
+  and stages rows over the exact eras, which commit as the #307 comma-union exactly as
+  the variable page's do. A variable whose states can't be read refuses the whole batch
+  rather than falling back to the aggregate.
+- **Fidelity limit, deliberate**: a sequential RENAME. The list ticks each column name
+  on its own (that is what Y-82 shows, and the name is what a researcher hunts for),
+  where the leaf folds the chain into one `representation: null` row over the union. The
+  finer surface is one click away and is linked from the same row.
 - **The action bar is not sticky.** App's `.routed` is an `overflow-x: auto` scroll
   container so wide tables scroll horizontally, and that makes it the sticky scrollport:
   a `position: sticky; bottom: 0` bar there pins to a box that never scrolls vertically

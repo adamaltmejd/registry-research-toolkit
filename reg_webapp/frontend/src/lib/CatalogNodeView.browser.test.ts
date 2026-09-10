@@ -1095,16 +1095,21 @@ describe("CatalogNodeView register arm", () => {
 // tick, and one action adds every ticked column to the project through the same
 // staged add → resolve → commit stack the variable pages use.
 
-/** The `?period` resolve one staged add makes — a categorical state under the
- * variant it was staged for. */
-function resolvedState(variant: string, column: string): VariableStateModel {
+/** One state of a variable, as both GETs an Add makes return it: the `?period`
+ * resolve (so the committed binding carries a real type) and the per-variable read
+ * the exact delivery eras come off. */
+function columnState(
+  variant: string,
+  column: string,
+  { id = 1, from = "1990-01-01", to = "9999-12-31" } = {},
+): VariableStateModel {
   return {
-    state_id: 1,
+    state_id: id,
     variant,
     variant_label: null,
     register_variant_id: 1,
-    valid_from: "1990-01-01",
-    valid_to: "9999-12-31",
+    valid_from: from,
+    valid_to: to,
     data_type: "int",
     data_length: null,
     delivery_column_name: column,
@@ -1117,16 +1122,52 @@ function resolvedState(variant: string, column: string): VariableStateModel {
   };
 }
 
-/** The browse GET returns the register node; the staged adds' `?period` GETs
- * resolve to one state each, so a committed binding carries a real type. */
-function mockRegisterAndResolve(node: CatalogNode): void {
+/** A listed variable's own states, which an Add reads to stage the EXACT delivery
+ * eras rather than the list's MIN/MAX aggregate: one state per listed delivery, so
+ * a variable's history agrees with the aggregate by default. `eras` gives one
+ * variable's column the interrupted history the aggregate cannot express. */
+type ColumnedChild = {
+  fqid: string;
+  deliveries: ReturnType<typeof delivery>[];
+};
+
+function columnedLeafNode(
+  child: ColumnedChild,
+  eras: Record<string, [string, string][]>,
+): CatalogNode {
+  const states: VariableStateModel[] = [];
+  for (const d of child.deliveries) {
+    const spans = eras[`${child.fqid}::${d.column}`] ?? [
+      [d.coverage.coverage_from, d.coverage.coverage_to ?? "9999-12-31"],
+    ];
+    for (const [from, to] of spans) {
+      states.push(
+        columnState(d.variant, d.column, { id: states.length + 1, from, to }),
+      );
+    }
+  }
+  return {
+    kind: "binding",
+    fqid: child.fqid,
+    states,
+  } as unknown as CatalogNode;
+}
+
+/** The browse GET returns the register node; each ticked variable's own GET returns
+ * its states, and the staged adds' `?period` GETs resolve to one state each. */
+function mockRegisterAndResolve(
+  node: CatalogNode,
+  eras: Record<string, [string, string][]> = {},
+): void {
+  const children = (node as unknown as { children: ColumnedChild[] }).children;
   vi.mocked(getCatalogNode).mockImplementation(async (fqid, params) => {
     if (!params?.period) {
-      return node;
+      const child = children.find((c) => c.fqid === fqid);
+      return child === undefined ? node : columnedLeafNode(child, eras);
     }
     const variant = typeof params.variant === "string" ? params.variant : "";
     return {
-      states: [resolvedState(variant, fqid.split("/").at(-1) ?? "")],
+      states: [columnState(variant, fqid.split("/").at(-1) ?? "")],
     } as unknown as StatesResponse;
   });
 }
@@ -1270,6 +1311,55 @@ describe("CatalogNodeView register arm: add columns (Y-83)", () => {
     expect(
       projectStore.draft?.sources.map((source) => source.register_variant),
     ).toEqual(["scb/lisa/individer-15plus", "scb/lisa/individer-16plus"]);
+  });
+
+  it("commits an interrupted column as its real eras, not the list's aggregate span", async () => {
+    // The list reads `ForvErs` as 1990–2021, the MIN/MAX over its deliveries. The
+    // variable's own states say it was delivered 1990–1999 and again 2010–2021,
+    // with a decade in between that it was not.
+    mockRegisterAndResolve(columnedRegisterNode(1), {
+      "scb/lisa/forvink-ers::ForvErs": [
+        ["1990-01-01", "1999-12-31"],
+        ["2010-01-01", "2021-12-31"],
+      ],
+    });
+    windowStore.set({ from: 1995, to: 2015 });
+
+    await renderRegister();
+    await expect.element(page.getByText("Kön")).toBeVisible();
+    await tickColumn("ForvErs");
+    await page.getByRole("button", { name: "Add 1 column to project" }).click();
+
+    await expect.element(page.getByText("Applied +1 column")).toBeVisible();
+    // The gap years are carved out as the #307 list form — what the variable's own
+    // page commits, and NOT the single 1995–2015 span the aggregate would give.
+    expect(projectStore.draft?.sources[0]?.period).toEqual([
+      { from: 1995, to: 1999 },
+      { from: 2010, to: 2015 },
+    ]);
+  });
+
+  it("refuses the whole batch when a ticked variable's states can't be read", async () => {
+    const node = columnedRegisterNode(1);
+    vi.mocked(getCatalogNode).mockImplementation(async (fqid) => {
+      if (fqid === "scb/lisa") {
+        return node;
+      }
+      throw new Error("offline");
+    });
+    windowStore.set({ from: 2018, to: 2023 });
+
+    await renderRegister();
+    await expect.element(page.getByText("Kön")).toBeVisible();
+    await tickColumn("Kon");
+    await page.getByRole("button", { name: "Add 1 column to project" }).click();
+
+    // Without the states the exact eras are unknown, and the list's aggregate may
+    // claim years the column was never delivered in — so nothing is authored.
+    await expect
+      .element(page.getByText(/Could not read the delivery years/))
+      .toBeVisible();
+    expect(projectStore.draft?.sources).toEqual([]);
   });
 });
 

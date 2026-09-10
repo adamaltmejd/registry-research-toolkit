@@ -22,6 +22,7 @@ import {
   classGroupHref,
   countFoldedMembers,
   deliveryColumnRows,
+  exactDeliveryColumnRows,
   foldGroupedRows,
   type GroupedRow,
   groupFilterKeys,
@@ -363,6 +364,7 @@ $effect(() => {
   selectedVariants = new Set();
   selectedColumns = new Set();
   periodRequired = false;
+  columnsUnread = false;
   applyOutcome = null;
 });
 
@@ -538,7 +540,30 @@ function columnKey(fqid: string, name: string): string {
 let selectedColumns = $state(new Set<string>());
 let applying = $state(false);
 let periodRequired = $state(false);
+let columnsUnread = $state(false);
 let applyOutcome = $state<StagedApplyOutcome | null>(null);
+
+/** The refusal when an Add could not read a ticked variable's states, so the exact
+ * delivery eras are unknown. Nothing is authored — committing the list's aggregate
+ * span instead would claim years the column may never have been delivered in.
+ *
+ * Leads with the CHEAP remedy: a refusal keeps the ticks, so pressing Add again
+ * just retries the reads. Reload is the fallback for the other cause — a listed
+ * column the variable's own states no longer deliver, where only a fresh list agrees
+ * with them again. */
+const COLUMN_STATES_UNREAD_MESSAGE =
+  "Could not read the delivery years for a ticked column, so nothing was added — add again, or reload the page if it keeps failing.";
+
+/** The refusal line the bar shows, if any. Each Add sets BOTH gates' verdicts, so at
+ * most one is ever true: whichever refused, the batch was declined whole and the
+ * draft is untouched. */
+const addBlocked = $derived(
+  periodRequired
+    ? ADD_WINDOW_REQUIRED_MESSAGE
+    : columnsUnread
+      ? COLUMN_STATES_UNREAD_MESSAGE
+      : null,
+);
 
 function toggleColumn(fqid: string, name: string): void {
   const next = new Set(selectedColumns);
@@ -614,12 +639,59 @@ $effect(() => () => {
   unmounted = true;
 });
 
+/** The staged picks with every DISPLAY row replaced by the one built from its
+ * variable's own states, so an add commits the exact delivery eras and not the
+ * list's aggregate (which cannot show the gap between two eras — see
+ * `exactDeliveryColumnRows`). Matched on `pickerRowKey`, the STAGING identity: what
+ * commits is provably the row the researcher ticked and the "In project" marker
+ * reads, not a lookalike.
+ *
+ * Null refuses the WHOLE batch: a variable whose states can't be read, or that no
+ * longer delivers the ticked row, must not fall back to the approximated window.
+ * simplify: one GET per ticked VARIABLE, in parallel — a column ticked under two
+ * variants, or two columns of one variable, share the one read. */
+async function exactPicks(
+  picks: readonly StagedPick[],
+): Promise<StagedPick[] | null> {
+  const bands = new Map(picks.map((pick) => [pick.band.key, pick.band]));
+  let exactRows: Map<string, PickerRepresentation>;
+  try {
+    const fetched = await Promise.all(
+      [...bands.values()].map(async (band) =>
+        (await exactDeliveryColumnRows(band.key)).map(
+          (row) => [pickerRowKey(band, row), row] as const,
+        ),
+      ),
+    );
+    exactRows = new Map(fetched.flat());
+  } catch {
+    return null;
+  }
+  const exact: StagedPick[] = [];
+  for (const pick of picks) {
+    const row = exactRows.get(pickerRowKey(pick.band, pick.row));
+    if (row === undefined) {
+      return null;
+    }
+    exact.push({ band: pick.band, row });
+  }
+  return exact;
+}
+
 async function addSelected(): Promise<void> {
   const columns = staged.columns;
   applying = true;
   try {
+    const picks = await exactPicks(staged.picks);
+    columnsUnread = picks === null;
+    if (picks === null) {
+      // This attempt was refused HERE, so the period gate's verdict on the last
+      // one is stale — leaving it set would show a nudge about the wrong refusal.
+      periodRequired = false;
+      return;
+    }
     const result = await applyStagedPicks(
-      { adds: staged.picks, removes: [], periodChanges: [] },
+      { adds: picks, removes: [], periodChanges: [] },
       {
         scope: addScope,
         seed: { regMetaVersion, steward },
@@ -920,7 +992,7 @@ async function addSelected(): Promise<void> {
         </div>
         <StagedAddStatus
           outcome={applyOutcome}
-          blocked={periodRequired ? ADD_WINDOW_REQUIRED_MESSAGE : null}
+          blocked={addBlocked}
         />
       {:else}
         <Panel title="Variables">

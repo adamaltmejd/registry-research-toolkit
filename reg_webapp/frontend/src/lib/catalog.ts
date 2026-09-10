@@ -1188,7 +1188,12 @@ export interface PickerRepresentation {
    * separate eras (e.g. 2005–2010 then 2015–2020, a real gap between) has one window
    * per era. `rowWirePeriod`/`rowAddPeriod` emit the comma-union over these (the #307
    * interrupted-series wire form) so the committed source never covers the gap years
-   * the representation wasn't delivered. */
+   * the representation wasn't delivered.
+   *
+   * Only as exact as the states the row was built from. A row built off the register
+   * list's aggregate coverage (`deliveryColumnRows`) has one window per (variant,
+   * column) and CANNOT show an interruption — display grade. Before committing such
+   * a row, rebuild it over the variable's own states (`exactDeliveryColumnRows`). */
   windows: { from: string; to: string }[];
   /** Concrete variant segments that back this displayed row. Ordinary rows have
    * exactly one segment; folded variant-family rows have one per concrete variant,
@@ -1683,11 +1688,12 @@ function pickerVariantSegments(
  * commits both column names where the leaf's folded row would commit one
  * `representation: null` over the union span.
  *
- * The windows come from `BindingChild.deliveries`, whose coverage is the MIN/MAX
- * aggregate per (variant, column) — so a column delivered in SEPARATE eras reads
- * here as ONE span and commits the gap years between them, where the leaf (which
- * holds the states) carves them out as a comma-union. Deliberate: the exact windows
- * would cost a states fetch per listed variable.
+ * One delivery in, one window out — so the caller decides how exact the windows
+ * are. The register LIST passes `BindingChild.deliveries`, whose coverage is the
+ * MIN/MAX aggregate per (variant, column): display grade, and enough to print a
+ * year range for free. An ADD passes one delivery per real state
+ * (`exactDeliveryColumnRows`), because the aggregate reads a column delivered in
+ * SEPARATE eras as ONE span and would commit the gap years between them.
  *
  * The label/value-set fields go in empty: this surface identifies a row by its
  * COLUMN, and nothing on the register page renders a variant label or a coding. */
@@ -1711,6 +1717,49 @@ export function deliveryColumnRows(
         ? null
         : (delivery.coverage.coverage_to ?? null),
     })),
+  );
+}
+
+/** The same rows `deliveryColumnRows` gives the register list, rebuilt from the
+ * variable's OWN states so their windows are its EXACT delivery eras (Y-83).
+ *
+ * The list can only build them from the aggregate coverage, which cannot express an
+ * interruption (see `deliveryColumnRows`). Printing a year range off that is fine;
+ * COMMITTING it is not — the source would claim years the column was never delivered
+ * in, where the variable's own page commits the eras as the #307 comma-union. So an
+ * Add re-reads the states, and the list pays no fetch per listed variable.
+ *
+ * Rejects when the FQID is not a binding leaf, so a caller refuses its batch rather
+ * than committing an approximated period.
+ * simplify: one GET per ticked VARIABLE — not per column, and not per add (which
+ * still resolves its own). A researcher ticks a few dozen columns per action; give
+ * the register response the exact windows if a LISTING surface ever needs them. */
+export async function exactDeliveryColumnRows(
+  fqid: string,
+): Promise<PickerRepresentation[]> {
+  const node = narrowCatalogNode(await getCatalogNode(fqid));
+  if (node?.kind !== "binding") {
+    throw new Error(`${fqid} is not a binding leaf`);
+  }
+  // One call per COLUMN, as the list makes them: a call that saw two would fold the
+  // #902 rename, which this surface deliberately keeps as two tickable rows.
+  // `latestEraByColumn`'s keys are the variable's distinct NAMED delivery columns.
+  return [...latestEraByColumn(node.states).keys()].flatMap((column) =>
+    deliveryColumnRows(
+      column,
+      // One state = one delivery window, so `deliveryWindows` fuses the contiguous
+      // runs and keeps the real gaps — where the aggregate has already lost them.
+      node.states
+        .filter((state) => state.delivery_column_name === column)
+        .map((state) => ({
+          variant: state.variant,
+          coverage: {
+            coverage_from: state.valid_from,
+            coverage_to: state.valid_to,
+            open_ended: state.valid_to === OPEN_ENDED_VALID_TO,
+          },
+        })),
+    ),
   );
 }
 
