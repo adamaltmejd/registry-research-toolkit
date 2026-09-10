@@ -23,18 +23,30 @@ candidate copies across into `curation/relations.toml` verbatim (the same text-o
 boundary `variable_same_as.render_candidates_toml` has). There is still no loader for
 the file itself — the maintainer curates.
 
-A CANDIDATE PAIR is two `variable_state` rows in ONE register (any variant
-coordinate) whose windows are disjoint and ADJACENT (`_adjacent`: the later
-`valid_from` is the day, or the year, after the earlier `valid_to`), in one of two
-shapes:
+A CANDIDATE PAIR is two `variable_state` rows in ONE register whose windows are
+disjoint and ADJACENT (`_adjacent`: the later `valid_from` is the day, or the year,
+after the earlier `valid_to`), in one of two shapes:
 
   - `cross_var_id` — the SAME delivery column under two var_ids (the re-minted
-    variable, `ForvErs`). Emitted at VARIABLE grain, like the curated "Summa annan
-    inkomst" block.
+    variable, `ForvErs`), in ANY variant coordinate: a re-minted variable may move
+    variants, and whether it did is the curator's call. Emitted at VARIABLE grain,
+    like the curated "Summa annan inkomst" block.
   - `split_rename` — two variables sharing ONE `provider_key` (split-container
     siblings) whose columns DIFFER (the never-co-delivered rename, `PeOrgNr` →
-    `PeOrgNr_LISA`). Emitted at REPRESENTATION grain (`from_column` / `to_column`,
-    #843, plus `variant` #846 when every era pair sits in one register_variant).
+    `PeOrgNr_LISA`), both eras INSIDE one `register_variant`. Emitted at
+    REPRESENTATION grain (`from_column` / `to_column`, #843), ALWAYS scoped to that
+    variant (#846). A rename is one delivery coordinate changing its column header,
+    so an era pair meeting ACROSS variants (`Ast_SektorKod` in arbetsstallen
+    1990-1992 → `SektorKod` in individer-16plus 1993-1999) is two parallel
+    variant-specific columns of one split container that happen to abut in time,
+    and is DROPPED rather than emitted unscoped.
+
+    The condition is on the PAIR: a cross-variant abutment is not a candidate even
+    when the same two variables ALSO meet inside a variant (LISA's `PeOrgNr` →
+    `PeOrgNr_LISA` does both, and the same-variant meeting stands), and the same
+    rename evidenced inside SEVERAL variants is SEVERAL candidates — `relations.py`
+    keys a representation edge on `(…, column, variant)` (#846), so those are
+    distinct edges and both load.
 
 Two gates drop a pair: it is already joined by a `variable_replaced_by` /
 `representation_replaced_by` edge in EITHER direction (the curation is done), or the
@@ -84,21 +96,24 @@ class SuccessionCandidate:
     """One candidate succession: `predecessor` superseded by `successor`, evidenced
     by the EARLIEST adjacent era pair found for the two variables. `kind` is
     `cross_var_id` (same column, two var_ids — variable grain) or `split_rename`
-    (one var_id, two split siblings, differing columns — representation grain).
-    `variant` is the register_variant slug scoping a representation edge; `''` on a
-    variable-grain candidate and on a rename whose evidence spans several variants
-    (a variable-level rename)."""
+    (one var_id, two split siblings, differing columns — representation grain)."""
 
     register_fqid: str
     kind: str
     predecessor: Era
     successor: Era
-    variant: str
 
     @property
     def effective_year(self) -> int:
         """The year the successor era opens — the edge's `effective_year`."""
         return int(self.successor.valid_from[:4])
+
+    @property
+    def variant(self) -> str:
+        """The register_variant slug scoping a representation edge: the eras' shared
+        variant on a `split_rename`, `''` on a variable-grain candidate — the loader
+        rejects `variant` there."""
+        return self.predecessor.variant if self.kind == "split_rename" else ""
 
 
 @dataclass(frozen=True)
@@ -272,13 +287,12 @@ def infer_succession_candidates(conn: sqlite3.Connection) -> SuccessionResult:
     mutates).
 
     Pairs every delivered era against the eras that could directly succeed it
-    (`_adjacent`) within its register, in the two shapes the module docstring
-    defines, then drops a pair that is already edged (`_edged_variable_pairs`) or
-    CO-DELIVERED (`_codelivered`). Several era pairs can evidence ONE succession
-    (the same two variables meeting in several variants), so pairs are grouped per
-    `(kind, predecessor, successor, columns)` and emitted once, evidenced by the
-    EARLIEST transition; a group whose era pairs do not all sit in one
-    register_variant emits unscoped (`variant = ''`)."""
+    (`_adjacent`) within its register — a `split_rename` pair only INSIDE one
+    register_variant — in the two shapes the module docstring defines, then drops a
+    pair that is already edged (`_edged_variable_pairs`) or CO-DELIVERED
+    (`_codelivered`). Several era pairs can evidence ONE succession, so pairs are
+    grouped per the EMITTED EDGE's identity and emitted once, evidenced by the
+    EARLIEST transition."""
     edged = _edged_variable_pairs(conn)
 
     # The two pairing universes. `cross_var_id` pairs within a (register, column),
@@ -308,10 +322,14 @@ def infer_succession_candidates(conn: sqlite3.Connection) -> SuccessionResult:
                         shaped = pred.provider_key != succ.provider_key
                     else:
                         # One var_id: two DIFFERENT siblings whose columns differ (a
-                        # single variable's own column rename needs no edge).
-                        shaped = pred.variable_id != succ.variable_id and fold_column(
-                            pred.column
-                        ) != fold_column(succ.column)
+                        # single variable's own column rename needs no edge) meeting
+                        # INSIDE one register_variant — a cross-variant abutment is
+                        # not a rename (module docstring).
+                        shaped = (
+                            pred.variable_id != succ.variable_id
+                            and pred.variant == succ.variant
+                            and fold_column(pred.column) != fold_column(succ.column)
+                        )
                     if (
                         shaped
                         and _adjacent(pred.valid_to, succ.valid_from)
@@ -325,21 +343,20 @@ def infer_succession_candidates(conn: sqlite3.Connection) -> SuccessionResult:
     )
 
     # Group by the EMITTED EDGE's identity so one succession emits one `[[edge]]`:
-    # the columns are part of a representation edge's identity but not a
-    # variable-grain one, so two variables succeeding each other on SEVERAL shared
-    # columns are one cross_var_id candidate, not one per column.
-    groups: dict[tuple[str, str, str, str, str], list[tuple[Era, Era]]] = {}
+    # `relations.py` keys a representation edge on `(…, column, variant)` (#846) and
+    # a variable-grain one on the FQIDs alone, so two variables succeeding each other
+    # on SEVERAL shared columns are ONE cross_var_id candidate, while a rename
+    # evidenced inside several variants is one candidate PER variant.
+    groups: dict[tuple[str, str, str, str, str, str], list[tuple[Era, Era]]] = {}
     for kind, pred, succ in pairs:
         if _codelivered(windows, pred.variable_id, succ.variable_id):
             continue
-        columns = (
-            ("", "")
+        scope = (
+            ("", "", "")
             if kind == "cross_var_id"
-            else (fold_column(pred.column), fold_column(succ.column))
+            else (fold_column(pred.column), fold_column(succ.column), pred.variant)
         )
-        groups.setdefault((kind, pred.fqid, succ.fqid, *columns), []).append(
-            (pred, succ)
-        )
+        groups.setdefault((kind, pred.fqid, succ.fqid, *scope), []).append((pred, succ))
 
     candidates: list[SuccessionCandidate] = []
     for (kind, *_), evidence in groups.items():
@@ -359,15 +376,6 @@ def infer_succession_candidates(conn: sqlite3.Connection) -> SuccessionResult:
                 e[1].column,
             ),
         )
-        # #846 scope — representation grain ONLY (the loader rejects `variant` on a
-        # variable-grain edge), and only when EVERY era pair of this succession sits
-        # inside one register_variant. Evidence spanning variants (or meeting across
-        # them) is a variable-level rename, emitted unscoped.
-        scopes = (
-            {p.variant if p.variant == s.variant else "" for p, s in evidence}
-            if kind == "split_rename"
-            else {""}
-        )
         candidates.append(
             SuccessionCandidate(
                 # Both endpoints are in one register, so either FQID's leading
@@ -376,7 +384,6 @@ def infer_succession_candidates(conn: sqlite3.Connection) -> SuccessionResult:
                 kind=kind,
                 predecessor=pred,
                 successor=succ,
-                variant=next(iter(scopes)) if len(scopes) == 1 else "",
             )
         )
 
@@ -430,8 +437,8 @@ def render_succession_toml(result: SuccessionResult) -> str:
     Grouped by register, deterministic within it. A `cross_var_id` candidate emits a
     VARIABLE-grain edge (`from` / `to` / `effective_year`); a `split_rename` one
     emits a REPRESENTATION-grain edge, adding `from_column` / `to_column` and the
-    `variant` scope when the evidence has one. No `note` is emitted — the transition
-    reason is the curator's to write."""
+    `variant` its eras sit in. No `note` is emitted — the transition reason is the
+    curator's to write."""
     lines = [
         "# GENERATED succession candidate worklist — "
         "reg-meta-build succession-candidates.",
@@ -443,10 +450,12 @@ def render_succession_toml(result: SuccessionResult) -> str:
         "#   cross_var_id — the SAME delivery column under two SCB var_ids (a",
         "#                  re-minted variable): a VARIABLE-grain edge.",
         "#   split_rename — two split-container siblings of ONE var_id whose",
-        "#                  columns differ (a never-co-delivered rename): a",
-        "#                  REPRESENTATION-grain edge (from_column / to_column,",
-        "#                  plus `variant` when all the evidence sits in one",
-        "#                  register_variant).",
+        "#                  columns differ (a never-co-delivered rename), both eras",
+        "#                  INSIDE one register_variant: a REPRESENTATION-grain",
+        "#                  edge (from_column / to_column), always `variant`-scoped",
+        "#                  and emitted once per variant it is evidenced in. An era",
+        "#                  pair meeting ACROSS variants is two parallel",
+        "#                  variant-specific columns, not a rename, and is dropped.",
         "# A pair already joined by a variable/representation replaced_by edge is",
         "# skipped, and so is a CO-DELIVERED pair (that is split-sibling-suspects'",
         "# territory — its gate is this one's mirror image).",
@@ -487,8 +496,7 @@ def render_succession_toml(result: SuccessionResult) -> str:
         if c.kind == "split_rename":
             lines.append(f"from_column = {_toml_str(c.predecessor.column)}")
             lines.append(f"to_column = {_toml_str(c.successor.column)}")
-            if c.variant:
-                lines.append(f"variant = {_toml_str(c.variant)}")
+            lines.append(f"variant = {_toml_str(c.variant)}")
         lines.append(f"effective_year = {c.effective_year}")
 
     return "\n".join(lines) + "\n"

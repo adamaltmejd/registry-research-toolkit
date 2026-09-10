@@ -4,11 +4,12 @@
 Modelled on `test_split_sibling_suspects.py` (the diagnostic this one mirrors —
 same corpus, opposite temporal gate): `infer_succession_candidates` over a
 hand-built synthetic DB exercises the two candidate shapes plus every gate
-(already-edged, co-delivered, non-adjacent), and `render_succession_toml` is
-round-tripped BOTH through a plain TOML parse and through `relations.py`'s real
-loader + materializer against the same fixture DB — the emitted worklist must be
-in the exact `[[edge]]` grammar `curation/relations.toml` accepts. A separate test
-proves the diagnostic never mutates the DB.
+(already-edged, co-delivered, non-adjacent, an era pair across variants), and
+`render_succession_toml` is round-tripped BOTH through a plain TOML parse and
+through `relations.py`'s real loader + materializer against the same fixture DB —
+the emitted worklist must be in the exact `[[edge]]` grammar
+`curation/relations.toml` accepts. A separate test proves the diagnostic never
+mutates the DB.
 
 Fully synthetic (CLAUDE.md): builds its own in-memory DB via the `_slugged_db`
 helpers; never reads a real built DB.
@@ -36,7 +37,7 @@ if TYPE_CHECKING:
 
 # The default fixture register is scb/lisa (provider 1), variant 10
 # (`individer-15plus`). Variant 20 (`individer-16plus`) is added by `_base_db` so a
-# candidate's evidence can span variants.
+# test can deliver eras in DIFFERENT variants.
 _REGISTER_ID = 1
 _VARIANT_ID = 10
 _OTHER_VARIANT_ID = 20
@@ -308,7 +309,7 @@ class TestInfer:
         assert rename.predecessor.column == "PeOrgNr"
         assert rename.successor.column == "PeOrgNr_LISA"
         assert rename.effective_year == 2016
-        # All the evidence sits in one delivering variant → the edge is scoped.
+        # A rename is emitted scoped to the variant its two eras meet in.
         assert rename.variant == "individer-15plus"
 
     def test_the_curated_edge_is_what_suppresses_the_anninkf_pair(self) -> None:
@@ -441,9 +442,79 @@ class TestInfer:
         conn.commit()
         assert infer_succession_candidates(conn).total == 0
 
-    def test_evidence_across_variants_emits_unscoped(self) -> None:
-        # The same rename meeting in TWO variants is a variable-level rename: one
-        # candidate, emitted without a `variant` scope.
+    def test_a_rename_meeting_across_variants_is_not_a_candidate(self) -> None:
+        # Two variant-specific columns of ONE split container that happen to abut
+        # in time (Ast_SektorKod in one variant, SektorKod in the other) are
+        # parallel siblings, not one coordinate renaming its header.
+        conn = _base_db()
+        _add_era(
+            conn,
+            var_id=95,
+            slug="ast-sektorkod",
+            name="Sektorkod, arbetsställe",
+            column="Ast_SektorKod",
+            valid_from="1990-01-01",
+            valid_to="1992-12-31",
+            variant_id=_VARIANT_ID,
+        )
+        _add_era(
+            conn,
+            var_id=95,
+            slug="sektorkod",
+            name="Sektorkod",
+            column="SektorKod",
+            valid_from="1993-01-01",
+            valid_to="1999-12-31",
+            variant_id=_OTHER_VARIANT_ID,
+        )
+        conn.commit()
+        assert infer_succession_candidates(conn).total == 0
+
+    def test_a_cross_variant_pair_does_not_sink_the_same_variant_one(self) -> None:
+        # The LISA `PeOrgNr` shape: the predecessor delivers in ONE variant, the
+        # successor in that one AND another. The gate is per era PAIR, so the
+        # cross-variant pair is dropped on its own and the same-variant rename
+        # still stands, scoped to the variant it meets in.
+        conn = _base_db()
+        _add_era(
+            conn,
+            var_id=56,
+            slug="person-orgnr",
+            name="Person-/organisationsnummer",
+            column="PeOrgNr",
+            valid_from="2010-01-01",
+            valid_to="2015-12-31",
+            variant_id=_VARIANT_ID,
+        )
+        for variant_id in (_VARIANT_ID, _OTHER_VARIANT_ID):
+            _add_era(
+                conn,
+                var_id=56,
+                slug="person-orgnr-2",
+                name="Person-/organisationsnummer",
+                column="PeOrgNr_LISA",
+                valid_from="2016-01-01",
+                valid_to="2023-12-31",
+                variant_id=variant_id,
+            )
+        conn.commit()
+        result = infer_succession_candidates(conn)
+        assert [
+            (c.kind, c.predecessor.fqid, c.successor.fqid, c.variant)
+            for c in result.candidates
+        ] == [
+            (
+                "split_rename",
+                "scb/lisa/person-orgnr",
+                "scb/lisa/person-orgnr-2",
+                "individer-15plus",
+            )
+        ]
+
+    def test_a_rename_inside_two_variants_emits_one_candidate_each(self) -> None:
+        # The same rename meeting INSIDE variant A and INSIDE variant B is two
+        # scoped edges, not one unscoped one: `relations.py` keys a representation
+        # edge on (…, column, variant), so both load.
         conn = _base_db()
         for variant_id in (_VARIANT_ID, _OTHER_VARIANT_ID):
             _add_era(
@@ -468,8 +539,10 @@ class TestInfer:
             )
         conn.commit()
         result = infer_succession_candidates(conn)
-        assert result.total == 1
-        assert result.candidates[0].variant == ""
+        assert [(c.kind, c.variant) for c in result.candidates] == [
+            ("split_rename", "individer-15plus"),
+            ("split_rename", "individer-16plus"),
+        ]
 
     def test_empty_db(self) -> None:
         conn = _base_db()
