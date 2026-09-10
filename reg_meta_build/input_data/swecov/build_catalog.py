@@ -2553,28 +2553,82 @@ def _steward_load_db(db_path: Path):
       ``provider/register/variant``).
     * ``states_vc[(coord, vslug, col)]`` → the state windows
       ``[(value_set_id, valid_from, valid_to)]`` for co-delivery detection.
+
+    A co-delivered second spelling — the flavor group's other Covid column,
+    every #945 multi-alias cvid on the global track — has no
+    ``variable_state`` row of its own, so the union's second arm resolves it
+    like a state column: shape (``data_type`` / ``is_identifier``) and value
+    set from the state that owns its window, the window itself from
+    ``variable_alias_window``. Admission is column-based, so a literal delivery
+    column left unresolved is not orderable at all (steward README →
+    "Near-duplicate physical columns").
+
+    That arm reads the alias WINDOW table, not ``variable_alias``, because a
+    window is what makes a spelling an orderable REPRESENTATION: the resolver
+    (`Catalog._expand_state_windows`) surfaces an alias column only where its
+    window is CONTAINED in a state's validity and that state's own column
+    participates in the contained set, and §12's consistency gate
+    (`reg_meta.inventory_check`) refuses to boot a deployment whose inventory
+    maps anything else. A bare ``variable_alias`` row is the search-only
+    delivery-column history — mapping one would state holdings no order could
+    ever fill — so those two conditions are mirrored here rather than unioning
+    the two tables flat.
     """
+    from reg_meta.db import register_py_lower
+
     if not db_path.exists():
         raise SystemExit(f"reg_meta DB not found: {db_path} (pass --db <flavored>)")
     conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
+    # Unicode-aware LOWER for the participation test below: SQLite's own is
+    # ASCII-only, so a Swedish header (`Ägare`) would not fold — the reason
+    # every other delivery-column case comparison in the build uses it (#843).
+    register_py_lower(conn)
     by_regcol: dict[tuple[str, str], list] = defaultdict(list)
     by_provcol: dict[tuple[str, str], list] = defaultdict(list)
     states_vc: dict[tuple[str, str, str], list] = defaultdict(list)
-    # ORDER BY makes the cursor order — and thus the `type` picked for a column
-    # whose states disagree on `data_type` (first row wins below) — stable across
-    # reg_meta rebuilds, so the emitted catalog is byte-stable, not just sorted.
+    # The ORDER BY spans the whole union (alias rows sort INTO the state rows,
+    # they are not appended after them), so the cursor order — and thus the
+    # `type` picked for a column whose states disagree on `data_type` (first row
+    # wins below) — is stable across reg_meta rebuilds and the emitted catalog
+    # is byte-stable, not just sorted. `coord` orders exactly as the variant
+    # slug did: its `provider/register/` prefix is constant within the two
+    # preceding keys.
     for prov, reg, coord, vslug, col, dtype, isid, vsid, vf, vt in conn.execute(
-        """SELECT p.slug, r.slug, p.slug||'/'||r.slug||'/'||rv.slug, v.slug,
-                  vs.delivery_column_name, vs.data_type, v.is_identifier,
-                  vs.value_set_id, vs.valid_from, vs.valid_to
+        """SELECT p.slug AS prov, r.slug AS reg,
+                  p.slug||'/'||r.slug||'/'||rv.slug AS coord, v.slug AS vslug,
+                  vs.delivery_column_name AS col, vs.data_type AS dtype,
+                  v.is_identifier AS isid, vs.value_set_id AS vsid,
+                  vs.valid_from AS vf, vs.valid_to AS vt
            FROM variable_state vs JOIN variable v USING(variable_id)
            JOIN register r ON r.register_id=v.register_id
            JOIN provider p ON p.provider_id=r.provider_id
            JOIN register_variant rv USING(register_variant_id)
            WHERE vs.delivery_column_name IS NOT NULL
              AND trim(vs.delivery_column_name) != '' AND v.slug IS NOT NULL
-           ORDER BY p.slug, r.slug, rv.slug, v.slug,
-                    vs.delivery_column_name, vs.valid_from, vs.data_type"""
+           UNION ALL
+           SELECT p.slug, r.slug, p.slug||'/'||r.slug||'/'||rv.slug, v.slug,
+                  w.delivery_column_name, vs.data_type, v.is_identifier,
+                  vs.value_set_id, w.valid_from, w.valid_to
+           FROM variable_alias_window w JOIN variable v USING(variable_id)
+           JOIN register r ON r.register_id=v.register_id
+           JOIN provider p ON p.provider_id=r.provider_id
+           JOIN register_variant rv USING(register_variant_id)
+           JOIN variable_state vs ON vs.variable_id=w.variable_id
+                AND vs.register_variant_id=w.register_variant_id
+                AND vs.valid_from<=w.valid_from AND w.valid_to<=vs.valid_to
+           WHERE trim(w.delivery_column_name) != '' AND v.slug IS NOT NULL
+             AND NOT EXISTS (SELECT 1 FROM variable_state s
+                             WHERE s.variable_id=w.variable_id
+                               AND s.register_variant_id=w.register_variant_id
+                               AND s.delivery_column_name=w.delivery_column_name)
+             AND EXISTS (SELECT 1 FROM variable_alias_window b
+                         WHERE b.variable_id=w.variable_id
+                           AND b.register_variant_id=w.register_variant_id
+                           AND vs.valid_from<=b.valid_from
+                           AND b.valid_to<=vs.valid_to
+                           AND py_lower(b.delivery_column_name)
+                               =py_lower(vs.delivery_column_name))
+           ORDER BY prov, reg, coord, vslug, col, vf, dtype"""
     ):
         u = col.upper()
         rec = {"coord": coord, "vslug": vslug, "col": col, "dtype": dtype, "isid": isid}
