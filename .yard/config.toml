@@ -358,15 +358,15 @@ artifacts = [
   "replace-opened-1920x1080.png",
 ]
 
-# Review runs on every candidate. max_gate_repair_rounds limits repairs after
-# gate failures, max_rounds limits repairs after blocking review findings, and
-# timeout_minutes limits one review run. blocking sets the repair threshold and
-# max_priority the least severe reported finding (P0 most severe through P3);
-# codex_speed is a fast service tier for the codex seats only (Y-493): a queue,
-# not an identity — model/effort stay what the review is recorded against.
-# panel lists the seats the default workflow runs.
+# Review runs on every candidate, gates before it. A confirmed gate failure
+# returns to the implementer like a blocking review finding, and max_rounds
+# bounds every automatic round the candidate spends, gate-bought or review-
+# bought alike; timeout_minutes limits one review run. blocking sets the
+# repair threshold and max_priority the least severe reported finding (P0
+# most severe through P3); codex_speed is a fast service tier for the codex
+# seats only (Y-493): a queue, not an identity — model/effort stay what the
+# review is recorded against. panel lists the seats the default workflow runs.
 [checks.review]
-max_gate_repair_rounds = 2
 max_rounds = 5
 timeout_minutes = 30
 blocking = "P1"
