@@ -28,7 +28,7 @@ import {
   periodWireBounds,
   VALUE_SET_VERSION_NONE,
 } from "./period";
-import type { Binding } from "./project_data";
+import { type Binding, defaultSourceName } from "./project_data";
 import type { Route } from "./router.svelte";
 import type { BreadcrumbItem } from "./ui/types";
 
@@ -650,6 +650,30 @@ export function routeBreadcrumbs(route: Route): BreadcrumbItem[] {
 export function registerPrefixOf(registerVariant: string): string {
   const segs = fqidSegments(registerVariant);
   return segs.length >= 2 ? `${segs[0]}/${segs[1]}` : "";
+}
+
+/** The TITLE of a source card in the cart: the REGISTER the source delivers from,
+ * uppercased — `scb/lisa/individer-15plus` → `"LISA"` (Swedish register stubs are
+ * mostly acronyms). That uppercasing is `defaultSourceName`'s, deliberately: the
+ * generated source `name` the card shows as a detail row is built from the same
+ * rule, and the two must not drift. `qualifyProvider` prefixes the provider
+ * (`"SCB LISA"`) for a deployment serving MORE THAN ONE provider, where a bare
+ * register slug can name two registers; on a single-provider deployment the prefix
+ * is noise. `""` when the coordinate carries no register segment — the caller
+ * renders its own fallback. NOT the source's `name`: that is a generated join key
+ * (`LISA_2`), never the thing the researcher picked. */
+export function sourceRegisterTitle(
+  registerVariant: string,
+  qualifyProvider: boolean,
+): string {
+  const register = defaultSourceName(registerVariant);
+  if (!register) {
+    return "";
+  }
+  const provider = fqidSegments(registerVariant)[0];
+  return qualifyProvider && provider
+    ? `${provider.toUpperCase()} ${register}`
+    : register;
 }
 
 /** The display label for a source's `register_variant` coordinate — the ONE place

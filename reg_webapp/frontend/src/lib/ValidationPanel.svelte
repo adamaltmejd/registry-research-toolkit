@@ -24,7 +24,7 @@ import {
 // Each finding LEADS with the human title (`codeLabel`), DEMOTES the raw `code` to
 // a small muted chip (still the stable identifier people cite), and — instead of
 // leaking the raw JSON pointer — renders a click-to-LOCATE label
-// ("Source 'lisa_main' → binding scb/lisa/adeldag", via `findingLocation`) that
+// ("Source 'lisa_main' → column scb/lisa/adeldag", via `findingLocation`) that
 // scrolls to and briefly flashes the relevant source/binding card. `sources` is the
 // draft's (possibly malformed) source list, used only to resolve those labels.
 const {
@@ -218,9 +218,14 @@ const LEVEL_LABEL: Record<Level, string> = {
     >
       {#if result.ok}
         <!-- Names the check that COMPLETED, not a state of readiness: nothing here
-             says the study is complete, and the order is its own check below. -->
-        {status === "warnings" ? "Draft valid with warnings" : "Draft valid"} — project rules and catalog metadata checked.
-        {#if result.issues.length > 0}
+             says the study is complete, and the order is its own check below. With
+             NOTHING to report the verdict is the whole line — a researcher who has
+             just assembled a cart reads "Draft valid" and moves on; the clause
+             saying which check ran is what the notes underneath are already
+             evidence of, so it comes back only when there are notes. -->
+        {status === "warnings" ? "Draft valid with warnings" : "Draft valid"}
+        {#if status === "warnings"}
+          — project rules and catalog metadata checked.
           ({result.issues.length} non-blocking {result.issues.length === 1 ? "note" : "notes"}.)
         {/if}
       {:else}
@@ -256,12 +261,15 @@ const LEVEL_LABEL: Record<Level, string> = {
         </div>
       {/if}
     {/each}
-    {#if result.ok}
+    {#if status === "warnings"}
       <!-- Order materialization is a SEPARATE check (§12): a draft that validates
            clean here can still be blocked there, and the banner above is where that
            verdict lands. Below the findings because it is what the NEXT step does —
            muted, and deliberately outside the live region so it isn't re-announced
-           on every keystroke. -->
+           on every keystroke. Said only where there is already something to read:
+           an issue-free draft leaves the validation area at one line, and the
+           researcher's next click on an ENABLED download control runs those checks
+           for real. -->
       <p class="muted">Generating <code>order.json</code> runs its own order checks.</p>
     {/if}
   {/if}

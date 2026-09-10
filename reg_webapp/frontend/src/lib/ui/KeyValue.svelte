@@ -53,6 +53,13 @@ let { rows = [], value }: Props = $props();
     margin: 0;
     color: var(--text);
     font-size: var(--text-sm);
+    /* A value is text this primitive doesn't control — a machine identifier (a
+       source name, an FQID), a long unbroken label — whose min-content width would
+       otherwise widen this grid track and push the card past 375px. `min-width: 0`
+       lets the track shrink, `overflow-wrap: anywhere` breaks the run in place
+       (#1110). */
+    min-width: 0;
+    overflow-wrap: anywhere;
   }
   dd.mono {
     font-family: var(--font-mono);

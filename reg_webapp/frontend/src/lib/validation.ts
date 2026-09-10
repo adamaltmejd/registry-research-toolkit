@@ -122,18 +122,18 @@ export const KNOWN_CODES: Record<string, CodeInfo> = {
   unexpected_field: { label: "Unexpected field", hint: "error" },
   invalid_fqid: { label: "Malformed FQID", hint: "error" },
   fqid_register_variant_mismatch: {
-    label: "Binding FQID prefix does not match the source's register_variant",
+    label: "Column FQID prefix does not match the source's register_variant",
     hint: "error",
   },
   invalid_period: { label: "Invalid period", hint: "error" },
   subtype_on_wrong_type: {
-    label: "Subtype/format field set on a binding type that doesn't own it",
+    label: "Subtype/format field set on a column type that doesn't own it",
     hint: "error",
   },
-  empty_bindings: { label: "Source has no bindings", hint: "error" },
+  empty_bindings: { label: "Source has no columns", hint: "error" },
   duplicate_source_name: { label: "Duplicate source name", hint: "error" },
   display_name_collision: {
-    label: "Two bindings on a source share a display_name",
+    label: "Two columns on a source share a display_name",
     hint: "error",
   },
   duplicate_panel_id: { label: "Duplicate panel_id", hint: "error" },
@@ -188,7 +188,7 @@ export const KNOWN_CODES: Record<string, CodeInfo> = {
     hint: "error",
   },
   period_outside_state_validity: {
-    label: "No variable state covers the binding's (variant, period)",
+    label: "No variable state covers the column's (variant, period)",
     hint: "error",
   },
   binding_value_set_version_ambiguous: {
@@ -218,15 +218,15 @@ export const KNOWN_CODES: Record<string, CodeInfo> = {
     // Intersection semantics (§12): the clipped part IS ordered, so this reports
     // what is available rather than a fault. It also covers a #307 list period's
     // uncovered segment, so the label must not read as "one continuous range".
-    label: "The binding is available for only part of the requested period",
+    label: "The column is available for only part of the requested period",
     hint: "info",
   },
   deprecated_traversal: {
-    label: "The binding resolves through deprecated catalog metadata",
+    label: "The column resolves through deprecated catalog metadata",
     hint: "info",
   },
   variable_replaced: {
-    label: "The binding has a replacement edge at/before this period",
+    label: "The column has a replacement edge at/before this period",
     hint: "info",
   },
   // ── order materializer (§12) ──────────────────────────────────────────────
@@ -279,7 +279,7 @@ export function bindingAnchorId(
 }
 
 /** A user-facing LOCATION for a finding, derived from its RFC-6901 `path` plus the
- * draft's sources — the summary list speaks "Source 'lisa_main' → binding
+ * draft's sources — the summary list speaks "Source 'lisa_main' → column
  * scb/lisa/adeldag" instead of leaking the raw pointer, carries the DOM-anchor id so
  * a click scrolls to the relevant card, AND — since the cart is read-only and fixes
  * happen in the catalog browser (#991) — an outbound `catalogHref` to the subject
@@ -468,10 +468,10 @@ export function findingLocation(
       const bindings = safeSourceBindings(source);
       const variable = (bindings[bIdx] as { variable?: unknown } | undefined)
         ?.variable;
-      const bindingLabel =
+      const columnLabel =
         typeof variable === "string" && variable.length > 0
-          ? `binding ${variable}`
-          : `binding ${bIdx + 1}`;
+          ? `column ${variable}`
+          : `column ${bIdx + 1}`;
       // The binding's own variable FQID is its catalog subject page; a fresh row
       // with no variable yet has no target → omit the link.
       const catalog =
@@ -479,7 +479,7 @@ export function findingLocation(
           ? { catalogHref: catalogHref(variable), catalogLabel: variable }
           : {};
       return {
-        label: `${sourceLabel} → ${bindingLabel}`,
+        label: `${sourceLabel} → ${columnLabel}`,
         anchorId: bindingAnchorId(sIdx, bIdx),
         ...catalog,
       };

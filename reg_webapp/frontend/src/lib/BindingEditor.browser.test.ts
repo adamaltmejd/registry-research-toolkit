@@ -5,9 +5,11 @@ import BindingEditor from "./BindingEditor.svelte";
 import type { Binding } from "./project_data";
 import { projectStore } from "./project_store.svelte";
 
-// #991/#993: BindingEditor is the READ-ONLY cart binding row — it DISPLAYS the
-// picked variable (+ pinned representation) and offers delete only. No variable
-// picker, no type <select>, no display_name input, no Advanced disclosure.
+// #991/#993: BindingEditor is the READ-ONLY cart column row — it DISPLAYS the
+// delivery column ordered (and the variable it came from) and offers delete only.
+// No variable picker, no type <select>, no display_name input, no Advanced
+// disclosure. Y-75: the row LEADS with the column name, because that is what the
+// researcher ordered and what lands in the extract.
 
 beforeEach(() => {
   // Seed a fresh draft with one source + one binding so removeBinding has a target
@@ -32,7 +34,7 @@ beforeEach(() => {
 });
 
 describe("BindingEditor read-only cart row", () => {
-  it("displays the variable + pinned representation, with no editing affordances", async () => {
+  it("leads with the pinned delivery column and links the FQID to the catalog", async () => {
     const binding = projectStore.draft?.sources?.[0].bindings?.[0] as Binding;
     await render(BindingEditor, {
       sourceIndex: 0,
@@ -40,11 +42,12 @@ describe("BindingEditor read-only cart row", () => {
       binding,
     });
 
-    await expect
-      .element(page.getByText("scb/lisa/kon", { exact: true }))
-      .toBeVisible();
-    // The pinned representation (delivery column) is shown as a chip.
+    // The pinned representation IS the delivery column name — it leads the row…
     await expect.element(page.getByText("Kon", { exact: true })).toBeVisible();
+    // …and the variable it came from is a link to its catalog subject page.
+    await expect
+      .element(page.getByRole("link", { name: "scb/lisa/kon" }))
+      .toHaveAttribute("href", "/catalog/scb/lisa/kon");
 
     // No picker / type select / display_name input / Advanced disclosure.
     expect(
@@ -55,7 +58,55 @@ describe("BindingEditor read-only cart row", () => {
     expect(page.getByText("Advanced").query()).toBeNull();
   });
 
-  it("shows the '(no variable)' fallback for a binding without a variable", async () => {
+  it("falls back to the resolved default column when no representation is pinned", async () => {
+    // What the picker writes for an unambiguous pick (`bindingFieldsFromResolution`
+    // → `display_name` = the resolved `delivery_column_name`, `representation` null).
+    const binding = {
+      variable: "scb/lisa/adeldag",
+      type: "opaque",
+      display_name: "AdelDag",
+      representation: null,
+    } as unknown as Binding;
+    await render(BindingEditor, {
+      sourceIndex: 0,
+      bindingIndex: 0,
+      binding,
+    });
+
+    await expect
+      .element(page.getByText("AdelDag", { exact: true }))
+      .toBeVisible();
+    await expect
+      .element(page.getByRole("link", { name: "scb/lisa/adeldag" }))
+      .toBeVisible();
+  });
+
+  it("leads with the variable FQID when the row carries no column name", async () => {
+    // A project_data.json authored outside this app carries neither field — and is
+    // still a valid, orderable draft. So the row leads with what the file DOES say
+    // (the FQID it was picked from) rather than a placeholder; nothing here invents
+    // a column name.
+    const binding = {
+      variable: "scb/lisa/kon",
+      type: "",
+    } as unknown as Binding;
+    await render(BindingEditor, {
+      sourceIndex: 0,
+      bindingIndex: 0,
+      binding,
+    });
+
+    expect(document.body.textContent).not.toContain("(no column name)");
+    await expect
+      .element(page.getByRole("link", { name: "scb/lisa/kon" }))
+      .toBeVisible();
+    // …and the delete button is named by it, so the controls list disambiguates.
+    await expect
+      .element(page.getByRole("button", { name: "Remove column scb/lisa/kon" }))
+      .toBeVisible();
+  });
+
+  it("shows the '(no variable)' fallback, unlinked, for a binding without a variable", async () => {
     const binding = { type: "opaque" } as unknown as Binding;
     await render(BindingEditor, {
       sourceIndex: 0,
@@ -64,10 +115,13 @@ describe("BindingEditor read-only cart row", () => {
     });
 
     await expect.element(page.getByText("(no variable)")).toBeVisible();
+    // No variable, no subject page — the row must not link to the catalog root.
+    expect(page.getByRole("link").query()).toBeNull();
   });
 
-  it("removes the binding through the store when 'Remove binding' is clicked", async () => {
-    // Add a second binding so the source survives after one is removed.
+  it("removes one column through the store on the click, with no confirmation", async () => {
+    // Y-75: a single column is a row the researcher is pointing at — only dropping
+    // a whole SOURCE (the register and every column under it) asks first.
     projectStore.applyStagedDiff({
       adds: [
         {
@@ -88,8 +142,9 @@ describe("BindingEditor read-only cart row", () => {
       binding,
     });
 
-    await page.getByRole("button", { name: "Remove binding" }).click();
+    await page.getByRole("button", { name: "Remove column" }).click();
 
+    expect(page.getByRole("alertdialog").query()).toBeNull();
     // The store dropped binding 0 (kon); adeldag survives.
     expect(
       projectStore.draft?.sources?.[0].bindings?.map((b) => b.variable),

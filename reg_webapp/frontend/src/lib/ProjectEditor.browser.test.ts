@@ -160,6 +160,34 @@ describe("ProjectEditor cart — read-only, no add affordances", () => {
     expect(projectStore.draft?.name).toBe("My study");
   });
 
+  // Y-75: the steward / reg_meta / schema stamps are the file's provenance — they
+  // are read-only, nothing on this page edits them, and the order route only reads
+  // `steward` to refuse a mismatch. So they leave the column where the order is
+  // assembled and sit in a footer at the foot of the page. Presentation only: the
+  // draft keeps every field.
+  it("keeps the file's provenance in a page footer, not the working column", async () => {
+    seedSources(["scb/lisa/v1"]);
+    await render(ProjectEditor, { regMetaVersion: "1.0.0", steward: "global" });
+
+    const footer = document.querySelector<HTMLElement>("footer.provenance");
+    expect(footer).not.toBeNull();
+    for (const shown of [
+      "Steward",
+      "global",
+      "reg_meta version",
+      "reg_meta/v1.0.0",
+      "schema version",
+    ]) {
+      expect(footer?.textContent).toContain(shown);
+    }
+    // It is the LAST thing on the page — below the sources and the findings.
+    const editor = document.querySelector<HTMLElement>("article.editor");
+    expect(editor?.lastElementChild).toBe(footer);
+    // The draft is untouched by where they render.
+    expect(projectStore.draft?.steward).toBe("global");
+    expect(projectStore.draft?.reg_meta_version).toBe("reg_meta/v1.0.0");
+  });
+
   it("coerces a non-array sources to empty and renders without crashing", async () => {
     openFile(MALFORMED);
     await render(ProjectEditor, { regMetaVersion: "1.0.0", steward: "global" });
@@ -224,8 +252,13 @@ describe("ProjectEditor stable keys (middle-remove keeps the right survivors)", 
       page.getByRole("button", { name: "Remove source" }).elements(),
     ).toHaveLength(3);
 
-    // Remove the MIDDLE source (scb/rtb/v1) via its own "Remove source" button.
+    // Remove the MIDDLE source (scb/rtb/v1) via its own "Remove source" button,
+    // then answer that card's confirmation (Y-75).
     await page.getByRole("button", { name: "Remove source" }).nth(1).click();
+    await page
+      .getByRole("alertdialog")
+      .getByRole("button", { name: "Remove source" })
+      .click();
 
     // The store dropped the middle source; the two survivors keep their coordinates.
     expect(projectStore.draft?.sources?.map((s) => s.register_variant)).toEqual(

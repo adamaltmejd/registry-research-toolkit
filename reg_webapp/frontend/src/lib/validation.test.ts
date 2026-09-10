@@ -168,12 +168,12 @@ describe("findingLocation (pointer → human location)", () => {
     { name: "", bindings: [] }, // an unnamed source, no register_variant
   ];
 
-  it("labels a binding path 'Source <name> → binding <fqid>' + binding anchor + catalog link", () => {
+  it("labels a binding path 'Source <name> → column <fqid>' + binding anchor + catalog link", () => {
     const loc = findingLocation("/sources/0/bindings/0/variable", sources);
     // The cart is read-only, so a binding finding links out to the binding's
     // catalog subject page (its variable FQID) for the fix (#991).
     expect(loc).toEqual({
-      label: "Source 'lisa_main' → binding scb/lisa/adeldag",
+      label: "Source 'lisa_main' → column scb/lisa/adeldag",
       anchorId: bindingAnchorId(0, 0),
       catalogHref: "/catalog/scb/lisa/adeldag",
       catalogLabel: "scb/lisa/adeldag",
@@ -206,8 +206,8 @@ describe("findingLocation (pointer → human location)", () => {
 
   it("falls back to the 1-based index when the source is unnamed, omitting the catalog link", () => {
     const loc = findingLocation("/sources/1/bindings/0/variable", sources);
-    // unnamed source → "Source 2"; out-of-range binding → "binding 1"
-    expect(loc?.label).toBe("Source 2 → binding 1");
+    // unnamed source → "Source 2"; out-of-range column → "column 1"
+    expect(loc?.label).toBe("Source 2 → column 1");
     expect(loc?.anchorId).toBe(bindingAnchorId(1, 0));
     // No variable on the (absent) binding → no catalog target.
     expect(loc?.catalogHref).toBeUndefined();

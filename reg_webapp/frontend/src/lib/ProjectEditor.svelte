@@ -1,26 +1,34 @@
 <script lang="ts">
-import { AlertDialog } from "bits-ui";
 import { onDestroy } from "svelte";
+import { getStats } from "./api";
+import { asyncResource } from "./async.svelte";
 import { regMetaReleaseTag, safeSourceSlots } from "./project_data";
 import { projectStore } from "./project_store.svelte";
 import SourceEditor from "./SourceEditor.svelte";
-import { Button, EmptyState, KeyValue, type KeyValueRow, Panel } from "./ui";
+import {
+  Button,
+  ConfirmDialog,
+  EmptyState,
+  KeyValue,
+  type KeyValueRow,
+  Panel,
+} from "./ui";
 import ValidationPanel from "./ValidationPanel.svelte";
 import { windowCoverageHints } from "./validation";
 
 // The /project page — a READ-ONLY data-order CART (#991/#993), not an editor.
 // Under #991 the project IS the cart: it SHOWS what the researcher picked while
-// browsing (sources + bindings), and adding/changing data always happens in the
-// catalog browser. So this page is browse-only authoring: view the picked
-// sources/bindings, delete a source/binding, edit the project NAME, and
+// browsing (sources + their columns), and adding/changing data always happens in
+// the catalog browser. So this page is browse-only authoring: view the picked
+// sources/columns, delete a source/column, edit the project NAME, and
 // Open/Download the project_data.json + Download order.json. Fixes for a
 // validation finding are reached via the ValidationPanel's outbound catalog link
-// (the catalog subject page is the only place a binding is (re-)picked). This is:
+// (the catalog subject page is the only place a column is (re-)picked). This is:
 //  - the home/new screen (draft == null): New / Open buttons,
-//  - the loaded-draft view: the read-only steward/version/schema block + editable
-//    project name, a dirty indicator, a toolbar
+//  - the loaded-draft view: the editable project name, a dirty indicator, a toolbar
 //    (New / Open / Download project_data.json / Download order.json),
-//    the open-error banner, the READ-ONLY sources/bindings list, the ValidationPanel.
+//    the open-error banner, the READ-ONLY sources/columns list, the ValidationPanel,
+//    and a provenance footer (steward / reg_meta / schema version, read-only).
 //
 // `reg_meta_version` (bare package version) and `steward` (the deployment's
 // steward id) are seeded from the deployment context (passed by App.svelte) and
@@ -87,6 +95,16 @@ function downloadThenReplace(): void {
   projectStore.confirmReplacement();
 }
 
+// A source card titles itself with its REGISTER ("LISA"). On a deployment serving
+// more than one provider a bare register slug can name two registers, so the title
+// carries its provider there ("SCB LISA") and not on a single-provider one, where
+// the prefix is noise on every card. `/api/stats` is the steward-FILTERED count of
+// what this deployment serves (the same read the landing page makes); until it
+// resolves the cards title unqualified, which is what a one-provider deployment —
+// the case the prefix would be noise on — shows anyway.
+const stats = asyncResource(() => getStats());
+const providerQualified = $derived((stats.data?.providers ?? 1) > 1);
+
 // This page is the only surface that asks the question, and it unmounts on a
 // route change (`{#if route.name === "project"}`) — so drop any unanswered
 // replacement with it. Left standing it would outlive its dialog: a catalog pick
@@ -109,45 +127,34 @@ onDestroy(() => {
   />
 
   <!-- The confirmation for a deliberate replacement of a DIRTY draft (New, or a
-       parsed-and-accepted Open). Bits UI's AlertDialog carries the modal
-       semantics: role="alertdialog", the title/description wiring, the focus trap
-       and the return of focus to whatever was focused when it opened. Its
-       `interactOutsideBehavior` default ("ignore") is right here — a stray click
-       on the scrim must not answer a question about losing work; Escape and
-       Cancel both keep the draft. -->
-  <AlertDialog.Root
+       parsed-and-accepted Open). The store owns the question, so `open` is one-way
+       and every dismissal — Escape, Cancel — routes back through it. -->
+  <ConfirmDialog
     open={projectStore.replacementPending}
     onOpenChange={(open) => {
       if (!open) {
         projectStore.cancelReplacement();
       }
     }}
+    title="Replace the current project?"
   >
-    <AlertDialog.Portal>
-      <AlertDialog.Overlay class="replace-scrim" />
-      <AlertDialog.Content class="replace-dialog">
-        <AlertDialog.Title class="replace-title">
-          Replace the current project?
-        </AlertDialog.Title>
-        <AlertDialog.Description class="replace-body">
-          {projectStore.draft?.name || "Untitled project"} has unsaved changes
-          since its last download. Your browser keeps one recovery copy, and the
-          replacement overwrites it.
-        </AlertDialog.Description>
-        <div class="replace-actions">
-          <Button variant="default" onclick={() => projectStore.cancelReplacement()}>
-            Cancel
-          </Button>
-          <Button variant="default" onclick={downloadThenReplace}>
-            Download project_data.json
-          </Button>
-          <Button variant="danger" onclick={() => projectStore.confirmReplacement()}>
-            Replace without downloading
-          </Button>
-        </div>
-      </AlertDialog.Content>
-    </AlertDialog.Portal>
-  </AlertDialog.Root>
+    {#snippet description()}
+      {projectStore.draft?.name || "Untitled project"} has unsaved changes since
+      its last download. Your browser keeps one recovery copy, and the replacement
+      overwrites it.
+    {/snippet}
+    {#snippet actions()}
+      <Button variant="default" onclick={() => projectStore.cancelReplacement()}>
+        Cancel
+      </Button>
+      <Button variant="default" onclick={downloadThenReplace}>
+        Download project_data.json
+      </Button>
+      <Button variant="danger" onclick={() => projectStore.confirmReplacement()}>
+        Replace without downloading
+      </Button>
+    {/snippet}
+  </ConfirmDialog>
 
   {#if projectStore.openError}
     <p class="banner error" role="alert">
@@ -179,22 +186,6 @@ onDestroy(() => {
          while the draft itself stays verbatim for serialize/validate. -->
     {@const sources = safeSourceSlots(draft.sources)}
     {@const coverageHints = windowCoverageHints(draft.window, sources)}
-    <!-- The read-only deployment-seed identifiers (steward / reg_meta / schema
-         version) as labelled mono rows. Coerced to a string so a malformed opened
-         spec (non-string field) still renders rather than crashing. -->
-    {@const roRows = [
-      { label: "Steward", value: String(draft.steward ?? ""), mono: true },
-      {
-        label: "reg_meta version",
-        value: String(draft.reg_meta_version ?? ""),
-        mono: true,
-      },
-      {
-        label: "schema version",
-        value: String(draft.schema_version ?? ""),
-        mono: true,
-      },
-    ] satisfies KeyValueRow[]}
     <header class="editor-head">
       <h2>
         {draft.name || "Untitled project"}
@@ -235,24 +226,20 @@ onDestroy(() => {
       <code>order.json</code> is the order manifest generated from it.
     </p>
 
-    <!-- Top-level fields. `name` is the one editable field (the label a researcher
-         always sets); `steward` / `reg_meta_version` / `schema_version` are read-only
-         deployment-seed identifiers (schema gates Model A; steward controls
-         branding). -->
-    <div class="fields">
-      <label>
-        <span>Name</span>
-        <input
-          type="text"
-          value={draft.name}
-          placeholder="Project name"
-          oninput={(e) => projectStore.updateField("name", e.currentTarget.value)}
-        />
-      </label>
-      <KeyValue rows={roRows} />
-    </div>
+    <!-- `name` is the one editable top-level field on this page — the label a
+         researcher always sets. The read-only deployment-seed identifiers are in
+         the provenance footer. -->
+    <label class="field">
+      <span>Name</span>
+      <input
+        type="text"
+        value={draft.name}
+        placeholder="Project name"
+        oninput={(e) => projectStore.updateField("name", e.currentTarget.value)}
+      />
+    </label>
 
-    <!-- READ-ONLY sources/bindings cart (#991). Keyed by the store-owned STABLE
+    <!-- READ-ONLY sources/columns cart (#991). Keyed by the store-owned STABLE
          client id (issue #200) — NOT the index — so a middle-remove remounts the
          correct SourceEditor instance instead of rebinding a survivor's stale UI
          state to a shifted source. The id lives only in the store, never in the
@@ -271,6 +258,7 @@ onDestroy(() => {
                 sourceIndex={i}
                 source={source}
                 issues={projectStore.validation?.issues ?? []}
+                {providerQualified}
               />
             {/each}
           </div>
@@ -289,6 +277,31 @@ onDestroy(() => {
       onRetry={() => projectStore.validate()}
       onRetryOrder={() => projectStore.downloadOrder()}
     />
+
+    <!-- The file's provenance, at the foot of the page: which steward this draft
+         belongs to, and which catalog + schema it was authored against. Read-only
+         deployment-seed stamps (schema gates Model A; steward controls branding),
+         not part of assembling the order — so they stay out of the working column,
+         and stay in project_data.json regardless. Coerced to a string so a
+         malformed opened spec (non-string field) still renders rather than
+         crashing. -->
+    {@const roRows = [
+      { label: "Steward", value: String(draft.steward ?? ""), mono: true },
+      {
+        label: "reg_meta version",
+        value: String(draft.reg_meta_version ?? ""),
+        mono: true,
+      },
+      {
+        label: "schema version",
+        value: String(draft.schema_version ?? ""),
+        mono: true,
+      },
+    ] satisfies KeyValueRow[]}
+    <footer class="provenance">
+      <h3 class="micro-label">Project provenance</h3>
+      <KeyValue rows={roRows} />
+    </footer>
   {/if}
 </article>
 
@@ -336,23 +349,18 @@ onDestroy(() => {
     background: var(--err-bg);
     border: 1px solid var(--err-border);
   }
-  .fields {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-4);
-    margin-bottom: var(--space-4);
-  }
-  .fields label {
+  .field {
     display: flex;
     flex-direction: column;
     gap: var(--space-1);
     max-width: 28rem;
+    margin-bottom: var(--space-4);
   }
-  .fields label span {
+  .field span {
     font-weight: 600;
     font-size: var(--text-sm);
   }
-  .fields input {
+  .field input {
     font: inherit;
     padding: var(--space-2) var(--space-3);
     border: 1px solid var(--border);
@@ -363,57 +371,14 @@ onDestroy(() => {
     flex-direction: column;
     gap: var(--space-4);
   }
-
-  /* The replacement confirmation. Bits UI portals it to <body>, so its classes
-     land outside this component's scope — hence `:global`, namespaced the way
-     `ui/Button.svelte` namespaces `.ui-btn`. */
-  /* Above every layer the shell stacks (its drawer is 60, that drawer's own
-     scrim 55) — a modal the app can paint through is not a modal. Both are
-     portalled to <body>, so they share the root stacking context with those. */
-  :global(.replace-scrim) {
-    position: fixed;
-    inset: 0;
-    z-index: 70;
-    background: var(--scrim);
+  /* The provenance footer: a hairline rule separates it from the working column
+     above, the way App's citation footer separates the vintage from the route. */
+  .provenance {
+    margin-top: var(--space-4);
+    padding-top: var(--space-3);
+    border-top: 1px solid var(--border);
   }
-  :global(.replace-dialog) {
-    position: fixed;
-    /* Centred on the wide canvas; at 375px the inset margin governs and the
-       dialog fills the width minus that margin — where the three actions wrap.
-       35rem is what fits them on one row from 768 up. A long project name in the
-       description scrolls rather than pushing the actions past the viewport. */
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: min(35rem, calc(100vw - var(--space-4) * 2));
-    max-height: calc(100vh - var(--space-4) * 2);
-    overflow-y: auto;
-    z-index: 71;
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-3);
-    padding: var(--space-4);
-    background: var(--surface-raised);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    box-shadow: var(--elevation-raised);
-  }
-  :global(.replace-dialog:focus-visible) {
-    outline: none;
-    box-shadow: var(--focus-ring);
-  }
-  :global(.replace-title) {
-    font-size: var(--text-h3);
-    font-weight: var(--heading-weight);
-  }
-  :global(.replace-body) {
-    color: var(--text-muted);
-  }
-  :global(.replace-actions) {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-end;
-    gap: var(--space-2);
+  .provenance h3 {
+    margin: 0 0 var(--space-2);
   }
 </style>

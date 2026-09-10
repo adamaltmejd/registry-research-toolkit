@@ -76,7 +76,7 @@ describe("ValidationPanel — researcher-language findings", () => {
       .toBeVisible();
     // …the location reads in user terms, NOT the raw JSON pointer…
     await expect
-      .element(page.getByText("Source 'lisa_main' → binding scb/lisa/adeldag"))
+      .element(page.getByText("Source 'lisa_main' → column scb/lisa/adeldag"))
       .toBeVisible();
     // …and the raw pointer is NOT rendered anywhere.
     expect(document.body.textContent).not.toContain(
@@ -151,7 +151,7 @@ describe("ValidationPanel — researcher-language findings", () => {
       });
 
       const locate = page.getByRole("button", {
-        name: "Source 'lisa_main' → binding scb/lisa/adeldag",
+        name: "Source 'lisa_main' → column scb/lisa/adeldag",
       });
       await expect.element(locate).toBeVisible();
       expect(card.classList.contains("locate-flash")).toBe(false);
@@ -206,13 +206,15 @@ describe("ValidationPanel — researcher-language findings", () => {
     expect(document.querySelector('[aria-busy="true"]')).not.toBeNull();
   });
 
-  // What the green status CLAIMS (Y-17). Validation and order materialization are
-  // separate checks — a draft that passes here can still be blocked there — so the
-  // summary names the check that completed (the draft, against the project rules
-  // and the catalog metadata its bindings resolve through) and the order checks are
-  // named by the file that runs them, instead of a bare "no errors" the researcher
-  // can read as "the study is ready to order".
-  it("names the completed draft check and points the order checks at order.json", async () => {
+  // What the green status CLAIMS (Y-17), and how little it says when there is
+  // nothing to report (Y-75). Validation and order materialization are separate
+  // checks — a draft that passes here can still be blocked there — so the summary
+  // still names the check that completed rather than a bare "no errors" the
+  // researcher can read as "the study is ready to order". But with ZERO issues the
+  // whole validation area is that one verdict: the clause naming the check, and the
+  // caveat that order.json runs its own, are what the notes below are evidence of,
+  // so they come back with the notes (see the next case).
+  it("says only the verdict when a clean draft has nothing to report", async () => {
     await render(ValidationPanel, {
       result: { ok: true, issues: [] },
       status: "ok",
@@ -224,13 +226,14 @@ describe("ValidationPanel — researcher-language findings", () => {
 
     await expect
       .element(page.getByRole("status"))
-      .toMatchTextContent(
-        /^Draft valid — project rules and catalog metadata checked\.$/,
-      );
-    // The order check is the SEPARATE pass, and it is named by the artifact that
-    // runs it — but it is NOT re-announced: only the verdict is a live status.
-    await expect.element(page.getByText(ORDER_NOTE)).toBeVisible();
+      .toMatchTextContent(/^Draft valid$/);
     expect(document.querySelectorAll('[role="status"]')).toHaveLength(1);
+    // The explanatory clause and the order-check caveat are not part of a clean
+    // read — the cart, not the validator's console.
+    expect(document.body.textContent).not.toContain(
+      "project rules and catalog metadata checked",
+    );
+    expect(document.body.textContent).not.toContain(ORDER_NOTE);
     // No claim of completeness, and no bare "no errors".
     expect(document.body.textContent).not.toContain("no errors");
   });
@@ -266,7 +269,7 @@ describe("ValidationPanel — researcher-language findings", () => {
     await expect
       .element(
         page.getByText(
-          "The binding is available for only part of the requested period",
+          "The column is available for only part of the requested period",
         ),
       )
       .toBeVisible();
@@ -283,7 +286,9 @@ describe("ValidationPanel — researcher-language findings", () => {
       )
       .toBeVisible();
     // Nothing here reads as an error: the draft still validates, with its note
-    // counted, and the order checks are still named as the ones left to run.
+    // counted, and the order checks are still named as the ones left to run — the
+    // clause and the caveat the clean read above drops come back with the notes
+    // they explain (Y-75).
     await expect
       .element(page.getByRole("status"))
       .toMatchTextContent(
@@ -486,7 +491,7 @@ describe("ValidationPanel — researcher-language findings", () => {
       .toBeVisible();
     // The coordinates locate a card — the same affordance a validation issue gets.
     await expect
-      .element(page.getByText("Source 'lisa_main' → binding scb/lisa/adeldag"))
+      .element(page.getByText("Source 'lisa_main' → column scb/lisa/adeldag"))
       .toBeVisible();
     // A project-level finding names no coordinate, so it simply has no locator —
     // just its title and the message that carries the correction.
