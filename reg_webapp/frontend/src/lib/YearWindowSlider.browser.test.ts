@@ -34,8 +34,16 @@ describe("YearWindowSlider", () => {
     const toThumb = screen.getByRole("slider", { name: "To year" });
     await expect.element(fromThumb).toHaveValue("1960");
     await expect.element(toThumb).toHaveValue("2026");
-    // No explicit window → the readout reads "full history", not a year span.
-    await expect.element(screen.getByText("full history")).toBeVisible();
+    // No explicit window → the readout reads "not set", not a year span.
+    await expect.element(screen.getByText("not set")).toBeVisible();
+    // … with a one-line nudge to set one (Y-77).
+    await expect
+      .element(
+        screen.getByText(
+          "Set the years your study covers; picks are clipped to it.",
+        ),
+      )
+      .toBeVisible();
   });
 
   it("seeds the thumbs + readout from an active window", async () => {
@@ -53,6 +61,14 @@ describe("YearWindowSlider", () => {
       .element(screen.getByRole("slider", { name: "To year" }))
       .toHaveValue("2010");
     await expect.element(screen.getByText("1990–2010")).toBeVisible();
+    // A set window reads as today — no "not set" nudge alongside it.
+    await expect
+      .element(
+        screen.getByText(
+          "Set the years your study covers; picks are clipped to it.",
+        ),
+      )
+      .not.toBeInTheDocument();
   });
 
   it("moving the From thumb commits the new window", async () => {
@@ -126,9 +142,9 @@ describe("YearWindowSlider", () => {
     expect(onchange).toHaveBeenLastCalledWith({ from: 1990, to: 2003 });
   });
 
-  // ── #629 item 1: clear control resets to full history ───────────────────────
+  // ── #629 item 1: clear control resets to unset ───────────────────────────────
 
-  it("shows no clear control at full history (null window)", async () => {
+  it("shows no clear control when already unset (null window)", async () => {
     const screen = await render(YearWindowSlider, {
       min: 1960,
       max: 2026,
@@ -136,11 +152,11 @@ describe("YearWindowSlider", () => {
       onchange: vi.fn(),
       onclear: vi.fn(),
     });
-    // Nothing to clear when already full history — the control is hidden.
+    // Nothing to clear when already unset — the control is hidden.
     await expect
       .element(
         screen.getByRole("button", {
-          name: "Clear project window (full history)",
+          name: "Clear project window (not set)",
         }),
       )
       .not.toBeInTheDocument();
@@ -156,7 +172,7 @@ describe("YearWindowSlider", () => {
       onclear,
     });
     await screen
-      .getByRole("button", { name: "Clear project window (full history)" })
+      .getByRole("button", { name: "Clear project window (not set)" })
       .click();
     expect(onclear).toHaveBeenCalledTimes(1);
   });

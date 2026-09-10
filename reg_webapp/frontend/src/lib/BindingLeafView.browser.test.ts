@@ -1388,8 +1388,14 @@ describe("BindingLeafView representation picker (#678)", () => {
     await kon.click();
     await page.getByRole("button", { name: "Add to project" }).click();
 
+    // Y-77: the refusal names BOTH ways out — the rail's study window and this
+    // page's Apply — not just the one the old copy pointed to.
     await expect
-      .element(page.getByText(/Apply a period before adding/))
+      .element(
+        page.getByText(
+          "Apply a period before adding — set the study window in the rail, or press Apply under Period above, then select and add again.",
+        ),
+      )
       .toBeVisible();
     expect(projectStore.draft?.sources).toHaveLength(0);
     await expect.element(page.getByText(/^Applied/)).not.toBeInTheDocument();

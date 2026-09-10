@@ -45,6 +45,7 @@ import { router } from "./router.svelte";
 import SourcePeriodCorrection from "./SourcePeriodCorrection.svelte";
 import SubjectView from "./SubjectView.svelte";
 import {
+  ADD_PERIOD_REQUIRED_MESSAGE,
   committedPickerRows,
   finalAddPeriodWires,
   periodChangesWithStagedAdds,
@@ -720,8 +721,7 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
     <p class="page-add">
       <span class="add-blocked" role="alert">
         <span aria-hidden="true">▲</span>
-        Apply a period before adding — press Apply under Period above, then select
-        and add again.
+        {ADD_PERIOD_REQUIRED_MESSAGE}
       </span>
     </p>
   {:else if applyOutcome}

@@ -68,7 +68,7 @@ describe("windowStore — no active draft (localStorage fallback)", () => {
   it("clearing back to null is reachable after an explicit window (#629 item 1)", () => {
     // The header's clear control wires `onclear` → `set(null)`. After any
     // interaction has set an explicit window, clearing restores the null state
-    // (→ the slider's "full history" readout, asserted in the browser test).
+    // (→ the slider's "not set" readout, asserted in the browser test).
     windowStore.set({ from: 1960, to: 2026 }); // even a FULL-bounds explicit span …
     expect(windowStore.value).not.toBeNull();
     windowStore.set(null); // … the explicit clear still returns to full history.

@@ -415,13 +415,20 @@ export function periodChangesWithStagedAdds(
   });
 }
 
+/** The nudge a leaf/group page shows when `finalAddPeriodWires` refuses a staged
+ * add (Y-77): named both ways out — set the study window in the rail, or apply a
+ * period on this page — as ONE shared string, so the two pages can't drift. */
+export const ADD_PERIOD_REQUIRED_MESSAGE =
+  "Apply a period before adding — set the study window in the rail, or press Apply under Period above, then select and add again.";
+
 /** The wire period each staged add resolves its binding at and commits under, in
  * `adds` order — or null when ANY of them has no valid FINITE period. A picker row
  * with an open-ended delivery window, picked with neither a `?period` nor a project
  * window to clip it to, resolves no period at all: committing it would author
  * `period: ""` and a `type: ""` the resolve cannot derive, which only the backend
  * validator would catch. All-or-nothing so one such row can't half-apply a batch —
- * the caller keeps the draft unchanged and asks for a period instead. */
+ * the caller keeps the draft unchanged and asks for a period instead
+ * (`ADD_PERIOD_REQUIRED_MESSAGE`). */
 export function finalAddPeriodWires(
   existing: Iterable<PickerSourcePeriod>,
   changes: readonly StagedPeriodChange[],

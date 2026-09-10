@@ -10,8 +10,8 @@
 // overlaid native `<input type="range">` thumbs (real `slider` ARIA + keyboard,
 // clamped non-crossing); this component layers the readout, the `.fill`, and the
 // clear control on top. When no window is set, the thumbs seed at the full
-// [min, max] span (a no-op visual default) and the readout shows "full history"
-// until the user moves a thumb.
+// [min, max] span (a no-op visual default) and the readout shows "not set" (plus
+// a one-line nudge to set one, Y-77) until the user moves a thumb.
 //
 // COMMIT-ON-RELEASE (#629 item 2): the thumbs/readout update LIVE on each native
 // `input` tick (the bound `from`/`to` below — smooth dragging), but we only
@@ -59,7 +59,7 @@ const selection = $derived({
 });
 
 // Whether the current thumbs cover the FULL bounds and no window is set — the
-// "full history" readout state (a slider parked at the extremes with no explicit
+// "not set" readout state (a slider parked at the extremes with no explicit
 // window means the user hasn't narrowed anything).
 const isFullHistory = $derived(active === null && from === min && to === max);
 
@@ -85,26 +85,31 @@ const fillWidth = $derived(((to - from) / span) * 100);
   <div class="readout-row">
     <span class="readout" aria-live="polite">
       {#if isFullHistory}
-        full history
+        not set
       {:else}
         {from}–{to}
       {/if}
     </span>
-    <!-- Clear control (#629 item 1): an explicit reset to full history — the only
+    <!-- Clear control (#629 item 1): an explicit reset to "not set" — the only
          way back to a `null` window once dragged (a moved slider always expresses
-         an explicit span). Hidden when already at full history so it's not a no-op. -->
+         an explicit span). Hidden when already unset so it's not a no-op. -->
     {#if active !== null}
       <button
         type="button"
         class="clear"
-        aria-label="Clear project window (full history)"
-        title="Clear — full history"
+        aria-label="Clear project window (not set)"
+        title="Clear — not set"
         onclick={() => onclear()}
       >
         ✕
       </button>
     {/if}
   </div>
+  {#if isFullHistory}
+    <!-- Y-77: a first-time user has no study window and no `?period` — nudge them
+         to set one here rather than leaving "not set" unexplained. -->
+    <p class="hint">Set the years your study covers; picks are clipped to it.</p>
+  {/if}
   <!-- The shared dual-thumb track (#632), on its own full-width row. `onCommit`
        (native `change`) is the COMMIT (#629 item 2) — no `onLiveInput`, so a drag
        updates only the bound `from`/`to` (live readout/fill) and commits once on
@@ -139,6 +144,13 @@ const fillWidth = $derived(((to - from) / span) * 100);
     font-size: 0.8rem;
     color: var(--text-muted);
     white-space: nowrap;
+  }
+  /* The Y-77 nudge: one quiet line under the readout, only while unset — not a
+     warning (no glyph/status tint), just the missing context. */
+  .hint {
+    margin: 0;
+    font-size: var(--text-micro);
+    color: var(--text-muted);
   }
   .clear {
     /* A small, low-emphasis reset glyph at the right end of the readout row.
