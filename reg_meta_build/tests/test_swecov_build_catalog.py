@@ -46,7 +46,7 @@ def _column(name: str, **extra: str) -> dict:
 
 
 def test_spelling_variants_become_one_state_carrying_the_other_columns() -> None:
-    """The two Covid spellings of `inera/vardguiden/bestallda-prover`.
+    """The two Covid spellings in Inera's `Ordered tests` delivery.
 
     They differ only in punctuation, so they are ONE steward variable — and they
     are CO-DELIVERED, so they are ONE state whose `aliases` carry the other
@@ -193,10 +193,6 @@ def _variant_names(inventory: dict, provider: str, register: str) -> dict[str, s
 
 
 def test_a_named_variant_carries_its_own_name(flavor_inventory: dict) -> None:
-    assert _variant_names(flavor_inventory, "inera", "vardguiden") == {
-        "samtal": "Samtal 1177",
-        "bestallda-prover": "Beställda prover",
-    }
     assert _variant_names(flavor_inventory, "skatteverket", "tillfalligt-anstand") == {
         "ansokt": "Ansökt",
         "beviljat": "Beviljat",
@@ -207,6 +203,25 @@ def test_a_named_variant_carries_its_own_name(flavor_inventory: dict) -> None:
         "individer": "Individer",
         "transaktioner": "Transaktioner",
     }
+
+
+def test_disjoint_deliveries_of_one_service_are_separate_registers(
+    flavor_inventory: dict,
+) -> None:
+    """Inera's two 1177 deliveries are disjoint schemas (see the disposition
+    comment), so they are two REGISTERS with a `_default` variant each, under one
+    provider named for the service."""
+    assert [
+        (r["key"], r["name"], [v["key"] for v in r["variants"]])
+        for r in flavor_inventory["registers"]
+        if r["provider"] == "inera"
+    ] == [
+        ("bestallda-prover", "Beställda prover", ["_default"]),
+        ("samtal", "Samtal 1177", ["_default"]),
+    ]
+    assert {"slug": "inera", "name": "Inera AB / 1177 Vårdguiden"} in flavor_inventory[
+        "providers"
+    ]
 
 
 def test_a_default_variant_keeps_the_register_name(flavor_inventory: dict) -> None:
@@ -227,9 +242,11 @@ def test_the_emitted_inventory_loads_under_the_extend_db_contract(
     the `extend-db` contract admits."""
     inventory = load_inventory(flavor_inventory_path)
     register = next(
-        r for r in inventory.registers if (r.provider, r.key) == ("inera", "vardguiden")
+        r
+        for r in inventory.registers
+        if (r.provider, r.key) == ("inera", "bestallda-prover")
     )
-    variant = next(v for v in register.variants if v.key == "bestallda-prover")
+    variant = next(v for v in register.variants if v.key == "_default")
     covid = next(v for v in variant.variables if v.key == "covid-19-antikroppar")
 
     assert [(s.column, s.aliases) for s in covid.states] == [
@@ -270,15 +287,15 @@ def flavored_db(tmp_path_factory: pytest.TempPathFactory) -> Path:
     conn = sqlite3.connect(db_path)
     conn.executescript(DDL)
     conn.execute(
-        "INSERT INTO provider (provider_id, slug, name) VALUES (900, 'inera', 'Inera AB')"
+        "INSERT INTO provider (provider_id, slug, name) VALUES (900, 'inera', 'Inera AB / 1177 Vårdguiden')"
     )
     conn.execute(
         "INSERT INTO register (register_id, provider_id, name, slug) "
-        "VALUES (901, 900, '1177 Vårdguiden', 'vardguiden')"
+        "VALUES (901, 900, 'Beställda prover', 'bestallda-prover')"
     )
     conn.execute(
         "INSERT INTO register_variant (register_variant_id, register_id, name, slug) "
-        "VALUES (902, 901, 'Beställda prover', 'bestallda-prover')"
+        "VALUES (902, 901, 'Beställda prover', '_default')"
     )
     for variable_id, slug, columns in (
         (903, "covid-19-antikroppar", ("Covid-19 antikroppar", "Covid_19_antikroppar")),
@@ -321,7 +338,7 @@ def test_an_alias_only_spelling_resolves_beside_its_state_spelling(
     union it resolved to nothing at all — no mapping, hence not orderable."""
     by_regcol, by_provcol, states_vc = build_catalog._steward_load_db(flavored_db)
 
-    coord = "inera/vardguiden/bestallda-prover"
+    coord = "inera/bestallda-prover/_default"
     for spelling in ("Covid-19 antikroppar", "Covid_19_antikroppar"):
         record = {
             "coord": coord,
@@ -331,7 +348,7 @@ def test_an_alias_only_spelling_resolves_beside_its_state_spelling(
             "isid": 0,
         }
         # Both spellings, under the one variable, with the owning state's shape.
-        assert by_regcol[("inera/vardguiden", spelling.upper())] == [record]
+        assert by_regcol[("inera/bestallda-prover", spelling.upper())] == [record]
         assert by_provcol[("inera", spelling.upper())] == [record]
         # The alias carries its own window; the state spelling is NOT restated
         # by the alias arm (it has a `variable_state` row of its own).
@@ -345,7 +362,7 @@ def test_an_alias_only_spelling_resolves_beside_its_state_spelling(
     # A windowless `variable_alias` spelling is search-only: the column that
     # resolves through it today (UPPER folding onto the state spelling) keeps
     # exactly the record — and so the mapping — it already had.
-    assert by_regcol[("inera/vardguiden", "T_KOLUMN")] == [
+    assert by_regcol[("inera/bestallda-prover", "T_KOLUMN")] == [
         {
             "coord": coord,
             "vslug": "t-kolumn",
@@ -394,12 +411,12 @@ def test_inventory_maps_every_spelling_of_a_co_delivered_column(
         for column in table["column"]
     } == {
         "Covid-19 antikroppar": [
-            ("inera/vardguiden/covid-19-antikroppar", "Covid-19 antikroppar")
+            ("inera/bestallda-prover/covid-19-antikroppar", "Covid-19 antikroppar")
         ],
         "Covid_19_antikroppar": [
-            ("inera/vardguiden/covid-19-antikroppar", "Covid_19_antikroppar")
+            ("inera/bestallda-prover/covid-19-antikroppar", "Covid_19_antikroppar")
         ],
-        "T_kolumn": [("inera/vardguiden/t-kolumn", "T_kolumn")],
+        "T_kolumn": [("inera/bestallda-prover/t-kolumn", "T_kolumn")],
     }
     # §12's other half: every emitted mapping must resolve against the DB the
     # deployment serves, or `stewards.check_delivery_inventory` refuses boot.

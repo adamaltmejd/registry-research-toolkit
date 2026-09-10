@@ -1595,9 +1595,12 @@ def cmd_grafts(args: argparse.Namespace) -> None:
 # (enriched-JSON key, provider_slug, provider_name, register_key, register_name,
 #  variant_key, variant_slug, variant_name). Single-variant registers use the
 #  `_default` variant slug (matches the global catalog convention) and repeat the
-#  register name as the variant name; a register named by several entries (Inera
-#  1177, Skatteverket's schemes, Tillväxtverket's delivery models) accretes one
-#  variant per entry, each naming its own delivery. Exactly one entry names a
+#  register name as the variant name; a register named by several entries
+#  (Skatteverket's schemes, Tillväxtverket's delivery models) accretes one
+#  variant per entry, each naming its own delivery — entries share a register
+#  only where they DELIVER that one register's variables, so deliveries with
+#  disjoint schemas are separate registers (reg_meta/DESIGN.md → "Why the
+#  variant is a coordinate, not an identity level"). Exactly one entry names a
 #  given (provider, register, variant) — a second is fatal in `cmd_flavor`.
 _FLAVOR_DISPOSITION: list[tuple[str, str, str, str, str, str, str, str]] = [
     # Commercial deliveries — no global home by construction.
@@ -1784,27 +1787,28 @@ _FLAVOR_DISPOSITION: list[tuple[str, str, str, str, str, str, str, str]] = [
         "_default",
         "Pandemrix-vaccinationer",
     ),
-    # Inera / 1177 Vårdguiden — one register, a variant per delivery. Register
-    # key/slug must be letter-leading (slug grammar ^[a-z]...), so "vardguiden"
-    # not "1177".
+    # Inera / 1177 Vårdguiden — two REGISTERS: the deliveries are disjoint
+    # schemas sharing only `PersonNr` (the rule above), and each is its own
+    # enriched-holding key, so neither needs a `_FLAVOR_VARIANT_TABLES` selector.
+    # The 1177 service names the PROVIDER.
     (
         "Inera/1177/Calls to 1177",
         "inera",
-        "Inera AB",
-        "vardguiden",
-        "1177 Vårdguiden",
+        "Inera AB / 1177 Vårdguiden",
         "samtal",
-        "samtal",
+        "Samtal 1177",
+        "_default",
+        "_default",
         "Samtal 1177",
     ),
     (
         "Inera/1177/Ordered tests",
         "inera",
-        "Inera AB",
-        "vardguiden",
-        "1177 Vårdguiden",
+        "Inera AB / 1177 Vårdguiden",
         "bestallda-prover",
-        "bestallda-prover",
+        "Beställda prover",
+        "_default",
+        "_default",
         "Beställda prover",
     ),
     # National quality registers — no SCB/SOS catalog home.
