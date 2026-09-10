@@ -247,6 +247,17 @@ def _coverage_bounds(
     return cov_from, (None if open_ended else cov_to), open_ended
 
 
+def _keep_lowest(spellings: dict[str, str], column: str) -> None:
+    """Record `column` in `spellings` under its case-folded identity (`py_lower`'s
+    rule), keeping the LOWEST spelling by byte order. Lowest rather than
+    first-seen so that a caller folding unordered rows lands on the same spelling
+    whatever order it reads them in."""
+    folded = column.lower()
+    held = spellings.get(folded)
+    if held is None or column < held:
+        spellings[folded] = column
+
+
 # Concept-group browse shapes (#303; see DESIGN.md → Concept groups): a derived
 # PRESENTATION-ONLY grouping of near-identical browse rows (split-sibling edge
 # components, month-suffixed families, curated facet families). A group is NOT an
@@ -1409,7 +1420,12 @@ class Catalog:
         deliver is `check_inventory`'s question, and it reads the resolver).
         Columns are identified case-INSENSITIVELY (`py_lower`'s rule, which the
         build validates `variable_alias ⊇ state columns` with), so an alias that
-        only re-spells a listed column is that one delivery, not a second.
+        only re-spells a listed column is that one delivery, not a second. Where
+        several spellings of one column EACH carry windows, that one delivery
+        spans them all — earliest start, latest end, every window row counted —
+        under the state's own spelling, or the lowest by byte order where no state
+        names it. No step of the fold reads the row order, so the same DB answers
+        byte-identically whatever plan SQLite picks for the unordered reads.
 
         Every join is LEFT, as in `register_variable_coverage`, purely to pin the
         JOIN ORDER: with inner joins SQLite drives from the state / alias table
@@ -1473,7 +1489,7 @@ class Catalog:
 
         # (slug, variant) -> {delivery column -> (cov_from, cov_to, count)}: the
         # state grain first (exact spelling, as `register_column_coverage` keys
-        # it), widened by the two alias passes below.
+        # it), widened by the alias history below.
         columns: dict[
             tuple[str, str], dict[str | None, tuple[str | None, str | None, int]]
         ] = {}
@@ -1481,6 +1497,10 @@ class Catalog:
         # of its own is delivered over. Built from the state rows alone, so an
         # added alias column can never widen it.
         spans: dict[tuple[str, str], tuple[str, str, int]] = {}
+        # Case-folded column -> the spelling to list it under, what the states say
+        # and what the alias history says; the state's own wins where both name it.
+        stated: dict[tuple[str, str], dict[str, str]] = {}
+        aliased: dict[tuple[str, str], dict[str, str]] = {}
         for r in state_rows:
             key = (r["slug"], r["variant"])
             columns.setdefault(key, {})[r["col"]] = (
@@ -1488,35 +1508,52 @@ class Catalog:
                 r["cov_to"],
                 r["nstates"],
             )
+            if r["col"] is not None:
+                _keep_lowest(stated.setdefault(key, {}), r["col"])
             prev = spans.get(key, (r["cov_from"], r["cov_to"], 0))
             spans[key] = (
                 min(prev[0], r["cov_from"]),
                 max(prev[1], r["cov_to"]),
                 prev[2] + r["nstates"],
             )
-        # Case-folded column -> the spelling already listed for that variant.
-        listed: dict[tuple[str, str], dict[str, str]] = {
-            key: {col.lower(): col for col in cols if col is not None}
-            for key, cols in columns.items()
-        }
-        # A column's own windows are the coverage it is delivered over, replacing
-        # the state's claim where the two name the same column.
+        # A column's own windows are the coverage it is delivered over. Spellings
+        # that fold together are that ONE column, so their windows MERGE —
+        # earliest start, latest end, every window row counted — rather than the
+        # last row read winning, which would answer off the query plan (0.40.0
+        # windows 124 folded columns under more than one spelling — 14 of them
+        # over spans that differ, so last-wins loses real coverage).
+        windows: dict[tuple[str, str], dict[str, tuple[str, str, int]]] = {}
         for r in window_rows:
             key = (r["slug"], r["variant"])
-            column = listed.setdefault(key, {}).setdefault(r["col"].lower(), r["col"])
-            columns.setdefault(key, {})[column] = (
-                r["cov_from"],
-                r["cov_to"],
-                r["nwindows"],
+            _keep_lowest(aliased.setdefault(key, {}), r["col"])
+            folded = r["col"].lower()
+            held = windows.setdefault(key, {}).get(
+                folded, (r["cov_from"], r["cov_to"], 0)
             )
-        # What the alias history adds beyond those: a column with no window of its
-        # own, delivered over the variant's states.
+            windows[key][folded] = (
+                min(held[0], r["cov_from"]),
+                max(held[1], r["cov_to"]),
+                held[2] + r["nwindows"],
+            )
         for r in alias_rows:
-            key = (r["slug"], r["variant"])
-            column = listed.setdefault(key, {}).setdefault(r["col"].lower(), r["col"])
-            columns.setdefault(key, {}).setdefault(
-                column, spans.get(key, (None, None, 0))
-            )
+            _keep_lowest(aliased.setdefault((r["slug"], r["variant"]), {}), r["col"])
+        # What that history says about one variant's columns: each folded column
+        # listed under its ONE spelling, the windows on it REPLACING the state's
+        # claim (however the states spelled it), and a column the states never
+        # named added over the variant's states.
+        for key, alias_spellings in aliased.items():
+            spelled = {**alias_spellings, **stated.get(key, {})}
+            windowed = windows.get(key, {})
+            variant_columns = {
+                col: coverage
+                for col, coverage in columns.get(key, {}).items()
+                if col is None or col.lower() not in windowed
+            }
+            for folded, coverage in windowed.items():
+                variant_columns[spelled[folded]] = coverage
+            for column in spelled.values():
+                variant_columns.setdefault(column, spans.get(key, (None, None, 0)))
+            columns[key] = variant_columns
 
         out: dict[str, list[VariableDelivery]] = {}
         for (slug, variant), variant_columns in sorted(columns.items()):

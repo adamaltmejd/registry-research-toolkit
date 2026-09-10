@@ -347,6 +347,55 @@ def test_register_variable_deliveries_state_column_that_is_also_an_alias() -> No
     assert deliveries["kon"][1].coverage.open_ended is True
 
 
+@pytest.mark.parametrize("reversed_rows", [False, True])
+def test_register_variable_deliveries_windowed_case_distinct_spellings(
+    reversed_rows: bool,
+) -> None:
+    """Y-93: the corpus windows one column under SEVERAL case-distinct spellings
+    (`fastigheter`'s IDVE / IdVe / idve, each with windows of its own). They are
+    ONE column (`py_lower`), so the delivery spans them all and is listed once:
+    under the state's own spelling where a state names it, else the lowest by byte
+    order. Neither alias read is ordered, so the same rows read the other way
+    round must answer identically — the coverage cannot be whichever spelling
+    came last."""
+    conn = build_slugged_db()
+    add_variable(conn, register_id=1, var_id=700, name="Fastighet", slug="idve")
+    add_state(
+        conn,
+        register_id=1,
+        variable_slug="idve",
+        register_variant_id=10,
+        valid_from="2013-01-01",
+        valid_to="2023-12-31",
+        delivery_column_name="Idve",
+    )
+    aliases = [
+        ("IDVE", (("2013-01-01", "2023-12-31"),)),
+        ("IdVe", (("1998-01-01", "2012-12-31"),)),
+        ("idve", (("1998-01-01", "2004-12-31"), ("2005-01-01", "2012-12-31"))),
+        # A second folded column, this one named by no state at all.
+        ("TAXVARDE", (("2011-01-01", "2015-12-31"),)),
+        ("Taxvarde", (("2005-01-01", "2010-12-31"),)),
+    ]
+    for column, windows in reversed(aliases) if reversed_rows else aliases:
+        _add_alias(conn, variable_slug="idve", column=column, windows=windows)
+
+    deliveries = Catalog(conn).register_variable_deliveries("scb", "lisa")
+
+    assert [(d.variant, d.column) for d in deliveries["idve"]] == [
+        ("individer-15plus", "Idve"),
+        ("individer-15plus", "TAXVARDE"),
+    ]
+    by_column = {d.column: d.coverage for d in deliveries["idve"]}
+    # Every spelling's windows — and they replace the state's own 2013– claim.
+    assert by_column["Idve"].coverage_from == "1998-01-01"
+    assert by_column["Idve"].coverage_to == "2023-12-31"
+    assert by_column["Idve"].state_count == 4
+    assert by_column["TAXVARDE"].coverage_from == "2005-01-01"
+    assert by_column["TAXVARDE"].coverage_to == "2015-12-31"
+    assert by_column["TAXVARDE"].state_count == 2
+
+
 def test_coverage_bounds_mapping() -> None:
     # (coverage_from, coverage_to, open_ended).
     assert _coverage_bounds("2010-01-01", "9999-12-31") == ("2010-01-01", None, True)
