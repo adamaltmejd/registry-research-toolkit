@@ -122,6 +122,20 @@ inactivity_timeout_minutes = 0
 total_work_timeout_minutes = 360
 instructions = "Smallest safe change, in the ticket's scope only; match the conventions of the code you are changing. No scope beyond the ticket — if more is needed, file a proposal. Before declaring the candidate, make one simplification pass over your own diff (the /simplify skill if available): reuse what exists, drop what the ticket did not ask for, then re-run the checks."
 
+# Same worker as light, at full effort instead of medium, for the rendered
+# candidates the light-ui workflow further down puts on it: a small change
+# whose picture a flow gate already retains, so the operator reviews screenshots
+# rather than rebuilding the render environment to look for themselves.
+[roles.light-ui]
+backend = "claude"
+model = "claude-sonnet-5"
+effort = "xhigh"
+access = "writable"
+tools = { subagents = false }
+inactivity_timeout_minutes = 0
+total_work_timeout_minutes = 360
+instructions = "Smallest safe change, in the ticket's scope only; match the conventions of the code you are changing. No scope beyond the ticket — if more is needed, file a proposal. Before declaring the candidate, make one simplification pass over your own diff (the /simplify skill if available): reuse what exists, drop what the ticket did not ask for, then re-run the checks. If the ticket changes rendered reg_webapp frontend UI: load the repo skill reg-webapp-frontend-design before authoring (if the Skill tool does not list it, read .claude/skills/reg-webapp-frontend-design/SKILL.md). Do not run reg-webapp-design-reviewer and do not render screenshots yourself — the flow gates retain the pictures and the operator judges them."
+
 # Each [checks.<name>] section defines a gate, and each workflow's checks key
 # (see [workflows.*] below) selects which gates its candidates must pass — a
 # gate no workflow lists runs nowhere.
@@ -425,6 +439,21 @@ checks = ["lint", "test", "frontend", "project-flows", "catalog-flows", "replace
 role = "light"
 review = "none"
 checks = ["lint", "test", "frontend"]
+
+# The light-ui workflow is light's economy applied to a rendered change: the
+# worker is light's model at full effort (Sonnet at xhigh -- more reasoning per
+# turn than light's medium, not the Opus implementation role), and what it drops
+# is the in-session review machinery -- no /simplify subagent round, no
+# reg-webapp-design-reviewer seat. What it keeps is the rendered flow gates, so
+# the operator still gets pictures: project-flows, catalog-flows and
+# replace-flows retain screenshots the same way they do for ui. Select it for a
+# small rendered change whose surface those gate scenarios already render -- a
+# copy change, a gate flip, a label source. A change on a route the scenarios
+# do not render still needs the operator's own render, or the ui workflow.
+[workflows.light-ui]
+role = "light-ui"
+review = "none"
+checks = ["lint", "test", "frontend", "project-flows", "catalog-flows", "replace-flows"]
 
 # concurrency limits how many ready tickets run at once.
 [scheduler]

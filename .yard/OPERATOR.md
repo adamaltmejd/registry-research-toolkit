@@ -38,7 +38,10 @@ worker, reviewer or plan argues for broader work.
   design seat and the rendered flow gates (`project-flows`, `catalog-flows`) with
   retained screenshots alongside the code seat. No other workflow binds both. Read
   `yard workflow list` or `.yard/config.toml` for the actual checks; do not assume all
-  workflows run all gates. Other work uses `default` or `light` as appropriate.
+  workflows run all gates. Other work uses `default` or `light` as appropriate. A small
+  rendered change whose surface the flow-gate scenarios already render — a copy change,
+  a gate flip, a label source — goes on `light-ui` instead; approve it on the retained
+  PNGs the same way.
 
 ## Manual integration
 
