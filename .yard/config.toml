@@ -528,4 +528,7 @@ build_artifacts = [
   # (frontend/.gitignore matches the directory: `.svelte-check/`). First
   # tripped a Y-29/4 retarget.
   "reg_webapp/frontend/.svelte-check",
+  # Vitest's cache, left by an in-clone test run (frontend/.gitignore matches
+  # the directory: `.vitest/`). First cost cleanup generations on Y-101/Y-104/Y-110.
+  "reg_webapp/frontend/.vitest",
 ]
