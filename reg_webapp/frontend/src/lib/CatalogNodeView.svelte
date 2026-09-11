@@ -368,6 +368,16 @@ let variantsLifted = $state(false);
 // renders only `{#if selectedVariants.size > 0}` — unmounts out from under it.
 // Losing focus there would drop it to `<body>` with nothing announced (a6).
 let variantChipsEl = $state<HTMLFieldSetElement | null>(null);
+// Bumped every time the route below resets — the component is REUSED across
+// catalog paths (register → register included), so `fqidPath` changing is not
+// an unmount. `batchGuard` captures this alongside the project generation and
+// the study window, so a batch whose page changed while it was in flight is
+// abandoned rather than completing onto whatever page is on screen now. A plain
+// variable, not `$state`: nothing reads it reactively (only `batchGuard`'s
+// closure, well after this effect runs), and incrementing a tracked value inside
+// the very effect that depends on it is the read-writes-the-same-state loop
+// Svelte's `effect_update_depth_exceeded` warns about.
+let routeGeneration = 0;
 $effect(() => {
   // `fqidPath` is the navigation key — touching it here clears the filter when
   // the route changes (the component is reused across catalog paths).
@@ -378,6 +388,7 @@ $effect(() => {
   selectedColumns = new Map();
   addRefusal = null;
   applyOutcome = null;
+  routeGeneration += 1;
 });
 
 function toggleVariant(variant: string): void {
@@ -576,11 +587,28 @@ function columnKey(fqid: string, name: string): string {
  * head never stands for a concrete variant it does not name. */
 let selectedColumns = $state(new Map<string, ReadonlySet<string>>());
 let applying = $state(false);
-/** Why the last Add authored NOTHING, or null. ONE slot rather than a flag per
- * gate: every Add ends by setting it — to a reason, or to null — so a verdict about
- * one batch can never outlive the batch it refused. */
-let addRefusal = $state<string | null>(null);
-let applyOutcome = $state<StagedApplyOutcome | null>(null);
+
+/** Why the last Add authored NOTHING, and how to say it: `error` for a read that
+ * failed (nobody refused anything, the batch just couldn't be evaluated) vs `warn`
+ * for a refusal the researcher's own next move retires (add again, move the
+ * window). ONE slot rather than a flag per gate: every Add ends by setting it — to
+ * a reason, or to null — so a verdict about one batch can never outlive the batch
+ * it refused. */
+interface AddRefusal {
+  message: string;
+  tone: "warn" | "error";
+}
+let addRefusal = $state<AddRefusal | null>(null);
+
+/** What the last Add committed, plus — when the exact eras, read only after the
+ * tick gate's aggregate pass, turned out not to deliver a ticked column inside the
+ * window after all — which column(s) that was, so a partial Add never reads as a
+ * complete one (`addSelected`). Cleared on every exit but a successful apply, same
+ * as `addRefusal`. */
+interface AddOutcome extends StagedApplyOutcome {
+  droppedNote: string | null;
+}
+let applyOutcome = $state<AddOutcome | null>(null);
 
 /** The refusal when an Add could not read a ticked variable's states, so the exact
  * delivery eras are unknown. Nothing is authored — committing the list's aggregate
@@ -743,12 +771,14 @@ $effect(() => () => {
 });
 
 /** The gate a batch runs at every await: whether it STILL describes the page it was
- * pressed on. Captured at the press, because all three of its inputs can move under
- * an Add — the host can unmount, the rail can New/Open, and the STUDY WINDOW can be
- * dragged. The window is one of the three because it is this page's period control
- * and it lives in the rail, which an Add does not disable: moving it while the reads
- * are out would otherwise commit the batch under the years the researcher just left,
- * beside a list already redrawn for the years they chose.
+ * pressed on. Captured at the press, because all four of its inputs can move under
+ * an Add — the host can unmount, the ROUTE can change onto a different node without
+ * unmounting (this component is reused register → register, `routeGeneration`), the
+ * rail can New/Open, and the STUDY WINDOW can be dragged. The window is one of the
+ * four because it is this page's period control and it lives in the rail, which an
+ * Add does not disable: moving it while the reads are out would otherwise commit the
+ * batch under the years the researcher just left, beside a list already redrawn for
+ * the years they chose.
  *
  * A closure rather than captured values threaded through, so the call sites — after
  * the era reads, and inside `applyStagedPicks`, whose binding resolves are one more
@@ -756,8 +786,10 @@ $effect(() => () => {
 function batchGuard(): () => boolean {
   const stagedAgainst = projectStore.replacementGeneration;
   const stagedYears = windowYears;
+  const stagedRoute = routeGeneration;
   return () =>
     unmounted ||
+    routeGeneration !== stagedRoute ||
     projectStore.replacementGeneration !== stagedAgainst ||
     windowYears !== stagedYears;
 }
@@ -813,12 +845,17 @@ async function exactPicks(
 }
 
 async function addSelected(): Promise<void> {
+  // The button stays focusable and clickable through an Add (`aria-disabled`, not
+  // `disabled` — see the markup), so a re-entrant press needs its own guard.
+  if (applying) {
+    return;
+  }
   // Bind the batch to the ticks AND to the page it was pressed on: the per-variable
-  // reads below are a round trip, and a New/Open in the rail or a drag of the study
-  // window during it means what comes back is no longer a pick against the project —
-  // or under the window — the researcher pressed Add on (`batchGuard`).
-  // `applyStagedPicks` runs the same guard, but only from the moment IT is called,
-  // which is after this read.
+  // reads below are a round trip, and a New/Open in the rail, a route change, or a
+  // drag of the study window during it means what comes back is no longer a pick
+  // against the project, the page, or under the window the researcher pressed Add
+  // on (`batchGuard`). `applyStagedPicks` runs the same guard, but only from the
+  // moment IT is called, which is after this read.
   const lapsed = batchGuard();
   const scope = addScope;
   const ticked = stagedTicks;
@@ -827,24 +864,48 @@ async function addSelected(): Promise<void> {
     const exact = await exactPicks(ticked);
     if (lapsed()) {
       // Abandoned mid-read, before anything was authored. The verdict on a batch
-      // staged against a project — or a window — that is gone says nothing about the
-      // next Add, and the ticks survive for one against what is on screen now.
+      // staged against a project, a window, or a PAGE that is gone says nothing
+      // about the next Add, and the ticks survive for one against what is on
+      // screen now.
       addRefusal = null;
+      applyOutcome = null;
       return;
     }
     if (exact === null) {
-      addRefusal = COLUMN_STATES_UNREAD_MESSAGE;
+      addRefusal = { message: COLUMN_STATES_UNREAD_MESSAGE, tone: "error" };
+      applyOutcome = null;
       return;
     }
     // The exact eras can disagree with the aggregate coverage the tick gate read, so
     // apply the same gate to what came back: only rows really delivered inside the
     // window commit, and only the ticked columns they cover are reported as added.
     const adds = exact.filter((pick) => rowDeliversInScope(pick.row, scope));
-    const columns = columnKeys(adds).size;
+    const addedKeys = columnKeys(adds);
+    const columns = addedKeys.size;
     if (columns === 0) {
-      addRefusal = outOfWindowMessage(scopeYears(scope));
+      addRefusal = {
+        message: outOfWindowMessage(scopeYears(scope)),
+        tone: "warn",
+      };
+      applyOutcome = null;
       return;
     }
+    // The eras can drop SOME ticked columns without emptying the batch — named in
+    // the confirmation below rather than silently lost, and left ticked (the
+    // `selectedColumns` prune at the end only drops what committed) so the
+    // researcher can retry them once the window covers their real eras. Named only
+    // when NONE of its rows survived the filter above: a column two variants
+    // deliver, one inside the window and one outside it, still committed.
+    const dropped = exact.filter((pick) => !rowDeliversInScope(pick.row, scope));
+    const droppedNames = [
+      ...new Set(
+        dropped.flatMap((pick) =>
+          pick.columns.filter(
+            (name) => !addedKeys.has(columnKey(pick.band.key, name)),
+          ),
+        ),
+      ),
+    ].sort();
     const result = await applyStagedPicks(
       { adds, removes: [] },
       {
@@ -853,20 +914,36 @@ async function addSelected(): Promise<void> {
         cancelled: lapsed,
       },
     );
-    addRefusal =
-      result.kind === "period-required" ? ADD_WINDOW_REQUIRED_MESSAGE : null;
-    if (result.kind === "applied") {
-      // Confirm in the unit the button promised — the ticked COLUMNS that committed,
-      // never the rows: one tick of a column two variants deliver stages two adds, and
-      // "+2 columns" would not be the move the researcher just made.
-      applyOutcome = result.outcome && {
-        added: columns,
-        removed: 0,
-      };
-      // The ticks are consumed: the columns now read as in the project, and a
-      // second press can't re-add what the first one committed.
-      selectedColumns = new Map();
+    if (result.kind !== "applied") {
+      // A refusal (period-required) or an abandonment (the project replaced mid
+      // resolve): either way nothing was authored, and a stale confirmation from an
+      // earlier, successful Add must not go on reading as current.
+      addRefusal =
+        result.kind === "period-required"
+          ? { message: ADD_WINDOW_REQUIRED_MESSAGE, tone: "warn" }
+          : null;
+      applyOutcome = null;
+      return;
     }
+    addRefusal = null;
+    // Confirm in the unit the button promised — the ticked COLUMNS that committed,
+    // never the rows: one tick of a column two variants deliver stages two adds, and
+    // "+2 columns" would not be the move the researcher just made.
+    applyOutcome = result.outcome && {
+      added: columns,
+      removed: 0,
+      droppedNote:
+        droppedNames.length > 0
+          ? `${droppedNames.join(", ")} not delivered in ${scopeYears(scope)}`
+          : null,
+    };
+    // Only the columns that committed are consumed: they now read as in the
+    // project, and a second press can't re-add what this one did. A column the
+    // eras dropped stays ticked — it was never added, so there is nothing to undo
+    // by re-pressing once the window covers it.
+    selectedColumns = new Map(
+      [...selectedColumns].filter(([key]) => !addedKeys.has(key)),
+    );
   } finally {
     applying = false;
   }
@@ -1163,7 +1240,8 @@ async function addSelected(): Promise<void> {
           <Button
             variant="primary"
             size="sm"
-            disabled={stagedColumns === 0 || !seedReady || applying}
+            disabled={stagedColumns === 0 || !seedReady}
+            aria-disabled={applying}
             onclick={addSelected}
           >
             {#if applying}
@@ -1177,7 +1255,9 @@ async function addSelected(): Promise<void> {
         </div>
         <StagedAddStatus
           outcome={applyOutcome}
-          blocked={addRefusal}
+          blocked={addRefusal?.message ?? null}
+          blockedTone={addRefusal?.tone ?? "warn"}
+          note={applyOutcome?.droppedNote ?? null}
         />
       {:else}
         <Panel title="Variables">
@@ -1395,6 +1475,13 @@ async function addSelected(): Promise<void> {
      not. */
   .delivery-column .window-years {
     font-family: var(--font-mono);
+  }
+  /* The tick's focus ring — frontend/DESIGN.md's per-component rule: `.cbox`'s face
+     lives in ui/utilities.css, but `:focus-visible` is each consumer's own (the
+     other being RepresentationPicker.svelte), never a global sheet. */
+  .cbox:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
   }
   /* The add bar under the list: the selected count, then the single primary Add.
      Same shape as the picker footer on the variable pages, so the two authoring

@@ -3235,6 +3235,16 @@ function codingsVaryHref(
     overflow: hidden;
   }
 
+  /* The tick's focus ring — frontend/DESIGN.md's per-component rule: `.cbox`'s face
+     lives in ui/utilities.css, but `:focus-visible` is each consumer's own (the
+     other being CatalogNodeView.svelte), never a global sheet. Every row, subhead
+     and select-all checkbox in this component is a `.cbox`, so one rule covers
+     them all. */
+  .cbox:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+  }
+
   /* ── Graph/time-band mode (#904) ───────────────────────────────────────────
      Small edge-bearing graphs render as the picker itself: variable lanes in the
      sticky gutter, selectable representation cells on the year axis, and succession

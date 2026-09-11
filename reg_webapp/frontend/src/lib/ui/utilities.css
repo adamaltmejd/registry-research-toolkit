@@ -118,11 +118,15 @@
    <input type="checkbox"> (so it keeps the role, the keyboard control and the
    :checked/:indeterminate states); this strips the OS chrome and repaints the box
    in roles — --border on --surface, an --accent fill + --accent-fg check when
-   checked, the app's --focus-ring on :focus-visible, the app's dim when disabled.
-   Without it a tick renders in the browser's own blue, a hue no theme can remap.
-   CROSS-component (the representation picker's rows and select-all, the register
-   list's column ticks), so like `.micro-label` above it lives here rather than in
-   any one component's <style>. */
+   checked, the app's dim when disabled. The FOCUS ring is deliberately NOT here:
+   frontend/DESIGN.md's per-component focus rule keeps `:focus-visible { box-shadow:
+   var(--focus-ring) }` in each consumer's own scoped CSS, never a global sheet —
+   RepresentationPicker.svelte and CatalogNodeView.svelte each carry their own
+   `.cbox:focus-visible` rule. This sheet owns only the face. Without it a tick
+   renders in the browser's own blue, a hue no theme can remap. CROSS-component (the
+   representation picker's rows and select-all, the register list's column ticks),
+   so like `.micro-label` above it lives here rather than in any one component's
+   <style>. */
 .cbox {
   position: relative;
   flex: 0 0 auto;
@@ -143,11 +147,6 @@
 .cbox:disabled {
   opacity: 0.5;
   cursor: not-allowed;
-}
-
-.cbox:focus-visible {
-  outline: none;
-  box-shadow: var(--focus-ring);
 }
 
 /* FULL selection → the accent fill + the centered check. Indeterminate is NOT here:

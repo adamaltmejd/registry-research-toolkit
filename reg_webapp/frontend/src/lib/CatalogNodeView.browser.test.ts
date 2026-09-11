@@ -1436,6 +1436,10 @@ describe("CatalogNodeView register arm: add columns (Y-83)", () => {
       .element(page.getByText(/set the study window in the rail/))
       .toBeVisible();
     expect(projectStore.draft?.sources).toEqual([]);
+    // A refusal the researcher's own next move retires — warn, announced politely
+    // (StagedAddStatus, Y-106), never the error tint a read failure gets.
+    const refusal = page.getByText(/Apply a period before adding/).element();
+    expect(refusal.closest("[role]")?.getAttribute("role")).toBe("status");
   });
 
   it("retires the study-window nudge once the window is set, keeping the ticks", async () => {
@@ -1457,6 +1461,35 @@ describe("CatalogNodeView register arm: add columns (Y-83)", () => {
       .not.toBeInTheDocument();
     await page.getByRole("button", { name: "Add 1 column to project" }).click();
     await expect.element(page.getByText("Applied +1 column")).toBeVisible();
+  });
+
+  it("clears a stale confirmation when a later Add is refused (Y-106)", async () => {
+    // A SECOND register_variant (`arbetsstallen`), carrying no source yet: a
+    // pick on `Kon`'s own `individer-15plus` would inherit that source's period
+    // instead of refusing, which would test nothing.
+    mockRegisterAndResolve(columnedRegisterNode(2));
+    vi.mocked(getRegisterVariants).mockResolvedValue(lisaVariants());
+    windowStore.set({ from: 2018, to: 2023 });
+
+    await renderRegister();
+    await expect.element(page.getByText("Kön")).toBeVisible();
+    await tickColumn("Kon");
+    await page.getByRole("button", { name: "Add 1 column to project" }).click();
+    await expect.element(page.getByText("Applied +1 column")).toBeVisible();
+
+    // Unsetting the window after a successful Add, then ticking an open-ended
+    // column on the OTHER register_variant (`ArbstNr`, delivered 2005–, no
+    // existing source) and pressing Add again: that batch has no finite period
+    // to commit under and is refused whole. The earlier confirmation must not go
+    // on reading as current beside a refusal for a DIFFERENT Add.
+    windowStore.set(null);
+    await tickColumn("ArbstNr");
+    await page.getByRole("button", { name: "Add 1 column to project" }).click();
+
+    await expect
+      .element(page.getByText(/Apply a period before adding/))
+      .toBeVisible();
+    await expect.element(page.getByText(/Applied/)).not.toBeInTheDocument();
   });
 
   it("stages what the variant lens shows, one add per delivering variant", async () => {
@@ -1745,6 +1778,10 @@ describe("CatalogNodeView register arm: add columns (Y-83)", () => {
       .element(page.getByText(/Could not read the delivery years/))
       .toBeVisible();
     expect(projectStore.draft?.sources).toEqual([]);
+    // A read that failed, not a refusal: the error tint and `alert` (StagedAddStatus,
+    // Y-106) — nobody declined anything, the batch just couldn't be evaluated.
+    const failure = page.getByText(/Could not read the delivery years/).element();
+    expect(failure.closest("[role]")?.getAttribute("role")).toBe("alert");
   });
 
   it("refuses a column the study window has moved off, on its own row", async () => {
@@ -1796,8 +1833,12 @@ describe("CatalogNodeView register arm: add columns (Y-83)", () => {
       .click();
 
     // The confirmation counts what was authored, not what was ticked: the aggregate
-    // the bar could see said two, the states said one.
+    // the bar could see said two, the states said one — and names the column the
+    // real eras dropped, so the researcher sees what did not commit.
     await expect.element(page.getByText("Applied +1 column")).toBeVisible();
+    await expect
+      .element(page.getByText(/ForvErs not delivered in 2000–2005/))
+      .toBeVisible();
     expect(projectStore.draft?.sources).toEqual([
       expect.objectContaining({
         register_variant: "scb/lisa/individer-15plus",
@@ -1805,6 +1846,20 @@ describe("CatalogNodeView register arm: add columns (Y-83)", () => {
         bindings: [expect.objectContaining({ variable: "scb/lisa/disp" })],
       }),
     ]);
+    // The dropped column's OWN tick survives — never cleared by a batch it took
+    // no part in — so an Add under a window that covers it is one press.
+    await expect
+      .element(page.getByRole("checkbox", { name: "ForvErs", exact: true }))
+      .toBeChecked();
+    // The committed column's tick IS consumed, and now reads as in the project.
+    await expect
+      .element(
+        page.getByRole("checkbox", {
+          name: "CDISP 1968–2019 In project",
+          exact: true,
+        }),
+      )
+      .not.toBeChecked();
   });
 
   it("authors nothing when the real eras miss the window for every ticked column", async () => {
@@ -1905,6 +1960,90 @@ describe("CatalogNodeView register arm: add columns (Y-83)", () => {
     await expect
       .element(page.getByRole("checkbox", { name: "Kon", exact: true }))
       .toBeChecked();
+  });
+
+  it("abandons a batch whose page changes while the eras are read (Y-106)", async () => {
+    let releaseStates = (): void => {};
+    // The per-variable read an Add makes, held open so a navigation can land while
+    // the batch is still in flight.
+    mockRegisterAndResolve(
+      columnedRegisterNode(1),
+      {},
+      new Promise<void>((resolve) => {
+        releaseStates = resolve;
+      }),
+    );
+    windowStore.set({ from: 2018, to: 2023 });
+
+    const screen = await renderRegister();
+    await expect.element(page.getByText("Kön")).toBeVisible();
+    await tickColumn("Kon");
+    await page.getByRole("button", { name: "Add 1 column to project" }).click();
+    await expect
+      .element(page.getByRole("button", { name: "Adding…" }))
+      .toBeVisible();
+
+    // This component is REUSED register → register (the route-reset `$effect`),
+    // so `unmounted` alone would miss a page change mid-read: the batch must bind
+    // to the route too, or the read completing would report on the register the
+    // researcher has since opened.
+    await screen.rerender({ fqidPath: "scb/rams" });
+    releaseStates();
+
+    await expect
+      .element(page.getByRole("button", { name: "Adding…" }))
+      .not.toBeInTheDocument();
+    expect(projectStore.draft?.sources).toEqual([]);
+    // Nothing is authored and nothing is reported — not a refusal either — on the
+    // page the researcher has since opened.
+    await expect.element(page.getByText(/Applied/)).not.toBeInTheDocument();
+    await expect
+      .element(page.getByText(/Could not read the delivery years/))
+      .not.toBeInTheDocument();
+  });
+
+  it("keeps keyboard focus on the Add button through an add (Y-106)", async () => {
+    let releaseStates = (): void => {};
+    // A mixed batch (as the dropped-column test above): `ForvErs` stays ticked
+    // after the Add, so the button still has work to do and stays genuinely
+    // enabled afterward too — the focus check isn't confounded by the button
+    // later, separately, disabling because nothing is left to add.
+    mockRegisterAndResolve(
+      columnedRegisterNode(1),
+      {
+        "scb/lisa/forvink-ers::ForvErs": [
+          ["1990-01-01", "1999-12-31"],
+          ["2010-01-01", "2021-12-31"],
+        ],
+      },
+      new Promise<void>((resolve) => {
+        releaseStates = resolve;
+      }),
+    );
+    windowStore.set({ from: 2000, to: 2005 });
+
+    await renderRegister();
+    await expect.element(page.getByText("Kön")).toBeVisible();
+    await tickColumn("ForvErs");
+    await tickColumn("CDISP 1968–2019");
+
+    const addButton = page.getByRole("button", {
+      name: "Add 2 columns to project",
+    });
+    const addButtonEl = addButton.element();
+    await addButton.click();
+    await expect
+      .element(page.getByRole("button", { name: "Adding…" }))
+      .toBeVisible();
+
+    // `aria-disabled` freezes the ACTION while the add is in flight; the element
+    // itself stays in the tab order, so the press that started it keeps focus
+    // instead of dropping to <body> — a natively `disabled` button's fate.
+    expect(document.activeElement).toBe(addButtonEl);
+
+    releaseStates();
+    await expect.element(page.getByText("Applied +1 column")).toBeVisible();
+    expect(document.activeElement).toBe(addButtonEl);
   });
 });
 
