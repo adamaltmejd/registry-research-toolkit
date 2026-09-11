@@ -271,9 +271,22 @@ function firstYear(windows: readonly { from: string; to: string }[]): string {
  * delivered again (Y-104). A list, not a joined string, because the cell renders
  * each era as its own unbreakable run: this page spells "still delivered" as a
  * TRAILING DASH, so a "1995–" left at the end of a wrapped line would read as
- * open-ended when it is the head of a closed range. */
+ * open-ended when it is the head of a closed range.
+ *
+ * The labels are YEAR-grain and the eras are not, so eras that differ can label
+ * the same: a #319 monthly family missing a month is delivered in two disjoint
+ * SUB-YEAR eras inside 2018, and "2018, 2018" tells a reader nothing the one
+ * entry does not. Repeats are always adjacent — the windows are disjoint and
+ * ordered, so a label can only recur while the year does — and are dropped. */
 function eraLabels(windows: readonly { from: string; to: string }[]): string[] {
-  return windows.map(eraYears).filter(Boolean);
+  const labels: string[] = [];
+  for (const window of windows) {
+    const label = eraYears(window);
+    if (label && label !== labels.at(-1)) {
+      labels.push(label);
+    }
+  }
+  return labels;
 }
 
 /** One era as years: "2018", "1990–2021", "2022–" while still delivered, or
@@ -1148,9 +1161,11 @@ async function addSelected(): Promise<void> {
                           <!-- One span per ERA, so the line wraps BETWEEN eras and
                                never inside one: a range broken after its dash would
                                read as the open-ended form this cell spells the same
-                               way (Y-104). -->
+                               way (Y-104). Keyed by POSITION: a year-grain label is
+                               no identity, and this list is rebuilt whole from the
+                               windows rather than reordered. -->
                           <span class="column-years"
-                            >{#each col.years as era, i (era)}{i > 0
+                            >{#each col.years as era, i (i)}{i > 0
                               ? ", "
                               : ""}<span class="era">{era}</span>{/each}</span
                           >

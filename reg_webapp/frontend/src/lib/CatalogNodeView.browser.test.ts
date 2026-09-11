@@ -285,6 +285,32 @@ function crossedColumnRegisterNode(): CatalogNode {
   } as unknown as CatalogNode;
 }
 
+// A #319 monthly family with a month missing: ONE column delivered in two
+// DISJOINT SUB-YEAR eras inside a single year. The cell prints years, so both eras
+// read "2018" — a label the list must say ONCE, and can never key itself by.
+function subYearErasRegisterNode(): CatalogNode {
+  return {
+    kind: "register",
+    fqid: "scb/lonestrukturstatistik",
+    name: "Lönestrukturstatistik",
+    children: [
+      {
+        kind: "binding",
+        fqid: "scb/lonestrukturstatistik/lon",
+        name: "Lön",
+        deliveries: [
+          delivery(
+            "individer",
+            "LonFink",
+            ["2018-01-01", "2018-01-31"],
+            ["2018-03-01", "2018-03-31"],
+          ),
+        ],
+      },
+    ],
+  } as unknown as CatalogNode;
+}
+
 // The shape a name-grain gate alone gets wrong (Y-104). `individer-15plus`
 // renamed `CDISP` to `CDISP5` in 2010 — #902 folds its two deliveries into ONE
 // picker row spanning both — while `individer-16plus` still delivers `CDISP`. Pool
@@ -1913,6 +1939,24 @@ describe("CatalogNodeView register arm: add columns (Y-83)", () => {
           name: "Fodelsear –1968, 1995–",
           exact: true,
         }),
+      )
+      .toBeVisible();
+  });
+
+  it("says one year once for two sub-year eras inside it (Y-104)", async () => {
+    mockRegisterAndResolve(subYearErasRegisterNode());
+    windowStore.set({ from: 2018, to: 2018 });
+
+    await renderRegister("scb/lonestrukturstatistik");
+    // By role: the register's own heading contains the variable's name.
+    await expect.element(page.getByRole("link", { name: "Lön" })).toBeVisible();
+
+    // Two eras, one label. The cell is year-grain, so a second "2018" says nothing
+    // a reader can use — and a list keyed by its rendered label would collide on
+    // the two outright, taking the whole row down.
+    await expect
+      .element(
+        page.getByRole("checkbox", { name: "LonFink 2018", exact: true }),
       )
       .toBeVisible();
   });
