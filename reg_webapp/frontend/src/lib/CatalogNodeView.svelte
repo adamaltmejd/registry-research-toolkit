@@ -1129,11 +1129,11 @@ async function addSelected(): Promise<void> {
         {/if}
         <!-- The add bar (Y-83). It stays mounted through a filter that empties the
              list, so ticks made across several searches are still countable and
-             addable. Y-83 asked for a STICKY bar: App's routed region is an
-             `overflow-x: auto` scroll container, which becomes the sticky
-             scrollport, so `bottom: 0` pins to a box that never scrolls
-             vertically rather than to the viewport. Pinning it needs that
-             container changed — a whole-app move, left to its own change. -->
+             addable. Y-97: pinned `position: sticky; bottom: 0` against the
+             viewport — App's `.routed` no longer traps horizontal overflow (that
+             moved to DataTable's own scroll wrapper), so the viewport is the
+             nearest scrollport and the bar stays in reach at the bottom of the
+             screen through a long list. -->
         <div class="add-bar">
           <span class="add-count" role="status">
             {stagedColumns === 0
@@ -1385,8 +1385,13 @@ async function addSelected(): Promise<void> {
   }
   /* The add bar under the list: the selected count, then the single primary Add.
      Same shape as the picker footer on the variable pages, so the two authoring
-     surfaces read as one control. */
+     surfaces read as one control. Y-97: sticky against the viewport, opaque on
+     the same `--surface` token as the rest of the chrome (no translucent
+     overlay) and no shadow — the design language casts one soft
+     `--elevation-raised` shadow only, and this bar isn't it. */
   .add-bar {
+    position: sticky;
+    bottom: 0;
     display: flex;
     flex-wrap: wrap;
     align-items: center;

@@ -838,11 +838,13 @@ variable pages to add one column each.
   the list. And the confirmation counts the ticked COLUMNS, not the rows: ticking both
   names of one chain says "+2 columns" over the one binding they share, because two
   columns is what the researcher ticked.
-- **The action bar is not sticky.** App's `.routed` is an `overflow-x: auto` scroll
-  container so wide tables scroll horizontally, and that makes it the sticky scrollport:
-  a `position: sticky; bottom: 0` bar there pins to a box that never scrolls vertically
-  instead of to the viewport. The bar sits under the list until that container changes,
-  which is a whole-app move rather than a register-page one.
+- **The action bar is sticky (Y-97).** Horizontal overflow for a wide table lives on
+  `DataTable`'s own scroll wrapper (`overflow-x: auto`, `max-inline-size: 100%`), not on
+  App's `.routed`, which stays `overflow: visible` — so the page scrolls on the viewport,
+  the same scrollport every other sticky element on the site already assumes. `position:
+  sticky; bottom: 0` on the bar now pins to that viewport, so scrolling any distance
+  through a long list (LISA's ~740 variables) still leaves the count and the Add in reach
+  at the bottom edge.
 
 ## Catalog stats (`routes/stats.py`, #675)
 

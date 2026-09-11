@@ -397,6 +397,23 @@ function registerNode(): CatalogNode {
   } as unknown as CatalogNode;
 }
 
+// A register node with MANY ungrouped leaves — enough rows to overflow the test
+// viewport vertically (Y-97), the way LISA's ~740-variable list does for a real
+// researcher. No `deliveries`, like `registerNode()` above: the sticky-bar proof
+// doesn't tick anything, only scrolls past it.
+function manyLeavesRegisterNode(count: number): CatalogNode {
+  return {
+    kind: "register",
+    fqid: "scb/lisa",
+    name: "LISA",
+    children: Array.from({ length: count }, (_, i) => ({
+      kind: "binding",
+      fqid: `scb/lisa/v${i}`,
+      name: `Variable ${i}`,
+    })),
+  } as unknown as CatalogNode;
+}
+
 function groupedRegisterNode(): CatalogNode {
   return {
     kind: "register",
@@ -1773,6 +1790,37 @@ describe("CatalogNodeView register arm: add columns (Y-83)", () => {
     await expect
       .element(page.getByRole("checkbox", { name: "Kon", exact: true }))
       .toBeChecked();
+  });
+});
+
+describe("CatalogNodeView register arm: sticky add bar (Y-97)", () => {
+  it("keeps the add bar pinned to the viewport bottom after scrolling through a long list", async () => {
+    await page.viewport(1280, 800);
+    vi.mocked(getCatalogNode).mockResolvedValue(manyLeavesRegisterNode(60));
+
+    await renderRegister();
+    await expect.element(page.getByText("Variable 0")).toBeVisible();
+
+    // Scroll well past the bar's unscrolled position under the table — the
+    // "two thirds down a long list" the ticket's researcher is in.
+    window.scrollTo(0, document.documentElement.scrollHeight / 2);
+
+    const bar = document.querySelector<HTMLElement>(".add-bar");
+    expect(bar).not.toBeNull();
+    const rect = bar?.getBoundingClientRect();
+    const viewportBottom = window.innerHeight;
+    // Pinned flush to the viewport's bottom edge (within 1px)…
+    const bottomGap = Math.abs((rect?.bottom ?? 0) - viewportBottom);
+    expect(bottomGap).toBeLessThanOrEqual(1);
+    // …and its top is on screen, not clipped above the fold.
+    expect(rect?.top ?? -1).toBeGreaterThanOrEqual(0);
+    expect(rect?.top ?? viewportBottom).toBeLessThan(viewportBottom);
+
+    // The page itself never grows a horizontal scrollbar — DataTable's own
+    // wrapper owns the (unused, here narrow) horizontal overflow, not `.routed`.
+    expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(
+      document.documentElement.clientWidth + 1,
+    );
   });
 });
 

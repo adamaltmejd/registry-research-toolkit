@@ -260,11 +260,16 @@ const qualified = $derived(providerQualified());
   /* AppShell's canvas grows through the viewport remainder. Keep the routed
      region as its flexible body so asynchronous pages replace content inside a
      stable main-area footprint instead of promoting the citation footer into
-     the provisional route-content position. Tall routes still expand normally. */
+     the provisional route-content position. Tall routes still expand normally.
+     Y-97: this is NOT the horizontal-overflow scrollport — that belongs to
+     DataTable's own wrapper, the element that is actually wide. Any `overflow`
+     other than `visible` here would make `.routed` the sticky scrollport for
+     every `position: sticky` descendant (like the register page's add bar),
+     pinning them to a box that only scrolls horizontally instead of to the
+     viewport every other sticky element on the site already assumes. */
   .routed {
     flex: 1 0 auto;
     min-width: 0;
-    overflow-x: auto;
   }
   .vintage {
     font-size: 0.8rem;

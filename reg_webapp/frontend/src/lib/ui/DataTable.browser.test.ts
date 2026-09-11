@@ -254,6 +254,36 @@ describe("DataTable", () => {
     expect(noWidthStyle == null || !noWidthStyle.includes("width")).toBe(true);
   });
 
+  it("scrolls a wide table inside its own wrapper instead of widening the page (Y-97)", async () => {
+    // Atomic (mono) cell content can't break/wrap, so the browser can't shrink
+    // these columns to fit — a real overflow regardless of the table's `auto`
+    // layout algorithm, unlike breakable text which could get squeezed and mask
+    // the bug this proof guards against.
+    const wideColumns: Column<Record<string, string>>[] = Array.from(
+      { length: 8 },
+      (_, i) => ({ key: `c${i}`, label: `Column ${i}`, mono: true }),
+    );
+    const wideRow: Record<string, string> = {};
+    for (let i = 0; i < wideColumns.length; i++) {
+      wideRow[`c${i}`] = "X".repeat(60);
+    }
+    const { container } = await renderTable<Record<string, string>>({
+      columns: wideColumns,
+      rows: [wideRow],
+    });
+
+    // The table's own scroll wrapper absorbs the overflow…
+    const wrapper = container.querySelector<HTMLElement>(".table-scroll");
+    expect(wrapper).not.toBeNull();
+    expect(wrapper?.scrollWidth ?? 0).toBeGreaterThan(
+      wrapper?.clientWidth ?? 0,
+    );
+    // …so the document itself never grows a horizontal scrollbar.
+    expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(
+      document.documentElement.clientWidth + 1,
+    );
+  });
+
   it("makes rows selectable grid-rows when selection props are passed", async () => {
     let selected = "";
     const { container } = await renderTable({

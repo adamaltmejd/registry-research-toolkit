@@ -172,76 +172,90 @@ function onkeydown(event: KeyboardEvent, row: Row): void {
      Every selectable row is its OWN tab stop (tabindex=0), NOT a single-tab-stop
      roving-tabindex grid: list keyboard NAV is owned by Bits UI `Command`
      elsewhere — this primitive provides selectable rows + visual states only. -->
-<table
-  class="data-table"
-  class:framed
-  class:narrow-stack={framed && columns.length === 2}
-  role={selectable ? "grid" : "table"}
-  style={`--data-table-columns: ${columns.length}`}
->
-  <!-- svelte-ignore a11y_no_redundant_roles -->
-  <thead role="rowgroup">
+<!-- Y-97: `.table-scroll`'s horizontal-overflow rationale is in its own CSS rule below. -->
+<div class="table-scroll">
+  <table
+    class="data-table"
+    class:framed
+    class:narrow-stack={framed && columns.length === 2}
+    role={selectable ? "grid" : "table"}
+    style={`--data-table-columns: ${columns.length}`}
+  >
     <!-- svelte-ignore a11y_no_redundant_roles -->
-    <!-- These roles ARE redundant on a native table — deliberately so: the
-         responsive stack switches `display` to block, stripping native table
-         roles in Firefox/Safari, so every role is restated explicitly to keep
-         the semantics across that change. -->
-    <tr role="row">
-      {#each columns as col, i (col.key)}
-        <th
-          scope="col"
-          role="columnheader"
-          class="micro-label align-{alignOf(col)}"
-          class:first={i === 0}
-          style={col.width ? `width: ${col.width}` : undefined}
-        >
-          {col.label}
-        </th>
-      {/each}
-    </tr>
-  </thead>
-  <!-- svelte-ignore a11y_no_redundant_roles -->
-  <tbody role="rowgroup">
-    {#each rows as row, i (getRowId ? getRowId(row) : i)}
-      {@const id = getRowId?.(row)}
-      {@const isSelected = selectable && id === selectedId}
+    <thead role="rowgroup">
       <!-- svelte-ignore a11y_no_redundant_roles -->
-      <tr
-        role="row"
-        class:selectable
-        class:navigable
-        class:selected={isSelected}
-        tabindex={selectable ? 0 : undefined}
-        aria-selected={selectable ? isSelected : undefined}
-        onmousedown={navigable ? onrowmousedown : undefined}
-        onclick={selectable
-          ? (e) => onrowclick(e, row)
-          : navigable
-            ? onrownavigationclick
-            : undefined}
-        onkeydown={selectable ? (e) => onkeydown(e, row) : undefined}
-      >
-        {#each columns as col, colIndex (col.key)}
-          <!-- `data-label` feeds the stacked-card micro-label prefix (<=48rem);
-               `.first` marks the primary title cell (no prefix). The prefix is
-               decorative — screen readers still get the column name from the
-               (visually-hidden but a11y-tree-present) <th role="columnheader">. -->
-          <td
-            role={selectable ? "gridcell" : "cell"}
-            class="align-{alignOf(col)}"
-            class:first={colIndex === 0}
-            class:mono={col.mono || col.numeric}
-            data-label={col.label}
+      <!-- These roles ARE redundant on a native table — deliberately so: the
+           responsive stack switches `display` to block, stripping native table
+           roles in Firefox/Safari, so every role is restated explicitly to keep
+           the semantics across that change. -->
+      <tr role="row">
+        {#each columns as col, i (col.key)}
+          <th
+            scope="col"
+            role="columnheader"
+            class="micro-label align-{alignOf(col)}"
+            class:first={i === 0}
+            style={col.width ? `width: ${col.width}` : undefined}
           >
-            {#if cell}{@render cell(row, col)}{:else}{row[col.key]}{/if}
-          </td>
+            {col.label}
+          </th>
         {/each}
       </tr>
-    {/each}
-  </tbody>
-</table>
+    </thead>
+    <!-- svelte-ignore a11y_no_redundant_roles -->
+    <tbody role="rowgroup">
+      {#each rows as row, i (getRowId ? getRowId(row) : i)}
+        {@const id = getRowId?.(row)}
+        {@const isSelected = selectable && id === selectedId}
+        <!-- svelte-ignore a11y_no_redundant_roles -->
+        <tr
+          role="row"
+          class:selectable
+          class:navigable
+          class:selected={isSelected}
+          tabindex={selectable ? 0 : undefined}
+          aria-selected={selectable ? isSelected : undefined}
+          onmousedown={navigable ? onrowmousedown : undefined}
+          onclick={selectable
+            ? (e) => onrowclick(e, row)
+            : navigable
+              ? onrownavigationclick
+              : undefined}
+          onkeydown={selectable ? (e) => onkeydown(e, row) : undefined}
+        >
+          {#each columns as col, colIndex (col.key)}
+            <!-- `data-label` feeds the stacked-card micro-label prefix (<=48rem);
+                 `.first` marks the primary title cell (no prefix). The prefix is
+                 decorative — screen readers still get the column name from the
+                 (visually-hidden but a11y-tree-present) <th role="columnheader">. -->
+            <td
+              role={selectable ? "gridcell" : "cell"}
+              class="align-{alignOf(col)}"
+              class:first={colIndex === 0}
+              class:mono={col.mono || col.numeric}
+              data-label={col.label}
+            >
+              {#if cell}{@render cell(row, col)}{:else}{row[col.key]}{/if}
+            </td>
+          {/each}
+        </tr>
+      {/each}
+    </tbody>
+  </table>
+</div>
 
 <style>
+  /* Y-97: the horizontal-overflow scrollport lives here, on the wrapper of the
+     element that is actually wide, rather than on a routed-region ancestor —
+     which would make every route's scrollport horizontal-only and break
+     `position: sticky` descendants elsewhere on the page (they'd pin to a box
+     that never scrolls vertically instead of to the viewport). `max-inline-size:
+     100%` keeps the wrapper itself from ever widening the page; the table inside
+     it scrolls on its own. */
+  .table-scroll {
+    overflow-x: auto;
+    max-inline-size: 100%;
+  }
   .data-table {
     width: 100%;
     border-collapse: collapse;
