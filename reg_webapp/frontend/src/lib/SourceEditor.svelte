@@ -4,9 +4,9 @@ import BindingEditor from "./BindingEditor.svelte";
 import { fqidSegments, sourceCardHeading } from "./catalog";
 import { sourceNames } from "./catalog_names.svelte";
 import {
-  grammarYear,
   periodFromWire,
   periodToWire,
+  resolveYearEntry,
   sameYearWindow,
   yearWindowFromWire,
   yearWindowToWire,
@@ -211,40 +211,14 @@ const toText = $derived(
 
 /** The entry resolved: the year window it names, or why it names none — with the
  * field(s) that refusal is about, so the hairline marks the year at fault rather
- * than both. Null while the fields still mirror the stored period. */
-const entryResolution = $derived.by<
-  | { years: StudyWindow }
-  | { problem: string; at: { from: boolean; to: boolean } }
-  | null
->(() => {
-  if (entry === null) {
-    return null;
-  }
-  // `grammarYear` is the wire's OWN year rule (19xx/20xx), the same one the
-  // catalog's exact-year fields and `periodFromWire` are written against — so a
-  // year these fields accept is a year the period wire can carry.
-  const from = grammarYear(entry.from);
-  const to = grammarYear(entry.to);
-  const at = { from: from === null, to: to === null };
-  if (from === null || to === null) {
-    // Word for word the catalog picker's own refusal (`PeriodPicker`), naming the
-    // century range instead of an example year: a cart card has no coverage band to
-    // draw an exemplar from.
-    const rule = "a four-digit year, 1900 to 2099.";
-    if (at.from && at.to) {
-      return { problem: `From and To must each be ${rule}`, at };
-    }
-    return { problem: `${at.from ? "From" : "To"} must be ${rule}`, at };
-  }
-  if (from > to) {
-    // The pair, not either year on its own.
-    return {
-      problem: `From ${from} is after To ${to} — enter From at or before To.`,
-      at: { from: true, to: true },
-    };
-  }
-  return { years: { from, to } };
-});
+ * than both. Null while the fields still mirror the stored period. The shared
+ * `resolveYearEntry` (period.ts) is called with no band: this card has no
+ * coverage to check against or draw an example year from, unlike the catalog's
+ * `PeriodPicker`, which passes one to the same resolver — so this falls back to
+ * the wire's own year rule (19xx/20xx) and its century-range wording. */
+const entryResolution = $derived(
+  resolveYearEntry(entry?.from ?? null, entry?.to ?? null),
+);
 
 const entryProblem = $derived(
   entryResolution !== null && "problem" in entryResolution
@@ -799,31 +773,11 @@ function confirmRemove(): void {
   .years label {
     white-space: nowrap;
   }
-  /* The exact-year field, as the catalog's own period entry sets it. */
-  .year {
-    box-sizing: border-box;
-    width: 5rem;
-    padding: var(--space-1) var(--space-2);
-    border: 1px solid var(--border-strong);
-    border-radius: var(--radius-sm);
-    background: var(--surface);
-    color: var(--text);
-    /* A year is a machine identifier (DESIGN.md → Typography): mono, tabular. */
-    font-family: var(--font-mono);
-    font-size: var(--text-sm);
-    font-variant-numeric: tabular-nums;
-  }
-  .year:focus-visible {
-    outline: none;
-    border-color: var(--accent);
-    box-shadow: var(--focus-ring);
-  }
-  .year[aria-invalid="true"] {
-    border-color: var(--err);
-  }
   /* An Apply already in flight: frozen (`readonly`, not `disabled` — a read-only
      field stays in the tab order), dimmed the way the Apply button's own
-     `aria-disabled` is (Button.svelte). */
+     `aria-disabled` is (Button.svelte). The shared `.year` face itself, and the
+     `.problem`/`.problem.refused` status row below, live in ui/utilities.css
+     (Y-100) — the catalog's PeriodPicker carries the same entry. */
   .year:read-only {
     opacity: 0.6;
   }
@@ -853,22 +807,11 @@ function confirmRemove(): void {
     color: var(--text);
     font-size: var(--text-sm);
   }
-  /* Status ROWS: the status tint as fill, the status foreground as text, the glyph
-     first (frontend/DESIGN.md → Banners and status rows). The refusal line keeps no
-     fill and no height while it says nothing. */
+  /* This card's own spacing: `.source-period`'s grid row-gap already spaces this
+     row, so the shared (margin-less) utilities.css `.problem` needs none of its
+     own here — the catalog's PeriodPicker sets a different local margin instead. */
   .problem {
-    display: flex;
-    align-items: baseline;
-    gap: var(--space-2);
     margin: 0;
-    color: var(--err);
-    font-size: var(--text-sm);
-  }
-  .problem.refused {
-    padding: var(--space-1) var(--space-2);
-    border: 1px solid var(--err-border);
-    border-radius: var(--radius-sm);
-    background: var(--err-bg);
   }
   /* The same row, reporting rather than refusing — the cool OK roles, as
      ValidationPanel's clean verdict wears them. */

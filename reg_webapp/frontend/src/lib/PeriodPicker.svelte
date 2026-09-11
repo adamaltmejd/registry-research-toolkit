@@ -5,14 +5,15 @@ import {
   clampYearPeriodWire,
   clampYearWindow,
   coverageBandEdges,
-  grammarYear,
   intersectCoverageWindow,
+  resolveYearEntry,
   sameYearWindow,
   yearWindowFromWire,
   yearWindowRepresentable,
   yearWindowToWire,
 } from "./period";
 import type { StudyWindow } from "./project_data";
+import { Button } from "./ui";
 
 // WINDOW-ANCHORED period selection (#615): a year-grain availability slider
 // seeded from the project window and the subject's data-coverage track. The
@@ -277,67 +278,18 @@ let entryCommitted = $state(false);
 const entryFrom = $derived(entry?.from ?? String(sliderSelection.from));
 const entryTo = $derived(entry?.to ?? String(sliderSelection.to));
 
-/** Any four-digit run → its int, else null. WIDER than the wire's `grammarYear`
- * (19xx/20xx) so the fields can tell "not a year" from "not a year we hold". */
-function fourDigitYear(raw: string): number | null {
-  const trimmed = raw.trim();
-  return /^\d{4}$/.test(trimmed) ? Number.parseInt(trimmed, 10) : null;
-}
-
 /** The entry resolved: the year window it names, or why it names none — with the
  * field(s) that refusal is about, so the hairline marks the year at fault rather
- * than both. Null while the fields still mirror the pending selection. */
-const entryResolution = $derived.by<
-  | { window: StudyWindow }
-  | { problem: string; at: { from: boolean; to: boolean } }
-  | null
->(() => {
-  if (entry === null) {
-    return null;
-  }
-  const from = fourDigitYear(entry.from);
-  const to = fourDigitYear(entry.to);
-  if (from === null || to === null) {
-    // Phrased off `at`, like the out-of-band refusals below, so the line can only
-    // name the fields it marks: clearing the pair and pressing Apply must not
-    // explain only From while To's hairline is red too.
-    const at = { from: from === null, to: to === null };
-    const year = `four-digit year, like ${selectableYears.from}.`;
-    if (at.from && at.to) {
-      return { problem: `From and To must each be a ${year}`, at };
-    }
-    return { problem: `${at.from ? "From" : "To"} must be a ${year}`, at };
-  }
-  // A four-digit year outside the wire's own century range (`2100`, `1899`) is
-  // out of RANGE, not badly typed — telling the user it isn't four digits would
-  // contradict what they just typed.
-  const inBand = (raw: string, year: number) =>
-    grammarYear(raw) !== null &&
-    year >= selectableYears.from &&
-    year <= selectableYears.to;
-  const at = { from: !inBand(entry.from, from), to: !inBand(entry.to, to) };
-  const band = `${selectableYears.from}–${selectableYears.to}`;
-  if (at.from && at.to) {
-    return {
-      problem: `${from} and ${to} are outside ${band} — pick years in that range.`,
-      at,
-    };
-  }
-  if (at.from || at.to) {
-    return {
-      problem: `${at.from ? from : to} is outside ${band} — pick a year in that range.`,
-      at,
-    };
-  }
-  if (from > to) {
-    // The pair, not either year on its own.
-    return {
-      problem: `From ${from} is after To ${to} — enter From at or before To.`,
-      at: { from: true, to: true },
-    };
-  }
-  return { window: { from, to } };
-});
+ * than both. Null while the fields still mirror the pending selection. The
+ * shared `resolveYearEntry` (period.ts) is passed this picker's selectable band,
+ * so a four-digit year outside it reports as out of range rather than badly
+ * typed — `SourceEditor`'s cart card calls the same resolver without one. */
+const entryResolution = $derived(
+  resolveYearEntry(entry?.from ?? null, entry?.to ?? null, {
+    selectableYears,
+    yearRule: `four-digit year, like ${selectableYears.from}.`,
+  }),
+);
 
 // The two arms of that union, so the narrowing is spelled once for the three
 // places that read it.
@@ -347,8 +299,8 @@ const entryProblem = $derived(
     : null,
 );
 const entryWindow = $derived(
-  entryResolution !== null && "window" in entryResolution
-    ? entryResolution.window
+  entryResolution !== null && "years" in entryResolution
+    ? entryResolution.years
     : null,
 );
 
@@ -477,13 +429,13 @@ function submit(event: SubmitEvent): void {
       />
     </div>
     <div class="actions">
-      <button type="submit" class="apply" aria-label="Apply period">
+      <Button type="submit" size="sm" aria-label="Apply period">
         Apply
-      </button>
+      </Button>
       {#if period !== null}
-        <button type="button" class="clear" onclick={() => onclear()}>
+        <Button type="button" size="sm" onclick={() => onclear()}>
           Clear
-        </button>
+        </Button>
       {/if}
     </div>
   </div>
@@ -535,72 +487,15 @@ function submit(event: SubmitEvent): void {
   .exact label {
     white-space: nowrap;
   }
-  .year {
-    box-sizing: border-box;
-    width: 5rem;
-    padding: var(--space-1) var(--space-2);
-    border: 1px solid var(--border-strong);
-    border-radius: var(--radius-sm);
-    background: var(--surface);
-    color: var(--text);
-    /* A year is a machine identifier (DESIGN.md → Typography): mono, tabular. */
-    font-family: var(--font-mono);
-    font-size: var(--text-sm);
-    font-variant-numeric: tabular-nums;
-  }
-  .year:focus-visible {
-    outline: none;
-    border-color: var(--accent);
-    box-shadow: var(--focus-ring);
-  }
-  .year[aria-invalid="true"] {
-    border-color: var(--err);
-  }
   .actions {
     display: flex;
     gap: var(--space-2);
   }
-  button.apply,
-  button.clear {
-    padding: 0.4rem 0.9rem;
-    border: 1px solid var(--accent);
-    border-radius: var(--radius-sm);
-    background: var(--accent);
-    color: var(--accent-fg);
-    font: inherit;
-    cursor: pointer;
-  }
-  button.clear {
-    background: var(--surface);
-    color: var(--accent);
-  }
-  button.apply:hover,
-  button.clear:hover {
-    filter: brightness(0.95);
-  }
-  /* The card keeps keyboard focus across an Apply (Y-65), so the control that
-     submitted it has to SHOW that it still holds it — the browser's own ring is
-     ink-on-ink over the filled Apply. Same offset ring the year fields paint. */
-  button.apply:focus-visible,
-  button.clear:focus-visible {
-    outline: none;
-    box-shadow: var(--focus-ring);
-  }
+  /* The shared `.year`/`.problem`/`.problem.refused` rules live in
+     ui/utilities.css (Y-100) — this card's own top margin, spacing it under the
+     slider row, is the only local part (SourceEditor's copy sits in a grid whose
+     own row-gap already spaces it, so it sets none). */
   .problem {
-    display: flex;
-    align-items: baseline;
-    gap: var(--space-2);
     margin: var(--space-2) 0 0;
-    color: var(--err);
-    font-size: var(--text-sm);
-  }
-  /* A refusal is a status ROW: the status tint as fill, the status foreground as
-     text, the glyph first (DESIGN.md → Banners and status rows). Only while it
-     says something — empty, the line keeps no fill and no height. */
-  .problem.refused {
-    padding: var(--space-1) var(--space-2);
-    border: 1px solid var(--err-border);
-    border-radius: var(--radius-sm);
-    background: var(--err-bg);
   }
 </style>

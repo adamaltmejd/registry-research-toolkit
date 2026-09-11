@@ -17,6 +17,7 @@ import {
   periodYearCoverage,
   periodYearIntervals,
   queryFromParams,
+  resolveYearEntry,
   sameYearWindow,
   VALUE_SET_VERSION_NONE,
   yearWindowFromWire,
@@ -1022,5 +1023,88 @@ describe("coverageBandEdges (#671 selectable band / #631 vintage cap)", () => {
     expect(
       coverageBandEdges({ from: 2025, to: null }, 1960, 2026, 2024),
     ).toBeNull();
+  });
+});
+
+describe("resolveYearEntry (Y-16/Y-81 exact-year entry, hoisted Y-100)", () => {
+  it("is null while untouched (either side null)", () => {
+    expect(resolveYearEntry(null, null)).toBeNull();
+  });
+
+  it("without a band: a valid pair in the wire's own century range resolves", () => {
+    expect(resolveYearEntry("2015", "2020")).toEqual({
+      years: { from: 2015, to: 2020 },
+    });
+  });
+
+  it("without a band: badly-typed text refuses with the default century wording", () => {
+    expect(resolveYearEntry("20x", "2020")).toEqual({
+      problem: "From must be a four-digit year, 1900 to 2099.",
+      at: { from: true, to: false },
+    });
+    expect(resolveYearEntry("", "")).toEqual({
+      problem: "From and To must each be a four-digit year, 1900 to 2099.",
+      at: { from: true, to: true },
+    });
+  });
+
+  it("without a band: a year outside 1900-2099 refuses the same as badly-typed (no band to be 'outside')", () => {
+    expect(resolveYearEntry("2100", "2100")).toEqual({
+      problem: "From and To must each be a four-digit year, 1900 to 2099.",
+      at: { from: true, to: true },
+    });
+  });
+
+  it("without a band: From after To refuses naming the pair", () => {
+    expect(resolveYearEntry("2020", "2015")).toEqual({
+      problem: "From 2020 is after To 2015 — enter From at or before To.",
+      at: { from: true, to: true },
+    });
+  });
+
+  it("with a band: a custom yearRule wording is used for a badly-typed entry", () => {
+    expect(
+      resolveYearEntry("20x", "2020", {
+        selectableYears: { from: 2015, to: 2024 },
+        yearRule: "four-digit year, like 2015.",
+      }),
+    ).toEqual({
+      problem: "From must be a four-digit year, like 2015.",
+      at: { from: true, to: false },
+    });
+  });
+
+  it("with a band: a four-digit year outside it is out of range, not badly typed", () => {
+    expect(
+      resolveYearEntry("2030", "2020", {
+        selectableYears: { from: 2015, to: 2024 },
+        yearRule: "four-digit year, like 2015.",
+      }),
+    ).toEqual({
+      problem: "2030 is outside 2015–2024 — pick a year in that range.",
+      at: { from: true, to: false },
+    });
+  });
+
+  it("with a band: both years outside it are named together", () => {
+    expect(
+      resolveYearEntry("2010", "2030", {
+        selectableYears: { from: 2015, to: 2024 },
+        yearRule: "four-digit year, like 2015.",
+      }),
+    ).toEqual({
+      problem:
+        "2010 and 2030 are outside 2015–2024 — pick years in that range.",
+      at: { from: true, to: true },
+    });
+  });
+
+  it("with a band: a year within it resolves", () => {
+    expect(
+      resolveYearEntry("2016", "2018", {
+        selectableYears: { from: 2015, to: 2024 },
+        yearRule: "four-digit year, like 2015.",
+      }),
+    ).toEqual({ years: { from: 2016, to: 2018 } });
   });
 });

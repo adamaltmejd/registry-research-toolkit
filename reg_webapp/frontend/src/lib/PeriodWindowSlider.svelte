@@ -8,14 +8,17 @@
 // primitive's `selectableMin/Max`) so a true data span like 1995–2008 is visible
 // at a glance instead of the full 1960–vintage track reading as available. The
 // not-delivered GAP (inside the selection but outside coverage) is GREYED, and
-// two amber deviation hints fire:
-//   • USER deviation — the active selection ≠ the project window → "deviates
-//     from project window · reset to project window" (reset = clear `?period`,
-//     which falls back to the window; the parent owns that URL write).
+// two deviation hints fire:
+//   • USER deviation — the active selection ≠ the project window → "Deviates
+//     from project window", plain text (Y-100: the window is an authoring seed,
+//     a selection covering more is an ordinary choice, not a warning — the same
+//     reading `SourceEditor`'s cart card gives its own period), with a "reset to
+//     project window" Button (reset = clear `?period`, which falls back to the
+//     window; the parent owns that URL write).
 //   • AVAILABILITY deviation — coverage doesn't cover the active selection →
-//     the greyed gap + a "not delivered before/after Y" note. SOFTENED when no
-//     project window is set (browsing without a window is not a "deviation",
-//     just an FYI), per the spec.
+//     amber: the greyed gap + a "not delivered before/after Y" note. SOFTENED
+//     when no project window is set (browsing without a window is not a
+//     "deviation", just an FYI), per the spec.
 //
 // Self-contained presentation (props in, callbacks out — no store import) so
 // it's unit-testable in isolation; the PeriodPicker owns the wire seam (it
@@ -31,6 +34,7 @@ import {
   sameYearWindow,
 } from "./period";
 import type { StudyWindow } from "./project_data";
+import { Button } from "./ui";
 
 interface Props {
   // The slider bounds (inclusive years) — the union of the window + coverage,
@@ -393,11 +397,14 @@ const coverageThrough = $derived(
       the project-window default.
     </p>
   {:else if userDeviation}
-    <p class="deviation user" role="status">
+    <!-- Plain text, no status role (Y-100 — see the file header). Lowercase
+         button text continues the sentence rather than reading as a standalone
+         command (pinned: PeriodPicker.browser.test.ts, this file). -->
+    <p class="deviation user">
       Deviates from project window ({projectWindow?.from}–{projectWindow?.to})
-      <button type="button" class="reset" onclick={() => onreset()}>
+      <Button size="sm" onclick={() => onreset()}>
         reset to project window
-      </button>
+      </Button>
     </p>
   {/if}
 
@@ -539,7 +546,11 @@ const coverageThrough = $derived(
     gap: 0.5rem;
     flex-wrap: wrap;
   }
-  .deviation.user,
+  /* USER deviation is plain text (Y-100 — see the file header); AVAILABILITY
+     and SUB-ANNUAL stay amber, both real mismatches to flag. */
+  .deviation.user {
+    color: var(--text);
+  }
   .deviation.availability,
   .deviation.sub-annual {
     color: var(--warn); /* the picker's advisory tone */
@@ -549,18 +560,5 @@ const coverageThrough = $derived(
   }
   .deviation.availability.soft {
     color: var(--text-muted); /* softened: advisory FYI, not amber */
-  }
-  .reset {
-    font: inherit;
-    font-size: 0.8rem;
-    padding: 0.1rem 0.45rem;
-    border: 1px solid currentColor;
-    border-radius: 999px;
-    background: none;
-    color: inherit;
-    cursor: pointer;
-  }
-  .reset:hover {
-    background: var(--surface);
   }
 </style>

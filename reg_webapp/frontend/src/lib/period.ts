@@ -940,3 +940,102 @@ export function sameYearWindow(
   }
   return a.from === b.from && a.to === b.to;
 }
+
+// ── Exact-year entry (Y-16 PeriodPicker + Y-81 SourceEditor, hoisted Y-100) ──
+// Both the catalog's period card and the /project cart's per-source period
+// editor carry two typed year fields and resolve them the same way; this is
+// the "is this a usable year pair" rule they both call, once.
+
+/** Any four-digit run → its int, else null. WIDER than `grammarYear` (19xx/20xx)
+ * so a caller with its own selectable band (`YearEntryOptions.selectableYears`)
+ * can tell "not a year" from "not a year we hold" — an out-of-band four-digit
+ * year (`2100`) is out of RANGE, not badly typed. */
+function fourDigitYear(raw: string): number | null {
+  const trimmed = raw.trim();
+  return /^\d{4}$/.test(trimmed) ? Number.parseInt(trimmed, 10) : null;
+}
+
+/** The clause a plain grammar-year check refuses by, when the caller supplies
+ * no band-specific wording (`YearEntryOptions.yearRule`'s default) — the wire
+ * grammar's own century range. */
+const DEFAULT_YEAR_RULE = "four-digit year, 1900 to 2099.";
+
+export interface YearEntryOptions {
+  /** The selectable year band an entry must ALSO fall within — the picker's
+   * slider-clamped years (coverage / project window / steward bounds). Omitted
+   * for a plain wire-grammar check: `SourceEditor` writes the period itself, so
+   * the wire's own 19xx/20xx rule (`grammarYear`) IS the only band it has. */
+  selectableYears?: StudyWindow;
+  /** The clause naming the year rule in the "must be a ___" refusal, e.g.
+   * `"four-digit year, like 2015."` (the picker, off the band's first year).
+   * Defaults to `DEFAULT_YEAR_RULE` — the wording a plain grammar-year check
+   * (no `selectableYears`) refuses by. */
+  yearRule?: string;
+}
+
+/**
+ * The exact-year entry both `PeriodPicker` and `SourceEditor` resolve their two
+ * typed year fields against: the year window the pair names, or why it names
+ * none — with the field(s) that refusal is about, so the caller's hairline
+ * marks the year at fault rather than both. `from`/`to` are the raw field text,
+ * or `null` while the fields still mirror the seeded value (nothing typed
+ * yet) — the caller's own "has this been touched" signal, folded in here
+ * rather than gated a second time at each call site.
+ *
+ * Without `selectableYears`, the strict wire grammar (`grammarYear`) is both
+ * the "is this a year" test and the only band. With it, a WIDER "is this even
+ * a year" test (`fourDigitYear`) runs first, so a four-digit year outside the
+ * band reports as out of range rather than badly typed, then a second check
+ * against the band itself. Pure — unit-tested in `period.test.ts`.
+ */
+export function resolveYearEntry(
+  from: string | null,
+  to: string | null,
+  opts: YearEntryOptions = {},
+):
+  | { years: StudyWindow }
+  | { problem: string; at: { from: boolean; to: boolean } }
+  | null {
+  if (from === null || to === null) {
+    return null;
+  }
+  const { selectableYears, yearRule = DEFAULT_YEAR_RULE } = opts;
+  const parseYear = selectableYears ? fourDigitYear : grammarYear;
+  const fromYear = parseYear(from);
+  const toYear = parseYear(to);
+  if (fromYear === null || toYear === null) {
+    const at = { from: fromYear === null, to: toYear === null };
+    if (at.from && at.to) {
+      return { problem: `From and To must each be a ${yearRule}`, at };
+    }
+    return { problem: `${at.from ? "From" : "To"} must be a ${yearRule}`, at };
+  }
+  if (selectableYears) {
+    const inBand = (raw: string, year: number) =>
+      grammarYear(raw) !== null &&
+      year >= selectableYears.from &&
+      year <= selectableYears.to;
+    const at = { from: !inBand(from, fromYear), to: !inBand(to, toYear) };
+    if (at.from || at.to) {
+      const band = `${selectableYears.from}–${selectableYears.to}`;
+      if (at.from && at.to) {
+        return {
+          problem: `${fromYear} and ${toYear} are outside ${band} — pick years in that range.`,
+          at,
+        };
+      }
+      return {
+        problem: `${at.from ? fromYear : toYear} is outside ${band} — pick a year in that range.`,
+        at,
+      };
+    }
+  }
+  if (fromYear > toYear) {
+    // The pair, not either year on its own.
+    return {
+      problem: `From ${fromYear} is after To ${toYear} — enter From at or before To.`,
+      at: { from: true, to: true },
+    };
+  }
+  return { years: { from: fromYear, to: toYear } };
+}

@@ -32,6 +32,53 @@
   border: 0;
 }
 
+/* Shared exact-year entry (Y-100/A-220): the catalog's `PeriodPicker` and the
+   /project cart's per-source period editor (`SourceEditor`, Y-81) each hold two
+   `<input class="year">` fields resolved by the shared `resolveYearEntry`
+   (period.ts) and a `role="status"` line reporting what they resolve to. The
+   shared visual form lives here; layout-owned spacing (each host's own
+   `.problem` margin) and states only one host has (`SourceEditor`'s
+   `.year:read-only`, `.problem.applied`, `.problem.info`) stay local to it. */
+.year {
+  box-sizing: border-box;
+  width: 5rem;
+  padding: var(--space-1) var(--space-2);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--text);
+  /* A year is a machine identifier (DESIGN.md → Typography): mono, tabular. */
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
+}
+.year:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: var(--focus-ring);
+}
+.year[aria-invalid="true"] {
+  border-color: var(--err);
+}
+
+/* Status ROW for the entry's refusal/confirmation: the status tint as fill, the
+   status foreground as text, the glyph first (DESIGN.md → Banners and status
+   rows). `.problem` alone (no `.refused`) keeps no fill and no height while it
+   says nothing. */
+.problem {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  color: var(--err);
+  font-size: var(--text-sm);
+}
+.problem.refused {
+  padding: var(--space-1) var(--space-2);
+  border: 1px solid var(--err-border);
+  border-radius: var(--radius-sm);
+  background: var(--err-bg);
+}
+
 /* Shared integrated-list surface.
 
    Used for compact catalog picker/search lists that sit directly inside a rounded
