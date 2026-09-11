@@ -2,7 +2,7 @@
 name: yard-drive
 description: Drive a Yard board — hold the wake-driven loop across every decision, answer a stopped lane through the exits its attention item names, read a candidate before approving it, dispose of advisory findings, and retire a ticket in the order that sticks. Load this whenever you are asked to operate, drive, run, watch or babysit a Yard board, or when you are about to answer a `yard status` attention item.
 ---
-<!-- yard-scaffold: yard 0.14.8 (commit 4be7bdf402007dac2285bd377fc4974cbd4418ef) -->
+<!-- yard-scaffold: yard 0.14.10 (commit b0c58aac706e5cb528c9aa5cdb7226086d0a22b9) -->
 
 # /yard-drive
 
@@ -38,11 +38,17 @@ after one is the worst possible moment to stop looking.
 
 Two things look like permission to walk away and are not:
 
-- **`{"kind":"quiet","cursor":SEQ}`.** Nothing is in flight and nothing queued is
-  free to start, so no command is coming to produce an event: the next thing
-  that happens is something *you* do. Quiet is an invitation to act — file,
-  unpark, resume, decide — not a shift that ended. If there is genuinely nothing
-  to do, say so and hand the cursor over; do not silently stop.
+- **`{"kind":"quiet","cursor":SEQ,"attention":[...]}`.** Nothing is in flight and
+  nothing queued is free to start, so no command is coming to produce an event:
+  the next thing that happens is something *you* do. Quiet is an invitation to
+  act — file, unpark, resume, decide — not a shift that ended. If there is
+  genuinely nothing to do, say so and hand the cursor over; do not silently
+  stop. **A non-empty `attention` is a decision to take, not a board to leave:**
+  those ids are items open right now, each with a command of yours still owed on
+  it. The wake for each already fired, so re-arming at its `seq` will never
+  replay it — `yard status` lists what they ask and the exits that answer them,
+  and you take them before you watch again. Only an empty `attention` means
+  nothing is waiting on you.
 - **A wake for a lane other than the one you are waiting on.** A watch reports
   the project's next wake, not yours. Take the line, and if it needs nothing,
   watch again from its `seq`.
