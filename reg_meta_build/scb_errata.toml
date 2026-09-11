@@ -1,0 +1,61 @@
+# SCB export errata (Y-114) — the running log of upstream errors in SCB's
+# `Registerinformation.csv`.
+#
+# An entry states "SCB delivered this, but its own machine metadata does not say
+# so", with the evidence that establishes it. The build replays each entry as a
+# synthetic Registerinformation row INSIDE the SCB adapter, before coalescing, so
+# the correction is made at SCB's own grain: windows, gaps, fusing, alias
+# windows, types, value sets and classification backfill all fall out of the
+# existing passes. This is NOT a `variable_state` override surface — see
+# reg_meta_build/DESIGN.md → Curation surface taxonomy.
+#
+# Two typed entry kinds:
+#
+#   [[version]]    register = "<provider>/<register>"   # 2-segment FQID
+#                  variant  = "<variant-slug>"
+#                  name     = "<Registerversionnamn>"   # SCB's token, verbatim
+#                  evidence = "..."                     # why we know it exists
+#                  noted    = "YYYY-MM-DD"
+#     Adds a register version SCB has not documented.
+#
+#   [[delivered]]  register = "<provider>/<register>"
+#                  variant  = "<variant-slug>"
+#                  column   = "<Kolumnnamn>"            # SCB's spelling
+#                  versions = ["<name>", ...]           # SCB's tokens, verbatim
+#                  evidence = "..."
+#                  noted    = "YYYY-MM-DD"
+#                  upstream = "..."                     # optional error class
+#     Adds the column-in-version rows SCB omitted. The column must already have a
+#     real row somewhere on that variant — a column SCB never documents is a
+#     variable_grafts.toml graft or a canonical_attach entry, not errata.
+#
+# Versions are named, never dated: the version name is the coordinate SCB itself
+# publishes, and the build already parses its period.
+#
+# RETIRING AN ENTRY: the build FAILS with `scb_errata_now_present` once SCB ships
+# the row. Delete the entry — git keeps the record of the upstream error. Never
+# edit an entry to keep a failing build green.
+
+[[delivered]]
+register = "scb/lisa"
+variant = "individer-15plus"
+column = "DispInkKE"
+versions = ["2010", "2011", "2012"]
+upstream = "omitted-column-in-version"
+evidence = """SCB's own LISA documentation gives DispInkKE as delivered from 1998 \
+onwards, and SWECOV's holdings list the column in Individ_2010, Individ_2011 and \
+Individ_2012; SCB's Registerinformation export documents those three versions but \
+carries no row for the column. See reg_meta_build/docs/lisa/DispInkKE.md."""
+noted = "2026-09-11"
+
+[[delivered]]
+register = "scb/lisa"
+variant = "individer-15plus"
+column = "DispInkKE04"
+versions = ["2010", "2011", "2012"]
+upstream = "omitted-column-in-version"
+evidence = """The 2004-definition twin of DispInkKE, co-delivered with it: SWECOV's \
+holdings list DispInkKE04 in Individ_2010, Individ_2011 and Individ_2012, and SCB's \
+Registerinformation export documents those three versions but carries no row for the \
+column. See reg_meta_build/docs/lisa/DispInkKE.md for the family's delivery span."""
+noted = "2026-09-11"

@@ -120,6 +120,14 @@ def _no_repo_curation() -> Iterator[None]:
     import reg_meta_build.variable_grafts as _vg
 
     mp.setattr(_vg, "repo_variable_grafts_path", lambda: None)
+    # scb_errata.toml (Y-114) names real scb registers/variants by SLUG and its
+    # entries are STRICT (an unknown variant, an undocumented version or a column
+    # with no real row fails the build) — against a fixture export every one of
+    # them would. db.py LOCAL-imports the symbol (like codelivery), so patching
+    # the module alone suffices.
+    import reg_meta_build.scb_errata as _se
+
+    mp.setattr(_se, "repo_scb_errata_path", lambda: None)
     yield
     mp.undo()
 
@@ -260,3 +268,31 @@ def build_with_rows(
         input_dir=input_dir, db_dir=db_dir, skip_classifications=True, slug_dir=slug_dir
     )
     return connect_built_db(db_dir / "reg_meta.db")
+
+
+def errata_version(name: str) -> str:
+    """A `[[version]]` entry for `scb_errata.toml` (Y-114) naming an edition of
+    the fixture's TESTREG/individer variant."""
+    return (
+        "[[version]]\n"
+        'register = "scb/testreg"\n'
+        'variant = "individer"\n'
+        f'name = "{name}"\n'
+        f'evidence = "the steward holds the {name} delivery"\n'
+        'noted = "2026-09-11"\n'
+    )
+
+
+def errata_delivered(column: str, *versions: str) -> str:
+    """A `[[delivered]]` entry for `scb_errata.toml` (Y-114): `column` was
+    delivered in `versions` of TESTREG/individer but SCB's export omits the row."""
+    listed = ", ".join(f'"{v}"' for v in versions)
+    return (
+        "[[delivered]]\n"
+        'register = "scb/testreg"\n'
+        'variant = "individer"\n'
+        f'column = "{column}"\n'
+        f"versions = [{listed}]\n"
+        f'evidence = "the steward holds {column} for those years"\n'
+        'noted = "2026-09-11"\n'
+    )

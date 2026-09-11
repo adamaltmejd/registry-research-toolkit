@@ -21,7 +21,12 @@ from _csv_fixtures import (
     write_csv,
     write_scb_input,
 )
-from _shared_fixtures import fail_replace_onto
+from _shared_fixtures import (
+    _write_fixture_slug_dir,
+    errata_delivered,
+    errata_version,
+    fail_replace_onto,
+)
 from reg_meta.db import SCHEMA_VERSION, get_manifest, open_db
 from reg_meta.errors import RegMetaError
 from reg_meta.queries import extract_year
@@ -4698,3 +4703,83 @@ class TestCanonicalAttachManifest:
         # 64-hex sha256 digest (same `_file_sha256` the siblings use).
         digest = checksums["lisa_canonical.toml"]
         assert len(digest) == 64 and all(c in "0123456789abcdef" for c in digest)
+
+
+class TestScbErrataBuild:
+    """Build-level contract for the SCB export errata (Y-114): the log retires
+    itself when SCB ships the row, and the manifest records what it applied."""
+
+    def _build(
+        self,
+        tmp_path: Path,
+        monkeypatch: pytest.MonkeyPatch,
+        errata_toml: str,
+    ) -> dict:
+        """Run a real build with `errata_toml` standing in for the committed
+        `scb_errata.toml`, and return the shipped manifest's `row_counts`."""
+        import reg_meta_build.scb_errata as _se
+
+        path = tmp_path / "scb_errata.toml"
+        path.write_text(errata_toml, encoding="utf-8")
+        monkeypatch.setattr(_se, "repo_scb_errata_path", lambda: path)
+
+        input_dir = tmp_path / "input"
+        db_dir = tmp_path / "db"
+        slug_dir = tmp_path / "slugs"
+        slug_dir.mkdir()
+        write_scb_input(input_dir)
+        _write_fixture_slug_dir(slug_dir)
+        build_db(
+            input_dir=input_dir,
+            db_dir=db_dir,
+            slug_dir=slug_dir,
+            skip_classifications=True,
+        )
+        conn = open_db(db_dir / "reg_meta.db")
+        try:
+            return json.loads(get_manifest(conn)["row_counts"])
+        finally:
+            conn.close()
+
+    def test_manifest_reports_the_applied_versions_and_rows(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        # Kon is documented in 2020/2021/2022 but not in the declared 2023
+        # edition; one [[version]] + one [[delivered]] row is what lands.
+        row_counts = self._build(
+            tmp_path,
+            monkeypatch,
+            errata_version("2023") + "\n" + errata_delivered("Kon", "2023"),
+        )
+        assert row_counts["scb_errata_versions"] == 1
+        assert row_counts["scb_errata_rows"] == 1
+
+    def test_empty_errata_leaves_the_manifest_untouched(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        # No always-present `…: 0` pair — it would move the manifest blob against
+        # the released DB and trip the dbdiff byte-identity gate for nothing.
+        row_counts = self._build(tmp_path, monkeypatch, "")
+        assert "scb_errata_versions" not in row_counts
+        assert "scb_errata_rows" not in row_counts
+
+    def test_entry_whose_row_scb_now_ships_fails_the_build(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        # Kon IS documented in 2021, so the entry has been overtaken by an SCB
+        # fix: the build fails so the maintainer deletes it (git keeps the log).
+        with pytest.raises(RegMetaError) as exc:
+            self._build(tmp_path, monkeypatch, errata_delivered("Kon", "2021"))
+        assert exc.value.code == "scb_errata_now_present"
+        assert "delete the entry" in exc.value.remediation.casefold()
+
+    def test_declared_version_scb_now_documents_fails_the_build(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        with pytest.raises(RegMetaError) as exc:
+            self._build(
+                tmp_path,
+                monkeypatch,
+                errata_version("2022"),
+            )
+        assert exc.value.code == "scb_errata_now_present"

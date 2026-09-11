@@ -84,6 +84,7 @@ from reg_meta_build.resolution import (
     assemble_runs,
     resolve_year_intervals,
 )
+from reg_meta_build.scb_errata import ScbErrata, apply_scb_errata
 
 _LISA_REGISTER_NAME_PREFIX = "longitudinell integrationsdatabas"
 
@@ -4285,6 +4286,7 @@ class SCBAdapter:
         self,
         conn: sqlite3.Connection,
         codelivery: CodeliveryMap | None = None,
+        errata: ScbErrata | None = None,
         *,
         value_prestage_cache: Path | None = None,
         refresh_value_prestage: bool = False,
@@ -4297,6 +4299,9 @@ class SCBAdapter:
         # Co-delivery curation (register_id, var_id, column) → kept label,
         # consulted by the coalescer for genuine one-off same-column conflicts.
         self.codelivery = codelivery or {}
+        # Upstream-errata curation (scb_errata.py): the versions/rows SCB's
+        # export omits, replayed as synthetic Registerinformation rows below.
+        self.errata = errata or ScbErrata()
         self.source_checksums: dict[str, str] = {}
         self.row_counts: dict[str, int] = {}
         self.coalesce_stats: dict[str, Any] = {}
@@ -4460,6 +4465,24 @@ class SCBAdapter:
         # target tables are populated.
         with _stage_timer("scb:populate_sensitivity_flags"):
             _populate_sensitivity_flags(conn)
+
+        # Y-114: replay the curated upstream errata as synthetic
+        # Registerinformation rows. Here — after the value-set projection, before
+        # the coalescer — so a cloned row carries its column's real value-set
+        # link and every later pass reads it as an ordinary delivery.
+        with _stage_timer("scb:apply_errata"):
+            errata_counts = apply_scb_errata(conn, self.errata)
+        if errata_counts["versions"] or errata_counts["rows"]:
+            _progress(
+                f"Applied SCB errata: {errata_counts['versions']:,} version(s), "
+                f"{errata_counts['rows']:,} row(s)."
+            )
+            # Emitted only when non-zero: an always-present `…: 0` pair would
+            # move the manifest's `row_counts` blob against the released DB and
+            # trip the dbdiff byte-identity gate for a count carrying no
+            # information (same rule as the curated same_as counts in db.py).
+            self.row_counts["scb_errata_versions"] = errata_counts["versions"]
+            self.row_counts["scb_errata_rows"] = errata_counts["rows"]
 
         # A2.1: coalesce variable_instance rows into variable_state. Reads
         # `unika_summary` and `register_version`; must run before the

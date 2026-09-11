@@ -22,6 +22,15 @@ from _csv_fixtures import (
     _var_row,
     write_scb_input,
 )
+from _shared_fixtures import (
+    CODING_A,
+    CODING_B,
+    build_with_rows,
+    errata_delivered,
+    errata_version,
+    vm_rows,
+)
+from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta_build.db import DDL, build_db, seed_providers
 from reg_meta_build.dbdiff import diff_db_content
 from reg_meta_build.ir import (
@@ -1166,3 +1175,247 @@ class TestMultiYearEditionWindows:
         )
         assert self._window(conn, "950") == ("2004-01-01", "2007-12-31")
         conn.close()
+
+
+# ── 9. SCB export errata (Y-114) ───────────────────────────────────────────
+
+
+def _built_with_errata(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    ri_extra: list[str],
+    errata_toml: str,
+    vm_extra: list[str] | None = None,
+) -> sqlite3.Connection:
+    """Build the standard fixture plus `ri_extra`, with `errata_toml` standing in
+    for the committed `scb_errata.toml`. `build_with_rows` writes the fixture
+    slug dir the errata's `scb/testreg` + `individer` slugs resolve against."""
+    import reg_meta_build.scb_errata as _se
+
+    path = tmp_path / "scb_errata.toml"
+    path.write_text(errata_toml, encoding="utf-8")
+    monkeypatch.setattr(_se, "repo_scb_errata_path", lambda: path)
+    return build_with_rows(tmp_path, ri_extra, vm_extra or [])
+
+
+def _windows(conn: sqlite3.Connection, provider_key: str) -> list[tuple]:
+    return conn.execute(
+        "SELECT vs.valid_from, vs.valid_to "
+        "FROM variable_state vs JOIN variable v ON v.variable_id = vs.variable_id "
+        "WHERE v.register_id = 1 AND v.provider_key = ? ORDER BY vs.valid_from",
+        (provider_key,),
+    ).fetchall()
+
+
+class TestScbErrata:
+    """A curated errata entry is replayed as a synthetic Registerinformation row
+    before the coalescer, so the added coordinate produces ordinary
+    `variable_state` output — windows, gaps, fusing and value sets all fall out
+    of the existing passes.
+
+    TESTREG/individer documents versions '2020' (regver 100), '2021' (101) and
+    '2022' (102), so an entry can name one without inventing an edition.
+    """
+
+    def test_omitted_rows_extend_the_state(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        # The seeded LISA shape: SCB documents the column in its latest edition
+        # only, the steward holds the two before it.
+        ri = [
+            _var_row(
+                colname="DispCol",
+                cvid=9310,
+                var_id=931,
+                varname="DispVar",
+                year="2022",
+                regver_id=102,
+            )
+        ]
+        without = _build_from_ri_rows(tmp_path / "plain", ri)
+        assert _windows(without, "931") == [("2022-01-01", "2022-12-31")]
+        without.close()
+
+        conn = _built_with_errata(
+            tmp_path, monkeypatch, ri, errata_delivered("DispCol", "2020", "2021")
+        )
+        try:
+            assert _windows(conn, "931") == [("2020-01-01", "2022-12-31")]
+        finally:
+            conn.close()
+
+    def _timeline_rows(self) -> tuple[list[str], list[str]]:
+        """One column delivered under two codings: coding A in 2018 and 2022,
+        coding B in 2020. Distinct value sets over overlapping spans route the
+        (variable, variant) through the coalescer's per-year TIMELINE, where each
+        coding's won years RLE into runs — so an added year is visibly a run
+        member, not just a widened hull. A 2016 filler edition gives the errata a
+        documented version to name below."""
+        ri = [
+            _var_row(
+                colname="TlCol",
+                cvid=cvid,
+                var_id=940,
+                varname="TlVar",
+                year=year,
+                regver_id=regver,
+            )
+            for cvid, year, regver in (
+                (9400, "2018", 9400),
+                (9401, "2020", 9401),
+                (9402, "2022", 9402),
+            )
+        ] + [
+            _var_row(
+                colname="FillCol",
+                cvid=9410,
+                var_id=941,
+                varname="FillVar",
+                year="2016",
+                regver_id=9410,
+            )
+        ]
+        vm = (
+            vm_rows(9400, "AlphaA", CODING_A)
+            + vm_rows(9402, "AlphaA", CODING_A)
+            + vm_rows(9401, "BetaB", CODING_B)
+        )
+        return ri, vm
+
+    def test_adjacent_row_fuses_into_one_window(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        ri, vm = self._timeline_rows()
+        plain = tmp_path / "plain"
+        plain.mkdir()
+        without = build_with_rows(plain, ri, vm)
+        assert _windows(without, "940") == [
+            ("2018-01-01", "2018-12-31"),
+            ("2020-01-01", "2020-12-31"),
+            ("2022-01-01", "2022-12-31"),
+        ]
+        without.close()
+
+        # 2021 is adjacent to coding A's 2022 run, so the two become one window.
+        conn = _built_with_errata(
+            tmp_path, monkeypatch, ri, errata_delivered("TlCol", "2021"), vm_extra=vm
+        )
+        try:
+            assert _windows(conn, "940") == [
+                ("2018-01-01", "2018-12-31"),
+                ("2020-01-01", "2020-12-31"),
+                ("2021-01-01", "2022-12-31"),
+            ]
+        finally:
+            conn.close()
+
+    def test_non_adjacent_row_stays_a_separate_state(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        ri, vm = self._timeline_rows()
+        # 2016 touches none of coding A's years (2017 is delivered by nobody), so
+        # it stays its own window instead of paving the gap.
+        conn = _built_with_errata(
+            tmp_path, monkeypatch, ri, errata_delivered("TlCol", "2016"), vm_extra=vm
+        )
+        try:
+            assert _windows(conn, "940") == [
+                ("2016-01-01", "2016-12-31"),
+                ("2018-01-01", "2018-12-31"),
+                ("2020-01-01", "2020-12-31"),
+                ("2022-01-01", "2022-12-31"),
+            ]
+        finally:
+            conn.close()
+
+    def test_value_set_bearing_column_keeps_its_value_set(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        # The clone carries the source row's value-set link, so the added year
+        # joins the SAME coalescer group (the value set anchors state identity)
+        # and the extended window keeps the coding.
+        conn = _built_with_errata(
+            tmp_path,
+            monkeypatch,
+            [
+                _var_row(
+                    colname="CodedCol",
+                    cvid=9330,
+                    var_id=933,
+                    varname="CodedVar",
+                    year="2021",
+                    regver_id=101,
+                )
+            ],
+            errata_delivered("CodedCol", "2020"),
+            vm_extra=vm_rows(9330, "AlphaA", CODING_A),
+        )
+        try:
+            assert _windows(conn, "933") == [("2020-01-01", "2021-12-31")]
+            value_set_id = conn.execute(
+                "SELECT vs.value_set_id FROM variable_state vs "
+                "JOIN variable v ON v.variable_id = vs.variable_id "
+                "WHERE v.register_id = 1 AND v.provider_key = ?",
+                ("933",),
+            ).fetchone()[0]
+            assert value_set_id is not None
+            codes = conn.execute(
+                "SELECT vc.code FROM value_set_member vsm "
+                "JOIN value_code vc ON vc.code_id = vsm.code_id "
+                "WHERE vsm.value_set_id = ? ORDER BY vc.code",
+                (value_set_id,),
+            ).fetchall()
+            assert [c[0] for c in codes] == [code for code, _label in CODING_A]
+        finally:
+            conn.close()
+
+    def test_declared_version_lands_as_a_register_version_and_a_state(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        # SCB documents TESTREG/individer only through 2022; a [[version]] entry
+        # declares the 2023 edition the steward holds, and a [[delivered]] entry
+        # puts the column into it.
+        conn = _built_with_errata(
+            tmp_path,
+            monkeypatch,
+            [
+                _var_row(
+                    colname="AheadCol",
+                    cvid=9340,
+                    var_id=934,
+                    varname="AheadVar",
+                    year="2022",
+                    regver_id=102,
+                )
+            ],
+            errata_version("2023") + "\n" + errata_delivered("AheadCol", "2023"),
+        )
+        try:
+            assert _windows(conn, "934") == [("2022-01-01", "2023-12-31")]
+            names = conn.execute(
+                "SELECT registerversionnamn FROM register_version "
+                "WHERE register_variant_id = 10 ORDER BY registerversionnamn"
+            ).fetchall()
+            assert [n[0] for n in names] == ["2020", "2021", "2022", "2023"]
+        finally:
+            conn.close()
+
+    def test_column_with_no_real_row_is_a_graft_not_errata(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        with pytest.raises(RegMetaError) as exc:
+            _built_with_errata(
+                tmp_path, monkeypatch, [], errata_delivered("NeverDelivered", "2020")
+            )
+        assert exc.value.code == "scb_errata_no_source_row"
+        assert exc.value.exit_code == EXIT_CONFIG
+
+    def test_undocumented_version_must_be_declared(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        with pytest.raises(RegMetaError) as exc:
+            _built_with_errata(
+                tmp_path, monkeypatch, [], errata_delivered("Kon", "2019")
+            )
+        assert exc.value.code == "scb_errata_unknown_version"
+        assert exc.value.exit_code == EXIT_CONFIG

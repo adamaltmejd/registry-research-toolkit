@@ -5188,6 +5188,7 @@ def build_db(
         # infra from this one). ORDER IS LOAD-BEARING: SCB runs before SOS so SOS
         # value_sets content-collapse onto SCB's already-written rows (R2 hybrid).
         from .codelivery import load_codelivery, repo_codelivery_path
+        from .scb_errata import load_scb_errata, repo_scb_errata_path
         from .sources.curated import CanonicalScbAdapter, CuratedAdapter
         from .sources.scb import SCBAdapter
         from .sources.sos import SOSAdapter
@@ -5200,11 +5201,18 @@ def build_db(
             # codelivery.toml can't fail an SOS-only build that never reads it.
             # Empty when the file is absent (wheel installs, synthetic builds).
             codelivery = load_codelivery(repo_codelivery_path())
+            # Upstream errata (Y-114): the rows SCB's export omits. Slug-resolved
+            # against the SAME curated slug dir `populate_slugs` reads — the
+            # adapter applies these before the slug columns exist.
+            errata = load_scb_errata(
+                repo_scb_errata_path(), slug_dir or repo_slug_dir()
+            )
             adapters.append(
                 (
                     SCBAdapter(
                         conn,
                         codelivery,
+                        errata,
                         value_prestage_cache=scb_value_prestage_cache,
                         refresh_value_prestage=refresh_scb_value_prestage,
                     ),

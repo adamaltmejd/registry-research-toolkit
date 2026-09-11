@@ -38,7 +38,10 @@ from reg_meta_build.doc_db import (
 )
 from reg_meta_build.period_family_merges import load_period_family_merges
 from reg_meta_build.relations import _SAME_AS_MAX_COMPONENT, load_relations
+from reg_meta_build.scb_errata import load_scb_errata
 from reg_meta_build.variable_grafts import load_variable_grafts
+
+from reg_meta_build.fqid_slugs import repo_slug_dir
 
 # reg_meta_build/ package root (tests/ sits beside the TOMLs).
 _ROOT = Path(__file__).resolve().parent.parent
@@ -401,6 +404,24 @@ def test_repo_variable_grafts_include_swecov_survey_wave_batch() -> None:
     assert {"ACAT01", "ADECU", "AI_FTE_F"} <= {g.column for g in grafts}
     peorgnrhe = next(g for g in grafts if g.column == "PeOrgNrHe")
     assert peorgnrhe.is_identifier
+
+
+def test_repo_scb_errata_parses() -> None:
+    # `scb_errata.toml` (Y-114) is the upstream-error log; every entry resolves
+    # its `register`/`variant` slugs against the curated fqid_slugs/scb.toml the
+    # build reads, so a stale slug is a load-time failure here rather than a
+    # maintainer-build surprise. The remaining half (the version is documented,
+    # the column has a real row) needs the real export and stays build-only.
+    errata = load_scb_errata(_ROOT / "scb_errata.toml", repo_slug_dir())
+    assert errata  # the verified LISA DispInkKE case ships with the repo
+    assert {(d.column, d.versions) for d in errata.delivered} >= {
+        ("DispInkKE", ("2010", "2011", "2012")),
+        ("DispInkKE04", ("2010", "2011", "2012")),
+    }
+    # scb/lisa "Individer, 15 år och äldre".
+    assert all(
+        (d.register_id, d.register_variant_id) == (34, 153) for d in errata.delivered
+    )
 
 
 def test_repo_doc_sources_parses() -> None:
