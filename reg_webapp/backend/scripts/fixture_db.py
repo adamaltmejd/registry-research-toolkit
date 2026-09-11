@@ -172,6 +172,8 @@ def build_catalog_fixture_db(db_path: Path) -> None:
     _seed_code_variable_map(src)
     _seed_merged_family(src, add_variable, add_state)
     _seed_representation_group(src)
+    _seed_interrupted_delivery(src, add_variable, add_state)
+    _seed_rename_chain(src, add_variable, add_state)
     _seed_many_state_binding(src, add_variable, add_state, add_value_set)
     _rebuild_fts(src)
     _stamp_manifest(src)
@@ -604,6 +606,63 @@ def _seed_representation_group(src: sqlite3.Connection) -> None:
             "INSERT INTO concept_group_variable_facet "
             "(member_id, axis, value, label) VALUES (?, 'month', ?, ?)",
             (cur.lastrowid, value, label),
+        )
+
+
+def _seed_interrupted_delivery(
+    src: sqlite3.Connection, add_variable, add_state
+) -> None:
+    """Y-109: seed `scb/lisa/lan`, ONE column delivered in three DISJOINT eras —
+    1968, then 1995-1996, then continuously from 1998 — `VariableDelivery`'s own
+    docstring example. Plain `variable_state` rows are enough:
+    `register_variable_deliveries` lists a column off the states alone when
+    nothing in `variable_alias`/`variable_alias_window` aliases it. Without this,
+    `dev.sh --fixture-db shot /catalog/scb/lisa` has no interrupted column to
+    render the register list's disjoint windows, its "Not delivered in ..." tick
+    gate, or the #307 comma-union Add on."""
+    add_variable(src, register_id=1, var_id=980, name="Län", slug="lan")
+    for valid_from, valid_to in (
+        ("1968-01-01", "1968-12-31"),
+        ("1995-01-01", "1996-12-31"),
+        ("1998-01-01", "9999-12-31"),
+    ):
+        add_state(
+            src,
+            register_id=1,
+            variable_slug="lan",
+            register_variant_id=10,  # lisa's default variant
+            valid_from=valid_from,
+            valid_to=valid_to,
+            delivery_column_name="Lan",
+        )
+
+
+def _seed_rename_chain(src: sqlite3.Connection, add_variable, add_state) -> None:
+    """Y-109: seed `scb/lisa/forvink-ers`, ONE variable renamed from `ForvErs` to
+    `ForvErsNy` in 2000, so the register list has a sequential rename to fold:
+    both spellings are tickable rows over their own eras (the list's NAME-grain
+    label and tick), while the variable's own page folds the chain into one
+    `representation: null` row (#902) and the list's per-(variant, name) "In
+    project" marker has to read the row's own eras rather than the pooled name.
+    A different variable/spelling from `disp`/`CDISP`→`CDISP5`, which several
+    backend tests already seed ad hoc onto this same register (`catalog_db` is
+    function-scoped, but a second `disp` here would collide on the register's
+    unique `(register_id, slug)`)."""
+    add_variable(
+        src, register_id=1, var_id=990, name="Förvärvsinkomst", slug="forvink-ers"
+    )
+    for column, valid_from, valid_to in (
+        ("ForvErs", "1968-01-01", "1999-12-31"),
+        ("ForvErsNy", "2000-01-01", "9999-12-31"),
+    ):
+        add_state(
+            src,
+            register_id=1,
+            variable_slug="forvink-ers",
+            register_variant_id=10,  # lisa's default variant
+            valid_from=valid_from,
+            valid_to=valid_to,
+            delivery_column_name=column,
         )
 
 

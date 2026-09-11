@@ -24,7 +24,8 @@ def test_provider_children_carry_register_coverage(client):
     by_fqid = {c["fqid"]: c for c in body["children"]}
     lisa = by_fqid["scb/lisa"]["coverage"]
     # kon + lonfink (merged monthly family, #319) + forsamling (many-state, Y-46)
-    assert lisa["variable_count"] == 3
+    # + lan (interrupted delivery, Y-109) + forvink-ers (rename chain, Y-109)
+    assert lisa["variable_count"] == 5
     assert lisa["open_ended"] is True  # kon state is open-ended
     assert lisa["coverage_to"] is None
     rams = by_fqid["scb/rams"]["coverage"]

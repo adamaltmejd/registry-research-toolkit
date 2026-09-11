@@ -90,11 +90,14 @@ def test_register_node_lists_bindings_and_variants_ref(client):
     assert body["fqid"] == "scb/lisa"
     bindings = [c for c in body["children"] if c["kind"] == "binding"]
     # `lonfink` is the merged monthly-family binding (#319) seeded alongside `kon`;
-    # `forsamling` is the many-state / shared-coding binding (Y-46).
+    # `forsamling` is the many-state / shared-coding binding (Y-46); `lan` is the
+    # interrupted-delivery binding and `forvink-ers` the rename-chain one (Y-109).
     assert {b["fqid"] for b in bindings} == {
         "scb/lisa/kon",
         "scb/lisa/lonfink",
         "scb/lisa/forsamling",
+        "scb/lisa/lan",
+        "scb/lisa/forvink-ers",
     }
     # The variant-browser slot (A5.2a, wired): carries the navigable register_fqid.
     variants_refs = [c for c in body["children"] if c["kind"] == "variants-ref"]
