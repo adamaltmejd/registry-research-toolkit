@@ -4,15 +4,11 @@ from __future__ import annotations
 
 import re
 from functools import cache
-from typing import TYPE_CHECKING
 
 from reg_meta.fqid import _YEAR, is_period, period_token_to_bounds
 from reg_meta.queries import extract_year
 
 from ._curation import fold_column
-
-if TYPE_CHECKING:
-    import sqlite3
 
 # Term phrase -> HT/VT prefix, year on either side. `hosttermin`/`vartermin`
 # are NFKD-folded Swedish forms; compact `HT2024`/`VT 2024` is covered too.
@@ -42,11 +38,18 @@ _YEAR_RANGE_RE = re.compile(
     rf"(?<!\d)({_YEAR}){_ISO_TAIL}\s*-{{1,3}}\s*({_YEAR}){_ISO_TAIL}(?!\d)"
 )
 
-# `fold_column` NFKD-decomposes then drops non-ASCII, which would DELETE an en/em
-# dash rather than fold it — `1961-01-01 –– 2025-12-31` would read as two dates
-# with no separator. Map the Unicode dashes onto ASCII `-` first so the range
-# grammar can require a real separator instead of accepting bare whitespace.
+# `fold_column` NFKD-decomposes then drops non-ASCII, which DELETES an en/em dash
+# rather than folding it: `1961-01-01 –– 2025-12-31` would read as two dates with
+# no separator, and `2005 kvartal 2–4` as a lone Q2. Map the Unicode dashes onto
+# ASCII `-` FIRST, in the one fold both readers below go through, so a name reads
+# the same whichever dash character SCB happened to type.
 _DASHES = str.maketrans(dict.fromkeys("‐‑‒–—―−", "-"))
+
+
+def _fold_name(versionname: str) -> str:
+    """An edition name folded for matching: Unicode dashes normalized to ASCII,
+    then `fold_column`'s NFKD/ASCII/lowercase fold."""
+    return fold_column(versionname.translate(_DASHES))
 
 
 def _term_bounds(folded: str) -> list[tuple[int, tuple[str, str]]]:
@@ -82,7 +85,7 @@ def edition_bounds(versionname: str | None, year: int | None) -> tuple[str, str]
     """
     if year is None:
         return None
-    s = fold_column(versionname) if versionname else ""
+    s = _fold_name(versionname) if versionname else ""
     if not s:
         return None
     ystr = f"{year:04d}"
@@ -130,7 +133,7 @@ def _term_span(folded: str) -> tuple[str, str] | None:
     return min(lo for _, (lo, _) in terms), max(hi for _, (_, hi) in terms)
 
 
-def _year_range_span(folded: str, horizon: int | None) -> tuple[str, str] | None:
+def _year_range_span(folded: str) -> tuple[str, str] | None:
     """`A - B` (or an ISO date range) → the full calendar years A..B.
 
     The endpoints' months and days are deliberately dropped: a claim window is
@@ -138,17 +141,15 @@ def _year_range_span(folded: str, horizon: int | None) -> tuple[str, str] | None
     month end), and the observed ISO ranges are whole years anyway
     (`1961-01-01 –– 2025-12-31`).
 
-    A range ending past ``horizon``, the latest edition year this build's corpus
-    names, is a PROJECTION horizon — befolkningsframskrivningar `2011-2060`
-    delivers one 2011-vintage forecast, it is not a 50-year delivery span — so it
-    keeps the single-year (vintage) claim. Modelling projection vintages properly
-    is out of scope here.
+    No future-guard here: a range ending years from now is read like any other,
+    because whether a register's names are forecast horizons is the caller's
+    declared fact (`_PROJECTION_REGISTERS` in `sources/scb.py`).
     """
     m = _YEAR_RANGE_RE.search(folded)
     if m is None:
         return None
     lo_year, hi_year = int(m.group(1)), int(m.group(2))
-    if hi_year <= lo_year or (horizon is not None and hi_year > horizon):
+    if hi_year <= lo_year:
         return None
     return (
         period_token_to_bounds(f"{lo_year:04d}")[0],
@@ -156,13 +157,11 @@ def _year_range_span(folded: str, horizon: int | None) -> tuple[str, str] | None
     )
 
 
-def _name_span(
-    versionname: str, year: int, horizon: int | None
-) -> tuple[str, str] | None:
+def _name_span(versionname: str, year: int) -> tuple[str, str] | None:
     """The full inclusive ISO span an edition name claims, or None for a name
     that spans at most its own edition year."""
-    s = fold_column(versionname.translate(_DASHES))
-    span = _school_year_span(s) or _term_span(s) or _year_range_span(s, horizon)
+    s = _fold_name(versionname)
+    span = _school_year_span(s) or _term_span(s) or _year_range_span(s)
     # `extract_year` reads the name's FIRST year, so a name that really spans a
     # range starts at `year`. A span starting later means the first year is
     # something else — a collection year in front of the period it describes
@@ -174,9 +173,29 @@ def _name_span(
 
 
 @cache
-def edition_claims(
-    versionname: str | None, horizon: int | None
-) -> tuple[tuple[int, str, str], ...]:
+def vintage_claim(versionname: str | None) -> tuple[tuple[int, str, str], ...]:
+    """The single ``(year, lo, hi)`` claim an edition name's own VINTAGE makes.
+
+    The name's first year (`extract_year`), narrowed inside that year by
+    `edition_bounds`. Two callers: the single-year fallback below, and a declared
+    projection register, where the version IS the vintage
+    (`_PROJECTION_REGISTERS` in `sources/scb.py`). Empty when the name carries no
+    parseable year.
+    """
+    if not versionname:
+        return ()
+    year = extract_year(versionname)
+    if year is None:
+        return ()
+    # A parsed `year` implies a non-empty name, so `edition_bounds` does not
+    # return None here — but a claim MUST exist for every observed year, so
+    # don't couple that guarantee to it.
+    lo, hi = edition_bounds(versionname, year) or period_token_to_bounds(f"{year:04d}")
+    return ((year, lo, hi),)
+
+
+@cache
+def edition_claims(versionname: str | None) -> tuple[tuple[int, str, str], ...]:
     """The ``(year, lo, hi)`` delivery claims an SCB edition name makes, ascending.
 
     One claim per calendar year the name spans, each an inclusive ISO window
@@ -191,29 +210,23 @@ def edition_claims(
     carrying run/gap structure, so a gap between versions stays a gap and the
     coalescer's fusing rules are unchanged.
 
-    ``horizon`` is the build's latest edition year (`build_horizon`), used only to
-    tell a delivery span from a projection horizon. A name with no parseable
-    edition year yields no claim at all, and callers fall back to their own
-    unknown-year behavior.
+    A pure function of the NAME: no build year, corpus statistic or wall clock
+    enters here, so a rebuild of the same corpus stays byte-identical and a name
+    reads the same whatever else the corpus happens to contain. The projection
+    policy is the caller's (`sources/scb.py::register_edition_claims`).
 
     Cached: the coalescer parses per instance row (~515K) over a corpus of a few
-    thousand DISTINCT edition names, and every argument is hashable and the
-    result immutable.
+    thousand DISTINCT edition names, and the result is immutable.
     """
     if not versionname:
         return ()
-    year = extract_year(versionname)
-    if year is None:
+    vintage = vintage_claim(versionname)
+    if not vintage:
         return ()
-    span = _name_span(versionname, year, horizon)
+    year, _, _ = vintage[0]
+    span = _name_span(versionname, year)
     if span is None:
-        # A parsed `year` implies a non-empty name, so `edition_bounds` does not
-        # return None here — but a claim MUST exist for every observed year, so
-        # don't couple that guarantee to it.
-        lo, hi = edition_bounds(versionname, year) or period_token_to_bounds(
-            f"{year:04d}"
-        )
-        return ((year, lo, hi),)
+        return vintage
     lo, hi = span
     lo_year, hi_year = int(lo[:4]), int(hi[:4])
     claims: list[tuple[int, str, str]] = []
@@ -221,22 +234,3 @@ def edition_claims(
         y_lo, y_hi = period_token_to_bounds(f"{y:04d}")
         claims.append((y, lo if y == lo_year else y_lo, hi if y == hi_year else y_hi))
     return tuple(claims)
-
-
-def build_horizon(conn: sqlite3.Connection) -> int | None:
-    """The build's horizon year: the latest edition year the corpus NAMES.
-
-    Read off the edition table (a few thousand rows) rather than the ~515K
-    instance rows, and through this one helper so every caller — the coalescer
-    and `alias_windows` — reads a version name against the same horizon.
-
-    `extract_year` reads a name's first year, so a projection version
-    (`2011-2060`) contributes its vintage 2011 and cannot inflate the horizon.
-    Derived from the corpus rather than the wall clock, so a rebuild of the same
-    corpus stays byte-identical.
-    """
-    years = [
-        extract_year(name or "")
-        for (name,) in conn.execute("SELECT registerversionnamn FROM register_version")
-    ]
-    return max((year for year in years if year is not None), default=None)

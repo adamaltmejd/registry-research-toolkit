@@ -32,7 +32,6 @@ from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta.queries import extract_year
 
 from ._curation import curation_error, fold_column, resolve_variable_id
-from .alias_windows import materialize_multi_alias_windows
 from .classification_links import (
     load_classification_links,
     materialize_classification_links,
@@ -4371,6 +4370,11 @@ def materialize(
             fold_slug_hints=fold_slug_hints,
             progress=_progress,
         )
+        # Deferred like the adapter imports below: `alias_windows` reads the
+        # SCB adapter's declared projection set, and the adapter imports this
+        # module.
+        from .alias_windows import materialize_multi_alias_windows
+
         alias_window_counts = materialize_multi_alias_windows(conn, progress=_progress)
         # Manifest row-count key deliberately kept as the pre-rename
         # `monthly_family_merges` (the surface is now `period_family_merges`): the

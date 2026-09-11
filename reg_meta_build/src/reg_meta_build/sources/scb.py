@@ -68,10 +68,7 @@ from reg_meta_build.db import (
     _stage_timer,
     _value_set_hash,
 )
-from reg_meta_build.edition_bounds import (
-    build_horizon as _build_horizon,
-    edition_claims as _edition_claims,
-)
+from reg_meta_build.edition_bounds import edition_claims, vintage_claim
 from reg_meta_build.ir import (
     IRDeliveryProvenance,
     IRRegister,
@@ -951,7 +948,7 @@ class _StateGroup:
     # YYYY-01-01/YYYY-12-31, so a sub-annual edition only narrows a boundary
     # when NO full-year edition shares that boundary year). The materializer
     # reads these ONLY at a state's lifetime start/end, to avoid over-claiming
-    # the boundary year (see `_edition_claims`). None when no edition carried a
+    # the boundary year (see `edition_claims`). None when no edition carried a
     # parseable year (the yearless/unika fallback fires instead).
     @property
     def from_iso(self) -> str | None:
@@ -1958,7 +1955,7 @@ def _split_off_non_contested(
 # conflation → segment choice → run assembly; see its module docstring and
 # DESIGN.md → Interval-native co-delivery resolution). THIS adapter supplies
 # the provider conventions the engine is parameterized over: the claim
-# extraction (`_edition_claims` on `registerversionnamn`), the identity
+# extraction (`register_edition_claims` on `registerversionnamn`), the identity
 # verdict (`_pool_single_coding`), and the resolution cascade
 # (`_resolve_column_year`) — wired up in `_resolve_year_winners`.
 
@@ -1977,6 +1974,31 @@ _COSMETIC_MAX_SYM = 2  # symmetric code-count diff treated as cosmetic drift
 # qualifiers of annual deliveries ('15 oktober YYYY' school snapshots), so
 # narrowing them would drop real coverage.
 _CADENCE_BY_REGISTER: dict[int, str] = {392: "month"}
+
+# Y-113 projection policy: a register whose version names state the HORIZON a
+# forecast reaches rather than years anything was delivered for. SCB's
+# befolkningsframskrivningar (register 310) names every version `2009-2060
+# huvudalternativ`, `2011-2060`, … — the version IS the 2009/2011 vintage, not a
+# 50-year delivery. Declared per register, the same idiom as the cadence map
+# above, because nothing in the NAME tells a forecast horizon from a genuine
+# multi-year span: ESF's `Programperiod 2021-2027` is a real programme period
+# and claims 2021..2027 even though it too ends in the future. Corpus-derived
+# alternatives were measured and rejected (see DESIGN.md → Multi-year version
+# names). A discovery rule for new projection registers is out of scope; add the
+# register id here.
+_PROJECTION_REGISTERS: set[int] = {310}
+
+
+def register_edition_claims(
+    register_id: int, versionname: str | None
+) -> tuple[tuple[int, str, str], ...]:
+    """The `(year, lo, hi)` claims one edition makes, read against the declared
+    projection set. The coalescer and `alias_windows` both go through this, so
+    the two never disagree about what a version name covers."""
+    if register_id in _PROJECTION_REGISTERS:
+        return vintage_claim(versionname)
+    return edition_claims(versionname)
+
 
 # Grain markers (ascii-folded substrings) flagging a HISTORICAL re-coding —
 # `Kommun historisk`, `Län historisk`, `… tidigare`. SCB co-delivers these
@@ -2563,10 +2585,6 @@ def _coalesce_variable_states(
     # coalescer stamp `variable_instance.variable_id` with no guessing.
     cvid_gkey: dict[int, tuple] = {}
 
-    # `_edition_claims` needs the build's horizon year to tell a multi-year
-    # DELIVERY span from a projection horizon; read once, before the row loop.
-    horizon = _build_horizon(conn)
-
     for row in rows:
         grain = row["grain"] or ""
         col = row["delivery_column_name"]
@@ -2669,12 +2687,12 @@ def _coalesce_variable_states(
         # signal `regver_min`/`regver_max` derive from), and the per-variable
         # max so the materializer can identify the latest-era group when
         # clamping unika ranges.
-        eds = _edition_claims(row["registerversionnamn"], horizon)
+        eds = register_edition_claims(row["register_id"], row["registerversionnamn"])
         if eds:
             _auth = _edition_authority(row["registerversionnamn"])
             _appr = row["registerversion_senastgodkanddatum"] or ""
             # #219/#271: the claim window is the edition's sub-annual ISO hull.
-            # String min/max is chronological for ISO dates. `_edition_claims`
+            # String min/max is chronological for ISO dates. `edition_claims`
             # nests every window in its OWN year, so each year a version spans
             # contributes within that year: a full-year edition gives
             # YYYY-01-01/YYYY-12-31 (a year that ALSO has a full-year/spring
@@ -3108,7 +3126,7 @@ def _coalesce_variable_states(
         if to_year is None:
             open_top_from_unika += 1
         # #219: clamp the state's lifetime START/END to the sub-annual delivery
-        # window (from_iso/to_iso) instead of the boundary year. `_edition_claims`
+        # window (from_iso/to_iso) instead of the boundary year. `edition_claims`
         # nests every claim window in its OWN year and `regver_min`/`regver_max` are
         # the claim years' own bounds, so from_iso lands in the regver_min year and
         # to_iso in the regver_max year BY CONSTRUCTION — they can only narrow

@@ -15,7 +15,7 @@ from typing import TYPE_CHECKING
 
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 
-from .edition_bounds import build_horizon, edition_claims
+from .sources.scb import register_edition_claims
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -32,15 +32,16 @@ def _table_exists(conn: sqlite3.Connection, name: str) -> bool:
 
 
 def _version_bounds(
-    version_name: str | None, horizon: int | None
+    register_id: int, version_name: str | None
 ) -> tuple[str, str] | None:
     """The inclusive ISO hull of everything an edition name claims.
 
-    Derived from the same `edition_claims` parse the coalescer built the states
-    from, so a multi-year version (a school year, a year range) matches the
-    widened state it produced instead of only its first year.
+    Goes through `register_edition_claims`, the same reading the coalescer built
+    the states from — declared projection set included — so a multi-year version
+    (a school year, a year range) matches the widened state it produced instead
+    of only its first year, and a projection vintage still matches its own year.
     """
-    claims = edition_claims(version_name, horizon)
+    claims = register_edition_claims(register_id, version_name)
     if not claims:
         return None
     return claims[0][1], claims[-1][2]
@@ -98,7 +99,7 @@ def materialize_multi_alias_windows(
     cvid_list = sorted(multi_cvids)
     placeholders = ",".join("?" for _ in cvid_list)
     cvid_rows = cur.execute(
-        "SELECT vi.cvid, vi.variable_id, vi.register_variant_id, "
+        "SELECT vi.cvid, vi.variable_id, vi.register_id, vi.register_variant_id, "
         "vi.value_set_id, COALESCE(vi.value_set_version_label, '') AS label, "
         "rv.registerversionnamn "
         "FROM variable_instance vi "
@@ -119,10 +120,6 @@ def materialize_multi_alias_windows(
         for row in cvid_rows
     }
 
-    # The same horizon the coalescer read, so the two agree on which version
-    # names carry a multi-year delivery span (see `edition_claims`).
-    horizon = build_horizon(conn)
-
     windows: set[tuple[int, int, str, str, str]] = set()
     unresolved: list[str] = []
     skipped = 0
@@ -134,7 +131,7 @@ def materialize_multi_alias_windows(
                 f"version={row['registerversionnamn']!r} has no owning variable_id"
             )
             continue
-        bounds = _version_bounds(row["registerversionnamn"], horizon)
+        bounds = _version_bounds(row["register_id"], row["registerversionnamn"])
         strict_states = cur.execute(
             "SELECT state_id, valid_from, valid_to, delivery_column_name "
             "FROM variable_state "

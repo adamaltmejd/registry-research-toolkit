@@ -995,6 +995,11 @@ class TestNameFieldHygiene:
 # ── 8. Multi-year edition names claim their whole span (Y-113) ──────────────
 
 
+# befolkningsframskrivningar, the one entry in the SCB adapter's
+# `_PROJECTION_REGISTERS`: (name, register_id, register_variant_id).
+_PROJECTION_REG = ("PROGREG", 310, 3100)
+
+
 class TestMultiYearEditionWindows:
     """A `registerversionnamn` that names several years is DELIVERED across all
     of them, so `variable_state` must cover the whole span.
@@ -1006,12 +1011,14 @@ class TestMultiYearEditionWindows:
     test_triage.py pins the parse underneath.
     """
 
-    def _window(self, conn: sqlite3.Connection, provider_key: str) -> tuple[str, str]:
+    def _window(
+        self, conn: sqlite3.Connection, provider_key: str, register_id: int = 1
+    ) -> tuple[str, str]:
         rows = conn.execute(
             "SELECT vs.valid_from, vs.valid_to FROM variable_state vs "
             "JOIN variable v ON v.variable_id = vs.variable_id "
-            "WHERE v.register_id = 1 AND v.provider_key = ?",
-            (provider_key,),
+            "WHERE v.register_id = ? AND v.provider_key = ?",
+            (register_id, provider_key),
         ).fetchall()
         assert len(rows) == 1, f"expected one state for {provider_key}, got {rows}"
         return rows[0][0], rows[0][1]
@@ -1021,16 +1028,11 @@ class TestMultiYearEditionWindows:
         tmp_path: Path,
         versionname: str,
         year: str,
-        corpus_year: str = "2025",
+        register: tuple[str, int, int] = ("TESTREG", 1, 10),
     ) -> sqlite3.Connection:
-        """One variable delivered by one `versionname` edition, alongside an
-        unrelated plain annual edition for `corpus_year`.
-
-        That second row is what sets the build's HORIZON (the latest edition year
-        the corpus names) — the standard fixture only reaches 2020, and a range
-        ending past the horizon is read as a projection. The real corpus gets its
-        horizon the same way, from ordinary year-stamped editions.
-        """
+        """One variable delivered by one `versionname` edition, in `register`
+        (`(name, id, variant_id)`) — TESTREG unless the case is about the
+        declared projection set."""
         return _build_from_ri_rows(
             tmp_path,
             [
@@ -1042,15 +1044,8 @@ class TestMultiYearEditionWindows:
                     year=year,
                     versionname=versionname,
                     regver_id=9800,
-                ),
-                _var_row(
-                    colname="HorizonCol",
-                    cvid=9710,
-                    var_id=951,
-                    varname="HorizonVar",
-                    year=corpus_year,
-                    regver_id=9810,
-                ),
+                    register=register,
+                )
             ],
         )
 
@@ -1075,9 +1070,10 @@ class TestMultiYearEditionWindows:
                 "2020",
                 ("2020-07-01", "2021-06-30"),
             ),
-            # befolkningsframskrivningar: a forecast past the corpus's own latest
-            # edition year stays its 2011 vintage, not a 50-year delivery.
-            ("2011-2060", "2011", ("2011-01-01", "2011-12-31")),
+            # ESF `Programperiod 2021-2027` ends after every other edition in
+            # the fixture (the standard rows reach 2020) and still claims all of
+            # it: nothing but the declared register set narrows a span.
+            ("Programperiod 2021-2027", "2021", ("2021-01-01", "2027-12-31")),
             # Controls: a plain annual and a lone term are claimed as before.
             ("2018", "2018", ("2018-01-01", "2018-12-31")),
             ("Höstterminen 2018", "2018", ("2018-07-01", "2018-12-31")),
@@ -1094,19 +1090,22 @@ class TestMultiYearEditionWindows:
         assert self._window(conn, "950") == expected
         conn.close()
 
-    def test_range_past_the_corpus_horizon_keeps_the_vintage_year(
+    def test_declared_projection_register_keeps_its_vintage_year(
         self, tmp_path: Path
     ) -> None:
-        # The horizon is what separates a delivered span from a forecast, so the
-        # SAME name reads both ways on either side of it: `1971 - 2024` is a
-        # delivery once the corpus reaches 2024, and a vintage while it does not.
-        conn = self._built(tmp_path, "1971 - 2024", "1971", corpus_year="2024")
-        assert self._window(conn, "950") == ("1971-01-01", "2024-12-31")
-        conn.close()
-        conn = self._built(
-            tmp_path / "short", "1971 - 2024", "1971", corpus_year="2010"
+        # A version of a register in `_PROJECTION_REGISTERS` (310,
+        # befolkningsframskrivningar) names the horizon its forecast reaches, so
+        # it ships as the 2011 vintage. Nothing in the NAME says so — the SAME
+        # name on any other register claims all 50 years, which is what makes
+        # this the register's declared fact rather than the parser's guess.
+        conn = self._built(tmp_path, "2011-2060", "2011", _PROJECTION_REG)
+        assert self._window(conn, "950", register_id=310) == (
+            "2011-01-01",
+            "2011-12-31",
         )
-        assert self._window(conn, "950") == ("1971-01-01", "1971-12-31")
+        conn.close()
+        conn = self._built(tmp_path / "other", "2011-2060", "2011")
+        assert self._window(conn, "950") == ("2011-01-01", "2060-12-31")
         conn.close()
 
     def test_school_year_series_is_not_a_year_short_at_the_end(

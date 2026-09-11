@@ -31,9 +31,9 @@ from reg_meta.errors import RegMetaError
 from reg_meta.fqid import period_token_to_bounds
 from reg_meta_build.db import _drop_fullcover_codeless_states, build_db
 from reg_meta_build.edition_bounds import (
-    build_horizon,
     edition_bounds,
     edition_claims,
+    vintage_claim,
 )
 from reg_meta_build.resolution import Claim, assemble_runs
 from reg_meta_build.sources.scb import (
@@ -61,6 +61,7 @@ from reg_meta_build.sources.scb import (
     _StateGroup,
     _triage_groups,
     _TriageResult,
+    register_edition_claims,
 )
 
 
@@ -201,6 +202,12 @@ class TestEditionBounds:
         assert edition_bounds("2011 kv1", 2011) == period_token_to_bounds("2011-Q1")
         # A range spans its endpoints (union of the two quarter tokens).
         assert edition_bounds("2005 kvartal 2-4", 2005) == ("2005-04-01", "2005-12-31")
+        # …whichever dash SCB typed. `fold_column` NFKD-DROPS an en dash rather
+        # than folding it, so without the shared dash normalization this read as
+        # a lone Q2 and lost half the year (Y-113 r2).
+        assert edition_bounds("2005 kvartal 2–4", 2005) == edition_bounds(
+            "2005 kvartal 2-4", 2005
+        )
         assert edition_bounds("2007 kv 2-kv 4", 2007) == ("2007-04-01", "2007-12-31")
         assert edition_bounds("Kvartal 1-3 fr.o.m 2010", 2010) == (
             "2010-01-01",
@@ -285,7 +292,8 @@ class TestEditionClaims:
 
     One claim per calendar year spanned, each nested in its own year (the
     `Claim` contract), so the claim KEY SET still carries the run/gap structure
-    the coalescer fuses on. `horizon` is the build's latest edition year.
+    the coalescer fuses on. A pure function of the name — the projection policy
+    is the caller's declared register set, pinned in `TestVintageClaim`.
     """
 
     def test_single_year_names_claim_exactly_edition_bounds(self) -> None:
@@ -301,51 +309,47 @@ class TestEditionClaims:
             ("Kvartal 1-3 fr.o.m 2010", 2010),
             ("15 oktober 2024", 2024),
         ):
-            assert edition_claims(name, 2025) == (
-                (year, *edition_bounds(name, year)),
-            ), name
+            assert edition_claims(name) == ((year, *edition_bounds(name, year)),), name
 
     def test_year_range_claims_every_year_it_spans(self) -> None:
         # innovation-foretag `2004 - 2006`; interior years are full calendar years
         # so a gap between versions stays a gap.
-        assert edition_claims("2004 - 2006", 2025) == (
+        assert edition_claims("2004 - 2006") == (
             (2004, "2004-01-01", "2004-12-31"),
             (2005, "2005-01-01", "2005-12-31"),
             (2006, "2006-01-01", "2006-12-31"),
         )
         # hreg doktorander `1971 - 2024`, and the un-spaced spelling.
-        assert edition_claims("1971 - 2024", 2025)[-1] == (
+        assert edition_claims("1971 - 2024")[-1] == (
             2024,
             "2024-01-01",
             "2024-12-31",
         )
-        assert edition_claims("2004-2006", 2025) == edition_claims("2004 - 2006", 2025)
+        assert edition_claims("2004-2006") == edition_claims("2004 - 2006")
 
     def test_iso_date_range_claims_every_year_it_spans(self) -> None:
         # flergenreg `1961-01-01 –– 2025-12-31`: en dashes, which `fold_column`
         # would DELETE rather than fold, so they are mapped to ASCII first.
-        claims = edition_claims("1961-01-01 –– 2025-12-31", 2025)
+        claims = edition_claims("1961-01-01 –– 2025-12-31")
         assert len(claims) == 65
         assert claims[0] == (1961, "1961-01-01", "1961-12-31")
         assert claims[-1] == (2025, "2025-01-01", "2025-12-31")
-        assert edition_claims("1961-01-01 -- 2025-12-31", 2025) == claims
+        assert edition_claims("1961-01-01 -- 2025-12-31") == claims
 
     def test_school_year_claims_ht_through_vt(self) -> None:
         # grundskola-ak9 / gymnasieskola-betyg / lararreg `Läsåret 2012/2013`:
         # HT of the first year through VT of the last, on the period grammar's
         # own term bounds.
-        assert edition_claims("Läsåret 2012/2013", 2025) == (
+        assert edition_claims("Läsåret 2012/2013") == (
             (2012, *period_token_to_bounds("HT2012")),
             (2013, *period_token_to_bounds("VT2013")),
         )
         # A bare `A/B` reads the same way.
-        assert edition_claims("2012/2013", 2025) == edition_claims(
-            "Läsåret 2012/2013", 2025
-        )
+        assert edition_claims("2012/2013") == edition_claims("Läsåret 2012/2013")
 
     def test_school_year_range_claims_ht_first_through_vt_last(self) -> None:
         # hreg grundutbildning `Läsåren 1993/1994 - 2024/2025` → HT1993..VT2025.
-        claims = edition_claims("Läsåren 1993/1994 - 2024/2025", 2025)
+        claims = edition_claims("Läsåren 1993/1994 - 2024/2025")
         assert claims[0] == (1993, *period_token_to_bounds("HT1993"))
         assert claims[-1] == (2025, *period_token_to_bounds("VT2025"))
         # Interior years are whole, so every year of the series is claimed once.
@@ -355,51 +359,50 @@ class TestEditionClaims:
     def test_non_consecutive_slash_pair_is_not_a_school_year(self) -> None:
         # A classification vintage pair is not a school year; it keeps the
         # single-year claim rather than inventing a 21-year span.
-        assert edition_claims("SUN 2000/2020", 2025) == (
-            (2000, "2000-01-01", "2000-12-31"),
-        )
+        assert edition_claims("SUN 2000/2020") == ((2000, "2000-01-01", "2000-12-31"),)
 
     def test_term_range_claims_first_term_through_last(self) -> None:
         # utbildningsanalyser `Höstterminen 2020 - Vårterminen 2021`.
-        assert edition_claims("Höstterminen 2020 - Vårterminen 2021", 2025) == (
+        assert edition_claims("Höstterminen 2020 - Vårterminen 2021") == (
             (2020, *period_token_to_bounds("HT2020")),
             (2021, *period_token_to_bounds("VT2021")),
         )
         # ureg `Komvux HT 1988 - VT 2024`: HT1988, whole years, then VT2024.
-        claims = edition_claims("Komvux HT 1988 - VT 2024", 2025)
+        claims = edition_claims("Komvux HT 1988 - VT 2024")
         assert claims[0] == (1988, *period_token_to_bounds("HT1988"))
         assert claims[-1] == (2024, *period_token_to_bounds("VT2024"))
         assert claims[1] == (1989, "1989-01-01", "1989-12-31")
 
-    def test_projection_horizon_keeps_the_vintage_year(self) -> None:
-        # befolkningsframskrivningar `2011-2060` forecasts past the build's own
-        # horizon: the version IS the 2011 vintage, not a 50-year delivery span.
-        assert edition_claims("2011-2060", 2025) == (
-            (2011, "2011-01-01", "2011-12-31"),
-        )
-        # Same name once the corpus really reaches 2060 → a delivered span.
-        assert len(edition_claims("2011-2060", 2060)) == 50
+    def test_a_span_ending_in_the_future_is_still_a_span(self) -> None:
+        # ESF `Programperiod 2021-2027` is a real programme period and claims all
+        # of it, even though it ends after every edition the corpus names. The
+        # name parser has no build year, corpus statistic or wall clock to
+        # compare against — a forecast horizon is the CALLER's declared fact.
+        claims = edition_claims("Programperiod 2021-2027")
+        assert [year for year, _, _ in claims] == list(range(2021, 2028))
+        # Read as a name alone, a projection horizon is no different.
+        assert len(edition_claims("2011-2060")) == 50
 
     def test_span_must_start_in_the_edition_year(self) -> None:
         # A collection year in front of the period it describes: 2019 is the
         # edition's own claim, so the HT2020 note does not move or widen it
         # (it would otherwise drop 2019 out of the claim key set entirely).
-        assert edition_claims("Insamling 2019 avseende höstterminen 2020", 2025) == (
+        assert edition_claims("Insamling 2019 avseende höstterminen 2020") == (
             (2019, "2019-01-01", "2019-12-31"),
         )
 
     def test_out_of_range_term_year_does_not_crash(self) -> None:
         # `period_token_to_bounds("HT1850")` would raise; the marker is dropped,
         # leaving a single full-year 2024 claim.
-        assert edition_claims("HT 1850, version 2024", 2025) == (
+        assert edition_claims("HT 1850, version 2024") == (
             (2024, "2024-01-01", "2024-12-31"),
         )
 
     def test_yearless_claims_nothing(self) -> None:
         # No parseable edition year → no claim; the caller's yearless/unika
         # fallback fires instead.
-        assert edition_claims(None, 2025) == ()
-        assert edition_claims("Senaste versionen", 2025) == ()
+        assert edition_claims(None) == ()
+        assert edition_claims("Senaste versionen") == ()
 
     def test_claim_windows_are_nested_in_their_own_year(self) -> None:
         # The `Claim` contract every consumer relies on: a window never crosses a
@@ -410,7 +413,7 @@ class TestEditionClaims:
             "1961-01-01 –– 2025-12-31",
             "2004 - 2006",
         ):
-            claims = edition_claims(name, 2025)
+            claims = edition_claims(name)
             assert [y for y, _, _ in claims] == list(
                 range(claims[0][0], claims[-1][0] + 1)
             ), name
@@ -419,24 +422,36 @@ class TestEditionClaims:
                 assert lo <= hi, (name, y)
 
 
-class TestBuildHorizon:
-    @staticmethod
-    def _horizon(*names: str | None) -> int | None:
-        conn = sqlite3.connect(":memory:")
-        conn.execute("CREATE TABLE register_version (registerversionnamn TEXT)")
-        conn.executemany(
-            "INSERT INTO register_version VALUES (?)", [(n,) for n in names]
+class TestVintageClaim:
+    """The reading a DECLARED projection register gets: the version IS the
+    vintage, so a name states the horizon its forecast reaches rather than years
+    anything was delivered for. `register_edition_claims` routes register ids in
+    `_PROJECTION_REGISTERS` here and every other register to `edition_claims`."""
+
+    def test_projection_name_keeps_its_vintage_year(self) -> None:
+        # befolkningsframskrivningar (register 310): `2011-2060` is one
+        # 2011-vintage forecast, not a 50-year delivery span.
+        assert vintage_claim("2011-2060") == ((2011, "2011-01-01", "2011-12-31"),)
+        assert register_edition_claims(310, "2009-2060 huvudalternativ") == (
+            (2009, "2009-01-01", "2009-12-31"),
         )
-        return build_horizon(conn)
 
-    def test_horizon_is_the_latest_edition_year_named(self) -> None:
-        # `extract_year` reads a name's FIRST year, so a projection version
-        # contributes its vintage and cannot inflate the horizon past the data.
-        assert self._horizon("2019", "2011-2060", "Läsåret 2023/2024") == 2023
+    def test_every_other_register_reads_the_full_span(self) -> None:
+        # The same name on a non-declared register claims all of it — the guard
+        # is the register, never the shape of the name.
+        assert register_edition_claims(311, "2011-2060") == edition_claims("2011-2060")
+        assert len(register_edition_claims(311, "2011-2060")) == 50
 
-    def test_yearless_and_empty_corpora(self) -> None:
-        assert self._horizon("Senaste versionen", None, "") is None
-        assert self._horizon() is None
+    def test_vintage_still_narrows_within_its_own_year(self) -> None:
+        # It is `edition_bounds`' window, not a blind full year: a sub-annual
+        # marker on a projection version still narrows inside the vintage year.
+        assert vintage_claim("Höstterminen 2024") == (
+            (2024, *period_token_to_bounds("HT2024")),
+        )
+
+    def test_yearless_claims_nothing(self) -> None:
+        assert vintage_claim(None) == ()
+        assert vintage_claim("Senaste versionen") == ()
 
 
 def _yiv(year: int) -> tuple[str, str]:

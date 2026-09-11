@@ -1529,12 +1529,12 @@ variable was never delivered in.
 
 `edition_bounds(versionname, year)` (#219, `edition_bounds.py`) parses the Swedish
 term/quarter/half phrasings to an inclusive ISO `(lo, hi)` window WITHIN that year;
-`edition_claims(versionname, horizon)` wraps it to read a name's full span (below).
-Since #271 the per-group envelope (`from_iso` = min claim lo, `to_iso` = max claim hi)
-derives from the claim records rather than parallel accumulator fields. The materializer
-applies the envelope **only at a state's lifetime start/end** — `from_iso` for the first
-emitted run when it begins at `regver_min`, `to_iso` for the last when it ends at
-`regver_max`. Interior timeline handoffs between competing value sets stay year-aligned.
+`edition_claims(versionname)` wraps it to read a name's full span (below). Since #271
+the per-group envelope (`from_iso` = min claim lo, `to_iso` = max claim hi) derives from
+the claim records rather than parallel accumulator fields. The materializer applies the
+envelope **only at a state's lifetime start/end** — `from_iso` for the first emitted run
+when it begins at `regver_min`, `to_iso` for the last when it ends at `regver_max`.
+Interior timeline handoffs between competing value sets stay year-aligned.
 
 Each individual CLAIM window is still nested in its own year **by construction**:
 `edition_bounds` is passed one edition year and narrows only markers whose own year
@@ -1575,17 +1575,35 @@ overlapping pair would ever ship. `regver_min`/`regver_max` are DERIVED from the
 years (`min`/`max` of the key set, like `from_iso`/`to_iso` at ISO grain), so the
 materializer's precise-vs-padded run edges still land on the span's real bounds.
 
-**Projection horizons are not spans.** A range ending after the build's HORIZON year —
-the latest edition year the corpus names, `build_horizon` over every
-`registerversionnamn`, derived from the input rather than the wall clock so a rebuild
-stays byte-identical — is a forecast, not a delivery: befolkningsframskrivningar
-`2011-2060` ships one 2011-vintage projection. Those keep the first-year (vintage)
-claim. Modelling projection vintages properly is separate work. The guard is
-deliberately NOT applied to school-year or term spans: `extract_year` of
-`Läsåret 2024/2025` is 2024, so on a school-year register the horizon is the last
-series' START year, and guarding uniformly would refuse the final `A/B` of every such
-register — re-creating the year-short bug. The coalescer and `alias_windows.py` both
-call `build_horizon`, so the two sides read a version name identically.
+**Projection registers are declared, not inferred.** One class of name is a forecast
+HORIZON rather than a delivery span: befolkningsframskrivningar (register 310) names
+every version `2009-2060 huvudalternativ`, `2011-2060`, … and the version IS the
+2009/2011 vintage. Nothing in the NAME separates that from a genuine multi-year span —
+ESF's `Programperiod 2021-2027` is a real programme period and claims 2021..2027 even
+though it too ends in the future — so the fact is declared per register,
+`_PROJECTION_REGISTERS = {310}` beside `_CADENCE_BY_REGISTER` in `sources/scb.py`.
+`register_edition_claims` is the one reading both the coalescer and `alias_windows.py`
+go through: a declared register gets `vintage_claim` (the name's first year, still
+narrowed inside it by `edition_bounds`), everything else gets `edition_claims`.
+
+The two inferred alternatives were measured on the 0.40.1 corpus and rejected. Approval
+dates cannot stand in: SCB approves budget-year versions ahead of their year
+(`Utjämningsår 2026` approved 2025-06-13), and `Registerversion_ForstaGodkannandeDatum`
+is filled for 2,673 versions only. A corpus-wide "max edition year" cannot either — it
+is a statistic about unrelated registers, it reverts a whole span to one year the first
+time a register ships ahead of the corpus, and it collapses ESF to 2021 today. So
+`edition_claims` stays a pure function of the name: no build year, corpus statistic or
+wall clock enters it, which is also what keeps a rebuild of the same corpus
+byte-identical. A discovery rule for new projection registers is separate work; a new
+one is added to the set.
+
+**One fold, both readers.** `_curation.fold_column` NFKD-decomposes then drops
+non-ASCII, which DELETES an en/em dash rather than folding it —
+`1961-01-01 –– 2025-12-31` would read as two dates with no separator, and
+`2005 kvartal 2–4` as a lone Q2, losing half the year purely on which dash SCB typed.
+`_fold_name` maps the Unicode dashes onto ASCII `-` first and is the single fold
+`edition_bounds` and the span reader both go through, so a name reads the same in
+either.
 
 Only the academic-term, quarter (`kvartal`/`kv`, incl. ranges), and half-year
 (`Första/Andra halvåret`) forms are narrowed; bare years, dated annuals, prelim/final,
@@ -1621,7 +1639,7 @@ lives in `resolution.py` (`Claim`, `SweepHooks`, `resolve_year_intervals`,
 `assemble_runs`, the grammar successor tables); it contains no provider grammar and no
 SCB types, and is parameterized over an opaque candidate key through the hooks. The SCB
 adapter (`sources/scb.py`) supplies the provider conventions: claim extraction
-(`edition_claims` on `registerversionnamn`), the identity verdict
+(`register_edition_claims` on `registerversionnamn`), the identity verdict
 (`_pool_single_coding`), the resolution cascade (`_resolve_column_year`, with its
 SCB-specific label-freshness and historical-grain steps), the curation pins, and the
 per-register cadence map — wired together in `_resolve_year_winners`. SCB stays the

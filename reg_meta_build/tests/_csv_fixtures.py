@@ -151,12 +151,17 @@ def _var_row(
     unit: str = "",
     varopdef: str = "",
     varsource: str = "",
+    register: tuple[str, int, int] = ("TESTREG", 1, 10),
 ) -> str:
-    """A Registerinformation row for register TESTREG (register_id 1, variant
-    register_variant_id 10), varying only the fields triage keys on. Shared by
-    the triage tests and the A2.3 replaced_by tests (both reuse the
+    """A Registerinformation row, by default for register TESTREG (register_id 1,
+    variant register_variant_id 10), varying only the fields triage keys on.
+    Shared by the triage tests and the A2.3 replaced_by tests (both reuse the
     canonical disjoint-column split geometry), so it lives here rather than in
     either test module.
+
+    `register` is `(name, register_id, register_variant_id)` — one argument so a
+    row can never name one register under another's id. Override it only where a
+    per-register declared fact is under test (Y-113's `_PROJECTION_REGISTERS`).
 
     `versionname` overrides the `registerversionnamn` cell (the value the
     coalescer derives the edition year and sub-annual window from); it defaults
@@ -168,8 +173,9 @@ def _var_row(
     (default empty) — used to verify each split sibling carries ITS column's
     operational definition (#892). `varsource` sets `VariabelRegister_Källa` for
     source attribution/coalescing regressions."""
+    regname, register_id, regvar_id = register
     return _ri_row(
-        "TESTREG",
+        regname,
         "Testregistret",
         "Testning",
         "Individer",
@@ -201,8 +207,8 @@ def _var_row(
         data_type,
         data_length,
         str(cvid),
-        "1",
-        "10",
+        str(register_id),
+        str(regvar_id),
         str(regver_id),
         str(var_id),
     )
