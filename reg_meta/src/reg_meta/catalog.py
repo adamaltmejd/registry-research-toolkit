@@ -235,9 +235,9 @@ class VariableDelivery(_CatalogModel):
     civilståndsändringar, delivered 1968, then 1995–1996, then 1998– — reads as
     interrupted and a consumer can match a period against the eras rather than
     against the span. `coverage` stays the span over those windows (earliest
-    start, latest end) — unchanged by Y-104, and no longer what the register browse
-    row shows: it renders the eras. Empty only where `coverage` is boundless too (an alias column on a
-    variant with no states of its own)."""
+    start, latest end) — unchanged by Y-104, and no longer what the register
+    browse row shows: it renders the eras. Empty only where `coverage` is
+    boundless too (an alias column on a variant with no states of its own)."""
 
     variant: str
     column: str | None
