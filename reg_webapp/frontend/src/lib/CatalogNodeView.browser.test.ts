@@ -1342,6 +1342,93 @@ describe("CatalogNodeView register arm: add columns (Y-83)", () => {
     ).toEqual(["scb/lisa/individer-15plus"]);
   });
 
+  it("keeps a tick scoped to the variant it was made under when the lens is lifted", async () => {
+    mockRegisterAndResolve(splitColumnRegisterNode());
+    vi.mocked(getRegisterVariants).mockResolvedValue(lisaVariants());
+    windowStore.set({ from: 2018, to: 2023 });
+
+    await renderRegister();
+    await expect.element(page.getByText("Kön")).toBeVisible();
+
+    // Ticked while the list showed 15+ ALONE. The lens is a live filter and the tick
+    // is not, so lifting it before pressing Add must not hand the batch the 16+
+    // delivery of the same name — a variant the researcher never had on screen.
+    await clickVariantChip("Individer, 15 år och äldre");
+    await tickColumn("Kon");
+    await page.getByRole("button", { name: "Clear variant filter" }).click();
+    await expect
+      .element(page.getByRole("button", { name: "Clear variant filter" }))
+      .not.toBeInTheDocument();
+
+    await expect.element(page.getByText("1 column selected")).toBeVisible();
+    await page.getByRole("button", { name: "Add 1 column to project" }).click();
+    await expect.element(page.getByText("Applied +1 column")).toBeVisible();
+    expect(
+      projectStore.draft?.sources.map((source) => source.register_variant),
+    ).toEqual(["scb/lisa/individer-15plus"]);
+  });
+
+  it("drops a tick from the batch while the lens shows only a variant it excluded", async () => {
+    mockRegisterAndResolve(splitColumnRegisterNode());
+    vi.mocked(getRegisterVariants).mockResolvedValue(lisaVariants());
+    windowStore.set({ from: 2018, to: 2023 });
+
+    await renderRegister();
+    await expect.element(page.getByText("Kön")).toBeVisible();
+    await clickVariantChip("Individer, 15 år och äldre");
+    await tickColumn("Kon");
+
+    // Moving the lens to the OTHER variant leaves the tick nothing it covers: the
+    // `Kon` on screen is now the 16+ delivery, which this tick never stood for. It
+    // reads as unticked and there is nothing to add — never a silent switch.
+    await clickVariantChip("Individer, 16 år och äldre");
+    await clickVariantChip("Individer, 15 år och äldre");
+    await expect
+      .element(page.getByRole("checkbox", { name: "Kon", exact: true }))
+      .not.toBeChecked();
+    await expect
+      .element(page.getByRole("button", { name: "Add columns to project" }))
+      .toBeDisabled();
+
+    // The tick was not thrown away, only held out of the batch: the lens that made
+    // it brings it back, still scoped to the one variant it was made under.
+    await clickVariantChip("Individer, 16 år och äldre");
+    await expect
+      .element(page.getByRole("checkbox", { name: "Kon", exact: true }))
+      .toBeChecked();
+    await page.getByRole("button", { name: "Add 1 column to project" }).click();
+    await expect.element(page.getByText("Applied +1 column")).toBeVisible();
+    expect(
+      projectStore.draft?.sources.map((source) => source.register_variant),
+    ).toEqual(["scb/lisa/individer-15plus"]);
+  });
+
+  it("re-ticking a column under a moved lens captures the variant now on screen", async () => {
+    mockRegisterAndResolve(splitColumnRegisterNode());
+    vi.mocked(getRegisterVariants).mockResolvedValue(lisaVariants());
+    windowStore.set({ from: 2018, to: 2023 });
+
+    await renderRegister();
+    await expect.element(page.getByText("Kön")).toBeVisible();
+    await clickVariantChip("Individer, 15 år och äldre");
+    await tickColumn("Kon");
+    await clickVariantChip("Individer, 16 år och äldre");
+    await clickVariantChip("Individer, 15 år och äldre");
+
+    // The box reads unticked under this lens, so clicking it must TICK it — and the
+    // tick it makes is a tick on what the row shows now, the 16+ delivery.
+    await tickColumn("Kon");
+    await expect
+      .element(page.getByRole("checkbox", { name: "Kon", exact: true }))
+      .toBeChecked();
+    await page.getByRole("button", { name: "Add 1 column to project" }).click();
+
+    await expect.element(page.getByText("Applied +1 column")).toBeVisible();
+    expect(
+      projectStore.draft?.sources.map((source) => source.register_variant),
+    ).toEqual(["scb/lisa/individer-16plus"]);
+  });
+
   it("commits an interrupted column as its real eras, not the list's aggregate span", async () => {
     // The list reads `ForvErs` as 1990–2021, the MIN/MAX over its deliveries. The
     // variable's own states say it was delivered 1990–1999 and again 2010–2021,

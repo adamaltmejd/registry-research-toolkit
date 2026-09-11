@@ -761,10 +761,18 @@ variable pages to add one column each.
   out to ONE staged add per *(variable, concrete `register_variant`, column)* — the same
   per-concrete-segment fan-out (#376) the variable page performs. So the file a tick
   authors is the file that page authors, and the two grades of row the page holds (see
-  the two bullets below) never leave it. The chip lens rides along: the rows are built
-  from the states of the variants the ticked column was SHOWN under, which is the part a
-  `?variant` modifier plays on the variable's own page (`narrowStatesByModifier`) — so a
-  tick made under a lens can never author a variant the researcher filtered away.
+  the two bullets below) never leave it. The chip lens rides along, and it is CAPTURED
+  WHEN THE COLUMN IS TICKED: a tick stores the concrete variants the list showed that
+  column under, and an Add stages the intersection of those with the variants on screen
+  when it is pressed, building the rows from the states of exactly those — the part a
+  `?variant` modifier plays on the variable's own page (`narrowStatesByModifier`). The
+  capture is the load-bearing half. The lens is live and a tick is not, so reading the
+  lens at Add time instead would let a lens lifted in between widen the tick to a
+  variant the researcher never saw, and a lens moved to another variant swap the tick
+  silently onto that one. Bounded by both pages, a tick can never author a variant the
+  researcher filtered away, in either direction: one the lens has moved off reads as
+  UNTICKED and adds nothing until the lens that made it comes back — or until it is
+  ticked again, which re-captures under what is on screen now.
 - **The staging stack is shared, not copied.** `staged_picker.ts` owns the whole staged
   add → resolve → commit sequence (`stagedAddCandidates` → `applyStagedPicks`,
   committing through `projectStore.applyStagedDiff`), and `StagedAddStatus.svelte` is

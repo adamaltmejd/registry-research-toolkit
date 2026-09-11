@@ -364,7 +364,7 @@ $effect(() => {
   void fqidPath;
   filter = "";
   selectedVariants = new Set();
-  selectedColumns = new Set();
+  selectedColumns = new Map();
   addRefusal = null;
   applyOutcome = null;
 });
@@ -545,7 +545,19 @@ function columnKey(fqid: string, name: string): string {
   return `${fqid}::${name}`;
 }
 
-let selectedColumns = $state(new Set<string>());
+/** The ticked columns, each mapped to the concrete variants the list SHOWED that
+ * column under at the moment it was ticked. The variants ride along because the chip
+ * lens is LIVE and a tick is not: read at Add time instead, a lens lifted since the
+ * tick would widen it to variants the researcher never saw, and a lens moved to
+ * another variant would swap the tick onto that one. What an Add stages is the
+ * intersection of the two (`stagedTicks`) — never wider than what was on screen when
+ * the tick was made, never wider than what is on screen now.
+ *
+ * The captured variants are the rows' own `variant` heads, which is the whole row
+ * here: the list's rows are built from synthetic states that carry no
+ * `variant_family` (`deliveryColumnRows`), so nothing in them is family-folded and a
+ * head never stands for a concrete variant it does not name. */
+let selectedColumns = $state(new Map<string, ReadonlySet<string>>());
 let applying = $state(false);
 /** Why the last Add authored NOTHING, or null. ONE slot rather than a flag per
  * gate: every Add ends by setting it — to a reason, or to null — so a verdict about
@@ -574,10 +586,19 @@ function outOfWindowMessage(years: string): string {
   return `No ticked column was delivered in ${years}, so nothing was added — set the study window in the rail to years they were delivered, then add again.`;
 }
 
-function toggleColumn(fqid: string, name: string): void {
-  const next = new Set(selectedColumns);
-  if (!next.delete(columnKey(fqid, name))) {
-    next.add(columnKey(fqid, name));
+function toggleColumn(fqid: string, column: DeliveryColumn): void {
+  const next = new Map(selectedColumns);
+  const key = columnKey(fqid, column.name);
+  // Off what the BOX reads (`stagedColumnKeys`), not off the bare key: a tick the
+  // lens has moved out of the batch shows as unticked, and clicking an unticked box
+  // must tick it. So a click always leaves the column in the state its box shows the
+  // opposite of — and re-ticking re-captures, under the variants on screen now.
+  if (stagedColumnKeys.has(key)) {
+    next.delete(key);
+  } else {
+    // Captured HERE rather than read back at Add time: what the row shows now is
+    // what the researcher is choosing, and the lens can move before they press Add.
+    next.set(key, new Set(column.rows.map((row) => row.variant)));
   }
   // Reassign so the `$state` proxy tracks the change (as `toggleVariant`).
   selectedColumns = next;
@@ -617,21 +638,23 @@ interface TickedVariable {
   variants: Set<string>;
 }
 
-// The staged batch, derived from the LIVE list rather than from the tick set: a
-// tick whose column the variant lens has since hidden, or the study window has moved
-// off, contributes nothing — so the count on the bar and what the button adds always
-// describe the same page.
+// The staged batch: the LIVE list met with the ticks. A tick whose column the variant
+// lens has since hidden, or the study window has moved off, contributes nothing, and
+// a variant it did not cover when it was made is never added back — so the batch is
+// bounded by BOTH the page the tick was made on and the page it will be pressed on,
+// and the count on the bar always describes what the button adds.
 const stagedTicks = $derived.by((): TickedVariable[] => {
   const ticked: TickedVariable[] = [];
   for (const band of pickerBands) {
     const columns = new Set<string>();
     const variants = new Set<string>();
     for (const column of columnsByFqid.get(band.key) ?? []) {
-      if (!selectedColumns.has(columnKey(band.key, column.name))) {
+      const tickedUnder = selectedColumns.get(columnKey(band.key, column.name));
+      if (tickedUnder === undefined) {
         continue;
       }
       for (const row of column.rows) {
-        if (rowDeliversInScope(row, addScope)) {
+        if (tickedUnder.has(row.variant) && rowDeliversInScope(row, addScope)) {
           columns.add(column.name);
           variants.add(row.variant);
         }
@@ -644,23 +667,24 @@ const stagedTicks = $derived.by((): TickedVariable[] => {
   return ticked;
 });
 
-/** How many listed COLUMNS a batch stands for — the unit this page counts in, at
- * BOTH ends of an Add, so the bar's promise and the confirmation cannot phrase the
- * same batch differently. The rows are never the unit: a column two variants deliver
- * is one column and two adds, and a renamed column ticked under both its names is two
- * columns and one add. */
-function countColumns(
+/** Which listed COLUMNS a batch stands for, by tick identity — the unit this page
+ * counts in at BOTH ends of an Add, and what the checkboxes read, so the ticks, the
+ * bar's promise and the confirmation cannot phrase the same batch differently. The
+ * rows are never the unit: a column two variants deliver is one column and two adds,
+ * and a renamed column ticked under both its names is two columns and one add. */
+function columnKeys(
   batch: Iterable<{ band: StagedPickerBand; columns: Iterable<string> }>,
-): number {
+): Set<string> {
   const keys = new Set<string>();
   for (const { band, columns } of batch) {
     for (const column of columns) {
       keys.add(columnKey(band.key, column));
     }
   }
-  return keys.size;
+  return keys;
 }
-const stagedColumns = $derived(countColumns(stagedTicks));
+const stagedColumnKeys = $derived(columnKeys(stagedTicks));
+const stagedColumns = $derived(stagedColumnKeys.size);
 
 /** "1 column" / "3 columns" — the bar's count and its button say the same thing. */
 const columnCount = $derived(
@@ -705,7 +729,7 @@ function batchGuard(): () => boolean {
 
 /** A staged row and the TICKED column names it commits — one for an ordinary column,
  * two when a #902 rename chain was ticked under both of its names. Carrying them is
- * what lets the confirmation count in the bar's unit (`countColumns`) without asking
+ * what lets the confirmation count in the bar's unit (`columnKeys`) without asking
  * the mapping question a second time. */
 interface ExactPick extends StagedPick {
   columns: string[];
@@ -780,7 +804,7 @@ async function addSelected(): Promise<void> {
     // apply the same gate to what came back: only rows really delivered inside the
     // window commit, and only the ticked columns they cover are reported as added.
     const adds = exact.filter((pick) => rowDeliversInScope(pick.row, scope));
-    const columns = countColumns(adds);
+    const columns = columnKeys(adds).size;
     if (columns === 0) {
       addRefusal = outOfWindowMessage(scopeYears(scope));
       return;
@@ -806,7 +830,7 @@ async function addSelected(): Promise<void> {
       };
       // The ticks are consumed: the columns now read as in the project, and a
       // second press can't re-add what the first one committed.
-      selectedColumns = new Set();
+      selectedColumns = new Map();
     }
   } finally {
     applying = false;
@@ -1012,10 +1036,11 @@ async function addSelected(): Promise<void> {
                       <input
                         class="cbox"
                         type="checkbox"
-                        checked={addable &&
-                          selectedColumns.has(columnKey(row.fqid, col.name))}
+                        checked={stagedColumnKeys.has(
+                          columnKey(row.fqid, col.name),
+                        )}
                         disabled={applying || !addable}
-                        onchange={() => toggleColumn(row.fqid, col.name)}
+                        onchange={() => toggleColumn(row.fqid, col)}
                       />
                       <!-- Name, era and markers are ONE wrapping line beside the
                            tick, so at 375 a marker that will not fit drops under the
