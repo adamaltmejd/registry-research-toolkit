@@ -251,6 +251,32 @@ function splitColumnRegisterNode(): CatalogNode {
   } as unknown as CatalogNode;
 }
 
+// ONE variable delivered under TWO column names by BOTH variants — the shape a pooled
+// variant set cross-authors. `Kon` ticked under one lens and `Alder` under the other
+// both exist in both variants, so matching a row by name alone would stage each under
+// the other's variant as well. The eras differ, so the committed source periods say
+// which column went where.
+function crossedColumnRegisterNode(): CatalogNode {
+  return {
+    kind: "register",
+    fqid: "scb/lisa",
+    name: "LISA",
+    children: [
+      {
+        kind: "binding",
+        fqid: "scb/lisa/kon",
+        name: "Kön",
+        deliveries: [
+          delivery("individer-15plus", "Kon", "2010-01-01", null),
+          delivery("individer-16plus", "Kon", "2010-01-01", null),
+          delivery("individer-15plus", "Alder", "2000-01-01", "2015-12-31"),
+          delivery("individer-16plus", "Alder", "2000-01-01", "2015-12-31"),
+        ],
+      },
+    ],
+  } as unknown as CatalogNode;
+}
+
 // A concept group whose members SPLIT across variants: `kon` + `disp` are
 // `individer-15plus`, `arbetsstalle` is `arbetsstallen`, and the ungrouped
 // `foretag` is a variant of its own — so a lens can leave the group with two
@@ -1427,6 +1453,48 @@ describe("CatalogNodeView register arm: add columns (Y-83)", () => {
     expect(
       projectStore.draft?.sources.map((source) => source.register_variant),
     ).toEqual(["scb/lisa/individer-16plus"]);
+  });
+
+  it("stages each column under the variants ITS OWN tick was made under", async () => {
+    mockRegisterAndResolve(crossedColumnRegisterNode());
+    vi.mocked(getRegisterVariants).mockResolvedValue(lisaVariants());
+    windowStore.set({ from: 1990, to: 2023 });
+
+    await renderRegister();
+    await expect.element(page.getByText("Kön")).toBeVisible();
+
+    // Two columns of ONE variable, ticked under DIFFERENT lenses. Both names exist in
+    // both variants, so a batch that pooled the two ticks' variants would stage each
+    // column under the other's variant too — four adds where the researcher made two.
+    await clickVariantChip("Individer, 15 år och äldre");
+    await tickColumn("Kon 2010–");
+    await clickVariantChip("Individer, 16 år och äldre");
+    await clickVariantChip("Individer, 15 år och äldre");
+    await tickColumn("Alder 2000–2015");
+    // Only `Alder` is in the batch here — `Kon`'s tick covers no variant this lens
+    // shows — which is what makes the two ticks' variant sets genuinely different.
+    await expect.element(page.getByText("1 column selected")).toBeVisible();
+    await page.getByRole("button", { name: "Clear variant filter" }).click();
+
+    await expect.element(page.getByText("2 columns selected")).toBeVisible();
+    await page
+      .getByRole("button", { name: "Add 2 columns to project" })
+      .click();
+    await expect.element(page.getByText("Applied +2 columns")).toBeVisible();
+
+    // `Kon` under 15+ alone and `Alder` under 16+ alone: one source each, over that
+    // column's own era. Pooled, both sources would span BOTH eras instead.
+    expect(
+      Object.fromEntries(
+        (projectStore.draft?.sources ?? []).map((source) => [
+          source.register_variant,
+          source.period,
+        ]),
+      ),
+    ).toEqual({
+      "scb/lisa/individer-15plus": { from: 2010, to: 2023 },
+      "scb/lisa/individer-16plus": { from: 2000, to: 2015 },
+    });
   });
 
   it("commits an interrupted column as its real eras, not the list's aggregate span", async () => {

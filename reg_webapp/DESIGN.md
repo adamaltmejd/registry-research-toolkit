@@ -772,7 +772,13 @@ variable pages to add one column each.
   silently onto that one. Bounded by both pages, a tick can never author a variant the
   researcher filtered away, in either direction: one the lens has moved off reads as
   UNTICKED and adds nothing until the lens that made it comes back — or until it is
-  ticked again, which re-captures under what is on screen now.
+  ticked again, which re-captures under what is on screen now. The capture is PER COLUMN
+  and stays that way through the commit: a batch is grouped into one *scope* per
+  distinct variant set (`stagedTicks`), and each scope builds its variable's rows on its
+  own. Two columns of one variable ticked under different lenses must not pool their
+  variants, because rows are matched to columns by NAME (`rowCoversColumn`) and both
+  names usually exist in both variants — a pooled set would stage each column under the
+  other's variants and quietly author four adds where the researcher made two.
 - **The staging stack is shared, not copied.** `staged_picker.ts` owns the whole staged
   add → resolve → commit sequence (`stagedAddCandidates` → `applyStagedPicks`,
   committing through `projectStore.applyStagedDiff`), and `StagedAddStatus.svelte` is
@@ -810,14 +816,15 @@ variable pages to add one column each.
   1990–2020. Printing that year range is what the list wants and costs no fetch per
   listed variable — committing it would claim years the column was never delivered in.
   So an Add re-reads each ticked VARIABLE's own states (`catalog.ts`
-  `variablePickerRows`, one GET per ticked variable, on top of the per-add resolve) and
-  stages rows over the exact eras, which commit as the #307 comma-union exactly as the
-  variable page's do. A variable whose states can't be read refuses the whole batch
-  rather than falling back to the aggregate. The two grades can DISAGREE — a window
-  inside an interruption passes a tick that only ever saw the aggregate — so the Add
-  applies the window gate again to the rows that come back, and the confirmation counts
-  the columns that actually committed. A batch left with nothing authors nothing and
-  names the window it found empty.
+  `variablePickerRows`, one GET per ticked variable per scope — one scope unless the
+  lens moved between its ticks — on top of the per-add resolve) and stages rows over the
+  exact eras, which commit as the #307 comma-union exactly as the variable page's do. A
+  variable whose states can't be read refuses the whole batch rather than falling back
+  to the aggregate. The two grades can DISAGREE — a window inside an interruption passes
+  a tick that only ever saw the aggregate — so the Add applies the window gate again to
+  the rows that come back, and the confirmation counts the columns that actually
+  committed. A batch left with nothing authors nothing and names the window it found
+  empty.
 - **A sequential RENAME is listed twice and committed once.** The list names every
   column a variable was delivered under, so `CDISP` and `CDISP5` are two tickable rows
   (that is what Y-82 shows, and the name is what a researcher hunts for). The variable's

@@ -628,11 +628,18 @@ const committedColumns = $derived.by((): Set<string> => {
   return committed;
 });
 
-/** One listed variable's share of the staged batch: the ticked delivery-column
- * NAMES, and the concrete variants the list showed them under. Names rather than the
- * list's own rows, because an Add commits the variable's own rows instead (see
- * `variablePickerRows`), which a name can share with another name. */
-interface TickedVariable {
+/** A SCOPE of one listed variable's staged batch: the ticked delivery-column NAMES
+ * that stage under one and the same set of concrete variants, and that set. Names
+ * rather than the list's own rows, because an Add commits the variable's own rows
+ * instead (see `variablePickerRows`), which a name can share with another name.
+ *
+ * ONE scope per variable in the ordinary case — every tick on it was made under the
+ * same lens. A researcher who moved the lens between ticks gets one scope per
+ * distinct set, and the sets must not pool: `exactPicks` builds a variable's rows
+ * once per scope and then matches them by column name alone, so a pooled set would
+ * stage each column under the other's variants — the very thing the per-tick capture
+ * exists to prevent. */
+interface TickedScope {
   band: StagedPickerBand;
   columns: Set<string>;
   variants: Set<string>;
@@ -643,26 +650,37 @@ interface TickedVariable {
 // a variant it did not cover when it was made is never added back — so the batch is
 // bounded by BOTH the page the tick was made on and the page it will be pressed on,
 // and the count on the bar always describes what the button adds.
-const stagedTicks = $derived.by((): TickedVariable[] => {
-  const ticked: TickedVariable[] = [];
+const stagedTicks = $derived.by((): TickedScope[] => {
+  const ticked: TickedScope[] = [];
   for (const band of pickerBands) {
-    const columns = new Set<string>();
-    const variants = new Set<string>();
+    // Grouped by the variants a column STAGES under — its captured set met with the
+    // live rows — because that set is the narrowing its rows get built under.
+    const scopes = new Map<string, TickedScope>();
     for (const column of columnsByFqid.get(band.key) ?? []) {
       const tickedUnder = selectedColumns.get(columnKey(band.key, column.name));
       if (tickedUnder === undefined) {
         continue;
       }
+      const variants = new Set<string>();
       for (const row of column.rows) {
         if (tickedUnder.has(row.variant) && rowDeliversInScope(row, addScope)) {
-          columns.add(column.name);
           variants.add(row.variant);
         }
       }
+      if (variants.size === 0) {
+        continue;
+      }
+      // The scope's identity, order-independent. `\0` cannot occur in a
+      // `register_variant` slug, so no two different sets spell the same key.
+      const key = [...variants].sort().join("\0");
+      const scope = scopes.get(key);
+      if (scope === undefined) {
+        scopes.set(key, { band, columns: new Set([column.name]), variants });
+      } else {
+        scope.columns.add(column.name);
+      }
     }
-    if (columns.size > 0) {
-      ticked.push({ band, columns, variants });
-    }
+    ticked.push(...scopes.values());
   }
   return ticked;
 });
@@ -741,10 +759,11 @@ interface ExactPick extends StagedPick {
  *
  * Null refuses the WHOLE batch: a variable whose states can't be read, or that no
  * longer delivers a ticked column, must not fall back to the list's approximation.
- * simplify: one GET per ticked VARIABLE, in parallel — a column ticked under two
- * variants, or two columns of one variable, share the one read. */
+ * simplify: one GET per ticked variable per SCOPE, in parallel — a column ticked
+ * under two variants, and two columns of one variable ticked under the same lens,
+ * share the one read; only a lens moved between ticks costs a second. */
 async function exactPicks(
-  ticked: readonly TickedVariable[],
+  ticked: readonly TickedScope[],
 ): Promise<ExactPick[] | null> {
   try {
     const staged = await Promise.all(
