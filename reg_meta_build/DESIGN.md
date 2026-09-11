@@ -1532,9 +1532,10 @@ term/quarter/half phrasings to an inclusive ISO `(lo, hi)` window WITHIN that ye
 `edition_claims(versionname)` wraps it to read a name's full span (below). Since #271
 the per-group envelope (`from_iso` = min claim lo, `to_iso` = max claim hi) derives from
 the claim records rather than parallel accumulator fields. The materializer applies the
-envelope **only at a state's lifetime start/end** — `from_iso` for the first emitted run
-when it begins at `regver_min`, `to_iso` for the last when it ends at `regver_max`.
-Interior timeline handoffs between competing value sets stay year-aligned.
+envelope **only at a state's lifetime start/end** — `from_iso`/`to_iso` on the fast span
+path, and on the timeline path the first/last emitted run's OWN owned bound, whatever
+year it falls in (Y-121). Interior timeline handoffs between competing value sets stay
+year-aligned.
 
 Each individual CLAIM window is still nested in its own year **by construction**:
 `edition_bounds` is passed one edition year and narrows only markers whose own year
@@ -1571,9 +1572,15 @@ versions stays a gap and the coalescer's fusing rules are unchanged, and the swe
 decomposes per year. The same-column overlap that #219 avoided by refusing to cross the
 year boundary is now resolved where it belongs — the interval sweep arbitrates the next
 year's rival at year grain, and `coalesce_same_column_overlap` fail-fast-raises if an
-overlapping pair would ever ship. `regver_min`/`regver_max` are DERIVED from the claim
-years (`min`/`max` of the key set, like `from_iso`/`to_iso` at ISO grain), so the
-materializer's precise-vs-padded run edges still land on the span's real bounds.
+overlapping pair would ever ship. It did, until Y-121: emission still asked whether a
+run's edge year was the group's `regver_max`, and a claim is not ownership. A group's
+last owned interval routinely ends mid-year (a school year hands over at the term) while
+the group ALSO claimed the years after it and lost them to the rival, so a lifetime edge
+was padded out over space the rival had just won. `regver_min`/`regver_max` are DERIVED
+from the claim years (`min`/`max` of the key set, like `from_iso`/`to_iso` at ISO
+grain), so they answer "what did this group ask for", not "what did it get": the run
+loop now reads them only to decide the OPEN top — `regver_min` not at all — and takes
+every lifetime edge from the owned interval itself.
 
 **Projection registers are declared, not inferred.** One class of name is a forecast
 HORIZON rather than a delivery span: befolkningsframskrivningar (register 310) names
@@ -1698,21 +1705,24 @@ the year.
 `_rle_runs`: a run breaks (a) on a year with no owned segment (today's rule —
 `_rle_runs` runs over *owned* years, so a year that was lost or dropped still splits)
 and (b) at any segment a *rival* owns on the same column (new — mid-year handoffs become
-expressible). Each run emits `[first owned lo .. last owned hi]`: **interior unclaimed
-space inside a run stays paved** (an interior VT-only year between owned years still
-reads as covered — today's behavior, deliberately kept so the rewrite is output-stable
-outside genuine conflicts), while **lost space never is** (a rival- owned segment
-carves, at whatever grain the rival won). No date arithmetic is needed: all bounds are
-grammar-generated ISO strings, ordering is lexical, and emission hulls per run rather
-than concatenating adjacent segments. (If month-grain narrowing ever lands, the
-synthesized `02-29` month-end bound from `period_token_to_bounds` must not round-trip
-through `date.fromisoformat` — a footgun to remember, not a current constraint.)
+expressible). Each run emits `[first owned lo .. last owned hi]`, padded out to the
+calendar year at any edge a year-RLE break made, where nobody owns the gap: **interior
+unclaimed space inside a run stays paved** (an interior VT-only year between owned years
+still reads as covered — today's behavior, deliberately kept so the rewrite is
+output-stable outside genuine conflicts), while **lost space never is** (a rival- owned
+segment carves, at whatever grain the rival won). No date arithmetic is needed: all
+bounds are grammar-generated ISO strings, ordering is lexical, and emission hulls per
+run rather than concatenating adjacent segments. (If month-grain narrowing ever lands,
+the synthesized `02-29` month-end bound from `period_token_to_bounds` must not
+round-trip through `date.fromisoformat` — a footgun to remember, not a current
+constraint.)
 
 **#270 subsumption (corollary).** A lifetime-boundary run's first/last owned claim IS
-the sub-annual envelope edge: a group whose earliest edition is HT starts its first run
-at `YYYY-07-01`, one ending on VT ends at `YYYY-06-30`, interior year-grain handoffs
-stay year-aligned, and the season/month forms still expand full-year (the narrowing
-subset of `edition_bounds` is unchanged; school-year/läsår names are read by
+the sub-annual envelope edge — unconditionally, whatever the group's claim span says
+(Y-121): a group whose earliest owned interval is an HT starts its first run at
+`YYYY-07-01`, one whose last ends on a VT ends at `YYYY-06-30`, interior year-grain
+handoffs stay year-aligned, and the season/month forms still expand full-year (the
+narrowing subset of `edition_bounds` is unchanged; school-year/läsår names are read by
 `edition_claims` instead, see Multi-year version names). The clamp's "only ever narrows,
 never crosses a year" property is inherited from claim year-nesting; the
 `coalesce_inverted_state_window` fail-fast stays as the backstop.

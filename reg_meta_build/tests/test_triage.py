@@ -1516,6 +1516,19 @@ def _vm_rows(cvid: int, version: str, codes: list[tuple[str, str]]) -> list[str]
     return [PIPE.join([version, "1", kod, ben, str(cvid), ""]) for kod, ben in codes]
 
 
+def _column_windows(conn: sqlite3.Connection, col: str) -> list[tuple[str, str, int]]:
+    """One delivery column's emitted states as `(valid_from, valid_to, value_set)`,
+    earliest first — the shape the timeline/sweep assertions compare against."""
+    return [
+        (r["valid_from"], r["valid_to"], r["value_set_id"])
+        for r in conn.execute(
+            "SELECT valid_from, valid_to, value_set_id FROM variable_state "
+            "WHERE delivery_column_name = ? ORDER BY valid_from",
+            (col,),
+        )
+    ]
+
+
 class TestSubAnnualBoundaryClamp:
     """#219: a state's lifetime START/END is clamped to the actual sub-annual
     delivery window instead of over-claiming the boundary year. Single-column,
@@ -1658,8 +1671,8 @@ class TestSubAnnualBoundaryClamp:
         # Force the TIMELINE path: two distinct codings on ONE column (var 950,
         # TimeCol) with overlapping spans. Coding A (HT-start 2018 + 2020) loses
         # year 2019 to coding B (introduced 2019), so A's owned years carve into TWO
-        # runs [2018] and [2020]. Exercises the `is_first and run_lo == regver_min`
-        # guard in the timeline run loop — never reached by the fast-path tests.
+        # runs [2018] and [2020]. Exercises the `is_first` lifetime-edge arm of
+        # the timeline run loop — never reached by the fast-path tests.
         conn = _build(
             tmp_path,
             [
@@ -1700,33 +1713,145 @@ class TestSubAnnualBoundaryClamp:
                 + _vm_rows(9710, "BetaB", _CLAMP_CODING_B)
             ),
         )
-        rows = conn.execute(
-            "SELECT valid_from, valid_to, value_set_id FROM variable_state "
-            "WHERE delivery_column_name = 'TimeCol' ORDER BY valid_from"
-        ).fetchall()
-        assert len(rows) == 3, rows
-        # Coding A's FIRST run starts at its HT-start (Jul 1) — the timeline first-run
-        # clamp. The carve middle run (coding B, 2019) is the year-granular handoff.
-        assert (rows[0]["valid_from"], rows[0]["valid_to"]) == (
-            "2018-07-01",
-            "2018-12-31",
-        )
-        assert (rows[1]["valid_from"], rows[1]["valid_to"]) == (
-            "2019-01-01",
-            "2019-12-31",
-        )
-        # A's SECOND (interior) run is fully year-granular — from_iso (2018-07-01) is
-        # NOT reapplied to a run that doesn't open at regver_min.
-        assert (rows[2]["valid_from"], rows[2]["valid_to"]) == (
-            "2020-01-01",
-            "2020-12-31",
-        )
+        wins = _column_windows(conn, "TimeCol")
+        # Coding A's FIRST run starts at its HT-start (Jul 1) — the lifetime edge.
+        # The carve middle run (coding B, 2019) is the year-granular handoff. A's
+        # SECOND run is fully year-granular: it opens on a year-RLE break (nobody
+        # owns the gap), not at A's lifetime start, so that edge pads.
+        assert [(vf, vt) for vf, vt, _ in wins] == [
+            ("2018-07-01", "2018-12-31"),
+            ("2019-01-01", "2019-12-31"),
+            ("2020-01-01", "2020-12-31"),
+        ]
         # Outer runs are coding A (one value set); the middle is coding B.
-        assert (
-            rows[0]["value_set_id"]
-            == rows[2]["value_set_id"]
-            != rows[1]["value_set_id"]
+        assert wins[0][2] == wins[2][2] != wins[1][2]
+
+    def test_timeline_last_run_vt_end_not_padded_over_rival(
+        self, tmp_path: Path
+    ) -> None:
+        # TRAILING lifetime edge (Y-121). Coding A (`1996/1997` + `1998`) claims
+        # 1998 too but LOSES it to coding B (`1997/1998` + `1998/1999`, introduced
+        # a year later → SUPERSESSION), so A's last owned interval ends at VT1997
+        # while its `regver_max` is 1998. Padding that edge out to the claim year's
+        # December paved over B's HT1997 (`coalesce_same_column_overlap`).
+        conn = _build(
+            tmp_path,
+            [
+                _var_row(
+                    colname="EdgeCol",
+                    cvid=9860,
+                    var_id=953,
+                    varname="EdgeVar",
+                    year="1996",
+                    versionname="1996/1997",
+                    regver_id=9860,
+                ),
+                _var_row(
+                    colname="EdgeCol",
+                    cvid=9861,
+                    var_id=953,
+                    varname="EdgeVar",
+                    year="1998",
+                    versionname="1998",
+                    regver_id=9861,
+                ),
+                _var_row(
+                    colname="EdgeCol",
+                    cvid=9862,
+                    var_id=953,
+                    varname="EdgeVar",
+                    year="1997",
+                    versionname="1997/1998",
+                    regver_id=9862,
+                ),
+                _var_row(
+                    colname="EdgeCol",
+                    cvid=9863,
+                    var_id=953,
+                    varname="EdgeVar",
+                    year="1998",
+                    versionname="1998/1999",
+                    regver_id=9863,
+                ),
+            ],
+            vm_extra=(
+                _vm_rows(9860, "AlphaA", _CLAMP_CODING_A)
+                + _vm_rows(9861, "AlphaA", _CLAMP_CODING_A)
+                + _vm_rows(9862, "BetaB", _CLAMP_CODING_B)
+                + _vm_rows(9863, "BetaB", _CLAMP_CODING_B)
+            ),
         )
+        wins = _column_windows(conn, "EdgeCol")
+        # A ends at its own last owned bound (VT1997); B opens at HT1997 and runs
+        # through the VT1999 half-year it owns.
+        assert [(vf, vt) for vf, vt, _ in wins] == [
+            ("1996-07-01", "1997-06-30"),
+            ("1997-07-01", "1999-06-30"),
+        ]
+        assert wins[0][2] != wins[1][2]
+
+    def test_timeline_first_run_ht_start_not_padded_over_rival(
+        self, tmp_path: Path
+    ) -> None:
+        # LEADING lifetime edge (Y-121), reachable with plain term names. Coding A
+        # (`1996 höstterminen` + `1997 höstterminen`) claims 1996, but the full-year
+        # rival B (`1996`) outranks it there by AUTHORITY, so A's first owned
+        # interval is HT1997 while its `regver_min` is 1996. Padding that edge back
+        # to January paved over B's VT1997.
+        conn = _build(
+            tmp_path,
+            [
+                _var_row(
+                    colname="LeadCol",
+                    cvid=9870,
+                    var_id=954,
+                    varname="LeadVar",
+                    year="1996",
+                    versionname="1996 höstterminen",
+                    regver_id=9870,
+                ),
+                _var_row(
+                    colname="LeadCol",
+                    cvid=9871,
+                    var_id=954,
+                    varname="LeadVar",
+                    year="1997",
+                    versionname="1997 höstterminen",
+                    regver_id=9871,
+                ),
+                _var_row(
+                    colname="LeadCol",
+                    cvid=9872,
+                    var_id=954,
+                    varname="LeadVar",
+                    year="1996",
+                    versionname="1996",
+                    regver_id=9872,
+                ),
+                _var_row(
+                    colname="LeadCol",
+                    cvid=9873,
+                    var_id=954,
+                    varname="LeadVar",
+                    year="1997",
+                    versionname="1997 vårterminen",
+                    regver_id=9873,
+                ),
+            ],
+            vm_extra=(
+                _vm_rows(9870, "AlphaA", _CLAMP_CODING_A)
+                + _vm_rows(9871, "AlphaA", _CLAMP_CODING_A)
+                + _vm_rows(9872, "BetaB", _CLAMP_CODING_B)
+                + _vm_rows(9873, "BetaB", _CLAMP_CODING_B)
+            ),
+        )
+        wins = _column_windows(conn, "LeadCol")
+        # B keeps 1996 and VT1997; A starts at its own first owned bound (HT1997).
+        assert [(vf, vt) for vf, vt, _ in wins] == [
+            ("1996-01-01", "1997-06-30"),
+            ("1997-07-01", "1997-12-31"),
+        ]
+        assert wins[0][2] != wins[1][2]
 
     def test_residual_clamp_overrides_to_iso(self, tmp_path: Path) -> None:
         # `_collapse_residual` pass 2 caps a VT-ending group (to_iso 2020-06-30) whose
@@ -1842,18 +1967,6 @@ class TestIntervalSweep:
     """#271 interval-native resolution — behavior the year bucket could not
     express. Build-level: full synthetic builds through the materializer."""
 
-    def _windows(
-        self, conn: sqlite3.Connection, col: str
-    ) -> list[tuple[str, str, int]]:
-        return [
-            (r["valid_from"], r["valid_to"], r["value_set_id"])
-            for r in conn.execute(
-                "SELECT valid_from, valid_to, value_set_id FROM variable_state "
-                "WHERE delivery_column_name = ? ORDER BY valid_from",
-                (col,),
-            )
-        ]
-
     def test_term_split_substantive_both_kept(self, tmp_path: Path) -> None:
         # GENUINELY different codings on VT vs HT of one year, equal approval:
         # the year bucket ended GENUINE (build fail → pin); disjoint windows
@@ -1886,7 +1999,7 @@ class TestIntervalSweep:
                 + _vm_rows(9801, "BetaB", _CLAMP_CODING_B)
             ),
         )
-        wins = self._windows(conn, "TermCol")
+        wins = _column_windows(conn, "TermCol")
         assert [(vf, vt) for vf, vt, _ in wins] == [
             ("2009-01-01", "2009-06-30"),
             ("2009-07-01", "2009-12-31"),
@@ -1926,7 +2039,7 @@ class TestIntervalSweep:
                 + _vm_rows(9811, "HT-koder", drifted)
             ),
         )
-        wins = self._windows(conn, "DriftCol")
+        wins = _column_windows(conn, "DriftCol")
         assert [(vf, vt) for vf, vt, _ in wins] == [("2009-07-01", "2009-12-31")]
 
     def test_midyear_handoff_authority(self, tmp_path: Path) -> None:
@@ -1961,7 +2074,7 @@ class TestIntervalSweep:
                 + _vm_rows(9821, "BetaB", _CLAMP_CODING_B)
             ),
         )
-        wins = self._windows(conn, "HandCol")
+        wins = _column_windows(conn, "HandCol")
         assert [(vf, vt) for vf, vt, _ in wins] == [
             ("2009-01-01", "2009-06-30"),
             ("2009-07-01", "2009-12-31"),
@@ -1999,7 +2112,7 @@ class TestIntervalSweep:
                 + _vm_rows(9831, "BetaB", _CLAMP_CODING_B)
             ),
         )
-        wins = self._windows(conn, "CarveCol")
+        wins = _column_windows(conn, "CarveCol")
         assert [(vf, vt) for vf, vt, _ in wins] == [
             ("2009-01-01", "2009-03-31"),
             ("2009-04-01", "2009-09-30"),
@@ -2054,7 +2167,7 @@ class TestIntervalSweep:
             ),
             unika_extra=[unika_open],
         )
-        wins = self._windows(conn, "OpenTermCol")
+        wins = _column_windows(conn, "OpenTermCol")
         assert [(vf, vt) for vf, vt, _ in wins] == [
             ("2009-01-01", "2009-06-30"),
             ("2009-07-01", "9999-12-31"),

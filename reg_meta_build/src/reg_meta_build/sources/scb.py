@@ -3295,16 +3295,19 @@ def _coalesce_variable_states(
         for gk, ints in owned.items():
             for lo, hi in ints:
                 col_owned[gk[8]].append((lo, hi, gk))
-        # Each owning group's window = runs of its owned intervals (`_assemble_
-        # runs`): a run breaks on a year with no owned interval (the pre-#271
-        # year-RLE rule — lost or unclaimed years carve out) and at a same-
-        # column rival-owned segment (mid-year handoffs, new). Emission keeps
-        # year-grain boundaries except at the lifetime edges (#219/#270: the
-        # first/last owned bound IS the sub-annual envelope edge) and at
-        # rival-cut edges (necessarily precise — padding would overlap the
-        # rival). Interior unclaimed space inside a run stays paved; for the
-        # year-bucket population every owned interval is a full year, so
-        # padded and precise edges coincide and the output is byte-identical.
+        # Each owning group's window = runs of its owned intervals
+        # (`assemble_runs`, which owns the break taxonomy). Emission pads an
+        # edge out to its calendar year ONLY where a year-RLE break made it —
+        # nobody owns that gap (interior unclaimed space inside a run stays
+        # paved for the same reason). Every other edge is precise, because
+        # something else may own the rest of that year: a rival at a cut edge,
+        # and at a LIFETIME edge (#219/#270: the first/last owned bound IS the
+        # sub-annual envelope edge) the rival that took the years this group
+        # claimed and lost — its claim span cannot vouch for them (Y-121).
+        # The `is_first or cut_in` / `is_last or cut_out` pairs below cover
+        # every edge: `assemble_runs` never flags the first run `cut_in` nor
+        # the last `cut_out`, so each `or` names two mutually exclusive
+        # reasons for a precise edge rather than two overlapping ones.
         emitted_windows: dict[str, list[tuple[str, str]]] = defaultdict(list)
         for gk, ints in owned.items():
             grp = groups[gk]
@@ -3321,7 +3324,7 @@ def _coalesce_variable_states(
                 is_first = idx == 0
                 is_last = idx == len(runs) - 1
                 run_lo, run_hi = run_ints[0][0], run_ints[-1][1]
-                run_lo_year, run_hi_year = int(run_lo[:4]), int(run_hi[:4])
+                run_hi_year = int(run_hi[:4])
                 if (
                     is_last
                     and open_to is None
@@ -3330,14 +3333,14 @@ def _coalesce_variable_states(
                 ):
                     vt = _VALID_TO_OPEN_SENTINEL
                     open_top_from_unika += 1
-                elif (is_last and run_hi_year == grp.regver_max) or cut_out:
+                elif is_last or cut_out:
                     vt = run_hi
                 else:
                     vt = _year_to_iso_to(run_hi_year) or _VALID_TO_OPEN_SENTINEL
-                if (is_first and run_lo_year == grp.regver_min) or cut_in:
+                if is_first or cut_in:
                     vf = run_lo
                 else:
-                    vf = _year_to_iso_from(run_lo_year) or _VALID_FROM_UNKNOWN
+                    vf = _year_to_iso_from(int(run_lo[:4])) or _VALID_FROM_UNKNOWN
                 _append_state(grp, gk, vid, vf, vt, disambig=True)
                 emitted_windows[gk[8]].append((vf, vt))
         # #271 double-emission guard: the sweep must never put two overlapping
