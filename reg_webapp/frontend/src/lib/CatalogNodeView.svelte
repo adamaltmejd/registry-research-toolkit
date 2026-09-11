@@ -308,6 +308,31 @@ function yearRange(from: string, to: string): string {
   return from === to ? from : `${from}–${to}`;
 }
 
+/** Above this many eras, the label folds (Y-110): an interrupted delivery can run
+ * to a dozen-plus disjoint eras, which pushes the row's NAME onto its own line
+ * above a multi-line year block. At or under it the whole list still prints, same
+ * as Y-104's own shape — 2–3 eras is the ordinary interrupted case and needs no
+ * folding. */
+const ERA_LABEL_LIMIT = 3;
+
+/** The eras a column's label actually prints, and how many it folds away. Past
+ * `ERA_LABEL_LIMIT` only the first and last era print — the boundaries of the
+ * whole delivery history — behind a `+N` affordance; the cell gives that
+ * affordance a `title` carrying the full list, so a curious reader can still see
+ * every era without the row paying for it in height. */
+function visibleEras(years: readonly string[]): {
+  shown: readonly string[];
+  hiddenCount: number;
+} {
+  if (years.length <= ERA_LABEL_LIMIT) {
+    return { shown: years, hiddenCount: 0 };
+  }
+  return {
+    shown: [years[0], years.at(-1) ?? years[0]],
+    hiddenCount: years.length - 2,
+  };
+}
+
 function classificationBrowseRows(
   rows: GroupedRow<ClassificationNodeData>[],
   families: ClassificationFamilyNodeData[],
@@ -1163,11 +1188,18 @@ async function addSelected(): Promise<void> {
                                read as the open-ended form this cell spells the same
                                way (Y-104). Keyed by POSITION: a year-grain label is
                                no identity, and this list is rebuilt whole from the
-                               windows rather than reordered. -->
+                               windows rather than reordered. Past ERA_LABEL_LIMIT
+                               only the first and last era print, folding the rest
+                               behind a `+N` whose title carries them all (Y-110). -->
+                          {@const eras = visibleEras(col.years)}
+                          {@const sep = eras.hiddenCount > 0 ? " … " : ", "}
                           <span class="column-years"
-                            >{#each col.years as era, i (i)}{i > 0
-                              ? ", "
-                              : ""}<span class="era">{era}</span>{/each}</span
+                            >{#each eras.shown as era, i (i)}{i > 0
+                              ? sep
+                              : ""}<span class="era">{era}</span>{/each}{#if eras.hiddenCount > 0}<span
+                                class="era-more"
+                                title={col.years.join(", ")}> +{eras.hiddenCount}</span
+                              >{/if}</span
                           >
                         {/if}
                         {#if committedColumns.has(columnKey(row.fqid, col.name))}
@@ -1470,6 +1502,12 @@ async function addSelected(): Promise<void> {
      year range is: "1995–1996" broken after the dash is this cell's own spelling
      for "still delivered". The commas between eras stay breakable. */
   .column-years .era {
+    white-space: nowrap;
+  }
+  /* The `+N` affordance folding the middle of a long era list (Y-110). Its
+     `title` carries the full list — no separate expansion surface, since a
+     native tooltip is enough for the tail case this exists for. */
+  .era-more {
     white-space: nowrap;
   }
   /* A column the study window has moved off: its tick is disabled, so the whole

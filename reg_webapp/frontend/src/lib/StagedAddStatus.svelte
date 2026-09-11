@@ -37,8 +37,12 @@ const applied = $derived(outcome === null ? "" : stagedDiffSummary(outcome));
     </span>
   </p>
 {:else if outcome}
+  <!-- A status row (frontend/DESIGN.md → Banners and status rows), same shape as
+       the refusal above: the `--ok` tint as fill, a glyph first, plain copy. -->
   <p class="page-add">
     <span class="add-confirm" role="status">
+      <!-- DESIGN.md status glyphs: ✓ ok. -->
+      <span aria-hidden="true">✓</span>
       Applied {applied} — <a href="/project">view</a>
     </span>
   </p>
@@ -64,7 +68,13 @@ const applied = $derived(outcome === null ? "" : stagedDiffSummary(outcome));
     color: var(--warn);
   }
   .add-confirm {
+    display: inline-flex;
+    align-items: baseline;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-sm);
     font-size: var(--text-sm);
-    color: var(--accent);
+    background: var(--ok-bg);
+    color: var(--ok);
   }
 </style>
