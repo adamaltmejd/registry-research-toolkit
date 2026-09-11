@@ -4460,16 +4460,16 @@ class SCBAdapter:
                             projection_stats=self.projection_stats,
                         )
 
-        # A1.2: lift sensitivity / identifier flags from unika_summary into the
-        # variable table. Runs after the enrichment loop so both source and
-        # target tables are populated.
-        with _stage_timer("scb:populate_sensitivity_flags"):
-            _populate_sensitivity_flags(conn)
-
         # Y-114: replay the curated upstream errata as synthetic
-        # Registerinformation rows. Here — after the value-set projection, before
-        # the coalescer — so a cloned row carries its column's real value-set
-        # link and every later pass reads it as an ordinary delivery.
+        # Registerinformation rows. Both edges of this slot are load-bearing:
+        # AFTER the enrichment loop's value-set projection, so a cloned row
+        # carries its column's real value-set link; BEFORE the A1.2 sensitivity
+        # lift and the coalescer, so no pass downstream of the import ever sees
+        # a variable_instance population the errata is missing from. A synthetic
+        # row clones its source's var_id / Variabelnamn / column spelling, so it
+        # lands in the same `(register_id, var_id)` classification group as the
+        # real delivery it stands in for — running the PII/identifier lift over
+        # it is how that stays true by construction rather than by argument.
         with _stage_timer("scb:apply_errata"):
             errata_counts = apply_scb_errata(conn, self.errata)
         if errata_counts["versions"] or errata_counts["rows"]:
@@ -4483,6 +4483,13 @@ class SCBAdapter:
             # information (same rule as the curated same_as counts in db.py).
             self.row_counts["scb_errata_versions"] = errata_counts["versions"]
             self.row_counts["scb_errata_rows"] = errata_counts["rows"]
+
+        # A1.2: lift sensitivity / identifier flags from unika_summary into the
+        # variable table. Runs after the enrichment loop so both source and
+        # target tables are populated, and after the errata replay so the
+        # synthetic rows are classified with the deliveries they extend.
+        with _stage_timer("scb:populate_sensitivity_flags"):
+            _populate_sensitivity_flags(conn)
 
         # A2.1: coalesce variable_instance rows into variable_state. Reads
         # `unika_summary` and `register_version`; must run before the

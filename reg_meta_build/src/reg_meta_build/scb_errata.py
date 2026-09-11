@@ -7,9 +7,10 @@ omits a row, nothing downstream can put it back — grafts and `canonical_attach
 mint a NEW variable (the attach loader refuses a column that already exists) and
 `delivery_enrichment` only backfills prose. So the correction is made at the
 PROVIDER'S OWN GRAIN: `scb_errata.toml` entries become synthetic
-Registerinformation rows INSIDE the SCB adapter, before coalescing. Windows,
-gaps, fusing, alias windows, types, value sets and the classification backfill
-then fall out of the existing passes — there is no post-pass state surgery and
+Registerinformation rows INSIDE the SCB adapter, early enough that every pass
+after the import sees them. Windows, gaps, fusing, alias windows, types, value
+sets, the A1.2 sensitivity/identifier lift and the classification backfill then
+fall out of the existing passes — there is no post-pass state surgery and
 no generic `variable_state_overrides.toml` (see DESIGN.md → Curation surface
 taxonomy).
 
@@ -363,9 +364,10 @@ def _now_present(context: str, what: str) -> None:
 def apply_scb_errata(conn: sqlite3.Connection, errata: ScbErrata) -> dict[str, int]:
     """Write the errata entries as synthetic Registerinformation rows.
 
-    Runs inside `SCBAdapter.emit()` after the value-set projection and BEFORE
-    the coalescer, so a cloned row carries its column's real value-set link and
-    every downstream pass treats it as an ordinary delivery.
+    Runs inside `SCBAdapter.emit()` after the value-set projection — so a cloned
+    row carries its column's real value-set link — and before the A1.2
+    sensitivity lift and the coalescer, so the PII/identifier classification and
+    every pass after it read the synthetic rows as ordinary deliveries.
 
     Returns `{"versions": n, "rows": n}`. Raises EXIT_CONFIG when an entry
     names a variant this export doesn't have (`scb_errata_unknown_variant`), a

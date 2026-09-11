@@ -1369,6 +1369,27 @@ class TestScbErrata:
         finally:
             conn.close()
 
+    def test_extended_column_keeps_its_sensitivity_classification(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        # The errata replay runs BEFORE the A1.2 sensitivity lift, so a synthetic
+        # row is never a delivery coordinate the PII/identifier classification
+        # skipped. TestCol/TestVar is `KansligVariabel = 1` in the fixture's
+        # UnikaRegisterOchVariabler and SCB documents it in 2020 only; extending
+        # it to 2022 must widen the window AND keep is_sensitive.
+        conn = _built_with_errata(
+            tmp_path, monkeypatch, [], errata_delivered("TestCol", "2021", "2022")
+        )
+        try:
+            assert _windows(conn, "100") == [("2020-01-01", "2022-12-31")]
+            flags = conn.execute(
+                "SELECT is_sensitive, is_identifier FROM variable "
+                "WHERE register_id = 1 AND provider_key = '100'"
+            ).fetchone()
+            assert tuple(flags) == (1, 0)
+        finally:
+            conn.close()
+
     def test_declared_version_lands_as_a_register_version_and_a_state(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ) -> None:
