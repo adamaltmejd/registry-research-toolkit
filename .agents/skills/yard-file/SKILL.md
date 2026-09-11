@@ -2,7 +2,7 @@
 name: yard-file
 description: File work into a Yard project — decide a proposal by the admission rule, size a ticket to one lane's worth, park it before anything spends on it, write a body a worker can converge on, and report a Yard defect upstream instead of ticketing it here. Load this whenever you are about to create a Yard ticket, decide or accept a proposal, write or edit a ticket body, or read an outside report — an issue, a bug report, a finding somebody handed you — that might become one.
 ---
-<!-- yard-scaffold: yard 0.14.5 (commit ad728ad7cd88cf2ebd3e198d7783595a8d2dbae8) -->
+<!-- yard-scaffold: yard 0.14.8 (commit 4be7bdf402007dac2285bd377fc4974cbd4418ef) -->
 
 # /yard-file
 
@@ -40,18 +40,23 @@ and guarantees the same proposal returns having taught nobody anything.
 
 `yard proposal accept A-N ...` runs each recorded command against current state,
 in the order you list them, and one transaction covers the acceptance and its
-command. It creates real tickets — and a created ticket that is ready is
-admitted, so a worker and its spend start on the way out of the command. Accept
+command. What that admits depends on the command it runs: where it creates a
+ticket, the ticket is real, and a created ticket that is ready is admitted, so a
+worker and its spend start on the way out of the command; where it edits an
+existing ticket instead, nothing new is admitted and the cost is the edit. Accept
 a batch because you decided each member, not to clear the board.
 
 **`--parked` is that same cost boundary, drawn at the decision.** `yard proposal
 accept A-N --parked` creates the ticket parked in the acceptance's own
-transaction, so no admission pass ever sees it ready. Use it whenever the
-proposal is worth keeping but the ticket must wait — its preconditions do not
-hold yet, you mean to edit the body first, or you want to gate it behind other
-work — and unpark it when it is ready to be worked. Parking afterwards is a
-race you can lose: the scheduler admits within milliseconds, and a worker that
-starts on a ticket nothing can satisfy yet spends real money to stop unchanged.
+transaction, so no admission pass ever sees it ready. Use it on a
+ticket-creating acceptance whenever the proposal is worth keeping but the ticket
+must wait — its preconditions do not hold yet, you mean to edit the body first,
+or you want to gate it behind other work — and unpark it when it is ready to be
+worked. Parking afterwards is a race you can lose: the scheduler admits within
+milliseconds, and a worker that starts on a ticket nothing can satisfy yet
+spends real money to stop unchanged. The flag refuses an acceptance whose
+recorded command creates no ticket, so do not reach for it when you accept a
+`ticket.edit` proposal: there is nothing to park, and the acceptance refuses.
 
 **Decide a follow-up proposal after its origin lane settles.** While that
 lane's review round is still running, its next repair can implement the

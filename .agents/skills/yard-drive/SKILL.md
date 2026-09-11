@@ -2,7 +2,7 @@
 name: yard-drive
 description: Drive a Yard board — hold the wake-driven loop across every decision, answer a stopped lane through the exits its attention item names, read a candidate before approving it, dispose of advisory findings, and retire a ticket in the order that sticks. Load this whenever you are asked to operate, drive, run, watch or babysit a Yard board, or when you are about to answer a `yard status` attention item.
 ---
-<!-- yard-scaffold: yard 0.14.5 (commit ad728ad7cd88cf2ebd3e198d7783595a8d2dbae8) -->
+<!-- yard-scaffold: yard 0.14.8 (commit 4be7bdf402007dac2285bd377fc4974cbd4418ef) -->
 
 # /yard-drive
 
@@ -153,6 +153,20 @@ carrying `landed` and the head. Take the landing from Git rather than from an
 exit status: `yard sync` fast-forwards your checkout from canonical — landing
 never moves it underneath you — and `git log -1` is what shows the commit
 actually arrived. Then watch again.
+
+**A landed configuration is not a running one.** The daemon reads
+`.yard/config.toml` at startup, so a candidate that changed it lands without
+reaching the daemon serving the project — `yard status` says so, as `daemon
+configuration differs from canonical main@<sha>`. A restart is what loads it,
+and with lanes running it goes behind the admission hold: `yard pause`, then
+`yard daemon restart` or the host's service manager, then the edits the new
+configuration enables — a ticket unparked, a ticket moved to a workflow it now
+declares — then `yard resume`. The pause holds only what starts; lanes already
+working run on. Without it a ready ticket can be admitted into the gap around
+the restart and spend a whole attempt under the configuration you just
+replaced, because a lane's workflow, role and brief are chosen when it is
+admitted and hold for the life of the attempt. README's "Restarting the
+daemon" is the same sequence in full.
 
 If the read does not convince you, `yard lane reject ID -m "<what to change>"
 --expect-head <head>` returns the attempt to repair carrying your notes. The
