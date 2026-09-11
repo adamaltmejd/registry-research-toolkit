@@ -840,11 +840,11 @@ variable pages to add one column each.
   columns is what the researcher ticked.
 - **The action bar is sticky (Y-97).** Horizontal overflow for a wide table lives on
   `DataTable`'s own scroll wrapper (`overflow-x: auto`, `max-inline-size: 100%`), not on
-  App's `.routed`, which stays `overflow: visible` — so the page scrolls on the viewport,
-  the same scrollport every other sticky element on the site already assumes. `position:
-  sticky; bottom: 0` on the bar now pins to that viewport, so scrolling any distance
-  through a long list (LISA's ~740 variables) still leaves the count and the Add in reach
-  at the bottom edge.
+  App's `.routed`, which stays `overflow: visible` — so the page scrolls on the
+  viewport, the same scrollport every other sticky element on the site already assumes.
+  `position: sticky; bottom: 0` on the bar now pins to that viewport, so scrolling any
+  distance through a long list (LISA's ~740 variables) still leaves the count and the
+  Add in reach at the bottom edge.
 
 ## Catalog stats (`routes/stats.py`, #675)
 
