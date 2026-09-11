@@ -1051,6 +1051,17 @@ describe("BindingLeafView representation picker (#678)", () => {
         "+1 column",
       );
     });
+    // A status row (Y-110): the `--ok` tint as fill and a leading glyph, never
+    // bare `--accent` text — the accent is never a status color, and under a
+    // provider theme (a pure `accent*` remap) that would tint a success
+    // confirmation with the provider's own hue instead of "ok".
+    const confirm = document.querySelector<HTMLElement>(".add-confirm");
+    expect(confirm?.querySelector('[aria-hidden="true"]')?.textContent).toBe(
+      "✓",
+    );
+    expect(getComputedStyle(confirm as HTMLElement).color).toBe(
+      "rgb(30, 122, 60)",
+    );
 
     await page.getByRole("checkbox", { name: /Kon/ }).click();
 

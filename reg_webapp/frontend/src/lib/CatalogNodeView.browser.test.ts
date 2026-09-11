@@ -365,6 +365,35 @@ function interruptedColumnRegisterNode(): CatalogNode {
   } as unknown as CatalogNode;
 }
 
+// The Y-110 tail: FOUR disjoint eras, one more than `ERA_LABEL_LIMIT`. `Lan` is
+// delivered in 1968, again in 1972, again in 1995–1996, and continuously from
+// 1998 — enough eras that printing all four would push the row's NAME onto its
+// own line (the defect Y-110 fixes).
+function fourEraColumnRegisterNode(): CatalogNode {
+  return {
+    kind: "register",
+    fqid: "scb/civilstandsandringar",
+    name: "Civilståndsändringar",
+    children: [
+      {
+        kind: "binding",
+        fqid: "scb/civilstandsandringar/lan",
+        name: "Län",
+        deliveries: [
+          delivery(
+            "individer",
+            "Lan",
+            ["1968-01-01", "1968-12-31"],
+            ["1972-01-01", "1972-12-31"],
+            ["1995-01-01", "1996-12-31"],
+            ["1998-01-01", null],
+          ),
+        ],
+      },
+    ],
+  } as unknown as CatalogNode;
+}
+
 /** Two columns the years cannot fully date. `Fodelsear` was delivered from before
  * the record starts until 1968 and again from 1995 (the `0001-01-01` start
  * sentinel), and `LanAlias` is delivered in NO era at all — the boundless delivery
@@ -1776,6 +1805,44 @@ describe("CatalogNodeView register arm: add columns (Y-83)", () => {
         page.getByRole("checkbox", {
           name: "Lan 1968, 1995–1996, 1998–",
           exact: true,
+        }),
+      )
+      .toBeVisible();
+  });
+
+  it("folds a long era list to its first, last and a +N affordance (Y-110)", async () => {
+    mockRegisterAndResolve(fourEraColumnRegisterNode());
+    windowStore.set({ from: 1960, to: 2024 });
+
+    const { container } = await renderRegister("scb/civilstandsandringar");
+    await expect.element(page.getByText("Län")).toBeVisible();
+
+    // One era past ERA_LABEL_LIMIT: the label prints only the first and last
+    // era — the boundaries of the whole history — never the full four, which
+    // would push the row's NAME onto its own line (the Y-110 defect).
+    const columnYears = container.querySelector(".column-years");
+    expect(columnYears?.textContent).toBe("1968 … 1998– +2");
+
+    // The `+N` affordance carries the eras it folded (1972 and 1995–1996) in
+    // both its hover title and its accessible name — never in the title alone,
+    // which a screen-reader user never hears.
+    const moreBadge = container.querySelector<HTMLElement>(".era-more");
+    expect(moreBadge?.textContent).toBe("+2");
+    expect(moreBadge).toHaveAttribute(
+      "title",
+      "1968, 1972, 1995–1996, 1998–",
+    );
+    expect(moreBadge).toHaveAttribute(
+      "aria-label",
+      "+2 more eras: 1972, 1995–1996",
+    );
+
+    // …which means the TICK's own accessible name carries them too, not just
+    // the "+2" count.
+    await expect
+      .element(
+        page.getByRole("checkbox", {
+          name: /Lan 1968 … 1998–.*1972, 1995–1996/,
         }),
       )
       .toBeVisible();

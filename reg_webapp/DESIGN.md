@@ -884,7 +884,11 @@ variable pages to add one column each.
   keeps prose out of mono. Each era is one unbreakable run, because a `1995–` wrapped to
   the end of a line is this same grammar's "still delivered". An era undated at one end
   takes the bare dash on that side (`–1968`) rather than being left out: an omission
-  from a LIST reads as a gap.
+  from a LIST reads as a gap. Past three eras the list folds to its first and last era
+  plus a `+N` affordance (`1968 … 2024– +9`), so a long interrupted history cannot push
+  the row's name onto its own line (Y-110); the affordance carries the folded eras in
+  both its `title` and its accessible name, so they stay reachable by hover or by screen
+  reader.
 - **A sequential RENAME is listed twice and committed once.** The list names every
   column a variable was delivered under, so `CDISP` and `CDISP5` are two tickable rows
   (that is what Y-82 shows, and the name is what a researcher hunts for). The variable's

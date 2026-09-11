@@ -315,22 +315,29 @@ function yearRange(from: string, to: string): string {
  * folding. */
 const ERA_LABEL_LIMIT = 3;
 
-/** The eras a column's label actually prints, and how many it folds away. Past
+/** The eras a column's label actually prints, and which ones it folds away. Past
  * `ERA_LABEL_LIMIT` only the first and last era print — the boundaries of the
  * whole delivery history — behind a `+N` affordance; the cell gives that
- * affordance a `title` carrying the full list, so a curious reader can still see
- * every era without the row paying for it in height. */
+ * affordance both a `title` and an accessible name carrying the folded eras, so a
+ * reader can see or hear every era without the row paying for it in height. */
 function visibleEras(years: readonly string[]): {
   shown: readonly string[];
-  hiddenCount: number;
+  hidden: readonly string[];
 } {
   if (years.length <= ERA_LABEL_LIMIT) {
-    return { shown: years, hiddenCount: 0 };
+    return { shown: years, hidden: [] };
   }
   return {
     shown: [years[0], years.at(-1) ?? years[0]],
-    hiddenCount: years.length - 2,
+    hidden: years.slice(1, -1),
   };
+}
+
+/** The `+N` affordance's accessible name (Y-110): the hidden eras it folds away,
+ * so a screen-reader user hears what a hovering reader sees in the `title` — the
+ * visible "+N" alone would say only a count, never which eras it stands for. */
+function eraFoldLabel(hidden: readonly string[]): string {
+  return `+${hidden.length} more era${hidden.length === 1 ? "" : "s"}: ${hidden.join(", ")}`;
 }
 
 function classificationBrowseRows(
@@ -1192,13 +1199,15 @@ async function addSelected(): Promise<void> {
                                only the first and last era print, folding the rest
                                behind a `+N` whose title carries them all (Y-110). -->
                           {@const eras = visibleEras(col.years)}
-                          {@const sep = eras.hiddenCount > 0 ? " … " : ", "}
+                          {@const sep = eras.hidden.length > 0 ? " … " : ", "}
                           <span class="column-years"
                             >{#each eras.shown as era, i (i)}{i > 0
                               ? sep
-                              : ""}<span class="era">{era}</span>{/each}{#if eras.hiddenCount > 0}<span
+                              : ""}<span class="era">{era}</span>{/each}{#if eras.hidden.length > 0}{" "}<span
                                 class="era-more"
-                                title={col.years.join(", ")}> +{eras.hiddenCount}</span
+                                title={col.years.join(", ")}
+                                aria-label={eraFoldLabel(eras.hidden)}
+                                >+{eras.hidden.length}</span
                               >{/if}</span
                           >
                         {/if}
