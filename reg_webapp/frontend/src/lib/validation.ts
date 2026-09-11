@@ -32,7 +32,6 @@ import {
   safeSourceName,
   safeSourcePeriod,
   safeSourceRegisterVariant,
-  safeStudyWindow,
 } from "./project_data";
 
 export type ValidationIssue = components["schemas"]["ValidationIssueModel"];

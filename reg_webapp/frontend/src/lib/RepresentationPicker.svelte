@@ -42,7 +42,6 @@ import {
   type YearScale,
   yearScaleOf,
 } from "./picker_graph";
-import type { StagedPeriodChange } from "./project_store.svelte";
 import { router } from "./router.svelte";
 import {
   nullBindingCommittedRowKeys,
@@ -149,7 +148,6 @@ export interface PickerRemoval {
 export interface PickerApplyPayload {
   adds: PickerSelection[];
   removes: PickerRemoval[];
-  periodChanges: StagedPeriodChange[];
 }
 
 type PickerApplyResult = boolean | undefined;
@@ -564,18 +562,12 @@ const stagedRemoves = $derived.by((): PickerRemoval[] => {
   }
   return out;
 });
-const periodChanges = $derived.by((): StagedPeriodChange[] => {
-  void activePeriod;
-  return [];
-});
 const selectedCount = $derived(stagedAdds.length);
 const removeCount = $derived(stagedRemoves.length);
-const periodChangeCount = $derived(periodChanges.length);
-const diffCount = $derived(selectedCount + removeCount + periodChangeCount);
-const rowDiffCount = $derived(selectedCount + removeCount);
+const diffCount = $derived(selectedCount + removeCount);
 const canApply = $derived(diffCount > 0 && (selectedCount === 0 || canAdd));
 const applyLabel = $derived.by(() => {
-  if (periodChangeCount > 0 || (selectedCount > 0 && removeCount > 0)) {
+  if (selectedCount > 0 && removeCount > 0) {
     return "Apply changes";
   }
   if (removeCount > 0) {
@@ -603,7 +595,6 @@ async function commit(): Promise<void> {
     const applied = await onapply({
       adds: stagedAdds,
       removes: stagedRemoves,
-      periodChanges,
     });
     if (applied !== false) {
       stagedAddKeys = new Set<string>();
@@ -2152,7 +2143,6 @@ const footerLabel = $derived.by(() => {
   const label = stagedDiffSummary({
     added: selectedCount,
     removed: removeCount,
-    periodChanged: periodChangeCount,
   });
   if (label === "") {
     return "";
@@ -3211,7 +3201,7 @@ function codingsVaryHref(
 
   <div class="picker-footer">
     <span class="count" role="status">{footerLabel}</span>
-    {#if rowDiffCount > 0}
+    {#if diffCount > 0}
       <Button
         type="button"
         variant="default"

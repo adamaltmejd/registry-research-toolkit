@@ -846,7 +846,7 @@ async function addSelected(): Promise<void> {
       return;
     }
     const result = await applyStagedPicks(
-      { adds, removes: [], periodChanges: [] },
+      { adds, removes: [] },
       {
         scope,
         seed: { regMetaVersion, steward },
@@ -862,7 +862,6 @@ async function addSelected(): Promise<void> {
       applyOutcome = result.outcome && {
         added: columns,
         removed: 0,
-        periodChanged: 0,
       };
       // The ticks are consumed: the columns now read as in the project, and a
       // second press can't re-add what the first one committed.

@@ -97,3 +97,19 @@ export function asyncResource<T>(
     },
   };
 }
+
+/**
+ * A component's own teardown flag: flips true when the component unmounts, so an
+ * `await` it's holding (a restore gate, a staged Apply) can check it before
+ * touching state or writing into a draft the researcher has already left. The same
+ * idiom `asyncResource`'s per-fetch `cancelled` flag uses above, exported for a
+ * caller that gates its OWN await rather than a fetch. The returned effect reads
+ * nothing, so it never re-runs — the flag means destroyed, not "inputs changed".
+ */
+export function unmountedFlag(): () => boolean {
+  let unmounted = false;
+  $effect(() => () => {
+    unmounted = true;
+  });
+  return () => unmounted;
+}

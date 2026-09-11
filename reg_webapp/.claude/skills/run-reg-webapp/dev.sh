@@ -17,12 +17,13 @@
 #                          ONE-SHOT — start, run the Playwright driver `flows`
 #                          (the /project error+retry cases, the catalog-authored
 #                          draft cases, the deliberate-replacement case, the
-#                          source-period correction and the period card's keyboard
-#                          focus, at four viewports), tear down, exit with the
-#                          driver's status. The PNGs land in <out-dir> — each yard
-#                          gate passes it $YARD_ARTIFACT_DIR and names the
-#                          scenarios it retains the PNGs for; no names runs all
-#                          eight, which is the local verification invocation.
+#                          /project card's source-period edit and the period
+#                          card's keyboard focus, at four viewports), tear down,
+#                          exit with the driver's status. The PNGs land in
+#                          <out-dir> — each yard gate passes it
+#                          $YARD_ARTIFACT_DIR and names the scenarios it retains
+#                          the PNGs for; no names runs all eight, which is the
+#                          local verification invocation.
 #   dev.sh shot [viewport...] <route>...
 #                          ONE-SHOT — screenshot each route, tear down, exit.
 #                          Viewport flags before the routes capture responsive

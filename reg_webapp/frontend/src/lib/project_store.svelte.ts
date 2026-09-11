@@ -965,10 +965,8 @@ export const projectStore = {
 
   /**
    * Commit ONE confirmed source-period edit — the cart card's "Apply period"
-   * action — as its OWN period-only `applyStagedDiff`, never unioned with staged
-   * adds (`periodChangesWithStagedAdds` widens a change to cover the adds
-   * committed beside it; an edit has none beside it, so what the researcher
-   * confirmed is exactly what lands).
+   * action — as its OWN period-only `applyStagedDiff`: an edit has no staged adds
+   * beside it, so what the researcher confirmed is exactly what lands.
    *
    * Returns false WITHOUT mutating when the draft has been replaced since the edit
    * began, or the named source is gone or is no longer the value it started from

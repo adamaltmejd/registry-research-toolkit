@@ -1,4 +1,5 @@
 <script lang="ts">
+import { unmountedFlag } from "./async.svelte";
 import BindingEditor from "./BindingEditor.svelte";
 import { fqidSegments, sourceCardHeading } from "./catalog";
 import { sourceNames } from "./catalog_names.svelte";
@@ -197,14 +198,9 @@ let applying = $state(false);
  * looking at, which the store re-checks the write against. Plain, not `$state`:
  * nothing renders from it. */
 let editedFrom: SourcePeriodEditTarget | null = null;
-/** Flipped by the `$effect` teardown when this card goes away, so an Apply still
- * waiting on the restore gate in `applyPeriod` is abandoned rather than written
- * behind the researcher's back (the same idiom the catalog views use for a staged
- * Apply). This effect reads nothing, so it never re-runs. */
-let unmounted = false;
-$effect(() => () => {
-  unmounted = true;
-});
+/** So an Apply still waiting on the restore gate in `applyPeriod` is abandoned
+ * rather than written behind the researcher's back. */
+const unmounted = unmountedFlag();
 
 const fromText = $derived(
   entry?.from ?? (storedYears ? String(storedYears.from) : ""),
@@ -358,7 +354,7 @@ async function applyPeriod(): Promise<void> {
     // the fields read-only for the whole span, so nothing typed here can revise
     // `wire`, and a second press can't queue behind this one.
     await projectStore.restored;
-    if (unmounted) {
+    if (unmounted()) {
       return;
     }
     writeRefused = !projectStore.applySourcePeriodEdit({

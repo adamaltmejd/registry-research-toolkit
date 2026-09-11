@@ -8,7 +8,7 @@ import {
   type StatesResponse,
   type VariableGraphNode,
 } from "./api";
-import { asyncResource } from "./async.svelte";
+import { asyncResource, unmountedFlag } from "./async.svelte";
 import {
   coverageFromStates,
   formatDataType,
@@ -442,15 +442,9 @@ $effect(() => {
   periodRequired = false;
 });
 
-/** Flipped by the `$effect` teardown when this view is destroyed — the
- * cancellation idiom `asyncResource` uses internally, so a pick still waiting on
- * the restore gate is abandoned rather than committed into a draft from a page
- * the researcher has navigated away from. This effect reads nothing, so it never
- * re-runs: the flag means destroyed, not "inputs changed". */
-let unmounted = false;
-$effect(() => () => {
-  unmounted = true;
-});
+/** So a pick still waiting on the restore gate is abandoned rather than committed
+ * into a draft from a page the researcher has navigated away from. */
+const unmounted = unmountedFlag();
 
 /** Apply the staged diff through the shared staging stack (`staged_picker.ts`),
  * which owns the fan-out, the resolve and the ONE store mutation; this view owns
@@ -459,7 +453,7 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
   const result = await applyStagedPicks(payload, {
     scope: { period: activePickerPeriod, window: pickerWindow },
     seed: { regMetaVersion, steward },
-    cancelled: () => unmounted,
+    cancelled: unmounted,
   });
   periodRequired = result.kind === "period-required";
   if (result.kind === "applied") {

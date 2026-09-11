@@ -2378,12 +2378,13 @@ Both are re-checked through one store-internal predicate immediately before the 
 source that moved, or a project that was replaced, under an open edit refuses the write
 instead of overwriting it, and the card says so. Ordinary browsing still stages nothing
 — changing years, filtering rows or following a `?period` link leaves the draft alone,
-and `RepresentationPicker` keeps deriving `periodChanges = []` because a partial
-leaf/group cannot infer a source-wide rewrite from the columns it happens to show.
-Coverage and type drift after the edit stay the server validator's job, as above. (Y-81
-retired the catalog-side Y-15 correction that used to do this from a "Project sources on
-this page" box on every leaf and group page: the catalog surface had to re-state a
-source the cart already shows whole, and nobody found it there.)
+and `RepresentationPicker` has no period-change path at all: a partial leaf/group
+cannot infer a source-wide rewrite from the columns it happens to show, so that rewrite
+happens on the `/project` card only. Coverage and type drift after the edit stay the
+server validator's job, as above. (Y-81 retired the catalog-side Y-15 correction that
+used to do this from a "Project sources on this page" box on every leaf and group
+page: the catalog surface had to re-state a source the cart already shows whole, and
+nobody found it there.)
 
 ## Browser storage + project-file persistence (the SPA store)
 

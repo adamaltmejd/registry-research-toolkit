@@ -13,7 +13,6 @@ import {
   finalAddPeriodWires,
   finalSourcePeriodsForStagedAdds,
   nullBindingCommittedRowKeys,
-  periodChangesWithStagedAdds,
   pickerRowKey,
   rowAddSegments,
   type StagedPick,
@@ -540,129 +539,11 @@ describe("committedPickerRows", () => {
   });
 });
 
-describe("periodChangesWithStagedAdds", () => {
-  it("preserves same-variant staged add windows when a period change replaces the source period", () => {
-    expect(
-      periodChangesWithStagedAdds(
-        [
-          {
-            sourceName: "LISA",
-            registerVariant: "scb/lisa/ind",
-            period: { from: 2012, to: 2014 },
-          },
-        ],
-        [
-          {
-            registerVariant: "scb/lisa/ind",
-            period: { from: 2018, to: 2020 },
-          },
-          {
-            registerVariant: "scb/lisa/arb",
-            period: 2020,
-          },
-        ],
-      ),
-    ).toEqual([
-      {
-        sourceName: "LISA",
-        registerVariant: "scb/lisa/ind",
-        period: [
-          { from: 2012, to: 2014 },
-          { from: 2018, to: 2020 },
-        ],
-      },
-    ]);
-  });
-
-  it("keeps a wider period change instead of narrowing it to the staged add", () => {
-    expect(
-      periodChangesWithStagedAdds(
-        [
-          {
-            sourceName: "LISA",
-            registerVariant: "scb/lisa/ind",
-            period: { from: 2000, to: 2020 },
-          },
-        ],
-        [
-          {
-            registerVariant: "scb/lisa/ind",
-            period: { from: 2018, to: 2020 },
-          },
-        ],
-      ),
-    ).toEqual([
-      {
-        sourceName: "LISA",
-        registerVariant: "scb/lisa/ind",
-        period: { from: 2000, to: 2020 },
-      },
-    ]);
-  });
-
-  it("preserves token add windows when a token period change replaces the source period", () => {
-    expect(
-      periodChangesWithStagedAdds(
-        [
-          {
-            sourceName: "LISA",
-            registerVariant: "scb/lisa/ind",
-            period: "2020-Q1",
-          },
-        ],
-        [
-          {
-            registerVariant: "scb/lisa/ind",
-            period: "2020-Q2",
-          },
-        ],
-      ),
-    ).toEqual([
-      {
-        sourceName: "LISA",
-        registerVariant: "scb/lisa/ind",
-        period: ["2020-Q1", "2020-Q2"],
-      },
-    ]);
-  });
-
-  it("preserves multiple same-variant token add windows with a token period change", () => {
-    expect(
-      periodChangesWithStagedAdds(
-        [
-          {
-            sourceName: "LISA",
-            registerVariant: "scb/lisa/ind",
-            period: "2020-Q1",
-          },
-        ],
-        [
-          {
-            registerVariant: "scb/lisa/ind",
-            period: "2020-Q2",
-          },
-          {
-            registerVariant: "scb/lisa/ind",
-            period: "2020-Q3",
-          },
-        ],
-      ),
-    ).toEqual([
-      {
-        sourceName: "LISA",
-        registerVariant: "scb/lisa/ind",
-        period: ["2020-Q1", "2020-Q2", "2020-Q3"],
-      },
-    ]);
-  });
-});
-
 describe("finalAddPeriodWires", () => {
   it("resolves each add at the final source period it commits under", () => {
     expect(
       finalAddPeriodWires(
         [{ registerVariant: "scb/lisa/ind", period: 2000 }],
-        [],
         [
           { registerVariant: "scb/lisa/ind", period: { from: 2010, to: 2015 } },
           { registerVariant: "scb/rams/std", period: 2019 },
@@ -678,7 +559,6 @@ describe("finalAddPeriodWires", () => {
     expect(
       finalAddPeriodWires(
         [],
-        [],
         [
           { registerVariant: "scb/lisa/ind", period: 2019 },
           { registerVariant: "scb/rams/std", period: "" },
@@ -693,7 +573,6 @@ describe("finalAddPeriodWires", () => {
     expect(
       finalAddPeriodWires(
         [],
-        [],
         [{ registerVariant: "scb/lisa/ind", period: "_default" }],
       ),
     ).toBeNull();
@@ -705,7 +584,6 @@ describe("finalAddPeriodWires", () => {
     expect(
       finalAddPeriodWires(
         [{ registerVariant: "scb/lisa/ind", period: 2018 }],
-        [],
         [{ registerVariant: "scb/lisa/ind", period: "" }],
       ),
     ).toEqual(["2018"]);
@@ -721,7 +599,6 @@ describe("finalSourcePeriodsForStagedAdds", () => {
           period: 2000,
         },
       ],
-      [],
       [
         {
           registerVariant: "scb/lisa/ind",
@@ -736,34 +613,6 @@ describe("finalSourcePeriodsForStagedAdds", () => {
     ]);
   });
 
-  it("lets a same-batch period replacement define the final source period", () => {
-    const periods = finalSourcePeriodsForStagedAdds(
-      [
-        {
-          registerVariant: "scb/lisa/ind",
-          period: 2000,
-        },
-      ],
-      [
-        {
-          sourceName: "LISA",
-          registerVariant: "scb/lisa/ind",
-          period: { from: 2010, to: 2015 },
-        },
-      ],
-      [
-        {
-          registerVariant: "scb/lisa/ind",
-          period: { from: 2010, to: 2015 },
-        },
-      ],
-    );
-
-    // The change wins outright: without it the add would have coalesced onto the
-    // existing 2000 into a two-segment list.
-    expect(periods.get("scb/lisa/ind")).toEqual({ from: 2010, to: 2015 });
-  });
-
   it("keeps duplicate register variants aligned with the source that apply will update", () => {
     const periods = finalSourcePeriodsForStagedAdds(
       [
@@ -776,7 +625,6 @@ describe("finalSourcePeriodsForStagedAdds", () => {
           period: 2020,
         },
       ],
-      [],
       [
         {
           registerVariant: "scb/lisa/ind",
@@ -796,7 +644,6 @@ describe("finalSourcePeriodsForStagedAdds", () => {
           period: "2020-Q1",
         },
       ],
-      [],
       [
         {
           registerVariant: "scb/lisa/ind",
@@ -1038,7 +885,6 @@ describe("applyStagedPicks", () => {
       {
         adds: picksOf(pickerRepresentations(konStates)),
         removes: [],
-        periodChanges: [],
       },
       ctx,
     );
@@ -1052,14 +898,13 @@ describe("applyStagedPicks", () => {
       {
         adds: picksOf(deliveryColumnRows("Kon", konDeliveries)),
         removes: [],
-        periodChanges: [],
       },
       ctx,
     );
 
     expect(fromLeaf).toEqual({
       kind: "applied",
-      outcome: { added: 2, removed: 0, periodChanged: 0 },
+      outcome: { added: 2, removed: 0 },
     });
     expect(fromRegister).toEqual(fromLeaf);
     expect(JSON.stringify(projectStore.draft)).toBe(leafDraft);
@@ -1087,7 +932,7 @@ describe("applyStagedPicks", () => {
     const before = JSON.stringify(projectStore.draft);
 
     const result = await applyStagedPicks(
-      { adds: picksOf(openEnded), removes: [], periodChanges: [] },
+      { adds: picksOf(openEnded), removes: [] },
       {
         scope: { period: null, window: null },
         seed: SEED,
@@ -1112,7 +957,6 @@ describe("applyStagedPicks", () => {
       {
         adds: picksOf(deliveryColumnRows("Kon", konDeliveries)),
         removes: [],
-        periodChanges: [],
       },
       {
         scope: { period: null, window: [2018, 2023] },
@@ -1147,7 +991,6 @@ describe("applyStagedPicks", () => {
       {
         adds: picksOf(deliveryColumnRows("Kon", konDeliveries)),
         removes: [],
-        periodChanges: [],
       },
       {
         scope: { period: null, window: [2018, 2023] },
@@ -1163,7 +1006,7 @@ describe("applyStagedPicks", () => {
   it("has nothing to confirm for an empty batch", async () => {
     expect(
       await applyStagedPicks(
-        { adds: [], removes: [], periodChanges: [] },
+        { adds: [], removes: [] },
         { scope: {}, seed: SEED, cancelled: () => false },
       ),
     ).toEqual({ kind: "applied", outcome: null });

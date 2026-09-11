@@ -33,7 +33,6 @@ import {
 import {
   projectStore,
   type StagedAdd,
-  type StagedPeriodChange,
   type StagedRemove,
 } from "./project_store.svelte";
 
@@ -362,32 +361,6 @@ export function nullBindingCommittedRowKeys(
   return keys.length > 0 ? keys : [target.key];
 }
 
-export function periodChangesWithStagedAdds(
-  changes: readonly StagedPeriodChange[],
-  adds: readonly PickerAddPeriod[],
-): StagedPeriodChange[] {
-  const addPeriods = new Map<string, Period>();
-  for (const add of adds) {
-    const current = addPeriods.get(add.registerVariant);
-    addPeriods.set(
-      add.registerVariant,
-      current === undefined
-        ? add.period
-        : periodCoverageUnion(current, add.period),
-    );
-  }
-  return changes.map((change) => {
-    const addPeriod = addPeriods.get(change.registerVariant);
-    if (addPeriod === undefined) {
-      return change;
-    }
-    return {
-      ...change,
-      period: periodCoverageUnion(change.period, addPeriod),
-    };
-  });
-}
-
 /** The nudge a leaf/group page shows when `finalAddPeriodWires` refuses a staged
  * add (Y-77): named both ways out — set the study window in the rail, or apply a
  * period on this page — as ONE shared string, so the two pages can't drift. */
@@ -410,10 +383,9 @@ export const ADD_WINDOW_REQUIRED_MESSAGE =
  * (`ADD_PERIOD_REQUIRED_MESSAGE`). */
 export function finalAddPeriodWires(
   existing: Iterable<PickerSourcePeriod>,
-  changes: readonly StagedPeriodChange[],
   adds: readonly PickerAddPeriod[],
 ): string[] | null {
-  const periods = finalSourcePeriodsForStagedAdds(existing, changes, adds);
+  const periods = finalSourcePeriodsForStagedAdds(existing, adds);
   const wires: string[] = [];
   for (const add of adds) {
     const wire = periodToWire(periods.get(add.registerVariant) ?? add.period);
@@ -427,7 +399,6 @@ export function finalAddPeriodWires(
 
 export function finalSourcePeriodsForStagedAdds(
   existing: Iterable<PickerSourcePeriod>,
-  changes: readonly StagedPeriodChange[],
   adds: readonly PickerAddPeriod[],
 ): Map<string, Period> {
   const periods = new Map<string, Period>();
@@ -444,9 +415,6 @@ export function finalSourcePeriodsForStagedAdds(
         ? add.period
         : periodCoverageUnion(current, add.period),
     );
-  }
-  for (const change of periodChangesWithStagedAdds(changes, adds)) {
-    periods.set(change.registerVariant, change.period);
   }
   return periods;
 }
@@ -467,12 +435,10 @@ export interface StagedPick {
   row: PickerRepresentation;
 }
 
-/** The batch one Apply commits: rows to add, committed rows to remove, and
- * source-period changes to fold in. */
+/** The batch one Apply commits: rows to add, committed rows to remove. */
 export interface StagedApplyPayload {
   adds: readonly StagedPick[];
   removes: readonly { committed: PickerCommittedRow }[];
-  periodChanges: readonly StagedPeriodChange[];
 }
 
 /** The deployment seed a pristine store needs to mint the project the picks land
@@ -487,13 +453,12 @@ export interface StagedApplySeed {
 export interface StagedApplyOutcome {
   added: number;
   removed: number;
-  periodChanged: number;
 }
 
-/** A staged diff in words — "+2 columns · -1 column · 1 period change", only the
- * parts that are non-zero, "" for an empty diff. ONE formatter so the picker footer
- * (what an Apply WILL do) and a page's confirmation (what it DID) can never phrase
- * the same three counts differently. */
+/** A staged diff in words — "+2 columns · -1 column", only the parts that are
+ * non-zero, "" for an empty diff. ONE formatter so the picker footer (what an
+ * Apply WILL do) and a page's confirmation (what it DID) can never phrase the
+ * same two counts differently. */
 export function stagedDiffSummary(counts: StagedApplyOutcome): string {
   const parts: string[] = [];
   if (counts.added > 0) {
@@ -502,11 +467,6 @@ export function stagedDiffSummary(counts: StagedApplyOutcome): string {
   if (counts.removed > 0) {
     parts.push(
       `-${counts.removed} ${counts.removed === 1 ? "column" : "columns"}`,
-    );
-  }
-  if (counts.periodChanged > 0) {
-    parts.push(
-      `${counts.periodChanged} ${counts.periodChanged === 1 ? "period change" : "period changes"}`,
     );
   }
   return parts.join(" · ");
@@ -605,11 +565,7 @@ export async function applyStagedPicks(
     cancelled: () => boolean;
   },
 ): Promise<StagedApplyResult> {
-  if (
-    payload.adds.length === 0 &&
-    payload.removes.length === 0 &&
-    payload.periodChanges.length === 0
-  ) {
+  if (payload.adds.length === 0 && payload.removes.length === 0) {
     return { kind: "applied", outcome: null };
   }
   // The draft lifecycle is application-owned and its restore is ASYNCHRONOUS: on a
@@ -633,7 +589,6 @@ export async function applyStagedPicks(
   );
   const addPeriods = finalAddPeriodWires(
     sourcePeriodsFromDraft(projectStore.draft),
-    payload.periodChanges,
     candidates,
   );
   if (addPeriods === null) {
@@ -660,20 +615,12 @@ export async function applyStagedPicks(
   const removes = payload.removes.flatMap((r) =>
     stagedRemoveForCommitted(r.committed),
   );
-  projectStore.applyStagedDiff({
-    adds,
-    removes,
-    periodChange: periodChangesWithStagedAdds(
-      payload.periodChanges,
-      candidates,
-    ),
-  });
+  projectStore.applyStagedDiff({ adds, removes });
   return {
     kind: "applied",
     outcome: {
       added: payload.adds.length,
       removed: removes.length,
-      periodChanged: payload.periodChanges.length,
     },
   };
 }

@@ -1,7 +1,7 @@
-import { flushSync } from "svelte";
+import { flushSync, tick } from "svelte";
 import { describe, expect, it, vi } from "vitest";
 import { ApiError } from "./api";
-import { asyncResource } from "./async.svelte";
+import { asyncResource, unmountedFlag } from "./async.svelte";
 
 // `asyncResource` registers an `$effect`, so drive it inside an `$effect.root`
 // scope (the Svelte 5 way to run effects outside a component) and `flushSync()`
@@ -137,5 +137,19 @@ describe("asyncResource", () => {
     await vi.waitFor(() => expect(res.loading).toBe(false));
     expect(res.data).toBe("FRESH");
     stop();
+  });
+});
+
+describe("unmountedFlag", () => {
+  it("reads false while mounted and flips true after teardown", async () => {
+    let unmounted!: () => boolean;
+    const stop = $effect.root(() => {
+      unmounted = unmountedFlag();
+    });
+    flushSync();
+    await tick();
+    expect(unmounted()).toBe(false);
+    stop();
+    await vi.waitFor(() => expect(unmounted()).toBe(true));
   });
 });
