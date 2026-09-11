@@ -914,10 +914,25 @@ describe("narrowGroupsToMembers (Y-82 variant lens)", () => {
     ],
   });
 
+  /** A lensed `BindingChild`-shaped item: an fqid delivered under the given
+   * columns (null, the default, for a whole-variable delivery — the
+   * SCB-named-no-column case `delivery_column` is also null for). */
+  function delivered(
+    fqid: string,
+    ...columns: (string | null)[]
+  ): { fqid: string; deliveries: { column: string | null }[] } {
+    return {
+      fqid,
+      deliveries: (columns.length > 0 ? columns : [null]).map((column) => ({
+        column,
+      })),
+    };
+  }
+
   it("rebuilds a group over the present members, so its count and keys narrow with it", () => {
     const [narrowed] = narrowGroupsToMembers(
       [threeMember],
-      [{ fqid: "scb/lisa/inkjan" }, { fqid: "scb/lisa/inkmar" }],
+      [delivered("scb/lisa/inkjan"), delivered("scb/lisa/inkmar")],
     );
     expect(narrowed.members.map((m) => m.fqid)).toEqual([
       "scb/lisa/inkjan",
@@ -932,7 +947,7 @@ describe("narrowGroupsToMembers (Y-82 variant lens)", () => {
 
   it("drops a group the lens leaves with one member — that member is a leaf row", () => {
     expect(
-      narrowGroupsToMembers([threeMember], [{ fqid: "scb/lisa/inkjan" }]),
+      narrowGroupsToMembers([threeMember], [delivered("scb/lisa/inkjan")]),
     ).toEqual([]);
   });
 
@@ -945,19 +960,68 @@ describe("narrowGroupsToMembers (Y-82 variant lens)", () => {
     // two members on one variable are still one variable, not a group.
     const rep = group({
       members: [
-        { fqid: "scb/lisa/disp", name: "Disp", facets: [] },
-        { fqid: "scb/lisa/disp", name: "Disp", facets: [] },
+        {
+          fqid: "scb/lisa/disp",
+          name: "Disp",
+          facets: [],
+          delivery_column: "CDISP",
+        },
+        {
+          fqid: "scb/lisa/disp",
+          name: "Disp",
+          facets: [],
+          delivery_column: "CDISP5",
+        },
       ],
     });
-    expect(narrowGroupsToMembers([rep], [{ fqid: "scb/lisa/disp" }])).toEqual(
-      [],
-    );
+    expect(
+      narrowGroupsToMembers(
+        [rep],
+        [delivered("scb/lisa/disp", "CDISP", "CDISP5")],
+      ),
+    ).toEqual([]);
   });
 
   it("leaves a fully delivered group alone", () => {
     expect(
-      narrowGroupsToMembers([threeMember], threeMember.members)[0].members,
+      narrowGroupsToMembers(
+        [threeMember],
+        threeMember.members.map((m) => delivered(m.fqid)),
+      )[0].members,
     ).toHaveLength(3);
+  });
+
+  it("(Y-94) narrows a representation family by delivery column, not FQID alone — a member no selected variant delivers is dropped even though its FQID survives", () => {
+    // `disp` carries two representations (CDISP / CDISP5); the lens kept only
+    // the variant that delivers CDISP, so CDISP5 must not survive on the
+    // strength of sharing `disp`'s FQID.
+    const family = group({
+      members: [
+        {
+          fqid: "scb/lisa/disp",
+          name: "Disp",
+          facets: [],
+          delivery_column: "CDISP",
+        },
+        {
+          fqid: "scb/lisa/disp",
+          name: "Disp",
+          facets: [],
+          delivery_column: "CDISP5",
+        },
+        { fqid: "scb/lisa/kon", name: "Kön", facets: [] },
+      ],
+    });
+    const [narrowed] = narrowGroupsToMembers(
+      [family],
+      [delivered("scb/lisa/disp", "CDISP"), delivered("scb/lisa/kon")],
+    );
+    expect(
+      narrowed.members.map((m) => [m.fqid, m.delivery_column ?? null]),
+    ).toEqual([
+      ["scb/lisa/disp", "CDISP"],
+      ["scb/lisa/kon", null],
+    ]);
   });
 });
 

@@ -159,15 +159,42 @@ export function distinctMemberCount(
  *
  * Takes the `items` list rather than a set of FQIDs so a caller hands the SAME
  * list to this and to `foldGroupedRows` — the two must agree about what is
- * present, and a separately built key set is a way for them not to. */
+ * present, and a separately built key set is a way for them not to.
+ *
+ * A REPRESENTATION member survives on `(fqid, delivery_column)`, not FQID
+ * alone (Y-94): a representation family can hold several members on one FQID,
+ * each under its own `delivery_column` (CDISP + CDISP5), and `items` already
+ * carries only the deliveries the active lens kept. Matching by FQID alone
+ * would keep every representation once ANY of them survived, so a member
+ * whose column no surviving delivery names is dropped even though its FQID is
+ * still present. A whole-variable member (`delivery_column` null — it names
+ * no ONE representation) still survives on FQID presence alone, as before:
+ * `delivery_column` is only ever set on the representation members a family
+ * needs to tell apart, so it's the only field able to say which of them the
+ * lens still delivers. */
 export function narrowGroupsToMembers(
   groups: readonly ConceptGroup[] | undefined,
-  items: readonly { fqid: string }[],
+  items: readonly {
+    fqid: string;
+    deliveries?: readonly { column: string | null }[];
+  }[],
 ): ConceptGroup[] {
-  const present = new Set(items.map((item) => item.fqid));
+  const deliveredColumns = new Map<string, Set<string | null>>();
+  for (const item of items) {
+    deliveredColumns.set(
+      item.fqid,
+      new Set((item.deliveries ?? []).map((d) => d.column)),
+    );
+  }
   const narrowed: ConceptGroup[] = [];
   for (const group of groups ?? []) {
-    const members = group.members.filter((m) => present.has(m.fqid));
+    const members = group.members.filter((m) => {
+      const columns = deliveredColumns.get(m.fqid);
+      return (
+        columns !== undefined &&
+        (m.delivery_column == null || columns.has(m.delivery_column))
+      );
+    });
     if (distinctMemberCount(members) > 1) {
       narrowed.push({ ...group, members });
     }

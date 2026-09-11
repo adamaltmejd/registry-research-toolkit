@@ -342,6 +342,45 @@ function splitVariantGroupRegisterNode(): CatalogNode {
   } as unknown as CatalogNode;
 }
 
+// `splitColumnRegisterNode`'s `kon` + `disp` FOLDED into one concept-group row
+// whose `disp` member is a REPRESENTATION FAMILY (#819) — `disp`'s FQID
+// survives under BOTH variants (each delivers it under CDISP or CDISP5), so a
+// lens must narrow the group's members by `(fqid, delivery_column)` rather
+// than by FQID alone, or the representation the lensed variant does not
+// deliver stays in the group (Y-94).
+function splitVariantRepresentationGroupRegisterNode(): CatalogNode {
+  return {
+    ...(splitColumnRegisterNode() as unknown as Record<string, unknown>),
+    groups: [
+      {
+        key: "inkomstbegrepp",
+        label: "Inkomstbegrepp",
+        source: "token",
+        axes: [{ name: "begrepp", label: "Begrepp" }],
+        members: [
+          {
+            fqid: "scb/lisa/kon",
+            name: "Kön",
+            facets: [{ axis: "begrepp", value: "kon", label: "Kön" }],
+          },
+          {
+            fqid: "scb/lisa/disp",
+            name: "Disponibel inkomst",
+            delivery_column: "CDISP",
+            facets: [{ axis: "begrepp", value: "disp", label: "Disponibel" }],
+          },
+          {
+            fqid: "scb/lisa/disp",
+            name: "Disponibel inkomst",
+            delivery_column: "CDISP5",
+            facets: [{ axis: "begrepp", value: "disp", label: "Disponibel" }],
+          },
+        ],
+      },
+    ],
+  } as unknown as CatalogNode;
+}
+
 // The same register with `kon` + `disp` FOLDED into one concept-group row (#303).
 // The row stands in for its members, so the column filter has to reach through it.
 function groupedColumnRegisterNode(): CatalogNode {
@@ -762,6 +801,39 @@ describe("CatalogNodeView register arm", () => {
     ).toBeNull();
   });
 
+  it("keeps keyboard focus on the chip strip and announces the lift (Y-94)", async () => {
+    vi.mocked(getCatalogNode).mockResolvedValue(columnedRegisterNode(2));
+    vi.mocked(getRegisterVariants).mockResolvedValue(lisaVariants());
+
+    const { container } = await render(CatalogNodeView, {
+      fqidPath: "scb/lisa",
+      regMetaVersion: "test",
+      steward: "global",
+      windowMinYear: 1960,
+      vintageYear: 2024,
+    });
+
+    await clickVariantChip("Arbetsställen");
+    const clearButton = page.getByRole("button", {
+      name: "Clear variant filter",
+    });
+    await clearButton.element().focus();
+    expect(document.activeElement).toBe(clearButton.element());
+
+    await clearButton.click();
+
+    // The button that had focus just unmounted (`selectedVariants` is empty
+    // again) — focus must not have dropped to <body> with it (a6).
+    const strip = container.querySelector("fieldset.variant-filter");
+    expect(strip).not.toBeNull();
+    expect(document.activeElement).not.toBe(document.body);
+    expect(strip?.contains(document.activeElement)).toBe(true);
+    // …and the readout that went blank alongside it says the lift happened.
+    expect(
+      container.querySelector('[aria-live="polite"]')?.textContent?.trim(),
+    ).toBe("Showing all 5 variables");
+  });
+
   it("says the variant lens is also narrowing an empty result (Y-82)", async () => {
     vi.mocked(getCatalogNode).mockResolvedValue(columnedRegisterNode(2));
     vi.mocked(getRegisterVariants).mockResolvedValue(lisaVariants());
@@ -916,6 +988,49 @@ describe("CatalogNodeView register arm", () => {
       .element(page.getByText("Showing 1 of 4 variables"))
       .toBeVisible();
     expect(variableRows(container)).toEqual([["Arbetsställe", "ArbstNr"]]);
+  });
+
+  it("narrows a group's representation members by delivery column, not FQID alone (Y-94)", async () => {
+    vi.mocked(getCatalogNode).mockResolvedValue(
+      splitVariantRepresentationGroupRegisterNode(),
+    );
+    vi.mocked(getRegisterVariants).mockResolvedValue(lisaVariants());
+
+    const { container } = await render(CatalogNodeView, {
+      fqidPath: "scb/lisa",
+      regMetaVersion: "test",
+      steward: "global",
+      windowMinYear: 1960,
+      vintageYear: 2024,
+    });
+
+    // Unlensed: `disp`'s two representations dedup to one variable (#819), so
+    // the group reads 2 variables (kon + disp) and both columns are findable.
+    await expect
+      .element(page.getByRole("link", { name: /Inkomstbegrepp/ }))
+      .toBeVisible();
+    expect(variableRows(container).map(([name]) => name)).toEqual([
+      "Inkomstbegrepp 2 variables",
+    ]);
+
+    // Lens on the variant that delivers `disp` as CDISP: `disp`'s FQID still
+    // survives (it's delivered under CDISP), so the old FQID-only rule would
+    // have kept the CDISP5 representation along with it. It must not.
+    await clickVariantChip("Individer, 16 år och äldre");
+    await page
+      .getByRole("textbox", { name: /Filter variables/i })
+      .fill("cdisp5");
+    await expect
+      .element(page.getByText("No variables match “cdisp5”"))
+      .toBeVisible();
+
+    // The surviving representation is still findable through the same row.
+    await page
+      .getByRole("textbox", { name: /Filter variables/i })
+      .fill("cdisp");
+    await expect
+      .element(page.getByRole("link", { name: /Inkomstbegrepp/ }))
+      .toBeVisible();
   });
 
   it("finds a FOLDED variable by its delivery column name (Y-82)", async () => {

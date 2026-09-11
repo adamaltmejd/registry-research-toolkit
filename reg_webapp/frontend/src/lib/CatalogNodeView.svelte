@@ -358,12 +358,23 @@ let filter = $state("");
 // selection, the same interaction as the group page's per-axis facet filters.
 // Filter-only — it narrows what the list shows, never the project.
 let selectedVariants = $state(new Set<string>());
+// Set by `clearVariants` (Y-94) so the live region announces the return to the
+// whole register once; `toggleVariant` and the navigation reset below both
+// supersede it (a new selection, or leaving the register, means the lift is no
+// longer the last thing that happened to the strip).
+let variantsLifted = $state(false);
+// The fieldset wrapping the chips (Y-94): bound so `clearVariants` can move
+// focus onto the strip BEFORE the "Clear variant filter" button — which
+// renders only `{#if selectedVariants.size > 0}` — unmounts out from under it.
+// Losing focus there would drop it to `<body>` with nothing announced (a6).
+let variantChipsEl = $state<HTMLFieldSetElement | null>(null);
 $effect(() => {
   // `fqidPath` is the navigation key — touching it here clears the filter when
   // the route changes (the component is reused across catalog paths).
   void fqidPath;
   filter = "";
   selectedVariants = new Set();
+  variantsLifted = false;
   selectedColumns = new Map();
   addRefusal = null;
   applyOutcome = null;
@@ -376,11 +387,17 @@ function toggleVariant(variant: string): void {
   }
   // Reassign so the `$state` proxy tracks the change (as ConceptGroupNavigator).
   selectedVariants = next;
+  variantsLifted = false;
 }
 
 /** Lift the variant lens — the way back to the whole register. Leaves the text
- * filter alone, which is why the control says "variant filter". */
+ * filter alone, which is why the control says "variant filter". Moves focus to
+ * the chip strip's first chip before emptying the selection (Y-94/a6): once
+ * `selectedVariants` is empty the "Clear variant filter" button this handler
+ * runs from unmounts, so focus has to already be somewhere that survives. */
 function clearVariants(): void {
+  variantChipsEl?.querySelector<HTMLInputElement>("input")?.focus();
+  variantsLifted = true;
   selectedVariants = new Set();
 }
 
@@ -960,7 +977,7 @@ async function addSelected(): Promise<void> {
                stays the `?variant=` slug. Value-only chips, like the picker's
                dimension filters. -->
           <div class="variant-filters">
-            <fieldset class="variant-filter">
+            <fieldset class="variant-filter" bind:this={variantChipsEl}>
               <legend><span class="micro-label">Variant</span></legend>
               {#if variantsResource.loading}
                 <!-- A chip can only be NAMED once the variant list lands. Painting
@@ -992,13 +1009,17 @@ async function addSelected(): Promise<void> {
                  silently otherwise: with the text box empty FilterInput shows no
                  "x of y". While typing, FilterInput reports the SAME pair (its
                  `shown` is already the post-chip count), so this one steps aside
-                 rather than say it twice. -->
+                 rather than say it twice. Y-94: `variantsLifted` gets it one more
+                 thing to say — the return to the whole register a Clear just
+                 made, so that action is heard too, not just silently focused. -->
             <div class="variant-status">
               <span aria-live="polite">
                 {#if selectedVariants.size > 0 && !filter.trim()}
                   Showing {countFoldedMembers(filteredRows)} of {countFoldedMembers(
                     registerRows,
                   )} variables
+                {:else if variantsLifted && !filter.trim()}
+                  Showing all {countFoldedMembers(registerRows)} variables
                 {/if}
               </span>
               {#if selectedVariants.size > 0}
