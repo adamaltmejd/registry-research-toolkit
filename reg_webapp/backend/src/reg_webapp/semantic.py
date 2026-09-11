@@ -303,8 +303,7 @@ def _check_binding(
                 "fqid_unresolved",
                 "error",
                 var_path,
-                f"column {binding.variable!r} resolves to no variable "
-                "in reg_meta",
+                f"column {binding.variable!r} resolves to no variable in reg_meta",
             )
         )
         # The variable doesn't resolve, so the PERIOD probe is meaningless — skip
