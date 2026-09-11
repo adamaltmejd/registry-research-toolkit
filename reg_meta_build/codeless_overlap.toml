@@ -473,3 +473,60 @@ variable = "yrkesverksam-under-aret"
 column = "YrkVerksStat"
 resolution = "cap"
 
+
+# ── yrkeshogskolan (Y-113 follow-up, 2026-09-12) ─────────────────────────────
+# Variant `studerande` ships one multi-year version `2005-2024` that delivers
+# these six columns WITHOUT a value set, beside yearly versions that deliver
+# them coded (tiny flags: vs2029 2008, vs222 2009-2020/2024, vs6919 2021,
+# vs13278 2021-2024). Y-113 reads `2005-2024` as its full span, so the code-less
+# state now runs 2005-2024 and the uncoded years are a residual tail. `cap`
+# keeps the truthful "no value set recorded" for those years and matches the
+# pre-Y-113 layout; `extend` would grow one flag vintage over the others.
+
+# yrkeshogskolan/avslutunderaret col=AvslutUnderAret  ::  vs2029 (2008), vs222 (2009-2024)
+[[resolve]]
+provider = "scb"
+register = "yrkeshogskolan"
+variable = "avslutunderaret"
+column = "AvslutUnderAret"
+resolution = "cap"
+
+# yrkeshogskolan/faktisktstuderande col=FaktisktStuderande  ::  vs13278 (2021-2024)
+[[resolve]]
+provider = "scb"
+register = "yrkeshogskolan"
+variable = "faktisktstuderande"
+column = "FaktisktStuderande"
+resolution = "cap"
+
+# yrkeshogskolan/faktisktstuderande-ht col=FaktisktStuderande_ht  ::  vs13278 (2021-2024)
+[[resolve]]
+provider = "scb"
+register = "yrkeshogskolan"
+variable = "faktisktstuderande-ht"
+column = "FaktisktStuderande_ht"
+resolution = "cap"
+
+# yrkeshogskolan/faktisktstuderande-vt col=FaktisktStuderande_vt  ::  vs13278 (2021-2024)
+[[resolve]]
+provider = "scb"
+register = "yrkeshogskolan"
+variable = "faktisktstuderande-vt"
+column = "FaktisktStuderande_vt"
+resolution = "cap"
+
+# yrkeshogskolan/terminstuderande-ht col=TerminStuderande_ht  ::  vs2029 (2008), vs222 (2009-2020), vs6919 (2021)
+[[resolve]]
+provider = "scb"
+register = "yrkeshogskolan"
+variable = "terminstuderande-ht"
+column = "TerminStuderande_ht"
+resolution = "cap"
+
+# yrkeshogskolan/terminstuderande-vt col=TerminStuderande_vt  ::  vs2029 (2008), vs222 (2009-2020), vs6919 (2021)
+[[resolve]]
+provider = "scb"
+register = "yrkeshogskolan"
+variable = "terminstuderande-vt"
+column = "TerminStuderande_vt"
+resolution = "cap"
