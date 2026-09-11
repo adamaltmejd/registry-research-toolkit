@@ -762,7 +762,7 @@ def _check_source(
             _error(
                 "empty_bindings",
                 f"{base}/bindings",
-                "source must have at least one binding",
+                "source must have at least one column",
             )
         )
         return

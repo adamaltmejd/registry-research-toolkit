@@ -303,7 +303,7 @@ def _check_binding(
                 "fqid_unresolved",
                 "error",
                 var_path,
-                f"binding variable {binding.variable!r} resolves to no variable "
+                f"column {binding.variable!r} resolves to no variable "
                 "in reg_meta",
             )
         )
@@ -358,7 +358,7 @@ def _check_binding_hints(
                 "deprecated_traversal",
                 "info",
                 var_path,
-                f"binding {binding.variable!r} resolves to a deprecated catalog "
+                f"column {binding.variable!r} resolves to a deprecated catalog "
                 "variable; prefer a current successor when one is available",
             )
         )
@@ -380,7 +380,7 @@ def _check_binding_hints(
                 "variable_replaced",
                 "info",
                 var_path,
-                f"binding {binding.variable!r} has replacement {target!r}{effective} "
+                f"column {binding.variable!r} has replacement {target!r}{effective} "
                 f"by requested period {_render(requested)}",
                 successor_fqid=successor_fqid,
             )
@@ -465,7 +465,7 @@ def _check_binding_period(
                 "range_period_partially_covered",
                 "info",
                 var_path,
-                f"binding {binding.variable!r} is available for only part of "
+                f"column {binding.variable!r} is available for only part of "
                 f"requested period {resolution.clip.requested_period} at "
                 f"{source.register_variant}; it is ordered for "
                 f"{resolution.clip.ordered_period}",
@@ -497,7 +497,7 @@ def _check_binding_period(
                 "binding_value_set_version_ambiguous",
                 "error",
                 var_path,
-                f"binding {binding.variable!r} resolves to several co-delivered "
+                f"column {binding.variable!r} resolves to several co-delivered "
                 f"value sets {sorted(labels.values())} on one column at "
                 f"{source.register_variant} period {resolution.requested_period} "
                 "— this reg_meta build needs co-delivery curation",
@@ -517,7 +517,7 @@ def _check_binding_period(
                 "binding_state_drifts_within_period",
                 "info",
                 var_path,
-                f"binding {binding.variable!r} spans {len(resolution.states)} "
+                f"column {binding.variable!r} spans {len(resolution.states)} "
                 "states across a transition within period "
                 f"{resolution.requested_period}",
             )
@@ -577,7 +577,7 @@ def _check_steward_admission(
                 "fqid_outside_steward_catalog",
                 "warning",
                 var_path,
-                f"binding {variable!r} resolves in reg_meta but is outside this "
+                f"column {variable!r} resolves in reg_meta but is outside this "
                 f"deployment's steward catalog under {variant_coord} — the "
                 "steward does not supply it there",
             )
@@ -592,7 +592,7 @@ def _check_steward_admission(
                 "representation_outside_steward_catalog",
                 "warning",
                 var_path,
-                f"binding {variable!r} resolves to representation "
+                f"column {variable!r} resolves to representation "
                 f"{_format_columns(missing)}, which this steward does not supply "
                 f"under {variant_coord} — available there as "
                 f"{_format_columns(held)} only",

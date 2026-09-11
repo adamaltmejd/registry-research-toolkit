@@ -46,7 +46,7 @@ const DRIFT_RESULT = {
       code: "binding_state_drifts_within_period",
       path: "/sources/0/bindings/0/variable",
       message:
-        "binding 'scb/lisa/adeldag' spans 2 states across a transition within period 2015..2020",
+        "column 'scb/lisa/adeldag' spans 2 states across a transition within period 2015..2020",
     },
   ],
 };
@@ -253,7 +253,7 @@ describe("ValidationPanel — researcher-language findings", () => {
             code: "range_period_partially_covered",
             path: "/sources/0/bindings/0/period",
             message:
-              "binding 'scb/lisa/adeldag' requested 2005..2010,2015..2020, ordered 2015..2020",
+              "column 'scb/lisa/adeldag' requested 2005..2010,2015..2020, ordered 2015..2020",
           },
         ],
       },
@@ -281,7 +281,7 @@ describe("ValidationPanel — researcher-language findings", () => {
     await expect
       .element(
         page.getByText(
-          "binding 'scb/lisa/adeldag' requested 2005..2010,2015..2020, ordered 2015..2020",
+          "column 'scb/lisa/adeldag' requested 2005..2010,2015..2020, ordered 2015..2020",
         ),
       )
       .toBeVisible();

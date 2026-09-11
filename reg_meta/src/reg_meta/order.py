@@ -574,7 +574,7 @@ def resolve_binding(
     except (FqidError, RegMetaError) as exc:
         return blocked(
             "variable_unresolved",
-            f"binding {binding.variable!r} does not resolve against the "
+            f"column {binding.variable!r} does not resolve against the "
             f"catalog at {source.register_variant}: {exc}",
         )
 
@@ -588,7 +588,7 @@ def resolve_binding(
         if state.delivery_column_name is None:
             return blocked(
                 "representation_unresolved",
-                f"binding {binding.variable!r} resolves to a state with no "
+                f"column {binding.variable!r} resolves to a state with no "
                 f"delivery column at {source.register_variant}; an unresolved "
                 "representation cannot be ordered",
                 _render(_merge(overlaps)),
@@ -609,7 +609,7 @@ def resolve_binding(
         if binding.representation is not None and offered:
             return blocked(
                 "representation_unknown",
-                f"binding {binding.variable!r} pins representation "
+                f"column {binding.variable!r} pins representation "
                 f"{binding.representation!r}, which is not a delivery column at "
                 f"{source.register_variant} in {rendered} "
                 f"(available: {sorted(offered)})",
@@ -617,7 +617,7 @@ def resolve_binding(
             )
         return blocked(
             "binding_unavailable",
-            f"binding {binding.variable!r} has no state covering "
+            f"column {binding.variable!r} has no state covering "
             f"{source.register_variant} anywhere in {rendered}",
             rendered,
         )
@@ -649,7 +649,7 @@ def resolve_binding(
         finding = OrderFinding(
             code="representation_ambiguous",
             message=(
-                f"binding {binding.variable!r} resolves to co-existing "
+                f"column {binding.variable!r} resolves to co-existing "
                 f"representations {overlapping} at {source.register_variant}; "
                 "pin one with `representation` — a manifest never guesses"
             ),
@@ -1017,7 +1017,7 @@ def _materialize_binding(
                     "mapping_ambiguous",
                     f"steward table {table.id!r} column {inv_column.name!r} maps "
                     f"{source.register_variant} {binding.variable!r} with no "
-                    f"`representation`, but the binding delivers "
+                    f"`representation`, but the column delivers "
                     f"{representations} across the request; qualify the mapping "
                     "with the canonical representation its column carries",
                     resolution.requested_period,
