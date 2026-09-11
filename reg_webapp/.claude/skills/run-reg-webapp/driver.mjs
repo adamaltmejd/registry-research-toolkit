@@ -716,7 +716,10 @@ async function catalogPeriodRequiredCase(page, counts, shoot) {
   );
   await settled(page);
   await shoot("catalog-no-period");
-  await page.getByRole("alert").filter({ hasText: "Apply a period" }).waitFor();
+  // Y-106: StagedAddStatus now splits the role by tone — an ordinary refusal
+  // (this one; the researcher's own next move retires it) announces the calmer
+  // `status`, and only a read FAILURE (nobody refused anything) gets `alert`.
+  await page.getByRole("status").filter({ hasText: "Apply a period" }).waitFor();
   check(
     (await page.getByRole("status").filter({ hasText: "Applied" }).count()) === 0,
     "the refused Add reported a successful apply",
