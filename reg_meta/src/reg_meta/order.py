@@ -107,6 +107,8 @@ from .inventory import (
     EditionRange,
     _intersect,
     _Interval,
+    _merge,
+    _next_day,
     _render,
     _render_interval,
     edition_bounds,
@@ -397,33 +399,10 @@ def extraction_filenames(entry: OrderEntry) -> tuple[str, ...]:
 
 # ── interval algebra over inclusive ISO date strings ────────────────────────
 #
-# The day-arithmetic half (adjacency joining, gaps) lives here because only the
-# coverage gate needs it; intersection and period rendering live in
-# `inventory.py`, which shares them with the §12 conflict validator.
-
-
-def _next_day(iso: str) -> str:
-    """The day after an inclusive upper bound. Bounds reaching the open-ended
-    `9999-12-31` sentinel have no successor and stay put (they are always
-    clipped against a finite requested period before the arithmetic runs)."""
-    if iso >= "9999-12-31":
-        return iso
-    return (
-        date.fromisoformat(snap_to_real_month_end(iso)) + timedelta(days=1)
-    ).isoformat()
-
-
-def _merge(intervals: list[_Interval]) -> tuple[_Interval, ...]:
-    """Sort and coalesce intervals, joining overlapping AND day-adjacent ones
-    (`..2018-12-31` + `2019-01-01..` is one continuous window, not two)."""
-    merged: list[_Interval] = []
-    for lo, hi in sorted(intervals):
-        if merged and lo <= _next_day(merged[-1][1]):
-            if hi > merged[-1][1]:
-                merged[-1] = (merged[-1][0], hi)
-        else:
-            merged.append((lo, hi))
-    return tuple(merged)
+# GAPS live here because only the coverage gate needs them; adjacency joining
+# (`_merge`, `_next_day`), intersection and period rendering live in
+# `inventory.py`, which shares them with the §12 conflict validator and the
+# catalog's delivery windows.
 
 
 def _gaps(

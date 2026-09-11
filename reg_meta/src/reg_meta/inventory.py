@@ -21,6 +21,7 @@ This module holds no DB access — it is pure domain code over an authored file.
 from __future__ import annotations
 
 import tomllib
+from datetime import date, timedelta
 from typing import TYPE_CHECKING, Literal
 
 from pydantic import (
@@ -39,6 +40,7 @@ from .fqid import (
     FqidKind,
     period_token_for_bounds,
     period_token_to_bounds,
+    snap_to_real_month_end,
     validate_slug,
 )
 
@@ -145,10 +147,11 @@ def edition_bounds(edition: Edition) -> tuple[tuple[str, str], ...]:
 
 # ── interval algebra and period rendering over inclusive ISO dates ──────────
 #
-# Shared with `order.py`, which imports these: an inventory edition, a project
-# period, an availability window and a §12 resolution conflict must all expand
-# and render through ONE grammar, so a clip, an overlap and an edition can never
-# disagree about bounds or spelling.
+# Shared with `order.py` and `catalog.py`, which import these: an inventory
+# edition, a project period, an availability window, a §12 resolution conflict
+# and a delivery's windows must all expand and render through ONE grammar, so a
+# clip, an overlap, an edition and a browse row can never disagree about bounds
+# or spelling.
 
 # An inclusive ISO `(lo, hi)` date interval — the currency of every edition,
 # overlap, clip and coverage computation.
@@ -158,6 +161,32 @@ _Interval = tuple[str, str]
 def _intersect(a: _Interval, b: _Interval) -> _Interval | None:
     lo, hi = max(a[0], b[0]), min(a[1], b[1])
     return (lo, hi) if lo <= hi else None
+
+
+def _next_day(iso: str) -> str:
+    """The day after an inclusive upper bound. Bounds reaching the open-ended
+    `9999-12-31` sentinel have no successor and stay put (they are always
+    clipped against a finite requested period before the arithmetic runs).
+    Snapped first: the period grammar synthesizes a non-leap `YYYY-02-29` upper
+    bound, which `date` arithmetic would raise on (`snap_to_real_month_end`)."""
+    if iso >= "9999-12-31":
+        return iso
+    return (
+        date.fromisoformat(snap_to_real_month_end(iso)) + timedelta(days=1)
+    ).isoformat()
+
+
+def _merge(intervals: list[_Interval]) -> tuple[_Interval, ...]:
+    """Sort and coalesce intervals, joining overlapping AND day-adjacent ones
+    (`..2018-12-31` + `2019-01-01..` is one continuous window, not two)."""
+    merged: list[_Interval] = []
+    for lo, hi in sorted(intervals):
+        if merged and lo <= _next_day(merged[-1][1]):
+            if hi > merged[-1][1]:
+                merged[-1] = (merged[-1][0], hi)
+        else:
+            merged.append((lo, hi))
+    return tuple(merged)
 
 
 def _render(intervals: tuple[_Interval, ...]) -> str:

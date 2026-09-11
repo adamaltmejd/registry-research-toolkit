@@ -39,6 +39,7 @@ from .fqid import (
     period_token_for_bounds,
     period_token_to_bounds,
 )
+from .inventory import _merge
 
 if TYPE_CHECKING:
     import sqlite3
@@ -209,6 +210,16 @@ class VariableCoverage(_CatalogModel):
     state_count: int
 
 
+class VariableWindow(_CatalogModel):
+    """One inclusive ISO window a delivery was delivered over — the raw
+    `variable_state` / `variable_alias_window` bounds, sentinels included
+    (`0001-01-01` = start unknown, `9999-12-31` = still delivered), so a reader
+    sees the same bounds the binding leaf's states carry."""
+
+    valid_from: str
+    valid_to: str
+
+
 class VariableDelivery(_CatalogModel):
     """One `(variant, delivery column)` a variable is delivered under (Y-82),
     with that pair's own window as a `VariableCoverage`. A register browse row
@@ -217,11 +228,21 @@ class VariableDelivery(_CatalogModel):
 
     `column` is None for a state SCB named no delivery column for — the variant
     still delivers the variable, so the row keeps it (unlike
-    `register_column_coverage`, whose per-column keys can't express it)."""
+    `register_column_coverage`, whose per-column keys can't express it).
+
+    `windows` carries the delivery's DISJOINT eras (Y-104), ordered by start and
+    fused where they meet, so an INTERRUPTED column — `Lan` on
+    civilståndsändringar, delivered 1968, then 1995–1996, then 1998– — reads as
+    interrupted and a consumer can match a period against the eras rather than
+    against the span. `coverage` stays the span over those windows (earliest
+    start, latest end) — unchanged by Y-104, and no longer what the register browse
+    row shows: it renders the eras. Empty only where `coverage` is boundless too (an alias column on a
+    variant with no states of its own)."""
 
     variant: str
     column: str | None
     coverage: VariableCoverage
+    windows: tuple[VariableWindow, ...]
 
 
 class RegisterCoverage(_CatalogModel):
@@ -245,6 +266,23 @@ def _coverage_bounds(
     False."""
     open_ended = cov_to == OPEN_ENDED_VALID_TO
     return cov_from, (None if open_ended else cov_to), open_ended
+
+
+def _fuse_windows(eras: list[tuple[str, str]]) -> tuple[VariableWindow, ...]:
+    """One delivery's raw `(valid_from, valid_to)` rows as its DISJOINT windows
+    (Y-104), through the SHARED interval algebra (`inventory._merge`): ordered by
+    start, each era coalesced into the open window when it touches or overlaps it,
+    else opening a NEW window — a real delivery gap. The same rule the coverage
+    gate joins an availability window with and the SPA's `deliveryWindows` applies
+    to a variable's states, so a browse row, an order and the picker can never
+    disagree about where a delivery stopped.
+
+    `_merge` sorts rather than trusting the read, which this needs: the reads are
+    UNORDERED, and one folded column's eras reach here from two spellings and two
+    tables. It also snaps the period grammar's synthesized non-leap `YYYY-02-29`
+    bound before doing `date` arithmetic on it — a bound a #319 monthly family
+    really does write into `variable_alias_window`."""
+    return tuple(VariableWindow(valid_from=lo, valid_to=hi) for lo, hi in _merge(eras))
 
 
 def _merge_span(
@@ -1438,13 +1476,29 @@ class Catalog:
         slug (the binding-FQID leaf, so the webapp zips it onto each
         `list_bindings` child).
 
-        `register_column_coverage`'s GROUP BY with the delivering VARIANT carried
-        and NULL columns KEPT: the register page needs the column names a variable
-        is delivered under (its filter matches them) and the variants that deliver
-        it (its variant chips), which the column-keyed sibling can express for
+        `register_column_coverage`'s grain with the delivering VARIANT carried and
+        NULL columns KEPT: the register page needs the column names a variable is
+        delivered under (its filter matches them) and the variants that deliver it
+        (its variant chips), which the column-keyed sibling can express for
         neither. A NULL-slug variant is excluded — it isn't browse-addressable, so
         it can't be a `?variant=` coordinate either (symmetric with
         `list_variants`).
+
+        Y-104: each delivery carries its DISJOINT `windows` beside the span, so an
+        interrupted column reads as interrupted and a consumer can match a period
+        against the real eras. That is why the reads are per-ROW rather than the
+        MIN/MAX/COUNT aggregates they were: an aggregate cannot express a gap, and
+        the span is the first and last of the fused windows anyway. The reads stay
+        UNORDERED — every fold below sorts or is order-free, and an `ORDER BY` no
+        step reads costs a temp b-tree over the whole per-register row set and
+        un-pins the join order the all-LEFT joins exist to hold (measured: the
+        per-register `SEARCH v USING COVERING INDEX idx_variable_slug
+        (register_id=? AND slug>?)` degrades to a catalog-wide `SCAN v USING
+        COVERING INDEX idx_variable_slug`, plus `USE TEMP B-TREE FOR ORDER BY`).
+        simplify: the fuse is one `inventory._merge` per column over one row per
+        state / alias window — 22,684 rows on the corpus's largest register
+        (scb/ulf). Gap-and-islands SQL (a window function over `MAX(valid_to) OVER
+        (…)`) is the upgrade if a register ever makes that slow.
 
         Y-93: `variable_state` names only the state's own column, so an
         ALIAS-backed one — a #319 monthly family (`LonFinkJan` … `LonFinkDec`), a
@@ -1463,11 +1517,12 @@ class Catalog:
         Columns are identified case-INSENSITIVELY (`py_lower`'s rule, which the
         build validates `variable_alias ⊇ state columns` with), so an alias that
         only re-spells a listed column is that one delivery, not a second. Where
-        several spellings of one column EACH carry windows, that one delivery
-        spans them all — earliest start, latest end, every window row counted —
-        under the spelling `representative_columns` picks. No step of the fold
-        reads the row order, so the same DB answers byte-identically whatever plan
-        SQLite picks for the unordered reads.
+        several spellings of one column EACH carry windows, that one delivery is
+        delivered over all their eras — fused into windows, counted whole — under
+        the spelling `representative_columns` picks. No step of the fold reads the
+        row order (`_fuse_windows` sorts, via `inventory._merge`; the rest is
+        `setdefault`, a set, or a final sort), so the same DB answers
+        byte-identically whatever plan SQLite picks.
 
         Every join is LEFT, as in `register_variable_coverage`, purely to pin the
         JOIN ORDER: with inner joins SQLite drives from the state / alias table
@@ -1477,15 +1532,14 @@ class Catalog:
         so the result is identical and each plan is a per-register `SEARCH v USING
         COVERING INDEX idx_variable_slug` over its own indexed child. Joining the
         window table to the alias table instead of to `variable` costs that
-        pinning (measured: `SCAN v` catalog-wide), so the windows are read as
-        their own aggregate and folded onto the columns here. Row order is
-        established by the final sort, not by SQL: the alias pass appends columns
-        no `ORDER BY` could have placed."""
+        pinning (measured: `SCAN v` catalog-wide), so the windows are read on
+        their own and folded onto the columns here. Row order is established by
+        the final sort, not by SQL: the alias pass appends columns no `ORDER BY`
+        could have placed."""
         state_rows = self._conn.execute(
             "SELECT v.slug AS slug, rv.slug AS variant, "
             "vs.delivery_column_name AS col, "
-            "MIN(vs.valid_from) AS cov_from, MAX(vs.valid_to) AS cov_to, "
-            "COUNT(vs.state_id) AS nstates "
+            "vs.valid_from AS valid_from, vs.valid_to AS valid_to "
             "FROM variable v "
             "JOIN register r ON v.register_id = r.register_id "
             "JOIN provider p ON r.provider_id = p.provider_id "
@@ -1493,16 +1547,13 @@ class Catalog:
             "LEFT JOIN register_variant rv "
             "  ON rv.register_variant_id = vs.register_variant_id "
             "WHERE p.slug = ? AND r.slug = ? AND v.slug IS NOT NULL "
-            "  AND rv.slug IS NOT NULL "
-            "GROUP BY v.variable_id, rv.register_variant_id, "
-            "  vs.delivery_column_name",
+            "  AND rv.slug IS NOT NULL ",
             (provider_slug, register_slug),
         ).fetchall()
         window_rows = self._conn.execute(
             "SELECT v.slug AS slug, rv.slug AS variant, "
             "w.delivery_column_name AS col, "
-            "MIN(w.valid_from) AS cov_from, MAX(w.valid_to) AS cov_to, "
-            "COUNT(*) AS nwindows "
+            "w.valid_from AS valid_from, w.valid_to AS valid_to "
             "FROM variable v "
             "JOIN register r ON v.register_id = r.register_id "
             "JOIN provider p ON r.provider_id = p.provider_id "
@@ -1510,9 +1561,7 @@ class Catalog:
             "LEFT JOIN register_variant rv "
             "  ON rv.register_variant_id = w.register_variant_id "
             "WHERE p.slug = ? AND r.slug = ? AND v.slug IS NOT NULL "
-            "  AND rv.slug IS NOT NULL AND w.delivery_column_name IS NOT NULL "
-            "GROUP BY v.variable_id, rv.register_variant_id, "
-            "  w.delivery_column_name",
+            "  AND rv.slug IS NOT NULL AND w.delivery_column_name IS NOT NULL ",
             (provider_slug, register_slug),
         ).fetchall()
         alias_rows = self._conn.execute(
@@ -1529,72 +1578,75 @@ class Catalog:
             (provider_slug, register_slug),
         ).fetchall()
 
-        # (slug, variant) -> {delivery column -> (cov_from, cov_to, count)}: the
-        # state grain first (exact spelling, as `register_column_coverage` keys
-        # it), widened by the alias history below.
-        columns: dict[
-            tuple[str, str], dict[str | None, tuple[str | None, str | None, int]]
-        ] = {}
-        # That variant's span over ALL its states — what an alias with no windows
-        # of its own is delivered over. Built from the state rows alone, so an
-        # added alias column can never widen it.
-        spans: dict[tuple[str, str], tuple[str, str, int]] = {}
+        # (slug, variant) -> {delivery column -> its raw eras}: the state grain
+        # first (exact spelling, as `register_column_coverage` keys it), widened by
+        # the alias history below. Raw rather than fused, because the fold below
+        # merges eras ACROSS spellings and only then knows what one column's
+        # windows are.
+        columns: dict[tuple[str, str], dict[str | None, list[tuple[str, str]]]] = {}
         # The spellings the alias history names each column with, per variant;
         # the states' own are `columns[key]`'s keys, and `representative_columns`
         # picks the one spelling to list each column under.
-        aliased: dict[tuple[str, str], list[str]] = {}
+        aliased: dict[tuple[str, str], set[str]] = {}
         for r in state_rows:
             key = (r["slug"], r["variant"])
-            columns.setdefault(key, {})[r["col"]] = (
-                r["cov_from"],
-                r["cov_to"],
-                r["nstates"],
-            )
-            spans[key] = _merge_span(
-                spans.get(key), r["cov_from"], r["cov_to"], r["nstates"]
+            columns.setdefault(key, {}).setdefault(r["col"], []).append(
+                (r["valid_from"], r["valid_to"])
             )
         # A column's own windows are the coverage it is delivered over. Spellings
-        # that fold together are that ONE column, so their windows MERGE —
-        # earliest start, latest end, every window row counted — rather than the
-        # last row read winning, which would answer off the query plan (0.40.0
-        # windows 124 folded columns under more than one spelling — 14 of them
-        # over spans that differ, so last-wins loses real coverage).
-        windows: dict[tuple[str, str], dict[str, tuple[str, str, int]]] = {}
+        # that fold together are that ONE column, so their eras POOL — the fuse
+        # reads them as one column's delivery history — rather than the last row
+        # read winning, which would answer off the query plan (0.40.0 windows 124
+        # folded columns under more than one spelling — 14 of them over spans that
+        # differ, so last-wins loses real coverage).
+        windows: dict[tuple[str, str], dict[str, list[tuple[str, str]]]] = {}
         for r in window_rows:
             key = (r["slug"], r["variant"])
-            aliased.setdefault(key, []).append(r["col"])
-            folded = r["col"].lower()
-            by_column = windows.setdefault(key, {})
-            by_column[folded] = _merge_span(
-                by_column.get(folded), r["cov_from"], r["cov_to"], r["nwindows"]
+            aliased.setdefault(key, set()).add(r["col"])
+            windows.setdefault(key, {}).setdefault(r["col"].lower(), []).append(
+                (r["valid_from"], r["valid_to"])
             )
         for r in alias_rows:
-            aliased.setdefault((r["slug"], r["variant"]), []).append(r["col"])
+            aliased.setdefault((r["slug"], r["variant"]), set()).add(r["col"])
         # What that history says about one variant's columns: each folded column
         # listed under its ONE spelling, the windows on it REPLACING the state's
         # claim (however the states spelled it), and a column the states never
         # named added over the variant's states.
         for key, alias_columns in aliased.items():
-            spelled = representative_columns(columns.get(key, {}), alias_columns)
+            stated = columns.get(key, {})
+            spelled = representative_columns(stated, alias_columns)
             windowed = windows.get(key, {})
             variant_columns = {
-                col: coverage
-                for col, coverage in columns.get(key, {}).items()
+                col: eras
+                for col, eras in stated.items()
                 if col is None or col.lower() not in windowed
             }
-            for folded, coverage in windowed.items():
-                variant_columns[spelled[folded]] = coverage
+            for folded, eras in windowed.items():
+                variant_columns[spelled[folded]] = eras
+            # An alias the STATES never named is delivered over the variant's whole
+            # state history — read off `stated` (the one era list per column this
+            # fold already holds) rather than accumulated a second time, and off
+            # the STATES alone, so an added alias column can never widen it.
+            variant_span = [era for eras in stated.values() for era in eras]
             for column in spelled.values():
-                variant_columns.setdefault(column, spans.get(key, (None, None, 0)))
+                variant_columns.setdefault(column, variant_span)
             columns[key] = variant_columns
 
         out: dict[str, list[VariableDelivery]] = {}
         for (slug, variant), variant_columns in sorted(columns.items()):
             # A NULL column sorts first, where Y-82's SQL ORDER BY put it.
-            for column, (raw_from, raw_to, count) in sorted(
+            for column, eras in sorted(
                 variant_columns.items(), key=lambda kv: (kv[0] is not None, kv[0] or "")
             ):
-                cov_from, cov_to, open_ended = _coverage_bounds(raw_from, raw_to)
+                fused = _fuse_windows(eras)
+                # The span is the fused windows' outer bounds: first start, last
+                # end (a fuse leaves them ordered and disjoint, so the last window
+                # ends latest). `coverage` is unchanged by Y-104 — the same
+                # MIN/MAX the GROUP BY answered.
+                cov_from, cov_to, open_ended = _coverage_bounds(
+                    fused[0].valid_from if fused else None,
+                    fused[-1].valid_to if fused else None,
+                )
                 out.setdefault(slug, []).append(
                     VariableDelivery(
                         variant=variant,
@@ -1603,8 +1655,9 @@ class Catalog:
                             coverage_from=cov_from,
                             coverage_to=cov_to,
                             open_ended=open_ended,
-                            state_count=count,
+                            state_count=len(eras),
                         ),
+                        windows=fused,
                     )
                 )
         return out

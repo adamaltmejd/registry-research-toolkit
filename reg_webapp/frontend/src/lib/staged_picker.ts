@@ -103,10 +103,6 @@ function bindingRepresentation(binding: unknown): string | null {
     : null;
 }
 
-function boundsOverlap(a: PeriodBounds, b: PeriodBounds): boolean {
-  return a.from <= b.to && b.from <= a.to;
-}
-
 function rowWindowBounds(row: PickerRepresentation): PeriodBounds[] {
   return (row.windows.length > 0 ? row.windows : [row]).map((window) => ({
     from: window.from,
@@ -114,15 +110,27 @@ function rowWindowBounds(row: PickerRepresentation): PeriodBounds[] {
   }));
 }
 
-function rowOverlapsPeriod(row: PickerRepresentation, period: Period): boolean {
+/** Do these delivery windows reach a COMMITTED source's period? The period side is
+ * the #307 comma-union a source can carry, so every segment of it is tried. Exported
+ * because the register list asks it of a delivery column's own eras (Y-104): its
+ * rows are the variable's — a #902 rename chain folds into ONE row spanning the
+ * whole chain — so only the NAME's windows can say whether the source period
+ * reached the years that name was delivered in. */
+export function windowsOverlapPeriod(
+  windows: readonly { from: string; to: string }[],
+  period: Period,
+): boolean {
   const segments = boundedPeriodSegments(period);
   if (!segments) {
     return false;
   }
-  const windows = rowWindowBounds(row);
   return segments.some((segment) =>
-    windows.some((rowWindow) => boundsOverlap(segment.bounds, rowWindow)),
+    windowsOverlapWindow(windows, segment.bounds),
   );
+}
+
+function rowOverlapsPeriod(row: PickerRepresentation, period: Period): boolean {
+  return windowsOverlapPeriod(rowWindowBounds(row), period);
 }
 
 /** The concrete `register_variant` segments a folded picker row spans (#376): its
@@ -553,10 +561,10 @@ async function stagedAdd(
  * wait may end in a commit into a page they have left behind.
  *
  * The replacement guard below starts HERE, when this call does. A host that reads
- * anything asynchronously between the press and this call (the register list re-reads
- * each ticked variable's delivery eras) has a window this guard cannot see, and must
- * capture `projectStore.replacementGeneration` at the PRESS and abandon its own batch
- * if it moved — as `CatalogNodeView.addSelected` does. */
+ * anything asynchronously between the press and this call has a window this guard
+ * cannot see, and must capture `projectStore.replacementGeneration` at the PRESS and
+ * report it through `cancelled` — as `CatalogNodeView.addSelected` does, whose guard
+ * also covers the route and the study window, which this one cannot see at all. */
 export async function applyStagedPicks(
   payload: StagedApplyPayload,
   ctx: {

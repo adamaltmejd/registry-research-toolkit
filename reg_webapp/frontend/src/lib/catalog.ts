@@ -17,6 +17,7 @@ import {
   getCatalogNode,
   isCatalogNode,
   type StatesResponse,
+  type VariableDeliveryModel,
   type VariableGraphNode,
   type VariableStateModel,
   type VariantsResponse,
@@ -1217,10 +1218,9 @@ export interface PickerRepresentation {
    * interrupted-series wire form) so the committed source never covers the gap years
    * the representation wasn't delivered.
    *
-   * Only as exact as the states the row was built from. A row built off the register
-   * list's aggregate coverage (`deliveryColumnRows`) has one window per (variant,
-   * column) and CANNOT show an interruption — display grade. Before committing such
-   * a row, rebuild it over the variable's own states (`variablePickerRows`). */
+   * Exact wherever the row comes from: the leaf and the group graph build them from
+   * the states, the register list from the deliveries' own `windows` (Y-104), which
+   * carry the same eras. */
   windows: { from: string; to: string }[];
   /** Concrete variant segments that back this displayed row. Ordinary rows have
    * exactly one segment; folded variant-family rows have one per concrete variant,
@@ -1315,8 +1315,13 @@ function rowWirePeriod(
  * NEW window (a real delivery gap). Open-ended windows (the `9999-12-31` ceiling)
  * swallow everything after them — like `collapseSpans`, but column-scoped and
  * returning only the spans (no technical-change notes). A continuously-delivered
- * column yields ONE window; an interrupted one yields a window per era. */
-function deliveryWindows(
+ * column yields ONE window; an interrupted one yields a window per era.
+ *
+ * reg_meta applies the same rule per delivery (`catalog.py` `_fuse_windows`), so the
+ * register list's `VariableDelivery.windows` arrive already fused; this merges ACROSS
+ * deliveries — the several variants that ship one column name, or one variable's
+ * states. */
+export function deliveryWindows(
   bounds: readonly { from: string; to: string }[],
 ): { from: string; to: string }[] {
   const ordered = [...bounds].sort(
@@ -1708,94 +1713,44 @@ function pickerVariantSegments(
     });
 }
 
-/** The picker rows for ONE delivery column of a register-list row (Y-83): one row
- * per VARIANT that delivers the column under that name, in the order the register
- * response lists them (variant slug). Adding a ticked column from the register page
- * therefore stages exactly the per-(variable, variant, column) sources the
- * variable's own page stages — `rowAddSegments` fans each row out to its one
- * concrete `register_variant`, as it does for an unfolded leaf row.
+/** The picker rows for ONE register-list variable (Y-83), built from the DELIVERIES
+ * the register response carries: one synthetic state per (delivery, window), fed
+ * through `pickerRepresentations`. The rows a tick stages are therefore the rows the
+ * variable's OWN PAGE builds from its states — same key format, same window fuse, same
+ * #902 rename fold — by construction rather than by a copy that can drift from
+ * `pickerRow`, and an add made from the list authors the file a leaf add authors.
  *
- * Built by feeding the register's coverages through `pickerRepresentations` as
- * synthetic states rather than by assembling rows here: `PickerStateInput` is
- * ALREADY the widened shape a second source feeds (the group graph — see its
- * doc), so the register list inherits the row rules (key format, window union,
- * segments, the #902 rename fold) by construction instead of by a copy that can
- * drift from `pickerRow`. One call is one column of one variable and each delivery
- * a distinct variant, so nothing folds: every row comes back SINGLE-SEGMENT and
- * unfolded. That is what a LISTING wants — the register list shows each delivered
- * column NAME on its own line (Y-82: that is the name a researcher hunts for), so a
- * sequential rename is two tickable rows here where the variable's own page shows
- * one folded row.
+ * Exact since Y-104: each delivery carries its DISJOINT `windows`, so an interrupted
+ * column's eras commit as the #307 comma-union and never claim a gap year. Before that
+ * the list only had the MIN/MAX span, which cannot express an interruption, and an Add
+ * paid a GET per ticked variable to rebuild these rows from the states.
  *
- * DISPLAY GRADE, and display only. The coverage the list passes is the MIN/MAX
- * aggregate per (variant, column), which cannot express an interruption, and one row
- * per column name is not what a rename COMMITS (#902). An Add maps these rows' ticked
- * names onto the variable's own rows instead (`variablePickerRows`), so what the
- * register page authors is what the leaf page authors.
- *
- * The label/value-set fields go in empty: this surface identifies a row by its
- * COLUMN, and nothing on the register page renders a variant label or a coding. */
+ * Two fields the register response does not carry, neither of which a commit reads: the
+ * curated variant FAMILY (#376), so rows here group by CONCRETE variant and come back
+ * single-segment where the leaf may fold a family into one row; and the value-set
+ * identity, so the label/coding fields go in empty — nothing on the register page
+ * renders either. A delivery under no column name is skipped by `pickerRepresentations`
+ * (no column, nothing to select), and one with no windows contributes no state and so
+ * no row: there is nothing this page could commit it over. */
 export function deliveryColumnRows(
-  column: string,
-  deliveries: readonly { variant: string; coverage: MemberCoverage }[],
+  deliveries: readonly VariableDeliveryModel[],
 ): PickerRepresentation[] {
+  let stateId = 0;
   return pickerRepresentations(
-    deliveries.map((delivery, index) => ({
-      state_id: index,
-      variant: delivery.variant,
-      variant_label: null,
-      delivery_column_name: column,
-      value_set_version_label: "",
-      value_set_id: null,
-      // A null `coverage_from` is "start unknown" and a null/open-ended
-      // `coverage_to` is "still delivered" — the same nullable bounds a graph state
-      // carries, normalized to the catalog sentinels by `pickerRepresentations`.
-      valid_from: delivery.coverage.coverage_from ?? null,
-      valid_to: delivery.coverage.open_ended
-        ? null
-        : (delivery.coverage.coverage_to ?? null),
-    })),
-  );
-}
-
-/** The picker rows the VARIABLE'S OWN PAGE builds, for an Add made from the
- * register list (Y-83): `pickerRepresentations` over the variable's own states,
- * narrowed to the variants the list showed the ticked columns under. The list renders
- * `deliveryColumnRows` but COMMITS these, so an add made from it authors the file the
- * leaf page authors — two properties the list's own rows cannot have:
- *
- *   - the EXACT delivery eras. The list can only build rows from the aggregate
- *     coverage, which cannot express an interruption. Printing a year range off that
- *     is fine; committing it would claim years the column was never delivered in,
- *     where the states commit the eras as the #307 comma-union.
- *   - the #902 RENAME FOLD. A variable delivered as `CDISP` and then `CDISP5` is ONE
- *     representation over the union, committing `representation: null` so per-period
- *     resolution picks the right column per year — pinning either name would break the
- *     other's era. The list still LISTS both names (Y-82: the name is what a
- *     researcher hunts for); `rowCoversColumn` maps a tick of either onto the row.
- *
- * `variants` plays the part the `?variant` modifier plays on the leaf
- * (`narrowStatesByModifier`): the fold sees the states of the variants the ticked rows
- * stood for and no others. Not wider — the whole register's variants would fold in a
- * variant that delivers only columns the researcher never ticked, and every segment of
- * a folded row is authored (#376). Not narrower, or a chip lens would be the only
- * thing standing between a tick and a variant it filtered away.
- *
- * Rejects when the FQID is not a binding leaf, so a caller refuses its batch rather
- * than committing an approximated period.
- * simplify: one GET per ticked VARIABLE — not per column, and not per add (which
- * still resolves its own). A researcher ticks a few dozen columns per action; give
- * the register response the exact windows if a LISTING surface ever needs them. */
-export async function variablePickerRows(
-  fqid: string,
-  variants: ReadonlySet<string>,
-): Promise<PickerRepresentation[]> {
-  const node = narrowCatalogNode(await getCatalogNode(fqid));
-  if (node?.kind !== "binding") {
-    throw new Error(`${fqid} is not a binding leaf`);
-  }
-  return pickerRepresentations(
-    node.states.filter((state) => variants.has(state.variant)),
+    deliveries.flatMap((delivery) =>
+      delivery.windows.map((window) => ({
+        state_id: stateId++,
+        variant: delivery.variant,
+        variant_label: null,
+        delivery_column_name: delivery.column,
+        value_set_version_label: "",
+        value_set_id: null,
+        // The wire carries the catalog sentinels raw (`0001-01-01` start unknown,
+        // `9999-12-31` still delivered) — the same bounds a leaf state carries.
+        valid_from: window.valid_from,
+        valid_to: window.valid_to,
+      })),
+    ),
   );
 }
 
@@ -3234,75 +3189,6 @@ export function coverageFromStates(
 export function yearOf(iso: string): number | null {
   const m = /^(\d{4})/.exec(iso ?? "");
   return m ? Number.parseInt(m[1], 10) : null;
-}
-
-/** A per-member coverage span as it rides on the wire (`VariableCoverageModel`):
- * ISO `coverage_from`/`coverage_to` (`null` when unknown) + the open-ended flag.
- * Structural so callers needn't import the schema alias. */
-export interface MemberCoverage {
-  coverage_from?: string | null;
-  coverage_to?: string | null;
-  open_ended: boolean;
-}
-
-/** The UNION data-availability span (#638 PR2a) over a group's member coverages,
- * as a year-grain `Coverage` for the period picker's availability lens:
- *  - `from` = the earliest finite member `coverage_from` year (null when none
- *    has a finite start);
- *  - `to` = the latest finite member `coverage_to` year — UNLESS any member is
- *    open-ended (or carries a null `coverage_to`), which unbounds the END
- *    (`to: null` = "still delivered"), mirroring `coverageFromStates`'s
- *    open-ended sentinel handling so the slider projects it to the vintage.
- * Members with null coverage (stateless) are skipped. Returns null when no
- * member contributes a finite bound AND none is open-ended (nothing to draw or
- * gap against — the picker softens the deviation hint). */
-export function memberCoverageUnion(
-  coverages: readonly (MemberCoverage | null | undefined)[],
-): Coverage | null {
-  let from: number | null = null;
-  let to: number | null = null;
-  let openEnded = false;
-  for (const cov of coverages) {
-    if (!cov) {
-      continue;
-    }
-    // A stateless member's payload is `{null, null, false}` (not null) — it
-    // carries no span, so treat it like null coverage. WITHOUT this, its null
-    // `coverage_to` would wrongly trip the open-ended branch below and unbound
-    // the WHOLE union END (the union track then runs to the vintage even when
-    // every finite member ends earlier). A finite `coverage_from` WITH a null
-    // `coverage_to` is a GENUINE open-ended member and still falls through.
-    if (
-      cov.coverage_from == null &&
-      cov.coverage_to == null &&
-      !cov.open_ended
-    ) {
-      continue;
-    }
-    // The yearless-fallback floor (`0001-01-01`) is "start unknown", not year 1
-    // — skip it so it never floors the union `from` (mirrors `coverageFromStates`).
-    const fromYear =
-      cov.coverage_from && cov.coverage_from !== YEARLESS_VALID_FROM
-        ? yearOf(cov.coverage_from)
-        : null;
-    if (fromYear !== null && (from === null || fromYear < from)) {
-      from = fromYear;
-    }
-    // An open-ended member (or one with no finite end) unbounds the union END.
-    if (cov.open_ended || cov.coverage_to == null) {
-      openEnded = true;
-    } else {
-      const toYear = yearOf(cov.coverage_to);
-      if (toYear !== null && (to === null || toYear > to)) {
-        to = toYear;
-      }
-    }
-  }
-  const unionTo = openEnded ? null : to;
-  if (from === null && unionTo === null) {
-    return null;
-  }
-  return { from, to: unionTo };
 }
 
 // ── Shared binding resolution (subject-page staged picker adds) ──────────────

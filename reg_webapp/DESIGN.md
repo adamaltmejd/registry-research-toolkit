@@ -710,11 +710,11 @@ QUERY PLAN reports `USING COVERING INDEX`).
 ### Per-variable deliveries (Y-82)
 
 A register-child also carries `deliveries`: the `(variant, delivery column)` pairs that
-deliver the variable, each with that pair's own `VariableCoverage` window. It answers
-the two questions the coverage span can't — *which variant delivers this?* and *what
-column name does a researcher know it by?* (LISA's `forvink-ers` is `ForvErs` on paper).
-One more GROUP BY in the same query-time family
-(`Catalog.register_variable_deliveries`), grouped by
+deliver the variable, each with that pair's own `VariableCoverage` window AND — since
+Y-104 — its disjoint `windows`. It answers the two questions the coverage span can't —
+*which variant delivers this?* and *what column name does a researcher know it by?*
+(LISA's `forvink-ers` is `ForvErs` on paper). One more read in the same query-time
+family (`Catalog.register_variable_deliveries`), keyed by
 `(variable, register_variant, delivery_column_name)` over the same `variable_state` rows
 and behind the same ETag/edge cache — no new endpoint, no build-time materialization.
 Selecting `delivery_column_name` puts it outside `idx_variable_state_coverage` (as it
@@ -722,6 +722,20 @@ does its `register_column_coverage` sibling), so it reaches the row rather than 
 satisfied index-only; both joins are LEFT to pin the join order, because with inner
 joins SQLite drives from `variable_state` and scans the WHOLE table instead of searching
 `idx_variable_state_variable` per register.
+
+- **Windows, not a GROUP BY (Y-104)**: 7,295 of the corpus's 77,843 delivery groups
+  (9.4%) do not tile contiguously, so the MIN/MAX span asserted an unbroken delivery for
+  one group in eleven. The reads return ONE ROW PER STATE now — the GROUP BY dropped and
+  nothing put in its place, since the fuse sorts and an `ORDER BY` no step reads costs a
+  temp b-tree over the whole per-register row set and un-pins the join order the
+  all-LEFT joins exist to hold (the per-register `SEARCH v USING COVERING INDEX
+  idx_variable_slug` degrades to a catalog-wide `SCAN v`) — and Python fuses each
+  group's eras into disjoint
+  `windows`, the SPA's `deliveryWindows` rule moved to the model so both ends agree by
+  construction. `coverage` is unchanged: it is the span over those windows, which is
+  still what a browse row prints. The ceiling is row volume — scb/ulf, the corpus's
+  largest register by states, is 22,684 rows over 10,785 groups — and gap-and-islands
+  SQL is the upgrade if that stops fitting.
 
 - `column` is None for a state SCB named no delivery column for. The variant still
   delivers the variable, so the row is KEPT — unlike `register_column_coverage`, whose
@@ -781,14 +795,13 @@ variable pages to add one column each.
 - **The tick grain is the column NAME the list shows** (`catalog.ts`
   `deliveryColumnRows`); the COMMIT grain is the variable's own picker row. A tick names
   a column, an Add maps that name onto the rows the variable's own page builds
-  (`variablePickerRows` → `rowCoversColumn`), and `rowAddSegments` fans each of those
+  (`deliveryColumnRows` → `rowCoversColumn`), and `rowAddSegments` fans each of those
   out to ONE staged add per *(variable, concrete `register_variant`, column)* — the same
   per-concrete-segment fan-out (#376) the variable page performs. So the file a tick
-  authors is the file that page authors, and the two grades of row the page holds (see
-  the two bullets below) never leave it. The chip lens rides along, and it is CAPTURED
+  authors is the file that page authors. The chip lens rides along, and it is CAPTURED
   WHEN THE COLUMN IS TICKED: a tick stores the concrete variants the list showed that
   column under, and an Add stages the intersection of those with the variants on screen
-  when it is pressed, building the rows from the states of exactly those — the part a
+  when it is pressed, staging only the rows those variants deliver — the part a
   `?variant` modifier plays on the variable's own page (`narrowStatesByModifier`). The
   capture is the load-bearing half. The lens is live and a tick is not, so reading the
   lens at Add time instead would let a lens lifted in between widen the tick to a
@@ -797,12 +810,13 @@ variable pages to add one column each.
   researcher filtered away, in either direction: one the lens has moved off reads as
   UNTICKED and adds nothing until the lens that made it comes back — or until it is
   ticked again, which re-captures under what is on screen now. The capture is PER COLUMN
-  and stays that way through the commit: a batch is grouped into one *scope* per
-  distinct variant set (`stagedTicks`), and each scope builds its variable's rows on its
-  own. Two columns of one variable ticked under different lenses must not pool their
-  variants, because rows are matched to columns by NAME (`rowCoversColumn`) and both
-  names usually exist in both variants — a pooled set would stage each column under the
-  other's variants and quietly author four adds where the researcher made two.
+  and stays that way through the commit: ONE sweep (`stagedBatch`) meets each ticked
+  name with the rows that deliver it, and a row joins a tick only where that tick's own
+  captured variants cover it. Two columns of one variable ticked under different lenses
+  must not pool their variants, because rows are matched to columns by NAME
+  (`rowCoversColumn`) and both names usually exist in both variants — a pooled set would
+  stage each column under the other's variants and quietly author four adds where the
+  researcher made two.
 - **The staging stack is shared, not copied.** `staged_picker.ts` owns the whole staged
   add → resolve → commit sequence (`stagedAddCandidates` → `applyStagedPicks`,
   committing through `projectStore.applyStagedDiff`), and `StagedAddStatus.svelte` is
@@ -819,36 +833,59 @@ variable pages to add one column each.
   retire the moment the window moves — one `addRefusal` slot rather than a flag per
   gate, so a verdict can never outlive the batch it refused. The refusal only: the ticks
   survive, so "add again" is one press. An Add is bound to the window it was pressed
-  under for its whole round trip — the rail is not disabled while the era reads and the
-  per-add resolves are out, so a window moved mid-Add ABANDONS the batch (`batchGuard`,
-  asked again after every await, `applyStagedPicks`'s own included) rather than
-  committing it under years the researcher has already left, beside a list redrawn for
-  the years they chose. Abandoned, not refused: nothing is authored, nothing is claimed,
-  and the ticks survive for an Add under the window now on screen.
+  under for its whole round trip — the rail is not disabled while the draft restore and
+  the per-add resolves are out, so a window moved mid-Add ABANDONS the batch
+  (`batchGuard`, asked again after every await, `applyStagedPicks`'s own included)
+  rather than committing it under years the researcher has already left, beside a list
+  redrawn for the years they chose. Abandoned, not refused: nothing is authored, nothing
+  is claimed, and the ticks survive for an Add under the window now on screen.
 - **A column the window has moved off is not tickable.** The list names every column the
-  register ever delivered, so a window later (or earlier) than a column's whole history
-  leaves it nothing to commit. Its tick is disabled and the row carries the reason. A
-  subject page's picker only DIMS such a row and still lets it be picked, and
+  register ever delivered, so a window later than a column's last era, earlier than its
+  first, or inside one of its gaps leaves it nothing to commit. The gate is that column
+  NAME's own eras, never the row's: a #902 rename chain folds into one row spanning the
+  whole chain, so a row-grain gate would offer the RETIRED name under a window only its
+  successor covers — a tick on a column the register stopped delivering before the
+  window opened, under a label printing the very years that say so. Such a tick is
+  disabled and the row carries the reason. A column delivered in NO era — the boundless
+  delivery `VariableDelivery` documents, an alias spelling on a variant with no states
+  of its own — is refused on its own terms ("Not delivered", naming no window, since
+  none would lift it): it has no row to stage, and a checkbox that ticks and commits
+  nothing is a control that lies.
+
+  A subject page's picker only DIMS such a row and still lets it be picked, and
   `rowAddSegments` deliberately FALLS BACK to a row's whole span when the window clips
   it to nothing so that pick still adds something — that page has a Period control to
   say what. Here the window is the only period there is, so inheriting that fallback
   would author years the researcher never asked for: the page refuses the row before
   staging it, and the bar's count never promises a column an Add cannot commit.
-- **The list's windows are display grade; an add re-reads the states.** `deliveries`
-  carries a MIN/MAX coverage per (variant, column), which cannot express an
-  interruption: a column delivered 1990–1999 and again 2010–2020 reads there as
-  1990–2020. Printing that year range is what the list wants and costs no fetch per
-  listed variable — committing it would claim years the column was never delivered in.
-  So an Add re-reads each ticked VARIABLE's own states (`catalog.ts`
-  `variablePickerRows`, one GET per ticked variable per scope — one scope unless the
-  lens moved between its ticks — on top of the per-add resolve) and stages rows over the
-  exact eras, which commit as the #307 comma-union exactly as the variable page's do. A
-  variable whose states can't be read refuses the whole batch rather than falling back
-  to the aggregate. The two grades can DISAGREE — a window inside an interruption passes
-  a tick that only ever saw the aggregate — so the Add applies the window gate again to
-  the rows that come back, and the confirmation counts the columns that actually
-  committed. A batch left with nothing authors nothing and names the window it found
-  empty.
+- **The list's windows are EXACT (Y-104), so an Add reads nothing extra.** Each delivery
+  carries its own DISJOINT `windows` beside the MIN/MAX `coverage` span, so a column
+  delivered 1968, then 1995–1996, then 1998– says so on the wire. `deliveryColumnRows`
+  builds a synthetic state per (delivery, window) and runs it through
+  `pickerRepresentations`, so the rows a tick stages ARE the rows the variable's own page
+  builds from its states — same key format, same window fuse, same #902 rename fold —
+  and the list's years label prints the eras the way that page does. One consequence
+  everywhere: the years beside a name, the window gate on the tick, the "In project"
+  marker and the committed #307 comma-union all read the same eras, so a window inside
+  an interruption is not tickable rather than tickable-then-dropped, and a register-list
+  add is byte-identical to the variable page's without a second read. Before Y-104 the
+  wire carried only the span; an Add paid a GET per ticked variable to rebuild these
+  rows from the states, and the two grades could disagree.
+
+  The label and the two per-name verdicts are NAME-grain while the commit is ROW-grain,
+  and the split is load-bearing: a #902 rename chain folds into ONE row spanning the
+  whole chain, so the tick gate asks that NAME's own `windows`, and "In project" asks
+  whether the committed source period reached them (`windowsOverlapPeriod`). Gating on
+  the row offers a retired name for its successor's years; marking on the row alone
+  claims a name the Add never committed.
+
+  The years are spelled compactly — `1968, 1995–1996, 1998–` — rather than through the
+  `since 1998` / `until 1968` words `formatWindow` gives the variable page: this cell is
+  all-mono and rides inside a tick's accessible name, and frontend/DESIGN.md keeps prose
+  out of mono. Each era is one unbreakable run, because a `1995–` wrapped to the end of
+  a line is this same grammar's "still delivered". An era undated at one end takes the
+  bare dash on that side (`–1968`) rather than being left out: an omission from a LIST
+  reads as a gap.
 - **A sequential RENAME is listed twice and committed once.** The list names every
   column a variable was delivered under, so `CDISP` and `CDISP5` are two tickable rows
   (that is what Y-82 shows, and the name is what a researcher hunts for). The variable's
@@ -1691,9 +1728,9 @@ a different job per kind:
 - The **classification** leaf has no time axis (a classification edition is
   period-less).
 
-The group's availability span is `memberCoverageUnion` over its members' coverages, and
-a member's coverage line uses `formatWindow` — including the one-sided `until <year>`
-form when the start is unknown (#658).
+The group's availability span is `ConceptGroupView`'s own `unionCoverage` over its
+members' coverages, and a member's coverage line uses `formatWindow` — including the
+one-sided `until <year>` form when the start is unknown (#658).
 
 ### Shared section components
 

@@ -3,6 +3,7 @@ import type {
   CatalogNode,
   GraphState,
   StatesResponse,
+  VariableDeliveryModel,
   VariableStateModel,
   VariantsResponse,
 } from "./api";
@@ -44,7 +45,6 @@ import {
   labelSuffix,
   leafSlug,
   matchesFilter,
-  memberCoverageUnion,
   memberKey,
   narrowCatalogNode,
   narrowStatesByModifier,
@@ -1626,24 +1626,37 @@ describe("narrowStatesByModifier (#678: picker honors the active narrowing)", ()
 });
 
 describe("deliveryColumnRows (Y-83 register-list picks)", () => {
+  /** One `VariableDelivery` as the register response carries it. `coverage` is the
+   * span reg_meta derives FROM the windows, so the fixtures keep the two agreeing —
+   * nothing here reads it, but a divergent fixture would misdescribe the wire. */
+  const delivery = (
+    variant: string,
+    column: string | null,
+    windows: [string, string][],
+  ): VariableDeliveryModel => {
+    const open = windows.at(-1)?.[1] === "9999-12-31";
+    return {
+      variant,
+      column,
+      coverage: {
+        coverage_from: windows[0]?.[0] ?? null,
+        // The wire's own rule (`_coverage_bounds`): an open-ended span carries a
+        // NULL `coverage_to` beside the flag, never the ceiling sentinel.
+        coverage_to: open ? null : (windows.at(-1)?.[1] ?? null),
+        open_ended: open,
+        state_count: windows.length,
+      },
+      windows: windows.map(([valid_from, valid_to]) => ({
+        valid_from,
+        valid_to,
+      })),
+    };
+  };
+
   it("stages one unfolded row per delivering variant, over that variant's own span", () => {
-    const rows = deliveryColumnRows("Kon", [
-      {
-        variant: "individer-16plus",
-        coverage: {
-          coverage_from: "1990-01-01",
-          coverage_to: "2009-12-31",
-          open_ended: false,
-        },
-      },
-      {
-        variant: "individer-15plus",
-        coverage: {
-          coverage_from: "2010-01-01",
-          coverage_to: null,
-          open_ended: true,
-        },
-      },
+    const rows = deliveryColumnRows([
+      delivery("individer-16plus", "Kon", [["1990-01-01", "2009-12-31"]]),
+      delivery("individer-15plus", "Kon", [["2010-01-01", "9999-12-31"]]),
     ]);
 
     expect(rows.map((r) => [r.key, r.wirePeriod])).toEqual([
@@ -1664,20 +1677,57 @@ describe("deliveryColumnRows (Y-83 register-list picks)", () => {
   });
 
   it("reads a delivery with no known start as unbounded on that side", () => {
-    const [row] = deliveryColumnRows("Kon", [
-      {
-        variant: "individer",
-        coverage: {
-          coverage_from: null,
-          coverage_to: "2009-12-31",
-          open_ended: false,
-        },
-      },
+    const [row] = deliveryColumnRows([
+      delivery("individer", "Kon", [["0001-01-01", "2009-12-31"]]),
     ]);
 
     expect(row.from).toBe("0001-01-01");
     expect(row.period).toBe("until 2009");
     expect(row.wirePeriod).toBeNull();
+  });
+
+  it("an interrupted column is ONE row carrying its eras, committed as the comma-union (Y-104)", () => {
+    // `Lan` on civilståndsändringar: delivered 1968, then 1995–1996, then 1998–.
+    const rows = deliveryColumnRows([
+      delivery("individer", "Lan", [
+        ["1968-01-01", "1968-12-31"],
+        ["1995-01-01", "1996-12-31"],
+        ["1998-01-01", "9999-12-31"],
+      ]),
+    ]);
+
+    expect(rows).toHaveLength(1);
+    expect(rows[0].key).toBe("individer::Lan");
+    // The eras survive the trip through `pickerRepresentations` as the row's own
+    // windows: the span 1968– would claim 1969–1994, which was never delivered.
+    expect(rows[0].windows).toEqual([
+      { from: "1968-01-01", to: "1968-12-31" },
+      { from: "1995-01-01", to: "1996-12-31" },
+      { from: "1998-01-01", to: "9999-12-31" },
+    ]);
+    // `period` stays the row's SPAN — the picker's own label, unchanged by Y-104;
+    // the register list's interrupted years label reads `windows` instead.
+    expect(rows[0].period).toBe("since 1968");
+    // Open-ended on the last era, so no wire period of its own — the study window
+    // clips it, and the clip is the comma-union of the closed eras.
+    expect(rows[0].wirePeriod).toBeNull();
+  });
+
+  it("a closed interrupted column commits its gap as the #307 comma-union", () => {
+    const [row] = deliveryColumnRows([
+      delivery("individer", "Lan", [
+        ["1968-01-01", "1968-12-31"],
+        ["1995-01-01", "1996-12-31"],
+      ]),
+    ]);
+
+    expect(row.wirePeriod).toBe("1968,1995..1996");
+  });
+
+  it("a delivery with no windows contributes no row", () => {
+    // An alias column on a variant with no states of its own: reg_meta sends the
+    // delivery with empty `windows`, and there is no era this page could commit.
+    expect(deliveryColumnRows([delivery("individer", "Kon", [])])).toEqual([]);
   });
 });
 
@@ -4033,102 +4083,6 @@ describe("coverageFromStates (#615 availability span)", () => {
         }),
       ]),
     ).toEqual({ from: 2002, to: 2010 });
-  });
-});
-
-describe("memberCoverageUnion (#638 PR2a group availability span)", () => {
-  it("unions finite member spans to year ints", () => {
-    expect(
-      memberCoverageUnion([
-        {
-          coverage_from: "2000-01-01",
-          coverage_to: "2008-12-31",
-          open_ended: false,
-        },
-        {
-          coverage_from: "1995-01-01",
-          coverage_to: "2010-06-30",
-          open_ended: false,
-        },
-      ]),
-    ).toEqual({ from: 1995, to: 2010 });
-  });
-
-  it("an open-ended member unbounds the union END (null), start preserved", () => {
-    expect(
-      memberCoverageUnion([
-        {
-          coverage_from: "2000-01-01",
-          coverage_to: "2008-12-31",
-          open_ended: false,
-        },
-        { coverage_from: "2005-01-01", coverage_to: null, open_ended: true },
-      ]),
-    ).toEqual({ from: 2000, to: null });
-  });
-
-  it("a member with no finite end (null coverage_to) also unbounds the END", () => {
-    expect(
-      memberCoverageUnion([
-        { coverage_from: "2000-01-01", coverage_to: null, open_ended: false },
-      ]),
-    ).toEqual({ from: 2000, to: null });
-  });
-
-  it("skips null / stateless members", () => {
-    expect(
-      memberCoverageUnion([
-        null,
-        undefined,
-        {
-          coverage_from: "2001-01-01",
-          coverage_to: "2003-12-31",
-          open_ended: false,
-        },
-      ]),
-    ).toEqual({ from: 2001, to: 2003 });
-  });
-
-  it("null when no member contributes a finite bound and none is open-ended", () => {
-    expect(memberCoverageUnion([])).toBeNull();
-    expect(memberCoverageUnion([null, undefined])).toBeNull();
-    expect(
-      memberCoverageUnion([
-        { coverage_from: null, coverage_to: null, open_ended: false },
-      ]),
-    ).toBeNull();
-  });
-
-  it("a stateless member ({null,null,false}) does NOT unbound the union END", () => {
-    // The stateless payload carries no span — it must be skipped, NOT treated as
-    // open-ended. Its null `coverage_to` would otherwise trip the open-ended
-    // branch and unbound the whole union (`to: null`), drawing the union track
-    // through the vintage even though every finite member ends earlier.
-    expect(
-      memberCoverageUnion([
-        {
-          coverage_from: "2005-01-01",
-          coverage_to: "2010-12-31",
-          open_ended: false,
-        },
-        { coverage_from: null, coverage_to: null, open_ended: false },
-      ]),
-    ).toEqual({ from: 2005, to: 2010 });
-  });
-
-  it("a yearless-floor start (0001-01-01) does NOT floor the union to year 1", () => {
-    // The `0001-01-01` start sentinel means "start unknown", not year 1 — it must
-    // be treated as no finite start (mirrors `coverageFromStates`), else the union
-    // `from` floors to 1 and balloons the PeriodPicker slider track.
-    expect(
-      memberCoverageUnion([
-        {
-          coverage_from: "0001-01-01",
-          coverage_to: "2008-12-31",
-          open_ended: false,
-        },
-      ]),
-    ).toEqual({ from: null, to: 2008 });
   });
 });
 

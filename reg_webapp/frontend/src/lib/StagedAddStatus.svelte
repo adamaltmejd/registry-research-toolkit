@@ -10,8 +10,6 @@ import { type StagedApplyOutcome, stagedDiffSummary } from "./staged_picker";
 let {
   outcome = null,
   blocked = null,
-  blockedTone = "warn",
-  note = null,
 }: {
   /** What the last Apply committed, or null (nothing applied yet / cleared). */
   outcome?: StagedApplyOutcome | null;
@@ -20,34 +18,21 @@ let {
    * which of ITS controls the researcher can reach for. A refusal wins over a stale
    * confirmation. */
   blocked?: string | null;
-  /** `error` when `blocked` names a read that failed rather than a choice anyone
-   * made — nobody refused anything, the batch just couldn't be evaluated — vs the
-   * default `warn` for a refusal the researcher's own next move retires (DESIGN.md
-   * status glyphs: ✕ error, ▲ warn). */
-  blockedTone?: "warn" | "error";
-  /** Rides beside a successful `outcome`: names a ticked column the batch could
-   * NOT commit (the register list's exact-era drop, read only after the tick gate's
-   * own aggregate pass), so a partial Add never reads as a complete one. Ignored
-   * without `outcome`. */
-  note?: string | null;
 } = $props();
 
 const applied = $derived(outcome === null ? "" : stagedDiffSummary(outcome));
-// DESIGN.md status glyphs: ✕ error, ▲ warn. `error` announces `alert` (nothing
-// to act on but retry); `warn` is the calmer `status`, a refusal the researcher's
-// own next move retires.
-const blockedGlyph = $derived(blockedTone === "error" ? "✕" : "▲");
-const blockedRole = $derived(blockedTone === "error" ? "alert" : "status");
 </script>
 
 {#if blocked}
-  <!-- The Apply was refused before the store was touched, so nothing was authored
-       — or, for `error`, never even evaluated. A status row (frontend/DESIGN.md →
-       Banners and status rows): the status tint as fill, a glyph first, plain
-       copy. -->
+  <!-- The Apply was refused before the store was touched, so nothing was
+       authored. A status row (frontend/DESIGN.md → Banners and status rows): the
+       status tint as fill, a glyph first, plain copy. -->
   <p class="page-add">
-    <span class="add-blocked tone-{blockedTone}" role={blockedRole}>
-      <span aria-hidden="true">{blockedGlyph}</span>
+    <!-- DESIGN.md status glyphs: ▲ warn. Every refusal a host can show is one the
+         researcher's own next move retires, so it announces as the calmer
+         `status` rather than an `alert`. -->
+    <span class="add-blocked" role="status">
+      <span aria-hidden="true">▲</span>
       {blocked}
     </span>
   </p>
@@ -55,9 +40,6 @@ const blockedRole = $derived(blockedTone === "error" ? "alert" : "status");
   <p class="page-add">
     <span class="add-confirm" role="status">
       Applied {applied} — <a href="/project">view</a>
-      {#if note}
-        <span class="add-note">· {note}</span>
-      {/if}
     </span>
   </p>
 {/if}
@@ -78,23 +60,11 @@ const blockedRole = $derived(blockedTone === "error" ? "alert" : "status");
     padding: var(--space-2) var(--space-3);
     border-radius: var(--radius-sm);
     font-size: var(--text-sm);
-  }
-  .add-blocked.tone-warn {
     background: var(--warn-bg);
     color: var(--warn);
-  }
-  .add-blocked.tone-error {
-    background: var(--err-bg);
-    color: var(--err);
   }
   .add-confirm {
     font-size: var(--text-sm);
     color: var(--accent);
-  }
-  /* The dropped-column note: a caveat beside a real confirmation, not a status of
-     its own — muted like the app's other secondary asides (e.g. CatalogNodeView's
-     `.column-years`), not a second tinted banner. */
-  .add-note {
-    color: var(--text-muted);
   }
 </style>

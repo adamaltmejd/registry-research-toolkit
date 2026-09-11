@@ -2903,6 +2903,16 @@ export interface components {
          *     `column` is None for a state SCB named no delivery column for — the variant
          *     still delivers the variable, so the row keeps it (unlike
          *     `register_column_coverage`, whose per-column keys can't express it).
+         *
+         *     `windows` carries the delivery's DISJOINT eras (Y-104), ordered by start and
+         *     fused where they meet, so an INTERRUPTED column — `Lan` on
+         *     civilståndsändringar, delivered 1968, then 1995–1996, then 1998– — reads as
+         *     interrupted and a consumer can match a period against the eras rather than
+         *     against the span. `coverage` stays the span over those windows (earliest
+         *     start, latest end): the two say different things about the same delivery and
+         *     both are carried, since a browse row shows the span and an add commits the
+         *     eras. Empty only where `coverage` is boundless too (an alias column on a
+         *     variant with no states of its own).
          */
         VariableDelivery: {
             /** Column */
@@ -2910,6 +2920,8 @@ export interface components {
             coverage: components["schemas"]["VariableCoverage"];
             /** Variant */
             variant: string;
+            /** Windows */
+            windows: components["schemas"]["VariableWindow"][];
         };
         /**
          * VariableEdition
@@ -3168,6 +3180,19 @@ export interface components {
             variant_family_label?: string | null;
             /** Variant Label */
             variant_label: string | null;
+        };
+        /**
+         * VariableWindow
+         * @description One inclusive ISO window a delivery was delivered over — the raw
+         *     `variable_state` / `variable_alias_window` bounds, sentinels included
+         *     (`0001-01-01` = start unknown, `9999-12-31` = still delivered), so a reader
+         *     sees the same bounds the binding leaf's states carry.
+         */
+        VariableWindow: {
+            /** Valid From */
+            valid_from: string;
+            /** Valid To */
+            valid_to: string;
         };
         /** VariantSummary */
         VariantSummary: {

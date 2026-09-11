@@ -716,9 +716,9 @@ async function catalogPeriodRequiredCase(page, counts, shoot) {
   );
   await settled(page);
   await shoot("catalog-no-period");
-  // Y-106: StagedAddStatus now splits the role by tone — an ordinary refusal
-  // (this one; the researcher's own next move retires it) announces the calmer
-  // `status`, and only a read FAILURE (nobody refused anything) gets `alert`.
+  // StagedAddStatus announces a refusal as `status`, not `alert`: every refusal a
+  // host can show is one the researcher's own next move retires (this one: choose a
+  // period), so it is a state to read, not an emergency to interrupt for.
   await page.getByRole("status").filter({ hasText: "Apply a period" }).waitFor();
   check(
     (await page.getByRole("status").filter({ hasText: "Applied" }).count()) === 0,

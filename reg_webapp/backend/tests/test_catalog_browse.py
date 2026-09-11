@@ -106,7 +106,10 @@ def test_register_children_carry_their_delivery_columns(client):
     """Y-82: each binding child names the `(variant, column)` pairs it is
     delivered under, with each pair's OWN window — the columns the register page
     shows beside the variable (and filters on) and the variants its chips narrow
-    by. `kon` is delivered as `Kon` by the single `individer-15plus` variant."""
+    by. `kon` is delivered as `Kon` by the single `individer-15plus` variant.
+
+    Y-104: and with that pair's DISJOINT `windows` beside the span, which is what
+    the register list shows and matches on."""
     body = client.get("/api/catalog/scb/lisa").json()
     by_fqid = {c["fqid"]: c for c in body["children"] if c["kind"] == "binding"}
     assert by_fqid["scb/lisa/kon"]["deliveries"] == [
@@ -119,6 +122,7 @@ def test_register_children_carry_their_delivery_columns(client):
                 "open_ended": True,
                 "state_count": 1,
             },
+            "windows": [{"valid_from": "2018-01-01", "valid_to": "9999-12-31"}],
         }
     ]
 

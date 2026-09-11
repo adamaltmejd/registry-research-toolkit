@@ -16,6 +16,7 @@ from typing import TYPE_CHECKING
 
 import pytest
 from reg_meta.catalog import Catalog, _coverage_bounds
+from reg_meta.fqid import period_token_to_bounds
 
 sys.path.insert(
     0, str(Path(__file__).resolve().parents[2] / "reg_meta_build" / "tests")
@@ -285,6 +286,55 @@ def test_register_variable_deliveries() -> None:
     assert by_column[None].coverage_to == "2015-12-31"
 
 
+def test_register_variable_deliveries_disjoint_windows() -> None:
+    """Y-104: a delivery carries the DISJOINT eras it was delivered over, so an
+    INTERRUPTED column reads as interrupted where the span cannot say so. `lan` is
+    delivered 1968, then 1995-1996, then 1998- (three windows, the last open); the
+    `Kommun` beside it is delivered by two states that MEET, so it is one window.
+    `coverage` is unaffected either way — it stays the span over the windows."""
+    conn = build_slugged_db()
+    add_variable(conn, register_id=1, var_id=900, name="Lan", slug="lan")
+    for valid_from, valid_to, column in [
+        ("1968-01-01", "1968-12-31", "Lan"),
+        ("1995-01-01", "1996-12-31", "Lan"),
+        ("1998-01-01", "9999-12-31", "Lan"),
+        # Two states that MEET at the year boundary: one delivery, one window.
+        ("2010-01-01", "2015-12-31", "Kommun"),
+        ("2016-01-01", "2020-12-31", "Kommun"),
+    ]:
+        add_state(
+            conn,
+            register_id=1,
+            variable_slug="lan",
+            register_variant_id=10,
+            valid_from=valid_from,
+            valid_to=valid_to,
+            delivery_column_name=column,
+        )
+
+    deliveries = Catalog(conn).register_variable_deliveries("scb", "lisa")
+
+    by_column = {d.column: d for d in deliveries["lan"]}
+    assert [(w.valid_from, w.valid_to) for w in by_column["Lan"].windows] == [
+        ("1968-01-01", "1968-12-31"),
+        ("1995-01-01", "1996-12-31"),
+        # Still delivered: the last window ends OPEN, at the sentinel the binding
+        # leaf's own states carry.
+        ("1998-01-01", "9999-12-31"),
+    ]
+    # The span is unchanged by the split — every consumer of `coverage` reads what
+    # it read before.
+    assert by_column["Lan"].coverage.coverage_from == "1968-01-01"
+    assert by_column["Lan"].coverage.coverage_to is None
+    assert by_column["Lan"].coverage.open_ended is True
+    assert by_column["Lan"].coverage.state_count == 3
+    # Contiguous states are ONE window, not one per state.
+    assert [(w.valid_from, w.valid_to) for w in by_column["Kommun"].windows] == [
+        ("2010-01-01", "2020-12-31")
+    ]
+    assert by_column["Kommun"].coverage.state_count == 2
+
+
 def _add_alias(
     conn: sqlite3.Connection,
     *,
@@ -333,7 +383,14 @@ def test_register_variable_deliveries_alias_backed_columns() -> None:
         conn,
         variable_slug="lonfink",
         column="LonFinkFeb",
-        windows=(("2018-02-01", "2018-02-28"), ("2019-02-01", "2019-02-28")),
+        # The bounds the #319 family merge really writes for a February month
+        # token: `period_token_to_bounds` synthesizes day 29 whatever the year,
+        # so a non-leap `2018-02-29` reaches the DB and any consumer doing real
+        # `date` arithmetic on it must snap first (`snap_to_real_month_end`).
+        windows=(
+            period_token_to_bounds("2018-02"),
+            period_token_to_bounds("2019-02"),
+        ),
     )
     _add_alias(conn, variable_slug="lonfink", column="LonFinkHist")
 
@@ -351,11 +408,21 @@ def test_register_variable_deliveries_alias_backed_columns() -> None:
     assert by_column["LonFink"].state_count == 1
     # The windowed alias is delivered over ITS windows, not the state's.
     assert by_column["LonFinkFeb"].coverage_from == "2018-02-01"
-    assert by_column["LonFinkFeb"].coverage_to == "2019-02-28"
+    assert by_column["LonFinkFeb"].coverage_to == "2019-02-29"
     assert by_column["LonFinkFeb"].open_ended is False
     assert by_column["LonFinkFeb"].state_count == 2
     # The unwindowed alias takes the owning state's window in that variant.
     assert by_column["LonFinkHist"] == by_column["LonFink"]
+    # Y-104: the month column's two Februaries are two windows, a year apart —
+    # the interruption the span (2018-02-01 - 2019-02-29) cannot express. That
+    # the fuse ANSWERS here is the regression: it does `date` arithmetic on the
+    # running end to find the day after it, and the synthesized 29th is not a
+    # real date.
+    windows = {d.column: d.windows for d in deliveries["lonfink"]}
+    assert [(w.valid_from, w.valid_to) for w in windows["LonFinkFeb"]] == [
+        ("2018-02-01", "2018-02-29"),
+        ("2019-02-01", "2019-02-29"),
+    ]
 
 
 def test_register_variable_deliveries_state_column_that_is_also_an_alias() -> None:

@@ -134,23 +134,31 @@ function providerNode(): CatalogNode {
   } as unknown as CatalogNode;
 }
 
-/** One `(variant, column)` delivery on a register child (Y-82). `to` null with
- * `open` true is a still-delivered window. */
+/** One `(variant, column)` delivery on a register child (Y-82), over one era per
+ * `[from, to]` pair — `to` null is a still-delivered window. Two or more eras is an
+ * INTERRUPTED column (Y-104): the wire carries each era in `windows`, and `coverage`
+ * is the span over them, which cannot express the gap. NO eras is the boundless
+ * delivery `VariableDelivery` documents — an alias spelling on a variant with no
+ * states of its own. */
 function delivery(
   variant: string,
   column: string,
-  from: string,
-  to: string | null,
+  ...eras: [string, string | null][]
 ) {
+  const last = eras.at(-1);
   return {
     variant,
     column,
     coverage: {
-      coverage_from: from,
-      coverage_to: to,
-      open_ended: to === null,
-      state_count: 1,
+      coverage_from: eras[0]?.[0] ?? null,
+      coverage_to: last?.[1] ?? null,
+      open_ended: last?.[1] === null,
+      state_count: eras.length,
     },
+    windows: eras.map(([from, to]) => ({
+      valid_from: from,
+      valid_to: to ?? "9999-12-31",
+    })),
   };
 }
 
@@ -165,14 +173,14 @@ function columnedRegisterNode(variants: 1 | 2): CatalogNode {
       kind: "binding",
       fqid: "scb/lisa/kon",
       name: "Kön",
-      deliveries: [delivery("individer-15plus", "Kon", "2018-01-01", null)],
+      deliveries: [delivery("individer-15plus", "Kon", ["2018-01-01", null])],
     },
     {
       kind: "binding",
       fqid: "scb/lisa/forvink-ers",
       name: "Förvärvsinkomst",
       deliveries: [
-        delivery("individer-15plus", "ForvErs", "1990-01-01", "2021-12-31"),
+        delivery("individer-15plus", "ForvErs", ["1990-01-01", "2021-12-31"]),
       ],
     },
     {
@@ -180,7 +188,7 @@ function columnedRegisterNode(variants: 1 | 2): CatalogNode {
       fqid: "scb/lisa/forversnetto",
       name: "Förvärvsinkomst netto",
       deliveries: [
-        delivery("individer-15plus", "ForvErsNetto", "2011-01-01", null),
+        delivery("individer-15plus", "ForvErsNetto", ["2011-01-01", null]),
       ],
     },
     {
@@ -188,8 +196,8 @@ function columnedRegisterNode(variants: 1 | 2): CatalogNode {
       fqid: "scb/lisa/disp",
       name: "Disponibel inkomst",
       deliveries: [
-        delivery("individer-15plus", "CDISP", "1968-01-01", "2019-12-31"),
-        delivery("individer-15plus", "CDISP5", "2020-01-01", null),
+        delivery("individer-15plus", "CDISP", ["1968-01-01", "2019-12-31"]),
+        delivery("individer-15plus", "CDISP5", ["2020-01-01", null]),
       ],
     },
   ];
@@ -198,7 +206,7 @@ function columnedRegisterNode(variants: 1 | 2): CatalogNode {
       kind: "binding",
       fqid: "scb/lisa/arbetsstalle",
       name: "Arbetsställe",
-      deliveries: [delivery("arbetsstallen", "ArbstNr", "2005-01-01", null)],
+      deliveries: [delivery("arbetsstallen", "ArbstNr", ["2005-01-01", null])],
     });
   }
   return {
@@ -234,8 +242,8 @@ function splitColumnRegisterNode(): CatalogNode {
         fqid: "scb/lisa/kon",
         name: "Kön",
         deliveries: [
-          delivery("individer-15plus", "Kon", "1990-01-01", null),
-          delivery("individer-16plus", "Kon", "1990-01-01", null),
+          delivery("individer-15plus", "Kon", ["1990-01-01", null]),
+          delivery("individer-16plus", "Kon", ["1990-01-01", null]),
         ],
       },
       {
@@ -243,8 +251,8 @@ function splitColumnRegisterNode(): CatalogNode {
         fqid: "scb/lisa/disp",
         name: "Disponibel inkomst",
         deliveries: [
-          delivery("individer-16plus", "CDISP", "1968-01-01", "2019-12-31"),
-          delivery("individer-15plus", "CDISP5", "2020-01-01", null),
+          delivery("individer-16plus", "CDISP", ["1968-01-01", "2019-12-31"]),
+          delivery("individer-15plus", "CDISP5", ["2020-01-01", null]),
         ],
       },
     ],
@@ -267,11 +275,73 @@ function crossedColumnRegisterNode(): CatalogNode {
         fqid: "scb/lisa/kon",
         name: "Kön",
         deliveries: [
-          delivery("individer-15plus", "Kon", "2010-01-01", null),
-          delivery("individer-16plus", "Kon", "2010-01-01", null),
-          delivery("individer-15plus", "Alder", "2000-01-01", "2015-12-31"),
-          delivery("individer-16plus", "Alder", "2000-01-01", "2015-12-31"),
+          delivery("individer-15plus", "Kon", ["2010-01-01", null]),
+          delivery("individer-16plus", "Kon", ["2010-01-01", null]),
+          delivery("individer-15plus", "Alder", ["2000-01-01", "2015-12-31"]),
+          delivery("individer-16plus", "Alder", ["2000-01-01", "2015-12-31"]),
         ],
+      },
+    ],
+  } as unknown as CatalogNode;
+}
+
+// The Y-104 shape: ONE column, delivered in DISJOINT eras. `Lan` on
+// civilståndsändringar was delivered in 1968, again in 1995–1996, and continuously
+// from 1998 — a history the MIN/MAX span "1968–" cannot tell from an unbroken one.
+// The wire carries the eras themselves now, so the list can show and match them.
+function interruptedColumnRegisterNode(): CatalogNode {
+  return {
+    kind: "register",
+    fqid: "scb/civilstandsandringar",
+    name: "Civilståndsändringar",
+    children: [
+      {
+        kind: "binding",
+        fqid: "scb/civilstandsandringar/lan",
+        name: "Län",
+        deliveries: [
+          delivery(
+            "individer",
+            "Lan",
+            ["1968-01-01", "1968-12-31"],
+            ["1995-01-01", "1996-12-31"],
+            ["1998-01-01", null],
+          ),
+        ],
+      },
+    ],
+  } as unknown as CatalogNode;
+}
+
+/** Two columns the years cannot fully date. `Fodelsear` was delivered from before
+ * the record starts until 1968 and again from 1995 (the `0001-01-01` start
+ * sentinel), and `LanAlias` is delivered in NO era at all — the boundless delivery
+ * `VariableDelivery` documents: an alias spelling on a variant with no states of
+ * its own, carrying an empty `windows` and a null coverage. */
+function undatedColumnRegisterNode(): CatalogNode {
+  return {
+    kind: "register",
+    fqid: "scb/civilstandsandringar",
+    name: "Civilståndsändringar",
+    children: [
+      {
+        kind: "binding",
+        fqid: "scb/civilstandsandringar/fodelsear",
+        name: "Födelseår",
+        deliveries: [
+          delivery(
+            "individer",
+            "Fodelsear",
+            ["0001-01-01", "1968-12-31"],
+            ["1995-01-01", null],
+          ),
+        ],
+      },
+      {
+        kind: "binding",
+        fqid: "scb/civilstandsandringar/lan",
+        name: "Län",
+        deliveries: [delivery("individer", "LanAlias")],
       },
     ],
   } as unknown as CatalogNode;
@@ -291,25 +361,29 @@ function splitVariantGroupRegisterNode(): CatalogNode {
         kind: "binding",
         fqid: "scb/lisa/kon",
         name: "Kön",
-        deliveries: [delivery("individer-15plus", "Kon", "2018-01-01", null)],
+        deliveries: [delivery("individer-15plus", "Kon", ["2018-01-01", null])],
       },
       {
         kind: "binding",
         fqid: "scb/lisa/disp",
         name: "Disponibel inkomst",
-        deliveries: [delivery("individer-15plus", "CDISP", "1968-01-01", null)],
+        deliveries: [
+          delivery("individer-15plus", "CDISP", ["1968-01-01", null]),
+        ],
       },
       {
         kind: "binding",
         fqid: "scb/lisa/arbetsstalle",
         name: "Arbetsställe",
-        deliveries: [delivery("arbetsstallen", "ArbstNr", "2005-01-01", null)],
+        deliveries: [
+          delivery("arbetsstallen", "ArbstNr", ["2005-01-01", null]),
+        ],
       },
       {
         kind: "binding",
         fqid: "scb/lisa/foretag",
         name: "Företag",
-        deliveries: [delivery("foretag", "ForetagNr", "2005-01-01", null)],
+        deliveries: [delivery("foretag", "ForetagNr", ["2005-01-01", null])],
       },
     ],
     groups: [
@@ -1253,9 +1327,8 @@ describe("CatalogNodeView register arm", () => {
 // tick, and one action adds every ticked column to the project through the same
 // staged add → resolve → commit stack the variable pages use.
 
-/** One state of a variable, as both GETs an Add makes return it: the `?period`
- * resolve (so the committed binding carries a real type) and the per-variable read
- * the exact delivery eras come off. */
+/** One state of a variable, as the `?period` resolve returns it, so the committed
+ * binding carries a real type. */
 function columnState(
   variant: string,
   column: string,
@@ -1280,55 +1353,13 @@ function columnState(
   };
 }
 
-/** A listed variable's own states, which an Add reads to stage the EXACT delivery
- * eras rather than the list's MIN/MAX aggregate: one state per listed delivery, so
- * a variable's history agrees with the aggregate by default. `eras` gives one
- * variable's column the interrupted history the aggregate cannot express. */
-type ColumnedChild = {
-  fqid: string;
-  deliveries: ReturnType<typeof delivery>[];
-};
-
-function columnedLeafNode(
-  child: ColumnedChild,
-  eras: Record<string, [string, string][]>,
-): CatalogNode {
-  const states: VariableStateModel[] = [];
-  for (const d of child.deliveries) {
-    const spans = eras[`${child.fqid}::${d.column}`] ?? [
-      [d.coverage.coverage_from, d.coverage.coverage_to ?? "9999-12-31"],
-    ];
-    for (const [from, to] of spans) {
-      states.push(
-        columnState(d.variant, d.column, { id: states.length + 1, from, to }),
-      );
-    }
-  }
-  return {
-    kind: "binding",
-    fqid: child.fqid,
-    states,
-  } as unknown as CatalogNode;
-}
-
-/** The browse GET returns the register node; each ticked variable's own GET returns
- * its states, and the staged adds' `?period` GETs resolve to one state each. `hold`
- * keeps the per-variable read pending until it settles, so a case can land something
- * (a New) while an Add's exact-era reads are still in flight. */
-function mockRegisterAndResolve(
-  node: CatalogNode,
-  eras: Record<string, [string, string][]> = {},
-  hold?: Promise<void>,
-): void {
-  const children = (node as unknown as { children: ColumnedChild[] }).children;
+/** The browse GET returns the register node, and the staged adds' `?period` GETs
+ * resolve one binding each — the ONLY reads an Add makes, now that the list's own
+ * `deliveries` carry the exact eras (Y-104). */
+function mockRegisterAndResolve(node: CatalogNode): void {
   vi.mocked(getCatalogNode).mockImplementation(async (fqid, params) => {
     if (!params?.period) {
-      const child = children.find((c) => c.fqid === fqid);
-      if (child === undefined) {
-        return node;
-      }
-      await hold;
-      return columnedLeafNode(child, eras);
+      return node;
     }
     const variant = typeof params.variant === "string" ? params.variant : "";
     return {
@@ -1337,9 +1368,24 @@ function mockRegisterAndResolve(
   });
 }
 
-async function renderRegister() {
+/** Hold the app-owned draft restore open, and return its release. This is the gate
+ * `applyStagedPicks` awaits between the press and the commit — and, since the list
+ * reads nothing of its own at Add time (Y-104), the place a case lands something
+ * (a New, a window drag, a navigation) while an Add is in flight. The same spy the
+ * leaf and the concept group hold their Adds at. */
+function holdRestore(): () => void {
+  const { promise, resolve } = Promise.withResolvers<void>();
+  const restoring = vi.spyOn(projectStore, "restored", "get");
+  restoring.mockReturnValue(promise);
+  return () => {
+    restoring.mockRestore();
+    resolve();
+  };
+}
+
+async function renderRegister(fqidPath = "scb/lisa") {
   return await render(CatalogNodeView, {
-    fqidPath: "scb/lisa",
+    fqidPath,
     regMetaVersion: "test",
     steward: "global",
     windowMinYear: 1960,
@@ -1436,8 +1482,8 @@ describe("CatalogNodeView register arm: add columns (Y-83)", () => {
       .element(page.getByText(/set the study window in the rail/))
       .toBeVisible();
     expect(projectStore.draft?.sources).toEqual([]);
-    // A refusal the researcher's own next move retires — warn, announced politely
-    // (StagedAddStatus, Y-106), never the error tint a read failure gets.
+    // A refusal the researcher's own next move retires, so it is announced
+    // politely through `StagedAddStatus`'s status row (Y-106), never an alert.
     const refusal = page.getByText(/Apply a period before adding/).element();
     expect(refusal.closest("[role]")?.getAttribute("role")).toBe("status");
   });
@@ -1662,30 +1708,71 @@ describe("CatalogNodeView register arm: add columns (Y-83)", () => {
     });
   });
 
-  it("commits an interrupted column as its real eras, not the list's aggregate span", async () => {
-    // The list reads `ForvErs` as 1990–2021, the MIN/MAX over its deliveries. The
-    // variable's own states say it was delivered 1990–1999 and again 2010–2021,
-    // with a decade in between that it was not.
-    mockRegisterAndResolve(columnedRegisterNode(1), {
-      "scb/lisa/forvink-ers::ForvErs": [
-        ["1990-01-01", "1999-12-31"],
-        ["2010-01-01", "2021-12-31"],
-      ],
-    });
+  it("shows an interrupted column's delivery years era by era (Y-104)", async () => {
+    mockRegisterAndResolve(interruptedColumnRegisterNode());
+    windowStore.set({ from: 1960, to: 2024 });
+
+    await renderRegister("scb/civilstandsandringar");
+    await expect.element(page.getByText("Län")).toBeVisible();
+
+    // The wire carries `Lan`'s three eras, so the list says what the variable's own
+    // page says: delivered, interrupted, delivered again. The span "1968–" the
+    // aggregate could express would claim 26 years it was never delivered in — and
+    // a lone column shows years here for exactly that reason (Y-82 shows none).
+    await expect
+      .element(
+        page.getByRole("checkbox", {
+          name: "Lan 1968, 1995–1996, 1998–",
+          exact: true,
+        }),
+      )
+      .toBeVisible();
+  });
+
+  it("commits an interrupted column as its real eras, never across the gap (Y-104)", async () => {
+    mockRegisterAndResolve(interruptedColumnRegisterNode());
     windowStore.set({ from: 1995, to: 2015 });
 
-    await renderRegister();
-    await expect.element(page.getByText("Kön")).toBeVisible();
-    await tickColumn("ForvErs");
+    await renderRegister("scb/civilstandsandringar");
+    await expect.element(page.getByText("Län")).toBeVisible();
+    await tickColumn("Lan 1968, 1995–1996, 1998–");
     await page.getByRole("button", { name: "Add 1 column to project" }).click();
 
     await expect.element(page.getByText("Applied +1 column")).toBeVisible();
-    // The gap years are carved out as the #307 list form — what the variable's own
-    // page commits, and NOT the single 1995–2015 span the aggregate would give.
+    // The 1997 gap is carved out as the #307 list form — what the variable's own
+    // page commits, and NOT the single 1995–2015 span the span would give.
     expect(projectStore.draft?.sources[0]?.period).toEqual([
-      { from: 1995, to: 1999 },
-      { from: 2010, to: 2015 },
+      { from: 1995, to: 1996 },
+      { from: 1998, to: 2015 },
     ]);
+    // …and the row reads as in the project off those same eras: the marker matches
+    // the committed source era by era, with no second read of the states.
+    await expect
+      .element(
+        page.getByRole("checkbox", {
+          name: "Lan 1968, 1995–1996, 1998– In project",
+          exact: true,
+        }),
+      )
+      .not.toBeChecked();
+  });
+
+  it("offers no tick for a column whose gap swallows the study window (Y-104)", async () => {
+    mockRegisterAndResolve(interruptedColumnRegisterNode());
+    // 1970–1990 falls between `Lan`'s 1968 era and its 1995 one. The span "1968–"
+    // covers it; the eras do not, and the eras are what the list matches on.
+    windowStore.set({ from: 1970, to: 1990 });
+
+    await renderRegister("scb/civilstandsandringar");
+    await expect.element(page.getByText("Län")).toBeVisible();
+
+    const lan = page.getByRole("checkbox", {
+      name: "Lan 1968, 1995–1996, 1998– Not delivered in 1970–1990",
+      exact: true,
+    });
+    await expect.element(lan).toBeDisabled();
+    await expect.element(lan).not.toBeChecked();
+    expect(projectStore.draft?.sources).toEqual([]);
   });
 
   it("commits a sequentially renamed column as the ONE row its variable's page commits", async () => {
@@ -1757,35 +1844,6 @@ describe("CatalogNodeView register arm: add columns (Y-83)", () => {
       .not.toBeChecked();
   });
 
-  it("refuses the whole batch when a ticked variable's states can't be read", async () => {
-    const node = columnedRegisterNode(1);
-    vi.mocked(getCatalogNode).mockImplementation(async (fqid) => {
-      if (fqid === "scb/lisa") {
-        return node;
-      }
-      throw new Error("offline");
-    });
-    windowStore.set({ from: 2018, to: 2023 });
-
-    await renderRegister();
-    await expect.element(page.getByText("Kön")).toBeVisible();
-    await tickColumn("Kon");
-    await page.getByRole("button", { name: "Add 1 column to project" }).click();
-
-    // Without the states the exact eras are unknown, and the list's aggregate may
-    // claim years the column was never delivered in — so nothing is authored.
-    await expect
-      .element(page.getByText(/Could not read the delivery years/))
-      .toBeVisible();
-    expect(projectStore.draft?.sources).toEqual([]);
-    // A read that failed, not a refusal: the error tint and `alert` (StagedAddStatus,
-    // Y-106) — nobody declined anything, the batch just couldn't be evaluated.
-    const failure = page
-      .getByText(/Could not read the delivery years/)
-      .element();
-    expect(failure.closest("[role]")?.getAttribute("role")).toBe("alert");
-  });
-
   it("refuses a column the study window has moved off, on its own row", async () => {
     mockRegisterAndResolve(columnedRegisterNode(1));
     // The list shows every column the register ever delivered. `ForvErs` ended in
@@ -1812,48 +1870,58 @@ describe("CatalogNodeView register arm: add columns (Y-83)", () => {
     expect(projectStore.draft?.sources).toEqual([]);
   });
 
-  it("counts only the columns that committed when the real eras miss the window", async () => {
-    // The list reads `ForvErs` as 1990–2021, so a 2000–2005 window passes the tick.
-    // Its real eras stop in 1999 and resume in 2010, and the window falls in the gap
-    // — where `CDISP` (1968–2019) really is delivered.
-    mockRegisterAndResolve(columnedRegisterNode(1), {
-      "scb/lisa/forvink-ers::ForvErs": [
-        ["1990-01-01", "1999-12-31"],
-        ["2010-01-01", "2021-12-31"],
-      ],
+  it("dates an era that began before the record does (Y-104)", async () => {
+    mockRegisterAndResolve(undatedColumnRegisterNode());
+    windowStore.set({ from: 1960, to: 2024 });
+
+    await renderRegister("scb/civilstandsandringar");
+    await expect.element(page.getByText("Födelseår")).toBeVisible();
+
+    // The first era's start is the `0001-01-01` sentinel — unknown, not absent.
+    // Dropped from a LIST it would read as a gap before 1995, beside a tick that
+    // commits those years all the same; the undated side takes the same bare dash
+    // the open-ended side does.
+    await expect
+      .element(
+        page.getByRole("checkbox", {
+          name: "Fodelsear –1968, 1995–",
+          exact: true,
+        }),
+      )
+      .toBeVisible();
+  });
+
+  it("offers no tick for a column delivered in no era at all (Y-104)", async () => {
+    mockRegisterAndResolve(undatedColumnRegisterNode());
+    // No study window, where every other column IS tickable: this one has no era
+    // to commit under any window, so the tick is refused on its own terms and the
+    // reason names no window — none would lift it. A checkbox that ticks and
+    // stages nothing would be a control that lies.
+
+    await renderRegister("scb/civilstandsandringar");
+    await expect.element(page.getByText("Län")).toBeVisible();
+
+    const alias = page.getByRole("checkbox", {
+      name: "LanAlias Not delivered",
+      exact: true,
     });
-    windowStore.set({ from: 2000, to: 2005 });
+    await expect.element(alias).toBeDisabled();
+    await expect.element(alias).not.toBeChecked();
+  });
+
+  it("marks only the rename's names the committed years reach (Y-104)", async () => {
+    mockRegisterAndResolve(columnedRegisterNode(1));
+    // 2015–2019 is inside `CDISP`'s era and wholly before `CDISP5`'s, so the ONE
+    // folded row they share commits years only `CDISP` was delivered in.
+    windowStore.set({ from: 2015, to: 2019 });
 
     await renderRegister();
     await expect.element(page.getByText("Kön")).toBeVisible();
-    await tickColumn("ForvErs");
     await tickColumn("CDISP 1968–2019");
-    await expect.element(page.getByText("2 columns selected")).toBeVisible();
-
-    await page
-      .getByRole("button", { name: "Add 2 columns to project" })
-      .click();
-
-    // The confirmation counts what was authored, not what was ticked: the aggregate
-    // the bar could see said two, the states said one — and names the column the
-    // real eras dropped, so the researcher sees what did not commit.
+    await page.getByRole("button", { name: "Add 1 column to project" }).click();
     await expect.element(page.getByText("Applied +1 column")).toBeVisible();
-    await expect
-      .element(page.getByText(/ForvErs not delivered in 2000–2005/))
-      .toBeVisible();
-    expect(projectStore.draft?.sources).toEqual([
-      expect.objectContaining({
-        register_variant: "scb/lisa/individer-15plus",
-        period: { from: 2000, to: 2005 },
-        bindings: [expect.objectContaining({ variable: "scb/lisa/disp" })],
-      }),
-    ]);
-    // The dropped column's OWN tick survives — never cleared by a batch it took
-    // no part in — so an Add under a window that covers it is one press.
-    await expect
-      .element(page.getByRole("checkbox", { name: "ForvErs", exact: true }))
-      .toBeChecked();
-    // The committed column's tick IS consumed, and now reads as in the project.
+
+    // The ticked name reads as in the project…
     await expect
       .element(
         page.getByRole("checkbox", {
@@ -1861,40 +1929,51 @@ describe("CatalogNodeView register arm: add columns (Y-83)", () => {
           exact: true,
         }),
       )
-      .not.toBeChecked();
+      .toBeVisible();
+    // …and its successor does NOT: the row is committed, but none of the years
+    // `CDISP5` was delivered in are. Marked, it would send a researcher away from
+    // a column they still have to add — beside a tick refusing it in the same
+    // breath.
+    await expect
+      .element(
+        page.getByRole("checkbox", {
+          name: "CDISP5 2020– Not delivered in 2015–2019",
+          exact: true,
+        }),
+      )
+      .toBeVisible();
   });
 
-  it("authors nothing when the real eras miss the window for every ticked column", async () => {
-    mockRegisterAndResolve(columnedRegisterNode(1), {
-      "scb/lisa/forvink-ers::ForvErs": [
-        ["1990-01-01", "1999-12-31"],
-        ["2010-01-01", "2021-12-31"],
-      ],
-    });
-    windowStore.set({ from: 2000, to: 2005 });
+  it("offers no tick for a RETIRED name its successor still delivers (Y-104)", async () => {
+    mockRegisterAndResolve(columnedRegisterNode(1));
+    // `disp` is delivered as CDISP through 2019 and as CDISP5 from 2020, and #902
+    // folds the two into ONE picker row spanning both — so the row reaches a
+    // 2022–2024 window and the retired NAME does not. The gate is the name's own
+    // eras, the same ones its label prints beside it: a tick offered off the folded
+    // row would invite a pick of a column the register stopped delivering three
+    // years before the window opens, under a label that says so.
+    windowStore.set({ from: 2022, to: 2024 });
 
     await renderRegister();
     await expect.element(page.getByText("Kön")).toBeVisible();
-    await tickColumn("ForvErs");
-    await page.getByRole("button", { name: "Add 1 column to project" }).click();
 
-    // Nothing left to commit once the aggregate gave way to the states, so the batch
-    // is refused whole rather than committing the span it was never delivered over.
+    const retired = page.getByRole("checkbox", {
+      name: "CDISP 1968–2019 Not delivered in 2022–2024",
+      exact: true,
+    });
+    await expect.element(retired).toBeDisabled();
+    // The name that IS delivered then stays tickable — one row, two names, one
+    // offered.
     await expect
-      .element(page.getByText(/No ticked column was delivered in 2000–2005/))
-      .toBeVisible();
-    expect(projectStore.draft?.sources).toEqual([]);
+      .element(
+        page.getByRole("checkbox", { name: "CDISP5 2020–", exact: true }),
+      )
+      .not.toBeDisabled();
   });
 
-  it("abandons a batch whose study window moves while the eras are read", async () => {
-    let releaseStates = (): void => {};
-    mockRegisterAndResolve(
-      columnedRegisterNode(1),
-      {},
-      new Promise<void>((resolve) => {
-        releaseStates = resolve;
-      }),
-    );
+  it("abandons a batch whose study window moves while the Add is queued", async () => {
+    mockRegisterAndResolve(columnedRegisterNode(1));
+    const release = holdRestore();
     windowStore.set({ from: 2018, to: 2023 });
 
     await renderRegister();
@@ -1906,10 +1985,10 @@ describe("CatalogNodeView register arm: add columns (Y-83)", () => {
       .toBeVisible();
 
     // The rail's window is not disabled by an Add, and it IS this page's period:
-    // moving it mid-read makes the pending batch a pick under years the researcher
+    // moving it mid-Add makes the pending batch a pick under years the researcher
     // has already left, so it is abandoned rather than committed as 2018–2023.
     windowStore.set({ from: 2019, to: 2023 });
-    releaseStates();
+    release();
 
     await expect
       .element(page.getByRole("button", { name: "Adding…" }))
@@ -1923,17 +2002,9 @@ describe("CatalogNodeView register arm: add columns (Y-83)", () => {
       .toBeChecked();
   });
 
-  it("abandons a batch whose project is replaced while the eras are read", async () => {
-    let releaseStates = (): void => {};
-    // The per-variable read an Add makes, held open so a New can land while the batch
-    // is still in flight.
-    mockRegisterAndResolve(
-      columnedRegisterNode(1),
-      {},
-      new Promise<void>((resolve) => {
-        releaseStates = resolve;
-      }),
-    );
+  it("abandons a batch whose project is replaced while the Add is queued", async () => {
+    mockRegisterAndResolve(columnedRegisterNode(1));
+    const release = holdRestore();
     windowStore.set({ from: 2018, to: 2023 });
 
     await renderRegister();
@@ -1950,7 +2021,7 @@ describe("CatalogNodeView register arm: add columns (Y-83)", () => {
       reg_meta_version: "reg_meta/v1.0.0",
       steward: "global",
     });
-    releaseStates();
+    release();
 
     await expect
       .element(page.getByRole("button", { name: "Adding…" }))
@@ -1964,17 +2035,9 @@ describe("CatalogNodeView register arm: add columns (Y-83)", () => {
       .toBeChecked();
   });
 
-  it("abandons a batch whose page changes while the eras are read (Y-106)", async () => {
-    let releaseStates = (): void => {};
-    // The per-variable read an Add makes, held open so a navigation can land while
-    // the batch is still in flight.
-    mockRegisterAndResolve(
-      columnedRegisterNode(1),
-      {},
-      new Promise<void>((resolve) => {
-        releaseStates = resolve;
-      }),
-    );
+  it("abandons a batch whose page changes while the Add is queued (Y-106)", async () => {
+    mockRegisterAndResolve(columnedRegisterNode(1));
+    const release = holdRestore();
     windowStore.set({ from: 2018, to: 2023 });
 
     const screen = await renderRegister();
@@ -1986,47 +2049,32 @@ describe("CatalogNodeView register arm: add columns (Y-83)", () => {
       .toBeVisible();
 
     // This component is REUSED register → register (the route-reset `$effect`),
-    // so `unmounted` alone would miss a page change mid-read: the batch must bind
-    // to the route too, or the read completing would report on the register the
-    // researcher has since opened.
+    // so `unmounted` alone would miss a page change mid-Add: the batch must bind to
+    // the route too, or the queued commit would land on the register the researcher
+    // has since opened.
     await screen.rerender({ fqidPath: "scb/rams" });
-    releaseStates();
+    release();
 
     await expect
       .element(page.getByRole("button", { name: "Adding…" }))
       .not.toBeInTheDocument();
     expect(projectStore.draft?.sources).toEqual([]);
     // Nothing is authored and nothing is reported — not a refusal either — on the
-    // page the researcher has since opened.
+    // page the researcher has since opened. `StagedAddStatus` says both through a
+    // `status` row, so its absence is the whole claim.
     await expect.element(page.getByText(/Applied/)).not.toBeInTheDocument();
-    await expect
-      .element(page.getByText(/Could not read the delivery years/))
-      .not.toBeInTheDocument();
+    expect(document.querySelector(".page-add")).toBeNull();
   });
 
   it("keeps keyboard focus on the Add button through an add (Y-106)", async () => {
-    let releaseStates = (): void => {};
-    // A mixed batch: `ForvErs` stays ticked after the Add (its real eras miss
-    // the window), so this exercises the IN-FLIGHT freeze on a batch that will
-    // still have staged columns once it settles.
-    mockRegisterAndResolve(
-      columnedRegisterNode(1),
-      {
-        "scb/lisa/forvink-ers::ForvErs": [
-          ["1990-01-01", "1999-12-31"],
-          ["2010-01-01", "2021-12-31"],
-        ],
-      },
-      new Promise<void>((resolve) => {
-        releaseStates = resolve;
-      }),
-    );
-    windowStore.set({ from: 2000, to: 2005 });
+    mockRegisterAndResolve(columnedRegisterNode(1));
+    const release = holdRestore();
+    windowStore.set({ from: 2018, to: 2023 });
 
     await renderRegister();
     await expect.element(page.getByText("Kön")).toBeVisible();
+    await tickColumn("Kon");
     await tickColumn("ForvErs");
-    await tickColumn("CDISP 1968–2019");
 
     const addButton = page.getByRole("button", {
       name: "Add 2 columns to project",
@@ -2042,8 +2090,8 @@ describe("CatalogNodeView register arm: add columns (Y-83)", () => {
     // instead of dropping to <body> — a natively `disabled` button's fate.
     expect(document.activeElement).toBe(addButtonEl);
 
-    releaseStates();
-    await expect.element(page.getByText("Applied +1 column")).toBeVisible();
+    release();
+    await expect.element(page.getByText("Applied +2 columns")).toBeVisible();
     expect(document.activeElement).toBe(addButtonEl);
   });
 
