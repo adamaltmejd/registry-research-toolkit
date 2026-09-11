@@ -1534,8 +1534,7 @@ Since #271 the per-group envelope (`from_iso` = min claim lo, `to_iso` = max cla
 derives from the claim records rather than parallel accumulator fields. The materializer
 applies the envelope **only at a state's lifetime start/end** — `from_iso` for the first
 emitted run when it begins at `regver_min`, `to_iso` for the last when it ends at
-`regver_max`. Interior timeline
-handoffs between competing value sets stay year-aligned.
+`regver_max`. Interior timeline handoffs between competing value sets stay year-aligned.
 
 Each individual CLAIM window is still nested in its own year **by construction**:
 `edition_bounds` is passed one edition year and narrows only markers whose own year
@@ -1590,13 +1589,13 @@ call `build_horizon`, so the two sides read a version name identically.
 
 Only the academic-term, quarter (`kvartal`/`kv`, incl. ranges), and half-year
 (`Första/Andra halvåret`) forms are narrowed; bare years, dated annuals, prelim/final,
-month names, seasons (`Hösten`/`Våren`/`Sommar`) and `Sommarterminen` all stay
-full-year there, since their sub-year span is ambiguous and narrowing would risk
-dropping coverage. (`läsår` carries no marker for its own year either — its HT/VT split
-only exists once the name's full span is read, which is `edition_claims`' job above.)
+month names, seasons (`Hösten`/`Våren`/`Sommar`) and `Sommarterminen` all stay full-year
+there, since their sub-year span is ambiguous and narrowing would risk dropping
+coverage. (`läsår` carries no marker for its own year either — its HT/VT split only
+exists once the name's full span is read, which is `edition_claims`' job above.)
 Token→ISO expansion is reg_meta's `period_token_to_bounds`, so a `HT2024` query and the
-emitted state bound agree byte-for-byte. Because the emitted `valid_from`
-only ever becomes MORE specific (year → term), it can only split a previously-colliding
+emitted state bound agree byte-for-byte. Because the emitted `valid_from` only ever
+becomes MORE specific (year → term), it can only split a previously-colliding
 uniqueness-index key, never merge two distinct ones, so the year-keyed residual-collapse
 scope and the fast path's never-collides assumption are unaffected.
 
@@ -1636,9 +1635,9 @@ in that year (`edition_claims`, a full-year edition contributing
 `YYYY-01-01..YYYY-12-31`), with the year's max `_edition_authority` and max approval
 date. A version naming several years contributes a claim to EACH of them (Y-113). This
 single structure replaces `regyears`, `year_authority`, `year_approval` AND the #270
-envelope (`from_iso`/`to_iso`): the envelope was the min/max hull of exactly
-these windows, so the boundary clamp becomes a *corollary* (below) rather than a bolted-
-on field pair. Claims are **year-nested by construction** — `edition_claims` emits one
+envelope (`from_iso`/`to_iso`): the envelope was the min/max hull of exactly these
+windows, so the boundary clamp becomes a *corollary* (below) rather than a bolted-on
+field pair. Claims are **year-nested by construction** — `edition_claims` emits one
 window per year and ties each to that year — so segments never cross a year boundary,
 the sweep decomposes per year, and cross-year logic stays at year grain. Cross-year
 edition forms (läsår ranges) did NOT need year-nesting lifted: Y-113 reads them as one
@@ -1696,8 +1695,8 @@ the sub-annual envelope edge: a group whose earliest edition is HT starts its fi
 at `YYYY-07-01`, one ending on VT ends at `YYYY-06-30`, interior year-grain handoffs
 stay year-aligned, and the season/month forms still expand full-year (the narrowing
 subset of `edition_bounds` is unchanged; school-year/läsår names are read by
-`edition_claims` instead, see Multi-year version names). The clamp's "only ever
-narrows, never crosses a year" property is inherited from claim year-nesting; the
+`edition_claims` instead, see Multi-year version names). The clamp's "only ever narrows,
+never crosses a year" property is inherited from claim year-nesting; the
 `coalesce_inverted_state_window` fail-fast stays as the backstop.
 
 #### Cadence policy: the compaction window is per-variant
@@ -1998,9 +1997,8 @@ Every implementation PR gates on:
 5. **Synthetic suite** — full structural validator (`validate_built_db(corpus=False)`);
    new fixtures: same-year disjoint substantive editions (both kept), same-year cosmetic
    pair (one winner, unchanged), overlapping sub-annual windows (mid-year handoff),
-   VT/HT open-top selection, season/month editions (still full-year),
-   school-year editions (HT→VT spans, Y-113),
-   quarter claims.
+   VT/HT open-top selection, season/month editions (still full-year), school-year
+   editions (HT→VT spans, Y-113), quarter claims.
 
 ## Co-delivery resolution curation (`codelivery.toml`)
 
