@@ -1828,10 +1828,7 @@ describe("CatalogNodeView register arm: add columns (Y-83)", () => {
     // which a screen-reader user never hears.
     const moreBadge = container.querySelector<HTMLElement>(".era-more");
     expect(moreBadge?.textContent).toBe("+2");
-    expect(moreBadge).toHaveAttribute(
-      "title",
-      "1968, 1972, 1995–1996, 1998–",
-    );
+    expect(moreBadge).toHaveAttribute("title", "1968, 1972, 1995–1996, 1998–");
     expect(moreBadge).toHaveAttribute(
       "aria-label",
       "+2 more eras: 1972, 1995–1996",
