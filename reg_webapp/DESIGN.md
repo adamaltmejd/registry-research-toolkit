@@ -1420,9 +1420,9 @@ Load-bearing decisions downstream children (#806–#809) must not re-litigate:
   `glyph` snippet (the accent-vs-status rule: hue alone is never sufficient); the glyph
   is `aria-hidden`, so status meaning must also appear in the label text.
 - **`Tag` is copy-faced.** (Y-105, superseding Y-83's "declares no font-family") The
-  base `.tag` rule sets `font-family: var(--font-ui)` — a tag label is a word of UI
-  text — and the `mono` prop opts a tag into the mono face for the exception, an
-  identifier shown as a tag.
+  base `.tag` rule sets `font-family: var(--font-ui)` — a tag label is a word of UI text
+  — and the `mono` prop opts a tag into the mono face for the exception, an identifier
+  shown as a tag.
 - **Focus-ring convention.** Every interactive primitive applies
   `:focus-visible { box-shadow: var(--focus-ring) }` in its own scoped CSS — no global
   stylesheet owns this.
