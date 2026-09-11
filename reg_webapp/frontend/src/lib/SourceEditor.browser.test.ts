@@ -196,12 +196,14 @@ describe("SourceEditor cart card", () => {
     // One provider in this deployment: the register name is unambiguous, so the
     // card does not spend a row on the word every card would carry.
     expect(page.getByText("Provider", { exact: true }).query()).toBeNull();
-    // The delete button says the same thing as a sentence, with the coordinate
-    // along to tell two cards on one register apart.
+    // The delete button says the same thing as a sentence, led by the source's own
+    // NAME (Y-98) — the one thing that still differs between two sources an
+    // imported spec puts on the same register_variant — with the heading and
+    // variant alongside for a reader who does not recognise it on its own.
     await expect
       .element(
         page.getByRole("button", {
-          name: "Remove source LISA, Individer, 16 år och äldre (scb/lisa/individer-16plus)",
+          name: "Remove source LISA_2 (LISA, Individer, 16 år och äldre)",
           exact: true,
         }),
       )
@@ -300,7 +302,7 @@ describe("SourceEditor cart card", () => {
     await expect
       .element(
         page.getByRole("button", {
-          name: "Remove source MiDAS (fk/midas/_default)",
+          name: "Remove source MIDAS (MiDAS)",
           exact: true,
         }),
       )
@@ -370,7 +372,8 @@ describe("SourceEditor cart card", () => {
     ).toHaveLength(1);
     expect(page.getByText("Register variant").query()).toBeNull();
     // A coordinate standing in for a name is still a machine identifier: mono, like
-    // every other FQID the app shows, and said ONCE in the button's name too.
+    // every other FQID the app shows, and said ONCE in the button's name too — the
+    // source's own name still leads it.
     const heading = document.querySelector<HTMLElement>(".source-head h3");
     expect(getComputedStyle(heading as HTMLElement).fontFamily).toContain(
       "mono",
@@ -378,7 +381,7 @@ describe("SourceEditor cart card", () => {
     await expect
       .element(
         page.getByRole("button", {
-          name: "Remove source scb/lisa/individer-15plus",
+          name: "Remove source LISA (scb/lisa/individer-15plus)",
           exact: true,
         }),
       )
@@ -421,7 +424,8 @@ describe("SourceEditor cart card", () => {
 
     // A missing period is not another grammar — it is what this source lacks, so the
     // same two fields author it, empty. Apply stays live — a dead button explains
-    // nothing — and does nothing at all until the fields name a range.
+    // nothing — and writes nothing until the fields name a range, saying so (a4)
+    // rather than leaving a blank press looking like it did something.
     await expect
       .element(page.getByRole("textbox", { name: "From" }))
       .toHaveValue("");
@@ -435,6 +439,7 @@ describe("SourceEditor cart card", () => {
     expect(page.getByText(/must be a four-digit year/).elements()).toHaveLength(
       0,
     );
+    await expect.element(page.getByText("Period unchanged.")).toBeVisible();
   });
 
   // Y-75: a whole source is the register plus every column taken from it, and
@@ -469,7 +474,7 @@ describe("SourceEditor cart card", () => {
     await expect
       .element(dialog)
       .toMatchTextContent(
-        /Remove the LISA source \(Individer 15\+\) and its 2 columns\?/,
+        /Remove the source LISA \(LISA, Individer 15\+\) and its 2 columns\?/,
       );
     // Nothing has gone yet — the question is the whole effect of the first click.
     expect(projectStore.draft?.sources).toHaveLength(2);
@@ -829,7 +834,7 @@ describe("SourceEditor source period (Y-81)", () => {
   // the card waits on the same gate the catalog's Add waits on: the store checks
   // an edit against the draft it FINDS, and a write issued while the restore is in
   // flight is checked against a draft the lifecycle has not finished loading.
-  it("holds the write until the app-owned draft restore has settled", async () => {
+  it("holds the write until the app-owned draft restore has settled, freezing the fields meanwhile", async () => {
     const source = seedSource(2020);
     const { promise: gate, resolve: release } = Promise.withResolvers<void>();
     const restoring = vi.spyOn(projectStore, "restored", "get");
@@ -837,18 +842,25 @@ describe("SourceEditor source period (Y-81)", () => {
     try {
       await renderCard(source);
 
-      await page.getByRole("textbox", { name: "From" }).fill("1990");
-      await page.getByRole("button", { name: /Apply period/ }).click();
+      const from = page.getByRole("textbox", { name: "From" });
+      const apply = page.getByRole("button", { name: /Apply period/ });
+      await from.fill("1990");
+      await apply.click();
 
-      // Still restoring: nothing written, and nothing announced either. A fixed
-      // wait, not `vi.waitFor`: the assertion is that NOTHING happens, and a poll
-      // would pass on its first tick, before the continuation it is meant to catch
-      // has run.
-      await new Promise((r) => setTimeout(r, 100));
+      // Still restoring: the wait says so (a4) rather than nothing at all, and the
+      // fields freeze on what THIS press captured (a1/a3) — the value it typed
+      // before the press is what the eventual write uses, not a `2020` a second
+      // press could otherwise queue behind it.
+      await expect
+        .element(page.getByText("Waiting for the project to load…"))
+        .toBeVisible();
+      await expect.element(from).toHaveAttribute("readonly");
+      await expect.element(apply).toHaveAttribute("aria-disabled", "true");
       expect(projectStore.draft?.sources?.[0]?.period).toBe(2020);
       expect(page.getByText(/Period set to/).query()).toBeNull();
 
-      // …and once the gate opens it lands, checked against the settled draft.
+      // …and once the gate opens it lands, checked against the settled draft, with
+      // the fields live again.
       release();
       await expect
         .element(page.getByText("Period set to 1990–2020."))
@@ -857,9 +869,143 @@ describe("SourceEditor source period (Y-81)", () => {
         from: 1990,
         to: 2020,
       });
+      await expect.element(from).not.toHaveAttribute("readonly");
+      await expect.element(apply).toHaveAttribute("aria-disabled", "false");
     } finally {
       restoring.mockRestore();
     }
+  });
+
+  // a1/a3: the fields staying editable through the wait let a second Apply queue
+  // behind the first on the SAME gate — and once the first's write landed, the
+  // second would find the draft it captured already moved, raising a staleness
+  // refusal for a write that did succeed. Freezing the controls for the whole span
+  // makes a second press a no-op instead.
+  it("ignores a second Apply held on the same restore gate, so a landed write is never re-checked as stale", async () => {
+    const source = seedSource(2020);
+    const { promise: gate, resolve: release } = Promise.withResolvers<void>();
+    const restoring = vi.spyOn(projectStore, "restored", "get");
+    restoring.mockReturnValue(gate);
+    try {
+      await renderCard(source);
+
+      await page.getByRole("textbox", { name: "From" }).fill("1990");
+      const apply = page.getByRole("button", { name: /Apply period/ });
+      await apply.click();
+      await expect
+        .element(page.getByText("Waiting for the project to load…"))
+        .toBeVisible();
+      // A second press while the first still holds the gate: nothing new to
+      // contribute, and it must not queue a write of its own. `force` bypasses
+      // Playwright's own actionability wait (which already refuses to click an
+      // `aria-disabled` element) — the guard under test is `applyPeriod`'s own,
+      // for whatever got a click event through regardless.
+      await apply.click({ force: true });
+
+      release();
+      await expect
+        .element(page.getByText("Period set to 1990–2020."))
+        .toBeVisible();
+      expect(projectStore.draft?.sources?.[0]?.period).toEqual({
+        from: 1990,
+        to: 2020,
+      });
+      // A second queued write would have found the draft already moved by the
+      // first and raised the staleness alert instead.
+      expect(page.getByRole("alert").query()).toBeNull();
+    } finally {
+      restoring.mockRestore();
+    }
+  });
+
+  // a4: an Apply pressed with nothing to change used to return silently, leaving
+  // the researcher to guess whether it did anything.
+  it("announces when an Apply has nothing to change", async () => {
+    const source = seedSource(2020);
+    await renderCard(source);
+
+    // Pressed with the fields still showing exactly the stored period.
+    await page.getByRole("button", { name: /Apply period/ }).click();
+    await expect.element(page.getByText("Period unchanged.")).toBeVisible();
+    expect(projectStore.draft?.sources?.[0]?.period).toBe(2020);
+
+    // Typed back to the same value and applied again: still nothing to write.
+    await page.getByRole("textbox", { name: "From" }).fill("2020");
+    await page.getByRole("button", { name: /Apply period/ }).click();
+    await expect.element(page.getByText("Period unchanged.")).toBeVisible();
+    expect(projectStore.draft?.sources?.[0]?.period).toBe(2020);
+  });
+
+  it("retires a stale confirmation once a later Apply finds nothing to change", async () => {
+    // A real write, then an untouched second press: the line must switch to the
+    // unchanged notice rather than leaving the earlier "Period set to" standing —
+    // it is no longer what this press did.
+    const source = seedSource(2020);
+    await renderCard(source);
+
+    await page.getByRole("textbox", { name: "From" }).fill("1990");
+    await page.getByRole("button", { name: /Apply period/ }).click();
+    await expect
+      .element(page.getByText("Period set to 1990–2020."))
+      .toBeVisible();
+
+    await page.getByRole("button", { name: /Apply period/ }).click();
+    await expect.element(page.getByText("Period unchanged.")).toBeVisible();
+    expect(page.getByText(/Period set to/).query()).toBeNull();
+  });
+
+  // a2: two sources an imported spec put on the SAME register_variant share a
+  // heading and a variant — the one thing still unique between them is the
+  // source's own generated name, so it has to lead every per-source control's
+  // accessible name or a screen-reader controls list can't tell them apart.
+  it("names two sources on the SAME register variant by their own source name", async () => {
+    const lisaCore = {
+      name: "lisa-core",
+      register_variant: "scb/lisa/v1",
+      period: 2020,
+      bindings: [],
+    } as unknown as Source;
+    const lisaLonfink = {
+      name: "lisa-lonfink",
+      register_variant: "scb/lisa/v1",
+      period: 2018,
+      bindings: [],
+    } as unknown as Source;
+    await renderCard(lisaCore, { sourceIndex: 0 });
+    await renderCard(lisaLonfink, { sourceIndex: 1 });
+
+    await expect
+      .element(
+        page.getByRole("button", {
+          name: "Apply period for lisa-core (LISA, Individer 15+)",
+          exact: true,
+        }),
+      )
+      .toBeVisible();
+    await expect
+      .element(
+        page.getByRole("button", {
+          name: "Apply period for lisa-lonfink (LISA, Individer 15+)",
+          exact: true,
+        }),
+      )
+      .toBeVisible();
+    await expect
+      .element(
+        page.getByRole("group", {
+          name: "Period for lisa-core (LISA, Individer 15+)",
+          exact: true,
+        }),
+      )
+      .toBeVisible();
+    await expect
+      .element(
+        page.getByRole("group", {
+          name: "Period for lisa-lonfink (LISA, Individer 15+)",
+          exact: true,
+        }),
+      )
+      .toBeVisible();
   });
 
   it("drops a held write whose card left the page meanwhile", async () => {

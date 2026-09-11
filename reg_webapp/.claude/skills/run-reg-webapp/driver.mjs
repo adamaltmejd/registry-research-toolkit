@@ -505,6 +505,15 @@ async function orderRetryCase(page, counts, shoot, project, expected) {
     "the synthetic project must validate clean before the order is attempted",
   );
 
+  // Y-98: an Apply with nothing to change says so rather than doing nothing
+  // silently. Captured here because this scenario already opens `lisa-2018`, the
+  // one project-flows fixture with a SourceEditor card in frame — the notice
+  // outlives the rest of this scenario, so it is still on screen for the shots
+  // below.
+  const card = page.getByRole("region", { name: "Source 1" });
+  await card.getByRole("button", { name: /^Apply period/ }).click();
+  await card.getByText("Period unchanged.").waitFor();
+
   const restoreOrder = await failInTransport(page, ORDER_PATH, counts);
   await ui.download.click();
   await ui.banner.waitFor();

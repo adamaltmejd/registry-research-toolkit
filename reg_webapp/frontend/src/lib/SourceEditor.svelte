@@ -116,6 +116,13 @@ const variantSlug = $derived(fqidSegments(registerVariant)[2] ?? "");
 const bindings = $derived(safeSourceBindings(source));
 const bindingsMalformed = $derived(sourceBindingsMalformed(source));
 
+// The panel/order join key (reg_meta `OrderEntry.source`) — the one thing that
+// still differs between two sources an imported spec put on the SAME
+// register_variant (an import routinely does; the catalog's own add path can't
+// author it, since it finds-or-creates by variant). Shared by the detail row below
+// and every per-source control's accessible name.
+const sourceName = $derived(safeSourceName(source) || "(unnamed source)");
+
 // The stored period as its WIRE string (list-period aware — `periodToWire` already
 // joins list segments); null when the source carries none or an unshapeable one.
 const periodWire = $derived(periodToWire(safeSourcePeriod(source) as Period));
@@ -137,7 +144,7 @@ const metaRows = $derived([
     : [{ label: "Register variant", value: registerVariant, mono: true }]),
   {
     label: "Source name",
-    value: safeSourceName(source) || "(unnamed source)",
+    value: sourceName,
     mono: true,
   },
 ] satisfies KeyValueRow[]);
@@ -174,6 +181,18 @@ let writeRefused = $state(false);
  * and where the new period neither crosses the study window nor changes a finding,
  * there is nothing else on the card that moves. */
 let appliedYears = $state<StudyWindow | null>(null);
+/** The last Apply had nothing to write — the entry named exactly the stored period,
+ * or nothing was ever typed. A different thing from `entryRefusal`: the years ARE
+ * usable, there is just no change to make. */
+let unchangedNotice = $state(false);
+/** An Apply is in flight — from the press that found something to write until the
+ * store's write returns. The whole span is the restore-gate wait below (the write
+ * itself is synchronous), so this doubles as "waiting for the draft to settle". The
+ * two year fields and the Apply button freeze for it: a second press while one is
+ * held on the gate must not queue a write of its own — the first press's write may
+ * already have moved the draft by the time a queued second one runs, raising a
+ * staleness refusal for a write that did land (a1/a3). */
+let applying = $state(false);
 /** The source as it stood when this edit began — the value the researcher was
  * looking at, which the store re-checks the write against. Plain, not `$state`:
  * nothing renders from it. */
@@ -288,6 +307,7 @@ function editYear(side: "from" | "to", value: string): void {
     };
     writeRefused = false;
     appliedYears = null;
+    unchangedNotice = false;
   }
   // The buffer starts as what the fields were SHOWING — the stored period on the
   // first keystroke, the previous entry after that. `fromText`/`toText` already say
@@ -302,6 +322,11 @@ function editYear(side: "from" | "to", value: string): void {
  * point, since the source moved and the next Apply has to be made against a value
  * the researcher can see, so the alert says the years were reset. */
 async function applyPeriod(): Promise<void> {
+  if (applying) {
+    // Held on the SAME gate as an earlier press: the fields are already frozen on
+    // what that press captured, so this one has nothing new to contribute.
+    return;
+  }
   // Committing FIRST is what makes a refused Apply say why: years that name no
   // window leave `proposedWire` null, so the write below is skipped and the
   // refusal line renders instead.
@@ -309,27 +334,44 @@ async function applyPeriod(): Promise<void> {
   const target = editedFrom;
   const wire = proposedWire;
   if (target === null || wire === null) {
+    // Nothing to write: either `entryProblem` already explains why (rendered via
+    // `entryRefusal` below), or the entry names exactly the stored period (typed
+    // back to it, or never touched at all) — say so rather than leaving Apply
+    // looking like it silently did nothing. Retiring the other two verdicts here
+    // too: this press is what the status line now reports, not whatever an
+    // earlier one left behind.
+    unchangedNotice = entryProblem === null;
+    writeRefused = false;
+    appliedYears = null;
     return;
   }
-  const written = yearWindowFromWire(wire);
-  // The draft lifecycle is application-owned and its restore is ASYNCHRONOUS, so
-  // this waits for it exactly as the catalog's Add path does: the store re-checks
-  // the edit against the draft it finds, and that check is only worth anything
-  // once the draft it reads is the SETTLED one. The wait is unbounded, so a card
-  // gone by the time it returns — the researcher left /project — abandons the
-  // write rather than landing it on a page nobody is looking at.
-  await projectStore.restored;
-  if (unmounted) {
-    return;
+  unchangedNotice = false;
+  applying = true;
+  try {
+    const written = yearWindowFromWire(wire);
+    // The draft lifecycle is application-owned and its restore is ASYNCHRONOUS, so
+    // this waits for it exactly as the catalog's Add path does: the store re-checks
+    // the edit against the draft it finds, and that check is only worth anything
+    // once the draft it reads is the SETTLED one. The wait is unbounded, so a card
+    // gone by the time it returns — the researcher left /project — abandons the
+    // write rather than landing it on a page nobody is looking at. `applying` keeps
+    // the fields read-only for the whole span, so nothing typed here can revise
+    // `wire`, and a second press can't queue behind this one.
+    await projectStore.restored;
+    if (unmounted) {
+      return;
+    }
+    writeRefused = !projectStore.applySourcePeriodEdit({
+      ...target,
+      period: periodFromWire(wire),
+    });
+    appliedYears = writeRefused ? null : written;
+    entry = null;
+    entryCommitted = false;
+    editedFrom = null;
+  } finally {
+    applying = false;
   }
-  writeRefused = !projectStore.applySourcePeriodEdit({
-    ...target,
-    period: periodFromWire(wire),
-  });
-  appliedYears = writeRefused ? null : written;
-  entry = null;
-  entryCommitted = false;
-  editedFrom = null;
 }
 
 // The removal question and the delete button's accessible name are SENTENCES, and
@@ -342,33 +384,32 @@ const identified = $derived(!sourceMalformed && registerVariant !== "");
 const columnCount = $derived(
   `${bindings.length} column${bindings.length === 1 ? "" : "s"}`,
 );
+// How a per-source control NAMES this source: the generated join key
+// (`sourceName`) first, since it is the one thing still unique between two sources
+// an imported spec put on the SAME register_variant — the heading and variant a
+// control used to lean on alone are then identical between them (a2). The
+// heading (+ variant, when named) still rides along for a reader who does not
+// recognise the generated name on its own. Spelled ONCE, because every per-source
+// control interpolates it and two spellings would let one card be named two ways.
+const identifiedName = $derived(
+  `${sourceName} (${heading}${variantName ? `, ${variantName}` : ""})`,
+);
 const removeQuestion = $derived(
   identified
-    ? `Remove the ${heading} source${variantName ? ` (${variantName})` : ""} and its ${columnCount}?`
+    ? `Remove the source ${identifiedName} and its ${columnCount}?`
     : `Remove this source and its ${columnCount}?`,
 );
-// How the card NAMES this source inside a per-source button label. Two sources on
-// the SAME register share a heading, and two in one succession family differ by a
-// few words of frame — so the concrete coordinate rides along, the one thing that
-// (short of two sources on one variant) differs. Not where the heading already IS
-// that coordinate. Spelled ONCE, because both per-source buttons interpolate it and
-// two spellings would let one card be named two ways.
-const cardName = $derived(
-  `${heading}${variantName ? `, ${variantName}` : ""}${
-    titleIsCoordinate ? "" : ` (${registerVariant})`
-  }`,
-);
 const removeLabel = $derived(
-  identified ? `Remove source ${cardName}` : undefined,
+  identified ? `Remove source ${identifiedName}` : undefined,
 );
 const applyPeriodLabel = $derived(
-  identified ? `Apply period for ${cardName}` : undefined,
+  identified ? `Apply period for ${identifiedName}` : undefined,
 );
 /** The year pair's accessible name. Every card contributes a field labelled "From"
  * and one labelled "To"; naming the GROUP per source tells them apart in a flat
  * form-field list without touching the visible labels the fields are named by. */
 const periodGroupLabel = $derived(
-  identified ? `Period for ${cardName}` : "Period",
+  identified ? `Period for ${identifiedName}` : "Period",
 );
 
 // Removing a source takes its whole column list with it, and nothing in the cart
@@ -490,6 +531,7 @@ function confirmRemove(): void {
               autocomplete="off"
               value={fromText}
               placeholder="yyyy"
+              readonly={applying}
               aria-invalid={entryRefusal?.at.from === true}
               aria-describedby={problemId}
               oninput={(event) => editYear("from", event.currentTarget.value)}
@@ -506,6 +548,7 @@ function confirmRemove(): void {
               autocomplete="off"
               value={toText}
               placeholder="yyyy"
+              readonly={applying}
               aria-invalid={entryRefusal?.at.to === true}
               aria-describedby={problemId}
               oninput={(event) => editYear("to", event.currentTarget.value)}
@@ -518,12 +561,21 @@ function confirmRemove(): void {
                Apply from the next's — the same disambiguation the Remove button
                takes, and by the same words.
 
-               NEVER disabled, as the catalog's own period card commits its years:
-               clicking a refused entry explains the refusal instead of leaving a dead
-               button and no reason, and an Apply that disables itself the moment it
-               succeeds blurs the keyboard that pressed it back to the top of the
-               page. An Apply with nothing to do is a no-op. -->
-          <Button type="submit" size="sm" aria-label={applyPeriodLabel}>
+               NEVER truly disabled, as the catalog's own period card commits its
+               years: clicking a refused entry explains the refusal instead of
+               leaving a dead button and no reason, and a button that disables
+               itself blurs the keyboard that pressed it back to the top of the
+               page. `aria-disabled` (paired with the year fields' `readonly`)
+               freezes the control for an Apply already in flight — announced and
+               styled as unavailable, but never pulled out of the tab order — and a
+               press while it holds is a no-op (`applyPeriod`'s own guard). An Apply
+               with nothing to do says so instead of doing nothing silently. -->
+          <Button
+            type="submit"
+            size="sm"
+            aria-label={applyPeriodLabel}
+            aria-disabled={applying}
+          >
             Apply period
           </Button>
         </form>
@@ -543,20 +595,31 @@ function confirmRemove(): void {
       <!-- Rendered ALWAYS, so a refusal lands in a live region that already existed
            rather than one that appears with it (matching the catalog period card's
            own refusal line). It carries the CONFIRMATION too: a write and the
-           refusal it fixes are the same line changing, not a second one appearing. -->
+           refusal it fixes are the same line changing, not a second one appearing.
+           An Apply in flight wins over whatever this line said before it — a fresh
+           press supersedes a stale verdict — and an unchanged entry gets its own
+           quiet word rather than the silence a no-op used to leave. -->
       <p
         class="problem"
-        class:refused={entryRefusal !== null}
-        class:applied={entryRefusal === null && appliedLabel !== null}
+        class:refused={!applying && entryRefusal !== null}
+        class:applied={!applying && entryRefusal === null && appliedLabel !== null}
+        class:info={applying ||
+          (entryRefusal === null && appliedLabel === null && unchangedNotice)}
         id="{uid}-problem"
         role="status"
       >
-        {#if entryRefusal !== null}
+        {#if applying}
+          <span aria-hidden="true">i</span>
+          Waiting for the project to load…
+        {:else if entryRefusal !== null}
           <span aria-hidden="true">✕</span>
           {entryRefusal.problem}
         {:else if appliedLabel !== null}
           <span aria-hidden="true">✓</span>
           {appliedLabel}
+        {:else if unchangedNotice}
+          <span aria-hidden="true">i</span>
+          Period unchanged.
         {/if}
       </p>
 
@@ -762,6 +825,12 @@ function confirmRemove(): void {
   .year[aria-invalid="true"] {
     border-color: var(--err);
   }
+  /* An Apply already in flight: frozen (`readonly`, not `disabled` — a read-only
+     field stays in the tab order), dimmed the way the Apply button's own
+     `aria-disabled` is (Button.svelte). */
+  .year:read-only {
+    opacity: 0.6;
+  }
   /* A period the year fields cannot author: the wire itself (a machine value, so
      mono) with the reason beside it, at the muted metadata weight. */
   .period-fixed {
@@ -813,6 +882,16 @@ function confirmRemove(): void {
     border-radius: var(--radius-sm);
     background: var(--ok-bg);
     color: var(--ok);
+  }
+  /* Neither a refusal nor a change: the write is still waiting on the restore
+     gate, or the entry already names the stored period. Cool info, not ok or err —
+     nothing failed and nothing happened. */
+  .problem.info {
+    padding: var(--space-1) var(--space-2);
+    border: 1px solid var(--info);
+    border-radius: var(--radius-sm);
+    background: var(--info-bg);
+    color: var(--info);
   }
   .stale {
     display: flex;
