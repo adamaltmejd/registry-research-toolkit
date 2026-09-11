@@ -896,7 +896,9 @@ async function addSelected(): Promise<void> {
     // researcher can retry them once the window covers their real eras. Named only
     // when NONE of its rows survived the filter above: a column two variants
     // deliver, one inside the window and one outside it, still committed.
-    const dropped = exact.filter((pick) => !rowDeliversInScope(pick.row, scope));
+    const dropped = exact.filter(
+      (pick) => !rowDeliversInScope(pick.row, scope),
+    );
     const droppedNames = [
       ...new Set(
         dropped.flatMap((pick) =>

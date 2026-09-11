@@ -1780,7 +1780,9 @@ describe("CatalogNodeView register arm: add columns (Y-83)", () => {
     expect(projectStore.draft?.sources).toEqual([]);
     // A read that failed, not a refusal: the error tint and `alert` (StagedAddStatus,
     // Y-106) — nobody declined anything, the batch just couldn't be evaluated.
-    const failure = page.getByText(/Could not read the delivery years/).element();
+    const failure = page
+      .getByText(/Could not read the delivery years/)
+      .element();
     expect(failure.closest("[role]")?.getAttribute("role")).toBe("alert");
   });
 
