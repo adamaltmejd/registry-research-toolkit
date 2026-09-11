@@ -845,9 +845,13 @@ async function exactPicks(
 }
 
 async function addSelected(): Promise<void> {
-  // The button stays focusable and clickable through an Add (`aria-disabled`, not
-  // `disabled` — see the markup), so a re-entrant press needs its own guard.
-  if (applying) {
+  // The button is NEVER natively `disabled` (see the markup) — including at zero
+  // staged columns — so it never drops keyboard focus to `<body>`, mid-add or
+  // after one that empties the selection. `aria-disabled` freezes the ACTION
+  // instead, which means every reason the bar would grey the button out has to
+  // be re-checked here, or a stray click (or Enter/Space) would run an Add the
+  // button visually refused.
+  if (applying || stagedColumns === 0 || !seedReady) {
     return;
   }
   // Bind the batch to the ticks AND to the page it was pressed on: the per-variable
@@ -1242,8 +1246,7 @@ async function addSelected(): Promise<void> {
           <Button
             variant="primary"
             size="sm"
-            disabled={stagedColumns === 0 || !seedReady}
-            aria-disabled={applying}
+            aria-disabled={stagedColumns === 0 || !seedReady || applying}
             onclick={addSelected}
           >
             {#if applying}

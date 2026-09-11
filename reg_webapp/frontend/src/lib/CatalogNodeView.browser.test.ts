@@ -2006,10 +2006,9 @@ describe("CatalogNodeView register arm: add columns (Y-83)", () => {
 
   it("keeps keyboard focus on the Add button through an add (Y-106)", async () => {
     let releaseStates = (): void => {};
-    // A mixed batch (as the dropped-column test above): `ForvErs` stays ticked
-    // after the Add, so the button still has work to do and stays genuinely
-    // enabled afterward too — the focus check isn't confounded by the button
-    // later, separately, disabling because nothing is left to add.
+    // A mixed batch: `ForvErs` stays ticked after the Add (its real eras miss
+    // the window), so this exercises the IN-FLIGHT freeze on a batch that will
+    // still have staged columns once it settles.
     mockRegisterAndResolve(
       columnedRegisterNode(1),
       {
@@ -2045,6 +2044,31 @@ describe("CatalogNodeView register arm: add columns (Y-83)", () => {
 
     releaseStates();
     await expect.element(page.getByText("Applied +1 column")).toBeVisible();
+    expect(document.activeElement).toBe(addButtonEl);
+  });
+
+  it("keeps keyboard focus on the Add button after an add that empties the selection (Y-106)", async () => {
+    // The ORDINARY case: every ticked column commits, `selectedColumns` empties,
+    // and the bar has nothing left to add — the button reads "Add columns to
+    // project" again and greys out. It must do that via `aria-disabled`, never
+    // `disabled`, or this is exactly the moment focus would drop to `<body>`.
+    mockRegisterAndResolve(columnedRegisterNode(1));
+    windowStore.set({ from: 2018, to: 2023 });
+
+    await renderRegister();
+    await expect.element(page.getByText("Kön")).toBeVisible();
+    await tickColumn("Kon");
+
+    const addButton = page.getByRole("button", {
+      name: "Add 1 column to project",
+    });
+    const addButtonEl = addButton.element();
+    await addButton.click();
+
+    await expect.element(page.getByText("Applied +1 column")).toBeVisible();
+    await expect
+      .element(page.getByRole("button", { name: "Add columns to project" }))
+      .toBeDisabled();
     expect(document.activeElement).toBe(addButtonEl);
   });
 });
