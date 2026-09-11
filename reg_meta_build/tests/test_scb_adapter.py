@@ -1440,3 +1440,45 @@ class TestScbErrata:
             )
         assert exc.value.code == "scb_errata_unknown_version"
         assert exc.value.exit_code == EXIT_CONFIG
+
+    def test_declared_version_must_be_the_variants_newest(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        # A declared edition's regver_id is minted above every real one and the
+        # coalescer reads that order as era order, so declaring 2019 — behind a
+        # variant SCB documents through 2022 — would publish the cloned row's
+        # spelling and type as the LATEST delivery. Refuse instead.
+        with pytest.raises(RegMetaError) as exc:
+            _built_with_errata(tmp_path, monkeypatch, [], errata_version("2019"))
+        assert exc.value.code == "scb_errata_version_not_latest"
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert "2022" in exc.value.message  # names what it has to be newer than
+        assert "era order" in exc.value.remediation
+
+    def test_one_fixed_version_retires_only_that_version(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        # SCB has started shipping DispCol's 2022 row while 2020 and 2021 are
+        # still missing. The failure must send the maintainer to `versions`, not
+        # to the whole entry — deleting it would drop two live omissions.
+        ri = [
+            _var_row(
+                colname="DispCol",
+                cvid=9310,
+                var_id=931,
+                varname="DispVar",
+                year="2022",
+                regver_id=102,
+            )
+        ]
+        with pytest.raises(RegMetaError) as exc:
+            _built_with_errata(
+                tmp_path,
+                monkeypatch,
+                ri,
+                errata_delivered("DispCol", "2020", "2021", "2022"),
+            )
+        assert exc.value.code == "scb_errata_now_present"
+        assert "'2022'" in exc.value.message
+        assert "drop '2022' from that entry's `versions`" in exc.value.remediation
+        assert "delete the entry" not in exc.value.remediation

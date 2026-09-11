@@ -16,7 +16,11 @@
 #                  name     = "<Registerversionnamn>"   # SCB's token, verbatim
 #                  evidence = "..."                     # why we know it exists
 #                  noted    = "YYYY-MM-DD"
-#     Adds a register version SCB has not documented.
+#     Adds a register version SCB has not documented. It must be the variant's
+#     NEWEST edition: a declared version's id is minted above every id SCB's
+#     export can produce, and the build reads that order as era order, so an
+#     older declared edition would publish itself as the latest delivery
+#     (`scb_errata_version_not_latest`).
 #
 #   [[delivered]]  register = "<provider>/<register>"
 #                  variant  = "<variant-slug>"
@@ -27,14 +31,17 @@
 #                  upstream = "..."                     # optional error class
 #     Adds the column-in-version rows SCB omitted. The column must already have a
 #     real row somewhere on that variant — a column SCB never documents is a
-#     variable_grafts.toml graft or a canonical_attach entry, not errata.
+#     variable_grafts.toml graft or a canonical_attach entry, not errata. Name
+#     each version once; one entry carries every omitted version of its column.
 #
 # Versions are named, never dated: the version name is the coordinate SCB itself
 # publishes, and the build already parses its period.
 #
 # RETIRING AN ENTRY: the build FAILS with `scb_errata_now_present` once SCB ships
-# the row. Delete the entry — git keeps the record of the upstream error. Never
-# edit an entry to keep a failing build green.
+# the row, and names the version it fixed. Retire exactly that much — drop the
+# version from `versions` when the entry's other versions are still omitted,
+# delete the entry when it was the last one. Git keeps the record of the upstream
+# error. Never edit an entry to keep a failing build green.
 
 [[delivered]]
 register = "scb/lisa"

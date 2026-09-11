@@ -30,15 +30,19 @@ SCB itself publishes, and the year parsing already lives in `edition_bounds`.
 Ids come from `mint_canonical_scb` — the reserved SCB sub-band `[2^61, 2^62)`
 for rows that belong to the `scb` provider but are absent from its machine
 export. Deterministic (same entry → same id every build) and disjoint from every
-real source-derived cvid/regver_id by construction. One consequence to know: the
-coalescer reads `regver_id` order as era order, so a `[[version]]`-declared
-edition sorts as the LATEST era for the latest-alias / latest-type trackers.
-That is the right answer for the motivating shape (SCB documents 2019-2020 for a
-register the steward holds through 2023) and inert otherwise, since a synthetic
-row clones its column's real spelling and type.
+real source-derived cvid/regver_id by construction. That band sits above every
+id SCB's export can produce, and the coalescer reads `regver_id` order as era
+order — so a `[[version]]`-declared edition is unconditionally the LATEST era for
+the latest-alias / latest-type trackers. Rather than leave that to chance, a
+declared edition that does not START at or after the variant's newest documented
+year is REFUSED (`scb_errata_version_not_latest`): the motivating shape (SCB
+documents 2019-2020 for a register the steward holds through 2023) is exactly
+what the band gets right, and the rest would silently overwrite a real delivery's
+published spelling and type.
 
 Self-cleaning: an entry whose row is present in SCB's export FAILS the build
-(`scb_errata_now_present`), so the entry gets deleted and git keeps the history.
+(`scb_errata_now_present`), naming the version so a multi-version entry loses
+only the version SCB fixed; git keeps the history of what was retired.
 """
 
 from __future__ import annotations
@@ -57,6 +61,7 @@ from ._curation import (
     load_curation_entries,
     require_str,
 )
+from .edition_bounds import edition_claims
 from .fqid_slugs import (
     PROVIDER_FILE_SUFFIX,
     _parse_register_id,
@@ -236,9 +241,10 @@ def load_scb_errata(path: Path | None, slug_dir: Path | None) -> ScbErrata:
     `[[delivered]]` top-level; no unknown key inside an entry; `register` a
     2-segment SCB FQID and `register`/`variant` curated; `evidence` and `noted`
     (canonical `YYYY-MM-DD`) present; `versions` a non-empty list of non-empty
-    strings; and no duplicate `(variant, name)` / `(variant, column)` entry — two
-    entries for one column must be ONE entry listing both versions, or the log
-    stops being readable as the record of what SCB missed.
+    strings naming each version at most once; and no duplicate `(variant, name)`
+    / `(variant, column)` entry — two entries for one column must be ONE entry
+    listing both versions, or the log stops being readable as the record of what
+    SCB missed.
     """
     version_entries = load_curation_entries(
         path,
@@ -308,6 +314,15 @@ def load_scb_errata(path: Path | None, slug_dir: Path | None) -> ScbErrata:
                 'Give `versions = ["2010", "2011"]` — SCB version names verbatim, '
                 "never dates.",
             )
+        named = tuple(v.strip() for v in raw_versions)
+        repeated = sorted({n for n in named if named.count(n) > 1})
+        if repeated:
+            raise curation_error(
+                _CODE,
+                f"scb_errata {ctx} repeats version(s) {repeated} in `versions`.",
+                "Each version may appear once in an entry's `versions` — the "
+                "second mention would mint the same synthetic row twice.",
+            )
         if "upstream" in entry and not isinstance(entry["upstream"], str):
             raise curation_error(
                 _CODE,
@@ -324,14 +339,7 @@ def load_scb_errata(path: Path | None, slug_dir: Path | None) -> ScbErrata:
                 "omitted version in that entry's `versions`.",
             )
         seen_columns.add(key)
-        delivered.append(
-            ErrataDelivered(
-                register_id,
-                variant_id,
-                column,
-                tuple(v.strip() for v in raw_versions),
-            )
-        )
+        delivered.append(ErrataDelivered(register_id, variant_id, column, named))
 
     return ScbErrata(tuple(versions), tuple(delivered))
 
@@ -352,11 +360,71 @@ _CLONED = (
 )
 
 
-def _now_present(context: str, what: str) -> None:
+def _edition_years(name: str) -> tuple[int, ...]:
+    """The calendar years an edition NAME claims, ascending — read through the
+    coalescer's own parser (`edition_bounds.edition_claims`), so the era guard
+    below and the windows a synthetic row goes on to produce cannot disagree
+    about what a version covers. Empty when the name carries no parseable year.
+
+    Name-only, without `sources/scb.py::register_edition_claims`' projection-set
+    policy (a forecast register's version IS its vintage, so it claims one year
+    rather than its span). Reading a projection register's span in full can only
+    push the documented top LATER, i.e. refuse a declared edition the policy
+    would have allowed — the safe direction, and it keeps the guard off the
+    adapter's import cycle.
+    """
+    return tuple(year for year, _lo, _hi in edition_claims(name))
+
+
+def _check_declared_era(context: str, name: str, documented_top: int | None) -> None:
+    """A `[[version]]` may declare only the variant's NEWEST era.
+
+    A declared edition's `regver_id` is minted into the reserved canonical-SCB
+    band, so it sorts above every id SCB's export can produce — and the coalescer
+    reads `regver_id` order as era order for `latest_alias` / `latest_type`. An
+    edition declared BEFORE the documented range would therefore publish its
+    cloned column spelling and type/length as the variable's latest, silently
+    overriding the genuinely newest delivery. Refuse rather than publish that.
+
+    Same-year is fine (a declared `HT2022` alongside a documented `2022` is the
+    ordinary within-year convention), and a variant with no year-bearing
+    documented edition has nothing to be newer than.
+    """
+    if documented_top is None:
+        return
+    years = _edition_years(name)
+    if years and years[0] >= documented_top:
+        return
+    detail = (
+        f"it starts in {years[0]}, before the variant's latest documented "
+        f"year ({documented_top})"
+        if years
+        else f"no year parses from the name, so it cannot be placed after the "
+        f"variant's latest documented year ({documented_top})"
+    )
+    raise curation_error(
+        "scb_errata_version_not_latest",
+        f"scb_errata {context} cannot be declared: {detail}.",
+        "A [[version]] edition is minted into the reserved canonical-SCB id "
+        "band, which sorts above every id SCB's export can produce, and the "
+        "coalescer reads that order as era order — so the build can only honour "
+        "a declared edition that is the variant's newest. Name a later edition, "
+        "or point the [[delivered]] entry at a version SCB already documents, "
+        f"in reg_meta_build/{_FILE_NAME}.",
+    )
+
+
+def _now_present(context: str, what: str, remedy: str) -> None:
+    """Self-cleaning failure: SCB now ships what an entry says it omitted.
+
+    `remedy` is what the maintainer should actually do, which is NOT always
+    "delete the entry" — one version of a multi-version `[[delivered]]` can be
+    fixed upstream while the rest of the entry still records a live omission.
+    """
     raise curation_error(
         "scb_errata_now_present",
         f"scb_errata {context}: {what} is present in SCB's export.",
-        f"SCB fixed it — delete the entry from reg_meta_build/{_FILE_NAME} "
+        f"SCB fixed it — {remedy} in reg_meta_build/{_FILE_NAME} "
         "(git keeps the record of the upstream error).",
     )
 
@@ -373,8 +441,10 @@ def apply_scb_errata(conn: sqlite3.Connection, errata: ScbErrata) -> dict[str, i
     names a variant this export doesn't have (`scb_errata_unknown_variant`), a
     version the variant neither documents nor declares
     (`scb_errata_unknown_version`), a column with no real row anywhere on the
-    variant (`scb_errata_no_source_row` — that is a graft/attach, not errata),
-    or a row SCB now ships (`scb_errata_now_present`).
+    variant (`scb_errata_no_source_row` — that is a graft/attach, not errata), a
+    `[[version]]` that is not the variant's newest edition
+    (`scb_errata_version_not_latest`), or a version/row SCB now ships
+    (`scb_errata_now_present`).
     """
     counts = {"versions": 0, "rows": 0}
     if not errata:
@@ -412,10 +482,27 @@ def apply_scb_errata(conn: sqlite3.Connection, errata: ScbErrata) -> dict[str, i
     ):
         documented.setdefault((variant_id, name or ""), []).append(regver_id)
 
+    # The newest year SCB's own export documents per variant. Computed before any
+    # synthetic edition lands, so the era guard reads the same answer whatever
+    # order the `[[version]]` entries appear in.
+    documented_top: dict[int, int] = {}
+    for variant_id, name in documented:
+        years = _edition_years(name)
+        if years:
+            documented_top[variant_id] = max(
+                documented_top.get(variant_id, years[-1]), years[-1]
+            )
+
     for v in errata.versions:
         context = f"[[version]] {v.name}"
         if (v.register_variant_id, v.name) in documented:
-            _now_present(context, f"version {v.name!r}")
+            _now_present(
+                context,
+                f"version {v.name!r}",
+                "delete the [[version]] entry (its [[delivered]] entries keep "
+                "working against SCB's own edition)",
+            )
+        _check_declared_era(context, v.name, documented_top.get(v.register_variant_id))
         regver_id = mint_canonical_scb(
             "scb-errata-version", str(v.register_variant_id), v.name
         )
@@ -478,7 +565,16 @@ def apply_scb_errata(conn: sqlite3.Connection, errata: ScbErrata) -> dict[str, i
                     "for it.",
                 )
             if present & set(regvers):
-                _now_present(context, f"the {name!r} row for {d.column!r}")
+                # One version of a multi-version entry can be fixed upstream
+                # while the rest still record a live omission — say which, or the
+                # maintainer retires an entry that is still carrying its weight.
+                _now_present(
+                    context,
+                    f"the {name!r} row for {d.column!r}",
+                    "delete the entry"
+                    if len(d.versions) == 1
+                    else f"drop {name!r} from that entry's `versions`",
+                )
             source = _nearest(candidates, extract_year(name))
             for regver_id in regvers:
                 cvid = mint_canonical_scb(

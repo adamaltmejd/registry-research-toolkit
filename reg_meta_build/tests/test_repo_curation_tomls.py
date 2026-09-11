@@ -424,6 +424,29 @@ def test_repo_scb_errata_parses() -> None:
     )
 
 
+def test_scb_errata_repeated_version_raises_curation_error(tmp_path: Path) -> None:
+    # A version named twice in one `versions` list would mint the same synthetic
+    # row twice and die on the id collision mid-insert. Catch it at load, where
+    # the maintainer gets a remediation instead of a primary-key error.
+    path = tmp_path / "scb_errata.toml"
+    path.write_text(
+        "[[delivered]]\n"
+        'register = "scb/lisa"\n'
+        'variant = "individer-15plus"\n'
+        'column = "DispInkKE"\n'
+        'versions = ["2010", "2011", "2010"]\n'
+        'evidence = "SWECOV holds the column in those years"\n'
+        'noted = "2026-09-11"\n',
+        encoding="utf-8",
+    )
+    with pytest.raises(RegMetaError) as exc:
+        load_scb_errata(path, repo_slug_dir())
+    assert exc.value.code == "scb_errata_invalid"
+    assert exc.value.exit_code == EXIT_CONFIG
+    assert "2010" in exc.value.message
+    assert "once" in exc.value.remediation
+
+
 def test_repo_doc_sources_parses() -> None:
     # `doc_sources.toml` (#372) maps a doc `source` slug → public SCB PDF; a
     # missing `url`/`title` key would otherwise surface only at doc-DB build
