@@ -116,6 +116,22 @@ def docs_db(catalog_db: Path) -> Path:
 
 
 @pytest.fixture
+def case_twin_db(catalog_db: Path) -> Path:
+    """``catalog_db`` plus the Y-107 case-twin scenario (``fixture_db``): one
+    `scb/lisa/idve` variable whose column is spelled `Idh` by the era a steward's
+    inventory was generated over and `IdH` by the era after it (plus an unheld
+    `Taxvarde` rename). Seeded here rather than in ``build_catalog_fixture_db`` for
+    the same reason ``topical_catalog_db`` is."""
+    conn = sqlite3.connect(catalog_db)
+    try:
+        fixture_db.seed_case_twin_column(conn)
+        conn.commit()
+    finally:
+        conn.close()
+    return catalog_db
+
+
+@pytest.fixture
 def topical_catalog_db(catalog_db: Path) -> Path:
     """``catalog_db`` plus the topical ranking scenario (``fixture_db``): one
     register purpose and one variable name/definition carrying a topic, and six

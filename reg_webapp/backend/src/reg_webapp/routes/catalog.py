@@ -73,6 +73,7 @@ from reg_webapp.catalog_fqid import (
     ValidatedFqidPath,
     validate_fqid_path,
 )
+from reg_webapp.catalog_index import _fold_column, _folded_columns
 from reg_webapp.conn import catalog_conn as _catalog_conn
 from reg_webapp.models import (
     BindingChild,
@@ -115,7 +116,6 @@ from reg_webapp.query_input import clamp_limit, matches_filter, validate_text_qu
 
 if TYPE_CHECKING:
     import sqlite3
-    from collections.abc import Iterable
 
     from reg_webapp.catalog_index import CatalogIndex
 
@@ -251,28 +251,12 @@ def _filter_states_to_held(
     """Narrow a binding's states to the delivery columns the steward holds for
     `fqid` (#859, browse = column-grain faithful). A kept binding has a non-empty
     held-column set; the filter compares each state's RESOLVED `delivery_column_name`
-    against it, mirroring the index's `(fqid, resolved column)` admission (#206). The
+    against it under `_fold_column` (Y-107 — the index carries the inventory's own
+    spelling, so an exact compare left a case-twin holding's leaf with NO states),
+    mirroring the index's `(fqid, resolved column)` admission (#206). The
     `held_columns` set is reused, never re-derived."""
-    held = index.held_columns(fqid)
-    return [s for s in states if s.delivery_column_name in held]
-
-
-def _fold_column(column: str | None) -> str | None:
-    """A delivery column's case-folded identity (`py_lower`'s rule, which reg_meta
-    names one representative spelling per column with, and the build validates
-    `variable_alias ⊇ state columns` with). `None` folds to itself.
-
-    The catalog route matches a steward's HELD column to a catalog row through this
-    fold (Y-102): the inventory spells a column as the steward's own holdings do,
-    which is not always the catalog's spelling of it — see DESIGN.md → Coverage
-    aggregates. An exactly-spelled held column matches as it always did."""
-    return column if column is None else column.lower()
-
-
-def _folded_columns(columns: Iterable[str | None]) -> frozenset[str | None]:
-    """A steward's held delivery columns under `_fold_column` — folded ONCE, where
-    they leave the index, so every comparison downstream is fold against fold."""
-    return frozenset(_fold_column(column) for column in columns)
+    held = _folded_columns(index.held_columns(fqid))
+    return [s for s in states if _fold_column(s.delivery_column_name) in held]
 
 
 def _folded_column_coverage(
@@ -416,18 +400,30 @@ def _narrow_graph_to_held(
 def _narrow_group_members(group, index: CatalogIndex, catalog: Catalog):
     """Return `group` with its `members` narrowed to the steward's holdings (#859),
     or None if no member survives. A representation member (`delivery_column` set) is
-    kept iff `index.admits(str(member.fqid), member.delivery_column)`; a whole-variable
-    member (`delivery_column` None) iff its bare FQID is in `admitted_variable_fqids`.
-    Reuses the existing `admits` / `admitted_variable_fqids` probes (no re-derivation).
+    kept iff that column FOLDS onto one the steward holds for the member's FQID; a
+    whole-variable member (`delivery_column` None) iff its bare FQID is in
+    `admitted_variable_fqids`. Reuses the existing `held_columns` /
+    `admitted_variable_fqids` probes (no re-derivation). The column match goes through
+    `_fold_column` rather than the exact `index.admits` probe (Y-107): a curated member
+    names the column in an ALIAS spelling and the index carries the steward's own, so a
+    case twin read as unheld and took the whole group with it.
     The group's tags are recomputed from the surviving members so a filtered steward
     never inherits thematic tags from excluded siblings. A frozen Pydantic model, so
     the narrowed copy is via `model_copy`."""
     admitted = index.admitted_variable_fqids
+    # Folded once per member FQID, not per member: a representation family puts many
+    # members on ONE variable, and this runs for every group on a register page.
+    folded_held = {
+        fqid: _folded_columns(index.held_columns(fqid))
+        for fqid in {
+            str(m.fqid) for m in group.members if m.delivery_column is not None
+        }
+    }
     kept = [
         m
         for m in group.members
         if (
-            index.admits(str(m.fqid), m.delivery_column)
+            _fold_column(m.delivery_column) in folded_held[str(m.fqid)]
             if m.delivery_column is not None
             else str(m.fqid) in admitted
         )

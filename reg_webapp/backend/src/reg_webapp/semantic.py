@@ -68,6 +68,8 @@ from reg_meta.inventory import _overlap, _render
 from reg_meta.order import requested_intervals, resolve_binding
 from reg_schema.validation import ValidationIssue, ValidationResult
 
+from reg_webapp.catalog_index import _fold_column, _folded_columns
+
 if TYPE_CHECKING:
     from collections.abc import Iterable
 
@@ -568,7 +570,13 @@ def _check_steward_admission(
 
     ``resolved_columns=None`` means the binding's own column is indeterminate
     (period/representation/ambiguity issues already reported) — only the
-    FQID-level check can run; the column-level check stays silent."""
+    FQID-level check can run; the column-level check stays silent.
+
+    The column comparison folds (``_fold_column``, Y-107): the index carries the
+    inventory's own spelling of the column, which is not always the one the binding
+    resolves to, so an exact compare warned about a column the steward demonstrably
+    holds. ``held`` itself stays UNFOLDED — the message enumerates the steward's own
+    spelling verbatim."""
     held = index.held_columns_for_variant(variable, variant_coord)
     if not held:
         issues.append(
@@ -584,7 +592,10 @@ def _check_steward_admission(
         return
     if resolved_columns is None:
         return
-    missing = resolved_columns - held
+    folded_held = _folded_columns(held)
+    missing = frozenset(
+        column for column in resolved_columns if _fold_column(column) not in folded_held
+    )
     if missing:
         issues.append(
             _issue(

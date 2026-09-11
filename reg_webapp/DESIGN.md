@@ -649,13 +649,25 @@ columns without a per-column state row get `coverage = None`; held unnamed colum
 `Catalog.register_unnamed_column_coverage` because `register_column_coverage` has no
 NULL delivery-column key.
 
-A held column is matched to the catalog's rows through ONE fold (`_fold_column`,
-`py_lower`'s rule), never by exact string (Y-102) — the index holds the inventory's
-spelling of the column, which is not always the catalog's (see § Steward layering and
-the in-memory catalog index). The same fold serves the deliveries narrowing, the graph's
-held-column narrowing and the concept-group member's per-column window; reg_meta names
-one representative spelling per column, so each folded column has a single row to find
-(reg_meta/DESIGN.md → One spelling per delivery column).
+A held column is matched to the catalog's rows through ONE fold (`_fold_column` /
+`_folded_columns` in `catalog_index.py`, `py_lower`'s rule), never by exact string
+(Y-102, Y-107) — the index holds the inventory's spelling of the column, which is not
+always the catalog's (see § Steward layering and the in-memory catalog index). The same
+fold serves the coverage recompute, the deliveries narrowing, the graph's held-column
+narrowing, the binding leaf's states, the concept-group member's per-column window and
+its admission, the steward narrowing of search hits, `semantic.py`'s representation
+check, and — as `py_lower` in SQL or `str.lower` in Python — reg_meta's
+`_filter_variable_delivery_scope`. reg_meta names one representative spelling per
+column, so each folded column has a single row to find (reg_meta/DESIGN.md → One
+spelling per delivery column). One held-column comparison is still exact: the concept
+GROUP probe in the search narrowing (`CatalogIndex.admits`), because reg_meta's own
+group-member scope decides that member upstream by exact spelling — folding one half
+alone would be inert.
+
+The fold lives BESIDE the index, never inside it: `held_columns` is also a DISPLAY value
+— the `representation_outside_steward_catalog` message enumerates the steward's own
+spelling — so a folded index would lowercase researcher-facing text. Callers fold at the
+comparison and return the catalog's own spelling of what they keep.
 
 Register-scoped concept-group subject pages also use `register_column_coverage` for
 representation members, but a missing per-column key is a known curated member with no

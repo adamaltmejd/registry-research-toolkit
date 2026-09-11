@@ -26,6 +26,7 @@ from reg_meta.errors import RegMetaError
 from reg_meta.queries import SEARCH_TYPES, search as reg_meta_search
 
 from reg_webapp import golden
+from reg_webapp.catalog_index import _fold_column, _folded_columns
 from reg_webapp.conn import catalog_conn
 from reg_webapp.models import (
     ClassificationCodeSearchGroup,
@@ -502,7 +503,12 @@ def _narrow_search_groups(
 def _narrow_variable_leaf_columns(
     results: list[SearchResult], index: CatalogIndex
 ) -> list[SearchResult]:
-    """Mask variable leaf delivery-column chips to the steward's held columns."""
+    """Mask variable leaf delivery-column chips to the steward's held columns.
+
+    The match is under `_fold_column` (Y-107): the index carries the inventory's own
+    spelling of the column and the chip the catalog's, so an exact compare masked a
+    held case twin away. The chip keeps the CATALOG's spelling — the fold decides
+    membership only."""
     narrowed: list[SearchResult] = []
     for result in results:
         if result.type != "variable" or result.fqid is None:
@@ -512,9 +518,11 @@ def _narrow_variable_leaf_columns(
         if not held or not result.delivery_column_names:
             narrowed.append(result)
             continue
-        held_names = frozenset(col for col in held if col is not None)
+        held_names = _folded_columns(held)
         held_columns = tuple(
-            col for col in result.delivery_column_names if col in held_names
+            col
+            for col in result.delivery_column_names
+            if _fold_column(col) in held_names
         )
         narrowed.append(
             result.model_copy(update={"delivery_column_names": held_columns})

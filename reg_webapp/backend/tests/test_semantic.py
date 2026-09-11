@@ -16,7 +16,7 @@ from __future__ import annotations
 
 import pytest
 import reg_meta.db
-from _steward_helpers import catalog_index as _catalog_index
+from _steward_helpers import CASE_TWIN_HOLDINGS, catalog_index as _catalog_index
 from reg_meta.catalog import Catalog
 from reg_schema.project_data import ProjectData
 from reg_webapp.semantic import validate_semantic
@@ -1308,6 +1308,75 @@ def test_resolved_column_mismatch_across_sequential_rename(renamed_column_catalo
     assert issue.level == "warning"
     assert "'KonNy'" in issue.message
     assert "'Kon'" in issue.message
+    assert "fqid_outside_steward_catalog" not in by_code
+    assert result.ok
+
+
+# ── Y-107: the held spelling and the resolved one are ONE column ────────────
+# A steward's inventory states the column as the era it was generated over spells
+# it; the catalog spells the same column differently in another era. Admission
+# compares the two under `py_lower`, while the message keeps the steward's own
+# spelling — see `fixture_db.seed_case_twin_column` for the shape.
+
+
+@pytest.fixture
+def case_twin_catalog(case_twin_db):
+    conn = reg_meta.db.open_db(case_twin_db, check_schema=False)
+    try:
+        yield Catalog(conn)
+    finally:
+        conn.close()
+
+
+@pytest.fixture
+def case_twin_index(case_twin_catalog):
+    """The steward holding `scb/lisa/idve` under the windowed era's `Idh` — which the
+    boot gate resolves, and which is NOT how the catalog spells the column after
+    2018."""
+    index = _catalog_index(CASE_TWIN_HOLDINGS, case_twin_catalog)
+    assert index.bindings_by_variant["scb/lisa/individer-15plus"] == frozenset(
+        {("scb/lisa/idve", "Idh")}
+    )
+    return index
+
+
+def _idve_source(period: int) -> dict:
+    return {
+        "name": f"lisa-{period}",
+        "register_variant": "scb/lisa/individer-15plus",
+        "period": period,
+        "bindings": [{"variable": "scb/lisa/idve", "type": "categorical"}],
+    }
+
+
+def test_held_case_twin_representation_is_admitted(case_twin_catalog, case_twin_index):
+    # The 2019–2023 era stands on the catalog's own `IdH`, so the binding resolves to
+    # that spelling while the steward holds the column as `Idh`. One column, so no
+    # warning: the exact compare used to tell the researcher a column the boot gate
+    # had admitted was not supplied here.
+    result = validate_semantic(
+        _project([_idve_source(2020)]), case_twin_catalog, index=case_twin_index
+    )
+    codes = {i.code for i in result.issues}
+    assert "representation_outside_steward_catalog" not in codes
+    assert "fqid_outside_steward_catalog" not in codes
+    assert result.ok
+
+
+def test_unheld_representation_message_keeps_the_stewards_own_spelling(
+    case_twin_catalog, case_twin_index
+):
+    # The 2024 rename resolves to `Taxvarde`, a column this steward really does not
+    # hold — the warning still fires. Its enumeration of the holdings is the
+    # steward's OWN spelling, verbatim: the fold decides admission, never display.
+    result = validate_semantic(
+        _project([_idve_source(2024)]), case_twin_catalog, index=case_twin_index
+    )
+    by_code = {i.code: i for i in result.issues}
+    issue = by_code["representation_outside_steward_catalog"]
+    assert issue.level == "warning"
+    assert "'Taxvarde'" in issue.message
+    assert "available there as 'Idh' only" in issue.message
     assert "fqid_outside_steward_catalog" not in by_code
     assert result.ok
 

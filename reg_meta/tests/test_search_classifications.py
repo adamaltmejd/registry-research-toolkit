@@ -1044,6 +1044,45 @@ def test_variable_search_delivery_scope_keeps_description_hit() -> None:
     assert out.results[0].delivery_column_names == ("HeldColumn",)
 
 
+def test_variable_search_delivery_scope_keeps_a_held_case_twin_spelling() -> None:
+    """Y-107: the scope's spelling of a column need not be the catalog's spelling.
+
+    A steward whose inventory was generated over an era that spells the column `Idh`
+    holds `Idh`; the catalog's alias for the era searched here spells the same column
+    `IdH`. Comparing exactly, the hit's only held name folded away, so `IdH` read as an
+    unheld alias and the whole variable was dropped from the steward's search — see
+    reg_meta/DESIGN.md -> One spelling per delivery column.
+    """
+    conn = build_slugged_db(
+        variable=("Fastighet", 32183, 1001, "IdH"),
+        delivery_column_name="IdH",
+        variable_slug="idve",
+    )
+    add_binding(
+        conn,
+        cvid=1002,
+        register_id=1,
+        register_variant_id=10,
+        regver_id=100,
+        var_id=32183,
+        delivery_column_name="Taxvarde",
+    )
+    _rebuild_fts(conn)
+
+    out = search(
+        conn,
+        "Idh",
+        field="description",
+        type="variable",
+        fqids={"scb/lisa/idve"},
+        delivery_column_scope={"scb/lisa/idve": {"Idh"}},
+    )
+
+    assert [str(row.fqid) for row in out.results] == ["scb/lisa/idve"]
+    # The fold decides membership; the name shown stays the catalog's own spelling.
+    assert out.results[0].delivery_column_names == ("IdH",)
+
+
 def test_variable_search_delivery_scope_filters_before_group_folding() -> None:
     conn = build_slugged_db(
         variable=("First variable", 32183, 1001, "HeldA"),

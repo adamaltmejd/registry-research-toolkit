@@ -17,6 +17,7 @@ from pathlib import Path
 
 import pytest
 import reg_meta.db
+from _steward_helpers import CASE_TWIN_HOLDINGS, write_steward
 from fastapi.testclient import TestClient
 from reg_meta.catalog import ConceptGroupMember
 from reg_meta.queries import _code_system
@@ -528,6 +529,28 @@ def test_narrow_variable_leaf_columns_treats_none_as_concrete_column():
 
     assert len(kept) == 1
     assert kept[0].delivery_column_names == ("Kon",)
+
+
+def test_steward_search_keeps_a_variable_held_under_a_case_twin_spelling(
+    case_twin_db, tmp_path, monkeypatch
+):
+    """Y-107: the steward holds `scb/lisa/idve` as `Idh` (the windowed era's
+    spelling, which the boot gate resolves) while the catalog's alias history spells
+    the column `IdH`. Searching for the column dropped the variable outright — the
+    delivery scope matched no held name, so the hit read as depending on an unheld
+    alias. The row comes back under the catalog's own spelling; the unheld `Taxvarde`
+    rename stays out of the chips."""
+    stewards = tmp_path / "stewards"
+    write_steward(stewards, "ifau", CASE_TWIN_HOLDINGS)
+    monkeypatch.setenv("REG_WEBAPP_STEWARDS_DIR", str(stewards))
+    monkeypatch.setenv("REG_WEBAPP_STEWARD", "ifau")
+    with TestClient(create_app()) as client:
+        body = client.get("/api/search", params={"q": "Idh", "type": "variable"}).json()
+
+    results = _group(body, "variables")["results"]
+    assert [(r["fqid"], r["delivery_column_names"]) for r in results] == [
+        ("scb/lisa/idve", ["IdH"])
+    ]
 
 
 def test_filtered_variable_search_passes_delivery_scope_into_full_backfill_query(

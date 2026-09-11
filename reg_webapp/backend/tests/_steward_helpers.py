@@ -35,6 +35,16 @@ CLEAN_HOLDINGS: list[Holding] = [
     ("scb/rams/standard", "scb/rams/syss", "Syss", "2019"),
 ]
 
+# Y-107: the case-twin holding. The steward states the column as the era its
+# inventory was generated over spells it (`Idh`, the alias window's own case — what
+# the resolver and the boot gate answer there), while the catalog also delivers that
+# column as `IdH` — see `fixture_db.seed_case_twin_column`, which seeds that variable
+# and the UNHELD `Taxvarde` rename. Every steward surface must fold the two spellings
+# together; the `case_twin_db` fixture pairs with this list.
+CASE_TWIN_HOLDINGS: list[Holding] = [
+    ("scb/lisa/individer-15plus", "scb/lisa/idve", "Idh", "2013"),
+]
+
 
 def inventory_toml(holdings: Sequence[Holding], *, steward: str = "ifau") -> str:
     """Render a minimal delivery inventory stating ``holdings``.

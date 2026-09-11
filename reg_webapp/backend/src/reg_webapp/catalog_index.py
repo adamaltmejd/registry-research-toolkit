@@ -92,6 +92,8 @@ from reg_meta.fqid import snap_to_real_month_end
 from reg_meta.inventory import _intersect, edition_bounds
 
 if TYPE_CHECKING:
+    from collections.abc import Iterable
+
     from reg_meta.catalog import Catalog
     from reg_meta.inventory import ColumnMapping, DeliveryInventory
 
@@ -103,6 +105,29 @@ Coordinate = tuple[str, str, str | None]
 
 # An inclusive ISO `(lo, hi)` date interval, `reg_meta.inventory`'s currency.
 Interval = tuple[str, str]
+
+
+def _fold_column(column: str | None) -> str | None:
+    """A delivery column's case-folded identity (`py_lower`'s rule, which reg_meta
+    names one representative spelling per column with, and the build validates
+    `variable_alias ⊇ state columns` with). `None` folds to itself.
+
+    Every reader that matches a HELD column against a catalog row goes through this
+    fold (Y-102, Y-107): the inventory spells a column as the steward's own holdings
+    do, which is not always the catalog's spelling of it — see reg_webapp/DESIGN.md →
+    Coverage aggregates. An exactly-spelled held column matches as it always did.
+
+    The fold lives BESIDE the index, never inside it: `held_columns` is also a
+    DISPLAY value (`semantic.py`'s `representation_outside_steward_catalog` message
+    enumerates the steward's own spelling), so folding at the index would lowercase
+    researcher-facing text. Callers fold at the comparison."""
+    return column if column is None else column.lower()
+
+
+def _folded_columns(columns: Iterable[str | None]) -> frozenset[str | None]:
+    """A steward's held delivery columns under `_fold_column` — folded ONCE, where
+    they leave the index, so every comparison downstream is fold against fold."""
+    return frozenset(_fold_column(column) for column in columns)
 
 
 @dataclass(frozen=True)

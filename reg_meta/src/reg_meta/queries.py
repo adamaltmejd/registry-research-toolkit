@@ -532,9 +532,14 @@ def _filter_variable_delivery_scope(
         if held is None or not row.get("delivery_column_names"):
             filtered.append(row)
             continue
-        held_names = frozenset(col for col in held if col is not None)
+        # The scope is an inventory's spelling of the column, which need not be the
+        # catalog's spelling of it, so both sides fold — `py_lower`'s rule, the one
+        # `representative_columns` folds case twins onto one column with (Y-107; see
+        # DESIGN.md → One spelling per delivery column). The kept names stay the
+        # catalog's own spelling: the fold decides membership, never display.
+        folded_held = frozenset(col.lower() for col in held if col is not None)
         held_columns = tuple(
-            col for col in row["delivery_column_names"] if col in held_names
+            col for col in row["delivery_column_names"] if col.lower() in folded_held
         )
         if _depends_on_unheld_delivery_alias(row, terms, held_columns):
             continue
