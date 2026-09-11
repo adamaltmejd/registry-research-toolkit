@@ -285,6 +285,32 @@ function crossedColumnRegisterNode(): CatalogNode {
   } as unknown as CatalogNode;
 }
 
+// The shape a name-grain gate alone gets wrong (Y-104). `individer-15plus`
+// renamed `CDISP` to `CDISP5` in 2010 — #902 folds its two deliveries into ONE
+// picker row spanning both — while `individer-16plus` still delivers `CDISP`. Pool
+// the NAME's eras across the two and `CDISP` reads as delivered to this day, which
+// is true of 16plus and false of 15plus, whose row reaches a late window only
+// through the successor.
+function renamedByOneVariantRegisterNode(): CatalogNode {
+  return {
+    kind: "register",
+    fqid: "scb/lisa",
+    name: "LISA",
+    children: [
+      {
+        kind: "binding",
+        fqid: "scb/lisa/disp",
+        name: "Disponibel inkomst",
+        deliveries: [
+          delivery("individer-15plus", "CDISP", ["2000-01-01", "2009-12-31"]),
+          delivery("individer-15plus", "CDISP5", ["2010-01-01", null]),
+          delivery("individer-16plus", "CDISP", ["2000-01-01", null]),
+        ],
+      },
+    ],
+  } as unknown as CatalogNode;
+}
+
 // The Y-104 shape: ONE column, delivered in DISJOINT eras. `Lan` on
 // civilståndsändringar was delivered in 1968, again in 1995–1996, and continuously
 // from 1998 — a history the MIN/MAX span "1968–" cannot tell from an unbroken one.
@@ -1969,6 +1995,51 @@ describe("CatalogNodeView register arm: add columns (Y-83)", () => {
         page.getByRole("checkbox", { name: "CDISP5 2020–", exact: true }),
       )
       .not.toBeDisabled();
+  });
+
+  it("stages a retired name only under the variant still delivering it (Y-104)", async () => {
+    mockRegisterAndResolve(renamedByOneVariantRegisterNode());
+    vi.mocked(getRegisterVariants).mockResolvedValue(lisaVariants());
+    // Inside 16plus's `CDISP`, and years after 15plus renamed it.
+    windowStore.set({ from: 2015, to: 2020 });
+
+    await renderRegister();
+    await expect.element(page.getByText("Disponibel inkomst")).toBeVisible();
+
+    // The tick is offered — 16plus really does deliver `CDISP` in 2015–2020, and the
+    // label pools both variants to say so — but it stages that variant ALONE. 15plus's
+    // folded row reaches the window only through `CDISP5`, the name this tick is not.
+    await tickColumn("CDISP 2000–");
+    await page.getByRole("button", { name: "Add 1 column to project" }).click();
+    await expect.element(page.getByText("Applied +1 column")).toBeVisible();
+    expect(
+      projectStore.draft?.sources.map((source) => source.register_variant),
+    ).toEqual(["scb/lisa/individer-16plus"]);
+
+    // Commit 15plus's row too, under the successor's name — the years it really was
+    // delivered under `CDISP5`.
+    await tickColumn("CDISP5 2010–");
+    await page.getByRole("button", { name: "Add 1 column to project" }).click();
+    await expect.element(page.getByText("Applied +1 column")).toBeVisible();
+    expect(
+      projectStore.draft?.sources.map((source) => source.register_variant),
+    ).toEqual(["scb/lisa/individer-16plus", "scb/lisa/individer-15plus"]);
+
+    // `CDISP5` reads as in the project. `CDISP` does NOT, though BOTH its rows are
+    // now committed: 15plus's was committed for years it delivered `CDISP5` in, and
+    // pooling 16plus's still-current eras over that row would claim a name 15plus
+    // never added — the marker asks each row's own variant.
+    await expect
+      .element(
+        page.getByRole("checkbox", {
+          name: "CDISP5 2010– In project",
+          exact: true,
+        }),
+      )
+      .toBeVisible();
+    await expect
+      .element(page.getByRole("checkbox", { name: "CDISP 2000–", exact: true }))
+      .toBeVisible();
   });
 
   it("abandons a batch whose study window moves while the Add is queued", async () => {

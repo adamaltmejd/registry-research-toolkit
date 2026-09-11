@@ -870,12 +870,14 @@ variable pages to add one column each.
   add is byte-identical to the variable page's without a second read. Before Y-104 the
   wire carried only the span; an Add paid a GET per ticked variable to rebuild these
   rows from the states, and the two grades could disagree.
-- **The label and the two per-name verdicts are NAME-grain while the commit is
-  ROW-grain**, and the split is load-bearing: a #902 rename chain folds into ONE row
-  spanning the whole chain, so the tick gate asks that NAME's own `windows`, and "In
-  project" asks whether the committed source period reached them
-  (`windowsOverlapPeriod`). Gating on the row offers a retired name for its successor's
-  years; marking on the row alone claims a name the Add never committed.
+- **The label and the tick are NAME-grain; the add and its marker are per (variant,
+  name); the commit is ROW-grain.** The split is load-bearing: a #902 rename chain folds
+  into ONE row spanning the whole chain, so a row-grain gate offers a retired name for
+  its successor's years. The label and the tick pool the name's eras across the variants
+  that ship it, because one box covers them all. `stagedBatch` and "In project" then ask
+  `windowsByVariant` for the row's OWN variant, because a sibling variant still shipping
+  a retired name must not lend those years to the variant that renamed it — that pooled
+  reading would stage the successor under the retired name, and mark it added.
 - **The years are spelled compactly** — `1968, 1995–1996, 1998–` — rather than through
   the `since 1998` / `until 1968` words `formatWindow` gives the variable page: this
   cell is all-mono and rides inside a tick's accessible name, and frontend/DESIGN.md

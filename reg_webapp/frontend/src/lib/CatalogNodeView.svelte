@@ -92,15 +92,20 @@ const registerColumns: Column<RegisterRow>[] = [
  * variable's rows that DELIVER this name, which is one per variant shipping it,
  * or the one row a #902 rename folded it into.
  *
- * `windows` and `rows` answer different questions and the cell needs both. The
- * windows are NAME-grain: what the label says, and what the tick gate asks, so a
- * name is offered only for years it was really delivered in. The rows are
- * COMMIT-grain: a folded rename is one row spanning the whole chain, so gating on
- * them would offer a retired name for its successor's years (Y-104). */
+ * The three era fields answer different questions and the cell needs all of
+ * them. `windows` is NAME-grain — the name's eras pooled across every variant
+ * that ships it — which is what the label prints and what OFFERS the tick, since
+ * one tick covers them all. `windowsByVariant` keeps those same eras per
+ * (variant, name), the grain an ADD is decided at: a sibling variant still
+ * shipping a retired name would otherwise lend its years to the variant that
+ * renamed it. The rows are COMMIT-grain: a folded rename is ONE row spanning the
+ * whole chain, so gating on them would offer a retired name for its successor's
+ * years (Y-104). */
 type DeliveryColumn = {
   name: string;
   years: string[];
   windows: { from: string; to: string }[];
+  windowsByVariant: Map<string, { from: string; to: string }[]>;
   rows: PickerRepresentation[];
 };
 
@@ -217,18 +222,32 @@ function deliveryColumns(
   const several = byName.size > 1;
   return [...byName]
     .map(([name, deliveries]) => {
-      // The eras THIS NAME was delivered over, fused across the variants that
-      // ship it — never the rows' windows, which for a folded rename span the
-      // chain's whole history and would print the successor's years here.
-      const windows = deliveryWindows(
-        deliveries.flatMap((d) =>
-          d.windows.map((w) => ({ from: w.valid_from, to: w.valid_to })),
-        ),
+      // The eras THIS NAME was delivered over, per VARIANT that ships it —
+      // never the rows' windows, which for a folded rename span the chain's
+      // whole history. Kept split because an add is per (variant, name) even
+      // though the tick and the label are per name.
+      const byVariant = new Map<string, { from: string; to: string }[]>();
+      for (const d of deliveries) {
+        const eras = byVariant.get(d.variant) ?? [];
+        for (const w of d.windows) {
+          eras.push({ from: w.valid_from, to: w.valid_to });
+        }
+        byVariant.set(d.variant, eras);
+      }
+      const windowsByVariant = new Map(
+        [...byVariant].map(([variant, eras]) => [
+          variant,
+          deliveryWindows(eras),
+        ]),
       );
+      // Pooled for the label and the tick: the name was delivered in a year if
+      // ANY variant delivered it then, which is what the researcher reads.
+      const windows = deliveryWindows([...byVariant.values()].flat());
       return {
         name,
         years: several || windows.length > 1 ? eraLabels(windows) : [],
         windows,
+        windowsByVariant,
         rows: rows.filter((row) => rowCoversColumn(row, name)),
       };
     })
@@ -626,9 +645,10 @@ const addBounds = $derived(
  * NAME's own eras met with the add scope, never the folded row's, which for a
  * rename chain spans the successor's years too. ONE predicate for the cell and
  * `stagedBatch`, so a tick can never be offered under a gate the Add then applies
- * differently. A name with NO eras (an alias spelling on a variant with no states
- * of its own) is never offered: there is no window to wait for, and no row to
- * stage either. */
+ * differently — the Add only narrows it, per (variant, name), which no box could
+ * show: a tick is one box over every variant that ships the name. A name with NO
+ * eras (an alias spelling on a variant with no states of its own) is never
+ * offered: there is no window to wait for, and no row to stage either. */
 function columnOffered(column: DeliveryColumn): boolean {
   return (
     column.windows.length > 0 && windowsOverlapWindow(column.windows, addBounds)
@@ -714,13 +734,18 @@ const committedColumns = $derived.by((): Set<string> => {
         column.rows.length > 0 &&
         column.rows.every((row) => {
           const match = committedRows.get(pickerRowKey(band, row));
-          // The NAME's own eras must be inside what was committed, not just the
-          // ROW's: a #902 rename chain is ONE row spanning the whole chain, so a
-          // row-grain marker would say "In project" on a retired name whose years
-          // the committed source never reached — beside a tick refusing it.
+          // THIS VARIANT's eras for the name must be inside what was committed, not
+          // just the ROW's: a #902 rename chain is ONE row spanning the whole chain,
+          // so a row-grain marker would say "In project" on a retired name whose
+          // years the committed source never reached — beside a tick refusing it.
+          // Pooled eras would do the same across variants, lending one variant's
+          // still-current name to the one that renamed it.
           return (
             match !== undefined &&
-            windowsOverlapPeriod(column.windows, match.sourcePeriod)
+            windowsOverlapPeriod(
+              column.windowsByVariant.get(row.variant) ?? [],
+              match.sourcePeriod,
+            )
           );
         })
       ) {
@@ -773,11 +798,18 @@ const stagedBatch = $derived.by(
           continue;
         }
         for (const row of column.rows) {
-          // Per ROW as well as per name: a name two variants deliver has a row each,
-          // and only the variants whose own eras reach the window commit — the other
-          // row would fall back to its whole span (`rowAddSegments`).
+          // Per (VARIANT, NAME) as well as per name: the tick was offered off the
+          // POOLED eras, so a variant that still ships a retired name offers it for
+          // every variant — including one that renamed it, whose folded row reaches
+          // the window through the SUCCESSOR. That row must not be staged under the
+          // retired name. `rowDeliversInScope` cannot see the distinction: the row is
+          // the whole chain.
           if (
             !tickedUnder.has(row.variant) ||
+            !windowsOverlapWindow(
+              column.windowsByVariant.get(row.variant) ?? [],
+              addBounds,
+            ) ||
             !rowDeliversInScope(row, addScope)
           ) {
             continue;
