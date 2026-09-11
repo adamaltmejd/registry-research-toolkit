@@ -33,7 +33,11 @@ worker, reviewer or plan argues for broader work.
   worker to integrate under review. The retired pre-Yard GitHub coordination machinery
   gets no new work.
 - **Record dogfooding.** Keep observed Yard problems and papercuts in
-  [DOGFOOD.md](DOGFOOD.md), including anything that wastes time or tokens.
+  [DOGFOOD.md](DOGFOOD.md), including anything that wastes time or tokens. The file
+  holds open items only: delete an entry once its upstream report is closed (fixed in
+  the running version with the retest result on the issue, or declined), and delete an
+  unfiled observation once it is filed or judged not worth filing. Git history keeps the
+  text.
 - **File rendered frontend changes with `--workflow ui`.** This adds the source-only
   design seat and the rendered flow gates (`project-flows`, `catalog-flows`) with
   retained screenshots alongside the code seat. No other workflow binds both. Read
@@ -121,7 +125,7 @@ Record the issue URL with the incident context in [DOGFOOD.md](DOGFOOD.md). Upst
 issues are intake: the builder decides which findings become Yard tickets and records
 the disposition and eventual fix/release. Filing feedback does not admit work here.
 After upgrading, retest the reported behavior and add the result to the issue; reopen it
-if the problem persists.
+if the problem persists, otherwise delete the DOGFOOD entry.
 
 Keep raw logs, verification reports and submission receipts in the already ignored
 `archive/reports/yard/`. Commit concise outcomes in DOGFOOD.md; label references to

@@ -240,7 +240,9 @@ local canonical main, and an uncoordinated second writer produces diverged heads
 `yard sync` will refuse.
 
 **Dogfooding**: Yard is the maintainer's own project under active development, and this
-repo is its testbed. While operating it, keep a running log in `.yard/DOGFOOD.md` of
-everything about how Yard works in practice — serious problems, but also papercuts:
-inconsistencies, unclear output, extra steps, and anything that wastes time or tokens.
-Periodically the maintainer summarizes it into insights for the Yard builder agent.
+repo is its testbed. While operating it, log in `.yard/DOGFOOD.md` how Yard behaves in
+practice — serious problems, but also papercuts: inconsistencies, unclear output, extra
+steps, and anything that wastes time or tokens. The log holds open items only: delete an
+entry once its upstream report is closed (fixed in the running Yard version, with the
+retest result on the issue, or declined), and delete an unfiled observation once it is
+filed or judged not worth filing. Git history keeps the deleted text.
