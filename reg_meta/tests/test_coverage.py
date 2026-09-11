@@ -170,6 +170,47 @@ def test_register_column_coverage_distinct_windows() -> None:
     assert var_cov["disp"].coverage_to == "2024-12-31"
 
 
+@pytest.mark.parametrize("reversed_rows", [False, True])
+def test_register_column_coverage_folds_case_twin_spellings(
+    reversed_rows: bool,
+) -> None:
+    """Y-102: two states spelling ONE delivery column differently (`Idh` beside
+    `IdH`) are one column (`py_lower`), so they share ONE key carrying the merged
+    window, under the spelling `representative_columns` picks — the spelling
+    `register_variable_deliveries` lists the column under and `queries.resolve`
+    answers with. Two keys would split the column's coverage, and a steward
+    holding either spelling would be shown whichever half it landed on. The
+    GROUP BY is unordered, so the rows read the other way round must answer
+    identically."""
+    conn = build_slugged_db()
+    add_variable(conn, register_id=1, var_id=800, name="Fastighet", slug="idve")
+    twins = [
+        ("Idh", "2013-01-01", "2015-12-31"),
+        ("IdH", "2016-01-01", "2018-12-31"),
+    ]
+    for column, valid_from, valid_to in reversed(twins) if reversed_rows else twins:
+        add_state(
+            conn,
+            register_id=1,
+            variable_slug="idve",
+            register_variant_id=10,
+            valid_from=valid_from,
+            valid_to=valid_to,
+            delivery_column_name=column,
+        )
+
+    col_cov = Catalog(conn).register_column_coverage("scb", "lisa")
+
+    # One key, under the lowest spelling by byte order (no state names it in a
+    # spelling the others don't fold to).
+    assert [key for key in col_cov if key[0] == "idve"] == [("idve", "IdH")]
+    merged = col_cov[("idve", "IdH")]
+    assert merged.coverage_from == "2013-01-01"
+    assert merged.coverage_to == "2018-12-31"
+    assert merged.state_count == 2
+    assert merged.open_ended is False
+
+
 def test_register_variable_deliveries() -> None:
     """Y-82: the per-variable `(variant, column)` listing the register page reads.
     Each pair carries its OWN window (a renamed column gets its era, not the

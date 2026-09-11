@@ -14,6 +14,7 @@ import sqlite3
 from concurrent.futures import ThreadPoolExecutor
 
 import pytest
+from _steward_helpers import write_steward
 from fastapi.testclient import TestClient
 from reg_webapp.app import create_app
 
@@ -192,6 +193,69 @@ def test_register_children_carry_alias_backed_delivery_columns(client):
         ("individer-15plus", "LonFinkJan", "2018-01-01", "2018-01-31"),
         ("individer-15plus", "LonFinkMars", "2018-03-01", "2018-03-31"),
     ]
+
+
+def test_held_column_matches_the_catalog_spelling_case_insensitively(
+    catalog_db, tmp_path, monkeypatch
+):
+    """Y-102: a steward holds the column under ITS OWN spelling (Y-92 emits the
+    holdings' literal one on purpose), which need not be the spelling the
+    catalog's state carries — SWECOV holds `Idh` where the state says `IdH`, on
+    7% of its mappings. The register page matches the two by `py_lower`, so the
+    delivery row IS shown and the variable's coverage counts it; before, the
+    exact-string compare left the researcher a variable with no delivery row and
+    no coverage though the boot gate had admitted the mapping.
+
+    The fold widens nothing else: a second delivered column this steward does not
+    hold stays out of the row.
+    """
+    with sqlite3.connect(catalog_db) as conn:
+        conn.execute(
+            "INSERT INTO variable (variable_id, register_id, provider_key, name, "
+            "slug) VALUES (950, 1, '950', 'Fastighet', 'idve')"
+        )
+        conn.execute(
+            "INSERT INTO variable_state (variable_id, register_variant_id, "
+            "valid_from, valid_to, data_type, delivery_column_name) "
+            "VALUES (950, 10, '2013-01-01', '2023-12-31', 'int', 'IdH')"
+        )
+        # The alias history spells the state's own column `Idh` as well — the
+        # window row is what the steward's inventory (and the boot gate that
+        # admits it) took its spelling from.
+        conn.executemany(
+            "INSERT INTO variable_alias (variable_id, register_variant_id, "
+            "delivery_column_name) VALUES (950, 10, ?)",
+            [("IdH",), ("Idh",), ("Taxvarde",)],
+        )
+        conn.execute(
+            "INSERT INTO variable_alias_window (variable_id, register_variant_id, "
+            "delivery_column_name, valid_from, valid_to) "
+            "VALUES (950, 10, 'Idh', '2013-01-01', '2023-12-31')"
+        )
+
+    stewards = tmp_path / "stewards"
+    write_steward(
+        stewards,
+        "ifau",
+        [("scb/lisa/individer-15plus", "scb/lisa/idve", "Idh", "2013")],
+    )
+    monkeypatch.setenv("REG_WEBAPP_STEWARDS_DIR", str(stewards))
+    monkeypatch.setenv("REG_WEBAPP_STEWARD", "ifau")
+    with TestClient(create_app()) as client:
+        body = client.get("/api/catalog/scb/lisa").json()
+
+    idve = next(c for c in body["children"] if c.get("fqid") == "scb/lisa/idve")
+    # The held `Idh` is the state's `IdH`: one delivery row, under the catalog's
+    # own spelling. `Taxvarde` is delivered but unheld, so it stays excluded.
+    assert [(d["variant"], d["column"]) for d in idve["deliveries"]] == [
+        ("individer-15plus", "IdH")
+    ]
+    assert idve["coverage"] == {
+        "coverage_from": "2013-01-01",
+        "coverage_to": "2023-12-31",
+        "open_ended": False,
+        "state_count": 1,
+    }
 
 
 def test_binding_leaf_embeds_full_record(client):

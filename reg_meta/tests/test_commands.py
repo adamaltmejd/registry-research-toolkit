@@ -1305,7 +1305,13 @@ class TestResolve:
     def test_repeated_alias_does_not_duplicate_variable(self):
         """One variable delivering the same column under several alias rows
         (per variant, or a case spelling) is still ONE match, carrying one
-        deterministic representative spelling."""
+        deterministic representative spelling.
+
+        Y-102: that spelling is the STATE's own where a state names the column —
+        `Kon` here, though `KON` is the lower of the two alias rows by byte order
+        — which is the spelling the catalog's own readers list the column under
+        (`catalog.representative_columns`), so `resolve` and a browse row name one
+        column the same way."""
         from _slugged_db import build_slugged_db
         from reg_meta.queries import resolve
 
@@ -1318,7 +1324,26 @@ class TestResolve:
         conn.commit()
         matches = resolve(conn, ["kon"])[0]["matches"]
         assert [m["fqid"] for m in matches] == ["scb/lisa/kon"]
-        assert matches[0]["matched_column"] == "KON"
+        assert matches[0]["matched_column"] == "Kon"
+
+    def test_representative_spelling_falls_back_to_lowest_alias(self):
+        """Y-102, the other arm of the rule: a column carried only by
+        `variable_alias` — a co-delivered spelling no `variable_state` names — has
+        no state spelling to prefer, so the lowest by byte order represents it, as
+        it does in `Catalog.register_variable_deliveries`."""
+        from _slugged_db import build_slugged_db
+        from reg_meta.queries import resolve
+
+        conn = build_slugged_db()
+        conn.executemany(
+            "INSERT INTO variable_alias "
+            "(variable_id, register_variant_id, delivery_column_name) "
+            "SELECT variable_id, 10, ? FROM variable WHERE slug = 'kon'",
+            [("Konkod",), ("KONKOD",)],
+        )
+        conn.commit()
+        matches = resolve(conn, ["konkod"])[0]["matches"]
+        assert [m["matched_column"] for m in matches] == ["KONKOD"]
 
 
 # ---------------------------------------------------------------------------

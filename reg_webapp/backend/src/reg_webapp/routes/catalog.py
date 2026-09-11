@@ -115,6 +115,7 @@ from reg_webapp.query_input import clamp_limit, matches_filter, validate_text_qu
 
 if TYPE_CHECKING:
     import sqlite3
+    from collections.abc import Iterable
 
     from reg_webapp.catalog_index import CatalogIndex
 
@@ -256,10 +257,44 @@ def _filter_states_to_held(
     return [s for s in states if s.delivery_column_name in held]
 
 
+def _fold_column(column: str | None) -> str | None:
+    """A delivery column's case-folded identity (`py_lower`'s rule, which reg_meta
+    names one representative spelling per column with, and the build validates
+    `variable_alias ⊇ state columns` with). `None` folds to itself.
+
+    The catalog route matches a steward's HELD column to a catalog row through this
+    fold (Y-102): the inventory spells a column as the steward's own holdings do,
+    which is not always the catalog's spelling of it — see DESIGN.md → Coverage
+    aggregates. An exactly-spelled held column matches as it always did."""
+    return column if column is None else column.lower()
+
+
+def _folded_columns(columns: Iterable[str | None]) -> frozenset[str | None]:
+    """A steward's held delivery columns under `_fold_column` — folded ONCE, where
+    they leave the index, so every comparison downstream is fold against fold."""
+    return frozenset(_fold_column(column) for column in columns)
+
+
+def _folded_column_coverage(
+    catalog: Catalog, provider_slug: str, register_slug: str
+) -> dict[tuple[str, str | None], VariableCoverage]:
+    """`Catalog.register_column_coverage` re-keyed on `_fold_column`, so a column
+    finds its coverage row whatever case the reader spells it in. One pass per
+    listing; reg_meta already folds its own case twins onto one key, so no two rows
+    can collide here."""
+    return {
+        (slug, _fold_column(column)): coverage
+        for (slug, column), coverage in catalog.register_column_coverage(
+            provider_slug, register_slug
+        ).items()
+    }
+
+
 def _held_graph_node_columns(
     node: VariableGraphNode, index: CatalogIndex, focus_fqid: str | None
 ) -> frozenset[str | None]:
-    """Held columns for a graph node, accepting held same_as aliases as identity."""
+    """Held columns for a graph node, FOLDED (`_fold_column`) for matching against
+    a state's own spelling, and accepting held same_as aliases as identity."""
     candidate_fqids = {
         str(fqid)
         for fqid in (
@@ -273,11 +308,11 @@ def _held_graph_node_columns(
     held: set[str | None] = set()
     for fqid in candidate_fqids:
         held.update(index.held_columns(fqid))
-    return frozenset(held)
+    return _folded_columns(held)
 
 
 def _graph_column_matches(left: str, right: str) -> bool:
-    return left.casefold() == right.casefold()
+    return _fold_column(left) == _fold_column(right)
 
 
 def _node_has_representation_endpoint(
@@ -353,7 +388,9 @@ def _narrow_graph_to_held(
         held = _held_graph_node_columns(
             node, index, focus_fqid if node.id == graph.focus_id else None
         )
-        states = [s for s in node.states if s.delivery_column_name in held]
+        states = [
+            s for s in node.states if _fold_column(s.delivery_column_name) in held
+        ]
         if states:
             kept_nodes.append(
                 node.model_copy(
@@ -579,7 +616,7 @@ _NO_STATE_COVERAGE = VariableCoverage(
 
 
 def _held_variable_coverage(
-    per_column: dict[tuple[str, str], VariableCoverage],
+    per_column: dict[tuple[str, str | None], VariableCoverage],
     per_unnamed: dict[str, VariableCoverage],
     variable_slug: str,
     held_columns: frozenset[str | None],
@@ -590,12 +627,15 @@ def _held_variable_coverage(
     borrowing the whole-variable union; that mirrors representation-member coverage
     and avoids overstating partial-column holdings. A genuinely unnamed held column
     (`delivery_column_name is None`) has no `register_column_coverage` key, so it uses
-    the exact unnamed-column coverage row.
+    the exact unnamed-column coverage row. Both sides arrive FOLDED — `held_columns`
+    through `_folded_columns`, `per_column` through `_folded_column_coverage` — so a
+    held spelling that is not the catalog's still finds its row.
     """
     rows = [
-        per_column[(variable_slug, column)]
+        coverage
         for column in held_columns
-        if column is not None and (variable_slug, column) in per_column
+        if column is not None
+        and (coverage := per_column.get((variable_slug, column))) is not None
     ]
     if None in held_columns and variable_slug in per_unnamed:
         rows.append(per_unnamed[variable_slug])
@@ -793,7 +833,7 @@ def _concept_group_node(
     echoed for the SPA to highlight (None when absent/unrecognized — a bad hint is
     ignored, keeping the group page first-class)."""
     coverage = catalog.register_variable_coverage(provider_slug, register_slug)
-    column_coverage = catalog.register_column_coverage(provider_slug, register_slug)
+    column_coverage = _folded_column_coverage(catalog, provider_slug, register_slug)
     members: list[ConceptGroupNodeMember] = []
     for m in group.members:
         # The member FQID's leaf segment IS its variable slug — the key
@@ -804,8 +844,11 @@ def _concept_group_node(
         # representation member, so serialize the zero-state coverage object rather
         # than `None` (unknown) or the variable-level union.
         if m.delivery_column is not None:
+            # A curated member names the column in an ALIAS spelling (the build
+            # validates it against `variable_alias`), which need not be the one
+            # reg_meta keys the coverage under, so this match folds too (Y-102).
             member_cov = column_coverage.get(
-                (leaf_slug, m.delivery_column), _NO_STATE_COVERAGE
+                (leaf_slug, _fold_column(m.delivery_column)), _NO_STATE_COVERAGE
             )
         else:
             member_cov = coverage.get(leaf_slug)
@@ -861,7 +904,7 @@ def _classification_family_node(family) -> ClassificationFamilyNode:
 
 
 def _held_register_coverage(
-    per_column: dict[tuple[str, str], VariableCoverage],
+    per_column: dict[tuple[str, str | None], VariableCoverage],
     per_unnamed: dict[str, VariableCoverage],
     held_columns_by_slug: dict[str, frozenset[str | None]],
 ) -> RegisterCoverage | None:
@@ -935,7 +978,7 @@ def _provider_response(
             provider, register, variable = fqid.split("/")
             held_columns_by_register.setdefault(f"{provider}/{register}", {})[
                 variable
-            ] = index.held_columns(fqid)
+            ] = _folded_columns(index.held_columns(fqid))
 
         def coverage_for(register_slug: str) -> RegisterCoverage | None:
             held_columns = held_columns_by_register.get(
@@ -943,7 +986,7 @@ def _provider_response(
             )
             if not held_columns:
                 return None
-            per_column = catalog.register_column_coverage(provider_slug, register_slug)
+            per_column = _folded_column_coverage(catalog, provider_slug, register_slug)
             per_unnamed = catalog.register_unnamed_column_coverage(
                 provider_slug, register_slug
             )
@@ -999,7 +1042,7 @@ def _register_response(
             return variable_coverage.get(variable_slug)
 
     else:
-        column_coverage = catalog.register_column_coverage(provider_slug, register_slug)
+        column_coverage = _folded_column_coverage(catalog, provider_slug, register_slug)
         unnamed_coverage = catalog.register_unnamed_column_coverage(
             provider_slug, register_slug
         )
@@ -1027,14 +1070,16 @@ def _register_response(
         rows = deliveries.get(variable_slug, [])
         if held_columns is None:
             return rows
-        return [d for d in rows if d.column in held_columns]
+        return [d for d in rows if _fold_column(d.column) in held_columns]
 
     def held_columns_for(variable_slug: str) -> frozenset[str | None] | None:
-        """This steward's held delivery columns for a variable, or None on the
-        unfiltered path. One lookup per binding, shared by both readers."""
+        """This steward's held delivery columns for a variable, FOLDED, or None on
+        the unfiltered path. One lookup per binding, shared by both readers."""
         if index is None:
             return None
-        return index.held_columns(f"{provider_slug}/{register_slug}/{variable_slug}")
+        return _folded_columns(
+            index.held_columns(f"{provider_slug}/{register_slug}/{variable_slug}")
+        )
 
     # A register's children are its bindings PLUS a `variants` reference
     # stub (the declared A5.2 variant-browser slot — a link, not data).

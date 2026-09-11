@@ -169,6 +169,32 @@ This allows `34`, `LISA`, and `utbildning` to all work.
 FTS fallback, no confidence scoring. Status is `matched` or `no_match`. This is
 intentional — resolve is for mapping known column headers, not discovery.
 
+## One spelling per delivery column
+
+One delivery column can be spelled several ways across the catalog: `variable_state`
+carries the state's own spelling, `variable_alias` / `variable_alias_window` the alias
+history's (`fastigheter` windows IDVE, IdVe and idve over one column). They fold
+together under `py_lower` — the rule the build validates
+`variable_alias ⊇ state columns` with — so they are ONE column, and every reader that
+has to NAME it takes the same representative from `catalog.representative_columns`:
+**the state's own spelling where a state names the column, else the lowest by byte
+order**. Lowest rather than first-seen, because the reads are unordered: a first-seen
+rule would answer off whatever plan SQLite picked for them.
+
+So a column's IDENTITY is its fold and its NAME is the representative.
+`Catalog.register_column_coverage` (one key per folded column, over the twins' merged
+window), `Catalog.register_variable_deliveries` (one delivery row per folded column) and
+`queries.resolve` (`matched_column`) had three rules between them until Y-102 — the
+state's spelling, Y-93's representative, and `MIN(variable_alias.delivery_column_name)`
+— so one column could come back under three names.
+
+A consumer holding a spelling of its OWN matches these rows by the fold, never by string
+equality. A steward's inventory token is exactly such a spelling: the boot gate below
+accepts it in whichever spelling the resolver produced for that pair — the alias-WINDOW
+spelling where a state expands into its windows — which by this rule is deliberately not
+always the representative (see reg_webapp/DESIGN.md → Steward layering and the in-memory
+catalog index).
+
 ## Composite registers and source tracking
 
 Registers like LISA, FRIDA, LINDA, and STATIV are composites — most of their variables

@@ -649,6 +649,14 @@ columns without a per-column state row get `coverage = None`; held unnamed colum
 `Catalog.register_unnamed_column_coverage` because `register_column_coverage` has no
 NULL delivery-column key.
 
+A held column is matched to the catalog's rows through ONE fold (`_fold_column`,
+`py_lower`'s rule), never by exact string (Y-102) — the index holds the inventory's
+spelling of the column, which is not always the catalog's (see § Steward layering and
+the in-memory catalog index). The same fold serves the deliveries narrowing, the graph's
+held-column narrowing and the concept-group member's per-column window; reg_meta names
+one representative spelling per column, so each folded column has a single row to find
+(reg_meta/DESIGN.md → One spelling per delivery column).
+
 Register-scoped concept-group subject pages also use `register_column_coverage` for
 representation members, but a missing per-column key is a known curated member with no
 `variable_state` row, not absent enrichment. Those members serialize the existing
@@ -724,9 +732,9 @@ joins SQLite drives from `variable_state` and scans the WHOLE table instead of s
   listed column is that one delivery.
 - **Steward semantics**: for a filtered steward the deliveries are narrowed to
   `CatalogIndex.held_columns(fqid)` — the SAME held-column set the coverage recompute
-  uses — so a partial-column hold names only the columns that steward actually holds.
-  The index's grain is variant-blind, so the filter is on the column, not on the
-  variant.
+  uses, matched by the same `_fold_column` fold — so a partial-column hold names only
+  the columns that steward actually holds, under the catalog's own spelling of each. The
+  index's grain is variant-blind, so the filter is on the column, not on the variant.
 - **Additive**: `deliveries` defaults to `[]` and is populated only in the register
   listing payload; the SPA must tolerate its absence (a register node's own payload, or
   a child that predates the field).
@@ -1005,8 +1013,16 @@ internals are dataclasses), carrying three maps derived from the inventory's
   `delivery_column_name`. A mapping's `representation` IS that canonical token — never
   the physical `column.name`, which is the steward's own literal delivery spelling — so
   an explicit representation is admitted verbatim and boot performs **zero** catalog
-  resolution (every SWECOV mapping is explicit). A `representation` of `None` states
-  "the concept's *single* representation" (§12) and is **not** a wildcard: it is
+  resolution (every SWECOV mapping is explicit). Verbatim means in the INVENTORY's
+  spelling: the token names the catalog's column, but its case is the one the generator
+  wrote (Y-92 emits the holdings' literal spelling on purpose — admission is
+  column-based and the ordered column must stay orderable), and that is not always the
+  case the catalog's `variable_state` carries. On SWECOV it differs on 7% of 36,840
+  mappings (`Idh` held, `IdH` delivered), which a deployment BOOTS on — the gate accepts
+  the spelling the resolver produced — so every catalog-side comparison folds the two
+  (Y-102, § Coverage aggregates); comparing strings dropped exactly those columns from
+  the register page's delivery cell and its coverage. A `representation` of `None`
+  states "the concept's *single* representation" (§12) and is **not** a wildcard: it is
   resolved against the catalog over the table's edition bounds, so a mapping authored
   before reg_meta grew a sibling column still compares equal to a researcher who must
   now pin. One edition can span a **rename**, so that resolution can answer with several

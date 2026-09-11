@@ -15,7 +15,12 @@ from binascii import Error as Base64Error
 from hashlib import sha256
 from typing import TYPE_CHECKING, Any
 
-from .catalog import Catalog, ConceptGroupMember, GroupFacet
+from .catalog import (
+    Catalog,
+    ConceptGroupMember,
+    GroupFacet,
+    representative_columns,
+)
 from .db import classification_succession_as_of_year, get_manifest
 from .errors import EXIT_NOT_FOUND, EXIT_USAGE, RegMetaError
 from .fqid import Fqid, try_emit
@@ -4317,9 +4322,15 @@ def resolve(
     # SHARE (register_id, provider_key), so grouping on that pair returned one
     # match for two real variables. A variable can hold several alias rows
     # folding to the queried column (one per delivering variant, or case
-    # spellings); `MIN` picks its representative spelling deterministically.
+    # spellings), and the states can name it in a spelling of their own: the two
+    # `MIN`s are the candidates `representative_columns` picks the ONE answer
+    # from, so `resolve` names the column the catalog's browse readers name it by
+    # (see DESIGN.md → One spelling per delivery column).
     exact_sql = (
-        "SELECT MIN(va.delivery_column_name) AS delivery_column_name, "
+        "SELECT MIN(va.delivery_column_name) AS alias_column, "
+        "(SELECT MIN(vs.delivery_column_name) FROM variable_state vs "
+        "  WHERE vs.variable_id = v.variable_id "
+        "  AND py_lower(vs.delivery_column_name) = ?) AS state_column, "
         "v.register_id, " + _VAR_ID_V + ", v.name AS variable_name, "
         "p.slug AS provider_slug, r.slug AS register_slug, "
         "v.slug AS variable_slug "
@@ -4338,7 +4349,9 @@ def resolve(
     for col in columns:
         col_lower = col.lower()
 
-        exact_rows = conn.execute(exact_sql, [col_lower, *register_params]).fetchall()
+        exact_rows = conn.execute(
+            exact_sql, [col_lower, col_lower, *register_params]
+        ).fetchall()
 
         matches = [
             {
@@ -4350,7 +4363,9 @@ def resolve(
                 ),
                 "var_id": r["var_id"],
                 "variable_name": r["variable_name"],
-                "matched_column": r["delivery_column_name"],
+                "matched_column": representative_columns(
+                    [r["state_column"]], [r["alias_column"]]
+                )[col_lower],
                 "register_id": r["register_id"],
             }
             for r in exact_rows
