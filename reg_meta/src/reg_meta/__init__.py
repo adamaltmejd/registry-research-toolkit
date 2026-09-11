@@ -150,7 +150,7 @@ __all__ = [
     "search",
 ]
 
-__version__ = "0.40.0"
+__version__ = "0.40.1"
 
 
 # Public names resolved on first access instead of at import. `download_db`
