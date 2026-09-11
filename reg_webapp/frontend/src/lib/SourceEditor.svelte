@@ -727,13 +727,6 @@ function confirmRemove(): void {
   .source-head h3.mono {
     font-family: var(--font-mono);
   }
-  /* The error badge inside that heading is COPY — "3 errors" — so it keeps the UI
-     face even where the heading has fallen back to the coordinate. `Tag` declares no
-     face of its own (frontend/DESIGN.md binds the primitive to mono), so a mono-faced
-     context sets the UI face on its own usage, as the register list does. */
-  .source-head h3.mono :global(.tag) {
-    font-family: var(--font-ui);
-  }
   /* The period control: the same entry the catalog's period card carries, on the
      card's own spacing rhythm rather than in a second bordered box (cards inside
      cards, DESIGN.md), and on the SAME two columns `KeyValue` lays the rows above it

@@ -13,6 +13,7 @@
 import { lint, type ResolvedDimension } from "@google/design.md/linter";
 import { describe, expect, it } from "vitest";
 import designMd from "../DESIGN.md?raw";
+import tagSvelte from "./lib/ui/Tag.svelte?raw";
 import tokensCss from "./tokens.css?raw";
 
 /** `{ value: 0.75, unit: "rem" }` → `"0.75rem"`, the spelling tokens.css uses. */
@@ -129,5 +130,32 @@ describe("DESIGN.md ↔ tokens.css parity", () => {
       expected[`${token} (${property})`] = specValue.toLowerCase();
     }
     expect(actual).toEqual(expected);
+  });
+
+  it("binds the tag primitive's face to Tag.svelte's own base rule", () => {
+    // components.tag.typography resolves through the spec's own reference (it
+    // names a font family, which SPEC above does not track), so this checks the
+    // one component binding the ticket added rather than reusing SPEC/CSS.
+    const FONT_FAMILY_VAR: Record<string, string> = {
+      "Schibsted Grotesk": "--font-ui",
+      "IBM Plex Mono": "--font-mono",
+    };
+    const typography = lint(designMd)
+      .designSystem.components.get("tag")
+      ?.properties.get("typography");
+    if (
+      !typography ||
+      typeof typography !== "object" ||
+      typography.type !== "typography"
+    ) {
+      throw new Error("components.tag.typography did not resolve");
+    }
+    const expectedVar = FONT_FAMILY_VAR[typography.fontFamily ?? ""];
+    expect(expectedVar).toBeDefined();
+
+    const baseRule = tagSvelte.match(/\.tag\s*{[^}]*}/)?.[0];
+    if (!baseRule) throw new Error("Tag.svelte has no base .tag rule");
+    const actualVar = baseRule.match(/font-family:\s*var\((--[\w-]+)\)/)?.[1];
+    expect(actualVar).toBe(expectedVar);
   });
 });

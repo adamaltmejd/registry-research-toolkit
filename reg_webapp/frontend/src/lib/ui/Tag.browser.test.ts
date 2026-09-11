@@ -30,6 +30,23 @@ describe("Tag", () => {
     expect(container.querySelector(".tag")).toHaveClass("mono");
   });
 
+  it("is copy-faced by default, mono only when opted in (Y-105)", async () => {
+    const { container: copy } = await render(Tag, { children: label });
+    const copyTag = copy.querySelector<HTMLElement>(".tag");
+    expect(getComputedStyle(copyTag as HTMLElement).fontFamily).toContain(
+      "Schibsted Grotesk",
+    );
+
+    const { container: mono } = await render(Tag, {
+      mono: true,
+      children: label,
+    });
+    const monoLabel = mono.querySelector<HTMLElement>(".tag .label");
+    expect(getComputedStyle(monoLabel as HTMLElement).fontFamily).toContain(
+      "IBM Plex Mono",
+    );
+  });
+
   it("renders a leading glyph for status tones, hidden from a11y", async () => {
     const glyph = createRawSnippet(() => ({ render: () => "<span>✕</span>" }));
     const { container } = await render(Tag, {

@@ -1390,13 +1390,6 @@ async function addSelected(): Promise<void> {
     color: var(--text-muted);
     cursor: default;
   }
-  /* This cell is mono because it lists identifiers, and a tag in it is COPY — two
-     words of English. `Tag` declares no face of its own (frontend/DESIGN.md binds
-     the primitive to mono), so a mono-faced context sets the UI face on its own
-     usage rather than re-facing every tag in the app. */
-  .delivery-column :global(.tag) {
-    font-family: var(--font-ui);
-  }
   /* The years inside that copy are an identifier, like the delivery years beside
      them (frontend/DESIGN.md → Typography): the sentence is UI-faced, the span is
      not. */

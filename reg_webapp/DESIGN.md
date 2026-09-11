@@ -1419,15 +1419,10 @@ Load-bearing decisions downstream children (#806–#809) must not re-litigate:
   label clears AA without per-component overrides. Status tones **require** a leading
   `glyph` snippet (the accent-vs-status rule: hue alone is never sufficient); the glyph
   is `aria-hidden`, so status meaning must also appear in the label text.
-- **`Tag` declares no font-family.** `frontend/DESIGN.md`'s front matter binds the tag
-  primitive to the mono face, so the base `.tag` rule sets none and a tag takes its
-  context's. A tag LABEL is usually English copy ("In project", "3 errors"), so the two
-  contexts that are mono because they list identifiers — the register list's
-  delivery-column cell and `SourceEditor`'s coordinate heading — set `--font-ui` on
-  their OWN `:global(.tag)` usage. Putting the UI face on the base instead would re-face
-  every tag in the app to fix those two, so the missing declaration is the decision, not
-  an oversight. That the contract says mono while most call sites are copy is unresolved
-  and filed as a follow-up.
+- **`Tag` is copy-faced.** (Y-105, superseding Y-83's "declares no font-family") The
+  base `.tag` rule sets `font-family: var(--font-ui)` — a tag label is a word of UI
+  text — and the `mono` prop opts a tag into the mono face for the exception, an
+  identifier shown as a tag.
 - **Focus-ring convention.** Every interactive primitive applies
   `:focus-visible { box-shadow: var(--focus-ring) }` in its own scoped CSS — no global
   stylesheet owns this.

@@ -163,7 +163,7 @@ components:
     textColor: "{colors.text}"
   tag:
     rounded: "{rounded.sm}"
-    typography: "{typography.mono}"
+    typography: "{typography.body-sm}"
   banner-error:
     backgroundColor: "{colors.err-bg}"
     textColor: "{colors.err}"
@@ -322,7 +322,8 @@ and are composed before anything new is styled: `Panel`, `DataTable`, `Breadcrum
   view; `default` is a white surface with a hairline border; `ghost` is borderless ink
   text; `danger` is the error fill for destructive actions only. Two sizes (`md`, `sm`),
   `sm` at label size. A button says what happens: "Add to project", never "Submit".
-- **Tags:** mono, `sm` radius, a hairline border in the tone's hue. Chrome tones
+- **Tags:** copy-faced, `sm` radius, a hairline border in the tone's hue; `mono` is an
+  opt-in for a tag that shows an identifier rather than a label. Chrome tones
   (`neutral`, `accent`), categorical type tones (`reg`/`var`/`code`/`class`/`group`),
   and status tones (`error`/`warn`/`info`/`ok`) that require a leading glyph.
 - **Filter chips (`FilterChip`):** the multi-select control above a filtered list — a
