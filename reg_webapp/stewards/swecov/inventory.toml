@@ -13789,6 +13789,11 @@ register_variant = "scb/aku/aku-april-2005-dec-2020"
 variable = "scb/aku/hufrantimtot"
 representation = "HuFrAntimTot"
 
+[[table.column.mapping]]
+register_variant = "scb/aku/aku-april-2005-dec-2020"
+variable = "scb/aku/hufrantimtot"
+representation = "HuFranTimTot"
+
 [[table.column]]
 name = "HuFrAntimTotFO"
 
@@ -13852,6 +13857,11 @@ representation = "HuFranSkal1"
 
 [[table.column]]
 name = "HuFranTimTotAnst"
+
+[[table.column.mapping]]
+register_variant = "scb/aku/aku-april-2005-dec-2020"
+variable = "scb/aku/hufrantimtot"
+representation = "HuFranTimTotAnst"
 
 [[table.column.mapping]]
 register_variant = "scb/aku/aku-april-2005-dec-2020"
@@ -15723,6 +15733,11 @@ register_variant = "scb/aku/aku-april-2005-dec-2020"
 variable = "scb/aku/hufrantimtot"
 representation = "HuFrAntimTot"
 
+[[table.column.mapping]]
+register_variant = "scb/aku/aku-april-2005-dec-2020"
+variable = "scb/aku/hufrantimtot"
+representation = "HuFranTimTot"
+
 [[table.column]]
 name = "HuFrAntimTotFO"
 
@@ -15786,6 +15801,11 @@ representation = "HuFranSkal1"
 
 [[table.column]]
 name = "HuFranTimTotAnst"
+
+[[table.column.mapping]]
+register_variant = "scb/aku/aku-april-2005-dec-2020"
+variable = "scb/aku/hufrantimtot"
+representation = "HuFranTimTotAnst"
 
 [[table.column.mapping]]
 register_variant = "scb/aku/aku-april-2005-dec-2020"
@@ -17657,6 +17677,11 @@ register_variant = "scb/aku/aku-april-2005-dec-2020"
 variable = "scb/aku/hufrantimtot"
 representation = "HuFrAntimTot"
 
+[[table.column.mapping]]
+register_variant = "scb/aku/aku-april-2005-dec-2020"
+variable = "scb/aku/hufrantimtot"
+representation = "HuFranTimTot"
+
 [[table.column]]
 name = "HuFrAntimTotFO"
 
@@ -17720,6 +17745,11 @@ representation = "HuFranSkal1"
 
 [[table.column]]
 name = "HuFranTimTotAnst"
+
+[[table.column.mapping]]
+register_variant = "scb/aku/aku-april-2005-dec-2020"
+variable = "scb/aku/hufrantimtot"
+representation = "HuFranTimTotAnst"
 
 [[table.column.mapping]]
 register_variant = "scb/aku/aku-april-2005-dec-2020"
@@ -19591,6 +19621,11 @@ register_variant = "scb/aku/aku-april-2005-dec-2020"
 variable = "scb/aku/hufrantimtot"
 representation = "HuFrAntimTot"
 
+[[table.column.mapping]]
+register_variant = "scb/aku/aku-april-2005-dec-2020"
+variable = "scb/aku/hufrantimtot"
+representation = "HuFranTimTot"
+
 [[table.column]]
 name = "HuFrAntimTotFO"
 
@@ -19654,6 +19689,11 @@ representation = "HuFranSkal1"
 
 [[table.column]]
 name = "HuFranTimTotAnst"
+
+[[table.column.mapping]]
+register_variant = "scb/aku/aku-april-2005-dec-2020"
+variable = "scb/aku/hufrantimtot"
+representation = "HuFranTimTotAnst"
 
 [[table.column.mapping]]
 register_variant = "scb/aku/aku-april-2005-dec-2020"
@@ -21525,6 +21565,11 @@ register_variant = "scb/aku/aku-april-2005-dec-2020"
 variable = "scb/aku/hufrantimtot"
 representation = "HuFrAntimTot"
 
+[[table.column.mapping]]
+register_variant = "scb/aku/aku-april-2005-dec-2020"
+variable = "scb/aku/hufrantimtot"
+representation = "HuFranTimTot"
+
 [[table.column]]
 name = "HuFrAntimTotFO"
 
@@ -21588,6 +21633,11 @@ representation = "HuFranSkal1"
 
 [[table.column]]
 name = "HuFranTimTotAnst"
+
+[[table.column.mapping]]
+register_variant = "scb/aku/aku-april-2005-dec-2020"
+variable = "scb/aku/hufrantimtot"
+representation = "HuFranTimTotAnst"
 
 [[table.column.mapping]]
 register_variant = "scb/aku/aku-april-2005-dec-2020"
@@ -23486,6 +23536,11 @@ register_variant = "scb/aku/aku-april-2005-dec-2020"
 variable = "scb/aku/hufrantimtot"
 representation = "HuFrAntimTot"
 
+[[table.column.mapping]]
+register_variant = "scb/aku/aku-april-2005-dec-2020"
+variable = "scb/aku/hufrantimtot"
+representation = "HuFranTimTot"
+
 [[table.column]]
 name = "HuFrAntimTotFO"
 
@@ -23549,6 +23604,11 @@ representation = "HuFranSkal1"
 
 [[table.column]]
 name = "HuFranTimTotAnst"
+
+[[table.column.mapping]]
+register_variant = "scb/aku/aku-april-2005-dec-2020"
+variable = "scb/aku/hufrantimtot"
+representation = "HuFranTimTotAnst"
 
 [[table.column.mapping]]
 register_variant = "scb/aku/aku-april-2005-dec-2020"
@@ -59475,23 +59535,53 @@ representation = "CO"
 [[table.column]]
 name = "CO21"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO21"
+
 [[table.column]]
 name = "CO31"
 
 [[table.column]]
 name = "CO41"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO41"
+
 [[table.column]]
 name = "CO51"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO51"
 
 [[table.column]]
 name = "CO61"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO61"
+
 [[table.column]]
 name = "CO71"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO71"
+
 [[table.column]]
 name = "Co55"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO55"
 
 [[table.column]]
 name = "EMP"
@@ -60842,26 +60932,66 @@ representation = "CO11"
 [[table.column]]
 name = "co12"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO12"
+
 [[table.column]]
 name = "co13"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO13"
 
 [[table.column]]
 name = "co14"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO14"
+
 [[table.column]]
 name = "co15"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO15"
 
 [[table.column]]
 name = "co22"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO22"
+
 [[table.column]]
 name = "co23"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO23"
 
 [[table.column]]
 name = "co24"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO24"
+
 [[table.column]]
 name = "co25"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO25"
 
 [[table.column]]
 name = "co32"
@@ -60878,47 +61008,122 @@ name = "co35"
 [[table.column]]
 name = "co42"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO42"
+
 [[table.column]]
 name = "co43"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO43"
 
 [[table.column]]
 name = "co44"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO44"
+
 [[table.column]]
 name = "co45"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO45"
 
 [[table.column]]
 name = "co52"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO52"
+
 [[table.column]]
 name = "co53"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO53"
 
 [[table.column]]
 name = "co54"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO54"
+
 [[table.column]]
 name = "co62"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO62"
 
 [[table.column]]
 name = "co63"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO63"
+
 [[table.column]]
 name = "co64"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO64"
 
 [[table.column]]
 name = "co65"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO65"
+
 [[table.column]]
 name = "co72"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO72"
 
 [[table.column]]
 name = "co73"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO73"
+
 [[table.column]]
 name = "co74"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO74"
+
 [[table.column]]
 name = "co75"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO75"
 
 [[table.column]]
 name = "nace"
@@ -60999,20 +61204,45 @@ representation = "CO"
 [[table.column]]
 name = "CO21"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO21"
+
 [[table.column]]
 name = "CO31"
 
 [[table.column]]
 name = "CO41"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO41"
+
 [[table.column]]
 name = "CO51"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO51"
 
 [[table.column]]
 name = "CO61"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO61"
+
 [[table.column]]
 name = "CO71"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO71"
 
 [[table.column]]
 name = "ECap"
@@ -62406,6 +62636,11 @@ representation = "co11_o"
 [[table.column]]
 name = "co12"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO12"
+
 [[table.column]]
 name = "co12_o"
 
@@ -62417,6 +62652,11 @@ representation = "co12_o"
 [[table.column]]
 name = "co13"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO13"
+
 [[table.column]]
 name = "co13_o"
 
@@ -62427,6 +62667,11 @@ representation = "co13_o"
 
 [[table.column]]
 name = "co14"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO14"
 
 [[table.column]]
 name = "co14_o"
@@ -62447,6 +62692,11 @@ representation = "co21_o"
 [[table.column]]
 name = "co22"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO22"
+
 [[table.column]]
 name = "co22_o"
 
@@ -62458,6 +62708,11 @@ representation = "co22_o"
 [[table.column]]
 name = "co23"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO23"
+
 [[table.column]]
 name = "co23_o"
 
@@ -62468,6 +62723,11 @@ representation = "co23_o"
 
 [[table.column]]
 name = "co24"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO24"
 
 [[table.column]]
 name = "co24_o"
@@ -62529,6 +62789,11 @@ representation = "co41_o"
 [[table.column]]
 name = "co42"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO42"
+
 [[table.column]]
 name = "co42_o"
 
@@ -62540,6 +62805,11 @@ representation = "co42_o"
 [[table.column]]
 name = "co43"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO43"
+
 [[table.column]]
 name = "co43_o"
 
@@ -62550,6 +62820,11 @@ representation = "co43_o"
 
 [[table.column]]
 name = "co44"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO44"
 
 [[table.column]]
 name = "co44_o"
@@ -62570,6 +62845,11 @@ representation = "co51_o"
 [[table.column]]
 name = "co52"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO52"
+
 [[table.column]]
 name = "co52_o"
 
@@ -62581,6 +62861,11 @@ representation = "co52_o"
 [[table.column]]
 name = "co53"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO53"
+
 [[table.column]]
 name = "co53_o"
 
@@ -62591,6 +62876,11 @@ representation = "co53_o"
 
 [[table.column]]
 name = "co54"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO54"
 
 [[table.column]]
 name = "co54_o"
@@ -62611,6 +62901,11 @@ representation = "co61_o"
 [[table.column]]
 name = "co62"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO62"
+
 [[table.column]]
 name = "co62_o"
 
@@ -62622,6 +62917,11 @@ representation = "co62_o"
 [[table.column]]
 name = "co63"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO63"
+
 [[table.column]]
 name = "co63_o"
 
@@ -62632,6 +62932,11 @@ representation = "co63_o"
 
 [[table.column]]
 name = "co64"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO64"
 
 [[table.column]]
 name = "co64_o"
@@ -62652,6 +62957,11 @@ representation = "co71_o"
 [[table.column]]
 name = "co72"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO72"
+
 [[table.column]]
 name = "co72_o"
 
@@ -62663,6 +62973,11 @@ representation = "co72_o"
 [[table.column]]
 name = "co73"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO73"
+
 [[table.column]]
 name = "co73_o"
 
@@ -62673,6 +62988,11 @@ representation = "co73_o"
 
 [[table.column]]
 name = "co74"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO74"
 
 [[table.column]]
 name = "co74_o"
@@ -63151,20 +63471,45 @@ representation = "CO"
 [[table.column]]
 name = "CO21"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO21"
+
 [[table.column]]
 name = "CO31"
 
 [[table.column]]
 name = "CO41"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO41"
+
 [[table.column]]
 name = "CO51"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO51"
 
 [[table.column]]
 name = "CO61"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO61"
+
 [[table.column]]
 name = "CO71"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO71"
 
 [[table.column]]
 name = "ECap"
@@ -64467,20 +64812,50 @@ representation = "CO11"
 [[table.column]]
 name = "co12"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO12"
+
 [[table.column]]
 name = "co13"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO13"
 
 [[table.column]]
 name = "co14"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO14"
+
 [[table.column]]
 name = "co22"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO22"
 
 [[table.column]]
 name = "co23"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO23"
+
 [[table.column]]
 name = "co24"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO24"
 
 [[table.column]]
 name = "co32"
@@ -64494,38 +64869,98 @@ name = "co34"
 [[table.column]]
 name = "co42"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO42"
+
 [[table.column]]
 name = "co43"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO43"
 
 [[table.column]]
 name = "co44"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO44"
+
 [[table.column]]
 name = "co52"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO52"
 
 [[table.column]]
 name = "co53"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO53"
+
 [[table.column]]
 name = "co54"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO54"
 
 [[table.column]]
 name = "co62"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO62"
+
 [[table.column]]
 name = "co63"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO63"
 
 [[table.column]]
 name = "co64"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO64"
+
 [[table.column]]
 name = "co72"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO72"
 
 [[table.column]]
 name = "co73"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO73"
+
 [[table.column]]
 name = "co74"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO74"
 
 [[table.column]]
 name = "emp04"
@@ -64676,23 +65111,53 @@ representation = "CO"
 [[table.column]]
 name = "CO21"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO21"
+
 [[table.column]]
 name = "CO31"
 
 [[table.column]]
 name = "CO41"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO41"
+
 [[table.column]]
 name = "CO51"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO51"
 
 [[table.column]]
 name = "CO61"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO61"
+
 [[table.column]]
 name = "CO71"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO71"
+
 [[table.column]]
 name = "Co55"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO55"
 
 [[table.column]]
 name = "EcoCo"
@@ -66248,26 +66713,66 @@ representation = "CO11"
 [[table.column]]
 name = "co12"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO12"
+
 [[table.column]]
 name = "co13"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO13"
 
 [[table.column]]
 name = "co14"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO14"
+
 [[table.column]]
 name = "co15"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO15"
 
 [[table.column]]
 name = "co22"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO22"
+
 [[table.column]]
 name = "co23"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO23"
 
 [[table.column]]
 name = "co24"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO24"
+
 [[table.column]]
 name = "co25"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO25"
 
 [[table.column]]
 name = "co32"
@@ -66284,47 +66789,122 @@ name = "co35"
 [[table.column]]
 name = "co42"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO42"
+
 [[table.column]]
 name = "co43"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO43"
 
 [[table.column]]
 name = "co44"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO44"
+
 [[table.column]]
 name = "co45"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO45"
 
 [[table.column]]
 name = "co52"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO52"
+
 [[table.column]]
 name = "co53"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO53"
 
 [[table.column]]
 name = "co54"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO54"
+
 [[table.column]]
 name = "co62"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO62"
 
 [[table.column]]
 name = "co63"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO63"
+
 [[table.column]]
 name = "co64"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO64"
 
 [[table.column]]
 name = "co65"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO65"
+
 [[table.column]]
 name = "co72"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO72"
 
 [[table.column]]
 name = "co73"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO73"
+
 [[table.column]]
 name = "co74"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO74"
+
 [[table.column]]
 name = "co75"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO75"
 
 [[table.column]]
 name = "emp06"
@@ -66395,8 +66975,18 @@ edition = 2010
 [[table.column]]
 name = "Co52"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO52"
+
 [[table.column]]
 name = "Co54"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO54"
 
 [[table.column]]
 name = "G17a"
@@ -67251,29 +67841,74 @@ representation = "CO11"
 [[table.column]]
 name = "co12"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO12"
+
 [[table.column]]
 name = "co13"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO13"
 
 [[table.column]]
 name = "co14"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO14"
+
 [[table.column]]
 name = "co15"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO15"
 
 [[table.column]]
 name = "co21"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO21"
+
 [[table.column]]
 name = "co22"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO22"
 
 [[table.column]]
 name = "co23"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO23"
+
 [[table.column]]
 name = "co24"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO24"
+
 [[table.column]]
 name = "co25"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO25"
 
 [[table.column]]
 name = "co31"
@@ -67293,56 +67928,146 @@ name = "co35"
 [[table.column]]
 name = "co41"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO41"
+
 [[table.column]]
 name = "co42"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO42"
 
 [[table.column]]
 name = "co43"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO43"
+
 [[table.column]]
 name = "co44"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO44"
 
 [[table.column]]
 name = "co45"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO45"
+
 [[table.column]]
 name = "co51"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO51"
 
 [[table.column]]
 name = "co53"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO53"
+
 [[table.column]]
 name = "co55"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO55"
 
 [[table.column]]
 name = "co61"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO61"
+
 [[table.column]]
 name = "co62"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO62"
 
 [[table.column]]
 name = "co63"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO63"
+
 [[table.column]]
 name = "co64"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO64"
 
 [[table.column]]
 name = "co65"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO65"
+
 [[table.column]]
 name = "co71"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO71"
 
 [[table.column]]
 name = "co72"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO72"
+
 [[table.column]]
 name = "co73"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO73"
 
 [[table.column]]
 name = "co74"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO74"
+
 [[table.column]]
 name = "co75"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO75"
 
 [[table.column]]
 name = "emp08"
@@ -67453,41 +68178,106 @@ edition = 2012
 [[table.column]]
 name = "CO311"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO311"
+
 [[table.column]]
 name = "CO313"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO313"
 
 [[table.column]]
 name = "CO315"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO315"
+
 [[table.column]]
 name = "CO321"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO321"
 
 [[table.column]]
 name = "CO322"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO322"
+
 [[table.column]]
 name = "CO323"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO323"
 
 [[table.column]]
 name = "CO324"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO324"
+
 [[table.column]]
 name = "CO325"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO325"
 
 [[table.column]]
 name = "CO81"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO81"
+
 [[table.column]]
 name = "CO83"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO83"
 
 [[table.column]]
 name = "CO85"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO85"
+
 [[table.column]]
 name = "Co52"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO52"
+
 [[table.column]]
 name = "Co54"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO54"
 
 [[table.column]]
 name = "ENMRG"
@@ -67579,6 +68369,11 @@ name = "INITPS"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/inadps"
+representation = "INITPS"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/initps"
 representation = "INITPS"
 
@@ -67595,6 +68390,11 @@ name = "INOTHGD"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/inadgd"
+representation = "INOTHGD"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/inothgd"
 representation = "INOTHGD"
 
@@ -67603,11 +68403,21 @@ name = "INOTHPS"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/inadps"
+representation = "INOTHPS"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/inothps"
 representation = "INOTHPS"
 
 [[table.column]]
 name = "INOTHSV"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/inadsv"
+representation = "INOTHSV"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
@@ -67667,6 +68477,11 @@ name = "INTOGD"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/inadgd"
+representation = "INTOGD"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/intogd"
 representation = "INTOGD"
 
@@ -67675,11 +68490,21 @@ name = "INTOPS"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/inadps"
+representation = "INTOPS"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/intops"
 representation = "INTOPS"
 
 [[table.column]]
 name = "INTOSV"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/inadsv"
+representation = "INTOSV"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
@@ -67707,11 +68532,21 @@ name = "InItGd"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/inadgd"
+representation = "INITGD"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/initgd"
 representation = "InItGd"
 
 [[table.column]]
 name = "InItSv"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/inadsv"
+representation = "INITSV"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
@@ -67821,6 +68656,11 @@ representation = "PeorgNr"
 
 [[table.column]]
 name = "PBNOCT"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/pbinct"
+representation = "PBNOCT"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
@@ -68086,95 +68926,250 @@ representation = "CO11"
 [[table.column]]
 name = "co12"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO12"
+
 [[table.column]]
 name = "co13"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO13"
 
 [[table.column]]
 name = "co14"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO14"
+
 [[table.column]]
 name = "co15"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO15"
 
 [[table.column]]
 name = "co21"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO21"
+
 [[table.column]]
 name = "co22"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO22"
 
 [[table.column]]
 name = "co23"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO23"
+
 [[table.column]]
 name = "co24"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO24"
 
 [[table.column]]
 name = "co25"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO25"
+
 [[table.column]]
 name = "co312"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO312"
 
 [[table.column]]
 name = "co314"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO314"
+
 [[table.column]]
 name = "co41"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO41"
 
 [[table.column]]
 name = "co42"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO42"
+
 [[table.column]]
 name = "co43"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO43"
 
 [[table.column]]
 name = "co44"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO44"
+
 [[table.column]]
 name = "co45"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO45"
 
 [[table.column]]
 name = "co51"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO51"
+
 [[table.column]]
 name = "co53"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO53"
 
 [[table.column]]
 name = "co55"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO55"
+
 [[table.column]]
 name = "co61"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO61"
 
 [[table.column]]
 name = "co62"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO62"
+
 [[table.column]]
 name = "co63"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO63"
 
 [[table.column]]
 name = "co64"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO64"
+
 [[table.column]]
 name = "co65"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO65"
 
 [[table.column]]
 name = "co71"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO71"
+
 [[table.column]]
 name = "co72"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO72"
 
 [[table.column]]
 name = "co73"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO73"
+
 [[table.column]]
 name = "co74"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO74"
 
 [[table.column]]
 name = "co75"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO75"
+
 [[table.column]]
 name = "co82"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO82"
+
 [[table.column]]
 name = "co84"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO84"
 
 [[table.column]]
 name = "emp2010"
@@ -68581,41 +69576,106 @@ edition = 2014
 [[table.column]]
 name = "CO311"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO311"
+
 [[table.column]]
 name = "CO313"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO313"
 
 [[table.column]]
 name = "CO315"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO315"
+
 [[table.column]]
 name = "CO321"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO321"
 
 [[table.column]]
 name = "CO322"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO322"
+
 [[table.column]]
 name = "CO323"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO323"
 
 [[table.column]]
 name = "CO324"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO324"
+
 [[table.column]]
 name = "CO325"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO325"
 
 [[table.column]]
 name = "CO81"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO81"
+
 [[table.column]]
 name = "CO83"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO83"
 
 [[table.column]]
 name = "CO85"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO85"
+
 [[table.column]]
 name = "Co52"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO52"
+
 [[table.column]]
 name = "Co54"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO54"
 
 [[table.column]]
 name = "ECOENO"
@@ -68964,6 +70024,11 @@ name = "INITPS"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/inadps"
+representation = "INITPS"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/initps"
 representation = "INITPS"
 
@@ -68980,6 +70045,11 @@ name = "INOTHGD"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/inadgd"
+representation = "INOTHGD"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/inothgd"
 representation = "INOTHGD"
 
@@ -68988,11 +70058,21 @@ name = "INOTHPS"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/inadps"
+representation = "INOTHPS"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/inothps"
 representation = "INOTHPS"
 
 [[table.column]]
 name = "INOTHSV"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/inadsv"
+representation = "INOTHSV"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
@@ -69052,6 +70132,11 @@ name = "INTOGD"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/inadgd"
+representation = "INTOGD"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/intogd"
 representation = "INTOGD"
 
@@ -69060,11 +70145,21 @@ name = "INTOPS"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/inadps"
+representation = "INTOPS"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/intops"
 representation = "INTOPS"
 
 [[table.column]]
 name = "INTOSV"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/inadsv"
+representation = "INTOSV"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
@@ -69092,11 +70187,21 @@ name = "InItGd"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/inadgd"
+representation = "INITGD"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/initgd"
 representation = "InItGd"
 
 [[table.column]]
 name = "InItSv"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/inadsv"
+representation = "INITSV"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
@@ -69209,11 +70314,21 @@ name = "PBINN"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/pbinct"
+representation = "PBINN"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/pbinn"
 representation = "PBINN"
 
 [[table.column]]
 name = "PBNOCT"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/pbinct"
+representation = "PBNOCT"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
@@ -69455,95 +70570,250 @@ representation = "CO11"
 [[table.column]]
 name = "co12"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO12"
+
 [[table.column]]
 name = "co13"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO13"
 
 [[table.column]]
 name = "co14"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO14"
+
 [[table.column]]
 name = "co15"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO15"
 
 [[table.column]]
 name = "co21"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO21"
+
 [[table.column]]
 name = "co22"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO22"
 
 [[table.column]]
 name = "co23"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO23"
+
 [[table.column]]
 name = "co24"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO24"
 
 [[table.column]]
 name = "co25"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO25"
+
 [[table.column]]
 name = "co312"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO312"
 
 [[table.column]]
 name = "co314"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO314"
+
 [[table.column]]
 name = "co41"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO41"
 
 [[table.column]]
 name = "co42"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO42"
+
 [[table.column]]
 name = "co43"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO43"
 
 [[table.column]]
 name = "co44"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO44"
+
 [[table.column]]
 name = "co45"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO45"
 
 [[table.column]]
 name = "co51"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO51"
+
 [[table.column]]
 name = "co53"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO53"
 
 [[table.column]]
 name = "co55"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO55"
+
 [[table.column]]
 name = "co61"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO61"
 
 [[table.column]]
 name = "co62"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO62"
+
 [[table.column]]
 name = "co63"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO63"
 
 [[table.column]]
 name = "co64"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO64"
+
 [[table.column]]
 name = "co65"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO65"
 
 [[table.column]]
 name = "co71"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO71"
+
 [[table.column]]
 name = "co72"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO72"
 
 [[table.column]]
 name = "co73"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO73"
+
 [[table.column]]
 name = "co74"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO74"
 
 [[table.column]]
 name = "co75"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO75"
+
 [[table.column]]
 name = "co82"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO82"
+
 [[table.column]]
 name = "co84"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO84"
 
 [[table.column]]
 name = "emp2012"
@@ -69683,38 +70953,98 @@ representation = "BGrupp"
 [[table.column]]
 name = "CO311"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO311"
+
 [[table.column]]
 name = "CO313"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO313"
 
 [[table.column]]
 name = "CO315"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO315"
+
 [[table.column]]
 name = "CO321"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO321"
 
 [[table.column]]
 name = "CO322"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO322"
+
 [[table.column]]
 name = "CO323"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO323"
 
 [[table.column]]
 name = "CO324"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO324"
+
 [[table.column]]
 name = "CO325"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO325"
 
 [[table.column]]
 name = "CO81"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO81"
+
 [[table.column]]
 name = "CO83"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO83"
 
 [[table.column]]
 name = "CO85"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO85"
+
 [[table.column]]
 name = "CONA1"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CONA1"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
@@ -69726,11 +71056,21 @@ name = "CONA2"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CONA2"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/cona2"
 representation = "CONA2"
 
 [[table.column]]
 name = "CONA31"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CONA31"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
@@ -69742,11 +71082,21 @@ name = "CONA32"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CONA32"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/cona32"
 representation = "CONA32"
 
 [[table.column]]
 name = "CONA4"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CONA4"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
@@ -69758,11 +71108,21 @@ name = "CONA5"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CONA5"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/cona5"
 representation = "CONA5"
 
 [[table.column]]
 name = "CONA6"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CONA6"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
@@ -69774,11 +71134,21 @@ name = "CONA7"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CONA7"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/cona7"
 representation = "CONA7"
 
 [[table.column]]
 name = "CONA8"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CONA8"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
@@ -69788,8 +71158,18 @@ representation = "CONA8"
 [[table.column]]
 name = "Co52"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO52"
+
 [[table.column]]
 name = "Co54"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO54"
 
 [[table.column]]
 name = "EGFOU"
@@ -70009,6 +71389,11 @@ name = "INITPS"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/inadps"
+representation = "INITPS"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/initps"
 representation = "INITPS"
 
@@ -70025,6 +71410,11 @@ name = "INOTHGD"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/inadgd"
+representation = "INOTHGD"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/inothgd"
 representation = "INOTHGD"
 
@@ -70033,11 +71423,21 @@ name = "INOTHPS"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/inadps"
+representation = "INOTHPS"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/inothps"
 representation = "INOTHPS"
 
 [[table.column]]
 name = "INOTHSV"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/inadsv"
+representation = "INOTHSV"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
@@ -70097,6 +71497,11 @@ name = "INTOGD"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/inadgd"
+representation = "INTOGD"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/intogd"
 representation = "INTOGD"
 
@@ -70105,11 +71510,21 @@ name = "INTOPS"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/inadps"
+representation = "INTOPS"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/intops"
 representation = "INTOPS"
 
 [[table.column]]
 name = "INTOSV"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/inadsv"
+representation = "INTOSV"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
@@ -70137,11 +71552,21 @@ name = "InItGd"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/inadgd"
+representation = "INITGD"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/initgd"
 representation = "InItGd"
 
 [[table.column]]
 name = "InItSv"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/inadsv"
+representation = "INITSV"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
@@ -70233,6 +71658,11 @@ name = "LGFIN"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/lg"
+representation = "LGFIN"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/lgfin"
 representation = "LGFIN"
 
@@ -70297,11 +71727,21 @@ name = "LGOTHO"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/lg"
+representation = "LGOTHO"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/lgotho"
 representation = "LGOTHO"
 
 [[table.column]]
 name = "LGREG"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/lg"
+representation = "LGREG"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
@@ -70334,6 +71774,11 @@ representation = "LGRSPRV"
 
 [[table.column]]
 name = "LGTEC"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/lg"
+representation = "LGTEC"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
@@ -70478,11 +71923,21 @@ name = "PBINN"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/pbinct"
+representation = "PBINN"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/pbinn"
 representation = "PBINN"
 
 [[table.column]]
 name = "PBNOCT"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/pbinct"
+representation = "PBNOCT"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
@@ -70740,95 +72195,250 @@ representation = "CO11"
 [[table.column]]
 name = "co12"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO12"
+
 [[table.column]]
 name = "co13"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO13"
 
 [[table.column]]
 name = "co14"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO14"
+
 [[table.column]]
 name = "co15"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO15"
 
 [[table.column]]
 name = "co21"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO21"
+
 [[table.column]]
 name = "co22"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO22"
 
 [[table.column]]
 name = "co23"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO23"
+
 [[table.column]]
 name = "co24"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO24"
 
 [[table.column]]
 name = "co25"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO25"
+
 [[table.column]]
 name = "co312"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO312"
 
 [[table.column]]
 name = "co314"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO314"
+
 [[table.column]]
 name = "co41"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO41"
 
 [[table.column]]
 name = "co42"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO42"
+
 [[table.column]]
 name = "co43"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO43"
 
 [[table.column]]
 name = "co44"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO44"
+
 [[table.column]]
 name = "co45"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO45"
 
 [[table.column]]
 name = "co51"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO51"
+
 [[table.column]]
 name = "co53"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO53"
 
 [[table.column]]
 name = "co55"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO55"
+
 [[table.column]]
 name = "co61"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO61"
 
 [[table.column]]
 name = "co62"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO62"
+
 [[table.column]]
 name = "co63"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO63"
 
 [[table.column]]
 name = "co64"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO64"
+
 [[table.column]]
 name = "co65"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO65"
 
 [[table.column]]
 name = "co71"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO71"
+
 [[table.column]]
 name = "co72"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO72"
 
 [[table.column]]
 name = "co73"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO73"
+
 [[table.column]]
 name = "co74"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO74"
 
 [[table.column]]
 name = "co75"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO75"
+
 [[table.column]]
 name = "co82"
 
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO82"
+
 [[table.column]]
 name = "co84"
+
+[[table.column.mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/co11"
+representation = "CO84"
 
 [[table.column]]
 name = "enout"
@@ -118906,6 +120516,11 @@ register_variant = "scb/fou/foretagssektorn"
 variable = "scb/fou/orgnr-12"
 representation = "PeorgNr"
 
+[[table.column.mapping]]
+register_variant = "scb/fou/foretagssektorn"
+variable = "scb/fou/orgnr-12"
+representation = "peorgnr"
+
 [[table.column]]
 name = "V125"
 
@@ -120213,6 +121828,11 @@ name = "P1105_LopNr_PeOrgNr"
 register_variant = "scb/fou/foretagssektorn"
 variable = "scb/fou/orgnr-12"
 representation = "PeorgNr"
+
+[[table.column.mapping]]
+register_variant = "scb/fou/foretagssektorn"
+variable = "scb/fou/orgnr-12"
+representation = "peorgnr"
 
 [[table.column]]
 name = "V011"
@@ -122058,6 +123678,11 @@ name = "P1105_LopNr_PeOrgNr"
 register_variant = "scb/fou/foretagssektorn"
 variable = "scb/fou/orgnr-12"
 representation = "PeorgNr"
+
+[[table.column.mapping]]
+register_variant = "scb/fou/foretagssektorn"
+variable = "scb/fou/orgnr-12"
+representation = "peorgnr"
 
 [[table.column]]
 name = "V001"
@@ -124071,6 +125696,11 @@ register_variant = "scb/fou/foretagssektorn"
 variable = "scb/fou/orgnr-12"
 representation = "PeorgNr"
 
+[[table.column.mapping]]
+register_variant = "scb/fou/foretagssektorn"
+variable = "scb/fou/orgnr-12"
+representation = "peorgnr"
+
 [[table.column]]
 name = "V001"
 
@@ -125859,6 +127489,11 @@ register_variant = "scb/fou/foretagssektorn"
 variable = "scb/fou/orgnr-12"
 representation = "PeorgNr"
 
+[[table.column.mapping]]
+register_variant = "scb/fou/foretagssektorn"
+variable = "scb/fou/orgnr-12"
+representation = "peorgnr"
+
 [[table]]
 id = "FTG_FOU_2005"
 edition = 2005
@@ -125870,6 +127505,11 @@ name = "P1105_LopNr_PeOrgNr"
 register_variant = "scb/fou/foretagssektorn"
 variable = "scb/fou/orgnr-12"
 representation = "PeorgNr"
+
+[[table.column.mapping]]
+register_variant = "scb/fou/foretagssektorn"
+variable = "scb/fou/orgnr-12"
+representation = "peorgnr"
 
 [[table.column]]
 name = "SUMDRIFT"
@@ -127814,6 +129454,11 @@ register_variant = "scb/fou/foretagssektorn"
 variable = "scb/fou/orgnr-12"
 representation = "PeorgNr"
 
+[[table.column.mapping]]
+register_variant = "scb/fou/foretagssektorn"
+variable = "scb/fou/orgnr-12"
+representation = "peorgnr"
+
 [[table]]
 id = "FTG_FOU_2007"
 edition = 2007
@@ -127825,6 +129470,11 @@ name = "P1105_LopNr_PeOrgNr"
 register_variant = "scb/fou/foretagssektorn"
 variable = "scb/fou/orgnr-12"
 representation = "PeorgNr"
+
+[[table.column.mapping]]
+register_variant = "scb/fou/foretagssektorn"
+variable = "scb/fou/orgnr-12"
+representation = "peorgnr"
 
 [[table.column]]
 name = "SUMDRIFT"
@@ -129353,6 +131003,11 @@ register_variant = "scb/fou/foretagssektorn"
 variable = "scb/fou/orgnr-12"
 representation = "PeorgNr"
 
+[[table.column.mapping]]
+register_variant = "scb/fou/foretagssektorn"
+variable = "scb/fou/orgnr-12"
+representation = "peorgnr"
+
 [[table]]
 id = "FTG_FOU_2009"
 edition = 2009
@@ -129364,6 +131019,11 @@ name = "P1105_LopNr_PeOrgNr"
 register_variant = "scb/fou/foretagssektorn"
 variable = "scb/fou/orgnr-12"
 representation = "PeorgNr"
+
+[[table.column.mapping]]
+register_variant = "scb/fou/foretagssektorn"
+variable = "scb/fou/orgnr-12"
+representation = "peorgnr"
 
 [[table.column]]
 name = "SUMDRIFT"
@@ -130884,6 +132544,11 @@ register_variant = "scb/fou/foretagssektorn"
 variable = "scb/fou/orgnr-12"
 representation = "PeorgNr"
 
+[[table.column.mapping]]
+register_variant = "scb/fou/foretagssektorn"
+variable = "scb/fou/orgnr-12"
+representation = "peorgnr"
+
 [[table.column]]
 name = "ÅRSVERKEN"
 
@@ -130911,6 +132576,11 @@ name = "P1105_LopNr_PeOrgNr"
 register_variant = "scb/fou/foretagssektorn"
 variable = "scb/fou/orgnr-12"
 representation = "PeorgNr"
+
+[[table.column.mapping]]
+register_variant = "scb/fou/foretagssektorn"
+variable = "scb/fou/orgnr-12"
+representation = "peorgnr"
 
 [[table.column]]
 name = "PGA"
@@ -133127,6 +134797,11 @@ register_variant = "scb/fou/foretagssektorn"
 variable = "scb/fou/orgnr-12"
 representation = "PeorgNr"
 
+[[table.column.mapping]]
+register_variant = "scb/fou/foretagssektorn"
+variable = "scb/fou/orgnr-12"
+representation = "peorgnr"
+
 [[table.column]]
 name = "Vikt"
 
@@ -133173,6 +134848,11 @@ name = "P1105_LopNr_PeOrgNr"
 register_variant = "scb/fou/foretagssektorn"
 variable = "scb/fou/orgnr-12"
 representation = "PeorgNr"
+
+[[table.column.mapping]]
+register_variant = "scb/fou/foretagssektorn"
+variable = "scb/fou/orgnr-12"
+representation = "peorgnr"
 
 [[table.column]]
 name = "PGA"
@@ -135427,6 +137107,11 @@ register_variant = "scb/fou/foretagssektorn"
 variable = "scb/fou/orgnr-12"
 representation = "PeorgNr"
 
+[[table.column.mapping]]
+register_variant = "scb/fou/foretagssektorn"
+variable = "scb/fou/orgnr-12"
+representation = "peorgnr"
+
 [[table.column]]
 name = "Vikt"
 
@@ -135596,6 +137281,11 @@ name = "P1105_LopNr_PeOrgNr"
 register_variant = "scb/fou/foretagssektorn"
 variable = "scb/fou/orgnr-12"
 representation = "PeorgNr"
+
+[[table.column.mapping]]
+register_variant = "scb/fou/foretagssektorn"
+variable = "scb/fou/orgnr-12"
+representation = "peorgnr"
 
 [[table.column]]
 name = "PGA"
@@ -138137,6 +139827,11 @@ name = "P1105_LopNr_PeOrgNr"
 register_variant = "scb/fou/foretagssektorn"
 variable = "scb/fou/orgnr-12"
 representation = "PeorgNr"
+
+[[table.column.mapping]]
+register_variant = "scb/fou/foretagssektorn"
+variable = "scb/fou/orgnr-12"
+representation = "peorgnr"
 
 [[table.column]]
 name = "PGA"
@@ -142431,6 +144126,11 @@ register_variant = "scb/fou/foretagssektorn"
 variable = "scb/fou/orgnr-12"
 representation = "PeorgNr"
 
+[[table.column.mapping]]
+register_variant = "scb/fou/foretagssektorn"
+variable = "scb/fou/orgnr-12"
+representation = "peorgnr"
+
 [[table.column]]
 name = "SEAT"
 
@@ -144521,6 +146221,11 @@ name = "P1105_LopNr_PeOrgNr"
 register_variant = "scb/fou/foretagssektorn"
 variable = "scb/fou/orgnr-12"
 representation = "PeorgNr"
+
+[[table.column.mapping]]
+register_variant = "scb/fou/foretagssektorn"
+variable = "scb/fou/orgnr-12"
+representation = "peorgnr"
 
 [[table.column]]
 name = "SEAT"
@@ -191795,72 +193500,72 @@ partition = "pa-telefon"
 name = "P1105_LopNr_PersonNr"
 
 [[table.column.mapping]]
-register_variant = "inera/vardguiden/samtal"
-variable = "inera/vardguiden/personnr"
+register_variant = "inera/samtal/_default"
+variable = "inera/samtal/personnr"
 representation = "PersonNr"
 
 [[table.column]]
 name = "StatQuestionAnswer2"
 
 [[table.column.mapping]]
-register_variant = "inera/vardguiden/samtal"
-variable = "inera/vardguiden/statquestionanswer2"
+register_variant = "inera/samtal/_default"
+variable = "inera/samtal/statquestionanswer2"
 representation = "StatQuestionAnswer2"
 
 [[table.column]]
 name = "Tidsstämpel"
 
 [[table.column.mapping]]
-register_variant = "inera/vardguiden/samtal"
-variable = "inera/vardguiden/tidsstampel"
+register_variant = "inera/samtal/_default"
+variable = "inera/samtal/tidsstampel"
 representation = "Tidsstämpel"
 
 [[table.column]]
 name = "contactReason"
 
 [[table.column.mapping]]
-register_variant = "inera/vardguiden/samtal"
-variable = "inera/vardguiden/contactreason"
+register_variant = "inera/samtal/_default"
+variable = "inera/samtal/contactreason"
 representation = "contactReason"
 
 [[table.column]]
 name = "documentCreatedTime"
 
 [[table.column.mapping]]
-register_variant = "inera/vardguiden/samtal"
-variable = "inera/vardguiden/documentcreatedtime"
+register_variant = "inera/samtal/_default"
+variable = "inera/samtal/documentcreatedtime"
 representation = "documentCreatedTime"
 
 [[table.column]]
 name = "personGender"
 
 [[table.column.mapping]]
-register_variant = "inera/vardguiden/samtal"
-variable = "inera/vardguiden/persongender"
+register_variant = "inera/samtal/_default"
+variable = "inera/samtal/persongender"
 representation = "personGender"
 
 [[table.column]]
 name = "personZipcode"
 
 [[table.column.mapping]]
-register_variant = "inera/vardguiden/samtal"
-variable = "inera/vardguiden/personzipcode"
+register_variant = "inera/samtal/_default"
+variable = "inera/samtal/personzipcode"
 representation = "personZipcode"
 
 [[table.column]]
 name = "referralCategory"
 
 [[table.column.mapping]]
-register_variant = "inera/vardguiden/samtal"
-variable = "inera/vardguiden/referralcategory"
+register_variant = "inera/samtal/_default"
+variable = "inera/samtal/referralcategory"
 representation = "referralCategory"
 
 [[table.column]]
 name = "referralPriority"
 
 [[table.column.mapping]]
-register_variant = "inera/vardguiden/samtal"
-variable = "inera/vardguiden/referralpriority-2"
+register_variant = "inera/samtal/_default"
+variable = "inera/samtal/referralpriority"
 representation = "referralPriority"
 
 [[table]]
@@ -191872,112 +193577,112 @@ partition = "ck-ep"
 name = "AnswerArrivedFromLabDateTime"
 
 [[table.column.mapping]]
-register_variant = "inera/vardguiden/bestallda-prover"
-variable = "inera/vardguiden/answerarrivedfromlabdatetime"
+register_variant = "inera/bestallda-prover/_default"
+variable = "inera/bestallda-prover/answerarrivedfromlabdatetime"
 representation = "AnswerArrivedFromLabDateTime"
 
 [[table.column]]
 name = "Covid_19_antikroppar"
 
 [[table.column.mapping]]
-register_variant = "inera/vardguiden/bestallda-prover"
-variable = "inera/vardguiden/covid-19-antikroppar-2"
+register_variant = "inera/bestallda-prover/_default"
+variable = "inera/bestallda-prover/covid-19-antikroppar"
 representation = "Covid_19_antikroppar"
 
 [[table.column]]
 name = "Covid_19_diagnostik"
 
 [[table.column.mapping]]
-register_variant = "inera/vardguiden/bestallda-prover"
-variable = "inera/vardguiden/covid-19-diagnostik-2"
+register_variant = "inera/bestallda-prover/_default"
+variable = "inera/bestallda-prover/covid-19-diagnostik"
 representation = "Covid_19_diagnostik"
 
 [[table.column]]
 name = "HandledDateTime"
 
 [[table.column.mapping]]
-register_variant = "inera/vardguiden/bestallda-prover"
-variable = "inera/vardguiden/handleddatetime"
+register_variant = "inera/bestallda-prover/_default"
+variable = "inera/bestallda-prover/handleddatetime"
 representation = "HandledDateTime"
 
 [[table.column]]
 name = "MaterialHandling"
 
 [[table.column.mapping]]
-register_variant = "inera/vardguiden/bestallda-prover"
-variable = "inera/vardguiden/materialhandling"
+register_variant = "inera/bestallda-prover/_default"
+variable = "inera/bestallda-prover/materialhandling"
 representation = "MaterialHandling"
 
 [[table.column]]
 name = "MaterialHandlingLabName"
 
 [[table.column.mapping]]
-register_variant = "inera/vardguiden/bestallda-prover"
-variable = "inera/vardguiden/materialhandlinglabname"
+register_variant = "inera/bestallda-prover/_default"
+variable = "inera/bestallda-prover/materialhandlinglabname"
 representation = "MaterialHandlingLabName"
 
 [[table.column]]
 name = "OfferGroupName"
 
 [[table.column.mapping]]
-register_variant = "inera/vardguiden/bestallda-prover"
-variable = "inera/vardguiden/offergroupname"
+register_variant = "inera/bestallda-prover/_default"
+variable = "inera/bestallda-prover/offergroupname"
 representation = "OfferGroupName"
 
 [[table.column]]
 name = "OfferID"
 
 [[table.column.mapping]]
-register_variant = "inera/vardguiden/bestallda-prover"
-variable = "inera/vardguiden/offerid"
+register_variant = "inera/bestallda-prover/_default"
+variable = "inera/bestallda-prover/offerid"
 representation = "OfferID"
 
 [[table.column]]
 name = "OfferName"
 
 [[table.column.mapping]]
-register_variant = "inera/vardguiden/bestallda-prover"
-variable = "inera/vardguiden/offername"
+register_variant = "inera/bestallda-prover/_default"
+variable = "inera/bestallda-prover/offername"
 representation = "OfferName"
 
 [[table.column]]
 name = "OfferValidForResidentsCountyCode"
 
 [[table.column.mapping]]
-register_variant = "inera/vardguiden/bestallda-prover"
-variable = "inera/vardguiden/offervalidforresidentscountycode"
+register_variant = "inera/bestallda-prover/_default"
+variable = "inera/bestallda-prover/offervalidforresidentscountycode"
 representation = "OfferValidForResidentsCountyCode"
 
 [[table.column]]
 name = "OrderCreatedDateTime"
 
 [[table.column.mapping]]
-register_variant = "inera/vardguiden/bestallda-prover"
-variable = "inera/vardguiden/ordercreateddatetime"
+register_variant = "inera/bestallda-prover/_default"
+variable = "inera/bestallda-prover/ordercreateddatetime"
 representation = "OrderCreatedDateTime"
 
 [[table.column]]
 name = "P1105_LopNr_PersonNr"
 
 [[table.column.mapping]]
-register_variant = "inera/vardguiden/bestallda-prover"
-variable = "inera/vardguiden/personnr-2"
+register_variant = "inera/bestallda-prover/_default"
+variable = "inera/bestallda-prover/personnr"
 representation = "PersonNr"
 
 [[table.column]]
 name = "ReportingLabUnitID"
 
 [[table.column.mapping]]
-register_variant = "inera/vardguiden/bestallda-prover"
-variable = "inera/vardguiden/reportinglabunitid"
+register_variant = "inera/bestallda-prover/_default"
+variable = "inera/bestallda-prover/reportinglabunitid"
 representation = "ReportingLabUnitID"
 
 [[table.column]]
 name = "SampleDrawDateTime"
 
 [[table.column.mapping]]
-register_variant = "inera/vardguiden/bestallda-prover"
-variable = "inera/vardguiden/sampledrawdatetime"
+register_variant = "inera/bestallda-prover/_default"
+variable = "inera/bestallda-prover/sampledrawdatetime"
 representation = "SampleDrawDateTime"
 
 [[table]]
@@ -191989,112 +193694,112 @@ partition = "egen-provhantering"
 name = "AnswerArrivedFromLabDateTime"
 
 [[table.column.mapping]]
-register_variant = "inera/vardguiden/bestallda-prover"
-variable = "inera/vardguiden/answerarrivedfromlabdatetime"
+register_variant = "inera/bestallda-prover/_default"
+variable = "inera/bestallda-prover/answerarrivedfromlabdatetime"
 representation = "AnswerArrivedFromLabDateTime"
 
 [[table.column]]
 name = "Covid-19 antikroppar"
 
 [[table.column.mapping]]
-register_variant = "inera/vardguiden/bestallda-prover"
-variable = "inera/vardguiden/covid-19-antikroppar"
+register_variant = "inera/bestallda-prover/_default"
+variable = "inera/bestallda-prover/covid-19-antikroppar"
 representation = "Covid-19 antikroppar"
 
 [[table.column]]
 name = "Covid-19 diagnostik"
 
 [[table.column.mapping]]
-register_variant = "inera/vardguiden/bestallda-prover"
-variable = "inera/vardguiden/covid-19-diagnostik"
+register_variant = "inera/bestallda-prover/_default"
+variable = "inera/bestallda-prover/covid-19-diagnostik"
 representation = "Covid-19 diagnostik"
 
 [[table.column]]
 name = "HandledDateTime"
 
 [[table.column.mapping]]
-register_variant = "inera/vardguiden/bestallda-prover"
-variable = "inera/vardguiden/handleddatetime"
+register_variant = "inera/bestallda-prover/_default"
+variable = "inera/bestallda-prover/handleddatetime"
 representation = "HandledDateTime"
 
 [[table.column]]
 name = "MaterialHandling"
 
 [[table.column.mapping]]
-register_variant = "inera/vardguiden/bestallda-prover"
-variable = "inera/vardguiden/materialhandling"
+register_variant = "inera/bestallda-prover/_default"
+variable = "inera/bestallda-prover/materialhandling"
 representation = "MaterialHandling"
 
 [[table.column]]
 name = "MaterialHandlingLabName"
 
 [[table.column.mapping]]
-register_variant = "inera/vardguiden/bestallda-prover"
-variable = "inera/vardguiden/materialhandlinglabname"
+register_variant = "inera/bestallda-prover/_default"
+variable = "inera/bestallda-prover/materialhandlinglabname"
 representation = "MaterialHandlingLabName"
 
 [[table.column]]
 name = "OfferGroupName"
 
 [[table.column.mapping]]
-register_variant = "inera/vardguiden/bestallda-prover"
-variable = "inera/vardguiden/offergroupname"
+register_variant = "inera/bestallda-prover/_default"
+variable = "inera/bestallda-prover/offergroupname"
 representation = "OfferGroupName"
 
 [[table.column]]
 name = "OfferID"
 
 [[table.column.mapping]]
-register_variant = "inera/vardguiden/bestallda-prover"
-variable = "inera/vardguiden/offerid"
+register_variant = "inera/bestallda-prover/_default"
+variable = "inera/bestallda-prover/offerid"
 representation = "OfferID"
 
 [[table.column]]
 name = "OfferName"
 
 [[table.column.mapping]]
-register_variant = "inera/vardguiden/bestallda-prover"
-variable = "inera/vardguiden/offername"
+register_variant = "inera/bestallda-prover/_default"
+variable = "inera/bestallda-prover/offername"
 representation = "OfferName"
 
 [[table.column]]
 name = "OfferValidForResidentsCountyCode"
 
 [[table.column.mapping]]
-register_variant = "inera/vardguiden/bestallda-prover"
-variable = "inera/vardguiden/offervalidforresidentscountycode"
+register_variant = "inera/bestallda-prover/_default"
+variable = "inera/bestallda-prover/offervalidforresidentscountycode"
 representation = "OfferValidForResidentsCountyCode"
 
 [[table.column]]
 name = "OrderCreatedDateTime"
 
 [[table.column.mapping]]
-register_variant = "inera/vardguiden/bestallda-prover"
-variable = "inera/vardguiden/ordercreateddatetime"
+register_variant = "inera/bestallda-prover/_default"
+variable = "inera/bestallda-prover/ordercreateddatetime"
 representation = "OrderCreatedDateTime"
 
 [[table.column]]
 name = "P1105_LopNr_PersonNr"
 
 [[table.column.mapping]]
-register_variant = "inera/vardguiden/bestallda-prover"
-variable = "inera/vardguiden/personnr-2"
+register_variant = "inera/bestallda-prover/_default"
+variable = "inera/bestallda-prover/personnr"
 representation = "PersonNr"
 
 [[table.column]]
 name = "ReportingLabUnitID"
 
 [[table.column.mapping]]
-register_variant = "inera/vardguiden/bestallda-prover"
-variable = "inera/vardguiden/reportinglabunitid"
+register_variant = "inera/bestallda-prover/_default"
+variable = "inera/bestallda-prover/reportinglabunitid"
 representation = "ReportingLabUnitID"
 
 [[table.column]]
 name = "SampleDrawDateTime"
 
 [[table.column.mapping]]
-register_variant = "inera/vardguiden/bestallda-prover"
-variable = "inera/vardguiden/sampledrawdatetime"
+register_variant = "inera/bestallda-prover/_default"
+variable = "inera/bestallda-prover/sampledrawdatetime"
 representation = "SampleDrawDateTime"
 
 [[table]]
@@ -192106,72 +193811,72 @@ partition = "vptu-corona"
 name = "P1105_LopNr_PersonNr"
 
 [[table.column.mapping]]
-register_variant = "inera/vardguiden/samtal"
-variable = "inera/vardguiden/personnr"
+register_variant = "inera/samtal/_default"
+variable = "inera/samtal/personnr"
 representation = "PersonNr"
 
 [[table.column]]
 name = "StatQuestionAnswer2"
 
 [[table.column.mapping]]
-register_variant = "inera/vardguiden/samtal"
-variable = "inera/vardguiden/statquestionanswer2"
+register_variant = "inera/samtal/_default"
+variable = "inera/samtal/statquestionanswer2"
 representation = "StatQuestionAnswer2"
 
 [[table.column]]
 name = "contactReason"
 
 [[table.column.mapping]]
-register_variant = "inera/vardguiden/samtal"
-variable = "inera/vardguiden/contactreason"
+register_variant = "inera/samtal/_default"
+variable = "inera/samtal/contactreason"
 representation = "contactReason"
 
 [[table.column]]
 name = "documentCreatedTime"
 
 [[table.column.mapping]]
-register_variant = "inera/vardguiden/samtal"
-variable = "inera/vardguiden/documentcreatedtime"
+register_variant = "inera/samtal/_default"
+variable = "inera/samtal/documentcreatedtime"
 representation = "documentCreatedTime"
 
 [[table.column]]
 name = "documentSigned"
 
 [[table.column.mapping]]
-register_variant = "inera/vardguiden/samtal"
-variable = "inera/vardguiden/documentsigned"
+register_variant = "inera/samtal/_default"
+variable = "inera/samtal/documentsigned"
 representation = "documentSigned"
 
 [[table.column]]
 name = "personGender"
 
 [[table.column.mapping]]
-register_variant = "inera/vardguiden/samtal"
-variable = "inera/vardguiden/persongender"
+register_variant = "inera/samtal/_default"
+variable = "inera/samtal/persongender"
 representation = "personGender"
 
 [[table.column]]
 name = "personZipcode"
 
 [[table.column.mapping]]
-register_variant = "inera/vardguiden/samtal"
-variable = "inera/vardguiden/personzipcode"
+register_variant = "inera/samtal/_default"
+variable = "inera/samtal/personzipcode"
 representation = "personZipcode"
 
 [[table.column]]
 name = "referralCategory"
 
 [[table.column.mapping]]
-register_variant = "inera/vardguiden/samtal"
-variable = "inera/vardguiden/referralcategory"
+register_variant = "inera/samtal/_default"
+variable = "inera/samtal/referralcategory"
 representation = "referralCategory"
 
 [[table.column]]
 name = "referralPriority_"
 
 [[table.column.mapping]]
-register_variant = "inera/vardguiden/samtal"
-variable = "inera/vardguiden/referralpriority"
+register_variant = "inera/samtal/_default"
+variable = "inera/samtal/referralpriority"
 representation = "referralPriority_"
 
 [[table]]
@@ -216744,35 +218449,90 @@ representation = "LonFInkApr"
 [[table.column]]
 name = "LonFInkAug"
 
+[[table.column.mapping]]
+register_variant = "scb/rams/jobbregistret"
+variable = "scb/rams/lone-eller-foretagarinkomst-manad"
+representation = "LonFInkAug"
+
 [[table.column]]
 name = "LonFInkDec"
+
+[[table.column.mapping]]
+register_variant = "scb/rams/jobbregistret"
+variable = "scb/rams/lone-eller-foretagarinkomst-manad"
+representation = "LonFInkDec"
 
 [[table.column]]
 name = "LonFInkFeb"
 
+[[table.column.mapping]]
+register_variant = "scb/rams/jobbregistret"
+variable = "scb/rams/lone-eller-foretagarinkomst-manad"
+representation = "LonFInkFeb"
+
 [[table.column]]
 name = "LonFInkJan"
+
+[[table.column.mapping]]
+register_variant = "scb/rams/jobbregistret"
+variable = "scb/rams/lone-eller-foretagarinkomst-manad"
+representation = "LonFInkJan"
 
 [[table.column]]
 name = "LonFInkJuli"
 
+[[table.column.mapping]]
+register_variant = "scb/rams/jobbregistret"
+variable = "scb/rams/lone-eller-foretagarinkomst-manad"
+representation = "LonFInkJuli"
+
 [[table.column]]
 name = "LonFInkJuni"
+
+[[table.column.mapping]]
+register_variant = "scb/rams/jobbregistret"
+variable = "scb/rams/lone-eller-foretagarinkomst-manad"
+representation = "LonFInkJuni"
 
 [[table.column]]
 name = "LonFInkMaj"
 
+[[table.column.mapping]]
+register_variant = "scb/rams/jobbregistret"
+variable = "scb/rams/lone-eller-foretagarinkomst-manad"
+representation = "LonFInkMaj"
+
 [[table.column]]
 name = "LonFInkMars"
+
+[[table.column.mapping]]
+register_variant = "scb/rams/jobbregistret"
+variable = "scb/rams/lone-eller-foretagarinkomst-manad"
+representation = "LonFInkMars"
 
 [[table.column]]
 name = "LonFInkNov"
 
+[[table.column.mapping]]
+register_variant = "scb/rams/jobbregistret"
+variable = "scb/rams/lone-eller-foretagarinkomst-manad"
+representation = "LonFInkNov"
+
 [[table.column]]
 name = "LonFInkOkt"
 
+[[table.column.mapping]]
+register_variant = "scb/rams/jobbregistret"
+variable = "scb/rams/lone-eller-foretagarinkomst-manad"
+representation = "LonFInkOkt"
+
 [[table.column]]
 name = "LonFInkSep"
+
+[[table.column.mapping]]
+register_variant = "scb/rams/jobbregistret"
+variable = "scb/rams/lone-eller-foretagarinkomst-manad"
+representation = "LonFInkSep"
 
 [[table.column]]
 name = "P1105_LopNr_CfarNr"
@@ -216882,35 +218642,90 @@ representation = "LonFInkApr"
 [[table.column]]
 name = "LonFInkAug"
 
+[[table.column.mapping]]
+register_variant = "scb/rams/jobbregistret"
+variable = "scb/rams/lone-eller-foretagarinkomst-manad"
+representation = "LonFInkAug"
+
 [[table.column]]
 name = "LonFInkDec"
+
+[[table.column.mapping]]
+register_variant = "scb/rams/jobbregistret"
+variable = "scb/rams/lone-eller-foretagarinkomst-manad"
+representation = "LonFInkDec"
 
 [[table.column]]
 name = "LonFInkFeb"
 
+[[table.column.mapping]]
+register_variant = "scb/rams/jobbregistret"
+variable = "scb/rams/lone-eller-foretagarinkomst-manad"
+representation = "LonFInkFeb"
+
 [[table.column]]
 name = "LonFInkJan"
+
+[[table.column.mapping]]
+register_variant = "scb/rams/jobbregistret"
+variable = "scb/rams/lone-eller-foretagarinkomst-manad"
+representation = "LonFInkJan"
 
 [[table.column]]
 name = "LonFInkJuli"
 
+[[table.column.mapping]]
+register_variant = "scb/rams/jobbregistret"
+variable = "scb/rams/lone-eller-foretagarinkomst-manad"
+representation = "LonFInkJuli"
+
 [[table.column]]
 name = "LonFInkJuni"
+
+[[table.column.mapping]]
+register_variant = "scb/rams/jobbregistret"
+variable = "scb/rams/lone-eller-foretagarinkomst-manad"
+representation = "LonFInkJuni"
 
 [[table.column]]
 name = "LonFInkMaj"
 
+[[table.column.mapping]]
+register_variant = "scb/rams/jobbregistret"
+variable = "scb/rams/lone-eller-foretagarinkomst-manad"
+representation = "LonFInkMaj"
+
 [[table.column]]
 name = "LonFInkMars"
+
+[[table.column.mapping]]
+register_variant = "scb/rams/jobbregistret"
+variable = "scb/rams/lone-eller-foretagarinkomst-manad"
+representation = "LonFInkMars"
 
 [[table.column]]
 name = "LonFInkNov"
 
+[[table.column.mapping]]
+register_variant = "scb/rams/jobbregistret"
+variable = "scb/rams/lone-eller-foretagarinkomst-manad"
+representation = "LonFInkNov"
+
 [[table.column]]
 name = "LonFInkOkt"
 
+[[table.column.mapping]]
+register_variant = "scb/rams/jobbregistret"
+variable = "scb/rams/lone-eller-foretagarinkomst-manad"
+representation = "LonFInkOkt"
+
 [[table.column]]
 name = "LonFInkSep"
+
+[[table.column.mapping]]
+register_variant = "scb/rams/jobbregistret"
+variable = "scb/rams/lone-eller-foretagarinkomst-manad"
+representation = "LonFInkSep"
 
 [[table.column]]
 name = "P1105_LopNr_CfarNr"
@@ -217020,35 +218835,90 @@ representation = "LonFInkApr"
 [[table.column]]
 name = "LonFInkAug"
 
+[[table.column.mapping]]
+register_variant = "scb/rams/jobbregistret"
+variable = "scb/rams/lone-eller-foretagarinkomst-manad"
+representation = "LonFInkAug"
+
 [[table.column]]
 name = "LonFInkDec"
+
+[[table.column.mapping]]
+register_variant = "scb/rams/jobbregistret"
+variable = "scb/rams/lone-eller-foretagarinkomst-manad"
+representation = "LonFInkDec"
 
 [[table.column]]
 name = "LonFInkFeb"
 
+[[table.column.mapping]]
+register_variant = "scb/rams/jobbregistret"
+variable = "scb/rams/lone-eller-foretagarinkomst-manad"
+representation = "LonFInkFeb"
+
 [[table.column]]
 name = "LonFInkJan"
+
+[[table.column.mapping]]
+register_variant = "scb/rams/jobbregistret"
+variable = "scb/rams/lone-eller-foretagarinkomst-manad"
+representation = "LonFInkJan"
 
 [[table.column]]
 name = "LonFInkJuli"
 
+[[table.column.mapping]]
+register_variant = "scb/rams/jobbregistret"
+variable = "scb/rams/lone-eller-foretagarinkomst-manad"
+representation = "LonFInkJuli"
+
 [[table.column]]
 name = "LonFInkJuni"
+
+[[table.column.mapping]]
+register_variant = "scb/rams/jobbregistret"
+variable = "scb/rams/lone-eller-foretagarinkomst-manad"
+representation = "LonFInkJuni"
 
 [[table.column]]
 name = "LonFInkMaj"
 
+[[table.column.mapping]]
+register_variant = "scb/rams/jobbregistret"
+variable = "scb/rams/lone-eller-foretagarinkomst-manad"
+representation = "LonFInkMaj"
+
 [[table.column]]
 name = "LonFInkMars"
+
+[[table.column.mapping]]
+register_variant = "scb/rams/jobbregistret"
+variable = "scb/rams/lone-eller-foretagarinkomst-manad"
+representation = "LonFInkMars"
 
 [[table.column]]
 name = "LonFInkNov"
 
+[[table.column.mapping]]
+register_variant = "scb/rams/jobbregistret"
+variable = "scb/rams/lone-eller-foretagarinkomst-manad"
+representation = "LonFInkNov"
+
 [[table.column]]
 name = "LonFInkOkt"
 
+[[table.column.mapping]]
+register_variant = "scb/rams/jobbregistret"
+variable = "scb/rams/lone-eller-foretagarinkomst-manad"
+representation = "LonFInkOkt"
+
 [[table.column]]
 name = "LonFInkSep"
+
+[[table.column.mapping]]
+register_variant = "scb/rams/jobbregistret"
+variable = "scb/rams/lone-eller-foretagarinkomst-manad"
+representation = "LonFInkSep"
 
 [[table.column]]
 name = "P1105_LopNr_CfarNr"
@@ -217956,6 +219826,16 @@ representation = "Ksjusni"
 [[table.column]]
 name = "NG1"
 
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "NG1"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "ng1"
+
 [[table.column]]
 name = "P1105_LopNr_FallId"
 
@@ -217982,6 +219862,11 @@ representation = "PeOrgNrRam"
 
 [[table.column]]
 name = "SyssF"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/aktuellt-antal-anstallda"
+representation = "SYSSF"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -218044,6 +219929,11 @@ representation = "fallangd"
 
 [[table.column]]
 name = "fallgrp"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/fallangd"
+representation = "fallgrp"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -218217,6 +220107,11 @@ representation = "sjuktom"
 
 [[table.column]]
 name = "snigrupp"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "snigrupp"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -218330,6 +220225,16 @@ register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
 variable = "scb/ksju/naringsgren"
 representation = "NGS1"
 
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "NgS1"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "ngs1"
+
 [[table.column]]
 name = "P1105_LopNr_FallId"
 
@@ -218356,6 +220261,11 @@ representation = "PeOrgNrRam"
 
 [[table.column]]
 name = "SyssF"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/aktuellt-antal-anstallda"
+representation = "SYSSF"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -218418,6 +220328,11 @@ representation = "fallangd"
 
 [[table.column]]
 name = "fallgrp"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/fallangd"
+representation = "fallgrp"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -218591,6 +220506,11 @@ representation = "sjuktom"
 
 [[table.column]]
 name = "snigrupp"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "snigrupp"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -218704,6 +220624,16 @@ register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
 variable = "scb/ksju/naringsgren"
 representation = "NGS1"
 
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "NgS1"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "ngs1"
+
 [[table.column]]
 name = "P1105_LopNr_FallId"
 
@@ -218730,6 +220660,11 @@ representation = "PeOrgNrRam"
 
 [[table.column]]
 name = "SyssF"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/aktuellt-antal-anstallda"
+representation = "SYSSF"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -218792,6 +220727,11 @@ representation = "fallangd"
 
 [[table.column]]
 name = "fallgrp"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/fallangd"
+representation = "fallgrp"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -218965,6 +220905,11 @@ representation = "sjuktom"
 
 [[table.column]]
 name = "snigrupp"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "snigrupp"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -219086,6 +221031,16 @@ register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
 variable = "scb/ksju/naringsgren"
 representation = "NGS1"
 
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "NgS1"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "ngs1"
+
 [[table.column]]
 name = "P1105_LopNr_Id"
 
@@ -219112,6 +221067,11 @@ representation = "PeOrgNrRam"
 
 [[table.column]]
 name = "SyssF"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/aktuellt-antal-anstallda"
+representation = "SYSSF"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -219174,6 +221134,11 @@ representation = "fallangd"
 
 [[table.column]]
 name = "fallgrp"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/fallangd"
+representation = "fallgrp"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -219347,6 +221312,11 @@ representation = "sjuktom"
 
 [[table.column]]
 name = "snigrupp"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "snigrupp"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -219484,6 +221454,16 @@ register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
 variable = "scb/ksju/naringsgren"
 representation = "NGS1"
 
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "NgS1"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "ngs1"
+
 [[table.column]]
 name = "P1105_LopNr_Id"
 
@@ -219510,6 +221490,11 @@ representation = "PeOrgNrRam"
 
 [[table.column]]
 name = "SyssF"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/aktuellt-antal-anstallda"
+representation = "SYSSF"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -219572,6 +221557,11 @@ representation = "fallangd"
 
 [[table.column]]
 name = "fallgrp"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/fallangd"
+representation = "fallgrp"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -219745,6 +221735,11 @@ representation = "sjuktom"
 
 [[table.column]]
 name = "snigrupp"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "snigrupp"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -219882,6 +221877,16 @@ register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
 variable = "scb/ksju/naringsgren"
 representation = "NGS1"
 
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "NgS1"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "ngs1"
+
 [[table.column]]
 name = "P1105_LopNr_Id"
 
@@ -219908,6 +221913,11 @@ representation = "PeOrgNrRam"
 
 [[table.column]]
 name = "SyssF"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/aktuellt-antal-anstallda"
+representation = "SYSSF"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -219970,6 +221980,11 @@ representation = "fallangd"
 
 [[table.column]]
 name = "fallgrp"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/fallangd"
+representation = "fallgrp"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -220143,6 +222158,11 @@ representation = "sjuktom"
 
 [[table.column]]
 name = "snigrupp"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "snigrupp"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -220280,6 +222300,16 @@ register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
 variable = "scb/ksju/naringsgren"
 representation = "NGS1"
 
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "NgS1"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "ngs1"
+
 [[table.column]]
 name = "P1105_LopNr_Id"
 
@@ -220306,6 +222336,11 @@ representation = "PeOrgNrRam"
 
 [[table.column]]
 name = "SyssF"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/aktuellt-antal-anstallda"
+representation = "SYSSF"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -220368,6 +222403,11 @@ representation = "fallangd"
 
 [[table.column]]
 name = "fallgrp"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/fallangd"
+representation = "fallgrp"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -220541,6 +222581,11 @@ representation = "sjuktom"
 
 [[table.column]]
 name = "snigrupp"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "snigrupp"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -220678,6 +222723,16 @@ register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
 variable = "scb/ksju/naringsgren"
 representation = "NGS1"
 
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "NgS1"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "ngs1"
+
 [[table.column]]
 name = "P1105_LopNr_Id"
 
@@ -220704,6 +222759,11 @@ representation = "PeOrgNrRam"
 
 [[table.column]]
 name = "SyssF"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/aktuellt-antal-anstallda"
+representation = "SYSSF"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -220766,6 +222826,11 @@ representation = "fallangd"
 
 [[table.column]]
 name = "fallgrp"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/fallangd"
+representation = "fallgrp"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -220939,6 +223004,11 @@ representation = "sjuktom"
 
 [[table.column]]
 name = "snigrupp"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "snigrupp"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -221076,6 +223146,16 @@ register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
 variable = "scb/ksju/naringsgren"
 representation = "NGS1"
 
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "NgS1"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "ngs1"
+
 [[table.column]]
 name = "P1105_LopNr_Id"
 
@@ -221102,6 +223182,11 @@ representation = "PeOrgNrRam"
 
 [[table.column]]
 name = "SyssF"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/aktuellt-antal-anstallda"
+representation = "SYSSF"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -221164,6 +223249,11 @@ representation = "fallangd"
 
 [[table.column]]
 name = "fallgrp"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/fallangd"
+representation = "fallgrp"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -221337,6 +223427,11 @@ representation = "sjuktom"
 
 [[table.column]]
 name = "snigrupp"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "snigrupp"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -221474,6 +223569,16 @@ register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
 variable = "scb/ksju/naringsgren"
 representation = "NGS1"
 
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "NgS1"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "ngs1"
+
 [[table.column]]
 name = "P1105_LopNr_Id"
 
@@ -221500,6 +223605,11 @@ representation = "PeOrgNrRam"
 
 [[table.column]]
 name = "SyssF"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/aktuellt-antal-anstallda"
+representation = "SYSSF"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -221562,6 +223672,11 @@ representation = "fallangd"
 
 [[table.column]]
 name = "fallgrp"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/fallangd"
+representation = "fallgrp"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -221735,6 +223850,11 @@ representation = "sjuktom"
 
 [[table.column]]
 name = "snigrupp"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "snigrupp"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -221872,6 +223992,16 @@ register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
 variable = "scb/ksju/naringsgren"
 representation = "NGS1"
 
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "NgS1"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "ngs1"
+
 [[table.column]]
 name = "P1105_LopNr_Id"
 
@@ -221898,6 +224028,11 @@ representation = "PeOrgNrRam"
 
 [[table.column]]
 name = "SyssF"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/aktuellt-antal-anstallda"
+representation = "SYSSF"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -221960,6 +224095,11 @@ representation = "fallangd"
 
 [[table.column]]
 name = "fallgrp"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/fallangd"
+representation = "fallgrp"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -222133,6 +224273,11 @@ representation = "sjuktom"
 
 [[table.column]]
 name = "snigrupp"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "snigrupp"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -222270,6 +224415,16 @@ register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
 variable = "scb/ksju/naringsgren"
 representation = "NGS1"
 
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "NgS1"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "ngs1"
+
 [[table.column]]
 name = "P1105_LopNr_Id"
 
@@ -222296,6 +224451,11 @@ representation = "PeOrgNrRam"
 
 [[table.column]]
 name = "SyssF"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/aktuellt-antal-anstallda"
+representation = "SYSSF"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -222358,6 +224518,11 @@ representation = "fallangd"
 
 [[table.column]]
 name = "fallgrp"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/fallangd"
+representation = "fallgrp"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -222531,6 +224696,11 @@ representation = "sjuktom"
 
 [[table.column]]
 name = "snigrupp"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "snigrupp"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -222668,6 +224838,16 @@ register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
 variable = "scb/ksju/naringsgren"
 representation = "NGS1"
 
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "NgS1"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "ngs1"
+
 [[table.column]]
 name = "P1105_LopNr_Id"
 
@@ -222694,6 +224874,11 @@ representation = "PeOrgNrRam"
 
 [[table.column]]
 name = "SyssF"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/aktuellt-antal-anstallda"
+representation = "SYSSF"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -222756,6 +224941,11 @@ representation = "fallangd"
 
 [[table.column]]
 name = "fallgrp"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/fallangd"
+representation = "fallgrp"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -222929,6 +225119,11 @@ representation = "sjuktom"
 
 [[table.column]]
 name = "snigrupp"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "snigrupp"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -223066,6 +225261,16 @@ register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
 variable = "scb/ksju/naringsgren"
 representation = "NGS1"
 
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "NgS1"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "ngs1"
+
 [[table.column]]
 name = "P1105_LopNr_Id"
 
@@ -223092,6 +225297,11 @@ representation = "PeOrgNrRam"
 
 [[table.column]]
 name = "SyssF"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/aktuellt-antal-anstallda"
+representation = "SYSSF"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -223154,6 +225364,11 @@ representation = "fallangd"
 
 [[table.column]]
 name = "fallgrp"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/fallangd"
+representation = "fallgrp"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -223327,6 +225542,11 @@ representation = "sjuktom"
 
 [[table.column]]
 name = "snigrupp"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "snigrupp"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -223464,6 +225684,16 @@ register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
 variable = "scb/ksju/naringsgren"
 representation = "NGS1"
 
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "NgS1"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "ngs1"
+
 [[table.column]]
 name = "P1105_LopNr_Id"
 
@@ -223490,6 +225720,11 @@ representation = "PeOrgNrRam"
 
 [[table.column]]
 name = "SyssF"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/aktuellt-antal-anstallda"
+representation = "SYSSF"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -223552,6 +225787,11 @@ representation = "fallangd"
 
 [[table.column]]
 name = "fallgrp"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/fallangd"
+representation = "fallgrp"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -223725,6 +225965,11 @@ representation = "sjuktom"
 
 [[table.column]]
 name = "snigrupp"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "snigrupp"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -223862,6 +226107,16 @@ register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
 variable = "scb/ksju/naringsgren"
 representation = "NGS1"
 
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "NgS1"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "ngs1"
+
 [[table.column]]
 name = "P1105_LopNr_Id"
 
@@ -223888,6 +226143,11 @@ representation = "PeOrgNrRam"
 
 [[table.column]]
 name = "SyssF"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/aktuellt-antal-anstallda"
+representation = "SYSSF"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -223950,6 +226210,11 @@ representation = "fallangd"
 
 [[table.column]]
 name = "fallgrp"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/fallangd"
+representation = "fallgrp"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -224123,6 +226388,11 @@ representation = "sjuktom"
 
 [[table.column]]
 name = "snigrupp"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "snigrupp"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -224260,6 +226530,16 @@ register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
 variable = "scb/ksju/naringsgren"
 representation = "NGS1"
 
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "NgS1"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "ngs1"
+
 [[table.column]]
 name = "P1105_LopNr_Id"
 
@@ -224286,6 +226566,11 @@ representation = "PeOrgNrRam"
 
 [[table.column]]
 name = "SyssF"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/aktuellt-antal-anstallda"
+representation = "SYSSF"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -224348,6 +226633,11 @@ representation = "fallangd"
 
 [[table.column]]
 name = "fallgrp"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/fallangd"
+representation = "fallgrp"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -224521,6 +226811,11 @@ representation = "sjuktom"
 
 [[table.column]]
 name = "snigrupp"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "snigrupp"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -224658,6 +226953,16 @@ register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
 variable = "scb/ksju/naringsgren"
 representation = "NGS1"
 
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "NgS1"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "ngs1"
+
 [[table.column]]
 name = "P1105_LopNr_Id"
 
@@ -224684,6 +226989,11 @@ representation = "PeOrgNrRam"
 
 [[table.column]]
 name = "SyssF"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/aktuellt-antal-anstallda"
+representation = "SYSSF"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -224746,6 +227056,11 @@ representation = "fallangd"
 
 [[table.column]]
 name = "fallgrp"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/fallangd"
+representation = "fallgrp"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -224919,6 +227234,11 @@ representation = "sjuktom"
 
 [[table.column]]
 name = "snigrupp"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "snigrupp"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -225056,6 +227376,16 @@ register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
 variable = "scb/ksju/naringsgren"
 representation = "NGS1"
 
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "NgS1"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "ngs1"
+
 [[table.column]]
 name = "P1105_LopNr_Id"
 
@@ -225082,6 +227412,11 @@ representation = "PeOrgNrRam"
 
 [[table.column]]
 name = "SyssF"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/aktuellt-antal-anstallda"
+representation = "SYSSF"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -225144,6 +227479,11 @@ representation = "fallangd"
 
 [[table.column]]
 name = "fallgrp"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/fallangd"
+representation = "fallgrp"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -225317,6 +227657,11 @@ representation = "sjuktom"
 
 [[table.column]]
 name = "snigrupp"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "snigrupp"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -225454,6 +227799,16 @@ register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
 variable = "scb/ksju/naringsgren"
 representation = "NGS1"
 
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "NgS1"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "ngs1"
+
 [[table.column]]
 name = "P1105_LopNr_Id"
 
@@ -225480,6 +227835,11 @@ representation = "PeOrgNrRam"
 
 [[table.column]]
 name = "SyssF"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/aktuellt-antal-anstallda"
+representation = "SYSSF"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -225542,6 +227902,11 @@ representation = "fallangd"
 
 [[table.column]]
 name = "fallgrp"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/fallangd"
+representation = "fallgrp"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -225715,6 +228080,11 @@ representation = "sjuktom"
 
 [[table.column]]
 name = "snigrupp"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "snigrupp"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -225852,6 +228222,16 @@ register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
 variable = "scb/ksju/naringsgren"
 representation = "NGS1"
 
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "NgS1"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "ngs1"
+
 [[table.column]]
 name = "P1105_LopNr_Id"
 
@@ -225878,6 +228258,11 @@ representation = "PeOrgNrRam"
 
 [[table.column]]
 name = "SyssF"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/aktuellt-antal-anstallda"
+representation = "SYSSF"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -225940,6 +228325,11 @@ representation = "fallangd"
 
 [[table.column]]
 name = "fallgrp"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/fallangd"
+representation = "fallgrp"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -226113,6 +228503,11 @@ representation = "sjuktom"
 
 [[table.column]]
 name = "snigrupp"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "snigrupp"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -226250,6 +228645,16 @@ register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
 variable = "scb/ksju/naringsgren"
 representation = "NGS1"
 
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "NgS1"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "ngs1"
+
 [[table.column]]
 name = "P1105_LopNr_Id"
 
@@ -226276,6 +228681,11 @@ representation = "PeOrgNrRam"
 
 [[table.column]]
 name = "SyssF"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/aktuellt-antal-anstallda"
+representation = "SYSSF"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -226338,6 +228748,11 @@ representation = "fallangd"
 
 [[table.column]]
 name = "fallgrp"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/fallangd"
+representation = "fallgrp"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -226511,6 +228926,11 @@ representation = "sjuktom"
 
 [[table.column]]
 name = "snigrupp"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "snigrupp"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -226648,6 +229068,16 @@ register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
 variable = "scb/ksju/naringsgren"
 representation = "NGS1"
 
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "NgS1"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "ngs1"
+
 [[table.column]]
 name = "P1105_LopNr_Id"
 
@@ -226674,6 +229104,11 @@ representation = "PeOrgNrRam"
 
 [[table.column]]
 name = "SyssF"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/aktuellt-antal-anstallda"
+representation = "SYSSF"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -226736,6 +229171,11 @@ representation = "fallangd"
 
 [[table.column]]
 name = "fallgrp"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/fallangd"
+representation = "fallgrp"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -226909,6 +229349,11 @@ representation = "sjuktom"
 
 [[table.column]]
 name = "snigrupp"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "snigrupp"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -227046,6 +229491,16 @@ register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
 variable = "scb/ksju/naringsgren"
 representation = "NGS1"
 
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "NgS1"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "ngs1"
+
 [[table.column]]
 name = "P1105_LopNr_Id"
 
@@ -227072,6 +229527,11 @@ representation = "PeOrgNrRam"
 
 [[table.column]]
 name = "SyssF"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/aktuellt-antal-anstallda"
+representation = "SYSSF"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -227134,6 +229594,11 @@ representation = "fallangd"
 
 [[table.column]]
 name = "fallgrp"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/fallangd"
+representation = "fallgrp"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -227307,6 +229772,11 @@ representation = "sjuktom"
 
 [[table.column]]
 name = "snigrupp"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "snigrupp"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -227444,6 +229914,16 @@ register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
 variable = "scb/ksju/naringsgren"
 representation = "NGS1"
 
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "NgS1"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "ngs1"
+
 [[table.column]]
 name = "P1105_LopNr_Id"
 
@@ -227470,6 +229950,11 @@ representation = "PeOrgNrRam"
 
 [[table.column]]
 name = "SyssF"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/aktuellt-antal-anstallda"
+representation = "SYSSF"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -227532,6 +230017,11 @@ representation = "fallangd"
 
 [[table.column]]
 name = "fallgrp"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/fallangd"
+representation = "fallgrp"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -227705,6 +230195,11 @@ representation = "sjuktom"
 
 [[table.column]]
 name = "snigrupp"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "snigrupp"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -227842,6 +230337,16 @@ register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
 variable = "scb/ksju/naringsgren"
 representation = "NGS1"
 
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "NgS1"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "ngs1"
+
 [[table.column]]
 name = "P1105_LopNr_Id"
 
@@ -227868,6 +230373,11 @@ representation = "PeOrgNrRam"
 
 [[table.column]]
 name = "SyssF"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/aktuellt-antal-anstallda"
+representation = "SYSSF"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -227930,6 +230440,11 @@ representation = "fallangd"
 
 [[table.column]]
 name = "fallgrp"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/fallangd"
+representation = "fallgrp"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -228103,6 +230618,11 @@ representation = "sjuktom"
 
 [[table.column]]
 name = "snigrupp"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "snigrupp"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -228240,6 +230760,16 @@ register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
 variable = "scb/ksju/naringsgren"
 representation = "NGS1"
 
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "NgS1"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "ngs1"
+
 [[table.column]]
 name = "P1105_LopNr_Id"
 
@@ -228266,6 +230796,11 @@ representation = "PeOrgNrRam"
 
 [[table.column]]
 name = "SyssF"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/aktuellt-antal-anstallda"
+representation = "SYSSF"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -228328,6 +230863,11 @@ representation = "fallangd"
 
 [[table.column]]
 name = "fallgrp"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/fallangd"
+representation = "fallgrp"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -228501,6 +231041,11 @@ representation = "sjuktom"
 
 [[table.column]]
 name = "snigrupp"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "snigrupp"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -228638,6 +231183,16 @@ register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
 variable = "scb/ksju/naringsgren"
 representation = "NGS1"
 
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "NgS1"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "ngs1"
+
 [[table.column]]
 name = "P1105_LopNr_Id"
 
@@ -228664,6 +231219,11 @@ representation = "PeOrgNrRam"
 
 [[table.column]]
 name = "SyssF"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/aktuellt-antal-anstallda"
+representation = "SYSSF"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -228726,6 +231286,11 @@ representation = "fallangd"
 
 [[table.column]]
 name = "fallgrp"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/fallangd"
+representation = "fallgrp"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -228899,6 +231464,11 @@ representation = "sjuktom"
 
 [[table.column]]
 name = "snigrupp"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "snigrupp"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -229036,6 +231606,16 @@ register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
 variable = "scb/ksju/naringsgren"
 representation = "NGS1"
 
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "NgS1"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "ngs1"
+
 [[table.column]]
 name = "P1105_LopNr_Id"
 
@@ -229062,6 +231642,11 @@ representation = "PeOrgNrRam"
 
 [[table.column]]
 name = "SyssF"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/aktuellt-antal-anstallda"
+representation = "SYSSF"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -229124,6 +231709,11 @@ representation = "fallangd"
 
 [[table.column]]
 name = "fallgrp"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/fallangd"
+representation = "fallgrp"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -229297,6 +231887,11 @@ representation = "sjuktom"
 
 [[table.column]]
 name = "snigrupp"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "snigrupp"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -229434,6 +232029,16 @@ register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
 variable = "scb/ksju/naringsgren"
 representation = "NGS1"
 
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "NgS1"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "ngs1"
+
 [[table.column]]
 name = "P1105_LopNr_Id"
 
@@ -229460,6 +232065,11 @@ representation = "PeOrgNrRam"
 
 [[table.column]]
 name = "SyssF"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/aktuellt-antal-anstallda"
+representation = "SYSSF"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -229522,6 +232132,11 @@ representation = "fallangd"
 
 [[table.column]]
 name = "fallgrp"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/fallangd"
+representation = "fallgrp"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -229695,6 +232310,11 @@ representation = "sjuktom"
 
 [[table.column]]
 name = "snigrupp"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "snigrupp"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -229832,6 +232452,16 @@ register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
 variable = "scb/ksju/naringsgren"
 representation = "NGS1"
 
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "NgS1"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "ngs1"
+
 [[table.column]]
 name = "P1105_LopNr_Id"
 
@@ -229858,6 +232488,11 @@ representation = "PeOrgNrRam"
 
 [[table.column]]
 name = "SyssF"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/aktuellt-antal-anstallda"
+representation = "SYSSF"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -229920,6 +232555,11 @@ representation = "fallangd"
 
 [[table.column]]
 name = "fallgrp"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/fallangd"
+representation = "fallgrp"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -230093,6 +232733,11 @@ representation = "sjuktom"
 
 [[table.column]]
 name = "snigrupp"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "snigrupp"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -230230,6 +232875,16 @@ register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
 variable = "scb/ksju/naringsgren"
 representation = "NGS1"
 
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "NgS1"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "ngs1"
+
 [[table.column]]
 name = "P1105_LopNr_Id"
 
@@ -230256,6 +232911,11 @@ representation = "PeOrgNrRam"
 
 [[table.column]]
 name = "SyssF"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/aktuellt-antal-anstallda"
+representation = "SYSSF"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -230318,6 +232978,11 @@ representation = "fallangd"
 
 [[table.column]]
 name = "fallgrp"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/fallangd"
+representation = "fallgrp"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -230491,6 +233156,11 @@ representation = "sjuktom"
 
 [[table.column]]
 name = "snigrupp"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "snigrupp"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -230628,6 +233298,16 @@ register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
 variable = "scb/ksju/naringsgren"
 representation = "NGS1"
 
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "NgS1"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "ngs1"
+
 [[table.column]]
 name = "P1105_LopNr_Id"
 
@@ -230654,6 +233334,11 @@ representation = "PeOrgNrRam"
 
 [[table.column]]
 name = "SyssF"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/aktuellt-antal-anstallda"
+representation = "SYSSF"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -230716,6 +233401,11 @@ representation = "fallangd"
 
 [[table.column]]
 name = "fallgrp"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/fallangd"
+representation = "fallgrp"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -230889,6 +233579,11 @@ representation = "sjuktom"
 
 [[table.column]]
 name = "snigrupp"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "snigrupp"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -231026,6 +233721,16 @@ register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
 variable = "scb/ksju/naringsgren"
 representation = "NGS1"
 
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "NgS1"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "ngs1"
+
 [[table.column]]
 name = "P1105_LopNr_Id"
 
@@ -231052,6 +233757,11 @@ representation = "PeOrgNrRam"
 
 [[table.column]]
 name = "SyssF"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/aktuellt-antal-anstallda"
+representation = "SYSSF"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -231114,6 +233824,11 @@ representation = "fallangd"
 
 [[table.column]]
 name = "fallgrp"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/fallangd"
+representation = "fallgrp"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -231287,6 +234002,11 @@ representation = "sjuktom"
 
 [[table.column]]
 name = "snigrupp"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "snigrupp"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -231427,6 +234147,16 @@ register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
 variable = "scb/ksju/naringsgren"
 representation = "NGS1"
 
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "NgS1"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "ngs1"
+
 [[table.column]]
 name = "P1105_LopNr_Id"
 
@@ -231453,6 +234183,11 @@ representation = "PeOrgNrRam"
 
 [[table.column]]
 name = "SyssF"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/aktuellt-antal-anstallda"
+representation = "SYSSF"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -231507,6 +234242,11 @@ representation = "fallangd"
 
 [[table.column]]
 name = "fallgrp"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/fallangd"
+representation = "fallgrp"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -231680,6 +234420,11 @@ representation = "sjuktom"
 
 [[table.column]]
 name = "snigrupp"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "snigrupp"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -231820,6 +234565,16 @@ register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
 variable = "scb/ksju/naringsgren"
 representation = "NGS1"
 
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "NgS1"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "ngs1"
+
 [[table.column]]
 name = "P1105_LopNr_Id"
 
@@ -231846,6 +234601,11 @@ representation = "PeOrgNrRam"
 
 [[table.column]]
 name = "SyssF"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/aktuellt-antal-anstallda"
+representation = "SYSSF"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -231900,6 +234660,11 @@ representation = "fallangd"
 
 [[table.column]]
 name = "fallgrp"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/fallangd"
+representation = "fallgrp"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
@@ -232076,6 +234841,11 @@ name = "snigrupp"
 
 [[table.column.mapping]]
 register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
+variable = "scb/ksju/naringsgren"
+representation = "snigrupp"
+
+[[table.column.mapping]]
+register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden"
 variable = "scb/ksju/naringsgrupp"
 representation = "snigrupp"
 
@@ -232189,7 +234959,7 @@ name = "Delperiod_slut_Datum"
 
 [[table.column.mapping]]
 register_variant = "tillvaxtverket/korttidsarbete/individer"
-variable = "tillvaxtverket/korttidsarbete/delperiod-slut-datum-2"
+variable = "tillvaxtverket/korttidsarbete/delperiod-slut-datum"
 representation = "Delperiod_slut_Datum"
 
 [[table.column]]
@@ -232197,7 +234967,7 @@ name = "Delperiod_start_Datum"
 
 [[table.column.mapping]]
 register_variant = "tillvaxtverket/korttidsarbete/individer"
-variable = "tillvaxtverket/korttidsarbete/delperiod-start-datum-2"
+variable = "tillvaxtverket/korttidsarbete/delperiod-start-datum"
 representation = "Delperiod_start_Datum"
 
 [[table.column]]
@@ -232240,6 +235010,11 @@ register_variant = "tillvaxtverket/korttidsarbete/individer"
 variable = "tillvaxtverket/korttidsarbete/ordinarie-arbetstid-timmar"
 representation = "Ordinarie_arbetstid_Timmar"
 
+[[table.column.mapping]]
+register_variant = "tillvaxtverket/korttidsarbete/individer"
+variable = "tillvaxtverket/korttidsarbete/ordinarie-arbetstid-timmar"
+representation = "Ordinarie_arbetstid_timmar"
+
 [[table.column]]
 name = "Ordinarie_manadslon_belopp"
 
@@ -232253,7 +235028,7 @@ name = "P1105_LopNr_ArendeID_KTA"
 
 [[table.column.mapping]]
 register_variant = "tillvaxtverket/korttidsarbete/individer"
-variable = "tillvaxtverket/korttidsarbete/arendeid-kta-2"
+variable = "tillvaxtverket/korttidsarbete/arendeid-kta"
 representation = "ArendeID_KTA"
 
 [[table.column]]
@@ -232277,7 +235052,7 @@ name = "P1105_Lopnr_PeOrgNr"
 
 [[table.column.mapping]]
 register_variant = "tillvaxtverket/korttidsarbete/individer"
-variable = "tillvaxtverket/korttidsarbete/peorgnr-2"
+variable = "tillvaxtverket/korttidsarbete/peorgnr"
 representation = "PeOrgNr"
 
 [[table.column]]
@@ -232361,7 +235136,7 @@ name = "Beslut"
 
 [[table.column.mapping]]
 register_variant = "tillvaxtverket/korttidsarbete/transaktioner"
-variable = "tillvaxtverket/korttidsarbete/beslut-2"
+variable = "tillvaxtverket/korttidsarbete/beslut"
 representation = "Beslut"
 
 [[table.column]]
@@ -232409,7 +235184,7 @@ name = "P1105_LopNr_PersonNr_PeOrgNr"
 
 [[table.column.mapping]]
 register_variant = "tillvaxtverket/korttidsarbete/transaktioner"
-variable = "tillvaxtverket/korttidsarbete/personnr-peorgnr-2"
+variable = "tillvaxtverket/korttidsarbete/personnr-peorgnr"
 representation = "PersonNr_PeOrgNr"
 
 [[table.column]]
@@ -232425,7 +235200,7 @@ name = "Pagaende_Avslutat"
 
 [[table.column.mapping]]
 register_variant = "tillvaxtverket/korttidsarbete/transaktioner"
-variable = "tillvaxtverket/korttidsarbete/pagaende-avslutat-2"
+variable = "tillvaxtverket/korttidsarbete/pagaende-avslutat"
 representation = "Pagaende_Avslutat"
 
 [[table.column]]
@@ -232533,7 +235308,7 @@ name = "Delperiod_slut_Datum"
 
 [[table.column.mapping]]
 register_variant = "tillvaxtverket/korttidsarbete/individer"
-variable = "tillvaxtverket/korttidsarbete/delperiod-slut-datum-2"
+variable = "tillvaxtverket/korttidsarbete/delperiod-slut-datum"
 representation = "Delperiod_slut_Datum"
 
 [[table.column]]
@@ -232541,7 +235316,7 @@ name = "Delperiod_start_Datum"
 
 [[table.column.mapping]]
 register_variant = "tillvaxtverket/korttidsarbete/individer"
-variable = "tillvaxtverket/korttidsarbete/delperiod-start-datum-2"
+variable = "tillvaxtverket/korttidsarbete/delperiod-start-datum"
 representation = "Delperiod_start_Datum"
 
 [[table.column]]
@@ -232584,6 +235359,11 @@ register_variant = "tillvaxtverket/korttidsarbete/individer"
 variable = "tillvaxtverket/korttidsarbete/ordinarie-arbetstid-timmar"
 representation = "Ordinarie_arbetstid_Timmar"
 
+[[table.column.mapping]]
+register_variant = "tillvaxtverket/korttidsarbete/individer"
+variable = "tillvaxtverket/korttidsarbete/ordinarie-arbetstid-timmar"
+representation = "Ordinarie_arbetstid_timmar"
+
 [[table.column]]
 name = "Ordinarie_manadslon_belopp"
 
@@ -232597,7 +235377,7 @@ name = "P1105_LopNr_ArendeID_KTA"
 
 [[table.column.mapping]]
 register_variant = "tillvaxtverket/korttidsarbete/individer"
-variable = "tillvaxtverket/korttidsarbete/arendeid-kta-2"
+variable = "tillvaxtverket/korttidsarbete/arendeid-kta"
 representation = "ArendeID_KTA"
 
 [[table.column]]
@@ -232621,7 +235401,7 @@ name = "P1105_Lopnr_PeOrgNr"
 
 [[table.column.mapping]]
 register_variant = "tillvaxtverket/korttidsarbete/individer"
-variable = "tillvaxtverket/korttidsarbete/peorgnr-2"
+variable = "tillvaxtverket/korttidsarbete/peorgnr"
 representation = "PeOrgNr"
 
 [[table.column]]
@@ -232705,7 +235485,7 @@ name = "Beslut"
 
 [[table.column.mapping]]
 register_variant = "tillvaxtverket/korttidsarbete/transaktioner"
-variable = "tillvaxtverket/korttidsarbete/beslut-2"
+variable = "tillvaxtverket/korttidsarbete/beslut"
 representation = "Beslut"
 
 [[table.column]]
@@ -232761,7 +235541,7 @@ name = "P1105_LopNr_PersonNr_PeOrgNr"
 
 [[table.column.mapping]]
 register_variant = "tillvaxtverket/korttidsarbete/transaktioner"
-variable = "tillvaxtverket/korttidsarbete/personnr-peorgnr-2"
+variable = "tillvaxtverket/korttidsarbete/personnr-peorgnr"
 representation = "PersonNr_PeOrgNr"
 
 [[table.column]]
@@ -232777,7 +235557,7 @@ name = "Pagaende_Avslutat"
 
 [[table.column.mapping]]
 register_variant = "tillvaxtverket/korttidsarbete/transaktioner"
-variable = "tillvaxtverket/korttidsarbete/pagaende-avslutat-2"
+variable = "tillvaxtverket/korttidsarbete/pagaende-avslutat"
 representation = "Pagaende_Avslutat"
 
 [[table.column]]
@@ -248427,6 +251207,11 @@ register_variant = "swecov/population/_default"
 variable = "swecov/population/personnr"
 representation = "PersonNr"
 
+[[table.column.mapping]]
+register_variant = "swecov/population/_default"
+variable = "swecov/population/personnr"
+representation = "personnr"
+
 [[table.column]]
 name = "Partner"
 
@@ -258257,7 +261042,7 @@ name = "P1105_LopNr_PERSORGNR_PersonNr"
 
 [[table.column.mapping]]
 register_variant = "skatteverket/tillfalligt-anstand/ansokt"
-variable = "skatteverket/tillfalligt-anstand/persorgnr-personnr-3"
+variable = "skatteverket/tillfalligt-anstand/persorgnr-personnr"
 representation = "PERSORGNR_PersonNr"
 
 [[table.column]]
@@ -258285,7 +261070,7 @@ name = "DAT_TRANS"
 
 [[table.column.mapping]]
 register_variant = "skatteverket/tillfalligt-anstand/aterkallat"
-variable = "skatteverket/tillfalligt-anstand/dat-trans-2"
+variable = "skatteverket/tillfalligt-anstand/dat-trans"
 representation = "DAT_TRANS"
 
 [[table.column]]
@@ -258301,7 +261086,7 @@ name = "P1105_Lopnr_PERSORGNR_PeOrgNr"
 
 [[table.column.mapping]]
 register_variant = "skatteverket/tillfalligt-anstand/aterkallat"
-variable = "skatteverket/tillfalligt-anstand/persorgnr-peorgnr-4"
+variable = "skatteverket/tillfalligt-anstand/persorgnr-peorgnr"
 representation = "PERSORGNR_PeOrgNr"
 
 [[table.column]]
@@ -258345,7 +261130,7 @@ name = "P1105_LopNr_PERSORGNR_PersonNr"
 
 [[table.column.mapping]]
 register_variant = "skatteverket/tillfalligt-anstand/beviljat"
-variable = "skatteverket/tillfalligt-anstand/persorgnr-personnr-4"
+variable = "skatteverket/tillfalligt-anstand/persorgnr-personnr"
 representation = "PERSORGNR_PersonNr"
 
 [[table.column]]
@@ -258353,7 +261138,7 @@ name = "P1105_Lopnr_PERSORGNR_PeOrgNr"
 
 [[table.column.mapping]]
 register_variant = "skatteverket/tillfalligt-anstand/beviljat"
-variable = "skatteverket/tillfalligt-anstand/persorgnr-peorgnr-2"
+variable = "skatteverket/tillfalligt-anstand/persorgnr-peorgnr"
 representation = "PERSORGNR_PeOrgNr"
 
 [[table.column]]
@@ -258361,7 +261146,7 @@ name = "PERIOD_FROM"
 
 [[table.column.mapping]]
 register_variant = "skatteverket/tillfalligt-anstand/beviljat"
-variable = "skatteverket/tillfalligt-anstand/period-from-2"
+variable = "skatteverket/tillfalligt-anstand/period-from"
 representation = "PERIOD_FROM"
 
 [[table.column]]
@@ -258369,7 +261154,7 @@ name = "PERIOD_TOM"
 
 [[table.column.mapping]]
 register_variant = "skatteverket/tillfalligt-anstand/beviljat"
-variable = "skatteverket/tillfalligt-anstand/period-tom-3"
+variable = "skatteverket/tillfalligt-anstand/period-tom"
 representation = "PERIOD_TOM"
 
 [[table]]
@@ -258381,7 +261166,7 @@ name = "DAT_TRANS"
 
 [[table.column.mapping]]
 register_variant = "skatteverket/tillfalligt-anstand/upphort"
-variable = "skatteverket/tillfalligt-anstand/dat-trans-3"
+variable = "skatteverket/tillfalligt-anstand/dat-trans"
 representation = "DAT_TRANS"
 
 [[table.column]]
@@ -258389,7 +261174,7 @@ name = "P1105_LopNr_PERSORGNR_PersonNr"
 
 [[table.column.mapping]]
 register_variant = "skatteverket/tillfalligt-anstand/upphort"
-variable = "skatteverket/tillfalligt-anstand/persorgnr-personnr-2"
+variable = "skatteverket/tillfalligt-anstand/persorgnr-personnr"
 representation = "PERSORGNR_PersonNr"
 
 [[table.column]]
@@ -258397,7 +261182,7 @@ name = "P1105_Lopnr_PERSORGNR_PeOrgNr"
 
 [[table.column.mapping]]
 register_variant = "skatteverket/tillfalligt-anstand/upphort"
-variable = "skatteverket/tillfalligt-anstand/persorgnr-peorgnr-3"
+variable = "skatteverket/tillfalligt-anstand/persorgnr-peorgnr"
 representation = "PERSORGNR_PeOrgNr"
 
 [[table.column]]
@@ -258405,7 +261190,7 @@ name = "PERIOD_FROM"
 
 [[table.column.mapping]]
 register_variant = "skatteverket/tillfalligt-anstand/upphort"
-variable = "skatteverket/tillfalligt-anstand/period-from-3"
+variable = "skatteverket/tillfalligt-anstand/period-from"
 representation = "PERIOD_FROM"
 
 [[table.column]]
@@ -258413,7 +261198,7 @@ name = "PERIOD_TOM"
 
 [[table.column.mapping]]
 register_variant = "skatteverket/tillfalligt-anstand/upphort"
-variable = "skatteverket/tillfalligt-anstand/period-tom-2"
+variable = "skatteverket/tillfalligt-anstand/period-tom"
 representation = "PERIOD_TOM"
 
 [[table.column]]
@@ -258669,7 +261454,7 @@ name = "OMSTALLNINGSSTOD_PERIOD"
 
 [[table.column.mapping]]
 register_variant = "skatteverket/omstallningsstod/ansokt"
-variable = "skatteverket/omstallningsstod/omstallningsstod-period-2"
+variable = "skatteverket/omstallningsstod/omstallningsstod-period"
 representation = "OMSTALLNINGSSTOD_PERIOD"
 
 [[table.column]]
@@ -258677,7 +261462,7 @@ name = "P1105_LopNr_ARENDENUMMER"
 
 [[table.column.mapping]]
 register_variant = "skatteverket/omstallningsstod/ansokt"
-variable = "skatteverket/omstallningsstod/arendenummer-3"
+variable = "skatteverket/omstallningsstod/arendenummer"
 representation = "ARENDENUMMER"
 
 [[table.column]]
@@ -258685,7 +261470,7 @@ name = "P1105_LopNr_PERSORGNR_PersonNr"
 
 [[table.column.mapping]]
 register_variant = "skatteverket/omstallningsstod/ansokt"
-variable = "skatteverket/omstallningsstod/persorgnr-personnr-3"
+variable = "skatteverket/omstallningsstod/persorgnr-personnr"
 representation = "PERSORGNR_PersonNr"
 
 [[table.column]]
@@ -258693,7 +261478,7 @@ name = "P1105_Lopnr_PERSORGNR_PeOrgNr"
 
 [[table.column.mapping]]
 register_variant = "skatteverket/omstallningsstod/ansokt"
-variable = "skatteverket/omstallningsstod/persorgnr-peorgnr-3"
+variable = "skatteverket/omstallningsstod/persorgnr-peorgnr"
 representation = "PERSORGNR_PeOrgNr"
 
 [[table.column]]
@@ -258729,7 +261514,7 @@ name = "P1105_LopNr_ARENDENUMMER"
 
 [[table.column.mapping]]
 register_variant = "skatteverket/omstallningsstod/avslag"
-variable = "skatteverket/omstallningsstod/arendenummer-2"
+variable = "skatteverket/omstallningsstod/arendenummer"
 representation = "ARENDENUMMER"
 
 [[table.column]]
@@ -258737,7 +261522,7 @@ name = "P1105_LopNr_PERSORGNR_PersonNr"
 
 [[table.column.mapping]]
 register_variant = "skatteverket/omstallningsstod/avslag"
-variable = "skatteverket/omstallningsstod/persorgnr-personnr-2"
+variable = "skatteverket/omstallningsstod/persorgnr-personnr"
 representation = "PERSORGNR_PersonNr"
 
 [[table.column]]
@@ -258745,7 +261530,7 @@ name = "P1105_Lopnr_PERSORGNR_PeOrgNr"
 
 [[table.column.mapping]]
 register_variant = "skatteverket/omstallningsstod/avslag"
-variable = "skatteverket/omstallningsstod/persorgnr-peorgnr-2"
+variable = "skatteverket/omstallningsstod/persorgnr-peorgnr"
 representation = "PERSORGNR_PeOrgNr"
 
 [[table]]
@@ -261730,6 +264515,11 @@ register_variant = "scb/grundskola-ak9/grundskolan-betyg-ak9"
 variable = "scb/grundskola-ak9/meritvarde"
 representation = "MeritVarde"
 
+[[table.column.mapping]]
+register_variant = "scb/grundskola-ak9/grundskolan-betyg-ak9"
+variable = "scb/grundskola-ak9/meritvarde"
+representation = "Meritvarde"
+
 [[table.column]]
 name = "ML_BETYG"
 
@@ -262079,6 +264869,11 @@ name = "MERITVARDE"
 register_variant = "scb/grundskola-ak9/grundskolan-betyg-ak9"
 variable = "scb/grundskola-ak9/meritvarde"
 representation = "MeritVarde"
+
+[[table.column.mapping]]
+register_variant = "scb/grundskola-ak9/grundskolan-betyg-ak9"
+variable = "scb/grundskola-ak9/meritvarde"
+representation = "Meritvarde"
 
 [[table.column]]
 name = "ML_BETYG"
@@ -262430,6 +265225,11 @@ register_variant = "scb/grundskola-ak9/grundskolan-betyg-ak9"
 variable = "scb/grundskola-ak9/meritvarde"
 representation = "MeritVarde"
 
+[[table.column.mapping]]
+register_variant = "scb/grundskola-ak9/grundskolan-betyg-ak9"
+variable = "scb/grundskola-ak9/meritvarde"
+representation = "Meritvarde"
+
 [[table.column]]
 name = "ML_BETYG"
 
@@ -262742,6 +265542,11 @@ name = "MERITVARDE"
 register_variant = "scb/grundskola-ak9/grundskolan-betyg-ak9"
 variable = "scb/grundskola-ak9/meritvarde"
 representation = "MeritVarde"
+
+[[table.column.mapping]]
+register_variant = "scb/grundskola-ak9/grundskolan-betyg-ak9"
+variable = "scb/grundskola-ak9/meritvarde"
+representation = "Meritvarde"
 
 [[table.column]]
 name = "ML_BETYG"
@@ -263088,6 +265893,11 @@ register_variant = "scb/grundskola-ak9/grundskolan-betyg-ak9"
 variable = "scb/grundskola-ak9/meritvarde"
 representation = "MeritVarde"
 
+[[table.column.mapping]]
+register_variant = "scb/grundskola-ak9/grundskolan-betyg-ak9"
+variable = "scb/grundskola-ak9/meritvarde"
+representation = "Meritvarde"
+
 [[table.column]]
 name = "ML_BETYG"
 
@@ -263433,6 +266243,11 @@ register_variant = "scb/grundskola-ak9/grundskolan-betyg-ak9"
 variable = "scb/grundskola-ak9/meritvarde"
 representation = "MeritVarde"
 
+[[table.column.mapping]]
+register_variant = "scb/grundskola-ak9/grundskolan-betyg-ak9"
+variable = "scb/grundskola-ak9/meritvarde"
+representation = "Meritvarde"
+
 [[table.column]]
 name = "ML_BETYG"
 
@@ -263777,6 +266592,11 @@ name = "MERITVARDE"
 register_variant = "scb/grundskola-ak9/grundskolan-betyg-ak9"
 variable = "scb/grundskola-ak9/meritvarde"
 representation = "MeritVarde"
+
+[[table.column.mapping]]
+register_variant = "scb/grundskola-ak9/grundskolan-betyg-ak9"
+variable = "scb/grundskola-ak9/meritvarde"
+representation = "Meritvarde"
 
 [[table.column]]
 name = "ML_BETYG"
@@ -264136,6 +266956,11 @@ register_variant = "scb/grundskola-ak9/grundskolan-betyg-ak9"
 variable = "scb/grundskola-ak9/meritvarde"
 representation = "MeritVarde"
 
+[[table.column.mapping]]
+register_variant = "scb/grundskola-ak9/grundskolan-betyg-ak9"
+variable = "scb/grundskola-ak9/meritvarde"
+representation = "Meritvarde"
+
 [[table.column]]
 name = "ML_BETYG"
 
@@ -264493,6 +267318,11 @@ name = "MERITVARDE"
 register_variant = "scb/grundskola-ak9/grundskolan-betyg-ak9"
 variable = "scb/grundskola-ak9/meritvarde"
 representation = "MeritVarde"
+
+[[table.column.mapping]]
+register_variant = "scb/grundskola-ak9/grundskolan-betyg-ak9"
+variable = "scb/grundskola-ak9/meritvarde"
+representation = "Meritvarde"
 
 [[table.column]]
 name = "ML_BETYG"
@@ -264852,6 +267682,11 @@ register_variant = "scb/grundskola-ak9/grundskolan-betyg-ak9"
 variable = "scb/grundskola-ak9/meritvarde"
 representation = "MeritVarde"
 
+[[table.column.mapping]]
+register_variant = "scb/grundskola-ak9/grundskolan-betyg-ak9"
+variable = "scb/grundskola-ak9/meritvarde"
+representation = "Meritvarde"
+
 [[table.column]]
 name = "ML_BETYG"
 
@@ -265209,6 +268044,11 @@ name = "MERITVARDE"
 register_variant = "scb/grundskola-ak9/grundskolan-betyg-ak9"
 variable = "scb/grundskola-ak9/meritvarde"
 representation = "MeritVarde"
+
+[[table.column.mapping]]
+register_variant = "scb/grundskola-ak9/grundskolan-betyg-ak9"
+variable = "scb/grundskola-ak9/meritvarde"
+representation = "Meritvarde"
 
 [[table.column]]
 name = "ML_BETYG"
@@ -265568,6 +268408,11 @@ register_variant = "scb/grundskola-ak9/grundskolan-betyg-ak9"
 variable = "scb/grundskola-ak9/meritvarde"
 representation = "MeritVarde"
 
+[[table.column.mapping]]
+register_variant = "scb/grundskola-ak9/grundskolan-betyg-ak9"
+variable = "scb/grundskola-ak9/meritvarde"
+representation = "Meritvarde"
+
 [[table.column]]
 name = "ML_BETYG"
 
@@ -265926,6 +268771,11 @@ register_variant = "scb/grundskola-ak9/grundskolan-betyg-ak9"
 variable = "scb/grundskola-ak9/meritvarde"
 representation = "MeritVarde"
 
+[[table.column.mapping]]
+register_variant = "scb/grundskola-ak9/grundskolan-betyg-ak9"
+variable = "scb/grundskola-ak9/meritvarde"
+representation = "Meritvarde"
+
 [[table.column]]
 name = "ML_BETYG"
 
@@ -266283,6 +269133,11 @@ name = "MERITVARDE"
 register_variant = "scb/grundskola-ak9/grundskolan-betyg-ak9"
 variable = "scb/grundskola-ak9/meritvarde"
 representation = "MeritVarde"
+
+[[table.column.mapping]]
+register_variant = "scb/grundskola-ak9/grundskolan-betyg-ak9"
+variable = "scb/grundskola-ak9/meritvarde"
+representation = "Meritvarde"
 
 [[table.column]]
 name = "ML_BETYG"
@@ -266673,6 +269528,11 @@ name = "MERITVARDE"
 register_variant = "scb/grundskola-ak9/grundskolan-betyg-ak9"
 variable = "scb/grundskola-ak9/meritvarde"
 representation = "MeritVarde"
+
+[[table.column.mapping]]
+register_variant = "scb/grundskola-ak9/grundskolan-betyg-ak9"
+variable = "scb/grundskola-ak9/meritvarde"
+representation = "Meritvarde"
 
 [[table.column]]
 name = "ML_BETYG"
@@ -267076,6 +269936,11 @@ name = "MERITVARDE"
 register_variant = "scb/grundskola-ak9/grundskolan-betyg-ak9"
 variable = "scb/grundskola-ak9/meritvarde"
 representation = "MeritVarde"
+
+[[table.column.mapping]]
+register_variant = "scb/grundskola-ak9/grundskolan-betyg-ak9"
+variable = "scb/grundskola-ak9/meritvarde"
+representation = "Meritvarde"
 
 [[table.column]]
 name = "ML_BETYG"
@@ -267487,6 +270352,11 @@ name = "MERITVARDE"
 register_variant = "scb/grundskola-ak9/grundskolan-betyg-ak9"
 variable = "scb/grundskola-ak9/meritvarde"
 representation = "MeritVarde"
+
+[[table.column.mapping]]
+register_variant = "scb/grundskola-ak9/grundskolan-betyg-ak9"
+variable = "scb/grundskola-ak9/meritvarde"
+representation = "Meritvarde"
 
 [[table.column]]
 name = "ML_BETYG"
@@ -267923,6 +270793,11 @@ register_variant = "scb/grundskola-ak9/grundskolan-betyg-ak9"
 variable = "scb/grundskola-ak9/meritvarde"
 representation = "MeritVarde"
 
+[[table.column.mapping]]
+register_variant = "scb/grundskola-ak9/grundskolan-betyg-ak9"
+variable = "scb/grundskola-ak9/meritvarde"
+representation = "Meritvarde"
+
 [[table.column]]
 name = "ML_BETYG"
 
@@ -268344,6 +271219,11 @@ name = "MERITVARDE"
 register_variant = "scb/grundskola-ak9/grundskolan-betyg-ak9"
 variable = "scb/grundskola-ak9/meritvarde"
 representation = "MeritVarde"
+
+[[table.column.mapping]]
+register_variant = "scb/grundskola-ak9/grundskolan-betyg-ak9"
+variable = "scb/grundskola-ak9/meritvarde"
+representation = "Meritvarde"
 
 [[table.column]]
 name = "ML_BETYG"
@@ -268775,6 +271655,11 @@ register_variant = "scb/grundskola-ak9/grundskolan-betyg-ak9"
 variable = "scb/grundskola-ak9/meritvarde"
 representation = "MeritVarde"
 
+[[table.column.mapping]]
+register_variant = "scb/grundskola-ak9/grundskolan-betyg-ak9"
+variable = "scb/grundskola-ak9/meritvarde"
+representation = "Meritvarde"
+
 [[table.column]]
 name = "ML_BETYG"
 
@@ -269204,6 +272089,11 @@ name = "MERITVARDE"
 register_variant = "scb/grundskola-ak9/grundskolan-betyg-ak9"
 variable = "scb/grundskola-ak9/meritvarde"
 representation = "MeritVarde"
+
+[[table.column.mapping]]
+register_variant = "scb/grundskola-ak9/grundskolan-betyg-ak9"
+variable = "scb/grundskola-ak9/meritvarde"
+representation = "Meritvarde"
 
 [[table.column]]
 name = "ML_BETYG"
@@ -269635,6 +272525,11 @@ register_variant = "scb/grundskola-ak9/grundskolan-betyg-ak9"
 variable = "scb/grundskola-ak9/meritvarde"
 representation = "MeritVarde"
 
+[[table.column.mapping]]
+register_variant = "scb/grundskola-ak9/grundskolan-betyg-ak9"
+variable = "scb/grundskola-ak9/meritvarde"
+representation = "Meritvarde"
+
 [[table.column]]
 name = "ML_BETYG"
 
@@ -270064,6 +272959,11 @@ name = "MERITVARDE"
 register_variant = "scb/grundskola-ak9/grundskolan-betyg-ak9"
 variable = "scb/grundskola-ak9/meritvarde"
 representation = "MeritVarde"
+
+[[table.column.mapping]]
+register_variant = "scb/grundskola-ak9/grundskolan-betyg-ak9"
+variable = "scb/grundskola-ak9/meritvarde"
+representation = "Meritvarde"
 
 [[table.column]]
 name = "ML_BETYG"
@@ -270503,6 +273403,11 @@ register_variant = "scb/grundskola-ak9/grundskolan-betyg-ak9"
 variable = "scb/grundskola-ak9/meritvarde"
 representation = "MeritVarde"
 
+[[table.column.mapping]]
+register_variant = "scb/grundskola-ak9/grundskolan-betyg-ak9"
+variable = "scb/grundskola-ak9/meritvarde"
+representation = "Meritvarde"
+
 [[table.column]]
 name = "ML_BETYG"
 
@@ -270906,6 +273811,11 @@ name = "MERITVARDE"
 register_variant = "scb/grundskola-ak9/grundskolan-betyg-ak9"
 variable = "scb/grundskola-ak9/meritvarde"
 representation = "MeritVarde"
+
+[[table.column.mapping]]
+register_variant = "scb/grundskola-ak9/grundskolan-betyg-ak9"
+variable = "scb/grundskola-ak9/meritvarde"
+representation = "Meritvarde"
 
 [[table.column]]
 name = "ML_BETYG"
@@ -271332,6 +274242,11 @@ register_variant = "scb/grundskola-ak9/grundskolan-betyg-ak9"
 variable = "scb/grundskola-ak9/meritvarde"
 representation = "MeritVarde"
 
+[[table.column.mapping]]
+register_variant = "scb/grundskola-ak9/grundskolan-betyg-ak9"
+variable = "scb/grundskola-ak9/meritvarde"
+representation = "Meritvarde"
+
 [[table.column]]
 name = "ML_BETYG"
 
@@ -271756,6 +274671,11 @@ name = "MERITVARDE"
 register_variant = "scb/grundskola-ak9/grundskolan-betyg-ak9"
 variable = "scb/grundskola-ak9/meritvarde"
 representation = "MeritVarde"
+
+[[table.column.mapping]]
+register_variant = "scb/grundskola-ak9/grundskolan-betyg-ak9"
+variable = "scb/grundskola-ak9/meritvarde"
+representation = "Meritvarde"
 
 [[table.column]]
 name = "ML_BETYG"
@@ -286598,6 +289518,11 @@ register_variant = "swedbank/konsumtion/_default"
 variable = "swedbank/konsumtion/age-group"
 representation = "AGE_GROUP"
 
+[[table.column.mapping]]
+register_variant = "swedbank/konsumtion/_default"
+variable = "swedbank/konsumtion/age-group"
+representation = "Age_group"
+
 [[table.column]]
 name = "Country_Code"
 
@@ -286638,6 +289563,11 @@ register_variant = "swedbank/konsumtion/_default"
 variable = "swedbank/konsumtion/zip-code"
 representation = "ZIP_CODE"
 
+[[table.column.mapping]]
+register_variant = "swedbank/konsumtion/_default"
+variable = "swedbank/konsumtion/zip-code"
+representation = "ZIP_Code"
+
 [[table]]
 id = "Swedbank_V01_20210520"
 edition = 2019
@@ -286651,6 +289581,11 @@ register_variant = "swedbank/konsumtion/_default"
 variable = "swedbank/konsumtion/age-group"
 representation = "AGE_GROUP"
 
+[[table.column.mapping]]
+register_variant = "swedbank/konsumtion/_default"
+variable = "swedbank/konsumtion/age-group"
+representation = "Age_group"
+
 [[table.column]]
 name = "AVERAGE_SPENDINGS"
 
@@ -286658,6 +289593,11 @@ name = "AVERAGE_SPENDINGS"
 register_variant = "swedbank/konsumtion/_default"
 variable = "swedbank/konsumtion/average-spendings"
 representation = "AVERAGE_SPENDINGS"
+
+[[table.column.mapping]]
+register_variant = "swedbank/konsumtion/_default"
+variable = "swedbank/konsumtion/average-spendings"
+representation = "Average_Spendings"
 
 [[table.column]]
 name = "Month"
@@ -286675,6 +289615,11 @@ register_variant = "swedbank/konsumtion/_default"
 variable = "swedbank/konsumtion/total-spendings"
 representation = "TOTAL_SPENDINGS"
 
+[[table.column.mapping]]
+register_variant = "swedbank/konsumtion/_default"
+variable = "swedbank/konsumtion/total-spendings"
+representation = "Total_Spendings"
+
 [[table.column]]
 name = "UNIQUE_CARDHOLDER"
 
@@ -286699,6 +289644,11 @@ register_variant = "swedbank/konsumtion/_default"
 variable = "swedbank/konsumtion/year"
 representation = "YEAR"
 
+[[table.column.mapping]]
+register_variant = "swedbank/konsumtion/_default"
+variable = "swedbank/konsumtion/year"
+representation = "Year"
+
 [[table.column]]
 name = "ZIP_CODE"
 
@@ -286706,6 +289656,11 @@ name = "ZIP_CODE"
 register_variant = "swedbank/konsumtion/_default"
 variable = "swedbank/konsumtion/zip-code"
 representation = "ZIP_CODE"
+
+[[table.column.mapping]]
+register_variant = "swedbank/konsumtion/_default"
+variable = "swedbank/konsumtion/zip-code"
+representation = "ZIP_Code"
 
 [[table]]
 id = "Swedbank_V02"
@@ -286720,6 +289675,11 @@ register_variant = "swedbank/konsumtion/_default"
 variable = "swedbank/konsumtion/age-group"
 representation = "AGE_GROUP"
 
+[[table.column.mapping]]
+register_variant = "swedbank/konsumtion/_default"
+variable = "swedbank/konsumtion/age-group"
+representation = "Age_group"
+
 [[table.column]]
 name = "Country_Code"
 
@@ -286759,6 +289719,11 @@ name = "ZIP_Code"
 register_variant = "swedbank/konsumtion/_default"
 variable = "swedbank/konsumtion/zip-code"
 representation = "ZIP_CODE"
+
+[[table.column.mapping]]
+register_variant = "swedbank/konsumtion/_default"
+variable = "swedbank/konsumtion/zip-code"
+representation = "ZIP_Code"
 
 [[table]]
 id = "Swedbank_V02_20210520"
@@ -286773,6 +289738,11 @@ register_variant = "swedbank/konsumtion/_default"
 variable = "swedbank/konsumtion/age-group"
 representation = "AGE_GROUP"
 
+[[table.column.mapping]]
+register_variant = "swedbank/konsumtion/_default"
+variable = "swedbank/konsumtion/age-group"
+representation = "Age_group"
+
 [[table.column]]
 name = "AVERAGE_SPENDING"
 
@@ -286813,6 +289783,11 @@ register_variant = "swedbank/konsumtion/_default"
 variable = "swedbank/konsumtion/year"
 representation = "YEAR"
 
+[[table.column.mapping]]
+register_variant = "swedbank/konsumtion/_default"
+variable = "swedbank/konsumtion/year"
+representation = "Year"
+
 [[table.column]]
 name = "ZIP_CODE"
 
@@ -286820,6 +289795,11 @@ name = "ZIP_CODE"
 register_variant = "swedbank/konsumtion/_default"
 variable = "swedbank/konsumtion/zip-code"
 representation = "ZIP_CODE"
+
+[[table.column.mapping]]
+register_variant = "swedbank/konsumtion/_default"
+variable = "swedbank/konsumtion/zip-code"
+representation = "ZIP_Code"
 
 [[table]]
 id = "Swedbank_V03"
@@ -286834,6 +289814,11 @@ register_variant = "swedbank/konsumtion/_default"
 variable = "swedbank/konsumtion/age-group"
 representation = "AGE_GROUP"
 
+[[table.column.mapping]]
+register_variant = "swedbank/konsumtion/_default"
+variable = "swedbank/konsumtion/age-group"
+representation = "Age_group"
+
 [[table.column]]
 name = "Country_Code"
 
@@ -286874,6 +289859,11 @@ register_variant = "swedbank/konsumtion/_default"
 variable = "swedbank/konsumtion/zip-code"
 representation = "ZIP_CODE"
 
+[[table.column.mapping]]
+register_variant = "swedbank/konsumtion/_default"
+variable = "swedbank/konsumtion/zip-code"
+representation = "ZIP_Code"
+
 [[table]]
 id = "Swedbank_V03_20210520"
 edition = 2020
@@ -286886,6 +289876,11 @@ name = "AGE_GROUP"
 register_variant = "swedbank/konsumtion/_default"
 variable = "swedbank/konsumtion/age-group"
 representation = "AGE_GROUP"
+
+[[table.column.mapping]]
+register_variant = "swedbank/konsumtion/_default"
+variable = "swedbank/konsumtion/age-group"
+representation = "Age_group"
 
 [[table.column]]
 name = "AVERAGE_SPENDING"
@@ -286927,6 +289922,11 @@ register_variant = "swedbank/konsumtion/_default"
 variable = "swedbank/konsumtion/year"
 representation = "YEAR"
 
+[[table.column.mapping]]
+register_variant = "swedbank/konsumtion/_default"
+variable = "swedbank/konsumtion/year"
+representation = "Year"
+
 [[table.column]]
 name = "ZIP_CODE"
 
@@ -286934,6 +289934,11 @@ name = "ZIP_CODE"
 register_variant = "swedbank/konsumtion/_default"
 variable = "swedbank/konsumtion/zip-code"
 representation = "ZIP_CODE"
+
+[[table.column.mapping]]
+register_variant = "swedbank/konsumtion/_default"
+variable = "swedbank/konsumtion/zip-code"
+representation = "ZIP_Code"
 
 [[table]]
 id = "Swedbank_V04"
@@ -286947,6 +289952,11 @@ name = "Age_group"
 register_variant = "swedbank/konsumtion/_default"
 variable = "swedbank/konsumtion/age-group"
 representation = "AGE_GROUP"
+
+[[table.column.mapping]]
+register_variant = "swedbank/konsumtion/_default"
+variable = "swedbank/konsumtion/age-group"
+representation = "Age_group"
 
 [[table.column]]
 name = "Country_Code"
@@ -286987,6 +289997,11 @@ name = "ZIP_Code"
 register_variant = "swedbank/konsumtion/_default"
 variable = "swedbank/konsumtion/zip-code"
 representation = "ZIP_CODE"
+
+[[table.column.mapping]]
+register_variant = "swedbank/konsumtion/_default"
+variable = "swedbank/konsumtion/zip-code"
+representation = "ZIP_Code"
 
 [[table]]
 id = "Swedbank_V04_20210520"
@@ -287009,6 +290024,11 @@ register_variant = "swedbank/konsumtion/_default"
 variable = "swedbank/konsumtion/zip-code"
 representation = "ZIP_CODE"
 
+[[table.column.mapping]]
+register_variant = "swedbank/konsumtion/_default"
+variable = "swedbank/konsumtion/zip-code"
+representation = "ZIP_Code"
+
 [[table]]
 id = "Swedbank_V05"
 edition = 2020
@@ -287021,6 +290041,11 @@ name = "Age_group"
 register_variant = "swedbank/konsumtion/_default"
 variable = "swedbank/konsumtion/age-group"
 representation = "AGE_GROUP"
+
+[[table.column.mapping]]
+register_variant = "swedbank/konsumtion/_default"
+variable = "swedbank/konsumtion/age-group"
+representation = "Age_group"
 
 [[table.column]]
 name = "Country_Code"
@@ -287061,6 +290086,11 @@ name = "ZIP_Code"
 register_variant = "swedbank/konsumtion/_default"
 variable = "swedbank/konsumtion/zip-code"
 representation = "ZIP_CODE"
+
+[[table.column.mapping]]
+register_variant = "swedbank/konsumtion/_default"
+variable = "swedbank/konsumtion/zip-code"
+representation = "ZIP_Code"
 
 [[table]]
 id = "Swedbank_V06"
@@ -287075,6 +290105,11 @@ register_variant = "swedbank/konsumtion/_default"
 variable = "swedbank/konsumtion/age-group"
 representation = "AGE_GROUP"
 
+[[table.column.mapping]]
+register_variant = "swedbank/konsumtion/_default"
+variable = "swedbank/konsumtion/age-group"
+representation = "Age_group"
+
 [[table.column]]
 name = "Country_Code"
 
@@ -287114,6 +290149,11 @@ name = "ZIP_Code"
 register_variant = "swedbank/konsumtion/_default"
 variable = "swedbank/konsumtion/zip-code"
 representation = "ZIP_CODE"
+
+[[table.column.mapping]]
+register_variant = "swedbank/konsumtion/_default"
+variable = "swedbank/konsumtion/zip-code"
+representation = "ZIP_Code"
 
 [[table]]
 id = "Swedbank_V07"
@@ -287128,6 +290168,11 @@ register_variant = "swedbank/konsumtion/_default"
 variable = "swedbank/konsumtion/age-group"
 representation = "AGE_GROUP"
 
+[[table.column.mapping]]
+register_variant = "swedbank/konsumtion/_default"
+variable = "swedbank/konsumtion/age-group"
+representation = "Age_group"
+
 [[table.column]]
 name = "Country_Code"
 
@@ -287167,6 +290212,11 @@ name = "ZIP_Code"
 register_variant = "swedbank/konsumtion/_default"
 variable = "swedbank/konsumtion/zip-code"
 representation = "ZIP_CODE"
+
+[[table.column.mapping]]
+register_variant = "swedbank/konsumtion/_default"
+variable = "swedbank/konsumtion/zip-code"
+representation = "ZIP_Code"
 
 [[table]]
 id = "Swedbank_V08"
@@ -287181,6 +290231,11 @@ register_variant = "swedbank/konsumtion/_default"
 variable = "swedbank/konsumtion/age-group"
 representation = "AGE_GROUP"
 
+[[table.column.mapping]]
+register_variant = "swedbank/konsumtion/_default"
+variable = "swedbank/konsumtion/age-group"
+representation = "Age_group"
+
 [[table.column]]
 name = "Country_Code"
 
@@ -287220,6 +290275,11 @@ name = "ZIP_Code"
 register_variant = "swedbank/konsumtion/_default"
 variable = "swedbank/konsumtion/zip-code"
 representation = "ZIP_CODE"
+
+[[table.column.mapping]]
+register_variant = "swedbank/konsumtion/_default"
+variable = "swedbank/konsumtion/zip-code"
+representation = "ZIP_Code"
 
 [[table]]
 id = "Swedbank_V09"
@@ -287234,6 +290294,11 @@ register_variant = "swedbank/konsumtion/_default"
 variable = "swedbank/konsumtion/age-group"
 representation = "AGE_GROUP"
 
+[[table.column.mapping]]
+register_variant = "swedbank/konsumtion/_default"
+variable = "swedbank/konsumtion/age-group"
+representation = "Age_group"
+
 [[table.column]]
 name = "Country_Code"
 
@@ -287273,6 +290338,11 @@ name = "ZIP_Code"
 register_variant = "swedbank/konsumtion/_default"
 variable = "swedbank/konsumtion/zip-code"
 representation = "ZIP_CODE"
+
+[[table.column.mapping]]
+register_variant = "swedbank/konsumtion/_default"
+variable = "swedbank/konsumtion/zip-code"
+representation = "ZIP_Code"
 
 [[table]]
 id = "Swedbank_V10"
@@ -287287,6 +290357,11 @@ register_variant = "swedbank/konsumtion/_default"
 variable = "swedbank/konsumtion/age-group"
 representation = "AGE_GROUP"
 
+[[table.column.mapping]]
+register_variant = "swedbank/konsumtion/_default"
+variable = "swedbank/konsumtion/age-group"
+representation = "Age_group"
+
 [[table.column]]
 name = "Country_Code"
 
@@ -287326,6 +290401,11 @@ name = "ZIP_Code"
 register_variant = "swedbank/konsumtion/_default"
 variable = "swedbank/konsumtion/zip-code"
 representation = "ZIP_CODE"
+
+[[table.column.mapping]]
+register_variant = "swedbank/konsumtion/_default"
+variable = "swedbank/konsumtion/zip-code"
+representation = "ZIP_Code"
 
 [[table]]
 id = "Swedbank_V11"
@@ -287340,6 +290420,11 @@ register_variant = "swedbank/konsumtion/_default"
 variable = "swedbank/konsumtion/age-group"
 representation = "AGE_GROUP"
 
+[[table.column.mapping]]
+register_variant = "swedbank/konsumtion/_default"
+variable = "swedbank/konsumtion/age-group"
+representation = "Age_group"
+
 [[table.column]]
 name = "Country_Code"
 
@@ -287379,6 +290464,11 @@ name = "ZIP_Code"
 register_variant = "swedbank/konsumtion/_default"
 variable = "swedbank/konsumtion/zip-code"
 representation = "ZIP_CODE"
+
+[[table.column.mapping]]
+register_variant = "swedbank/konsumtion/_default"
+variable = "swedbank/konsumtion/zip-code"
+representation = "ZIP_Code"
 
 [[table]]
 id = "Swedbank_V12"
@@ -287401,6 +290491,11 @@ register_variant = "swedbank/konsumtion/_default"
 variable = "swedbank/konsumtion/average-spendings"
 representation = "AVERAGE_SPENDINGS"
 
+[[table.column.mapping]]
+register_variant = "swedbank/konsumtion/_default"
+variable = "swedbank/konsumtion/average-spendings"
+representation = "Average_Spendings"
+
 [[table.column]]
 name = "Total_Spendings"
 
@@ -287408,6 +290503,11 @@ name = "Total_Spendings"
 register_variant = "swedbank/konsumtion/_default"
 variable = "swedbank/konsumtion/total-spendings"
 representation = "TOTAL_SPENDINGS"
+
+[[table.column.mapping]]
+register_variant = "swedbank/konsumtion/_default"
+variable = "swedbank/konsumtion/total-spendings"
+representation = "Total_Spendings"
 
 [[table.column]]
 name = "Unique_Card_Holders"
@@ -287425,6 +290525,11 @@ register_variant = "swedbank/konsumtion/_default"
 variable = "swedbank/konsumtion/year"
 representation = "YEAR"
 
+[[table.column.mapping]]
+register_variant = "swedbank/konsumtion/_default"
+variable = "swedbank/konsumtion/year"
+representation = "Year"
+
 [[table.column]]
 name = "ZIP_Code"
 
@@ -287432,6 +290537,11 @@ name = "ZIP_Code"
 register_variant = "swedbank/konsumtion/_default"
 variable = "swedbank/konsumtion/zip-code"
 representation = "ZIP_CODE"
+
+[[table.column.mapping]]
+register_variant = "swedbank/konsumtion/_default"
+variable = "swedbank/konsumtion/zip-code"
+representation = "ZIP_Code"
 
 [[table]]
 id = "Swedbank_V13"
@@ -287454,6 +290564,11 @@ register_variant = "swedbank/konsumtion/_default"
 variable = "swedbank/konsumtion/average-spendings"
 representation = "AVERAGE_SPENDINGS"
 
+[[table.column.mapping]]
+register_variant = "swedbank/konsumtion/_default"
+variable = "swedbank/konsumtion/average-spendings"
+representation = "Average_Spendings"
+
 [[table.column]]
 name = "Total_Spendings"
 
@@ -287461,6 +290576,11 @@ name = "Total_Spendings"
 register_variant = "swedbank/konsumtion/_default"
 variable = "swedbank/konsumtion/total-spendings"
 representation = "TOTAL_SPENDINGS"
+
+[[table.column.mapping]]
+register_variant = "swedbank/konsumtion/_default"
+variable = "swedbank/konsumtion/total-spendings"
+representation = "Total_Spendings"
 
 [[table.column]]
 name = "Unique_Card_Holders"
@@ -287478,6 +290598,11 @@ register_variant = "swedbank/konsumtion/_default"
 variable = "swedbank/konsumtion/year"
 representation = "YEAR"
 
+[[table.column.mapping]]
+register_variant = "swedbank/konsumtion/_default"
+variable = "swedbank/konsumtion/year"
+representation = "Year"
+
 [[table.column]]
 name = "ZIP_Code"
 
@@ -287485,6 +290610,11 @@ name = "ZIP_Code"
 register_variant = "swedbank/konsumtion/_default"
 variable = "swedbank/konsumtion/zip-code"
 representation = "ZIP_CODE"
+
+[[table.column.mapping]]
+register_variant = "swedbank/konsumtion/_default"
+variable = "swedbank/konsumtion/zip-code"
+representation = "ZIP_Code"
 
 [[table]]
 id = "Swedbank_V14"
@@ -287507,6 +290637,11 @@ register_variant = "swedbank/konsumtion/_default"
 variable = "swedbank/konsumtion/average-spendings"
 representation = "AVERAGE_SPENDINGS"
 
+[[table.column.mapping]]
+register_variant = "swedbank/konsumtion/_default"
+variable = "swedbank/konsumtion/average-spendings"
+representation = "Average_Spendings"
+
 [[table.column]]
 name = "Total_Spendings"
 
@@ -287514,6 +290649,11 @@ name = "Total_Spendings"
 register_variant = "swedbank/konsumtion/_default"
 variable = "swedbank/konsumtion/total-spendings"
 representation = "TOTAL_SPENDINGS"
+
+[[table.column.mapping]]
+register_variant = "swedbank/konsumtion/_default"
+variable = "swedbank/konsumtion/total-spendings"
+representation = "Total_Spendings"
 
 [[table.column]]
 name = "Unique_Card_Holders"
@@ -287531,6 +290671,11 @@ register_variant = "swedbank/konsumtion/_default"
 variable = "swedbank/konsumtion/year"
 representation = "YEAR"
 
+[[table.column.mapping]]
+register_variant = "swedbank/konsumtion/_default"
+variable = "swedbank/konsumtion/year"
+representation = "Year"
+
 [[table.column]]
 name = "ZIP_Code"
 
@@ -287538,6 +290683,11 @@ name = "ZIP_Code"
 register_variant = "swedbank/konsumtion/_default"
 variable = "swedbank/konsumtion/zip-code"
 representation = "ZIP_CODE"
+
+[[table.column.mapping]]
+register_variant = "swedbank/konsumtion/_default"
+variable = "swedbank/konsumtion/zip-code"
+representation = "ZIP_Code"
 
 [[table]]
 id = "Swedbank_V15"
@@ -287560,6 +290710,11 @@ register_variant = "swedbank/konsumtion/_default"
 variable = "swedbank/konsumtion/average-spendings"
 representation = "AVERAGE_SPENDINGS"
 
+[[table.column.mapping]]
+register_variant = "swedbank/konsumtion/_default"
+variable = "swedbank/konsumtion/average-spendings"
+representation = "Average_Spendings"
+
 [[table.column]]
 name = "Total_Spendings"
 
@@ -287567,6 +290722,11 @@ name = "Total_Spendings"
 register_variant = "swedbank/konsumtion/_default"
 variable = "swedbank/konsumtion/total-spendings"
 representation = "TOTAL_SPENDINGS"
+
+[[table.column.mapping]]
+register_variant = "swedbank/konsumtion/_default"
+variable = "swedbank/konsumtion/total-spendings"
+representation = "Total_Spendings"
 
 [[table.column]]
 name = "Unique_Card_Holders"
@@ -287584,6 +290744,11 @@ register_variant = "swedbank/konsumtion/_default"
 variable = "swedbank/konsumtion/year"
 representation = "YEAR"
 
+[[table.column.mapping]]
+register_variant = "swedbank/konsumtion/_default"
+variable = "swedbank/konsumtion/year"
+representation = "Year"
+
 [[table.column]]
 name = "ZIP_Code"
 
@@ -287591,6 +290756,11 @@ name = "ZIP_Code"
 register_variant = "swedbank/konsumtion/_default"
 variable = "swedbank/konsumtion/zip-code"
 representation = "ZIP_CODE"
+
+[[table.column.mapping]]
+register_variant = "swedbank/konsumtion/_default"
+variable = "swedbank/konsumtion/zip-code"
+representation = "ZIP_Code"
 
 [[table]]
 id = "Swedbank_V16"
@@ -287613,6 +290783,11 @@ register_variant = "swedbank/konsumtion/_default"
 variable = "swedbank/konsumtion/average-spendings"
 representation = "AVERAGE_SPENDINGS"
 
+[[table.column.mapping]]
+register_variant = "swedbank/konsumtion/_default"
+variable = "swedbank/konsumtion/average-spendings"
+representation = "Average_Spendings"
+
 [[table.column]]
 name = "Total_Spendings"
 
@@ -287620,6 +290795,11 @@ name = "Total_Spendings"
 register_variant = "swedbank/konsumtion/_default"
 variable = "swedbank/konsumtion/total-spendings"
 representation = "TOTAL_SPENDINGS"
+
+[[table.column.mapping]]
+register_variant = "swedbank/konsumtion/_default"
+variable = "swedbank/konsumtion/total-spendings"
+representation = "Total_Spendings"
 
 [[table.column]]
 name = "Unique_Card_Holders"
@@ -287637,6 +290817,11 @@ register_variant = "swedbank/konsumtion/_default"
 variable = "swedbank/konsumtion/year"
 representation = "YEAR"
 
+[[table.column.mapping]]
+register_variant = "swedbank/konsumtion/_default"
+variable = "swedbank/konsumtion/year"
+representation = "Year"
+
 [[table.column]]
 name = "ZIP_Code"
 
@@ -287644,6 +290829,11 @@ name = "ZIP_Code"
 register_variant = "swedbank/konsumtion/_default"
 variable = "swedbank/konsumtion/zip-code"
 representation = "ZIP_CODE"
+
+[[table.column.mapping]]
+register_variant = "swedbank/konsumtion/_default"
+variable = "swedbank/konsumtion/zip-code"
+representation = "ZIP_Code"
 
 [[table]]
 id = "Swedbank_V17"
@@ -287666,6 +290856,11 @@ register_variant = "swedbank/konsumtion/_default"
 variable = "swedbank/konsumtion/average-spendings"
 representation = "AVERAGE_SPENDINGS"
 
+[[table.column.mapping]]
+register_variant = "swedbank/konsumtion/_default"
+variable = "swedbank/konsumtion/average-spendings"
+representation = "Average_Spendings"
+
 [[table.column]]
 name = "Total_Spendings"
 
@@ -287673,6 +290868,11 @@ name = "Total_Spendings"
 register_variant = "swedbank/konsumtion/_default"
 variable = "swedbank/konsumtion/total-spendings"
 representation = "TOTAL_SPENDINGS"
+
+[[table.column.mapping]]
+register_variant = "swedbank/konsumtion/_default"
+variable = "swedbank/konsumtion/total-spendings"
+representation = "Total_Spendings"
 
 [[table.column]]
 name = "Unique_Card_Holders"
@@ -287690,6 +290890,11 @@ register_variant = "swedbank/konsumtion/_default"
 variable = "swedbank/konsumtion/year"
 representation = "YEAR"
 
+[[table.column.mapping]]
+register_variant = "swedbank/konsumtion/_default"
+variable = "swedbank/konsumtion/year"
+representation = "Year"
+
 [[table.column]]
 name = "ZIP_Code"
 
@@ -287697,6 +290902,11 @@ name = "ZIP_Code"
 register_variant = "swedbank/konsumtion/_default"
 variable = "swedbank/konsumtion/zip-code"
 representation = "ZIP_CODE"
+
+[[table.column.mapping]]
+register_variant = "swedbank/konsumtion/_default"
+variable = "swedbank/konsumtion/zip-code"
+representation = "ZIP_Code"
 
 [[table]]
 id = "Telia_ODM"
