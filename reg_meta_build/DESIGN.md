@@ -1527,38 +1527,75 @@ is a partial autumn term (`Höstterminen`/`HT`, delivered Jul–Dec) or its LATE
 partial spring term (`Vårterminen`/`VT`, Jan–Jun): the year bound claims a half-year the
 variable was never delivered in.
 
-`_edition_bounds(versionname, year)` (#219) parses the Swedish term/quarter/half
-phrasings to an inclusive ISO `(lo, hi)` window; since #271 the per-group envelope
-(`from_iso` = min claim lo, `to_iso` = max claim hi) derives from the claim records
-rather than parallel accumulator fields. The materializer applies the envelope **only at
-a state's lifetime start/end** — `from_iso` for the first emitted run when it begins at
-`regver_min`, `to_iso` for the last when it ends at `regver_max`. Interior timeline
+`edition_bounds(versionname, year)` (#219, `edition_bounds.py`) parses the Swedish
+term/quarter/half phrasings to an inclusive ISO `(lo, hi)` window WITHIN that year;
+`edition_claims(versionname, horizon)` wraps it to read a name's full span (below).
+Since #271 the per-group envelope (`from_iso` = min claim lo, `to_iso` = max claim hi)
+derives from the claim records rather than parallel accumulator fields. The materializer
+applies the envelope **only at a state's lifetime start/end** — `from_iso` for the first
+emitted run when it begins at `regver_min`, `to_iso` for the last when it ends at
+`regver_max`. Interior timeline
 handoffs between competing value sets stay year-aligned.
 
-The clamp only ever NARROWS within the boundary year — it never crosses a year boundary,
-**by construction**: `_edition_bounds` is passed the row's edition year
-(`extract_year(registerversionnamn)`) and narrows only markers whose own year EQUALS it,
-so every edition's window is a subset of `[year-01-01, year-12-31]` and the group
-envelope is a subset of `[regver_min-01-01, regver_max-12-31]`. A cross-year school-year
-range (`Höstterminen 2020 - Vårterminen 2021`, whose `extract_year` is the first year)
-thus narrows its START to Jul 1 but drops the next-year spring term, keeping a
-year-granular END. This year-tie also closes two corpus-constructible traps: a term
-naming a different year than the edition (`Insamling 2019 avseende höstterminen 2020`)
-can no longer produce an inverted `valid_from > valid_to`, and a stray out-of-1900-2099
-term (`HT 1850, version 2024`) can no longer crash `period_token_to_bounds`. As a
-backstop, the materializer fail-fast-raises (`coalesce_inverted_state_window`) if any
-non-sentinel state would ship with `valid_from > valid_to`. Extending across the year
-boundary is avoided regardless because it would manufacture a same-column overlap with a
-distinct value set delivered the next year (legitimate year-over-year recoding) and trip
-the one-value-set-per-period invariant; capturing a school-year range's spring tail is
-deferred (it fixes an UNDER-claim beyond this PR's over-claim scope).
+Each individual CLAIM window is still nested in its own year **by construction**:
+`edition_bounds` is passed one edition year and narrows only markers whose own year
+EQUALS it, so its window is a subset of `[year-01-01, year-12-31]`. That year-tie closes
+two corpus-constructible traps — a term naming a different year than the edition
+(`Insamling 2019 avseende höstterminen 2020`) can no longer produce an inverted
+`valid_from > valid_to`, and a stray out-of-1900-2099 term (`HT 1850, version 2024`) can
+no longer crash `period_token_to_bounds`. As a backstop, the materializer
+fail-fast-raises (`coalesce_inverted_state_window`) if any non-sentinel state would ship
+with `valid_from > valid_to`.
+
+#### Multi-year version names (Y-113)
+
+A version name can name a span WIDER than one year, and #219 originally read only its
+first year (`extract_year`): `Läsåret 2012/2013` claimed calendar 2012,
+flergenerationsregistret's `1961-01-01 –– 2025-12-31` collapsed to 1961, and every
+school-year register ended a year short of its series. 644 of 8,599 corpus versions had
+a name wider than their claim, and 353 held SWECOV coordinates read as unavailable for
+that reason alone.
+
+`edition_claims` now reads the whole span and emits **one claim per year it covers**,
+each still nested in its own year: `Läsåret 2012/2013` is HT2012 then VT2013,
+`Komvux HT 1988 - VT 2024` is HT1988, 1989..2023 whole, then VT2024. Three shapes are
+read — a year range (`A - B`, `A-B`, ISO date ranges joined by `--`/`––`, whose months
+and days are dropped because a claim window is period-token grained), a school year
+(`Läsåret A/B`, bare `A/B`, `Läsåren A/B - C/D`, requiring CONSECUTIVE pairs so a
+classification vintage like `SUN 2000/2020` is not mistaken for one), and a term range
+(markers in two distinct years). A span is only taken when it STARTS in the name's first
+year, so a collection year in front of the period it describes keeps its own claim.
+
+Claiming every spanned year rather than a hull is what keeps this compatible with
+everything above: the claim KEY SET still carries run/gap structure, so a gap between
+versions stays a gap and the coalescer's fusing rules are unchanged, and the sweep still
+decomposes per year. The same-column overlap that #219 avoided by refusing to cross the
+year boundary is now resolved where it belongs — the interval sweep arbitrates the next
+year's rival at year grain, and `coalesce_same_column_overlap` fail-fast-raises if an
+overlapping pair would ever ship. `regver_min`/`regver_max` are DERIVED from the claim
+years (`min`/`max` of the key set, like `from_iso`/`to_iso` at ISO grain), so the
+materializer's precise-vs-padded run edges still land on the span's real bounds.
+
+**Projection horizons are not spans.** A range ending after the build's HORIZON year —
+the latest edition year the corpus names, `build_horizon` over every
+`registerversionnamn`, derived from the input rather than the wall clock so a rebuild
+stays byte-identical — is a forecast, not a delivery: befolkningsframskrivningar
+`2011-2060` ships one 2011-vintage projection. Those keep the first-year (vintage)
+claim. Modelling projection vintages properly is separate work. The guard is
+deliberately NOT applied to school-year or term spans: `extract_year` of
+`Läsåret 2024/2025` is 2024, so on a school-year register the horizon is the last
+series' START year, and guarding uniformly would refuse the final `A/B` of every such
+register — re-creating the year-short bug. The coalescer and `alias_windows.py` both
+call `build_horizon`, so the two sides read a version name identically.
 
 Only the academic-term, quarter (`kvartal`/`kv`, incl. ranges), and half-year
 (`Första/Andra halvåret`) forms are narrowed; bare years, dated annuals, prelim/final,
-month names, seasons (`Hösten`/`Våren`/`Sommar`), `Sommarterminen`, and `läsår` all stay
-full-year, since their sub-year span is ambiguous and narrowing would risk dropping
-coverage. Token→ISO expansion is reg_meta's `period_token_to_bounds`, so a `HT2024`
-query and the emitted state bound agree byte-for-byte. Because the emitted `valid_from`
+month names, seasons (`Hösten`/`Våren`/`Sommar`) and `Sommarterminen` all stay
+full-year there, since their sub-year span is ambiguous and narrowing would risk
+dropping coverage. (`läsår` carries no marker for its own year either — its HT/VT split
+only exists once the name's full span is read, which is `edition_claims`' job above.)
+Token→ISO expansion is reg_meta's `period_token_to_bounds`, so a `HT2024` query and the
+emitted state bound agree byte-for-byte. Because the emitted `valid_from`
 only ever becomes MORE specific (year → term), it can only split a previously-colliding
 uniqueness-index key, never merge two distinct ones, so the year-keyed residual-collapse
 scope and the fast path's never-collides assumption are unaffected.
@@ -1572,7 +1609,7 @@ term's coding when two sub-annual editions of one year carried different value s
 what this design removes).
 
 **Design goal.** Resolution operates on the windows editions actually delivered
-(`_edition_bounds`), not on calendar-year buckets, so that two same-year editions with
+(`edition_claims`), not on calendar-year buckets, so that two same-year editions with
 genuinely different value sets on disjoint windows (VT Jan–Jun vs HT Jul–Dec) BOTH ship
 as non-overlapping states — term-split falls out of interval correctness, with no
 special case. Everything the year bucket got right is preserved: cosmetic/drift
@@ -1585,7 +1622,7 @@ lives in `resolution.py` (`Claim`, `SweepHooks`, `resolve_year_intervals`,
 `assemble_runs`, the grammar successor tables); it contains no provider grammar and no
 SCB types, and is parameterized over an opaque candidate key through the hooks. The SCB
 adapter (`sources/scb.py`) supplies the provider conventions: claim extraction
-(`_edition_bounds` on `registerversionnamn`), the identity verdict
+(`edition_claims` on `registerversionnamn`), the identity verdict
 (`_pool_single_coding`), the resolution cascade (`_resolve_column_year`, with its
 SCB-specific label-freshness and historical-grain steps), the curation pins, and the
 per-register cadence map — wired together in `_resolve_year_winners`. SCB stays the
@@ -1595,16 +1632,17 @@ engine's only caller until a second provider needs co-delivery resolution.
 
 **Claims.** Each state group carries one *claim* per observed edition year:
 `(lo, hi, authority, approval)` — the inclusive ISO hull of the group's edition windows
-in that year (`_edition_bounds`, a full-year edition contributing
+in that year (`edition_claims`, a full-year edition contributing
 `YYYY-01-01..YYYY-12-31`), with the year's max `_edition_authority` and max approval
-date. This single structure replaces `regyears`, `year_authority`, `year_approval` AND
-the #270 envelope (`from_iso`/`to_iso`): the envelope was the min/max hull of exactly
+date. A version naming several years contributes a claim to EACH of them (Y-113). This
+single structure replaces `regyears`, `year_authority`, `year_approval` AND the #270
+envelope (`from_iso`/`to_iso`): the envelope was the min/max hull of exactly
 these windows, so the boundary clamp becomes a *corollary* (below) rather than a bolted-
-on field pair. Claims are **year-nested by construction** — `_edition_bounds` ties every
-marker to its edition year — so segments never cross a year boundary, the sweep
-decomposes per year, and cross-year logic stays at year grain. (Lifting year-nesting is
-what a future cross-year edition form — läsår ranges — would change; the model
-accommodates it, see scope boundaries.)
+on field pair. Claims are **year-nested by construction** — `edition_claims` emits one
+window per year and ties each to that year — so segments never cross a year boundary,
+the sweep decomposes per year, and cross-year logic stays at year grain. Cross-year
+edition forms (läsår ranges) did NOT need year-nesting lifted: Y-113 reads them as one
+claim per spanned year, which is why the sweep was unaffected.
 
 **Drift conflation — identity per compaction window, blind to claim windows.** The
 cascade's *identity* steps — value-set fold (one value set in several groups),
@@ -1656,8 +1694,9 @@ through `date.fromisoformat` — a footgun to remember, not a current constraint
 **#270 subsumption (corollary).** A lifetime-boundary run's first/last owned claim IS
 the sub-annual envelope edge: a group whose earliest edition is HT starts its first run
 at `YYYY-07-01`, one ending on VT ends at `YYYY-06-30`, interior year-grain handoffs
-stay year-aligned, and the school-year/läsår/season/month forms still expand full-year
-(the narrowing subset of `_edition_bounds` is unchanged). The clamp's "only ever
+stay year-aligned, and the season/month forms still expand full-year (the narrowing
+subset of `edition_bounds` is unchanged; school-year/läsår names are read by
+`edition_claims` instead, see Multi-year version names). The clamp's "only ever
 narrows, never crosses a year" property is inherited from claim year-nesting; the
 `coalesce_inverted_state_window` fail-fast stays as the backstop.
 
@@ -1685,7 +1724,7 @@ an explicit per-variant parameter rather than hard-coding the year.
   month-grain deliveries are never compacted across months as if they were one delivery.
   The same setting is the onboarding knob for the first genuinely sub-annual-coding
   provider (SOS half-year, FK/FHM/SKV events).
-- **`cadence = month` does not extend `_edition_bounds` month parsing.** Month tokens in
+- **`cadence = month` does not extend `edition_bounds` month parsing.** Month tokens in
   SCB edition names are overwhelmingly *measurement-date qualifiers of annual
   deliveries* — the school registers' `15 oktober YYYY` census snapshots, the
   `Mars 2006` survey waves — so globally narrowing month-named editions would drop
@@ -1799,7 +1838,7 @@ The catalog carries 8 monthly families ≈ 96 columns across
 lisa/ekonomiskt-bistand/rams/bas — 12 month-named delivery columns per concept (LISA
 `lonfink{jan..dec}`, `agi{1,2,3}lonfink{jan..dec}`, …). These ship inside **annual**
 editions, so the interval resolver does *not* by itself give them monthly windows
-(`_edition_bounds` reads the edition name, not column names — and the curated narrowing
+(`edition_bounds` reads the edition name, not column names — and the curated narrowing
 subset deliberately excludes month-named editions). #319 adds the **adapter-level
 curated family merge** (`period_family_merges.py`, driven by
 `curation/period_family_merges.toml`): 12 columns → ONE variable, each column carrying a
@@ -1920,7 +1959,7 @@ data is monthly). The earlier deferral to #496 is closed.
 
 #### Measurement and verification plan
 
-The instrument is `scripts/measure_subannual_codings.py` (reuses `_edition_bounds` /
+The instrument is `scripts/measure_subannual_codings.py` (reuses `edition_bounds` /
 `extract_year` / the cosmetic threshold, and mirrors the build importer's Vardemangder
 row filtering exactly, so the measured classification cannot drift from build behavior).
 Baseline (real corpus, 2026-06-11, after the PR-#297 review fixes): of 488,972
@@ -1959,7 +1998,8 @@ Every implementation PR gates on:
 5. **Synthetic suite** — full structural validator (`validate_built_db(corpus=False)`);
    new fixtures: same-year disjoint substantive editions (both kept), same-year cosmetic
    pair (one winner, unchanged), overlapping sub-annual windows (mid-year handoff),
-   VT/HT open-top selection, school-year/season/month editions (still full-year),
+   VT/HT open-top selection, season/month editions (still full-year),
+   school-year editions (HT→VT spans, Y-113),
    quarter claims.
 
 ## Co-delivery resolution curation (`codelivery.toml`)

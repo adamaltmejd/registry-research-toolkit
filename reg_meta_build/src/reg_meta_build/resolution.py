@@ -3,7 +3,7 @@
 Claims in, owned intervals out (DESIGN.md → Interval-native co-delivery
 resolution). No provider grammar lives here: claim windows arrive pre-parsed
 (the SCB adapter derives them from `registerversionnamn` via
-`_edition_bounds`), and every provider-convention judgment — which claims are
+`edition_claims`), and every provider-convention judgment — which claims are
 one drifted coding, who wins a contested segment — is injected through
 `SweepHooks`. The SCB adapter is the only caller until a second provider
 needs co-delivery resolution.

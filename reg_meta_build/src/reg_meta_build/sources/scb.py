@@ -68,7 +68,10 @@ from reg_meta_build.db import (
     _stage_timer,
     _value_set_hash,
 )
-from reg_meta_build.edition_bounds import edition_bounds as _edition_bounds
+from reg_meta_build.edition_bounds import (
+    build_horizon as _build_horizon,
+    edition_claims as _edition_claims,
+)
 from reg_meta_build.ir import (
     IRDeliveryProvenance,
     IRRegister,
@@ -898,11 +901,9 @@ class _StateGroup:
     # OriginalName row + open RenamedName row) — without this, `unika_max` from
     # the bounded row would mask the open-ended signal.
     unika_has_open_top: bool = False
-    regver_min: int | None = None
-    regver_max: int | None = None
     # Latest-era alias: highest regver_id, ties broken by lexically smallest
     # delivery_column_name. regver_id alone orders alias selection; the row's
-    # year only updates regver_min/max.
+    # year only enters through its claims.
     latest_alias: str | None = None
     latest_alias_regver: int | None = None
     # Latest-era data_type/data_length (#526). A value-set-anchored group now
@@ -950,7 +951,7 @@ class _StateGroup:
     # YYYY-01-01/YYYY-12-31, so a sub-annual edition only narrows a boundary
     # when NO full-year edition shares that boundary year). The materializer
     # reads these ONLY at a state's lifetime start/end, to avoid over-claiming
-    # the boundary year (see `_edition_bounds`). None when no edition carried a
+    # the boundary year (see `_edition_claims`). None when no edition carried a
     # parseable year (the yearless/unika fallback fires instead).
     @property
     def from_iso(self) -> str | None:
@@ -959,6 +960,19 @@ class _StateGroup:
     @property
     def to_iso(self) -> str | None:
         return max((c.hi for c in self.claims.values()), default=None)
+
+    # The group's observed EDITION-YEAR range — the year-grain edges of the same
+    # claim structure `from_iso`/`to_iso` read at ISO grain. A multi-year version
+    # claims every year it spans, so a school year's span reaches its VT year and
+    # the materializer emits that run's precise sub-annual edge instead of padding
+    # it back out to December. None when no edition carried a parseable year.
+    @property
+    def regver_min(self) -> int | None:
+        return min(self.claims, default=None)
+
+    @property
+    def regver_max(self) -> int | None:
+        return max(self.claims, default=None)
 
 
 # ─────────────────────────────────────────────────────────────────────────
@@ -1944,7 +1958,7 @@ def _split_off_non_contested(
 # conflation → segment choice → run assembly; see its module docstring and
 # DESIGN.md → Interval-native co-delivery resolution). THIS adapter supplies
 # the provider conventions the engine is parameterized over: the claim
-# extraction (`_edition_bounds` on `registerversionnamn`), the identity
+# extraction (`_edition_claims` on `registerversionnamn`), the identity
 # verdict (`_pool_single_coding`), and the resolution cascade
 # (`_resolve_column_year`) — wired up in `_resolve_year_winners`.
 
@@ -1958,7 +1972,7 @@ _COSMETIC_MAX_SYM = 2  # symmetric code-count diff treated as cosmetic drift
 # are annual-stamped and carry no value-set conflict at either grain today —
 # the declaration is output-inert now (asserted by the PR-B dbdiff gate) and
 # pins that month-grain deliveries are never compacted across months as if
-# they were one delivery. It deliberately does NOT extend `_edition_bounds`
+# they were one delivery. It deliberately does NOT extend `edition_bounds`
 # month parsing: month tokens in SCB edition names are measurement-date
 # qualifiers of annual deliveries ('15 oktober YYYY' school snapshots), so
 # narrowing them would drop real coverage.
@@ -2549,6 +2563,10 @@ def _coalesce_variable_states(
     # coalescer stamp `variable_instance.variable_id` with no guessing.
     cvid_gkey: dict[int, tuple] = {}
 
+    # `_edition_claims` needs the build's horizon year to tell a multi-year
+    # DELIVERY span from a projection horizon; read once, before the row loop.
+    horizon = _build_horizon(conn)
+
     for row in rows:
         grain = row["grain"] or ""
         col = row["delivery_column_name"]
@@ -2647,45 +2665,38 @@ def _coalesce_variable_states(
             grp.data_length = row["data_length"]
             grp.latest_type_regver = _type_regver
 
-        # Track register_version year per cvid (fallback signal) on the
-        # group, and also on the per-variable max so the materializer can
-        # identify the latest-era group when clamping unika ranges.
-        rver_year = extract_year(row["registerversionnamn"] or "")
-        if rver_year is not None:
+        # Track the edition's claimed years on the group (the fallback
+        # signal `regver_min`/`regver_max` derive from), and the per-variable
+        # max so the materializer can identify the latest-era group when
+        # clamping unika ranges.
+        eds = _edition_claims(row["registerversionnamn"], horizon)
+        if eds:
             _auth = _edition_authority(row["registerversionnamn"])
             _appr = row["registerversion_senastgodkanddatum"] or ""
             # #219/#271: the claim window is the edition's sub-annual ISO hull.
-            # String min/max is chronological for ISO dates. Bounds are tied to this
-            # edition's year (`rver_year`), so each edition contributes within its own
-            # year: a full-year edition gives YYYY-01-01/YYYY-12-31 (a min-year that
-            # ALSO has a full-year/spring edition keeps -01-01 — no spurious narrowing),
-            # and the claim hull can never escape `[regver_min, regver_max]`. The
-            # full-year fallback is unreachable belt-and-braces: a parsed `rver_year`
-            # implies a non-empty version name, so `_edition_bounds` never returns
-            # None here — but a claim MUST exist for every observed year (the key
-            # set carries the run/gap structure), so don't couple that to it.
-            ed = _edition_bounds(row["registerversionnamn"], rver_year) or (
-                f"{rver_year:04d}-01-01",
-                f"{rver_year:04d}-12-31",
-            )
-            claim = grp.claims.get(rver_year)
-            if claim is None:
-                grp.claims[rver_year] = Claim(ed[0], ed[1], _auth, _appr)
-            else:
-                claim.lo = min(claim.lo, ed[0])
-                claim.hi = max(claim.hi, ed[1])
-                claim.authority = max(claim.authority, _auth)
-                claim.approval = max(claim.approval, _appr)
-            grp.regver_min = (
-                rver_year if grp.regver_min is None else min(grp.regver_min, rver_year)
-            )
-            grp.regver_max = (
-                rver_year if grp.regver_max is None else max(grp.regver_max, rver_year)
-            )
+            # String min/max is chronological for ISO dates. `_edition_claims`
+            # nests every window in its OWN year, so each year a version spans
+            # contributes within that year: a full-year edition gives
+            # YYYY-01-01/YYYY-12-31 (a year that ALSO has a full-year/spring
+            # edition keeps -01-01 — no spurious narrowing), and the claim hull
+            # can never escape `[regver_min, regver_max]`.
+            for _year, _lo, _hi in eds:
+                claim = grp.claims.get(_year)
+                if claim is None:
+                    grp.claims[_year] = Claim(_lo, _hi, _auth, _appr)
+                else:
+                    claim.lo = min(claim.lo, _lo)
+                    claim.hi = max(claim.hi, _hi)
+                    claim.authority = max(claim.authority, _auth)
+                    claim.approval = max(claim.approval, _appr)
+            # The per-variable max era the materializer clamps unika ranges
+            # against. A multi-year version was DELIVERED across every year it
+            # spans, so its latest era is the span's last year, not its first.
+            rver_max = eds[-1][0]
             vkey = (row["register_id"], row["register_variant_id"], row["var_id"])
             cur_max = var_max_regver.get(vkey)
-            if cur_max is None or rver_year > cur_max:
-                var_max_regver[vkey] = rver_year
+            if cur_max is None or rver_max > cur_max:
+                var_max_regver[vkey] = rver_max
 
         # Track the latest alias for the era. "Latest" = highest regver_id
         # in the group; ties broken by lexically smallest alias for
@@ -3037,8 +3048,8 @@ def _coalesce_variable_states(
                 remediation=(
                     "A sub-annual bound derivation produced valid_from > valid_to. "
                     "Rebuild from source with `reg-meta-build build-db`; if it "
-                    "persists, the `_edition_bounds` registerversionnamn parse "
-                    "(reg_meta_build/sources/scb.py) needs a fix."
+                    "persists, the `edition_claims` registerversionnamn parse "
+                    "(reg_meta_build/edition_bounds.py) needs a fix."
                 ),
             )
         if vt == _VALID_TO_OPEN_SENTINEL or vf == _VALID_FROM_UNKNOWN:
@@ -3097,10 +3108,11 @@ def _coalesce_variable_states(
         if to_year is None:
             open_top_from_unika += 1
         # #219: clamp the state's lifetime START/END to the sub-annual delivery
-        # window (from_iso/to_iso) instead of the boundary year. `_edition_bounds`
-        # ties every edition's window to its OWN year, so from_iso lands in the
-        # regver_min year and to_iso in the regver_max year BY CONSTRUCTION — they can
-        # only narrow within those boundary years, never cross one (a cross-year span
+        # window (from_iso/to_iso) instead of the boundary year. `_edition_claims`
+        # nests every claim window in its OWN year and `regver_min`/`regver_max` are
+        # the claim years' own bounds, so from_iso lands in the regver_min year and
+        # to_iso in the regver_max year BY CONSTRUCTION — they can only narrow
+        # within those boundary years, never cross one (a cross-year span
         # would risk a same-column overlap with a distinct value set in the adjacent
         # year). So no within-year guard is needed here; `_append_state` additionally
         # fail-fast-asserts valid_from <= valid_to. The `or` chains preserve the

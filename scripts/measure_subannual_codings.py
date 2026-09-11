@@ -11,12 +11,18 @@ Methodology (deliberately reuses the resolver's own helpers so the
 classification can never drift from build behavior):
 
 - Every `Registerinformation.csv` row is an edition observation, keyed by its
-  inclusive ISO window `_edition_bounds(registerversionnamn, extract_year(...))`.
+  inclusive ISO window `edition_bounds(registerversionnamn, extract_year(...))`
+  — the build's WITHIN-YEAR narrowing, which is the half this instrument needs:
+  the group key is per year, and the subject is which sub-annual window of one
+  year delivered which codes. The build's cross-year widening (`edition_claims`,
+  Y-113) changes which YEARS an edition is counted in, not which codes a window
+  delivered, so it is deliberately not applied here.
   Named buckets at reporting time: `VT` (Jan–Jun), `HT` (Jul–Dec), `FY`
-  (full-year — bare years, dated annuals, and the deliberately-unparsed
-  sub-annual forms: months, seasons, läsår); every other strict sub-year
-  window (quarters, halves, multi-quarter ranges) is compared per-window in
-  the third report so a quarter-grain regression is not invisible.
+  (full-year — bare years, dated annuals, and the sub-annual forms
+  `edition_bounds` leaves un-narrowed: months, seasons, and a läsår's own
+  year); every other strict sub-year window (quarters, halves, multi-quarter
+  ranges) is compared per-window in the third report so a quarter-grain
+  regression is not invisible.
 - Group key is `(RegVarID, VarId, ascii-folded Kolumnnamn, year)` — the
   resolver's per-column contested-year unit.
 - Per window, the code-key set is the union of `Värdekod` over the window's
@@ -61,11 +67,8 @@ from pathlib import Path
 
 from reg_meta.queries import extract_year
 from reg_meta_build.db import _VARDEMANGDER_SENTINELS, _open_scb_csv
-from reg_meta_build.sources.scb import (
-    _COSMETIC_MAX_SYM,
-    _ascii_fold_lower,
-    _edition_bounds,
-)
+from reg_meta_build.edition_bounds import edition_bounds
+from reg_meta_build.sources.scb import _COSMETIC_MAX_SYM, _ascii_fold_lower
 
 # Group key: (RegVarID, VarId, folded column, year).
 GroupKey = tuple[int, int, str, int]
@@ -88,7 +91,7 @@ def _collect_editions(
             year = extract_year(versionname)
             if year is None:
                 continue  # yearless editions have no per-year placement
-            window = _edition_bounds(versionname, year)
+            window = edition_bounds(versionname, year)
             if window is None:
                 continue
             rvid = int(row["RegVarID"])

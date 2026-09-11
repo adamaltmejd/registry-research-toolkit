@@ -14,6 +14,7 @@ import inspect
 import sqlite3
 from typing import TYPE_CHECKING
 
+import pytest
 from _csv_fixtures import (
     PIPE,
     REGISTERINFORMATION_ROWS,
@@ -668,11 +669,13 @@ class TestA43aFlipParity:
 # ── delivery-column read-boundary hygiene ──────────────────────────────────
 
 
-def _hygiene_build(
+def _build_from_ri_rows(
     tmp_path: Path,
     ri_extra: list[str],
     unika_extra: list[str] | None = None,
 ) -> sqlite3.Connection:
+    """Build the standard SCB fixture plus `ri_extra` Registerinformation rows,
+    and open the shipped DB."""
     input_dir = tmp_path / "input"
     write_scb_input(
         input_dir,
@@ -704,7 +707,7 @@ class TestDeliveryColumnHygiene:
         # raw spellings on distinct cvids — pre-trim these never co-occur, so
         # rule 2 puts them in disjoint components and triage splits the
         # variable. Post-trim they are one spelling, one component.
-        conn = _hygiene_build(
+        conn = _build_from_ri_rows(
             tmp_path,
             [
                 _var_row(
@@ -747,7 +750,7 @@ class TestDeliveryColumnHygiene:
         # Registerinformation ships the clean spelling, unika the padded one.
         # Both sides trim at read, so the sensitivity-flag join
         # (`va.delivery_column_name = us.kolumnnamn`) still matches.
-        conn = _hygiene_build(
+        conn = _build_from_ri_rows(
             tmp_path,
             [
                 _var_row(
@@ -787,7 +790,7 @@ class TestDeliveryColumnHygiene:
         # A blank (or whitespace-only) Kolumnnamn means "no delivery header":
         # the variable still builds, its state carries NULL, and NO
         # variable_alias row ships (empty string is not a header).
-        conn = _hygiene_build(
+        conn = _build_from_ri_rows(
             tmp_path,
             [
                 _var_row(
@@ -855,7 +858,7 @@ class TestNameFieldHygiene:
         # (2021, clean): one variable either way (identity is (rid, var_id)),
         # but the first-non-empty fill runs on trimmed values, so the shipped
         # name carries no padding regardless of row order.
-        conn = _hygiene_build(
+        conn = _build_from_ri_rows(
             tmp_path,
             [
                 _var_row(
@@ -890,7 +893,7 @@ class TestNameFieldHygiene:
         # Registerinformation ships the clean Variabelnamn, unika the padded
         # one. Both sides trim at read, so the sensitivity-flag join
         # (`v.name = us.variabelnamn`) still matches.
-        conn = _hygiene_build(
+        conn = _build_from_ri_rows(
             tmp_path,
             [
                 _var_row(
@@ -934,7 +937,7 @@ class TestNameFieldHygiene:
         # second. A plain `INSERT OR IGNORE` would keep the first and drop the
         # flag (a PII-scanner false negative); the flag-OR accumulation must
         # preserve is_sensitive=1 regardless of row order.
-        conn = _hygiene_build(
+        conn = _build_from_ri_rows(
             tmp_path,
             [
                 _var_row(
@@ -986,4 +989,181 @@ class TestNameFieldHygiene:
             "SELECT is_sensitive FROM variable WHERE provider_key = '920'"
         ).fetchone()[0]
         assert sensitive == 1
+        conn.close()
+
+
+# ── 8. Multi-year edition names claim their whole span (Y-113) ──────────────
+
+
+class TestMultiYearEditionWindows:
+    """A `registerversionnamn` that names several years is DELIVERED across all
+    of them, so `variable_state` must cover the whole span.
+
+    Before Y-113 the claim was the first year only (`extract_year`), narrowed
+    inside that year by `edition_bounds` — so flergenerationsregistret collapsed
+    to 1961 and every school-year register was a year short at the end of its
+    series. These pin the shipped window per name shape; `TestEditionClaims` in
+    test_triage.py pins the parse underneath.
+    """
+
+    def _window(self, conn: sqlite3.Connection, provider_key: str) -> tuple[str, str]:
+        rows = conn.execute(
+            "SELECT vs.valid_from, vs.valid_to FROM variable_state vs "
+            "JOIN variable v ON v.variable_id = vs.variable_id "
+            "WHERE v.register_id = 1 AND v.provider_key = ?",
+            (provider_key,),
+        ).fetchall()
+        assert len(rows) == 1, f"expected one state for {provider_key}, got {rows}"
+        return rows[0][0], rows[0][1]
+
+    def _built(
+        self,
+        tmp_path: Path,
+        versionname: str,
+        year: str,
+        corpus_year: str = "2025",
+    ) -> sqlite3.Connection:
+        """One variable delivered by one `versionname` edition, alongside an
+        unrelated plain annual edition for `corpus_year`.
+
+        That second row is what sets the build's HORIZON (the latest edition year
+        the corpus names) — the standard fixture only reaches 2020, and a range
+        ending past the horizon is read as a projection. The real corpus gets its
+        horizon the same way, from ordinary year-stamped editions.
+        """
+        return _build_from_ri_rows(
+            tmp_path,
+            [
+                _var_row(
+                    colname="SpanCol",
+                    cvid=9700,
+                    var_id=950,
+                    varname="SpanVar",
+                    year=year,
+                    versionname=versionname,
+                    regver_id=9800,
+                ),
+                _var_row(
+                    colname="HorizonCol",
+                    cvid=9710,
+                    var_id=951,
+                    varname="HorizonVar",
+                    year=corpus_year,
+                    regver_id=9810,
+                ),
+            ],
+        )
+
+    @pytest.mark.parametrize(
+        ("versionname", "year", "expected"),
+        [
+            # innovation-foretag.
+            ("2004 - 2006", "2004", ("2004-01-01", "2006-12-31")),
+            # hreg doktorander.
+            ("1971 - 2024", "1971", ("1971-01-01", "2024-12-31")),
+            # flergenreg — every window collapsed to 1961 before Y-113.
+            ("1961-01-01 –– 2025-12-31", "1961", ("1961-01-01", "2025-12-31")),
+            # grundskola-ak9 / gymnasieskola-betyg / lararreg.
+            ("Läsåret 2012/2013", "2012", ("2012-07-01", "2013-06-30")),
+            # hreg grundutbildning.
+            ("Läsåren 1993/1994 - 2024/2025", "1993", ("1993-07-01", "2025-06-30")),
+            # ureg.
+            ("Komvux HT 1988 - VT 2024", "1988", ("1988-07-01", "2024-06-30")),
+            # utbildningsanalyser.
+            (
+                "Höstterminen 2020 - Vårterminen 2021",
+                "2020",
+                ("2020-07-01", "2021-06-30"),
+            ),
+            # befolkningsframskrivningar: a forecast past the corpus's own latest
+            # edition year stays its 2011 vintage, not a 50-year delivery.
+            ("2011-2060", "2011", ("2011-01-01", "2011-12-31")),
+            # Controls: a plain annual and a lone term are claimed as before.
+            ("2018", "2018", ("2018-01-01", "2018-12-31")),
+            ("Höstterminen 2018", "2018", ("2018-07-01", "2018-12-31")),
+        ],
+    )
+    def test_shipped_window_is_the_full_named_span(
+        self,
+        tmp_path: Path,
+        versionname: str,
+        year: str,
+        expected: tuple[str, str],
+    ) -> None:
+        conn = self._built(tmp_path, versionname, year)
+        assert self._window(conn, "950") == expected
+        conn.close()
+
+    def test_range_past_the_corpus_horizon_keeps_the_vintage_year(
+        self, tmp_path: Path
+    ) -> None:
+        # The horizon is what separates a delivered span from a forecast, so the
+        # SAME name reads both ways on either side of it: `1971 - 2024` is a
+        # delivery once the corpus reaches 2024, and a vintage while it does not.
+        conn = self._built(tmp_path, "1971 - 2024", "1971", corpus_year="2024")
+        assert self._window(conn, "950") == ("1971-01-01", "2024-12-31")
+        conn.close()
+        conn = self._built(
+            tmp_path / "short", "1971 - 2024", "1971", corpus_year="2010"
+        )
+        assert self._window(conn, "950") == ("1971-01-01", "1971-12-31")
+        conn.close()
+
+    def test_school_year_series_is_not_a_year_short_at_the_end(
+        self, tmp_path: Path
+    ) -> None:
+        # The flagship shape: consecutive `Läsåret A/B` editions on one column.
+        # Each claims HT..VT, so the interior calendar years tile exactly and the
+        # series fuses into ONE state that runs to the last spring term. Read as
+        # first years only it would start in January and stop a year early, at
+        # 2012-01-01..2014-12-31.
+        conn = _build_from_ri_rows(
+            tmp_path,
+            [
+                _var_row(
+                    colname="Betyg",
+                    cvid=9700 + i,
+                    var_id=950,
+                    varname="BetygVar",
+                    year=str(year),
+                    versionname=f"Läsåret {year}/{year + 1}",
+                    regver_id=9800 + i,
+                )
+                for i, year in enumerate((2012, 2013, 2014))
+            ],
+        )
+        assert self._window(conn, "950") == ("2012-07-01", "2015-06-30")
+        conn.close()
+
+    def test_span_years_are_claimed_individually_not_as_a_hull(
+        self, tmp_path: Path
+    ) -> None:
+        # The claim KEY SET carries run/gap structure: a multi-year version
+        # contributes each year it spans, so a LATER single-year edition of the
+        # same column fuses onto the span instead of leaving a phantom gap, and
+        # a genuine gap stays a gap. Two editions, 2004-2006 then 2007.
+        conn = _build_from_ri_rows(
+            tmp_path,
+            [
+                _var_row(
+                    colname="SpanCol",
+                    cvid=9700,
+                    var_id=950,
+                    varname="SpanVar",
+                    year="2004",
+                    versionname="2004 - 2006",
+                    regver_id=9800,
+                ),
+                _var_row(
+                    colname="SpanCol",
+                    cvid=9701,
+                    var_id=950,
+                    varname="SpanVar",
+                    year="2007",
+                    versionname="2007",
+                    regver_id=9801,
+                ),
+            ],
+        )
+        assert self._window(conn, "950") == ("2004-01-01", "2007-12-31")
         conn.close()

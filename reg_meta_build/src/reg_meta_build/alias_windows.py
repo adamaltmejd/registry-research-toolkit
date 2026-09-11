@@ -14,9 +14,8 @@ import sqlite3
 from typing import TYPE_CHECKING
 
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
-from reg_meta.queries import extract_year
 
-from .edition_bounds import edition_bounds
+from .edition_bounds import build_horizon, edition_claims
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -32,9 +31,19 @@ def _table_exists(conn: sqlite3.Connection, name: str) -> bool:
     )
 
 
-def _version_bounds(version_name: str | None) -> tuple[str, str] | None:
-    year = extract_year(version_name or "")
-    return edition_bounds(version_name, year)
+def _version_bounds(
+    version_name: str | None, horizon: int | None
+) -> tuple[str, str] | None:
+    """The inclusive ISO hull of everything an edition name claims.
+
+    Derived from the same `edition_claims` parse the coalescer built the states
+    from, so a multi-year version (a school year, a year range) matches the
+    widened state it produced instead of only its first year.
+    """
+    claims = edition_claims(version_name, horizon)
+    if not claims:
+        return None
+    return claims[0][1], claims[-1][2]
 
 
 def _state_overlaps_bounds(
@@ -110,6 +119,10 @@ def materialize_multi_alias_windows(
         for row in cvid_rows
     }
 
+    # The same horizon the coalescer read, so the two agree on which version
+    # names carry a multi-year delivery span (see `edition_claims`).
+    horizon = build_horizon(conn)
+
     windows: set[tuple[int, int, str, str, str]] = set()
     unresolved: list[str] = []
     skipped = 0
@@ -121,7 +134,7 @@ def materialize_multi_alias_windows(
                 f"version={row['registerversionnamn']!r} has no owning variable_id"
             )
             continue
-        bounds = _version_bounds(row["registerversionnamn"])
+        bounds = _version_bounds(row["registerversionnamn"], horizon)
         strict_states = cur.execute(
             "SELECT state_id, valid_from, valid_to, delivery_column_name "
             "FROM variable_state "

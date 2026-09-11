@@ -93,3 +93,58 @@ def test_multi_alias_cvid_skips_mixed_state_shapes() -> None:
 
     assert counts == {"cvids": 1, "windows": 0, "skipped": 1}
     assert conn.execute("SELECT COUNT(*) FROM variable_alias_window").fetchone() == (0,)
+
+
+def test_multi_year_version_matches_the_state_it_spans() -> None:
+    # Y-113: the pass matches a cvid's edition to its state through the SAME
+    # `edition_claims` parse the coalescer built the state from. A school-year
+    # range spans HT1993..VT2025, so it finds the state covering the tail of
+    # that span; read as its first year (1993) alone it would find nothing and
+    # the co-delivered columns would go unrecorded.
+    conn = _conn()
+    conn.execute(
+        "INSERT INTO register_version VALUES (1, 'Läsåren 1993/1994 - 2024/2025')"
+    )
+    conn.execute("INSERT INTO variable_instance VALUES (10, 100, 200, 1, NULL, '')")
+    conn.executemany(
+        "INSERT INTO variable_alias_build VALUES (10, ?)",
+        [("Betyg",), ("BetygNy",)],
+    )
+    conn.execute(
+        "INSERT INTO variable_state VALUES "
+        "(1, 100, 200, '1993-07-01', '2025-06-30', 'Betyg', NULL, '')"
+    )
+
+    counts = materialize_multi_alias_windows(conn)
+
+    assert counts == {"cvids": 1, "windows": 2, "skipped": 0}
+    assert conn.execute(
+        "SELECT delivery_column_name, valid_from, valid_to "
+        "FROM variable_alias_window ORDER BY delivery_column_name"
+    ).fetchall() == [
+        ("Betyg", "1993-07-01", "2025-06-30"),
+        ("BetygNy", "1993-07-01", "2025-06-30"),
+    ]
+
+
+def test_projection_range_is_read_as_its_vintage_year() -> None:
+    # The horizon comes off the same `register_version` table the coalescer read
+    # it from, so both sides agree that a range ending past the corpus's latest
+    # edition year (here 2011) is a projection, not a delivery span. Were the
+    # range taken at face value the 2050 state would be matched and windowed.
+    conn = _conn()
+    conn.execute("INSERT INTO register_version VALUES (1, '2011-2060')")
+    conn.execute("INSERT INTO variable_instance VALUES (10, 100, 200, 1, NULL, '')")
+    conn.executemany(
+        "INSERT INTO variable_alias_build VALUES (10, ?)",
+        [("Prognos",), ("PrognosNy",)],
+    )
+    conn.execute(
+        "INSERT INTO variable_state VALUES "
+        "(1, 100, 200, '2050-01-01', '2050-12-31', 'Prognos', NULL, '')"
+    )
+
+    counts = materialize_multi_alias_windows(conn)
+
+    assert counts == {"cvids": 1, "windows": 0, "skipped": 1}
+    assert conn.execute("SELECT COUNT(*) FROM variable_alias_window").fetchone() == (0,)
