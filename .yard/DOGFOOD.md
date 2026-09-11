@@ -1301,3 +1301,1014 @@ messages in bounded evidence. Local-only evidence is under
 `archive/reports/releases/2026-09-09/`: `Y-71-gate-failure.json`,
 `Y-71-e5-gate-diagnostic.log`, `yard-image-check/ca52109/yard-build.log` and
 `yard-gate-diagnostic-source.json`. No external report was filed for this incident.
+
+## 2026-09-09: Reporting coverage and release-preparation latency audit
+
+Audited the complete log and freshly read the upstream reports through the
+maintainer-author trust gate. Before this audit, #48–#64 comprised 17 reports: 16 closed
+and #64 open. Older notebook entries also contain unfiled suggestions and historical
+incidents without a current retest; this is not evidence that every past papercut has a
+GitHub issue.
+
+Filed [#65](https://github.com/adamaltmejd/switchyard/issues/65) for the missing
+gate-image diagnostic above. Filed
+[#66](https://github.com/adamaltmejd/switchyard/issues/66) for the documented
+16-artifact count limit forcing one screenshot suite into three gates: Y-71's 40
+retained PNGs total 3,541,912 bytes, below the existing 16 MiB per-gate byte budget. The
+latter is an improvement request, not a contract violation or a reopening of #57. Both
+reports include sanitized evidence, bounded acceptance criteria and `report` /
+`filed-by:codex` labels; submitted bodies were read back exactly. The relevant limits
+and diagnostic path remain in v0.14.6 source, but these live observations were on
+v0.14.5.
+
+Y-71 and Y-72 took 3h 1m 27s from admission to landing: implementation, investigation
+and self-checks 2h 3m 10s; formal reviews 41m 20s; gate executions including preparation
+7m 17s (4%); attention intervals 9m 26s. Neither attempt retargeted or conflicted. These
+are elapsed phases, not CPU or token-cost totals. Worker time includes `/simplify`,
+subagents and tests; attention time includes operator inspection. Changed requirements
+and concrete CI/production/image repairs explain several rounds, so the whole interval
+is not avoidable Yard overhead. The strongest candidates for improvement are earlier
+toolchain checks and fewer overlapping model-review duties while preserving
+deterministic gates.
+
+Filed [#67](https://github.com/adamaltmejd/switchyard/issues/67) for candidate-image
+preparation occurring only after formal review. Y-71 spent 15m 46.724s on a passing
+review before its image failed in 89.760s. The same ordering remains in v0.14.6 source,
+with no workflow ordering option. This asks for assessment of earlier preparation when
+image inputs change; it promises no measured saving and preserves exact-candidate
+validation. Submission and trusted readback matched exactly.
+
+Fresh release metadata confirms v0.14.6 was published September 8 at 21:22:12 UTC,
+carrying the fixes associated with #60–#63. The host still runs v0.14.5; no upgrade or
+live retest was performed for this audit. Detailed coverage, timing exports and
+publication receipts are local-only under `archive/reports/yard/2026-09-09-*`.
+
+## 2026-09-10: Filing batch Y-73..Y-85 and driving the first two landings
+
+Filed 13 tickets from a catalog + `/project` dogfooding pass (Claude Fable 5.1
+operating). Observations while driving Y-73 and Y-74 to landing on Yard 0.14.5:
+
+- **`review-failed` quoted the wrong line as its error.** Y-73's review failed twice
+  with `error: … WARNING: proceeding, even though we could not create PATH aliases …`.
+  That WARNING also appears in every *successful* codex review log; the actual failure
+  was `codex engine failed (1)` two lines later, caused by the Codex desktop app
+  rewriting `~/.codex/config.toml` with a `[features.context_management]` table the
+  installed CLI 0.147.0 rejected (`codex update` fixed it). The attention item's `error`
+  field took the last WARNING line from autoreview's preparation rather than the engine
+  failure, which sent the operator down the wrong path first. Autoreview's report is the
+  origin; Yard relays `reportError` verbatim.
+- **`worker-failed` on a provider limit offers only `abandon`.** Y-75/1 died on "You've
+  hit your weekly limit · resets 9pm (UTC)" before committing anything. The only exit
+  was `yard lane abandon`, which returns the ticket to ready and re-admits a fresh
+  attempt at full spend, so the operator has to read the reset time out of free text and
+  decide when abandoning is safe. A provider-error with no candidate would be better
+  served by a "retry after" exit (or a held state) than by abandon-only.
+- **A ticket edit before the first review round is free; after it, it costs a round.**
+  Editing Y-73's body to fix a stale "untracked generator" claim while the lane was
+  minutes old superseded the review that had already started
+  (`review superseded: it read an older ticket`), so `yard lane start Y-73/1` had to
+  queue another. Expected per `yard-drive`, but the status line did not say a round was
+  already in flight when the edit was made; a warning on `yard ticket edit` for an
+  active attempt would help.
+- **Depends-on needs ids that only exist after creation.** Filing a batch with
+  dependencies takes two passes (`yard ticket new --json` for ids, then the dependents).
+  Fine, but a `--depends-on-title` or batch file would remove the choreography.
+- Approved Y-74/1 over one P2 advisory ("exact vs folded column equality"):
+  `fold_column` is the build's own column-identity key, so the advisory was disposed as
+  land-as-is with a note. Approved Y-73/1 clean (3862 tests). Both landed within a
+  minute of approval.
+- **Finished lanes lose their wall-clock.** `yard lane show Y-76/1` prints
+  `g1  initial run  done  0s` (Y-71/1: `4s`) for every finished generation; only a
+  running one shows real elapsed. The store's `execution.started_at` is also rewritten
+  per generation, so the honest number is `ended_at - created_at`, reachable only by
+  querying `store.db`. Wanted: the per-generation and per-execution durations
+  `yard lane show` already promises ("lists each generation's trigger, outcome, and
+  duration").
+- **No way to tell "implementing" from "verifying" without reading the transcript.**
+  Both ui lanes (Y-75/2 at 54 min, Y-78/1 at 31 min) had been code-complete for a while
+  and were running the four-width Playwright flows, the design-reviewer subagent and
+  /simplify — exactly what the ui workflow asks — but `yard status` just says
+  `running 0m` (the `0m` there is also wrong; `yard lane show` had `elapsed 52m35s`). A
+  phase hint from the worker's own progress note, or the elapsed on the status row,
+  would answer "is this stuck?" without `yard lane tail`.
+- Baseline from `store.db` (created→ended of the implementation execution, all
+  generations): ui lanes 21–297 min, median ≈ 65 (Y-15/2 took 106 in ONE generation);
+  default 11–74, median ≈ 20; light 1–22. The ui workflow is ~3× default by design.
+- **`yard ticket edit --scope PATH ...` takes one path per flag.** The usage line
+  promises `--scope PATH ...`, but `--scope a b c` fails with "takes one id, got 3";
+  `--scope a --scope b --scope c` works. Either the help or the parser is wrong.
+- **`yard proposal accept` cannot set priority or workflow.** A worker's proposal
+  arrives at p0 (the top of the queue) on the default workflow; the only safe path is
+  `--parked`, then `ticket edit --priority/--workflow/--title/--body-file`, then
+  `relate`, then `unpark` — four commands and three revision bumps (Y-89 sits at r4
+  before any worker read it) for one decision.
+  `accept --priority N --workflow W --parked` would make the common case one command.
+- Decided A-189 → Y-89 (light, p3, depends Y-75) and rejected A-190 into a Y-80 body
+  edit. Neither decision woke the armed `yard status --watch` — expected, operator acts
+  are not attention — but it means a `--since` cursor read before a batch of decisions
+  is still the right one after it.
+- **The worker's own rendered evidence is thrown away; the operator re-renders it.**
+  Y-78 changed the group page (`/catalog/group/...`), which none of the three flow gates
+  render, so per OPERATOR.md the operator had to render it before approving. The worker
+  had already produced exactly those pictures in-lane (the design-reviewer subagent's
+  `/tmp/y78-after/_catalog_group_scb_lisa_person-orgnr-{mobile,tablet,wide}.png`), but
+  only gate artifacts are retained. Reproducing them on the host cost: a worktree at the
+  base + `git apply` of the lane diff, a 450 MB `reg-meta update` into a scratch dir
+  (the local XDG DB was a stale 0.38.3), `bunx playwright install chromium` (host
+  browsers were one Playwright bump behind the lockfile), and two `dev.sh shot` runs —
+  about 15 minutes for four screenshots. Wanted: a way for the worker to attach files
+  from its workspace as retained lane artifacts (or a gate that screenshots the routes
+  the ticket names), so the operator opens the candidate's own pictures instead of
+  rebuilding the render environment.
+- `dev.sh shot --all <routes>` is the order; `dev.sh --all shot` prints usage and exits
+  2 (my error, but a usage line that names the accepted order first would have caught
+  it).
+- **Landing Y-76 under a running Y-75 changed Y-75's premise mid-flight (operator error,
+  but Yard could have warned).** Y-75 ("column row leads with the resolved default the
+  picker already knows") was written before Y-76 ("stop stamping display_name at pick
+  time") existed; both were mine, both touched the binding's column name, and I approved
+  Y-76 while Y-75/2 was an hour into its run. Y-75/2 was retargeted onto Y-76's landing,
+  its design seat correctly blocked on the now-unreachable clause (P1), the worker filed
+  A-193 with three shapes, and the fix was a ticket edit (Y-75 r2)
+  + a fold into Y-80 + a nudge — about an hour of a $50 lane spent discovering what the
+    operator should have sequenced. Two aids: (a) at approve time, list the running
+    lanes whose scope hints overlap the candidate's changed paths ("Y-75/2 running,
+    touches BindingEditor.svelte, ticket mentions display_name"); (b) `proposal show`'s
+    `blocksCompletion true` is the first place the operator learns accepting would keep
+    the origin ticket open — worth a line in the wake's `requestedSummary` too.
+- **Adding a workflow is a ticket.** `.yard/config.toml` is tracked, Yard is the single
+  writer to main, so a new `[workflows.light-ui]` went in as Y-90 (light lane) rather
+  than an edit — fine, but it means every candidate in flight while it lands shows a
+  configuration transition at approval, and a workflow cannot be tried before it is
+  landed. A `yard workflow add`/`yard project edit` that commits the config through the
+  same path would make the common case one command.
+- **`correctnessMismatch: true` is the line to read.** Y-79/1 came up
+  `pass-with-advisories` (blocking threshold P1) while the codex seat rated the patch
+  "incorrect" at 0.97 on two P2s in the new fold algorithm. The wake JSON carries the
+  flag and `yard lane show` prints the seat's explanation, which is what made the
+  reject-for-repair call obvious; a `pass` label alone would have hidden it. Keep the
+  flag prominent — maybe promote it into the rendered `review` label ("pass, reviewer
+  disagrees") so it cannot be skimmed past.
+- **A landed config change is not live until `yard daemon restart`.** Y-90 landed
+  `[workflows.light-ui]`, `yard sync` printed the restart hint, and `yard status`
+  carries a clear warning — good. But `yard ticket edit Y-77 --workflow light-ui` is
+  refused ("declares no workflow light-ui") until the restart, and the restart is a
+  whole-daemon stop while Y-80/1 is mid-conflict-resolution, so the operator has to park
+  the ticket and wait for a quiet moment. A daemon that reloads `.yard/config.toml` on
+  landing (it already digests it per candidate) would remove the manual step and the
+  park.
+- Correction to the entry above: `yard pause` / `yard resume` exist (bare verbs), so the
+  restart sequence is pause → `yard daemon restart` → edit/unpark → resume, with no
+  admission race. Neither `yard-drive` nor the `yard sync` restart hint mentions pause;
+  one line there ("pause admissions first if a restart must not race an admission")
+  would have saved the ticket park. Also observed: while a lane sits at approval-needed
+  the board prints "admissions waiting: Y-80/1 is awaiting approval" and admits nothing
+  into the free slot — deliberate or not, worth documenting.
+- **Session-limit stops now offer `re-run`.** Both running lanes (Y-80/1 g4, Y-82/1 g1)
+  stopped on "You've hit your session limit · resets 9:50am (UTC)" and the item offered
+  `yard lane start <attempt>/e1 --expect-generation N` next to abandon — the exit the
+  weekly-limit stop on Y-75/1 lacked (see above). Taking it two minutes after the reset
+  resumed both rounds with no new attempt and no lost work. Still wanted: a "retry at
+  <time>" that the daemon takes itself, since the reset time is right there in the
+  error.
+- **Progress notes are truncated and the full text is not reachable.** Y-84/1's worker
+  ended its note with "Three notes for the operator: 1. The ticket's 'one states entry
+  per dist \[yard: note truncated\]" — `yard lane show`, `--json` and the rendered
+  `lane tail` all carry the same truncated string, so the operator has to grep
+  `lane tail --raw` for the `lane_progress` frame to read what the worker wanted
+  decided. A note is the worker's one channel to the operator; store it whole (or print
+  where the full text is).
+- **A land-as-is advisory disposition has no verb of its own.** `yard-drive` §4 says a
+  disposition "is a decision you record", but the only recording verb is
+  `yard proposal promote LANE a1`, which files a ticket-creation proposal. Recording
+  "land as-is, because X" therefore means promote → the proposal raises an attention
+  wake (A-207 on Y-86/1) → `yard proposal reject A-207 -m "<re-admission condition>"`.
+  Two commands and a spurious wake to say "no". A `yard lane dispose LANE a1 -m REASON`
+  (or `promote --reject -m`) that records the reason against the report without a
+  proposal round-trip would make the cheap disposition as cheap as the skill implies.
+  Same wake also confirmed that `yard proposal promote --json` prints the full proposal
+  object pretty-printed, which is fine for reading but not for `--json` consumers
+  expecting one line like the watch stream.
+- **A ticket whose Proof contradicts its Behavior list gets the Proof built.** Y-87 r1
+  said "split_rename is emitted only when predecessor and successor eras share a
+  variant" (a per-pair rule) but its Proof line told the worker to flip the existing
+  two-variant fixture to "assert the pair is absent" (a per-group rule). The worker
+  built the group gate, flagged the tension in its progress note ("a judgment call the
+  ticket leaves open" — truncated by `lane show`), and codex rated the patch incorrect
+  at P2 (correctnessMismatch again). Measured on the 0.40.0 corpus: the group gate
+  dropped ~275 real renames incl. LISA's `PeOrgNr → PeOrgNr_LISA`, the module's own
+  docstring example. Operator lesson (mine, not Yard's): a fixture named in Proof IS a
+  behavior statement; when it flips, say what it asserts afterwards, not just "absent".
+  Yard-side: a worker that spots a ticket-internal contradiction should propose a
+  `ticket.edit` (which stops the attempt at `ticket-edit-proposed`) rather than pick a
+  side and mention it in a progress note nobody reads untruncated.
+- **`yard ticket unpark` bumps the ticket revision.** Y-92:
+  `ticket edit … --expect-revision 1` → "revision 2", then `ticket unpark Y-92` →
+  `ticket show` says revision 3. Parking is scheduling state, not ticket content, so a
+  revision guard taken before an unpark now fails for a body nobody changed — and a
+  worker/reviewer "re-read at the new revision" for no textual change. If the bump is
+  deliberate (revision = any mutation), the unpark output should print the new revision
+  the way `edit` does; today it prints only `Y-92  unparked`.
+- `yard proposal accept --parked --json` returns the created ticket under `result.id`
+  wrapped in a one-element array per accepted command; fine, but the whole original
+  proposal body is echoed twice (attention + result), so the JSON is ~4 KB for a
+  one-line answer. A `--quiet`/`id`-only form would help scripted accept→edit→unpark
+  chains.
+- **First `light-ui` lane (Y-77/1, Sonnet xhigh, review none, six checks): 11 min
+  wall-clock (7 min implementation + 4 min gates), $2.85, approved on the first
+  candidate.** Against the `ui` workflow's median ≈65 min / three-figure-dollar lanes
+  for changes of this size, the split earns its keep. The operator read was: the source
+  diff (three Svelte files + one shared string), the test diff, and two of the ~40
+  retained flow-gate PNGs — the `catalog-no-period` capture at 1280×900 and 375×812,
+  i.e. the exact state the ticket changes (rail readout "not set" + hint, and the
+  two-exit add-blocked message). Two things made that read cheap and are worth keeping:
+  the flow gates capture FULL-PAGE at four viewports and name the captures by flow step,
+  so the operator can pick the one step a ticket touches without opening the rest; and
+  `review: none` meant no correctness-mismatch line to reconcile. What is missing: the
+  wake line lists the gate execution ids but not which retained captures each produced —
+  a `captures:` list (or `yard lane evidence Y-77/1 --gate catalog-flows`) would save
+  the `ls` under `.yard/local/evidence/...`, which is the operator reaching into the
+  daemon's directory to find its own evidence.
+
+**Filed upstream 2026-09-10 (adamaltmejd/switchyard), one report per observation from
+this section:** weekly-limit stop typed `provider-error`, abandon only → #85;
+`review-failed` quotes the PATH-alias WARNING → #68; finished generations `done 0s` →
+#69; status row `0m`
+
++ no phase hint → #70; truncated progress notes → #71; `--scope PATH ...` usage → #72;
+  `proposal accept` lacks priority/workflow → #73; `unpark` bumps revision → #74;
+  land-as-is advisory disposition round-trip → #75; approval item lacks the retained
+  captures → #76; worker's own renders discarded → #77; no overlap warning at approve
+  (Y-75/Y-76) → #78; landed config not live until restart + no mention of `yard pause` →
+  #79; `ticket edit` supersedes an in-flight round silently → #80; `correctnessMismatch`
+  not in the rendered label → #81; proposal `--json` shape → #82; depends-on needs
+  post-creation ids → #83; worker should propose a ticket edit on a self-contradictory
+  ticket → #84. Standing rule from the user: every future papercut gets filed there too,
+  not only logged here.
+
+- **Y-82/1 (ui) landed after two rounds: ~4 h wall-clock, $73.89, six advisories on the
+  final report.** The operator read for round 2 was: diff of the four returned items,
+  both seats' findings, three corpus measurements (alias-only columns, duplicate variant
+  names, single-variable groups) and a host re-render of the register page at 1280 and
+  375 (the flow gates never render `/catalog/<p>/<r>`, and the chip lens is not
+  URL-wired, so the lens state itself was verifiable only through the browser tests).
+  Two of the six advisories became tickets (Y-93 backend, Y-94 light-ui), three measured
+  to zero, one the render disproved. Two promote wakes + two accept→edit→unpark chains
+  for that — #73/#75/#83 upstream cover the choreography. `--until-quiet` drained the
+  promote wakes nicely but then EXITED on quiet, so the operator has to remember to
+  re-arm afterwards; a `--stream` that also prints quiet-and-keeps-waiting would remove
+  that step.
+- **Issue #63 recurred on 0.14.5 while the 0.14.8 upgrade was staged.** Y-81/1 g2 died
+  in the design-reviewer pass with
+  `Docker output consumer failed: provider NDJSON record exceeded 1048576 bytes` — an
+  image Read of a four-width capture — with the implementation complete but no candidate
+  declared, and the item offered `abandon` alone. Recovered as #63 documents:
+  `yard lane nudge Y-81/1/e1 --expect-generation 2 -m '<bounded-preview guidance>'`
+  resumed the same session as g3. 0.14.6 raised the bound to 16 MiB and types the stop
+  as `provider-record-oversized` with a relaunch exit, so this is the last time on this
+  board. Lesson for the upgrade sequencing: a fix that is already released costs a lane
+  every day it is not installed; the config-key removal (Y-95) that gates the 0.14.7+
+  daemon should have been landed the day 0.14.7 shipped, ahead of any ui lane.
+- **A Docker prune strands a running attempt for good.** While Y-81/1 was in review and
+  Y-83/1 between its review (1 blocking P1) and repair round, every image and container
+  on the host disappeared (disk went from 1 GiB free to 145 GiB; not the operator's
+  doing). Y-83/1's repair generation failed at
+  `docker image inspect sha256:ed81a4ab… No such image`, the item offered `abandon`
+  alone, and `yard lane start Y-83/1/e1 --expect-generation 4` (the re-run) failed
+  identically at g5: the implementation execution is pinned to the exact image id it
+  started with and nothing re-prepares it, while gates build their own image per
+  execution and were fine. Recovery: abandon (candidate 8dc5372c retained) + park Y-83 +
+  `yard lane replay Y-83/1` when capacity frees — `replay` refuses with "lane capacity
+  is full" rather than queueing, so the operator has to come back for it, and the park
+  is what keeps the scheduler from admitting a from-scratch Y-83/2 into the freed slot
+  first. Filed upstream as #86. Side effect worth knowing: with all images gone, the
+  next lane (Y-95, light) pays a cold image build before its worker starts.
+- Y-81/1 followed Y-83/1 into the same wall twenty minutes later (its review asked for a
+  repair; g5 died at `image inspect sha256:cafb3349… No such image`). Recovery this time
+  with `yard pause` first, so the slot the abandon freed went to
+  `yard lane replay Y-81/1` (→ Y-81/2, "seeded from Y-81/1, no worker spend") instead of
+  to the next p2 ticket: pause → park → abandon → replay is the sequence when capacity
+  is contested. Cost of the wipe so far: two reviewed candidates re-proved from scratch
+  and two repair rounds re-bought (~$100 of lane spend already sunk in Y-81/1 + Y-83/1
+  stays sunk).
+- Correction: the Docker wipe was the user's own `docker system prune` — Docker was
+  holding ~100 GB of disk. That is the real papercut: Yard builds a hermetic image per
+  gate execution and per lane, records each by exact digest, and never prunes the ones
+  no live attempt needs, so a board that has landed ~90 tickets has left the host with a
+  hundred gigabytes of dead layers. Wanted: `yard daemon gc` (or a prune at cleanup
+  time) that removes images no active attempt or recent evidence refers to, and a README
+  note that a manual prune strands running attempts (#86).
+- **Why every execution gets its own image id (answered, on #86).**
+  `docker build --iidfile` under BuildKit + containerd store returns the digest of an
+  OCI image INDEX that wraps the manifest plus a per-build provenance attestation, so a
+  fully cached rebuild of an identical tree gets a new id every time (A/B: 15/15 steps
+  CACHED, same config, same layers, different ids). With
+  `--provenance=false --sbom=false` the id is the manifest digest and two builds from
+  two worktrees reproduce `sha256:fd57f0d5…` exactly. Yard records and later inspects
+  the index digest, which is why a prune strands attempts although a rebuild would
+  reproduce the image, and why the store holds 600 single-use ids over ~3 GB of shared
+  layers. The 100 GB was old layer sets (each lockfile/Dockerfile change ≈ 3 GB) plus
+  build cache, never garbage-collected.
+
+## 2026-09-10: Upgrade 0.14.5 → 0.14.8
+
+Installed the verified `yard-v0.14.8-darwin-arm64` (sha256 `4ec9473d…`, contract 0.14.8
+@ `4be7bdf4…`) with the board quiescent (Y-81/2 at approval-needed, admissions paused,
+Y-95's retired-key removal landed first as `98399f9d`). Sequence: `yard daemon stop` →
+store backup (store.db + wal/shm, git mirror, daemon.log, preflight, previous
+executable; 134 MB, NOT the 3.5 GB `.yard/local` — lanes/tools/evidence left in place) →
+`install` → `yard daemon restart`. Schema 43 → 44 migrated on open; daemon pid 97712
+reports 0.14.8, lanes ready, Y-81/2's approval item intact.
+
+- **`yard daemon restart` lost a race with its own auto-start and reported failure for a
+  restart that had succeeded.** After `stop`, `daemon status` said "no daemon is
+  answering"; `restart` then refused with "another daemon already holds the daemon lock
+  (pid 25346)" — the OLD pid, which no longer existed — and the verify step's
+  `yard status` found a healthy 0.14.8 daemon (pid 97712) started by an ordinary command
+  in the gap. The README documents exit 4 as "another owner kept the project", but the
+  owner here was the new binary's own on-demand daemon, so the message pointed at a dead
+  pid and the operator had to prove the outcome by hand. Wanted: `restart` re-reads the
+  lock holder after its stop and reports the daemon actually serving (version + pid),
+  and the stale pid never appears once the process is gone.
+- Two prerequisites cost more than the upgrade itself: the retired
+  `checks.review.max_gate_repair_rounds` key had to leave canonical main through a lane
+  (Y-95) before a 0.14.7+ daemon would load the config, and the 0.14.8 client refuses a
+  0.14.5 daemon, so the executable could not be staged on PATH — every wait for a free
+  slot was the upgrade waiting. A release that retires a config key could ship a
+  `yard config migrate` that lands the edit through the same single-writer path.
+- **Host cleanup after the upgrade (user-approved):** removed
+  `~/.local/state/switchyard` (15 GB: July lane clones of the switchyard repo + July
+  gate caches, unreferenced by the 0.14.8 source, nothing open), the pre-0.14.0 upgrade
+  backup (2.1 GB), three Aug backups of another project's store (1.1 GB), and killed
+  three 0.13.5 daemons left running since Sep 5 by an upgrade test under `/private/tmp`.
+  Kept today's 134 MB pre-0.14.8 backup. Filed as #87 (orphaned state,
+  `yard doctor --clean` wanted) and #88 (`daemon restart` reports a dead pid while its
+  own on-demand daemon has the project). Docker's 100 GB was #86. Together: ~130 GB of
+  Yard-related disk that nothing reclaimed on its own.
+
+### Y-92/1: a provider "Request timed out" offers abandon alone (#89)
+
+`worker-failed` with `reason: provider-error, error: "Request timed out"` on the very
+first turn (13 transcript lines, no candidate, 8 minutes wall). The item's only exit was
+`yard lane abandon Y-92/1`. Abandoning cost nothing this time, but a timeout
+mid-generation would strand real work behind abandon-only, which is the shape #85 fixed
+for the session/weekly limits in 0.14.8. Filed as
+[#89](https://github.com/adamaltmejd/switchyard/issues/89): type transient transport
+errors like the limits, with a relaunch exit. Abandoned; Y-92 returns to ready.
+
+### Y-83/2 e20: a host sleep expired the review deadline and the re-run re-bought a finished seat
+
+Cause found after the fact: the laptop entered clamshell sleep at 20:33:48 local on a 6
+% battery (`pmset -g log`), about eleven minutes into the design seat of round 1; it
+woke around 22:14. Yard's review deadline is wall-clock
+(`live.deadlineAt = Date.now() + timeoutMs`), so the sleep consumed the whole 30-minute
+budget: the audit log is silent from 18:23Z to 20:14:34Z, then the round fails at
+publication with "review deadline expired before evidence publication" (A-234). The
+codex seat had finished at ~3 min with its P1 retained in
+`evidence/Y-83/2/e20/report.json`
+(`review_step.completed: codex=findings, design=error`), yet
+`yard lane start Y-83/2/e20` re-ran BOTH seats (e21). Not a Yard fault that the host
+slept, but two things could be cheaper: a deadline that does not count time the process
+was suspended (a timer that fires late by more than its own length is a sleep, not a
+hang), and a re-run that reuses a seat whose report the round already published. Filed
+upstream, see the issue number in the next line. Filed as
+[#90](https://github.com/adamaltmejd/switchyard/issues/90).
+
+### Y-92/2: a `ticket.edit` proposal that corrected the ticket (A-236, accepted)
+
+The r3 body I wrote said an alias spelling without a window row should fall back to "the
+owning state's window(s)". The worker measured on its fixture that such a mapping fails
+§12's inventory check (`representation_unresolved`) and would give the 120 UPPER-folding
+twins a second, unresolvable mapping; it built the containment+participation form
+instead and proposed the edit with the evidence. The proposal path worked as designed:
+one wake, `yard proposal show A-236` carried the whole body, `accept` released the lane.
+Papercut: the sentence-level diff against the current revision was mine to compute
+(`--json` on both sides); the proposal view shows only the new body, so a 5 KB edit
+reads as a rewrite when it changed two sentences. Filed as
+[#91](https://github.com/adamaltmejd/switchyard/issues/91).
+
+### Y-92/2 approved (6a08d2cb): $17.87 for a 70-line generator change
+
+Review pass, 0 findings; gates green; diff matches r4 exactly (UNION ALL arm on
+`variable_alias_window` with containment + participation mirrored from
+`Catalog._expand_state_windows`, `NOT EXISTS` a state with the literal spelling, one
+ORDER BY over the union; a `flavored_db` fixture and a `check_inventory`-clean
+assertion). The cost line is the observation:
+`e1 implementation in=18,352,773 cached=18,058,125 out=110,640 cost=$17.87` over 33
+minutes for +233/−8 lines — the worker re-read a 2,600-line generator and the resolver
+many times at Opus xhigh. Not a Yard defect, but a per-lane cost ceiling or a "cost so
+far" line on the wake would have let me choose `light` for the fresh attempt after the
+timeout, which a Sonnet worker could have carried from the r3 body.
+
+### Y-83/2 round 2: rejected at 2b8cdf2b on two P2 advisories (a1, a2)
+
+Review passed with 6 advisories after the era repair. a1 (a ticked column with no era
+inside the study window reports "Applied +1 column", clears the tick and mints an empty
+project) and a2 (the replacement-generation guard is captured after the new exact-rows
+fetch, so New/Open during it commits into the replacement) are bugs in the ticket's own
+surface, so I rejected with notes naming them plus a3 (Tag base face contradicts the
+DESIGN.md front matter) and a5 (lens test never activates the lens); a4 verified a no-op
+(only ConceptGroupView sets `pinRepresentation`), a6 lands. Rendered the register page
+myself against 0.40.0 (`dev.sh shot` in a worktree) because the catalog-flows gate takes
+no screenshot of the register-list step: ticks sit beside each column name in the mono
+cell, years dimmed, add bar below the list. Lane cost so far $32.38 (conflict resolution
+$4.55, three Opus xhigh generations). Observation: a P2 "bug" advisory that does not
+block is the review's threshold working as configured (`blocking` = P1), but on a new UI
+surface a false confirmation is what the ticket's consumer meets first; the operator has
+to read every advisory's body, the titles alone ("Do not count columns …") undersell it.
+
+### Y-93/1 rejected at ff7efc48 on the one P2 advisory (measured real)
+
+Review passed with a single P2 ("case-twin alias windows overwrite each other's
+coverage") and `correctness-mismatch` (codex: patch is incorrect, 0.88). Measured on
+0.40.0: 124 folded groups have two windowed case-twin spellings, 14 with differing
+coverage (idve/fastigheter: IDVE 2013..2023 beside idve 1998..2023), and the fold is
+overwrite-by-row-order on an unordered SELECT. Rejected with the numbers and the shape
+for the test. Second lane tonight where the review's `blocking = P1` threshold let a
+corpus-real correctness bug through as advisory while `correctness-mismatch` said the
+reviewer thought the patch wrong: the mismatch flag is the signal, and it is only in
+`yard status`'s parenthesis and the JSON, not in the approve exit or the findings list.
+Correction to the entry above: `yard lane show` does print a `correctness` line under
+`review` ("the reviewer judged 'patch is incorrect'; the verdict is pass because no
+finding met the blocking threshold — …"); my grep for `^review|^finding` dropped it.
+Upstream #81 declined the same complaint for that reason. Nothing to file; read the
+whole show output.
+
+### Y-83/2 round 2: the review blocked on my ticket's "byte-identical" clause
+
+Round 2 failed on a P1 that is the ticket's letter, not the candidate's fault: I wrote
+"project_data.json is byte-identical to adding the same rows from the variable pages" to
+pin the era fidelity, and the reviewer applied it to the #902 rename fold too (two
+ticked names → two explicit rows vs the leaf's one `representation: null` row). Both
+readings are defensible; the repair now builds the fold, which is at least coherent with
+the leaf. Lesson for the filing side: a "byte-identical" clause is a contract over every
+path, so name the paths it covers. Not a Yard defect. Eight advisories rode along, four
+of them P2 bugs in the new host — the surface is converging slowly (rounds 2/5, ~$40).
+
+### Y-93/1 round 2 approved (920c6519)
+
+The operator-reject repair did exactly the note: merged windows across folded spellings
+(min start, max end, summed rows), spelling by `_keep_lowest` (state's own, else lowest
+by byte order), no step reading row order, test parametrized over reversed insertion.
+Review pass, 0 findings, no mismatch. 18 minutes and ~$9.4 for the round; lane total
+$25.95.
+
+### Y-93 landed; A-241 rejected, A-244 → Y-102 (parked p2)
+
+`yard proposal accept A-244 --parked --priority 2` (0.14.8) did what its help says: one
+transaction, the ticket parked and prioritised on the way out, no admission race. The
+worker's body was a plan with "not measured here", so the operator replaced it with the
+measurement (2,556/36,840 SWECOV held mappings spelled differently from the state
+column; exact-string compares in the route). Papercut: the proposal's title is not in
+the repo's `<type>(<package>): …` convention and the accept has no `--title`, so the
+retitle is a second `ticket edit --expect-revision` round-trip.
+
+### A-246 (from Y-85/1 gate repair): a pre-existing test-order pollution the lane may not fix
+
+`test_validate.py`'s `test_failed_validation_does_not_replace_installed_db` patches
+`validate.validate_built_db` before its first import of `reg_meta_build.cli`, so cli
+binds the fake and teardown writes the fake back into cli for the rest of the xdist
+worker; two unrelated tests fail whenever `--dist load` hands that worker the polluter
+first. Y-85's candidate only shifted the slices. Reproduced on main in 1 s with the
+proposal's `-k` sets (2 failed / 4 passed). Automatic repair may not edit pre-existing
+tests (correct), so the worker proposed; accepted `--priority 2 --workflow light`
+unparked so the fix lands ahead of the p3 queue and Y-85/1 retargets onto it. Good
+proposal: deterministic repro, the non-test fix shapes checked and ruled out, the reason
+it could not be done in-lane.
+
+### Y-85/1: park → stop → abandon to free the slot for the fix it needs
+
+Its gate repair could only loop (g2 stopped without repairing, correctly; g3 would have
+too, up to `max_rounds = 5`, each round a worker turn plus a 5-minute test gate), and
+the lane held one of two slots while the fix (Y-103, p2 light) waited for one. Retired
+the attempt in the skill's order with the ticket parked, candidate 173cf8bc retained, to
+`yard lane replay Y-85/1` after Y-103 lands. Papercut: a gate repair whose worker
+reports "cannot repair: base-protected test" still queues the next repair round; a
+worker that stops with that verdict could stop the loop and raise the item at once,
+saving the remaining rounds (here 3 × ~$2 and ~30 min).
+
+### Y-103/1 approved (53b9f25e): the light workflow at its best
+
+Admitted, built and gated in under three minutes for $0.31: the import moved above the
+first monkeypatch with a four-line comment, gates green, no review by policy. The
+`(unreviewed by policy)` label on the approval row is the right reminder that the
+operator's read IS the review for a light lane.
+
+### Y-83/2 at $82.91 after five generations: advisory-to-blocking drift across rounds
+
+Round 3 failed on two P1s that were P2 advisories a round earlier (round 2's a1 "abandon
+an add if the study window changes during the state reads" is round 3's b2 "abort an add
+when the study window changes"; round 1's a1 "recheck host cancellation after binding
+resolution" is round 3's b1). I had disposed both as land-over (not integrity-class by
+the skill's list), and the next round's reviewer, which never sees that disposition,
+re-raised them a grade higher. Each round here is ~$8–10 (Opus xhigh repair + two seats +
+six gates). Suggestion for Yard: put the operator's advisory dispositions into the next
+round's reviewer brief ("a1 landed-over by the operator on <date>: <reason>") so a
+finding is either escalated with a stated reason or left as decided. Filing upstream.
+Filed as [#92](https://github.com/adamaltmejd/switchyard/issues/92). Also: Y-103 landed
+and `yard lane replay Y-85/1` was refused with "lane capacity is full" — the scheduler
+admitted the next ready ticket into the freed slot in the seconds between the landing
+wake and my command, as the skill warns. `yard pause` before the landing would have held
+the slot.
+
+### Y-88/1 approved (25418597): a curation lane done right
+
+Eight LISA `replaced_by` edges at the grain the evidence names (four variable-grain
+re-mints, four variant-scoped representation renames), each with a changelog citation
+and a `note`; 44 candidates rejected with reasons in the progress note; the operator
+resolved all 16 endpoints and 8 columns against 0.40.0 independently. Review pass, 0
+findings; $17.73, 23 minutes. The worker also flagged that the ticket's motivation was
+stale (the KU→AGI and SNI families were already edged by #375/#931/#1122) rather than
+building on it.
+
+### Y-83/2 approved at 68f1c1fb after six generations and $87.63
+
+Round 4 passed with six advisories (two P2: in-place register→register navigation during
+an in-flight add is not a lapse; a stale "Applied" line survives a later refusal). The
+core now does what the ticket asks — exact eras, the #902 fold as the commit grain,
+byte-identical files, out-of-window ticks disabled with the reason, the batch bound to
+press-time generation and window — and I rendered the page once more against 0.40.0
+before approving. Disposition: a1/a2/a3/a4/a5 → one light-ui follow-up via
+`proposal promote a1` (the rest named in its body), a6 landed (verified no-op twice).
+Lane arithmetic worth keeping: a `ui` lane on a new authoring surface cost six
+generations, four review rounds and one operator reject; the two-seat review plus six
+gates is ~$3–4 per round before the repair itself.
+
+### Y-85/2 approved (748f21bb): the replay path end to end
+
+`yard lane replay Y-85/1` seeded Y-85/2 from the retained diff in 2 s with no worker
+spend (18k input tokens for the seed generation), then review and three gates ran fresh
+on the new base — with Y-103's test fix under it the test gate passed first time. Review
+pass, 0 findings. The whole detour (park → stop → abandon → wait for the fix → replay)
+cost the abandoned attempt's $10.69 of gate-repair spend and nothing more.
+
+### Standing approval re-gates on every landing: Y-83/2 bumped three times
+
+After approval at 68f1c1fb, Y-83/2 went `gating (standing: target-moved)` three times in
+a row — Y-88, Y-85 and Y-89 each landed while its six gates (~10 min) were re-running,
+and each landing restarted them. Correct by construction (the approval binds
+base+head+checks), but with a busy board a `ui` lane can be starved by cheaper lanes
+landing under it. Paused admissions by hand so it can land. Suggestion: when a standing
+approval is re-gating, hold other landings (not admissions) until it lands, or land it
+first — a landing queue ordered by "approved first". Filed as
+[#93](https://github.com/adamaltmejd/switchyard/issues/93).
+
+### Y-83/2: the approval at 68f1c1fb did not stand — retarget → re-review → two more repairs → $101
+
+After AP-120 the third target move (Y-89) re-ran the review on content that had just
+passed (e105's predecessor failed with a P1 "preserve the captured variant set per
+selected column", a stricter reading of the lens rule than any earlier round asked for);
+g7 and g8 built it (~$13, 17 min) and round 2 passed with seven advisories, five of them
+the same class as before (route change during an in-flight add, stale "Applied" line,
+global focus ring). Re-approved at fd7ee1f9 with admissions paused so nothing can move
+the target again. Net: an operator approval on a busy board bought nothing; the lane is
+at $101 and eight generations for one authoring surface. Adding this to #93 as the
+concrete cost.
+
+### Y-83 landed at fd7ee1f9; the follow-ups filed
+
+Y-104 (A-237, disjoint windows on the wire, parked p3, body replaced with the measured
+one), Y-105 (A-243, Tag face — decided: copy-faced primitive, `mono` opt-in, plus a
+`components.*` arm in the design test; parked p3 light), Y-106 (promoted a1 as the
+umbrella for advisories a1–a5/a7; parked p3 light-ui). Y-102 unparked; admissions
+resumed; Y-97 and Y-102 admitted at once. Papercuts on the way: `proposal promote` takes
+ONE finding, so an umbrella ticket for six same-surface advisories is one promote plus a
+body rewrite, and the other five are disposed only in that body; `proposal accept` has
+no `--title`, so the convention retitle is another `ticket edit --expect-revision`
+round-trip (as #91).
+
+### Y-97/1 approved (8c56bf81): light-ui, $5.34, the operator's render as the review
+
+Horizontal overflow moved from App's `.routed` to DataTable's own `.table-scroll`
+wrapper; the add bar is `position: sticky; bottom: 0` against the viewport, opaque, no
+shadow; two browser tests (bar pinned after a long scroll; wide table scrolls inside its
+wrapper, page never widens). The six checks including the rendered flow gates passed on
+the first candidate (g1 "failed" only for an uncommitted workspace, self-healed in 11
+s). I rendered `/catalog/scb/lisa` at 1280×900 against 0.40.0 and the bar sits pinned at
+the bottom edge over the list; the leaf and project gate images are unchanged. No review
+seat by policy — for a two-file CSS/DOM move with rendered gates that is the right
+spend.
+
+### Y-102/1 approved (dcdc9dbf)
+
+`_fold_column` / `_folded_columns` / `_folded_column_coverage` in the register route, a
+single `representative_columns` rule in reg_meta used by `register_column_coverage`,
+`register_variable_deliveries` and `queries.resolve`, DESIGN notes in both packages,
+tests on each reader and on the route with the `Idh`/`IdH` fixture. Review pass, 0
+findings, $18.62 in one generation. The worker proposed the four sibling surfaces it
+left exact (A-258) instead of widening scope — the admission rule working from the
+worker's side.
+
+### Y-94/1 approved (dde6ee79): light-ui, $4.10, one generation
+
+Both Y-82 advisories (focus drop on Clear, FQID-only member narrowing) built with a
+browser test each and a unit test; six checks green first time. The operator's read is
+the review: the diff is 27 lines of component change plus 35 in `catalog.ts`, and the
+lens is not URL-wired so a static render shows nothing the tests do not already assert.
+
+### Y-96/1 approved (bbb46115): the generated skills adopted, $0.25
+
+The candidate's `.agents/skills/{yard-operator,yard-file,yard-drive}/SKILL.md` changes
+are identical (every added and removed line) to the `yard init` 0.14.8 scaffold diff I
+captured before the upgrade; the scaffold marker now names 0.14.8 / 4be7bdf4.
+`.claude/skills` are symlinks, so both catalogs serve the new text. 37 s, three gates,
+one light generation.
+
+### Y-98/1 approved (e53294f7): light-ui, $10.43
+
+In-flight guard (`applying`: readonly years, `aria-disabled` Apply, second press a
+no-op), "Waiting for the project to load…" / "Period unchanged." info states, per-source
+accessible names led by the source name, five browser tests and a project-flows driver
+line that captures the notice in the retained shots. Gates green on the first candidate
+(g1 "failed" only for the uncommitted-workspace self-heal, 14 s). Read the project gate
+image: cards, editor and notices as designed.
+
+### Y-107/1 approved (dd7f57e9): $20.25, one generation, review clean
+
+`_fold_column` / `_folded_columns` hoisted to `catalog_index.py`; leaf states, group
+members, search narrowing, the semantic message (held spelling kept verbatim) and
+reg_meta's delivery-scope filter all fold at the comparison; one `seed_case_twin_column`
+fixture and a `case_twin_client` reused across five tests. The worker left the one
+comparison that needs both packages in one change (A-264) as a proposal with fixture and
+test names already in it — the cheapest follow-up to accept so far.
+
+### Y-99/1 approved (f5ae41c7): a deletion ticket at −208 net lines, $6.66
+
+`periodChanges` / `periodChangesWithStagedAdds` / the "period change(s)" confirmation
+branch gone from the picker, both views, the register host and `staged_picker.ts`; the
+store's own `periodChange` primitive kept for the cart card's editor; the A-229 rider
+(`unmountedFlag()` in `async.svelte.ts` with a test, three copies replaced) and the
+A-233 riders (`validation.ts` import, dev.sh's stale scenario line) done in the same
+lane. Gates green. Riders folded into a deletion ticket paid off: three tiny proposals,
+one lane. Y-99/1 came back to approval-needed at 78a930b3 after its retarget onto
+Y-107's landing: content identical (one DESIGN.md hunk offset), gates re-run green,
+re-approved. For a `light` lane the re-approval is a formality the operator still has to
+perform by hand — a standing approval could carry when the rebased diff is
+byte-identical to the approved one (cf. #93).
+
+### Y-100/1 approved (1f138248): light-ui, $6.14, one generation
+
+One `resolveYearEntry` in period.ts (band + per-host rule wording as options, 84 lines
+of unit tests), the `.year`/`.problem` rules moved to ui/utilities.css, PeriodPicker's
+Apply and the slider's reset on the `Button` primitive, the deviation as plain text. Six
+gates green; the retained leaf image shows Apply/Clear as the cart card's twins. Base is
+one landing behind canonical and Y-99 touched `SourceEditor.svelte` too, so the retarget
+may need a conflict round.
+
+### Y-108/1 approved (e38b7f20): the held-column fold is now everywhere
+
+reg_meta's `_group_member_in_delivery_scope` folds (`_folded_held_columns`), the
+webapp's browse and search group narrowings share one `held_group_members`, and
+`CatalogIndex.admits` — the last exact-spelling probe — is deleted with its tests moved
+to `held_columns`. Review pass, 0 findings, $16.61. Three lanes (Y-102, Y-107, Y-108)
+for one measured failure was the right decomposition: each landed clean, each named the
+next.
+
+### Y-105/1 approved (3106dd0c): light, $2.48
+
+Tag base `font-family: var(--font-ui)`, `mono` the opt-in, front matter
+`components.tag.typography → {typography.body-sm}`, both call-site overrides deleted, a
+`design_md.test.ts` arm that resolves the tag binding through the spec and matches it to
+Tag.svelte's base rule, a browser test on the computed faces. The contract drift that
+cost Y-83/2 a review round is now a failing test instead of a paragraph.
+
+### Y-101/1 approved (9afb42f1): light-ui, $11.87, then the expected retarget
+
+One From/To row per list segment in stored order, "Add years", per-row Remove hidden at
+one row, one Apply writing the sorted/merged wire `mergePeriods` would, a cross-row
+overlap refused in the same status line naming both spans, a token period still
+read-only, a list reduced to one row written as the single-range wire, the deviation
+marker on the overall span. Five browser tests and nine unit tests carry it. The base
+was two landings behind canonical, so the approval was superseded by the retarget onto
+3106dd0c as before (content identical modulo hunk offsets); six gates re-running, one
+more re-approval to perform by hand.
+
+Two reads the gates could not give me. (1) The worker's first generation is listed as
+`g1  initial run  failed  27m15s` with no reason, followed by
+`g2 workspace.uncommitted  done  25s`. That g1 *was* the implementation and its
+"failure" was the ordinary unclean-clone handoff (`!! reg_webapp/frontend/.vitest/` and
+`node_modules/`) is visible only in the store's `execution.next_prompt` — neither
+`lane show` at any grain nor `lane tail` prints it, and the worker's own last g1 line
+says "Repo is clean". Filed as [Switchyard
+#94](https://github.com/adamaltmejd/switchyard/issues/94). Project-side: declaring
+`reg_webapp/frontend/.vitest` under `workspace.build_artifacts` would spare the cleanup
+generation (config.toml change → manual integration; not done). (2) No gate runs the
+driver's `project-source-period` scenario (the three flow gates split the 16-artifact
+cap between five scenarios; the period and focus scenarios from Y-81/Y-65 were never
+wired in), so the ticket's "project-flows captures a two-segment card" proof is only the
+worker's word. Rendered it myself from a worktree at the candidate
+(`dev.sh flows <dir> project-source-period`, four widths): two rows on the sibling card,
+Remove per row, "Differs from study window 2018–2020" against the 2015..2020 span, the
+refused entry on the single-row card unchanged. A fourth `period-flows` gate (12 files)
+is the project-side fix.
+
+A11y nit, not worth a round: the per-row Remove buttons are all named "Remove" (the
+source-level one is "Remove source <name>"); a per-row `aria-label` naming the span
+would tell them apart in a controls list. Bundle into the next period-card ticket.
+
+Landed as fafff25a after the hand re-approval; checkout synced.
+
+### Y-106/1 gate-failed (477c8fe8): a role split the flow driver did not know about
+
+catalog-flows died in scenario `catalog-period-required`: `driver.mjs:719` waits for
+`getByRole('alert')` containing "Apply a period", and the candidate now announces
+warn-tone refusals as `role=status` (`StagedAddStatus.blockedRole`; the error tone keeps
+`alert`). Consistent with `SourceEditor`'s own period-refusal line, and a reading of my
+ticket clause "read-failure with the error tint and role, the refusals with warn" that I
+did not intend but cannot fault. Nudged (the printed repair exit): keep the split,
+update the driver's scenario 5 to the status role, and run all three gates' scenario
+sets from the clone before finishing — the transcript shows the worker never ran
+`dev.sh flows` once, although the ticket named "the six light-ui checks including the
+rendered flow gates" as proof. $10.15 for the round so far.
+
+Papercut: the lane's `error` line and `gate-result.json` headline the CONSEQUENCE —
+"declared artifacts were not retained: catalog-pick-768x1024.png (missing), …" (13
+filenames) — and the cause
+(`flows: FAIL catalog-period-required 375x812 … waitFor: Timeout 30000ms exceeded`) is
+line 124 of a 150-line `gate.log`. When the gate command itself exits non-zero, its last
+failing line is the headline an operator needs; the missing-artifact list is what
+follows from it. Filed as [Switchyard
+#95](https://github.com/adamaltmejd/switchyard/issues/95).
+
+### Y-106/1 rejected at 2bb85612: the focus clause held only for the batch the test chose
+
+The repair round did what the nudge asked (driver scenario 5 on the status role; all
+five flow scenarios run from the clone this time, 16/16 OK) and a
+`gate repair (round 1)` fixed two biome print-width lines on its own — $14.52 so far,
+six gates green. Read against the ticket: the route generation, the cleared
+confirmation, the dropped-column note with ticks kept, the per-consumer focus rings and
+the tone/role split are all there. The focus clause is not: `aria-disabled` freezes the
+action while the add is in flight, but an add that commits every ticked column empties
+the selection and the button goes natively `disabled`, dropping focus to `<body>` — the
+test comment names exactly that fate and tests a mixed batch to avoid it. Rejected with
+the two acceptable repairs (stay in the tab order at zero staged columns like
+`SourceEditor`'s Apply, or move focus to the status line's "view" link) and a second
+focus test. A ticket clause that says "asserted with document.activeElement" needs to
+say *after which press*.
+
+### Y-106/1 approved (17cb4bd7): $17.02 over four generations
+
+The reject repair took option (a): the Add button is never natively `disabled` —
+`aria-disabled` for all three reasons, `addSelected` re-checks them — with a second
+focus test for the add that empties the selection (`toBeDisabled()` in vitest's browser
+matchers honours `aria-disabled`, Playwright-style, so the assertion is real). One
+nudge, one automatic gate repair, one rejection: the two rounds that were mine to pay
+were both for things the ticket said ambiguously — "the six light-ui checks including
+the rendered flow gates" (which the worker read as "the gates will run them", not "run
+them") and "keeps focus through an add" (which held only for the batch the test chose).
+Base is one landing behind canonical (fafff25a), so the approval will be superseded by
+the retarget once more.
+
+Landed as 0ab8360e after the hand re-approval; checkout synced. Y-104 (disjoint windows
+on the wire) is the last ticket, unparked next.
+
+### Y-104 unparked at revision 2 by my own chaining (operator error, not Yard's)
+
+I chained `yard ticket edit … | tail -1 && yard ticket unpark Y-104`: the edit failed
+(my body file was never written — a Python heredoc ate the JSON pipe), the pipeline's
+status was `tail`'s 0, and the unpark ran. Y-104/1 was admitted on r2 within the second;
+the edit landed as r3 thirty seconds later and a nudge carried the same two paragraphs
+to the running worker (the review reads r3 either way). Lesson for the routine: never
+put a spend command after `&&` on a pipeline, and never in the same command as the edit
+it depends on — one command, read its line, then the next. Yard behaved exactly as
+documented; the `revision 3` line on the edit and the `unparked  revision 2` line on the
+unpark are what let me see the order of events at all.
+
+### Y-104/1 rejected at 530cd53b: $99.45, one P2 the reviewer called "incorrect"
+
+The expensive lane of the batch: g1 1h03m on r2, the nudge generation 2h00m (marked
+`failed` — the unclean-clone handoff again, cf. #94), two automatic gate repairs (a
+biome width, a stale `openapi.json` snapshot), then a codex review that passed with one
+P2 and `correctness: patch is incorrect (0.93)`. The finding is right and it is against
+the ticket, not beside it: the register list's tick gate uses the column NAME's windows
+unioned across variants, so with a rename fold in one variant and the old name still
+delivered by another, a window inside the successor's era stages the first variant
+through its successor — exactly the case the candidate's own DESIGN.md bullet says the
+name-grain gate prevents. Rejected with the per-(variant, name) gate and one browser
+test. The diff otherwise does what r3 asked, including the Y-106 cleanup and the
+`_merge`/`_next_day` hoist from order.py into inventory.py (shared with catalog.py now).
+
+Two proposals came out of the design-review subagent this lane ran (A-282 polish, A-283
+an interrupted column in the fixture DB); both wait for the lane to settle. Sixteen
+files for a ticket whose scope hint named five; `inventory.py`, `order.py`,
+`staged_picker.ts`, `StagedAddStatus.svelte`, DESIGN.md and the generated files are all
+consequences the body asked for, so no scope complaint — but the hint is what the board
+prints and it undersold the read by a factor of three.
+
+### Y-104/1 round 2 rejected at 3464f3ee: the a1 repair landed, a new P2 appeared
+
+The per-(variant, name) gate came back exactly as asked (`windowsByVariant` on both
+verdicts, a two-variant rename test, the DESIGN.md bullet rewritten) — $2.38 for the
+round. Review round 2 passed with a different P2 at 0.96, again "patch is incorrect":
+the era list is `{#each col.years as era, i (era)}`, keyed by the rendered year label,
+and two sub-year windows inside one year (a #319 monthly family missing a month) render
+identically, so Svelte's keyed each collides on real corpus data. A one-line key plus
+label dedupe; rejected a second time rather than land a row that can throw. Worth noting
+for the reviewer-drift file (#92): round 1 read the same `each` and said nothing; a
+finding that only surfaces once the previous one is repaired is the normal shape of a
+review, not drift, but it means "one finding per round" is the operator's planning
+number.
+
+### A-282 and A-283 accepted parked (light-ui, p4 and p3) while Y-104/1 repairs
+
+Decided before the origin lane settled, deliberately: its open round is a one-line key
+fix and cannot absorb either scope. A-283 (an interrupted column and a rename chain in
+`fixture_db.py`) is a real gap — my own render recipe had to use the 0.40.0 release DB
+because the fixture cannot show a single thing Y-104 added, and the flows gates look at
+that fixture. A-282 (the unbounded era label displacing the name; the confirmation half
+of `StagedAddStatus` in accent, which frontend/DESIGN.md forbids for status) is two
+small rendered defects on one surface, one lane. Both parked until Y-104 lands: A-282
+edits the same label code the open round is touching, and A-283's flow shots show
+nothing until the windows are on the wire.
+
+### Y-104/1 approved (6ac99c85): $103.24, seven generations, three review rounds
+
+Round 3 came back with a third P2 at 0.93, again "patch is incorrect": the In-project
+marker reads one committed source per picker row, and the reviewer's scenario adds the
+same row twice under two windows. Checked before deciding: `applyStagedPicks`
+finds-or-creates the source by `register_variant` alone and merges the period, so the
+second add lands in the same source as a list period, which `windowsOverlapPeriod`
+already reads; and `committedPickerRows`' first-source match is Y-83's, untouched here.
+A hand-authored project with the same binding in two sources on one variant is the only
+shape that reaches it. Dispositioned as land, with the re-file condition in the approval
+note.
+
+Three rounds, three different P2 "incorrect" verdicts, each on the surface the previous
+repair had just changed and each one that the reviewer could have raised in round 1 (the
+each-key and the one-source map were both in the first candidate). That is the cost
+shape of a reviewer that reports one finding per round: three repair rounds and three
+reviews for what one thorough round would have listed together. Worth a line on #92 once
+this lands.
+
+Landed as 6ac99c85; checkout synced; Y-109 and Y-110 unparked into the two free slots.
+
+### Y-110/1 rejected at 6d500833: $3.67, no tests, tooltip-only eras
+
+Era label folds past three eras to `first … last +N` with the full list in a `title`;
+the confirmation half of `StagedAddStatus` is now a status row (✓, `--ok` on `--ok-bg`)
+— visible in the retained `catalog-period-recovered` shot. Rejected for two things the
+proposal body never asked for because it was a proposal, not a ticket body I had edited:
+no test for either behaviour (the fixture has no 4-era column, so the fold has no proof
+anywhere), and the folded eras reachable only through a native tooltip while the tick's
+accessible name gained a bare `+2`. Lesson repeated from Y-83: an accepted proposal's
+body is the worker's brief; if it lacks a Proof section, write one before unparking, or
+pay a round for it.
+
+### Y-109/1 approved (c8ff667b): light-ui, $3.60, one generation
+
+Two seeded variables in the fixture the flows gates import, an interrupted `Lan` and a
+`ForvErs`→`ForvErsNy` rename chain; rendered `/catalog/scb/lisa` with `--fixture-db`
+from the candidate and read the eras on the list. No gate shot shows the register list
+(the flow scenarios open leaves and /project), so the proof was the operator's own
+render — the same gap A-283 named, one step closer to closed: the fixture can now show
+the feature, and a register-list flow scenario is what would put it in the gates.
+
+Landed as c8ff667b; checkout synced.
+
+### Y-110/1 approved (cab08a43): $7.39 after one reject round
+
+The repair round brought the fold test (a four-era column: `1968 … 1998– +2`, `title`
+with all four, `aria-label` "+2 more eras: 1972, 1995–1996" reaching the tick's name),
+the confirmation-row assertion (✓ glyph and the computed `--ok` colour), the DESIGN.md
+line. Two more `workspace.uncommitted` handoffs on this lane (g1 and g3 both "failed"
+into a cleanup generation, cf. #94) and one automatic gate repair. Base is one landing
+behind canonical (Y-109), so the retarget re-approval is due next.
+
+Landed as 821199b6 after the hand re-approval; checkout synced. The board is empty: 25
+landings since the 2026-09-09 batch was filed, every ticket of it done.
+
+### Three more reports after the board drained
+
+Read back through this session's entries for what was noted and not filed. #94 and #95
+were both accepted and landed upstream within the day (Y-662, Y-663, due in 0.14.9); #93
+was closed as by-design, so the three further hand re-approvals this session (Y-101,
+Y-106, Y-110) went unreported. Filed: [Switchyard
+#96](https://github.com/adamaltmejd/switchyard/issues/96) — 12 of 40 lanes since the
+upgrade ended their round with `node_modules`/`.vitest` in the clone and paid a cleanup
+generation (13 in all; Y-110 twice), which Yard could do itself for a dependency tree it
+never accepts anyway; [#97](https://github.com/adamaltmejd/switchyard/issues/97) — a
+cursor-resumed watch printed `{"kind":"quiet"}` while Y-104/1 sat at `approval-needed`,
+indistinguishable from an empty board;
+[#98](https://github.com/adamaltmejd/switchyard/issues/98) — `proposal accept --parked`
+does not print the ticket id and `ticket list --status parked` is refused. Project-side,
+still to do by hand: `reg_webapp/frontend/.vitest` under `workspace.build_artifacts`.
+
+## 2026-09-11: Upgrade 0.14.8 → 0.14.10
+
+Board empty and quiet (cursor 90917), no service manager. Downloaded the three assets
+with `gh release download`, `shasum -c SHA256SUMS` OK, the executable's digest
+`8a250291…` equal to `yard.artifact.sha256` in the contract (0.14.10 @ `b0c58aac`).
+Sequence: `yard daemon stop` (pid 97712 gone after 2 s — no lock race this time, the
+board being empty) → backup of store.db + wal/shm, daemon.log, bootstrap config, git
+mirror, preflight, previous executable (146 MB, `~/yard-backups/…-pre-v0.14.10`) →
+`install -m 0755` → `yard --version` = 0.14.10/b0c58aac → `yard daemon restart`: pid
+43171, schema stays 44, canonical loaded at 821199b6, `laneMutationsReady` true once
+reconciliation finished. Verified against the release notes: the quiet line now reads
+`{"kind":"quiet","cursor":90917,"attention":[]}` (#97 → Y-665); `lane show` generations
+carry their reason and the cleanup round is named `unclean-clone cleanup` (#94 → Y-662:
+Y-104/1's g2 now says "worker stopped with uncommitted or in-progress Git work");
+`ticket list --blocked` lists parked tickets (#98 → Y-666); `status` prints the new
+`queued:` section. `yard project show` reports only `yard-drive` drifted; `yard init`
+printed the 20-line patch (the quiet-line bullet) without touching the files. Two light
+tickets filed parked for the adoption: the skill patch and `reg_webapp/frontend/.vitest`
+under `workspace.build_artifacts` — `node_modules` was already declared, which is
+exactly the special case Y-664 removed (#96). Preflight running.
+
+Papercut: `daemon.log` has no timestamps, so the 315
+`Y-35/2/e3 supervisor task failure persist attempt N failed: … is a conflict execution`
+lines and the four
+`startup reconciliation failed: could not enumerate project containers` lines at its
+head could not be dated against this restart without checking that the file had stopped
+growing (it had: both are from earlier daemon lives).
+
+Preflight: all 19 requirements proven (image rebuilt at 821199b6 as `sha256:fd57f0d5…`,
+the stable manifest digest the 0.14.10 notes name; six gates green). Y-111 (adopt the
+yard-drive scaffold) and Y-112 (declare `.vitest`) filed as `light` p2 and unparked —
+their lanes are the first executions under 0.14.10.
+
+Y-112/1 approved and landed as 240aadc7 ($0.28, 31 s): the `.vitest` declaration, config
+digest ec0e3a11 → f575e2cc. All three gates ran on the one stable image digest
+`fd57f0d5…` (Y-656 as advertised: three gates, one id).
+
+Y-111/1 approved and landed as 22a89181 ($0.23): the `yard-drive` scaffold now names
+0.14.10 / b0c58aac, line for line the `yard init` patch. The daemon was restarted
+between Y-112 landing and Y-111 approval to load the new config digest (`yard status`
+had warned "daemon configuration differs from canonical main"); lane mutations were
+ready one second after the restart. Adoption of 0.14.10 complete: two lanes, $0.51, both
+first-candidate.
+
+## 2026-09-11: `/release patch` under the manual-integration handoff (in progress)
+
+- Board empty and quiet at cursor 91942 when the release started; `yard pause` recorded
+  `changed: true` (seq 91943) so the pause is this workflow's to lift.
+- Local canonical main (22a89181) was 70 commits ahead of `origin/main` (dde8894f, the
+  last manual merge): Yard lands locally and nothing pushes until a manual integration.
+  The first release push carried all of them plus two release commits; the pre-push gate
+  (full suite, Docker workspace mode) passed in about a minute.
+- Handoff step 3 worked as written: `git merge --ff-only origin/main` in the main
+  checkout, then `yard sync --json` reported `changed: true`,
+  `from 22a89181 → to f7ea2ced`, `relation equal`, and `yard status` showed the three
+  heads agreeing with no restart required.
+- Papercut (repo, not Yard): the release skill's `uvx --from ty==0.0.79 ty check` and
+  the pre-commit `ty` hook fail on the maintainer host whenever the pin is younger than
+  the global `~/.config/uv/uv.toml` `exclude-newer = "7 days"` (0.0.79 was published
+  2026-09-07). `UV_EXCLUDE_NEWER=2026-09-12T00:00:00Z` on the command / the `git commit`
+  works around it; Yard lanes never see it because they run in containers.
+- The SWECOV regeneration wave that 748f21bb (Y-85) deferred to "the maintainer's
+  post-landing `flavor` + `inventory` run" turned out to be a release prerequisite: the
+  generator's `cmd_inventory` scopes Inera tables to `inera/samtal` /
+  `inera/bestallda-prover`, so a step-11 regen against a flavored DB built from the old
+  derived inventory would have dropped both tables. Ran `flavor`, committed the
+  re-minted `inera.toml` + swecov snapshot (a8bae7ae) ahead of the bump, validated with
+  an extend-db dry run against the 0.40.0 base (clean, 1,291 pooled variables).
+- Release-skill trap (repo, not Yard): the skill's "release every package with
+  unreleased commits" inference pulled reg_schema (one message-string commit) into the
+  batch. reg_schema's package version IS the project_data.json `schema_version` that
+  reg_meta and the webapp accept *exactly*
+  (`test_supported_version_is_reg_schemas_own_declaration`), so the 3.0.1 bump failed
+  the pre-push gate with 40 failures and would have invalidated every authored project
+  for a cosmetic change. Dropped the bump (never reached origin); reg_schema stays at
+  3.0.0 until a real schema change bumps it together with reg_meta's supported version.
+- Released reg_meta_build 0.30.1 (PyPI) and reg_meta 0.40.1 (three assets: fresh main DB
+  0073e927…, doc DB copied forward, fresh SWECOV DB 5b661a79…); step-11 inventory
+  refresh e8520202 committed and pushed. Yard itself needed nothing during the window:
+  `yard sync` imported each pushed head, `yard status` never asked for a restart, and
+  the paused board stayed empty. The one Yard-adjacent papercut is that DOGFOOD entries
+  like this one now describe a manual-integration workflow that Yard cannot see at all —
+  `yard status` shows `relation equal` but has no notion that a release window is open,
+  so a second operator would only learn of it from this file.
+- Post-publish `integration / integration` on the `reg_meta/v0.40.1` tag failed exactly
+  where the release skill says it can: the §12 gate ran the TAG's committed inventory
+  (old `inera/vardguiden/*` coordinates, 55 unresolved) against the new flavored asset;
+  `publish` and `test_update_and_query` were green, PyPI immutable. The refresh e8520202
+  was already on main, so the answer is `gh workflow run integration.yml --ref main`,
+  not a re-release. Skill papercut: step 11 cannot run before the tag by design, so this
+  red run is structural for every release that moves a steward coordinate — the skill
+  could say so up front instead of listing it under error recovery.
+- Re-validation `integration.yml --ref main` (run 34590688893) green; the push-triggered
+  container build's `deploy-swecov` green on the refreshed inventory + 0.40.1 asset.
+  `yard resume` lifted this workflow's pause; heads agree at e8520202; release worktree
+  removed. Total wall clock for three packages' worth of preparation, one dropped bump,
+  a 6:45 catalog build and the SWECOV wave: about 25 minutes.
+
+## 2026-09-11: Y-113 stopped by a network outage, then a host sleep spent its window
+
+Driving the curation-consolidation chain (Y-113..Y-120, Claude Fable 5.1 operating).
+Y-113/1's first worker generation died at 14:27Z on `provider-request-timeout` when the
+laptop lost its network; the host then slept from 15:01Z to 21:41Z. The attempt's
+360-minute total-work window is wall-clock by design (upstream #90's disposition) and
+had expired at 20:10Z while the lane sat stopped.
+
+- **Stale exit.** At 21:49Z `yard lane show Y-113/1` still printed A-295's `re-run` exit
+  (`yard lane start Y-113/1/e1 --expect-generation 1`). Taking it was accepted
+  ("re-running the implementation round; no new attempt") and cancelled within seconds
+  as `total-work-timeout`, raising A-296 with the guarded nudge. The nudge (its help: "a
+  fresh mandate renews the attempt's total-work window") started g3 on the retained
+  session; `totalWorkStartedAt` moved to 21:50:41Z. Cost: one cancelled generation and
+  one extra decision. Filed as
+  [#99](https://github.com/adamaltmejd/switchyard/issues/99); searched #53, #89, #90
+  first (adjacent, none covers an exit printed after the window expired). Raw wake
+  lines, lane JSON and the submitted body are local-only under
+  `archive/reports/yard/2026-09-11-y113-stale-rerun-exit/`.
+- The 16m43s / $3.12 g1 spend had committed nothing (`head -`); whether the on-disk
+  workspace state carried into g3 is only visible from the candidate.
