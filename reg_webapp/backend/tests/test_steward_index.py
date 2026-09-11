@@ -172,9 +172,9 @@ representation = "Kon"
 
     index = build_catalog_index(inventory, ExplodingCatalog())
 
-    assert index.admits("scb/lisa/kon", "Kon")
-    # The PHYSICAL column name is not the admitted token.
-    assert not index.admits("scb/lisa/kon", "P1105_Kon")
+    # The admitted token is the mapping's `representation`, never the PHYSICAL column
+    # name (`P1105_Kon`) the steward's own table spells it with.
+    assert index.held_columns("scb/lisa/kon") == frozenset({"Kon"})
 
 
 def test_null_representation_resolves_to_the_states_columns(catalog):
@@ -393,14 +393,11 @@ def test_held_columns_for_variant_never_unions_across_variants(catalog):
 
 def test_index_admits_known_and_rejects_unknown(catalog):
     index = _catalog_index(_CLEAN_HOLDINGS, catalog)
-    assert index.admits("scb/lisa/kon", "Kon")
-    assert index.admits("scb/rams/syss", "Syss")
-    # In the universe but NOT in this steward's inventory → not admitted.
-    assert not index.admits("scb/rams/nosuchbinding", "Whatever")
-    # #206: the right FQID at a column the steward does not hold → not admitted,
-    # but `held_columns` still names the concept (the representation-level case).
-    assert not index.admits("scb/lisa/kon", "KonDetailed")
+    # #206: admission is column-grain, so the held set names the concept AND the one
+    # column of it this steward holds — a sibling column (`KonDetailed`) is not in it.
     assert index.held_columns("scb/lisa/kon") == frozenset({"Kon"})
+    assert index.held_columns("scb/rams/syss") == frozenset({"Syss"})
+    # In the universe but NOT in this steward's inventory → not admitted.
     assert index.held_columns("scb/rams/nosuchbinding") == frozenset()
 
 

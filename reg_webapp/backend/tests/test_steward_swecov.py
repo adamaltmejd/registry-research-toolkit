@@ -102,9 +102,9 @@ def test_index_builds_green_with_no_catalog_access(
 def test_known_holdings_are_admitted(inventory: DeliveryInventory) -> None:
     index = build_catalog_index(inventory, _NoCatalog())
 
-    assert index.admits("swecov/population/personnr", "PersonNr")
-    assert index.admits("swecov/population/indexpop", "IndexPop")
-    assert index.admits("swecov/adress-sarskilt-boende/utdadr2", "UtdAdr2")
+    assert "PersonNr" in index.held_columns("swecov/population/personnr")
+    assert "IndexPop" in index.held_columns("swecov/population/indexpop")
+    assert "UtdAdr2" in index.held_columns("swecov/adress-sarskilt-boende/utdadr2")
     # The stale hreg-sun-groupings register must stay out of the catalog.
     assert not index.admits_register("swecov/hreg-sun-groupings")
 

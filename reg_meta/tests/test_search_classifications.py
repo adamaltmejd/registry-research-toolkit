@@ -1044,15 +1044,13 @@ def test_variable_search_delivery_scope_keeps_description_hit() -> None:
     assert out.results[0].delivery_column_names == ("HeldColumn",)
 
 
-def test_variable_search_delivery_scope_keeps_a_held_case_twin_spelling() -> None:
-    """Y-107: the scope's spelling of a column need not be the catalog's spelling.
-
-    A steward whose inventory was generated over an era that spells the column `Idh`
-    holds `Idh`; the catalog's alias for the era searched here spells the same column
-    `IdH`. Comparing exactly, the hit's only held name folded away, so `IdH` read as an
-    unheld alias and the whole variable was dropped from the steward's search — see
-    reg_meta/DESIGN.md -> One spelling per delivery column.
-    """
+@pytest.fixture
+def case_twin_db() -> sqlite3.Connection:
+    """One `scb/lisa/idve` variable delivered under TWO spellings of one column: the
+    catalog's alias history carries `IdH` (the state's own) and renames it `Taxvarde`
+    in a later era, while a steward's inventory — generated over an era whose alias
+    window spells it `Idh` — holds `Idh`. See reg_meta/DESIGN.md → One spelling per
+    delivery column."""
     conn = build_slugged_db(
         variable=("Fastighet", 32183, 1001, "IdH"),
         delivery_column_name="IdH",
@@ -1068,9 +1066,19 @@ def test_variable_search_delivery_scope_keeps_a_held_case_twin_spelling() -> Non
         delivery_column_name="Taxvarde",
     )
     _rebuild_fts(conn)
+    return conn
 
+
+def test_variable_search_delivery_scope_keeps_a_held_case_twin_spelling(
+    case_twin_db: sqlite3.Connection,
+) -> None:
+    """Y-107: the scope's spelling of a column need not be the catalog's spelling.
+
+    Comparing exactly, the hit's only held name folded away, so `IdH` read as an unheld
+    alias and the whole variable was dropped from the steward's search.
+    """
     out = search(
-        conn,
+        case_twin_db,
         "Idh",
         field="description",
         type="variable",
@@ -1081,6 +1089,55 @@ def test_variable_search_delivery_scope_keeps_a_held_case_twin_spelling() -> Non
     assert [str(row.fqid) for row in out.results] == ["scb/lisa/idve"]
     # The fold decides membership; the name shown stays the catalog's own spelling.
     assert out.results[0].delivery_column_names == ("IdH",)
+
+
+def test_group_member_delivery_scope_keeps_a_held_case_twin_spelling(
+    case_twin_db: sqlite3.Connection,
+) -> None:
+    """Y-108: the same fold on the group MEMBER's side of the scope.
+
+    The curated members name the column as the curation spells it (`IdH`, the catalog's
+    alias history) while the steward holds `Idh`. Compared exactly, the held member left
+    the group's member list upstream of every webapp surface — and with the unheld
+    `Taxvarde` rename the only other member, the whole group folded away from the
+    steward's search.
+    """
+    conn = case_twin_db
+    vid = conn.execute(
+        "SELECT variable_id FROM variable WHERE slug = 'idve'"
+    ).fetchone()[0]
+    conn.execute(
+        "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
+        "label, source) VALUES (90, 'variable', 1, 'fastighet-rep', "
+        "'Fastighetsbeteckning', 'curated')"
+    )
+    conn.execute(
+        "INSERT INTO concept_group_axis (group_id, axis, ordinal, label) "
+        "VALUES (90, 'era', 0, 'era')"
+    )
+    conn.executemany(
+        "INSERT INTO concept_group_variable "
+        "(group_id, variable_id, delivery_column_name) VALUES (90, ?, ?)",
+        [(vid, "IdH"), (vid, "Taxvarde")],
+    )
+
+    # The group's own LABEL is what folds a one-variable representation family into a
+    # group row (two members on one variable are one member key, never ≥2 distinct).
+    out = search(
+        conn,
+        "Fastighetsbeteckning",
+        field="description",
+        type="variable",
+        fqids={"scb/lisa/idve"},
+        delivery_column_scope={"scb/lisa/idve": {"Idh"}},
+    )
+
+    (group,) = out.results
+    assert group.type == "group"
+    # The held case twin survives under the curation's own spelling; the unheld
+    # rename does not.
+    assert [m.delivery_column for m in group.members] == ["IdH"]
+    assert group.member_count == 1
 
 
 def test_variable_search_delivery_scope_filters_before_group_folding() -> None:

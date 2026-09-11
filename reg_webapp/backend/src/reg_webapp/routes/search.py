@@ -26,7 +26,7 @@ from reg_meta.errors import RegMetaError
 from reg_meta.queries import SEARCH_TYPES, search as reg_meta_search
 
 from reg_webapp import golden
-from reg_webapp.catalog_index import _fold_column, _folded_columns
+from reg_webapp.catalog_index import _fold_column, _folded_columns, held_group_members
 from reg_webapp.conn import catalog_conn
 from reg_webapp.models import (
     ClassificationCodeSearchGroup,
@@ -453,23 +453,19 @@ def _narrow_search_groups(
     results: list[SearchResult], index: CatalogIndex
 ) -> tuple[list[SearchResult], int]:
     """Narrow each `ConceptGroupSearchResult` row's `members` to the steward's
-    COLUMN-grain holdings (#859), mirroring browse's `_narrow_group_members`.
+    COLUMN-grain holdings (#859) — the search half of `held_group_members`, which
+    carries the member rule itself (and the fold it matches columns under).
 
     reg_meta already narrowed group members at FQID grain (`_group_result_row`'s
     `allow` set), but a #819 representation member shares one FQID across different
     `delivery_column`s — a steward holding only SOME columns of an FQID still sees the
-    unheld representations. This refines on top: a representation member
-    (`delivery_column` set) is kept iff `index.admits(str(m.fqid), m.delivery_column)`;
-    a whole-variable member (`delivery_column` None) iff its bare FQID is in
-    `admitted_variable_fqids`. `member_count` is reset to the narrowed length.
+    unheld representations. This refines on top; `member_count` is reset to the
+    narrowed length. reg_meta's `_group_member_in_delivery_scope` folds the SAME
+    comparison upstream, in the same change (Y-108) — folding only here would be inert,
+    because an unfolded scope has already dropped the member by now.
 
     A group left with NO surviving member is DROPPED. The steward variable arm uses
-    bounded cursor backfill so a dropped row does not unnecessarily shorten the page.
-
-    Browse's `_narrow_group_members` operates on a DIFFERENT model
-    (`ConceptGroupSummary` vs `ConceptGroupSearchResult`), so a thin search-local helper
-    is the right reuse boundary — not a forced shared abstraction."""
-    admitted = index.admitted_variable_fqids
+    bounded cursor backfill so a dropped row does not unnecessarily shorten the page."""
     kept_rows: list[SearchResult] = []
     dropped = 0
     for r in results:
@@ -477,15 +473,7 @@ def _narrow_search_groups(
         if r.type != "group":
             kept_rows.append(r)
             continue
-        kept_members = [
-            m
-            for m in r.members
-            if (
-                index.admits(str(m.fqid), m.delivery_column)
-                if m.delivery_column is not None
-                else str(m.fqid) in admitted
-            )
-        ]
+        kept_members = held_group_members(r.members, index)
         if not kept_members:
             dropped += 1
             continue

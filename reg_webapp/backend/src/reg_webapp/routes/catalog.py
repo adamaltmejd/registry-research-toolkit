@@ -73,7 +73,7 @@ from reg_webapp.catalog_fqid import (
     ValidatedFqidPath,
     validate_fqid_path,
 )
-from reg_webapp.catalog_index import _fold_column, _folded_columns
+from reg_webapp.catalog_index import _fold_column, _folded_columns, held_group_members
 from reg_webapp.conn import catalog_conn as _catalog_conn
 from reg_webapp.models import (
     BindingChild,
@@ -399,35 +399,12 @@ def _narrow_graph_to_held(
 
 def _narrow_group_members(group, index: CatalogIndex, catalog: Catalog):
     """Return `group` with its `members` narrowed to the steward's holdings (#859),
-    or None if no member survives. A representation member (`delivery_column` set) is
-    kept iff that column FOLDS onto one the steward holds for the member's FQID; a
-    whole-variable member (`delivery_column` None) iff its bare FQID is in
-    `admitted_variable_fqids`. Reuses the existing `held_columns` /
-    `admitted_variable_fqids` probes (no re-derivation). The column match goes through
-    `_fold_column` rather than the exact `index.admits` probe (Y-107): a curated member
-    names the column in an ALIAS spelling and the index carries the steward's own, so a
-    case twin read as unheld and took the whole group with it.
+    or None if no member survives — the browse half of `held_group_members`, which
+    carries the member rule itself (and the fold it matches columns under).
     The group's tags are recomputed from the surviving members so a filtered steward
     never inherits thematic tags from excluded siblings. A frozen Pydantic model, so
     the narrowed copy is via `model_copy`."""
-    admitted = index.admitted_variable_fqids
-    # Folded once per member FQID, not per member: a representation family puts many
-    # members on ONE variable, and this runs for every group on a register page.
-    folded_held = {
-        fqid: _folded_columns(index.held_columns(fqid))
-        for fqid in {
-            str(m.fqid) for m in group.members if m.delivery_column is not None
-        }
-    }
-    kept = [
-        m
-        for m in group.members
-        if (
-            _fold_column(m.delivery_column) in folded_held[str(m.fqid)]
-            if m.delivery_column is not None
-            else str(m.fqid) in admitted
-        )
-    ]
+    kept = held_group_members(group.members, index)
     if not kept:
         return None
     # ty 0.0.54 resolves reg_webapp's workspace reg_meta dependency from the main

@@ -255,7 +255,7 @@ def test_held_case_twin_column_keeps_the_leafs_states(case_twin_client):
 def test_held_case_twin_column_keeps_its_concept_group_member(case_twin_client):
     """Y-107: a concept-group member names its column in a CURATED spelling (the
     build validates it against `variable_alias`) and the index carries the steward's
-    own, so the exact `admits` probe read the held member as unheld — and, both
+    own, so the exact compare it used read the held member as unheld — and, both
     members failing, dropped the whole group off the register page. The `IdH` member
     survives; the unheld `Taxvarde` member does not."""
     body = case_twin_client.get("/api/catalog/scb/lisa").json()

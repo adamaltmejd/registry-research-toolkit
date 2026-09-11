@@ -92,9 +92,9 @@ from reg_meta.fqid import snap_to_real_month_end
 from reg_meta.inventory import _intersect, edition_bounds
 
 if TYPE_CHECKING:
-    from collections.abc import Iterable
+    from collections.abc import Iterable, Sequence
 
-    from reg_meta.catalog import Catalog
+    from reg_meta.catalog import Catalog, ConceptGroupMember
     from reg_meta.inventory import ColumnMapping, DeliveryInventory
 
 # One admitted §12 coordinate — `(register_variant, binding FQID, resolved
@@ -154,8 +154,8 @@ class CatalogIndex:
     FQID / provider sets, the flattened admission pairs, the per-FQID held-column
     map) are ``functools.cached_property``: each rescans ``bindings_by_variant``
     only on first access, then the result is memoized. A register page probes
-    ``admits`` once per concept-group member — hundreds of full ~5.7k-pair scans
-    on the un-memoized class — so the flattened ``_admitted_pairs`` /
+    ``held_columns`` once per concept-group member — hundreds of full ~5.7k-pair
+    scans on the un-memoized class — so the flattened ``_admitted_pairs`` /
     ``_held_columns_by_fqid`` indexes turn those into O(1) lookups. ``cached_property``
     coexists with ``@dataclass(frozen=True)``: the cached value is written into
     ``__dict__`` (this class has NO ``__slots__``), bypassing the frozen
@@ -189,8 +189,9 @@ class CatalogIndex:
     @cached_property
     def _admitted_pairs(self) -> frozenset[tuple[str, str | None]]:
         """Every admitted ``(fqid, resolved delivery column)`` pair, flattened
-        across variants ONCE. Backs the O(1) ``admits`` membership probe (the hot
-        per-member path on a register page)."""
+        across variants ONCE. Backs the per-FQID and bare-FQID projections below,
+        and through them the O(1) ``held_columns`` lookup (the hot per-member path
+        on a register page)."""
         return frozenset(
             pair for bindings in self.bindings_by_variant.values() for pair in bindings
         )
@@ -226,24 +227,18 @@ class CatalogIndex:
                 by_register.setdefault(register_fqid, set()).add(coord)
         return {reg: frozenset(coords) for reg, coords in by_register.items()}
 
-    def admits(self, fqid: str, column: str | None) -> bool:
-        """True iff the ``(fqid, resolved delivery column)`` pair is admitted by
-        ANY variant in the index (#206: admission is column-based — see module
-        docstring). ``fqid`` is the bare 3-segment binding FQID (no ``@version``
-        pin to normalize away — that grammar is retired); ``column`` is the
-        RESOLVED ``delivery_column_name`` on the caller's side.
+    def held_columns(self, fqid: str) -> frozenset[str | None]:
+        """The delivery columns this steward holds for ``fqid`` across ALL
+        variants — the discovery-grain union backing the browse/search column
+        narrowing (#206: admission is column-based — see module docstring).
+        ``fqid`` is the bare 3-segment binding FQID (no ``@version`` pin to
+        normalize away — that grammar is retired).
 
         DISCOVERY grain, deliberately variant-blind: the browse and search
         surfaces (#859) list what the steward holds *anywhere* and carry their
         own variant axis (``held_variant_coords_for_register``). A project's
         source names ONE variant, so its admission goes through the
         variant-scoped ``held_columns_for_variant`` instead."""
-        return (fqid, column) in self._admitted_pairs
-
-    def held_columns(self, fqid: str) -> frozenset[str | None]:
-        """The delivery columns this steward holds for ``fqid`` across ALL
-        variants — the discovery-grain union backing the browse/search column
-        narrowing, with the same variant-blindness rationale as ``admits``."""
         return self._held_columns_by_fqid.get(fqid, frozenset())
 
     def held_columns_for_variant(
@@ -272,7 +267,7 @@ class CatalogIndex:
         ``fqid`` side of every ``(fqid, column)`` pair. Browse-grain (column
         de-duped): the discovery surfaces (#859 browse + search) narrow their
         variable rows against this set. Column-grain admission for a known FQID
-        is the separate ``admits`` / ``held_columns`` probe."""
+        is the separate ``held_columns`` probe."""
         return frozenset(fqid for fqid, _column in self._admitted_pairs)
 
     @cached_property
@@ -320,6 +315,42 @@ class CatalogIndex:
             registers=len(self.held_register_fqids),
             variables=len(self.admitted_variable_fqids),
         )
+
+
+def held_group_members(
+    members: Sequence[ConceptGroupMember], index: CatalogIndex
+) -> list[ConceptGroupMember]:
+    """The concept-group members this steward holds, at COLUMN grain (#859).
+
+    A #819 representation member (``delivery_column`` set) survives iff its column
+    FOLDS onto one the steward holds for the member's FQID; a whole-variable member
+    (``delivery_column`` None) iff its bare FQID is admitted at all. The member names
+    the column as the CURATION spells it and the index carries the steward's own, so
+    the comparison goes through ``_fold_column`` and never an exact compare (Y-107,
+    Y-108) — a case twin read as unheld took its whole group with it.
+
+    ONE rule for both discovery surfaces: browse's ``_narrow_group_members`` and
+    search's ``_narrow_search_groups`` differ only in what they do with the survivors
+    (recompute tags vs reset ``member_count``). Their member models differ in the
+    subclass (browse's ``ConceptGroupNodeMember`` adds coverage), but this reads only
+    ``fqid`` / ``delivery_column``, which reg_meta's ``ConceptGroupMember`` base
+    carries. Folded once per member FQID, not per member: a representation family
+    puts many members on ONE variable, and browse runs this for every group on a
+    register page."""
+    folded_held = {
+        fqid: _folded_columns(index.held_columns(fqid))
+        for fqid in {str(m.fqid) for m in members if m.delivery_column is not None}
+    }
+    admitted = index.admitted_variable_fqids
+    return [
+        m
+        for m in members
+        if (
+            _fold_column(m.delivery_column) in folded_held[str(m.fqid)]
+            if m.delivery_column is not None
+            else str(m.fqid) in admitted
+        )
+    ]
 
 
 def build_catalog_index(inventory: DeliveryInventory, catalog: Catalog) -> CatalogIndex:

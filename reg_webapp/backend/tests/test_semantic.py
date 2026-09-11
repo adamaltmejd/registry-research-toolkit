@@ -983,8 +983,8 @@ def kon_only_index(catalog):
     one-mapping delivery inventory). `scb/rams/syss` resolves reg_meta-wide but is
     NOT admitted by this index."""
     index = _catalog_index([_KON_HOLDING], catalog)
-    assert index.admits("scb/lisa/kon", "Kon")
-    assert not index.admits("scb/rams/syss", "Syss")
+    assert index.held_columns("scb/lisa/kon") == frozenset({"Kon"})
+    assert index.held_columns("scb/rams/syss") == frozenset()
     return index
 
 
@@ -1032,8 +1032,8 @@ def test_outside_steward_catalog_warns_per_unadmitted_binding(two_lisa_var_catal
     # admitted `kon` (source 0 binding 0) stays silent while the unadmitted `alder`
     # warns at both its source-0/binding-1 and source-1/binding-0 positions.
     index = _catalog_index([_KON_HOLDING], two_lisa_var_catalog)
-    assert index.admits("scb/lisa/kon", "Kon")
-    assert not index.admits("scb/lisa/alder", "Alder")
+    assert index.held_columns("scb/lisa/kon") == frozenset({"Kon"})
+    assert index.held_columns("scb/lisa/alder") == frozenset()
 
     researcher = _project(
         [
@@ -1077,8 +1077,8 @@ def test_outside_steward_catalog_coexists_with_period_check(catalog):
     index = _catalog_index(
         [("scb/rams/standard", "scb/rams/syss", "Syss", "2019")], catalog
     )
-    assert index.admits("scb/rams/syss", "Syss")
-    assert not index.admits("scb/lisa/kon", "Kon")
+    assert index.held_columns("scb/rams/syss") == frozenset({"Syss"})
+    assert index.held_columns("scb/lisa/kon") == frozenset()
 
     # kon's only state is 2018-01-01..9999-12-31; period 2015 is outside it.
     result = validate_semantic(

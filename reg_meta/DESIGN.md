@@ -190,12 +190,14 @@ state's spelling, Y-93's representative, and `MIN(variable_alias.delivery_column
 
 A consumer holding a spelling of its OWN matches these rows by the fold, never by string
 equality — `queries._filter_variable_delivery_scope`, which narrows a search hit's
-delivery columns to a steward's holdings, folds both sides for exactly that reason
-(Y-107). A steward's inventory token is exactly such a spelling: the boot gate below
-accepts it in whichever spelling the resolver produced for that pair — the alias-WINDOW
-spelling where a state expands into its windows — which by this rule is deliberately not
-always the representative (see reg_webapp/DESIGN.md → Steward layering and the in-memory
-catalog index).
+delivery columns to a steward's holdings, and `queries._group_member_in_delivery_scope`,
+which decides whether a concept group's representation member is inside that same scope,
+both fold their two sides for exactly that reason (Y-107, Y-108; the columns they keep
+stay the catalog's own spelling). A steward's inventory token is exactly such a
+spelling: the boot gate below accepts it in whichever spelling the resolver produced for
+that pair — the alias-WINDOW spelling where a state expands into its windows — which by
+this rule is deliberately not always the representative (see reg_webapp/DESIGN.md →
+Steward layering and the in-memory catalog index).
 
 ## Composite registers and source tracking
 

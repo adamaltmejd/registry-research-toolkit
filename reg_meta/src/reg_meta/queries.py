@@ -517,6 +517,18 @@ def _depends_on_unheld_delivery_alias(
     return False
 
 
+def _folded_held_columns(held: Collection[str | None]) -> frozenset[str]:
+    """One FQID's held delivery columns under `py_lower`'s fold, the rule that makes a
+    column's case twins ONE column (DESIGN.md → One spelling per delivery column).
+
+    A `delivery_column_scope` carries an inventory's spelling of the column, which need
+    not be the catalog's spelling of it, so every comparison against a catalog row folds
+    BOTH sides (Y-107, Y-108). What the caller keeps stays the catalog's own spelling:
+    the fold decides membership, never display. A `None` holding names no column, so it
+    matches none."""
+    return frozenset(col.lower() for col in held if col is not None)
+
+
 def _filter_variable_delivery_scope(
     results: list[dict[str, Any]],
     query: str,
@@ -532,12 +544,7 @@ def _filter_variable_delivery_scope(
         if held is None or not row.get("delivery_column_names"):
             filtered.append(row)
             continue
-        # The scope is an inventory's spelling of the column, which need not be the
-        # catalog's spelling of it, so both sides fold — `py_lower`'s rule, the one
-        # `representative_columns` folds case twins onto one column with (Y-107; see
-        # DESIGN.md → One spelling per delivery column). The kept names stay the
-        # catalog's own spelling: the fold decides membership, never display.
-        folded_held = frozenset(col.lower() for col in held if col is not None)
+        folded_held = _folded_held_columns(held)
         held_columns = tuple(
             col for col in row["delivery_column_names"] if col.lower() in folded_held
         )
@@ -636,7 +643,10 @@ def search(
     delivery_column_scope is the optional column-grain companion to ``fqids`` for
     variable FTS rows. It masks returned delivery-column aliases to held columns
     and drops rows whose only query evidence is an unheld delivery alias, before
-    concept folding and pagination.
+    concept folding and pagination; it also narrows a folded concept group's
+    representation members to the columns held for their FQID. A held column matches
+    a catalog one under ``py_lower``'s fold, never by string equality — the scope
+    carries the caller's spelling of the column, not the catalog's.
 
     ``code_variable_owner_limit`` controls the shown code rows' variable owner slice
     (``None`` = all variable owners for the paginated code rows). Classification
@@ -2897,11 +2907,22 @@ def _group_member_in_delivery_scope(
     member: dict[str, Any],
     delivery_column_scope: Mapping[str, Collection[str | None]],
 ) -> bool:
+    """True iff a concept-group member is inside the steward's delivery scope: its
+    FQID is held, and a REPRESENTATION member's own column folds onto one of the
+    columns held for that FQID. A whole-variable member (no column) needs only the
+    FQID.
+
+    The member names the column as the CURATION spells it and the scope as the
+    steward's inventory does, so the comparison folds both sides
+    (`_folded_held_columns`, Y-108) — compared exactly, a held case twin dropped
+    the member here, upstream of every webapp surface that reads it."""
     fqid = member.get("fqid")
     if fqid is None or fqid not in delivery_column_scope:
         return False
     delivery_column = member.get("delivery_column")
-    return delivery_column is None or delivery_column in delivery_column_scope[fqid]
+    return delivery_column is None or delivery_column.lower() in _folded_held_columns(
+        delivery_column_scope[fqid]
+    )
 
 
 # `_code_id` is the value-arm's deferred-annotation marker (#352 perf):

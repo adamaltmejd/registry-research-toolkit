@@ -531,26 +531,55 @@ def test_narrow_variable_leaf_columns_treats_none_as_concrete_column():
     assert kept[0].delivery_column_names == ("Kon",)
 
 
-def test_steward_search_keeps_a_variable_held_under_a_case_twin_spelling(
-    case_twin_db, tmp_path, monkeypatch
-):
-    """Y-107: the steward holds `scb/lisa/idve` as `Idh` (the windowed era's
-    spelling, which the boot gate resolves) while the catalog's alias history spells
-    the column `IdH`. Searching for the column dropped the variable outright — the
-    delivery scope matched no held name, so the hit read as depending on an unheld
-    alias. The row comes back under the catalog's own spelling; the unheld `Taxvarde`
-    rename stays out of the chips."""
+@pytest.fixture
+def case_twin_client(case_twin_db, tmp_path, monkeypatch):
+    """A client for a steward over the case-twin catalog: `ifau` holds `scb/lisa/idve`
+    as `Idh` (the windowed era's spelling, which the boot gate resolves) while the
+    catalog's alias history spells the same column `IdH` and renames it `Taxvarde` in
+    an era the steward does NOT hold."""
     stewards = tmp_path / "stewards"
     write_steward(stewards, "ifau", CASE_TWIN_HOLDINGS)
     monkeypatch.setenv("REG_WEBAPP_STEWARDS_DIR", str(stewards))
     monkeypatch.setenv("REG_WEBAPP_STEWARD", "ifau")
     with TestClient(create_app()) as client:
-        body = client.get("/api/search", params={"q": "Idh", "type": "variable"}).json()
+        yield client
+
+
+def test_steward_search_keeps_a_variable_held_under_a_case_twin_spelling(
+    case_twin_client,
+):
+    """Y-107: searching for the column dropped the variable outright — the delivery
+    scope matched no held name, so the hit read as depending on an unheld alias. The
+    row comes back under the catalog's own spelling; the unheld `Taxvarde` rename stays
+    out of the chips."""
+    body = case_twin_client.get(
+        "/api/search", params={"q": "Idh", "type": "variable"}
+    ).json()
 
     results = _group(body, "variables")["results"]
     assert [(r["fqid"], r["delivery_column_names"]) for r in results] == [
         ("scb/lisa/idve", ["IdH"])
     ]
+
+
+def test_steward_search_keeps_a_group_member_held_under_a_case_twin_spelling(
+    case_twin_client,
+):
+    """Y-108: the curated `fastighet-rep` members name their columns as the catalog's
+    alias history spells them (`IdH`, `Taxvarde`), while the steward holds `Idh`.
+    Compared exactly, reg_meta's group-member scope dropped the held member upstream of
+    the webapp and the group — its other member unheld — folded away from the steward's
+    search entirely. Both comparisons fold, so the group comes back holding the case
+    twin under the catalog's own spelling and nothing else."""
+    body = case_twin_client.get(
+        "/api/search", params={"q": "Fastighetsbeteckning", "type": "variable"}
+    ).json()
+
+    results = _group(body, "variables")["results"]
+    assert [r["group_key"] for r in results] == ["fastighet-rep"]
+    group = results[0]
+    assert [m["delivery_column"] for m in group["members"]] == ["IdH"]
+    assert group["member_count"] == 1
 
 
 def test_filtered_variable_search_passes_delivery_scope_into_full_backfill_query(

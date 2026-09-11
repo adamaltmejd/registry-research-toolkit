@@ -651,18 +651,22 @@ NULL delivery-column key.
 
 A held column is matched to the catalog's rows through ONE fold (`_fold_column` /
 `_folded_columns` in `catalog_index.py`, `py_lower`'s rule), never by exact string
-(Y-102, Y-107) — the index holds the inventory's spelling of the column, which is not
-always the catalog's (see § Steward layering and the in-memory catalog index). The same
-fold serves the coverage recompute, the deliveries narrowing, the graph's held-column
-narrowing, the binding leaf's states, the concept-group member's per-column window and
-its admission, the steward narrowing of search hits, `semantic.py`'s representation
-check, and — as `py_lower` in SQL or `str.lower` in Python — reg_meta's
-`_filter_variable_delivery_scope`. reg_meta names one representative spelling per
+(Y-102, Y-107, Y-108) — the index holds the inventory's spelling of the column, which is
+not always the catalog's (see § Steward layering and the in-memory catalog index). The
+same fold serves the coverage recompute, the deliveries narrowing, the graph's
+held-column narrowing, the binding leaf's states, the concept-group member's per-column
+window and its admission on browse and on search, the steward narrowing of search hits,
+`semantic.py`'s representation check, and — as `py_lower` in SQL or `str.lower` in
+Python — reg_meta's `_filter_variable_delivery_scope` and
+`_group_member_in_delivery_scope`. reg_meta names one representative spelling per
 column, so each folded column has a single row to find (reg_meta/DESIGN.md → One
-spelling per delivery column). One held-column comparison is still exact: the concept
-GROUP probe in the search narrowing (`CatalogIndex.admits`), because reg_meta's own
-group-member scope decides that member upstream by exact spelling — folding one half
-alone would be inert.
+spelling per delivery column). No held-column comparison is exact any more: the search
+narrowing's group members were the last (Y-108, folded together with reg_meta's
+group-member scope, which decides that member upstream — folding one half alone would be
+inert), and the exact-spelling index probe they used is deleted rather than kept as a
+second rule. Browse and search keep ONE member rule between them (`held_group_members`
+in `catalog_index.py`, beside the fold); each route owns only what it does with the
+survivors.
 
 The fold lives BESIDE the index, never inside it: `held_columns` is also a DISPLAY value
 — the `representation_outside_steward_catalog` message enumerates the steward's own
@@ -1077,15 +1081,15 @@ filtered steward — previously it gated only validate/authoring/stats/context.
 *Browse — column-grain faithful (#206).* The catalog root shows only held providers; a
 provider node shows only held registers; a register node shows only held bindings
 (filtered by `admitted_variable_fqids`) with concept-group members narrowed to held
-(representation members via column-grain `admits`; whole-variable members via bare-FQID
-membership in `admitted_variable_fqids`; a group with no surviving member is dropped). A
-held binding leaf narrows its embedded `states` to held delivery columns
-(`held_columns`), and the `?period` / `/states` resolve_at subset is narrowed the same
-way. The `/variants` sub-resource filters to variant coordinates with ≥1 held binding
-(`held_variant_coords_for_register`). All seven binding-suffix sub-endpoints (`/states`,
-`/predecessors`, `/successors`, `/dimensions`, `/graph`, `/lineage`,
-`/lineage_warnings`) apply the ONE pre-resolve admission gate (`_require_admitted`) that
-covers binding, register, and provider grains uniformly:
+(`held_group_members`: representation members at column grain under the fold above;
+whole-variable members via bare-FQID membership in `admitted_variable_fqids`; a group
+with no surviving member is dropped). A held binding leaf narrows its embedded `states`
+to held delivery columns (`held_columns`), and the `?period` / `/states` resolve_at
+subset is narrowed the same way. The `/variants` sub-resource filters to variant
+coordinates with ≥1 held binding (`held_variant_coords_for_register`). All seven
+binding-suffix sub-endpoints (`/states`, `/predecessors`, `/successors`, `/dimensions`,
+`/graph`, `/lineage`, `/lineage_warnings`) apply the ONE pre-resolve admission gate
+(`_require_admitted`) that covers binding, register, and provider grains uniformly:
 
 - a LIVE entity the steward does not hold → **404** ("not in this steward's catalog");
 - an UNADMITTED but dead/renamed slug whose terminal successor IS held → **301** to that
@@ -2228,8 +2232,8 @@ keys on the **source's variant coordinate** — a mapping states a whole
 would let an order through for a column the steward cannot deliver. It keys on the
 literal binding FQID: a curated same_as sibling (e.g. `kon→syss`) names a *different*
 physical column, so warning on it is correct under holdings semantics, not a keying
-artifact. The variant-blind `admits` / `held_columns` probes remain the **discovery**
-grain, backing the browse and search listings, which carry their own variant axis
+artifact. The variant-blind `held_columns` probe remains the **discovery** grain,
+backing the browse and search listings, which carry their own variant axis
 (`held_variant_coords_for_register`).
 
 ## Cost protection (`limits.py`)
