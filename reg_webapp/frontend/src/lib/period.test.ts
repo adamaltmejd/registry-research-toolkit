@@ -7,6 +7,7 @@ import {
   looksLikePeriod,
   mergePeriods,
   nextResolutionQuery,
+  normalizePeriodRows,
   notDeliveredGaps,
   periodFromWire,
   periodRangeEndpoints,
@@ -20,6 +21,7 @@ import {
   resolveYearEntry,
   sameYearWindow,
   VALUE_SET_VERSION_NONE,
+  yearSegmentsFromWire,
   yearWindowFromWire,
   yearWindowRepresentable,
   yearWindowToWire,
@@ -579,6 +581,32 @@ describe("yearWindowFromWire (?period wire → year window | null)", () => {
   });
 });
 
+describe("yearSegmentsFromWire (Y-101 list-row seed)", () => {
+  it("a single segment → the one-element array (the single-range case's one row)", () => {
+    expect(yearSegmentsFromWire("2018")).toEqual([{ from: 2018, to: 2018 }]);
+    expect(yearSegmentsFromWire("2010..2020")).toEqual([
+      { from: 2010, to: 2020 },
+    ]);
+  });
+
+  it("a #307 comma list → one window per segment, in stored order", () => {
+    expect(yearSegmentsFromWire("2015..2017,2019..2020")).toEqual([
+      { from: 2015, to: 2017 },
+      { from: 2019, to: 2020 },
+    ]);
+  });
+
+  it("blank / null → null (nothing stored yet)", () => {
+    expect(yearSegmentsFromWire(null)).toBeNull();
+    expect(yearSegmentsFromWire("")).toBeNull();
+  });
+
+  it("a token ANYWHERE in the list makes the whole period unrepresentable", () => {
+    expect(yearSegmentsFromWire("HT2018")).toBeNull();
+    expect(yearSegmentsFromWire("2015..2017,HT2018")).toBeNull();
+  });
+});
+
 describe("yearWindowRepresentable", () => {
   it("true for pure year windows, false otherwise (mirrors yearWindowFromWire)", () => {
     expect(yearWindowRepresentable("2018")).toBe(true);
@@ -985,6 +1013,56 @@ describe("mergePeriods (#992 find-or-create period extension)", () => {
       from: 2010,
       to: 2015,
     });
+  });
+});
+
+describe("normalizePeriodRows (Y-101 period-row list → Period)", () => {
+  it("a single row → the scalar year, not a one-element list", () => {
+    expect(normalizePeriodRows([{ from: 2020, to: 2020 }])).toEqual({
+      period: 2020,
+    });
+  });
+
+  it("disjoint rows sort ascending, out of the order they were entered", () => {
+    expect(
+      normalizePeriodRows([
+        { from: 2019, to: 2020 },
+        { from: 2015, to: 2017 },
+      ]),
+    ).toEqual({
+      period: [
+        { from: 2015, to: 2017 },
+        { from: 2019, to: 2020 },
+      ],
+    });
+  });
+
+  it("adjacency-merges TOUCHING rows into one span, same as mergePeriods", () => {
+    expect(
+      normalizePeriodRows([
+        { from: 2010, to: 2011 },
+        { from: 2012, to: 2013 },
+      ]),
+    ).toEqual({ period: { from: 2010, to: 2013 } });
+  });
+
+  it("a genuinely overlapping pair reports its two row indices instead of merging", () => {
+    expect(
+      normalizePeriodRows([
+        { from: 2015, to: 2018 },
+        { from: 2017, to: 2020 },
+      ]),
+    ).toEqual({ a: 0, b: 1 });
+  });
+
+  it("reports the first overlapping pair by ORIGINAL row index, not sorted position", () => {
+    expect(
+      normalizePeriodRows([
+        { from: 2019, to: 2021 },
+        { from: 2015, to: 2016 },
+        { from: 2020, to: 2022 },
+      ]),
+    ).toEqual({ a: 0, b: 2 });
   });
 });
 

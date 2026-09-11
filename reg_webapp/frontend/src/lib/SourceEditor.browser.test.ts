@@ -138,6 +138,22 @@ function renderCard(
   });
 }
 
+/** A one-column LISA Arbetsställen source IN THE DRAFT — the store's staleness
+ * guard re-reads the draft, so a card edited against a detached object would be
+ * refused every time. Returns the slot to render. */
+function seedSource(period: Period): Source {
+  projectStore.applyStagedDiff({
+    adds: [
+      {
+        registerVariant: "scb/lisa/arbetsstallen",
+        period,
+        binding: { variable: "scb/lisa/kon", type: "categorical" },
+      },
+    ],
+  });
+  return projectStore.draft?.sources?.[0] as Source;
+}
+
 describe("SourceEditor cart card", () => {
   it("displays the register_variant read-only, with the period as its one field", async () => {
     const source = {
@@ -698,22 +714,6 @@ describe("SourceEditor cart card", () => {
 // semantics); what is pinned here is the card's half: the entry, the deviation
 // marker, and the refusal when the source moved underneath.
 describe("SourceEditor source period (Y-81)", () => {
-  /** A one-column LISA Arbetsställen source IN THE DRAFT — the store's staleness
-   * guard re-reads the draft, so a card edited against a detached object would be
-   * refused every time. Returns the slot to render. */
-  function seedSource(period: Period): Source {
-    projectStore.applyStagedDiff({
-      adds: [
-        {
-          registerVariant: "scb/lisa/arbetsstallen",
-          period,
-          binding: { variable: "scb/lisa/kon", type: "categorical" },
-        },
-      ],
-    });
-    return projectStore.draft?.sources?.[0] as Source;
-  }
-
   it("rewrites this source's period and nothing else", async () => {
     const source = seedSource(2020);
     await renderCard(source);
@@ -1031,19 +1031,19 @@ describe("SourceEditor source period (Y-81)", () => {
     }
   });
 
-  // A period the year fields cannot express — a token, or the #307 comma list two
-  // disjoint picks merge into. Collapsing it into a span would order years nobody
-  // asked for, so the card shows it as it stands.
-  it("leaves a period that is not a single year range alone", async () => {
+  // A TOKEN period — a different vocabulary nothing in the SPA authors (Y-101).
+  // Collapsing it into a span would order years nobody asked for, so the card
+  // shows it as it stands.
+  it("leaves a token period alone, read-only", async () => {
     const source = {
       name: "LISA",
       register_variant: "scb/lisa/arbetsstallen",
-      period: [2019, 2021],
+      period: "HT2018",
       bindings: [],
     } as unknown as Source;
     await renderCard(source);
 
-    await expect.element(page.getByText("2019,2021")).toBeVisible();
+    await expect.element(page.getByText("HT2018")).toBeVisible();
     await expect
       .element(page.getByText(/can't express this period/))
       .toBeVisible();
@@ -1069,5 +1069,138 @@ describe("SourceEditor source period (Y-81)", () => {
         { period: "1990..2020", variant: "arbetsstallen" },
       ]);
     });
+  });
+});
+
+// ── Y-101: a multi-segment source period, one From/To row per segment ───────
+//
+// A source whose period is a #307 comma list (`2015..2017,2019..2020` —
+// `mergePeriods`' own output for two disjoint picks on one register variant) used
+// to render read-only. Every segment here is a plain year or a uniform-year
+// range, so it is authored the same way a single range is: one row per segment,
+// "Add years", a per-row "Remove", ONE Apply.
+describe("SourceEditor source period list segments (Y-101)", () => {
+  it("renders one row per segment, in stored order, and applies an edit as a list", async () => {
+    const source = seedSource([
+      { from: 2015, to: 2017 },
+      { from: 2019, to: 2020 },
+    ]);
+    await renderCard(source);
+
+    const froms = page.getByRole("textbox", { name: "From" });
+    const tos = page.getByRole("textbox", { name: "To" });
+    expect(froms.elements()).toHaveLength(2);
+    await expect.element(froms.nth(0)).toHaveValue("2015");
+    await expect.element(tos.nth(0)).toHaveValue("2017");
+    await expect.element(froms.nth(1)).toHaveValue("2019");
+    await expect.element(tos.nth(1)).toHaveValue("2020");
+
+    // Extend the second segment — well clear of the first, so the two stay two
+    // segments rather than fusing (a touching pair adjacency-merges, its own case
+    // below).
+    await tos.nth(1).fill("2022");
+    await page.getByRole("button", { name: /Apply period/ }).click();
+
+    await expect
+      .element(page.getByText("Period set to 2015–2017, 2019–2022."))
+      .toBeVisible();
+    expect(projectStore.draft?.sources?.[0]?.period).toEqual([
+      { from: 2015, to: 2017 },
+      { from: 2019, to: 2022 },
+    ]);
+  });
+
+  it("adds a segment row and applies it as an extra list member", async () => {
+    const source = seedSource(2020);
+    await renderCard(source);
+
+    // A single-range period has no Remove — one row is the floor.
+    expect(
+      page.getByRole("button", { name: "Remove", exact: true }).query(),
+    ).toBeNull();
+
+    await page.getByRole("button", { name: "Add years" }).click();
+    const froms = page.getByRole("textbox", { name: "From" });
+    expect(froms.elements()).toHaveLength(2);
+
+    await froms.nth(1).fill("2022");
+    await page.getByRole("textbox", { name: "To" }).nth(1).fill("2023");
+    await page.getByRole("button", { name: /Apply period/ }).click();
+
+    await expect.element(page.getByText(/Period set to/)).toBeVisible();
+    expect(projectStore.draft?.sources?.[0]?.period).toEqual([
+      2020,
+      { from: 2022, to: 2023 },
+    ]);
+  });
+
+  it("reduces a two-segment period to one row and writes the single-range wire, not a one-element list", async () => {
+    const source = seedSource([
+      { from: 2015, to: 2017 },
+      { from: 2019, to: 2020 },
+    ]);
+    await renderCard(source);
+
+    await page
+      .getByRole("button", { name: "Remove", exact: true })
+      .first()
+      .click();
+    expect(page.getByRole("textbox", { name: "From" }).elements()).toHaveLength(
+      1,
+    );
+    // The remaining row is the row that WASN'T removed (2019–2020), not a reset.
+    await expect
+      .element(page.getByRole("textbox", { name: "From" }))
+      .toHaveValue("2019");
+    await page.getByRole("button", { name: /Apply period/ }).click();
+
+    expect(projectStore.draft?.sources?.[0]?.period).toEqual({
+      from: 2019,
+      to: 2020,
+    });
+  });
+
+  it("refuses an overlapping pair of segments, naming both spans", async () => {
+    const source = seedSource([
+      { from: 2015, to: 2018 },
+      { from: 2019, to: 2020 },
+    ]);
+    await renderCard(source);
+
+    await page.getByRole("textbox", { name: "From" }).nth(1).fill("2017");
+    await page.getByRole("button", { name: /Apply period/ }).click();
+
+    await expect
+      .element(page.getByText(/2015–2018 and 2017–2020 overlap/))
+      .toBeVisible();
+    // Refused: the stored list is untouched.
+    expect(projectStore.draft?.sources?.[0]?.period).toEqual([
+      { from: 2015, to: 2018 },
+      { from: 2019, to: 2020 },
+    ]);
+  });
+
+  it("marks a list period's overall span — first From to last To — against the study window", async () => {
+    const spanning = {
+      name: "LISA",
+      register_variant: "scb/lisa/arbetsstallen",
+      period: [
+        { from: 2015, to: 2017 },
+        { from: 2019, to: 2020 },
+      ],
+      bindings: [],
+    } as unknown as Source;
+    const matching = await renderCard(spanning, {
+      studyWindow: { from: 2015, to: 2020 },
+    });
+    // The internal gap (2018) doesn't matter — only the outer span does, same as
+    // a single range.
+    expect(page.getByText(/Differs from study window/).query()).toBeNull();
+    matching.unmount();
+
+    await renderCard(spanning, { studyWindow: { from: 2010, to: 2020 } });
+    await expect
+      .element(page.getByText("Differs from study window 2010–2020"))
+      .toBeVisible();
   });
 });

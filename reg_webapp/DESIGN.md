@@ -2352,21 +2352,25 @@ mutation path (the store's earlier single-pick `addFromCatalog` handoff was dead
 mutators the cart UI calls — a source's own generated `name` is not editable anywhere.
 
 Bindings, variant and representation are written once at PICK time; a source's
-**period** is the one field the cart edits (Y-81). It is a field of the SOURCE rather
-than of any single pick — a study window of 2005..2020 with one register reaching back
-to 1990 is an ordinary order — and the `/project` source card is the only surface that
-shows a source WHOLE: its full coordinate, its stored period and every column it
-carries, including columns no one catalog page lists. That is what a source-wide rewrite
-has to be looked at against, so that is where it is made. The card authors it in the
-catalog's own period vocabulary — two exact-year fields and one Apply, the same entry
-`PeriodPicker` carries beside its slider — and writes back through the same wire shaping
-a pick uses (a bare year when the bounds meet, `{from, to}` otherwise). A period the
-year fields cannot express (a token like `HT2018`, or the #307 comma list two disjoint
-picks merge into) is shown as it stands and never silently collapsed into a span. Where
-the period differs from the project's `window` the card MARKS it ("Differs from study
-window 2005–2020"): the window is an authoring seed, not an inheritance (reg_schema puts
-`period` on `Source` alone), so divergence is shown rather than warned about — whether
-the window is actually left uncovered is a validation finding and has one.
+**period** is the one field the cart edits (Y-81), one From/To row per segment for a
+#307 list period (Y-101 — a single range is the one-row form of this). It is a field of
+the SOURCE rather than of any single pick — a study window of 2005..2020 with one
+register reaching back to 1990 is an ordinary order — and the `/project` source card is
+the only surface that shows a source WHOLE: its full coordinate, its stored period and
+every column it carries, including columns no one catalog page lists. That is what a
+source-wide rewrite has to be looked at against, so that is where it is made. The card
+authors it in the catalog's own period vocabulary — exact-year fields and one Apply, the
+same entry `PeriodPicker` carries beside its slider, plus "Add years" and a per-row
+Remove (hidden at one row) — and writes back through the same wire shaping a pick uses.
+Applying sorts and merges the rows into the disjoint ascending wire `mergePeriods` would
+produce, refusing a within-row disorder or a genuine cross-row overlap in the same
+status line rather than silently collapsing one; a token period (`HT2018`) is a
+different vocabulary the rows do not author, and is shown as it stands. Where the
+period's overall span (first From to last To) differs from the project's `window` the
+card MARKS it ("Differs from study window 2005–2020"): the window is an authoring seed,
+not an inheritance (reg_schema puts `period` on `Source` alone), so divergence is shown
+rather than warned about — whether the window is actually left uncovered is a validation
+finding and has one.
 
 The rewrite goes through `applySourcePeriodEdit`, keyed by source **name** as well as
 coordinate: a draft may carry several differently named sources on one register variant

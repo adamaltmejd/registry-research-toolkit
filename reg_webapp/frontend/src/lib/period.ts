@@ -580,6 +580,48 @@ export function mergePeriods(existing: Period, incoming: Period): Period {
   return segments.length === 1 ? segments[0] : segments;
 }
 
+/** Two of a Y-101 period-row list's segments that SHARE a year, by their original
+ * row index (ascending) — what `normalizePeriodRows` returns instead of a
+ * `Period` when the rows can't be coalesced without silently discarding which
+ * row the researcher meant. */
+export interface PeriodRowOverlap {
+  a: number;
+  b: number;
+}
+
+/**
+ * Normalise a Y-101 source-period ROW LIST — one already year-valid window per
+ * row (see `resolveYearEntry`), in the order the researcher entered them — into
+ * the `Period` `mergePeriods` would write for that same set: sorted ascending,
+ * a touching pair collapsed exactly as `mergePeriods` collapses one, a lone
+ * survivor a scalar rather than a one-element list. Two windows that actually
+ * SHARE a year return their row indices instead: unlike `mergePeriods`'
+ * existing+incoming merge (where the newer window winning a real overlap is the
+ * point), two rows the researcher is authoring side by side are a replace, and
+ * merging across a genuine overlap would erase which row was which — so this
+ * refuses rather than coalescing silently. Pure — unit-tested in
+ * `period.test.ts`.
+ */
+export function normalizePeriodRows(
+  windows: StudyWindow[],
+): { period: Period } | PeriodRowOverlap {
+  for (let a = 0; a < windows.length; a++) {
+    for (let b = a + 1; b < windows.length; b++) {
+      if (
+        windows[a].from <= windows[b].to &&
+        windows[b].from <= windows[a].to
+      ) {
+        return { a, b };
+      }
+    }
+  }
+  const merged = coalesceYearIntervals(
+    windows.map(({ from, to }): [number, number] => [from, to]),
+  );
+  const segments = merged.map(yearIntervalToSegment);
+  return { period: segments.length === 1 ? segments[0] : segments };
+}
+
 export interface BoundedPeriodSegment {
   wire: string;
   bounds: PeriodBounds;
@@ -755,6 +797,25 @@ export function yearWindowFromWire(
     return null;
   }
   return { from, to };
+}
+
+/** Every segment of a wire `?period` as a year window, in STORED order — the
+ * Y-101 list editor's one-row-per-segment seed, generalising `yearWindowFromWire`
+ * to the #307 comma list (a single segment is the one-row case). `null` when the
+ * wire is blank or ANY segment is not a bare year / uniform-year range — a token
+ * segment (`HT2018`) makes the WHOLE period unrepresentable by year rows, the
+ * same all-or-nothing rule `periodWireBounds` uses. */
+export function yearSegmentsFromWire(
+  wire: string | null | undefined,
+): StudyWindow[] | null {
+  const value = (wire ?? "").trim();
+  if (value === "") {
+    return null;
+  }
+  const windows = value
+    .split(LIST_SEP)
+    .map((member) => yearWindowFromWire(member));
+  return windows.every((w): w is StudyWindow => w !== null) ? windows : null;
 }
 
 /** Parse a string as a bare GRAMMAR year (19xx/20xx) → its int, else null. The

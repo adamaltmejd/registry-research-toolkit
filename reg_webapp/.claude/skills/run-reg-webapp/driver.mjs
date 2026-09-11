@@ -758,16 +758,20 @@ async function catalogPeriodRequiredCase(page, counts, shoot) {
   );
 }
 
-/** Scenario 6 — the source's PERIOD, edited on its /project card (Y-81). A
- * researcher whose study window is 2018..2020 wants ONE source to reach back to
- * 2015, without deleting and rebuilding it. The project opened here carries two
- * differently named sources on the SAME register variant — the shape the catalog's
- * add path cannot author (it finds-or-creates by variant), and the one only a
- * source NAME tells apart — so the edit must move exactly the card it was made on,
- * keeping that name and every column, Forsamling included. The card is where this
- * lives because it is the only surface that shows a source WHOLE, which is what a
- * source-wide rewrite has to be looked at against. Rendered because the card, its
- * refusal and the deviation it then carries are the surface the operator judges.
+/** Scenario 6 — the source's PERIOD, edited on its /project card (Y-81), one
+ * From/To row per segment for a #307 list period (Y-101). A researcher whose
+ * study window is 2018..2020 wants ONE source to reach back to 2015, without
+ * deleting and rebuilding it. The project opened here carries two differently
+ * named sources on the SAME register variant — the shape the catalog's add path
+ * cannot author (it finds-or-creates by variant), and the one only a source NAME
+ * tells apart — so the edit must move exactly the card it was made on, keeping
+ * that name and every column, Forsamling included. `lisa-lonfink`'s period is a
+ * two-segment list (`2015..2017,2019..2020`) purely to give the first shot a
+ * two-row card to render alongside the single-range card being edited — nothing
+ * here edits it. The card is where this lives because it is the only surface that
+ * shows a source WHOLE, which is what a source-wide rewrite has to be looked at
+ * against. Rendered because the card, its refusal and the deviation it then
+ * carries are the surface the operator judges.
  */
 async function sourcePeriodCase(page, counts, shoot, project) {
   // (1) Open the two-source project, and let the autosave hold it.
@@ -794,6 +798,14 @@ async function sourcePeriodCase(page, counts, shoot, project) {
   await card.getByText("scb/lisa/forsamling").waitFor();
   const armed = `${await from.inputValue()}..${await to.inputValue()}`;
   check(armed === "2018..2020", `the card armed its year fields at ${armed}`);
+  // The sibling card (Y-101): a two-segment list period renders one row per
+  // segment rather than the read-only note Y-81 shipped it with.
+  const sibling = page.getByRole("region", { name: "Source 2" });
+  const siblingFrom = sibling.getByRole("textbox", { name: "From" });
+  check(
+    (await siblingFrom.count()) === 2,
+    `the two-segment sibling card rendered ${await siblingFrom.count()} From row(s)`,
+  );
   await shoot("project-source-period-card");
 
   // (3) Years that name no range are refused, with the field at fault marked and
@@ -828,7 +840,14 @@ async function sourcePeriodCase(page, counts, shoot, project) {
         { from: 2015, to: 2020 },
         ["scb/lisa/kon", "scb/lisa/forsamling"],
       ],
-      ["lisa-lonfink", 2018, ["scb/lisa/lonfink"]],
+      [
+        "lisa-lonfink",
+        [
+          { from: 2015, to: 2017 },
+          { from: 2019, to: 2020 },
+        ],
+        ["scb/lisa/lonfink"],
+      ],
     ],
     (s) => [s.name, s.period, s.bindings.map((b) => b.variable)],
   );
@@ -1148,7 +1167,12 @@ try {
         {
           name: "lisa-lonfink",
           register_variant: "scb/lisa/individer-15plus",
-          period: 2018,
+          // A #307 two-segment list (Y-101) — untouched by this scenario, present
+          // so the shots show a multi-row card alongside the one being edited.
+          period: [
+            { from: 2015, to: 2017 },
+            { from: 2019, to: 2020 },
+          ],
           bindings: [
             {
               variable: "scb/lisa/lonfink",

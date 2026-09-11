@@ -4,12 +4,13 @@ import BindingEditor from "./BindingEditor.svelte";
 import { fqidSegments, sourceCardHeading } from "./catalog";
 import { sourceNames } from "./catalog_names.svelte";
 import {
+  normalizePeriodRows,
   periodFromWire,
   periodToWire,
+  periodYearCoverage,
   resolveYearEntry,
   sameYearWindow,
-  yearWindowFromWire,
-  yearWindowToWire,
+  yearSegmentsFromWire,
 } from "./period";
 import {
   type Period,
@@ -124,9 +125,10 @@ const bindingsMalformed = $derived(sourceBindingsMalformed(source));
 // and every per-source control's accessible name.
 const sourceName = $derived(safeSourceName(source) || "(unnamed source)");
 
+const period = $derived(safeSourcePeriod(source) as Period);
 // The stored period as its WIRE string (list-period aware — `periodToWire` already
 // joins list segments); null when the source carries none or an unshapeable one.
-const periodWire = $derived(periodToWire(safeSourcePeriod(source) as Period));
+const periodWire = $derived(periodToWire(period));
 
 // The coordinate rows, rendered through the shared KeyValue primitive
 // (#804) — same metadata-row styling ProjectEditor uses. The provider heads them
@@ -150,49 +152,65 @@ const metaRows = $derived([
   },
 ] satisfies KeyValueRow[]);
 
-// ── The source's period (Y-81) ───────────────────────────────────────────────
+// ── The source's period (Y-81, list segments Y-101) ─────────────────────────
 //
-// Authored in the catalog's own period vocabulary: a YEAR RANGE, the one grammar
-// the catalog's `PeriodPicker` authors, written back through the same wire shaping
-// a pick uses (`periodFromWire(yearWindowToWire(…))` — a bare year when the two
-// bounds meet, the `{from, to}` object otherwise). A period the year fields cannot
-// express — a token like `HT2018`, or the #307 comma list two disjoint picks merge
-// into — is shown as it stands and never silently rewritten into a span, exactly as
-// the catalog's picker leaves one alone.
+// Authored in the catalog's own period vocabulary: a YEAR RANGE per row, the one
+// grammar the catalog's `PeriodPicker` authors, one row for a plain period and one
+// row per segment of a #307 comma list (`2015..2017,2019..2020` — what two
+// disjoint picks on a register variant merge into) — the single-range case is the
+// one-row form of this. Written back through the same wire shaping a pick uses. A
+// TOKEN period (`HT2018`) is a different vocabulary nothing here authors; it is
+// shown as it stands, never silently rewritten into a span.
 
-/** The stored period as a year window, or null when it is absent, a token or a
- * segment list. */
-const storedYears = $derived(yearWindowFromWire(periodWire));
-/** Whether the year fields can author THIS source's period. A source with no period
- * yet is authored by them too; it is what a source is missing, not another grammar. */
-const yearsEditable = $derived(periodWire === null || storedYears !== null);
+/** One row's two fields, as TEXT — kept as typed rather than parsed, so a refused
+ * entry stays on screen as it was typed instead of being rewritten. */
+interface YearRow {
+  from: string;
+  to: string;
+}
 
-/** The two fields as TYPED, or null while they mirror the stored period. Kept as
- * text so a refused entry stays on screen as it was typed rather than being
- * rewritten into some other range. */
-let entry = $state<{ from: string; to: string } | null>(null);
-/** Whether the entry has been committed (blur or Apply) — a half-typed year must
+/** The stored period's segments as year windows — null for a token/mixed period
+ * (unrepresentable) as well as for an unset one (nothing stored to segment). */
+const storedSegments = $derived(
+  periodWire === null ? null : yearSegmentsFromWire(periodWire),
+);
+/** The stored period as one row per segment, in stored order — a source with no
+ * period yet is one blank row (what it's missing, not another grammar). Only
+ * meaningful while `yearsEditable`. */
+const storedRows = $derived<YearRow[]>(
+  storedSegments === null
+    ? [{ from: "", to: "" }]
+    : storedSegments.map((w) => ({ from: String(w.from), to: String(w.to) })),
+);
+/** Whether the rows can author THIS source's period: every segment a bare year or
+ * a uniform-year range. A source with no period yet is authored by them too. */
+const yearsEditable = $derived(periodWire === null || storedSegments !== null);
+
+/** The rows as EDITED, or null while they mirror the stored segments untouched —
+ * the same "has this been touched" signal `editedFrom` gates the write on. */
+let rows = $state<YearRow[] | null>(null);
+/** Whether the rows have been committed (blur or Apply) — a half-typed year must
  * not announce a refusal on every keystroke. */
 let entryCommitted = $state(false);
 /** The last Apply was refused because the SOURCE moved under the edit — a different
- * thing from `entryRefusal`, which is the years themselves being unusable. */
+ * thing from `entryRefusal`, which is the rows themselves being unusable. */
 let writeRefused = $state(false);
-/** The period a landed write set, until the next keystroke retires it. A form that
- * says nothing on success leaves the researcher to infer it from a greyed button —
- * and where the new period neither crosses the study window nor changes a finding,
- * there is nothing else on the card that moves. */
-let appliedYears = $state<StudyWindow | null>(null);
-/** The last Apply had nothing to write — the entry named exactly the stored period,
- * or nothing was ever typed. A different thing from `entryRefusal`: the years ARE
+/** The windows a landed write set, until the next keystroke retires them. A form
+ * that says nothing on success leaves the researcher to infer it from a greyed
+ * button — and where the new period neither crosses the study window nor changes a
+ * finding, there is nothing else on the card that moves. */
+let appliedWindows = $state<StudyWindow[] | null>(null);
+/** The last Apply had nothing to write — the rows named exactly the stored period,
+ * or nothing was ever touched. A different thing from `entryRefusal`: the rows ARE
  * usable, there is just no change to make. */
 let unchangedNotice = $state(false);
 /** An Apply is in flight — from the press that found something to write until the
  * store's write returns. The whole span is the restore-gate wait below (the write
  * itself is synchronous), so this doubles as "waiting for the draft to settle". The
- * two year fields and the Apply button freeze for it: a second press while one is
- * held on the gate must not queue a write of its own — the first press's write may
- * already have moved the draft by the time a queued second one runs, raising a
- * staleness refusal for a write that did land (a1/a3). */
+ * year fields, Add, Remove and the Apply button freeze for it: a second press
+ * while one is held on the gate must not queue a write of its own — the first
+ * press's write may already have moved the draft by the time a queued second one
+ * runs, raising a staleness refusal for a write that did land (a1/a3). */
 let applying = $state(false);
 /** The source as it stood when this edit began — the value the researcher was
  * looking at, which the store re-checks the write against. Plain, not `$state`:
@@ -202,88 +220,165 @@ let editedFrom: SourcePeriodEditTarget | null = null;
  * rather than written behind the researcher's back. */
 const unmounted = unmountedFlag();
 
-const fromText = $derived(
-  entry?.from ?? (storedYears ? String(storedYears.from) : ""),
-);
-const toText = $derived(
-  entry?.to ?? (storedYears ? String(storedYears.to) : ""),
+/** The rows on screen: the edited buffer once touched, else the stored segments. */
+const displayRows = $derived(rows ?? storedRows);
+
+/** A refusal about one or more rows: the message, and which row(s)/field(s) it
+ * marks — so a within-row grammar problem highlights just its own field while a
+ * cross-row overlap highlights both rows whole. Shared shape for `rowProblem` and
+ * `overlapProblem` below. */
+interface RowsProblem {
+  problem: string;
+  rows: { index: number; from: boolean; to: boolean }[];
+}
+
+/** A window's ISO-year span as a reader sees it: a bare year when it's one year
+ * wide, else the en-dash range. */
+function windowLabel(w: StudyWindow): string {
+  return w.from === w.to ? String(w.from) : `${w.from}–${w.to}`;
+}
+
+/** Each row resolved by the shared `resolveYearEntry` (no band — this card writes
+ * the wire itself), or null for every row while nothing has been touched yet
+ * (mirrors the untouched-entry null the single-row card used before Y-101). */
+const rowResolutions = $derived(
+  displayRows.map((row) =>
+    rows === null ? null : resolveYearEntry(row.from, row.to),
+  ),
 );
 
-/** The entry resolved: the year window it names, or why it names none — with the
- * field(s) that refusal is about, so the hairline marks the year at fault rather
- * than both. Null while the fields still mirror the stored period. The shared
- * `resolveYearEntry` (period.ts) is called with no band: this card has no
- * coverage to check against or draw an example year from, unlike the catalog's
- * `PeriodPicker`, which passes one to the same resolver — so this falls back to
- * the wire's own year rule (19xx/20xx) and its century-range wording. */
-const entryResolution = $derived(
-  resolveYearEntry(entry?.from ?? null, entry?.to ?? null),
+/** The first row whose own grammar/order is bad, by the card's existing year rule
+ * — the same "From after To" / "must be a four-digit year" refusal the single-row
+ * card always used, now naming which row it's about. */
+const rowProblem = $derived.by((): RowsProblem | null => {
+  for (let i = 0; i < rowResolutions.length; i++) {
+    const r = rowResolutions[i];
+    if (r !== null && "problem" in r) {
+      return { problem: r.problem, rows: [{ index: i, ...r.at }] };
+    }
+  }
+  return null;
+});
+
+/** Every row's window, once ALL of them resolve cleanly — the input
+ * `normalizePeriodRows` sorts/merges, or refuses on a real overlap. Null while
+ * untouched or while any row is individually bad (`rowProblem` already covers
+ * that case). */
+const rowWindows = $derived.by((): StudyWindow[] | null => {
+  if (rows === null || rowProblem !== null) {
+    return null;
+  }
+  return rowResolutions.map((r) => (r as { years: StudyWindow }).years);
+});
+
+const normalized = $derived(
+  rowWindows === null ? null : normalizePeriodRows(rowWindows),
 );
 
-const entryProblem = $derived(
-  entryResolution !== null && "problem" in entryResolution
-    ? entryResolution
-    : null,
-);
-/** The refusal to show, once the entry has been committed. */
+/** Two rows sharing a year: coalescing them would erase which row the researcher
+ * meant, so this refuses instead — same status line, a new sentence naming the
+ * two spans at fault (the VALIDATED windows, not the raw field text). */
+const overlapProblem = $derived.by((): RowsProblem | null => {
+  if (rowWindows === null || normalized === null || "period" in normalized) {
+    return null;
+  }
+  const { a, b } = normalized;
+  return {
+    problem: `${windowLabel(rowWindows[a])} and ${windowLabel(rowWindows[b])} overlap — a year can only be in one segment.`,
+    rows: [
+      { index: a, from: true, to: true },
+      { index: b, from: true, to: true },
+    ],
+  };
+});
+
+const entryProblem = $derived(rowProblem ?? overlapProblem);
+/** The refusal to show, once the rows have been committed. */
 const entryRefusal = $derived(entryCommitted ? entryProblem : null);
 /** The refusal line is only described-by while it actually says something. */
 const problemId = $derived(
   entryRefusal === null ? undefined : `${uid}-problem`,
 );
-/** The wire the entry would write, or null when it names no window / no change. */
+/** Whether row `index`'s `side` field is the one a refusal is about. */
+function rowInvalid(index: number, side: "from" | "to"): boolean {
+  return entryRefusal?.rows.some((r) => r.index === index && r[side]) ?? false;
+}
+
+/** The wire the rows would write, or null when they name no valid list / no
+ * change from what is stored. */
 const proposedWire = $derived.by(() => {
-  if (entryResolution === null || !("years" in entryResolution)) {
+  if (normalized === null || !("period" in normalized)) {
     return null;
   }
-  const wire = yearWindowToWire(entryResolution.years);
+  const wire = periodToWire(normalized.period);
   return wire === periodWire ? null : wire;
 });
+
 /** The confirmation a landed write leaves in the refusal's own region — one line
  * that is either explaining a refusal or reporting a write, never both. */
 const appliedLabel = $derived(
-  appliedYears === null
+  appliedWindows === null
     ? null
-    : appliedYears.from === appliedYears.to
-      ? `Period set to ${appliedYears.from}.`
-      : `Period set to ${appliedYears.from}–${appliedYears.to}.`,
+    : `Period set to ${appliedWindows.map(windowLabel).join(", ")}.`,
 );
 
 /** The study window this source's period is MARKED against, or null when there is
  * nothing to mark — the whole point of a per-source period is that it MAY differ,
  * so the card says when it does instead of flagging it. A source with no period at
  * all differs from nothing; that it has none is the validator's finding, not this
- * marker's. Compared through `sameYearWindow`, the shared user-deviation predicate,
- * so a period is judged by the span it covers rather than by how the wire spells it
- * (a stored `{from: 2020, to: 2020}` is the same span as a window of 2020). */
+ * marker's. Compared through `sameYearWindow` against the period's OVERALL span
+ * (first From to last To, `periodYearCoverage` — the same span a single range is
+ * its own span of), so a period is judged by what it covers rather than by how the
+ * wire spells it or how many segments it has. */
 const deviation = $derived(
   studyWindow !== null &&
     periodWire !== null &&
-    !sameYearWindow(storedYears, studyWindow)
+    !sameYearWindow(periodYearCoverage(period), studyWindow)
     ? studyWindow
     : null,
 );
 
-function editYear(side: "from" | "to", value: string): void {
-  if (entry === null) {
-    // The edit starts HERE: capture the source as it is, so a write onto a source
-    // that has moved since — a column removed from this very card, a project
-    // replaced — is refused rather than landing on a value nobody looked at.
-    editedFrom = {
-      sourceName: safeSourceName(source),
-      registerVariant,
-      snapshot: sourceSnapshot(source),
-      replacementGeneration: projectStore.replacementGeneration,
-    };
-    writeRefused = false;
-    appliedYears = null;
-    unchangedNotice = false;
+/** The edit starts HERE: capture the source as it is, so a write onto a source
+ * that has moved since — a column removed from this very card, a project
+ * replaced — is refused rather than landing on a value nobody looked at. Shared by
+ * every row mutation (typing, Add, Remove) that turns `rows` from "mirroring
+ * stored" into an active edit. */
+function beginEdit(): void {
+  editedFrom = {
+    sourceName: safeSourceName(source),
+    registerVariant,
+    snapshot: sourceSnapshot(source),
+    replacementGeneration: projectStore.replacementGeneration,
+  };
+  writeRefused = false;
+  appliedWindows = null;
+  unchangedNotice = false;
+}
+
+function editYear(index: number, side: "from" | "to", value: string): void {
+  if (rows === null) {
+    beginEdit();
   }
-  // The buffer starts as what the fields were SHOWING — the stored period on the
-  // first keystroke, the previous entry after that. `fromText`/`toText` already say
-  // which, so the seed is not spelled a second time here.
-  const base = entry ?? { from: fromText, to: toText };
-  entry = side === "from" ? { ...base, from: value } : { ...base, to: value };
+  const base = rows ?? storedRows;
+  rows = base.map((r, i) => (i === index ? { ...r, [side]: value } : r));
+}
+
+/** Append an empty segment row at the end — the researcher fills it in like any
+ * other. */
+function addRow(): void {
+  if (rows === null) {
+    beginEdit();
+  }
+  rows = [...(rows ?? storedRows), { from: "", to: "" }];
+}
+
+/** Drop one segment row. The template hides this control while only one row
+ * remains — a period always has at least one row to hold it. */
+function removeRow(index: number): void {
+  if (rows === null) {
+    beginEdit();
+  }
+  rows = (rows ?? storedRows).filter((_, i) => i !== index);
 }
 
 /** Commit the edited period: ONE period-only diff through the store's guarded
@@ -297,7 +392,7 @@ async function applyPeriod(): Promise<void> {
     // what that press captured, so this one has nothing new to contribute.
     return;
   }
-  // Committing FIRST is what makes a refused Apply say why: years that name no
+  // Committing FIRST is what makes a refused Apply say why: rows that name no
   // window leave `proposedWire` null, so the write below is skipped and the
   // refusal line renders instead.
   entryCommitted = true;
@@ -305,20 +400,20 @@ async function applyPeriod(): Promise<void> {
   const wire = proposedWire;
   if (target === null || wire === null) {
     // Nothing to write: either `entryProblem` already explains why (rendered via
-    // `entryRefusal` below), or the entry names exactly the stored period (typed
+    // `entryRefusal` below), or the rows name exactly the stored period (typed
     // back to it, or never touched at all) — say so rather than leaving Apply
     // looking like it silently did nothing. Retiring the other two verdicts here
     // too: this press is what the status line now reports, not whatever an
     // earlier one left behind.
     unchangedNotice = entryProblem === null;
     writeRefused = false;
-    appliedYears = null;
+    appliedWindows = null;
     return;
   }
   unchangedNotice = false;
   applying = true;
   try {
-    const written = yearWindowFromWire(wire);
+    const written = yearSegmentsFromWire(wire);
     // The draft lifecycle is application-owned and its restore is ASYNCHRONOUS, so
     // this waits for it exactly as the catalog's Add path does: the store re-checks
     // the edit against the draft it finds, and that check is only worth anything
@@ -335,8 +430,8 @@ async function applyPeriod(): Promise<void> {
       ...target,
       period: periodFromWire(wire),
     });
-    appliedYears = writeRefused ? null : written;
-    entry = null;
+    appliedWindows = writeRefused ? null : written;
+    rows = null;
     entryCommitted = false;
     editedFrom = null;
   } finally {
@@ -473,15 +568,15 @@ function confirmRemove(): void {
   {:else}
     <KeyValue rows={metaRows} />
 
-    <!-- The PERIOD: the one field the cart edits (Y-81). A year range, in the
-         catalog's own vocabulary — two exact-year fields and one Apply, the same
-         entry the catalog's period card carries beside its slider. There is no
-         slider here: a cart card knows no data-coverage track to draw one against,
-         and the years are what the researcher already has in mind. -->
+    <!-- The PERIOD: the one field the cart edits (Y-81), one From/To row per
+         segment (Y-101) — a single range is the one-row form of this. Written the
+         same entry the catalog's period card carries beside its slider; there is
+         no slider here, a cart card knows no data-coverage track to draw one
+         against, and the years are what the researcher already has in mind. -->
     <div class="source-period">
       <span class="micro-label">Period</span>
       {#if yearsEditable}
-        <!-- A form, so Enter in either field applies the period — the catalog's
+        <!-- A form, so Enter in a year field applies the period — the catalog's
              period card commits its years the same way, and a change the keyboard
              can only finish by tabbing to a button is not finished. -->
         <form
@@ -491,68 +586,90 @@ function confirmRemove(): void {
             void applyPeriod();
           }}
         >
-          <div class="years" role="group" aria-label={periodGroupLabel}>
-            <label class="micro-label" for="{uid}-from">From</label>
-            <input
-              id="{uid}-from"
-              class="year"
-              type="text"
-              inputmode="numeric"
-              autocomplete="off"
-              value={fromText}
-              placeholder="yyyy"
-              readonly={applying}
-              aria-invalid={entryRefusal?.at.from === true}
-              aria-describedby={problemId}
-              oninput={(event) => editYear("from", event.currentTarget.value)}
-              onchange={() => {
-                entryCommitted = true;
-              }}
-            />
-            <label class="micro-label" for="{uid}-to">To</label>
-            <input
-              id="{uid}-to"
-              class="year"
-              type="text"
-              inputmode="numeric"
-              autocomplete="off"
-              value={toText}
-              placeholder="yyyy"
-              readonly={applying}
-              aria-invalid={entryRefusal?.at.to === true}
-              aria-describedby={problemId}
-              oninput={(event) => editYear("to", event.currentTarget.value)}
-              onchange={() => {
-                entryCommitted = true;
-              }}
-            />
+          <div class="year-rows" role="group" aria-label={periodGroupLabel}>
+            {#each displayRows as row, i (i)}
+              <div class="year-row">
+                <label class="micro-label" for="{uid}-from-{i}">From</label>
+                <input
+                  id="{uid}-from-{i}"
+                  class="year"
+                  type="text"
+                  inputmode="numeric"
+                  autocomplete="off"
+                  value={row.from}
+                  placeholder="yyyy"
+                  readonly={applying}
+                  aria-invalid={rowInvalid(i, "from")}
+                  aria-describedby={problemId}
+                  oninput={(event) =>
+                    editYear(i, "from", event.currentTarget.value)}
+                  onchange={() => {
+                    entryCommitted = true;
+                  }}
+                />
+                <label class="micro-label" for="{uid}-to-{i}">To</label>
+                <input
+                  id="{uid}-to-{i}"
+                  class="year"
+                  type="text"
+                  inputmode="numeric"
+                  autocomplete="off"
+                  value={row.to}
+                  placeholder="yyyy"
+                  readonly={applying}
+                  aria-invalid={rowInvalid(i, "to")}
+                  aria-describedby={problemId}
+                  oninput={(event) =>
+                    editYear(i, "to", event.currentTarget.value)}
+                  onchange={() => {
+                    entryCommitted = true;
+                  }}
+                />
+                {#if displayRows.length > 1}
+                  <!-- Hidden while only one row remains: a period always has at
+                       least one row to hold it. -->
+                  <Button
+                    size="sm"
+                    disabled={applying}
+                    onclick={() => removeRow(i)}
+                  >
+                    Remove
+                  </Button>
+                {/if}
+              </div>
+            {/each}
           </div>
-          <!-- Named per source, so a screen-reader controls list tells one card's
-               Apply from the next's — the same disambiguation the Remove button
-               takes, and by the same words.
+          <div class="period-actions">
+            <Button size="sm" disabled={applying} onclick={addRow}>
+              Add years
+            </Button>
+            <!-- Named per source, so a screen-reader controls list tells one
+                 card's Apply from the next's — the same disambiguation the
+                 Remove button takes, and by the same words.
 
-               NEVER truly disabled, as the catalog's own period card commits its
-               years: clicking a refused entry explains the refusal instead of
-               leaving a dead button and no reason, and a button that disables
-               itself blurs the keyboard that pressed it back to the top of the
-               page. `aria-disabled` (paired with the year fields' `readonly`)
-               freezes the control for an Apply already in flight — announced and
-               styled as unavailable, but never pulled out of the tab order — and a
-               press while it holds is a no-op (`applyPeriod`'s own guard). An Apply
-               with nothing to do says so instead of doing nothing silently. -->
-          <Button
-            type="submit"
-            size="sm"
-            aria-label={applyPeriodLabel}
-            aria-disabled={applying}
-          >
-            Apply period
-          </Button>
+                 NEVER truly disabled, as the catalog's own period card commits
+                 its years: clicking a refused entry explains the refusal
+                 instead of leaving a dead button and no reason, and a button
+                 that disables itself blurs the keyboard that pressed it back to
+                 the top of the page. `aria-disabled` (paired with the year
+                 fields' `readonly`) freezes the control for an Apply already in
+                 flight — announced and styled as unavailable, but never pulled
+                 out of the tab order — and a press while it holds is a no-op
+                 (`applyPeriod`'s own guard). An Apply with nothing to do says
+                 so instead of doing nothing silently. -->
+            <Button
+              type="submit"
+              size="sm"
+              aria-label={applyPeriodLabel}
+              aria-disabled={applying}
+            >
+              Apply period
+            </Button>
+          </div>
         </form>
       {:else}
-        <!-- A token period, or the #307 comma list two disjoint picks merge into:
-             the year fields cannot express it, and collapsing it into a span would
-             order years nobody asked for. It stands as it is. -->
+        <!-- A token period: the year fields cannot express it, and collapsing it
+             into a span would order years nobody asked for. It stands as it is. -->
         <p class="period-fixed">
           <span class="mono">{periodWire}</span>
           <span class="fixed-note">
@@ -754,17 +871,30 @@ function confirmRemove(): void {
   }
   .period-entry {
     display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+  /* One row per segment (Y-101) — a single range is the one-row form of this. */
+  .year-rows {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+  .year-row {
+    display: flex;
     flex-wrap: wrap;
     align-items: center;
     gap: var(--space-2) var(--space-3);
   }
-  .years {
-    display: flex;
-    align-items: center;
-    gap: var(--space-2);
-  }
-  .years label {
+  .year-row label {
     white-space: nowrap;
+  }
+  /* Add years + Apply period, below the rows they act on. */
+  .period-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2) var(--space-3);
   }
   /* An Apply already in flight: frozen (`readonly`, not `disabled` — a read-only
      field stays in the tab order), dimmed the way the Apply button's own
