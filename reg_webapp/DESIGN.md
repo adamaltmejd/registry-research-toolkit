@@ -728,15 +728,14 @@ joins SQLite drives from `variable_state` and scans the WHOLE table instead of s
   one group in eleven. The reads return ONE ROW PER STATE now — the GROUP BY dropped and
   nothing put in its place, since the fuse sorts and an `ORDER BY` no step reads costs a
   temp b-tree over the whole per-register row set and un-pins the join order the
-  all-LEFT joins exist to hold (the per-register `SEARCH v USING COVERING INDEX
-  idx_variable_slug` degrades to a catalog-wide `SCAN v`) — and Python fuses each
-  group's eras into disjoint
-  `windows`, the SPA's `deliveryWindows` rule moved to the model so both ends agree by
-  construction. `coverage` is unchanged: it is the span over those windows, which is
-  still what a browse row prints. The ceiling is row volume — scb/ulf, the corpus's
-  largest register by states, is 22,684 rows over 10,785 groups — and gap-and-islands
-  SQL is the upgrade if that stops fitting.
-
+  all-LEFT joins exist to hold (the per-register
+  `SEARCH v USING COVERING INDEX idx_variable_slug` degrades to a catalog-wide `SCAN v`)
+  — and Python fuses each group's eras into disjoint `windows`, the SPA's
+  `deliveryWindows` rule moved to the model so both ends agree by construction.
+  `coverage` is unchanged: it is the span over those windows, which is still what a
+  browse row prints. The ceiling is row volume — scb/ulf, the corpus's largest register
+  by states, is 22,684 rows over 10,785 groups — and gap-and-islands SQL is the upgrade
+  if that stops fitting.
 - `column` is None for a state SCB named no delivery column for. The variant still
   delivers the variable, so the row is KEPT — unlike `register_column_coverage`, whose
   per-column keys can't express a NULL key. Variants with a NULL slug are excluded
@@ -851,41 +850,39 @@ variable pages to add one column each.
   of its own — is refused on its own terms ("Not delivered", naming no window, since
   none would lift it): it has no row to stage, and a checkbox that ticks and commits
   nothing is a control that lies.
-
-  A subject page's picker only DIMS such a row and still lets it be picked, and
-  `rowAddSegments` deliberately FALLS BACK to a row's whole span when the window clips
-  it to nothing so that pick still adds something — that page has a Period control to
-  say what. Here the window is the only period there is, so inheriting that fallback
-  would author years the researcher never asked for: the page refuses the row before
-  staging it, and the bar's count never promises a column an Add cannot commit.
+- **The subject page's fallback stops at the list.** A subject page's picker only DIMS
+  such a row and still lets it be picked, and `rowAddSegments` deliberately FALLS BACK
+  to a row's whole span when the window clips it to nothing so that pick still adds
+  something — that page has a Period control to say what. Here the window is the only
+  period there is, so inheriting that fallback would author years the researcher never
+  asked for: the page refuses the row before staging it, and the bar's count never
+  promises a column an Add cannot commit.
 - **The list's windows are EXACT (Y-104), so an Add reads nothing extra.** Each delivery
   carries its own DISJOINT `windows` beside the MIN/MAX `coverage` span, so a column
   delivered 1968, then 1995–1996, then 1998– says so on the wire. `deliveryColumnRows`
   builds a synthetic state per (delivery, window) and runs it through
-  `pickerRepresentations`, so the rows a tick stages ARE the rows the variable's own page
-  builds from its states — same key format, same window fuse, same #902 rename fold —
-  and the list's years label prints the eras the way that page does. One consequence
+  `pickerRepresentations`, so the rows a tick stages ARE the rows the variable's own
+  page builds from its states — same key format, same window fuse, same #902 rename fold
+  — and the list's years label prints the eras the way that page does. One consequence
   everywhere: the years beside a name, the window gate on the tick, the "In project"
   marker and the committed #307 comma-union all read the same eras, so a window inside
   an interruption is not tickable rather than tickable-then-dropped, and a register-list
   add is byte-identical to the variable page's without a second read. Before Y-104 the
   wire carried only the span; an Add paid a GET per ticked variable to rebuild these
   rows from the states, and the two grades could disagree.
-
-  The label and the two per-name verdicts are NAME-grain while the commit is ROW-grain,
-  and the split is load-bearing: a #902 rename chain folds into ONE row spanning the
-  whole chain, so the tick gate asks that NAME's own `windows`, and "In project" asks
-  whether the committed source period reached them (`windowsOverlapPeriod`). Gating on
-  the row offers a retired name for its successor's years; marking on the row alone
-  claims a name the Add never committed.
-
-  The years are spelled compactly — `1968, 1995–1996, 1998–` — rather than through the
-  `since 1998` / `until 1968` words `formatWindow` gives the variable page: this cell is
-  all-mono and rides inside a tick's accessible name, and frontend/DESIGN.md keeps prose
-  out of mono. Each era is one unbreakable run, because a `1995–` wrapped to the end of
-  a line is this same grammar's "still delivered". An era undated at one end takes the
-  bare dash on that side (`–1968`) rather than being left out: an omission from a LIST
-  reads as a gap.
+- **The label and the two per-name verdicts are NAME-grain while the commit is
+  ROW-grain**, and the split is load-bearing: a #902 rename chain folds into ONE row
+  spanning the whole chain, so the tick gate asks that NAME's own `windows`, and "In
+  project" asks whether the committed source period reached them
+  (`windowsOverlapPeriod`). Gating on the row offers a retired name for its successor's
+  years; marking on the row alone claims a name the Add never committed.
+- **The years are spelled compactly** — `1968, 1995–1996, 1998–` — rather than through
+  the `since 1998` / `until 1968` words `formatWindow` gives the variable page: this
+  cell is all-mono and rides inside a tick's accessible name, and frontend/DESIGN.md
+  keeps prose out of mono. Each era is one unbreakable run, because a `1995–` wrapped to
+  the end of a line is this same grammar's "still delivered". An era undated at one end
+  takes the bare dash on that side (`–1968`) rather than being left out: an omission
+  from a LIST reads as a gap.
 - **A sequential RENAME is listed twice and committed once.** The list names every
   column a variable was delivered under, so `CDISP` and `CDISP5` are two tickable rows
   (that is what Y-82 shows, and the name is what a researcher hunts for). The variable's
