@@ -73,7 +73,9 @@ then file it or delete it with a reason.
   `yard workflow add` or `yard config migrate`, and a new client refuses the old daemon,
   so the binary cannot be staged on PATH before the config lands.
 - (0.14.8) No per-lane cost ceiling and no "cost so far" on the wake line; Y-92/2
-  reached $17.87 for +233/−8 lines before anyone looked.
+  reached $17.87 for +233/−8 lines before anyone looked. Y-113/1 (0.14.10, opus xhigh)
+  reached $51.95 across five generations, most of it a resumed session re-reading 37M
+  cached input tokens; the approval item showed no cost either.
 - (0.14.8) `yard proposal accept` has no `--title`; a convention retitle costs a
   `ticket edit --expect-revision` round-trip (check whether #91 covers it).
 - (0.14.8) A gate repair whose worker reports "cannot repair: base-protected test" still
