@@ -4800,8 +4800,15 @@ column = "P1105_LopNr_PersonNr_Barn"
 # every register version of theirs `Vt <Y>` / `VT <Y>` (register_version
 # for grundskola-prov-ak3/-ak6/-ak9 in the built catalog), so the bare year
 # in `Äp3_<Y>`-style table names is VT<Y>, not a school year or a calendar
-# year. Other school-year registers (spring/autumn anchors) are curated once
-# Y-123 closes the fragmented windows their residual is measured against.
+# year.
+#
+# Grade registers deliver the school year that ENDS in the table year (grades
+# are set in June): SCB names their versions `Läsåret <Y-1>/<Y>`, and against
+# the catalog built after Y-123 the `spring` reading leaves 3 anchor-sensitive
+# held pairs uncovered on grundskola-ak9 and 3 on gymnasieskola-betyg where the
+# calendar reading leaves 30 and 7 and `autumn` 27 and 4 (2026-09-12). The
+# teacher register is an October snapshot, so its table year STARTS the school
+# year: `autumn` leaves 0 of 613 pairs uncovered, every other reading 34.
 
 [[school_year]]
 register = "scb/grundskola-prov-ak3"
@@ -4814,3 +4821,15 @@ anchor = "vt"
 [[school_year]]
 register = "scb/grundskola-prov-ak9"
 anchor = "vt"
+
+[[school_year]]
+register = "scb/grundskola-ak9"
+anchor = "spring"
+
+[[school_year]]
+register = "scb/gymnasieskola-betyg"
+anchor = "spring"
+
+[[school_year]]
+register = "scb/lararreg"
+anchor = "autumn"

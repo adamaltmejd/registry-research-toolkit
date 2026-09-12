@@ -155115,7 +155115,7 @@ representation = "year"
 
 [[table]]
 id = "GymnasieskolaAvg_Individ_1973"
-edition = 1973
+edition = { from = "1972-07-01", to = "1973-06-30" }
 
 [[table.column]]
 name = "MBetyg"
@@ -155161,7 +155161,7 @@ representation = "AvgAr"
 
 [[table]]
 id = "GymnasieskolaAvg_Individ_1974"
-edition = 1974
+edition = { from = "1973-07-01", to = "1974-06-30" }
 
 [[table.column]]
 name = "MBetyg"
@@ -155207,7 +155207,7 @@ representation = "AvgAr"
 
 [[table]]
 id = "GymnasieskolaAvg_Individ_1975"
-edition = 1975
+edition = { from = "1974-07-01", to = "1975-06-30" }
 
 [[table.column]]
 name = "MBetyg"
@@ -155253,7 +155253,7 @@ representation = "AvgAr"
 
 [[table]]
 id = "GymnasieskolaAvg_Individ_1976"
-edition = 1976
+edition = { from = "1975-07-01", to = "1976-06-30" }
 
 [[table.column]]
 name = "MBetyg"
@@ -155299,7 +155299,7 @@ representation = "AvgAr"
 
 [[table]]
 id = "GymnasieskolaAvg_Individ_1977"
-edition = 1977
+edition = { from = "1976-07-01", to = "1977-06-30" }
 
 [[table.column]]
 name = "MBetyg"
@@ -155345,7 +155345,7 @@ representation = "AvgAr"
 
 [[table]]
 id = "GymnasieskolaAvg_Individ_1978"
-edition = 1978
+edition = { from = "1977-07-01", to = "1978-06-30" }
 
 [[table.column]]
 name = "MBetyg"
@@ -155391,7 +155391,7 @@ representation = "AvgAr"
 
 [[table]]
 id = "GymnasieskolaAvg_Individ_1979"
-edition = 1979
+edition = { from = "1978-07-01", to = "1979-06-30" }
 
 [[table.column]]
 name = "MBetyg"
@@ -155437,7 +155437,7 @@ representation = "AvgAr"
 
 [[table]]
 id = "GymnasieskolaAvg_Individ_1980"
-edition = 1980
+edition = { from = "1979-07-01", to = "1980-06-30" }
 
 [[table.column]]
 name = "MBetyg"
@@ -155483,7 +155483,7 @@ representation = "AvgAr"
 
 [[table]]
 id = "GymnasieskolaAvg_Individ_1981"
-edition = 1981
+edition = { from = "1980-07-01", to = "1981-06-30" }
 
 [[table.column]]
 name = "MBetyg"
@@ -155529,7 +155529,7 @@ representation = "AvgAr"
 
 [[table]]
 id = "GymnasieskolaAvg_Individ_1982"
-edition = 1982
+edition = { from = "1981-07-01", to = "1982-06-30" }
 
 [[table.column]]
 name = "MBetyg"
@@ -155575,7 +155575,7 @@ representation = "AvgAr"
 
 [[table]]
 id = "GymnasieskolaAvg_Individ_1983"
-edition = 1983
+edition = { from = "1982-07-01", to = "1983-06-30" }
 
 [[table.column]]
 name = "MBetyg"
@@ -155621,7 +155621,7 @@ representation = "AvgAr"
 
 [[table]]
 id = "GymnasieskolaAvg_Individ_1984"
-edition = 1984
+edition = { from = "1983-07-01", to = "1984-06-30" }
 
 [[table.column]]
 name = "MBetyg"
@@ -155667,7 +155667,7 @@ representation = "AvgAr"
 
 [[table]]
 id = "GymnasieskolaAvg_Individ_1985"
-edition = 1985
+edition = { from = "1984-07-01", to = "1985-06-30" }
 
 [[table.column]]
 name = "MBetyg"
@@ -155713,7 +155713,7 @@ representation = "AvgAr"
 
 [[table]]
 id = "GymnasieskolaAvg_Individ_1986"
-edition = 1986
+edition = { from = "1985-07-01", to = "1986-06-30" }
 
 [[table.column]]
 name = "MBetyg"
@@ -155759,7 +155759,7 @@ representation = "AvgAr"
 
 [[table]]
 id = "GymnasieskolaAvg_Individ_1987"
-edition = 1987
+edition = { from = "1986-07-01", to = "1987-06-30" }
 
 [[table.column]]
 name = "Hman"
@@ -155818,7 +155818,7 @@ representation = "AvgAr"
 
 [[table]]
 id = "GymnasieskolaAvg_Individ_1988"
-edition = 1988
+edition = { from = "1987-07-01", to = "1988-06-30" }
 
 [[table.column]]
 name = "Hman"
@@ -155877,7 +155877,7 @@ representation = "AvgAr"
 
 [[table]]
 id = "GymnasieskolaAvg_Individ_1989"
-edition = 1989
+edition = { from = "1988-07-01", to = "1989-06-30" }
 
 [[table.column]]
 name = "Hman"
@@ -155936,7 +155936,7 @@ representation = "AvgAr"
 
 [[table]]
 id = "GymnasieskolaAvg_Individ_1990"
-edition = 1990
+edition = { from = "1989-07-01", to = "1990-06-30" }
 
 [[table.column]]
 name = "AvgAr"
@@ -156003,7 +156003,7 @@ representation = "Skolkod"
 
 [[table]]
 id = "GymnasieskolaAvg_Individ_1991"
-edition = 1991
+edition = { from = "1990-07-01", to = "1991-06-30" }
 
 [[table.column]]
 name = "AvgAr"
@@ -156070,7 +156070,7 @@ representation = "Skolkod"
 
 [[table]]
 id = "GymnasieskolaAvg_Individ_1992"
-edition = 1992
+edition = { from = "1991-07-01", to = "1992-06-30" }
 
 [[table.column]]
 name = "AvgAr"
@@ -156137,7 +156137,7 @@ representation = "Skolkod"
 
 [[table]]
 id = "GymnasieskolaAvg_Individ_1993"
-edition = 1993
+edition = { from = "1992-07-01", to = "1993-06-30" }
 
 [[table.column]]
 name = "AvgAr"
@@ -156204,7 +156204,7 @@ representation = "Skolkod"
 
 [[table]]
 id = "GymnasieskolaAvg_Individ_1994"
-edition = 1994
+edition = { from = "1993-07-01", to = "1994-06-30" }
 
 [[table.column]]
 name = "AvgAr"
@@ -156271,7 +156271,7 @@ representation = "Skolkod"
 
 [[table]]
 id = "GymnasieskolaAvg_Individ_1995"
-edition = 1995
+edition = { from = "1994-07-01", to = "1995-06-30" }
 
 [[table.column]]
 name = "AvgAr"
@@ -156338,7 +156338,7 @@ representation = "Skolkod"
 
 [[table]]
 id = "GymnasieskolaAvg_Individ_1996"
-edition = 1996
+edition = { from = "1995-07-01", to = "1996-06-30" }
 
 [[table.column]]
 name = "AvgAr"
@@ -156405,7 +156405,7 @@ representation = "Skolkod"
 
 [[table]]
 id = "GymnasieskolaAvg_Individ_1997"
-edition = 1997
+edition = { from = "1996-07-01", to = "1997-06-30" }
 
 [[table.column]]
 name = "AvgAr"
@@ -156501,7 +156501,7 @@ representation = "utbildningstyp"
 
 [[table]]
 id = "GymnasieskolaAvg_Individ_1998"
-edition = 1998
+edition = { from = "1997-07-01", to = "1998-06-30" }
 
 [[table.column]]
 name = "AvgAr"
@@ -156597,7 +156597,7 @@ representation = "utbildningstyp"
 
 [[table]]
 id = "GymnasieskolaAvg_Individ_1999"
-edition = 1999
+edition = { from = "1998-07-01", to = "1999-06-30" }
 
 [[table.column]]
 name = "AvgAr"
@@ -156693,7 +156693,7 @@ representation = "utbildningstyp"
 
 [[table]]
 id = "GymnasieskolaAvg_Individ_2000"
-edition = 2000
+edition = { from = "1999-07-01", to = "2000-06-30" }
 
 [[table.column]]
 name = "AvgAr"
@@ -156789,7 +156789,7 @@ representation = "utbildningstyp"
 
 [[table]]
 id = "GymnasieskolaAvg_Individ_2001"
-edition = 2001
+edition = { from = "2000-07-01", to = "2001-06-30" }
 
 [[table.column]]
 name = "AvgAr"
@@ -156885,7 +156885,7 @@ representation = "utbildningstyp"
 
 [[table]]
 id = "GymnasieskolaAvg_Individ_2002"
-edition = 2002
+edition = { from = "2001-07-01", to = "2002-06-30" }
 
 [[table.column]]
 name = "AvgAr"
@@ -156981,7 +156981,7 @@ representation = "utbildningstyp"
 
 [[table]]
 id = "GymnasieskolaAvg_Individ_2003"
-edition = 2003
+edition = { from = "2002-07-01", to = "2003-06-30" }
 
 [[table.column]]
 name = "AvgAr"
@@ -157077,7 +157077,7 @@ representation = "utbildningstyp"
 
 [[table]]
 id = "GymnasieskolaAvg_Individ_2004"
-edition = 2004
+edition = { from = "2003-07-01", to = "2004-06-30" }
 
 [[table.column]]
 name = "AvgAr"
@@ -157173,7 +157173,7 @@ representation = "utbildningstyp"
 
 [[table]]
 id = "GymnasieskolaAvg_Individ_2005"
-edition = 2005
+edition = { from = "2004-07-01", to = "2005-06-30" }
 
 [[table.column]]
 name = "AvgAr"
@@ -157269,7 +157269,7 @@ representation = "utbildningstyp"
 
 [[table]]
 id = "GymnasieskolaAvg_Individ_2006"
-edition = 2006
+edition = { from = "2005-07-01", to = "2006-06-30" }
 
 [[table.column]]
 name = "AvgAr"
@@ -157365,7 +157365,7 @@ representation = "utbildningstyp"
 
 [[table]]
 id = "GymnasieskolaAvg_Individ_2007"
-edition = 2007
+edition = { from = "2006-07-01", to = "2007-06-30" }
 
 [[table.column]]
 name = "AvgAr"
@@ -157461,7 +157461,7 @@ representation = "utbildningstyp"
 
 [[table]]
 id = "GymnasieskolaAvg_Individ_2008"
-edition = 2008
+edition = { from = "2007-07-01", to = "2008-06-30" }
 
 [[table.column]]
 name = "AvgAr"
@@ -157557,7 +157557,7 @@ representation = "utbildningstyp"
 
 [[table]]
 id = "GymnasieskolaAvg_Individ_2009"
-edition = 2009
+edition = { from = "2008-07-01", to = "2009-06-30" }
 
 [[table.column]]
 name = "AvgAr"
@@ -157653,7 +157653,7 @@ representation = "utbildningstyp"
 
 [[table]]
 id = "GymnasieskolaAvg_Individ_2010"
-edition = 2010
+edition = { from = "2009-07-01", to = "2010-06-30" }
 
 [[table.column]]
 name = "AvgAr"
@@ -157749,7 +157749,7 @@ representation = "utbildningstyp"
 
 [[table]]
 id = "GymnasieskolaAvg_Individ_2011"
-edition = 2011
+edition = { from = "2010-07-01", to = "2011-06-30" }
 
 [[table.column]]
 name = "AvgAr"
@@ -157845,7 +157845,7 @@ representation = "utbildningstyp"
 
 [[table]]
 id = "GymnasieskolaAvg_Individ_2012"
-edition = 2012
+edition = { from = "2011-07-01", to = "2012-06-30" }
 
 [[table.column]]
 name = "AvgAr"
@@ -157941,7 +157941,7 @@ representation = "utbildningstyp"
 
 [[table]]
 id = "GymnasieskolaAvg_Individ_2013"
-edition = 2013
+edition = { from = "2012-07-01", to = "2013-06-30" }
 
 [[table.column]]
 name = "AvgAr"
@@ -158037,7 +158037,7 @@ representation = "utbildningstyp"
 
 [[table]]
 id = "GymnasieskolaAvg_Individ_2014"
-edition = 2014
+edition = { from = "2013-07-01", to = "2014-06-30" }
 
 [[table.column]]
 name = "AvgAr"
@@ -158123,7 +158123,7 @@ representation = "utbildningstyp"
 
 [[table]]
 id = "GymnasieskolaAvg_Individ_2015"
-edition = 2015
+edition = { from = "2014-07-01", to = "2015-06-30" }
 
 [[table.column]]
 name = "AvgAr"
@@ -158209,7 +158209,7 @@ representation = "utbildningstyp"
 
 [[table]]
 id = "GymnasieskolaAvg_Individ_2016"
-edition = 2016
+edition = { from = "2015-07-01", to = "2016-06-30" }
 
 [[table.column]]
 name = "AvgAr"
@@ -158295,7 +158295,7 @@ representation = "utbildningstyp"
 
 [[table]]
 id = "GymnasieskolaAvg_Individ_2017"
-edition = 2017
+edition = { from = "2016-07-01", to = "2017-06-30" }
 
 [[table.column]]
 name = "AvgAr"
@@ -158381,7 +158381,7 @@ representation = "utbildningstyp"
 
 [[table]]
 id = "GymnasieskolaAvg_Individ_2018"
-edition = 2018
+edition = { from = "2017-07-01", to = "2018-06-30" }
 
 [[table.column]]
 name = "AvgAr"
@@ -158467,7 +158467,7 @@ representation = "utbildningstyp"
 
 [[table]]
 id = "GymnasieskolaAvg_Individ_2019"
-edition = 2019
+edition = { from = "2018-07-01", to = "2019-06-30" }
 
 [[table.column]]
 name = "AvgAr"
@@ -158553,7 +158553,7 @@ representation = "utbildningstyp"
 
 [[table]]
 id = "GymnasieskolaAvg_Individ_2020"
-edition = 2020
+edition = { from = "2019-07-01", to = "2020-06-30" }
 
 [[table.column]]
 name = "AvgAr"
@@ -158639,7 +158639,7 @@ representation = "utbildningstyp"
 
 [[table]]
 id = "GymnasieskolaAvg_Individ_2021"
-edition = 2021
+edition = { from = "2020-07-01", to = "2021-06-30" }
 
 [[table.column]]
 name = "AvgAr"
@@ -158725,7 +158725,7 @@ representation = "utbildningstyp"
 
 [[table]]
 id = "GymnasieskolaAvg_Individ_2022"
-edition = 2022
+edition = { from = "2021-07-01", to = "2022-06-30" }
 
 [[table.column]]
 name = "AvgAr"
@@ -158811,7 +158811,7 @@ representation = "utbildningstyp"
 
 [[table]]
 id = "GymnasieskolaAvg_Individ_2023"
-edition = 2023
+edition = { from = "2022-07-01", to = "2023-06-30" }
 
 [[table.column]]
 name = "AvgAr"
@@ -158897,7 +158897,7 @@ representation = "utbildningstyp"
 
 [[table]]
 id = "GymnasieskolaAvg_Individ_2024"
-edition = 2024
+edition = { from = "2023-07-01", to = "2024-06-30" }
 
 [[table.column]]
 name = "AvgAr"
@@ -158983,7 +158983,7 @@ representation = "utbildningstyp"
 
 [[table]]
 id = "GymnasieskolaAvg_Kurs_1997"
-edition = 1997
+edition = { from = "1996-07-01", to = "1997-06-30" }
 
 [[table.column]]
 name = "Betyg"
@@ -159019,7 +159019,7 @@ representation = "Poang"
 
 [[table]]
 id = "GymnasieskolaAvg_Kurs_1998"
-edition = 1998
+edition = { from = "1997-07-01", to = "1998-06-30" }
 
 [[table.column]]
 name = "Betyg"
@@ -159055,7 +159055,7 @@ representation = "Poang"
 
 [[table]]
 id = "GymnasieskolaAvg_Kurs_1999"
-edition = 1999
+edition = { from = "1998-07-01", to = "1999-06-30" }
 
 [[table.column]]
 name = "Betyg"
@@ -159091,7 +159091,7 @@ representation = "Poang"
 
 [[table]]
 id = "GymnasieskolaAvg_Kurs_2000"
-edition = 2000
+edition = { from = "1999-07-01", to = "2000-06-30" }
 
 [[table.column]]
 name = "Betyg"
@@ -159127,7 +159127,7 @@ representation = "Poang"
 
 [[table]]
 id = "GymnasieskolaAvg_Kurs_2001"
-edition = 2001
+edition = { from = "2000-07-01", to = "2001-06-30" }
 
 [[table.column]]
 name = "Betyg"
@@ -159163,7 +159163,7 @@ representation = "Poang"
 
 [[table]]
 id = "GymnasieskolaAvg_Kurs_2002"
-edition = 2002
+edition = { from = "2001-07-01", to = "2002-06-30" }
 
 [[table.column]]
 name = "Betyg"
@@ -159199,7 +159199,7 @@ representation = "Poang"
 
 [[table]]
 id = "GymnasieskolaAvg_Kurs_2003"
-edition = 2003
+edition = { from = "2002-07-01", to = "2003-06-30" }
 
 [[table.column]]
 name = "Betyg"
@@ -159235,7 +159235,7 @@ representation = "Poang"
 
 [[table]]
 id = "GymnasieskolaAvg_Kurs_2004"
-edition = 2004
+edition = { from = "2003-07-01", to = "2004-06-30" }
 
 [[table.column]]
 name = "Betyg"
@@ -159271,7 +159271,7 @@ representation = "Poang"
 
 [[table]]
 id = "GymnasieskolaAvg_Kurs_2005"
-edition = 2005
+edition = { from = "2004-07-01", to = "2005-06-30" }
 
 [[table.column]]
 name = "Betyg"
@@ -159307,7 +159307,7 @@ representation = "Poang"
 
 [[table]]
 id = "GymnasieskolaAvg_Kurs_2006"
-edition = 2006
+edition = { from = "2005-07-01", to = "2006-06-30" }
 
 [[table.column]]
 name = "Betyg"
@@ -159343,7 +159343,7 @@ representation = "Poang"
 
 [[table]]
 id = "GymnasieskolaAvg_Kurs_2007"
-edition = 2007
+edition = { from = "2006-07-01", to = "2007-06-30" }
 
 [[table.column]]
 name = "Betyg"
@@ -159379,7 +159379,7 @@ representation = "Poang"
 
 [[table]]
 id = "GymnasieskolaAvg_Kurs_2008"
-edition = 2008
+edition = { from = "2007-07-01", to = "2008-06-30" }
 
 [[table.column]]
 name = "Betyg"
@@ -159415,7 +159415,7 @@ representation = "Poang"
 
 [[table]]
 id = "GymnasieskolaAvg_Kurs_2009"
-edition = 2009
+edition = { from = "2008-07-01", to = "2009-06-30" }
 
 [[table.column]]
 name = "Betyg"
@@ -159451,7 +159451,7 @@ representation = "Poang"
 
 [[table]]
 id = "GymnasieskolaAvg_Kurs_2010"
-edition = 2010
+edition = { from = "2009-07-01", to = "2010-06-30" }
 
 [[table.column]]
 name = "Betyg"
@@ -159495,7 +159495,7 @@ representation = "Utokad"
 
 [[table]]
 id = "GymnasieskolaAvg_Kurs_2011"
-edition = 2011
+edition = { from = "2010-07-01", to = "2011-06-30" }
 
 [[table.column]]
 name = "Betyg"
@@ -159539,7 +159539,7 @@ representation = "Utokad"
 
 [[table]]
 id = "GymnasieskolaAvg_Kurs_2012"
-edition = 2012
+edition = { from = "2011-07-01", to = "2012-06-30" }
 
 [[table.column]]
 name = "Betyg"
@@ -159583,7 +159583,7 @@ representation = "Utokad"
 
 [[table]]
 id = "GymnasieskolaAvg_Kurs_2013"
-edition = 2013
+edition = { from = "2012-07-01", to = "2013-06-30" }
 
 [[table.column]]
 name = "Betyg"
@@ -159627,7 +159627,7 @@ representation = "Utokad"
 
 [[table]]
 id = "GymnasieskolaAvg_Kurs_2014"
-edition = 2014
+edition = { from = "2013-07-01", to = "2014-06-30" }
 
 [[table.column]]
 name = "Betyg"
@@ -159671,7 +159671,7 @@ representation = "Utokad"
 
 [[table]]
 id = "GymnasieskolaAvg_Kurs_2015"
-edition = 2015
+edition = { from = "2014-07-01", to = "2015-06-30" }
 
 [[table.column]]
 name = "Betyg"
@@ -159715,7 +159715,7 @@ representation = "Utokad"
 
 [[table]]
 id = "GymnasieskolaAvg_Kurs_2016"
-edition = 2016
+edition = { from = "2015-07-01", to = "2016-06-30" }
 
 [[table.column]]
 name = "Betyg"
@@ -159759,7 +159759,7 @@ representation = "Utokad"
 
 [[table]]
 id = "GymnasieskolaAvg_Kurs_2017"
-edition = 2017
+edition = { from = "2016-07-01", to = "2017-06-30" }
 
 [[table.column]]
 name = "Betyg"
@@ -159803,7 +159803,7 @@ representation = "Utokad"
 
 [[table]]
 id = "GymnasieskolaAvg_Kurs_2018"
-edition = 2018
+edition = { from = "2017-07-01", to = "2018-06-30" }
 
 [[table.column]]
 name = "Betyg"
@@ -159847,7 +159847,7 @@ representation = "Utokad"
 
 [[table]]
 id = "GymnasieskolaAvg_Kurs_2019"
-edition = 2019
+edition = { from = "2018-07-01", to = "2019-06-30" }
 
 [[table.column]]
 name = "Betyg"
@@ -159891,7 +159891,7 @@ representation = "Utokad"
 
 [[table]]
 id = "GymnasieskolaAvg_Kurs_2020"
-edition = 2020
+edition = { from = "2019-07-01", to = "2020-06-30" }
 
 [[table.column]]
 name = "Betyg"
@@ -159935,7 +159935,7 @@ representation = "Utokad"
 
 [[table]]
 id = "GymnasieskolaAvg_Kurs_2021"
-edition = 2021
+edition = { from = "2020-07-01", to = "2021-06-30" }
 
 [[table.column]]
 name = "Betyg"
@@ -159979,7 +159979,7 @@ representation = "Utokad"
 
 [[table]]
 id = "GymnasieskolaAvg_Kurs_2022"
-edition = 2022
+edition = { from = "2021-07-01", to = "2022-06-30" }
 
 [[table.column]]
 name = "Betyg"
@@ -160023,7 +160023,7 @@ representation = "Utokad"
 
 [[table]]
 id = "GymnasieskolaAvg_Kurs_2023"
-edition = 2023
+edition = { from = "2022-07-01", to = "2023-06-30" }
 
 [[table.column]]
 name = "Betyg"
@@ -160067,7 +160067,7 @@ representation = "Utokad"
 
 [[table]]
 id = "GymnasieskolaAvg_Kurs_2024"
-edition = 2024
+edition = { from = "2023-07-01", to = "2024-06-30" }
 
 [[table.column]]
 name = "Betyg"
@@ -239002,7 +239002,7 @@ representation = "Sökt belopp, kr (u)(sokande)"
 
 [[table]]
 id = "LReg_1989"
-edition = 1989
+edition = { from = "1989-07-01", to = "1990-06-30" }
 
 [[table.column]]
 name = "Argang"
@@ -239060,7 +239060,7 @@ representation = "TjLedig"
 
 [[table]]
 id = "LReg_1990"
-edition = 1990
+edition = { from = "1990-07-01", to = "1991-06-30" }
 
 [[table.column]]
 name = "Argang"
@@ -239126,7 +239126,7 @@ representation = "TjLedig"
 
 [[table]]
 id = "LReg_1991"
-edition = 1991
+edition = { from = "1991-07-01", to = "1992-06-30" }
 
 [[table.column]]
 name = "Argang"
@@ -239213,7 +239213,7 @@ representation = "BefKod"
 
 [[table]]
 id = "LReg_1992"
-edition = 1992
+edition = { from = "1992-07-01", to = "1993-06-30" }
 
 [[table.column]]
 name = "Anstslag"
@@ -239308,7 +239308,7 @@ representation = "BefKod"
 
 [[table]]
 id = "LReg_1993"
-edition = 1993
+edition = { from = "1993-07-01", to = "1994-06-30" }
 
 [[table.column]]
 name = "Anstslag"
@@ -239403,7 +239403,7 @@ representation = "BefKod"
 
 [[table]]
 id = "LReg_1994"
-edition = 1994
+edition = { from = "1994-07-01", to = "1995-06-30" }
 
 [[table.column]]
 name = "Anstslag"
@@ -239498,7 +239498,7 @@ representation = "BefKod"
 
 [[table]]
 id = "LReg_1995"
-edition = 1995
+edition = { from = "1995-07-01", to = "1996-06-30" }
 
 [[table.column]]
 name = "Anstslag"
@@ -239606,7 +239606,7 @@ representation = "BefKod"
 
 [[table]]
 id = "LReg_1996"
-edition = 1996
+edition = { from = "1996-07-01", to = "1997-06-30" }
 
 [[table.column]]
 name = "Anstslag"
@@ -239714,7 +239714,7 @@ representation = "BefKod"
 
 [[table]]
 id = "LReg_1997"
-edition = 1997
+edition = { from = "1997-07-01", to = "1998-06-30" }
 
 [[table.column]]
 name = "Anstslag"
@@ -239822,7 +239822,7 @@ representation = "BefKod"
 
 [[table]]
 id = "LReg_1998"
-edition = 1998
+edition = { from = "1998-07-01", to = "1999-06-30" }
 
 [[table.column]]
 name = "Anstslag"
@@ -239930,7 +239930,7 @@ representation = "BefKod"
 
 [[table]]
 id = "LReg_1999"
-edition = 1999
+edition = { from = "1999-07-01", to = "2000-06-30" }
 
 [[table.column]]
 name = "ANNANPED"
@@ -240166,7 +240166,7 @@ representation = "BefKod"
 
 [[table]]
 id = "LReg_2000"
-edition = 2000
+edition = { from = "2000-07-01", to = "2001-06-30" }
 
 [[table.column]]
 name = "ANNANPED"
@@ -240402,7 +240402,7 @@ representation = "BefKod"
 
 [[table]]
 id = "LReg_2001"
-edition = 2001
+edition = { from = "2001-07-01", to = "2002-06-30" }
 
 [[table.column]]
 name = "ANNANPED"
@@ -240638,7 +240638,7 @@ representation = "BefKod"
 
 [[table]]
 id = "LReg_2002"
-edition = 2002
+edition = { from = "2002-07-01", to = "2003-06-30" }
 
 [[table.column]]
 name = "ANNANPED"
@@ -240874,7 +240874,7 @@ representation = "BefKod"
 
 [[table]]
 id = "LReg_2003"
-edition = 2003
+edition = { from = "2003-07-01", to = "2004-06-30" }
 
 [[table.column]]
 name = "ANNANPED"
@@ -241110,7 +241110,7 @@ representation = "BefKod"
 
 [[table]]
 id = "LReg_2004"
-edition = 2004
+edition = { from = "2004-07-01", to = "2005-06-30" }
 
 [[table.column]]
 name = "ANNANPED"
@@ -241346,7 +241346,7 @@ representation = "BefKod"
 
 [[table]]
 id = "LReg_2005"
-edition = 2005
+edition = { from = "2005-07-01", to = "2006-06-30" }
 
 [[table.column]]
 name = "ANNANPED"
@@ -241582,7 +241582,7 @@ representation = "BefKod"
 
 [[table]]
 id = "LReg_2006"
-edition = 2006
+edition = { from = "2006-07-01", to = "2007-06-30" }
 
 [[table.column]]
 name = "ANNANPED"
@@ -241818,7 +241818,7 @@ representation = "BefKod"
 
 [[table]]
 id = "LReg_2007"
-edition = 2007
+edition = { from = "2007-07-01", to = "2008-06-30" }
 
 [[table.column]]
 name = "ANNANPED"
@@ -242054,7 +242054,7 @@ representation = "BefKod"
 
 [[table]]
 id = "LReg_2008"
-edition = 2008
+edition = { from = "2008-07-01", to = "2009-06-30" }
 
 [[table.column]]
 name = "ANNANPED"
@@ -242290,7 +242290,7 @@ representation = "BefKod"
 
 [[table]]
 id = "LReg_2009"
-edition = 2009
+edition = { from = "2009-07-01", to = "2010-06-30" }
 
 [[table.column]]
 name = "ANNANPED"
@@ -242534,7 +242534,7 @@ representation = "BefKod"
 
 [[table]]
 id = "LReg_2010"
-edition = 2010
+edition = { from = "2010-07-01", to = "2011-06-30" }
 
 [[table.column]]
 name = "ANNANPED"
@@ -242778,7 +242778,7 @@ representation = "BefKod"
 
 [[table]]
 id = "LReg_2011"
-edition = 2011
+edition = { from = "2011-07-01", to = "2012-06-30" }
 
 [[table.column]]
 name = "ANNANPED"
@@ -243022,7 +243022,7 @@ representation = "BefKod"
 
 [[table]]
 id = "LReg_2012"
-edition = 2012
+edition = { from = "2012-07-01", to = "2013-06-30" }
 
 [[table.column]]
 name = "ANNANPED"
@@ -243266,7 +243266,7 @@ representation = "BefKod"
 
 [[table]]
 id = "LReg_2013"
-edition = 2013
+edition = { from = "2013-07-01", to = "2014-06-30" }
 
 [[table.column]]
 name = "ANNANPED"
@@ -243534,7 +243534,7 @@ representation = "Verksamhetstyp"
 
 [[table]]
 id = "LReg_2014"
-edition = 2014
+edition = { from = "2014-07-01", to = "2015-06-30" }
 
 [[table.column]]
 name = "ANNANPED"
@@ -243826,7 +243826,7 @@ representation = "Verksamhetstyp"
 
 [[table]]
 id = "LReg_2015"
-edition = 2015
+edition = { from = "2015-07-01", to = "2016-06-30" }
 
 [[table.column]]
 name = "ANNANPED"
@@ -244118,7 +244118,7 @@ representation = "Verksamhetstyp"
 
 [[table]]
 id = "LReg_2016"
-edition = 2016
+edition = { from = "2016-07-01", to = "2017-06-30" }
 
 [[table.column]]
 name = "ANNANPED"
@@ -244418,7 +244418,7 @@ representation = "Verksamhetstyp"
 
 [[table]]
 id = "LReg_2017"
-edition = 2017
+edition = { from = "2017-07-01", to = "2018-06-30" }
 
 [[table.column]]
 name = "ANNANPED"
@@ -244718,7 +244718,7 @@ representation = "Verksamhetstyp"
 
 [[table]]
 id = "LReg_2018"
-edition = 2018
+edition = { from = "2018-07-01", to = "2019-06-30" }
 
 [[table.column]]
 name = "ANNANPED"
@@ -245018,7 +245018,7 @@ representation = "Verksamhetstyp"
 
 [[table]]
 id = "LReg_2019"
-edition = 2019
+edition = { from = "2019-07-01", to = "2020-06-30" }
 
 [[table.column]]
 name = "ANNANPED"
@@ -245318,7 +245318,7 @@ representation = "Verksamhetstyp"
 
 [[table]]
 id = "LReg_2020"
-edition = 2020
+edition = { from = "2020-07-01", to = "2021-06-30" }
 
 [[table.column]]
 name = "ANNANPED"
@@ -245618,7 +245618,7 @@ representation = "Verksamhetstyp"
 
 [[table]]
 id = "LReg_2021"
-edition = 2021
+edition = { from = "2021-07-01", to = "2022-06-30" }
 
 [[table.column]]
 name = "ANNANPED"
@@ -245918,7 +245918,7 @@ representation = "Verksamhetstyp"
 
 [[table]]
 id = "LReg_2022"
-edition = 2022
+edition = { from = "2022-07-01", to = "2023-06-30" }
 
 [[table.column]]
 name = "ANNANPED"
@@ -261639,7 +261639,7 @@ representation = "TILLF_REDUCERAD_EGENAVGIFT"
 
 [[table]]
 id = "slutbetyg_Ak9_1990"
-edition = 1990
+edition = { from = "1989-07-01", to = "1990-06-30" }
 
 [[table.column]]
 name = "BI"
@@ -261973,7 +261973,7 @@ representation = "Tk"
 
 [[table]]
 id = "slutbetyg_Ak9_1991"
-edition = 1991
+edition = { from = "1990-07-01", to = "1991-06-30" }
 
 [[table.column]]
 name = "BI"
@@ -262307,7 +262307,7 @@ representation = "Tk"
 
 [[table]]
 id = "slutbetyg_Ak9_1992"
-edition = 1992
+edition = { from = "1991-07-01", to = "1992-06-30" }
 
 [[table.column]]
 name = "BI"
@@ -262641,7 +262641,7 @@ representation = "Tk"
 
 [[table]]
 id = "slutbetyg_Ak9_1993"
-edition = 1993
+edition = { from = "1992-07-01", to = "1993-06-30" }
 
 [[table.column]]
 name = "BI"
@@ -262975,7 +262975,7 @@ representation = "Tk"
 
 [[table]]
 id = "slutbetyg_Ak9_1994"
-edition = 1994
+edition = { from = "1993-07-01", to = "1994-06-30" }
 
 [[table.column]]
 name = "BI"
@@ -263309,7 +263309,7 @@ representation = "Tk"
 
 [[table]]
 id = "slutbetyg_Ak9_1995"
-edition = 1995
+edition = { from = "1994-07-01", to = "1995-06-30" }
 
 [[table.column]]
 name = "BI"
@@ -263643,7 +263643,7 @@ representation = "Tk"
 
 [[table]]
 id = "slutbetyg_Ak9_1996"
-edition = 1996
+edition = { from = "1995-07-01", to = "1996-06-30" }
 
 [[table.column]]
 name = "BI"
@@ -263977,7 +263977,7 @@ representation = "Tk"
 
 [[table]]
 id = "slutbetyg_Ak9_1997"
-edition = 1997
+edition = { from = "1996-07-01", to = "1997-06-30" }
 
 [[table.column]]
 name = "BI"
@@ -264311,7 +264311,7 @@ representation = "Tk"
 
 [[table]]
 id = "slutbetyg_Ak9_1998"
-edition = 1998
+edition = { from = "1997-07-01", to = "1998-06-30" }
 
 [[table.column]]
 name = "Antal_Ettor"
@@ -264666,7 +264666,7 @@ representation = "Tn"
 
 [[table]]
 id = "slutbetyg_Ak9_1999"
-edition = 1999
+edition = { from = "1998-07-01", to = "1999-06-30" }
 
 [[table.column]]
 name = "Antal_Ettor"
@@ -265021,7 +265021,7 @@ representation = "Tn"
 
 [[table]]
 id = "slutbetyg_Ak9_2000"
-edition = 2000
+edition = { from = "1999-07-01", to = "2000-06-30" }
 
 [[table.column]]
 name = "Antal_Ettor"
@@ -265376,7 +265376,7 @@ representation = "Tn"
 
 [[table]]
 id = "slutbetyg_Ak9_2001"
-edition = 2001
+edition = { from = "2000-07-01", to = "2001-06-30" }
 
 [[table.column]]
 name = "Antal_Ettor"
@@ -265726,7 +265726,7 @@ representation = "Tn"
 
 [[table]]
 id = "slutbetyg_Ak9_2002"
-edition = 2002
+edition = { from = "2001-07-01", to = "2002-06-30" }
 
 [[table.column]]
 name = "Antal_Ettor"
@@ -266076,7 +266076,7 @@ representation = "Tn"
 
 [[table]]
 id = "slutbetyg_Ak9_2003"
-edition = 2003
+edition = { from = "2002-07-01", to = "2003-06-30" }
 
 [[table.column]]
 name = "Antal_Ettor"
@@ -266426,7 +266426,7 @@ representation = "Tn"
 
 [[table]]
 id = "slutbetyg_Ak9_2004"
-edition = 2004
+edition = { from = "2003-07-01", to = "2004-06-30" }
 
 [[table.column]]
 name = "Antal_Ettor"
@@ -266789,7 +266789,7 @@ representation = "Antal_Betyg"
 
 [[table]]
 id = "slutbetyg_Ak9_2005"
-edition = 2005
+edition = { from = "2004-07-01", to = "2005-06-30" }
 
 [[table.column]]
 name = "Antal_Ettor"
@@ -267152,7 +267152,7 @@ representation = "Antal_Betyg"
 
 [[table]]
 id = "slutbetyg_Ak9_2006"
-edition = 2006
+edition = { from = "2005-07-01", to = "2006-06-30" }
 
 [[table.column]]
 name = "Antal_Ettor"
@@ -267515,7 +267515,7 @@ representation = "Antal_Betyg"
 
 [[table]]
 id = "slutbetyg_Ak9_2007"
-edition = 2007
+edition = { from = "2006-07-01", to = "2007-06-30" }
 
 [[table.column]]
 name = "Antal_Ettor"
@@ -267878,7 +267878,7 @@ representation = "Antal_Betyg"
 
 [[table]]
 id = "slutbetyg_Ak9_2008"
-edition = 2008
+edition = { from = "2007-07-01", to = "2008-06-30" }
 
 [[table.column]]
 name = "Antal_Ettor"
@@ -268241,7 +268241,7 @@ representation = "Antal_Betyg"
 
 [[table]]
 id = "slutbetyg_Ak9_2009"
-edition = 2009
+edition = { from = "2008-07-01", to = "2009-06-30" }
 
 [[table.column]]
 name = "Antal_Ettor"
@@ -268604,7 +268604,7 @@ representation = "Antal_Betyg"
 
 [[table]]
 id = "slutbetyg_Ak9_2010"
-edition = 2010
+edition = { from = "2009-07-01", to = "2010-06-30" }
 
 [[table.column]]
 name = "Antal_Ettor"
@@ -268967,7 +268967,7 @@ representation = "Antal_Betyg"
 
 [[table]]
 id = "slutbetyg_Ak9_2011"
-edition = 2011
+edition = { from = "2010-07-01", to = "2011-06-30" }
 
 [[table.column]]
 name = "Antal_Ettor"
@@ -269362,7 +269362,7 @@ representation = "Beht_YRK"
 
 [[table]]
 id = "slutbetyg_Ak9_2012"
-edition = 2012
+edition = { from = "2011-07-01", to = "2012-06-30" }
 
 [[table.column]]
 name = "Antal_Ettor"
@@ -269757,7 +269757,7 @@ representation = "Beht_YRK"
 
 [[table]]
 id = "slutbetyg_Ak9_2013"
-edition = 2013
+edition = { from = "2012-07-01", to = "2013-06-30" }
 
 [[table.column]]
 name = "Antal_F"
@@ -270173,7 +270173,7 @@ representation = "Beht_YRK"
 
 [[table]]
 id = "slutbetyg_Ak9_2014"
-edition = 2014
+edition = { from = "2013-07-01", to = "2014-06-30" }
 
 [[table.column]]
 name = "Antal_F"
@@ -270605,7 +270605,7 @@ representation = "MeritVarde_M2"
 
 [[table]]
 id = "slutbetyg_Ak9_2015"
-edition = 2015
+edition = { from = "2014-07-01", to = "2015-06-30" }
 
 [[table.column]]
 name = "Antal_F"
@@ -271032,7 +271032,7 @@ representation = "MeritVarde_M2"
 
 [[table]]
 id = "slutbetyg_Ak9_2016"
-edition = 2016
+edition = { from = "2015-07-01", to = "2016-06-30" }
 
 [[table.column]]
 name = "Antal_F"
@@ -271467,7 +271467,7 @@ representation = "MeritVarde_M2"
 
 [[table]]
 id = "slutbetyg_Ak9_2017"
-edition = 2017
+edition = { from = "2016-07-01", to = "2017-06-30" }
 
 [[table.column]]
 name = "Antal_F"
@@ -271902,7 +271902,7 @@ representation = "MeritVarde_M2"
 
 [[table]]
 id = "slutbetyg_Ak9_2018"
-edition = 2018
+edition = { from = "2017-07-01", to = "2018-06-30" }
 
 [[table.column]]
 name = "Antal_F"
@@ -272337,7 +272337,7 @@ representation = "MeritVarde_M2"
 
 [[table]]
 id = "slutbetyg_Ak9_2019"
-edition = 2019
+edition = { from = "2018-07-01", to = "2019-06-30" }
 
 [[table.column]]
 name = "Antal_F"
@@ -272772,7 +272772,7 @@ representation = "MeritVarde_M2"
 
 [[table]]
 id = "slutbetyg_Ak9_2020"
-edition = 2020
+edition = { from = "2019-07-01", to = "2020-06-30" }
 
 [[table.column]]
 name = "Antal_F"
@@ -273207,7 +273207,7 @@ representation = "MeritVarde_M2"
 
 [[table]]
 id = "slutbetyg_Ak9_2021"
-edition = 2021
+edition = { from = "2020-07-01", to = "2021-06-30" }
 
 [[table.column]]
 name = "AntalBetyg"
@@ -273616,7 +273616,7 @@ representation = "MeritVarde_M2"
 
 [[table]]
 id = "slutbetyg_Ak9_2022"
-edition = 2022
+edition = { from = "2021-07-01", to = "2022-06-30" }
 
 [[table.column]]
 name = "AntalBetyg"
@@ -274046,7 +274046,7 @@ representation = "MeritVarde_M2"
 
 [[table]]
 id = "slutbetyg_Ak9_2023"
-edition = 2023
+edition = { from = "2022-07-01", to = "2023-06-30" }
 
 [[table.column]]
 name = "AntalBetyg"
@@ -274476,7 +274476,7 @@ representation = "MeritVarde_M2"
 
 [[table]]
 id = "slutbetyg_Ak9_2024"
-edition = 2024
+edition = { from = "2023-07-01", to = "2024-06-30" }
 
 [[table.column]]
 name = "AntalBetyg"
