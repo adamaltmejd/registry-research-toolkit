@@ -64,6 +64,10 @@ then file it or delete it with a reason.
   `yard status` prints `0 open`, `yard lane diff Y-123/1` prints
   `error: no attempt Y-123/1`) instead of resolving the project through the git common
   dir or refusing with a pointer to the main checkout.
+- (0.14.10, filed as switchyard #101) `yard lane diff` truncates a large candidate diff
+  (~29.7k lines, marker `[yard: diff truncated]` inside the patch text) and has no
+  `--full`; the operator's pre-approval real-data build needs the whole candidate.
+  Workaround: `git fetch .yard/local/git/canonical.git <head>` and a detached worktree.
 - (0.13.3) A daemon restart to load config cancelled a running execution (Y-35/1/e1) and
   left a stopped attempt with no attention item and no printed exit. Not re-observed
   since; retest before filing.
