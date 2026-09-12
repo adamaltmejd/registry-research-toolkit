@@ -21,7 +21,6 @@ from pathlib import Path
 import pytest
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta.fqid import FqidKind
-from reg_meta_build.canonical_attach import load_canonical_attach
 from reg_meta_build.codeless_overlap import load_codeless_overlap
 from reg_meta_build.codelivery import load_codelivery
 from reg_meta_build.concept_groups import (
@@ -39,7 +38,6 @@ from reg_meta_build.doc_db import (
 from reg_meta_build.period_family_merges import load_period_family_merges
 from reg_meta_build.relations import _SAME_AS_MAX_COMPONENT, load_relations
 from reg_meta_build.scb_errata import load_scb_errata
-from reg_meta_build.variable_grafts import load_variable_grafts
 
 from reg_meta_build.fqid_slugs import repo_slug_dir
 
@@ -371,48 +369,17 @@ def test_repo_relations_parses() -> None:
     )
 
 
-def test_repo_canonical_attach_parses() -> None:
-    # The #400 PR2 canonical-attach seed lives beside the other canonical-SCB
-    # seed (input_data/scb_canonical/). It is authored separately and may not
-    # ship yet — skip when absent; when present, the load-time shape (2-segment
-    # FQID, required keys, ISO dates, declared classifications) must hold. The
-    # loader tolerates a missing path (returns []), but here we want a real gate
-    # on the in-repo file, so resolve the direct path and skip if it's not there.
-    path = _ROOT / "input_data" / "scb_canonical" / "lisa_canonical.toml"
-    if not path.is_file():
-        pytest.skip("lisa_canonical.toml not present in this checkout")
-    entries = load_canonical_attach(path)
-    assert entries  # a present seed must carry at least one [[attach]]
-    assert all(e.provider == "scb" and e.register and e.variant for e in entries)
-    assert all(e.column and e.name and e.definition for e in entries)
-
-
-def test_repo_variable_grafts_parses() -> None:
-    grafts = load_variable_grafts(_ROOT / "variable_grafts.toml")
-    assert grafts  # the #365 SWECOV grafts ship with the repo
-    # Load-time shape (2-segment FQID, non-empty variant/column/description,
-    # unique triple); variant/column RESOLUTION is maintainer-build territory.
-    assert all(g.provider and g.register and g.variant and g.column for g in grafts)
-
-
-def test_repo_variable_grafts_include_swecov_survey_wave_batch() -> None:
-    grafts = load_variable_grafts(_ROOT / "variable_grafts.toml")
-    counts = Counter((g.provider, g.register, g.variant) for g in grafts)
-    assert counts[("scb", "fou", "foretagssektorn")] == 992
-    assert counts[("scb", "innovation-foretag", "_default")] == 647
-    assert counts[("scb", "it-anvandning", "it-anvandning-i-foretag")] == 156
-    assert {"ACAT01", "ADECU", "AI_FTE_F"} <= {g.column for g in grafts}
-    peorgnrhe = next(g for g in grafts if g.column == "PeOrgNrHe")
-    assert peorgnrhe.is_identifier
-
-
 def test_repo_scb_errata_parses() -> None:
-    # `scb_errata.toml` (Y-114) is the upstream-error log; every entry resolves
-    # its `register`/`variant` slugs against the curated fqid_slugs/scb.toml the
-    # build reads, so a stale slug is a load-time failure here rather than a
-    # maintainer-build surprise. The remaining half (the version is documented,
-    # the column has a real row) needs the real export and stays build-only.
-    errata = load_scb_errata(_ROOT / "scb_errata.toml", repo_slug_dir())
+    # `scb_errata.toml` (Y-114/Y-116) is the upstream-error log; every entry
+    # resolves its `register`/`variant` slugs against the curated fqid_slugs/scb.toml
+    # the build reads, so a stale slug is a load-time failure here rather than a
+    # maintainer-build surprise. The remaining half (the version is documented, the
+    # column has / has not a real row) needs the real export and stays build-only.
+    errata = load_scb_errata(
+        _ROOT / "scb_errata.toml",
+        repo_slug_dir(),
+        classification_seed_path=_ROOT / "classifications.toml",
+    )
     assert errata  # the verified LISA DispInkKE case ships with the repo
     assert {(d.column, d.versions) for d in errata.delivered} >= {
         ("DispInkKE", ("2010", "2011", "2012")),
@@ -422,6 +389,48 @@ def test_repo_scb_errata_parses() -> None:
     assert all(
         (d.register_id, d.register_variant_id) == (34, 153) for d in errata.delivered
     )
+
+
+def test_repo_scb_errata_columns_carry_both_evidence_sources() -> None:
+    # Y-116 folded the SWECOV grafts and the LISA doc-coverage attaches into
+    # [[column]]. Both blocks must survive a regeneration of either: the counts
+    # pin the survey-wave batch (#856) and the doc set, and the LISA entries pin
+    # the variant re-targeting — an entry whose `versions` name editions its
+    # variant does not have fails only on a maintainer build, with the corpus.
+    errata = load_scb_errata(
+        _ROOT / "scb_errata.toml",
+        repo_slug_dir(),
+        classification_seed_path=_ROOT / "classifications.toml",
+    )
+    by_source = Counter(c.source for c in errata.columns)
+    assert by_source == {"steward-holdings": 1875, "scb-docs": 34}
+
+    holdings = Counter(
+        (c.register_id, c.register_variant_id)
+        for c in errata.columns
+        if c.source == "steward-holdings"
+    )
+    assert sorted(holdings.values(), reverse=True)[:3] == [992, 647, 156]
+    assert all(
+        c.versions is None for c in errata.columns if c.source == "steward-holdings"
+    )
+    peorgnrhe = next(c for c in errata.columns if c.column == "PeOrgNrHe")
+    assert peorgnrhe.is_identifier
+
+    # LISA's individual frame is `individer-16plus` (34.1335) through 2009 and
+    # `individer-15plus` (34.153) from 2010, so a doc-coverage entry's versions
+    # must fall inside its variant's era.
+    eras = {1335: range(1990, 2010), 153: range(2010, 2024)}
+    docs = [c for c in errata.columns if c.source == "scb-docs"]
+    assert {c.register_variant_id for c in docs} == set(eras)
+    for c in docs:
+        assert c.versions is not None
+        assert all(int(v) in eras[c.register_variant_id] for v in c.versions)
+    # FastBet (1998–) and MedbLandNamn (1990–) span the change: two entries, one
+    # variable each (`key` is register-scoped, not variant-scoped).
+    spanning = {c.column for c in docs if sum(d.column == c.column for d in docs) > 1}
+    assert spanning == {"FastBet", "MedbLandNamn"}
+    assert len({c.key for c in docs if c.column in spanning}) == 2
 
 
 def test_scb_errata_repeated_version_raises_curation_error(tmp_path: Path) -> None:

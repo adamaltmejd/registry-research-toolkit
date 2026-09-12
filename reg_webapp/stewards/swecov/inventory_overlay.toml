@@ -40,7 +40,7 @@
 #   [[assign]]   table, register_variant
 #       Variant coordinate(s) (<provider>/<register>/<variant>, string or
 #       list) for a table the curated MAPPING/disposition cannot place —
-#       residue-provider deliveries (FHM_*, FK_*, …) and grafted holdings.
+#       residue-provider deliveries (FHM_*, FK_*, …) and errata-minted columns.
 
 # ── supersessions (maintainer-confirmed 2026-09-01) ─────────────────────────
 

@@ -3,10 +3,9 @@
 
 `Registerinformation.csv` is one row per (register variant, version, variable,
 column); the coalescer turns those rows into `variable_state` windows. When SCB
-omits a row, nothing downstream can put it back — grafts and `canonical_attach`
-mint a NEW variable (the attach loader refuses a column that already exists) and
-`delivery_enrichment` only backfills prose. So the correction is made at the
-PROVIDER'S OWN GRAIN: `scb_errata.toml` entries become synthetic
+omits a row, nothing downstream can put it back — `delivery_enrichment` only
+backfills prose onto a variable that already exists. So the correction is made at
+the PROVIDER'S OWN GRAIN: `scb_errata.toml` entries become synthetic
 Registerinformation rows INSIDE the SCB adapter, early enough that every pass
 after the import sees them. Windows, gaps, fusing, alias windows, types, value
 sets, the A1.2 sensitivity/identifier lift and the classification backfill then
@@ -14,17 +13,32 @@ fall out of the existing passes — there is no post-pass state surgery and
 no generic `variable_state_overrides.toml` (see DESIGN.md → Curation surface
 taxonomy).
 
-Two typed entry kinds:
+Three typed entry kinds, one question each:
 
 * `[[version]]` — a register version SCB has not documented. Mints a
   `register_version` row.
-* `[[delivered]]` — the (version, column) rows SCB omitted. Clones the column's
-  attributes (var_id, Variabelnamn, definition-carrying prose, Datatyp,
-  Datalängd, value-set link, grain) from the NEAREST real version of the same
-  (variant, column) — EVERY row that edition carries for the column, so a column
-  co-delivered there under two variables is replayed as two rows. Each synthetic
-  row lands in the same coalescer group as the real row it copies and simply
-  extends that group's claim years.
+* `[[delivered]]` — the (version, column) rows SCB omitted for a column it
+  documents ELSEWHERE on the variant. Clones the column's attributes (var_id,
+  Variabelnamn, definition-carrying prose, Datatyp, Datalängd, value-set link,
+  grain) from the NEAREST real version of the same (variant, column) — EVERY row
+  that edition carries for the column, so a column co-delivered there under two
+  variables is replayed as two rows. Each synthetic row lands in the same
+  coalescer group as the real row it copies and simply extends that group's claim
+  years.
+* `[[column]]` — a column SCB documents NOWHERE on the variant (Y-116, folding in
+  the retired `variable_grafts.py` / `canonical_attach.py` post-passes). There is
+  no row to clone, so the entry carries the variable's own identity (name,
+  definition, type, PII flags, optional classification) and mints it: one
+  `variable` plus one synthetic row per named version. The evidence is either
+  SCB's own documentation (`source = "scb-docs"` — the LISA doc library) or a
+  steward's holdings (`source = "steward-holdings"` — the SWECOV delivery lists);
+  the build treats both identically, because the FACT is the same one.
+
+`[[delivered]]` and `[[column]]` partition that question exactly: the first
+refuses a column with no real row on the variant (`scb_errata_no_source_row`),
+the second refuses a column that HAS one (`scb_errata_now_present`). One column
+of one variant is therefore one entry of one kind, and a column SCB starts
+shipping fails the build rather than silently duplicating a live variable.
 
 The curator names SCB versions, never dates: a version name is the coordinate
 SCB itself publishes, and the year parsing already lives in `edition_bounds`.
@@ -32,7 +46,7 @@ SCB itself publishes, and the year parsing already lives in `edition_bounds`.
 Ids come from `mint_canonical_scb` — the reserved SCB sub-band `[2^61, 2^62)`
 for rows that belong to the `scb` provider but are absent from its machine
 export. Deterministic (same entry → same id every build) and disjoint from every
-real source-derived cvid/regver_id by construction. That band sits above every
+real source-derived cvid/regver_id/variable_id by construction. That band sits above every
 id SCB's export can produce, and the coalescer reads `regver_id` order as era
 order — so a `[[version]]`-declared edition is unconditionally the LATEST era for
 the latest-alias / latest-type trackers. Rather than leave that to chance, a
@@ -54,7 +68,7 @@ from __future__ import annotations
 
 import functools
 import sqlite3
-from dataclasses import dataclass
+from dataclasses import dataclass, fields
 from datetime import date
 from pathlib import Path
 
@@ -62,8 +76,10 @@ from ._curation import (
     curation_error,
     fold_column,
     load_curation_entries,
+    require_bool,
     require_str,
 )
+from .classifications import declared_short_names
 from .edition_bounds import edition_claims
 from .fqid_slugs import (
     PROVIDER_FILE_SUFFIX,
@@ -84,9 +100,46 @@ _VERSION_FIELDS = frozenset({"register", "variant", "name", "evidence", "noted"}
 _DELIVERED_FIELDS = frozenset(
     {"register", "variant", "column", "versions", "evidence", "noted", "upstream"}
 )
+_COLUMN_FIELDS = frozenset(
+    {
+        "register",
+        "variant",
+        "column",
+        "name",
+        "definition",
+        "data_type",
+        "classification",
+        "is_identifier",
+        "is_sensitive",
+        "versions",
+        "all_versions",
+        "source",
+        "evidence",
+        "noted",
+    }
+)
+
+# Where a `[[column]]`'s evidence comes from. Documentary only — the build mints
+# the same rows either way — but it is the first thing whoever retires an entry
+# needs, so it is a closed vocabulary rather than free text.
+_SOURCES = frozenset({"scb-docs", "steward-holdings"})
+
+# `data_type` vocabulary, shared with `input_data/scb_canonical/scb_canonical.toml`
+# (CanonicalScbAdapter). Stored verbatim on the synthetic row; the gate keeps a
+# typo (`txt`, `int`) from shipping a meaningless type. Optional: a steward
+# holdings list often names no type, and an absent one is a NULL state type.
+_DATA_TYPES = frozenset({"text", "decimal", "integer", "date"})
+
+# `variable.source_label` for a `[[column]]`-minted variable. ONE label for both
+# `source` values: the fact ("SCB's export lacks this column") is the same one,
+# and `source` — which is not published — is where the evidence class lives.
+ERRATA_COLUMN_SOURCE_LABEL = "scb-errata"
 
 _require_str = functools.partial(
     require_str, code=_CODE, prefix="scb_errata", file_name=_FILE_NAME
+)
+_require_bool = functools.partial(
+    require_bool, code=_CODE, prefix="scb_errata", file_name=_FILE_NAME
 )
 
 
@@ -111,6 +164,62 @@ class ErrataDelivered:
     versions: tuple[str, ...]
 
 
+# The `[[column]]` fields that say WHERE the variable is delivered rather
+# than what it is; everything else is `ErrataColumn.identity`.
+_PER_VARIANT_FIELDS = frozenset(
+    {"register_id", "register_variant_id", "versions", "source"}
+)
+
+
+@dataclass(frozen=True)
+class ErrataColumn:
+    """One `[[column]]`, resolved to SCB source ids: a column SCB documents
+    nowhere on the variant, with the variable identity to mint for it.
+
+    `versions` are `Registerversionnamn` tokens verbatim, or None for
+    `all_versions = true` (every edition the variant has — the faithful reading
+    of a steward holdings list, which states that the column is in the delivery
+    without dating it). `definition` becomes the variable's `description`, as the
+    curated prose always has; `variable.definition` stays SCB's own export field
+    and is left NULL.
+    """
+
+    register_id: int
+    register_variant_id: int
+    column: str
+    name: str
+    definition: str
+    data_type: str | None
+    classification: str | None
+    is_identifier: bool
+    is_sensitive: bool
+    versions: tuple[str, ...] | None
+    source: str
+
+    @property
+    def key(self) -> tuple[int, str]:
+        """The minted variable's identity: `(register_id, folded column)`.
+
+        NOT the variant — a column delivered on two variants of one register is
+        ONE variable with a state per variant, exactly as a machine `var_id`
+        spanning variants coalesces, and `variable.provider_key` (the column) is
+        register-scoped so it could not be anything else."""
+        return (self.register_id, fold_column(self.column))
+
+    @property
+    def identity(self) -> tuple:
+        """Everything the minted variable IS, as opposed to where it is
+        delivered. Two entries sharing a `key` must agree on all of it — they
+        describe one variable, and whichever the materializer wrote first would
+        silently decide. Derived from the fields rather than listed, so a new
+        variable-grain field joins the agreement check by existing."""
+        return tuple(
+            getattr(self, f.name)
+            for f in fields(self)
+            if f.name not in _PER_VARIANT_FIELDS
+        )
+
+
 @dataclass(frozen=True)
 class ScbErrata:
     """The loaded errata log. Empty when the file is absent (wheel installs,
@@ -118,9 +227,10 @@ class ScbErrata:
 
     versions: tuple[ErrataVersion, ...] = ()
     delivered: tuple[ErrataDelivered, ...] = ()
+    columns: tuple[ErrataColumn, ...] = ()
 
     def __bool__(self) -> bool:
-        return bool(self.versions or self.delivered)
+        return bool(self.versions or self.delivered or self.columns)
 
 
 def repo_scb_errata_path() -> Path | None:
@@ -177,10 +287,38 @@ def _unknown_keys(entry: dict, allowed: frozenset[str], table: str) -> None:
         )
 
 
-def _require_noted(entry: dict, context: str) -> None:
-    """`noted` is the date the maintainer recorded the omission. Validated (the
-    log is only useful if every entry is dated) but not carried into the build —
-    like `evidence`, it documents the entry for whoever retires it."""
+# The three entry kinds this file carries. Each is loaded by its own call, and
+# names the other two as legal siblings — derived here so a fourth kind cannot
+# be added to one list and forgotten in another, which would report a legitimate
+# table as an unknown top-level key.
+_KINDS: dict[str, str] = {
+    "version": "register / variant / name / evidence / noted",
+    "delivered": "register / variant / column / versions / evidence / noted",
+    "column": "register / variant / column / name / definition / "
+    "versions or all_versions / source / evidence / noted",
+}
+
+
+def _entries(path: Path | None, kind: str) -> list[dict]:
+    """One entry kind's raw tables, under this file's shared error vocabulary."""
+    return load_curation_entries(
+        path,
+        entry_key=kind,
+        label="SCB-errata",
+        prefix="scb_errata",
+        code_base="scb_errata",
+        file_name=_FILE_NAME,
+        entry_fields=_KINDS[kind],
+        sibling_keys=frozenset(_KINDS) - {kind},
+    )
+
+
+def _require_provenance(entry: dict, context: str) -> None:
+    """Every entry of every kind is evidenced and dated: `evidence` is why the
+    maintainer believes SCB got it wrong, `noted` the date they recorded it.
+    Validated but not carried into the build — both document the entry for
+    whoever retires it, and the log is only useful if neither can be omitted."""
+    _require_str(entry, "evidence", context)
     noted = _require_str(entry, "noted", context)
     try:
         parsed = date.fromisoformat(noted)
@@ -235,41 +373,35 @@ def _resolve_variant(
     return register_id, variant_id, context
 
 
-def load_scb_errata(path: Path | None, slug_dir: Path | None) -> ScbErrata:
+def load_scb_errata(
+    path: Path | None,
+    slug_dir: Path | None,
+    *,
+    classification_seed_path: Path | None = None,
+) -> ScbErrata:
     """Parse the errata TOML, resolving each entry's `register`/`variant` slugs
     against the curated `scb.toml` in `slug_dir`. Empty when no file (synthetic
     builds, wheel installs).
 
+    `classification_seed_path` is the build's own `classifications.toml` (the one
+    `populate_classifications` seeds from), consulted only when some `[[column]]`
+    names a `classification` — an undeclared short_name is a typo that would
+    otherwise be dropped silently by the candidate feed.
+
     Strict load, all EXIT_CONFIG with a remediation: only `[[version]]` /
-    `[[delivered]]` top-level; no unknown key inside an entry; `register` a
-    2-segment SCB FQID and `register`/`variant` curated; `evidence` and `noted`
-    (canonical `YYYY-MM-DD`) present; `versions` a non-empty list of non-empty
-    strings naming each version at most once; and no duplicate `(variant, name)`
-    / `(variant, column)` entry — two entries for one column must be ONE entry
-    listing both versions, or the log stops being readable as the record of what
-    SCB missed.
+    `[[delivered]]` / `[[column]]` top-level; no unknown key inside an entry;
+    `register` a 2-segment SCB FQID and `register`/`variant` curated; `evidence`
+    and `noted` (canonical `YYYY-MM-DD`) present; `versions` a non-empty list of
+    non-empty strings naming each version at most once; and no duplicate
+    `(variant, name)` / `(variant, column)` entry — two entries for one column
+    must be ONE entry listing both versions, or the log stops being readable as
+    the record of what SCB missed. `[[delivered]]` and `[[column]]` share that
+    column key: a column is one kind of omission or the other, never both.
     """
-    version_entries = load_curation_entries(
-        path,
-        entry_key="version",
-        label="SCB-errata",
-        prefix="scb_errata",
-        code_base="scb_errata",
-        file_name=_FILE_NAME,
-        entry_fields="register / variant / name / evidence / noted",
-        sibling_keys=frozenset({"delivered"}),
-    )
-    delivered_entries = load_curation_entries(
-        path,
-        entry_key="delivered",
-        label="SCB-errata",
-        prefix="scb_errata",
-        code_base="scb_errata",
-        file_name=_FILE_NAME,
-        entry_fields="register / variant / column / versions / evidence / noted",
-        sibling_keys=frozenset({"version"}),
-    )
-    if not version_entries and not delivered_entries:
+    version_entries = _entries(path, "version")
+    delivered_entries = _entries(path, "delivered")
+    column_entries = _entries(path, "column")
+    if not version_entries and not delivered_entries and not column_entries:
         # Before touching the slug dir: resolving FQIDs parses the whole
         # curated scb.toml (~20k entries), and the common case — no file, or a
         # build whose provider set never reaches it — has nothing to resolve.
@@ -282,8 +414,7 @@ def load_scb_errata(path: Path | None, slug_dir: Path | None) -> ScbErrata:
         _unknown_keys(entry, _VERSION_FIELDS, "version")
         _, variant_id, context = _resolve_variant(entry, "version", registers, variants)
         name = _require_str(entry, "name", f"[[version]] {context}")
-        _require_str(entry, "evidence", f"[[version]] {context}/{name}")
-        _require_noted(entry, f"[[version]] {context}/{name}")
+        _require_provenance(entry, f"[[version]] {context}/{name}")
         if (variant_id, name) in seen_versions:
             raise curation_error(
                 _CODE,
@@ -302,30 +433,8 @@ def load_scb_errata(path: Path | None, slug_dir: Path | None) -> ScbErrata:
         )
         column = _require_str(entry, "column", f"[[delivered]] {context}")
         ctx = f"[[delivered]] {context}/{column}"
-        _require_str(entry, "evidence", ctx)
-        _require_noted(entry, ctx)
-        raw_versions = entry.get("versions")
-        if (
-            not isinstance(raw_versions, list)
-            or not raw_versions
-            or not all(isinstance(v, str) and v.strip() for v in raw_versions)
-        ):
-            raise curation_error(
-                _CODE,
-                f"scb_errata {ctx} needs `versions` as a non-empty list of "
-                f"`Registerversionnamn` strings, got {raw_versions!r}.",
-                'Give `versions = ["2010", "2011"]` — SCB version names verbatim, '
-                "never dates.",
-            )
-        named = tuple(v.strip() for v in raw_versions)
-        repeated = sorted({n for n in named if named.count(n) > 1})
-        if repeated:
-            raise curation_error(
-                _CODE,
-                f"scb_errata {ctx} repeats version(s) {repeated} in `versions`.",
-                "Each version may appear once in an entry's `versions` — the "
-                "second mention would mint the same synthetic row twice.",
-            )
+        _require_provenance(entry, ctx)
+        named = _named_versions(entry, ctx)
         if "upstream" in entry and not isinstance(entry["upstream"], str):
             raise curation_error(
                 _CODE,
@@ -344,7 +453,164 @@ def load_scb_errata(path: Path | None, slug_dir: Path | None) -> ScbErrata:
         seen_columns.add(key)
         delivered.append(ErrataDelivered(register_id, variant_id, column, named))
 
-    return ScbErrata(tuple(versions), tuple(delivered))
+    columns: list[ErrataColumn] = []
+    # The variable each `[[column]]` key mints, so a column declared on two
+    # variants of one register is checked to describe the SAME variable — it
+    # will BE one (`ErrataColumn.key`), and a disagreement would silently ship
+    # whichever entry the materializer wrote first.
+    identities: dict[tuple[int, str], tuple] = {}
+    for entry in column_entries:
+        _unknown_keys(entry, _COLUMN_FIELDS, "column")
+        register_id, variant_id, context = _resolve_variant(
+            entry, "column", registers, variants
+        )
+        column = _require_str(entry, "column", f"[[column]] {context}")
+        ctx = f"[[column]] {context}/{column}"
+        loaded = ErrataColumn(
+            register_id=register_id,
+            register_variant_id=variant_id,
+            column=column,
+            name=_require_str(entry, "name", ctx),
+            definition=_require_str(entry, "definition", ctx),
+            data_type=_column_data_type(entry, ctx),
+            classification=_column_classification(entry, ctx),
+            is_identifier=_require_bool(entry, "is_identifier", ctx),
+            is_sensitive=_require_bool(entry, "is_sensitive", ctx),
+            versions=_column_versions(entry, ctx),
+            source=_column_source(entry, ctx),
+        )
+        _require_provenance(entry, ctx)
+        key = (variant_id, fold_column(column))
+        if key in seen_columns:
+            raise curation_error(
+                _CODE,
+                f"scb_errata duplicate entry for {context}/{column}.",
+                "Each (register, variant, column) may appear once, in ONE of "
+                "[[delivered]] (SCB documents the column elsewhere on the "
+                "variant) or [[column]] (it documents it nowhere).",
+            )
+        seen_columns.add(key)
+        if identities.setdefault(loaded.key, loaded.identity) != loaded.identity:
+            raise curation_error(
+                _CODE,
+                f"scb_errata {ctx} describes a different variable than the "
+                f"other [[column]] entry for column {column!r} in the same "
+                "register.",
+                "A column delivered on two variants of one register is ONE "
+                "variable: give both entries the same column spelling, name, "
+                "definition, data_type, classification and PII flags, or "
+                "rename one of the columns.",
+            )
+        columns.append(loaded)
+
+    _check_declared_classifications(columns, classification_seed_path)
+
+    return ScbErrata(tuple(versions), tuple(delivered), tuple(columns))
+
+
+def _named_versions(entry: dict, ctx: str) -> tuple[str, ...]:
+    """An entry's `versions` list: non-empty, every member a non-empty
+    `Registerversionnamn` string, each named at most once (a second mention
+    would mint the same synthetic row twice and die on the id collision
+    mid-insert — caught here, where the maintainer gets a remediation)."""
+    raw = entry.get("versions")
+    if (
+        not isinstance(raw, list)
+        or not raw
+        or not all(isinstance(v, str) and v.strip() for v in raw)
+    ):
+        raise curation_error(
+            _CODE,
+            f"scb_errata {ctx} needs `versions` as a non-empty list of "
+            f"`Registerversionnamn` strings, got {raw!r}.",
+            'Give `versions = ["2010", "2011"]` — SCB version names verbatim, '
+            "never dates.",
+        )
+    named = tuple(v.strip() for v in raw)
+    repeated = sorted({n for n in named if named.count(n) > 1})
+    if repeated:
+        raise curation_error(
+            _CODE,
+            f"scb_errata {ctx} repeats version(s) {repeated} in `versions`.",
+            "Each version may appear once in an entry's `versions` — the "
+            "second mention would mint the same synthetic row twice.",
+        )
+    return named
+
+
+def _column_versions(entry: dict, ctx: str) -> tuple[str, ...] | None:
+    """A `[[column]]`'s placement: the named versions, or None for
+    `all_versions = true`.
+
+    Exactly one of the two. `all_versions` is what a steward holdings list
+    actually says — the column is in the delivery, undated — and naming every
+    edition instead would make the entry rot the next time SCB ships one."""
+    all_versions = _require_bool(entry, "all_versions", ctx)
+    if all_versions == ("versions" in entry):
+        raise curation_error(
+            _CODE,
+            f"scb_errata {ctx} needs EITHER `versions` or `all_versions = true`, "
+            f"not {'both' if all_versions else 'neither'}.",
+            'Name the editions the column was delivered in (`versions = ["2010"]`) '
+            "or declare it delivered in every edition of the variant "
+            "(`all_versions = true`).",
+        )
+    return None if all_versions else _named_versions(entry, ctx)
+
+
+def _column_source(entry: dict, ctx: str) -> str:
+    source = _require_str(entry, "source", ctx)
+    if source not in _SOURCES:
+        raise curation_error(
+            _CODE,
+            f"scb_errata {ctx}: source {source!r} is not one of {sorted(_SOURCES)}.",
+            "Say where the evidence comes from: `scb-docs` (SCB's own "
+            "documentation) or `steward-holdings` (a steward's delivery list).",
+        )
+    return source
+
+
+def _column_data_type(entry: dict, ctx: str) -> str | None:
+    """A `[[column]]`'s optional `data_type`, gated on the canonical vocabulary.
+    Absent → None (a NULL state type): a steward holdings list routinely carries
+    no type, and inventing one would publish a guess as a fact."""
+    if "data_type" not in entry:
+        return None
+    data_type = _require_str(entry, "data_type", ctx)
+    if data_type not in _DATA_TYPES:
+        raise curation_error(
+            _CODE,
+            f"scb_errata {ctx}: data_type {data_type!r} is not one of "
+            f"{sorted(_DATA_TYPES)}.",
+            f"Use a canonical data_type: {sorted(_DATA_TYPES)}, or omit the key.",
+        )
+    return data_type
+
+
+def _column_classification(entry: dict, ctx: str) -> str | None:
+    if "classification" not in entry:
+        return None
+    return _require_str(entry, "classification", ctx)
+
+
+def _check_declared_classifications(
+    columns: list[ErrataColumn], seed_path: Path | None
+) -> None:
+    """Every `[[column]]` `classification` must name a DECLARED classification
+    short_name. The candidate feed drops an unknown one with no row and no error,
+    so a typo would silently ship an untagged state."""
+    named = {c.classification for c in columns if c.classification is not None}
+    if not named:
+        return
+    declared = declared_short_names(seed_path)
+    unknown = sorted(named - declared)
+    if unknown:
+        raise curation_error(
+            _CODE,
+            f"scb_errata [[column]] names undeclared classification(s) {unknown}.",
+            "Use an existing classification short_name (e.g. 'SSYK96') or declare "
+            "it in reg_meta_build/classifications.toml.",
+        )
 
 
 # Columns cloned from a real source row onto the synthetic one. `cvid` /
@@ -417,6 +683,35 @@ def _check_declared_era(context: str, name: str, documented_top: int | None) -> 
     )
 
 
+def _versions_of(
+    documented: dict[tuple[int, str], list[int]],
+    variant_id: int,
+    name: str,
+    context: str,
+    remedy: str,
+) -> list[int]:
+    """The editions carrying `name` on the variant, or the shared refusal when
+    the variant neither documents nor declares it. `remedy` is the entry kind's
+    own way out — a `[[column]]` can also say `all_versions = true`."""
+    regvers = documented.get((variant_id, name))
+    if not regvers:
+        raise curation_error(
+            "scb_errata_unknown_version",
+            f"scb_errata {context}: version {name!r} is neither documented by "
+            "SCB nor declared by a [[version]] entry.",
+            f"Fix the `Registerversionnamn` spelling in "
+            f"reg_meta_build/{_FILE_NAME}, {remedy}.",
+        )
+    return regvers
+
+
+def _scope(variant_ids: set[int]) -> tuple[str, tuple[int, ...]]:
+    """An `IN (…)` placeholder list and its bound params for a set of variant
+    ids, sorted so a query plan (and any log of it) is reproducible."""
+    params = tuple(sorted(variant_ids))
+    return ",".join("?" * len(params)), params
+
+
 def _now_present(context: str, what: str, remedy: str) -> None:
     """Self-cleaning failure: SCB now ships what an entry says it omitted.
 
@@ -432,7 +727,11 @@ def _now_present(context: str, what: str, remedy: str) -> None:
     )
 
 
-def apply_scb_errata(conn: sqlite3.Connection, errata: ScbErrata) -> dict[str, int]:
+def apply_scb_errata(
+    conn: sqlite3.Connection,
+    errata: ScbErrata,
+    classification_candidates: list[tuple[int, int | None, str]],
+) -> dict[str, int]:
     """Write the errata entries as synthetic Registerinformation rows.
 
     Runs inside `SCBAdapter.emit()` after the value-set projection — so a cloned
@@ -440,24 +739,35 @@ def apply_scb_errata(conn: sqlite3.Connection, errata: ScbErrata) -> dict[str, i
     sensitivity lift and the coalescer, so the PII/identifier classification and
     every pass after it read the synthetic rows as ordinary deliveries.
 
-    Returns `{"versions": n, "rows": n}`. Raises EXIT_CONFIG when an entry
-    names a variant this export doesn't have (`scb_errata_unknown_variant`), a
-    version the variant neither documents nor declares
-    (`scb_errata_unknown_version`), a column with no real row anywhere on the
-    variant (`scb_errata_no_source_row` — that is a graft/attach, not errata), a
-    `[[version]]` that is not the variant's newest edition
+    A `[[column]]` has no row to clone, so it MINTS instead: one `variable`
+    (`mint_canonical_scb`, `provider_key` = the delivery column) per
+    `(register, folded column)`, plus one synthetic row per named version, each
+    carrying the owning `variable_id` already — the coalescer reads that stamp
+    rather than re-deriving it from the non-numeric provider_key. An entry's
+    `classification`, when it has one, is appended to `classification_candidates`
+    (the provider-blind feed every non-SCB adapter uses), so the normal backfill
+    tags the state the coalescer builds.
+
+    Returns `{"versions": n, "rows": n, "columns": n}` (`columns` = variables
+    minted; their synthetic rows are counted in `rows`). Raises EXIT_CONFIG when
+    an entry names a variant this export doesn't have
+    (`scb_errata_unknown_variant`), a version the variant neither documents nor
+    declares (`scb_errata_unknown_version`), a `[[delivered]]` column with no
+    real row anywhere on the variant (`scb_errata_no_source_row` — that is a
+    `[[column]]`), a `[[version]]` that is not the variant's newest edition
     (`scb_errata_version_not_latest`), or a version/row SCB now ships
     (`scb_errata_now_present`).
     """
-    counts = {"versions": 0, "rows": 0}
+    counts = {"versions": 0, "rows": 0, "columns": 0}
     if not errata:
         return counts
 
-    variant_ids = {e.register_variant_id for e in errata.versions} | {
-        e.register_variant_id for e in errata.delivered
-    }
-    placeholders = ",".join("?" * len(variant_ids))
-    params = tuple(sorted(variant_ids))
+    variant_ids = (
+        {e.register_variant_id for e in errata.versions}
+        | {e.register_variant_id for e in errata.delivered}
+        | {e.register_variant_id for e in errata.columns}
+    )
+    placeholders, params = _scope(variant_ids)
     live_variants = {
         row[0]
         for row in conn.execute(
@@ -517,11 +827,16 @@ def apply_scb_errata(conn: sqlite3.Connection, errata: ScbErrata) -> dict[str, i
         documented[(v.register_variant_id, v.name)] = [regver_id]
         counts["versions"] += 1
 
-    # Real rows for the errata's columns, keyed (variant_id, folded column). One
-    # scan over the named variants; rows for other columns are dropped on read.
+    # Clone payloads for the `[[delivered]]` columns, keyed (variant_id, folded
+    # column). One scan over the variants THOSE entries name — deliberately not
+    # the `[[column]]` ones, which need a yes/no (`present` below) and not a row
+    # to copy: this query carries every cloned field, including the long prose,
+    # and widening it to a variant the size of LISA to answer a membership test
+    # would read the whole register for nothing.
     wanted = {(e.register_variant_id, fold_column(e.column)) for e in errata.delivered}
     sources: dict[tuple[int, str], list[sqlite3.Row]] = {}
     if wanted:
+        scope, scope_params = _scope({v for v, _ in wanted})
         cur = conn.cursor()
         # By-name access without touching the build connection's own
         # tuple row_factory (the coalescer's idiom, `_coalesce_variable_states`).
@@ -533,8 +848,8 @@ def apply_scb_errata(conn: sqlite3.Connection, errata: ScbErrata) -> dict[str, i
             f"FROM variable_instance vi "
             f"JOIN variable_alias_build va ON va.cvid = vi.cvid "
             f"JOIN register_version rv ON rv.regver_id = vi.regver_id "
-            f"WHERE vi.register_variant_id IN ({placeholders})",
-            params,
+            f"WHERE vi.register_variant_id IN ({scope})",
+            scope_params,
         )
         for row in cur:
             key = (
@@ -544,6 +859,23 @@ def apply_scb_errata(conn: sqlite3.Connection, errata: ScbErrata) -> dict[str, i
             if key in wanted:
                 sources.setdefault(key, []).append(row)
 
+    # The mirror question for `[[column]]`: does the export deliver this column
+    # ANYWHERE on the variant? Two narrow columns, deduped by SQLite before
+    # Python sees them — a presence test, not a payload.
+    present: set[tuple[int, str]] = set()
+    if errata.columns:
+        scope, scope_params = _scope({e.register_variant_id for e in errata.columns})
+        present = {
+            (variant_id, fold_column(column))
+            for variant_id, column in conn.execute(
+                f"SELECT DISTINCT vi.register_variant_id, va.delivery_column_name "
+                f"FROM variable_instance vi "
+                f"JOIN variable_alias_build va ON va.cvid = vi.cvid "
+                f"WHERE vi.register_variant_id IN ({scope})",
+                scope_params,
+            )
+        }
+
     for d in errata.delivered:
         context = f"[[delivered]] {d.column}"
         candidates = sources.get((d.register_variant_id, fold_column(d.column)))
@@ -552,22 +884,19 @@ def apply_scb_errata(conn: sqlite3.Connection, errata: ScbErrata) -> dict[str, i
                 "scb_errata_no_source_row",
                 f"scb_errata {context}: column {d.column!r} has no real row on "
                 "this register variant.",
-                "Errata re-adds an OMITTED delivery of a column SCB documents "
-                "elsewhere on the variant. A column SCB never documents is a "
-                "variable_grafts.toml graft or a canonical_attach entry.",
+                "[[delivered]] re-adds an OMITTED delivery of a column SCB "
+                "documents elsewhere on the variant. A column SCB documents "
+                "nowhere is a [[column]] entry — it has no row to clone.",
             )
         present = {row["regver_id"] for row in candidates}
         for name in d.versions:
-            regvers = documented.get((d.register_variant_id, name))
-            if not regvers:
-                raise curation_error(
-                    "scb_errata_unknown_version",
-                    f"scb_errata {context}: version {name!r} is neither "
-                    "documented by SCB nor declared by a [[version]] entry.",
-                    f"Fix the `Registerversionnamn` spelling in "
-                    f"reg_meta_build/{_FILE_NAME}, or add a [[version]] entry "
-                    "for it.",
-                )
+            regvers = _versions_of(
+                documented,
+                d.register_variant_id,
+                name,
+                context,
+                "or add a [[version]] entry for it",
+            )
             if present & set(regvers):
                 # One version of a multi-version entry can be fixed upstream
                 # while the rest still record a live omission — say which, or the
@@ -614,7 +943,117 @@ def apply_scb_errata(conn: sqlite3.Connection, errata: ScbErrata) -> dict[str, i
                         (cvid, source["delivery_column_name"]),
                     )
                     counts["rows"] += 1
+
+    _mint_columns(conn, errata, documented, present, classification_candidates, counts)
     return counts
+
+
+def _mint_columns(
+    conn: sqlite3.Connection,
+    errata: ScbErrata,
+    documented: dict[tuple[int, str], list[int]],
+    present: set[tuple[int, str]],
+    classification_candidates: list[tuple[int, int | None, str]],
+    counts: dict[str, int],
+) -> None:
+    """Mint each `[[column]]`'s variable and its synthetic rows.
+
+    `documented` already carries the `[[version]]` entries this build declared,
+    so `all_versions` means "every edition the variant has AFTER errata" — the
+    one reading under which a declared version and a steward holdings list agree.
+    """
+    # Every edition per variant, for `all_versions`. Sorted once, here, so the
+    # minted cvids do not depend on dict order.
+    editions: dict[int, list[str]] = {}
+    for variant_id, name in documented:
+        editions.setdefault(variant_id, []).append(name)
+    for names in editions.values():
+        names.sort()
+
+    minted: dict[tuple[int, str], int] = {}
+    for c in errata.columns:
+        context = f"[[column]] {c.column}"
+        if (c.register_variant_id, fold_column(c.column)) in present:
+            _now_present(
+                context,
+                f"column {c.column!r}",
+                "SCB documents the column on this variant now, so it is a "
+                "[[delivered]] omission at most — move the entry (listing the "
+                "versions still missing) or delete it",
+            )
+        variable_id = minted.get(c.key)
+        if variable_id is None:
+            # Keyed on the REGISTER, not the variant: one variable, one state per
+            # variant (`ErrataColumn.key`). `definition` becomes `description` —
+            # `variable.definition` is SCB's own export field and stays NULL, as
+            # it does for every curated variable.
+            variable_id = mint_canonical_scb(
+                "scb-errata-column", str(c.register_id), fold_column(c.column)
+            )
+            conn.execute(
+                "INSERT INTO variable (variable_id, register_id, provider_key, "
+                "name, description, source_label, is_identifier, is_sensitive) "
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                (
+                    variable_id,
+                    c.register_id,
+                    c.column,
+                    c.name,
+                    c.definition,
+                    ERRATA_COLUMN_SOURCE_LABEL,
+                    int(c.is_identifier),
+                    int(c.is_sensitive),
+                ),
+            )
+            minted[c.key] = variable_id
+            counts["columns"] += 1
+            if c.classification is not None:
+                # value_set_id None: a [[column]] mints no codes (it is a
+                # doc-coverage fact), so the link is variable-grained.
+                classification_candidates.append((variable_id, None, c.classification))
+
+        names = c.versions
+        if names is None:
+            names = editions.get(c.register_variant_id, ())
+        for name in names:
+            regvers = _versions_of(
+                documented,
+                c.register_variant_id,
+                name,
+                context,
+                "add a [[version]] entry for it, or use `all_versions = true`",
+            )
+            for regver_id in regvers:
+                cvid = mint_canonical_scb(
+                    "scb-errata-column-row", str(variable_id), str(regver_id)
+                )
+                # `var_id` is the minted `variable_id`: the source grain needs an
+                # integer key, this column has none of SCB's, and reusing the
+                # variable's own id keeps it unique per register by construction.
+                # `variable_id` is stamped HERE because the coalescer cannot
+                # re-derive it — `CAST('<column>' AS INTEGER)` is 0.
+                conn.execute(
+                    "INSERT INTO variable_instance "
+                    "(cvid, register_id, register_variant_id, regver_id, var_id, "
+                    " variabelnamn, data_type, variable_id) "
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                    (
+                        cvid,
+                        c.register_id,
+                        c.register_variant_id,
+                        regver_id,
+                        variable_id,
+                        c.name,
+                        c.data_type,
+                        variable_id,
+                    ),
+                )
+                conn.execute(
+                    "INSERT INTO variable_alias_build "
+                    "(cvid, delivery_column_name) VALUES (?, ?)",
+                    (cvid, c.column),
+                )
+                counts["rows"] += 1
 
 
 def _nearest_rows(candidates: list[sqlite3.Row], name: str) -> list[sqlite3.Row]:

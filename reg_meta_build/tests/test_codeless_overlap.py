@@ -373,7 +373,7 @@ class TestResolveCuratedCodelessOverlaps:
     def test_cap_interior_twin_minted_in_low_band_despite_high_band_max(self) -> None:
         # Band-pinned twin minting (#868 follow-up): the original code-less state is
         # SCB-provider (LOW band, a small AUTOINCREMENT id < 2^62), but the table also
-        # holds a high-band state (>= 2^62 — a graft / canonical-attach / SOS row), so
+        # holds a high-band state (>= 2^62 — a SOS / steward row), so
         # the GLOBAL MAX(state_id) is high-band. A naive global-MAX+1 mint would land
         # the SCB twin in the minted band and fail validate._check_minted_id_bands
         # ("SCB id overflows the minted band"). The twin must be minted in the SAME

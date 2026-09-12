@@ -76,7 +76,7 @@ into seven families:
   | **set**                 | `concept_groups.toml` (loaded by `concept_groups.py`), `tags.toml` (loaded by `tags.py`)                                                                                                                                                                                                                                    | Presentation-only grouping and discovery layers. Concept groups fold structurally related variables for browse; tags supply thematic cross-register discovery. Both are regenerated fresh each build (no identity or immutability machinery).                                                                                                                                                                                                                                                                                                           |
   | **code↔label pairing**  | `code_label_pairs.toml` (loaded by `load_code_label_pairs` in `concept_groups.py`)                                                                                                                                                                                                                                          | Curated list of `[[pair]]` entries declaring that a code variable (owns a value_set) and a label variable (owns none) are decode partners co-delivered in the same register. Each pair is resolved and appended to `edge_siblings` by `_append_code_label_edges` at materialize time, so the two variables fold into one axis-less `edge` concept group. Presentation-only; regenerated each build.                                                                                                                                                     |
   | **document provenance** | `doc_sources.toml`, `related_documents.toml` (loaded by `doc_db.py`)                                                                                                                                                                                                                                                        | Maintainer-curated provenance for the separate doc DB. `doc_sources.toml` resolves converted markdown docs back to public SCB source PDFs without republishing them. `related_documents.toml` maps register-version related-document PDFs that may be rehosted verbatim, with per-file license, fetch date, source surface, filename, sha256, and byte size; binaries stay gitignored under `input_data/SCB/docs/<register>/` and are stored in the released doc DB.                                                                                    |
-  | **source/gap-fill**     | `input_data/<Provider>/<provider>.toml` (thin curated providers), `delivery_enrichment.toml` (loaded by `delivery_enrichment.py`), `variable_grafts.toml` (loaded by `variable_grafts.py`), `input_data/scb_canonical/lisa_canonical.toml` (loaded by `canonical_attach.py`), `scb_errata.toml` (loaded by `scb_errata.py`) | Source delivery (thin providers whose public docs are hand-transcribed) and gap-fill overlays on the global SCB/SOS catalog (descriptions backfilled from steward delivery lists; variables present in steward docs but absent from machine metadata; canonical-SCB columns attached onto an existing register — `canonical_attach.py`, the rich analog of grafts; the versions and column-in-version rows SCB's own export omits — `scb_errata.toml`, the upstream errata log, replayed as synthetic Registerinformation rows inside the SCB adapter). |
+  | **source/gap-fill**     | `input_data/<Provider>/<provider>.toml` (thin curated providers), `delivery_enrichment.toml` (loaded by `delivery_enrichment.py`), `scb_errata.toml` (loaded by `scb_errata.py`) | Source delivery (thin providers whose public docs are hand-transcribed) and gap-fill overlays on the global SCB/SOS catalog (descriptions and delivery aliases backfilled from steward delivery lists — `delivery_enrichment.toml`; everything SCB's own export lacks — `scb_errata.toml`, the upstream errata log, replayed as synthetic Registerinformation rows inside the SCB adapter: the missing versions and column-in-version rows (`[[version]]` / `[[delivered]]`) and the columns it documents on no version at all, which mint the variable (`[[column]]`, from SCB's docs or a steward's holdings)). |
   | **value/coding**        | `classifications.toml` + CSV seeds in `input_data/classifications/` (loaded by `classifications.py`), `classification_links.toml` (loaded by `classification_links.py`), `codelivery.toml` (loaded by `codelivery.py`)                                                                                                      | Canonical code systems and their codes; curated variable→classification assignment overrides for the residue the auto-detector leaves unlinked; curated co-delivery resolution pins for SCB columns that carry multiple codings in the same period.                                                                                                                                                                                                                                                                                                     |
   | **period family merge** | `curation/period_family_merges.toml` (loaded by `period_family_merges.py`)                                                                                                                                                                                                                                                  | Identity-mutating post-triage pass: merges N period-named physical columns (today the 12 months, e.g. `lonfinkjan`…`lonfinkdec`) into ONE variable with per-period alias windows. Runs after triage (`variable_state` exists) but before slug population. 8 entries covering 8 bounded monthly families (4 LISA + 4 non-LISA). Retained per #523 under epic #518 R4; see the "Decision (#518/#523): retain the merge" section for rationale.                                                                                                            |
 
@@ -98,12 +98,14 @@ into seven families:
   types, value sets and the classification backfill are produced by the ordinary passes.
   There is no post-pass `variable_state` surgery and no generic
   `variable_state_overrides.toml` (see the classification-links rule below for the same
-  boundary). A column SCB never documents anywhere on the variant is NOT errata — that
-  is a `variable_grafts.toml` graft or a `canonical_attach.py` entry, and the errata
-  pass refuses it (`scb_errata_no_source_row`) — shape and slugs are checked at load,
-  everything that needs the export is checked when the entry is applied. The log is
-  self-cleaning: once SCB ships the row the build fails with `scb_errata_now_present`
-  and the entry is deleted, leaving the record in git.
+  boundary). A column SCB never documents anywhere on the variant is the same file's
+  `[[column]]`, which mints the variable instead of re-adding a row; the two are
+  partitioned by whether the export has a row for the column somewhere on the variant,
+  and each entry kind fails the build when it is the other one
+  (`scb_errata_no_source_row` / `scb_errata_now_present`) — shape and slugs are checked
+  at load, everything that needs the export is checked when the entry is applied. The
+  log is self-cleaning: once SCB ships the row the build fails with
+  `scb_errata_now_present` and the entry is deleted, leaving the record in git.
 - **Classification links are typed, not generic state overrides.**
   `classification_links.toml` targets the `classification_candidate` pipeline and then
   `variable_state.classification_id`. It is NOT a generic
@@ -454,41 +456,57 @@ Because it is a second `scb`-provider adapter, the materializer drains SCB-machi
 (`coalesce_stats`/`projection_stats`) by attribute presence (`projection_stats`,
 SCB-only) rather than `provider == "scb"`.
 
-### Canonical-SCB attach post-pass (#400 PR2)
+### Columns the export documents nowhere — `scb_errata.toml` `[[column]]` (Y-116)
 
 The `CanonicalScbAdapter` above mints canonical-SCB content as **whole new registers**.
-The attach post-pass (`canonical_attach.py`) handles the other case: a canonical-SCB
-column that belongs to a register the **machine build already materialized** (LISA
-columns documented in reg_meta's own SCB docs but absent from the CSV export). It is the
-**rich analog of `variable_grafts`** — both mint a `variable` + `variable_state` +
-`variable_alias` onto an existing `(register, variant)` resolved BY SLUG, gap-fill only
-(skip when the column already delivers a state), strict-load / lenient-resolve. Three
-differences make it "rich":
+A column that belongs to a register the **machine build already materialized** but that
+the export documents on no version of the variant is the errata surface's third entry
+kind, beside `[[version]]` and `[[delivered]]`: `[[column]]` declares the column absent
+and **mints the variable identity** — `register` / `variant` / `column` / `name` /
+`definition`, optional `data_type` / `classification` / `is_identifier` / `is_sensitive`,
+`versions` or `all_versions = true`, and a `source` saying where the evidence comes from
+(`scb-docs`, SCB's own documentation — the LISA hand-documented SSYK/SNI columns — or
+`steward-holdings`, a steward's delivery list). Y-116 folded the two post-passes that
+used to do this (`variable_grafts.py`, `canonical_attach.py`) into it: same three tables
+written, so one file, one grammar and one existence guard.
 
-- **Canonical-SCB ids, not MAX+1.** A graft mints a sequential id just above the SCB
-  max; an attach uses `mint_canonical_scb("scb", register, variant, column)` — the same
-  reserved sub-band `[2^61, 2^62)` the `#444` adapter uses, so the rows are
-  deterministic and indistinguishable from full-adapter canonical rows except that they
-  land on an existing register. `validate.py`'s `_check_canonical_attach_band` proves
-  every `source_label='canonical-scb'` variable AND its state hold an id in that
-  sub-band.
-- **Closed validity windows.** A graft is open-ended (`0001-01-01`..`9999-12-31`); an
-  attach carries the seed entry's `valid_from`/`valid_to` (a real era like 2010–2013).
-  An omitted `valid_to` writes the `9999-12-31` sentinel.
+- **Applied at source grain, like `[[delivered]]`.** The entry writes
+  `variable_instance` + `variable_alias_build` rows inside the SCB adapter, before
+  coalescing, so slug derivation, the classification backfill, alias windows and
+  validation all flow through the ordinary passes. No post-slug minting remains, and a
+  `[[column]]` needs no slug-resolved target: the loader resolves register and variant
+  by slug at load time, as the other two kinds do.
+- **Identity keyed on `(register, column)`, not the variant.** A column delivered on two
+  variants of one register is ONE variable with one state per variant — the machine
+  path's own rule, and what keeps `variable.provider_key` register-unique. The loader
+  refuses two entries for one `(register, column)` that describe different variables.
+- **Canonical-SCB ids.** `mint_canonical_scb` puts the `variable_id` and each synthetic
+  `variable_instance` in the reserved sub-band `[2^61, 2^62)`: still low-band (an `scb`
+  id MUST be `< 2^62`) yet far above every real source-derived SCB id. The state is the
+  coalescer's, with an ordinary low-band `state_id`. `validate.py`'s
+  `_check_errata_column_band` proves every `source_label='scb-errata'` variable holds an
+  id in that sub-band. `provider_key` is the bare delivery column, as for any
+  non-numeric SCB key — `reg_meta.queries` emits a `var_id` only for an all-digits one.
+- **One existence guard.** A `[[column]]` whose column now has a real row on that
+  (register, variant) FAILS the build — it is a `[[delivered]]` now — the mirror of
+  `[[delivered]]`'s `scb_errata_no_source_row`. Neither kind silently skips.
 - **Classification link.** An entry's optional `classification` (a declared catalog
   short_name, validated at load) is appended to the build's shared
-  `classification_candidates` list (`value_set_id` None), so the existing provider-blind
-  backfill (`_backfill_state_classifications`) tags `variable_state.classification_id`
-  for free — the same side channel SOS and the thin providers feed.
+  `classification_candidates` list (`value_set_id` None), so the provider-blind backfill
+  (`_backfill_state_classifications`) tags `variable_state.classification_id` for free —
+  the same side channel SOS and the thin providers feed. No value sets (a `value_set`
+  key is rejected). No `SCHEMA_VERSION` bump (rows on existing tables).
 
-No value sets (maintainer decision: classification-link-only; a `value_set` key is
-rejected). Why a **post-pass** and not a `CanonicalScbAdapter` extension: the target
-register/variant slugs only exist after `populate_slugs` (the machine build materialized
-them), so the attach cannot resolve its target at adapter-emit time. It runs in the
-slug-guarded block right after `materialize_grafts`, sharing that block's
-`classification_candidates` list. The committed seed is
-`input_data/scb_canonical/lisa_canonical.toml`. No `SCHEMA_VERSION` bump (rows on
-existing tables).
+Candidates come from the tracked, maintainer-run `input_data/swecov/build_catalog.py
+grafts` pass, which variant-tags the gapfill columns and writes them as `[[column]]`
+stanzas with `evidence` / `noted` as TODO placeholders the loader refuses. What that
+generator excludes upstream, so it never reaches an entry (each is a *different*
+disposition, learned the hard way): **flavor / SWECOV-constructed** columns (kept in the
+steward flavor); **pseudonymized aggregations** (GDB's 250m grids — a spatial LopNr);
+**recoded representations** (`_omkodad` columns — masked value sets of an existing
+variable → `variable_alias`, not a new variable); and columns with no documentation but
+their own name. The variant is **data-derived** (the holding's table grounds to a
+reg_meta variant by column overlap), never guessed.
 
 ## IR + adapter architecture
 
@@ -1467,7 +1485,7 @@ expressed as a grouping nudge.
   | `column_merge`     | ~~`[[column_merge]]` / `source_column_repairs.py`~~  | ~~unifies never-co-occurring gap-fill twins into one variable~~       | **retired (#846)** — RTB: representation `replaced_by`; FRIDA: variant-scoped succession |
   | `fold_override`    | ~~`[[fold_override]]` / `source_column_repairs.py`~~ | ~~folds disjoint-stem contested columns of one concept into one var~~ | **retired (#845)** — replaced by SPLIT + concept-group faceting                          |
   | `codelivery`       | `codelivery.toml` / `codelivery.py`                  | pins which coding a column KEEPS when it carries two in a period      | **keep (confirm-only)**                                                                  |
-  | `canonical_attach` | `lisa_canonical.toml` / `canonical_attach.py`        | mints canonical-SCB variable/state rows + classification links        | **keep (confirm-only)**                                                                  |
+  | `errata [[column]]` | `scb_errata.toml` / `scb_errata.py`                 | mints the variable for a column SCB's export documents nowhere        | **keep (confirm-only)**                                                                  |
 
 **`column_merge` (#196) — FULLY RETIRED (#846).** *(Historical tracker note; the surface
 no longer exists in the build.)* The `[[column_merge]]` / `source_column_repairs.py`
@@ -1527,11 +1545,11 @@ fiat-folded FQID, there were no existing bindings to remap. Lower-risk than
 codings in one period — it decides the codes the data actually carries. Representation-
 level, not navigation; nothing to migrate.
 
-**`canonical_attach` (#444/#400) — keep (confirm-only).** Catalog completeness over real
-provider data: it mints CANONICAL-SCB `variable`/`variable_state` rows for columns SCB
-documents but omits from the machine export (the LISA hand-documented SSYK/SNI columns,
-…) plus their classification links. Real provider content, not a grouping nudge —
-nothing to migrate.
+**`errata [[column]]` (#444/#400, folded in Y-116) — keep (confirm-only).** Catalog
+completeness over real provider data: it mints the `variable` for a column SCB's export
+documents on no version of the variant (the LISA hand-documented SSYK/SNI columns, the
+SWECOV steward holdings) plus its classification link, and the ordinary SCB passes take
+it from there. Real provider content, not a grouping nudge — nothing to migrate.
 
 ### Sub-annual boundary clamp
 
@@ -2768,8 +2786,8 @@ Two entry kinds ship today, both in `delivery_enrichment.toml`:
   rows is safe because the validator invariant is one-directional — every
   `variable_state` column must be in `variable_alias`, but not the reverse
   (`_check_variable_alias_covers_state_columns`). No `variable_alias_window` (those are
-  #319's monthly per-month *expansion*, a different shape). Gap-fill variable grafts
-  remain deferred (the candidate set needs type curation; see #365).
+  #319's monthly per-month *expansion*, a different shape). A column the variant has no
+  variable for at all is not an alias — it is an errata `[[column]]`, which mints one.
 
 The apply pass runs in the same slug-gated post-pass block as concept groups (after
 `populate_variable_slugs`, so `(register, variable)` resolves off stored slugs) and is
@@ -2792,46 +2810,6 @@ Two guards, both deliberate:
   `SCHEMA_VERSION` bump — descriptions write text and aliases add rows on existing
   variables.
 
-## Variable grafts (#365 PR1d)
-
-`variable_grafts.py` mints catalog **variables that reg_meta's machine metadata lacks**
-but a steward delivery documents, onto an **existing** `(register, variant)`. Unlike the
-description/alias overlays — which only touch existing rows — a graft **creates
-identity**: one `variable` + one `variable_state` + one `variable_alias` + a slug. The
-curated input is a package-root `reg_meta_build/variable_grafts.toml` (`[[graft]]`:
-`register` / `variant` / `column` / `description` / optional `data_type`), generated by
-the tracked, maintainer-run `input_data/swecov/build_catalog.py grafts` pass.
-
-What that generator excludes upstream, so it never reaches a graft (each is a
-*different* disposition, learned the hard way): **flavor / SWECOV-constructed** columns
-(kept in the steward flavor); **pseudonymized aggregations** (GDB's 250m grids — a
-spatial LopNr); **recoded representations** (`_omkodad` columns — masked value sets of
-an existing variable → `variable_alias`, not a new variable); and columns **documented
-in reg_meta's own SCB docs** but missing from the machine metadata (a reg_meta
-completeness gap, #400 — fixed canonically, not grafted from a steward). The variant is
-**data-derived** (the holding's table grounds to a reg_meta variant by column overlap),
-never guessed.
-
-The materialize pass runs in the slug-gated block **after `populate_slugs`** (so the
-target register/variant slugs resolve) and **before `populate_variable_slugs`** (so each
-minted variable's NULL slug auto-derives from its delivery column, like any other).
-Discipline:
-
-- **Gap-fill only** — a graft whose column already exists as a `variable_state` column
-  in that variant is skipped (case/diacritic-folded); we never duplicate an existing
-  variable.
-- **Strict load, lenient resolve** — a structural TOML defect (malformed FQID, duplicate
-  `(register, variant, column)`) fails the build; a `(register, variant)` that doesn't
-  resolve is counted `unresolved`, not fatal (slug churn, like the other overlays).
-- **Banded ids** — the minted-id-band invariant (`validate._check_minted_id_bands`)
-  requires SCB ids `< 2^62` and SOS ids in `[2^62, 2^63)`. `variable_id`/`state_id` are
-  AUTOINCREMENT and SOS rows hold high ids, so a graft mints **explicit** ids just above
-  the SCB maximum (staying in-band). SOS grafts are out of scope for now (would need an
-  in-band SOS id).
-- **Provenance** — every grafted `variable.source_label = "swecov-graft"`, so the SPA
-  can badge inventory-sourced variables; `data_type` absent ⇒ NULL state type
-  (catalog-only, untyped). No `SCHEMA_VERSION` bump — rows on existing tables.
-
 ## Steward-flavored DB — extend-db (#365 PR2)
 
 `extend_db.py` builds a **steward-flavored** `reg_meta.db` by overlaying steward-only
@@ -2848,8 +2826,8 @@ remains.
 The global catalog covers SCB/SOS plus any new *global* providers curated into
 `input_data`. A steward with additional information about a global provider enriches the
 *global* build via the shipped PR1 mechanisms (`delivery_enrichment.py` for descriptions
-and aliases, `variable_grafts.py` for shared-column grafts) — "scope follows what a fact
-is about." `extend-db` carries ONLY content that is steward-private and has no global
+and aliases, `scb_errata.toml`'s `[[column]]` for a column the machine metadata lacks
+entirely) — "scope follows what a fact is about." `extend-db` carries ONLY content that is steward-private and has no global
 home: a new provider (e.g. a bank like Swedbank) and the registers/variants/variables
 they deliver. Enrichment of existing global entities is explicitly NOT its job.
 

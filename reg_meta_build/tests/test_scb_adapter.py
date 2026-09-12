@@ -26,6 +26,7 @@ from _shared_fixtures import (
     CODING_A,
     CODING_B,
     build_with_rows,
+    errata_column,
     errata_delivered,
     errata_version,
     vm_rows,
@@ -33,6 +34,7 @@ from _shared_fixtures import (
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta_build.db import DDL, build_db, seed_providers
 from reg_meta_build.dbdiff import diff_db_content
+from reg_meta_build.id import _CANONICAL_SCB_BIT, is_canonical_scb
 from reg_meta_build.ir import (
     IRDeliveryProvenance,
     IRRegister,
@@ -1527,7 +1529,7 @@ class TestScbErrata:
         finally:
             conn.close()
 
-    def test_column_with_no_real_row_is_a_graft_not_errata(
+    def test_column_with_no_real_row_is_a_column_entry_not_delivered(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ) -> None:
         with pytest.raises(RegMetaError) as exc:
@@ -1588,3 +1590,183 @@ class TestScbErrata:
         assert "'2022'" in exc.value.message
         assert "drop '2022' from that entry's `versions`" in exc.value.remediation
         assert "delete the entry" not in exc.value.remediation
+
+
+# ── 10. SCB export errata: [[column]] (Y-116) ──────────────────────────────
+
+
+def _minted(conn: sqlite3.Connection, column: str) -> sqlite3.Row:
+    conn.row_factory = sqlite3.Row
+    row = conn.execute(
+        "SELECT * FROM variable WHERE register_id = 1 AND provider_key = ?",
+        (column,),
+    ).fetchone()
+    conn.row_factory = None
+    return row
+
+
+class TestScbErrataColumn:
+    """A `[[column]]` mints the variable SCB documents nowhere, at SOURCE grain:
+    the synthetic rows go through the coalescer, so the state's window, slug,
+    alias and classification are the ordinary passes' output — not a post-pass's
+    hand-written row. Folds in the retired `variable_grafts.py` (`all_versions`)
+    and `canonical_attach.py` (`versions`) surfaces.
+    """
+
+    def test_mints_variable_state_and_alias_over_every_edition(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        conn = _built_with_errata(tmp_path, monkeypatch, [], errata_column("HeldCol"))
+        try:
+            var = _minted(conn, "HeldCol")
+            assert var["name"] == "HeldCol name"
+            assert var["description"] == "HeldCol definition"
+            assert var["definition"] is None  # SCB's own export field
+            assert var["source_label"] == "scb-errata"
+            assert is_canonical_scb(var["variable_id"])
+            # TESTREG/individer is documented 2020-2022: `all_versions` claims
+            # the whole span, and the window is the coalescer's, not a sentinel.
+            assert _windows(conn, "HeldCol") == [("2020-01-01", "2022-12-31")]
+            assert conn.execute(
+                "SELECT delivery_column_name FROM variable_alias WHERE variable_id = ?",
+                (var["variable_id"],),
+            ).fetchall() == [("HeldCol",)]
+            assert (
+                conn.execute(
+                    "SELECT slug FROM variable WHERE variable_id = ?",
+                    (var["variable_id"],),
+                ).fetchone()[0]
+                == "heldcol"
+            )
+        finally:
+            conn.close()
+
+    def test_named_versions_window_to_those_editions(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        conn = _built_with_errata(
+            tmp_path, monkeypatch, [], errata_column("DocCol", "2021", "2022")
+        )
+        try:
+            assert _windows(conn, "DocCol") == [("2021-01-01", "2022-12-31")]
+        finally:
+            conn.close()
+
+    def test_declared_flags_and_type_survive_the_sensitivity_lift(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        # The A1.2 lift resolves a variable through its numeric var_id; a minted
+        # column has none, so the ENTRY's flags are the published ones.
+        conn = _built_with_errata(
+            tmp_path,
+            monkeypatch,
+            [],
+            errata_column(
+                "PnrCol", data_type="text", is_identifier=True, is_sensitive=True
+            ),
+        )
+        try:
+            var = _minted(conn, "PnrCol")
+            assert (var["is_identifier"], var["is_sensitive"]) == (1, 1)
+            assert (
+                conn.execute(
+                    "SELECT data_type FROM variable_state WHERE variable_id = ?",
+                    (var["variable_id"],),
+                ).fetchone()[0]
+                == "text"
+            )
+        finally:
+            conn.close()
+
+    def test_absent_type_and_flags_default(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        conn = _built_with_errata(tmp_path, monkeypatch, [], errata_column("BareCol"))
+        try:
+            var = _minted(conn, "BareCol")
+            assert (var["is_identifier"], var["is_sensitive"]) == (0, 0)
+            assert (
+                conn.execute(
+                    "SELECT data_type FROM variable_state WHERE variable_id = ?",
+                    (var["variable_id"],),
+                ).fetchone()[0]
+                is None
+            )
+        finally:
+            conn.close()
+
+    def test_ids_are_deterministic_and_stay_in_the_scb_band(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        ids = []
+        for run in ("a", "b"):
+            (tmp_path / run).mkdir()
+            conn = _built_with_errata(
+                tmp_path / run, monkeypatch, [], errata_column("StableCol")
+            )
+            try:
+                ids.append(_minted(conn, "StableCol")["variable_id"])
+            finally:
+                conn.close()
+        assert ids[0] == ids[1]
+        assert is_canonical_scb(ids[0])
+
+    def test_split_sibling_stays_below_the_minted_sub_band(self) -> None:
+        # `variable.variable_id` is AUTOINCREMENT, so a canonical-sub-band row
+        # already in the table would drag every later triage split-sibling up
+        # with it (`lastrowid` = MAX+1) and break `_check_errata_column_band`.
+        conn = sqlite3.connect(":memory:")
+        try:
+            conn.executescript(DDL)
+            seed_providers(conn)
+            conn.execute(
+                "INSERT INTO register (register_id, provider_id, name) "
+                "VALUES (1, 1, 'r')"
+            )
+            conn.execute(
+                "INSERT INTO variable (variable_id, register_id, provider_key) "
+                "VALUES (7, 1, '7')"
+            )
+            conn.execute(
+                "INSERT INTO variable (variable_id, register_id, provider_key) "
+                "VALUES (?, 1, 'HeldCol')",
+                (_CANONICAL_SCB_BIT + 5,),
+            )
+            new_vid = scb_module._insert_split_sibling_variable(
+                conn,
+                register_id=1,
+                var_id=7,
+                shared=scb_module._inherited_variable_fields(conn, 7),
+            )
+            assert new_vid == 8
+        finally:
+            conn.close()
+
+    def test_column_now_in_the_export_fails_the_build(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        # The mirror of `scb_errata_no_source_row`: once SCB documents the column
+        # the entry would duplicate a live variable, so it fails — no silent skip
+        # (the retired graft pass's behaviour).
+        with pytest.raises(RegMetaError) as exc:
+            _built_with_errata(tmp_path, monkeypatch, [], errata_column("Kon"))
+        assert exc.value.code == "scb_errata_now_present"
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert "[[delivered]]" in exc.value.remediation
+
+    def test_present_column_check_folds_case_and_diacritics(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        with pytest.raises(RegMetaError) as exc:
+            _built_with_errata(tmp_path, monkeypatch, [], errata_column("kön"))
+        assert exc.value.code == "scb_errata_now_present"
+
+    def test_unknown_version_fails(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        with pytest.raises(RegMetaError) as exc:
+            _built_with_errata(
+                tmp_path, monkeypatch, [], errata_column("HeldCol", "2019")
+            )
+        assert exc.value.code == "scb_errata_unknown_version"
+        assert "all_versions" in exc.value.remediation

@@ -117,6 +117,17 @@ _Coord = tuple[str, str]
 # an uncurated one, cannot reach a build.
 _TODO_EVIDENCE = "TODO: the evidence that SCB delivered this row"
 _TODO_NOTED = "TODO: YYYY-MM-DD"
+# A `[[column]]`'s evidence is the other half of the same fact: what says the
+# column exists, plus the export saying nothing about it. The first clause is the
+# only part that differs by `source`.
+_TODO_COLUMN_EVIDENCE = (
+    "TODO: {attests}, and that SCB's export carries no row for it on any version "
+    "of this variant"
+)
+_COLUMN_ATTESTATION = {
+    "scb-docs": "the SCB doc page documenting this column",
+    "steward-holdings": "the delivery list holding this column",
+}
 
 
 @dataclass(frozen=True)
@@ -322,6 +333,39 @@ def errata_stanzas(misses: Sequence[CoverageMiss]) -> str:
     return "\n\n".join(stanzas) + "\n" if stanzas else ""
 
 
+def column_stanza(
+    register: str, variant: str, column: str, label: str, source: str
+) -> str:
+    """One `[[column]]` candidate: a column SCB's export documents on NO version
+    of the variant, so there is no row to re-add and the entry mints the variable.
+
+    Rendered HERE, beside the `[[version]]` / `[[delivered]]` stanzas, though its
+    producer is the SWECOV generator rather than this gate — one renderer of the
+    errata grammar is the one place that can keep a candidate loadable when the
+    grammar gains a key. `label` is the only description either evidence source
+    gives, and becomes both `name` and `definition`.
+
+    No `data_type`: a delivery list spells its own types (`varchar`), not the four
+    the loader accepts, and the key is optional precisely because a holdings list
+    carries none — emitting a guess would publish it as a fact. `all_versions =
+    true`: neither source dates the column, and an `scb-docs` entry's validity
+    years are on its doc page, for the curator to narrow to a `versions` list.
+    """
+    return _stanza(
+        "column",
+        (
+            ("register", _toml_str(register)),
+            ("variant", _toml_str(variant)),
+            ("column", _toml_str(column)),
+            ("name", _toml_str(label)),
+            ("definition", _toml_str(label)),
+            ("all_versions", "true"),
+            ("source", _toml_str(source)),
+        ),
+        evidence=_TODO_COLUMN_EVIDENCE.format(attests=_COLUMN_ATTESTATION[source]),
+    )
+
+
 def errata_worklist(report: CoverageReport) -> str:
     """`report` as a candidate `scb_errata.toml` file in three sections a maintainer
     works down: the `[[version]]` entries the undocumented editions need, the
@@ -341,8 +385,8 @@ def errata_worklist(report: CoverageReport) -> str:
         "# placeholders, and the loader refuses a placeholder `noted`, so nothing",
         "# here reaches a build until a maintainer has established that SCB really",
         "# delivered the row and dated the finding. A miss whose column SCB never",
-        "# documents anywhere is a variable_grafts.toml graft or a canonical_attach",
-        "# entry instead — not errata.",
+        "# documents anywhere is a [[column]] entry in the same file instead — it",
+        "# mints the variable rather than re-adding a row.",
         "#",
         "# Only the `scb` sections are stanzas. This file corrects SCB's own export,",
         "# and its loader refuses an entry on another provider, so every non-SCB miss",
@@ -666,12 +710,16 @@ def _delivered_stanza(miss: CoverageMiss) -> str:
     )
 
 
-def _stanza(header: str, fields: tuple[tuple[str, str], ...]) -> str:
+def _stanza(
+    header: str,
+    fields: tuple[tuple[str, str], ...],
+    evidence: str = _TODO_EVIDENCE,
+) -> str:
     """One entry as valid, complete TOML — every key `load_scb_errata` requires,
     with the curator's own two as TODO placeholders."""
     body = "".join(f"{key} = {value}\n" for key, value in fields)
     return (
         f"[[{header}]]\n{body}"
-        f"evidence = {_toml_str(_TODO_EVIDENCE)}\n"
+        f"evidence = {_toml_str(evidence)}\n"
         f"noted = {_toml_str(_TODO_NOTED)}"
     )

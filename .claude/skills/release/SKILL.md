@@ -298,7 +298,7 @@ Build and upload fresh if **any** condition is true:
 - The builder or its curated inputs changed since the prior release's asset —
   `git log <prev reg_meta tag>..HEAD -- reg_meta_build/ ':(exclude)reg_meta_build/docs/'`
   is non-empty. Build-side changes (curated TOMLs, `sources/`, `db.py` content, new
-  indexes, grafts) alter DB **content** without necessarily bumping `SCHEMA_VERSION`, so
+  indexes, errata) alter DB **content** without necessarily bumping `SCHEMA_VERSION`, so
   copying the old asset forward would ship a **stale** DB. The `docs/` exclude matters:
   `build-db` does not consume `reg_meta_build/docs/` (that drives the doc-DB asset in
   8b), so a docs-only release still copies the main DB forward. When this fires only
@@ -502,8 +502,8 @@ non-SCB misses, which are answered at their own surface and not here), curate th
 entries that have evidence into `reg_meta_build/scb_errata.toml`, and note the rebuild
 path: errata is an **SCB adapter** input, so a corrected window reaches the flavor only
 through a fresh **8a** main DB and then a fresh 8c overlay. A miss whose column SCB
-documents nowhere is a `variable_grafts.toml` graft or a `canonical_attach` entry
-instead, not errata. If the curation is larger than this release can carry, land it as
+documents nowhere is a `[[column]]` entry in the same file instead, not a
+`[[delivered]]` one. If the curation is larger than this release can carry, land it as
 its own change and release from that — do not publish a flavored DB the gate refused.
 
 **Maintainer-local inputs**: `reg_meta_build/input_data/swecov/` (holding

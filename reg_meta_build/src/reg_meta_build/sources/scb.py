@@ -69,6 +69,7 @@ from reg_meta_build.db import (
     _value_set_hash,
 )
 from reg_meta_build.edition_bounds import edition_claims, vintage_claim
+from reg_meta_build.id import _CANONICAL_SCB_BIT
 from reg_meta_build.ir import (
     IRDeliveryProvenance,
     IRRegister,
@@ -85,7 +86,11 @@ from reg_meta_build.resolution import (
     prev_day_from_cut,
     resolve_year_intervals,
 )
-from reg_meta_build.scb_errata import ScbErrata, apply_scb_errata
+from reg_meta_build.scb_errata import (
+    ERRATA_COLUMN_SOURCE_LABEL,
+    ScbErrata,
+    apply_scb_errata,
+)
 
 _LISA_REGISTER_NAME_PREFIX = "longitudinell integrationsdatabas"
 
@@ -740,7 +745,14 @@ def _populate_sensitivity_flags(conn: sqlite3.Connection) -> int:
         "WHERE is_identifier = 0 "
         f"  AND register_id IN (SELECT register_id FROM register "
         f"WHERE provider_id = {PROVIDER_ID_SCB}) "
-        "  AND CAST(provider_key AS INTEGER) IN (SELECT var_id FROM identifier_semantics)"
+        # Band-gated, because only a source-derived variable HAS a var_id to
+        # match: an errata `[[column]]` variable (scb_errata.py) is keyed by its
+        # delivery column, so `CAST('<column>' AS INTEGER)` is 0 and a declared
+        # var_id 0 would flag every minted column as an identifier. Its id is
+        # minted into the reserved sub-band, so the band says what the key is.
+        "  AND variable_id < ? "
+        "  AND CAST(provider_key AS INTEGER) IN (SELECT var_id FROM identifier_semantics)",
+        (_CANONICAL_SCB_BIT,),
     )
     declared = id_cur.rowcount or 0
     _progress(f"  {declared:,} additional rows flagged from Identifierare.csv")
@@ -1619,13 +1631,26 @@ def _insert_split_sibling_variable(
     var_id: int,
     shared: _InheritedVariableFields,
 ) -> int:
-    cur = conn.execute(
+    # Explicit id, not AUTOINCREMENT: the errata pass already inserted
+    # canonical-sub-band (`>= 2^61`) variables, which would otherwise pull every
+    # split sibling up there with them and break `_check_errata_column_band`.
+    # `MAX+1` under the sub-band floor reproduces what AUTOINCREMENT assigned
+    # before those rows existed.
+    new_vid = (
+        conn.execute(
+            "SELECT COALESCE(MAX(variable_id), 0) FROM variable WHERE variable_id < ?",
+            (_CANONICAL_SCB_BIT,),
+        ).fetchone()[0]
+        + 1
+    )
+    conn.execute(
         "INSERT INTO variable "
-        "(register_id, provider_key, name, definition, description, "
+        "(variable_id, register_id, provider_key, name, definition, description, "
         "source_register_text, measurement_unit, source_register_id, "
         "source_label, is_sensitive, is_identifier) "
-        "VALUES (?, CAST(? AS TEXT), ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        "VALUES (?, ?, CAST(? AS TEXT), ?, ?, ?, ?, ?, ?, ?, ?, ?)",
         (
+            new_vid,
             register_id,
             var_id,
             shared.name,
@@ -1639,8 +1664,6 @@ def _insert_split_sibling_variable(
             shared.is_identifier,
         ),
     )
-    new_vid = cur.lastrowid
-    assert new_vid is not None  # lastrowid is set after an INSERT
     return new_vid
 
 
@@ -2912,13 +2935,28 @@ def _coalesce_variable_states(
     # merged variable *names* — `CAST('name' AS INTEGER)` → 0 in SQLite — but
     # this SCB-specific coalescer is replaced by the per-provider IR adapters in
     # A4, so the numeric-key assumption never reaches SOS.
+    # The id band decides which arm a row belongs to. Every source-derived SCB
+    # variable is below the reserved `[2^61, 2^62)` sub-band and keyed by its
+    # var_id; an errata `[[column]]` variable (scb_errata.py) is minted INTO that
+    # sub-band and keyed by its delivery COLUMN, for which the CAST means nothing
+    # — so `_mint_columns` stamped its own id as its synthetic rows' `var_id`,
+    # and the variable IS its own key.
     with _stage_timer("scb:coalesce:load_variable_map"):
         vid_map: dict[tuple[int, int], int] = {
             (r[0], r[1]): r[2]
             for r in conn.execute(
-                "SELECT register_id, CAST(provider_key AS INTEGER), variable_id FROM variable"
+                "SELECT register_id, CAST(provider_key AS INTEGER), variable_id "
+                "FROM variable WHERE variable_id < ?",
+                (_CANONICAL_SCB_BIT,),
             )
         }
+        vid_map.update(
+            ((r[0], r[1]), r[1])
+            for r in conn.execute(
+                "SELECT register_id, variable_id FROM variable WHERE source_label = ?",
+                (ERRATA_COLUMN_SOURCE_LABEL,),
+            )
+        )
 
     # Triage: resolve pre-triage collisions (fold/split/collapse) before
     # materializing. Mints split-sibling `variable` rows (so vid_map above is
@@ -4336,6 +4374,12 @@ class SCBAdapter:
         self.projection_stats: _ProjectionStats = _ProjectionStats()
         self.fold_slug_hints: dict[int, str] = {}
         self.sibling_edges: list[tuple[int, int]] = []
+        # Provider-blind classification feed (`db.materialize` drains it via
+        # getattr, like the SOS/curated adapters'): `[[column]]` errata name an
+        # existing catalog classification's short_name, and a minted variable has
+        # no `value_set_version_label` for the SCB `variable_instance` feed to
+        # resolve. Empty on a build whose errata declare no classification.
+        self.classification_candidates: list[tuple[int, int | None, str]] = []
 
     def emit(self, source_dir: Path) -> Iterator[IRObject]:
         """Parse SCB exports under ``source_dir`` and emit IR objects.
@@ -4499,11 +4543,14 @@ class SCBAdapter:
         # real delivery it stands in for — running the PII/identifier lift over
         # it is how that stays true by construction rather than by argument.
         with _stage_timer("scb:apply_errata"):
-            errata_counts = apply_scb_errata(conn, self.errata)
+            errata_counts = apply_scb_errata(
+                conn, self.errata, self.classification_candidates
+            )
         if errata_counts["versions"] or errata_counts["rows"]:
             _progress(
                 f"Applied SCB errata: {errata_counts['versions']:,} version(s), "
-                f"{errata_counts['rows']:,} row(s)."
+                f"{errata_counts['rows']:,} row(s), "
+                f"{errata_counts['columns']:,} minted column(s)."
             )
             # Emitted only when non-zero: an always-present `…: 0` pair would
             # move the manifest's `row_counts` blob against the released DB and
@@ -4511,6 +4558,7 @@ class SCBAdapter:
             # information (same rule as the curated same_as counts in db.py).
             self.row_counts["scb_errata_versions"] = errata_counts["versions"]
             self.row_counts["scb_errata_rows"] = errata_counts["rows"]
+            self.row_counts["scb_errata_columns"] = errata_counts["columns"]
 
         # A1.2: lift sensitivity / identifier flags from unika_summary into the
         # variable table. Runs after the enrichment loop so both source and

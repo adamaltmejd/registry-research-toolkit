@@ -203,11 +203,12 @@ def _encode_search_cursor(context: str, offset: int, after: str) -> str:
 #    to be digit-only (e.g. a curated column literally named `2020`) is high-band,
 #    so it resolves to NULL rather than a bogus `2020`.
 #  - The DIGIT check gates out low-band SCB variables whose provider_key is NOT
-#    numeric: SCB variable GRAFTS (reg_meta_build/variable_grafts.py) are minted
-#    in the SCB band (variable_id < 2^62) but carry a non-numeric provider_key of
-#    the form `graft:<column>`. Band-only would `CAST('graft:col' AS INTEGER)` = 0,
-#    leaking a bogus `var_id: 0`. The digit check rejects them → NULL. (Restores
-#    the #466 behaviour the band-only #474 guard regressed.)
+#    numeric: an SCB column SCB's own export never documented (a `[[column]]` in
+#    reg_meta_build/scb_errata.toml) is minted in the SCB band (variable_id <
+#    2^62) but carries the delivery COLUMN as its provider_key. Band-only would
+#    `CAST('FastBet' AS INTEGER)` = 0, leaking a bogus `var_id: 0`. The digit
+#    check rejects them → NULL. (Restores the #466 behaviour the band-only #474
+#    guard regressed.)
 #
 # build-invariant: SCB variable_id < 2^62, non-SCB >= 2^62 (band check).
 # This literal MIRRORS `reg_meta_build/id.py::_MINT_BIT` (= 1 << 62) — the

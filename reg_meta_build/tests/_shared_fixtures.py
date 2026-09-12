@@ -4,6 +4,7 @@ suites. Both conftests import these via the on-`sys.path` bare-name path
 
 from __future__ import annotations
 
+import json
 import os
 import sqlite3
 from typing import TYPE_CHECKING
@@ -114,17 +115,12 @@ def _no_repo_curation() -> Iterator[None]:
 
     mp.setattr(_cl, "repo_classification_links_path", lambda: None)
     mp.setattr(_db, "repo_classification_links_path", lambda: None)
-    # variable_grafts.toml (#365 PR1d) mints variables onto real scb (register,
-    # variant); against a fixture DB every one is unresolved. db.py LOCAL-imports
-    # the symbol (like codelivery), so patching the module alone suffices.
-    import reg_meta_build.variable_grafts as _vg
-
-    mp.setattr(_vg, "repo_variable_grafts_path", lambda: None)
-    # scb_errata.toml (Y-114) names real scb registers/variants by SLUG and its
-    # entries are STRICT (an unknown variant, an undocumented version or a column
-    # with no real row fails the build) — against a fixture export every one of
-    # them would. db.py LOCAL-imports the symbol (like codelivery), so patching
-    # the module alone suffices.
+    # scb_errata.toml (Y-114/Y-116) names real scb registers/variants by SLUG and
+    # its entries are STRICT (an unknown variant, an undocumented version, a
+    # [[delivered]] column with no real row or a [[column]] that now has one fails
+    # the build) — against a fixture export every one of them would. db.py
+    # LOCAL-imports the symbol (like codelivery), so patching the module alone
+    # suffices.
     import reg_meta_build.scb_errata as _se
 
     mp.setattr(_se, "repo_scb_errata_path", lambda: None)
@@ -280,6 +276,28 @@ def errata_version(name: str) -> str:
         f'name = "{name}"\n'
         f'evidence = "the steward holds the {name} delivery"\n'
         'noted = "2026-09-11"\n'
+    )
+
+
+def errata_column(column: str, *versions: str, **fields: object) -> str:
+    """A `[[column]]` entry for `scb_errata.toml` (Y-116): `column` is delivered
+    on TESTREG/individer but SCB's export documents it NOWHERE, so the entry
+    mints the variable. With no `versions`, it claims every edition
+    (`all_versions = true`); `fields` overrides or adds any key."""
+    entry: dict[str, object] = {
+        "register": "scb/testreg",
+        "variant": "individer",
+        "column": column,
+        "name": f"{column} name",
+        "definition": f"{column} definition",
+        **({"versions": list(versions)} if versions else {"all_versions": True}),
+        "source": "steward-holdings",
+        "evidence": f"the steward holds {column}",
+        "noted": "2026-09-12",
+        **fields,
+    }
+    return "[[column]]\n" + "".join(
+        f"{k} = {json.dumps(v, ensure_ascii=False)}\n" for k, v in entry.items()
     )
 
 

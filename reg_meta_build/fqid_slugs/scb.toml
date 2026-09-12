@@ -42582,7 +42582,7 @@ slug = "sun2000niva-3-far"
 slug = "huvudman"
 [variable."102.8137.hmannamn"]
 slug = "huvudman-namn"
-[variable."102.graft:utbildningstyp"]
+[variable."102.utbildningstyp"]
 slug = "programtyp"
 
 # register 103
@@ -42940,33 +42940,33 @@ slug = "bostadstyp"
 slug = "naringsgren-for-statistiken"
 [variable."168.4027.ng"]
 slug = "naringsgren"
-[variable."168.graft:KassaOchBank"]
+[variable."168.KassaOchBank"]
 slug = "kassa-och-bank-2"
-[variable."168.graft:Leverantorsskulder"]
+[variable."168.Leverantorsskulder"]
 slug = "leverantorsskulder-2"
-[variable."168.graft:MaskinerOchInventarier"]
+[variable."168.MaskinerOchInventarier"]
 slug = "maskiner-och-inventarier-2"
-[variable."168.graft:RedovisatResultat"]
+[variable."168.RedovisatResultat"]
 slug = "redovisat-arsresultat"
-[variable."168.graft:Skattekostnader"]
+[variable."168.Skattekostnader"]
 slug = "skatt"
-[variable."168.graft:SummaKortfristigaFordringar"]
+[variable."168.SummaKortfristigaFordringar"]
 slug = "summa-kortfristiga-fordringar-2"
-[variable."168.graft:SummaKortfristigaPlaceringar"]
+[variable."168.SummaKortfristigaPlaceringar"]
 slug = "summa-kortfristiga-placeringar-2"
-[variable."168.graft:SummaKortfristigaSkulder"]
+[variable."168.SummaKortfristigaSkulder"]
 slug = "summa-kortfristiga-skulder-2"
-[variable."168.graft:SummaLangfristigaSkulder"]
+[variable."168.SummaLangfristigaSkulder"]
 slug = "summa-langfristiga-skulder-2"
-[variable."168.graft:SummaMateriellaAnlaggningstillgangar"]
+[variable."168.SummaMateriellaAnlaggningstillgangar"]
 slug = "summa-materiella-anlaggningstillgangar-2"
-[variable."168.graft:SummaObeskattadeReserver"]
+[variable."168.SummaObeskattadeReserver"]
 slug = "summa-obeskattade-reserver-2"
-[variable."168.graft:SummaOmsattningstillgangar"]
+[variable."168.SummaOmsattningstillgangar"]
 slug = "summa-omsattningstillgangar-2"
-[variable."168.graft:SummaPersonalkostnader"]
+[variable."168.SummaPersonalkostnader"]
 slug = "summa-personalkostnader-2"
-[variable."168.graft:SummaTillgangar"]
+[variable."168.SummaTillgangar"]
 slug = "summa-tillgangar-2"
 
 # register 176
@@ -43062,7 +43062,7 @@ slug = "sun-niva-mor-grupperad-2"
 slug = "huvudman"
 [variable."193.8137.hmannamn"]
 slug = "huvudman-namn"
-[variable."193.graft:MSPR2_SPRAK"]
+[variable."193.MSPR2_SPRAK"]
 slug = "moderna-sprak-sprakval-sprak"
 
 # register 194
@@ -44360,7 +44360,7 @@ slug = "forskningsamne-3"
 slug = "forskningsamne-5"
 [variable."47.29561.natamne"]
 slug = "nationellt-forskningsamne"
-[variable."47.graft:benamning"]
+[variable."47.benamning"]
 slug = "examensbenamning-namnare"
 
 # register 55

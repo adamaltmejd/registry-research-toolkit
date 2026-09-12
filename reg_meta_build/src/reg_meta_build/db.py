@@ -3610,13 +3610,12 @@ def _resolve_curated_codeless_overlaps(
     # Mint new code-less twins (cap interior split) deterministically, in the SAME
     # id band as the original code-less state being split: an SCB original (low band,
     # `< _MINT_BIT`) gets a low-band twin, a minted-provider original (high band,
-    # `>= _MINT_BIT` — grafts / canonical-attach / SOS) gets a high-band twin. A
+    # `>= _MINT_BIT` — SOS and the other minted providers) gets a high-band twin. A
     # single global MAX(state_id)+1 would land EVERY twin in the high band whenever
     # any high-band state exists, overflowing the SCB band check
     # (validate._check_minted_id_bands requires SCB state_ids `< _MINT_BIT`). Two
     # per-band running counters, seeded from each band's current max and incremented
-    # as we mint, keep each twin unique within its band. Mirrors variable_grafts'
-    # band-pinned minting.
+    # as we mint, keep each twin unique within its band.
     next_low_state_id = (
         conn.execute(
             "SELECT COALESCE(MAX(state_id), 0) FROM variable_state WHERE state_id < ?",
@@ -4388,78 +4387,6 @@ def materialize(
             fm_counts["windows"] + alias_window_counts["windows"]
         )
 
-        # Variable grafts (#365 PR1d) — mint catalog variables reg_meta lacks but
-        # a steward delivers, onto an existing (register, variant). Runs AFTER
-        # populate_slugs (register/variant slugs resolve the target) and BEFORE
-        # populate_variable_slugs (the minted variable's NULL slug auto-derives
-        # from its delivery column, like any other). Gap-fill only; banded ids.
-        from .variable_grafts import (
-            load_variable_grafts,
-            materialize_grafts,
-            repo_variable_grafts_path,
-        )
-
-        graft_counts = materialize_grafts(
-            conn,
-            load_variable_grafts(repo_variable_grafts_path()),
-            providers=active_providers,
-            warn=_progress,
-        )
-        row_counts["variable_grafts"] = graft_counts["minted"]
-        _progress(
-            f"  {graft_counts['minted']:,} variable grafts "
-            f"({graft_counts['skipped']:,} already present, "
-            f"{graft_counts['unresolved']:,} unresolved)"
-        )
-
-        # Canonical-SCB attach (#400 PR2) — the RICH analog of grafts: mint
-        # canonical-SCB variables (LISA columns absent from SCB's machine export)
-        # onto an existing (register, variant), with canonical-SCB-banded ids, a
-        # closed validity window, and an optional classification link. Same
-        # slug-guarded block + ordering rationale as grafts (after populate_slugs
-        # resolves the target, before populate_variable_slugs auto-derives the new
-        # slug). Its classification candidates join the SAME list fed to
-        # `_feed_classification_candidates` below, so the backfill tags them.
-        from .canonical_attach import (
-            canonical_attach_path,
-            load_canonical_attach,
-            materialize_canonical_attach,
-        )
-
-        # The canonical-attach seed (`lisa_canonical.toml`) is read from the SAME
-        # `--input-dir/scb_canonical/` the `CanonicalScbAdapter` reads its
-        # `scb_canonical.toml` from — found here as that adapter's paired source
-        # dir (basename `scb_canonical`). None when this build has no such adapter
-        # (synthetic / SCB-only / SOS-only builds) → the load no-ops.
-        canonical_dir = next(
-            (d for _a, d in adapters if d.name == _CANONICAL_SCB_DIRNAME), None
-        )
-        attach_seed_path = canonical_attach_path(canonical_dir)
-        # Provenance: record the attach seed alongside the other canonical-SCB
-        # inputs (scb_canonical.toml + CSVs, keyed by basename via `_file_sha256`).
-        # Only when the seed actually resolved (None ⇒ no canonical adapter, a
-        # legitimate no-op — matching the no-canonical-dir case; a stale-but-present
-        # dir already failed loud in `canonical_attach_path`). Without this, a build
-        # audit sees scb_canonical.toml recorded but NOT the seed that minted the
-        # LISA rows.
-        if attach_seed_path is not None:
-            source_checksums[attach_seed_path.name] = _file_sha256(attach_seed_path)
-        attach_counts = materialize_canonical_attach(
-            conn,
-            load_canonical_attach(
-                attach_seed_path,
-                classification_seed_path=seed_path,
-            ),
-            providers=active_providers,
-            classification_candidates=classification_candidates,
-            warn=_progress,
-        )
-        row_counts["canonical_attach"] = attach_counts["minted"]
-        _progress(
-            f"  {attach_counts['minted']:,} canonical-SCB attaches "
-            f"({attach_counts['unresolved']:,} unresolved)"
-        )
-
         # Stored `variable.slug`. Runs after populate_slugs
         # (register/variant slugs feed collision messages) and after
         # _coalesce_variable_states (reads variable_state.delivery_column_name),
@@ -5154,8 +5081,8 @@ def build_db(
     conn.execute(f"PRAGMA cache_size={_BUILD_PAGE_CACHE_KIB}")  # ~2 GiB main page cache
     conn.execute("PRAGMA temp_store=MEMORY")  # classification build uses temp tables
     conn.execute("PRAGMA foreign_keys=OFF")  # Enable after import for speed
-    # Unicode-aware LOWER() for delivery_column_name folding (variable_grafts runs
-    # on this write conn, which isn't created via `open_db`). See reg_meta.db. (#853)
+    # Unicode-aware LOWER() for delivery_column_name folding: the validation pass
+    # runs on this write conn, which isn't created via `open_db`. See reg_meta.db. (#853)
     register_py_lower(conn)
     build_failed = True
     try:
@@ -5201,24 +5128,33 @@ def build_db(
             # codelivery.toml can't fail an SOS-only build that never reads it.
             # Empty when the file is absent (wheel installs, synthetic builds).
             codelivery = load_codelivery(repo_codelivery_path())
-            # Upstream errata (Y-114): the rows SCB's export omits. Slug-resolved
-            # against the SAME curated slug dir `populate_slugs` reads — the
-            # adapter applies these before the slug columns exist.
+            # Upstream errata (Y-114/Y-116): what SCB's export omits — versions,
+            # column-in-version rows, and whole columns. Slug-resolved against the
+            # SAME curated slug dir `populate_slugs` reads; the adapter applies
+            # these before the slug columns exist.
+            errata_path = repo_scb_errata_path()
             errata = load_scb_errata(
-                repo_scb_errata_path(), slug_dir or repo_slug_dir()
+                errata_path,
+                slug_dir or repo_slug_dir(),
+                classification_seed_path=seed_path,
             )
-            adapters.append(
-                (
-                    SCBAdapter(
-                        conn,
-                        codelivery,
-                        errata,
-                        value_prestage_cache=scb_value_prestage_cache,
-                        refresh_value_prestage=refresh_scb_value_prestage,
-                    ),
-                    scb_dir,
+            scb_adapter = SCBAdapter(
+                conn,
+                codelivery,
+                errata,
+                value_prestage_cache=scb_value_prestage_cache,
+                refresh_value_prestage=refresh_scb_value_prestage,
+            )
+            # Provenance: the errata file mints catalog rows, so a build audit
+            # needs its digest next to the exports it corrects. Recorded through
+            # the adapter's own `source_checksums` channel (merged by
+            # `materialize`), keyed by basename like every other input. None on a
+            # wheel install, which ships no curation.
+            if errata_path is not None:
+                scb_adapter.source_checksums[errata_path.name] = _file_sha256(
+                    errata_path
                 )
-            )
+            adapters.append((scb_adapter, scb_dir))
         if "sos" in providers:
             adapters.append((SOSAdapter(conn), sos_dir))
         # Thin curated providers (#422): one shared adapter per agency, each

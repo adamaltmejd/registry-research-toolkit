@@ -383,7 +383,7 @@ def register_py_lower(conn: sqlite3.Connection) -> None:
     """Register ``py_lower``, a Unicode-aware ``LOWER()`` (SQLite's is ASCII-only,
     so Swedish ``åäö`` headers like ``Ägare``/``Kön`` don't fold). Used for
     case-insensitive ``delivery_column_name`` matching across reg_meta queries and
-    the build validator/grafts (refs #843, #853)."""
+    the build validator (refs #843, #853)."""
     conn.create_function(
         "py_lower",
         1,

@@ -23,6 +23,7 @@ from _csv_fixtures import (
 )
 from _shared_fixtures import (
     _write_fixture_slug_dir,
+    errata_column,
     errata_delivered,
     errata_version,
     fail_replace_onto,
@@ -36,7 +37,6 @@ from reg_meta_build.db import (
     _value_set_hash,
     build_db,
 )
-from reg_meta_build.id import mint_canonical_scb
 from reg_meta_build.sources.scb import _canon_data_type
 
 from reg_meta_build.fqid_slugs import slug_dir_curates_canonical_scb
@@ -4615,108 +4615,19 @@ class TestProvenanceDbPublication:
             conn.close()
 
 
-class TestCanonicalAttachManifest:
-    """The canonical-attach seed (`lisa_canonical.toml`) is recorded in the build
-    manifest's `source_checksums` alongside the other canonical-SCB inputs (#400).
-    Without it a build audit sees `scb_canonical.toml` + its CSVs recorded but NOT
-    the seed that minted the 32 LISA rows."""
-
-    # A minimal valid `scb_canonical.toml`: one canonical register (its minted
-    # `[2^61, 2^62)` id pinned in the slug TOML below) so the CanonicalScbAdapter
-    # activates and the attach pass runs against the SAME `scb_canonical/` dir.
-    _CANON_REG_ID = mint_canonical_scb("scb", "tcanon")
-    _CANON_VARIANT_ID = mint_canonical_scb("scb", "tcanon", "_default")
-    _SCB_CANONICAL_TOML = (
-        '[[register]]\nkey = "tcanon"\nname = "Test canonical"\n'
-        'valid_from = "2020-01-01"\n'
-        '[[register.variable]]\nname = "Col"\ncolumn = "Col"\n'
-    )
-    # An attach onto the SYNTHETIC SCB register (testreg/individer, register 1
-    # variant 10 from `write_scb_input`), a gap-fill column → mints one row, so the
-    # pass does real work and the manifest entry is the proof it ran.
-    _LISA_CANONICAL_TOML = (
-        '[[attach]]\nregister = "scb/testreg"\nvariant = "individer"\n'
-        'column = "AttachedCol"\nname = "Attached column"\n'
-        'definition = "A canonical-attach-minted LISA column."\n'
-        'data_type = "text"\nvalid_from = "2010-01-01"\n'
-    )
-
-    def _build(self, tmp_path: Path) -> tuple[dict[str, str], dict[str, object]]:
-        input_dir = tmp_path / "input"
-        write_scb_input(input_dir)
-        canonical_dir = input_dir / "scb_canonical"
-        canonical_dir.mkdir()
-        (canonical_dir / "scb_canonical.toml").write_text(
-            self._SCB_CANONICAL_TOML, encoding="utf-8"
-        )
-        (canonical_dir / "lisa_canonical.toml").write_text(
-            self._LISA_CANONICAL_TOML, encoding="utf-8"
-        )
-
-        slug_dir = tmp_path / "slugs"
-        slug_dir.mkdir()
-        # Standard synthetic register/variant slugs PLUS the canonical register pin
-        # (id-keyed) so populate_slugs + the #556 stale-seed preflight both pass.
-        (slug_dir / "scb.toml").write_text(
-            '[register."1"]\nslug = "testreg"\n'
-            '[register."2"]\nslug = "otherreg"\n'
-            '[register_variant."1.10"]\nslug = "individer"\n'
-            '[register_variant."2.20"]\nslug = "foretag"\n'
-            f'[register."{self._CANON_REG_ID}"]\nslug = "tcanon"\n'
-            f'[register_variant."{self._CANON_REG_ID}.{self._CANON_VARIANT_ID}"]\n'
-            'slug = "_default"\n',
-            encoding="utf-8",
-        )
-        (slug_dir / "classifications.toml").write_text("", encoding="utf-8")
-
-        db_dir = tmp_path / "db"
-        build_db(
-            input_dir=input_dir,
-            db_dir=db_dir,
-            providers=("scb",),
-            slug_dir=slug_dir,
-            skip_classifications=True,
-        )
-        conn = open_db(db_dir / "reg_meta.db")
-        try:
-            manifest = get_manifest(conn)
-            checksums = json.loads(manifest["source_checksums"])
-            # Confirm the attach pass actually ran (minted the gap-fill column) —
-            # so the recorded checksum is the seed that changed the catalog, not a
-            # no-op file that happened to sit in the dir.
-            minted = conn.execute(
-                "SELECT COUNT(*) FROM variable_state "
-                "WHERE delivery_column_name = 'AttachedCol'"
-            ).fetchone()[0]
-            row_counts = json.loads(manifest["row_counts"])
-        finally:
-            conn.close()
-        assert minted == 1, "canonical-attach pass did not mint its column"
-        assert row_counts.get("canonical_attach") == 1
-        return checksums, row_counts
-
-    def test_seed_checksum_recorded(self, tmp_path: Path) -> None:
-        checksums, _ = self._build(tmp_path)
-        # Keyed by basename, exactly like the sibling canonical-SCB inputs.
-        assert "lisa_canonical.toml" in checksums
-        assert "scb_canonical.toml" in checksums
-        # 64-hex sha256 digest (same `_file_sha256` the siblings use).
-        digest = checksums["lisa_canonical.toml"]
-        assert len(digest) == 64 and all(c in "0123456789abcdef" for c in digest)
-
-
 class TestScbErrataBuild:
-    """Build-level contract for the SCB export errata (Y-114): the log retires
-    itself when SCB ships the row, and the manifest records what it applied."""
+    """Build-level contract for the SCB export errata (Y-114/Y-116): the log
+    retires itself when SCB ships the row, and the manifest records what it
+    applied and the digest of the file that said so."""
 
-    def _build(
+    def _manifest(
         self,
         tmp_path: Path,
         monkeypatch: pytest.MonkeyPatch,
         errata_toml: str,
     ) -> dict:
         """Run a real build with `errata_toml` standing in for the committed
-        `scb_errata.toml`, and return the shipped manifest's `row_counts`."""
+        `scb_errata.toml`, and return the shipped manifest."""
         import reg_meta_build.scb_errata as _se
 
         path = tmp_path / "scb_errata.toml"
@@ -4737,9 +4648,19 @@ class TestScbErrataBuild:
         )
         conn = open_db(db_dir / "reg_meta.db")
         try:
-            return json.loads(get_manifest(conn)["row_counts"])
+            return dict(get_manifest(conn))
         finally:
             conn.close()
+
+    def _build(
+        self,
+        tmp_path: Path,
+        monkeypatch: pytest.MonkeyPatch,
+        errata_toml: str,
+    ) -> dict:
+        return json.loads(
+            self._manifest(tmp_path, monkeypatch, errata_toml)["row_counts"]
+        )
 
     def test_manifest_reports_the_applied_versions_and_rows(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
@@ -4754,6 +4675,24 @@ class TestScbErrataBuild:
         assert row_counts["scb_errata_versions"] == 1
         assert row_counts["scb_errata_rows"] == 1
 
+    def test_minted_columns_are_counted(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        # A [[column]] mints one variable and one synthetic row per edition;
+        # TESTREG/individer is documented 2020-2022, so `all_versions` is three.
+        row_counts = self._build(tmp_path, monkeypatch, errata_column("HeldCol"))
+        assert row_counts["scb_errata_columns"] == 1
+        assert row_counts["scb_errata_rows"] == 3
+
+    def test_errata_file_digest_is_recorded(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        # The file MINTS catalog rows, so a build audit that sees the exports but
+        # not the errata that corrected them is missing the input that mattered.
+        manifest = self._manifest(tmp_path, monkeypatch, errata_column("HeldCol"))
+        digest = json.loads(manifest["source_checksums"])["scb_errata.toml"]
+        assert len(digest) == 64 and all(c in "0123456789abcdef" for c in digest)
+
     def test_empty_errata_leaves_the_manifest_untouched(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ) -> None:
@@ -4762,6 +4701,7 @@ class TestScbErrataBuild:
         row_counts = self._build(tmp_path, monkeypatch, "")
         assert "scb_errata_versions" not in row_counts
         assert "scb_errata_rows" not in row_counts
+        assert "scb_errata_columns" not in row_counts
 
     def test_entry_whose_row_scb_now_ships_fails_the_build(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch

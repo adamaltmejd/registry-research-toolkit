@@ -57,7 +57,6 @@ from typing import TYPE_CHECKING, Literal
 from reg_meta.catalog import _decode_panel_entity_key
 from reg_meta.db import classification_succession_as_of_year, open_db
 
-from reg_meta_build.canonical_attach import CANONICAL_ATTACH_SOURCE_LABEL
 from reg_meta_build.db import (
     _PROVIDER_SEED,
     _VALID_TO_SENTINEL,
@@ -74,6 +73,7 @@ from reg_meta_build.relations import (
     _REPLACED_BY_NOTE_VINTAGE_LIFT,
     _variable_vintage_stream_key,
 )
+from reg_meta_build.scb_errata import ERRATA_COLUMN_SOURCE_LABEL
 
 # Seeded non-SCB provider ids (SOS, FOHM, … — every built-in provider that
 # mints into the high band). The global build's minted-id band check enforces
@@ -192,14 +192,14 @@ def validate_built_db(
     real data.
 
     ``flavored`` (#365 PR2) validates a steward-flavored DB: an ``extend-db``
-    overlay (global core + steward registers/variables/grafts/aliases) on top
+    overlay (global core + steward registers/variables/aliases) on top
     of a released global DB. It runs the SAME full structural suite as
     ``corpus=False`` (the real-corpus volume floors stay OFF — a flavor adds a
     small, steward-specific tail, not the SCB/SOS bulk), but TIGHTENS the
     minted-id band check: every non-SCB provider's ids must be in the high
     minted band ``[2^62, 2^63)`` (steward providers are ``mint()``-ed). SCB
-    stays unchanged — SCB-register grafts legitimately keep low-band sequential
-    ids. ``flavored`` is independent of ``corpus``; a flavor build never sets
+    stays unchanged — every SCB id, minted or source-derived, is below 2^62.
+    ``flavored`` is independent of ``corpus``; a flavor build never sets
     ``corpus`` (it has no full SCB/SOS corpus to floor-check).
 
     ``bootstrap`` marks a ``--skip-slugs`` build — the documented pre-curation
@@ -264,7 +264,7 @@ def validate_built_db(
             conn, result, tables, slug_dir, flavored=flavored, bootstrap=bootstrap
         )
         _check_minted_id_bands(conn, result, tables, flavored=flavored)
-        _check_canonical_attach_band(conn, result, tables)
+        _check_errata_column_band(conn, result, tables)
         # No SOS-specific code_variable_map coverage check: code_variable_map IS
         # the DISTINCT projection of `variable_state ⨝ value_set_member`, and SOS
         # writes variable_state directly (no scratch intermediary like SCB's
@@ -1180,8 +1180,8 @@ def _check_minted_id_bands(
     high-band (``provider_id != SCB``), catching a steward overlay that forgot to
     mint. Steward providers are not in ``_PROVIDER_SEED``, so they are out of
     scope for the global check — hence the two predicates. The SCB rule is
-    UNCHANGED in both modes: SCB-register grafts legitimately keep low-band
-    sequential ids, so SCB ids stay ``< 2^62``.
+    UNCHANGED in both modes: SCB ids stay ``< 2^62``, including the
+    canonical-sub-band ids `mint_canonical_scb` produces.
     """
     result.section("[bands: minted-id disjointness]")
     if "register" not in tables:
@@ -1211,7 +1211,7 @@ def _check_minted_id_bands(
     failures = 0
     n_high = 0  # rows expected in the minted band (seeded non-SCB, or all non-SCB if flavored)
     for label, sql in grains:
-        # SCB ids must be < 2^62 (UNCHANGED in both modes — grafts stay low).
+        # SCB ids must be < 2^62 (UNCHANGED in both modes).
         bad_scb = conn.execute(
             f"SELECT COUNT(*) FROM ({sql}) WHERE provider_id = ? AND id >= ?",
             (PROVIDER_ID_SCB, _MINT_BIT),
@@ -1264,46 +1264,43 @@ def _check_minted_id_bands(
             result.ok("all SCB ids < 2^62 and all non-SCB ids >= 2^62")
 
 
-def _check_canonical_attach_band(
+def _check_errata_column_band(
     conn: sqlite3.Connection, result: ValidationResult, tables: set[str]
 ) -> None:
-    """#400 PR2: every `source_label='canonical-scb'` variable (the
-    canonical-attach pass) holds an id in the reserved canonical-SCB sub-band
+    """Y-116: every `source_label='scb-errata'` variable (a `scb_errata.toml`
+    `[[column]]`) holds a `variable_id` in the reserved canonical-SCB sub-band
     `[2^61, 2^62)`.
 
-    The canonical analog of `_check_minted_id_bands`' minted-band guard: an attach
-    row is minted with `mint_canonical_scb`, so its `variable_id` AND `state_id`
-    must land in that sub-band. (The generic band check already proves a
-    canonical-SCB id is `< 2^62` because the row is on the `scb` provider; this
-    additionally proves it is `>= 2^61`, i.e. it can't collide with a real
-    source-derived SCB id.) Self-skips when no attach rows are present (every
-    SCB-only / non-LISA build), so it only bites once the attach pass minted."""
-    result.section("[bands: canonical-attach sub-band]")
+    The canonical analog of `_check_minted_id_bands`' minted-band guard: the
+    errata pass mints these with `mint_canonical_scb`. (The generic band check
+    already proves the id is `< 2^62` because the row is on the `scb` provider;
+    this additionally proves it is `>= 2^61`, i.e. it can't collide with a real
+    source-derived SCB id.) `variable_id` ONLY: the entry's STATES are the
+    coalescer's, built from the synthetic source rows like any other delivery, so
+    they carry ordinary sequential `state_id`s. Self-skips when no such rows are
+    present (every build whose errata declare no column)."""
+    result.section("[bands: errata-column sub-band]")
     if "variable" not in tables:
-        result.ok("variable table absent — canonical-attach band check skipped")
+        result.ok("variable table absent — errata-column band check skipped")
         return
-    rows = conn.execute(
-        "SELECT vs.variable_id, vs.state_id FROM variable_state vs "
-        "JOIN variable v USING (variable_id) WHERE v.source_label = ?",
-        (CANONICAL_ATTACH_SOURCE_LABEL,),
-    ).fetchall()
-    if not rows:
-        result.ok("no canonical-attach rows — band check trivially holds")
+    ids = [
+        r[0]
+        for r in conn.execute(
+            "SELECT variable_id FROM variable WHERE source_label = ?",
+            (ERRATA_COLUMN_SOURCE_LABEL,),
+        )
+    ]
+    if not ids:
+        result.ok("no errata-column rows — band check trivially holds")
         return
-    bad = sum(
-        1
-        for variable_id, state_id in rows
-        if not is_canonical_scb(variable_id) or not is_canonical_scb(state_id)
-    )
+    bad = sum(1 for variable_id in ids if not is_canonical_scb(variable_id))
     if bad:
         result.fail(
-            f"{bad} canonical-attach state(s) with a variable_id/state_id outside "
-            "the canonical-SCB sub-band [2^61, 2^62) — un-minted?"
+            f"{bad} errata-column variable_id(s) outside the canonical-SCB "
+            "sub-band [2^61, 2^62) — un-minted?"
         )
     else:
-        result.ok(
-            f"all {len(rows)} canonical-attach id(s) in the sub-band [2^61, 2^62)"
-        )
+        result.ok(f"all {len(ids)} errata-column id(s) in the sub-band [2^61, 2^62)")
 
 
 # A4.3b sanity bands for the combined build. The 13 SOS workbooks merge (by

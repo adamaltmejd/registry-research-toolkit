@@ -15,8 +15,8 @@ ship today, both in ``delivery_enrichment.toml``:
   rows is safe: the validator invariant is one-directional (every state column
   must be in ``variable_alias``; the reverse is not required).
 
-(Gap-fill variable grafts remain deferred — the candidate set needs type
-curation; see #365.)
+(Gap-fill — minting a variable for a column SCB documents nowhere — is
+`scb_errata.toml`'s `[[column]]`, not this surface.)
 
 Scope follows what a fact is *about*, not where it was learned (revised
 2026-06-12, #365): a description of an AGI column is an AGI fact regardless of
