@@ -17,15 +17,16 @@
 # FLAG/GAP — coverage window: the source carries no year range. valid_from=1969
 # is sourced from the variable content (standardized inskrivningsprov regime:
 # I-prov, standardpoäng, psychological profile — the 1969 conscription reform);
-# valid_to=1996 from the Pliktverket digital takeover in 1997. Maintainer to
-# confirm the real archival span.
+# valid_to=1997: the steward's RA_Insark file holds records through 1997 (the
+# Pliktverket digital register also starts 1997; the two overlap that year).
+# Maintainer to confirm the real archival span.
 
 
 [[register]]
 key = "inskrivning"
 name = "Inskrivningsregister (mönstring)"
 valid_from = "1969-01-01"  # FLAG: standardized inskrivningsprov regime (1969 reform)
-valid_to = "1996-12-31"  # FLAG: Pliktverket takes over the digital register 1997
+valid_to = "1997-12-31"  # SWECOV's RA_Insark delivery holds enlistment records through 1997 (the year Pliktverket's digital register begins; the two overlap that year)
 purpose = "Historiskt inskrivnings-/mönstringsregister (Krigsarkivet): resultat från värnpliktsmönstringen — bosättning, sjukdomsnummer, psykologisk och medicinsk kapacitetsprofil, fysiska och medicinska mått (syn, hörsel, längd, vikt, blodtryck, kondition), inskrivningsprov samt placering och förbandsönskemål. Föregångare till Pliktverkets register 1997–2010."
 
 [[register.variable]]

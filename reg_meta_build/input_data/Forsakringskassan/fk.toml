@@ -4021,7 +4021,7 @@ data_type = "decimal"
 [[register]]
 key = "bostadsersattning"
 name = "Bostadsersättning"
-valid_from = "2018-01-01"  # FK admin från 2018-01-01 (etablering; förordning 2010:407)
+valid_from = "2015-01-01"  # coverage: SWECOV's FK delivery (FK_BOSTADSERSATTNING_lev4, UTTAG_MANAD) holds payments from 2015-01; FK paid the benefit on Arbetsförmedlingen's decisions before the 2018-01-01 responsibility transfer (förordning 2010:407), so 2018 was the administrative start, not the data's; earlier than 2015 unverified
 purpose = """
 Bostadsersättning till nyanlända som deltar i etableringsinsatser. Registret \
 innehåller utbetalt belopp per ersättningsperiod.\
@@ -4237,7 +4237,7 @@ data_type = "decimal"
 [[register]]
 key = "etableringsersattning"
 name = "Etableringsersättning"
-valid_from = "2018-01-01"  # FK admin från 2018-01-01 (ansvarsövergång från Arbetsförmedlingen; förordning 2010:407)
+valid_from = "2015-01-01"  # coverage: SWECOV's FK delivery holds payments from 2015-01 (UTTAG_MANAD); FK paid on Arbetsförmedlingen's decisions before the 2018-01-01 ansvarsövergång (förordning 2010:407), so 2018 was the administrative start; earlier than 2015 unverified
 purpose = """
 Etableringsersättning till nyanlända invandrare som deltar i etableringsinsatser. \
 Registret innehåller utbetalt belopp per ersättningsperiod.\
@@ -4279,7 +4279,7 @@ data_type = "decimal"
 [[register]]
 key = "etableringstillagg"
 name = "Etableringstillägg"
-valid_from = "2018-01-01"  # FK admin från 2018-01-01 (förordning 2010:407)
+valid_from = "2015-01-01"  # coverage: SWECOV's FK delivery holds payments from 2015-01 (UTTAG_MANAD); FK paid before the 2018-01-01 administrative transfer (förordning 2010:407); earlier than 2015 unverified
 purpose = """
 Etableringstillägg till nyanlända med barn som deltar i etableringsinsatser. \
 Registret innehåller utbetalt belopp per ersättningsperiod.\
