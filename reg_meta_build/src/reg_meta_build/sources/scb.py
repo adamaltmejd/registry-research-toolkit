@@ -82,6 +82,7 @@ from reg_meta_build.resolution import (
     Claim,
     SweepHooks,
     assemble_runs,
+    prev_day_from_cut,
     resolve_year_intervals,
 )
 from reg_meta_build.scb_errata import ScbErrata, apply_scb_errata
@@ -1092,12 +1093,15 @@ class _TriageResult:
     labels: dict[tuple, str]
     # gkeys collapsed into a sibling and not materialized.
     dropped: set[tuple]
-    # gkey → clamped valid_to YEAR. Pass 2 of `_collapse_residual` caps a group
-    # whose `[regver_min, regver_max]` span is superseded by a later same-column
-    # state; the materializer's fast path emits this as valid_to (overriding the
-    # open sentinel). NEVER touches `regver_min`/valid_from, so the unique index
+    # gkey → clamped valid_to, an inclusive ISO DATE. Pass 2 of
+    # `_collapse_residual` caps a group whose `[regver_min, regver_max]` span is
+    # superseded by a later same-column state; the materializer's fast path emits
+    # this as valid_to (overriding the open sentinel). ISO, not a year: a year
+    # here padded out to December and swallowed the spring term the superseded
+    # group delivered (Y-123). Only ever earlier than the group's own last
+    # delivery day, and NEVER touches `regver_min`/valid_from, so the unique index
     # keys stay stable. (No default: built positionally alongside `dropped`.)
-    clamped_to: dict[tuple, int]
+    clamped_to: dict[tuple, str]
     # variable_id → shared-stem slug base for folded variables (consumed by
     # populate_variable_slugs; a single-column variable is absent → derives
     # from its column as usual).
@@ -1378,6 +1382,18 @@ def _preferred_label(gk: tuple, grp: _StateGroup, res: _TriageResult) -> str:
     )
 
 
+@dataclass(frozen=True)
+class _ResidualBounds:
+    """One group's span at both grains, for `_collapse_residual`'s pass-2 sweep:
+    the `regver` YEARS it compares on and the ISO claim envelope it clamps to."""
+
+    lo_year: int
+    hi_year: int
+    first_iso: str
+    last_iso: str
+    gkey: tuple
+
+
 def _collapse_residual(groups: dict[tuple, _StateGroup], res: _TriageResult) -> None:
     """Rule 4 — final collision resolution, in two passes.
 
@@ -1404,10 +1420,14 @@ def _collapse_residual(groups: dict[tuple, _StateGroup], res: _TriageResult) -> 
     source text) groups are swept ascending by lower bound against a running
     "container": a group fully inside the container is DROPPED (its coverage is
     redundant); a group that starts inside it but extends past range-CLAMPS the
-    container (`res.clamped_to`) to end the year before this group begins, then becomes
-    the new container — never touching `regver_min`/valid_from, so the index keys stay
-    stable. Distinct value sets are the timeline/validator's domain and are never
-    reconciled here."""
+    container (`res.clamped_to`) to end the day before this group's first delivery
+    day (or its own last, whichever comes first), then becomes the new container —
+    never touching `regver_min`/valid_from, so the index keys stay stable. The sweep
+    COMPARES spans at year grain (safe coarsening for same-coding drift) but CLAMPS
+    at ISO grain: since Y-113 a läsår edition claims two calendar years, so a year
+    clamp padded back out to December and dropped the spring term the superseded
+    group delivered (Y-123). Distinct value sets are the timeline/validator's domain
+    and are never reconciled here."""
     scopes: dict[tuple, list[tuple]] = defaultdict(list)
     for gkey, grp in groups.items():
         if gkey in res.dropped:
@@ -1500,32 +1520,40 @@ def _collapse_residual(groups: dict[tuple, _StateGroup], res: _TriageResult) -> 
         for sub_gkeys in subgroups.values():
             if len(sub_gkeys) <= 1:
                 continue
-            # Need both bounds on every member to compare spans; the narrowed
-            # (lo, hi, gkey) list also satisfies the type checker for the sweep.
-            bounds: list[tuple[int, int, tuple]] = []
+            # Both grains for every member: the sweep COMPARES years and CLAMPS
+            # ISO. All four bounds are None together (a claim-less group), so one
+            # guard covers them — and narrowing them once here keeps the sweep
+            # itself free of None checks.
+            bounds: list[_ResidualBounds] = []
             for gk in sub_gkeys:
-                lo, hi = groups[gk].regver_min, groups[gk].regver_max
-                if lo is None or hi is None:
+                grp = groups[gk]
+                lo, hi = grp.regver_min, grp.regver_max
+                first, last = grp.from_iso, grp.to_iso
+                if lo is None or hi is None or first is None or last is None:
                     break
-                bounds.append((lo, hi, gk))
+                bounds.append(_ResidualBounds(lo, hi, first, last, gk))
             if len(bounds) != len(sub_gkeys):
                 continue
             # Sweep ascending, merging overlaps: drop a fully-subsumed group,
-            # clamp a crossing one to end the year before the next begins.
-            bounds.sort(key=lambda b: (b[0], b[1]))
-            container_lo, covered_to, container_gk = bounds[0]
-            for lo, hi, gk in bounds[1:]:
-                if lo > covered_to:  # gap → this group opens a fresh container
-                    container_lo, covered_to, container_gk = lo, hi, gk
-                elif hi <= covered_to:  # subsumed by the container → drop
-                    res.dropped.add(gk)
-                else:  # crossing: clamp the container, then advance to this group
-                    # Pass 1 already deduped same-valid_from collisions, so lower
-                    # bounds are distinct (lo > container_lo) and the clamp can
-                    # never empty the container's span.
-                    assert lo - 1 >= container_lo
-                    res.clamped_to[container_gk] = lo - 1
-                    container_lo, covered_to, container_gk = lo, hi, gk
+            # clamp a crossing one to end just before the next one begins.
+            bounds.sort(key=lambda b: (b.lo_year, b.hi_year))
+            container = bounds[0]
+            for entry in bounds[1:]:
+                if entry.lo_year > container.hi_year:  # gap → fresh container
+                    container = entry
+                elif entry.hi_year <= container.hi_year:  # subsumed → drop
+                    res.dropped.add(entry.gkey)
+                else:  # crossing: cap the container, then advance to this group
+                    # Capped by the container's own last delivery day: at ISO grain
+                    # a successor's year can open AFTER the container's window ends
+                    # (container through VT, successor from Q4), and a clamp must
+                    # never EXTEND a state. A claim window is year-nested, so the
+                    # cap also never empties the container's span — asserted, since
+                    # `_append_state` would only catch it once emitted.
+                    clamp = min(container.last_iso, prev_day_from_cut(entry.first_iso))
+                    assert clamp >= container.first_iso
+                    res.clamped_to[container.gkey] = clamp
+                    container = entry
 
 
 @dataclass(frozen=True)
@@ -3118,14 +3146,6 @@ def _coalesce_variable_states(
         nonlocal open_top_from_unika
         vid = _resolve_variable_id(gkey, grp)
         from_year = _group_from_year(grp)
-        # A triage clamp (residual same-column supersession, _collapse_residual
-        # pass 2) caps valid_to the year before the superseding group begins and
-        # overrides the open sentinel — a superseded group is no longer active.
-        # Clamps only land on fast-path groups, so honoring it here suffices.
-        clamp = triage.clamped_to.get(gkey)
-        to_year = clamp if clamp is not None else _group_open_to(grp)
-        if to_year is None:
-            open_top_from_unika += 1
         # #219: clamp the state's lifetime START/END to the sub-annual delivery
         # window (from_iso/to_iso) instead of the boundary year. `edition_claims`
         # nests every claim window in its OWN year and `regver_min`/`regver_max` are
@@ -3135,14 +3155,22 @@ def _coalesce_variable_states(
         # would risk a same-column overlap with a distinct value set in the adjacent
         # year). So no within-year guard is needed here; `_append_state` additionally
         # fail-fast-asserts valid_from <= valid_to. The `or` chains preserve the
-        # yearless/unika fallback (from_iso/to_iso are None there); a year clamp and
-        # the open sentinel both ignore to_iso (else branch) — a superseded group ends
-        # at the year clamp, a still-active one stays open.
+        # yearless/unika fallback (from_iso/to_iso are None there).
         vf = grp.from_iso or _year_to_iso_from(from_year) or _VALID_FROM_UNKNOWN
-        if clamp is None and to_year is not None:
-            vt = grp.to_iso or _year_to_iso_to(to_year) or _VALID_TO_OPEN_SENTINEL
+        # A triage clamp (residual same-column supersession, _collapse_residual
+        # pass 2) is an inclusive ISO DATE — the day before the superseding group's
+        # first delivery day, or this group's own last, whichever comes first — and
+        # overrides both to_iso and the open sentinel: a superseded group is no
+        # longer active, so even a clamp landing exactly on to_iso is load-bearing.
+        # Clamps only land on fast-path groups, so honoring it here suffices.
+        clamp = triage.clamped_to.get(gkey)
+        if clamp is not None:
+            vt = clamp
+        elif (to_year := _group_open_to(grp)) is None:  # still active
+            open_top_from_unika += 1
+            vt = _VALID_TO_OPEN_SENTINEL
         else:
-            vt = _year_to_iso_to(to_year) or _VALID_TO_OPEN_SENTINEL
+            vt = grp.to_iso or _year_to_iso_to(to_year) or _VALID_TO_OPEN_SENTINEL
         _append_state(grp, gkey, vid, vf, vt)
 
     # Partition surviving groups by (variable_id, register_variant_id). A

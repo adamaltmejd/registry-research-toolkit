@@ -1886,8 +1886,8 @@ class TestSubAnnualBoundaryClamp:
     def test_residual_clamp_overrides_to_iso(self, tmp_path: Path) -> None:
         # `_collapse_residual` pass 2 caps a VT-ending group (to_iso 2020-06-30) whose
         # [regver_min, regver_max] span is crossed by a later same-column, same-value-
-        # set group. The YEAR clamp must win over the sub-annual envelope (the
-        # `clamp is None` guard in `_emit_span`). Two code-less groups distinguished by
+        # set group. The clamp must win over the sub-annual envelope (`_emit_span`
+        # prefers it to to_iso). Two code-less groups distinguished by
         # data_length share value_set_id NULL + label "" so they stay on the fast path
         # and subgroup together in pass 2.
         conn = _build(
@@ -1915,7 +1915,7 @@ class TestSubAnnualBoundaryClamp:
                     data_length="1",
                 ),
                 # Group Q (data_length 2): 2020 .. 2021 — crosses P, so pass 2 clamps
-                # P to end 2019 (the year before Q's lower bound).
+                # P to the day before Q's first delivery day (2020-01-01).
                 _var_row(
                     colname="ClampCol",
                     cvid=9723,
@@ -1938,8 +1938,8 @@ class TestSubAnnualBoundaryClamp:
                 ),
             ],
         )
-        # P (data_length 1): valid_to is the clamp year-end 2019-12-31, NOT the
-        # VT2020 envelope end 2020-06-30.
+        # P (data_length 1): valid_to is the clamp 2019-12-31, NOT the VT2020
+        # envelope end 2020-06-30.
         row = conn.execute(
             "SELECT valid_from, valid_to FROM variable_state "
             "WHERE delivery_column_name = 'ClampCol' AND data_length = '1'"
@@ -1949,8 +1949,8 @@ class TestSubAnnualBoundaryClamp:
     def test_open_sentinel_overrides_to_iso(self, tmp_path: Path) -> None:
         # A still-active group (unika row with blank VersionSista) whose latest
         # edition is a spring term (to_iso 2020-06-30). The open-ended sentinel must
-        # win over the sub-annual envelope (the `to_year is not None` guard in
-        # `_emit_span`): a currently-live variable stays open, not clamped to VT-end.
+        # win over the sub-annual envelope (the `_group_open_to(grp) is None` branch
+        # in `_emit_span`): a currently-live variable stays open, not clamped to VT-end.
         unika_open = PIPE.join(
             [
                 "TESTREG",
@@ -2884,8 +2884,9 @@ class TestCollapseResidualOverlap:
         }
         res = self._res([gk_old, gk_new])
         _collapse_residual(groups, res)
-        # Container clamped to end the year before the newer span begins.
-        assert res.clamped_to == {gk_old: 2012}
+        # Container clamped to the day before the newer span's first delivery
+        # day — here full-year claims, so the December end the year clamp gave.
+        assert res.clamped_to == {gk_old: "2012-12-31"}
         assert res.dropped == set()
 
     def test_gap_groups_left_alone(self) -> None:
@@ -2954,7 +2955,7 @@ class TestCollapseResidualOverlap:
 
     def test_chain_of_three_crossing_clamps_each(self) -> None:
         # A staircase of three overlapping spans clamps each earlier container to
-        # the year before the next begins; the latest stays open.
+        # just before the next begins; the latest stays open.
         gk_a = self._gk("a", 5)
         gk_b = self._gk("b", 5)
         gk_c = self._gk("c", 5)
@@ -2965,7 +2966,7 @@ class TestCollapseResidualOverlap:
         }
         res = self._res([gk_a, gk_b, gk_c])
         _collapse_residual(groups, res)
-        assert res.clamped_to == {gk_a: 2011, gk_b: 2015}
+        assert res.clamped_to == {gk_a: "2011-12-31", gk_b: "2015-12-31"}
         assert res.dropped == set()
 
     def test_pass1_disambiguation_feeds_pass2_subgrouping(self) -> None:
@@ -3015,6 +3016,117 @@ class TestCollapseResidualOverlap:
         _collapse_residual(groups, res)
         assert res.dropped == set()
         assert res.clamped_to == {}
+
+    def test_crossing_container_clamped_at_iso_grain(self) -> None:
+        # Y-123: a school-year handoff. The two eras' YEAR spans cross at 2012,
+        # but the container only delivered through VT2012 and the successor opens
+        # at HT2012 — so the clamp is 2012-06-30. The old `lo - 1` year clamp said
+        # 2011, which `_emit_span` padded back out to 2011-12-31 and lost the
+        # spring term the container delivered.
+        gk_old, gk_new = self._gk("a", None), self._gk("b", None)
+        old, new = self._grp(None, 2010, 2012), self._grp(None, 2012, 2014)
+        old.claims = {
+            2010: Claim("2010-07-01", "2010-12-31", _AUTH_SUBANNUAL, ""),
+            2011: _year_claim(2011),
+            2012: Claim("2012-01-01", "2012-06-30", _AUTH_SUBANNUAL, ""),
+        }
+        new.claims = {
+            2012: Claim("2012-07-01", "2012-12-31", _AUTH_SUBANNUAL, ""),
+            2013: _year_claim(2013),
+            2014: Claim("2014-01-01", "2014-06-30", _AUTH_SUBANNUAL, ""),
+        }
+        res = self._res([gk_old, gk_new])
+        _collapse_residual({gk_old: old, gk_new: new}, res)
+        assert res.clamped_to == {gk_old: "2012-06-30"}
+        assert res.dropped == set()
+
+    def test_clamp_bounded_by_the_container_own_last_delivery(self) -> None:
+        # The clamp never EXTENDS the container: a successor opening in Q4 of the
+        # crossing year must not stretch a container that stopped at VT forward to
+        # 2012-09-30 — it ends at its own last delivery day.
+        gk_old, gk_new = self._gk("a", None), self._gk("b", None)
+        old, new = self._grp(None, 2010, 2012), self._grp(None, 2012, 2014)
+        old.claims = {
+            2010: _year_claim(2010),
+            2011: _year_claim(2011),
+            2012: Claim("2012-01-01", "2012-06-30", _AUTH_SUBANNUAL, ""),
+        }
+        new.claims = {
+            2012: Claim("2012-10-01", "2012-12-31", _AUTH_SUBANNUAL, ""),
+            2013: _year_claim(2013),
+            2014: _year_claim(2014),
+        }
+        res = self._res([gk_old, gk_new])
+        _collapse_residual({gk_old: old, gk_new: new}, res)
+        assert res.clamped_to == {gk_old: "2012-06-30"}
+        assert res.dropped == set()
+
+
+class TestResidualClampWindows:
+    """Y-123 at build grain: a CODE-LESS column's data-type eras never reach the
+    interval sweep (`_needs_timeline` requires two DISTINCT value sets), so the
+    fast path plus `_collapse_residual` pass 2 own their windows — and that
+    clamp must honor the claim windows, not the bare year."""
+
+    def _type_era_windows(
+        self, tmp_path: Path, col: str, editions: list[tuple[int, str, str, str]]
+    ) -> list[tuple[str, str, int]]:
+        """Build one code-less column delivered by a run of `Läsåret` editions,
+        each `(cvid, versionname, data_type, data_length)`. No Vardemangder rows,
+        so every era's `value_set_id` is NULL — which is what keeps these off the
+        interval sweep, so this is the code-less twin of `_schoolyear_windows`, not
+        a caller of it. The cvid doubles as the regver_id, and the approval year is
+        derived (the läsår's spring year) because no case here turns on it."""
+        rows = [
+            _var_row(
+                colname=col,
+                cvid=cvid,
+                var_id=971,
+                varname=f"{col}Var",
+                year=versionname[-4:],
+                versionname=versionname,
+                regver_id=cvid,
+                data_type=data_type,
+                data_length=data_length,
+            )
+            for cvid, versionname, data_type, data_length in editions
+        ]
+        return _column_windows(_build(tmp_path, rows), col)
+
+    def test_typed_era_handoff_keeps_the_spring_term(self, tmp_path: Path) -> None:
+        # `grundskola-ak9` `Antal_Betyg`: smallint → char at a school-year
+        # boundary. Since Y-113 the smallint era claims through 2012 (to_iso
+        # 2012-06-30) and the char era from 2012 (from_iso 2012-07-01), so the
+        # year spans CROSS and pass 2 clamps the container. A year clamp ended it
+        # 2011-12-31 and nobody shipped 2012-01-01..2012-06-30.
+        wins = self._type_era_windows(
+            tmp_path,
+            "AntalCol",
+            [
+                (9910, "Läsåret 2010/2011", "smallint", "0"),
+                (9911, "Läsåret 2011/2012", "smallint", "0"),
+                (9912, "Läsåret 2012/2013", "char", "2"),
+                (9913, "Läsåret 2013/2014", "char", "2"),
+            ],
+        )
+        assert [(vf, vt) for vf, vt, _ in wins] == [
+            ("2010-07-01", "2012-06-30"),
+            ("2012-07-01", "2014-06-30"),
+        ]
+
+    def test_single_type_era_stays_one_state(self, tmp_path: Path) -> None:
+        # Control: one shape throughout, so nothing supersedes and no clamp
+        # fires — three läsår editions ship a single contiguous state.
+        wins = self._type_era_windows(
+            tmp_path,
+            "SoloCol",
+            [
+                (9920, "Läsåret 2010/2011", "smallint", "0"),
+                (9921, "Läsåret 2011/2012", "smallint", "0"),
+                (9922, "Läsåret 2012/2013", "smallint", "0"),
+            ],
+        )
+        assert [(vf, vt) for vf, vt, _ in wins] == [("2010-07-01", "2013-06-30")]
 
 
 class TestFoldSlugHint:

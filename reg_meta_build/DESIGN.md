@@ -1261,7 +1261,9 @@ invariant, so the SCB adapter triages every such collision (`sources/scb.py`,
   drift); pass 2 reconciles SAME-column, SAME-value-set, SAME-emitted-label groups whose
   `[regver_min, regver_max]` spans *overlap across different lower-bound years* —
   dropping a fully-subsumed group and range-clamping a crossing container's `valid_to`
-  to the year before the successor begins. Only fast-path
+  to the day before the successor's first delivery day, bounded by the container's own
+  last (ISO grain, not the bare year: a year clamp padded out to December and swallowed
+  the spring term a läsår container delivered — Y-123). Only fast-path
   `(variable_id, register_variant_id)` partitions are touched; distinct value sets and
   different-column overlaps (parallel co-deliveries) are left to the materializer.
 
@@ -1548,7 +1550,9 @@ the claim records rather than parallel accumulator fields. The materializer appl
 envelope **only at a state's lifetime start/end** — `from_iso`/`to_iso` on the fast span
 path, and on the timeline path the first/last emitted run's OWN owned bound, whatever
 year it falls in (Y-121). Interior timeline handoffs between competing value sets stay
-year-aligned.
+year-aligned. A fast-path group SUPERSEDED by a later same-column state ends at the
+residual clamp instead of its `to_iso` (*Collapse* above) — also ISO, so a school-year
+handoff between two shapes of one code-less column loses no term either (Y-123).
 
 Each individual CLAIM window is still nested in its own year **by construction**:
 `edition_bounds` is passed one edition year and narrows only markers whose own year
@@ -1869,9 +1873,16 @@ are orthogonal; `valid_from[:4]` remains the display-year source).
   Edition claims always win where present; a year-grain unika bound never narrows or
   extends a sub-annual claim.
 - **Triage.** The contested-column gate already buckets by *edition id*, not year (Codex
-  #139) — no conversion. `_collapse_residual` passes 1–2 stay year-keyed: they reconcile
-  same-coding re-delivery drift, where year bucketing is a safe coarsening
-  (`_group_from_year`'s docstring argument), not coding conflicts.
+  #139) — no conversion. `_collapse_residual` keeps years where a year is identity
+  rather than output: pass 1 keys the index scope by `valid_from`-year, and pass 2
+  COMPARES spans as year hulls. Both reconcile same-coding re-delivery drift, where year
+  bucketing is a safe coarsening (`_group_from_year`'s docstring argument), not coding
+  conflicts. What pass 2 EMITS is ISO, though — its clamped `valid_to` is a delivered
+  bound, and Y-123 moved it off the year (above). Its DROP decision is the one
+  year-grain judgment left about emitted coverage: a group nested at year grain but
+  DISJOINT at ISO grain (a container ending at VT, a lone `Höstterminen` successor)
+  would be dropped and its window lost. Unobserved on the corpus — the Jul–Dec gap scan
+  is clean — and a hull-aware subsumption test is the fix if it ever appears.
 - **`_spans_overlap`** (the fast-path/timeline router) moves its span test from year
   ints to claim-hull ISO bounds, so a partition whose only "overlap" was two disjoint
   same-year terms keeps the fast path. Ripple: `_collapse_residual` pass 2 scopes on
