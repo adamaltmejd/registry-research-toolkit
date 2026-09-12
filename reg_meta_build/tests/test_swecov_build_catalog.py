@@ -646,11 +646,12 @@ def test_errata_worklist_is_empty_when_every_holding_has_a_window(
 def test_errata_worklist_splits_version_missing_from_column_missing(
     tmp_path: Path, flavored_db: Path
 ) -> None:
-    """With `T_kolumn` narrowed to 2019 and the variant documented only through
-    2020 (the Covid state), a 2020 holding of `T_kolumn` is column-missing and a
-    2021 holding of it is version-missing too — so the worklist carries one
-    `[[version]]` (2021) and ONE `[[delivered]]` naming both editions (two
-    entries for one column would be the duplicate `scb_errata` refuses)."""
+    """With `T_kolumn` narrowed to 2019 and the variant documenting exactly one
+    register version (2020), a 2020 holding of `T_kolumn` is column-missing — the
+    omitted row names that version verbatim — and a 2021 holding is version-missing
+    too, since the catalog knows no version covering it. So the worklist carries one
+    `[[version]]` (2021) and ONE `[[delivered]]` naming both editions (two entries
+    for one column would be the duplicate `scb_errata` refuses)."""
     db = tmp_path / "narrowed.db"
     db.write_bytes(flavored_db.read_bytes())
     conn = sqlite3.connect(db)
@@ -659,16 +660,28 @@ def test_errata_worklist_splits_version_missing_from_column_missing(
         "WHERE delivery_column_name = 'T_kolumn'"
     )
     conn.execute(
-        "UPDATE variable_state SET valid_from = '2019-01-01', valid_to = '2020-12-31' "
-        "WHERE delivery_column_name = 'Covid-19 antikroppar'"
+        "INSERT INTO register_version "
+        "(regver_id, register_variant_id, registerversionnamn) "
+        "VALUES (905, 902, '2020')"
     )
     conn.commit()
     conn.close()
 
     worklist = _run_errata(tmp_path, db, {2020: ("T_kolumn",), 2021: ("T_kolumn",)})
 
+    # Complete entries, not fragments: every key `load_scb_errata` requires is
+    # present, with the curator's own two as TODO placeholders.
+    todo = {
+        "evidence": "TODO: the evidence that SCB delivered this row",
+        "noted": "TODO: YYYY-MM-DD",
+    }
     assert worklist["version"] == [
-        {"register": "inera/bestallda-prover", "variant": "_default", "name": "2021"}
+        {
+            "register": "inera/bestallda-prover",
+            "variant": "_default",
+            "name": "2021",
+            **todo,
+        }
     ]
     assert worklist["delivered"] == [
         {
@@ -676,5 +689,6 @@ def test_errata_worklist_splits_version_missing_from_column_missing(
             "variant": "_default",
             "column": "T_kolumn",
             "versions": ["2020", "2021"],
+            **todo,
         }
     ]

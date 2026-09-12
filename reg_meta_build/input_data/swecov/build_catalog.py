@@ -3343,7 +3343,7 @@ def cmd_errata(args: argparse.Namespace) -> None:
         f" ({report.unresolved} mapping(s) not judged — coordinate unresolved)"
     )
     print(
-        f"  version-missing: {len(version_candidates(report))} "
+        f"  version-missing: {len(version_candidates(report.misses))} "
         f"[[version]] candidate(s)"
         f"  column-missing: {len(report.misses)} [[delivered]] candidate(s)"
     )

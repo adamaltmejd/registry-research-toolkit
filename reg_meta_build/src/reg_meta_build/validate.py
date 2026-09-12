@@ -64,7 +64,11 @@ from reg_meta_build.db import (
     PROVIDER_ID_SOS,
 )
 from reg_meta_build.id import _MINT_BIT, is_canonical_scb
-from reg_meta_build.inventory_coverage import coverage_misses, miss_line
+from reg_meta_build.inventory_coverage import (
+    coverage_misses,
+    errata_stanzas,
+    miss_line,
+)
 from reg_meta_build.relations import (
     _REPLACED_BY_NOTE_VINTAGE_LIFT,
     _variable_vintage_stream_key,
@@ -84,7 +88,7 @@ if TYPE_CHECKING:
 
     from reg_meta.inventory import DeliveryInventory
 
-LineKind = Literal["section", "ok", "fail", "info"]
+LineKind = Literal["section", "ok", "fail", "info", "block"]
 
 
 @dataclass(frozen=True)
@@ -99,6 +103,11 @@ class ValidationLine:
             return f"  [OK] {self.text}"
         if self.kind == "fail":
             return f"  [FAIL] {self.text}"
+        if self.kind == "block":
+            # Verbatim, unprefixed: a block is text the maintainer COPIES out of
+            # the report (Y-115's scb_errata.toml stanzas), so a `  · ` in front
+            # of every line would stop it parsing where it is pasted.
+            return self.text
         return f"  · {self.text}"
 
 
@@ -126,12 +135,18 @@ class ValidationResult:
     def info(self, msg: str) -> None:
         self.lines.append(ValidationLine("info", msg))
 
+    def block(self, text: str) -> None:
+        """A verbatim, unprefixed chunk of the report — text meant to be copied
+        out of it rather than read line by line."""
+        self.lines.append(ValidationLine("block", text))
+
     def format_report(self) -> str:
         # Blank line before each section (except the first) so sections
-        # are visually separated in the rendered report.
+        # are visually separated in the rendered report. A block gets one too:
+        # it is a paste target, so where it starts has to be obvious.
         parts: list[str] = []
         for ln in self.lines:
-            if ln.kind == "section" and parts:
+            if ln.kind in ("section", "block") and parts:
                 parts.append("")
             parts.append(ln.format())
         return "\n".join(parts)
@@ -2446,6 +2461,13 @@ def _check_representation_replaced_by(
     result.info(f"{n_edges} representation succession edge(s)")
 
 
+# How many (register, variant, column) groups the report spells out in full.
+# Beyond it the count stands in and `build_catalog.py errata` writes the rest:
+# a red gate on a stale inventory can name thousands of groups, and a stderr
+# report nobody scrolls to the end of is not a repair instruction.
+_MISS_REPORT_CAP = 10
+
+
 def _check_inventory_window_coverage(
     conn: sqlite3.Connection,
     result: ValidationResult,
@@ -2461,8 +2483,11 @@ def _check_inventory_window_coverage(
     EXISTS, so the contradiction survives every other gate and surfaces as the
     RESEARCHER's ``period_outside_state_validity`` on data the steward has. The
     repair is upstream-grained — SCB omitted the row from its own export — so the
-    report renders each miss in ``scb_errata.toml``'s ``[[version]]`` /
-    ``[[delivered]]`` grammar; see `inventory_coverage` for the reading rules.
+    report ends in a VERBATIM block of ``scb_errata.toml`` stanzas: one
+    ``[[delivered]]`` per miss naming the omitted ``Registerversionnamn``, preceded
+    by a ``[[version]]`` for every held edition the catalog documents no version
+    for. Valid, complete TOML the maintainer pastes, with ``evidence`` / ``noted``
+    as TODO placeholders. See `inventory_coverage` for the reading rules.
 
     ``delivery_inventory is None`` (synthetic CI, the global build, an
     ``extend-db`` run outside a repo checkout) SKIPS the gate: with no holdings
@@ -2488,12 +2513,13 @@ def _check_inventory_window_coverage(
             "state or alias window"
         )
         return
-    for miss in report.misses[:10]:
+    shown = report.misses[:_MISS_REPORT_CAP]
+    for miss in shown:
         result.fail(miss_line(miss))
-    if len(report.misses) > 10:
+    if len(report.misses) > len(shown):
         result.info(
-            f"... and {len(report.misses) - 10:,} more (register, variant, column) "
-            "group(s)"
+            f"... and {len(report.misses) - len(shown):,} more "
+            "(register, variant, column) group(s)"
         )
     result.info(
         f"{report.missed_pairs:,} held column × edition pair(s) in "
@@ -2501,11 +2527,16 @@ def _check_inventory_window_coverage(
         f"out of {report.pairs:,} judged"
     )
     result.info(
-        "curate the omissions into reg_meta_build/scb_errata.toml — "
+        "curate the omissions into reg_meta_build/scb_errata.toml — the stanzas "
+        "below are complete and paste as they stand, but `evidence` and `noted` "
+        "are TODO placeholders only the maintainer can fill (the loader refuses a "
+        "placeholder `noted`, so an uncurated paste cannot ship). "
         "`python input_data/swecov/build_catalog.py --db <flavored-db> errata` "
-        "writes the full candidate worklist. Never answer this gate by skipping "
-        "validation: the flavor would ship contradicting the steward's holdings."
+        "writes the same entries for every group as a worklist file. Never answer "
+        "this gate by skipping validation: the flavor would ship contradicting "
+        "the steward's holdings."
     )
+    result.block(errata_stanzas(shown))
 
 
 def _check_operational(conn: sqlite3.Connection, result: ValidationResult) -> None:

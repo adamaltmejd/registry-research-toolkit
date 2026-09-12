@@ -1983,12 +1983,16 @@ class TestDeliveryInventoryGate:
         assert resolve_delivery_inventory(None, "no-such-steward") is None
 
     def test_hook_fails_on_a_holding_with_no_window(
-        self, tmp_path: Path, global_db: Path
+        self,
+        tmp_path: Path,
+        global_db: Path,
+        capsys: pytest.CaptureFixture[str],
     ) -> None:
         """The flavored hook threads the loaded inventory into the validator: a
         2017 holding of a column delivered 2018-2020 fails with the stable
-        EXIT_CONFIG / `validation_failed`, naming the coordinate and the
-        `scb_errata.toml` entry that repairs it."""
+        EXIT_CONFIG / `validation_failed`, naming the coordinate — and the report
+        it writes to stderr ends in the `scb_errata.toml` stanzas that repair it,
+        verbatim, so the maintainer can paste them."""
         from reg_meta.inventory import load_inventory as load_delivery_inventory
 
         from reg_meta_build import cli
@@ -2001,8 +2005,11 @@ class TestDeliveryInventoryGate:
         assert exc.value.exit_code == EXIT_CONFIG
         assert exc.value.code == "validation_failed"
         assert "held 2017" in exc.value.message
-        assert "[[delivered]] register = " in exc.value.message
-        assert 'column = "BELOPP"' in exc.value.message
+        assert "BELOPP" in exc.value.message
+        report = capsys.readouterr().err
+        assert "[[delivered]]\nregister = " in report
+        assert 'column = "BELOPP"' in report
+        assert 'versions = ["2017"]' in report
 
     def test_hook_passes_on_a_covered_holding(
         self, tmp_path: Path, global_db: Path
@@ -2050,5 +2057,5 @@ class TestDeliveryInventoryGate:
         with pytest.raises(RegMetaError) as exc:
             _cmd_extend_db(args)
         assert exc.value.exit_code == EXIT_CONFIG
-        assert 'column = "BELOPP"' in exc.value.message
+        assert "BELOPP: held 2017" in exc.value.message
         assert not (out_dir / "reg_meta.db").exists()

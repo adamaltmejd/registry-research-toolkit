@@ -2496,15 +2496,26 @@ class TestInventoryWindowCoverage:
 
     A tiny flavored DB (scb/lisa, one variant) plus a hand-written inventory: the
     gate must fail exactly on the columns the steward holds in an edition with no
-    covering `variable_state` / `variable_alias_window`, and say what to put in
-    `scb_errata.toml`."""
+    covering `variable_state` / `variable_alias_window`, and end in a block of
+    valid `scb_errata.toml` stanzas that repair them."""
 
     @staticmethod
     def _db() -> sqlite3.Connection:
-        """`kon` delivered 2018-2019, `dispinkke` delivered 1998-2009. So 2019 is a
-        DOCUMENTED edition of the variant that `DispInkKE` is missing from, and
-        2020 is an edition the variant has no register version for at all."""
-        from _slugged_db import add_state, add_variable, build_slugged_db
+        """`kon` delivered 2018-2019, `dispinkke` delivered 1998-2009, and the
+        variant documents the register versions 2010, 2011, 2012 and `LISA 2019`.
+
+        That last `Registerversionnamn` is deliberately NOT its own period token:
+        an omitted row must name SCB's spelling of the edition verbatim, so a
+        report that echoed the token it parsed would show up here. 2019 is then a
+        DOCUMENTED edition `DispInkKE` is missing from, and 2020 one the catalog
+        knows no register version for at all.
+        """
+        from _slugged_db import (
+            add_state,
+            add_variable,
+            add_version,
+            build_slugged_db,
+        )
 
         conn = build_slugged_db(classification=None)
         conn.execute("UPDATE variable_state SET valid_to = '2019-12-31'")
@@ -2518,6 +2529,13 @@ class TestInventoryWindowCoverage:
             valid_to="2009-12-31",
             delivery_column_name="DispInkKE",
         )
+        for regver_id, name in (
+            (110, "2010"),
+            (111, "2011"),
+            (112, "2012"),
+            (119, "LISA 2019"),
+        ):
+            add_version(conn, regver_id=regver_id, register_variant_id=10, name=name)
         conn.commit()
         return conn
 
@@ -2550,6 +2568,14 @@ class TestInventoryWindowCoverage:
         return self._run(conn, load_inventory(path))
 
     @staticmethod
+    def _block(result: validate_mod.ValidationResult) -> str:
+        """The report's one VERBATIM stanza block — the text a maintainer copies
+        out of the report, so it must appear in it unprefixed."""
+        (block,) = [ln.text for ln in result.lines if ln.kind == "block"]
+        assert block in result.format_report()
+        return block
+
+    @staticmethod
     def _run(conn: sqlite3.Connection, inventory) -> validate_mod.ValidationResult:
         result = validate_mod.ValidationResult()
         validate_mod._check_inventory_window_coverage(
@@ -2561,7 +2587,7 @@ class TestInventoryWindowCoverage:
         """The 2019 table holds both columns; only `DispInkKE` (delivered
         1998-2009) has no window over it, and only it is reported — grouped by
         (register, variant, column), with the held editions and the coordinate's
-        known windows, in the `[[delivered]]` grammar so the line can be pasted."""
+        known windows, and repaired by one pasteable `[[delivered]]`."""
         result = self._check(
             self._db(),
             tmp_path,
@@ -2573,13 +2599,16 @@ class TestInventoryWindowCoverage:
         (failure,) = result.failures
         assert failure.startswith("scb/lisa/individer-15plus DispInkKE: held 2019, ")
         assert "catalog windows 1998..2009" in failure
-        assert '[[delivered]] register = "scb/lisa"' in failure
-        assert 'variant = "individer-15plus"' in failure
-        assert 'column = "DispInkKE"' in failure
-        assert 'versions = ["2019"]' in failure
-        # The documented-edition arm: 2019 IS a register version of the variant
-        # (`kon` is delivered over it), so only the column row is missing.
-        assert "[[version]]" not in failure
+        block = self._block(result)
+        assert block.startswith('[[delivered]]\nregister = "scb/lisa"\n')
+        assert 'variant = "individer-15plus"' in block
+        assert 'column = "DispInkKE"' in block
+        # SCB's own spelling of the edition, verbatim — not the `2019` token the
+        # gate parsed it with.
+        assert 'versions = ["LISA 2019"]' in block
+        # The documented-edition arm: the catalog knows a register version covering
+        # 2019, so only the column row is missing.
+        assert "[[version]]" not in block
 
     def test_alias_window_coverage_counts(self, tmp_path: Path):
         """A `variable_alias_window` row is a delivery of its column too: the gate
@@ -2601,8 +2630,8 @@ class TestInventoryWindowCoverage:
 
     def test_column_match_is_case_folded(self, tmp_path: Path):
         """The inventory spells a column as the steward's holdings do, which is not
-        always the catalog's spelling: the match folds with `str.lower()` (the
-        webapp's rule), so `DISPINKKE` finds the catalog's `DispInkKE`."""
+        always the catalog's spelling: the match folds with NFC + `str.lower()`
+        (the webapp's rule), so `DISPINKKE` finds the catalog's `DispInkKE`."""
         conn = self._db()
         conn.execute(
             "UPDATE variable_state SET valid_to = '2019-12-31' "
@@ -2614,19 +2643,142 @@ class TestInventoryWindowCoverage:
         )
         assert result.passed, result.failures
 
+    def test_column_match_folds_nfc_on_both_sides(self, tmp_path: Path):
+        """Å/Ä/Ö reach the gate COMPOSED out of one file and DECOMPOSED out of the
+        other — the inventory TOML and the DB are written by different tools — and
+        those are the same column. The fold normalizes NFC on BOTH sides before
+        lowercasing, so the two spellings match; plain `str.lower()` would report
+        phantom misses and demand errata for columns the catalog delivers."""
+        import unicodedata
+
+        from _slugged_db import add_state, add_variable
+
+        conn = self._db()
+        # One column per Swedish diacritic, and the two files disagree about
+        # composition in BOTH directions, so neither side can be the only one
+        # normalized: NFD in the DB / NFC in the holdings, and the reverse.
+        held = {}
+        stored = {}
+        for slug, column, db_form in (
+            ("arslon", "Årslön", "NFD"),
+            ("agare", "Ägare", "NFC"),
+            ("kon-diacritic", "Kön", "NFD"),
+        ):
+            stored[slug] = unicodedata.normalize(db_form, column)
+            held[slug] = unicodedata.normalize(
+                "NFC" if db_form == "NFD" else "NFD", column.upper()
+            )
+            # Folds together ONLY under NFC: lowercasing alone leaves a combining
+            # mark on one side and a precomposed letter on the other.
+            assert held[slug].lower() != stored[slug].lower()
+
+        for var_id, slug in ((46, "arslon"), (47, "agare"), (48, "kon-diacritic")):
+            column = stored[slug]
+            add_variable(conn, register_id=1, var_id=var_id, name=column, slug=slug)
+            add_state(
+                conn,
+                register_id=1,
+                variable_slug=slug,
+                register_variant_id=10,
+                valid_from="2019-01-01",
+                valid_to="2019-12-31",
+                delivery_column_name=column,
+            )
+        conn.commit()
+
+        result = self._check(
+            conn,
+            tmp_path,
+            self._table(2019, *((held[slug], slug, held[slug]) for slug in stored)),
+        )
+        assert result.passed, result.failures
+        assert "all 3 held column × edition pair(s)" in result.format_report()
+
+    def test_reported_stanzas_load_as_scb_errata(self, tmp_path: Path):
+        """The block IS the repair, so it has to be valid `scb_errata.toml`: it
+        parses with `tomllib`, and `load_scb_errata` accepts its shape against the
+        repo's curated SCB slugs.
+
+        `noted` is the one field a placeholder cannot satisfy — the loader demands a
+        canonical `YYYY-MM-DD`, which is exactly what stops an uncurated paste from
+        reaching a build — so the proof is: refused while undated, and loads once
+        dated, every other field already what the loader wants.
+        """
+        import tomllib
+
+        from reg_meta_build.scb_errata import load_scb_errata
+
+        from reg_meta_build.fqid_slugs import repo_slug_dir
+
+        todo_evidence = "TODO: the evidence that SCB delivered this row"
+        result = self._check(
+            self._db(),
+            tmp_path,
+            *(
+                self._table(year, ("DispInkKE", "dispinkke", "DispInkKE"))
+                for year in (2010, 2011, 2012, 2021)
+            ),
+        )
+        block = self._block(result)
+
+        parsed = tomllib.loads(block)
+        # 2010-2012 are documented (named verbatim); 2021 is not, so it is minted
+        # as a [[version]] and named in the same [[delivered]].
+        assert parsed["version"] == [
+            {
+                "register": "scb/lisa",
+                "variant": "individer-15plus",
+                "name": "2021",
+                "evidence": todo_evidence,
+                "noted": "TODO: YYYY-MM-DD",
+            }
+        ]
+        assert parsed["delivered"] == [
+            {
+                "register": "scb/lisa",
+                "variant": "individer-15plus",
+                "column": "DispInkKE",
+                "versions": ["2010", "2011", "2012", "2021"],
+                "evidence": todo_evidence,
+                "noted": "TODO: YYYY-MM-DD",
+            }
+        ]
+
+        path = tmp_path / "scb_errata.toml"
+        path.write_text(block, encoding="utf-8")
+        with pytest.raises(RegMetaError) as exc:
+            load_scb_errata(path, repo_slug_dir())
+        assert "`noted`" in exc.value.message
+
+        path.write_text(
+            block.replace('noted = "TODO: YYYY-MM-DD"', 'noted = "2026-09-12"'),
+            encoding="utf-8",
+        )
+        errata = load_scb_errata(path, repo_slug_dir())
+        assert [version.name for version in errata.versions] == ["2021"]
+        (delivered,) = errata.delivered
+        assert delivered.column == "DispInkKE"
+        assert delivered.versions == ("2010", "2011", "2012", "2021")
+
     def test_edition_with_no_register_version_asks_for_a_version_entry(
         self, tmp_path: Path
     ):
-        """Nothing on the variant covers 2020, so SCB documents no register version
-        for it: the repair needs a `[[version]]` before the `[[delivered]]`."""
+        """The catalog carries no `register_version` covering 2020, so there is no
+        `Registerversionnamn` for an omitted row to name: the repair mints the
+        version under its period token FIRST, then hangs the `[[delivered]]` on
+        it."""
         result = self._check(
             self._db(), tmp_path, self._table(2020, ("Kon", "kon", "Kon"))
         )
         (failure,) = result.failures
+        assert "2020 not documented at all — a [[version]] each" in failure
+        block = self._block(result)
         assert (
-            "no documented register version over 2020 (a [[version]] each)" in failure
-        )
-        assert 'versions = ["2020"]' in failure
+            '[[version]]\nregister = "scb/lisa"\nvariant = "individer-15plus"\n'
+            'name = "2020"\n'
+        ) in block
+        assert 'versions = ["2020"]' in block
+        assert block.index("[[version]]") < block.index("[[delivered]]")
 
     def test_held_editions_merge_into_ranges_in_one_group(self, tmp_path: Path):
         """Three annual tables holding one column are ONE curation decision: one
@@ -2642,7 +2794,7 @@ class TestInventoryWindowCoverage:
         )
         (failure,) = result.failures
         assert "held 2010..2012" in failure
-        assert 'versions = ["2010", "2011", "2012"]' in failure
+        assert 'versions = ["2010", "2011", "2012"]' in self._block(result)
         assert "3 held column × edition pair(s) in 1 group(s)" in result.format_report()
 
     def test_a_column_one_of_whose_mappings_covers_it_passes(self, tmp_path: Path):
