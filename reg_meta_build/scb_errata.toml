@@ -12742,105 +12742,6 @@ noted = "2026-06-14"
 [[column]]
 register = "scb/innovation-foretag"
 variant = "_default"
-column = "CONA1"
-name = "CONA1"
-definition = "CONA1"
-all_versions = true
-source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it."
-noted = "2026-06-14"
-
-[[column]]
-register = "scb/innovation-foretag"
-variant = "_default"
-column = "CONA2"
-name = "CONA2"
-definition = "CONA2"
-all_versions = true
-source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it."
-noted = "2026-06-14"
-
-[[column]]
-register = "scb/innovation-foretag"
-variant = "_default"
-column = "CONA31"
-name = "CONA31"
-definition = "CONA31"
-all_versions = true
-source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it."
-noted = "2026-06-14"
-
-[[column]]
-register = "scb/innovation-foretag"
-variant = "_default"
-column = "CONA32"
-name = "CONA32"
-definition = "CONA32"
-all_versions = true
-source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it."
-noted = "2026-06-14"
-
-[[column]]
-register = "scb/innovation-foretag"
-variant = "_default"
-column = "CONA4"
-name = "CONA4"
-definition = "CONA4"
-all_versions = true
-source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it."
-noted = "2026-06-14"
-
-[[column]]
-register = "scb/innovation-foretag"
-variant = "_default"
-column = "CONA5"
-name = "CONA5"
-definition = "CONA5"
-all_versions = true
-source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it."
-noted = "2026-06-14"
-
-[[column]]
-register = "scb/innovation-foretag"
-variant = "_default"
-column = "CONA6"
-name = "CONA6"
-definition = "CONA6"
-all_versions = true
-source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it."
-noted = "2026-06-14"
-
-[[column]]
-register = "scb/innovation-foretag"
-variant = "_default"
-column = "CONA7"
-name = "CONA7"
-definition = "CONA7"
-all_versions = true
-source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it."
-noted = "2026-06-14"
-
-[[column]]
-register = "scb/innovation-foretag"
-variant = "_default"
-column = "CONA8"
-name = "CONA8"
-definition = "CONA8"
-all_versions = true
-source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it."
-noted = "2026-06-14"
-
-[[column]]
-register = "scb/innovation-foretag"
-variant = "_default"
 column = "CONC_PRD_NO"
 name = "CONC_PRD_NO"
 definition = "CONC_PRD_NO"
@@ -16779,39 +16680,6 @@ noted = "2026-06-14"
 [[column]]
 register = "scb/innovation-foretag"
 variant = "_default"
-column = "InItGd"
-name = "InItGd"
-definition = "InItGd"
-all_versions = true
-source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it."
-noted = "2026-06-14"
-
-[[column]]
-register = "scb/innovation-foretag"
-variant = "_default"
-column = "INITPS"
-name = "INITPS"
-definition = "INITPS"
-all_versions = true
-source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it."
-noted = "2026-06-14"
-
-[[column]]
-register = "scb/innovation-foretag"
-variant = "_default"
-column = "InItSv"
-name = "InItSv"
-definition = "InItSv"
-all_versions = true
-source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it."
-noted = "2026-06-14"
-
-[[column]]
-register = "scb/innovation-foretag"
-variant = "_default"
 column = "INMAR"
 name = "INMAR"
 definition = "INMAR"
@@ -16892,39 +16760,6 @@ variant = "_default"
 column = "Inonab_o"
 name = "Inonab_o"
 definition = "Inonab_o"
-all_versions = true
-source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it."
-noted = "2026-06-14"
-
-[[column]]
-register = "scb/innovation-foretag"
-variant = "_default"
-column = "INOTHGD"
-name = "INOTHGD"
-definition = "INOTHGD"
-all_versions = true
-source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it."
-noted = "2026-06-14"
-
-[[column]]
-register = "scb/innovation-foretag"
-variant = "_default"
-column = "INOTHPS"
-name = "INOTHPS"
-definition = "INOTHPS"
-all_versions = true
-source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it."
-noted = "2026-06-14"
-
-[[column]]
-register = "scb/innovation-foretag"
-variant = "_default"
-column = "INOTHSV"
-name = "INOTHSV"
-definition = "INOTHSV"
 all_versions = true
 source = "steward-holdings"
 evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it."
@@ -17296,39 +17131,6 @@ noted = "2026-06-14"
 [[column]]
 register = "scb/innovation-foretag"
 variant = "_default"
-column = "INTOGD"
-name = "INTOGD"
-definition = "INTOGD"
-all_versions = true
-source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it."
-noted = "2026-06-14"
-
-[[column]]
-register = "scb/innovation-foretag"
-variant = "_default"
-column = "INTOPS"
-name = "INTOPS"
-definition = "INTOPS"
-all_versions = true
-source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it."
-noted = "2026-06-14"
-
-[[column]]
-register = "scb/innovation-foretag"
-variant = "_default"
-column = "INTOSV"
-name = "INTOSV"
-definition = "INTOSV"
-all_versions = true
-source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it."
-noted = "2026-06-14"
-
-[[column]]
-register = "scb/innovation-foretag"
-variant = "_default"
 column = "INUN"
 name = "INUN"
 definition = "INUN"
@@ -17409,50 +17211,6 @@ variant = "_default"
 column = "LanSate"
 name = "LanSate"
 definition = "LanSate"
-all_versions = true
-source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it."
-noted = "2026-06-14"
-
-[[column]]
-register = "scb/innovation-foretag"
-variant = "_default"
-column = "LGFIN"
-name = "LGFIN"
-definition = "LGFIN"
-all_versions = true
-source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it."
-noted = "2026-06-14"
-
-[[column]]
-register = "scb/innovation-foretag"
-variant = "_default"
-column = "LGOTHO"
-name = "LGOTHO"
-definition = "LGOTHO"
-all_versions = true
-source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it."
-noted = "2026-06-14"
-
-[[column]]
-register = "scb/innovation-foretag"
-variant = "_default"
-column = "LGREG"
-name = "LGREG"
-definition = "LGREG"
-all_versions = true
-source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it."
-noted = "2026-06-14"
-
-[[column]]
-register = "scb/innovation-foretag"
-variant = "_default"
-column = "LGTEC"
-name = "LGTEC"
-definition = "LGTEC"
 all_versions = true
 source = "steward-holdings"
 evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it."
@@ -18234,28 +17992,6 @@ variant = "_default"
 column = "PAT"
 name = "PAT"
 definition = "PAT"
-all_versions = true
-source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it."
-noted = "2026-06-14"
-
-[[column]]
-register = "scb/innovation-foretag"
-variant = "_default"
-column = "PBINN"
-name = "PBINN"
-definition = "PBINN"
-all_versions = true
-source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it."
-noted = "2026-06-14"
-
-[[column]]
-register = "scb/innovation-foretag"
-variant = "_default"
-column = "PBNOCT"
-name = "PBNOCT"
-definition = "PBNOCT"
 all_versions = true
 source = "steward-holdings"
 evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it."

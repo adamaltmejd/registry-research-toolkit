@@ -83991,33 +83991,6 @@ slug = "chg-3"  # source: kolumnnamn
 [variable."257.CKNO_NO"]
 slug = "ckno-no"  # source: kolumnnamn
 
-[variable."257.CONA1"]
-slug = "cona1"  # source: kolumnnamn
-
-[variable."257.CONA2"]
-slug = "cona2"  # source: kolumnnamn
-
-[variable."257.CONA31"]
-slug = "cona31"  # source: kolumnnamn
-
-[variable."257.CONA32"]
-slug = "cona32"  # source: kolumnnamn
-
-[variable."257.CONA4"]
-slug = "cona4"  # source: kolumnnamn
-
-[variable."257.CONA5"]
-slug = "cona5"  # source: kolumnnamn
-
-[variable."257.CONA6"]
-slug = "cona6"  # source: kolumnnamn
-
-[variable."257.CONA7"]
-slug = "cona7"  # source: kolumnnamn
-
-[variable."257.CONA8"]
-slug = "cona8"  # source: kolumnnamn
-
 [variable."257.CONC_PRD_NO"]
 slug = "conc-prd-no"  # source: kolumnnamn
 
@@ -84984,9 +84957,6 @@ slug = "htec"  # source: kolumnnamn
 [variable."257.I20c"]
 slug = "i20c"  # source: kolumnnamn
 
-[variable."257.INITPS"]
-slug = "initps"  # source: kolumnnamn
-
 [variable."257.INMAR"]
 slug = "inmar"  # source: kolumnnamn
 
@@ -85004,15 +84974,6 @@ slug = "inno-prd-nnew"  # source: kolumnnamn
 
 [variable."257.INNO_PRD_NO"]
 slug = "inno-prd-no"  # source: kolumnnamn
-
-[variable."257.INOTHGD"]
-slug = "inothgd"  # source: kolumnnamn
-
-[variable."257.INOTHPS"]
-slug = "inothps"  # source: kolumnnamn
-
-[variable."257.INOTHSV"]
-slug = "inothsv"  # source: kolumnnamn
 
 [variable."257.INPCS"]
 slug = "inpcs"  # source: kolumnnamn
@@ -85050,15 +85011,6 @@ slug = "inser-2"  # source: kolumnnamn
 [variable."257.INSER_3"]
 slug = "inser-3"  # source: kolumnnamn
 
-[variable."257.INTOGD"]
-slug = "intogd"  # source: kolumnnamn
-
-[variable."257.INTOPS"]
-slug = "intops"  # source: kolumnnamn
-
-[variable."257.INTOSV"]
-slug = "intosv"  # source: kolumnnamn
-
 [variable."257.INUN"]
 slug = "inun"  # source: kolumnnamn
 
@@ -85067,12 +85019,6 @@ slug = "ipr-no"  # source: kolumnnamn
 
 [variable."257.IPR_OUT_NO"]
 slug = "ipr-out-no"  # source: kolumnnamn
-
-[variable."257.InItGd"]
-slug = "initgd"  # source: kolumnnamn
-
-[variable."257.InItSv"]
-slug = "initsv"  # source: kolumnnamn
 
 [variable."257.InOnab"]
 slug = "inonab"  # source: kolumnnamn
@@ -85154,18 +85100,6 @@ slug = "jurform"  # source: kolumnnamn
 
 [variable."257.KommunSate"]
 slug = "kommunsate"  # source: kolumnnamn
-
-[variable."257.LGFIN"]
-slug = "lgfin"  # source: kolumnnamn
-
-[variable."257.LGOTHO"]
-slug = "lgotho"  # source: kolumnnamn
-
-[variable."257.LGREG"]
-slug = "lgreg"  # source: kolumnnamn
-
-[variable."257.LGTEC"]
-slug = "lgtec"  # source: kolumnnamn
 
 [variable."257.LILLAS"]
 slug = "lillas"  # source: kolumnnamn
@@ -85355,12 +85289,6 @@ slug = "orored"  # source: kolumnnamn
 
 [variable."257.PAT"]
 slug = "pat"  # source: kolumnnamn
-
-[variable."257.PBINN"]
-slug = "pbinn"  # source: kolumnnamn
-
-[variable."257.PBNOCT"]
-slug = "pbnoct"  # source: kolumnnamn
 
 [variable."257.PeOrgNrHe"]
 slug = "peorgnrhe"  # source: kolumnnamn

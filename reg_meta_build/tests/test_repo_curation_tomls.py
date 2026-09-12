@@ -397,20 +397,25 @@ def test_repo_scb_errata_columns_carry_both_evidence_sources() -> None:
     # pin the survey-wave batch (#856) and the doc set, and the LISA entries pin
     # the variant re-targeting — an entry whose `versions` name editions its
     # variant does not have fails only on a maintainer build, with the corpus.
+    # The holdings count is 24 short of the grafts it converted: SCB's export
+    # now carries those 24 innovation-foretag columns, which the graft pass
+    # skipped in silence and [[column]] refuses (`scb_errata_now_present`), so
+    # they came out. A regeneration that re-proposes them is proposing entries
+    # the real corpus rejects.
     errata = load_scb_errata(
         _ROOT / "scb_errata.toml",
         repo_slug_dir(),
         classification_seed_path=_ROOT / "classifications.toml",
     )
     by_source = Counter(c.source for c in errata.columns)
-    assert by_source == {"steward-holdings": 1875, "scb-docs": 34}
+    assert by_source == {"steward-holdings": 1851, "scb-docs": 34}
 
     holdings = Counter(
         (c.register_id, c.register_variant_id)
         for c in errata.columns
         if c.source == "steward-holdings"
     )
-    assert sorted(holdings.values(), reverse=True)[:3] == [992, 647, 156]
+    assert sorted(holdings.values(), reverse=True)[:3] == [992, 623, 156]
     assert all(
         c.versions is None for c in errata.columns if c.source == "steward-holdings"
     )

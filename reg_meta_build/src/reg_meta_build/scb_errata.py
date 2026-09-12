@@ -861,7 +861,10 @@ def apply_scb_errata(
 
     # The mirror question for `[[column]]`: does the export deliver this column
     # ANYWHERE on the variant? Two narrow columns, deduped by SQLite before
-    # Python sees them — a presence test, not a payload.
+    # Python sees them — a presence test, not a payload. `delivery_column_name`
+    # is nullable and an unnamed alias can never equal a real column, so SQL
+    # drops it rather than hand `fold_column` a None — the guard the retired
+    # canonical-attach scan carried for the same reason.
     present_columns: set[tuple[int, str]] = set()
     if errata.columns:
         scope, scope_params = _scope({e.register_variant_id for e in errata.columns})
@@ -871,7 +874,8 @@ def apply_scb_errata(
                 f"SELECT DISTINCT vi.register_variant_id, va.delivery_column_name "
                 f"FROM variable_instance vi "
                 f"JOIN variable_alias_build va ON va.cvid = vi.cvid "
-                f"WHERE vi.register_variant_id IN ({scope})",
+                f"WHERE vi.register_variant_id IN ({scope}) "
+                f"AND va.delivery_column_name IS NOT NULL",
                 scope_params,
             )
         }
