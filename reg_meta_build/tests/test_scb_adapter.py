@@ -1761,6 +1761,34 @@ class TestScbErrataColumn:
             _built_with_errata(tmp_path, monkeypatch, [], errata_column("kön"))
         assert exc.value.code == "scb_errata_now_present"
 
+    def test_a_delivered_entry_does_not_blind_the_column_check(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        # Both kinds ask "is this in the export already?", of different things:
+        # a [[delivered]] entry of its own versions, a [[column]] of the whole
+        # variant. Answering the first must not cost the second its answer —
+        # the committed file holds both kinds, so a build that skips the
+        # [[column]] guard mints a duplicate of a live variable instead.
+        ri = [
+            _var_row(
+                colname="DispCol",
+                cvid=9310,
+                var_id=931,
+                varname="DispVar",
+                year="2022",
+                regver_id=102,
+            )
+        ]
+        with pytest.raises(RegMetaError) as exc:
+            _built_with_errata(
+                tmp_path,
+                monkeypatch,
+                ri,
+                errata_delivered("DispCol", "2020") + "\n" + errata_column("Kon"),
+            )
+        assert exc.value.code == "scb_errata_now_present"
+        assert "'Kon'" in exc.value.message
+
     def test_unknown_version_fails(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ) -> None:

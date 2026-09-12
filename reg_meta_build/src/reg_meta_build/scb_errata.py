@@ -829,10 +829,10 @@ def apply_scb_errata(
 
     # Clone payloads for the `[[delivered]]` columns, keyed (variant_id, folded
     # column). One scan over the variants THOSE entries name — deliberately not
-    # the `[[column]]` ones, which need a yes/no (`present` below) and not a row
-    # to copy: this query carries every cloned field, including the long prose,
-    # and widening it to a variant the size of LISA to answer a membership test
-    # would read the whole register for nothing.
+    # the `[[column]]` ones, which need a yes/no (`present_columns` below) and
+    # not a row to copy: this query carries every cloned field, including the
+    # long prose, and widening it to a variant the size of LISA to answer a
+    # membership test would read the whole register for nothing.
     wanted = {(e.register_variant_id, fold_column(e.column)) for e in errata.delivered}
     sources: dict[tuple[int, str], list[sqlite3.Row]] = {}
     if wanted:
@@ -862,10 +862,10 @@ def apply_scb_errata(
     # The mirror question for `[[column]]`: does the export deliver this column
     # ANYWHERE on the variant? Two narrow columns, deduped by SQLite before
     # Python sees them — a presence test, not a payload.
-    present: set[tuple[int, str]] = set()
+    present_columns: set[tuple[int, str]] = set()
     if errata.columns:
         scope, scope_params = _scope({e.register_variant_id for e in errata.columns})
-        present = {
+        present_columns = {
             (variant_id, fold_column(column))
             for variant_id, column in conn.execute(
                 f"SELECT DISTINCT vi.register_variant_id, va.delivery_column_name "
@@ -888,7 +888,7 @@ def apply_scb_errata(
                 "documents elsewhere on the variant. A column SCB documents "
                 "nowhere is a [[column]] entry — it has no row to clone.",
             )
-        present = {row["regver_id"] for row in candidates}
+        present_regvers = {row["regver_id"] for row in candidates}
         for name in d.versions:
             regvers = _versions_of(
                 documented,
@@ -897,7 +897,7 @@ def apply_scb_errata(
                 context,
                 "or add a [[version]] entry for it",
             )
-            if present & set(regvers):
+            if present_regvers & set(regvers):
                 # One version of a multi-version entry can be fixed upstream
                 # while the rest still record a live omission — say which, or the
                 # maintainer retires an entry that is still carrying its weight.
@@ -944,7 +944,9 @@ def apply_scb_errata(
                     )
                     counts["rows"] += 1
 
-    _mint_columns(conn, errata, documented, present, classification_candidates, counts)
+    _mint_columns(
+        conn, errata, documented, present_columns, classification_candidates, counts
+    )
     return counts
 
 
@@ -952,7 +954,7 @@ def _mint_columns(
     conn: sqlite3.Connection,
     errata: ScbErrata,
     documented: dict[tuple[int, str], list[int]],
-    present: set[tuple[int, str]],
+    present_columns: set[tuple[int, str]],
     classification_candidates: list[tuple[int, int | None, str]],
     counts: dict[str, int],
 ) -> None:
@@ -973,7 +975,7 @@ def _mint_columns(
     minted: dict[tuple[int, str], int] = {}
     for c in errata.columns:
         context = f"[[column]] {c.column}"
-        if (c.register_variant_id, fold_column(c.column)) in present:
+        if (c.register_variant_id, fold_column(c.column)) in present_columns:
             _now_present(
                 context,
                 f"column {c.column!r}",
