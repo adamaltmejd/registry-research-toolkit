@@ -68,6 +68,11 @@ then file it or delete it with a reason.
   (~29.7k lines, marker `[yard: diff truncated]` inside the patch text) and has no
   `--full`; the operator's pre-approval real-data build needs the whole candidate.
   Workaround: `git fetch .yard/local/git/canonical.git <head>` and a detached worktree.
+- (0.14.10) After a provider/network outage a review execution (Y-116/1/e31) showed
+  `reviewing r0/5 · seat codex 1/1 38m` with no evidence directory, no review process on
+  the host, and no wake — the seat never started and nothing timed it out.
+  `yard lane stop <exec>` then `yard lane start <attempt>` re-ran it (e32 started within
+  a second). Retest before filing: one occurrence, right after an ENOTFOUND outage.
 - (0.13.3) A daemon restart to load config cancelled a running execution (Y-35/1/e1) and
   left a stopped attempt with no attention item and no printed exit. Not re-observed
   since; retest before filing.
