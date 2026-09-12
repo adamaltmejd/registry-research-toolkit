@@ -2482,12 +2482,15 @@ def _check_inventory_window_coverage(
     whole edition and `reg_meta.inventory_check` only asks whether the coordinate
     EXISTS, so the contradiction survives every other gate and surfaces as the
     RESEARCHER's ``period_outside_state_validity`` on data the steward has. The
-    repair is upstream-grained — SCB omitted the row from its own export — so the
-    report ends in a VERBATIM block of ``scb_errata.toml`` stanzas: one
-    ``[[delivered]]`` per miss naming the omitted ``Registerversionnamn``, preceded
-    by a ``[[version]]`` for every held edition the catalog documents no version
-    for. Valid, complete TOML the maintainer pastes, with ``evidence`` / ``noted``
-    as TODO placeholders. See `inventory_coverage` for the reading rules.
+    repair for an SCB coordinate is upstream-grained — SCB omitted the row from its
+    own export — so the report ends in a VERBATIM block of ``scb_errata.toml``
+    stanzas: one ``[[delivered]]`` per miss naming the omitted
+    ``Registerversionnamn``, preceded by a ``[[version]]`` for every held edition the
+    catalog documents no version for. Valid, complete TOML the maintainer pastes,
+    with ``evidence`` / ``noted`` as TODO placeholders. A miss on ANY OTHER provider
+    stays out of that block — that file corrects SCB's export only and its loader
+    refuses another provider — and its own fail line names the curated surface its
+    window is widened on instead. See `inventory_coverage` for the reading rules.
 
     ``delivery_inventory is None`` (synthetic CI, the global build, an
     ``extend-db`` run outside a repo checkout) SKIPS the gate: with no holdings
@@ -2527,16 +2530,28 @@ def _check_inventory_window_coverage(
         f"out of {report.pairs:,} judged"
     )
     result.info(
-        "curate the omissions into reg_meta_build/scb_errata.toml — the stanzas "
-        "below are complete and paste as they stand, but `evidence` and `noted` "
-        "are TODO placeholders only the maintainer can fill (the loader refuses a "
-        "placeholder `noted`, so an uncurated paste cannot ship). "
         "`python input_data/swecov/build_catalog.py --db <flavored-db> errata` "
-        "writes the same entries for every group as a worklist file. Never answer "
-        "this gate by skipping validation: the flavor would ship contradicting "
-        "the steward's holdings."
+        "writes every group as a worklist file, the scb stanzas first and the "
+        "curated-window misses after them. Never answer this gate by skipping "
+        "validation: the flavor would ship contradicting the steward's holdings."
     )
-    result.block(errata_stanzas(shown))
+    curated = [miss for miss in report.misses if not miss.errata]
+    if curated:
+        result.info(
+            f"{len(curated):,} group(s) are NOT on the `scb` provider and are NOT "
+            "errata: scb_errata.toml corrects SCB's own export and its loader "
+            "refuses another provider, so each of those lines names the curated "
+            "surface its window comes from — widen it there and rebuild."
+        )
+    stanzas = errata_stanzas(shown)
+    if stanzas:
+        result.info(
+            "curate the scb omissions into reg_meta_build/scb_errata.toml — the "
+            "stanzas below are complete and paste as they stand, but `evidence` and "
+            "`noted` are TODO placeholders only the maintainer can fill (the loader "
+            "refuses a placeholder `noted`, so an uncurated paste cannot ship)."
+        )
+        result.block(stanzas)
 
 
 def _check_operational(conn: sqlite3.Connection, result: ValidationResult) -> None:

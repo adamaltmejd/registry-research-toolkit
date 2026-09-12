@@ -2986,9 +2986,14 @@ consumes and the per-provider slug TOMLs.
   `corpus=True`. As of Y-115 it also takes the steward's loaded `delivery_inventory` and
   runs `_check_inventory_window_coverage` over it (`inventory_coverage.py` — the miss
   rule, shared with the `build_catalog.py errata` worklist so gate and generator cannot
-  disagree). A miss is reported in `scb_errata.toml`'s `[[version]]` / `[[delivered]]`
-  grammar, because that is where the repair goes: SCB omitted the row from its own
-  export. `None` self-skips the gate.
+  disagree). A miss on the `scb` provider is reported in `scb_errata.toml`'s
+  `[[version]]` / `[[delivered]]` grammar, because that is where the repair goes: SCB
+  omitted the row from its own export. A miss on any OTHER provider is never rendered as
+  a stanza — that file corrects SCB's export and its loader refuses another provider —
+  so it reports as one line naming the surface its window is curated on
+  (`input_data/<Provider>/<slug>.toml`'s `valid_from`, the Socialstyrelsen export for
+  `sos`, or the inventory `extend-db` overlaid for a steward's own minted provider).
+  `None` self-skips the gate.
 - **`_populate_fts(include_value_code=False)`** — skips the `value_code_fts` INSERT. The
   full build keeps `include_value_code=True` (the default), so its call is unchanged.
 

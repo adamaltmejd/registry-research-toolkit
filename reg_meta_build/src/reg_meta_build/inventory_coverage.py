@@ -13,12 +13,22 @@ the steward holds in an edition reg_meta has no `variable_state` /
 
 This module is that comparison, with two consumers that must not disagree about
 the rule: the flavored validation gate (`validate._check_inventory_window_coverage`)
-and the steward generator's `build_catalog.py errata` worklist. A miss renders as
-VALID, COMPLETE `[[version]]` / `[[delivered]]` stanzas of
+and the steward generator's `build_catalog.py errata` worklist. A miss on the `scb`
+provider renders as VALID, COMPLETE `[[version]]` / `[[delivered]]` stanzas of
 `reg_meta_build/scb_errata.toml` — pasteable as they stand but for `evidence` and
 `noted`, which ride as TODO placeholders — because that is where the repair goes:
 SCB omitted a row from its own export, so the correction is made at SCB's grain
 (see `scb_errata.py`).
+
+A miss on ANY OTHER provider is never rendered in that grammar. `scb_errata.toml`
+corrects SCB's own export, and its loader refuses an entry on another provider
+outright (`scb_errata._PROVIDER`), so a stanza naming `fk/...` would aim the
+maintainer at a file that cannot hold it — which is exactly what the 2026-09-12
+flavored run did with its 26 `fk` and 11 `riksarkivet` groups. Those windows are
+curated per provider instead: `input_data/<Provider>/<slug>.toml`'s `valid_from`
+for a thin curated agency, the Socialstyrelsen export for `sos`, the inventory
+`extend-db` overlaid for a steward-minted flavor provider. Such a miss renders as
+ONE line naming the held editions, the catalog's windows and that surface.
 
 Reading rules, each deliberate:
 
@@ -71,12 +81,19 @@ from typing import TYPE_CHECKING
 from reg_meta.inventory import _intersect, _merge, _render, edition_bounds
 from reg_meta.inventory_check import _variable_ids, _variant_ids
 
-# `edition_claims` is the coalescer's own parse of a `Registerversionnamn` into
-# the years it claims, so a version covers a held edition here exactly as it
+# `_CURATED_PROVIDERS` is the build's own `(provider slug, input_data subdir)`
+# registry — the one `sources/curated.py` reads — so the surface this gate names
+# for a non-SCB miss is the file the build really takes that provider's windows
+# from. `edition_claims` is the coalescer's own parse of a `Registerversionnamn`
+# into the years it claims, so a version covers a held edition here exactly as it
 # delivers one in the build. The package's shared `_toml_str` quotes every string
-# leaf, so a stanza reads like every other candidate emitter's.
+# leaf, so a stanza reads like every other candidate emitter's. `_PROVIDER` is the
+# ONE provider `scb_errata.toml` accepts, imported rather than restated so the
+# partition here cannot drift from the loader's own refusal.
+from reg_meta_build.db import _CURATED_PROVIDERS
 from reg_meta_build.edition_bounds import edition_claims
 from reg_meta_build.fqid_slugs import _toml_str
+from reg_meta_build.scb_errata import _PROVIDER
 
 if TYPE_CHECKING:
     import sqlite3
@@ -103,8 +120,9 @@ _TODO_NOTED = "TODO: YYYY-MM-DD"
 @dataclass(frozen=True)
 class CoverageMiss:
     """One `(register, variant, column)` the steward holds in editions the
-    catalog has no window for — the grain `scb_errata.toml`'s `[[delivered]]`
-    repairs, so a group is one curation decision.
+    catalog has no window for — on the `scb` provider, the grain
+    `scb_errata.toml`'s `[[delivered]]` repairs, so a group is one curation
+    decision.
 
     `register` is the 2-segment `provider/register` FQID and `variant` the variant
     slug, the pair `[[delivered]]` is keyed on. `column` is the CANONICAL delivery
@@ -127,6 +145,21 @@ class CoverageMiss:
     @property
     def coordinate(self) -> str:
         return f"{self.register}/{self.variant}"
+
+    @property
+    def provider(self) -> str:
+        """The FQID's provider segment — what decides where the repair goes."""
+        return self.register.partition("/")[0]
+
+    @property
+    def errata(self) -> bool:
+        """Can `scb_errata.toml` repair this miss? Only on the `scb` provider:
+        that file records what SCB omitted from SCB's OWN export, and its loader
+        refuses any other provider, so rendering a stanza for one would aim the
+        maintainer at a file that cannot accept it. Every other provider's windows
+        are curated elsewhere (`_curated_surface`).
+        """
+        return self.provider == _PROVIDER
 
 
 @dataclass(frozen=True)
@@ -201,9 +234,20 @@ def coverage_misses(
 
 
 def miss_line(miss: CoverageMiss) -> str:
-    """One report line locating `miss`: the held editions merged into ranges, what
-    the catalog carries instead, and the versions the omitted rows must name. The
-    pasteable repair is the stanza block (`errata_stanzas`), not this line."""
+    """One report line locating `miss` in the grammar of ITS repair.
+
+    A `scb` coordinate names the held editions merged into ranges, what the catalog
+    carries instead, and the versions the omitted rows must list; the pasteable
+    repair is then the stanza block (`errata_stanzas`), not this line. A coordinate
+    on any other provider names the curated surface that carries its window
+    instead, because no stanza can repair it — the line IS the whole finding.
+    """
+    if not miss.errata:
+        return (
+            f"{miss.coordinate} {miss.column}: {_held_vs_windows(miss)} — not "
+            f"errata (provider `{miss.provider}`, not `{_PROVIDER}`); the window is "
+            f"curated in {_curated_surface(miss.provider)}"
+        )
     mint = (
         f" ({', '.join(miss.mint)} not documented at all — a [[version]] each)"
         if miss.mint
@@ -218,16 +262,18 @@ def miss_line(miss: CoverageMiss) -> str:
 def version_candidates(
     misses: Sequence[CoverageMiss],
 ) -> tuple[tuple[str, str, str], ...]:
-    """The `[[version]]` entries `misses` need: one `(register, variant,
-    Registerversionnamn)` per version the catalog does not know at all, deduped and
-    ordered. Two columns omitted from the same undocumented edition need the
-    version minted ONCE — `load_scb_errata` refuses a duplicate `(variant, name)`.
+    """The `[[version]]` entries the `scb` misses in `misses` need: one `(register,
+    variant, Registerversionnamn)` per version the catalog does not know at all,
+    deduped and ordered. Two columns omitted from the same undocumented edition need
+    the version minted ONCE — `load_scb_errata` refuses a duplicate `(variant,
+    name)`. A miss on another provider contributes nothing: it is not errata.
     """
     return tuple(
         sorted(
             {
                 (miss.register, miss.variant, name)
                 for miss in misses
+                if miss.errata
                 for name in miss.mint
             }
         )
@@ -235,24 +281,34 @@ def version_candidates(
 
 
 def errata_stanzas(misses: Sequence[CoverageMiss]) -> str:
-    """`misses` as a pasteable `scb_errata.toml` fragment: every `[[version]]` the
-    undocumented editions need first (the `[[delivered]]` rows hang on them), then
-    one `[[delivered]]` per group.
+    """The `scb` misses in `misses` as a pasteable `scb_errata.toml` fragment: every
+    `[[version]]` the undocumented editions need first (the `[[delivered]]` rows
+    hang on them), then one `[[delivered]]` per group.
 
     Valid, complete TOML — it parses, and `load_scb_errata` accepts its shape but
     for the placeholder `noted`. A candidate all the same, NOT a drop-in: only the
     maintainer can write the `evidence` that makes an entry an upstream-error
     record rather than a window override, and the date it was found.
+
+    A miss on another provider is dropped HERE rather than filtered by the caller:
+    the one renderer of this grammar is the one place that can guarantee no stanza
+    ever names a provider the loader refuses (`miss_line` reports those instead).
     """
-    stanzas = _version_stanzas(misses) + _delivered_stanzas(misses)
+    errata = [miss for miss in misses if miss.errata]
+    stanzas = _version_stanzas(errata) + _delivered_stanzas(errata)
     return "\n\n".join(stanzas) + "\n" if stanzas else ""
 
 
 def errata_worklist(report: CoverageReport) -> str:
-    """`report` as a candidate `scb_errata.toml` file, the stanzas split into the
-    `[[version]]` entries the undocumented editions need and the `[[delivered]]`
-    entries every miss needs, each under a header a maintainer can work down."""
-    versions = _version_stanzas(report.misses)
+    """`report` as a candidate `scb_errata.toml` file in three sections a maintainer
+    works down: the `[[version]]` entries the undocumented editions need, the
+    `[[delivered]]` entries the `scb` misses need — and then, as COMMENTS because no
+    stanza of this file can carry them, the misses on every other provider with the
+    curated surface each one's window is widened on.
+    """
+    errata = [miss for miss in report.misses if miss.errata]
+    curated = [miss for miss in report.misses if not miss.errata]
+    versions = _version_stanzas(errata)
     lines = [
         "# GENERATED by input_data/swecov/build_catalog.py errata — candidate",
         "# reg_meta_build/scb_errata.toml entries for the columns the steward holds",
@@ -265,10 +321,15 @@ def errata_worklist(report: CoverageReport) -> str:
         "# documents anywhere is a variable_grafts.toml graft or a canonical_attach",
         "# entry instead — not errata.",
         "#",
+        "# Only the `scb` sections are stanzas. This file corrects SCB's own export,",
+        "# and its loader refuses an entry on another provider, so every non-SCB miss",
+        "# rides in the third section as a comment naming the surface its window is",
+        "# curated on — nothing to paste here, a window to widen there.",
+        "#",
         f"# {report.missed_pairs} held column × edition pair(s) in "
         f"{len(report.misses)} group(s), out of {report.pairs} judged.",
         "",
-        f"# ── version-missing: {len(versions)} held edition(s) the catalog "
+        f"# ── version-missing: {len(versions)} held `scb` edition(s) the catalog "
         "documents no register version for; mint them first ──",
     ]
     for stanza in versions:
@@ -276,10 +337,18 @@ def errata_worklist(report: CoverageReport) -> str:
     lines += [
         "",
         f"# ── column-missing: the omitted column rows themselves, "
-        f"{len(report.misses)} (register, variant, column) group(s) ──",
+        f"{len(errata)} `scb` (register, variant, column) group(s) ──",
     ]
-    for miss in report.misses:
+    for miss in errata:
         lines += ["", f"# {_held_vs_windows(miss)}", _delivered_stanza(miss)]
+    lines += [
+        "",
+        f"# ── curated windows: {len(curated)} group(s) on a provider other than "
+        "`scb`, which this file cannot correct — widen the window on the surface "
+        "named on each line ──",
+    ]
+    for miss in curated:
+        lines += ["", f"# {miss_line(miss)}"]
     return "\n".join(lines) + "\n"
 
 
@@ -493,6 +562,40 @@ def _covers(edition: _Interval, windows: tuple[_Interval, ...]) -> bool:
     coverage is one interval and single-interval containment IS union coverage."""
     lo, hi = edition
     return any(window[0] <= lo and hi <= window[1] for window in windows)
+
+
+# ── the repair surface ───────────────────────────────────────────────────────
+
+# Where each non-SCB provider's delivery windows are curated — the file a miss on
+# that provider is repaired in, since `scb_errata.toml` refuses it. Built from the
+# build's own `(slug, input_data subdir)` registry, so a renamed subdir moves this
+# pointer with it instead of leaving it aimed at a path that no longer exists.
+# `sos` is the one seeded provider in neither registry: it has a machine export
+# (untracked workbooks) rather than a curated TOML, so its window comes from the
+# delivery itself.
+_CURATED_SURFACE: dict[str, str] = {
+    slug: f"reg_meta_build/input_data/{subdir}/{slug}.toml (`valid_from` / "
+    "`valid_to` on the register or the variant)"
+    for slug, subdir in _CURATED_PROVIDERS
+} | {
+    "sos": "reg_meta_build/input_data/Socialstyrelsen/ (the SOS delivery "
+    "workbooks — SOS states its own coverage, there is no curated TOML)"
+}
+
+
+def _curated_surface(provider: str) -> str:
+    """The surface carrying `provider`'s windows, named as the repair for a miss
+    `scb_errata.toml` cannot take.
+
+    A provider the global build does not seed at all is a STEWARD-MINTED flavor
+    provider (`extend-db`'s `providers[]`): nothing in this repo states its windows,
+    so the repair is in the inventory the steward's generator produced.
+    """
+    return _CURATED_SURFACE.get(
+        provider,
+        "the steward inventory extend-db overlays (this flavor provider's own "
+        "`states[].valid_from` / `valid_to`)",
+    )
 
 
 # ── rendering ────────────────────────────────────────────────────────────────

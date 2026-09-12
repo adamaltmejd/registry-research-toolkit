@@ -1990,9 +1990,13 @@ class TestDeliveryInventoryGate:
     ) -> None:
         """The flavored hook threads the loaded inventory into the validator: a
         2017 holding of a column delivered 2018-2020 fails with the stable
-        EXIT_CONFIG / `validation_failed`, naming the coordinate — and the report
-        it writes to stderr ends in the `scb_errata.toml` stanzas that repair it,
-        verbatim, so the maintainer can paste them."""
+        EXIT_CONFIG / `validation_failed`, naming the coordinate.
+
+        The steward's registers sit on the steward's OWN minted provider, and
+        `scb_errata.toml` corrects SCB's export alone — its loader refuses any other
+        provider — so this finding carries NO stanza. The report names the surface
+        that does state the window: the inventory `extend-db` overlaid.
+        """
         from reg_meta.inventory import load_inventory as load_delivery_inventory
 
         from reg_meta_build import cli
@@ -2006,10 +2010,13 @@ class TestDeliveryInventoryGate:
         assert exc.value.code == "validation_failed"
         assert "held 2017" in exc.value.message
         assert "BELOPP" in exc.value.message
+        assert "the steward inventory extend-db overlays" in exc.value.message
         report = capsys.readouterr().err
-        assert "[[delivered]]\nregister = " in report
-        assert 'column = "BELOPP"' in report
-        assert 'versions = ["2017"]' in report
+        assert "held 2017, catalog windows 2018..2020" in report
+        assert "NOT on the `scb` provider" in report
+        # A stanza would send the maintainer to a file that cannot hold it.
+        assert "[[delivered]]" not in report
+        assert "[[version]]" not in report
 
     def test_hook_passes_on_a_covered_holding(
         self, tmp_path: Path, global_db: Path

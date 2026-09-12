@@ -2540,17 +2540,24 @@ class TestInventoryWindowCoverage:
         return conn
 
     @staticmethod
-    def _table(edition: object, *columns: tuple[str, str, str]) -> str:
+    def _table(
+        edition: object,
+        *columns: tuple[str, str, str],
+        variant: str = "scb/lisa/individer-15plus",
+    ) -> str:
         """One `[[table]]` stanza: `(physical column, variable slug,
-        representation)` per column."""
-        lines = ["[[table]]", f"id = 'Individ_{edition}'", f"edition = {edition}"]
+        representation)` per column, mapped onto `variant` (whose register prefix
+        the variable FQIDs take, so a table can hold another provider's columns)."""
+        register = variant.rpartition("/")[0]
+        table_id = f"{register.replace('/', '_')}_{edition}"
+        lines = ["[[table]]", f"id = '{table_id}'", f"edition = {edition}"]
         for name, variable, representation in columns:
             lines += [
                 "[[table.column]]",
                 f"name = '{name}'",
                 "[[table.column.mapping]]",
-                "register_variant = 'scb/lisa/individer-15plus'",
-                f"variable = 'scb/lisa/{variable}'",
+                f"register_variant = '{variant}'",
+                f"variable = '{register}/{variable}'",
                 f"representation = '{representation}'",
             ]
         return "\n".join(lines)
@@ -2796,6 +2803,83 @@ class TestInventoryWindowCoverage:
         assert "held 2010..2012" in failure
         assert 'versions = ["2010", "2011", "2012"]' in self._block(result)
         assert "3 held column × edition pair(s) in 1 group(s)" in result.format_report()
+
+    def test_a_non_scb_miss_is_a_curated_window_line_not_an_errata_stanza(
+        self, tmp_path: Path
+    ):
+        """`scb_errata.toml` corrects SCB's OWN export — its loader refuses an entry
+        on another provider — so a miss on `fk` cannot be repaired by a stanza, and
+        rendering one aims the maintainer at a file that cannot hold it (what the
+        2026-09-12 flavored run did with its 26 `fk` groups). Both misses fail the
+        gate; only the SCB one reaches the pasteable block, and the `fk` line names
+        the curated TOML its window is widened on instead."""
+        from _slugged_db import add_register, add_state, add_variable, add_variant
+        from reg_meta_build.db import PROVIDER_ID_FK
+
+        conn = self._db()
+        add_register(
+            conn,
+            register_id=2,
+            slug="sjukfall",
+            name="Sjukfall",
+            provider_id=PROVIDER_ID_FK,
+        )
+        add_variant(
+            conn,
+            register_variant_id=20,
+            register_id=2,
+            slug="_default",
+            name="Sjukfall",
+        )
+        add_variable(conn, register_id=2, var_id=60, name="Dagar", slug="dagar")
+        add_state(
+            conn,
+            register_id=2,
+            variable_slug="dagar",
+            register_variant_id=20,
+            valid_from="2019-01-01",
+            valid_to="2019-12-31",
+            delivery_column_name="Dagar",
+        )
+        conn.commit()
+
+        result = self._check(
+            conn,
+            tmp_path,
+            self._table(2019, ("DispInkKE", "dispinkke", "DispInkKE")),
+            self._table(
+                2017,
+                ("Dagar", "dagar", "Dagar"),
+                variant="fk/sjukfall/_default",
+            ),
+        )
+
+        assert len(result.failures) == 2, result.failures
+        (fk_line,) = [f for f in result.failures if f.startswith("fk/")]
+        assert "held 2017, catalog windows 2019" in fk_line
+        assert "input_data/Forsakringskassan/fk.toml" in fk_line
+        assert "valid_from" in fk_line
+        # No stanza grammar on the line, and no stanza in the block: the fk miss is
+        # not an errata entry at any grain.
+        assert "[[delivered]]" not in fk_line
+        assert "[[version]]" not in fk_line
+        block = self._block(result)
+        assert block.count("[[delivered]]") == 1
+        assert '"scb/lisa"' in block
+        assert "fk/sjukfall" not in block
+        assert "NOT on the `scb` provider" in result.format_report()
+
+    def test_every_seeded_provider_but_scb_names_a_curated_surface(self):
+        """The fallback wording says "the steward inventory extend-db overlays",
+        which is true only of a provider the GLOBAL build never seeds. A newly
+        seeded agency must be given its surface here, or its misses would send the
+        maintainer to a steward inventory that says nothing about it."""
+        from reg_meta_build.db import _PROVIDER_SEED
+        from reg_meta_build.inventory_coverage import _CURATED_SURFACE
+
+        assert {slug for _, slug, _ in _PROVIDER_SEED} - {"scb"} == set(
+            _CURATED_SURFACE
+        )
 
     def test_a_column_one_of_whose_mappings_covers_it_passes(self, tmp_path: Path):
         """Coverage is judged per PHYSICAL column: a column serving two variables

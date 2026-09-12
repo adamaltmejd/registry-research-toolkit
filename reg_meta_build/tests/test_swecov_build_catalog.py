@@ -594,10 +594,16 @@ _VARIABLE_OF = {
 }
 
 
-def _held(steward_dir: Path, holdings: dict[int, tuple[str, ...]]) -> None:
+def _held(
+    steward_dir: Path,
+    holdings: dict[int, tuple[str, ...]],
+    variant: str = "inera/bestallda-prover/_default",
+) -> None:
     """A committed-inventory stand-in: one `[[table]]` per edition holding those
     columns of `Beställda prover`, each mapped to its own representation — the
-    shape `cmd_inventory` emits."""
+    shape `cmd_inventory` emits. `variant` is the coordinate they map onto, so a
+    holdings statement can name the register under another provider."""
+    register = variant.rpartition("/")[0]
     lines = ["version = 1", 'steward = "swecov"']
     for edition, columns in holdings.items():
         lines += ["", "[[table]]", f'id = "T_{edition}"', f"edition = {edition}"]
@@ -608,8 +614,8 @@ def _held(steward_dir: Path, holdings: dict[int, tuple[str, ...]]) -> None:
                 f'name = "{column}"',
                 "",
                 "[[table.column.mapping]]",
-                'register_variant = "inera/bestallda-prover/_default"',
-                f'variable = "inera/bestallda-prover/{_VARIABLE_OF[column]}"',
+                f'register_variant = "{variant}"',
+                f'variable = "{register}/{_VARIABLE_OF[column]}"',
                 f'representation = "{column}"',
             ]
     (steward_dir / "inventory.toml").write_text(
@@ -617,19 +623,33 @@ def _held(steward_dir: Path, holdings: dict[int, tuple[str, ...]]) -> None:
     )
 
 
-def _run_errata(tmp_path: Path, db: Path, holdings: dict[int, tuple[str, ...]]) -> dict:
-    """Write the holdings, run the subcommand, parse the worklist it leaves under
-    `derived/`."""
+def _errata_text(
+    tmp_path: Path,
+    db: Path,
+    holdings: dict[int, tuple[str, ...]],
+    variant: str = "inera/bestallda-prover/_default",
+) -> str:
+    """Write the holdings, run the subcommand, read back the worklist it leaves
+    under `derived/`."""
     steward_dir = tmp_path / "steward"
     steward_dir.mkdir(exist_ok=True)
-    _held(steward_dir, holdings)
+    _held(steward_dir, holdings, variant)
     csv_path = tmp_path / "SWECOV_variables_2025-12-11.csv"
     build_catalog.cmd_errata(argparse.Namespace(csv=csv_path, db=db, out=steward_dir))
-    return tomllib.loads(
-        (csv_path.parent / "derived" / "errata_worklist.toml").read_text(
-            encoding="utf-8"
-        )
+    return (csv_path.parent / "derived" / "errata_worklist.toml").read_text(
+        encoding="utf-8"
     )
+
+
+def _run_errata(
+    tmp_path: Path,
+    db: Path,
+    holdings: dict[int, tuple[str, ...]],
+    variant: str = "inera/bestallda-prover/_default",
+) -> dict:
+    """The worklist as the maintainer's TOML parser sees it — comment-only
+    sections carry no entries, so an all-commented worklist parses to `{}`."""
+    return tomllib.loads(_errata_text(tmp_path, db, holdings, variant))
 
 
 def test_errata_worklist_is_empty_when_every_holding_has_a_window(
@@ -651,10 +671,16 @@ def test_errata_worklist_splits_version_missing_from_column_missing(
     omitted row names that version verbatim — and a 2021 holding is version-missing
     too, since the catalog knows no version covering it. So the worklist carries one
     `[[version]]` (2021) and ONE `[[delivered]]` naming both editions (two entries
-    for one column would be the duplicate `scb_errata` refuses)."""
+    for one column would be the duplicate `scb_errata` refuses).
+
+    The register moves to the `scb` provider on the copy, because stanzas are what
+    `scb_errata.toml` accepts and it accepts nothing else: a miss on the fixture's
+    own flavor provider is the curated-window case below, not this one.
+    """
     db = tmp_path / "narrowed.db"
     db.write_bytes(flavored_db.read_bytes())
     conn = sqlite3.connect(db)
+    conn.execute("UPDATE provider SET slug = 'scb' WHERE provider_id = 900")
     conn.execute(
         "UPDATE variable_state SET valid_from = '2019-01-01', valid_to = '2019-12-31' "
         "WHERE delivery_column_name = 'T_kolumn'"
@@ -667,7 +693,12 @@ def test_errata_worklist_splits_version_missing_from_column_missing(
     conn.commit()
     conn.close()
 
-    worklist = _run_errata(tmp_path, db, {2020: ("T_kolumn",), 2021: ("T_kolumn",)})
+    worklist = _run_errata(
+        tmp_path,
+        db,
+        {2020: ("T_kolumn",), 2021: ("T_kolumn",)},
+        variant="scb/bestallda-prover/_default",
+    )
 
     # Complete entries, not fragments: every key `load_scb_errata` requires is
     # present, with the curator's own two as TODO placeholders.
@@ -677,7 +708,7 @@ def test_errata_worklist_splits_version_missing_from_column_missing(
     }
     assert worklist["version"] == [
         {
-            "register": "inera/bestallda-prover",
+            "register": "scb/bestallda-prover",
             "variant": "_default",
             "name": "2021",
             **todo,
@@ -685,10 +716,43 @@ def test_errata_worklist_splits_version_missing_from_column_missing(
     ]
     assert worklist["delivered"] == [
         {
-            "register": "inera/bestallda-prover",
+            "register": "scb/bestallda-prover",
             "variant": "_default",
             "column": "T_kolumn",
             "versions": ["2020", "2021"],
             **todo,
         }
     ]
+
+
+def test_errata_worklist_lists_a_non_scb_miss_as_a_curated_window(
+    tmp_path: Path, flavored_db: Path
+) -> None:
+    """`Beställda prover` sits on the steward's own `inera` provider, and
+    `scb_errata.toml` accepts entries on `scb` alone — so the same narrowed holding
+    yields NO stanza at all. It rides in the third section as a comment naming the
+    held editions, the catalog's window and the surface that carries it: for a
+    flavor provider, the inventory `extend-db` overlaid (there is no curated TOML
+    for it in this repo). A `[[delivered]]` here would send the maintainer to a file
+    whose loader refuses the entry."""
+    db = tmp_path / "narrowed.db"
+    db.write_bytes(flavored_db.read_bytes())
+    conn = sqlite3.connect(db)
+    conn.execute(
+        "UPDATE variable_state SET valid_from = '2019-01-01', valid_to = '2019-12-31' "
+        "WHERE delivery_column_name = 'T_kolumn'"
+    )
+    conn.commit()
+    conn.close()
+
+    text = _errata_text(tmp_path, db, {2020: ("T_kolumn",)})
+
+    # Not one entry of either kind — the whole finding is a comment, so the file
+    # parses to nothing.
+    assert "[[" not in text
+    assert tomllib.loads(text) == {}
+    assert "curated windows: 1 group(s)" in text
+    (line,) = [ln for ln in text.splitlines() if "T_kolumn:" in ln]
+    assert "held 2020, catalog windows 2019" in line
+    assert "not errata (provider `inera`, not `scb`)" in line
+    assert "the steward inventory extend-db overlays" in line
