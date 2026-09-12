@@ -1841,6 +1841,9 @@ class TestCli:
         args = argparse.Namespace(
             db=str(out_dir),
             base_db=str(global_db),
+            # The steward-holdings gate has its own tests; an empty-of-this-flavor
+            # inventory keeps this one about the envelope.
+            delivery_inventory=str(_empty_delivery_inventory(tmp_path)),
             inventory=str(inv_path),
             steward=_STEWARD,
             slug_dir=str(slug_dir),
@@ -1849,6 +1852,9 @@ class TestCli:
         )
         envelope, exit_code = _cmd_extend_db(args)
         assert exit_code == 0
+        assert (
+            envelope["request"]["args"]["delivery_inventory"] == args.delivery_inventory
+        )
         data = envelope["data"]
         for key in ("providers", "registers", "variants", "variables", "states"):
             assert key in data
@@ -1874,6 +1880,7 @@ class TestCli:
         args = argparse.Namespace(
             db=str(out_dir),
             base_db=str(global_db),
+            delivery_inventory=None,
             inventory=str(inv_path),
             steward=_STEWARD,
             slug_dir=None,
@@ -1883,3 +1890,165 @@ class TestCli:
         envelope, exit_code = _cmd_extend_db(args)
         assert exit_code == 0
         assert envelope["data"]["variables"] == 3
+
+
+# ── steward-holdings window coverage (Y-115) ─────────────────────────────────
+
+
+def _empty_delivery_inventory(tmp_path: Path) -> Path:
+    """A structurally valid §12 inventory that states nothing about the flavor:
+    one table, one column, no mappings (an unmapped column is inventoried but
+    never admitted). Keeps a run off the committed steward inventory the flag
+    otherwise defaults to."""
+    path = tmp_path / "empty-holdings.toml"
+    path.write_text(
+        "version = 1\n"
+        f'steward = "{_STEWARD}"\n\n'
+        '[[table]]\nid = "Nothing_2019"\nedition = 2019\n\n'
+        '[[table.column]]\nname = "UNMAPPED"\n',
+        encoding="utf-8",
+    )
+    return path
+
+
+class TestDeliveryInventoryGate:
+    """Y-115: `extend-db` refuses to ship a flavor DB that contradicts the
+    steward's committed delivery inventory — a column HELD in a table edition the
+    built windows don't cover."""
+
+    @staticmethod
+    def _coordinates(db: Path) -> tuple[str, str]:
+        """`(variant coordinate, belopp binding FQID)` read back from the built
+        flavor — the slugs are derived by the overlay, never assumed."""
+        conn = sqlite3.connect(db)
+        provider, register, variant = conn.execute(
+            "SELECT p.slug, r.slug, rv.slug FROM register_variant rv "
+            "JOIN register r ON r.register_id = rv.register_id "
+            "JOIN provider p ON p.provider_id = r.provider_id "
+            "WHERE r.register_id = ?",
+            (_steward_register_ids()["register"],),
+        ).fetchone()
+        belopp = conn.execute(
+            "SELECT slug FROM variable WHERE register_id = ? AND provider_key = ?",
+            (_steward_register_ids()["register"], "belopp"),
+        ).fetchone()[0]
+        conn.close()
+        return f"{provider}/{register}/{variant}", f"{provider}/{register}/{belopp}"
+
+    def _delivery_inventory(self, db: Path, tmp_path: Path, edition: int) -> Path:
+        """A §12 inventory holding `BELOPP` in one table of `edition`. The
+        multistate flavor delivers that column 2018-2020, so 2017 is a holding
+        with no window and 2019 is a covered one."""
+        coordinate, belopp = self._coordinates(db)
+        path = tmp_path / f"holdings-{edition}.toml"
+        path.write_text(
+            "version = 1\n"
+            f'steward = "{_STEWARD}"\n\n'
+            "[[table]]\n"
+            f'id = "Transaktioner_{edition}"\n'
+            f"edition = {edition}\n\n"
+            "[[table.column]]\n"
+            'name = "BELOPP"\n\n'
+            "[[table.column.mapping]]\n"
+            f'register_variant = "{coordinate}"\n'
+            f'variable = "{belopp}"\n'
+            'representation = "BELOPP"\n',
+            encoding="utf-8",
+        )
+        return path
+
+    def test_argparse_exposes_delivery_inventory(self) -> None:
+        """The committed steward inventory is the default (resolved from a repo
+        checkout), so the flag only has to name an override."""
+        from reg_meta_build.cli import _build_parser
+
+        parser = _build_parser()
+        base = ["extend-db", "--base-db", "b", "--inventory", "i"]
+        assert parser.parse_args(base).delivery_inventory is None
+        assert (
+            parser.parse_args(
+                [*base, "--delivery-inventory", "h.toml"]
+            ).delivery_inventory
+            == "h.toml"
+        )
+
+    def test_default_resolves_the_committed_steward_inventory(self) -> None:
+        """With no `--delivery-inventory`, the gate reads
+        `reg_webapp/stewards/<steward>/inventory.toml` from the checkout — and a
+        steward with no committed inventory self-skips rather than failing."""
+        from reg_meta_build.extend_db import resolve_delivery_inventory
+
+        inventory = resolve_delivery_inventory(None, _STEWARD)
+        assert inventory is not None and inventory.steward == _STEWARD
+        assert resolve_delivery_inventory(None, "no-such-steward") is None
+
+    def test_hook_fails_on_a_holding_with_no_window(
+        self, tmp_path: Path, global_db: Path
+    ) -> None:
+        """The flavored hook threads the loaded inventory into the validator: a
+        2017 holding of a column delivered 2018-2020 fails with the stable
+        EXIT_CONFIG / `validation_failed`, naming the coordinate and the
+        `scb_errata.toml` entry that repairs it."""
+        from reg_meta.inventory import load_inventory as load_delivery_inventory
+
+        from reg_meta_build import cli
+
+        _, out = _run_extend(tmp_path, global_db, _multistate_inventory())
+        path = self._delivery_inventory(out, tmp_path, 2017)
+        hook = cli._flavored_validate_hook(None, load_delivery_inventory(path))
+        with pytest.raises(RegMetaError) as exc:
+            hook(out)
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert exc.value.code == "validation_failed"
+        assert "held 2017" in exc.value.message
+        assert "[[delivered]] register = " in exc.value.message
+        assert 'column = "BELOPP"' in exc.value.message
+
+    def test_hook_passes_on_a_covered_holding(
+        self, tmp_path: Path, global_db: Path
+    ) -> None:
+        """The same holding inside the delivered window is not a finding."""
+        from reg_meta.inventory import load_inventory as load_delivery_inventory
+
+        from reg_meta_build import cli
+
+        _, out = _run_extend(tmp_path, global_db, _multistate_inventory())
+        path = self._delivery_inventory(out, tmp_path, 2019)
+        cli._flavored_validate_hook(None, load_delivery_inventory(path))(out)
+
+    def test_cmd_extend_db_wires_the_gate_and_discards_the_staging_db(
+        self, tmp_path: Path, global_db: Path
+    ) -> None:
+        """End-to-end through the CLI handler: `--delivery-inventory` reaches the
+        flavored hook, the run fails, and nothing is published."""
+        import argparse
+
+        from reg_meta_build.cli import _cmd_extend_db
+
+        _, probe = _run_extend(
+            tmp_path, global_db, _multistate_inventory(), out_name="probe"
+        )
+        holdings = self._delivery_inventory(probe, tmp_path, 2017)
+        inv_path = tmp_path / "inv.json"
+        inv_path.write_text(json.dumps(_multistate_inventory()), encoding="utf-8")
+        slug_dir = tmp_path / "gate-sslug"
+        slug_dir.mkdir()
+        _write_steward_slug_dir(slug_dir)
+        out_dir = tmp_path / "gate-out"
+        out_dir.mkdir()
+
+        args = argparse.Namespace(
+            db=str(out_dir),
+            base_db=str(global_db),
+            inventory=str(inv_path),
+            delivery_inventory=str(holdings),
+            steward=_STEWARD,
+            slug_dir=str(slug_dir),
+            skip_slugs=False,
+            no_validate=False,
+        )
+        with pytest.raises(RegMetaError) as exc:
+            _cmd_extend_db(args)
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert 'column = "BELOPP"' in exc.value.message
+        assert not (out_dir / "reg_meta.db").exists()

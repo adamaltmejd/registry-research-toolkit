@@ -64,6 +64,7 @@ from reg_meta_build.db import (
     PROVIDER_ID_SOS,
 )
 from reg_meta_build.id import _MINT_BIT, is_canonical_scb
+from reg_meta_build.inventory_coverage import coverage_misses, miss_line
 from reg_meta_build.relations import (
     _REPLACED_BY_NOTE_VINTAGE_LIFT,
     _variable_vintage_stream_key,
@@ -80,6 +81,8 @@ _GLOBAL_NONSCB_PROVIDER_IDS: tuple[int, ...] = tuple(
 
 if TYPE_CHECKING:
     import sqlite3
+
+    from reg_meta.inventory import DeliveryInventory
 
 LineKind = Literal["section", "ok", "fail", "info"]
 
@@ -141,6 +144,7 @@ def validate_built_db(
     flavored: bool = False,
     bootstrap: bool = False,
     slug_dir: Path | None = None,
+    delivery_inventory: DeliveryInventory | None = None,
 ) -> ValidationResult:
     """Run the build invariants against ``db_path``.
 
@@ -197,6 +201,14 @@ def validate_built_db(
     steward providers that dir covers; the global base's entity-key vars stay out
     of scope (validated at global build, and ``_variable_source_ids`` is unsafe on
     a flavored DB for global registers).
+
+    ``delivery_inventory`` (Y-115) is the steward's loaded §12 holdings statement
+    (``reg_webapp/stewards/<steward>/inventory.toml``); it feeds
+    ``_check_inventory_window_coverage``, which fails the build when a column the
+    steward HOLDS in a table edition has no covering state or alias window on its
+    coordinate. ``None`` (the default, used by synthetic CI and the global build)
+    SKIPS that gate — there is no holdings statement to contradict. The
+    ``extend-db`` CLI resolves and loads it once, the way it does ``slug_dir``.
     """
     db_path = Path(db_path)
     if not db_path.exists():
@@ -254,6 +266,7 @@ def validate_built_db(
             conn, result, tables, corpus=corpus, bootstrap=bootstrap
         )
         _check_representation_replaced_by(conn, result, tables, corpus=corpus)
+        _check_inventory_window_coverage(conn, result, tables, delivery_inventory)
         _check_operational(conn, result)
     finally:
         conn.close()
@@ -2431,6 +2444,68 @@ def _check_representation_replaced_by(
         "SELECT COUNT(*) FROM representation_replaced_by"
     ).fetchone()[0]
     result.info(f"{n_edges} representation succession edge(s)")
+
+
+def _check_inventory_window_coverage(
+    conn: sqlite3.Connection,
+    result: ValidationResult,
+    tables: set[str],
+    delivery_inventory: DeliveryInventory | None,
+) -> None:
+    """Y-115: every column the steward HOLDS in a table edition must have a
+    covering ``variable_state`` or ``variable_alias_window`` on its coordinate.
+
+    A flavor DB that contradicts the steward's own §12 holdings statement must not
+    ship: `catalog_index` admits an explicit ``representation`` over the table's
+    whole edition and `reg_meta.inventory_check` only asks whether the coordinate
+    EXISTS, so the contradiction survives every other gate and surfaces as the
+    RESEARCHER's ``period_outside_state_validity`` on data the steward has. The
+    repair is upstream-grained — SCB omitted the row from its own export — so the
+    report renders each miss in ``scb_errata.toml``'s ``[[version]]`` /
+    ``[[delivered]]`` grammar; see `inventory_coverage` for the reading rules.
+
+    ``delivery_inventory is None`` (synthetic CI, the global build, an
+    ``extend-db`` run outside a repo checkout) SKIPS the gate: with no holdings
+    statement there is nothing to contradict.
+    """
+    result.section("[inventory: steward holdings have a catalog window]")
+    if delivery_inventory is None:
+        result.ok("no delivery inventory given — steward-holdings gate skipped")
+        return
+    if not {"variable_state", "variable_alias_window"}.issubset(tables):
+        result.ok("variable_state / variable_alias_window absent — gate skipped")
+        return
+    report = coverage_misses(conn, delivery_inventory)
+    if report.unresolved:
+        result.info(
+            f"{report.unresolved:,} mapping(s) not judged — their coordinate "
+            "resolves to nothing (reg_meta.inventory_check's finding; regenerate "
+            "the inventory against this DB)"
+        )
+    if not report.misses:
+        result.ok(
+            f"all {report.pairs:,} held column × edition pair(s) have a covering "
+            "state or alias window"
+        )
+        return
+    for miss in report.misses[:10]:
+        result.fail(miss_line(miss))
+    if len(report.misses) > 10:
+        result.info(
+            f"... and {len(report.misses) - 10:,} more (register, variant, column) "
+            "group(s)"
+        )
+    result.info(
+        f"{report.missed_pairs:,} held column × edition pair(s) in "
+        f"{len(report.misses):,} group(s) have no catalog window, "
+        f"out of {report.pairs:,} judged"
+    )
+    result.info(
+        "curate the omissions into reg_meta_build/scb_errata.toml — "
+        "`python input_data/swecov/build_catalog.py --db <flavored-db> errata` "
+        "writes the full candidate worklist. Never answer this gate by skipping "
+        "validation: the flavor would ship contradicting the steward's holdings."
+    )
 
 
 def _check_operational(conn: sqlite3.Connection, result: ValidationResult) -> None:

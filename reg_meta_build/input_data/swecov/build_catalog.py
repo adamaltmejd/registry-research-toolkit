@@ -3297,6 +3297,58 @@ def cmd_inventory(args: argparse.Namespace) -> None:
     print(f"  load_inventory: OK ({len(inv.tables)} tables)")
 
 
+# --- errata: the columns held in editions the catalog has no window for ------
+#
+# The committed inventory states what SWECOV HOLDS; the flavored DB states what
+# reg_meta can deliver. Where they disagree — a column held in an edition with no
+# covering `variable_state` / `variable_alias_window` — the researcher hits
+# "period outside validity" on data the steward has, and `extend-db`'s flavored
+# validation now refuses to ship it (Y-115). The repair is an upstream-error
+# record in `reg_meta_build/scb_errata.toml`, so this subcommand writes the same
+# misses the gate fails on as a CANDIDATE worklist for the maintainer to curate:
+# the `[[version]]` entries for editions SCB documents no register version for,
+# then the `[[delivered]]` entries for the omitted column rows themselves.
+#
+# The reading rules live in `reg_meta_build.inventory_coverage` — ONE
+# implementation, so the worklist can never disagree with the gate that made it.
+
+
+def cmd_errata(args: argparse.Namespace) -> None:
+    from reg_meta.db import open_db
+    from reg_meta.inventory import load_inventory
+    from reg_meta_build.inventory_coverage import (
+        coverage_misses,
+        errata_worklist,
+        version_candidates,
+    )
+
+    repo_root = Path(__file__).resolve().parents[3]
+    steward_dir = args.out or (repo_root / "reg_webapp" / "stewards" / "swecov")
+    inventory = load_inventory(steward_dir / "inventory.toml")
+    # `check_schema=False`: this reads a flavored DB that may predate the running
+    # build's SCHEMA_VERSION, and the gate only touches long-stable tables.
+    conn = open_db(args.db, check_schema=False)
+    try:
+        report = coverage_misses(conn, inventory)
+    finally:
+        conn.close()
+
+    dest = args.csv.parent / "derived" / "errata_worklist.toml"
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    dest.write_text(errata_worklist(report), encoding="utf-8")
+    print(f"wrote {dest}")
+    print(
+        f"  held column × edition pairs: {report.pairs} judged,"
+        f" {report.missed_pairs} with no catalog window"
+        f" ({report.unresolved} mapping(s) not judged — coordinate unresolved)"
+    )
+    print(
+        f"  version-missing: {len(version_candidates(report))} "
+        f"[[version]] candidate(s)"
+        f"  column-missing: {len(report.misses)} [[delivered]] candidate(s)"
+    )
+
+
 # --- reporting ---------------------------------------------------------------
 
 
@@ -3379,6 +3431,19 @@ def main() -> None:
         default=None,
         help="stewards/swecov output dir (default: <repo>/reg_webapp/stewards/swecov)",
     )
+    errata_p = sub.add_parser(
+        "errata",
+        help="write derived/errata_worklist.toml: candidate scb_errata.toml entries"
+        " for the columns the committed inventory holds in editions the FLAVORED"
+        " --db has no window for",
+    )
+    errata_p.add_argument(
+        "--out",
+        type=Path,
+        default=None,
+        help="stewards/swecov dir holding inventory.toml"
+        " (default: <repo>/reg_webapp/stewards/swecov)",
+    )
     steward_p = sub.add_parser(
         "steward",
         help="emit reg_webapp/stewards/swecov/ catalog against a FLAVORED --db (#423)",
@@ -3408,6 +3473,7 @@ def main() -> None:
         "grafts": cmd_grafts,
         "flavor": cmd_flavor,
         "inventory": cmd_inventory,
+        "errata": cmd_errata,
         "steward": cmd_steward,
     }[args.command](args)
 

@@ -368,6 +368,13 @@ def _delivered(
     and let a deployment boot on a mapping `resolve_at` cannot fill — the exact
     false pass this gate exists to prevent.
 
+    These two tables have a SECOND reader with a deliberately different rule:
+    `reg_meta_build.inventory_coverage` (Y-115, extend-db's steward-holdings
+    gate) does read them as a flat union, because it asks whether the catalog
+    claims the column in an edition AT ALL, not whether `resolve_at` can fill
+    the mapping. Move `_expand_state_windows`' semantics and that reader needs
+    looking at too.
+
     Two streaming scans, filtered against the inventory's own pairs, so the
     working set stays the inventory's and not the catalog's."""
     states: dict[_PairIds, list[tuple[str, str, str | None]]] = {}

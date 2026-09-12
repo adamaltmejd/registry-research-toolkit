@@ -106,17 +106,24 @@ import json
 import shutil
 import sqlite3
 from dataclasses import dataclass, fields
+from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
 from reg_meta.db import DB_FILENAME
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta.fqid import FqidError, FqidKind, period_token_to_bounds, validate_slug
 
+# The steward's §12 holdings statement, for the flavored validation's
+# window-coverage gate (Y-115). Aliased: `load_inventory` in this module is the
+# extend-db JSON contract's own loader, a different file in a different format.
+from reg_meta.inventory import load_inventory as load_delivery_inventory
+
 from .id import mint
 
 if TYPE_CHECKING:
     from collections.abc import Callable
-    from pathlib import Path
+
+    from reg_meta.inventory import DeliveryInventory
 
 # Open-range sentinel for an inserted state whose inventory gives no validity
 # window — mirrors `variable_grafts` and the DDL `valid_to` default.
@@ -894,6 +901,39 @@ def resolve_steward_slug_dir(
             ),
         )
     return resolved
+
+
+def resolve_delivery_inventory(
+    inventory_path: Path | None, steward: str
+) -> DeliveryInventory | None:
+    """Load the steward's §12 delivery inventory for the flavored validation's
+    window-coverage gate (Y-115), or ``None`` when there is none to read.
+
+    An explicit ``inventory_path`` is loaded (and structurally validated) as
+    given, so a typo or a malformed file is `load_inventory`'s own EXIT_CONFIG
+    rather than a silently skipped gate. Otherwise the committed
+    ``reg_webapp/stewards/<steward>/inventory.toml`` of a repo checkout — absent
+    (a wheel install, a steward with no committed inventory yet), the gate
+    self-skips, exactly as it does for a global build.
+
+    Called by the CLI BEFORE the overlay runs, so a malformed inventory fails in a
+    second instead of after a multi-GB copy.
+    """
+    if inventory_path is None:
+        # Repo root: this module sits at <root>/reg_meta_build/src/reg_meta_build/.
+        # The inventory is a `reg_webapp` deploy artifact, not a build input, so
+        # it is not beside the curation TOMLs `repo_scb_errata_path` reads.
+        candidate = (
+            Path(__file__).resolve().parents[3]
+            / "reg_webapp"
+            / "stewards"
+            / steward
+            / "inventory.toml"
+        )
+        if not candidate.is_file():
+            return None
+        inventory_path = candidate
+    return load_delivery_inventory(inventory_path.expanduser().resolve())
 
 
 def extend_db(

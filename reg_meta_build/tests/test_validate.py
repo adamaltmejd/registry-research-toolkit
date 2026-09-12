@@ -2488,3 +2488,195 @@ def test_variable_alias_window_section_present_in_report(fixture_db: Path):
     report = validate_built_db(fixture_db).format_report()
     assert "[alias windows]" in report
     assert "every window has valid_from <= valid_to" in report
+
+
+class TestInventoryWindowCoverage:
+    """Y-115 `_check_inventory_window_coverage` — the steward's §12 holdings
+    statement against the windows the flavor actually carries.
+
+    A tiny flavored DB (scb/lisa, one variant) plus a hand-written inventory: the
+    gate must fail exactly on the columns the steward holds in an edition with no
+    covering `variable_state` / `variable_alias_window`, and say what to put in
+    `scb_errata.toml`."""
+
+    @staticmethod
+    def _db() -> sqlite3.Connection:
+        """`kon` delivered 2018-2019, `dispinkke` delivered 1998-2009. So 2019 is a
+        DOCUMENTED edition of the variant that `DispInkKE` is missing from, and
+        2020 is an edition the variant has no register version for at all."""
+        from _slugged_db import add_state, add_variable, build_slugged_db
+
+        conn = build_slugged_db(classification=None)
+        conn.execute("UPDATE variable_state SET valid_to = '2019-12-31'")
+        add_variable(conn, register_id=1, var_id=45, name="DispInkKE", slug="dispinkke")
+        add_state(
+            conn,
+            register_id=1,
+            variable_slug="dispinkke",
+            register_variant_id=10,
+            valid_from="1998-01-01",
+            valid_to="2009-12-31",
+            delivery_column_name="DispInkKE",
+        )
+        conn.commit()
+        return conn
+
+    @staticmethod
+    def _table(edition: object, *columns: tuple[str, str, str]) -> str:
+        """One `[[table]]` stanza: `(physical column, variable slug,
+        representation)` per column."""
+        lines = ["[[table]]", f"id = 'Individ_{edition}'", f"edition = {edition}"]
+        for name, variable, representation in columns:
+            lines += [
+                "[[table.column]]",
+                f"name = '{name}'",
+                "[[table.column.mapping]]",
+                "register_variant = 'scb/lisa/individer-15plus'",
+                f"variable = 'scb/lisa/{variable}'",
+                f"representation = '{representation}'",
+            ]
+        return "\n".join(lines)
+
+    def _check(
+        self, conn: sqlite3.Connection, tmp_path: Path, *tables: str
+    ) -> validate_mod.ValidationResult:
+        from reg_meta.inventory import load_inventory
+
+        path = tmp_path / "inventory.toml"
+        path.write_text(
+            "version = 1\nsteward = 'swecov'\n\n" + "\n\n".join(tables) + "\n",
+            encoding="utf-8",
+        )
+        return self._run(conn, load_inventory(path))
+
+    @staticmethod
+    def _run(conn: sqlite3.Connection, inventory) -> validate_mod.ValidationResult:
+        result = validate_mod.ValidationResult()
+        validate_mod._check_inventory_window_coverage(
+            conn, result, {"variable_state", "variable_alias_window"}, inventory
+        )
+        return result
+
+    def test_uncovered_column_fails_and_covered_one_passes(self, tmp_path: Path):
+        """The 2019 table holds both columns; only `DispInkKE` (delivered
+        1998-2009) has no window over it, and only it is reported — grouped by
+        (register, variant, column), with the held editions and the coordinate's
+        known windows, in the `[[delivered]]` grammar so the line can be pasted."""
+        result = self._check(
+            self._db(),
+            tmp_path,
+            self._table(
+                2019, ("Kon", "kon", "Kon"), ("DispInkKE", "dispinkke", "DispInkKE")
+            ),
+        )
+        assert len(result.failures) == 1, result.failures
+        (failure,) = result.failures
+        assert failure.startswith("scb/lisa/individer-15plus DispInkKE: held 2019, ")
+        assert "catalog windows 1998..2009" in failure
+        assert '[[delivered]] register = "scb/lisa"' in failure
+        assert 'variant = "individer-15plus"' in failure
+        assert 'column = "DispInkKE"' in failure
+        assert 'versions = ["2019"]' in failure
+        # The documented-edition arm: 2019 IS a register version of the variant
+        # (`kon` is delivered over it), so only the column row is missing.
+        assert "[[version]]" not in failure
+
+    def test_alias_window_coverage_counts(self, tmp_path: Path):
+        """A `variable_alias_window` row is a delivery of its column too: the gate
+        reads it and `variable_state` as one union, so a column carried only by a
+        window over the edition is covered."""
+        conn = self._db()
+        conn.execute(
+            "INSERT INTO variable_alias_window (variable_id, register_variant_id, "
+            "delivery_column_name, valid_from, valid_to) SELECT variable_id, 10, "
+            "'DispInkKE', '2019-01-01', '2019-12-31' FROM variable "
+            "WHERE slug = 'dispinkke'"
+        )
+        conn.commit()
+        result = self._check(
+            conn, tmp_path, self._table(2019, ("DispInkKE", "dispinkke", "DispInkKE"))
+        )
+        assert result.passed, result.failures
+        assert "all 1 held column × edition pair(s)" in result.format_report()
+
+    def test_column_match_is_case_folded(self, tmp_path: Path):
+        """The inventory spells a column as the steward's holdings do, which is not
+        always the catalog's spelling: the match folds with `str.lower()` (the
+        webapp's rule), so `DISPINKKE` finds the catalog's `DispInkKE`."""
+        conn = self._db()
+        conn.execute(
+            "UPDATE variable_state SET valid_to = '2019-12-31' "
+            "WHERE delivery_column_name = 'DispInkKE'"
+        )
+        conn.commit()
+        result = self._check(
+            conn, tmp_path, self._table(2019, ("DISPINKKE", "dispinkke", "DISPINKKE"))
+        )
+        assert result.passed, result.failures
+
+    def test_edition_with_no_register_version_asks_for_a_version_entry(
+        self, tmp_path: Path
+    ):
+        """Nothing on the variant covers 2020, so SCB documents no register version
+        for it: the repair needs a `[[version]]` before the `[[delivered]]`."""
+        result = self._check(
+            self._db(), tmp_path, self._table(2020, ("Kon", "kon", "Kon"))
+        )
+        (failure,) = result.failures
+        assert (
+            "no documented register version over 2020 (a [[version]] each)" in failure
+        )
+        assert 'versions = ["2020"]' in failure
+
+    def test_held_editions_merge_into_ranges_in_one_group(self, tmp_path: Path):
+        """Three annual tables holding one column are ONE curation decision: one
+        group, the held editions merged into a range, and every edition named
+        separately in `versions` (an errata entry names SCB versions, not spans)."""
+        result = self._check(
+            self._db(),
+            tmp_path,
+            *(
+                self._table(year, ("DispInkKE", "dispinkke", "DispInkKE"))
+                for year in (2010, 2011, 2012)
+            ),
+        )
+        (failure,) = result.failures
+        assert "held 2010..2012" in failure
+        assert 'versions = ["2010", "2011", "2012"]' in failure
+        assert "3 held column × edition pair(s) in 1 group(s)" in result.format_report()
+
+    def test_a_column_one_of_whose_mappings_covers_it_passes(self, tmp_path: Path):
+        """Coverage is judged per PHYSICAL column: a column serving two variables
+        is orderable as long as one of them delivers it over the edition."""
+        two_mappings = self._table(2019, ("Kon", "dispinkke", "DispInkKE")) + (
+            "\n[[table.column.mapping]]\n"
+            "register_variant = 'scb/lisa/individer-15plus'\n"
+            "variable = 'scb/lisa/kon'\nrepresentation = 'Kon'"
+        )
+        assert self._check(self._db(), tmp_path, two_mappings).passed
+
+    def test_unresolved_coordinate_is_counted_not_failed(self, tmp_path: Path):
+        """A coordinate that names nothing is `reg_meta.inventory_check`'s finding
+        (slug churn, repaired by regenerating the inventory) — this gate reports
+        the skip and stays green rather than going red on ordinary churn."""
+        result = self._check(
+            self._db(), tmp_path, self._table(2019, ("Gone", "gone", "Gone"))
+        )
+        assert result.passed, result.failures
+        assert "1 mapping(s) not judged" in result.format_report()
+
+    def test_gate_skips_without_an_inventory(self):
+        """No holdings statement (synthetic CI, the global build, an extend-db run
+        outside a checkout) — nothing to contradict."""
+        result = self._run(self._db(), None)
+        assert result.passed
+        assert "steward-holdings gate skipped" in result.format_report()
+
+
+def test_inventory_coverage_section_present_in_report(fixture_db: Path):
+    """Y-115: the section must appear (as the skip, with no inventory given) so
+    the gate can't be silently de-registered."""
+    assert (
+        "[inventory: steward holdings have a catalog window]"
+        in validate_built_db(fixture_db).format_report()
+    )

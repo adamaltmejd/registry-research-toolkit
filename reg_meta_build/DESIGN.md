@@ -2875,7 +2875,11 @@ input, never mutated), then runs an insert-only overlay on the copy:
    tightened to require every non-SCB provider's ids in `[2^62, 2^63)`; and (#559) the
    entity-key curation gate runs against the steward slug dir, scoped to the steward
    providers it covers. The CLI resolves the steward slug dir once and passes the same
-   value to both `extend_db` and the hook.
+   value to both `extend_db` and the hook. Y-115 adds the steward-holdings gate: the CLI
+   also loads the steward's committed §12 delivery inventory (`--delivery-inventory`,
+   default `reg_webapp/stewards/<steward>/inventory.toml`) and threads it in, so a
+   flavor that contradicts the steward's own holdings — a column HELD in a table edition
+   with no covering state or alias window — never publishes.
 6. **Publish** into `<db_dir>/reg_meta.db` via the same `publish_db` as `build-db` (back
    the live generation up to `.prev`, then one atomic replace). No VACUUM — the overlay
    is insert-only; nothing is freed.
@@ -2979,7 +2983,12 @@ consumes and the per-provider slug TOMLs.
   resolved steward `slug_dir` into this call so `_check_entity_key_vars_curated`
   enforces the steward registers that dir curates (scoped by register id via
   `_entity_key_curation_basis`). Independent of `corpus`; a flavor build never sets
-  `corpus=True`.
+  `corpus=True`. As of Y-115 it also takes the steward's loaded `delivery_inventory` and
+  runs `_check_inventory_window_coverage` over it (`inventory_coverage.py` — the miss
+  rule, shared with the `build_catalog.py errata` worklist so gate and generator cannot
+  disagree). A miss is reported in `scb_errata.toml`'s `[[version]]` / `[[delivered]]`
+  grammar, because that is where the repair goes: SCB omitted the row from its own
+  export. `None` self-skips the gate.
 - **`_populate_fts(include_value_code=False)`** — skips the `value_code_fts` INSERT. The
   full build keeps `include_value_code=True` (the default), so its call is unchanged.
 

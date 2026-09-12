@@ -53,7 +53,11 @@ from .concept_groups import (
 from .db import build_db
 from .doc_coverage import compute_doc_coverage, render_doc_coverage_toml
 from .doc_db import build_doc_db, repo_docs_dir
-from .extend_db import extend_db, resolve_steward_slug_dir
+from .extend_db import (
+    extend_db,
+    resolve_delivery_inventory,
+    resolve_steward_slug_dir,
+)
 from .fqid_slugs import (
     CLASSIFICATIONS_FILE,
     SNAPSHOT_FILENAME,
@@ -90,6 +94,8 @@ from .variable_same_as import (
 
 if TYPE_CHECKING:
     from collections.abc import Callable
+
+    from reg_meta.inventory import DeliveryInventory
 
 # ---------------------------------------------------------------------------
 # Parser
@@ -277,12 +283,23 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Skip steward slug population (the overlaid rows keep NULL slugs).",
     )
     extend_db_p.add_argument(
+        "--delivery-inventory",
+        default=None,
+        help=(
+            "Path to the steward's §12 delivery inventory TOML, the holdings the "
+            "flavored validation checks the built windows against (default: "
+            "reg_webapp/stewards/<steward>/inventory.toml from a repo checkout; "
+            "absent, that gate self-skips)."
+        ),
+    )
+    extend_db_p.add_argument(
         "--no-validate",
         action="store_true",
         help=(
             "Skip the post-overlay flavored validation. By default extend-db runs "
             "the full structural suite plus the tightened non-SCB minted-id band "
-            "check and fails with EXIT_CONFIG on any violation."
+            "check and the steward-holdings window-coverage gate, and fails with "
+            "EXIT_CONFIG on any violation."
         ),
     )
 
@@ -923,7 +940,9 @@ def _cmd_build_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     ), 0
 
 
-def _flavored_validate_hook(slug_dir: Path | None) -> Callable[[Path], None]:
+def _flavored_validate_hook(
+    slug_dir: Path | None, delivery_inventory: DeliveryInventory | None
+) -> Callable[[Path], None]:
     """Return an extend_db pre_rename_hook running the FLAVORED validator against
     the staging DB. Same fail-on-failures shape as ``_build_validate_hook``, but
     ``flavored=True`` (the tightened non-SCB minted-id band check) and
@@ -933,10 +952,16 @@ def _flavored_validate_hook(slug_dir: Path | None) -> Callable[[Path], None]:
     Threads the resolved STEWARD ``slug_dir`` (the dir the overlay populated) into
     the validator so the entity-key curation gate (#559) runs on the overlay,
     scoped to the steward providers that dir covers. ``None`` (``--skip-slugs``)
-    self-skips the gate."""
+    self-skips the gate. ``delivery_inventory`` (Y-115) is the steward's loaded
+    holdings statement for the window-coverage gate; ``None`` self-skips it."""
 
     def hook(staging_db: Path) -> None:
-        validation = validate_built_db(staging_db, flavored=True, slug_dir=slug_dir)
+        validation = validate_built_db(
+            staging_db,
+            flavored=True,
+            slug_dir=slug_dir,
+            delivery_inventory=delivery_inventory,
+        )
         sys.stderr.write(validation.format_report() + "\n")
         sys.stderr.flush()
         if validation.failures:
@@ -972,7 +997,15 @@ def _cmd_extend_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
         args.steward,
         skip_slugs=args.skip_slugs,
     )
-    pre_rename_hook = None if args.no_validate else _flavored_validate_hook(slug_dir)
+    pre_rename_hook = None
+    if not args.no_validate:
+        # Loaded HERE, before the overlay: a malformed holdings statement must fail
+        # in a second, not after the multi-GB copy the hook runs behind.
+        delivery_inventory = resolve_delivery_inventory(
+            Path(args.delivery_inventory) if args.delivery_inventory else None,
+            args.steward,
+        )
+        pre_rename_hook = _flavored_validate_hook(slug_dir, delivery_inventory)
     result = extend_db(
         base_db=Path(args.base_db),
         inventory_path=Path(args.inventory),
@@ -988,6 +1021,7 @@ def _cmd_extend_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
         args_payload={
             "base_db": args.base_db,
             "inventory": args.inventory,
+            "delivery_inventory": args.delivery_inventory,
             "steward": args.steward,
             "skip_slugs": args.skip_slugs,
             "validate": not args.no_validate,

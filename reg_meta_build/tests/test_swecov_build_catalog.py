@@ -583,3 +583,98 @@ def test_an_unknown_school_year_anchor_is_refused(
             "T2012",
             ["T_kolumn"],
         )
+
+
+# --- cmd_errata: the scb_errata.toml candidate worklist -----------------------
+
+_VARIABLE_OF = {
+    "Covid-19 antikroppar": "covid-19-antikroppar",
+    "Covid_19_antikroppar": "covid-19-antikroppar",
+    "T_kolumn": "t-kolumn",
+}
+
+
+def _held(steward_dir: Path, holdings: dict[int, tuple[str, ...]]) -> None:
+    """A committed-inventory stand-in: one `[[table]]` per edition holding those
+    columns of `Beställda prover`, each mapped to its own representation — the
+    shape `cmd_inventory` emits."""
+    lines = ["version = 1", 'steward = "swecov"']
+    for edition, columns in holdings.items():
+        lines += ["", "[[table]]", f'id = "T_{edition}"', f"edition = {edition}"]
+        for column in columns:
+            lines += [
+                "",
+                "[[table.column]]",
+                f'name = "{column}"',
+                "",
+                "[[table.column.mapping]]",
+                'register_variant = "inera/bestallda-prover/_default"',
+                f'variable = "inera/bestallda-prover/{_VARIABLE_OF[column]}"',
+                f'representation = "{column}"',
+            ]
+    (steward_dir / "inventory.toml").write_text(
+        "\n".join(lines) + "\n", encoding="utf-8"
+    )
+
+
+def _run_errata(tmp_path: Path, db: Path, holdings: dict[int, tuple[str, ...]]) -> dict:
+    """Write the holdings, run the subcommand, parse the worklist it leaves under
+    `derived/`."""
+    steward_dir = tmp_path / "steward"
+    steward_dir.mkdir(exist_ok=True)
+    _held(steward_dir, holdings)
+    csv_path = tmp_path / "SWECOV_variables_2025-12-11.csv"
+    build_catalog.cmd_errata(argparse.Namespace(csv=csv_path, db=db, out=steward_dir))
+    return tomllib.loads(
+        (csv_path.parent / "derived" / "errata_worklist.toml").read_text(
+            encoding="utf-8"
+        )
+    )
+
+
+def test_errata_worklist_is_empty_when_every_holding_has_a_window(
+    tmp_path: Path, flavored_db: Path
+) -> None:
+    """The fixture's states are open-ended, so a holding of any edition is
+    covered — the worklist carries no candidate entries."""
+    assert (
+        _run_errata(tmp_path, flavored_db, {2021: ("Covid-19 antikroppar", "T_kolumn")})
+        == {}
+    )
+
+
+def test_errata_worklist_splits_version_missing_from_column_missing(
+    tmp_path: Path, flavored_db: Path
+) -> None:
+    """With `T_kolumn` narrowed to 2019 and the variant documented only through
+    2020 (the Covid state), a 2020 holding of `T_kolumn` is column-missing and a
+    2021 holding of it is version-missing too — so the worklist carries one
+    `[[version]]` (2021) and ONE `[[delivered]]` naming both editions (two
+    entries for one column would be the duplicate `scb_errata` refuses)."""
+    db = tmp_path / "narrowed.db"
+    db.write_bytes(flavored_db.read_bytes())
+    conn = sqlite3.connect(db)
+    conn.execute(
+        "UPDATE variable_state SET valid_from = '2019-01-01', valid_to = '2019-12-31' "
+        "WHERE delivery_column_name = 'T_kolumn'"
+    )
+    conn.execute(
+        "UPDATE variable_state SET valid_from = '2019-01-01', valid_to = '2020-12-31' "
+        "WHERE delivery_column_name = 'Covid-19 antikroppar'"
+    )
+    conn.commit()
+    conn.close()
+
+    worklist = _run_errata(tmp_path, db, {2020: ("T_kolumn",), 2021: ("T_kolumn",)})
+
+    assert worklist["version"] == [
+        {"register": "inera/bestallda-prover", "variant": "_default", "name": "2021"}
+    ]
+    assert worklist["delivered"] == [
+        {
+            "register": "inera/bestallda-prover",
+            "variant": "_default",
+            "column": "T_kolumn",
+            "versions": ["2020", "2021"],
+        }
+    ]

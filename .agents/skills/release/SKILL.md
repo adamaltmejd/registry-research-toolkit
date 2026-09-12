@@ -470,6 +470,31 @@ light sanity check, not the authoritative gate: `deploy-swecov`'s
 committed steward catalog references any content the flavored DB lacks, so a truncated
 or stale inventory surfaces there rather than shipping silently.
 
+`extend-db` also gates the build on the steward's **committed delivery inventory**
+(`reg_webapp/stewards/<steward>/inventory.toml`, resolved from the checkout by default;
+`--delivery-inventory` overrides it): every column the steward HOLDS in a table edition
+must have a covering `variable_state` or `variable_alias_window` on its coordinate, or
+the flavored validation fails with `EXIT_CONFIG` / `validation_failed` and nothing is
+published (Y-115). The report groups each miss by (register, variant, column) with the
+held editions and the coordinate's known windows, written in the `[[version]]` /
+`[[delivered]]` grammar of `reg_meta_build/scb_errata.toml`.
+
+**A red gate is answered by curating errata, never by skipping validation.** Do not pass
+`--no-validate`, and run 8c from the repo checkout so the default resolution finds the
+committed inventory (the report's `[OK] no delivery inventory given` line means the gate
+did NOT run): the failure says this flavor contradicts the steward's own holdings
+statement, so shipping it puts "period outside validity" in front of researchers for
+data the steward has. Write the full candidate worklist with
+`python build_catalog.py --db "$db" errata` (from `reg_meta_build/input_data/swecov/`;
+it needs only the flavored DB and the committed inventory — not the untracked holdings
+CSV), curate the entries that have evidence into `reg_meta_build/scb_errata.toml`, and
+note the rebuild path: errata is an **SCB adapter** input, so a corrected window reaches
+the flavor only through a fresh **8a** main DB and then a fresh 8c overlay. A miss whose
+column SCB documents nowhere is a `variable_grafts.toml` graft or a `canonical_attach`
+entry instead, not errata. If the curation is larger than this release can carry, land
+it as its own change and release from that — do not publish a flavored DB the gate
+refused.
+
 **Maintainer-local inputs**: `reg_meta_build/input_data/swecov/` (holding
 `flavor_inventory.json`) is untracked/maintainer-local. If a **fresh** SWECOV build is
 required (per the conditions above) but these inputs are absent — a non-maintainer or CI
