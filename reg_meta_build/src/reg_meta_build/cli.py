@@ -941,7 +941,7 @@ def _cmd_build_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
 
 
 def _flavored_validate_hook(
-    slug_dir: Path | None, delivery_inventory: DeliveryInventory | None
+    slug_dir: Path | None, delivery_inventory: DeliveryInventory | None = None
 ) -> Callable[[Path], None]:
     """Return an extend_db pre_rename_hook running the FLAVORED validator against
     the staging DB. Same fail-on-failures shape as ``_build_validate_hook``, but
@@ -953,7 +953,8 @@ def _flavored_validate_hook(
     the validator so the entity-key curation gate (#559) runs on the overlay,
     scoped to the steward providers that dir covers. ``None`` (``--skip-slugs``)
     self-skips the gate. ``delivery_inventory`` (Y-115) is the steward's loaded
-    holdings statement for the window-coverage gate; ``None`` self-skips it."""
+    holdings statement for the window-coverage gate; ``None`` — the default, for a
+    caller probing one gate in isolation — self-skips it."""
 
     def hook(staging_db: Path) -> None:
         validation = validate_built_db(
