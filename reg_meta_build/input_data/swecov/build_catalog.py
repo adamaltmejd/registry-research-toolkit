@@ -3345,12 +3345,11 @@ def cmd_errata(args: argparse.Namespace) -> None:
         f" {report.missed_pairs} with no catalog window"
         f" ({report.unresolved} mapping(s) not judged — coordinate unresolved)"
     )
-    errata = [miss for miss in report.misses if miss.errata]
     print(
-        f"  version-missing: {len(version_candidates(errata))} "
+        f"  version-missing: {len(version_candidates(report.misses))} "
         f"[[version]] candidate(s)"
-        f"  column-missing: {len(errata)} [[delivered]] candidate(s)"
-        f"  curated-window: {len(report.misses) - len(errata)} non-scb miss(es)"
+        f"  column-missing: {len(report.errata_misses)} [[delivered]] candidate(s)"
+        f"  curated-window: {len(report.curated_misses)} non-scb miss(es)"
     )
 
 

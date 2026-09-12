@@ -2535,7 +2535,7 @@ def _check_inventory_window_coverage(
         "curated-window misses after them. Never answer this gate by skipping "
         "validation: the flavor would ship contradicting the steward's holdings."
     )
-    curated = [miss for miss in report.misses if not miss.errata]
+    curated = report.curated_misses
     if curated:
         result.info(
             f"{len(curated):,} group(s) are NOT on the `scb` provider and are NOT "

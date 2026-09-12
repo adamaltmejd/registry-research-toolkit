@@ -593,11 +593,12 @@ _VARIABLE_OF = {
     "T_kolumn": "t-kolumn",
 }
 
+# The fixture's own variant coordinate — on `inera`, the steward's flavor provider.
+_INERA = "inera/bestallda-prover/_default"
+
 
 def _held(
-    steward_dir: Path,
-    holdings: dict[int, tuple[str, ...]],
-    variant: str = "inera/bestallda-prover/_default",
+    steward_dir: Path, holdings: dict[int, tuple[str, ...]], variant: str
 ) -> None:
     """A committed-inventory stand-in: one `[[table]]` per edition holding those
     columns of `Beställda prover`, each mapped to its own representation — the
@@ -627,10 +628,11 @@ def _errata_text(
     tmp_path: Path,
     db: Path,
     holdings: dict[int, tuple[str, ...]],
-    variant: str = "inera/bestallda-prover/_default",
+    variant: str = _INERA,
 ) -> str:
     """Write the holdings, run the subcommand, read back the worklist it leaves
-    under `derived/`."""
+    under `derived/`. `tomllib.loads` of the result is the maintainer's own read:
+    comment-only sections carry no entries, so an all-commented worklist is `{}`."""
     steward_dir = tmp_path / "steward"
     steward_dir.mkdir(exist_ok=True)
     _held(steward_dir, holdings, variant)
@@ -641,26 +643,15 @@ def _errata_text(
     )
 
 
-def _run_errata(
-    tmp_path: Path,
-    db: Path,
-    holdings: dict[int, tuple[str, ...]],
-    variant: str = "inera/bestallda-prover/_default",
-) -> dict:
-    """The worklist as the maintainer's TOML parser sees it — comment-only
-    sections carry no entries, so an all-commented worklist parses to `{}`."""
-    return tomllib.loads(_errata_text(tmp_path, db, holdings, variant))
-
-
 def test_errata_worklist_is_empty_when_every_holding_has_a_window(
     tmp_path: Path, flavored_db: Path
 ) -> None:
     """The fixture's states are open-ended, so a holding of any edition is
     covered — the worklist carries no candidate entries."""
-    assert (
-        _run_errata(tmp_path, flavored_db, {2021: ("Covid-19 antikroppar", "T_kolumn")})
-        == {}
+    worklist = _errata_text(
+        tmp_path, flavored_db, {2021: ("Covid-19 antikroppar", "T_kolumn")}
     )
+    assert tomllib.loads(worklist) == {}
 
 
 def test_errata_worklist_splits_version_missing_from_column_missing(
@@ -693,11 +684,13 @@ def test_errata_worklist_splits_version_missing_from_column_missing(
     conn.commit()
     conn.close()
 
-    worklist = _run_errata(
-        tmp_path,
-        db,
-        {2020: ("T_kolumn",), 2021: ("T_kolumn",)},
-        variant="scb/bestallda-prover/_default",
+    worklist = tomllib.loads(
+        _errata_text(
+            tmp_path,
+            db,
+            {2020: ("T_kolumn",), 2021: ("T_kolumn",)},
+            variant="scb/bestallda-prover/_default",
+        )
     )
 
     # Complete entries, not fragments: every key `load_scb_errata` requires is
