@@ -296980,7 +296980,7 @@ representation = "SUN2020Niva_old"
 
 [[table]]
 id = "Äp3_2010"
-edition = 2010
+edition = "VT2010"
 
 [[table.column]]
 name = "Ar"
@@ -297235,7 +297235,7 @@ representation = "Termin"
 
 [[table]]
 id = "Äp3_2011"
-edition = 2011
+edition = "VT2011"
 
 [[table.column]]
 name = "Ar"
@@ -297490,7 +297490,7 @@ representation = "Termin"
 
 [[table]]
 id = "Äp3_2012"
-edition = 2012
+edition = "VT2012"
 
 [[table.column]]
 name = "Ar"
@@ -297745,7 +297745,7 @@ representation = "Termin"
 
 [[table]]
 id = "Äp3_2013"
-edition = 2013
+edition = "VT2013"
 
 [[table.column]]
 name = "Ar"
@@ -298013,7 +298013,7 @@ representation = "Termin"
 
 [[table]]
 id = "Äp3_2014"
-edition = 2014
+edition = "VT2014"
 
 [[table.column]]
 name = "Ar"
@@ -298294,7 +298294,7 @@ representation = "Termin"
 
 [[table]]
 id = "Äp3_2015"
-edition = 2015
+edition = "VT2015"
 
 [[table.column]]
 name = "Ar"
@@ -298567,7 +298567,7 @@ representation = "Termin"
 
 [[table]]
 id = "Äp3_2016"
-edition = 2016
+edition = "VT2016"
 
 [[table.column]]
 name = "Ar"
@@ -298846,7 +298846,7 @@ representation = "Termin"
 
 [[table]]
 id = "Äp3_2017"
-edition = 2017
+edition = "VT2017"
 
 [[table.column]]
 name = "Ar"
@@ -299125,7 +299125,7 @@ representation = "Termin"
 
 [[table]]
 id = "Äp3_2018"
-edition = 2018
+edition = "VT2018"
 
 [[table.column]]
 name = "Ar"
@@ -299404,7 +299404,7 @@ representation = "Termin"
 
 [[table]]
 id = "Äp3_2019"
-edition = 2019
+edition = "VT2019"
 
 [[table.column]]
 name = "Ar"
@@ -299683,7 +299683,7 @@ representation = "Termin"
 
 [[table]]
 id = "Äp3_2022"
-edition = 2022
+edition = "VT2022"
 
 [[table.column]]
 name = "Ar"
@@ -299946,7 +299946,7 @@ representation = "Termin"
 
 [[table]]
 id = "Äp3_2023"
-edition = 2023
+edition = "VT2023"
 
 [[table.column]]
 name = "Ar"
@@ -300209,7 +300209,7 @@ representation = "Termin"
 
 [[table]]
 id = "Äp3_2024"
-edition = 2024
+edition = "VT2024"
 
 [[table.column]]
 name = "Ar"
@@ -300472,7 +300472,7 @@ representation = "Termin"
 
 [[table]]
 id = "Äp6_2012"
-edition = 2012
+edition = "VT2012"
 
 [[table.column]]
 name = "Ar"
@@ -300637,7 +300637,7 @@ representation = "Termin"
 
 [[table]]
 id = "Äp6_2013"
-edition = 2013
+edition = "VT2013"
 
 [[table.column]]
 name = "AK6_SVA"
@@ -300850,7 +300850,7 @@ representation = "Termin"
 
 [[table]]
 id = "Äp6_2014"
-edition = 2014
+edition = "VT2014"
 
 [[table.column]]
 name = "AK6_SVA"
@@ -301071,7 +301071,7 @@ representation = "Termin"
 
 [[table]]
 id = "Äp6_2015"
-edition = 2015
+edition = "VT2015"
 
 [[table.column]]
 name = "AK6_SVA"
@@ -301284,7 +301284,7 @@ representation = "Termin"
 
 [[table]]
 id = "Äp6_2016"
-edition = 2016
+edition = "VT2016"
 
 [[table.column]]
 name = "AK6_SVA"
@@ -301497,7 +301497,7 @@ representation = "Termin"
 
 [[table]]
 id = "Äp6_2017"
-edition = 2017
+edition = "VT2017"
 
 [[table.column]]
 name = "AK6_SVA"
@@ -301710,7 +301710,7 @@ representation = "Termin"
 
 [[table]]
 id = "Äp6_2018"
-edition = 2018
+edition = "VT2018"
 
 [[table.column]]
 name = "AK6_SVA"
@@ -301923,7 +301923,7 @@ representation = "Termin"
 
 [[table]]
 id = "Äp6_2019"
-edition = 2019
+edition = "VT2019"
 
 [[table.column]]
 name = "AK6_SVA"
@@ -302136,7 +302136,7 @@ representation = "Termin"
 
 [[table]]
 id = "Äp6_2022"
-edition = 2022
+edition = "VT2022"
 
 [[table.column]]
 name = "AK6_SVA"
@@ -302349,7 +302349,7 @@ representation = "Termin"
 
 [[table]]
 id = "Äp6_2023"
-edition = 2023
+edition = "VT2023"
 
 [[table.column]]
 name = "AK6_SVA"
@@ -302562,7 +302562,7 @@ representation = "Termin"
 
 [[table]]
 id = "Äp6_2024"
-edition = 2024
+edition = "VT2024"
 
 [[table.column]]
 name = "AK6_SVA"
@@ -302755,7 +302755,7 @@ representation = "Termin"
 
 [[table]]
 id = "Äp9_2003"
-edition = 2003
+edition = "VT2003"
 
 [[table.column]]
 name = "EN_A_BETYG"
@@ -302879,7 +302879,7 @@ name = "SkolKommun"
 
 [[table]]
 id = "Äp9_2004"
-edition = 2004
+edition = "VT2004"
 
 [[table.column]]
 name = "EN_A_BETYG"
@@ -303011,7 +303011,7 @@ name = "SkolKommun"
 
 [[table]]
 id = "Äp9_2005"
-edition = 2005
+edition = "VT2005"
 
 [[table.column]]
 name = "EN_A_BETYG"
@@ -303159,7 +303159,7 @@ name = "SkolKommun"
 
 [[table]]
 id = "Äp9_2006"
-edition = 2006
+edition = "VT2006"
 
 [[table.column]]
 name = "EN_A_BETYG"
@@ -303307,7 +303307,7 @@ name = "SkolKommun"
 
 [[table]]
 id = "Äp9_2007"
-edition = 2007
+edition = "VT2007"
 
 [[table.column]]
 name = "EN_A_BETYG"
@@ -303455,7 +303455,7 @@ name = "SkolKommun"
 
 [[table]]
 id = "Äp9_2008"
-edition = 2008
+edition = "VT2008"
 
 [[table.column]]
 name = "EN_A_BETYG"
@@ -303603,7 +303603,7 @@ name = "SkolKommun"
 
 [[table]]
 id = "Äp9_2009"
-edition = 2009
+edition = "VT2009"
 
 [[table.column]]
 name = "BI_PROVBET"
@@ -303763,7 +303763,7 @@ name = "SkolKommun"
 
 [[table]]
 id = "Äp9_2010"
-edition = 2010
+edition = "VT2010"
 
 [[table.column]]
 name = "BI_PROVBET"
@@ -303923,7 +303923,7 @@ name = "SkolKommun"
 
 [[table]]
 id = "Äp9_2011"
-edition = 2011
+edition = "VT2011"
 
 [[table.column]]
 name = "BI_PROVBET"
@@ -304088,7 +304088,7 @@ name = "SkolKommun"
 
 [[table]]
 id = "Äp9_2012"
-edition = 2012
+edition = "VT2012"
 
 [[table.column]]
 name = "BI_PROVBET"
@@ -304253,7 +304253,7 @@ name = "SkolKommun"
 
 [[table]]
 id = "Äp9_2013"
-edition = 2013
+edition = "VT2013"
 
 [[table.column]]
 name = "BI_PROVBET"
@@ -304468,7 +304468,7 @@ name = "SkolKommun"
 
 [[table]]
 id = "Äp9_2014"
-edition = 2014
+edition = "VT2014"
 
 [[table.column]]
 name = "BI_PROVBET"
@@ -304691,7 +304691,7 @@ name = "SkolKommun"
 
 [[table]]
 id = "Äp9_2015"
-edition = 2015
+edition = "VT2015"
 
 [[table.column]]
 name = "Ar"
@@ -304919,7 +304919,7 @@ representation = "SV_PROVBET"
 
 [[table]]
 id = "Äp9_2016"
-edition = 2016
+edition = "VT2016"
 
 [[table.column]]
 name = "Ar"
@@ -305147,7 +305147,7 @@ representation = "SV_PROVBET"
 
 [[table]]
 id = "Äp9_2017"
-edition = 2017
+edition = "VT2017"
 
 [[table.column]]
 name = "Ar"
@@ -305375,7 +305375,7 @@ representation = "SV_PROVBET"
 
 [[table]]
 id = "Äp9_2018"
-edition = 2018
+edition = "VT2018"
 
 [[table.column]]
 name = "Ar"
@@ -305603,7 +305603,7 @@ representation = "SV_PROVBET"
 
 [[table]]
 id = "Äp9_2019"
-edition = 2019
+edition = "VT2019"
 
 [[table.column]]
 name = "Ar"
@@ -305831,7 +305831,7 @@ representation = "SV_PROVBET"
 
 [[table]]
 id = "Äp9_2022"
-edition = 2022
+edition = "VT2022"
 
 [[table.column]]
 name = "Ar"
@@ -306059,7 +306059,7 @@ representation = "SV_PROVBET"
 
 [[table]]
 id = "Äp9_2023"
-edition = 2023
+edition = "VT2023"
 
 [[table.column]]
 name = "Ar"
@@ -306287,7 +306287,7 @@ representation = "SV_PROVBET"
 
 [[table]]
 id = "Äp9_2024"
-edition = 2024
+edition = "VT2024"
 
 [[table.column]]
 name = "Ar"

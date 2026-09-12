@@ -4794,3 +4794,23 @@ column = "glopnr"
 [[unmap]]
 table = "GravReg_Pop_lev2"
 column = "P1105_LopNr_PersonNr_Barn"
+
+# ── school-year anchors (maintainer-curated 2026-09-12) ─────────────────────
+# The national-test registers deliver one SPRING TERM per year: SCB names
+# every register version of theirs `Vt <Y>` / `VT <Y>` (register_version
+# for grundskola-prov-ak3/-ak6/-ak9 in the built catalog), so the bare year
+# in `Äp3_<Y>`-style table names is VT<Y>, not a school year or a calendar
+# year. Other school-year registers (spring/autumn anchors) are curated once
+# Y-123 closes the fragmented windows their residual is measured against.
+
+[[school_year]]
+register = "scb/grundskola-prov-ak3"
+anchor = "vt"
+
+[[school_year]]
+register = "scb/grundskola-prov-ak6"
+anchor = "vt"
+
+[[school_year]]
+register = "scb/grundskola-prov-ak9"
+anchor = "vt"
