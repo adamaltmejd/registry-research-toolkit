@@ -18,6 +18,19 @@
 #       tokens. `edition` uses the shared period grammar: a year int, a token
 #       string ("2019-Q3", "HT2020"), an inline range { from = ..., to = ... },
 #       or a list of those for an interrupted series.
+#   [[school_year]] register, anchor
+#       Per-register school-year rule: SCB's school registers deliver school
+#       years, so a table of theirs named by ONE year holds the school year
+#       that year ANCHORS — `spring` (grades set in the spring: table year Y
+#       is <Y-1>-07-01..<Y>-06-30), `autumn` (an October snapshot: Y is
+#       <Y>-07-01..<Y+1>-06-30), or `vt` / `ht` for a single term (VT<Y> /
+#       HT<Y>). `register` is a 2-part coordinate (<provider>/<register>) and
+#       the rule applies to every table of that register whose edition comes
+#       from a bare year in its name; a per-table [[edition]] above still
+#       wins. Which school year a table year names differs per register, so
+#       the anchor is curated against SCB's register documentation, never
+#       inferred. A table whose registers' rules disagree, or a rule no
+#       emitted table's register matches, is refused as a stale entry.
 #   [[partition]] table, label
 #       §12 disjoint-partition label (a slug): names which sub-population
 #       shard of one edition this table carries (survey stratum, reporter

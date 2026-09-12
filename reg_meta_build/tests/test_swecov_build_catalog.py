@@ -21,7 +21,7 @@ from pathlib import Path
 
 import pytest
 from reg_meta.db import open_db
-from reg_meta.inventory import load_inventory as load_delivery_inventory
+from reg_meta.inventory import edition_bounds, load_inventory as load_delivery_inventory
 from reg_meta.inventory_check import check_inventory, unresolved_message
 from reg_meta_build.extend_db import load_inventory
 
@@ -373,6 +373,31 @@ def test_an_alias_only_spelling_resolves_beside_its_state_spelling(
     ]
 
 
+def _run_inventory(
+    tmp_path: Path, db: Path, overlay: str, table: str, columns: list[str]
+) -> Path:
+    """`cmd_inventory` over a synthetic one-table CSV; returns the steward dir.
+
+    The table lands under the `Ordered tests` holding, whose disposition entry
+    names no table selector — so the table NAME decides only its edition, while
+    its columns resolve against the flavored DB (`inera/bestallda-prover`)."""
+    steward_dir = tmp_path / "steward"
+    steward_dir.mkdir()
+    (steward_dir / "inventory_overlay.toml").write_text(overlay, encoding="utf-8")
+    csv_path = tmp_path / "SWECOV_variables_2025-12-11.csv"
+    csv_path.write_text(
+        "Category,Detail,Table\n"
+        + ",".join(("Inera/1177", "Ordered tests", table, *columns))
+        + "\n",
+        encoding="utf-8",
+    )
+
+    build_catalog.cmd_inventory(
+        argparse.Namespace(csv=csv_path, db=db, out=steward_dir)
+    )
+    return steward_dir
+
+
 def test_inventory_maps_every_spelling_of_a_co_delivered_column(
     tmp_path: Path, flavored_db: Path
 ) -> None:
@@ -383,21 +408,12 @@ def test_inventory_maps_every_spelling_of_a_co_delivered_column(
     columns = sorted(
         c["name"] for c in _synthetic_enriched()["Inera/1177/Ordered tests"]["columns"]
     )
-    steward_dir = tmp_path / "steward"
-    steward_dir.mkdir()
-    (steward_dir / "inventory_overlay.toml").write_text(
-        '[[edition]]\ntable = "T"\nedition = 2021\n', encoding="utf-8"
-    )
-    csv_path = tmp_path / "SWECOV_variables_2025-12-11.csv"
-    csv_path.write_text(
-        "Category,Detail,Table\n"
-        + ",".join(("Inera/1177", "Ordered tests", "T", *columns))
-        + "\n",
-        encoding="utf-8",
-    )
-
-    build_catalog.cmd_inventory(
-        argparse.Namespace(csv=csv_path, db=flavored_db, out=steward_dir)
+    steward_dir = _run_inventory(
+        tmp_path,
+        flavored_db,
+        '[[edition]]\ntable = "T"\nedition = 2021\n',
+        "T",
+        columns,
     )
 
     emitted = tomllib.loads(
@@ -431,3 +447,139 @@ def test_inventory_maps_every_spelling_of_a_co_delivered_column(
     finally:
         conn.close()
     assert not findings, unresolved_message(findings)
+
+
+# --- cmd_inventory: per-register school-year editions ------------------------
+
+
+def _emitted_editions(steward_dir: Path) -> dict[str, object]:
+    emitted = tomllib.loads(
+        (steward_dir / "inventory.toml").read_text(encoding="utf-8")
+    )
+    return {table["id"]: table["edition"] for table in emitted["table"]}
+
+
+def _stale_entries(tmp_path: Path) -> list[str]:
+    worklist = json.loads(
+        (tmp_path / "derived" / "inventory_worklist.json").read_text(encoding="utf-8")
+    )
+    return worklist["stale_overlay_entries"]
+
+
+@pytest.mark.parametrize(
+    ("anchor", "edition", "bounds"),
+    [
+        (
+            "spring",
+            {"from": "2011-07-01", "to": "2012-06-30"},
+            ("2011-07-01", "2012-06-30"),
+        ),
+        (
+            "autumn",
+            {"from": "2012-07-01", "to": "2013-06-30"},
+            ("2012-07-01", "2013-06-30"),
+        ),
+        ("vt", "VT2012", ("2012-01-01", "2012-06-30")),
+        ("ht", "HT2012", ("2012-07-01", "2012-12-31")),
+    ],
+)
+def test_a_school_year_rule_spells_a_table_year_as_the_school_year_it_holds(
+    tmp_path: Path,
+    flavored_db: Path,
+    capsys: pytest.CaptureFixture[str],
+    anchor: str,
+    edition: object,
+    bounds: tuple[str, str],
+) -> None:
+    """The register's anchor decides which school year the table year `2012`
+    names — and the emitted spelling expands, through the shared period
+    grammar every reader of the inventory uses, to exactly that window."""
+    steward_dir = _run_inventory(
+        tmp_path,
+        flavored_db,
+        f'[[school_year]]\nregister = "inera/bestallda-prover"\nanchor = "{anchor}"\n',
+        "T2012",
+        ["T_kolumn"],
+    )
+
+    assert _emitted_editions(steward_dir) == {"T2012": edition}
+    (loaded,) = load_delivery_inventory(steward_dir / "inventory.toml").tables
+    assert edition_bounds(loaded.edition) == (bounds,)
+    assert (
+        f"  school_year inera/bestallda-prover ({anchor}): 1 tables re-spelled"
+        in capsys.readouterr().out
+    )
+
+
+def test_a_curated_edition_wins_over_the_school_year_rule(
+    tmp_path: Path, flavored_db: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    steward_dir = _run_inventory(
+        tmp_path,
+        flavored_db,
+        '[[school_year]]\nregister = "inera/bestallda-prover"\nanchor = "spring"\n'
+        '[[edition]]\ntable = "T2012"\nedition = 2012\n',
+        "T2012",
+        ["T_kolumn"],
+    )
+
+    assert _emitted_editions(steward_dir) == {"T2012": 2012}
+    assert (
+        "  school_year inera/bestallda-prover (spring): 0 tables re-spelled"
+        in capsys.readouterr().out
+    )
+
+
+def test_a_table_two_school_year_rules_disagree_on_is_refused(
+    tmp_path: Path, flavored_db: Path
+) -> None:
+    """Two registers' rules over one table make its school year ambiguous, so
+    no rule applies: the table keeps its calendar year and is named for the
+    maintainer, the way a stale overlay entry is."""
+    steward_dir = _run_inventory(
+        tmp_path,
+        flavored_db,
+        '[[school_year]]\nregister = "inera/bestallda-prover"\nanchor = "spring"\n'
+        '[[school_year]]\nregister = "inera/samtal"\nanchor = "autumn"\n'
+        '[[assign]]\ntable = "T2012"\nregister_variant = '
+        '["inera/bestallda-prover/_default", "inera/samtal/_default"]\n',
+        "T2012",
+        ["T_kolumn"],
+    )
+
+    assert _emitted_editions(steward_dir) == {"T2012": 2012}
+    assert _stale_entries(tmp_path) == [
+        "T2012 (school_year rules disagree across inera/bestallda-prover, inera/samtal)"
+    ]
+
+
+def test_a_school_year_rule_no_table_maps_to_is_refused(
+    tmp_path: Path, flavored_db: Path
+) -> None:
+    steward_dir = _run_inventory(
+        tmp_path,
+        flavored_db,
+        '[[school_year]]\nregister = "scb/grundskola-ak9"\nanchor = "spring"\n',
+        "T2012",
+        ["T_kolumn"],
+    )
+
+    assert _emitted_editions(steward_dir) == {"T2012": 2012}
+    assert _stale_entries(tmp_path) == [
+        "scb/grundskola-ak9 (school_year spring, no emitted table maps to it)"
+    ]
+
+
+def test_an_unknown_school_year_anchor_is_refused(
+    tmp_path: Path, flavored_db: Path
+) -> None:
+    """The anchor set is the grammar: a misspelled one is a curation slip, not
+    a table year to be re-spelled by guesswork."""
+    with pytest.raises(SystemExit, match="anchor 'winter'"):
+        _run_inventory(
+            tmp_path,
+            flavored_db,
+            '[[school_year]]\nregister = "inera/bestallda-prover"\nanchor = "winter"\n',
+            "T2012",
+            ["T_kolumn"],
+        )
