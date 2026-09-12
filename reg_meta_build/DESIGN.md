@@ -1851,8 +1851,8 @@ are orthogonal; `valid_from[:4]` remains the display-year source).
   (post-conflation, post-choice) keeps today's outcome when a VT carrier beat an HT
   drift twin — the carrier owns the class hull, so the twin's HT window is part of what
   survives and cannot disqualify the winner from staying open (Y-123) — while a kept
-  substantive VT/HT sibling pair hands the open top to the interval-latest
-  state only (two open tops on one column would overlap at the sentinel).
+  substantive VT/HT sibling pair hands the open top to the interval-latest state only
+  (two open tops on one column would overlap at the sentinel).
 - **Lineage.** `link_variable_state_lineage` already joins on interval overlap and emits
   intersection windows — sub-annual consumer or source states produce finer
   intersections with zero changes.
