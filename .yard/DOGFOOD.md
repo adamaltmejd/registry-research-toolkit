@@ -130,13 +130,14 @@ once it has moved.
 - Codex desktop app rewrites `~/.codex/config.toml` with a table older CLIs reject;
   `codex engine failed (1)` in review is fixed by `codex update`.
 - Release skill: `UV_EXCLUDE_NEWER=<date>` for host `ty` pins younger than the global
-  7-day `exclude-newer`; the SWECOV `flavor` plus `inventory` wave is a release
-  prerequisite whenever a steward coordinate moves; reg_schema's version is the exact
-  `schema_version`, never a routine patch; post-publish `integration` on the tag fails
-  structurally when a steward coordinate moved, so rerun `integration.yml --ref main`
-  and never re-release. Handoff step 3 is `git merge --ff-only origin/main`, then
-  `yard sync --json` expecting `relation equal`; `yard pause`'s `changed: true` marks
-  whose pause it is.
+  7-day `exclude-newer`; run `uv run --frozen` under that override, or uv rewrites
+  `uv.lock` with an `[options] exclude-newer` block that pre-commit then stashes and
+  restores; the SWECOV `flavor` plus `inventory` wave is a release prerequisite whenever
+  a steward coordinate moves; reg_schema's version is the exact `schema_version`, never
+  a routine patch; post-publish `integration` on the tag fails structurally when a
+  steward coordinate moved, so rerun `integration.yml --ref main` and never re-release.
+  Handoff step 3 is `git merge --ff-only origin/main`, then `yard sync --json` expecting
+  `relation equal`; `yard pause`'s `changed: true` marks whose pause it is.
 - Filing lessons: a fixture named under Proof is a behavior statement; a
   "byte-identical" clause names its paths; an accepted proposal body needs a Proof
   section before unpark; recheck old briefs before admitting a batch.
