@@ -21,8 +21,10 @@ Two typed entry kinds:
 * `[[delivered]]` — the (version, column) rows SCB omitted. Clones the column's
   attributes (var_id, Variabelnamn, definition-carrying prose, Datatyp,
   Datalängd, value-set link, grain) from the NEAREST real version of the same
-  (variant, column), so the synthetic row lands in the same coalescer group as
-  the real ones and simply extends their claim years.
+  (variant, column) — EVERY row that edition carries for the column, so a column
+  co-delivered there under two variables is replayed as two rows. Each synthetic
+  row lands in the same coalescer group as the real row it copies and simply
+  extends that group's claim years.
 
 The curator names SCB versions, never dates: a version name is the coordinate
 SCB itself publishes, and the year parsing already lives in `edition_bounds`.
@@ -38,7 +40,10 @@ declared edition that does not START at or after the variant's newest documented
 year is REFUSED (`scb_errata_version_not_latest`): the motivating shape (SCB
 documents 2019-2020 for a register the steward holds through 2023) is exactly
 what the band gets right, and the rest would silently overwrite a real delivery's
-published spelling and type.
+published spelling and type. Several declared editions on ONE variant still carry
+no chronology relative to each OTHER — reserved-band ids order by hash, not by
+year — which is inert as long as their `[[delivered]]` rows clone the same
+nearest documented source, and that is the case this guard leaves open.
 
 Self-cleaning: an entry whose row is present in SCB's export FAILS the build
 (`scb_errata_now_present`), naming the version so a multi-version entry loses
@@ -52,8 +57,6 @@ import sqlite3
 from dataclasses import dataclass
 from datetime import date
 from pathlib import Path
-
-from reg_meta.queries import extract_year
 
 from ._curation import (
     curation_error,
@@ -344,7 +347,7 @@ def load_scb_errata(path: Path | None, slug_dir: Path | None) -> ScbErrata:
     return ScbErrata(tuple(versions), tuple(delivered))
 
 
-# Columns cloned from the nearest real row onto the synthetic one. `cvid` /
+# Columns cloned from a real source row onto the synthetic one. `cvid` /
 # `regver_id` are minted; `classification_id` and `variable_id` stay NULL —
 # they are stamped by later passes that see the synthetic row like any other.
 _CLONED = (
@@ -524,8 +527,9 @@ def apply_scb_errata(conn: sqlite3.Connection, errata: ScbErrata) -> dict[str, i
         # tuple row_factory (the coalescer's idiom, `_coalesce_variable_states`).
         cur.row_factory = sqlite3.Row
         cur.execute(
-            f"SELECT vi.register_variant_id, vi.regver_id, va.delivery_column_name, "
-            f"       rv.registerversionnamn, {', '.join('vi.' + c for c in _CLONED)} "
+            f"SELECT vi.cvid, vi.register_variant_id, vi.regver_id, "
+            f"       va.delivery_column_name, rv.registerversionnamn, "
+            f"       {', '.join('vi.' + c for c in _CLONED)} "
             f"FROM variable_instance vi "
             f"JOIN variable_alias_build va ON va.cvid = vi.cvid "
             f"JOIN register_version rv ON rv.regver_id = vi.regver_id "
@@ -575,55 +579,79 @@ def apply_scb_errata(conn: sqlite3.Connection, errata: ScbErrata) -> dict[str, i
                     if len(d.versions) == 1
                     else f"drop {name!r} from that entry's `versions`",
                 )
-            source = _nearest(candidates, extract_year(name))
+            clones = _nearest_rows(candidates, name)
             for regver_id in regvers:
-                cvid = mint_canonical_scb(
-                    "scb-errata-row",
-                    str(d.register_variant_id),
-                    fold_column(d.column),
-                    name,
-                    str(regver_id),
-                )
-                conn.execute(
-                    f"INSERT INTO variable_instance "
-                    f"(cvid, register_id, register_variant_id, regver_id, "
-                    f"{', '.join(_CLONED)}) "
-                    f"VALUES (?, ?, ?, ?, {', '.join('?' * len(_CLONED))})",
-                    (
-                        cvid,
-                        d.register_id,
-                        d.register_variant_id,
-                        regver_id,
-                        *(source[c] for c in _CLONED),
-                    ),
-                )
-                # The source row's OWN spelling, not the curator's: inventing a
-                # spelling would shard the coalescer's case-twin components.
-                conn.execute(
-                    "INSERT INTO variable_alias_build (cvid, delivery_column_name) "
-                    "VALUES (?, ?)",
-                    (cvid, source["delivery_column_name"]),
-                )
-                counts["rows"] += 1
+                for source in clones:
+                    # Keyed on the SOURCE row's cvid as well: a co-delivered
+                    # column contributes several clones to one (version, column),
+                    # and each needs its own id.
+                    cvid = mint_canonical_scb(
+                        "scb-errata-row",
+                        str(d.register_variant_id),
+                        fold_column(d.column),
+                        name,
+                        str(regver_id),
+                        str(source["cvid"]),
+                    )
+                    conn.execute(
+                        f"INSERT INTO variable_instance "
+                        f"(cvid, register_id, register_variant_id, regver_id, "
+                        f"{', '.join(_CLONED)}) "
+                        f"VALUES (?, ?, ?, ?, {', '.join('?' * len(_CLONED))})",
+                        (
+                            cvid,
+                            d.register_id,
+                            d.register_variant_id,
+                            regver_id,
+                            *(source[c] for c in _CLONED),
+                        ),
+                    )
+                    # The source row's OWN spelling, not the curator's: inventing
+                    # a spelling would shard the coalescer's case-twin components.
+                    conn.execute(
+                        "INSERT INTO variable_alias_build "
+                        "(cvid, delivery_column_name) VALUES (?, ?)",
+                        (cvid, source["delivery_column_name"]),
+                    )
+                    counts["rows"] += 1
     return counts
 
 
-def _nearest(candidates: list[sqlite3.Row], target_year: int | None) -> sqlite3.Row:
-    """The real row to clone: the one whose edition year is closest to the added
-    version's. An equidistant tie goes to the LATER edition (the coalescer's own
-    latest-era convention — a delivery's shape carries forward, not back), and a
-    remaining tie, or an unparseable year on either side, to the lowest
-    `regver_id` so the choice is byte-stable across builds."""
+def _nearest_rows(candidates: list[sqlite3.Row], name: str) -> list[sqlite3.Row]:
+    """The real rows to clone for added version `name`: the whole of the NEAREST
+    real edition, ascending `cvid`.
+
+    Distance is measured over the years the two names CLAIM, on both sides — a
+    source edition spelled `2010-2012` is ONE year from an added `2013`, where
+    reading only a name's first year would have put it three away and handed the
+    clone to a `2015`. An equidistant tie goes to the LATER edition (the
+    coalescer's own latest-era convention — a delivery's shape carries forward,
+    not back), and a remaining tie, or a name no year parses from on either side,
+    to the lowest `regver_id`.
+
+    That edition can carry the column MORE THAN ONCE — a column co-delivered
+    under two variables, each with its own value set and type. Every one of those
+    rows is cloned, one synthetic row per source row: it is the faithful replay
+    of what SCB delivered in the edition being copied, each clone lands in the
+    coalescer group of the row it came from rather than dragging one group's
+    value set onto the other, and the result does not depend on which row the
+    unordered scan happened to return first.
+    """
+    target = _edition_years(name)
 
     def key(row: sqlite3.Row) -> tuple[int, int, int, int]:
-        year = extract_year(row["registerversionnamn"] or "")
-        if target_year is None or year is None:
+        years = _edition_years(row["registerversionnamn"] or "")
+        if not target or not years:
             return (1, 0, 0, row["regver_id"])
         return (
             0,
-            abs(year - target_year),
-            0 if year >= target_year else 1,
+            min(abs(y - t) for y in years for t in target),
+            0 if years[-1] >= target[-1] else 1,
             row["regver_id"],
         )
 
-    return min(candidates, key=key)
+    nearest = min(candidates, key=key)["regver_id"]
+    return sorted(
+        (row for row in candidates if row["regver_id"] == nearest),
+        key=lambda row: row["cvid"],
+    )

@@ -1198,6 +1198,21 @@ def _built_with_errata(
     return build_with_rows(tmp_path, ri_extra, vm_extra or [])
 
 
+def _state_codes(conn: sqlite3.Connection, provider_key: str) -> list[str]:
+    """The codes of the single value set on a variable's states, ascending."""
+    return [
+        row[0]
+        for row in conn.execute(
+            "SELECT DISTINCT vc.code FROM variable_state vs "
+            "JOIN variable v ON v.variable_id = vs.variable_id "
+            "JOIN value_set_member vsm ON vsm.value_set_id = vs.value_set_id "
+            "JOIN value_code vc ON vc.code_id = vsm.code_id "
+            "WHERE v.register_id = 1 AND v.provider_key = ? ORDER BY vc.code",
+            (provider_key,),
+        )
+    ]
+
+
 def _windows(conn: sqlite3.Connection, provider_key: str) -> list[tuple]:
     return conn.execute(
         "SELECT vs.valid_from, vs.valid_to "
@@ -1366,6 +1381,97 @@ class TestScbErrata:
                 (value_set_id,),
             ).fetchall()
             assert [c[0] for c in codes] == [code for code, _label in CODING_A]
+        finally:
+            conn.close()
+
+    def test_co_delivered_column_clones_every_row_of_the_edition(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        # SCB's 2022 edition carries TwinCol TWICE — two variables, each with its
+        # own value set. The nearest edition is cloned whole, so the added 2021
+        # coordinate is replayed once per real row. Picking one row would extend
+        # one variable, drop the other, and leave which is which to whatever the
+        # unordered source scan returned first.
+        ri = [
+            _var_row(
+                colname="TwinCol",
+                cvid=9500,
+                var_id=950,
+                varname="TwinVarA",
+                year="2022",
+                regver_id=102,
+            ),
+            _var_row(
+                colname="TwinCol",
+                cvid=9501,
+                var_id=951,
+                varname="TwinVarB",
+                year="2022",
+                regver_id=102,
+            ),
+        ]
+        vm = vm_rows(9500, "AlphaA", CODING_A) + vm_rows(9501, "BetaB", CODING_B)
+        conn = _built_with_errata(
+            tmp_path, monkeypatch, ri, errata_delivered("TwinCol", "2021"), vm_extra=vm
+        )
+        try:
+            assert _windows(conn, "950") == [("2021-01-01", "2022-12-31")]
+            assert _windows(conn, "951") == [("2021-01-01", "2022-12-31")]
+            # Each clone carries ITS source row's coding, not one row's dragged
+            # onto both.
+            assert _state_codes(conn, "950") == [c for c, _l in CODING_A]
+            assert _state_codes(conn, "951") == [c for c, _l in CODING_B]
+        finally:
+            conn.close()
+
+    def test_nearest_edition_is_measured_over_the_years_a_name_claims(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        # SpanCol is delivered in a '2010-2012' edition (coding A) and a '2015'
+        # one (coding B), and the errata adds the documented 2013 edition. The
+        # range CLAIMS 2012, one year from 2013, where 2015 is two — reading only
+        # each name's first year would put the range three away and hand 2013 to
+        # coding B.
+        ri = [
+            _var_row(
+                colname="SpanCol",
+                cvid=9600,
+                var_id=960,
+                varname="SpanVar",
+                year="2010",
+                versionname="2010-2012",
+                regver_id=9610,
+            ),
+            _var_row(
+                colname="SpanCol",
+                cvid=9602,
+                var_id=960,
+                varname="SpanVar",
+                year="2015",
+                regver_id=9612,
+            ),
+            # Gives the errata a documented 2013 edition to name.
+            _var_row(
+                colname="MarkCol",
+                cvid=9603,
+                var_id=961,
+                varname="MarkVar",
+                year="2013",
+                regver_id=9613,
+            ),
+        ]
+        vm = vm_rows(9600, "AlphaA", CODING_A) + vm_rows(9602, "BetaB", CODING_B)
+        conn = _built_with_errata(
+            tmp_path, monkeypatch, ri, errata_delivered("SpanCol", "2013"), vm_extra=vm
+        )
+        try:
+            # 2013 joins coding A's run and fuses with it. Cloning the 2015 row
+            # instead would leave 2010-2012 alone and make 2013 its own
+            # coding-B window.
+            assert _windows(conn, "960") == [
+                ("2010-01-01", "2013-12-31"),
+                ("2015-01-01", "2015-12-31"),
+            ]
         finally:
             conn.close()
 
