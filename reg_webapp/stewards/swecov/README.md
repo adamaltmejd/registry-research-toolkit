@@ -64,8 +64,8 @@ residue is 343 columns. By disposition:
   follow-up, *not* flavor-routed (scope follows what a fact is *about*, #365). The
   inventory picks them up as those aliases land.
 
-- **survey-wave global follow-ups (21 columns)** — documented in SWECOV's delivery
-  lists but absent from reg_meta machine metadata; handled as **global** `scb_errata.toml`
+- **survey-wave global follow-ups (21 columns)** — documented in SWECOV's delivery lists
+  but absent from reg_meta machine metadata; handled as **global** `scb_errata.toml`
   `[[column]]` entries (`source = "steward-holdings"`), not steward flavor. The steward
   inventory picks them up after a fresh reg_meta build/release and inventory
   regeneration.
