@@ -50,6 +50,7 @@ stays green; they bite on the orchestrator's full-corpus build.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from enum import StrEnum
 from pathlib import Path
 from typing import TYPE_CHECKING, Literal
 
@@ -152,6 +153,16 @@ class ValidationResult:
         return "\n".join(parts)
 
 
+class HoldingsGate(StrEnum):
+    """Stands in for a holdings statement when ``extend-db --skip-holdings-gate``
+    turned the steward-holdings gate off (Y-124) — the operator's explicit refusal,
+    distinct from ``None`` (a build with no holdings statement at all: the global
+    build, synthetic CI). One three-state parameter rather than an inventory plus a
+    skip flag, so "an inventory AND a skip" cannot be handed to the gate."""
+
+    SKIPPED = "skipped"
+
+
 def validate_built_db(
     db_path: Path,
     *,
@@ -159,7 +170,7 @@ def validate_built_db(
     flavored: bool = False,
     bootstrap: bool = False,
     slug_dir: Path | None = None,
-    delivery_inventory: DeliveryInventory | None = None,
+    delivery_inventory: DeliveryInventory | HoldingsGate | None = None,
 ) -> ValidationResult:
     """Run the build invariants against ``db_path``.
 
@@ -222,8 +233,9 @@ def validate_built_db(
     ``_check_inventory_window_coverage``, which fails the build when a column the
     steward HOLDS in a table edition has no covering state or alias window on its
     coordinate. ``None`` (the default, used by synthetic CI and the global build)
-    SKIPS that gate — there is no holdings statement to contradict. The
+    SKIPS that gate — there is no holdings statement to contradict; the
     ``extend-db`` CLI resolves and loads it once, the way it does ``slug_dir``.
+    ``HoldingsGate.SKIPPED`` also skips it, and says the flag did it.
     """
     db_path = Path(db_path)
     if not db_path.exists():
@@ -2472,7 +2484,7 @@ def _check_inventory_window_coverage(
     conn: sqlite3.Connection,
     result: ValidationResult,
     tables: set[str],
-    delivery_inventory: DeliveryInventory | None,
+    delivery_inventory: DeliveryInventory | HoldingsGate | None,
 ) -> None:
     """Y-115: every column the steward HOLDS in a table edition must have a
     covering ``variable_state`` or ``variable_alias_window`` on its coordinate.
@@ -2492,11 +2504,17 @@ def _check_inventory_window_coverage(
     refuses another provider — and its own fail line names the curated surface its
     window is widened on instead. See `inventory_coverage` for the reading rules.
 
-    ``delivery_inventory is None`` (synthetic CI, the global build, an
-    ``extend-db`` run outside a repo checkout) SKIPS the gate: with no holdings
-    statement there is nothing to contradict.
+    ``delivery_inventory is None`` (synthetic CI, the global build) SKIPS the gate:
+    with no holdings statement there is nothing to contradict.
+    ``HoldingsGate.SKIPPED`` skips it too, and names the flag that asked for it.
     """
     result.section("[inventory: steward holdings have a catalog window]")
+    if delivery_inventory is HoldingsGate.SKIPPED:
+        result.ok(
+            "steward-holdings gate skipped — --skip-holdings-gate "
+            "(the flavor ships unchecked against the steward's holdings)"
+        )
+        return
     if delivery_inventory is None:
         result.ok("no delivery inventory given — steward-holdings gate skipped")
         return

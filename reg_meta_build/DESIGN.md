@@ -2898,7 +2898,12 @@ input, never mutated), then runs an insert-only overlay on the copy:
    also loads the steward's committed §12 delivery inventory (`--delivery-inventory`,
    default `reg_webapp/stewards/<steward>/inventory.toml`) and threads it in, so a
    flavor that contradicts the steward's own holdings — a column HELD in a table edition
-   with no covering state or alias window — never publishes.
+   with no covering state or alias window — never publishes. Y-124 makes that resolution
+   fail-fast, the shape `resolve_steward_slug_dir` already had: resolving to nothing is
+   `extend_delivery_inventory_not_found` (EXIT_CONFIG), `--skip-holdings-gate` is the
+   only way a validated run loses the gate, and the envelope's `args.delivery_inventory`
+   records the RESOLVED path the gate read — so a published flavor states what checked
+   it.
 6. **Publish** into `<db_dir>/reg_meta.db` via the same `publish_db` as `build-db` (back
    the live generation up to `.prev`, then one atomic replace). No VACUUM — the overlay
    is insert-only; nothing is freed.
@@ -3011,8 +3016,12 @@ consumes and the per-provider slug TOMLs.
   a stanza — that file corrects SCB's export and its loader refuses another provider —
   so it reports as one line naming the surface its window is curated on
   (`input_data/<Provider>/<slug>.toml`'s `valid_from`, the Socialstyrelsen export for
-  `sos`, or the inventory `extend-db` overlaid for a steward's own minted provider).
-  `None` self-skips the gate.
+  `sos`, or the inventory `extend-db` overlaid for a steward's own minted provider). The
+  parameter is three-state: an inventory runs the gate, `None` skips it (the global
+  build and synthetic CI, which have no holdings statement), and `HoldingsGate.SKIPPED`
+  skips it naming `--skip-holdings-gate` as the reason (Y-124). One value, so an
+  inventory paired with a skip is unrepresentable and the reason is never inferred from
+  an absent argument.
 - **`_populate_fts(include_value_code=False)`** — skips the `value_code_fts` INSERT. The
   full build keeps `include_value_code=True` (the default), so its call is unchanged.
 

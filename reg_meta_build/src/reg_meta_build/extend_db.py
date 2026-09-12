@@ -113,17 +113,10 @@ from reg_meta.db import DB_FILENAME
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta.fqid import FqidError, FqidKind, period_token_to_bounds, validate_slug
 
-# The steward's §12 holdings statement, for the flavored validation's
-# window-coverage gate (Y-115). Aliased: `load_inventory` in this module is the
-# extend-db JSON contract's own loader, a different file in a different format.
-from reg_meta.inventory import load_inventory as load_delivery_inventory
-
 from .id import mint
 
 if TYPE_CHECKING:
     from collections.abc import Callable
-
-    from reg_meta.inventory import DeliveryInventory
 
 # Open-range sentinel for an inserted state whose inventory gives no validity
 # window — mirrors `variable_grafts` and the DDL `valid_to` default.
@@ -904,36 +897,57 @@ def resolve_steward_slug_dir(
 
 
 def resolve_delivery_inventory(
-    inventory_path: Path | None, steward: str
-) -> DeliveryInventory | None:
-    """Load the steward's §12 delivery inventory for the flavored validation's
-    window-coverage gate (Y-115), or ``None`` when there is none to read.
+    inventory_path: Path | None, steward: str, *, skip_holdings_gate: bool
+) -> Path | None:
+    """Resolve the steward's §12 delivery inventory — the holdings statement the
+    flavored validation's window-coverage gate (Y-115) checks the built windows
+    against — or ``None`` when ``skip_holdings_gate``.
 
-    An explicit ``inventory_path`` is loaded (and structurally validated) as
-    given, so a typo or a malformed file is `load_inventory`'s own EXIT_CONFIG
-    rather than a silently skipped gate. Otherwise the committed
-    ``reg_webapp/stewards/<steward>/inventory.toml`` of a repo checkout — absent
-    (a wheel install, a steward with no committed inventory yet), the gate
-    self-skips, exactly as it does for a global build.
+    Same shape as ``resolve_steward_slug_dir``: an explicit ``inventory_path`` is
+    taken as given (a typo or a malformed file is `load_inventory`'s own
+    EXIT_CONFIG, never a silently skipped gate), otherwise the committed
+    ``reg_webapp/stewards/<steward>/inventory.toml`` of a repo checkout. When that
+    is absent — a wheel install, a renamed tree, a steward whose inventory is not
+    committed yet — this RAISES ``extend_delivery_inventory_not_found`` (Y-124):
+    those are exactly the runs where holdings drift is most likely, so the gate
+    refuses to run blind rather than self-skipping in one ``[OK]`` line of a
+    multi-thousand-line report. ``--skip-holdings-gate`` is the only way to lose
+    it.
 
-    Called by the CLI BEFORE the overlay runs, so a malformed inventory fails in a
-    second instead of after a multi-GB copy.
+    The CLI resolves and loads BEFORE the overlay runs, so a malformed inventory
+    fails in a second instead of after a multi-GB copy.
     """
-    if inventory_path is None:
-        # Repo root: this module sits at <root>/reg_meta_build/src/reg_meta_build/.
-        # The inventory is a `reg_webapp` deploy artifact, not a build input, so
-        # it is not beside the curation TOMLs `repo_scb_errata_path` reads.
-        candidate = (
-            Path(__file__).resolve().parents[3]
-            / "reg_webapp"
-            / "stewards"
-            / steward
-            / "inventory.toml"
+    if skip_holdings_gate:
+        return None
+    if inventory_path is not None:
+        return inventory_path.expanduser().resolve()
+    # Repo root: this module sits at <root>/reg_meta_build/src/reg_meta_build/.
+    # The inventory is a `reg_webapp` deploy artifact, not a build input, so
+    # it is not beside the curation TOMLs `repo_scb_errata_path` reads.
+    candidate = (
+        Path(__file__).resolve().parents[3]
+        / "reg_webapp"
+        / "stewards"
+        / steward
+        / "inventory.toml"
+    )
+    if not candidate.is_file():
+        raise RegMetaError(
+            exit_code=EXIT_CONFIG,
+            code="extend_delivery_inventory_not_found",
+            error_class="configuration",
+            message=(
+                "No --delivery-inventory given and no committed holdings "
+                f"statement for steward {steward!r} at {candidate}."
+            ),
+            remediation=(
+                "Pass --delivery-inventory, run from a repo checkout carrying "
+                f"reg_webapp/stewards/{steward}/inventory.toml, or pass "
+                "--skip-holdings-gate (the flavor then ships unchecked against "
+                "the steward's holdings)."
+            ),
         )
-        if not candidate.is_file():
-            return None
-        inventory_path = candidate
-    return load_delivery_inventory(inventory_path.expanduser().resolve())
+    return candidate
 
 
 def extend_db(

@@ -487,22 +487,24 @@ surface its window is curated on: `reg_meta_build/input_data/<Provider>/<slug>.t
 or the inventory `extend-db` overlaid for a steward's own minted provider. Widen the
 window there and rebuild; do not paste it into the errata file.
 
-**A red gate is answered by curating errata, never by skipping validation.** Do not pass
-`--no-validate`, and run 8c from the repo checkout so the default resolution finds the
-committed inventory (the report's `[OK] no delivery inventory given` line means the gate
-did NOT run): the failure says this flavor contradicts the steward's own holdings
-statement, so shipping it puts "period outside validity" in front of researchers for
-data the steward has. Write the full candidate worklist with
-`python build_catalog.py --db "$db" errata` (from `reg_meta_build/input_data/swecov/`;
-it needs only the flavored DB and the committed inventory — not the untracked holdings
-CSV; its third section lists the non-SCB misses, which are answered at their own surface
-and not here), curate the entries that have evidence into
-`reg_meta_build/scb_errata.toml`, and note the rebuild path: errata is an **SCB
-adapter** input, so a corrected window reaches the flavor only through a fresh **8a**
-main DB and then a fresh 8c overlay. A miss whose column SCB documents nowhere is a
-`variable_grafts.toml` graft or a `canonical_attach` entry instead, not errata. If the
-curation is larger than this release can carry, land it as its own change and release
-from that — do not publish a flavored DB the gate refused.
+**A red gate is answered by curating errata, never by skipping validation.** The gate
+refuses to run blind: with no `--delivery-inventory` and no committed inventory for the
+steward, `extend-db` fails with `extend_delivery_inventory_not_found` (EXIT_CONFIG)
+instead of skipping itself, so it cannot silently disarm outside a checkout. Pass
+neither `--no-validate` nor `--skip-holdings-gate` (the flag that turns off this gate
+alone, and with it any statement that the flavor agrees with the steward's holdings):
+the failure says this flavor contradicts the steward's own holdings statement, so
+shipping it puts "period outside validity" in front of researchers for data the steward
+has. Write the full candidate worklist with `python build_catalog.py --db "$db" errata`
+(from `reg_meta_build/input_data/swecov/`; it needs only the flavored DB and the
+committed inventory — not the untracked holdings CSV; its third section lists the
+non-SCB misses, which are answered at their own surface and not here), curate the
+entries that have evidence into `reg_meta_build/scb_errata.toml`, and note the rebuild
+path: errata is an **SCB adapter** input, so a corrected window reaches the flavor only
+through a fresh **8a** main DB and then a fresh 8c overlay. A miss whose column SCB
+documents nowhere is a `variable_grafts.toml` graft or a `canonical_attach` entry
+instead, not errata. If the curation is larger than this release can carry, land it as
+its own change and release from that — do not publish a flavored DB the gate refused.
 
 **Maintainer-local inputs**: `reg_meta_build/input_data/swecov/` (holding
 `flavor_inventory.json`) is untracked/maintainer-local. If a **fresh** SWECOV build is

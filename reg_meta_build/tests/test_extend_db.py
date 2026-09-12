@@ -34,7 +34,7 @@ from reg_meta_build.extend_db import (
     load_inventory,
 )
 from reg_meta_build.id import _MINT_BIT, mint
-from reg_meta_build.validate import validate_built_db
+from reg_meta_build.validate import HoldingsGate, validate_built_db
 
 from reg_meta_build.fqid_slugs import populate_variable_slugs
 
@@ -1691,7 +1691,7 @@ class TestFlavoredEntityKeyGate:
     def test_flavored_validate_hook_threads_slug_dir(
         self, tmp_path: Path, global_db: Path
     ) -> None:
-        """`cli._flavored_validate_hook(steward_dir)` threads the slug_dir into the
+        """`cli._flavored_validate_hook(steward_dir, ...)` threads the slug_dir into the
         flavored validator, so the entity-key gate runs on the overlay and FAILS on
         the un-pinned steward key — proving the hook passes slug_dir through (not a
         bare `validate_built_db(flavored=True)` that would self-skip the gate)."""
@@ -1699,7 +1699,9 @@ class TestFlavoredEntityKeyGate:
 
         out = self._build_flavored_with_panel(tmp_path, global_db)
         steward_dir = tmp_path / "panel-sslug"  # panel key, no [variable] pin
-        hook = cli._flavored_validate_hook(steward_dir)
+        # This probe is about the entity-key gate, so it takes the sibling gate's
+        # `--skip-holdings-gate` arm — named, not inferred from a missing argument.
+        hook = cli._flavored_validate_hook(steward_dir, HoldingsGate.SKIPPED)
         with pytest.raises(RegMetaError) as exc:
             hook(out)
         assert exc.value.code == "validation_failed"
@@ -1838,23 +1840,29 @@ class TestCli:
         out_dir = tmp_path / "out"
         out_dir.mkdir()
 
+        holdings = _empty_delivery_inventory(tmp_path)
         args = argparse.Namespace(
             db=str(out_dir),
             base_db=str(global_db),
             # The steward-holdings gate has its own tests; an empty-of-this-flavor
             # inventory keeps this one about the envelope.
-            delivery_inventory=str(_empty_delivery_inventory(tmp_path)),
+            delivery_inventory=str(holdings),
             inventory=str(inv_path),
             steward=_STEWARD,
             slug_dir=str(slug_dir),
             skip_slugs=False,
+            skip_holdings_gate=False,
             no_validate=False,
         )
         envelope, exit_code = _cmd_extend_db(args)
         assert exit_code == 0
-        assert (
-            envelope["request"]["args"]["delivery_inventory"] == args.delivery_inventory
+        # Y-124: the RESOLVED statement the gate ran against, so a published
+        # flavor's envelope says what it was checked against — never `null` on a
+        # run whose gate executed.
+        assert envelope["request"]["args"]["delivery_inventory"] == str(
+            holdings.resolve()
         )
+        assert envelope["request"]["args"]["skip_holdings_gate"] is False
         data = envelope["data"]
         for key in ("providers", "registers", "variants", "variables", "states"):
             assert key in data
@@ -1885,6 +1893,7 @@ class TestCli:
             steward=_STEWARD,
             slug_dir=None,
             skip_slugs=True,
+            skip_holdings_gate=False,
             no_validate=True,
         )
         envelope, exit_code = _cmd_extend_db(args)
@@ -1959,28 +1968,67 @@ class TestDeliveryInventoryGate:
 
     def test_argparse_exposes_delivery_inventory(self) -> None:
         """The committed steward inventory is the default (resolved from a repo
-        checkout), so the flag only has to name an override."""
+        checkout), so the flag only has to name an override —
+        `--skip-holdings-gate` is the opt-out, off unless typed."""
         from reg_meta_build.cli import _build_parser
 
         parser = _build_parser()
         base = ["extend-db", "--base-db", "b", "--inventory", "i"]
         assert parser.parse_args(base).delivery_inventory is None
+        assert parser.parse_args(base).skip_holdings_gate is False
         assert (
             parser.parse_args(
                 [*base, "--delivery-inventory", "h.toml"]
             ).delivery_inventory
             == "h.toml"
         )
+        assert (
+            parser.parse_args([*base, "--skip-holdings-gate"]).skip_holdings_gate
+            is True
+        )
 
     def test_default_resolves_the_committed_steward_inventory(self) -> None:
         """With no `--delivery-inventory`, the gate reads
-        `reg_webapp/stewards/<steward>/inventory.toml` from the checkout — and a
-        steward with no committed inventory self-skips rather than failing."""
+        `reg_webapp/stewards/<steward>/inventory.toml` from the checkout."""
         from reg_meta_build.extend_db import resolve_delivery_inventory
 
-        inventory = resolve_delivery_inventory(None, _STEWARD)
-        assert inventory is not None and inventory.steward == _STEWARD
-        assert resolve_delivery_inventory(None, "no-such-steward") is None
+        path = resolve_delivery_inventory(None, _STEWARD, skip_holdings_gate=False)
+        assert path is not None and path.is_file()
+        assert path.parts[-4:] == ("reg_webapp", "stewards", _STEWARD, "inventory.toml")
+
+    def test_no_committed_inventory_refuses_to_run_blind(self) -> None:
+        """Y-124: no `--delivery-inventory` and nothing committed for the steward
+        (a wheel install, a renamed tree, an uncommitted inventory) is EXIT_CONFIG,
+        not a gate that silently disarmed. The message names all three ways out."""
+        from reg_meta_build.extend_db import resolve_delivery_inventory
+
+        with pytest.raises(RegMetaError) as exc:
+            resolve_delivery_inventory(
+                None, "no-such-steward", skip_holdings_gate=False
+            )
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert exc.value.code == "extend_delivery_inventory_not_found"
+        assert "--delivery-inventory" in exc.value.remediation
+        assert "repo checkout" in exc.value.remediation
+        assert "--skip-holdings-gate" in exc.value.remediation
+
+    def test_explicit_path_resolves_and_the_flag_is_the_typed_skip(
+        self, tmp_path: Path
+    ) -> None:
+        """An explicit path is resolved as given (the loader owns a typo or a
+        malformed file); `--skip-holdings-gate` is the one resolution that yields
+        no inventory, the way `--skip-slugs` does for the slug dir."""
+        from reg_meta_build.extend_db import resolve_delivery_inventory
+
+        given = _empty_delivery_inventory(tmp_path)
+        assert (
+            resolve_delivery_inventory(given, _STEWARD, skip_holdings_gate=False)
+            == given.resolve()
+        )
+        assert (
+            resolve_delivery_inventory(None, "no-such-steward", skip_holdings_gate=True)
+            is None
+        )
 
     def test_hook_fails_on_a_holding_with_no_window(
         self,
@@ -2059,6 +2107,7 @@ class TestDeliveryInventoryGate:
             steward=_STEWARD,
             slug_dir=str(slug_dir),
             skip_slugs=False,
+            skip_holdings_gate=False,
             no_validate=False,
         )
         with pytest.raises(RegMetaError) as exc:
@@ -2066,3 +2115,47 @@ class TestDeliveryInventoryGate:
         assert exc.value.exit_code == EXIT_CONFIG
         assert "BELOPP: held 2017" in exc.value.message
         assert not (out_dir / "reg_meta.db").exists()
+
+    def test_skip_holdings_gate_is_the_documented_opt_out(
+        self,
+        tmp_path: Path,
+        global_db: Path,
+        capsys: pytest.CaptureFixture[str],
+    ) -> None:
+        """Y-124: `--skip-holdings-gate` is the ONLY way the gate does not run. It
+        wins over the committed inventory the default resolution would have found:
+        the run publishes with no holdings statement read at all, the report line
+        names the flag as the reason, and the envelope records the skip — so a
+        published flavor states that the gate was off."""
+        import argparse
+
+        from reg_meta_build.cli import _cmd_extend_db
+
+        inv_path = tmp_path / "skip-inv.json"
+        inv_path.write_text(json.dumps(_multistate_inventory()), encoding="utf-8")
+        slug_dir = tmp_path / "skip-sslug"
+        slug_dir.mkdir()
+        _write_steward_slug_dir(slug_dir)
+        out_dir = tmp_path / "skip-out"
+        out_dir.mkdir()
+
+        args = argparse.Namespace(
+            db=str(out_dir),
+            base_db=str(global_db),
+            inventory=str(inv_path),
+            delivery_inventory=None,
+            steward=_STEWARD,
+            slug_dir=str(slug_dir),
+            skip_slugs=False,
+            skip_holdings_gate=True,
+            no_validate=False,
+        )
+        envelope, exit_code = _cmd_extend_db(args)
+        assert exit_code == 0
+        assert (out_dir / "reg_meta.db").exists()
+        assert envelope["request"]["args"]["delivery_inventory"] is None
+        assert envelope["request"]["args"]["skip_holdings_gate"] is True
+        assert (
+            "steward-holdings gate skipped — --skip-holdings-gate"
+            in capsys.readouterr().err
+        )

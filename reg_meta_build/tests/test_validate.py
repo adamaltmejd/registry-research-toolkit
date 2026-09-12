@@ -2902,8 +2902,9 @@ class TestInventoryWindowCoverage:
         assert "1 mapping(s) not judged" in result.format_report()
 
     def test_gate_skips_without_an_inventory(self):
-        """No holdings statement (synthetic CI, the global build, an extend-db run
-        outside a checkout) — nothing to contradict."""
+        """No holdings statement (synthetic CI, the global build) — nothing to
+        contradict. An `extend-db` run cannot get here: it resolves a statement or
+        refuses (Y-124), and its opt-out arrives as `HoldingsGate.SKIPPED`."""
         result = self._run(self._db(), None)
         assert result.passed
         assert "steward-holdings gate skipped" in result.format_report()
