@@ -59,6 +59,11 @@ then file it or delete it with a reason.
   before filing.
 - (0.11) Configured models are not validated against the vendored worker CLI at config
   load or preflight; a pin that refuses a model surfaces only as a worker failure.
+- (0.14.10, filed as switchyard #100) Run from a git WORKTREE of the project, `yard`
+  silently initializes a second, empty board (`.yard/local/` appears in the worktree;
+  `yard status` prints `0 open`, `yard lane diff Y-123/1` prints
+  `error: no attempt Y-123/1`) instead of resolving the project through the git common
+  dir or refusing with a pointer to the main checkout.
 - (0.13.3) A daemon restart to load config cancelled a running execution (Y-35/1/e1) and
   left a stopped attempt with no attention item and no printed exit. Not re-observed
   since; retest before filing.
