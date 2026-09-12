@@ -1529,6 +1529,36 @@ def _column_windows(conn: sqlite3.Connection, col: str) -> list[tuple[str, str, 
     ]
 
 
+def _schoolyear_windows(
+    tmp_path: Path,
+    col: str,
+    var_id: int,
+    editions: list[tuple[int, str, str, str, list[tuple[str, str]]]],
+) -> list[tuple[str, str, int]]:
+    """Build one column delivered by a run of `Läsåret` editions and return its
+    emitted windows (Y-123's handoff fixtures). Each edition is
+    `(cvid, versionname, approval year, value-set label, codes)`; the cvid
+    doubles as the regver_id and the variable is named after the column."""
+    ri = [
+        _var_row(
+            colname=col,
+            cvid=cvid,
+            var_id=var_id,
+            varname=f"{col}Var",
+            year=year,
+            versionname=versionname,
+            regver_id=cvid,
+        )
+        for cvid, versionname, year, _, _ in editions
+    ]
+    vm = [
+        row
+        for cvid, _, _, label, codes in editions
+        for row in _vm_rows(cvid, label, codes)
+    ]
+    return _column_windows(_build(tmp_path, ri, vm_extra=vm), col)
+
+
 class TestSubAnnualBoundaryClamp:
     """#219: a state's lifetime START/END is clamped to the actual sub-annual
     delivery window instead of over-claiming the boundary year. Single-column,
@@ -2008,9 +2038,9 @@ class TestIntervalSweep:
 
     def test_term_drift_cosmetic_one_winner(self, tmp_path: Path) -> None:
         # Same shape but the codings differ by ONE code: drift conflation is
-        # window-blind, so the pair still collapses to one winner (label
-        # freshness: HT beats VT) owning ITS OWN window — exactly the year
-        # bucket's outcome. The cosmetic population must show zero diff.
+        # window-blind, so the pair still collapses to ONE winner — and that
+        # winner owns the CLASS HULL (Y-123), so the year stays covered
+        # end-to-end instead of losing the loser's term.
         drifted = _CLAMP_CODING_A + [("14", "Alpha fyra")]
         conn = _build(
             tmp_path,
@@ -2040,7 +2070,84 @@ class TestIntervalSweep:
             ),
         )
         wins = _column_windows(conn, "DriftCol")
-        assert [(vf, vt) for vf, vt, _ in wins] == [("2009-07-01", "2009-12-31")]
+        assert [(vf, vt) for vf, vt, _ in wins] == [("2009-01-01", "2009-12-31")]
+
+    def test_schoolyear_handoff_same_label_owns_class_hull(
+        self, tmp_path: Path
+    ) -> None:
+        # Y-123: two codings of one column handing over at a school-year
+        # boundary, under ONE source label. Since Y-113 `Läsåret 2004/2005`
+        # claims HT2004 AND VT2005, so 2005 is contested by two groups with
+        # DISJOINT windows; one label makes the pool single-coding, so it
+        # conflates to one carrier (recency: the 2005/2006 edition) — which
+        # owns the CLASS HULL. A carrier keeping only its own HT2005 shipped
+        # nothing for 2005-01-01..2005-06-30 although the 2004/2005 edition
+        # delivered it (the `gymnasieskola-betyg` variant 686 `Betyg` shape).
+        wins = _schoolyear_windows(
+            tmp_path,
+            "LasCol",
+            966,
+            [
+                (9880, "Läsåret 2003/2004", "2003", "Betyg", _CLAMP_CODING_A),
+                (9881, "Läsåret 2004/2005", "2004", "Betyg", _CLAMP_CODING_A),
+                (9882, "Läsåret 2005/2006", "2005", "Betyg", _CLAMP_CODING_B),
+                (9883, "Läsåret 2006/2007", "2006", "Betyg", _CLAMP_CODING_B),
+            ],
+        )
+        assert [(vf, vt) for vf, vt, _ in wins] == [
+            ("2003-07-01", "2004-12-31"),
+            ("2005-01-01", "2007-06-30"),
+        ]
+        assert wins[0][2] != wins[1][2]  # two codings, handing over losslessly
+
+    def test_schoolyear_handoff_cosmetic_diff_owns_class_hull(
+        self, tmp_path: Path
+    ) -> None:
+        # The same handoff reached through the COSMETIC arm of the identity
+        # verdict instead of the shared label: distinct labels, one code of
+        # difference. Same hull, same windows.
+        drifted = _CLAMP_CODING_A + [("14", "Alpha fyra")]
+        wins = _schoolyear_windows(
+            tmp_path,
+            "DriftLasCol",
+            967,
+            [
+                (9890, "Läsåret 2003/2004", "2003", "A-koder", _CLAMP_CODING_A),
+                (9891, "Läsåret 2004/2005", "2004", "A-koder", _CLAMP_CODING_A),
+                (9892, "Läsåret 2005/2006", "2005", "B-koder", drifted),
+                (9893, "Läsåret 2006/2007", "2006", "B-koder", drifted),
+            ],
+        )
+        assert [(vf, vt) for vf, vt, _ in wins] == [
+            ("2003-07-01", "2004-12-31"),
+            ("2005-01-01", "2007-06-30"),
+        ]
+        assert wins[0][2] != wins[1][2]
+
+    def test_schoolyear_handoff_hull_when_recency_keeps_older(
+        self, tmp_path: Path
+    ) -> None:
+        # The Jul–Dec mirror: the 2011/2012 edition was approved LAST, so
+        # recency hands 2012 to the OLDER coding. The hull then extends the
+        # older coding's run forward over the autumn the 2012/2013 edition
+        # delivered, instead of losing 2012-07-01..2012-12-31 (`Program` in
+        # `gymnasieskola-betyg` variant 108).
+        wins = _schoolyear_windows(
+            tmp_path,
+            "MirrorCol",
+            968,
+            [
+                (9900, "Läsåret 2010/2011", "2011", "Program", _CLAMP_CODING_A),
+                (9901, "Läsåret 2011/2012", "2013", "Program", _CLAMP_CODING_A),
+                (9902, "Läsåret 2012/2013", "2012", "Program", _CLAMP_CODING_B),
+                (9903, "Läsåret 2013/2014", "2012", "Program", _CLAMP_CODING_B),
+            ],
+        )
+        assert [(vf, vt) for vf, vt, _ in wins] == [
+            ("2010-07-01", "2012-12-31"),
+            ("2013-01-01", "2014-06-30"),
+        ]
+        assert wins[0][2] != wins[1][2]
 
     def test_midyear_handoff_authority(self, tmp_path: Path) -> None:
         # A full-year edition vs a FINAL autumn-term edition with a different
@@ -2240,9 +2347,9 @@ class TestIntervalSweepUnits:
 
     def test_cosmetic_disjoint_conflates_window_blind(self) -> None:
         # Identity is blind to claim windows: a VT/HT drift pair (symdiff 1)
-        # collapses to one carrier owning ITS OWN window (HT via label-
-        # freshness's term rank on the version-derived labels — here labels
-        # carry no markers, so the largest set wins at the cosmetic step).
+        # collapses to one carrier (here the largest set, at the cosmetic
+        # step) — and the carrier owns the whole class's hull, so the pair's
+        # two terms ship as the one year they delivered together.
         a = _state(1, col="x")
         b = _state(2, col="x")
         self._term_claims(a, 2009, "VT")
@@ -2251,7 +2358,24 @@ class TestIntervalSweepUnits:
             [a[0], b[0]], dict([a, b]), 2009, self._codes({1: 11, 2: 10})
         )
         assert genuine == []
-        assert owned == [(a[0], "2009-01-01", "2009-06-30")]  # larger set carries
+        assert owned == [(a[0], "2009-01-01", "2009-12-31")]  # larger set carries
+
+    def test_conflated_hull_merges_only_adjacent_windows(self) -> None:
+        # The hull is `merge_adjacent`, not the class's min..max span: a drift
+        # pair delivering Q1 and Q4 leaves the middle unclaimed, so the carrier
+        # owns TWO intervals and nobody ships space the class never delivered.
+        a = _state(1, col="x")
+        b = _state(2, col="x")
+        a[1].claims = {2009: Claim("2009-01-01", "2009-03-31", _AUTH_PLAIN, "")}
+        b[1].claims = {2009: Claim("2009-10-01", "2009-12-31", _AUTH_PLAIN, "")}
+        owned, genuine = _resolve_year_winners(
+            [a[0], b[0]], dict([a, b]), 2009, self._codes({1: 11, 2: 10})
+        )
+        assert genuine == []
+        assert owned == [
+            (a[0], "2009-01-01", "2009-03-31"),
+            (a[0], "2009-10-01", "2009-12-31"),
+        ]
 
     def test_month_cadence_disables_cross_month_conflation(self) -> None:
         # Under `cadence = month` (AGI, register 392) two months with
@@ -2286,7 +2410,8 @@ class TestIntervalSweepUnits:
             [gka, gkb], groups, 2024, self._codes({1: 11, 2: 10})
         )
         assert genuine == []
-        assert owned == [(gka, "2024-02-01", "2024-02-29")]  # one carrier
+        # One carrier, owning the class hull: both months, merged.
+        assert owned == [(gka, "2024-02-01", "2024-03-31")]
 
 
 class TestSplit:

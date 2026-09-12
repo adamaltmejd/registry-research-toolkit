@@ -1697,10 +1697,15 @@ today's *pool-level* predicates verbatim — value-set-id equality,
 one-source-label-across-the-pool, and the cosmetic test as the pool's max *pairwise*
 symmetric diff (no pairwise transitive closure: an A\~B\~C chain whose A↔C diff exceeds
 the threshold does NOT conflate, exactly as today's set-level check refuses it). The
-carrier keeps **its own claim window** — not the class hull — and co-class losers'
-claims are *dropped* (no carve, no run split), which is byte-for-byte today's drop
-semantics including the #270 corner where a boundary-year winner claims only its own
-term window.
+carrier owns **the class hull** — `merge_adjacent` of every claim window in the class,
+not only its own — and co-class losers emit nothing for that window (no carve, no run
+split). The hull is what makes one winner per compaction window *safe*: a carrier that
+kept only its own window left the losers' delivered space unowned, and since Y-113 made
+a läsår name claim both its terms that space is real — every school-year coding handoff
+shipped a half-year gap (Y-123: `Läsåret 2004/2005` delivered spring 2005, the year's
+carrier was the 2005/2006 coding, and nobody shipped 2005-01-01..2005-06-30). Only
+*adjacent* windows merge, so the hull never claims space the class did not deliver: a
+class delivering Q1 and Q4 of a year owns two intervals and leaves the middle unclaimed.
 
 **Segment choice — window-aware, per overlapped segment.** The surviving carriers'
 windows partition the year into atomic segments. Per segment, the carriers covering it
@@ -1755,7 +1760,9 @@ an explicit per-variant parameter rather than hard-coding the year.
 
 - **Default: calendar year.** Every SCB edition is year-stamped, the term registers'
   cosmetic VT/HT drift (school/course rosters) must keep collapsing to one winner, and
-  the default preserves the measured cosmetic baseline and the zero-diff gate.
+  the default preserved the measured cosmetic baseline and the #271 zero-diff gate
+  (Y-123 then widened those winners' windows to the class hull — one winner per year
+  still, over the space the class delivered).
 - **AGI is declared `cadence = month` from the start.** Register 392
   (Arbetsgivardeklarationer på individnivå, variant *Individuppgifter (AGI)*) carries
   monthly-cadence data even though its catalog editions are annual-stamped and no
@@ -1842,8 +1849,9 @@ are orthogonal; `valid_from[:4]` remains the display-year source).
   (`regver_max == var_max_regver`) to interval grain: a group qualifies when its max
   **surviving**-claim `hi` equals the variable's max surviving-claim `hi`. "Surviving"
   (post-conflation, post-choice) keeps today's outcome when a VT carrier beat an HT
-  drift twin — the dropped HT claim must not disqualify the winner from staying open —
-  while a kept substantive VT/HT sibling pair hands the open top to the interval-latest
+  drift twin — the carrier owns the class hull, so the twin's HT window is part of what
+  survives and cannot disqualify the winner from staying open (Y-123) — while a kept
+  substantive VT/HT sibling pair hands the open top to the interval-latest
   state only (two open tops on one column would overlap at the sentinel).
 - **Lineage.** `link_variable_state_lineage` already joins on interval overlap and emits
   intersection windows — sub-annual consumer or source states produce finer

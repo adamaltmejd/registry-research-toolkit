@@ -13,9 +13,10 @@ The model, per contested year and delivery column:
 1. DRIFT CONFLATION (identity, per compaction window, blind to claim
    windows): a pool that is ONE drifted coding (`hooks.single_coding`)
    resolves via the caller's cascade (`hooks.resolve_pool`) to one carrier
-   owning ITS OWN claim window; co-class losers are dropped — no carve, no
-   run split. The compaction window is the `cadence` parameter: the whole
-   year by default, single months under ``"month"``.
+   owning THE CLASS HULL (`merge_adjacent` of every claim window in the
+   pool); co-class losers emit nothing — no carve, no run split. The
+   compaction window is the `cadence` parameter: the whole year by default,
+   single months under ``"month"``.
 2. SEGMENT CHOICE (window-aware): a multi-coding pool's claim windows
    partition the year into atomic segments; each multi-claimant segment runs
    the caller's full cascade. Disjoint windows are NOT a conflict — both
@@ -215,26 +216,32 @@ def _resolve_column_intervals[C: Hashable](
             else:
                 pools.append(gks)
 
-    carriers: list[C] = []
+    # Each surviving carrier with the space it holds from here on: its own
+    # window, or — where a pool conflated — the whole class's. A carrier that
+    # kept only its own window left the co-class losers' delivered space
+    # unowned (DESIGN.md → drift conflation). Only the conflating branch can
+    # widen a window, and today only on the sole-carrier return below.
+    carriers: list[tuple[C, list[tuple[str, str]]]] = []
     for pool in pools:
         if len(pool) > 1 and hooks.single_coding(pool):
             winners, genuine = hooks.resolve_pool(pool)
             if genuine:  # unreachable: a single-coding pool always collapses
                 raise AssertionError(f"single-coding pool failed to conflate: {pool!r}")
-            carriers.extend(winners)
+            hull = merge_adjacent(sorted(hooks.window(gk) for gk in pool))
+            carriers.extend((gk, hull) for gk in winners)
         else:
-            carriers.extend(pool)
+            carriers.extend((gk, [hooks.window(gk)]) for gk in pool)
 
     if len(carriers) == 1:
-        lo, hi = hooks.window(carriers[0])
-        return [(carriers[0], lo, hi)], []
+        gk, hull = carriers[0]
+        return [(gk, lo, hi) for lo, hi in hull], []
 
     # ── segment choice ──────────────────────────────────────────────────
     cuts: set[str] = set()
-    for gk in carriers:
-        lo, hi = hooks.window(gk)
-        cuts.add(lo)
-        cuts.add(day_after_window_end(hi))
+    for _, hull in carriers:
+        for lo, hi in hull:
+            cuts.add(lo)
+            cuts.add(day_after_window_end(hi))
     bounds = sorted(cuts)
     owned: list[tuple[C, str, str]] = []
     genuine_segs: list[tuple[str, str, list[C]]] = []
@@ -242,9 +249,10 @@ def _resolve_column_intervals[C: Hashable](
     for seg_lo, seg_next in pairwise(bounds):
         covering = [
             gk
-            for gk in carriers
-            if hooks.window(gk)[0] <= seg_lo
-            and seg_next <= day_after_window_end(hooks.window(gk)[1])
+            for gk, hull in carriers
+            if any(
+                lo <= seg_lo and seg_next <= day_after_window_end(hi) for lo, hi in hull
+            )
         ]
         if not covering:
             continue  # a gap between disjoint claim windows — unclaimed
@@ -270,7 +278,7 @@ def _resolve_column_intervals[C: Hashable](
             # get this far (the cascade's coded pool always beats them).
             seg_owned[winners[0]].append((seg_lo, seg_hi))
     # Deterministic first-win order: carriers order, intervals merged.
-    for gk in carriers:
+    for gk, _ in carriers:
         if gk in seg_owned:
             for lo, hi in merge_adjacent(sorted(seg_owned[gk])):
                 owned.append((gk, lo, hi))
