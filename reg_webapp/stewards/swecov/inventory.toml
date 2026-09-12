@@ -68372,11 +68372,6 @@ register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/inadps"
 representation = "INITPS"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/initps"
-representation = "INITPS"
-
 [[table.column]]
 name = "INONG"
 
@@ -68393,11 +68388,6 @@ register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/inadgd"
 representation = "INOTHGD"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/inothgd"
-representation = "INOTHGD"
-
 [[table.column]]
 name = "INOTHPS"
 
@@ -68406,22 +68396,12 @@ register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/inadps"
 representation = "INOTHPS"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/inothps"
-representation = "INOTHPS"
-
 [[table.column]]
 name = "INOTHSV"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/inadsv"
-representation = "INOTHSV"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/inothsv"
 representation = "INOTHSV"
 
 [[table.column]]
@@ -68480,11 +68460,6 @@ register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/inadgd"
 representation = "INTOGD"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/intogd"
-representation = "INTOGD"
-
 [[table.column]]
 name = "INTOPS"
 
@@ -68493,22 +68468,12 @@ register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/inadps"
 representation = "INTOPS"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/intops"
-representation = "INTOPS"
-
 [[table.column]]
 name = "INTOSV"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/inadsv"
-representation = "INTOSV"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/intosv"
 representation = "INTOSV"
 
 [[table.column]]
@@ -68535,11 +68500,6 @@ register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/inadgd"
 representation = "INITGD"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/initgd"
-representation = "InItGd"
-
 [[table.column]]
 name = "InItSv"
 
@@ -68547,11 +68507,6 @@ name = "InItSv"
 register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/inadsv"
 representation = "INITSV"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/initsv"
-representation = "InItSv"
 
 [[table.column]]
 name = "InPdFe"
@@ -68660,11 +68615,6 @@ name = "PBNOCT"
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/pbinct"
-representation = "PBNOCT"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/pbnoct"
 representation = "PBNOCT"
 
 [[table.column]]
@@ -70027,11 +69977,6 @@ register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/inadps"
 representation = "INITPS"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/initps"
-representation = "INITPS"
-
 [[table.column]]
 name = "INONG"
 
@@ -70048,11 +69993,6 @@ register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/inadgd"
 representation = "INOTHGD"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/inothgd"
-representation = "INOTHGD"
-
 [[table.column]]
 name = "INOTHPS"
 
@@ -70061,22 +70001,12 @@ register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/inadps"
 representation = "INOTHPS"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/inothps"
-representation = "INOTHPS"
-
 [[table.column]]
 name = "INOTHSV"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/inadsv"
-representation = "INOTHSV"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/inothsv"
 representation = "INOTHSV"
 
 [[table.column]]
@@ -70135,11 +70065,6 @@ register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/inadgd"
 representation = "INTOGD"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/intogd"
-representation = "INTOGD"
-
 [[table.column]]
 name = "INTOPS"
 
@@ -70148,22 +70073,12 @@ register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/inadps"
 representation = "INTOPS"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/intops"
-representation = "INTOPS"
-
 [[table.column]]
 name = "INTOSV"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/inadsv"
-representation = "INTOSV"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/intosv"
 representation = "INTOSV"
 
 [[table.column]]
@@ -70190,11 +70105,6 @@ register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/inadgd"
 representation = "INITGD"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/initgd"
-representation = "InItGd"
-
 [[table.column]]
 name = "InItSv"
 
@@ -70202,11 +70112,6 @@ name = "InItSv"
 register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/inadsv"
 representation = "INITSV"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/initsv"
-representation = "InItSv"
 
 [[table.column]]
 name = "InPdFe"
@@ -70317,22 +70222,12 @@ register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/pbinct"
 representation = "PBINN"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/pbinn"
-representation = "PBINN"
-
 [[table.column]]
 name = "PBNOCT"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/pbinct"
-representation = "PBNOCT"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/pbnoct"
 representation = "PBNOCT"
 
 [[table.column]]
@@ -71046,22 +70941,12 @@ register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/co11"
 representation = "CONA1"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/cona1"
-representation = "CONA1"
-
 [[table.column]]
 name = "CONA2"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/co11"
-representation = "CONA2"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/cona2"
 representation = "CONA2"
 
 [[table.column]]
@@ -71072,22 +70957,12 @@ register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/co11"
 representation = "CONA31"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/cona31"
-representation = "CONA31"
-
 [[table.column]]
 name = "CONA32"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/co11"
-representation = "CONA32"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/cona32"
 representation = "CONA32"
 
 [[table.column]]
@@ -71098,22 +70973,12 @@ register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/co11"
 representation = "CONA4"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/cona4"
-representation = "CONA4"
-
 [[table.column]]
 name = "CONA5"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/co11"
-representation = "CONA5"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/cona5"
 representation = "CONA5"
 
 [[table.column]]
@@ -71124,11 +70989,6 @@ register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/co11"
 representation = "CONA6"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/cona6"
-representation = "CONA6"
-
 [[table.column]]
 name = "CONA7"
 
@@ -71137,22 +70997,12 @@ register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/co11"
 representation = "CONA7"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/cona7"
-representation = "CONA7"
-
 [[table.column]]
 name = "CONA8"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/co11"
-representation = "CONA8"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/cona8"
 representation = "CONA8"
 
 [[table.column]]
@@ -71392,11 +71242,6 @@ register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/inadps"
 representation = "INITPS"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/initps"
-representation = "INITPS"
-
 [[table.column]]
 name = "INONG"
 
@@ -71413,11 +71258,6 @@ register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/inadgd"
 representation = "INOTHGD"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/inothgd"
-representation = "INOTHGD"
-
 [[table.column]]
 name = "INOTHPS"
 
@@ -71426,22 +71266,12 @@ register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/inadps"
 representation = "INOTHPS"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/inothps"
-representation = "INOTHPS"
-
 [[table.column]]
 name = "INOTHSV"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/inadsv"
-representation = "INOTHSV"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/inothsv"
 representation = "INOTHSV"
 
 [[table.column]]
@@ -71500,11 +71330,6 @@ register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/inadgd"
 representation = "INTOGD"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/intogd"
-representation = "INTOGD"
-
 [[table.column]]
 name = "INTOPS"
 
@@ -71513,22 +71338,12 @@ register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/inadps"
 representation = "INTOPS"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/intops"
-representation = "INTOPS"
-
 [[table.column]]
 name = "INTOSV"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/inadsv"
-representation = "INTOSV"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/intosv"
 representation = "INTOSV"
 
 [[table.column]]
@@ -71555,11 +71370,6 @@ register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/inadgd"
 representation = "INITGD"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/initgd"
-representation = "InItGd"
-
 [[table.column]]
 name = "InItSv"
 
@@ -71567,11 +71377,6 @@ name = "InItSv"
 register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/inadsv"
 representation = "INITSV"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/initsv"
-representation = "InItSv"
 
 [[table.column]]
 name = "InPdFe"
@@ -71661,11 +71466,6 @@ register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/lg"
 representation = "LGFIN"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/lgfin"
-representation = "LGFIN"
-
 [[table.column]]
 name = "LGIMPF"
 
@@ -71730,22 +71530,12 @@ register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/lg"
 representation = "LGOTHO"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/lgotho"
-representation = "LGOTHO"
-
 [[table.column]]
 name = "LGREG"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/lg"
-representation = "LGREG"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/lgreg"
 representation = "LGREG"
 
 [[table.column]]
@@ -71778,11 +71568,6 @@ name = "LGTEC"
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/lg"
-representation = "LGTEC"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/lgtec"
 representation = "LGTEC"
 
 [[table.column]]
@@ -71926,22 +71711,12 @@ register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/pbinct"
 representation = "PBINN"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/pbinn"
-representation = "PBINN"
-
 [[table.column]]
 name = "PBNOCT"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/pbinct"
-representation = "PBNOCT"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/pbnoct"
 representation = "PBNOCT"
 
 [[table.column]]
@@ -149693,6 +149468,21 @@ register_variant = "scb/gdb/adresser-fastigheter"
 variable = "scb/gdb/kommun"
 representation = "Kommun"
 
+[[table.column.mapping]]
+register_variant = "scb/gdb/fastigheter"
+variable = "scb/gdb/kommun"
+representation = "KOMMUN"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/fastigheter"
+variable = "scb/gdb/kommun"
+representation = "Kommun"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/fastigheter"
+variable = "scb/gdb/kommun"
+representation = "kommun"
+
 [[table.column]]
 name = "P1105_Lopnr_skolkod"
 
@@ -149719,6 +149509,21 @@ name = "Kommun"
 register_variant = "scb/gdb/adresser-fastigheter"
 variable = "scb/gdb/kommun"
 representation = "Kommun"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/fastigheter"
+variable = "scb/gdb/kommun"
+representation = "KOMMUN"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/fastigheter"
+variable = "scb/gdb/kommun"
+representation = "Kommun"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/fastigheter"
+variable = "scb/gdb/kommun"
+representation = "kommun"
 
 [[table.column]]
 name = "P1105_Lopnr_skolkod"
@@ -149747,6 +149552,21 @@ register_variant = "scb/gdb/adresser-fastigheter"
 variable = "scb/gdb/kommun"
 representation = "Kommun"
 
+[[table.column.mapping]]
+register_variant = "scb/gdb/fastigheter"
+variable = "scb/gdb/kommun"
+representation = "KOMMUN"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/fastigheter"
+variable = "scb/gdb/kommun"
+representation = "Kommun"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/fastigheter"
+variable = "scb/gdb/kommun"
+representation = "kommun"
+
 [[table.column]]
 name = "P1105_Lopnr_skolkod"
 
@@ -149773,6 +149593,21 @@ name = "Kommun"
 register_variant = "scb/gdb/adresser-fastigheter"
 variable = "scb/gdb/kommun"
 representation = "Kommun"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/fastigheter"
+variable = "scb/gdb/kommun"
+representation = "KOMMUN"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/fastigheter"
+variable = "scb/gdb/kommun"
+representation = "Kommun"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/fastigheter"
+variable = "scb/gdb/kommun"
+representation = "kommun"
 
 [[table.column]]
 name = "P1105_Lopnr_skolkod"
@@ -149801,6 +149636,21 @@ register_variant = "scb/gdb/adresser-fastigheter"
 variable = "scb/gdb/kommun"
 representation = "Kommun"
 
+[[table.column.mapping]]
+register_variant = "scb/gdb/fastigheter"
+variable = "scb/gdb/kommun"
+representation = "KOMMUN"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/fastigheter"
+variable = "scb/gdb/kommun"
+representation = "Kommun"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/fastigheter"
+variable = "scb/gdb/kommun"
+representation = "kommun"
+
 [[table.column]]
 name = "P1105_Lopnr_skolkod"
 
@@ -149827,6 +149677,21 @@ name = "Kommun"
 register_variant = "scb/gdb/adresser-fastigheter"
 variable = "scb/gdb/kommun"
 representation = "Kommun"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/fastigheter"
+variable = "scb/gdb/kommun"
+representation = "KOMMUN"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/fastigheter"
+variable = "scb/gdb/kommun"
+representation = "Kommun"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/fastigheter"
+variable = "scb/gdb/kommun"
+representation = "kommun"
 
 [[table.column]]
 name = "P1105_Lopnr_skolkod"
@@ -149855,6 +149720,21 @@ register_variant = "scb/gdb/adresser-fastigheter"
 variable = "scb/gdb/kommun"
 representation = "Kommun"
 
+[[table.column.mapping]]
+register_variant = "scb/gdb/fastigheter"
+variable = "scb/gdb/kommun"
+representation = "KOMMUN"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/fastigheter"
+variable = "scb/gdb/kommun"
+representation = "Kommun"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/fastigheter"
+variable = "scb/gdb/kommun"
+representation = "kommun"
+
 [[table.column]]
 name = "P1105_Lopnr_skolkod"
 
@@ -149881,6 +149761,21 @@ name = "Kommun"
 register_variant = "scb/gdb/adresser-fastigheter"
 variable = "scb/gdb/kommun"
 representation = "Kommun"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/fastigheter"
+variable = "scb/gdb/kommun"
+representation = "KOMMUN"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/fastigheter"
+variable = "scb/gdb/kommun"
+representation = "Kommun"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/fastigheter"
+variable = "scb/gdb/kommun"
+representation = "kommun"
 
 [[table.column]]
 name = "P1105_Lopnr_skolkod"
@@ -149909,6 +149804,21 @@ register_variant = "scb/gdb/adresser-fastigheter"
 variable = "scb/gdb/kommun"
 representation = "Kommun"
 
+[[table.column.mapping]]
+register_variant = "scb/gdb/fastigheter"
+variable = "scb/gdb/kommun"
+representation = "KOMMUN"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/fastigheter"
+variable = "scb/gdb/kommun"
+representation = "Kommun"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/fastigheter"
+variable = "scb/gdb/kommun"
+representation = "kommun"
+
 [[table.column]]
 name = "P1105_Lopnr_skolkod"
 
@@ -149936,6 +149846,21 @@ register_variant = "scb/gdb/adresser-fastigheter"
 variable = "scb/gdb/kommun"
 representation = "Kommun"
 
+[[table.column.mapping]]
+register_variant = "scb/gdb/fastigheter"
+variable = "scb/gdb/kommun"
+representation = "KOMMUN"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/fastigheter"
+variable = "scb/gdb/kommun"
+representation = "Kommun"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/fastigheter"
+variable = "scb/gdb/kommun"
+representation = "kommun"
+
 [[table.column]]
 name = "P1105_Lopnr_skolkod"
 
@@ -149962,6 +149887,21 @@ name = "Kommun"
 register_variant = "scb/gdb/adresser-fastigheter"
 variable = "scb/gdb/kommun"
 representation = "Kommun"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/fastigheter"
+variable = "scb/gdb/kommun"
+representation = "KOMMUN"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/fastigheter"
+variable = "scb/gdb/kommun"
+representation = "Kommun"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/fastigheter"
+variable = "scb/gdb/kommun"
+representation = "kommun"
 
 [[table.column]]
 name = "P1105_Lopnr_skolenhetskod"
@@ -149993,6 +149933,21 @@ register_variant = "scb/gdb/adresser-fastigheter"
 variable = "scb/gdb/kommun"
 representation = "Kommun"
 
+[[table.column.mapping]]
+register_variant = "scb/gdb/fastigheter"
+variable = "scb/gdb/kommun"
+representation = "KOMMUN"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/fastigheter"
+variable = "scb/gdb/kommun"
+representation = "Kommun"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/fastigheter"
+variable = "scb/gdb/kommun"
+representation = "kommun"
+
 [[table.column]]
 name = "P1105_Lopnr_skolenhetskod"
 
@@ -150019,6 +149974,21 @@ name = "Kommun"
 register_variant = "scb/gdb/adresser-fastigheter"
 variable = "scb/gdb/kommun"
 representation = "Kommun"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/fastigheter"
+variable = "scb/gdb/kommun"
+representation = "KOMMUN"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/fastigheter"
+variable = "scb/gdb/kommun"
+representation = "Kommun"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/fastigheter"
+variable = "scb/gdb/kommun"
+representation = "kommun"
 
 [[table.column]]
 name = "P1105_Lopnr_skolenhetskod"
@@ -150047,6 +150017,21 @@ register_variant = "scb/gdb/adresser-fastigheter"
 variable = "scb/gdb/kommun"
 representation = "Kommun"
 
+[[table.column.mapping]]
+register_variant = "scb/gdb/fastigheter"
+variable = "scb/gdb/kommun"
+representation = "KOMMUN"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/fastigheter"
+variable = "scb/gdb/kommun"
+representation = "Kommun"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/fastigheter"
+variable = "scb/gdb/kommun"
+representation = "kommun"
+
 [[table.column]]
 name = "P1105_Lopnr_skolenhetskod"
 
@@ -150073,6 +150058,21 @@ name = "Kommun"
 register_variant = "scb/gdb/adresser-fastigheter"
 variable = "scb/gdb/kommun"
 representation = "Kommun"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/fastigheter"
+variable = "scb/gdb/kommun"
+representation = "KOMMUN"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/fastigheter"
+variable = "scb/gdb/kommun"
+representation = "Kommun"
+
+[[table.column.mapping]]
+register_variant = "scb/gdb/fastigheter"
+variable = "scb/gdb/kommun"
+representation = "kommun"
 
 [[table.column]]
 name = "P1105_Lopnr_skolenhetskod"
@@ -160481,7 +160481,7 @@ name = "tmgrpnamn"
 
 [[table]]
 id = "Hreg_Poang_1993_2022"
-edition = { from = 1993, to = 2021 }
+edition = { from = "HT1993", to = 2021 }
 
 [[table.column]]
 name = "AmneGrupp"
@@ -160777,13 +160777,23 @@ representation = "YProg"
 
 [[table]]
 id = "Hreg_Reg_1990_1993"
-edition = { from = 1990, to = 1992 }
+edition = { from = "HT1990", to = "VT1993" }
 
 [[table.column]]
 name = "AGrupp"
 
+[[table.column.mapping]]
+register_variant = "scb/hreg/grundutbildning-1977"
+variable = "scb/hreg/agrupp"
+representation = "AGrupp"
+
 [[table.column]]
 name = "Ar"
+
+[[table.column.mapping]]
+register_variant = "scb/hreg/grundutbildning-1977"
+variable = "scb/hreg/ar-for-registreringen"
+representation = "Ar"
 
 [[table.column.mapping]]
 register_variant = "scb/hreg/grundutbildning-1993"
@@ -160793,8 +160803,18 @@ representation = "Ar"
 [[table.column]]
 name = "Distform"
 
+[[table.column.mapping]]
+register_variant = "scb/hreg/grundutbildning-1977"
+variable = "scb/hreg/distform"
+representation = "Distform"
+
 [[table.column]]
 name = "FFG"
+
+[[table.column.mapping]]
+register_variant = "scb/hreg/grundutbildning-1977"
+variable = "scb/hreg/ffg"
+representation = "FFG"
 
 [[table.column]]
 name = "FFG_Stud"
@@ -160823,14 +160843,34 @@ representation = "FFG_Yprog"
 [[table.column]]
 name = "GrenKod"
 
+[[table.column.mapping]]
+register_variant = "scb/hreg/grundutbildning-1977"
+variable = "scb/hreg/grenkod"
+representation = "GrenKod"
+
 [[table.column]]
 name = "GrenPomf"
+
+[[table.column.mapping]]
+register_variant = "scb/hreg/grundutbildning-1977"
+variable = "scb/hreg/grenpomf"
+representation = "GrenPomf"
 
 [[table.column]]
 name = "HskNyb"
 
+[[table.column.mapping]]
+register_variant = "scb/hreg/grundutbildning-1977"
+variable = "scb/hreg/hogskolanyborjare"
+representation = "HskNyb"
+
 [[table.column]]
 name = "Hskod"
+
+[[table.column.mapping]]
+register_variant = "scb/hreg/grundutbildning-1977"
+variable = "scb/hreg/hogskolekod"
+representation = "Hskod"
 
 [[table.column.mapping]]
 register_variant = "scb/hreg/grundutbildning-1993"
@@ -160840,14 +160880,34 @@ representation = "HsKod"
 [[table.column]]
 name = "LinLangd"
 
+[[table.column.mapping]]
+register_variant = "scb/hreg/grundutbildning-1977"
+variable = "scb/hreg/linlangd"
+representation = "LinLangd"
+
 [[table.column]]
 name = "LinTyp"
+
+[[table.column.mapping]]
+register_variant = "scb/hreg/grundutbildning-1977"
+variable = "scb/hreg/lintyp"
+representation = "LinTyp"
 
 [[table.column]]
 name = "LinjeKod"
 
+[[table.column.mapping]]
+register_variant = "scb/hreg/grundutbildning-1977"
+variable = "scb/hreg/linjekod"
+representation = "LinjeKod"
+
 [[table.column]]
 name = "Niva"
+
+[[table.column.mapping]]
+register_variant = "scb/hreg/grundutbildning-1977"
+variable = "scb/hreg/forkunskapsniva-kurs"
+representation = "Niva"
 
 [[table.column.mapping]]
 register_variant = "scb/hreg/grundutbildning-1993"
@@ -160857,8 +160917,18 @@ representation = "Niva"
 [[table.column]]
 name = "Omr"
 
+[[table.column.mapping]]
+register_variant = "scb/hreg/grundutbildning-1977"
+variable = "scb/hreg/amnesomrade"
+representation = "Omr"
+
 [[table.column]]
 name = "P1105_Lopnr_Personnr"
+
+[[table.column.mapping]]
+register_variant = "scb/hreg/grundutbildning-1977"
+variable = "scb/hreg/personnr-motsvarande-2"
+representation = "Personnr"
 
 [[table.column.mapping]]
 register_variant = "scb/hreg/grundutbildning-1993"
@@ -160868,8 +160938,18 @@ representation = "PersonNr"
 [[table.column]]
 name = "Stutakt"
 
+[[table.column.mapping]]
+register_variant = "scb/hreg/grundutbildning-1977"
+variable = "scb/hreg/stutakt"
+representation = "Stutakt"
+
 [[table.column]]
 name = "Termin"
+
+[[table.column.mapping]]
+register_variant = "scb/hreg/grundutbildning-1977"
+variable = "scb/hreg/termin-registreringen"
+representation = "Termin"
 
 [[table.column.mapping]]
 register_variant = "scb/hreg/grundutbildning-1993"
@@ -160878,6 +160958,11 @@ representation = "Termin"
 
 [[table.column]]
 name = "Yprog"
+
+[[table.column.mapping]]
+register_variant = "scb/hreg/grundutbildning-1977"
+variable = "scb/hreg/yrkesexamen-1993"
+representation = "Yprog"
 
 [[table.column.mapping]]
 register_variant = "scb/hreg/grundutbildning-1993"
@@ -160895,7 +160980,7 @@ name = "linjeben"
 
 [[table]]
 id = "Hreg_Reg_1993_2022"
-edition = { from = 1993, to = 2021 }
+edition = { from = "HT1993", to = 2021 }
 
 [[table.column]]
 name = "AmneGrupp"
@@ -164890,6 +164975,11 @@ representation = "LoneInk"
 
 [[table.column]]
 name = "Nyk"
+
+[[table.column.mapping]]
+register_variant = "scb/lisa/individer-16plus"
+variable = "scb/lisa/yrke-fob"
+representation = "Nyk"
 
 [[table.column]]
 name = "P1105_LopNr_ArbstId"
@@ -295258,7 +295348,7 @@ edition = 1997
 name = "ExamAr"
 
 [[table.column.mapping]]
-register_variant = "scb/ureg/personens-hogsta-utbildning"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
 variable = "scb/ureg/examensar"
 representation = "ExamAr"
 
@@ -295266,7 +295356,7 @@ representation = "ExamAr"
 name = "KallKod"
 
 [[table.column.mapping]]
-register_variant = "scb/ureg/personens-hogsta-utbildning"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
 variable = "scb/ureg/kallkod"
 representation = "KallKod"
 
@@ -295274,7 +295364,7 @@ representation = "KallKod"
 name = "P1105_Lopnr_PersonNr"
 
 [[table.column.mapping]]
-register_variant = "scb/ureg/personens-hogsta-utbildning"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
 variable = "scb/ureg/personnr"
 representation = "PersonNr"
 
@@ -295282,7 +295372,7 @@ representation = "PersonNr"
 name = "SUN2000Grp"
 
 [[table.column.mapping]]
-register_variant = "scb/ureg/personens-hogsta-utbildning"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
 variable = "scb/ureg/sun2000grp"
 representation = "SUN2000Grp"
 
@@ -295290,7 +295380,7 @@ representation = "SUN2000Grp"
 name = "SUN2000Inr"
 
 [[table.column.mapping]]
-register_variant = "scb/ureg/personens-hogsta-utbildning"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
 variable = "scb/ureg/sun2000inr"
 representation = "SUN2000Inr"
 
@@ -295298,7 +295388,7 @@ representation = "SUN2000Inr"
 name = "SUN2000Niva"
 
 [[table.column.mapping]]
-register_variant = "scb/ureg/personens-hogsta-utbildning"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
 variable = "scb/ureg/sun2000niva"
 representation = "SUN2000Niva"
 
@@ -295306,7 +295396,7 @@ representation = "SUN2000Niva"
 name = "SUN2000Niva_old"
 
 [[table.column.mapping]]
-register_variant = "scb/ureg/personens-hogsta-utbildning"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
 variable = "scb/ureg/sun2000niva"
 representation = "SUN2000Niva_old"
 
@@ -295318,7 +295408,7 @@ edition = 1998
 name = "ExamAr"
 
 [[table.column.mapping]]
-register_variant = "scb/ureg/personens-hogsta-utbildning"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
 variable = "scb/ureg/examensar"
 representation = "ExamAr"
 
@@ -295326,7 +295416,7 @@ representation = "ExamAr"
 name = "KallKod"
 
 [[table.column.mapping]]
-register_variant = "scb/ureg/personens-hogsta-utbildning"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
 variable = "scb/ureg/kallkod"
 representation = "KallKod"
 
@@ -295334,7 +295424,7 @@ representation = "KallKod"
 name = "P1105_Lopnr_PersonNr"
 
 [[table.column.mapping]]
-register_variant = "scb/ureg/personens-hogsta-utbildning"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
 variable = "scb/ureg/personnr"
 representation = "PersonNr"
 
@@ -295342,7 +295432,7 @@ representation = "PersonNr"
 name = "SUN2000Grp"
 
 [[table.column.mapping]]
-register_variant = "scb/ureg/personens-hogsta-utbildning"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
 variable = "scb/ureg/sun2000grp"
 representation = "SUN2000Grp"
 
@@ -295350,7 +295440,7 @@ representation = "SUN2000Grp"
 name = "SUN2000Inr"
 
 [[table.column.mapping]]
-register_variant = "scb/ureg/personens-hogsta-utbildning"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
 variable = "scb/ureg/sun2000inr"
 representation = "SUN2000Inr"
 
@@ -295358,7 +295448,7 @@ representation = "SUN2000Inr"
 name = "SUN2000Niva"
 
 [[table.column.mapping]]
-register_variant = "scb/ureg/personens-hogsta-utbildning"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
 variable = "scb/ureg/sun2000niva"
 representation = "SUN2000Niva"
 
@@ -295366,7 +295456,7 @@ representation = "SUN2000Niva"
 name = "SUN2000Niva_old"
 
 [[table.column.mapping]]
-register_variant = "scb/ureg/personens-hogsta-utbildning"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
 variable = "scb/ureg/sun2000niva"
 representation = "SUN2000Niva_old"
 
@@ -295378,7 +295468,7 @@ edition = 1999
 name = "ExamAr"
 
 [[table.column.mapping]]
-register_variant = "scb/ureg/personens-hogsta-utbildning"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
 variable = "scb/ureg/examensar"
 representation = "ExamAr"
 
@@ -295386,7 +295476,7 @@ representation = "ExamAr"
 name = "KallKod"
 
 [[table.column.mapping]]
-register_variant = "scb/ureg/personens-hogsta-utbildning"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
 variable = "scb/ureg/kallkod"
 representation = "KallKod"
 
@@ -295394,7 +295484,7 @@ representation = "KallKod"
 name = "P1105_Lopnr_PersonNr"
 
 [[table.column.mapping]]
-register_variant = "scb/ureg/personens-hogsta-utbildning"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
 variable = "scb/ureg/personnr"
 representation = "PersonNr"
 
@@ -295402,7 +295492,7 @@ representation = "PersonNr"
 name = "SUN2000Grp"
 
 [[table.column.mapping]]
-register_variant = "scb/ureg/personens-hogsta-utbildning"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
 variable = "scb/ureg/sun2000grp"
 representation = "SUN2000Grp"
 
@@ -295410,7 +295500,7 @@ representation = "SUN2000Grp"
 name = "SUN2000Inr"
 
 [[table.column.mapping]]
-register_variant = "scb/ureg/personens-hogsta-utbildning"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
 variable = "scb/ureg/sun2000inr"
 representation = "SUN2000Inr"
 
@@ -295418,7 +295508,7 @@ representation = "SUN2000Inr"
 name = "SUN2000Niva"
 
 [[table.column.mapping]]
-register_variant = "scb/ureg/personens-hogsta-utbildning"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
 variable = "scb/ureg/sun2000niva"
 representation = "SUN2000Niva"
 
@@ -295426,7 +295516,7 @@ representation = "SUN2000Niva"
 name = "SUN2000Niva_old"
 
 [[table.column.mapping]]
-register_variant = "scb/ureg/personens-hogsta-utbildning"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
 variable = "scb/ureg/sun2000niva"
 representation = "SUN2000Niva_old"
 
@@ -295438,7 +295528,7 @@ edition = 2000
 name = "ExamAr"
 
 [[table.column.mapping]]
-register_variant = "scb/ureg/personens-hogsta-utbildning"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
 variable = "scb/ureg/examensar"
 representation = "ExamAr"
 
@@ -295446,7 +295536,7 @@ representation = "ExamAr"
 name = "KallKod"
 
 [[table.column.mapping]]
-register_variant = "scb/ureg/personens-hogsta-utbildning"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
 variable = "scb/ureg/kallkod"
 representation = "KallKod"
 
@@ -295454,7 +295544,7 @@ representation = "KallKod"
 name = "P1105_Lopnr_PersonNr"
 
 [[table.column.mapping]]
-register_variant = "scb/ureg/personens-hogsta-utbildning"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
 variable = "scb/ureg/personnr"
 representation = "PersonNr"
 
@@ -295462,7 +295552,7 @@ representation = "PersonNr"
 name = "SUN2000Grp"
 
 [[table.column.mapping]]
-register_variant = "scb/ureg/personens-hogsta-utbildning"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
 variable = "scb/ureg/sun2000grp"
 representation = "SUN2000Grp"
 
@@ -295470,7 +295560,7 @@ representation = "SUN2000Grp"
 name = "SUN2000Inr"
 
 [[table.column.mapping]]
-register_variant = "scb/ureg/personens-hogsta-utbildning"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
 variable = "scb/ureg/sun2000inr"
 representation = "SUN2000Inr"
 
@@ -295478,7 +295568,7 @@ representation = "SUN2000Inr"
 name = "SUN2000Niva"
 
 [[table.column.mapping]]
-register_variant = "scb/ureg/personens-hogsta-utbildning"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
 variable = "scb/ureg/sun2000niva"
 representation = "SUN2000Niva"
 
@@ -295486,7 +295576,7 @@ representation = "SUN2000Niva"
 name = "SUN2000Niva_old"
 
 [[table.column.mapping]]
-register_variant = "scb/ureg/personens-hogsta-utbildning"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
 variable = "scb/ureg/sun2000niva"
 representation = "SUN2000Niva_old"
 
@@ -295498,7 +295588,7 @@ edition = 2001
 name = "ExamAr"
 
 [[table.column.mapping]]
-register_variant = "scb/ureg/personens-hogsta-utbildning"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
 variable = "scb/ureg/examensar"
 representation = "ExamAr"
 
@@ -295506,7 +295596,7 @@ representation = "ExamAr"
 name = "KallKod"
 
 [[table.column.mapping]]
-register_variant = "scb/ureg/personens-hogsta-utbildning"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
 variable = "scb/ureg/kallkod"
 representation = "KallKod"
 
@@ -295514,7 +295604,7 @@ representation = "KallKod"
 name = "P1105_Lopnr_PersonNr"
 
 [[table.column.mapping]]
-register_variant = "scb/ureg/personens-hogsta-utbildning"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
 variable = "scb/ureg/personnr"
 representation = "PersonNr"
 
@@ -295522,7 +295612,7 @@ representation = "PersonNr"
 name = "SUN2000Grp"
 
 [[table.column.mapping]]
-register_variant = "scb/ureg/personens-hogsta-utbildning"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
 variable = "scb/ureg/sun2000grp"
 representation = "SUN2000Grp"
 
@@ -295530,7 +295620,7 @@ representation = "SUN2000Grp"
 name = "SUN2000Inr"
 
 [[table.column.mapping]]
-register_variant = "scb/ureg/personens-hogsta-utbildning"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
 variable = "scb/ureg/sun2000inr"
 representation = "SUN2000Inr"
 
@@ -295538,7 +295628,7 @@ representation = "SUN2000Inr"
 name = "SUN2000Niva"
 
 [[table.column.mapping]]
-register_variant = "scb/ureg/personens-hogsta-utbildning"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
 variable = "scb/ureg/sun2000niva"
 representation = "SUN2000Niva"
 
@@ -295546,7 +295636,7 @@ representation = "SUN2000Niva"
 name = "SUN2000Niva_old"
 
 [[table.column.mapping]]
-register_variant = "scb/ureg/personens-hogsta-utbildning"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
 variable = "scb/ureg/sun2000niva"
 representation = "SUN2000Niva_old"
 
@@ -295558,7 +295648,7 @@ edition = 2002
 name = "ExamAr"
 
 [[table.column.mapping]]
-register_variant = "scb/ureg/personens-hogsta-utbildning"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
 variable = "scb/ureg/examensar"
 representation = "ExamAr"
 
@@ -295566,7 +295656,7 @@ representation = "ExamAr"
 name = "KallKod"
 
 [[table.column.mapping]]
-register_variant = "scb/ureg/personens-hogsta-utbildning"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
 variable = "scb/ureg/kallkod"
 representation = "KallKod"
 
@@ -295574,7 +295664,7 @@ representation = "KallKod"
 name = "P1105_Lopnr_PersonNr"
 
 [[table.column.mapping]]
-register_variant = "scb/ureg/personens-hogsta-utbildning"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
 variable = "scb/ureg/personnr"
 representation = "PersonNr"
 
@@ -295582,7 +295672,7 @@ representation = "PersonNr"
 name = "SUN2000Grp"
 
 [[table.column.mapping]]
-register_variant = "scb/ureg/personens-hogsta-utbildning"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
 variable = "scb/ureg/sun2000grp"
 representation = "SUN2000Grp"
 
@@ -295590,7 +295680,7 @@ representation = "SUN2000Grp"
 name = "SUN2000Inr"
 
 [[table.column.mapping]]
-register_variant = "scb/ureg/personens-hogsta-utbildning"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
 variable = "scb/ureg/sun2000inr"
 representation = "SUN2000Inr"
 
@@ -295598,7 +295688,7 @@ representation = "SUN2000Inr"
 name = "SUN2000Niva"
 
 [[table.column.mapping]]
-register_variant = "scb/ureg/personens-hogsta-utbildning"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
 variable = "scb/ureg/sun2000niva"
 representation = "SUN2000Niva"
 
@@ -295606,7 +295696,7 @@ representation = "SUN2000Niva"
 name = "SUN2000Niva_old"
 
 [[table.column.mapping]]
-register_variant = "scb/ureg/personens-hogsta-utbildning"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
 variable = "scb/ureg/sun2000niva"
 representation = "SUN2000Niva_old"
 
@@ -295618,7 +295708,7 @@ edition = 2003
 name = "ExamAr"
 
 [[table.column.mapping]]
-register_variant = "scb/ureg/personens-hogsta-utbildning"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
 variable = "scb/ureg/examensar"
 representation = "ExamAr"
 
@@ -295626,7 +295716,7 @@ representation = "ExamAr"
 name = "KallKod"
 
 [[table.column.mapping]]
-register_variant = "scb/ureg/personens-hogsta-utbildning"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
 variable = "scb/ureg/kallkod"
 representation = "KallKod"
 
@@ -295634,7 +295724,7 @@ representation = "KallKod"
 name = "P1105_Lopnr_PersonNr"
 
 [[table.column.mapping]]
-register_variant = "scb/ureg/personens-hogsta-utbildning"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
 variable = "scb/ureg/personnr"
 representation = "PersonNr"
 
@@ -295642,7 +295732,7 @@ representation = "PersonNr"
 name = "SUN2000Grp"
 
 [[table.column.mapping]]
-register_variant = "scb/ureg/personens-hogsta-utbildning"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
 variable = "scb/ureg/sun2000grp"
 representation = "SUN2000Grp"
 
@@ -295650,7 +295740,7 @@ representation = "SUN2000Grp"
 name = "SUN2000Inr"
 
 [[table.column.mapping]]
-register_variant = "scb/ureg/personens-hogsta-utbildning"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
 variable = "scb/ureg/sun2000inr"
 representation = "SUN2000Inr"
 
@@ -295658,7 +295748,7 @@ representation = "SUN2000Inr"
 name = "SUN2000Niva"
 
 [[table.column.mapping]]
-register_variant = "scb/ureg/personens-hogsta-utbildning"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
 variable = "scb/ureg/sun2000niva"
 representation = "SUN2000Niva"
 
@@ -295666,7 +295756,7 @@ representation = "SUN2000Niva"
 name = "SUN2000Niva_old"
 
 [[table.column.mapping]]
-register_variant = "scb/ureg/personens-hogsta-utbildning"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
 variable = "scb/ureg/sun2000niva"
 representation = "SUN2000Niva_old"
 
@@ -295678,7 +295768,7 @@ edition = 2004
 name = "ExamAr"
 
 [[table.column.mapping]]
-register_variant = "scb/ureg/personens-hogsta-utbildning"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
 variable = "scb/ureg/examensar"
 representation = "ExamAr"
 
@@ -295686,7 +295776,7 @@ representation = "ExamAr"
 name = "KallKod"
 
 [[table.column.mapping]]
-register_variant = "scb/ureg/personens-hogsta-utbildning"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
 variable = "scb/ureg/kallkod"
 representation = "KallKod"
 
@@ -295694,7 +295784,7 @@ representation = "KallKod"
 name = "P1105_Lopnr_PersonNr"
 
 [[table.column.mapping]]
-register_variant = "scb/ureg/personens-hogsta-utbildning"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
 variable = "scb/ureg/personnr"
 representation = "PersonNr"
 
@@ -295702,7 +295792,7 @@ representation = "PersonNr"
 name = "SUN2000Grp"
 
 [[table.column.mapping]]
-register_variant = "scb/ureg/personens-hogsta-utbildning"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
 variable = "scb/ureg/sun2000grp"
 representation = "SUN2000Grp"
 
@@ -295710,7 +295800,7 @@ representation = "SUN2000Grp"
 name = "SUN2000Inr"
 
 [[table.column.mapping]]
-register_variant = "scb/ureg/personens-hogsta-utbildning"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
 variable = "scb/ureg/sun2000inr"
 representation = "SUN2000Inr"
 
@@ -295718,7 +295808,7 @@ representation = "SUN2000Inr"
 name = "SUN2000Niva"
 
 [[table.column.mapping]]
-register_variant = "scb/ureg/personens-hogsta-utbildning"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
 variable = "scb/ureg/sun2000niva"
 representation = "SUN2000Niva"
 
@@ -295726,7 +295816,7 @@ representation = "SUN2000Niva"
 name = "SUN2000Niva_old"
 
 [[table.column.mapping]]
-register_variant = "scb/ureg/personens-hogsta-utbildning"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
 variable = "scb/ureg/sun2000niva"
 representation = "SUN2000Niva_old"
 
@@ -295738,7 +295828,7 @@ edition = 2005
 name = "ExamAr"
 
 [[table.column.mapping]]
-register_variant = "scb/ureg/personens-hogsta-utbildning"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
 variable = "scb/ureg/examensar"
 representation = "ExamAr"
 
@@ -295746,7 +295836,7 @@ representation = "ExamAr"
 name = "KallKod"
 
 [[table.column.mapping]]
-register_variant = "scb/ureg/personens-hogsta-utbildning"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
 variable = "scb/ureg/kallkod"
 representation = "KallKod"
 
@@ -295754,7 +295844,7 @@ representation = "KallKod"
 name = "P1105_Lopnr_PersonNr"
 
 [[table.column.mapping]]
-register_variant = "scb/ureg/personens-hogsta-utbildning"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
 variable = "scb/ureg/personnr"
 representation = "PersonNr"
 
@@ -295762,7 +295852,7 @@ representation = "PersonNr"
 name = "SUN2000Grp"
 
 [[table.column.mapping]]
-register_variant = "scb/ureg/personens-hogsta-utbildning"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
 variable = "scb/ureg/sun2000grp"
 representation = "SUN2000Grp"
 
@@ -295770,7 +295860,7 @@ representation = "SUN2000Grp"
 name = "SUN2000Inr"
 
 [[table.column.mapping]]
-register_variant = "scb/ureg/personens-hogsta-utbildning"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
 variable = "scb/ureg/sun2000inr"
 representation = "SUN2000Inr"
 
@@ -295778,7 +295868,7 @@ representation = "SUN2000Inr"
 name = "SUN2000Niva"
 
 [[table.column.mapping]]
-register_variant = "scb/ureg/personens-hogsta-utbildning"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
 variable = "scb/ureg/sun2000niva"
 representation = "SUN2000Niva"
 
@@ -295786,7 +295876,7 @@ representation = "SUN2000Niva"
 name = "SUN2000Niva_old"
 
 [[table.column.mapping]]
-register_variant = "scb/ureg/personens-hogsta-utbildning"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
 variable = "scb/ureg/sun2000niva"
 representation = "SUN2000Niva_old"
 
@@ -295798,7 +295888,7 @@ edition = 2006
 name = "ExamAr"
 
 [[table.column.mapping]]
-register_variant = "scb/ureg/personens-hogsta-utbildning"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
 variable = "scb/ureg/examensar"
 representation = "ExamAr"
 
@@ -295806,7 +295896,7 @@ representation = "ExamAr"
 name = "KallKod"
 
 [[table.column.mapping]]
-register_variant = "scb/ureg/personens-hogsta-utbildning"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
 variable = "scb/ureg/kallkod"
 representation = "KallKod"
 
@@ -295814,7 +295904,7 @@ representation = "KallKod"
 name = "P1105_Lopnr_PersonNr"
 
 [[table.column.mapping]]
-register_variant = "scb/ureg/personens-hogsta-utbildning"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
 variable = "scb/ureg/personnr"
 representation = "PersonNr"
 
@@ -295822,7 +295912,7 @@ representation = "PersonNr"
 name = "SUN2000Grp"
 
 [[table.column.mapping]]
-register_variant = "scb/ureg/personens-hogsta-utbildning"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
 variable = "scb/ureg/sun2000grp"
 representation = "SUN2000Grp"
 
@@ -295830,7 +295920,7 @@ representation = "SUN2000Grp"
 name = "SUN2000Inr"
 
 [[table.column.mapping]]
-register_variant = "scb/ureg/personens-hogsta-utbildning"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
 variable = "scb/ureg/sun2000inr"
 representation = "SUN2000Inr"
 
@@ -295838,7 +295928,7 @@ representation = "SUN2000Inr"
 name = "SUN2000Niva"
 
 [[table.column.mapping]]
-register_variant = "scb/ureg/personens-hogsta-utbildning"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
 variable = "scb/ureg/sun2000niva"
 representation = "SUN2000Niva"
 
@@ -295846,7 +295936,7 @@ representation = "SUN2000Niva"
 name = "SUN2000Niva_old"
 
 [[table.column.mapping]]
-register_variant = "scb/ureg/personens-hogsta-utbildning"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
 variable = "scb/ureg/sun2000niva"
 representation = "SUN2000Niva_old"
 
@@ -295858,7 +295948,7 @@ edition = 2007
 name = "ExamAr"
 
 [[table.column.mapping]]
-register_variant = "scb/ureg/personens-hogsta-utbildning"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
 variable = "scb/ureg/examensar"
 representation = "ExamAr"
 
@@ -295866,7 +295956,7 @@ representation = "ExamAr"
 name = "KallKod"
 
 [[table.column.mapping]]
-register_variant = "scb/ureg/personens-hogsta-utbildning"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
 variable = "scb/ureg/kallkod"
 representation = "KallKod"
 
@@ -295874,7 +295964,7 @@ representation = "KallKod"
 name = "P1105_Lopnr_PersonNr"
 
 [[table.column.mapping]]
-register_variant = "scb/ureg/personens-hogsta-utbildning"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
 variable = "scb/ureg/personnr"
 representation = "PersonNr"
 
@@ -295882,7 +295972,7 @@ representation = "PersonNr"
 name = "SUN2000Grp"
 
 [[table.column.mapping]]
-register_variant = "scb/ureg/personens-hogsta-utbildning"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
 variable = "scb/ureg/sun2000grp"
 representation = "SUN2000Grp"
 
@@ -295890,7 +295980,7 @@ representation = "SUN2000Grp"
 name = "SUN2000Inr"
 
 [[table.column.mapping]]
-register_variant = "scb/ureg/personens-hogsta-utbildning"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
 variable = "scb/ureg/sun2000inr"
 representation = "SUN2000Inr"
 
@@ -295898,7 +295988,7 @@ representation = "SUN2000Inr"
 name = "SUN2000Niva"
 
 [[table.column.mapping]]
-register_variant = "scb/ureg/personens-hogsta-utbildning"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
 variable = "scb/ureg/sun2000niva"
 representation = "SUN2000Niva"
 
@@ -295906,7 +295996,7 @@ representation = "SUN2000Niva"
 name = "SUN2000Niva_old"
 
 [[table.column.mapping]]
-register_variant = "scb/ureg/personens-hogsta-utbildning"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
 variable = "scb/ureg/sun2000niva"
 representation = "SUN2000Niva_old"
 

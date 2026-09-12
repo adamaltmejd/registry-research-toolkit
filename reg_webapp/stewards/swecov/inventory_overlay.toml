@@ -1517,35 +1517,15 @@ edition = { from = 2013, to = 2024 }
 table = "GU_ss_fr"
 edition = { from = 2018, to = 2020 }
 
-# evidence: [Ar] (char), 40,831,043 dated rows of 40,831,043
-[[edition]]
-table = "Hreg_Poang_1993_2022"
-edition = { from = 1993, to = 2022 }
-
 # evidence: [Ar] (char), 5,522,836 dated rows of 5,522,836
 [[edition]]
 table = "Hreg_Poang_2022_2024"
 edition = { from = 2022, to = 2024 }
 
-# evidence: [Ar] (char), 1,417,959 dated rows of 1,417,959
-[[edition]]
-table = "Hreg_Reg_1990_1993"
-edition = { from = 1990, to = 1993 }
-
-# evidence: [Ar] (char), 42,201,099 dated rows of 42,201,099
-[[edition]]
-table = "Hreg_Reg_1993_2022"
-edition = { from = 1993, to = 2022 }
-
 # evidence: [Ar] (char), 5,474,028 dated rows of 5,474,028
 [[edition]]
 table = "Hreg_Reg_2022_2024"
 edition = { from = 2022, to = 2024 }
-
-# evidence: [Ar] (char), 25,845,414 dated rows of 25,845,414
-[[edition]]
-table = "Hreg_Sok_2015_2022"
-edition = { from = 2015, to = 2022 }
 
 # evidence: [Ar] (char), 9,969,204 dated rows of 9,969,204
 [[edition]]
@@ -2842,14 +2822,24 @@ edition = { from = 2021, to = 2023 }
 # boundary year (newer delivery owns it, as the later and presumably revised
 # one). Confirmed: newer owns the boundary year (if the
 # older delivery proves authoritative for its final year, flip here).
+#
+# 2026-09-12: the three 1993-ordning tables are spelled on the läsår boundary
+# instead of the calendar year. SCB documents grundutbildning-1993 and
+# grundutbildning-poang as ONE school-year range each ("Läsåren 1993/1994 -
+# 2024/2025" → window 1993-07-01..2025-06-30), so a calendar-year 1993 edition
+# claims 1993-01-01..1993-06-30, which no 1993-ordning version delivers.
+# Hreg_Reg_1993_2022 / Hreg_Poang_1993_2022 start at HT1993; Hreg_Reg_1990_1993
+# ends at VT1993 (the last term of the 1977 studieordning). The newer-owns-the-
+# boundary rule above still holds at term grain: the two tables meet at the
+# 1993 läsår boundary and no term is served twice.
 
 [[edition]]
 table = "Hreg_Reg_1990_1993"
-edition = { from = 1990, to = 1992 }
+edition = { from = "HT1990", to = "VT1993" }
 
 [[edition]]
 table = "Hreg_Reg_1993_2022"
-edition = { from = 1993, to = 2021 }
+edition = { from = "HT1993", to = 2021 }
 
 [[edition]]
 table = "Hreg_Sok_2015_2022"
@@ -2857,7 +2847,7 @@ edition = { from = 2015, to = 2021 }
 
 [[edition]]
 table = "Hreg_Poang_1993_2022"
-edition = { from = 1993, to = 2021 }
+edition = { from = "HT1993", to = 2021 }
 
 # Hreg_Examina name-range editions, same PROPOSED newer-owns-2022 boundary rule
 # as the trims above (no probe time column; ranges from the table names).
@@ -4833,3 +4823,139 @@ anchor = "spring"
 [[school_year]]
 register = "scb/lararreg"
 anchor = "autumn"
+
+# ══ Version-gap investigation, 2026-09-12 (scratchpad/version-gaps/report.md) ══
+# ── scb/hreg: routing + spelling. Hreg_Reg_1990_1993 (Ar, Hskod, Niva,
+# P1105_Lopnr_Personnr, Termin, Yprog + the FFG_* first-time flags) holds the
+# last three school years of the 1977 studieordning, which SCB documents on
+# grundutbildning-1977 ("Läsåren 1977/1978 - 1992/1993", window
+# 1977-07-01..1993-06-30) with exactly those six columns. Assigned to BOTH
+# variants so the FFG_* columns (errata [[column]] entries on
+# grundutbildning-1993 only, windows 1993-07-01..2025-06-30 since Y-116) keep their mapping; the six documented columns then cover through
+# the 1977 variant. Its edition is re-spelled HT1990..VT1993 in the DECIDED
+# Hreg block above.
+
+[[assign]]
+table = "Hreg_Reg_1990_1993"
+register_variant = ["scb/hreg/grundutbildning-1977", "scb/hreg/grundutbildning-1993"]
+
+# ── scb/ureg: routing. SCB documents 1997..2007 on
+# personens-hogsta-utbildning-16-74 (ExamAr, KallKod, PersonNr every year;
+# SUN2000Grp/Inr/Niva/Niva_old from 2000) and 2008..2024 on
+# personens-hogsta-utbildning. The curated MAPPING routes every UREG<year> table
+# to the latter, so the eleven 1997..2007 tables have no window. Route them to
+# the variant SCB documents them on. (UREG1990..UREG1996 stay unroutable — no
+# UREG variant documents those years; see report.md.)
+
+[[assign]]
+table = "UREG1997"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
+
+[[assign]]
+table = "UREG1998"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
+
+[[assign]]
+table = "UREG1999"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
+
+[[assign]]
+table = "UREG2000"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
+
+[[assign]]
+table = "UREG2001"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
+
+[[assign]]
+table = "UREG2002"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
+
+[[assign]]
+table = "UREG2003"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
+
+[[assign]]
+table = "UREG2004"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
+
+[[assign]]
+table = "UREG2005"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
+
+[[assign]]
+table = "UREG2006"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
+
+[[assign]]
+table = "UREG2007"
+register_variant = "scb/ureg/personens-hogsta-utbildning-16-74"
+
+# ── scb/gdb: routing. Kommun (VarId 36) is documented on the `fastigheter`
+# variant in every version 2003-01-01..2017-01-01 (spelled Kommun / kommun /
+# KOMMUN — one folded column); adresser-fastigheter only starts 2018. The
+# GDB_Skolor<year> tables map Kommun to adresser-fastigheter for every year.
+# Assigned to BOTH variants so DeSO keeps its adresser-fastigheter mapping
+# (fastigheter never documents DeSO — that miss stays, see report.md) while
+# Kommun 2003..2017 covers through fastigheter. GDB_Ast/GDB_Ind hold DeSO only,
+# so they gain nothing from the same assign and are left alone.
+
+[[assign]]
+table = "GDB_Skolor2003"
+register_variant = ["scb/gdb/fastigheter", "scb/gdb/adresser-fastigheter"]
+
+[[assign]]
+table = "GDB_Skolor2004"
+register_variant = ["scb/gdb/fastigheter", "scb/gdb/adresser-fastigheter"]
+
+[[assign]]
+table = "GDB_Skolor2005"
+register_variant = ["scb/gdb/fastigheter", "scb/gdb/adresser-fastigheter"]
+
+[[assign]]
+table = "GDB_Skolor2006"
+register_variant = ["scb/gdb/fastigheter", "scb/gdb/adresser-fastigheter"]
+
+[[assign]]
+table = "GDB_Skolor2007"
+register_variant = ["scb/gdb/fastigheter", "scb/gdb/adresser-fastigheter"]
+
+[[assign]]
+table = "GDB_Skolor2008"
+register_variant = ["scb/gdb/fastigheter", "scb/gdb/adresser-fastigheter"]
+
+[[assign]]
+table = "GDB_Skolor2009"
+register_variant = ["scb/gdb/fastigheter", "scb/gdb/adresser-fastigheter"]
+
+[[assign]]
+table = "GDB_Skolor2010"
+register_variant = ["scb/gdb/fastigheter", "scb/gdb/adresser-fastigheter"]
+
+[[assign]]
+table = "GDB_Skolor2011"
+register_variant = ["scb/gdb/fastigheter", "scb/gdb/adresser-fastigheter"]
+
+[[assign]]
+table = "GDB_Skolor2012"
+register_variant = ["scb/gdb/fastigheter", "scb/gdb/adresser-fastigheter"]
+
+[[assign]]
+table = "GDB_Skolor2013"
+register_variant = ["scb/gdb/fastigheter", "scb/gdb/adresser-fastigheter"]
+
+[[assign]]
+table = "GDB_Skolor2014"
+register_variant = ["scb/gdb/fastigheter", "scb/gdb/adresser-fastigheter"]
+
+[[assign]]
+table = "GDB_Skolor2015"
+register_variant = ["scb/gdb/fastigheter", "scb/gdb/adresser-fastigheter"]
+
+[[assign]]
+table = "GDB_Skolor2016"
+register_variant = ["scb/gdb/fastigheter", "scb/gdb/adresser-fastigheter"]
+
+[[assign]]
+table = "GDB_Skolor2017"
+register_variant = ["scb/gdb/fastigheter", "scb/gdb/adresser-fastigheter"]
