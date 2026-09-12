@@ -96,6 +96,2440 @@ Registerinformation export documents those three versions but carries no row for
 column. See reg_meta_build/docs/lisa/DispInkKE.md for the family's delivery span."""
 noted = "2026-09-11"
 
+# ── Steward-holdings gate content, 2026-09-12 (post-Y-123 build; worklist derived/errata_worklist.toml) ──
+
+# LISA documentation holes (2026-09-12): continuing columns SCB's export drops for one or two years, and one column its own P1105 delivery list dates earlier than the export.
+
+[[delivered]]
+register = "scb/lisa"
+variant = "arbetsstallen"
+column = "Ast_SektorKod"
+versions = ["2022"]
+evidence = "SWECOV holds Ast_SektorKod in Arbst_2022; SCB documents it 1990..2021 and 2023 with no row in 2022 — a one-year documentation hole in a continuing column."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/lisa"
+variant = "foretag"
+column = "Org_SektorKod"
+versions = ["2022"]
+evidence = "SWECOV holds Org_SektorKod in Ftg_2022; SCB documents it 2003..2021 and 2023 with no row in 2022 — a one-year documentation hole in a continuing column."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/lisa"
+variant = "individer-15plus"
+column = "AmPol"
+versions = ["2016"]
+evidence = "SWECOV holds AmPol in Individ_2016 (LISA individer-15plus); SCB's Registerinformation export documents the column in every LISA version 2010..2015 and 2017..2023 but carries no row for it in 2016 — a one-year documentation hole in a continuing column."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/lisa"
+variant = "individer-15plus"
+column = "BAS"
+versions = ["2020", "2021"]
+evidence = "SWECOV holds BAS in Individ_2020 and Individ_2021; SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) states BAS delivered 2020–2023, while the Registerinformation export documents it only from 2022."
+noted = "2026-09-12"
+
+# Proposed reg_meta_build/scb_errata.toml entries — Y-113..Y-120 version-gap
+# investigation (SWECOV holdings on scb/agi, scb/gdb, scb/ureg, scb/hreg).
+# Pasteable as they stand; each entry's `evidence` states the holdings fact the
+# investigation established from reg_webapp/stewards/swecov/inventory.toml and
+# SCB's Registerinformation.csv (2026-03-09 export). Grammar: scb_errata.toml
+# header. NOT included: the misses the era guard (`scb_errata_version_not_latest`)
+# refuses (GDB 1990-2017, UREG 1990-1996) and the coalescer-defect misses
+# (HREG sokande KursOrt/ProgOrt/YProg) — see report.md.
+
+# ── scb/agi — SCB documents AGI as two annual stream versions per year
+# ("<year>, löne- och förmånsutbetalningar" / "<year>, sociala ersättningar")
+# and stops at 2020; SWECOV holds the monthly Arb_/Soc_ tables through 2023-12.
+# Three annual löne-stream versions cover every held month edition (the
+# coalescer reads "2021, …" as the whole of 2021). All 40 columns are present in
+# the clone source "2020, löne- och förmånsutb" (regver 17967), which is the
+# nearest documented edition for every one of them.
+
+[[version]]
+register = "scb/agi"
+variant = "individuppgifter-agi"
+name = "2021, löne- och förmånsutbetalningar"
+evidence = "SWECOV holds Arb_AGIIndivid202101_Def … Arb_AGIIndivid202112_Def (12 monthly tables, 62 columns each, partition arb) and Soc_AGIIndivid202101_Def … Soc_AGIIndivid202112_Def (12 monthly tables, 16 columns, partition soc) for 2021-01..2021-12; SCB's Registerinformation export documents individuppgifter-agi only as the 2019 and 2020 löne-/sociala-stream versions. Named in SCB's own löne-stream token convention (its 2019 spelling) so that `scb_errata_now_present` retires it when SCB ships the version."
+noted = "2026-09-12"
+
+[[version]]
+register = "scb/agi"
+variant = "individuppgifter-agi"
+name = "2022, löne- och förmånsutbetalningar"
+evidence = "SWECOV holds Arb_AGIIndivid202201_Def … Arb_AGIIndivid202212_Def (12 monthly tables, 62 columns each, partition arb) and Soc_AGIIndivid202201_Def … Soc_AGIIndivid202212_Def (12 monthly tables, 16 columns, partition soc) for 2022-01..2022-12; SCB's Registerinformation export documents individuppgifter-agi only as the 2019 and 2020 löne-/sociala-stream versions. Named in SCB's own löne-stream token convention (its 2019 spelling) so that `scb_errata_now_present` retires it when SCB ships the version."
+noted = "2026-09-12"
+
+[[version]]
+register = "scb/agi"
+variant = "individuppgifter-agi"
+name = "2023, löne- och förmånsutbetalningar"
+evidence = "SWECOV holds Arb_AGIIndivid202301_Def … Arb_AGIIndivid202312_Def (12 monthly tables, 62 columns each, partition arb) and Soc_AGIIndivid202301_Def … Soc_AGIIndivid202312_Def (12 monthly tables, 16 columns, partition soc) for 2023-01..2023-12; SCB's Registerinformation export documents individuppgifter-agi only as the 2019 and 2020 löne-/sociala-stream versions. Named in SCB's own löne-stream token convention (its 2019 spelling) so that `scb_errata_now_present` retires it when SCB ships the version."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/agi"
+variant = "individuppgifter-agi"
+column = "AMBASSAD_ANSTALLD_SVERIGE"
+versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds AMBASSAD_ANSTALLD_SVERIGE in the Arb_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/agi"
+variant = "individuppgifter-agi"
+column = "ANDRA_KOSTNADSERS"
+versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds ANDRA_KOSTNADSERS in the Arb_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/agi"
+variant = "individuppgifter-agi"
+column = "ANTAL_DAGAR_SJOINKOMST"
+versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds ANTAL_DAGAR_SJOINKOMST in the Arb_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/agi"
+variant = "individuppgifter-agi"
+column = "ASTNr"
+versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds ASTNr in the Arb_AGIIndivid<YYYYMM>_Def and Soc_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/agi"
+variant = "individuppgifter-agi"
+column = "AVDRAG_UTGIFT_ARBETET"
+versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds AVDRAG_UTGIFT_ARBETET in the Arb_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/agi"
+variant = "individuppgifter-agi"
+column = "AVDR_PREL_SKATT"
+versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds AVDR_PREL_SKATT in the Arb_AGIIndivid<YYYYMM>_Def and Soc_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/agi"
+variant = "individuppgifter-agi"
+column = "AVDR_SKATT_ASINK"
+versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds AVDR_SKATT_ASINK in the Arb_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/agi"
+variant = "individuppgifter-agi"
+column = "AVDR_SKATT_SINK"
+versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds AVDR_SKATT_SINK in the Arb_AGIIndivid<YYYYMM>_Def and Soc_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/agi"
+variant = "individuppgifter-agi"
+column = "AVRAKNING_AVGIFTSFRI_ERS"
+versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds AVRAKNING_AVGIFTSFRI_ERS in the Arb_AGIIndivid<YYYYMM>_Def and Soc_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/agi"
+variant = "individuppgifter-agi"
+column = "BILERSATTNING"
+versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds BILERSATTNING in the Arb_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/agi"
+variant = "individuppgifter-agi"
+column = "BOSTADSF_EJ_SMAHUS_EJ_ULAG_SA"
+versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds BOSTADSF_EJ_SMAHUS_EJ_ULAG_SA in the Arb_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/agi"
+variant = "individuppgifter-agi"
+column = "BOSTADSF_EJ_SMAHUS_ULAG_AG"
+versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds BOSTADSF_EJ_SMAHUS_ULAG_AG in the Arb_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/agi"
+variant = "individuppgifter-agi"
+column = "BOSTADSF_EJ_SMAHUS_ULAG_EA"
+versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds BOSTADSF_EJ_SMAHUS_ULAG_EA in the Arb_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/agi"
+variant = "individuppgifter-agi"
+column = "BOSTADSF_SMAHUS_EJ_ULAG_SA"
+versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds BOSTADSF_SMAHUS_EJ_ULAG_SA in the Arb_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/agi"
+variant = "individuppgifter-agi"
+column = "DM_VID_BILFORMAN_EJ_ULAG_SA"
+versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds DM_VID_BILFORMAN_EJ_ULAG_SA in the Arb_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/agi"
+variant = "individuppgifter-agi"
+column = "DM_VID_BILFORMAN_ULAG_AG"
+versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds DM_VID_BILFORMAN_ULAG_AG in the Arb_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/agi"
+variant = "individuppgifter-agi"
+column = "DM_VID_BILFORMAN_ULAG_EA"
+versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds DM_VID_BILFORMAN_ULAG_EA in the Arb_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/agi"
+variant = "individuppgifter-agi"
+column = "EJSKATTEAVDR_EJBESKATTNING_SV"
+versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds EJSKATTEAVDR_EJBESKATTNING_SV in the Arb_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/agi"
+variant = "individuppgifter-agi"
+column = "ERS_EJ_SOC_AVG_EJ_JOBBAVD"
+versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds ERS_EJ_SOC_AVG_EJ_JOBBAVD in the Arb_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/agi"
+variant = "individuppgifter-agi"
+column = "ERS_FORMAN_BOSTAD_MM_SINK"
+versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds ERS_FORMAN_BOSTAD_MM_SINK in the Arb_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/agi"
+variant = "individuppgifter-agi"
+column = "FORMAN_HAR_JUSTERATS"
+versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds FORMAN_HAR_JUSTERATS in the Arb_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/agi"
+variant = "individuppgifter-agi"
+column = "FORMAN_SOM_PENSION_EJ_ULAG_SA"
+versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds FORMAN_SOM_PENSION_EJ_ULAG_SA in the Arb_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/agi"
+variant = "individuppgifter-agi"
+column = "FORSKAR_SKATTE_NAMNDEN"
+versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds FORSKAR_SKATTE_NAMNDEN in the Arb_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/agi"
+variant = "individuppgifter-agi"
+column = "HYRESERSATTNING"
+versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds HYRESERSATTNING in the Arb_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/agi"
+variant = "individuppgifter-agi"
+column = "KONTANT_ERSATTNING_EJ_ULAG_SA"
+versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds KONTANT_ERSATTNING_EJ_ULAG_SA in the Arb_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/agi"
+variant = "individuppgifter-agi"
+column = "KONTANT_ERSATTNING_ULAG_AG"
+versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds KONTANT_ERSATTNING_ULAG_AG in the Arb_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/agi"
+variant = "individuppgifter-agi"
+column = "KONTANT_ERSATTNING_ULAG_EA"
+versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds KONTANT_ERSATTNING_ULAG_EA in the Arb_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/agi"
+variant = "individuppgifter-agi"
+column = "PeOrgNr"
+versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds PeOrgNr in the Arb_AGIIndivid<YYYYMM>_Def and Soc_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/agi"
+variant = "individuppgifter-agi"
+column = "PersonNr"
+versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds PersonNr in the Arb_AGIIndivid<YYYYMM>_Def and Soc_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/agi"
+variant = "individuppgifter-agi"
+column = "SP_BILFORMAN_EJ_ULAG_SA"
+versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds SP_BILFORMAN_EJ_ULAG_SA in the Arb_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/agi"
+variant = "individuppgifter-agi"
+column = "SP_BILFORMAN_ULAG_AG"
+versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds SP_BILFORMAN_ULAG_AG in the Arb_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/agi"
+variant = "individuppgifter-agi"
+column = "SP_BILFORMAN_ULAG_EA"
+versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds SP_BILFORMAN_ULAG_EA in the Arb_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/agi"
+variant = "individuppgifter-agi"
+column = "SP_OVRIGA_FORMANER_EJ_ULAG_SA"
+versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds SP_OVRIGA_FORMANER_EJ_ULAG_SA in the Arb_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/agi"
+variant = "individuppgifter-agi"
+column = "SP_OVRIGA_FORMANER_ULAG_AG"
+versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds SP_OVRIGA_FORMANER_ULAG_AG in the Arb_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/agi"
+variant = "individuppgifter-agi"
+column = "SP_OVRIGA_FORMANER_ULAG_EA"
+versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds SP_OVRIGA_FORMANER_ULAG_EA in the Arb_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/agi"
+variant = "individuppgifter-agi"
+column = "TJANSTEPENSION"
+versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds TJANSTEPENSION in the Arb_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/agi"
+variant = "individuppgifter-agi"
+column = "TRAKTAMENTE"
+versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds TRAKTAMENTE in the Arb_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/agi"
+variant = "individuppgifter-agi"
+column = "UNDERLAG_ROTARBETE"
+versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds UNDERLAG_ROTARBETE in the Arb_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/agi"
+variant = "individuppgifter-agi"
+column = "UNDERLAG_RUTARBETE"
+versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds UNDERLAG_RUTARBETE in the Arb_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/agi"
+variant = "individuppgifter-agi"
+column = "VISSA_AVDRAG"
+versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds VISSA_AVDRAG in the Arb_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
+noted = "2026-09-12"
+
+# ── scb/gdb — adresser-fastigheter is documented 2018-01-01..2023-01-01;
+# SWECOV holds GDB_Skolor2024 with Kommun. 2024 starts after the variant's newest
+# documented year, so the era guard admits it; the clone source is 2023-01-01
+# (regver 18792), whose Kommun row (VarId 36, varchar) exists.
+
+[[version]]
+register = "scb/gdb"
+variant = "adresser-fastigheter"
+name = "2024-01-01"
+evidence = "SWECOV holds GDB_Skolor2024 (columns DeSO_2018, DeSO_2025, Kommun, P1105_Lopnr_skolenhetskod, Skolform) and GDB_Ind2024 for edition 2024; SCB's Registerinformation export documents adresser-fastigheter through 2023-01-01 only. Named in the variant's own YYYY-01-01 token convention."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/gdb"
+variant = "adresser-fastigheter"
+column = "Kommun"
+versions = ["2024-01-01"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds Kommun in GDB_Skolor2024 for edition 2024; SCB documents Kommun (VarId 36) in every adresser-fastigheter version 2018-01-01..2023-01-01 and none after."
+noted = "2026-09-12"
+
+# ── scb/ureg — personens-hogsta-utbildning-16-74 is documented 1997..2007 and
+# carries the SUN2000 columns only from the 2000 version; SWECOV's UREG1997,
+# UREG1998 and UREG1999 tables hold them (with the [[assign]] in
+# proposed_overlay.toml routing UREG1997..UREG2007 to this variant). Clone
+# source: 2000 (regver 1213), one row per column.
+
+# ── scb/hreg — sokande-grund-avancerad. SCB's export documents Kurskod, LInr
+# and LProg ONLY in the four Höstterminen 2005..2008 versions (no Vårterminen
+# version at all, nothing from 2009); SWECOV holds KursKod, LInr and LProg in
+# Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (2022..2024).
+# Clone source: Höstterminen 2008 (regver 1550), char. The version list is the
+# 20 term versions the held editions span (the worklist's set).
+
+[[delivered]]
+register = "scb/hreg"
+variant = "sokande-grund-avancerad"
+column = "Kurskod"
+versions = ["Vårterminen 2015", "Höstterminen 2015", "Vårterminen 2016", "Höstterminen 2016", "Vårterminen 2017", "Höstterminen 2017", "Vårterminen 2018", "Höstterminen 2018", "Vårterminen 2019", "Höstterminen 2019", "Vårterminen 2020", "Höstterminen 2020", "Vårterminen 2021", "Höstterminen 2021", "Vårterminen 2022", "Höstterminen 2022", "Vårterminen 2023", "Höstterminen 2023", "Vårterminen 2024", "Höstterminen 2024"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds Kurskod in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/hreg"
+variant = "sokande-grund-avancerad"
+column = "LInr"
+versions = ["Vårterminen 2015", "Höstterminen 2015", "Vårterminen 2016", "Höstterminen 2016", "Vårterminen 2017", "Höstterminen 2017", "Vårterminen 2018", "Höstterminen 2018", "Vårterminen 2019", "Höstterminen 2019", "Vårterminen 2020", "Höstterminen 2020", "Vårterminen 2021", "Höstterminen 2021", "Vårterminen 2022", "Höstterminen 2022", "Vårterminen 2023", "Höstterminen 2023", "Vårterminen 2024", "Höstterminen 2024"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds LInr in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/hreg"
+variant = "sokande-grund-avancerad"
+column = "LProg"
+versions = ["Vårterminen 2015", "Höstterminen 2015", "Vårterminen 2016", "Höstterminen 2016", "Vårterminen 2017", "Höstterminen 2017", "Vårterminen 2018", "Höstterminen 2018", "Vårterminen 2019", "Höstterminen 2019", "Vårterminen 2020", "Höstterminen 2020", "Vårterminen 2021", "Höstterminen 2021", "Vårterminen 2022", "Höstterminen 2022", "Vårterminen 2023", "Höstterminen 2023", "Vårterminen 2024", "Höstterminen 2024"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds LProg in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+noted = "2026-09-12"
+
+# Omgang (three variables, VarId 39310/39311/39312, one column) and PersonNr
+# (VarId 1346) first appear in SCB's export in Vårterminen 2016; Hreg_Sok_2015_2022
+# holds both from edition 2015. In the 2015 versions SCB carries VarId 1346 with a
+# BLANK Kolumnnamn (CVIDs 352072 VT2015, 390073 HT2015), which is why the build
+# split it into `personnr-motsvarande` (no column) and `personnr-motsvarande-2`
+# (PersonNr, 2016+). Clone source for both columns: Höstterminen 2016 (regver
+# 9855). If the maintainer confirms Hreg_Sok_2015_2022 starts in autumn 2015 (see
+# the commented [[edition]] in proposed_overlay.toml), drop "Vårterminen 2015".
+
+[[delivered]]
+register = "scb/hreg"
+variant = "sokande-grund-avancerad"
+column = "Omgang"
+versions = ["Vårterminen 2015", "Höstterminen 2015"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds Omgang in Hreg_Sok_2015_2022 (edition 2015..2021); SCB's Registerinformation export documents the Vårterminen 2015 and Höstterminen 2015 versions of sokande-grund-avancerad without a Omgang column and carries it from Vårterminen 2016 onwards."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/hreg"
+variant = "sokande-grund-avancerad"
+column = "PersonNr"
+versions = ["Vårterminen 2015", "Höstterminen 2015"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds PersonNr in Hreg_Sok_2015_2022 (edition 2015..2021); SCB's Registerinformation export documents the Vårterminen 2015 and Höstterminen 2015 versions of sokande-grund-avancerad without a PersonNr column and carries it from Vårterminen 2016 onwards."
+noted = "2026-09-12"
+
+# Survey-register [[delivered]] candidates (fou / it-anvandning / innovation-foretag),
+# computed 2026-09-12 against SCB's raw Registerinformation export; duplicates by
+# folded column merged (versions unioned).
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "AnstS"
+versions = ["2015", "2017"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds AnstS in FTG_FOU_2015, FTG_FOU_2017; SCB's Registerinformation export documents FoU Företagssektorn 2015, 2017 but names only 1/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "Ar"
+versions = ["2015", "2017"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds Ar in FTG_FOU_2015, FTG_FOU_2017; SCB's Registerinformation export documents FoU Företagssektorn 2015, 2017 but names only 1/1 distinct column(s) there and carries no row for this column; its only named rows are in 2005."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "Lillan"
+versions = ["2015", "2017"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds Lillan in FTG_FOU_2015, FTG_FOU_2017; SCB's Registerinformation export documents FoU Företagssektorn 2015, 2017 but names only 1/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "PeorgNr"
+versions = ["2009", "2011", "2013", "2015", "2017", "2019", "2021"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds PeorgNr in ; SCB's Registerinformation export documents FoU Företagssektorn 2009, 2011, 2013, 2015, 2017, 2019, 2021 but names only 0/0/0/1/1/8/8 distinct column(s) there and carries no row for this column; its only named rows are in 2003, 2005, 2007. | SWECOV holds peorgnr in ; SCB's Registerinformation export documents FoU Företagssektorn 2009, 2011, 2013, 2015, 2017, 2019, 2021 but names only 0/0/0/1/1/8/8 distinct column(s) there and carries no row for this column; its only named rows are in 2003, 2005, 2007."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "Storan"
+versions = ["2015", "2017"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds Storan in FTG_FOU_2015, FTG_FOU_2017; SCB's Registerinformation export documents FoU Företagssektorn 2015, 2017 but names only 1/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "Stratum"
+versions = ["2015", "2017"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds Stratum in FTG_FOU_2015, FTG_FOU_2017; SCB's Registerinformation export documents FoU Företagssektorn 2015, 2017 but names only 1/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "v011"
+versions = ["2005", "2007", "2009", "2011", "2013", "2015", "2017"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds v011 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015, FTG_FOU_2017; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015, 2017 but names only 4/3/0/0/0/1/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "v012"
+versions = ["2005", "2007", "2009", "2011", "2013", "2015", "2017"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds v012 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015, FTG_FOU_2017; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015, 2017 but names only 4/3/0/0/0/1/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "v013"
+versions = ["2005", "2007", "2009", "2011", "2013", "2015", "2017"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds v013 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015, FTG_FOU_2017; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015, 2017 but names only 4/3/0/0/0/1/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "v014"
+versions = ["2005"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds v014 in FTG_FOU_2005; SCB's Registerinformation export documents FoU Företagssektorn 2005 but names only 4 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "v021"
+versions = ["2005"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds v021 in FTG_FOU_2005; SCB's Registerinformation export documents FoU Företagssektorn 2005 but names only 4 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "v022"
+versions = ["2005"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds v022 in FTG_FOU_2005; SCB's Registerinformation export documents FoU Företagssektorn 2005 but names only 4 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "v023"
+versions = ["2005"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds v023 in FTG_FOU_2005; SCB's Registerinformation export documents FoU Företagssektorn 2005 but names only 4 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "v024"
+versions = ["2005"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds v024 in FTG_FOU_2005; SCB's Registerinformation export documents FoU Företagssektorn 2005 but names only 4 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "v0301"
+versions = ["2005", "2007", "2009", "2011", "2013", "2015", "2017"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds v0301 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015, FTG_FOU_2017; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015, 2017 but names only 4/3/0/0/0/1/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "v031"
+versions = ["2005"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds v031 in FTG_FOU_2005; SCB's Registerinformation export documents FoU Företagssektorn 2005 but names only 4 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "v0311"
+versions = ["2005", "2007", "2009", "2011", "2013", "2015", "2017"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds v0311 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015, FTG_FOU_2017; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015, 2017 but names only 4/3/0/0/0/1/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "v032"
+versions = ["2005"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds v032 in FTG_FOU_2005; SCB's Registerinformation export documents FoU Företagssektorn 2005 but names only 4 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "v0321"
+versions = ["2013", "2015", "2017"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds v0321 in FTG_FOU_2013, FTG_FOU_2015, FTG_FOU_2017; SCB's Registerinformation export documents FoU Företagssektorn 2013, 2015, 2017 but names only 0/1/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "v033"
+versions = ["2005"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds v033 in FTG_FOU_2005; SCB's Registerinformation export documents FoU Företagssektorn 2005 but names only 4 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "v034"
+versions = ["2005"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds v034 in FTG_FOU_2005; SCB's Registerinformation export documents FoU Företagssektorn 2005 but names only 4 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "v0401"
+versions = ["2005", "2007", "2009", "2011", "2013", "2015"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds v0401 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015 but names only 4/3/0/0/0/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "v0402"
+versions = ["2005", "2007", "2009", "2011", "2013", "2015"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds v0402 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015 but names only 4/3/0/0/0/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "v041"
+versions = ["2005"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds v041 in FTG_FOU_2005; SCB's Registerinformation export documents FoU Företagssektorn 2005 but names only 4 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "v0411"
+versions = ["2005", "2007", "2009", "2011", "2013", "2015"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds v0411 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015 but names only 4/3/0/0/0/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "v0412"
+versions = ["2005", "2007", "2009", "2011", "2013", "2015"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds v0412 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015 but names only 4/3/0/0/0/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "v042"
+versions = ["2005"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds v042 in FTG_FOU_2005; SCB's Registerinformation export documents FoU Företagssektorn 2005 but names only 4 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "v0421"
+versions = ["2005", "2007", "2009", "2011", "2013", "2015"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds v0421 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015 but names only 4/3/0/0/0/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "v0422"
+versions = ["2005", "2007", "2009", "2011", "2013", "2015"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds v0422 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015 but names only 4/3/0/0/0/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "v043"
+versions = ["2005"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds v043 in FTG_FOU_2005; SCB's Registerinformation export documents FoU Företagssektorn 2005 but names only 4 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "v0431"
+versions = ["2005", "2007", "2009", "2011", "2013", "2015"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds v0431 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015 but names only 4/3/0/0/0/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "v0432"
+versions = ["2005", "2007", "2009", "2011", "2013", "2015"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds v0432 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015 but names only 4/3/0/0/0/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "v044"
+versions = ["2005"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds v044 in FTG_FOU_2005; SCB's Registerinformation export documents FoU Företagssektorn 2005 but names only 4 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "v0441"
+versions = ["2005", "2007", "2009", "2011", "2013", "2015"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds v0441 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015 but names only 4/3/0/0/0/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "v0442"
+versions = ["2005", "2007", "2009", "2011", "2013", "2015"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds v0442 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015 but names only 4/3/0/0/0/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "v0451"
+versions = ["2005", "2007", "2009", "2011", "2013", "2015"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds v0451 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015 but names only 4/3/0/0/0/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "v0452"
+versions = ["2005", "2007", "2009", "2011", "2013", "2015"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds v0452 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015 but names only 4/3/0/0/0/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "v0461"
+versions = ["2005", "2007", "2009", "2011", "2013", "2015"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds v0461 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015 but names only 4/3/0/0/0/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "v0462"
+versions = ["2005", "2007", "2009", "2011", "2013", "2015"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds v0462 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015 but names only 4/3/0/0/0/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "v0471"
+versions = ["2005", "2007", "2009", "2011", "2013", "2015"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds v0471 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015 but names only 4/3/0/0/0/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "v0472"
+versions = ["2005", "2007", "2009", "2011", "2013", "2015"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds v0472 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015 but names only 4/3/0/0/0/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "v0500"
+versions = ["2005"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds v0500 in FTG_FOU_2005; SCB's Registerinformation export documents FoU Företagssektorn 2005 but names only 4 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "v0501"
+versions = ["2005"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds v0501 in FTG_FOU_2005; SCB's Registerinformation export documents FoU Företagssektorn 2005 but names only 4 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "v0502"
+versions = ["2005"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds v0502 in FTG_FOU_2005; SCB's Registerinformation export documents FoU Företagssektorn 2005 but names only 4 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "v0503"
+versions = ["2005"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds v0503 in FTG_FOU_2005; SCB's Registerinformation export documents FoU Företagssektorn 2005 but names only 4 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "v0504"
+versions = ["2005"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds v0504 in FTG_FOU_2005; SCB's Registerinformation export documents FoU Företagssektorn 2005 but names only 4 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "v0505"
+versions = ["2005"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds v0505 in FTG_FOU_2005; SCB's Registerinformation export documents FoU Företagssektorn 2005 but names only 4 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "v051"
+versions = ["2005"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds v051 in FTG_FOU_2005; SCB's Registerinformation export documents FoU Företagssektorn 2005 but names only 4 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "v052"
+versions = ["2005"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds v052 in FTG_FOU_2005; SCB's Registerinformation export documents FoU Företagssektorn 2005 but names only 4 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "v0523"
+versions = ["2005"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds v0523 in FTG_FOU_2005; SCB's Registerinformation export documents FoU Företagssektorn 2005 but names only 4 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "v053"
+versions = ["2005"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds v053 in FTG_FOU_2005; SCB's Registerinformation export documents FoU Företagssektorn 2005 but names only 4 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "v054"
+versions = ["2005"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds v054 in FTG_FOU_2005; SCB's Registerinformation export documents FoU Företagssektorn 2005 but names only 4 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "v0571"
+versions = ["2005", "2007", "2009", "2011", "2013", "2015", "2017"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds v0571 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015, FTG_FOU_2017; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015, 2017 but names only 4/3/0/0/0/1/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "v0581"
+versions = ["2005", "2007", "2009", "2011", "2013", "2015", "2017"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds v0581 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015, FTG_FOU_2017; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015, 2017 but names only 4/3/0/0/0/1/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "v0591"
+versions = ["2005", "2007", "2009", "2011", "2013", "2015", "2017"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds v0591 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015, FTG_FOU_2017; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015, 2017 but names only 4/3/0/0/0/1/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "v0601"
+versions = ["2005", "2007", "2009", "2011", "2013", "2015", "2017"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds v0601 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015, FTG_FOU_2017; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015, 2017 but names only 4/3/0/0/0/1/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "v061"
+versions = ["2005"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds v061 in FTG_FOU_2005; SCB's Registerinformation export documents FoU Företagssektorn 2005 but names only 4 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "v0611"
+versions = ["2005", "2007", "2009", "2011", "2013", "2015", "2017"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds v0611 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015, FTG_FOU_2017; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015, 2017 but names only 4/3/0/0/0/1/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "v062"
+versions = ["2005"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds v062 in FTG_FOU_2005; SCB's Registerinformation export documents FoU Företagssektorn 2005 but names only 4 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "v0621"
+versions = ["2005", "2007", "2009", "2011", "2013", "2015", "2017"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds v0621 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015, FTG_FOU_2017; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015, 2017 but names only 4/3/0/0/0/1/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "v063"
+versions = ["2005"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds v063 in FTG_FOU_2005; SCB's Registerinformation export documents FoU Företagssektorn 2005 but names only 4 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "v0631"
+versions = ["2005", "2007", "2009", "2011", "2013", "2015", "2017"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds v0631 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015, FTG_FOU_2017; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015, 2017 but names only 4/3/0/0/0/1/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "v064"
+versions = ["2005"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds v064 in FTG_FOU_2005; SCB's Registerinformation export documents FoU Företagssektorn 2005 but names only 4 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "v0641"
+versions = ["2005", "2007", "2009", "2011", "2013", "2015", "2017"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds v0641 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015, FTG_FOU_2017; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015, 2017 but names only 4/3/0/0/0/1/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "v0651"
+versions = ["2005", "2007", "2009", "2011", "2013", "2015", "2017"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds v0651 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015, FTG_FOU_2017; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015, 2017 but names only 4/3/0/0/0/1/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "v0661"
+versions = ["2005", "2007", "2009", "2011", "2013", "2015", "2017"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds v0661 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015, FTG_FOU_2017; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015, 2017 but names only 4/3/0/0/0/1/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "v0671"
+versions = ["2005", "2007", "2009", "2011", "2013", "2015", "2017"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds v0671 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015, FTG_FOU_2017; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015, 2017 but names only 4/3/0/0/0/1/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "v068"
+versions = ["2015"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds v068 in FTG_FOU_2015; SCB's Registerinformation export documents FoU Företagssektorn 2015 but names only 1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "v0681"
+versions = ["2005", "2007", "2009", "2011", "2013", "2015", "2017"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds v0681 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015, FTG_FOU_2017; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015, 2017 but names only 4/3/0/0/0/1/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "v0691"
+versions = ["2005", "2007", "2009", "2011", "2013", "2015", "2017"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds v0691 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015, FTG_FOU_2017; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015, 2017 but names only 4/3/0/0/0/1/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "v0701"
+versions = ["2005", "2007", "2009", "2011", "2013", "2015", "2017"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds v0701 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015, FTG_FOU_2017; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015, 2017 but names only 4/3/0/0/0/1/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "v0711"
+versions = ["2005", "2007", "2009", "2011", "2013", "2015", "2017"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds v0711 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015, FTG_FOU_2017; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015, 2017 but names only 4/3/0/0/0/1/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "v0721"
+versions = ["2005", "2007", "2009", "2011", "2013", "2015", "2017"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds v0721 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015, FTG_FOU_2017; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015, 2017 but names only 4/3/0/0/0/1/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "v0731"
+versions = ["2005", "2007", "2009", "2011", "2013", "2015", "2017"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds v0731 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015, FTG_FOU_2017; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015, 2017 but names only 4/3/0/0/0/1/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "v0741"
+versions = ["2005", "2007", "2009", "2011", "2013", "2015", "2017"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds v0741 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015, FTG_FOU_2017; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015, 2017 but names only 4/3/0/0/0/1/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "v0751"
+versions = ["2005", "2007", "2009", "2011", "2013", "2015", "2017"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds v0751 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015, FTG_FOU_2017; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015, 2017 but names only 4/3/0/0/0/1/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "v0761"
+versions = ["2005", "2007", "2009", "2011", "2013", "2015", "2017"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds v0761 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015, FTG_FOU_2017; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015, 2017 but names only 4/3/0/0/0/1/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "v0771"
+versions = ["2005", "2007", "2009", "2011", "2013", "2015", "2017"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds v0771 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015, FTG_FOU_2017; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015, 2017 but names only 4/3/0/0/0/1/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "v0781"
+versions = ["2007", "2009", "2011", "2013", "2015", "2017"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds v0781 in FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015, FTG_FOU_2017; SCB's Registerinformation export documents FoU Företagssektorn 2007, 2009, 2011, 2013, 2015, 2017 but names only 3/0/0/0/1/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "v0782"
+versions = ["2005"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds v0782 in FTG_FOU_2005; SCB's Registerinformation export documents FoU Företagssektorn 2005 but names only 4 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "v1256"
+versions = ["2015", "2017"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds v1256 in FTG_FOU_2015, FTG_FOU_2017; SCB's Registerinformation export documents FoU Företagssektorn 2015, 2017 but names only 1/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/it-anvandning"
+variant = "it-anvandning-i-foretag"
+column = "AWSVALPCT"
+versions = ["2014"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds AWSVALPCT in ITftg_Mikro_2014, ITftg_Stora_2014; SCB's export documents IT-användning i företag 2014 but carries no row with this Kolumnnamn there (the variable's 2014 rows carry a blank Kolumnnamn); its named rows are in 2013, 2015, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/it-anvandning"
+variant = "it-anvandning-i-foretag"
+column = "CRMAN"
+versions = ["2014", "2015"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds CRMAN in ITftg_Mikro_2014, ITftg_Stora_2014, ITftg_Stora_2015; SCB's export documents IT-användning i företag 2014, 2015 but carries no row with this Kolumnnamn there; its named rows are in 2017, 2019, 2021."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/it-anvandning"
+variant = "it-anvandning-i-foretag"
+column = "CRMSTR"
+versions = ["2014", "2015"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds CRMSTR in ITftg_Mikro_2014, ITftg_Stora_2014, ITftg_Stora_2015; SCB's export documents IT-användning i företag 2014, 2015 but carries no row with this Kolumnnamn there (the variable's 2014 rows carry a blank Kolumnnamn); its named rows are in 2017, 2019, 2021."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/it-anvandning"
+variant = "it-anvandning-i-foretag"
+column = "CUSE"
+versions = ["2017"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds CUSE in ITftg_Mikro_2017; SCB's export documents IT-användning i företag 2017 but carries no row with this Kolumnnamn there (the variable's 2017 rows carry a blank Kolumnnamn); its named rows are in 2013, 2014, 2015, 2018."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/it-anvandning"
+variant = "it-anvandning-i-foretag"
+column = "EBUY2"
+versions = ["2014"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds EBUY2 in ITftg_Mikro_2014, ITftg_Stora_2014; SCB's export documents IT-användning i företag 2014 but carries no row with this Kolumnnamn there (the variable's 2014 rows carry a blank Kolumnnamn); its named rows are in 2015, 2017."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/it-anvandning"
+variant = "it-anvandning-i-foretag"
+column = "EMPIUSEPCT"
+versions = ["2014"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds EMPIUSEPCT in ITftg_Mikro_2014, ITftg_Stora_2014; SCB's export documents IT-användning i företag 2014 but carries no row with this Kolumnnamn there (the variable's 2014 rows carry a blank Kolumnnamn); its named rows are in 2013, 2015, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/it-anvandning"
+variant = "it-anvandning-i-foretag"
+column = "EMPMD1PCT"
+versions = ["2014"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds EMPMD1PCT in ITftg_Mikro_2014, ITftg_Stora_2014; SCB's export documents IT-användning i företag 2014 but carries no row with this Kolumnnamn there (the variable's 2014 rows carry a blank Kolumnnamn); its named rows are in 2015, 2017, 2018."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/it-anvandning"
+variant = "it-anvandning-i-foretag"
+column = "INV3R_PAP"
+versions = ["2014"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds INV3R_PAP in ITftg_Mikro_2014, ITftg_Stora_2014; SCB's export documents IT-användning i företag 2014 but carries no row with this Kolumnnamn there; its named rows are in 2017."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/it-anvandning"
+variant = "it-anvandning-i-foretag"
+column = "INV3R_PMP"
+versions = ["2014"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds INV3R_PMP in ITftg_Mikro_2014, ITftg_Stora_2014; SCB's export documents IT-användning i företag 2014 but carries no row with this Kolumnnamn there; its named rows are in 2017."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/it-anvandning"
+variant = "it-anvandning-i-foretag"
+column = "INV3SBG_PAP"
+versions = ["2014"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds INV3SBG_PAP in ITftg_Mikro_2014, ITftg_Stora_2014; SCB's export documents IT-användning i företag 2014 but carries no row with this Kolumnnamn there (the variable's 2014 rows carry a blank Kolumnnamn); its named rows are in 2017."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/it-anvandning"
+variant = "it-anvandning-i-foretag"
+column = "INV3SBG_PEMP"
+versions = ["2014"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds INV3SBG_PEMP in ITftg_Mikro_2014, ITftg_Stora_2014; SCB's export documents IT-användning i företag 2014 but carries no row with this Kolumnnamn there (the variable's 2014 rows carry a blank Kolumnnamn); its named rows are in 2017."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/it-anvandning"
+variant = "it-anvandning-i-foretag"
+column = "INV3SBG_PPMP"
+versions = ["2014"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds INV3SBG_PPMP in ITftg_Mikro_2014, ITftg_Stora_2014; SCB's export documents IT-användning i företag 2014 but carries no row with this Kolumnnamn there (the variable's 2014 rows carry a blank Kolumnnamn); its named rows are in 2017."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/it-anvandning"
+variant = "it-anvandning-i-foretag"
+column = "ITERP1"
+versions = ["2014", "2015"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds ITERP1 in ITftg_Mikro_2014, ITftg_Stora_2014, ITftg_Stora_2015; SCB's export documents IT-användning i företag 2014, 2015 but carries no row with this Kolumnnamn there (the variable's 2014 rows carry a blank Kolumnnamn); its named rows are in 2013, 2017, 2019, 2021, 2023, 2025."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/it-anvandning"
+variant = "it-anvandning-i-foretag"
+column = "ITSP2"
+versions = ["2014"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds ITSP2 in ITftg_Mikro_2014, ITftg_Stora_2014; SCB's export documents IT-användning i företag 2014 but carries no row with this Kolumnnamn there (the variable's 2014 rows carry a blank Kolumnnamn); its named rows are in 2015, 2017, 2018, 2019, 2020, 2022, 2024."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/it-anvandning"
+variant = "it-anvandning-i-foretag"
+column = "ITSPRCR2"
+versions = ["2014"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds ITSPRCR2 in ITftg_Mikro_2014, ITftg_Stora_2014; SCB's export documents IT-användning i företag 2014 but carries no row with this Kolumnnamn there (the variable's 2014 rows carry a blank Kolumnnamn); its named rows are in 2015, 2017, 2018, 2019, 2020, 2022, 2024."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/it-anvandning"
+variant = "it-anvandning-i-foretag"
+column = "ITSPT2"
+versions = ["2014"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds ITSPT2 in ITftg_Mikro_2014, ITftg_Stora_2014; SCB's export documents IT-användning i företag 2014 but carries no row with this Kolumnnamn there (the variable's 2014 rows carry a blank Kolumnnamn); its named rows are in 2015, 2017, 2018, 2019, 2020, 2022, 2024."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/it-anvandning"
+variant = "it-anvandning-i-foretag"
+column = "ITSPVAC2"
+versions = ["2014"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds ITSPVAC2 in ITftg_Mikro_2014, ITftg_Stora_2014; SCB's export documents IT-användning i företag 2014 but carries no row with this Kolumnnamn there (the variable's 2014 rows carry a blank Kolumnnamn); its named rows are in 2015, 2017, 2018, 2019, 2020, 2022, 2024."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/it-anvandning"
+variant = "it-anvandning-i-foretag"
+column = "ITUST2"
+versions = ["2014"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds ITUST2 in ITftg_Mikro_2014, ITftg_Stora_2014; SCB's export documents IT-användning i företag 2014 but carries no row with this Kolumnnamn there (the variable's 2014 rows carry a blank Kolumnnamn); its named rows are in 2015, 2017, 2018, 2019, 2020, 2022, 2024."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/it-anvandning"
+variant = "it-anvandning-i-foretag"
+column = "NPOP"
+versions = ["2020"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds NPOP in ITftg_Mikro_2020, ITftg_Stora_2020; SCB's export documents IT-användning i företag 2020 but carries no row with this Kolumnnamn there; its named rows are in 2021, 2022, 2023, 2024, 2025."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/it-anvandning"
+variant = "it-anvandning-i-foretag"
+column = "NRESP"
+versions = ["2020"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds NRESP in ITftg_Mikro_2020, ITftg_Stora_2020; SCB's export documents IT-användning i företag 2020 but carries no row with this Kolumnnamn there; its named rows are in 2021, 2022, 2023, 2024, 2025."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/it-anvandning"
+variant = "it-anvandning-i-foretag"
+column = "NSAMP"
+versions = ["2020"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds NSAMP in ITftg_Mikro_2020, ITftg_Stora_2020; SCB's export documents IT-användning i företag 2020 but carries no row with this Kolumnnamn there; its named rows are in 2021, 2022, 2023, 2024, 2025."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/it-anvandning"
+variant = "it-anvandning-i-foretag"
+column = "NUTS2"
+versions = ["2020"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds NUTS2 in ITftg_Stora_2020; SCB's export documents IT-användning i företag 2020 but carries no row with this Kolumnnamn there; its named rows are in 2021, 2022, 2023, 2024, 2025."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/it-anvandning"
+variant = "it-anvandning-i-foretag"
+column = "NgS1"
+versions = ["2013", "2014", "2015", "2017", "2018", "2019", "2020"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds NgS1 in ITftg_Mikro_2013, ITftg_Mikro_2014, ITftg_Mikro_2015, ITftg_Mikro_2017, ITftg_Mikro_2018, ITftg_Mikro_2019, ITftg_Mikro_2020, ITftg_Stora_2013, ITftg_Stora_2014, ITftg_Stora_2015, ITftg_Stora_2017, ITftg_Stora_2018, ITftg_Stora_2019, ITftg_Stora_2020; SCB's export documents IT-användning i företag 2013, 2014, 2015, 2017, 2018, 2019, 2020 but carries no row with this Kolumnnamn there; its named rows are in 2021, 2022, 2023, 2024, 2025."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/it-anvandning"
+variant = "it-anvandning-i-foretag"
+column = "Oms"
+versions = ["2020"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds Oms in ITftg_Mikro_2020, ITftg_Stora_2020; SCB's export documents IT-användning i företag 2020 but carries no row with this Kolumnnamn there; its named rows are in 2021, 2022."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/it-anvandning"
+variant = "it-anvandning-i-foretag"
+column = "Outlier"
+versions = ["2020"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds Outlier in ITftg_Mikro_2020, ITftg_Stora_2020; SCB's export documents IT-användning i företag 2020 but carries no row with this Kolumnnamn there; its named rows are in 2021, 2022, 2023, 2024, 2025."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/it-anvandning"
+variant = "it-anvandning-i-foretag"
+column = "PeOrgNr"
+versions = ["2013", "2014", "2015", "2017", "2018", "2019", "2020"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds PeOrgNr in ; SCB's export documents IT-användning i företag 2013, 2014, 2015, 2017, 2018, 2019, 2020 but carries no row with this Kolumnnamn there; its named rows are in 2021, 2022, 2023, 2024, 2025."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/it-anvandning"
+variant = "it-anvandning-i-foretag"
+column = "RFAC1"
+versions = ["2014"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds RFAC1 in ITftg_Mikro_2014, ITftg_Stora_2014; SCB's export documents IT-användning i företag 2014 but carries no row with this Kolumnnamn there; its named rows are in 2017."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/it-anvandning"
+variant = "it-anvandning-i-foretag"
+column = "RFASPRI1"
+versions = ["2014"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds RFASPRI1 in ITftg_Mikro_2014, ITftg_Stora_2014; SCB's export documents IT-användning i företag 2014 but carries no row with this Kolumnnamn there (the variable's 2014 rows carry a blank Kolumnnamn); its named rows are in 2017."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/it-anvandning"
+variant = "it-anvandning-i-foretag"
+column = "RFPSDP1"
+versions = ["2014"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds RFPSDP1 in ITftg_Mikro_2014, ITftg_Stora_2014; SCB's export documents IT-användning i företag 2014 but carries no row with this Kolumnnamn there; its named rows are in 2017."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/it-anvandning"
+variant = "it-anvandning-i-foretag"
+column = "SISC"
+versions = ["2014"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds SISC in ITftg_Mikro_2014, ITftg_Stora_2014; SCB's export documents IT-användning i företag 2014 but carries no row with this Kolumnnamn there (the variable's 2014 rows carry a blank Kolumnnamn); its named rows are in 2015, 2017, 2023."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/it-anvandning"
+variant = "it-anvandning-i-foretag"
+column = "SISCADE"
+versions = ["2014"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds SISCADE in ITftg_Mikro_2014, ITftg_Stora_2014; SCB's export documents IT-användning i företag 2014 but carries no row with this Kolumnnamn there (the variable's 2014 rows carry a blank Kolumnnamn); its named rows are in 2015, 2017."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/it-anvandning"
+variant = "it-anvandning-i-foretag"
+column = "SISCWEB"
+versions = ["2014"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds SISCWEB in ITftg_Mikro_2014, ITftg_Stora_2014; SCB's export documents IT-användning i företag 2014 but carries no row with this Kolumnnamn there (the variable's 2014 rows carry a blank Kolumnnamn); its named rows are in 2015, 2017."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/it-anvandning"
+variant = "it-anvandning-i-foretag"
+column = "TID"
+versions = ["2013"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds TID in ITftg_Stora_2013; SCB's export documents IT-användning i företag 2013 but carries no row with this Kolumnnamn there; its named rows are in 2014, 2015, 2017, 2018, 2019, 2020."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/it-anvandning"
+variant = "it-anvandning-i-foretag"
+column = "TURN"
+versions = ["2014"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds TURN in ITftg_Mikro_2014, ITftg_Stora_2014; SCB's export documents IT-användning i företag 2014 but carries no row with this Kolumnnamn there (the variable's 2014 rows carry a blank Kolumnnamn); its named rows are in 2013, 2015."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/it-anvandning"
+variant = "it-anvandning-i-foretag"
+column = "UTVANTP"
+versions = ["2014"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds UTVANTP in ITftg_Mikro_2014, ITftg_Stora_2014; SCB's export documents IT-användning i företag 2014 but carries no row with this Kolumnnamn there (the variable's 2014 rows carry a blank Kolumnnamn); its named rows are in 2013, 2015, 2017, 2018."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/it-anvandning"
+variant = "it-anvandning-i-foretag"
+column = "UTVEGANV"
+versions = ["2014"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds UTVEGANV in ITftg_Mikro_2014, ITftg_Stora_2014; SCB's export documents IT-användning i företag 2014 but carries no row with this Kolumnnamn there (the variable's 2014 rows carry a blank Kolumnnamn); its named rows are in 2013, 2015."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/it-anvandning"
+variant = "it-anvandning-i-foretag"
+column = "UTVEXF"
+versions = ["2014"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds UTVEXF in ITftg_Mikro_2014, ITftg_Stora_2014; SCB's export documents IT-användning i företag 2014 but carries no row with this Kolumnnamn there (the variable's 2014 rows carry a blank Kolumnnamn); its named rows are in 2013, 2015."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/it-anvandning"
+variant = "it-anvandning-i-foretag"
+column = "UTVP"
+versions = ["2014"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds UTVP in ITftg_Mikro_2014, ITftg_Stora_2014; SCB's export documents IT-användning i företag 2014 but carries no row with this Kolumnnamn there (the variable's 2014 rows carry a blank Kolumnnamn); its named rows are in 2013, 2015, 2017, 2018."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/it-anvandning"
+variant = "it-anvandning-i-foretag"
+column = "UTVSUP"
+versions = ["2014"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds UTVSUP in ITftg_Mikro_2014, ITftg_Stora_2014; SCB's export documents IT-användning i företag 2014 but carries no row with this Kolumnnamn there (the variable's 2014 rows carry a blank Kolumnnamn); its named rows are in 2013, 2015."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/it-anvandning"
+variant = "it-anvandning-i-foretag"
+column = "Vikt"
+versions = ["2017", "2018", "2020"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds Vikt in ITftg_Mikro_2017, ITftg_Mikro_2018, ITftg_Mikro_2020, ITftg_Stora_2017, ITftg_Stora_2018, ITftg_Stora_2020; SCB's export documents IT-användning i företag 2017, 2018, 2020 but carries no row with this Kolumnnamn there; its named rows are in 2021, 2022, 2023, 2024, 2025."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/it-anvandning"
+variant = "it-anvandning-i-foretag"
+column = "WEBORD"
+versions = ["2014"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds WEBORD in ITftg_Mikro_2014, ITftg_Stora_2014; SCB's export documents IT-användning i företag 2014 but carries no row with this Kolumnnamn there (the variable's 2014 rows carry a blank Kolumnnamn); its named rows are in 2013, 2015, 2017, 2018, 2019, 2020, 2021, 2023, 2025."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/it-anvandning"
+variant = "it-anvandning-i-foretag"
+column = "stratum"
+versions = ["2013", "2014", "2015", "2017", "2020"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds stratum in ITftg_Mikro_2015, ITftg_Mikro_2017, ITftg_Mikro_2020, ITftg_Stora_2013, ITftg_Stora_2014, ITftg_Stora_2015, ITftg_Stora_2017, ITftg_Stora_2020; SCB's export documents IT-användning i företag 2013, 2014, 2015, 2017, 2020 but carries no row with this Kolumnnamn there; its named rows are in 2021, 2022, 2023, 2024, 2025."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "AGKAT"
+versions = ["2014 - 2016", "2016 - 2018", "2018 - 2020"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds AGKAT in CIS2016, CIS2018, CIS2020 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2014 - 2016, 2016 - 2018, 2018 - 2020 without a row for this column; its named rows are in 2022 - 2024."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "Ar"
+versions = ["2002 - 2004", "2004 - 2006", "2014 - 2016"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds Ar in CIS2004, CIS2006, CIS2016 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2002 - 2004, 2004 - 2006, 2014 - 2016 without a row for this column; its named rows are in 2020 - 2022."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "CO11"
+versions = ["2002 - 2004", "2004 - 2006", "2006 - 2008", "2008 - 2010", "2010 - 2012"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds CO11 in CIS2004, CIS2006, CIS2008, CIS2010, CIS2012 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2002 - 2004, 2004 - 2006, 2006 - 2008, 2008 - 2010, 2010 - 2012 with a blank Kolumnnamn on the variable's rows in 2002 - 2004, 2004 - 2006, 2006 - 2008, 2008 - 2010, 2010 - 2012; its named rows are in 2014 - 2016."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "CO12"
+versions = ["2002 - 2004", "2004 - 2006", "2006 - 2008", "2008 - 2010", "2010 - 2012"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds CO12 in CIS2004, CIS2006, CIS2008, CIS2010, CIS2012 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2002 - 2004, 2004 - 2006, 2006 - 2008, 2008 - 2010, 2010 - 2012 with a blank Kolumnnamn on the variable's rows in 2002 - 2004, 2004 - 2006, 2006 - 2008, 2008 - 2010, 2010 - 2012; its named rows are in 2014 - 2016."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "CO13"
+versions = ["2002 - 2004", "2004 - 2006", "2006 - 2008", "2008 - 2010", "2010 - 2012"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds CO13 in CIS2004, CIS2006, CIS2008, CIS2010, CIS2012 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2002 - 2004, 2004 - 2006, 2006 - 2008, 2008 - 2010, 2010 - 2012 with a blank Kolumnnamn on the variable's rows in 2002 - 2004, 2004 - 2006, 2006 - 2008, 2008 - 2010, 2010 - 2012; its named rows are in 2014 - 2016."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "CO14"
+versions = ["2002 - 2004", "2004 - 2006", "2006 - 2008", "2008 - 2010", "2010 - 2012"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds CO14 in CIS2004, CIS2006, CIS2008, CIS2010, CIS2012 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2002 - 2004, 2004 - 2006, 2006 - 2008, 2008 - 2010, 2010 - 2012 with a blank Kolumnnamn on the variable's rows in 2002 - 2004, 2004 - 2006, 2006 - 2008, 2008 - 2010, 2010 - 2012; its named rows are in 2014 - 2016."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "CO15"
+versions = ["2006 - 2008", "2008 - 2010", "2010 - 2012"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds CO15 in CIS2008, CIS2010, CIS2012 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2006 - 2008, 2008 - 2010, 2010 - 2012 with a blank Kolumnnamn on the variable's rows in 2006 - 2008, 2008 - 2010, 2010 - 2012; its named rows are in 2014 - 2016."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "CO21"
+versions = ["2002 - 2004", "2004 - 2006", "2006 - 2008", "2008 - 2010", "2010 - 2012"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds CO21 in CIS2004, CIS2006, CIS2008, CIS2010, CIS2012 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2002 - 2004, 2004 - 2006, 2006 - 2008, 2008 - 2010, 2010 - 2012 with a blank Kolumnnamn on the variable's rows in 2002 - 2004, 2004 - 2006, 2006 - 2008, 2008 - 2010, 2010 - 2012; its named rows are in 2014 - 2016."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "CO22"
+versions = ["2002 - 2004", "2004 - 2006", "2006 - 2008", "2008 - 2010", "2010 - 2012"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds CO22 in CIS2004, CIS2006, CIS2008, CIS2010, CIS2012 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2002 - 2004, 2004 - 2006, 2006 - 2008, 2008 - 2010, 2010 - 2012 with a blank Kolumnnamn on the variable's rows in 2002 - 2004, 2004 - 2006, 2006 - 2008, 2008 - 2010, 2010 - 2012; its named rows are in 2014 - 2016."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "CO23"
+versions = ["2002 - 2004", "2004 - 2006", "2006 - 2008", "2008 - 2010", "2010 - 2012"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds CO23 in CIS2004, CIS2006, CIS2008, CIS2010, CIS2012 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2002 - 2004, 2004 - 2006, 2006 - 2008, 2008 - 2010, 2010 - 2012 with a blank Kolumnnamn on the variable's rows in 2002 - 2004, 2004 - 2006, 2006 - 2008, 2008 - 2010, 2010 - 2012; its named rows are in 2014 - 2016."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "CO24"
+versions = ["2002 - 2004", "2004 - 2006", "2006 - 2008", "2008 - 2010", "2010 - 2012"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds CO24 in CIS2004, CIS2006, CIS2008, CIS2010, CIS2012 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2002 - 2004, 2004 - 2006, 2006 - 2008, 2008 - 2010, 2010 - 2012 with a blank Kolumnnamn on the variable's rows in 2002 - 2004, 2004 - 2006, 2006 - 2008, 2008 - 2010, 2010 - 2012; its named rows are in 2014 - 2016."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "CO25"
+versions = ["2006 - 2008", "2008 - 2010", "2010 - 2012"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds CO25 in CIS2008, CIS2010, CIS2012 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2006 - 2008, 2008 - 2010, 2010 - 2012 with a blank Kolumnnamn on the variable's rows in 2006 - 2008, 2008 - 2010, 2010 - 2012; its named rows are in 2014 - 2016."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "CO311"
+versions = ["2010 - 2012"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds CO311 in CIS2012 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2010 - 2012 with a blank Kolumnnamn on the variable's rows in 2010 - 2012; its named rows are in 2014 - 2016."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "CO312"
+versions = ["2010 - 2012"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds CO312 in CIS2012 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2010 - 2012 with a blank Kolumnnamn on the variable's rows in 2010 - 2012; its named rows are in 2014 - 2016."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "CO313"
+versions = ["2010 - 2012"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds CO313 in CIS2012 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2010 - 2012 with a blank Kolumnnamn on the variable's rows in 2010 - 2012; its named rows are in 2014 - 2016."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "CO314"
+versions = ["2010 - 2012"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds CO314 in CIS2012 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2010 - 2012 with a blank Kolumnnamn on the variable's rows in 2010 - 2012; its named rows are in 2014 - 2016."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "CO315"
+versions = ["2010 - 2012"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds CO315 in CIS2012 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2010 - 2012 with a blank Kolumnnamn on the variable's rows in 2010 - 2012; its named rows are in 2014 - 2016."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "CO321"
+versions = ["2010 - 2012"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds CO321 in CIS2012 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2010 - 2012 with a blank Kolumnnamn on the variable's rows in 2010 - 2012; its named rows are in 2014 - 2016."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "CO322"
+versions = ["2010 - 2012"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds CO322 in CIS2012 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2010 - 2012 with a blank Kolumnnamn on the variable's rows in 2010 - 2012; its named rows are in 2014 - 2016."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "CO323"
+versions = ["2010 - 2012"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds CO323 in CIS2012 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2010 - 2012 with a blank Kolumnnamn on the variable's rows in 2010 - 2012; its named rows are in 2014 - 2016."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "CO324"
+versions = ["2010 - 2012"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds CO324 in CIS2012 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2010 - 2012 with a blank Kolumnnamn on the variable's rows in 2010 - 2012; its named rows are in 2014 - 2016."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "CO325"
+versions = ["2010 - 2012"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds CO325 in CIS2012 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2010 - 2012 with a blank Kolumnnamn on the variable's rows in 2010 - 2012; its named rows are in 2014 - 2016."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "CO41"
+versions = ["2002 - 2004", "2004 - 2006", "2006 - 2008", "2008 - 2010", "2010 - 2012"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds CO41 in CIS2004, CIS2006, CIS2008, CIS2010, CIS2012 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2002 - 2004, 2004 - 2006, 2006 - 2008, 2008 - 2010, 2010 - 2012 with a blank Kolumnnamn on the variable's rows in 2002 - 2004, 2004 - 2006, 2006 - 2008, 2008 - 2010, 2010 - 2012; its named rows are in 2014 - 2016."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "CO42"
+versions = ["2002 - 2004", "2004 - 2006", "2006 - 2008", "2008 - 2010", "2010 - 2012"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds CO42 in CIS2004, CIS2006, CIS2008, CIS2010, CIS2012 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2002 - 2004, 2004 - 2006, 2006 - 2008, 2008 - 2010, 2010 - 2012 with a blank Kolumnnamn on the variable's rows in 2002 - 2004, 2004 - 2006, 2006 - 2008, 2008 - 2010, 2010 - 2012; its named rows are in 2014 - 2016."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "CO43"
+versions = ["2002 - 2004", "2004 - 2006", "2006 - 2008", "2008 - 2010", "2010 - 2012"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds CO43 in CIS2004, CIS2006, CIS2008, CIS2010, CIS2012 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2002 - 2004, 2004 - 2006, 2006 - 2008, 2008 - 2010, 2010 - 2012 with a blank Kolumnnamn on the variable's rows in 2002 - 2004, 2004 - 2006, 2006 - 2008, 2008 - 2010, 2010 - 2012; its named rows are in 2014 - 2016."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "CO44"
+versions = ["2002 - 2004", "2004 - 2006", "2006 - 2008", "2008 - 2010", "2010 - 2012"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds CO44 in CIS2004, CIS2006, CIS2008, CIS2010, CIS2012 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2002 - 2004, 2004 - 2006, 2006 - 2008, 2008 - 2010, 2010 - 2012 with a blank Kolumnnamn on the variable's rows in 2002 - 2004, 2004 - 2006, 2006 - 2008, 2008 - 2010, 2010 - 2012; its named rows are in 2014 - 2016."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "CO45"
+versions = ["2006 - 2008", "2008 - 2010", "2010 - 2012"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds CO45 in CIS2008, CIS2010, CIS2012 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2006 - 2008, 2008 - 2010, 2010 - 2012 with a blank Kolumnnamn on the variable's rows in 2006 - 2008, 2008 - 2010, 2010 - 2012; its named rows are in 2014 - 2016."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "CO51"
+versions = ["2002 - 2004", "2004 - 2006", "2006 - 2008", "2008 - 2010", "2010 - 2012"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds CO51 in CIS2004, CIS2006, CIS2008, CIS2010, CIS2012 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2002 - 2004, 2004 - 2006, 2006 - 2008, 2008 - 2010, 2010 - 2012 with a blank Kolumnnamn on the variable's rows in 2002 - 2004, 2004 - 2006, 2006 - 2008, 2008 - 2010, 2010 - 2012; its named rows are in 2014 - 2016."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "CO52"
+versions = ["2002 - 2004", "2004 - 2006", "2006 - 2008", "2008 - 2010", "2010 - 2012"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds CO52 in CIS2004, CIS2006, CIS2008, CIS2010, CIS2012 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2002 - 2004, 2004 - 2006, 2006 - 2008, 2008 - 2010, 2010 - 2012 with a blank Kolumnnamn on the variable's rows in 2002 - 2004, 2004 - 2006, 2006 - 2008, 2008 - 2010, 2010 - 2012; its named rows are in 2014 - 2016."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "CO53"
+versions = ["2002 - 2004", "2004 - 2006", "2006 - 2008", "2008 - 2010", "2010 - 2012"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds CO53 in CIS2004, CIS2006, CIS2008, CIS2010, CIS2012 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2002 - 2004, 2004 - 2006, 2006 - 2008, 2008 - 2010, 2010 - 2012 with a blank Kolumnnamn on the variable's rows in 2002 - 2004, 2004 - 2006, 2006 - 2008, 2008 - 2010, 2010 - 2012; its named rows are in 2014 - 2016."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "CO54"
+versions = ["2002 - 2004", "2004 - 2006", "2006 - 2008", "2008 - 2010", "2010 - 2012"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds CO54 in CIS2004, CIS2006, CIS2008, CIS2010, CIS2012 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2002 - 2004, 2004 - 2006, 2006 - 2008, 2008 - 2010, 2010 - 2012 with a blank Kolumnnamn on the variable's rows in 2002 - 2004, 2004 - 2006, 2006 - 2008, 2008 - 2010, 2010 - 2012; its named rows are in 2014 - 2016."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "CO55"
+versions = ["2006 - 2008", "2008 - 2010", "2010 - 2012"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds CO55 in CIS2008, CIS2010, CIS2012 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2006 - 2008, 2008 - 2010, 2010 - 2012 with a blank Kolumnnamn on the variable's rows in 2006 - 2008, 2008 - 2010, 2010 - 2012; its named rows are in 2014 - 2016."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "CO61"
+versions = ["2002 - 2004", "2004 - 2006", "2006 - 2008", "2008 - 2010", "2010 - 2012"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds CO61 in CIS2004, CIS2006, CIS2008, CIS2010, CIS2012 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2002 - 2004, 2004 - 2006, 2006 - 2008, 2008 - 2010, 2010 - 2012 with a blank Kolumnnamn on the variable's rows in 2002 - 2004, 2004 - 2006, 2006 - 2008, 2008 - 2010, 2010 - 2012; its named rows are in 2014 - 2016."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "CO62"
+versions = ["2002 - 2004", "2004 - 2006", "2006 - 2008", "2008 - 2010", "2010 - 2012"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds CO62 in CIS2004, CIS2006, CIS2008, CIS2010, CIS2012 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2002 - 2004, 2004 - 2006, 2006 - 2008, 2008 - 2010, 2010 - 2012 with a blank Kolumnnamn on the variable's rows in 2002 - 2004, 2004 - 2006, 2006 - 2008, 2008 - 2010, 2010 - 2012; its named rows are in 2014 - 2016."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "CO63"
+versions = ["2002 - 2004", "2004 - 2006", "2006 - 2008", "2008 - 2010", "2010 - 2012"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds CO63 in CIS2004, CIS2006, CIS2008, CIS2010, CIS2012 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2002 - 2004, 2004 - 2006, 2006 - 2008, 2008 - 2010, 2010 - 2012 with a blank Kolumnnamn on the variable's rows in 2002 - 2004, 2004 - 2006, 2006 - 2008, 2008 - 2010, 2010 - 2012; its named rows are in 2014 - 2016."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "CO64"
+versions = ["2002 - 2004", "2004 - 2006", "2006 - 2008", "2008 - 2010", "2010 - 2012"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds CO64 in CIS2004, CIS2006, CIS2008, CIS2010, CIS2012 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2002 - 2004, 2004 - 2006, 2006 - 2008, 2008 - 2010, 2010 - 2012 with a blank Kolumnnamn on the variable's rows in 2002 - 2004, 2004 - 2006, 2006 - 2008, 2008 - 2010, 2010 - 2012; its named rows are in 2014 - 2016."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "CO65"
+versions = ["2006 - 2008", "2008 - 2010", "2010 - 2012"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds CO65 in CIS2008, CIS2010, CIS2012 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2006 - 2008, 2008 - 2010, 2010 - 2012 with a blank Kolumnnamn on the variable's rows in 2006 - 2008, 2008 - 2010, 2010 - 2012; its named rows are in 2014 - 2016."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "CO71"
+versions = ["2002 - 2004", "2004 - 2006", "2006 - 2008", "2008 - 2010", "2010 - 2012"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds CO71 in CIS2004, CIS2006, CIS2008, CIS2010, CIS2012 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2002 - 2004, 2004 - 2006, 2006 - 2008, 2008 - 2010, 2010 - 2012 with a blank Kolumnnamn on the variable's rows in 2002 - 2004, 2004 - 2006, 2006 - 2008, 2008 - 2010, 2010 - 2012; its named rows are in 2014 - 2016."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "CO72"
+versions = ["2002 - 2004", "2004 - 2006", "2006 - 2008", "2008 - 2010", "2010 - 2012"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds CO72 in CIS2004, CIS2006, CIS2008, CIS2010, CIS2012 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2002 - 2004, 2004 - 2006, 2006 - 2008, 2008 - 2010, 2010 - 2012 with a blank Kolumnnamn on the variable's rows in 2002 - 2004, 2004 - 2006, 2006 - 2008, 2008 - 2010, 2010 - 2012; its named rows are in 2014 - 2016."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "CO73"
+versions = ["2002 - 2004", "2004 - 2006", "2006 - 2008", "2008 - 2010", "2010 - 2012"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds CO73 in CIS2004, CIS2006, CIS2008, CIS2010, CIS2012 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2002 - 2004, 2004 - 2006, 2006 - 2008, 2008 - 2010, 2010 - 2012 with a blank Kolumnnamn on the variable's rows in 2002 - 2004, 2004 - 2006, 2006 - 2008, 2008 - 2010, 2010 - 2012; its named rows are in 2014 - 2016."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "CO74"
+versions = ["2002 - 2004", "2004 - 2006", "2006 - 2008", "2008 - 2010", "2010 - 2012"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds CO74 in CIS2004, CIS2006, CIS2008, CIS2010, CIS2012 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2002 - 2004, 2004 - 2006, 2006 - 2008, 2008 - 2010, 2010 - 2012 with a blank Kolumnnamn on the variable's rows in 2002 - 2004, 2004 - 2006, 2006 - 2008, 2008 - 2010, 2010 - 2012; its named rows are in 2014 - 2016."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "CO75"
+versions = ["2006 - 2008", "2008 - 2010", "2010 - 2012"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds CO75 in CIS2008, CIS2010, CIS2012 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2006 - 2008, 2008 - 2010, 2010 - 2012 with a blank Kolumnnamn on the variable's rows in 2006 - 2008, 2008 - 2010, 2010 - 2012; its named rows are in 2014 - 2016."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "CO81"
+versions = ["2010 - 2012"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds CO81 in CIS2012 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2010 - 2012 with a blank Kolumnnamn on the variable's rows in 2010 - 2012; its named rows are in 2014 - 2016."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "CO82"
+versions = ["2010 - 2012"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds CO82 in CIS2012 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2010 - 2012 with a blank Kolumnnamn on the variable's rows in 2010 - 2012; its named rows are in 2014 - 2016."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "CO83"
+versions = ["2010 - 2012"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds CO83 in CIS2012 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2010 - 2012 with a blank Kolumnnamn on the variable's rows in 2010 - 2012; its named rows are in 2014 - 2016."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "CO84"
+versions = ["2010 - 2012"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds CO84 in CIS2012 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2010 - 2012 with a blank Kolumnnamn on the variable's rows in 2010 - 2012; its named rows are in 2014 - 2016."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "CO85"
+versions = ["2010 - 2012"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds CO85 in CIS2012 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2010 - 2012 with a blank Kolumnnamn on the variable's rows in 2010 - 2012; its named rows are in 2014 - 2016."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "ENMRG"
+versions = ["2010 - 2012"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds ENMRG in CIS2012 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2010 - 2012 without a row for this column; its named rows are in 2014 - 2016."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "ENOUT"
+versions = ["2010 - 2012"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds ENOUT in CIS2012 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2010 - 2012 without a row for this column; its named rows are in 2014 - 2016."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "FUNEU"
+versions = ["2004 - 2006", "2010 - 2012"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds FUNEU in CIS2006, CIS2012 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2004 - 2006, 2010 - 2012 without a row for this column; its named rows are in 2014 - 2016."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "FUNGMT"
+versions = ["2004 - 2006", "2010 - 2012"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds FUNGMT in CIS2006, CIS2012 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2004 - 2006, 2010 - 2012 without a row for this column; its named rows are in 2014 - 2016."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "FUNLOC"
+versions = ["2004 - 2006", "2010 - 2012"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds FUNLOC in CIS2006, CIS2012 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2004 - 2006, 2010 - 2012 with a blank Kolumnnamn on the variable's rows in 2010 - 2012; its named rows are in 2014 - 2016."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "FUNRTD"
+versions = ["2004 - 2006", "2010 - 2012"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds FUNRTD in CIS2006, CIS2012 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2004 - 2006, 2010 - 2012 without a row for this column; its named rows are in 2014 - 2016."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "FWTURN"
+versions = ["2010 - 2012"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds FWTURN in CIS2012 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2010 - 2012 with a blank Kolumnnamn on the variable's rows in 2010 - 2012; its named rows are in 2014 - 2016."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "HDEM"
+versions = ["2002 - 2004", "2004 - 2006", "2008 - 2010"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds HDEM in CIS2004, CIS2006, CIS2010 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2002 - 2004, 2004 - 2006, 2008 - 2010 without a row for this column; its named rows are in 2014 - 2016."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "HFENT"
+versions = ["2002 - 2004", "2004 - 2006", "2008 - 2010"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds HFENT in CIS2004, CIS2006, CIS2010 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2002 - 2004, 2004 - 2006, 2008 - 2010 without a row for this column; its named rows are in 2014 - 2016."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "HO"
+versions = ["2004 - 2006", "2006 - 2008", "2008 - 2010", "2010 - 2012"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds HO in CIS2006, CIS2008, CIS2010, CIS2012 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2004 - 2006, 2006 - 2008, 2008 - 2010, 2010 - 2012 without a row for this column; its named rows are in 2014 - 2016, 2016 - 2018, 2018 - 2020."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "HPAR"
+versions = ["2002 - 2004", "2004 - 2006", "2008 - 2010"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds HPAR in CIS2004, CIS2006, CIS2010 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2002 - 2004, 2004 - 2006, 2008 - 2010 without a row for this column; its named rows are in 2014 - 2016."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "HPER"
+versions = ["2002 - 2004", "2004 - 2006", "2008 - 2010"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds HPER in CIS2004, CIS2006, CIS2010 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2002 - 2004, 2004 - 2006, 2008 - 2010 without a row for this column; its named rows are in 2014 - 2016."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "HPRIOR"
+versions = ["2002 - 2004", "2004 - 2006", "2008 - 2010"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds HPRIOR in CIS2004, CIS2006, CIS2010 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2002 - 2004, 2004 - 2006, 2008 - 2010 without a row for this column; its named rows are in 2014 - 2016."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "INADGD"
+versions = ["2010 - 2012"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds INADGD in CIS2012 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2010 - 2012 with a blank Kolumnnamn on the variable's rows in 2010 - 2012; its named rows are in 2014 - 2016."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "INADPS"
+versions = ["2010 - 2012"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds INADPS in CIS2012 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2010 - 2012 with a blank Kolumnnamn on the variable's rows in 2010 - 2012; its named rows are in 2014 - 2016."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "INADSV"
+versions = ["2010 - 2012"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds INADSV in CIS2012 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2010 - 2012 with a blank Kolumnnamn on the variable's rows in 2010 - 2012; its named rows are in 2014 - 2016."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "INNA_COMPL"
+versions = ["2016 - 2018"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds INNA_COMPL in CIS2018 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2016 - 2018 without a row for this column; its named rows are in 2020 - 2022, 2022 - 2024."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "INNO_PCS_COMM"
+versions = ["2016 - 2018"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds INNO_PCS_COMM in CIS2018 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2016 - 2018 without a row for this column; its named rows are in 2020 - 2022, 2022 - 2024."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "INPDFC"
+versions = ["2008 - 2010", "2010 - 2012"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds INPDFC in CIS2010, CIS2012 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2008 - 2010, 2010 - 2012 with a blank Kolumnnamn on the variable's rows in 2008 - 2010, 2010 - 2012; its named rows are in 2014 - 2016."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "INPDFE"
+versions = ["2008 - 2010", "2010 - 2012"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds INPDFE in CIS2010, CIS2012 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2008 - 2010, 2010 - 2012 with a blank Kolumnnamn on the variable's rows in 2008 - 2010, 2010 - 2012; its named rows are in 2014 - 2016."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "INPDFW"
+versions = ["2008 - 2010", "2010 - 2012"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds INPDFW in CIS2010, CIS2012 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2008 - 2010, 2010 - 2012 with a blank Kolumnnamn on the variable's rows in 2008 - 2010, 2010 - 2012; its named rows are in 2014 - 2016."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "INPSNM"
+versions = ["2010 - 2012"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds INPSNM in CIS2012 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2010 - 2012 with a blank Kolumnnamn on the variable's rows in 2010 - 2012; its named rows are in 2014 - 2016."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "LARMAR"
+versions = ["2008 - 2010", "2010 - 2012"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds LARMAR in CIS2010, CIS2012 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2008 - 2010, 2010 - 2012 with a blank Kolumnnamn on the variable's rows in 2008 - 2010, 2010 - 2012; its named rows are in 2014 - 2016."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "LillaN"
+versions = ["2014 - 2016", "2016 - 2018"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds LillaN in CIS2016, CIS2018 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2014 - 2016, 2016 - 2018 without a row for this column; its named rows are in 2020 - 2022."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "LillaNs"
+versions = ["2004 - 2006", "2016 - 2018"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds LillaNs in CIS2006, CIS2018 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2004 - 2006, 2016 - 2018 without a row for this column; its named rows are in 2020 - 2022."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "PBINCT"
+versions = ["2010 - 2012"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds PBINCT in CIS2012 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2010 - 2012 with a blank Kolumnnamn on the variable's rows in 2010 - 2012; its named rows are in 2014 - 2016."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "PRODSG"
+versions = ["2004 - 2006"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds PRODSG in CIS2006 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2004 - 2006 without a row for this column; its named rows are in 2014 - 2016."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "PROPAT"
+versions = ["2004 - 2006"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds PROPAT in CIS2006 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2004 - 2006 without a row for this column; its named rows are in 2014 - 2016."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "PROTM"
+versions = ["2004 - 2006"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds PROTM in CIS2006 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2004 - 2006 without a row for this column; its named rows are in 2014 - 2016."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "PUBDOM"
+versions = ["2010 - 2012"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds PUBDOM in CIS2012 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2010 - 2012 with a blank Kolumnnamn on the variable's rows in 2010 - 2012; its named rows are in 2014 - 2016."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "PUBFOR"
+versions = ["2010 - 2012"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds PUBFOR in CIS2012 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2010 - 2012 with a blank Kolumnnamn on the variable's rows in 2010 - 2012; its named rows are in 2014 - 2016."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "PeorgNr"
+versions = ["2008 - 2010", "2010 - 2012", "2012 - 2014", "2014 - 2016", "2016 - 2018"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds PeorgNr in  (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2008 - 2010, 2010 - 2012, 2012 - 2014, 2014 - 2016, 2016 - 2018 with a blank Kolumnnamn on the variable's rows in 2008 - 2010, 2010 - 2012, 2012 - 2014; its named rows are in 2002 - 2004, 2004 - 2006, 2006 - 2008, 2020 - 2022. | SWECOV holds Peorgnr in  (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2008 - 2010, 2010 - 2012, 2012 - 2014, 2014 - 2016, 2016 - 2018 with a blank Kolumnnamn on the variable's rows in 2008 - 2010, 2010 - 2012, 2012 - 2014; its named rows are in 2002 - 2004, 2004 - 2006, 2006 - 2008, 2020 - 2022."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "RALLX"
+versions = ["2010 - 2012"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds RALLX in CIS2012 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2010 - 2012 with a blank Kolumnnamn on the variable's rows in 2010 - 2012; its named rows are in 2014 - 2016."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "RDSG"
+versions = ["2008 - 2010", "2010 - 2012"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds RDSG in CIS2010, CIS2012 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2008 - 2010, 2010 - 2012 with a blank Kolumnnamn on the variable's rows in 2008 - 2010, 2010 - 2012; its named rows are in 2014 - 2016."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "RMACX"
+versions = ["2002 - 2004", "2004 - 2006", "2006 - 2008", "2008 - 2010", "2010 - 2012"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds RMACX in CIS2004, CIS2006, CIS2008, CIS2010, CIS2012 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2002 - 2004, 2004 - 2006, 2006 - 2008, 2008 - 2010, 2010 - 2012 with a blank Kolumnnamn on the variable's rows in 2010 - 2012; its named rows are in 2014 - 2016."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "ROTRX"
+versions = ["2010 - 2012"]
+upstream = "blank-column-name-in-version"
+evidence = "SWECOV holds ROTRX in CIS2012 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2010 - 2012 with a blank Kolumnnamn on the variable's rows in 2010 - 2012; its named rows are in 2014 - 2016."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "RPRE"
+versions = ["2002 - 2004", "2004 - 2006", "2006 - 2008", "2008 - 2010", "2010 - 2012"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds RPRE in CIS2004, CIS2006, CIS2008, CIS2010, CIS2012 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2002 - 2004, 2004 - 2006, 2006 - 2008, 2008 - 2010, 2010 - 2012 with a blank Kolumnnamn on the variable's rows in 2010 - 2012; its named rows are in 2014 - 2016."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "SNI"
+versions = ["2002 - 2004"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds SNI in CIS2004 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2002 - 2004 without a row for this column; its named rows are in 2020 - 2022."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "StoraN"
+versions = ["2002 - 2004", "2004 - 2006", "2014 - 2016", "2016 - 2018"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds StoraN in CIS2004, CIS2006, CIS2016, CIS2018 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2002 - 2004, 2004 - 2006, 2014 - 2016, 2016 - 2018 without a row for this column; its named rows are in 2020 - 2022."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "Stratum"
+versions = ["2002 - 2004", "2004 - 2006", "2014 - 2016", "2016 - 2018"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds Stratum in CIS2004, CIS2006, CIS2016, CIS2018 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2002 - 2004, 2004 - 2006, 2014 - 2016, 2016 - 2018 without a row for this column; its named rows are in 2020 - 2022."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "TUR_PRD_INN"
+versions = ["2016 - 2018"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds TUR_PRD_INN in CIS2018 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2016 - 2018 without a row for this column; its named rows are in 2020 - 2022, 2022 - 2024."
+noted = "2026-09-12"
+
+[[delivered]]
+register = "scb/innovation-foretag"
+variant = "_default"
+column = "WEIGHT"
+versions = ["2004 - 2006", "2006 - 2008", "2008 - 2010", "2010 - 2012", "2012 - 2014"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds WEIGHT in CIS2006, CIS2008, CIS2010, CIS2012, CIS2014 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2004 - 2006, 2006 - 2008, 2008 - 2010, 2010 - 2012, 2012 - 2014 without a row for this column; its named rows are in 2022 - 2024."
+noted = "2026-09-12"
+
 # ══ LISA doc coverage (Y-116, was input_data/scb_canonical/lisa_canonical.toml) ══
 # Columns documented in SCB's own doc library (lisa-bakgrundsfakta-1990-2017) but
 # absent from the machine-export catalog. Each entry mirrors one column's doc at
