@@ -1483,9 +1483,20 @@ def _windows(conn: sqlite3.Connection, provider_key: str) -> list[tuple]:
     ).fetchall()
 
 
+def _states(conn: sqlite3.Connection, provider_key: str) -> list[tuple]:
+    return conn.execute(
+        "SELECT vs.delivery_column_name, vs.data_type, vs.data_length, "
+        "vs.valid_from, vs.valid_to "
+        "FROM variable_state vs JOIN variable v ON v.variable_id = vs.variable_id "
+        "WHERE v.register_id = 1 AND v.provider_key = ? "
+        "ORDER BY vs.valid_from, vs.delivery_column_name",
+        (provider_key,),
+    ).fetchall()
+
+
 class TestScbErrata:
-    """A curated errata entry is replayed as a synthetic Registerinformation row
-    before the coalescer, so the added coordinate produces ordinary
+    """A curated errata entry is applied at Registerinformation grain before the
+    coalescer, so a cloned or newly named coordinate produces ordinary
     `variable_state` output — windows, gaps, fusing and value sets all fall out
     of the existing passes.
 
@@ -1519,6 +1530,140 @@ class TestScbErrata:
             assert _windows(conn, "931") == [("2020-01-01", "2022-12-31")]
         finally:
             conn.close()
+
+    def test_blank_target_instance_is_named(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        conn = _built_with_errata(
+            tmp_path,
+            monkeypatch,
+            [
+                _var_row(
+                    colname="",
+                    cvid=9311,
+                    var_id=931,
+                    varname="DispVar",
+                    year="2021",
+                    regver_id=101,
+                ),
+                _var_row(
+                    colname="DispCol",
+                    cvid=9312,
+                    var_id=931,
+                    varname="DispVar",
+                    year="2022",
+                    regver_id=102,
+                ),
+            ],
+            errata_delivered("DispCol", "2021"),
+        )
+        try:
+            assert _states(conn, "931") == [
+                ("DispCol", "int", "1", "2021-01-01", "2022-12-31")
+            ]
+        finally:
+            conn.close()
+
+    def test_multi_version_entry_names_blank_and_clones_absent_edition(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        conn = _built_with_errata(
+            tmp_path,
+            monkeypatch,
+            [
+                _var_row(
+                    colname="",
+                    cvid=9321,
+                    var_id=932,
+                    varname="DispVar",
+                    year="2021",
+                    regver_id=101,
+                ),
+                _var_row(
+                    colname="DispCol",
+                    cvid=9322,
+                    var_id=932,
+                    varname="DispVar",
+                    year="2022",
+                    regver_id=102,
+                ),
+            ],
+            errata_delivered("DispCol", "2020", "2021"),
+        )
+        try:
+            assert _states(conn, "932") == [
+                ("DispCol", "int", "1", "2020-01-01", "2022-12-31")
+            ]
+        finally:
+            conn.close()
+
+    def test_named_blank_keeps_target_metadata(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        conn = _built_with_errata(
+            tmp_path,
+            monkeypatch,
+            [
+                _var_row(
+                    colname="",
+                    cvid=9331,
+                    var_id=933,
+                    varname="MetaVar",
+                    year="2021",
+                    regver_id=101,
+                    data_type="int",
+                    data_length="2",
+                ),
+                _var_row(
+                    colname="MetaCol",
+                    cvid=9332,
+                    var_id=933,
+                    varname="MetaVar",
+                    year="2022",
+                    regver_id=102,
+                    data_type="varchar",
+                    data_length="10",
+                ),
+            ],
+            errata_delivered("MetaCol", "2021"),
+        )
+        try:
+            assert _states(conn, "933") == [
+                ("MetaCol", "int", "2", "2021-01-01", "2021-12-31"),
+                ("MetaCol", "varchar", "10", "2022-01-01", "2022-12-31"),
+            ]
+        finally:
+            conn.close()
+
+    def test_target_delivered_under_other_column_is_refused(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        with pytest.raises(RegMetaError) as exc:
+            _built_with_errata(
+                tmp_path,
+                monkeypatch,
+                [
+                    _var_row(
+                        colname="OtherCol",
+                        cvid=9341,
+                        var_id=934,
+                        varname="DispVar",
+                        year="2021",
+                        regver_id=101,
+                    ),
+                    _var_row(
+                        colname="DispCol",
+                        cvid=9342,
+                        var_id=934,
+                        varname="DispVar",
+                        year="2022",
+                        regver_id=102,
+                    ),
+                ],
+                errata_delivered("DispCol", "2021"),
+            )
+        assert exc.value.code == "scb_errata_delivered_under_other_column"
+        assert "OtherCol" in exc.value.message
 
     def _timeline_rows(self) -> tuple[list[str], list[str]]:
         """One column delivered under two codings: coding A in 2018 and 2022,

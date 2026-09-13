@@ -22,9 +22,11 @@ Three typed entry kinds, one question each:
   Variabelnamn, definition-carrying prose, Datatyp, Datalängd, value-set link,
   grain) from the NEAREST real version of the same (variant, column) — EVERY row
   that edition carries for the column, so a column co-delivered there under two
-  variables is replayed as two rows. Each synthetic row lands in the same
-  coalescer group as the real row it copies and simply extends that group's claim
-  years.
+  variables is replayed as two rows. When the target edition already has one
+  alias-less instance for the source row's VarId, the entry names that instance
+  instead, preserving its cvid and metadata. Otherwise each synthetic row lands
+  in the same coalescer group as the real row it copies and simply extends that
+  group's claim years.
 * `[[column]]` — a column SCB documents NOWHERE on the variant (Y-116, folding in
   the retired `variable_grafts.py` / `canonical_attach.py` post-passes). There is
   no row to clone, so the entry carries the variable's own identity (name,
@@ -690,6 +692,65 @@ def _now_present(context: str, what: str, remedy: str) -> None:
     )
 
 
+def _blank_target_cvid(
+    conn: sqlite3.Connection,
+    *,
+    variant_id: int,
+    regver_id: int,
+    var_id: int,
+    version: str,
+    column: str,
+) -> int | None:
+    """Return the unique alias-less target cvid for a source VarId, if any.
+
+    A VarId is not enough to choose between several instances: SCB also reuses
+    one for matrix columns. A single named instance is therefore a conflict,
+    while multiple instances (blank or mixed) are ambiguous rather than a cue
+    to assign the entry's column to one of them.
+    """
+    targets: dict[int, list[str]] = {}
+    for cvid, documented_column in conn.execute(
+        "SELECT vi.cvid, va.delivery_column_name "
+        "FROM variable_instance vi "
+        "LEFT JOIN variable_alias_build va ON va.cvid = vi.cvid "
+        "WHERE vi.register_variant_id = ? AND vi.regver_id = ? "
+        "AND vi.var_id = ? ORDER BY vi.cvid, va.delivery_column_name",
+        (variant_id, regver_id, var_id),
+    ):
+        aliases = targets.setdefault(cvid, [])
+        if documented_column is not None:
+            aliases.append(documented_column)
+
+    if not targets:
+        return None
+    if len(targets) > 1:
+        descriptions = [
+            f"cvid {cvid} ({', '.join(repr(c) for c in aliases) or 'blank Kolumnnamn'})"
+            for cvid, aliases in targets.items()
+        ]
+        raise curation_error(
+            "scb_errata_delivered_ambiguous",
+            f"scb_errata [[delivered]] {column}: version {version!r} carries "
+            f"multiple instances for VarId {var_id}: {', '.join(descriptions)}.",
+            "Do not guess which same-VarId instance owns the column — SCB can "
+            "reuse a VarId for matrix columns. Resolve the source ambiguity "
+            f"before applying the entry in reg_meta_build/{_FILE_NAME}.",
+        )
+
+    cvid, aliases = next(iter(targets.items()))
+    if aliases:
+        rendered = ", ".join(repr(c) for c in aliases)
+        raise curation_error(
+            "scb_errata_delivered_under_other_column",
+            f"scb_errata [[delivered]] {column}: version {version!r} already "
+            f"carries VarId {var_id} under SCB column(s) {rendered}.",
+            "Remove or correct the [[delivered]] entry; a shared VarId does "
+            "not prove that SCB renamed a column and can instead describe "
+            "matrix columns.",
+        )
+    return cvid
+
+
 def apply_scb_errata(
     conn: sqlite3.Connection,
     errata: ScbErrata,
@@ -712,12 +773,14 @@ def apply_scb_errata(
     tags the state the coalescer builds.
 
     Returns `{"versions": n, "rows": n, "columns": n}` (`columns` = variables
-    minted; their synthetic rows are counted in `rows`). Raises EXIT_CONFIG when
+    minted; every corrected delivery is counted in `rows`). Raises EXIT_CONFIG when
     an entry names a variant this export doesn't have
     (`scb_errata_unknown_variant`), a version the variant neither documents nor
     declares (`scb_errata_unknown_version`), a `[[delivered]]` column with no
     real row anywhere on the variant (`scb_errata_no_source_row` — that is a
-    `[[column]]`), or a version/row SCB now ships (`scb_errata_now_present`).
+    `[[column]]`), a version/row SCB now ships (`scb_errata_now_present`), or a
+    target already carries the source VarId under another column or through an
+    ambiguous set of instances.
     """
     counts = {"versions": 0, "rows": 0, "columns": 0}
     if not errata:
@@ -864,6 +927,25 @@ def apply_scb_errata(
             clones = _nearest_rows(candidates, name)
             for regver_id in regvers:
                 for source in clones:
+                    target_cvid = _blank_target_cvid(
+                        conn,
+                        variant_id=d.register_variant_id,
+                        regver_id=regver_id,
+                        var_id=source["var_id"],
+                        version=name,
+                        column=d.column,
+                    )
+                    if target_cvid is not None:
+                        # The target row is SCB's own instance. Add only the
+                        # source row's spelling; its cvid and every metadata
+                        # field remain exactly as the export documented them.
+                        conn.execute(
+                            "INSERT INTO variable_alias_build "
+                            "(cvid, delivery_column_name) VALUES (?, ?)",
+                            (target_cvid, source["delivery_column_name"]),
+                        )
+                        counts["rows"] += 1
+                        continue
                     # Keyed on the SOURCE row's cvid as well: a co-delivered
                     # column contributes several clones to one (version, column),
                     # and each needs its own id.

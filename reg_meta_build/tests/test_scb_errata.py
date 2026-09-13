@@ -1,20 +1,28 @@
-"""`scb_errata.toml` loader tests — the `[[column]]` entry kind (Y-116).
+"""`scb_errata.toml` loader and focused apply-time tests.
 
 Structural validation only (EXIT_CONFIG, every arm with a remediation): what a
 `[[column]]` must say for the build to mint a variable from it. The
 materialization — minting at source grain, the existence guard, windows, slugs,
 flags, ids — is `test_scb_adapter.py::TestScbErrataColumn`, where a real build
-runs. Folds in the loader halves of the retired `test_variable_grafts.py` and
+runs. `TestDeliveredApplication` isolates the source-grain decision that must
+preserve an existing target cvid before coalescing discards it. Folds in the
+loader halves of the retired `test_variable_grafts.py` and
 `test_canonical_attach.py`.
 """
 
 from __future__ import annotations
 
+import sqlite3
 from typing import TYPE_CHECKING
 
 import pytest
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
-from reg_meta_build.scb_errata import load_scb_errata
+from reg_meta_build.scb_errata import (
+    ErrataDelivered,
+    ScbErrata,
+    apply_scb_errata,
+    load_scb_errata,
+)
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -91,6 +99,163 @@ def _refused(tmp_path: Path, slug_dir: Path, body: str, seed: Path | None = None
     assert exc.value.exit_code == EXIT_CONFIG
     assert exc.value.remediation
     return exc.value
+
+
+def _application_db(
+    targets: list[tuple[int, str | None]],
+) -> sqlite3.Connection:
+    """Minimal apply-time schema: one named 2022 source plus 2021 targets.
+
+    Each target is `(cvid, column)` for source VarId 931; `None` models SCB's
+    blank Kolumnnamn, which has no `variable_alias_build` row.
+    """
+    conn = sqlite3.connect(":memory:")
+    conn.executescript(
+        """
+        CREATE TABLE register_variant (register_variant_id INTEGER PRIMARY KEY);
+        CREATE TABLE register_version (
+            regver_id INTEGER PRIMARY KEY,
+            register_variant_id INTEGER NOT NULL,
+            registerversionnamn TEXT
+        );
+        CREATE TABLE variable_instance (
+            cvid INTEGER PRIMARY KEY,
+            register_id INTEGER NOT NULL,
+            register_variant_id INTEGER NOT NULL,
+            regver_id INTEGER NOT NULL,
+            var_id INTEGER NOT NULL,
+            variabelnamn TEXT,
+            data_type TEXT,
+            data_length TEXT,
+            value_set_version_label TEXT,
+            vardemangdsniva TEXT,
+            operational_definition TEXT,
+            source_register_text TEXT,
+            value_set_id INTEGER
+        );
+        CREATE TABLE variable_alias_build (
+            cvid INTEGER NOT NULL,
+            delivery_column_name TEXT NOT NULL,
+            PRIMARY KEY (cvid, delivery_column_name)
+        );
+        INSERT INTO register_variant VALUES (10);
+        INSERT INTO register_version VALUES (101, 10, '2021');
+        INSERT INTO register_version VALUES (102, 10, '2022');
+        INSERT INTO variable_instance VALUES (
+            9310, 1, 10, 102, 931, 'Source name', 'varchar', '10',
+            'source coding', '1', 'source operation', 'source register', 77
+        );
+        INSERT INTO variable_alias_build VALUES (9310, 'DispCol');
+        """
+    )
+    for cvid, column in targets:
+        conn.execute(
+            "INSERT INTO variable_instance VALUES "
+            "(?, 1, 10, 101, 931, 'Target name', 'int', '2', "
+            "'target coding', '2', 'target operation', 'target register', 88)",
+            (cvid,),
+        )
+        if column is not None:
+            conn.execute(
+                "INSERT INTO variable_alias_build VALUES (?, ?)", (cvid, column)
+            )
+    return conn
+
+
+def _apply_delivered(conn: sqlite3.Connection) -> dict[str, int]:
+    return apply_scb_errata(
+        conn,
+        ScbErrata(
+            delivered=(
+                ErrataDelivered(
+                    register_id=1,
+                    register_variant_id=10,
+                    column="DispCol",
+                    versions=("2021",),
+                ),
+            )
+        ),
+        [],
+    )
+
+
+class TestDeliveredApplication:
+    def test_unique_blank_target_is_named_without_replacing_its_instance(self) -> None:
+        conn = _application_db([(9311, None)])
+        before = conn.execute(
+            "SELECT * FROM variable_instance WHERE cvid = 9311"
+        ).fetchone()
+
+        assert _apply_delivered(conn)["rows"] == 1
+
+        assert conn.execute(
+            "SELECT * FROM variable_instance WHERE cvid = 9311"
+        ).fetchone() == before
+        assert conn.execute(
+            "SELECT cvid, delivery_column_name FROM variable_alias_build "
+            "WHERE cvid = 9311"
+        ).fetchall() == [(9311, "DispCol")]
+        assert conn.execute(
+            "SELECT COUNT(*) FROM variable_instance WHERE regver_id = 101"
+        ).fetchone()[0] == 1
+        conn.close()
+
+    def test_other_column_is_refused_and_named(self) -> None:
+        conn = _application_db([(9311, "OtherCol")])
+        with pytest.raises(RegMetaError) as exc:
+            _apply_delivered(conn)
+        assert exc.value.code == "scb_errata_delivered_under_other_column"
+        assert "OtherCol" in exc.value.message
+        assert "matrix columns" in exc.value.remediation
+        conn.close()
+
+    def test_multiple_blank_targets_are_ambiguous(self) -> None:
+        conn = _application_db([(9311, None), (9312, None)])
+        with pytest.raises(RegMetaError) as exc:
+            _apply_delivered(conn)
+        assert exc.value.code == "scb_errata_delivered_ambiguous"
+        assert "cvid 9311" in exc.value.message
+        assert "cvid 9312" in exc.value.message
+        conn.close()
+
+    def test_mixed_blank_and_named_targets_are_ambiguous(self) -> None:
+        conn = _application_db([(9311, None), (9312, "MatrixCol")])
+        with pytest.raises(RegMetaError) as exc:
+            _apply_delivered(conn)
+        assert exc.value.code == "scb_errata_delivered_ambiguous"
+        assert "blank Kolumnnamn" in exc.value.message
+        assert "MatrixCol" in exc.value.message
+        conn.close()
+
+    def test_competing_entries_cannot_claim_one_blank_target(self) -> None:
+        conn = _application_db([(9311, None)])
+        conn.execute(
+            "INSERT INTO variable_instance VALUES "
+            "(9312, 1, 10, 102, 931, 'Source name', 'varchar', '10', "
+            "'source coding', '1', 'source operation', 'source register', 77)"
+        )
+        conn.execute(
+            "INSERT INTO variable_alias_build VALUES (9312, 'RivalCol')"
+        )
+        errata = ScbErrata(
+            delivered=tuple(
+                ErrataDelivered(
+                    register_id=1,
+                    register_variant_id=10,
+                    column=column,
+                    versions=("2021",),
+                )
+                for column in ("DispCol", "RivalCol")
+            )
+        )
+
+        with pytest.raises(RegMetaError) as exc:
+            apply_scb_errata(conn, errata, [])
+
+        assert exc.value.code == "scb_errata_delivered_under_other_column"
+        assert "RivalCol" in exc.value.message
+        assert "DispCol" in exc.value.message
+        conn.close()
 
 
 class TestVersionEntry:
