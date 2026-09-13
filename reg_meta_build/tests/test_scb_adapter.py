@@ -39,7 +39,6 @@ from reg_meta.order import requested_intervals, resolve_binding
 from reg_meta_build.cis2016_matrix import load_cis2016_matrix
 from reg_meta_build.db import DDL, build_db, seed_providers
 from reg_meta_build.dbdiff import diff_db_content
-from reg_meta_build.fqid_slugs import load_provider_toml
 from reg_meta_build.id import _CANONICAL_SCB_BIT, is_canonical_scb
 from reg_meta_build.ir import (
     IRDeliveryProvenance,
@@ -53,6 +52,8 @@ from reg_meta_build.ir import (
 from reg_meta_build.sources import scb as scb_module
 from reg_meta_build.sources.scb import SCBAdapter
 from reg_schema.project_data import Binding, Source
+
+from reg_meta_build.fqid_slugs import load_provider_toml
 
 if TYPE_CHECKING:
     from reg_meta_build.sources import IRAdapter
