@@ -23,6 +23,7 @@ from reg_meta_build.scb_errata import (
     apply_scb_errata,
     load_scb_errata,
 )
+from reg_meta_build.id import mint_canonical_scb
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -257,6 +258,69 @@ class TestDeliveredApplication:
         assert exc.value.code == "scb_errata_delivered_under_other_column"
         assert "RivalCol" in exc.value.message
         assert "DispCol" in exc.value.message
+        conn.close()
+
+    def test_same_varid_columns_both_clone_into_absent_target(self) -> None:
+        conn = _application_db([])
+        conn.execute(
+            "INSERT INTO variable_instance VALUES "
+            "(9312, 1, 10, 102, 931, 'Rival name', 'decimal', '8', "
+            "'rival coding', '3', 'rival operation', 'rival register', 99)"
+        )
+        conn.execute("INSERT INTO variable_alias_build VALUES (9312, 'RivalCol')")
+        errata = ScbErrata(
+            delivered=tuple(
+                ErrataDelivered(
+                    register_id=1,
+                    register_variant_id=10,
+                    column=column,
+                    versions=("2021",),
+                )
+                for column in ("DispCol", "RivalCol")
+            )
+        )
+
+        assert apply_scb_errata(conn, errata, [])["rows"] == 2
+
+        rows = conn.execute(
+            "SELECT va.delivery_column_name, vi.cvid, vi.variabelnamn, "
+            "vi.data_type, vi.data_length, vi.value_set_version_label, "
+            "vi.vardemangdsniva, vi.operational_definition, "
+            "vi.source_register_text, vi.value_set_id "
+            "FROM variable_instance vi "
+            "JOIN variable_alias_build va ON va.cvid = vi.cvid "
+            "WHERE vi.regver_id = 101 ORDER BY va.delivery_column_name"
+        ).fetchall()
+        assert rows == [
+            (
+                "DispCol",
+                mint_canonical_scb(
+                    "scb-errata-row", "10", "dispcol", "2021", "101", "9310"
+                ),
+                "Source name",
+                "varchar",
+                "10",
+                "source coding",
+                "1",
+                "source operation",
+                "source register",
+                77,
+            ),
+            (
+                "RivalCol",
+                mint_canonical_scb(
+                    "scb-errata-row", "10", "rivalcol", "2021", "101", "9312"
+                ),
+                "Rival name",
+                "decimal",
+                "8",
+                "rival coding",
+                "3",
+                "rival operation",
+                "rival register",
+                99,
+            ),
+        ]
         conn.close()
 
 

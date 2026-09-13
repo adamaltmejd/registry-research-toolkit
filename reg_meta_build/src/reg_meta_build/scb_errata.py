@@ -695,6 +695,7 @@ def _now_present(context: str, what: str, remedy: str) -> None:
 def _blank_target_cvid(
     conn: sqlite3.Connection,
     *,
+    cloned_cvids: set[int],
     variant_id: int,
     regver_id: int,
     var_id: int,
@@ -717,6 +718,8 @@ def _blank_target_cvid(
         "AND vi.var_id = ? ORDER BY vi.cvid, va.delivery_column_name",
         (variant_id, regver_id, var_id),
     ):
+        if cvid in cloned_cvids:
+            continue
         aliases = targets.setdefault(cvid, [])
         if documented_column is not None:
             aliases.append(documented_column)
@@ -892,6 +895,11 @@ def apply_scb_errata(
             )
         }
 
+    # Rows inserted by one entry are not SCB evidence against a later one: two
+    # columns can be co-delivered under one VarId and each need its own clone.
+    # Track only clones, not original blank instances named above — once an
+    # original cvid is named, a competing entry must still see and refuse it.
+    cloned_cvids: set[int] = set()
     for d in errata.delivered:
         context = f"[[delivered]] {d.column}"
         candidates = sources.get((d.register_variant_id, fold_column(d.column)))
@@ -929,6 +937,7 @@ def apply_scb_errata(
                 for source in clones:
                     target_cvid = _blank_target_cvid(
                         conn,
+                        cloned_cvids=cloned_cvids,
                         variant_id=d.register_variant_id,
                         regver_id=regver_id,
                         var_id=source["var_id"],
@@ -977,6 +986,7 @@ def apply_scb_errata(
                         "(cvid, delivery_column_name) VALUES (?, ?)",
                         (cvid, source["delivery_column_name"]),
                     )
+                    cloned_cvids.add(cvid)
                     counts["rows"] += 1
 
     _mint_columns(
