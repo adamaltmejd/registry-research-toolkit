@@ -287,6 +287,7 @@ def test_binding_leaf_embeds_full_record(client):
     # The per-state classification slug serializes too; the fixture kon state has
     # classification_id NULL → None.
     assert state["classification_slug"] is None
+    assert state["provenance"] is None
     # #321: an OPEN-ENDED state (valid_to = the 9999-12-31 sentinel) has no
     # finite period token — the field is None (the SPA renders "since
     # valid_from").
@@ -309,6 +310,24 @@ def test_binding_leaf_embeds_full_record(client):
     # test_binding_leaf_embeds_full_succession_chain).
     for field in ("succession_chain", "lineage"):
         assert field in body
+
+
+def test_states_endpoint_returns_delivery_provenance(client, catalog_db):
+    provenance = (
+        "errata:omitted-column-in-version\n"
+        "The steward holds this delivery, which SCB omits."
+    )
+    with sqlite3.connect(catalog_db) as conn:
+        conn.execute(
+            "UPDATE variable_state SET provenance = ? "
+            "WHERE variable_id = (SELECT variable_id FROM variable WHERE slug = 'kon')",
+            (provenance,),
+        )
+
+    resp = client.get("/api/catalog/scb/lisa/kon/states")
+
+    assert resp.status_code == 200
+    assert resp.json()["states"][0]["provenance"] == provenance
 
 
 def test_binding_leaf_embeds_full_succession_chain(client):
@@ -1189,6 +1208,7 @@ def test_state_period_token_passes_through_reg_meta():
             data_length=None,
             delivery_column_name=None,
             source_register_text=None,
+            provenance=None,
             value_set_version_label="",
             value_set_id=None,
             value_set=None,

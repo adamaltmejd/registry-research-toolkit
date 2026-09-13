@@ -63,6 +63,7 @@ function state(over: Partial<VariableStateModel>): VariableStateModel {
     data_length: null,
     delivery_column_name: null,
     source_register_text: null,
+    provenance: null,
     value_set_version_label: "",
     value_set_id: null,
     value_set: null,
@@ -2069,6 +2070,7 @@ describe("BindingLeafView representation picker (#678)", () => {
     expect(disclosure?.open).toBe(false);
     expect(disclosure?.textContent).toContain("Sensitive");
     expect(disclosure?.textContent).toContain("Identifier");
+    expect(disclosure?.textContent).not.toContain("Corrected deliveries");
     const promptMeta = [...document.querySelectorAll("dl.meta")].filter(
       (dl) => !dl.closest("details.tech-details"),
     );
@@ -2138,6 +2140,55 @@ describe("BindingLeafView representation picker (#678)", () => {
     expect(promptText).toContain("Valid");
     expect(tech.textContent).not.toContain("Variant");
     expect(tech.textContent).not.toContain("Value-set version");
+  });
+
+  it("shows corrected intervals and evidence only after technical details expands", async () => {
+    const evidence = "The steward holds Kon for 2020; SCB's metadata omits it.";
+    await render(BindingLeafView, {
+      fqidPath: "scb/lisa/kon",
+      node: node([
+        state({
+          state_id: 1,
+          variant: "individer",
+          variant_label: "Individuals",
+          delivery_column_name: "Kon",
+          valid_from: "2019-01-01",
+          valid_to: "2019-12-31",
+        }),
+        state({
+          state_id: 2,
+          variant: "individer",
+          variant_label: "Individuals",
+          delivery_column_name: "Kon",
+          valid_from: "2020-01-01",
+          valid_to: "2020-12-31",
+          provenance: `errata:omitted-column-in-version\n${evidence}`,
+        }),
+      ]),
+      regMetaVersion: SEED.regMetaVersion,
+      steward: SEED.steward,
+      windowMinYear: SEED.windowMinYear,
+      vintageYear: 2024,
+    });
+
+    const disclosure = document.querySelector<HTMLDetailsElement>(
+      "details.tech-details",
+    );
+    expect(disclosure?.open).toBe(false);
+    expect(disclosure?.textContent).toContain("Corrected deliveries");
+    await expect.element(page.getByText(evidence)).not.toBeVisible();
+
+    await page.getByText("Technical details", { exact: true }).click();
+
+    await expect.element(page.getByText(evidence)).toBeVisible();
+    await expect
+      .element(page.getByText("omitted-column-in-version", { exact: true }))
+      .toBeVisible();
+    const interval = document.querySelector<HTMLDivElement>(
+      '.correction-list div[title="2020-01-01 – 2020-12-31"]',
+    );
+    expect(interval?.textContent).toContain("Interval 2020");
+    expect(disclosure?.textContent).not.toContain("2019-01-01");
   });
 
   it("Apply stays seed-gated (disabled) even when a row is staged, until the seed is present", async () => {

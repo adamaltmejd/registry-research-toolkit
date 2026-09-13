@@ -123,6 +123,7 @@ _COLUMN_FIELDS = frozenset(
 # the same rows either way — but it is the first thing whoever retires an entry
 # needs, so it is a closed vocabulary rather than free text.
 _SOURCES = frozenset({"scb-docs", "steward-holdings"})
+_DEFAULT_DELIVERED_CLASS = "omitted-column-in-version"
 
 # `data_type` vocabulary, shared with `input_data/scb_canonical/scb_canonical.toml`
 # (CanonicalScbAdapter). Stored verbatim on the synthetic row; the gate keeps a
@@ -132,7 +133,7 @@ _DATA_TYPES = frozenset({"text", "decimal", "integer", "date"})
 
 # `variable.source_label` for a `[[column]]`-minted variable. ONE label for both
 # `source` values: the fact ("SCB's export lacks this column") is the same one,
-# and `source` — which is not published — is where the evidence class lives.
+# while `source` becomes the state-provenance class researchers can inspect.
 ERRATA_COLUMN_SOURCE_LABEL = "scb-errata"
 
 _require_str = functools.partial(
@@ -162,12 +163,13 @@ class ErrataDelivered:
     register_variant_id: int
     column: str
     versions: tuple[str, ...]
+    provenance: str
 
 
 # The `[[column]]` fields that say WHERE the variable is delivered rather
 # than what it is; everything else is `ErrataColumn.identity`.
 _PER_VARIANT_FIELDS = frozenset(
-    {"register_id", "register_variant_id", "versions", "source"}
+    {"register_id", "register_variant_id", "versions", "source", "provenance"}
 )
 
 
@@ -195,6 +197,7 @@ class ErrataColumn:
     is_sensitive: bool
     versions: tuple[str, ...] | None
     source: str
+    provenance: str
 
     @property
     def key(self) -> tuple[int, str]:
@@ -305,12 +308,12 @@ def _entries(path: Path | None, kind: str) -> list[dict]:
     )
 
 
-def _require_provenance(entry: dict, context: str) -> None:
+def _require_provenance(entry: dict, context: str) -> str:
     """Every entry of every kind is evidenced and dated: `evidence` is why the
     maintainer believes SCB got it wrong, `noted` the date they recorded it.
-    Validated but not carried into the build — both document the entry for
-    whoever retires it, and the log is only useful if neither can be omitted."""
-    _require_str(entry, "evidence", context)
+    `evidence` is returned so row-producing entries can carry it into their
+    delivery-window provenance. `noted` remains curation-log metadata."""
+    evidence = _require_str(entry, "evidence", context)
     noted = _require_str(entry, "noted", context)
     try:
         parsed = date.fromisoformat(noted)
@@ -322,6 +325,18 @@ def _require_provenance(entry: dict, context: str) -> None:
             f"scb_errata {context} needs `noted` as YYYY-MM-DD, got {noted!r}.",
             'Use the date the omission was recorded, e.g. `noted = "2026-09-11"`.',
         )
+    return evidence
+
+
+def _state_provenance(class_name: str, evidence: str) -> str:
+    """Stable, human-readable state provenance: class first, evidence after it.
+
+    The newline is the field's only structural separator. It keeps the catalog
+    value useful as-is for CLI/JSON consumers while letting the SPA present the
+    correction class and supporting evidence separately. Evidence may itself
+    contain newlines; consumers split only the first one.
+    """
+    return f"errata:{class_name}\n{evidence}"
 
 
 def _resolve_variant(
@@ -434,15 +449,13 @@ def load_scb_errata(
         )
         column = _require_str(entry, "column", f"[[delivered]] {context}")
         ctx = f"[[delivered]] {context}/{column}"
-        _require_provenance(entry, ctx)
+        evidence = _require_provenance(entry, ctx)
         named = _named_versions(entry, ctx)
-        if "upstream" in entry and not isinstance(entry["upstream"], str):
-            raise curation_error(
-                _CODE,
-                f"scb_errata {ctx} `upstream` must be a string when present, "
-                f"got {entry['upstream']!r}.",
-                'Give `upstream = "<class>"` as a string, or omit it.',
-            )
+        upstream = (
+            _require_str(entry, "upstream", ctx)
+            if "upstream" in entry
+            else _DEFAULT_DELIVERED_CLASS
+        )
         key = (variant_id, fold_column(column))
         if key in seen_columns:
             raise curation_error(
@@ -452,7 +465,15 @@ def load_scb_errata(
                 "omitted version in that entry's `versions`.",
             )
         seen_columns.add(key)
-        delivered.append(ErrataDelivered(register_id, variant_id, column, named))
+        delivered.append(
+            ErrataDelivered(
+                register_id,
+                variant_id,
+                column,
+                named,
+                _state_provenance(upstream, evidence),
+            )
+        )
 
     columns: list[ErrataColumn] = []
     # The variable each `[[column]]` key mints, so a column declared on two
@@ -467,6 +488,8 @@ def load_scb_errata(
         )
         column = _require_str(entry, "column", f"[[column]] {context}")
         ctx = f"[[column]] {context}/{column}"
+        source = _column_source(entry, ctx)
+        evidence = _require_provenance(entry, ctx)
         loaded = ErrataColumn(
             register_id=register_id,
             register_variant_id=variant_id,
@@ -478,9 +501,9 @@ def load_scb_errata(
             is_identifier=_require_bool(entry, "is_identifier", ctx),
             is_sensitive=_require_bool(entry, "is_sensitive", ctx),
             versions=_column_versions(entry, ctx),
-            source=_column_source(entry, ctx),
+            source=source,
+            provenance=_state_provenance(source, evidence),
         )
-        _require_provenance(entry, ctx)
         key = (variant_id, fold_column(column))
         if key in seen_columns:
             raise curation_error(
@@ -961,6 +984,11 @@ def apply_scb_errata(
                             "(cvid, delivery_column_name) VALUES (?, ?)",
                             (target_cvid, source["delivery_column_name"]),
                         )
+                        conn.execute(
+                            "UPDATE variable_instance SET provenance = ? "
+                            "WHERE cvid = ?",
+                            (d.provenance, target_cvid),
+                        )
                         named_targets.add(target_key)
                         counts["rows"] += 1
                         continue
@@ -978,14 +1006,15 @@ def apply_scb_errata(
                     conn.execute(
                         f"INSERT INTO variable_instance "
                         f"(cvid, register_id, register_variant_id, regver_id, "
-                        f"{', '.join(_CLONED)}) "
-                        f"VALUES (?, ?, ?, ?, {', '.join('?' * len(_CLONED))})",
+                        f"{', '.join(_CLONED)}, provenance) "
+                        f"VALUES (?, ?, ?, ?, {', '.join('?' * len(_CLONED))}, ?)",
                         (
                             cvid,
                             d.register_id,
                             d.register_variant_id,
                             regver_id,
                             *(source[c] for c in _CLONED),
+                            d.provenance,
                         ),
                     )
                     # The source row's OWN spelling, not the curator's: inventing
@@ -1091,8 +1120,8 @@ def _mint_columns(
                 conn.execute(
                     "INSERT INTO variable_instance "
                     "(cvid, register_id, register_variant_id, regver_id, var_id, "
-                    " variabelnamn, data_type, variable_id) "
-                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                    " variabelnamn, data_type, variable_id, provenance) "
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
                     (
                         cvid,
                         c.register_id,
@@ -1102,6 +1131,7 @@ def _mint_columns(
                         c.name,
                         c.data_type,
                         variable_id,
+                        c.provenance,
                     ),
                 )
                 conn.execute(

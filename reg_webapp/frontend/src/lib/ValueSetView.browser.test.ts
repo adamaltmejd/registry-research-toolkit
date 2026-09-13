@@ -75,6 +75,7 @@ function state(over: Partial<VariableStateModel>): VariableStateModel {
     data_length: null,
     delivery_column_name: null,
     source_register_text: null,
+    provenance: null,
     value_set_version_label: "",
     value_set_id: null,
     value_set: null,

@@ -7,11 +7,13 @@ import {
   isCatalogNode,
   type StatesResponse,
   type VariableGraphNode,
+  type VariableStateModel,
 } from "./api";
 import { asyncResource, unmountedFlag } from "./async.svelte";
 import {
   coverageFromStates,
   formatDataType,
+  formatStateWindow,
   fqidSegments,
   groupLinkFromFocus,
   narrowStatesByModifier,
@@ -20,6 +22,7 @@ import {
   pickerWindowYears,
   qualifierFromFocus,
   registerPrefixOf,
+  windowTitle,
 } from "./catalog";
 import DocMentionsPanel from "./DocMentionsPanel.svelte";
 import LineageDetails from "./LineageDetails.svelte";
@@ -45,7 +48,7 @@ import {
   type StagedApplyOutcome,
 } from "./staged_picker";
 import TechnicalDetails from "./TechnicalDetails.svelte";
-import { Tag } from "./ui";
+import { KeyValue, type KeyValueRow, Tag } from "./ui";
 import ValueSetView from "./ValueSetView.svelte";
 import { windowStore } from "./window.svelte";
 
@@ -262,6 +265,33 @@ const technicalState = $derived.by(() => {
   }
   return valueSetStates[0];
 });
+
+type Correction = {
+  state: VariableStateModel;
+  className: string;
+  evidence: string;
+};
+
+function correctionFromState(state: VariableStateModel): Correction | null {
+  const provenance = state.provenance;
+  if (!provenance?.startsWith("errata:")) {
+    return null;
+  }
+  const separator = provenance.indexOf("\n");
+  if (separator < 0) {
+    return null;
+  }
+  const className = provenance.slice("errata:".length, separator).trim();
+  const evidence = provenance.slice(separator + 1).trim();
+  return className && evidence ? { state, className, evidence } : null;
+}
+
+const corrections = $derived.by(() =>
+  (valueSetStates ?? []).flatMap((state) => {
+    const correction = correctionFromState(state);
+    return correction === null ? [] : [correction];
+  }),
+);
 
 // ── The relationship-graph fetch (#678/#904) ────────────────────────────────
 // The leaf owns ONE `/graph` fetch (#761/#792): it feeds the picker graph mode AND the
@@ -699,6 +729,44 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
         <dt class="micro-label">Delivery column</dt>
         <dd><code>{technicalState.delivery_column_name}</code></dd>
       {/if}
+      {#if corrections.length > 0}
+        <dt class="micro-label">Corrected deliveries</dt>
+        <dd>
+          <ul class="correction-list">
+            {#each corrections as correction}
+              {@const correctionFacts = [
+                {
+                  label: "Variant",
+                  value:
+                    correction.state.variant_label ?? correction.state.variant,
+                },
+                {
+                  label: "Interval",
+                  value:
+                    formatStateWindow(correction.state) ??
+                    windowTitle(
+                      correction.state.valid_from,
+                      correction.state.valid_to,
+                    ),
+                  mono: true,
+                },
+                { label: "Class", value: correction.className, mono: true },
+              ] satisfies KeyValueRow[]}
+              <li>
+                <div
+                  title={windowTitle(
+                    correction.state.valid_from,
+                    correction.state.valid_to,
+                  )}
+                >
+                  <KeyValue rows={correctionFacts} />
+                </div>
+                <p class="correction-evidence">{correction.evidence}</p>
+              </li>
+            {/each}
+          </ul>
+        </dd>
+      {/if}
     </dl>
   </TechnicalDetails>
 {/snippet}
@@ -757,6 +825,15 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
   .meta dd {
     min-width: 0;
     margin: 0;
+  }
+  .correction-list {
+    display: grid;
+    gap: var(--space-3);
+    margin: 0;
+    padding-inline-start: var(--space-4);
+  }
+  .correction-evidence {
+    margin: var(--space-1) 0 0;
   }
   .tag-strip {
     display: flex;

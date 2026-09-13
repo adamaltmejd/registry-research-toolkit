@@ -504,6 +504,9 @@ CREATE TABLE variable_instance (
     -- cell for opaque source/questionnaire codes (E22/E60); the importer routes
     -- those here so they can be preserved at state grain.
     source_register_text TEXT,
+    -- State provenance carrier used by the SCB coalescer. NULL for provider
+    -- export rows; dropped with this build-only table after IR emission.
+    provenance TEXT,
     classification_id INTEGER REFERENCES classification(id),
     -- value_set_id links to the cvid's deduplicated, year-projected code list.
     -- NULL when the cvid has no codes (sentinel-only or every union pair
@@ -584,6 +587,11 @@ CREATE TABLE variable_state (
     -- multi-response members can share one variable and value set while each
     -- column carries a distinct SCB `VariabelOperationell_definition`.
     operational_definition TEXT,
+    -- NULL for provider-exported states. Curated corrections carry a stable
+    -- `errata:<class>\\n<evidence>` value; steward-only states may carry their
+    -- `steward:<label>` origin. Kept at state grain so corrected and documented
+    -- subintervals cannot be conflated.
+    provenance TEXT,
     value_set_id INTEGER REFERENCES value_set(value_set_id),
     -- Overlap discriminator (multi-vintage / grain / coding). NOT NULL
     -- DEFAULT '' so the uniqueness index below bites in the common
@@ -3209,11 +3217,11 @@ def _insert_core_graph_from_ir(
         "INSERT INTO variable_state "
         "(state_id, variable_id, register_variant_id, valid_from, valid_to, "
         " data_type, data_length, delivery_column_name, source_register_text, "
-        " operational_definition, value_set_id, "
+        " operational_definition, provenance, value_set_id, "
         " value_set_version_label, classification_id) "
         "VALUES (:state_id, :variable_id, :register_variant_id, :valid_from, "
         " :valid_to, :data_type, :data_length, :delivery_column_name, "
-        " :source_register_text, :operational_definition, :value_set_id, "
+        " :source_register_text, :operational_definition, :provenance, :value_set_id, "
         " :value_set_version_label, NULL)",
         [
             {
@@ -3231,6 +3239,7 @@ def _insert_core_graph_from_ir(
                 "delivery_column_name": s.delivery_column_name,
                 "source_register_text": s.source_register_text,
                 "operational_definition": s.operational_definition,
+                "provenance": s.provenance,
                 "value_set_id": s.value_set_id,
                 "value_set_version_label": s.value_set_version_label or "",
             }

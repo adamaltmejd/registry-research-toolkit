@@ -407,6 +407,7 @@ class TestRepresentationRuns:
                 data_length=None,
                 delivery_column_name=col,
                 source_register_text=None,
+                provenance=None,
                 value_set_version_label="",
                 value_set_id=99,
                 value_set=None,

@@ -5057,6 +5057,17 @@
             ],
             "title": "Period Token"
           },
+          "provenance": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Provenance"
+          },
           "register_variant_id": {
             "title": "Register Variant Id",
             "type": "integer"
@@ -5172,6 +5183,7 @@
           "data_length",
           "delivery_column_name",
           "source_register_text",
+          "provenance",
           "value_set_version_label",
           "value_set_id",
           "value_set",

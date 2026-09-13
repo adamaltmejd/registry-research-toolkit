@@ -1605,14 +1605,14 @@ with the requested edition tab active; and the `concept-group` (served by the fi
 
 Per-kind mapping into the six sections:
 
-  | Section       | Variable (`BindingLeafView`)                                                                            | Classification (`ClassificationLeafView`)                        | Concept group (`ConceptGroupView`)                                                                                                            |
-  | ------------- | ------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
-  | description   | definition / description / unit `<dl>` + `via_same_as` note                                             | short name `<dl>`                                                | aggregated thematic tags, then shared definition/description (when members agree — #678/#900) above Technical details (key / facets / source) |
-  | picker        | `PeriodPicker` (time) + `RepresentationPicker` (list or graph/time-band) + add-to-project               | `ClassificationEditionGraph` compact edition DAG (#906)          | `PeriodPicker` (availability lens) + `RepresentationPicker` (list or graph/time-band)                                                         |
-  | value / codes | codings (`ValueSetView` (#905), each distinct value set via `CodeList`)                                 | `ClassificationCodesPanel` (`CodeList`)                          | —                                                                                                                                             |
-  | relationships | `LineageDetails` (provenance/warnings); succession/group graph context lives in the picker              | derived classification links; edition succession lives in picker | — (members live in the picker)                                                                                                                |
-  | docs          | `DocMentionsPanel`                                                                                      | —                                                                | —                                                                                                                                             |
-  | technical     | one bottom `TechnicalDetails` disclosure (sensitive / identifier, plus single-state data type / column) | —                                                                | —                                                                                                                                             |
+  | Section       | Variable (`BindingLeafView`)                                                                                                                             | Classification (`ClassificationLeafView`)                        | Concept group (`ConceptGroupView`)                                                                                                            |
+  | ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+  | description   | definition / description / unit `<dl>` + `via_same_as` note                                                                                              | short name `<dl>`                                                | aggregated thematic tags, then shared definition/description (when members agree — #678/#900) above Technical details (key / facets / source) |
+  | picker        | `PeriodPicker` (time) + `RepresentationPicker` (list or graph/time-band) + add-to-project                                                                | `ClassificationEditionGraph` compact edition DAG (#906)          | `PeriodPicker` (availability lens) + `RepresentationPicker` (list or graph/time-band)                                                         |
+  | value / codes | codings (`ValueSetView` (#905), each distinct value set via `CodeList`)                                                                                  | `ClassificationCodesPanel` (`CodeList`)                          | —                                                                                                                                             |
+  | relationships | `LineageDetails` (provenance/warnings); succession/group graph context lives in the picker                                                               | derived classification links; edition succession lives in picker | — (members live in the picker)                                                                                                                |
+  | docs          | `DocMentionsPanel`                                                                                                                                       | —                                                                | —                                                                                                                                             |
+  | technical     | one bottom `TechnicalDetails` disclosure (sensitive / identifier, single-state data type / column, and corrected delivery intervals with class/evidence) | —                                                                | —                                                                                                                                             |
 
 **#670 — member identity and fetch ownership.** For a grouped variable,
 `BindingLeafView` renders a member-distinguishing qualifier (facet labels, e.g. "AGI ·
@@ -1801,11 +1801,12 @@ one-sided `until <year>` form when the start is unknown (#658).
   disclosure that demotes **backend/structural** fields below the user-facing ones. The
   binding leaf owns a single bottom disclosure for the variable's sensitive / identifier
   flags and, when exactly one state is in view, that state's type / length / delivery
-  column. Concept groups still use the component for key / facets / source. One
-  component keeps the summary + styling consistent across call sites; callers omit it
-  entirely when there's nothing to demote. `LineageDetails` follows the same
-  omit-when-empty rule: with no provenance, warnings, loading state, or error, it
-  renders nothing.
+  column. Errata-backed states add their exact interval, correction class and supporting
+  evidence here; the disclosure remains collapsed and ordinary states add no row.
+  Concept groups still use the component for key / facets / source. One component keeps
+  the summary + styling consistent across call sites; callers omit it entirely when
+  there's nothing to demote. `LineageDetails` follows the same omit-when-empty rule:
+  with no provenance, warnings, loading state, or error, it renders nothing.
 
 ### Picker graph ownership (#904, #1057)
 
@@ -2619,10 +2620,12 @@ statements == 0):
   is now an explicit *negative* case (the pin is retired), alongside
   `scb/lisa/naringsgren@bad/slug` and `…@@x`.
 
-**Provenance confinement (route introspection).** No handler references the provenance
-DB path — the route surface never exposes provenance, so there is no path-confinement to
-enforce at the handler level. This is a property of the endpoint set, re-checked when
-routes are added.
+**Provenance confinement (route introspection).** No handler references the
+maintainer-only sibling provenance DB path, so there is no path-confinement to enforce
+at the handler level. The published catalog's separate `variable_state.provenance` field
+is safe row metadata (provider export versus curated delivery correction) and travels
+with states; it does not expose or query the sibling DB. This separation is a property
+of the endpoint set, re-checked when routes are added.
 
 ## Forward-looking open UX notes
 

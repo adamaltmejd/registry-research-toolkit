@@ -941,6 +941,11 @@ class CuratedAdapter:
                         delivery_column_name=state.column,
                         value_set_id=value_set_id,
                         value_set_version_label=state.value_set_version_label,
+                        provenance=(
+                            f"steward:{self.steward}"
+                            if self.steward is not None
+                            else None
+                        ),
                     )
                     for column in state.columns:
                         yield IRVariableAlias(

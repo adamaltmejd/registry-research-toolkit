@@ -1947,20 +1947,24 @@ def _write_payload(
                         "data_type": inst.get("data_type", ""),
                         "aliases": ", ".join(inst.get("aliases", [])),
                         "values": inst.get("value_set_count", 0),
+                        "provenance": inst.get("provenance", "") or "",
                     }
                 )
+        columns = [
+            "register_id",
+            "var_id",
+            "name",
+            "variant",
+            "period",
+            "data_type",
+            "aliases",
+            "values",
+        ]
+        if any(row["provenance"] for row in rows):
+            columns.append("provenance")
         write_formatted(
             rows,
-            [
-                "register_id",
-                "var_id",
-                "name",
-                "variant",
-                "period",
-                "data_type",
-                "aliases",
-                "values",
-            ],
+            columns,
             output_path,
             fmt=fmt,
             fmt_explicit=fmt_explicit,

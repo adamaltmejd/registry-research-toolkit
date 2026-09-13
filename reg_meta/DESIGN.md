@@ -268,7 +268,10 @@ see "Classifications"), while the human-readable source attribution lives on
 `variable.source_label` (cross-era constant). `variable_state` carries `state_id`,
 `variable_id`, `register_variant_id`, `valid_from`/`valid_to`, `data_type`,
 `data_length`, `delivery_column_name`, `value_set_id`, `value_set_version_label`, and
-`classification_id`.
+`classification_id`. It also carries nullable `provenance`: NULL for a
+provider-documented interval, `errata:<class>\n<evidence>` for an SCB correction, and
+optionally `steward:<label>` for steward-only rows. Keeping this at state grain prevents
+one corrected edition from relabeling a neighboring documented window.
 
 **Variant-less registers (`_default`).** Socialstyrelsen LSS, BU, SOL ship variables
 without a deldatamängd sheet. Adapters synthesise a single `_default` variant row at
@@ -649,12 +652,13 @@ when ungrouped; #616).
 `state_id`, `variant` (the `register_variant.slug`), `register_variant_id`, `valid_from`
 / `valid_to` (inclusive ISO dates), `data_type`, `data_length`, `delivery_column_name`
 (denormalized latest alias), `source_register_text` (raw source attribution/code when it
-varies by state), `value_set_version_label` (NOT NULL, `''` = no discriminator),
-`value_set_id`, `value_set` (hydrated `(code, label)` tuple, None when the state has no
-value set), `is_identifier` (variable-grain flag denormalized onto every state via a
-JOIN — constant across all of a variable's states — so consumers holding only a
-`VariableState` (e.g. the `resolve_at` / `/states` paths) can read the authoritative
-identifier flag without needing the enclosing `ResolvedVariable`), and
+varies by state), `provenance` (NULL for provider export; correction class and evidence
+for an errata-backed interval), `value_set_version_label` (NOT NULL, `''` = no
+discriminator), `value_set_id`, `value_set` (hydrated `(code, label)` tuple, None when
+the state has no value set), `is_identifier` (variable-grain flag denormalized onto
+every state via a JOIN — constant across all of a variable's states — so consumers
+holding only a `VariableState` (e.g. the `resolve_at` / `/states` paths) can read the
+authoritative identifier flag without needing the enclosing `ResolvedVariable`), and
 `classification_slug` (the classification family slug (see DESIGN.md → Classifications)
 for this state's value set, e.g. `lkf2007`; resolved per-state from
 `variable_state.classification_id` — varies across a variable's states; None for

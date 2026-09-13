@@ -41,6 +41,8 @@ _ENTRY = {
     "noted": '"2026-09-12"',
 }
 
+_PROVENANCE = "errata:omitted-column-in-version\nTest evidence."
+
 
 def _toml(**overrides: str | None) -> str:
     """The canonical `[[column]]` entry with `overrides` applied; a None value
@@ -132,7 +134,8 @@ def _application_db(
             vardemangdsniva TEXT,
             operational_definition TEXT,
             source_register_text TEXT,
-            value_set_id INTEGER
+            value_set_id INTEGER,
+            provenance TEXT
         );
         CREATE TABLE variable_alias_build (
             cvid INTEGER NOT NULL,
@@ -144,7 +147,7 @@ def _application_db(
         INSERT INTO register_version VALUES (102, 10, '2022');
         INSERT INTO variable_instance VALUES (
             9310, 1, 10, 102, 931, 'Source name', 'varchar', '10',
-            'source coding', '1', 'source operation', 'source register', 77
+            'source coding', '1', 'source operation', 'source register', 77, NULL
         );
         INSERT INTO variable_alias_build VALUES (9310, 'DispCol');
         """
@@ -153,7 +156,7 @@ def _application_db(
         conn.execute(
             "INSERT INTO variable_instance VALUES "
             "(?, 1, 10, 101, 931, 'Target name', 'int', '2', "
-            "'target coding', '2', 'target operation', 'target register', 88)",
+            "'target coding', '2', 'target operation', 'target register', 88, NULL)",
             (cvid,),
         )
         if column is not None:
@@ -173,6 +176,7 @@ def _apply_delivered(conn: sqlite3.Connection) -> dict[str, int]:
                     register_variant_id=10,
                     column="DispCol",
                     versions=("2021",),
+                    provenance=_PROVENANCE,
                 ),
             )
         ),
@@ -189,10 +193,11 @@ class TestDeliveredApplication:
 
         assert _apply_delivered(conn)["rows"] == 1
 
-        assert (
-            conn.execute("SELECT * FROM variable_instance WHERE cvid = 9311").fetchone()
-            == before
-        )
+        after = conn.execute(
+            "SELECT * FROM variable_instance WHERE cvid = 9311"
+        ).fetchone()
+        assert after[:-1] == before[:-1]
+        assert after[-1] == _PROVENANCE
         assert conn.execute(
             "SELECT cvid, delivery_column_name FROM variable_alias_build "
             "WHERE cvid = 9311"
@@ -237,7 +242,7 @@ class TestDeliveredApplication:
         conn.execute(
             "INSERT INTO variable_instance VALUES "
             "(9312, 1, 10, 102, 931, 'Source name', 'varchar', '10', "
-            "'source coding', '1', 'source operation', 'source register', 77)"
+            "'source coding', '1', 'source operation', 'source register', 77, NULL)"
         )
         conn.execute("INSERT INTO variable_alias_build VALUES (9312, 'RivalCol')")
         errata = ScbErrata(
@@ -247,6 +252,7 @@ class TestDeliveredApplication:
                     register_variant_id=10,
                     column=column,
                     versions=("2021",),
+                    provenance=_PROVENANCE,
                 )
                 for column in ("DispCol", "RivalCol")
             )
@@ -265,7 +271,7 @@ class TestDeliveredApplication:
         conn.execute(
             "INSERT INTO variable_instance VALUES "
             "(9312, 1, 10, 102, 931, 'Rival name', 'decimal', '8', "
-            "'rival coding', '3', 'rival operation', 'rival register', 99)"
+            "'rival coding', '3', 'rival operation', 'rival register', 99, NULL)"
         )
         conn.execute("INSERT INTO variable_alias_build VALUES (9312, 'RivalCol')")
         errata = ScbErrata(
@@ -275,6 +281,7 @@ class TestDeliveredApplication:
                     register_variant_id=10,
                     column=column,
                     versions=("2021",),
+                    provenance=_PROVENANCE,
                 )
                 for column in ("DispCol", "RivalCol")
             )
@@ -331,16 +338,17 @@ class TestDeliveredApplication:
         conn.execute(
             "INSERT INTO variable_instance VALUES "
             "(9312, 1, 10, 102, 931, 'Second source', 'decimal', '8', "
-            "'second coding', '3', 'second operation', 'second register', 99)"
+            "'second coding', '3', 'second operation', 'second register', 99, NULL)"
         )
         conn.execute("INSERT INTO variable_alias_build VALUES (9312, 'DispCol')")
 
         assert _apply_delivered(conn)["rows"] == 1
 
-        assert (
-            conn.execute("SELECT * FROM variable_instance WHERE cvid = 9311").fetchone()
-            == before
-        )
+        after = conn.execute(
+            "SELECT * FROM variable_instance WHERE cvid = 9311"
+        ).fetchone()
+        assert after[:-1] == before[:-1]
+        assert after[-1] == _PROVENANCE
         assert conn.execute(
             "SELECT cvid, delivery_column_name FROM variable_alias_build "
             "WHERE cvid = 9311"
@@ -367,6 +375,36 @@ class TestVersionEntry:
         assert "four-digit year" in err.remediation
 
 
+class TestDeliveredEntry:
+    def test_evidence_and_default_class_form_provenance(
+        self, tmp_path: Path, slug_dir: Path
+    ) -> None:
+        body = (
+            '[[delivered]]\nregister = "scb/lisa"\n'
+            'variant = "individer-15plus"\ncolumn = "Kon"\n'
+            'versions = ["2010"]\nevidence = "The steward holds it."\n'
+            'noted = "2026-09-12"\n'
+        )
+        (entry,) = _load(tmp_path, slug_dir, body).delivered
+        assert entry.provenance == (
+            "errata:omitted-column-in-version\nThe steward holds it."
+        )
+
+    def test_upstream_value_is_the_correction_class(
+        self, tmp_path: Path, slug_dir: Path
+    ) -> None:
+        body = (
+            '[[delivered]]\nregister = "scb/lisa"\n'
+            'variant = "individer-15plus"\ncolumn = "Kon"\n'
+            'versions = ["2010"]\nevidence = "SCB left the name blank."\n'
+            'noted = "2026-09-12"\nupstream = "blank-column-name-in-version"\n'
+        )
+        (entry,) = _load(tmp_path, slug_dir, body).delivered
+        assert entry.provenance == (
+            "errata:blank-column-name-in-version\nSCB left the name blank."
+        )
+
+
 class TestColumnEntry:
     def test_absent_file_is_empty(self, slug_dir: Path) -> None:
         errata = load_scb_errata(None, slug_dir)
@@ -381,6 +419,9 @@ class TestColumnEntry:
         assert entry.definition == "Yrkeskod pa 4-siffernivan."
         assert entry.versions == ("2010", "2011")
         assert entry.source == "scb-docs"
+        assert entry.provenance == (
+            "errata:scb-docs\nSCB doc library lisa-bakgrundsfakta-1990-2017."
+        )
         assert entry.key == (34, "ssyk4_j16")
         # Optional identity: absent data_type/classification means "not stated",
         # never a guessed fact; the PII flags default to off.
@@ -500,6 +541,20 @@ class TestColumnEntry:
         first, second = _load(tmp_path, slug_dir, both).columns
         assert first.key == second.key
         assert first.register_variant_id != second.register_variant_id
+
+    def test_two_variants_may_have_different_evidence(
+        self, tmp_path: Path, slug_dir: Path
+    ) -> None:
+        both = (
+            _toml()
+            + "\n"
+            + _toml(
+                variant='"individer-16plus"', evidence='"The second holdings list."'
+            )
+        )
+        first, second = _load(tmp_path, slug_dir, both).columns
+        assert first.key == second.key
+        assert first.provenance != second.provenance
 
     def test_two_variants_disagreeing_about_the_variable_fail(
         self, tmp_path: Path, slug_dir: Path

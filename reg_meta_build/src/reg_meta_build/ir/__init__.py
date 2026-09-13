@@ -150,6 +150,9 @@ class IRVariableState(_IRBase):
     # delivery-column grain (#736). Distinct from variable-level
     # `operational_definition`, which is only a shared/canonical summary.
     operational_definition: str | None = None
+    # NULL for provider-exported rows. Corrected SCB states carry
+    # `errata:<class>\n<evidence>`; steward-only IR may name its steward.
+    provenance: str | None = None
 
 
 class IRVariableAlias(_IRBase):

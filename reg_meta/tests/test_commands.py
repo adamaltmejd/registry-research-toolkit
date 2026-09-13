@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import json
+import sqlite3
 import sys
+from pathlib import Path
 
 import pytest
 from reg_meta.cli import run
@@ -431,6 +433,42 @@ class TestGetVarinfo:
         assert "year" in inst
         assert "aliases" in inst
         assert "value_set_count" in inst
+        assert inst["provenance"] is None
+
+    def test_correction_provenance_is_printed(
+        self, db_path: str, capsys: pytest.CaptureFixture[str]
+    ) -> None:
+        provenance = (
+            "errata:omitted-column-in-version\n"
+            "The steward holds this delivery, which SCB omits."
+        )
+        with sqlite3.connect(Path(db_path) / "reg_meta.db") as conn:
+            conn.execute(
+                "UPDATE variable_state SET provenance = ? "
+                "WHERE state_id = (SELECT MIN(vs.state_id) FROM variable_state vs "
+                "JOIN variable v ON v.variable_id = vs.variable_id "
+                "WHERE v.register_id = 1 AND v.provider_key = '44')",
+                (provenance,),
+            )
+
+        code = run(
+            [
+                "--format",
+                "list",
+                "--db",
+                db_path,
+                "get",
+                "varinfo",
+                "Kön",
+                "--register",
+                "TESTREG",
+            ]
+        )
+
+        assert code == 0
+        output = capsys.readouterr().out
+        assert "provenance" in output
+        assert provenance in output
 
     def test_value_set_count(self, db_path: str):
         data, _code = _run_json(

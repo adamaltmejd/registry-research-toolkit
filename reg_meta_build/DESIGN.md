@@ -104,7 +104,10 @@ with deliberately separate homes:
   and its export does not say so", and the build replays the entry as a synthetic
   Registerinformation row before coalescing, so windows, gaps, fusing, alias windows,
   types, value sets and the classification backfill are produced by the ordinary passes.
-  There is no post-pass `variable_state` surgery and no generic
+  The synthetic row also carries `errata:<class>\n<evidence>` into
+  `variable_state.provenance`; provenance is part of the coalescing key so a corrected
+  edition cannot relabel or be erased by an adjacent provider-documented interval. There
+  is no post-pass `variable_state` surgery and no generic
   `variable_state_overrides.toml` (see the classification-links rule below for the same
   boundary). A column SCB never documents anywhere on the variant is the same file's
   `[[column]]`, which mints the variable instead of re-adding a row; the two are
@@ -505,7 +508,8 @@ it: same three tables written, so one file, one grammar and one existence guard.
   `classification_candidates` list (`value_set_id` None), so the provider-blind backfill
   (`_backfill_state_classifications`) tags `variable_state.classification_id` for free —
   the same side channel SOS and the thin providers feed. No value sets (a `value_set`
-  key is rejected). No `SCHEMA_VERSION` bump (rows on existing tables).
+  key is rejected). Y-116 needed no schema change; Y-120 later added the shared
+  `variable_state.provenance` carrier for its correction class and evidence.
 
 Candidates come from the tracked, maintainer-run
 `input_data/swecov/build_catalog.py grafts` pass, which variant-tags the gapfill columns

@@ -3154,6 +3154,8 @@ export interface components {
             operational_definition?: string | null;
             /** Period Token */
             period_token?: string | null;
+            /** Provenance */
+            provenance: string | null;
             /** Register Variant Id */
             register_variant_id: number;
             /** Source Register Text */

@@ -221,6 +221,24 @@ class TestResolveBinding:
         assert r.operational_definition is None
         assert r.states[0].operational_definition == "Avser just denna leveranskolumn."
 
+    def test_state_provenance_flows_through_resolve(self) -> None:
+        conn = build_slugged_db()
+        provenance = (
+            "errata:omitted-column-in-version\n"
+            "The steward holds this delivery, which SCB omits."
+        )
+        conn.execute(
+            "UPDATE variable_state SET provenance = ? "
+            "WHERE variable_id = (SELECT variable_id FROM variable WHERE slug = 'kon')",
+            (provenance,),
+        )
+        conn.commit()
+
+        r = Catalog(conn).resolve("scb/lisa/kon")
+
+        assert isinstance(r, ResolvedVariable)
+        assert r.states[0].provenance == provenance
+
     def test_alias_window_expansion_suppresses_base_state_operational_definition(
         self,
     ) -> None:

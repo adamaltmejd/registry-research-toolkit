@@ -294,7 +294,12 @@ CLASSIFICATION_SUCCESSION_AS_OF_YEAR = 2026
 #   classification relationships such as KS87-P deriving from ICD-9-KS87. This is
 #   deliberately separate from `classification_replaced_by` so terminal walks and
 #   variable-vintage lifting continue to read only temporal edition succession.
-SCHEMA_VERSION = "6.7.0"
+# - 6.8.0 (Y-120): additive `variable_state.provenance` column. NULL means the
+#   provider export documents the state; curated SCB corrections carry their
+#   `errata:<class>` and evidence at interval grain, and steward-only states may
+#   carry their steward label. Regenerate-not-migrate; a 6.7.0 DB cannot explain
+#   corrected delivery windows and is rejected by the minor-version gate.
+SCHEMA_VERSION = "6.8.0"
 DB_FILENAME = "reg_meta.db"
 
 

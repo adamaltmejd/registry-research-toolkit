@@ -3301,7 +3301,8 @@ def get_varinfo(
         states = conn.execute(
             "SELECT vs.state_id, vs.register_variant_id, vs.valid_from, vs.valid_to, "
             "vs.value_set_version_label, vs.data_type, vs.data_length, "
-            "vs.delivery_column_name, vs.operational_definition, vs.value_set_id, "
+            "vs.delivery_column_name, vs.operational_definition, vs.provenance, "
+            "vs.value_set_id, "
             "rv.name AS variant_name, "
             "p.slug AS provider_slug, r.slug AS register_slug, v.slug AS variable_slug "
             "FROM variable_state vs "
@@ -3342,6 +3343,7 @@ def get_varinfo(
                 "data_type": s["data_type"],
                 "data_length": s["data_length"],
                 "operational_definition": s["operational_definition"],
+                "provenance": s["provenance"],
                 # The state's denormalized latest alias (see DESIGN.md → Two-level variable model); list-shaped for
                 # the CLI renderer's `", ".join(...)`.
                 "aliases": [col] if col else [],

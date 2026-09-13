@@ -880,7 +880,7 @@ def _parse_unika_year(raw: str | None) -> int | None:
 @dataclass
 class _StateGroup:
     """One pre-triage coalesced state group (lifted to module scope so the
-    triage below can read it). The 9-component group key lives in the
+    triage below can read it). The 11-component group key lives in the
     `groups` dict; the accumulator carries the year-range signals plus the
     latest-era delivery column for triage."""
 
@@ -892,6 +892,8 @@ class _StateGroup:
     value_set_id: int | None
     value_set_version_label: str | None
     source_register_text: str | None = None
+    # State-grain correction/steward provenance. Provider-exported rows are None.
+    provenance: str | None = None
     operational_definition: str | None = None
     operational_definition_conflict: bool = False
     # grain is part of the *group key* (gkey position 7), not stored here.
@@ -1092,9 +1094,9 @@ def _latest_era(grp: _StateGroup) -> tuple[int, int]:
     return grp.latest_era or (-1, -1)
 
 
-def _source_only_same_column_drift(left: tuple, right: tuple) -> bool:
-    """True when two state gkeys differ only by source-register attribution."""
-    return left[:9] == right[:9] and (left[9] or "") != (right[9] or "")
+def _state_metadata_only_same_column_drift(left: tuple, right: tuple) -> bool:
+    """True when state gkeys differ only by state-grain attribution."""
+    return left[:9] == right[:9] and tuple(left[9:11]) != tuple(right[9:11])
 
 
 @dataclass
@@ -1380,17 +1382,19 @@ def _spans_overlap(groups: dict[tuple, _StateGroup], gkeys: list[tuple]) -> bool
 def _needs_timeline(groups: dict[tuple, _StateGroup], gkeys: list[tuple]) -> bool:
     """The materializer's complete timeline-routing predicate.
 
-    Besides value-set overlap, multiple source-register texts on one delivery
-    column need interval ownership so source provenance can change by era. Both
-    the residual collapse and emitter must use this exact decision: collapsing a
-    partition the emitter later treats as a timeline can erase a documented era.
+    Besides value-set overlap, multiple source-register texts or correction
+    provenances on one delivery column need interval ownership so metadata can
+    change by era. Both the residual collapse and emitter must use this exact
+    decision: collapsing a partition the emitter later treats as a timeline can
+    erase a documented era or spread one correction across its neighbors.
     """
     if _spans_overlap(groups, gkeys):
         return True
-    by_col: dict[str, set[str]] = defaultdict(set)
+    by_col: dict[str, set[tuple[str, str]]] = defaultdict(set)
     for gk in gkeys:
-        by_col[gk[8]].add(groups[gk].source_register_text or "")
-    return any(len(texts) > 1 for texts in by_col.values())
+        grp = groups[gk]
+        by_col[gk[8]].add((grp.source_register_text or "", grp.provenance or ""))
+    return any(len(metadata) > 1 for metadata in by_col.values())
 
 
 def _claims_disjoint(left: _StateGroup, right: _StateGroup) -> bool:
@@ -1515,11 +1519,14 @@ def _collapse_residual(groups: dict[tuple, _StateGroup], res: _TriageResult) -> 
                 used.add(preferred)
                 res.labels[gk] = preferred
                 kept.append(gk)
-            elif any(_source_only_same_column_drift(gk, kept_gk) for kept_gk in kept):
-                # Source-only drift is state-grain provenance, not uninformative
-                # shape drift. Keep it for the timeline arbiter; same-period
-                # collisions collapse there by latest edition, while any
-                # existing interval-grain separation remains available.
+            elif any(
+                _state_metadata_only_same_column_drift(gk, kept_gk)
+                for kept_gk in kept
+            ):
+                # Source/correction provenance is state-grain metadata, not
+                # uninformative shape drift. Keep it for the timeline arbiter;
+                # same-period collisions collapse there by latest edition,
+                # while interval-grain separation remains available.
                 res.labels[gk] = preferred
                 kept.append(gk)
             elif (
@@ -1582,6 +1589,7 @@ def _collapse_residual(groups: dict[tuple, _StateGroup], res: _TriageResult) -> 
                     grp.value_set_id,
                     emitted_label,
                     grp.source_register_text or "",
+                    grp.provenance or "",
                 )
             ].append(gk)
 
@@ -2180,19 +2188,20 @@ def _resolve_year_winners(
     drafts from), not the raw source `value_set_version_label` (which a
     fold/collapse may relabel).
     """
-    source_texts_by_col: dict[str, set[str]] = defaultdict(set)
+    metadata_by_col: dict[str, set[tuple[str, str]]] = defaultdict(set)
     codeless_shapes_by_col: dict[str, set[tuple[str, str]]] = defaultdict(set)
     valued_cols: set[str] = set()
     for gk in cands:
-        source_texts_by_col[gk[8]].add(groups[gk].source_register_text or "")
+        grp = groups[gk]
+        metadata_by_col[gk[8]].add(
+            (grp.source_register_text or "", grp.provenance or "")
+        )
         if groups[gk].value_set_id is None:
             codeless_shapes_by_col[gk[8]].add((gk[3], gk[4]))
         else:
             valued_cols.add(gk[8])
-    source_drift_cols = {
-        col
-        for col, source_texts in source_texts_by_col.items()
-        if len(source_texts) > 1
+    metadata_drift_cols = {
+        col for col, metadata in metadata_by_col.items() if len(metadata) > 1
     }
     codeless_shape_drift_cols = {
         col
@@ -2206,7 +2215,7 @@ def _resolve_year_winners(
         sort_key=_gk_sort_key,
         coded=lambda gk: (
             groups[gk].value_set_id is not None
-            or gk[8] in source_drift_cols
+            or gk[8] in metadata_drift_cols
             or gk[8] in codeless_shape_drift_cols
         ),
         single_coding=lambda pool: _pool_single_coding(
@@ -2236,8 +2245,11 @@ def _pool_single_coding(
     no shared-code relabel. Deliberately set-level, not a pairwise transitive
     closure — an A~B~C chain whose A↔C diff exceeds the threshold does NOT
     conflate, exactly as the cascade's cosmetic step refuses it."""
-    source_texts = {groups[gk].source_register_text or "" for gk in pool}
-    if len(source_texts) > 1:
+    metadata = {
+        (groups[gk].source_register_text or "", groups[gk].provenance or "")
+        for gk in pool
+    }
+    if len(metadata) > 1:
         return False
     vss = sorted({vs for gk in pool if (vs := groups[gk].value_set_id) is not None})
     if not vss:
@@ -2576,7 +2588,7 @@ def _coalesce_variable_states(
             "SELECT vi.cvid, vi.register_id, vi.register_variant_id, vi.var_id, vi.regver_id, "
             "       vi.data_type, vi.data_length, vi.value_set_id, "
             "       vi.value_set_version_label, vi.vardemangdsniva AS grain, "
-            "       vi.source_register_text, vi.operational_definition, "
+            "       vi.source_register_text, vi.operational_definition, vi.provenance, "
             "       vi.variabelnamn, va.delivery_column_name, "
             "       rv.registerversionnamn, "
             "       rv.registerversion_senastgodkanddatum "
@@ -2672,10 +2684,22 @@ def _coalesce_variable_states(
     # Group accumulator: key → mutable `_StateGroup` (module scope; the
     # triage reads it). We iterate `rows` once and update the year-range
     # signals / latest alias in place. A dict rather than itertools.groupby
-    # because rows aren't pre-sorted and the key has 10 components (the column
+    # because rows aren't pre-sorted and the key has 11 components (the column
     # component stays at index 8; grain stays at index 7).
     groups: dict[
-        tuple[int, int, int, str, str, int | None, str | None, str, str, str],
+        tuple[
+            int,
+            int,
+            int,
+            str,
+            str,
+            int | None,
+            str | None,
+            str,
+            str,
+            str,
+            str,
+        ],
         _StateGroup,
     ] = {}
     # Map (register_id, register_variant_id, kolumnnamn, variabelnamn) → set of
@@ -2754,6 +2778,7 @@ def _coalesce_variable_states(
             grain,
             component,
             row["source_register_text"] or "",
+            row["provenance"] or "",
         )
         cvid_gkey[row["cvid"]] = gkey  # idempotent: one cvid → one gkey
         grp = groups.get(gkey)
@@ -2767,6 +2792,7 @@ def _coalesce_variable_states(
                 value_set_id=row["value_set_id"],
                 value_set_version_label=row["value_set_version_label"],
                 source_register_text=row["source_register_text"] or None,
+                provenance=row["provenance"] or None,
             )
             groups[gkey] = grp
 
@@ -3243,6 +3269,7 @@ def _coalesce_variable_states(
                 None
                 if grp.operational_definition_conflict
                 else grp.operational_definition,
+                grp.provenance,
                 grp.value_set_id,
                 label,
             )
@@ -3312,8 +3339,11 @@ def _coalesce_variable_states(
     def _col_value_sets(gks: list[tuple]) -> set[int]:
         return {vs for gk in gks if (vs := groups[gk].value_set_id) is not None}
 
-    def _col_source_texts(gks: list[tuple]) -> set[str]:
-        return {groups[gk].source_register_text or "" for gk in gks}
+    def _col_state_metadata(gks: list[tuple]) -> set[tuple[str, str]]:
+        return {
+            (groups[gk].source_register_text or "", groups[gk].provenance or "")
+            for gk in gks
+        }
 
     for (vid, rv), gkeys in by_vv.items():
         if not _needs_timeline(groups, gkeys):
@@ -3343,7 +3373,7 @@ def _coalesce_variable_states(
             col_yb = [gk for gk in year_bearing if gk[8] == col]
             if (
                 len(_col_value_sets(col_yl + col_yb)) <= 1
-                and len(_col_source_texts(col_yl + col_yb)) <= 1
+                and len(_col_state_metadata(col_yl + col_yb)) <= 1
             ):
                 yearless_emit.update(col_yl)  # no conflict on this column
                 continue
@@ -3541,9 +3571,9 @@ def _coalesce_variable_states(
         conn.executemany(
             "INSERT INTO variable_state (variable_id, register_variant_id, "
             "    valid_from, valid_to, data_type, data_length, delivery_column_name, "
-            "    source_register_text, operational_definition, value_set_id, "
-            "    value_set_version_label) "
-            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            "    source_register_text, operational_definition, provenance, "
+            "    value_set_id, value_set_version_label) "
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             batch,
         )
 
@@ -4749,7 +4779,7 @@ class SCBAdapter:
         for row in self.conn.execute(
             "SELECT state_id, variable_id, register_variant_id, valid_from, "
             "       valid_to, data_type, data_length, delivery_column_name, "
-            "       source_register_text, operational_definition, value_set_id, "
+            "       source_register_text, operational_definition, provenance, value_set_id, "
             "       value_set_version_label "
             "FROM variable_state ORDER BY state_id"
         ):
@@ -4765,8 +4795,9 @@ class SCBAdapter:
                     "delivery_column_name": row[7],
                     "source_register_text": row[8],
                     "operational_definition": row[9],
-                    "value_set_id": row[10],
-                    "value_set_version_label": row[11],
+                    "provenance": row[10],
+                    "value_set_id": row[11],
+                    "value_set_version_label": row[12],
                 }
             )
 

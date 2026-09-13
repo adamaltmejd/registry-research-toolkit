@@ -42,6 +42,7 @@ function state(
     data_length: null,
     delivery_column_name: column,
     source_register_text: null,
+    provenance: null,
     value_set_version_label: "",
     value_set_id: null,
     value_set: null,

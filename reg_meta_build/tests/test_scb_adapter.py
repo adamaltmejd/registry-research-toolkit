@@ -1487,6 +1487,15 @@ def _windows(conn: sqlite3.Connection, provider_key: str) -> list[tuple]:
     ).fetchall()
 
 
+def _provenance_windows(conn: sqlite3.Connection, provider_key: str) -> list[tuple]:
+    return conn.execute(
+        "SELECT vs.valid_from, vs.valid_to, vs.provenance "
+        "FROM variable_state vs JOIN variable v ON v.variable_id = vs.variable_id "
+        "WHERE v.register_id = 1 AND v.provider_key = ? ORDER BY vs.valid_from",
+        (provider_key,),
+    ).fetchall()
+
+
 def _states(conn: sqlite3.Connection, provider_key: str) -> list[tuple]:
     return conn.execute(
         "SELECT vs.delivery_column_name, vs.data_type, vs.data_length, "
@@ -1525,13 +1534,24 @@ class TestScbErrata:
         ]
         without = _build_from_ri_rows(tmp_path / "plain", ri)
         assert _windows(without, "931") == [("2022-01-01", "2022-12-31")]
+        assert _provenance_windows(without, "931") == [
+            ("2022-01-01", "2022-12-31", None)
+        ]
         without.close()
 
         conn = _built_with_errata(
             tmp_path, monkeypatch, ri, errata_delivered("DispCol", "2020", "2021")
         )
         try:
-            assert _windows(conn, "931") == [("2020-01-01", "2022-12-31")]
+            assert _provenance_windows(conn, "931") == [
+                (
+                    "2020-01-01",
+                    "2021-12-31",
+                    "errata:omitted-column-in-version\n"
+                    "the steward holds DispCol for those years",
+                ),
+                ("2022-01-01", "2022-12-31", None),
+            ]
         finally:
             conn.close()
 
@@ -1563,7 +1583,8 @@ class TestScbErrata:
         )
         try:
             assert _states(conn, "931") == [
-                ("DispCol", "int", "1", "2021-01-01", "2022-12-31")
+                ("DispCol", "int", "1", "2021-01-01", "2021-12-31"),
+                ("DispCol", "int", "1", "2022-01-01", "2022-12-31"),
             ]
         finally:
             conn.close()
@@ -1596,7 +1617,8 @@ class TestScbErrata:
         )
         try:
             assert _states(conn, "932") == [
-                ("DispCol", "int", "1", "2020-01-01", "2022-12-31")
+                ("DispCol", "int", "1", "2020-01-01", "2021-12-31"),
+                ("DispCol", "int", "1", "2022-01-01", "2022-12-31"),
             ]
         finally:
             conn.close()
@@ -1707,7 +1729,7 @@ class TestScbErrata:
         )
         return ri, vm
 
-    def test_adjacent_row_fuses_into_one_window(
+    def test_adjacent_documented_and_corrected_rows_stay_distinct(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ) -> None:
         ri, vm = self._timeline_rows()
@@ -1721,7 +1743,8 @@ class TestScbErrata:
         ]
         without.close()
 
-        # 2021 is adjacent to coding A's 2022 run, so the two become one window.
+        # 2021 is adjacent to coding A's documented 2022 run, but its correction
+        # evidence must not label the provider-exported year (or be erased by it).
         conn = _built_with_errata(
             tmp_path, monkeypatch, ri, errata_delivered("TlCol", "2021"), vm_extra=vm
         )
@@ -1729,7 +1752,8 @@ class TestScbErrata:
             assert _windows(conn, "940") == [
                 ("2018-01-01", "2018-12-31"),
                 ("2020-01-01", "2020-12-31"),
-                ("2021-01-01", "2022-12-31"),
+                ("2021-01-01", "2021-12-31"),
+                ("2022-01-01", "2022-12-31"),
             ]
         finally:
             conn.close()
@@ -1776,7 +1800,10 @@ class TestScbErrata:
             vm_extra=vm_rows(9330, "AlphaA", CODING_A),
         )
         try:
-            assert _windows(conn, "933") == [("2020-01-01", "2021-12-31")]
+            assert _windows(conn, "933") == [
+                ("2020-01-01", "2020-12-31"),
+                ("2021-01-01", "2021-12-31"),
+            ]
             value_set_id = conn.execute(
                 "SELECT vs.value_set_id FROM variable_state vs "
                 "JOIN variable v ON v.variable_id = vs.variable_id "
@@ -1825,8 +1852,14 @@ class TestScbErrata:
             tmp_path, monkeypatch, ri, errata_delivered("TwinCol", "2021"), vm_extra=vm
         )
         try:
-            assert _windows(conn, "950") == [("2021-01-01", "2022-12-31")]
-            assert _windows(conn, "951") == [("2021-01-01", "2022-12-31")]
+            assert _windows(conn, "950") == [
+                ("2021-01-01", "2021-12-31"),
+                ("2022-01-01", "2022-12-31"),
+            ]
+            assert _windows(conn, "951") == [
+                ("2021-01-01", "2021-12-31"),
+                ("2022-01-01", "2022-12-31"),
+            ]
             # Each clone carries ITS source row's coding, not one row's dragged
             # onto both.
             assert _state_codes(conn, "950") == [c for c, _l in CODING_A]
@@ -1875,11 +1908,12 @@ class TestScbErrata:
             tmp_path, monkeypatch, ri, errata_delivered("SpanCol", "2013"), vm_extra=vm
         )
         try:
-            # 2013 joins coding A's run and fuses with it. Cloning the 2015 row
-            # instead would leave 2010-2012 alone and make 2013 its own
-            # coding-B window.
+            # 2013 inherits coding A, but remains separate because its evidence
+            # must not relabel the documented 2010-2012 window. Cloning the 2015
+            # row instead would give the corrected interval coding B.
             assert _windows(conn, "960") == [
-                ("2010-01-01", "2013-12-31"),
+                ("2010-01-01", "2012-12-31"),
+                ("2013-01-01", "2013-12-31"),
                 ("2015-01-01", "2015-12-31"),
             ]
         finally:
@@ -1897,7 +1931,10 @@ class TestScbErrata:
             tmp_path, monkeypatch, [], errata_delivered("TestCol", "2021", "2022")
         )
         try:
-            assert _windows(conn, "100") == [("2020-01-01", "2022-12-31")]
+            assert _windows(conn, "100") == [
+                ("2020-01-01", "2020-12-31"),
+                ("2021-01-01", "2022-12-31"),
+            ]
             flags = conn.execute(
                 "SELECT is_sensitive, is_identifier FROM variable "
                 "WHERE register_id = 1 AND provider_key = '100'"
@@ -1928,7 +1965,10 @@ class TestScbErrata:
             errata_version("2023") + "\n" + errata_delivered("AheadCol", "2023"),
         )
         try:
-            assert _windows(conn, "934") == [("2022-01-01", "2023-12-31")]
+            assert _windows(conn, "934") == [
+                ("2022-01-01", "2022-12-31"),
+                ("2023-01-01", "2023-12-31"),
+            ]
             names = conn.execute(
                 "SELECT registerversionnamn FROM register_version "
                 "WHERE register_variant_id = 10 ORDER BY registerversionnamn"
@@ -1958,7 +1998,13 @@ class TestScbErrata:
             + errata_delivered("SameYearCol", "Höstterminen 2022"),
         )
         try:
-            assert _windows(conn, "935") == [("2022-01-01", "2022-12-31")]
+            # The term-specific edition and the annual provider edition overlap
+            # at the catalog's year granularity. Existing availability resolution
+            # keeps the documented interval; the term's evidence must not relabel
+            # that entire interval as corrected.
+            assert _provenance_windows(conn, "935") == [
+                ("2022-01-01", "2022-12-31", None)
+            ]
             assert (
                 conn.execute(
                     "SELECT COUNT(*) FROM register_version "
@@ -2022,7 +2068,11 @@ class TestScbErrata:
             errata_version("2019") + "\n" + errata_delivered("EraCol", "2019"),
         )
         try:
-            assert _windows(conn, "934") == [("2019-01-01", "2022-12-31")]
+            assert _windows(conn, "934") == [
+                ("2019-01-01", "2019-12-31"),
+                ("2020-01-01", "2020-12-31"),
+                ("2022-01-01", "2022-12-31"),
+            ]
             states = conn.execute(
                 "SELECT vs.delivery_column_name, vs.data_type "
                 "FROM variable_state vs "
@@ -2030,7 +2080,11 @@ class TestScbErrata:
                 "WHERE v.register_id = 1 AND v.provider_key = '934' "
                 "ORDER BY vs.valid_from"
             ).fetchall()
-            assert states == [("eracol", "varchar")]
+            assert states == [
+                ("EraCol", "char"),
+                ("eracol", "varchar"),
+                ("eracol", "varchar"),
+            ]
         finally:
             conn.close()
 
@@ -2097,7 +2151,13 @@ class TestScbErrataColumn:
             assert is_canonical_scb(var["variable_id"])
             # TESTREG/individer is documented 2020-2022: `all_versions` claims
             # the whole span, and the window is the coalescer's, not a sentinel.
-            assert _windows(conn, "HeldCol") == [("2020-01-01", "2022-12-31")]
+            assert _provenance_windows(conn, "HeldCol") == [
+                (
+                    "2020-01-01",
+                    "2022-12-31",
+                    "errata:steward-holdings\nthe steward holds HeldCol",
+                )
+            ]
             assert conn.execute(
                 "SELECT delivery_column_name FROM variable_alias WHERE variable_id = ?",
                 (var["variable_id"],),
