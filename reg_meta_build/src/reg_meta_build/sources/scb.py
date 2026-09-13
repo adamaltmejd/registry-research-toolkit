@@ -1520,8 +1520,7 @@ def _collapse_residual(groups: dict[tuple, _StateGroup], res: _TriageResult) -> 
                 res.labels[gk] = preferred
                 kept.append(gk)
             elif any(
-                _state_metadata_only_same_column_drift(gk, kept_gk)
-                for kept_gk in kept
+                _state_metadata_only_same_column_drift(gk, kept_gk) for kept_gk in kept
             ):
                 # Source/correction provenance is state-grain metadata, not
                 # uninformative shape drift. Keep it for the timeline arbiter;
