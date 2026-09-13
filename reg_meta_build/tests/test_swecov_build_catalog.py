@@ -18,7 +18,7 @@ import sys
 import tomllib
 from collections import defaultdict
 from pathlib import Path
-from types import ModuleType
+from typing import TYPE_CHECKING
 
 import pytest
 from reg_meta.db import open_db
@@ -35,6 +35,9 @@ from reg_meta_build.ir import (
 )
 from reg_meta_build.sources.curated import CuratedAdapter
 from reg_meta_build.sources.scb import register_edition_claims
+
+if TYPE_CHECKING:
+    from types import ModuleType
 
 _GENERATOR = (
     Path(__file__).resolve().parents[1] / "input_data" / "swecov" / "build_catalog.py"
@@ -69,7 +72,7 @@ def test_default_csv_uses_newest_full_inventory_or_requires_argument(
         spec.loader.exec_module(module)
         return module
 
-    assert load("matching").DEFAULT_CSV == newest
+    assert newest == load("matching").DEFAULT_CSV
 
     older.unlink()
     newest.unlink()
