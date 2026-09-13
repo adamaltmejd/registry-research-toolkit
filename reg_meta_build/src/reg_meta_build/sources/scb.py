@@ -91,6 +91,7 @@ from reg_meta_build.scb_errata import (
     ERRATA_COLUMN_SOURCE_LABEL,
     ScbErrata,
     apply_scb_errata,
+    scope_state_provenance,
 )
 
 _LISA_REGISTER_NAME_PREFIX = "longitudinell integrationsdatabas"
@@ -3090,8 +3091,10 @@ def _coalesce_variable_states(
     # fast-path/timeline decision. Gather its exact edition claims separately so
     # `_append_state` can partition a resolved state without changing its union,
     # chosen type/alias/value set, or gap-filling behavior. Provider-documented
-    # claims are retained only for a corrected target; they mask overlapping
-    # errata (a window SCB documents is not itself a correction).
+    # claims are retained only for a corrected target. Where one overlaps an
+    # errata claim, the interval remains documented and the correction is scoped
+    # to its exact source edition instead of discarded or applied to the whole
+    # resolved interval.
     def _provenance_target(row: sqlite3.Row) -> tuple[int, int, str] | None:
         gkey = cvid_gkey[row["cvid"]]
         vid = triage.assignments.get(gkey)
@@ -3102,9 +3105,9 @@ def _coalesce_variable_states(
         for row in rows
         if row["provenance"] and (target := _provenance_target(row)) is not None
     }
-    provenance_claims: dict[tuple[int, int, str], set[tuple[str, str, str | None]]] = (
-        defaultdict(set)
-    )
+    provenance_claims: dict[
+        tuple[int, int, str], set[tuple[str, str, str | None, str]]
+    ] = defaultdict(set)
     for row in rows:
         target = _provenance_target(row)
         if target not in corrected_targets:
@@ -3116,7 +3119,9 @@ def _coalesce_variable_states(
             else [(_VALID_FROM_UNKNOWN, _VALID_TO_OPEN_SENTINEL)]
         )
         provenance = row["provenance"] or None
-        provenance_claims[target].update((lo, hi, provenance) for lo, hi in bounds)
+        provenance_claims[target].update(
+            (lo, hi, provenance, row["registerversionnamn"]) for lo, hi in bounds
+        )
 
     # #892/#736: attribute cvid operational definitions after triage. The state
     # rows above carry each group's per-column text. The variable-level column is
@@ -3227,15 +3232,30 @@ def _coalesce_variable_states(
         claims = provenance_claims.get((vid, gkey[1], gkey[8]))
         if not claims:
             return [(vf, vt, None)]
+        documented = [
+            (lo, hi) for lo, hi, provenance, _edition in claims if provenance is None
+        ]
+        attributed_claims = []
+        for claim_lo, claim_hi, provenance, edition in claims:
+            if provenance is not None:
+                overlaps = [
+                    (lo, hi)
+                    for lo, hi in documented
+                    if lo <= claim_hi and claim_lo <= hi
+                ]
+                if overlaps:
+                    claim_lo = min(claim_lo, *(lo for lo, _hi in overlaps))
+                    claim_hi = max(claim_hi, *(hi for _lo, hi in overlaps))
+            attributed_claims.append((claim_lo, claim_hi, provenance, edition))
         clipped = [
-            (max(vf, lo), min(vt, hi), provenance)
-            for lo, hi, provenance in claims
+            (max(vf, lo), min(vt, hi), provenance, edition)
+            for lo, hi, provenance, edition in attributed_claims
             if lo <= vt and vf <= hi
         ]
         if not clipped:
             return [(vf, vt, None)]
         cuts = {vf}
-        for lo, hi, _provenance in clipped:
+        for lo, hi, _provenance, _edition in clipped:
             cuts.add(lo)
             if hi < vt:
                 cuts.add(day_after_window_end(hi))
@@ -3243,13 +3263,13 @@ def _coalesce_variable_states(
         segments: list[tuple[str, str, str | None]] = []
         for index, lo in enumerate(starts):
             hi = prev_day_from_cut(starts[index + 1]) if index + 1 < len(starts) else vt
-            active = {
-                provenance
-                for claim_lo, claim_hi, provenance in clipped
+            active = [
+                (provenance, edition)
+                for claim_lo, claim_hi, provenance, edition in clipped
                 if claim_lo <= lo <= claim_hi
-            }
-            corrections = sorted(p for p in active if p is not None)
-            if None in active or not corrections:
+            ]
+            corrections = sorted({p for p, _edition in active if p is not None})
+            if not corrections:
                 provenance = None
             elif len(corrections) == 1:
                 provenance = corrections[0]
@@ -3268,6 +3288,9 @@ def _coalesce_variable_states(
                         "evidence value or give them disjoint edition windows."
                     ),
                 )
+            if provenance is not None and any(p is None for p, _edition in active):
+                editions = sorted({edition for p, edition in active if p is not None})
+                provenance = scope_state_provenance(provenance, editions)
             if segments and segments[-1][2] == provenance:
                 segments[-1] = (segments[-1][0], hi, provenance)
             else:

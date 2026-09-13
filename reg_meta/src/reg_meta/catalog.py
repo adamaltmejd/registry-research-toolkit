@@ -752,10 +752,13 @@ class VariableState(_CatalogModel):
     # multi-response members may share one variable/value set while each delivery
     # column has its own meaning.
     operational_definition: str | None = None
-    # NULL means the provider export documents this interval. Curated rows carry
-    # a source-specific, human-readable explanation (SCB errata values begin
-    # `errata:<class>\n` and continue with their supporting evidence).
-    provenance: str | None
+    provenance: str | None = Field(
+        description="NULL for an ordinary provider-documented interval. SCB "
+        "corrections use `errata:<class>\\n<evidence>`; when a corrected source "
+        "edition overlaps a provider-documented interval, one or more "
+        "`source-edition:<name>` lines follow the class and scope the correction "
+        "without replacing the documented attribution."
+    )
     # Overlap discriminator (see reg_meta_build/DESIGN.md → Build-time triage (SCB); multi-vintage / grain / coding). NOT NULL
     # DEFAULT '' in the DDL, so '' means "no discriminator", not absent.
     value_set_version_label: str

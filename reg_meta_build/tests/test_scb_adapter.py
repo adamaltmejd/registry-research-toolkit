@@ -1999,11 +1999,18 @@ class TestScbErrata:
         )
         try:
             # The term-specific edition and the annual provider edition overlap
-            # at the catalog's year granularity. Existing availability resolution
-            # keeps the documented interval; the term's evidence must not relabel
-            # that entire interval as corrected.
+            # after availability resolution. The provider-documented annual state
+            # stays intact, while the term's evidence survives with only that exact
+            # source-edition as its correction scope; it must not relabel the whole
+            # annual window as corrected or change state identity/lineage inputs.
             assert _provenance_windows(conn, "935") == [
-                ("2022-01-01", "2022-12-31", None)
+                (
+                    "2022-01-01",
+                    "2022-12-31",
+                    "errata:omitted-column-in-version\n"
+                    "source-edition:Höstterminen 2022\n"
+                    "the steward holds SameYearCol for those years",
+                ),
             ]
             assert (
                 conn.execute(

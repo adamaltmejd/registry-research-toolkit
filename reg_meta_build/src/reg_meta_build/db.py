@@ -587,8 +587,10 @@ CREATE TABLE variable_state (
     -- multi-response members can share one variable and value set while each
     -- column carries a distinct SCB `VariabelOperationell_definition`.
     operational_definition TEXT,
-    -- NULL for provider-exported states. Curated corrections carry a stable
-    -- `errata:<class>\\n<evidence>` value; steward-only states may carry their
+    -- NULL for ordinary provider-exported states. Curated corrections carry a
+    -- stable `errata:<class>\\n<evidence>` value; when a corrected source edition
+    -- overlaps a documented claim, exact `source-edition:<name>` scope line(s)
+    -- preserve both attributions. Steward-only states may carry their
     -- `steward:<label>` origin. Kept at state grain so corrected and documented
     -- subintervals cannot be conflated.
     provenance TEXT,

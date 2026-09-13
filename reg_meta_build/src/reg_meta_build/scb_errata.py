@@ -329,14 +329,24 @@ def _require_provenance(entry: dict, context: str) -> str:
 
 
 def _state_provenance(class_name: str, evidence: str) -> str:
-    """Stable, human-readable state provenance: class first, evidence after it.
+    """Stable, human-readable base provenance: class first, evidence after it.
 
     The newline is the field's only structural separator. It keeps the catalog
     value useful as-is for CLI/JSON consumers while letting the SPA present the
-    correction class and supporting evidence separately. Evidence may itself
-    contain newlines; consumers split only the first one.
+    correction class and supporting evidence separately. If this correction
+    overlaps a provider-documented claim, the coalescer inserts exact
+    `source-edition:<name>` line(s) after the class; evidence may itself contain
+    newlines, so consumers remove only those leading scope lines.
     """
     return f"errata:{class_name}\n{evidence}"
+
+
+def scope_state_provenance(provenance: str, editions: list[str]) -> str:
+    """Add exact source-edition scope to an overlapping correction value."""
+    header, evidence = provenance.split("\n", maxsplit=1)
+    return "\n".join(
+        (header, *(f"source-edition:{edition}" for edition in editions), evidence)
+    )
 
 
 def _resolve_variant(

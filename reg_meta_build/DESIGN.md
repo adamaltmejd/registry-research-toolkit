@@ -107,18 +107,21 @@ with deliberately separate homes:
   The synthetic row also carries `errata:<class>\n<evidence>` into
   `variable_state.provenance`. The coalescer first resolves availability and displayed
   shape exactly as it does for provider rows, then partitions that resolved state along
-  the errata entry's exact edition claims; a provider-documented claim masks overlapping
-  errata. Provenance therefore cannot change coverage or shape selection, while one
-  corrected edition still cannot relabel an adjacent documented interval. There is no
-  post-pass `variable_state` surgery and no generic `variable_state_overrides.toml` (see
-  the classification-links rule below for the same boundary). A column SCB never
-  documents anywhere on the variant is the same file's `[[column]]`, which mints the
-  variable instead of re-adding a row; the two are partitioned by whether the export has
-  a row for the column somewhere on the variant, and each entry kind fails the build
-  when it is the other one (`scb_errata_no_source_row` / `scb_errata_now_present`) —
-  shape and slugs are checked at load, everything that needs the export is checked when
-  the entry is applied. The log is self-cleaning: once SCB ships the row the build fails
-  with `scb_errata_now_present` and the entry is deleted, leaving the record in git.
+  the errata entry's exact edition claims. An overlap preserves the provider-documented
+  attribution and inserts exact `source-edition:<name>` scope line(s) into the
+  correction value, so its evidence survives without describing the whole documented
+  interval as corrected. Provenance therefore cannot change coverage or shape selection,
+  while one corrected edition still cannot relabel an adjacent documented interval.
+  There is no post-pass `variable_state` surgery and no generic
+  `variable_state_overrides.toml` (see the classification-links rule below for the same
+  boundary). A column SCB never documents anywhere on the variant is the same file's
+  `[[column]]`, which mints the variable instead of re-adding a row; the two are
+  partitioned by whether the export has a row for the column somewhere on the variant,
+  and each entry kind fails the build when it is the other one
+  (`scb_errata_no_source_row` / `scb_errata_now_present`) — shape and slugs are checked
+  at load, everything that needs the export is checked when the entry is applied. The
+  log is self-cleaning: once SCB ships the row the build fails with
+  `scb_errata_now_present` and the entry is deleted, leaving the record in git.
 - **Classification links are typed, not generic state overrides.**
   `curation/classifications.toml` targets the `classification_candidate` pipeline and
   then `variable_state.classification_id`. It is NOT a generic

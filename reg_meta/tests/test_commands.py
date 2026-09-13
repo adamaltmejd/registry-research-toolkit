@@ -440,6 +440,7 @@ class TestGetVarinfo:
     ) -> None:
         provenance = (
             "errata:omitted-column-in-version\n"
+            "source-edition:Höstterminen 2020\n"
             "The steward holds this delivery, which SCB omits."
         )
         with sqlite3.connect(Path(db_path) / "reg_meta.db") as conn:
@@ -469,6 +470,7 @@ class TestGetVarinfo:
         output = capsys.readouterr().out
         assert "provenance" in output
         assert provenance in output
+        assert "source-edition:Höstterminen 2020" in output
 
     def test_value_set_count(self, db_path: str):
         data, _code = _run_json(

@@ -1802,11 +1802,13 @@ one-sided `until <year>` form when the start is unknown (#658).
   binding leaf owns a single bottom disclosure for the variable's sensitive / identifier
   flags and, when exactly one state is in view, that state's type / length / delivery
   column. Errata-backed states add their exact interval, correction class and supporting
-  evidence here; the disclosure remains collapsed and ordinary states add no row.
-  Concept groups still use the component for key / facets / source. One component keeps
-  the summary + styling consistent across call sites; callers omit it entirely when
-  there's nothing to demote. `LineageDetails` follows the same omit-when-empty rule:
-  with no provenance, warnings, loading state, or error, it renders nothing.
+  evidence here. When correction provenance carries `source-edition:<name>` scope, the
+  disclosure names the catalog interval as provider-documented and shows the corrected
+  source edition separately; the disclosure remains collapsed and ordinary states add no
+  row. Concept groups still use the component for key / facets / source. One component
+  keeps the summary + styling consistent across call sites; callers omit it entirely
+  when there's nothing to demote. `LineageDetails` follows the same omit-when-empty
+  rule: with no provenance, warnings, loading state, or error, it renders nothing.
 
 ### Picker graph ownership (#904, #1057)
 

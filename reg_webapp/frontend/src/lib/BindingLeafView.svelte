@@ -270,6 +270,7 @@ type Correction = {
   state: VariableStateModel;
   className: string;
   evidence: string;
+  sourceEditions: string[];
 };
 
 function correctionFromState(state: VariableStateModel): Correction | null {
@@ -282,8 +283,18 @@ function correctionFromState(state: VariableStateModel): Correction | null {
     return null;
   }
   const className = provenance.slice("errata:".length, separator).trim();
-  const evidence = provenance.slice(separator + 1).trim();
-  return className && evidence ? { state, className, evidence } : null;
+  const lines = provenance.slice(separator + 1).split("\n");
+  const sourceEditions: string[] = [];
+  while (lines[0]?.startsWith("source-edition:")) {
+    const edition = lines.shift()?.slice("source-edition:".length).trim();
+    if (edition) {
+      sourceEditions.push(edition);
+    }
+  }
+  const evidence = lines.join("\n").trim();
+  return className && evidence
+    ? { state, className, evidence, sourceEditions }
+    : null;
 }
 
 const corrections = $derived.by(() =>
@@ -741,7 +752,10 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
                     correction.state.variant_label ?? correction.state.variant,
                 },
                 {
-                  label: "Interval",
+                  label:
+                    correction.sourceEditions.length > 0
+                      ? "Catalog interval"
+                      : "Interval",
                   value:
                     formatStateWindow(correction.state) ??
                     windowTitle(
@@ -750,6 +764,22 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
                     ),
                   mono: true,
                 },
+                ...(correction.sourceEditions.length > 0
+                  ? [
+                      {
+                        label: "Attribution",
+                        value: "Provider-documented with a scoped correction",
+                      },
+                      {
+                        label:
+                          correction.sourceEditions.length === 1
+                            ? "Source edition"
+                            : "Source editions",
+                        value: correction.sourceEditions.join(", "),
+                        mono: true,
+                      },
+                    ]
+                  : []),
                 { label: "Class", value: correction.className, mono: true },
               ] satisfies KeyValueRow[]}
               <li>

@@ -2191,6 +2191,50 @@ describe("BindingLeafView representation picker (#678)", () => {
     expect(disclosure?.textContent).not.toContain("2019-01-01");
   });
 
+  it("scopes an overlapping correction to its source edition", async () => {
+    const evidence = "The steward holds the autumn delivery SCB omitted.";
+    await render(BindingLeafView, {
+      fqidPath: "scb/lisa/kon",
+      node: node([
+        state({
+          state_id: 2,
+          variant: "individer",
+          variant_label: "Individuals",
+          delivery_column_name: "Kon",
+          valid_from: "2022-01-01",
+          valid_to: "2022-12-31",
+          period_token: "2022",
+          provenance:
+            "errata:omitted-column-in-version\n" +
+            "source-edition:Höstterminen 2022\n" +
+            evidence,
+        }),
+      ]),
+      regMetaVersion: SEED.regMetaVersion,
+      steward: SEED.steward,
+      windowMinYear: SEED.windowMinYear,
+      vintageYear: 2024,
+    });
+
+    const disclosure = document.querySelector<HTMLDetailsElement>(
+      "details.tech-details",
+    );
+    expect(disclosure?.open).toBe(false);
+    await expect.element(page.getByText(evidence)).not.toBeVisible();
+
+    await page.getByText("Technical details", { exact: true }).click();
+
+    await expect.element(page.getByText(evidence)).toBeVisible();
+    await expect
+      .element(page.getByText("Höstterminen 2022", { exact: true }))
+      .toBeVisible();
+    expect(disclosure?.textContent).toContain("Catalog interval 2022");
+    expect(disclosure?.textContent).toContain(
+      "Attribution Provider-documented with a scoped correction",
+    );
+    expect(disclosure?.textContent).not.toContain("Corrected interval 2022");
+  });
+
   it("Apply stays seed-gated (disabled) even when a row is staged, until the seed is present", async () => {
     await render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",

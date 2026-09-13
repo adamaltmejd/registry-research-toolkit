@@ -3154,7 +3154,10 @@ export interface components {
             operational_definition?: string | null;
             /** Period Token */
             period_token?: string | null;
-            /** Provenance */
+            /**
+             * Provenance
+             * @description NULL for an ordinary provider-documented interval. SCB corrections use `errata:<class>\n<evidence>`; when a corrected source edition overlaps a provider-documented interval, one or more `source-edition:<name>` lines follow the class and scope the correction without replacing the documented attribution.
+             */
             provenance: string | null;
             /** Register Variant Id */
             register_variant_id: number;
