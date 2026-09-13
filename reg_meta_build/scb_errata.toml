@@ -16,11 +16,9 @@
 #                  name     = "<Registerversionnamn>"   # SCB's token, verbatim
 #                  evidence = "..."                     # why we know it exists
 #                  noted    = "YYYY-MM-DD"
-#     Adds a register version SCB has not documented. It must be the variant's
-#     NEWEST edition: a declared version's id is minted above every id SCB's
-#     export can produce, and the build reads that order as era order, so an
-#     older declared edition would publish itself as the latest delivery
-#     (`scb_errata_version_not_latest`).
+#     Adds any register version SCB has not documented. Era order follows the
+#     maximum year an edition claims; a declared historical version therefore
+#     does not replace a newer documented edition's latest spelling or type.
 #
 #   [[delivered]]  register = "<provider>/<register>"
 #                  variant  = "<variant-slug>"
@@ -137,9 +135,8 @@ noted = "2026-09-12"
 # Pasteable as they stand; each entry's `evidence` states the holdings fact the
 # investigation established from reg_webapp/stewards/swecov/inventory.toml and
 # SCB's Registerinformation.csv (2026-03-09 export). Grammar: scb_errata.toml
-# header. NOT included: the misses the era guard (`scb_errata_version_not_latest`)
-# refuses (GDB 1990-2017, UREG 1990-1996) and the coalescer-defect misses
-# (HREG sokande KursOrt/ProgOrt/YProg) — see report.md.
+# header. NOT included: the coalescer-defect misses (HREG sokande
+# KursOrt/ProgOrt/YProg) — see report.md.
 
 # ── scb/agi — SCB documents AGI as two annual stream versions per year
 # ("<year>, löne- och förmånsutbetalningar" / "<year>, sociala ersättningar")

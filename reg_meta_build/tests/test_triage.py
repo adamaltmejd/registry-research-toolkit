@@ -103,6 +103,7 @@ def _state(
     for bound in (regver_min, regver_max):
         if bound is not None and bound not in g.claims:
             g.claims[bound] = _year_claim(bound)
+    g.latest_era = (g.regver_max or -1, -1)
     return gkey, g
 
 
@@ -983,6 +984,13 @@ class TestPickStateRep:
         a = _state(1, regver_max=2010, dlen="1")
         b = _state(1, regver_max=2020, dlen="2")
         assert _pick_state_rep([a[0], b[0]], dict([a, b])) == b[0]
+
+    def test_same_year_uses_edition_id_as_tiebreak(self) -> None:
+        a = _state(1, year=2020, dlen="1")
+        b = _state(1, year=2020, dlen="2")
+        a[1].latest_era = (2020, 11)
+        b[1].latest_era = (2020, 10)
+        assert _pick_state_rep([a[0], b[0]], dict([a, b])) == a[0]
 
 
 def _build(
@@ -2794,6 +2802,7 @@ class TestCollapseResidual:
             value_set_id=value_set_id,
             value_set_version_label="",
             claims=_year_claims(2018, regver_max),
+            latest_era=(regver_max, -1),
             latest_alias="Kon",
         )
 
@@ -2842,6 +2851,7 @@ class TestCollapseResidualOverlap:
             value_set_id=value_set_id,
             value_set_version_label="",
             claims=_year_claims(regver_min, regver_max),
+            latest_era=(regver_max, -1),
             latest_alias=alias,
         )
 

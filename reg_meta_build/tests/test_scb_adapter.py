@@ -848,6 +848,48 @@ class TestDeliveryColumnHygiene:
         conn.close()
 
 
+class TestEraOrdering:
+    def test_latest_alias_and_type_follow_claimed_year_before_id(
+        self, tmp_path: Path
+    ) -> None:
+        # SCB's edition ids are not chronological: the older delivery has the
+        # larger id. The two case-only aliases and text-family types fold into
+        # one state, whose displayed shape must still come from 2021.
+        conn = _build_from_ri_rows(
+            tmp_path,
+            [
+                _var_row(
+                    colname="EraCol",
+                    cvid=9900,
+                    var_id=990,
+                    varname="EraVar",
+                    year="2020",
+                    regver_id=9901,
+                    data_type="char",
+                ),
+                _var_row(
+                    colname="eracol",
+                    cvid=9901,
+                    var_id=990,
+                    varname="EraVar",
+                    year="2021",
+                    regver_id=9900,
+                    data_type="varchar",
+                ),
+            ],
+        )
+        try:
+            states = conn.execute(
+                "SELECT vs.delivery_column_name, vs.data_type "
+                "FROM variable_state vs "
+                "JOIN variable v ON v.variable_id = vs.variable_id "
+                "WHERE v.register_id = 1 AND v.provider_key = '990'"
+            ).fetchall()
+            assert states == [("eracol", "varchar")]
+        finally:
+            conn.close()
+
+
 # ── name-field read-boundary hygiene (#366) ────────────────────────────────
 
 
@@ -1529,6 +1571,39 @@ class TestScbErrata:
         finally:
             conn.close()
 
+    def test_declared_same_year_version_stays_accepted(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        conn = _built_with_errata(
+            tmp_path,
+            monkeypatch,
+            [
+                _var_row(
+                    colname="SameYearCol",
+                    cvid=9342,
+                    var_id=935,
+                    varname="SameYearVar",
+                    year="2022",
+                    regver_id=102,
+                )
+            ],
+            errata_version("Höstterminen 2022")
+            + "\n"
+            + errata_delivered("SameYearCol", "Höstterminen 2022"),
+        )
+        try:
+            assert _windows(conn, "935") == [("2022-01-01", "2022-12-31")]
+            assert (
+                conn.execute(
+                    "SELECT COUNT(*) FROM register_version "
+                    "WHERE register_variant_id = 10 "
+                    "AND registerversionnamn = 'Höstterminen 2022'"
+                ).fetchone()[0]
+                == 1
+            )
+        finally:
+            conn.close()
+
     def test_column_with_no_real_row_is_a_column_entry_not_delivered(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ) -> None:
@@ -1549,19 +1624,49 @@ class TestScbErrata:
         assert exc.value.code == "scb_errata_unknown_version"
         assert exc.value.exit_code == EXIT_CONFIG
 
-    def test_declared_version_must_be_the_variants_newest(
+    def test_declared_older_version_keeps_newer_alias_and_type_latest(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ) -> None:
-        # A declared edition's regver_id is minted above every real one and the
-        # coalescer reads that order as era order, so declaring 2019 — behind a
-        # variant SCB documents through 2022 — would publish the cloned row's
-        # spelling and type as the LATEST delivery. Refuse instead.
-        with pytest.raises(RegMetaError) as exc:
-            _built_with_errata(tmp_path, monkeypatch, [], errata_version("2019"))
-        assert exc.value.code == "scb_errata_version_not_latest"
-        assert exc.value.exit_code == EXIT_CONFIG
-        assert "2022" in exc.value.message  # names what it has to be newer than
-        assert "era order" in exc.value.remediation
+        # 2019 clones the nearest documented row (2020, EraCol/char). Its minted
+        # regver_id is above every source id, but claimed-year ordering keeps the
+        # genuinely newer 2022 row (eracol/varchar) as the displayed shape.
+        conn = _built_with_errata(
+            tmp_path,
+            monkeypatch,
+            [
+                _var_row(
+                    colname="EraCol",
+                    cvid=9340,
+                    var_id=934,
+                    varname="EraVar",
+                    year="2020",
+                    regver_id=100,
+                    data_type="char",
+                ),
+                _var_row(
+                    colname="eracol",
+                    cvid=9341,
+                    var_id=934,
+                    varname="EraVar",
+                    year="2022",
+                    regver_id=102,
+                    data_type="varchar",
+                ),
+            ],
+            errata_version("2019") + "\n" + errata_delivered("EraCol", "2019"),
+        )
+        try:
+            assert _windows(conn, "934") == [("2019-01-01", "2022-12-31")]
+            states = conn.execute(
+                "SELECT vs.delivery_column_name, vs.data_type "
+                "FROM variable_state vs "
+                "JOIN variable v ON v.variable_id = vs.variable_id "
+                "WHERE v.register_id = 1 AND v.provider_key = '934' "
+                "ORDER BY vs.valid_from"
+            ).fetchall()
+            assert states == [("eracol", "varchar")]
+        finally:
+            conn.close()
 
     def test_one_fixed_version_retires_only_that_version(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch

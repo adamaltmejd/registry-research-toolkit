@@ -3089,7 +3089,7 @@ class TestVariableStateTypeFold:
 
     def test_latest_era_type_displayed(self, tmp_path: Path):
         """The surviving merged state's displayed data_type is the LATEST
-        edition's delivery type (highest regver_id), not the first row's."""
+        edition's delivery type (highest claimed year), not the first row's."""
         db_path = self._build(
             tmp_path,
             eras=[
@@ -3101,7 +3101,7 @@ class TestVariableStateTypeFold:
         try:
             states = self._states(conn, 920)
             assert len(states) == 1
-            # regver_id 921 (char) is the latest era → char wins over varchar.
+            # The 2021 char delivery is the latest era → char wins over varchar.
             assert states[0]["data_type"] == "char"
             assert states[0]["data_length"] == "1"
         finally:

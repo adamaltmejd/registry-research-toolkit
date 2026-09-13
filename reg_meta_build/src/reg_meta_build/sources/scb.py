@@ -912,18 +912,20 @@ class _StateGroup:
     # OriginalName row + open RenamedName row) — without this, `unika_max` from
     # the bounded row would mask the open-ended signal.
     unika_has_open_top: bool = False
-    # Latest-era alias: highest regver_id, ties broken by lexically smallest
-    # delivery_column_name. regver_id alone orders alias selection; the row's
-    # year only enters through its claims.
+    # Latest edition observed in the group: maximum claimed year, then
+    # regver_id within that year. Yearless editions sort below year-bearing
+    # ones; their ids still make their order deterministic.
+    latest_era: tuple[int, int] | None = None
+    # Latest-era alias, with lexically smallest delivery_column_name as the
+    # final same-edition tiebreak.
     latest_alias: str | None = None
-    latest_alias_regver: int | None = None
+    latest_alias_era: tuple[int, int] | None = None
     # Latest-era data_type/data_length (#526). A value-set-anchored group now
     # merges rows of differing type/length, so the displayed shape must track
     # the latest delivery, NOT the arbitrary first row. Selected exactly like
-    # `latest_alias` (highest regver_id; deterministic tiebreak) via this
-    # tracker. For valueless groups type+length are in the gkey, so every merged
-    # row already shares them — the tracker is a no-op there.
-    latest_type_regver: int | None = None
+    # `latest_alias` (claimed year, regver_id, deterministic value tiebreak).
+    # For valueless groups type+length are in the gkey, so every merged row
+    # already shares them — the tracker is a no-op there.
     # Distinct raw (data_type, data_length) pairs the group merged — drives the
     # class-flip fold stat (`n_type_class_folds`). Bounded: SCB's per-delivery
     # type wobble is tiny per column, so this set never grows large.
@@ -1085,9 +1087,9 @@ def _group_from_year(grp: _StateGroup) -> int | None:
     return grp.regver_min if grp.regver_min is not None else grp.unika_min
 
 
-def _latest_regver_id(grp: _StateGroup) -> int:
-    """Latest raw SCB edition id observed for a coalesced state group."""
-    return max(grp.regvers, default=-1)
+def _latest_era(grp: _StateGroup) -> tuple[int, int]:
+    """Latest observed (claimed year, edition id), with a yearless sentinel."""
+    return grp.latest_era or (-1, -1)
 
 
 def _source_only_same_column_drift(left: tuple, right: tuple) -> bool:
@@ -1459,8 +1461,8 @@ def _collapse_residual(groups: dict[tuple, _StateGroup], res: _TriageResult) -> 
         ordered = sorted(
             scope_gkeys,
             key=lambda gk: (
-                -(groups[gk].regver_max or -1),
-                -_latest_regver_id(groups[gk]),
+                -_latest_era(groups[gk])[0],
+                -_latest_era(groups[gk])[1],
                 tuple("" if x is None else str(x) for x in gk),
             ),
         )
@@ -1781,20 +1783,18 @@ _FOLDABLE_KIND = "same_definition_different_column"
 def _representative_group(
     gkeys: list[tuple], groups: dict[tuple, _StateGroup]
 ) -> _StateGroup | None:
-    """The latest-era group for a column — highest `latest_alias_regver` (the
-    edition that set the surviving delivery alias), deterministic stringified-
-    gkey tiebreak. Mirrors the `latest_alias` rule so the compared shape is the
-    column's latest delivered shape. None when no gkey resolves to a group
-    (defensive: the kind then falls back to generic)."""
+    """The latest-era group for a column — highest `latest_alias_era` (the
+    claimed year and edition id that set the surviving delivery alias), then a
+    deterministic stringified-gkey tiebreak. Mirrors the `latest_alias` rule so
+    the compared shape is the column's latest delivered shape. None when no
+    gkey resolves to a group (defensive: the kind then falls back to generic)."""
     present = [(gk, groups[gk]) for gk in gkeys if gk in groups]
     if not present:
         return None
     _, grp = max(
         present,
         key=lambda item: (
-            item[1].latest_alias_regver
-            if item[1].latest_alias_regver is not None
-            else -1,
+            item[1].latest_alias_era or (-1, -1),
             tuple("" if x is None else str(x) for x in item[0]),
         ),
     )
@@ -2418,14 +2418,13 @@ def _shared_code_relabeled(
 
 def _pick_state_rep(gkeys: list[tuple], groups: dict[tuple, _StateGroup]) -> tuple:
     """Deterministic representative among gkeys sharing a value set: the
-    latest-era group (highest `regver_max`), then the latest raw SCB edition id,
-    then the stringified gkey (a raw gkey carries `value_set_id: int | None`, so a
-    None-vs-int compare would raise; stringify each element)."""
+    latest-era group (maximum claimed year, then edition id within that year),
+    then the stringified gkey (a raw gkey carries `value_set_id: int | None`, so
+    a None-vs-int compare would raise; stringify each element)."""
     return max(
         gkeys,
         key=lambda gk: (
-            groups[gk].regver_max if groups[gk].regver_max is not None else -1,
-            _latest_regver_id(groups[gk]),
+            _latest_era(groups[gk]),
             tuple("" if x is None else str(x) for x in gk),
         ),
     )
@@ -2713,33 +2712,39 @@ def _coalesce_variable_states(
         # by edition, not year (regver_id is NOT NULL on variable_instance).
         grp.regvers.add(row["regver_id"])
 
+        # One chronology key for every latest-era consumer. The edition's
+        # maximum claimed year orders eras; its source id only breaks ties
+        # within that year. A yearless name has no chronology claim and sorts
+        # below every year-bearing edition.
+        eds = register_edition_claims(row["register_id"], row["registerversionnamn"])
+        era = (max((year for year, _lo, _hi in eds), default=-1), row["regver_id"])
+        previous_era = grp.latest_era
+        if previous_era is None or era > previous_era:
+            grp.latest_era = era
+
         # Latest-era data_type/data_length (#526). A value-set-anchored group can
         # merge rows of differing type/length; the displayed shape must follow
-        # the latest delivery (mirrors the `latest_alias` rule below): highest
-        # regver_id wins, ties broken deterministically by the (type, length)
-        # tuple so output is row-order-independent. Track every distinct raw
+        # the latest delivery (mirrors the `latest_alias` rule below): claimed
+        # year then regver_id wins, ties broken deterministically by the (type,
+        # length) tuple so output is row-order-independent. Track every distinct raw
         # (type, length) seen so the class-flip stat can detect a folded flip.
         grp.seen_types.add((row["data_type"], row["data_length"]))
-        _type_regver = row["regver_id"]
-        _cur_type_regver = grp.latest_type_regver
         if (
-            _cur_type_regver is None
-            or _type_regver > _cur_type_regver
+            previous_era is None
+            or era > previous_era
             or (
-                _type_regver == _cur_type_regver
+                era == previous_era
                 and (row["data_type"] or "", row["data_length"] or "")
                 < (grp.data_type or "", grp.data_length or "")
             )
         ):
             grp.data_type = row["data_type"]
             grp.data_length = row["data_length"]
-            grp.latest_type_regver = _type_regver
 
         # Track the edition's claimed years on the group (the fallback
         # signal `regver_min`/`regver_max` derive from), and the per-variable
         # max so the materializer can identify the latest-era group when
         # clamping unika ranges.
-        eds = register_edition_claims(row["register_id"], row["registerversionnamn"])
         if eds:
             _auth = _edition_authority(row["registerversionnamn"])
             _appr = row["registerversion_senastgodkanddatum"] or ""
@@ -2768,26 +2773,22 @@ def _coalesce_variable_states(
             if cur_max is None or rver_max > cur_max:
                 var_max_regver[vkey] = rver_max
 
-        # Track the latest alias for the era. "Latest" = highest regver_id
-        # in the group; ties broken by lexically smallest alias for
-        # reproducibility.
+        # Track the latest alias for the era. "Latest" = maximum claimed year,
+        # then regver_id within that year; same-edition aliases use the
+        # lexically smallest spelling for reproducibility.
         alias = row["delivery_column_name"]
         if alias:
-            regver = row["regver_id"]
-            cur_regver = grp.latest_alias_regver
+            cur_era = grp.latest_alias_era
             cur_alias = grp.latest_alias
-            # Replace the latest alias when: no alias yet, prior alias had no
-            # regver year (unknown beats nothing), strictly newer regver, or
-            # same regver but lexically smaller alias for determinism.
             replace = (
                 cur_alias is None
-                or cur_regver is None
-                or regver > cur_regver
-                or (regver == cur_regver and alias < (cur_alias or ""))
+                or cur_era is None
+                or era > cur_era
+                or (era == cur_era and alias < (cur_alias or ""))
             )
             if replace:
                 grp.latest_alias = alias
-                grp.latest_alias_regver = regver
+                grp.latest_alias_era = era
 
         # Stage the unika lookup. unika_summary's PK is
         # (register_id, register_variant_id, kolumnnamn, variabelnamn); we need an
