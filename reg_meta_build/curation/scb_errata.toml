@@ -148,6 +148,14 @@ versions = ["2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "201
 evidence = "SCB Förändringar i LISA 2020 (2022-02-28), Nya variabler och befintliga variabler i LISA som påverkas: TTJLONU 2011–2020; SWECOV_variables_full_2026-06-15.csv, LISA/Individ/Individ_2011 through Individ_2019 each explicitly contains TTJLONU."
 noted = "2026-09-13"
 
+[[delivered]]
+register = "scb/aku"
+variant = "aku-april-2005-dec-2020"
+column = "IVECK"
+versions = ["2020"]
+evidence = "SWECOV_variables_full_2026-06-15.csv row208 AKU_2020 contains exact IVECK; raw SCB VarId6631 documents Veckonummer för intervju under året / Kalendervecka through2019."
+noted = "2026-09-13"
+
 # Proposed reg_meta_build/curation/scb_errata.toml entries — Y-113..Y-120 version-gap
 # investigation (SWECOV holdings on scb/agi, scb/gdb, scb/ureg, scb/hreg).
 # Pasteable as they stand; each entry's `evidence` states the holdings fact the
