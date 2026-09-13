@@ -4712,10 +4712,15 @@ def _apply_cis2016_matrix(
     # one-owner pipeline only after every selector and minted id has passed.
     conn.execute("DELETE FROM variable_alias_build WHERE cvid = ?", (selector.cvid,))
     conn.execute("DELETE FROM variable_instance WHERE cvid = ?", (selector.cvid,))
-    if not conn.execute(
-        "SELECT 1 FROM variable_instance WHERE register_id = ? AND var_id = ? LIMIT 1",
-        (selector.register_id, selector.var_id),
-    ).fetchone():
+    parent_survives = (
+        conn.execute(
+            "SELECT 1 FROM variable_instance "
+            "WHERE register_id = ? AND var_id = ? LIMIT 1",
+            (selector.register_id, selector.var_id),
+        ).fetchone()
+        is not None
+    )
+    if not parent_survives:
         # A target-only synthetic source (or future reduced export) would
         # otherwise leave the generic VarId variable orphaned.  Real other-wave
         # instances retain that unreviewed source identity.
@@ -4723,7 +4728,16 @@ def _apply_cis2016_matrix(
             "DELETE FROM variable WHERE variable_id = ?", (parent["variable_id"],)
         )
 
-    slug_hints: dict[int, str] = {}
+    # Removing the pilot's named CO11 state must not rename the surviving
+    # historical identity whose established FQID is still used by older-wave
+    # inventory coordinates.  Keep this reviewed identity pin beside the
+    # answer partition rather than deriving it from whichever other wave
+    # happens to be present in an input export.
+    slug_hints: dict[int, str] = (
+        {parent["variable_id"]: matrix.historical_variable_slug}
+        if parent_survives
+        else {}
+    )
     for answer, variable_id in identities:
         description = (
             f"{matrix.question_label} ({', '.join(answer.columns)}; "

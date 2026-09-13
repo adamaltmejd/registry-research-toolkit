@@ -13,6 +13,7 @@ import hashlib
 import inspect
 import json
 import sqlite3
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 import pytest
@@ -53,8 +54,6 @@ from reg_meta_build.sources.scb import SCBAdapter
 from reg_schema.project_data import Binding, Source
 
 if TYPE_CHECKING:
-    from pathlib import Path
-
     from reg_meta_build.sources import IRAdapter
 
 
@@ -1490,6 +1489,7 @@ def _cis2016_payload() -> dict:
             "noted": "2026-09-13",
         },
         "question_label": "Typ av samarbetspartner geografiskt fördelat",
+        "historical_variable_slug": "co11",
         "axes": [
             {"key": "partner", "label_en": "Cooperation partner"},
             {"key": "response", "label_en": "Location or response"},
@@ -1533,7 +1533,7 @@ def _built_with_cis2016_matrix(
     return build_with_rows(tmp_path, ri_extra, vm_extra or [])
 
 
-def _cis2016_rows() -> list[str]:
+def _cis2016_rows(*columns: str) -> list[str]:
     common = {
         "cvid": 469456,
         "var_id": 15662,
@@ -1546,13 +1546,27 @@ def _cis2016_rows() -> list[str]:
         "vardef": "The common matrix question",
         "varsource": "CIS 2016 question 18",
     }
-    return [_var_row(colname=column, **common) for column in ("CO11", "CONA1")]
+    selected = columns or ("CO11", "CONA1")
+    return [_var_row(colname=column, **common) for column in selected]
+
+
+def _full_cis2016_payload() -> dict:
+    path = (
+        Path(__file__).parents[1] / "curation" / "cis2016-matrix-meaning-evidence.json"
+    )
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    payload["selector"] = _cis2016_payload()["selector"]
+    return payload
 
 
 class TestCis2016MatrixProjection:
     def test_distinct_answers_keep_identity_ownership_and_source_evidence(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ) -> None:
+        payload = _full_cis2016_payload()
+        pilot_columns = tuple(
+            column for answer in payload["answers"] for column in answer["columns"]
+        )
         historical_editions = tuple(enumerate(range(2004, 2014, 2)))
         historical = [
             _var_row(
@@ -1569,19 +1583,8 @@ class TestCis2016MatrixProjection:
         ]
         extra = (
             historical
-            + _cis2016_rows()
+            + _cis2016_rows(*pilot_columns)
             + [
-                # Same VarId and spelling in an unreviewed wave stays on the generic
-                # source identity; the curated answer does not acquire continuity.
-                _var_row(
-                    colname="CO11",
-                    cvid=469457,
-                    var_id=15662,
-                    varname="Later unreviewed matrix",
-                    year="2018",
-                    regver_id=11530,
-                    vardef="Unreviewed later-wave meaning",
-                ),
                 # A different shared-CVID source remains generic and coalesces as it
                 # did before this narrowly selected projection.
                 _var_row(colname="SHARED_A", cvid=469500, var_id=16000),
@@ -1599,13 +1602,13 @@ class TestCis2016MatrixProjection:
             )
 
         conn = _built_with_cis2016_matrix(
-            tmp_path / "forward", monkeypatch, extra, _cis2016_payload(), values
+            tmp_path / "forward", monkeypatch, extra, payload, values
         )
         reverse = _built_with_cis2016_matrix(
             tmp_path / "reverse",
             monkeypatch,
             list(reversed(extra)),
-            _cis2016_payload(),
+            payload,
             values,
         )
         try:
@@ -1628,6 +1631,30 @@ class TestCis2016MatrixProjection:
             assert ids == reverse_ids
             assert len(set(ids.values())) == 2
             assert all(is_canonical_scb(variable_id) for variable_id in ids.values())
+
+            all_ids = dict(
+                conn.execute(
+                    "SELECT slug, variable_id FROM variable "
+                    "WHERE provider_key = '15662' AND slug <> 'co11'"
+                )
+            )
+            reverse_all_ids = dict(
+                reverse.execute(
+                    "SELECT slug, variable_id FROM variable "
+                    "WHERE provider_key = '15662' AND slug <> 'co11'"
+                )
+            )
+            assert all_ids == reverse_all_ids
+            assert len(all_ids) == 54
+            assert len(set(all_ids.values())) == 54
+            projected_owners = conn.execute(
+                "SELECT v.variable_id, va.delivery_column_name FROM variable v "
+                "JOIN variable_alias va USING (variable_id) "
+                "WHERE v.provider_key = '15662' AND v.slug <> 'co11'"
+            ).fetchall()
+            assert len(projected_owners) == 54
+            assert len({row[0] for row in projected_owners}) == 54
+            assert {row[1] for row in projected_owners} == set(pilot_columns)
 
             aliases = {
                 slug: {
@@ -1683,8 +1710,11 @@ class TestCis2016MatrixProjection:
                     "regver_id": 11529,
                     "var_id": 15662,
                 }
-                assert provenance["evidence"]["sha256"] == "a" * 64
-                assert provenance["evidence"]["question"] == "Question 18"
+                assert provenance["evidence"]["sha256"] == payload["evidence"]["sha256"]
+                assert (
+                    provenance["evidence"]["question"]
+                    == payload["evidence"]["question"]
+                )
 
             for variable_id in ids.values():
                 codes = {
@@ -1713,6 +1743,8 @@ class TestCis2016MatrixProjection:
                 catalog.resolve_at(f"scb/testreg/{slugs[0]}", 2018, variant="individer")
                 == []
             )
+            historical_identity = catalog.variable_identity("scb/testreg/co11")
+            assert str(historical_identity.canonical_fqid) == "scb/testreg/co11"
             for slug, column in zip(slugs, ("CO11", "CONA1"), strict=True):
                 binding = Binding(variable=f"scb/testreg/{slug}", type="categorical")
                 source = Source(
@@ -1731,29 +1763,26 @@ class TestCis2016MatrixProjection:
                 assert resolution.slices == (("2015-01-01", "2015-12-31", column),)
             conn.row_factory = None
 
-            # The five historical alias-less states and the unreviewed named
-            # wave remain together on the original source identity. Projecting
-            # the reviewed edition must neither absorb nor orphan them.
+            # The five historical alias-less states remain on the original
+            # source identity. Projecting the reviewed edition must neither
+            # absorb nor orphan them, even without another named CO11 state to
+            # supply the old slug incidentally.
             generic = conn.execute(
                 "SELECT v.variable_id, v.slug, vs.valid_from, vs.valid_to, "
                 "vs.delivery_column_name "
                 "FROM variable v JOIN variable_state vs USING (variable_id) "
-                "WHERE v.provider_key = '15662' AND v.slug NOT IN (?, ?)",
-                slugs,
+                "WHERE v.provider_key = '15662' AND v.slug = 'co11'"
             ).fetchall()
             assert len({row[0] for row in generic}) == 1
             assert {row[1] for row in generic} == {"co11"}
-            blank_states = sorted(row for row in generic if row[4] is None)
-            assert len(blank_states) == 5
-            assert [row[2] for row in blank_states] == [
+            assert len(generic) == 5
+            assert {row[4] for row in generic} == {None}
+            assert [row[2] for row in sorted(generic)] == [
                 "2002-01-01",
                 "2004-01-01",
                 "2006-01-01",
                 "2008-01-01",
                 "2010-01-01",
-            ]
-            assert [row[2:] for row in generic if row[4] == "CO11"] == [
-                ("2018-01-01", "2018-12-31", "CO11")
             ]
 
             unrelated = conn.execute(
@@ -1766,6 +1795,43 @@ class TestCis2016MatrixProjection:
         finally:
             conn.close()
             reverse.close()
+
+    def test_unreviewed_later_wave_does_not_join_curated_answer(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        rows = _cis2016_rows() + [
+            _var_row(
+                colname="CO11",
+                cvid=469457,
+                var_id=15662,
+                varname="Later unreviewed matrix",
+                year="2018",
+                regver_id=11530,
+                vardef="Unreviewed later-wave meaning",
+            )
+        ]
+        conn = _built_with_cis2016_matrix(
+            tmp_path, monkeypatch, rows, _cis2016_payload()
+        )
+        try:
+            conn.row_factory = sqlite3.Row
+            catalog = Catalog(conn)
+            assert (
+                catalog.resolve_at(
+                    "scb/testreg/cis2016-cooperation-group-enterprises-sweden",
+                    2018,
+                    variant="individer",
+                )
+                == []
+            )
+            historical_rows = conn.execute(
+                "SELECT v.slug, vs.delivery_column_name "
+                "FROM variable v JOIN variable_state vs USING (variable_id) "
+                "WHERE v.provider_key = '15662' AND vs.valid_from = '2018-01-01'"
+            ).fetchall()
+            assert [tuple(row) for row in historical_rows] == [("co11", "CO11")]
+        finally:
+            conn.close()
 
     def test_reviewed_same_meaning_aliases_share_only_their_answer(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch

@@ -17,6 +17,7 @@
     "noted": "2026-09-13"
   },
   "question_label": "Typ av samarbetspartner geografiskt fördelat",
+  "historical_variable_slug": "co11",
   "axes": [
     {"key": "partner", "label_en": "Cooperation partner"},
     {"key": "response", "label_en": "Location or response"}
