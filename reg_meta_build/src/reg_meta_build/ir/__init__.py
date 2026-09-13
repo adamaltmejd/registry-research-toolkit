@@ -186,6 +186,9 @@ class IRVariableAliasWindow(_IRBase):
     delivery_column_name: str
     valid_from: str | None
     valid_to: str | None
+    # NULL for provider-derived windows. Curated corrections use the same
+    # delivery-window provenance contract as IRVariableState.
+    provenance: str | None = None
 
 
 class IRValueCode(_IRBase):

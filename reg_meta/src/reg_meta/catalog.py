@@ -3029,20 +3029,20 @@ class Catalog:
 
     def _variable_windows(
         self, variable_id: int
-    ) -> dict[int, list[tuple[str, str, str]]]:
+    ) -> dict[int, list[tuple[str, str, str, str | None]]]:
         """`variable_alias_window` rows (#319/#945) grouped by
-        `register_variant_id` → [(delivery_column_name, valid_from, valid_to), …]
-        sorted by window start. EMPTY for variables with no resolver-visible alias
-        representations, so expansion is a no-op there. One indexed point-lookup
-        on `idx_variable_alias_window_lookup`."""
-        out: dict[int, list[tuple[str, str, str]]] = {}
-        for rvid, col, wfrom, wto in self._conn.execute(
-            "SELECT register_variant_id, delivery_column_name, valid_from, valid_to "
-            "FROM variable_alias_window WHERE variable_id = ? "
+        `register_variant_id` → [(delivery_column_name, valid_from, valid_to,
+        provenance), …] sorted by window start. EMPTY for variables with no
+        resolver-visible alias representations, so expansion is a no-op there.
+        One indexed point-lookup on `idx_variable_alias_window_lookup`."""
+        out: dict[int, list[tuple[str, str, str, str | None]]] = {}
+        for rvid, col, wfrom, wto, provenance in self._conn.execute(
+            "SELECT register_variant_id, delivery_column_name, valid_from, valid_to, "
+            "provenance FROM variable_alias_window WHERE variable_id = ? "
             "ORDER BY register_variant_id, valid_from, delivery_column_name",
             (variable_id,),
         ):
-            out.setdefault(rvid, []).append((col, wfrom, wto))
+            out.setdefault(rvid, []).append((col, wfrom, wto, provenance))
         return out
 
     def _expand_state_windows(
@@ -3062,9 +3062,11 @@ class Catalog:
         columns over that same state window. Variables with no window rows map 1:1
         via `_row_to_state` (byte-identical behaviour). Windows share the base
         state's `state_id` + `value_set_version_label`; only
-        `delivery_column_name` + `valid_from`/`valid_to` are overridden. The
-        per-window identity is the compound (state_id, delivery_column_name,
-        valid_from)."""
+        `delivery_column_name` + `valid_from`/`valid_to` are always overridden.
+        An explicit window provenance overrides the base provenance; otherwise it
+        is inherited. As before, expanded representations do not inherit the
+        base column's operational definition. The per-window identity is the
+        compound (state_id, delivery_column_name, valid_from)."""
 
         def to_state(row: sqlite3.Row) -> VariableState:
             return self._row_to_state(
@@ -3084,20 +3086,20 @@ class Catalog:
             # somewhere in its window set, so unrelated narrower windows do not
             # hide this state's base column.
             state_windows = [
-                (col, wfrom, wto)
-                for (col, wfrom, wto) in windows
+                (col, wfrom, wto, provenance)
+                for (col, wfrom, wto, provenance) in windows
                 if base.valid_from <= wfrom and wto <= base.valid_to
             ]
             has_base_window = base.delivery_column_name is not None and any(
                 col.lower() == base.delivery_column_name.lower()
-                for (col, _wfrom, _wto) in state_windows
+                for (col, _wfrom, _wto, _provenance) in state_windows
             )
             if state_windows and not has_base_window:
                 out.append(base)
                 continue
             matched = [
-                (col, wfrom, wto)
-                for (col, wfrom, wto) in state_windows
+                (col, wfrom, wto, provenance)
+                for (col, wfrom, wto, provenance) in state_windows
                 if wfrom <= hi and wto >= lo
             ]
             if not matched:
@@ -3106,7 +3108,7 @@ class Catalog:
                 # than silently dropping the claim.
                 out.append(base)
                 continue
-            for col, wfrom, wto in matched:
+            for col, wfrom, wto, provenance in matched:
                 # The window's own bounds drive `period_token` (recompute — the
                 # base annual token doesn't describe the month window).
                 out.append(
@@ -3116,6 +3118,11 @@ class Catalog:
                             "valid_from": wfrom,
                             "valid_to": wto,
                             "operational_definition": None,
+                            "provenance": (
+                                provenance
+                                if provenance is not None
+                                else base.provenance
+                            ),
                             "period_token": self._period_token_for_window(wfrom, wto),
                         }
                     )

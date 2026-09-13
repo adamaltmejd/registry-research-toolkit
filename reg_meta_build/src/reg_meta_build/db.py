@@ -694,15 +694,20 @@ CREATE TABLE variable_alias (
 -- merges write sub-annual month windows for 12 month-named columns folded into one
 -- annual variable. #945 multi-alias SCB cvids write one state-window row per
 -- co-delivered alias column so aliases that can appear in delivered data are
--- picker/order-visible representations instead of search-only headers. EMPTY for
--- variables with no alias windows (the resolver no-ops then, leaving those variables'
--- behaviour byte-identical). SHIPS — the query layer reads it.
+-- picker/order-visible representations instead of search-only headers. Y-132 adds
+-- exact source-edition intervals for already-owned aliases absent from SCB's edition
+-- metadata. EMPTY for variables with no alias windows (the resolver no-ops then,
+-- leaving those variables' behaviour byte-identical). SHIPS — the query layer reads it.
 CREATE TABLE variable_alias_window (
     variable_id INTEGER NOT NULL REFERENCES variable(variable_id),
     register_variant_id INTEGER NOT NULL REFERENCES register_variant(register_variant_id),
     delivery_column_name TEXT NOT NULL,
     valid_from TEXT NOT NULL,   -- 'YYYY-MM-DD' inclusive
     valid_to TEXT NOT NULL,     -- 'YYYY-MM-DD' inclusive
+    -- NULL for source-derived representation windows. Curated corrections use
+    -- the same `errata:<class>\\n<evidence>` contract as variable_state; the
+    -- read-side expansion projects it onto VariableState.provenance.
+    provenance TEXT,
     PRIMARY KEY (variable_id, register_variant_id, delivery_column_name, valid_from)
 );
 CREATE INDEX idx_variable_alias_window_lookup
@@ -3273,8 +3278,8 @@ def _insert_core_graph_from_ir(
 
     conn.executemany(
         "INSERT OR IGNORE INTO variable_alias_window "
-        "(variable_id, register_variant_id, delivery_column_name, valid_from, valid_to) "
-        "VALUES (?, ?, ?, ?, ?)",
+        "(variable_id, register_variant_id, delivery_column_name, valid_from, valid_to, "
+        "provenance) VALUES (?, ?, ?, ?, ?, ?)",
         [
             (
                 w.variable_id,
@@ -3282,6 +3287,7 @@ def _insert_core_graph_from_ir(
                 w.delivery_column_name,
                 w.valid_from if w.valid_from is not None else _VALID_FROM_UNKNOWN,
                 w.valid_to if w.valid_to is not None else _VALID_TO_SENTINEL,
+                w.provenance,
             )
             for w in alias_windows
         ],
@@ -4489,15 +4495,16 @@ def materialize(
         # Deferred like the adapter imports below: `alias_windows` reads the
         # SCB adapter's declared projection set, and the adapter imports this
         # module.
-        from .alias_windows import materialize_multi_alias_windows
+        from .alias_windows import (
+            load_alias_windows,
+            materialize_curated_alias_windows,
+            materialize_multi_alias_windows,
+        )
 
         alias_window_counts = materialize_multi_alias_windows(conn, progress=_progress)
         # The manifest names the general period-family surface, even though the
         # only curated families today are monthly.
         row_counts["period_family_merges"] = fm_counts["families"]
-        row_counts["variable_alias_windows"] = (
-            fm_counts["windows"] + alias_window_counts["windows"]
-        )
 
         # Stored `variable.slug`. Runs after populate_slugs
         # (register/variant slugs feed collision messages) and after
@@ -4513,6 +4520,23 @@ def materialize(
         row_counts["variable_slugs_curated"] = var_slug_counts["curated"]
         row_counts["variable_slugs_auto"] = (
             var_slug_counts["auto_existing"] + var_slug_counts["auto_new"]
+        )
+
+        # Exact-edition windows for aliases the canonical identity already owns.
+        # FQIDs resolve only after variable slugs have been assigned; SCB's
+        # register_version metadata is available here so declarations can be checked
+        # against exact source-edition names and claims. This pass never writes aliases
+        # or states.
+        curated_alias_window_counts = materialize_curated_alias_windows(
+            conn,
+            load_alias_windows(repo_curation_path("alias_windows.toml")),
+            providers=active_providers,
+            progress=_progress,
+        )
+        row_counts["variable_alias_windows"] = (
+            fm_counts["windows"]
+            + alias_window_counts["windows"]
+            + curated_alias_window_counts["windows"]
         )
 
         # Curated resolution for the residual code-less ↔ code-bearing overlap

@@ -2,14 +2,15 @@
 
 The scaffold (`load_curation_entries`, `curation_error`, `canonical_int`,
 `fold_column`) plus the per-entry leaf helpers below (`require_str`,
-`require_bool`, `require_fqid`, `resolve_variable_id`, `resolve_register_id`)
+`require_bool`, `require_evidence`, `require_fqid`, `resolve_variable_id`,
+`resolve_register_id`)
 serve the `[[entry]]` curation-TOML loaders —
 `codelivery.py`, `concept_groups.py`, `tags.py`,
 `period_family_merges.py`, `delivery_enrichment.py`, `scb_errata.py`,
-`classification_links.py`, and `relations.py` (the single typed `[[edge]]`
-surface for the curated pairwise relations — same_as / replaced_by,
-#522). Each loader threads its own `code` / `prefix` / `file_name` through
-(typically via a module-level `functools.partial`) so its established error
+`alias_windows.py`, `classification_links.py`, and `relations.py` (the single
+typed `[[edge]]` surface for the curated pairwise relations — same_as /
+replaced_by, #522). Each loader threads its own `code` / `prefix` / `file_name`
+through (typically via a module-level `functools.partial`) so its established error
 codes (and near-identical messages) are preserved.
 The exceptions are `classifications.py` / `fqid_slugs.py` / `extend_db.py`, whose
 data shapes differ enough that they don't share this scaffold.
@@ -28,6 +29,7 @@ from __future__ import annotations
 import functools
 import tomllib
 import unicodedata
+from datetime import date
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -257,6 +259,49 @@ def require_str(
             f'Give `{field} = "<value>"` in reg_meta_build/{file_name}.',
         )
     return value.strip()
+
+
+def require_evidence(
+    entry: dict,
+    context: str,
+    *,
+    code: str,
+    prefix: str,
+    file_name: str,
+) -> str:
+    """Require correction ``evidence`` plus a canonical ``noted`` date.
+
+    The evidence is returned for the row-level provenance carrier; ``noted`` is
+    curation-log metadata. Keeping the date parser here gives every correction
+    surface the same strict YYYY-MM-DD rule.
+    """
+    evidence = require_str(
+        entry,
+        "evidence",
+        context,
+        code=code,
+        prefix=prefix,
+        file_name=file_name,
+    )
+    noted = require_str(
+        entry,
+        "noted",
+        context,
+        code=code,
+        prefix=prefix,
+        file_name=file_name,
+    )
+    try:
+        parsed = date.fromisoformat(noted)
+    except ValueError:
+        parsed = None
+    if parsed is None or parsed.isoformat() != noted:
+        raise curation_error(
+            code,
+            f"{prefix} {context} needs `noted` as YYYY-MM-DD, got {noted!r}.",
+            'Use the date the correction was recorded, e.g. `noted = "2026-09-11"`.',
+        )
+    return evidence
 
 
 def require_bool(

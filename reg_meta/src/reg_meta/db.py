@@ -299,7 +299,12 @@ CLASSIFICATION_SUCCESSION_AS_OF_YEAR = 2026
 #   `errata:<class>` and evidence at interval grain, and steward-only states may
 #   carry their steward label. Regenerate-not-migrate; a 6.7.0 DB cannot explain
 #   corrected delivery windows and is rejected by the minor-version gate.
-SCHEMA_VERSION = "6.8.0"
+# - 6.9.0 (Y-132): additive `variable_alias_window.provenance` column. Curated
+#   exact-edition aliases project correction provenance onto their expanded
+#   VariableState without mutating or relabeling the provider-documented base
+#   state. A 6.8.0 DB cannot distinguish a curated representation interval from
+#   a source-derived alias window and is rejected by the minor-version gate.
+SCHEMA_VERSION = "6.9.0"
 DB_FILENAME = "reg_meta.db"
 
 

@@ -1,0 +1,12 @@
+# Exact source-edition windows for delivery columns that already belong to the
+# canonical variable and variant but are absent from the source edition's
+# documented representation. These declarations add representations only; they
+# never create aliases, states, identities, or neighboring-year coverage.
+
+[[alias]]
+variable = "scb/it-anvandning/bestallde-varor-tjanster-webb-app"
+variant = "it-anvandning-i-foretag"
+column = "AEBUY"
+source_editions = ["2018"]
+evidence = "SWECOV table ITftg_Mikro_2018 holds AEBUY. SCB VarId 30000 documents AEBUY in 2015 and E_AWBUY in 2018 with the same variable name, definition, empty operational definition, and varchar type."
+noted = "2026-09-13"

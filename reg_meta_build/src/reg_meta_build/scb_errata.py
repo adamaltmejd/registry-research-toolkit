@@ -67,7 +67,6 @@ import functools
 import json
 import sqlite3
 from dataclasses import dataclass, fields
-from datetime import date
 from typing import TYPE_CHECKING
 
 from ._curation import (
@@ -75,6 +74,7 @@ from ._curation import (
     fold_column,
     load_curation_entries,
     require_bool,
+    require_evidence,
     require_str,
 )
 from .classifications import declared_short_names
@@ -96,6 +96,13 @@ _CODE = "scb_errata_invalid"
 # 2-segment and must name it — errata is an SCB-adapter operation, so another
 # provider's slug could never resolve to an SCB (register, variant).
 _PROVIDER = "scb"
+
+_require_evidence = functools.partial(
+    require_evidence,
+    code=_CODE,
+    prefix="scb_errata",
+    file_name=_FILE_NAME,
+)
 
 _VERSION_FIELDS = frozenset({"register", "variant", "name", "evidence", "noted"})
 _DELIVERED_FIELDS = frozenset(
@@ -312,26 +319,6 @@ def _entries(path: Path | None, kind: str) -> list[dict]:
     )
 
 
-def _require_provenance(entry: dict, context: str) -> str:
-    """Every entry of every kind is evidenced and dated: `evidence` is why the
-    maintainer believes SCB got it wrong, `noted` the date they recorded it.
-    `evidence` is returned so row-producing entries can carry it into their
-    delivery-window provenance. `noted` remains curation-log metadata."""
-    evidence = _require_str(entry, "evidence", context)
-    noted = _require_str(entry, "noted", context)
-    try:
-        parsed = date.fromisoformat(noted)
-    except ValueError:
-        parsed = None
-    if parsed is None or parsed.isoformat() != noted:
-        raise curation_error(
-            _CODE,
-            f"scb_errata {context} needs `noted` as YYYY-MM-DD, got {noted!r}.",
-            'Use the date the omission was recorded, e.g. `noted = "2026-09-11"`.',
-        )
-    return evidence
-
-
 def _state_provenance(class_name: str, evidence: str) -> str:
     """Stable, human-readable base provenance: class first, evidence after it.
 
@@ -469,7 +456,7 @@ def load_scb_errata(
         _unknown_keys(entry, _VERSION_FIELDS, "version")
         _, variant_id, context = _resolve_variant(entry, "version", registers, variants)
         name = _require_str(entry, "name", f"[[version]] {context}")
-        _require_provenance(entry, f"[[version]] {context}/{name}")
+        _require_evidence(entry, f"[[version]] {context}/{name}")
         if not _edition_years(name):
             raise curation_error(
                 "scb_errata_version_year_unknown",
@@ -496,7 +483,7 @@ def load_scb_errata(
         )
         column = _require_str(entry, "column", f"[[delivered]] {context}")
         ctx = f"[[delivered]] {context}/{column}"
-        evidence = _require_provenance(entry, ctx)
+        evidence = _require_evidence(entry, ctx)
         named = _named_versions(entry, ctx)
         upstream = (
             _require_str(entry, "upstream", ctx)
@@ -536,7 +523,7 @@ def load_scb_errata(
         column = _require_str(entry, "column", f"[[column]] {context}")
         ctx = f"[[column]] {context}/{column}"
         source = _column_source(entry, ctx)
-        evidence = _require_provenance(entry, ctx)
+        evidence = _require_evidence(entry, ctx)
         loaded = ErrataColumn(
             register_id=register_id,
             register_variant_id=variant_id,

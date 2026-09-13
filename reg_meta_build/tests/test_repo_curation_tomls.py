@@ -22,6 +22,7 @@ import pytest
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta.fqid import FqidKind
 from reg_meta_build._curation import repo_curation_path
+from reg_meta_build.alias_windows import load_alias_windows
 from reg_meta_build.classification_links import load_classification_links
 from reg_meta_build.classifications import load_seed
 from reg_meta_build.codeless_overlap import load_codeless_overlap
@@ -51,6 +52,7 @@ _CURATION = _ROOT / "curation"
 
 def test_catalog_overlays_share_one_directory() -> None:
     names = {
+        "alias_windows.toml",
         "classifications.toml",
         "codeless_overlap.toml",
         "codelivery.toml",
@@ -297,6 +299,27 @@ def test_repo_delivery_enrichment_keeps_issue_428_aliases() -> None:
         ),
         ("scb/fek", "skatteskulder", "Skatteskulder"),
     } <= triples
+
+
+def test_repo_alias_windows_parse_and_start_with_verified_it_case() -> None:
+    aliases = load_alias_windows(_CURATION / "alias_windows.toml")
+
+    assert [
+        (
+            alias.fqid,
+            alias.variant,
+            alias.column,
+            alias.source_editions,
+        )
+        for alias in aliases
+    ] == [
+        (
+            "scb/it-anvandning/bestallde-varor-tjanster-webb-app",
+            "it-anvandning-i-foretag",
+            "AEBUY",
+            ("2018",),
+        )
+    ]
 
 
 def test_repo_delivery_enrichment_tracks_curated_lisa_sni_slugs() -> None:

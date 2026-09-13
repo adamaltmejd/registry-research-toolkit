@@ -117,6 +117,7 @@ _IR_FACTORIES: dict[str, tuple[type[BaseModel], dict[str, object]]] = {
             "delivery_column_name": "Kon",
             "valid_from": "2018-01-01",
             "valid_to": None,
+            "provenance": "errata:test\nheld",
         },
     ),
     "IRValueCode": (
@@ -332,8 +333,10 @@ def test_core_graph_reinsert_preserves_existing_alias_windows() -> None:
 
     assert conn.execute(
         "SELECT variable_id, register_variant_id, delivery_column_name, "
-        "valid_from, valid_to FROM variable_alias_window"
-    ).fetchall() == [(100, 10, "Kon", "2018-01-01", "2018-12-31")]
+        "valid_from, valid_to, provenance FROM variable_alias_window"
+    ).fetchall() == [
+        (100, 10, "Kon", "2018-01-01", "2018-12-31", "errata:test\nheld")
+    ]
     conn.close()
 
 

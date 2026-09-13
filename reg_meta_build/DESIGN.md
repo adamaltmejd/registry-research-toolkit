@@ -82,7 +82,7 @@ with deliberately separate homes:
   | **navigation lineage**  | `curation/lineage.toml`                                                                                                                | Provider-qualified source-variant defaults and per-consumer-variable overrides for `variable_state_lineage`. |
   | **relation**            | `curation/relations.toml`                                                                                                              | Typed `[[edge]]` graph facts (`same_as`, `replaced_by`, and `derived_from`).                                 |
   | **set**                 | `curation/concept_groups.toml`, `curation/concept_groups.auto.toml`, `curation/tags.toml`                                              | Curated/generated browse groups, consolidated `[[pair]]` code↔label folds, and thematic discovery tags.      |
-  | **gap-fill**            | `curation/delivery_enrichment.generated.toml`, `curation/scb_errata.toml`                                                              | Generated delivery-list descriptions/aliases and source-level corrections for omissions in SCB's export.     |
+  | **gap-fill**            | `curation/delivery_enrichment.generated.toml`, `curation/scb_errata.toml`, `curation/alias_windows.toml`                               | Delivery-list enrichment, source omissions, and exact-edition windows for existing aliases.                  |
   | **value/coding**        | `curation/classifications.toml`, `curation/codelivery.toml`; canonical CSVs in `input_data/classifications/`                           | Classification seeds plus `[[link]]` overrides, and SCB same-period co-delivery coding decisions.            |
   | **overlap resolution**  | `curation/codeless_overlap.toml`                                                                                                       | Curated decisions for residual code-less/code-bearing state overlaps.                                        |
   | **period family merge** | `curation/period_family_merges.toml`                                                                                                   | Pre-slug merge of parallel period columns into one variable with per-period alias windows.                   |
@@ -131,6 +131,17 @@ with deliberately separate homes:
   at load, everything that needs the export is checked when the entry is applied. The
   log is self-cleaning: once SCB ships the row the build fails with
   `scb_errata_now_present` and the entry is deleted, leaving the record in git.
+- **An already-owned alias missing from one held delivery is a representation
+  correction, not a source-instance repair.** `curation/alias_windows.toml` names the
+  canonical variable FQID, variant, existing alias, and exact SCB source editions. It
+  runs after variable slug assignment, requires the target's source instance in each
+  edition, validates its interval through `register_edition_claims`, and adds only
+  those claim intervals to
+  `variable_alias_window`; it never feeds alias connectivity, creates a source row, or
+  changes `variable_state`. A provenance-neutral base-column window preserves the
+  containing state's original representation, while the curated alias window carries
+  the existing `errata:scoped-attributions` contract. A declaration that the source now
+  covers fails for retirement instead of widening the alias.
 - **Classification links are typed, not generic state overrides.**
   `curation/classifications.toml` targets the `classification_candidate` pipeline and
   then `variable_state.classification_id`. It is NOT a generic
@@ -2021,6 +2032,16 @@ read-time inference would be lossy. Mixed-shape cvids whose alias set maps to se
 shipped state windows are deliberately left as ordinary search/header aliases; they are
 not one-state representation families and need explicit curation before they can be
 picker-visible.
+
+For the distinct case where one of the variable's existing aliases is physically held
+in a source edition whose documented state uses another representative column,
+`materialize_curated_alias_windows` reads `curation/alias_windows.toml` after variable
+slugs resolve. Each named edition contributes the exact, possibly disjoint intervals
+returned by `register_edition_claims`; the containing state's hull is not copied onto
+the alias. The pass inserts the state's representative window only as needed to keep
+the base representation visible. Curated windows override the expanded
+`VariableState.provenance` with correction provenance; source-derived monthly and
+multi-alias windows keep NULL and inherit their base state's provenance.
 
 ##### Decision (#518/#523): retain the merge
 
