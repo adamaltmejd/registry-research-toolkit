@@ -1288,10 +1288,13 @@ invariant, so the SCB adapter triages every such collision (`sources/scb.py`,
   Only fast-path `(variable_id, register_variant_id)` partitions are touched: residual
   collapse and emission share the complete `_needs_timeline` predicate, so distinct
   value sets and same-column source-register text drift are left to the interval
-  materializer. Different-column overlaps (parallel co-deliveries) remain untouched too.
-  This shared routing preserves a documented era inside a returning shape's outer hull
-  when source attribution changes between the runs (Y-128/TJOMF), without treating every
-  claim gap as a new timeline policy.
+  materializer. Within an already-routed timeline, disjoint code-less claims with
+  different canonical type/length shapes remain separate interval owners; they are not
+  conflated into one shape's claim hull (Y-128's 1996 half-year course deliveries).
+  Different-column overlaps (parallel co-deliveries) remain untouched too. This shared
+  routing preserves a documented era inside a returning shape's outer hull when source
+  attribution changes between the runs (Y-128/TJOMF), without treating every claim gap
+  as a new timeline policy.
 
 **State-identity rule (#526).** The VALUE SET anchors a valued variable's temporal-state
 identity; SCB's per-delivery `Datatyp` / `Datalängd` is low-trust passthrough (declared

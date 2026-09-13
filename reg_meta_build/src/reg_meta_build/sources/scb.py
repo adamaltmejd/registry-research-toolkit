@@ -2181,12 +2181,23 @@ def _resolve_year_winners(
     fold/collapse may relabel).
     """
     source_texts_by_col: dict[str, set[str]] = defaultdict(set)
+    codeless_shapes_by_col: dict[str, set[tuple[str, str]]] = defaultdict(set)
+    valued_cols: set[str] = set()
     for gk in cands:
         source_texts_by_col[gk[8]].add(groups[gk].source_register_text or "")
+        if groups[gk].value_set_id is None:
+            codeless_shapes_by_col[gk[8]].add((gk[3], gk[4]))
+        else:
+            valued_cols.add(gk[8])
     source_drift_cols = {
         col
         for col, source_texts in source_texts_by_col.items()
         if len(source_texts) > 1
+    }
+    codeless_shape_drift_cols = {
+        col
+        for col, shapes in codeless_shapes_by_col.items()
+        if col not in valued_cols and len(shapes) > 1
     }
 
     hooks = SweepHooks(
@@ -2194,7 +2205,9 @@ def _resolve_year_winners(
         column=lambda gk: gk[8],
         sort_key=_gk_sort_key,
         coded=lambda gk: (
-            groups[gk].value_set_id is not None or gk[8] in source_drift_cols
+            groups[gk].value_set_id is not None
+            or gk[8] in source_drift_cols
+            or gk[8] in codeless_shape_drift_cols
         ),
         single_coding=lambda pool: _pool_single_coding(
             pool, groups, codes_fn, code_labels_fn
@@ -2216,18 +2229,20 @@ def _pool_single_coding(
     """True iff this column-period pool is ONE drifted coding — the pool-level
     identity verdict (DESIGN.md → drift conflation). Mirrors the cascade's own
     identity predicates verbatim, except source-register drift is state-grain
-    provenance and must keep interval ownership available: at most one distinct
-    non-null value set; or one source label across the coded groups; or every
-    pairwise symmetric code diff within `_COSMETIC_MAX_SYM` with no shared-code
-    relabel. Deliberately
-    set-level, not a pairwise transitive closure — an A~B~C chain whose A↔C
-    diff exceeds the threshold does NOT conflate, exactly as the cascade's
-    cosmetic step refuses it."""
+    provenance and must keep interval ownership available. An all-code-less pool
+    is one coding only when its canonical type/length shape agrees; otherwise:
+    at most one distinct non-null value set; or one source label across the coded
+    groups; or every pairwise symmetric code diff within `_COSMETIC_MAX_SYM` with
+    no shared-code relabel. Deliberately set-level, not a pairwise transitive
+    closure — an A~B~C chain whose A↔C diff exceeds the threshold does NOT
+    conflate, exactly as the cascade's cosmetic step refuses it."""
     source_texts = {groups[gk].source_register_text or "" for gk in pool}
     if len(source_texts) > 1:
         return False
     vss = sorted({vs for gk in pool if (vs := groups[gk].value_set_id) is not None})
-    if len(vss) <= 1:
+    if not vss:
+        return len({(gk[3], gk[4]) for gk in pool}) <= 1
+    if len(vss) == 1:
         return True
     orig_labels = {
         groups[gk].value_set_version_label or ""

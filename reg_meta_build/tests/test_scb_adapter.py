@@ -1002,8 +1002,9 @@ class TestEraOrdering:
     ) -> None:
         # The real course columns change declared length between the two halves
         # of 1996. An older source-text era already makes each partition
-        # timeline-owned; the higher-ID first half must not make PASS1 discard
-        # regver 14892's disjoint, source-documented second-half claim.
+        # timeline-owned; the higher-ID first half must neither make PASS1
+        # discard regver 14892's disjoint second-half claim nor absorb its
+        # interval as code-less drift.
         conn = _build_from_ri_rows(
             tmp_path,
             [
@@ -1057,7 +1058,8 @@ class TestEraOrdering:
             ).fetchall()
             assert states == [
                 ("1995-01-01", "1995-12-31", first_length, "T6"),
-                ("1996-01-01", "1996-12-31", first_length, source),
+                ("1996-01-01", "1996-06-30", first_length, source),
+                ("1996-07-01", "1996-12-31", second_length, source),
             ]
         finally:
             conn.close()
