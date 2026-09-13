@@ -599,7 +599,7 @@ _INERA = "inera/bestallda-prover/_default"
 
 
 def _held(
-    steward_dir: Path, holdings: dict[int, tuple[str, ...]], variant: str
+    steward_dir: Path, holdings: dict[int | str, tuple[str, ...]], variant: str
 ) -> None:
     """A committed-inventory stand-in: one `[[table]]` per edition holding those
     columns of `Beställda prover`, each mapped to its own representation — the
@@ -628,7 +628,7 @@ def _held(
 def _errata_text(
     tmp_path: Path,
     db: Path,
-    holdings: dict[int, tuple[str, ...]],
+    holdings: dict[int | str, tuple[str, ...]],
     variant: str = _INERA,
 ) -> str:
     """Write the holdings, run the subcommand, read back the worklist it leaves
@@ -750,6 +750,48 @@ def test_errata_worklist_lists_a_non_scb_miss_as_a_curated_window(
     assert "held 2020, catalog windows 2019" in line
     assert "not errata (provider `inera`, not `scb`)" in line
     assert "the steward inventory extend-db overlays" in line
+
+
+@pytest.mark.parametrize("variant", [_INERA, "scb/bestallda-prover/_default"])
+def test_errata_worklist_excludes_every_multi_period_suggestion(
+    tmp_path: Path, flavored_db: Path, variant: str, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """Partial, absent and disjoint range/list holdings are not availability
+    evidence. They produce no version, delivered-column or curated-window
+    suggestion regardless of provider, and the worklist/CLI report an honest
+    zero assessed denominator plus the skipped-table count."""
+    db = tmp_path / "narrowed.db"
+    db.write_bytes(flavored_db.read_bytes())
+    conn = sqlite3.connect(db)
+    if variant.startswith("scb/"):
+        conn.execute("UPDATE provider SET slug = 'scb' WHERE provider_id = 900")
+    conn.execute(
+        "UPDATE variable_state SET valid_from = '2019-01-01', "
+        "valid_to = '2019-12-31' WHERE delivery_column_name = 'T_kolumn'"
+    )
+    conn.commit()
+    conn.close()
+
+    text = _errata_text(
+        tmp_path,
+        db,
+        {
+            "{ from = 2018, to = 2020 }": ("T_kolumn",),
+            "{ from = 2021, to = 2022 }": ("T_kolumn",),
+            "[2016, 2017]": ("T_kolumn",),
+        },
+        variant=variant,
+    )
+
+    assert tomllib.loads(text) == {}
+    assert "out of 0 assessed" in text
+    assert "3 multi-period table(s) not assessed" in text
+    assert "version-missing: 0" in text
+    assert "column-missing: the omitted column rows themselves, 0" in text
+    assert "curated windows: 0" in text
+    stdout = capsys.readouterr().out
+    assert "held column × edition pairs: 0 assessed, 0 with no catalog window" in stdout
+    assert "3 multi-period table(s) not assessed" in stdout
 
 
 # --- cmd_grafts: the scb_errata.toml [[column]] candidates --------------------

@@ -3411,7 +3411,9 @@ def cmd_inventory(args: argparse.Namespace) -> None:
 # register version for, then the `[[delivered]]` entries for the omitted column
 # rows themselves. A miss on any OTHER provider cannot be an entry in that file at
 # all (its loader refuses one), so it rides in a third section as a comment naming
-# the curated surface its window is widened on.
+# the curated surface its window is widened on. Multi-period range/list tables are
+# excluded from every section: their dates describe the records in the file, not
+# each column's availability.
 #
 # The reading rules live in `reg_meta_build.inventory_coverage` — ONE
 # implementation, so the worklist can never disagree with the gate that made it.
@@ -3423,6 +3425,7 @@ def cmd_errata(args: argparse.Namespace) -> None:
     from reg_meta_build.inventory_coverage import (
         coverage_misses,
         errata_worklist,
+        skipped_tables_line,
         version_candidates,
     )
 
@@ -3442,10 +3445,11 @@ def cmd_errata(args: argparse.Namespace) -> None:
     dest.write_text(errata_worklist(report), encoding="utf-8")
     print(f"wrote {dest}")
     print(
-        f"  held column × edition pairs: {report.pairs} judged,"
+        f"  held column × edition pairs: {report.pairs} assessed,"
         f" {report.missed_pairs} with no catalog window"
         f" ({report.unresolved} mapping(s) not judged — coordinate unresolved)"
     )
+    print(f"  {skipped_tables_line(report.skipped_tables)}")
     print(
         f"  version-missing: {len(version_candidates(report.misses))} "
         f"[[version]] candidate(s)"

@@ -35,9 +35,14 @@ Reading rules, each deliberate:
 * Coverage is judged PER PHYSICAL COLUMN of a table: covered iff ANY of its
   mappings covers the edition. One physical column serving several variants stays
   orderable as long as one of them delivers it.
-* A mapping's basis is the table's whole `edition_bounds` — the same claim
-  `catalog_index` admits an explicit `representation` over — so this gate refuses
-  exactly the claim the runtime would have trusted.
+* Only a table whose edition is ONE period token is assessed. An integer is
+  normalized to its annual token by the inventory loader, and sub-annual / LA
+  tokens retain their exact bounds. A range or list is a multi-period table: its
+  dates describe the records in the file, not every column's availability, so it
+  is counted and reported as not assessed and contributes no inferred correction.
+* An assessed mapping's basis is the table's full single-period `edition_bounds` —
+  the same claim `catalog_index` admits an explicit `representation` over — so
+  this gate refuses exactly the claim the runtime would have trusted.
 * `variable_state` and `variable_alias_window` are read as a FLAT UNION keyed by
   the folded delivery column, and an edition is covered when the MERGED union
   contains it (a column whose edition straddles two abutting states is delivered,
@@ -178,14 +183,16 @@ class CoverageMiss:
 @dataclass(frozen=True)
 class CoverageReport:
     """`misses` plus the denominators, both at the gate's own grain of one held
-    column × edition claim: `pairs` judged, `missed_pairs` of them uncovered, and
-    `unresolved` mappings skipped because their coordinate names nothing in the
-    catalog."""
+    column × single delivered period: `pairs` assessed, `missed_pairs` of them
+    uncovered, `unresolved` mappings skipped because their coordinate names
+    nothing in the catalog, and `skipped_tables` range/list editions excluded
+    because a multi-period record span is not column-availability evidence."""
 
     misses: tuple[CoverageMiss, ...]
     pairs: int
     missed_pairs: int
     unresolved: int
+    skipped_tables: int
 
     @property
     def errata_misses(self) -> tuple[CoverageMiss, ...]:
@@ -201,6 +208,14 @@ class CoverageReport:
         return tuple(miss for miss in self.misses if not miss.errata)
 
 
+def skipped_tables_line(count: int) -> str:
+    """One shared explanation for the gate and both worklist reports."""
+    return (
+        f"{count:,} multi-period table(s) not assessed — range/list editions "
+        "describe table records, not each column's availability"
+    )
+
+
 def coverage_misses(
     conn: sqlite3.Connection, inventory: DeliveryInventory
 ) -> CoverageReport:
@@ -210,9 +225,12 @@ def coverage_misses(
     carrying its editions ascending and its version names sorted, so two runs over
     the same inputs produce the same report (and the same worklist file).
     """
+    assessed_tables = tuple(
+        table for table in inventory.tables if isinstance(table.edition, str)
+    )
     coords: set[_Coord] = {
         (mapping.register_variant, str(mapping.variable))
-        for table in inventory.tables
+        for table in assessed_tables
         for column in table.columns
         for mapping in column.mappings
     }
@@ -238,7 +256,7 @@ def coverage_misses(
     pairs = 0
     missed_pairs = 0
     unresolved = 0
-    for table in inventory.tables:
+    for table in assessed_tables:
         bounds = edition_bounds(table.edition)
         for column in table.columns:
             placed = _placements(column, pair_ids, windows)
@@ -264,6 +282,7 @@ def coverage_misses(
         pairs=pairs,
         missed_pairs=missed_pairs,
         unresolved=unresolved,
+        skipped_tables=len(inventory.tables) - len(assessed_tables),
     )
 
 
@@ -394,7 +413,8 @@ def errata_worklist(report: CoverageReport) -> str:
         "# curated on — nothing to paste here, a window to widen there.",
         "#",
         f"# {report.missed_pairs} held column × edition pair(s) in "
-        f"{len(report.misses)} group(s), out of {report.pairs} judged.",
+        f"{len(report.misses)} group(s), out of {report.pairs} assessed.",
+        f"# {skipped_tables_line(report.skipped_tables)}.",
         "",
         f"# ── version-missing: {len(versions)} held `scb` edition(s) the catalog "
         "documents no register version for; mint them first ──",
@@ -492,9 +512,9 @@ class _Versions:
         no documented version covers it.
 
         Every version OVERLAPPING the edition contributes its name, and the
-        edition counts as documented only when their merged claims contain it: a
-        held `2010..2012` edition is three annual versions, and one that runs off
-        the end of the documented history is not documented at all.
+        edition counts as documented only when their merged claims contain the
+        full delivered period. One that runs off the end of the documented
+        history is not documented at all.
         """
         overlapping = [
             (name, claims)

@@ -2635,6 +2635,59 @@ class TestInventoryWindowCoverage:
         assert result.passed, result.failures
         assert "all 1 held column × edition pair(s)" in result.format_report()
 
+    def test_range_and_list_tables_are_skipped_with_honest_denominator(
+        self, tmp_path: Path
+    ):
+        """A range/list says which records a multi-period table contains, not
+        which years each column was delivered. Partial, absent and disjoint
+        catalog windows therefore contribute neither misses nor assessed pairs;
+        the one annual table remains assessed and is the only inferred repair."""
+        result = self._check(
+            self._db(),
+            tmp_path,
+            self._table(
+                "{ from = 2008, to = 2010 }",
+                ("DispInkKE", "dispinkke", "DispInkKE"),
+            ),
+            self._table(
+                "{ from = 2020, to = 2021 }",
+                ("DispInkKE", "dispinkke", "DispInkKE"),
+            ),
+            self._table("[2016, 2017]", ("Kon", "kon", "Kon")),
+            self._table(2020, ("Kon", "kon", "Kon")),
+        )
+
+        assert len(result.failures) == 1, result.failures
+        report = result.format_report()
+        assert "3 multi-period table(s) not assessed" in report
+        assert "range/list editions describe table records" in report
+        assert "1 held column × edition pair(s)" in report
+        assert "out of 1 assessed" in report
+        block = self._block(result)
+        assert block.count("[[version]]") == 1
+        assert block.count("[[delivered]]") == 1
+        assert 'name = "2020"' in block
+
+    def test_la_token_still_requires_full_period_containment(self, tmp_path: Path):
+        """LA is one delivered period, even though it crosses calendar years.
+        An almost-covering state must still fail the existing containment rule."""
+        conn = self._db()
+        conn.execute(
+            "UPDATE variable_state SET valid_from = '2018-07-01', "
+            "valid_to = '2019-05-31' WHERE delivery_column_name = 'DispInkKE'"
+        )
+        conn.commit()
+
+        result = self._check(
+            conn,
+            tmp_path,
+            self._table('"LA2018"', ("DispInkKE", "dispinkke", "DispInkKE")),
+        )
+
+        assert len(result.failures) == 1, result.failures
+        assert "held LA2018" in result.failures[0]
+        assert "out of 1 assessed" in result.format_report()
+
     def test_column_match_is_case_folded(self, tmp_path: Path):
         """The inventory spells a column as the steward's holdings do, which is not
         always the catalog's spelling: the match folds with NFC + `str.lower()`

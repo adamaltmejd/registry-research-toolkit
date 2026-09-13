@@ -68,6 +68,7 @@ from reg_meta_build.inventory_coverage import (
     coverage_misses,
     errata_stanzas,
     miss_line,
+    skipped_tables_line,
 )
 from reg_meta_build.relations import (
     _REPLACED_BY_NOTE_VINTAGE_LIFT,
@@ -231,9 +232,11 @@ def validate_built_db(
     ``delivery_inventory`` (Y-115) is the steward's loaded §12 holdings statement
     (``reg_webapp/stewards/<steward>/inventory.toml``); it feeds
     ``_check_inventory_window_coverage``, which fails the build when a column the
-    steward HOLDS in a table edition has no covering state or alias window on its
-    coordinate. ``None`` (the default, used by synthetic CI and the global build)
-    SKIPS that gate — there is no holdings statement to contradict; the
+    steward HOLDS in a single-period table edition has no covering state or alias
+    window on its coordinate. Multi-period range/list tables are reported but not
+    assessed: their record spans are not column-availability evidence. ``None``
+    (the default, used by synthetic CI and the global build) SKIPS that gate —
+    there is no holdings statement to contradict; the
     ``extend-db`` CLI resolves and loads it once, the way it does ``slug_dir``.
     ``HoldingsGate.SKIPPED`` also skips it, and says the flag did it.
     """
@@ -2483,8 +2486,10 @@ def _check_inventory_window_coverage(
     tables: set[str],
     delivery_inventory: DeliveryInventory | HoldingsGate | None,
 ) -> None:
-    """Y-115: every column the steward HOLDS in a table edition must have a
-    covering ``variable_state`` or ``variable_alias_window`` on its coordinate.
+    """Y-115/Y-126: every column the steward HOLDS in a single-period table
+    edition must have a covering ``variable_state`` or ``variable_alias_window``
+    on its coordinate. Multi-period tables are not availability evidence and are
+    reported without being assessed.
 
     A flavor DB that contradicts the steward's own §12 holdings statement must not
     ship: `catalog_index` admits an explicit ``representation`` over the table's
@@ -2519,6 +2524,8 @@ def _check_inventory_window_coverage(
         result.ok("variable_state / variable_alias_window absent — gate skipped")
         return
     report = coverage_misses(conn, delivery_inventory)
+    if report.skipped_tables:
+        result.info(skipped_tables_line(report.skipped_tables))
     if report.unresolved:
         result.info(
             f"{report.unresolved:,} mapping(s) not judged — their coordinate "
@@ -2527,8 +2534,8 @@ def _check_inventory_window_coverage(
         )
     if not report.misses:
         result.ok(
-            f"all {report.pairs:,} held column × edition pair(s) have a covering "
-            "state or alias window"
+            f"all {report.pairs:,} held column × edition pair(s) assessed have a "
+            "covering state or alias window"
         )
         return
     shown = report.misses[:_MISS_REPORT_CAP]
@@ -2542,7 +2549,7 @@ def _check_inventory_window_coverage(
     result.info(
         f"{report.missed_pairs:,} held column × edition pair(s) in "
         f"{len(report.misses):,} group(s) have no catalog window, "
-        f"out of {report.pairs:,} judged"
+        f"out of {report.pairs:,} assessed"
     )
     result.info(
         "`python input_data/swecov/build_catalog.py --db <flavored-db> errata` "
