@@ -69,7 +69,7 @@ from reg_meta_build.db import (
     _value_set_hash,
 )
 from reg_meta_build.edition_bounds import edition_claims, vintage_claim
-from reg_meta_build.id import _CANONICAL_SCB_BIT
+from reg_meta_build.id import _CANONICAL_SCB_BIT, mint_canonical_scb
 from reg_meta_build.ir import (
     IRDeliveryProvenance,
     IRRegister,
@@ -97,6 +97,7 @@ from reg_meta_build.scb_errata import (
 
 _LISA_REGISTER_NAME_PREFIX = "longitudinell integrationsdatabas"
 _RESOLUTION_GAP_PROVENANCE = "inferred:resolution-gap"
+_CIS2016_PROVENANCE = "curated:scb-cis2016-matrix-answer"
 
 
 def _register_variant_description(
@@ -121,6 +122,7 @@ def _register_variant_description(
 if TYPE_CHECKING:
     from collections.abc import Callable, Iterator
 
+    from reg_meta_build.cis2016_matrix import Cis2016Matrix, MatrixAnswer
     from reg_meta_build.codelivery import CodeliveryMap
     from reg_meta_build.sources import IRObject
 
@@ -884,7 +886,7 @@ def _parse_unika_year(raw: str | None) -> int | None:
 @dataclass
 class _StateGroup:
     """One pre-triage coalesced state group (lifted to module scope so the
-    triage below can read it). The 10-component group key lives in the
+    triage below can read it). The 11-component group key lives in the
     `groups` dict; the accumulator carries the year-range signals plus the
     latest-era delivery column for triage."""
 
@@ -895,6 +897,10 @@ class _StateGroup:
     data_length: str | None
     value_set_id: int | None
     value_set_version_label: str | None
+    # An adapter-projected answer already has an explicit owner.  It remains a
+    # group-key partition so an identically named column in another wave cannot
+    # merge into it before triage; None is the ordinary source-derived path.
+    preset_variable_id: int | None = None
     source_register_text: str | None = None
     operational_definition: str | None = None
     operational_definition_conflict: bool = False
@@ -1098,7 +1104,17 @@ def _latest_era(grp: _StateGroup) -> tuple[int, int]:
 
 def _source_only_same_column_drift(left: tuple, right: tuple) -> bool:
     """True when two state gkeys differ only by source-register attribution."""
-    return left[:9] == right[:9] and (left[9] or "") != (right[9] or "")
+    # Pure triage unit fixtures omit the production-only source/owner suffix;
+    # absent owner means the ordinary source-derived path in both forms.
+    left_source = left[9] if len(left) > 9 else ""
+    right_source = right[9] if len(right) > 9 else ""
+    left_owner = left[10] if len(left) > 10 else None
+    right_owner = right[10] if len(right) > 10 else None
+    return (
+        left[:9] == right[:9]
+        and (left_source or "") != (right_source or "")
+        and left_owner == right_owner
+    )
 
 
 @dataclass
@@ -1216,17 +1232,25 @@ def _triage_groups(
     coalescer applies when it materializes `variable_state`."""
     res = _TriageResult({}, {}, set(), {}, {}, [], Counter())
 
-    by_var: dict[tuple[int, int], list[tuple]] = defaultdict(list)
+    by_var: dict[tuple[int, int, int | None], list[tuple]] = defaultdict(list)
     for gkey, grp in groups.items():
         # .get → None for a group whose parent variable is missing; the
         # coalescer's materializer raises a clear error on that invariant break.
-        res.assignments[gkey] = vid_map.get((grp.register_id, grp.var_id))
-        by_var[(grp.register_id, grp.var_id)].append(gkey)
+        res.assignments[gkey] = (
+            grp.preset_variable_id
+            if grp.preset_variable_id is not None
+            else vid_map.get((grp.register_id, grp.var_id))
+        )
+        by_var[(grp.register_id, grp.var_id, grp.preset_variable_id)].append(gkey)
 
-    for (register_id, var_id), gkeys in by_var.items():
+    for (register_id, var_id, preset_variable_id), gkeys in by_var.items():
         if len(gkeys) <= 1:
             continue
-        orig_vid = vid_map.get((register_id, var_id))
+        orig_vid = (
+            preset_variable_id
+            if preset_variable_id is not None
+            else vid_map.get((register_id, var_id))
+        )
         if orig_vid is None:
             continue
 
@@ -2510,7 +2534,8 @@ def _coalesce_variable_states(
     """Coalesce `variable_instance` rows into `variable_state` (see reg_meta/DESIGN.md → Two-level variable model).
 
     Group key: `(register_id, register_variant_id, var_id, <type>, <length>,
-    value_set_id, value_set_version_label, grain, component, source_register_text)`.
+    value_set_id, value_set_version_label, grain, component,
+    source_register_text, preset_variable_id)`.
 
     State-identity rule (#526): the VALUE SET anchors a valued variable's
     temporal state — SCB's per-delivery `data_type`/`data_length` are low-trust
@@ -2581,6 +2606,7 @@ def _coalesce_variable_states(
             "       vi.data_type, vi.data_length, vi.value_set_id, "
             "       vi.value_set_version_label, vi.vardemangdsniva AS grain, "
             "       vi.source_register_text, vi.operational_definition, vi.provenance, "
+            "       vi.variable_id AS preset_variable_id, "
             "       vi.variabelnamn, va.delivery_column_name, "
             "       rv.registerversionnamn, "
             "       rv.registerversion_senastgodkanddatum "
@@ -2676,8 +2702,9 @@ def _coalesce_variable_states(
     # Group accumulator: key → mutable `_StateGroup` (module scope; the
     # triage reads it). We iterate `rows` once and update the year-range
     # signals / latest alias in place. A dict rather than itertools.groupby
-    # because rows aren't pre-sorted and the key has 10 components (the column
-    # component stays at index 8; grain stays at index 7).
+    # because rows aren't pre-sorted and the key has 11 components (the column
+    # component stays at index 8; grain stays at index 7; an explicit projected
+    # owner is the final identity partition).
     groups: dict[
         tuple[
             int,
@@ -2690,6 +2717,7 @@ def _coalesce_variable_states(
             str,
             str,
             str,
+            int | None,
         ],
         _StateGroup,
     ] = {}
@@ -2713,7 +2741,7 @@ def _coalesce_variable_states(
 
     # cvid → its group key. A cvid belongs to exactly ONE group: every gkey
     # field is a cvid-level constant (register/variant/var_id/shape/value-set/
-    # label/grain/source text) EXCEPT the column component, and rule-2
+    # label/grain/source text/pre-set owner) EXCEPT the column component, and rule-2
     # connectivity (the `cvid_anchor` union above) merges ALL of a cvid's
     # columns into one component — so every row a cvid contributes carries the
     # same gkey. After triage assigns each gkey a `variable_id`, this lets the
@@ -2769,6 +2797,7 @@ def _coalesce_variable_states(
             grain,
             component,
             row["source_register_text"] or "",
+            row["preset_variable_id"],
         )
         cvid_gkey[row["cvid"]] = gkey  # idempotent: one cvid → one gkey
         grp = groups.get(gkey)
@@ -2781,6 +2810,7 @@ def _coalesce_variable_states(
                 data_length=row["data_length"],
                 value_set_id=row["value_set_id"],
                 value_set_version_label=row["value_set_version_label"],
+                preset_variable_id=row["preset_variable_id"],
                 source_register_text=row["source_register_text"] or None,
             )
             groups[gkey] = grp
@@ -4462,6 +4492,306 @@ def _project_and_mint_value_sets(
     return stats
 
 
+def _cis2016_answer_provenance(matrix: Cis2016Matrix, answer: MatrixAnswer) -> str:
+    """Stable source-id/evidence association retained on the projected state."""
+    selector = matrix.selector
+    payload = json.dumps(
+        {
+            "answer_key": answer.key,
+            "columns": list(answer.columns),
+            "evidence": {
+                "document": matrix.evidence.document,
+                "noted": matrix.evidence.noted,
+                "pages": answer.source_pages,
+                "question": matrix.evidence.question,
+                "sha256": matrix.evidence.sha256,
+                "url": matrix.evidence.url,
+            },
+            "source": {
+                "cvid": selector.cvid,
+                "edition": selector.edition,
+                "register": selector.register_fqid,
+                "register_id": selector.register_id,
+                "register_variant": selector.variant,
+                "register_variant_id": selector.register_variant_id,
+                "regver_id": selector.regver_id,
+                "var_id": selector.var_id,
+            },
+        },
+        ensure_ascii=False,
+        separators=(",", ":"),
+        sort_keys=True,
+    )
+    return f"{_CIS2016_PROVENANCE}\n{payload}"
+
+
+def _apply_cis2016_matrix(
+    conn: sqlite3.Connection, matrix: Cis2016Matrix | None
+) -> dict[str, Any]:
+    """Project the one reviewed shared-CVID matrix into answer instances.
+
+    The source row has one CVID with many aliases.  Replace it with one
+    deterministic, pre-owned instance per reviewed answer identity, copying its
+    source shape and value-set link exactly.  Generic coalescing then sees
+    ordinary one-owner instances; the original source ids remain on every
+    state's provenance and never become catalog identity keys.
+    """
+    if matrix is None:
+        return {"answers": 0, "aliases": 0, "slug_hints": {}}
+
+    selector = matrix.selector
+    cur = conn.cursor()
+    cur.row_factory = sqlite3.Row
+    source = cur.execute(
+        "SELECT vi.*, rv.registerversionnamn, r.provider_id "
+        "FROM variable_instance vi "
+        "JOIN register_version rv ON rv.regver_id = vi.regver_id "
+        "JOIN register r ON r.register_id = vi.register_id "
+        "WHERE vi.cvid = ?",
+        (selector.cvid,),
+    ).fetchone()
+    expected = (
+        selector.register_id,
+        selector.register_variant_id,
+        selector.regver_id,
+        selector.var_id,
+        selector.edition,
+        PROVIDER_ID_SCB,
+    )
+    observed = (
+        (
+            source["register_id"],
+            source["register_variant_id"],
+            source["regver_id"],
+            source["var_id"],
+            source["registerversionnamn"],
+            source["provider_id"],
+        )
+        if source is not None
+        else None
+    )
+    if observed != expected:
+        raise RegMetaError(
+            exit_code=EXIT_CONFIG,
+            code="cis2016_matrix_selector_mismatch",
+            error_class="configuration",
+            message=(
+                "CIS 2016 matrix curation selector does not match its source "
+                f"instance: expected {expected!r}, observed {observed!r}."
+            ),
+            remediation=(
+                "Recheck the exact RegisterId/RegVarID/RegVerID/VarId/CVID and "
+                "edition in reg_meta_build/curation/"
+                "cis2016-matrix-meaning-evidence.json; do not transfer the "
+                "mapping to another wave."
+            ),
+        )
+
+    scoped_aliases = {
+        (cvid, column)
+        for cvid, column in conn.execute(
+            "SELECT vi.cvid, va.delivery_column_name "
+            "FROM variable_instance vi "
+            "JOIN variable_alias_build va ON va.cvid = vi.cvid "
+            "WHERE vi.register_id = ? AND vi.register_variant_id = ? "
+            "AND vi.regver_id = ? AND vi.var_id = ?",
+            (
+                selector.register_id,
+                selector.register_variant_id,
+                selector.regver_id,
+                selector.var_id,
+            ),
+        )
+    }
+    expected_aliases = {(selector.cvid, column) for column in matrix.columns}
+    if scoped_aliases != expected_aliases:
+        missing = sorted(expected_aliases - scoped_aliases)
+        unexpected = sorted(scoped_aliases - expected_aliases)
+        raise RegMetaError(
+            exit_code=EXIT_CONFIG,
+            code="cis2016_matrix_column_mismatch",
+            error_class="configuration",
+            message=(
+                "CIS 2016 matrix curation does not cover the exact named source "
+                f"partition (missing={missing}, unexpected={unexpected})."
+            ),
+            remediation=(
+                "Update the reviewed declaration only after checking every named "
+                "column on edition 11529; never leave a residual same-VarId "
+                "answer outside the partition."
+            ),
+        )
+
+    parent_rows = cur.execute(
+        "SELECT variable_id, source_register_text, measurement_unit, source_register_id, "
+        "source_label, is_sensitive, is_identifier "
+        "FROM variable WHERE register_id = ? AND provider_key = CAST(? AS TEXT) "
+        "ORDER BY variable_id",
+        (selector.register_id, selector.var_id),
+    ).fetchall()
+    if len(parent_rows) != 1:
+        raise RegMetaError(
+            exit_code=EXIT_CONFIG,
+            code="cis2016_matrix_parent_conflict",
+            error_class="configuration",
+            message=(
+                "CIS 2016 matrix source VarId must have exactly one pre-triage "
+                f"variable, found {len(parent_rows)}."
+            ),
+            remediation=(
+                "Apply the answer projection before generic SCB triage and check "
+                "for a conflicting curation of VarId 15662."
+            ),
+        )
+    parent = parent_rows[0]
+
+    identities = [
+        (
+            answer,
+            mint_canonical_scb(
+                "scb-cis2016-matrix-answer",
+                str(selector.register_id),
+                str(selector.register_variant_id),
+                str(selector.regver_id),
+                str(selector.var_id),
+                answer.key,
+            ),
+        )
+        for answer in sorted(matrix.answers, key=lambda item: item.key)
+    ]
+    projected_cvids = {
+        answer.key: mint_canonical_scb(
+            "scb-cis2016-matrix-instance", str(selector.cvid), answer.key
+        )
+        for answer, _variable_id in identities
+    }
+    variable_ids = {variable_id for _answer, variable_id in identities}
+    if len(variable_ids) != len(identities) or len(
+        set(projected_cvids.values())
+    ) != len(identities):
+        raise RegMetaError(
+            exit_code=EXIT_CONFIG,
+            code="cis2016_matrix_identity_collision",
+            error_class="configuration",
+            message="CIS 2016 matrix answer keys minted duplicate identities.",
+            remediation="Choose distinct stable answer keys in the curation JSON.",
+        )
+    existing_variable_ids = {
+        row[0]
+        for row in conn.execute(
+            f"SELECT variable_id FROM variable WHERE variable_id IN "
+            f"({','.join('?' * len(variable_ids))})",
+            tuple(sorted(variable_ids)),
+        )
+    }
+    existing_cvids = {
+        row[0]
+        for row in conn.execute(
+            f"SELECT cvid FROM variable_instance WHERE cvid IN "
+            f"({','.join('?' * len(projected_cvids))})",
+            tuple(sorted(projected_cvids.values())),
+        )
+    }
+    if existing_variable_ids or existing_cvids:
+        raise RegMetaError(
+            exit_code=EXIT_CONFIG,
+            code="cis2016_matrix_identity_collision",
+            error_class="configuration",
+            message=(
+                "CIS 2016 matrix identities collide with existing rows "
+                f"(variable_ids={sorted(existing_variable_ids)}, "
+                f"cvids={sorted(existing_cvids)})."
+            ),
+            remediation=(
+                "Do not change the ID band or retry with generated counters; "
+                "resolve the deterministic key collision."
+            ),
+        )
+
+    # The source cvid cannot name one of 54 meanings.  Remove it from the
+    # one-owner pipeline only after every selector and minted id has passed.
+    conn.execute("DELETE FROM variable_alias_build WHERE cvid = ?", (selector.cvid,))
+    conn.execute("DELETE FROM variable_instance WHERE cvid = ?", (selector.cvid,))
+    if not conn.execute(
+        "SELECT 1 FROM variable_instance WHERE register_id = ? AND var_id = ? LIMIT 1",
+        (selector.register_id, selector.var_id),
+    ).fetchone():
+        # A target-only synthetic source (or future reduced export) would
+        # otherwise leave the generic VarId variable orphaned.  Real other-wave
+        # instances retain that unreviewed source identity.
+        conn.execute(
+            "DELETE FROM variable WHERE variable_id = ?", (parent["variable_id"],)
+        )
+
+    slug_hints: dict[int, str] = {}
+    for answer, variable_id in identities:
+        description = (
+            f"{matrix.question_label} ({', '.join(answer.columns)}; "
+            f"{selector.edition})."
+        )
+        conn.execute(
+            "INSERT INTO variable "
+            "(variable_id, register_id, provider_key, name, definition, description, "
+            " operational_definition, source_register_text, measurement_unit, "
+            " source_register_id, source_label, is_sensitive, is_identifier) "
+            "VALUES (?, ?, CAST(? AS TEXT), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            (
+                variable_id,
+                selector.register_id,
+                selector.var_id,
+                answer.label_en,
+                answer.definition_en,
+                description,
+                answer.definition_en,
+                parent["source_register_text"],
+                parent["measurement_unit"],
+                parent["source_register_id"],
+                parent["source_label"],
+                parent["is_sensitive"],
+                parent["is_identifier"],
+            ),
+        )
+        projected_cvid = projected_cvids[answer.key]
+        conn.execute(
+            "INSERT INTO variable_instance "
+            "(cvid, register_id, register_variant_id, regver_id, var_id, "
+            " variabelnamn, data_type, data_length, value_set_version_label, "
+            " vardemangdsniva, operational_definition, source_register_text, "
+            " provenance, classification_id, value_set_id, variable_id) "
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            (
+                projected_cvid,
+                selector.register_id,
+                selector.register_variant_id,
+                selector.regver_id,
+                selector.var_id,
+                answer.label_en,
+                source["data_type"],
+                source["data_length"],
+                source["value_set_version_label"],
+                source["vardemangdsniva"],
+                answer.definition_en,
+                source["source_register_text"],
+                _cis2016_answer_provenance(matrix, answer),
+                source["classification_id"],
+                source["value_set_id"],
+                variable_id,
+            ),
+        )
+        conn.executemany(
+            "INSERT INTO variable_alias_build (cvid, delivery_column_name) "
+            "VALUES (?, ?)",
+            [(projected_cvid, column) for column in sorted(answer.columns)],
+        )
+        slug_hints[variable_id] = answer.slug
+
+    return {
+        "answers": len(identities),
+        "aliases": len(matrix.columns),
+        "slug_hints": slug_hints,
+    }
+
+
 _SQL_CREATE_RE = re.compile(
     r"CREATE\s+TABLE\s+\[dbo\]\.\[(\w+)\]\s*\((.*?)\)\s*ON\s+\[PRIMARY\]",
     re.DOTALL | re.IGNORECASE,
@@ -4566,6 +4896,7 @@ class SCBAdapter:
         conn: sqlite3.Connection,
         codelivery: CodeliveryMap | None = None,
         errata: ScbErrata | None = None,
+        cis2016_matrix: Cis2016Matrix | None = None,
         *,
         value_prestage_cache: Path | None = None,
         refresh_value_prestage: bool = False,
@@ -4581,6 +4912,9 @@ class SCBAdapter:
         # Upstream-errata curation (scb_errata.py): the versions/rows SCB's
         # export omits, replayed as synthetic Registerinformation rows below.
         self.errata = errata or ScbErrata()
+        # One reviewed SCB answer partition.  Applied after value-set/PII
+        # enrichment and before generic coalescing; absent in synthetic/wheel builds.
+        self.cis2016_matrix = cis2016_matrix
         self.source_checksums: dict[str, str] = {}
         self.row_counts: dict[str, int] = {}
         self.coalesce_stats: dict[str, Any] = {}
@@ -4780,6 +5114,21 @@ class SCBAdapter:
         with _stage_timer("scb:populate_sensitivity_flags"):
             _populate_sensitivity_flags(conn)
 
+        # Y-134: the provider export gives one CVID to the 54 documented CIS
+        # 2016 matrix answers.  Project only the reviewed edition after its
+        # value set and PII flags are known, before any shared-CVID/component
+        # heuristic can collapse those meanings.
+        with _stage_timer("scb:apply_cis2016_matrix"):
+            matrix_counts = _apply_cis2016_matrix(conn, self.cis2016_matrix)
+        if matrix_counts["answers"]:
+            self.row_counts["cis2016_matrix_answers"] = matrix_counts["answers"]
+            self.row_counts["cis2016_matrix_aliases"] = matrix_counts["aliases"]
+            _progress(
+                "Applied CIS 2016 matrix partition: "
+                f"{matrix_counts['answers']:,} answer item(s), "
+                f"{matrix_counts['aliases']:,} source alias(es)."
+            )
+
         # A2.1: coalesce variable_instance rows into variable_state. Reads
         # `unika_summary` and `register_version`; must run before the
         # unika_summary DROP below.
@@ -4789,6 +5138,7 @@ class SCBAdapter:
         # R8 side channels (NOT manifest values): consumed by the materializer's
         # slug post-pass and the concept-group edge fold.
         self.fold_slug_hints = self.coalesce_stats["_fold_slug_hints"]
+        self.fold_slug_hints.update(matrix_counts["slug_hints"])
         self.sibling_edges = self.coalesce_stats["_sibling_edges"]
 
         # A2.1: drop the now-unused unika_summary table (both consumers ran).

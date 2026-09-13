@@ -1,0 +1,566 @@
+{
+  "selector": {
+    "register": "scb/innovation-foretag",
+    "register_id": 257,
+    "variant": "_default",
+    "register_variant_id": 553,
+    "edition": "2014 - 2016",
+    "regver_id": 11529,
+    "var_id": 15662,
+    "cvid": 469456
+  },
+  "evidence": {
+    "document": "SCB quality declaration, Appendix 2, historical concordance CIS2016 column",
+    "url": "https://www.scb.se/contentassets/9e6a00ac2fc7421cabab329528166232/uf0315_kd_2018_ah_191113.pdf#page=23",
+    "sha256": "68513ec189f2222986831f3042a069d66181df3fdb3619e705d0f2ef91ce8c5b",
+    "question": "Question 18 of the 2014–2016 questionnaire; mappings use the separately labelled CIS2016 concordance column on pages 23–27.",
+    "noted": "2026-09-13"
+  },
+  "question_label": "Typ av samarbetspartner geografiskt fördelat",
+  "axes": [
+    {"key": "partner", "label_en": "Cooperation partner"},
+    {"key": "response", "label_en": "Location or response"}
+  ],
+  "answers": [
+    {
+      "key": "group-enterprises-sweden",
+      "slug": "cis2016-cooperation-group-enterprises-sweden",
+      "columns": ["CO11"],
+      "label_en": "Other group enterprises — Sweden",
+      "definition_en": "Cooperation with other group enterprises in Sweden.",
+      "partner": {"key": "group_enterprises", "label_en": "Other group enterprises"},
+      "response": {"key": "sweden", "label_en": "Sweden"},
+      "source_pages": {"CO11": 23}
+    },
+    {
+      "key": "group-enterprises-other-europe",
+      "slug": "cis2016-cooperation-group-enterprises-other-europe",
+      "columns": ["CO12"],
+      "label_en": "Other group enterprises — Other Europe",
+      "definition_en": "Cooperation with other group enterprises elsewhere in Europe.",
+      "partner": {"key": "group_enterprises", "label_en": "Other group enterprises"},
+      "response": {"key": "other_europe", "label_en": "Other Europe"},
+      "source_pages": {"CO12": 23}
+    },
+    {
+      "key": "group-enterprises-usa",
+      "slug": "cis2016-cooperation-group-enterprises-usa",
+      "columns": ["CO13"],
+      "label_en": "Other group enterprises — USA",
+      "definition_en": "Cooperation with other group enterprises in the USA.",
+      "partner": {"key": "group_enterprises", "label_en": "Other group enterprises"},
+      "response": {"key": "usa", "label_en": "USA"},
+      "source_pages": {"CO13": 23}
+    },
+    {
+      "key": "group-enterprises-china-india",
+      "slug": "cis2016-cooperation-group-enterprises-china-india",
+      "columns": ["CO14"],
+      "label_en": "Other group enterprises — China or India",
+      "definition_en": "Cooperation with other group enterprises in China or India.",
+      "partner": {"key": "group_enterprises", "label_en": "Other group enterprises"},
+      "response": {"key": "china_india", "label_en": "China or India"},
+      "source_pages": {"CO14": 23}
+    },
+    {
+      "key": "group-enterprises-other-countries",
+      "slug": "cis2016-cooperation-group-enterprises-other-countries",
+      "columns": ["CO15"],
+      "label_en": "Other group enterprises — Other countries",
+      "definition_en": "Cooperation with other group enterprises in other countries.",
+      "partner": {"key": "group_enterprises", "label_en": "Other group enterprises"},
+      "response": {"key": "other_countries", "label_en": "Other countries"},
+      "source_pages": {"CO15": 23}
+    },
+    {
+      "key": "group-enterprises-not-applicable",
+      "slug": "cis2016-cooperation-group-enterprises-not-applicable",
+      "columns": ["CONA1"],
+      "label_en": "Other group enterprises — Not applicable",
+      "definition_en": "Cooperation with other group enterprises: not applicable.",
+      "partner": {"key": "group_enterprises", "label_en": "Other group enterprises"},
+      "response": {"key": "not_applicable", "label_en": "Not applicable"},
+      "source_pages": {"CONA1": 24}
+    },
+    {
+      "key": "suppliers-sweden",
+      "slug": "cis2016-cooperation-suppliers-sweden",
+      "columns": ["CO21"],
+      "label_en": "Equipment suppliers — Sweden",
+      "definition_en": "Cooperation with equipment suppliers in Sweden.",
+      "partner": {"key": "suppliers", "label_en": "Equipment suppliers"},
+      "response": {"key": "sweden", "label_en": "Sweden"},
+      "source_pages": {"CO21": 24}
+    },
+    {
+      "key": "suppliers-other-europe",
+      "slug": "cis2016-cooperation-suppliers-other-europe",
+      "columns": ["CO22"],
+      "label_en": "Equipment suppliers — Other Europe",
+      "definition_en": "Cooperation with equipment suppliers elsewhere in Europe.",
+      "partner": {"key": "suppliers", "label_en": "Equipment suppliers"},
+      "response": {"key": "other_europe", "label_en": "Other Europe"},
+      "source_pages": {"CO22": 24}
+    },
+    {
+      "key": "suppliers-usa",
+      "slug": "cis2016-cooperation-suppliers-usa",
+      "columns": ["CO23"],
+      "label_en": "Equipment suppliers — USA",
+      "definition_en": "Cooperation with equipment suppliers in the USA.",
+      "partner": {"key": "suppliers", "label_en": "Equipment suppliers"},
+      "response": {"key": "usa", "label_en": "USA"},
+      "source_pages": {"CO23": 24}
+    },
+    {
+      "key": "suppliers-china-india",
+      "slug": "cis2016-cooperation-suppliers-china-india",
+      "columns": ["CO24"],
+      "label_en": "Equipment suppliers — China or India",
+      "definition_en": "Cooperation with equipment suppliers in China or India.",
+      "partner": {"key": "suppliers", "label_en": "Equipment suppliers"},
+      "response": {"key": "china_india", "label_en": "China or India"},
+      "source_pages": {"CO24": 24}
+    },
+    {
+      "key": "suppliers-other-countries",
+      "slug": "cis2016-cooperation-suppliers-other-countries",
+      "columns": ["CO25"],
+      "label_en": "Equipment suppliers — Other countries",
+      "definition_en": "Cooperation with equipment suppliers in other countries.",
+      "partner": {"key": "suppliers", "label_en": "Equipment suppliers"},
+      "response": {"key": "other_countries", "label_en": "Other countries"},
+      "source_pages": {"CO25": 24}
+    },
+    {
+      "key": "suppliers-not-applicable",
+      "slug": "cis2016-cooperation-suppliers-not-applicable",
+      "columns": ["CONA2"],
+      "label_en": "Equipment suppliers — Not applicable",
+      "definition_en": "Cooperation with equipment suppliers: not applicable.",
+      "partner": {"key": "suppliers", "label_en": "Equipment suppliers"},
+      "response": {"key": "not_applicable", "label_en": "Not applicable"},
+      "source_pages": {"CONA2": 24}
+    },
+    {
+      "key": "private-customers-sweden",
+      "slug": "cis2016-cooperation-private-customers-sweden",
+      "columns": ["CO311"],
+      "label_en": "Private-sector customers — Sweden",
+      "definition_en": "Cooperation with private-sector customers in Sweden.",
+      "partner": {"key": "private_customers", "label_en": "Private-sector customers"},
+      "response": {"key": "sweden", "label_en": "Sweden"},
+      "source_pages": {"CO311": 24}
+    },
+    {
+      "key": "private-customers-other-europe",
+      "slug": "cis2016-cooperation-private-customers-other-europe",
+      "columns": ["CO312"],
+      "label_en": "Private-sector customers — Other Europe",
+      "definition_en": "Cooperation with private-sector customers elsewhere in Europe.",
+      "partner": {"key": "private_customers", "label_en": "Private-sector customers"},
+      "response": {"key": "other_europe", "label_en": "Other Europe"},
+      "source_pages": {"CO312": 24}
+    },
+    {
+      "key": "private-customers-usa",
+      "slug": "cis2016-cooperation-private-customers-usa",
+      "columns": ["CO313"],
+      "label_en": "Private-sector customers — USA",
+      "definition_en": "Cooperation with private-sector customers in the USA.",
+      "partner": {"key": "private_customers", "label_en": "Private-sector customers"},
+      "response": {"key": "usa", "label_en": "USA"},
+      "source_pages": {"CO313": 24}
+    },
+    {
+      "key": "private-customers-china-india",
+      "slug": "cis2016-cooperation-private-customers-china-india",
+      "columns": ["CO314"],
+      "label_en": "Private-sector customers — China or India",
+      "definition_en": "Cooperation with private-sector customers in China or India.",
+      "partner": {"key": "private_customers", "label_en": "Private-sector customers"},
+      "response": {"key": "china_india", "label_en": "China or India"},
+      "source_pages": {"CO314": 25}
+    },
+    {
+      "key": "private-customers-other-countries",
+      "slug": "cis2016-cooperation-private-customers-other-countries",
+      "columns": ["CO315"],
+      "label_en": "Private-sector customers — Other countries",
+      "definition_en": "Cooperation with private-sector customers in other countries.",
+      "partner": {"key": "private_customers", "label_en": "Private-sector customers"},
+      "response": {"key": "other_countries", "label_en": "Other countries"},
+      "source_pages": {"CO315": 25}
+    },
+    {
+      "key": "private-customers-not-applicable",
+      "slug": "cis2016-cooperation-private-customers-not-applicable",
+      "columns": ["CONA31"],
+      "label_en": "Private-sector customers — Not applicable",
+      "definition_en": "Cooperation with private-sector customers: not applicable.",
+      "partner": {"key": "private_customers", "label_en": "Private-sector customers"},
+      "response": {"key": "not_applicable", "label_en": "Not applicable"},
+      "source_pages": {"CONA31": 25}
+    },
+    {
+      "key": "public-customers-sweden",
+      "slug": "cis2016-cooperation-public-customers-sweden",
+      "columns": ["CO321"],
+      "label_en": "Public-sector customers — Sweden",
+      "definition_en": "Cooperation with public-sector customers in Sweden.",
+      "partner": {"key": "public_customers", "label_en": "Public-sector customers"},
+      "response": {"key": "sweden", "label_en": "Sweden"},
+      "source_pages": {"CO321": 25}
+    },
+    {
+      "key": "public-customers-other-europe",
+      "slug": "cis2016-cooperation-public-customers-other-europe",
+      "columns": ["CO322"],
+      "label_en": "Public-sector customers — Other Europe",
+      "definition_en": "Cooperation with public-sector customers elsewhere in Europe.",
+      "partner": {"key": "public_customers", "label_en": "Public-sector customers"},
+      "response": {"key": "other_europe", "label_en": "Other Europe"},
+      "source_pages": {"CO322": 25}
+    },
+    {
+      "key": "public-customers-usa",
+      "slug": "cis2016-cooperation-public-customers-usa",
+      "columns": ["CO323"],
+      "label_en": "Public-sector customers — USA",
+      "definition_en": "Cooperation with public-sector customers in the USA.",
+      "partner": {"key": "public_customers", "label_en": "Public-sector customers"},
+      "response": {"key": "usa", "label_en": "USA"},
+      "source_pages": {"CO323": 25}
+    },
+    {
+      "key": "public-customers-china-india",
+      "slug": "cis2016-cooperation-public-customers-china-india",
+      "columns": ["CO324"],
+      "label_en": "Public-sector customers — China or India",
+      "definition_en": "Cooperation with public-sector customers in China or India.",
+      "partner": {"key": "public_customers", "label_en": "Public-sector customers"},
+      "response": {"key": "china_india", "label_en": "China or India"},
+      "source_pages": {"CO324": 25}
+    },
+    {
+      "key": "public-customers-other-countries",
+      "slug": "cis2016-cooperation-public-customers-other-countries",
+      "columns": ["CO325"],
+      "label_en": "Public-sector customers — Other countries",
+      "definition_en": "Cooperation with public-sector customers in other countries.",
+      "partner": {"key": "public_customers", "label_en": "Public-sector customers"},
+      "response": {"key": "other_countries", "label_en": "Other countries"},
+      "source_pages": {"CO325": 25}
+    },
+    {
+      "key": "public-customers-not-applicable",
+      "slug": "cis2016-cooperation-public-customers-not-applicable",
+      "columns": ["CONA32"],
+      "label_en": "Public-sector customers — Not applicable",
+      "definition_en": "Cooperation with public-sector customers: not applicable.",
+      "partner": {"key": "public_customers", "label_en": "Public-sector customers"},
+      "response": {"key": "not_applicable", "label_en": "Not applicable"},
+      "source_pages": {"CONA32": 25}
+    },
+    {
+      "key": "competitors-sweden",
+      "slug": "cis2016-cooperation-competitors-sweden",
+      "columns": ["CO41"],
+      "label_en": "Competitors — Sweden",
+      "definition_en": "Cooperation with competitors in Sweden.",
+      "partner": {"key": "competitors", "label_en": "Competitors"},
+      "response": {"key": "sweden", "label_en": "Sweden"},
+      "source_pages": {"CO41": 25}
+    },
+    {
+      "key": "competitors-other-europe",
+      "slug": "cis2016-cooperation-competitors-other-europe",
+      "columns": ["CO42"],
+      "label_en": "Competitors — Other Europe",
+      "definition_en": "Cooperation with competitors elsewhere in Europe.",
+      "partner": {"key": "competitors", "label_en": "Competitors"},
+      "response": {"key": "other_europe", "label_en": "Other Europe"},
+      "source_pages": {"CO42": 25}
+    },
+    {
+      "key": "competitors-usa",
+      "slug": "cis2016-cooperation-competitors-usa",
+      "columns": ["CO43"],
+      "label_en": "Competitors — USA",
+      "definition_en": "Cooperation with competitors in the USA.",
+      "partner": {"key": "competitors", "label_en": "Competitors"},
+      "response": {"key": "usa", "label_en": "USA"},
+      "source_pages": {"CO43": 25}
+    },
+    {
+      "key": "competitors-china-india",
+      "slug": "cis2016-cooperation-competitors-china-india",
+      "columns": ["CO44"],
+      "label_en": "Competitors — China or India",
+      "definition_en": "Cooperation with competitors in China or India.",
+      "partner": {"key": "competitors", "label_en": "Competitors"},
+      "response": {"key": "china_india", "label_en": "China or India"},
+      "source_pages": {"CO44": 25}
+    },
+    {
+      "key": "competitors-other-countries",
+      "slug": "cis2016-cooperation-competitors-other-countries",
+      "columns": ["CO45"],
+      "label_en": "Competitors — Other countries",
+      "definition_en": "Cooperation with competitors in other countries.",
+      "partner": {"key": "competitors", "label_en": "Competitors"},
+      "response": {"key": "other_countries", "label_en": "Other countries"},
+      "source_pages": {"CO45": 25}
+    },
+    {
+      "key": "competitors-not-applicable",
+      "slug": "cis2016-cooperation-competitors-not-applicable",
+      "columns": ["CONA4"],
+      "label_en": "Competitors — Not applicable",
+      "definition_en": "Cooperation with competitors: not applicable.",
+      "partner": {"key": "competitors", "label_en": "Competitors"},
+      "response": {"key": "not_applicable", "label_en": "Not applicable"},
+      "source_pages": {"CONA4": 25}
+    },
+    {
+      "key": "consultants-sweden",
+      "slug": "cis2016-cooperation-consultants-sweden",
+      "columns": ["CO51"],
+      "label_en": "Consultants — Sweden",
+      "definition_en": "Cooperation with consultants in Sweden.",
+      "partner": {"key": "consultants", "label_en": "Consultants"},
+      "response": {"key": "sweden", "label_en": "Sweden"},
+      "source_pages": {"CO51": 25}
+    },
+    {
+      "key": "consultants-other-europe",
+      "slug": "cis2016-cooperation-consultants-other-europe",
+      "columns": ["CO52"],
+      "label_en": "Consultants — Other Europe",
+      "definition_en": "Cooperation with consultants elsewhere in Europe.",
+      "partner": {"key": "consultants", "label_en": "Consultants"},
+      "response": {"key": "other_europe", "label_en": "Other Europe"},
+      "source_pages": {"CO52": 25}
+    },
+    {
+      "key": "consultants-usa",
+      "slug": "cis2016-cooperation-consultants-usa",
+      "columns": ["CO53"],
+      "label_en": "Consultants — USA",
+      "definition_en": "Cooperation with consultants in the USA.",
+      "partner": {"key": "consultants", "label_en": "Consultants"},
+      "response": {"key": "usa", "label_en": "USA"},
+      "source_pages": {"CO53": 25}
+    },
+    {
+      "key": "consultants-china-india",
+      "slug": "cis2016-cooperation-consultants-china-india",
+      "columns": ["CO54"],
+      "label_en": "Consultants — China or India",
+      "definition_en": "Cooperation with consultants in China or India.",
+      "partner": {"key": "consultants", "label_en": "Consultants"},
+      "response": {"key": "china_india", "label_en": "China or India"},
+      "source_pages": {"CO54": 25}
+    },
+    {
+      "key": "consultants-other-countries",
+      "slug": "cis2016-cooperation-consultants-other-countries",
+      "columns": ["CO55"],
+      "label_en": "Consultants — Other countries",
+      "definition_en": "Cooperation with consultants in other countries.",
+      "partner": {"key": "consultants", "label_en": "Consultants"},
+      "response": {"key": "other_countries", "label_en": "Other countries"},
+      "source_pages": {"CO55": 26}
+    },
+    {
+      "key": "consultants-not-applicable",
+      "slug": "cis2016-cooperation-consultants-not-applicable",
+      "columns": ["CONA5"],
+      "label_en": "Consultants — Not applicable",
+      "definition_en": "Cooperation with consultants: not applicable.",
+      "partner": {"key": "consultants", "label_en": "Consultants"},
+      "response": {"key": "not_applicable", "label_en": "Not applicable"},
+      "source_pages": {"CONA5": 26}
+    },
+    {
+      "key": "universities-sweden",
+      "slug": "cis2016-cooperation-universities-sweden",
+      "columns": ["CO61"],
+      "label_en": "Universities and higher education — Sweden",
+      "definition_en": "Cooperation with universities and higher education institutions in Sweden.",
+      "partner": {"key": "universities", "label_en": "Universities and higher education"},
+      "response": {"key": "sweden", "label_en": "Sweden"},
+      "source_pages": {"CO61": 26}
+    },
+    {
+      "key": "universities-other-europe",
+      "slug": "cis2016-cooperation-universities-other-europe",
+      "columns": ["CO62"],
+      "label_en": "Universities and higher education — Other Europe",
+      "definition_en": "Cooperation with universities and higher education institutions elsewhere in Europe.",
+      "partner": {"key": "universities", "label_en": "Universities and higher education"},
+      "response": {"key": "other_europe", "label_en": "Other Europe"},
+      "source_pages": {"CO62": 26}
+    },
+    {
+      "key": "universities-usa",
+      "slug": "cis2016-cooperation-universities-usa",
+      "columns": ["CO63"],
+      "label_en": "Universities and higher education — USA",
+      "definition_en": "Cooperation with universities and higher education institutions in the USA.",
+      "partner": {"key": "universities", "label_en": "Universities and higher education"},
+      "response": {"key": "usa", "label_en": "USA"},
+      "source_pages": {"CO63": 26}
+    },
+    {
+      "key": "universities-china-india",
+      "slug": "cis2016-cooperation-universities-china-india",
+      "columns": ["CO64"],
+      "label_en": "Universities and higher education — China or India",
+      "definition_en": "Cooperation with universities and higher education institutions in China or India.",
+      "partner": {"key": "universities", "label_en": "Universities and higher education"},
+      "response": {"key": "china_india", "label_en": "China or India"},
+      "source_pages": {"CO64": 26}
+    },
+    {
+      "key": "universities-other-countries",
+      "slug": "cis2016-cooperation-universities-other-countries",
+      "columns": ["CO65"],
+      "label_en": "Universities and higher education — Other countries",
+      "definition_en": "Cooperation with universities and higher education institutions in other countries.",
+      "partner": {"key": "universities", "label_en": "Universities and higher education"},
+      "response": {"key": "other_countries", "label_en": "Other countries"},
+      "source_pages": {"CO65": 26}
+    },
+    {
+      "key": "universities-not-applicable",
+      "slug": "cis2016-cooperation-universities-not-applicable",
+      "columns": ["CONA6"],
+      "label_en": "Universities and higher education — Not applicable",
+      "definition_en": "Cooperation with universities and higher education institutions: not applicable.",
+      "partner": {"key": "universities", "label_en": "Universities and higher education"},
+      "response": {"key": "not_applicable", "label_en": "Not applicable"},
+      "source_pages": {"CONA6": 26}
+    },
+    {
+      "key": "private-research-sweden",
+      "slug": "cis2016-cooperation-private-research-sweden",
+      "columns": ["CO71"],
+      "label_en": "Private research institutes — Sweden",
+      "definition_en": "Cooperation with private research institutes in Sweden.",
+      "partner": {"key": "private_research", "label_en": "Private research institutes"},
+      "response": {"key": "sweden", "label_en": "Sweden"},
+      "source_pages": {"CO71": 26}
+    },
+    {
+      "key": "private-research-other-europe",
+      "slug": "cis2016-cooperation-private-research-other-europe",
+      "columns": ["CO72"],
+      "label_en": "Private research institutes — Other Europe",
+      "definition_en": "Cooperation with private research institutes elsewhere in Europe.",
+      "partner": {"key": "private_research", "label_en": "Private research institutes"},
+      "response": {"key": "other_europe", "label_en": "Other Europe"},
+      "source_pages": {"CO72": 26}
+    },
+    {
+      "key": "private-research-usa",
+      "slug": "cis2016-cooperation-private-research-usa",
+      "columns": ["CO73"],
+      "label_en": "Private research institutes — USA",
+      "definition_en": "Cooperation with private research institutes in the USA.",
+      "partner": {"key": "private_research", "label_en": "Private research institutes"},
+      "response": {"key": "usa", "label_en": "USA"},
+      "source_pages": {"CO73": 26}
+    },
+    {
+      "key": "private-research-china-india",
+      "slug": "cis2016-cooperation-private-research-china-india",
+      "columns": ["CO74"],
+      "label_en": "Private research institutes — China or India",
+      "definition_en": "Cooperation with private research institutes in China or India.",
+      "partner": {"key": "private_research", "label_en": "Private research institutes"},
+      "response": {"key": "china_india", "label_en": "China or India"},
+      "source_pages": {"CO74": 26}
+    },
+    {
+      "key": "private-research-other-countries",
+      "slug": "cis2016-cooperation-private-research-other-countries",
+      "columns": ["CO75"],
+      "label_en": "Private research institutes — Other countries",
+      "definition_en": "Cooperation with private research institutes in other countries.",
+      "partner": {"key": "private_research", "label_en": "Private research institutes"},
+      "response": {"key": "other_countries", "label_en": "Other countries"},
+      "source_pages": {"CO75": 26}
+    },
+    {
+      "key": "private-research-not-applicable",
+      "slug": "cis2016-cooperation-private-research-not-applicable",
+      "columns": ["CONA7"],
+      "label_en": "Private research institutes — Not applicable",
+      "definition_en": "Cooperation with private research institutes: not applicable.",
+      "partner": {"key": "private_research", "label_en": "Private research institutes"},
+      "response": {"key": "not_applicable", "label_en": "Not applicable"},
+      "source_pages": {"CONA7": 26}
+    },
+    {
+      "key": "public-research-sweden",
+      "slug": "cis2016-cooperation-public-research-sweden",
+      "columns": ["CO81"],
+      "label_en": "Public research institutes — Sweden",
+      "definition_en": "Cooperation with public research institutes in Sweden.",
+      "partner": {"key": "public_research", "label_en": "Public research institutes"},
+      "response": {"key": "sweden", "label_en": "Sweden"},
+      "source_pages": {"CO81": 27}
+    },
+    {
+      "key": "public-research-other-europe",
+      "slug": "cis2016-cooperation-public-research-other-europe",
+      "columns": ["CO82"],
+      "label_en": "Public research institutes — Other Europe",
+      "definition_en": "Cooperation with public research institutes elsewhere in Europe.",
+      "partner": {"key": "public_research", "label_en": "Public research institutes"},
+      "response": {"key": "other_europe", "label_en": "Other Europe"},
+      "source_pages": {"CO82": 27}
+    },
+    {
+      "key": "public-research-usa",
+      "slug": "cis2016-cooperation-public-research-usa",
+      "columns": ["CO83"],
+      "label_en": "Public research institutes — USA",
+      "definition_en": "Cooperation with public research institutes in the USA.",
+      "partner": {"key": "public_research", "label_en": "Public research institutes"},
+      "response": {"key": "usa", "label_en": "USA"},
+      "source_pages": {"CO83": 27}
+    },
+    {
+      "key": "public-research-china-india",
+      "slug": "cis2016-cooperation-public-research-china-india",
+      "columns": ["CO84"],
+      "label_en": "Public research institutes — China or India",
+      "definition_en": "Cooperation with public research institutes in China or India.",
+      "partner": {"key": "public_research", "label_en": "Public research institutes"},
+      "response": {"key": "china_india", "label_en": "China or India"},
+      "source_pages": {"CO84": 27}
+    },
+    {
+      "key": "public-research-other-countries",
+      "slug": "cis2016-cooperation-public-research-other-countries",
+      "columns": ["CO85"],
+      "label_en": "Public research institutes — Other countries",
+      "definition_en": "Cooperation with public research institutes in other countries.",
+      "partner": {"key": "public_research", "label_en": "Public research institutes"},
+      "response": {"key": "other_countries", "label_en": "Other countries"},
+      "source_pages": {"CO85": 27}
+    },
+    {
+      "key": "public-research-not-applicable",
+      "slug": "cis2016-cooperation-public-research-not-applicable",
+      "columns": ["CONA8"],
+      "label_en": "Public research institutes — Not applicable",
+      "definition_en": "Cooperation with public research institutes: not applicable.",
+      "partner": {"key": "public_research", "label_en": "Public research institutes"},
+      "response": {"key": "not_applicable", "label_en": "Not applicable"},
+      "source_pages": {"CONA8": 27}
+    }
+  ]
+}

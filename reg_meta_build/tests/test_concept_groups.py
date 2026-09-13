@@ -15,6 +15,7 @@ adjacent-chain succession edges (`classification_replaced_by`) are covered in
 
 from __future__ import annotations
 
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 import pytest
@@ -26,6 +27,7 @@ from _slugged_db import (
     build_slugged_db,
 )
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
+from reg_meta_build.cis2016_matrix import load_cis2016_matrix
 from reg_meta_build.concept_groups import (
     Accept,
     ClassificationGroup,
@@ -932,6 +934,72 @@ class TestCuratedGroups:
         with pytest.raises(RegMetaError) as exc:
             materialize_concept_groups(conn, (curated,), providers=_SCB)
         assert exc.value.code == "concept_groups_unresolved"
+
+
+class TestCis2016MatrixConceptGroup:
+    def test_all_answer_identities_are_explicit_two_axis_members(self) -> None:
+        curation = Path(__file__).parents[1] / "curation"
+        matrix = load_cis2016_matrix(curation / "cis2016-matrix-meaning-evidence.json")
+        assert matrix is not None
+        group = next(
+            item
+            for item in load_concept_groups(curation / "concept_groups.toml")
+            if item.key == "cis2016-cooperation-partner-by-location"
+        )
+
+        assert group.provider == "scb"
+        assert group.register == "innovation-foretag"
+        assert group.label == matrix.question_label
+        assert group.axes == (
+            ("partner", "Cooperation partner"),
+            ("response", "Location or response"),
+        )
+        assert len(group.members) == len(matrix.answers) == 54
+
+        members = {member.variable: member for member in group.members}
+        assert set(members) == {answer.slug for answer in matrix.answers}
+        for answer in matrix.answers:
+            assert members[answer.slug].delivery_column is None
+            assert members[answer.slug].coords == (
+                ("partner", answer.partner.key, answer.partner.label_en),
+                ("response", answer.response.key, answer.response.label_en),
+            )
+
+        conn = build_slugged_db(
+            register=("Innovation", "innovation-foretag", 257, 1),
+            variant=None,
+            version=None,
+            variable=None,
+            classification=None,
+        )
+        for offset, answer in enumerate(matrix.answers):
+            add_variable(
+                conn,
+                register_id=257,
+                var_id=15662000 + offset,
+                name=answer.label_en,
+                slug=answer.slug,
+            )
+        counts = materialize_concept_groups(conn, (group,), providers=_SCB)
+        assert counts["curated_groups"] == 1
+        assert len(_groups(conn)[group.key]["members"]) == 54
+
+        answers = {
+            answer.columns[0]: answer
+            for answer in matrix.answers
+            if len(answer.columns) == 1
+        }
+        co11 = answers["CO11"]
+        cona1 = answers["CONA1"]
+        assert _vid(conn, co11.slug) != _vid(conn, cona1.slug)
+        assert _facets(conn, co11.slug) == [
+            ("partner", "group_enterprises", "Other group enterprises"),
+            ("response", "sweden", "Sweden"),
+        ]
+        assert _facets(conn, cona1.slug) == [
+            ("partner", "group_enterprises", "Other group enterprises"),
+            ("response", "not_applicable", "Not applicable"),
+        ]
 
 
 class TestMultiAxisGroups:

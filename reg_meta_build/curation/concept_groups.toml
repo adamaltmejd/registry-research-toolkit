@@ -2204,3 +2204,393 @@ label = "scb/vaxtskyddsmedel/vaxtskyddsmedelsnamn"
 [[pair]]
 code  = "scb/vaxtskyddsmedel/vsid"
 label = "scb/vaxtskyddsmedel/vsnamn"
+
+# CIS 2016 question 18: 54 source-documented answer cells. These whole-variable
+# members remain separate identities; the group only presents the two reviewed
+# dimensions from the SCB concordance (pp. 23–27).
+[[variable_group]]
+register = "scb/innovation-foretag"
+key = "cis2016-cooperation-partner-by-location"
+label = "Typ av samarbetspartner geografiskt fördelat"
+axes = [
+  { axis = "partner", label = "Cooperation partner" },
+  { axis = "response", label = "Location or response" },
+]
+
+[[variable_group.members]]
+variable = "cis2016-cooperation-group-enterprises-sweden"
+coords = [
+  { axis = "partner", value = "group_enterprises", label = "Other group enterprises" },
+  { axis = "response", value = "sweden", label = "Sweden" },
+]
+
+[[variable_group.members]]
+variable = "cis2016-cooperation-group-enterprises-other-europe"
+coords = [
+  { axis = "partner", value = "group_enterprises", label = "Other group enterprises" },
+  { axis = "response", value = "other_europe", label = "Other Europe" },
+]
+
+[[variable_group.members]]
+variable = "cis2016-cooperation-group-enterprises-usa"
+coords = [
+  { axis = "partner", value = "group_enterprises", label = "Other group enterprises" },
+  { axis = "response", value = "usa", label = "USA" },
+]
+
+[[variable_group.members]]
+variable = "cis2016-cooperation-group-enterprises-china-india"
+coords = [
+  { axis = "partner", value = "group_enterprises", label = "Other group enterprises" },
+  { axis = "response", value = "china_india", label = "China or India" },
+]
+
+[[variable_group.members]]
+variable = "cis2016-cooperation-group-enterprises-other-countries"
+coords = [
+  { axis = "partner", value = "group_enterprises", label = "Other group enterprises" },
+  { axis = "response", value = "other_countries", label = "Other countries" },
+]
+
+[[variable_group.members]]
+variable = "cis2016-cooperation-group-enterprises-not-applicable"
+coords = [
+  { axis = "partner", value = "group_enterprises", label = "Other group enterprises" },
+  { axis = "response", value = "not_applicable", label = "Not applicable" },
+]
+
+[[variable_group.members]]
+variable = "cis2016-cooperation-suppliers-sweden"
+coords = [
+  { axis = "partner", value = "suppliers", label = "Equipment suppliers" },
+  { axis = "response", value = "sweden", label = "Sweden" },
+]
+
+[[variable_group.members]]
+variable = "cis2016-cooperation-suppliers-other-europe"
+coords = [
+  { axis = "partner", value = "suppliers", label = "Equipment suppliers" },
+  { axis = "response", value = "other_europe", label = "Other Europe" },
+]
+
+[[variable_group.members]]
+variable = "cis2016-cooperation-suppliers-usa"
+coords = [
+  { axis = "partner", value = "suppliers", label = "Equipment suppliers" },
+  { axis = "response", value = "usa", label = "USA" },
+]
+
+[[variable_group.members]]
+variable = "cis2016-cooperation-suppliers-china-india"
+coords = [
+  { axis = "partner", value = "suppliers", label = "Equipment suppliers" },
+  { axis = "response", value = "china_india", label = "China or India" },
+]
+
+[[variable_group.members]]
+variable = "cis2016-cooperation-suppliers-other-countries"
+coords = [
+  { axis = "partner", value = "suppliers", label = "Equipment suppliers" },
+  { axis = "response", value = "other_countries", label = "Other countries" },
+]
+
+[[variable_group.members]]
+variable = "cis2016-cooperation-suppliers-not-applicable"
+coords = [
+  { axis = "partner", value = "suppliers", label = "Equipment suppliers" },
+  { axis = "response", value = "not_applicable", label = "Not applicable" },
+]
+
+[[variable_group.members]]
+variable = "cis2016-cooperation-private-customers-sweden"
+coords = [
+  { axis = "partner", value = "private_customers", label = "Private-sector customers" },
+  { axis = "response", value = "sweden", label = "Sweden" },
+]
+
+[[variable_group.members]]
+variable = "cis2016-cooperation-private-customers-other-europe"
+coords = [
+  { axis = "partner", value = "private_customers", label = "Private-sector customers" },
+  { axis = "response", value = "other_europe", label = "Other Europe" },
+]
+
+[[variable_group.members]]
+variable = "cis2016-cooperation-private-customers-usa"
+coords = [
+  { axis = "partner", value = "private_customers", label = "Private-sector customers" },
+  { axis = "response", value = "usa", label = "USA" },
+]
+
+[[variable_group.members]]
+variable = "cis2016-cooperation-private-customers-china-india"
+coords = [
+  { axis = "partner", value = "private_customers", label = "Private-sector customers" },
+  { axis = "response", value = "china_india", label = "China or India" },
+]
+
+[[variable_group.members]]
+variable = "cis2016-cooperation-private-customers-other-countries"
+coords = [
+  { axis = "partner", value = "private_customers", label = "Private-sector customers" },
+  { axis = "response", value = "other_countries", label = "Other countries" },
+]
+
+[[variable_group.members]]
+variable = "cis2016-cooperation-private-customers-not-applicable"
+coords = [
+  { axis = "partner", value = "private_customers", label = "Private-sector customers" },
+  { axis = "response", value = "not_applicable", label = "Not applicable" },
+]
+
+[[variable_group.members]]
+variable = "cis2016-cooperation-public-customers-sweden"
+coords = [
+  { axis = "partner", value = "public_customers", label = "Public-sector customers" },
+  { axis = "response", value = "sweden", label = "Sweden" },
+]
+
+[[variable_group.members]]
+variable = "cis2016-cooperation-public-customers-other-europe"
+coords = [
+  { axis = "partner", value = "public_customers", label = "Public-sector customers" },
+  { axis = "response", value = "other_europe", label = "Other Europe" },
+]
+
+[[variable_group.members]]
+variable = "cis2016-cooperation-public-customers-usa"
+coords = [
+  { axis = "partner", value = "public_customers", label = "Public-sector customers" },
+  { axis = "response", value = "usa", label = "USA" },
+]
+
+[[variable_group.members]]
+variable = "cis2016-cooperation-public-customers-china-india"
+coords = [
+  { axis = "partner", value = "public_customers", label = "Public-sector customers" },
+  { axis = "response", value = "china_india", label = "China or India" },
+]
+
+[[variable_group.members]]
+variable = "cis2016-cooperation-public-customers-other-countries"
+coords = [
+  { axis = "partner", value = "public_customers", label = "Public-sector customers" },
+  { axis = "response", value = "other_countries", label = "Other countries" },
+]
+
+[[variable_group.members]]
+variable = "cis2016-cooperation-public-customers-not-applicable"
+coords = [
+  { axis = "partner", value = "public_customers", label = "Public-sector customers" },
+  { axis = "response", value = "not_applicable", label = "Not applicable" },
+]
+
+[[variable_group.members]]
+variable = "cis2016-cooperation-competitors-sweden"
+coords = [
+  { axis = "partner", value = "competitors", label = "Competitors" },
+  { axis = "response", value = "sweden", label = "Sweden" },
+]
+
+[[variable_group.members]]
+variable = "cis2016-cooperation-competitors-other-europe"
+coords = [
+  { axis = "partner", value = "competitors", label = "Competitors" },
+  { axis = "response", value = "other_europe", label = "Other Europe" },
+]
+
+[[variable_group.members]]
+variable = "cis2016-cooperation-competitors-usa"
+coords = [
+  { axis = "partner", value = "competitors", label = "Competitors" },
+  { axis = "response", value = "usa", label = "USA" },
+]
+
+[[variable_group.members]]
+variable = "cis2016-cooperation-competitors-china-india"
+coords = [
+  { axis = "partner", value = "competitors", label = "Competitors" },
+  { axis = "response", value = "china_india", label = "China or India" },
+]
+
+[[variable_group.members]]
+variable = "cis2016-cooperation-competitors-other-countries"
+coords = [
+  { axis = "partner", value = "competitors", label = "Competitors" },
+  { axis = "response", value = "other_countries", label = "Other countries" },
+]
+
+[[variable_group.members]]
+variable = "cis2016-cooperation-competitors-not-applicable"
+coords = [
+  { axis = "partner", value = "competitors", label = "Competitors" },
+  { axis = "response", value = "not_applicable", label = "Not applicable" },
+]
+
+[[variable_group.members]]
+variable = "cis2016-cooperation-consultants-sweden"
+coords = [
+  { axis = "partner", value = "consultants", label = "Consultants" },
+  { axis = "response", value = "sweden", label = "Sweden" },
+]
+
+[[variable_group.members]]
+variable = "cis2016-cooperation-consultants-other-europe"
+coords = [
+  { axis = "partner", value = "consultants", label = "Consultants" },
+  { axis = "response", value = "other_europe", label = "Other Europe" },
+]
+
+[[variable_group.members]]
+variable = "cis2016-cooperation-consultants-usa"
+coords = [
+  { axis = "partner", value = "consultants", label = "Consultants" },
+  { axis = "response", value = "usa", label = "USA" },
+]
+
+[[variable_group.members]]
+variable = "cis2016-cooperation-consultants-china-india"
+coords = [
+  { axis = "partner", value = "consultants", label = "Consultants" },
+  { axis = "response", value = "china_india", label = "China or India" },
+]
+
+[[variable_group.members]]
+variable = "cis2016-cooperation-consultants-other-countries"
+coords = [
+  { axis = "partner", value = "consultants", label = "Consultants" },
+  { axis = "response", value = "other_countries", label = "Other countries" },
+]
+
+[[variable_group.members]]
+variable = "cis2016-cooperation-consultants-not-applicable"
+coords = [
+  { axis = "partner", value = "consultants", label = "Consultants" },
+  { axis = "response", value = "not_applicable", label = "Not applicable" },
+]
+
+[[variable_group.members]]
+variable = "cis2016-cooperation-universities-sweden"
+coords = [
+  { axis = "partner", value = "universities", label = "Universities and higher education" },
+  { axis = "response", value = "sweden", label = "Sweden" },
+]
+
+[[variable_group.members]]
+variable = "cis2016-cooperation-universities-other-europe"
+coords = [
+  { axis = "partner", value = "universities", label = "Universities and higher education" },
+  { axis = "response", value = "other_europe", label = "Other Europe" },
+]
+
+[[variable_group.members]]
+variable = "cis2016-cooperation-universities-usa"
+coords = [
+  { axis = "partner", value = "universities", label = "Universities and higher education" },
+  { axis = "response", value = "usa", label = "USA" },
+]
+
+[[variable_group.members]]
+variable = "cis2016-cooperation-universities-china-india"
+coords = [
+  { axis = "partner", value = "universities", label = "Universities and higher education" },
+  { axis = "response", value = "china_india", label = "China or India" },
+]
+
+[[variable_group.members]]
+variable = "cis2016-cooperation-universities-other-countries"
+coords = [
+  { axis = "partner", value = "universities", label = "Universities and higher education" },
+  { axis = "response", value = "other_countries", label = "Other countries" },
+]
+
+[[variable_group.members]]
+variable = "cis2016-cooperation-universities-not-applicable"
+coords = [
+  { axis = "partner", value = "universities", label = "Universities and higher education" },
+  { axis = "response", value = "not_applicable", label = "Not applicable" },
+]
+
+[[variable_group.members]]
+variable = "cis2016-cooperation-private-research-sweden"
+coords = [
+  { axis = "partner", value = "private_research", label = "Private research institutes" },
+  { axis = "response", value = "sweden", label = "Sweden" },
+]
+
+[[variable_group.members]]
+variable = "cis2016-cooperation-private-research-other-europe"
+coords = [
+  { axis = "partner", value = "private_research", label = "Private research institutes" },
+  { axis = "response", value = "other_europe", label = "Other Europe" },
+]
+
+[[variable_group.members]]
+variable = "cis2016-cooperation-private-research-usa"
+coords = [
+  { axis = "partner", value = "private_research", label = "Private research institutes" },
+  { axis = "response", value = "usa", label = "USA" },
+]
+
+[[variable_group.members]]
+variable = "cis2016-cooperation-private-research-china-india"
+coords = [
+  { axis = "partner", value = "private_research", label = "Private research institutes" },
+  { axis = "response", value = "china_india", label = "China or India" },
+]
+
+[[variable_group.members]]
+variable = "cis2016-cooperation-private-research-other-countries"
+coords = [
+  { axis = "partner", value = "private_research", label = "Private research institutes" },
+  { axis = "response", value = "other_countries", label = "Other countries" },
+]
+
+[[variable_group.members]]
+variable = "cis2016-cooperation-private-research-not-applicable"
+coords = [
+  { axis = "partner", value = "private_research", label = "Private research institutes" },
+  { axis = "response", value = "not_applicable", label = "Not applicable" },
+]
+
+[[variable_group.members]]
+variable = "cis2016-cooperation-public-research-sweden"
+coords = [
+  { axis = "partner", value = "public_research", label = "Public research institutes" },
+  { axis = "response", value = "sweden", label = "Sweden" },
+]
+
+[[variable_group.members]]
+variable = "cis2016-cooperation-public-research-other-europe"
+coords = [
+  { axis = "partner", value = "public_research", label = "Public research institutes" },
+  { axis = "response", value = "other_europe", label = "Other Europe" },
+]
+
+[[variable_group.members]]
+variable = "cis2016-cooperation-public-research-usa"
+coords = [
+  { axis = "partner", value = "public_research", label = "Public research institutes" },
+  { axis = "response", value = "usa", label = "USA" },
+]
+
+[[variable_group.members]]
+variable = "cis2016-cooperation-public-research-china-india"
+coords = [
+  { axis = "partner", value = "public_research", label = "Public research institutes" },
+  { axis = "response", value = "china_india", label = "China or India" },
+]
+
+[[variable_group.members]]
+variable = "cis2016-cooperation-public-research-other-countries"
+coords = [
+  { axis = "partner", value = "public_research", label = "Public research institutes" },
+  { axis = "response", value = "other_countries", label = "Other countries" },
+]
+
+[[variable_group.members]]
+variable = "cis2016-cooperation-public-research-not-applicable"
+coords = [
+  { axis = "partner", value = "public_research", label = "Public research institutes" },
+  { axis = "response", value = "not_applicable", label = "Not applicable" },
+]
