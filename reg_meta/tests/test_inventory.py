@@ -143,7 +143,7 @@ def test_school_year_edition_loads_and_renders_as_its_token(tmp_path) -> None:
     inventory = load_inventory(
         _write(
             tmp_path,
-            '''
+            """
 version = 1
 steward = "swecov"
 
@@ -152,7 +152,7 @@ id = "Grundskola_2004.csv"
 edition = "LA2004"
 [[table.column]]
 name = "Betyg"
-''',
+""",
         )
     )
     edition = inventory.tables[0].edition

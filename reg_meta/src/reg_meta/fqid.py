@@ -142,8 +142,7 @@ _PERIOD_PATTERNS = (
     re.compile(rf"^{_YEAR}-H[12]\Z"),
 )
 _PERIOD_GRAMMAR = (
-    "YYYY, YYYY-MM, YYYY-MM-DD, HTYYYY/VTYYYY, LA<YYYY>, "
-    "YYYY-Q[1-4], YYYY-H[12]"
+    "YYYY, YYYY-MM, YYYY-MM-DD, HTYYYY/VTYYYY, LA<YYYY>, YYYY-Q[1-4], YYYY-H[12]"
 )
 
 # Most-specific-first so "LISA HT2020" yields "HT2020", not "2020". Word
@@ -260,9 +259,7 @@ def period_token_to_bounds(token: str) -> tuple[str, str]:
     caller validates user input here).
     """
     if not is_period(token):
-        raise FqidError(
-            f"not a period token: {token!r} (grammar: {_PERIOD_GRAMMAR})"
-        )
+        raise FqidError(f"not a period token: {token!r} (grammar: {_PERIOD_GRAMMAR})")
     if token.startswith("LA"):
         year = token[2:]
         return f"{year}-07-01", f"{int(year) + 1:04d}-06-30"
@@ -413,9 +410,7 @@ def validate_slug(
 
 def _validate_period(value: str) -> None:
     if not is_period(value):
-        raise FqidError(
-            f"invalid period: {value!r} (grammar: {_PERIOD_GRAMMAR})"
-        )
+        raise FqidError(f"invalid period: {value!r} (grammar: {_PERIOD_GRAMMAR})")
 
 
 @dataclass(frozen=True)
