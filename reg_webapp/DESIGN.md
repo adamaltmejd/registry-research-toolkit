@@ -389,8 +389,8 @@ AND zero connection opens** (wired as a pre-open `Depends`; reg_meta's `resolve_
 `reg_meta.fqid.is_period` / `validate_slug` — not re-encoded here. FastAPI-free so it's
 unit-testable in isolation.
 
-- **Period wire format**: int year (`2020` → `int`), period token (`HT2020` / `LA2020`
-  / `2020-Q3` / `2020-08` / `2018-12-31` → `str`), range (`<from>..<to>`, literal `..` →
+- **Period wire format**: int year (`2020` → `int`), period token (`HT2020` / `LA2020` /
+  `2020-Q3` / `2020-08` / `2018-12-31` → `str`), range (`<from>..<to>`, literal `..` →
   `{"from","to"}` dict), `_default` sentinel, and the **#307 comma list**
   (`2005..2010,2015..2020` → one segment per member via `parse_period_query`; #340). A
   bare year maps to `int` (the documented year arm); every other token to `str`. List

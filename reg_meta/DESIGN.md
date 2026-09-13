@@ -630,8 +630,7 @@ families*.
 `Source.period`): a bare year (`2018`), a period token
 (`"HT2020"`/`"LA2020"`/`"2020-Q3"`/`"2020-08"`/`"2018-12-31"`), an explicit range
 `{"from", "to"}` (endpoints are int or token), or the `"_default"` snapshot sentinel (no
-period filter).
-Expanded to an inclusive ISO `(lo, hi)` interval by `_period_bounds` +
+period filter). Expanded to an inclusive ISO `(lo, hi)` interval by `_period_bounds` +
 `fqid.period_token_to_bounds`, intersected against the full-date `variable_state`
 validity ranges — so sub-annual and range queries are precise, not year-granular.
 
