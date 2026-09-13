@@ -426,7 +426,7 @@ def test_an_alias_only_spelling_resolves_beside_its_state_spelling(
 ) -> None:
     """`Covid_19_antikroppar` has no `variable_state` of its own, so before the
     union it resolved to nothing at all — no mapping, hence not orderable."""
-    by_regcol, by_provcol, states_vc = build_catalog._steward_load_db(flavored_db)
+    by_regcol = build_catalog._steward_load_db(flavored_db)
 
     coord = "inera/bestallda-prover/_default"
     for spelling in ("Covid-19 antikroppar", "Covid_19_antikroppar"):
@@ -434,21 +434,9 @@ def test_an_alias_only_spelling_resolves_beside_its_state_spelling(
             "coord": coord,
             "vslug": "covid-19-antikroppar",
             "col": spelling,
-            "dtype": "varchar",
-            "isid": 0,
         }
-        # Both spellings, under the one variable, with the owning state's shape.
+        # Both spellings resolve under the one variable.
         assert by_regcol[("inera/bestallda-prover", spelling.upper())] == [record]
-        assert by_provcol[("inera", spelling.upper())] == [record]
-        # The alias carries its own window; the state spelling is NOT restated
-        # by the alias arm (it has a `variable_state` row of its own).
-        assert states_vc[(coord, "covid-19-antikroppar", spelling)] == [
-            (None, "0001-01-01", "9999-12-31")
-        ]
-        # Two spellings of one variable share a value set — never a prune.
-        assert not build_catalog._steward_codelivered(
-            states_vc, coord, "covid-19-antikroppar", spelling
-        )
     # A windowless `variable_alias` spelling is search-only: the column that
     # resolves through it today (UPPER folding onto the state spelling) keeps
     # exactly the record — and so the mapping — it already had.
@@ -457,8 +445,6 @@ def test_an_alias_only_spelling_resolves_beside_its_state_spelling(
             "coord": coord,
             "vslug": "t-kolumn",
             "col": "T_kolumn",
-            "dtype": "varchar",
-            "isid": 0,
         }
     ]
 

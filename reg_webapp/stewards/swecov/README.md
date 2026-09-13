@@ -37,7 +37,7 @@ reg-meta-build --db "$db_dir" extend-db \
     --base-db ~/.local/share/reg_meta/reg_meta.db \
     --providers-dir reg_meta_build/input_data/swecov/providers \
     --slug-dir reg_meta_build/fqid_slugs/swecov
-# 2. emit this inventory against it (also writes derived/steward_coverage.json).
+# 2. emit this inventory against it (also writes derived/inventory_worklist.json).
 #    Add `--out <checkout>/reg_webapp/stewards/swecov` when running from a git
 #    worktree: the default writes to the generator's own repo root.
 python3 reg_meta_build/input_data/swecov/build_catalog.py \
@@ -48,31 +48,12 @@ Output is deterministic (tables sorted by id, columns and mappings by coordinate
 
 ## Coverage
 
-Coverage is bounded by what reg_meta currently mints, and **rises automatically** as the
-residue below lands upstream — just regenerate against a fresh flavored DB. The current
-breakdown lives in the untracked `derived/steward_coverage.json`; as of reg_meta 0.34.0
-the inventory admits **6,674 / 7,017 = 95.1%** of physical columns. The unresolved
-residue is 343 columns. By disposition:
-
-- **other (233 columns)** — provider/register-specific residue that still needs a global
-  onboarding, alias, or modeling decision before it can resolve.
-
-- **global-provider alias gaps (89 columns)** — holdings routed to a global
-  provider/register (FOHM/FK #422, the Umeå/Läkemedelsverket/Pliktverket/Riksarkivet
-  agencies #443, AGI employer-header and utrikeshandel-tjänster #444) where some
-  delivery column names don't yet match reg_meta's — a global alias/onboarding
-  follow-up, *not* flavor-routed (scope follows what a fact is *about*, #365). The
-  inventory picks them up as those aliases land.
-
-- **survey-wave global follow-ups (21 columns)** — documented in SWECOV's delivery lists
-  but absent from reg_meta machine metadata; handled as **global** `scb_errata.toml`
-  `[[column]]` entries (`source = "steward-holdings"`), not steward flavor. The steward
-  inventory picks them up after a fresh reg_meta build/release and inventory
-  regeneration.
-
-Separately, the generator records 13 excluded pure lookup / key-crosswalk columns with
-no catalogable variables (documented non-gaps outside the coverage denominator), and 0
-pruned co-delivered value-set columns.
+Coverage is bounded by what reg_meta currently mints, and rises as upstream content
+lands. The generator prints current mapped, pivot-unmapped, unresolved and
+curated-unmapped column counts. Its untracked `derived/inventory_worklist.json` records
+tables that still need an edition or assignment and stale overlay entries; regenerate
+against a fresh flavored DB for the current state instead of keeping a version-stamped
+coverage snapshot here.
 
 Near-duplicate physical columns (`AVERAGE_SPENDING`/`AVERAGE_SPENDINGS`,
 `Covid-19 antikroppar`/`Covid_19_antikroppar`) must never be collapsed away: each

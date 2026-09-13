@@ -13,8 +13,8 @@ it is a maintainer artifact — absent in wheel installs and synthetic test buil
 and uses the same load/resolve split: structure + vocabulary are checked at load,
 FQID / short_name existence at materialize time against the built DB.
 
-The file SHIPS EMPTY today (just a documented format header). The residue
-curation itself is a deferred follow-up; the loader handles zero entries cleanly.
+The committed file carries the curated residue; the loader also handles zero entries
+cleanly.
 """
 
 from __future__ import annotations

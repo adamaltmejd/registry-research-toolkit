@@ -106,31 +106,30 @@ unchanged.
 
 ## 11 — Steward catalogs
 
-**Partially shipped.** The `swecov` steward catalog shipped in #365 PR3:
-`reg_webapp/stewards/swecov/steward.project_data.json` is committed (column-based
-admission, 67.0% physical-column coverage; see `reg_webapp/stewards/swecov/README.md`).
-The `steward` subcommand of the tracked, maintainer-run
-`input_data/swecov/build_catalog.py` generates it against the flavored reg_meta DB.
-Admission keying (#206) closed with that PR. SWECOV is the proving steward for pre-v1
-testing, so its catalog/config live in this repo for now. That is not the release
-architecture: before v1 release, extract SWECOV to its own steward repo/system and make
-that system copyable for future stewards.
+**SWECOV shipped; IFAU pending.** The `swecov` steward layer now consists of a
+hand-maintained `reg_webapp/stewards/swecov/steward.toml` identity and the generated
+`inventory.toml` delivery inventory ratified in §12. The tracked, maintainer-run
+`input_data/swecov/build_catalog.py inventory` command generates the inventory against
+the flavored reg_meta DB; it is the source of column- and edition-aware admission.
+SWECOV is the proving steward for pre-v1 testing, so its inventory/config live in this
+repo for now. That is not the release architecture: before v1 release, extract SWECOV to
+its own steward repo/system and make that system copyable for future stewards.
 
 #365 PR4 wiring: `data.swecov.se` is the SWECOV hostname, served by a separate Fly app
 (`reg-webapp-swecov`) behind the same Cloudflare Workers pattern as the global catalog.
 The SWECOV Fly jobs use the app-scoped `FLY_API_TOKEN_SWECOV` secret, not the global
-app's `FLY_API_TOKEN`. The SWECOV image bundles BOTH the committed catalog and the
+app's `FLY_API_TOKEN`. The SWECOV image bundles BOTH the committed inventory and the
 **flavored** `extend-db` DB (`REG_META_DB` pointed at it). CI keeps the generated flavor
 artifact out of git, but the SWECOV metadata is non-confidential for the current testing
 steward, so `reg_meta_swecov.db.zst` is a public GitHub release asset on the same
 `reg_meta/v*` tag as the public/global DB. The workflow synthesizes the BuildKit JSON
 manifest (`tag`, `url`, `sha256`), the bake refuses a tag/digest mismatch, and
-`reg_meta_docs.db` stays on the public release asset for that same tag. The catalog
-binds steward-only providers (`swedbank`, `region-*`, `swecov`, …) that the *global*
+`reg_meta_docs.db` stays on the public release asset for that same tag. The inventory
+maps steward-only providers (`swedbank`, `region-*`, `swecov`, …) that the *global*
 release DB does not contain, so booting `REG_WEBAPP_STEWARD=swecov` against the plain
 global asset would drop every steward-only binding as drift — the flavored DB must ship
 as the deployment's reg_meta asset, and the SWECOV smoke gate fails on any steward
-catalog drift warning. The `ifau` steward catalog has not been authored yet. The
+catalog drift warning. The `ifau` steward inventory has not been authored yet. The
 provisional seven-column order CSV is gone: both product surfaces now serve §12's
 normalized delivery manifest below.
 
