@@ -135,13 +135,12 @@ with deliberately separate homes:
   correction, not a source-instance repair.** `curation/alias_windows.toml` names the
   canonical variable FQID, variant, existing alias, and exact SCB source editions. It
   runs after variable slug assignment, requires the target's source instance in each
-  edition, validates its interval through `register_edition_claims`, and adds only
-  those claim intervals to
-  `variable_alias_window`; it never feeds alias connectivity, creates a source row, or
-  changes `variable_state`. A provenance-neutral base-column window preserves the
-  containing state's original representation, while the curated alias window carries
-  the existing `errata:scoped-attributions` contract. A declaration that the source now
-  covers fails for retirement instead of widening the alias.
+  edition, validates its interval through `register_edition_claims`, and adds only those
+  claim intervals to `variable_alias_window`; it never feeds alias connectivity, creates
+  a source row, or changes `variable_state`. A provenance-neutral base-column window
+  preserves the containing state's original representation, while the curated alias
+  window carries the existing `errata:scoped-attributions` contract. A declaration that
+  the source now covers fails for retirement instead of widening the alias.
 - **Classification links are typed, not generic state overrides.**
   `curation/classifications.toml` targets the `classification_candidate` pipeline and
   then `variable_state.classification_id`. It is NOT a generic
@@ -2033,13 +2032,13 @@ shipped state windows are deliberately left as ordinary search/header aliases; t
 not one-state representation families and need explicit curation before they can be
 picker-visible.
 
-For the distinct case where one of the variable's existing aliases is physically held
-in a source edition whose documented state uses another representative column,
+For the distinct case where one of the variable's existing aliases is physically held in
+a source edition whose documented state uses another representative column,
 `materialize_curated_alias_windows` reads `curation/alias_windows.toml` after variable
 slugs resolve. Each named edition contributes the exact, possibly disjoint intervals
 returned by `register_edition_claims`; the containing state's hull is not copied onto
-the alias. The pass inserts the state's representative window only as needed to keep
-the base representation visible. Curated windows override the expanded
+the alias. The pass inserts the state's representative window only as needed to keep the
+base representation visible. Curated windows override the expanded
 `VariableState.provenance` with correction provenance; source-derived monthly and
 multi-alias windows keep NULL and inherit their base state's provenance.
 

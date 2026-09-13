@@ -635,11 +635,10 @@ A nullable window-level `provenance` uses the same contract as
 `variable_state.provenance`: source-derived windows leave it NULL and inherit the base
 state's provenance, while an exact-edition curated alias overrides it with the
 correction class, evidence, and source-edition scope. This attributes the added
-representation without relabeling the provider-documented state.
-A variable with no window rows maps 1:1, byte-identically. The monthly merge is
-explicitly retained under #518/#523; the retention rationale and the #523↔#496 two-layer
-boundary are recorded in `reg_meta_build/DESIGN.md` → *Consumers: monthly column
-families*.
+representation without relabeling the provider-documented state. A variable with no
+window rows maps 1:1, byte-identically. The monthly merge is explicitly retained under
+#518/#523; the retention rationale and the #523↔#496 two-layer boundary are recorded in
+`reg_meta_build/DESIGN.md` → *Consumers: monthly column families*.
 
 **`Period`** — `int | str | dict`, the polymorphic period `resolve_at` accepts (mirrors
 `Source.period`): a bare year (`2018`), a period token
