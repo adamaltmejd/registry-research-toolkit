@@ -38,6 +38,8 @@ if TYPE_CHECKING:
 # sourced from it. IDs are arbitrary but stable across the helpers below.
 _SOURCE_REGISTER_ID = 1
 _CONSUMER_REGISTER_ID = 2
+_SCB_PROVIDERS = frozenset({"scb"})
+_SCB_SOS_PROVIDERS = frozenset({"scb", "sos"})
 
 
 def _new_conn() -> sqlite3.Connection:
@@ -204,8 +206,13 @@ class TestVariableStateLineage:
             tmp_path, defaults={"rtb": "folkbokforda-personer"}
         )
 
-        counts = link_variable_state_lineage(conn, slug_dir)
-        assert counts == {"edges": 1, "warnings_ambiguous": 0, "warnings_no_source": 0}
+        counts = link_variable_state_lineage(conn, slug_dir, providers=_SCB_PROVIDERS)
+        assert counts == {
+            "edges": 1,
+            "warnings_ambiguous": 0,
+            "warnings_no_source": 0,
+            "provider_skipped": 0,
+        }
         assert _edges(conn) == [(s_cons, s_src, "2021-01-01", "2021-12-31")]
         assert _warnings(conn) == []
 
@@ -235,7 +242,7 @@ class TestVariableStateLineage:
             tmp_path, defaults={"rtb": "folkbokforda-personer"}
         )
 
-        link_variable_state_lineage(conn, slug_dir)
+        link_variable_state_lineage(conn, slug_dir, providers=_SCB_PROVIDERS)
         assert _edges(conn) == [(s_cons, s_src, "2015-01-01", "9999-12-31")]
 
     def test_lineage_partial_overlap_clipped(self, tmp_path: Path):
@@ -263,7 +270,7 @@ class TestVariableStateLineage:
             tmp_path, defaults={"rtb": "folkbokforda-personer"}
         )
 
-        link_variable_state_lineage(conn, slug_dir)
+        link_variable_state_lineage(conn, slug_dir, providers=_SCB_PROVIDERS)
         assert _edges(conn) == [(s_cons, s_src, "2015-01-01", "2018-12-31")]
 
     def test_lineage_disjoint_no_edge_no_warning(self, tmp_path: Path):
@@ -293,8 +300,13 @@ class TestVariableStateLineage:
             tmp_path, defaults={"rtb": "folkbokforda-personer"}
         )
 
-        counts = link_variable_state_lineage(conn, slug_dir)
-        assert counts == {"edges": 0, "warnings_ambiguous": 0, "warnings_no_source": 0}
+        counts = link_variable_state_lineage(conn, slug_dir, providers=_SCB_PROVIDERS)
+        assert counts == {
+            "edges": 0,
+            "warnings_ambiguous": 0,
+            "warnings_no_source": 0,
+            "provider_skipped": 0,
+        }
         assert _edges(conn) == []
         assert _warnings(conn) == []
 
@@ -345,7 +357,7 @@ class TestVariableStateLineage:
             tmp_path, defaults={"rtb": "folkbokforda-personer"}
         )
 
-        counts = link_variable_state_lineage(conn, slug_dir)
+        counts = link_variable_state_lineage(conn, slug_dir, providers=_SCB_PROVIDERS)
         assert counts["edges"] == 2
         assert _edges(conn) == [
             (s_cons_old, s_src_old, "2010-01-01", "2014-12-31"),
@@ -410,12 +422,23 @@ class TestVariableStateLineage:
             valid_to="2099-12-31",
         )
         conn.commit()
-        slug_dir = _write_lineage_toml(
-            tmp_path, defaults={"rtb": "folkbokforda-personer"}
+        slug_dir = tmp_path / "lineage.toml"
+        slug_dir.write_text(
+            '[lineage."sos/par/kon-par"]\n'
+            'source_register = "rtb"\n'
+            'source_variant = "folkbokforda-personer"\n',
+            encoding="utf-8",
         )
 
-        counts = link_variable_state_lineage(conn, slug_dir)
-        assert counts == {"edges": 1, "warnings_ambiguous": 0, "warnings_no_source": 0}
+        counts = link_variable_state_lineage(
+            conn, slug_dir, providers=_SCB_SOS_PROVIDERS
+        )
+        assert counts == {
+            "edges": 1,
+            "warnings_ambiguous": 0,
+            "warnings_no_source": 0,
+            "provider_skipped": 0,
+        }
         assert _edges(conn) == [(s_cons, s_src, "2015-01-01", "2099-12-31")]
         assert _warnings(conn) == []
 
@@ -492,8 +515,13 @@ class TestVariableStateLineage:
             tmp_path, defaults={"rtb": "folkbokforda-personer"}
         )
 
-        counts = link_variable_state_lineage(conn, slug_dir)
-        assert counts == {"edges": 1, "warnings_ambiguous": 0, "warnings_no_source": 0}
+        counts = link_variable_state_lineage(conn, slug_dir, providers=_SCB_PROVIDERS)
+        assert counts == {
+            "edges": 1,
+            "warnings_ambiguous": 0,
+            "warnings_no_source": 0,
+            "provider_skipped": 0,
+        }
         assert _edges(conn) == [(s_cons, s_src, "2021-01-01", "2021-12-31")]
 
     def test_lineage_same_as_renamed_source_variable(self, tmp_path: Path):
@@ -528,8 +556,13 @@ class TestVariableStateLineage:
             tmp_path, defaults={"rtb": "folkbokforda-personer"}
         )
 
-        counts = link_variable_state_lineage(conn, slug_dir)
-        assert counts == {"edges": 1, "warnings_ambiguous": 0, "warnings_no_source": 0}
+        counts = link_variable_state_lineage(conn, slug_dir, providers=_SCB_PROVIDERS)
+        assert counts == {
+            "edges": 1,
+            "warnings_ambiguous": 0,
+            "warnings_no_source": 0,
+            "provider_skipped": 0,
+        }
         assert _edges(conn) == [(s_cons, s_src, "2018-01-01", "2018-12-31")]
 
     def test_lineage_ambiguous_variant_fallback_warns(self, tmp_path: Path):
@@ -573,8 +606,13 @@ class TestVariableStateLineage:
         # No [lineage_defaults] for rtb, no override → fallback.
         slug_dir = _write_lineage_toml(tmp_path)
 
-        counts = link_variable_state_lineage(conn, slug_dir)
-        assert counts == {"edges": 2, "warnings_ambiguous": 1, "warnings_no_source": 0}
+        counts = link_variable_state_lineage(conn, slug_dir, providers=_SCB_PROVIDERS)
+        assert counts == {
+            "edges": 2,
+            "warnings_ambiguous": 1,
+            "warnings_no_source": 0,
+            "provider_skipped": 0,
+        }
         assert _edges(conn) == [
             (s_cons, s_src_a, "2021-01-01", "2021-12-31"),
             (s_cons, s_src_b, "2021-01-01", "2021-12-31"),
@@ -625,6 +663,7 @@ class TestVariableStateLineage:
         conn.commit()
         slug_dir = _write_lineage_toml(
             tmp_path,
+            defaults={"rtb": "folkbokforda-personer"},
             overrides={
                 "lisa.kon": {
                     "source_register": "rtb",
@@ -633,8 +672,13 @@ class TestVariableStateLineage:
             },
         )
 
-        counts = link_variable_state_lineage(conn, slug_dir)
-        assert counts == {"edges": 1, "warnings_ambiguous": 0, "warnings_no_source": 0}
+        counts = link_variable_state_lineage(conn, slug_dir, providers=_SCB_PROVIDERS)
+        assert counts == {
+            "edges": 1,
+            "warnings_ambiguous": 0,
+            "warnings_no_source": 0,
+            "provider_skipped": 0,
+        }
         # Only the grund-bosattning state links — folkbokforda-personer ignored.
         assert _edges(conn) == [(s_cons, s_src_b, "2021-01-01", "2021-12-31")]
 
@@ -657,8 +701,13 @@ class TestVariableStateLineage:
             tmp_path, defaults={"rtb": "folkbokforda-personer"}
         )
 
-        counts = link_variable_state_lineage(conn, slug_dir)
-        assert counts == {"edges": 0, "warnings_ambiguous": 0, "warnings_no_source": 1}
+        counts = link_variable_state_lineage(conn, slug_dir, providers=_SCB_PROVIDERS)
+        assert counts == {
+            "edges": 0,
+            "warnings_ambiguous": 0,
+            "warnings_no_source": 1,
+            "provider_skipped": 0,
+        }
         assert _edges(conn) == []
         warns = _warnings(conn)
         assert len(warns) == 1
@@ -684,8 +733,13 @@ class TestVariableStateLineage:
             tmp_path, defaults={"rtb": "folkbokforda-personer"}
         )
 
-        counts = link_variable_state_lineage(conn, slug_dir)
-        assert counts == {"edges": 0, "warnings_ambiguous": 0, "warnings_no_source": 0}
+        counts = link_variable_state_lineage(conn, slug_dir, providers=_SCB_PROVIDERS)
+        assert counts == {
+            "edges": 0,
+            "warnings_ambiguous": 0,
+            "warnings_no_source": 0,
+            "provider_skipped": 0,
+        }
 
     def test_lineage_self_sourced_variable_skipped(self, tmp_path: Path):
         """source_register_id == own register_id is also excluded (a variable
@@ -722,8 +776,13 @@ class TestVariableStateLineage:
             tmp_path, defaults={"rtb": "folkbokforda-personer"}
         )
 
-        counts = link_variable_state_lineage(conn, slug_dir)
-        assert counts == {"edges": 0, "warnings_ambiguous": 0, "warnings_no_source": 0}
+        counts = link_variable_state_lineage(conn, slug_dir, providers=_SCB_PROVIDERS)
+        assert counts == {
+            "edges": 0,
+            "warnings_ambiguous": 0,
+            "warnings_no_source": 0,
+            "provider_skipped": 0,
+        }
 
     def test_lineage_override_mismatched_register_fails(self, tmp_path: Path):
         """An override whose source_register contradicts the variable's resolved
@@ -761,7 +820,7 @@ class TestVariableStateLineage:
         )
 
         with pytest.raises(RegMetaError) as exc:
-            link_variable_state_lineage(conn, slug_dir)
+            link_variable_state_lineage(conn, slug_dir, providers=_SCB_PROVIDERS)
         assert exc.value.code == "lineage_override_register_mismatch"
         assert "rams" in exc.value.message
         assert "rtb" in exc.value.message
@@ -793,9 +852,79 @@ class TestVariableStateLineage:
         )
 
         with pytest.raises(RegMetaError) as exc:
-            link_variable_state_lineage(conn, slug_dir)
+            link_variable_state_lineage(conn, slug_dir, providers=_SCB_PROVIDERS)
         assert exc.value.code == "lineage_pin_unknown_variant"
         assert "nonexistent-variant" in exc.value.message
+
+    def test_lineage_unused_default_unknown_register_fails(self, tmp_path: Path):
+        """An included-provider default is validated even when no consumer state
+        uses it."""
+        conn = _new_conn()
+        path = tmp_path / "lineage.toml"
+        path.write_text(
+            '[lineage_defaults]\n"scb/missing-register" = "missing-variant"\n',
+            encoding="utf-8",
+        )
+
+        with pytest.raises(RegMetaError) as exc:
+            link_variable_state_lineage(conn, path, providers=_SCB_PROVIDERS)
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert exc.value.code == "lineage_pin_unknown_register"
+        assert "scb/missing-register" in exc.value.message
+
+    def test_lineage_unused_override_unknown_consumer_fails(self, tmp_path: Path):
+        """An included-provider override must name a live consumer variable even
+        when no matching consumer state would reach the application loop."""
+        conn = _new_conn()
+        add_register(conn, register_id=1, slug="present", name="Present")
+        path = tmp_path / "lineage.toml"
+        path.write_text(
+            '[lineage."scb/present/missing-variable"]\n'
+            'source_register = "missing-register"\n'
+            'source_variant = "missing-variant"\n',
+            encoding="utf-8",
+        )
+
+        with pytest.raises(RegMetaError) as exc:
+            link_variable_state_lineage(conn, path, providers=_SCB_PROVIDERS)
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert exc.value.code == "lineage_override_unknown_consumer"
+        assert "scb/present/missing-variable" in exc.value.message
+
+    def test_lineage_excluded_provider_entries_are_counted_and_skipped(
+        self, tmp_path: Path
+    ):
+        conn = _new_conn()
+        path = tmp_path / "lineage.toml"
+        path.write_text(
+            '[lineage_defaults]\n"sos/missing-register" = "missing-variant"\n'
+            '[lineage."sos/present/missing-variable"]\n'
+            'source_register = "missing-register"\n'
+            'source_variant = "missing-variant"\n',
+            encoding="utf-8",
+        )
+
+        counts = link_variable_state_lineage(conn, path, providers=_SCB_PROVIDERS)
+        assert counts == {
+            "edges": 0,
+            "warnings_ambiguous": 0,
+            "warnings_no_source": 0,
+            "provider_skipped": 2,
+        }
+
+    def test_lineage_malformed_excluded_provider_entry_fails(self, tmp_path: Path):
+        conn = _new_conn()
+        path = tmp_path / "lineage.toml"
+        path.write_text(
+            '[lineage."sos/present/missing-variable"]\n'
+            'source_register = "missing-register"\n',
+            encoding="utf-8",
+        )
+
+        with pytest.raises(RegMetaError) as exc:
+            link_variable_state_lineage(conn, path, providers=_SCB_PROVIDERS)
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert exc.value.code == "lineage_override_incomplete"
 
 
 class TestLoadLineageConfig:

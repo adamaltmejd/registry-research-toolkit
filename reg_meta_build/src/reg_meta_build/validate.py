@@ -1977,7 +1977,9 @@ def _check_concept_groups(
         elif n_curated >= 1:
             result.ok(f"{n_curated} curated group(s) (>= 1)")
         else:
-            result.fail("no curated concept groups (curation/concept_groups.toml not applied?)")
+            result.fail(
+                "no curated concept groups (curation/concept_groups.toml not applied?)"
+            )
     # Derived (`source='token'`) classification vintage families no longer fold
     # here (#571) — they materialize as succession edges, asserted-empty
     # (structural) above and floored in `_check_classification_replaced_by`. Only

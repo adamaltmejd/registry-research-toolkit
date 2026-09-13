@@ -50,7 +50,9 @@ def main() -> None:
     parser.add_argument("before", type=Path)
     parser.add_argument("after", type=Path)
     parser.add_argument(
-        "--codelivery", type=Path, default=Path("reg_meta_build/curation/codelivery.toml")
+        "--codelivery",
+        type=Path,
+        default=Path("reg_meta_build/curation/codelivery.toml"),
     )
     args = parser.parse_args()
     conn = _connect(args.before, args.after)

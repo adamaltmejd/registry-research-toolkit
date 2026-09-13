@@ -152,8 +152,7 @@ class TestLoader:
     def test_excluded_provider_shape_is_still_validated(self, tmp_path: Path) -> None:
         toml = _write(
             tmp_path / "delivery_enrichment.generated.toml",
-            '[[description]]\nregister = "sos/par"\n'
-            'description = "missing variable"\n',
+            '[[description]]\nregister = "sos/par"\ndescription = "missing variable"\n',
         )
         with pytest.raises(RegMetaError) as exc:
             load_delivery_enrichment(toml)

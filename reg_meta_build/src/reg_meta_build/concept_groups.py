@@ -864,9 +864,7 @@ def load_code_label_pairs(path: Path | None) -> tuple[CodeLabelPair, ...]:
         code_base="code_label_pairs",
         file_name="curation/concept_groups.toml",
         entry_fields="code / label (both 3-segment FQIDs)",
-        sibling_keys=frozenset(
-            {"variable_group", "accept", "classification_group"}
-        ),
+        sibling_keys=frozenset({"variable_group", "accept", "classification_group"}),
     )
     out: list[CodeLabelPair] = []
     seen_pairs: set[tuple[tuple[str, str, str], tuple[str, str, str]]] = set()

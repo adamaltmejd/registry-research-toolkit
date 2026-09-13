@@ -341,9 +341,7 @@ def test_repo_delivery_enrichment_tracks_curated_lisa_sni_slugs() -> None:
 
 
 def test_repo_period_family_merges_parses() -> None:
-    families = load_period_family_merges(
-        _CURATION / "period_family_merges.toml"
-    )
+    families = load_period_family_merges(_CURATION / "period_family_merges.toml")
     assert families  # the #319 LISA monthly families ship with the repo
     # Member RESOLUTION (12 month columns exist for the stem) is maintainer-build
     # territory (the materializer fails fast); load-time shape is this gate.

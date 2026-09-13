@@ -2676,7 +2676,7 @@ def load_lineage_config(path: Path | None) -> LineageConfig:
         raise _err(
             "lineage_invalid",
             f"{path.name}: unknown top-level key(s): {sorted(unknown_top)}.",
-            "Use only [lineage_defaults] and [lineage.\"<consumer FQID>\"] "
+            'Use only [lineage_defaults] and [lineage."<consumer FQID>"] '
             "tables in reg_meta_build/curation/lineage.toml.",
         )
 
@@ -2734,14 +2734,12 @@ def load_lineage_config(path: Path | None) -> LineageConfig:
             )
         source_register = block.get("source_register")
         source_variant = block.get("source_variant")
-        if not isinstance(source_register, str) or not isinstance(
-            source_variant, str
-        ):
+        if not isinstance(source_register, str) or not isinstance(source_variant, str):
             raise _err(
                 "lineage_override_incomplete",
                 f"{path.name}: [lineage.{consumer_fqid!r}] requires string "
                 "source_register and source_variant keys.",
-                "Set both keys, e.g. source_register = \"rams\" and "
+                'Set both keys, e.g. source_register = "rams" and '
                 'source_variant = "individregister".',
             )
         overrides[(consumer_parts[0], consumer_parts[1], consumer_parts[2])] = (

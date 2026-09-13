@@ -3141,9 +3141,7 @@ class TestCuratedClassificationLinks:
         from reg_meta_build.classification_links import load_classification_links
 
         path = (
-            Path(__file__).resolve().parent.parent
-            / "curation"
-            / "classifications.toml"
+            Path(__file__).resolve().parent.parent / "curation" / "classifications.toml"
         )
         assert path.is_file(), "curation/classifications.toml must ship in the repo"
         expected = {

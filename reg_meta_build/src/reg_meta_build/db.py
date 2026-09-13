@@ -35,6 +35,7 @@ from ._curation import (
     curation_error,
     fold_column,
     repo_curation_path,
+    resolve_register_id,
     resolve_variable_id,
 )
 from .classification_links import (
@@ -2628,6 +2629,8 @@ def _variable_set_via_same_as(
 def link_variable_state_lineage(
     conn: sqlite3.Connection,
     lineage_path: Path | None,
+    *,
+    providers: frozenset[str],
 ) -> dict[str, int]:
     """Materialize state-pair interval-overlap lineage edges.
 
@@ -2652,18 +2655,37 @@ def link_variable_state_lineage(
 
     A2.7 made this the SOLE lineage linker — the v0.11 `link_consumer_side_bindings`
     (which only set the now-dropped `variable_instance.via_source_id`) was deleted.
-    Returns {'edges', 'warnings_ambiguous', 'warnings_no_source'} counts.
+    ``providers`` is the explicit set selected for this build. Curation entries
+    associated with an excluded provider are skipped and counted; every entry
+    for an included provider is resolved before state iteration, so an unused
+    dangling pin cannot silently pass.
 
-    Raises `RegMetaError` on contradictory curation: an override whose
-    `source_register` disagrees with the variable's resolved
+    Returns {'edges', 'warnings_ambiguous', 'warnings_no_source',
+    'provider_skipped'} counts.
+
+    Raises `RegMetaError` on dangling included-provider curation, an override
+    whose `source_register` disagrees with the variable's resolved
     `source_register_id`, or a pin naming a variant that doesn't exist in the
     source register.
     """
     config = load_lineage_config(lineage_path)
 
-    # Resolve every override's source register/variant to a register_variant_id
-    # up front; this also validates the named variants exist (fail-fast). Cache
-    # variant-slug→id per register so we touch the DB once per source register.
+    # The loader shape-validates the WHOLE file before this provider filter. An
+    # entry's provider association is its source provider for defaults and its
+    # consumer provider for overrides.
+    defaults = {
+        key: variant for key, variant in config.defaults.items() if key[0] in providers
+    }
+    overrides = {
+        key: target for key, target in config.overrides.items() if key[0] in providers
+    }
+    provider_skipped = (
+        len(config.defaults) + len(config.overrides) - len(defaults) - len(overrides)
+    )
+
+    # Resolve every included pin to a register_variant_id up front; this also
+    # validates unused catalog targets (fail-fast). Cache variant-slug→id per
+    # register so validation and application touch the DB once per source register.
     # Keyed (provider_slug, register_slug): register.slug is NOT globally unique,
     # so a pin for a source register must not resolve to another provider's
     # variant that happens to share the register + variant slug (Codex P2 on #144).
@@ -2689,6 +2711,16 @@ def link_variable_state_lineage(
     def _pin_variant_id(
         provider_slug: str, register_slug: str, variant_slug: str, *, source: str
     ) -> int:
+        if resolve_register_id(conn, provider_slug, register_slug) is None:
+            raise curation_error(
+                "lineage_pin_unknown_register",
+                f"{source}: source register {provider_slug}/{register_slug} "
+                "not found in this build.",
+                (
+                    "Fix the lineage pin to name a real source-register FQID "
+                    "for a provider included in this build."
+                ),
+            )
         variant_id = _variants_for(provider_slug, register_slug).get(variant_slug)
         if variant_id is None:
             raise RegMetaError(
@@ -2706,6 +2738,68 @@ def link_variable_state_lineage(
                 ),
             )
         return variant_id
+
+    default_variant_ids = {
+        key: _pin_variant_id(
+            key[0],
+            key[1],
+            variant,
+            source=f"[lineage_defaults] {key[0]}/{key[1]}",
+        )
+        for key, variant in defaults.items()
+    }
+    override_variant_ids: dict[tuple[str, str, str], int] = {}
+    for key, (override_register, override_variant) in overrides.items():
+        consumer_provider, consumer_register, consumer_slug = key
+        source = f'[lineage."{consumer_provider}/{consumer_register}/{consumer_slug}"]'
+        consumer_variable_id = resolve_variable_id(
+            conn, consumer_provider, consumer_register, consumer_slug
+        )
+        if consumer_variable_id is None:
+            raise curation_error(
+                "lineage_override_unknown_consumer",
+                f"{source}: consumer variable does not resolve in this build.",
+                (
+                    "Fix the lineage override to name a real consumer-variable "
+                    "FQID for a provider included in this build."
+                ),
+            )
+        resolved_source = conn.execute(
+            "SELECT sp.slug, sr.slug "
+            "FROM variable v "
+            "LEFT JOIN register sr ON v.source_register_id = sr.register_id "
+            "LEFT JOIN provider sp ON sr.provider_id = sp.provider_id "
+            "WHERE v.variable_id = ?",
+            (consumer_variable_id,),
+        ).fetchone()
+        if resolved_source is None or resolved_source[0] is None:
+            raise curation_error(
+                "lineage_override_missing_source_register",
+                f"{source}: consumer variable has no resolved source register.",
+                (
+                    "Remove the override or correct the consumer variable's "
+                    "source-register attribution."
+                ),
+            )
+        source_provider, source_register = resolved_source
+        if override_register != source_register:
+            raise curation_error(
+                "lineage_override_register_mismatch",
+                (
+                    f"{source}: source_register {override_register!r} contradicts "
+                    f"the variable's resolved source register {source_register!r}."
+                ),
+                (
+                    "Fix the override's source_register to match the variable's "
+                    "variable_register_kalla attribution, or remove the override."
+                ),
+            )
+        override_variant_ids[key] = _pin_variant_id(
+            source_provider,
+            source_register,
+            override_variant,
+            source=source,
+        )
 
     # Consumer states whose variable is sourced from a *different* register.
     # ORDER BY state_id pins deterministic warning-emission order.
@@ -2774,48 +2868,13 @@ def link_variable_state_lineage(
 
         # Resolve the pinned source variant(s). None = register-level fallback
         # (all variants that carry a matching state) + ambiguous warning.
-        override = config.overrides.get(
-            (consumer_provider, consumer_register, consumer_slug)
-        )
+        consumer_key = (consumer_provider, consumer_register, consumer_slug)
         pinned_variant_ids: list[int] | None
-        if override is not None:
-            override_register, override_variant = override
-            if override_register != source_register:
-                raise RegMetaError(
-                    exit_code=EXIT_CONFIG,
-                    code="lineage_override_register_mismatch",
-                    error_class="configuration",
-                    message=(
-                        f'[lineage."{consumer_provider}/{consumer_register}/'
-                        f'{consumer_slug}"]: '
-                        f"source_register {override_register!r} contradicts the "
-                        f"variable's resolved source register {source_register!r}."
-                    ),
-                    remediation=(
-                        "Fix the override's source_register to match the "
-                        "variable's variable_register_kalla attribution, or "
-                        "remove the override."
-                    ),
-                )
+        if consumer_key in override_variant_ids:
+            pinned_variant_ids = [override_variant_ids[consumer_key]]
+        elif (source_provider, source_register) in default_variant_ids:
             pinned_variant_ids = [
-                _pin_variant_id(
-                    source_provider,
-                    source_register,
-                    override_variant,
-                    source=(
-                        f'[lineage."{consumer_provider}/{consumer_register}/'
-                        f'{consumer_slug}"]'
-                    ),
-                )
-            ]
-        elif (source_provider, source_register) in config.defaults:
-            pinned_variant_ids = [
-                _pin_variant_id(
-                    source_provider,
-                    source_register,
-                    config.defaults[(source_provider, source_register)],
-                    source=f"[lineage_defaults] {source_provider}/{source_register}",
-                )
+                default_variant_ids[(source_provider, source_register)]
             ]
         else:
             pinned_variant_ids = None  # register-level fallback
@@ -2914,12 +2973,15 @@ def link_variable_state_lineage(
         "edges": len(edges),
         "warnings_ambiguous": len(warnings_ambiguous),
         "warnings_no_source": len(warnings_no_source),
+        "provider_skipped": provider_skipped,
     }
-    if consumer_rows:
+    if consumer_rows or provider_skipped:
         _progress(
             f"  Variable state lineage edges: {counts['edges']:,} emitted, "
             f"{counts['warnings_ambiguous']:,} ambiguous-variant, "
-            f"{counts['warnings_no_source']:,} no-source warnings"
+            f"{counts['warnings_no_source']:,} no-source warnings; "
+            f"{counts['provider_skipped']:,} curation entries skipped — "
+            "provider not in build"
         )
     return counts
 
@@ -4661,7 +4723,9 @@ def materialize(
         # linker would silently emit zero edges instead of an honest
         # incompleteness signal.
         lineage_counts = link_variable_state_lineage(
-            conn, repo_curation_path("lineage.toml")
+            conn,
+            repo_curation_path("lineage.toml"),
+            providers=active_providers,
         )
         row_counts["variable_state_lineage"] = lineage_counts["edges"]
         row_counts["variable_state_lineage_warnings"] = (
