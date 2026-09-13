@@ -188,16 +188,20 @@ class TestDeliveredApplication:
 
         assert _apply_delivered(conn)["rows"] == 1
 
-        assert conn.execute(
-            "SELECT * FROM variable_instance WHERE cvid = 9311"
-        ).fetchone() == before
+        assert (
+            conn.execute("SELECT * FROM variable_instance WHERE cvid = 9311").fetchone()
+            == before
+        )
         assert conn.execute(
             "SELECT cvid, delivery_column_name FROM variable_alias_build "
             "WHERE cvid = 9311"
         ).fetchall() == [(9311, "DispCol")]
-        assert conn.execute(
-            "SELECT COUNT(*) FROM variable_instance WHERE regver_id = 101"
-        ).fetchone()[0] == 1
+        assert (
+            conn.execute(
+                "SELECT COUNT(*) FROM variable_instance WHERE regver_id = 101"
+            ).fetchone()[0]
+            == 1
+        )
         conn.close()
 
     def test_other_column_is_refused_and_named(self) -> None:
@@ -234,9 +238,7 @@ class TestDeliveredApplication:
             "(9312, 1, 10, 102, 931, 'Source name', 'varchar', '10', "
             "'source coding', '1', 'source operation', 'source register', 77)"
         )
-        conn.execute(
-            "INSERT INTO variable_alias_build VALUES (9312, 'RivalCol')"
-        )
+        conn.execute("INSERT INTO variable_alias_build VALUES (9312, 'RivalCol')")
         errata = ScbErrata(
             delivered=tuple(
                 ErrataDelivered(
