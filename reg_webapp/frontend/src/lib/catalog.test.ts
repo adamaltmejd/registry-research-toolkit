@@ -4507,6 +4507,52 @@ describe("distinctValueSets (#668 — value-set-centric fold)", () => {
     ]);
   });
 
+  it.each([
+    ["continuing column first", 2, 3, false],
+    ["added alias first", 3, 2, true],
+  ])(
+    "does not report a replacement when a successor adds an alias (%s)",
+    (_label, continuingStateId, aliasStateId, reverseSuccessors) => {
+      const predecessor = state({
+        state_id: 1,
+        value_set_id: 1,
+        variant: "individer",
+        valid_from: "2017-01-01",
+        valid_to: "2017-12-31",
+        delivery_column_name: "A",
+      });
+      const continuing = state({
+        state_id: continuingStateId,
+        value_set_id: 1,
+        variant: "individer",
+        valid_from: "2018-01-01",
+        valid_to: "2018-12-31",
+        delivery_column_name: "A",
+      });
+      const alias = state({
+        state_id: aliasStateId,
+        value_set_id: 1,
+        variant: "individer",
+        valid_from: "2018-01-01",
+        valid_to: "2018-12-31",
+        delivery_column_name: "B",
+      });
+      const successors = reverseSuccessors
+        ? [alias, continuing]
+        : [continuing, alias];
+
+      const usage = distinctValueSets([predecessor, ...successors])[0].usages[0];
+      expect(
+        usage.states
+          .filter((s) => s.valid_from === "2018-01-01")
+          .map((s) => s.delivery_column_name),
+      ).toEqual(["A", "B"]);
+      expect(usage.spans).toEqual([
+        { from: "2017-01-01", to: "2018-12-31" },
+      ]);
+    },
+  );
+
   it("does not report technical changes for same-state monthly windows", () => {
     const states = [
       state({
