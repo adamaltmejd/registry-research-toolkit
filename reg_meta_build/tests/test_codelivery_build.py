@@ -477,8 +477,8 @@ class TestResidualClampReconciliation:
     def test_nested_length_drift_folds_to_one(self, tmp_path: Path) -> None:
         # Younger span 2018-2020 (len 5) sits inside older 2016-2022 (len 3). Same
         # value set/label/column → #526 folds both into ONE state over the older's
-        # full span. Latest era here is the younger (regver 1860+ > 1760+), so the
-        # displayed length is 5.
+        # full span. Claimed-year chronology makes the edition extending through
+        # 2022 latest despite its lower regver ids, so the displayed length is 3.
         ri_old, vm_old = self._drift_rows(
             colname="DropCol",
             var_id=1760,
@@ -504,4 +504,4 @@ class TestResidualClampReconciliation:
         # One folded state over the union span; latest era's length displayed.
         assert len(rows) == 1
         assert (rows[0][0][:4], rows[0][1][:4]) == ("2016", "2022")
-        assert rows[0][2] == "5"
+        assert rows[0][2] == "3"

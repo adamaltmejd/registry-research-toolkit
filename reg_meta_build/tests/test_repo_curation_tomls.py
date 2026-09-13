@@ -53,7 +53,11 @@ def test_repo_codeless_overlap_parses() -> None:
     # #868: the residual worklist is curated in-repo — the loader must accept it as
     # well-formed (a malformed entry or header would raise here). It loads to a
     # non-empty map of (register, variable, column) → (resolution, extend_label).
-    assert load_codeless_overlap(_ROOT / "codeless_overlap.toml")
+    curation = load_codeless_overlap(_ROOT / "codeless_overlap.toml")
+    assert curation
+    assert curation[
+        ("scb", "lastbilstrafik", "varukod-sandning", "varukod")
+    ] == ("cap", None)
 
 
 def test_repo_concept_groups_parses() -> None:

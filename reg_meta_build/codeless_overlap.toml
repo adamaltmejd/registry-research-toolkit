@@ -342,6 +342,14 @@ variable = "naringsgren"
 column = "SNI"
 resolution = "cap"
 
+# lastbilstrafik/varukod-sandning col=VaruKod  ::  uncoded 2000-2007; vs214 2006; vs1783 2008
+[[resolve]]
+provider = "scb"
+register = "lastbilstrafik"
+variable = "varukod-sandning"
+column = "VaruKod"
+resolution = "cap"
+
 # linda/hogsta-utbildning-avslutningsar col=BSUNAR  ::  vs27 'År'
 [[resolve]]
 provider = "scb"

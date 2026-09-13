@@ -2,7 +2,7 @@
 (#868): the `codeless_overlap.py` loader and the `db.py` materialization pass
 `_resolve_curated_codeless_overlaps` + its mandatory-curation gate.
 
-Two halves:
+Three layers:
   - Loader validation — mirrors `TestLoadCodelivery` in `test_triage.py`: bad
     directive, missing/forbidden `extend`, blank key parts, duplicate key, malformed
     TOML → EXIT_CONFIG.
@@ -12,6 +12,9 @@ Two halves:
     unresolvable-extend failure, and the post-resolution mandatory-curation gate —
     both buckets: uncurated keys and a curated entry whose resolution leaves a
     residual overlap.
+  - Build integration — a reversed-id, mixed-case SCB edition sequence exercises
+    claimed-year alias selection before the literal-column overlap gate, then proves
+    an exact `cap` keeps both uncoded tails and leaves the coded years unchanged.
 """
 
 from __future__ import annotations
@@ -20,6 +23,8 @@ import sqlite3
 from typing import TYPE_CHECKING
 
 import pytest
+from _csv_fixtures import _var_row
+from _shared_fixtures import CODING_A, CODING_B, build_with_rows, vm_rows
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta_build.codeless_overlap import load_codeless_overlap
 from reg_meta_build.db import _resolve_curated_codeless_overlaps
@@ -218,6 +223,95 @@ class TestLoadCodelessOverlap:
     def test_missing_file_is_empty(self, tmp_path: Path) -> None:
         assert load_codeless_overlap(tmp_path / "nope.toml") == {}
         assert load_codeless_overlap(None) == {}
+
+
+class TestBuildIntegration:
+    def test_claimed_year_alias_exposes_interior_overlap_for_cap(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        # SCB's real lastbilstrafik shape: the 2000 code-less row has the higher
+        # regver id and spells the column `Varukod`, while the chronologically
+        # latest code-less row (2007) spells it `VaruKod`, like the coded 2006/2008
+        # rows. Claimed-year selection therefore exposes the literal-column
+        # overlap that highest-id selection hid.
+        ri = [
+            _var_row(
+                colname="Varukod",
+                cvid=106581,
+                var_id=2061,
+                varname="Varukod sändning",
+                year="2000",
+                regver_id=1377,
+            ),
+            _var_row(
+                colname="VaruKod",
+                cvid=15489,
+                var_id=2061,
+                varname="Varukod sändning",
+                year="2007",
+                regver_id=696,
+            ),
+            _var_row(
+                colname="VaruKod",
+                cvid=15488,
+                var_id=2061,
+                varname="Varukod sändning",
+                year="2006",
+                regver_id=695,
+            ),
+            _var_row(
+                colname="VaruKod",
+                cvid=15490,
+                var_id=2061,
+                varname="Varukod sändning",
+                year="2008",
+                regver_id=697,
+            ),
+        ]
+        vm = vm_rows(15488, "Goods 2006", CODING_A) + vm_rows(
+            15490, "Goods 2008", CODING_B
+        )
+
+        uncurated = tmp_path / "uncurated"
+        uncurated.mkdir()
+        with pytest.raises(RegMetaError) as exc:
+            build_with_rows(uncurated, ri, vm)
+        assert exc.value.code == "codeless_overlap_uncurated_residual"
+        assert "('scb', 'testreg', 'varukod', 'varukod')" in exc.value.message
+
+        curation = tmp_path / "codeless_overlap.toml"
+        curation.write_text(
+            '[[resolve]]\nprovider = "scb"\nregister = "testreg"\n'
+            'variable = "varukod"\ncolumn = "varukod"\n'
+            'resolution = "cap"\n',
+            encoding="utf-8",
+        )
+        import reg_meta_build.db as db_module
+
+        monkeypatch.setattr(db_module, "repo_codeless_overlap_path", lambda: curation)
+        capped = tmp_path / "capped"
+        capped.mkdir()
+        conn = build_with_rows(capped, ri, vm)
+        try:
+            rows = conn.execute(
+                "SELECT vs.valid_from, vs.valid_to, vs.value_set_id, "
+                "vs.value_set_version_label, vs.delivery_column_name "
+                "FROM variable_state vs "
+                "JOIN variable v ON v.variable_id = vs.variable_id "
+                "WHERE v.slug = 'varukod' "
+                "ORDER BY vs.valid_from"
+            ).fetchall()
+        finally:
+            conn.close()
+
+        assert [
+            (row[0][:4], row[1][:4], row[2] is None, row[3], row[4]) for row in rows
+        ] == [
+            ("2000", "2005", True, "", "VaruKod"),
+            ("2006", "2006", False, "Goods 2006", "VaruKod"),
+            ("2007", "2007", True, "", "VaruKod"),
+            ("2008", "2008", False, "Goods 2008", "VaruKod"),
+        ]
 
 
 # ── materialization pass ─────────────────────────────────────────────────────
