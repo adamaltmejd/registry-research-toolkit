@@ -125,6 +125,9 @@ _COLUMN_FIELDS = frozenset(
 # needs, so it is a closed vocabulary rather than free text.
 _SOURCES = frozenset({"scb-docs", "steward-holdings"})
 _DEFAULT_DELIVERED_CLASS = "omitted-column-in-version"
+_RESERVED_CORRECTION_CLASSES = frozenset(
+    {"scoped-attributions", "overlapping-attributions"}
+)
 
 # `data_type` vocabulary, shared with `input_data/scb_canonical/scb_canonical.toml`
 # (CanonicalScbAdapter). Stored verbatim on the synthetic row; the gate keeps a
@@ -339,6 +342,23 @@ def _state_provenance(class_name: str, evidence: str) -> str:
     with a scoped-attributions value that retains every edition/evidence pair;
     correction-only overlaps use the same records under overlapping-attributions.
     """
+    if class_name in _RESERVED_CORRECTION_CLASSES:
+        raise curation_error(
+            _CODE,
+            f"scb_errata correction class {class_name!r} is reserved for "
+            "builder-generated scoped provenance.",
+            "Use a specific upstream correction class instead.",
+        )
+    for field, value in (
+        ("`upstream` correction class", class_name),
+        ("`evidence`", evidence),
+    ):
+        if "\n" in value or "\r" in value:
+            raise curation_error(
+                _CODE,
+                f"scb_errata {field} cannot contain line breaks.",
+                "Keep that value on one line.",
+            )
     return f"errata:{class_name}\n{evidence}"
 
 

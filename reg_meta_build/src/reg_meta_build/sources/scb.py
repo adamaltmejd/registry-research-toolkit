@@ -96,6 +96,7 @@ from reg_meta_build.scb_errata import (
 )
 
 _LISA_REGISTER_NAME_PREFIX = "longitudinell integrationsdatabas"
+_RESOLUTION_GAP_PROVENANCE = "inferred:resolution-gap"
 
 
 def _register_variant_description(
@@ -3308,7 +3309,10 @@ def _coalesce_variable_states(
                 elif active_corrections:
                     provenance = active_corrections[0][3]
                 else:
-                    provenance = None
+                    # The coalescer already retains this source-less gap as part
+                    # of the resolved state. Keep that availability unchanged,
+                    # but do not let NULL misattribute it to the provider.
+                    provenance = _RESOLUTION_GAP_PROVENANCE
             if segments and segments[-1][2] == provenance:
                 segments[-1] = (segments[-1][0], hi, provenance)
             else:

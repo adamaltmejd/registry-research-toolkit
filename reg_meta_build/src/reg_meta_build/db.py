@@ -591,9 +591,10 @@ CREATE TABLE variable_state (
     -- stable `errata:<class>\\n<evidence>` value; when corrected source editions
     -- overlap a documented claim, `errata:scoped-attributions` carries JSON
     -- records pairing each edition set with its class/evidence; correction-only
-    -- overlaps use `errata:overlapping-attributions`. Steward-only states may
-    -- carry their `steward:<label>` origin. Kept at state grain so corrected and
-    -- documented subintervals cannot be conflated.
+    -- overlaps use `errata:overlapping-attributions`. A source-less interval
+    -- retained by resolution carries `inferred:resolution-gap`, never provider
+    -- NULL. Steward-only states may carry their `steward:<label>` origin. Kept at
+    -- state grain so corrected, inferred, and documented spans cannot conflate.
     provenance TEXT,
     value_set_id INTEGER REFERENCES value_set(value_set_id),
     -- Overlap discriminator (multi-vintage / grain / coding). NOT NULL

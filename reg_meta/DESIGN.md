@@ -275,8 +275,10 @@ provider-documented claim, `errata:scoped-attributions\n<JSON array>` records pa
 correction class and evidence value with its exact `source_editions`. This preserves
 multiple attributions without confusing disjoint editions or relabeling the enclosing
 documented window. Correction-only overlaps use the same records under
-`errata:overlapping-attributions`. Keeping this at state grain prevents one corrected
-edition from relabeling a neighboring documented window.
+`errata:overlapping-attributions`. A source-less span retained by the existing coalescer
+carries `inferred:resolution-gap`, which attributes it to neither provider nor curator.
+Keeping this at state grain prevents one corrected edition from relabeling a neighboring
+documented window.
 
 **Variant-less registers (`_default`).** Socialstyrelsen LSS, BU, SOL ship variables
 without a deldatamängd sheet. Adapters synthesise a single `_default` variant row at

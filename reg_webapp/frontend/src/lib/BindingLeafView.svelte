@@ -342,6 +342,11 @@ function correctionsFromState(state: VariableStateModel): Correction[] {
 const corrections = $derived.by(() =>
   (valueSetStates ?? []).flatMap(correctionsFromState),
 );
+const inferredGaps = $derived(
+  (valueSetStates ?? []).filter(
+    (state) => state.provenance === "inferred:resolution-gap",
+  ),
+);
 
 // ── The relationship-graph fetch (#678/#904) ────────────────────────────────
 // The leaf owns ONE `/graph` fetch (#761/#792): it feeds the picker graph mode AND the
@@ -835,6 +840,35 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
                   <KeyValue rows={correctionFacts} />
                 </div>
                 <p class="correction-evidence">{correction.evidence}</p>
+              </li>
+            {/each}
+          </ul>
+        </dd>
+      {/if}
+      {#if inferredGaps.length > 0}
+        <dt class="micro-label">Inferred intervals</dt>
+        <dd>
+          <ul class="correction-list">
+            {#each inferredGaps as state}
+              {@const gapFacts = [
+                {
+                  label: "Variant",
+                  value: state.variant_label ?? state.variant,
+                },
+                {
+                  label: "Interval",
+                  value: windowTitle(state.valid_from, state.valid_to),
+                  mono: true,
+                },
+                {
+                  label: "Attribution",
+                  value: "Unattributed; retained by catalog resolution",
+                },
+              ] satisfies KeyValueRow[]}
+              <li>
+                <div title={windowTitle(state.valid_from, state.valid_to)}>
+                  <KeyValue rows={gapFacts} />
+                </div>
               </li>
             {/each}
           </ul>

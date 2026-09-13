@@ -114,17 +114,22 @@ with deliberately separate homes:
   annual, and no evidence describes the whole documented interval as corrected.
   Correction-only overlaps use the same records under `errata:overlapping-attributions`;
   evidence is descriptive, so distinct overlapping records coexist rather than compete
-  in metadata resolution. Provenance cannot change coverage or shape selection, while
-  one corrected edition still cannot relabel an adjacent documented interval. There is
-  no post-pass `variable_state` surgery and no generic `variable_state_overrides.toml`
-  (see the classification-links rule below for the same boundary). A column SCB never
-  documents anywhere on the variant is the same file's `[[column]]`, which mints the
-  variable instead of re-adding a row; the two are partitioned by whether the export has
-  a row for the column somewhere on the variant, and each entry kind fails the build
-  when it is the other one (`scb_errata_no_source_row` / `scb_errata_now_present`) —
-  shape and slugs are checked at load, everything that needs the export is checked when
-  the entry is applied. The log is self-cleaning: once SCB ships the row the build fails
-  with `scb_errata_now_present` and the entry is deleted, leaving the record in git.
+  in metadata resolution. The aggregate class names are builder-reserved, and curated
+  classes/evidence are single-line so a base record cannot impersonate the structured
+  carrier. Provenance cannot change coverage or shape selection, while one corrected
+  edition still cannot relabel an adjacent documented interval. When the existing
+  resolver retains a gap covered by no source claim, the coalescer stamps only that span
+  `inferred:resolution-gap` instead of provider NULL; this changes attribution, never
+  coverage or resolved metadata. There is no post-pass `variable_state` surgery and no
+  generic `variable_state_overrides.toml` (see the classification-links rule below for
+  the same boundary). A column SCB never documents anywhere on the variant is the same
+  file's `[[column]]`, which mints the variable instead of re-adding a row; the two are
+  partitioned by whether the export has a row for the column somewhere on the variant,
+  and each entry kind fails the build when it is the other one
+  (`scb_errata_no_source_row` / `scb_errata_now_present`) — shape and slugs are checked
+  at load, everything that needs the export is checked when the entry is applied. The
+  log is self-cleaning: once SCB ships the row the build fails with
+  `scb_errata_now_present` and the entry is deleted, leaving the record in git.
 - **Classification links are typed, not generic state overrides.**
   `curation/classifications.toml` targets the `classification_candidate` pipeline and
   then `variable_state.classification_id`. It is NOT a generic

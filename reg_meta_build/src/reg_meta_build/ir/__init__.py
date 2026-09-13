@@ -154,6 +154,7 @@ class IRVariableState(_IRBase):
     # `errata:<class>\n<evidence>`; corrections overlapping a documented claim use
     # `errata:scoped-attributions` JSON records that retain exact edition/evidence
     # pairs, and correction-only overlaps use `errata:overlapping-attributions`.
+    # `inferred:resolution-gap` marks source-less coverage retained by resolution.
     # Steward-only IR may name its steward.
     provenance: str | None = None
 

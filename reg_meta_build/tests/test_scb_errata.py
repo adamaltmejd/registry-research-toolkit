@@ -404,6 +404,45 @@ class TestDeliveredEntry:
             "errata:blank-column-name-in-version\nSCB left the name blank."
         )
 
+    @pytest.mark.parametrize(
+        "reserved", ["scoped-attributions", "overlapping-attributions"]
+    )
+    def test_builder_provenance_classes_are_reserved(
+        self, tmp_path: Path, slug_dir: Path, reserved: str
+    ) -> None:
+        body = (
+            '[[delivered]]\nregister = "scb/lisa"\n'
+            'variant = "individer-15plus"\ncolumn = "Kon"\n'
+            'versions = ["2010"]\nevidence = "The steward holds it."\n'
+            f'noted = "2026-09-12"\nupstream = "{reserved}"\n'
+        )
+        err = _refused(tmp_path, slug_dir, body)
+        assert "reserved" in err.message
+
+    @pytest.mark.parametrize(
+        ("field", "value"),
+        [
+            ("upstream", '"""specific\ncorrection"""'),
+            ("evidence", '"""The steward holds\nthis delivery."""'),
+        ],
+    )
+    def test_provenance_fields_reject_line_breaks(
+        self, tmp_path: Path, slug_dir: Path, field: str, value: str
+    ) -> None:
+        fields = {
+            "evidence": '"The steward holds it."',
+            "upstream": '"specific-correction"',
+            field: value,
+        }
+        body = (
+            '[[delivered]]\nregister = "scb/lisa"\n'
+            'variant = "individer-15plus"\ncolumn = "Kon"\n'
+            f'versions = ["2010"]\nevidence = {fields["evidence"]}\n'
+            f'noted = "2026-09-12"\nupstream = {fields["upstream"]}\n'
+        )
+        err = _refused(tmp_path, slug_dir, body)
+        assert "line breaks" in err.message
+
 
 class TestColumnEntry:
     def test_absent_file_is_empty(self, slug_dir: Path) -> None:

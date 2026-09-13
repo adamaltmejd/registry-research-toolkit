@@ -2157,11 +2157,7 @@ class TestScbErrata:
         )
         try:
             states = _provenance_windows(conn, "937")
-            corrected = [state for state in states if state[2] is not None]
-            assert [(vf, vt) for vf, vt, _provenance in corrected] == [
-                ("2021-01-01", "2021-06-30")
-            ]
-            header, attributions = _scoped_attributions(corrected[0][2])
+            header, attributions = _scoped_attributions(states[0][2])
             assert header == "errata:overlapping-attributions"
             assert attributions == [
                 {
@@ -2175,10 +2171,14 @@ class TestScbErrata:
                     "source_editions": ["VT2021"],
                 },
             ]
-            assert states[1:] == [("2021-07-01", "2022-12-31", None)]
+            assert states[1:] == [
+                ("2021-07-01", "2021-12-31", "inferred:resolution-gap"),
+                ("2022-01-01", "2022-12-31", None),
+            ]
             assert _states(conn, "937") == [
                 ("AliasA", "varchar", "1", "2021-01-01", "2021-06-30"),
-                ("AliasA", "varchar", "1", "2021-07-01", "2022-12-31"),
+                ("AliasA", "varchar", "1", "2021-07-01", "2021-12-31"),
+                ("AliasA", "varchar", "1", "2022-01-01", "2022-12-31"),
             ]
         finally:
             conn.close()
