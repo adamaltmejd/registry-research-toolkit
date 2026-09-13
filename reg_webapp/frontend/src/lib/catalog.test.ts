@@ -4541,15 +4541,14 @@ describe("distinctValueSets (#668 — value-set-centric fold)", () => {
         ? [alias, continuing]
         : [continuing, alias];
 
-      const usage = distinctValueSets([predecessor, ...successors])[0].usages[0];
+      const usage = distinctValueSets([predecessor, ...successors])[0]
+        .usages[0];
       expect(
         usage.states
           .filter((s) => s.valid_from === "2018-01-01")
           .map((s) => s.delivery_column_name),
       ).toEqual(["A", "B"]);
-      expect(usage.spans).toEqual([
-        { from: "2017-01-01", to: "2018-12-31" },
-      ]);
+      expect(usage.spans).toEqual([{ from: "2017-01-01", to: "2018-12-31" }]);
     },
   );
 
