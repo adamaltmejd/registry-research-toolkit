@@ -445,7 +445,9 @@ def flavored_db(tmp_path_factory: pytest.TempPathFactory) -> Path:
         if len(columns) > 1:
             conn.executemany(
                 "INSERT INTO variable_alias_window "
-                "VALUES (?, 902, ?, '0001-01-01', '9999-12-31')",
+                "(variable_id, register_variant_id, delivery_column_name, "
+                "valid_from, valid_to) VALUES "
+                "(?, 902, ?, '0001-01-01', '9999-12-31')",
                 alias_rows,
             )
     # The `HuSSYK1` / `HUSSYK1` shape: a historical spelling carried by
