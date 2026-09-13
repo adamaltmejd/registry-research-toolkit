@@ -221,6 +221,41 @@ const singleWithStructural = [
   }),
 ];
 
+function matrixProvenance(
+  answerKey: string,
+  column: string,
+  pageNumber: number,
+): string {
+  return (
+    "curated:scb-cis2016-matrix-answer\n" +
+    JSON.stringify({
+      answer_key: answerKey,
+      columns: [column],
+      evidence: {
+        document:
+          "SCB quality declaration, Appendix 2, historical concordance CIS2016 column",
+        noted: "2026-09-13",
+        pages: { [column]: pageNumber },
+        question:
+          "Question 18 of the 2014–2016 questionnaire; mappings use the separately labelled CIS2016 concordance column on pages 23–27.",
+        sha256:
+          "68513ec189f2222986831f3042a069d66181df3fdb3619e705d0f2ef91ce8c5b",
+        url: "https://www.scb.se/contentassets/9e6a00ac2fc7421cabab329528166232/uf0315_kd_2018_ah_191113.pdf#page=23",
+      },
+      source: {
+        cvid: 469456,
+        edition: "2014 - 2016",
+        register: "scb/innovation-foretag",
+        register_id: 257,
+        register_variant: "_default",
+        register_variant_id: 553,
+        regver_id: 11529,
+        var_id: 15662,
+      },
+    })
+  );
+}
+
 beforeEach(() => {
   vi.mocked(getCatalogNode).mockReset();
   vi.mocked(getCatalogNode).mockImplementation(async (_fqid, params) => {
@@ -2348,6 +2383,226 @@ describe("BindingLeafView representation picker (#678)", () => {
     expect(disclosure?.textContent).toContain("Interval 2021");
     expect(disclosure?.textContent).not.toContain("Catalog interval");
     expect(disclosure?.textContent).not.toContain("Provider-documented");
+  });
+
+  it("shows curated matrix evidence only after technical details expands while preserving errata", async () => {
+    const correctionEvidence =
+      "The steward holds CO11 for 2017; SCB's metadata omits it.";
+    const question =
+      "Question 18 of the 2014–2016 questionnaire; mappings use the separately labelled CIS2016 concordance column on pages 23–27.";
+    await render(BindingLeafView, {
+      fqidPath: "scb/innovation-foretag/co11",
+      node: node(
+        [
+          state({
+            state_id: 20,
+            variant: "_default",
+            variant_label: "All enterprises",
+            delivery_column_name: "CO11",
+            valid_from: "2014-01-01",
+            valid_to: "2016-12-31",
+            provenance: matrixProvenance(
+              "group-enterprises-sweden",
+              "CO11",
+              23,
+            ),
+          }),
+          state({
+            state_id: 21,
+            variant: "_default",
+            variant_label: "All enterprises",
+            delivery_column_name: "CO11",
+            valid_from: "2017-01-01",
+            valid_to: "2017-12-31",
+            provenance: `errata:omitted-column-in-version\n${correctionEvidence}`,
+          }),
+        ],
+        {
+          fqid: "scb/innovation-foretag/co11",
+          name: "Enterprises in Sweden",
+        },
+      ),
+      ...SEED,
+      vintageYear: 2024,
+    });
+
+    const disclosure = document.querySelector<HTMLDetailsElement>(
+      "details.tech-details",
+    );
+    expect(disclosure?.open).toBe(false);
+    await expect
+      .element(page.getByText("Curated matrix evidence"))
+      .not.toBeVisible();
+    await expect.element(page.getByText(question)).not.toBeVisible();
+    await expect.element(page.getByText(correctionEvidence)).not.toBeVisible();
+
+    await page.getByText("Technical details", { exact: true }).click();
+
+    await expect
+      .element(page.getByText("Curated matrix evidence"))
+      .toBeVisible();
+    await expect.element(page.getByText(question)).toBeVisible();
+    await expect.element(page.getByText(correctionEvidence)).toBeVisible();
+    expect(disclosure?.textContent).toContain(
+      "Interpretation Curated answer partition interpreted from provider metadata; not a provider assertion or availability correction",
+    );
+    expect(disclosure?.textContent).toContain(
+      "Applies to variant All enterprises",
+    );
+    expect(disclosure?.textContent).toContain(
+      "Applies to interval 2014 – 2016",
+    );
+    expect(disclosure?.textContent).toContain(
+      "Answer key group-enterprises-sweden",
+    );
+    expect(disclosure?.textContent).toContain("Source column CO11");
+    expect(disclosure?.textContent).toContain("Source edition 2014 - 2016");
+    expect(disclosure?.textContent).toContain("Evidence page CO11: 23");
+    expect(disclosure?.textContent).toContain(
+      "Evidence document SCB quality declaration, Appendix 2, historical concordance CIS2016 column",
+    );
+    expect(disclosure?.textContent).toContain(
+      "Original source identifiers cvid=469456; register_id=257; register_variant_id=553; regver_id=11529; var_id=15662",
+    );
+    expect(disclosure?.textContent).toContain(
+      "Document SHA-256 68513ec189f2222986831f3042a069d66181df3fdb3619e705d0f2ef91ce8c5b",
+    );
+    const sourceLink = page.getByRole("link", { name: "Open source document" });
+    await expect
+      .element(sourceLink)
+      .toHaveAttribute(
+        "href",
+        "https://www.scb.se/contentassets/9e6a00ac2fc7421cabab329528166232/uf0315_kd_2018_ah_191113.pdf#page=23",
+      );
+    await expect.element(sourceLink).toHaveAttribute("target", "_blank");
+    await expect
+      .element(sourceLink)
+      .toHaveAttribute("rel", "noopener noreferrer");
+    expect(disclosure?.textContent).toContain("Corrected deliveries");
+    expect(disclosure?.textContent).toContain("omitted-column-in-version");
+  });
+
+  it("limits curated matrix evidence to the selected variant and period", async () => {
+    const selected = state({
+      state_id: 30,
+      variant: "_default",
+      variant_label: "All enterprises",
+      delivery_column_name: "CO11",
+      valid_from: "2014-01-01",
+      valid_to: "2016-12-31",
+      provenance: matrixProvenance("group-enterprises-sweden", "CO11", 23),
+    });
+    const selectedPeer = state({
+      state_id: 31,
+      variant: "_default",
+      delivery_column_name: "CO10",
+      valid_from: "2014-01-01",
+      valid_to: "2016-12-31",
+    });
+    const otherPeriod = state({
+      state_id: 32,
+      variant: "_default",
+      variant_label: "All enterprises",
+      delivery_column_name: "CONA1",
+      valid_from: "2010-01-01",
+      valid_to: "2012-12-31",
+      provenance: matrixProvenance("group-domestic", "CONA1", 24),
+    });
+    const otherVariant = state({
+      state_id: 33,
+      variant: "groups",
+      variant_label: "Enterprise groups",
+      delivery_column_name: "CO12",
+      valid_from: "2014-01-01",
+      valid_to: "2016-12-31",
+      provenance: matrixProvenance("group-foreign", "CO12", 25),
+    });
+    vi.mocked(getCatalogNode).mockImplementation(async (_fqid, params) => {
+      const periodStates = [selected, selectedPeer, otherVariant];
+      return statesResponse(
+        params?.variant === "_default"
+          ? periodStates.filter((item) => item.variant === "_default")
+          : periodStates,
+      );
+    });
+    router.navigate(
+      "/catalog/scb/innovation-foretag/co11?period=2014..2016&variant=_default",
+    );
+
+    await render(BindingLeafView, {
+      fqidPath: "scb/innovation-foretag/co11",
+      node: node([selected, selectedPeer, otherPeriod, otherVariant]),
+      ...SEED,
+      vintageYear: 2024,
+    });
+
+    await vi.waitFor(() =>
+      expect(getCatalogNode).toHaveBeenCalledWith(
+        "scb/innovation-foretag/co11",
+        expect.objectContaining({
+          period: "2014..2016",
+          variant: "_default",
+        }),
+      ),
+    );
+    await page.getByText("Technical details", { exact: true }).click();
+
+    await expect
+      .element(page.getByText("group-enterprises-sweden", { exact: true }))
+      .toBeVisible();
+    await expect
+      .element(page.getByText("group-domestic", { exact: true }))
+      .not.toBeInTheDocument();
+    await expect
+      .element(page.getByText("group-foreign", { exact: true }))
+      .not.toBeInTheDocument();
+    expect(
+      document.querySelector<HTMLDetailsElement>("details.tech-details")
+        ?.textContent,
+    ).not.toContain("CONA1");
+    expect(
+      document.querySelector<HTMLDetailsElement>("details.tech-details")
+        ?.textContent,
+    ).not.toContain("CO12");
+  });
+
+  it("omits unknown, malformed, or unsafe curated provenance without crashing", async () => {
+    await render(BindingLeafView, {
+      fqidPath: "scb/innovation-foretag/co11",
+      node: node([
+        state({
+          state_id: 40,
+          delivery_column_name: "CO11",
+          provenance: "curated:future-format\n{}",
+        }),
+        state({
+          state_id: 41,
+          delivery_column_name: "CONA1",
+          provenance: "curated:scb-cis2016-matrix-answer\n{not-json}",
+        }),
+        state({
+          state_id: 42,
+          delivery_column_name: "CO12",
+          provenance: matrixProvenance("group-foreign", "CO12", 25).replace(
+            "https://",
+            "javascript:",
+          ),
+        }),
+      ]),
+      ...SEED,
+      vintageYear: 2024,
+    });
+
+    await expect
+      .element(page.getByRole("heading", { name: "Kön" }))
+      .toBeVisible();
+    await page.getByText("Technical details", { exact: true }).click();
+    await expect
+      .element(page.getByText("Curated matrix evidence"))
+      .not.toBeInTheDocument();
+    await expect
+      .element(page.getByRole("link", { name: "Open source document" }))
+      .not.toBeInTheDocument();
   });
 
   it("marks resolution-only gaps as inferred and unattributed", async () => {

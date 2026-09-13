@@ -34,6 +34,7 @@ import {
   nextResolutionQuery,
   VALUE_SET_VERSION_NONE,
 } from "./period";
+import { isPlainObject } from "./project_data";
 import { projectStore } from "./project_store.svelte";
 import RepresentationPicker, {
   type PickerApplyPayload,
@@ -274,6 +275,140 @@ type Correction = {
   providerDocumented: boolean;
 };
 
+type CuratedMatrixAnswer = {
+  state: VariableStateModel;
+  answerKey: string;
+  columns: string[];
+  evidence: {
+    document: string;
+    noted: string;
+    pages: [string, number][];
+    question: string;
+    sha256: string;
+    url: string;
+  };
+  source: {
+    cvid: number;
+    edition: string;
+    register: string;
+    registerId: number;
+    registerVariant: string;
+    registerVariantId: number;
+    regverId: number;
+    varId: number;
+  };
+};
+
+const CURATED_MATRIX_PREFIX = "curated:scb-cis2016-matrix-answer\n";
+
+function nonEmptyString(value: unknown): value is string {
+  return typeof value === "string" && value.trim().length > 0;
+}
+
+function curatedMatrixAnswerFromState(
+  state: VariableStateModel,
+): CuratedMatrixAnswer | null {
+  const provenance = state.provenance;
+  if (!provenance?.startsWith(CURATED_MATRIX_PREFIX)) {
+    return null;
+  }
+
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(provenance.slice(CURATED_MATRIX_PREFIX.length));
+  } catch {
+    return null;
+  }
+  if (!isPlainObject(parsed)) {
+    return null;
+  }
+
+  const evidence = parsed.evidence;
+  const source = parsed.source;
+  if (
+    !nonEmptyString(parsed.answer_key) ||
+    !Array.isArray(parsed.columns) ||
+    parsed.columns.length === 0 ||
+    !parsed.columns.every(nonEmptyString) ||
+    !isPlainObject(evidence) ||
+    !nonEmptyString(evidence.document) ||
+    !nonEmptyString(evidence.noted) ||
+    !nonEmptyString(evidence.question) ||
+    !nonEmptyString(evidence.sha256) ||
+    !/^[0-9a-f]{64}$/i.test(evidence.sha256) ||
+    !nonEmptyString(evidence.url) ||
+    !isPlainObject(source) ||
+    !nonEmptyString(source.edition) ||
+    !nonEmptyString(source.register) ||
+    !nonEmptyString(source.register_variant)
+  ) {
+    return null;
+  }
+
+  const pageMap = evidence.pages;
+  if (!isPlainObject(pageMap)) {
+    return null;
+  }
+  const pages = Object.entries(pageMap);
+  if (
+    pages.length === 0 ||
+    !pages.every(
+      ([column, page]) =>
+        nonEmptyString(column) &&
+        Number.isSafeInteger(page) &&
+        Number(page) > 0,
+    ) ||
+    !parsed.columns.every((column) => column in pageMap)
+  ) {
+    return null;
+  }
+
+  const sourceIds = [
+    source.cvid,
+    source.register_id,
+    source.register_variant_id,
+    source.regver_id,
+    source.var_id,
+  ];
+  if (!sourceIds.every((id) => Number.isSafeInteger(id) && Number(id) > 0)) {
+    return null;
+  }
+
+  let sourceUrl: URL;
+  try {
+    sourceUrl = new URL(evidence.url);
+  } catch {
+    return null;
+  }
+  if (sourceUrl.protocol !== "https:") {
+    return null;
+  }
+
+  return {
+    state,
+    answerKey: parsed.answer_key.trim(),
+    columns: parsed.columns.map((column) => column.trim()),
+    evidence: {
+      document: evidence.document.trim(),
+      noted: evidence.noted.trim(),
+      pages: pages.map(([column, page]) => [column.trim(), Number(page)]),
+      question: evidence.question.trim(),
+      sha256: evidence.sha256.toLowerCase(),
+      url: sourceUrl.href,
+    },
+    source: {
+      cvid: Number(source.cvid),
+      edition: source.edition.trim(),
+      register: source.register.trim(),
+      registerId: Number(source.register_id),
+      registerVariant: source.register_variant.trim(),
+      registerVariantId: Number(source.register_variant_id),
+      regverId: Number(source.regver_id),
+      varId: Number(source.var_id),
+    },
+  };
+}
+
 function correctionsFromState(state: VariableStateModel): Correction[] {
   const provenance = state.provenance;
   if (!provenance?.startsWith("errata:")) {
@@ -346,6 +481,12 @@ const inferredGaps = $derived(
   (valueSetStates ?? []).filter(
     (state) => state.provenance === "inferred:resolution-gap",
   ),
+);
+const curatedMatrixAnswers = $derived.by(() =>
+  ((isNarrowed ? valueSetScope : valueSetStates) ?? []).flatMap((state) => {
+    const answer = curatedMatrixAnswerFromState(state);
+    return answer === null ? [] : [answer];
+  }),
 );
 
 // ── The relationship-graph fetch (#678/#904) ────────────────────────────────
@@ -874,6 +1015,107 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
           </ul>
         </dd>
       {/if}
+      {#if curatedMatrixAnswers.length > 0}
+        <dt class="micro-label">Curated matrix evidence</dt>
+        <dd>
+          <ul class="correction-list">
+            {#each curatedMatrixAnswers as answer}
+              {@const answerFacts = [
+                {
+                  label: "Interpretation",
+                  value:
+                    "Curated answer partition interpreted from provider metadata; not a provider assertion or availability correction",
+                },
+                { label: "Answer key", value: answer.answerKey, mono: true },
+                {
+                  label: "Applies to variant",
+                  value: answer.state.variant_label ?? answer.state.variant,
+                },
+                {
+                  label: "Applies to interval",
+                  value:
+                    formatStateWindow(answer.state) ??
+                    windowTitle(
+                      answer.state.valid_from,
+                      answer.state.valid_to,
+                    ),
+                  mono: true,
+                },
+                {
+                  label:
+                    answer.columns.length === 1
+                      ? "Source column"
+                      : "Source columns",
+                  value: answer.columns.join(", "),
+                  mono: true,
+                },
+                {
+                  label: "Source edition",
+                  value: answer.source.edition,
+                  mono: true,
+                },
+                {
+                  label: "Evidence document",
+                  value: answer.evidence.document,
+                },
+                { label: "Evidence question", value: answer.evidence.question },
+                {
+                  label:
+                    answer.evidence.pages.length === 1
+                      ? "Evidence page"
+                      : "Evidence pages",
+                  value: answer.evidence.pages
+                    .map(([column, page]) => `${column}: ${page}`)
+                    .join(", "),
+                  mono: true,
+                },
+                {
+                  label: "Source register",
+                  value: answer.source.register,
+                  mono: true,
+                },
+                {
+                  label: "Source register variant",
+                  value: answer.source.registerVariant,
+                  mono: true,
+                },
+                {
+                  label: "Original source identifiers",
+                  value: `cvid=${answer.source.cvid}; register_id=${answer.source.registerId}; register_variant_id=${answer.source.registerVariantId}; regver_id=${answer.source.regverId}; var_id=${answer.source.varId}`,
+                  mono: true,
+                },
+                {
+                  label: "Document SHA-256",
+                  value: answer.evidence.sha256,
+                  mono: true,
+                },
+                {
+                  label: "Evidence noted",
+                  value: answer.evidence.noted,
+                  mono: true,
+                },
+              ] satisfies KeyValueRow[]}
+              <li>
+                <div
+                  title={windowTitle(
+                    answer.state.valid_from,
+                    answer.state.valid_to,
+                  )}
+                >
+                  <KeyValue rows={answerFacts} />
+                </div>
+                <p class="correction-evidence">
+                  <a
+                    href={answer.evidence.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >Open source document</a>
+                </p>
+              </li>
+            {/each}
+          </ul>
+        </dd>
+      {/if}
     </dl>
   </TechnicalDetails>
 {/snippet}
@@ -941,6 +1183,14 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
   }
   .correction-evidence {
     margin: var(--space-1) 0 0;
+  }
+  .correction-evidence a {
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+  }
+  .correction-evidence a:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
   }
   .tag-strip {
     display: flex;
