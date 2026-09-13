@@ -42598,6 +42598,10 @@ slug = "niva-vuxenutbildning-vt"
 slug = "avklarade-undervisningstimmar-ht"
 [variable."103.14651.kxutimvt"]
 slug = "avklarade-undervisningstimmar-vt"
+[variable."103.17509.astsni2"]
+# Y-128: claimed-year ordering exposes Astsni2 as variable 34373's current
+# split discriminator; retain its established astsni identity.
+slug = "astsni"
 [variable."103.1819.sekt"]
 slug = "sektorkod"
 [variable."103.1819.sektorkod"]

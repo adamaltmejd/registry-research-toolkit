@@ -2184,6 +2184,84 @@ class TestPopulateVariableSlugs:
         assert sa == "boareaimp"
         assert sb == "bantalrumimp"
 
+    def test_curated_split_pin_uses_current_same_date_discriminator(
+        self, tmp_path: Path
+    ) -> None:
+        # Y-128/RPU 34373: claimed-year ordering puts the lowercase `astsni`
+        # state after `Astsni2` at the same earliest date, so the split source
+        # key is now `.astsni2`. Curate that exact key to retain the established
+        # `astsni` slug while the 43145 `.astsnig` sibling remains distinct.
+        conn = self._db(kol="Kon")
+        add_variable(
+            conn,
+            register_id=1,
+            var_id=17509,
+            name="Arbetsställets näringsgren",
+            slug="target-temp",
+        )
+        add_variable(
+            conn,
+            register_id=1,
+            var_id=17509,
+            name="Arbetsställets näringsgren",
+            slug="sibling-temp",
+        )
+        target = conn.execute(
+            "SELECT variable_id FROM variable WHERE slug = 'target-temp'"
+        ).fetchone()[0]
+        sibling = conn.execute(
+            "SELECT variable_id FROM variable WHERE slug = 'sibling-temp'"
+        ).fetchone()[0]
+        add_state(
+            conn,
+            register_id=1,
+            variable_slug="target-temp",
+            register_variant_id=10,
+            valid_from="2000-01-01",
+            valid_to="2000-12-31",
+            delivery_column_name="astsni",
+            value_set_version_label="legacy",
+        )
+        add_state(
+            conn,
+            register_id=1,
+            variable_slug="target-temp",
+            register_variant_id=10,
+            valid_from="2000-01-01",
+            valid_to="2000-12-31",
+            delivery_column_name="Astsni2",
+            value_set_version_label="current",
+        )
+        add_state(
+            conn,
+            register_id=1,
+            variable_slug="sibling-temp",
+            register_variant_id=10,
+            valid_from="2000-01-01",
+            valid_to="9999-12-31",
+            delivery_column_name="astsnig",
+        )
+        conn.execute(
+            "UPDATE variable SET slug = NULL WHERE variable_id IN (?, ?)",
+            (target, sibling),
+        )
+        conn.commit()
+
+        d = self._slug_dir(
+            tmp_path,
+            '[variable."1.17509.astsni2"]\nslug = "astsni"\n',
+            scb_freeze="curating",
+        )
+        (d / f"scb{AUTO_FILE_SUFFIX}").write_text(
+            '[variable."1.17509.astsnig"]\nslug = "astsnig"\n', encoding="utf-8"
+        )
+        counts = populate_variable_slugs(conn, d)
+
+        assert self._slug_of_vid(conn, target) == "astsni"
+        assert self._slug_of_vid(conn, sibling) == "astsnig"
+        assert counts["curated"] == 1
+        assert counts["auto_existing"] == 1
+
     def test_constant_column_is_not_drift(self, tmp_path: Path) -> None:
         # Regression: two eras carrying the SAME column is not drift
         # (COUNT(DISTINCT)=1) — it keeps the register-unique column slug.

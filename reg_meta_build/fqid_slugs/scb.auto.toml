@@ -70830,9 +70830,6 @@ slug = "skommunht"  # source: kolumnnamn
 [variable."103.14815.skommunkx"]
 slug = "skommunkx"  # source: kolumnnamn
 
-[variable."103.17509.astsni"]
-slug = "astsni"  # source: fold
-
 [variable."103.17509.astsnig"]
 slug = "astsnig"  # source: fold
 
