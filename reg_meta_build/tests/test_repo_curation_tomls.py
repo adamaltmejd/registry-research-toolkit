@@ -381,14 +381,16 @@ def test_repo_scb_errata_parses() -> None:
         classification_seed_path=_ROOT / "classifications.toml",
     )
     assert errata  # the verified LISA DispInkKE case ships with the repo
-    assert {(d.column, d.versions) for d in errata.delivered} >= {
-        ("DispInkKE", ("2010", "2011", "2012")),
-        ("DispInkKE04", ("2010", "2011", "2012")),
+    # scb/lisa "Individer, 15 år och äldre"; pin the complete coordinates of
+    # these named records without assuming the multi-register file contains
+    # only LISA entries.
+    assert {
+        (d.column, d.versions, d.register_id, d.register_variant_id)
+        for d in errata.delivered
+    } >= {
+        ("DispInkKE", ("2010", "2011", "2012"), 34, 153),
+        ("DispInkKE04", ("2010", "2011", "2012"), 34, 153),
     }
-    # scb/lisa "Individer, 15 år och äldre".
-    assert all(
-        (d.register_id, d.register_variant_id) == (34, 153) for d in errata.delivered
-    )
 
 
 def test_repo_scb_errata_columns_carry_both_evidence_sources() -> None:

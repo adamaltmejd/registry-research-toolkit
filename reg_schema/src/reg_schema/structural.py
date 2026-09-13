@@ -513,8 +513,8 @@ def _check_period(period: object, base: str, issues: list[ValidationIssue]) -> N
                 "invalid_period",
                 path,
                 f"period string {period!r} must match a period grammar form "
-                "(YYYY, YYYY-MM, YYYY-MM-DD, HTYYYY, VTYYYY, YYYY-Q[1-4], "
-                "YYYY-H[12])",
+                "(YYYY, YYYY-MM, YYYY-MM-DD, HTYYYY, VTYYYY, LA<YYYY>, "
+                "YYYY-Q[1-4], YYYY-H[12])",
             )
         )
         return
