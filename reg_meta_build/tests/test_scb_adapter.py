@@ -889,6 +889,75 @@ class TestEraOrdering:
         finally:
             conn.close()
 
+    def test_disjoint_type_era_claims_preserve_the_middle_years(
+        self, tmp_path: Path
+    ) -> None:
+        # The tinyint shape returns after an int era. Its older edition IDs are
+        # deliberately higher than every later ID, and its older alias differs
+        # only by case: claimed-year ordering therefore reunites the spelling as
+        # Tjomf. The disjoint tinyint claim set must not use its 1995..2018 outer
+        # hull to collapse the documented 2011..2015 int deliveries.
+        old_tinyint = [
+            _var_row(
+                colname="TJOMF",
+                cvid=40_000 + year,
+                var_id=3876,
+                varname="TjomfVar",
+                year=str(year),
+                regver_id=30_000 + year,
+                data_type="tinyint",
+                data_length="1",
+                register=("TESTREG", 1, 815),
+            )
+            for year in range(1995, 2005)
+        ]
+        middle_ids = (4515, 5273, 5898, 7363, 9991)
+        middle_int = [
+            _var_row(
+                colname="Tjomf",
+                cvid=50_000 + year,
+                var_id=3876,
+                varname="TjomfVar",
+                year=str(year),
+                regver_id=regver_id,
+                data_type="int",
+                data_length="4",
+                register=("TESTREG", 1, 815),
+            )
+            for year, regver_id in zip(range(2011, 2016), middle_ids, strict=True)
+        ]
+        new_tinyint = [
+            _var_row(
+                colname="Tjomf",
+                cvid=60_000 + year,
+                var_id=3876,
+                varname="TjomfVar",
+                year=str(year),
+                regver_id=1000 + year,
+                data_type="tinyint",
+                data_length="1",
+                register=("TESTREG", 1, 815),
+            )
+            for year in range(2016, 2019)
+        ]
+        conn = _build_from_ri_rows(tmp_path, old_tinyint + middle_int + new_tinyint)
+        try:
+            states = conn.execute(
+                "SELECT vs.valid_from, vs.valid_to, vs.data_type "
+                "FROM variable_state vs "
+                "JOIN variable v ON v.variable_id = vs.variable_id "
+                "WHERE v.register_id = 1 AND v.provider_key = '3876' "
+                "AND vs.register_variant_id = 815 "
+                "ORDER BY vs.valid_from"
+            ).fetchall()
+            assert states == [
+                ("1995-01-01", "2004-12-31", "tinyint"),
+                ("2011-01-01", "2015-12-31", "int"),
+                ("2016-01-01", "2018-12-31", "tinyint"),
+            ]
+        finally:
+            conn.close()
+
     def test_year_bearing_edition_outranks_unknown_year_before_id(
         self, tmp_path: Path
     ) -> None:

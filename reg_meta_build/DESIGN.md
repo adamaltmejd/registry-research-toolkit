@@ -1284,7 +1284,10 @@ invariant, so the SCB adapter triages every such collision (`sources/scb.py`,
   last (ISO grain, not the bare year: a year clamp padded out to December and swallowed
   the spring term a läsår container delivered — Y-123). Only fast-path
   `(variable_id, register_variant_id)` partitions are touched; distinct value sets and
-  different-column overlaps (parallel co-deliveries) are left to the materializer.
+  different-column overlaps (parallel co-deliveries) are left to the materializer. A
+  same-column group with disjoint claims surrounding another group's documented era is
+  timeline-owned too: its outer hull cannot subsume the intervening group or pave the
+  claim gap (Y-128).
 
 **State-identity rule (#526).** The VALUE SET anchors a valued variable's temporal-state
 identity; SCB's per-delivery `Datatyp` / `Datalängd` is low-trust passthrough (declared
