@@ -25,6 +25,7 @@ import pytest
 from _slugged_db import add_state, add_variable, build_slugged_db
 from reg_meta.catalog import Catalog
 from reg_meta.cli import run
+from reg_meta.db import SCHEMA_VERSION
 from reg_meta.errors import EXIT_CONFIG, EXIT_NO_MATCH, RegMetaError
 from reg_meta.inventory import load_inventory
 from reg_meta.order import (
@@ -260,7 +261,7 @@ def conn() -> sqlite3.Connection:
         delivery_column_name="Ssyk4",
     )
     for key, value in (
-        ("schema_version", "6.7.0"),
+        ("schema_version", SCHEMA_VERSION),
         ("import_date", "2026-08-01T00:00:00Z"),
     ):
         db.execute("INSERT INTO import_manifest VALUES (?, ?)", (key, value))
@@ -623,7 +624,7 @@ class TestMaterializedOrder:
         provenance = manifest.provenance
         assert provenance.steward == "swecov"
         assert provenance.project_name == "Synthetic order"
-        assert provenance.catalog_schema_version == "6.7.0"
+        assert provenance.catalog_schema_version == SCHEMA_VERSION
         assert provenance.catalog_import_date == "2026-08-01T00:00:00Z"
         assert len(provenance.project_hash) == 64
         # The hash is the project's identity: a different project, a different hash.

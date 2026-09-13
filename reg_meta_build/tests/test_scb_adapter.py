@@ -2070,20 +2070,27 @@ class TestScbErrata:
         try:
             assert _windows(conn, "934") == [
                 ("2019-01-01", "2019-12-31"),
-                ("2020-01-01", "2020-12-31"),
-                ("2022-01-01", "2022-12-31"),
+                ("2020-01-01", "2022-12-31"),
             ]
             states = conn.execute(
-                "SELECT vs.delivery_column_name, vs.data_type "
+                "SELECT vs.delivery_column_name, vs.data_type, vs.data_length "
                 "FROM variable_state vs "
                 "JOIN variable v ON v.variable_id = vs.variable_id "
                 "WHERE v.register_id = 1 AND v.provider_key = '934' "
                 "ORDER BY vs.valid_from"
             ).fetchall()
             assert states == [
-                ("EraCol", "char"),
-                ("eracol", "varchar"),
-                ("eracol", "varchar"),
+                ("eracol", "varchar", "1"),
+                ("eracol", "varchar", "1"),
+            ]
+            assert _provenance_windows(conn, "934") == [
+                (
+                    "2019-01-01",
+                    "2019-12-31",
+                    "errata:omitted-column-in-version\n"
+                    "the steward holds EraCol for those years",
+                ),
+                ("2020-01-01", "2022-12-31", None),
             ]
         finally:
             conn.close()

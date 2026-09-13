@@ -83,6 +83,7 @@ from reg_meta_build.resolution import (
     Claim,
     SweepHooks,
     assemble_runs,
+    day_after_window_end,
     prev_day_from_cut,
     resolve_year_intervals,
 )
@@ -880,7 +881,7 @@ def _parse_unika_year(raw: str | None) -> int | None:
 @dataclass
 class _StateGroup:
     """One pre-triage coalesced state group (lifted to module scope so the
-    triage below can read it). The 11-component group key lives in the
+    triage below can read it). The 10-component group key lives in the
     `groups` dict; the accumulator carries the year-range signals plus the
     latest-era delivery column for triage."""
 
@@ -892,8 +893,6 @@ class _StateGroup:
     value_set_id: int | None
     value_set_version_label: str | None
     source_register_text: str | None = None
-    # State-grain correction/steward provenance. Provider-exported rows are None.
-    provenance: str | None = None
     operational_definition: str | None = None
     operational_definition_conflict: bool = False
     # grain is part of the *group key* (gkey position 7), not stored here.
@@ -1094,9 +1093,9 @@ def _latest_era(grp: _StateGroup) -> tuple[int, int]:
     return grp.latest_era or (-1, -1)
 
 
-def _state_metadata_only_same_column_drift(left: tuple, right: tuple) -> bool:
-    """True when state gkeys differ only by state-grain attribution."""
-    return left[:9] == right[:9] and tuple(left[9:11]) != tuple(right[9:11])
+def _source_only_same_column_drift(left: tuple, right: tuple) -> bool:
+    """True when two state gkeys differ only by source-register attribution."""
+    return left[:9] == right[:9] and (left[9] or "") != (right[9] or "")
 
 
 @dataclass
@@ -1382,19 +1381,17 @@ def _spans_overlap(groups: dict[tuple, _StateGroup], gkeys: list[tuple]) -> bool
 def _needs_timeline(groups: dict[tuple, _StateGroup], gkeys: list[tuple]) -> bool:
     """The materializer's complete timeline-routing predicate.
 
-    Besides value-set overlap, multiple source-register texts or correction
-    provenances on one delivery column need interval ownership so metadata can
-    change by era. Both the residual collapse and emitter must use this exact
-    decision: collapsing a partition the emitter later treats as a timeline can
-    erase a documented era or spread one correction across its neighbors.
+    Besides value-set overlap, multiple source-register texts on one delivery
+    column need interval ownership so source provenance can change by era. Both
+    the residual collapse and emitter must use this exact decision: collapsing a
+    partition the emitter later treats as a timeline can erase a documented era.
     """
     if _spans_overlap(groups, gkeys):
         return True
-    by_col: dict[str, set[tuple[str, str]]] = defaultdict(set)
+    by_col: dict[str, set[str]] = defaultdict(set)
     for gk in gkeys:
-        grp = groups[gk]
-        by_col[gk[8]].add((grp.source_register_text or "", grp.provenance or ""))
-    return any(len(metadata) > 1 for metadata in by_col.values())
+        by_col[gk[8]].add(groups[gk].source_register_text or "")
+    return any(len(texts) > 1 for texts in by_col.values())
 
 
 def _claims_disjoint(left: _StateGroup, right: _StateGroup) -> bool:
@@ -1519,13 +1516,11 @@ def _collapse_residual(groups: dict[tuple, _StateGroup], res: _TriageResult) -> 
                 used.add(preferred)
                 res.labels[gk] = preferred
                 kept.append(gk)
-            elif any(
-                _state_metadata_only_same_column_drift(gk, kept_gk) for kept_gk in kept
-            ):
-                # Source/correction provenance is state-grain metadata, not
-                # uninformative shape drift. Keep it for the timeline arbiter;
-                # same-period collisions collapse there by latest edition,
-                # while interval-grain separation remains available.
+            elif any(_source_only_same_column_drift(gk, kept_gk) for kept_gk in kept):
+                # Source-only drift is state-grain provenance, not uninformative
+                # shape drift. Keep it for the timeline arbiter; same-period
+                # collisions collapse there by latest edition, while any
+                # existing interval-grain separation remains available.
                 res.labels[gk] = preferred
                 kept.append(gk)
             elif (
@@ -1588,7 +1583,6 @@ def _collapse_residual(groups: dict[tuple, _StateGroup], res: _TriageResult) -> 
                     grp.value_set_id,
                     emitted_label,
                     grp.source_register_text or "",
-                    grp.provenance or "",
                 )
             ].append(gk)
 
@@ -2187,20 +2181,19 @@ def _resolve_year_winners(
     drafts from), not the raw source `value_set_version_label` (which a
     fold/collapse may relabel).
     """
-    metadata_by_col: dict[str, set[tuple[str, str]]] = defaultdict(set)
+    source_texts_by_col: dict[str, set[str]] = defaultdict(set)
     codeless_shapes_by_col: dict[str, set[tuple[str, str]]] = defaultdict(set)
     valued_cols: set[str] = set()
     for gk in cands:
-        grp = groups[gk]
-        metadata_by_col[gk[8]].add(
-            (grp.source_register_text or "", grp.provenance or "")
-        )
+        source_texts_by_col[gk[8]].add(groups[gk].source_register_text or "")
         if groups[gk].value_set_id is None:
             codeless_shapes_by_col[gk[8]].add((gk[3], gk[4]))
         else:
             valued_cols.add(gk[8])
-    metadata_drift_cols = {
-        col for col, metadata in metadata_by_col.items() if len(metadata) > 1
+    source_drift_cols = {
+        col
+        for col, source_texts in source_texts_by_col.items()
+        if len(source_texts) > 1
     }
     codeless_shape_drift_cols = {
         col
@@ -2214,7 +2207,7 @@ def _resolve_year_winners(
         sort_key=_gk_sort_key,
         coded=lambda gk: (
             groups[gk].value_set_id is not None
-            or gk[8] in metadata_drift_cols
+            or gk[8] in source_drift_cols
             or gk[8] in codeless_shape_drift_cols
         ),
         single_coding=lambda pool: _pool_single_coding(
@@ -2244,11 +2237,8 @@ def _pool_single_coding(
     no shared-code relabel. Deliberately set-level, not a pairwise transitive
     closure — an A~B~C chain whose A↔C diff exceeds the threshold does NOT
     conflate, exactly as the cascade's cosmetic step refuses it."""
-    metadata = {
-        (groups[gk].source_register_text or "", groups[gk].provenance or "")
-        for gk in pool
-    }
-    if len(metadata) > 1:
+    source_texts = {groups[gk].source_register_text or "" for gk in pool}
+    if len(source_texts) > 1:
         return False
     vss = sorted({vs for gk in pool if (vs := groups[gk].value_set_id) is not None})
     if not vss:
@@ -2683,7 +2673,7 @@ def _coalesce_variable_states(
     # Group accumulator: key → mutable `_StateGroup` (module scope; the
     # triage reads it). We iterate `rows` once and update the year-range
     # signals / latest alias in place. A dict rather than itertools.groupby
-    # because rows aren't pre-sorted and the key has 11 components (the column
+    # because rows aren't pre-sorted and the key has 10 components (the column
     # component stays at index 8; grain stays at index 7).
     groups: dict[
         tuple[
@@ -2694,7 +2684,6 @@ def _coalesce_variable_states(
             str,
             int | None,
             str | None,
-            str,
             str,
             str,
             str,
@@ -2777,7 +2766,6 @@ def _coalesce_variable_states(
             grain,
             component,
             row["source_register_text"] or "",
-            row["provenance"] or "",
         )
         cvid_gkey[row["cvid"]] = gkey  # idempotent: one cvid → one gkey
         grp = groups.get(gkey)
@@ -2791,7 +2779,6 @@ def _coalesce_variable_states(
                 value_set_id=row["value_set_id"],
                 value_set_version_label=row["value_set_version_label"],
                 source_register_text=row["source_register_text"] or None,
-                provenance=row["provenance"] or None,
             )
             groups[gkey] = grp
 
@@ -3098,6 +3085,39 @@ def _coalesce_variable_states(
             "ON variable_instance(variable_id, cvid)"
         )
 
+    # Delivery correction provenance is an annotation on the availability the
+    # coalescer would already produce, never an input to shape selection or the
+    # fast-path/timeline decision. Gather its exact edition claims separately so
+    # `_append_state` can partition a resolved state without changing its union,
+    # chosen type/alias/value set, or gap-filling behavior. Provider-documented
+    # claims are retained only for a corrected target; they mask overlapping
+    # errata (a window SCB documents is not itself a correction).
+    def _provenance_target(row: sqlite3.Row) -> tuple[int, int, str] | None:
+        gkey = cvid_gkey[row["cvid"]]
+        vid = triage.assignments.get(gkey)
+        return None if vid is None else (vid, row["register_variant_id"], gkey[8])
+
+    corrected_targets = {
+        target
+        for row in rows
+        if row["provenance"] and (target := _provenance_target(row)) is not None
+    }
+    provenance_claims: dict[tuple[int, int, str], set[tuple[str, str, str | None]]] = (
+        defaultdict(set)
+    )
+    for row in rows:
+        target = _provenance_target(row)
+        if target not in corrected_targets:
+            continue
+        claims = register_edition_claims(row["register_id"], row["registerversionnamn"])
+        bounds = (
+            [(lo, hi) for _year, lo, hi in claims]
+            if claims
+            else [(_VALID_FROM_UNKNOWN, _VALID_TO_OPEN_SENTINEL)]
+        )
+        provenance = row["provenance"] or None
+        provenance_claims[target].update((lo, hi, provenance) for lo, hi in bounds)
+
     # #892/#736: attribute cvid operational definitions after triage. The state
     # rows above carry each group's per-column text. The variable-level column is
     # only a shared/canonical summary: write it when all non-empty cvid texts for
@@ -3200,6 +3220,60 @@ def _coalesce_variable_states(
     # Disambiguation is counted; a flood would signal a bug.
     _used_index_keys: set[tuple[int, int, str, str]] = set()
 
+    def _partition_provenance(
+        gkey: tuple, vid: int, vf: str, vt: str
+    ) -> list[tuple[str, str, str | None]]:
+        """Split one already-resolved state only where its attribution changes."""
+        claims = provenance_claims.get((vid, gkey[1], gkey[8]))
+        if not claims:
+            return [(vf, vt, None)]
+        clipped = [
+            (max(vf, lo), min(vt, hi), provenance)
+            for lo, hi, provenance in claims
+            if lo <= vt and vf <= hi
+        ]
+        if not clipped:
+            return [(vf, vt, None)]
+        cuts = {vf}
+        for lo, hi, _provenance in clipped:
+            cuts.add(lo)
+            if hi < vt:
+                cuts.add(day_after_window_end(hi))
+        starts = sorted(cuts)
+        segments: list[tuple[str, str, str | None]] = []
+        for index, lo in enumerate(starts):
+            hi = prev_day_from_cut(starts[index + 1]) if index + 1 < len(starts) else vt
+            active = {
+                provenance
+                for claim_lo, claim_hi, provenance in clipped
+                if claim_lo <= lo <= claim_hi
+            }
+            corrections = sorted(p for p in active if p is not None)
+            if None in active or not corrections:
+                provenance = None
+            elif len(corrections) == 1:
+                provenance = corrections[0]
+            else:
+                raise RegMetaError(
+                    exit_code=EXIT_CONFIG,
+                    code="coalesce_conflicting_state_provenance",
+                    error_class="configuration",
+                    message=(
+                        "multiple SCB correction evidence values cover the same "
+                        f"delivery interval [{lo}..{hi}] for variable_id={vid}, "
+                        f"register_variant_id={gkey[1]}, column={gkey[8]!r}."
+                    ),
+                    remediation=(
+                        "Make the overlapping scb_errata entries agree on one "
+                        "evidence value or give them disjoint edition windows."
+                    ),
+                )
+            if segments and segments[-1][2] == provenance:
+                segments[-1] = (segments[-1][0], hi, provenance)
+            else:
+                segments.append((lo, hi, provenance))
+        return segments
+
     def _append_state(
         grp: _StateGroup,
         gkey: tuple,
@@ -3232,47 +3306,53 @@ def _coalesce_variable_states(
                     "(reg_meta_build/edition_bounds.py) needs a fix."
                 ),
             )
-        if vt == _VALID_TO_OPEN_SENTINEL or vf == _VALID_FROM_UNKNOWN:
-            sentinel_count += 1
-        if not grp.unika_matched:
-            fallback_only_count += 1
-        # Fold token from triage wins; else the group's own label (NOT NULL
-        # DEFAULT '' — coalesce NULL→'' so the index bites for single-version).
-        label = triage.labels.get(gkey, grp.value_set_version_label or "")
-        if disambig:
-            base = label
-            # Disambiguate a cross-column co-delivery collision with the delivery-
-            # column name (self-documenting + order-stable) rather than an opaque
-            # counter; the first-emitted column keeps the base label. The numeric
-            # fallback only fires if the column name ALSO collides (it shouldn't —
-            # same-column conflicts are caught as `genuine` before emit).
-            col = grp.latest_alias or gkey[8] or "cd"
-            n = 0
-            while (vid, grp.register_variant_id, vf, label) in _used_index_keys:
-                n += 1
-                suffix = col if n == 1 else f"{col}{n}"
-                label = f"{base}-{suffix}" if base else suffix
-            if label != base:
-                disambig_count += 1
-        _used_index_keys.add((vid, grp.register_variant_id, vf, label))
-        batch.append(
-            (
-                vid,
-                grp.register_variant_id,
-                vf,
-                vt,
-                grp.data_type,
-                grp.data_length,
-                grp.latest_alias,
-                grp.source_register_text,
-                None
-                if grp.operational_definition_conflict
-                else grp.operational_definition,
-                grp.provenance,
-                grp.value_set_id,
-                label,
+        for part_from, part_to, provenance in _partition_provenance(gkey, vid, vf, vt):
+            if part_to == _VALID_TO_OPEN_SENTINEL or part_from == _VALID_FROM_UNKNOWN:
+                sentinel_count += 1
+            if not grp.unika_matched:
+                fallback_only_count += 1
+            # Fold token from triage wins; else the group's own label (NOT NULL
+            # DEFAULT '' — coalesce NULL→'' so the index bites for single-version).
+            label = triage.labels.get(gkey, grp.value_set_version_label or "")
+            if disambig:
+                base = label
+                # Disambiguate a cross-column co-delivery collision with the delivery-
+                # column name (self-documenting + order-stable) rather than an opaque
+                # counter; the first-emitted column keeps the base label. The numeric
+                # fallback only fires if the column name ALSO collides (it shouldn't —
+                # same-column conflicts are caught as `genuine` before emit).
+                col = grp.latest_alias or gkey[8] or "cd"
+                n = 0
+                while (
+                    vid,
+                    grp.register_variant_id,
+                    part_from,
+                    label,
+                ) in _used_index_keys:
+                    n += 1
+                    suffix = col if n == 1 else f"{col}{n}"
+                    label = f"{base}-{suffix}" if base else suffix
+                if label != base:
+                    disambig_count += 1
+            _used_index_keys.add((vid, grp.register_variant_id, part_from, label))
+            batch.append(
+                (
+                    vid,
+                    grp.register_variant_id,
+                    part_from,
+                    part_to,
+                    grp.data_type,
+                    grp.data_length,
+                    grp.latest_alias,
+                    grp.source_register_text,
+                    None
+                    if grp.operational_definition_conflict
+                    else grp.operational_definition,
+                    provenance,
+                    grp.value_set_id,
+                    label,
+                )
             )
-        )
 
     def _emit_span(gkey: tuple, grp: _StateGroup) -> None:
         """Fast path / yearless fallback: one state over the group's
@@ -3338,11 +3418,8 @@ def _coalesce_variable_states(
     def _col_value_sets(gks: list[tuple]) -> set[int]:
         return {vs for gk in gks if (vs := groups[gk].value_set_id) is not None}
 
-    def _col_state_metadata(gks: list[tuple]) -> set[tuple[str, str]]:
-        return {
-            (groups[gk].source_register_text or "", groups[gk].provenance or "")
-            for gk in gks
-        }
+    def _col_source_texts(gks: list[tuple]) -> set[str]:
+        return {groups[gk].source_register_text or "" for gk in gks}
 
     for (vid, rv), gkeys in by_vv.items():
         if not _needs_timeline(groups, gkeys):
@@ -3372,7 +3449,7 @@ def _coalesce_variable_states(
             col_yb = [gk for gk in year_bearing if gk[8] == col]
             if (
                 len(_col_value_sets(col_yl + col_yb)) <= 1
-                and len(_col_state_metadata(col_yl + col_yb)) <= 1
+                and len(_col_source_texts(col_yl + col_yb)) <= 1
             ):
                 yearless_emit.update(col_yl)  # no conflict on this column
                 continue
