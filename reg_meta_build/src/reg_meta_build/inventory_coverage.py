@@ -104,7 +104,7 @@ from reg_meta.inventory_check import _variable_ids, _variant_ids
 from reg_meta_build.db import _CURATED_PROVIDERS
 from reg_meta_build.edition_bounds import edition_claims
 from reg_meta_build.fqid_slugs import _toml_str
-from reg_meta_build.scb_errata import ERRATA_COLUMN_SOURCE_LABEL, _PROVIDER
+from reg_meta_build.scb_errata import _PROVIDER, ERRATA_COLUMN_SOURCE_LABEL
 
 if TYPE_CHECKING:
     import sqlite3

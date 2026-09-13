@@ -700,8 +700,7 @@ def _held(
     for edition, columns in holdings.items():
         edition_value = (
             str(edition)
-            if isinstance(edition, int)
-            or (edition.startswith("{") or edition.startswith("["))
+            if isinstance(edition, int) or edition.startswith(("{", "["))
             else json.dumps(edition)
         )
         lines += [
