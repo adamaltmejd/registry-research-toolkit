@@ -901,6 +901,12 @@ def apply_scb_errata(
     # original cvid is named, a competing entry must still see and refuse it.
     cloned_cvids: set[int] = set()
     for d in errata.delivered:
+        # One source edition can carry the SAME (VarId, column) through several
+        # cvid payloads. If they meet one original blank target, naming that
+        # instance once satisfies this entry; only an absent target clones each
+        # payload. Entry-local scope is load-bearing: a DIFFERENT column's entry
+        # must still see the now-owned original cvid and refuse it.
+        named_targets: set[tuple[int, int, str]] = set()
         context = f"[[delivered]] {d.column}"
         candidates = sources.get((d.register_variant_id, fold_column(d.column)))
         if not candidates:
@@ -935,6 +941,13 @@ def apply_scb_errata(
             clones = _nearest_rows(candidates, name)
             for regver_id in regvers:
                 for source in clones:
+                    target_key = (
+                        regver_id,
+                        source["var_id"],
+                        source["delivery_column_name"],
+                    )
+                    if target_key in named_targets:
+                        continue
                     target_cvid = _blank_target_cvid(
                         conn,
                         cloned_cvids=cloned_cvids,
@@ -953,6 +966,7 @@ def apply_scb_errata(
                             "(cvid, delivery_column_name) VALUES (?, ?)",
                             (target_cvid, source["delivery_column_name"]),
                         )
+                        named_targets.add(target_key)
                         counts["rows"] += 1
                         continue
                     # Keyed on the SOURCE row's cvid as well: a co-delivered

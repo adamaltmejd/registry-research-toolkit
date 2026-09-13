@@ -323,6 +323,36 @@ class TestDeliveredApplication:
         ]
         conn.close()
 
+    def test_repeated_same_column_source_rows_name_one_blank_target_once(self) -> None:
+        conn = _application_db([(9311, None)])
+        before = conn.execute(
+            "SELECT * FROM variable_instance WHERE cvid = 9311"
+        ).fetchone()
+        conn.execute(
+            "INSERT INTO variable_instance VALUES "
+            "(9312, 1, 10, 102, 931, 'Second source', 'decimal', '8', "
+            "'second coding', '3', 'second operation', 'second register', 99)"
+        )
+        conn.execute("INSERT INTO variable_alias_build VALUES (9312, 'DispCol')")
+
+        assert _apply_delivered(conn)["rows"] == 1
+
+        assert (
+            conn.execute("SELECT * FROM variable_instance WHERE cvid = 9311").fetchone()
+            == before
+        )
+        assert conn.execute(
+            "SELECT cvid, delivery_column_name FROM variable_alias_build "
+            "WHERE cvid = 9311"
+        ).fetchall() == [(9311, "DispCol")]
+        assert (
+            conn.execute(
+                "SELECT COUNT(*) FROM variable_instance WHERE regver_id = 101"
+            ).fetchone()[0]
+            == 1
+        )
+        conn.close()
+
 
 class TestVersionEntry:
     def test_historical_year_parses(self, tmp_path: Path, slug_dir: Path) -> None:
