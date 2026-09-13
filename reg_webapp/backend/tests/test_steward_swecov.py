@@ -30,6 +30,7 @@ line; this is the maintainer's early warning.
 
 from __future__ import annotations
 
+import json
 import os
 from pathlib import Path
 
@@ -43,6 +44,10 @@ from reg_webapp.stewards import load_delivery_inventory, load_steward
 
 _STEWARDS_DIR = Path(__file__).resolve().parents[2] / "stewards"
 _SWECOV = _STEWARDS_DIR / "swecov"
+_CIS2016_MATRIX_EVIDENCE = (
+    Path(__file__).resolve().parents[3]
+    / "reg_meta_build/curation/cis2016-matrix-meaning-evidence.json"
+)
 
 
 class _NoCatalog:
@@ -68,6 +73,65 @@ def test_swecov_steward_loads_with_its_inventory() -> None:
 def test_inventory_shape(inventory: DeliveryInventory) -> None:
     assert inventory.steward == "swecov"
     assert inventory.tables, "inventory must declare at least one table"
+
+
+def test_cis2016_matrix_columns_map_to_their_answer_identities(
+    inventory: DeliveryInventory,
+) -> None:
+    raw = json.loads(_CIS2016_MATRIX_EVIDENCE.read_text(encoding="utf-8"))
+    answer_by_column = {
+        column.casefold(): (
+            column,
+            f"scb/innovation-foretag/{answer['slug']}",
+        )
+        for answer in raw["answers"]
+        for column in answer["columns"]
+    }
+    assert len(answer_by_column) == 54
+
+    (cis2016,) = [table for table in inventory.tables if table.id == "CIS2016"]
+    assert cis2016.edition == "2016"
+
+    observed = []
+    for column in cis2016.columns:
+        for mapping in column.mappings:
+            representation = mapping.representation
+            if representation is None:
+                continue
+            key = representation.casefold()
+            if key not in answer_by_column:
+                continue
+            source_column, answer_fqid = answer_by_column[key]
+            variable_fqid = str(mapping.variable)
+            observed.append((column.name, representation, variable_fqid))
+            assert representation == source_column
+            assert variable_fqid == answer_fqid
+            assert mapping.register_variant == "scb/innovation-foretag/_default"
+
+    assert len(observed) == 54
+    assert len({representation.casefold() for _, representation, _ in observed}) == 54
+    assert len({variable for _, _, variable in observed}) == 54
+    physical_names = {
+        representation.casefold(): name for name, representation, _ in observed
+    }
+    assert physical_names["co11"] == "co11"
+    assert physical_names["co52"] == "Co52"
+
+    # Identically spelled columns in earlier waves remain on the unreviewed
+    # source identity; the CIS2016 evidence does not establish continuity.
+    older = [
+        mapping
+        for table in inventory.tables
+        if table.id == f"CIS{table.edition}" and table.id != "CIS2016"
+        for column in table.columns
+        for mapping in column.mappings
+        if mapping.representation is not None
+        and mapping.representation.casefold() in answer_by_column
+    ]
+    assert len(older) == 228
+    assert all(
+        str(mapping.variable) == "scb/innovation-foretag/co11" for mapping in older
+    )
 
 
 def test_every_mapping_pins_its_representation(inventory: DeliveryInventory) -> None:

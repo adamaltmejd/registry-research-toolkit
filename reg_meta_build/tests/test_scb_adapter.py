@@ -1553,7 +1553,21 @@ class TestCis2016MatrixProjection:
     def test_distinct_answers_keep_identity_ownership_and_source_evidence(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ) -> None:
-        extra = _cis2016_rows() + [
+        historical_editions = tuple(enumerate(range(2004, 2014, 2)))
+        historical = [
+            _var_row(
+                colname="",
+                cvid=469451 + index,
+                var_id=15662,
+                varname="Typ av samarbetspartner geografiskt fördelat",
+                year=str(end_year),
+                versionname=f"{end_year - 2} - {end_year}",
+                regver_id=11520 + index,
+                vardef="The common matrix question",
+            )
+            for index, end_year in historical_editions
+        ]
+        extra = historical + _cis2016_rows() + [
             # Same VarId and spelling in an unreviewed wave stays on the generic
             # source identity; the curated answer does not acquire continuity.
             _var_row(
@@ -1571,6 +1585,14 @@ class TestCis2016MatrixProjection:
             _var_row(colname="SHARED_B", cvid=469500, var_id=16000),
         ]
         values = vm_rows(469456, "CIS2016", CODING_A)
+        for index, end_year in historical_editions:
+            values.extend(
+                vm_rows(
+                    469451 + index,
+                    f"CIS{end_year}",
+                    [(str(end_year), f"Historical {end_year}")],
+                )
+            )
 
         conn = _built_with_cis2016_matrix(
             tmp_path / "forward", monkeypatch, extra, _cis2016_payload(), values
@@ -1705,15 +1727,30 @@ class TestCis2016MatrixProjection:
                 assert resolution.slices == (("2015-01-01", "2015-12-31", column),)
             conn.row_factory = None
 
-            # The unreviewed wave remains one separate generic source identity.
+            # The five historical alias-less states and the unreviewed named
+            # wave remain together on the original source identity. Projecting
+            # the reviewed edition must neither absorb nor orphan them.
             generic = conn.execute(
-                "SELECT v.variable_id, vs.valid_from, vs.valid_to "
+                "SELECT v.variable_id, v.slug, vs.valid_from, vs.valid_to, "
+                "vs.delivery_column_name "
                 "FROM variable v JOIN variable_state vs USING (variable_id) "
                 "WHERE v.provider_key = '15662' AND v.slug NOT IN (?, ?)",
                 slugs,
             ).fetchall()
-            assert len(generic) == 1
-            assert generic[0][1:] == ("2018-01-01", "2018-12-31")
+            assert len({row[0] for row in generic}) == 1
+            assert {row[1] for row in generic} == {"co11"}
+            blank_states = sorted(row for row in generic if row[4] is None)
+            assert len(blank_states) == 5
+            assert [row[2] for row in blank_states] == [
+                "2002-01-01",
+                "2004-01-01",
+                "2006-01-01",
+                "2008-01-01",
+                "2010-01-01",
+            ]
+            assert [row[2:] for row in generic if row[4] == "CO11"] == [
+                ("2018-01-01", "2018-12-31", "CO11")
+            ]
 
             unrelated = conn.execute(
                 "SELECT v.variable_id, group_concat(va.delivery_column_name, ',') "
