@@ -388,7 +388,9 @@ reviewer = "codex:gpt-5.6-sol:high"
 # (reg_webapp/frontend/DESIGN.md, ~15 KB), not the 178 KB engineering doc, and
 # never src/tokens.css — autoreview rejects that filename as sensitive.
 [checks.review.reviewers.design]
-reviewer = "claude:claude-opus-5:high"
+# Temporary Claude availability fallback (2026-09-13). Restore the Claude
+# binding after its host CLI/preflight and account access work again.
+reviewer = "codex:gpt-5.6-sol:high"
 context = [
   ".claude/skills/reg-webapp-design-reviewer/SKILL.md",
   "reg_webapp/frontend/DESIGN.md",
