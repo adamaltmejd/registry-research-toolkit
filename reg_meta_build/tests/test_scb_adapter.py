@@ -2235,10 +2235,17 @@ class TestScbErrata:
             errata_version("2019") + "\n" + errata_delivered("EraCol", "2019"),
         )
         try:
-            assert _windows(conn, "934") == [
+            windows = _windows(conn, "934")
+            assert windows == [
                 ("2019-01-01", "2019-12-31"),
-                ("2020-01-01", "2022-12-31"),
+                ("2020-01-01", "2020-12-31"),
+                ("2021-01-01", "2021-12-31"),
+                ("2022-01-01", "2022-12-31"),
             ]
+            assert (windows[0][0], windows[-1][1]) == (
+                "2019-01-01",
+                "2022-12-31",
+            )
             states = conn.execute(
                 "SELECT vs.delivery_column_name, vs.data_type, vs.data_length "
                 "FROM variable_state vs "
@@ -2249,6 +2256,8 @@ class TestScbErrata:
             assert states == [
                 ("eracol", "varchar", "1"),
                 ("eracol", "varchar", "1"),
+                ("eracol", "varchar", "1"),
+                ("eracol", "varchar", "1"),
             ]
             assert _provenance_windows(conn, "934") == [
                 (
@@ -2257,7 +2266,13 @@ class TestScbErrata:
                     "errata:omitted-column-in-version\n"
                     "the steward holds EraCol for those years",
                 ),
-                ("2020-01-01", "2022-12-31", None),
+                ("2020-01-01", "2020-12-31", None),
+                (
+                    "2021-01-01",
+                    "2021-12-31",
+                    "inferred:resolution-gap",
+                ),
+                ("2022-01-01", "2022-12-31", None),
             ]
         finally:
             conn.close()
