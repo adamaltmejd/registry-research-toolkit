@@ -2992,15 +2992,14 @@ consumes and the per-provider slug TOMLs.
   rule, shared with the `build_catalog.py errata` worklist so gate and generator cannot
   disagree). Only single-period editions are assessed, with full-period containment;
   integer years and period tokens (including `LA` school years) follow the same rule.
-  Range/list editions are explicitly counted as not assessed and produce no
-  availability inference or correction suggestion: a multi-period table's dates
-  describe its records, not each column's availability. A miss on the `scb` provider
-  is reported in `scb_errata.toml`'s
-  `[[version]]` / `[[delivered]]` grammar, because that is where the repair goes: SCB
-  omitted the row from its own export. A miss on any OTHER provider is never rendered as
-  a stanza — that file corrects SCB's export and its loader refuses another provider —
-  so it reports as one line naming the surface its window is curated on
-  (`input_data/<Provider>/<slug>.toml`'s `valid_from`, the Socialstyrelsen export for
+  Range/list editions are explicitly counted as not assessed and produce no availability
+  inference or correction suggestion: a multi-period table's dates describe its records,
+  not each column's availability. A miss on the `scb` provider is reported in
+  `scb_errata.toml`'s `[[version]]` / `[[delivered]]` grammar, because that is where the
+  repair goes: SCB omitted the row from its own export. A miss on any OTHER provider is
+  never rendered as a stanza — that file corrects SCB's export and its loader refuses
+  another provider — so it reports as one line naming the surface its window is curated
+  on (`input_data/<Provider>/<slug>.toml`'s `valid_from`, the Socialstyrelsen export for
   `sos`, or the inventory `extend-db` overlaid for a steward's own minted provider). The
   parameter is three-state: an inventory runs the gate, `None` skips it (the global
   build and synthetic CI, which have no holdings statement), and `HoldingsGate.SKIPPED`
