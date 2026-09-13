@@ -378,12 +378,8 @@ def test_curated_alias_rejects_unknown_column() -> None:
 def test_curated_alias_rejects_cross_variant_column() -> None:
     conn = _conn()
     _seed_curated(conn, aliases=("E_AWBUY",))
-    conn.execute(
-        "INSERT INTO register_variant VALUES (201, 1, 'other-variant')"
-    )
-    conn.execute(
-        "INSERT INTO variable_alias VALUES (100, 201, 'AEBUY')"
-    )
+    conn.execute("INSERT INTO register_variant VALUES (201, 1, 'other-variant')")
+    conn.execute("INSERT INTO variable_alias VALUES (100, 201, 'AEBUY')")
 
     with pytest.raises(RegMetaError) as exc_info:
         materialize_curated_alias_windows(

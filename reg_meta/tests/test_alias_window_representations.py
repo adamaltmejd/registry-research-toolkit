@@ -205,7 +205,12 @@ def test_curated_partial_state_window_preserves_base_and_earlier_alias(
         assert alias.valid_to == "2018-12-31"
         assert alias.provenance == "errata:test\nSWECOV holds it"
         assert alias.operational_definition is None
-        assert (alias.state_id, alias.data_type, alias.data_length, alias.value_set_id) == (
+        assert (
+            alias.state_id,
+            alias.data_type,
+            alias.data_length,
+            alias.value_set_id,
+        ) == (
             base.state_id,
             base.data_type,
             base.data_length,

@@ -83,7 +83,7 @@ def _source_editions(entry: dict, context: str) -> tuple[str, ...]:
             _CODE,
             f"alias_windows {context} needs `source_editions` as a non-empty "
             f"list of source-edition names, got {raw!r}.",
-            'Give exact `register_version.registerversionnamn` values, e.g. '
+            "Give exact `register_version.registerversionnamn` values, e.g. "
             '`source_editions = ["2018"]`.',
         )
     editions = tuple(value.strip() for value in raw)
@@ -446,9 +446,7 @@ def materialize_curated_alias_windows(
     # Staged first: a later invalid declaration must not leave an earlier entry
     # partly applied when this function is exercised outside build_db's transaction.
     base_windows: set[tuple[int, int, str, str, str]] = set()
-    targets: dict[
-        tuple[int, int, str, str, str], list[tuple[str, str]]
-    ] = {}
+    targets: dict[tuple[int, int, str, str, str], list[tuple[str, str]]] = {}
 
     for declaration in active:
         variable_id = resolve_variable_id(
@@ -568,9 +566,7 @@ def materialize_curated_alias_windows(
                 (variable_id, variant_id),
             )
         ]
-        base_provenance = _state_provenance(
-            _CORRECTION_CLASS, declaration.evidence
-        )
+        base_provenance = _state_provenance(_CORRECTION_CLASS, declaration.evidence)
 
         for edition in declaration.source_editions:
             edition_rows = conn.execute(
