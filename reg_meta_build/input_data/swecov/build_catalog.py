@@ -3483,16 +3483,15 @@ def cmd_inventory(args: argparse.Namespace) -> None:
 # reg_meta can deliver. Where they disagree — a column held in an edition with no
 # covering `variable_state` / `variable_alias_window` — the researcher hits
 # "period outside validity" on data the steward has, and `extend-db`'s flavored
-# validation now refuses to ship it (Y-115). For an SCB coordinate the repair is an
-# upstream-error record in `reg_meta_build/scb_errata.toml`, so this subcommand
-# writes the same misses the gate fails on as a CANDIDATE worklist for the
-# maintainer to curate: the `[[version]]` entries for editions SCB documents no
-# register version for, then the `[[delivered]]` entries for the omitted column
-# rows themselves. A miss on any OTHER provider cannot be an entry in that file at
-# all (its loader refuses one), so it rides in a third section as a comment naming
-# the curated surface its window is widened on. Multi-period range/list tables are
-# excluded from every section: their dates describe the records in the file, not
-# each column's availability.
+# validation now refuses to ship it (Y-115). For an SCB-export variable the repair
+# is an upstream-error record in `reg_meta_build/scb_errata.toml`, so this command
+# renders `[[version]]` entries for undocumented editions and `[[delivered]]`
+# entries for omitted rows. An errata-created variable has no SCB row to clone and
+# instead gets bounded `[[column]]`/mapping inspection guidance. A miss on any
+# OTHER provider cannot be an entry in that file at all (its loader refuses one),
+# so it is a comment naming the curated surface carrying the window. Multi-period
+# range/list tables are excluded from every section: their dates describe the
+# records in the file, not each column's availability.
 #
 # The reading rules live in `reg_meta_build.inventory_coverage` — ONE
 # implementation, so the worklist can never disagree with the gate that made it.
@@ -3532,7 +3531,8 @@ def cmd_errata(args: argparse.Namespace) -> None:
     print(
         f"  version-missing: {len(version_candidates(report.misses))} "
         f"[[version]] candidate(s)"
-        f"  column-missing: {len(report.errata_misses)} [[delivered]] candidate(s)"
+        f"  column-missing: {len(report.delivered_misses)} [[delivered]] candidate(s)"
+        f"  errata-column: {len(report.errata_column_misses)} miss(es) to inspect"
         f"  curated-window: {len(report.curated_misses)} non-scb miss(es)"
     )
 

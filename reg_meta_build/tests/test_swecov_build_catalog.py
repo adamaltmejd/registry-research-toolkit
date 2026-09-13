@@ -33,6 +33,7 @@ from reg_meta_build.ir import (
     IRVariant,
 )
 from reg_meta_build.sources.curated import CuratedAdapter
+from reg_meta_build.sources.scb import register_edition_claims
 
 _GENERATOR = (
     Path(__file__).resolve().parents[1] / "input_data" / "swecov" / "build_catalog.py"
@@ -680,6 +681,7 @@ _VARIABLE_OF = {
     "Covid-19 antikroppar": "covid-19-antikroppar",
     "Covid_19_antikroppar": "covid-19-antikroppar",
     "T_kolumn": "t-kolumn",
+    "Errata_utan_variant": "errata-utan-variant",
 }
 
 # The fixture's own variant coordinate — on `inera`, the steward's flavor provider.
@@ -696,7 +698,18 @@ def _held(
     register = variant.rpartition("/")[0]
     lines = ["version = 1", 'steward = "swecov"']
     for edition, columns in holdings.items():
-        lines += ["", "[[table]]", f'id = "T_{edition}"', f"edition = {edition}"]
+        edition_value = (
+            str(edition)
+            if isinstance(edition, int)
+            or (edition.startswith("{") or edition.startswith("["))
+            else json.dumps(edition)
+        )
+        lines += [
+            "",
+            "[[table]]",
+            f"id = {json.dumps(f'T_{edition}')}",
+            f"edition = {edition_value}",
+        ]
         for column in columns:
             lines += [
                 "",
@@ -807,6 +820,121 @@ def test_errata_worklist_splits_version_missing_from_column_missing(
     ]
 
 
+def test_errata_column_misses_are_inspection_items_not_delivered_candidates(
+    tmp_path: Path, flavored_db: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """A `[[column]]`-minted variable has no real SCB row for `[[delivered]]`.
+
+    The finite 2019 state models an explicitly version-limited entry; the second
+    variable resolves at register scope but has no state on the target variant,
+    so the DB cannot distinguish a missing entry from a routing/materialization
+    problem. A real undocumented 2021 edition still earns its independent
+    `[[version]]` candidate. The range table proves it contributes to none of the
+    candidate or assessed counts.
+    """
+    db = tmp_path / "errata-columns.db"
+    db.write_bytes(flavored_db.read_bytes())
+    conn = sqlite3.connect(db)
+    conn.execute("UPDATE provider SET slug = 'scb' WHERE provider_id = 900")
+    conn.execute(
+        "UPDATE variable SET source_label = 'scb-errata' WHERE variable_id = 904"
+    )
+    conn.execute(
+        "UPDATE variable_state SET valid_from = '2019-01-01', "
+        "valid_to = '2019-12-31' WHERE variable_id = 904"
+    )
+    conn.execute(
+        "INSERT INTO variable "
+        "(variable_id, register_id, provider_key, slug, name, source_label) "
+        "VALUES (906, 901, 'Errata_utan_variant', 'errata-utan-variant', "
+        "'Errata utan variant', 'scb-errata')"
+    )
+    conn.execute(
+        "INSERT INTO register_version "
+        "(regver_id, register_variant_id, registerversionnamn) "
+        "VALUES (905, 902, '2020')"
+    )
+    conn.commit()
+    conn.close()
+
+    text = _errata_text(
+        tmp_path,
+        db,
+        {
+            2020: ("T_kolumn", "Errata_utan_variant"),
+            2021: ("T_kolumn",),
+            "{ from = 2022, to = 2023 }": (
+                "T_kolumn",
+                "Errata_utan_variant",
+            ),
+        },
+        variant="scb/bestallda-prover/_default",
+    )
+
+    worklist = tomllib.loads(text)
+    assert [entry["name"] for entry in worklist["version"]] == ["2021"]
+    assert "delivered" not in worklist
+    assert "column-missing: the omitted column rows themselves, 0" in text
+    assert "errata-created columns: 2 group(s); no [[delivered]] candidate" in text
+    assert "scb/bestallda-prover/_default T_kolumn: held 2020..2021" in text
+    assert "scb/bestallda-prover/_default Errata_utan_variant: held 2020" in text
+    assert "target-variant [[column]] entry and inventory" in text
+    assert "does not reveal `all_versions` versus explicit `versions`" in text
+    assert "only when its matching" in text
+    assert "uses `all_versions = true`" in text
+    assert "routing/materialization mismatch" in text
+    assert "1 multi-period table(s) not assessed" in text
+    assert 'name = "2022"' not in text
+    assert 'name = "2023"' not in text
+
+    stdout = capsys.readouterr().out
+    assert "held column × edition pairs: 3 assessed, 3 with no catalog window" in stdout
+    assert "1 multi-period table(s) not assessed" in stdout
+    assert "version-missing: 1 [[version]] candidate(s)" in stdout
+    assert "column-missing: 0 [[delivered]] candidate(s)" in stdout
+    assert "errata-column: 2 miss(es) to inspect" in stdout
+
+
+def test_school_year_version_candidate_round_trips_through_scb_claims(
+    tmp_path: Path, flavored_db: Path
+) -> None:
+    """The holdings token stays `LA2020`, while the suggested SCB version name
+    uses the loader's native `2020/2021` spelling and claims those exact bounds.
+    A multi-period control remains entirely outside inference.
+    """
+    db = tmp_path / "school-year.db"
+    db.write_bytes(flavored_db.read_bytes())
+    conn = sqlite3.connect(db)
+    conn.execute("UPDATE provider SET slug = 'scb' WHERE provider_id = 900")
+    conn.execute(
+        "UPDATE variable_state SET valid_from = '2019-01-01', "
+        "valid_to = '2019-12-31' WHERE variable_id = 904"
+    )
+    conn.commit()
+    conn.close()
+
+    text = _errata_text(
+        tmp_path,
+        db,
+        {"LA2020": ("T_kolumn",), "[2022, 2023]": ("T_kolumn",)},
+        variant="scb/bestallda-prover/_default",
+    )
+    worklist = tomllib.loads(text)
+
+    assert [entry["name"] for entry in worklist["version"]] == ["2020/2021"]
+    assert worklist["delivered"][0]["versions"] == ["2020/2021"]
+    claims = register_edition_claims(901, worklist["version"][0]["name"])
+    assert claims == (
+        (2020, "2020-07-01", "2020-12-31"),
+        (2021, "2021-01-01", "2021-06-30"),
+    )
+    assert (claims[0][1], claims[-1][2]) == edition_bounds("LA2020")[0]
+    assert "held LA2020, catalog windows 2019" in text
+    assert "1 multi-period table(s) not assessed" in text
+    assert 'name = "2022"' not in text
+    assert 'name = "2023"' not in text
+
+
 def test_errata_worklist_lists_a_non_scb_miss_as_a_curated_window(
     tmp_path: Path, flavored_db: Path
 ) -> None:
@@ -876,10 +1004,15 @@ def test_errata_worklist_excludes_every_multi_period_suggestion(
     assert "3 multi-period table(s) not assessed" in text
     assert "version-missing: 0" in text
     assert "column-missing: the omitted column rows themselves, 0" in text
+    assert "errata-created columns: 0" in text
     assert "curated windows: 0" in text
     stdout = capsys.readouterr().out
     assert "held column × edition pairs: 0 assessed, 0 with no catalog window" in stdout
     assert "3 multi-period table(s) not assessed" in stdout
+    assert "version-missing: 0 [[version]] candidate(s)" in stdout
+    assert "column-missing: 0 [[delivered]] candidate(s)" in stdout
+    assert "errata-column: 0 miss(es) to inspect" in stdout
+    assert "curated-window: 0 non-scb miss(es)" in stdout
 
 
 # --- cmd_grafts: the scb_errata.toml [[column]] candidates --------------------

@@ -2496,15 +2496,15 @@ def _check_inventory_window_coverage(
     whole edition and `reg_meta.inventory_check` only asks whether the coordinate
     EXISTS, so the contradiction survives every other gate and surfaces as the
     RESEARCHER's ``period_outside_state_validity`` on data the steward has. The
-    repair for an SCB coordinate is upstream-grained — SCB omitted the row from its
-    own export — so the report ends in a VERBATIM block of ``scb_errata.toml``
-    stanzas: one ``[[delivered]]`` per miss naming the omitted
-    ``Registerversionnamn``, preceded by a ``[[version]]`` for every held edition the
-    catalog documents no version for. Valid, complete TOML the maintainer pastes,
-    with ``evidence`` / ``noted`` as TODO placeholders. A miss on ANY OTHER provider
-    stays out of that block — that file corrects SCB's export only and its loader
-    refuses another provider — and its own fail line names the curated surface its
-    window is widened on instead. See `inventory_coverage` for the reading rules.
+    repair for an SCB-export variable is upstream-grained — SCB omitted the row
+    from its own export — so the report includes a ``[[delivered]]`` naming the
+    omitted ``Registerversionnamn``. A variable minted from ``[[column]]`` has no
+    real row to clone, so its fail line directs the curator back to that entry and
+    mapping instead. Independently missing editions still contribute a preceding
+    ``[[version]]``. A miss on ANY OTHER provider stays out of the stanza block —
+    that file corrects SCB's export only and its loader refuses another provider —
+    and its fail line names the curated surface its window is widened on instead.
+    See `inventory_coverage` for the reading rules.
 
     ``delivery_inventory is None`` (synthetic CI, the global build) SKIPS the gate:
     with no holdings statement there is nothing to contradict.
@@ -2553,9 +2553,10 @@ def _check_inventory_window_coverage(
     )
     result.info(
         "`python input_data/swecov/build_catalog.py --db <flavored-db> errata` "
-        "writes every group as a worklist file, the scb stanzas first and the "
-        "curated-window misses after them. Never answer this gate by skipping "
-        "validation: the flavor would ship contradicting the steward's holdings."
+        "writes every group as a worklist: loadable SCB candidates first, then "
+        "errata-column and curated-window inspection items. Never answer this gate "
+        "by skipping validation: the flavor would ship contradicting the steward's "
+        "holdings."
     )
     curated = report.curated_misses
     if curated:
