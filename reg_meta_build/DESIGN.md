@@ -115,10 +115,11 @@ with deliberately separate homes:
   Correction-only overlaps use the same records under `errata:overlapping-attributions`;
   evidence is descriptive, so distinct overlapping records coexist rather than compete
   in metadata resolution. The aggregate class names are builder-reserved, and curated
-  classes/evidence are single-line so a base record cannot impersonate the structured
-  carrier. Provenance cannot change coverage or shape selection, while one corrected
-  edition still cannot relabel an adjacent documented interval. When the existing
-  resolver retains a gap covered by no source claim, the coalescer stamps only that span
+  classes are single-line so a base record cannot impersonate the structured carrier;
+  evidence remains free text, and the structured formatter preserves its paragraphs.
+  Provenance cannot change coverage or shape selection, while one corrected edition
+  still cannot relabel an adjacent documented interval. When the existing resolver
+  retains a gap covered by no source claim, the coalescer stamps only that span
   `inferred:resolution-gap` instead of provider NULL; this changes attribution, never
   coverage or resolved metadata. There is no post-pass `variable_state` surgery and no
   generic `variable_state_overrides.toml` (see the classification-links rule below for

@@ -335,11 +335,12 @@ def _require_provenance(entry: dict, context: str) -> str:
 def _state_provenance(class_name: str, evidence: str) -> str:
     """Stable, human-readable base provenance: class first, evidence after it.
 
-    The newline is the field's only structural separator. It keeps the catalog
-    value useful as-is for CLI/JSON consumers while letting the SPA present the
-    correction class and supporting evidence separately. When corrections
-    overlap a provider-documented claim, the coalescer replaces this base form
-    with a scoped-attributions value that retains every edition/evidence pair;
+    The first newline separates the class from free-text evidence; subsequent
+    newlines remain part of that evidence. This keeps the catalog value useful
+    as-is for CLI/JSON consumers while letting the SPA present the correction
+    class and supporting evidence separately. When corrections overlap a
+    provider-documented claim, the coalescer replaces this base form with a
+    scoped-attributions value that retains every edition/evidence pair;
     correction-only overlaps use the same records under overlapping-attributions.
     """
     if class_name in _RESERVED_CORRECTION_CLASSES:
@@ -349,16 +350,12 @@ def _state_provenance(class_name: str, evidence: str) -> str:
             "builder-generated scoped provenance.",
             "Use a specific upstream correction class instead.",
         )
-    for field, value in (
-        ("`upstream` correction class", class_name),
-        ("`evidence`", evidence),
-    ):
-        if "\n" in value or "\r" in value:
-            raise curation_error(
-                _CODE,
-                f"scb_errata {field} cannot contain line breaks.",
-                "Keep that value on one line.",
-            )
+    if "\n" in class_name or "\r" in class_name:
+        raise curation_error(
+            _CODE,
+            "scb_errata `upstream` correction class cannot contain line breaks.",
+            "Keep that value on one line.",
+        )
     return f"errata:{class_name}\n{evidence}"
 
 

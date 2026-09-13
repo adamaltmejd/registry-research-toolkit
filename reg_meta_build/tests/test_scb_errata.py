@@ -23,6 +23,7 @@ from reg_meta_build.scb_errata import (
     ScbErrata,
     apply_scb_errata,
     load_scb_errata,
+    scoped_state_provenance,
 )
 
 if TYPE_CHECKING:
@@ -419,29 +420,37 @@ class TestDeliveredEntry:
         err = _refused(tmp_path, slug_dir, body)
         assert "reserved" in err.message
 
-    @pytest.mark.parametrize(
-        ("field", "value"),
-        [
-            ("upstream", '"""specific\ncorrection"""'),
-            ("evidence", '"""The steward holds\nthis delivery."""'),
-        ],
-    )
-    def test_provenance_fields_reject_line_breaks(
-        self, tmp_path: Path, slug_dir: Path, field: str, value: str
+    def test_provenance_class_rejects_line_breaks(
+        self, tmp_path: Path, slug_dir: Path
     ) -> None:
-        fields = {
-            "evidence": '"The steward holds it."',
-            "upstream": '"specific-correction"',
-            field: value,
-        }
         body = (
             '[[delivered]]\nregister = "scb/lisa"\n'
             'variant = "individer-15plus"\ncolumn = "Kon"\n'
-            f'versions = ["2010"]\nevidence = {fields["evidence"]}\n'
-            f'noted = "2026-09-12"\nupstream = {fields["upstream"]}\n'
+            'versions = ["2010"]\nevidence = "The steward holds it."\n'
+            'noted = "2026-09-12"\nupstream = """specific\ncorrection"""\n'
         )
         err = _refused(tmp_path, slug_dir, body)
         assert "line breaks" in err.message
+
+    def test_multiline_evidence_round_trips_loader_and_scoped_formatter(
+        self, tmp_path: Path, slug_dir: Path
+    ) -> None:
+        body = (
+            '[[delivered]]\nregister = "scb/lisa"\n'
+            'variant = "individer-15plus"\ncolumn = "Kon"\n'
+            'versions = ["2010"]\nevidence = """First paragraph.\n\n'
+            'Second paragraph."""\nnoted = "2026-09-12"\n'
+        )
+        (entry,) = _load(tmp_path, slug_dir, body).delivered
+        assert entry.provenance == (
+            "errata:omitted-column-in-version\nFirst paragraph.\n\nSecond paragraph."
+        )
+        assert scoped_state_provenance([(entry.provenance, "2010")]) == (
+            "errata:scoped-attributions\n"
+            '[{"class":"omitted-column-in-version",'
+            '"evidence":"First paragraph.\\n\\nSecond paragraph.",'
+            '"source_editions":["2010"]}]'
+        )
 
 
 class TestColumnEntry:
