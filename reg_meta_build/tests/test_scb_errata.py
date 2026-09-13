@@ -17,13 +17,13 @@ from typing import TYPE_CHECKING
 
 import pytest
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
+from reg_meta_build.id import mint_canonical_scb
 from reg_meta_build.scb_errata import (
     ErrataDelivered,
     ScbErrata,
     apply_scb_errata,
     load_scb_errata,
 )
-from reg_meta_build.id import mint_canonical_scb
 
 if TYPE_CHECKING:
     from pathlib import Path
