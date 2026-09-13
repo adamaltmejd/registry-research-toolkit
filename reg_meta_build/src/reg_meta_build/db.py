@@ -3227,7 +3227,6 @@ def _reinsert_core_graph_from_ir(
     _progress("A4.3a: re-inserting core graph from IR (materializer sole-writer)...")
 
     for table in (
-        "variable_alias_window",
         "variable_alias",
         "variable_state",
         "variable",

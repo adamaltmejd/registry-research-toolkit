@@ -16,9 +16,13 @@ import pytest
 from pydantic import BaseModel
 from reg_meta.errors import RegMetaError
 from reg_meta_build.db import (
+    DDL,
     PROVENANCE_DB_FILENAME,
+    _insert_core_graph_from_ir,
+    _reinsert_core_graph_from_ir,
     create_empty_provenance_db,
     publish_db,
+    seed_providers,
 )
 from reg_meta_build.ir import (
     IRClassification,
@@ -288,6 +292,49 @@ def test_irobject_union_covers_every_ir_class() -> None:
     assert members == expected, (
         f"IRObject drift; missing={expected - members} extra={members - expected}"
     )
+
+
+def test_core_graph_reinsert_preserves_existing_alias_windows() -> None:
+    """Alias-window producers that run outside the IR stream retain their rows."""
+    conn = sqlite3.connect(":memory:")
+    conn.executescript(DDL)
+    seed_providers(conn)
+    register = IRRegister.model_validate(_IR_FACTORIES["IRRegister"][1])
+    variant = IRVariant.model_validate(_IR_FACTORIES["IRVariant"][1])
+    variable = IRVariable.model_validate(_IR_FACTORIES["IRVariable"][1])
+    state = IRVariableState.model_validate(
+        _IR_FACTORIES["IRVariableState"][1]
+        | {"valid_from": "2018-01-01", "valid_to": "2018-12-31"}
+    )
+    alias = IRVariableAlias.model_validate(_IR_FACTORIES["IRVariableAlias"][1])
+    window = IRVariableAliasWindow.model_validate(
+        _IR_FACTORIES["IRVariableAliasWindow"][1] | {"valid_to": "2018-12-31"}
+    )
+    _insert_core_graph_from_ir(
+        conn,
+        registers=[register],
+        variants=[variant],
+        variables=[variable],
+        states=[state],
+        aliases=[alias],
+        alias_windows=[window],
+    )
+
+    _reinsert_core_graph_from_ir(
+        conn,
+        registers=[register],
+        variants=[variant],
+        variables=[variable],
+        states=[state],
+        aliases=[alias],
+        alias_windows=[],
+    )
+
+    assert conn.execute(
+        "SELECT variable_id, register_variant_id, delivery_column_name, "
+        "valid_from, valid_to FROM variable_alias_window"
+    ).fetchall() == [(100, 10, "Kon", "2018-01-01", "2018-12-31")]
+    conn.close()
 
 
 def test_publish_db_installs_new_bytes_and_keeps_prior_generation(
