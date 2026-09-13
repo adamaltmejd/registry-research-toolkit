@@ -45,6 +45,7 @@ _CORPUS: tuple[str, ...] = (
     "2018-02",  # non-leap February month token (no author day — valid)
     "HT2020",
     "VT2019",
+    "LA2004",
     "2020-Q1",
     "2020-Q4",
     "2020-H1",
@@ -77,6 +78,7 @@ _CORPUS: tuple[str, ...] = (
     "1899",
     "2100",
     "HT9999",
+    "LA",
     "2018-13-01",
     "2018-01-00",
     "2018-01-32",

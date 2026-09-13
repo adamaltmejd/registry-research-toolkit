@@ -22,9 +22,10 @@
 #       Per-register school-year rule: SCB's school registers deliver school
 #       years, so a table of theirs named by ONE year holds the school year
 #       that year ANCHORS — `spring` (grades set in the spring: table year Y
-#       is <Y-1>-07-01..<Y>-06-30), `autumn` (an October snapshot: Y is
-#       <Y>-07-01..<Y+1>-06-30), or `vt` / `ht` for a single term (VT<Y> /
-#       HT<Y>). `register` is a 2-part coordinate (<provider>/<register>) and
+#       emits LA<Y-1>), `autumn` (an October snapshot: Y emits LA<Y>), or `vt` /
+#       `ht` for a single term (VT<Y> / HT<Y>). LA<Y> spans
+#       <Y>-07-01..<Y+1>-06-30. `register` is a 2-part coordinate
+#       (<provider>/<register>) and
 #       the rule applies to every table of that register whose edition comes
 #       from a bare year in its name; a per-table [[edition]] above still
 #       wins. Which school year a table year names differs per register, so

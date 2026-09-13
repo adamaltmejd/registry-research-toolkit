@@ -192,6 +192,7 @@ describe("looksLikePeriod (advisory period grammar)", () => {
     "2020-12-31",
     "HT2020",
     "VT2020",
+    "LA2004",
     "2020-Q1",
     "2020-Q4",
     "2020-H1",
@@ -220,6 +221,7 @@ describe("looksLikePeriod (advisory period grammar)", () => {
     "2020-Q5", // bad quarter
     "2020-H3", // bad half
     "XT2020", // bad term prefix
+    "LA", // school-year prefix without its starting year
     "2020-2021", // a dash range is NOT the `..` range grammar
     "2018..2019..2020", // two separators
     "2018..", // missing endpoint
@@ -250,6 +252,7 @@ describe("isStructurallyValidPeriodWire", () => {
   it("accepts sorted non-overlapping period wires", () => {
     expect(isStructurallyValidPeriodWire("2020")).toBe(true);
     expect(isStructurallyValidPeriodWire("2019-03..2019-06")).toBe(true);
+    expect(isStructurallyValidPeriodWire("LA2004..LA2005")).toBe(true);
     expect(isStructurallyValidPeriodWire("2005..2010,2015..2020")).toBe(true);
   });
 
@@ -263,6 +266,7 @@ describe("isStructurallyValidPeriodWire", () => {
   it("rejects grammar-looking lists that are unsorted or overlapping", () => {
     expect(isStructurallyValidPeriodWire("2020,2019")).toBe(false);
     expect(isStructurallyValidPeriodWire("2010..2020,2020..2021")).toBe(false);
+    expect(isStructurallyValidPeriodWire("2004,LA2004")).toBe(false);
     expect(isStructurallyValidPeriodWire("2020..2019")).toBe(false);
   });
 });
@@ -380,6 +384,13 @@ describe("periodTokenBounds (#306 advisory window math)", () => {
     });
   });
 
+  it("maps a school year across its two calendar years", () => {
+    expect(periodTokenBounds("LA2004")).toEqual({
+      from: "2004-07-01",
+      to: "2005-06-30",
+    });
+  });
+
   it("maps months (leap-aware) and days", () => {
     expect(periodTokenBounds("2020-02")).toEqual({
       from: "2020-02-01",
@@ -404,6 +415,10 @@ describe("periodTokenBounds (#306 advisory window math)", () => {
 });
 
 describe("periodTokenForBounds (#271 inverse — coarsest exact token)", () => {
+  it("a school-year window → its LA token", () => {
+    expect(periodTokenForBounds("2004-07-01", "2005-06-30")).toBe("LA2004");
+  });
+
   it("a full-year window → the bare year", () => {
     expect(periodTokenForBounds("2020-01-01", "2020-12-31")).toBe("2020");
   });
@@ -447,6 +462,7 @@ describe("periodTokenForBounds (#271 inverse — coarsest exact token)", () => {
       ["2020-03-01", "2020-03-31"],
       ["2020-07-01", "2020-09-30"],
       ["2009-01-01", "2009-06-30"],
+      ["2004-07-01", "2005-06-30"],
       ["2020-08-15", "2020-08-15"],
     ] as const) {
       const token = periodTokenForBounds(lo, hi);
@@ -502,6 +518,10 @@ describe("periodWireBounds (#678: exact ISO bounds of a whole ?period)", () => {
     expect(periodWireBounds("2010-Q2..2015-03")).toEqual({
       from: "2010-04-01",
       to: "2015-03-31",
+    });
+    expect(periodWireBounds("LA2004..LA2005")).toEqual({
+      from: "2004-07-01",
+      to: "2006-06-30",
     });
   });
 

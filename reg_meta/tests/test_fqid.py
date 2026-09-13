@@ -274,6 +274,7 @@ class TestPeriodGrammar:
             "2018-12",
             "HT2020",
             "VT2019",
+            "LA2004",
             "2020-Q1",
             "2020-Q4",
             "2020-H1",
@@ -297,6 +298,7 @@ class TestPeriodGrammar:
             "2018-1",
             "Q1-2020",
             "HT20",
+            "LA",
             "2020-Q0",
             "2020-Q5",
             "abc",
@@ -318,6 +320,7 @@ class TestPeriodGrammar:
             "2018-01-1",
             "2020\n",  # trailing newline (Python `$` would accept this; `\Z` rejects)
             "HT2020\n",
+            "LA2004\n",
             "2020-Q3\n",
             "2020-01-01\n",
             # Calendar-impossible author days: pass the syntactic 01-31 day regex
@@ -333,6 +336,10 @@ class TestPeriodGrammar:
     def test_invalid_periods(self, bad: str) -> None:
         assert not is_period(bad)
 
+    def test_school_year_without_a_year_is_rejected_with_the_grammar(self) -> None:
+        with pytest.raises(FqidError, match=r"LA<YYYY>"):
+            period_token_to_bounds("LA")
+
     @pytest.mark.parametrize("bad", ["2019-02-29", "2018-02-30", "2021-04-31"])
     def test_period_token_to_bounds_rejects_calendar_invalid_day(
         self, bad: str
@@ -346,6 +353,12 @@ class TestPeriodGrammar:
 
 
 class TestPeriodTokenForBounds:
+    def test_school_year_bounds(self) -> None:
+        assert period_token_to_bounds("LA2004") == (
+            "2004-07-01",
+            "2005-06-30",
+        )
+
     @pytest.mark.parametrize(
         "token",
         # Every emittable token form round-trips bounds → token exactly. The
@@ -354,6 +367,7 @@ class TestPeriodTokenForBounds:
             "2018",
             "VT2019",
             "HT2020",
+            "LA2004",
             "2020-Q1",
             "2020-Q3",
             "2018-03",
@@ -385,7 +399,6 @@ class TestPeriodTokenForBounds:
             ("2009-01-01", "2009-09-30"),  # Q1-Q3 union — no single token
             ("2009-04-01", "2009-12-31"),  # Q2-Q4 union
             ("2010-01-01", "2012-12-31"),  # multi-year span
-            ("2009-07-01", "2010-06-30"),  # school-year span
         ],
     )
     def test_non_grammar_window_renders_explicit_range(self, lo: str, hi: str) -> None:

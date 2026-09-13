@@ -44,14 +44,14 @@ describe("PeriodPicker — year-grain UI", () => {
     const onsubmit = vi.fn<(period: string) => void>();
     const onclear = vi.fn<() => void>();
     const screen = await render(PeriodPicker, {
-      period: "HT2020",
+      period: "LA2020",
       window: { from: 2000, to: 2010 },
       onsubmit,
       onclear,
     });
     await expect.element(screen.getByText(/Active period/)).toBeVisible();
     await expect
-      .element(screen.getByText("HT2020", { exact: true }))
+      .element(screen.getByText("LA2020", { exact: true }))
       .toBeVisible();
     await screen.getByRole("button", { name: "Apply period" }).click();
     expect(onsubmit).not.toHaveBeenCalled();

@@ -66,7 +66,7 @@ class _InventoryModel(BaseModel):
 
 
 class EditionRange(_InventoryModel):
-    """The `{ from = ..., to = ... }` finite range form of a table edition.
+    """The `{ from = ..., to = ... }` multi-period form of a table edition.
 
     Endpoints are period tokens (a bare TOML year int is normalized to its token
     string on the way in). `from` is a Python keyword, so the attr is `from_`
@@ -83,11 +83,12 @@ class EditionRange(_InventoryModel):
         return _year_int_to_token(value)
 
 
-# One contiguous piece of a table edition: a period token or an explicit range.
+# One token denotes ONE delivered period; an explicit range denotes a
+# multi-period file.
 EditionSegment = str | EditionRange
-# A table's edition: one segment, or a finite list of segments for a table that
-# carries an interrupted series. NEVER `"_default"` and never an unbounded
-# "all periods" sentinel (§12) — an edition is always finite and explicit.
+# A table's edition: one segment, or a finite list for a multi-period file that
+# carries an interrupted series. NEVER `"_default"` and never an unbounded "all
+# periods" sentinel (§12) — an edition is always finite and explicit.
 Edition = EditionSegment | tuple[EditionSegment, ...]
 
 
@@ -369,6 +370,9 @@ class InventoryColumn(_InventoryModel):
 class InventoryTable(_InventoryModel):
     """One delivered table: an opaque exact identifier, ONE explicit physical
     edition, and its physical columns.
+
+    An authored year int or period token means the file delivers ONE period; an
+    explicit range or list means the file delivers multiple periods.
 
     `id` is verbatim and opaque — an exact delivery filename
     (`LISA_Individ_2019.csv`) or a schema-qualified SQL table

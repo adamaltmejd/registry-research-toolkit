@@ -3083,7 +3083,7 @@ def _table_edition(table: str, overlay: dict) -> object | None:
     return int(tok) if re.fullmatch(r"\d{4}", tok) else tok
 
 
-def _school_year_edition(anchor: str, year: int) -> object:
+def _school_year_edition(anchor: str, year: int) -> str:
     """The school year a bare table year names, under a register's anchor.
 
     SCB's school registers deliver school years, not calendar years, and a
@@ -3092,9 +3092,9 @@ def _school_year_edition(anchor: str, year: int) -> object:
     an October teacher snapshot by the autumn year), so the anchor is curated
     per register in the overlay's `[[school_year]]`, never inferred."""
     if anchor == "spring":
-        return {"from": f"{year - 1}-07-01", "to": f"{year}-06-30"}
+        return f"LA{year - 1}"
     if anchor == "autumn":
-        return {"from": f"{year}-07-01", "to": f"{year + 1}-06-30"}
+        return f"LA{year}"
     return f"{anchor.upper()}{year}"  # a single term: VT<Y> / HT<Y>
 
 

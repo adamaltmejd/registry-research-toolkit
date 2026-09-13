@@ -27,6 +27,7 @@ _ACCEPT_PERIODS = [
     ("2020", 2020),
     ("HT2020", "HT2020"),
     ("VT2020", "VT2020"),
+    ("LA2004", "LA2004"),
     ("2020-Q3", "2020-Q3"),
     ("2020-H1", "2020-H1"),
     ("2020-08", "2020-08"),
@@ -36,6 +37,7 @@ _ACCEPT_PERIODS = [
     ("2020-Q1..2020-Q4", {"from": "2020-Q1", "to": "2020-Q4"}),
     ("2018-01..2018-06", {"from": "2018-01", "to": "2018-06"}),
     ("HT2018..VT2019", {"from": "HT2018", "to": "VT2019"}),
+    ("LA2004..LA2005", {"from": "LA2004", "to": "LA2005"}),
 ]
 
 # Malformed period values must raise BEFORE any reg_meta lookup. SQLi /
@@ -48,6 +50,7 @@ _REJECT_PERIODS = [
     "2020%2f..",  # percent-encoded slash (Starlette decodes; even raw it's not a token)
     "2020-13",  # month out of range
     "HT20",  # year too short
+    "LA",  # school-year prefix without its starting year
     "2020-2021",  # a bare year-range without `..` is not a token
     "2018..2019..2020",  # double `..`
     "..2020",  # missing from-endpoint
@@ -85,6 +88,7 @@ _ACCEPT_PERIOD_QUERIES = [
     ("_default", ["_default"]),
     ("2005..2010,2015..2020", [{"from": 2005, "to": 2010}, {"from": 2015, "to": 2020}]),
     ("2005..2010,2013,HT2018", [{"from": 2005, "to": 2010}, 2013, "HT2018"]),
+    ("LA2004,LA2006", ["LA2004", "LA2006"]),
     ("2020,2015", [2020, 2015]),  # unsorted accepted — browse query, not authored
 ]
 

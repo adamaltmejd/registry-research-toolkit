@@ -335,6 +335,7 @@ def test_period_token_strings_are_ok() -> None:
         "2018-12-31",
         "HT2020",
         "VT2020",
+        "LA2004",
         "2018-Q1",
         "2018-H1",
     ):
@@ -356,6 +357,13 @@ def test_period_snapshot_sentinel_is_invalid_period() -> None:
 def test_period_range_object_is_ok() -> None:
     spec = _spec()
     spec["sources"][0]["period"] = {"from": "2018-01-01", "to": "2020-06-30"}
+    result = validate_structural(spec)
+    assert result.ok, result.issues
+
+
+def test_period_range_with_school_year_endpoints_is_ok() -> None:
+    spec = _spec()
+    spec["sources"][0]["period"] = {"from": "LA2004", "to": "LA2005"}
     result = validate_structural(spec)
     assert result.ok, result.issues
 
@@ -503,6 +511,13 @@ def test_period_list_mixed_grammar_overlap_is_caught() -> None:
     # on real intervals, not token strings.
     spec = _spec()
     spec["sources"][0]["period"] = [2018, "HT2018"]
+    result = validate_structural(spec)
+    assert _at(result, "invalid_period") == ["/sources/0/period/1"]
+
+
+def test_period_list_school_year_overlap_is_caught() -> None:
+    spec = _spec()
+    spec["sources"][0]["period"] = [2004, "LA2004"]
     result = validate_structural(spec)
     assert _at(result, "invalid_period") == ["/sources/0/period/1"]
 

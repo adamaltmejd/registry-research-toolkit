@@ -17,6 +17,7 @@ from reg_meta.fqid import FqidError
 from reg_meta.inventory import (
     DeliveryInventory,
     EditionRange,
+    _render,
     edition_bounds,
     load_inventory,
 )
@@ -136,6 +137,27 @@ def test_edition_bounds_expand_via_the_shared_period_grammar() -> None:
         ("2005-01-01", "2010-12-31"),
         ("2015-01-01", "2015-12-31"),
     )
+
+
+def test_school_year_edition_loads_and_renders_as_its_token(tmp_path) -> None:
+    inventory = load_inventory(
+        _write(
+            tmp_path,
+            '''
+version = 1
+steward = "swecov"
+
+[[table]]
+id = "Grundskola_2004.csv"
+edition = "LA2004"
+[[table.column]]
+name = "Betyg"
+''',
+        )
+    )
+    edition = inventory.tables[0].edition
+    assert edition == "LA2004"
+    assert _render(edition_bounds(edition)) == "LA2004"
 
 
 @pytest.mark.parametrize(

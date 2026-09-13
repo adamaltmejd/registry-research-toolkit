@@ -137,8 +137,13 @@ _PERIOD_PATTERNS = (
     re.compile(rf"^{_YEAR}-{_MONTH}\Z"),
     re.compile(rf"^{_YEAR}-{_MONTH}-{_DAY}\Z"),
     re.compile(rf"^[HV]T{_YEAR}\Z"),
+    re.compile(rf"^LA{_YEAR}\Z"),
     re.compile(rf"^{_YEAR}-Q[1-4]\Z"),
     re.compile(rf"^{_YEAR}-H[12]\Z"),
+)
+_PERIOD_GRAMMAR = (
+    "YYYY, YYYY-MM, YYYY-MM-DD, HTYYYY/VTYYYY, LA<YYYY>, "
+    "YYYY-Q[1-4], YYYY-H[12]"
 )
 
 # Most-specific-first so "LISA HT2020" yields "HT2020", not "2020". Word
@@ -241,12 +246,13 @@ def period_token_to_bounds(token: str) -> tuple[str, str]:
     The full date-range expansion the resolver's `resolve_at` needs to intersect
     against `variable_state` validity ranges (which are stored as full ISO dates,
     see DESIGN.md → Two-level variable model). Mirrors the ingest-side expansion so a `HT2020` query and a `HT2020`
-    state agree on bounds. Accepts the six period forms `is_period` accepts:
+    state agree on bounds. Accepts the seven period forms `is_period` accepts:
 
         2018          → 2018-01-01 .. 2018-12-31
         2018-03       → 2018-03-01 .. 2018-03-31
         2018-12-31    → 2018-12-31 .. 2018-12-31  (single day)
         HT2020 / VT2020 → autumn (Jul-Dec) / spring (Jan-Jun) term
+        LA2004        → 2004-07-01 .. 2005-06-30  (school year)
         2018-Q3       → 2018-07-01 .. 2018-09-30
         2018-H1       → 2018-01-01 .. 2018-06-30
 
@@ -255,10 +261,11 @@ def period_token_to_bounds(token: str) -> tuple[str, str]:
     """
     if not is_period(token):
         raise FqidError(
-            f"not a period token: {token!r} "
-            "(grammar: YYYY, YYYY-MM, YYYY-MM-DD, HTYYYY/VTYYYY, "
-            "YYYY-Q[1-4], YYYY-H[12])"
+            f"not a period token: {token!r} (grammar: {_PERIOD_GRAMMAR})"
         )
+    if token.startswith("LA"):
+        year = token[2:]
+        return f"{year}-07-01", f"{int(year) + 1:04d}-06-30"
     if token[:2] in ("HT", "VT"):
         year = token[2:]
         lo_m, hi_m = ("07", "12") if token[0] == "H" else ("01", "06")
@@ -315,6 +322,9 @@ def period_token_for_bounds(lo: str, hi: str) -> str:
     SCB's term registers, and the curated period grammar prefers the term
     spelling) — the ``-H`` forms are accepted on input but never emitted."""
     year, ylo_m = lo[:4], lo[5:7]
+    school_year = f"LA{year}"
+    if is_period(school_year) and period_token_to_bounds(school_year) == (lo, hi):
+        return school_year
     if hi[:4] == year:
         if (lo, hi) == (f"{year}-01-01", f"{year}-12-31"):
             return year
@@ -404,9 +414,7 @@ def validate_slug(
 def _validate_period(value: str) -> None:
     if not is_period(value):
         raise FqidError(
-            f"invalid period: {value!r} "
-            "(grammar: YYYY, YYYY-MM, YYYY-MM-DD, HTYYYY/VTYYYY, "
-            "YYYY-Q[1-4], YYYY-H[12])"
+            f"invalid period: {value!r} (grammar: {_PERIOD_GRAMMAR})"
         )
 
 

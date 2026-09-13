@@ -356,7 +356,9 @@ on `variable_state` and in `project_data` Sources — you just never reach a var
 **No period slot.** The same variable can have different definitions in different years;
 that drift is `variable_state` rows with explicit validity ranges, not per-year FQIDs.
 Year-specific resolution is supplied via `resolve_at(fqid, period)` or `Source.period`.
-Time is data context, not identity.
+The shared period-token grammar is `YYYY`, `YYYY-MM`, `YYYY-MM-DD`, `HTYYYY`/`VTYYYY`,
+`LA<YYYY>` (the school year from July `YYYY` through June `YYYY+1`), `YYYY-Q[1-4]`, or
+`YYYY-H[12]`. Time is data context, not identity.
 
 **Classification vintage is in the slug.** SUN2020 is `class/sun2020`, not
 `class/sun?version=2020`; ICD-10 and ICD-11 are distinct classifications with distinct
@@ -626,8 +628,9 @@ families*.
 
 **`Period`** — `int | str | dict`, the polymorphic period `resolve_at` accepts (mirrors
 `Source.period`): a bare year (`2018`), a period token
-(`"HT2020"`/`"2020-Q3"`/`"2020-08"`/`"2018-12-31"`), an explicit range `{"from", "to"}`
-(endpoints are int or token), or the `"_default"` snapshot sentinel (no period filter).
+(`"HT2020"`/`"LA2020"`/`"2020-Q3"`/`"2020-08"`/`"2018-12-31"`), an explicit range
+`{"from", "to"}` (endpoints are int or token), or the `"_default"` snapshot sentinel (no
+period filter).
 Expanded to an inclusive ISO `(lo, hi)` interval by `_period_bounds` +
 `fqid.period_token_to_bounds`, intersected against the full-date `variable_state`
 validity ranges — so sub-annual and range queries are precise, not year-granular.
@@ -772,13 +775,14 @@ name = "LopNr"                    # zero mappings = unresolved, but still invent
   carries no period still requires an explicit curated `edition`. Filename-edition
   inference is not implemented here; if a generator adds it, §12 requires it to fail for
   review on zero or ambiguous period tokens rather than guess.
-- **One explicit finite `edition` per table**, in the shared period grammar — a token
-  (`2019`, `2019-03`, `2019-Q3`, `HT2019`, `2019-03-01`), a `{ from, to }` range, or a
-  finite list of those for an interrupted series. A bare TOML year int canonicalizes to
-  its token string. `"_default"` and any unbounded "all periods" sentinel are rejected:
-  an edition is what makes coverage computable. `edition_bounds()` expands an edition
-  into inclusive ISO `(lo, hi)` intervals via `fqid.period_token_to_bounds`, so an
-  inventory edition and a project period expand through the same grammar.
+- **One explicit finite `edition` per table**, in the shared period grammar. A year int
+  or token (`2019`, `2019-03`, `2019-Q3`, `HT2019`, `LA2019`, `2019-03-01`) means ONE
+  delivered period; a `{ from, to }` range or finite list means a multi-period file (the
+  list represents an interrupted series). A bare TOML year int canonicalizes to its
+  token string. `"_default"` and any unbounded "all periods" sentinel are rejected: an
+  edition is what makes coverage computable. `edition_bounds()` expands an edition into
+  inclusive ISO `(lo, hi)` intervals via `fqid.period_token_to_bounds`, so an inventory
+  edition and a project period expand through the same grammar.
 - **Zero or more mappings per column.** A mapping names the 3-part variant coordinate,
   the 3-segment variable binding FQID, and the nullable canonical `representation` (a
   join discriminator, not an output substitute). Zero mappings keep an unresolved

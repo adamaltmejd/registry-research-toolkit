@@ -15,6 +15,7 @@ Single source of truth: the period grammar is ``reg_meta.fqid.is_period`` /
 
     ?period=2020              int year      → Period int 2020
     ?period=HT2020            period token  → Period str "HT2020"
+    ?period=LA2004            period token  → Period str "LA2004"
     ?period=2020-Q3           period token  → Period str "2020-Q3"
     ?period=2020-08           period token  → Period str "2020-08"
     ?period=2018-12-31        period token  → Period str "2018-12-31"
@@ -93,7 +94,7 @@ def _parse_endpoint(raw: str) -> int | str:
         raise PeriodParamError(
             f"invalid period range endpoint: {raw!r} "
             "(grammar: YYYY, YYYY-MM, YYYY-MM-DD, HTYYYY/VTYYYY, "
-            "YYYY-Q[1-4], YYYY-H[12])"
+            "LA<YYYY>, YYYY-Q[1-4], YYYY-H[12])"
         )
     if len(raw) == _YEAR_LEN and raw.isdigit():
         return int(raw)

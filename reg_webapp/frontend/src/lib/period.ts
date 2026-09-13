@@ -42,7 +42,7 @@ const MONTH = "(?:0[1-9]|1[0-2])";
 const DAY = "(?:0[1-9]|[12]\\d|3[01])";
 
 const TOKEN_RE = new RegExp(
-  `^(?:${YEAR}|${YEAR}-${MONTH}|${YEAR}-${MONTH}-${DAY}|[HV]T${YEAR}|${YEAR}-Q[1-4]|${YEAR}-H[12])$`,
+  `^(?:${YEAR}|${YEAR}-${MONTH}|${YEAR}-${MONTH}-${DAY}|[HV]T${YEAR}|LA${YEAR}|${YEAR}-Q[1-4]|${YEAR}-H[12])$`,
 );
 
 const FULL_DATE_RE = new RegExp(`^${YEAR}-${MONTH}-${DAY}$`);
@@ -63,8 +63,9 @@ function isRealCalendarDay(value: string): boolean {
 }
 
 /** One period TOKEN (no range, no `_default`): the single-token forms —
- * `YYYY`, `YYYY-MM`, `YYYY-MM-DD`, `HTYYYY`/`VTYYYY`, `YYYY-Q[1-4]`,
- * `YYYY-H[12]`. A `YYYY-MM-DD` is additionally calendar-validated. */
+ * `YYYY`, `YYYY-MM`, `YYYY-MM-DD`, `HTYYYY`/`VTYYYY`, `LA<YYYY>`,
+ * `YYYY-Q[1-4]`, `YYYY-H[12]`. A `YYYY-MM-DD` is additionally
+ * calendar-validated. */
 function isPeriodToken(value: string): boolean {
   if (!TOKEN_RE.test(value)) {
     return false;
@@ -192,6 +193,13 @@ export function periodTokenBounds(token: string): PeriodBounds | null {
   if (!isPeriodToken(value)) {
     return null;
   }
+  const schoolYear = /^LA((?:19|20)\d{2})$/.exec(value);
+  if (schoolYear) {
+    return {
+      from: `${schoolYear[1]}-07-01`,
+      to: `${Number(schoolYear[1]) + 1}-06-30`,
+    };
+  }
   const term = /^([HV]T)((?:19|20)\d{2})$/.exec(value);
   if (term) {
     const [mmddFrom, mmddTo] = TERM_BOUNDS[term[1]];
@@ -236,6 +244,14 @@ export function periodTokenBounds(token: string): PeriodBounds | null {
 export function periodTokenForBounds(lo: string, hi: string): string {
   const year = lo.slice(0, 4);
   const loMonth = lo.slice(5, 7);
+  const schoolYear = `LA${year}`;
+  const schoolYearBounds = periodTokenBounds(schoolYear);
+  if (
+    schoolYearBounds?.from === lo &&
+    schoolYearBounds.to === hi
+  ) {
+    return schoolYear;
+  }
   if (hi.slice(0, 4) === year) {
     if (lo === `${year}-01-01` && hi === `${year}-12-31`) {
       return year;

@@ -281,8 +281,9 @@ def _is_classification_fqid(value: object) -> bool:
 # --- Period grammar -----------------------------------------------------
 
 # Period-token grammar: bare year, year-month, full date, Swedish terms
-# (HT/VT), quarters, half-years. The bounds (year 1900-2099, month 01-12,
-# day 01-31) mirror the canonical grammar in ``reg_meta.fqid._PERIOD_PATTERNS``.
+# (HT/VT), school years (LA), quarters, half-years. The bounds (year 1900-2099,
+# month 01-12, day 01-31) mirror the canonical grammar in
+# ``reg_meta.fqid._PERIOD_PATTERNS``.
 # reg_schema can't import reg_meta (one-way dep; see
 # DESIGN.md), so the grammar is duplicated here — keep the two in sync: a looser
 # copy would let a spec pass this structural gate yet fail reg_meta's period
@@ -301,7 +302,7 @@ _DAY = r"(?:0[1-9]|[12]\d|3[01])"
 # keeps this copy byte-for-byte aligned with reg_meta's verdict (the parity test
 # in reg_webapp/backend/tests/test_period_grammar_parity.py enforces this).
 _PERIOD_TOKEN: re.Pattern[str] = re.compile(
-    rf"^(?:{_YEAR}(?:-{_MONTH}(?:-{_DAY})?|-Q[1-4]|-H[12])?|[HV]T{_YEAR})\Z"
+    rf"^(?:{_YEAR}(?:-{_MONTH}(?:-{_DAY})?|-Q[1-4]|-H[12])?|[HV]T{_YEAR}|LA{_YEAR})\Z"
 )
 
 
@@ -368,6 +369,9 @@ def _endpoint_bounds(value: int | str) -> tuple[str, str]:
     if _is_int_literal(value):
         return f"{value:04d}-01-01", f"{value:04d}-12-31"
     token = str(value)
+    if token.startswith("LA"):
+        year = token[2:]
+        return f"{year}-07-01", f"{int(year) + 1:04d}-06-30"
     if token[:2] in ("HT", "VT"):
         year = token[2:]
         lo_m, hi_m = ("07", "12") if token[0] == "H" else ("01", "06")
@@ -509,8 +513,8 @@ def _check_period(period: object, base: str, issues: list[ValidationIssue]) -> N
                 "invalid_period",
                 path,
                 f"period string {period!r} must match a period grammar form "
-                "(YYYY, YYYY-MM, YYYY-MM-DD, HTYYYY, VTYYYY, YYYY-Q[1-4], "
-                "YYYY-H[12])",
+                "(YYYY, YYYY-MM, YYYY-MM-DD, HTYYYY, VTYYYY, LA<YYYY>, "
+                "YYYY-Q[1-4], YYYY-H[12])",
             )
         )
         return
