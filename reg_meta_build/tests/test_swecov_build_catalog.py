@@ -18,6 +18,7 @@ import sys
 import tomllib
 from collections import defaultdict
 from pathlib import Path
+from types import ModuleType
 
 import pytest
 from reg_meta.db import open_db
@@ -45,6 +46,40 @@ build_catalog = importlib.util.module_from_spec(_spec)
 # annotations through `sys.modules[cls.__module__]`.
 sys.modules[_spec.name] = build_catalog
 _spec.loader.exec_module(build_catalog)
+
+
+def test_default_csv_uses_newest_full_inventory_or_requires_argument(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    generator = tmp_path / "build_catalog.py"
+    generator.write_bytes(_GENERATOR.read_bytes())
+    old_name = tmp_path / "SWECOV_variables_2099-01-01.csv"
+    older = tmp_path / "SWECOV_variables_full_2026-08-01.csv"
+    newest = tmp_path / "SWECOV_variables_full_2026-09-13.csv"
+    for path in (old_name, older, newest):
+        path.touch()
+
+    def load(suffix: str) -> ModuleType:
+        spec = importlib.util.spec_from_file_location(f"swecov_csv_{suffix}", generator)
+        assert spec and spec.loader
+        module = importlib.util.module_from_spec(spec)
+        monkeypatch.setitem(sys.modules, spec.name, module)
+        spec.loader.exec_module(module)
+        return module
+
+    assert load("matching").DEFAULT_CSV == newest
+
+    older.unlink()
+    newest.unlink()
+    without_match = load("required")
+    assert without_match.DEFAULT_CSV is None
+    monkeypatch.setattr(sys, "argv", [str(generator), "normalize"])
+    with pytest.raises(SystemExit) as exc_info:
+        without_match.main()
+    assert exc_info.value.code == 2
+    assert "the following arguments are required: --csv" in capsys.readouterr().err
 
 
 def _column(name: str, **extra: str) -> dict:
