@@ -1297,13 +1297,13 @@ type/length wobble (\~29% of adjacent transitions differed only on the type stri
 displayed `data_type` / `data_length` is the **latest era's** (highest claimed edition
 year, then `regver_id` within that year, mirroring the `latest_alias` rule) — the
 surviving state shows the current delivery's shape, not an arbitrary earlier one.
-**Valueless** columns have no categorical anchor,
-so type+length stay the only shape signal and remain in the key — but `data_type` is run
-through `_canon_data_type` (ASCII-fold + lowercase + collapse whitespace; the text
-family `char`/`varchar`/`nchar`/`nvarchar` → one token) so a char↔varchar wobble folds
-while a genuine class flip (date→int) still splits on a real width change. A class flip
-under a stable value set (the SCB-error `float(53)`-on-categorical case) is **folded**
-and counted: `coalesce_stats.n_type_folds` (anchored groups that swallowed >1 distinct
+**Valueless** columns have no categorical anchor, so type+length stay the only shape
+signal and remain in the key — but `data_type` is run through `_canon_data_type`
+(ASCII-fold + lowercase + collapse whitespace; the text family
+`char`/`varchar`/`nchar`/`nvarchar` → one token) so a char↔varchar wobble folds while a
+genuine class flip (date→int) still splits on a real width change. A class flip under a
+stable value set (the SCB-error `float(53)`-on-categorical case) is **folded** and
+counted: `coalesce_stats.n_type_folds` (anchored groups that swallowed >1 distinct
 (type, length)) and `n_type_class_folds` (the subset spanning >1 `_data_type_class`),
 with a capped class-flip exemplar list on the private `_type_class_fold_sample` key and
 a `type-fold (#526)` build line. Downstream the SPA's `stateChangeHints` simply stops

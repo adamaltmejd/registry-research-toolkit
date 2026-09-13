@@ -19,6 +19,8 @@
 #     Adds any register version SCB has not documented. Era order follows the
 #     maximum year an edition claims; a declared historical version therefore
 #     does not replace a newer documented edition's latest spelling or type.
+#     The name must contain a parseable four-digit year
+#     (`scb_errata_version_year_unknown`).
 #
 #   [[delivered]]  register = "<provider>/<register>"
 #                  variant  = "<variant-slug>"

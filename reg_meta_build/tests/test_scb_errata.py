@@ -42,6 +42,17 @@ def _toml(**overrides: str | None) -> str:
     )
 
 
+def _version(name: str) -> str:
+    return (
+        "[[version]]\n"
+        'register = "scb/lisa"\n'
+        'variant = "individer-15plus"\n'
+        f'name = "{name}"\n'
+        'evidence = "the steward holds this edition"\n'
+        'noted = "2026-09-12"\n'
+    )
+
+
 @pytest.fixture
 def slug_dir(tmp_path: Path) -> Path:
     """A curated `scb.toml` carrying the two LISA individual-frame variants the
@@ -80,6 +91,19 @@ def _refused(tmp_path: Path, slug_dir: Path, body: str, seed: Path | None = None
     assert exc.value.exit_code == EXIT_CONFIG
     assert exc.value.remediation
     return exc.value
+
+
+class TestVersionEntry:
+    def test_historical_year_parses(self, tmp_path: Path, slug_dir: Path) -> None:
+        (entry,) = _load(tmp_path, slug_dir, _version("2001")).versions
+        assert entry.name == "2001"
+
+    def test_name_without_claimed_year_fails(
+        self, tmp_path: Path, slug_dir: Path
+    ) -> None:
+        err = _refused(tmp_path, slug_dir, _version("Äldre leverans"))
+        assert err.code == "scb_errata_version_year_unknown"
+        assert "four-digit year" in err.remediation
 
 
 class TestColumnEntry:

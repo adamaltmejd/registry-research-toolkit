@@ -42,6 +42,8 @@ shipping fails the build rather than silently duplicating a live variable.
 
 The curator names SCB versions, never dates: a version name is the coordinate
 SCB itself publishes, and the year parsing already lives in `edition_bounds`.
+A declared version name must carry a parseable year so the coalescer can place
+it chronologically.
 
 Ids come from `mint_canonical_scb` — the reserved SCB sub-band `[2^61, 2^62)`
 for rows that belong to the `scb` provider but are absent from its machine
@@ -384,8 +386,9 @@ def load_scb_errata(
     Strict load, all EXIT_CONFIG with a remediation: only `[[version]]` /
     `[[delivered]]` / `[[column]]` top-level; no unknown key inside an entry;
     `register` a 2-segment SCB FQID and `register`/`variant` curated; `evidence`
-    and `noted` (canonical `YYYY-MM-DD`) present; `versions` a non-empty list of
-    non-empty strings naming each version at most once; and no duplicate
+    and `noted` (canonical `YYYY-MM-DD`) present; a `[[version]]` name carrying
+    a parseable claimed year; `versions` a non-empty list of non-empty strings
+    naming each version at most once; and no duplicate
     `(variant, name)` / `(variant, column)` entry — two entries for one column
     must be ONE entry listing both versions, or the log stops being readable as
     the record of what SCB missed. `[[delivered]]` and `[[column]]` share that
@@ -408,6 +411,14 @@ def load_scb_errata(
         _, variant_id, context = _resolve_variant(entry, "version", registers, variants)
         name = _require_str(entry, "name", f"[[version]] {context}")
         _require_provenance(entry, f"[[version]] {context}/{name}")
+        if not _edition_years(name):
+            raise curation_error(
+                "scb_errata_version_year_unknown",
+                f"scb_errata [[version]] {context}/{name} has no parseable "
+                "claimed year.",
+                "Use SCB's exact version name containing a four-digit year so "
+                "the coalescer can place the edition chronologically.",
+            )
         if (variant_id, name) in seen_versions:
             raise curation_error(
                 _CODE,

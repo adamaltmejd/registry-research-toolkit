@@ -889,6 +889,48 @@ class TestEraOrdering:
         finally:
             conn.close()
 
+    def test_year_bearing_edition_outranks_unknown_year_before_id(
+        self, tmp_path: Path
+    ) -> None:
+        # The yearless edition has the larger id, but it makes no chronology
+        # claim. A documented year-bearing edition therefore supplies the
+        # displayed alias and type; ids order unknown editions only among
+        # themselves.
+        conn = _build_from_ri_rows(
+            tmp_path,
+            [
+                _var_row(
+                    colname="EraCol",
+                    cvid=9902,
+                    var_id=991,
+                    varname="EraVar",
+                    year="2020",
+                    versionname="Okänd version",
+                    regver_id=9903,
+                    data_type="char",
+                ),
+                _var_row(
+                    colname="eracol",
+                    cvid=9903,
+                    var_id=991,
+                    varname="EraVar",
+                    year="2019",
+                    regver_id=9902,
+                    data_type="varchar",
+                ),
+            ],
+        )
+        try:
+            states = conn.execute(
+                "SELECT vs.delivery_column_name, vs.data_type "
+                "FROM variable_state vs "
+                "JOIN variable v ON v.variable_id = vs.variable_id "
+                "WHERE v.register_id = 1 AND v.provider_key = '991'"
+            ).fetchall()
+            assert states == [("eracol", "varchar")]
+        finally:
+            conn.close()
+
 
 # ── name-field read-boundary hygiene (#366) ────────────────────────────────
 
