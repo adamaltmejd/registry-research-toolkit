@@ -246,10 +246,7 @@ export function periodTokenForBounds(lo: string, hi: string): string {
   const loMonth = lo.slice(5, 7);
   const schoolYear = `LA${year}`;
   const schoolYearBounds = periodTokenBounds(schoolYear);
-  if (
-    schoolYearBounds?.from === lo &&
-    schoolYearBounds.to === hi
-  ) {
+  if (schoolYearBounds?.from === lo && schoolYearBounds.to === hi) {
     return schoolYear;
   }
   if (hi.slice(0, 4) === year) {
