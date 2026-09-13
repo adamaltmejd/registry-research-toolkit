@@ -380,11 +380,8 @@ class CuratedAdapter:
         valid_from = self._opt_str(entry, "valid_from")
         if valid_from is None and self.steward is None:
             valid_from = self._req_str(path, entry, "valid_from", f"register {key!r}")
-        if valid_from is not None:
-            self._check_boundary(path, valid_from, f"register {key!r} valid_from")
         valid_to = self._opt_str(entry, "valid_to")
-        if valid_to is not None:
-            self._check_boundary(path, valid_to, f"register {key!r} valid_to")
+        self._check_authored_window(path, valid_from, valid_to, f"register {key!r}")
 
         variant_entries = entry.get("variant", [])
         if not isinstance(variant_entries, list) or not all(
@@ -410,19 +407,13 @@ class CuratedAdapter:
                 path, v, _VARIANT_KEYS, f"register {key!r} variant {vk!r}"
             )
             variant_valid_from = self._opt_str(v, "valid_from")
-            if variant_valid_from is not None:
-                self._check_boundary(
-                    path,
-                    variant_valid_from,
-                    f"register {key!r} variant {vk!r} valid_from",
-                )
             variant_valid_to = self._opt_str(v, "valid_to")
-            if variant_valid_to is not None:
-                self._check_boundary(
-                    path,
-                    variant_valid_to,
-                    f"register {key!r} variant {vk!r} valid_to",
-                )
+            self._check_authored_window(
+                path,
+                variant_valid_from,
+                variant_valid_to,
+                f"register {key!r} variant {vk!r}",
+            )
             variants.append(
                 _CuratedVariant(
                     key=vk,
@@ -539,11 +530,8 @@ class CuratedAdapter:
             path, entry, variable_keys, f"register {reg_key!r} variable {name!r}"
         )
         valid_from = self._opt_str(entry, "valid_from")
-        if valid_from is not None:
-            self._check_boundary(path, valid_from, f"{ctx} {name!r} valid_from")
         valid_to = self._opt_str(entry, "valid_to")
-        if valid_to is not None:
-            self._check_boundary(path, valid_to, f"{ctx} {name!r} valid_to")
+        self._check_authored_window(path, valid_from, valid_to, f"{ctx} {name!r}")
 
         variants = self._load_variant_refs(path, entry, ctx, name, variant_keys)
         state_entries = entry.get("state")
@@ -673,10 +661,7 @@ class CuratedAdapter:
         self._reject_unknown(path, entry, _STATE_KEYS, ctx)
         valid_from = self._opt_str(entry, "valid_from")
         valid_to = self._opt_str(entry, "valid_to")
-        if valid_from is not None:
-            self._check_boundary(path, valid_from, f"{ctx} valid_from")
-        if valid_to is not None:
-            self._check_boundary(path, valid_to, f"{ctx} valid_to")
+        self._check_authored_window(path, valid_from, valid_to, ctx)
         aliases = entry.get("aliases", [])
         if not isinstance(aliases, list) or not all(
             isinstance(alias, str) and alias.strip() for alias in aliases
@@ -775,6 +760,29 @@ class CuratedAdapter:
                 "curated_toml_invalid",
                 f"{path.name}: {ctx}: {value!r} must be a valid ISO date YYYY-MM-DD.",
                 "Use a real ten-character ISO 8601 date.",
+            )
+
+    def _check_authored_window(
+        self,
+        path: Path,
+        valid_from: str | None,
+        valid_to: str | None,
+        ctx: str,
+    ) -> None:
+        if valid_from is not None:
+            self._check_boundary(path, valid_from, f"{ctx} valid_from")
+        if valid_to is not None:
+            self._check_boundary(path, valid_to, f"{ctx} valid_to")
+        if valid_from is None or valid_to is None:
+            return
+        expanded_from = self._expanded_boundary(valid_from, end=False)
+        expanded_to = self._expanded_boundary(valid_to, end=True)
+        if expanded_from > expanded_to:
+            raise curation_error(
+                "curated_toml_invalid",
+                f"{path.name}: {ctx} has an inverted validity window "
+                f"({expanded_from} > {expanded_to}).",
+                "Set valid_from no later than valid_to.",
             )
 
     def _reject_unknown(

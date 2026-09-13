@@ -356,6 +356,62 @@ def test_year_one_state_start_is_rejected_at_boundary(
     )
 
 
+def test_inverted_register_window_is_rejected_before_variable_override(
+    tmp_path: Path,
+) -> None:
+    text = _BASE_TOML.replace(
+        'purpose = "Bank delivery"',
+        'purpose = "Bank delivery"\nvalid_from = "2022"\nvalid_to = "2020"',
+        1,
+    ).replace(
+        '  variants = ["_default"]',
+        '  variants = ["_default"]\n  valid_from = "2010"\n  valid_to = "2030"',
+        1,
+    )
+    with pytest.raises(RegMetaError) as exc:
+        _load_provider_ir(_providers(tmp_path, text), _STEWARD)
+    assert exc.value.exit_code == EXIT_CONFIG
+    assert (
+        "register 'transaktioner' has an inverted validity window" in exc.value.message
+    )
+    assert "2022-01-01 > 2020-12-31" in exc.value.message
+
+
+def test_inverted_variable_window_is_rejected_before_state_override(
+    tmp_path: Path,
+) -> None:
+    text = _BASE_TOML.replace(
+        '  variants = ["_default"]',
+        '  variants = ["_default"]\n  valid_from = "2022"\n  valid_to = "2020"',
+        1,
+    ).replace(
+        '    column = "BELOPP"\n    data_type = "float"',
+        '    column = "BELOPP"\n    data_type = "float"\n'
+        '    valid_from = "2010"\n    valid_to = "2030"',
+        1,
+    )
+    with pytest.raises(RegMetaError) as exc:
+        _load_provider_ir(_providers(tmp_path, text), _STEWARD)
+    assert exc.value.exit_code == EXIT_CONFIG
+    assert "variable 'Belopp' has an inverted validity window" in exc.value.message
+    assert "2022-01-01 > 2020-12-31" in exc.value.message
+
+
+def test_valid_child_window_still_overrides_register_window(tmp_path: Path) -> None:
+    text = _BASE_TOML.replace(
+        'purpose = "Bank delivery"',
+        'purpose = "Bank delivery"\nvalid_from = "2018"\nvalid_to = "2020"',
+        1,
+    ).replace(
+        '  variants = ["_default"]',
+        '  variants = ["_default"]\n  valid_from = "2010"\n  valid_to = "2030"',
+        1,
+    )
+    graph = _load_provider_ir(_providers(tmp_path, text), _STEWARD)
+    state = next(s for s in graph.states if s.delivery_column_name == "BELOPP")
+    assert (state.valid_from, state.valid_to) == ("2010-01-01", "2030-12-31")
+
+
 def test_inverted_state_window_is_rejected(tmp_path: Path) -> None:
     text = _BASE_TOML.replace(
         '    column = "BELOPP"\n    data_type = "float"',
@@ -366,7 +422,7 @@ def test_inverted_state_window_is_rejected(tmp_path: Path) -> None:
     with pytest.raises(RegMetaError) as exc:
         _load_provider_ir(_providers(tmp_path, text), _STEWARD)
     assert exc.value.exit_code == EXIT_CONFIG
-    assert "has no overlap" in exc.value.message
+    assert "state[0] has an inverted validity window" in exc.value.message
 
 
 def test_variable_key_cannot_repeat_within_one_variant(tmp_path: Path) -> None:
