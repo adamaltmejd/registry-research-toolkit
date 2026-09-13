@@ -37,6 +37,17 @@ had expired at 20:10Z while the lane sat stopped.
 - The 16m43s / $3.12 g1 spend had committed nothing (`head -`); whether the on-disk
   workspace state carried into g3 is only visible from the candidate.
 
+### 2026-09-13: automatic repairs repeat a protected-test authority block
+
+Reproduced the 0.14.8 observation on 0.14.10 while operating Y-125 and Y-128 with Sol.
+Y-128's consecutive automatic repair rounds reported that the required existing test
+edits were forbidden, made no changes, and still bought another round. Editing the
+ticket clarified scope but did not change the repair prompt's authority. A guarded
+unrestricted operator nudge permitted the specific correction. Filed as
+[#102](https://github.com/adamaltmejd/switchyard/issues/102); candidate and test guards
+were preserved. Redacted transcripts and submission text are local-only under
+`archive/reports/yard/2026-09-13-sol-operator/`.
+
 ## Observed, not yet filed
 
 One line each, with the Yard version it was observed on. Retest on the running version,
@@ -92,8 +103,6 @@ then file it or delete it with a reason.
   cached input tokens; the approval item showed no cost either.
 - (0.14.8) `yard proposal accept` has no `--title`; a convention retitle costs a
   `ticket edit --expect-revision` round-trip (check whether #91 covers it).
-- (0.14.8) A gate repair whose worker reports "cannot repair: base-protected test" still
-  queues the next repair round.
 - (0.14.8) `yard proposal promote` takes one finding; an umbrella ticket for several
   same-surface advisories is one promote plus a body rewrite.
 - (0.14.10) `daemon.log` has no timestamps and is never rotated: 315 stale
