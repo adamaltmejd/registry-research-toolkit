@@ -632,12 +632,14 @@ delivery column can be picked/ordered rather than remaining search-only. The exp
 base claim, so windows can SHARE one `state_id` (one claim, N representations) — the
 per-window identity is the compound (`state_id`, `delivery_column_name`, `valid_from`).
 A nullable window-level `provenance` uses the same contract as
-`variable_state.provenance`: source-derived windows leave it NULL and inherit the base
-state's provenance, while an exact-edition curated alias overrides it with the
-correction class, evidence, and source-edition scope. This attributes the added
-representation without relabeling the provider-documented state. A variable with no
-window rows maps 1:1, byte-identically. The monthly merge is explicitly retained under
-#518/#523; the retention rationale and the #523↔#496 two-layer boundary are recorded in
+`variable_state.provenance`: source-derived windows leave it NULL, retain the existing
+replacement/participation semantics, and inherit the base state's provenance. An
+exact-edition curated alias carries the correction class, evidence, and source-edition
+scope; the reader adds it to the source result rather than making it participate in
+replacement. This preserves the original base state, including its operational
+definition, without a synthetic full-state window. A variable with no window rows maps
+1:1, byte-identically. The monthly merge is explicitly retained under #518/#523; the
+retention rationale and the #523↔#496 two-layer boundary are recorded in
 `reg_meta_build/DESIGN.md` → *Consumers: monthly column families*.
 
 **`Period`** — `int | str | dict`, the polymorphic period `resolve_at` accepts (mirrors

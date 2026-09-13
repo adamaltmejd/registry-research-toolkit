@@ -3030,7 +3030,7 @@ class Catalog:
     def _variable_windows(
         self, variable_id: int
     ) -> dict[int, list[tuple[str, str, str, str | None]]]:
-        """`variable_alias_window` rows (#319/#945) grouped by
+        """`variable_alias_window` rows (#319/#945/Y-132) grouped by
         `register_variant_id` → [(delivery_column_name, valid_from, valid_to,
         provenance), …] sorted by window start. EMPTY for variables with no
         resolver-visible alias representations, so expansion is a no-op there.
@@ -3057,20 +3057,40 @@ class Catalog:
         """Map period-filtered `variable_state` rows to `VariableState`s, expanding
         stored alias windows that overlap `bounds`.
 
-        Monthly-family variables (#319) expand one annual state into month-column
-        windows. Multi-alias cvids (#945) expand one state into co-delivered alias
-        columns over that same state window. Variables with no window rows map 1:1
-        via `_row_to_state` (byte-identical behaviour). Windows share the base
-        state's `state_id` + `value_set_version_label`; only
-        `delivery_column_name` + `valid_from`/`valid_to` are always overridden.
-        An explicit window provenance overrides the base provenance; otherwise it
-        is inherited. As before, expanded representations do not inherit the
-        base column's operational definition. The per-window identity is the
-        compound (state_id, delivery_column_name, valid_from)."""
+        Source-derived monthly-family (#319) and multi-alias (#945) windows retain
+        the existing replacement semantics: they expand a participating base state
+        into window representations. Provenance-bearing curated windows (Y-132)
+        are additive, so they cannot hide the base representation or another source
+        window. Variables with no window rows map 1:1 via `_row_to_state`
+        (byte-identical behaviour).
+
+        Windows share the base state's `state_id` + `value_set_version_label`; only
+        `delivery_column_name` + `valid_from`/`valid_to` are always overridden. An
+        explicit window provenance overrides the base provenance; otherwise it is
+        inherited. Expanded alias representations do not inherit the base column's
+        operational definition. The per-window identity is the compound (state_id,
+        delivery_column_name, valid_from)."""
 
         def to_state(row: sqlite3.Row) -> VariableState:
             return self._row_to_state(
                 row, with_codes=with_codes, with_code_summary=with_code_summary
+            )
+
+        def expand_window(
+            base: VariableState, window: tuple[str, str, str, str | None]
+        ) -> VariableState:
+            col, wfrom, wto, provenance = window
+            return base.model_copy(
+                update={
+                    "delivery_column_name": col,
+                    "valid_from": wfrom,
+                    "valid_to": wto,
+                    "operational_definition": None,
+                    "provenance": (
+                        provenance if provenance is not None else base.provenance
+                    ),
+                    "period_token": self._period_token_for_window(wfrom, wto),
+                }
             )
 
         windows_by_variant = self._variable_windows(variable_id)
@@ -3081,52 +3101,36 @@ class Catalog:
         for row in rows:
             base = to_state(row)
             windows = windows_by_variant.get(row["register_variant_id"], [])
-            # Windows belonging to THIS state. Overlapping states can exist; a
-            # state expands only if its own representative column participates
-            # somewhere in its window set, so unrelated narrower windows do not
-            # hide this state's base column.
+            # Windows belonging to THIS state. Overlapping states can exist, so
+            # containment remains part of both source and curated semantics.
             state_windows = [
                 (col, wfrom, wto, provenance)
                 for (col, wfrom, wto, provenance) in windows
                 if base.valid_from <= wfrom and wto <= base.valid_to
             ]
-            has_base_window = base.delivery_column_name is not None and any(
+            source_windows = [w for w in state_windows if w[3] is None]
+            curated_windows = [w for w in state_windows if w[3] is not None]
+            has_source_base = base.delivery_column_name is not None and any(
                 col.lower() == base.delivery_column_name.lower()
-                for (col, _wfrom, _wto, _provenance) in state_windows
+                for (col, _wfrom, _wto, _provenance) in source_windows
             )
-            if state_windows and not has_base_window:
-                out.append(base)
-                continue
-            matched = [
-                (col, wfrom, wto, provenance)
-                for (col, wfrom, wto, provenance) in state_windows
-                if wfrom <= hi and wto >= lo
+            matched_source = [
+                window
+                for window in source_windows
+                if window[1] <= hi and window[2] >= lo
             ]
-            if not matched:
-                # A windowed variable's state with no window in range (e.g. a year
-                # a monthly family didn't deliver a column) stays visible rather
-                # than silently dropping the claim.
+            if source_windows and has_source_base and matched_source:
+                out.extend(expand_window(base, window) for window in matched_source)
+            else:
+                # Preserve the old fallback exactly: a source family without a
+                # participating base, or without a window in range, leaves the
+                # original state visible with all of its metadata.
                 out.append(base)
-                continue
-            for col, wfrom, wto, provenance in matched:
-                # The window's own bounds drive `period_token` (recompute — the
-                # base annual token doesn't describe the month window).
-                out.append(
-                    base.model_copy(
-                        update={
-                            "delivery_column_name": col,
-                            "valid_from": wfrom,
-                            "valid_to": wto,
-                            "operational_definition": None,
-                            "provenance": (
-                                provenance
-                                if provenance is not None
-                                else base.provenance
-                            ),
-                            "period_token": self._period_token_for_window(wfrom, wto),
-                        }
-                    )
-                )
+            out.extend(
+                expand_window(base, window)
+                for window in curated_windows
+                if window[1] <= hi and window[2] >= lo
+            )
         out.sort(key=lambda s: (s.valid_from, s.valid_to, s.delivery_column_name or ""))
         return out
 

@@ -1441,8 +1441,9 @@ def _check_variable_alias_window(
     (monthly-family survivors retain all 12 columns there; multi-alias cvids
     retain every co-delivered alias — same invariant
     `_check_variable_alias_covers_state_columns` enforces for states); every exact
-    state-window alias family keeps the state's representative column, so resolver
-    expansion cannot hide the base column. Corpus: a
+    source-derived state-window family keeps the state's representative column,
+    so replacement expansion cannot hide the base column. Provenance-bearing
+    curated windows are additive and do not need a synthetic base window. Corpus: a
     real maintainer build merges the 8 monthly families (#319/#383), so this is
     also the regression floor for family-merge (>= `_AW_MIN_MERGED_FAMILIES`
     sub-annual survivors) now that the month-token-group floor in
@@ -1497,6 +1498,7 @@ def _check_variable_alias_window(
         "  SELECT 1 FROM variable_alias_window w "
         "  WHERE w.variable_id = vs.variable_id "
         "  AND w.register_variant_id = vs.register_variant_id "
+        "  AND w.provenance IS NULL "
         "  AND w.valid_from = vs.valid_from "
         "  AND w.valid_to = vs.valid_to"
         ") "
@@ -1504,16 +1506,20 @@ def _check_variable_alias_window(
         "  SELECT 1 FROM variable_alias_window w "
         "  WHERE w.variable_id = vs.variable_id "
         "  AND w.register_variant_id = vs.register_variant_id "
+        "  AND w.provenance IS NULL "
         "  AND py_lower(w.delivery_column_name) = py_lower(vs.delivery_column_name) "
         "  AND w.valid_from = vs.valid_from "
         "  AND w.valid_to = vs.valid_to"
         ")"
     ).fetchone()[0]
     if base_hidden == 0:
-        result.ok("every exact-window state keeps its representative column visible")
+        result.ok(
+            "every exact source-window state keeps its representative column visible"
+        )
     else:
         result.fail(
-            f"{base_hidden:,} exact-window state(s) missing their representative column"
+            f"{base_hidden:,} exact source-window state(s) missing their "
+            "representative column"
         )
 
     if corpus:

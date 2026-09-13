@@ -411,12 +411,10 @@ def materialize_curated_alias_windows(
     contributes its own claim intervals from ``register_edition_claims``;
     neighboring years and gaps are never inferred.
 
-    A state's representative column gets a full-state, provenance-neutral window
-    only when it does not already participate in that state's window family. This
-    preserves the original representation while allowing the narrower curated
-    alias to expand from the same state. The curated window itself carries scoped
-    correction provenance, so the read side does not present it as directly
-    provider-documented.
+    The curated window carries scoped correction provenance. The read side uses
+    that marker to add it to the source-derived representation result, preserving
+    the original state and any partial window family without writing or widening
+    a synthetic base window.
     """
     active = tuple(d for d in declarations if d.provider in providers)
     if not active:
@@ -445,7 +443,6 @@ def materialize_curated_alias_windows(
 
     # Staged first: a later invalid declaration must not leave an earlier entry
     # partly applied when this function is exercised outside build_db's transaction.
-    base_windows: set[tuple[int, int, str, str, str]] = set()
     targets: dict[tuple[int, int, str, str, str], list[tuple[str, str]]] = {}
 
     for declaration in active:
@@ -631,7 +628,7 @@ def materialize_curated_alias_windows(
 
             for _year, claim_from, claim_to in claims:
                 states = conn.execute(
-                    "SELECT state_id, valid_from, valid_to, delivery_column_name "
+                    "SELECT state_id, delivery_column_name "
                     "FROM variable_state WHERE variable_id = ? "
                     "AND register_variant_id = ? AND valid_from <= ? AND valid_to >= ? "
                     "ORDER BY state_id",
@@ -656,7 +653,7 @@ def materialize_curated_alias_windows(
                         "Narrow the declaration only after the source-state "
                         "ambiguity has been resolved.",
                     )
-                state_id, state_from, state_to, state_column = states[0]
+                state_id, state_column = states[0]
                 if state_column is None:
                     raise curation_error(
                         "alias_windows_unsupported_edition",
@@ -706,30 +703,7 @@ def materialize_curated_alias_windows(
                 )
                 targets.setdefault(target, []).append((base_provenance, edition))
 
-                state_window_has_base = any(
-                    fold_column(window_column) == fold_column(state_column)
-                    and str(state_from) <= window_from
-                    and window_to <= str(state_to)
-                    for window_column, window_from, window_to in existing_windows
-                )
-                if not state_window_has_base:
-                    base_windows.add(
-                        (
-                            variable_id,
-                            variant_id,
-                            state_column,
-                            str(state_from),
-                            str(state_to),
-                        )
-                    )
-
     before = conn.total_changes
-    conn.executemany(
-        "INSERT OR IGNORE INTO variable_alias_window "
-        "(variable_id, register_variant_id, delivery_column_name, valid_from, "
-        "valid_to, provenance) VALUES (?, ?, ?, ?, ?, NULL)",
-        sorted(base_windows),
-    )
     conn.executemany(
         "INSERT INTO variable_alias_window "
         "(variable_id, register_variant_id, delivery_column_name, valid_from, "

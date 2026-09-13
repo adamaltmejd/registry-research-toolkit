@@ -2485,6 +2485,31 @@ class TestVariableAliasWindowChecks:
             result.failures
         )
 
+    def test_curated_exact_window_does_not_need_a_synthetic_base(self):
+        conn = self._windowed_db()
+        vid, rvid, _base_col = conn.execute(
+            "SELECT variable_id, register_variant_id, delivery_column_name "
+            "FROM variable_alias_window"
+        ).fetchone()
+        valid_from, valid_to = conn.execute(
+            "SELECT valid_from, valid_to FROM variable_state "
+            "WHERE variable_id = ? AND register_variant_id = ?",
+            (vid, rvid),
+        ).fetchone()
+        conn.execute(
+            "INSERT INTO variable_alias "
+            "(variable_id, register_variant_id, delivery_column_name) "
+            "VALUES (?, ?, 'OtherCol')",
+            (vid, rvid),
+        )
+        conn.execute(
+            "UPDATE variable_alias_window SET delivery_column_name = 'OtherCol', "
+            "valid_from = ?, valid_to = ?, provenance = ?",
+            (valid_from, valid_to, "errata:test\nheld"),
+        )
+
+        assert self._run(conn).passed
+
 
 def test_variable_alias_window_section_present_in_report(fixture_db: Path):
     """#319/#945: the `[alias windows]` section must appear so the check can't

@@ -242,6 +242,39 @@ def test_a_window_only_representation_resolves(conn, tmp_path) -> None:
     )
 
 
+def test_a_curated_window_is_additive_without_a_base_window(conn, tmp_path) -> None:
+    """A provenance-bearing window adds its alias beside the unchanged state."""
+    variable_id = conn.execute(
+        "SELECT variable_id FROM variable WHERE slug = 'yrke'"
+    ).fetchone()[0]
+    conn.execute(
+        "INSERT INTO variable_alias "
+        "(variable_id, register_variant_id, delivery_column_name) "
+        "VALUES (?, 10, 'Ssyk4')",
+        (variable_id,),
+    )
+    conn.execute(
+        "INSERT INTO variable_alias_window "
+        "(variable_id, register_variant_id, delivery_column_name, valid_from, "
+        "valid_to, provenance) VALUES (?, 10, 'Ssyk4', '2018-01-01', "
+        "'2018-12-31', 'errata:test\nSWECOV holds it')",
+        (variable_id,),
+    )
+    conn.commit()
+
+    assert _resolver_columns(conn, "scb/lisa/yrke", "individer-15plus") == {
+        "Ssyk3",
+        "Ssyk4",
+    }
+    assert (
+        check_inventory(
+            _inventory(tmp_path, CLEAN_INVENTORY.replace('"Ssyk3"', '"Ssyk4"')),
+            conn,
+        )
+        == ()
+    )
+
+
 def test_an_orphaned_alias_window_is_not_a_delivered_representation(
     conn, tmp_path
 ) -> None:

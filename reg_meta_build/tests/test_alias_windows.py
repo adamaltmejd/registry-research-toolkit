@@ -294,11 +294,8 @@ def test_curated_alias_uses_exact_claim_and_preserves_base_state() -> None:
         conn, (_curated(),), providers=frozenset({"scb"})
     )
 
-    assert counts == {"entries": 1, "windows": 2}
-    assert _windows(conn) == [
-        ("AEBUY", "2018-01-01", "2018-12-31"),
-        ("E_AWBUY", "2017-01-01", "2018-12-31"),
-    ]
+    assert counts == {"entries": 1, "windows": 1}
+    assert _windows(conn) == [("AEBUY", "2018-01-01", "2018-12-31")]
     assert conn.execute("SELECT * FROM variable_state").fetchall() == original_state
     assert conn.execute(
         "SELECT provenance FROM variable_alias_window "
@@ -328,7 +325,6 @@ def test_curated_disjoint_editions_stay_disjoint() -> None:
     assert _windows(conn) == [
         ("AEBUY", "2016-01-01", "2016-12-31"),
         ("AEBUY", "2018-01-01", "2018-12-31"),
-        ("E_AWBUY", "2015-01-01", "2019-12-31"),
     ]
 
 

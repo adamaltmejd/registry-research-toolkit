@@ -137,10 +137,11 @@ with deliberately separate homes:
   runs after variable slug assignment, requires the target's source instance in each
   edition, validates its interval through `register_edition_claims`, and adds only those
   claim intervals to `variable_alias_window`; it never feeds alias connectivity, creates
-  a source row, or changes `variable_state`. A provenance-neutral base-column window
-  preserves the containing state's original representation, while the curated alias
-  window carries the existing `errata:scoped-attributions` contract. A declaration that
-  the source now covers fails for retirement instead of widening the alias.
+  a source row, or changes `variable_state`. The curated alias window carries the
+  existing `errata:scoped-attributions` contract, which makes it additive to the
+  read-side source representation instead of requiring a synthetic base window. A
+  declaration that the source now covers fails for retirement instead of widening the
+  alias.
 - **Classification links are typed, not generic state overrides.**
   `curation/classifications.toml` targets the `classification_candidate` pipeline and
   then `variable_state.classification_id`. It is NOT a generic
@@ -2037,10 +2038,10 @@ a source edition whose documented state uses another representative column,
 `materialize_curated_alias_windows` reads `curation/alias_windows.toml` after variable
 slugs resolve. Each named edition contributes the exact, possibly disjoint intervals
 returned by `register_edition_claims`; the containing state's hull is not copied onto
-the alias. The pass inserts the state's representative window only as needed to keep the
-base representation visible. Curated windows override the expanded
-`VariableState.provenance` with correction provenance; source-derived monthly and
-multi-alias windows keep NULL and inherit their base state's provenance.
+the alias. Curated windows override the expanded `VariableState.provenance` with
+correction provenance and are added to the source-derived result. Source monthly and
+multi-alias windows keep NULL, retain their replacement semantics, and inherit their
+base state's provenance.
 
 ##### Decision (#518/#523): retain the merge
 

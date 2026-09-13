@@ -358,15 +358,14 @@ def _delivered(
     orderable across a given period is the representation grain, which only the
     order path can decide.
 
-    `variable_alias_window` is read the way its ONLY reader reads it
-    (`Catalog._expand_state_windows`), never as a flat union: a window row is
-    not an independently delivered representation. It expands a state only when
-    it is CONTAINED in that state's validity AND that state's own delivery
-    column participates in the contained set; otherwise the state stands on its
-    own column and its windows deliver nothing. Unioning the two tables would
-    bless an orphaned, non-contained or non-participating window as deliverable
-    and let a deployment boot on a mapping `resolve_at` cannot fill — the exact
-    false pass this gate exists to prevent.
+    `variable_alias_window` is read the way its ONLY resolver reader reads it
+    (`Catalog._expand_state_windows`), never as a flat union. Source-derived
+    windows replace a state only when they are CONTAINED in its validity AND its
+    own delivery column participates; otherwise the state stands on its own.
+    Provenance-bearing curated windows are additive to that source result, but
+    still must be contained. A flat union would bless an orphaned or
+    non-contained window as deliverable and let a deployment boot on a mapping
+    `resolve_at` cannot fill — the exact false pass this gate exists to prevent.
 
     These two tables have a SECOND reader with a deliberately different rule:
     `reg_meta_build.inventory_coverage` (Y-115, extend-db's steward-holdings
@@ -387,14 +386,17 @@ def _delivered(
             states.setdefault(pair, []).append((valid_from, valid_to, column))
     if not states:
         return {}
-    windows: dict[_PairIds, list[tuple[str, str, str]]] = {}
-    for variable_id, register_variant_id, column, valid_from, valid_to in conn.execute(
+    windows: dict[_PairIds, list[tuple[str, str, str, str | None]]] = {}
+    for row in conn.execute(
         "SELECT variable_id, register_variant_id, delivery_column_name, "
-        "valid_from, valid_to FROM variable_alias_window"
+        "valid_from, valid_to, provenance FROM variable_alias_window"
     ):
+        variable_id, register_variant_id, column, valid_from, valid_to, provenance = row
         pair = (variable_id, register_variant_id)
         if pair in states:
-            windows.setdefault(pair, []).append((column, valid_from, valid_to))
+            windows.setdefault(pair, []).append(
+                (column, valid_from, valid_to, provenance)
+            )
     return {
         pair: _expanded_columns(state_rows, windows.get(pair, []))
         for pair, state_rows in states.items()
@@ -403,31 +405,35 @@ def _delivered(
 
 def _expanded_columns(
     states: list[tuple[str, str, str | None]],
-    windows: list[tuple[str, str, str]],
+    windows: list[tuple[str, str, str, str | None]],
 ) -> frozenset[str]:
     """`Catalog._expand_state_windows`'s delivery columns for one pair.
 
     The gate reads the WHOLE history (`"_default"`, no period filter), so the
     resolver's window ∩ requested-bounds test is trivially true and is not
-    mirrored — every contained window is in range. What is mirrored is the
-    containment and participation pair of conditions, which is what decides
-    whether a state expands into its windows or stands on its own column."""
+    mirrored — every contained window is in range. What is mirrored is source
+    replacement versus curated addition after the shared containment rule."""
     columns: set[str] = set()
     for valid_from, valid_to, column in states:
         contained = [w for w in windows if valid_from <= w[1] and w[2] <= valid_to]
+        source_windows = [w for w in contained if w[3] is None]
         if (
-            contained
+            source_windows
             and column is not None
-            and any(w[0].lower() == column.lower() for w in contained)
+            and any(w[0].lower() == column.lower() for w in source_windows)
         ):
             # The state's own column participates, so the state EXPANDS: the
             # contained windows REPLACE it, the base column returning as the
             # window that matched it — in that window's own spelling.
-            columns.update(w[0] for w in contained)
+            columns.update(w[0] for w in source_windows)
         elif column is not None:
-            # No window contained by this state, or none carrying its column:
-            # the state stands on its own and its windows deliver nothing.
+            # No source window contained by this state, or none carrying its
+            # column: the state stands on its own and source windows deliver
+            # nothing. Curated windows are added separately below.
             columns.add(column)
+        # Curated aliases are additive to whichever source representation the
+        # rules above selected; their non-NULL provenance is the schema marker.
+        columns.update(w[0] for w in contained if w[3] is not None)
     return frozenset(columns)
 
 

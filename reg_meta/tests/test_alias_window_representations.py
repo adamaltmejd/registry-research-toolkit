@@ -155,13 +155,6 @@ def test_curated_partial_state_window_preserves_base_and_earlier_alias(
         write_conn.execute(
             "INSERT INTO variable_alias_window "
             "(variable_id, register_variant_id, delivery_column_name, valid_from, "
-            "valid_to, provenance) VALUES (?, ?, ?, '2017-01-01', "
-            "'2018-12-31', NULL)",
-            (variable_id, variant_id, base_column),
-        )
-        write_conn.execute(
-            "INSERT INTO variable_alias_window "
-            "(variable_id, register_variant_id, delivery_column_name, valid_from, "
             "valid_to, provenance) VALUES (?, ?, ?, '2018-01-01', "
             "'2018-12-31', 'errata:test\nSWECOV holds it')",
             (variable_id, variant_id, curated_column),
@@ -180,9 +173,7 @@ def test_curated_partial_state_window_preserves_base_and_earlier_alias(
 
         states_2017 = cat.resolve_at(_FQID, "2017")
         assert [state.delivery_column_name for state in states_2017] == [base_column]
-        # Existing alias-window behavior still suppresses the base column's
-        # column-specific operational definition on every expanded representation.
-        assert states_2017[0].operational_definition is None
+        assert states_2017[0].operational_definition == "Base representation meaning"
         assert states_2017[0].provenance == "errata:base-state\nBase correction"
 
         states_2018 = cat.resolve_at(_FQID, "2018")
@@ -200,7 +191,7 @@ def test_curated_partial_state_window_preserves_base_and_earlier_alias(
         )
         assert base.valid_from == "2017-01-01"
         assert base.valid_to == "2018-12-31"
-        assert base.operational_definition is None
+        assert base.operational_definition == "Base representation meaning"
         assert alias.valid_from == "2018-01-01"
         assert alias.valid_to == "2018-12-31"
         assert alias.provenance == "errata:test\nSWECOV holds it"
@@ -218,6 +209,91 @@ def test_curated_partial_state_window_preserves_base_and_earlier_alias(
         )
     finally:
         conn.close()
+
+
+def test_curated_window_preserves_partial_family_fallback(tmp_path: Path) -> None:
+    """Adding a curated window must not consume an uncovered source-family gap."""
+    db = _build_multi_alias_db(tmp_path)
+    write_conn = sqlite3.connect(db)
+    try:
+        variable_id, variant_id, base_column, state_id = write_conn.execute(
+            "SELECT vs.variable_id, vs.register_variant_id, "
+            "vs.delivery_column_name, vs.state_id FROM variable_state vs "
+            "JOIN variable v ON v.variable_id = vs.variable_id "
+            "WHERE v.slug = 'loneink-lisa2006'",
+        ).fetchone()
+        curated_column = next(column for column in _ALIASES if column != base_column)
+        write_conn.execute("DELETE FROM variable_alias_window")
+        write_conn.execute(
+            "UPDATE variable_state SET valid_from = '2017-01-01', "
+            "operational_definition = 'Base representation meaning' "
+            "WHERE state_id = ?",
+            (state_id,),
+        )
+        write_conn.execute(
+            "INSERT INTO variable_alias_window "
+            "(variable_id, register_variant_id, delivery_column_name, valid_from, "
+            "valid_to, provenance) VALUES (?, ?, ?, '2017-01-01', "
+            "'2017-12-31', NULL)",
+            (variable_id, variant_id, base_column),
+        )
+        write_conn.commit()
+    finally:
+        write_conn.close()
+
+    before_conn = open_db(db)
+    try:
+        before_2017 = Catalog(before_conn).resolve_at(_FQID, "2017")
+        before_2018 = Catalog(before_conn).resolve_at(_FQID, "2018")
+    finally:
+        before_conn.close()
+    assert len(before_2017) == len(before_2018) == 1
+    assert before_2017[0].valid_to == "2017-12-31"
+    assert before_2017[0].operational_definition is None
+    assert before_2018[0].valid_from == "2017-01-01"
+    assert before_2018[0].valid_to == "2018-12-31"
+    assert before_2018[0].operational_definition == "Base representation meaning"
+
+    write_conn = sqlite3.connect(db)
+    try:
+        write_conn.execute(
+            "INSERT INTO variable_alias_window "
+            "(variable_id, register_variant_id, delivery_column_name, valid_from, "
+            "valid_to, provenance) VALUES (?, ?, ?, '2018-01-01', "
+            "'2018-12-31', 'errata:test\nSWECOV holds it')",
+            (variable_id, variant_id, curated_column),
+        )
+        write_conn.commit()
+    finally:
+        write_conn.close()
+
+    after_conn = open_db(db)
+    try:
+        cat = Catalog(after_conn)
+        assert cat.resolve_at(_FQID, "2017") == before_2017
+        after_2018 = cat.resolve_at(_FQID, "2018")
+        assert {state.delivery_column_name for state in after_2018} == {
+            base_column,
+            curated_column,
+        }
+        base = next(
+            state for state in after_2018 if state.delivery_column_name == base_column
+        )
+        alias = next(
+            state
+            for state in after_2018
+            if state.delivery_column_name == curated_column
+        )
+        assert base == before_2018[0]
+        assert alias.operational_definition is None
+        assert alias.provenance == "errata:test\nSWECOV holds it"
+        assert (alias.state_id, alias.data_type, alias.data_length) == (
+            base.state_id,
+            base.data_type,
+            base.data_length,
+        )
+    finally:
+        after_conn.close()
 
 
 def test_provenance_column_keeps_monthly_window_selection_unchanged(

@@ -704,9 +704,10 @@ CREATE TABLE variable_alias_window (
     delivery_column_name TEXT NOT NULL,
     valid_from TEXT NOT NULL,   -- 'YYYY-MM-DD' inclusive
     valid_to TEXT NOT NULL,     -- 'YYYY-MM-DD' inclusive
-    -- NULL for source-derived representation windows. Curated corrections use
+    -- NULL for source-derived replacement windows. Curated corrections use
     -- the same `errata:<class>\\n<evidence>` contract as variable_state; the
-    -- read-side expansion projects it onto VariableState.provenance.
+    -- read side treats non-NULL provenance as an additive representation and
+    -- projects it onto VariableState.provenance.
     provenance TEXT,
     PRIMARY KEY (variable_id, register_variant_id, delivery_column_name, valid_from)
 );
