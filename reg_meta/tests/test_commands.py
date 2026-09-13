@@ -439,9 +439,10 @@ class TestGetVarinfo:
         self, db_path: str, capsys: pytest.CaptureFixture[str]
     ) -> None:
         provenance = (
-            "errata:omitted-column-in-version\n"
-            "source-edition:Höstterminen 2020\n"
-            "The steward holds this delivery, which SCB omits."
+            "errata:scoped-attributions\n"
+            '[{"class":"omitted-column-in-version",'
+            '"evidence":"The steward holds this delivery, which SCB omits.",'
+            '"source_editions":["Höstterminen 2020"]}]'
         )
         with sqlite3.connect(Path(db_path) / "reg_meta.db") as conn:
             conn.execute(
@@ -470,7 +471,7 @@ class TestGetVarinfo:
         output = capsys.readouterr().out
         assert "provenance" in output
         assert provenance in output
-        assert "source-edition:Höstterminen 2020" in output
+        assert '"source_editions":["Höstterminen 2020"]' in output
 
     def test_value_set_count(self, db_path: str):
         data, _code = _run_json(

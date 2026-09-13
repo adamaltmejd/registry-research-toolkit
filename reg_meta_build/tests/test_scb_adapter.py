@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import hashlib
 import inspect
+import json
 import sqlite3
 from typing import TYPE_CHECKING
 
@@ -2007,9 +2008,10 @@ class TestScbErrata:
                 (
                     "2022-01-01",
                     "2022-12-31",
-                    "errata:omitted-column-in-version\n"
-                    "source-edition:Höstterminen 2022\n"
-                    "the steward holds SameYearCol for those years",
+                    "errata:scoped-attributions\n"
+                    '[{"class":"omitted-column-in-version",'
+                    '"evidence":"the steward holds SameYearCol for those years",'
+                    '"source_editions":["Höstterminen 2022"]}]',
                 ),
             ]
             assert (
@@ -2020,6 +2022,57 @@ class TestScbErrata:
                 ).fetchone()[0]
                 == 1
             )
+        finally:
+            conn.close()
+
+    def test_disjoint_term_corrections_keep_their_evidence_pairs(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        conn = _built_with_errata(
+            tmp_path,
+            monkeypatch,
+            [
+                _var_row(
+                    colname=column,
+                    cvid=9340,
+                    var_id=934,
+                    varname="EraVar",
+                    year="2021",
+                    regver_id=9900,
+                    data_type="varchar",
+                )
+                for column in ("AliasA", "AliasB")
+            ],
+            errata_version("VT2021")
+            + "\n"
+            + errata_version("HT2021")
+            + "\n"
+            + errata_delivered("AliasA", "VT2021")
+            + "\n"
+            + errata_delivered("AliasB", "HT2021"),
+        )
+        try:
+            states = _provenance_windows(conn, "934")
+            assert [(vf, vt) for vf, vt, _provenance in states] == [
+                ("2021-01-01", "2021-12-31")
+            ]
+            header, payload = states[0][2].split("\n", maxsplit=1)
+            assert header == "errata:scoped-attributions"
+            assert json.loads(payload) == [
+                {
+                    "class": "omitted-column-in-version",
+                    "evidence": "the steward holds AliasA for those years",
+                    "source_editions": ["VT2021"],
+                },
+                {
+                    "class": "omitted-column-in-version",
+                    "evidence": "the steward holds AliasB for those years",
+                    "source_editions": ["HT2021"],
+                },
+            ]
+            assert _states(conn, "934") == [
+                ("AliasB", "varchar", "1", "2021-01-01", "2021-12-31")
+            ]
         finally:
             conn.close()
 

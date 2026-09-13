@@ -64,6 +64,7 @@ only the version SCB fixed; git keeps the history of what was retired.
 from __future__ import annotations
 
 import functools
+import json
 import sqlite3
 from dataclasses import dataclass, fields
 from datetime import date
@@ -333,20 +334,35 @@ def _state_provenance(class_name: str, evidence: str) -> str:
 
     The newline is the field's only structural separator. It keeps the catalog
     value useful as-is for CLI/JSON consumers while letting the SPA present the
-    correction class and supporting evidence separately. If this correction
-    overlaps a provider-documented claim, the coalescer inserts exact
-    `source-edition:<name>` line(s) after the class; evidence may itself contain
-    newlines, so consumers remove only those leading scope lines.
+    correction class and supporting evidence separately. When corrections
+    overlap a provider-documented claim, the coalescer replaces this base form
+    with a scoped-attributions value that retains every edition/evidence pair.
     """
     return f"errata:{class_name}\n{evidence}"
 
 
-def scope_state_provenance(provenance: str, editions: list[str]) -> str:
-    """Add exact source-edition scope to an overlapping correction value."""
-    header, evidence = provenance.split("\n", maxsplit=1)
-    return "\n".join(
-        (header, *(f"source-edition:{edition}" for edition in editions), evidence)
+def scoped_state_provenance(attributions: list[tuple[str, str]]) -> str:
+    """Encode ordered correction provenance with explicit source-edition scope."""
+    grouped: dict[str, list[str]] = {}
+    for provenance, edition in attributions:
+        editions = grouped.setdefault(provenance, [])
+        if edition not in editions:
+            editions.append(edition)
+
+    records = []
+    for provenance, editions in grouped.items():
+        header, evidence = provenance.split("\n", maxsplit=1)
+        records.append(
+            {
+                "class": header.removeprefix("errata:"),
+                "evidence": evidence,
+                "source_editions": editions,
+            }
+        )
+    payload = json.dumps(
+        records, ensure_ascii=False, separators=(",", ":"), sort_keys=True
     )
+    return f"errata:scoped-attributions\n{payload}"
 
 
 def _resolve_variant(

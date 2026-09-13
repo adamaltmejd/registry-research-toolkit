@@ -273,35 +273,63 @@ type Correction = {
   sourceEditions: string[];
 };
 
-function correctionFromState(state: VariableStateModel): Correction | null {
+function correctionsFromState(state: VariableStateModel): Correction[] {
   const provenance = state.provenance;
   if (!provenance?.startsWith("errata:")) {
-    return null;
+    return [];
   }
   const separator = provenance.indexOf("\n");
   if (separator < 0) {
-    return null;
+    return [];
   }
   const className = provenance.slice("errata:".length, separator).trim();
-  const lines = provenance.slice(separator + 1).split("\n");
-  const sourceEditions: string[] = [];
-  while (lines[0]?.startsWith("source-edition:")) {
-    const edition = lines.shift()?.slice("source-edition:".length).trim();
-    if (edition) {
-      sourceEditions.push(edition);
+  const body = provenance.slice(separator + 1).trim();
+  if (className === "scoped-attributions") {
+    let parsed: unknown;
+    try {
+      parsed = JSON.parse(body);
+    } catch {
+      return [];
     }
+    if (!Array.isArray(parsed)) {
+      return [];
+    }
+    const corrections: Correction[] = [];
+    for (const item of parsed) {
+      if (typeof item !== "object" || item === null) {
+        return [];
+      }
+      const record = item as Record<string, unknown>;
+      if (
+        typeof record.class !== "string" ||
+        !record.class.trim() ||
+        typeof record.evidence !== "string" ||
+        !record.evidence.trim() ||
+        !Array.isArray(record.source_editions) ||
+        record.source_editions.length === 0 ||
+        !record.source_editions.every(
+          (edition) => typeof edition === "string" && edition.trim(),
+        )
+      ) {
+        return [];
+      }
+      corrections.push({
+        state,
+        className: record.class.trim(),
+        evidence: record.evidence.trim(),
+        sourceEditions: record.source_editions,
+      });
+    }
+    return corrections;
   }
-  const evidence = lines.join("\n").trim();
+  const evidence = body;
   return className && evidence
-    ? { state, className, evidence, sourceEditions }
-    : null;
+    ? [{ state, className, evidence, sourceEditions: [] }]
+    : [];
 }
 
 const corrections = $derived.by(() =>
-  (valueSetStates ?? []).flatMap((state) => {
-    const correction = correctionFromState(state);
-    return correction === null ? [] : [correction];
-  }),
+  (valueSetStates ?? []).flatMap(correctionsFromState),
 );
 
 // ── The relationship-graph fetch (#678/#904) ────────────────────────────────

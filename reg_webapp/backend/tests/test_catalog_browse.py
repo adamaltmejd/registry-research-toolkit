@@ -314,9 +314,10 @@ def test_binding_leaf_embeds_full_record(client):
 
 def test_states_endpoint_returns_delivery_provenance(client, catalog_db):
     provenance = (
-        "errata:omitted-column-in-version\n"
-        "source-edition:Höstterminen 2020\n"
-        "The steward holds this delivery, which SCB omits."
+        "errata:scoped-attributions\n"
+        '[{"class":"omitted-column-in-version",'
+        '"evidence":"The steward holds this delivery, which SCB omits.",'
+        '"source_editions":["Höstterminen 2020"]}]'
     )
     with sqlite3.connect(catalog_db) as conn:
         conn.execute(

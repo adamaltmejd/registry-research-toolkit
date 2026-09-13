@@ -151,9 +151,9 @@ class IRVariableState(_IRBase):
     # `operational_definition`, which is only a shared/canonical summary.
     operational_definition: str | None = None
     # NULL for ordinary provider-exported rows. Corrected SCB states carry
-    # `errata:<class>\n<evidence>`; a correction overlapping a documented claim
-    # inserts exact `source-edition:<name>` scope line(s) between them. Steward-only
-    # IR may name its steward.
+    # `errata:<class>\n<evidence>`; corrections overlapping a documented claim use
+    # `errata:scoped-attributions` JSON records that retain exact edition/evidence
+    # pairs. Steward-only IR may name its steward.
     provenance: str | None = None
 
 

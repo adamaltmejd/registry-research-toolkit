@@ -271,10 +271,11 @@ see "Classifications"), while the human-readable source attribution lives on
 `classification_id`. It also carries nullable `provenance`: NULL for an ordinary
 provider-documented interval, `errata:<class>\n<evidence>` for an SCB correction, and
 optionally `steward:<label>` for steward-only rows. When an SCB correction overlaps a
-provider-documented claim, exact `source-edition:<name>` line(s) between the class and
-evidence preserve both attributions and scope the correction to those editions. Keeping
-this at state grain prevents one corrected edition from relabeling a neighboring
-documented window.
+provider-documented claim, `errata:scoped-attributions\n<JSON array>` records pair each
+correction class and evidence value with its exact `source_editions`. This preserves
+multiple attributions without confusing disjoint editions or relabeling the enclosing
+documented window. Keeping this at state grain prevents one corrected edition from
+relabeling a neighboring documented window.
 
 **Variant-less registers (`_default`).** Socialstyrelsen LSS, BU, SOL ship variables
 without a deldatamängd sheet. Adapters synthesise a single `_default` variant row at
@@ -657,19 +658,19 @@ when ungrouped; #616).
 (denormalized latest alias), `source_register_text` (raw source attribution/code when it
 varies by state), `provenance` (NULL for an ordinary provider-export interval;
 correction class and evidence for an errata-backed interval, plus exact source-edition
-scope when that correction overlaps a documented claim), `value_set_version_label` (NOT
-NULL, `''` = no discriminator), `value_set_id`, `value_set` (hydrated `(code, label)`
-tuple, None when the state has no value set), `is_identifier` (variable-grain flag
-denormalized onto every state via a JOIN — constant across all of a variable's states —
-so consumers holding only a `VariableState` (e.g. the `resolve_at` / `/states` paths)
-can read the authoritative identifier flag without needing the enclosing
-`ResolvedVariable`), and `classification_slug` (the classification family slug (see
-DESIGN.md → Classifications) for this state's value set, e.g. `lkf2007`; resolved
-per-state from `variable_state.classification_id` — varies across a variable's states;
-None for code-less / unclassified states). The full delivery-column history — multiple
-aliases per state from cross-edition spelling drift — lives in the `variable_alias`
-table; `delivery_column_name` is its denormalized latest, and `reg-meta get datacolumns`
-surfaces the complete list.
+scope as paired JSON attribution records when corrections overlap a documented claim),
+`value_set_version_label` (NOT NULL, `''` = no discriminator), `value_set_id`,
+`value_set` (hydrated `(code, label)` tuple, None when the state has no value set),
+`is_identifier` (variable-grain flag denormalized onto every state via a JOIN — constant
+across all of a variable's states — so consumers holding only a `VariableState` (e.g.
+the `resolve_at` / `/states` paths) can read the authoritative identifier flag without
+needing the enclosing `ResolvedVariable`), and `classification_slug` (the classification
+family slug (see DESIGN.md → Classifications) for this state's value set, e.g.
+`lkf2007`; resolved per-state from `variable_state.classification_id` — varies across a
+variable's states; None for code-less / unclassified states). The full delivery-column
+history — multiple aliases per state from cross-edition spelling drift — lives in the
+`variable_alias` table; `delivery_column_name` is its denormalized latest, and
+`reg-meta get datacolumns` surfaces the complete list.
 
 **Edge semantics (reader-facing).** All relationship edges are **variable grain** — the
 variant is a delivery coordinate, not an identity level, so there is nothing below the

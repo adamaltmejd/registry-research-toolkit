@@ -84,6 +84,7 @@ from reg_meta_build.resolution import (
     SweepHooks,
     assemble_runs,
     day_after_window_end,
+    merge_adjacent,
     prev_day_from_cut,
     resolve_year_intervals,
 )
@@ -91,7 +92,7 @@ from reg_meta_build.scb_errata import (
     ERRATA_COLUMN_SOURCE_LABEL,
     ScbErrata,
     apply_scb_errata,
-    scope_state_provenance,
+    scoped_state_provenance,
 )
 
 _LISA_REGISTER_NAME_PREFIX = "longitudinell integrationsdatabas"
@@ -3232,28 +3233,46 @@ def _coalesce_variable_states(
         claims = provenance_claims.get((vid, gkey[1], gkey[8]))
         if not claims:
             return [(vf, vt, None)]
-        documented = [
-            (lo, hi) for lo, hi, provenance, _edition in claims if provenance is None
-        ]
-        attributed_claims = []
-        for claim_lo, claim_hi, provenance, edition in claims:
-            if provenance is not None:
-                overlaps = [
-                    (lo, hi)
-                    for lo, hi in documented
-                    if lo <= claim_hi and claim_lo <= hi
-                ]
-                if overlaps:
-                    claim_lo = min(claim_lo, *(lo for lo, _hi in overlaps))
-                    claim_hi = max(claim_hi, *(hi for _lo, hi in overlaps))
-            attributed_claims.append((claim_lo, claim_hi, provenance, edition))
         clipped = [
             (max(vf, lo), min(vt, hi), provenance, edition)
-            for lo, hi, provenance, edition in attributed_claims
+            for lo, hi, provenance, edition in claims
             if lo <= vt and vf <= hi
         ]
         if not clipped:
             return [(vf, vt, None)]
+
+        # A documented component owns the resolved state identity. Corrections
+        # touching it become scoped annotations on that component, but retain
+        # their ORIGINAL claim windows below for genuine-conflict detection.
+        # This avoids inventing overlap between two disjoint term editions while
+        # keeping an annual documented state unsplit.
+        documented_components = merge_adjacent(
+            sorted(
+                (lo, hi)
+                for lo, hi, provenance, _edition in clipped
+                if provenance is None
+            )
+        )
+        scoped_by_component = {}
+        for component in documented_components:
+            component_lo, component_hi = component
+            scoped = sorted(
+                (
+                    claim_lo,
+                    claim_hi,
+                    edition,
+                    provenance,
+                )
+                for claim_lo, claim_hi, provenance, edition in clipped
+                if provenance is not None
+                and claim_lo <= component_hi
+                and component_lo <= claim_hi
+            )
+            if scoped:
+                scoped_by_component[component] = scoped_state_provenance(
+                    [(provenance, edition) for _lo, _hi, edition, provenance in scoped]
+                )
+
         cuts = {vf}
         for lo, hi, _provenance, _edition in clipped:
             cuts.add(lo)
@@ -3269,11 +3288,7 @@ def _coalesce_variable_states(
                 if claim_lo <= lo <= claim_hi
             ]
             corrections = sorted({p for p, _edition in active if p is not None})
-            if not corrections:
-                provenance = None
-            elif len(corrections) == 1:
-                provenance = corrections[0]
-            else:
+            if len(corrections) > 1:
                 raise RegMetaError(
                     exit_code=EXIT_CONFIG,
                     code="coalesce_conflicting_state_provenance",
@@ -3288,9 +3303,20 @@ def _coalesce_variable_states(
                         "evidence value or give them disjoint edition windows."
                     ),
                 )
-            if provenance is not None and any(p is None for p, _edition in active):
-                editions = sorted({edition for p, edition in active if p is not None})
-                provenance = scope_state_provenance(provenance, editions)
+            documented_component = next(
+                (
+                    component
+                    for component in documented_components
+                    if component[0] <= lo <= component[1]
+                ),
+                None,
+            )
+            if documented_component is not None:
+                provenance = scoped_by_component.get(documented_component)
+            elif corrections:
+                provenance = corrections[0]
+            else:
+                provenance = None
             if segments and segments[-1][2] == provenance:
                 segments[-1] = (segments[-1][0], hi, provenance)
             else:
