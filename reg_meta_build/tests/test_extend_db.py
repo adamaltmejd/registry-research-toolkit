@@ -337,6 +337,25 @@ def test_duplicate_state_key_is_rejected(tmp_path: Path) -> None:
     assert "duplicate state key" in exc.value.message
 
 
+@pytest.mark.parametrize("explicit_start", ["0001", "0001-01", "0001-01-01"])
+def test_year_one_state_start_is_rejected_at_boundary(
+    tmp_path: Path, explicit_start: str
+) -> None:
+    text = _BASE_TOML.replace(
+        '    column = "BELOPP"\n    data_type = "float"',
+        '    column = "BELOPP"\n    data_type = "float"\n\n'
+        '    [[register.variable.state]]\n    column = "BELOPP_SEK"\n'
+        f'    data_type = "float"\n    valid_from = "{explicit_start}"',
+        1,
+    )
+    with pytest.raises(RegMetaError) as exc:
+        _load_provider_ir(_providers(tmp_path, text), _STEWARD)
+    assert exc.value.exit_code == EXIT_CONFIG
+    assert (
+        f"valid_from: {explicit_start!r} is not a valid ISO period" in exc.value.message
+    )
+
+
 def test_inverted_state_window_is_rejected(tmp_path: Path) -> None:
     text = _BASE_TOML.replace(
         '    column = "BELOPP"\n    data_type = "float"',
