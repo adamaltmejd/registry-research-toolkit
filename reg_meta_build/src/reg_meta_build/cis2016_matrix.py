@@ -122,16 +122,11 @@ class Cis2016Matrix(_CurationModel):
     selector: MatrixSelector
     evidence: MatrixEvidence
     question_label: NonEmpty
-    historical_variable_slug: StableKey
     axes: tuple[MatrixAxis, MatrixAxis]
     answers: tuple[MatrixAnswer, ...]
 
     @model_validator(mode="after")
     def _complete_partition(self) -> Cis2016Matrix:
-        if derive_variable_slug(self.historical_variable_slug) != (
-            self.historical_variable_slug
-        ):
-            raise ValueError("historical_variable_slug is not a valid variable slug")
         if tuple(axis.key for axis in self.axes) != ("partner", "response"):
             raise ValueError("axes must be ordered as partner, response")
         if len(self.answers) < 2:
@@ -141,10 +136,6 @@ class Cis2016Matrix(_CurationModel):
             values = [getattr(answer, attr) for answer in self.answers]
             if len(set(values)) != len(values):
                 raise ValueError(f"matrix answers repeat {attr} selectors")
-        if self.historical_variable_slug in {answer.slug for answer in self.answers}:
-            raise ValueError(
-                "historical_variable_slug conflicts with a matrix answer slug"
-            )
 
         columns = [column for answer in self.answers for column in answer.columns]
         if len(set(columns)) != len(columns):

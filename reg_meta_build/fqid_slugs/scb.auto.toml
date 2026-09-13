@@ -52632,7 +52632,7 @@ slug = "q17k"  # source: kolumnnamn
 [variable."257.15644"]
 slug = "q10a1"  # source: kolumnnamn
 
-[variable."257.15662"]
+[variable."257.15662.x"]
 slug = "co11"  # source: kolumnnamn
 
 [variable."257.20915"]

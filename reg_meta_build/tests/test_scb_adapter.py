@@ -39,6 +39,7 @@ from reg_meta.order import requested_intervals, resolve_binding
 from reg_meta_build.cis2016_matrix import load_cis2016_matrix
 from reg_meta_build.db import DDL, build_db, seed_providers
 from reg_meta_build.dbdiff import diff_db_content
+from reg_meta_build.fqid_slugs import load_provider_toml
 from reg_meta_build.id import _CANONICAL_SCB_BIT, is_canonical_scb
 from reg_meta_build.ir import (
     IRDeliveryProvenance,
@@ -1489,7 +1490,6 @@ def _cis2016_payload() -> dict:
             "noted": "2026-09-13",
         },
         "question_label": "Typ av samarbetspartner geografiskt fördelat",
-        "historical_variable_slug": "co11",
         "axes": [
             {"key": "partner", "label_en": "Cooperation partner"},
             {"key": "response", "label_en": "Location or response"},
@@ -1559,10 +1559,38 @@ def _full_cis2016_payload() -> dict:
     return payload
 
 
+def _use_committed_cis2016_auto_pin(monkeypatch: pytest.MonkeyPatch) -> None:
+    auto_path = Path(__file__).parents[1] / "fqid_slugs" / "scb.auto.toml"
+    variable_pins = {
+        entry.source_id: entry
+        for entry in load_provider_toml(auto_path)
+        if entry.kind == "variable"
+    }
+    assert "257.15662" not in variable_pins
+    assert variable_pins["257.15662.x"].slug == "co11"
+
+    import _shared_fixtures
+
+    write_fixture_slug_dir = _shared_fixtures._write_fixture_slug_dir
+
+    def _write_pinned_slug_dir(slug_dir: Path) -> None:
+        write_fixture_slug_dir(slug_dir)
+        (slug_dir / "freeze.toml").write_text('scb = "curating"\n', encoding="utf-8")
+        (slug_dir / "scb.auto.toml").write_text(
+            '[variable."1.15662.x"]\nslug = "co11"  # source: kolumnnamn\n',
+            encoding="utf-8",
+        )
+
+    monkeypatch.setattr(
+        _shared_fixtures, "_write_fixture_slug_dir", _write_pinned_slug_dir
+    )
+
+
 class TestCis2016MatrixProjection:
     def test_distinct_answers_keep_identity_ownership_and_source_evidence(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ) -> None:
+        _use_committed_cis2016_auto_pin(monkeypatch)
         payload = _full_cis2016_payload()
         pilot_columns = tuple(
             column for answer in payload["answers"] for column in answer["columns"]
@@ -1824,12 +1852,16 @@ class TestCis2016MatrixProjection:
                 )
                 == []
             )
-            historical_rows = conn.execute(
+            other_wave_rows = conn.execute(
                 "SELECT v.slug, vs.delivery_column_name "
                 "FROM variable v JOIN variable_state vs USING (variable_id) "
                 "WHERE v.provider_key = '15662' AND vs.valid_from = '2018-01-01'"
             ).fetchall()
-            assert [tuple(row) for row in historical_rows] == [("co11", "CO11")]
+            assert len(other_wave_rows) == 1
+            assert other_wave_rows[0]["delivery_column_name"] == "CO11"
+            assert other_wave_rows[0]["slug"] != (
+                "cis2016-cooperation-group-enterprises-sweden"
+            )
         finally:
             conn.close()
 
