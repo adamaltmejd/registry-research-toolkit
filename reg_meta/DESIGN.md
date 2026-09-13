@@ -1176,7 +1176,7 @@ isolates split siblings (each sibling's states classify independently), and lets
 variable-level helpers aggregate when needed.
 
 The `classification_id` column is populated at build time from a maintainer-curated TOML
-seed at `reg_meta_build/classifications.toml` (exact match against
+seed at `reg_meta_build/curation/classifications.toml` (exact match against
 `value_set_version_label`, no fuzzy inference). The seed schema, build-time invariants,
 and validation rules live in [../reg_meta_build/DESIGN.md](../reg_meta_build/DESIGN.md)
 § "Classification seed".
@@ -1437,13 +1437,14 @@ already knowing the register. ONE global vocabulary (`tag`, slug globally unique
 polymorphic membership table (`tag_member`): a row carries EXACTLY ONE grain — a
 `register_id` (coarse thematic browse) OR a `variable_id` (the "golden/starred"
 recommendation, where `starred` flags it and `note` carries the one-line rationale
-curation can give and popularity can't). Curated from `reg_meta_build/tags.toml`,
-derived every build (regenerate-not-migrate); a discovery overlay that leaves identity
-untouched, same family as concept groups and delivery enrichment (package-root TOMLs).
-The first committed content slice is SCB-heavy and intentionally small; synthetic builds
-and wheel installs can still materialize empty tag tables when the curation file is
-absent. The webapp consumes memberships as catalog-node chips; tag-scoped search/facets
-and tag-backed search boost remain separate consumption work.
+curation can give and popularity can't). Curated from
+`reg_meta_build/curation/tags.toml`, derived every build (regenerate-not-migrate); a
+discovery overlay that leaves identity untouched, same family as concept groups and
+delivery enrichment (catalog-overlay TOMLs). The first committed content slice is
+SCB-heavy and intentionally small; synthetic builds and wheel installs can still
+materialize empty tag tables when the curation file is absent. The webapp consumes
+memberships as catalog-node chips; tag-scoped search/facets and tag-backed search boost
+remain separate consumption work.
 
 **API**: `Catalog.list_tags()` → `TagSummary` (slug, label, description, `member_count`,
 `starred_count`) is the vocabulary with counts; `tags_for_variable(fqid)` /

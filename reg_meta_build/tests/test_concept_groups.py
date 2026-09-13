@@ -2337,7 +2337,7 @@ class TestCodeLabelPairs:
 class TestCodeLabelPairLoader:
     @staticmethod
     def _load(tmp_path, text: str):
-        path = tmp_path / "code_label_pairs.toml"
+        path = tmp_path / "concept_groups.toml"
         path.write_text(text, encoding="utf-8")
         return load_code_label_pairs(path)
 

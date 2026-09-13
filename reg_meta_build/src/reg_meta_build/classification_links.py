@@ -8,7 +8,7 @@ deliberately leaves for a human. This is the curated override for that tail: a
 maintainer names `variable → classification` directly, and it takes precedence
 over every auto/feed candidate.
 
-Like the other curation TOMLs (`curation/relations.toml`, `concept_groups.toml`)
+Like the other curation TOMLs (`curation/relations.toml`, `curation/concept_groups.toml`)
 it is a maintainer artifact — absent in wheel installs and synthetic test builds —
 and uses the same load/resolve split: structure + vocabulary are checked at load,
 FQID / short_name existence at materialize time against the built DB.
@@ -21,7 +21,6 @@ from __future__ import annotations
 
 import functools
 from dataclasses import dataclass
-from pathlib import Path
 from typing import TYPE_CHECKING
 
 from ._curation import (
@@ -33,6 +32,7 @@ from ._curation import (
 
 if TYPE_CHECKING:
     import sqlite3
+    from pathlib import Path
 
 
 @dataclass(frozen=True)
@@ -49,23 +49,12 @@ class CuratedClassificationLink:
     note: str | None
 
 
-def repo_classification_links_path() -> Path | None:
-    """`reg_meta_build/classification_links.toml` from a repo checkout, or None
-    (wheel installs don't ship curation — it's a maintainer artifact like the slug
-    TOMLs). Sits at the package root, NOT under `fqid_slugs/` (that dir is
-    glob-loaded as provider-slug TOMLs; a file there would break the build)."""
-    candidate = (
-        Path(__file__).resolve().parent.parent.parent / "classification_links.toml"
-    )
-    return candidate if candidate.is_file() else None
-
-
 _require_fqid = functools.partial(
     require_fqid,
     code="classification_links_invalid",
     prefix="classification_links",
     entry_table="[[link]]",
-    file_name="classification_links.toml",
+    file_name="curation/classifications.toml",
     example="scb/ulf/<variable>",
 )
 
@@ -89,8 +78,9 @@ def load_classification_links(
         label="classification-links",
         prefix="classification_links",
         code_base="classification_links",
-        file_name="classification_links.toml",
+        file_name="curation/classifications.toml",
         entry_fields="variable / classification",
+        sibling_keys=frozenset({"classification"}),
     )
     out: list[CuratedClassificationLink] = []
     # A duplicate `variable` is curation drift (two rows would fight over the same
@@ -165,7 +155,8 @@ def materialize_classification_links(
                 "classification_links_unresolved",
                 f"classification_links variable {fqid!r} does not resolve to a "
                 "variable.",
-                "Fix the `variable` FQID in reg_meta_build/classification_links.toml.",
+                "Fix the `variable` FQID in "
+                "reg_meta_build/curation/classifications.toml.",
             )
         cls_row = conn.execute(
             "SELECT id FROM classification WHERE short_name = ?",
@@ -176,8 +167,8 @@ def materialize_classification_links(
                 "classification_links_unresolved",
                 f"classification_links classification {e.classification!r} (for "
                 f"{fqid!r}) is not a seeded classification short_name.",
-                "Use a short_name present in classifications.toml, or remove the "
-                "entry from reg_meta_build/classification_links.toml.",
+                "Use a short_name present in curation/classifications.toml, or remove the "
+                "entry from reg_meta_build/curation/classifications.toml.",
             )
         cls_id = cls_row[0]
 

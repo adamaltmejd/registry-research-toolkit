@@ -6,7 +6,7 @@ are keyed on real SCB source ids that collide with fixture register ids. That
 fixture removed the incidental coverage the fixture build used to provide: a
 malformed entry in the maintainer-edited TOMLs would otherwise surface only on
 a real-data `build-db`. This test loads the actual files by DIRECT path — the
-autouse fixture only nulls the `repo_*_path` helpers, not the loaders.
+autouse fixture only nulls the shared repo curation resolver, not the loaders.
 
 Scope: load-time validation only (TOML shape, canonical ints, folded-column
 group rules). The build-time half (named columns exist for the var) needs the
@@ -21,6 +21,9 @@ from pathlib import Path
 import pytest
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta.fqid import FqidKind
+from reg_meta_build._curation import repo_curation_path
+from reg_meta_build.classification_links import load_classification_links
+from reg_meta_build.classifications import load_seed
 from reg_meta_build.codeless_overlap import load_codeless_overlap
 from reg_meta_build.codelivery import load_codelivery
 from reg_meta_build.concept_groups import (
@@ -39,21 +42,61 @@ from reg_meta_build.period_family_merges import load_period_family_merges
 from reg_meta_build.relations import _SAME_AS_MAX_COMPONENT, load_relations
 from reg_meta_build.scb_errata import load_scb_errata
 
-from reg_meta_build.fqid_slugs import repo_slug_dir
+from reg_meta_build.fqid_slugs import load_lineage_config, repo_slug_dir
 
-# reg_meta_build/ package root (tests/ sits beside the TOMLs).
+# reg_meta_build/ package root (tests/ sits beside the curation/ directory).
 _ROOT = Path(__file__).resolve().parent.parent
+_CURATION = _ROOT / "curation"
+
+
+def test_catalog_overlays_share_one_directory() -> None:
+    names = {
+        "classifications.toml",
+        "codeless_overlap.toml",
+        "codelivery.toml",
+        "concept_groups.auto.toml",
+        "concept_groups.toml",
+        "delivery_enrichment.generated.toml",
+        "lineage.toml",
+        "period_family_merges.toml",
+        "relations.toml",
+        "scb_errata.toml",
+        "tags.toml",
+    }
+    assert {path.name for path in _CURATION.glob("*.toml")} == names
+    assert all(repo_curation_path(name) == _CURATION / name for name in names)
+    assert not any((_ROOT / name).is_file() for name in names)
+    assert not any(
+        path.is_file()
+        for path in (
+            _ROOT / "classification_links.toml",
+            _ROOT / "code_label_pairs.toml",
+            _ROOT / "delivery_enrichment.toml",
+        )
+    )
+
+
+def test_repo_classifications_and_links_parse_from_one_file() -> None:
+    path = _CURATION / "classifications.toml"
+    assert load_seed(path)
+    assert load_classification_links(path)
+
+
+def test_repo_lineage_parses_from_overlay() -> None:
+    config = load_lineage_config(_CURATION / "lineage.toml")
+    assert config.defaults == {("scb", "rtb"): "folkbokforda-personer"}
+    assert config.overrides == {}
 
 
 def test_repo_codelivery_parses() -> None:
-    assert load_codelivery(_ROOT / "codelivery.toml")
+    assert load_codelivery(_CURATION / "codelivery.toml")
 
 
 def test_repo_codeless_overlap_parses() -> None:
     # #868: the residual worklist is curated in-repo — the loader must accept it as
     # well-formed (a malformed entry or header would raise here). It loads to a
     # non-empty map of (register, variable, column) → (resolution, extend_label).
-    curation = load_codeless_overlap(_ROOT / "codeless_overlap.toml")
+    curation = load_codeless_overlap(_CURATION / "codeless_overlap.toml")
     assert curation
     assert curation[("scb", "lastbilstrafik", "varukod-sandning", "varukod")] == (
         "cap",
@@ -62,7 +105,7 @@ def test_repo_codeless_overlap_parses() -> None:
 
 
 def test_repo_concept_groups_parses() -> None:
-    groups = load_concept_groups(_ROOT / "concept_groups.toml")
+    groups = load_concept_groups(_CURATION / "concept_groups.toml")
     assert groups  # the LISA agi rank family ships with the repo
     # Build-time resolution (register/group/variable exist) is maintainer-build
     # territory (the materializer fails fast); load-time shape is this gate.
@@ -158,9 +201,9 @@ def test_repo_concept_groups_auto_parses() -> None:
     # `concept_groups.auto.toml` (#496) is the GENERATED, build-critical candidate
     # catalog — an `[[accept]]` resolves against it at materialize time, so a
     # parse-incompatible regeneration would break a real build. This catches that
-    # without a full build-db. Direct path (not `repo_concept_groups_auto_path`)
+    # without a full build-db. Direct path keeps this a parser-only assertion
     # matches the other repo-TOML tests; the loader re-validates the shape.
-    groups = load_concept_groups(_ROOT / "concept_groups.auto.toml")
+    groups = load_concept_groups(_CURATION / "concept_groups.auto.toml")
     assert groups  # the generator emits >0 foldable families
     assert all(len(g.members) >= 2 for g in groups)
 
@@ -170,7 +213,7 @@ def test_repo_code_label_pairs_parses() -> None:
     # concept-group fold. Load-time shape (every entry sets `code`/`label` as
     # 3-segment FQIDs) is this gate; endpoint resolution + the structural guards
     # (value-set ownership, co-delivery) are maintainer-build territory.
-    pairs = load_code_label_pairs(_ROOT / "code_label_pairs.toml")
+    pairs = load_code_label_pairs(_CURATION / "concept_groups.toml")
     assert pairs  # the curated SCB pairs ship with the repo
     assert all(p.code_provider and p.code_register and p.code_variable for p in pairs)
     assert all(
@@ -200,7 +243,7 @@ def test_repo_concept_group_accepts_parses() -> None:
     # PARSES with a valid load-time shape; the count grows as curation batches land
     # (the #496 batch-1 SOS families ship now), so assert presence + shape, not an
     # exact count.
-    accepts = load_concept_group_accepts(_ROOT / "concept_groups.toml")
+    accepts = load_concept_group_accepts(_CURATION / "concept_groups.toml")
     assert accepts
     assert all(a.provider and a.register and a.key for a in accepts)
 
@@ -212,7 +255,7 @@ def test_repo_classification_groups_parses() -> None:
     # load-time shape (>= 2 members, unique keys/slugs). The umbrellas are now
     # AXIS-LESS (axis is None — members are distinct classifications, not points
     # on a scale), so this no longer asserts a truthy axis.
-    groups = load_classification_groups(_ROOT / "concept_groups.toml")
+    groups = load_classification_groups(_CURATION / "concept_groups.toml")
     assert groups
     assert {g.key for g in groups} >= {"sun"}
     assert all(len(g.members) >= 2 for g in groups)
@@ -220,18 +263,22 @@ def test_repo_classification_groups_parses() -> None:
 
 
 def test_repo_delivery_enrichment_parses() -> None:
-    enr = load_delivery_enrichment(_ROOT / "delivery_enrichment.toml")
+    path = _CURATION / "delivery_enrichment.generated.toml"
+    assert "GENERATED" in path.read_text(encoding="utf-8").splitlines()[2]
+    enr = load_delivery_enrichment(path)
     # the #365 global description backfills + delivery-column aliases ship together
     assert enr.descriptions
     assert enr.aliases
-    # Slug RESOLUTION is lenient + maintainer-build territory; load-time shape
+    # Slug RESOLUTION is strict + maintainer-build territory; load-time shape
     # (2-segment FQID, unique keys) is this gate.
     assert all(d.provider and d.register and d.variable for d in enr.descriptions)
     assert all(a.provider and a.register and a.delivery_column for a in enr.aliases)
 
 
 def test_repo_delivery_enrichment_keeps_issue_428_aliases() -> None:
-    aliases = load_delivery_enrichment(_ROOT / "delivery_enrichment.toml").aliases
+    aliases = load_delivery_enrichment(
+        _CURATION / "delivery_enrichment.generated.toml"
+    ).aliases
     triples = {
         (f"{a.provider}/{a.register}", a.variable, a.delivery_column) for a in aliases
     }
@@ -253,7 +300,7 @@ def test_repo_delivery_enrichment_keeps_issue_428_aliases() -> None:
 
 
 def test_repo_delivery_enrichment_tracks_curated_lisa_sni_slugs() -> None:
-    enr = load_delivery_enrichment(_ROOT / "delivery_enrichment.toml")
+    enr = load_delivery_enrichment(_CURATION / "delivery_enrichment.generated.toml")
     lisa_variables = {
         d.variable
         for d in enr.descriptions
@@ -295,7 +342,7 @@ def test_repo_delivery_enrichment_tracks_curated_lisa_sni_slugs() -> None:
 
 def test_repo_period_family_merges_parses() -> None:
     families = load_period_family_merges(
-        _ROOT / "curation" / "period_family_merges.toml"
+        _CURATION / "period_family_merges.toml"
     )
     assert families  # the #319 LISA monthly families ship with the repo
     # Member RESOLUTION (12 month columns exist for the stem) is maintainer-build
@@ -313,7 +360,7 @@ def test_repo_relations_parses() -> None:
     # The gate is load-time shape — a malformed entry would otherwise surface only
     # on a real build. Endpoint RESOLUTION is maintainer-build territory (the
     # materializers fail fast).
-    relations = load_relations(_ROOT / "curation" / "relations.toml")
+    relations = load_relations(_CURATION / "relations.toml")
     # 615 (#508) + 232 (#737) = 847 curated variable-grain identity edges.
     assert len(relations.same_as) == 847
     assert all(
@@ -381,9 +428,9 @@ def test_repo_scb_errata_parses() -> None:
     # maintainer-build surprise. The remaining half (the version is documented, the
     # column has / has not a real row) needs the real export and stays build-only.
     errata = load_scb_errata(
-        _ROOT / "scb_errata.toml",
+        _CURATION / "scb_errata.toml",
         repo_slug_dir(),
-        classification_seed_path=_ROOT / "classifications.toml",
+        classification_seed_path=_CURATION / "classifications.toml",
     )
     assert errata  # the verified LISA DispInkKE case ships with the repo
     # scb/lisa "Individer, 15 år och äldre"; pin the complete coordinates of
@@ -410,9 +457,9 @@ def test_repo_scb_errata_columns_carry_both_evidence_sources() -> None:
     # they came out. A regeneration that re-proposes them is proposing entries
     # the real corpus rejects.
     errata = load_scb_errata(
-        _ROOT / "scb_errata.toml",
+        _CURATION / "scb_errata.toml",
         repo_slug_dir(),
-        classification_seed_path=_ROOT / "classifications.toml",
+        classification_seed_path=_CURATION / "classifications.toml",
     )
     by_source = Counter(c.source for c in errata.columns)
     assert by_source == {"steward-holdings": 1851, "scb-docs": 34}

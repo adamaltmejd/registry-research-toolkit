@@ -65,9 +65,8 @@ SNAPSHOT_FILENAME = ".snapshot.json"
 
 # Top-level keys accepted in a provider TOML; anything else is a typo
 # (e.g. `[registers."34"]` vs the singular form) that today would otherwise
-# silently no-op. `lineage_defaults` / `lineage` are NOT SlugEntry rows —
-# `load_lineage_config` parses them separately — but they're legal top-level
-# tables, so the strict typo check must accept them. Graph semantics
+# silently no-op. Navigation lineage lives in `curation/lineage.toml`, not in
+# these identity files. Graph semantics
 # (`same_as` / `replaced_by` succession) are NOT a slug surface
 # anymore (#522) — they live in `curation/relations.toml`, so a top-level
 # `[[replaced_by]]` or an inline `same_as` field in a slug TOML now fails as an
@@ -77,8 +76,6 @@ _PROVIDER_TOPLEVEL_KEYS: frozenset[str] = frozenset(
         "register",
         "register_variant",
         "variable",
-        "lineage_defaults",
-        "lineage",
     }
 )
 _CLASSIFICATIONS_TOPLEVEL_KEYS: frozenset[str] = frozenset({"classification"})
@@ -126,7 +123,8 @@ def repo_slug_dir() -> Path | None:
     """Return ``reg_meta_build/fqid_slugs/`` from a repo checkout, or ``None``.
 
     Wheel installs do not ship the slug TOMLs — they are maintainer artifacts
-    consumed by the build, alongside ``classifications.toml`` and ``docs/``.
+    consumed by the build, alongside the catalog overlays under ``curation/``
+    and ``docs/``.
     """
     pkg_dir = Path(__file__).resolve().parent
     candidate = pkg_dir.parent.parent / "fqid_slugs"
@@ -1140,7 +1138,7 @@ def populate_slugs(
                 "slug_unknown_source_id",
                 f"{CLASSIFICATIONS_FILE}: classification.{entry.source_id!r} "
                 f"has no row in this build.",
-                "Add the short_name to classifications.toml (the seed) or drop "
+                "Add the short_name to curation/classifications.toml (the seed) or drop "
                 "the slug entry.",
             )
         conn.execute(
@@ -2638,7 +2636,7 @@ def _assert_no_unslugged(
 
 @dataclass(frozen=True)
 class LineageConfig:
-    """Source-variant pinning for lineage, parsed from slug TOMLs.
+    """Source-variant pinning parsed from ``curation/lineage.toml``.
 
     Keyed by PROVIDER because register.slug is not globally unique — two
     providers can reuse a register slug, so an `scb/rtb` default must not bleed
@@ -2647,9 +2645,7 @@ class LineageConfig:
     variant slug (the `[lineage_defaults]` block). `overrides` maps
     `(provider_slug, consumer_register_slug, variable_slug)` →
     `(source_register_slug, source_variant_slug)` (the
-    `[lineage."<consumer>.<slug>"]` blocks). The provider is the one owning the
-    `<provider>.toml` the block lives in: the source register's provider for
-    defaults, the consumer's provider for overrides.
+    `[lineage."<provider>/<consumer>/<slug>"]` blocks).
 
     Both carry pure shape (string-typed values); existence of the named
     registers / variants is validated by `link_variable_state_lineage` against
@@ -2660,105 +2656,98 @@ class LineageConfig:
     overrides: dict[tuple[str, str, str], tuple[str, str]]
 
 
-def load_lineage_config(slug_dir: Path) -> LineageConfig:
-    """Parse `[lineage_defaults]` and `[lineage."<consumer>.<slug>"]` from every
-    provider TOML under ``slug_dir`` (excluding ``classifications.toml``).
+def load_lineage_config(path: Path | None) -> LineageConfig:
+    """Parse the single navigation-lineage overlay.
 
-    Keys carry the provider (from the `<provider>.toml` filename via
-    `_provider_from_path`) because register.slug is not globally unique. A
-    duplicate key *within one provider* (e.g. across `scb.toml` and its `.auto`
-    companion) is a fail-fast error; the SAME register slug under DIFFERENT
-    providers is fine — distinct keys. The TOML dotted-key form
-    `[lineage."lisa.kon"]` parses as a single quoted key under `lineage`;
-    register/variable slugs are `[a-z0-9-]` (no `.`), so splitting the key on
-    the first `.` cleanly recovers `(consumer_register, variable_slug)`.
+    ``[lineage_defaults]`` keys are two-segment source-register FQIDs and
+    ``[lineage."…"]`` keys are three-segment consumer-variable FQIDs. Provider
+    association is therefore explicit rather than inferred from an identity
+    filename. Missing curation yields an empty config; malformed shape still
+    fails before any provider-specific resolution.
     """
     defaults: dict[tuple[str, str], str] = {}
     overrides: dict[tuple[str, str, str], tuple[str, str]] = {}
 
-    for path in sorted(slug_dir.glob("*.toml")):
-        if path.name in _RESERVED_NON_PROVIDER_TOMLS:
-            continue
-        provider = _provider_from_path(path)
-        data = _parse_toml(path)
+    if path is None or not path.is_file():
+        return LineageConfig(defaults=defaults, overrides=overrides)
+    data = _parse_toml(path)
+    unknown_top = set(data) - {"lineage_defaults", "lineage"}
+    if unknown_top:
+        raise _err(
+            "lineage_invalid",
+            f"{path.name}: unknown top-level key(s): {sorted(unknown_top)}.",
+            "Use only [lineage_defaults] and [lineage.\"<consumer FQID>\"] "
+            "tables in reg_meta_build/curation/lineage.toml.",
+        )
 
-        raw_defaults = data.get("lineage_defaults", {})
-        if not isinstance(raw_defaults, dict):
+    raw_defaults = data.get("lineage_defaults", {})
+    if not isinstance(raw_defaults, dict):
+        raise _err(
+            "lineage_defaults_malformed",
+            f"{path.name}: [lineage_defaults] must be a table of "
+            f'"provider/source-register" = "variant_slug" entries.',
+            "Use a [lineage_defaults] table with two-segment FQID keys and "
+            "string values.",
+        )
+    for source_fqid, variant in raw_defaults.items():
+        source_parts = source_fqid.split("/")
+        if len(source_parts) != 2 or not all(source_parts):
             raise _err(
-                "lineage_defaults_malformed",
-                f"{path.name}: [lineage_defaults] must be a table of "
-                f'source_register = "variant_slug" entries.',
-                "Use a [lineage_defaults] table with string values.",
+                "lineage_default_key_malformed",
+                f"{path.name}: [lineage_defaults] key {source_fqid!r} must be a "
+                "two-segment provider/register FQID.",
+                'Use a key such as "scb/rtb".',
             )
-        for src_register, variant in raw_defaults.items():
-            if not isinstance(variant, str):
-                raise _err(
-                    "lineage_default_not_string",
-                    f"{path.name}: [lineage_defaults] {src_register!r} must be a "
-                    f"string variant slug, got {type(variant).__name__}.",
-                    "Set the value to the source variant slug, e.g. "
-                    'rtb = "folkbokforda-personer".',
-                )
-            default_key = (provider, src_register)
-            if default_key in defaults:
-                raise _err(
-                    "lineage_default_duplicate",
-                    f"{path.name}: duplicate [lineage_defaults] entry for "
-                    f"source register {src_register!r} under provider "
-                    f"{provider!r} (already set to {defaults[default_key]!r}).",
-                    "Declare each (provider, source-register) default once.",
-                )
-            defaults[default_key] = variant
+        if not isinstance(variant, str):
+            raise _err(
+                "lineage_default_not_string",
+                f"{path.name}: [lineage_defaults] {source_fqid!r} must be a "
+                f"string variant slug, got {type(variant).__name__}.",
+                "Set the value to the source variant slug, e.g. "
+                '"scb/rtb" = "folkbokforda-personer".',
+            )
+        defaults[(source_parts[0], source_parts[1])] = variant
 
-        raw_overrides = data.get("lineage", {})
-        if not isinstance(raw_overrides, dict):
+    raw_overrides = data.get("lineage", {})
+    if not isinstance(raw_overrides, dict):
+        raise _err(
+            "lineage_override_malformed",
+            f"{path.name}: [lineage] must contain "
+            '[lineage."<provider>/<consumer>/<variable>"] tables.',
+            "Use quoted three-segment FQID keys under [lineage].",
+        )
+    for consumer_fqid, block in raw_overrides.items():
+        if not isinstance(block, dict):
             raise _err(
                 "lineage_override_malformed",
-                f"{path.name}: [lineage] must contain "
-                '[lineage."<consumer_register>.<variable_slug>"] tables.',
-                "Use quoted dotted-key tables under [lineage].",
+                f"{path.name}: [lineage.{consumer_fqid!r}] must be a table with "
+                "source_register and source_variant keys.",
+                "Use a table under a quoted consumer-variable FQID.",
             )
-        for key, block in raw_overrides.items():
-            if not isinstance(block, dict):
-                raise _err(
-                    "lineage_override_malformed",
-                    f"{path.name}: [lineage.{key!r}] must be a table with "
-                    "source_register and source_variant keys.",
-                    "Use a table, e.g. "
-                    '[lineage."lisa.inkomst_pension"] '
-                    'source_register = "rams" source_variant = "individregister".',
-                )
-            # Split on the FIRST '.' — register slugs are dot-free, so the
-            # remainder is the (also dot-free) variable slug.
-            consumer_register, sep, variable_slug = key.partition(".")
-            if not sep or not consumer_register or not variable_slug:
-                raise _err(
-                    "lineage_override_key_malformed",
-                    f"{path.name}: [lineage.{key!r}] key must be "
-                    '"<consumer_register>.<variable_slug>".',
-                    'Use the dotted form, e.g. [lineage."lisa.kon"].',
-                )
-            source_register = block.get("source_register")
-            source_variant = block.get("source_variant")
-            if not isinstance(source_register, str) or not isinstance(
-                source_variant, str
-            ):
-                raise _err(
-                    "lineage_override_incomplete",
-                    f"{path.name}: [lineage.{key!r}] requires string "
-                    "source_register and source_variant keys.",
-                    "Set both keys, e.g. "
-                    'source_register = "rams" source_variant = "individregister".',
-                )
-            override_key = (provider, consumer_register, variable_slug)
-            if override_key in overrides:
-                raise _err(
-                    "lineage_override_duplicate",
-                    f"{path.name}: duplicate [lineage] override for "
-                    f"{key!r} under provider {provider!r}.",
-                    "Declare each (provider, consumer-variable) override once.",
-                )
-            overrides[override_key] = (source_register, source_variant)
+        consumer_parts = consumer_fqid.split("/")
+        if len(consumer_parts) != 3 or not all(consumer_parts):
+            raise _err(
+                "lineage_override_key_malformed",
+                f"{path.name}: [lineage.{consumer_fqid!r}] key must be a "
+                "three-segment provider/register/variable FQID.",
+                'Use a key such as [lineage."scb/lisa/kon"].',
+            )
+        source_register = block.get("source_register")
+        source_variant = block.get("source_variant")
+        if not isinstance(source_register, str) or not isinstance(
+            source_variant, str
+        ):
+            raise _err(
+                "lineage_override_incomplete",
+                f"{path.name}: [lineage.{consumer_fqid!r}] requires string "
+                "source_register and source_variant keys.",
+                "Set both keys, e.g. source_register = \"rams\" and "
+                'source_variant = "individregister".',
+            )
+        overrides[(consumer_parts[0], consumer_parts[1], consumer_parts[2])] = (
+            source_register,
+            source_variant,
+        )
 
     return LineageConfig(defaults=defaults, overrides=overrides)
 

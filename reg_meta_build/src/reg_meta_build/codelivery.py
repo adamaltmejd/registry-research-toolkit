@@ -21,9 +21,12 @@ is autoincrement and is NOT used). It resolves the conflict one of two ways:
 
 from __future__ import annotations
 
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 from ._curation import canonical_int, curation_error, fold_column, load_curation_entries
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 # (register_id, var_id, delivery-column component) — the same coordinates the
 # coalescer's per-column resolver carries (gkey[0], gkey[2], gkey[8]). The column
@@ -36,14 +39,6 @@ CodeliveryRule = tuple[str | None, str | None]
 CodeliveryMap = dict[CodeliveryKey, CodeliveryRule]
 
 _KEEP_RULES = frozenset({"latest_year"})
-
-
-def repo_codelivery_path() -> Path | None:
-    """`reg_meta_build/codelivery.toml` from a repo checkout, or None (wheel
-    installs don't ship curation — it's a maintainer artifact like the slug
-    TOMLs)."""
-    candidate = Path(__file__).resolve().parent.parent.parent / "codelivery.toml"
-    return candidate if candidate.is_file() else None
 
 
 def load_codelivery(path: Path | None) -> CodeliveryMap:
@@ -71,7 +66,7 @@ def load_codelivery(path: Path | None) -> CodeliveryMap:
         label="co-delivery",
         prefix="codelivery",
         code_base="codelivery",
-        file_name="codelivery.toml",
+        file_name="curation/codelivery.toml",
         entry_fields="register_id / var_id / column",
     )
     out: CodeliveryMap = {}

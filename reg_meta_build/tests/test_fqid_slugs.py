@@ -3300,6 +3300,16 @@ class TestUnknownTopLevelTables:
         assert exc.value.code == "slug_toml_invalid"
         assert "registers" in exc.value.message
 
+    def test_provider_lineage_blocks_are_not_identity_input(self, tmp_path: Path):
+        path = _write(
+            tmp_path / "scb.toml",
+            '[lineage_defaults]\nrtb = "folkbokforda-personer"\n',
+        )
+        with pytest.raises(RegMetaError) as exc:
+            load_provider_toml(path)
+        assert exc.value.code == "slug_toml_invalid"
+        assert "lineage_defaults" in exc.value.message
+
     def test_classifications_unknown_top_level(self, tmp_path: Path):
         path = _write(
             tmp_path / "classifications.toml",

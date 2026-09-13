@@ -26,7 +26,6 @@ from __future__ import annotations
 
 import functools
 from dataclasses import dataclass
-from pathlib import Path
 from typing import TYPE_CHECKING
 
 from reg_meta.fqid import derive_variable_slug, period_token_to_bounds
@@ -42,6 +41,7 @@ from .concept_groups import _MONTH_TOKENS
 if TYPE_CHECKING:
     import sqlite3
     from collections.abc import Callable
+    from pathlib import Path
 
 # A period family must resolve to at least this many distinct months to be a
 # coherent merge target (mirrors the concept-group month-fold guard
@@ -60,18 +60,6 @@ class PeriodFamily:
     register: str
     family_stem: str
     label: str
-
-
-def repo_period_family_merges_path() -> Path | None:
-    """`reg_meta_build/curation/period_family_merges.toml` from a repo checkout, or
-    None (wheel installs don't ship curation — a maintainer artifact like the slug
-    TOMLs and `concept_groups.toml`)."""
-    candidate = (
-        Path(__file__).resolve().parent.parent.parent
-        / "curation"
-        / "period_family_merges.toml"
-    )
-    return candidate if candidate.is_file() else None
 
 
 _require_str = functools.partial(

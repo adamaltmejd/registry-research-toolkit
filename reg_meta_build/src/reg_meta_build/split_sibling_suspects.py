@@ -10,7 +10,7 @@ This is the residue-style "diagnostics make worklists, curated TOML lands them"
 pattern — the EXACT analog of `classifications.dump_classification_residue` /
 `render_residue_toml`: it productizes a curation backlog into a comment-rich
 worklist a maintainer reads, and materializes NOTHING. There is no loader for the
-emitted TOML on purpose — the maintainer folds (`concept_groups.toml`) or severs
+emitted TOML on purpose — the maintainer folds (`curation/concept_groups.toml`) or severs
 by hand; the `disposition` placeholder is the human's to fill.
 
 A SPLIT family is the variables sharing one `(register_id, provider_key)` (the
@@ -383,7 +383,7 @@ def render_suspects_toml(result: SplitSiblingResult) -> str:
     and a `disposition = ""` placeholder for the maintainer to set to `"fold"` or
     `"distinct"`. Every emitted pair is CO-DELIVERED (the gate; see the module
     docstring). NOTHING loads this — it is a worklist for humans; the fold lands
-    via `concept_groups.toml` and a sever is a no-op (the edge is already gone).
+    via `curation/concept_groups.toml` and a sever is a no-op (the edge is already gone).
     Read-only worklist only."""
     # Group suspects by family (register_fqid, provider_key) so each family's
     # pairs emit together; sort families high-value-first (most pairs first), then
@@ -417,7 +417,7 @@ def render_suspects_toml(result: SplitSiblingResult) -> str:
         "#",
         "# NOTHING here loads into a build. For each pair set disposition to:",
         '#   "fold"     — same concept, different representation: fold the siblings',
-        "#                 into one concept_groups.toml group.",
+        "#                 into one curation/concept_groups.toml group.",
         '#   "distinct" — genuinely different concepts: leave them severed (no-op;',
         "#                 the related edge is already gone).",
         "# co_grouped = true means the pair already folds into one browse row (the",

@@ -204,7 +204,7 @@ def _encode_search_cursor(context: str, offset: int, after: str) -> str:
 #    so it resolves to NULL rather than a bogus `2020`.
 #  - The DIGIT check gates out low-band SCB variables whose provider_key is NOT
 #    numeric: an SCB column SCB's own export never documented (a `[[column]]` in
-#    reg_meta_build/scb_errata.toml) is minted in the SCB band (variable_id <
+#    reg_meta_build/curation/scb_errata.toml) is minted in the SCB band (variable_id <
 #    2^62) but carries the delivery COLUMN as its provider_key. Band-only would
 #    `CAST('FastBet' AS INTEGER)` = 0, leaking a bogus `var_id: 0`. The digit
 #    check rejects them → NULL. (Restores the #466 behaviour the band-only #474

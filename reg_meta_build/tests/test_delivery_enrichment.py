@@ -3,7 +3,7 @@
 
 Covers the TOML loader (structural validation, EXIT_CONFIG on defects) and the
 description-backfill apply pass against hand-curated slugged DBs: gap-fill-only
-(never overwrites), lenient unresolved-slug handling, idempotency, and the
+(never overwrites), fail-fast included-provider resolution, idempotency, and the
 provider gate."""
 
 from __future__ import annotations
@@ -30,7 +30,7 @@ _SCB = frozenset({"scb"})
 
 def _desc(counts: dict[str, int]) -> dict[str, int]:
     """The description-backfill counts only (apply also returns alias_* keys)."""
-    return {k: counts[k] for k in ("applied", "skipped", "unresolved")}
+    return {k: counts[k] for k in ("applied", "skipped", "provider_skipped")}
 
 
 def _alias(counts: dict[str, int]) -> dict[str, int]:
@@ -73,7 +73,7 @@ class TestLoader:
 
     def test_valid_entries_parse(self, tmp_path: Path) -> None:
         toml = _write(
-            tmp_path / "delivery_enrichment.toml",
+            tmp_path / "delivery_enrichment.generated.toml",
             '[[description]]\nregister = "scb/agi"\nvariable = "kon"\n'
             'description = "Kön"\nprovenance = "p.xlsx"\n\n'
             '[[description]]\nregister = "scb/lisa"\nvariable = "ink"\n'
@@ -92,7 +92,7 @@ class TestLoader:
 
     def test_unknown_top_level_key_fails(self, tmp_path: Path) -> None:
         toml = _write(
-            tmp_path / "delivery_enrichment.toml",
+            tmp_path / "delivery_enrichment.generated.toml",
             '[[descriptions]]\nregister = "scb/agi"\nvariable = "kon"\n'
             'description = "Kön"\n',
         )
@@ -112,14 +112,14 @@ class TestLoader:
         ],
     )
     def test_malformed_entry_fails(self, tmp_path: Path, body: str) -> None:
-        toml = _write(tmp_path / "delivery_enrichment.toml", body)
+        toml = _write(tmp_path / "delivery_enrichment.generated.toml", body)
         with pytest.raises(RegMetaError) as exc:
             load_delivery_enrichment(toml)
         assert exc.value.exit_code == EXIT_CONFIG
 
     def test_duplicate_register_variable_fails(self, tmp_path: Path) -> None:
         toml = _write(
-            tmp_path / "delivery_enrichment.toml",
+            tmp_path / "delivery_enrichment.generated.toml",
             '[[description]]\nregister = "scb/agi"\nvariable = "kon"\n'
             'description = "A"\n\n'
             '[[description]]\nregister = "scb/agi"\nvariable = "kon"\n'
@@ -131,7 +131,7 @@ class TestLoader:
 
     def test_same_variable_slug_different_register_ok(self, tmp_path: Path) -> None:
         toml = _write(
-            tmp_path / "delivery_enrichment.toml",
+            tmp_path / "delivery_enrichment.generated.toml",
             '[[description]]\nregister = "scb/agi"\nvariable = "kon"\n'
             'description = "A"\n\n'
             '[[description]]\nregister = "scb/lisa"\nvariable = "kon"\n'
@@ -141,9 +141,19 @@ class TestLoader:
 
     def test_non_string_provenance_fails(self, tmp_path: Path) -> None:
         toml = _write(
-            tmp_path / "delivery_enrichment.toml",
+            tmp_path / "delivery_enrichment.generated.toml",
             '[[description]]\nregister = "scb/agi"\nvariable = "kon"\n'
             'description = "Kön"\nprovenance = 7\n',
+        )
+        with pytest.raises(RegMetaError) as exc:
+            load_delivery_enrichment(toml)
+        assert exc.value.exit_code == EXIT_CONFIG
+
+    def test_excluded_provider_shape_is_still_validated(self, tmp_path: Path) -> None:
+        toml = _write(
+            tmp_path / "delivery_enrichment.generated.toml",
+            '[[description]]\nregister = "sos/par"\n'
+            'description = "missing variable"\n',
         )
         with pytest.raises(RegMetaError) as exc:
             load_delivery_enrichment(toml)
@@ -162,7 +172,7 @@ class TestApply:
         counts = apply_delivery_enrichment(
             conn, DeliveryEnrichment((_bf("ink", "Inkomst av tjänst"),)), providers=_SCB
         )
-        assert _desc(counts) == {"applied": 1, "skipped": 0, "unresolved": 0}
+        assert _desc(counts) == {"applied": 1, "skipped": 0, "provider_skipped": 0}
         assert _description(conn, "ink") == "Inkomst av tjänst"
 
     def test_does_not_overwrite_existing_description(self) -> None:
@@ -175,7 +185,7 @@ class TestApply:
             DeliveryEnrichment((_bf("ink", "Delivery-list text"),)),
             providers=_SCB,
         )
-        assert _desc(counts) == {"applied": 0, "skipped": 1, "unresolved": 0}
+        assert _desc(counts) == {"applied": 0, "skipped": 1, "provider_skipped": 0}
         assert _description(conn, "ink") == "Official SCB description"
 
     def test_blank_whitespace_description_is_gap_filled(self) -> None:
@@ -189,27 +199,30 @@ class TestApply:
         assert counts["applied"] == 1
         assert _description(conn, "ink") == "Filled"
 
-    def test_unresolved_slug_is_counted_not_fatal(self) -> None:
+    def test_unresolved_included_provider_target_fails(self) -> None:
         conn = build_slugged_db(classification=None)
-        warnings: list[str] = []
 
-        counts = apply_delivery_enrichment(
-            conn,
-            DeliveryEnrichment((_bf("does-not-exist", "x"),)),
-            providers=_SCB,
-            warn=warnings.append,
-        )
-        assert _desc(counts) == {"applied": 0, "skipped": 0, "unresolved": 1}
-        assert any("did not resolve" in w for w in warnings)
+        with pytest.raises(RegMetaError) as exc:
+            apply_delivery_enrichment(
+                conn,
+                DeliveryEnrichment((_bf("does-not-exist", "x"),)),
+                providers=_SCB,
+            )
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert exc.value.code == "delivery_enrichment_unresolved"
+        assert "scb/lisa/does-not-exist" in exc.value.message
 
     def test_wrong_register_does_not_cross_resolve(self) -> None:
         conn = build_slugged_db(classification=None)
         add_variable(conn, register_id=1, var_id=90, name="Inkomst", slug="ink")
-        # register 'agi' isn't in the fixture (only lisa) → unresolved, not applied
-        counts = apply_delivery_enrichment(
-            conn, DeliveryEnrichment((_bf("ink", "x", register="agi"),)), providers=_SCB
-        )
-        assert _desc(counts) == {"applied": 0, "skipped": 0, "unresolved": 1}
+        # register 'agi' isn't in the fixture (only lisa) → included-provider drift
+        with pytest.raises(RegMetaError) as exc:
+            apply_delivery_enrichment(
+                conn,
+                DeliveryEnrichment((_bf("ink", "x", register="agi"),)),
+                providers=_SCB,
+            )
+        assert exc.value.code == "delivery_enrichment_unresolved"
 
     def test_provider_gate_skips_inactive_provider(self) -> None:
         conn = build_slugged_db(classification=None)
@@ -220,7 +233,7 @@ class TestApply:
             DeliveryEnrichment((_bf("ink", "x"),)),
             providers=frozenset({"sos"}),
         )
-        assert _desc(counts) == {"applied": 0, "skipped": 0, "unresolved": 0}
+        assert _desc(counts) == {"applied": 0, "skipped": 0, "provider_skipped": 1}
         assert _description(conn, "ink") is None
 
     def test_idempotent_second_run_is_skip(self) -> None:
@@ -231,7 +244,11 @@ class TestApply:
         first = apply_delivery_enrichment(conn, enr, providers=_SCB)
         second = apply_delivery_enrichment(conn, enr, providers=_SCB)
         assert first["applied"] == 1
-        assert _desc(second) == {"applied": 0, "skipped": 1, "unresolved": 0}
+        assert _desc(second) == {
+            "applied": 0,
+            "skipped": 1,
+            "provider_skipped": 0,
+        }
 
 
 # ── alias loader ─────────────────────────────────────────────────────────────
@@ -261,7 +278,7 @@ def _alias_columns(conn: sqlite3.Connection, slug: str) -> set[str]:
 class TestAliasLoader:
     def test_mixed_file_parses_both_kinds(self, tmp_path: Path) -> None:
         toml = _write(
-            tmp_path / "delivery_enrichment.toml",
+            tmp_path / "delivery_enrichment.generated.toml",
             '[[description]]\nregister = "scb/agi"\nvariable = "kon"\n'
             'description = "Kön"\n\n'
             '[[alias]]\nregister = "scb/fek"\nvariable = "foradlingsvarde"\n'
@@ -275,7 +292,7 @@ class TestAliasLoader:
 
     def test_alias_only_file_parses(self, tmp_path: Path) -> None:
         toml = _write(
-            tmp_path / "delivery_enrichment.toml",
+            tmp_path / "delivery_enrichment.generated.toml",
             '[[alias]]\nregister = "scb/fek"\nvariable = "v"\n'
             'delivery_column = "Col"\n',
         )
@@ -292,14 +309,14 @@ class TestAliasLoader:
         ],
     )
     def test_malformed_alias_fails(self, tmp_path: Path, body: str) -> None:
-        toml = _write(tmp_path / "delivery_enrichment.toml", body)
+        toml = _write(tmp_path / "delivery_enrichment.generated.toml", body)
         with pytest.raises(RegMetaError) as exc:
             load_delivery_enrichment(toml)
         assert exc.value.exit_code == EXIT_CONFIG
 
     def test_duplicate_alias_triple_fails(self, tmp_path: Path) -> None:
         toml = _write(
-            tmp_path / "delivery_enrichment.toml",
+            tmp_path / "delivery_enrichment.generated.toml",
             '[[alias]]\nregister = "scb/fek"\nvariable = "v"\ndelivery_column = "Col"\n\n'
             '[[alias]]\nregister = "scb/fek"\nvariable = "v"\ndelivery_column = "col"\n',
         )
@@ -311,7 +328,7 @@ class TestAliasLoader:
         self, tmp_path: Path
     ) -> None:
         toml = _write(
-            tmp_path / "delivery_enrichment.toml",
+            tmp_path / "delivery_enrichment.generated.toml",
             '[[alias]]\nregister = "scb/gymnasieskola-betyg"\n'
             'variable = "kurs"\ndelivery_column = "Amneskod_omkodad"\n\n'
             '[[alias]]\nregister = "scb/gymnasieskola-betyg"\n'
@@ -330,7 +347,11 @@ class TestApplyAliases:
         counts = apply_delivery_enrichment(
             conn, DeliveryEnrichment((), (_ca("kon", "LopNr_Kon"),)), providers=_SCB
         )
-        assert _alias(counts) == {"applied": 1, "skipped": 0, "unresolved": 0}
+        assert _alias(counts) == {
+            "applied": 1,
+            "skipped": 0,
+            "provider_skipped": 0,
+        }
         assert _alias_columns(conn, "kon") == {"Kon", "LopNr_Kon"}
 
     def test_existing_column_is_skipped(self) -> None:
@@ -338,30 +359,42 @@ class TestApplyAliases:
         counts = apply_delivery_enrichment(
             conn, DeliveryEnrichment((), (_ca("kon", "Kon"),)), providers=_SCB
         )
-        assert _alias(counts) == {"applied": 0, "skipped": 1, "unresolved": 0}
+        assert _alias(counts) == {
+            "applied": 0,
+            "skipped": 1,
+            "provider_skipped": 0,
+        }
 
     def test_idempotent_second_run_skips(self) -> None:
         conn = build_slugged_db()
         enr = DeliveryEnrichment((), (_ca("kon", "LopNr_Kon"),))
         apply_delivery_enrichment(conn, enr, providers=_SCB)
         second = apply_delivery_enrichment(conn, enr, providers=_SCB)
-        assert _alias(second) == {"applied": 0, "skipped": 1, "unresolved": 0}
+        assert _alias(second) == {
+            "applied": 0,
+            "skipped": 1,
+            "provider_skipped": 0,
+        }
 
-    def test_unresolved_variable_counted(self) -> None:
+    def test_unresolved_included_provider_alias_fails(self) -> None:
         conn = build_slugged_db()
-        counts = apply_delivery_enrichment(
-            conn, DeliveryEnrichment((), (_ca("nope", "X"),)), providers=_SCB
-        )
-        assert _alias(counts) == {"applied": 0, "skipped": 0, "unresolved": 1}
+        with pytest.raises(RegMetaError) as exc:
+            apply_delivery_enrichment(
+                conn, DeliveryEnrichment((), (_ca("nope", "X"),)), providers=_SCB
+            )
+        assert exc.value.code == "delivery_enrichment_unresolved"
 
-    def test_variable_without_state_is_unresolved(self) -> None:
+    def test_variable_without_state_fails(self) -> None:
         conn = build_slugged_db()
         # a variable with NO variable_state → no variant to attach to
         add_variable(conn, register_id=1, var_id=91, name="Bistånd", slug="stateless")
-        counts = apply_delivery_enrichment(
-            conn, DeliveryEnrichment((), (_ca("stateless", "X"),)), providers=_SCB
-        )
-        assert _alias(counts) == {"applied": 0, "skipped": 0, "unresolved": 1}
+        with pytest.raises(RegMetaError) as exc:
+            apply_delivery_enrichment(
+                conn,
+                DeliveryEnrichment((), (_ca("stateless", "X"),)),
+                providers=_SCB,
+            )
+        assert exc.value.code == "delivery_enrichment_unresolved"
 
     def test_provider_gate_skips_inactive(self) -> None:
         conn = build_slugged_db()
@@ -370,5 +403,9 @@ class TestApplyAliases:
             DeliveryEnrichment((), (_ca("kon", "LopNr_Kon"),)),
             providers=frozenset({"sos"}),
         )
-        assert _alias(counts) == {"applied": 0, "skipped": 0, "unresolved": 0}
+        assert _alias(counts) == {
+            "applied": 0,
+            "skipped": 0,
+            "provider_skipped": 1,
+        }
         assert "LopNr_Kon" not in _alias_columns(conn, "kon")

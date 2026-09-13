@@ -20,7 +20,7 @@ from typing import TYPE_CHECKING
 
 import pytest
 from _slugged_db import add_register, add_variable, add_variant
-from reg_meta.errors import RegMetaError
+from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta_build.db import (
     DDL,
     PROVIDER_ID_SOS,
@@ -97,20 +97,22 @@ def _write_lineage_toml(
     defaults: dict[str, str] | None = None,
     overrides: dict[str, dict[str, str]] | None = None,
 ) -> Path:
-    """Write a minimal scb.toml exercising only the lineage blocks.
+    """Write a minimal ``curation/lineage.toml``.
 
-    `defaults` → `[lineage_defaults]`; `overrides` keyed by the dotted
+    `defaults` → `[lineage_defaults]`; `overrides` keyed by the legacy dotted
     `"<consumer>.<slug>"` string → a `{source_register, source_variant}` block.
     """
     lines: list[str] = []
     if defaults:
         lines.append("[lineage_defaults]")
-        lines.extend(f'{k} = "{v}"' for k, v in defaults.items())
+        lines.extend(f'"scb/{k}" = "{v}"' for k, v in defaults.items())
     for key, block in (overrides or {}).items():
-        lines.append(f'[lineage."{key}"]')
+        register, variable = key.split(".", 1)
+        lines.append(f'[lineage."scb/{register}/{variable}"]')
         lines.extend(f'{bk} = "{bv}"' for bk, bv in block.items())
-    (tmp_path / "scb.toml").write_text("\n".join(lines) + "\n", encoding="utf-8")
-    return tmp_path
+    path = tmp_path / "lineage.toml"
+    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    return path
 
 
 def _seed_kon_registers(
@@ -798,13 +800,15 @@ class TestVariableStateLineage:
 
 class TestLoadLineageConfig:
     def test_parses_defaults_and_overrides(self, tmp_path: Path):
-        (tmp_path / "scb.toml").write_text(
-            '[lineage_defaults]\nrtb = "folkbokforda-personer"\niot = "bostadshushall"\n'
-            '[lineage."lisa.inkomst_pension"]\n'
+        path = tmp_path / "lineage.toml"
+        path.write_text(
+            '[lineage_defaults]\n"scb/rtb" = "folkbokforda-personer"\n'
+            '"scb/iot" = "bostadshushall"\n'
+            '[lineage."scb/lisa/inkomst_pension"]\n'
             'source_register = "rams"\nsource_variant = "individregister"\n',
             encoding="utf-8",
         )
-        cfg = load_lineage_config(tmp_path)
+        cfg = load_lineage_config(path)
         assert cfg.defaults == {
             ("scb", "rtb"): "folkbokforda-personer",
             ("scb", "iot"): "bostadshushall",
@@ -813,24 +817,21 @@ class TestLoadLineageConfig:
             ("scb", "lisa", "inkomst_pension"): ("rams", "individregister")
         }
 
-    def test_classifications_toml_skipped(self, tmp_path: Path):
-        """`classifications.toml` carries no lineage blocks and must be skipped
-        (it has a different top-level grammar)."""
-        (tmp_path / "scb.toml").write_text(
-            '[lineage_defaults]\nrtb = "folkbokforda-personer"\n', encoding="utf-8"
-        )
-        (tmp_path / "classifications.toml").write_text(
-            '[classification."SUN2020"]\nslug = "sun"\n', encoding="utf-8"
-        )
-        cfg = load_lineage_config(tmp_path)
-        assert cfg.defaults == {("scb", "rtb"): "folkbokforda-personer"}
+    def test_unknown_top_level_table_fails(self, tmp_path: Path):
+        path = tmp_path / "lineage.toml"
+        path.write_text('[classification."SUN2020"]\nslug = "sun"\n', encoding="utf-8")
+        with pytest.raises(RegMetaError) as exc:
+            load_lineage_config(path)
+        assert exc.value.code == "lineage_invalid"
 
     def test_missing_source_variant_in_override_fails(self, tmp_path: Path):
-        (tmp_path / "scb.toml").write_text(
-            '[lineage."lisa.kon"]\nsource_register = "rtb"\n', encoding="utf-8"
+        path = tmp_path / "lineage.toml"
+        path.write_text(
+            '[lineage."scb/lisa/kon"]\nsource_register = "rtb"\n',
+            encoding="utf-8",
         )
         with pytest.raises(RegMetaError) as exc:
-            load_lineage_config(tmp_path)
+            load_lineage_config(path)
         assert exc.value.code == "lineage_override_incomplete"
 
     def test_same_register_slug_across_providers_coexist(self, tmp_path: Path):
@@ -838,34 +839,32 @@ class TestLoadLineageConfig:
         an `rtb` default under sos are DISTINCT (provider-keyed), not a
         duplicate. The linker resolves each against its own source provider
         (Codex P2 on #145)."""
-        (tmp_path / "scb.toml").write_text(
-            '[lineage_defaults]\nrtb = "folkbokforda-personer"\n', encoding="utf-8"
+        path = tmp_path / "lineage.toml"
+        path.write_text(
+            '[lineage_defaults]\n"scb/rtb" = "folkbokforda-personer"\n'
+            '"sos/rtb" = "grund-bosattning"\n',
+            encoding="utf-8",
         )
-        (tmp_path / "sos.toml").write_text(
-            '[lineage_defaults]\nrtb = "grund-bosattning"\n', encoding="utf-8"
-        )
-        cfg = load_lineage_config(tmp_path)
+        cfg = load_lineage_config(path)
         assert cfg.defaults == {
             ("scb", "rtb"): "folkbokforda-personer",
             ("sos", "rtb"): "grund-bosattning",
         }
 
     def test_duplicate_default_same_provider_fails(self, tmp_path: Path):
-        """The same (provider, source-register) default declared twice — here
-        across `scb.toml` and its `.auto` companion, both provider `scb` — is a
-        fail-fast duplicate."""
-        (tmp_path / "scb.toml").write_text(
-            '[lineage_defaults]\nrtb = "folkbokforda-personer"\n', encoding="utf-8"
-        )
-        (tmp_path / "scb.auto.toml").write_text(
-            '[lineage_defaults]\nrtb = "grund-bosattning"\n', encoding="utf-8"
+        """TOML rejects duplicate FQID keys before they can fight at apply time."""
+        path = tmp_path / "lineage.toml"
+        path.write_text(
+            '[lineage_defaults]\n"scb/rtb" = "folkbokforda-personer"\n'
+            '"scb/rtb" = "grund-bosattning"\n',
+            encoding="utf-8",
         )
         with pytest.raises(RegMetaError) as exc:
-            load_lineage_config(tmp_path)
-        assert exc.value.code == "lineage_default_duplicate"
+            load_lineage_config(path)
+        assert exc.value.exit_code == EXIT_CONFIG
 
-    def test_empty_dir_yields_empty_config(self, tmp_path: Path):
-        cfg = load_lineage_config(tmp_path)
+    def test_missing_file_yields_empty_config(self, tmp_path: Path):
+        cfg = load_lineage_config(tmp_path / "absent.toml")
         assert cfg.defaults == {}
         assert cfg.overrides == {}
 

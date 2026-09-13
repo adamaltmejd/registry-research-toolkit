@@ -1451,11 +1451,15 @@ def _built_with_errata(
     """Build the standard fixture plus `ri_extra`, with `errata_toml` standing in
     for the committed `scb_errata.toml`. `build_with_rows` writes the fixture
     slug dir the errata's `scb/testreg` + `individer` slugs resolve against."""
-    import reg_meta_build.scb_errata as _se
+    import reg_meta_build.db as _db
 
     path = tmp_path / "scb_errata.toml"
     path.write_text(errata_toml, encoding="utf-8")
-    monkeypatch.setattr(_se, "repo_scb_errata_path", lambda: path)
+    monkeypatch.setattr(
+        _db,
+        "repo_curation_path",
+        lambda name: path if name == "scb_errata.toml" else None,
+    )
     return build_with_rows(tmp_path, ri_extra, vm_extra or [])
 
 

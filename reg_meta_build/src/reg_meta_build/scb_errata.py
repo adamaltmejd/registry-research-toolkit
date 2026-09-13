@@ -5,7 +5,7 @@
 column); the coalescer turns those rows into `variable_state` windows. When SCB
 omits a row, nothing downstream can put it back — `delivery_enrichment` only
 backfills prose onto a variable that already exists. So the correction is made at
-the PROVIDER'S OWN GRAIN: `scb_errata.toml` entries become synthetic
+the PROVIDER'S OWN GRAIN: `curation/scb_errata.toml` entries become synthetic
 Registerinformation rows INSIDE the SCB adapter, early enough that every pass
 after the import sees them. Windows, gaps, fusing, alias windows, types, value
 sets, the A1.2 sensitivity/identifier lift and the classification backfill then
@@ -67,7 +67,7 @@ import functools
 import sqlite3
 from dataclasses import dataclass, fields
 from datetime import date
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 from ._curation import (
     curation_error,
@@ -86,7 +86,10 @@ from .fqid_slugs import (
 )
 from .id import mint_canonical_scb
 
-_FILE_NAME = "scb_errata.toml"
+if TYPE_CHECKING:
+    from pathlib import Path
+
+_FILE_NAME = "curation/scb_errata.toml"
 _CODE = "scb_errata_invalid"
 # The provider whose export this surface corrects. `register` FQIDs are
 # 2-segment and must name it — errata is an SCB-adapter operation, so another
@@ -228,14 +231,6 @@ class ScbErrata:
 
     def __bool__(self) -> bool:
         return bool(self.versions or self.delivered or self.columns)
-
-
-def repo_scb_errata_path() -> Path | None:
-    """`reg_meta_build/scb_errata.toml` from a repo checkout, or None (wheel
-    installs don't ship curation). Package-root sibling, like the other curation
-    TOMLs."""
-    candidate = Path(__file__).resolve().parent.parent.parent / _FILE_NAME
-    return candidate if candidate.is_file() else None
 
 
 def _scb_slug_ids(slug_dir: Path | None) -> tuple[dict[str, int], dict[str, int]]:
@@ -380,7 +375,7 @@ def load_scb_errata(
     against the curated `scb.toml` in `slug_dir`. Empty when no file (synthetic
     builds, wheel installs).
 
-    `classification_seed_path` is the build's own `classifications.toml` (the one
+    `classification_seed_path` is the build's own `curation/classifications.toml` (the one
     `populate_classifications` seeds from), consulted only when some `[[column]]`
     names a `classification` — an undeclared short_name is a typo that would
     otherwise be dropped silently by the candidate feed.
@@ -615,7 +610,7 @@ def _check_declared_classifications(
             _CODE,
             f"scb_errata [[column]] names undeclared classification(s) {unknown}.",
             "Use an existing classification short_name (e.g. 'SSYK96') or declare "
-            "it in reg_meta_build/classifications.toml.",
+            "it in reg_meta_build/curation/classifications.toml.",
         )
 
 

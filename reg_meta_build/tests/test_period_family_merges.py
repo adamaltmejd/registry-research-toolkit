@@ -70,7 +70,6 @@ def _build_with_family(tmp_path: Path, monkeypatch) -> sqlite3.Connection:
     period_family_merges.toml active (the autouse `_no_repo_curation` nulls it;
     re-point it here, after)."""
     import reg_meta_build.db as _db
-    import reg_meta_build.period_family_merges as _fm
 
     toml = tmp_path / "period_family_merges.toml"
     toml.write_text(
@@ -78,8 +77,11 @@ def _build_with_family(tmp_path: Path, monkeypatch) -> sqlite3.Connection:
         'family_stem = "lonfink"\nlabel = "Lön per månad"\n',
         encoding="utf-8",
     )
-    monkeypatch.setattr(_fm, "repo_period_family_merges_path", lambda: toml)
-    monkeypatch.setattr(_db, "repo_period_family_merges_path", lambda: toml)
+    monkeypatch.setattr(
+        _db,
+        "repo_curation_path",
+        lambda name: toml if name == "period_family_merges.toml" else None,
+    )
     ri, vm = _family_ri_vm()
     conn = build_with_rows(tmp_path, ri, vm)
     conn.row_factory = sqlite3.Row

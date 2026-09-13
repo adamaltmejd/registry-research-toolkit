@@ -132,11 +132,11 @@ versions = ["2020", "2021"]
 evidence = "SWECOV holds BAS in Individ_2020 and Individ_2021; SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) states BAS delivered 2020–2023, while the Registerinformation export documents it only from 2022."
 noted = "2026-09-12"
 
-# Proposed reg_meta_build/scb_errata.toml entries — Y-113..Y-120 version-gap
+# Proposed reg_meta_build/curation/scb_errata.toml entries — Y-113..Y-120 version-gap
 # investigation (SWECOV holdings on scb/agi, scb/gdb, scb/ureg, scb/hreg).
 # Pasteable as they stand; each entry's `evidence` states the holdings fact the
 # investigation established from reg_webapp/stewards/swecov/inventory.toml and
-# SCB's Registerinformation.csv (2026-03-09 export). Grammar: scb_errata.toml
+# SCB's Registerinformation.csv (2026-03-09 export). Grammar: curation/scb_errata.toml
 # header. NOT included: the coalescer-defect misses (HREG sokande
 # KursOrt/ProgOrt/YProg) — see report.md.
 
@@ -2586,7 +2586,7 @@ noted = "2026-06-25"
 #
 # Scope follows what the fact is about: these are global SCB survey columns, not
 # steward-local flavor rows. Columns already carrying a delivery alias in
-# delivery_enrichment.toml are excluded upstream, so a delivered column resolves to
+# curation/delivery_enrichment.generated.toml are excluded upstream, so a delivered column resolves to
 # ONE catalog variable. `all_versions = true` throughout: a holdings list states
 # that the column is in the delivery without dating it, and naming every edition
 # would rot the next time SCB ships one. A holdings list names no type, so these

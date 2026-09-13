@@ -8,12 +8,12 @@ diff on everything else. This script diffs `variable_state` row multisets
 between a BEFORE and AFTER build, groups changed rows by
 `(register, variable, variant, column)`, and flags any changed group whose
 bounds are purely year-grain on both sides (a diff the design says must not
-happen). It also re-validates every `codelivery.toml` pin: the pinned column's
+happen). It also re-validates every `curation/codelivery.toml` pin: the pinned column's
 state rows must be identical before/after, or the pin needs review.
 
 Usage:
     uv run python scripts/diff_variable_states.py BEFORE_DB AFTER_DB \
-        [--codelivery reg_meta_build/codelivery.toml]
+        [--codelivery reg_meta_build/curation/codelivery.toml]
 """
 
 from __future__ import annotations
@@ -50,7 +50,7 @@ def main() -> None:
     parser.add_argument("before", type=Path)
     parser.add_argument("after", type=Path)
     parser.add_argument(
-        "--codelivery", type=Path, default=Path("reg_meta_build/codelivery.toml")
+        "--codelivery", type=Path, default=Path("reg_meta_build/curation/codelivery.toml")
     )
     args = parser.parse_args()
     conn = _connect(args.before, args.after)
@@ -112,7 +112,7 @@ def main() -> None:
 
     # Pin re-validation: every pinned column's state rows must be unchanged.
     pins = tomllib.loads(args.codelivery.read_text())["resolve"]
-    print(f"\npin re-validation ({len(pins)} codelivery.toml pins):")
+    print(f"\npin re-validation ({len(pins)} curation/codelivery.toml pins):")
     pin_changed = 0
     changed_cols = {(names.get(vid, ("?",))[0], col) for vid, _, col in by_group}
     for pin in pins:

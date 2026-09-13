@@ -1984,7 +1984,11 @@ class TestBootstrapIgnoresSlugDir:
             'valid_codes_file = "testkon.csv"\nvardemangdsversion = ["Kön"]\n',
             encoding="utf-8",
         )
-        monkeypatch.setattr(db_mod, "repo_seed_path", lambda: seed)
+        monkeypatch.setattr(
+            db_mod,
+            "repo_curation_path",
+            lambda name: seed if name == "classifications.toml" else None,
+        )
 
         exit_code = cli_mod.run(
             [

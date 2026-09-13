@@ -11,7 +11,7 @@ queries against. Specifically:
 
 - `reg_meta.db` — main metadata DB (\~320 MB uncompressed). Built from SCB source CSVs
   under `reg_meta_build/input_data/`, classifications seed at
-  `reg_meta_build/classifications.toml`, and curated slug TOMLs under
+  `reg_meta_build/curation/classifications.toml`, and curated slug TOMLs under
   `reg_meta_build/fqid_slugs/`. Validated by `reg_meta_build/validate.py` before
   shipping.
 - `reg_meta_docs.db` — FTS5 search index over the curated markdown under
@@ -64,21 +64,29 @@ and helpers both packages agree on — lives in `reg_meta`.
 
 ## Curation surface taxonomy
 
-The build assembles the catalog from two kinds of inputs: machine-delivered source data
-(SCB CSVs, SOS workbooks, thin-provider TOMLs) and a set of maintainer-curated overlay
-files that repair, extend, and annotate what the source delivers. The curated files fall
-into seven families:
+The build assembles the catalog from machine-delivered source data and maintainer inputs
+with deliberately separate homes:
 
-  | Family                  | Files                                                                                                                                                                                                                              | Role                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-  | ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-  | **identifier**          | `fqid_slugs/<provider>.toml`, `fqid_slugs/<provider>.auto.toml`, `fqid_slugs/freeze.toml`, `fqid_slugs/classifications.toml` (loaded by `load_classifications_toml` in `fqid_slugs.py`); steward shards in `fqid_slugs/<steward>/` | Canonical register/variant/classification/variable slugs; panel-shape metadata on variants; per-provider freeze state. `fqid_slugs/classifications.toml` is the provider-independent classification slug surface (loaded separately from provider TOMLs). `[lineage_defaults]` / `[lineage.*]` blocks in the same TOMLs pin source-variant choices for `variable_state_lineage`.                                                                                                                                                                                                                                  |
-  | **relation**            | `curation/relations.toml` (loaded by `relations.py`)                                                                                                                                                                               | All curated pairwise graph facts: `same_as` identity edges and `replaced_by` succession edges. One typed `[[edge]]` array; `type` selects the DB target and validation rules. (The `related_to` edge type was retired in #800 — see *Build-time triage (SCB)* for the preserved in-build split-sibling pairs.)                                                                                                                                                                                                                                                                                                    |
-  | **set**                 | `concept_groups.toml` (loaded by `concept_groups.py`), `tags.toml` (loaded by `tags.py`)                                                                                                                                           | Presentation-only grouping and discovery layers. Concept groups fold structurally related variables for browse; tags supply thematic cross-register discovery. Both are regenerated fresh each build (no identity or immutability machinery).                                                                                                                                                                                                                                                                                                                                                                     |
-  | **code↔label pairing**  | `code_label_pairs.toml` (loaded by `load_code_label_pairs` in `concept_groups.py`)                                                                                                                                                 | Curated list of `[[pair]]` entries declaring that a code variable (owns a value_set) and a label variable (owns none) are decode partners co-delivered in the same register. Each pair is resolved and appended to `edge_siblings` by `_append_code_label_edges` at materialize time, so the two variables fold into one axis-less `edge` concept group. Presentation-only; regenerated each build.                                                                                                                                                                                                               |
-  | **document provenance** | `doc_sources.toml`, `related_documents.toml` (loaded by `doc_db.py`)                                                                                                                                                               | Maintainer-curated provenance for the separate doc DB. `doc_sources.toml` resolves converted markdown docs back to public SCB source PDFs without republishing them. `related_documents.toml` maps register-version related-document PDFs that may be rehosted verbatim, with per-file license, fetch date, source surface, filename, sha256, and byte size; binaries stay gitignored under `input_data/SCB/docs/<register>/` and are stored in the released doc DB.                                                                                                                                              |
-  | **source/gap-fill**     | `input_data/<Provider>/<provider>.toml` (thin curated providers), `delivery_enrichment.toml` (loaded by `delivery_enrichment.py`), `scb_errata.toml` (loaded by `scb_errata.py`)                                                   | Source delivery (thin providers whose public docs are hand-transcribed) and gap-fill overlays on the global SCB/SOS catalog (descriptions and delivery aliases backfilled from steward delivery lists — `delivery_enrichment.toml`; everything SCB's own export lacks — `scb_errata.toml`, the upstream errata log, replayed as synthetic Registerinformation rows inside the SCB adapter: the missing versions and column-in-version rows (`[[version]]` / `[[delivered]]`) and the columns it documents on no version at all, which mint the variable (`[[column]]`, from SCB's docs or a steward's holdings)). |
-  | **value/coding**        | `classifications.toml` + CSV seeds in `input_data/classifications/` (loaded by `classifications.py`), `classification_links.toml` (loaded by `classification_links.py`), `codelivery.toml` (loaded by `codelivery.py`)             | Canonical code systems and their codes; curated variable→classification assignment overrides for the residue the auto-detector leaves unlinked; curated co-delivery resolution pins for SCB columns that carry multiple codings in the same period.                                                                                                                                                                                                                                                                                                                                                               |
-  | **period family merge** | `curation/period_family_merges.toml` (loaded by `period_family_merges.py`)                                                                                                                                                         | Identity-mutating post-triage pass: merges N period-named physical columns (today the 12 months, e.g. `lonfinkjan`…`lonfinkdec`) into ONE variable with per-period alias windows. Runs after triage (`variable_state` exists) but before slug population. 8 entries covering 8 bounded monthly families (4 LISA + 4 non-LISA). Retained per #523 under epic #518 R4; see the "Decision (#518/#523): retain the merge" section for rationale.                                                                                                                                                                      |
+- `curation/` contains every catalog overlay. `repo_curation_path()` in `_curation.py`
+  is the single checkout resolver; there is no old-path fallback.
+- `input_data/` contains provider-source deliveries: SCB/SOS exports, thin-provider
+  TOMLs, and classification CSVs. These are inputs to adapters, not overlays.
+- `fqid_slugs/` contains identity pins and freeze state only. Navigation lineage moved
+  to `curation/lineage.toml` because it affects graph routing, not identity.
+- `doc_sources.toml` and `related_documents.toml` remain package-root provenance for the
+  separate document DB and are outside the catalog-overlay convention.
+
+  | Family                  | Files                                                                                                                                  | Role                                                                                                         |
+  | ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+  | **identifier**          | `fqid_slugs/<provider>.toml`, `<provider>.auto.toml`, `classifications.toml`, `freeze.toml`; steward shards in `fqid_slugs/<steward>/` | Canonical slugs, panel metadata, auto pins, and per-zone freeze state.                                       |
+  | **navigation lineage**  | `curation/lineage.toml`                                                                                                                | Provider-qualified source-variant defaults and per-consumer-variable overrides for `variable_state_lineage`. |
+  | **relation**            | `curation/relations.toml`                                                                                                              | Typed `[[edge]]` graph facts (`same_as`, `replaced_by`, and `derived_from`).                                 |
+  | **set**                 | `curation/concept_groups.toml`, `curation/concept_groups.auto.toml`, `curation/tags.toml`                                              | Curated/generated browse groups, consolidated `[[pair]]` code↔label folds, and thematic discovery tags.      |
+  | **gap-fill**            | `curation/delivery_enrichment.generated.toml`, `curation/scb_errata.toml`                                                              | Generated delivery-list descriptions/aliases and source-level corrections for omissions in SCB's export.     |
+  | **value/coding**        | `curation/classifications.toml`, `curation/codelivery.toml`; canonical CSVs in `input_data/classifications/`                           | Classification seeds plus `[[link]]` overrides, and SCB same-period co-delivery coding decisions.            |
+  | **overlap resolution**  | `curation/codeless_overlap.toml`                                                                                                       | Curated decisions for residual code-less/code-bearing state overlaps.                                        |
+  | **period family merge** | `curation/period_family_merges.toml`                                                                                                   | Pre-slug merge of parallel period columns into one variable with per-period alias windows.                   |
+  | **document provenance** | `doc_sources.toml`, `related_documents.toml`                                                                                           | Inputs for the separate document DB; intentionally outside `curation/`.                                      |
 
 **Boundary rules (anti-patterns):**
 
@@ -92,8 +100,8 @@ into seven families:
   retired in #846 after FRIDA's gap-fill was re-expressed as variant-scoped
   representation succession (see *Curated column-merge* below).
 - **A provider's own errors are corrected at the provider's grain, in the adapter —
-  never as state overrides.** `scb_errata.toml` says "SCB delivered this row and its
-  export does not say so", and the build replays the entry as a synthetic
+  never as state overrides.** `curation/scb_errata.toml` says "SCB delivered this row
+  and its export does not say so", and the build replays the entry as a synthetic
   Registerinformation row before coalescing, so windows, gaps, fusing, alias windows,
   types, value sets and the classification backfill are produced by the ordinary passes.
   There is no post-pass `variable_state` surgery and no generic
@@ -107,15 +115,16 @@ into seven families:
   log is self-cleaning: once SCB ships the row the build fails with
   `scb_errata_now_present` and the entry is deleted, leaving the record in git.
 - **Classification links are typed, not generic state overrides.**
-  `classification_links.toml` targets the `classification_candidate` pipeline and then
-  `variable_state.classification_id`. It is NOT a generic
+  `curation/classifications.toml` targets the `classification_candidate` pipeline and
+  then `variable_state.classification_id`. It is NOT a generic
   `variable_state_overrides.toml` that can mutate arbitrary state fields; a future
   simplification must keep the operation typed as a classification assignment with its
   own validation and precedence.
 - **Coding overrides stay in the value/coding family, not in sets or tags.** Do not fold
-  code-system assignment facts (`classification_links.toml`, `codelivery.toml`) into
-  `concept_groups.toml` or `tags.toml`; they have different semantics, validation, and
-  build-pass ordering.
+  code-system assignment facts (`curation/classifications.toml`,
+  `curation/codelivery.toml`) into `curation/concept_groups.toml` or
+  `curation/tags.toml`; they have different semantics, validation, and build-pass
+  ordering.
 - **`variable_replaced_by` has three provenance sources, each distinct.** The
   `timeseries_event`-derived path (`note = 'auto:timeseries_event'`) is a source fact
   with best-effort noise skips; curated edges in `curation/relations.toml`
@@ -177,10 +186,11 @@ The three patterns, and the surfaces on each:
   `build-db`) and idempotent (it preserves already-accepted families); a curated overlay
   opts in by reference. For presentation-only, high-volume facts where a wrong candidate
   is cosmetic and a git-diff review signal is wanted. Surfaces:
-  `concept_groups.auto.toml` + `concept_groups.toml` `[[accept]]`. Generator:
-  `concept-group-candidates`. Regenerating inside `build-db` is the anti-pattern here —
-  it would rewrite a tracked file every build (diff noise, perpetually dirty tree),
-  which is exactly why this file is refreshed only on an explicit run.
+  `curation/concept_groups.auto.toml` + `curation/concept_groups.toml` `[[accept]]`.
+  Generator: `concept-group-candidates`. Regenerating inside `build-db` is the
+  anti-pattern here — it would rewrite a tracked file every build (diff noise,
+  perpetually dirty tree), which is exactly why this file is refreshed only on an
+  explicit run.
 - **(c) Regenerate-every-build, gitignored-until-seal** — the `*.auto.toml` is rewritten
   on every `build-db`, gitignored while `churning`, then committed-and-pinned when the
   provider advances to `curating`/`frozen`. For deterministic, high-volume identity
@@ -375,12 +385,12 @@ reusing it rather than re-minting codes. The adapter contributes one
 feeding the same provider-blind candidate path SOS uses (`external_classification`
 resolver); the `_backfill_state_classifications` pass then tags the variable's states,
 keying on `(variable_id, NULL)`. The `classification` short_name is validated at TOML
-load against the seed manifest (`classifications.toml`): an **undeclared** short_name
-fails the build fast (a typo guard — `"ICD-10"` for `"ICD-10-SE"`). Every **declared**
-classification is seeded on every build (shared standards with git-tracked code CSVs;
-see below), so a declared reference always resolves to a present classification. FOHM
-(SmiNet + the national vaccination register) is the first thin provider;
-Försäkringskassan is the second, modeled in two tiers (28 registers): 12
+load against the seed manifest (`curation/classifications.toml`): an **undeclared**
+short_name fails the build fast (a typo guard — `"ICD-10"` for `"ICD-10-SE"`). Every
+**declared** classification is seeded on every build (shared standards with git-tracked
+code CSVs; see below), so a declared reference always resolves to a present
+classification. FOHM (SmiNet + the national vaccination register) is the first thin
+provider; Försäkringskassan is the second, modeled in two tiers (28 registers): 12
 publicly-documented registers grounded in FK's published variabelförteckningar (each
 with one variant per documented delivery table — fall/delfall,
 mottagare/barn/beviljanden/avslag, the tandvård delivery tables — e.g. sjukpenning,
@@ -456,7 +466,7 @@ Because it is a second `scb`-provider adapter, the materializer drains SCB-machi
 (`coalesce_stats`/`projection_stats`) by attribute presence (`projection_stats`,
 SCB-only) rather than `provider == "scb"`.
 
-### Columns the export documents nowhere — `scb_errata.toml` `[[column]]` (Y-116)
+### Columns the export documents nowhere — `curation/scb_errata.toml` `[[column]]` (Y-116)
 
 The `CanonicalScbAdapter` above mints canonical-SCB content as **whole new registers**.
 A column that belongs to a register the **machine build already materialized** but that
@@ -676,7 +686,7 @@ REFACTOR_SPEC.md / #212.
 
 The shared post-passes (run once over both providers' rows): classifications, slugs,
 `same_as` / `replaced_by` / lineage edges, `code_variable_map`, the
-`classification_candidate` feeds (SCB/SOS/#446 + curated `classification_links.toml` +
+`classification_candidate` feeds (SCB/SOS/#446 + curated `curation/classifications.toml` +
 the code-set-containment auto-detector — all three run in that order before
 `_backfill_state_classifications`), the `variable_state.classification_id` backfill,
 FTS. After `code_variable_map` is complete (base derivation + SCB cvid-scratch top-up),
@@ -896,13 +906,14 @@ source state(s) and emits one edge per pair whose validity ranges intersect, wit
   earlier single-seed form expanded only the source node and silently missed
   mismatched-slug cross-register edges — latent while `variable_same_as` was empty;
   since fixed.)
-- **Variant pinning is TOML-only — no SQL table.** A `[lineage_defaults]` block picks
-  one source variant per source register; a
-  `[lineage."<consumer_register>.<variable_slug>"]` block overrides it per consumer
-  variable. Uncurated consumers fall back to *all* source variants carrying a matching
-  state plus an `ambiguous_source_variant` warning; a consumer with no source state at
-  all gets `no_source_state`. A found-but- non-overlapping source state is neither — it
-  is a legitimate empty result (zero edges, zero warnings). Warnings land in
+- **Variant pinning is TOML-only — no SQL table.** The single `curation/lineage.toml`
+  overlay uses `[lineage_defaults]` with `"<provider>/<source_register>" = "<variant>"`
+  entries and `[lineage."<provider>/<consumer_register>/<variable_slug>"]` override
+  tables. Provider qualification is explicit because register slugs are provider-scoped.
+  Uncurated consumers fall back to *all* source variants carrying a matching state plus
+  an `ambiguous_source_variant` warning; a consumer with no source state at all gets
+  `no_source_state`. A found-but- non-overlapping source state is neither — it is a
+  legitimate empty result (zero edges, zero warnings). Warnings land in
   `variable_state_lineage_warning` and the build log for curator attention.
   `load_lineage_config` does shape validation only; existence of the named
   registers/variants is validated by the linker against the DB (fail-fast on a pin to a
@@ -992,7 +1003,7 @@ structure query users see (documented in [../reg_meta/DESIGN.md](../reg_meta/DES
 ## Classification seed
 
 The `classification_id` FK is populated at build time from a maintainer-curated TOML
-seed at `reg_meta_build/classifications.toml`. Each entry declares a normalized
+seed at `reg_meta_build/curation/classifications.toml`. Each entry declares a normalized
 classification and lists the raw `value_set_version_label` strings (the SCB-published
 "Vardemangdsversion" labels) that map to it — exact match, no fuzzy inference. Match
 strings are deterministic and auditable: any maintainer can enumerate them via
@@ -1169,8 +1180,8 @@ has one home and is read by both step 5's confident filter and the residue diagn
 **Residue diagnostic (`classification-residue`, #513).**
 `reg-meta-build classification-residue` (`dump_classification_residue`) productizes the
 multi-family curation residue as a reusable, read-only worklist — replacing the #494
-throwaway recompute — so a maintainer can curate `classification_links.toml` from it. It
-NEVER mutates the DB. It rebuilds `_vs_cls` via the shared helper and joins the
+throwaway recompute — so a maintainer can curate `curation/classifications.toml` from
+it. It NEVER mutates the DB. It rebuilds `_vs_cls` via the shared helper and joins the
 multi-family value sets (>1 candidate cls) to the SHIPPED
 `variable_state.classification_id IS NULL` signal: a value set is residual iff it is
 multi-family AND has ≥1 still-unclassified state. (The build scratch table
@@ -1182,13 +1193,13 @@ candidate classifications with per-candidate containment, the exact-(code,label)
 neighbour). The SAFE subset — exactly one standalone candidate at `label_agree ≥ 0.90`
 with all others below — is the curatable #494-part-2 tier and is emitted first as
 copyable `[[link]]` blocks (one per distinct variable FQID, since
-`classification_links.toml` rejects a duplicate `variable`; `-o`); the ambiguous residue
-is comment-only evidence. By construction the safe subset is mostly already harvested:
-the confident auto-curatable tier (a single label-unambiguous standalone class) is
-exactly what the #494 reclaim/curation already copied into `classification_links.toml`,
-so those value sets are no longer residual. What typically remains is vintage chains
-(candidates that are NOT standalone) plus genuine cross-family coincidences — a human
-must triage them.
+`curation/classifications.toml` rejects a duplicate `variable`; `-o`); the ambiguous
+residue is comment-only evidence. By construction the safe subset is mostly already
+harvested: the confident auto-curatable tier (a single label-unambiguous standalone
+class) is exactly what the #494 reclaim/curation already copied into
+`curation/classifications.toml`, so those value sets are no longer residual. What
+typically remains is vintage chains (candidates that are NOT standalone) plus genuine
+cross-family coincidences — a human must triage them.
 
 **Design decisions:**
 
@@ -1218,12 +1229,11 @@ must triage them.
   SNI editions (a second multi-vintage chain → genuine cross-family ambiguity, left for
   curation).
 
-### Curated classification links (`classification_links.toml`, #416 tail)
+### Curated classification links (`curation/classifications.toml`, #416 tail)
 
-`reg_meta_build/classification_links.toml` (package root, NOT under `fqid_slugs/`) lets
-a maintainer override or supplement the auto-detector for the residue the detector
-deliberately leaves unlinked: the family-ambiguous short numeric sets where SNI/SSYK/SUN
-coincide below \~15 codes.
+`reg_meta_build/curation/classifications.toml` lets a maintainer override or supplement
+the auto-detector for the residue the detector deliberately leaves unlinked: the
+family-ambiguous short numeric sets where SNI/SSYK/SUN coincide below \~15 codes.
 
 Each `[[link]]` entry maps a `variable` (3-segment `provider/register/variable` FQID) to
 a `classification` (`short_name`). An optional `note` records provenance. Resolution
@@ -1347,9 +1357,9 @@ case-/diacritic-only header twins delivered under *separate* cvids
 columns. Without the fold, a split-container var sharded each casing into its own
 sibling fragment (\~543 fragments across the corpus). Raw casing still surfaces where it
 should: `delivery_column_name` is the latest-era alias verbatim, and the unika lookups
-stay raw. Consequently every curated column key (`codelivery.toml`) is case-folded at
-load by the shared `_curation.fold_column` — TOML casing is cosmetic, and the single
-shared definition keeps loader keys and coalescer components from drifting.
+stay raw. Consequently every curated column key (`curation/codelivery.toml`) is
+case-folded at load by the shared `_curation.fold_column` — TOML casing is cosmetic, and
+the single shared definition keeps loader keys and coalescer components from drifting.
 
 **Co-delivery guard on the fold.** The fold targets era-rename twins that never
 co-occur. When two distinct spellings of one folded header share an edition of a variant
@@ -1392,10 +1402,11 @@ Two notes on the triage signals:
   ONE concept under DISJOINT-stem columns (e.g. KSju näringsgren as `NG1`/`Ksjusni`/
   `bransch`), the stem rule SPLITS them into sibling variables; those siblings are then
   re-united as one browseable family via a `[[variable_group]]` facet axis in
-  `concept_groups.toml` (#845; cf. #488 for the LISA pattern). This is the current
-  approach after the `[[fold_override]]` build-time surface (#261) was retired in #845:
-  split + concept-group faceting is lower-risk than build-time fiat-folding because it
-  leaves the leaf variable set visible to bindings and avoids entity-key entanglement.
+  `curation/concept_groups.toml` (#845; cf. #488 for the LISA pattern). This is the
+  current approach after the `[[fold_override]]` build-time surface (#261) was retired
+  in #845: split + concept-group faceting is lower-risk than build-time fiat-folding
+  because it leaves the leaf variable set visible to bindings and avoids entity-key
+  entanglement.
 
 - **Split `relation_kind` is decided PER CO-DELIVERED PAIR** (`_apply_split`), from the
   pair's two delivery columns, most specific first: `code_vs_label_pair` (name-based — a
@@ -1435,9 +1446,9 @@ two sibling variables in the base. The base grain is not fused by fiat.
 **Curation overlay.** Cross-representation identity ("these distinct representations are
 one concept across eras") is expressed in a typed overlay of lineage edges:
 `replaced_by` succession (column rename, retirement) and `same_as` equivalence in
-`curation/relations.toml`; concept groups in `concept_groups.toml` for browse grouping.
-The overlay is navigation — it records cross-era continuity without collapsing the base
-variables.
+`curation/relations.toml`; concept groups in `curation/concept_groups.toml` for browse
+grouping. The overlay is navigation — it records cross-era continuity without collapsing
+the base variables.
 
 **Derived views.** Panel/entity-key resolution, the variable graph, timeline, and search
 are computed by resolving *over* the overlay at read time. They are never stored as base
@@ -1496,8 +1507,8 @@ expressed as a grouping nudge.
   | ------------------- | ---------------------------------------------------- | --------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
   | `column_merge`      | ~~`[[column_merge]]` / `source_column_repairs.py`~~  | ~~unifies never-co-occurring gap-fill twins into one variable~~       | **retired (#846)** — RTB: representation `replaced_by`; FRIDA: variant-scoped succession |
   | `fold_override`     | ~~`[[fold_override]]` / `source_column_repairs.py`~~ | ~~folds disjoint-stem contested columns of one concept into one var~~ | **retired (#845)** — replaced by SPLIT + concept-group faceting                          |
-  | `codelivery`        | `codelivery.toml` / `codelivery.py`                  | pins which coding a column KEEPS when it carries two in a period      | **keep (confirm-only)**                                                                  |
-  | `errata [[column]]` | `scb_errata.toml` / `scb_errata.py`                  | mints the variable for a column SCB's export documents nowhere        | **keep (confirm-only)**                                                                  |
+  | `codelivery`        | `curation/codelivery.toml` / `codelivery.py`         | pins which coding a column KEEPS when it carries two in a period      | **keep (confirm-only)**                                                                  |
+  | `errata [[column]]` | `curation/scb_errata.toml` / `scb_errata.py`         | mints the variable for a column SCB's export documents nowhere        | **keep (confirm-only)**                                                                  |
 
 **`column_merge` (#196) — FULLY RETIRED (#846).** *(Historical tracker note; the surface
 no longer exists in the build.)* The `[[column_merge]]` / `source_column_repairs.py`
@@ -1539,9 +1550,9 @@ PARALLEL per edition, which the `variable_state` uniqueness index (one delivery 
 per variable × variant × period) cannot hold in one variable — so the build splits them
 into siblings (`naringsgren`/`naringsgren-rams`/`naringsgren-2siffer`/
 `naringsgren-grupperad-2009`). A **representation-grained** `[[variable_group]]` in
-`concept_groups.toml` (group key `naringsgren`, register `scb/ksju`) then re-unifies
-them: one member per live delivery column, faceted only by detail level (`nivo`:
-5-siffer / 2-siffer / grupperad). There is NO entity axis (all are the person's
+`curation/concept_groups.toml` (group key `naringsgren`, register `scb/ksju`) then
+re-unifies them: one member per live delivery column, faceted only by detail level
+(`nivo`: 5-siffer / 2-siffer / grupperad). There is NO entity axis (all are the person's
 workplace SNI), and vintage spellings ride each variable's own state timeline /
 `replaced_by` rather than a facet. The 2009 grouped-SNI `lgrp` representation is
 authored as a representation-grain successor edge to `NgGr1` in
@@ -2078,8 +2089,8 @@ Every implementation PR gates on:
    enumerated populations — substantive disjoint same-year pairs (now two states),
    mid-year handoffs, dissolved genuine conflicts/inert pins — and **zero diff** on the
    cosmetic population.
-3. **Pin re-validation** — before/after resolved winner per `codelivery.toml`-pinned
-   column.
+3. **Pin re-validation** — before/after resolved winner per
+   `curation/codelivery.toml`-pinned column.
 4. **Regression corpus** — the known substantive cases (`Orsak` 2009 VT-15 vs HT-4
    codes, `Lan` LKF vintages, Betyg/Gymnasieprogram/national-test grades, PSU waves)
    asserted before/after: post-B both terms ship as non-overlapping states and
@@ -2090,16 +2101,16 @@ Every implementation PR gates on:
    VT/HT open-top selection, season/month editions (still full-year), school-year
    editions (HT→VT spans, Y-113), quarter claims.
 
-## Co-delivery resolution curation (`codelivery.toml`)
+## Co-delivery resolution curation (`curation/codelivery.toml`)
 
-`codelivery.toml` (package root, like `concept_groups.toml` — NOT under `fqid_slugs/`)
-is an **SCB-only** curated overlay that tells the co-delivery resolver how to handle
-delivery columns that carry **multiple distinct codings in the same period**: 19 rules
-today. It is the `value/coding` family SCB column-repair surface — acting on VALUE-SET
-SELECTION for a column that is already a single identity with competing codings. (The
-companion surface `source_column_repairs.toml` that formerly acted on column IDENTITY
-before states exist was retired in #846; see *Curated column-merge* in the triage
-section above.)
+`curation/codelivery.toml` (beside `curation/concept_groups.toml`, not under
+`fqid_slugs/`) is an **SCB-only** curated overlay that tells the co-delivery resolver
+how to handle delivery columns that carry **multiple distinct codings in the same
+period**: 19 rules today. It is the `value/coding` family SCB column-repair surface —
+acting on VALUE-SET SELECTION for a column that is already a single identity with
+competing codings. (The companion surface `source_column_repairs.toml` that formerly
+acted on column IDENTITY before states exist was retired in #846; see *Curated
+column-merge* in the triage section above.)
 
 Each entry is a **source-id-keyed pin** — `(register_id, var_id, column)` — resolved one
 of two ways: `keep = "<emitted label>"` pins one value-set version label (matched
@@ -2469,8 +2480,9 @@ effective_year = 2014
 ```
 
 Curated variable → classification overrides live in the parallel standalone
-`reg_meta_build/classification_links.toml` (#416), loaded by `classification_links.py`.
-See *Classification seed → Curated classification links* above for the full contract.
+`reg_meta_build/curation/classifications.toml` (#416), loaded by
+`classification_links.py`. See *Classification seed → Curated classification links*
+above for the full contract.
 
 *Candidate generator.* `reg-meta-build same-as-candidates` (`infer_same_as_candidates`
 in `variable_same_as.py`) reads a BUILT DB and emits a tiered review worklist as
@@ -2606,17 +2618,17 @@ already-grouped member:
    IN-BUILD sibling sets (`edge_siblings`, `(variable_id, variable_id)` pairs the triage
    minted) — the `variable_related_to` table no longer exists (#800), so these in-build
    pairs are the sole home for split-sibling relationships. Since #923, `edge_siblings`
-   is also fed by curated `code_label_pairs.toml` pairs (`_append_code_label_edges`):
-   each curated code↔label decode pair (code variable owns a value_set; label variable
-   owns none; both co-delivered) is appended to `edge_siblings` before components are
-   computed, so an `edge` group is not exclusively an auto same-definition split.
-   **Curated precedence** (#591): any FQID claimed by a curated `[[variable_group]]` or
-   `[[accept]]` is subtracted from the edge components before they mint groups; a
-   component reduced below 2 survivors mints no group (the curated entry claims those
-   FQIDs instead). Other auto:triage `relation_kind`s (`code_vs_label_pair`,
-   `import_bug_suspect`) do NOT group — among auto:triage kinds, only
-   `same_definition_different_column` drives edge components (curated
-   `code_label_pairs.toml` pairs are the one non-triage addition, appended by
+   is also fed by curated `curation/concept_groups.toml` pairs
+   (`_append_code_label_edges`): each curated code↔label decode pair (code variable owns
+   a value_set; label variable owns none; both co-delivered) is appended to
+   `edge_siblings` before components are computed, so an `edge` group is not exclusively
+   an auto same-definition split. **Curated precedence** (#591): any FQID claimed by a
+   curated `[[variable_group]]` or `[[accept]]` is subtracted from the edge components
+   before they mint groups; a component reduced below 2 survivors mints no group (the
+   curated entry claims those FQIDs instead). Other auto:triage `relation_kind`s
+   (`code_vs_label_pair`, `import_bug_suspect`) do NOT group — among auto:triage kinds,
+   only `same_definition_different_column` drives edge components (curated
+   `curation/concept_groups.toml` pairs are the one non-triage addition, appended by
    `_append_code_label_edges` before components are computed). The former exact-parity
    check (`_check_edge_group_parity`, which recomputed components from persisted rows)
    is replaced by a corpus-only volume floor `_CG_MIN_EDGE_GROUPS` (#591): there are no
@@ -2624,8 +2636,9 @@ already-grouped member:
    (slug drift, empty `edge_siblings`) without recomputation. The floor is additionally
    gated on SCB being in the build (#595): a `--providers sos` real build skips it
    (info-level) rather than false-failing, since the auto split-sibling pairs in
-   `edge_siblings` are entirely SCB-sourced (curated `code_label_pairs.toml` pairs are
-   provider-gated per-pair and silently skipped when their provider is absent).
+   `edge_siblings` are entirely SCB-sourced (curated `curation/concept_groups.toml`
+   pairs are provider-gated per-pair and silently skipped when their provider is
+   absent).
 
 1. **`token`** — exact curated vocabularies only (NO regex name-patterns, the standing
    curation rule). Variables: the Swedish month slug tails, both short and full forms
@@ -2645,7 +2658,7 @@ already-grouped member:
    produce). `classification.supersedes_id` is a DERIVED back-pointer projected from the
    active subset of that edge table by `derive_supersedes_from_edges` (runs after the
    auto + curated edges land, before `link_value_set_classifications` reads it); the
-   `classifications.toml` seed no longer declares succession. The
+   `curation/classifications.toml` seed no longer declares succession. The
    `concept_group_classification` table and `kind='classification'` machinery hold the
    curated umbrella groups — `group:sun` being the first, added by #516 (see below). The
    variable-grain counterpart is derived by `derive_variable_vintage_succession` (#584):
@@ -2655,8 +2668,8 @@ already-grouped member:
    cross-product families: only variables whose slug stems agree after the adjacent
    classification edge's digit-bearing vintage tokens are removed are matched.
 
-2. **`curated`** — `reg_meta_build/concept_groups.toml` (package root, like
-   `codelivery.toml` — NOT under `fqid_slugs/`, which is glob-loaded as provider TOMLs).
+2. **`curated`** — `reg_meta_build/curation/concept_groups.toml`, beside the other
+   catalog overlays and outside `fqid_slugs/`, which is identity-only and glob-loaded.
    Two entry kinds, both **opt-in** (a family folds only when explicitly present):
    - `[[variable_group]]` — a hand-authored family with an exact member list. The
      **single-axis shape** (legacy, what the candidate generator emits) declares one
@@ -2671,8 +2684,8 @@ already-grouped member:
      land in `concept_group_axis`; per-member-per-axis coordinates in
      `concept_group_variable_facet`.
    - `[[accept]]` (#496) — fold a candidate family from the committed, **generated**
-     `reg_meta_build/concept_groups.auto.toml` BY REFERENCE (`register` + `key`,
-     optional `label`/`axis` overrides and an `exclude` member-slug list).
+     `reg_meta_build/curation/concept_groups.auto.toml` BY REFERENCE (`register` +
+     `key`, optional `label`/`axis` overrides and an `exclude` member-slug list).
      `concept_groups.auto.toml` is the **machine-owned** ranked catalog the
      `concept-group-candidates` generator (#496 PR1) emits over a built DB — committed
      but never hand-edited; an auto family folds ONLY when an accept names it (an
@@ -2766,11 +2779,11 @@ flavored builds read the dir and enforce the pins unchanged.
 from steward delivery / variable lists that describe the **shared** SCB/SOS world — not
 steward-private content — so they belong in the normal *global* build, not a steward
 flavor (scope follows what a fact is *about*, not where it was learned; see #365). The
-curated input is a package-root `reg_meta_build/delivery_enrichment.toml` (like
-`concept_groups.toml`, NOT under `fqid_slugs/`), a **generated** extract: the untracked
-`input_data/swecov/build_catalog.py globals` pass emits `global_enrichment.json`, which
-is projected into the committed TOML against a fresh `reg_meta.db` under three grounding
-guards, so the committed rows are column-verified rather than fuzzily matched:
+curated input is `reg_meta_build/curation/delivery_enrichment.generated.toml`, a
+**generated** extract: the untracked `input_data/swecov/build_catalog.py globals` pass
+emits `global_enrichment.json`, which is projected into the committed TOML against a
+fresh `reg_meta.db` under three grounding guards, so the committed rows are
+column-verified rather than fuzzily matched:
 
 1. **Exact column grounding** — the delivery column (pseudonymization `P1105_LopNr_`
    prefix stripped) must equal one of the variable's real `delivery_column_name`s; a row
@@ -2785,7 +2798,7 @@ guards, so the committed rows are column-verified rather than fuzzily matched:
 Plus whitespace collapsed, trailing footnote `*` stripped, and `(register, variable)`
 pairs with conflicting cross-vintage descriptions dropped.
 
-Two entry kinds ship today, both in `delivery_enrichment.toml`:
+Two entry kinds ship today, both in `curation/delivery_enrichment.generated.toml`:
 
 - **`[[description]]`** (PR1a) — fill an empty `variable.description` from the
   delivery-list prose.
@@ -2811,16 +2824,14 @@ Two guards, both deliberate:
   `WHERE description IS NULL OR TRIM(description) = ''` clause), so an official SCB/SOS
   description always outranks the delivery list; an alias uses `INSERT OR IGNORE`, so a
   column the variant already carries is a no-op. Both passes are idempotent.
-- **Strict load, lenient resolve.** A *structural* TOML defect (duplicate keys,
-  malformed FQID, multi-segment variable) FAILS the build (EXIT_CONFIG) like the other
-  curation surfaces. But a row whose slug no longer *resolves* (or, for an alias, whose
-  variable has no state) is skipped + counted (`unresolved`), NOT a build failure —
-  unlike `concept_groups`' fail-fast. Rationale: pre-v1 variable slugs regenerate each
-  build while their provider zone is `churning` (#470), and an enrichment row is
-  non-structural, so one stale row must not make the whole global build fragile.
-  Regenerate the TOML when the count drifts. No snapshot / immutability machinery and no
-  `SCHEMA_VERSION` bump — descriptions write text and aliases add rows on existing
-  variables.
+- **Strict load and resolution.** The whole TOML is shape-validated before provider
+  gating. An entry for a provider in the build whose variable (or, for an alias,
+  delivered state) does not resolve FAILS with `delivery_enrichment_unresolved`
+  (`EXIT_CONFIG`), like peer catalog overlays. Entries for excluded providers are
+  skipped and counted as `provider_skipped`; provider absence never excuses malformed
+  TOML. Regenerate the TOML when the count drifts. No snapshot / immutability machinery
+  and no `SCHEMA_VERSION` bump — descriptions write text and aliases add rows on
+  existing variables.
 
 ## Steward-flavored DB — extend-db (#365 PR2)
 
@@ -2838,11 +2849,11 @@ remains.
 The global catalog covers SCB/SOS plus any new *global* providers curated into
 `input_data`. A steward with additional information about a global provider enriches the
 *global* build via the shipped PR1 mechanisms (`delivery_enrichment.py` for descriptions
-and aliases, `scb_errata.toml`'s `[[column]]` for a column the machine metadata lacks
-entirely) — "scope follows what a fact is about." `extend-db` carries ONLY content that
-is steward-private and has no global home: a new provider (e.g. a bank like Swedbank)
-and the registers/variants/variables they deliver. Enrichment of existing global
-entities is explicitly NOT its job.
+and aliases, `curation/scb_errata.toml`'s `[[column]]` for a column the machine metadata
+lacks entirely) — "scope follows what a fact is about." `extend-db` carries ONLY content
+that is steward-private and has no global home: a new provider (e.g. a bank like
+Swedbank) and the registers/variants/variables they deliver. Enrichment of existing
+global entities is explicitly NOT its job.
 
 The tracked, maintainer-run generator (`input_data/swecov/build_catalog.py`) produces
 one curated-provider TOML per steward-only provider under
@@ -2993,17 +3004,17 @@ variable auto-pins and freeze advancement remain the later real-content step.
   Range/list editions are explicitly counted as not assessed and produce no availability
   inference or correction suggestion: a multi-period table's dates describe its records,
   not each column's availability. A miss on the `scb` provider is reported in
-  `scb_errata.toml`'s `[[version]]` / `[[delivered]]` grammar, because that is where the
-  repair goes: SCB omitted the row from its own export. A miss on any OTHER provider is
-  never rendered as a stanza — that file corrects SCB's export and its loader refuses
-  another provider — so it reports as one line naming the surface its window is curated
-  on (`input_data/<Provider>/<slug>.toml`'s `valid_from`, the Socialstyrelsen export for
-  `sos`, or the curated-provider TOML `extend-db` overlaid for a steward's own minted
-  provider). The parameter is three-state: an inventory runs the gate, `None` skips it
-  (the global build and synthetic CI, which have no holdings statement), and
-  `HoldingsGate.SKIPPED` skips it naming `--skip-holdings-gate` as the reason (Y-124).
-  One value, so an inventory paired with a skip is unrepresentable and the reason is
-  never inferred from an absent argument.
+  `curation/scb_errata.toml`'s `[[version]]` / `[[delivered]]` grammar, because that is
+  where the repair goes: SCB omitted the row from its own export. A miss on any OTHER
+  provider is never rendered as a stanza — that file corrects SCB's export and its
+  loader refuses another provider — so it reports as one line naming the surface its
+  window is curated on (`input_data/<Provider>/<slug>.toml`'s `valid_from`, the
+  Socialstyrelsen export for `sos`, or the curated-provider TOML `extend-db` overlaid
+  for a steward's own minted provider). The parameter is three-state: an inventory runs
+  the gate, `None` skips it (the global build and synthetic CI, which have no holdings
+  statement), and `HoldingsGate.SKIPPED` skips it naming `--skip-holdings-gate` as the
+  reason (Y-124). One value, so an inventory paired with a skip is unrepresentable and
+  the reason is never inferred from an absent argument.
 - **`_populate_fts(include_value_code=False)`** — skips the `value_code_fts` INSERT. The
   full build keeps `include_value_code=True` (the default), so its call is unchanged.
 
@@ -3012,8 +3023,7 @@ variable auto-pins and freeze advancement remain the later real-content step.
 `tags.py` materializes a maintainer-curated cross-register THEMATIC tag layer — a
 discovery overlay so a researcher finds candidates ("a measure of income") without
 already knowing the register. Orthogonal to `concept_groups` (structural fold within ONE
-register); same overlay family, a sibling package-root `reg_meta_build/tags.toml` (NOT
-under `fqid_slugs/`).
+register); same overlay family, `reg_meta_build/curation/tags.toml`.
 
 Schema: ONE global vocabulary `tag` (slug globally unique) + ONE polymorphic
 `tag_member` (EXACTLY ONE grain per row via a CHECK — a `register_id` for coarse browse
@@ -3021,20 +3031,19 @@ OR a `variable_id` for the starred/golden recommendation; `rank`/`starred`/`note
 Per-grain uniqueness is two PARTIAL unique indexes (a plain composite key can't, since
 SQLite treats the unused-grain NULL as distinct).
 
-`tags.toml` shape: `[[tag]]` (slug/label/optional description) with nested
+`curation/tags.toml` shape: `[[tag]]` (slug/label/optional description) with nested
 `[[tag.member]]` tables, each referencing EXACTLY ONE of `variable` (3-seg FQID) /
 `register` (2-seg FQID), plus optional `rank`/`starred`/`note`. `load_tags` does strict
 shape validation (EXIT_CONFIG, via the shared `_curation.load_curation_entries`
 scaffold; empty on missing file for wheel installs + synthetic builds).
 `materialize_tags` runs in the same slug-gated post-pass block as concept groups /
-delivery enrichment, provider-gated; it resolves member FQIDs → ids and, UNLIKE delivery
-enrichment's lenient resolve, fails the build LOUD (`tags_unresolved`, EXIT_CONFIG) on a
-dangling reference — a tag is a curated structural overlay, so drift must be fixed, not
-dropped. The committed file starts as a small SCB-heavy seed and grows by reviewed
-entries; missing files still materialize empty tables for wheel installs and synthetic
-builds. `validate_built_db` runs a corpus-independent closure check
-(`tag_id`/`register_id`/`variable_id` resolve, exactly-one-grain holds) with NO volume
-floor.
+delivery enrichment, provider-gated; it resolves member FQIDs → ids and fails the build
+LOUD (`tags_unresolved`, EXIT_CONFIG) on a dangling reference — a tag is a curated
+structural overlay, so drift must be fixed, not dropped. The committed file starts as a
+small SCB-heavy seed and grows by reviewed entries; missing files still materialize
+empty tables for wheel installs and synthetic builds. `validate_built_db` runs a
+corpus-independent closure check (`tag_id`/`register_id`/`variable_id` resolve,
+exactly-one-grain holds) with NO volume floor.
 
 ## Slug immutability
 
@@ -3050,12 +3059,12 @@ removes and renames.
 **Per-provider freeze model (#470) — `churning` → `curating` → `frozen`.** A slug dir's
 immutability is set **per zone**, not globally. A **zone** is a provider slug (the
 `<provider>.toml` filename stem) plus the reserved zone name `classifications` (the
-provider-independent `classifications.toml`, whose entries key on bare `source_id`).
-State lives in `<slug_dir>/freeze.toml`, a flat TOML map `<zone> = "<state>"`. An
-**absent file or an unlisted zone defaults to `churning`** (so an empty dir is
-all-churning), and an unknown zone key or an invalid state value fails fast
-(`EXIT_CONFIG`). Each slug dir has its own `freeze.toml` — the global `fqid_slugs/` and
-each steward subdir (`fqid_slugs/swecov/`).
+provider-independent `fqid_slugs/classifications.toml`, whose entries key on bare
+`source_id`). State lives in `<slug_dir>/freeze.toml`, a flat TOML map
+`<zone> = "<state>"`. An **absent file or an unlisted zone defaults to `churning`** (so
+an empty dir is all-churning), and an unknown zone key or an invalid state value fails
+fast (`EXIT_CONFIG`). Each slug dir has its own `freeze.toml` — the global `fqid_slugs/`
+and each steward subdir (`fqid_slugs/swecov/`).
 
 The three states advance deliberately; **`frozen` is a one-way seal**:
 

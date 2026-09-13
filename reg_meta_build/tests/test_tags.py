@@ -14,12 +14,12 @@ from typing import TYPE_CHECKING
 import pytest
 from _slugged_db import add_register, add_variable, build_slugged_db
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
+from reg_meta_build._curation import repo_curation_path
 from reg_meta_build.tags import (
     CuratedTag,
     TagMember,
     load_tags,
     materialize_tags,
-    repo_tags_path,
 )
 
 if TYPE_CHECKING:
@@ -73,7 +73,7 @@ def test_load_tags_empty_when_no_file() -> None:
 
 
 def test_repo_tags_toml_seeds_scb_subset() -> None:
-    tags = load_tags(repo_tags_path())
+    tags = load_tags(repo_curation_path("tags.toml"))
     assert [tag.slug for tag in tags] == [
         "income",
         "economic-assistance-amount",

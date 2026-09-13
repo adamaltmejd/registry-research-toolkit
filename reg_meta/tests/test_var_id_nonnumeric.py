@@ -245,7 +245,7 @@ def test_digit_shaped_nonscb_key_is_none(db: sqlite3.Connection) -> None:
 
 def test_low_band_column_key_is_none(db: sqlite3.Connection) -> None:
     # Locks the regression Codex caught (#474): a column SCB's own export never
-    # documented (a `[[column]]` in reg_meta_build/scb_errata.toml) is minted in
+    # documented (a `[[column]]` in reg_meta_build/curation/scb_errata.toml) is minted in
     # the SCB band (variable_id < 2^62) but carries the delivery COLUMN as its
     # `provider_key`. The band-only guard CAST('SomeCol' AS INTEGER) = 0, leaking
     # a bogus var_id 0; the digit check makes it resolve to None.

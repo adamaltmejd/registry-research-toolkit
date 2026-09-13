@@ -28,13 +28,23 @@ from __future__ import annotations
 import functools
 import tomllib
 import unicodedata
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 
 if TYPE_CHECKING:
     import sqlite3
-    from pathlib import Path
+
+
+def repo_curation_path(file_name: str) -> Path | None:
+    """Return one catalog-overlay file from the repo's ``curation/`` directory.
+
+    Wheels do not ship maintainer curation, so a missing file resolves to
+    ``None`` just like the loaders' explicit missing-path convention.
+    """
+    candidate = Path(__file__).resolve().parent.parent.parent / "curation" / file_name
+    return candidate if candidate.is_file() else None
 
 
 @functools.cache
@@ -177,7 +187,7 @@ def load_curation_entries(
     validation stays in each loader (their schemas differ).
 
     ``sibling_keys`` lists OTHER legal top-level keys in the same file (a file
-    that carries more than one entry type, e.g. ``delivery_enrichment.toml``'s
+    that carries more than one entry type, e.g. ``curation/delivery_enrichment.generated.toml``'s
     ``[[description]]`` + ``[[alias]]``): they are not flagged as unknown, and
     each is loaded by its own call. ``[]`` when ``path`` is None/missing
     (synthetic test builds, wheel installs). Errors carry

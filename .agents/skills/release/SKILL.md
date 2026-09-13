@@ -478,13 +478,14 @@ the flavored validation fails with `EXIT_CONFIG` / `validation_failed` and nothi
 published (Y-115). The report groups each miss by (register, variant, column) with the
 held editions and the coordinate's known windows. A miss on the `scb` provider is
 written in the `[[version]]` / `[[delivered]]` grammar of
-`reg_meta_build/scb_errata.toml`, complete and pasteable but for its TODO `evidence` /
-`noted`. A miss on ANY OTHER provider is never errata — that file corrects SCB's own
-export and its loader refuses another provider — so it reports as one line naming the
-surface its window is curated on: `reg_meta_build/input_data/<Provider>/<slug>.toml`'s
-`valid_from` (e.g. `Forsakringskassan/fk.toml`), the Socialstyrelsen export for `sos`,
-or the curated-provider TOML `extend-db` overlaid for a steward's own minted provider.
-Widen the window there and rebuild; do not paste it into the errata file.
+`reg_meta_build/curation/scb_errata.toml`, complete and pasteable but for its TODO
+`evidence` / `noted`. A miss on ANY OTHER provider is never errata — that file corrects
+SCB's own export and its loader refuses another provider — so it reports as one line
+naming the surface its window is curated on:
+`reg_meta_build/input_data/<Provider>/<slug>.toml`'s `valid_from` (e.g.
+`Forsakringskassan/fk.toml`), the Socialstyrelsen export for `sos`, or the
+curated-provider TOML `extend-db` overlaid for a steward's own minted provider. Widen
+the window there and rebuild; do not paste it into the errata file.
 
 **A red gate is answered by curating errata, never by skipping validation.** The gate
 refuses to run blind: with no `--delivery-inventory` and no committed inventory for the
@@ -498,10 +499,10 @@ has. Write the full candidate worklist with `python build_catalog.py --db "$db" 
 (from `reg_meta_build/input_data/swecov/`; it needs only the flavored DB and the
 committed inventory — not the untracked holdings CSV; its third section lists the
 non-SCB misses, which are answered at their own surface and not here), curate the
-entries that have evidence into `reg_meta_build/scb_errata.toml`, and note the rebuild
-path: errata is an **SCB adapter** input, so a corrected window reaches the flavor only
-through a fresh **8a** main DB and then a fresh 8c overlay. A miss whose column SCB
-documents nowhere is a `[[column]]` entry in the same file instead, not a
+entries that have evidence into `reg_meta_build/curation/scb_errata.toml`, and note the
+rebuild path: errata is an **SCB adapter** input, so a corrected window reaches the
+flavor only through a fresh **8a** main DB and then a fresh 8c overlay. A miss whose
+column SCB documents nowhere is a `[[column]]` entry in the same file instead, not a
 `[[delivered]]` one. If the curation is larger than this release can carry, land it as
 its own change and release from that — do not publish a flavored DB the gate refused.
 

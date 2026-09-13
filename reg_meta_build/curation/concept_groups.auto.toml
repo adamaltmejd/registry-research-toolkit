@@ -1,20 +1,20 @@
 # GENERATED concept-group fold candidates — reg-meta-build concept-group-candidates.
 #
-# THIS FILE IS MACHINE-OWNED. It IS reg_meta_build/concept_groups.auto.toml,
+# THIS FILE IS MACHINE-OWNED. It IS reg_meta_build/curation/concept_groups.auto.toml,
 # the committed candidate catalog. Regenerate it with:
 #   reg-meta-build --db <built-db-dir> concept-group-candidates \
-#     --output-toml reg_meta_build/concept_groups.auto.toml
+#     --output-toml reg_meta_build/curation/concept_groups.auto.toml
 # (`--db` points at a built reg_meta DB to scan; `--output-toml` targets
 # this committed file). NEVER hand-edit it (edits are overwritten).
 #
 # These are INFERRED foldable column families, NOT folded by default.
 # Folding is OPT-IN: to fold a family, add an `[[accept]]` entry in
-# reg_meta_build/concept_groups.toml referencing its `register` + `key`
+# reg_meta_build/curation/concept_groups.toml referencing its `register` + `key`
 # (optional `label` / `axis` overrides, optional `exclude = ["<slug>", …]`).
 # An unaccepted family stays unfolded. Concept groups are presentation-only,
 # so review each family before accepting it.
 #
-# Regeneration is IDEMPOTENT: the generator reads concept_groups.toml's
+# Regeneration is IDEMPOTENT: the generator reads curation/concept_groups.toml's
 # accept-list and PRESERVES already-accepted families here (an accept
 # materializes its family as a group, which a naive rescan would drop), so
 # regenerating against a normal built DB keeps every accept resolvable.

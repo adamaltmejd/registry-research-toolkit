@@ -3530,7 +3530,7 @@ def _coalesce_variable_states(
                 "same-column co-delivery:\n" + "\n".join(lines)
             ),
             remediation=(
-                "Add a curation pin to reg_meta_build/codelivery.toml keyed on "
+                "Add a curation pin to reg_meta_build/curation/codelivery.toml keyed on "
                 '(register_id, var_id, column), with `keep = "<emitted label>"` '
                 'naming the coding to keep (or `keep_rule = "latest_year"` for '
                 "recurring dated vintages). See the file header."

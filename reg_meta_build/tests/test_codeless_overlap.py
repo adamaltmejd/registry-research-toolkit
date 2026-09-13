@@ -288,7 +288,11 @@ class TestBuildIntegration:
         )
         import reg_meta_build.db as db_module
 
-        monkeypatch.setattr(db_module, "repo_codeless_overlap_path", lambda: curation)
+        monkeypatch.setattr(
+            db_module,
+            "repo_curation_path",
+            lambda name: curation if name == "codeless_overlap.toml" else None,
+        )
         capped = tmp_path / "capped"
         capped.mkdir()
         conn = build_with_rows(capped, ri, vm)

@@ -2,7 +2,7 @@
 
 A classification is a normalized code system (SUN2000, SSYK2012, SNI2007, ...)
 that groups the value codes produced by many variable instances. The seed at
-``reg_meta_build/classifications.toml`` declares one entry per code system and
+``reg_meta_build/curation/classifications.toml`` declares one entry per code system and
 lists the raw ``variable_instance.vardemangdsversion`` strings that map to it.
 
 Runtime never loads the seed — query commands read the already-populated
@@ -17,17 +17,18 @@ import sys
 import time
 import tomllib
 from dataclasses import dataclass
-from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
 from reg_meta.db import CLASSIFICATION_SUCCESSION_AS_OF_YEAR
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 
+from ._curation import repo_curation_path
 from .concept_groups import classification_slug_stem
 from .fqid_slugs import _toml_comment, _toml_str
 
 if TYPE_CHECKING:
     import sqlite3
+    from pathlib import Path
 
 # vardemangdsversion is OPTIONAL: a provider-seeded entry may carry canonical
 # codes (via valid_codes_file) with no observed instance-label linkage.
@@ -63,19 +64,6 @@ _CONFIDENT_MIN_CODES = 15  # single-family at/above this auto-links on size alon
 _CONFIDENT_LABEL_AGREE = 0.90  # else rescue a shorter single-family set on labels
 
 
-def repo_seed_path() -> Path | None:
-    """Return the in-repo classifications seed, for build-time use only.
-
-    Located from ``reg_meta_build/src/reg_meta_build/`` up two levels to the
-    ``reg_meta_build/`` package root and down to ``classifications.toml``.
-    Installed wheels do not ship the seed — it is a maintainer artifact,
-    same as ``reg_meta_build/docs/``.
-    """
-    pkg_dir = Path(__file__).resolve().parent
-    candidate = pkg_dir.parent.parent / "classifications.toml"
-    return candidate if candidate.is_file() else None
-
-
 def declared_short_names(seed_path: Path | None = None) -> frozenset[str]:
     """Every classification ``short_name`` declared in the seed, provider-agnostic
     — includes provider-tagged entries (e.g. ``provider = "sos"``), all of which
@@ -83,25 +71,25 @@ def declared_short_names(seed_path: Path | None = None) -> frozenset[str]:
     validation of references to a classification (e.g. a curated thin-provider's
     ``classification`` link).
 
-    ``seed_path`` defaults to the in-repo seed via ``repo_seed_path()``; pass the
+    ``seed_path`` defaults to the in-repo curation seed; pass the
     build's own seed (``build_db(seed_path=...)``) so validation matches what
     ``populate_classifications`` seeds. Resolution mirrors
-    ``materialize``'s ``seed_path or repo_seed_path()`` exactly, keeping the two
+    ``materialize``'s seed resolution exactly, keeping the two
     consistent. Build-time only; raises if the seed is not locatable (an
     installed wheel doesn't ship it — but no build runs there)."""
-    path = seed_path or repo_seed_path()
+    path = seed_path or repo_curation_path("classifications.toml")
     if path is None:
         raise RegMetaError(
             exit_code=EXIT_CONFIG,
             code="classification_seed_unreadable",
             error_class="configuration",
             message=(
-                "classifications.toml seed not found; cannot validate "
+                "curation/classifications.toml seed not found; cannot validate "
                 "classification references."
             ),
             remediation=(
                 "Run build-db from the maintainer repo checkout where "
-                "classifications.toml is present."
+                "curation/classifications.toml is present."
             ),
         )
     return frozenset(entry["short_name"] for entry in load_seed(path))
@@ -722,7 +710,7 @@ def populate_classifications(
                 "that don't occur in the input data:\n" + details
             ),
             remediation=(
-                "Either remove the stale entries from classifications.toml or "
+                "Either remove the stale entries from curation/classifications.toml or "
                 "re-export metadata so the strings match. Enumerate live "
                 "values with: SELECT DISTINCT value_set_version_label FROM "
                 "variable_instance;"
@@ -1803,7 +1791,7 @@ def link_value_set_classifications(conn: sqlite3.Connection) -> dict[str, int]:
 # AND every other candidate is < this floor. Mirrors `_CONFIDENT_LABEL_AGREE`
 # (the detector's own label-precision lever) — a label-unambiguous standalone is
 # exactly the #494-part-2 tier a maintainer copied verbatim into
-# classification_links.toml.
+# curation/classifications.toml.
 _SAFE_LABEL_AGREE = _CONFIDENT_LABEL_AGREE
 
 
@@ -2171,7 +2159,7 @@ def _mixed_state_variable_ids(
 
 def render_residue_toml(result: ResidueResult) -> str:
     """Render the residue worklist as a `[[link]]` TOML string a maintainer curates
-    from — the exact shape `classification_links.toml` accepts, so a CONFIRMED
+    from — the exact shape `curation/classifications.toml` accepts, so a CONFIRMED
     candidate copies across verbatim. Built by hand (not `tomli_w`) so the
     per-value-set evidence `#` comments survive (`tomli_w` drops comments); every
     emitted string value (`variable`, `classification`, `note`) and every value
@@ -2271,7 +2259,7 @@ def render_residue_toml(result: ResidueResult) -> str:
         "# sets with >= 1 still-unclassified (classification_id IS NULL) state. These",
         "# are INFERRED candidates, NOT confirmed links. NOTHING here loads into a",
         "# build — review each and copy ONLY confirmed links into",
-        "# reg_meta_build/classification_links.toml (drop/replace the residue note).",
+        "# reg_meta_build/curation/classifications.toml (drop/replace the residue note).",
         "#",
         f"# {result.total} residual value set(s); "
         f"{result.safe_count} safe-subset (single label-unambiguous standalone).",

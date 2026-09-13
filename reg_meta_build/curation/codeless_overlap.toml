@@ -8,7 +8,7 @@
 # maintainer decision landed here. The build FAILS (EXIT_CONFIG) if any residual
 # overlap has no `[[resolve]]` entry — this file must be mandatory-complete.
 #
-# A maintainer artifact like `codelivery.toml` / the slug TOMLs: it is NOT shipped
+# A maintainer artifact like `curation/codelivery.toml` / the slug TOMLs: it is NOT shipped
 # in wheels (build-db is maintainer-only).
 #
 # Format — one table per residual `(provider, register, variable, column)`:

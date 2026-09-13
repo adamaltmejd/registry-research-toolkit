@@ -1148,7 +1148,7 @@ class TestPopulateClassifications:
         """
         from reg_meta_build import db as build_db_mod
 
-        monkeypatch.setattr(build_db_mod, "repo_seed_path", lambda: None)
+        monkeypatch.setattr(build_db_mod, "repo_curation_path", lambda _name: None)
         input_dir = _make_input_dir(tmp_path)
         db_dir = tmp_path / "db"
         db_dir.mkdir()
@@ -3086,7 +3086,7 @@ class TestCuratedClassificationLinks:
     def test_load_bad_fqid_fails(self, tmp_path: Path) -> None:
         from reg_meta_build.classification_links import load_classification_links
 
-        path = tmp_path / "classification_links.toml"
+        path = tmp_path / "classifications.toml"
         path.write_text(
             '[[link]]\nvariable = "scb/ulf"\nclassification = "ICD-10-SE"\n',
             encoding="utf-8",
@@ -3098,7 +3098,7 @@ class TestCuratedClassificationLinks:
     def test_load_missing_classification_fails(self, tmp_path: Path) -> None:
         from reg_meta_build.classification_links import load_classification_links
 
-        path = tmp_path / "classification_links.toml"
+        path = tmp_path / "classifications.toml"
         path.write_text('[[link]]\nvariable = "scb/ulf/ha0611m"\n', encoding="utf-8")
         with pytest.raises(RegMetaError) as ei:
             load_classification_links(path)
@@ -3107,7 +3107,7 @@ class TestCuratedClassificationLinks:
     def test_load_duplicate_variable_fails(self, tmp_path: Path) -> None:
         from reg_meta_build.classification_links import load_classification_links
 
-        path = tmp_path / "classification_links.toml"
+        path = tmp_path / "classifications.toml"
         path.write_text(
             '[[link]]\nvariable = "scb/ulf/ha0611m"\nclassification = "ICD-10-SE"\n'
             '[[link]]\nvariable = "scb/ulf/ha0611m"\nclassification = "OTHER"\n',
@@ -3122,7 +3122,7 @@ class TestCuratedClassificationLinks:
 
         assert load_classification_links(None) == ()
         assert load_classification_links(tmp_path / "absent.toml") == ()
-        empty = tmp_path / "classification_links.toml"
+        empty = tmp_path / "classifications.toml"
         empty.write_text("# only comments\n", encoding="utf-8")
         assert load_classification_links(empty) == ()
 
@@ -3132,7 +3132,7 @@ class TestCuratedClassificationLinks:
         drift is caught here.
 
         Reconstructs the repo path directly (not via
-        `repo_classification_links_path()`): the session-scoped
+        the shared curation resolver): the session-scoped
         `_no_repo_curation` autouse fixture patches that getter to `None` so
         synthetic builds see no curation, which would otherwise mask the shipped
         file from this assertion."""
@@ -3140,8 +3140,12 @@ class TestCuratedClassificationLinks:
 
         from reg_meta_build.classification_links import load_classification_links
 
-        path = Path(__file__).resolve().parent.parent / "classification_links.toml"
-        assert path.is_file(), "classification_links.toml must ship in the repo"
+        path = (
+            Path(__file__).resolve().parent.parent
+            / "curation"
+            / "classifications.toml"
+        )
+        assert path.is_file(), "curation/classifications.toml must ship in the repo"
         expected = {
             ("scb", "ureg", "isced2011niva"): "ISCED2011",
             ("scb", "ureg", "isced-f-2013"): "ISCED-F2013",
@@ -3660,7 +3664,7 @@ class TestClassificationResidueCli:
         assert summary["output_toml"] == str(out_toml.resolve())
 
         # The emitted worklist's [[link]] block re-parses through the curated loader
-        # — a confirmed safe candidate copies into classification_links.toml verbatim.
+        # — a confirmed safe candidate copies into curation/classifications.toml.
         links = load_classification_links(out_toml)
         assert [
             (e.provider, e.register, e.variable, e.classification) for e in links
@@ -3690,12 +3694,12 @@ class TestClassificationResidueCli:
 
 class TestRepoClassificationCsvSnapshots:
     def test_icd11_and_sni2025_csvs_load_from_repo_seed(self):
-        from reg_meta_build.classifications import repo_seed_path
+        from reg_meta_build._curation import repo_curation_path
 
-        seed_path = repo_seed_path()
+        seed_path = repo_curation_path("classifications.toml")
         assert seed_path is not None
         entries = {entry["short_name"]: entry for entry in load_seed(seed_path)}
-        cls_dir = seed_path.parent / "input_data" / "classifications"
+        cls_dir = seed_path.parent.parent / "input_data" / "classifications"
 
         assert entries["ICD-11-SE"]["valid_codes_file"] == "sos/icd-11-se.csv"
         assert entries["ICD-11-SE"]["valid_from"] == 2027
@@ -3720,13 +3724,13 @@ class TestRepoClassificationCsvSnapshots:
         """The real merged `sos/kva.csv` (KMÅ ∪ KKÅ, deduped on the 50 shared
         chapter headers) loads into ONE `KVA` classification with codes and
         WITHOUT a duplicate-code `RegMetaError` — proving the merge deduped."""
-        from reg_meta_build.classifications import (
-            populate_classifications,
-            repo_seed_path,
-        )
+        from reg_meta_build._curation import repo_curation_path
+        from reg_meta_build.classifications import populate_classifications
         from reg_meta_build.db import DDL
 
-        cls_dir = repo_seed_path().parent / "input_data" / "classifications"
+        seed_path = repo_curation_path("classifications.toml")
+        assert seed_path is not None
+        cls_dir = seed_path.parent.parent / "input_data" / "classifications"
         assert (cls_dir / "sos" / "kva.csv").is_file(), "merged kva.csv must exist"
 
         seed = tmp_path / "classifications.toml"

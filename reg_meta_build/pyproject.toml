@@ -34,7 +34,8 @@ reg-meta-build = "reg_meta_build.cli:main"
 [tool.hatch.build.targets.wheel]
 packages = ["src/reg_meta_build"]
 
-# Curated TOMLs (fqid_slugs/, classifications.toml) and source CSVs
+# Maintainer inputs (curation/, fqid_slugs/, input_data/) are intentionally excluded;
+# this package builds databases but does not ship its source corpus.
 # (input_data/) live in this package directory as maintainer-edited assets.
 # They are NOT bundled into the wheel — end users consume the prebuilt
 # reg_meta.db downloaded via `reg-meta update`.

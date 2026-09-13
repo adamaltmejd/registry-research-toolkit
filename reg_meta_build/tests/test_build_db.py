@@ -166,6 +166,9 @@ class TestBuildDb:
         manifest = get_manifest(db_conn)
         assert manifest["schema_version"] == SCHEMA_VERSION
         assert "import_date" in manifest
+        row_counts = json.loads(manifest["row_counts"])
+        assert "period_family_merges" in row_counts
+        assert "monthly_family_merges" not in row_counts
 
     def test_register_count(self, db_conn: sqlite3.Connection):
         count = db_conn.execute("SELECT COUNT(*) FROM register").fetchone()[0]
@@ -415,7 +418,7 @@ class TestBuildDb:
         """End-to-end: the full build_db pipeline materializes a
         `variable_state_lineage` edge. OTHERREG's Kön (consumer, sourced from
         TESTREG, year 2021) joins TESTREG's value-set-bearing Kön state
-        (2020-2021, `individer` variant pinned via `[lineage_defaults]`); the
+        (2020-2021, in the only source variant `individer`); the
         interval intersection clips to the consumer's 2021. Proves pipeline
         ordering + `slug_root` plumbing, not just the unit-level linker."""
         rows = db_conn.execute(
@@ -1667,9 +1670,13 @@ class TestSameAsBuildIntegration:
         write_scb_input(input_dir)
         self._write_slug_dir(slug_dir)
         rel_path = self._write_relations(tmp_path)
-        # The shared fixture stubs `repo_relations_path` to None; point it at the
+        # The shared fixture stubs the curation resolver to None; point it at the
         # test's curated edge so the same_as pass materializes it.
-        monkeypatch.setattr(_db, "repo_relations_path", lambda: rel_path)
+        monkeypatch.setattr(
+            _db,
+            "repo_curation_path",
+            lambda name: rel_path if name == "relations.toml" else None,
+        )
         build_db(
             input_dir=input_dir,
             db_dir=db_dir,
@@ -1717,7 +1724,11 @@ class TestSameAsBuildIntegration:
         write_scb_input(input_dir)
         self._write_slug_dir(slug_dir)
         rel_path = self._write_relations(tmp_path)
-        monkeypatch.setattr(_db, "repo_relations_path", lambda: rel_path)
+        monkeypatch.setattr(
+            _db,
+            "repo_curation_path",
+            lambda name: rel_path if name == "relations.toml" else None,
+        )
         build_db(
             input_dir=input_dir,
             db_dir=db_dir,
@@ -3385,7 +3396,7 @@ class TestReplacedByEdges:
         ``registerinformation_rows=None`` uses the standard fixture; pass a
         custom list (e.g. to inject a triage split) to vary the variables.
         ``relations_extra`` is written to a ``relations.toml`` whose
-        ``repo_relations_path`` is patched in (e.g. `[[edge]] type="replaced_by"`
+        the curation resolver is patched (e.g. `[[edge]] type="replaced_by"`
         succession rows for the #440/#522 curated tests); requires
         ``monkeypatch``.
         """
@@ -3405,7 +3416,11 @@ class TestReplacedByEdges:
             assert monkeypatch is not None, "relations_extra requires monkeypatch"
             rel_path = tmp_path / "relations.toml"
             rel_path.write_text(relations_extra, encoding="utf-8")
-            monkeypatch.setattr(_db, "repo_relations_path", lambda: rel_path)
+            monkeypatch.setattr(
+                _db,
+                "repo_curation_path",
+                lambda name: rel_path if name == "relations.toml" else None,
+            )
         build_db(
             input_dir=input_dir,
             db_dir=db_dir,
@@ -4628,11 +4643,15 @@ class TestScbErrataBuild:
     ) -> dict:
         """Run a real build with `errata_toml` standing in for the committed
         `scb_errata.toml`, and return the shipped manifest."""
-        import reg_meta_build.scb_errata as _se
+        import reg_meta_build.db as _db
 
         path = tmp_path / "scb_errata.toml"
         path.write_text(errata_toml, encoding="utf-8")
-        monkeypatch.setattr(_se, "repo_scb_errata_path", lambda: path)
+        monkeypatch.setattr(
+            _db,
+            "repo_curation_path",
+            lambda name: path if name == "scb_errata.toml" else None,
+        )
 
         input_dir = tmp_path / "input"
         db_dir = tmp_path / "db"

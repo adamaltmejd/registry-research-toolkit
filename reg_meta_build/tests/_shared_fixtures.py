@@ -61,69 +61,13 @@ def _no_repo_curation() -> Iterator[None]:
     the session-scoped `fixture_db` build; tests that exercise a curation surface
     monkeypatch their own file path on top (function-scoped, applied after, undone
     per test)."""
-    import reg_meta_build.codelivery as _cd
-    import reg_meta_build.concept_groups as _cg
     import reg_meta_build.db as _db
-    import reg_meta_build.delivery_enrichment as _de
-    import reg_meta_build.period_family_merges as _fm
-    import reg_meta_build.relations as _rel
-    import reg_meta_build.tags as _tg
 
     mp = pytest.MonkeyPatch()
-    mp.setattr(_cd, "repo_codelivery_path", lambda: None)
-    # concept_groups.toml references real registers (scb/lisa) by SLUG, and the
-    # materializer fails fast on a dangling reference — which every synthetic
-    # fixture build would be. `db.materialize` imported the symbol directly, so
-    # patch it there too.
-    mp.setattr(_cg, "repo_concept_groups_path", lambda: None)
-    mp.setattr(_db, "repo_concept_groups_path", lambda: None)
-    # code_label_pairs.toml (#923) references real scb slugs by FQID; the build
-    # fails LOUD on a dangling reference or a failed structural guard, so a
-    # synthetic build must see an empty file. db.py imported the symbol directly —
-    # patch it there too.
-    mp.setattr(_cg, "repo_code_label_pairs_path", lambda: None)
-    mp.setattr(_db, "repo_code_label_pairs_path", lambda: None)
-    # delivery_enrichment.toml's backfills are keyed on real scb slugs; against a
-    # fixture DB every one is unresolved (lenient, but 383 wasted lookups + a
-    # warning per build). db.py imported the symbol directly — patch it there.
-    mp.setattr(_de, "repo_delivery_enrichment_path", lambda: None)
-    mp.setattr(_db, "repo_delivery_enrichment_path", lambda: None)
-    # tags.toml (#311) references real scb slugs; the materializer fails LOUD on a
-    # dangling reference, so a synthetic build must see an empty file. db.py
-    # imported the symbol directly — patch it there too.
-    mp.setattr(_tg, "repo_tags_path", lambda: None)
-    mp.setattr(_db, "repo_tags_path", lambda: None)
-    # curation/period_family_merges.toml (#319) merges real LISA month columns; the
-    # materializer fails LOUD if a curated stem doesn't resolve, so a synthetic build
-    # must see an empty file. db.py imported the symbol directly — patch it there too.
-    mp.setattr(_fm, "repo_period_family_merges_path", lambda: None)
-    mp.setattr(_db, "repo_period_family_merges_path", lambda: None)
-    # relations.toml (#522) is the typed `[[edge]]` surface for the curated
-    # pairwise relations (same_as / replaced_by). It carries real
-    # scb/sos slugs (the moved #375 succession edges); every
-    # materializer fails LOUD on a dangling/unknown endpoint, so a synthetic
-    # build must see an empty file. db.py imported `repo_relations_path` directly
-    # — patch it there too. (`_rel` patch covers any callers that resolve the
-    # path through the relations module.)
-    mp.setattr(_rel, "repo_relations_path", lambda: None)
-    mp.setattr(_db, "repo_relations_path", lambda: None)
-    # classification_links.toml (#416/#494) links real scb variables to seeded
-    # classifications; `materialize_classification_links` fails LOUD on an
-    # unresolved FQID, so a synthetic build must see an empty file. Latent until
-    # #494 populated it. db.py imported the symbol directly — patch it there too.
-    import reg_meta_build.classification_links as _cl
-
-    mp.setattr(_cl, "repo_classification_links_path", lambda: None)
-    mp.setattr(_db, "repo_classification_links_path", lambda: None)
-    # scb_errata.toml (Y-114/Y-116) names real scb registers/variants by SLUG and
-    # its entries are STRICT (an unknown variant, an undocumented version, a
-    # [[delivered]] column with no real row or a [[column]] that now has one fails
-    # the build) — against a fixture export every one of them would. db.py
-    # LOCAL-imports the symbol (like codelivery), so patching the module alone
-    # suffices.
-    import reg_meta_build.scb_errata as _se
-
-    mp.setattr(_se, "repo_scb_errata_path", lambda: None)
+    # Every catalog overlay now resolves through this one build-time boundary.
+    # Synthetic builds pass their classification seed explicitly and otherwise
+    # need an empty curation directory so real-corpus FQIDs cannot bind fixtures.
+    mp.setattr(_db, "repo_curation_path", lambda _name: None)
     yield
     mp.undo()
 
@@ -165,13 +109,7 @@ def _write_fixture_slug_dir(slug_dir: Path) -> None:
     table stays empty, so the empty `classifications.toml` clears
     `populate_slugs`'s strict coverage check (no rows = no NULL slugs).
     """
-    # Lineage default: OTHERREG's Kön (sourced from TESTREG) pins to
-    # TESTREG's `individer` variant, so the e2e build materializes a
-    # variable_state_lineage edge (asserted in test_build_db.py). Without the
-    # pin the consumer would hit the single-variant fallback (TESTREG has only
-    # `individer`), which is silent — the explicit pin exercises the curated path.
     (slug_dir / "scb.toml").write_text(
-        '[lineage_defaults]\ntestreg = "individer"\n'
         '[register."1"]\nslug = "testreg"\n'
         '[register."2"]\nslug = "otherreg"\n'
         '[register_variant."1.10"]\nslug = "individer"\n'

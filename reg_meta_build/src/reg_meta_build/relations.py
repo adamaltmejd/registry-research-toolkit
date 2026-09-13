@@ -38,7 +38,7 @@ loader accepts — so a confirmed candidate copies across into
 `curation/relations.toml` verbatim. The boundary is text, not symbols: the
 generator imports nothing from here, and the round-trip is the TOML grammar.
 
-Like the other curation TOMLs (`concept_groups.toml`, `codelivery.toml`) the file
+Like the other curation TOMLs (`curation/concept_groups.toml`, `curation/codelivery.toml`) the file
 is a maintainer artifact — absent in wheel installs and synthetic test builds.
 """
 
@@ -47,7 +47,6 @@ from __future__ import annotations
 import functools
 import re
 from dataclasses import dataclass
-from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
 from reg_meta.fqid import (
@@ -69,6 +68,7 @@ from ._curation import (
 if TYPE_CHECKING:
     import sqlite3
     from collections.abc import Iterable
+    from pathlib import Path
 
 # ── relation kind vocabularies ──────────────────────────────────────────────
 
@@ -292,17 +292,6 @@ def _variable_vintage_stream_key(
 # ---------------------------------------------------------------------------
 # Loading
 # ---------------------------------------------------------------------------
-
-
-def repo_relations_path() -> Path | None:
-    """`reg_meta_build/curation/relations.toml` from a repo checkout, or None
-    (wheel installs don't ship curation — it's a maintainer artifact like the
-    slug TOMLs). Lives under `curation/` (cross-provider), beside
-    `period_family_merges.toml`."""
-    candidate = (
-        Path(__file__).resolve().parent.parent.parent / "curation" / "relations.toml"
-    )
-    return candidate if candidate.is_file() else None
 
 
 _require_fqid_variable = functools.partial(
@@ -856,7 +845,7 @@ def load_relations(path: Path | None) -> CuratedRelations:
 def _classification_slugs(conn: sqlite3.Connection) -> set[_ClassKey]:
     """Live `(provider, classification_slug)` pairs — the universe a curated
     classification same_as endpoint must resolve into. Classifications carry no
-    provider in classifications.toml; the publisher field is the provider."""
+    provider in curation/classifications.toml; the publisher field is the provider."""
     out: set[_ClassKey] = set()
     for slug, publisher in conn.execute(
         "SELECT slug, publisher FROM classification WHERE slug IS NOT NULL"

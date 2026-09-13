@@ -3,7 +3,7 @@
 Gap-fill catalog facts extracted from steward delivery / variable lists that
 describe the **shared** SCB/SOS world — not steward-private content — curated
 into a committed TOML and applied to the normal *global* build. Two entry kinds
-ship today, both in ``delivery_enrichment.toml``:
+ship today, both in ``curation/delivery_enrichment.generated.toml``:
 
 * ``[[description]]`` (PR1a) — fill an EMPTY ``variable.description`` from the
   delivery list's prose.
@@ -16,7 +16,7 @@ ship today, both in ``delivery_enrichment.toml``:
   must be in ``variable_alias``; the reverse is not required).
 
 (Gap-fill — minting a variable for a column SCB documents nowhere — is
-`scb_errata.toml`'s `[[column]]`, not this surface.)
+`curation/scb_errata.toml`'s `[[column]]`, not this surface.)
 
 Scope follows what a fact is *about*, not where it was learned (revised
 2026-06-12, #365): a description of an AGI column is an AGI fact regardless of
@@ -31,28 +31,23 @@ which project's delivery list surfaced it. Two guards keep that honest:
   ``(register, variable)`` key, a malformed FQID — fails the build (EXIT_CONFIG),
   like the other curation surfaces.
 
-**Deliberate deviation from `concept_groups` strictness:** a backfill whose
-``(register, variable)`` no longer *resolves* against the built DB is skipped
-with a warning and counted, NOT a build failure. Rationale: pre-v1 variable
-slugs regenerate each build while their provider zone is `churning` (#470), and
-a description backfill is non-structural — making the global build fragile to one
-stale enrichment row would trade a real robustness loss for a cosmetic gain. The
-unresolved count surfaces in the build summary so drift stays visible; regenerate
-the TOML from the delivery lists when it grows.
+Reference resolution follows the catalog-overlay rule: an entry for a provider
+included in the build must resolve or the build fails with ``EXIT_CONFIG``; an
+entry for an excluded provider is skipped and counted. Shape is always validated
+when the file is loaded, before provider gating.
 """
 
 from __future__ import annotations
 
 import functools
 from dataclasses import dataclass
-from pathlib import Path
 from typing import TYPE_CHECKING
 
 from ._curation import curation_error, load_curation_entries, require_str
 
 if TYPE_CHECKING:
     import sqlite3
-    from collections.abc import Callable
+    from pathlib import Path
 
 
 @dataclass(frozen=True)
@@ -94,22 +89,11 @@ class DeliveryEnrichment:
     aliases: tuple[CuratedAlias, ...] = ()
 
 
-def repo_delivery_enrichment_path() -> Path | None:
-    """``reg_meta_build/delivery_enrichment.toml`` from a repo checkout, or None
-    (wheel installs don't ship curation — it's a maintainer artifact like the
-    slug TOMLs and ``concept_groups.toml``). Sits at the package root, NOT under
-    ``fqid_slugs/`` (that dir is glob-loaded as provider-slug TOMLs)."""
-    candidate = (
-        Path(__file__).resolve().parent.parent.parent / "delivery_enrichment.toml"
-    )
-    return candidate if candidate.is_file() else None
-
-
 _require_str = functools.partial(
     require_str,
     code="delivery_enrichment_invalid",
     prefix="delivery_enrichment",
-    file_name="delivery_enrichment.toml",
+    file_name="curation/delivery_enrichment.generated.toml",
 )
 
 
@@ -117,8 +101,8 @@ def _parse_register_variable(entry: dict, kind: str) -> tuple[str, str, str]:
     """Validate + split the shared ``register`` (2-segment ``provider/register``
     FQID) and ``variable`` (single register-local slug) fields. Returns
     ``(provider, register, variable)``. A multi-segment ``variable`` (``foo/bar``)
-    is a maintainer typo and fails the strict load rather than being silently
-    counted unresolved later."""
+    is a maintainer typo and fails the strict load rather than surfacing later
+    as an unresolved target."""
     register_fqid = _require_str(entry, "register", kind)
     parts = register_fqid.split("/")
     if len(parts) != 2 or not all(parts):
@@ -155,7 +139,7 @@ def load_delivery_enrichment(path: Path | None) -> DeliveryEnrichment:
         label="delivery-enrichment",
         prefix="delivery_enrichment",
         code_base="delivery_enrichment",
-        file_name="delivery_enrichment.toml",
+        file_name="curation/delivery_enrichment.generated.toml",
         entry_fields="register / variable / description",
         sibling_keys=frozenset({"alias"}),
     )
@@ -177,7 +161,7 @@ def load_delivery_enrichment(path: Path | None) -> DeliveryEnrichment:
                 f"{provider}/{register}/{variable}.",
                 "Each (register, variable) may have at most one [[description]] "
                 "— resolve the conflicting rows in "
-                "reg_meta_build/delivery_enrichment.toml.",
+                "reg_meta_build/curation/delivery_enrichment.generated.toml.",
             )
         seen.add(scope_key)
         out.append(
@@ -213,7 +197,7 @@ def _load_aliases(path: Path | None) -> tuple[CuratedAlias, ...]:
         label="delivery-enrichment",
         prefix="delivery_enrichment",
         code_base="delivery_enrichment",
-        file_name="delivery_enrichment.toml",
+        file_name="curation/delivery_enrichment.generated.toml",
         entry_fields="register / variable / delivery_column",
         sibling_keys=frozenset({"description"}),
     )
@@ -249,14 +233,9 @@ def _load_aliases(path: Path | None) -> tuple[CuratedAlias, ...]:
 def _apply_description_backfills(
     conn: sqlite3.Connection,
     backfills: tuple[DescriptionBackfill, ...],
-    warn: Callable[[str], None],
 ) -> dict[str, int]:
-    """Fill empty ``variable.description`` from the curated backfills. Resolution
-    is lenient (see the module docstring): an entry whose register or variable
-    does not resolve is counted ``unresolved`` and skipped, never a build
-    failure. ``applied`` = rows whose empty description we filled; ``skipped`` =
-    target already had a non-empty description (gap-fill only)."""
-    counts = {"applied": 0, "skipped": 0, "unresolved": 0}
+    """Fill empty descriptions; a dangling included-provider target is drift."""
+    counts = {"applied": 0, "skipped": 0}
     for bf in backfills:
         row = conn.execute(
             "SELECT v.variable_id, v.description FROM variable v "
@@ -266,8 +245,14 @@ def _apply_description_backfills(
             (bf.provider, bf.register, bf.variable),
         ).fetchone()
         if row is None:
-            counts["unresolved"] += 1
-            continue
+            raise curation_error(
+                "delivery_enrichment_unresolved",
+                "delivery_enrichment description target "
+                f"{bf.provider}/{bf.register}/{bf.variable} does not resolve.",
+                "Fix the target in reg_meta_build/curation/"
+                "delivery_enrichment.generated.toml or regenerate it from "
+                "the named source input.",
+            )
         variable_id, existing = row
         if existing is not None and existing.strip():
             counts["skipped"] += 1
@@ -280,28 +265,18 @@ def _apply_description_backfills(
             (bf.description, variable_id),
         )
         counts["applied"] += cur.rowcount
-    if counts["unresolved"]:
-        warn(
-            f"  WARN delivery-enrichment: {counts['unresolved']:,} description "
-            "backfill(s) did not resolve (slug churn) — regenerate "
-            "delivery_enrichment.toml from the delivery lists"
-        )
     return counts
 
 
 def _apply_aliases(
     conn: sqlite3.Connection,
     aliases: tuple[CuratedAlias, ...],
-    warn: Callable[[str], None],
 ) -> dict[str, int]:
     """Insert curated ``variable_alias`` rows. Each alias is attached to every
-    register_variant in which the target variable has a ``variable_state`` (so
-    the alias surfaces consistently with the delivered data; a variable with no
-    state — e.g. provider absent from this build — is counted ``unresolved``).
-    Lenient like the backfill pass: a slug that doesn't resolve is counted, not
-    fatal. ``INSERT OR IGNORE`` makes it idempotent and skips a column the
-    variant already carries (``skipped``)."""
-    counts = {"applied": 0, "skipped": 0, "unresolved": 0}
+    register_variant in which the target variable has a ``variable_state``.
+    A missing variable or delivered state for an included provider is curation
+    drift and fails. ``INSERT OR IGNORE`` makes the pass idempotent."""
+    counts = {"applied": 0, "skipped": 0}
     for al in aliases:
         variant_rows = conn.execute(
             "SELECT DISTINCT vs.register_variant_id FROM variable_state vs "
@@ -319,8 +294,16 @@ def _apply_aliases(
             (al.provider, al.register, al.variable),
         ).fetchone()
         if variable_row is None or not variant_rows:
-            counts["unresolved"] += 1
-            continue
+            reason = "variable" if variable_row is None else "delivered state"
+            raise curation_error(
+                "delivery_enrichment_unresolved",
+                "delivery_enrichment alias target "
+                f"{al.provider}/{al.register}/{al.variable} has no {reason} "
+                "in this build.",
+                "Fix the target in reg_meta_build/curation/"
+                "delivery_enrichment.generated.toml or regenerate it from "
+                "the named source input.",
+            )
         variable_id = variable_row[0]
         for (register_variant_id,) in variant_rows:
             cur = conn.execute(
@@ -333,12 +316,6 @@ def _apply_aliases(
                 counts["applied"] += 1
             else:
                 counts["skipped"] += 1
-    if counts["unresolved"]:
-        warn(
-            f"  WARN delivery-enrichment: {counts['unresolved']:,} alias(es) did "
-            "not resolve (slug churn / no state) — regenerate "
-            "delivery_enrichment.toml from the delivery lists"
-        )
     return counts
 
 
@@ -347,20 +324,21 @@ def apply_delivery_enrichment(
     enrichment: DeliveryEnrichment,
     *,
     providers: frozenset[str],
-    warn: Callable[[str], None] | None = None,
 ) -> dict[str, int]:
     """Apply the delivery-enrichment overlay to the built DB. ``providers`` gates
     entries to the providers in this build (a ``--providers=sos`` build skips scb
     rows rather than counting them all unresolved), mirroring
     ``materialize_concept_groups``. Runs after ``populate_variable_slugs`` so
     ``(register, variable)`` resolves off stored slugs. Returns merged counts with
-    ``alias_*`` keys for the alias pass."""
-    warn = warn or (lambda _msg: None)
+    ``alias_*`` keys for the alias pass. Excluded-provider entries are counted;
+    included-provider entries resolve strictly."""
     descriptions = tuple(
         bf for bf in enrichment.descriptions if bf.provider in providers
     )
     aliases = tuple(al for al in enrichment.aliases if al.provider in providers)
-    counts = _apply_description_backfills(conn, descriptions, warn)
-    alias_counts = _apply_aliases(conn, aliases, warn)
+    counts = _apply_description_backfills(conn, descriptions)
+    counts["provider_skipped"] = len(enrichment.descriptions) - len(descriptions)
+    alias_counts = _apply_aliases(conn, aliases)
+    alias_counts["provider_skipped"] = len(enrichment.aliases) - len(aliases)
     counts.update({f"alias_{k}": v for k, v in alias_counts.items()})
     return counts

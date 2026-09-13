@@ -196,9 +196,13 @@ class TestGenuineConflictFailsBuild:
             'keep = "Nonexistent coding"\n',
             encoding="utf-8",
         )
-        import reg_meta_build.codelivery as _cd
+        import reg_meta_build.db as _db
 
-        monkeypatch.setattr(_cd, "repo_codelivery_path", lambda: pin)
+        monkeypatch.setattr(
+            _db,
+            "repo_curation_path",
+            lambda name: pin if name == "codelivery.toml" else None,
+        )
 
         with pytest.raises(RegMetaError) as exc:
             build_with_rows(tmp_path, ri, vm)

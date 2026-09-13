@@ -1,0 +1,14 @@
+# Consumer-side navigation lineage pins.
+#
+# Provider association is explicit in each FQID key because register slugs are
+# provider-scoped. A default maps a source-register FQID to its usual source
+# variant. Per-variable overrides use a consumer-variable FQID and name the
+# source register + variant when the default is wrong.
+
+[lineage_defaults]
+"scb/rtb" = "folkbokforda-personer"
+
+# Example override shape:
+# [lineage."scb/lisa/inkomst-pension"]
+# source_register = "rtb"
+# source_variant = "individregister"

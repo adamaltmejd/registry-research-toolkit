@@ -46,7 +46,7 @@ non-empty value names that label.
 from __future__ import annotations
 
 import functools
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 from ._curation import (
     curation_error,
@@ -55,12 +55,15 @@ from ._curation import (
     require_str,
 )
 
+if TYPE_CHECKING:
+    from pathlib import Path
+
 # Bind this loader's error code / prefix / file once (the shared leaf convention).
 _require_str = functools.partial(
     require_str,
     code="codeless_overlap_invalid",
     prefix="codeless_overlap",
-    file_name="codeless_overlap.toml",
+    file_name="curation/codeless_overlap.toml",
 )
 
 # (provider_slug, register_slug, variable_slug, folded-delivery-column) — the
@@ -79,14 +82,6 @@ CodelessOverlapRule = tuple[str, str | None]
 CodelessOverlapMap = dict[CodelessOverlapKey, CodelessOverlapRule]
 
 _RESOLUTIONS = frozenset({"cap", "drop", "extend"})
-
-
-def repo_codeless_overlap_path() -> Path | None:
-    """`reg_meta_build/codeless_overlap.toml` from a repo checkout, or None (wheel
-    installs don't ship curation — it's a maintainer artifact like the slug TOMLs
-    and `codelivery.toml`)."""
-    candidate = Path(__file__).resolve().parent.parent.parent / "codeless_overlap.toml"
-    return candidate if candidate.is_file() else None
 
 
 def load_codeless_overlap(path: Path | None) -> CodelessOverlapMap:
@@ -121,7 +116,7 @@ def load_codeless_overlap(path: Path | None) -> CodelessOverlapMap:
         label="code-less overlap",
         prefix="codeless_overlap",
         code_base="codeless_overlap",
-        file_name="codeless_overlap.toml",
+        file_name="curation/codeless_overlap.toml",
         entry_fields="register / variable / column / resolution",
     )
     out: CodelessOverlapMap = {}
@@ -151,7 +146,7 @@ def load_codeless_overlap(path: Path | None) -> CodelessOverlapMap:
                 "codeless_overlap_invalid",
                 f"codeless_overlap has duplicate [[resolve]] entries for key {key}.",
                 "Give exactly one [[resolve]] entry per (provider, register, variable, "
-                "column) in reg_meta_build/codeless_overlap.toml.",
+                "column) in reg_meta_build/curation/codeless_overlap.toml.",
             )
         resolution = entry.get("resolution")
         if not isinstance(resolution, str) or resolution not in _RESOLUTIONS:

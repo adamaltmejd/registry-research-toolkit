@@ -12,18 +12,6 @@
 # Bootstrap from live data with `reg-meta-build seed-slugs`. Schema and
 # field semantics live in reg_meta_build/DESIGN.md → Slug curation.
 
-# Consumer-side lineage (see reg_meta_build/DESIGN.md → Consumer-side lineage (variable_state_lineage)): source-variant pinning (TOML-only, no SQL table).
-# `[lineage_defaults]` picks the heuristic default source variant per source
-# register; `link_variable_state_lineage` joins LISA/RAMS/... consumer states
-# to these source-register states by validity intersection. Composite registers
-# (LISA, RAMS) source Kön etc. from RTB's folkbokforda-personer variant, not
-# from any of RTB's other variants. Per-variable overrides go in
-# [lineage."<consumer_register>.<variable_slug>"] blocks when a default is wrong
-# (none curated yet — uncurated consumers hit the all-variants fallback + an
-# ambiguous_source_variant warning, surfaced in the build log for curation).
-[lineage_defaults]
-rtb = "folkbokforda-personer"
-
 # Curated succession (`replaced_by`) edges moved to
 # reg_meta_build/curation/relations.toml (#522) — the LISA "Summa annan inkomst"
 # definition-era chain and the näringsgren kontrolluppgift→AGI source switch

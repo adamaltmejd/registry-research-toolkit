@@ -11,8 +11,9 @@ reg-meta update      # downloads package + database (~400 MB compressed)
 ```
 
 Alternatively, build from raw SCB CSV exports (maintainer flow — requires access to
-mikrometadata.scb.se and a repo checkout, since `build-db` reads `classifications.toml`,
-`fqid_slugs/`, and `input_data/SCB/` from the working tree; none of those ship in the
+mikrometadata.scb.se and a repo checkout, since `build-db` reads
+`reg_meta_build/curation/classifications.toml`, `reg_meta_build/fqid_slugs/`, and
+`reg_meta_build/input_data/SCB/` from the working tree; none of those ship in the
 wheel):
 
 ```bash
@@ -74,7 +75,7 @@ Use `--help` on any command or subcommand for full flag documentation.
 
 Build commands (`build-db`, `build-docs`, `seed-slugs`, `precheck-slugs`, `parse-sos`)
 live in the separate `reg_meta_build` package. They are maintainer-only and require a
-repo checkout (the wheel does not ship `classifications.toml`, `fqid_slugs/`, or
+repo checkout (the wheel does not ship `curation/`, `fqid_slugs/`, `input_data/`, or
 `docs/`); see the `reg_meta_build` README for the build flow.
 
 ## Output formats

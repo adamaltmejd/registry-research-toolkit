@@ -11,7 +11,7 @@ table at row 12+:
 Each data row contributes three LKF codes — the 2-digit län, the 4-digit
 kommun, and the 6-digit församling — all of which appear together in
 register data. The output is one canonical CSV per year, ready to wire
-into ``classifications.toml`` as ``valid_codes_file = "lkf{YEAR}.csv"``.
+into ``curation/classifications.toml`` as ``valid_codes_file = "lkf{YEAR}.csv"``.
 
 Coverage (as of probing in 2026-04):
 
@@ -38,7 +38,7 @@ Usage:
     uv run --with openpyxl --with xlrd python scripts/extract_lkf.py \\
         --out reg_meta_build/input_data/classifications/
 
-Add --emit-toml to print seed entries for classifications.toml on stderr.
+Add --emit-toml to print seed entries for curation/classifications.toml on stderr.
 """
 
 from __future__ import annotations
@@ -311,7 +311,7 @@ def write_csv(year: int, codes: dict[str, str], out_dir: Path) -> Path:
 def emit_toml_entry(year: int) -> str:
     """Emit a [[classification]] block for LKF{year}."""
     # The vardemangdsversion strings are inconsistent across years — see
-    # the existing LKF entry in classifications.toml for the variants.
+    # the existing LKF entry in curation/classifications.toml for the variants.
     # The script prints a starter; reconcile against actual observed
     # strings before committing.
     #
@@ -368,7 +368,7 @@ def main() -> int:
     p.add_argument(
         "--emit-toml",
         action="store_true",
-        help="Print starter classifications.toml entries on stderr.",
+        help="Print starter curation/classifications.toml entries on stderr.",
     )
     p.add_argument(
         "--download-pdfs",

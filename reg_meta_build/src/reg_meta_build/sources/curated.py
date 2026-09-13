@@ -352,10 +352,10 @@ class CuratedAdapter:
                             f"{path.name}: register {reg.key!r} variable "
                             f"{var.name!r}: classification {var.classification!r} "
                             f"is not a declared classification "
-                            f"(classifications.toml).",
+                            f"(curation/classifications.toml).",
                             "Use an existing classification short_name (e.g. "
                             "'ICD-10-SE', 'ATC') or declare it in "
-                            "classifications.toml.",
+                            "curation/classifications.toml.",
                         )
         return registers
 

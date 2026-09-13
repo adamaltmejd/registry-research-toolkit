@@ -5,8 +5,8 @@ see `DESIGN.md` § "Classifications" → "Canonical codes and state conformance"
 
 ## How it works
 
-Each `[[classification]]` in `reg_meta_build/classifications.toml` may declare a
-`valid_codes_file = "<filename>.csv"`. The CSV lives under
+Each `[[classification]]` in `reg_meta_build/curation/classifications.toml` may declare
+a `valid_codes_file = "<filename>.csv"`. The CSV lives under
 `reg_meta_build/input_data/classifications/` (tracked in git; SCB-sourced CSVs live at
 the top level, SOS CSVs under `sos/`). At build time:
 
@@ -53,7 +53,7 @@ A01,Tyfoidfeber,Typhoid fever,A00-A09
 2. Save as `reg_meta_build/input_data/classifications/<short_name>.csv` with the header
    above and commit it.
 3. Add `valid_codes_file = "<short_name>.csv"` to the matching seed entry in
-   `reg_meta_build/classifications.toml`.
+   `reg_meta_build/curation/classifications.toml`.
 4. Run `reg-meta-build build-db --input-dir reg_meta_build/input_data/`. Build output
    reports per-classification canonical coverage and persisted per-state conformance
    evidence for observed non-canonical codes.
@@ -64,7 +64,7 @@ A01,Tyfoidfeber,Typhoid fever,A00-A09
 ## Status overview
 
 81 classifications (47 per-year LKF entries + 23 SCB-sourced others + 11 SOS code
-systems). All currently declared in `classifications.toml` ship with a
+systems). All currently declared in `curation/classifications.toml` ship with a
 `valid_codes_file`.
 
 ### SCB-sourced classifications
@@ -393,8 +393,8 @@ merge).
 
 Then add `LKF{year}` seed entries (`--emit-toml` prints starters; the year-string
 variants need to be reconciled against the existing LKF entry in
-`classifications.toml`). The current single `LKF` entry should then be removed, with
-each year's `value_set_version_label` strings moved to the appropriate `LKF{year}`
+`curation/classifications.toml`). The current single `LKF` entry should then be removed,
+with each year's `value_set_version_label` strings moved to the appropriate `LKF{year}`
 entry.
 
 ### Education — ISCED 2011

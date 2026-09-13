@@ -4,9 +4,9 @@ A maintainer-curated tag vocabulary (income, employment, education, health, …)
 attached across providers/registers so a researcher can find candidates without
 already knowing which register to look in. Orthogonal to `concept_groups`, which
 folds column families *structurally* within ONE register; this layer is
-*thematic* across registers. Both are package-root curated overlays that leave
-identity untouched — same family, two files (`concept_groups.toml` /
-`tags.toml`).
+*thematic* across registers. Both are catalog overlays under ``curation/`` that
+leave identity untouched — same family, two files (`curation/concept_groups.toml` /
+`curation/tags.toml`).
 
 ONE global vocabulary (a tag slug is globally unique — cross-register discovery
 is the whole point) + ONE polymorphic membership table:
@@ -16,10 +16,10 @@ is the whole point) + ONE polymorphic membership table:
   `starred` flags a recommended variable and `note` carries the one-line
   rationale curation can give (and popularity can't).
 
-The committed `tags.toml` starts with a small SCB-heavy seed and can grow by
+The committed `curation/tags.toml` starts with a small SCB-heavy seed and can grow by
 reviewed entries. Wheel installs and synthetic test builds may still omit the
 file, in which case the tables materialize empty. A *structural* defect in
-`tags.toml` (bad shape, duplicate member, dangling reference) fails the build
+`curation/tags.toml` (bad shape, duplicate member, dangling reference) fails the build
 (EXIT_CONFIG), like the other curation surfaces — curation drift must be fixed,
 not silently dropped.
 """
@@ -29,7 +29,6 @@ from __future__ import annotations
 import functools
 import sqlite3
 from dataclasses import dataclass
-from pathlib import Path
 from typing import TYPE_CHECKING
 
 from ._curation import (
@@ -42,6 +41,7 @@ from ._curation import (
 
 if TYPE_CHECKING:
     from collections.abc import Callable
+    from pathlib import Path
 
 
 @dataclass(frozen=True)
@@ -72,21 +72,11 @@ class CuratedTag:
     members: tuple[TagMember, ...]
 
 
-def repo_tags_path() -> Path | None:
-    """`reg_meta_build/tags.toml` from a repo checkout, or None (wheel installs
-    don't ship curation — it's a maintainer artifact like the slug TOMLs and
-    `concept_groups.toml`). Sits at the package root, NOT under `fqid_slugs/`
-    (that dir is identity curation, glob-loaded as provider-slug TOMLs; tags are a
-    presentation/discovery overlay)."""
-    candidate = Path(__file__).resolve().parent.parent.parent / "tags.toml"
-    return candidate if candidate.is_file() else None
-
-
 _require_str = functools.partial(
     require_str,
     code="tags_invalid",
     prefix="tags",
-    file_name="tags.toml",
+    file_name="curation/tags.toml",
 )
 
 
@@ -98,7 +88,8 @@ def _optional_str(entry: dict, field: str, context: str) -> str | None:
         raise curation_error(
             "tags_invalid",
             f"tags {context} `{field}` must be a string, got {value!r}.",
-            f"Give `{field}` as a string or omit it in reg_meta_build/tags.toml.",
+            f"Give `{field}` as a string or omit it in "
+            "reg_meta_build/curation/tags.toml.",
         )
     return value
 
@@ -119,7 +110,7 @@ def load_tags(path: Path | None) -> tuple[CuratedTag, ...]:
         label="tag",
         prefix="tags",
         code_base="tags",
-        file_name="tags.toml",
+        file_name="curation/tags.toml",
         entry_fields="slug / label / members",
     )
     out: list[CuratedTag] = []
@@ -133,7 +124,7 @@ def load_tags(path: Path | None) -> tuple[CuratedTag, ...]:
                 "tags_invalid",
                 f"tags duplicate slug {slug!r}.",
                 "Tag slugs are a GLOBAL vocabulary — each must be unique in "
-                "reg_meta_build/tags.toml.",
+                "reg_meta_build/curation/tags.toml.",
             )
         seen_slugs.add(slug)
         raw_members = entry.get("member", [])
@@ -283,7 +274,7 @@ def materialize_tags(
                         "tags_unresolved",
                         f"{mctx}: variable {m.provider}/{m.register}/{m.variable!r} "
                         "does not resolve.",
-                        "Fix the member FQID in reg_meta_build/tags.toml.",
+                        "Fix the member FQID in reg_meta_build/curation/tags.toml.",
                     )
             else:
                 register_id = resolve_register_id(conn, m.provider, m.register)
@@ -292,7 +283,7 @@ def materialize_tags(
                         "tags_unresolved",
                         f"{mctx}: register {m.provider}/{m.register!r} does not "
                         "resolve.",
-                        "Fix the member FQID in reg_meta_build/tags.toml.",
+                        "Fix the member FQID in reg_meta_build/curation/tags.toml.",
                     )
                 variable_id = None
             try:
@@ -308,7 +299,7 @@ def materialize_tags(
                     f"{ctx}: member resolves to a (tag, register/variable) pair "
                     "already in this tag.",
                     "Each register/variable may appear at most once per tag in "
-                    "reg_meta_build/tags.toml.",
+                    "reg_meta_build/curation/tags.toml.",
                 ) from exc
             counts["members"] += 1
         counts["tags"] += 1

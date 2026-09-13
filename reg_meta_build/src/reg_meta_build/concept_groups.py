@@ -40,7 +40,7 @@ never claims an already-grouped member):
    ``derive_classification_succession``. The ``concept_group_classification``
    table and the ``kind='classification'`` machinery are RETAINED (empty of
    derived rows) for the curated umbrella groups #516 adds later.
-2. ``curated`` — maintainer TOML (``reg_meta_build/concept_groups.toml``), three
+2. ``curated`` — maintainer TOML (``reg_meta_build/curation/concept_groups.toml``), three
    opt-in entry kinds:
    - ``[[variable_group]]`` — a hand-authored family with an exact member list.
      A SINGLE-axis family (the legacy shape) declares one ``axis`` and attaches
@@ -81,11 +81,11 @@ import re
 import sqlite3
 from dataclasses import dataclass
 from itertools import pairwise
-from pathlib import Path
 from typing import TYPE_CHECKING, Literal
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Iterable
+    from pathlib import Path
 
 from ._components import DisjointSet
 from ._curation import (
@@ -201,7 +201,7 @@ class CuratedGroup:
     family (the iot disposable-income group) N.
     `origin` records how it was authored so `_apply_curated_groups` can tailor its
     EXIT_CONFIG remediations: a hand-authored `[[variable_group]]` (the default)
-    points the maintainer at `concept_groups.toml`; an `[[accept]]`-resolved family
+    points the maintainer at `curation/concept_groups.toml`; an `[[accept]]`-resolved family
     (`resolve_accept` sets `origin="accept"`) points at the `[[accept]]` /
     `concept_groups.auto.toml` instead, since its key/register/members come from the
     generated catalog, not a hand-picked curated key."""
@@ -217,7 +217,7 @@ class CuratedGroup:
 
 @dataclass(frozen=True)
 class Accept:
-    """One `[[accept]]` entry from `concept_groups.toml` (#496): an OPT-IN to
+    """One `[[accept]]` entry from `curation/concept_groups.toml` (#496): an OPT-IN to
     fold an auto family from `concept_groups.auto.toml` BY REFERENCE. The
     `(provider, register, key)` locates the auto family; `label`/`axis` override
     the auto family's when set; `exclude` drops member slugs (a stem that picked
@@ -288,44 +288,11 @@ class CodeLabelPair:
     label_variable: str
 
 
-def repo_concept_groups_path() -> Path | None:
-    """`reg_meta_build/concept_groups.toml` from a repo checkout, or None
-    (wheel installs don't ship curation — it's a maintainer artifact like the
-    slug TOMLs). Sits at the package root, NOT under `fqid_slugs/` (that dir
-    is glob-loaded as provider-slug TOMLs; a file there would break the
-    build)."""
-    candidate = Path(__file__).resolve().parent.parent.parent / "concept_groups.toml"
-    return candidate if candidate.is_file() else None
-
-
-def repo_concept_groups_auto_path() -> Path | None:
-    """`reg_meta_build/concept_groups.auto.toml` from a repo checkout, or None.
-    The GENERATED, machine-owned catalog of fold candidates the
-    `concept-group-candidates` command emits (#496); committed but never
-    hand-edited. A `[[accept]]` in `concept_groups.toml` folds a family from
-    here BY REFERENCE. Sibling of `repo_concept_groups_path()` at the package
-    root; None on wheel installs (curation artifacts aren't shipped)."""
-    candidate = (
-        Path(__file__).resolve().parent.parent.parent / "concept_groups.auto.toml"
-    )
-    return candidate if candidate.is_file() else None
-
-
-def repo_code_label_pairs_path() -> Path | None:
-    """`reg_meta_build/code_label_pairs.toml` from a repo checkout, or None
-    (wheel installs don't ship curation — it's a maintainer artifact like the
-    slug TOMLs). Sibling of `repo_concept_groups_path()` at the package root; the
-    curated code↔label pair list (#923) the build folds into axis-less `edge`
-    groups via the same `edge_siblings` channel."""
-    candidate = Path(__file__).resolve().parent.parent.parent / "code_label_pairs.toml"
-    return candidate if candidate.is_file() else None
-
-
 _require_str = functools.partial(
     require_str,
     code="concept_groups_invalid",
     prefix="concept_groups",
-    file_name="concept_groups.toml",
+    file_name="curation/concept_groups.toml",
 )
 
 _require_pair_fqid = functools.partial(
@@ -333,7 +300,7 @@ _require_pair_fqid = functools.partial(
     code="code_label_pairs_invalid",
     prefix="code_label_pairs",
     entry_table="[[pair]]",
-    file_name="code_label_pairs.toml",
+    file_name="curation/concept_groups.toml",
 )
 
 
@@ -576,14 +543,14 @@ def load_concept_groups(path: Path | None) -> tuple[CuratedGroup, ...]:
         label="concept-group",
         prefix="concept_groups",
         code_base="concept_groups",
-        file_name="concept_groups.toml",
+        file_name="curation/concept_groups.toml",
         entry_fields="register / key / label / axis|axes / members",
-        # `concept_groups.toml` carries two other entry kinds — `[[accept]]`
+        # `curation/concept_groups.toml` carries two other entry kinds — `[[accept]]`
         # (folds an auto family by reference, `load_concept_group_accepts`) and
         # `[[classification_group]]` (curated umbrella, `load_classification_groups`)
         # — so both are legal siblings here, not unknown-top-level typos. Harmless
         # for `concept_groups.auto.toml`, which carries neither.
-        sibling_keys=frozenset({"accept", "classification_group"}),
+        sibling_keys=frozenset({"accept", "classification_group", "pair"}),
     )
     out: list[CuratedGroup] = []
     seen_keys: set[tuple[str, str, str]] = set()
@@ -654,7 +621,7 @@ def _require_opt_str(entry: dict, field: str, context: str) -> str | None:
 
 
 def load_concept_group_accepts(path: Path | None) -> tuple[Accept, ...]:
-    """Parse the `[[accept]]` entries from `concept_groups.toml` (#496): the
+    """Parse the `[[accept]]` entries from `curation/concept_groups.toml` (#496): the
     opt-in accept-list that folds auto families from `concept_groups.auto.toml`
     by reference. Empty when no file (synthetic builds, wheel installs) or no
     `[[accept]]` tables.
@@ -671,9 +638,9 @@ def load_concept_group_accepts(path: Path | None) -> tuple[Accept, ...]:
         label="concept-group",
         prefix="concept_groups",
         code_base="concept_groups",
-        file_name="concept_groups.toml",
+        file_name="curation/concept_groups.toml",
         entry_fields="register / key (+ optional label / axis / exclude)",
-        sibling_keys=frozenset({"variable_group", "classification_group"}),
+        sibling_keys=frozenset({"variable_group", "classification_group", "pair"}),
     )
     out: list[Accept] = []
     seen_keys: set[tuple[str, str, str]] = set()
@@ -808,9 +775,9 @@ def load_classification_groups(path: Path | None) -> tuple[ClassificationGroup, 
         label="classification-group",
         prefix="concept_groups",
         code_base="concept_groups",
-        file_name="concept_groups.toml",
+        file_name="curation/concept_groups.toml",
         entry_fields="key / label / members (+ optional axis)",
-        sibling_keys=frozenset({"variable_group", "accept"}),
+        sibling_keys=frozenset({"variable_group", "accept", "pair"}),
     )
     out: list[ClassificationGroup] = []
     seen_keys: set[str] = set()
@@ -880,7 +847,7 @@ def load_classification_groups(path: Path | None) -> tuple[ClassificationGroup, 
 
 
 def load_code_label_pairs(path: Path | None) -> tuple[CodeLabelPair, ...]:
-    """Parse the curated code↔label pair TOML (`reg_meta_build/code_label_pairs.toml`,
+    """Parse the curated code↔label pair TOML (`reg_meta_build/curation/concept_groups.toml`,
     #923). Empty when no file (synthetic test builds, wheel installs).
 
     Load-time validation (all EXIT_CONFIG, actionable): only `[[pair]]` top-level;
@@ -895,8 +862,11 @@ def load_code_label_pairs(path: Path | None) -> tuple[CodeLabelPair, ...]:
         label="code-label-pair",
         prefix="code_label_pairs",
         code_base="code_label_pairs",
-        file_name="code_label_pairs.toml",
+        file_name="curation/concept_groups.toml",
         entry_fields="code / label (both 3-segment FQIDs)",
+        sibling_keys=frozenset(
+            {"variable_group", "accept", "classification_group"}
+        ),
     )
     out: list[CodeLabelPair] = []
     seen_pairs: set[tuple[tuple[str, str, str], tuple[str, str, str]]] = set()
@@ -912,7 +882,7 @@ def load_code_label_pairs(path: Path | None) -> tuple[CodeLabelPair, ...]:
                 f"code_label_pairs pair has identical `code` and `label` FQID "
                 f"{'/'.join(code)!r}.",
                 "A code↔label pair needs two distinct variables. Fix or drop the "
-                "pair in reg_meta_build/code_label_pairs.toml.",
+                "pair in reg_meta_build/curation/concept_groups.toml.",
             )
         # Reject duplicate (code, label) FQID tuples (mirrors `load_concept_groups`
         # rejecting duplicate keys in the same file). The committed TOML is
@@ -924,7 +894,7 @@ def load_code_label_pairs(path: Path | None) -> tuple[CodeLabelPair, ...]:
                 f"code_label_pairs duplicate pair {'/'.join(code)!r} <-> "
                 f"{'/'.join(label)!r}.",
                 "List each (code, label) pair once in "
-                "reg_meta_build/code_label_pairs.toml.",
+                "reg_meta_build/curation/concept_groups.toml.",
             )
         seen_pairs.add((code, label))
         out.append(
@@ -1043,7 +1013,7 @@ def _derive_edge_groups(
     split-sibling pairs. `edge_siblings` is the IN-BUILD set of same-definition
     sibling pairs the triage minted (`(variable_id, variable_id)`) — NOT a table
     round-trip; they are never persisted to any shipped table. Since #923 it ALSO
-    carries curated code↔label decode pairs (`code_label_pairs.toml`, appended by
+    carries curated code↔label decode pairs (`curation/concept_groups.toml`, appended by
     `_append_code_label_edges`), so an `edge` group is NOT exclusively an auto
     same-definition split — a future feature must not assume that (e.g. must not
     auto-merge edge-group members into one variable identity).
@@ -1453,12 +1423,12 @@ def _apply_curated_groups(
     seam (the catalog-wide invariant is also re-asserted in the validator, #819).
 
     Remediations branch on `g.origin`: a hand-authored family points the
-    maintainer at `concept_groups.toml`; an accepted one points at the `[[accept]]`
+    maintainer at `curation/concept_groups.toml`; an accepted one points at the `[[accept]]`
     / generated `concept_groups.auto.toml`, since its key/register/members come
     from the catalog (the maintainer can't hand-pick a different key)."""
     regen = (
         "reg-meta-build --db <built-db-dir> concept-group-candidates "
-        "--output-toml reg_meta_build/concept_groups.auto.toml"
+        "--output-toml reg_meta_build/curation/concept_groups.auto.toml"
     )
     n_groups = 0
     for g in groups:
@@ -1480,9 +1450,9 @@ def _apply_curated_groups(
                 "concept_groups_unresolved",
                 f"{ctx}: register does not resolve.",
                 f"Regenerate concept_groups.auto.toml (`{regen}`) or drop the "
-                "`[[accept]]` in reg_meta_build/concept_groups.toml."
+                "`[[accept]]` in reg_meta_build/curation/concept_groups.toml."
                 if is_accept
-                else "Fix the `register` FQID in reg_meta_build/concept_groups.toml.",
+                else "Fix the `register` FQID in reg_meta_build/curation/concept_groups.toml.",
             )
         try:
             group_id = _insert_group(
@@ -1522,7 +1492,7 @@ def _apply_curated_groups(
                     "the `[[accept]]`."
                     if is_accept
                     else "Fix the member's `variable` slug in "
-                    "reg_meta_build/concept_groups.toml.",
+                    "reg_meta_build/curation/concept_groups.toml.",
                 )
             variable_id = var[0]
             # Verify a representation member's delivery column was actually
@@ -1544,7 +1514,7 @@ def _apply_curated_groups(
                         "the `delivery_column`."
                         if is_accept
                         else "Fix the member's `delivery_column` in "
-                        "reg_meta_build/concept_groups.toml (match the exact "
+                        "reg_meta_build/curation/concept_groups.toml (match the exact "
                         "delivered column name).",
                     )
             # Cross-group membership guard: the surrogate PK no longer catches a
@@ -1569,7 +1539,7 @@ def _apply_curated_groups(
                     "`exclude` this member in the `[[accept]]`."
                     if is_accept
                     else "`exclude` the conflicting member or pick a different "
-                    "variable in reg_meta_build/concept_groups.toml.",
+                    "variable in reg_meta_build/curation/concept_groups.toml.",
                 )
             try:
                 member_id = _insert_member(
@@ -1638,7 +1608,7 @@ def _apply_curated_classification_groups(
                     f"{ctx}: member classification {m.classification!r} does not "
                     "resolve (no classification carries that slug).",
                     "Fix the member's `classification` slug in "
-                    "reg_meta_build/concept_groups.toml.",
+                    "reg_meta_build/curation/concept_groups.toml.",
                 )
             try:
                 conn.execute(
@@ -1653,7 +1623,7 @@ def _apply_curated_classification_groups(
                     f"{ctx}: member classification {m.classification!r} already "
                     "belongs to a concept group.",
                     "A classification joins at most one group — remove the "
-                    "duplicate member in reg_meta_build/concept_groups.toml.",
+                    "duplicate member in reg_meta_build/curation/concept_groups.toml.",
                 ) from exc
             n_members += 1
         if n_members < 2:
@@ -1764,7 +1734,7 @@ def materialize_concept_groups(
     Dimension 2 (#496) is OPT-IN over the generated `concept_groups.auto.toml`:
     `auto` is the machine-owned candidate catalog (`load_concept_groups` of the
     auto file), but an auto family folds ONLY when an `[[accept]]` in
-    `concept_groups.toml` references it (`accepts`). Each gated accept resolves
+    `curation/concept_groups.toml` references it (`accepts`). Each gated accept resolves
     against `auto` to a `CuratedGroup` (label/axis overrides + `exclude`
     applied), then the resolved-accepted families and the custom
     `[[variable_group]]` families share the existing `_apply_curated_groups`

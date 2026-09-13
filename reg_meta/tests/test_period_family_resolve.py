@@ -29,7 +29,6 @@ _FQID = "scb/testreg/lonfink"
 
 def _build(tmp_path: Path, monkeypatch) -> Path:
     import reg_meta_build.db as _db
-    import reg_meta_build.period_family_merges as _fm
 
     toml = tmp_path / "period_family_merges.toml"
     toml.write_text(
@@ -37,8 +36,11 @@ def _build(tmp_path: Path, monkeypatch) -> Path:
         'family_stem = "lonfink"\nlabel = "Lön per månad"\n',
         encoding="utf-8",
     )
-    monkeypatch.setattr(_fm, "repo_period_family_merges_path", lambda: toml)
-    monkeypatch.setattr(_db, "repo_period_family_merges_path", lambda: toml)
+    monkeypatch.setattr(
+        _db,
+        "repo_curation_path",
+        lambda name: toml if name == "period_family_merges.toml" else None,
+    )
 
     ri: list[str] = []
     vm: list[str] = []
@@ -207,7 +209,6 @@ def _build_gap_year(tmp_path: Path, monkeypatch) -> Path:
     `_expand_state_windows` fallback: a query for a month with no window in that
     year keeps the raw annual state (never silently dropped)."""
     import reg_meta_build.db as _db
-    import reg_meta_build.period_family_merges as _fm
 
     toml = tmp_path / "period_family_merges.toml"
     toml.write_text(
@@ -215,8 +216,11 @@ def _build_gap_year(tmp_path: Path, monkeypatch) -> Path:
         'family_stem = "lonfink"\nlabel = "Lön per månad"\n',
         encoding="utf-8",
     )
-    monkeypatch.setattr(_fm, "repo_period_family_merges_path", lambda: toml)
-    monkeypatch.setattr(_db, "repo_period_family_merges_path", lambda: toml)
+    monkeypatch.setattr(
+        _db,
+        "repo_curation_path",
+        lambda name: toml if name == "period_family_merges.toml" else None,
+    )
 
     ri: list[str] = []
     vm: list[str] = []

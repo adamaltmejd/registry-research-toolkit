@@ -31,22 +31,24 @@ from reg_meta.db import (
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta.queries import extract_year
 
-from ._curation import curation_error, fold_column, resolve_variable_id
+from ._curation import (
+    curation_error,
+    fold_column,
+    repo_curation_path,
+    resolve_variable_id,
+)
 from .classification_links import (
     load_classification_links,
     materialize_classification_links,
-    repo_classification_links_path,
 )
 from .classifications import (
     apply_classification_conformance_gate,
     derive_supersedes_from_edges,
     link_value_set_classifications,
     populate_classifications,
-    repo_seed_path,
 )
 from .codeless_overlap import (
     load_codeless_overlap,
-    repo_codeless_overlap_path,
 )
 from .concept_groups import (
     CodeLabelPair,
@@ -56,14 +58,10 @@ from .concept_groups import (
     load_concept_group_accepts,
     load_concept_groups,
     materialize_concept_groups,
-    repo_code_label_pairs_path,
-    repo_concept_groups_auto_path,
-    repo_concept_groups_path,
 )
 from .delivery_enrichment import (
     apply_delivery_enrichment,
     load_delivery_enrichment,
-    repo_delivery_enrichment_path,
 )
 from .fqid_slugs import (
     load_lineage_config,
@@ -86,7 +84,6 @@ from .ir import (
 from .period_family_merges import (
     load_period_family_merges,
     materialize_period_family_merges,
-    repo_period_family_merges_path,
 )
 from .relations import (
     derive_variable_vintage_succession,
@@ -94,12 +91,10 @@ from .relations import (
     materialize_classification_derived_from,
     materialize_curated_replaced_by,
     materialize_same_as,
-    repo_relations_path,
 )
 from .tags import (
     load_tags,
     materialize_tags,
-    repo_tags_path,
 )
 
 if TYPE_CHECKING:
@@ -725,7 +720,7 @@ SELECT
 FROM variable v;
 
 -- Classifications: normalized code systems (SUN2000, SSYK2012, SNI2007, ...).
--- Populated at build time from a maintainer-curated seed (classifications.toml)
+-- Populated at build time from a maintainer-curated seed (curation/classifications.toml)
 -- that maps raw variable_instance.vardemangdsversion labels to normalized
 -- classification rows. See DESIGN.md → Classification seed.
 CREATE TABLE classification (
@@ -1012,7 +1007,7 @@ CREATE INDEX idx_classification_derived_from_source
 --               never persisted to any shipped table; a curated
 --               `[[variable_group]]` claiming a member excludes it from the
 --               component (curated precedence). Since #923, curated code↔label
---               decode pairs (`code_label_pairs.toml`) are ALSO appended to
+--               decode pairs (`curation/concept_groups.toml`) are ALSO appended to
 --               `edge_siblings`, so an `edge` group is NOT exclusively an auto
 --               same-definition split — a future feature must not assume that
 --               (e.g. must not auto-merge edge-group members into one variable
@@ -1020,7 +1015,7 @@ CREATE INDEX idx_classification_derived_from_source
 --   'token'   — exact curated vocabularies only (no regex name-patterns):
 --               Swedish month slug tails for variables; 4-digit vintage-year
 --               slug tails for classifications (lkf1980…, sni2007).
---   'curated' — maintainer TOML (`reg_meta_build/concept_groups.toml`), e.g.
+--   'curated' — maintainer TOML (`reg_meta_build/curation/concept_groups.toml`), e.g.
 --               the LISA agi{1,2,3} rank facet over the month groups.
 -- A variable/classification belongs to AT MOST ONE group. For classifications
 -- the single-column member PK enforces it; for variables the surrogate-keyed
@@ -1133,7 +1128,7 @@ CREATE INDEX idx_concept_group_classification_group
 -- Curated cross-register THEMATIC tag layer (#311). Orthogonal to concept_group
 -- (which folds column families *structurally* within one register): a tag cuts
 -- *across* providers/registers ("income", "health", …) for discovery without
--- knowing the register. Curated from `tags.toml`; derived every build
+-- knowing the register. Curated from `curation/tags.toml`; derived every build
 -- (regenerate-not-migrate); a presentation/discovery overlay that leaves identity
 -- untouched. Missing curation files still materialize empty tables for synthetic
 -- builds and wheel installs; repo builds load the reviewed seed content.
@@ -2632,7 +2627,7 @@ def _variable_set_via_same_as(
 
 def link_variable_state_lineage(
     conn: sqlite3.Connection,
-    slug_dir: Path,
+    lineage_path: Path | None,
 ) -> dict[str, int]:
     """Materialize state-pair interval-overlap lineage edges.
 
@@ -2664,7 +2659,7 @@ def link_variable_state_lineage(
     `source_register_id`, or a pin naming a variant that doesn't exist in the
     source register.
     """
-    config = load_lineage_config(slug_dir)
+    config = load_lineage_config(lineage_path)
 
     # Resolve every override's source register/variant to a register_variant_id
     # up front; this also validates the named variants exist (fail-fast). Cache
@@ -2791,7 +2786,8 @@ def link_variable_state_lineage(
                     code="lineage_override_register_mismatch",
                     error_class="configuration",
                     message=(
-                        f'[lineage."{consumer_register}.{consumer_slug}"]: '
+                        f'[lineage."{consumer_provider}/{consumer_register}/'
+                        f'{consumer_slug}"]: '
                         f"source_register {override_register!r} contradicts the "
                         f"variable's resolved source register {source_register!r}."
                     ),
@@ -2806,7 +2802,10 @@ def link_variable_state_lineage(
                     source_provider,
                     source_register,
                     override_variant,
-                    source=f'[lineage."{consumer_register}.{consumer_slug}"]',
+                    source=(
+                        f'[lineage."{consumer_provider}/{consumer_register}/'
+                        f'{consumer_slug}"]'
+                    ),
                 )
             ]
         elif (source_provider, source_register) in config.defaults:
@@ -2882,8 +2881,9 @@ def link_variable_state_lineage(
                         f"No source-variant pin for "
                         f"{consumer_register}.{consumer_slug}; matched source "
                         f"states across all variants: {candidate_variants!r}. Add "
-                        f'a [lineage_defaults] or [lineage."{consumer_register}.'
-                        f'{consumer_slug}"] pin to disambiguate.',
+                        f'a [lineage_defaults] or [lineage."{consumer_provider}/'
+                        f'{consumer_register}/{consumer_slug}"] pin in '
+                        "curation/lineage.toml to disambiguate.",
                     )
                 )
 
@@ -2974,7 +2974,7 @@ def _append_code_label_edges(
                 "code_label_pairs_unresolved",
                 f"code_label_pairs pair code {code_fqid!r} does not resolve to a "
                 "variable.",
-                "Fix the `code` FQID in reg_meta_build/code_label_pairs.toml "
+                "Fix the `code` FQID in reg_meta_build/curation/concept_groups.toml "
                 "(provider/register/variable must exist in the built DB).",
             )
         label_vid = resolve_variable_id(
@@ -2985,7 +2985,7 @@ def _append_code_label_edges(
                 "code_label_pairs_unresolved",
                 f"code_label_pairs pair label {label_fqid!r} does not resolve to a "
                 "variable.",
-                "Fix the `label` FQID in reg_meta_build/code_label_pairs.toml "
+                "Fix the `label` FQID in reg_meta_build/curation/concept_groups.toml "
                 "(provider/register/variable must exist in the built DB).",
             )
         ctx = f"code_label_pairs pair {code_fqid!r} <-> {label_fqid!r}"
@@ -2997,7 +2997,7 @@ def _append_code_label_edges(
                 "must own one).",
                 "The `code` FQID must be the coded variable (the value-set owner). "
                 "Swap code/label or drop the pair in "
-                "reg_meta_build/code_label_pairs.toml.",
+                "reg_meta_build/curation/concept_groups.toml.",
             )
         # Guard 2: the label endpoint owns NO value_set.
         if _variable_owns_value_set(conn, label_vid):
@@ -3007,7 +3007,7 @@ def _append_code_label_edges(
                 "must own none).",
                 "The `label` FQID must be the denormalized name column (no value "
                 "set). Swap code/label or drop the pair in "
-                "reg_meta_build/code_label_pairs.toml.",
+                "reg_meta_build/curation/concept_groups.toml.",
             )
         # Guard 3: the two are co-delivered (share a register_variant_id).
         co_delivered = conn.execute(
@@ -3024,7 +3024,7 @@ def _append_code_label_edges(
                 "register_variant_id between their states).",
                 "A code↔label pair must be delivered together in one register "
                 "variant. Fix or drop the pair in "
-                "reg_meta_build/code_label_pairs.toml.",
+                "reg_meta_build/curation/concept_groups.toml.",
             )
         sibling_edges.append((code_vid, label_vid))
 
@@ -3971,7 +3971,7 @@ def _resolve_curated_codeless_overlaps(
         if uncurated:
             parts.append(
                 f"{len(uncurated)} have no `[[resolve]]` entry in "
-                f"codeless_overlap.toml: {uncurated}"
+                f"curation/codeless_overlap.toml: {uncurated}"
             )
         if unresolved:
             parts.append(
@@ -3993,7 +3993,7 @@ def _resolve_curated_codeless_overlaps(
             remediation=(
                 "For uncurated keys, add a `[[resolve]]` entry (cap / drop / extend) "
                 "per (register, variable, column) to reg_meta_build/"
-                "codeless_overlap.toml. For keys whose entry left a residual, the "
+                "curation/codeless_overlap.toml. For keys whose entry left a residual, the "
                 "chosen resolution does not clear the overlap — pick a different one "
                 "(e.g. `cap` or `drop` instead of an `extend` that grows only one "
                 "coded window)."
@@ -4333,24 +4333,24 @@ def materialize(
     # ONCE here, then materialized into its `same_as` / `replaced_by` table groups
     # further down (after all slugs). Empty when the file is absent (synthetic
     # builds, wheel installs).
-    relations = load_relations(repo_relations_path())
+    relations = load_relations(repo_curation_path("relations.toml"))
 
     # Classifications — maintainer-curated normalized code systems. Every
     # classification is seeded regardless of `--providers` (shared standards with
     # git-tracked canonical-code CSVs), so there are no provider-skipped entries
     # to thread anywhere.
+    classifications_path = seed_path or repo_curation_path("classifications.toml")
     if skip_classifications:
         _progress("Skipping classifications (skip_classifications=True)")
     else:
-        seed = seed_path or repo_seed_path()
-        if seed is None:
+        if classifications_path is None:
             raise RegMetaError(
                 exit_code=EXIT_CONFIG,
                 code="classification_seed_not_found",
                 error_class="configuration",
                 message=(
                     "Classification seed not found. build-db requires the "
-                    "in-repo classifications.toml; it is a maintainer-only "
+                    "in-repo curation/classifications.toml; it is a maintainer-only "
                     "command and is not supported from wheel installs."
                 ),
                 remediation=(
@@ -4364,11 +4364,11 @@ def materialize(
         # isn't built relaxes its classification's unmatched-string drift).
         n_classifications = populate_classifications(
             conn,
-            seed,
+            classifications_path,
             valid_codes_dir=valid_codes_dir,
             built_providers=active_providers,
         )
-        row_counts["classifications.toml"] = n_classifications
+        row_counts["curation/classifications.toml"] = n_classifications
 
     # Slug TOMLs: populate slug columns on register / register_variant /
     # classification. Run after classifications so the classification table
@@ -4406,7 +4406,7 @@ def materialize(
         # curation/period_family_merges.toml.
         fm_counts = materialize_period_family_merges(
             conn,
-            load_period_family_merges(repo_period_family_merges_path()),
+            load_period_family_merges(repo_curation_path("period_family_merges.toml")),
             providers=active_providers,
             fold_slug_hints=fold_slug_hints,
             progress=_progress,
@@ -4417,14 +4417,9 @@ def materialize(
         from .alias_windows import materialize_multi_alias_windows
 
         alias_window_counts = materialize_multi_alias_windows(conn, progress=_progress)
-        # Manifest row-count key deliberately kept as the pre-rename
-        # `monthly_family_merges` (the surface is now `period_family_merges`): the
-        # whole `row_counts` dict is serialized into the dbdiff-compared
-        # `import_manifest`, so renaming this label would break the byte-identity of
-        # an otherwise pure relocation (#518/#523) and owe a release for no content
-        # change. It's an internal metric label with no runtime consumer; rename it
-        # in a future build that already owes a manifest delta.
-        row_counts["monthly_family_merges"] = fm_counts["families"]
+        # The manifest names the general period-family surface, even though the
+        # only curated families today are monthly.
+        row_counts["period_family_merges"] = fm_counts["families"]
         row_counts["variable_alias_windows"] = (
             fm_counts["windows"] + alias_window_counts["windows"]
         )
@@ -4455,9 +4450,10 @@ def materialize(
         # Mandatory-complete: any residual overlap on a key with no curated entry
         # FAILS the build. Empty curated map (synthetic builds, wheel installs, the
         # not-yet-curated state) → no-op when there are no residual overlaps.
-        _resolve_curated_codeless_overlaps(
-            conn, load_codeless_overlap(repo_codeless_overlap_path())
+        codeless_overlap = load_codeless_overlap(
+            repo_curation_path("codeless_overlap.toml")
         )
+        _resolve_curated_codeless_overlaps(conn, codeless_overlap)
 
         # Curated code↔label pairs (#923) — fold a coded variable (`partikod`)
         # and its denormalized label column (`partinamn`) into ONE axis-less edge
@@ -4467,9 +4463,10 @@ def materialize(
         # (a pair whose provider is absent from this --providers build is skipped),
         # so it lives in this block and reads `active_providers`. A dangling FQID
         # or a failed structural guard FAILS the build (EXIT_CONFIG).
+        concept_groups_path = repo_curation_path("concept_groups.toml")
         _append_code_label_edges(
             conn,
-            load_code_label_pairs(repo_code_label_pairs_path()),
+            load_code_label_pairs(concept_groups_path),
             active_providers,
             sibling_edges,
         )
@@ -4487,15 +4484,13 @@ def materialize(
         # `[[variable_group]]` families fold unconditionally (and take PRECEDENCE
         # over the edge fold — a claimed FQID is excluded from its edge
         # component); an auto family folds only when an `[[accept]]` in
-        # concept_groups.toml references it.
+        # curation/concept_groups.toml references it.
         cg_counts = materialize_concept_groups(
             conn,
-            load_concept_groups(repo_concept_groups_path()),
-            auto=load_concept_groups(repo_concept_groups_auto_path()),
-            accepts=load_concept_group_accepts(repo_concept_groups_path()),
-            classification_groups=load_classification_groups(
-                repo_concept_groups_path()
-            ),
+            load_concept_groups(concept_groups_path),
+            auto=load_concept_groups(repo_curation_path("concept_groups.auto.toml")),
+            accepts=load_concept_group_accepts(concept_groups_path),
+            classification_groups=load_classification_groups(concept_groups_path),
             edge_siblings=sibling_edges,
             providers=active_providers,
             warn=_progress,
@@ -4532,21 +4527,22 @@ def materialize(
         # Slug-dependent, so it lives in this --skip-slugs-guarded block.
         de_counts = apply_delivery_enrichment(
             conn,
-            load_delivery_enrichment(repo_delivery_enrichment_path()),
+            load_delivery_enrichment(
+                repo_curation_path("delivery_enrichment.generated.toml")
+            ),
             providers=active_providers,
-            warn=_progress,
         )
         row_counts["description_backfills"] = de_counts["applied"]
         row_counts["delivery_aliases"] = de_counts["alias_applied"]
         _progress(
             f"  {de_counts['applied']:,} description backfills "
             f"({de_counts['skipped']:,} already set, "
-            f"{de_counts['unresolved']:,} unresolved)"
+            f"{de_counts['provider_skipped']:,} skipped — provider not in build)"
         )
         _progress(
             f"  {de_counts['alias_applied']:,} delivery aliases "
             f"({de_counts['alias_skipped']:,} already present, "
-            f"{de_counts['alias_unresolved']:,} unresolved)"
+            f"{de_counts['alias_provider_skipped']:,} skipped — provider not in build)"
         )
 
         # Curated cross-register thematic tags (#311) — discovery overlay. Runs
@@ -4556,7 +4552,7 @@ def materialize(
         # a dangling member reference fails the build LOUD (EXIT_CONFIG).
         tag_counts = materialize_tags(
             conn,
-            load_tags(repo_tags_path()),
+            load_tags(repo_curation_path("tags.toml")),
             providers=active_providers,
             progress=_progress,
         )
@@ -4663,9 +4659,10 @@ def materialize(
         # it joins) — so it must be among the last passes. Shares the
         # skip_slugs guard: every slug is NULL under --skip-slugs, so the
         # linker would silently emit zero edges instead of an honest
-        # incompleteness signal. `slug_root` is in scope from the slug
-        # branch above.
-        lineage_counts = link_variable_state_lineage(conn, slug_root)
+        # incompleteness signal.
+        lineage_counts = link_variable_state_lineage(
+            conn, repo_curation_path("lineage.toml")
+        )
         row_counts["variable_state_lineage"] = lineage_counts["edges"]
         row_counts["variable_state_lineage_warnings"] = (
             lineage_counts["warnings_ambiguous"] + lineage_counts["warnings_no_source"]
@@ -4802,7 +4799,7 @@ def materialize(
     else:
         n_curated_links = materialize_classification_links(
             conn,
-            load_classification_links(repo_classification_links_path()),
+            load_classification_links(classifications_path),
             providers=active_providers,
         )
         row_counts["classification_links_curated"] = n_curated_links
@@ -4967,7 +4964,8 @@ def build_db(
 
     Classification population is controlled by:
       - ``skip_classifications=True`` — skip entirely (tests only).
-      - ``seed_path`` — explicit seed file. Defaults to ``repo_seed_path()``
+      - ``seed_path`` — explicit seed file. Defaults to
+        ``curation/classifications.toml``
         when running from a repo checkout; the build errors out if neither
         is available (build-db is maintainer-only and requires the seed).
 
@@ -5156,8 +5154,8 @@ def build_db(
         # to break the db ↔ sources.* import cycle (those modules import shared
         # infra from this one). ORDER IS LOAD-BEARING: SCB runs before SOS so SOS
         # value_sets content-collapse onto SCB's already-written rows (R2 hybrid).
-        from .codelivery import load_codelivery, repo_codelivery_path
-        from .scb_errata import load_scb_errata, repo_scb_errata_path
+        from .codelivery import load_codelivery
+        from .scb_errata import load_scb_errata
         from .sources.curated import CanonicalScbAdapter, CuratedAdapter
         from .sources.scb import SCBAdapter
         from .sources.sos import SOSAdapter
@@ -5167,14 +5165,14 @@ def build_db(
             # Co-delivery curation (maintainer artifact, like the slug TOMLs):
             # resolves genuine one-off same-column re-codings the coalescer cascade
             # leaves. SCB-only — loaded INSIDE this branch so a malformed/invalid
-            # codelivery.toml can't fail an SOS-only build that never reads it.
+            # curation/codelivery.toml can't fail an SOS-only build that never reads it.
             # Empty when the file is absent (wheel installs, synthetic builds).
-            codelivery = load_codelivery(repo_codelivery_path())
+            codelivery = load_codelivery(repo_curation_path("codelivery.toml"))
             # Upstream errata (Y-114/Y-116): what SCB's export omits — versions,
             # column-in-version rows, and whole columns. Slug-resolved against the
             # SAME curated slug dir `populate_slugs` reads; the adapter applies
             # these before the slug columns exist.
-            errata_path = repo_scb_errata_path()
+            errata_path = repo_curation_path("scb_errata.toml")
             errata = load_scb_errata(
                 errata_path,
                 slug_dir or repo_slug_dir(),
