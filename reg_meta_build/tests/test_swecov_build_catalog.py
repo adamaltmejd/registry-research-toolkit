@@ -24,7 +24,15 @@ from reg_meta.db import open_db
 from reg_meta.errors import RegMetaError
 from reg_meta.inventory import edition_bounds, load_inventory as load_delivery_inventory
 from reg_meta.inventory_check import check_inventory, unresolved_message
-from reg_meta_build.extend_db import load_inventory
+from reg_meta_build.ir import (
+    IRRegister,
+    IRVariable,
+    IRVariableAlias,
+    IRVariableAliasWindow,
+    IRVariableState,
+    IRVariant,
+)
+from reg_meta_build.sources.curated import CuratedAdapter
 
 _GENERATOR = (
     Path(__file__).resolve().parents[1] / "input_data" / "swecov" / "build_catalog.py"
@@ -161,98 +169,134 @@ def _synthetic_enriched() -> dict[str, dict]:
 
 
 def _run_flavor(tmp_path: Path, enriched: dict[str, dict]) -> Path:
-    """Run `cmd_flavor` over synthetic holdings; return its inventory JSON path."""
-    derived = tmp_path / "derived"
-    derived.mkdir()
+    """Run `cmd_flavor` in a synthetic package layout; return its input root."""
+    base = tmp_path / "input_data" / "swecov"
+    derived = base / "derived"
+    derived.mkdir(parents=True)
     (derived / "holdings_enriched.json").write_text(
         json.dumps(enriched), encoding="utf-8"
     )
     build_catalog.cmd_flavor(
-        argparse.Namespace(csv=tmp_path / "SWECOV_variables_2025-12-11.csv")
+        argparse.Namespace(csv=base / "SWECOV_variables_2025-12-11.csv")
     )
-    return derived / "flavor_inventory.json"
+    return base
 
 
 @pytest.fixture(scope="module")
-def flavor_inventory_path(tmp_path_factory: pytest.TempPathFactory) -> Path:
-    """One generator run for every test that reads its inventory."""
+def flavor_root(tmp_path_factory: pytest.TempPathFactory) -> Path:
+    """One generator run for every test that reads its provider TOMLs."""
     return _run_flavor(tmp_path_factory.mktemp("flavor"), _synthetic_enriched())
 
 
 @pytest.fixture(scope="module")
-def flavor_inventory(flavor_inventory_path: Path) -> dict:
-    return json.loads(flavor_inventory_path.read_text(encoding="utf-8"))
+def flavor_providers(flavor_root: Path) -> dict[str, dict]:
+    return {
+        path.stem: tomllib.loads(path.read_text(encoding="utf-8"))
+        for path in sorted((flavor_root / "providers").glob("*.toml"))
+    }
 
 
-def _variant_names(inventory: dict, provider: str, register: str) -> dict[str, str]:
-    reg = next(
-        r
-        for r in inventory["registers"]
-        if r["provider"] == provider and r["key"] == register
-    )
-    return {v["key"]: v["name"] for v in reg["variants"]}
+def _variant_names(providers: dict, provider: str, register: str) -> dict[str, str]:
+    reg = next(r for r in providers[provider]["register"] if r["key"] == register)
+    return {v["key"]: v["name"] for v in reg["variant"]}
 
 
-def test_a_named_variant_carries_its_own_name(flavor_inventory: dict) -> None:
-    assert _variant_names(flavor_inventory, "skatteverket", "tillfalligt-anstand") == {
+def test_a_named_variant_carries_its_own_name(flavor_providers: dict) -> None:
+    assert _variant_names(flavor_providers, "skatteverket", "tillfalligt-anstand") == {
         "ansokt": "Ansökt",
         "beviljat": "Beviljat",
         "upphort": "Upphört",
         "aterkallat": "Återkallat",
     }
-    assert _variant_names(flavor_inventory, "tillvaxtverket", "korttidsarbete") == {
+    assert _variant_names(flavor_providers, "tillvaxtverket", "korttidsarbete") == {
         "individer": "Individer",
         "transaktioner": "Transaktioner",
     }
 
 
 def test_disjoint_deliveries_of_one_service_are_separate_registers(
-    flavor_inventory: dict,
+    flavor_providers: dict,
 ) -> None:
     """Inera's two 1177 deliveries are disjoint schemas (see the disposition
     comment), so they are two REGISTERS with a `_default` variant each, under one
     provider named for the service."""
     assert [
-        (r["key"], r["name"], [v["key"] for v in r["variants"]])
-        for r in flavor_inventory["registers"]
-        if r["provider"] == "inera"
+        (r["key"], r["name"], [v["key"] for v in r["variant"]])
+        for r in flavor_providers["inera"]["register"]
     ] == [
         ("bestallda-prover", "Beställda prover", ["_default"]),
         ("samtal", "Samtal 1177", ["_default"]),
     ]
-    assert {"slug": "inera", "name": "Inera AB / 1177 Vårdguiden"} in flavor_inventory[
-        "providers"
-    ]
+    assert flavor_providers["inera"]["provider"]["name"] == (
+        "Inera AB / 1177 Vårdguiden"
+    )
 
 
-def test_a_default_variant_keeps_the_register_name(flavor_inventory: dict) -> None:
+def test_a_default_variant_keeps_the_register_name(flavor_providers: dict) -> None:
     defaults = {
-        (r["provider"], r["key"]): (r["name"], v["name"])
-        for r in flavor_inventory["registers"]
-        for v in r["variants"]
+        (provider, r["key"]): (r["name"], v["name"])
+        for provider, data in flavor_providers.items()
+        for r in data["register"]
+        for v in r["variant"]
         if v["key"] == "_default"
     }
     assert defaults  # the single-variant registers
     assert [c for c, (reg, var) in defaults.items() if reg != var] == []
 
 
-def test_the_emitted_inventory_loads_under_the_extend_db_contract(
-    flavor_inventory_path: Path,
+def test_emitted_tomls_load_through_curated_adapter(
+    flavor_root: Path,
 ) -> None:
     """A grouped variable's one state must carry the other spelling as an alias
     the `extend-db` contract admits."""
-    inventory = load_inventory(flavor_inventory_path)
-    register = next(
-        r
-        for r in inventory.registers
-        if (r.provider, r.key) == ("inera", "bestallda-prover")
+    objs = list(
+        CuratedAdapter("inera", steward="swecov").emit(flavor_root / "providers")
     )
-    variant = next(v for v in register.variants if v.key == "_default")
-    covid = next(v for v in variant.variables if v.key == "covid-19-antikroppar")
-
-    assert [(s.column, s.aliases) for s in covid.states] == [
-        ("Covid-19 antikroppar", ("Covid_19_antikroppar",))
+    covid = next(
+        variable
+        for variable in objs
+        if isinstance(variable, IRVariable)
+        and variable.provider_key == "covid-19-antikroppar"
+    )
+    states = [
+        o
+        for o in objs
+        if isinstance(o, IRVariableState) and o.variable_id == covid.variable_id
     ]
+    aliases = [
+        o
+        for o in objs
+        if isinstance(o, IRVariableAlias) and o.variable_id == covid.variable_id
+    ]
+    windows = [
+        o
+        for o in objs
+        if isinstance(o, IRVariableAliasWindow) and o.variable_id == covid.variable_id
+    ]
+    assert [state.delivery_column_name for state in states] == ["Covid-19 antikroppar"]
+    assert {alias.delivery_column_name for alias in aliases} == {
+        "Covid-19 antikroppar",
+        "Covid_19_antikroppar",
+    }
+    assert {window.delivery_column_name for window in windows} == {
+        "Covid-19 antikroppar",
+        "Covid_19_antikroppar",
+    }
+
+
+def test_generated_slug_pins_bind_to_emitted_graph(flavor_root: Path) -> None:
+    providers_dir = flavor_root / "providers"
+    slug_dir = flavor_root.parents[1] / "fqid_slugs" / "swecov"
+    for path in sorted(providers_dir.glob("*.toml")):
+        objs = list(CuratedAdapter(path.stem, steward="swecov").emit(providers_dir))
+        pins = tomllib.loads((slug_dir / path.name).read_text(encoding="utf-8"))
+        register_pins = pins.get("register", {})
+        variant_pins = pins.get("register_variant", {})
+        for obj in objs:
+            if isinstance(obj, IRRegister):
+                assert str(obj.register_id) in register_pins
+            elif isinstance(obj, IRVariant):
+                assert f"{obj.register_id}.{obj.register_variant_id}" in variant_pins
 
 
 def test_two_entries_naming_one_variant_differently_fail(
@@ -726,8 +770,8 @@ def test_errata_worklist_lists_a_non_scb_miss_as_a_curated_window(
     `scb_errata.toml` accepts entries on `scb` alone — so the same narrowed holding
     yields NO stanza at all. It rides in the third section as a comment naming the
     held editions, the catalog's window and the surface that carries it: for a
-    flavor provider, the inventory `extend-db` overlaid (there is no curated TOML
-    for it in this repo). A `[[delivered]]` here would send the maintainer to a file
+    flavor provider, the curated-provider TOML `extend-db` overlaid. A
+    `[[delivered]]` here would send the maintainer to a file
     whose loader refuses the entry."""
     db = tmp_path / "narrowed.db"
     db.write_bytes(flavored_db.read_bytes())
@@ -749,7 +793,7 @@ def test_errata_worklist_lists_a_non_scb_miss_as_a_curated_window(
     (line,) = [ln for ln in text.splitlines() if "T_kolumn:" in ln]
     assert "held 2020, catalog windows 2019" in line
     assert "not errata (provider `inera`, not `scb`)" in line
-    assert "the steward inventory extend-db overlays" in line
+    assert "the curated-provider TOML extend-db overlays" in line
 
 
 @pytest.mark.parametrize("variant", [_INERA, "scb/bestallda-prover/_default"])

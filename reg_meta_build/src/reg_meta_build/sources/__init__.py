@@ -51,6 +51,7 @@ from reg_meta_build.ir import (
     IRValueCode,
     IRVariable,
     IRVariableAlias,
+    IRVariableAliasWindow,
     IRVariableState,
     IRVariant,
     IRWarning,
@@ -68,6 +69,7 @@ IRObject = (
     | IRVariable
     | IRVariableState
     | IRVariableAlias
+    | IRVariableAliasWindow
     | IRValueCode
     | IRClassification
     | IRLineageEdge
@@ -98,7 +100,8 @@ class IRAdapter(Protocol):
           2. ``IRClassification``  (all; reference for value-set linkage)
           3. ``IRVariant``         (FK → register)
           4. ``IRVariable``        (FK → register, optional source_register_id)
-          5. ``IRVariableState`` / ``IRVariableAlias`` (FK → variable + variant
+          5. ``IRVariableState`` / ``IRVariableAlias`` /
+             ``IRVariableAliasWindow`` (FK → variable + variant
              [+ value_set for states])
           6. ``IRLineageEdge`` / ``IRReplacedByEdge``
           7. ``IRWarning`` / ``IRDeliveryProvenance`` (order-free sinks)

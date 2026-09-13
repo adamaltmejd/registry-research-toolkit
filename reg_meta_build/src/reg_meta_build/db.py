@@ -78,6 +78,7 @@ from .ir import (
     IRRegister,
     IRVariable,
     IRVariableAlias,
+    IRVariableAliasWindow,
     IRVariableState,
     IRVariant,
     IRWarning,
@@ -3042,7 +3043,7 @@ def _variable_owns_value_set(conn: sqlite3.Connection, variable_id: int) -> bool
     )
 
 
-def _reinsert_core_graph_from_ir(
+def _insert_core_graph_from_ir(
     conn: sqlite3.Connection,
     *,
     registers: list[IRRegister],
@@ -3050,44 +3051,30 @@ def _reinsert_core_graph_from_ir(
     variables: list[IRVariable],
     states: list[IRVariableState],
     aliases: list[IRVariableAlias],
+    alias_windows: list[IRVariableAliasWindow],
+    provider_ids: dict[str, int] | None = None,
 ) -> None:
-    """A4.3a provider-blindness flip: make the materializer the SOLE WRITER of
-    the shipped provider-shaped core graph by re-inserting it from the IR.
+    """Insert a provider-shaped core graph from adapter IR.
 
-    The adapter wrote these rows during emit() to derive SCB's exact legacy IDs
-    (strategy 2). This DELETEs the adapter-written rows and re-INSERTs them from
-    the collected IR with EXPLICIT PKs, so there is exactly one final writer and
-    no parallel old+new path. The re-inserted rows are content-identical to the
-    adapter's (the IR mirror carried the exact IDs), so the universal DB stays
-    byte-identical to the pre-A4 baseline (`sqlite_sequence` re-seed is excluded
-    from the dbdiff content comparison).
-
-    Scope: `register`, `register_variant`, `variable`, `variable_state`,
-    `variable_alias` — the genuinely provider-shaped tables. `value_set` /
-    `value_code` / `value_set_member` are NOT re-inserted here: they are
-    content-addressed (member_hash) / counter-derived and PROVIDER-SHARED BY
-    CONTENT (an identical SOS code list collapses onto the same row, A4.3b), and
-    the year-projection can leave orphan `value_code` rows that belong to no
-    `value_set_member`, which the member-derived IR stream cannot reproduce. The
-    adapter stays their writer; they carry no provider-specific shape.
-
-    Slugs are inserted NULL: the IR's slug field is ignored for the core graph;
-    `populate_slugs` / `populate_variable_slugs` UPDATE them in place afterwards
-    (strategy B) — which is why the A4.1 inert-mirror NULL→"" slug caveat
-    disappears (the mirror is gone; insert-then-UPDATE, no read-back).
+    The global materializer calls this after clearing adapter-written rows; the
+    steward overlay calls it additively on a released DB. ``provider_ids`` is
+    supplied only for the latter because steward providers are not global seed
+    rows.
     """
-    _progress("A4.3a: re-inserting core graph from IR (materializer sole-writer)...")
 
-    # Delete adapter-written rows (FK-child → parent; build runs foreign_keys=OFF
-    # so order is not load-bearing, but keep it FK-safe for clarity).
-    for table in (
-        "variable_alias",
-        "variable_state",
-        "variable",
-        "register_variant",
-        "register",
-    ):
-        conn.execute(f"DELETE FROM {table}")
+    def provider_id(provider: str) -> int:
+        if provider_ids is None:
+            return _provider_id_for(provider)
+        try:
+            return provider_ids[provider]
+        except KeyError as exc:
+            raise RegMetaError(
+                exit_code=EXIT_CONFIG,
+                code="unknown_provider",
+                error_class="configuration",
+                message=f"No provider_id for provider {provider!r}.",
+                remediation="Declare the provider before inserting its register IR.",
+            ) from exc
 
     conn.executemany(
         "INSERT INTO register (register_id, provider_id, name, purpose, slug) "
@@ -3095,7 +3082,7 @@ def _reinsert_core_graph_from_ir(
         [
             {
                 "register_id": r.register_id,
-                "provider_id": _provider_id_for(r.provider),
+                "provider_id": provider_id(r.provider),
                 "name": r.name,
                 "purpose": r.purpose,
             }
@@ -3171,7 +3158,9 @@ def _reinsert_core_graph_from_ir(
                 "state_id": s.state_id,
                 "variable_id": s.variable_id,
                 "register_variant_id": s.register_variant_id,
-                "valid_from": s.valid_from,
+                "valid_from": s.valid_from
+                if s.valid_from is not None
+                else _VALID_FROM_UNKNOWN,
                 "valid_to": s.valid_to
                 if s.valid_to is not None
                 else _VALID_TO_SENTINEL,
@@ -3207,10 +3196,60 @@ def _reinsert_core_graph_from_ir(
         ],
     )
 
+    conn.executemany(
+        "INSERT OR IGNORE INTO variable_alias_window "
+        "(variable_id, register_variant_id, delivery_column_name, valid_from, valid_to) "
+        "VALUES (?, ?, ?, ?, ?)",
+        [
+            (
+                w.variable_id,
+                w.register_variant_id,
+                w.delivery_column_name,
+                w.valid_from if w.valid_from is not None else _VALID_FROM_UNKNOWN,
+                w.valid_to if w.valid_to is not None else _VALID_TO_SENTINEL,
+            )
+            for w in alias_windows
+        ],
+    )
+
+
+def _reinsert_core_graph_from_ir(
+    conn: sqlite3.Connection,
+    *,
+    registers: list[IRRegister],
+    variants: list[IRVariant],
+    variables: list[IRVariable],
+    states: list[IRVariableState],
+    aliases: list[IRVariableAlias],
+    alias_windows: list[IRVariableAliasWindow],
+) -> None:
+    """Replace adapter-written rows with the collected provider-neutral IR."""
+    _progress("A4.3a: re-inserting core graph from IR (materializer sole-writer)...")
+
+    for table in (
+        "variable_alias_window",
+        "variable_alias",
+        "variable_state",
+        "variable",
+        "register_variant",
+        "register",
+    ):
+        conn.execute(f"DELETE FROM {table}")
+
+    _insert_core_graph_from_ir(
+        conn,
+        registers=registers,
+        variants=variants,
+        variables=variables,
+        states=states,
+        aliases=aliases,
+        alias_windows=alias_windows,
+    )
+
     _progress(
         f"  re-inserted {len(registers):,} register / {len(variants):,} variant / "
         f"{len(variables):,} variable / {len(states):,} state / "
-        f"{len(aliases):,} alias row(s) from IR"
+        f"{len(aliases):,} alias / {len(alias_windows):,} alias-window row(s) from IR"
     )
 
 
@@ -4139,6 +4178,7 @@ def materialize(
     variables: list[IRVariable] = []
     states: list[IRVariableState] = []
     aliases: list[IRVariableAlias] = []
+    alias_windows: list[IRVariableAliasWindow] = []
     # Combined manifest inputs + the side channels the post-passes consume once.
     row_counts: dict[str, Any] = {}
     source_checksums: dict[str, str] = {}
@@ -4186,6 +4226,8 @@ def materialize(
                 states.append(obj)
             elif isinstance(obj, IRVariableAlias):
                 aliases.append(obj)
+            elif isinstance(obj, IRVariableAliasWindow):
+                alias_windows.append(obj)
             elif isinstance(obj, IRWarning):
                 adapter_warnings.append(
                     (
@@ -4269,6 +4311,7 @@ def materialize(
         variables=variables,
         states=states,
         aliases=aliases,
+        alias_windows=alias_windows,
     )
     _emit_timing("reinsert_core_graph", _t)
 

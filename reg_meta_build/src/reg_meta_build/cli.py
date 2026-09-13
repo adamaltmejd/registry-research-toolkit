@@ -38,9 +38,8 @@ from reg_meta.errors import (
     RegMetaError,
 )
 
-# The steward's §12 holdings statement, for the flavored validation's
-# window-coverage gate. Aliased: `inventory` on the extend-db command line is the
-# overlay's own JSON contract, a different file in a different format.
+# The steward's distinct §12 holdings statement, for the flavored validation's
+# window-coverage gate.
 from reg_meta.inventory import load_inventory as load_delivery_inventory
 
 from .classifications import (
@@ -61,6 +60,7 @@ from .doc_db import build_doc_db, repo_docs_dir
 from .extend_db import (
     extend_db,
     resolve_delivery_inventory,
+    resolve_steward_providers_dir,
     resolve_steward_slug_dir,
 )
 from .fqid_slugs import (
@@ -244,7 +244,7 @@ def _build_parser() -> argparse.ArgumentParser:
 
     extend_db_p = sub.add_parser(
         "extend-db",
-        help="Overlay a steward inventory onto a released global DB (maintainer-only).",
+        help="Overlay steward provider TOMLs onto a released global DB (maintainer-only).",
         description=(
             "Build a steward-FLAVORED metadata DB (#365 PR2): an insert-only\n"
             "overlay of steward-ONLY content (the steward's own providers,\n"
@@ -256,7 +256,7 @@ def _build_parser() -> argparse.ArgumentParser:
             "Examples:\n"
             "  reg-meta-build --db /tmp/swecov extend-db \\\n"
             "      --base-db ~/.reg_meta/reg_meta.db \\\n"
-            "      --inventory input_data/swecov/inventory.json"
+            "      --providers-dir reg_meta_build/input_data/swecov/providers"
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
@@ -266,14 +266,17 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Path to the released global reg_meta.db to overlay onto (read-only).",
     )
     extend_db_p.add_argument(
-        "--inventory",
-        required=True,
-        help="Path to the steward inventory JSON (see extend_db.py for the contract).",
+        "--providers-dir",
+        default=None,
+        help=(
+            "Directory containing one curated-provider TOML per steward-only "
+            "provider (default: input_data/<steward>/providers/ from a checkout)."
+        ),
     )
     extend_db_p.add_argument(
         "--steward",
         default="swecov",
-        help="Steward slug (default: swecov). Must match the inventory's `steward`.",
+        help="Steward slug (default: swecov).",
     )
     extend_db_p.add_argument(
         "--slug-dir",
@@ -1007,6 +1010,9 @@ def _flavored_validate_hook(
 def _cmd_extend_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     start = time.perf_counter()
     db_dir = Path(args.db) if args.db else default_db_dir()
+    providers_dir = resolve_steward_providers_dir(
+        Path(args.providers_dir) if args.providers_dir else None, args.steward
+    )
     # Resolve the steward slug dir ONCE and feed the SAME value to both the
     # flavored validate hook (so its entity-key gate reads the dir the overlay
     # populated) and `extend_db` (which re-resolves idempotently). Mirrors
@@ -1034,7 +1040,7 @@ def _cmd_extend_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
         )
     result = extend_db(
         base_db=Path(args.base_db),
-        inventory_path=Path(args.inventory),
+        providers_dir=providers_dir,
         db_dir=db_dir,
         steward=args.steward,
         slug_dir=slug_dir,
@@ -1046,7 +1052,7 @@ def _cmd_extend_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
         command="extend-db",
         args_payload={
             "base_db": args.base_db,
-            "inventory": args.inventory,
+            "providers_dir": str(providers_dir),
             # The RESOLVED holdings statement the gate ran against, not the raw
             # flag: a published flavor's envelope states which file it was checked
             # against, and `skip_holdings_gate` is the only reason it can be null
@@ -1865,8 +1871,8 @@ _COMMAND_OVERVIEW: list[tuple[str, str]] = [
         "Build the metadata DB from SCB CSV exports.",
     ),
     (
-        "extend-db --base-db DB --inventory JSON [--steward S]",
-        "Overlay a steward inventory onto a released global DB (flavored DB).",
+        "extend-db --base-db DB [--providers-dir DIR] [--steward S]",
+        "Overlay steward provider TOMLs onto a released global DB.",
     ),
     (
         "build-docs [--docs-dir DIR]",

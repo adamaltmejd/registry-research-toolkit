@@ -2923,10 +2923,10 @@ class TestInventoryWindowCoverage:
         assert "NOT on the `scb` provider" in result.format_report()
 
     def test_every_seeded_provider_but_scb_names_a_curated_surface(self):
-        """The fallback wording says "the steward inventory extend-db overlays",
+        """The fallback wording says "the curated-provider TOML extend-db overlays",
         which is true only of a provider the GLOBAL build never seeds. A newly
         seeded agency must be given its surface here, or its misses would send the
-        maintainer to a steward inventory that says nothing about it."""
+        maintainer to a steward provider file that says nothing about it."""
         from reg_meta_build.db import _PROVIDER_SEED
         from reg_meta_build.inventory_coverage import _CURATED_SURFACE
 

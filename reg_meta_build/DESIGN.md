@@ -200,7 +200,7 @@ Top-level commands (no `maintain` subgroup; that group is dissolved):
 
 ```text
 reg-meta-build build-db [--no-validate] [--skip-slugs] ...
-reg-meta-build extend-db --base-db DB --inventory JSON [--steward S] ...
+reg-meta-build extend-db --base-db DB [--providers-dir DIR] [--steward S] ...
 reg-meta-build build-docs ...
 reg-meta-build seed-slugs [--out-dir DIR] [--propose-panel] ...
 reg-meta-build precheck-slugs ...
@@ -2845,8 +2845,9 @@ and the registers/variants/variables they deliver. Enrichment of existing global
 entities is explicitly NOT its job.
 
 The tracked, maintainer-run generator (`input_data/swecov/build_catalog.py`) produces
-the inventory JSON. The PR ships zero real steward content — the synthetic fixture proof
-only; real content is generated outside the repo.
+one curated-provider TOML per steward-only provider under
+`input_data/swecov/providers/`. Real provider regeneration remains a separate content
+step.
 
 ### Mechanics
 
@@ -2857,15 +2858,15 @@ input, never mutated), then runs an insert-only overlay on the copy:
    `seed_providers`).
 2. **INSERT** the steward core graph (registers → variants → variables → states + the
    per-state alias row). All ids are deterministically minted via `id.mint()` in the
-   high band `[2^62, 2^63)`. `variable.source_label` is set from the inventory's
-   `source_label` field for provenance. Each inventory variable has a non-empty `states`
-   array, so a steward delivery rename can stay one variable with multiple literal
-   delivery-column states. Each state's delivery column also inserts a `variable_alias`
-   row, preserving the `variable_alias ⊇ state delivery columns` invariant. A state's
-   co-delivered `aliases` stay ONE state and additionally insert a
-   `variable_alias_window` row per column of that state, its own included — the #945
-   shape above — so each literal spelling resolves as its own representation instead of
-   needing a fake `value_set_version_label`.
+   high band `[2^62, 2^63)`. `variable.source_label` is set from its provider TOML for
+   provenance. Each curated variable has a non-empty `state` array, so a steward
+   delivery rename can stay one variable with multiple literal delivery-column states.
+   Each state's delivery column also inserts a `variable_alias` row, preserving the
+   `variable_alias ⊇ state delivery columns` invariant. A state's co-delivered `aliases`
+   stay ONE state and additionally insert a `variable_alias_window` row per column of
+   that state, its own included — the #945 shape above — so each literal spelling
+   resolves as its own representation instead of needing a fake
+   `value_set_version_label`.
 3. **Slug** the new rows using `populate_slugs(strict=False)` for registers/variants
    (the steward TOML covers only the inserted rows; global rows keep their published
    slugs untouched) and `populate_variable_slugs(incremental=True)` for variables
@@ -2901,69 +2902,54 @@ input, never mutated), then runs an insert-only overlay on the copy:
 
 No `SCHEMA_VERSION` bump — rows on existing tables only.
 
-### Inventory JSON contract
+### Curated-provider TOML contract
 
-`extend_db` reads a single JSON file the generator produces:
+`extend-db --providers-dir DIR` reads one `<provider>.toml` per provider through the
+same `CuratedAdapter` used by the global thin-provider build. The filename is the
+provider slug; steward files add required display/provenance metadata:
 
-```json
-{
-  "steward": "swecov",
-  "source_label": "swecov-inventory-2025-12-11",
-  "providers": [
-    {"slug": "swedbank", "name": "Swedbank AB"}
-  ],
-  "registers": [
-    {
-      "provider": "swedbank", "key": "transaktioner",
-      "name": "Transaktioner", "purpose": null, "description": null,
-      "variants": [
-        {
-          "key": "_default", "name": "Transaktioner", "description": null,
-          "variables": [
-            {
-              "key": "belopp", "name": "Belopp", "definition": null,
-              "description": "Transaktionsbelopp i SEK.",
-              "is_identifier": false, "is_sensitive": false,
-              "states": [
-                {
-                  "column": "BELOPP", "data_type": "float",
-                  "aliases": ["BELOPP_SEK"],
-                  "value_set_version_label": "",
-                  "valid_from": null, "valid_to": null
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ]
-}
+```toml
+[provider]
+name = "Swedbank AB"
+source_label = "swecov-inventory-2025-12-11"
+
+[[register]]
+key = "transaktioner"
+name = "Transaktioner"
+
+  [[register.variant]]
+  key = "_default"
+  name = "Transaktioner"
+
+  [[register.variable]]
+  key = "belopp"
+  name = "Belopp"
+  description = "Transaktionsbelopp i SEK."
+  variants = ["_default"]
+
+    [[register.variable.state]]
+    column = "BELOPP"
+    data_type = "float"
+    aliases = ["BELOPP_SEK"]
 ```
 
-Top-level keys: `steward` and `source_label` (both required strings); `providers` and
-`registers` (both optional arrays). Any other top-level key is a structural defect.
-Per-level key sets are closed (`_reject_unknown_keys`); a variable `key` must not
-contain `.` (it becomes `variable.provider_key`, whose slug source-ID grammar uses `.`
-as a segment separator), and each variable needs at least one `states` entry. A state
-needs `column`, may carry `data_type` and validity bounds, may list in `aliases` the
-distinct physical columns co-delivered with its own in that window
-(`Covid-19 antikroppar` / `Covid_19_antikroppar` is one state with an alias, not a state
-each), and may set `value_set_version_label` to disambiguate value-set versions that
-share a `valid_from`. An undeclared provider on a register, an inverted validity window,
-a delivery column repeated within a state, a duplicate state uniqueness key, or
-`base == output` are all `EXIT_CONFIG` structural errors — the overlay's content is
-steward-only, so there is no lenient `unresolved` count.
+Global thin-provider TOMLs retain their flat `column` form and required register
+`valid_from`; their existing window intersection and unprefixed ID inputs are unchanged.
+The steward form may omit either validity boundary to preserve an unknown/open date and
+accepts the same ISO period tokens the catalog query surface uses. It adds explicit
+`key` plus nested `state` rows for multistate variables. Repeating a variable key for a
+different `variants` delivery pools it at register scope; all variable metadata must
+agree. Unknown fields, malformed/inverted bounds, repeated columns, and duplicate state
+uniqueness keys fail with `EXIT_CONFIG`. Co-delivered spellings belong in one state's
+`aliases`; the adapter emits alias-window IR for every spelling. Steward state IR has no
+value-set content.
 
-The nesting is **delivery-shaped** (like SCB's per-variant sheets), but variable
-identity is register-scoped (reg_meta/DESIGN.md → "Why the variant is a coordinate, not
-an identity level"): a variable `key` that several of a register's variants list is
-**pooled** by the insert writer into ONE `variable` row, and each listing variant
-contributes its own `variable_state` + `variable_alias`. The load boundary
-(`_reject_divergent_pooled_variables`) makes listings that disagree on a variable-level
-attribute (`name`, `definition`, `description`, `is_identifier`, `is_sensitive`) an
-`EXIT_CONFIG` structural error naming the register, key and field — the pooled row
-carries one of each, and first-wins would silently drop the rest.
+The steward ID convention remains distinct: registers and variants use
+`mint("register", provider, key)` and
+`mint("variant", provider, register_key, variant_key)` (and the corresponding prefixed
+variable/state inputs). Global curated providers continue using unprefixed
+provider-native parts. `--steward` selects this identity convention explicitly; it is
+not inferred from the TOML.
 
 ### Per-steward slug snapshot
 
@@ -2982,8 +2968,9 @@ The populated `fqid_slugs/swecov/` snapshot (#421) is emitted by the tracked,
 maintainer-run generator `input_data/swecov/build_catalog.py flavor`, which projects the
 steward-only SWECOV holdings (commercial, regional/municipal, national quality
 registers, and Källa-empty SWECOV-constructed columns — public-agency and canonical-SCB
-content is routed to the global track instead) into the inventory JSON `extend-db`
-consumes and the per-provider slug TOMLs.
+content is routed to the global track instead) into the per-provider TOMLs `extend-db`
+consumes. It writes the register/variant pins directly into `fqid_slugs/swecov/`;
+variable auto-pins and freeze advancement remain the later real-content step.
 
 ### Supporting seams
 
@@ -3011,12 +2998,12 @@ consumes and the per-provider slug TOMLs.
   never rendered as a stanza — that file corrects SCB's export and its loader refuses
   another provider — so it reports as one line naming the surface its window is curated
   on (`input_data/<Provider>/<slug>.toml`'s `valid_from`, the Socialstyrelsen export for
-  `sos`, or the inventory `extend-db` overlaid for a steward's own minted provider). The
-  parameter is three-state: an inventory runs the gate, `None` skips it (the global
-  build and synthetic CI, which have no holdings statement), and `HoldingsGate.SKIPPED`
-  skips it naming `--skip-holdings-gate` as the reason (Y-124). One value, so an
-  inventory paired with a skip is unrepresentable and the reason is never inferred from
-  an absent argument.
+  `sos`, or the curated-provider TOML `extend-db` overlaid for a steward's own minted
+  provider). The parameter is three-state: an inventory runs the gate, `None` skips it
+  (the global build and synthetic CI, which have no holdings statement), and
+  `HoldingsGate.SKIPPED` skips it naming `--skip-holdings-gate` as the reason (Y-124).
+  One value, so an inventory paired with a skip is unrepresentable and the reason is
+  never inferred from an absent argument.
 - **`_populate_fts(include_value_code=False)`** — skips the `value_code_fts` INSERT. The
   full build keeps `include_value_code=True` (the default), so its call is unchanged.
 

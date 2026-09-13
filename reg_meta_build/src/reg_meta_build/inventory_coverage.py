@@ -673,13 +673,13 @@ def _curated_surface(provider: str) -> str:
     `scb_errata.toml` cannot take.
 
     A provider the global build does not seed at all is a STEWARD-MINTED flavor
-    provider (`extend-db`'s `providers[]`): nothing in this repo states its windows,
-    so the repair is in the inventory the steward's generator produced.
+    provider (`extend-db` provider TOMLs): its window is authored in that provider's
+    steward curation file.
     """
     return _CURATED_SURFACE.get(
         provider,
-        "the steward inventory extend-db overlays (this flavor provider's own "
-        "`states[].valid_from` / `valid_to`)",
+        "the curated-provider TOML extend-db overlays (this flavor provider's own "
+        "`state.valid_from` / `valid_to`)",
     )
 
 

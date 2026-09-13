@@ -19,6 +19,7 @@ from reg_meta_build.ir import (
     IRRegister,
     IRVariable,
     IRVariableAlias,
+    IRVariableAliasWindow,
     IRVariableState,
     IRVariant,
 )
@@ -121,6 +122,88 @@ def test_emit_two_variant_register(tmp_path: Path) -> None:
         for o in objs
         if isinstance(o, IRRegister | IRVariant | IRVariable)
     )
+
+
+def test_steward_contract_emits_multistate_alias_windows_and_prefixed_ids(
+    tmp_path: Path,
+) -> None:
+    toml = """\
+[provider]
+name = "Private Provider"
+source_label = "steward-delivery-2026-01-01"
+
+[[register]]
+key = "r"
+name = "R"
+
+  [[register.variant]]
+  key = "a"
+  name = "A"
+
+  [[register.variable]]
+  key = "amount"
+  name = "Amount"
+  variants = ["a"]
+
+    [[register.variable.state]]
+    column = "AMOUNT"
+    data_type = "float"
+    valid_to = "2020"
+
+    [[register.variable.state]]
+    column = "AMOUNT_SEK"
+    data_type = "float"
+    valid_from = "2021"
+    aliases = ["Amount-SEK"]
+"""
+    src = tmp_path / "src"
+    src.mkdir()
+    (src / "private.toml").write_text(toml, encoding="utf-8")
+    adapter = CuratedAdapter("private", steward="swecov")
+    objs = list(adapter.emit(src))
+
+    register = next(o for o in objs if isinstance(o, IRRegister))
+    variant = next(o for o in objs if isinstance(o, IRVariant))
+    variable = next(o for o in objs if isinstance(o, IRVariable))
+    states = [o for o in objs if isinstance(o, IRVariableState)]
+    windows = [o for o in objs if isinstance(o, IRVariableAliasWindow)]
+    assert adapter.provider_name == "Private Provider"
+    assert register.register_id == mint("register", "private", "r")
+    assert variant.register_variant_id == mint("variant", "private", "r", "a")
+    assert variable.variable_id == mint("variable", "private", "r", "amount")
+    assert variable.provider_key == "amount"
+    assert variable.source_label == "steward-delivery-2026-01-01"
+    assert [(s.delivery_column_name, s.valid_from, s.valid_to) for s in states] == [
+        ("AMOUNT", None, "2020-12-31"),
+        ("AMOUNT_SEK", "2021-01-01", None),
+    ]
+    assert {w.delivery_column_name for w in windows} == {"AMOUNT_SEK", "Amount-SEK"}
+
+
+def test_global_flat_contract_keeps_unprefixed_identity(tmp_path: Path) -> None:
+    objs = _emit("fk", _TWO_VARIANT, tmp_path)
+    register = next(o for o in objs if isinstance(o, IRRegister))
+    variant = next(o for o in objs if isinstance(o, IRVariant))
+    variable = next(o for o in objs if isinstance(o, IRVariable))
+    assert register.register_id == mint("fk", "reg1")
+    assert variant.register_variant_id == mint("fk", "reg1", "fall")
+    assert variable.variable_id == mint("fk", "reg1", "pnr")
+    assert register.register_id != mint("register", "fk", "reg1")
+
+
+@pytest.mark.parametrize(
+    "old, new",
+    [
+        ('purpose = "prose"', 'purpose = "prose"\ndescription = "steward-only"'),
+        ('column = "pnr"', 'key = "person"\n  column = "pnr"'),
+    ],
+)
+def test_global_contract_still_rejects_steward_only_fields(
+    tmp_path: Path, old: str, new: str
+) -> None:
+    with pytest.raises(RegMetaError) as exc:
+        _emit("fk", _TWO_VARIANT.replace(old, new, 1), tmp_path)
+    assert exc.value.code == "curated_toml_invalid"
 
 
 _REGISTER_VALID_TO = """\

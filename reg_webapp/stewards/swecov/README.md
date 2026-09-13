@@ -35,7 +35,7 @@ reg_meta release or a flavor change:
 # 1. build the flavored DB (released global + SWECOV flavor providers)
 reg-meta-build --db "$db_dir" extend-db \
     --base-db ~/.local/share/reg_meta/reg_meta.db \
-    --inventory reg_meta_build/input_data/swecov/derived/flavor_inventory.json \
+    --providers-dir reg_meta_build/input_data/swecov/providers \
     --slug-dir reg_meta_build/fqid_slugs/swecov
 # 2. emit this inventory against it (also writes derived/steward_coverage.json).
 #    Add `--out <checkout>/reg_webapp/stewards/swecov` when running from a git

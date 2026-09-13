@@ -1676,10 +1676,10 @@ def cmd_grafts(args: argparse.Namespace) -> None:
         print(f"    {reg}/{var}: {n}")
 
 
-# --- flavor: emit the extend-db steward inventory JSON -----------------------
+# --- flavor: emit extend-db curated-provider TOMLs ---------------------------
 #
 # The steward-FLAVORED slice (#421, #365 PR2): SWECOV holdings with NO global
-# home, projected into the `extend-db` inventory JSON contract (see
+# home, projected into the shared curated-provider TOML contract (see
 # reg_meta_build/DESIGN.md → "Steward-flavored DB — extend-db"). Scope follows
 # "what a fact is ABOUT": only steward-private content lands here. Excluded and
 # routed elsewhere by the curated MAPPING / dispositions below:
@@ -2308,7 +2308,7 @@ _FLAVOR_VARIANT_TABLES: dict[tuple[str, str, str], tuple[str, ...]] = {
 
 def _kebab(text: str) -> str:
     """ASCII kebab slug: NFKD-transliterate (ä→a), lower, non-alnum→'-'. Used
-    for the inventory variable `key` (becomes `variable.provider_key`, which the
+    for the curated variable `key` (becomes `variable.provider_key`, which the
     slug source-ID grammar forbids a '.' in)."""
     folded = (
         unicodedata.normalize("NFKD", text).encode("ascii", "ignore").decode("ascii")
@@ -2317,7 +2317,7 @@ def _kebab(text: str) -> str:
 
 
 def _flavor_variables(columns: list[dict]) -> list[dict]:
-    """Project an enriched holding's columns into inventory variable dicts.
+    """Project an enriched holding's columns into curated variable dictionaries.
 
     A column whose master-list `Källa` names a canonical source REGISTER (LISA,
     RTB, AKU, …) has a canonical home and is routed to the global graft/enrichment
@@ -2366,7 +2366,7 @@ def _flavor_variables(columns: list[dict]) -> list[dict]:
     variables: list[dict] = []
     for spellings in groups.values():
         first_column, first_entry = next(iter(spellings.items()))
-        # Multistate inventory contract (#981): the delivery column and its window
+        # Multistate curated contract (#981): the delivery column and its window
         # live in a `states` list, not flat on the variable.
         state: dict = {
             "column": first_column,
@@ -2396,6 +2396,70 @@ def _source_label(csv_path: Path) -> str:
     """`swecov-inventory-<YYYY-MM-DD>` from the inventory CSV filename."""
     m = re.search(r"(\d{4}-\d{2}-\d{2})", csv_path.stem)
     return f"swecov-inventory-{m.group(1)}" if m else "swecov-inventory"
+
+
+def _flavor_provider_toml(
+    provider_name: str, source_label: str, registers: list[dict]
+) -> str:
+    """Render one steward provider in CuratedAdapter's strict TOML shape."""
+    lines = [
+        "[provider]",
+        f"name = {_toml_str(provider_name)}",
+        f"source_label = {_toml_str(source_label)}",
+    ]
+    for reg in registers:
+        lines += [
+            "",
+            "[[register]]",
+            f"key = {_toml_str(reg['key'])}",
+            f"name = {_toml_str(reg['name'])}",
+        ]
+        for attribute in ("purpose", "description"):
+            if reg.get(attribute):
+                lines.append(f"{attribute} = {_toml_str(reg[attribute])}")
+        for variant in reg["variants"]:
+            lines += [
+                "",
+                "[[register.variant]]",
+                f"key = {_toml_str(variant['key'])}",
+                f"name = {_toml_str(variant['name'])}",
+            ]
+            if variant.get("description"):
+                lines.append(f"description = {_toml_str(variant['description'])}")
+        for variant in reg["variants"]:
+            for variable in variant["variables"]:
+                lines += [
+                    "",
+                    "[[register.variable]]",
+                    f"key = {_toml_str(variable['key'])}",
+                    f"name = {_toml_str(variable['name'])}",
+                    f"variants = [{_toml_str(variant['key'])}]",
+                ]
+                for attribute in ("definition", "description", "measurement_unit"):
+                    if variable.get(attribute):
+                        lines.append(f"{attribute} = {_toml_str(variable[attribute])}")
+                if variable.get("is_identifier"):
+                    lines.append("is_identifier = true")
+                if variable.get("is_sensitive"):
+                    lines.append("is_sensitive = true")
+                for state in variable["states"]:
+                    lines += [
+                        "",
+                        "[[register.variable.state]]",
+                        f"column = {_toml_str(state['column'])}",
+                    ]
+                    for attribute in (
+                        "data_type",
+                        "valid_from",
+                        "valid_to",
+                        "value_set_version_label",
+                    ):
+                        if state.get(attribute):
+                            lines.append(f"{attribute} = {_toml_str(state[attribute])}")
+                    if state.get("aliases"):
+                        aliases = ", ".join(_toml_str(v) for v in state["aliases"])
+                        lines.append(f"aliases = [{aliases}]")
+    return "\n".join(lines) + "\n"
 
 
 def cmd_flavor(args: argparse.Namespace) -> None:
@@ -2463,7 +2527,7 @@ def cmd_flavor(args: argparse.Namespace) -> None:
         variables = _flavor_variables(columns)
         if not variables:
             # Every column was Källa-sourced (canonical) — nothing steward-only
-            # remains. The inventory contract requires >= 1 variable per variant,
+            # remains. The curated contract requires >= 1 variable per variant,
             # and such a holding does not belong in the flavor anyway: drop its
             # disposition entry (route the canonical columns via the graft track).
             raise SystemExit(
@@ -2479,28 +2543,31 @@ def cmd_flavor(args: argparse.Namespace) -> None:
         }
         reg["_variant_slugs"][var_key] = var_slug
 
-    # --- inventory JSON (the extend-db contract) ---
-    inv_registers = []
-    for (prov_slug, reg_key), reg in sorted(registers.items()):
-        inv_registers.append(
-            {
-                "provider": reg["provider"],
-                "key": reg["key"],
-                "name": reg["name"],
-                "purpose": reg["purpose"],
-                "description": reg["description"],
-                "variants": [reg["_variants"][vk] for vk in reg["_variants"]],
-            }
+    # --- curated-provider TOMLs (the extend-db contract) ---
+    providers_dir = base / "providers"
+    providers_dir.mkdir(parents=True, exist_ok=True)
+    source_label = _source_label(args.csv)
+    for prov_slug, provider_name in sorted(providers.items()):
+        provider_registers = []
+        for (candidate_provider, _reg_key), reg in sorted(registers.items()):
+            if candidate_provider != prov_slug:
+                continue
+            provider_registers.append(
+                {
+                    "key": reg["key"],
+                    "name": reg["name"],
+                    "purpose": reg["purpose"],
+                    "description": reg["description"],
+                    "variants": [
+                        reg["_variants"][variant_key]
+                        for variant_key in reg["_variants"]
+                    ],
+                }
+            )
+        (providers_dir / f"{prov_slug}.toml").write_text(
+            _flavor_provider_toml(provider_name, source_label, provider_registers),
+            encoding="utf-8",
         )
-    inventory = {
-        "steward": "swecov",
-        "source_label": _source_label(args.csv),
-        "providers": [{"slug": s, "name": providers[s]} for s in sorted(providers)],
-        "registers": inv_registers,
-    }
-    dest = base / "derived" / "flavor_inventory.json"
-    dest.parent.mkdir(exist_ok=True)
-    dest.write_text(json.dumps(inventory, ensure_ascii=False, indent=1))
 
     # --- steward slug TOMLs (committed; register + register_variant only) ---
     # Deterministic high-band ids via reg_meta_build.id.mint mirror what
@@ -2509,7 +2576,7 @@ def cmd_flavor(args: argparse.Namespace) -> None:
     # build time (not committed pre-v1), so they are not emitted here.
     from reg_meta_build.id import mint
 
-    slug_root = base / "derived" / "fqid_slugs_swecov"
+    slug_root = base.parents[1] / "fqid_slugs" / "swecov"
     slug_root.mkdir(parents=True, exist_ok=True)
     by_provider: dict[str, list[str]] = {}
     for (prov_slug, reg_key), reg in sorted(registers.items()):
@@ -2542,7 +2609,7 @@ def cmd_flavor(args: argparse.Namespace) -> None:
         for reg in registers.values()
         for v in reg["_variants"].values()
     )
-    print(f"wrote {dest}")
+    print(f"wrote curated-provider TOMLs to {providers_dir}/")
     print(f"  providers: {len(providers)}")
     print(f"  registers: {len(registers)}  variants: {n_var}  variables: {n_vars}")
     print(f"wrote steward slug TOMLs to {slug_root}/ ({len(by_provider)} providers)")
@@ -3528,7 +3595,7 @@ def main() -> None:
     )
     sub.add_parser(
         "flavor",
-        help="emit the steward-only extend-db inventory JSON + slug TOMLs (#421)",
+        help="emit steward-only curated-provider TOMLs + slug pins (#421)",
     )
     inventory_p = sub.add_parser(
         "inventory",

@@ -1,2161 +1,616 @@
-"""Tests for the steward-flavored DB overlay (#365 PR2; `extend_db.py`).
-
-Synthetic-only: a small global DB is built from the SCB CSV fixtures, then
-`extend_db` overlays a steward inventory onto a COPY. Minted ids are computed
-via `id.mint(...)` (deterministic) so a temp steward slug dir can be keyed on
-them. Covers the two steward-only operation kinds (providers +
-registers/variants/variables/states), the no-clobber guarantee, base-DB
-immutability, incremental slugging, FTS rebuild, flavored validation, and
-deterministic re-run.
-
-The `_no_repo_curation` autouse fixture (session-scoped, in `_shared_fixtures`)
-is in scope, so the global build runs with empty curation maps.
-"""
+"""Synthetic proof for the curated-provider steward overlay."""
 
 from __future__ import annotations
 
-import ast
-import inspect
-import json
-import re
+import argparse
 import sqlite3
 from typing import TYPE_CHECKING
 
 import pytest
 from _csv_fixtures import write_scb_input
-from _shared_fixtures import _write_fixture_slug_dir, fail_replace_onto
+from _shared_fixtures import _write_fixture_slug_dir
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
+from reg_meta.inventory import load_inventory as load_delivery_inventory
 from reg_meta_build.db import build_db
 from reg_meta_build.extend_db import (
-    InvProvider,
-    _expand_window,
     _insert_providers,
+    _load_provider_ir,
     extend_db,
-    load_inventory,
+    resolve_delivery_inventory,
+    resolve_steward_providers_dir,
 )
 from reg_meta_build.id import _MINT_BIT, mint
-from reg_meta_build.validate import HoldingsGate, validate_built_db
-
-from reg_meta_build.fqid_slugs import populate_variable_slugs
+from reg_meta_build.validate import validate_built_db
 
 if TYPE_CHECKING:
     from pathlib import Path
 
-# Steward + provider used across the inventory fixtures.
 _STEWARD = "swecov"
 _BANK = "swedbank"
 
+_BASE_TOML = """\
+[provider]
+name = "Swedbank AB"
+source_label = "swecov-inventory-test"
 
-# ── inventory fixtures ─────────────────────────────────────────────────────────
+[[register]]
+key = "transaktioner"
+name = "Transaktioner"
+purpose = "Bank delivery"
+description = "Bankkontotransaktioner."
 
+  [[register.variant]]
+  key = "_default"
+  name = "Transaktioner"
+  description = "One table"
 
-def _pooled_variable_register() -> dict:
-    """A steward register whose TWO variants both list the variable key
-    `personnr`. The variant is a delivery coordinate, not an identity level
-    (reg_meta/DESIGN.md → "Why the variant is a coordinate, not an identity
-    level"), so the overlay pools these into ONE variable with a state + alias
-    per delivering variant — the `personnr` / `personnr-2` defect."""
+  [[register.variable]]
+  key = "belopp"
+  name = "Belopp"
+  description = "Transaktionsbelopp i SEK."
+  variants = ["_default"]
 
-    def _personnr() -> dict:
-        return {
-            "key": "personnr",
-            "name": "Personnummer",
-            "definition": None,
-            "description": None,
-            "is_identifier": True,
-            "is_sensitive": True,
-            "states": [
-                {
-                    "column": "PersonNr",
-                    "data_type": "varchar",
-                    "valid_from": None,
-                    "valid_to": None,
-                }
-            ],
-        }
+    [[register.variable.state]]
+    column = "BELOPP"
+    data_type = "float"
 
-    return {
-        "provider": _BANK,
-        "key": "kunder",
-        "name": "Kunder",
-        "purpose": None,
-        "description": None,
-        "variants": [
-            {
-                "key": key,
-                "name": name,
-                "description": None,
-                "variables": [_personnr()],
-            }
-            for key, name in (("privat", "Privatkunder"), ("foretag", "Företagskunder"))
-        ],
-    }
+  [[register.variable]]
+  key = "kontonr"
+  name = "Kontonummer"
+  is_identifier = true
+  is_sensitive = true
+  variants = ["_default"]
 
+    [[register.variable.state]]
+    column = "KONTO"
+    data_type = "varchar"
+    valid_from = "2018"
 
-def _base_inventory() -> dict:
-    """A steward-only inventory: one new provider with a register/variant and
-    two variables, plus a second register that delivers one variable key from
-    two variants. No global-entity enrichment (grafts/aliases) — that is
-    global-build work, not flavor content."""
-    return {
-        "steward": _STEWARD,
-        "source_label": "swecov-inventory-test",
-        "providers": [{"slug": _BANK, "name": "Swedbank AB"}],
-        "registers": [
-            {
-                "provider": _BANK,
-                "key": "transaktioner",
-                "name": "Transaktioner",
-                "purpose": None,
-                "description": "Bankkontotransaktioner.",
-                "variants": [
-                    {
-                        "key": "_default",
-                        "name": "Transaktioner",
-                        "description": None,
-                        "variables": [
-                            {
-                                "key": "belopp",
-                                "name": "Belopp",
-                                "definition": None,
-                                "description": "Transaktionsbelopp i SEK.",
-                                "is_identifier": False,
-                                "is_sensitive": False,
-                                "states": [
-                                    {
-                                        "column": "BELOPP",
-                                        "data_type": "float",
-                                        "valid_from": None,
-                                        "valid_to": None,
-                                    }
-                                ],
-                            },
-                            {
-                                "key": "kontonr",
-                                "name": "Kontonummer",
-                                "definition": None,
-                                "description": None,
-                                "is_identifier": True,
-                                "is_sensitive": True,
-                                "states": [
-                                    {
-                                        "column": "KONTO",
-                                        "data_type": "varchar",
-                                        "valid_from": "2018",
-                                        "valid_to": None,
-                                    }
-                                ],
-                            },
-                        ],
-                    }
-                ],
-            },
-            _pooled_variable_register(),
-        ],
-    }
+[[register]]
+key = "kunder"
+name = "Kunder"
+
+  [[register.variant]]
+  key = "privat"
+  name = "Privatkunder"
+
+  [[register.variant]]
+  key = "foretag"
+  name = "Företagskunder"
+
+  [[register.variable]]
+  key = "personnr"
+  name = "Personnummer"
+  is_identifier = true
+  is_sensitive = true
+  variants = ["privat"]
+
+    [[register.variable.state]]
+    column = "PersonNr"
+
+  [[register.variable]]
+  key = "personnr"
+  name = "Personnummer"
+  is_identifier = true
+  is_sensitive = true
+  variants = ["foretag"]
+
+    [[register.variable.state]]
+    column = "PersonNr"
+"""
 
 
-def _reg_stub(provider: str, key: str) -> dict:
-    """A minimal structurally-valid register dict (one variant, one variable) —
-    used to exercise the loader's duplicate-(provider, key) guard."""
-    return {
-        "provider": provider,
-        "key": key,
-        "name": "N",
-        "variants": [
-            {
-                "key": "v",
-                "name": "V",
-                "variables": [{"key": "x", "name": "X", "states": [{"column": "C"}]}],
-            }
-        ],
-    }
-
-
-def _reg_stub_with_state(state: dict) -> dict:
-    """`_reg_stub` whose single variable carries `state` — exercises the
-    state-level structural guards."""
-    reg = _reg_stub("p", "k")
-    reg["variants"][0]["variables"][0]["states"] = [state]
-    return reg
-
-
-def _bad_aliases(value: object):
-    """A `test_structural_defects_fail` mutation putting `value` in a state's
-    `aliases`."""
-    return lambda d: d.update(
-        registers=[_reg_stub_with_state({"column": "C", "aliases": value})]
-    )
-
-
-def _steward_register_ids() -> dict[str, int]:
-    """Deterministic minted ids for the base inventory's steward graph."""
+def _ids() -> dict[str, int]:
     return {
         "provider": mint("provider", _BANK),
         "register": mint("register", _BANK, "transaktioner"),
         "variant": mint("variant", _BANK, "transaktioner", "_default"),
-        # A variable is register-scoped — the variant is NOT part of its identity.
-        "var_belopp": mint("variable", _BANK, "transaktioner", "belopp"),
-        "var_kontonr": mint("variable", _BANK, "transaktioner", "kontonr"),
+        "belopp": mint("variable", _BANK, "transaktioner", "belopp"),
+        "kontonr": mint("variable", _BANK, "transaktioner", "kontonr"),
         "pooled_register": mint("register", _BANK, "kunder"),
-        "pooled_privat": mint("variant", _BANK, "kunder", "privat"),
-        "pooled_foretag": mint("variant", _BANK, "kunder", "foretag"),
-        "var_personnr": mint("variable", _BANK, "kunder", "personnr"),
+        "privat": mint("variant", _BANK, "kunder", "privat"),
+        "foretag": mint("variant", _BANK, "kunder", "foretag"),
+        "personnr": mint("variable", _BANK, "kunder", "personnr"),
     }
 
 
-def _multistate_inventory() -> dict:
-    """One steward variable with two delivery-column states."""
-    inv = _base_inventory()
-    variables = inv["registers"][0]["variants"][0]["variables"]
-    variables[0]["states"] = [
-        {
-            "column": "BELOPP",
-            "data_type": "float",
-            "valid_from": "2018",
-            "valid_to": "2020",
-        },
-        {
-            "column": "BELOPP_SEK",
-            "data_type": "float",
-            "valid_from": "2021",
-            "valid_to": None,
-        },
-    ]
-    return inv
+def _providers(
+    tmp_path: Path, text: str = _BASE_TOML, *, name: str = "providers"
+) -> Path:
+    directory = tmp_path / name
+    directory.mkdir()
+    (directory / f"{_BANK}.toml").write_text(text, encoding="utf-8")
+    return directory
 
 
-def _co_delivered_alias_inventory() -> dict:
-    """One steward variable whose ONE delivery window ships its column under
-    three spellings — the `Covid-19 antikroppar` / `Covid_19_antikroppar` shape."""
-    inv = _base_inventory()
-    variables = inv["registers"][0]["variants"][0]["variables"]
-    variables[0]["states"] = [
-        {
-            "column": "BELOPP",
-            "data_type": "float",
-            "aliases": ["BELOPP_SEK", "Belopp-SEK"],
-            "valid_from": "2018",
-            "valid_to": None,
-        }
-    ]
-    return inv
-
-
-def _write_steward_slug_dir(
-    slug_dir: Path, *, panel_entity_key: str | None = None
-) -> None:
-    """Author a steward slug dir keyed on the minted ids: a `swedbank.toml`
-    register/variant slug entry per inventory row + empty snapshot. No variable
-    entries — the new variables auto-slug incrementally. No freeze.toml ⇒ the
-    steward zone defaults to churning (#470), which is the regenerate-each-build
-    overlay posture.
-
-    `panel_entity_key` (a resolved variable slug) puts a `panel_entity_key` on the
-    transaktioner variant, so the overlaid DB carries a STEWARD entity-key
-    variable the flavored curation gate must enforce (#559)."""
-    ids = _steward_register_ids()
-    panel = f'panel_entity_key = "{panel_entity_key}"\n' if panel_entity_key else ""
-    (slug_dir / ".snapshot.json").write_text("{}\n", encoding="utf-8")
-    (slug_dir / f"{_BANK}.toml").write_text(
+def _write_slug_dir(path: Path) -> None:
+    ids = _ids()
+    path.mkdir()
+    (path / ".snapshot.json").write_text("{}\n", encoding="utf-8")
+    (path / f"{_BANK}.toml").write_text(
         f'[register."{ids["register"]}"]\nslug = "transaktioner"\n'
         f'[register_variant."{ids["register"]}.{ids["variant"]}"]\n'
         'slug = "transaktioner-default"\n'
-        f"{panel}"
         f'[register."{ids["pooled_register"]}"]\nslug = "kunder"\n'
-        f'[register_variant."{ids["pooled_register"]}.{ids["pooled_privat"]}"]\n'
+        f'[register_variant."{ids["pooled_register"]}.{ids["privat"]}"]\n'
         'slug = "kunder-privat"\n'
-        f'[register_variant."{ids["pooled_register"]}.{ids["pooled_foretag"]}"]\n'
+        f'[register_variant."{ids["pooled_register"]}.{ids["foretag"]}"]\n'
         'slug = "kunder-foretag"\n',
         encoding="utf-8",
     )
 
 
-# ── build helpers ──────────────────────────────────────────────────────────────
-
-
 @pytest.fixture()
 def global_db(tmp_path: Path) -> Path:
-    """Build a synthetic global DB from the SCB CSV fixtures; return its path."""
-    inp, dbdir, slug = tmp_path / "in", tmp_path / "globaldb", tmp_path / "gslug"
-    for d in (inp, dbdir, slug):
-        d.mkdir()
-    write_scb_input(inp)
-    _write_fixture_slug_dir(slug)
-    build_db(input_dir=inp, db_dir=dbdir, skip_classifications=True, slug_dir=slug)
-    return dbdir / "reg_meta.db"
+    input_dir = tmp_path / "input"
+    db_dir = tmp_path / "global"
+    slug_dir = tmp_path / "global-slugs"
+    for directory in (input_dir, db_dir, slug_dir):
+        directory.mkdir()
+    write_scb_input(input_dir)
+    _write_fixture_slug_dir(slug_dir)
+    build_db(
+        input_dir=input_dir,
+        db_dir=db_dir,
+        skip_classifications=True,
+        slug_dir=slug_dir,
+    )
+    return db_dir / "reg_meta.db"
 
 
-def _run_extend(
+def _run(
     tmp_path: Path,
     base_db: Path,
-    inventory: dict,
+    text: str = _BASE_TOML,
     *,
-    out_name: str = "out",
-    validate: bool = False,
+    name: str = "out",
+    skip_slugs: bool = False,
+    pre_rename_hook=None,
 ) -> tuple[dict, Path]:
-    """Write the inventory + a steward slug dir, run extend_db, return
-    (counts, output_db_path)."""
-    inv_path = tmp_path / f"{out_name}-inventory.json"
-    inv_path.write_text(json.dumps(inventory), encoding="utf-8")
-    slug_dir = tmp_path / f"{out_name}-sslug"
-    slug_dir.mkdir()
-    _write_steward_slug_dir(slug_dir)
-    out_dir = tmp_path / out_name
-    out_dir.mkdir()
-    hook = None
-    if validate:
-
-        def hook(staging: Path) -> None:
-            result = validate_built_db(staging, flavored=True)
-            if result.failures:
-                raise AssertionError(f"flavored validation failed: {result.failures}")
-
-    counts = extend_db(
+    providers_dir = _providers(tmp_path, text, name=f"{name}-providers")
+    slug_dir = None
+    if not skip_slugs:
+        slug_dir = tmp_path / f"{name}-slugs"
+        _write_slug_dir(slug_dir)
+    out = tmp_path / name
+    result = extend_db(
         base_db=base_db,
-        inventory_path=inv_path,
-        db_dir=out_dir,
+        providers_dir=providers_dir,
+        db_dir=out,
         steward=_STEWARD,
         slug_dir=slug_dir,
-        pre_rename_hook=hook,
+        skip_slugs=skip_slugs,
+        pre_rename_hook=pre_rename_hook,
     )
-    return counts, out_dir / "reg_meta.db"
+    return result, out / "reg_meta.db"
 
 
-# ── _expand_window ─────────────────────────────────────────────────────────────
+def test_core_graph_metadata_flags_open_dates_and_source_label(
+    tmp_path: Path, global_db: Path
+) -> None:
+    counts, out = _run(tmp_path, global_db)
+    assert {
+        key: counts[key]
+        for key in ("providers", "registers", "variants", "variables", "states")
+    } == {
+        "providers": 1,
+        "registers": 2,
+        "variants": 3,
+        "variables": 3,
+        "states": 4,
+    }
+    conn = sqlite3.connect(out)
+    ids = _ids()
+    assert conn.execute(
+        "SELECT provider_id, name FROM provider WHERE slug = ?", (_BANK,)
+    ).fetchone() == (ids["provider"], "Swedbank AB")
+    assert conn.execute(
+        "SELECT name, purpose FROM register WHERE register_id = ?", (ids["register"],)
+    ).fetchone() == ("Transaktioner", "Bank delivery")
+    assert conn.execute(
+        "SELECT name, description FROM register_variant WHERE register_variant_id = ?",
+        (ids["variant"],),
+    ).fetchone() == ("Transaktioner", "One table")
+    assert conn.execute(
+        "SELECT name, description, source_label FROM variable WHERE variable_id = ?",
+        (ids["belopp"],),
+    ).fetchone() == ("Belopp", "Transaktionsbelopp i SEK.", "swecov-inventory-test")
+    assert conn.execute(
+        "SELECT is_identifier, is_sensitive FROM variable WHERE variable_id = ?",
+        (ids["kontonr"],),
+    ).fetchone() == (1, 1)
+    assert conn.execute(
+        "SELECT valid_from, valid_to, data_type FROM variable_state WHERE variable_id = ?",
+        (ids["belopp"],),
+    ).fetchone() == ("0001-01-01", "9999-12-31", "float")
+    assert conn.execute(
+        "SELECT valid_from, valid_to FROM variable_state WHERE variable_id = ?",
+        (ids["kontonr"],),
+    ).fetchone() == ("2018-01-01", "9999-12-31")
+    conn.close()
 
 
-class TestExpandWindow:
-    def test_month_from_open_to(self) -> None:
-        # YYYY-MM lower bound expands to the month's first day; None upper → open.
-        assert _expand_window("2018-06", None) == ("2018-06-01", "9999-12-31")
-
-    def test_open_from_month_to(self) -> None:
-        # None lower → open sentinel; YYYY-MM upper expands to month-last-day.
-        assert _expand_window(None, "2020-12") == ("0001-01-01", "2020-12-31")
-
-    def test_malformed_token_is_config_error(self) -> None:
-        with pytest.raises(RegMetaError) as exc:
-            _expand_window("not-a-date", None)
-        assert exc.value.exit_code == EXIT_CONFIG
-
-    def test_inverted_window_is_config_error(self) -> None:
-        # valid_from after valid_to would violate the variable_state DDL CHECK
-        # (valid_to >= valid_from) as an opaque IntegrityError at INSERT — caught
-        # here as a clean structural defect instead.
-        with pytest.raises(RegMetaError) as exc:
-            _expand_window("2020", "2018")
-        assert exc.value.exit_code == EXIT_CONFIG
-
-
-# ── overlay inserts ──────────────────────────────────────────────────────────────
-
-
-class TestOverlayInserts:
-    def test_new_core_graph_rows_present_with_source_label(
-        self, tmp_path: Path, global_db: Path
-    ) -> None:
-        counts, out = _run_extend(tmp_path, global_db, _base_inventory())
-        assert counts["providers"] == 1
-        assert counts["registers"] == 2
-        assert counts["variants"] == 3
-        # `personnr` is ONE pooled variable over its two delivering variants.
-        assert counts["variables"] == 3
-        assert counts["states"] == 4
-        conn = sqlite3.connect(out)
-        ids = _steward_register_ids()
-
-        prov = conn.execute(
-            "SELECT provider_id, name FROM provider WHERE slug = ?", (_BANK,)
-        ).fetchone()
-        assert prov == (ids["provider"], "Swedbank AB")
-
-        reg = conn.execute(
-            "SELECT register_id, provider_id, name FROM register WHERE register_id = ?",
-            (ids["register"],),
-        ).fetchone()
-        assert reg == (ids["register"], ids["provider"], "Transaktioner")
-
-        # Both steward variables carry the inventory source_label.
-        labels = {
-            r[0]
-            for r in conn.execute(
-                "SELECT DISTINCT source_label FROM variable WHERE register_id = ?",
-                (ids["register"],),
-            )
-        }
-        assert labels == {"swecov-inventory-test"}
-
-        # Each state's delivery column has a variable_alias row.
-        for var_id, column in (
-            (ids["var_belopp"], "BELOPP"),
-            (ids["var_kontonr"], "KONTO"),
-        ):
-            state = conn.execute(
-                "SELECT delivery_column_name FROM variable_state WHERE variable_id = ?",
-                (var_id,),
-            ).fetchone()
-            assert state == (column,)
-            alias = conn.execute(
-                "SELECT 1 FROM variable_alias WHERE variable_id = ? "
-                "AND delivery_column_name = ?",
-                (var_id, column),
-            ).fetchone()
-            assert alias is not None
-
-        # ...and no alias WINDOW without co-delivered `aliases`: an ordinary
-        # steward state keeps the resolver's 1:1 path.
-        assert conn.execute(
-            "SELECT COUNT(*) FROM variable_alias_window WHERE variable_id >= ?",
-            (_MINT_BIT,),
-        ).fetchone() == (0,)
-
-    def test_flags_and_validity_window_round_trip(
-        self, tmp_path: Path, global_db: Path
-    ) -> None:
-        _, out = _run_extend(tmp_path, global_db, _base_inventory())
-        conn = sqlite3.connect(out)
-        ids = _steward_register_ids()
-        # kontonr: is_identifier/is_sensitive set, valid_from "2018" expanded.
-        flags = conn.execute(
-            "SELECT is_identifier, is_sensitive FROM variable WHERE variable_id = ?",
-            (ids["var_kontonr"],),
-        ).fetchone()
-        assert flags == (1, 1)
-        window = conn.execute(
-            "SELECT valid_from, valid_to FROM variable_state WHERE variable_id = ?",
-            (ids["var_kontonr"],),
-        ).fetchone()
-        # valid_from "2018" expands to full ISO bounds (the DDL CHECKs
-        # length=10); valid_to (None) falls back to the open sentinel.
-        assert window == ("2018-01-01", "9999-12-31")
-        # belopp: open-range fallback on both ends.
-        belopp_window = conn.execute(
-            "SELECT valid_from, valid_to FROM variable_state WHERE variable_id = ?",
-            (ids["var_belopp"],),
-        ).fetchone()
-        assert belopp_window == ("0001-01-01", "9999-12-31")
-
-    def test_variable_can_have_multiple_delivery_states(
-        self, tmp_path: Path, global_db: Path
-    ) -> None:
-        counts, out = _run_extend(tmp_path, global_db, _multistate_inventory())
-        # belopp (2 states) + kontonr, plus the base's pooled personnr (2 states).
-        assert counts["variables"] == 3
-        assert counts["states"] == 5
-
-        conn = sqlite3.connect(out)
-        ids = _steward_register_ids()
-        states = conn.execute(
-            "SELECT delivery_column_name, valid_from, valid_to, value_set_version_label "
-            "FROM variable_state WHERE variable_id = ? ORDER BY valid_from",
-            (ids["var_belopp"],),
-        ).fetchall()
-        assert states == [
-            ("BELOPP", "2018-01-01", "2020-12-31", ""),
-            ("BELOPP_SEK", "2021-01-01", "9999-12-31", ""),
-        ]
-        aliases = {
-            r[0]
-            for r in conn.execute(
-                "SELECT delivery_column_name FROM variable_alias WHERE variable_id = ?",
-                (ids["var_belopp"],),
-            )
-        }
-        assert aliases == {"BELOPP", "BELOPP_SEK"}
-
-    def test_variable_listed_by_two_variants_is_one_pooled_variable(
-        self, tmp_path: Path, global_db: Path
-    ) -> None:
-        _, out = _run_extend(tmp_path, global_db, _base_inventory())
-        conn = sqlite3.connect(out)
-        ids = _steward_register_ids()
-
-        # ONE variable row for the register, however many variants list the key.
-        assert conn.execute(
-            "SELECT count(*) FROM variable WHERE register_id = ?",
-            (ids["pooled_register"],),
-        ).fetchone() == (1,)
-
-        # One state per delivering variant, each carrying its own coordinate.
-        states = conn.execute(
+def test_register_scoped_variable_is_pooled_across_variants(
+    tmp_path: Path, global_db: Path
+) -> None:
+    _, out = _run(tmp_path, global_db)
+    conn = sqlite3.connect(out)
+    ids = _ids()
+    assert conn.execute(
+        "SELECT COUNT(*) FROM variable WHERE register_id = ?", (ids["pooled_register"],)
+    ).fetchone() == (1,)
+    assert set(
+        conn.execute(
             "SELECT register_variant_id, delivery_column_name FROM variable_state "
             "WHERE variable_id = ?",
-            (ids["var_personnr"],),
-        ).fetchall()
-        assert set(states) == {
-            (ids["pooled_privat"], "PersonNr"),
-            (ids["pooled_foretag"], "PersonNr"),
-        }
-
-        # ...and one alias row per variant (the PK carries register_variant_id).
-        aliases = conn.execute(
-            "SELECT register_variant_id FROM variable_alias WHERE variable_id = ?",
-            (ids["var_personnr"],),
-        ).fetchall()
-        assert set(aliases) == {(ids["pooled_privat"],), (ids["pooled_foretag"],)}
-
-    def test_co_delivered_aliases_are_one_state_with_alias_windows(
-        self, tmp_path: Path, global_db: Path
-    ) -> None:
-        """Every co-delivered column becomes an orderable representation of the
-        ONE state, and `value_set_version_label` stays empty — it ships and
-        renders as a value-set version."""
-        counts, out = _run_extend(tmp_path, global_db, _co_delivered_alias_inventory())
-        # belopp (ONE state, 3 columns) + kontonr, plus the pooled personnr's 2.
-        assert counts["variables"] == 3
-        assert counts["states"] == 4
-
-        conn = sqlite3.connect(out)
-        ids = _steward_register_ids()
-        states = conn.execute(
-            "SELECT delivery_column_name, valid_from, valid_to, "
-            "value_set_version_label FROM variable_state WHERE variable_id = ?",
-            (ids["var_belopp"],),
-        ).fetchall()
-        assert states == [("BELOPP", "2018-01-01", "9999-12-31", "")]
-
-        aliases = {
-            r[0]
-            for r in conn.execute(
-                "SELECT delivery_column_name FROM variable_alias WHERE variable_id = ?",
-                (ids["var_belopp"],),
-            )
-        }
-        assert aliases == {"BELOPP", "BELOPP_SEK", "Belopp-SEK"}
-
-        # Including the state's own column, without which the resolver hides it.
-        windows = conn.execute(
-            "SELECT delivery_column_name, valid_from, valid_to "
-            "FROM variable_alias_window WHERE variable_id = ? AND "
-            "register_variant_id = ? ORDER BY delivery_column_name",
-            (ids["var_belopp"], ids["variant"]),
-        ).fetchall()
-        assert windows == [
-            ("BELOPP", "2018-01-01", "9999-12-31"),
-            ("BELOPP_SEK", "2018-01-01", "9999-12-31"),
-            ("Belopp-SEK", "2018-01-01", "9999-12-31"),
-        ]
-
-    def test_steward_provider_id_in_high_band(
-        self, tmp_path: Path, global_db: Path
-    ) -> None:
-        _run_extend(tmp_path, global_db, _base_inventory())
-        ids = _steward_register_ids()
-        for key in ids:
-            assert ids[key] >= _MINT_BIT, key
-
-
-# ── no-clobber + base-DB immutability ────────────────────────────────────────
-
-
-class TestNoClobber:
-    def test_global_core_rows_and_slugs_byte_identical(
-        self, tmp_path: Path, global_db: Path
-    ) -> None:
-        before = _global_snapshot(sqlite3.connect(global_db))
-        _, out = _run_extend(tmp_path, global_db, _base_inventory())
-        after = _global_snapshot(sqlite3.connect(out))
-        assert before == after
-
-    def test_base_db_not_mutated(self, tmp_path: Path, global_db: Path) -> None:
-        size_before = global_db.stat().st_size
-        mtime_before = global_db.stat().st_mtime_ns
-        digest_before = _global_snapshot(sqlite3.connect(global_db))
-        _run_extend(tmp_path, global_db, _base_inventory())
-        assert global_db.stat().st_size == size_before
-        assert global_db.stat().st_mtime_ns == mtime_before
-        assert _global_snapshot(sqlite3.connect(global_db)) == digest_before
-
-
-def _global_snapshot(conn: sqlite3.Connection) -> dict:
-    """Snapshot the pre-existing SCB global core graph (provider_id 1) for the
-    no-clobber comparison: every register/variant/variable row + its slug."""
-    return {
-        "registers": conn.execute(
-            "SELECT register_id, slug, name FROM register WHERE provider_id = 1 "
-            "ORDER BY register_id"
-        ).fetchall(),
-        "variants": conn.execute(
-            "SELECT rv.register_variant_id, rv.slug, rv.name FROM register_variant rv "
-            "JOIN register r ON rv.register_id = r.register_id "
-            "WHERE r.provider_id = 1 ORDER BY rv.register_variant_id"
-        ).fetchall(),
-        # Every provider_id=1 variable is a pre-existing global row (the overlay
-        # inserts ONLY steward-provider rows, never onto SCB), so its slug must
-        # be byte-identical after the overlay — the no-clobber guarantee.
-        "variables": conn.execute(
-            "SELECT v.variable_id, v.slug, v.name FROM variable v "
-            "JOIN register r ON v.register_id = r.register_id "
-            "WHERE r.provider_id = 1 "
-            "ORDER BY v.variable_id"
-        ).fetchall(),
-    }
-
-
-# ── slugs ────────────────────────────────────────────────────────────────────
-
-
-class TestSlugs:
-    def test_steward_register_variant_slugged_from_toml(
-        self, tmp_path: Path, global_db: Path
-    ) -> None:
-        _, out = _run_extend(tmp_path, global_db, _base_inventory())
-        conn = sqlite3.connect(out)
-        ids = _steward_register_ids()
-        assert (
-            conn.execute(
-                "SELECT slug FROM register WHERE register_id = ?", (ids["register"],)
-            ).fetchone()[0]
-            == "transaktioner"
+            (ids["personnr"],),
         )
-        assert (
-            conn.execute(
-                "SELECT slug FROM register_variant WHERE register_variant_id = ?",
-                (ids["variant"],),
-            ).fetchone()[0]
-            == "transaktioner-default"
-        )
-
-    def test_new_variables_auto_slugged(self, tmp_path: Path, global_db: Path) -> None:
-        _, out = _run_extend(tmp_path, global_db, _base_inventory())
-        conn = sqlite3.connect(out)
-        ids = _steward_register_ids()
-        slugs = {
-            r[0]
-            for r in conn.execute(
-                "SELECT slug FROM variable WHERE register_id = ?", (ids["register"],)
-            )
-        }
-        assert None not in slugs
-        assert len(slugs) == 2  # belopp, kontonr both got distinct slugs
-
-    def test_pooled_variable_slug_is_unsuffixed(
-        self, tmp_path: Path, global_db: Path
-    ) -> None:
-        # The key its two variants both list is one variable, so
-        # `populate_variable_slugs` sees no split sibling to uniquify against —
-        # no `personnr-2` is minted.
-        _, out = _run_extend(tmp_path, global_db, _base_inventory())
-        conn = sqlite3.connect(out)
-        ids = _steward_register_ids()
-        slugs = [
-            r[0]
-            for r in conn.execute(
-                "SELECT slug FROM variable WHERE register_id = ?",
-                (ids["pooled_register"],),
-            )
-        ]
-        assert slugs == ["personnr"]
-
-    def test_steward_auto_toml_written(self, tmp_path: Path, global_db: Path) -> None:
-        inv_path = tmp_path / "inventory.json"
-        inv_path.write_text(json.dumps(_base_inventory()), encoding="utf-8")
-        slug_dir = tmp_path / "sslug"
-        slug_dir.mkdir()
-        _write_steward_slug_dir(slug_dir)
-        out_dir = tmp_path / "out"
-        out_dir.mkdir()
-        extend_db(
-            base_db=global_db,
-            inventory_path=inv_path,
-            db_dir=out_dir,
-            steward=_STEWARD,
-            slug_dir=slug_dir,
-        )
-        auto_path = slug_dir / f"{_BANK}.auto.toml"
-        assert auto_path.is_file()
-        assert "[variable" in auto_path.read_text(encoding="utf-8")
+    ) == {(ids["privat"], "PersonNr"), (ids["foretag"], "PersonNr")}
+    conn.close()
 
 
-# ── FTS rebuild ──────────────────────────────────────────────────────────────
-
-
-class TestFts:
-    def test_new_register_and_variable_searchable(
-        self, tmp_path: Path, global_db: Path
-    ) -> None:
-        _, out = _run_extend(tmp_path, global_db, _base_inventory())
-        conn = sqlite3.connect(out)
-        # New register name "Transaktioner" indexed.
-        assert (
-            conn.execute(
-                "SELECT COUNT(*) FROM register_fts WHERE register_fts MATCH 'Transaktioner'"
-            ).fetchone()[0]
-            >= 1
-        )
-        # New variable name "Belopp" indexed.
-        assert (
-            conn.execute(
-                "SELECT COUNT(*) FROM variable_fts WHERE variable_fts MATCH 'Belopp'"
-            ).fetchone()[0]
-            >= 1
-        )
-
-    def test_no_duplicate_fts_rows(self, tmp_path: Path, global_db: Path) -> None:
-        _, out = _run_extend(tmp_path, global_db, _base_inventory())
-        conn = sqlite3.connect(out)
-        # External-content FTS rows must match the base-table row count exactly
-        # (a full rebuild, not a double-insert).
-        for tbl, fts in (("register", "register_fts"), ("variable", "variable_fts")):
-            assert (
-                conn.execute(f"SELECT COUNT(*) FROM {fts}").fetchone()[0]
-                == conn.execute(f"SELECT COUNT(*) FROM {tbl}").fetchone()[0]
-            )
-
-    def test_value_code_fts_unchanged(self, tmp_path: Path, global_db: Path) -> None:
-        """The overlay never inserts value_code rows, so extend_db SKIPS the
-        value_code_fts rebuild — the copied index is already in sync. Assert the
-        honest indexed-row count (the `_docsize` shadow table — COUNT(*) on the
-        external-content FTS reads `value_code` and can't see a double-insert)
-        equals the base DB's, guarding against a regression that re-inserts it."""
-        base_n = (
-            sqlite3.connect(global_db)
-            .execute("SELECT COUNT(*) FROM value_code_fts_docsize")
-            .fetchone()[0]
-        )
-        _, out = _run_extend(tmp_path, global_db, _base_inventory())
-        out_n = (
-            sqlite3.connect(out)
-            .execute("SELECT COUNT(*) FROM value_code_fts_docsize")
-            .fetchone()[0]
-        )
-        assert out_n == base_n
-
-
-# ── flavored validation ──────────────────────────────────────────────────────
-
-
-class TestFlavoredValidation:
-    def test_overlaid_db_passes_flavored_validation(
-        self, tmp_path: Path, global_db: Path
-    ) -> None:
-        # validate=True runs the flavored validator as the pre_rename_hook; it
-        # raises on failure, so reaching here means it passed. The co-delivered
-        # inventory is the one overlaid, so the alias-window closure checks run
-        # against real window rows.
-        counts, out = _run_extend(
-            tmp_path, global_db, _co_delivered_alias_inventory(), validate=True
-        )
-        assert counts["variables"] == 3
-        result = validate_built_db(out, flavored=True)
-        assert not result.failures, result.failures
-
-    def test_un_minted_steward_id_caught_by_band_check(
-        self, tmp_path: Path, global_db: Path
-    ) -> None:
-        _, out = _run_extend(tmp_path, global_db, _base_inventory())
-        conn = sqlite3.connect(out)
-        ids = _steward_register_ids()
-        # Deliberately corrupt a steward register id into the LOW band — the
-        # flavored band check must catch it (non-SCB id < 2^62).
-        conn.execute(
-            "UPDATE register SET register_id = 5 WHERE register_id = ?",
-            (ids["register"],),
-        )
-        conn.execute(
-            "UPDATE register_variant SET register_id = 5 WHERE register_id = ?",
-            (ids["register"],),
-        )
-        conn.execute(
-            "UPDATE variable SET register_id = 5 WHERE register_id = ?",
-            (ids["register"],),
-        )
-        conn.commit()
-        conn.close()
-        result = validate_built_db(out, flavored=True)
-        assert any("below the minted band" in f for f in result.failures), (
-            result.failures
-        )
-
-    def test_low_band_steward_id_passes_non_flavored(
-        self, tmp_path: Path, global_db: Path
-    ) -> None:
-        # #422: the GLOBAL (non-flavored) band check enforces high-band for every
-        # SEEDED non-SCB provider (sos + fohm; scb is excluded). A steward
-        # provider is dynamically minted, NOT in `_PROVIDER_SEED`, so it stays
-        # out of scope of the non-flavored check — its low-band id passes here
-        # and is caught only by `flavored=True` (the test above).
-        _, out = _run_extend(tmp_path, global_db, _base_inventory())
-        conn = sqlite3.connect(out)
-        ids = _steward_register_ids()
-        conn.execute(
-            "UPDATE register SET register_id = 5 WHERE register_id = ?",
-            (ids["register"],),
-        )
-        conn.execute(
-            "UPDATE register_variant SET register_id = 5 WHERE register_id = ?",
-            (ids["register"],),
-        )
-        conn.execute(
-            "UPDATE variable SET register_id = 5 WHERE register_id = ?",
-            (ids["register"],),
-        )
-        conn.commit()
-        conn.close()
-        result = validate_built_db(out, flavored=False)
-        assert not any("below the minted band" in f for f in result.failures)
-
-
-# ── idempotent re-run ────────────────────────────────────────────────────────
-
-
-class TestIdempotentReRun:
-    def test_two_runs_onto_fresh_copies_give_identical_counts_and_ids(
-        self, tmp_path: Path, global_db: Path
-    ) -> None:
-        counts_a, out_a = _run_extend(
-            tmp_path, global_db, _base_inventory(), out_name="a"
-        )
-        counts_b, out_b = _run_extend(
-            tmp_path, global_db, _base_inventory(), out_name="b"
-        )
-        # `db_path` is the per-run output dir; compare only the integer counts.
-        del counts_a["db_path"], counts_b["db_path"]
-        assert counts_a == counts_b
-        ids_a = _minted_overlay_ids(sqlite3.connect(out_a))
-        ids_b = _minted_overlay_ids(sqlite3.connect(out_b))
-        assert ids_a == ids_b
-
-
-def _minted_overlay_ids(conn: sqlite3.Connection) -> dict:
-    """All overlay-inserted ids — steward-only, so every one is high-band
-    (provider_id != SCB / variable_id >= 2^62). Deterministic across runs."""
-    return {
-        "registers": conn.execute(
-            "SELECT register_id FROM register WHERE provider_id != 1 ORDER BY register_id"
-        ).fetchall(),
-        "variables": conn.execute(
-            "SELECT variable_id FROM variable WHERE variable_id >= ? "
-            "ORDER BY variable_id",
-            (_MINT_BIT,),
-        ).fetchall(),
-    }
-
-
-# ── populate_variable_slugs(incremental=False) unchanged ─────────────────────
-
-
-class TestIncrementalFlagDefault:
-    def test_non_incremental_processes_all_variables(self, tmp_path: Path) -> None:
-        """incremental=False (the global build path) must derive a slug for EVERY
-        variable, including ones whose slug is already set — proving the
-        `AND v.slug IS NULL` filter is gated behind the flag and the global build
-        path is untouched."""
-        from reg_meta_build.db import DDL, seed_providers
-
-        conn = sqlite3.connect(":memory:")
-        conn.executescript(DDL)
-        seed_providers(conn)
-        conn.execute(
-            "INSERT INTO register (register_id, provider_id, name, slug) "
-            "VALUES (1, 1, 'R', 'r')"
-        )
-        conn.execute(
-            "INSERT INTO register_variant (register_variant_id, register_id, name, slug) "
-            "VALUES (10, 1, 'V', 'v')"
-        )
-        # Two variables: one already-slugged, one NULL.
-        conn.execute(
-            "INSERT INTO variable (variable_id, register_id, provider_key, name, slug) "
-            "VALUES (1, 1, '100', 'Alpha', 'preexisting')"
-        )
-        conn.execute(
-            "INSERT INTO variable (variable_id, register_id, provider_key, name) "
-            "VALUES (2, 1, '200', 'Beta')"
-        )
-        for vid in (1, 2):
-            conn.execute(
-                "INSERT INTO variable_state (variable_id, register_variant_id, "
-                "valid_from, valid_to, data_type, delivery_column_name) "
-                "VALUES (?, 10, '2018-01-01', '9999-12-31', 'int', ?)",
-                (vid, f"COL{vid}"),
-            )
-        conn.commit()
-
-        slug_dir = tmp_path / "slug"
-        slug_dir.mkdir()
-        # Non-incremental rewrites the already-slugged variable too (its prior
-        # slug isn't in any auto.toml, so it re-derives → 2 auto_new).
-        counts = populate_variable_slugs(conn, slug_dir, incremental=False)
-        assert counts["auto_new"] == 2
-
-    def test_incremental_processes_only_null_slug_variables(
-        self, tmp_path: Path
-    ) -> None:
-        from reg_meta_build.db import DDL, seed_providers
-
-        conn = sqlite3.connect(":memory:")
-        conn.executescript(DDL)
-        seed_providers(conn)
-        conn.execute(
-            "INSERT INTO register (register_id, provider_id, name, slug) "
-            "VALUES (1, 1, 'R', 'r')"
-        )
-        conn.execute(
-            "INSERT INTO register_variant (register_variant_id, register_id, name, slug) "
-            "VALUES (10, 1, 'V', 'v')"
-        )
-        conn.execute(
-            "INSERT INTO variable (variable_id, register_id, provider_key, name, slug) "
-            "VALUES (1, 1, '100', 'Alpha', 'preexisting')"
-        )
-        conn.execute(
-            "INSERT INTO variable (variable_id, register_id, provider_key, name) "
-            "VALUES (2, 1, '200', 'Beta')"
-        )
-        for vid in (1, 2):
-            conn.execute(
-                "INSERT INTO variable_state (variable_id, register_variant_id, "
-                "valid_from, valid_to, data_type, delivery_column_name) "
-                "VALUES (?, 10, '2018-01-01', '9999-12-31', 'int', ?)",
-                (vid, f"COL{vid}"),
-            )
-        conn.commit()
-
-        slug_dir = tmp_path / "slug"
-        slug_dir.mkdir()
-        counts = populate_variable_slugs(conn, slug_dir, incremental=True)
-        # Only the NULL-slug variable (id 2) is processed.
-        assert counts["auto_new"] == 1
-        assert (
-            conn.execute("SELECT slug FROM variable WHERE variable_id = 1").fetchone()[
-                0
-            ]
-            == "preexisting"  # untouched
-        )
-        assert (
-            conn.execute("SELECT slug FROM variable WHERE variable_id = 2").fetchone()[
-                0
-            ]
-            is not None
-        )
-
-    def test_incremental_skips_providers_with_no_null_slug_variables(
-        self, tmp_path: Path
-    ) -> None:
-        # #365 PR2 perf: under incremental=True, a provider whose variables are
-        # ALL already slugged must not be processed at all. Observable via its
-        # `<provider>.auto.toml` NOT being written (only a processed provider
-        # with first-sight slugs writes it) and its slugs staying untouched.
-        from reg_meta_build.db import DDL, seed_providers
-
-        conn = sqlite3.connect(":memory:")
-        conn.executescript(DDL)
-        seed_providers(conn)
-        # SCB (provider 1): one variable, already slugged → no NULL rows.
-        conn.execute(
-            "INSERT INTO register (register_id, provider_id, name, slug) "
-            "VALUES (1, 1, 'R', 'r')"
-        )
-        conn.execute(
-            "INSERT INTO register_variant (register_variant_id, register_id, name, slug) "
-            "VALUES (10, 1, 'V', 'v')"
-        )
-        conn.execute(
-            "INSERT INTO variable (variable_id, register_id, provider_key, name, slug) "
-            "VALUES (1, 1, '100', 'Alpha', 'preexisting')"
-        )
-        conn.execute(
-            "INSERT INTO variable_state (variable_id, register_variant_id, "
-            "valid_from, valid_to, data_type, delivery_column_name) "
-            "VALUES (1, 10, '2018-01-01', '9999-12-31', 'int', 'COL1')"
-        )
-        # A steward provider (high-band id) with one NULL-slug variable.
-        bank_pid = mint("provider", "bankx")
-        conn.execute(
-            "INSERT INTO provider (provider_id, slug, name) VALUES (?, 'bankx', 'Bank X')",
-            (bank_pid,),
-        )
-        conn.execute(
-            "INSERT INTO register (register_id, provider_id, name, slug) "
-            "VALUES (2000, ?, 'BR', 'br')",
-            (bank_pid,),
-        )
-        conn.execute(
-            "INSERT INTO register_variant (register_variant_id, register_id, name, slug) "
-            "VALUES (2010, 2000, 'BV', 'bv')"
-        )
-        conn.execute(
-            "INSERT INTO variable (variable_id, register_id, provider_key, name) "
-            "VALUES (2001, 2000, 'belopp', 'Belopp')"
-        )
-        conn.execute(
-            "INSERT INTO variable_state (variable_id, register_variant_id, "
-            "valid_from, valid_to, data_type, delivery_column_name) "
-            "VALUES (2001, 2010, '2018-01-01', '9999-12-31', 'float', 'BELOPP')"
-        )
-        conn.commit()
-
-        slug_dir = tmp_path / "slug"
-        slug_dir.mkdir()
-        counts = populate_variable_slugs(conn, slug_dir, incremental=True)
-        # Only the steward NULL-slug variable was processed.
-        assert counts["auto_new"] == 1
-        # SCB (no NULL rows) was skipped → its auto.toml is never written.
-        assert not (slug_dir / "scb.auto.toml").exists()
-        assert (slug_dir / "bankx.auto.toml").exists()
-        # SCB's published slug is untouched.
-        assert (
-            conn.execute("SELECT slug FROM variable WHERE variable_id = 1").fetchone()[
-                0
-            ]
-            == "preexisting"
-        )
-
-    def test_incremental_uniquifies_against_published_slug(
-        self, tmp_path: Path
-    ) -> None:
-        """A new variable whose auto-derived slug collides with a PUBLISHED global
-        slug in the same register must get a `-N` suffix, not raise on
-        UNIQUE(register_id, slug)."""
-        from reg_meta.fqid import derive_variable_slug
-        from reg_meta_build.db import DDL, seed_providers
-
-        conn = sqlite3.connect(":memory:")
-        conn.executescript(DDL)
-        seed_providers(conn)
-        conn.execute(
-            "INSERT INTO register (register_id, provider_id, name, slug) "
-            "VALUES (1, 1, 'R', 'r')"
-        )
-        conn.execute(
-            "INSERT INTO register_variant (register_variant_id, register_id, name, slug) "
-            "VALUES (10, 1, 'V', 'v')"
-        )
-        published = derive_variable_slug("KON")
-        conn.execute(
-            "INSERT INTO variable (variable_id, register_id, provider_key, name, slug) "
-            "VALUES (1, 1, '100', 'Alpha', ?)",
-            (published,),
-        )
-        # New variable delivers the SAME column KON AND has a name that slugs to
-        # the same base, so both the kolumnnamn and name fallback arms collide
-        # with the published slug — forcing the `-N` suffix that proves the
-        # `used` set was seeded with the published global slug.
-        conn.execute(
-            "INSERT INTO variable (variable_id, register_id, provider_key, name) "
-            "VALUES (2, 1, '200', 'Kön')"
-        )
-        conn.execute(
-            "INSERT INTO variable_state (variable_id, register_variant_id, "
-            "valid_from, valid_to, data_type, delivery_column_name) "
-            "VALUES (2, 10, '2018-01-01', '9999-12-31', 'int', 'KON')"
-        )
-        conn.commit()
-
-        slug_dir = tmp_path / "slug"
-        slug_dir.mkdir()
-        # Without the `used` seeding this would raise UNIQUE(register_id, slug).
-        populate_variable_slugs(conn, slug_dir, incremental=True)
-        new_slug = conn.execute(
-            "SELECT slug FROM variable WHERE variable_id = 2"
-        ).fetchone()[0]
-        assert new_slug != published
-        assert new_slug.startswith(published)  # `-N` suffix variant
-        # The published slug on the pre-existing variable is untouched.
-        assert (
-            conn.execute("SELECT slug FROM variable WHERE variable_id = 1").fetchone()[
-                0
-            ]
-            == published
-        )
-
-
-# ── loader strictness ────────────────────────────────────────────────────────
-
-
-class TestLoader:
-    def test_minimal_inventory_parses(self, tmp_path: Path) -> None:
-        inv = {"steward": "swecov", "source_label": "x"}
-        path = tmp_path / "inv.json"
-        path.write_text(json.dumps(inv), encoding="utf-8")
-        parsed = load_inventory(path)
-        assert parsed.steward == "swecov"
-        assert parsed.registers == ()
-
-    @pytest.mark.parametrize(
-        "mutate",
-        [
-            lambda d: d.pop("steward"),
-            lambda d: d.pop("source_label"),
-            lambda d: d.update(unexpected_key=1),
-            # grafts/aliases are now UNKNOWN top-level keys (trimmed to global
-            # build) — the strict top-level check must reject them.
-            lambda d: d.update(grafts=[]),
-            lambda d: d.update(aliases=[]),
-            lambda d: d.update(
-                registers=[{"provider": "p", "key": "k", "name": "N", "variants": []}]
-            ),  # empty variants
-            lambda d: d.update(
-                registers=[
-                    {
-                        "provider": "p",
-                        "key": "k",
-                        "name": "N",
-                        "variants": [{"key": "v", "name": "V", "variables": []}],
-                    }
-                ]
-            ),  # empty variables
-            lambda d: d.update(providers=[{"slug": "p"}]),  # missing name
-            # A non-bool `is_identifier` on a variable must be rejected (the
-            # field is INTEGER-flag-backed; a stray int is a generator bug).
-            lambda d: d.update(
-                registers=[
-                    {
-                        "provider": "p",
-                        "key": "k",
-                        "name": "N",
-                        "variants": [
-                            {
-                                "key": "v",
-                                "name": "V",
-                                "variables": [
-                                    {
-                                        "key": "x",
-                                        "name": "X",
-                                        "states": [{"column": "C"}],
-                                        "is_identifier": 1,
-                                    }
-                                ],
-                            }
-                        ],
-                    }
-                ]
-            ),  # non-bool is_identifier
-            # Duplicate provider slug.
-            lambda d: d.update(
-                providers=[
-                    {"slug": "p", "name": "P"},
-                    {"slug": "p", "name": "P2"},
-                ]
-            ),
-            # Provider slug `group` is reserved in the PROVIDER slot (#617): a
-            # provider named `group` would shadow the
-            # `/catalog/group/{provider}/{register}/{key}` route. The overlay
-            # load boundary must reject it (Codex P2 on #622) — the raw
-            # `_insert_providers` INSERT has no grammar gate of its own.
-            lambda d: d.update(providers=[{"slug": "group", "name": "Group"}]),
-            # Grammar-invalid provider slug (uppercase / underscore) — caught by
-            # the same provider-slot validate_slug call.
-            lambda d: d.update(providers=[{"slug": "Bad_Slug", "name": "Bad"}]),
-            # Duplicate (provider, register key).
-            lambda d: d.update(
-                registers=[
-                    _reg_stub("p", "k"),
-                    _reg_stub("p", "k"),
-                ]
-            ),
-            # A state's `aliases` are its co-delivered physical columns: a list
-            # of distinct non-empty strings, none of them the state's own column
-            # (the writer already emits that one's alias + window row).
-            _bad_aliases("C2"),
-            _bad_aliases([" "]),
-            _bad_aliases(["C"]),
-            _bad_aliases(["C2", "C2"]),
-        ],
+def test_multistate_rename_preserves_one_variable(
+    tmp_path: Path, global_db: Path
+) -> None:
+    text = _BASE_TOML.replace(
+        '    column = "BELOPP"\n    data_type = "float"',
+        '    column = "BELOPP"\n    data_type = "float"\n'
+        '    valid_from = "2018"\n    valid_to = "2020"\n\n'
+        '    [[register.variable.state]]\n    column = "BELOPP_SEK"\n'
+        '    data_type = "float"\n    valid_from = "2021"',
+        1,
     )
-    def test_structural_defects_fail(self, tmp_path: Path, mutate) -> None:
-        inv = {"steward": "swecov", "source_label": "x"}
-        mutate(inv)
-        path = tmp_path / "inv.json"
-        path.write_text(json.dumps(inv), encoding="utf-8")
-        with pytest.raises(RegMetaError) as exc:
-            load_inventory(path)
-        assert exc.value.exit_code == EXIT_CONFIG
-
-    def test_divergent_pooled_variable_attribute_is_config_error(
-        self, tmp_path: Path
-    ) -> None:
-        # Two variants of one register list `x`, disagreeing on `name`. The
-        # pooled variable row carries exactly one name, so this is a structural
-        # defect naming the register, key and field — never a silent first-wins.
-        reg = _reg_stub("swedbank", "tx")
-        second = _reg_stub("swedbank", "tx")["variants"][0]
-        second["key"] = "v2"
-        second["variables"][0]["name"] = "Other"
-        reg["variants"].append(second)
-        inv = {"steward": "swecov", "source_label": "x", "registers": [reg]}
-        path = tmp_path / "inv.json"
-        path.write_text(json.dumps(inv), encoding="utf-8")
-        with pytest.raises(RegMetaError) as exc:
-            load_inventory(path)
-        assert exc.value.exit_code == EXIT_CONFIG
-        assert "swedbank/tx" in exc.value.message
-        assert "'x'" in exc.value.message
-        assert "`name`" in exc.value.message
-
-    def test_non_object_root_is_config_error(self, tmp_path: Path) -> None:
-        # A JSON array (or any non-object) root must fail strict load.
-        path = tmp_path / "inv.json"
-        path.write_bytes(b"[]")
-        with pytest.raises(RegMetaError) as exc:
-            load_inventory(path)
-        assert exc.value.exit_code == EXIT_CONFIG
-
-    def test_dotted_variable_key_is_config_error(self, tmp_path: Path) -> None:
-        # A variable key with a '.' becomes a provider_key the slug source-ID
-        # grammar would mis-parse — rejected at load, not deep in slugging.
-        reg = _reg_stub("swedbank", "tx")
-        reg["variants"][0]["variables"][0]["key"] = "a.b"
-        inv = {"steward": "swecov", "source_label": "x", "registers": [reg]}
-        path = tmp_path / "inv.json"
-        path.write_text(json.dumps(inv), encoding="utf-8")
-        with pytest.raises(RegMetaError) as exc:
-            load_inventory(path)
-        assert exc.value.exit_code == EXIT_CONFIG
-
-    def test_variable_without_states_is_config_error(self, tmp_path: Path) -> None:
-        reg = _reg_stub("swedbank", "tx")
-        del reg["variants"][0]["variables"][0]["states"]
-        inv = {"steward": "swecov", "source_label": "x", "registers": [reg]}
-        path = tmp_path / "inv.json"
-        path.write_text(json.dumps(inv), encoding="utf-8")
-        with pytest.raises(RegMetaError) as exc:
-            load_inventory(path)
-        assert exc.value.exit_code == EXIT_CONFIG
-
-    def test_duplicate_state_uniqueness_key_is_config_error(
-        self, tmp_path: Path
-    ) -> None:
-        reg = _reg_stub("swedbank", "tx")
-        reg["variants"][0]["variables"][0]["states"] = [
-            {"column": "C1", "valid_from": "2020"},
-            {"column": "C2", "valid_from": "2020"},
-        ]
-        inv = {"steward": "swecov", "source_label": "x", "registers": [reg]}
-        path = tmp_path / "inv.json"
-        path.write_text(json.dumps(inv), encoding="utf-8")
-        with pytest.raises(RegMetaError) as exc:
-            load_inventory(path)
-        assert exc.value.exit_code == EXIT_CONFIG
-        assert "duplicate state key" in exc.value.message
-        # The remedy for two spellings of ONE window is `aliases`, not a fake
-        # `value_set_version_label` — which ships and renders as a value-set
-        # version, and splits the picker's codings.
-        assert "`aliases`" in exc.value.remediation
-
-    def test_state_aliases_are_stripped(self, tmp_path: Path) -> None:
-        inv = {
-            "steward": "swecov",
-            "source_label": "x",
-            "registers": [
-                _reg_stub_with_state({"column": "C", "aliases": [" C_2 ", "C-2"]})
-            ],
-        }
-        path = tmp_path / "inv.json"
-        path.write_text(json.dumps(inv), encoding="utf-8")
-        state = load_inventory(path).registers[0].variants[0].variables[0].states[0]
-        assert state.aliases == ("C_2", "C-2")
-
-    def test_duplicate_state_valid_from_allowed_with_discriminator(
-        self, tmp_path: Path
-    ) -> None:
-        reg = _reg_stub("swedbank", "tx")
-        reg["variants"][0]["variables"][0]["states"] = [
-            {"column": "C1", "valid_from": "2020", "value_set_version_label": "c1"},
-            {"column": "C2", "valid_from": "2020", "value_set_version_label": "c2"},
-        ]
-        inv = {"steward": "swecov", "source_label": "x", "registers": [reg]}
-        path = tmp_path / "inv.json"
-        path.write_text(json.dumps(inv), encoding="utf-8")
-        parsed = load_inventory(path)
-        states = parsed.registers[0].variants[0].variables[0].states
-        assert [s.value_set_version_label for s in states] == ["c1", "c2"]
-
-    def test_steward_mismatch_fails(self, tmp_path: Path, global_db: Path) -> None:
-        inv = {"steward": "other", "source_label": "x"}
-        path = tmp_path / "inv.json"
-        path.write_text(json.dumps(inv), encoding="utf-8")
-        out = tmp_path / "out"
-        out.mkdir()
-        with pytest.raises(RegMetaError) as exc:
-            extend_db(
-                base_db=global_db,
-                inventory_path=path,
-                db_dir=out,
-                steward="swecov",
-                skip_slugs=True,
-            )
-        assert exc.value.exit_code == EXIT_CONFIG
+    counts, out = _run(tmp_path, global_db, text)
+    assert counts["variables"] == 3 and counts["states"] == 5
+    conn = sqlite3.connect(out)
+    assert conn.execute(
+        "SELECT delivery_column_name, valid_from, valid_to FROM variable_state "
+        "WHERE variable_id = ? ORDER BY valid_from",
+        (_ids()["belopp"],),
+    ).fetchall() == [
+        ("BELOPP", "2018-01-01", "2020-12-31"),
+        ("BELOPP_SEK", "2021-01-01", "9999-12-31"),
+    ]
+    conn.close()
 
 
-class TestProviderSlugValidation:
-    """The overlay provider slug is INSERTed raw by `_insert_providers` with no
-    grammar gate of its own, so `load_inventory` validates it against reg_meta's
-    authoritative PROVIDER-slot rules (grammar + reservations incl. `group`,
-    #617). Codex P2 on #622."""
-
-    def test_reserved_group_provider_slug_rejected_with_actionable_message(
-        self, tmp_path: Path
-    ) -> None:
-        inv = {
-            "steward": "swecov",
-            "source_label": "x",
-            "providers": [{"slug": "group", "name": "Group"}],
-        }
-        path = tmp_path / "inv.json"
-        path.write_text(json.dumps(inv), encoding="utf-8")
-        with pytest.raises(RegMetaError) as exc:
-            load_inventory(path)
-        assert exc.value.exit_code == EXIT_CONFIG
-        # The message names the offending slug and the reason (the underlying
-        # FqidError text mentions the reserved group subject route).
-        assert "group" in exc.value.message
-        assert "reserved" in exc.value.message
-
-    def test_valid_provider_slug_accepted(self, tmp_path: Path) -> None:
-        # The validation must not reject a real, valid overlay provider slug.
-        inv = {
-            "steward": "swecov",
-            "source_label": "x",
-            "providers": [{"slug": "swedbank", "name": "Swedbank AB"}],
-        }
-        path = tmp_path / "inv.json"
-        path.write_text(json.dumps(inv), encoding="utf-8")
-        parsed = load_inventory(path)
-        assert parsed.providers[0].slug == "swedbank"
-
-
-# ── failure / edge paths ─────────────────────────────────────────────────────
-
-
-def _run_extend_skip_slugs(
-    tmp_path: Path, base_db: Path, inventory: dict, *, out_name: str = "out"
-) -> tuple[dict, Path]:
-    """`extend_db` with `skip_slugs=True` (no slug dir needed) — for failure/edge
-    tests that don't exercise slugging."""
-    inv_path = tmp_path / f"{out_name}-inventory.json"
-    inv_path.write_text(json.dumps(inventory), encoding="utf-8")
-    out_dir = tmp_path / out_name
-    out_dir.mkdir()
-    counts = extend_db(
-        base_db=base_db,
-        inventory_path=inv_path,
-        db_dir=out_dir,
-        steward=_STEWARD,
-        skip_slugs=True,
+def test_co_delivered_aliases_get_orderable_windows(
+    tmp_path: Path, global_db: Path
+) -> None:
+    text = _BASE_TOML.replace(
+        '    data_type = "float"',
+        '    data_type = "float"\n    aliases = ["BELOPP_SEK", "Belopp-SEK"]',
+        1,
     )
-    return counts, out_dir / "reg_meta.db"
-
-
-class TestFailurePaths:
-    def test_missing_base_db(self, tmp_path: Path) -> None:
-        inv_path = tmp_path / "inv.json"
-        inv_path.write_text(json.dumps(_base_inventory()), encoding="utf-8")
-        out = tmp_path / "out"
-        out.mkdir()
-        with pytest.raises(RegMetaError) as exc:
-            extend_db(
-                base_db=tmp_path / "nonexistent.db",
-                inventory_path=inv_path,
-                db_dir=out,
-                steward=_STEWARD,
-                skip_slugs=True,
-            )
-        assert exc.value.exit_code == EXIT_CONFIG
-        assert exc.value.code == "extend_base_db_not_found"
-
-    def test_base_db_equals_output_path(self, tmp_path: Path, global_db: Path) -> None:
-        # If --base-db resolves to <db_dir>/reg_meta.db, the end-of-run publish
-        # would overwrite the "read-only" base — reject up front.
-        import shutil
-
-        out = tmp_path / "out"
-        out.mkdir()
-        base_in_out = out / "reg_meta.db"
-        shutil.copy2(global_db, base_in_out)
-        inv_path = tmp_path / "inv.json"
-        inv_path.write_text(json.dumps(_base_inventory()), encoding="utf-8")
-        with pytest.raises(RegMetaError) as exc:
-            extend_db(
-                base_db=base_in_out,
-                inventory_path=inv_path,
-                db_dir=out,
-                steward=_STEWARD,
-                skip_slugs=True,
-            )
-        assert exc.value.exit_code == EXIT_CONFIG
-        assert exc.value.code == "extend_base_db_is_output"
-
-    def test_register_names_undeclared_provider(
-        self, tmp_path: Path, global_db: Path
-    ) -> None:
-        # A register whose provider is neither declared in `providers[]` nor live
-        # in the DB is a hard structural error in `_insert_core_graph`.
-        inv = _base_inventory()
-        inv["providers"] = []  # drop the declaration; `swedbank` is not live
-        with pytest.raises(RegMetaError) as exc:
-            _run_extend_skip_slugs(tmp_path, global_db, inv)
-        assert exc.value.exit_code == EXIT_CONFIG
-
-    def test_pre_rename_hook_failure_cleans_up(
-        self, tmp_path: Path, global_db: Path
-    ) -> None:
-        inv_path = tmp_path / "inv.json"
-        inv_path.write_text(json.dumps(_base_inventory()), encoding="utf-8")
-        out = tmp_path / "out"
-        out.mkdir()
-
-        class _HookError(RuntimeError):
-            pass
-
-        def hook(_staging: Path) -> None:
-            raise _HookError("validation refused the overlay")
-
-        with pytest.raises(_HookError):
-            extend_db(
-                base_db=global_db,
-                inventory_path=inv_path,
-                db_dir=out,
-                steward=_STEWARD,
-                skip_slugs=True,
-                pre_rename_hook=hook,
-            )
-        # The staging tmp is removed and no final DB was written (nothing to
-        # preserve — this is a first overlay into a fresh dir).
-        assert not (out / "reg_meta.db.tmp").exists()
-        assert not (out / "reg_meta.db").exists()
-
-    def test_failed_final_replacement_keeps_live_db(
-        self, tmp_path: Path, global_db: Path, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
-        """Y-52: extend publishes through the same `publish_db` as build, so a
-        failing final replacement leaves the live flavored DB at its own path
-        with its original bytes."""
-        inv_path = tmp_path / "inv.json"
-        inv_path.write_text(json.dumps(_base_inventory()), encoding="utf-8")
-        out = tmp_path / "out"
-        out.mkdir()
-        live = out / "reg_meta.db"
-        live_bytes = b"LIVE-FLAVORED-GENERATION-MUST-SURVIVE"
-        live.write_bytes(live_bytes)
-        fail_replace_onto(monkeypatch, live)
-
-        with pytest.raises(OSError, match="injected replacement failure"):
-            extend_db(
-                base_db=global_db,
-                inventory_path=inv_path,
-                db_dir=out,
-                steward=_STEWARD,
-                skip_slugs=True,
-            )
-
-        assert live.read_bytes() == live_bytes
-
-    def test_skip_slugs_leaves_null_slugs(
-        self, tmp_path: Path, global_db: Path
-    ) -> None:
-        _, out = _run_extend_skip_slugs(tmp_path, global_db, _base_inventory())
-        conn = sqlite3.connect(out)
-        ids = _steward_register_ids()
-        null_slugs = conn.execute(
-            "SELECT COUNT(*) FROM variable WHERE register_id = ? AND slug IS NULL",
-            (ids["register"],),
-        ).fetchone()[0]
-        assert null_slugs == 2  # belopp + kontonr both unslugged
-
-    def test_empty_inventory_is_zero_counts_and_no_change(
-        self, tmp_path: Path, global_db: Path
-    ) -> None:
-        before = _global_snapshot(sqlite3.connect(global_db))
-        inv = {"steward": _STEWARD, "source_label": "swecov-empty"}
-        counts, out = _run_extend_skip_slugs(tmp_path, global_db, inv)
-        for key in ("providers", "registers", "variants", "variables", "states"):
-            assert counts[key] == 0
-        # Core graph unchanged vs base, and the result validates clean.
-        assert _global_snapshot(sqlite3.connect(out)) == before
-        assert not validate_built_db(out, flavored=True).failures
-
-    def test_no_wal_sidecars_after_run(self, tmp_path: Path, global_db: Path) -> None:
-        # #365 PR2: extend_db reuses db._unlink_wal_sidecars (no local dupe). A
-        # successful run must leave no orphaned `-wal`/`-shm` next to the output.
-        _, out = _run_extend_skip_slugs(tmp_path, global_db, _base_inventory())
-        assert out.exists()
-        assert not out.with_name(out.name + "-wal").exists()
-        assert not out.with_name(out.name + "-shm").exists()
-
-    def test_unlink_wal_sidecars_is_db_function(self) -> None:
-        # The local definition was deleted in favor of importing from .db; assert
-        # the symbol used by extend_db IS the db.py one (no silent re-divergence).
-        import reg_meta_build.db as _db
-        import reg_meta_build.extend_db as _ext
-
-        assert not hasattr(_ext, "_unlink_wal_sidecars")
-        assert hasattr(_db, "_unlink_wal_sidecars")
-
-    def test_steward_register_missing_slug_fails(
-        self, tmp_path: Path, global_db: Path
-    ) -> None:
-        # A steward slug dir that slugs the VARIANT but omits the REGISTER entry:
-        # populate_slugs(strict=False) leaves the steward register NULL-slug, and
-        # the scoped guard must catch it as a clean EXIT_CONFIG (otherwise an
-        # unaddressable steward FQID would ship).
-        ids = _steward_register_ids()
-        slug_dir = tmp_path / "sslug"
-        slug_dir.mkdir()
-        # No freeze.toml ⇒ steward zone defaults to churning (#470).
-        (slug_dir / ".snapshot.json").write_text("{}\n", encoding="utf-8")
-        # Variant entry present, register entry DELIBERATELY absent.
-        (slug_dir / f"{_BANK}.toml").write_text(
-            f'[register_variant."{ids["register"]}.{ids["variant"]}"]\n'
-            'slug = "transaktioner-default"\n',
-            encoding="utf-8",
+    _, out = _run(tmp_path, global_db, text)
+    conn = sqlite3.connect(out)
+    var_id = _ids()["belopp"]
+    assert {
+        row[0]
+        for row in conn.execute(
+            "SELECT delivery_column_name FROM variable_alias WHERE variable_id = ?",
+            (var_id,),
         )
-        inv_path = tmp_path / "inv.json"
-        inv_path.write_text(json.dumps(_base_inventory()), encoding="utf-8")
-        out = tmp_path / "out"
-        out.mkdir()
-        with pytest.raises(RegMetaError) as exc:
-            extend_db(
-                base_db=global_db,
-                inventory_path=inv_path,
-                db_dir=out,
-                steward=_STEWARD,
-                slug_dir=slug_dir,
-            )
-        assert exc.value.exit_code == EXIT_CONFIG
-
-    def test_steward_slug_dir_is_file_fails(
-        self, tmp_path: Path, global_db: Path
-    ) -> None:
-        # `resolve_steward_slug_dir` rejects a `--slug-dir` that resolves to a
-        # FILE (not a directory) as a clean EXIT_CONFIG — the `not resolved.is_dir()`
-        # branch, distinct from the missing-register-entry path above.
-        slug_file = tmp_path / "not-a-dir.toml"
-        slug_file.write_text("", encoding="utf-8")
-        inv_path = tmp_path / "inv.json"
-        inv_path.write_text(json.dumps(_base_inventory()), encoding="utf-8")
-        out = tmp_path / "out"
-        out.mkdir()
-        with pytest.raises(RegMetaError) as exc:
-            extend_db(
-                base_db=global_db,
-                inventory_path=inv_path,
-                db_dir=out,
-                steward=_STEWARD,
-                slug_dir=slug_file,
-            )
-        assert exc.value.code == "extend_slug_dir_not_found"
-        assert exc.value.exit_code == EXIT_CONFIG
-
-
-# ── flavored entity-key curation gate (#559) ─────────────────────────────────
-
-
-class TestFlavoredEntityKeyGate:
-    """#559: the flavored extend-db validate path runs the entity-key curation
-    gate scoped to the steward providers, end-to-end through the real
-    `extend_db` + `validate_built_db(flavored=True, slug_dir=...)`."""
-
-    def _build_flavored_with_panel(self, tmp_path: Path, global_db: Path) -> Path:
-        """Overlay the base inventory with the steward variant keyed on the belopp
-        var (validate OFF, so an un-pinned key still builds), returning the out DB.
-        The belopp slug is read back from the built DB (not assumed) so the panel
-        ref actually resolves."""
-        ids = _steward_register_ids()
-        # First pass: plain slug dir (no panel key) so the build succeeds and we can
-        # read belopp's auto-derived slug + confirm its source_id key.
-        belopp_slug = self._resolve_belopp_slug(tmp_path, global_db, ids)
-        # Second pass: author the panel key pointing at the CONFIRMED belopp slug.
-        inv_path = tmp_path / "panel-inventory.json"
-        inv_path.write_text(json.dumps(_base_inventory()), encoding="utf-8")
-        slug_dir = tmp_path / "panel-sslug"
-        slug_dir.mkdir()
-        _write_steward_slug_dir(slug_dir, panel_entity_key=belopp_slug)
-        out_dir = tmp_path / "panel-out"
-        out_dir.mkdir()
-        extend_db(
-            base_db=global_db,
-            inventory_path=inv_path,
-            db_dir=out_dir,
-            steward=_STEWARD,
-            slug_dir=slug_dir,
-            pre_rename_hook=None,  # validate OFF: un-pinned key still builds
-        )
-        return out_dir / "reg_meta.db"
-
-    @staticmethod
-    def _resolve_belopp_slug(tmp_path: Path, global_db: Path, ids: dict) -> str:
-        """Build once with the plain steward dir, then READ belopp's resolved slug
-        and assert its source_id is `<register_id>.belopp`."""
-        _, out = _run_extend(tmp_path, global_db, _base_inventory(), out_name="probe")
-        conn = sqlite3.connect(out)
-        slug = conn.execute(
-            "SELECT slug FROM variable WHERE register_id = ? AND provider_key = ?",
-            (ids["register"], "belopp"),
-        ).fetchone()[0]
-        conn.close()
-        assert slug, "belopp must auto-slug on the overlay"
-        return slug
-
-    def test_flavored_gate_fails_unpinned_steward_entity_key(
-        self, tmp_path: Path, global_db: Path
-    ) -> None:
-        """The overlaid DB carries a steward entity-key var (belopp) with NO
-        `[variable]` pin → the flavored gate FAILS, naming the steward var's
-        source_id (`<register_id>.belopp`) and "no curated [variable] slug pin"."""
-        ids = _steward_register_ids()
-        out = self._build_flavored_with_panel(tmp_path, global_db)
-        # The steward dir as built has the panel key but no [variable] pin.
-        steward_dir = tmp_path / "panel-sslug"
-        result = validate_built_db(out, flavored=True, slug_dir=steward_dir)
-        assert not result.passed
-        src = f"{ids['register']}.belopp"
-        assert any(
-            f"source_id {src}" in f and "no curated [variable] slug pin" in f
-            for f in result.failures
-        ), result.failures
-
-    def test_flavored_gate_passes_when_steward_entity_key_pinned(
-        self, tmp_path: Path, global_db: Path
-    ) -> None:
-        """Adding the `[variable."<register_id>.belopp"]` pin (slug = belopp's
-        resolved slug) clears the flavored gate."""
-        ids = _steward_register_ids()
-        out = self._build_flavored_with_panel(tmp_path, global_db)
-        belopp_slug = (
-            sqlite3.connect(out)
-            .execute(
-                "SELECT slug FROM variable WHERE register_id = ? AND provider_key = ?",
-                (ids["register"], "belopp"),
-            )
-            .fetchone()[0]
-        )
-        # Append the [variable] pin to the steward dir's <bank>.toml.
-        steward_dir = tmp_path / "panel-sslug"
-        bank_toml = steward_dir / f"{_BANK}.toml"
-        bank_toml.write_text(
-            bank_toml.read_text(encoding="utf-8")
-            + f'\n[variable."{ids["register"]}.belopp"]\nslug = "{belopp_slug}"\n',
-            encoding="utf-8",
-        )
-        result = validate_built_db(out, flavored=True, slug_dir=steward_dir)
-        assert result.passed, result.failures
-        assert "entity-key var(s) are curated" in result.format_report()
-
-    def test_flavored_gate_does_not_enforce_global_scb_entity_key(
-        self, tmp_path: Path, global_db: Path
-    ) -> None:
-        """The steward-scoped gate ignores the global base's SCB entity-key vars:
-        inject an un-pinned SCB `panel_entity_key` into the overlaid DB and confirm
-        the flavored gate (steward dir, which has the belopp pin) still passes — no
-        scb failure, even though the steward dir has no scb pin."""
-        ids = _steward_register_ids()
-        out = self._build_flavored_with_panel(tmp_path, global_db)
-        belopp_slug = (
-            sqlite3.connect(out)
-            .execute(
-                "SELECT slug FROM variable WHERE register_id = ? AND provider_key = ?",
-                (ids["register"], "belopp"),
-            )
-            .fetchone()[0]
-        )
-        # Pin the steward var so the steward scope is clean, then add an UN-PINNED
-        # SCB panel key on a global SCB variant (the global base's concern, not the
-        # steward's). A global SCB variable + its variant from the synthetic base:
-        conn = sqlite3.connect(out)
-        scb_row = conn.execute(
-            "SELECT vs.register_variant_id, v.slug FROM variable v "
-            "JOIN variable_state vs ON vs.variable_id = v.variable_id "
-            "JOIN register r ON r.register_id = v.register_id "
-            "WHERE r.provider_id = 1 AND v.slug IS NOT NULL LIMIT 1"
-        ).fetchone()
-        assert scb_row is not None, "synthetic base must carry an SCB variable"
-        scb_variant_id, scb_slug = scb_row
+    } == {"BELOPP", "BELOPP_SEK", "Belopp-SEK"}
+    assert set(
         conn.execute(
-            "UPDATE register_variant SET panel_entity_key = ? "
-            "WHERE register_variant_id = ?",
-            (scb_slug, scb_variant_id),
+            "SELECT delivery_column_name, valid_from, valid_to FROM variable_alias_window "
+            "WHERE variable_id = ?",
+            (var_id,),
         )
-        conn.commit()
-        conn.close()
-        # Steward dir with the belopp pin (steward scope clean) but NO scb pin.
-        steward_dir = tmp_path / "panel-sslug"
-        bank_toml = steward_dir / f"{_BANK}.toml"
-        bank_toml.write_text(
-            bank_toml.read_text(encoding="utf-8")
-            + f'\n[variable."{ids["register"]}.belopp"]\nslug = "{belopp_slug}"\n',
-            encoding="utf-8",
+    ) == {
+        ("BELOPP", "0001-01-01", "9999-12-31"),
+        ("BELOPP_SEK", "0001-01-01", "9999-12-31"),
+        ("Belopp-SEK", "0001-01-01", "9999-12-31"),
+    }
+    conn.close()
+
+
+@pytest.mark.parametrize(
+    "old, new",
+    [
+        ('purpose = "Bank delivery"', 'purpose = "Bank delivery"\nunexpected = true'),
+        ('valid_from = "2018"', 'valid_from = "not-a-date"'),
+        ('column = "BELOPP"', 'column = "BELOPP"\naliases = ["BELOPP"]'),
+    ],
+)
+def test_malformed_provider_toml_is_exit_config(
+    tmp_path: Path, old: str, new: str
+) -> None:
+    text = _BASE_TOML.replace(old, new, 1)
+    with pytest.raises(RegMetaError) as exc:
+        _load_provider_ir(_providers(tmp_path, text), _STEWARD)
+    assert exc.value.exit_code == EXIT_CONFIG
+
+
+def test_duplicate_state_key_is_rejected(tmp_path: Path) -> None:
+    text = _BASE_TOML.replace(
+        '    column = "BELOPP"\n    data_type = "float"',
+        '    column = "BELOPP"\n    data_type = "float"\n    valid_from = "2020"\n\n'
+        '    [[register.variable.state]]\n    column = "BELOPP_SEK"\n'
+        '    data_type = "float"\n    valid_from = "2020"',
+        1,
+    )
+    with pytest.raises(RegMetaError) as exc:
+        _load_provider_ir(_providers(tmp_path, text), _STEWARD)
+    assert exc.value.exit_code == EXIT_CONFIG
+    assert "duplicate state key" in exc.value.message
+
+
+def test_inverted_state_window_is_rejected(tmp_path: Path) -> None:
+    text = _BASE_TOML.replace(
+        '    column = "BELOPP"\n    data_type = "float"',
+        '    column = "BELOPP"\n    data_type = "float"\n'
+        '    valid_from = "2021"\n    valid_to = "2020"',
+        1,
+    )
+    with pytest.raises(RegMetaError) as exc:
+        _load_provider_ir(_providers(tmp_path, text), _STEWARD)
+    assert exc.value.exit_code == EXIT_CONFIG
+    assert "has no overlap" in exc.value.message
+
+
+def test_variable_key_cannot_repeat_within_one_variant(tmp_path: Path) -> None:
+    needle = """\
+    [[register.variable.state]]
+    column = "BELOPP"
+    data_type = "float"
+"""
+    repeated = (
+        needle
+        + """\
+
+  [[register.variable]]
+  key = "belopp"
+  name = "Belopp"
+  description = "Transaktionsbelopp i SEK."
+  variants = ["_default"]
+
+    [[register.variable.state]]
+    column = "BELOPP_SEK"
+    valid_from = "2021"
+"""
+    )
+    with pytest.raises(RegMetaError) as exc:
+        _load_provider_ir(
+            _providers(tmp_path, _BASE_TOML.replace(needle, repeated)), _STEWARD
         )
-        result = validate_built_db(out, flavored=True, slug_dir=steward_dir)
-        # The un-pinned SCB key is OUT of the steward scope — the entity-key gate
-        # must not fail on it (any scb failure means the scope leaked).
-        scb_failures = [
-            f
-            for f in result.failures
-            if "no curated [variable] slug pin" in f and "belopp" not in f
-        ]
-        assert not scb_failures, scb_failures
-
-    def test_flavored_validate_hook_threads_slug_dir(
-        self, tmp_path: Path, global_db: Path
-    ) -> None:
-        """`cli._flavored_validate_hook(steward_dir, ...)` threads the slug_dir into the
-        flavored validator, so the entity-key gate runs on the overlay and FAILS on
-        the un-pinned steward key — proving the hook passes slug_dir through (not a
-        bare `validate_built_db(flavored=True)` that would self-skip the gate)."""
-        from reg_meta_build import cli
-
-        out = self._build_flavored_with_panel(tmp_path, global_db)
-        steward_dir = tmp_path / "panel-sslug"  # panel key, no [variable] pin
-        # This probe is about the entity-key gate, so it takes the sibling gate's
-        # `--skip-holdings-gate` arm — named, not inferred from a missing argument.
-        hook = cli._flavored_validate_hook(steward_dir, HoldingsGate.SKIPPED)
-        with pytest.raises(RegMetaError) as exc:
-            hook(out)
-        assert exc.value.code == "validation_failed"
-        assert "no curated [variable] slug pin" in exc.value.message
+    assert exc.value.exit_code == EXIT_CONFIG
+    assert "repeats variable" in exc.value.message
 
 
-# ── provider idempotency (_insert_providers) ─────────────────────────────────
+def test_pooled_variable_metadata_disagreement_is_rejected(tmp_path: Path) -> None:
+    head, separator, tail = _BASE_TOML.rpartition('name = "Personnummer"')
+    text = head + separator.replace("Personnummer", "Other") + tail
+    with pytest.raises(RegMetaError) as exc:
+        _load_provider_ir(_providers(tmp_path, text), _STEWARD)
+    assert exc.value.exit_code == EXIT_CONFIG
+    assert "different `name`" in exc.value.message
 
 
-class TestProviderIdempotency:
-    def test_existing_slug_name_mismatch_fails(self) -> None:
-        from reg_meta_build.db import DDL, seed_providers
+def test_steward_identity_inputs_and_slug_pins_bind(
+    tmp_path: Path, global_db: Path
+) -> None:
+    _, out = _run(tmp_path, global_db)
+    conn = sqlite3.connect(out)
+    ids = _ids()
+    assert conn.execute(
+        "SELECT slug FROM register WHERE register_id = ?", (ids["register"],)
+    ).fetchone() == ("transaktioner",)
+    assert conn.execute(
+        "SELECT slug FROM register_variant WHERE register_variant_id = ?",
+        (ids["variant"],),
+    ).fetchone() == ("transaktioner-default",)
+    assert conn.execute(
+        "SELECT slug FROM variable WHERE variable_id = ?", (ids["belopp"],)
+    ).fetchone() == ("belopp",)
+    assert all(value >= _MINT_BIT for value in ids.values())
+    conn.close()
 
-        conn = sqlite3.connect(":memory:")
-        conn.executescript(DDL)
-        seed_providers(conn)
-        # `scb` is seeded; re-declaring it with a DIFFERENT name must fail.
-        with pytest.raises(RegMetaError) as exc:
-            _insert_providers(conn, (InvProvider(slug="scb", name="Wrong Name"),))
-        assert exc.value.exit_code == EXIT_CONFIG
 
-    def test_existing_slug_matching_name_is_noop(self) -> None:
-        from reg_meta_build.db import DDL, seed_providers
-
-        conn = sqlite3.connect(":memory:")
-        conn.executescript(DDL)
-        seed_providers(conn)
-        # Query the real seeded SCB name rather than hardcoding it.
-        seeded_name = conn.execute(
-            "SELECT name FROM provider WHERE slug = 'scb'"
+def test_new_provider_content_is_searchable(tmp_path: Path, global_db: Path) -> None:
+    _, out = _run(tmp_path, global_db)
+    conn = sqlite3.connect(out)
+    assert (
+        conn.execute(
+            "SELECT COUNT(*) FROM variable_fts WHERE variable_fts MATCH ?",
+            ('"Transaktionsbelopp"',),
         ).fetchone()[0]
-        before = conn.execute("SELECT COUNT(*) FROM provider").fetchone()[0]
-        inserted = _insert_providers(conn, (InvProvider(slug="scb", name=seeded_name),))
-        assert inserted == 0  # matching name → skip
-        after = conn.execute("SELECT COUNT(*) FROM provider").fetchone()[0]
-        assert after == before  # no duplicate row
+        >= 1
+    )
+    conn.close()
 
 
-# ── CLI handler ──────────────────────────────────────────────────────────────
+def test_base_rows_and_base_file_are_not_clobbered(
+    tmp_path: Path, global_db: Path
+) -> None:
+    before_bytes = global_db.read_bytes()
+    tables = (
+        "provider",
+        "register",
+        "register_variant",
+        "variable",
+        "variable_state",
+        "variable_alias",
+        "variable_alias_window",
+    )
+    base_conn = sqlite3.connect(global_db)
+    before = {
+        table: set(base_conn.execute(f"SELECT * FROM {table}")) for table in tables
+    }
+    base_conn.close()
+    _, out = _run(tmp_path, global_db)
+    flavored_conn = sqlite3.connect(out)
+    after = {
+        table: set(flavored_conn.execute(f"SELECT * FROM {table}")) for table in tables
+    }
+    flavored_conn.close()
+    assert all(before[table] <= after[table] for table in tables)
+    assert global_db.read_bytes() == before_bytes
 
 
-# ── core-graph INSERT column parity (#425) ───────────────────────────────────
-
-# Two writers hand-roll the shipped core-graph INSERTs and their column lists
-# must stay identical: `extend_db._insert_core_graph` (steward overlay, per-row
-# `conn.execute`) and `db._reinsert_core_graph_from_ir` (materializer sole-writer,
-# `conn.executemany`). FOOTGUN: a future *nullable* column added to one writer but
-# not the other compiles, runs, and silently leaves the other writer's rows unset
-# (no NOT NULL to trip). No shared helper joins them — the two call sites differ
-# structurally (per-row positional vs bulk named binds), so a shared writer would
-# be an invasive refactor for a parity concern. This test is the chosen lock.
-
-_CORE_GRAPH_TABLES = frozenset(
-    {"register", "register_variant", "variable", "variable_state", "variable_alias"}
-)
-
-# `variable_alias` uses `INSERT OR IGNORE`, hence the optional clause.
-_INSERT_RE = re.compile(
-    r"INSERT(?:\s+OR\s+IGNORE)?\s+INTO\s+(\w+)\s*\(([^)]*)\)",
-    re.IGNORECASE,
-)
+def test_fresh_runs_are_deterministic(tmp_path: Path, global_db: Path) -> None:
+    first, first_db = _run(tmp_path, global_db, name="first")
+    second, second_db = _run(tmp_path, global_db, name="second")
+    assert {key: value for key, value in first.items() if key != "db_path"} == {
+        key: value for key, value in second.items() if key != "db_path"
+    }
+    query = (
+        "SELECT v.register_id, vs.register_variant_id, v.variable_id, vs.state_id "
+        "FROM variable_state vs JOIN variable v USING (variable_id) "
+        "JOIN register_variant rv USING (register_variant_id) "
+        "WHERE v.variable_id >= ? ORDER BY vs.state_id"
+    )
+    assert (
+        sqlite3.connect(first_db).execute(query, (_MINT_BIT,)).fetchall()
+        == sqlite3.connect(second_db).execute(query, (_MINT_BIT,)).fetchall()
+    )
 
 
-def _insert_columns_by_table(func) -> dict[str, frozenset[str]]:
-    """Walk ``func``'s source for ``conn.execute``/``conn.executemany`` calls whose
-    first positional arg is a string constant, and from each ``INSERT INTO`` string
-    extract ``{table: frozenset(columns)}`` for the core-graph tables.
-
-    Both writers spell the SQL as implicitly-concatenated multi-line string
-    literals (``"INSERT INTO variable " "(...) "``); Python's parser folds those
-    into a single ``ast.Constant``, so the whole INSERT statement reaches us as one
-    string — no manual re-joining needed."""
-    tree = ast.parse(inspect.getsource(func))
-    columns: dict[str, frozenset[str]] = {}
-    for node in ast.walk(tree):
-        if not isinstance(node, ast.Call):
-            continue
-        callee = node.func
-        if not (
-            isinstance(callee, ast.Attribute)
-            and callee.attr in ("execute", "executemany")
-        ):
-            continue
-        if not node.args:
-            continue
-        first = node.args[0]
-        if not (isinstance(first, ast.Constant) and isinstance(first.value, str)):
-            continue
-        match = _INSERT_RE.search(first.value)
-        if match is None:
-            continue
-        table = match.group(1)
-        if table not in _CORE_GRAPH_TABLES:
-            continue
-        columns[table] = frozenset(
-            col.strip() for col in match.group(2).split(",") if col.strip()
-        )
-    return columns
+def test_flavored_db_validates(tmp_path: Path, global_db: Path) -> None:
+    _, out = _run(tmp_path, global_db)
+    result = validate_built_db(out, flavored=True, corpus=False)
+    assert not result.failures, result.failures
 
 
-class TestCoreGraphInsertParity:
-    def test_overlay_and_materializer_insert_same_columns(self) -> None:
-        from reg_meta_build.db import _reinsert_core_graph_from_ir
-        from reg_meta_build.extend_db import _insert_core_graph
+def test_provider_insert_is_idempotent_and_name_safe() -> None:
+    from reg_meta_build.db import DDL, seed_providers
 
-        overlay = _insert_columns_by_table(_insert_core_graph)
-        materializer = _insert_columns_by_table(_reinsert_core_graph_from_ir)
-
-        # Both writers must INSERT into every core-graph table (else the parse
-        # missed one and the per-table check below would vacuously pass).
-        assert set(overlay) == _CORE_GRAPH_TABLES, overlay
-        assert set(materializer) == _CORE_GRAPH_TABLES, materializer
-
-        for table in sorted(_CORE_GRAPH_TABLES):
-            assert overlay[table] == materializer[table], (
-                f"{table}: _insert_core_graph and _reinsert_core_graph_from_ir "
-                f"INSERT different columns; symmetric difference "
-                f"{set(overlay[table] ^ materializer[table])}"
-            )
+    conn = sqlite3.connect(":memory:")
+    conn.executescript(DDL)
+    seed_providers(conn)
+    name = conn.execute("SELECT name FROM provider WHERE slug = 'scb'").fetchone()[0]
+    assert _insert_providers(conn, (("scb", name),)) == 0
+    with pytest.raises(RegMetaError):
+        _insert_providers(conn, (("scb", "Wrong"),))
 
 
-# ── CLI handler ──────────────────────────────────────────────────────────────
+def test_missing_or_empty_provider_directory_is_exit_config(tmp_path: Path) -> None:
+    with pytest.raises(RegMetaError) as exc:
+        resolve_steward_providers_dir(tmp_path / "missing", _STEWARD)
+    assert exc.value.exit_code == EXIT_CONFIG
+    empty = tmp_path / "empty"
+    empty.mkdir()
+    with pytest.raises(RegMetaError) as exc:
+        _load_provider_ir(empty, _STEWARD)
+    assert exc.value.exit_code == EXIT_CONFIG
 
 
-class TestCli:
-    def test_cmd_extend_db_envelope(self, tmp_path: Path, global_db: Path) -> None:
-        import argparse
+def test_hook_failure_discards_staging_db(tmp_path: Path, global_db: Path) -> None:
+    class HookError(RuntimeError):
+        pass
 
-        from reg_meta_build.cli import _cmd_extend_db
+    def fail(_path: Path) -> None:
+        raise HookError
 
-        inv_path = tmp_path / "inv.json"
-        inv_path.write_text(json.dumps(_base_inventory()), encoding="utf-8")
-        slug_dir = tmp_path / "sslug"
-        slug_dir.mkdir()
-        _write_steward_slug_dir(slug_dir)
-        out_dir = tmp_path / "out"
-        out_dir.mkdir()
-
-        holdings = _empty_delivery_inventory(tmp_path)
-        args = argparse.Namespace(
-            db=str(out_dir),
-            base_db=str(global_db),
-            # The steward-holdings gate has its own tests; an empty-of-this-flavor
-            # inventory keeps this one about the envelope.
-            delivery_inventory=str(holdings),
-            inventory=str(inv_path),
-            steward=_STEWARD,
-            slug_dir=str(slug_dir),
-            skip_slugs=False,
-            skip_holdings_gate=False,
-            no_validate=False,
-        )
-        envelope, exit_code = _cmd_extend_db(args)
-        assert exit_code == 0
-        # Y-124: the RESOLVED statement the gate ran against, so a published
-        # flavor's envelope says what it was checked against — never `null` on a
-        # run whose gate executed.
-        assert envelope["request"]["args"]["delivery_inventory"] == str(
-            holdings.resolve()
-        )
-        assert envelope["request"]["args"]["skip_holdings_gate"] is False
-        data = envelope["data"]
-        for key in ("providers", "registers", "variants", "variables", "states"):
-            assert key in data
-        assert data["variables"] == 3
-        assert "db_path" in data
-        assert data["db_path"] == str(out_dir / "reg_meta.db")
-
-    def test_cmd_extend_db_skip_slugs(self, tmp_path: Path, global_db: Path) -> None:
-        # #559: `skip_slugs=True` with `slug_dir=None` must drive
-        # `resolve_steward_slug_dir(skip_slugs=True) → None` through the CLI
-        # resolver (no slug dir needed, gate self-skips). `no_validate=True`
-        # keeps the run off the flavored hook. The overlay still inserts the
-        # steward graph (slugs left NULL).
-        import argparse
-
-        from reg_meta_build.cli import _cmd_extend_db
-
-        inv_path = tmp_path / "inv.json"
-        inv_path.write_text(json.dumps(_base_inventory()), encoding="utf-8")
-        out_dir = tmp_path / "out"
-        out_dir.mkdir()
-
-        args = argparse.Namespace(
-            db=str(out_dir),
-            base_db=str(global_db),
-            delivery_inventory=None,
-            inventory=str(inv_path),
-            steward=_STEWARD,
-            slug_dir=None,
-            skip_slugs=True,
-            skip_holdings_gate=False,
-            no_validate=True,
-        )
-        envelope, exit_code = _cmd_extend_db(args)
-        assert exit_code == 0
-        assert envelope["data"]["variables"] == 3
+    with pytest.raises(HookError):
+        _run(tmp_path, global_db, skip_slugs=True, pre_rename_hook=fail)
+    assert not (tmp_path / "out" / "reg_meta.db").exists()
+    assert not (tmp_path / "out" / "reg_meta.db.tmp").exists()
 
 
-# ── steward-holdings window coverage (Y-115) ─────────────────────────────────
-
-
-def _empty_delivery_inventory(tmp_path: Path) -> Path:
-    """A structurally valid §12 inventory that states nothing about the flavor:
-    one table, one column, no mappings (an unmapped column is inventoried but
-    never admitted). Keeps a run off the committed steward inventory the flag
-    otherwise defaults to."""
-    path = tmp_path / "empty-holdings.toml"
+def _empty_holdings(tmp_path: Path) -> Path:
+    path = tmp_path / "holdings.toml"
     path.write_text(
-        "version = 1\n"
-        f'steward = "{_STEWARD}"\n\n'
-        '[[table]]\nid = "Nothing_2019"\nedition = 2019\n\n'
-        '[[table.column]]\nname = "UNMAPPED"\n',
+        'version = 1\nsteward = "swecov"\n\n[[table]]\nid = "Nothing_2019"\n'
+        'edition = 2019\n\n[[table.column]]\nname = "UNMAPPED"\n',
         encoding="utf-8",
     )
     return path
 
 
-class TestDeliveryInventoryGate:
-    """Y-115: `extend-db` refuses to ship a flavor DB that contradicts the
-    steward's committed delivery inventory — a column HELD in a table edition the
-    built windows don't cover."""
+def test_cli_uses_providers_dir_and_keeps_holdings_gate(
+    tmp_path: Path, global_db: Path
+) -> None:
+    from reg_meta_build.cli import _cmd_extend_db
 
-    @staticmethod
-    def _coordinates(db: Path) -> tuple[str, str]:
-        """`(variant coordinate, belopp binding FQID)` read back from the built
-        flavor — the slugs are derived by the overlay, never assumed."""
-        conn = sqlite3.connect(db)
-        provider, register, variant = conn.execute(
-            "SELECT p.slug, r.slug, rv.slug FROM register_variant rv "
-            "JOIN register r ON r.register_id = rv.register_id "
-            "JOIN provider p ON p.provider_id = r.provider_id "
-            "WHERE r.register_id = ?",
-            (_steward_register_ids()["register"],),
-        ).fetchone()
-        belopp = conn.execute(
-            "SELECT slug FROM variable WHERE register_id = ? AND provider_key = ?",
-            (_steward_register_ids()["register"], "belopp"),
-        ).fetchone()[0]
-        conn.close()
-        return f"{provider}/{register}/{variant}", f"{provider}/{register}/{belopp}"
+    providers_dir = _providers(tmp_path)
+    slug_dir = tmp_path / "slugs"
+    _write_slug_dir(slug_dir)
+    holdings = _empty_holdings(tmp_path)
+    out = tmp_path / "out"
+    args = argparse.Namespace(
+        db=str(out),
+        base_db=str(global_db),
+        providers_dir=str(providers_dir),
+        delivery_inventory=str(holdings),
+        steward=_STEWARD,
+        slug_dir=str(slug_dir),
+        skip_slugs=False,
+        skip_holdings_gate=False,
+        no_validate=False,
+    )
+    envelope, exit_code = _cmd_extend_db(args)
+    assert exit_code == 0
+    assert envelope["request"]["args"]["providers_dir"] == str(providers_dir.resolve())
+    assert envelope["request"]["args"]["delivery_inventory"] == str(holdings.resolve())
+    assert envelope["data"]["variables"] == 3
 
-    def _delivery_inventory(self, db: Path, tmp_path: Path, edition: int) -> Path:
-        """A §12 inventory holding `BELOPP` in one table of `edition`. The
-        multistate flavor delivers that column 2018-2020, so 2017 is a holding
-        with no window and 2019 is a covered one."""
-        coordinate, belopp = self._coordinates(db)
-        path = tmp_path / f"holdings-{edition}.toml"
-        path.write_text(
-            "version = 1\n"
-            f'steward = "{_STEWARD}"\n\n'
-            "[[table]]\n"
-            f'id = "Transaktioner_{edition}"\n'
-            f"edition = {edition}\n\n"
-            "[[table.column]]\n"
-            'name = "BELOPP"\n\n'
-            "[[table.column.mapping]]\n"
-            f'register_variant = "{coordinate}"\n'
-            f'variable = "{belopp}"\n'
-            'representation = "BELOPP"\n',
-            encoding="utf-8",
-        )
-        return path
 
-    def test_argparse_exposes_delivery_inventory(self) -> None:
-        """The committed steward inventory is the default (resolved from a repo
-        checkout), so the flag only has to name an override —
-        `--skip-holdings-gate` is the opt-out, off unless typed."""
-        from reg_meta_build.cli import _build_parser
+def test_argparse_removed_flavor_inventory_option() -> None:
+    from reg_meta_build.cli import _build_parser
 
-        parser = _build_parser()
-        base = ["extend-db", "--base-db", "b", "--inventory", "i"]
-        assert parser.parse_args(base).delivery_inventory is None
-        assert parser.parse_args(base).skip_holdings_gate is False
-        assert (
-            parser.parse_args(
-                [*base, "--delivery-inventory", "h.toml"]
-            ).delivery_inventory
-            == "h.toml"
-        )
-        assert (
-            parser.parse_args([*base, "--skip-holdings-gate"]).skip_holdings_gate
-            is True
+    parser = _build_parser()
+    args = parser.parse_args(["extend-db", "--base-db", "base.db"])
+    assert args.providers_dir is None
+    assert not hasattr(args, "inventory")
+    with pytest.raises(SystemExit):
+        parser.parse_args(
+            ["extend-db", "--base-db", "base.db", "--inventory", "old.json"]
         )
 
-    def test_default_resolves_the_committed_steward_inventory(self) -> None:
-        """With no `--delivery-inventory`, the gate reads
-        `reg_webapp/stewards/<steward>/inventory.toml` from the checkout."""
-        from reg_meta_build.extend_db import resolve_delivery_inventory
 
-        path = resolve_delivery_inventory(None, _STEWARD, skip_holdings_gate=False)
-        assert path is not None and path.is_file()
-        assert path.parts[-4:] == ("reg_webapp", "stewards", _STEWARD, "inventory.toml")
+def test_delivery_inventory_resolution_remains_distinct(tmp_path: Path) -> None:
+    holdings = _empty_holdings(tmp_path)
+    assert (
+        resolve_delivery_inventory(holdings, _STEWARD, skip_holdings_gate=False)
+        == holdings.resolve()
+    )
+    assert resolve_delivery_inventory(None, "missing", skip_holdings_gate=True) is None
+    assert load_delivery_inventory(holdings).steward == _STEWARD
 
-    def test_no_committed_inventory_refuses_to_run_blind(self) -> None:
-        """Y-124: no `--delivery-inventory` and nothing committed for the steward
-        (a wheel install, a renamed tree, an uncommitted inventory) is EXIT_CONFIG,
-        not a gate that silently disarmed. The message names all three ways out."""
-        from reg_meta_build.extend_db import resolve_delivery_inventory
 
-        with pytest.raises(RegMetaError) as exc:
-            resolve_delivery_inventory(
-                None, "no-such-steward", skip_holdings_gate=False
-            )
-        assert exc.value.exit_code == EXIT_CONFIG
-        assert exc.value.code == "extend_delivery_inventory_not_found"
-        assert "--delivery-inventory" in exc.value.remediation
-        assert "repo checkout" in exc.value.remediation
-        assert "--skip-holdings-gate" in exc.value.remediation
+@pytest.mark.parametrize("edition, fails", [(2017, True), (2019, False)])
+def test_section_12_holdings_gate_still_checks_provider_windows(
+    tmp_path: Path, global_db: Path, edition: int, fails: bool
+) -> None:
+    from reg_meta_build.cli import _flavored_validate_hook
 
-    def test_explicit_path_resolves_and_the_flag_is_the_typed_skip(
-        self, tmp_path: Path
-    ) -> None:
-        """An explicit path is resolved as given (the loader owns a typo or a
-        malformed file); `--skip-holdings-gate` is the one resolution that yields
-        no inventory, the way `--skip-slugs` does for the slug dir."""
-        from reg_meta_build.extend_db import resolve_delivery_inventory
+    text = _BASE_TOML.replace(
+        '    column = "BELOPP"\n    data_type = "float"',
+        '    column = "BELOPP"\n    data_type = "float"\n'
+        '    valid_from = "2018"\n    valid_to = "2020"',
+        1,
+    )
+    _, out = _run(tmp_path, global_db, text)
+    conn = sqlite3.connect(out)
+    provider, register, variant = conn.execute(
+        "SELECT p.slug, r.slug, rv.slug FROM register_variant rv "
+        "JOIN register r USING (register_id) JOIN provider p USING (provider_id) "
+        "WHERE r.register_id = ?",
+        (_ids()["register"],),
+    ).fetchone()
+    variable = conn.execute(
+        "SELECT slug FROM variable WHERE variable_id = ?", (_ids()["belopp"],)
+    ).fetchone()[0]
+    conn.close()
 
-        given = _empty_delivery_inventory(tmp_path)
-        assert (
-            resolve_delivery_inventory(given, _STEWARD, skip_holdings_gate=False)
-            == given.resolve()
-        )
-        assert (
-            resolve_delivery_inventory(None, "no-such-steward", skip_holdings_gate=True)
-            is None
-        )
-
-    def test_hook_fails_on_a_holding_with_no_window(
-        self,
-        tmp_path: Path,
-        global_db: Path,
-        capsys: pytest.CaptureFixture[str],
-    ) -> None:
-        """The flavored hook threads the loaded inventory into the validator: a
-        2017 holding of a column delivered 2018-2020 fails with the stable
-        EXIT_CONFIG / `validation_failed`, naming the coordinate.
-
-        The steward's registers sit on the steward's OWN minted provider, and
-        `scb_errata.toml` corrects SCB's export alone — its loader refuses any other
-        provider — so this finding carries NO stanza. The report names the surface
-        that does state the window: the inventory `extend-db` overlaid.
-        """
-        from reg_meta.inventory import load_inventory as load_delivery_inventory
-
-        from reg_meta_build import cli
-
-        _, out = _run_extend(tmp_path, global_db, _multistate_inventory())
-        path = self._delivery_inventory(out, tmp_path, 2017)
-        hook = cli._flavored_validate_hook(None, load_delivery_inventory(path))
+    holdings = tmp_path / f"holdings-{edition}.toml"
+    holdings.write_text(
+        f'version = 1\nsteward = "{_STEWARD}"\n\n[[table]]\n'
+        f'id = "Transactions_{edition}"\nedition = {edition}\n\n'
+        '[[table.column]]\nname = "BELOPP"\n\n'
+        "[[table.column.mapping]]\n"
+        f'register_variant = "{provider}/{register}/{variant}"\n'
+        f'variable = "{provider}/{register}/{variable}"\n'
+        'representation = "BELOPP"\n',
+        encoding="utf-8",
+    )
+    hook = _flavored_validate_hook(None, load_delivery_inventory(holdings))
+    if fails:
         with pytest.raises(RegMetaError) as exc:
             hook(out)
-        assert exc.value.exit_code == EXIT_CONFIG
         assert exc.value.code == "validation_failed"
         assert "held 2017" in exc.value.message
-        assert "BELOPP" in exc.value.message
-        assert "the steward inventory extend-db overlays" in exc.value.message
-        report = capsys.readouterr().err
-        assert "held 2017, catalog windows 2018..2020" in report
-        assert "NOT on the `scb` provider" in report
-        # A stanza would send the maintainer to a file that cannot hold it.
-        assert "[[delivered]]" not in report
-        assert "[[version]]" not in report
-
-    def test_hook_passes_on_a_covered_holding(
-        self, tmp_path: Path, global_db: Path
-    ) -> None:
-        """The same holding inside the delivered window is not a finding."""
-        from reg_meta.inventory import load_inventory as load_delivery_inventory
-
-        from reg_meta_build import cli
-
-        _, out = _run_extend(tmp_path, global_db, _multistate_inventory())
-        path = self._delivery_inventory(out, tmp_path, 2019)
-        cli._flavored_validate_hook(None, load_delivery_inventory(path))(out)
-
-    def test_cmd_extend_db_wires_the_gate_and_discards_the_staging_db(
-        self, tmp_path: Path, global_db: Path
-    ) -> None:
-        """End-to-end through the CLI handler: `--delivery-inventory` reaches the
-        flavored hook, the run fails, and nothing is published."""
-        import argparse
-
-        from reg_meta_build.cli import _cmd_extend_db
-
-        _, probe = _run_extend(
-            tmp_path, global_db, _multistate_inventory(), out_name="probe"
-        )
-        holdings = self._delivery_inventory(probe, tmp_path, 2017)
-        inv_path = tmp_path / "inv.json"
-        inv_path.write_text(json.dumps(_multistate_inventory()), encoding="utf-8")
-        slug_dir = tmp_path / "gate-sslug"
-        slug_dir.mkdir()
-        _write_steward_slug_dir(slug_dir)
-        out_dir = tmp_path / "gate-out"
-        out_dir.mkdir()
-
-        args = argparse.Namespace(
-            db=str(out_dir),
-            base_db=str(global_db),
-            inventory=str(inv_path),
-            delivery_inventory=str(holdings),
-            steward=_STEWARD,
-            slug_dir=str(slug_dir),
-            skip_slugs=False,
-            skip_holdings_gate=False,
-            no_validate=False,
-        )
-        with pytest.raises(RegMetaError) as exc:
-            _cmd_extend_db(args)
-        assert exc.value.exit_code == EXIT_CONFIG
-        assert "BELOPP: held 2017" in exc.value.message
-        assert not (out_dir / "reg_meta.db").exists()
-
-    def test_skip_holdings_gate_is_the_documented_opt_out(
-        self,
-        tmp_path: Path,
-        global_db: Path,
-        capsys: pytest.CaptureFixture[str],
-    ) -> None:
-        """Y-124: `--skip-holdings-gate` is the ONLY way the gate does not run. It
-        wins over the committed inventory the default resolution would have found:
-        the run publishes with no holdings statement read at all, the report line
-        names the flag as the reason, and the envelope records the skip — so a
-        published flavor states that the gate was off."""
-        import argparse
-
-        from reg_meta_build.cli import _cmd_extend_db
-
-        inv_path = tmp_path / "skip-inv.json"
-        inv_path.write_text(json.dumps(_multistate_inventory()), encoding="utf-8")
-        slug_dir = tmp_path / "skip-sslug"
-        slug_dir.mkdir()
-        _write_steward_slug_dir(slug_dir)
-        out_dir = tmp_path / "skip-out"
-        out_dir.mkdir()
-
-        args = argparse.Namespace(
-            db=str(out_dir),
-            base_db=str(global_db),
-            inventory=str(inv_path),
-            delivery_inventory=None,
-            steward=_STEWARD,
-            slug_dir=str(slug_dir),
-            skip_slugs=False,
-            skip_holdings_gate=True,
-            no_validate=False,
-        )
-        envelope, exit_code = _cmd_extend_db(args)
-        assert exit_code == 0
-        assert (out_dir / "reg_meta.db").exists()
-        assert envelope["request"]["args"]["delivery_inventory"] is None
-        assert envelope["request"]["args"]["skip_holdings_gate"] is True
-        assert (
-            "steward-holdings gate skipped — --skip-holdings-gate"
-            in capsys.readouterr().err
-        )
+    else:
+        hook(out)

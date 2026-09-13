@@ -171,6 +171,16 @@ class IRVariableAlias(_IRBase):
     delivery_column_name: str
 
 
+class IRVariableAliasWindow(_IRBase):
+    """An orderable delivery-column representation for one state window."""
+
+    variable_id: int
+    register_variant_id: int
+    delivery_column_name: str
+    valid_from: str | None
+    valid_to: str | None
+
+
 class IRValueCode(_IRBase):
     # NOT part of the emitted stream: the value tables are adapter-written, not
     # IR-carried (see DESIGN.md → Materializer). This is the SOS adapter's
@@ -254,6 +264,7 @@ __all__ = [
     "IRValueCode",
     "IRVariable",
     "IRVariableAlias",
+    "IRVariableAliasWindow",
     "IRVariableState",
     "IRVariant",
     "IRWarning",

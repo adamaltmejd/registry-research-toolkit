@@ -52,7 +52,7 @@ reg_meta_build/input_data/*
 # agency dir but the same tracked-committed-source rule.
 !reg_meta_build/input_data/scb_canonical/
 # swecov/ stays untracked (confidential SWECOV-internal delivery documents),
-# but its README.md and build_catalog.py (the committed-inventory generator)
+# but its README.md and build_catalog.py (the committed catalog generator)
 # are force-tracked via `git add -f` (2026-09-02) — tracked files are
 # unaffected by these rules, so no exception line is needed.
 # Under classifications/ only the normalized CSVs (+ manifest.json) are tracked.

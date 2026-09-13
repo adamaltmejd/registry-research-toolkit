@@ -29,6 +29,7 @@ from reg_meta_build.ir import (
     IRValueCode,
     IRVariable,
     IRVariableAlias,
+    IRVariableAliasWindow,
     IRVariableState,
     IRVariant,
     IRWarning,
@@ -102,6 +103,16 @@ _IR_FACTORIES: dict[str, tuple[type[BaseModel], dict[str, object]]] = {
             "variable_id": 100,
             "register_variant_id": 10,
             "delivery_column_name": "Kon",
+        },
+    ),
+    "IRVariableAliasWindow": (
+        IRVariableAliasWindow,
+        {
+            "variable_id": 100,
+            "register_variant_id": 10,
+            "delivery_column_name": "Kon",
+            "valid_from": "2018-01-01",
+            "valid_to": None,
         },
     ),
     "IRValueCode": (

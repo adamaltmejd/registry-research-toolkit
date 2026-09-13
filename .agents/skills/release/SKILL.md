@@ -418,7 +418,7 @@ Build and upload fresh if **any** condition is true:
   DB content, so a fresh main DB requires a fresh flavored DB.
 - The SWECOV flavor inputs changed since the prior asset:
   `git diff <prev reg_meta tag>..HEAD -- reg_meta_build/fqid_slugs/swecov/` is
-  non-empty. The `flavor_inventory.json` and the generator are
+  non-empty. The generated `input_data/swecov/providers/` TOMLs are
   maintainer-local/untracked, so git can't see their drift — when in doubt, rebuild.
 - The release is a **major** version bump.
 - The immediately-previous release does **not** carry `reg_meta_swecov.db.zst` (e.g.
@@ -453,7 +453,7 @@ zstd -d "$base_dir/reg_meta.db.zst" -o "$base_dir/reg_meta.db"
 flav_dir="$(mktemp -d "${TMPDIR:-/tmp}/reg_meta_swecov.XXXXXX")"
 uv run reg-meta-build --db "$flav_dir" extend-db \
     --base-db "$base_dir/reg_meta.db" \
-    --inventory reg_meta_build/input_data/swecov/derived/flavor_inventory.json \
+    --providers-dir reg_meta_build/input_data/swecov/providers \
     --slug-dir reg_meta_build/fqid_slugs/swecov
 db="$flav_dir/reg_meta.db"
 uv run python -c "import sqlite3,sys; c=sqlite3.connect(sys.argv[1]); c.execute('PRAGMA wal_checkpoint(TRUNCATE)'); c.execute('PRAGMA journal_mode=DELETE'); c.commit(); c.close()" "$db"
@@ -468,7 +468,7 @@ global providers — the SWECOV flavor providers raise the `provider` count. Thi
 light sanity check, not the authoritative gate: `deploy-swecov`'s
 `REG_WEBAPP_FAIL_ON_STEWARD_DRIFT=1` smoke gate fails the (post-publish) deploy if the
 committed steward catalog references any content the flavored DB lacks, so a truncated
-or stale inventory surfaces there rather than shipping silently.
+or stale provider curation surfaces there rather than shipping silently.
 
 `extend-db` also gates the build on the steward's **committed delivery inventory**
 (`reg_webapp/stewards/<steward>/inventory.toml`, resolved from the checkout by default;
@@ -483,8 +483,8 @@ written in the `[[version]]` / `[[delivered]]` grammar of
 export and its loader refuses another provider — so it reports as one line naming the
 surface its window is curated on: `reg_meta_build/input_data/<Provider>/<slug>.toml`'s
 `valid_from` (e.g. `Forsakringskassan/fk.toml`), the Socialstyrelsen export for `sos`,
-or the inventory `extend-db` overlaid for a steward's own minted provider. Widen the
-window there and rebuild; do not paste it into the errata file.
+or the curated-provider TOML `extend-db` overlaid for a steward's own minted provider.
+Widen the window there and rebuild; do not paste it into the errata file.
 
 **A red gate is answered by curating errata, never by skipping validation.** The gate
 refuses to run blind: with no `--delivery-inventory` and no committed inventory for the
@@ -505,15 +505,15 @@ documents nowhere is a `[[column]]` entry in the same file instead, not a
 `[[delivered]]` one. If the curation is larger than this release can carry, land it as
 its own change and release from that — do not publish a flavored DB the gate refused.
 
-**Maintainer-local inputs**: `reg_meta_build/input_data/swecov/` (holding
-`flavor_inventory.json`) is untracked/maintainer-local. If a **fresh** SWECOV build is
-required (per the conditions above) but these inputs are absent — a non-maintainer or CI
-environment — **stop and do not publish**. Publishing (`--draft=false`, step 9)
-dispatches `container-build.yml`, whose `build-swecov-image` job hard-fails on the
-missing (or stale) asset — recreating exactly the broken-release state this step exists
-to prevent. Ask the maintainer to build and upload `reg_meta_swecov.db.zst` before
-publishing. (The 8d copy-forward path needs no maintainer-local inputs, so it is always
-available when a fresh build was **not** required.)
+**Maintainer-local inputs**: `reg_meta_build/input_data/swecov/providers/` is
+untracked/maintainer-local. If a **fresh** SWECOV build is required (per the conditions
+above) but these inputs are absent — a non-maintainer or CI environment — **stop and do
+not publish**. Publishing (`--draft=false`, step 9) dispatches `container-build.yml`,
+whose `build-swecov-image` job hard-fails on the missing (or stale) asset — recreating
+exactly the broken-release state this step exists to prevent. Ask the maintainer to
+build and upload `reg_meta_swecov.db.zst` before publishing. (The 8d copy-forward path
+needs no maintainer-local inputs, so it is always available when a fresh build was
+**not** required.)
 
 #### 8d. Copy-forward for assets not rebuilt
 
@@ -663,11 +663,11 @@ steward; today only swecov has one):
   inventory matches exactly what the container bakes — for swecov that is
   `reg_meta_swecov.db.zst`, the very file 8c uploaded and `build-swecov-image` bakes as
   `data.swecov.se`'s DB. Generating against a local `extend-db` rebuild re-introduces
-  the drift this asset exists to prevent: the untracked `flavor_inventory.json` can
-  differ from what 8c shipped (git can't see its drift), and a copy-forward release
-  ships a prior flavored DB, so a fresh local overlay would admit FQIDs absent from the
-  baked asset. Decompress the shipped asset to an uncompressed `reg_meta.db` (the
-  generator opens the base with sqlite, never the `.zst`):
+  the drift this asset exists to prevent: the untracked provider TOMLs can differ from
+  what 8c shipped (git can't see its drift), and a copy-forward release ships a prior
+  flavored DB, so a fresh local overlay would admit FQIDs absent from the baked asset.
+  Decompress the shipped asset to an uncompressed `reg_meta.db` (the generator opens the
+  base with sqlite, never the `.zst`):
 
   ```sh
   set -euo pipefail
