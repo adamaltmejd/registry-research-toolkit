@@ -1567,23 +1567,27 @@ class TestCis2016MatrixProjection:
             )
             for index, end_year in historical_editions
         ]
-        extra = historical + _cis2016_rows() + [
-            # Same VarId and spelling in an unreviewed wave stays on the generic
-            # source identity; the curated answer does not acquire continuity.
-            _var_row(
-                colname="CO11",
-                cvid=469457,
-                var_id=15662,
-                varname="Later unreviewed matrix",
-                year="2018",
-                regver_id=11530,
-                vardef="Unreviewed later-wave meaning",
-            ),
-            # A different shared-CVID source remains generic and coalesces as it
-            # did before this narrowly selected projection.
-            _var_row(colname="SHARED_A", cvid=469500, var_id=16000),
-            _var_row(colname="SHARED_B", cvid=469500, var_id=16000),
-        ]
+        extra = (
+            historical
+            + _cis2016_rows()
+            + [
+                # Same VarId and spelling in an unreviewed wave stays on the generic
+                # source identity; the curated answer does not acquire continuity.
+                _var_row(
+                    colname="CO11",
+                    cvid=469457,
+                    var_id=15662,
+                    varname="Later unreviewed matrix",
+                    year="2018",
+                    regver_id=11530,
+                    vardef="Unreviewed later-wave meaning",
+                ),
+                # A different shared-CVID source remains generic and coalesces as it
+                # did before this narrowly selected projection.
+                _var_row(colname="SHARED_A", cvid=469500, var_id=16000),
+                _var_row(colname="SHARED_B", cvid=469500, var_id=16000),
+            ]
+        )
         values = vm_rows(469456, "CIS2016", CODING_A)
         for index, end_year in historical_editions:
             values.extend(
