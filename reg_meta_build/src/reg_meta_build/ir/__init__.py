@@ -153,7 +153,8 @@ class IRVariableState(_IRBase):
     # NULL for ordinary provider-exported rows. Corrected SCB states carry
     # `errata:<class>\n<evidence>`; corrections overlapping a documented claim use
     # `errata:scoped-attributions` JSON records that retain exact edition/evidence
-    # pairs. Steward-only IR may name its steward.
+    # pairs, and correction-only overlaps use `errata:overlapping-attributions`.
+    # Steward-only IR may name its steward.
     provenance: str | None = None
 
 

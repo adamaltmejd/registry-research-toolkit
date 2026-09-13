@@ -3156,7 +3156,7 @@ export interface components {
             period_token?: string | null;
             /**
              * Provenance
-             * @description NULL for an ordinary provider-documented interval. SCB corrections use `errata:<class>\n<evidence>`; when a corrected source edition overlaps a provider-documented interval, `errata:scoped-attributions\n<JSON array>` pairs each correction's class and evidence with its exact `source_editions` without replacing the documented attribution.
+             * @description NULL for an ordinary provider-documented interval. SCB corrections use `errata:<class>\n<evidence>`; when a corrected source edition overlaps a provider-documented interval, `errata:scoped-attributions\n<JSON array>` pairs each correction's class and evidence with its exact `source_editions` without replacing the documented attribution. Correction-only overlaps use the same records under `errata:overlapping-attributions`.
              */
             provenance: string | null;
             /** Register Variant Id */

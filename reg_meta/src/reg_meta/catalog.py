@@ -758,7 +758,8 @@ class VariableState(_CatalogModel):
         "edition overlaps a provider-documented interval, "
         "`errata:scoped-attributions\\n<JSON array>` pairs each correction's "
         "class and evidence with its exact `source_editions` without replacing "
-        "the documented attribution."
+        "the documented attribution. Correction-only overlaps use the same "
+        "records under `errata:overlapping-attributions`."
     )
     # Overlap discriminator (see reg_meta_build/DESIGN.md → Build-time triage (SCB); multi-vintage / grain / coding). NOT NULL
     # DEFAULT '' in the DDL, so '' means "no discriminator", not absent.

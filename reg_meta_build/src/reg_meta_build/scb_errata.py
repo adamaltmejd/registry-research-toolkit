@@ -336,12 +336,15 @@ def _state_provenance(class_name: str, evidence: str) -> str:
     value useful as-is for CLI/JSON consumers while letting the SPA present the
     correction class and supporting evidence separately. When corrections
     overlap a provider-documented claim, the coalescer replaces this base form
-    with a scoped-attributions value that retains every edition/evidence pair.
+    with a scoped-attributions value that retains every edition/evidence pair;
+    correction-only overlaps use the same records under overlapping-attributions.
     """
     return f"errata:{class_name}\n{evidence}"
 
 
-def scoped_state_provenance(attributions: list[tuple[str, str]]) -> str:
+def scoped_state_provenance(
+    attributions: list[tuple[str, str]], *, provider_documented: bool = True
+) -> str:
     """Encode ordered correction provenance with explicit source-edition scope."""
     grouped: dict[str, list[str]] = {}
     for provenance, edition in attributions:
@@ -362,7 +365,8 @@ def scoped_state_provenance(attributions: list[tuple[str, str]]) -> str:
     payload = json.dumps(
         records, ensure_ascii=False, separators=(",", ":"), sort_keys=True
     )
-    return f"errata:scoped-attributions\n{payload}"
+    kind = "scoped-attributions" if provider_documented else "overlapping-attributions"
+    return f"errata:{kind}\n{payload}"
 
 
 def _resolve_variant(

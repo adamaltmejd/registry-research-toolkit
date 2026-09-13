@@ -1804,12 +1804,13 @@ one-sided `until <year>` form when the start is unknown (#658).
   column. Errata-backed states add their exact interval, correction class and supporting
   evidence here. When correction provenance carries scoped attribution records, the
   disclosure names the catalog interval as provider-documented and renders each exact
-  source-edition/evidence association separately; the disclosure remains collapsed and
-  ordinary states add no row. Concept groups still use the component for key / facets /
-  source. One component keeps the summary + styling consistent across call sites;
-  callers omit it entirely when there's nothing to demote. `LineageDetails` follows the
-  same omit-when-empty rule: with no provenance, warnings, loading state, or error, it
-  renders nothing.
+  source-edition/evidence association separately. Correction-only overlap records show
+  the corrected interval and exact associations without claiming provider attribution;
+  the disclosure remains collapsed and ordinary states add no row. Concept groups still
+  use the component for key / facets / source. One component keeps the summary + styling
+  consistent across call sites; callers omit it entirely when there's nothing to
+  demote. `LineageDetails` follows the same omit-when-empty rule: with no provenance,
+  warnings, loading state, or error, it renders nothing.
 
 ### Picker graph ownership (#904, #1057)
 

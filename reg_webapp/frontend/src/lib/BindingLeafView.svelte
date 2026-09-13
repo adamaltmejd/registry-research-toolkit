@@ -271,6 +271,7 @@ type Correction = {
   className: string;
   evidence: string;
   sourceEditions: string[];
+  providerDocumented: boolean;
 };
 
 function correctionsFromState(state: VariableStateModel): Correction[] {
@@ -284,7 +285,8 @@ function correctionsFromState(state: VariableStateModel): Correction[] {
   }
   const className = provenance.slice("errata:".length, separator).trim();
   const body = provenance.slice(separator + 1).trim();
-  if (className === "scoped-attributions") {
+  const providerDocumented = className === "scoped-attributions";
+  if (providerDocumented || className === "overlapping-attributions") {
     let parsed: unknown;
     try {
       parsed = JSON.parse(body);
@@ -318,13 +320,22 @@ function correctionsFromState(state: VariableStateModel): Correction[] {
         className: record.class.trim(),
         evidence: record.evidence.trim(),
         sourceEditions: record.source_editions,
+        providerDocumented,
       });
     }
     return corrections;
   }
   const evidence = body;
   return className && evidence
-    ? [{ state, className, evidence, sourceEditions: [] }]
+    ? [
+        {
+          state,
+          className,
+          evidence,
+          sourceEditions: [],
+          providerDocumented: false,
+        },
+      ]
     : [];
 }
 
@@ -781,7 +792,7 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
                 },
                 {
                   label:
-                    correction.sourceEditions.length > 0
+                    correction.providerDocumented
                       ? "Catalog interval"
                       : "Interval",
                   value:
@@ -792,12 +803,16 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
                     ),
                   mono: true,
                 },
-                ...(correction.sourceEditions.length > 0
+                ...(correction.providerDocumented
                   ? [
                       {
                         label: "Attribution",
                         value: "Provider-documented with a scoped correction",
                       },
+                    ]
+                  : []),
+                ...(correction.sourceEditions.length > 0
+                  ? [
                       {
                         label:
                           correction.sourceEditions.length === 1

@@ -2292,6 +2292,64 @@ describe("BindingLeafView representation picker (#678)", () => {
     expect(items[1]?.textContent).not.toContain(springEvidence);
   });
 
+  it("keeps correction-only evidence paired without provider attribution", async () => {
+    const springEvidence = "The steward holds the spring AliasA delivery.";
+    const autumnEvidence = "The steward holds the autumn AliasB delivery.";
+    await render(BindingLeafView, {
+      fqidPath: "scb/lisa/kon",
+      node: node([
+        state({
+          state_id: 2,
+          variant: "individer",
+          variant_label: "Individuals",
+          delivery_column_name: "AliasB",
+          valid_from: "2021-01-01",
+          valid_to: "2021-12-31",
+          period_token: "2021",
+          provenance:
+            "errata:overlapping-attributions\n" +
+            JSON.stringify([
+              {
+                class: "omitted-column-in-version",
+                evidence: springEvidence,
+                source_editions: ["VT2021"],
+              },
+              {
+                class: "omitted-column-in-version",
+                evidence: autumnEvidence,
+                source_editions: ["HT2021"],
+              },
+            ]),
+        }),
+      ]),
+      regMetaVersion: SEED.regMetaVersion,
+      steward: SEED.steward,
+      windowMinYear: SEED.windowMinYear,
+      vintageYear: 2024,
+    });
+
+    await page.getByText("Technical details", { exact: true }).click();
+
+    const items = Array.from(
+      document.querySelectorAll<HTMLLIElement>(".correction-list > li"),
+    );
+    expect(items).toHaveLength(2);
+    expect(items[0]?.textContent).toContain("VT2021");
+    expect(items[0]?.textContent).toContain(springEvidence);
+    expect(items[0]?.textContent).not.toContain("HT2021");
+    expect(items[0]?.textContent).not.toContain(autumnEvidence);
+    expect(items[1]?.textContent).toContain("HT2021");
+    expect(items[1]?.textContent).toContain(autumnEvidence);
+    expect(items[1]?.textContent).not.toContain("VT2021");
+    expect(items[1]?.textContent).not.toContain(springEvidence);
+    const disclosure = document.querySelector<HTMLDetailsElement>(
+      "details.tech-details",
+    );
+    expect(disclosure?.textContent).toContain("Interval 2021");
+    expect(disclosure?.textContent).not.toContain("Catalog interval");
+    expect(disclosure?.textContent).not.toContain("Provider-documented");
+  });
+
   it("Apply stays seed-gated (disabled) even when a row is staged, until the seed is present", async () => {
     await render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",

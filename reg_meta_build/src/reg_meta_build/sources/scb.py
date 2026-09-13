@@ -3242,10 +3242,9 @@ def _coalesce_variable_states(
             return [(vf, vt, None)]
 
         # A documented component owns the resolved state identity. Corrections
-        # touching it become scoped annotations on that component, but retain
-        # their ORIGINAL claim windows below for genuine-conflict detection.
-        # This avoids inventing overlap between two disjoint term editions while
-        # keeping an annual documented state unsplit.
+        # touching it become scoped annotations on that component. Their original
+        # claim windows still define each source edition's scope, so disjoint term
+        # editions do not become rivals and an annual documented state stays whole.
         documented_components = merge_adjacent(
             sorted(
                 (lo, hi)
@@ -3282,27 +3281,6 @@ def _coalesce_variable_states(
         segments: list[tuple[str, str, str | None]] = []
         for index, lo in enumerate(starts):
             hi = prev_day_from_cut(starts[index + 1]) if index + 1 < len(starts) else vt
-            active = [
-                (provenance, edition)
-                for claim_lo, claim_hi, provenance, edition in clipped
-                if claim_lo <= lo <= claim_hi
-            ]
-            corrections = sorted({p for p, _edition in active if p is not None})
-            if len(corrections) > 1:
-                raise RegMetaError(
-                    exit_code=EXIT_CONFIG,
-                    code="coalesce_conflicting_state_provenance",
-                    error_class="configuration",
-                    message=(
-                        "multiple SCB correction evidence values cover the same "
-                        f"delivery interval [{lo}..{hi}] for variable_id={vid}, "
-                        f"register_variant_id={gkey[1]}, column={gkey[8]!r}."
-                    ),
-                    remediation=(
-                        "Make the overlapping scb_errata entries agree on one "
-                        "evidence value or give them disjoint edition windows."
-                    ),
-                )
             documented_component = next(
                 (
                     component
@@ -3313,10 +3291,24 @@ def _coalesce_variable_states(
             )
             if documented_component is not None:
                 provenance = scoped_by_component.get(documented_component)
-            elif corrections:
-                provenance = corrections[0]
             else:
-                provenance = None
+                active_corrections = sorted(
+                    (claim_lo, claim_hi, edition, provenance)
+                    for claim_lo, claim_hi, provenance, edition in clipped
+                    if provenance is not None and claim_lo <= lo <= claim_hi
+                )
+                if len(active_corrections) > 1:
+                    provenance = scoped_state_provenance(
+                        [
+                            (provenance, edition)
+                            for _claim_lo, _claim_hi, edition, provenance in active_corrections
+                        ],
+                        provider_documented=False,
+                    )
+                elif active_corrections:
+                    provenance = active_corrections[0][3]
+                else:
+                    provenance = None
             if segments and segments[-1][2] == provenance:
                 segments[-1] = (segments[-1][0], hi, provenance)
             else:

@@ -1497,6 +1497,12 @@ def _provenance_windows(conn: sqlite3.Connection, provider_key: str) -> list[tup
     ).fetchall()
 
 
+def _scoped_attributions(provenance: str | None) -> tuple[str, list[dict]]:
+    assert provenance is not None
+    header, payload = provenance.split("\n", maxsplit=1)
+    return header, json.loads(payload)
+
+
 def _states(conn: sqlite3.Connection, provider_key: str) -> list[tuple]:
     return conn.execute(
         "SELECT vs.delivery_column_name, vs.data_type, vs.data_length, "
@@ -2056,9 +2062,9 @@ class TestScbErrata:
             assert [(vf, vt) for vf, vt, _provenance in states] == [
                 ("2021-01-01", "2021-12-31")
             ]
-            header, payload = states[0][2].split("\n", maxsplit=1)
+            header, attributions = _scoped_attributions(states[0][2])
             assert header == "errata:scoped-attributions"
-            assert json.loads(payload) == [
+            assert attributions == [
                 {
                     "class": "omitted-column-in-version",
                     "evidence": "the steward holds AliasA for those years",
@@ -2072,6 +2078,107 @@ class TestScbErrata:
             ]
             assert _states(conn, "934") == [
                 ("AliasB", "varchar", "1", "2021-01-01", "2021-12-31")
+            ]
+        finally:
+            conn.close()
+
+    def test_overlapping_documented_corrections_keep_both_attributions(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        conn = _built_with_errata(
+            tmp_path,
+            monkeypatch,
+            [
+                _var_row(
+                    colname=column,
+                    cvid=9343,
+                    var_id=936,
+                    varname="OverlapVar",
+                    year="2021",
+                    regver_id=9901,
+                    data_type="varchar",
+                )
+                for column in ("AliasA", "AliasB")
+            ],
+            errata_version("VT2021")
+            + "\n"
+            + errata_delivered("AliasA", "VT2021")
+            + "\n"
+            + errata_delivered("AliasB", "VT2021"),
+        )
+        try:
+            states = _provenance_windows(conn, "936")
+            assert [(vf, vt) for vf, vt, _provenance in states] == [
+                ("2021-01-01", "2021-12-31")
+            ]
+            header, attributions = _scoped_attributions(states[0][2])
+            assert header == "errata:scoped-attributions"
+            assert attributions == [
+                {
+                    "class": "omitted-column-in-version",
+                    "evidence": "the steward holds AliasA for those years",
+                    "source_editions": ["VT2021"],
+                },
+                {
+                    "class": "omitted-column-in-version",
+                    "evidence": "the steward holds AliasB for those years",
+                    "source_editions": ["VT2021"],
+                },
+            ]
+            assert _states(conn, "936") == [
+                ("AliasA", "varchar", "1", "2021-01-01", "2021-12-31")
+            ]
+        finally:
+            conn.close()
+
+    def test_overlapping_correction_only_claims_keep_both_attributions(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        conn = _built_with_errata(
+            tmp_path,
+            monkeypatch,
+            [
+                _var_row(
+                    colname=column,
+                    cvid=9344,
+                    var_id=937,
+                    varname="CorrectionOnlyVar",
+                    year="2022",
+                    regver_id=9902,
+                    data_type="varchar",
+                )
+                for column in ("AliasA", "AliasB")
+            ],
+            errata_version("VT2021")
+            + "\n"
+            + errata_delivered("AliasA", "VT2021")
+            + "\n"
+            + errata_delivered("AliasB", "VT2021"),
+        )
+        try:
+            states = _provenance_windows(conn, "937")
+            corrected = [state for state in states if state[2] is not None]
+            assert [(vf, vt) for vf, vt, _provenance in corrected] == [
+                ("2021-01-01", "2021-06-30")
+            ]
+            header, attributions = _scoped_attributions(corrected[0][2])
+            assert header == "errata:overlapping-attributions"
+            assert attributions == [
+                {
+                    "class": "omitted-column-in-version",
+                    "evidence": "the steward holds AliasA for those years",
+                    "source_editions": ["VT2021"],
+                },
+                {
+                    "class": "omitted-column-in-version",
+                    "evidence": "the steward holds AliasB for those years",
+                    "source_editions": ["VT2021"],
+                },
+            ]
+            assert states[1:] == [("2021-07-01", "2022-12-31", None)]
+            assert _states(conn, "937") == [
+                ("AliasA", "varchar", "1", "2021-01-01", "2021-06-30"),
+                ("AliasA", "varchar", "1", "2021-07-01", "2022-12-31"),
             ]
         finally:
             conn.close()
