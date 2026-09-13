@@ -313,11 +313,15 @@ class CuratedAdapter:
                 "Declare the provider display name and source_label.",
             )
         reg_tables = raw.get("register")
-        if not isinstance(reg_tables, list) or not reg_tables:
+        if (
+            not isinstance(reg_tables, list)
+            or not reg_tables
+            or not all(isinstance(entry, dict) for entry in reg_tables)
+        ):
             raise curation_error(
                 "curated_toml_invalid",
-                f"{path.name}: expected a non-empty `[[register]]` array.",
-                "Declare at least one [[register]] with a key and name.",
+                f"{path.name}: expected a non-empty `[[register]]` array of tables.",
+                "Declare each register as [[register]] with a key and name.",
             )
 
         registers: list[_CuratedRegister] = []
@@ -383,10 +387,12 @@ class CuratedAdapter:
             self._check_boundary(path, valid_to, f"register {key!r} valid_to")
 
         variant_entries = entry.get("variant", [])
-        if not isinstance(variant_entries, list):
+        if not isinstance(variant_entries, list) or not all(
+            isinstance(variant, dict) for variant in variant_entries
+        ):
             raise curation_error(
                 "curated_toml_invalid",
-                f"{path.name}: register {key!r}: `variant` must be an array.",
+                f"{path.name}: register {key!r}: `variant` must be an array of tables.",
                 "Use [[register.variant]] tables.",
             )
         variants: list[_CuratedVariant] = []
@@ -444,11 +450,15 @@ class CuratedAdapter:
         variant_keys = {v.key for v in variants}
 
         var_entries = entry.get("variable", [])
-        if not isinstance(var_entries, list) or not var_entries:
+        if (
+            not isinstance(var_entries, list)
+            or not var_entries
+            or not all(isinstance(variable, dict) for variable in var_entries)
+        ):
             raise curation_error(
                 "curated_toml_invalid",
                 f"{path.name}: register {key!r}: expected a non-empty "
-                "`[[register.variable]]` array.",
+                "`[[register.variable]]` array of tables.",
                 "Declare at least one variable per register.",
             )
         variables_by_key: dict[str, _CuratedVariable] = {}

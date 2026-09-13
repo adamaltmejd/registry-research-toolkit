@@ -13,7 +13,7 @@ import sqlite3
 from pathlib import Path
 
 import pytest
-from reg_meta.errors import RegMetaError
+from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta_build.id import _MINT_BIT, mint
 from reg_meta_build.ir import (
     IRRegister,
@@ -204,6 +204,42 @@ def test_global_contract_still_rejects_steward_only_fields(
     with pytest.raises(RegMetaError) as exc:
         _emit("fk", _TWO_VARIANT.replace(old, new, 1), tmp_path)
     assert exc.value.code == "curated_toml_invalid"
+
+
+@pytest.mark.parametrize(
+    "body, expected",
+    [
+        (
+            'register = [1]\n\n[provider]\nname = "Private"\nsource_label = "test"\n',
+            "[[register]]",
+        ),
+        (
+            '[provider]\nname = "Private"\nsource_label = "test"\n\n'
+            '[[register]]\nkey = "r"\nname = "R"\nvariant = [1]\n'
+            '[[register.variable]]\nkey = "v"\nname = "V"\n'
+            '[[register.variable.state]]\ncolumn = "C"\n',
+            "variant",
+        ),
+        (
+            '[provider]\nname = "Private"\nsource_label = "test"\n\n'
+            '[[register]]\nkey = "r"\nname = "R"\nvariable = [1]\n',
+            "[[register.variable]]",
+        ),
+    ],
+)
+def test_steward_table_arrays_reject_non_table_elements(
+    tmp_path: Path, body: str, expected: str
+) -> None:
+    src = tmp_path / "src"
+    src.mkdir()
+    (src / "private.toml").write_text(body, encoding="utf-8")
+
+    with pytest.raises(RegMetaError) as exc:
+        list(CuratedAdapter("private", steward="swecov").emit(src))
+
+    assert exc.value.exit_code == EXIT_CONFIG
+    assert exc.value.code == "curated_toml_invalid"
+    assert expected in exc.value.message
 
 
 _REGISTER_VALID_TO = """\

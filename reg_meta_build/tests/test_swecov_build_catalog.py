@@ -299,6 +299,50 @@ def test_generated_slug_pins_bind_to_emitted_graph(flavor_root: Path) -> None:
                 assert f"{obj.register_id}.{obj.register_variant_id}" in variant_pins
 
 
+def test_repeated_flavor_generation_is_deterministic(tmp_path: Path) -> None:
+    root = _run_flavor(tmp_path, _synthetic_enriched())
+    providers_dir = root / "providers"
+    before = {path.name: path.read_bytes() for path in providers_dir.glob("*.toml")}
+
+    build_catalog.cmd_flavor(
+        argparse.Namespace(csv=root / "SWECOV_variables_2025-12-11.csv")
+    )
+
+    assert {
+        path.name: path.read_bytes() for path in providers_dir.glob("*.toml")
+    } == before
+
+
+def test_removed_provider_refuses_stale_toml_before_writing(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    root = _run_flavor(tmp_path, _synthetic_enriched())
+    providers_dir = root / "providers"
+    stale = providers_dir / "swedbank.toml"
+    assert stale.is_file()
+    control = next(path for path in providers_dir.glob("*.toml") if path != stale)
+    control.write_text("must remain untouched\n", encoding="utf-8")
+    monkeypatch.setattr(
+        build_catalog,
+        "_FLAVOR_DISPOSITION",
+        [
+            entry
+            for entry in build_catalog._FLAVOR_DISPOSITION
+            if entry[1] != "swedbank"
+        ],
+    )
+
+    with pytest.raises(SystemExit) as exc:
+        build_catalog.cmd_flavor(
+            argparse.Namespace(csv=root / "SWECOV_variables_2025-12-11.csv")
+        )
+
+    assert "swedbank.toml" in str(exc.value)
+    assert "Review and remove obsolete files" in str(exc.value)
+    assert stale.is_file()
+    assert control.read_text(encoding="utf-8") == "must remain untouched\n"
+
+
 def test_two_entries_naming_one_variant_differently_fail(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

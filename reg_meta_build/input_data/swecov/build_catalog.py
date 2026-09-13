@@ -2546,6 +2546,18 @@ def cmd_flavor(args: argparse.Namespace) -> None:
     # --- curated-provider TOMLs (the extend-db contract) ---
     providers_dir = base / "providers"
     providers_dir.mkdir(parents=True, exist_ok=True)
+    expected_provider_files = {f"{provider}.toml" for provider in providers}
+    unexpected_provider_files = sorted(
+        path.name
+        for path in providers_dir.glob("*.toml")
+        if path.name not in expected_provider_files
+    )
+    if unexpected_provider_files:
+        raise SystemExit(
+            "unexpected existing provider TOML(s) not emitted by the current "
+            f"flavor disposition: {', '.join(unexpected_provider_files)}. Review "
+            "and remove obsolete files before rerunning; no provider output was written."
+        )
     source_label = _source_label(args.csv)
     for prov_slug, provider_name in sorted(providers.items()):
         provider_registers = []
