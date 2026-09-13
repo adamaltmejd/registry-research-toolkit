@@ -1348,28 +1348,13 @@ def _spans_overlap(groups: dict[tuple, _StateGroup], gkeys: list[tuple]) -> bool
     materializer's per-year TIMELINE: two year-bearing groups carry DISTINCT
     value sets over overlapping `[regver_min, regver_max]` windows, OR a yearless
     group sits on a column carrying >1 distinct value set (its open span would
-    overlap the column's other coding), OR another code-less same-column group
-    fills an interior gap in a code-less group's claim set. The gap case needs
-    the timeline because the fast `[min, max]` hull would otherwise collapse the
-    intervening documented type era into the returning outer shape. A coded
-    interior remains on the fast path so the mandatory code-less-overlap gate
-    can require its evidence-backed cap.
-    A FALSE partition stays on the fast span path — so there `[min, max]`
-    subsumption is real emitted coverage, which is why `_collapse_residual`'s
-    overlap pass only acts on it. Shared by the materializer and that pass, so
-    the two agree on the routing."""
+    overlap the column's other coding)."""
     spans: list[tuple[int, int, int]] = []
     col_vs: dict[str, set[int]] = defaultdict(set)
     col_yearless: dict[str, bool] = defaultdict(bool)
-    claimed_by_col: dict[str, set[int]] = defaultdict(set)
-    claim_spans: list[tuple[str, int, int, set[int]]] = []
     for gk in gkeys:
         g = groups[gk]
         if g.value_set_id is None:
-            if g.regver_min is not None and g.regver_max is not None:
-                years = set(g.claims)
-                claimed_by_col[gk[8]].update(years)
-                claim_spans.append((gk[8], g.regver_min, g.regver_max, years))
             continue
         col_vs[gk[8]].add(g.value_set_id)
         if not g.claims:
@@ -1383,20 +1368,29 @@ def _spans_overlap(groups: dict[tuple, _StateGroup], gkeys: list[tuple]) -> bool
             lo_j, hi_j, vs_j = spans[j]
             if vs_i != vs_j and max(lo_i, lo_j) <= min(hi_i, hi_j):
                 return True
-    # (b) another code-less group claims a year inside this code-less group's
-    # claim hull that this group itself did not claim. Its disjoint runs and the
-    # intervening type era must be emitted separately; comparing or emitting the
-    # outer hull loses that chronology (Y-128: Tjomf tinyint → int → tinyint).
-    for col, lo, hi, years in claim_spans:
-        if any(lo <= year <= hi for year in claimed_by_col[col] - years):
-            return True
-    # (c) a YEARLESS group on a column carrying >1 distinct value set — it emits
+    # (b) a YEARLESS group on a column carrying >1 distinct value set — it emits
     # an open span (fast path) that would overlap the column's other coding;
     # route the cluster through the timeline so it resolves.
     for col, yearless in col_yearless.items():
         if yearless and len(col_vs[col]) > 1:
             return True
     return False
+
+
+def _needs_timeline(groups: dict[tuple, _StateGroup], gkeys: list[tuple]) -> bool:
+    """The materializer's complete timeline-routing predicate.
+
+    Besides value-set overlap, multiple source-register texts on one delivery
+    column need interval ownership so source provenance can change by era. Both
+    the residual collapse and emitter must use this exact decision: collapsing a
+    partition the emitter later treats as a timeline can erase a documented era.
+    """
+    if _spans_overlap(groups, gkeys):
+        return True
+    by_col: dict[str, set[str]] = defaultdict(set)
+    for gk in gkeys:
+        by_col[gk[8]].add(groups[gk].source_register_text or "")
+    return any(len(texts) > 1 for texts in by_col.values())
 
 
 def _preferred_label(gk: tuple, grp: _StateGroup, res: _TriageResult) -> str:
@@ -1447,10 +1441,11 @@ def _collapse_residual(groups: dict[tuple, _StateGroup], res: _TriageResult) -> 
     bounds but overlapping `[regver_min, regver_max]` spans (a temporal
     supersession the index can't see) slip through. Only the materializer's FAST
     path emits a contiguous `[min, max]` span, so there `[min, max]` subsumption
-    is real emitted overlap; timeline partitions (distinct value sets) de-overlap
-    per-year already and are left to the materializer (`_spans_overlap` gates
-    this). Within each fast-path partition, same-(column, value set, emitted label,
-    source text) groups are swept ascending by lower bound against a running
+    is real emitted overlap; timeline partitions (distinct value sets or source-
+    register text drift) de-overlap per-year already and are left to the
+    materializer (`_needs_timeline` gates this). Within each fast-path partition,
+    same-(column, value set, emitted label, source text) groups are swept ascending
+    by lower bound against a running
     "container": a group fully inside the container is DROPPED (its coverage is
     redundant); a group that starts inside it but extends past range-CLAMPS the
     container (`res.clamped_to`) to end the day before this group's first delivery
@@ -1525,7 +1520,7 @@ def _collapse_residual(groups: dict[tuple, _StateGroup], res: _TriageResult) -> 
         fp_partitions[(vid, grp.register_variant_id)].append(gkey)
 
     for part_gkeys in fp_partitions.values():
-        if len(part_gkeys) <= 1 or _spans_overlap(groups, part_gkeys):
+        if len(part_gkeys) <= 1 or _needs_timeline(groups, part_gkeys):
             continue  # singleton, or a timeline partition the materializer owns
         # Sub-group by (delivery column, value set, EMITTED label, source text):
         # only the SAME column carrying the SAME coding under the SAME emitted label
@@ -3232,13 +3227,11 @@ def _coalesce_variable_states(
         _append_state(grp, gkey, vid, vf, vt)
 
     # Partition surviving groups by (variable_id, register_variant_id). A
-    # `(variable, variant)` needs the per-year TIMELINE iff two of its groups
-    # carry DISTINCT non-null value sets with OVERLAPPING `[regver_min,
-    # regver_max]` spans (the same condition `validate.py` flags), or a second
-    # code-less group claims an interior gap in another code-less group's
-    # claims. Everything else keeps the fast `[min,max]` span path —
-    # byte-identical to before, and benign single-group gaps stay covered (no
-    # needless fragmentation).
+    # `(variable, variant)` needs the per-year TIMELINE iff `_needs_timeline`
+    # finds overlapping codings or source-register text drift on a column.
+    # Everything else keeps the fast `[min,max]` span path — byte-identical to
+    # before, and benign single-group gaps stay covered (no needless
+    # fragmentation).
     by_vv: dict[tuple[int, int], list[tuple]] = defaultdict(list)
     for gkey, grp in groups.items():
         if gkey in triage.dropped:
@@ -3267,16 +3260,8 @@ def _coalesce_variable_states(
     def _col_source_texts(gks: list[tuple]) -> set[str]:
         return {groups[gk].source_register_text or "" for gk in gks}
 
-    def _needs_timeline(gks: list[tuple]) -> bool:
-        if _spans_overlap(groups, gks):
-            return True
-        by_col: dict[str, set[str]] = defaultdict(set)
-        for gk in gks:
-            by_col[gk[8]].add(groups[gk].source_register_text or "")
-        return any(len(texts) > 1 for texts in by_col.values())
-
     for (vid, rv), gkeys in by_vv.items():
-        if not _needs_timeline(gkeys):
+        if not _needs_timeline(groups, gkeys):
             for gk in gkeys:  # fast path
                 _emit_span(gk, groups[gk])
             continue

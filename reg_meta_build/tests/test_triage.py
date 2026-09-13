@@ -53,6 +53,7 @@ from reg_meta_build.sources.scb import (
     _fold_token_from_grain,
     _import_bug_suspect,
     _looks_like_code_label_pair,
+    _needs_timeline,
     _pick_state_rep,
     _resolve_year_winners,
     _spans_overlap,
@@ -2946,6 +2947,36 @@ class TestCollapseResidualOverlap:
         _collapse_residual(groups, res)
         # Whole partition is timeline-owned → pass 2 makes NO change, not even to
         # the vs5 crossing pair it would otherwise clamp.
+        assert res.dropped == set()
+        assert res.clamped_to == {}
+
+    def test_source_drift_timeline_partition_skipped(self) -> None:
+        # TJOMF's valued-overlap predicate is false, but the emitter still owns
+        # this partition because one delivery column carries two source texts.
+        # Residual collapse must consult that complete predicate too, or the
+        # returning outer shape's hull drops the contained middle era.
+        stable = "Lönestrukturstatistik, hela ekonomin (SLH)"
+        alternate = "Lönestruktur, hela ekonomin"
+        gk_outer = (1, 10, 44, "tinyint", "1", None, "", "", "tjomf", stable)
+        gk_alternate = (1, 10, 44, "int", "4", None, "", "", "tjomf", alternate)
+        gk_middle = (1, 10, 44, "int", "4", None, "", "", "tjomf", stable)
+        outer = self._grp(None, 1995, 2018, alias="Tjomf")
+        outer.claims = _year_claims(1995, 2004) | _year_claims(2016, 2018)
+        alternate_group = self._grp(None, 2005, 2010, alias="Tjomf")
+        middle = self._grp(None, 2011, 2015, alias="Tjomf")
+        outer.source_register_text = stable
+        alternate_group.source_register_text = alternate
+        middle.source_register_text = stable
+        groups = {
+            gk_outer: outer,
+            gk_alternate: alternate_group,
+            gk_middle: middle,
+        }
+
+        assert _spans_overlap(groups, list(groups)) is False
+        assert _needs_timeline(groups, list(groups)) is True
+        res = self._res(list(groups))
+        _collapse_residual(groups, res)
         assert res.dropped == set()
         assert res.clamped_to == {}
 

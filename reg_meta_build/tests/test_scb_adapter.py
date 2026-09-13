@@ -892,11 +892,14 @@ class TestEraOrdering:
     def test_disjoint_type_era_claims_preserve_the_middle_years(
         self, tmp_path: Path
     ) -> None:
-        # The tinyint shape returns after an int era. Its older edition IDs are
-        # deliberately higher than every later ID, and its older alias differs
-        # only by case: claimed-year ordering therefore reunites the spelling as
-        # Tjomf. The disjoint tinyint claim set must not use its 1995..2018 outer
-        # hull to collapse the documented 2011..2015 int deliveries.
+        # Real TJOMF has four runs: the 2005..2010 int run carries an alternate
+        # source text, while both tinyint runs and the 2011..2015 int run carry
+        # SLH. Its older edition IDs are deliberately higher than every later
+        # ID, and the older alias differs only by case. Claimed-year ordering
+        # reunites the spelling as Tjomf; source drift routes the partition to
+        # the timeline before residual hull collapse can erase 2011..2015.
+        slh_source = "Lönestrukturstatistik, hela ekonomin (SLH)"
+        alternate_source = "Lönestruktur, hela ekonomin :: Lönestruktur, hela ekonomin"
         old_tinyint = [
             _var_row(
                 colname="TJOMF",
@@ -907,9 +910,25 @@ class TestEraOrdering:
                 regver_id=30_000 + year,
                 data_type="tinyint",
                 data_length="1",
+                varsource=slh_source,
                 register=("TESTREG", 1, 815),
             )
             for year in range(1995, 2005)
+        ]
+        alternate_int = [
+            _var_row(
+                colname="Tjomf",
+                cvid=45_000 + year,
+                var_id=3876,
+                varname="TjomfVar",
+                year=str(year),
+                regver_id=20_000 + year,
+                data_type="int",
+                data_length="4",
+                varsource=alternate_source,
+                register=("TESTREG", 1, 815),
+            )
+            for year in range(2005, 2011)
         ]
         middle_ids = (4515, 5273, 5898, 7363, 9991)
         middle_int = [
@@ -922,6 +941,7 @@ class TestEraOrdering:
                 regver_id=regver_id,
                 data_type="int",
                 data_length="4",
+                varsource=slh_source,
                 register=("TESTREG", 1, 815),
             )
             for year, regver_id in zip(range(2011, 2016), middle_ids, strict=True)
@@ -936,14 +956,18 @@ class TestEraOrdering:
                 regver_id=1000 + year,
                 data_type="tinyint",
                 data_length="1",
+                varsource=slh_source,
                 register=("TESTREG", 1, 815),
             )
             for year in range(2016, 2019)
         ]
-        conn = _build_from_ri_rows(tmp_path, old_tinyint + middle_int + new_tinyint)
+        conn = _build_from_ri_rows(
+            tmp_path, old_tinyint + alternate_int + middle_int + new_tinyint
+        )
         try:
             states = conn.execute(
-                "SELECT vs.valid_from, vs.valid_to, vs.data_type "
+                "SELECT vs.valid_from, vs.valid_to, vs.data_type, "
+                "vs.source_register_text "
                 "FROM variable_state vs "
                 "JOIN variable v ON v.variable_id = vs.variable_id "
                 "WHERE v.register_id = 1 AND v.provider_key = '3876' "
@@ -951,9 +975,10 @@ class TestEraOrdering:
                 "ORDER BY vs.valid_from"
             ).fetchall()
             assert states == [
-                ("1995-01-01", "2004-12-31", "tinyint"),
-                ("2011-01-01", "2015-12-31", "int"),
-                ("2016-01-01", "2018-12-31", "tinyint"),
+                ("1995-01-01", "2004-12-31", "tinyint", slh_source),
+                ("2005-01-01", "2010-12-31", "int", alternate_source),
+                ("2011-01-01", "2015-12-31", "int", slh_source),
+                ("2016-01-01", "2018-12-31", "tinyint", slh_source),
             ]
         finally:
             conn.close()
