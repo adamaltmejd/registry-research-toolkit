@@ -2950,6 +2950,30 @@ class TestCollapseResidualOverlap:
         assert res.dropped == set()
         assert res.clamped_to == {}
 
+    def test_disjoint_subannual_empty_labels_reach_existing_timeline(self) -> None:
+        # PASS1 buckets both 1996 shapes at year grain. Source drift from the
+        # preceding era already makes the full partition timeline-owned, so its
+        # same-source, empty-label half-year claims must both reach the interval
+        # arbiter instead of one being discarded as undifferentiated drift.
+        gk_prior = (1, 10, 44, "int", "83", None, "", "", "t7a", "T6")
+        gk_first = (1, 10, 44, "int", "83", None, "", "", "t7a", "T7a")
+        gk_second = (1, 10, 44, "int", "93", None, "", "", "t7a", "T7a")
+        prior = self._grp(None, 1995, 1995, alias="t7a")
+        first = self._grp(None, 1996, 1996, alias="t7a")
+        second = self._grp(None, 1996, 1996, alias="t7a")
+        first.claims = {1996: Claim("1996-01-01", "1996-06-30", _AUTH_SUBANNUAL, "")}
+        second.claims = {1996: Claim("1996-07-01", "1996-12-31", _AUTH_SUBANNUAL, "")}
+        prior.source_register_text = "T6"
+        first.source_register_text = "T7a"
+        second.source_register_text = "T7a"
+        groups = {gk_prior: prior, gk_first: first, gk_second: second}
+
+        assert _needs_timeline(groups, list(groups)) is True
+        res = self._res(list(groups))
+        _collapse_residual(groups, res)
+        assert res.dropped == set()
+        assert res.labels[gk_first] == res.labels[gk_second] == ""
+
     def test_source_drift_timeline_partition_skipped(self) -> None:
         # TJOMF's valued-overlap predicate is false, but the emitter still owns
         # this partition because one delivery column carries two source texts.

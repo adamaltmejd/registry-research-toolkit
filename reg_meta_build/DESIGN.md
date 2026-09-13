@@ -1277,19 +1277,21 @@ invariant, so the SCB adapter triages every such collision (`sources/scb.py`,
 - **Collapse** — residual same-column metadata drift (`data_type` / `value_set_id`
   re-delivery churn). `_collapse_residual` runs in two passes: pass 1 dedupes groups
   sharing the same `valid_from`-year index key (keeps the latest-era state, drops pure
-  drift); pass 2 reconciles SAME-column, SAME-value-set, SAME-emitted-label groups whose
-  `[regver_min, regver_max]` spans *overlap across different lower-bound years* —
-  dropping a fully-subsumed group and range-clamping a crossing container's `valid_to`
-  to the day before the successor's first delivery day, bounded by the container's own
-  last (ISO grain, not the bare year: a year clamp padded out to December and swallowed
-  the spring term a läsår container delivered — Y-123). Only fast-path
-  `(variable_id, register_variant_id)` partitions are touched: residual collapse and
-  emission share the complete `_needs_timeline` predicate, so distinct value sets and
-  same-column source-register text drift are left to the interval materializer.
-  Different-column overlaps (parallel co-deliveries) remain untouched too. This shared
-  routing preserves a documented era inside a returning shape's outer hull when source
-  attribution changes between the runs (Y-128/TJOMF), without treating every claim gap
-  as a new timeline policy.
+  drift), except same-column/source empty-label groups with disjoint ISO claims in an
+  already timeline-owned partition, which must reach the interval arbiter (Y-128's
+  half-year course deliveries); pass 2 reconciles SAME-column, SAME-value-set,
+  SAME-emitted-label groups whose `[regver_min, regver_max]` spans *overlap across
+  different lower-bound years* — dropping a fully-subsumed group and range-clamping a
+  crossing container's `valid_to` to the day before the successor's first delivery day,
+  bounded by the container's own last (ISO grain, not the bare year: a year clamp padded
+  out to December and swallowed the spring term a läsår container delivered — Y-123).
+  Only fast-path `(variable_id, register_variant_id)` partitions are touched: residual
+  collapse and emission share the complete `_needs_timeline` predicate, so distinct
+  value sets and same-column source-register text drift are left to the interval
+  materializer. Different-column overlaps (parallel co-deliveries) remain untouched too.
+  This shared routing preserves a documented era inside a returning shape's outer hull
+  when source attribution changes between the runs (Y-128/TJOMF), without treating every
+  claim gap as a new timeline policy.
 
 **State-identity rule (#526).** The VALUE SET anchors a valued variable's temporal-state
 identity; SCB's per-delivery `Datatyp` / `Datalängd` is low-trust passthrough (declared

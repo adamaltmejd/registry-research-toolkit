@@ -1393,6 +1393,15 @@ def _needs_timeline(groups: dict[tuple, _StateGroup], gkeys: list[tuple]) -> boo
     return any(len(texts) > 1 for texts in by_col.values())
 
 
+def _claims_disjoint(left: _StateGroup, right: _StateGroup) -> bool:
+    """Whether two year-nested claim sets have no interval in common."""
+    return bool(left.claims and right.claims) and not any(
+        a.lo <= b.hi and b.lo <= a.hi
+        for a in left.claims.values()
+        for b in right.claims.values()
+    )
+
+
 def _preferred_label(gk: tuple, grp: _StateGroup, res: _TriageResult) -> str:
     """The label `_collapse_residual` PASS 1 prefers when deduping a `valid_from`
     scope: an existing triage override, else a grain token, else the group's
@@ -1431,10 +1440,12 @@ def _collapse_residual(groups: dict[tuple, _StateGroup], res: _TriageResult) -> 
     label is its fold label (if triage set one), else a grain token, else its own
     value_set_version_label. Processing latest-era first, a free label is kept; a
     *meaningful* label already taken is disambiguated (`-N`); an empty/
-    uninformative collision is pure shape/value drift and the group is dropped.
-    This preserves multi-vintage (distinct labels) and multi-grain (distinct
-    grain tokens) while collapsing drift — and, running after fold/split, also
-    resolves split-sibling within-column drift.
+    uninformative collision is pure shape/value drift and the group is dropped,
+    except same-column/source groups with disjoint ISO claims in a partition the
+    interval timeline already owns. Those must reach its interval arbiter rather
+    than be collapsed at year grain. This preserves multi-vintage (distinct
+    labels) and multi-grain (distinct grain tokens) while collapsing drift — and,
+    running after fold/split, also resolves split-sibling within-column drift.
 
     PASS 2 (same-column cross-year overlap): pass 1 keys on `valid_from`-year, so
     two SAME-column, SAME-value-set, SAME-label groups with DIFFERENT lower
@@ -1457,15 +1468,29 @@ def _collapse_residual(groups: dict[tuple, _StateGroup], res: _TriageResult) -> 
     group delivered (Y-123). Distinct value sets are the timeline/validator's domain
     and are never reconciled here."""
     scopes: dict[tuple, list[tuple]] = defaultdict(list)
+    partitions: dict[tuple[int, int], list[tuple]] = defaultdict(list)
     for gkey, grp in groups.items():
         if gkey in res.dropped:
             continue
         vid = res.assignments.get(gkey)
         if vid is None:
             continue
-        scopes[(vid, grp.register_variant_id, _group_from_year(grp))].append(gkey)
+        partition = (vid, grp.register_variant_id)
+        partitions[partition].append(gkey)
+        scopes[(*partition, _group_from_year(grp))].append(gkey)
 
-    for scope_gkeys in scopes.values():
+    timeline_partitions: dict[tuple[int, int], bool] = {}
+
+    def _timeline_owned(scope: tuple) -> bool:
+        partition = (scope[0], scope[1])
+        if partition not in timeline_partitions:
+            gkeys = partitions[partition]
+            timeline_partitions[partition] = len(gkeys) > 1 and _needs_timeline(
+                groups, gkeys
+            )
+        return timeline_partitions[partition]
+
+    for scope, scope_gkeys in scopes.items():
         if len(scope_gkeys) <= 1:
             continue
         # Latest era first so it keeps the cleanest label; deterministic ties.
@@ -1495,6 +1520,21 @@ def _collapse_residual(groups: dict[tuple, _StateGroup], res: _TriageResult) -> 
                 # shape drift. Keep it for the timeline arbiter; same-period
                 # collisions collapse there by latest edition, while any
                 # existing interval-grain separation remains available.
+                res.labels[gk] = preferred
+                kept.append(gk)
+            elif (
+                not preferred
+                and _timeline_owned(scope)
+                and all(
+                    gk[8] == kept_gk[8]
+                    and (grp.source_register_text or "")
+                    == (groups[kept_gk].source_register_text or "")
+                    and _claims_disjoint(grp, groups[kept_gk])
+                    for kept_gk in kept
+                )
+            ):
+                # The interval timeline, not this year-grain index guard, owns
+                # disjoint subannual shapes on one column/source (Y-128).
                 res.labels[gk] = preferred
                 kept.append(gk)
             elif preferred:  # meaningful token already taken → disambiguate

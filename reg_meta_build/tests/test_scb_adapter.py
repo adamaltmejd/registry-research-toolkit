@@ -983,6 +983,85 @@ class TestEraOrdering:
         finally:
             conn.close()
 
+    @pytest.mark.parametrize(
+        ("var_id", "column", "first_length", "second_length", "second_cvid", "source"),
+        [
+            (22077, "t7a", "83", "93", 694104, "T7a"),
+            (22080, "t7d", "59", "92", 694101, "T7d"),
+        ],
+    )
+    def test_timeline_preserves_documented_second_half_claim(
+        self,
+        tmp_path: Path,
+        var_id: int,
+        column: str,
+        first_length: str,
+        second_length: str,
+        second_cvid: int,
+        source: str,
+    ) -> None:
+        # The real course columns change declared length between the two halves
+        # of 1996. An older source-text era already makes each partition
+        # timeline-owned; the higher-ID first half must not make PASS1 discard
+        # regver 14892's disjoint, source-documented second-half claim.
+        conn = _build_from_ri_rows(
+            tmp_path,
+            [
+                _var_row(
+                    colname=column,
+                    cvid=second_cvid + 100,
+                    var_id=var_id,
+                    varname="Kursämne",
+                    year="1995",
+                    regver_id=14_000,
+                    data_length=first_length,
+                    varopdef="T6",
+                    register=("TESTREG", 1, 396),
+                ),
+                _var_row(
+                    colname=column,
+                    cvid=second_cvid + 1,
+                    var_id=var_id,
+                    varname="Kursämne",
+                    year="1996",
+                    versionname="Första halvåret 1996",
+                    regver_id=15_000,
+                    data_length=first_length,
+                    varopdef=source,
+                    register=("TESTREG", 1, 396),
+                ),
+                _var_row(
+                    colname=column,
+                    cvid=second_cvid,
+                    var_id=var_id,
+                    varname="Kursämne",
+                    year="1996",
+                    versionname="Andra halvåret 1996",
+                    regver_id=14892,
+                    data_length=second_length,
+                    varopdef=source,
+                    register=("TESTREG", 1, 396),
+                ),
+            ],
+        )
+        try:
+            states = conn.execute(
+                "SELECT vs.valid_from, vs.valid_to, vs.data_length, "
+                "vs.source_register_text "
+                "FROM variable_state vs "
+                "JOIN variable v ON v.variable_id = vs.variable_id "
+                "WHERE v.register_id = 1 AND v.provider_key = CAST(? AS TEXT) "
+                "AND vs.register_variant_id = 396 "
+                "ORDER BY vs.valid_from",
+                (var_id,),
+            ).fetchall()
+            assert states == [
+                ("1995-01-01", "1995-12-31", first_length, "T6"),
+                ("1996-01-01", "1996-12-31", first_length, source),
+            ]
+        finally:
+            conn.close()
+
     def test_year_bearing_edition_outranks_unknown_year_before_id(
         self, tmp_path: Path
     ) -> None:
