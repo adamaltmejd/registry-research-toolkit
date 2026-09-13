@@ -55,9 +55,10 @@ def test_repo_codeless_overlap_parses() -> None:
     # non-empty map of (register, variable, column) → (resolution, extend_label).
     curation = load_codeless_overlap(_ROOT / "codeless_overlap.toml")
     assert curation
-    assert curation[
-        ("scb", "lastbilstrafik", "varukod-sandning", "varukod")
-    ] == ("cap", None)
+    assert curation[("scb", "lastbilstrafik", "varukod-sandning", "varukod")] == (
+        "cap",
+        None,
+    )
 
 
 def test_repo_concept_groups_parses() -> None:
