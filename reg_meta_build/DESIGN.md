@@ -872,10 +872,15 @@ The snapshot instead uses this record contract:
 
 The selected serialization is UTF-8 escaped TSV, one logical record per physical line.
 Tabs, CR/LF and backslashes in readable text are escaped; undefined bytes remain tagged
-base64. SQLite is used only as a disposable, bounded-memory interning/sort workspace,
-not as the committed representation. Parquet was not added: it would add a dependency
-and its binary changes would not satisfy ordinary Git review. A tiny synthetic fixture
-screen (77 normalized lines) measured 5,784 bytes for escaped TSV versus 8,405 bytes for
+base64. Preparation uses SQLite only as a disposable, bounded-memory interning/sort
+workspace, not as the committed representation. The separate `measure-codecs` control
+loads every field from the complete normalized sample dictionaries and association
+tables into a fresh disposable SQLite DB, adding an occurrence ordinal to retain each
+logical table's order; it reports that DB's bytes and logical table/row/field counts
+before deleting it. This is not a measurement of the interner and is not an alternate
+snapshot format or reader. Parquet was not added: it would add a dependency and its
+binary changes would not satisfy ordinary Git review. A tiny synthetic fixture screen
+(77 normalized lines) measured 5,784 bytes for escaped TSV versus 8,405 bytes for
 canonical JSONL arrays, a 31% codec reduction. That fixture's complete snapshot was
 19,406 bytes for 5,040 bytes of raw CSV because manifests and small dictionaries
 dominate at tiny scale; it is explicitly not evidence that the 14 GB corpus condenses. A
@@ -898,9 +903,12 @@ names a bundle/edition, a source directory, all six known CSVs (each explicitly 
 or optional), any additional CSVs, and one or more independently retained archive paths,
 stable locators and member lists. Preparation verifies archive hashes, refuses an
 unlisted CSV, requires `Vardemangder.csv` and `VardemangderValidDates.csv` as a pair,
-and creates a new candidate path only. Archive paths and source paths never enter the
-deterministic manifest; stable archive locators, hashes and sizes do. Accepting a
-candidate is an ordinary explicit Git commit/branch decision by the maintainer.
+and captures every declared CSV's presence and file identity before converting any file.
+After conversion and candidate verification, it revalidates the complete inventory and
+every captured identity before publication; the existing per-file checks remain in
+place. Archive paths and source paths never enter the deterministic manifest; stable
+archive locators, hashes and sizes do. Accepting a candidate is an ordinary explicit Git
+commit/branch decision by the maintainer.
 
 ```json
 {

@@ -6,6 +6,7 @@ import csv
 import hashlib
 import io
 import json
+import os
 import sqlite3
 import subprocess
 from typing import TYPE_CHECKING
@@ -15,6 +16,7 @@ from _csv_fixtures import write_scb_input
 from reg_meta_build.input_snapshot import (
     SCB_CSV_FILES,
     SnapshotError,
+    SnapshotFile,
     converter_source_commit,
     create_build_lock,
     load_manifest,
@@ -280,6 +282,102 @@ def test_snapshot_fails_on_content_key_collision(
             tmp_path / "snapshot",
             converter_commit="b" * 40,
         )
+
+
+@pytest.mark.parametrize(
+    "mutation",
+    ("earlier-changed", "later-replaced", "optional-appeared", "optional-disappeared"),
+)
+def test_snapshot_rechecks_complete_source_bundle_before_publication(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    mutation: str,
+) -> None:
+    source_dir = write_scb_input(tmp_path / "source")
+    inventory_path = _inventory(tmp_path, source_dir)
+    inventory = json.loads(inventory_path.read_text(encoding="utf-8"))
+    if mutation == "optional-appeared":
+        inventory["files"].append({"name": "Optional.csv", "required": False})
+        inventory["archives"][0]["members"].append("Optional.csv")
+    elif mutation == "optional-disappeared":
+        optional = next(
+            item for item in inventory["files"] if item["name"] == "Identifierare.csv"
+        )
+        optional["required"] = False
+    inventory_path.write_text(json.dumps(inventory), encoding="utf-8")
+
+    original_prepare_file = snapshot_module._prepare_file
+    mutated = False
+
+    def prepare_then_mutate(*args: object, **kwargs: object) -> SnapshotFile:
+        nonlocal mutated
+        prepared = original_prepare_file(*args, **kwargs)
+        if mutated:
+            return prepared
+        mutated = True
+        if mutation == "earlier-changed":
+            with (source_dir / "Registerinformation.csv").open("ab") as handle:
+                handle.write(b"changed after conversion\r\n")
+        elif mutation == "later-replaced":
+            later = source_dir / "Timeseries.csv"
+            later_stat = later.stat()
+            replacement = source_dir / "Timeseries.replacement"
+            replacement.write_bytes(later.read_bytes())
+            os.utime(
+                replacement,
+                ns=(later_stat.st_atime_ns, later_stat.st_mtime_ns),
+            )
+            replacement.replace(later)
+        elif mutation == "optional-appeared":
+            (source_dir / "Optional.csv").write_bytes(b"field\r\nvalue\r\n")
+        else:
+            (source_dir / "Identifierare.csv").unlink()
+        return prepared
+
+    monkeypatch.setattr(snapshot_module, "_prepare_file", prepare_then_mutate)
+    output = tmp_path / "candidate"
+
+    with pytest.raises(SnapshotError, match="source bundle changed during conversion"):
+        prepare_snapshot(inventory_path, output, converter_commit="b" * 40)
+
+    assert not output.exists()
+    assert not list(tmp_path.glob(".candidate.candidate-*"))
+
+
+def test_codec_measurement_sqlite_control_covers_all_normalized_tables(
+    tmp_path: Path,
+) -> None:
+    source_dir = write_scb_input(tmp_path / "source")
+    measurement = measure_codec_sample(
+        _inventory(tmp_path, source_dir),
+        limits={"Registerinformation.csv": 2, "Vardemangder.csv": 3},
+        codec_sample_lines=10,
+    )
+    assert measurement["sample_records"]["Registerinformation.csv"] == 2
+    assert measurement["sample_records"]["Vardemangder.csv"] == 3
+    control = measurement["sqlite_normalized_tables_control"]
+    expected_table_rows = {
+        f"{name}:records": records
+        for name, records in measurement["sample_records"].items()
+    }
+    expected_field_counts: dict[str, int] = {}
+    for name in measurement["sample_records"]:
+        with snapshot_module.open_lossless_csv(source_dir / name) as (header, _rows):
+            groups, inline = snapshot_module._group_layout(name, header)
+        expected_field_counts[f"{name}:records"] = len(groups) + len(inline)
+        for group_name, positions in groups:
+            logical_name = f"{name}:{group_name}"
+            expected_table_rows[logical_name] = measurement["codec_sample"][
+                logical_name
+            ]["lines"]
+            expected_field_counts[logical_name] = len(positions) + 1
+
+    assert control["bytes"] > 0
+    assert control["table_rows"] == expected_table_rows
+    assert control["table_field_counts"] == expected_field_counts
+    assert control["logical_tables"] == len(expected_table_rows)
+    assert control["logical_rows"] == sum(expected_table_rows.values())
+    assert control["ordering"] == "zero-based occurrence ordinal per logical table"
 
 
 def test_content_keys_stay_stable_and_git_measurement_reports_update_growth(

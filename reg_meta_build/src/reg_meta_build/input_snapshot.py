@@ -917,6 +917,32 @@ def _source_inventory(inventory_path: Path, inventory: DeliveryInventory) -> Pat
     return source_dir
 
 
+def _source_bundle_identities(
+    source_dir: Path, inventory: DeliveryInventory
+) -> dict[str, tuple[int, int, int, int] | None]:
+    return {
+        item.name: (
+            _file_identity(source.stat())
+            if (source := source_dir / item.name).is_file()
+            else None
+        )
+        for item in inventory.files
+    }
+
+
+def _verify_source_bundle_unchanged(
+    inventory_path: Path,
+    inventory: DeliveryInventory,
+    source_dir: Path,
+    expected: Mapping[str, tuple[int, int, int, int] | None],
+) -> None:
+    current_source_dir = _source_inventory(inventory_path, inventory)
+    current = _source_bundle_identities(current_source_dir, inventory)
+    if current_source_dir != source_dir or current != expected:
+        changed = sorted(name for name in expected if current[name] != expected[name])
+        raise SnapshotError(f"source bundle changed during conversion: {changed}")
+
+
 def prepare_snapshot(
     inventory_path: Path,
     output: Path,
@@ -936,6 +962,7 @@ def prepare_snapshot(
         raise SnapshotError("converter_commit must be one non-empty revision token")
     inventory = load_inventory(inventory_path)
     source_dir = _source_inventory(inventory_path, inventory)
+    source_identities = _source_bundle_identities(source_dir, inventory)
 
     output.parent.mkdir(parents=True, exist_ok=True)
     staging = Path(
@@ -992,6 +1019,12 @@ def prepare_snapshot(
         )
         (staging / MANIFEST_NAME).write_bytes(_manifest_bytes(manifest))
         verify_snapshot(staging)
+        _verify_source_bundle_unchanged(
+            inventory_path,
+            inventory,
+            source_dir,
+            source_identities,
+        )
         normalized_bytes = _snapshot_size(staging, manifest)
         raw_bytes = sum(item.raw_size or 0 for item in files)
         records = sum(item.record_count for item in files)
@@ -1277,6 +1310,85 @@ def _sample_rows(
             target = next(targets, None)
 
 
+def _ordered_normalized_rows(
+    root: Path,
+    normalized_files: Sequence[NormalizedFile],
+    field_count: int,
+) -> Iterator[tuple[int | str, ...]]:
+    ordinal = 0
+    for normalized in normalized_files:
+        for line_number, fields in _iter_tsv(root / normalized.path):
+            if len(fields) != field_count:
+                raise SnapshotError(
+                    f"{normalized.path}: line {line_number} has the wrong field count"
+                )
+            yield (ordinal, *fields)
+            ordinal += 1
+
+
+def _sqlite_normalized_tables_control(
+    root: Path,
+    files: Sequence[SnapshotFile],
+    database: Path,
+) -> dict[str, Any]:
+    logical_tables: list[tuple[str, tuple[NormalizedFile, ...], int]] = []
+    for item in files:
+        for group in item.groups:
+            logical_tables.append(
+                (
+                    f"{item.name}:{group.name}",
+                    (group.dictionary,),
+                    len(group.positions) + 1,
+                )
+            )
+        logical_tables.append(
+            (
+                f"{item.name}:records",
+                item.records,
+                len(item.groups) + len(item.inline_positions),
+            )
+        )
+
+    table_rows: dict[str, int] = {}
+    table_field_counts: dict[str, int] = {}
+    conn = sqlite3.connect(database)
+    try:
+        conn.execute("PRAGMA journal_mode=OFF")
+        conn.execute("PRAGMA synchronous=OFF")
+        for table_index, (logical_name, normalized_files, field_count) in enumerate(
+            logical_tables
+        ):
+            table_name = f"normalized_{table_index:04d}"
+            columns = ", ".join(
+                f"field_{field_index:04d} TEXT NOT NULL"
+                for field_index in range(field_count)
+            )
+            conn.execute(
+                f"CREATE TABLE {table_name} "
+                f"(occurrence_ordinal INTEGER PRIMARY KEY, {columns})"
+            )
+            placeholders = ", ".join("?" for _index in range(field_count + 1))
+            conn.executemany(
+                f"INSERT INTO {table_name} VALUES ({placeholders})",
+                _ordered_normalized_rows(root, normalized_files, field_count),
+            )
+            table_rows[logical_name] = conn.execute(
+                f"SELECT COUNT(*) FROM {table_name}"
+            ).fetchone()[0]
+            table_field_counts[logical_name] = field_count
+        conn.commit()
+    finally:
+        conn.close()
+    return {
+        "bytes": database.stat().st_size,
+        "logical_tables": len(table_rows),
+        "logical_rows": sum(table_rows.values()),
+        "table_rows": table_rows,
+        "table_field_counts": table_field_counts,
+        "ordering": "zero-based occurrence ordinal per logical table",
+    }
+
+
 def measure_codec_sample(
     inventory_path: Path,
     *,
@@ -1303,6 +1415,7 @@ def measure_codec_sample(
         source_root.mkdir()
         population_records: dict[str, int] = {}
         sample_records: dict[str, int] = {}
+        prepared_files: list[SnapshotFile] = []
         file_limits: dict[str, int] = {}
         raw_bytes = 0
         for item in inventory.files:
@@ -1328,8 +1441,14 @@ def measure_codec_sample(
             prepared = _prepare_file(
                 sample, normalized_root, item.required, codec_sample
             )
+            prepared_files.append(prepared)
             sample_records[item.name] = prepared.record_count
             raw_bytes += sample.stat().st_size
+        sqlite_control = _sqlite_normalized_tables_control(
+            normalized_root,
+            prepared_files,
+            workspace / "normalized-tables-control.sqlite",
+        )
         return {
             "sampling": {
                 "method": "evenly-spaced-source-ordinals-v1",
@@ -1340,6 +1459,7 @@ def measure_codec_sample(
             "sample_records": sample_records,
             "logical_sample_csv_bytes": raw_bytes,
             "normalized_sample_bytes": tree_size(normalized_root),
+            "sqlite_normalized_tables_control": sqlite_control,
             "codec_sample": codec_sample.by_kind,
             "elapsed_seconds": time.perf_counter() - started,
         }
