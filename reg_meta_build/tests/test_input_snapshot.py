@@ -81,8 +81,14 @@ def _logical_rows(path: Path) -> list[list[bytes | None]]:
         ]
 
 
-def _git(repo: Path, *args: str) -> None:
-    subprocess.run(["git", "-C", str(repo), *args], check=True, capture_output=True)
+def _git(repo: Path, *args: str) -> str:
+    process = subprocess.run(
+        ["git", "-C", str(repo), *args],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    return process.stdout.strip()
 
 
 def test_snapshot_round_trip_preserves_raw_fields_occurrences_and_order(
@@ -317,6 +323,39 @@ def test_snapshot_rejects_unsupported_version_and_never_replaces_candidates(
     assert not failed.exists()
 
 
+@pytest.mark.parametrize("unsafe_kind", ["absolute", "traversal"])
+def test_snapshot_rejects_unsafe_source_name_without_writing_outside_restore(
+    tmp_path: Path, unsafe_kind: str
+) -> None:
+    source_dir = write_scb_input(tmp_path / "source")
+    snapshot = tmp_path / "snapshot"
+    prepare_snapshot(
+        _inventory(tmp_path, source_dir), snapshot, converter_commit="f" * 40
+    )
+    outside = tmp_path / "outside.csv"
+    outside.write_bytes(b"must remain unchanged")
+    unsafe_name = str(outside) if unsafe_kind == "absolute" else "../outside.csv"
+    manifest_path = snapshot / "manifest.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    source_file = next(item for item in manifest["files"] if item["present"])
+    original_name = source_file["name"]
+    source_file["name"] = unsafe_name
+    for archive in manifest["archives"]:
+        archive["members"] = [
+            unsafe_name if member == original_name else member
+            for member in archive["members"]
+        ]
+    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+
+    with pytest.raises(SnapshotError, match="plain .csv filename"):
+        verify_snapshot(snapshot)
+    with pytest.raises(SnapshotError, match="plain .csv filename"):
+        restore_snapshot(snapshot, tmp_path / "restore")
+
+    assert outside.read_bytes() == b"must remain unchanged"
+    assert not (tmp_path / "restore").exists()
+
+
 def test_inventory_requires_complete_listing_pairing_and_archive_coverage(
     tmp_path: Path,
 ) -> None:
@@ -396,6 +435,46 @@ def test_build_lock_pins_clean_repositories_auxiliary_inputs_and_result(
     with pytest.raises(SnapshotError, match="hash/size mismatch"):
         verify_build_lock(
             lock_path,
+            snapshot,
+            builder_repo,
+            auxiliary_inputs={
+                "Tabelldefinitioner.sql": auxiliary,
+                "ID-kolumner.xlsx": None,
+            },
+        )
+    auxiliary.write_text("CREATE TABLE x (id int);\n", encoding="utf-8")
+
+    (input_repo / ".gitignore").write_text(
+        "/snapshots/fixture/files/\n", encoding="utf-8"
+    )
+    _git(input_repo, "rm", "-q", "-r", "--cached", "snapshots/fixture/files")
+    _git(input_repo, "add", ".gitignore")
+    _git(input_repo, "commit", "-q", "-m", "omit normalized snapshot files")
+    unbacked_commit = _git(input_repo, "rev-parse", "HEAD")
+
+    unbacked_lock_path = tmp_path / "unbacked-lock.json"
+    with pytest.raises(SnapshotError, match="missing from pinned commit"):
+        create_build_lock(
+            snapshot,
+            builder_repo,
+            result_db,
+            unbacked_lock_path,
+            providers=("scb",),
+            build_options={"validate": True, "prestage": False},
+            auxiliary_inputs={
+                "Tabelldefinitioner.sql": auxiliary,
+                "ID-kolumner.xlsx": None,
+            },
+        )
+    assert not unbacked_lock_path.exists()
+
+    forged_lock = json.loads(lock_path.read_text(encoding="utf-8"))
+    forged_lock["input_repository_commit"] = unbacked_commit
+    forged_lock_path = tmp_path / "forged-lock.json"
+    forged_lock_path.write_text(json.dumps(forged_lock), encoding="utf-8")
+    with pytest.raises(SnapshotError, match="missing from pinned commit"):
+        verify_build_lock(
+            forged_lock_path,
             snapshot,
             builder_repo,
             auxiliary_inputs={

@@ -954,7 +954,9 @@ sampled logical lines, and deletes the workspace on return.
 closure, expands every occurrence, and recomputes separate ordered-record and
 header-plus-record digests. `restore` writes to a sibling staging directory, reopens the
 result through an independent CSV traversal, checks the same digests, and only then
-renames the complete directory into place. Restored CSV quoting is canonical rather than
+renames the complete directory into place. Loaded manifest source names pass the same
+plain-`.csv` filename boundary as inventory names before restoration writes any file, so
+absolute and traversal paths fail closed. Restored CSV quoting is canonical rather than
 byte-identical to the original; field bytes/order and quoted-empty/null semantics are
 identical. Exact original CSV bytes remain recoverable only from the independently
 retained, checksum-pinned archive.
@@ -965,11 +967,15 @@ manifest hash; snapshot schema/converter versions; clean builder commit; `uv.loc
 and Python runtime; provider order and build options; exact hashes or explicit absence
 for every auxiliary input; and the resulting DB hash. This captures inputs the current
 `import_manifest.source_checksums` does not, including `Tabelldefinitioner.sql` and
-`ID-kolumner.xlsx`. The operator must also list every selected classification, curation,
-slug, and non-SCB provider input as an auxiliary pin. `verify-lock` checks these pins
-before replay (omit `--result-db`) and the result hash afterward. A missing or
-mismatching input fails; it never substitutes a newer file. The build itself remains the
-existing observed workflow:
+`ID-kolumner.xlsx`. At lock creation and verification, the committed manifest and every
+dictionary/record artifact it declares are streamed from the exact pinned Git commit;
+each blob must exist and match the manifest's byte size and SHA256. The worktree is
+verified separately, so an ignored normalized tree cannot masquerade as a reproducible
+commit. The operator must also list every selected classification, curation, slug, and
+non-SCB provider input as an auxiliary pin. `verify-lock` checks these pins before
+replay (omit `--result-db`) and the result hash afterward. A missing or mismatching
+input fails; it never substitutes a newer file. The build itself remains the existing
+observed workflow:
 
 ```console
 uv run python scripts/build_db_watch.py --input-dir /tmp/input --db-dir /tmp/replay-db

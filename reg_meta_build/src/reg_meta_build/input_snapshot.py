@@ -41,6 +41,7 @@ from .db import _file_sha256
 
 if TYPE_CHECKING:
     from collections.abc import Iterator, Mapping, Sequence
+    from typing import IO
 
 SNAPSHOT_SCHEMA_VERSION = 1
 CONVERTER_VERSION = 1
@@ -132,9 +133,8 @@ class _Model(BaseModel):
     model_config = ConfigDict(extra="forbid", frozen=True)
 
 
-class InventoryFile(_Model):
+class _NamedCsvModel(_Model):
     name: str
-    required: bool
 
     @field_validator("name")
     @classmethod
@@ -142,6 +142,10 @@ class InventoryFile(_Model):
         if Path(value).name != value or not value.lower().endswith(".csv"):
             raise ValueError("name must be a plain .csv filename")
         return value
+
+
+class InventoryFile(_NamedCsvModel):
+    required: bool
 
 
 class ArchiveInput(_Model):
@@ -253,8 +257,7 @@ class PayloadGroup(_Model):
     entries: int
 
 
-class SnapshotFile(_Model):
-    name: str
+class SnapshotFile(_NamedCsvModel):
     required: bool
     present: bool
     raw_size: int | None = None
@@ -1339,6 +1342,94 @@ def clean_git_commit(repo: Path) -> str:
     return _git(repo, "rev-parse", "HEAD")
 
 
+def _snapshot_repo_path(snapshot_path: str, relative_path: str) -> str:
+    if snapshot_path == ".":
+        return relative_path
+    return f"{snapshot_path}/{relative_path}"
+
+
+def _read_git_blob(
+    stdin: IO[bytes], stdout: IO[bytes], object_spec: str, *, retain: bool = False
+) -> tuple[int, str, bytes | None]:
+    stdin.write(object_spec.encode("utf-8") + b"\n")
+    stdin.flush()
+    response = stdout.readline()
+    if response.endswith(b" missing\n"):
+        path = object_spec.partition(":")[2]
+        raise SnapshotError(f"snapshot artifact is missing from pinned commit: {path}")
+    parts = response.rstrip(b"\n").split()
+    if len(parts) != 3 or parts[1] != b"blob":
+        raise SnapshotError(f"invalid Git blob response for {object_spec!r}")
+    try:
+        size = int(parts[2])
+    except ValueError as exc:
+        raise SnapshotError(f"invalid Git blob size for {object_spec!r}") from exc
+    remaining = size
+    digest = hashlib.sha256()
+    payload = bytearray() if retain else None
+    while remaining:
+        chunk = stdout.read(min(remaining, 1024 * 1024))
+        if not chunk:
+            raise SnapshotError(f"truncated Git blob for {object_spec!r}")
+        digest.update(chunk)
+        if payload is not None:
+            payload.extend(chunk)
+        remaining -= len(chunk)
+    if stdout.read(1) != b"\n":
+        raise SnapshotError(f"invalid Git blob terminator for {object_spec!r}")
+    return size, digest.hexdigest(), bytes(payload) if payload is not None else None
+
+
+def _verify_committed_snapshot(
+    repo: Path, commit: str, snapshot_path: str
+) -> tuple[SnapshotManifest, str]:
+    try:
+        with subprocess.Popen(
+            ["git", "-C", str(repo), "cat-file", "--batch"],
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        ) as process:
+            assert process.stdin is not None
+            assert process.stdout is not None
+            assert process.stderr is not None
+            manifest_repo_path = _snapshot_repo_path(snapshot_path, MANIFEST_NAME)
+            _, manifest_sha256, manifest_bytes = _read_git_blob(
+                process.stdin,
+                process.stdout,
+                f"{commit}:{manifest_repo_path}",
+                retain=True,
+            )
+            assert manifest_bytes is not None
+            try:
+                manifest = SnapshotManifest.model_validate_json(manifest_bytes)
+            except ValueError as exc:
+                raise SnapshotError(
+                    f"invalid snapshot manifest in pinned commit: {exc}"
+                ) from exc
+            for item in manifest.files:
+                for normalized in _normalized_files(item):
+                    repo_path = _snapshot_repo_path(snapshot_path, normalized.path)
+                    size, sha256, _ = _read_git_blob(
+                        process.stdin, process.stdout, f"{commit}:{repo_path}"
+                    )
+                    if size != normalized.size or sha256 != normalized.sha256:
+                        raise SnapshotError(
+                            "normalized artifact hash/size mismatch in pinned commit: "
+                            f"{normalized.path}"
+                        )
+            process.stdin.close()
+            stderr = process.stderr.read().decode("utf-8", errors="replace").strip()
+            return_code = process.wait()
+            if return_code:
+                raise SnapshotError(
+                    f"git cat-file --batch failed in {repo}: {stderr or return_code}"
+                )
+            return manifest, manifest_sha256
+    except OSError as exc:
+        raise SnapshotError(f"cannot inspect pinned input commit: {exc}") from exc
+
+
 def create_build_lock(
     snapshot: Path,
     builder_repo: Path,
@@ -1357,12 +1448,16 @@ def create_build_lock(
         raise SnapshotError(
             f"build lock already exists and will not be overwritten: {output}"
         )
-    manifest = verify_snapshot(snapshot)
     input_repo = Path(_git(snapshot, "rev-parse", "--show-toplevel"))
     input_commit = clean_git_commit(input_repo)
     builder_commit = clean_git_commit(builder_repo)
     snapshot_path = snapshot.relative_to(input_repo).as_posix()
-    _git(input_repo, "ls-files", "--error-unmatch", f"{snapshot_path}/{MANIFEST_NAME}")
+    committed_manifest, committed_manifest_sha256 = _verify_committed_snapshot(
+        input_repo, input_commit, snapshot_path
+    )
+    manifest = verify_snapshot(snapshot)
+    if manifest != committed_manifest:
+        raise SnapshotError("worktree snapshot manifest differs from pinned commit")
     uv_lock = builder_repo / "uv.lock"
     if not uv_lock.is_file() or not result_db.is_file():
         raise SnapshotError("builder uv.lock and result DB must both exist")
@@ -1387,9 +1482,9 @@ def create_build_lock(
         schema_version=1,
         input_repository_commit=input_commit,
         snapshot_path=snapshot_path,
-        snapshot_manifest_sha256=_file_sha256(snapshot / MANIFEST_NAME),
-        snapshot_schema_version=manifest.schema_version,
-        snapshot_converter_version=manifest.converter_version,
+        snapshot_manifest_sha256=committed_manifest_sha256,
+        snapshot_schema_version=committed_manifest.schema_version,
+        snapshot_converter_version=committed_manifest.converter_version,
         builder_commit=builder_commit,
         uv_lock_sha256=_file_sha256(uv_lock),
         python_runtime=f"{sys.implementation.name}-{platform.python_version()}",
@@ -1433,19 +1528,18 @@ def verify_build_lock(
         raise SnapshotError(f"builder uv.lock is missing: {uv_lock}")
     if result_db is not None and not result_db.is_file():
         raise SnapshotError(f"result DB is missing: {result_db}")
+    input_commit = clean_git_commit(input_repo)
+    builder_commit = clean_git_commit(builder_repo)
+    snapshot_path = snapshot.relative_to(input_repo).as_posix()
     checks = {
         "input repository commit": (
-            clean_git_commit(input_repo),
+            input_commit,
             lock.input_repository_commit,
         ),
-        "builder commit": (clean_git_commit(builder_repo), lock.builder_commit),
+        "builder commit": (builder_commit, lock.builder_commit),
         "snapshot path": (
-            snapshot.relative_to(input_repo).as_posix(),
+            snapshot_path,
             lock.snapshot_path,
-        ),
-        "snapshot manifest": (
-            _file_sha256(snapshot / MANIFEST_NAME),
-            lock.snapshot_manifest_sha256,
         ),
         "uv.lock": (_file_sha256(uv_lock), lock.uv_lock_sha256),
         "Python runtime": (
@@ -1458,7 +1552,17 @@ def verify_build_lock(
             raise SnapshotError(
                 f"{label} pin mismatch: expected {expected}, got {actual}"
             )
-    verify_snapshot(snapshot)
+    committed_manifest, committed_manifest_sha256 = _verify_committed_snapshot(
+        input_repo, input_commit, snapshot_path
+    )
+    if committed_manifest_sha256 != lock.snapshot_manifest_sha256:
+        raise SnapshotError(
+            "snapshot manifest pin mismatch: expected "
+            f"{lock.snapshot_manifest_sha256}, got {committed_manifest_sha256}"
+        )
+    manifest = verify_snapshot(snapshot)
+    if manifest != committed_manifest:
+        raise SnapshotError("worktree snapshot manifest differs from pinned commit")
     expected_aux = {item.name: item for item in lock.auxiliary_inputs}
     if set(auxiliary_inputs) != set(expected_aux):
         raise SnapshotError("auxiliary input names do not match the build lock")
