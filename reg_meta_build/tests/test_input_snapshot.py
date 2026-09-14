@@ -12,9 +12,11 @@ import subprocess
 from typing import TYPE_CHECKING
 
 import pytest
-from _csv_fixtures import write_scb_input
+from _csv_fixtures import write_scb_input, write_scb_snapshot
+from reg_meta_build.db import _open_scb_csv, _open_scb_csv_raw
 from reg_meta_build.input_snapshot import (
     SCB_CSV_FILES,
+    ScbSnapshotSelection,
     SnapshotError,
     SnapshotFile,
     converter_source_commit,
@@ -22,6 +24,7 @@ from reg_meta_build.input_snapshot import (
     load_manifest,
     measure_codec_sample,
     measure_git_history,
+    open_scb_snapshot,
     prepare_snapshot,
     restore_snapshot,
     verify_build_lock,
@@ -93,6 +96,21 @@ def _git(repo: Path, *args: str) -> str:
         text=True,
     )
     return process.stdout.strip()
+
+
+def _repin(
+    selection: ScbSnapshotSelection, message: str = "fixture update"
+) -> ScbSnapshotSelection:
+    repo = selection.path.parent
+    _git(repo, "add", "-A")
+    _git(repo, "commit", "-q", "-m", message)
+    return type(selection)(
+        path=selection.path,
+        input_commit=_git(repo, "rev-parse", "HEAD"),
+        manifest_sha256=hashlib.sha256(
+            (selection.path / "manifest.json").read_bytes()
+        ).hexdigest(),
+    )
 
 
 def _builder_checkout(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
@@ -241,6 +259,103 @@ def test_snapshot_round_trip_preserves_raw_fields_occurrences_and_order(
     assert restored.joinpath(extra.name).read_bytes() != extra.read_bytes()
 
 
+def test_selected_snapshot_stream_preserves_lossless_cells_before_scb_decoding(
+    tmp_path: Path,
+) -> None:
+    source_dir = write_scb_input(tmp_path / "source")
+    values = source_dir / "Vardemangder.csv"
+    values.write_bytes(
+        values.read_bytes()
+        + b"X|X|007|\x8f|999999|\r\n"
+        + b'X|X|007|""|999999|0\r\n'
+        + b"X|X|007|NULL|999999|000\r\n"
+        + b"X|X|007|\x8f|999999|\r\n"
+    )
+    selection = write_scb_snapshot(tmp_path / "snapshot-fixture", source_dir)
+    reader = open_scb_snapshot(selection)
+
+    with reader.open_csv("Vardemangder.csv") as (_header, rows):
+        assert list(rows)[-4:] == [
+            ["X", "X", "007", "\x8f", "999999", None],
+            ["X", "X", "007", "", "999999", "0"],
+            ["X", "X", "007", "NULL", "999999", "000"],
+            ["X", "X", "007", "\x8f", "999999", None],
+        ]
+
+    synthetic_path = tmp_path / "not-restored" / "Vardemangder.csv"
+    with _open_scb_csv_raw(synthetic_path, reader) as (_header, rows):
+        assert list(rows)[-1][1] == ["X", "X", "007", "\x8f", "999999", ""]
+    with _open_scb_csv(synthetic_path, reader) as (_header, rows):
+        assert list(rows)[-1][1]["Värdebenämning"] == "Å"
+
+
+def test_selected_snapshot_requires_exact_commit_manifest_and_clean_checkout(
+    tmp_path: Path,
+) -> None:
+    source_dir = write_scb_input(tmp_path / "source")
+    selection = write_scb_snapshot(tmp_path / "snapshot-fixture", source_dir)
+    open_scb_snapshot(selection)
+
+    with pytest.raises(SnapshotError, match="input commit pin mismatch"):
+        open_scb_snapshot(
+            type(selection)(selection.path, "0" * 40, selection.manifest_sha256)
+        )
+    with pytest.raises(SnapshotError, match="manifest pin mismatch"):
+        open_scb_snapshot(
+            type(selection)(selection.path, selection.input_commit, "0" * 64)
+        )
+
+    (selection.path / "manifest.json").write_bytes(b"dirty")
+    with pytest.raises(SnapshotError, match="must be clean"):
+        open_scb_snapshot(selection)
+
+
+def test_selected_snapshot_preserves_optional_absence_and_rejects_value_pairing(
+    tmp_path: Path,
+) -> None:
+    partial_source = write_scb_input(
+        tmp_path / "partial-source", include=("registerinformation",)
+    )
+    partial = write_scb_snapshot(tmp_path / "partial-snapshot", partial_source)
+    reader = open_scb_snapshot(partial)
+    assert reader.has_file("Registerinformation.csv")
+    assert not reader.has_file("Identifierare.csv")
+    reader.verify_all()
+
+    source_dir = write_scb_input(tmp_path / "paired-source")
+    selection = write_scb_snapshot(tmp_path / "paired-snapshot", source_dir)
+    manifest_path = selection.path / "manifest.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    validity = next(
+        item
+        for item in manifest["files"]
+        if item["name"] == "VardemangderValidDates.csv"
+    )
+    for normalized in validity["records"]:
+        (selection.path / normalized["path"]).unlink()
+    for group in validity["groups"]:
+        (selection.path / group["dictionary"]["path"]).unlink()
+    validity.clear()
+    validity.update(
+        {
+            "name": "VardemangderValidDates.csv",
+            "required": False,
+            "present": False,
+        }
+    )
+    for archive in manifest["archives"]:
+        archive["members"] = [
+            name for name in archive["members"] if name != "VardemangderValidDates.csv"
+        ]
+    manifest_path.write_text(
+        json.dumps(manifest, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    unpaired = _repin(selection, "unpair values")
+    with pytest.raises(SnapshotError, match="must be present or absent together"):
+        open_scb_snapshot(unpaired)
+
+
 def test_snapshot_rejects_missing_dictionary_reference_even_with_updated_file_hash(
     tmp_path: Path,
 ) -> None:
@@ -337,7 +452,9 @@ def test_snapshot_rechecks_complete_source_bundle_before_publication(
     monkeypatch.setattr(snapshot_module, "_prepare_file", prepare_then_mutate)
     output = tmp_path / "candidate"
 
-    with pytest.raises(SnapshotError, match="source bundle changed during conversion"):
+    with pytest.raises(
+        SnapshotError, match=r"source (?:bundle|CSV) changed during conversion"
+    ):
         prepare_snapshot(inventory_path, output, converter_commit="b" * 40)
 
     assert not output.exists()

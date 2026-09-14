@@ -65,6 +65,7 @@ from reg_meta_build.db import (
     _open_scb_csv,
     _open_scb_csv_raw,
     _progress,
+    _scb_snapshot_error,
     _stage_timer,
     _value_set_hash,
 )
@@ -129,6 +130,7 @@ if TYPE_CHECKING:
         MatrixAnswer,
     )
     from reg_meta_build.codelivery import CodeliveryMap
+    from reg_meta_build.input_snapshot import ScbSnapshotReader
     from reg_meta_build.sources import IRObject
 
 
@@ -263,7 +265,9 @@ def _resolve_source_register(
 
 
 def _import_registerinformation(
-    conn: sqlite3.Connection, path: Path
+    conn: sqlite3.Connection,
+    path: Path,
+    snapshot: ScbSnapshotReader | None = None,
 ) -> tuple[int, dict[tuple[str, str, str, str], tuple[int, int]], set[int]]:
     """Import Registerinformation.csv into all core normalized tables.
 
@@ -284,7 +288,7 @@ def _import_registerinformation(
     row_count = 0
     _progress("Importing Registerinformation.csv...")
 
-    with _open_scb_csv(path) as (_, rows):
+    with _open_scb_csv(path, snapshot) as (_, rows):
         for row_number, row in rows:
             row_count += 1
             if row_count % 500_000 == 0:
@@ -592,6 +596,7 @@ def _import_unika(
     conn: sqlite3.Connection,
     path: Path,
     unika_join: dict[tuple[str, str, str, str], tuple[int, int]],
+    snapshot: ScbSnapshotReader | None = None,
 ) -> int:
     _progress("Importing UnikaRegisterOchVariabler.csv...")
     row_count = 0
@@ -609,7 +614,7 @@ def _import_unika(
     # output exactly.
     summary: dict[tuple[int, int, str, str], list[Any]] = {}
 
-    with _open_scb_csv(path) as (_, rows):
+    with _open_scb_csv(path, snapshot) as (_, rows):
         for _, row in rows:
             row_count += 1
             # Trimmed to mirror `_import_registerinformation`'s read-boundary
@@ -3790,12 +3795,16 @@ def _coalesce_variable_states(
     }
 
 
-def _import_identifierare(conn: sqlite3.Connection, path: Path) -> int:
+def _import_identifierare(
+    conn: sqlite3.Connection,
+    path: Path,
+    snapshot: ScbSnapshotReader | None = None,
+) -> int:
     _progress("Importing Identifierare.csv...")
     row_count = 0
     batch: list[tuple[int | str, ...]] = []
 
-    with _open_scb_csv(path) as (_, rows):
+    with _open_scb_csv(path, snapshot) as (_, rows):
         for _, row in rows:
             row_count += 1
             # Read-boundary trim (#366): name/definition are display-only here
@@ -3817,12 +3826,16 @@ def _import_identifierare(conn: sqlite3.Connection, path: Path) -> int:
     return row_count
 
 
-def _import_timeseries(conn: sqlite3.Connection, path: Path) -> int:
+def _import_timeseries(
+    conn: sqlite3.Connection,
+    path: Path,
+    snapshot: ScbSnapshotReader | None = None,
+) -> int:
     _progress("Importing Timeseries.csv...")
     row_count = 0
     batch: list[tuple[str, ...]] = []
 
-    with _open_scb_csv(path) as (_, rows):
+    with _open_scb_csv(path, snapshot) as (_, rows):
         for _, row in rows:
             row_count += 1
             # Read-boundary trim (#366): the free-text columns only; the id
@@ -3848,7 +3861,10 @@ def _import_timeseries(conn: sqlite3.Connection, path: Path) -> int:
     return row_count
 
 
-def _load_validity_map(path: Path) -> tuple[dict[int, list[tuple[int, int]]], int]:
+def _load_validity_map(
+    path: Path,
+    snapshot: ScbSnapshotReader | None = None,
+) -> tuple[dict[int, list[tuple[int, int]]], int]:
     """Load VardemangderValidDates.csv into an in-memory ItemId → year-windows map.
 
     Returns (validity_map, row_count). validity_map[item_id] is a list of
@@ -3862,7 +3878,7 @@ def _load_validity_map(path: Path) -> tuple[dict[int, list[tuple[int, int]]], in
     _progress("Loading VardemangderValidDates.csv into memory...")
     validity_map: dict[int, list[tuple[int, int]]] = {}
     row_count = 0
-    with _open_scb_csv(path) as (_, rows):
+    with _open_scb_csv(path, snapshot) as (_, rows):
         for _, row in rows:
             row_count += 1
             item_id = int(row["ItemID"])
@@ -3881,6 +3897,7 @@ def _import_vardemangder(
     conn: sqlite3.Connection,
     path: Path,
     known_cvids: set[int],
+    snapshot: ScbSnapshotReader | None = None,
 ) -> tuple[int, dict[int, tuple[str, str]]]:
     """Import Vardemangder.csv: write value_code, stage (cvid, code_id, item_id)
     triples to ``staging._build_cvid_pair`` for the year-projection pass.
@@ -3935,7 +3952,7 @@ def _import_vardemangder(
         "(cvid, code_id, item_id) VALUES (?, ?, ?)"
     )
 
-    with _open_scb_csv_raw(path) as (header, rows):
+    with _open_scb_csv_raw(path, snapshot) as (header, rows):
         i_cvid = header.index("CVID")
         i_kod = header.index("Värdekod")
         i_namn = header.index("Värdebenämning")
@@ -4171,6 +4188,10 @@ def _apply_value_prestage(
         _progress(f"SCB value prestage cache missing; rebuilding: {cache_path}")
         return None
 
+    # SCB imports above leave a transaction open on the disposable build DB.
+    # DETACH is forbidden while that transaction is active, including the stale
+    # cache path that must detach before rebuilding from the selected source.
+    conn.commit()
     attached = False
     try:
         conn.execute("ATTACH DATABASE ? AS prestage", (str(cache_path),))
@@ -4997,12 +5018,14 @@ class SCBAdapter:
         cis2016_matrix: Cis2016Matrix | None = None,
         cis2014_matrix: Cis2014Matrix | None = None,
         *,
+        snapshot: ScbSnapshotReader | None = None,
         value_prestage_cache: Path | None = None,
         refresh_value_prestage: bool = False,
     ) -> None:
         # The adapter writes its scratch/reference tables into the working conn
         # and reads the universal rows back to emit IR (strategy B).
         self.conn = conn
+        self.snapshot = snapshot
         self.value_prestage_cache = value_prestage_cache
         self.refresh_value_prestage = refresh_value_prestage
         # Co-delivery curation (register_id, var_id, column) → kept label,
@@ -5060,6 +5083,20 @@ class SCBAdapter:
         conn = self.conn
         scb_dir = source_dir
 
+        def source_present(filename: str) -> bool:
+            return (
+                self.snapshot.has_file(filename)
+                if self.snapshot is not None
+                else (scb_dir / filename).exists()
+            )
+
+        def source_checksum(filename: str) -> str:
+            return (
+                self.snapshot.raw_sha256(filename)
+                if self.snapshot is not None
+                else _file_sha256(scb_dir / filename)
+            )
+
         ri_path = scb_dir / "Registerinformation.csv"
 
         # SCB-private value-set-projection scratch: the (cvid, code_id, item_id)
@@ -5077,10 +5114,12 @@ class SCBAdapter:
         )
 
         # Core backbone: Registerinformation.csv (required).
-        self.source_checksums["Registerinformation.csv"] = _file_sha256(ri_path)
+        self.source_checksums["Registerinformation.csv"] = source_checksum(
+            "Registerinformation.csv"
+        )
         with _stage_timer("scb:registerinformation"):
             ri_count, unika_join, known_cvids = _import_registerinformation(
-                conn, ri_path
+                conn, ri_path, self.snapshot
             )
         self.row_counts["Registerinformation.csv"] = ri_count
         projection_backbone_sha256 = _projection_backbone_hash(conn)
@@ -5090,8 +5129,9 @@ class SCBAdapter:
         validity_row_count = 0
         validity_sha256 = ""
         vvd_path = scb_dir / "VardemangderValidDates.csv"
-        vm_path = scb_dir / "Vardemangder.csv"
-        if vm_path.exists() and not vvd_path.exists():
+        if source_present("Vardemangder.csv") and not source_present(
+            "VardemangderValidDates.csv"
+        ):
             raise RegMetaError(
                 exit_code=EXIT_CONFIG,
                 code="csv_missing_validity",
@@ -5105,26 +5145,34 @@ class SCBAdapter:
                     "mikrometadata.scb.se alongside Vardemangder.csv."
                 ),
             )
-        if vvd_path.exists():
-            validity_sha256 = _file_sha256(vvd_path)
+        if source_present("VardemangderValidDates.csv"):
+            validity_sha256 = source_checksum("VardemangderValidDates.csv")
             self.source_checksums["VardemangderValidDates.csv"] = validity_sha256
-            validity_map, validity_row_count = _load_validity_map(vvd_path)
+            validity_map, validity_row_count = _load_validity_map(
+                vvd_path, self.snapshot
+            )
             self.row_counts["VardemangderValidDates.csv"] = validity_row_count
 
         # Enrichment files (optional). VardemangderValidDates.csv handled above.
         for filename in _ENRICHMENT_FILES:
             path = scb_dir / filename
-            if not path.exists():
+            if not source_present(filename):
                 _progress(f"Skipping {filename} (not found)")
                 continue
-            self.source_checksums[filename] = _file_sha256(path)
+            self.source_checksums[filename] = source_checksum(filename)
 
             if filename == "UnikaRegisterOchVariabler.csv":
-                self.row_counts[filename] = _import_unika(conn, path, unika_join)
+                self.row_counts[filename] = _import_unika(
+                    conn, path, unika_join, self.snapshot
+                )
             elif filename == "Identifierare.csv":
-                self.row_counts[filename] = _import_identifierare(conn, path)
+                self.row_counts[filename] = _import_identifierare(
+                    conn, path, self.snapshot
+                )
             elif filename == "Timeseries.csv":
-                self.row_counts[filename] = _import_timeseries(conn, path)
+                self.row_counts[filename] = _import_timeseries(
+                    conn, path, self.snapshot
+                )
             elif filename == "Vardemangder.csv":
                 fingerprint = _value_prestage_fingerprint(
                     vardemangder_sha256=self.source_checksums[filename],
@@ -5147,7 +5195,7 @@ class SCBAdapter:
 
                 with _stage_timer("scb:vardemangder_import"):
                     vm_count, cvid_vs_info = _import_vardemangder(
-                        conn, path, known_cvids
+                        conn, path, known_cvids, self.snapshot
                     )
                 self.row_counts[filename] = vm_count
                 if cvid_vs_info:
@@ -5178,6 +5226,14 @@ class SCBAdapter:
                             validity_rows=validity_row_count,
                             projection_stats=self.projection_stats,
                         )
+
+        if self.snapshot is not None:
+            from reg_meta_build.input_snapshot import SnapshotError
+
+            try:
+                self.snapshot.verify_all()
+            except SnapshotError as exc:
+                raise _scb_snapshot_error(exc) from exc
 
         # Y-114: replay the curated upstream errata as synthetic
         # Registerinformation rows. Both edges of this slot are load-bearing:

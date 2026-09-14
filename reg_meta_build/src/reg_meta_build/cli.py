@@ -82,6 +82,7 @@ from .fqid_slugs import (
     write_entity_key_pins,
     write_snapshot,
 )
+from .input_snapshot import ScbSnapshotSelection
 from .sources.sos import SosParseError, parse_directory, parse_register_file
 from .split_sibling_suspects import (
     infer_split_sibling_suspects,
@@ -147,17 +148,20 @@ def _build_parser() -> argparse.ArgumentParser:
 
     build_p = sub.add_parser(
         "build-db",
-        help="Build the metadata DB from SCB CSV exports (maintainer-only).",
+        help="Build the metadata DB from SCB inputs (maintainer-only).",
         description=(
-            "Build the metadata database from raw SCB CSV exports. This\n"
+            "Build the metadata database from raw SCB CSV exports or an explicitly\n"
+            "pinned normalized SCB snapshot. This\n"
             "replaces the database entirely (not incremental). End users\n"
             "should use `reg-meta update` to fetch the pre-built DB instead.\n\n"
             "The input directory must contain:\n"
-            "  <input-dir>/SCB/*.csv             — SCB metadata exports\n"
+            "  <input-dir>/SCB/*.csv             — SCB exports unless a snapshot is selected\n"
             "  <input-dir>/classifications/*.csv — canonical classification CSVs (optional)\n\n"
             "Examples:\n"
             "  reg-meta-build build-db --input-dir reg_meta_build/input_data/\n"
-            "  reg-meta-build build-db --input-dir reg_meta_build/input_data/ --skip-slugs"
+            "  reg-meta-build build-db --input-dir reg_meta_build/input_data/ --skip-slugs\n"
+            "  reg-meta-build build-db --input-dir auxiliary-seed/ --scb-snapshot "
+            "inputs/snapshot --scb-input-commit <commit> --scb-manifest-sha256 <sha256>"
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
@@ -228,10 +232,28 @@ def _build_parser() -> argparse.ArgumentParser:
         default=None,
         help=(
             "Optional SQLite cache file for SCB's projected Vardemangder value-set "
-            "layer. When supplied, build-db validates it against the raw "
-            "Vardemangder files and SCB projection backbone, uses it when valid, "
+            "layer. When supplied, build-db validates it against the original-source "
+            "Vardemangder identities and SCB projection backbone, uses it when valid, "
             "and rebuilds it automatically when missing or stale."
         ),
+    )
+    build_p.add_argument(
+        "--scb-snapshot",
+        default=None,
+        help=(
+            "Normalized SCB snapshot directory. Requires --scb-input-commit and "
+            "--scb-manifest-sha256; never falls back to <input-dir>/SCB/*.csv."
+        ),
+    )
+    build_p.add_argument(
+        "--scb-input-commit",
+        default=None,
+        help="Full Git commit pin for --scb-snapshot's local input repository.",
+    )
+    build_p.add_argument(
+        "--scb-manifest-sha256",
+        default=None,
+        help="SHA-256 pin for --scb-snapshot/manifest.json.",
     )
     build_p.add_argument(
         "--refresh-scb-value-prestage-cache",
@@ -920,6 +942,32 @@ def _cmd_build_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
 
     providers = tuple(p.strip() for p in args.providers.split(",") if p.strip())
 
+    snapshot_values = (
+        args.scb_snapshot,
+        args.scb_input_commit,
+        args.scb_manifest_sha256,
+    )
+    if any(snapshot_values) and not all(snapshot_values):
+        raise RegMetaError(
+            exit_code=EXIT_USAGE,
+            code="scb_snapshot_selection_incomplete",
+            error_class="usage",
+            message=(
+                "--scb-snapshot, --scb-input-commit, and "
+                "--scb-manifest-sha256 must be supplied together."
+            ),
+            remediation="Supply all three snapshot-selection flags or none of them.",
+        )
+    scb_snapshot = (
+        ScbSnapshotSelection(
+            path=Path(args.scb_snapshot),
+            input_commit=args.scb_input_commit,
+            manifest_sha256=args.scb_manifest_sha256,
+        )
+        if all(snapshot_values)
+        else None
+    )
+
     pre_rename_hook = (
         None
         if args.no_validate
@@ -931,6 +979,7 @@ def _cmd_build_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
         slug_dir=slug_dir,
         skip_slugs=args.skip_slugs,
         providers=providers,
+        scb_snapshot=scb_snapshot,
         scb_value_prestage_cache=(
             Path(args.scb_value_prestage_cache)
             if args.scb_value_prestage_cache
@@ -947,6 +996,9 @@ def _cmd_build_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
             "skip_slugs": args.skip_slugs,
             "validate": not args.no_validate,
             "providers": list(providers),
+            "scb_snapshot": args.scb_snapshot,
+            "scb_input_commit": args.scb_input_commit,
+            "scb_manifest_sha256": args.scb_manifest_sha256,
             "scb_value_prestage_cache": args.scb_value_prestage_cache,
             "refresh_scb_value_prestage_cache": args.refresh_scb_value_prestage_cache,
         },
@@ -1868,7 +1920,7 @@ COMMAND_DISPATCH: dict[
 _COMMAND_OVERVIEW: list[tuple[str, str]] = [
     (
         "build-db --input-dir DIR",
-        "Build the metadata DB from SCB CSV exports.",
+        "Build the metadata DB from raw or pinned snapshot SCB inputs.",
     ),
     (
         "extend-db --base-db DB [--providers-dir DIR] [--steward S]",

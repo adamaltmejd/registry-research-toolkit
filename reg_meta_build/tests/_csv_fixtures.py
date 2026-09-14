@@ -6,7 +6,16 @@ when pytest collects multiple test directories.
 
 from __future__ import annotations
 
+import hashlib
+import json
+import subprocess
 from typing import TYPE_CHECKING
+
+from reg_meta_build.input_snapshot import (
+    SCB_CSV_FILES,
+    ScbSnapshotSelection,
+    prepare_snapshot,
+)
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -922,3 +931,61 @@ def write_scb_input(
         rows = valid_dates_rows if valid_dates_rows is not None else VALID_DATES_ROWS
         write_csv(scb_dir / "VardemangderValidDates.csv", VALID_DATES_HEADER, rows)
     return scb_dir
+
+
+def write_scb_snapshot(root: Path, scb_dir: Path) -> ScbSnapshotSelection:
+    """Commit a normalized snapshot of ``scb_dir`` in a synthetic input repo."""
+    root.mkdir(parents=True, exist_ok=True)
+    archive = root / "retained-delivery.zip"
+    archive.write_bytes(b"independently retained archive fixture")
+    present = {path.name for path in scb_dir.glob("*.csv")}
+    inventory = root / "inventory.json"
+    inventory.write_text(
+        json.dumps(
+            {
+                "bundle_id": "scb-mikrometadata",
+                "edition": "fixture",
+                "source_dir": str(scb_dir),
+                "files": [
+                    {
+                        "name": name,
+                        "required": name == "Registerinformation.csv",
+                    }
+                    for name in SCB_CSV_FILES
+                ],
+                "archives": [
+                    {
+                        "path": str(archive),
+                        "locator": "offline/scb-fixture.zip",
+                        "sha256": hashlib.sha256(archive.read_bytes()).hexdigest(),
+                        "members": sorted(present),
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    repo = root / "input-repo"
+    snapshot = repo / "snapshot"
+    prepare_snapshot(inventory, snapshot, converter_commit="f" * 40)
+    for args in (
+        ("init", "-q"),
+        ("config", "user.email", "test@example.invalid"),
+        ("config", "user.name", "Test"),
+        ("add", "."),
+        ("commit", "-q", "-m", "snapshot"),
+    ):
+        subprocess.run(["git", "-C", str(repo), *args], check=True)
+    commit = subprocess.run(
+        ["git", "-C", str(repo), "rev-parse", "HEAD"],
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout.strip()
+    return ScbSnapshotSelection(
+        path=snapshot,
+        input_commit=commit,
+        manifest_sha256=hashlib.sha256(
+            (snapshot / "manifest.json").read_bytes()
+        ).hexdigest(),
+    )

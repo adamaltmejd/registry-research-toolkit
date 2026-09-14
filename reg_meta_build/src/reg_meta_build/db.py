@@ -18,7 +18,7 @@ import sys
 import time
 from contextlib import contextmanager
 from datetime import date, timedelta
-from typing import TYPE_CHECKING, Any, Literal
+from typing import TYPE_CHECKING, Any, Literal, cast
 
 from reg_meta.db import (
     CLASSIFICATION_SUCCESSION_AS_OF_YEAR,
@@ -103,6 +103,7 @@ if TYPE_CHECKING:
     from pathlib import Path
 
     from .codeless_overlap import CodelessOverlapKey, CodelessOverlapMap
+    from .input_snapshot import ScbSnapshotReader, ScbSnapshotSelection
     from .relations import CuratedReplacedBy
 
 # Built-in data providers. `provider_id` values are stable: rows reference them
@@ -1633,6 +1634,19 @@ def publish_db(tmp_path: Path, final_path: Path) -> None:
 # ---------------------------------------------------------------------------
 
 
+def _scb_snapshot_error(exc: Exception) -> RegMetaError:
+    return RegMetaError(
+        exit_code=EXIT_CONFIG,
+        code="scb_snapshot_invalid",
+        error_class="configuration",
+        message=f"Selected SCB input snapshot is invalid: {exc}",
+        remediation=(
+            "Verify the input Git commit and manifest SHA-256, then recreate or "
+            "restore the damaged normalized snapshot before rebuilding."
+        ),
+    )
+
+
 def _file_sha256(path: Path) -> str:
     h = hashlib.sha256()
     with path.open("rb") as f:
@@ -1642,8 +1656,48 @@ def _file_sha256(path: Path) -> str:
 
 
 @contextmanager
+def _open_scb_source_raw(
+    path: Path, snapshot: ScbSnapshotReader | None
+) -> Iterator[tuple[list[str], Iterator[list[str]]]]:
+    if snapshot is None:
+        with path.open("rb") as raw_handle:
+            text_handle = io.TextIOWrapper(raw_handle, encoding="latin-1", newline="")
+            reader = csv.reader(text_handle, delimiter="|", quotechar='"')
+            try:
+                header = next(reader)
+            except StopIteration as exc:
+                raise RegMetaError(
+                    exit_code=EXIT_CONFIG,
+                    code="csv_empty",
+                    error_class="configuration",
+                    message=f"CSV file is empty: {path.name}",
+                    remediation="Re-export the file from mikrometadata.scb.se.",
+                ) from exc
+            yield header, reader
+        return
+
+    from .input_snapshot import SnapshotError
+
+    try:
+        with snapshot.open_csv(path.name) as (raw_header, raw_rows):
+            header = ["" if value is None else value for value in raw_header]
+
+            def rows() -> Iterator[list[str]]:
+                for row in raw_rows:
+                    for index, value in enumerate(row):
+                        if value is None:
+                            row[index] = ""
+                    yield cast("list[str]", row)
+
+            yield header, rows()
+    except SnapshotError as exc:
+        raise _scb_snapshot_error(exc) from exc
+
+
+@contextmanager
 def _open_scb_csv_raw(
     path: Path,
+    snapshot: ScbSnapshotReader | None = None,
 ) -> Iterator[tuple[list[str], Iterator[tuple[int, list[str]]]]]:
     """Open a pipe-delimited cp1252 CSV; yield (header, raw-field-list iterator).
 
@@ -1653,20 +1707,7 @@ def _open_scb_csv_raw(
     few it keeps; per-row dict-building and per-field `_decode_cp1252` otherwise
     dominate the whole build. The header IS decoded (cheap, once).
     """
-    with path.open("rb") as raw_handle:
-        text_handle = io.TextIOWrapper(raw_handle, encoding="latin-1", newline="")
-        reader = csv.reader(text_handle, delimiter="|", quotechar='"')
-        try:
-            raw_header = next(reader)
-        except StopIteration as exc:
-            raise RegMetaError(
-                exit_code=EXIT_CONFIG,
-                code="csv_empty",
-                error_class="configuration",
-                message=f"CSV file is empty: {path.name}",
-                remediation="Re-export the file from mikrometadata.scb.se.",
-            ) from exc
-
+    with _open_scb_source_raw(path, snapshot) as (raw_header, reader):
         header = [_decode_cp1252(v) for v in raw_header]
 
         expected = EXPECTED_HEADERS.get(path.name)
@@ -1699,6 +1740,7 @@ def _open_scb_csv_raw(
 @contextmanager
 def _open_scb_csv(
     path: Path,
+    snapshot: ScbSnapshotReader | None = None,
 ) -> Iterator[tuple[list[str], Iterator[tuple[int, dict[str, str]]]]]:
     """Open a pipe-delimited cp1252 CSV and yield (header, row_iterator).
 
@@ -1707,7 +1749,7 @@ def _open_scb_csv(
     a fully-decoded ``{column: value}`` dict. Built on `_open_scb_csv_raw`; hot
     paths that don't need every column decoded should use the raw helper.
     """
-    with _open_scb_csv_raw(path) as (header, raw_rows):
+    with _open_scb_csv_raw(path, snapshot) as (header, raw_rows):
 
         def row_iter() -> Iterator[tuple[int, dict[str, str]]]:
             for row_number, fields in raw_rows:
@@ -5041,6 +5083,7 @@ def build_db(
     slug_dir: Path | None = None,
     skip_slugs: bool = False,
     providers: tuple[str, ...] = ("scb",),
+    scb_snapshot: ScbSnapshotSelection | None = None,
     scb_value_prestage_cache: Path | None = None,
     refresh_scb_value_prestage: bool = False,
     pre_rename_hook: Callable[[Path], None] | None = None,
@@ -5049,7 +5092,8 @@ def build_db(
     """Build the reg_meta database from the selected providers' source exports.
 
     ``input_dir`` must contain:
-      - ``<input_dir>/SCB/*.csv``             — SCB metadata CSV exports
+      - ``<input_dir>/SCB/*.csv``             — SCB metadata CSV exports, unless
+        ``scb_snapshot`` explicitly selects a pinned normalized representation
       - ``<input_dir>/Socialstyrelsen/*.xlsx``— SOS register workbooks (A4.3b;
         required only when ``"sos"`` is in ``providers``)
       - ``<input_dir>/classifications/*.csv`` — canonical classification CSVs
@@ -5076,9 +5120,10 @@ def build_db(
     ``_VARDEMANGDER_SENTINELS`` / ``_VARDEMANGDER_REAL_SHAPED``.
 
     ``scb_value_prestage_cache`` optionally points at a provider-scoped cache of
-    SCB's expensive Vardemangder year-projection output. It is validated by raw
-    Vardemangder hashes plus the projection-relevant CVID/year backbone and is
-    rebuilt automatically when missing or stale.
+    SCB's expensive Vardemangder year-projection output. It is validated by original
+    Vardemangder source hashes plus the projection-relevant CVID/year backbone and is
+    rebuilt automatically when missing or stale. Equivalent raw and normalized inputs
+    therefore share the cache.
 
     Returns a summary dict for the CLI to display.
     """
@@ -5104,6 +5149,15 @@ def build_db(
             remediation=f"Pass a comma-list of known providers, e.g. {','.join(sorted(known))}.",
         )
 
+    if scb_snapshot is not None and "scb" not in providers:
+        raise RegMetaError(
+            exit_code=EXIT_CONFIG,
+            code="scb_snapshot_without_provider",
+            error_class="configuration",
+            message="An SCB input snapshot was selected but provider 'scb' is excluded.",
+            remediation="Include scb in --providers or remove the SCB snapshot selection.",
+        )
+
     if not input_dir.is_dir():
         raise RegMetaError(
             exit_code=EXIT_CONFIG,
@@ -5113,8 +5167,17 @@ def build_db(
             remediation="Provide a directory containing SCB/ and classifications/ subdirectories.",
         )
 
+    snapshot_reader = None
+    if scb_snapshot is not None:
+        from .input_snapshot import SnapshotError, open_scb_snapshot
+
+        try:
+            snapshot_reader = open_scb_snapshot(scb_snapshot)
+        except SnapshotError as exc:
+            raise _scb_snapshot_error(exc) from exc
+
     if "scb" in providers:
-        if not scb_dir.is_dir():
+        if snapshot_reader is None and not scb_dir.is_dir():
             raise RegMetaError(
                 exit_code=EXIT_CONFIG,
                 code="scb_dir_not_found",
@@ -5123,7 +5186,7 @@ def build_db(
                 remediation="Place SCB metadata CSV exports under <input_dir>/SCB/.",
             )
         ri_path = scb_dir / "Registerinformation.csv"
-        if not ri_path.exists():
+        if snapshot_reader is None and not ri_path.exists():
             raise RegMetaError(
                 exit_code=EXIT_CONFIG,
                 code="csv_missing_backbone",
@@ -5297,6 +5360,7 @@ def build_db(
                 errata,
                 cis2016_matrix,
                 cis2014_matrix,
+                snapshot=snapshot_reader,
                 value_prestage_cache=scb_value_prestage_cache,
                 refresh_value_prestage=refresh_scb_value_prestage,
             )
@@ -5390,6 +5454,8 @@ def build_db(
             # unresolved/ambiguous-id rate without re-running the build.
             "replaced_by_stats": mat["replaced_by_stats"],
         }
+        if snapshot_reader is not None:
+            manifest_data["scb_input_snapshot"] = snapshot_reader.provenance
         for key, value in manifest_data.items():
             conn.execute(
                 "INSERT INTO import_manifest VALUES (?, ?)",
@@ -5509,10 +5575,13 @@ def build_db(
         )
     _progress(f"Database written to {final_path}")
 
-    return {
+    result = {
         "db_path": str(final_path),
         "schema_version": SCHEMA_VERSION,
         "import_date": manifest_data["import_date"],
         "source_checksums": source_checksums,
         "row_counts": row_counts,
     }
+    if snapshot_reader is not None:
+        result["scb_input_snapshot"] = snapshot_reader.provenance
+    return result

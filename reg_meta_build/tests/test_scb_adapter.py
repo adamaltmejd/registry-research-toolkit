@@ -19,10 +19,13 @@ from typing import TYPE_CHECKING
 import pytest
 from _csv_fixtures import (
     PIPE,
+    REGISTERINFORMATION_HEADER,
     REGISTERINFORMATION_ROWS,
     UNIKA_ROWS,
     _var_row,
+    write_csv,
     write_scb_input,
+    write_scb_snapshot,
 )
 from _shared_fixtures import (
     CODING_A,
@@ -40,7 +43,10 @@ from reg_meta_build.cis2016_matrix import load_cis2014_matrix, load_cis2016_matr
 from reg_meta_build.db import DDL, build_db, seed_providers
 from reg_meta_build.dbdiff import TableIgnore, diff_db_content
 from reg_meta_build.id import _CANONICAL_SCB_BIT, is_canonical_scb
-from reg_meta_build.input_snapshot import prepare_snapshot, restore_snapshot
+from reg_meta_build.input_snapshot import (
+    ScbSnapshotReader,
+    SnapshotError,
+)
 from reg_meta_build.ir import (
     IRDeliveryProvenance,
     IRRegister,
@@ -52,6 +58,7 @@ from reg_meta_build.ir import (
 )
 from reg_meta_build.sources import scb as scb_module
 from reg_meta_build.sources.scb import SCBAdapter
+from reg_meta_build.validate import validate_built_db
 from reg_schema.project_data import Binding, Source
 
 from reg_meta_build.fqid_slugs import load_provider_toml
@@ -191,6 +198,38 @@ class TestEmitOrder:
 
 
 class TestFixtureRoundTrip:
+    def test_snapshot_preserves_optional_file_absence(self, tmp_path: Path) -> None:
+        raw_input = tmp_path / "raw"
+        scb_dir = write_scb_input(raw_input, include=("registerinformation",))
+        selection = write_scb_snapshot(tmp_path / "snapshot-fixture", scb_dir)
+        snapshot_seed = tmp_path / "snapshot-seed"
+        snapshot_seed.mkdir()
+        build_db(
+            input_dir=raw_input,
+            db_dir=tmp_path / "db_raw",
+            skip_classifications=True,
+            skip_slugs=True,
+        )
+        build_db(
+            input_dir=snapshot_seed,
+            db_dir=tmp_path / "db_snapshot",
+            skip_classifications=True,
+            skip_slugs=True,
+            scb_snapshot=selection,
+        )
+        report = diff_db_content(
+            tmp_path / "db_raw" / "reg_meta.db",
+            tmp_path / "db_snapshot" / "reg_meta.db",
+            ignore={
+                "import_manifest": TableIgnore(
+                    skip_where=(
+                        "key IN ('import_date', 'input_dir', 'scb_input_snapshot')"
+                    )
+                )
+            },
+        )
+        assert report.identical, report
+
     def test_two_builds_are_content_identical(self, tmp_path: Path) -> None:
         """Two independent builds of the same fixture through the new
         adapter/materializer must be byte-identical (order-independent content
@@ -215,59 +254,57 @@ class TestFixtureRoundTrip:
         report = diff_db_content(a, b)
         assert report.identical, report
 
-    def test_lossless_snapshot_reconstruction_preserves_catalog_facts(
+    def test_native_snapshot_build_preserves_catalog_and_raw_source_identities(
         self, tmp_path: Path
     ) -> None:
-        """CSV reserialization may change raw hashes, never catalog facts."""
+        """The normal builder consumes normalized rows without restored CSVs."""
         original = tmp_path / "original"
         scb_dir = write_scb_input(original)
-        archive = tmp_path / "scb-export.zip"
-        archive.write_bytes(b"retained archive fixture")
-        inventory = tmp_path / "inventory.json"
-        names = sorted(path.name for path in scb_dir.glob("*.csv"))
-        inventory.write_text(
-            json.dumps(
-                {
-                    "bundle_id": "scb-mikrometadata",
-                    "edition": "fixture",
-                    "source_dir": str(scb_dir),
-                    "files": [{"name": name, "required": True} for name in names],
-                    "archives": [
-                        {
-                            "path": str(archive),
-                            "locator": "offline/scb-export.zip",
-                            "sha256": hashlib.sha256(archive.read_bytes()).hexdigest(),
-                            "members": names,
-                        }
-                    ],
-                }
-            ),
-            encoding="utf-8",
-        )
-        snapshot = tmp_path / "snapshot"
-        prepare_snapshot(inventory, snapshot, converter_commit="f" * 40)
-        reconstructed = tmp_path / "reconstructed"
-        restore_snapshot(snapshot, reconstructed / "SCB")
+        selection = write_scb_snapshot(tmp_path / "snapshot-fixture", scb_dir)
+        snapshot_seed = tmp_path / "snapshot-seed"
+        fallback = snapshot_seed / "SCB"
+        fallback.mkdir(parents=True)
+        (fallback / "Registerinformation.csv").write_bytes(b"must|not|be|read\r\n")
 
-        def _build(source: Path, tag: str) -> Path:
+        def _build(source: Path, tag: str, *, snapshot=False) -> Path:
             db_dir = tmp_path / f"db_{tag}"
             build_db(
                 input_dir=source,
                 db_dir=db_dir,
                 skip_classifications=True,
                 skip_slugs=True,
+                scb_snapshot=selection if snapshot else None,
             )
             return db_dir / "reg_meta.db"
 
         baseline = _build(original, "baseline")
-        replay = _build(reconstructed, "replay")
+        replay = _build(snapshot_seed, "snapshot", snapshot=True)
         ignore = {
             "import_manifest": TableIgnore(
-                skip_where="key IN ('import_date', 'input_dir', 'source_checksums')"
+                skip_where="key IN ('import_date', 'input_dir', 'scb_input_snapshot')"
             )
         }
         report = diff_db_content(baseline, replay, ignore=ignore)
         assert report.identical, report
+        validation = validate_built_db(replay, corpus=False, bootstrap=True)
+        assert validation.passed, validation.format_report()
+
+        manifests = []
+        for path in (baseline, replay):
+            conn = sqlite3.connect(path)
+            try:
+                manifests.append(
+                    dict(conn.execute("SELECT key, value FROM import_manifest"))
+                )
+            finally:
+                conn.close()
+        assert manifests[0]["source_checksums"] == manifests[1]["source_checksums"]
+        assert manifests[0]["row_counts"] == manifests[1]["row_counts"]
+        assert json.loads(manifests[1]["scb_input_snapshot"]) == {
+            "input_repository_commit": selection.input_commit,
+            "snapshot_path": "snapshot",
+            "manifest_sha256": selection.manifest_sha256,
+        }
 
         conn = sqlite3.connect(replay)
         conn.execute(
@@ -533,6 +570,123 @@ class TestCodeIdIntegrity:
 
 
 class TestValuePrestageCache:
+    @pytest.mark.parametrize("mutation", ["values", "backbone"])
+    def test_snapshot_invalidates_cache_for_relevant_source_changes(
+        self, mutation: str, monkeypatch, tmp_path: Path
+    ) -> None:
+        input_dir = tmp_path / "input"
+        scb_dir = write_scb_input(input_dir)
+        cache = tmp_path / "scb-value-prestage.sqlite"
+        build_db(
+            input_dir=input_dir,
+            db_dir=tmp_path / "db_csv",
+            skip_classifications=True,
+            skip_slugs=True,
+            scb_value_prestage_cache=cache,
+        )
+        if mutation == "values":
+            values = scb_dir / "Vardemangder.csv"
+            values.write_bytes(
+                values.read_bytes() + values.read_bytes().splitlines()[-1] + b"\r\n"
+            )
+        else:
+            write_csv(
+                scb_dir / "Registerinformation.csv",
+                REGISTERINFORMATION_HEADER,
+                [
+                    *REGISTERINFORMATION_ROWS,
+                    _var_row(colname="NewColumn", cvid=9999, var_id=999),
+                ],
+            )
+        selection = write_scb_snapshot(tmp_path / f"snapshot-{mutation}", scb_dir)
+        original_import = scb_module._import_vardemangder
+        imported = False
+
+        def record_import(*args, **kwargs):
+            nonlocal imported
+            imported = True
+            return original_import(*args, **kwargs)
+
+        monkeypatch.setattr(scb_module, "_import_vardemangder", record_import)
+        snapshot_seed = tmp_path / f"snapshot-seed-{mutation}"
+        snapshot_seed.mkdir()
+        build_db(
+            input_dir=snapshot_seed,
+            db_dir=tmp_path / f"db_snapshot_{mutation}",
+            skip_classifications=True,
+            skip_slugs=True,
+            scb_snapshot=selection,
+            scb_value_prestage_cache=cache,
+        )
+        assert imported
+
+    def test_snapshot_validation_still_runs_when_cache_is_warm(
+        self, monkeypatch, tmp_path: Path
+    ) -> None:
+        input_dir = tmp_path / "input"
+        scb_dir = write_scb_input(input_dir)
+        cache = tmp_path / "scb-value-prestage.sqlite"
+        build_db(
+            input_dir=input_dir,
+            db_dir=tmp_path / "db_csv",
+            skip_classifications=True,
+            skip_slugs=True,
+            scb_value_prestage_cache=cache,
+        )
+        selection = write_scb_snapshot(tmp_path / "snapshot-fixture", scb_dir)
+
+        def fail_import(*_args, **_kwargs):
+            raise AssertionError("warm cache should bypass Vardemangder import")
+
+        def fail_validation(_self):
+            raise SnapshotError("damaged file bypassed by cache")
+
+        monkeypatch.setattr(scb_module, "_import_vardemangder", fail_import)
+        monkeypatch.setattr(ScbSnapshotReader, "verify_all", fail_validation)
+        snapshot_seed = tmp_path / "snapshot-seed"
+        snapshot_seed.mkdir()
+        with pytest.raises(RegMetaError) as exc_info:
+            build_db(
+                input_dir=snapshot_seed,
+                db_dir=tmp_path / "db_snapshot",
+                skip_classifications=True,
+                skip_slugs=True,
+                scb_snapshot=selection,
+                scb_value_prestage_cache=cache,
+            )
+        assert exc_info.value.code == "scb_snapshot_invalid"
+        assert "damaged file bypassed by cache" in exc_info.value.message
+
+    def test_snapshot_reuses_cache_created_from_equivalent_csv(
+        self, monkeypatch, tmp_path: Path
+    ) -> None:
+        input_dir = tmp_path / "input"
+        scb_dir = write_scb_input(input_dir)
+        cache = tmp_path / "scb-value-prestage.sqlite"
+        build_db(
+            input_dir=input_dir,
+            db_dir=tmp_path / "db_csv",
+            skip_classifications=True,
+            skip_slugs=True,
+            scb_value_prestage_cache=cache,
+        )
+        selection = write_scb_snapshot(tmp_path / "snapshot-fixture", scb_dir)
+
+        def fail_import(*_args, **_kwargs):
+            raise AssertionError("equivalent snapshot should reuse CSV-created cache")
+
+        monkeypatch.setattr(scb_module, "_import_vardemangder", fail_import)
+        snapshot_seed = tmp_path / "snapshot-seed"
+        snapshot_seed.mkdir()
+        build_db(
+            input_dir=snapshot_seed,
+            db_dir=tmp_path / "db_snapshot",
+            skip_classifications=True,
+            skip_slugs=True,
+            scb_snapshot=selection,
+            scb_value_prestage_cache=cache,
+        )
+
     def test_reuses_valid_cache_without_reimporting_vardemangder(
         self, monkeypatch, tmp_path: Path
     ) -> None:

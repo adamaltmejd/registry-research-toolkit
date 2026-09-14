@@ -825,15 +825,14 @@ actually DOS cp850 remnants undefined in cp1252:
 These are mapped during import (`_decode_cp1252`). The build reads \~1M backbone rows
 from `Registerinformation.csv` and \~102M value-item rows from `Vardemangder.csv`.
 
-### Lossless input-snapshot prototype (Y-151)
+### Lossless SCB input snapshots (Y-151/Y-152)
 
-`input_snapshot.py` and `scripts/prototype_scb_inputs.py` are a deliberately standalone
-experiment for the maintainer who receives successive SCB exports. They do **not**
-replace `_open_scb_csv_raw`, `SCBAdapter`, `build_db`, the IR, or the value-prestage
-cache, and no normal build reads the snapshot format. Their one question is whether a
-complete machine-readable delivery can be kept and reviewed economically in Git before
-the build interprets it. A failed size/history trial therefore leaves the production
-reader and every accepted input untouched.
+`input_snapshot.py` owns the lossless normalized representation used by the maintainer
+who receives successive SCB exports. `scripts/prototype_scb_inputs.py` prepares,
+verifies and can restore that representation; normal `build-db` can explicitly select an
+accepted snapshot and stream its rows through the same `_open_scb_csv_raw`,
+`_open_scb_csv` and `SCBAdapter` interpretation path as raw CSV. It does not replace the
+IR or value-prestage cache, and raw builds remain the original-source verification path.
 
 The current readers are intentionally unsuitable as the preparation boundary:
 `_open_scb_csv_raw` repairs the header and validates it against today's known shape;
@@ -896,7 +895,7 @@ higher-precedence command-scope override remains visible. Git version and the ex
 `git gc --prune=now` command remain in the result; pack sizes from runs with different
 reported inputs are not comparable evidence.
 
-#### Candidate and replay contract
+#### Candidate, selection and replay contract
 
 Use a separate, host-local Git repository with no required remote. One inventory JSON
 names a bundle/edition, a source directory, all six known CSVs (each explicitly required
@@ -952,6 +951,37 @@ uv run python scripts/prototype_scb_inputs.py verify snapshots/candidate
 uv run python scripts/prototype_scb_inputs.py restore snapshots/candidate /tmp/input/SCB
 ```
 
+After the maintainer accepts and commits the candidate in its local input repository,
+the normal builder selects it with three all-or-none flags:
+
+```console
+reg-meta-build --db /scratch/y152 build-db \
+  --input-dir /retained/auxiliary-seed \
+  --scb-snapshot /retained/scb-inputs/snapshot \
+  --scb-input-commit d10e9f2ffa1f1bd992e0c633211489dc693e3a95 \
+  --scb-manifest-sha256 5b540b8e401d289b78fd748564f11b04dcca695325142dd8ff06f1b82196c0bf \
+  --scb-value-prestage-cache /scratch/scb-value-prestage.sqlite --timing
+```
+
+Selection requires a clean checkout at the exact full commit. The manifest and every
+declared normalized blob are authenticated from that commit before the build starts; the
+worktree manifest must match its SHA-256 pin. Dictionaries and record chunks are then
+hashed, decoded and checked for size, line count, dictionary closure, ordered row digest
+and header-plus-row digest as the importer drains them. Files the current adapter does
+not consume, including `Vardemangder.csv` on a warm prestage hit, are drained before
+later build phases. Thus `--no-validate` only skips catalog invariants; it never skips
+selected-input authentication. Any failure removes the staging DB and leaves the
+published catalog unchanged.
+
+Snapshot null tokens remain distinct until this lossless validation has observed them;
+only then does the SCB reader collapse unquoted-null and quoted-empty cells to the empty
+string expected from the historical raw reader. The manifest's original raw CSV hashes
+remain `source_checksums`, so equivalent raw and snapshot representations share the same
+value-prestage identity. The separate `import_manifest.scb_input_snapshot` object
+records input-repository commit, repository-relative snapshot path and manifest hash; it
+is provenance, not a cache key or a replacement source identity. SQL/XLSX SCB
+auxiliaries and every other provider still resolve below `--input-dir`.
+
 `prepare` derives `converter_commit` from the checkout containing both the executing CLI
 file and the imported `input_snapshot.py`; they must be tracked blobs matching HEAD in
 the same clean repository. There is no caller-supplied converter checkout, so an
@@ -981,16 +1011,16 @@ byte-identical to the original; field bytes/order and quoted-empty/null semantic
 identical. Exact original CSV bytes remain recoverable only from the independently
 retained, checksum-pinned archive.
 
-A reproducible catalog result needs more than a snapshot name. `pin-build` refuses dirty
-repositories and records the full input-repository commit, snapshot-relative path and
-manifest hash; snapshot schema/converter versions; clean builder commit; `uv.lock` hash
-and Python runtime; provider order and build options; exact hashes or explicit absence
-for every auxiliary input; and the recorded DB hash. This captures inputs the current
-`import_manifest.source_checksums` does not, including `Tabelldefinitioner.sql` and
-`ID-kolumner.xlsx`. The builder repository is not caller-selectable: it is derived from
-the imported package checkout, and `input_snapshot.py`, the package CLI, the snapshot
-CLI, `build_db_watch.py`, and `uv.lock` must all be tracked blobs matching HEAD in that
-same clean checkout.
+A complete replay receipt needs more than the input selection above. `pin-build` refuses
+dirty repositories and records the full input-repository commit, snapshot-relative path
+and manifest hash; snapshot schema/converter versions; clean builder commit; `uv.lock`
+hash and Python runtime; provider order and build options; exact hashes or explicit
+absence for every auxiliary input; and the recorded DB hash. This captures inputs the
+current `import_manifest.source_checksums` does not, including `Tabelldefinitioner.sql`
+and `ID-kolumner.xlsx`. The builder repository is not caller-selectable: it is derived
+from the imported package checkout, and `input_snapshot.py`, the package CLI, the
+snapshot CLI, `build_db_watch.py`, and `uv.lock` must all be tracked blobs matching HEAD
+in that same clean checkout.
 
 At lock creation and verification, the committed manifest and every dictionary/record
 artifact it declares are streamed from the exact pinned Git commit; each blob must exist
@@ -1009,7 +1039,11 @@ with `dbdiff.diff_db_content`. Only the `import_manifest` rows keyed `import_dat
 `input_dir` are excluded for two builds from the same normalized snapshot;
 `source_checksums`, schema and every catalog fact remain compared. Raw-original versus
 canonical-restored quoting differences are audited separately in the host acceptance
-comparison below. The build itself remains the existing observed workflow:
+comparison below. A `BuildLock` pins the old builder commit, runtime, options, manually
+enumerated auxiliary inventory and recorded result as well as the SCB inputs; it is
+therefore optional replay evidence, never mandatory input selection for a newer builder.
+Its auxiliary inventory remains manual. A native snapshot replay uses the normal build
+command above, then the optional lock verifier:
 
 ```console
 uv run python scripts/prototype_scb_inputs.py pin-build snapshots/accepted \
@@ -1017,7 +1051,9 @@ uv run python scripts/prototype_scb_inputs.py pin-build snapshots/accepted \
   --option validate=true --aux Tabelldefinitioner.sql=/retained/Tabelldefinitioner.sql
 uv run python scripts/prototype_scb_inputs.py verify-lock /tmp/replay-lock.json \
   snapshots/accepted --aux Tabelldefinitioner.sql=/retained/Tabelldefinitioner.sql
-uv run python scripts/build_db_watch.py --input-dir /tmp/input --db-dir /tmp/replay-db
+reg-meta-build --db /tmp/replay-db build-db --input-dir /tmp/input \
+  --scb-snapshot snapshots/accepted --scb-input-commit <commit> \
+  --scb-manifest-sha256 <sha256>
 uv run python scripts/prototype_scb_inputs.py verify-lock /tmp/replay-lock.json \
   snapshots/accepted --recorded-db /retained/recorded-snapshot-build.db \
   --replay-db /tmp/replay-db/reg_meta.db \
@@ -1043,13 +1079,13 @@ recorded original byte sizes/SHA256 values. On a full coherent bundle:
    edit, a repeated-description edit and fixed-seed 1% edit as controlled simulations.
    `measure-git INITIAL UPDATE` reports changed lines/files and initial/incremental
    packed growth for each pair.
-3. Run same-code full-provider baseline and reconstructed builds through the `build-db`
-   skill with default corpus validation, SQLite integrity/FK checks, the cold value path
-   and a separate disposable prestage run. Compare the baseline to the latest release,
-   then reconstructed output to the same-code baseline. Keep an unfiltered dbdiff report
-   first; a second comparison may exclude only the audited import date, input path and
-   raw source-checksum manifest rows caused by canonical CSV quoting. Every schema row,
-   ID, count, projection/coalescing statistic and catalog fact must match.
+3. Run same-code full-provider raw baseline and native snapshot builds through the
+   `build-db` skill with default corpus validation, SQLite integrity/FK checks, the cold
+   value path and a separate disposable prestage run. Compare the baseline to the latest
+   release, then snapshot output to the same-code baseline. Keep an unfiltered dbdiff
+   report first; a second comparison may exclude only the audited import date, input
+   path and snapshot-selection provenance. Original `source_checksums`, `row_counts`,
+   every schema row, ID, projection/coalescing statistic and catalog fact must match.
 
 Hard failure is any distorted/lost/reordered occurrence, non-deterministic normalized
 bytes, incomplete candidate publication, missing/mismatching pin, unexplained catalog
@@ -1059,8 +1095,7 @@ CSV bundle, and a controlled 1% edit adding less than 10% of the initial pack. O
 Git diffs must expose changed payload text and traceable associations rather than only a
 binary change. Failing any gate leaves the current builder, accepted snapshot and raw
 archives untouched and informs a new format decision; it does not authorize a storage
-service, native snapshot reader, reconciliation engine, PDF machinery or curation
-rewrite.
+service, reconciliation engine, PDF machinery or curation rewrite.
 
 ### Build performance
 

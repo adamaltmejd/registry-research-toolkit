@@ -12,7 +12,7 @@ from __future__ import annotations
 
 import json
 import sqlite3
-from typing import TYPE_CHECKING
+from pathlib import Path
 
 import pytest
 from _csv_fixtures import write_scb_input
@@ -23,9 +23,6 @@ from reg_meta_build.db import build_db
 from reg_meta_build.validate import validate_built_db
 
 from reg_meta_build import validate as validate_mod
-
-if TYPE_CHECKING:
-    from pathlib import Path
 
 
 class TestValidateModule:
@@ -1729,6 +1726,89 @@ class TestBuildDbValidateFlag:
         ns = parser.parse_args(["build-db", "--input-dir", "x", "--no-validate"])
         assert ns.no_validate is True
 
+
+class TestBuildDbSnapshotSelection:
+    def test_argparse_exposes_all_three_snapshot_pins(self):
+        from reg_meta_build.cli import _build_parser
+
+        ns = _build_parser().parse_args(
+            [
+                "build-db",
+                "--input-dir",
+                "seed",
+                "--scb-snapshot",
+                "inputs/snapshot",
+                "--scb-input-commit",
+                "a" * 40,
+                "--scb-manifest-sha256",
+                "b" * 64,
+            ]
+        )
+        assert ns.scb_snapshot == "inputs/snapshot"
+        assert ns.scb_input_commit == "a" * 40
+        assert ns.scb_manifest_sha256 == "b" * 64
+
+    def test_incomplete_selection_fails_before_build(self, monkeypatch):
+        from reg_meta_build import cli as cli_mod
+
+        monkeypatch.setattr(
+            cli_mod,
+            "build_db",
+            lambda **_kwargs: pytest.fail("incomplete selection reached build_db"),
+        )
+        args = cli_mod._build_parser().parse_args(
+            [
+                "build-db",
+                "--input-dir",
+                "seed",
+                "--scb-snapshot",
+                "inputs/snapshot",
+            ]
+        )
+        with pytest.raises(RegMetaError) as exc_info:
+            cli_mod._cmd_build_db(args)
+        assert exc_info.value.code == "scb_snapshot_selection_incomplete"
+
+    def test_complete_selection_reaches_one_build_argument(
+        self, tmp_path: Path, monkeypatch
+    ):
+        from reg_meta_build import cli as cli_mod
+
+        seen = {}
+
+        def fake_build_db(**kwargs):
+            seen.update(kwargs)
+            return {"import_date": "2026-09-14"}
+
+        monkeypatch.setattr(cli_mod, "build_db", fake_build_db)
+        args = cli_mod._build_parser().parse_args(
+            [
+                "--db",
+                str(tmp_path / "db"),
+                "build-db",
+                "--input-dir",
+                "seed",
+                "--providers",
+                "scb",
+                "--no-validate",
+                "--scb-snapshot",
+                "inputs/snapshot",
+                "--scb-input-commit",
+                "a" * 40,
+                "--scb-manifest-sha256",
+                "b" * 64,
+            ]
+        )
+        envelope, exit_code = cli_mod._cmd_build_db(args)
+        assert exit_code == 0
+        assert envelope["request"]["args"]["scb_snapshot"] == "inputs/snapshot"
+        selection = seen["scb_snapshot"]
+        assert selection.path == Path("inputs/snapshot")
+        assert selection.input_commit == "a" * 40
+        assert selection.manifest_sha256 == "b" * 64
+
+
+class TestBuildDbPublicationValidation:
     def test_failed_validation_does_not_replace_installed_db(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ):

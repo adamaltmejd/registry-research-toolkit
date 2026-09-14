@@ -1,10 +1,10 @@
 """Lossless, versioned snapshots of SCB machine-readable CSV deliveries.
 
-This module is deliberately outside the normal build path.  It condenses a coherent
-CSV delivery into deterministic, reviewable text files and can reconstruct the same
-ordered logical records without consulting the retained raw archive.  Provider
-interpretation (encoding repair, filtering, projection, coalescing, and curation) stays
-in :mod:`reg_meta_build.sources.scb`.
+This module condenses a coherent CSV delivery into deterministic, reviewable text files
+and exposes an authenticated streamed reader for the normal build path.  It can also
+reconstruct the same ordered logical records without consulting the retained raw
+archive.  Provider interpretation (encoding repair, filtering, projection, coalescing,
+and curation) stays in :mod:`reg_meta_build.sources.scb`.
 
 The archive contract is logical-record losslessness, not original-CSV byte identity.
 The independently retained archive remains the authority for delimiters, quoting, and
@@ -77,6 +77,7 @@ SCB_CSV_FILES = (
 
 _KEY_RE = re.compile(r"[A-Za-z0-9_-]{22}\Z")
 _HASH_RE = re.compile(r"[0-9a-f]{64}\Z")
+_GIT_COMMIT_RE = re.compile(r"[0-9a-f]{40}\Z")
 _UNSET = object()
 
 # These groups are compression hints only.  A group is enabled only when all of its
@@ -444,6 +445,15 @@ class SnapshotStats:
     codec_sample: dict[str, dict[str, int]]
 
 
+@dataclass(frozen=True)
+class ScbSnapshotSelection:
+    """An explicitly pinned normalized SCB input selected for ``build_db``."""
+
+    path: Path
+    input_commit: str
+    manifest_sha256: str
+
+
 @dataclass
 class _CodecSample:
     limit: int
@@ -585,22 +595,45 @@ def _tsv_line(fields: Sequence[str]) -> bytes:
     return ("\t".join(fields) + "\n").encode()
 
 
-def _iter_tsv(path: Path) -> Iterator[tuple[int, list[str]]]:
-    with path.open("rb") as handle:
-        for line_number, raw in enumerate(handle, start=1):
-            if not raw.endswith(b"\n"):
-                raise SnapshotError(
-                    f"{path}: line {line_number} lacks a newline terminator"
-                )
-            try:
-                text = raw[:-1].decode("utf-8")
-            except UnicodeDecodeError as exc:
-                raise SnapshotError(f"{path}: line {line_number} is not UTF-8") from exc
-            if "\r" in text:
-                raise SnapshotError(
-                    f"{path}: line {line_number} contains an unescaped CR"
-                )
-            yield line_number, text.split("\t")
+def _iter_tsv(
+    path: Path, expected: NormalizedFile | None = None
+) -> Iterator[tuple[int, list[str]]]:
+    digest = hashlib.sha256()
+    size = 0
+    lines = 0
+    try:
+        handle = path.open("rb")
+    except OSError as exc:
+        raise SnapshotError(f"cannot open normalized artifact {path}: {exc}") from exc
+    try:
+        with handle:
+            for line_number, raw in enumerate(handle, start=1):
+                digest.update(raw)
+                size += len(raw)
+                lines += 1
+                if not raw.endswith(b"\n"):
+                    raise SnapshotError(
+                        f"{path}: line {line_number} lacks a newline terminator"
+                    )
+                try:
+                    text = raw[:-1].decode("utf-8")
+                except UnicodeDecodeError as exc:
+                    raise SnapshotError(
+                        f"{path}: line {line_number} is not UTF-8"
+                    ) from exc
+                if "\r" in text:
+                    raise SnapshotError(
+                        f"{path}: line {line_number} contains an unescaped CR"
+                    )
+                yield line_number, text.split("\t")
+    except OSError as exc:
+        raise SnapshotError(f"cannot read normalized artifact {path}: {exc}") from exc
+    if expected is not None and (
+        size != expected.size
+        or lines != expected.lines
+        or digest.hexdigest() != expected.sha256
+    ):
+        raise SnapshotError(f"normalized file hash/size/line mismatch: {expected.path}")
 
 
 @contextmanager
@@ -1070,7 +1103,7 @@ def _declared_normalized_files(manifest: SnapshotManifest) -> set[str]:
     }
 
 
-def _verify_normalized_files(root: Path, manifest: SnapshotManifest) -> None:
+def _verify_normalized_inventory(root: Path, manifest: SnapshotManifest) -> None:
     declared = _declared_normalized_files(manifest)
     actual_root = root / "files"
     actual = (
@@ -1086,16 +1119,6 @@ def _verify_normalized_files(root: Path, manifest: SnapshotManifest) -> None:
         raise SnapshotError(
             f"normalized file inventory mismatch; missing={sorted(declared - actual)}, extra={sorted(actual - declared)}"
         )
-    for item in manifest.files:
-        for normalized in _normalized_files(item):
-            path = root / normalized.path
-            if (
-                path.stat().st_size != normalized.size
-                or _file_sha256(path) != normalized.sha256
-            ):
-                raise SnapshotError(
-                    f"normalized file hash/size mismatch: {normalized.path}"
-                )
 
 
 def _load_groups(
@@ -1106,7 +1129,9 @@ def _load_groups(
         payloads: dict[str, tuple[RawCell, ...]] = {}
         last_key = ""
         lines = 0
-        for line_number, fields in _iter_tsv(root / group.dictionary.path):
+        for line_number, fields in _iter_tsv(
+            root / group.dictionary.path, group.dictionary
+        ):
             if len(fields) != len(group.positions) + 1:
                 raise SnapshotError(
                     f"{group.dictionary.path}: line {line_number} has the wrong field count"
@@ -1141,7 +1166,7 @@ def _iter_snapshot_rows(
     seen = 0
     for record_file in item.records:
         lines = 0
-        for line_number, fields in _iter_tsv(root / record_file.path):
+        for line_number, fields in _iter_tsv(root / record_file.path, record_file):
             if len(fields) != expected_fields:
                 raise SnapshotError(
                     f"{record_file.path}: line {line_number} has the wrong field count"
@@ -1197,6 +1222,96 @@ def _logical_hashes(
     return records_digest.hexdigest(), logical_digest.hexdigest(), count
 
 
+@contextmanager
+def _open_snapshot_rows(
+    root: Path, item: SnapshotFile
+) -> Iterator[tuple[list[RawCell], Iterator[list[RawCell]]]]:
+    """Open one normalized CSV and validate its bytes and logical stream at EOF."""
+    dictionaries = _load_groups(root, item)
+    header = [_decode_cell(cell) for cell in item.header]
+    records_digest = hashlib.sha256()
+    logical_digest = hashlib.sha256()
+    logical_digest.update(b"header\0")
+    _update_record_hash(logical_digest, header)
+    count = 0
+    complete = False
+
+    def checked_rows() -> Iterator[list[RawCell]]:
+        nonlocal complete, count
+        for row in _iter_snapshot_rows(root, item, dictionaries):
+            _update_record_hash(records_digest, row)
+            logical_digest.update(b"record\0")
+            _update_record_hash(logical_digest, row)
+            count += 1
+            yield row
+        if count != item.record_count:
+            raise SnapshotError(f"record count mismatch for {item.name}")
+        if (
+            records_digest.hexdigest() != item.ordered_records_sha256
+            or logical_digest.hexdigest() != item.logical_sha256
+        ):
+            raise SnapshotError(f"logical record round-trip mismatch for {item.name}")
+        complete = True
+
+    yield header, checked_rows()
+    if not complete:
+        raise SnapshotError(f"snapshot row stream was not fully consumed: {item.name}")
+
+
+class ScbSnapshotReader:
+    """Authenticated, streamed access to one selected SCB input snapshot."""
+
+    def __init__(
+        self,
+        root: Path,
+        manifest: SnapshotManifest,
+        *,
+        input_commit: str,
+        snapshot_path: str,
+        manifest_sha256: str,
+    ) -> None:
+        self.root = root
+        self.manifest = manifest
+        self._files = {item.name: item for item in manifest.files}
+        self._verified: set[str] = set()
+        self.provenance = {
+            "input_repository_commit": input_commit,
+            "snapshot_path": snapshot_path,
+            "manifest_sha256": manifest_sha256,
+        }
+        _verify_normalized_inventory(root, manifest)
+
+    def has_file(self, name: str) -> bool:
+        item = self._files.get(name)
+        return item is not None and item.present
+
+    def raw_sha256(self, name: str) -> str:
+        item = self._files.get(name)
+        if item is None or not item.present or item.raw_sha256 is None:
+            raise SnapshotError(f"snapshot source file is absent: {name}")
+        return item.raw_sha256
+
+    @contextmanager
+    def open_csv(
+        self, name: str
+    ) -> Iterator[tuple[list[RawCell], Iterator[list[RawCell]]]]:
+        item = self._files.get(name)
+        if item is None or not item.present:
+            raise SnapshotError(f"snapshot source file is absent: {name}")
+        with _open_snapshot_rows(self.root, item) as opened:
+            yield opened
+        self._verified.add(name)
+
+    def verify_all(self) -> None:
+        """Drain every present file not already consumed by the SCB adapter."""
+        for item in self.manifest.files:
+            if not item.present or item.name in self._verified:
+                continue
+            with self.open_csv(item.name) as (_header, rows):
+                for _row in rows:
+                    pass
+
+
 def _write_csv(
     path: Path, header: Sequence[RawCell], rows: Iterator[Sequence[RawCell]]
 ) -> None:
@@ -1222,29 +1337,33 @@ def _inspect_snapshot(
 ) -> SnapshotManifest:
     if manifest is None:
         manifest = load_manifest(root)
-    _verify_normalized_files(root, manifest)
+    _verify_normalized_inventory(root, manifest)
     for item in manifest.files:
         if not item.present:
             continue
-        dictionaries = _load_groups(root, item)
-        header = [_decode_cell(cell) for cell in item.header]
-        rows = _iter_snapshot_rows(root, item, dictionaries)
-        if restore_dir is None:
-            records_hash, logical_hash, count = _logical_hashes(header, rows)
-        else:
-            restored = restore_dir / item.name
-            _write_csv(restored, header, rows)
-            with open_lossless_csv(restored) as (restored_header, restored_rows):
-                records_hash, logical_hash, count = _logical_hashes(
-                    restored_header, restored_rows
-                )
-        if count != item.record_count:
-            raise SnapshotError(f"record count mismatch for {item.name}")
-        if (
-            records_hash != item.ordered_records_sha256
-            or logical_hash != item.logical_sha256
-        ):
-            raise SnapshotError(f"logical record round-trip mismatch for {item.name}")
+        with _open_snapshot_rows(root, item) as (header, rows):
+            if restore_dir is None:
+                for _row in rows:
+                    pass
+            else:
+                restored = restore_dir / item.name
+                _write_csv(restored, header, rows)
+                with open_lossless_csv(restored) as (
+                    restored_header,
+                    restored_rows,
+                ):
+                    records_hash, logical_hash, count = _logical_hashes(
+                        restored_header, restored_rows
+                    )
+                if count != item.record_count:
+                    raise SnapshotError(f"record count mismatch for {item.name}")
+                if (
+                    records_hash != item.ordered_records_sha256
+                    or logical_hash != item.logical_sha256
+                ):
+                    raise SnapshotError(
+                        f"logical record round-trip mismatch for {item.name}"
+                    )
     return manifest
 
 
@@ -1631,6 +1750,83 @@ def _verify_committed_snapshot(
         raise SnapshotError(f"cannot inspect pinned input commit: {exc}") from exc
 
 
+def open_scb_snapshot(selection: ScbSnapshotSelection) -> ScbSnapshotReader:
+    """Authenticate a pinned snapshot checkout and return its streamed reader."""
+    if not _GIT_COMMIT_RE.fullmatch(selection.input_commit):
+        raise SnapshotError(
+            "SCB input commit must be a full 40-character lowercase Git commit"
+        )
+    if not _HASH_RE.fullmatch(selection.manifest_sha256):
+        raise SnapshotError(
+            "SCB manifest SHA-256 must be 64 lowercase hexadecimal characters"
+        )
+    root = selection.path.expanduser().resolve()
+    if not root.is_dir():
+        raise SnapshotError(f"SCB snapshot directory not found: {root}")
+    repo = Path(_git(root, "rev-parse", "--show-toplevel")).resolve()
+    try:
+        snapshot_path = root.relative_to(repo).as_posix()
+    except ValueError as exc:
+        raise SnapshotError(
+            f"SCB snapshot is outside its Git repository: {root}"
+        ) from exc
+    actual_commit = clean_git_commit(repo)
+    if actual_commit != selection.input_commit:
+        raise SnapshotError(
+            "SCB input commit pin mismatch: expected "
+            f"{selection.input_commit}, got {actual_commit}"
+        )
+    committed_manifest, committed_manifest_sha256 = _verify_committed_snapshot(
+        repo, selection.input_commit, snapshot_path
+    )
+    if committed_manifest_sha256 != selection.manifest_sha256:
+        raise SnapshotError(
+            "SCB snapshot manifest pin mismatch: expected "
+            f"{selection.manifest_sha256}, got {committed_manifest_sha256}"
+        )
+    manifest_path = root / MANIFEST_NAME
+    try:
+        worktree_manifest_bytes = manifest_path.read_bytes()
+    except OSError as exc:
+        raise SnapshotError(
+            f"cannot read snapshot manifest {manifest_path}: {exc}"
+        ) from exc
+    worktree_manifest_sha256 = hashlib.sha256(worktree_manifest_bytes).hexdigest()
+    if worktree_manifest_sha256 != selection.manifest_sha256:
+        raise SnapshotError(
+            "worktree snapshot manifest differs from its pin: expected "
+            f"{selection.manifest_sha256}, got {worktree_manifest_sha256}"
+        )
+    try:
+        manifest = SnapshotManifest.model_validate_json(worktree_manifest_bytes)
+    except ValueError as exc:
+        raise SnapshotError(
+            f"invalid snapshot manifest {manifest_path}: {exc}"
+        ) from exc
+    if manifest != committed_manifest:
+        raise SnapshotError("worktree snapshot manifest differs from pinned commit")
+    files = {item.name: item for item in manifest.files}
+    if missing := set(SCB_CSV_FILES) - set(files):
+        raise SnapshotError(
+            f"snapshot manifest is missing known SCB files: {sorted(missing)}"
+        )
+    if not files["Registerinformation.csv"].present:
+        raise SnapshotError(
+            "snapshot is missing required SCB backbone Registerinformation.csv"
+        )
+    if files["Vardemangder.csv"].present != files["VardemangderValidDates.csv"].present:
+        raise SnapshotError(
+            "Vardemangder.csv and VardemangderValidDates.csv must be present or absent together"
+        )
+    return ScbSnapshotReader(
+        root,
+        manifest,
+        input_commit=selection.input_commit,
+        snapshot_path=snapshot_path,
+        manifest_sha256=selection.manifest_sha256,
+    )
+
+
 def create_build_lock(
     snapshot: Path,
     recorded_db: Path,
@@ -1911,6 +2107,8 @@ def measure_git_history(initial: Path, update: Path) -> dict[str, Any]:
 __all__ = [
     "BuildLock",
     "DeliveryInventory",
+    "ScbSnapshotReader",
+    "ScbSnapshotSelection",
     "SnapshotError",
     "SnapshotManifest",
     "SnapshotStats",
@@ -1922,6 +2120,7 @@ __all__ = [
     "measure_codec_sample",
     "measure_git_history",
     "open_lossless_csv",
+    "open_scb_snapshot",
     "prepare_snapshot",
     "restore_snapshot",
     "verify_build_lock",
