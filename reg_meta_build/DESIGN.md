@@ -883,7 +883,11 @@ one-row controlled update changed four files and added 1,024 bytes to 9,216 byte
 packed Git objects (Git 2.47.3, `git gc --prune=now`; sizes reported by
 `git count-objects -v`), also not evidence about real history or the separate fixed-seed
 1% gate. `prepare` reports the same bounded codec counters on host inputs so the
-selection can be rejected when real data disagrees.
+selection can be rejected when real data disagrees. `measure-git` pins and reports its
+local packing inputs: compression level 9, window 10, depth 50, one pack thread,
+unlimited window memory, sparse delta search and offset deltas, with bitmap writing
+disabled. Git version and the exact `git gc --prune=now` command remain in the result;
+pack sizes from runs with different reported inputs are not comparable evidence.
 
 #### Candidate and replay contract
 
@@ -938,6 +942,11 @@ uv run python scripts/prototype_scb_inputs.py verify snapshots/candidate
 uv run python scripts/prototype_scb_inputs.py restore snapshots/candidate /tmp/input/SCB
 ```
 
+`prepare` derives `converter_commit` from the checkout containing both the executing CLI
+file and the imported `input_snapshot.py`; they must be tracked blobs matching HEAD in
+the same clean repository. There is no caller-supplied converter checkout, so an
+unrelated clean repository cannot lend its commit identity to executed code.
+
 `measure-codecs` is read-only and publishes nothing. It defaults to 100,000 backbone
 records, 1,000,000 value records and at most 100,000 records from every other declared
 CSV; `--limit FILE.csv=N` changes an explicit cap. It first validates and counts the
@@ -971,11 +980,12 @@ for every auxiliary input; and the resulting DB hash. This captures inputs the c
 dictionary/record artifact it declares are streamed from the exact pinned Git commit;
 each blob must exist and match the manifest's byte size and SHA256. The worktree is
 verified separately, so an ignored normalized tree cannot masquerade as a reproducible
-commit. The operator must also list every selected classification, curation, slug, and
-non-SCB provider input as an auxiliary pin. `verify-lock` checks these pins before
-replay (omit `--result-db`) and the result hash afterward. A missing or mismatching
-input fails; it never substitutes a newer file. The build itself remains the existing
-observed workflow:
+commit. `verify-lock` also compares its recorded snapshot schema and converter versions
+to that validated manifest. The operator must list every selected classification,
+curation, slug, and non-SCB provider input as an auxiliary pin. `verify-lock` checks
+these pins before replay (omit `--result-db`) and the result hash afterward. A missing
+or mismatching input fails; it never substitutes a newer file. The build itself remains
+the existing observed workflow:
 
 ```console
 uv run python scripts/build_db_watch.py --input-dir /tmp/input --db-dir /tmp/replay-db

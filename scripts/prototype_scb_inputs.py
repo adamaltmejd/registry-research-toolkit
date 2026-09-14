@@ -16,7 +16,7 @@ from typing import TYPE_CHECKING, Any
 
 from reg_meta_build.input_snapshot import (
     SnapshotError,
-    clean_git_commit,
+    converter_source_commit,
     create_build_lock,
     measure_codec_sample,
     measure_git_history,
@@ -70,12 +70,6 @@ def _parser() -> argparse.ArgumentParser:
     prepare = subparsers.add_parser("prepare", help="create a new candidate snapshot")
     prepare.add_argument("inventory", type=Path)
     prepare.add_argument("output", type=Path)
-    prepare.add_argument(
-        "--builder-repo",
-        type=Path,
-        default=Path.cwd(),
-        help="clean converter checkout to pin (default: current directory)",
-    )
     prepare.add_argument("--codec-sample-lines", type=int, default=100_000)
 
     verify = subparsers.add_parser(
@@ -141,7 +135,7 @@ def _run(args: argparse.Namespace) -> dict[str, Any]:
     if args.command == "prepare":
         if args.codec_sample_lines < 1:
             raise SnapshotError("--codec-sample-lines must be positive")
-        commit = clean_git_commit(args.builder_repo)
+        commit = converter_source_commit(Path(__file__))
         return asdict(
             prepare_snapshot(
                 args.inventory,

@@ -49,6 +49,18 @@ SERIALIZATION = "escaped-tsv-v1"
 CHUNK_RECORDS = 100_000
 MANIFEST_NAME = "manifest.json"
 
+_GIT_PACK_SETTINGS = (
+    ("core.compression", "9"),
+    ("pack.compression", "9"),
+    ("pack.depth", "50"),
+    ("pack.threads", "1"),
+    ("pack.useSparse", "true"),
+    ("pack.window", "10"),
+    ("pack.windowMemory", "0"),
+    ("repack.useDeltaBaseOffset", "true"),
+    ("repack.writeBitmaps", "false"),
+)
+
 SCB_CSV_FILES = (
     "Registerinformation.csv",
     "UnikaRegisterOchVariabler.csv",
@@ -1164,8 +1176,14 @@ def _write_csv(
         text_handle.flush()
 
 
-def _inspect_snapshot(root: Path, restore_dir: Path | None = None) -> SnapshotManifest:
-    manifest = load_manifest(root)
+def _inspect_snapshot(
+    root: Path,
+    restore_dir: Path | None = None,
+    *,
+    manifest: SnapshotManifest | None = None,
+) -> SnapshotManifest:
+    if manifest is None:
+        manifest = load_manifest(root)
     _verify_normalized_files(root, manifest)
     for item in manifest.files:
         if not item.present:
@@ -1202,6 +1220,7 @@ def restore_snapshot(root: Path, output: Path) -> SnapshotStats:
     started = time.perf_counter()
     root = root.resolve()
     output = output.resolve()
+    manifest = load_manifest(root)
     if output.exists():
         raise SnapshotError(
             f"restore target already exists and will not be overwritten: {output}"
@@ -1211,7 +1230,7 @@ def restore_snapshot(root: Path, output: Path) -> SnapshotStats:
         tempfile.mkdtemp(prefix=f".{output.name}.restore-", dir=output.parent)
     )
     try:
-        manifest = _inspect_snapshot(root, staging)
+        manifest = _inspect_snapshot(root, staging, manifest=manifest)
         staging.replace(output)
         return SnapshotStats(
             raw_bytes=sum(item.raw_size or 0 for item in manifest.files),
@@ -1340,6 +1359,39 @@ def clean_git_commit(repo: Path) -> str:
     if status:
         raise SnapshotError(f"Git repository must be clean for an exact pin: {repo}")
     return _git(repo, "rev-parse", "HEAD")
+
+
+def converter_source_commit(cli_path: Path) -> str:
+    """Return the commit containing the clean CLI and imported converter sources."""
+    sources = (cli_path.resolve(), Path(__file__).resolve())
+    if any(not source.is_file() for source in sources):
+        raise SnapshotError("CLI and imported converter source files must exist")
+    repositories = tuple(
+        Path(_git(source.parent, "rev-parse", "--show-toplevel")).resolve()
+        for source in sources
+    )
+    if repositories[0] != repositories[1]:
+        raise SnapshotError(
+            "CLI and imported converter must come from the same Git checkout"
+        )
+    repo = repositories[0]
+    commit = clean_git_commit(repo)
+    for source in sources:
+        relative = source.relative_to(repo).as_posix()
+        try:
+            committed_blob = _git(repo, "rev-parse", "--verify", f"{commit}:{relative}")
+        except SnapshotError as exc:
+            raise SnapshotError(
+                f"converter source is not a tracked HEAD blob: {relative}"
+            ) from exc
+        if _git(repo, "cat-file", "-t", committed_blob) != "blob":
+            raise SnapshotError(f"converter source is not a Git blob: {relative}")
+        worktree_blob = _git(repo, "hash-object", "--no-filters", relative)
+        if worktree_blob != committed_blob:
+            raise SnapshotError(
+                f"converter source differs from its HEAD blob: {relative}"
+            )
+    return commit
 
 
 def _snapshot_repo_path(snapshot_path: str, relative_path: str) -> str:
@@ -1563,6 +1615,21 @@ def verify_build_lock(
     manifest = verify_snapshot(snapshot)
     if manifest != committed_manifest:
         raise SnapshotError("worktree snapshot manifest differs from pinned commit")
+    version_checks = {
+        "snapshot schema version": (
+            manifest.schema_version,
+            lock.snapshot_schema_version,
+        ),
+        "snapshot converter version": (
+            manifest.converter_version,
+            lock.snapshot_converter_version,
+        ),
+    }
+    for label, (actual, expected) in version_checks.items():
+        if actual != expected:
+            raise SnapshotError(
+                f"{label} pin mismatch: expected {expected}, got {actual}"
+            )
     expected_aux = {item.name: item for item in lock.auxiliary_inputs}
     if set(auxiliary_inputs) != set(expected_aux):
         raise SnapshotError("auxiliary input names do not match the build lock")
@@ -1609,6 +1676,8 @@ def measure_git_history(initial: Path, update: Path) -> dict[str, Any]:
         _git(repo, "init", "-q")
         _git(repo, "config", "user.email", "snapshot@example.invalid")
         _git(repo, "config", "user.name", "Snapshot measurement")
+        for name, value in _GIT_PACK_SETTINGS:
+            _git(repo, "config", "--local", name, value)
 
         def install(source: Path) -> None:
             for child in repo.iterdir():
@@ -1655,6 +1724,7 @@ def measure_git_history(initial: Path, update: Path) -> dict[str, Any]:
         return {
             "git_version": _git(repo, "--version"),
             "git_gc": "git gc --prune=now",
+            "git_pack_settings": dict(_GIT_PACK_SETTINGS),
             "initial_working_tree_bytes": tree_size(initial),
             "update_working_tree_bytes": tree_size(update),
             "initial_loose_object_bytes": initial_loose,
@@ -1675,6 +1745,7 @@ __all__ = [
     "SnapshotManifest",
     "SnapshotStats",
     "clean_git_commit",
+    "converter_source_commit",
     "create_build_lock",
     "load_inventory",
     "load_manifest",

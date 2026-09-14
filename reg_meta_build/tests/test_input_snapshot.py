@@ -14,6 +14,7 @@ from _csv_fixtures import write_scb_input
 from reg_meta_build.input_snapshot import (
     SCB_CSV_FILES,
     SnapshotError,
+    converter_source_commit,
     create_build_lock,
     load_manifest,
     measure_codec_sample,
@@ -274,6 +275,63 @@ def test_content_keys_stay_stable_and_git_measurement_reports_update_growth(
         measurement["two_commit_packed_object_bytes"]
         >= measurement["initial_packed_object_bytes"]
     )
+    assert measurement["git_gc"] == "git gc --prune=now"
+    assert measurement["git_version"].startswith("git version ")
+    assert measurement["git_pack_settings"] == {
+        "core.compression": "9",
+        "pack.compression": "9",
+        "pack.depth": "50",
+        "pack.threads": "1",
+        "pack.useSparse": "true",
+        "pack.window": "10",
+        "pack.windowMemory": "0",
+        "repack.useDeltaBaseOffset": "true",
+        "repack.writeBitmaps": "false",
+    }
+
+
+def test_converter_commit_requires_same_clean_tracked_checkout(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo = tmp_path / "converter-repo"
+    cli = repo / "scripts" / "prototype.py"
+    converter = repo / "package" / "input_snapshot.py"
+    cli.parent.mkdir(parents=True)
+    converter.parent.mkdir(parents=True)
+    cli.write_text("cli\n", encoding="utf-8")
+    converter.write_text("converter\n", encoding="utf-8")
+    (repo / ".gitignore").write_text("ignored.py\n", encoding="utf-8")
+    _git(repo, "init", "-q")
+    _git(repo, "config", "user.email", "test@example.invalid")
+    _git(repo, "config", "user.name", "Test")
+    _git(repo, "add", ".")
+    _git(repo, "commit", "-q", "-m", "converter")
+    commit = _git(repo, "rev-parse", "HEAD")
+    monkeypatch.setattr(snapshot_module, "__file__", str(converter))
+
+    assert converter_source_commit(cli) == commit
+
+    converter.write_text("dirty converter\n", encoding="utf-8")
+    with pytest.raises(SnapshotError, match="must be clean"):
+        converter_source_commit(cli)
+    converter.write_text("converter\n", encoding="utf-8")
+
+    ignored = repo / "ignored.py"
+    ignored.write_text("ignored\n", encoding="utf-8")
+    with pytest.raises(SnapshotError, match="not a tracked HEAD blob"):
+        converter_source_commit(ignored)
+
+    other_repo = tmp_path / "unrelated-repo"
+    unrelated_cli = other_repo / "prototype.py"
+    other_repo.mkdir()
+    unrelated_cli.write_text("unrelated\n", encoding="utf-8")
+    _git(other_repo, "init", "-q")
+    _git(other_repo, "config", "user.email", "test@example.invalid")
+    _git(other_repo, "config", "user.name", "Test")
+    _git(other_repo, "add", ".")
+    _git(other_repo, "commit", "-q", "-m", "unrelated")
+    with pytest.raises(SnapshotError, match="same Git checkout"):
+        converter_source_commit(unrelated_cli)
 
 
 def test_codec_sample_ordinals_span_the_whole_stream() -> None:
@@ -349,11 +407,12 @@ def test_snapshot_rejects_unsafe_source_name_without_writing_outside_restore(
 
     with pytest.raises(SnapshotError, match="plain .csv filename"):
         verify_snapshot(snapshot)
+    restore_parent = tmp_path / "new-parent"
     with pytest.raises(SnapshotError, match="plain .csv filename"):
-        restore_snapshot(snapshot, tmp_path / "restore")
+        restore_snapshot(snapshot, restore_parent / "restore")
 
     assert outside.read_bytes() == b"must remain unchanged"
-    assert not (tmp_path / "restore").exists()
+    assert not restore_parent.exists()
 
 
 def test_inventory_requires_complete_listing_pairing_and_archive_coverage(
@@ -430,6 +489,25 @@ def test_build_lock_pins_clean_repositories_auxiliary_inputs_and_result(
         },
         result_db=result_db,
     )
+
+    for field, value, message in (
+        ("snapshot_schema_version", 999, "snapshot schema version"),
+        ("snapshot_converter_version", -999, "snapshot converter version"),
+    ):
+        invalid_lock = json.loads(lock_path.read_text(encoding="utf-8"))
+        invalid_lock[field] = value
+        invalid_lock_path = tmp_path / f"invalid-{field}.json"
+        invalid_lock_path.write_text(json.dumps(invalid_lock), encoding="utf-8")
+        with pytest.raises(SnapshotError, match=f"{message} pin mismatch"):
+            verify_build_lock(
+                invalid_lock_path,
+                snapshot,
+                builder_repo,
+                auxiliary_inputs={
+                    "Tabelldefinitioner.sql": auxiliary,
+                    "ID-kolumner.xlsx": None,
+                },
+            )
 
     auxiliary.write_text("changed\n", encoding="utf-8")
     with pytest.raises(SnapshotError, match="hash/size mismatch"):
