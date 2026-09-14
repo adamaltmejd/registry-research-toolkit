@@ -86,12 +86,10 @@ instructions = "Smallest safe change, in the ticket's scope only. Follow the rep
 # held -- though Yard ships no number of its own, because a budget in the
 # scaffold reads as a contract and size is a signal read after the fact.
 [roles.planning]
-backend = "claude"
-# claude-fable-5-1 needs worker CLI >= 2.1.251: yard 0.12.0's pin (2.1.258)
-# carries it; yard 0.11.0's (2.1.236) refused it, which is why this briefly
-# ran claude-opus-5.
-model = "claude-fable-5-1"
-effort = "high"
+# Temporary Claude-credit fallback (2026-09-14); restore original claude/claude-fable-5-1/high.
+backend = "codex"
+model = "gpt-6-astra"
+effort = "xhigh"
 instructions = "Plan against this repository's CLAUDE.md conventions and each package's DESIGN.md; name the package(s) each ticket touches. This project is shedding overengineering: delete or defer behavior before splitting it, and split only what is independently useful — answer a frightening size by shrinking the scope, never by subdividing it into a backlog. Every ticket names its consumer and the observable behavior they get. Problems that have not happened are not requirements, and this single-maintainer research tool is not an adversarial environment."
 
 # The conflict role resolves a conflicted retarget and takes the same keys as
