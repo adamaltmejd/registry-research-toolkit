@@ -290,6 +290,24 @@ def test_content_keys_stay_stable_and_git_measurement_reports_update_growth(
     }
 
 
+def test_git_measurement_reports_effective_command_scope_config(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    initial = tmp_path / "initial"
+    update = tmp_path / "update"
+    initial.mkdir()
+    update.mkdir()
+    (initial / "records.tsv").write_text("initial\n", encoding="utf-8")
+    (update / "records.tsv").write_text("updated\n", encoding="utf-8")
+    monkeypatch.setenv("GIT_CONFIG_COUNT", "1")
+    monkeypatch.setenv("GIT_CONFIG_KEY_0", "pack.window")
+    monkeypatch.setenv("GIT_CONFIG_VALUE_0", "0")
+
+    measurement = measure_git_history(initial, update)
+
+    assert measurement["git_pack_settings"]["pack.window"] == "0"
+
+
 def test_converter_commit_requires_same_clean_tracked_checkout(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

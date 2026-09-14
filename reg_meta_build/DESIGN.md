@@ -883,11 +883,13 @@ one-row controlled update changed four files and added 1,024 bytes to 9,216 byte
 packed Git objects (Git 2.47.3, `git gc --prune=now`; sizes reported by
 `git count-objects -v`), also not evidence about real history or the separate fixed-seed
 1% gate. `prepare` reports the same bounded codec counters on host inputs so the
-selection can be rejected when real data disagrees. `measure-git` pins and reports its
-local packing inputs: compression level 9, window 10, depth 50, one pack thread,
-unlimited window memory, sparse delta search and offset deltas, with bitmap writing
-disabled. Git version and the exact `git gc --prune=now` command remain in the result;
-pack sizes from runs with different reported inputs are not comparable evidence.
+selection can be rejected when real data disagrees. `measure-git` sets local packing
+defaults: compression level 9, window 10, depth 50, one pack thread, unlimited window
+memory, sparse delta search and offset deltas, with bitmap writing disabled. It reports
+the effective values read by Git under the same environment used for packing, so a
+higher-precedence command-scope override remains visible. Git version and the exact
+`git gc --prune=now` command remain in the result; pack sizes from runs with different
+reported inputs are not comparable evidence.
 
 #### Candidate and replay contract
 

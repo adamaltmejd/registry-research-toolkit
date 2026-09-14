@@ -1698,6 +1698,10 @@ def measure_git_history(initial: Path, update: Path) -> dict[str, Any]:
         _git(repo, "add", "-A")
         _git(repo, "commit", "-q", "-m", "initial")
         initial_loose, _ = _git_object_sizes(repo)
+        effective_pack_settings = {
+            name: _git(repo, "config", "--get", name)
+            for name, _value in _GIT_PACK_SETTINGS
+        }
         _git(repo, "gc", "--prune=now")
         _, initial_pack = _git_object_sizes(repo)
         install(update)
@@ -1724,7 +1728,7 @@ def measure_git_history(initial: Path, update: Path) -> dict[str, Any]:
         return {
             "git_version": _git(repo, "--version"),
             "git_gc": "git gc --prune=now",
-            "git_pack_settings": dict(_GIT_PACK_SETTINGS),
+            "git_pack_settings": effective_pack_settings,
             "initial_working_tree_bytes": tree_size(initial),
             "update_working_tree_bytes": tree_size(update),
             "initial_loose_object_bytes": initial_loose,
