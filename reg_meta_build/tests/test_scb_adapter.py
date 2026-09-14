@@ -1946,6 +1946,7 @@ class TestCis2014MatrixProjection:
             assert len(historical) == 4
             assert {row[1] for row in historical} == {"co11"}
             assert {row[4] for row in historical} == {None}
+            assert historical[-1][2:] == ("2010-01-01", "2012-12-31", None)
             assert self._original_parent_metadata(combined) == (
                 self._original_parent_metadata(reverse)
             )
