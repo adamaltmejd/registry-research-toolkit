@@ -1552,7 +1552,7 @@ def _cis2016_rows(*columns: str) -> list[str]:
 
 
 def _cis2014_payload() -> dict:
-    payload = {
+    return {
         "selector": {
             "register": "scb/innovation-foretag",
             "register_id": 257,
@@ -1597,7 +1597,6 @@ def _cis2014_payload() -> dict:
             ),
         ],
     }
-    return payload
 
 
 def _cis2014_rows(*, column: str = "") -> list[str]:

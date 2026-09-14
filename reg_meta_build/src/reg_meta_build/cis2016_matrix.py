@@ -13,7 +13,7 @@ answer identities or continuity links.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Annotated, Literal, TypeVar
+from typing import TYPE_CHECKING, Annotated, Literal
 
 from pydantic import (
     BaseModel,
@@ -208,18 +208,15 @@ class Cis2014Matrix(_CisMatrix):
         return self
 
 
-_MatrixT = TypeVar("_MatrixT", bound=_CisMatrix)
-
-
-def _load_matrix(
+def _load_matrix[MatrixT: _CisMatrix](
     path: Path | None,
     slug_dir: Path | None,
     *,
-    model: type[_MatrixT],
+    model: type[MatrixT],
     wave: str,
     code_prefix: str,
     file_name: str,
-) -> _MatrixT | None:
+) -> MatrixT | None:
     """Load one explicit reviewed matrix declaration.
 
     Missing is an empty curation surface for wheel installs and synthetic
