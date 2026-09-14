@@ -1225,6 +1225,8 @@ def restore_snapshot(root: Path, output: Path) -> SnapshotStats:
     started = time.perf_counter()
     root = root.resolve()
     output = output.resolve()
+    if output == root or root in output.parents:
+        raise SnapshotError("restore target must be outside the snapshot root")
     manifest = load_manifest(root)
     if output.exists():
         raise SnapshotError(

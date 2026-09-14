@@ -493,6 +493,34 @@ def test_snapshot_rejects_unsafe_source_name_without_writing_outside_restore(
     assert not restore_parent.exists()
 
 
+def test_restore_rejects_targets_inside_snapshot_without_writing(
+    tmp_path: Path,
+) -> None:
+    source_dir = write_scb_input(tmp_path / "source")
+    snapshot = tmp_path / "snapshot"
+    prepare_snapshot(
+        _inventory(tmp_path, source_dir), snapshot, converter_commit="f" * 40
+    )
+    before = {
+        path.relative_to(snapshot).as_posix(): path.read_bytes()
+        for path in snapshot.rglob("*")
+        if path.is_file()
+    }
+    nested_parent = snapshot / "restore-output"
+
+    with pytest.raises(SnapshotError, match="outside the snapshot root"):
+        restore_snapshot(snapshot, snapshot)
+    with pytest.raises(SnapshotError, match="outside the snapshot root"):
+        restore_snapshot(snapshot, nested_parent / "restored")
+
+    assert not nested_parent.exists()
+    assert before == {
+        path.relative_to(snapshot).as_posix(): path.read_bytes()
+        for path in snapshot.rglob("*")
+        if path.is_file()
+    }
+
+
 def test_inventory_requires_complete_listing_pairing_and_archive_coverage(
     tmp_path: Path,
 ) -> None:

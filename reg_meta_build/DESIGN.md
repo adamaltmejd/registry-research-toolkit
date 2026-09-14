@@ -963,11 +963,12 @@ sampled logical lines, and deletes the workspace on return.
 
 `verify` hashes every normalized file, checks sorted content keys and dictionary
 closure, expands every occurrence, and recomputes separate ordered-record and
-header-plus-record digests. `restore` writes to a sibling staging directory, reopens the
-result through an independent CSV traversal, checks the same digests, and only then
-renames the complete directory into place. Loaded manifest source names pass the same
-plain-`.csv` filename boundary as inventory names before restoration writes any file, so
-absolute and traversal paths fail closed. Restored CSV quoting is canonical rather than
+header-plus-record digests. `restore` rejects a target equal to or below the snapshot
+root, then writes to a sibling staging directory, reopens the result through an
+independent CSV traversal, checks the same digests, and only then renames the complete
+directory into place. Loaded manifest source names pass the same plain-`.csv` filename
+boundary as inventory names before restoration writes any file, so absolute and
+traversal paths fail closed. Restored CSV quoting is canonical rather than
 byte-identical to the original; field bytes/order and quoted-empty/null semantics are
 identical. Exact original CSV bytes remain recoverable only from the independently
 retained, checksum-pinned archive.
