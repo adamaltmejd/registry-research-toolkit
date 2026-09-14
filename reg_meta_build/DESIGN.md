@@ -825,6 +825,191 @@ actually DOS cp850 remnants undefined in cp1252:
 These are mapped during import (`_decode_cp1252`). The build reads \~1M backbone rows
 from `Registerinformation.csv` and \~102M value-item rows from `Vardemangder.csv`.
 
+### Lossless input-snapshot prototype (Y-151)
+
+`input_snapshot.py` and `scripts/prototype_scb_inputs.py` are a deliberately standalone
+experiment for the maintainer who receives successive SCB exports. They do **not**
+replace `_open_scb_csv_raw`, `SCBAdapter`, `build_db`, the IR, or the value-prestage
+cache, and no normal build reads the snapshot format. Their one question is whether a
+complete machine-readable delivery can be kept and reviewed economically in Git before
+the build interprets it. A failed size/history trial therefore leaves the production
+reader and every accepted input untouched.
+
+The current readers are intentionally unsuitable as the preparation boundary:
+`_open_scb_csv_raw` repairs the header and validates it against today's known shape;
+`_open_scb_csv` also repairs every value. The adapter then trims/selects fields,
+integer-parses source IDs, first-wins some repeated facts, filters sentinel/empty value
+rows, rejects unknown CVIDs, projects full dates to years and deduplicates value
+triples. The prestage cache contains those interpreted projected tables. In particular,
+`Registerinformation.csv` has 36 fields while the adapter does not retain
+`Registerrubrik`, `Registervariantrubrik`, `RegistervariantSekretess`,
+`VariabelReferenstid`, `VariabelHämtadFrån`, or `VariabelExtern_kommentar`. None of
+these paths is relabelled as source truth by this prototype.
+
+The snapshot instead uses this record contract:
+
+- CSV is read positionally as latin-1 byte passthrough with Python 3.14's
+  `csv.QUOTE_NOTNULL`. Unquoted empty is a distinct null token; quoted empty is an empty
+  byte string. No source-level string such as `NULL` is assigned null semantics.
+- A field whose bytes decode strictly as cp1252 is stored as readable Unicode and must
+  encode back to the same bytes. A field containing an undefined cp1252 byte is tagged
+  base64 as a whole. There is no `_decode_cp1252` repair, trimming, Unicode
+  normalization, numeric conversion or type inference.
+- Header positions, every row occurrence and row order are retained. Unknown and
+  duplicated headings fall back to inline positional fields. A malformed row or
+  incomplete conversion fails before the candidate directory is atomically published.
+- `Vardemangder.csv` dictionaries only the exact `(Värdemängdsversion, Värdemängdsnivå)`
+  and `(Värdekod, Värdebenämning)` byte tuples; lexical `CVID`, lexical `ItemId` and
+  extra fields remain on every association. `Registerinformation.csv` similarly
+  dictionaries exact register, variant, version, population/object, variable and
+  delivery payload tuples while all five lexical IDs and unknown fields remain on each
+  occurrence. No ItemId/CVID dependency or whole-row uniqueness is assumed.
+- Dictionary keys are BLAKE2b-128 over tagged bytes, group name and positions, encoded
+  as base64url. Full payloads are independently retained during interning and a key
+  associated with two payloads aborts conversion. Dictionaries sort by content key;
+  association records stay in 100,000-row source-order chunks. The manifest proves that
+  group plus inline positions partition every column exactly once.
+
+The selected serialization is UTF-8 escaped TSV, one logical record per physical line.
+Tabs, CR/LF and backslashes in readable text are escaped; undefined bytes remain tagged
+base64. SQLite is used only as a disposable, bounded-memory interning/sort workspace,
+not as the committed representation. Parquet was not added: it would add a dependency
+and its binary changes would not satisfy ordinary Git review. A tiny synthetic fixture
+screen (77 normalized lines) measured 5,784 bytes for escaped TSV versus 8,405 bytes for
+canonical JSONL arrays, a 31% codec reduction. That fixture's complete snapshot was
+19,406 bytes for 5,040 bytes of raw CSV because manifests and small dictionaries
+dominate at tiny scale; it is explicitly not evidence that the 14 GB corpus condenses. A
+one-row controlled update changed four files and added 1,024 bytes to 9,216 bytes of
+packed Git objects (Git 2.47.3, `git gc --prune=now`; sizes reported by
+`git count-objects -v`), also not evidence about real history or the separate fixed-seed
+1% gate. `prepare` reports the same bounded codec counters on host inputs so the
+selection can be rejected when real data disagrees.
+
+#### Candidate and replay contract
+
+Use a separate, host-local Git repository with no required remote. One inventory JSON
+names a bundle/edition, a source directory, all six known CSVs (each explicitly required
+or optional), any additional CSVs, and one or more independently retained archive paths,
+stable locators and member lists. Preparation verifies archive hashes, refuses an
+unlisted CSV, requires `Vardemangder.csv` and `VardemangderValidDates.csv` as a pair,
+and creates a new candidate path only. Archive paths and source paths never enter the
+deterministic manifest; stable archive locators, hashes and sizes do. Accepting a
+candidate is an ordinary explicit Git commit/branch decision by the maintainer.
+
+```json
+{
+  "bundle_id": "scb-mikrometadata",
+  "edition": "2026-09-delivery",
+  "source_dir": "/expanded/read-only/SCB",
+  "files": [
+    { "name": "Registerinformation.csv", "required": true },
+    { "name": "UnikaRegisterOchVariabler.csv", "required": true },
+    { "name": "Identifierare.csv", "required": true },
+    { "name": "Timeseries.csv", "required": true },
+    { "name": "Vardemangder.csv", "required": true },
+    { "name": "VardemangderValidDates.csv", "required": true }
+  ],
+  "archives": [
+    {
+      "path": "/retained/read-only/scb-2026-09.zip",
+      "locator": "offline/scb-2026-09.zip",
+      "sha256": "<independently recorded 64-character lowercase SHA256>",
+      "members": [
+        "Registerinformation.csv",
+        "UnikaRegisterOchVariabler.csv",
+        "Identifierare.csv",
+        "Timeseries.csv",
+        "Vardemangder.csv",
+        "VardemangderValidDates.csv"
+      ]
+    }
+  ]
+}
+```
+
+The archive may be any opaque compressed file; the prototype hashes it but does not
+extract or modify it. The operator independently proves its member bytes during host
+acceptance. Optional absences use `"required": false` while retaining the file entry.
+
+```console
+uv run python scripts/prototype_scb_inputs.py measure-codecs inventory.json
+uv run python scripts/prototype_scb_inputs.py prepare inventory.json snapshots/candidate
+uv run python scripts/prototype_scb_inputs.py verify snapshots/candidate
+uv run python scripts/prototype_scb_inputs.py restore snapshots/candidate /tmp/input/SCB
+```
+
+`measure-codecs` is read-only and publishes nothing. It defaults to 100,000 backbone
+records, 1,000,000 value records and at most 100,000 records from every other declared
+CSV; `--limit FILE.csv=N` changes an explicit cap. It builds the same temporary
+dictionary/association shapes as `prepare`, reports both codecs for the sampled logical
+lines, and deletes the workspace on return.
+
+`verify` hashes every normalized file, checks sorted content keys and dictionary
+closure, expands every occurrence, and recomputes separate ordered-record and
+header-plus-record digests. `restore` writes to a sibling staging directory, reopens the
+result through an independent CSV traversal, checks the same digests, and only then
+renames the complete directory into place. Restored CSV quoting is canonical rather than
+byte-identical to the original; field bytes/order and quoted-empty/null semantics are
+identical. Exact original CSV bytes remain recoverable only from the independently
+retained, checksum-pinned archive.
+
+A reproducible catalog result needs more than a snapshot name. `pin-build` refuses dirty
+repositories and records the full input-repository commit, snapshot-relative path and
+manifest hash; snapshot schema/converter versions; clean builder commit; `uv.lock` hash
+and Python runtime; provider order and build options; exact hashes or explicit absence
+for every auxiliary input; and the resulting DB hash. This captures inputs the current
+`import_manifest.source_checksums` does not, including `Tabelldefinitioner.sql` and
+`ID-kolumner.xlsx`. The operator must also list every selected classification, curation,
+slug, and non-SCB provider input as an auxiliary pin. `verify-lock` checks these pins
+before replay (omit `--result-db`) and the result hash afterward. A missing or
+mismatching input fails; it never substitutes a newer file. The build itself remains the
+existing observed workflow:
+
+```console
+uv run python scripts/build_db_watch.py --input-dir /tmp/input --db-dir /tmp/replay-db
+uv run python scripts/prototype_scb_inputs.py pin-build snapshots/accepted \
+  /tmp/replay-db/reg_meta.db /tmp/replay-lock.json --providers scb,... \
+  --option validate=true --aux Tabelldefinitioner.sql=/retained/Tabelldefinitioner.sql
+```
+
+#### Host acceptance measurement
+
+The operator performs the corpus decision; synthetic coverage cannot claim it. Before
+the run, record workstation disk/RAM/time ceilings. Keep the originals and compressed
+archives unchanged outside both Git repositories and verify each archive expands to the
+recorded original byte sizes/SHA256 values. On a full coherent bundle:
+
+1. Record raw expanded and compressed bytes, normalized working-tree bytes, loose and
+   packed initial Git bytes, and peak temporary disk including the interning database,
+   candidate, reconstruction, Git packing, build staging and optional prestage cache.
+   Record conversion, verification, restoration and cold/warm build wall time plus peak
+   memory. Totals must expose duplicated storage rather than net it away.
+2. Independently traverse original and reconstructed headers/records in order and
+   compare every tagged field, not only counts or unordered hashes. Re-run conversion
+   and require byte-identical normalized output. Use retained successive exports when
+   available. Otherwise label append, middle insertion/deletion, reorder, one label
+   edit, a repeated-description edit and fixed-seed 1% edit as controlled simulations.
+   `measure-git INITIAL UPDATE` reports changed lines/files and initial/incremental
+   packed growth for each pair.
+3. Run same-code full-provider baseline and reconstructed builds through the `build-db`
+   skill with default corpus validation, SQLite integrity/FK checks, the cold value path
+   and a separate disposable prestage run. Compare the baseline to the latest release,
+   then reconstructed output to the same-code baseline. Keep an unfiltered dbdiff report
+   first; a second comparison may exclude only the audited import date, input path and
+   raw source-checksum manifest rows caused by canonical CSV quoting. Every schema row,
+   ID, count, projection/coalescing statistic and catalog fact must match.
+
+Hard failure is any distorted/lost/reordered occurrence, non-deterministic normalized
+bytes, incomplete candidate publication, missing/mismatching pin, unexplained catalog
+delta, validation failure or workstation-ceiling overrun. The provisional affordability
+gate is normalized working tree plus initial packed Git smaller than the expanded raw
+CSV bundle, and a controlled 1% edit adding less than 10% of the initial pack. Ordinary
+Git diffs must expose changed payload text and traceable associations rather than only a
+binary change. Failing any gate leaves the current builder, accepted snapshot and raw
+archives untouched and informs a new format decision; it does not authorize a storage
+service, native snapshot reader, reconciliation engine, PDF machinery or curation
+rewrite.
+
 ### Build performance
 
 The \~102M-row `Vardemangder.csv` import is the build's hot loop (it dominated total

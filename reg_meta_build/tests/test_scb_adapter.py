@@ -38,8 +38,9 @@ from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta.order import requested_intervals, resolve_binding
 from reg_meta_build.cis2016_matrix import load_cis2014_matrix, load_cis2016_matrix
 from reg_meta_build.db import DDL, build_db, seed_providers
-from reg_meta_build.dbdiff import diff_db_content
+from reg_meta_build.dbdiff import TableIgnore, diff_db_content
 from reg_meta_build.id import _CANONICAL_SCB_BIT, is_canonical_scb
+from reg_meta_build.input_snapshot import prepare_snapshot, restore_snapshot
 from reg_meta_build.ir import (
     IRDeliveryProvenance,
     IRRegister,
@@ -213,6 +214,69 @@ class TestFixtureRoundTrip:
         b = _build("b")
         report = diff_db_content(a, b)
         assert report.identical, report
+
+    def test_lossless_snapshot_reconstruction_preserves_catalog_facts(
+        self, tmp_path: Path
+    ) -> None:
+        """CSV reserialization may change raw hashes, never catalog facts."""
+        original = tmp_path / "original"
+        scb_dir = write_scb_input(original)
+        archive = tmp_path / "scb-export.zip"
+        archive.write_bytes(b"retained archive fixture")
+        inventory = tmp_path / "inventory.json"
+        names = sorted(path.name for path in scb_dir.glob("*.csv"))
+        inventory.write_text(
+            json.dumps(
+                {
+                    "bundle_id": "scb-mikrometadata",
+                    "edition": "fixture",
+                    "source_dir": str(scb_dir),
+                    "files": [{"name": name, "required": True} for name in names],
+                    "archives": [
+                        {
+                            "path": str(archive),
+                            "locator": "offline/scb-export.zip",
+                            "sha256": hashlib.sha256(archive.read_bytes()).hexdigest(),
+                            "members": names,
+                        }
+                    ],
+                }
+            ),
+            encoding="utf-8",
+        )
+        snapshot = tmp_path / "snapshot"
+        prepare_snapshot(inventory, snapshot, converter_commit="f" * 40)
+        reconstructed = tmp_path / "reconstructed"
+        restore_snapshot(snapshot, reconstructed / "SCB")
+
+        def _build(source: Path, tag: str) -> Path:
+            db_dir = tmp_path / f"db_{tag}"
+            build_db(
+                input_dir=source,
+                db_dir=db_dir,
+                skip_classifications=True,
+                skip_slugs=True,
+            )
+            return db_dir / "reg_meta.db"
+
+        baseline = _build(original, "baseline")
+        replay = _build(reconstructed, "replay")
+        ignore = {
+            "import_manifest": TableIgnore(
+                skip_where="key IN ('import_date', 'input_dir', 'source_checksums')"
+            )
+        }
+        report = diff_db_content(baseline, replay, ignore=ignore)
+        assert report.identical, report
+
+        conn = sqlite3.connect(replay)
+        conn.execute(
+            "UPDATE variable SET name = name || ' changed' "
+            "WHERE variable_id = (SELECT MIN(variable_id) FROM variable)"
+        )
+        conn.commit()
+        conn.close()
+        assert not diff_db_content(baseline, replay, ignore=ignore).identical
 
 
 # ── 4. Emit-order determinism (R6) ─────────────────────────────────────────
