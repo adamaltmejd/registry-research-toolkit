@@ -127,6 +127,15 @@ noted = "2026-09-12"
 [[delivered]]
 register = "scb/lisa"
 variant = "individer-15plus"
+column = "AmPolTyp"
+versions = ["2011", "2012", "2013", "2014", "2015", "2016", "2017"]
+upstream = "blank-column-name-in-version"
+evidence = "SCB LISA bakgrundsfakta 1990–2017, Bilaga 9 printed page 470 (PDF page 471), marks AmPolTyp for each year 1990–2017; the AmPolTyp narrative describes occurrence of compensation for labour-market-policy measures. PDF sha256 76dc7ef8f1cbdfae05f40ff8628c3fc698f8b54478793e3125410686a5ee0ddc. Registerinformation.csv RegisterId 34, RegVarID 153, VarId 31619 has one unnamed original CVID in each edition 2011–2017, with name, definition and operational definition identical to the same-variant named AmPolTyp source. Name those original targets while retaining their own metadata and coding; this evidence does not authorize 2018–2019."
+noted = "2026-09-14"
+
+[[delivered]]
+register = "scb/lisa"
+variant = "individer-15plus"
 column = "BAS"
 versions = ["2020", "2021"]
 evidence = "SWECOV holds BAS in Individ_2020 and Individ_2021; SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) states BAS delivered 2020–2023, while the Registerinformation export documents it only from 2022."
