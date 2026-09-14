@@ -976,24 +976,43 @@ A reproducible catalog result needs more than a snapshot name. `pin-build` refus
 repositories and records the full input-repository commit, snapshot-relative path and
 manifest hash; snapshot schema/converter versions; clean builder commit; `uv.lock` hash
 and Python runtime; provider order and build options; exact hashes or explicit absence
-for every auxiliary input; and the resulting DB hash. This captures inputs the current
+for every auxiliary input; and the recorded DB hash. This captures inputs the current
 `import_manifest.source_checksums` does not, including `Tabelldefinitioner.sql` and
-`ID-kolumner.xlsx`. At lock creation and verification, the committed manifest and every
-dictionary/record artifact it declares are streamed from the exact pinned Git commit;
-each blob must exist and match the manifest's byte size and SHA256. The worktree is
-verified separately, so an ignored normalized tree cannot masquerade as a reproducible
-commit. `verify-lock` also compares its recorded snapshot schema and converter versions
-to that validated manifest. The operator must list every selected classification,
-curation, slug, and non-SCB provider input as an auxiliary pin. `verify-lock` checks
-these pins before replay (omit `--result-db`) and the result hash afterward. A missing
-or mismatching input fails; it never substitutes a newer file. The build itself remains
-the existing observed workflow:
+`ID-kolumner.xlsx`. The builder repository is not caller-selectable: it is derived from
+the imported package checkout, and `input_snapshot.py`, the package CLI, the snapshot
+CLI, `build_db_watch.py`, and `uv.lock` must all be tracked blobs matching HEAD in that
+same clean checkout.
+
+At lock creation and verification, the committed manifest and every dictionary/record
+artifact it declares are streamed from the exact pinned Git commit; each blob must exist
+and match the manifest's byte size and SHA256. The worktree is verified separately, so
+an ignored normalized tree cannot masquerade as a reproducible commit. `verify-lock`
+also compares its recorded snapshot schema and converter versions to that validated
+manifest. The operator must list every selected classification, curation, slug, and
+non-SCB provider input as an auxiliary pin. A missing or mismatching input fails; it
+never substitutes a newer file.
+
+The lock's `result_db_sha256` authenticates the exact retained DB supplied to
+`pin-build`; it is not a replay-content fingerprint. `verify-lock` with no database is
+the explicit pre-build pin check. `--recorded-db` authenticates that retained artifact,
+and adding `--replay-db` compares a newly built database against the authenticated one
+with `dbdiff.diff_db_content`. Only the `import_manifest` rows keyed `import_date` and
+`input_dir` are excluded for two builds from the same normalized snapshot;
+`source_checksums`, schema and every catalog fact remain compared. Raw-original versus
+canonical-restored quoting differences are audited separately in the host acceptance
+comparison below. The build itself remains the existing observed workflow:
 
 ```console
-uv run python scripts/build_db_watch.py --input-dir /tmp/input --db-dir /tmp/replay-db
 uv run python scripts/prototype_scb_inputs.py pin-build snapshots/accepted \
-  /tmp/replay-db/reg_meta.db /tmp/replay-lock.json --providers scb,... \
+  /retained/recorded-snapshot-build.db /tmp/replay-lock.json --providers scb,... \
   --option validate=true --aux Tabelldefinitioner.sql=/retained/Tabelldefinitioner.sql
+uv run python scripts/prototype_scb_inputs.py verify-lock /tmp/replay-lock.json \
+  snapshots/accepted --aux Tabelldefinitioner.sql=/retained/Tabelldefinitioner.sql
+uv run python scripts/build_db_watch.py --input-dir /tmp/input --db-dir /tmp/replay-db
+uv run python scripts/prototype_scb_inputs.py verify-lock /tmp/replay-lock.json \
+  snapshots/accepted --recorded-db /retained/recorded-snapshot-build.db \
+  --replay-db /tmp/replay-db/reg_meta.db \
+  --aux Tabelldefinitioner.sql=/retained/Tabelldefinitioner.sql
 ```
 
 #### Host acceptance measurement

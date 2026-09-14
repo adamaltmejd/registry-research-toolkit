@@ -105,9 +105,8 @@ def _parser() -> argparse.ArgumentParser:
 
     pin = subparsers.add_parser("pin-build", help="write an exact replay/result lock")
     pin.add_argument("snapshot", type=Path)
-    pin.add_argument("result_db", type=Path)
+    pin.add_argument("recorded_db", type=Path)
     pin.add_argument("output", type=Path)
-    pin.add_argument("--builder-repo", type=Path, default=Path.cwd())
     pin.add_argument(
         "--providers", required=True, help="comma-separated exact provider order"
     )
@@ -125,8 +124,16 @@ def _parser() -> argparse.ArgumentParser:
     )
     check.add_argument("lock", type=Path)
     check.add_argument("snapshot", type=Path)
-    check.add_argument("--builder-repo", type=Path, default=Path.cwd())
-    check.add_argument("--result-db", type=Path)
+    check.add_argument(
+        "--recorded-db",
+        type=Path,
+        help="authenticate the retained DB whose SHA256 is recorded in the lock",
+    )
+    check.add_argument(
+        "--replay-db",
+        type=Path,
+        help="compare a rebuilt DB with the authenticated --recorded-db",
+    )
     check.add_argument("--aux", action="append", default=[], metavar="NAME=PATH|NAME=-")
     return parser
 
@@ -175,8 +182,7 @@ def _run(args: argparse.Namespace) -> dict[str, Any]:
     if args.command == "pin-build":
         lock = create_build_lock(
             args.snapshot,
-            args.builder_repo,
-            args.result_db,
+            args.recorded_db,
             args.output,
             providers=tuple(
                 item.strip() for item in args.providers.split(",") if item.strip()
@@ -189,14 +195,15 @@ def _run(args: argparse.Namespace) -> dict[str, Any]:
         lock = verify_build_lock(
             args.lock,
             args.snapshot,
-            args.builder_repo,
             auxiliary_inputs=_auxiliary(args.aux),
-            result_db=args.result_db,
+            recorded_db=args.recorded_db,
+            replay_db=args.replay_db,
         )
         return {
             "input_repository_commit": lock.input_repository_commit,
             "builder_commit": lock.builder_commit,
-            "result_checked": args.result_db is not None,
+            "recorded_result_authenticated": args.recorded_db is not None,
+            "replay_compared": args.replay_db is not None,
             "status": "verified",
         }
     raise AssertionError(f"unhandled command {args.command}")

@@ -38,6 +38,7 @@ from urllib.parse import quote
 from pydantic import BaseModel, ConfigDict, field_validator, model_validator
 
 from .db import _file_sha256
+from .dbdiff import TableIgnore, diff_db_content, format_report
 
 if TYPE_CHECKING:
     from collections.abc import Iterator, Mapping, Sequence
@@ -60,6 +61,10 @@ _GIT_PACK_SETTINGS = (
     ("repack.useDeltaBaseOffset", "true"),
     ("repack.writeBitmaps", "false"),
 )
+
+_REPLAY_DB_IGNORE = {
+    "import_manifest": TableIgnore(skip_where="key IN ('import_date', 'input_dir')")
+}
 
 SCB_CSV_FILES = (
     "Registerinformation.csv",
@@ -1361,19 +1366,18 @@ def clean_git_commit(repo: Path) -> str:
     return _git(repo, "rev-parse", "HEAD")
 
 
-def converter_source_commit(cli_path: Path) -> str:
-    """Return the commit containing the clean CLI and imported converter sources."""
-    sources = (cli_path.resolve(), Path(__file__).resolve())
+def _tracked_source_commit(
+    source_paths: Sequence[Path], *, identity: str
+) -> tuple[Path, str]:
+    sources = tuple(source.resolve() for source in source_paths)
     if any(not source.is_file() for source in sources):
-        raise SnapshotError("CLI and imported converter source files must exist")
+        raise SnapshotError(f"{identity} source files must exist")
     repositories = tuple(
         Path(_git(source.parent, "rev-parse", "--show-toplevel")).resolve()
         for source in sources
     )
-    if repositories[0] != repositories[1]:
-        raise SnapshotError(
-            "CLI and imported converter must come from the same Git checkout"
-        )
+    if len(set(repositories)) != 1:
+        raise SnapshotError(f"{identity} sources must come from the same Git checkout")
     repo = repositories[0]
     commit = clean_git_commit(repo)
     for source in sources:
@@ -1382,16 +1386,39 @@ def converter_source_commit(cli_path: Path) -> str:
             committed_blob = _git(repo, "rev-parse", "--verify", f"{commit}:{relative}")
         except SnapshotError as exc:
             raise SnapshotError(
-                f"converter source is not a tracked HEAD blob: {relative}"
+                f"{identity} source is not a tracked HEAD blob: {relative}"
             ) from exc
         if _git(repo, "cat-file", "-t", committed_blob) != "blob":
-            raise SnapshotError(f"converter source is not a Git blob: {relative}")
+            raise SnapshotError(f"{identity} source is not a Git blob: {relative}")
         worktree_blob = _git(repo, "hash-object", "--no-filters", relative)
         if worktree_blob != committed_blob:
             raise SnapshotError(
-                f"converter source differs from its HEAD blob: {relative}"
+                f"{identity} source differs from its HEAD blob: {relative}"
             )
+    return repo, commit
+
+
+def converter_source_commit(cli_path: Path) -> str:
+    """Return the commit containing the clean CLI and imported converter sources."""
+    _repo, commit = _tracked_source_commit(
+        (cli_path, Path(__file__)), identity="converter"
+    )
     return commit
+
+
+def _builder_source_identity() -> tuple[Path, str]:
+    module_path = Path(__file__).resolve()
+    repo = Path(_git(module_path.parent, "rev-parse", "--show-toplevel")).resolve()
+    return _tracked_source_commit(
+        (
+            module_path,
+            module_path.with_name("cli.py"),
+            repo / "scripts" / "prototype_scb_inputs.py",
+            repo / "scripts" / "build_db_watch.py",
+            repo / "uv.lock",
+        ),
+        identity="builder",
+    )
 
 
 def _snapshot_repo_path(snapshot_path: str, relative_path: str) -> str:
@@ -1484,17 +1511,16 @@ def _verify_committed_snapshot(
 
 def create_build_lock(
     snapshot: Path,
-    builder_repo: Path,
-    result_db: Path,
+    recorded_db: Path,
     output: Path,
     *,
     providers: Sequence[str],
     build_options: Mapping[str, bool | int | str],
     auxiliary_inputs: Mapping[str, Path | None],
 ) -> BuildLock:
-    """Bind exact input/builder commits, auxiliary inputs, and a built DB hash."""
+    """Bind exact inputs/code and authenticate one retained recorded database."""
     snapshot = snapshot.resolve()
-    builder_repo = builder_repo.resolve()
+    recorded_db = recorded_db.resolve()
     output = output.resolve()
     if output.exists():
         raise SnapshotError(
@@ -1502,7 +1528,7 @@ def create_build_lock(
         )
     input_repo = Path(_git(snapshot, "rev-parse", "--show-toplevel"))
     input_commit = clean_git_commit(input_repo)
-    builder_commit = clean_git_commit(builder_repo)
+    builder_repo, builder_commit = _builder_source_identity()
     snapshot_path = snapshot.relative_to(input_repo).as_posix()
     committed_manifest, committed_manifest_sha256 = _verify_committed_snapshot(
         input_repo, input_commit, snapshot_path
@@ -1511,8 +1537,8 @@ def create_build_lock(
     if manifest != committed_manifest:
         raise SnapshotError("worktree snapshot manifest differs from pinned commit")
     uv_lock = builder_repo / "uv.lock"
-    if not uv_lock.is_file() or not result_db.is_file():
-        raise SnapshotError("builder uv.lock and result DB must both exist")
+    if not recorded_db.is_file():
+        raise SnapshotError(f"recorded result DB is missing: {recorded_db}")
     auxiliary: list[AuxiliaryPin] = []
     for name, path in sorted(auxiliary_inputs.items()):
         if path is None:
@@ -1543,7 +1569,7 @@ def create_build_lock(
         providers=tuple(providers),
         build_options=dict(sorted(build_options.items())),
         auxiliary_inputs=tuple(auxiliary),
-        result_db_sha256=_file_sha256(result_db),
+        result_db_sha256=_file_sha256(recorded_db),
     )
     output.parent.mkdir(parents=True, exist_ok=True)
     temporary_fd, temporary_name = tempfile.mkstemp(
@@ -1562,26 +1588,29 @@ def create_build_lock(
 def verify_build_lock(
     lock_path: Path,
     snapshot: Path,
-    builder_repo: Path,
     *,
     auxiliary_inputs: Mapping[str, Path | None],
-    result_db: Path | None = None,
+    recorded_db: Path | None = None,
+    replay_db: Path | None = None,
 ) -> BuildLock:
-    """Verify replay pins before a build and, when supplied, its result afterward."""
+    """Verify pins, authenticate a recorded DB, and optionally compare a replay."""
     try:
         lock = BuildLock.model_validate_json(lock_path.read_bytes())
     except (OSError, ValueError) as exc:
         raise SnapshotError(f"invalid build lock {lock_path}: {exc}") from exc
     snapshot = snapshot.resolve()
-    builder_repo = builder_repo.resolve()
+    recorded_db = recorded_db.resolve() if recorded_db is not None else None
+    replay_db = replay_db.resolve() if replay_db is not None else None
+    if replay_db is not None and recorded_db is None:
+        raise SnapshotError("replay comparison requires the recorded result DB")
     input_repo = Path(_git(snapshot, "rev-parse", "--show-toplevel"))
+    builder_repo, builder_commit = _builder_source_identity()
     uv_lock = builder_repo / "uv.lock"
-    if not uv_lock.is_file():
-        raise SnapshotError(f"builder uv.lock is missing: {uv_lock}")
-    if result_db is not None and not result_db.is_file():
-        raise SnapshotError(f"result DB is missing: {result_db}")
+    if recorded_db is not None and not recorded_db.is_file():
+        raise SnapshotError(f"recorded result DB is missing: {recorded_db}")
+    if replay_db is not None and not replay_db.is_file():
+        raise SnapshotError(f"replay result DB is missing: {replay_db}")
     input_commit = clean_git_commit(input_repo)
-    builder_commit = clean_git_commit(builder_repo)
     snapshot_path = snapshot.relative_to(input_repo).as_posix()
     checks = {
         "input repository commit": (
@@ -1648,8 +1677,23 @@ def verify_build_lock(
             or _file_sha256(path) != expected.sha256
         ):
             raise SnapshotError(f"auxiliary input {name} hash/size mismatch")
-    if result_db is not None and _file_sha256(result_db) != lock.result_db_sha256:
-        raise SnapshotError("result DB hash does not match the build lock")
+    if recorded_db is not None and _file_sha256(recorded_db) != lock.result_db_sha256:
+        raise SnapshotError("recorded result DB hash does not match the build lock")
+    if replay_db is not None:
+        assert recorded_db is not None
+        try:
+            report = diff_db_content(
+                recorded_db,
+                replay_db,
+                ignore=_REPLAY_DB_IGNORE,
+            )
+        except (OSError, sqlite3.Error) as exc:
+            raise SnapshotError(f"cannot compare replay result DB: {exc}") from exc
+        if not report.identical:
+            raise SnapshotError(
+                "replay result DB differs from the authenticated recorded DB:\n"
+                f"{format_report(report)}"
+            )
     return lock
 
 

@@ -6,6 +6,7 @@ import csv
 import hashlib
 import io
 import json
+import sqlite3
 import subprocess
 from typing import TYPE_CHECKING
 
@@ -90,6 +91,65 @@ def _git(repo: Path, *args: str) -> str:
         text=True,
     )
     return process.stdout.strip()
+
+
+def _builder_checkout(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
+    repo = tmp_path / "builder-repo"
+    module = repo / "reg_meta_build" / "src" / "reg_meta_build" / "input_snapshot.py"
+    sources = (
+        module,
+        module.with_name("cli.py"),
+        repo / "scripts" / "prototype_scb_inputs.py",
+        repo / "scripts" / "build_db_watch.py",
+        repo / "uv.lock",
+    )
+    for source in sources:
+        source.parent.mkdir(parents=True, exist_ok=True)
+        source.write_text(f"fixture: {source.name}\n", encoding="utf-8")
+    _git(repo, "init", "-q")
+    _git(repo, "config", "user.email", "test@example.invalid")
+    _git(repo, "config", "user.name", "Test")
+    _git(repo, "add", ".")
+    _git(repo, "commit", "-q", "-m", "builder")
+    monkeypatch.setattr(snapshot_module, "__file__", str(module))
+    return repo
+
+
+def _write_catalog_db(
+    path: Path,
+    *,
+    import_date: str,
+    input_dir: str,
+    source_checksums: str = "same normalized inputs",
+    fact: str = "same catalog fact",
+) -> None:
+    conn = sqlite3.connect(path)
+    try:
+        conn.executescript(
+            "CREATE TABLE import_manifest (key TEXT PRIMARY KEY, value TEXT NOT NULL);"
+            "CREATE TABLE catalog_fact (id INTEGER PRIMARY KEY, value TEXT NOT NULL);"
+        )
+        conn.executemany(
+            "INSERT INTO import_manifest (key, value) VALUES (?, ?)",
+            (
+                ("import_date", import_date),
+                ("input_dir", input_dir),
+                ("source_checksums", source_checksums),
+            ),
+        )
+        conn.execute("INSERT INTO catalog_fact VALUES (1, ?)", (fact,))
+        conn.commit()
+    finally:
+        conn.close()
+
+
+def _update_db(path: Path, sql: str, value: str) -> None:
+    conn = sqlite3.connect(path)
+    try:
+        conn.execute(sql, (value,))
+        conn.commit()
+    finally:
+        conn.close()
 
 
 def test_snapshot_round_trip_preserves_raw_fields_occurrences_and_order(
@@ -454,7 +514,7 @@ def test_inventory_requires_complete_listing_pairing_and_archive_coverage(
 
 
 def test_build_lock_pins_clean_repositories_auxiliary_inputs_and_result(
-    tmp_path: Path,
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     source_dir = write_scb_input(tmp_path / "source")
     input_repo = tmp_path / "input-repo"
@@ -469,24 +529,26 @@ def test_build_lock_pins_clean_repositories_auxiliary_inputs_and_result(
     _git(input_repo, "add", ".")
     _git(input_repo, "commit", "-q", "-m", "snapshot")
 
-    builder_repo = tmp_path / "builder-repo"
-    builder_repo.mkdir()
-    (builder_repo / "uv.lock").write_text("fixture lock\n", encoding="utf-8")
-    _git(builder_repo, "init", "-q")
-    _git(builder_repo, "config", "user.email", "test@example.invalid")
-    _git(builder_repo, "config", "user.name", "Test")
-    _git(builder_repo, "add", ".")
-    _git(builder_repo, "commit", "-q", "-m", "builder")
+    builder_repo = _builder_checkout(tmp_path, monkeypatch)
 
     auxiliary = tmp_path / "Tabelldefinitioner.sql"
     auxiliary.write_text("CREATE TABLE x (id int);\n", encoding="utf-8")
-    result_db = tmp_path / "reg_meta.db"
-    result_db.write_bytes(b"fixture result")
+    recorded_db = tmp_path / "recorded.db"
+    replay_db = tmp_path / "replay.db"
+    _write_catalog_db(
+        recorded_db,
+        import_date="2026-09-14T10:00:00Z",
+        input_dir="/tmp/first-reconstruction",
+    )
+    _write_catalog_db(
+        replay_db,
+        import_date="2026-09-14T11:00:00Z",
+        input_dir="/tmp/second-reconstruction",
+    )
     lock_path = tmp_path / "build-lock.json"
     lock = create_build_lock(
         snapshot,
-        builder_repo,
-        result_db,
+        recorded_db,
         lock_path,
         providers=("scb",),
         build_options={"validate": True, "prestage": False},
@@ -500,13 +562,83 @@ def test_build_lock_pins_clean_repositories_auxiliary_inputs_and_result(
     verify_build_lock(
         lock_path,
         snapshot,
-        builder_repo,
         auxiliary_inputs={
             "Tabelldefinitioner.sql": auxiliary,
             "ID-kolumner.xlsx": None,
         },
-        result_db=result_db,
     )
+    verify_build_lock(
+        lock_path,
+        snapshot,
+        auxiliary_inputs={
+            "Tabelldefinitioner.sql": auxiliary,
+            "ID-kolumner.xlsx": None,
+        },
+        recorded_db=recorded_db,
+        replay_db=replay_db,
+    )
+    with pytest.raises(SnapshotError, match="requires the recorded result DB"):
+        verify_build_lock(
+            lock_path,
+            snapshot,
+            auxiliary_inputs={
+                "Tabelldefinitioner.sql": auxiliary,
+                "ID-kolumner.xlsx": None,
+            },
+            replay_db=replay_db,
+        )
+
+    _update_db(
+        replay_db,
+        "UPDATE import_manifest SET value = ? WHERE key = 'source_checksums'",
+        "changed normalized inputs",
+    )
+    with pytest.raises(SnapshotError, match="replay result DB differs"):
+        verify_build_lock(
+            lock_path,
+            snapshot,
+            auxiliary_inputs={
+                "Tabelldefinitioner.sql": auxiliary,
+                "ID-kolumner.xlsx": None,
+            },
+            recorded_db=recorded_db,
+            replay_db=replay_db,
+        )
+
+    recorded_bytes = recorded_db.read_bytes()
+    recorded_db.write_bytes(b"tampered recorded artifact")
+    with pytest.raises(SnapshotError, match="recorded result DB hash"):
+        verify_build_lock(
+            lock_path,
+            snapshot,
+            auxiliary_inputs={
+                "Tabelldefinitioner.sql": auxiliary,
+                "ID-kolumner.xlsx": None,
+            },
+            recorded_db=recorded_db,
+        )
+    recorded_db.write_bytes(recorded_bytes)
+    _update_db(
+        replay_db,
+        "UPDATE import_manifest SET value = ? WHERE key = 'source_checksums'",
+        "same normalized inputs",
+    )
+    _update_db(
+        replay_db,
+        "UPDATE catalog_fact SET value = ? WHERE id = 1",
+        "changed catalog fact",
+    )
+    with pytest.raises(SnapshotError, match="replay result DB differs"):
+        verify_build_lock(
+            lock_path,
+            snapshot,
+            auxiliary_inputs={
+                "Tabelldefinitioner.sql": auxiliary,
+                "ID-kolumner.xlsx": None,
+            },
+            recorded_db=recorded_db,
+            replay_db=replay_db,
+        )
 
     for field, value, message in (
         ("snapshot_schema_version", 999, "snapshot schema version"),
@@ -520,7 +652,6 @@ def test_build_lock_pins_clean_repositories_auxiliary_inputs_and_result(
             verify_build_lock(
                 invalid_lock_path,
                 snapshot,
-                builder_repo,
                 auxiliary_inputs={
                     "Tabelldefinitioner.sql": auxiliary,
                     "ID-kolumner.xlsx": None,
@@ -532,7 +663,6 @@ def test_build_lock_pins_clean_repositories_auxiliary_inputs_and_result(
         verify_build_lock(
             lock_path,
             snapshot,
-            builder_repo,
             auxiliary_inputs={
                 "Tabelldefinitioner.sql": auxiliary,
                 "ID-kolumner.xlsx": None,
@@ -552,8 +682,7 @@ def test_build_lock_pins_clean_repositories_auxiliary_inputs_and_result(
     with pytest.raises(SnapshotError, match="missing from pinned commit"):
         create_build_lock(
             snapshot,
-            builder_repo,
-            result_db,
+            recorded_db,
             unbacked_lock_path,
             providers=("scb",),
             build_options={"validate": True, "prestage": False},
@@ -572,7 +701,24 @@ def test_build_lock_pins_clean_repositories_auxiliary_inputs_and_result(
         verify_build_lock(
             forged_lock_path,
             snapshot,
-            builder_repo,
+            auxiliary_inputs={
+                "Tabelldefinitioner.sql": auxiliary,
+                "ID-kolumner.xlsx": None,
+            },
+        )
+
+    (builder_repo / ".gitignore").write_text(
+        "/scripts/build_db_watch.py\n", encoding="utf-8"
+    )
+    _git(builder_repo, "rm", "-q", "--cached", "scripts/build_db_watch.py")
+    _git(builder_repo, "add", ".gitignore")
+    _git(builder_repo, "commit", "-q", "-m", "omit builder entry point")
+    with pytest.raises(
+        SnapshotError, match="builder source is not a tracked HEAD blob"
+    ):
+        verify_build_lock(
+            lock_path,
+            snapshot,
             auxiliary_inputs={
                 "Tabelldefinitioner.sql": auxiliary,
                 "ID-kolumner.xlsx": None,
