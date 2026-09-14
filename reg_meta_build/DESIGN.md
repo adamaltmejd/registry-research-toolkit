@@ -940,9 +940,15 @@ uv run python scripts/prototype_scb_inputs.py restore snapshots/candidate /tmp/i
 
 `measure-codecs` is read-only and publishes nothing. It defaults to 100,000 backbone
 records, 1,000,000 value records and at most 100,000 records from every other declared
-CSV; `--limit FILE.csv=N` changes an explicit cap. It builds the same temporary
-dictionary/association shapes as `prepare`, reports both codecs for the sampled logical
-lines, and deletes the workspace on return.
+CSV; `--limit FILE.csv=N` changes an explicit cap. It first validates and counts the
+entire record stream, then makes a second full pass selecting deterministic, evenly
+spaced source ordinals (including both endpoints when the cap is greater than one). The
+retained sample is bounded, but input I/O is therefore two complete scans. This avoids
+calling a prefix representative; it is still a systematic format-comparison sample, not
+a statistically representative corpus claim. The full-corpus fidelity, storage,
+Git-history and catalog-parity gates below remain required. The command builds the same
+temporary dictionary/association shapes as `prepare`, reports both codecs for the
+sampled logical lines, and deletes the workspace on return.
 
 `verify` hashes every normalized file, checks sorted content keys and dictionary
 closure, expands every occurrence, and recomputes separate ordered-record and

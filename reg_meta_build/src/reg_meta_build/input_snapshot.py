@@ -31,7 +31,6 @@ import tempfile
 import time
 from contextlib import contextmanager
 from dataclasses import dataclass, field
-from itertools import islice
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Literal, Self, cast
 from urllib.parse import quote
@@ -708,12 +707,7 @@ def _prepare_file(
     codec_sample: _CodecSample,
 ) -> SnapshotFile:
     source_stat = source.stat()
-    source_identity = (
-        source_stat.st_dev,
-        source_stat.st_ino,
-        source_stat.st_size,
-        source_stat.st_mtime_ns,
-    )
+    source_identity = _file_identity(source_stat)
     file_root = root / "files" / _safe_file_dir(source.name)
     records_root = file_root / "records"
     dictionaries_root = file_root / "dictionaries"
@@ -832,13 +826,7 @@ def _prepare_file(
             )
 
         raw_sha256 = _file_sha256(source)
-        final_stat = source.stat()
-        final_identity = (
-            final_stat.st_dev,
-            final_stat.st_ino,
-            final_stat.st_size,
-            final_stat.st_mtime_ns,
-        )
+        final_identity = _file_identity(source.stat())
         if final_identity != source_identity:
             raise SnapshotError(f"source CSV changed during conversion: {source}")
         return SnapshotFile(
@@ -1234,13 +1222,39 @@ def restore_snapshot(root: Path, output: Path) -> SnapshotStats:
         raise
 
 
-def measure_codec_prefix(
+def _file_identity(stat: os.stat_result) -> tuple[int, int, int, int]:
+    return (stat.st_dev, stat.st_ino, stat.st_size, stat.st_mtime_ns)
+
+
+def _sample_ordinals(total_records: int, limit: int) -> Iterator[int]:
+    """Yield fixed source ordinals spanning the whole stream, including its ends."""
+    if total_records <= limit:
+        yield from range(total_records)
+    elif limit == 1:
+        yield total_records // 2
+    else:
+        for sample_index in range(limit):
+            yield sample_index * (total_records - 1) // (limit - 1)
+
+
+def _sample_rows(
+    rows: Iterator[list[RawCell]], total_records: int, limit: int
+) -> Iterator[list[RawCell]]:
+    targets = iter(_sample_ordinals(total_records, limit))
+    target = next(targets, None)
+    for ordinal, row in enumerate(rows):
+        if target is not None and ordinal == target:
+            yield row
+            target = next(targets, None)
+
+
+def measure_codec_sample(
     inventory_path: Path,
     *,
     limits: Mapping[str, int] | None = None,
     codec_sample_lines: int = 100_000,
 ) -> dict[str, Any]:
-    """Compare codecs on bounded logical prefixes without publishing a snapshot."""
+    """Compare codecs on bounded, evenly spaced records across each source stream."""
     started = time.perf_counter()
     inventory_path = inventory_path.resolve()
     inventory = load_inventory(inventory_path)
@@ -1251,14 +1265,15 @@ def measure_codec_prefix(
     }
     selected_limits = {**default_limits, **(limits or {})}
     if any(limit < 1 for limit in selected_limits.values()):
-        raise SnapshotError("codec prefix limits must be positive")
+        raise SnapshotError("codec sample limits must be positive")
     codec_sample = _CodecSample(codec_sample_lines)
     with tempfile.TemporaryDirectory(prefix="regmeta-input-codec-") as temporary:
         workspace = Path(temporary)
         source_root = workspace / "source"
         normalized_root = workspace / "normalized"
         source_root.mkdir()
-        file_records: dict[str, int] = {}
+        population_records: dict[str, int] = {}
+        sample_records: dict[str, int] = {}
         file_limits: dict[str, int] = {}
         raw_bytes = 0
         for item in inventory.files:
@@ -1267,19 +1282,35 @@ def measure_codec_prefix(
                 continue
             limit = selected_limits.get(item.name, 100_000)
             file_limits[item.name] = limit
-            prefix = source_root / item.name
+            source_identity = _file_identity(source.stat())
             with open_lossless_csv(source) as (header, rows):
-                _write_csv(prefix, header, islice(rows, limit))
+                population_records[item.name] = sum(1 for _row in rows)
+            sample = source_root / item.name
+            with open_lossless_csv(source) as (header, rows):
+                _write_csv(
+                    sample,
+                    header,
+                    _sample_rows(rows, population_records[item.name], limit),
+                )
+            if _file_identity(source.stat()) != source_identity:
+                raise SnapshotError(
+                    f"source CSV changed during codec sampling: {source}"
+                )
             prepared = _prepare_file(
-                prefix, normalized_root, item.required, codec_sample
+                sample, normalized_root, item.required, codec_sample
             )
-            file_records[item.name] = prepared.record_count
-            raw_bytes += prefix.stat().st_size
+            sample_records[item.name] = prepared.record_count
+            raw_bytes += sample.stat().st_size
         return {
+            "sampling": {
+                "method": "evenly-spaced-source-ordinals-v1",
+                "source_passes": 2,
+            },
             "limits": file_limits,
-            "file_records": file_records,
-            "logical_prefix_csv_bytes": raw_bytes,
-            "normalized_prefix_bytes": tree_size(normalized_root),
+            "population_records": population_records,
+            "sample_records": sample_records,
+            "logical_sample_csv_bytes": raw_bytes,
+            "normalized_sample_bytes": tree_size(normalized_root),
             "codec_sample": codec_sample.by_kind,
             "elapsed_seconds": time.perf_counter() - started,
         }
@@ -1543,7 +1574,7 @@ __all__ = [
     "create_build_lock",
     "load_inventory",
     "load_manifest",
-    "measure_codec_prefix",
+    "measure_codec_sample",
     "measure_git_history",
     "open_lossless_csv",
     "prepare_snapshot",

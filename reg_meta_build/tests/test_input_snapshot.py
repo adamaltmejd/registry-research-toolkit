@@ -16,7 +16,7 @@ from reg_meta_build.input_snapshot import (
     SnapshotError,
     create_build_lock,
     load_manifest,
-    measure_codec_prefix,
+    measure_codec_sample,
     measure_git_history,
     prepare_snapshot,
     restore_snapshot,
@@ -27,6 +27,7 @@ from reg_meta_build.input_snapshot import (
 from reg_meta_build import input_snapshot as snapshot_module
 
 if TYPE_CHECKING:
+    from collections.abc import Iterator
     from pathlib import Path
 
 
@@ -219,13 +220,19 @@ def test_content_keys_stay_stable_and_git_measurement_reports_update_growth(
 ) -> None:
     source_dir = write_scb_input(tmp_path / "source")
     inventory = _inventory(tmp_path, source_dir)
-    codec_measurement = measure_codec_prefix(
+    codec_measurement = measure_codec_sample(
         inventory,
         limits={"Registerinformation.csv": 2, "Vardemangder.csv": 3},
         codec_sample_lines=10,
     )
-    assert codec_measurement["file_records"]["Registerinformation.csv"] == 2
-    assert codec_measurement["file_records"]["Vardemangder.csv"] == 3
+    assert codec_measurement["population_records"]["Registerinformation.csv"] == 11
+    assert codec_measurement["population_records"]["Vardemangder.csv"] == 14
+    assert codec_measurement["sample_records"]["Registerinformation.csv"] == 2
+    assert codec_measurement["sample_records"]["Vardemangder.csv"] == 3
+    assert codec_measurement["sampling"] == {
+        "method": "evenly-spaced-source-ordinals-v1",
+        "source_passes": 2,
+    }
     assert codec_measurement["codec_sample"]
     initial = tmp_path / "initial"
     prepare_snapshot(inventory, initial, converter_commit="9" * 40)
@@ -261,6 +268,22 @@ def test_content_keys_stay_stable_and_git_measurement_reports_update_growth(
         measurement["two_commit_packed_object_bytes"]
         >= measurement["initial_packed_object_bytes"]
     )
+
+
+def test_codec_sample_ordinals_span_the_whole_stream() -> None:
+    assert tuple(snapshot_module._sample_ordinals(10, 3)) == (0, 4, 9)
+    assert tuple(snapshot_module._sample_ordinals(10, 1)) == (5,)
+    assert tuple(snapshot_module._sample_ordinals(3, 10)) == (0, 1, 2)
+
+    consumed: list[int] = []
+
+    def rows() -> Iterator[list[str]]:
+        for value in range(10):
+            consumed.append(value)
+            yield [str(value)]
+
+    assert list(snapshot_module._sample_rows(rows(), 10, 1)) == [["5"]]
+    assert consumed == list(range(10))
 
 
 def test_snapshot_rejects_unsupported_version_and_never_replaces_candidates(

@@ -18,7 +18,7 @@ from reg_meta_build.input_snapshot import (
     SnapshotError,
     clean_git_commit,
     create_build_lock,
-    measure_codec_prefix,
+    measure_codec_sample,
     measure_git_history,
     prepare_snapshot,
     restore_snapshot,
@@ -91,7 +91,7 @@ def _parser() -> argparse.ArgumentParser:
 
     codec = subparsers.add_parser(
         "measure-codecs",
-        help="compare escaped TSV and JSONL on bounded source prefixes",
+        help="compare codecs on a bounded sample spanning each source stream",
     )
     codec.add_argument("inventory", type=Path)
     codec.add_argument(
@@ -171,7 +171,7 @@ def _run(args: argparse.Namespace) -> dict[str, Any]:
             raise SnapshotError("--limit values must be integers") from exc
         if args.codec_sample_lines < 1:
             raise SnapshotError("--codec-sample-lines must be positive")
-        return measure_codec_prefix(
+        return measure_codec_sample(
             args.inventory,
             limits=limits,
             codec_sample_lines=args.codec_sample_lines,
