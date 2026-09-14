@@ -10,3 +10,27 @@ column = "AEBUY"
 source_editions = ["2018"]
 evidence = "SWECOV table ITftg_Mikro_2018 holds AEBUY. SCB VarId 30000 documents AEBUY in 2015 and E_AWBUY in 2018 with the same variable name, definition, empty operational definition, and varchar type."
 noted = "2026-09-13"
+
+[[alias]]
+variable = "scb/it-anvandning/andel-webb-forsaljning-foretag-offentlig"
+variant = "it-anvandning-i-foretag"
+column = "AWSVALBGPCT"
+source_editions = ["2020"]
+evidence = "SWECOV annual table ITftg_Stora_2020 holds AWSVALBGPCT. SCB RegisterId 258, RegVarID 556, VarId 29988 documents AWSVALBGPCT in 2019 (RegVerID 13481, CVID 605248) and E_AWSVAL_B2BG in 2020 (RegVerID 15409, CVID 726172) with identical variable name, definition, empty operational definition and varchar(255) type. Current catalog owns both aliases on the same variable and variant."
+noted = "2026-09-14"
+
+[[alias]]
+variable = "scb/it-anvandning/andel-webb-forsaljning-konsumenter"
+variant = "it-anvandning-i-foretag"
+column = "AWSVALCPCT"
+source_editions = ["2020"]
+evidence = "SWECOV annual table ITftg_Stora_2020 holds AWSVALCPCT. SCB RegisterId 258, RegVarID 556, VarId 29967 documents AWSVALCPCT in 2019 (RegVerID 13481, CVID 605246) and E_AWSVAL_B2C in 2020 (RegVerID 15409, CVID 726174) with identical variable name, definition, empty operational definition and varchar(255) type. Current catalog owns both aliases on the same variable and variant."
+noted = "2026-09-14"
+
+[[alias]]
+variable = "scb/it-anvandning/andel-omsattning-fran-edi"
+variant = "it-anvandning-i-foretag"
+column = "AXSVALPCT"
+source_editions = ["2020"]
+evidence = "SWECOV annual table ITftg_Stora_2020 holds AXSVALPCT. SCB RegisterId 258, RegVarID 556, VarId 26891 documents AXSVALPCT in 2019 (RegVerID 13481, CVID 605234) and AXVALPCT in 2020 (RegVerID 15409, CVID 726184) with identical variable name, definition, empty operational definition and varchar(255) type. Current catalog owns both aliases on the same variable and variant."
+noted = "2026-09-14"

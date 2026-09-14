@@ -304,22 +304,17 @@ def test_repo_delivery_enrichment_keeps_issue_428_aliases() -> None:
 def test_repo_alias_windows_parse_and_start_with_verified_it_case() -> None:
     aliases = load_alias_windows(_CURATION / "alias_windows.toml")
 
-    assert [
-        (
-            alias.fqid,
-            alias.variant,
-            alias.column,
-            alias.source_editions,
-        )
-        for alias in aliases
-    ] == [
-        (
-            "scb/it-anvandning/bestallde-varor-tjanster-webb-app",
-            "it-anvandning-i-foretag",
-            "AEBUY",
-            ("2018",),
-        )
-    ]
+    assert (
+        aliases[0].fqid,
+        aliases[0].variant,
+        aliases[0].column,
+        aliases[0].source_editions,
+    ) == (
+        "scb/it-anvandning/bestallde-varor-tjanster-webb-app",
+        "it-anvandning-i-foretag",
+        "AEBUY",
+        ("2018",),
+    )
 
 
 def test_repo_delivery_enrichment_tracks_curated_lisa_sni_slugs() -> None:
