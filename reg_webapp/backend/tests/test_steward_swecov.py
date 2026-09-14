@@ -44,6 +44,10 @@ from reg_webapp.stewards import load_delivery_inventory, load_steward
 
 _STEWARDS_DIR = Path(__file__).resolve().parents[2] / "stewards"
 _SWECOV = _STEWARDS_DIR / "swecov"
+_CIS2014_MATRIX_EVIDENCE = (
+    Path(__file__).resolve().parents[3]
+    / "reg_meta_build/curation/cis2014-matrix-meaning-evidence.json"
+)
 _CIS2016_MATRIX_EVIDENCE = (
     Path(__file__).resolve().parents[3]
     / "reg_meta_build/curation/cis2016-matrix-meaning-evidence.json"
@@ -75,11 +79,9 @@ def test_inventory_shape(inventory: DeliveryInventory) -> None:
     assert inventory.tables, "inventory must declare at least one table"
 
 
-def test_cis2016_matrix_columns_map_to_their_answer_identities(
-    inventory: DeliveryInventory,
-) -> None:
-    raw = json.loads(_CIS2016_MATRIX_EVIDENCE.read_text(encoding="utf-8"))
-    answer_by_column = {
+def _matrix_answers(path: Path) -> dict[str, tuple[str, str]]:
+    raw = json.loads(path.read_text(encoding="utf-8"))
+    return {
         column.casefold(): (
             column,
             f"scb/innovation-foretag/{answer['slug']}",
@@ -87,6 +89,109 @@ def test_cis2016_matrix_columns_map_to_their_answer_identities(
         for answer in raw["answers"]
         for column in answer["columns"]
     }
+
+
+def test_cis2014_matrix_columns_map_to_their_answer_identities(
+    inventory: DeliveryInventory,
+) -> None:
+    answer_by_column = _matrix_answers(_CIS2014_MATRIX_EVIDENCE)
+    assert len(answer_by_column) == 45
+    physical_by_column = {
+        "CO11": "co11",
+        "CO12": "co12",
+        "CO13": "co13",
+        "CO14": "co14",
+        "CO15": "co15",
+        "CO21": "co21",
+        "CO22": "co22",
+        "CO23": "co23",
+        "CO24": "co24",
+        "CO25": "co25",
+        "CO311": "CO311",
+        "CO312": "co312",
+        "CO313": "CO313",
+        "CO314": "co314",
+        "CO315": "CO315",
+        "CO321": "CO321",
+        "CO322": "CO322",
+        "CO323": "CO323",
+        "CO324": "CO324",
+        "CO325": "CO325",
+        "CO41": "co41",
+        "CO42": "co42",
+        "CO43": "co43",
+        "CO44": "co44",
+        "CO45": "co45",
+        "CO51": "co51",
+        "CO52": "Co52",
+        "CO53": "co53",
+        "CO54": "Co54",
+        "CO55": "co55",
+        "CO61": "co61",
+        "CO62": "co62",
+        "CO63": "co63",
+        "CO64": "co64",
+        "CO65": "co65",
+        "CO71": "co71",
+        "CO72": "co72",
+        "CO73": "co73",
+        "CO74": "co74",
+        "CO75": "co75",
+        "CO81": "CO81",
+        "CO82": "co82",
+        "CO83": "CO83",
+        "CO84": "co84",
+        "CO85": "CO85",
+    }
+    assert set(physical_by_column) == {
+        source_column for source_column, _answer in answer_by_column.values()
+    }
+
+    (cis2014,) = [table for table in inventory.tables if table.id == "CIS2014"]
+    assert cis2014.edition == "2014"
+    observed: dict[str, tuple[str, str]] = {}
+    for column in cis2014.columns:
+        for mapping in column.mappings:
+            representation = mapping.representation
+            if representation is None:
+                continue
+            key = representation.casefold()
+            if key not in answer_by_column:
+                continue
+            source_column, answer_fqid = answer_by_column[key]
+            assert column.name == physical_by_column[source_column]
+            assert representation == source_column
+            assert str(mapping.variable) == answer_fqid
+            assert mapping.register_variant == "scb/innovation-foretag/_default"
+            observed[key] = (column.name, str(mapping.variable))
+
+    assert len(observed) == 45
+    assert len({physical.casefold() for physical, _fqid in observed.values()}) == 45
+    assert len({fqid for _physical, fqid in observed.values()}) == 45
+
+    index = build_catalog_index(inventory, _NoCatalog())
+    for key, (_source_column, answer_fqid) in answer_by_column.items():
+        assert index.held_columns_for_variant(
+            answer_fqid, "scb/innovation-foretag/_default"
+        ) == frozenset({_source_column})
+        assert all(
+            key
+            not in {
+                column.casefold()
+                for column in index.held_columns_for_variant(
+                    sibling_fqid, "scb/innovation-foretag/_default"
+                )
+                if column is not None
+            }
+            for sibling_key, (_column, sibling_fqid) in answer_by_column.items()
+            if sibling_key != key
+        )
+
+
+def test_cis2016_matrix_columns_map_to_their_answer_identities(
+    inventory: DeliveryInventory,
+) -> None:
+    answer_by_column = _matrix_answers(_CIS2016_MATRIX_EVIDENCE)
     assert len(answer_by_column) == 54
 
     (cis2016,) = [table for table in inventory.tables if table.id == "CIS2016"]
@@ -117,18 +222,18 @@ def test_cis2016_matrix_columns_map_to_their_answer_identities(
     assert physical_names["co11"] == "co11"
     assert physical_names["co52"] == "Co52"
 
-    # Identically spelled columns in earlier waves remain on the unreviewed
-    # source identity; the CIS2016 evidence does not establish continuity.
+    # Identically spelled columns outside the two reviewed waves remain on the
+    # unreviewed source identity; neither declaration establishes continuity.
     older = [
         mapping
         for table in inventory.tables
-        if table.id == f"CIS{table.edition}" and table.id != "CIS2016"
+        if table.id == f"CIS{table.edition}" and table.id not in {"CIS2014", "CIS2016"}
         for column in table.columns
         for mapping in column.mappings
         if mapping.representation is not None
         and mapping.representation.casefold() in answer_by_column
     ]
-    assert len(older) == 228
+    assert len(older) == 183
     assert all(
         str(mapping.variable) == "scb/innovation-foretag/co11" for mapping in older
     )

@@ -1,9 +1,10 @@
-"""The documented CIS 2014–2016 cooperation-matrix answer partition.
+"""The reviewed CIS cooperation-matrix answer partitions.
 
-SCB's machine export gives all 54 named answer columns one VarId and one CVID.
-The accompanying quality declaration distinguishes the answers.  This module
-loads that one reviewed evidence declaration; the SCB adapter applies it at the
-source-instance boundary before generic coalescing.
+SCB's machine export gives the CIS 2016 answer columns one VarId and one CVID,
+while its CIS 2014 source instance names no columns at all.  The accompanying
+quality declaration distinguishes both waves' answers.  This module loads the
+two reviewed evidence declarations; the SCB adapter applies them at their exact
+source-instance boundaries before generic coalescing.
 
 This is intentionally not a matrix-discovery or source-mapping framework.
 Other waves need their own reviewed meaning evidence before they can acquire
@@ -12,7 +13,7 @@ answer identities or continuity links.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Annotated
+from typing import TYPE_CHECKING, Annotated, Literal, TypeVar
 
 from pydantic import (
     BaseModel,
@@ -30,8 +31,18 @@ if TYPE_CHECKING:
     from pathlib import Path
 
 
-_FILE_NAME = "curation/cis2016-matrix-meaning-evidence.json"
-_CODE = "cis2016_matrix_invalid"
+_CIS2016_FILE_NAME = "curation/cis2016-matrix-meaning-evidence.json"
+_CIS2014_FILE_NAME = "curation/cis2014-matrix-meaning-evidence.json"
+_CIS2014_SELECTOR = (
+    "scb/innovation-foretag",
+    257,
+    "_default",
+    553,
+    "2012 - 2014",
+    7293,
+    15662,
+    400684,
+)
 
 NonEmpty = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1)]
 StableKey = Annotated[
@@ -118,7 +129,7 @@ class MatrixAnswer(_CurationModel):
         return self
 
 
-class Cis2016Matrix(_CurationModel):
+class _CisMatrix(_CurationModel):
     selector: MatrixSelector
     evidence: MatrixEvidence
     question_label: NonEmpty
@@ -126,7 +137,7 @@ class Cis2016Matrix(_CurationModel):
     answers: tuple[MatrixAnswer, ...]
 
     @model_validator(mode="after")
-    def _complete_partition(self) -> Cis2016Matrix:
+    def _complete_partition(self) -> _CisMatrix:
         if tuple(axis.key for axis in self.axes) != ("partner", "response"):
             raise ValueError("axes must be ordered as partner, response")
         if len(self.answers) < 2:
@@ -163,10 +174,53 @@ class Cis2016Matrix(_CurationModel):
         return frozenset(column for answer in self.answers for column in answer.columns)
 
 
-def load_cis2016_matrix(
-    path: Path | None, slug_dir: Path | None = None
-) -> Cis2016Matrix | None:
-    """Load the one reviewed CIS 2016 matrix declaration.
+class Cis2016Matrix(_CisMatrix):
+    """The named-column CIS 2016 answer declaration."""
+
+
+class Cis2014Matrix(_CisMatrix):
+    """The documented answers for the exact blank-column CIS 2014 source."""
+
+    source_mode: Literal["documented_blank"]
+
+    @model_validator(mode="after")
+    def _exact_blank_source(self) -> Cis2014Matrix:
+        selector = self.selector
+        observed = (
+            selector.register_fqid,
+            selector.register_id,
+            selector.variant,
+            selector.register_variant_id,
+            selector.edition,
+            selector.regver_id,
+            selector.var_id,
+            selector.cvid,
+        )
+        if observed != _CIS2014_SELECTOR:
+            raise ValueError(
+                "documented_blank is confined to the reviewed CIS 2014 selector "
+                f"{_CIS2014_SELECTOR!r}, observed {observed!r}"
+            )
+        if any(len(answer.columns) != 1 for answer in self.answers):
+            raise ValueError(
+                "documented_blank answers must each name one reviewed column"
+            )
+        return self
+
+
+_MatrixT = TypeVar("_MatrixT", bound=_CisMatrix)
+
+
+def _load_matrix(
+    path: Path | None,
+    slug_dir: Path | None,
+    *,
+    model: type[_MatrixT],
+    wave: str,
+    code_prefix: str,
+    file_name: str,
+) -> _MatrixT | None:
+    """Load one explicit reviewed matrix declaration.
 
     Missing is an empty curation surface for wheel installs and synthetic
     builds, matching the repository's other curation loaders.  Syntax and
@@ -176,12 +230,12 @@ def load_cis2016_matrix(
     if path is None or not path.is_file():
         return None
     try:
-        matrix = Cis2016Matrix.model_validate_json(path.read_bytes())
+        matrix = model.model_validate_json(path.read_bytes())
     except (OSError, ValidationError) as exc:
         raise curation_error(
-            _CODE,
-            f"Could not load CIS 2016 matrix curation {path}: {exc}",
-            f"Fix the selectors and evidence in reg_meta_build/{_FILE_NAME}.",
+            f"{code_prefix}_invalid",
+            f"Could not load {wave} matrix curation {path}: {exc}",
+            f"Fix the selectors and evidence in reg_meta_build/{file_name}.",
         ) from exc
 
     if slug_dir is not None:
@@ -202,10 +256,38 @@ def load_cis2016_matrix(
         )
         if observed != expected:
             raise curation_error(
-                "cis2016_matrix_unknown_selector",
-                "CIS 2016 matrix register/variant FQIDs do not resolve to their "
+                f"{code_prefix}_unknown_selector",
+                f"{wave} matrix register/variant FQIDs do not resolve to their "
                 f"declared source ids: expected {expected!r}, observed {observed!r}.",
                 "Fix the selector or the curated SCB register/variant slugs; do "
                 "not apply this evidence to another source coordinate.",
             )
     return matrix
+
+
+def load_cis2016_matrix(
+    path: Path | None, slug_dir: Path | None = None
+) -> Cis2016Matrix | None:
+    """Load the reviewed named-column CIS 2016 matrix declaration."""
+    return _load_matrix(
+        path,
+        slug_dir,
+        model=Cis2016Matrix,
+        wave="CIS 2016",
+        code_prefix="cis2016_matrix",
+        file_name=_CIS2016_FILE_NAME,
+    )
+
+
+def load_cis2014_matrix(
+    path: Path | None, slug_dir: Path | None = None
+) -> Cis2014Matrix | None:
+    """Load the reviewed blank-source CIS 2014 matrix declaration."""
+    return _load_matrix(
+        path,
+        slug_dir,
+        model=Cis2014Matrix,
+        wave="CIS 2014",
+        code_prefix="cis2014_matrix",
+        file_name=_CIS2014_FILE_NAME,
+    )

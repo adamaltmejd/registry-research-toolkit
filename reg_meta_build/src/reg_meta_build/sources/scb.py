@@ -34,7 +34,7 @@ from collections import Counter, defaultdict
 from dataclasses import dataclass, field
 from itertools import combinations, pairwise
 from pathlib import Path
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Literal
 
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta.fqid import (
@@ -98,6 +98,7 @@ from reg_meta_build.scb_errata import (
 _LISA_REGISTER_NAME_PREFIX = "longitudinell integrationsdatabas"
 _RESOLUTION_GAP_PROVENANCE = "inferred:resolution-gap"
 _CIS2016_PROVENANCE = "curated:scb-cis2016-matrix-answer"
+_CIS2014_PROVENANCE = "curated:scb-cis2014-matrix-answer"
 
 
 def _register_variant_description(
@@ -122,7 +123,11 @@ def _register_variant_description(
 if TYPE_CHECKING:
     from collections.abc import Callable, Iterator
 
-    from reg_meta_build.cis2016_matrix import Cis2016Matrix, MatrixAnswer
+    from reg_meta_build.cis2016_matrix import (
+        Cis2014Matrix,
+        Cis2016Matrix,
+        MatrixAnswer,
+    )
     from reg_meta_build.codelivery import CodeliveryMap
     from reg_meta_build.sources import IRObject
 
@@ -4492,7 +4497,12 @@ def _project_and_mint_value_sets(
     return stats
 
 
-def _cis2016_answer_provenance(matrix: Cis2016Matrix, answer: MatrixAnswer) -> str:
+def _cis2016_answer_provenance(
+    matrix: Cis2014Matrix | Cis2016Matrix,
+    answer: MatrixAnswer,
+    *,
+    prefix: str = _CIS2016_PROVENANCE,
+) -> str:
     """Stable source-id/evidence association retained on the projected state."""
     selector = matrix.selector
     payload = json.dumps(
@@ -4522,23 +4532,18 @@ def _cis2016_answer_provenance(matrix: Cis2016Matrix, answer: MatrixAnswer) -> s
         separators=(",", ":"),
         sort_keys=True,
     )
-    return f"{_CIS2016_PROVENANCE}\n{payload}"
+    return f"{prefix}\n{payload}"
 
 
-def _apply_cis2016_matrix(
-    conn: sqlite3.Connection, matrix: Cis2016Matrix | None
-) -> dict[str, Any]:
-    """Project the one reviewed shared-CVID matrix into answer instances.
-
-    The source row has one CVID with many aliases.  Replace it with one
-    deterministic, pre-owned instance per reviewed answer identity, copying its
-    source shape and value-set link exactly.  Generic coalescing then sees
-    ordinary one-owner instances; the original source ids remain on every
-    state's provenance and never become catalog identity keys.
-    """
+def _resolve_cis_matrix_parent(
+    conn: sqlite3.Connection,
+    matrix: Cis2014Matrix | Cis2016Matrix | None,
+    *,
+    wave: Literal["cis2014", "cis2016"],
+) -> tuple[sqlite3.Row | None, int | None]:
+    """Prove the exact source and its original owner before either projection."""
     if matrix is None:
-        return {"answers": 0, "aliases": 0, "slug_hints": {}}
-
+        return None, None
     selector = matrix.selector
     cur = conn.cursor()
     cur.row_factory = sqlite3.Row
@@ -4570,20 +4575,95 @@ def _apply_cis2016_matrix(
         if source is not None
         else None
     )
+    wave_label = "CIS 2014" if wave == "cis2014" else "CIS 2016"
+    curation_file = (
+        "cis2014-matrix-meaning-evidence.json"
+        if wave == "cis2014"
+        else "cis2016-matrix-meaning-evidence.json"
+    )
     if observed != expected:
         raise RegMetaError(
             exit_code=EXIT_CONFIG,
-            code="cis2016_matrix_selector_mismatch",
+            code=f"{wave}_matrix_selector_mismatch",
             error_class="configuration",
             message=(
-                "CIS 2016 matrix curation selector does not match its source "
+                f"{wave_label} matrix curation selector does not match its source "
                 f"instance: expected {expected!r}, observed {observed!r}."
             ),
             remediation=(
                 "Recheck the exact RegisterId/RegVarID/RegVerID/VarId/CVID and "
                 "edition in reg_meta_build/curation/"
-                "cis2016-matrix-meaning-evidence.json; do not transfer the "
-                "mapping to another wave."
+                f"{curation_file}; do not transfer the mapping to another wave."
+            ),
+        )
+    parent_ids = [
+        row[0]
+        for row in conn.execute(
+            "SELECT variable_id FROM variable WHERE register_id = ? "
+            "AND provider_key = CAST(? AS TEXT) ORDER BY variable_id",
+            (selector.register_id, selector.var_id),
+        )
+    ]
+    if len(parent_ids) != 1:
+        raise RegMetaError(
+            exit_code=EXIT_CONFIG,
+            code=f"{wave}_matrix_parent_conflict",
+            error_class="configuration",
+            message=(
+                f"{wave_label} matrix source VarId must have exactly one original "
+                f"variable before answer projection, found {len(parent_ids)}."
+            ),
+            remediation=(
+                "Resolve conflicting source ownership before applying either "
+                "reviewed CIS answer partition."
+            ),
+        )
+    return source, parent_ids[0]
+
+
+def _apply_cis2016_matrix(
+    conn: sqlite3.Connection,
+    matrix: Cis2014Matrix | Cis2016Matrix | None,
+    *,
+    source: sqlite3.Row | None,
+    parent_variable_id: int | None,
+    wave: Literal["cis2014", "cis2016"] = "cis2016",
+) -> dict[str, Any]:
+    """Project one of the two reviewed shared-CVID matrices into answers.
+
+    CIS 2016 has one CVID with many named aliases; the exact CIS 2014 source
+    instance has no named aliases.  Replace either with one deterministic,
+    pre-owned instance per reviewed answer identity, copying its source shape
+    and value-set link exactly.  Generic coalescing then sees ordinary one-owner
+    instances; the original source ids remain on every state's provenance and
+    never become catalog identity keys.
+    """
+    if matrix is None:
+        return {"answers": 0, "aliases": 0, "slug_hints": {}}
+
+    is_documented_blank = wave == "cis2014"
+    wave_label = "CIS 2014" if is_documented_blank else "CIS 2016"
+    code_prefix = "cis2014_matrix" if is_documented_blank else "cis2016_matrix"
+    curation_file = (
+        "cis2014-matrix-meaning-evidence.json"
+        if is_documented_blank
+        else "cis2016-matrix-meaning-evidence.json"
+    )
+    provenance_prefix = (
+        _CIS2014_PROVENANCE if is_documented_blank else _CIS2016_PROVENANCE
+    )
+    selector = matrix.selector
+    cur = conn.cursor()
+    cur.row_factory = sqlite3.Row
+    if source is None or parent_variable_id is None:
+        raise RegMetaError(
+            exit_code=EXIT_CONFIG,
+            code=f"{code_prefix}_parent_conflict",
+            error_class="configuration",
+            message=f"{wave_label} matrix source owner was not resolved.",
+            remediation=(
+                "Resolve the exact source instance and its unique original owner "
+                "before applying the reviewed answer partition."
             ),
         )
 
@@ -4603,66 +4683,84 @@ def _apply_cis2016_matrix(
             ),
         )
     }
-    expected_aliases = {(selector.cvid, column) for column in matrix.columns}
+    expected_aliases = (
+        set()
+        if is_documented_blank
+        else {(selector.cvid, column) for column in matrix.columns}
+    )
     if scoped_aliases != expected_aliases:
         missing = sorted(expected_aliases - scoped_aliases)
         unexpected = sorted(scoped_aliases - expected_aliases)
         raise RegMetaError(
             exit_code=EXIT_CONFIG,
-            code="cis2016_matrix_column_mismatch",
+            code=f"{code_prefix}_column_mismatch",
             error_class="configuration",
             message=(
-                "CIS 2016 matrix curation does not cover the exact named source "
-                f"partition (missing={missing}, unexpected={unexpected})."
+                f"{wave_label} matrix curation does not match the exact "
+                f"{'blank' if is_documented_blank else 'named'} source partition "
+                f"(missing={missing}, unexpected={unexpected})."
             ),
             remediation=(
-                "Update the reviewed declaration only after checking every named "
-                "column on edition 11529; never leave a residual same-VarId "
-                "answer outside the partition."
+                "Update the reviewed declaration only after checking the exact "
+                f"source instance in {curation_file}; never infer answer columns "
+                "from another edition."
             ),
         )
 
     parent_rows = cur.execute(
         "SELECT variable_id, source_register_text, measurement_unit, source_register_id, "
         "source_label, is_sensitive, is_identifier "
-        "FROM variable WHERE register_id = ? AND provider_key = CAST(? AS TEXT) "
-        "ORDER BY variable_id",
-        (selector.register_id, selector.var_id),
+        "FROM variable WHERE variable_id = ? AND register_id = ? "
+        "AND provider_key = CAST(? AS TEXT)",
+        (parent_variable_id, selector.register_id, selector.var_id),
     ).fetchall()
     if len(parent_rows) != 1:
         raise RegMetaError(
             exit_code=EXIT_CONFIG,
-            code="cis2016_matrix_parent_conflict",
+            code=f"{code_prefix}_parent_conflict",
             error_class="configuration",
             message=(
-                "CIS 2016 matrix source VarId must have exactly one pre-triage "
-                f"variable, found {len(parent_rows)}."
+                f"{wave_label} matrix source instance must have exactly one "
+                f"matching original owner, found {len(parent_rows)}."
             ),
             remediation=(
-                "Apply the answer projection before generic SCB triage and check "
-                "for a conflicting curation of VarId 15662."
+                "Check the selected source instance's variable ownership before "
+                "applying another answer curation."
             ),
         )
     parent = parent_rows[0]
 
+    if is_documented_blank:
+        identity_namespace = "scb-cis2014-matrix-answer"
+        instance_namespace = "scb-cis2014-matrix-instance"
+        identity_scope = (
+            str(selector.register_id),
+            str(selector.register_variant_id),
+            str(selector.regver_id),
+            str(selector.var_id),
+            selector.edition,
+        )
+        instance_scope = (str(selector.cvid), selector.edition)
+    else:
+        identity_namespace = "scb-cis2016-matrix-answer"
+        instance_namespace = "scb-cis2016-matrix-instance"
+        identity_scope = (
+            str(selector.register_id),
+            str(selector.register_variant_id),
+            str(selector.regver_id),
+            str(selector.var_id),
+        )
+        instance_scope = (str(selector.cvid),)
+
     identities = [
         (
             answer,
-            mint_canonical_scb(
-                "scb-cis2016-matrix-answer",
-                str(selector.register_id),
-                str(selector.register_variant_id),
-                str(selector.regver_id),
-                str(selector.var_id),
-                answer.key,
-            ),
+            mint_canonical_scb(identity_namespace, *identity_scope, answer.key),
         )
         for answer in sorted(matrix.answers, key=lambda item: item.key)
     ]
     projected_cvids = {
-        answer.key: mint_canonical_scb(
-            "scb-cis2016-matrix-instance", str(selector.cvid), answer.key
-        )
+        answer.key: mint_canonical_scb(instance_namespace, *instance_scope, answer.key)
         for answer, _variable_id in identities
     }
     variable_ids = {variable_id for _answer, variable_id in identities}
@@ -4671,9 +4769,9 @@ def _apply_cis2016_matrix(
     ) != len(identities):
         raise RegMetaError(
             exit_code=EXIT_CONFIG,
-            code="cis2016_matrix_identity_collision",
+            code=f"{code_prefix}_identity_collision",
             error_class="configuration",
-            message="CIS 2016 matrix answer keys minted duplicate identities.",
+            message=f"{wave_label} matrix answer keys minted duplicate identities.",
             remediation="Choose distinct stable answer keys in the curation JSON.",
         )
     existing_variable_ids = {
@@ -4695,10 +4793,10 @@ def _apply_cis2016_matrix(
     if existing_variable_ids or existing_cvids:
         raise RegMetaError(
             exit_code=EXIT_CONFIG,
-            code="cis2016_matrix_identity_collision",
+            code=f"{code_prefix}_identity_collision",
             error_class="configuration",
             message=(
-                "CIS 2016 matrix identities collide with existing rows "
+                f"{wave_label} matrix identities collide with existing rows "
                 f"(variable_ids={sorted(existing_variable_ids)}, "
                 f"cvids={sorted(existing_cvids)})."
             ),
@@ -4772,7 +4870,7 @@ def _apply_cis2016_matrix(
                 source["vardemangdsniva"],
                 answer.definition_en,
                 source["source_register_text"],
-                _cis2016_answer_provenance(matrix, answer),
+                _cis2016_answer_provenance(matrix, answer, prefix=provenance_prefix),
                 source["classification_id"],
                 source["value_set_id"],
                 variable_id,
@@ -4897,6 +4995,7 @@ class SCBAdapter:
         codelivery: CodeliveryMap | None = None,
         errata: ScbErrata | None = None,
         cis2016_matrix: Cis2016Matrix | None = None,
+        cis2014_matrix: Cis2014Matrix | None = None,
         *,
         value_prestage_cache: Path | None = None,
         refresh_value_prestage: bool = False,
@@ -4912,9 +5011,10 @@ class SCBAdapter:
         # Upstream-errata curation (scb_errata.py): the versions/rows SCB's
         # export omits, replayed as synthetic Registerinformation rows below.
         self.errata = errata or ScbErrata()
-        # One reviewed SCB answer partition.  Applied after value-set/PII
+        # Two reviewed SCB answer partitions. Applied after value-set/PII
         # enrichment and before generic coalescing; absent in synthetic/wheel builds.
         self.cis2016_matrix = cis2016_matrix
+        self.cis2014_matrix = cis2014_matrix
         self.source_checksums: dict[str, str] = {}
         self.row_counts: dict[str, int] = {}
         self.coalesce_stats: dict[str, Any] = {}
@@ -5114,19 +5214,48 @@ class SCBAdapter:
         with _stage_timer("scb:populate_sensitivity_flags"):
             _populate_sensitivity_flags(conn)
 
-        # Y-134: the provider export gives one CVID to the 54 documented CIS
-        # 2016 matrix answers.  Project only the reviewed edition after its
-        # value set and PII flags are known, before any shared-CVID/component
-        # heuristic can collapse those meanings.
+        # Y-134/Y-140: project only the two reviewed CIS matrix editions after
+        # their value sets and PII flags are known, before any shared-CVID/
+        # component heuristic can collapse those meanings.
+        matrix_slug_hints: dict[int, str] = {}
+        cis2016_source, cis2016_parent = _resolve_cis_matrix_parent(
+            conn, self.cis2016_matrix, wave="cis2016"
+        )
+        cis2014_source, cis2014_parent = _resolve_cis_matrix_parent(
+            conn, self.cis2014_matrix, wave="cis2014"
+        )
         with _stage_timer("scb:apply_cis2016_matrix"):
-            matrix_counts = _apply_cis2016_matrix(conn, self.cis2016_matrix)
-        if matrix_counts["answers"]:
-            self.row_counts["cis2016_matrix_answers"] = matrix_counts["answers"]
-            self.row_counts["cis2016_matrix_aliases"] = matrix_counts["aliases"]
+            cis2016_counts = _apply_cis2016_matrix(
+                conn,
+                self.cis2016_matrix,
+                source=cis2016_source,
+                parent_variable_id=cis2016_parent,
+            )
+        matrix_slug_hints.update(cis2016_counts["slug_hints"])
+        if cis2016_counts["answers"]:
+            self.row_counts["cis2016_matrix_answers"] = cis2016_counts["answers"]
+            self.row_counts["cis2016_matrix_aliases"] = cis2016_counts["aliases"]
             _progress(
                 "Applied CIS 2016 matrix partition: "
-                f"{matrix_counts['answers']:,} answer item(s), "
-                f"{matrix_counts['aliases']:,} source alias(es)."
+                f"{cis2016_counts['answers']:,} answer item(s), "
+                f"{cis2016_counts['aliases']:,} source alias(es)."
+            )
+        with _stage_timer("scb:apply_cis2014_matrix"):
+            cis2014_counts = _apply_cis2016_matrix(
+                conn,
+                self.cis2014_matrix,
+                source=cis2014_source,
+                parent_variable_id=cis2014_parent,
+                wave="cis2014",
+            )
+        matrix_slug_hints.update(cis2014_counts["slug_hints"])
+        if cis2014_counts["answers"]:
+            self.row_counts["cis2014_matrix_answers"] = cis2014_counts["answers"]
+            self.row_counts["cis2014_matrix_aliases"] = cis2014_counts["aliases"]
+            _progress(
+                "Applied CIS 2014 matrix partition: "
+                f"{cis2014_counts['answers']:,} answer item(s), "
+                f"{cis2014_counts['aliases']:,} documented column(s)."
             )
 
         # A2.1: coalesce variable_instance rows into variable_state. Reads
@@ -5138,7 +5267,7 @@ class SCBAdapter:
         # R8 side channels (NOT manifest values): consumed by the materializer's
         # slug post-pass and the concept-group edge fold.
         self.fold_slug_hints = self.coalesce_stats["_fold_slug_hints"]
-        self.fold_slug_hints.update(matrix_counts["slug_hints"])
+        self.fold_slug_hints.update(matrix_slug_hints)
         self.sibling_edges = self.coalesce_stats["_sibling_edges"]
 
         # A2.1: drop the now-unused unika_summary table (both consumers ran).

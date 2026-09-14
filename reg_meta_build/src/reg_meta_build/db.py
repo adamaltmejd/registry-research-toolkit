@@ -5256,7 +5256,7 @@ def build_db(
         # to break the db ↔ sources.* import cycle (those modules import shared
         # infra from this one). ORDER IS LOAD-BEARING: SCB runs before SOS so SOS
         # value_sets content-collapse onto SCB's already-written rows (R2 hybrid).
-        from .cis2016_matrix import load_cis2016_matrix
+        from .cis2016_matrix import load_cis2014_matrix, load_cis2016_matrix
         from .codelivery import load_codelivery
         from .scb_errata import load_scb_errata
         from .sources.curated import CanonicalScbAdapter, CuratedAdapter
@@ -5285,11 +5285,18 @@ def build_db(
             cis2016_matrix = load_cis2016_matrix(
                 matrix_path, slug_dir or repo_slug_dir()
             )
+            cis2014_matrix_path = repo_curation_path(
+                "cis2014-matrix-meaning-evidence.json"
+            )
+            cis2014_matrix = load_cis2014_matrix(
+                cis2014_matrix_path, slug_dir or repo_slug_dir()
+            )
             scb_adapter = SCBAdapter(
                 conn,
                 codelivery,
                 errata,
                 cis2016_matrix,
+                cis2014_matrix,
                 value_prestage_cache=scb_value_prestage_cache,
                 refresh_value_prestage=refresh_scb_value_prestage,
             )
@@ -5305,6 +5312,10 @@ def build_db(
             if matrix_path is not None:
                 scb_adapter.source_checksums[matrix_path.name] = _file_sha256(
                     matrix_path
+                )
+            if cis2014_matrix_path is not None:
+                scb_adapter.source_checksums[cis2014_matrix_path.name] = _file_sha256(
+                    cis2014_matrix_path
                 )
             adapters.append((scb_adapter, scb_dir))
         if "sos" in providers:

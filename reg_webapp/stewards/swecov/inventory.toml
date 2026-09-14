@@ -69528,7 +69528,7 @@ name = "CO311"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
+variable = "scb/innovation-foretag/cis2014-cooperation-private-customers-sweden"
 representation = "CO311"
 
 [[table.column]]
@@ -69536,7 +69536,7 @@ name = "CO313"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
+variable = "scb/innovation-foretag/cis2014-cooperation-private-customers-usa"
 representation = "CO313"
 
 [[table.column]]
@@ -69544,7 +69544,7 @@ name = "CO315"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
+variable = "scb/innovation-foretag/cis2014-cooperation-private-customers-other-countries"
 representation = "CO315"
 
 [[table.column]]
@@ -69552,7 +69552,7 @@ name = "CO321"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
+variable = "scb/innovation-foretag/cis2014-cooperation-public-customers-sweden"
 representation = "CO321"
 
 [[table.column]]
@@ -69560,7 +69560,7 @@ name = "CO322"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
+variable = "scb/innovation-foretag/cis2014-cooperation-public-customers-other-europe"
 representation = "CO322"
 
 [[table.column]]
@@ -69568,7 +69568,7 @@ name = "CO323"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
+variable = "scb/innovation-foretag/cis2014-cooperation-public-customers-usa"
 representation = "CO323"
 
 [[table.column]]
@@ -69576,7 +69576,7 @@ name = "CO324"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
+variable = "scb/innovation-foretag/cis2014-cooperation-public-customers-china-india"
 representation = "CO324"
 
 [[table.column]]
@@ -69584,7 +69584,7 @@ name = "CO325"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
+variable = "scb/innovation-foretag/cis2014-cooperation-public-customers-other-countries"
 representation = "CO325"
 
 [[table.column]]
@@ -69592,7 +69592,7 @@ name = "CO81"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
+variable = "scb/innovation-foretag/cis2014-cooperation-public-research-sweden"
 representation = "CO81"
 
 [[table.column]]
@@ -69600,7 +69600,7 @@ name = "CO83"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
+variable = "scb/innovation-foretag/cis2014-cooperation-public-research-usa"
 representation = "CO83"
 
 [[table.column]]
@@ -69608,7 +69608,7 @@ name = "CO85"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
+variable = "scb/innovation-foretag/cis2014-cooperation-public-research-other-countries"
 representation = "CO85"
 
 [[table.column]]
@@ -69616,7 +69616,7 @@ name = "Co52"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
+variable = "scb/innovation-foretag/cis2014-cooperation-consultants-other-europe"
 representation = "CO52"
 
 [[table.column]]
@@ -69624,7 +69624,7 @@ name = "Co54"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
+variable = "scb/innovation-foretag/cis2014-cooperation-consultants-china-india"
 representation = "CO54"
 
 [[table.column]]
@@ -70459,7 +70459,7 @@ name = "co11"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
+variable = "scb/innovation-foretag/cis2014-cooperation-group-enterprises-sweden"
 representation = "CO11"
 
 [[table.column]]
@@ -70467,7 +70467,7 @@ name = "co12"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
+variable = "scb/innovation-foretag/cis2014-cooperation-group-enterprises-other-europe"
 representation = "CO12"
 
 [[table.column]]
@@ -70475,7 +70475,7 @@ name = "co13"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
+variable = "scb/innovation-foretag/cis2014-cooperation-group-enterprises-usa"
 representation = "CO13"
 
 [[table.column]]
@@ -70483,7 +70483,7 @@ name = "co14"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
+variable = "scb/innovation-foretag/cis2014-cooperation-group-enterprises-china-india"
 representation = "CO14"
 
 [[table.column]]
@@ -70491,7 +70491,7 @@ name = "co15"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
+variable = "scb/innovation-foretag/cis2014-cooperation-group-enterprises-other-countries"
 representation = "CO15"
 
 [[table.column]]
@@ -70499,7 +70499,7 @@ name = "co21"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
+variable = "scb/innovation-foretag/cis2014-cooperation-suppliers-sweden"
 representation = "CO21"
 
 [[table.column]]
@@ -70507,7 +70507,7 @@ name = "co22"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
+variable = "scb/innovation-foretag/cis2014-cooperation-suppliers-other-europe"
 representation = "CO22"
 
 [[table.column]]
@@ -70515,7 +70515,7 @@ name = "co23"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
+variable = "scb/innovation-foretag/cis2014-cooperation-suppliers-usa"
 representation = "CO23"
 
 [[table.column]]
@@ -70523,7 +70523,7 @@ name = "co24"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
+variable = "scb/innovation-foretag/cis2014-cooperation-suppliers-china-india"
 representation = "CO24"
 
 [[table.column]]
@@ -70531,7 +70531,7 @@ name = "co25"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
+variable = "scb/innovation-foretag/cis2014-cooperation-suppliers-other-countries"
 representation = "CO25"
 
 [[table.column]]
@@ -70539,7 +70539,7 @@ name = "co312"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
+variable = "scb/innovation-foretag/cis2014-cooperation-private-customers-other-europe"
 representation = "CO312"
 
 [[table.column]]
@@ -70547,7 +70547,7 @@ name = "co314"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
+variable = "scb/innovation-foretag/cis2014-cooperation-private-customers-china-india"
 representation = "CO314"
 
 [[table.column]]
@@ -70555,7 +70555,7 @@ name = "co41"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
+variable = "scb/innovation-foretag/cis2014-cooperation-competitors-sweden"
 representation = "CO41"
 
 [[table.column]]
@@ -70563,7 +70563,7 @@ name = "co42"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
+variable = "scb/innovation-foretag/cis2014-cooperation-competitors-other-europe"
 representation = "CO42"
 
 [[table.column]]
@@ -70571,7 +70571,7 @@ name = "co43"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
+variable = "scb/innovation-foretag/cis2014-cooperation-competitors-usa"
 representation = "CO43"
 
 [[table.column]]
@@ -70579,7 +70579,7 @@ name = "co44"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
+variable = "scb/innovation-foretag/cis2014-cooperation-competitors-china-india"
 representation = "CO44"
 
 [[table.column]]
@@ -70587,7 +70587,7 @@ name = "co45"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
+variable = "scb/innovation-foretag/cis2014-cooperation-competitors-other-countries"
 representation = "CO45"
 
 [[table.column]]
@@ -70595,7 +70595,7 @@ name = "co51"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
+variable = "scb/innovation-foretag/cis2014-cooperation-consultants-sweden"
 representation = "CO51"
 
 [[table.column]]
@@ -70603,7 +70603,7 @@ name = "co53"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
+variable = "scb/innovation-foretag/cis2014-cooperation-consultants-usa"
 representation = "CO53"
 
 [[table.column]]
@@ -70611,7 +70611,7 @@ name = "co55"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
+variable = "scb/innovation-foretag/cis2014-cooperation-consultants-other-countries"
 representation = "CO55"
 
 [[table.column]]
@@ -70619,7 +70619,7 @@ name = "co61"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
+variable = "scb/innovation-foretag/cis2014-cooperation-universities-sweden"
 representation = "CO61"
 
 [[table.column]]
@@ -70627,7 +70627,7 @@ name = "co62"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
+variable = "scb/innovation-foretag/cis2014-cooperation-universities-other-europe"
 representation = "CO62"
 
 [[table.column]]
@@ -70635,7 +70635,7 @@ name = "co63"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
+variable = "scb/innovation-foretag/cis2014-cooperation-universities-usa"
 representation = "CO63"
 
 [[table.column]]
@@ -70643,7 +70643,7 @@ name = "co64"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
+variable = "scb/innovation-foretag/cis2014-cooperation-universities-china-india"
 representation = "CO64"
 
 [[table.column]]
@@ -70651,7 +70651,7 @@ name = "co65"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
+variable = "scb/innovation-foretag/cis2014-cooperation-universities-other-countries"
 representation = "CO65"
 
 [[table.column]]
@@ -70659,7 +70659,7 @@ name = "co71"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
+variable = "scb/innovation-foretag/cis2014-cooperation-private-research-sweden"
 representation = "CO71"
 
 [[table.column]]
@@ -70667,7 +70667,7 @@ name = "co72"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
+variable = "scb/innovation-foretag/cis2014-cooperation-private-research-other-europe"
 representation = "CO72"
 
 [[table.column]]
@@ -70675,7 +70675,7 @@ name = "co73"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
+variable = "scb/innovation-foretag/cis2014-cooperation-private-research-usa"
 representation = "CO73"
 
 [[table.column]]
@@ -70683,7 +70683,7 @@ name = "co74"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
+variable = "scb/innovation-foretag/cis2014-cooperation-private-research-china-india"
 representation = "CO74"
 
 [[table.column]]
@@ -70691,7 +70691,7 @@ name = "co75"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
+variable = "scb/innovation-foretag/cis2014-cooperation-private-research-other-countries"
 representation = "CO75"
 
 [[table.column]]
@@ -70699,7 +70699,7 @@ name = "co82"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
+variable = "scb/innovation-foretag/cis2014-cooperation-public-research-other-europe"
 representation = "CO82"
 
 [[table.column]]
@@ -70707,7 +70707,7 @@ name = "co84"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
+variable = "scb/innovation-foretag/cis2014-cooperation-public-research-china-india"
 representation = "CO84"
 
 [[table.column]]

@@ -299,7 +299,10 @@ type CuratedMatrixAnswer = {
   };
 };
 
-const CURATED_MATRIX_PREFIX = "curated:scb-cis2016-matrix-answer\n";
+const CURATED_MATRIX_PREFIXES = [
+  "curated:scb-cis2016-matrix-answer\n",
+  "curated:scb-cis2014-matrix-answer\n",
+] as const;
 
 function nonEmptyString(value: unknown): value is string {
   return typeof value === "string" && value.trim().length > 0;
@@ -309,13 +312,16 @@ function curatedMatrixAnswerFromState(
   state: VariableStateModel,
 ): CuratedMatrixAnswer | null {
   const provenance = state.provenance;
-  if (!provenance?.startsWith(CURATED_MATRIX_PREFIX)) {
+  const prefix = CURATED_MATRIX_PREFIXES.find((candidate) =>
+    provenance?.startsWith(candidate),
+  );
+  if (!provenance || !prefix) {
     return null;
   }
 
   let parsed: unknown;
   try {
-    parsed = JSON.parse(provenance.slice(CURATED_MATRIX_PREFIX.length));
+    parsed = JSON.parse(provenance.slice(prefix.length));
   } catch {
     return null;
   }

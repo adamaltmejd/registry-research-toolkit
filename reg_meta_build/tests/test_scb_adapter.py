@@ -36,7 +36,7 @@ from _shared_fixtures import (
 from reg_meta.catalog import Catalog
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta.order import requested_intervals, resolve_binding
-from reg_meta_build.cis2016_matrix import load_cis2016_matrix
+from reg_meta_build.cis2016_matrix import load_cis2014_matrix, load_cis2016_matrix
 from reg_meta_build.db import DDL, build_db, seed_providers
 from reg_meta_build.dbdiff import diff_db_content
 from reg_meta_build.id import _CANONICAL_SCB_BIT, is_canonical_scb
@@ -1551,6 +1551,125 @@ def _cis2016_rows(*columns: str) -> list[str]:
     return [_var_row(colname=column, **common) for column in selected]
 
 
+def _cis2014_payload() -> dict:
+    payload = {
+        "selector": {
+            "register": "scb/innovation-foretag",
+            "register_id": 257,
+            "variant": "_default",
+            "register_variant_id": 553,
+            "edition": "2012 - 2014",
+            "regver_id": 7293,
+            "var_id": 15662,
+            "cvid": 400684,
+        },
+        "source_mode": "documented_blank",
+        "evidence": {
+            "document": "Synthetic CIS2014 concordance",
+            "url": "https://example.test/cis2014.pdf#page=23",
+            "sha256": "b" * 64,
+            "question": (
+                "VariabelRegister_Källa is Fråga 18 i enkäten "
+                "Innovationsverksamhet 2012-2014; the native edition is "
+                "2012 - 2014, while stale VariabelReferenstid says 2010–2012."
+            ),
+            "noted": "2026-09-14",
+        },
+        "question_label": "Typ av samarbetspartner geografiskt fördelat",
+        "axes": [
+            {"key": "partner", "label_en": "Cooperation partner"},
+            {"key": "response", "label_en": "Location or response"},
+        ],
+        "answers": [
+            _cis2016_answer(
+                "group-enterprises-sweden",
+                "cis2014-cooperation-group-enterprises-sweden",
+                ["CO11"],
+                "Cooperation with group enterprises in Sweden.",
+                ("sweden", "Sweden"),
+            ),
+            _cis2016_answer(
+                "group-enterprises-other-europe",
+                "cis2014-cooperation-group-enterprises-other-europe",
+                ["CO12"],
+                "Cooperation with group enterprises elsewhere in Europe.",
+                ("other_europe", "Other Europe"),
+            ),
+        ],
+    }
+    return payload
+
+
+def _cis2014_rows(*, column: str = "") -> list[str]:
+    return [
+        _var_row(
+            colname=column,
+            cvid=400684,
+            var_id=15662,
+            varname="Typ av samarbetspartner geografiskt fördelat",
+            year="2012",
+            versionname="2012 - 2014",
+            regver_id=7293,
+            data_type="",
+            data_length="",
+            vardef="The common matrix question",
+            varsource="Fråga 18 i enkäten Innovationsverksamhet 2012-2014",
+            register=("INNOVATION", 257, 553),
+        )
+    ]
+
+
+def _built_with_cis_matrices(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    ri_extra: list[str],
+    *,
+    cis2014: dict | None,
+    cis2016: dict | None,
+    vm_extra: list[str],
+) -> sqlite3.Connection:
+    import reg_meta_build.db as _db
+
+    paths: dict[str, Path] = {}
+    for name, payload in (
+        ("cis2014-matrix-meaning-evidence.json", cis2014),
+        ("cis2016-matrix-meaning-evidence.json", cis2016),
+    ):
+        if payload is None:
+            continue
+        path = tmp_path / name
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps(payload), encoding="utf-8")
+        paths[name] = path
+    monkeypatch.setattr(_db, "repo_curation_path", paths.get)
+    return build_with_rows(tmp_path, ri_extra, vm_extra)
+
+
+def _use_combined_cis_auto_pins(monkeypatch: pytest.MonkeyPatch) -> None:
+    import _shared_fixtures
+
+    def _write_pinned_slug_dir(slug_dir: Path) -> None:
+        (slug_dir / "scb.toml").write_text(
+            '[register."1"]\nslug = "testreg"\n'
+            '[register."2"]\nslug = "otherreg"\n'
+            '[register."257"]\nslug = "innovation-foretag"\n'
+            '[register_variant."1.10"]\nslug = "individer"\n'
+            '[register_variant."2.20"]\nslug = "foretag"\n'
+            '[register_variant."257.553"]\nslug = "_default"\n',
+            encoding="utf-8",
+        )
+        (slug_dir / "classifications.toml").write_text("", encoding="utf-8")
+        (slug_dir / "freeze.toml").write_text('scb = "curating"\n', encoding="utf-8")
+        (slug_dir / "scb.auto.toml").write_text(
+            '[variable."257.15662.x"]\nslug = "co11"  # source: kolumnnamn\n',
+            encoding="utf-8",
+        )
+
+    monkeypatch.setattr(
+        _shared_fixtures, "_write_fixture_slug_dir", _write_pinned_slug_dir
+    )
+
+
 def _full_cis2016_payload() -> dict:
     path = (
         Path(__file__).parents[1] / "curation" / "cis2016-matrix-meaning-evidence.json"
@@ -1585,6 +1704,335 @@ def _use_committed_cis2016_auto_pin(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(
         _shared_fixtures, "_write_fixture_slug_dir", _write_pinned_slug_dir
     )
+
+
+class TestCis2014MatrixProjection:
+    @staticmethod
+    def _combined_rows(cis2016: dict) -> tuple[list[str], list[str]]:
+        historical = [
+            _var_row(
+                colname="",
+                cvid=400680 + index,
+                var_id=15662,
+                varname="Typ av samarbetspartner geografiskt fördelat",
+                year=str(end_year),
+                versionname=f"{end_year - 2} - {end_year}",
+                regver_id=7289 + index,
+                vardef="The common matrix question",
+                register=("INNOVATION", 257, 553),
+            )
+            for index, end_year in enumerate((2006, 2008, 2010, 2012))
+        ]
+        cis2016_common = {
+            "cvid": 469456,
+            "var_id": 15662,
+            "varname": "Typ av samarbetspartner geografiskt fördelat",
+            "year": "2014",
+            "versionname": "2014 - 2016",
+            "regver_id": 11529,
+            "data_type": "decimal",
+            "data_length": "8",
+            "vardef": "The common matrix question",
+            "varsource": "CIS 2016 question 18",
+            "register": ("INNOVATION", 257, 553),
+        }
+        cis2016_columns = tuple(
+            column for answer in cis2016["answers"] for column in answer["columns"]
+        )
+        rows = (
+            historical
+            + _cis2014_rows()
+            + [_var_row(colname=column, **cis2016_common) for column in cis2016_columns]
+        )
+        values = [
+            PIPE.join(["Ja eller nej", "Ja eller nej", "0", "Nej", "400684", "288753"]),
+            PIPE.join(["Ja eller nej", "Ja eller nej", "1", "Ja", "400684", "424381"]),
+            *vm_rows(469456, "CIS2016", CODING_A),
+        ]
+        for index, end_year in enumerate((2006, 2008, 2010, 2012)):
+            values.extend(
+                vm_rows(
+                    400680 + index,
+                    f"CIS{end_year}",
+                    [(str(end_year), f"Historical {end_year}")],
+                )
+            )
+        return rows, values
+
+    @staticmethod
+    def _cis2016_snapshot(conn: sqlite3.Connection) -> list[tuple]:
+        return conn.execute(
+            "SELECT v.variable_id, v.slug, v.name, v.definition, "
+            "vs.valid_from, vs.valid_to, vs.data_type, vs.data_length, "
+            "vs.delivery_column_name, vs.provenance, vs.value_set_version_label, "
+            "group_concat(va.delivery_column_name, ',') "
+            "FROM variable v JOIN variable_state vs USING (variable_id) "
+            "JOIN variable_alias va USING (variable_id) "
+            "WHERE v.slug LIKE 'cis2016-cooperation-%' "
+            "GROUP BY v.variable_id, vs.state_id ORDER BY v.slug"
+        ).fetchall()
+
+    @staticmethod
+    def _original_parent_metadata(conn: sqlite3.Connection) -> tuple | None:
+        return conn.execute(
+            "SELECT variable_id, slug, provider_key, name, definition, description, "
+            "operational_definition, source_register_text, measurement_unit, "
+            "source_register_id, source_label, is_sensitive, is_identifier "
+            "FROM variable WHERE provider_key = '15662' AND slug = 'co11'"
+        ).fetchone()
+
+    @staticmethod
+    def _older_state_snapshot(conn: sqlite3.Connection) -> list[tuple]:
+        return conn.execute(
+            "SELECT v.variable_id, v.slug, vs.valid_from, vs.valid_to, "
+            "vs.delivery_column_name, vs.data_type, vs.data_length, "
+            "vs.source_register_text, vs.value_set_version_label "
+            "FROM variable v JOIN variable_state vs USING (variable_id) "
+            "WHERE v.provider_key = '15662' AND v.slug = 'co11' "
+            "AND vs.valid_from < '2012-01-01' ORDER BY vs.valid_from"
+        ).fetchall()
+
+    def test_both_reviewed_partitions_keep_distinct_ownership_and_wave_facts(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        _use_combined_cis_auto_pins(monkeypatch)
+        cis2014 = _cis2014_payload()
+        cis2016 = _full_cis2016_payload()
+        cis2016["selector"].update(
+            {
+                "register": "scb/innovation-foretag",
+                "register_id": 257,
+                "variant": "_default",
+                "register_variant_id": 553,
+            }
+        )
+        rows, values = self._combined_rows(cis2016)
+        combined = _built_with_cis_matrices(
+            tmp_path / "combined",
+            monkeypatch,
+            rows,
+            cis2014=cis2014,
+            cis2016=cis2016,
+            vm_extra=values,
+        )
+        reverse = _built_with_cis_matrices(
+            tmp_path / "reverse",
+            monkeypatch,
+            list(reversed(rows)),
+            cis2014=cis2014,
+            cis2016=cis2016,
+            vm_extra=values,
+        )
+        cis2016_only = _built_with_cis_matrices(
+            tmp_path / "cis2016-only",
+            monkeypatch,
+            rows,
+            cis2014=None,
+            cis2016=cis2016,
+            vm_extra=values,
+        )
+        try:
+            slugs = (
+                "cis2014-cooperation-group-enterprises-sweden",
+                "cis2014-cooperation-group-enterprises-other-europe",
+            )
+            ids = dict(
+                combined.execute(
+                    "SELECT slug, variable_id FROM variable WHERE slug IN (?, ?)",
+                    slugs,
+                )
+            )
+            reverse_ids = dict(
+                reverse.execute(
+                    "SELECT slug, variable_id FROM variable WHERE slug IN (?, ?)",
+                    slugs,
+                )
+            )
+            assert ids == reverse_ids
+            assert len(set(ids.values())) == 2
+            assert all(is_canonical_scb(variable_id) for variable_id in ids.values())
+
+            owners = combined.execute(
+                "SELECT v.slug, va.delivery_column_name FROM variable v "
+                "JOIN variable_alias va USING (variable_id) "
+                "WHERE v.slug IN (?, ?) ORDER BY v.slug",
+                slugs,
+            ).fetchall()
+            assert owners == [
+                (slugs[1], "CO12"),
+                (slugs[0], "CO11"),
+            ]
+
+            states = combined.execute(
+                "SELECT v.slug, vs.valid_from, vs.valid_to, vs.data_type, "
+                "vs.data_length, vs.delivery_column_name, vs.source_register_text, "
+                "vs.provenance, vs.value_set_version_label, vs.value_set_id "
+                "FROM variable v JOIN variable_state vs USING (variable_id) "
+                "WHERE v.slug IN (?, ?) ORDER BY v.slug",
+                slugs,
+            ).fetchall()
+            assert len(states) == 2
+            assert {(row[1], row[2]) for row in states} == {
+                ("2012-01-01", "2014-12-31")
+            }
+            assert {(row[3], row[4]) for row in states} == {("", "")}
+            assert {row[5] for row in states} == {"CO11", "CO12"}
+            assert {row[6] for row in states} == {
+                "Fråga 18 i enkäten Innovationsverksamhet 2012-2014"
+            }
+            assert {row[8] for row in states} == {"Ja eller nej"}
+            assert len({row[9] for row in states}) == 1
+            for row in states:
+                header, raw = row[7].split("\n", 1)
+                provenance = json.loads(raw)
+                assert header == "curated:scb-cis2014-matrix-answer"
+                assert provenance["source"] == {
+                    "cvid": 400684,
+                    "edition": "2012 - 2014",
+                    "register": "scb/innovation-foretag",
+                    "register_id": 257,
+                    "register_variant": "_default",
+                    "register_variant_id": 553,
+                    "regver_id": 7293,
+                    "var_id": 15662,
+                }
+                question = provenance["evidence"]["question"]
+                assert "Innovationsverksamhet 2012-2014" in question
+                assert "stale VariabelReferenstid says 2010–2012" in question
+                assert provenance["evidence"]["pages"] in (
+                    {"CO11": 23},
+                    {"CO12": 23},
+                )
+
+            for variable_id in ids.values():
+                codes = combined.execute(
+                    "SELECT vc.code, vc.label FROM variable_state vs "
+                    "JOIN value_set_member vsm USING (value_set_id) "
+                    "JOIN value_code vc USING (code_id) "
+                    "WHERE vs.variable_id = ? ORDER BY vc.code",
+                    (variable_id,),
+                ).fetchall()
+                assert codes == [("0", "Nej"), ("1", "Ja")]
+
+            combined.row_factory = sqlite3.Row
+            catalog = Catalog(combined)
+            for slug, column in zip(slugs, ("CO11", "CO12"), strict=True):
+                binding = Binding(
+                    variable=f"scb/innovation-foretag/{slug}", type="categorical"
+                )
+                source = Source(
+                    name="cis2014",
+                    register_variant="scb/innovation-foretag/_default",
+                    period=2014,
+                    bindings=(binding,),
+                )
+                resolution = resolve_binding(
+                    catalog,
+                    source,
+                    binding,
+                    requested_intervals(source.period),
+                )
+                assert resolution.finding is None
+                assert resolution.slices == (("2014-01-01", "2014-12-31", column),)
+            combined.row_factory = None
+
+            historical = combined.execute(
+                "SELECT v.variable_id, v.slug, vs.valid_from, vs.valid_to, "
+                "vs.delivery_column_name FROM variable v "
+                "JOIN variable_state vs USING (variable_id) "
+                "WHERE v.provider_key = '15662' AND v.slug = 'co11' "
+                "ORDER BY vs.valid_from"
+            ).fetchall()
+            assert len({row[0] for row in historical}) == 1
+            assert len(historical) == 4
+            assert {row[1] for row in historical} == {"co11"}
+            assert {row[4] for row in historical} == {None}
+            assert self._original_parent_metadata(combined) == (
+                self._original_parent_metadata(reverse)
+            )
+            assert self._original_parent_metadata(combined) == (
+                self._original_parent_metadata(cis2016_only)
+            )
+            assert self._older_state_snapshot(combined) == self._older_state_snapshot(
+                reverse
+            )
+            assert len(self._older_state_snapshot(combined)) == 4
+
+            assert len(self._cis2016_snapshot(combined)) == 54
+            assert self._cis2016_snapshot(combined) == self._cis2016_snapshot(reverse)
+            assert self._cis2016_snapshot(combined) == self._cis2016_snapshot(
+                cis2016_only
+            )
+
+            row_counts = json.loads(
+                combined.execute(
+                    "SELECT value FROM import_manifest WHERE key = 'row_counts'"
+                ).fetchone()[0]
+            )
+            assert row_counts["cis2014_matrix_answers"] == 2
+            assert row_counts["cis2014_matrix_aliases"] == 2
+            assert row_counts["cis2016_matrix_answers"] == 54
+            assert row_counts["cis2016_matrix_aliases"] == 54
+        finally:
+            combined.close()
+            reverse.close()
+            cis2016_only.close()
+
+    def test_blank_target_rejects_named_alias_or_missing_source(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        _use_combined_cis_auto_pins(monkeypatch)
+        values = [
+            PIPE.join(["Ja eller nej", "Ja eller nej", "0", "Nej", "400684", "288753"]),
+            PIPE.join(["Ja eller nej", "Ja eller nej", "1", "Ja", "400684", "424381"]),
+        ]
+        with pytest.raises(RegMetaError) as named:
+            _built_with_cis_matrices(
+                tmp_path / "named",
+                monkeypatch,
+                _cis2014_rows(column="CO11"),
+                cis2014=_cis2014_payload(),
+                cis2016=None,
+                vm_extra=values,
+            )
+        assert named.value.exit_code == EXIT_CONFIG
+        assert named.value.code == "cis2014_matrix_column_mismatch"
+        assert "blank source partition" in named.value.message
+
+        with pytest.raises(RegMetaError) as missing:
+            _built_with_cis_matrices(
+                tmp_path / "missing",
+                monkeypatch,
+                [],
+                cis2014=_cis2014_payload(),
+                cis2016=None,
+                vm_extra=[],
+            )
+        assert missing.value.exit_code == EXIT_CONFIG
+        assert missing.value.code == "cis2014_matrix_selector_mismatch"
+
+    def test_invalid_mode_selector_and_answer_coordinates_fail_config(
+        self, tmp_path: Path
+    ) -> None:
+        mutations = (
+            lambda payload: payload.pop("source_mode"),
+            lambda payload: payload["selector"].update(cvid=400685),
+            lambda payload: payload["answers"][1].update(
+                key=payload["answers"][0]["key"]
+            ),
+            lambda payload: payload["answers"][1].update(
+                response={"key": "sweden", "label_en": "Sweden"}
+            ),
+        )
+        for index, mutate in enumerate(mutations):
+            payload = _cis2014_payload()
+            mutate(payload)
+            path = tmp_path / f"invalid-{index}.json"
+            path.write_text(json.dumps(payload), encoding="utf-8")
+            with pytest.raises(RegMetaError) as exc:
+                load_cis2014_matrix(path)
+            assert exc.value.exit_code == EXIT_CONFIG
+            assert exc.value.code == "cis2014_matrix_invalid"
 
 
 class TestCis2016MatrixProjection:
@@ -1924,6 +2372,32 @@ class TestCis2016MatrixProjection:
             )
         assert missing.value.exit_code == EXIT_CONFIG
         assert missing.value.code == "cis2016_matrix_column_mismatch"
+
+        with pytest.raises(RegMetaError) as unexpected:
+            _built_with_cis2016_matrix(
+                tmp_path / "unexpected",
+                monkeypatch,
+                [
+                    *_cis2016_rows(),
+                    _var_row(
+                        colname="UNREVIEWED",
+                        cvid=469456,
+                        var_id=15662,
+                        varname="Typ av samarbetspartner geografiskt fördelat",
+                        year="2014",
+                        versionname="2014 - 2016",
+                        regver_id=11529,
+                        data_type="decimal",
+                        data_length="8",
+                        vardef="The common matrix question",
+                        varsource="CIS 2016 question 18",
+                    ),
+                ],
+                _cis2016_payload(),
+            )
+        assert unexpected.value.exit_code == EXIT_CONFIG
+        assert unexpected.value.code == "cis2016_matrix_column_mismatch"
+        assert "unexpected=[(469456, 'UNREVIEWED')]" in unexpected.value.message
 
         payload = _cis2016_payload()
         payload["selector"]["variant"] = "unknown"

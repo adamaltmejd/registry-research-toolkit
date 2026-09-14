@@ -27,7 +27,7 @@ from _slugged_db import (
     build_slugged_db,
 )
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
-from reg_meta_build.cis2016_matrix import load_cis2016_matrix
+from reg_meta_build.cis2016_matrix import load_cis2014_matrix, load_cis2016_matrix
 from reg_meta_build.concept_groups import (
     Accept,
     ClassificationGroup,
@@ -934,6 +934,153 @@ class TestCuratedGroups:
         with pytest.raises(RegMetaError) as exc:
             materialize_concept_groups(conn, (curated,), providers=_SCB)
         assert exc.value.code == "concept_groups_unresolved"
+
+
+class TestCis2014MatrixConceptGroup:
+    def test_all_answer_identities_are_explicit_two_axis_members(self) -> None:
+        curation = Path(__file__).parents[1] / "curation"
+        matrix = load_cis2014_matrix(curation / "cis2014-matrix-meaning-evidence.json")
+        cis2016 = load_cis2016_matrix(curation / "cis2016-matrix-meaning-evidence.json")
+        assert matrix is not None
+        assert cis2016 is not None
+        assert matrix.source_mode == "documented_blank"
+        assert matrix.selector.model_dump(by_alias=True) == {
+            "register": "scb/innovation-foretag",
+            "register_id": 257,
+            "variant": "_default",
+            "register_variant_id": 553,
+            "edition": "2012 - 2014",
+            "regver_id": 7293,
+            "var_id": 15662,
+            "cvid": 400684,
+        }
+        assert matrix.evidence.noted == "2026-09-14"
+        assert matrix.evidence.sha256 == (
+            "68513ec189f2222986831f3042a069d66181df3fdb3619e705d0f2ef91ce8c5b"
+        )
+        assert "Fråga 18 i enkäten Innovationsverksamhet 2012-2014" in (
+            matrix.evidence.question
+        )
+        assert "VariabelReferenstid says “2010–2012”" in matrix.evidence.question
+        expected_pages = {
+            **dict.fromkeys(("CO11", "CO12", "CO13", "CO14", "CO15"), 23),
+            **dict.fromkeys(
+                ("CO21", "CO22", "CO23", "CO24", "CO25", "CO311", "CO312", "CO313"),
+                24,
+            ),
+            **dict.fromkeys(
+                (
+                    "CO314",
+                    "CO315",
+                    "CO321",
+                    "CO322",
+                    "CO323",
+                    "CO324",
+                    "CO325",
+                    "CO41",
+                    "CO42",
+                    "CO43",
+                    "CO44",
+                    "CO45",
+                    "CO51",
+                    "CO52",
+                    "CO53",
+                    "CO54",
+                ),
+                25,
+            ),
+            **dict.fromkeys(
+                (
+                    "CO55",
+                    "CO61",
+                    "CO62",
+                    "CO63",
+                    "CO64",
+                    "CO65",
+                    "CO71",
+                    "CO72",
+                    "CO73",
+                    "CO74",
+                    "CO75",
+                ),
+                26,
+            ),
+            **dict.fromkeys(("CO81", "CO82", "CO83", "CO84", "CO85"), 27),
+        }
+        assert {
+            column: page
+            for answer in matrix.answers
+            for column, page in answer.source_pages.items()
+        } == expected_pages
+        group = next(
+            item
+            for item in load_concept_groups(curation / "concept_groups.toml")
+            if item.key == "cis2014-cooperation-partner-by-location"
+        )
+
+        assert group.provider == "scb"
+        assert group.register == "innovation-foretag"
+        assert group.label == matrix.question_label
+        assert group.axes == (
+            ("partner", "Cooperation partner"),
+            ("response", "Location or response"),
+        )
+        assert len(group.members) == len(matrix.answers) == 45
+
+        members = {member.variable: member for member in group.members}
+        assert set(members) == {answer.slug for answer in matrix.answers}
+        assert set(members).isdisjoint(answer.slug for answer in cis2016.answers)
+        for answer in matrix.answers:
+            assert answer.columns == (next(iter(answer.source_pages)),)
+            assert members[answer.slug].delivery_column is None
+            assert members[answer.slug].coords == (
+                ("partner", answer.partner.key, answer.partner.label_en),
+                ("response", answer.response.key, answer.response.label_en),
+            )
+
+        conn = build_slugged_db(
+            register=("Innovation", "innovation-foretag", 257, 1),
+            variant=None,
+            version=None,
+            variable=None,
+            classification=None,
+        )
+        for offset, answer in enumerate((*matrix.answers, *cis2016.answers)):
+            add_variable(
+                conn,
+                register_id=257,
+                var_id=15662000 + offset,
+                name=answer.label_en,
+                slug=answer.slug,
+            )
+        counts = materialize_concept_groups(conn, (group,), providers=_SCB)
+        assert counts["curated_groups"] == 1
+        assert len(_groups(conn)[group.key]["members"]) == 45
+
+        answers = {answer.columns[0]: answer for answer in matrix.answers}
+        co11 = answers["CO11"]
+        co12 = answers["CO12"]
+        cis2016_co11 = next(
+            answer for answer in cis2016.answers if answer.columns == ("CO11",)
+        )
+        assert (
+            len(
+                {
+                    _vid(conn, co11.slug),
+                    _vid(conn, co12.slug),
+                    _vid(conn, cis2016_co11.slug),
+                }
+            )
+            == 3
+        )
+        assert _facets(conn, co11.slug) == [
+            ("partner", "group_enterprises", "Other group enterprises"),
+            ("response", "sweden", "Sweden"),
+        ]
+        assert _facets(conn, co12.slug) == [
+            ("partner", "group_enterprises", "Other group enterprises"),
+            ("response", "other_europe", "Other Europe"),
+        ]
 
 
 class TestCis2016MatrixConceptGroup:
