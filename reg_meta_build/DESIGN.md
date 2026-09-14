@@ -550,9 +550,9 @@ never guessed.
 
 Reviewed, edition-specific SCB documentation can establish a delivery fact missing from
 the machine export. Record the document, page, exact source coordinate and supported
-editions in the existing typed curation surface. For a unique blank-column instance,
-the documentation supplies the missing column name; the original instance retains its
-own definition, type and coding. PDF evidence does not imply that a column covers other
+editions in the existing typed curation surface. For a unique blank-column instance, the
+documentation supplies the missing column name; the original instance retains its own
+definition, type and coding. PDF evidence does not imply that a column covers other
 editions or that every nonempty CSV fact should be overwritten.
 
 ## IR + adapter architecture
