@@ -989,3 +989,73 @@ def write_scb_snapshot(root: Path, scb_dir: Path) -> ScbSnapshotSelection:
             (snapshot / "manifest.json").read_bytes()
         ).hexdigest(),
     )
+
+
+def repin_scb_snapshot(
+    selection: ScbSnapshotSelection, message: str = "fixture update"
+) -> ScbSnapshotSelection:
+    """Commit fixture mutations and return their updated snapshot selection."""
+    repo = selection.path.parent
+    subprocess.run(["git", "-C", str(repo), "add", "-A"], check=True)
+    subprocess.run(["git", "-C", str(repo), "commit", "-q", "-m", message], check=True)
+    commit = subprocess.run(
+        ["git", "-C", str(repo), "rev-parse", "HEAD"],
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout.strip()
+    return ScbSnapshotSelection(
+        path=selection.path,
+        input_commit=commit,
+        manifest_sha256=hashlib.sha256(
+            (selection.path / "manifest.json").read_bytes()
+        ).hexdigest(),
+    )
+
+
+def omit_scb_snapshot_file(
+    selection: ScbSnapshotSelection, name: str
+) -> ScbSnapshotSelection:
+    """Remove one optional normalized file and commit the fixture mutation."""
+    manifest_path = selection.path / "manifest.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    item = next(item for item in manifest["files"] if item["name"] == name)
+    assert not item["required"]
+    for normalized in item["records"]:
+        (selection.path / normalized["path"]).unlink()
+    for group in item["groups"]:
+        (selection.path / group["dictionary"]["path"]).unlink()
+    item.clear()
+    item.update({"name": name, "required": False, "present": False})
+    for archive in manifest["archives"]:
+        archive["members"] = [member for member in archive["members"] if member != name]
+    manifest_path.write_text(
+        json.dumps(manifest, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    return repin_scb_snapshot(selection, f"omit {name}")
+
+
+def corrupt_scb_snapshot_logical_hashes(
+    selection: ScbSnapshotSelection,
+) -> ScbSnapshotSelection:
+    """Change normalized value data while leaving its logical digests stale."""
+    manifest_path = selection.path / "manifest.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    values = next(
+        item for item in manifest["files"] if item["name"] == "Vardemangder.csv"
+    )
+    record = values["records"][0]
+    record_path = selection.path / record["path"]
+    lines = record_path.read_text(encoding="utf-8").splitlines()
+    fields = lines[0].split("\t")
+    fields[-1] = "t9999"
+    lines[0] = "\t".join(fields)
+    record_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    record["size"] = record_path.stat().st_size
+    record["sha256"] = hashlib.sha256(record_path.read_bytes()).hexdigest()
+    manifest_path.write_text(
+        json.dumps(manifest, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    return repin_scb_snapshot(selection, "wrong ordered logical digest")

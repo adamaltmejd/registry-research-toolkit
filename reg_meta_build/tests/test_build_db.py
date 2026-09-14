@@ -2,10 +2,8 @@
 
 from __future__ import annotations
 
-import hashlib
 import json
 import sqlite3
-import subprocess
 from pathlib import Path
 from typing import ClassVar
 
@@ -19,6 +17,7 @@ from _csv_fixtures import (
     VARDEMANGDER_ROWS,
     _ri_row,
     _var_row,
+    corrupt_scb_snapshot_logical_hashes,
     timeseries_row,
     write_csv,
     write_scb_input,
@@ -960,39 +959,7 @@ class TestBuildDbErrors:
         input_dir = tmp_path / "input"
         scb_dir = write_scb_input(input_dir)
         selection = write_scb_snapshot(tmp_path / "snapshot-fixture", scb_dir)
-        manifest_path = selection.path / "manifest.json"
-        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-        values = next(
-            item for item in manifest["files"] if item["name"] == "Vardemangder.csv"
-        )
-        record = values["records"][0]
-        record_path = selection.path / record["path"]
-        lines = record_path.read_text(encoding="utf-8").splitlines()
-        fields = lines[0].split("\t")
-        fields[-1] = "t9999"
-        lines[0] = "\t".join(fields)
-        record_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
-        record["size"] = record_path.stat().st_size
-        record["sha256"] = hashlib.sha256(record_path.read_bytes()).hexdigest()
-        manifest_path.write_text(
-            json.dumps(manifest, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
-            encoding="utf-8",
-        )
-        repo = selection.path.parent
-        subprocess.run(["git", "-C", str(repo), "add", "."], check=True)
-        subprocess.run(
-            ["git", "-C", str(repo), "commit", "-q", "-m", "damage"], check=True
-        )
-        damaged = type(selection)(
-            path=selection.path,
-            input_commit=subprocess.run(
-                ["git", "-C", str(repo), "rev-parse", "HEAD"],
-                check=True,
-                capture_output=True,
-                text=True,
-            ).stdout.strip(),
-            manifest_sha256=hashlib.sha256(manifest_path.read_bytes()).hexdigest(),
-        )
+        damaged = corrupt_scb_snapshot_logical_hashes(selection)
         db_dir = tmp_path / "db"
         db_dir.mkdir()
         live = db_dir / "reg_meta.db"

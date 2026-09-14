@@ -1769,6 +1769,60 @@ class TestBuildDbSnapshotSelection:
             cli_mod._cmd_build_db(args)
         assert exc_info.value.code == "scb_snapshot_selection_incomplete"
 
+    @pytest.mark.parametrize(
+        ("snapshot_args", "expected_code"),
+        [
+            (("--scb-snapshot", ""), "scb_snapshot_selection_incomplete"),
+            (
+                (
+                    "--scb-snapshot",
+                    "",
+                    "--scb-input-commit",
+                    "",
+                    "--scb-manifest-sha256",
+                    "",
+                ),
+                "scb_snapshot_invalid",
+            ),
+        ],
+        ids=["empty-snapshot-only", "all-empty"],
+    )
+    def test_explicit_empty_selection_never_falls_back_to_raw(
+        self,
+        snapshot_args: tuple[str, ...],
+        expected_code: str,
+        tmp_path: Path,
+    ) -> None:
+        from reg_meta_build import cli as cli_mod
+
+        input_dir = tmp_path / "input"
+        write_scb_input(input_dir)
+        db_dir = tmp_path / "db"
+        db_dir.mkdir()
+        live = db_dir / DB_FILENAME
+        live_bytes = b"EXISTING-CATALOG"
+        live.write_bytes(live_bytes)
+        args = cli_mod._build_parser().parse_args(
+            [
+                "--db",
+                str(db_dir),
+                "build-db",
+                "--input-dir",
+                str(input_dir),
+                "--providers",
+                "scb",
+                "--skip-slugs",
+                "--no-validate",
+                *snapshot_args,
+            ]
+        )
+
+        with pytest.raises(RegMetaError) as exc_info:
+            cli_mod._cmd_build_db(args)
+
+        assert exc_info.value.code == expected_code
+        assert live.read_bytes() == live_bytes
+
     def test_complete_selection_reaches_one_build_argument(
         self, tmp_path: Path, monkeypatch
     ):

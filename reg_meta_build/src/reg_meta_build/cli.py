@@ -947,7 +947,8 @@ def _cmd_build_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
         args.scb_input_commit,
         args.scb_manifest_sha256,
     )
-    if any(snapshot_values) and not all(snapshot_values):
+    snapshot_options_present = tuple(value is not None for value in snapshot_values)
+    if any(snapshot_options_present) and not all(snapshot_options_present):
         raise RegMetaError(
             exit_code=EXIT_USAGE,
             code="scb_snapshot_selection_incomplete",
@@ -964,7 +965,7 @@ def _cmd_build_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
             input_commit=args.scb_input_commit,
             manifest_sha256=args.scb_manifest_sha256,
         )
-        if all(snapshot_values)
+        if all(snapshot_options_present)
         else None
     )
 

@@ -1814,10 +1814,11 @@ def open_scb_snapshot(selection: ScbSnapshotSelection) -> ScbSnapshotReader:
         raise SnapshotError(
             "snapshot is missing required SCB backbone Registerinformation.csv"
         )
-    if files["Vardemangder.csv"].present != files["VardemangderValidDates.csv"].present:
-        raise SnapshotError(
-            "Vardemangder.csv and VardemangderValidDates.csv must be present or absent together"
-        )
+    if (
+        files["Vardemangder.csv"].present
+        and not files["VardemangderValidDates.csv"].present
+    ):
+        raise SnapshotError("Vardemangder.csv requires VardemangderValidDates.csv")
     return ScbSnapshotReader(
         root,
         manifest,

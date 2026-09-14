@@ -23,6 +23,8 @@ from _csv_fixtures import (
     REGISTERINFORMATION_ROWS,
     UNIKA_ROWS,
     _var_row,
+    corrupt_scb_snapshot_logical_hashes,
+    omit_scb_snapshot_file,
     write_csv,
     write_scb_input,
     write_scb_snapshot,
@@ -43,10 +45,6 @@ from reg_meta_build.cis2016_matrix import load_cis2014_matrix, load_cis2016_matr
 from reg_meta_build.db import DDL, build_db, seed_providers
 from reg_meta_build.dbdiff import TableIgnore, diff_db_content
 from reg_meta_build.id import _CANONICAL_SCB_BIT, is_canonical_scb
-from reg_meta_build.input_snapshot import (
-    ScbSnapshotReader,
-    SnapshotError,
-)
 from reg_meta_build.ir import (
     IRDeliveryProvenance,
     IRRegister,
@@ -198,10 +196,30 @@ class TestEmitOrder:
 
 
 class TestFixtureRoundTrip:
-    def test_snapshot_preserves_optional_file_absence(self, tmp_path: Path) -> None:
+    @pytest.mark.parametrize(
+        "include",
+        [
+            ("registerinformation",),
+            ("registerinformation", "valid_dates"),
+        ],
+        ids=["all-optional-absent", "validity-without-values"],
+    )
+    def test_snapshot_preserves_optional_file_layouts(
+        self, include: tuple[str, ...], tmp_path: Path
+    ) -> None:
         raw_input = tmp_path / "raw"
-        scb_dir = write_scb_input(raw_input, include=("registerinformation",))
-        selection = write_scb_snapshot(tmp_path / "snapshot-fixture", scb_dir)
+        scb_dir = write_scb_input(raw_input, include=include)
+        if "valid_dates" in include:
+            snapshot_source = write_scb_input(
+                tmp_path / "snapshot-source",
+                include=("registerinformation", "vardemangder", "valid_dates"),
+            )
+            selection = write_scb_snapshot(
+                tmp_path / "snapshot-fixture", snapshot_source
+            )
+            selection = omit_scb_snapshot_file(selection, "Vardemangder.csv")
+        else:
+            selection = write_scb_snapshot(tmp_path / "snapshot-fixture", scb_dir)
         snapshot_seed = tmp_path / "snapshot-seed"
         snapshot_seed.mkdir()
         build_db(
@@ -634,28 +652,31 @@ class TestValuePrestageCache:
             scb_value_prestage_cache=cache,
         )
         selection = write_scb_snapshot(tmp_path / "snapshot-fixture", scb_dir)
+        damaged = corrupt_scb_snapshot_logical_hashes(selection)
 
         def fail_import(*_args, **_kwargs):
             raise AssertionError("warm cache should bypass Vardemangder import")
 
-        def fail_validation(_self):
-            raise SnapshotError("damaged file bypassed by cache")
-
         monkeypatch.setattr(scb_module, "_import_vardemangder", fail_import)
-        monkeypatch.setattr(ScbSnapshotReader, "verify_all", fail_validation)
         snapshot_seed = tmp_path / "snapshot-seed"
         snapshot_seed.mkdir()
+        db_dir = tmp_path / "db_snapshot"
+        db_dir.mkdir()
+        live = db_dir / "reg_meta.db"
+        live_bytes = b"EXISTING-CATALOG"
+        live.write_bytes(live_bytes)
         with pytest.raises(RegMetaError) as exc_info:
             build_db(
                 input_dir=snapshot_seed,
-                db_dir=tmp_path / "db_snapshot",
+                db_dir=db_dir,
                 skip_classifications=True,
                 skip_slugs=True,
-                scb_snapshot=selection,
+                scb_snapshot=damaged,
                 scb_value_prestage_cache=cache,
             )
         assert exc_info.value.code == "scb_snapshot_invalid"
-        assert "damaged file bypassed by cache" in exc_info.value.message
+        assert "logical record round-trip mismatch" in exc_info.value.message
+        assert live.read_bytes() == live_bytes
 
     def test_snapshot_reuses_cache_created_from_equivalent_csv(
         self, monkeypatch, tmp_path: Path

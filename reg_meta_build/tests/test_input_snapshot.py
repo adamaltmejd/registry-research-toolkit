@@ -12,11 +12,14 @@ import subprocess
 from typing import TYPE_CHECKING
 
 import pytest
-from _csv_fixtures import write_scb_input, write_scb_snapshot
+from _csv_fixtures import (
+    omit_scb_snapshot_file,
+    write_scb_input,
+    write_scb_snapshot,
+)
 from reg_meta_build.db import _open_scb_csv, _open_scb_csv_raw
 from reg_meta_build.input_snapshot import (
     SCB_CSV_FILES,
-    ScbSnapshotSelection,
     SnapshotError,
     SnapshotFile,
     converter_source_commit,
@@ -96,21 +99,6 @@ def _git(repo: Path, *args: str) -> str:
         text=True,
     )
     return process.stdout.strip()
-
-
-def _repin(
-    selection: ScbSnapshotSelection, message: str = "fixture update"
-) -> ScbSnapshotSelection:
-    repo = selection.path.parent
-    _git(repo, "add", "-A")
-    _git(repo, "commit", "-q", "-m", message)
-    return type(selection)(
-        path=selection.path,
-        input_commit=_git(repo, "rev-parse", "HEAD"),
-        manifest_sha256=hashlib.sha256(
-            (selection.path / "manifest.json").read_bytes()
-        ).hexdigest(),
-    )
 
 
 def _builder_checkout(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
@@ -324,35 +312,8 @@ def test_selected_snapshot_preserves_optional_absence_and_rejects_value_pairing(
 
     source_dir = write_scb_input(tmp_path / "paired-source")
     selection = write_scb_snapshot(tmp_path / "paired-snapshot", source_dir)
-    manifest_path = selection.path / "manifest.json"
-    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-    validity = next(
-        item
-        for item in manifest["files"]
-        if item["name"] == "VardemangderValidDates.csv"
-    )
-    for normalized in validity["records"]:
-        (selection.path / normalized["path"]).unlink()
-    for group in validity["groups"]:
-        (selection.path / group["dictionary"]["path"]).unlink()
-    validity.clear()
-    validity.update(
-        {
-            "name": "VardemangderValidDates.csv",
-            "required": False,
-            "present": False,
-        }
-    )
-    for archive in manifest["archives"]:
-        archive["members"] = [
-            name for name in archive["members"] if name != "VardemangderValidDates.csv"
-        ]
-    manifest_path.write_text(
-        json.dumps(manifest, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
-        encoding="utf-8",
-    )
-    unpaired = _repin(selection, "unpair values")
-    with pytest.raises(SnapshotError, match="must be present or absent together"):
+    unpaired = omit_scb_snapshot_file(selection, "VardemangderValidDates.csv")
+    with pytest.raises(SnapshotError, match="requires VardemangderValidDates.csv"):
         open_scb_snapshot(unpaired)
 
 
