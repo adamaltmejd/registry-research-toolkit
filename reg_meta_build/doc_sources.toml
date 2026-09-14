@@ -12,9 +12,11 @@
 # `_` vs `-` inconsistencies in the slugs (and URLs) are SCB's own real
 # filename quirks — kept verbatim in both the key and the URL.
 #
-# All 6 URLs verified 2026-06-15 to return `200 application/pdf` from the SCB
-# LISA register page; all live under the shared contentassets hash
-# `0521204f13e649299dec73f091e691e0`.
+# All 6 PDF URLs verified 2026-06-15 to return `200 application/pdf` from the
+# SCB LISA register page; all live under the shared contentassets hash
+# `0521204f13e649299dec73f091e691e0`. `load_doc_sources` itself is format-
+# agnostic (URL/title only), so a non-PDF source can be registered here too —
+# see the workbook entry below.
 #
 # Coverage is LISA-only today and grows as new registers' docs land. An
 # unmapped source is a build-time WARNING, never a failure.
@@ -42,3 +44,16 @@ title = "LISA 2022 - förändringar"
 [sources."lisa_2023-forandringar"]
 url = "https://www.scb.se/contentassets/0521204f13e649299dec73f091e691e0/lisa_2023-forandringar.pdf"
 title = "LISA 2023 - förändringar"
+
+# Original-source provenance for manual curation, not a parsed input: the
+# existing handbook PDFs above stop at 2017, so this workbook is the current
+# official LISA variable list. Registering it here does not parse the
+# workbook or amend any catalog facts automatically; it only records where
+# the maintainer's local copy came from. Downloaded unchanged into (gitignored)
+# reg_meta_build/input_data/SCB/docs/lisa-variabellista-total-t-o-m-2024-2025.xlsx.
+# Landing page: https://www.scb.se/LISA/. Fetched 2026-09-14.
+# SHA256 c96b4e7387af6acbff885e51465d8fabaca5376c4cdf2a1086bf7842ac5c5162,
+# 76565 bytes.
+[sources."lisa-variabellista-total-t-o-m-2024-2025"]
+url = "https://www.scb.se/contentassets/0521204f13e649299dec73f091e691e0/lisa-variabellista-total-t-o-m-2024-2025.xlsx"
+title = "LISA variabellista total t.o.m. 2024/2025"
