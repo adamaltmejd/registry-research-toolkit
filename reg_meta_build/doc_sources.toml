@@ -1,6 +1,6 @@
-# Curated doc source → SCB source-PDF map (#372).
+# Curated doc source → public SCB original map (#372).
 #
-# Resolves a doc's `source` frontmatter slug to the public SCB PDF it was
+# Resolves a doc's `source` frontmatter slug to the public SCB source it was
 # derived from, so the doc index can link out to the original instead of
 # republishing the converted body. Consumed at doc-DB BUILD time
 # (`reg_meta_build.doc_db.build_doc_db`), which writes the resolved
@@ -46,7 +46,9 @@ url = "https://www.scb.se/contentassets/0521204f13e649299dec73f091e691e0/lisa_20
 title = "LISA 2023 - förändringar"
 
 # Original-source provenance for manual curation, not a parsed input: the
-# existing handbook PDFs above stop at 2017, so this workbook is the current
+# consolidated LISA handbook above ("lisa-bakgrundsfakta-1990-2017") covers
+# 1990-2017; the 2019/2020/2022/2023 entries above are later supplements
+# listed separately, not a continuation of it. This workbook is the current
 # official LISA variable list. Registering it here does not parse the
 # workbook or amend any catalog facts automatically; it only records where
 # the maintainer's local copy came from. Downloaded unchanged into (gitignored)
