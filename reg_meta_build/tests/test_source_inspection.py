@@ -292,12 +292,14 @@ def test_lisa_reader_preserves_four_layouts_sections_periods_and_occurrences(
     (
         ("shift-header", r"Individ!A3:F3"),
         ("change-section", r"Individ årsoberoende!A30"),
+        ("section-qualifier", r"Individ!A5:F5"),
         ("bad-period", r"Individ!C600"),
         ("extra-column", r"expected 6 columns, got 7"),
+        ("valid-control", None),
     ),
 )
 def test_lisa_reader_rejects_changed_actual_layout_with_coordinates(
-    tmp_path: Path, mutation: str, expected: str
+    tmp_path: Path, mutation: str, expected: str | None
 ) -> None:
     path = write_lisa_workbook(tmp_path / "lisa.xlsx")
     workbook = load_workbook(path)
@@ -308,12 +310,23 @@ def test_lisa_reader_rejects_changed_actual_layout_with_coordinates(
             sheet.cell(3, column).value = None
     elif mutation == "change-section":
         workbook["Individ årsoberoende"]["A30"] = "Ny tabell"
+    elif mutation == "section-qualifier":
+        workbook["Individ"]["B5"] = "Unexpected qualifier"
     elif mutation == "bad-period":
         workbook["Individ"]["C600"] = "1990 till 2024"
-    else:
+    elif mutation == "extra-column":
         workbook["Individ"]["G3"] = "Ny kolumn"
+    else:
+        assert mutation == "valid-control"
     workbook.save(path)
     workbook.close()
+
+    if expected is None:
+        source = read_lisa_source(path, _revision(path))
+        assert "worksheet-context Individ!A5: Demografiska variabler" in (
+            source.worksheet_context
+        )
+        return
 
     with pytest.raises(LisaWorkbookError, match=expected):
         read_lisa_source(path, _revision(path))

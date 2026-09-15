@@ -492,14 +492,20 @@ def read_lisa_source(path: Path, revision: SourceRevision) -> _LisaSourceRead:
                     f"{spec.headers!r}, got {actual_header!r}"
                 )
             for row_number, expected in spec.text_rows.items():
-                actual = sheet.cell(row_number, 1).value
-                if actual != expected:
+                expected_row = (expected,) + (None,) * (len(spec.headers) - 1)
+                actual_row = tuple(
+                    sheet.cell(row_number, column).value
+                    for column in range(1, len(spec.headers) + 1)
+                )
+                if actual_row != expected_row:
+                    end = get_column_letter(len(spec.headers))
                     raise LisaWorkbookError(
-                        f"unsupported LISA section structure at {sheet_name}!A{row_number}: "
-                        f"expected {expected!r}, got {actual!r}"
+                        f"unsupported LISA section structure at {sheet_name}!"
+                        f"A{row_number}:{end}{row_number}: expected "
+                        f"{expected_row!r}, got {actual_row!r}"
                     )
                 worksheet_context.append(
-                    f"worksheet-context {sheet_name}!A{row_number}: {actual}"
+                    f"worksheet-context {sheet_name}!A{row_number}: {actual_row[0]}"
                 )
             for row_number, context_row in spec.context_rows.items():
                 actual = tuple(
