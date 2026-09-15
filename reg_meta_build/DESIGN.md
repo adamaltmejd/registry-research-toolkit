@@ -250,6 +250,12 @@ A source assertion contains:
   and physical layout, so a supported layout-only change produces a new evidence
   reference but not a semantic change.
 
+`assertion_key`, `assertion_id`, and the assertion projection describe one source
+occurrence as published. The key and projection therefore change when the publisher
+extends or splits that occurrence's full source scope; the old and new occurrence
+identities remain useful provenance. Neither is the sole lookup key for a reviewed
+decision dependency.
+
 For example, this is the shape a future LISA availability reader could emit. It is
 illustrative, not an assertion that the preserved workbook has been accepted or that its
 audit was correct:
@@ -316,9 +322,10 @@ Every decision records:
 - a stable `decision_id` and exactly one typed operation;
 - a canonical or source subject, population/variant, fact kind, and finite target
   edition/reference-period scope;
-- stable evidence selectors and the revision-qualified assertion IDs for every selected
-  and competing evidence occurrence reviewed;
-- checked assumptions and their reviewed semantic projections: same identity/meaning,
+- evidence dependencies, each with a stable semantic selector, its own explicit reviewed
+  edition/reference-period scope, the reviewed canonical projection hash, and the
+  revision-qualified assertion IDs for every selected and competing occurrence reviewed;
+- checked assumptions and their reviewed scoped projections: same identity/meaning,
   definition and operational definition, relevant type/length, code/code-label facts,
   source representation, target cardinality, and any copied-record or support-set
   assumption;
@@ -328,6 +335,24 @@ Every decision records:
 - the compact correction note to project into existing collapsed catalog metadata when
   the result is user-visible. The catalog does not gain a second detailed decision
   schema.
+
+A dependency's `semantic_selector` names the logical dataset, a reader-defined
+non-layout `record_family_key` (the canonical non-scope projection of
+`semantic_record_key`) shared by equivalent range-split occurrences, the complete source
+subject including population/variant, and the fact kind or kinds. It excludes source
+revision, row order, physical coordinates, and the source occurrence's packaged range;
+`reviewed_scope` states the exact scope the reviewer depended on. Reconciliation gathers
+all candidate occurrences matching that selector, restricts them to the reviewed scope,
+checks complete coverage and conflicts there, and hashes a canonical fact projection
+whose result is independent of row order and equivalent range segmentation. It never
+looks up the old full-range `assertion_key` as the only update selector.
+
+Scope canonicalization preserves the fact's native semantics. Adjacent edition ranges
+with the same fact may normalize together, but one pooled multi-year reference period
+remains one pooled scope: dependency comparison does not expand it into annual claims.
+The report retains both `reviewed_assertion_ids` from the artifact and
+`candidate_assertion_ids` for every revision-qualified witness used in the new
+projection.
 
 The finite operation vocabulary is tied to current cases:
 
@@ -351,9 +376,10 @@ targets the finite LISA editions 2010, 2011, and 2012. The replacement
 `correct_omission` decision would select the scoped SCB-documentation availability
 assertion, record the SWECOV holdings only as project-possession corroboration, require
 three absent machine targets, and name exact source records for any copied definition,
-type, representation, or code-set facts. The reviewed semantic projections of those
-records are dependencies. It cannot dynamically call `_nearest_rows`, cannot expand to
-2013, and cannot infer meaning or coding from availability.
+type, representation, or code-set facts. The reviewed canonical projections of those
+records, restricted to each dependency's explicit scope, are dependencies. It cannot
+dynamically call `_nearest_rows`, cannot expand to 2013, and cannot infer meaning or
+coding from availability.
 
 A reviewable artifact has this concrete shape (placeholder evidence IDs/hashes are
 filled from the accepted candidate; this example does not ratify new content):
@@ -378,26 +404,79 @@ filled from the accepted candidate; this example does not ratify new content):
   },
   "selected_evidence": [
     {
-      "assertion_key": "<stable SCB-documentation availability assertion key>",
-      "assertion_id": "<revision-qualified SCB-documentation assertion ID>",
-      "reviewed_projection_sha256": "<semantic projection SHA-256>"
+      "semantic_selector": {
+        "dataset": "scb-lisa-variable-availability",
+        "record_family_key": ["<section-key>", "DispInkKE"],
+        "subject": {
+          "provider": "scb",
+          "register": "lisa",
+          "source_variable": "DispInkKE",
+          "variant": "individer-15plus",
+          "population": "<documented population key>"
+        },
+        "fact_kind": "availability"
+      },
+      "reviewed_scope": {
+        "edition_scope": ["2010", "2011", "2012"],
+        "reference_period_scope": {"kind": "not_applicable"}
+      },
+      "reviewed_assertion_ids": ["<reviewed revision-qualified assertion ID>"],
+      "reviewed_projection_sha256": "<canonical dependency projection SHA-256>"
     }
   ],
   "considered_evidence": [
     {
-      "assertion_key": "<stable SWECOV possession assertion key>",
-      "assertion_id": "<revision-qualified SWECOV assertion ID>",
+      "semantic_selector": {
+        "dataset": "<accepted SWECOV holdings dataset>",
+        "record_family_key": ["DispInkKE", "individer-15plus"],
+        "subject": {
+          "provider": "scb",
+          "register": "lisa",
+          "source_variable": "DispInkKE",
+          "variant": "individer-15plus",
+          "population": "<documented population key>"
+        },
+        "fact_kind": "project_possession"
+      },
+      "reviewed_scope": {
+        "edition_scope": ["2010", "2011", "2012"],
+        "reference_period_scope": {"kind": "not_applicable"}
+      },
+      "reviewed_assertion_ids": ["<reviewed revision-qualified SWECOV assertion ID>"],
+      "reviewed_projection_sha256": "<canonical dependency projection SHA-256>",
       "role": "corroborating project possession only"
     }
   ],
   "checked_assumptions": [
     {
       "kind": "copied_facts",
-      "source_records": ["<exact reviewed SCB record locator(s)>"],
-      "facts": ["identity", "definition", "data_type", "code_set"],
-      "reviewed_projection_sha256": "<combined semantic projection SHA-256>"
+      "semantic_selector": {
+        "dataset": "scb-registerinformation",
+        "record_family_key": ["DispInkKE", "individer-15plus"],
+        "subject": {
+          "provider": "scb",
+          "register": "lisa",
+          "source_variable": "DispInkKE",
+          "variant": "individer-15plus",
+          "population": "<reviewed source population key>"
+        },
+        "fact_kinds": ["source_identity", "definition", "data_type", "code_set"]
+      },
+      "reviewed_scope": {
+        "edition_scope": ["2009"],
+        "reference_period_scope": {"kind": "not_applicable"}
+      },
+      "reviewed_assertion_ids": ["<reviewed 2009 revision-qualified assertion IDs>"],
+      "reviewed_projection_sha256": "<combined scoped dependency projection SHA-256>"
     },
-    {"kind": "target_cardinality", "expected": 3}
+    {
+      "kind": "target_cardinality",
+      "reviewed_scope": {
+        "edition_scope": ["2010", "2011", "2012"],
+        "reference_period_scope": {"kind": "not_applicable"}
+      },
+      "expected": 3
+    }
   ],
   "rationale": "SCB documentation supports only these missing occurrences.",
   "review": {
@@ -407,6 +486,14 @@ filled from the accepted candidate; this example does not ratify new content):
   }
 }
 ```
+
+The illustrative 2009 `copied_facts` scope is deliberately separate from the
+correction's 2010–2012 target. The evaluator compares definition/type/code facts in the
+reviewed source scope; it does not intersect every dependency with the correction target
+and thereby discard the source record that justified the copy. Target cardinality is
+checked over 2010–2012 independently. If a decision instead depends on a reviewed
+nearest-compatible support set, that assumption gets its own explicit selector, scope,
+and projection; a newly applicable nearer member changes that dependency and blocks.
 
 The CIS declarations are the other end of the typed spectrum. A `partition_subject`
 decision retains the exact CIS 2016 selector
@@ -448,23 +535,36 @@ cannot establish either.
 
 ### Decision evaluation across updates
 
-For each candidate bundle, reconciliation resolves a decision's stable evidence
-selectors against the candidate assertion keys and records the resulting
-revision-qualified assertion IDs. It compares candidate semantic projections with the
-reviewed ones. A whole-file checksum identifies which source revision was used; it does
-not invalidate every decision after an unrelated byte edit. A stable semantic record key
-can survive a supported workbook rename or layout change: the revision-qualified
-evidence reference and physical locator change and are reported, while an unchanged
-semantic projection remains unchanged.
+For each candidate bundle, reconciliation resolves each dependency's semantic selector
+across all candidate source occurrences. It restricts and canonically normalizes the
+matching facts within that dependency's reviewed scope, records their revision-qualified
+assertion IDs, and compares the resulting dependency projection with the reviewed
+projection. A whole-file checksum identifies which source revision was used; it does not
+invalidate every decision after an unrelated byte edit. A stable semantic record key can
+survive a supported workbook rename or layout change: the revision-qualified evidence
+reference and physical locator change and are reported, while an unchanged dependency
+projection remains unchanged.
 
-The evaluator also searches for newly applicable evidence for the same subject, fact,
-and scope. Checking only the old selected records would miss exactly the updates this
-architecture exists to catch. Results are:
+For example, a dependency may review positive availability over editions 2018–2019 from
+one source assertion. A candidate may extend that source occurrence to 2018–2020 or
+split it into separate 2018 and 2019 rows. The occurrence keys and revision-qualified
+witnesses change, but selector resolution followed by restriction to 2018–2019 yields
+the same canonical dependency projection, so the existing decision remains applicable.
+The report retains the old and new witnesses and reconciles 2020 independently; it does
+not extend the correction to 2020. This normalization does not split a pooled 2018–2019
+reference period into annual evidence.
+
+The evaluator also searches for newly applicable evidence intersecting the reviewed
+dependency scope and reconciles newly added outside scope independently. Checking only
+the old full-range assertion key would miss exactly the updates this architecture exists
+to catch. Lost reviewed-scope coverage, changed copied facts, new conflicts within that
+scope, and changed explicit support-set or cardinality assumptions still block. Results
+are:
 
 - `applicable`: selected and competing facts and every checked assumption still hold;
 - `upstream_fixed`: a corrected omission is now supplied by the provider;
-- `needs_review`: a relevant fact, target count, copied-record projection, support set,
-  or applicable witness changed;
+- `needs_review`: a relevant fact, target count, copied-record dependency projection, or
+  checked support set changed;
 - `missing_evidence`: a required witness or historical scope cannot be resolved;
 - `ambiguous`: competing applicable assertions have no justified resolution; or
 - `excluded_by_scope`: the decision is intentionally irrelevant to this explicit
@@ -644,8 +744,10 @@ by this documentation change:
   | Scenario                                   | Recorded and applied/blocking result                                                                                                                                                                                                                  | Operator report                                                                   | Proof boundary                                                                   |
   | ------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
   | Unchanged sources                          | Same revisions/assertion projections and decision dependencies; decisions are `applicable`; catalog content is deterministic.                                                                                                                         | Unchanged dispositions and pins.                                                  | Contract replay plus build/dbdiff.                                               |
-  | Unrelated source edit                      | New revision/hash and unrelated changed assertions; relevant projections are unchanged, so decisions still apply.                                                                                                                                     | Revision change separated from unaffected decisions.                              | Synthetic source-update regression.                                              |
-  | Same-year definition or codes change       | Old/new meaning or code-set projections on the bound subject; dependent decisions become `needs_review` and block.                                                                                                                                    | Exact changed facts, locators, decisions, and scope.                              | Decision regression plus materialization/publication gate.                       |
+  | Unrelated source edit                      | New revision/hash and unrelated changed assertions; relevant dependency projections are unchanged, so decisions still apply.                                                                                                                          | Revision change separated from unaffected decisions.                              | Synthetic source-update regression.                                              |
+  | Extended or split source range             | Full-range occurrence keys/witnesses change, but selector resolution produces the same canonical facts and coverage in the reviewed dependency scope; the decision remains `applicable`. Added outside scope is reconciled separately.                | Old/new witnesses, unchanged dependency projection, and separately added scope.   | Synthetic extend/split and row-order permutation regressions.                    |
+  | Same-year definition or codes change       | Old/new meaning or code-set facts change the projection within the reviewed dependency scope; dependent decisions become `needs_review` and block.                                                                                                    | Exact changed facts, locators, decisions, and scope.                              | Decision regression plus materialization/publication gate.                       |
+  | Copied source outside correction target    | A 2010–2012 correction may depend on reviewed 2009 definition/codes. The 2009 dependency projection and 2010–2012 target cardinality are checked in their own scopes; lost/changed source facts block.                                                | Both scopes, old/new source witnesses, copied facts, and assumption outcomes.     | Synthetic independent dependency/target-scope regression.                        |
   | New nearer cloning edition                 | New witness changes the reviewed support set/nearest-compatible assumption; no dynamic reselection; `needs_review` blocks.                                                                                                                            | Old exact copy source, new candidate, and affected copied facts.                  | Synthetic insertion regression.                                                  |
   | SCB fixes an omission                      | Provider assertion now occupies a corrected target; status `upstream_fixed` blocks until the finite correction is retired or re-resolved.                                                                                                             | Old correction and new provider record side by side.                              | Errata-replacement update regression.                                            |
   | Newly added year                           | New claims get their own scope; old corrections do not expand. Non-conflicting decisions stay applicable, while a new unresolved required fact blocks full publication.                                                                               | New edition and whether it is resolved independently.                             | Edition, decision, and build regressions.                                        |
