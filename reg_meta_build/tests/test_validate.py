@@ -2016,6 +2016,102 @@ class TestBuildDbBundleSelection:
             assert output.read_bytes() == original_output
         open_input_bundle(selection)
 
+    @pytest.mark.parametrize(
+        "command",
+        ("build-db", "prepare-input-bundle", "verify-input-bundle"),
+        ids=("build", "prepare", "verify"),
+    )
+    def test_missing_bundle_selection_suppresses_tracked_and_untracked_output(
+        self,
+        tmp_path: Path,
+        capsys: pytest.CaptureFixture[str],
+        command: str,
+    ) -> None:
+        from reg_meta.errors import EXIT_CONFIG
+        from reg_meta_build.input_snapshot import open_input_bundle
+
+        from reg_meta_build import cli as cli_mod
+
+        input_dir = tmp_path / "input"
+        write_scb_input(input_dir)
+        selection = write_input_bundle(tmp_path / "accepted", input_dir)
+        bundle = open_input_bundle(selection)
+        repository = bundle.repository
+        tracked_output = bundle.root / "catalog-bundle.json"
+        tracked_bytes = tracked_output.read_bytes()
+        db_dir = tmp_path / "db"
+        db_dir.mkdir()
+        published = db_dir / DB_FILENAME
+        published_bytes = b"EXISTING-CATALOG"
+        published.write_bytes(published_bytes)
+        curation_dir = tmp_path / "curation"
+        slug_dir = tmp_path / "slugs"
+        curation_dir.mkdir()
+        slug_dir.mkdir()
+        missing_selection = tmp_path / "missing-selection"
+        candidate = repository / "candidate"
+
+        if command == "build-db":
+            command_args = [
+                "--db",
+                str(db_dir),
+                command,
+                "--providers",
+                "scb",
+                "--skip-slugs",
+                "--no-validate",
+                "--input-bundle",
+                str(missing_selection),
+                "--input-commit",
+                "0" * 40,
+                "--input-manifest-sha256",
+                "0" * 64,
+            ]
+        elif command == "prepare-input-bundle":
+            command_args = [
+                command,
+                "--input-dir",
+                str(input_dir),
+                "--curation-dir",
+                str(curation_dir),
+                "--slug-dir",
+                str(slug_dir),
+                "--scb-snapshot",
+                str(missing_selection),
+                "--scb-input-commit",
+                "0" * 40,
+                "--scb-manifest-sha256",
+                "0" * 64,
+                "--output-dir",
+                str(candidate),
+            ]
+        else:
+            command_args = [
+                command,
+                "--input-bundle",
+                str(missing_selection),
+                "--input-commit",
+                "0" * 40,
+                "--input-manifest-sha256",
+                "0" * 64,
+            ]
+
+        for output in (
+            tracked_output,
+            repository / "results" / f"{command}.json",
+        ):
+            exit_code = cli_mod.run(["--output", str(output), *command_args])
+
+            assert exit_code == EXIT_CONFIG
+            error = json.loads(capsys.readouterr().out)["error"]
+            assert error["code"] == "catalog_input_bundle_invalid"
+            assert "not found" in error["message"]
+            assert tracked_output.read_bytes() == tracked_bytes
+            assert published.read_bytes() == published_bytes
+            assert not (repository / "results").exists()
+            assert not candidate.exists()
+            open_input_bundle(selection)
+
     def test_cli_timing_separates_prepared_dictionary_and_occurrences(
         self,
         tmp_path: Path,

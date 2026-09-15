@@ -2184,9 +2184,11 @@ def _print_help() -> None:
     w("\nRun `reg-meta-build <command> --help` for detailed help.\n")
 
 
-def _reject_bundle_output_path(
+def _confined_bundle_output_path(
     args: argparse.Namespace, output_path: str | None
-) -> None:
+) -> str | None:
+    if output_path is None:
+        return None
     selection_path = (
         getattr(args, "scb_snapshot", None)
         if args.command == "prepare-input-bundle"
@@ -2194,18 +2196,22 @@ def _reject_bundle_output_path(
         if args.command in {"build-db", "verify-input-bundle"}
         else None
     )
-    if output_path is None or not selection_path:
-        return
+    if selection_path is None:
+        return output_path
+    if not selection_path:
+        return None
     try:
         repository = input_bundle_repository(Path(selection_path))
     except SnapshotError:
-        # Let the build handler report the selected path's precise validation error.
-        return
+        # Keep the handler's precise selection error, but do not write it to a path
+        # whose confinement could not be established from that selection.
+        return None
     _reject_input_repository_destination(
         Path(output_path).expanduser().resolve(),
         repository,
         label="CLI output",
     )
+    return output_path
 
 
 def run(argv: list[str] | None = None) -> int:
@@ -2237,7 +2243,7 @@ def run(argv: list[str] | None = None) -> int:
     verbose = getattr(args, "verbose", False)
 
     try:
-        _reject_bundle_output_path(args, output_path)
+        output_path = _confined_bundle_output_path(args, output_path)
     except Exception as exc:  # noqa: BLE001 — never report into a rejected path
         return handle_cli_exception(exc, None)
 
