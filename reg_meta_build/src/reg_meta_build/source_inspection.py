@@ -397,23 +397,37 @@ def _finite_name_native_anchors(
     scopes: Iterable[_FiniteWorkbookScope],
 ) -> tuple[SourceRecord, ...]:
     """Select exact-name/native anchors inside an active finite assumption."""
+    return tuple(
+        record
+        for record in _finite_named_native_records(records, scopes)
+        if _column(record) == exact_column
+    )
+
+
+def _finite_named_native_records(
+    records: Iterable[SourceRecord],
+    scopes: Iterable[_FiniteWorkbookScope],
+) -> tuple[SourceRecord, ...]:
+    """Select all finite named witnesses on native variables in active scopes."""
     finite_scopes = tuple(scopes)
     return tuple(
         record
         for record in records
-        if _column(record) == exact_column
+        if _column(record) is not None
         and _native_variable_key(record) is not None
         and _finite_scope_ids_for_record(record, finite_scopes)
     )
 
 
 def _annual_targets_within_workbook_scope(
+    exact_column: str,
     records: Iterable[SourceRecord],
     anchors: Iterable[SourceRecord],
     scopes: Iterable[_FiniteWorkbookScope],
 ) -> tuple[SourceRecord, ...]:
     """Select blank-name annual records only inside their workbook declaration."""
     finite_scopes = tuple(scopes)
+    native_records = tuple(records)
     scope_by_id = {scope.assumption.assumption_id: scope for scope in finite_scopes}
     anchor_scope_ids: dict[tuple[int, int], set[str]] = defaultdict(set)
     for anchor in anchors:
@@ -422,9 +436,16 @@ def _annual_targets_within_workbook_scope(
         anchor_scope_ids[native_key].update(
             _finite_scope_ids_for_record(anchor, finite_scopes)
         )
+    finite_spellings: dict[tuple[int, int], set[str]] = defaultdict(set)
+    for named in _finite_named_native_records(native_records, finite_scopes):
+        native_key = _native_variable_key(named)
+        column = _column(named)
+        assert native_key is not None
+        assert column is not None
+        finite_spellings[native_key].add(column)
 
     targets: list[SourceRecord] = []
-    for record in records:
+    for record in native_records:
         column = record.fields.column_name
         year = _annual_year(record)
         native_key = _native_variable_key(record)
@@ -436,7 +457,7 @@ def _annual_targets_within_workbook_scope(
         ):
             continue
         connected_scope_ids = anchor_scope_ids.get(native_key, set())
-        if any(
+        if finite_spellings.get(native_key) == {exact_column} and any(
             year in scope_by_id[assumption_id].documented_years
             for assumption_id in connected_scope_ids
         ):
@@ -645,6 +666,9 @@ def compare_availability_records(
     unknown_by_native_variable: dict[tuple[int, int], list[SourceRecord]] = defaultdict(
         list
     )
+    records_by_native_variable: dict[tuple[int, int], list[SourceRecord]] = defaultdict(
+        list
+    )
     edition_years: set[tuple[int, int]] = set()
     variable_ids_by_assumption_column: dict[tuple[str, str], set[int]] = defaultdict(
         set
@@ -656,6 +680,8 @@ def compare_availability_records(
         column = _column(record)
         variant_id = record.subject.native.register_variant_id
         variable_id = record.subject.native.variable_id
+        if variant_id is not None and variable_id is not None:
+            records_by_native_variable[variant_id, variable_id].append(record)
         if column is not None:
             all_exact[column].append(record)
             if variant_id is not None and variable_id is not None:
@@ -682,6 +708,7 @@ def compare_availability_records(
                 unknown_by_variable_year[variant_id, variable_id, year].append(record)
 
     finite_anchors_by_column: dict[str, tuple[SourceRecord, ...]] = {}
+    finite_named_by_column: dict[str, tuple[SourceRecord, ...]] = {}
     finite_targets_by_column: dict[str, tuple[SourceRecord, ...]] = {}
     for column, documented_records in workbook_by_column.items():
         scopes = finite_scopes_by_column[column]
@@ -692,12 +719,17 @@ def compare_availability_records(
             for anchor in anchors
             if (native_key := _native_variable_key(anchor)) is not None
         }
+        native_records = tuple(
+            record
+            for native_key in anchor_native_keys
+            for record in records_by_native_variable.get(native_key, ())
+        )
+        finite_named_by_column[column] = _finite_named_native_records(
+            native_records, scopes
+        )
         finite_targets_by_column[column] = _annual_targets_within_workbook_scope(
-            (
-                record
-                for native_key in anchor_native_keys
-                for record in unknown_by_native_variable.get(native_key, ())
-            ),
+            column,
+            native_records,
             anchors,
             scopes,
         )
@@ -852,6 +884,17 @@ def compare_availability_records(
                         (assumption.scb_variant_id, variable_id, year), ()
                     )
                 )
+                blank_native_keys = {
+                    native_key
+                    for item in blank_candidates
+                    if (native_key := _native_variable_key(item)) is not None
+                }
+                competing_named = tuple(
+                    item
+                    for item in finite_named_by_column.get(column, ())
+                    if _native_variable_key(item) in blank_native_keys
+                    and _column(item) != column
+                )
                 folded_candidates = tuple(
                     item
                     for item in folded.get(
@@ -859,7 +902,17 @@ def compare_availability_records(
                     )
                     if _column(item) != column
                 )
-                if blank_candidates:
+                if blank_candidates and competing_named:
+                    candidates = (*blank_candidates, *competing_named)
+                    status = "ambiguous_match"
+                    present = True
+                    assumption_ids += (_SPELLING_CONTINUITY_ASSUMPTION_ID,)
+                    detail = (
+                        "the blank-name occurrence shares a native VarId with "
+                        "competing finite source spellings; no exact spelling is "
+                        "selected"
+                    )
+                elif blank_candidates:
                     candidates = blank_candidates
                     status = "unknown_spelling"
                     present = True
@@ -1162,7 +1215,9 @@ def _target_preview(
     scopes = _finite_workbook_scopes(workbook)
     exact_named = tuple(record for record in scb if _column(record) == exact_column)
     finite_anchors = _finite_name_native_anchors(exact_column, exact_named, scopes)
-    unknown_targets = _annual_targets_within_workbook_scope(scb, finite_anchors, scopes)
+    unknown_targets = _annual_targets_within_workbook_scope(
+        exact_column, scb, finite_anchors, scopes
+    )
     used_assumption_ids = {scope.assumption.assumption_id for scope in scopes}
     scoped_workbook_years = {
         year for scope in scopes for year in scope.documented_years

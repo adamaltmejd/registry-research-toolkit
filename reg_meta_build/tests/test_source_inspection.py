@@ -862,6 +862,78 @@ def test_filtered_preview_uses_finite_anchors_and_workbook_scoped_targets(
         )
 
 
+def test_competing_finite_native_spelling_makes_blank_target_ambiguous(
+    tmp_path: Path,
+) -> None:
+    input_dir = tmp_path / "source"
+    rows = [
+        _var_row(
+            colname=column,
+            cvid=member_id,
+            var_id=9,
+            year=str(year),
+            regver_id=200 + member_id,
+            register=("LISA", 34, 152),
+        )
+        for column, year, member_id in (
+            ("X", 2018, 1),
+            ("Y", 2019, 2),
+            ("", 2020, 3),
+        )
+    ]
+    write_scb_input(input_dir, registerinformation_rows=rows)
+    workbook = write_lisa_workbook(input_dir / "docs" / "lisa.xlsx")
+    source = load_workbook(workbook)
+    source["Företag"]["A9"] = "X"
+    source["Företag"]["C9"] = 2020
+    source.save(workbook)
+    source.close()
+    selection = write_input_bundle(
+        tmp_path / "accepted",
+        input_dir,
+        lisa_workbook=LisaWorkbookSelection(
+            path=workbook,
+            upstream_revision="2024-2025",
+            sha256=hashlib.sha256(workbook.read_bytes()).hexdigest(),
+        ),
+    )
+    bundle = open_input_bundle(selection)
+
+    full = inspect_bundle_source_records(bundle, code_commit="c" * 40)
+    filtered = inspect_bundle_source_records(
+        bundle, code_commit="c" * 40, exact_column="X"
+    )
+
+    assert filtered.target_preview is not None
+    assert filtered.target_preview.expected_source_target_count == 0
+    assert filtered.target_preview.target_record_ids == ()
+    scb_by_member = {
+        record.subject.native.member_id: record
+        for record in filtered.source_records
+        if record.subject.native.member_id is not None
+    }
+    assert set(scb_by_member) == {1, 2, 3}
+    competing = scb_by_member[2]
+    blank = scb_by_member[3]
+    for report in (full, filtered):
+        ambiguous = next(
+            outcome
+            for outcome in report.comparison_outcomes
+            if outcome.column_name == "X"
+            and outcome.workbook_record_ids
+            and outcome.status == "ambiguous_match"
+        )
+        assert set(ambiguous.scb_record_ids) == {
+            competing.record_id,
+            blank.record_id,
+        }
+        assert not any(
+            outcome.status == "unknown_spelling"
+            and blank.record_id in outcome.scb_record_ids
+            for outcome in report.comparison_outcomes
+        )
+
+
 def test_filtered_report_retains_unparseable_period_as_incomplete(
     tmp_path: Path,
 ) -> None:
