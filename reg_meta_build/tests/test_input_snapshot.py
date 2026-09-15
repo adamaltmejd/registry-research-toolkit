@@ -10,6 +10,7 @@ import os
 import sqlite3
 import subprocess
 from typing import TYPE_CHECKING
+from zipfile import BadZipFile
 
 import pytest
 from _csv_fixtures import (
@@ -17,6 +18,7 @@ from _csv_fixtures import (
     repin_input_bundle,
     repin_scb_snapshot,
     write_input_bundle,
+    write_input_bundle_from_snapshot,
     write_scb_input,
     write_scb_snapshot,
 )
@@ -582,6 +584,69 @@ def test_catalog_bundle_preparation_rejects_invalid_consumed_input(
         )
     assert exc_info.value.code == "curated_toml_invalid"
     assert not (snapshot.path.parent / "bundle").exists()
+
+
+@pytest.mark.parametrize(
+    ("source_root", "relative", "payload", "expected_exception"),
+    (
+        ("curation", "lineage.toml", b"not = [valid", RegMetaError),
+        ("input", "SCB/ID-kolumner.xlsx", b"not a zip", BadZipFile),
+        ("input", "SCB/Tabelldefinitioner.sql", b"\x81", UnicodeDecodeError),
+    ),
+)
+def test_bundle_prepare_and_verify_reject_invalid_small_consumed_contracts(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    source_root: str,
+    relative: str,
+    payload: bytes,
+    expected_exception: type[Exception],
+) -> None:
+    input_dir = tmp_path / "source"
+    write_scb_input(input_dir)
+    curation = tmp_path / "curation"
+    slugs = tmp_path / "slugs"
+    curation.mkdir()
+    slugs.mkdir()
+    root = curation if source_root == "curation" else input_dir
+    malformed = root / relative
+    malformed.parent.mkdir(parents=True, exist_ok=True)
+    malformed.write_bytes(payload)
+
+    snapshot = write_scb_snapshot(tmp_path / "accepted", input_dir / "SCB")
+    repository = snapshot.path.parent
+    snapshot_manifest = (snapshot.path / "manifest.json").read_bytes()
+    output = repository / "bundle"
+    with pytest.raises(expected_exception):
+        prepare_input_bundle(input_dir, curation, slugs, snapshot, output)
+
+    assert not output.exists()
+    assert (snapshot.path / "manifest.json").read_bytes() == snapshot_manifest
+    assert _git(repository, "rev-parse", "HEAD") == snapshot.input_commit
+    assert not _git(
+        repository, "status", "--porcelain=v1", "--untracked-files=all"
+    )
+
+    # Build an accepted malformed fixture without the contract gate so the
+    # explicit verifier is independently required to exercise the same consumer.
+    with monkeypatch.context() as bypass:
+        bypass.setattr(snapshot_module, "_validate_bundle_contract", lambda _root: None)
+        selection = write_input_bundle_from_snapshot(
+            input_dir,
+            snapshot,
+            curation_dir=curation,
+            slug_dir=slugs,
+        )
+    bundle_manifest = (selection.path / "catalog-bundle.json").read_bytes()
+
+    with pytest.raises(expected_exception):
+        verify_input_bundle(selection)
+
+    assert (selection.path / "catalog-bundle.json").read_bytes() == bundle_manifest
+    assert _git(repository, "rev-parse", "HEAD") == selection.input_commit
+    assert not _git(
+        repository, "status", "--porcelain=v1", "--untracked-files=all"
+    )
 
 
 def test_prepare_exhaustively_verifies_before_publication(

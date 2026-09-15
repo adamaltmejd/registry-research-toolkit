@@ -37,7 +37,7 @@ from urllib.parse import quote
 
 from pydantic import BaseModel, ConfigDict, field_validator, model_validator
 
-from .db import _CURATED_PROVIDERS, _file_sha256
+from .db import DDL, _CURATED_PROVIDERS, _file_sha256
 from .dbdiff import TableIgnore, diff_db_content, format_report
 
 if TYPE_CHECKING:
@@ -2352,11 +2352,12 @@ def _validate_bundle_contract(root: Path) -> None:
         load_concept_groups,
     )
     from .delivery_enrichment import load_delivery_enrichment
-    from .fqid_slugs import load_slug_dir, read_snapshot
+    from .fqid_slugs import load_lineage_config, load_slug_dir, read_snapshot
     from .period_family_merges import load_period_family_merges
     from .relations import load_relations
     from .scb_errata import load_scb_errata
     from .sources.curated import CanonicalScbAdapter, CuratedAdapter
+    from .sources.scb import _import_id_kolumner, _import_tabelldefinitioner
     from .sources.sos import parse_directory
     from .tags import load_tags
 
@@ -2396,6 +2397,19 @@ def _validate_bundle_contract(root: Path) -> None:
         finally:
             conn.close()
 
+    scb = catalog / "SCB"
+    auxiliary_conn = sqlite3.connect(":memory:")
+    try:
+        auxiliary_conn.executescript(DDL)
+        sql_path = scb / "Tabelldefinitioner.sql"
+        if sql_path.is_file():
+            _import_tabelldefinitioner(auxiliary_conn, sql_path)
+        xlsx_path = scb / "ID-kolumner.xlsx"
+        if xlsx_path.is_file():
+            _import_id_kolumner(auxiliary_conn, xlsx_path)
+    finally:
+        auxiliary_conn.close()
+
     if slugs.is_dir():
         load_slug_dir(slugs)
         snapshot_path = slugs / ".snapshot.json"
@@ -2420,6 +2434,7 @@ def _validate_bundle_contract(root: Path) -> None:
     load_code_label_pairs(concept_groups)
     load_concept_groups(curation_path("concept_groups.auto.toml"))
     load_delivery_enrichment(curation_path("delivery_enrichment.generated.toml"))
+    load_lineage_config(curation_path("lineage.toml"))
     load_period_family_merges(curation_path("period_family_merges.toml"))
     load_relations(curation_path("relations.toml"))
     load_scb_errata(
