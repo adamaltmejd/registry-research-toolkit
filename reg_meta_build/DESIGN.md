@@ -987,9 +987,11 @@ original source checksums; the accepted SCB source commit is
 
 Preparation reads loose provider inputs plus the code checkout's curation and slug
 authoring files, copies small formats byte-for-byte (XLSX stays XLSX), hashes and parses
-them, and exhaustively verifies the referenced SCB snapshot. It refuses an existing
-target and never stages or commits. Acceptance is an explicit maintainer Git decision;
-there is no reverse synchronization to the code checkout and no remote creation:
+them, and quick-checks the referenced accepted SCB snapshot's manifest, Git identity and
+inventory without traversing its logical stream. It refuses an existing target and never
+stages or commits. Acceptance is an explicit maintainer Git decision; there is no
+reverse synchronization to the code checkout and no remote creation. The explicit
+`verify-input-bundle` command performs the exhaustive SCB proof:
 
 ```console
 reg-meta-build prepare-input-bundle \

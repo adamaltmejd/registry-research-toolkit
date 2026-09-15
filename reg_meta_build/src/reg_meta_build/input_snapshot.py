@@ -2495,10 +2495,6 @@ def prepare_input_bundle(
         (staging / BUNDLE_MANIFEST_NAME).write_bytes(manifest_bytes)
         _verify_bundle_inventory(staging, manifest, hashes=True)
         _validate_bundle_contract(staging)
-        if verify_snapshot(snapshot.root) != snapshot.manifest:
-            raise SnapshotError(
-                "verified SCB snapshot differs from the selected manifest"
-            )
         changed = sorted(
             relative
             for relative, source in sources.items()

@@ -404,6 +404,31 @@ def test_catalog_bundle_manifest_changes_with_meaningful_auxiliary_input(
     assert first.manifest_sha256 != second.manifest_sha256
 
 
+def test_catalog_bundle_preparation_skips_exhaustive_snapshot_verification(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    input_dir = tmp_path / "source"
+    write_scb_input(input_dir)
+    snapshot = write_scb_snapshot(tmp_path / "accepted", input_dir / "SCB")
+    auxiliary = input_dir / "SCB" / "Tabelldefinitioner.sql"
+    auxiliary.write_text("CREATE TABLE auxiliary;\n", encoding="utf-8")
+    curation = tmp_path / "curation"
+    slugs = tmp_path / "slugs"
+    curation.mkdir()
+    slugs.mkdir()
+
+    def exhaustive_use(*_args: object, **_kwargs: object) -> None:
+        raise AssertionError("auxiliary-only preparation must reuse the accepted proof")
+
+    monkeypatch.setattr(snapshot_module, "verify_snapshot", exhaustive_use)
+    output = snapshot.path.parent / "bundle"
+    prepare_input_bundle(input_dir, curation, slugs, snapshot, output)
+
+    assert (
+        output / "catalog" / "SCB" / "Tabelldefinitioner.sql"
+    ).read_bytes() == auxiliary.read_bytes()
+
+
 def test_catalog_bundle_requires_exact_clean_selection_and_never_overwrites(
     tmp_path: Path,
 ) -> None:
