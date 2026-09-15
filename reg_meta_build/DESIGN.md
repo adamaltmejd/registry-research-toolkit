@@ -966,14 +966,14 @@ reg-meta-build --db /scratch/y152 build-db \
   --scb-value-prestage-cache /scratch/scb-value-prestage.sqlite --timing
 ```
 
-Selection requires a clean checkout at the exact full commit. The committed and
-worktree manifests must match the explicit SHA-256 pin and supported
-schema/converter versions. Ordinary build use then compares the declared normalized
-inventory and byte sizes with both the pinned Git tree and worktree. These are quick
-identity and completeness checks for an input the maintainer already accepted; they do
-not prove artifact hashes, dictionary content keys or logical round-trip digests again.
-Changing the commit or manifest requires new explicit pins after preparation or an
-explicit `verify`; the builder never accepts or repairs a changed snapshot implicitly.
+Selection requires a clean checkout at the exact full commit. The committed and worktree
+manifests must match the explicit SHA-256 pin and supported schema/converter versions.
+Ordinary build use then compares the declared normalized inventory and byte sizes with
+both the pinned Git tree and worktree. These are quick identity and completeness checks
+for an input the maintainer already accepted; they do not prove artifact hashes,
+dictionary content keys or logical round-trip digests again. Changing the commit or
+manifest requires new explicit pins after preparation or an explicit `verify`; the
+builder never accepts or repairs a changed snapshot implicitly.
 
 Consumed non-value streams still validate escaped-TSV syntax, field/line/record counts,
 dictionary ordering/closure and SCB headers, but omit artifact and logical-stream
