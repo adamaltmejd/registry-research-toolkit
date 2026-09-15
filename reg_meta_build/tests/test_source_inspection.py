@@ -1142,8 +1142,7 @@ def test_source_only_unknown_period_survives_full_and_filtered_inspection(
             for outcome in report.comparison_outcomes
         )
         assert any(
-            issue.kind == issue_kind
-            and issue.source_record_ids == (unknown.record_id,)
+            issue.kind == issue_kind and issue.source_record_ids == (unknown.record_id,)
             for issue in report.interpretation_issues
         )
 
