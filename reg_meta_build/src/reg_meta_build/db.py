@@ -5105,6 +5105,22 @@ def materialize(
 # ---------------------------------------------------------------------------
 
 
+def _reject_input_repository_destination(
+    path: Path, repository: Path, *, label: str
+) -> None:
+    """Reject a build output that would dirty the accepted input checkout."""
+    if path == repository or path.is_relative_to(repository):
+        raise RegMetaError(
+            exit_code=EXIT_CONFIG,
+            code="catalog_input_output_conflict",
+            error_class="configuration",
+            message=f"{label} must stay outside the accepted input repository: {path}",
+            remediation=(
+                "Choose a scratch/output path outside the catalog-inputs Git checkout."
+            ),
+        )
+
+
 def build_db(
     input_dir: Path | None,
     db_dir: Path,
@@ -5304,16 +5320,9 @@ def build_db(
             ("database output", db_dir),
             ("SCB value prestage cache", scb_value_prestage_cache),
         ):
-            if path is not None and (
-                path == bundle_reader.repository
-                or path.is_relative_to(bundle_reader.repository)
-            ):
-                raise RegMetaError(
-                    exit_code=EXIT_CONFIG,
-                    code="catalog_input_output_conflict",
-                    error_class="configuration",
-                    message=f"{label} must stay outside the accepted input repository: {path}",
-                    remediation="Choose a scratch/output path outside the catalog-inputs Git checkout.",
+            if path is not None:
+                _reject_input_repository_destination(
+                    path, bundle_reader.repository, label=label
                 )
 
     db_dir.mkdir(parents=True, exist_ok=True)

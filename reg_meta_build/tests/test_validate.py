@@ -1853,6 +1853,75 @@ class TestBuildDbBundleSelection:
         assert selection.input_commit == "a" * 40
         assert selection.manifest_sha256 == "b" * 64
 
+    @pytest.mark.parametrize(
+        "destination_kind", ("tracked", "untracked"), ids=("tracked", "untracked")
+    )
+    def test_cli_output_inside_input_repository_is_rejected_before_build(
+        self,
+        tmp_path: Path,
+        monkeypatch: pytest.MonkeyPatch,
+        capsys: pytest.CaptureFixture[str],
+        destination_kind: str,
+    ) -> None:
+        from reg_meta.errors import EXIT_CONFIG
+        from reg_meta_build.input_snapshot import open_input_bundle
+
+        from reg_meta_build import cli as cli_mod
+
+        input_dir = tmp_path / "input"
+        write_scb_input(input_dir)
+        selection = write_input_bundle(tmp_path / "accepted", input_dir)
+        repository = selection.path.parent
+        output = (
+            selection.path / "catalog-bundle.json"
+            if destination_kind == "tracked"
+            else repository / "results" / "build-result.json"
+        )
+        original_output = output.read_bytes() if output.exists() else None
+        db_dir = tmp_path / "db"
+        db_dir.mkdir()
+        published = db_dir / DB_FILENAME
+        published_bytes = b"EXISTING-CATALOG"
+        published.write_bytes(published_bytes)
+        build_called = False
+
+        def record_build(**_kwargs):
+            nonlocal build_called
+            build_called = True
+            return {"import_date": "2026-09-15"}
+
+        monkeypatch.setattr(cli_mod, "build_db", record_build)
+        exit_code = cli_mod.run(
+            [
+                "--db",
+                str(db_dir),
+                "--output",
+                str(output),
+                "build-db",
+                "--providers",
+                "scb",
+                "--skip-slugs",
+                "--no-validate",
+                "--input-bundle",
+                str(selection.path),
+                "--input-commit",
+                selection.input_commit,
+                "--input-manifest-sha256",
+                selection.manifest_sha256,
+            ]
+        )
+
+        assert exit_code == EXIT_CONFIG
+        assert not build_called
+        error = json.loads(capsys.readouterr().out)["error"]
+        assert error["code"] == "catalog_input_output_conflict"
+        if original_output is None:
+            assert not output.exists()
+        else:
+            assert output.read_bytes() == original_output
+        assert published.read_bytes() == published_bytes
+        open_input_bundle(selection)
+
     def test_cli_timing_separates_prepared_dictionary_and_occurrences(
         self,
         tmp_path: Path,

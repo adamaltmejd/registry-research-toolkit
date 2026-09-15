@@ -1872,6 +1872,14 @@ def clean_git_commit(repo: Path) -> str:
     return _git(repo, "rev-parse", "HEAD")
 
 
+def input_bundle_repository(path: Path) -> Path:
+    """Resolve the Git repository containing a selected catalog bundle path."""
+    root = path.expanduser().resolve()
+    if not root.is_dir():
+        raise SnapshotError(f"catalog input bundle directory not found: {root}")
+    return Path(_git(root, "rev-parse", "--show-toplevel")).resolve()
+
+
 def _tracked_source_commit(
     source_paths: Sequence[Path], *, identity: str
 ) -> tuple[Path, str]:
@@ -2629,9 +2637,7 @@ def open_input_bundle(selection: CatalogBundleSelection) -> CatalogBundleReader:
             "catalog bundle manifest SHA-256 must be 64 lowercase hexadecimal characters"
         )
     root = selection.path.expanduser().resolve()
-    if not root.is_dir():
-        raise SnapshotError(f"catalog input bundle directory not found: {root}")
-    repo = Path(_git(root, "rev-parse", "--show-toplevel")).resolve()
+    repo = input_bundle_repository(root)
     try:
         bundle_path = root.relative_to(repo).as_posix()
     except ValueError as exc:
@@ -3044,6 +3050,7 @@ __all__ = [
     "converter_source_commit",
     "create_build_lock",
     "create_slug_workspace",
+    "input_bundle_repository",
     "load_inventory",
     "load_manifest",
     "measure_codec_sample",

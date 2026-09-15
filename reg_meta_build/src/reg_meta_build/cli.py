@@ -54,7 +54,7 @@ from .concept_group_candidates import (
 from .concept_groups import (
     load_concept_group_accepts,
 )
-from .db import build_db
+from .db import _reject_input_repository_destination, build_db
 from .doc_coverage import compute_doc_coverage, render_doc_coverage_toml
 from .doc_db import build_doc_db, repo_docs_dir
 from .extend_db import (
@@ -86,6 +86,7 @@ from .input_snapshot import (
     CatalogBundleSelection,
     ScbSnapshotSelection,
     SnapshotError,
+    input_bundle_repository,
     prepare_input_bundle,
     verify_input_bundle,
 )
@@ -2183,6 +2184,24 @@ def _print_help() -> None:
     w("\nRun `reg-meta-build <command> --help` for detailed help.\n")
 
 
+def _reject_bundle_output_path(
+    args: argparse.Namespace, output_path: str | None
+) -> None:
+    bundle_path = getattr(args, "input_bundle", None)
+    if args.command != "build-db" or output_path is None or not bundle_path:
+        return
+    try:
+        repository = input_bundle_repository(Path(bundle_path))
+    except SnapshotError:
+        # Let the build handler report the selected path's precise validation error.
+        return
+    _reject_input_repository_destination(
+        Path(output_path).expanduser().resolve(),
+        repository,
+        label="CLI output",
+    )
+
+
 def run(argv: list[str] | None = None) -> int:
     parser = _build_parser()
     effective = argv if argv is not None else sys.argv[1:]
@@ -2210,6 +2229,11 @@ def run(argv: list[str] | None = None) -> int:
 
     output_path = getattr(args, "output", None)
     verbose = getattr(args, "verbose", False)
+
+    try:
+        _reject_bundle_output_path(args, output_path)
+    except Exception as exc:  # noqa: BLE001 — never report into a rejected path
+        return handle_cli_exception(exc, None)
 
     try:
         payload, exit_code = handler(args)
