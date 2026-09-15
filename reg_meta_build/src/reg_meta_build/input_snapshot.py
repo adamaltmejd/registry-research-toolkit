@@ -1705,7 +1705,10 @@ def _accepted_snapshot_materialization(
         repo = Path(_git(root, "rev-parse", "--show-toplevel")).resolve()
         snapshot_path = root.relative_to(repo).as_posix()
         commit = _git(repo, "rev-parse", "HEAD")
-    except (SnapshotError, ValueError):
+    except (
+        SnapshotError,
+        ValueError,
+    ):
         return None
     manifest_repo_path = _snapshot_repo_path(snapshot_path, MANIFEST_NAME)
     if not _git_bytes(repo, "ls-tree", "-z", commit, "--", manifest_repo_path):
