@@ -133,6 +133,36 @@ Each Python package releases to PyPI on its own tag (`reg_meta/v*`, `reg_meta_bu
   Tiny, focused, no `reg_meta` dep: the schema uses string IDs and leaves resolution to
   the consumer.
 
+### Accepted source revisions and catalog generations
+
+> **Target contract; not yet shipped.** `reg_meta_build/DESIGN.md` defines the full
+> source-reconciliation and correction architecture and its transition from the current
+> curation passes.
+
+`reg_meta_build` alone owns source revisions, source assertions, reviewed decisions, and
+their reconciliation. Accepted machine-readable inputs are selected by the exact commit
+and manifest of the host-local catalog-input repository. The built catalog embeds those
+input pins together with the builder and reviewed-decision identity. `reg_meta` and
+`reg_webapp` consume only the activated SQLite generation; they never read the input
+repository or recompute authority. When correction detail is exposed, it remains
+collapsed into the existing catalog metadata rather than creating a second public
+evidence API.
+
+The accepted input branch and active catalog are related but distinct local states. A
+candidate is reconciled, built, validated, and compared before its input commit is
+accepted. Catalog publication then atomically activates the artifact and its embedded
+pins. A failed build leaves both states unchanged; a publication failure after input
+acceptance may leave the input branch ahead while the active catalog retains its prior
+embedded pins. Runtime readers must never combine those two generations implicitly.
+
+The document index and steward inventories retain separate authority. Indexing or
+preserving a handbook/workbook does not make it a catalog source, and a steward's
+holdings establish possession only for that steward. The planned LISA supplemental
+reader enters through `reg_meta_build`'s machine-readable assertion boundary; PDF
+extraction stays upstream. None of these inputs cross the MONA boundary, and no source
+reconciliation changes the rule that PII stays in MONA and only aggregate,
+disclosure-controlled results leave it.
+
 ## Repo-wide invariants
 
 These are hygiene that keeps options open, enforced in CI where noted. Package-local

@@ -61,176 +61,592 @@ and helpers both packages agree on — lives in `reg_meta`.
   | `sources/` (per-provider IR adapters: scb, sos)                                                  | `reg_meta_build` |
   | `fqid.py`, `catalog.py`, `queries.py`, `doc_queries.py`, `errors.py`, `update.py`, `download.py` | `reg_meta`       |
 
-## Curation surface taxonomy
+## Source reconciliation and correction architecture
 
-The code repository authors catalog curation in deliberately separate homes. Bundle
-preparation copies the accepted bytes into the host-local input repository; routine
-builds read only that captured copy:
+> **Status: target architecture, not shipped behavior.** The current implementation is
+> traced below because it is the evidence for this decision. It still applies
+> corrections in several independent passes and does not yet implement the common
+> assertion, reconciliation, decision-status, or candidate-acceptance contracts in this
+> section. A documentation build or this design decision is not evidence that the target
+> works on the real corpus.
 
-- `curation/` contains every catalog overlay. `repo_curation_path()` in `_curation.py`
-  is the single checkout resolver; there is no old-path fallback.
-- `input_data/` contains provider-source deliveries: SCB/SOS exports, thin-provider
-  TOMLs, and classification CSVs. These are inputs to adapters, not overlays.
-- `fqid_slugs/` contains identity pins and freeze state only. Navigation lineage moved
-  to `curation/lineage.toml` because it affects graph routing, not identity.
-- `doc_sources.toml` and `related_documents.toml` remain package-root provenance for the
-  separate document DB and are outside the catalog-overlay convention.
+The consumer is the maintainer who receives successive official metadata deliveries and
+uses agents to investigate discrepancies before publishing a catalog. The required
+outcome is not merely a valid database: it is a reviewable explanation of what every
+accepted source asserts, why a correction applies, and which changed evidence prevents
+the old decision from being reused.
 
-  | Family                  | Files                                                                                                                                  | Role                                                                                                         |
-  | ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
-  | **identifier**          | `fqid_slugs/<provider>.toml`, `<provider>.auto.toml`, `classifications.toml`, `freeze.toml`; steward shards in `fqid_slugs/<steward>/` | Canonical slugs, panel metadata, auto pins, and per-zone freeze state.                                       |
-  | **navigation lineage**  | `curation/lineage.toml`                                                                                                                | Provider-qualified source-variant defaults and per-consumer-variable overrides for `variable_state_lineage`. |
-  | **relation**            | `curation/relations.toml`                                                                                                              | Typed `[[edge]]` graph facts (`same_as`, `replaced_by`, and `derived_from`).                                 |
-  | **set**                 | `curation/concept_groups.toml`, `curation/concept_groups.auto.toml`, `curation/tags.toml`                                              | Curated/generated browse groups, consolidated `[[pair]]` code↔label folds, and thematic discovery tags.      |
-  | **gap-fill**            | `curation/delivery_enrichment.generated.toml`, `curation/scb_errata.toml`, `curation/alias_windows.toml`                               | Delivery-list enrichment, source omissions, and exact-edition windows for existing aliases.                  |
-  | **value/coding**        | `curation/classifications.toml`, `curation/codelivery.toml`; canonical CSVs in `input_data/classifications/`                           | Classification seeds plus `[[link]]` overrides, and SCB same-period co-delivery coding decisions.            |
-  | **overlap resolution**  | `curation/codeless_overlap.toml`                                                                                                       | Curated decisions for residual code-less/code-bearing state overlaps.                                        |
-  | **period family merge** | `curation/period_family_merges.toml`                                                                                                   | Pre-slug merge of parallel period columns into one variable with per-period alias windows.                   |
-  | **document provenance** | `doc_sources.toml`, `related_documents.toml`                                                                                           | Inputs for the separate document DB; intentionally outside `curation/`.                                      |
+### Decision and rejected alternatives
 
-**Boundary rules (anti-patterns):**
+The target pipeline is:
 
-- **Succession edges are not `same_as`.** `same_as` declares identity (two FQIDs are the
-  same concept). `replaced_by` declares directional succession (predecessor superseded
-  by successor). Gap-fill twins (never-co-occurring columns that partition disjoint year
-  ranges of one concept) and era-renames (one delivery column renamed across eras) both
-  belong in `curation/relations.toml` as representation-grain `replaced_by` succession
-  edges with `from_column` / `to_column` — NOT as `same_as`. The `column_merge` surface
-  that used to handle gap-fills at the column-identity level (upstream of triage) was
-  retired in #846 after FRIDA's gap-fill was re-expressed as variant-scoped
-  representation succession (see *Curated column-merge* below).
-- **A provider's own errors are corrected at the provider's grain, in the adapter —
-  never as state overrides.** `curation/scb_errata.toml` says "SCB delivered this row
-  and its export does not say so", and the build replays the entry as a synthetic
-  Registerinformation row before coalescing, so windows, gaps, fusing, alias windows,
-  types, value sets and the classification backfill are produced by the ordinary passes.
-  The synthetic row also carries `errata:<class>\n<evidence>` into
-  `variable_state.provenance`. The coalescer first resolves availability and displayed
-  shape exactly as it does for provider rows, then partitions that resolved state along
-  the errata entry's exact edition claims. An overlap preserves the provider-documented
-  attribution and writes `errata:scoped-attributions\n<JSON array>`, whose records pair
-  every correction class/evidence value with its exact `source_editions`. Disjoint term
-  corrections therefore remain distinct facts even when the resolved catalog state is
-  annual, and no evidence describes the whole documented interval as corrected.
-  Correction-only overlaps use the same records under `errata:overlapping-attributions`;
-  evidence is descriptive, so distinct overlapping records coexist rather than compete
-  in metadata resolution. The aggregate class names are builder-reserved, and curated
-  classes are single-line so a base record cannot impersonate the structured carrier;
-  evidence remains free text, and the structured formatter preserves its paragraphs.
-  Provenance cannot change coverage or shape selection, while one corrected edition
-  still cannot relabel an adjacent documented interval. When the existing resolver
-  retains a gap covered by no source claim, the coalescer stamps only that span
-  `inferred:resolution-gap` instead of provider NULL; this changes attribution, never
-  coverage or resolved metadata. There is no post-pass `variable_state` surgery and no
-  generic `variable_state_overrides.toml` (see the classification-links rule below for
-  the same boundary). A column SCB never documents anywhere on the variant is the same
-  file's `[[column]]`, which mints the variable instead of re-adding a row; the two are
-  partitioned by whether the export has a row for the column somewhere on the variant,
-  and each entry kind fails the build when it is the other one
-  (`scb_errata_no_source_row` / `scb_errata_now_present`) — shape and slugs are checked
-  at load, everything that needs the export is checked when the entry is applied. The
-  log is self-cleaning: once SCB ships the row the build fails with
-  `scb_errata_now_present` and the entry is deleted, leaving the record in git.
-- **An already-owned alias missing from one held delivery is a representation
-  correction, not a source-instance repair.** `curation/alias_windows.toml` names the
-  canonical variable FQID, variant, existing alias, and exact SCB source editions. It
-  runs after variable slug assignment, requires the target's source instance in each
-  edition, validates its interval through `register_edition_claims`, and adds only those
-  claim intervals to `variable_alias_window`; it never feeds alias connectivity, creates
-  a source row, or changes `variable_state`. The curated alias window carries the
-  existing `errata:scoped-attributions` contract, which makes it additive to the
-  read-side source representation instead of requiring a synthetic base window. A
-  declaration that the source now covers fails for retirement instead of widening the
-  alias.
-- **Classification links are typed, not generic state overrides.**
-  `curation/classifications.toml` targets the `classification_candidate` pipeline and
-  then `variable_state.classification_id`. It is NOT a generic
-  `variable_state_overrides.toml` that can mutate arbitrary state fields; a future
-  simplification must keep the operation typed as a classification assignment with its
-  own validation and precedence.
-- **Coding overrides stay in the value/coding family, not in sets or tags.** Do not fold
-  code-system assignment facts (`curation/classifications.toml`,
-  `curation/codelivery.toml`) into `curation/concept_groups.toml` or
-  `curation/tags.toml`; they have different semantics, validation, and build-pass
-  ordering.
-- **`variable_replaced_by` has three provenance sources, each distinct.** The
-  `timeseries_event`-derived path (`note = 'auto:timeseries_event'`) is a source fact
-  with best-effort noise skips; curated edges in `curation/relations.toml`
-  (`note = 'curated:slug_toml'`) are human-authored FQID-level succession; and the
-  classification-vintage lift (`note = 'derived:classification_vintage_lift'`, #584)
-  derives edges by lifting `classification_replaced_by` edition chains to the variable
-  grain through value-set bindings. It handles the clean 1:1 same-name families and,
-  since #592, entangled cross-product families only when the predecessor/successor
-  variables share a conservative slug-stem stream key that strips only digit-bearing
-  vintage tokens. The lift runs AFTER the other two passes and re-runs
-  `reject_replaced_by_cycles` over the full combined graph, because a pre-existing
-  reversed edge plus a newly inserted lift edge can close a cycle the earlier checks
-  could not see. All three share traversal helpers; their authoring surfaces must not
-  merge.
-- **Graph semantics live in `curation/relations.toml`, not slug TOMLs.** A slug TOML
-  that contains an inline `same_as` field or a top-level `[[replaced_by]]` array now
-  fails as an unknown-key error. The only surviving per-entry edge field in a slug TOML
-  is the within-file `replaced_by` key-string typo-correction pointer (not a succession
-  edge).
+```text
+capture immutable machine-readable candidate revisions
+  → interpret source assertions
+  → reconcile assertions and reviewed decisions
+  → form catalog entities and states
+  → materialize distinct enrichment
+  → validate and publish one pinned catalog generation
+```
 
-## Generation provenance (auto vs curated)
+The common boundary is a small, strict assertion-and-decision model immediately before
+catalog entity formation. Provider readers remain provider-specific, and typed
+operations retain case-specific validation. This is not a framework wrapped around every
+existing post-pass. The runtime transition replaces the old correction routes and then
+deletes them.
 
-Orthogonal to *what* a surface curates (the taxonomy above) is *how its content is
-produced and reviewed*. Three patterns are in use, and the choice between them is not
-stylistic — it is set by one discriminator: **load-bearingness × rule-precision ×
-volume.** Place a new metadata kind by asking, in order:
+The strongest minimal retrofit would add finite-edition guards, semantic dependency
+checks, and one discrepancy report to `scb_errata.py`, `codelivery.py`,
+`alias_windows.py`, `period_family_merges.py`, `classification_links.py`,
+`relations.py`, and generated delivery enrichment. It would repair important individual
+failure modes cheaply. It would still leave authority, identity, evidence selection,
+partial-build behavior, and update invalidation implemented repeatedly at incompatible
+execution grains. Adding the LISA workbook would add yet another rule about which pass
+may override which other pass.
 
-1. **Does a wrong auto-generated entry corrupt correctness, or is it merely cosmetic?**
-   A `same_as` edge powers the catalog **discovery** surface — `Catalog.resolve` follows
-   it transitively (canonical address, search dedup, cross-register graph node) — so a
-   wrong edge produces a reversible cosmetic discovery mis-link (#737). That is
-   materially different from data corruption: data orders and specs bind the concrete
-   `(variable, variant, period)` the user picks and are never canonicalized through
-   `same_as`. A concept-group fold is similarly presentation-only — a wrong fold is
-   cosmetic. Both must be human-gated entry-by-entry; neither can auto-materialize
-   directly from a machine signal.
-2. **Is the inference rule high- or low-precision?** Overlapping-value-set `same_as`
-   candidates are noisy; exact code-set containment is sharp. A noisy rule never
-   auto-materializes, even into a discovery surface where a wrong entry is reversible.
-3. **Is it deterministic, high-volume identity regenerable byte-for-byte from inputs?**
-   Then *regenerate-not-migrate* applies and hand-entry is the wrong tool.
+The replacement is therefore preferred. One reconciliation result feeds entity
+formation; no old pass may mutate the same fact later. A finite typed operation
+vocabulary is preferred to a general JSON Patch, field-path, SQL, or ordered mutation
+language. The actual cases need operation-specific invariants—an identity binding proves
+one variable, a matrix partition proves complete membership, and a coding selection
+proves one winner. A general patch would hide those invariants in patch order and let a
+decision target builder storage rather than a domain fact.
 
-The three patterns, and the surfaces on each:
+### Shipped execution and data flow
 
-- **(a) Curation-only worklist** — the generator emits an *ephemeral* review worklist
-  (stdout / a throwaway `-o` file); the build consumes **only** the hand-curated file,
-  which grows one reviewed entry at a time. For discovery-surface facts (where a wrong
-  entry is a reversible mis-link, not data corruption) that are produced by an imprecise
-  rule — the curation bar is reasonable-confidence cross-register identity
-  (recall-liberal, bounded by the `_SAME_AS_MAX_COMPONENT` size cap), not
-  precision-over-recall (#737). Surface: `curation/relations.toml` (`same_as` /
-  `replaced_by`). Generator: `same-as-candidates`. **A low-precision rule must never
-  auto-load** — human review entry-by-entry is the gate, and that is the whole reason
-  this surface is hand-curated. The accepted entry still resolves endpoints at build
-  time when both endpoint providers are included; slug-anchoring preserves the authored
-  FQID, not a dangling edge.
-- **(b) Committed-auto + opt-in overlay** — the generator writes a **tracked,
-  machine-owned** `*.auto.toml`, regenerated by a *deliberate subcommand* (not inside
-  `build-db`) and idempotent (it preserves already-accepted families); a curated overlay
-  opts in by reference. For presentation-only, high-volume facts where a wrong candidate
-  is cosmetic and a git-diff review signal is wanted. Surfaces:
-  `curation/concept_groups.auto.toml` + `curation/concept_groups.toml` `[[accept]]`.
-  Generator: `concept-group-candidates`. Regenerating inside `build-db` is the
-  anti-pattern here — it would rewrite a tracked file every build (diff noise,
-  perpetually dirty tree), which is exactly why this file is refreshed only on an
-  explicit run.
-- **(c) Regenerate-every-build, gitignored-until-seal** — the `*.auto.toml` is rewritten
-  on every `build-db`, gitignored while `churning`, then committed-and-pinned when the
-  provider advances to `curating`/`frozen`. For deterministic, high-volume identity
-  (variable slugs) you do not review entry-by-entry until seal. The `.snapshot.json`
-  test and the freeze states are the review/seal gate. The git-diff signal that (b) gets
-  for free is here deferred to freeze-time on purpose: while churning, every build moves
-  the file, so a committed copy would be pure noise; the gitignore trades the signal
-  away until `curating`, when stability — and the diff — start to matter. See § "Slug
-  immutability".
+This is the current implementation until the target replaces it:
 
-When in doubt, the safe direction is toward more human gating: a load-bearing kind that
-*could* be presentation-only is cheap to gate and expensive to un-corrupt.
+1. `input_snapshot.py::prepare_snapshot` creates the lossless normalized SCB snapshot.
+   `prepare_input_bundle` captures a complete catalog bundle, including the accepted
+   snapshot, other provider inputs, `curation/`, and `fqid_slugs/`. `open_input_bundle`
+   selects an exact clean input-Git commit and manifest. Routine builds use quick
+   identity checks, prepared readers, and the value-prestage cache; exhaustive
+   verification remains an explicit preparation/acceptance operation.
+2. `SCBAdapter.emit` imports and projects provider values, applies `scb_errata.py`,
+   lifts sensitivity, applies the exact CIS 2014/2016 partitions, triages source
+   identities, and coalesces states through the interval resolver. SOS corrects a few
+   exact names and token mappings inside its reader. Thin-provider TOMLs are source
+   deliveries rather than corrections.
+3. `db.py::materialize` reinserts the combined IR core graph, removes fully covered
+   code-less shadows, seeds classifications, populates slugs, merges period families,
+   creates source and curated alias windows, resolves residual code-less overlaps,
+   materializes concept groups, applies generated delivery enrichment and tags, then
+   builds relations, classifications, lineage, code mappings, and search indexes.
+4. `build_db` validates the staged database and `publish_db` atomically replaces the
+   live catalog. The optional provenance sibling is written afterward and is non-fatal.
+
+`resolution.Claim` is an internal interval carrier—window, authority rank, and approval
+date—not a source assertion. `_curation.py` usefully shares parsing, normalization,
+error, and FQID-resolution leaves, but the TOML loaders it serves have no common
+evidence or decision lifecycle. The source checksum/evidence strings currently recorded
+by several routes are provenance or documentary prose; they are not checked semantic
+dependencies.
+
+The current homes divide into different concerns that must not all be relabelled
+"corrections":
+
+  | Concern                               | Shipped examples                                                                                        | Target treatment                                                                                |
+  | ------------------------------------- | ------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
+  | Source acquisition and interpretation | snapshots, SCB/SOS/thin-provider readers, edition parsing                                               | Retain; readers emit assertions before corrections.                                             |
+  | Reviewed source reconciliation        | SCB errata, curated alias windows, codelivery and code-less overlap pins, selected classification links | Replace with the common decision contract.                                                      |
+  | Identity/representation review        | `same_as`, period-family merges, CIS partitions                                                         | Move the evidence-bearing decision into the common contract; retain typed validators.           |
+  | Canonical standards                   | classification seeds and canonical code CSVs                                                            | Retain as versioned catalog inputs, separate from source-error correction.                      |
+  | Deterministic interpretation policy   | edition grammar, interval sweep, supported cadence and recurring provider rules                         | Retain as named, tested policy with explicit applicability.                                     |
+  | Derived/presentation enrichment       | concept groups, tags, auto classification detection, succession lifts, FTS                              | Retain downstream; it cannot repair source facts or establish identity.                         |
+  | Stable public naming                  | `fqid_slugs/` and freeze state                                                                          | Retain after entity formation; naming is not evidence.                                          |
+  | Consumer-specific routing             | lineage defaults and steward inventory/holdings                                                         | Retain separately; move only assertions of identity or source fact that are hiding inside them. |
+  | Document search                       | `build-docs`, `doc_sources.toml`, `related_documents.toml`                                              | Retain as a separate consumer; an indexed document is not automatically catalog evidence.       |
+
+### Target stages and ownership
+
+Each stage has exactly one responsibility:
+
+1. **Capture revisions.** Losslessly preserve candidate machine-readable source bytes
+   and identify every logical dataset by publisher, purpose, revision, bundle manifest,
+   and artifact hashes. Accepted candidates later advance `.local/catalog-inputs`, the
+   separate local Git repository on its sole named branch `main`, with no remote. Builds
+   select a commit and manifest, never a branch. Raw compressed archives stay outside
+   Git. No measured storage choice changes for this architecture.
+2. **Interpret assertions.** A purpose-specific reader validates one source format and
+   emits source-coordinate assertions without choosing catalog winners. Format repair,
+   edition grammar, and native ID interpretation live here. SCB, SOS, the LISA workbook,
+   and curated thin-provider files may use different readers; they meet only at the
+   assertion model.
+3. **Reconcile.** One run compares all assertions applicable to a subject/fact/scope,
+   checks every reviewed decision and its dependencies, and emits a complete report plus
+   resolved facts. It discovers new competing evidence as well as rechecking selected
+   evidence. It evaluates all independent decisions—including ones an old conditional
+   pass or conflict cascade would no longer reach—before returning blockers rather than
+   failing on the first resolvable conflict.
+4. **Form entities and states.** Provider-specific typed operations may bind identities,
+   partition a source subject, or map representations. Only resolved facts reach the
+   existing Pydantic IR. A correction is never a later `variable_state` patch.
+5. **Materialize and enrich.** `db.py` writes the universal graph, then runs naming,
+   canonical-standard, deterministic derivation, presentation, relation, lineage, and
+   search passes that do not choose between source claims. A downstream pass cannot
+   widen evidence scope or repair availability.
+6. **Validate and publish.** Structural validation and required
+   reconciliation/provenance validation run on the staged catalog. Publication
+   atomically activates one catalog artifact carrying the exact input, code, and
+   decision pins. The optional provenance DB remains diagnostic and cannot own a
+   mandatory gate because it is written non-fatally after the catalog swap.
+
+The code checkout is the sole authoring home for reviewed decisions and explicit policy.
+`prepare_input_bundle` copies those bytes into the candidate bundle and records the
+source blob/commit identity. The bundle copy is immutable evidence for a build, not a
+second place to edit. Reports show both the authoring path and captured hash. A changed
+authoring file requires a newly prepared candidate; an accepted build never falls back
+to the checkout and therefore cannot silently build different curation from the file an
+agent edited.
+
+### Assertion contract
+
+Use strict frozen Pydantic models beside the existing IR (`extra="forbid"`) for source
+revisions, locators, assertions, decisions, and report records. SQLite remains
+appropriate as bounded scratch for joins and reconciliation. Do not Pydantic-materialize
+the 100-million-row value stream: code sets remain content-addressed in the existing
+SQLite/value pipeline, and an assertion refers to a code-set content identity plus its
+source locator.
+
+A source assertion contains:
+
+- `source_revision`: logical dataset ID, publisher, declared purpose, upstream revision,
+  the selected bundle/manifest identity, artifact hashes, and any publisher-declared
+  supersession limited to explicit facts/scopes;
+- `record_locator`: a stable native record key plus current physical coordinates. SCB
+  uses register/variant/edition/VarId/CVID and field; a workbook uses sheet/table,
+  semantic row key, header key, and cell/range. Physical coordinates support inspection
+  but are not authority;
+- `subject`: the source subject before any canonical binding, with register, source
+  variable key or column, and population/variant as separate coordinates;
+- `fact_kind`: a closed vocabulary including availability, name, definition, operational
+  definition, source identity, data type/length, delivery representation, code set,
+  classification assignment, partition membership, and project/steward possession;
+- `edition_scope` and `reference_period_scope` separately. A scope is explicitly
+  `not_applicable`, `unknown`, a finite set, or a disjoint interval list. A pooled
+  `2018–2019` reference period is one pooled scope and is not expanded into annual
+  availability. `LA` is parsed as `lasar`/läsår, never calendar year;
+- an assertion state: `value`, `unknown`, or `negative`. `negative` is allowed only for
+  a fact whose schema defines a negative assertion, such as "not available". A missing
+  row emits no assertion. A source-defined blank emits `unknown` only when that format's
+  contract gives the blank that meaning; and
+- a deterministic assertion ID and semantic projection hash. The projection excludes
+  irrelevant layout fields but includes the subject, fact, scope, assertion state, and
+  value.
+
+For example, this is the shape a future LISA availability reader could emit. It is
+illustrative, not an assertion that the preserved workbook has been accepted or that its
+audit was correct:
+
+```json
+{
+  "assertion_id": "lisa-workbook:availability:ampoltyp:2018-2019",
+  "source_revision": {
+    "dataset": "scb-lisa-variable-availability",
+    "publisher": "SCB",
+    "purpose": "LISA variable availability by documented population and edition",
+    "upstream_revision": "<publisher revision from the accepted manifest>",
+    "artifact_sha256": "<captured SHA-256>"
+  },
+  "record_locator": {
+    "table": "<reader-recognized table>",
+    "record_key": ["AmPolTyp", "individer-15plus"],
+    "field": "availability",
+    "physical_cells": ["<cells recorded by the reader>"]
+  },
+  "subject": {
+    "provider": "scb",
+    "register": "lisa",
+    "source_variable": "AmPolTyp",
+    "variant": "individer-15plus",
+    "population": "<workbook population label>"
+  },
+  "fact_kind": "availability",
+  "edition_scope": ["2018", "2019"],
+  "reference_period_scope": {"kind": "not_applicable"},
+  "assertion": {"status": "value", "value": true}
+}
+```
+
+If a recognized workbook cell explicitly says the variable is unavailable, the last
+member is `{"status":"negative"}`. If it is a source-defined unknown marker, it is
+`{"status":"unknown"}`. If the row or year is absent, there is no assertion object at
+all. The SCB machine export's lack of a row is likewise absence, not a negative claim.
+
+The reader also preserves disjoint scopes without taking their hull. A variable
+documented for `1998..2003` and `2007..2010` produces two intervals; it is not available
+in 2004–2006. A multi-year table can assert one pooled reference period without
+asserting that the column is delivered in every constituent year.
+
+### Reviewed decision contract
+
+Reviewed artifacts live under one target authoring tree,
+`reg_meta_build/curation/source_decisions/`, and are captured under the corresponding
+bundle path. JSON is used because the strict Pydantic discriminated unions and nested
+evidence records are clearer than increasingly elaborate TOML tables. This is a clean
+replacement: there are no compatibility readers, migrations, shims, or dual writes for
+displaced formats.
+
+Every decision records:
+
+- a stable `decision_id` and exactly one typed operation;
+- a canonical or source subject, population/variant, fact kind, and finite target
+  edition/reference-period scope;
+- selected assertion IDs and every competing assertion considered;
+- checked assumptions and their reviewed semantic projections: same identity/meaning,
+  definition and operational definition, relevant type/length, code/code-label facts,
+  source representation, target cardinality, and any copied-record or support-set
+  assumption;
+- the expected number of source targets and outputs;
+- a rationale and review provenance (reviewer, date, authoring commit/blob); and
+- the compact correction note to project into existing collapsed catalog metadata when
+  the result is user-visible. The catalog does not gain a second detailed decision
+  schema.
+
+The finite operation vocabulary is tied to current cases:
+
+  | Operation               | Use and operation-specific proof                                                                                                           |
+  | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+  | `select_fact`           | Select or correct one fact over finite scope; proves all applicable witnesses and the chosen authority.                                    |
+  | `correct_omission`      | Supply a missing provider occurrence; proves exact target cardinality and every meaning/coding fact copied from named source records.      |
+  | `bind_identity`         | Establish aliases or `same_as`; proves the subjects are the same variable, not merely related.                                             |
+  | `partition_subject`     | Split one source subject into members; proves an exact selector and complete, non-overlapping partition.                                   |
+  | `map_representation`    | Map period families or alias windows; proves the canonical subject, variant, columns, and exact disjoint periods.                          |
+  | `select_coding`         | Resolve co-delivered or code-less/code-bearing choices; proves one coding for every contested interval and records the rejected witnesses. |
+  | `assign_classification` | Bind a state/code set to a canonical standard; proves the code-set identity and finite applicability.                                      |
+
+These operations share evidence, scope, update, and status semantics, while their
+validators remain ordinary functions. There is no arbitrary operation ordering. A
+decision consumes only source assertions and declared policies; another correction's
+output cannot masquerade as source evidence.
+
+The existing `DispInkKE` omission shows the required shape. Its current declaration
+targets the finite LISA editions 2010, 2011, and 2012. The replacement
+`correct_omission` decision would select the scoped SCB-documentation availability
+assertion, record the SWECOV holdings only as project-possession corroboration, require
+three absent machine targets, and name exact source records for any copied definition,
+type, representation, or code-set facts. The reviewed semantic projections of those
+records are dependencies. It cannot dynamically call `_nearest_rows`, cannot expand to
+2013, and cannot infer meaning or coding from availability.
+
+A reviewable artifact has this concrete shape (placeholder evidence IDs/hashes are
+filled from the accepted candidate; this example does not ratify new content):
+
+```json
+{
+  "decision_id": "scb-lisa-dispinkke-2010-2012",
+  "operation": {
+    "kind": "correct_omission",
+    "target": {
+      "subject": {
+        "provider": "scb",
+        "register": "lisa",
+        "source_variable": "DispInkKE"
+      },
+      "variant": "individer-15plus",
+      "edition_scope": ["2010", "2011", "2012"],
+      "fact_kind": "availability",
+      "assertion": {"status": "value", "value": true}
+    },
+    "expected_absent_targets": 3
+  },
+  "selected_evidence": [
+    {
+      "assertion_id": "<SCB-documentation availability assertion>",
+      "reviewed_projection_sha256": "<semantic projection SHA-256>"
+    }
+  ],
+  "considered_evidence": [
+    {
+      "assertion_id": "<SWECOV possession assertion>",
+      "role": "corroborating project possession only"
+    }
+  ],
+  "checked_assumptions": [
+    {
+      "kind": "copied_facts",
+      "source_records": ["<exact reviewed SCB record locator(s)>"],
+      "facts": ["identity", "definition", "data_type", "code_set"],
+      "reviewed_projection_sha256": "<combined semantic projection SHA-256>"
+    },
+    {"kind": "target_cardinality", "expected": 3}
+  ],
+  "rationale": "SCB documentation supports only these missing occurrences.",
+  "review": {
+    "reviewer": "maintainer",
+    "reviewed_on": "<YYYY-MM-DD>",
+    "authoring_blob": "<Git blob identity>"
+  }
+}
+```
+
+The CIS declarations are the other end of the typed spectrum. A `partition_subject`
+decision retains the exact CIS 2016 selector
+`(register_id=257, register_variant_id=553, edition="2014 - 2016", regver_id=11529, var_id=15662, cvid=469456)`,
+the quality-declaration revision and page locators, every source column, and the
+partner/response coordinates. Operation-specific validation still requires each observed
+answer column exactly once, every declared output exactly once, and the selected source
+instance exactly once. `CO11` is one answer member, not an alias for the full question.
+CIS answers remain distinct variables in one variable group.
+
+### Authority, agreement, and ambiguity
+
+Authority is a relation among source purpose, fact kind, and supported scope. It is
+never deduced from `.xlsx` versus `.csv`, filename, acquisition date, or a scalar
+"newest source" rank.
+
+  | Source purpose                          | Facts it can establish                                                                      | Limits                                                                                                               |
+  | --------------------------------------- | ------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+  | Provider machine metadata               | Native occurrence, identifiers, representation, type and coding for the records it contains | A missing row is not an explicit negative; known provider defects may be corrected by scoped official documentation. |
+  | Official availability schedule/workbook | Availability for its declared register, population/variant, and edition scope               | Does not supply an unchanged definition, code set, type, or identity unless it explicitly documents that fact.       |
+  | Official handbook/quality declaration   | Definitions, question/answer meanings, or availability within the document's stated scope   | A historical handbook does not silently cover later editions. PDF extraction/review is upstream of this build.       |
+  | Canonical classification source         | Standard identity and canonical codes for its stated vintage                                | Does not prove that an arbitrary variable uses the standard.                                                         |
+  | Steward holdings                        | Possession of a column in one steward/project delivery                                      | Never establishes universal provider availability or catalog meaning.                                                |
+  | Generated heuristic/worklist            | A candidate for review                                                                      | Has no authority until grounded in source assertions and accepted through a typed decision.                          |
+
+Agreement retains all independent witnesses and records that their semantic projections
+agree. An explicit source supersession resolves only the named fact and scope; its
+declaration and the superseded witness both remain in provenance. A missing assertion
+neither agrees nor conflicts. An explicit negative conflicts with a positive assertion
+over the same applicable scope. Competing official claims remain `ambiguous` unless
+purpose/scope supplies a documented precedence or a reviewed `select_fact` decision
+explains the selection. Unknown historical scope is `missing_evidence`, not an
+invitation to freeze the current catalog output and call it accepted.
+
+Aliases require evidence that two representations are the same variable. Related
+versions such as `_J16` and `_04` remain distinct variables and may be grouped for
+discovery. Succession is directional continuity, not identity. Concept groups and tags
+cannot establish either.
+
+### Decision evaluation across updates
+
+For each candidate bundle, reconciliation resolves a decision's evidence selectors
+against the candidate assertions and compares the candidate semantic projections with
+the reviewed ones. A whole-file checksum identifies which source revision was used; it
+does not invalidate every decision after an unrelated byte edit. A stable semantic
+record key can survive a supported workbook rename or layout change while the current
+physical locator changes and is reported.
+
+The evaluator also searches for newly applicable evidence for the same subject, fact,
+and scope. Checking only the old selected records would miss exactly the updates this
+architecture exists to catch. Results are:
+
+- `applicable`: selected and competing facts and every checked assumption still hold;
+- `upstream_fixed`: a corrected omission is now supplied by the provider;
+- `needs_review`: a relevant fact, target count, copied-record projection, support set,
+  or applicable witness changed;
+- `missing_evidence`: a required witness or historical scope cannot be resolved;
+- `ambiguous`: competing applicable assertions have no justified resolution; or
+- `excluded_by_scope`: the decision is intentionally irrelevant to this explicit
+  diagnostic provider/source selection.
+
+`upstream_fixed`, `needs_review`, `missing_evidence`, and unresolved `ambiguous` are
+blocking for an accepted full catalog until the decision is retired or reviewed.
+Harmless unknown metadata may remain unknown; an unknown needed to justify an emitted
+fact blocks that fact. Corrections never acquire a newly added edition implicitly.
+
+A copied-source decision names exact records and facts. If its reviewed assumption was
+"the nearest compatible edition in this support set", a newly inserted nearer edition
+changes that support set and produces `needs_review`; it never silently becomes the new
+clone. Prefer an exact source record when the evidence justifies one, but still report a
+new applicable witness whose meaning or coding bears on the correction.
+
+Enduring interpretation policy is versioned separately from reviewed exceptions.
+Supported edition grammar, `LA = lasar`/läsår, cadence, projection vintage, and a
+justified recurring coding rule are policies with explicit applicability and tests. A
+policy does not contain an undated omission or an `all_versions` correction. The
+interval algorithms in `edition_bounds.py` and `resolution.py` remain useful;
+`resolution.Claim` should be renamed or kept clearly internal so it is not confused with
+`SourceAssertion`.
+
+### LISA workbook integration
+
+The first supplemental authoritative input is the preserved machine-readable LISA
+workbook, but preservation is not acceptance. The bundle declares it as a logical
+dataset with publisher, purpose, upstream revision, hash, and required/optional status.
+A purpose-specific reader (target home `sources/lisa.py`, using the installed
+`openpyxl`) validates supported workbook structures and emits availability assertions
+with semantic row/header keys plus physical cell provenance.
+
+The reader preserves population and variant applicability, disjoint year ranges, pooled
+periods, explicit negatives, source-defined unknown/blanks, and absence as different
+states. A renamed file is irrelevant when the manifest still identifies the logical
+dataset. A reordered or supported restructured table may change physical locators while
+preserving semantic keys; an unknown layout or ambiguous key mapping blocks the input as
+unsupported.
+
+The September 14 `AmPolTyp` 2018–2019 disagreement motivates the route but is not an
+acceptance oracle. Once the workbook reader emits checked assertions, reconciliation
+compares them with mikrometadata and the handbook by fact and scope. Availability
+evidence can correct availability only. It cannot authorize carrying forward an old
+definition, operational definition, type, or codebook. Investigation of non-missing data
+values by year remains a separate empirical pipeline and cannot be inferred from pooled
+tables.
+
+PDF acquisition, extraction, OCR, and human review remain upstream. A later PDF pipeline
+may produce the same machine-readable assertion contract with document/page provenance;
+`build-db` never parses PDFs or treats the document-search index as evidence.
+`build-docs` and steward holdings remain separate consumers.
+
+### Operator and agent workflow
+
+This remains a local CLI/report workflow; the use case does not justify a service or UI.
+
+1. Starting from accepted input `main`, prepare every candidate source revision and the
+   current code-repository decision files into a new immutable bundle. Candidate work
+   may use a detached commit/worktree parented to `main`; `main` and the active catalog
+   remain unchanged.
+2. Run inspection once. The source readers and reconciliation implementation produce one
+   deterministic report containing all independently assessable conflicts and decisions:
+   old and new semantic facts, source locators, decision IDs, affected scopes, statuses,
+   blockers, and remediation. A source parse failure marks which analysis is incomplete;
+   it does not falsely report the rest as clean.
+3. The agent edits typed artifacts only in the code checkout's
+   `curation/source_decisions/`. Validate their strict JSON contract and
+   operation-specific invariants, then prepare a new candidate so the captured bundle
+   copy and authoring identity match. Repeat inspection and review until the
+   full-catalog report has no blocking decision outcomes.
+4. Build and validate a scratch catalog from the exact candidate commit/manifest,
+   inspect the same reconciliation report, and compare the database with the accepted
+   catalog/latest release. Any content change after this point invalidates the review
+   and build evidence.
+5. Explicitly fast-forward the local input repository's sole named branch `main` to the
+   exact tested candidate commit. No build writes, repairs, hydrates, commits, or
+   accepts inputs.
+6. Publish only the previously validated artifact carrying those exact
+   input/code/decision pins. Activation is the existing atomic catalog replacement;
+   correction detail exposed to users is collapsed into the existing metadata/provenance
+   fields.
+
+Input acceptance and catalog activation are two deliberate states, not one distributed
+transaction. Failure before input acceptance leaves input `main` and the active catalog
+unchanged. If input acceptance succeeds but publication fails, `main` may contain the
+new approved bundle while the active catalog and its embedded prior input pins remain
+unchanged. The operator report says so, and the exact verified artifact may be retried.
+Readers never combine current input `main` with an older active DB. Required decision
+evidence is embedded in or durably bound by the catalog artifact before activation; the
+optional provenance sibling cannot provide it after the fact.
+
+Partial provider builds are diagnostics. A manifest records every selected revision and
+every explicit exclusion. Loose inputs cannot mix with a bundle, and a required
+supplemental source cannot disappear through a partial selection that is then published
+as complete. Different source revision dates can be coherent; completeness and explicit
+selection, not matching dates, are the gate.
+
+### Existing surfaces and their destinations
+
+The target is a replacement with deletion gates, not a second layer over these paths:
+
+  | Shipped module/path                                                                                          | Target disposition and reason                                                                                                                                                                   |
+  | ------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | `input_snapshot.py::{prepare_snapshot,prepare_input_bundle,open_input_bundle}` and prepared/cache readers    | Retain lossless capture, complete inventory, exact commit/manifest selection, and fast routine reads. Extend the bundle inventory only for declared supplemental assertions and decision files. |
+  | `scb_errata.py`, `curation/scb_errata.toml`, and SCB adapter mutations                                       | Replace with source assertions plus `correct_omission`/`select_fact`; delete dynamic `_nearest_rows`, `_mint_columns`, `all_versions`, and the old loader/apply route at cutover.               |
+  | Curated part of `alias_windows.py` and `curation/alias_windows.toml`                                         | Replace with evidence-bound `bind_identity`/`map_representation`. Retain source-derived multi-alias window logic as interpretation until entity formation owns the equivalent projection.       |
+  | `period_family_merges.py` and `curation/period_family_merges.toml`                                           | Replace the independent authoring/apply route with `map_representation`; retain its month-family, parallelism, completeness, and interval validators as operation-specific logic.               |
+  | `cis2016_matrix.py` and both `cis*-matrix-meaning-evidence.json` files                                       | Re-home as `partition_subject` decisions. Retain exact selector, named/blank source-mode, coordinate, and complete-partition validation.                                                        |
+  | `codelivery.py`, `curation/codelivery.toml`, SCB resolution pins, `codeless_overlap.py`, and its TOML        | Replace reviewed exceptions with `select_coding`; keep genuinely recurring SCB interpretation as named policy and keep the provider-blind interval sweep.                                       |
+  | `resolution.py` and `edition_bounds.py`                                                                      | Retain interval ownership and edition grammar as interpretation mechanisms; they do not decide evidentiary authority.                                                                           |
+  | `delivery_enrichment.py` and `delivery_enrichment.generated.toml`                                            | Replace automatic global description/alias application with source assertions and reviewed grounding. A generated row remains a worklist until accepted.                                        |
+  | Source-dependent `[[link]]` entries in `curation/classifications.toml` and `classification_links.py`         | Move assignments to `assign_classification`; retain `classifications.py`, canonical seeds/CSVs, conformance, and deterministic detection.                                                       |
+  | Identity-affecting `same_as` entries in `curation/relations.toml`                                            | Move to evidence-bound `bind_identity`. The resolved graph may remain a downstream reader projection. Retain component/cycle guards.                                                            |
+  | Non-identity `replaced_by`/`derived_from`, timeseries-derived edges, classification succession/lifts         | Retain as distinct directional relation/derivation concerns; when a declaration depends on source facts, give that declaration checked assertions rather than exempting the whole file by name. |
+  | `concept_groups*.toml`, `concept_groups.py`, and `tags.toml`/`tags.py`                                       | Retain as presentation/discovery. Related-but-different variables remain separate and may be grouped. These routes cannot establish availability or identity.                                   |
+  | `lineage.toml` and lineage derivation                                                                        | Retain routing and downstream interval projection. Move any hidden source-identity assertion to the decision contract; warnings do not authorize a guessed link.                                |
+  | `fqid_slugs/`                                                                                                | Retain stable public naming/freeze behavior, downstream of resolved identities. Slugs are targets, not evidence.                                                                                |
+  | Thin-provider and canonical-SCB seeds                                                                        | Retain as machine-readable source deliveries, interpreted into assertions. Their curated origin does not make them correction patches.                                                          |
+  | `_curation.py`                                                                                               | Retain useful normalization, strict-error, and resolution leaves; delete loaders made dead by cutover.                                                                                          |
+  | `db.py`                                                                                                      | Retain IR materialization, enrichment, validation, and staged publication; delete scattered fact-selection calls once reconciliation is the sole input to entity formation.                     |
+  | `doc_db.py`, `doc_sources.toml`, `related_documents.toml`, steward inventories and `extend-db` holdings gate | Retain for their separate consumers. Presence/possession cannot silently become universal catalog evidence.                                                                                     |
+
+`same_as` remains symmetric/transitive identity used by `Catalog.resolve`; it is not
+harmless navigation metadata merely because it is projected into a graph. Aliases
+likewise require same-variable evidence. `replaced_by` is directional and may connect
+related versions without making them identical. CIS answer members stay distinct.
+Classification assignment, coding selection, and presentation grouping remain separate
+operations even when the current files call all three curation.
+
+### Transition sequence and completion gates
+
+This is a dependency order for later bounded implementation work, not a permanent
+tracker or an automatically filed backlog:
+
+1. **Assertions and inspection.** Add the strict source/assertion/report contracts and
+   LISA reader, with no publication path. The usable result is an aggregate discrepancy
+   report over the exact candidate bundle. Complete when supported inputs,
+   blanks/absence, disjoint scopes, and conflicts are inspectable; unsupported input
+   blocks without changing accepted state.
+2. **Decision cutover.** Add typed decisions and make resolved facts the sole input to
+   affected entity/state formation. The mandatory reconciliation/evidence gate blocks
+   normal catalog publication from the first cutover. Complete only when every old entry
+   is represented, explicitly retired, or blocking, and the displaced TOML/JSON loaders,
+   adapter mutations, and post-slug correction calls are deleted. An incomplete earlier
+   slice remains diagnostic-only.
+3. **Candidate promotion.** Finish exact-candidate build/diff/accept/retry reporting and
+   bind mandatory decision provenance into the catalog generation. Complete when a
+   tested detached candidate alone can fast-forward input `main`, publication failure
+   preserves the active generation, and no build can mix checkout authoring with
+   captured decisions. Remove this transition subsection when the target is shipped;
+   durable rationale stays above.
+
+### Required update scenarios and proof boundaries
+
+These are target behaviors and future evidence, not tests or real-data results produced
+by this documentation change:
+
+  | Scenario                                   | Recorded and applied/blocking result                                                                                                                                                                                                                  | Operator report                                                                   | Proof boundary                                                                   |
+  | ------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
+  | Unchanged sources                          | Same revisions/assertion projections and decision dependencies; decisions are `applicable`; catalog content is deterministic.                                                                                                                         | Unchanged dispositions and pins.                                                  | Contract replay plus build/dbdiff.                                               |
+  | Unrelated source edit                      | New revision/hash and unrelated changed assertions; relevant projections are unchanged, so decisions still apply.                                                                                                                                     | Revision change separated from unaffected decisions.                              | Synthetic source-update regression.                                              |
+  | Same-year definition or codes change       | Old/new meaning or code-set projections on the bound subject; dependent decisions become `needs_review` and block.                                                                                                                                    | Exact changed facts, locators, decisions, and scope.                              | Decision regression plus materialization/publication gate.                       |
+  | New nearer cloning edition                 | New witness changes the reviewed support set/nearest-compatible assumption; no dynamic reselection; `needs_review` blocks.                                                                                                                            | Old exact copy source, new candidate, and affected copied facts.                  | Synthetic insertion regression.                                                  |
+  | SCB fixes an omission                      | Provider assertion now occupies a corrected target; status `upstream_fixed` blocks until the finite correction is retired or re-resolved.                                                                                                             | Old correction and new provider record side by side.                              | Errata-replacement update regression.                                            |
+  | Newly added year                           | New claims get their own scope; old corrections do not expand. Non-conflicting decisions stay applicable, while a new unresolved required fact blocks full publication.                                                                               | New edition and whether it is resolved independently.                             | Edition, decision, and build regressions.                                        |
+  | Ambiguous identity or alias                | Competing subjects/target count are retained; no guessed binding is applied; `ambiguous` blocks dependent output.                                                                                                                                     | Candidates and missing same-variable evidence.                                    | Identity/alias and matrix partition tests.                                       |
+  | Renamed or restructured supported workbook | Logical revision and new physical locators are recorded; stable unique semantic keys preserve assertions. Unsupported/ambiguous structure blocks as an input error.                                                                                   | Locator-only change or exact schema/key failure.                                  | Supplemental-reader fixtures plus bundle validation.                             |
+  | Contradictory official availability        | Both scoped claims remain. Explicit purpose/supersession or reviewed selection resolves them; otherwise `ambiguous` blocks.                                                                                                                           | Both witnesses, overlap, authority rationale, and old/new outcome.                | Reconciliation authority regressions.                                            |
+  | Missing evidence                           | Missing witness/no assertion or `unknown` historical scope is recorded; a dependent correction is `missing_evidence` and blocks.                                                                                                                      | Missing selector and affected fact/scope; frozen output is not accepted evidence. | Contract/dependency regressions.                                                 |
+  | Partial or mixed source selection          | Manifest records every revision/exclusion; loose/bundle mixing or omitted required evidence is rejected. Explicit differing revision dates may be coherent; diagnostic partial builds are not publishable as complete.                                | Selected/excluded datasets and completeness state.                                | Input-selection and publication integration tests.                               |
+  | Failed build or publication                | Failure before acceptance leaves input `main` and active catalog unchanged. Failure after input acceptance leaves active catalog and embedded old pins unchanged, reports accepted-input/catalog divergence, and permits retry of the exact artifact. | Candidate pins, failure phase, preserved generation, and retry identity.          | Staged-publication failures extended across input acceptance/catalog activation. |
+
+Synthetic update exercises prove decision behavior for controlled changes; they do not
+prove that the current corpus is identical or that a real provider evolves that way. At
+the runtime cutover, an exact-candidate real-seed build with structural validation and
+dbdiff against the accepted catalog/latest release proves current-corpus identity or
+explains intended deltas; it does not prove update behavior. Actual
+successive-provider-update evidence requires at least two independently retained real
+deliveries run through the completed workflow. Later behavior changes therefore need
+focused update regressions, structural gates, and the operator's exact-candidate
+real-seed build. This documentation candidate claims none of those results.
+
+Later tests should extend the existing input, SCB adapter/errata, alias-window,
+period-family, codelivery, build/publication, validation, and dbdiff test homes. Add
+focused reconciliation and LISA-reader tests only when those runtime boundaries exist;
+this decision does not create empty scaffolding.
+
+## Shipped generation provenance (auto vs curated)
+
+Generation provenance remains relevant to downstream candidates, presentation, and
+naming, but it is not an evidence lifecycle. The shipped implementation has three useful
+patterns:
+
+1. **Curation-only worklist.** A low-precision generator emits an ephemeral candidate
+   list; only a reviewed artifact is consumed. `same-as-candidates` currently feeds
+   `relations.toml`, but identity acceptance moves to evidence-bound `bind_identity` at
+   the decision cutover. Generated succession or other retained relation candidates
+   remain worklists.
+2. **Committed auto catalog plus opt-in.** A deterministic high-volume,
+   presentation-only candidate catalog is tracked and refreshed deliberately; a curated
+   reference opts in. `concept_groups.auto.toml` plus `[[accept]]` remains the example.
+   A build never treats every generated candidate as accepted.
+3. **Regenerate each build until seal.** High-volume deterministic naming is generated
+   while a provider is `churning`, then committed and pinned in `curating`/ `frozen`.
+   The `fqid_slugs/*.auto.toml` and snapshot/freeze gates retain this behavior.
+
+No generation mode can accept a source correction, fact conflict, or identity decision
+automatically. Those require applicable source assertions and the typed reviewed
+decision contract above. This distinction replaces the earlier claim that a wrong
+`same_as` edge is merely cosmetic: `Catalog.resolve` follows it transitively, so it is
+an identity result even if one present consumer uses it only for discovery.
 
 ## CLI shape
 
@@ -494,68 +910,28 @@ Because it is a second `scb`-provider adapter, the materializer drains SCB-machi
 (`coalesce_stats`/`projection_stats`) by attribute presence (`projection_stats`,
 SCB-only) rather than `provider == "scb"`.
 
-### Columns the export documents nowhere — `curation/scb_errata.toml` `[[column]]` (Y-116)
+### Columns the export documents nowhere — shipped transition path
 
-The `CanonicalScbAdapter` above mints canonical-SCB content as **whole new registers**.
-A column that belongs to a register the **machine build already materialized** but that
-the export documents on no version of the variant is the errata surface's third entry
-kind, beside `[[version]]` and `[[delivered]]`: `[[column]]` declares the column absent
-and **mints the variable identity** — `register` / `variant` / `column` / `name` /
-`definition`, optional `data_type` / `classification` / `is_identifier` /
-`is_sensitive`, `versions` or `all_versions = true`, and a `source` saying where the
-evidence comes from (`scb-docs`, SCB's own documentation — the LISA hand-documented
-SSYK/SNI columns — or `steward-holdings`, a steward's delivery list). Y-116 folded the
-two post-passes that used to do this (`variable_grafts.py`, `canonical_attach.py`) into
-it: same three tables written, so one file, one grammar and one existence guard.
+The shipped `curation/scb_errata.toml` has `[[version]]`, `[[delivered]]`, and
+`[[column]]` entries. The first two inject missing SCB occurrences; `[[column]]` mints a
+variable when no source occurrence exists anywhere on the variant. They run in the SCB
+adapter before coalescing and use the ordinary slug, alias, state, classification, and
+validation paths. Exact-target and now-present guards are valuable shipped behavior.
 
-- **Applied at source grain, like `[[delivered]]`.** The entry writes
-  `variable_instance` + `variable_alias_build` rows inside the SCB adapter, before
-  coalescing, so slug derivation, the classification backfill, alias windows and
-  validation all flow through the ordinary passes. No post-slug minting remains, and a
-  `[[column]]` needs no slug-resolved target: the loader resolves register and variant
-  by slug at load time, as the other two kinds do.
-- **Identity keyed on `(register, column)`, not the variant.** A column delivered on two
-  variants of one register is ONE variable with one state per variant — the machine
-  path's own rule, and what keeps `variable.provider_key` register-unique. The loader
-  refuses two entries for one `(register, column)` that describe different variables.
-- **Canonical-SCB ids.** `mint_canonical_scb` puts the `variable_id` and each synthetic
-  `variable_instance` in the reserved sub-band `[2^61, 2^62)`: still low-band (an `scb`
-  id MUST be `< 2^62`) yet far above every real source-derived SCB id. The state is the
-  coalescer's, with an ordinary low-band `state_id`. `validate.py`'s
-  `_check_errata_column_band` proves every `source_label='scb-errata'` variable holds an
-  id in that sub-band. `provider_key` is the bare delivery column, as for any
-  non-numeric SCB key — `reg_meta.queries` emits a `var_id` only for an all-digits one.
-- **One existence guard.** A `[[column]]` whose column now has a real row on that
-  (register, variant) FAILS the build — it is a `[[delivered]]` now — the mirror of
-  `[[delivered]]`'s `scb_errata_no_source_row`. Neither kind silently skips.
-- **Classification link.** An entry's optional `classification` (a declared catalog
-  short_name, validated at load) is appended to the build's shared
-  `classification_candidates` list (`value_set_id` None), so the provider-blind backfill
-  (`_backfill_state_classifications`) tags `variable_state.classification_id` for free —
-  the same side channel SOS and the thin providers feed. No value sets (a `value_set`
-  key is rejected). Y-116 needed no schema change; Y-120 later added the shared
-  `variable_state.provenance` carrier for its correction class and evidence.
+The path is nevertheless superseded by the reconciliation decision above. Its
+`_nearest_rows` source choice is dynamic, copied definitions/types/codes are not checked
+semantic dependencies, and `all_versions` silently acquires new editions. Documentary
+`evidence` strings do not resolve competing claims, and a steward holding cannot by
+itself establish global availability. The runtime cutover replaces all three entry kinds
+with source assertions plus finite `correct_omission`/`select_fact` decisions and
+deletes `scb_errata.py` and its TOML.
 
-Candidates come from the tracked, maintainer-run
-`input_data/swecov/build_catalog.py grafts` pass, which variant-tags the gapfill columns
-and writes them as `[[column]]` stanzas with `evidence` / `noted` as TODO placeholders
-the loader refuses. What that generator excludes upstream, so it never reaches an entry
-(each is a *different* disposition, learned the hard way): **flavor /
-SWECOV-constructed** columns (kept in the steward flavor); **pseudonymized
-aggregations** (GDB's 250m grids — a spatial LopNr); **recoded representations**
-(`_omkodad` columns — masked value sets of an existing variable → `variable_alias`, not
-a new variable); and columns with no documentation but their own name. The variant is
-**data-derived** (the holding's table grounds to a reg_meta variant by column overlap),
-never guessed.
-
-Reviewed, edition-specific SCB documentation can establish a delivery fact missing from
-the machine export. Record the document, page, exact source coordinate and supported
-editions in the existing typed curation surface. For a unique blank-column instance, the
-documentation supplies the missing column name; the original source instance retains its
-own definition, type and coding before coalescing. The catalog still applies the
-existing state-identity rule (#526), including latest-era display of type and length for
-valued states. PDF evidence does not imply that a column covers other editions or that
-every nonempty CSV fact should be overwritten.
+Until that cutover, a reviewed, edition-specific SCB document may supply the missing
+column name or occurrence only over its stated scope. The original source instance keeps
+its own definition, type, and coding before coalescing. The current low-band ID,
+provider-key, and `variable_state.provenance` behavior remains shipped implementation
+detail, not a target decision contract. A generated holdings worklist is a candidate for
+review, not authority.
 
 ## IR + adapter architecture
 
@@ -977,13 +1353,14 @@ The bundle contains byte-for-byte copies under three roots:
 - `fqid_slugs/`: all global slug TOMLs plus freeze and snapshot state.
 
 It does not claim blanket input coverage for `build-docs`, `extend-db`, steward
-holdings, or extraction/evidence work. LISA Markdown remains a `build-docs` artifact;
-the LISA workbook and other unused evidence may be preserved separately without being
-treated as integrated or authoritative. Raw archives and preparation inventories stay
-outside Git. The existing SCB snapshot remains unchanged and continues to carry its
-original source checksums; the accepted SCB source commit is
-`d10e9f2ffa1f1bd992e0c633211489dc693e3a95` and its manifest SHA-256 is
-`5b540b8e401d289b78fd748564f11b04dcca695325142dd8ff06f1b82196c0bf`.
+holdings, or extraction/evidence work. **In the shipped implementation**, LISA Markdown
+remains a `build-docs` artifact; the LISA workbook and other unused evidence may be
+preserved separately without being treated as integrated or authoritative. The target
+above adds the workbook only through a declared supplemental-source reader and assertion
+contract. Raw archives and preparation inventories stay outside Git. The existing SCB
+snapshot remains unchanged and continues to carry its original source checksums; the
+accepted SCB source commit is `d10e9f2ffa1f1bd992e0c633211489dc693e3a95` and its
+manifest SHA-256 is `5b540b8e401d289b78fd748564f11b04dcca695325142dd8ff06f1b82196c0bf`.
 
 Preparation reads loose provider inputs plus the code checkout's curation and slug
 authoring files, copies small formats byte-for-byte (XLSX stays XLSX), hashes and parses
@@ -1235,8 +1612,8 @@ gate is normalized working tree plus initial packed Git smaller than the expande
 CSV bundle, and a controlled 1% edit adding less than 10% of the initial pack. Ordinary
 Git diffs must expose changed payload text and traceable associations rather than only a
 binary change. Failing any gate leaves the current builder, accepted snapshot and raw
-archives untouched and informs a new format decision; it does not authorize a storage
-service, reconciliation engine, PDF machinery or curation rewrite.
+archives untouched and informs a new storage-format decision; it does not authorize a
+storage service or changes to the separate reconciliation, PDF, or curation boundaries.
 
 ### Build performance
 
@@ -1886,144 +2263,42 @@ remaining open item is cross-column identical-parallel-column dedup (two deliver
 columns carrying exactly the same concept at the same period), which is a separate rule
 outside this collapse path.
 
-### Raw-faithful base, curation overlay, derived views (#805/#846)
+### Raw-faithful base, curation overlay, derived views — shipped transition
 
-The build follows a layered model with a hard separation between grain:
+The shipped SCB path first forms variables from machine-delivered representations.
+Triage may split one source VarId into sibling variables, while
+`curation/relations.toml` projects `same_as` identity and directional `replaced_by`/
+`derived_from` continuity after slugs. Concept groups and tags add navigation only.
+Orders still address a variable FQID and then a concrete representation, so identity is
+contract-bearing even when its graph is consumed for navigation.
 
-**Raw-faithful base.** Variables and FQIDs mirror the raw SCB delivery. Two delivery
-headers that never co-occur — even if they carry the same concept across eras — become
-two sibling variables in the base. The base grain is not fused by fiat.
+The target keeps raw assertions before reconciliation rather than declaring the first
+materialized graph "raw truth." Evidence-bound `bind_identity`, `partition_subject`, and
+`map_representation` operations run before final entity formation. This preserves source
+coordinates without forcing every source header to become a permanent catalog variable.
+Derived graphs remain downstream projections.
 
-**Curation overlay.** Cross-representation identity ("these distinct representations are
-one concept across eras") is expressed in a typed overlay of lineage edges:
-`replaced_by` succession (column rename, retirement) and `same_as` equivalence in
-`curation/relations.toml`; concept groups in `curation/concept_groups.toml` for browse
-grouping. The overlay is navigation — it records cross-era continuity without collapsing
-the base variables.
+`same_as` means symmetric/transitive identity and therefore requires evidence of the
+same variable. `replaced_by` means directional succession and does not establish
+identity. Related-but-different versions—including `_J16` and `_04`—remain distinct,
+though a concept group may present them together. CIS matrix answers are distinct group
+members. Period-family and alias mappings retain their exact variant/period/column
+validation but move into checked decisions.
 
-**Derived views.** Panel/entity-key resolution, the variable graph, timeline, and search
-are computed by resolving *over* the overlay at read time. They are never stored as base
-truth.
+### Identity-patching surface audit — superseded shipped decision
 
-**`[[column_merge]]` was the anti-pattern under this lens.** It pushed a presentation
-concern (a contiguous entity-key column across eras) DOWN into the base grain, fusing
-two raw sibling variables into one by fiat upstream of triage. Both entries have since
-been retired (#846): the RTB case via a representation-grain `replaced_by` edge
-recording the `PNR` → `PersonNr` rename; the FRIDA gap-fill case via two variant-scoped
-representation succession edges (`borgnr→persorgnr→borgnr`) in
-`curation/relations.toml`. The surface is deleted — the overlay model now handles both
-shapes without base-grain fiat fusion.
+The earlier audit classified `codelivery` and errata `[[column]]` as "keep
+(confirm-only)" and treated several relation operations as navigation. That verdict is
+superseded by the source-reconciliation decision above: coding selection, minted
+omissions, aliases, and `same_as` identity are all load-bearing reviewed decisions with
+semantic dependencies. Their shipped modules remain only until the decision cutover;
+there is no compatibility promise.
 
-### Identity-patching surface audit (#825): order-bearing vs navigation
-
-#805 reframed the build's key unit as the **representation**
-(`column × register × (variant, if exists) × period`); orders/bindings resolve to it via
-`reg_schema.Binding`, whose `representation` disambiguates the column. Variables and
-concept_groups are a curated **navigation** surface — they never touch orders, bindings,
-or stats. #825 audits the four build-time "identity-patching" surfaces against that line
-and classifies each. **Update (#845):** `fold_override` (channel-2 retire candidate) has
-since been retired — its one entry was re-expressed as SPLIT + concept-group faceting
-(see below). **Update (#846):** `column_merge` is now fully retired — the RTB half via a
-representation-grain `replaced_by` succession edge (PR A), the FRIDA gap-fill half via
-variant-scoped representation succession (this PR); the surface and its loader are
-deleted. The remaining two surfaces are live.
-
-The keep/retire split follows one cross-cutting principle, with one nuance the early
-framing got wrong: a **retire** candidate's effect stops at variable GROUPING, which is
-just a *default* grouping of representations. For the **data/stats an order resolves
-to** this is navigation-only — an order's values are column/representation-resolved per
-period (a `Binding`'s `representation` picks the actual delivery column), so over-split
-(the concept group re-unites the columns) and over-merge alike leave the resolved values
-unchanged. BUT the **variable FQID is the order contract's addressable handle**:
-`reg_schema.project_data.Binding.variable` (`project_data.py:136`, the binding FQID
-`<provider>/<register>/<slug>`) is what a `project_data.json` binding addresses and what
-the order manifest emits (`reg_meta/src/reg_meta/order.py`); concept_groups are NOT
-FQID-addressable, so `representation` only disambiguates the column *within* a variable
-— it does not make the variable set itself invisible to bindings. Any retirement that
-changes the leaf variable set therefore carries a **binding / default-selection
-migration precondition** — existing bindings to the affected FQIDs must be remapped and
-the default-representation chooser updated. The `fold_override` retire candidate
-(channel-2) inherited this precondition and addressed it pre-#845 by SPLIT +
-concept-group faceting (the leaf variables are visible to bindings from day one, so no
-FQID remapping is needed). The `column_merge` retire candidate (channel-1) was addressed
-across two PRs: the RTB half (#846 PR A) left the dense `personnr` sibling's FQID
-unchanged; the FRIDA gap-fill half (#846 this PR) split `borgnr`/`persorgnr` into
-separate variables but landed the `panel_entity_key` pin on the dense `person-orgnr`
-variable, so no existing binding was invalidated (pre-v1 seeded bindings are re-curated
-in-PR). A **keep** surface's effect instead reaches the representation's value-set /
-codes or mints real representations, so it is order- or data-bearing and cannot be
-expressed as a grouping nudge.
-
-  | Surface             | Source                                               | Effect                                                                | Verdict                                                                                  |
-  | ------------------- | ---------------------------------------------------- | --------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
-  | `column_merge`      | ~~`[[column_merge]]` / `source_column_repairs.py`~~  | ~~unifies never-co-occurring gap-fill twins into one variable~~       | **retired (#846)** — RTB: representation `replaced_by`; FRIDA: variant-scoped succession |
-  | `fold_override`     | ~~`[[fold_override]]` / `source_column_repairs.py`~~ | ~~folds disjoint-stem contested columns of one concept into one var~~ | **retired (#845)** — replaced by SPLIT + concept-group faceting                          |
-  | `codelivery`        | `curation/codelivery.toml` / `codelivery.py`         | pins which coding a column KEEPS when it carries two in a period      | **keep (confirm-only)**                                                                  |
-  | `errata [[column]]` | `curation/scb_errata.toml` / `scb_errata.py`         | mints the variable for a column SCB's export documents nowhere        | **keep (confirm-only)**                                                                  |
-
-**`column_merge` (#196) — FULLY RETIRED (#846).** *(Historical tracker note; the surface
-no longer exists in the build.)* The `[[column_merge]]` / `source_column_repairs.py`
-surface was navigation-only: it wrote NO `value_set`/`value_code` rows and NO
-lineage/succession edges — it only changed which `variable` a `variable_state` hung off.
-Two entries were retired across two PRs in #846:
-
-**RTB retirement (#846, PR A).** The `PNR` → `PersonNr` RTB era-rename (reg 2 var 57)
-was the #196 canonical example. It was a pure rename with no gap to fill: the two
-delivery columns never co-occurred, and the dense `personnr` sibling already carried the
-canonical slug that every RTB `panel_entity_key` pin referenced. Removing the
-`column_merge` entry split the unified variable into a sparse `pnr` sibling and the
-dense `personnr` sibling. **Resolution:** the rename intent → a curated
-representation-grain `replaced_by` edge (`from_column = "PNR"` /
-`to_column = "PersonNr"`, #846) in `curation/relations.toml`; the entity-key pin lands
-on the dense `personnr` sibling directly — no resolver walk needed. No binding or FQID
-remapping required.
-
-**FRIDA retirement (#846, this PR).** FRIDA's firm-key gap-fill (reg 121 var 56:
-`borgnr` / `persorgnr` / `borgnr` cycle) is a **variant-local** pattern: in the
-`punktskatter-for-energi` variant only, the firm-key column cycles `borgnr` (2007–13) →
-`persorgnr` (2014–17) → `borgnr` (2018–23), while 15 other variants deliver `borgnr`
-continuously. **Resolution:** two variant-scoped representation succession edges in
-`curation/relations.toml` (`borgnr→persorgnr` @2014, `persorgnr→borgnr` @2018, both
-scoped to `punktskatter-for-energi`) model the round-trip as time-monotone rather than a
-cycle (see *Variant-scoped representation succession* below). The `panel_entity_key` pin
-lands on the dense `person-orgnr` variable (the firm-key variable carrying continuous
-`borgnr` delivery across 15 variants); `persorgnr` becomes its own curated sibling.
-Pre-v1 seeded bindings were re-curated in-PR — no FQID remapping required.
-
-**`fold_override` (#261) — RETIRED (#845).** *(Historical tracker note; the surface no
-longer exists in the build.)* The channel-2 retire candidate audited here was pure
-variable grouping: it wrote NO `value_set`/`value_code`/lineage — only routing which
-variable the contested disjoint-stem columns landed under. **Retirement approach:** its
-sole entry (KSju reg 195 var 4027 näringsgren) was re-expressed by removing the
-override. KSju has ONE register variant whose unit is the PERSON, so all these columns
-are the same concept (the employee's workplace SNI); SCB merely ships several IN
-PARALLEL per edition, which the `variable_state` uniqueness index (one delivery column
-per variable × variant × period) cannot hold in one variable — so the build splits them
-into siblings (`naringsgren`/`naringsgren-rams`/`naringsgren-2siffer`/
-`naringsgren-grupperad-2009`). A **representation-grained** `[[variable_group]]` in
-`curation/concept_groups.toml` (group key `naringsgren`, register `scb/ksju`) then
-re-unifies them: one member per live delivery column, faceted only by detail level
-(`nivo`: 5-siffer / 2-siffer / grupperad). There is NO entity axis (all are the person's
-workplace SNI), and vintage spellings ride each variable's own state timeline /
-`replaced_by` rather than a facet. The 2009 grouped-SNI `lgrp` representation is
-authored as a representation-grain successor edge to `NgGr1` in
-`curation/relations.toml` (#875). This is strictly better than the old fiat-fold, which
-— bound by the same uniqueness index — could only keep one column per period and DROPPED
-the co-delivered others (lossy). It also resolved the binding / default-selection
-precondition without a remapping step: since the sibling FQIDs never existed as a
-fiat-folded FQID, there were no existing bindings to remap. Lower-risk than
-`column_merge`, and now done.
-
-**`codelivery` — keep (confirm-only).** Order-bearing: it pins which
-`value_set_version_label` (coding) a single delivery column KEEPS when it carries two
-codings in one period — it decides the codes the data actually carries. Representation-
-level, not navigation; nothing to migrate.
-
-**`errata [[column]]` (#444/#400, folded in Y-116) — keep (confirm-only).** Catalog
-completeness over real provider data: it mints the `variable` for a column SCB's export
-documents on no version of the variant (the LISA hand-documented SSYK/SNI columns, the
-SWECOV steward holdings) plus its classification link, and the ordinary SCB passes take
-it from there. Real provider content, not a grouping nudge — nothing to migrate.
+The already deleted `source_column_repairs.py`/`source_column_repairs.toml` routes stay
+deleted. Their useful domain conclusions remain: an era rename is directional
+representation succession, a gap-fill is variant/period-scoped, and parallel related
+representations must not be silently collapsed. The target does not revive generic
+column merging or a state-patch language.
 
 ### Sub-annual boundary clamp
 
@@ -2562,61 +2837,23 @@ Every implementation PR gates on:
    VT/HT open-top selection, season/month editions (still full-year), school-year
    editions (HT→VT spans, Y-113), quarter claims.
 
-## Co-delivery resolution curation (`curation/codelivery.toml`)
+## Co-delivery resolution curation — shipped transition
 
-`curation/codelivery.toml` (beside `curation/concept_groups.toml`, not under
-`fqid_slugs/`) is an **SCB-only** curated overlay that tells the co-delivery resolver
-how to handle delivery columns that carry **multiple distinct codings in the same
-period**: 19 rules today. It is the `value/coding` family SCB column-repair surface —
-acting on VALUE-SET SELECTION for a column that is already a single identity with
-competing codings. (The companion surface `source_column_repairs.toml` that formerly
-acted on column IDENTITY before states exist was retired in #846; see *Curated
-column-merge* in the triage section above.)
+`curation/codelivery.toml` currently gives the SCB resolver source-ID/column keyed
+`keep` or `latest_year` pins after its deterministic authority, recency,
+historical-grain, supersession, and label rules. A still-genuine conflict fails
+`coalesce_unresolved_codelivery`. A pin that is no longer reached can remain inert,
+however, and neither its selected coding nor the upstream facts it depended on are
+revalidated.
 
-Each entry is a **source-id-keyed pin** — `(register_id, var_id, column)` — resolved one
-of two ways: `keep = "<emitted label>"` pins one value-set version label (matched
-against the emitted label in `variable_state`, not the raw source label — a
-fold/collapse can relabel); `keep_rule = "latest_year"` picks, per contested year, the
-coding whose label embeds the latest 4-digit year (for recurring per-year vintage
-columns like SFI `Skolkod` where a single `keep` label can't span every year). The
-column key is stored case-folded via `_curation.fold_column` so that a curated column
-name and the coalescer component key agree even if SCB changes the header casing in a
-later export.
-
-Curation is **step 8 of 11** in the within-column cascade (`_resolve_column_year`) — a
-manual tie-breaker reached only after the seven deterministic steps fail to produce a
-single winner: authority → recency → current/historical-grain → value-set fold →
-supersession (latest-introduced wins the transition year) → same-label drift (keep
-largest) → label freshness (final > preliminary, calendar > academic, latest dated
-snapshot, HT > VT). Steps 9–11 (extends-later, cosmetic, genuine) run if curation also
-leaves a tie. Curation is deliberately low in the cascade: the deterministic steps
-handle all the recurring families (preliminär/final, sub-annual HT/VT, dated snapshots,
-SNI vintage transitions), and only genuinely one-off re-codings the deterministic steps
-cannot distinguish reach step 8.
-
-**Scope.** SCB-only: loaded only on the SCB adapter path, silently a no-op for an absent
-register (partial- and synthetic-build escape). It is NOT a generic variable-state-field
-override and NOT a cross-provider relation surface.
-
-**Cardinality and validation.** The file is a maintainer artifact — absent from wheel
-installs and synthetic builds (empty ⇒ no pins). A pin for a register present in the
-build but whose column is **never contested** (the conflict is resolved by an earlier
-deterministic step, or the column simply never has competing codings) lingers
-**undetected** — the shipped DB is still valid, since the cascade already resolved the
-column correctly; there is no stale-pin build failure for this case. The build only
-fails (`EXIT_CONFIG`, `coalesce_unresolved_codelivery`) when a column **still resolves
-to >1 value set after the entire cascade** — a genuinely ambiguous same-column
-co-delivery the pin failed to resolve. A pin for a register absent from the build is
-inert (the partial-build escape).
-
-**Historical note — `source_column_repairs.toml`.** The retired `[[column_merge]]`
-surface (deleted in #846) also had a partial-build escape but was stricter for present
-registers: a named column never observed as a delivery column of the var failed
-`EXIT_CONFIG` (`column_merge_unknown_column`). That stricter validation no longer
-exists; gap-fills and era-renames are now represented as representation-grain
-`replaced_by` edges in `curation/relations.toml`. A second companion surface,
-`[[fold_override]]` (also retired, in #845), handled contested disjoint-stem columns —
-its intent is now expressed via SPLIT + concept-group faceting.
+The target separates two responsibilities. Recurring, source-supported interpretation
+such as a scoped latest-vintage rule becomes named policy with explicit applicability
+and tests. A one-off coding answer becomes a finite `select_coding` decision that
+records every contested interval, selected and rejected code-set assertions, meaning and
+code-label dependencies, and expected cardinality. The provider-specific cascade and the
+provider-blind interval sweep may remain implementation mechanisms, but they consume
+resolved facts/policy rather than documentary pins. At cutover, `codelivery.py`,
+`codelivery.toml`, `codeless_overlap.py`, and `codeless_overlap.toml` are deleted.
 
 ## Slug curation
 
@@ -3234,65 +3471,22 @@ freeze above), and skips it BEFORE the `slug_dir` glob — the flag documents `-
 as ignored, so an unreadable TOML in that dir must not fail publication. Global and
 flavored builds read the dir and enforce the pins unchanged.
 
-## Delivery-list enrichment (#365)
+## Delivery-list enrichment — shipped transition
 
-`delivery_enrichment.py` applies a maintainer-curated overlay of catalog facts extracted
-from steward delivery / variable lists that describe the **shared** SCB/SOS world — not
-steward-private content — so they belong in the normal *global* build, not a steward
-flavor (scope follows what a fact is *about*, not where it was learned; see #365). The
-curated input is `reg_meta_build/curation/delivery_enrichment.generated.toml`, a
-**generated** extract: the untracked `input_data/swecov/build_catalog.py globals` pass
-emits `global_enrichment.json`, which is projected into the committed TOML against a
-fresh `reg_meta.db` under three grounding guards, so the committed rows are
-column-verified rather than fuzzily matched:
+`delivery_enrichment.py` currently applies `curation/delivery_enrichment.generated.toml`
+after slug assignment. Exact column-grounded entries fill an empty description or add an
+alias, while generic helper codes and conflicting descriptions are filtered during
+generation. Provider-gated resolution and gap-fill-only writes are useful guards, but
+the generated file's prose and alias candidates have no common source-assertion or
+reviewed-decision dependencies.
 
-1. **Exact column grounding** — the delivery column (pseudonymization `P1105_LopNr_`
-   prefix stripped) must equal one of the variable's real `delivery_column_name`s; a row
-   that does not ground exactly is dropped, never fuzzy-matched.
-2. **Generic survey/helper codes excluded** (`^F\d+` / `^FR\d+` / `^help\d*`) — one such
-   code is reused across unrelated surveys and so column-matches the wrong variable (the
-   SOS-styrtabell generic-column hazard #373 in SCB survey form, e.g.
-   `utbildningsanalyser`'s `F11`).
-3. **Version-axis SUN slugs deferred** (`^sun\d{4}`) — their descriptions are
-   vintage-specific and belong to the version-axis fold (#375).
-
-Plus whitespace collapsed, trailing footnote `*` stripped, and `(register, variable)`
-pairs with conflicting cross-vintage descriptions dropped.
-
-Two entry kinds ship today, both in `curation/delivery_enrichment.generated.toml`:
-
-- **`[[description]]`** (PR1a) — fill an empty `variable.description` from the
-  delivery-list prose.
-- **`[[alias]]`** (PR1c) — record `delivery_column` as an additional `variable_alias`
-  row for an existing variable (SWECOV delivers it under a name that differs from the
-  SCB metadata header, e.g. FEK `BidragForVerksamheten` ↔ `bidrag-for-verksamheten`).
-  The alias joins the variable's delivery-column history that `get_datacolumns` /
-  `resolve` read (and future MONA-side tooling matches columns against); it is attached
-  to every `register_variant` in which the variable has a state. Adding *extra* alias
-  rows is safe because the validator invariant is one-directional — every
-  `variable_state` column must be in `variable_alias`, but not the reverse
-  (`_check_variable_alias_covers_state_columns`). No `variable_alias_window` (those are
-  #319's monthly per-month *expansion*, a different shape). A column the variant has no
-  variable for at all is not an alias — it is an errata `[[column]]`, which mints one.
-
-The apply pass runs in the same slug-gated post-pass block as concept groups (after
-`populate_variable_slugs`, so `(register, variable)` resolves off stored slugs) and is
-provider-gated (entries for an unbuilt provider are skipped, not failed).
-
-Two guards, both deliberate:
-
-- **Gap-fill only.** A backfill never overwrites a non-empty description (the `UPDATE`'s
-  `WHERE description IS NULL OR TRIM(description) = ''` clause), so an official SCB/SOS
-  description always outranks the delivery list; an alias uses `INSERT OR IGNORE`, so a
-  column the variant already carries is a no-op. Both passes are idempotent.
-- **Strict load and resolution.** The whole TOML is shape-validated before provider
-  gating. An entry for a provider in the build whose variable (or, for an alias,
-  delivered state) does not resolve FAILS with `delivery_enrichment_unresolved`
-  (`EXIT_CONFIG`), like peer catalog overlays. Entries for excluded providers are
-  skipped and counted as `provider_skipped`; provider absence never excuses malformed
-  TOML. Regenerate the TOML when the count drifts. No snapshot / immutability machinery
-  and no `SCHEMA_VERSION` bump — descriptions write text and aliases add rows on
-  existing variables.
+The target removes this unchecked global apply route. Delivery lists with authority for
+shared catalog facts enter as declared machine-readable source revisions and emit
+assertions; generated matches remain a worklist. A description is selected by
+`select_fact`, and an alias by evidence-bound `bind_identity` or `map_representation`.
+Steward holdings continue to describe one project's possession and cannot create global
+availability, identity, or meaning. The old module and generated TOML are deleted when
+their accepted entries have been represented, retired, or left as explicit blockers.
 
 ## Steward-flavored DB — extend-db (#365 PR2)
 
