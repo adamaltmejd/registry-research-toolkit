@@ -9,7 +9,7 @@ from __future__ import annotations
 import hashlib
 import json
 import subprocess
-from typing import TYPE_CHECKING
+from pathlib import Path
 
 from reg_meta_build.input_snapshot import (
     SCB_CSV_FILES,
@@ -18,9 +18,6 @@ from reg_meta_build.input_snapshot import (
     prepare_input_bundle,
     prepare_snapshot,
 )
-
-if TYPE_CHECKING:
-    from pathlib import Path
 
 PIPE = "|"
 
@@ -1087,6 +1084,88 @@ def repin_input_bundle(
         manifest_sha256=hashlib.sha256(
             (selection.path / "catalog-bundle.json").read_bytes()
         ).hexdigest(),
+    )
+
+
+def _selected_snapshot_root(
+    selection: CatalogBundleSelection | ScbSnapshotSelection,
+) -> Path:
+    if isinstance(selection, ScbSnapshotSelection):
+        return selection.path
+    manifest = json.loads(
+        (selection.path / "catalog-bundle.json").read_text(encoding="utf-8")
+    )
+    return selection.path.parent / manifest["scb_snapshot_path"]
+
+
+def scb_values_role(
+    selection: CatalogBundleSelection | ScbSnapshotSelection,
+) -> str:
+    """Return the repository-relative cone directory for prepared SCB values."""
+    snapshot = _selected_snapshot_root(selection)
+    return (
+        (snapshot / "files" / "Vardemangder.csv")
+        .relative_to(selection.path.parent)
+        .as_posix()
+    )
+
+
+def sparsify_scb_values(
+    selection: CatalogBundleSelection | ScbSnapshotSelection,
+) -> tuple[str, ...]:
+    """Apply the supported fixture cone layout and return its saved directory list."""
+    repo = selection.path.parent
+    cold = Path(scb_values_role(selection))
+    tracked = subprocess.run(
+        ["git", "-C", str(repo), "ls-tree", "-r", "--name-only", "HEAD"],
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout.splitlines()
+    included: set[str] = set()
+    for raw_path in tracked:
+        path = Path(raw_path)
+        if path == cold or cold in path.parents:
+            continue
+        parent = path.parent
+        if parent == Path() or parent in cold.parents:
+            continue
+        included.add(parent.as_posix())
+    directories = tuple(sorted(included))
+    subprocess.run(
+        [
+            "git",
+            "-C",
+            str(repo),
+            "sparse-checkout",
+            "set",
+            "--cone",
+            "--no-sparse-index",
+            "--stdin",
+        ],
+        input="".join(f"{path}\n" for path in directories),
+        check=True,
+        text=True,
+    )
+    return directories
+
+
+def hydrate_scb_values(
+    selection: CatalogBundleSelection | ScbSnapshotSelection,
+) -> None:
+    """Materialize only the prepared SCB value role in a fixture checkout."""
+    subprocess.run(
+        [
+            "git",
+            "-C",
+            str(selection.path.parent),
+            "sparse-checkout",
+            "add",
+            "--stdin",
+        ],
+        input=f"{scb_values_role(selection)}\n",
+        check=True,
+        text=True,
     )
 
 

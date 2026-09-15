@@ -9,7 +9,12 @@ import sys
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from reg_meta_build.input_snapshot import SCB_CSV_FILES, SnapshotStats, prepare_snapshot
+from reg_meta_build.input_snapshot import (
+    SCB_CSV_FILES,
+    SnapshotMaterializationError,
+    SnapshotStats,
+    prepare_snapshot,
+)
 
 from conftest import load_scripts_module
 
@@ -84,6 +89,29 @@ def test_executable_verifies_a_prepared_snapshot(tmp_path: Path) -> None:
         "records": 1,
         "status": "verified",
     }
+
+
+def test_verify_reports_the_precise_sparse_hydration_action(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    repository = tmp_path / "accepted-inputs"
+    commit = "a" * 40
+    role = "snapshot/files/Vardemangder.csv"
+
+    def require_materialization(_snapshot: Path) -> None:
+        raise SnapshotMaterializationError(repository, commit, role)
+
+    monkeypatch.setattr(
+        prototype_scb_inputs, "verify_snapshot", require_materialization
+    )
+    assert prototype_scb_inputs.main(["verify", str(repository / "snapshot")]) == 2
+    error = capsys.readouterr().err
+    assert str(repository) in error
+    assert commit in error
+    assert role in error
+    assert "sparse-checkout add --stdin" in error
 
 
 def test_prepare_derives_provenance_from_the_executed_cli(

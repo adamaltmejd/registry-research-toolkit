@@ -13,6 +13,7 @@ import hashlib
 import inspect
 import json
 import sqlite3
+import subprocess
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -23,7 +24,9 @@ from _csv_fixtures import (
     REGISTERINFORMATION_ROWS,
     UNIKA_ROWS,
     _var_row,
+    hydrate_scb_values,
     omit_scb_snapshot_file,
+    sparsify_scb_values,
     write_csv,
     write_input_bundle,
     write_input_bundle_from_snapshot,
@@ -723,6 +726,197 @@ class TestValuePrestageCache:
             input_bundle=selection,
             scb_value_prestage_cache=cache,
         )
+
+    def test_sparse_snapshot_reuses_warm_cache_without_cold_or_exhaustive_reads(
+        self, monkeypatch, tmp_path: Path
+    ) -> None:
+        input_dir = tmp_path / "input"
+        write_scb_input(input_dir)
+        selection = write_input_bundle(tmp_path / "accepted", input_dir)
+        cache = tmp_path / "scb-value-prestage.sqlite"
+        complete_db = tmp_path / "db_complete"
+        build_db(
+            input_dir=None,
+            db_dir=complete_db,
+            skip_classifications=True,
+            skip_slugs=True,
+            input_bundle=selection,
+            scb_value_prestage_cache=cache,
+        )
+        sparsify_scb_values(selection)
+
+        original_open_csv = ScbSnapshotReader.open_csv
+
+        def reject_value_csv(reader, name):
+            if name == "Vardemangder.csv":
+                raise AssertionError("warm sparse build must not open value rows")
+            return original_open_csv(reader, name)
+
+        def reject_cold(*_args, **_kwargs):
+            raise AssertionError("warm sparse build must not inspect cold blobs")
+
+        monkeypatch.setattr(ScbSnapshotReader, "open_csv", reject_value_csv)
+        monkeypatch.setattr(ScbSnapshotReader, "open_vardemangder", reject_cold)
+        monkeypatch.setattr(snapshot_module, "_verify_committed_snapshot", reject_cold)
+        sparse_db = tmp_path / "db_sparse"
+        build_db(
+            input_dir=None,
+            db_dir=sparse_db,
+            skip_classifications=True,
+            skip_slugs=True,
+            input_bundle=selection,
+            scb_value_prestage_cache=cache,
+        )
+
+        report = diff_db_content(complete_db / "reg_meta.db", sparse_db / "reg_meta.db")
+        assert report.identical, report
+
+    @pytest.mark.parametrize(
+        "cache_state", ("missing", "stale", "corrupt", "forced", "disabled")
+    )
+    def test_sparse_snapshot_requires_materialization_when_cache_cannot_be_used(
+        self, cache_state: str, tmp_path: Path
+    ) -> None:
+        input_dir = tmp_path / "input"
+        write_scb_input(input_dir)
+        selection = write_input_bundle(tmp_path / "accepted", input_dir)
+        cache = tmp_path / "scb-value-prestage.sqlite"
+        seed_db = tmp_path / "db_seed"
+        build_db(
+            input_dir=None,
+            db_dir=seed_db,
+            skip_classifications=True,
+            skip_slugs=True,
+            input_bundle=selection,
+            scb_value_prestage_cache=cache,
+        )
+        live = seed_db / "reg_meta.db"
+        live_bytes = live.read_bytes()
+
+        if cache_state == "missing":
+            cache.unlink()
+        elif cache_state == "stale":
+            conn = sqlite3.connect(cache)
+            try:
+                conn.execute(
+                    "UPDATE meta SET value = ? WHERE key = 'source:Vardemangder.csv'",
+                    ("0" * 64,),
+                )
+                conn.commit()
+            finally:
+                conn.close()
+        elif cache_state == "corrupt":
+            cache.write_bytes(b"not a SQLite database")
+        cache_before = cache.read_bytes() if cache.exists() else None
+        sparsify_scb_values(selection)
+
+        with pytest.raises(RegMetaError) as exc_info:
+            build_db(
+                input_dir=None,
+                db_dir=seed_db,
+                skip_classifications=True,
+                skip_slugs=True,
+                input_bundle=selection,
+                scb_value_prestage_cache=(None if cache_state == "disabled" else cache),
+                refresh_scb_value_prestage=cache_state == "forced",
+            )
+
+        assert exc_info.value.code == "scb_snapshot_materialization_required"
+        assert selection.input_commit in exc_info.value.message
+        assert "sparse-checkout add --stdin" in exc_info.value.remediation
+        assert live.read_bytes() == live_bytes
+        assert (cache.read_bytes() if cache.exists() else None) == cache_before
+        repo = selection.path.parent
+        assert (
+            subprocess.run(
+                ["git", "-C", str(repo), "rev-parse", "HEAD"],
+                check=True,
+                capture_output=True,
+                text=True,
+            ).stdout.strip()
+            == selection.input_commit
+        )
+        assert not subprocess.run(
+            ["git", "-C", str(repo), "status", "--porcelain=v1"],
+            check=True,
+            capture_output=True,
+            text=True,
+        ).stdout
+
+    def test_sparse_snapshot_recovers_broken_matching_cache_after_hydration(
+        self, tmp_path: Path
+    ) -> None:
+        input_dir = tmp_path / "input"
+        write_scb_input(input_dir)
+        selection = write_input_bundle(tmp_path / "accepted", input_dir)
+        cache = tmp_path / "scb-value-prestage.sqlite"
+        baseline_dir = tmp_path / "db_baseline"
+        build_db(
+            input_dir=None,
+            db_dir=baseline_dir,
+            skip_classifications=True,
+            skip_slugs=True,
+            input_bundle=selection,
+            scb_value_prestage_cache=cache,
+        )
+        conn = sqlite3.connect(cache)
+        try:
+            conn.execute("DROP TABLE value_code")
+            conn.commit()
+        finally:
+            conn.close()
+        broken_cache = cache.read_bytes()
+        sparsify_scb_values(selection)
+        failure_dir = tmp_path / "db_failure"
+        failure_dir.mkdir()
+        published = failure_dir / "reg_meta.db"
+        published.write_bytes(b"EXISTING-CATALOG")
+
+        with pytest.raises(RegMetaError) as exc_info:
+            build_db(
+                input_dir=None,
+                db_dir=failure_dir,
+                skip_classifications=True,
+                skip_slugs=True,
+                input_bundle=selection,
+                scb_value_prestage_cache=cache,
+            )
+
+        assert exc_info.value.code == "scb_value_prestage_apply_failed"
+        assert "sparse-checkout add --stdin" in exc_info.value.remediation
+        assert "--refresh-scb-value-prestage-cache" in exc_info.value.remediation
+        assert cache.read_bytes() == broken_cache
+        assert published.read_bytes() == b"EXISTING-CATALOG"
+
+        hydrate_scb_values(selection)
+        recovered_dir = tmp_path / "db_recovered"
+        build_db(
+            input_dir=None,
+            db_dir=recovered_dir,
+            skip_classifications=True,
+            skip_slugs=True,
+            input_bundle=selection,
+            scb_value_prestage_cache=cache,
+            refresh_scb_value_prestage=True,
+        )
+        assert cache.read_bytes() != broken_cache
+        report = diff_db_content(
+            baseline_dir / "reg_meta.db", recovered_dir / "reg_meta.db"
+        )
+        assert report.identical, report
+
+        sparsify_scb_values(selection)
+        warm_dir = tmp_path / "db_warm"
+        build_db(
+            input_dir=None,
+            db_dir=warm_dir,
+            skip_classifications=True,
+            skip_slugs=True,
+            input_bundle=selection,
+            scb_value_prestage_cache=cache,
+        )
+        report = diff_db_content(baseline_dir / "reg_meta.db", warm_dir / "reg_meta.db")
+        assert report.identical, report
 
     def test_reuses_valid_cache_without_reimporting_vardemangder(
         self, monkeypatch, tmp_path: Path

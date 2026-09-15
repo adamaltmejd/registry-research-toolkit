@@ -5409,13 +5409,33 @@ class SCBAdapter:
                 )
                 cached = None
                 if self.value_prestage_cache is not None:
-                    with _stage_timer("scb:value_prestage_apply"):
-                        cached = _apply_value_prestage(
-                            conn,
-                            self.value_prestage_cache,
-                            fingerprint,
-                            force_rebuild=self.refresh_value_prestage,
-                        )
+                    try:
+                        with _stage_timer("scb:value_prestage_apply"):
+                            cached = _apply_value_prestage(
+                                conn,
+                                self.value_prestage_cache,
+                                fingerprint,
+                                force_rebuild=self.refresh_value_prestage,
+                            )
+                    except RegMetaError as exc:
+                        if (
+                            exc.code != "scb_value_prestage_apply_failed"
+                            or self.snapshot is None
+                            or self.snapshot.vardemangder_materialized
+                        ):
+                            raise
+                        required = self.snapshot.materialization_error()
+                        raise RegMetaError(
+                            exit_code=exc.exit_code,
+                            code=exc.code,
+                            error_class=exc.error_class,
+                            message=exc.message,
+                            remediation=(
+                                f"{required.hydration_action}. Then start a new "
+                                "build with --refresh-scb-value-prestage-cache "
+                                "(build_db_watch.py: --refresh-prestage-cache)."
+                            ),
+                        ) from exc
                 if cached is not None:
                     self.row_counts.update(cached.row_counts)
                     self.projection_stats = cached.projection_stats

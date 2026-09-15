@@ -54,7 +54,7 @@ from .concept_group_candidates import (
 from .concept_groups import (
     load_concept_group_accepts,
 )
-from .db import _reject_input_repository_destination, build_db
+from .db import _reject_input_repository_destination, _scb_snapshot_error, build_db
 from .doc_coverage import compute_doc_coverage, render_doc_coverage_toml
 from .doc_db import build_doc_db, repo_docs_dir
 from .extend_db import (
@@ -86,6 +86,7 @@ from .input_snapshot import (
     CatalogBundleSelection,
     ScbSnapshotSelection,
     SnapshotError,
+    SnapshotMaterializationError,
     input_bundle_repository,
     prepare_input_bundle,
     verify_input_bundle,
@@ -1152,6 +1153,8 @@ def _cmd_verify_input_bundle(
     )
     try:
         manifest = verify_input_bundle(selection)
+    except SnapshotMaterializationError as exc:
+        raise _scb_snapshot_error(exc) from exc
     except SnapshotError as exc:
         raise RegMetaError(
             exit_code=EXIT_CONFIG,

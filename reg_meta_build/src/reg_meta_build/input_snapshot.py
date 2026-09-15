@@ -172,6 +172,23 @@ class SnapshotError(ValueError):
     """The delivery or snapshot violates the lossless snapshot contract."""
 
 
+class SnapshotMaterializationError(SnapshotError):
+    """A complete pinned source role must be materialized before it can be read."""
+
+    def __init__(self, repository: Path, commit: str, role_path: str) -> None:
+        self.repository = repository
+        self.commit = commit
+        self.role_path = role_path
+        self.hydration_action = (
+            "run `git sparse-checkout add --stdin` in repository "
+            f"{repository} and provide `{role_path}` on stdin"
+        )
+        super().__init__(
+            "SCB prepared values are not materialized in the pinned input "
+            f"repository {repository} at commit {commit}; {self.hydration_action}"
+        )
+
+
 class _Model(BaseModel):
     model_config = ConfigDict(extra="forbid", frozen=True)
 
@@ -1255,33 +1272,57 @@ def _declared_normalized_files(manifest: SnapshotManifest) -> set[str]:
     }
 
 
-def _verify_normalized_inventory(root: Path, manifest: SnapshotManifest) -> None:
-    declared = _declared_normalized_files(manifest)
-    actual_root = root / "files"
-    actual = (
-        {
-            path.relative_to(root).as_posix(): path.stat().st_size
-            for path in actual_root.rglob("*")
-            if path.is_file()
-        }
-        if actual_root.exists()
-        else {}
+def _vardemangder_normalized_files(manifest: SnapshotManifest) -> set[str]:
+    item = next(
+        (item for item in manifest.files if item.name == "Vardemangder.csv"), None
     )
-    if actual.keys() != declared:
+    if item is None or not item.present:
+        return set()
+    return {normalized.path for normalized in _normalized_files(item)}
+
+
+def _verify_normalized_inventory(
+    root: Path,
+    manifest: SnapshotManifest,
+    *,
+    omitted: Collection[str] = (),
+) -> None:
+    declared = _declared_normalized_files(manifest)
+    omitted_set = set(omitted)
+    if not omitted_set <= declared:
+        raise SnapshotError(
+            f"undeclared normalized artifacts cannot be omitted: {sorted(omitted_set - declared)}"
+        )
+    expected = declared - omitted_set
+    actual = _actual_normalized_files(root)
+    if actual.keys() != expected:
         raise SnapshotError(
             "normalized file inventory mismatch; "
-            f"missing={sorted(declared - actual.keys())}, "
-            f"extra={sorted(actual.keys() - declared)}"
+            f"missing={sorted(expected - actual.keys())}, "
+            f"extra={sorted(actual.keys() - expected)}"
         )
 
     for item in manifest.files:
         for normalized in _normalized_files(item):
+            if normalized.path in omitted_set:
+                continue
             if actual[normalized.path] != normalized.size:
                 raise SnapshotError(
                     "normalized artifact size mismatch: "
                     f"{normalized.path} "
                     f"(expected {normalized.size}, got {actual[normalized.path]})"
                 )
+
+
+def _actual_normalized_files(root: Path) -> dict[str, int]:
+    actual_root = root / "files"
+    if not actual_root.exists():
+        return {}
+    return {
+        path.relative_to(root).as_posix(): path.stat().st_size
+        for path in actual_root.rglob("*")
+        if path.is_file()
+    }
 
 
 def _iter_group_payloads(
@@ -1512,11 +1553,14 @@ class ScbSnapshotReader:
         root: Path,
         manifest: SnapshotManifest,
         *,
+        repository: Path,
         input_commit: str,
         snapshot_path: str,
         manifest_sha256: str,
+        omitted: Collection[str] = (),
     ) -> None:
         self.root = root
+        self.repository = repository
         self.manifest = manifest
         self._files = {item.name: item for item in manifest.files}
         self.provenance = {
@@ -1524,7 +1568,25 @@ class ScbSnapshotReader:
             "snapshot_path": snapshot_path,
             "manifest_sha256": manifest_sha256,
         }
-        _verify_normalized_inventory(root, manifest)
+        self._omitted = frozenset(omitted)
+        _verify_normalized_inventory(root, manifest, omitted=self._omitted)
+
+    @property
+    def vardemangder_materialized(self) -> bool:
+        return not self._omitted
+
+    def materialization_error(self) -> SnapshotMaterializationError:
+        return SnapshotMaterializationError(
+            self.repository,
+            self.provenance["input_repository_commit"],
+            _snapshot_repo_path(
+                self.provenance["snapshot_path"], "files/Vardemangder.csv"
+            ),
+        )
+
+    def require_vardemangder_materialized(self) -> None:
+        if not self.vardemangder_materialized:
+            raise self.materialization_error()
 
     def has_file(self, name: str) -> bool:
         item = self._files.get(name)
@@ -1548,6 +1610,7 @@ class ScbSnapshotReader:
 
     def open_vardemangder(self) -> PreparedVardemangder:
         """Load prepared dictionaries without expanding value occurrences."""
+        self.require_vardemangder_materialized()
         item = self._files.get("Vardemangder.csv")
         if item is None or not item.present:
             raise SnapshotError("snapshot source file is absent: Vardemangder.csv")
@@ -1628,9 +1691,56 @@ def _inspect_snapshot(
     return manifest
 
 
+def _sparse_materialization_error(
+    root: Path, manifest: SnapshotManifest
+) -> SnapshotMaterializationError | None:
+    cold = _vardemangder_normalized_files(manifest)
+    if not cold or _actual_normalized_files(root).keys() != (
+        _declared_normalized_files(manifest) - cold
+    ):
+        return None
+    try:
+        repo = Path(_git(root, "rev-parse", "--show-toplevel")).resolve()
+        snapshot_path = root.relative_to(repo).as_posix()
+        commit = clean_git_commit(repo)
+        committed_manifest, _manifest_sha256 = _read_committed_manifest(
+            repo, commit, snapshot_path
+        )
+        if committed_manifest != manifest:
+            return None
+        _verify_committed_inventory(repo, commit, snapshot_path, manifest)
+        omitted = _verify_git_snapshot_materialization(
+            repo, commit, snapshot_path, manifest
+        )
+    except SnapshotError:
+        return None
+    if omitted != cold:
+        return None
+    return SnapshotMaterializationError(
+        repo,
+        commit,
+        _snapshot_repo_path(snapshot_path, "files/Vardemangder.csv"),
+    )
+
+
+def _require_complete_normalized_inventory(
+    root: Path, manifest: SnapshotManifest
+) -> None:
+    try:
+        _verify_normalized_inventory(root, manifest)
+    except SnapshotError as exc:
+        materialization_error = _sparse_materialization_error(root, manifest)
+        if materialization_error is not None:
+            raise materialization_error from exc
+        raise
+
+
 def verify_snapshot(root: Path) -> SnapshotManifest:
     """Verify normalized hashes, dictionary closure, and ordered logical records."""
-    return _inspect_snapshot(root.resolve())
+    root = root.resolve()
+    manifest = load_manifest(root)
+    _require_complete_normalized_inventory(root, manifest)
+    return _inspect_snapshot(root, manifest=manifest)
 
 
 def restore_snapshot(root: Path, output: Path) -> SnapshotStats:
@@ -1641,6 +1751,7 @@ def restore_snapshot(root: Path, output: Path) -> SnapshotStats:
     if output == root or root in output.parents:
         raise SnapshotError("restore target must be outside the snapshot root")
     manifest = load_manifest(root)
+    _require_complete_normalized_inventory(root, manifest)
     if output.exists():
         raise SnapshotError(
             f"restore target already exists and will not be overwritten: {output}"
@@ -1845,10 +1956,13 @@ def measure_codec_sample(
         }
 
 
-def _git_bytes(repo: Path, *args: str) -> bytes:
+def _git_bytes(repo: Path, *args: str, input_bytes: bytes | None = None) -> bytes:
     try:
         process = subprocess.run(
-            ["git", "-C", str(repo), *args], check=True, capture_output=True
+            ["git", "-C", str(repo), *args],
+            input=input_bytes,
+            check=True,
+            capture_output=True,
         )
     except (OSError, subprocess.CalledProcessError) as exc:
         detail = (
@@ -1862,6 +1976,20 @@ def _git_bytes(repo: Path, *args: str) -> bytes:
 
 def _git(repo: Path, *args: str) -> str:
     return _git_bytes(repo, *args).decode("utf-8").strip()
+
+
+def _git_config_bool(repo: Path, name: str) -> bool:
+    return (
+        _git(
+            repo,
+            "config",
+            "--type=bool",
+            "--default=false",
+            "--get",
+            name,
+        )
+        == "true"
+    )
 
 
 def clean_git_commit(repo: Path) -> str:
@@ -2014,6 +2142,144 @@ def _verify_committed_inventory(
         )
 
 
+def _committed_tree_paths(repo: Path, commit: str) -> set[str]:
+    tree = _git_bytes(repo, "ls-tree", "-r", "-z", commit)
+    paths: set[str] = set()
+    for entry in tree.split(b"\0"):
+        if not entry:
+            continue
+        try:
+            metadata, raw_path = entry.split(b"\t", 1)
+            _mode, object_type, _object_id = metadata.split(b" ", 2)
+            path = raw_path.decode("utf-8")
+        except (UnicodeDecodeError, ValueError) as exc:
+            raise SnapshotError("invalid Git tree entry in accepted input") from exc
+        if object_type != b"blob":
+            raise SnapshotError(f"non-file object in accepted input: {path}")
+        paths.add(path)
+    return paths
+
+
+def _index_tags(repo: Path) -> dict[str, str]:
+    staged = _git_bytes(repo, "ls-files", "--sparse", "--stage", "-z")
+    for entry in staged.split(b"\0"):
+        if not entry:
+            continue
+        metadata, _separator, raw_path = entry.partition(b"\t")
+        if metadata.startswith(b"040000 "):
+            path = raw_path.decode("utf-8", errors="replace")
+            raise SnapshotError(
+                "accepted input uses a sparse Git index entry at "
+                f"{path}; reapply the operator selection with --no-sparse-index"
+            )
+
+    tagged = _git_bytes(repo, "ls-files", "-v", "-z")
+    result: dict[str, str] = {}
+    for entry in tagged.split(b"\0"):
+        if not entry:
+            continue
+        if len(entry) < 3 or entry[1:2] != b" ":
+            raise SnapshotError("invalid Git index entry in accepted input")
+        try:
+            tag = entry[:1].decode("ascii")
+            path = entry[2:].decode("utf-8")
+        except UnicodeDecodeError as exc:
+            raise SnapshotError("invalid Git index path in accepted input") from exc
+        result[path] = tag
+    return result
+
+
+def _verify_git_snapshot_materialization(
+    repo: Path,
+    commit: str,
+    snapshot_path: str,
+    manifest: SnapshotManifest,
+) -> set[str]:
+    """Return the one cold role omitted by a valid full-index cone checkout."""
+    committed_paths = _committed_tree_paths(repo, commit)
+    index_tags = _index_tags(repo)
+    if index_tags.keys() != committed_paths:
+        raise SnapshotError(
+            "accepted input Git index differs from the pinned commit; "
+            f"missing={sorted(committed_paths - index_tags.keys())}, "
+            f"extra={sorted(index_tags.keys() - committed_paths)}"
+        )
+    if invalid := sorted(
+        path for path, tag in index_tags.items() if tag not in {"H", "S"}
+    ):
+        raise SnapshotError(
+            "accepted input has assume-unchanged or unsupported Git index flags: "
+            f"{invalid}"
+        )
+
+    sparse_checkout = _git_config_bool(repo, "core.sparseCheckout")
+    if sparse_checkout and (
+        not _git_config_bool(repo, "core.sparseCheckoutCone")
+        or _git_config_bool(repo, "index.sparse")
+    ):
+        raise SnapshotError(
+            "accepted input sparse selection requires cone mode and a normal full "
+            "Git index (--no-sparse-index)"
+        )
+
+    cold = _vardemangder_normalized_files(manifest)
+    cold_repo_paths = {
+        _snapshot_repo_path(snapshot_path, relative) for relative in cold
+    }
+    unexpected_skips = sorted(
+        path
+        for path, tag in index_tags.items()
+        if tag == "S" and path not in cold_repo_paths
+    )
+    if unexpected_skips:
+        raise SnapshotError(
+            "accepted input sparse selection omits files outside the SCB "
+            f"Vardemangder role: {unexpected_skips}"
+        )
+    cold_tags = {index_tags[path] for path in cold_repo_paths}
+    if not cold_tags or cold_tags == {"H"}:
+        omitted: set[str] = set()
+    elif cold_tags == {"S"}:
+        omitted = cold
+    else:
+        raise SnapshotError(
+            "accepted input must materialize or omit the complete SCB "
+            "Vardemangder role; partial Git index selection is unsupported"
+        )
+
+    if omitted and not sparse_checkout:
+        raise SnapshotError(
+            "the SCB Vardemangder role may be omitted only by cone-mode Git "
+            "sparse-checkout with --no-sparse-index"
+        )
+    if sparse_checkout:
+        rule_input = b"\0".join(
+            path.encode("utf-8") for path in sorted(committed_paths)
+        )
+        if rule_input:
+            rule_input += b"\0"
+        selected = {
+            path.decode("utf-8")
+            for path in _git_bytes(
+                repo,
+                "sparse-checkout",
+                "check-rules",
+                "-z",
+                input_bytes=rule_input,
+            ).split(b"\0")
+            if path
+        }
+        expected_selected = committed_paths - (cold_repo_paths if omitted else set())
+        if selected != expected_selected:
+            raise SnapshotError(
+                "accepted input sparse rules must exclude exactly the complete SCB "
+                "Vardemangder role; "
+                f"unexpectedly omitted={sorted(expected_selected - selected)}, "
+                f"unexpectedly selected={sorted(selected - expected_selected)}"
+            )
+    return omitted
+
+
 def _read_git_blob(
     stdin: IO[bytes], stdout: IO[bytes], object_spec: str, *, retain: bool = False
 ) -> tuple[int, str, bytes | None]:
@@ -2160,6 +2426,9 @@ def open_scb_snapshot(selection: ScbSnapshotSelection) -> ScbSnapshotReader:
     _verify_committed_inventory(
         repo, selection.input_commit, snapshot_path, committed_manifest
     )
+    omitted = _verify_git_snapshot_materialization(
+        repo, selection.input_commit, snapshot_path, manifest
+    )
     files = {item.name: item for item in manifest.files}
     if missing := set(SCB_CSV_FILES) - set(files):
         raise SnapshotError(
@@ -2177,9 +2446,11 @@ def open_scb_snapshot(selection: ScbSnapshotSelection) -> ScbSnapshotReader:
     return ScbSnapshotReader(
         root,
         manifest,
+        repository=repo,
         input_commit=selection.input_commit,
         snapshot_path=snapshot_path,
         manifest_sha256=selection.manifest_sha256,
+        omitted=omitted,
     )
 
 
@@ -2708,6 +2979,7 @@ def verify_input_bundle(
 ) -> CatalogBundleManifest:
     """Exhaustively verify accepted small inputs and the referenced SCB snapshot."""
     bundle = open_input_bundle(selection)
+    bundle.snapshot.require_vardemangder_materialized()
     _verify_bundle_inventory(bundle.root, bundle.manifest, hashes=True)
     _validate_bundle_contract(bundle.root)
     verified_snapshot = verify_snapshot(bundle.snapshot.root)
@@ -2778,6 +3050,8 @@ def create_build_lock(
     input_commit = clean_git_commit(input_repo)
     builder_repo, builder_commit = _builder_source_identity()
     snapshot_path = snapshot.relative_to(input_repo).as_posix()
+    worktree_manifest = load_manifest(snapshot)
+    _require_complete_normalized_inventory(snapshot, worktree_manifest)
     committed_manifest, committed_manifest_sha256 = _verify_committed_snapshot(
         input_repo, input_commit, snapshot_path
     )
@@ -2860,6 +3134,8 @@ def verify_build_lock(
         raise SnapshotError(f"replay result DB is missing: {replay_db}")
     input_commit = clean_git_commit(input_repo)
     snapshot_path = snapshot.relative_to(input_repo).as_posix()
+    worktree_manifest = load_manifest(snapshot)
+    _require_complete_normalized_inventory(snapshot, worktree_manifest)
     checks = {
         "input repository commit": (
             input_commit,
@@ -3045,6 +3321,7 @@ __all__ = [
     "ScbSnapshotSelection",
     "SnapshotError",
     "SnapshotManifest",
+    "SnapshotMaterializationError",
     "SnapshotStats",
     "clean_git_commit",
     "converter_source_commit",

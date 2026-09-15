@@ -84,11 +84,47 @@ TOMLs, codelivery/fold/split curation, classifications, concept groups, lineage,
 indexes, validation output, or any global cross-provider derivation.
 
 `build-db` validates the cache before using it. Missing, stale, or unusable cache files
-are rebuilt from raw SCB inputs automatically. Staleness is based on `Vardemangder.csv`,
-`VardemangderValidDates.csv`, a prestage format version, and the
-Registerinformation-derived CVID/register-version backbone used for year projection.
-Operational-definition text changes should not stale the cache; the final build still
-reads `Registerinformation.csv` and recomputes op defs.
+are rebuilt automatically from the prepared SCB values when that role is materialized.
+Staleness is based on `Vardemangder.csv`, `VardemangderValidDates.csv`, a prestage
+format version, and the Registerinformation-derived CVID/register-version backbone used
+for year projection. Operational-definition text changes should not stale the cache; the
+final build still reads `Registerinformation.csv` and recomputes op defs.
+
+The accepted input checkout normally leaves the complete prepared
+`snapshot/files/Vardemangder.csv` role packed in Git. A warm cache build reads neither
+its dictionaries nor occurrence chunks. If the cache must be rebuilt, the error names
+the exact repository, commit and repository-relative role. Start from the exact clean
+accepted commit, save the current directory selection outside accepted inputs, and
+hydrate only that directory (use the path printed by the error):
+
+```sh
+git -C /path/to/.local/catalog-inputs sparse-checkout list \
+  > /outside-inputs/warm-directories.txt
+printf '%s\n' snapshot/files/Vardemangder.csv | \
+  git -C /path/to/.local/catalog-inputs sparse-checkout add --stdin
+```
+
+Never use `reset --hard`, clear index flags to hide an obstruction, expand the raw CSV
+archive, or ask `build-db` to mutate accepted inputs. Git must refuse rather than
+overwrite an edit. A matching cache that failed while applying requires a fresh watcher
+run with `--refresh-prestage-cache` after hydration; other missing/stale cases rebuild
+on their normal cold path.
+
+After the cold rebuild, restore the saved warm cone-directory list kept outside the
+input repository:
+
+```sh
+git -C /path/to/.local/catalog-inputs sparse-checkout set \
+  --cone --no-sparse-index --stdin < /outside-inputs/warm-directories.txt
+```
+
+Do not use `reapply` for this transition; it does not remove the directory added for
+hydration. The saved list retains every other accepted snapshot, bundle, support and
+evidence directory. When accepting a new input tree, refresh that list and use
+`sparse-checkout check-rules --cone --rules-file` against every path from the exact
+pinned commit to confirm only the complete prepared-values role is excluded. The normal
+bundle quick check repeats that invariant and rejects hidden assume-unchanged,
+skip-worktree, sparse-index, dirty or partial states before building.
 
 Force a rebuild with `--refresh-prestage-cache` when the PR changes SCB value-set
 projection logic, prestage cache schema/versioning, or when the user explicitly asks for

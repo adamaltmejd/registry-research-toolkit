@@ -958,7 +958,7 @@ The SCB snapshot is one component of the complete catalog-input bundle described
 it is no longer independently selectable by a routine build. Its reader still performs
 the same quick identity checks when the enclosing bundle is opened.
 
-#### Complete catalog-input bundles (Y-154)
+#### Complete catalog-input bundles and sparse prepared values (Y-154/Y-155)
 
 The stable host location is `<maintainer-main-checkout>/.local/catalog-inputs/`, an
 ignored, separate Git repository with no remote. It must not live under disposable
@@ -1022,11 +1022,20 @@ reg-meta-build --db /scratch/catalog-build build-db \
 
 Selection requires a clean checkout at the exact full commit. The committed and worktree
 bundle and snapshot manifests must match their explicit SHA-256 pins and supported
-schemas. Ordinary use compares both declared inventories and byte sizes with the pinned
-Git tree and worktree. It does not hash the small payloads, read the complete SCB
-stream, decompress archives, recompute lossless digests, or require a historical replay
-lock. Changing either commit or manifest requires new explicit pins after preparation
-and acceptance; the builder never accepts or repairs changed input implicitly.
+schemas. Ordinary use compares the complete declared inventories and byte sizes with the
+pinned Git tree. The worktree may omit exactly the complete prepared
+`snapshot/files/Vardemangder.csv` role under a cone-mode sparse checkout with a normal
+full index; source presence, counts, checksums and provenance still come from the
+manifest and pinned commit. Every other committed path must remain selected. Index
+inspection rejects assume-unchanged flags, ad-hoc or partial skip-worktree flags, sparse
+directory entries, staged differences and loose cold replacements; the active sparse
+rules are checked against every path in the pinned tree so a newly accepted hot sibling
+cannot disappear behind clean status. Present metadata and bundle files retain their
+quick size/inventory checks. Ordinary selection does not hash the small payloads, read
+the complete SCB stream, decompress archives, recompute lossless digests, or require a
+historical replay lock. Changing either commit or manifest requires new explicit pins
+after preparation and acceptance; sparse transitions do not change either identity, and
+the builder never accepts, repairs or hydrates input implicitly.
 
 Consumed non-value streams still validate escaped-TSV syntax, field/line/record counts,
 dictionary ordering/closure and SCB headers, but omit artifact and logical-stream
@@ -1039,6 +1048,45 @@ sentinel/drift, null/empty, encoding, staging, projection and prestage materiali
 rules remain the interpretation boundary. A valid warm prestage hit reads neither value
 dictionaries nor occurrences. Timing output separates bundle quick checks, prepared
 dictionary work, occurrence import, prestage application/write and projection.
+
+A warm value-prestage hit therefore works with the value role absent. A missing, stale,
+unusable, disabled or forcibly refreshed cache reaches the cold reader and stops with
+the pinned repository/commit and exact Git hydration action; it never falls back to raw
+CSV. A matching cache whose tables cannot be applied additionally requires a new build
+with `--refresh-scb-value-prestage-cache` after hydration. These failures leave the
+existing cache and published catalog untouched. Automatic cache regeneration remains
+unchanged when the prepared role is present.
+
+The operator keeps the accepted warm cone-directory list outside the input repository.
+Before accepting it, feed every path from `git ls-tree -r --name-only <pinned-commit>`
+to `git sparse-checkout check-rules --cone --rules-file <warm-directories>` and confirm
+that the only excluded paths are below the selected `snapshot/files/Vardemangder.csv`
+directory. The list must explicitly retain every hot snapshot directory and every other
+accepted branch, including bundles and support, and must be refreshed when a new hot
+branch is accepted. Apply it with
+`sparse-checkout set --cone --no-sparse-index --stdin`; a routine build's quick bundle
+check independently enforces the same exact selection and hidden-index guards.
+
+With no input edits or obstructions, hydrate only the cold role by providing its
+repository-relative directory to Git:
+
+```console
+printf '%s\n' snapshot/files/Vardemangder.csv | \
+  git -C .local/catalog-inputs sparse-checkout add --stdin
+```
+
+After the explicit cold rebuild or exhaustive proof, restore the saved warm layout
+without changing other selections:
+
+```console
+git -C .local/catalog-inputs sparse-checkout set \
+  --cone --no-sparse-index --stdin < /outside-inputs/warm-directories.txt
+```
+
+Both transitions must start from the exact clean accepted commit and stop rather than
+overwrite edits. `reapply` does not remove a directory added for hydration. Do not use a
+hard reset, expand the whole repository as generic recovery, hide changes with index
+flags, or store the saved specification/output/cache inside accepted inputs.
 
 `--no-validate` still controls only post-build catalog invariant validation; this trust
 boundary is not permission to skip those invariants by default. Quick-use failures and
@@ -1094,7 +1142,9 @@ boundary as inventory names before restoration writes any file, so absolute and
 traversal paths fail closed. Restored CSV quoting is canonical rather than
 byte-identical to the original; field bytes/order and quoted-empty/null semantics are
 identical. Exact original CSV bytes remain recoverable only from the independently
-retained, checksum-pinned archive.
+retained, checksum-pinned archive. `verify`, `restore`, and build-lock creation or
+verification refuse a sparse value role with the hydration action before streaming cold
+Git blobs or writing restored output; partial proof is never reported as complete.
 
 A complete replay receipt needs more than the input selection above. `pin-build` refuses
 dirty repositories and records the full input-repository commit, snapshot-relative path

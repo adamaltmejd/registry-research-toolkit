@@ -1639,6 +1639,16 @@ def publish_db(tmp_path: Path, final_path: Path) -> None:
 
 
 def _scb_snapshot_error(exc: Exception) -> RegMetaError:
+    from .input_snapshot import SnapshotMaterializationError
+
+    if isinstance(exc, SnapshotMaterializationError):
+        return RegMetaError(
+            exit_code=EXIT_CONFIG,
+            code="scb_snapshot_materialization_required",
+            error_class="configuration",
+            message=str(exc),
+            remediation=exc.hydration_action,
+        )
     return RegMetaError(
         exit_code=EXIT_CONFIG,
         code="scb_snapshot_invalid",

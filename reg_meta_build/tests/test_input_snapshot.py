@@ -14,9 +14,12 @@ from zipfile import BadZipFile
 
 import pytest
 from _csv_fixtures import (
+    hydrate_scb_values,
     omit_scb_snapshot_file,
     repin_input_bundle,
     repin_scb_snapshot,
+    scb_values_role,
+    sparsify_scb_values,
     write_input_bundle,
     write_input_bundle_from_snapshot,
     write_scb_input,
@@ -29,6 +32,7 @@ from reg_meta_build.input_snapshot import (
     CatalogBundleSelection,
     SnapshotError,
     SnapshotFile,
+    SnapshotMaterializationError,
     converter_source_commit,
     create_build_lock,
     load_manifest,
@@ -369,6 +373,228 @@ def test_catalog_bundle_captures_complete_small_inventory_and_selects_quickly(
     }
 
 
+def test_sparse_value_role_preserves_declared_source_and_requires_hydration_for_proof(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    input_dir = tmp_path / "source"
+    scb_dir = write_scb_input(input_dir)
+    selection = write_input_bundle(tmp_path / "accepted", input_dir)
+    complete = open_input_bundle(selection)
+    source_hash = complete.snapshot.raw_sha256("Vardemangder.csv")
+    role = scb_values_role(selection)
+    cold_paths = sorted((complete.snapshot.root / "files/Vardemangder.csv").rglob("*"))
+    committed_cold = {
+        path
+        for path in _git(
+            selection.path.parent, "ls-tree", "-r", "--name-only", "HEAD"
+        ).splitlines()
+        if path.startswith(f"{role}/")
+    }
+    assert committed_cold
+
+    saved_directories = sparsify_scb_values(selection)
+    assert all(not path.exists() for path in cold_paths)
+
+    def exhaustive_use(*_args: object, **_kwargs: object) -> None:
+        raise AssertionError("warm sparse selection must not perform exhaustive proof")
+
+    with monkeypatch.context() as quick_only:
+        quick_only.setattr(
+            snapshot_module, "_verify_committed_snapshot", exhaustive_use
+        )
+        quick_only.setattr(snapshot_module, "_open_snapshot_rows", exhaustive_use)
+        bundle = open_input_bundle(selection)
+    assert bundle.snapshot.has_file("Vardemangder.csv")
+    assert bundle.snapshot.raw_sha256("Vardemangder.csv") == source_hash
+    assert (
+        source_hash
+        == hashlib.sha256((scb_dir / "Vardemangder.csv").read_bytes()).hexdigest()
+    )
+    assert {
+        path
+        for path in _git(
+            selection.path.parent, "ls-tree", "-r", "--name-only", "HEAD"
+        ).splitlines()
+        if path.startswith(f"{role}/")
+    } == committed_cold
+
+    for action in (
+        bundle.snapshot.open_vardemangder,
+        lambda: verify_input_bundle(selection),
+        lambda: verify_snapshot(bundle.snapshot.root),
+        lambda: restore_snapshot(bundle.snapshot.root, tmp_path / "restored"),
+    ):
+        with pytest.raises(SnapshotMaterializationError) as exc_info:
+            action()
+        assert str(selection.path.parent) in str(exc_info.value)
+        assert selection.input_commit in str(exc_info.value)
+        assert role in exc_info.value.hydration_action
+    assert not (tmp_path / "restored").exists()
+
+    hydrate_scb_values(selection)
+    hydrated = open_input_bundle(selection)
+    hydrated.snapshot.require_vardemangder_materialized()
+    assert verify_snapshot(hydrated.snapshot.root) == hydrated.snapshot.manifest
+    assert _git(selection.path.parent, "rev-parse", "HEAD") == selection.input_commit
+    assert not _git(selection.path.parent, "status", "--porcelain=v1")
+
+    restored_directories = sparsify_scb_values(selection)
+    assert restored_directories == saved_directories
+    open_input_bundle(selection)
+    assert _git(selection.path.parent, "rev-parse", "HEAD") == selection.input_commit
+    assert not _git(selection.path.parent, "status", "--porcelain=v1")
+
+
+def test_sparse_bundle_verifier_cli_reports_materialization_error(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    from reg_meta.errors import EXIT_CONFIG
+
+    from reg_meta_build import cli as cli_module
+
+    input_dir = tmp_path / "source"
+    write_scb_input(input_dir)
+    selection = write_input_bundle(tmp_path / "accepted", input_dir)
+    sparsify_scb_values(selection)
+
+    exit_code = cli_module.run(
+        [
+            "verify-input-bundle",
+            "--input-bundle",
+            str(selection.path),
+            "--input-commit",
+            selection.input_commit,
+            "--input-manifest-sha256",
+            selection.manifest_sha256,
+        ]
+    )
+
+    assert exit_code == EXIT_CONFIG
+    error = json.loads(capsys.readouterr().out)["error"]
+    assert error["code"] == "scb_snapshot_materialization_required"
+    assert selection.input_commit in error["message"]
+    assert "sparse-checkout add --stdin" in error["remediation"]
+
+
+@pytest.mark.parametrize(
+    "invalid_layout",
+    (
+        "partial-cold",
+        "missing-hot",
+        "assume-unchanged-hot",
+        "loose-cold-replacement",
+        "complete-loose-cold-replacement",
+        "non-cone",
+        "sparse-index",
+        "missing-sibling",
+    ),
+)
+def test_sparse_value_role_rejects_incorrect_index_and_rule_state(
+    tmp_path: Path, invalid_layout: str
+) -> None:
+    input_dir = tmp_path / "source"
+    write_scb_input(input_dir)
+    selection = write_input_bundle(tmp_path / "accepted", input_dir)
+    repo = selection.path.parent
+    if invalid_layout == "missing-sibling":
+        support = repo / "support" / "evidence.txt"
+        support.parent.mkdir()
+        support.write_text("accepted support\n", encoding="utf-8")
+        _git(repo, "add", ".")
+        _git(repo, "commit", "-q", "-m", "accepted support")
+        selection = CatalogBundleSelection(
+            selection.path,
+            _git(repo, "rev-parse", "HEAD"),
+            selection.manifest_sha256,
+        )
+    bundle = open_input_bundle(selection)
+    snapshot_relative = bundle.snapshot.root.relative_to(repo).as_posix()
+    manifest = bundle.snapshot.manifest
+    cold = sorted(
+        f"{snapshot_relative}/{path}"
+        for path in snapshot_module._vardemangder_normalized_files(manifest)
+    )
+    hot_item = next(
+        item for item in manifest.files if item.name == "Registerinformation.csv"
+    )
+    hot = f"{snapshot_relative}/{hot_item.records[0].path}"
+
+    if invalid_layout == "partial-cold":
+        _git(repo, "update-index", "--skip-worktree", cold[0])
+        (repo / cold[0]).unlink()
+        expected = "complete SCB Vardemangder role"
+    elif invalid_layout == "missing-hot":
+        _git(repo, "update-index", "--skip-worktree", hot)
+        (repo / hot).unlink()
+        expected = "outside the SCB Vardemangder role"
+    elif invalid_layout == "assume-unchanged-hot":
+        _git(repo, "update-index", "--assume-unchanged", hot)
+        path = repo / hot
+        payload = bytearray(path.read_bytes())
+        payload[0] = ord("A") if payload[0] != ord("A") else ord("B")
+        path.write_bytes(payload)
+        assert not _git(repo, "status", "--porcelain=v1")
+        expected = "assume-unchanged"
+    else:
+        cold_path = repo / cold[0]
+        cold_payloads = {path: (repo / path).read_bytes() for path in cold}
+        directories = sparsify_scb_values(selection)
+        if invalid_layout == "loose-cold-replacement":
+            cold_path.parent.mkdir(parents=True, exist_ok=True)
+            cold_path.write_bytes(cold_payloads[cold[0]])
+            expected = "complete SCB Vardemangder role"
+        elif invalid_layout == "complete-loose-cold-replacement":
+            for relative, payload in cold_payloads.items():
+                path = repo / relative
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_bytes(payload)
+            expected = "sparse rules"
+        elif invalid_layout == "non-cone":
+            _git(repo, "config", "--worktree", "core.sparseCheckoutCone", "false")
+            expected = "cone mode"
+        elif invalid_layout == "sparse-index":
+            subprocess.run(
+                [
+                    "git",
+                    "-C",
+                    str(repo),
+                    "sparse-checkout",
+                    "set",
+                    "--cone",
+                    "--sparse-index",
+                    "--stdin",
+                ],
+                input="".join(f"{path}\n" for path in directories),
+                check=True,
+                text=True,
+            )
+            expected = "sparse Git index"
+        else:
+            subprocess.run(
+                [
+                    "git",
+                    "-C",
+                    str(repo),
+                    "sparse-checkout",
+                    "set",
+                    "--cone",
+                    "--no-sparse-index",
+                    "--stdin",
+                ],
+                input="".join(
+                    f"{path}\n"
+                    for path in directories
+                    if not path.startswith("support")
+                ),
+                check=True,
+                text=True,
+            )
+            expected = "outside the SCB Vardemangder role"
+
+    with pytest.raises(SnapshotError, match=expected):
+        open_input_bundle(selection)
+
+
 def test_catalog_bundle_explicit_verify_and_unlisted_file_rejection(
     tmp_path: Path,
 ) -> None:
@@ -424,6 +650,7 @@ def test_catalog_bundle_preparation_skips_exhaustive_snapshot_verification(
         raise AssertionError("auxiliary-only preparation must reuse the accepted proof")
 
     monkeypatch.setattr(snapshot_module, "verify_snapshot", exhaustive_use)
+    sparsify_scb_values(snapshot)
     output = snapshot.path.parent / "bundle"
     prepare_input_bundle(input_dir, curation, slugs, snapshot, output)
 
@@ -1069,6 +1296,47 @@ def test_inventory_requires_complete_listing_pairing_and_archive_coverage(
     inventory = _inventory(tmp_path / "second", source_dir)
     with pytest.raises(SnapshotError, match="unlisted CSV"):
         prepare_snapshot(inventory, tmp_path / "snapshot-2", converter_commit="d" * 40)
+
+
+def test_build_lock_refuses_sparse_values_before_streaming_committed_blobs(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    source_dir = write_scb_input(tmp_path / "source")
+    selection = write_scb_snapshot(tmp_path / "accepted", source_dir)
+    _builder_checkout(tmp_path, monkeypatch)
+    recorded_db = tmp_path / "recorded.db"
+    _write_catalog_db(
+        recorded_db,
+        import_date="2026-09-15T10:00:00Z",
+        input_dir="/tmp/complete",
+    )
+    lock_path = tmp_path / "build-lock.json"
+    create_build_lock(
+        selection.path,
+        recorded_db,
+        lock_path,
+        providers=("scb",),
+        build_options={"validate": True},
+        auxiliary_inputs={},
+    )
+    sparsify_scb_values(selection)
+
+    def reject_blob_scan(*_args: object, **_kwargs: object) -> None:
+        raise AssertionError("sparse proof must fail before committed blob streaming")
+
+    monkeypatch.setattr(snapshot_module, "_verify_committed_snapshot", reject_blob_scan)
+    with pytest.raises(SnapshotMaterializationError):
+        create_build_lock(
+            selection.path,
+            recorded_db,
+            tmp_path / "second-lock.json",
+            providers=("scb",),
+            build_options={"validate": True},
+            auxiliary_inputs={},
+        )
+    with pytest.raises(SnapshotMaterializationError):
+        verify_build_lock(lock_path, selection.path, auxiliary_inputs={})
+    assert not (tmp_path / "second-lock.json").exists()
 
 
 def test_build_lock_pins_clean_repositories_auxiliary_inputs_and_result(
