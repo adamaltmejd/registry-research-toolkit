@@ -30,6 +30,7 @@ from reg_meta_build.db import _open_scb_csv, _open_scb_csv_raw
 from reg_meta_build.input_snapshot import (
     SCB_CSV_FILES,
     CatalogBundleSelection,
+    ScbSnapshotSelection,
     SnapshotError,
     SnapshotFile,
     SnapshotMaterializationError,
@@ -113,6 +114,30 @@ def _git(repo: Path, *args: str) -> str:
         text=True,
     )
     return process.stdout.strip()
+
+
+def _git_index_evidence(repo: Path) -> tuple[bytes, bytes]:
+    index_path = repo / _git(repo, "rev-parse", "--git-path", "index")
+    index_bytes = index_path.read_bytes()
+    flags = subprocess.run(
+        [
+            "git",
+            "-C",
+            str(repo),
+            "-c",
+            "core.sparseCheckout=false",
+            "ls-files",
+            "--sparse",
+            "-v",
+            "--stage",
+            "-z",
+        ],
+        check=True,
+        capture_output=True,
+        env={**os.environ, "GIT_OPTIONAL_LOCKS": "0"},
+    ).stdout
+    assert index_path.read_bytes() == index_bytes
+    return index_bytes, flags
 
 
 def _builder_checkout(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
@@ -445,6 +470,113 @@ def test_sparse_value_role_preserves_declared_source_and_requires_hydration_for_
     assert not _git(selection.path.parent, "status", "--porcelain=v1")
 
 
+def test_legitimate_sparse_reads_preserve_raw_index_evidence(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    input_dir = tmp_path / "source"
+    write_scb_input(input_dir)
+    selection = write_input_bundle(tmp_path / "accepted", input_dir)
+    complete = open_input_bundle(selection)
+    snapshot_selection = ScbSnapshotSelection(
+        path=complete.snapshot.root,
+        input_commit=selection.input_commit,
+        manifest_sha256=complete.manifest.scb_manifest_sha256,
+    )
+    sparsify_scb_values(selection)
+    monkeypatch.delenv("GIT_OPTIONAL_LOCKS", raising=False)
+    assert "GIT_OPTIONAL_LOCKS" not in os.environ
+    repo = selection.path.parent
+    before = _git_index_evidence(repo)
+    assert any(
+        entry.startswith(b"S ") and b"Vardemangder.csv/" in entry
+        for entry in before[1].split(b"\0")
+    )
+
+    assert not open_scb_snapshot(snapshot_selection).vardemangder_materialized
+    assert _git_index_evidence(repo) == before
+    assert not open_input_bundle(selection).snapshot.vardemangder_materialized
+    assert _git_index_evidence(repo) == before
+    with pytest.raises(SnapshotMaterializationError):
+        verify_snapshot(snapshot_selection.path)
+    assert _git_index_evidence(repo) == before
+
+
+@pytest.mark.parametrize("boundary", ("snapshot", "bundle", "proof"))
+@pytest.mark.parametrize(
+    "invalid_state", ("warm-hot-skip", "hydrated-hot-skip", "cold-replacements")
+)
+def test_sparse_boundaries_reject_without_normalizing_raw_index_evidence(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    boundary: str,
+    invalid_state: str,
+) -> None:
+    input_dir = tmp_path / "source"
+    write_scb_input(input_dir)
+    selection = write_input_bundle(tmp_path / "accepted", input_dir)
+    complete = open_input_bundle(selection)
+    repo = selection.path.parent
+    snapshot_selection = ScbSnapshotSelection(
+        path=complete.snapshot.root,
+        input_commit=selection.input_commit,
+        manifest_sha256=complete.manifest.scb_manifest_sha256,
+    )
+    snapshot_relative = complete.snapshot.root.relative_to(repo).as_posix()
+    cold = sorted(
+        f"{snapshot_relative}/{path}"
+        for path in snapshot_module._vardemangder_normalized_files(
+            complete.snapshot.manifest
+        )
+    )
+    cold_payloads = {path: (repo / path).read_bytes() for path in cold}
+    hot_item = next(
+        item
+        for item in complete.snapshot.manifest.files
+        if item.name == "Registerinformation.csv"
+    )
+    hot = f"{snapshot_relative}/{hot_item.records[0].path}"
+    sparsify_scb_values(selection)
+
+    if invalid_state == "hydrated-hot-skip":
+        hydrate_scb_values(selection)
+    if invalid_state.endswith("hot-skip"):
+        _git(repo, "update-index", "--skip-worktree", hot)
+        assert (repo / hot).is_file()
+        expected = "outside the SCB Vardemangder role"
+    else:
+        for relative, payload in cold_payloads.items():
+            path = repo / relative
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_bytes(payload)
+        expected = "marked omitted by the accepted Git index"
+
+    monkeypatch.delenv("GIT_OPTIONAL_LOCKS", raising=False)
+    assert "GIT_OPTIONAL_LOCKS" not in os.environ
+    before = _git_index_evidence(repo)
+    expected_skips = (hot,) if invalid_state.endswith("hot-skip") else tuple(cold)
+    assert all(
+        any(
+            entry.startswith(b"S ") and entry.endswith(b"\t" + relative.encode("utf-8"))
+            for entry in before[1].split(b"\0")
+        )
+        for relative in expected_skips
+    )
+    if invalid_state.endswith("hot-skip"):
+
+        def reject_status(*_args: object, **_kwargs: object) -> None:
+            raise AssertionError("raw index rejection must precede Git status")
+
+        monkeypatch.setattr(snapshot_module, "clean_git_commit", reject_status)
+    actions = {
+        "snapshot": lambda: open_scb_snapshot(snapshot_selection),
+        "bundle": lambda: open_input_bundle(selection),
+        "proof": lambda: verify_snapshot(snapshot_selection.path),
+    }
+    with pytest.raises(SnapshotError, match=expected):
+        actions[boundary]()
+    assert _git_index_evidence(repo) == before
+
+
 def test_sparse_bundle_verifier_cli_reports_materialization_error(
     tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:
@@ -542,13 +674,13 @@ def test_sparse_value_role_rejects_incorrect_index_and_rule_state(
         if invalid_layout == "loose-cold-replacement":
             cold_path.parent.mkdir(parents=True, exist_ok=True)
             cold_path.write_bytes(cold_payloads[cold[0]])
-            expected = "complete SCB Vardemangder role"
+            expected = "marked omitted by the accepted Git index"
         elif invalid_layout == "complete-loose-cold-replacement":
             for relative, payload in cold_payloads.items():
                 path = repo / relative
                 path.parent.mkdir(parents=True, exist_ok=True)
                 path.write_bytes(payload)
-            expected = "sparse rules"
+            expected = "marked omitted by the accepted Git index"
         elif invalid_layout == "non-cone":
             _git(repo, "config", "--worktree", "core.sparseCheckoutCone", "false")
             expected = "cone mode"
@@ -568,7 +700,7 @@ def test_sparse_value_role_rejects_incorrect_index_and_rule_state(
                 check=True,
                 text=True,
             )
-            expected = "sparse Git index"
+            expected = "normal full Git index"
         else:
             subprocess.run(
                 [

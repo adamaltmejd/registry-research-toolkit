@@ -1030,9 +1030,12 @@ manifest and pinned commit. Every other committed path must remain selected. Ind
 inspection rejects assume-unchanged flags, ad-hoc or partial skip-worktree flags, sparse
 directory entries, staged differences and loose cold replacements; the active sparse
 rules are checked against every path in the pinned tree so a newly accepted hot sibling
-cannot disappear behind clean status. Present metadata and bundle files retain their
-quick size/inventory checks. Ordinary selection does not hash the small payloads, read
-the complete SCB stream, decompress archives, recompute lossless digests, or require a
+cannot disappear behind clean status. The stored flags are probed with sparse handling
+disabled only for that read and optional Git locks disabled, before status; actual
+checkout configuration still governs the subsequent rule check, and selection never
+rewrites the accepted index. Present metadata and bundle files retain their quick
+size/inventory checks. Ordinary selection does not hash the small payloads, read the
+complete SCB stream, decompress archives, recompute lossless digests, or require a
 historical replay lock. Changing either commit or manifest requires new explicit pins
 after preparation and acceptance; sparse transitions do not change either identity, and
 the builder never accepts, repairs or hydrates input implicitly.

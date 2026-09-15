@@ -1295,6 +1295,12 @@ def _verify_normalized_inventory(
         )
     expected = declared - omitted_set
     actual = _actual_normalized_files(root)
+    if loose_replacements := sorted(omitted_set & actual.keys()):
+        raise SnapshotError(
+            "normalized artifacts marked omitted by the accepted Git index are "
+            "physically present; restore the saved sparse layout or hydrate the "
+            f"complete role through Git sparse-checkout: {loose_replacements}"
+        )
     if actual.keys() != expected:
         raise SnapshotError(
             "normalized file inventory mismatch; "
@@ -1691,48 +1697,52 @@ def _inspect_snapshot(
     return manifest
 
 
-def _sparse_materialization_error(
+def _accepted_snapshot_materialization(
     root: Path, manifest: SnapshotManifest
-) -> SnapshotMaterializationError | None:
-    cold = _vardemangder_normalized_files(manifest)
-    if not cold or _actual_normalized_files(root).keys() != (
-        _declared_normalized_files(manifest) - cold
-    ):
-        return None
+) -> tuple[Path, str, str, set[str]] | None:
+    """Inspect accepted Git state before status; return None for untracked candidates."""
     try:
         repo = Path(_git(root, "rev-parse", "--show-toplevel")).resolve()
         snapshot_path = root.relative_to(repo).as_posix()
-        commit = clean_git_commit(repo)
-        committed_manifest, _manifest_sha256 = _read_committed_manifest(
-            repo, commit, snapshot_path
-        )
-        if committed_manifest != manifest:
-            return None
-        _verify_committed_inventory(repo, commit, snapshot_path, manifest)
-        omitted = _verify_git_snapshot_materialization(
-            repo, commit, snapshot_path, manifest
-        )
-    except SnapshotError:
+        commit = _git(repo, "rev-parse", "HEAD")
+    except SnapshotError, ValueError:
         return None
-    if omitted != cold:
+    manifest_repo_path = _snapshot_repo_path(snapshot_path, MANIFEST_NAME)
+    if not _git_bytes(repo, "ls-tree", "-z", commit, "--", manifest_repo_path):
         return None
-    return SnapshotMaterializationError(
-        repo,
-        commit,
-        _snapshot_repo_path(snapshot_path, "files/Vardemangder.csv"),
+    committed_manifest, _manifest_sha256 = _read_committed_manifest(
+        repo, commit, snapshot_path
     )
+    _verify_committed_inventory(repo, commit, snapshot_path, committed_manifest)
+    omitted = _verify_git_snapshot_materialization(
+        repo, commit, snapshot_path, committed_manifest
+    )
+    clean_commit = clean_git_commit(repo)
+    if clean_commit != commit:
+        raise SnapshotError(
+            "accepted input commit changed while its materialization was checked: "
+            f"expected {commit}, got {clean_commit}"
+        )
+    if committed_manifest != manifest:
+        raise SnapshotError("worktree snapshot manifest differs from pinned commit")
+    return repo, commit, snapshot_path, omitted
 
 
 def _require_complete_normalized_inventory(
     root: Path, manifest: SnapshotManifest
 ) -> None:
-    try:
+    accepted = _accepted_snapshot_materialization(root, manifest)
+    if accepted is None:
         _verify_normalized_inventory(root, manifest)
-    except SnapshotError as exc:
-        materialization_error = _sparse_materialization_error(root, manifest)
-        if materialization_error is not None:
-            raise materialization_error from exc
-        raise
+        return
+    repo, commit, snapshot_path, omitted = accepted
+    _verify_normalized_inventory(root, manifest, omitted=omitted)
+    if omitted:
+        raise SnapshotMaterializationError(
+            repo,
+            commit,
+            _snapshot_repo_path(snapshot_path, "files/Vardemangder.csv"),
+        )
 
 
 def verify_snapshot(root: Path) -> SnapshotManifest:
@@ -1958,11 +1968,13 @@ def measure_codec_sample(
 
 def _git_bytes(repo: Path, *args: str, input_bytes: bytes | None = None) -> bytes:
     try:
+        # Git read commands may otherwise refresh accepted index evidence on disk.
         process = subprocess.run(
             ["git", "-C", str(repo), *args],
             input=input_bytes,
             check=True,
             capture_output=True,
+            env={**os.environ, "GIT_OPTIONAL_LOCKS": "0"},
         )
     except (OSError, subprocess.CalledProcessError) as exc:
         detail = (
@@ -2129,10 +2141,15 @@ def _verify_committed_inventory(
         for normalized in _normalized_files(item)
     }
     if actual.keys() != expected.keys():
+        missing = sorted(expected.keys() - actual.keys())
+        extra = sorted(actual.keys() - expected.keys())
+        details = []
+        if missing:
+            details.append(f"missing from pinned commit={missing}")
+        if extra:
+            details.append(f"extra in pinned commit={extra}")
         raise SnapshotError(
-            "normalized file inventory mismatch in pinned commit; "
-            f"missing={sorted(expected.keys() - actual.keys())}, "
-            f"extra={sorted(actual.keys() - expected.keys())}"
+            "normalized file inventory mismatch in pinned commit; " + ", ".join(details)
         )
     if mismatched := sorted(
         path for path, size in expected.items() if actual[path] != size
@@ -2161,30 +2178,49 @@ def _committed_tree_paths(repo: Path, commit: str) -> set[str]:
 
 
 def _index_tags(repo: Path) -> dict[str, str]:
-    staged = _git_bytes(repo, "ls-files", "--sparse", "--stage", "-z")
-    for entry in staged.split(b"\0"):
+    # Active sparse handling reports a stored S bit as H when its path is present.
+    # The command-local override exposes the raw bit without changing checkout config.
+    tagged = _git_bytes(
+        repo,
+        "-c",
+        "core.sparseCheckout=false",
+        "ls-files",
+        "--sparse",
+        "-v",
+        "--stage",
+        "-z",
+    )
+    result: dict[str, str] = {}
+    for entry in tagged.split(b"\0"):
         if not entry:
             continue
-        metadata, _separator, raw_path = entry.partition(b"\t")
-        if metadata.startswith(b"040000 "):
+        tagged_metadata, separator, raw_path = entry.partition(b"\t")
+        if not separator or len(tagged_metadata) < 3 or tagged_metadata[1:2] != b" ":
+            raise SnapshotError("invalid Git index entry in accepted input")
+        raw_tag = tagged_metadata[:1]
+        metadata = tagged_metadata[2:]
+        fields = metadata.split(b" ")
+        if len(fields) != 3:
+            raise SnapshotError("invalid staged Git index entry in accepted input")
+        mode, _object_id, stage = fields
+        if mode == b"040000":
             path = raw_path.decode("utf-8", errors="replace")
             raise SnapshotError(
                 "accepted input uses a sparse Git index entry at "
                 f"{path}; reapply the operator selection with --no-sparse-index"
             )
-
-    tagged = _git_bytes(repo, "ls-files", "-v", "-z")
-    result: dict[str, str] = {}
-    for entry in tagged.split(b"\0"):
-        if not entry:
-            continue
-        if len(entry) < 3 or entry[1:2] != b" ":
-            raise SnapshotError("invalid Git index entry in accepted input")
+        if stage != b"0":
+            path = raw_path.decode("utf-8", errors="replace")
+            raise SnapshotError(
+                f"accepted input has an unmerged Git index entry: {path}"
+            )
         try:
-            tag = entry[:1].decode("ascii")
-            path = entry[2:].decode("utf-8")
+            tag = raw_tag.decode("ascii")
+            path = raw_path.decode("utf-8")
         except UnicodeDecodeError as exc:
             raise SnapshotError("invalid Git index path in accepted input") from exc
+        if path in result:
+            raise SnapshotError(f"duplicate Git index entry in accepted input: {path}")
         result[path] = tag
     return result
 
@@ -2388,7 +2424,7 @@ def open_scb_snapshot(selection: ScbSnapshotSelection) -> ScbSnapshotReader:
         raise SnapshotError(
             f"SCB snapshot is outside its Git repository: {root}"
         ) from exc
-    actual_commit = clean_git_commit(repo)
+    actual_commit = _git(repo, "rev-parse", "HEAD")
     if actual_commit != selection.input_commit:
         raise SnapshotError(
             "SCB input commit pin mismatch: expected "
@@ -2401,6 +2437,18 @@ def open_scb_snapshot(selection: ScbSnapshotSelection) -> ScbSnapshotReader:
         raise SnapshotError(
             "SCB snapshot manifest pin mismatch: expected "
             f"{selection.manifest_sha256}, got {committed_manifest_sha256}"
+        )
+    _verify_committed_inventory(
+        repo, selection.input_commit, snapshot_path, committed_manifest
+    )
+    omitted = _verify_git_snapshot_materialization(
+        repo, selection.input_commit, snapshot_path, committed_manifest
+    )
+    actual_commit = clean_git_commit(repo)
+    if actual_commit != selection.input_commit:
+        raise SnapshotError(
+            "SCB input commit changed while its materialization was checked: expected "
+            f"{selection.input_commit}, got {actual_commit}"
         )
     manifest_path = root / MANIFEST_NAME
     try:
@@ -2423,12 +2471,6 @@ def open_scb_snapshot(selection: ScbSnapshotSelection) -> ScbSnapshotReader:
         ) from exc
     if manifest != committed_manifest:
         raise SnapshotError("worktree snapshot manifest differs from pinned commit")
-    _verify_committed_inventory(
-        repo, selection.input_commit, snapshot_path, committed_manifest
-    )
-    omitted = _verify_git_snapshot_materialization(
-        repo, selection.input_commit, snapshot_path, manifest
-    )
     files = {item.name: item for item in manifest.files}
     if missing := set(SCB_CSV_FILES) - set(files):
         raise SnapshotError(
@@ -2915,7 +2957,7 @@ def open_input_bundle(selection: CatalogBundleSelection) -> CatalogBundleReader:
         raise SnapshotError(
             f"catalog bundle is outside its Git repository: {root}"
         ) from exc
-    actual_commit = clean_git_commit(repo)
+    actual_commit = _git(repo, "rev-parse", "HEAD")
     if actual_commit != selection.input_commit:
         raise SnapshotError(
             "catalog input commit pin mismatch: expected "
@@ -2929,6 +2971,16 @@ def open_input_bundle(selection: CatalogBundleSelection) -> CatalogBundleReader:
             "catalog bundle manifest pin mismatch: expected "
             f"{selection.manifest_sha256}, got {committed_sha256}"
         )
+    _verify_committed_bundle_inventory(
+        repo, selection.input_commit, bundle_path, committed
+    )
+    snapshot = open_scb_snapshot(
+        ScbSnapshotSelection(
+            path=repo / committed.scb_snapshot_path,
+            input_commit=selection.input_commit,
+            manifest_sha256=committed.scb_manifest_sha256,
+        )
+    )
     manifest_path = root / BUNDLE_MANIFEST_NAME
     try:
         worktree_bytes = manifest_path.read_bytes()
@@ -2948,17 +3000,7 @@ def open_input_bundle(selection: CatalogBundleSelection) -> CatalogBundleReader:
         raise SnapshotError(
             "worktree catalog bundle manifest differs from pinned commit"
         )
-    _verify_committed_bundle_inventory(
-        repo, selection.input_commit, bundle_path, manifest
-    )
     _verify_bundle_inventory(root, manifest, hashes=False)
-    snapshot = open_scb_snapshot(
-        ScbSnapshotSelection(
-            path=repo / manifest.scb_snapshot_path,
-            input_commit=selection.input_commit,
-            manifest_sha256=manifest.scb_manifest_sha256,
-        )
-    )
     return CatalogBundleReader(
         root=root,
         repository=repo,
@@ -3047,11 +3089,11 @@ def create_build_lock(
             f"build lock already exists and will not be overwritten: {output}"
         )
     input_repo = Path(_git(snapshot, "rev-parse", "--show-toplevel"))
-    input_commit = clean_git_commit(input_repo)
     builder_repo, builder_commit = _builder_source_identity()
     snapshot_path = snapshot.relative_to(input_repo).as_posix()
     worktree_manifest = load_manifest(snapshot)
     _require_complete_normalized_inventory(snapshot, worktree_manifest)
+    input_commit = clean_git_commit(input_repo)
     committed_manifest, committed_manifest_sha256 = _verify_committed_snapshot(
         input_repo, input_commit, snapshot_path
     )
@@ -3132,10 +3174,10 @@ def verify_build_lock(
         raise SnapshotError(f"recorded result DB is missing: {recorded_db}")
     if replay_db is not None and not replay_db.is_file():
         raise SnapshotError(f"replay result DB is missing: {replay_db}")
-    input_commit = clean_git_commit(input_repo)
     snapshot_path = snapshot.relative_to(input_repo).as_posix()
     worktree_manifest = load_manifest(snapshot)
     _require_complete_normalized_inventory(snapshot, worktree_manifest)
+    input_commit = clean_git_commit(input_repo)
     checks = {
         "input repository commit": (
             input_commit,
