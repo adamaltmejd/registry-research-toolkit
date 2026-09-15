@@ -128,10 +128,12 @@ This is the current implementation until the target replaces it:
    exact names and token mappings inside its reader. Thin-provider TOMLs are source
    deliveries rather than corrections.
 3. `db.py::materialize` reinserts the combined IR core graph, removes fully covered
-   code-less shadows, seeds classifications, populates slugs, merges period families,
-   creates source and curated alias windows, resolves residual code-less overlaps,
-   materializes concept groups, applies generated delivery enrichment and tags, then
-   builds relations, classifications, lineage, code mappings, and search indexes.
+   code-less shadows, seeds classifications, populates register/variant/classification
+   slugs, merges period families, materializes source-derived multi-alias windows,
+   populates variable slugs, and only then materializes curated exact-edition alias
+   windows. It next resolves residual code-less overlaps, materializes concept groups,
+   applies generated delivery enrichment and tags, then builds relations,
+   classifications, lineage, code mappings, and search indexes.
 4. `build_db` validates the staged database and `publish_db` atomically replaces the
    live catalog. The optional provenance sibling is written afterward and is non-fatal.
 
@@ -218,10 +220,11 @@ A source assertion contains:
 - `source_revision`: logical dataset ID, publisher, declared purpose, upstream revision,
   the selected bundle/manifest identity, artifact hashes, and any publisher-declared
   supersession limited to explicit facts/scopes;
-- `record_locator`: a stable native record key plus current physical coordinates. SCB
-  uses register/variant/edition/VarId/CVID and field; a workbook uses sheet/table,
-  semantic row key, header key, and cell/range. Physical coordinates support inspection
-  but are not authority;
+- `record_locator`: a stable `semantic_record_key` plus current physical coordinates.
+  The reader derives the key from intrinsic dataset coordinates: SCB uses register,
+  variant, edition, VarId/CVID, and field; a workbook uses logical table/section,
+  semantic row, and header keys. Sheet names, row numbers, and cells/ranges are physical
+  coordinates used for inspection, not semantic identity or authority;
 - `subject`: the source subject before any canonical binding, with register, source
   variable key or column, and population/variant as separate coordinates;
 - `fact_kind`: a closed vocabulary including availability, name, definition, operational
@@ -234,10 +237,18 @@ A source assertion contains:
 - an assertion state: `value`, `unknown`, or `negative`. `negative` is allowed only for
   a fact whose schema defines a negative assertion, such as "not available". A missing
   row emits no assertion. A source-defined blank emits `unknown` only when that format's
-  contract gives the blank that meaning; and
-- a deterministic assertion ID and semantic projection hash. The projection excludes
-  irrelevant layout fields but includes the subject, fact, scope, assertion state, and
-  value.
+  contract gives the blank that meaning;
+- a deterministic `assertion_key`: the canonical hash (or equivalent canonical encoding)
+  of logical dataset ID, semantic record key, complete source subject coordinates
+  (including population and variant), fact kind, and normalized edition/reference-period
+  scopes. None of those identity-bearing coordinates may be omitted, and physical layout
+  is excluded;
+- a revision-qualified `assertion_id` for one evidence occurrence, formed from the
+  source-revision identity and `assertion_key`; and
+- a semantic projection hash over complete subject coordinates (including population and
+  variant), fact, normalized scopes, assertion state, and value. It excludes revision
+  and physical layout, so a supported layout-only change produces a new evidence
+  reference but not a semantic change.
 
 For example, this is the shape a future LISA availability reader could emit. It is
 illustrative, not an assertion that the preserved workbook has been accepted or that its
@@ -245,7 +256,8 @@ audit was correct:
 
 ```json
 {
-  "assertion_id": "lisa-workbook:availability:ampoltyp:2018-2019",
+  "assertion_key": "scb-lisa-variable-availability:availability:lisa:<section-key>:ampoltyp:individer-15plus:<population-key>:editions-2018-2019:reference-na",
+  "assertion_id": "scb-lisa-variable-availability@<source-revision-id>:sha256:<canonical-assertion-key-hash>",
   "source_revision": {
     "dataset": "scb-lisa-variable-availability",
     "publisher": "SCB",
@@ -254,8 +266,13 @@ audit was correct:
     "artifact_sha256": "<captured SHA-256>"
   },
   "record_locator": {
-    "table": "<reader-recognized table>",
-    "record_key": ["AmPolTyp", "individer-15plus"],
+    "semantic_record_key": [
+      "<section-key>",
+      "AmPolTyp",
+      "individer-15plus",
+      "<population-key>"
+    ],
+    "physical_table": "<current table or sheet>",
     "field": "availability",
     "physical_cells": ["<cells recorded by the reader>"]
   },
@@ -269,6 +286,7 @@ audit was correct:
   "fact_kind": "availability",
   "edition_scope": ["2018", "2019"],
   "reference_period_scope": {"kind": "not_applicable"},
+  "semantic_projection_sha256": "<semantic projection SHA-256>",
   "assertion": {"status": "value", "value": true}
 }
 ```
@@ -298,7 +316,8 @@ Every decision records:
 - a stable `decision_id` and exactly one typed operation;
 - a canonical or source subject, population/variant, fact kind, and finite target
   edition/reference-period scope;
-- selected assertion IDs and every competing assertion considered;
+- stable evidence selectors and the revision-qualified assertion IDs for every selected
+  and competing evidence occurrence reviewed;
 - checked assumptions and their reviewed semantic projections: same identity/meaning,
   definition and operational definition, relevant type/length, code/code-label facts,
   source representation, target cardinality, and any copied-record or support-set
@@ -359,13 +378,15 @@ filled from the accepted candidate; this example does not ratify new content):
   },
   "selected_evidence": [
     {
-      "assertion_id": "<SCB-documentation availability assertion>",
+      "assertion_key": "<stable SCB-documentation availability assertion key>",
+      "assertion_id": "<revision-qualified SCB-documentation assertion ID>",
       "reviewed_projection_sha256": "<semantic projection SHA-256>"
     }
   ],
   "considered_evidence": [
     {
-      "assertion_id": "<SWECOV possession assertion>",
+      "assertion_key": "<stable SWECOV possession assertion key>",
+      "assertion_id": "<revision-qualified SWECOV assertion ID>",
       "role": "corroborating project possession only"
     }
   ],
@@ -427,12 +448,14 @@ cannot establish either.
 
 ### Decision evaluation across updates
 
-For each candidate bundle, reconciliation resolves a decision's evidence selectors
-against the candidate assertions and compares the candidate semantic projections with
-the reviewed ones. A whole-file checksum identifies which source revision was used; it
-does not invalidate every decision after an unrelated byte edit. A stable semantic
-record key can survive a supported workbook rename or layout change while the current
-physical locator changes and is reported.
+For each candidate bundle, reconciliation resolves a decision's stable evidence
+selectors against the candidate assertion keys and records the resulting
+revision-qualified assertion IDs. It compares candidate semantic projections with the
+reviewed ones. A whole-file checksum identifies which source revision was used; it does
+not invalidate every decision after an unrelated byte edit. A stable semantic record key
+can survive a supported workbook rename or layout change: the revision-qualified
+evidence reference and physical locator change and are reported, while an unchanged
+semantic projection remains unchanged.
 
 The evaluator also searches for newly applicable evidence for the same subject, fact,
 and scope. Checking only the old selected records would miss exactly the updates this
@@ -627,7 +650,7 @@ by this documentation change:
   | SCB fixes an omission                      | Provider assertion now occupies a corrected target; status `upstream_fixed` blocks until the finite correction is retired or re-resolved.                                                                                                             | Old correction and new provider record side by side.                              | Errata-replacement update regression.                                            |
   | Newly added year                           | New claims get their own scope; old corrections do not expand. Non-conflicting decisions stay applicable, while a new unresolved required fact blocks full publication.                                                                               | New edition and whether it is resolved independently.                             | Edition, decision, and build regressions.                                        |
   | Ambiguous identity or alias                | Competing subjects/target count are retained; no guessed binding is applied; `ambiguous` blocks dependent output.                                                                                                                                     | Candidates and missing same-variable evidence.                                    | Identity/alias and matrix partition tests.                                       |
-  | Renamed or restructured supported workbook | Logical revision and new physical locators are recorded; stable unique semantic keys preserve assertions. Unsupported/ambiguous structure blocks as an input error.                                                                                   | Locator-only change or exact schema/key failure.                                  | Supplemental-reader fixtures plus bundle validation.                             |
+  | Renamed or restructured supported workbook | Logical revision, revision-qualified evidence references, and new physical locators are recorded; stable unique semantic keys match unchanged projections. Unsupported/ambiguous structure blocks as an input error.                                  | Provenance/layout-only change or exact schema/key failure.                        | Supplemental-reader fixtures plus bundle validation.                             |
   | Contradictory official availability        | Both scoped claims remain. Explicit purpose/supersession or reviewed selection resolves them; otherwise `ambiguous` blocks.                                                                                                                           | Both witnesses, overlap, authority rationale, and old/new outcome.                | Reconciliation authority regressions.                                            |
   | Incompatible reviewed decisions            | Individually applicable decisions propose incompatible values or identity partitions over an overlap; that overlap is not applied and `ambiguous` blocks entity formation. Agreeing proposals retain one output with all provenance.                  | Every conflicting decision ID, overlap, proposed result, and evidence.            | Synthetic compatibility regression that permutes decision/file order.            |
   | Missing evidence                           | Missing witness/no assertion or `unknown` historical scope is recorded; a dependent correction is `missing_evidence` and blocks.                                                                                                                      | Missing selector and affected fact/scope; frozen output is not accepted evidence. | Contract/dependency regressions.                                                 |
