@@ -27,9 +27,9 @@ substitute a branch name or infer a newer commit. The input path is an ignored, 
 host-local Git repository with no remote. The script writes a timestamped
 `/tmp/<slug>.log`, builds into scratch paths, lets `build-db` copy the selected bundle's
 mutable slug inputs to its per-run workspace, enables `--timing`, emits sparse
-milestones plus quiet-period health, and runs `integrity_check`,
-`foreign_key_check`, key table counts, and optional dbdiff after a successful build. It
-uses the SCB value prestage cache by default when SCB is in the provider set.
+milestones plus quiet-period health, and runs `integrity_check`, `foreign_key_check`,
+key table counts, and optional dbdiff after a successful build. It uses the SCB value
+prestage cache by default when SCB is in the provider set.
 
 ## Running unattended
 

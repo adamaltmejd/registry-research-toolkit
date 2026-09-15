@@ -1019,10 +1019,10 @@ reg-meta-build --db /scratch/catalog-build build-db \
 Selection requires a clean checkout at the exact full commit. The committed and worktree
 bundle and snapshot manifests must match their explicit SHA-256 pins and supported
 schemas. Ordinary use compares both declared inventories and byte sizes with the pinned
-Git tree and worktree. It does not hash the small payloads, read the complete SCB stream,
-decompress archives, recompute lossless digests, or require a historical replay lock.
-Changing either commit or manifest requires new explicit pins after preparation and
-acceptance; the builder never accepts or repairs changed input implicitly.
+Git tree and worktree. It does not hash the small payloads, read the complete SCB
+stream, decompress archives, recompute lossless digests, or require a historical replay
+lock. Changing either commit or manifest requires new explicit pins after preparation
+and acceptance; the builder never accepts or repairs changed input implicitly.
 
 Consumed non-value streams still validate escaped-TSV syntax, field/line/record counts,
 dictionary ordering/closure and SCB headers, but omit artifact and logical-stream
@@ -1046,9 +1046,9 @@ Snapshot null tokens remain distinct in the prepared representation and reader; 
 interpretation boundary collapses unquoted-null and quoted-empty cells to the empty
 string expected from the historical raw reader. The manifest's original raw CSV hashes
 remain `source_checksums`, so equivalent raw and snapshot representations share the same
-value-prestage identity. The `import_manifest.scb_input_snapshot` object
-records input-repository commit, repository-relative snapshot path and manifest hash; it
-is provenance, not a cache key or a replacement source identity. The adjacent
+value-prestage identity. The `import_manifest.scb_input_snapshot` object records
+input-repository commit, repository-relative snapshot path and manifest hash; it is
+provenance, not a cache key or a replacement source identity. The adjacent
 `import_manifest.catalog_input_bundle` records the complete input-repository commit,
 bundle-manifest path and manifest SHA-256.
 
@@ -1056,9 +1056,9 @@ Pinned selection is exclusive: `--input-dir` and `--slug-dir` cannot be mixed wi
 and no missing or unlisted file falls back to loose inputs or the builder checkout.
 Build output and prestage caches must remain outside the accepted repository. The build
 copies only mutable slug TOMLs to a per-run workspace, passes that same path to import
-and final validation, reports generated differences, and leaves the workspace for
-review without changing or accepting the input repository. The repository is checked
-again after validation immediately before atomic publication. `--input-dir` remains an
+and final validation, reports generated differences, and leaves the workspace for review
+without changing or accepting the input repository. The repository is checked again
+after validation immediately before atomic publication. `--input-dir` remains an
 explicit raw source-preparation/testing path, not a compatibility selection mode.
 
 `prepare` derives `converter_commit` from the checkout containing both the executing CLI
