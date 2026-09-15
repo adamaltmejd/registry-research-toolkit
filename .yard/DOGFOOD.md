@@ -15,6 +15,18 @@ from the store: `ui` about 65 minutes median, `default` about 20, `light` 1–22
 
 ## Open upstream reports
 
+### 2026-09-15: published macOS binary fails signature verification
+
+On macOS 27.0 arm64, the installed 0.14.10 CLI exited 137 before printing output. Its
+complete SHA256 matched the published release artifact, but `codesign --verify` reported
+an invalid signature. A task-local copy with a renewed ad-hoc signature verified and ran
+successfully; the installed binary was left unchanged. Filed as
+[#103](https://github.com/adamaltmejd/switchyard/issues/103). The active operator uses
+that same-version copy under the local-only evidence directory
+`archive/reports/yard/2026-09-15-prepared-input-build/yard-tool/`; keep it while the
+daemon runs from it. Release identity, repair receipts and the redacted report are
+retained there. The trigger for the new host failure is not established.
+
 ### 2026-09-11: Y-113 stopped by a network outage, then a host sleep spent its window
 
 Driving the curation-consolidation chain (Y-113..Y-120, Claude Fable 5.1 operating).
