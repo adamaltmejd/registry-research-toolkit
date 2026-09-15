@@ -37,7 +37,7 @@ from urllib.parse import quote
 
 from pydantic import BaseModel, ConfigDict, field_validator, model_validator
 
-from .db import DDL, _CURATED_PROVIDERS, _file_sha256
+from .db import _CURATED_PROVIDERS, DDL, _file_sha256
 from .dbdiff import TableIgnore, diff_db_content, format_report
 
 if TYPE_CHECKING:
