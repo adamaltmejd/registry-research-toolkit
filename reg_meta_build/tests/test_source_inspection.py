@@ -715,13 +715,13 @@ def test_compact_comparison_retains_witnesses_conflicts_ids_and_spelling() -> No
         "expected_witness",
     ),
     (
-        ("X", 153, "unknown_applicability", None, True),
+        ("X", 153, "missing_edition", False, False),
         ("Other", 153, "missing_edition", False, False),
         ("X", 152, "agreement", True, True),
         ("Other", 152, "unobserved_counterpart", True, False),
     ),
     ids=(
-        "cross-variant-exact-is-unknown",
+        "cross-variant-exact-does-not-establish-edition",
         "cross-variant-edition-is-missing",
         "scoped-exact-agrees",
         "scoped-edition-is-present",
@@ -768,14 +768,156 @@ def test_company_comparison_uses_only_its_finite_native_variant_assumption(
     assert bool(compared.scb_record_ids) is expected_witness
     assert compared.assumption_ids[0] == ("lisa-company-1990-2024-to-scb-variant-152")
     if scb_variant == 153 and scb_column == "X":
-        assert compared.assumption_ids == (
-            "lisa-company-1990-2024-to-scb-variant-152",
-            "unestablished-workbook-to-scb-variant-scope",
-        )
+        assert compared.assumption_ids == ("lisa-company-1990-2024-to-scb-variant-152",)
         assert any(
             outcome.status == "source_only_observation"
             and outcome.scb_record_ids == (scb_record.record_id,)
             for outcome in outcomes
+        )
+
+
+@pytest.mark.parametrize(
+    (
+        "witness_variant",
+        "known_assumed_edition",
+        "expected_status",
+        "expected_edition_present",
+    ),
+    (
+        (153, False, "missing_edition", False),
+        (153, True, "unobserved_counterpart", True),
+        (152, False, "unknown_applicability", None),
+        (152, True, "unknown_applicability", True),
+    ),
+    ids=(
+        "cross-variant-without-assumed-edition",
+        "cross-variant-with-assumed-edition",
+        "same-variant-unparsed-without-known-edition",
+        "same-variant-unparsed-with-known-edition",
+    ),
+)
+def test_filtered_company_comparison_separates_witnesses_from_edition_presence(
+    tmp_path: Path,
+    witness_variant: int,
+    known_assumed_edition: bool,
+    expected_status: str,
+    expected_edition_present: bool | None,
+) -> None:
+    input_dir = tmp_path / "source"
+    witness_version = "okänd utgåva" if witness_variant == 152 else "2020"
+    rows = [
+        _var_row(
+            colname="X",
+            cvid=1,
+            var_id=9,
+            year="2020",
+            versionname=witness_version,
+            regver_id=201,
+            register=("LISA", 34, witness_variant),
+        ),
+        _var_row(
+            colname="x",
+            cvid=2,
+            var_id=10,
+            year="2020",
+            regver_id=202,
+            register=("LISA", 34, 153),
+        ),
+        _var_row(
+            colname="",
+            cvid=3,
+            var_id=9,
+            year="2021",
+            versionname="okänd utgåva",
+            regver_id=203,
+            register=("LISA", 34, witness_variant),
+        ),
+    ]
+    if known_assumed_edition:
+        rows.append(
+            _var_row(
+                colname="Other",
+                cvid=4,
+                var_id=99,
+                year="2020",
+                regver_id=204,
+                register=("LISA", 34, 152),
+            )
+        )
+    write_scb_input(input_dir, registerinformation_rows=rows)
+    workbook = write_lisa_workbook(input_dir / "docs" / "lisa.xlsx")
+    source = load_workbook(workbook)
+    source["Företag"]["A9"] = "X"
+    source["Företag"]["C9"] = 2020
+    source.save(workbook)
+    source.close()
+    selection = write_input_bundle(
+        tmp_path / "accepted",
+        input_dir,
+        lisa_workbook=LisaWorkbookSelection(
+            path=workbook,
+            upstream_revision="2024-2025",
+            sha256=hashlib.sha256(workbook.read_bytes()).hexdigest(),
+        ),
+    )
+    bundle = open_input_bundle(selection)
+
+    full = inspect_bundle_source_records(bundle, code_commit="c" * 40)
+    filtered = inspect_bundle_source_records(
+        bundle, code_commit="c" * 40, exact_column="X"
+    )
+
+    comparison = next(
+        outcome
+        for outcome in filtered.comparison_outcomes
+        if outcome.column_name == "X"
+        and outcome.edition_scope.intervals
+        == (ScopeInterval(start="2020", end="2020"),)
+        and outcome.workbook_record_ids
+    )
+    assert comparison.status == expected_status
+    assert comparison.scb_edition_present is expected_edition_present
+    assert bool(comparison.scb_record_ids) is (witness_variant == 152)
+    assert comparison.register_variant_ids == ((152,) if witness_variant == 152 else ())
+    expected_assumption_ids = (
+        (
+            "lisa-company-1990-2024-to-scb-variant-152",
+            "unestablished-workbook-to-scb-variant-scope",
+        )
+        if witness_variant == 152
+        else ("lisa-company-1990-2024-to-scb-variant-152",)
+    )
+    assert comparison.assumption_ids == expected_assumption_ids
+    assert filtered.target_preview is not None
+    assert filtered.target_preview.expected_source_target_count == 0
+    assert filtered.target_preview.target_record_ids == ()
+    filtered_scb_by_member = {
+        record.subject.native.member_id: record
+        for record in filtered.source_records
+        if record.source == "scb-registerinformation"
+    }
+    assert filtered_scb_by_member[2].record_id in (
+        filtered.target_preview.casefold_collision_record_ids
+    )
+    assert filtered_scb_by_member[3].record_id not in (
+        filtered.target_preview.target_record_ids
+    )
+    for report in (full, filtered):
+        scb_by_member = {
+            record.subject.native.member_id: record
+            for record in report.source_records
+            if record.source == "scb-registerinformation"
+        }
+        assert {1, 2, 3} <= set(scb_by_member)
+        assert any(
+            scb_by_member[3].record_id in outcome.scb_record_ids
+            and outcome.status == "unknown_applicability"
+            and outcome.assumption_ids
+            == (
+                "unestablished-workbook-to-scb-variant-scope",
+                "same-native-variable-spelling-continuity",
+            )
+            for outcome in report.comparison_outcomes
         )
 
 
@@ -1512,7 +1654,7 @@ def test_pinned_bundle_cli_reports_deterministic_source_targets_without_cold_val
     assert 2024 in report["target_preview"]["unobserved_documented_editions"]
     assert len(report["target_preview"]["target_record_ids"]) == 1
     assert report["summary"]["outcome_counts"]["unknown_spelling"] == 1
-    assert report["summary"]["outcome_counts"]["unknown_applicability"] >= 1
+    assert report["summary"]["outcome_counts"].get("unknown_applicability", 0) == 0
     assert report["summary"]["outcome_counts"]["unobserved_counterpart"] == 1
     assert report["summary"]["outcome_counts"]["missing_edition"] >= 1
     agreement = next(
@@ -1526,15 +1668,20 @@ def test_pinned_bundle_cli_reports_deterministic_source_targets_without_cold_val
         "lisa-individual-2010-2024-to-scb-variant-153"
     ]
     cross_variant_casefold = next(
-        outcome
-        for outcome in report["comparison_outcomes"]
-        if outcome["status"] == "unknown_applicability"
-        and outcome["register_variant_ids"] == [1335]
+        record
+        for record in report["source_records"]
+        if record["subject"]["native"].get("member_id") == 3
     )
-    assert "casefold-spelling-candidate" in cross_variant_casefold["assumption_ids"]
     assert (
-        "unestablished-workbook-to-scb-variant-scope"
-        in cross_variant_casefold["assumption_ids"]
+        cross_variant_casefold["record_id"]
+        in report["target_preview"]["casefold_collision_record_ids"]
+    )
+    assert any(
+        outcome["status"] == "missing_edition"
+        and outcome["scb_edition_present"] is False
+        and not outcome["scb_record_ids"]
+        and {"start": "2022", "end": "2022"} in outcome["edition_scope"]["intervals"]
+        for outcome in report["comparison_outcomes"]
     )
     target_id = report["target_preview"]["target_record_ids"][0]
     target = next(

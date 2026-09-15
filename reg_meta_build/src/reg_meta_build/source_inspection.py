@@ -960,7 +960,11 @@ def compare_availability_records(
                     if unscoped_map:
                         candidates = tuple(unscoped_map.values())
                         status = "unknown_applicability"
-                        present = None
+                        present = (
+                            True
+                            if (assumption.scb_variant_id, year) in edition_years
+                            else None
+                        )
                         assumption_ids += (_UNESTABLISHED_SCOPE_ASSUMPTION_ID,)
                         if unscoped_folded_candidates:
                             assumption_ids += (_CASEFOLD_CANDIDATE_ASSUMPTION_ID,)
@@ -971,82 +975,20 @@ def compare_availability_records(
                             "the expected variant have pooled or unparseable periods; "
                             "annual applicability remains unknown"
                         )
-                    else:
-                        cross_map = {
-                            item.record_id: item
-                            for item in (
-                                *exact_any.get((column, year), ()),
-                                *(
-                                    record
-                                    for record in folded_any.get(
-                                        (column.casefold(), year), ()
-                                    )
-                                    if _column(record) != column
-                                ),
-                                *unscoped_exact.get(column, ()),
-                                *(
-                                    record
-                                    for record in unscoped_folded.get(
-                                        column.casefold(), ()
-                                    )
-                                    if _column(record) != column
-                                ),
-                            )
-                            if item.subject.native.register_variant_id
-                            != assumption.scb_variant_id
-                        }
-                        cross_folded = any(
-                            _column(item) != column for item in cross_map.values()
+                    elif (assumption.scb_variant_id, year) in edition_years:
+                        status = "unobserved_counterpart"
+                        present = True
+                        detail = (
+                            "the assumed native SCB variant edition exists but no "
+                            "matching source occurrence was observed"
                         )
-                        cross_blank = False
-                        for (
-                            other_variant,
-                            known_column,
-                        ), variable_ids in variable_ids_by_variant_column.items():
-                            if (
-                                other_variant == assumption.scb_variant_id
-                                or known_column != column
-                            ):
-                                continue
-                            for variable_id in variable_ids:
-                                for item in (
-                                    *unknown_by_variable_year.get(
-                                        (other_variant, variable_id, year), ()
-                                    ),
-                                    *unscoped_unknown_by_variable.get(
-                                        (other_variant, variable_id), ()
-                                    ),
-                                ):
-                                    cross_map[item.record_id] = item
-                                    cross_blank = True
-                        if cross_map:
-                            candidates = tuple(cross_map.values())
-                            status = "unknown_applicability"
-                            present = None
-                            assumption_ids += (_UNESTABLISHED_SCOPE_ASSUMPTION_ID,)
-                            if cross_folded:
-                                assumption_ids += (_CASEFOLD_CANDIDATE_ASSUMPTION_ID,)
-                            if cross_blank:
-                                assumption_ids += (_SPELLING_CONTINUITY_ASSUMPTION_ID,)
-                            detail = (
-                                "relevant spelling or native-variable candidates exist "
-                                "only outside the finite SCB variant assumption; they "
-                                "are retained without establishing a counterpart"
-                            )
-                        elif (assumption.scb_variant_id, year) in edition_years:
-                            status = "unobserved_counterpart"
-                            present = True
-                            detail = (
-                                "the assumed native SCB variant edition exists but no "
-                                "matching source occurrence was observed"
-                            )
-                        else:
-                            status = "missing_edition"
-                            present = False
-                            detail = (
-                                "the raw SCB input contains no annual edition for the "
-                                "assumed native variant"
-                            )
+                    else:
+                        status = "missing_edition"
+                        present = False
+                        detail = (
+                            "the raw SCB input contains no annual edition for the "
+                            "assumed native variant"
+                        )
             key: tuple[OutcomeStatus, bool | None, str, tuple[str, ...]] = (
                 status,
                 present,
