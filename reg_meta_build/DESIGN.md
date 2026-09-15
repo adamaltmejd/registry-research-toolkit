@@ -176,8 +176,10 @@ Each stage has exactly one responsibility:
    checks every reviewed decision and its dependencies, and emits a complete report plus
    resolved facts. It discovers new competing evidence as well as rechecking selected
    evidence. It evaluates all independent decisions—including ones an old conditional
-   pass or conflict cascade would no longer reach—before returning blockers rather than
-   failing on the first resolvable conflict.
+   pass or conflict cascade would no longer reach—and checks their proposed results
+   simultaneously for compatible values and identity partitions before applying any of
+   them. It returns all blockers rather than failing on the first resolvable conflict;
+   artifact or file order never supplies precedence.
 4. **Form entities and states.** Provider-specific typed operations may bind identities,
    partition a source subject, or map representations. Only resolved facts reach the
    existing Pydantic IR. A correction is never a later `variable_state` patch.
@@ -192,12 +194,15 @@ Each stage has exactly one responsibility:
    mandatory gate because it is written non-fatally after the catalog swap.
 
 The code checkout is the sole authoring home for reviewed decisions and explicit policy.
-`prepare_input_bundle` copies those bytes into the candidate bundle and records the
-source blob/commit identity. The bundle copy is immutable evidence for a build, not a
-second place to edit. Reports show both the authoring path and captured hash. A changed
-authoring file requires a newly prepared candidate; an accepted build never falls back
-to the checkout and therefore cannot silently build different curation from the file an
-agent edited.
+`prepare_input_bundle` copies those bytes into the candidate bundle. After the decision
+artifact is final, the bundle/report envelope records its captured blob/content identity
+and the code commit that supplied it; the artifact does not have to hash its own final
+serialization. Inline review provenance carries reviewer and date and may identify an
+explicitly prior reviewed revision. The bundle copy is immutable evidence for a build,
+not a second place to edit. Reports show the authoring path and captured identity. A
+changed authoring file requires a newly prepared candidate; an accepted build never
+falls back to the checkout and therefore cannot silently build different curation from
+the file an agent edited.
 
 ### Assertion contract
 
@@ -274,8 +279,9 @@ member is `{"status":"negative"}`. If it is a source-defined unknown marker, it 
 all. The SCB machine export's lack of a row is likewise absence, not a negative claim.
 
 The reader also preserves disjoint scopes without taking their hull. A variable
-documented for `1998..2003` and `2007..2010` produces two intervals; it is not available
-in 2004–2006. A multi-year table can assert one pooled reference period without
+documented for `1998..2003` and `2007..2010` produces two positively supported
+intervals; the 2004–2006 gap has no assertion unless the source supplies explicit
+negative evidence. A multi-year table can assert one pooled reference period without
 asserting that the column is delivered in every constituent year.
 
 ### Reviewed decision contract
@@ -298,7 +304,8 @@ Every decision records:
   source representation, target cardinality, and any copied-record or support-set
   assumption;
 - the expected number of source targets and outputs;
-- a rationale and review provenance (reviewer, date, authoring commit/blob); and
+- a rationale and inline review provenance (reviewer, date, and, when relevant, an
+  explicitly prior reviewed decision revision); and
 - the compact correction note to project into existing collapsed catalog metadata when
   the result is user-visible. The catalog does not gain a second detailed decision
   schema.
@@ -375,7 +382,7 @@ filled from the accepted candidate; this example does not ratify new content):
   "review": {
     "reviewer": "maintainer",
     "reviewed_on": "<YYYY-MM-DD>",
-    "authoring_blob": "<Git blob identity>"
+    "reviewed_revision": "<optional prior decision revision>"
   }
 }
 ```
@@ -445,6 +452,24 @@ blocking for an accepted full catalog until the decision is retired or reviewed.
 Harmless unknown metadata may remain unknown; an unknown needed to justify an emitted
 fact blocks that fact. Corrections never acquire a newly added edition implicitly.
 
+Individual applicability is necessary but not sufficient. Before applying decisions, the
+evaluator compares all proposed results over intersecting subject, variant, population,
+fact, edition, and reference-period scopes. Agreeing fact values produce one result with
+every supporting decision ID and provenance retained; compatible identity constraints
+compose while retaining each decision's provenance. Incompatible values, or an identity
+merge that crosses a partition another decision requires to remain distinct, produce one
+`ambiguous` blocking record naming all conflicting decision IDs and their exact overlap.
+No decision wins by filename, array position, or evaluation order, and reconciliation
+does not expose a partially applied decision set to entity formation.
+
+For example, suppose independently valid illustrative decisions `availability-a` selects
+positive availability for one LISA subject in 2018–2019 and `availability-b` selects an
+explicit negative for the same subject and variant in 2019. The 2019 overlap is
+`ambiguous` and blocks with both IDs and evidence; reversing file order cannot change
+that result. If both selected positive availability instead, the resolved fact is
+retained once with both decisions' provenance. This is a decision-versus-decision
+compatibility check, distinct from reconciling their underlying source assertions.
+
 A copied-source decision names exact records and facts. If its reviewed assumption was
 "the nearest compatible edition in this support set", a newly inserted nearer edition
 changes that support set and produces `needs_review`; it never silently becomes the new
@@ -503,9 +528,9 @@ This remains a local CLI/report workflow; the use case does not justify a servic
    it does not falsely report the rest as clean.
 3. The agent edits typed artifacts only in the code checkout's
    `curation/source_decisions/`. Validate their strict JSON contract and
-   operation-specific invariants, then prepare a new candidate so the captured bundle
-   copy and authoring identity match. Repeat inspection and review until the
-   full-catalog report has no blocking decision outcomes.
+   operation-specific invariants, then prepare a new candidate so the bundle/report
+   envelope pins the reviewed file and its supplying code commit. Repeat inspection and
+   review until the full-catalog report has no blocking decision outcomes.
 4. Build and validate a scratch catalog from the exact candidate commit/manifest,
    inspect the same reconciliation report, and compare the database with the accepted
    catalog/latest release. Any content change after this point invalidates the review
@@ -604,6 +629,7 @@ by this documentation change:
   | Ambiguous identity or alias                | Competing subjects/target count are retained; no guessed binding is applied; `ambiguous` blocks dependent output.                                                                                                                                     | Candidates and missing same-variable evidence.                                    | Identity/alias and matrix partition tests.                                       |
   | Renamed or restructured supported workbook | Logical revision and new physical locators are recorded; stable unique semantic keys preserve assertions. Unsupported/ambiguous structure blocks as an input error.                                                                                   | Locator-only change or exact schema/key failure.                                  | Supplemental-reader fixtures plus bundle validation.                             |
   | Contradictory official availability        | Both scoped claims remain. Explicit purpose/supersession or reviewed selection resolves them; otherwise `ambiguous` blocks.                                                                                                                           | Both witnesses, overlap, authority rationale, and old/new outcome.                | Reconciliation authority regressions.                                            |
+  | Incompatible reviewed decisions            | Individually applicable decisions propose incompatible values or identity partitions over an overlap; that overlap is not applied and `ambiguous` blocks entity formation. Agreeing proposals retain one output with all provenance.                  | Every conflicting decision ID, overlap, proposed result, and evidence.            | Synthetic compatibility regression that permutes decision/file order.            |
   | Missing evidence                           | Missing witness/no assertion or `unknown` historical scope is recorded; a dependent correction is `missing_evidence` and blocks.                                                                                                                      | Missing selector and affected fact/scope; frozen output is not accepted evidence. | Contract/dependency regressions.                                                 |
   | Partial or mixed source selection          | Manifest records every revision/exclusion; loose/bundle mixing or omitted required evidence is rejected. Explicit differing revision dates may be coherent; diagnostic partial builds are not publishable as complete.                                | Selected/excluded datasets and completeness state.                                | Input-selection and publication integration tests.                               |
   | Failed build or publication                | Failure before acceptance leaves input `main` and active catalog unchanged. Failure after input acceptance leaves active catalog and embedded old pins unchanged, reports accepted-input/catalog divergence, and permits retry of the exact artifact. | Candidate pins, failure phase, preserved generation, and retry identity.          | Staged-publication failures extended across input acceptance/catalog activation. |
@@ -795,14 +821,20 @@ tables).
 
 ### Curated thin providers (FOHM, Försäkringskassan, …)
 
+**Shipped behavior.**
+
 Some providers ship no machine-readable microdata-metadata export at all — a public
 agency whose register/variable documentation exists only as prose on a website or in
 PDFs. These onboard as **thin curated providers** (#422): a maintainer transcribes the
-agency's PUBLIC register/variable documentation into a hand-authored TOML, and that TOML
-**is** the source delivery — the authoritative, citable artifact, committed under
-`input_data/<Agency>/<provider>.toml` (unlike the untracked SCB/SOS seed). They ship in
-the GLOBAL build (everyone gets them), distinct from the steward-flavor `extend-db`
-track (#365): a thin provider is a global-catalog addition, not a steward overlay.
+agency's PUBLIC register/variable documentation into a hand-authored TOML. The current
+adapter treats that TOML as its machine-readable source delivery, committed under
+`input_data/<Agency>/<provider>.toml` (unlike the untracked SCB/SOS seed). It is a
+maintainer-authored transcription with citations and curator provenance, not an upstream
+publisher artifact or independent authority apart from the publisher documentation it
+cites. The target assertion reader preserves those two provenance roles separately. Thin
+providers ship in the GLOBAL build (everyone gets them), distinct from the
+steward-flavor `extend-db` track (#365): a thin provider is a global-catalog addition,
+not a steward overlay.
 
 One shared `CuratedAdapter` (`sources/curated.py`) reads any such TOML rather than a
 near-identical adapter per agency. Adding a thin provider is four steps:
