@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import subprocess
 from contextlib import contextmanager
 from typing import TYPE_CHECKING
 
@@ -23,6 +24,7 @@ from reg_meta_build.input_snapshot import (
     LISA_DATASET_ID,
     LisaWorkbookSelection,
     ScbSnapshotReader,
+    SnapshotError,
     open_input_bundle,
     open_scb_snapshot,
 )
@@ -45,10 +47,11 @@ from reg_meta_build.source_records import (
     TemporalScope,
     value_field,
 )
-from reg_meta_build.sources.lisa import LisaWorkbookError, read_lisa_records
-from reg_meta_build.sources.scb_records import read_scb_lisa_records
+from reg_meta_build.sources import lisa as lisa_module
+from reg_meta_build.sources.lisa import LisaWorkbookError, read_lisa_source
+from reg_meta_build.sources.scb_records import _scopes, read_scb_lisa_records
 
-from reg_meta_build import cli as cli_module
+from reg_meta_build import cli as cli_module, source_inspection as inspection_module
 
 if TYPE_CHECKING:
     from collections.abc import Iterator
@@ -131,9 +134,10 @@ def test_lisa_reader_preserves_four_layouts_sections_periods_and_occurrences(
     tmp_path: Path,
 ) -> None:
     path = write_lisa_workbook(tmp_path / "lisa.xlsx")
-    records = read_lisa_records(path, _revision(path))
+    source = read_lisa_source(path, _revision(path))
+    records = source.records
 
-    assert len(records) == 8
+    assert len(records) == 9
     assert {record.locator.physical_table for record in records} == {
         "Individ",
         "Individ årsoberoende",
@@ -191,6 +195,36 @@ def test_lisa_reader_preserves_four_layouts_sections_periods_and_occurrences(
     )
     assert ampoltyp.fields.availability == value_field(True)
 
+    ku2 = next(
+        record
+        for record in records
+        if _field_text(record, "column_name") == "KU2YrkStalln"
+    )
+    assert ku2.fields.sensitivity == SourceField(
+        status="value", value="conditional", raw_value="I vissa fall"
+    )
+    assert ku2.context[-2:] == (
+        (
+            "continuation-note Individ!B323: Före 2010 finns inte kod 5 "
+            "(företagare i eget AB). För åren 1993- finns istället variabeln "
+            "KU1Faman som anges som 1 om personen är en företagare i eget AB."
+        ),
+        "continuation-note Individ!F323: RAMS-Jobb",
+    )
+    assert ku2.locator.physical_cells[-2:] == ("Individ!B323", "Individ!F323")
+    assert len(source.worksheet_context) == 5
+    assert source.worksheet_context[0] == ("worksheet-footnote Individ!B815: _ftnref2")
+    assert source.worksheet_context[-1].startswith(
+        "worksheet-footnote Individ!B819: 7 Från och med årgång 2020"
+    )
+    assert all(
+        "Individ!B815" not in record.locator.physical_cells for record in records
+    )
+    assert all(
+        all("worksheet-footnote" not in item for item in record.context)
+        for record in records
+    )
+
 
 @pytest.mark.parametrize(
     ("mutation", "expected"),
@@ -221,7 +255,49 @@ def test_lisa_reader_rejects_changed_actual_layout_with_coordinates(
     workbook.close()
 
     with pytest.raises(LisaWorkbookError, match=expected):
-        read_lisa_records(path, _revision(path))
+        read_lisa_source(path, _revision(path))
+
+
+@pytest.mark.parametrize(
+    ("cell", "value", "expected"),
+    (
+        ("A322", "Other", r"Individ!A323"),
+        ("B323", "changed continuation", r"Individ!A323:F323"),
+        ("B816", "changed footer", r"Individ!A816:F816"),
+        ("B324", "arbitrary unkeyed text", r"Individ!A324:F324"),
+    ),
+)
+def test_lisa_reader_accepts_only_observed_unkeyed_context_rows(
+    tmp_path: Path, cell: str, value: str, expected: str
+) -> None:
+    path = write_lisa_workbook(tmp_path / "lisa.xlsx")
+    workbook = load_workbook(path)
+    workbook["Individ"][cell] = value
+    workbook.save(path)
+    workbook.close()
+
+    with pytest.raises(LisaWorkbookError, match=expected):
+        read_lisa_source(path, _revision(path))
+
+
+def test_lisa_reader_loads_the_small_selected_workbook_in_memory(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    path = write_lisa_workbook(tmp_path / "lisa.xlsx")
+    read_only_values: list[bool | None] = []
+    original = lisa_module.load_workbook
+
+    def tracked_load_workbook(*args: Any, **kwargs: Any) -> Any:
+        value = kwargs.get("read_only")
+        assert value is None or isinstance(value, bool)
+        read_only_values.append(value)
+        return original(*args, **kwargs)
+
+    monkeypatch.setattr(lisa_module, "load_workbook", tracked_load_workbook)
+
+    read_lisa_source(path, _revision(path))
+
+    assert read_only_values == [False]
 
 
 def test_source_fields_distinguish_missing_unknown_negative_and_sensitivity() -> None:
@@ -238,6 +314,13 @@ def test_source_fields_distinguish_missing_unknown_negative_and_sensitivity() ->
     assert sensitivity.status == "value"
     with pytest.raises(ValidationError, match="negative is supported only"):
         SourceFields(sensitivity=negative)
+    assert SourceFields(
+        sensitivity=value_field("conditional", raw="I vissa fall")
+    ).sensitivity == SourceField(
+        status="value", value="conditional", raw_value="I vissa fall"
+    )
+    with pytest.raises(ValidationError, match="use negative status"):
+        SourceFields(availability=value_field(False))
 
 
 def test_prepare_cli_requires_complete_lisa_selection(
@@ -381,6 +464,25 @@ def test_raw_scb_reader_preserves_native_instances_fields_and_period_limits(
     ]
 
 
+@pytest.mark.parametrize(
+    ("version_name", "expected_kind", "expected_issue"),
+    (
+        ("1990, 2000", "unknown", "unparseable_period"),
+        ("LISA 2011 och 2019", "unknown", "unparseable_period"),
+        ("1990-2000", "pooled", "pooled_period"),
+        ("LISA 2011", "intervals", None),
+    ),
+)
+def test_scb_scope_rejects_multi_year_tokens_only_on_single_claim_fallback(
+    version_name: str, expected_kind: str, expected_issue: str | None
+) -> None:
+    edition_scope, reference_scope, issue = _scopes(34, version_name)
+
+    assert edition_scope.kind == expected_kind
+    assert reference_scope.kind == expected_kind
+    assert issue == expected_issue
+
+
 def test_compact_comparison_retains_witnesses_conflicts_ids_and_spelling() -> None:
     revision = SourceRevision.create(
         dataset="fixture",
@@ -505,6 +607,141 @@ def test_filtered_report_retains_unparseable_period_as_incomplete(
         and outcome.scb_record_ids
         for outcome in report.comparison_outcomes
     )
+
+
+def test_filtered_report_retains_unscoped_same_variable_candidate_and_issue(
+    tmp_path: Path,
+) -> None:
+    input_dir = tmp_path / "source"
+    rows = [
+        _var_row(
+            colname="AmPolTyp",
+            cvid=1,
+            var_id=31619,
+            year="2020",
+            regver_id=200,
+            register=("LISA", 34, 153),
+        ),
+        _var_row(
+            colname="",
+            cvid=2,
+            var_id=31619,
+            year="2021",
+            versionname="okänd utgåva",
+            regver_id=201,
+            register=("LISA", 34, 153),
+        ),
+    ]
+    write_scb_input(input_dir, registerinformation_rows=rows)
+    workbook = write_lisa_workbook(input_dir / "docs" / "lisa.xlsx")
+    selection = write_input_bundle(
+        tmp_path / "accepted",
+        input_dir,
+        lisa_workbook=LisaWorkbookSelection(
+            path=workbook,
+            upstream_revision="2024-2025",
+            sha256=hashlib.sha256(workbook.read_bytes()).hexdigest(),
+        ),
+    )
+    bundle = open_input_bundle(selection)
+
+    full = inspect_bundle_source_records(bundle, code_commit="c" * 40)
+    filtered = inspect_bundle_source_records(
+        bundle, code_commit="c" * 40, exact_column="AmPolTyp"
+    )
+
+    assert full.complete is False
+    assert filtered.complete is False
+    assert filtered.target_preview is not None
+    unscoped = next(
+        record
+        for record in filtered.source_records
+        if record.subject.native.member_id == 2
+    )
+    assert unscoped.edition_scope.kind == "unknown"
+    assert unscoped.record_id in filtered.target_preview.target_record_ids
+    assert any(
+        issue.source_record_ids == (unscoped.record_id,)
+        and issue.kind == "unparseable_period"
+        for issue in filtered.interpretation_issues
+    )
+    assert any(
+        outcome.status == "unknown_applicability"
+        and outcome.scb_record_ids == (unscoped.record_id,)
+        and outcome.edition_scope.kind == "unknown"
+        for outcome in filtered.comparison_outcomes
+    )
+
+
+def test_column_filter_retains_source_only_exact_observations(
+    tmp_path: Path,
+) -> None:
+    input_dir = tmp_path / "source"
+    rows = [
+        _var_row(
+            colname="AmPolTyp",
+            cvid=1,
+            var_id=31619,
+            year="2020",
+            regver_id=200,
+            register=("LISA", 34, 153),
+        ),
+        _var_row(
+            colname="AmPolTyp",
+            cvid=2,
+            var_id=31619,
+            year="2025",
+            regver_id=201,
+            register=("LISA", 34, 153),
+        ),
+        _var_row(
+            colname="OnlyScb",
+            cvid=3,
+            var_id=40000,
+            year="2026",
+            regver_id=202,
+            register=("LISA", 34, 153),
+        ),
+    ]
+    write_scb_input(input_dir, registerinformation_rows=rows)
+    workbook = write_lisa_workbook(input_dir / "docs" / "lisa.xlsx")
+    selection = write_input_bundle(
+        tmp_path / "accepted",
+        input_dir,
+        lisa_workbook=LisaWorkbookSelection(
+            path=workbook,
+            upstream_revision="2024-2025",
+            sha256=hashlib.sha256(workbook.read_bytes()).hexdigest(),
+        ),
+    )
+    bundle = open_input_bundle(selection)
+
+    ampoltyp = inspect_bundle_source_records(
+        bundle, code_commit="c" * 40, exact_column="AmPolTyp"
+    )
+    assert {record.subject.native.member_id for record in ampoltyp.source_records} >= {
+        1,
+        2,
+    }
+    assert any(
+        outcome.status == "source_only_observation"
+        and outcome.edition_scope.intervals
+        == (ScopeInterval(start="2025", end="2025"),)
+        and not outcome.workbook_record_ids
+        for outcome in ampoltyp.comparison_outcomes
+    )
+
+    scb_only = inspect_bundle_source_records(
+        bundle, code_commit="c" * 40, exact_column="OnlyScb"
+    )
+    assert scb_only.summary.workbook_selected_occurrences == 0
+    assert len(scb_only.workbook_context) == 5
+    assert [record.subject.native.member_id for record in scb_only.source_records] == [
+        3
+    ]
+    assert len(scb_only.comparison_outcomes) == 1
+    assert scb_only.comparison_outcomes[0].status == "source_only_observation"
+    assert scb_only.comparison_outcomes[0].workbook_record_ids == ()
 
 
 def test_pinned_bundle_cli_reports_deterministic_source_targets_without_cold_values(
@@ -679,5 +916,23 @@ def test_pinned_bundle_cli_reports_deterministic_source_targets_without_cold_val
     )
     assert full_a == full_b
     assert full_a.target_preview is None
-    assert full_a.summary.workbook_selected_occurrences == 8
+    assert full_a.summary.workbook_selected_occurrences == 9
     assert opened == ["Registerinformation.csv"] * 4
+
+
+def test_source_interpreter_pin_rejects_a_loaded_dependency_from_another_checkout(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    other_repo = tmp_path / "other-checkout"
+    other_repo.mkdir()
+    subprocess.run(["git", "-C", str(other_repo), "init", "-q"], check=True)
+    other_queries = other_repo / "queries.py"
+    other_queries.write_text(
+        "def extract_year(_value): return 2021\n", encoding="utf-8"
+    )
+    monkeypatch.setattr(
+        inspection_module.reg_meta_queries, "__file__", str(other_queries)
+    )
+
+    with pytest.raises(SnapshotError, match="must come from the same Git checkout"):
+        inspection_module.source_interpreter_commit()

@@ -25,8 +25,9 @@ reg-meta-build doc-coverage              # diff doc-documented columns vs built 
 
 `prepare-input-bundle` captures the LISA workbook only when all three explicit
 `--lisa-workbook`, `--lisa-revision`, and `--lisa-workbook-sha256` selections are
-present. After the resulting bundle is committed, inspect the full workbook or one exact
-column spelling without reading cold SCB values:
+present. The explicit workbook path may be separate from `--input-dir`; that selection
+authorizes only that exact file and hash. After the resulting bundle is committed,
+inspect the full workbook or one exact column spelling without reading cold SCB values:
 
 ```sh
 reg-meta-build --output /tmp/lisa-source-records.json inspect-source-records \
@@ -36,8 +37,9 @@ reg-meta-build --output /tmp/lisa-source-records.json inspect-source-records \
   --column AmPolTyp
 ```
 
-The report is a diagnostic source-target preview. It applies no correction and makes no
-catalog-impact, acceptance, validation, or publication claim.
+The report retains source-only SCB observations and worksheet footnotes separately from
+declaration context. It is a diagnostic source-target preview: it applies no correction
+and makes no catalog-impact, acceptance, validation, or publication claim.
 
 See [DESIGN.md](DESIGN.md) for design rationale; remaining build work is tracked in
 `REFACTOR_SPEC.md` at repo root.

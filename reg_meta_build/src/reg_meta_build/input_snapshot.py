@@ -2735,7 +2735,6 @@ def _bundle_source_files(
         "catalog": input_dir.resolve(),
         "curation": curation_dir.resolve(),
         "fqid_slugs": slug_dir.resolve(),
-        "supplemental": input_dir.resolve(),
     }
     validated: dict[str, Path | None] = {}
     for relative, source in sorted(resolved.items()):
@@ -2751,8 +2750,19 @@ def _bundle_source_files(
             )
         if source is not None:
             source = source.resolve()
-            source_root = source_roots[Path(relative).parts[0]]
-            if not source.is_relative_to(source_root):
+            role = Path(relative).parts[0]
+            if role == "supplemental":
+                if lisa_workbook is None:
+                    raise SnapshotError(
+                        "supplemental bundle source has no explicit LISA selection"
+                    )
+                selected_source = lisa_workbook.path.expanduser().resolve()
+                if source != selected_source:
+                    raise SnapshotError(
+                        "LISA bundle source differs from its explicit selection: "
+                        f"{source}"
+                    )
+            elif not source.is_relative_to(source_roots[role]):
                 raise SnapshotError(
                     f"catalog bundle source escapes its selected root: {source}"
                 )
@@ -2914,7 +2924,7 @@ def _validate_bundle_contract(root: Path) -> None:
         dataset = manifest.supplemental_datasets[0]
         if dataset.selected:
             from .source_records import SourceRevision
-            from .sources.lisa import read_lisa_records
+            from .sources.lisa import read_lisa_source
 
             artifact = next(
                 item for item in manifest.files if item.path == dataset.artifact_path
@@ -2922,7 +2932,7 @@ def _validate_bundle_contract(root: Path) -> None:
             assert artifact.size is not None
             assert artifact.sha256 is not None
             assert dataset.upstream_revision is not None
-            read_lisa_records(
+            read_lisa_source(
                 root / dataset.artifact_path,
                 SourceRevision.create(
                     dataset=dataset.dataset,

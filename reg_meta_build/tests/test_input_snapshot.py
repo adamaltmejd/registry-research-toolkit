@@ -861,6 +861,27 @@ def test_catalog_bundle_captures_exact_selected_lisa_bytes_and_identity(
     assert captured.read_bytes() == source_bytes
 
 
+def test_catalog_bundle_captures_lisa_selected_outside_catalog_input_root(
+    tmp_path: Path,
+) -> None:
+    input_dir = tmp_path / "source"
+    write_scb_input(input_dir)
+    workbook = write_lisa_workbook(tmp_path / "official-source" / "lisa.xlsx")
+    source_bytes = workbook.read_bytes()
+
+    selection = write_input_bundle(
+        tmp_path / "accepted",
+        input_dir,
+        lisa_workbook=LisaWorkbookSelection(
+            path=workbook,
+            upstream_revision="2024-2025",
+            sha256=hashlib.sha256(source_bytes).hexdigest(),
+        ),
+    )
+
+    assert (selection.path / LISA_BUNDLE_PATH).read_bytes() == source_bytes
+
+
 def test_selected_lisa_ordinary_open_is_quick_and_explicit_verify_hashes(
     tmp_path: Path,
 ) -> None:

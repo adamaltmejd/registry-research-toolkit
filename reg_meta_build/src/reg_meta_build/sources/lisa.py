@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Literal
 
 from openpyxl import load_workbook
 from openpyxl.utils import get_column_letter
@@ -34,6 +34,13 @@ class LisaWorkbookError(SnapshotError):
 
 
 @dataclass(frozen=True)
+class _ContextRow:
+    kind: Literal["continuation-note", "worksheet-footnote"]
+    cells: tuple[object | None, ...]
+    preceding_declaration: tuple[int, str] | None = None
+
+
+@dataclass(frozen=True)
 class _TableSpec:
     title: str
     headers: tuple[str, ...]
@@ -42,7 +49,14 @@ class _TableSpec:
     register_column: int
     text_rows: Mapping[int, str]
     sections: Mapping[int, tuple[str, str]]
+    context_rows: Mapping[int, _ContextRow]
     population_rows: tuple[int, ...] = ()
+
+
+@dataclass(frozen=True)
+class _LisaSourceRead:
+    records: tuple[SourceRecord, ...]
+    worksheet_context: tuple[str, ...]
 
 
 _INDIVID_TEXT_ROWS = {
@@ -90,6 +104,89 @@ _INDIVID_TEXT_ROWS = {
     749: "Disponibel inkomst",
     766: "Huvudsaklig inkomstkälla, Befolkningens abetsmarknadsstatus",
     788: "Registerbaserad aktivitetsstatistik, RAKS",
+}
+
+_INDIVID_CONTEXT_ROWS = {
+    323: _ContextRow(
+        kind="continuation-note",
+        cells=(
+            None,
+            (
+                "Före 2010 finns inte kod 5 (företagare i eget AB). För åren "
+                "1993- finns istället variabeln KU1Faman som anges som 1 om "
+                "personen är en företagare i eget AB."
+            ),
+            None,
+            None,
+            None,
+            "RAMS-Jobb",
+        ),
+        preceding_declaration=(322, "KU2YrkStalln"),
+    ),
+    815: _ContextRow(
+        kind="worksheet-footnote",
+        cells=(None, "_ftnref2", None, None, None, None),
+    ),
+    816: _ContextRow(
+        kind="worksheet-footnote",
+        cells=(
+            None,
+            (
+                "1 Markering för variabler som innehåller känsliga personuppgifter "
+                "(Ja/Nej/I vissa fall). Variabeln betraktas som en känslig "
+                "personuppgift och kräver godkänd etikprövning hos "
+                "Etikprövningsmyndigheten om utlämnandet görs för forskningsändamål."
+            ),
+            None,
+            None,
+            None,
+            None,
+        ),
+    ),
+    817: _ContextRow(
+        kind="worksheet-footnote",
+        cells=(
+            None,
+            (
+                "2 Variabeln finns i två typer, kontakta SCB:s handläggare för "
+                "vidare information"
+            ),
+            None,
+            None,
+            None,
+            None,
+        ),
+    ),
+    818: _ContextRow(
+        kind="worksheet-footnote",
+        cells=(
+            None,
+            (
+                "5 Fr.o.m. 2014 fördelas familjeinkomster mellan sökande och "
+                "medsökande, tidigare ingick dessa ersättningar endast för den "
+                "sökande"
+            ),
+            None,
+            None,
+            None,
+            None,
+        ),
+    ),
+    819: _ContextRow(
+        kind="worksheet-footnote",
+        cells=(
+            None,
+            (
+                "7 Från och med årgång 2020 används inte längre yrkeskoderna 01, "
+                "02, 03 (militärer) och 3360 (poliser), individer med dessa "
+                "yrkeskoder ingår i stället i gruppen med okänt yrke."
+            ),
+            None,
+            None,
+            None,
+            None,
+        ),
+    ),
 }
 
 _TABLES: dict[str, _TableSpec] = {
@@ -176,6 +273,7 @@ _TABLES: dict[str, _TableSpec] = {
                 "Registerbaserad aktivitetsstatistik, RAKS",
             ),
         },
+        context_rows=_INDIVID_CONTEXT_ROWS,
     ),
     "Individ årsoberoende": _TableSpec(
         title="Årgångsoberoende individvariabler, 3 tabeller",
@@ -193,6 +291,7 @@ _TABLES: dict[str, _TableSpec] = {
             30: ("deceased", "Avlidna"),
             34: ("migration", "In- och Utvandring"),
         },
+        context_rows={},
     ),
     "Företag": _TableSpec(
         title="Företags- och organisationsvariabler",
@@ -220,6 +319,7 @@ _TABLES: dict[str, _TableSpec] = {
             93: ("economic-fundamentals/income-statement", "Resultaträkning"),
             111: ("economic-fundamentals/balance-sheet", "Balansräkning"),
         },
+        context_rows={},
         population_rows=(5, 6),
     ),
     "Arbetsställe": _TableSpec(
@@ -239,6 +339,7 @@ _TABLES: dict[str, _TableSpec] = {
             6: "1990-2001: 16 år och äldre, 2002-2011: 16-84 år, 2012-: 16-74 år",
         },
         sections={},
+        context_rows={},
         population_rows=(5, 6),
     ),
 }
@@ -301,7 +402,11 @@ def _sensitivity_field(value: Any, coordinate: str) -> SourceField | None:
     if text is None:
         return None
     normalized = text.strip()
-    values = {"Ja": True, "Nej": False}
+    values: dict[str, bool | str] = {
+        "Ja": True,
+        "Nej": False,
+        "I vissa fall": "conditional",
+    }
     if normalized not in values:
         raise LisaWorkbookError(
             f"unsupported LISA sensitivity value at {coordinate}: {value!r}"
@@ -309,10 +414,45 @@ def _sensitivity_field(value: Any, coordinate: str) -> SourceField | None:
     return value_field(values[normalized], raw=text)
 
 
-def read_lisa_records(path: Path, revision: SourceRevision) -> tuple[SourceRecord, ...]:
+def _attach_context(
+    records: list[SourceRecord],
+    record_index: int,
+    *,
+    sheet_name: str,
+    row_number: int,
+    context_row: _ContextRow,
+) -> None:
+    record = records[record_index]
+    cells: list[str] = []
+    context: list[str] = []
+    for column, value in enumerate(context_row.cells, start=1):
+        if value is None:
+            continue
+        coordinate = f"{sheet_name}!{get_column_letter(column)}{row_number}"
+        cells.append(coordinate)
+        context.append(f"{context_row.kind} {coordinate}: {value}")
+    locator = record.locator.model_copy(
+        update={"physical_cells": (*record.locator.physical_cells, *cells)}
+    )
+    records[record_index] = record.model_copy(
+        update={"locator": locator, "context": (*record.context, *context)}
+    )
+
+
+def _context_entries(
+    sheet_name: str, row_number: int, context_row: _ContextRow
+) -> tuple[str, ...]:
+    return tuple(
+        f"{context_row.kind} {sheet_name}!{get_column_letter(column)}{row_number}: {value}"
+        for column, value in enumerate(context_row.cells, start=1)
+        if value is not None
+    )
+
+
+def read_lisa_source(path: Path, revision: SourceRevision) -> _LisaSourceRead:
     """Validate the one supported workbook delivery and emit every declaration."""
     try:
-        workbook = load_workbook(path, read_only=True, data_only=True)
+        workbook = load_workbook(path, read_only=False, data_only=True)
     except Exception as exc:
         raise LisaWorkbookError(
             f"cannot open selected LISA workbook {path}: {exc}"
@@ -327,6 +467,7 @@ def read_lisa_records(path: Path, revision: SourceRevision) -> tuple[SourceRecor
             )
 
         records: list[SourceRecord] = []
+        worksheet_context: list[str] = []
         semantic_keys: set[tuple[str, ...]] = set()
         for sheet_name, spec in _TABLES.items():
             sheet = workbook[sheet_name]
@@ -357,6 +498,18 @@ def read_lisa_records(path: Path, revision: SourceRevision) -> tuple[SourceRecor
                         f"unsupported LISA section structure at {sheet_name}!A{row_number}: "
                         f"expected {expected!r}, got {actual!r}"
                     )
+            for row_number, context_row in spec.context_rows.items():
+                actual = tuple(
+                    sheet.cell(row_number, column).value
+                    for column in range(1, len(spec.headers) + 1)
+                )
+                if actual != context_row.cells:
+                    end = get_column_letter(len(spec.headers))
+                    raise LisaWorkbookError(
+                        f"unsupported LISA context structure at {sheet_name}!"
+                        f"A{row_number}:{end}{row_number}: expected "
+                        f"{context_row.cells!r}, got {actual!r}"
+                    )
 
             population_text = "\n".join(
                 str(sheet.cell(row, 1).value) for row in spec.population_rows
@@ -370,6 +523,7 @@ def read_lisa_records(path: Path, revision: SourceRevision) -> tuple[SourceRecor
             section_label = spec.title
             year_independent = spec.period_column is None
             seen_dated = False
+            last_record_index: int | None = None
             for row_number in range(4, sheet.max_row + 1):
                 if row_number in spec.sections:
                     section_key, section_label = spec.sections[row_number]
@@ -383,6 +537,45 @@ def read_lisa_records(path: Path, revision: SourceRevision) -> tuple[SourceRecor
                     sheet.cell(row_number, column).value
                     for column in range(1, len(spec.headers) + 1)
                 )
+                if context_row := spec.context_rows.get(row_number):
+                    if context_row.kind == "continuation-note":
+                        expected_preceding = context_row.preceding_declaration
+                        if last_record_index is None or expected_preceding is None:
+                            raise LisaWorkbookError(
+                                f"unsupported LISA continuation at {sheet_name}!"
+                                f"A{row_number}: expected preceding declaration "
+                                f"{expected_preceding!r}"
+                            )
+                        preceding = records[last_record_index]
+                        preceding_column = (
+                            preceding.fields.column_name.value
+                            if preceding.fields.column_name is not None
+                            and preceding.fields.column_name.status == "value"
+                            else None
+                        )
+                        if (
+                            preceding.locator.physical_table != sheet_name
+                            or preceding.locator.physical_record
+                            != f"row:{expected_preceding[0]}"
+                            or preceding_column != expected_preceding[1]
+                        ):
+                            raise LisaWorkbookError(
+                                f"unsupported LISA continuation at {sheet_name}!"
+                                f"A{row_number}: expected preceding declaration "
+                                f"{expected_preceding!r}"
+                            )
+                        _attach_context(
+                            records,
+                            last_record_index,
+                            sheet_name=sheet_name,
+                            row_number=row_number,
+                            context_row=context_row,
+                        )
+                    else:
+                        worksheet_context.extend(
+                            _context_entries(sheet_name, row_number, context_row)
+                        )
+                    continue
                 column_text = _cell_text(values[0])
                 description = _cell_text(values[1])
                 register_text = _cell_text(values[spec.register_column - 1])
@@ -492,9 +685,12 @@ def read_lisa_records(path: Path, revision: SourceRevision) -> tuple[SourceRecor
                         context=(spec.title, section_label),
                     )
                 )
-        return tuple(records)
+                last_record_index = len(records) - 1
+        return _LisaSourceRead(
+            records=tuple(records), worksheet_context=tuple(worksheet_context)
+        )
     finally:
         workbook.close()
 
 
-__all__ = ["LisaWorkbookError", "read_lisa_records"]
+__all__ = ["LisaWorkbookError", "read_lisa_source"]

@@ -212,14 +212,21 @@ class SourceFields(_SourceModel):
 
     @model_validator(mode="after")
     def _typed_fields(self) -> Self:
-        for field_name in ("availability", "sensitivity"):
-            observation = getattr(self, field_name)
-            if (
-                observation is not None
-                and observation.status == "value"
-                and type(observation.value) is not bool
-            ):
-                raise ValueError(f"{field_name} must carry a boolean value")
+        if (
+            self.availability is not None
+            and self.availability.status == "value"
+            and self.availability.value is not True
+        ):
+            raise ValueError(
+                "availability values must be true; use negative status for "
+                "explicit nonavailability"
+            )
+        if self.sensitivity is not None and self.sensitivity.status == "value":
+            value = self.sensitivity.value
+            if type(value) is not bool and value != "conditional":
+                raise ValueError(
+                    "sensitivity must carry a boolean or the conditional marker"
+                )
         for field_name in type(self).model_fields.keys() - {
             "availability",
             "sensitivity",

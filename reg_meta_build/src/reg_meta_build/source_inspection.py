@@ -6,9 +6,16 @@ from collections import Counter, defaultdict
 from pathlib import Path
 from typing import TYPE_CHECKING, Literal, Self
 
+import reg_meta.fqid as reg_meta_fqid
+import reg_meta.queries as reg_meta_queries
 from pydantic import BaseModel, ConfigDict, model_validator
 
-from reg_meta_build.input_snapshot import LISA_DATASET_ID, _tracked_source_commit
+from reg_meta_build import _curation as curation_module
+from reg_meta_build.input_snapshot import (
+    LISA_DATASET_ID,
+    SnapshotError,
+    _tracked_source_commit,
+)
 from reg_meta_build.source_records import (
     ScopeInterval,
     SourceField,
@@ -17,7 +24,7 @@ from reg_meta_build.source_records import (
     TemporalScope,
     canonical_sha256,
 )
-from reg_meta_build.sources.lisa import read_lisa_records
+from reg_meta_build.sources.lisa import read_lisa_source
 from reg_meta_build.sources.scb_records import LISA_REGISTER_ID, read_scb_lisa_records
 
 if TYPE_CHECKING:
@@ -39,6 +46,7 @@ OutcomeStatus = Literal[
     "ambiguous_match",
     "unknown_spelling",
     "unknown_applicability",
+    "source_only_observation",
 ]
 
 
@@ -141,6 +149,7 @@ class SourceInspectionReport(_ReportModel):
     pins: InspectionPins
     summary: InspectionSummary
     source_revisions: tuple[SourceRevision, ...]
+    workbook_context: tuple[str, ...]
     source_records: tuple[SourceRecord, ...]
     comparison_outcomes: tuple[ComparisonOutcome, ...]
     interpretation_issues: tuple[InterpretationIssue, ...]
@@ -172,6 +181,15 @@ def source_interpreter_commit() -> str:
     here = Path(__file__).resolve()
     package = here.parent
     repo = package.parents[2]
+    dependency_paths: list[Path] = []
+    for module in (reg_meta_fqid, reg_meta_queries, curation_module):
+        module_path = getattr(module, "__file__", None)
+        if module_path is None:
+            raise SnapshotError(
+                "source record interpreter dependency has no loaded source path: "
+                f"{module.__name__}"
+            )
+        dependency_paths.append(Path(module_path))
     _repository, commit = _tracked_source_commit(
         (
             here,
@@ -183,6 +201,7 @@ def source_interpreter_commit() -> str:
             package / "sources" / "lisa.py",
             package / "sources" / "scb.py",
             package / "sources" / "scb_records.py",
+            *dependency_paths,
             repo / "uv.lock",
         ),
         identity="source record interpreter",
@@ -291,9 +310,42 @@ def _outcome(
     )
 
 
+def _source_outcome(
+    *,
+    column_name: str,
+    status: Literal["source_only_observation", "unknown_applicability"],
+    workbook_records: Iterable[SourceRecord],
+    scb_record: SourceRecord,
+    detail: str,
+) -> ComparisonOutcome:
+    workbook = tuple(sorted(workbook_records, key=lambda item: item.record_id))
+    scope = scb_record.edition_scope
+    return ComparisonOutcome(
+        comparison_key=(
+            "source",
+            column_name,
+            status,
+            scb_record.record_id,
+        ),
+        status=status,
+        column_name=column_name,
+        edition_scope=scope,
+        workbook_record_ids=tuple(item.record_id for item in workbook),
+        scb_record_ids=(scb_record.record_id,),
+        applicability="unresolved_workbook_to_scb_variant",
+        scb_edition_present=True if _scope_years(scope) is not None else None,
+        register_variant_ids=_native_ids((scb_record,), "register_variant_id"),
+        variable_ids=_native_ids((scb_record,), "variable_id"),
+        member_ids=_native_ids((scb_record,), "member_id"),
+        detail=detail,
+    )
+
+
 def compare_availability_records(
     workbook_records: Iterable[SourceRecord],
     scb_records: Iterable[SourceRecord],
+    *,
+    exact_column: str | None = None,
 ) -> tuple[ComparisonOutcome, ...]:
     """Derive compact scoped availability views while retaining both witnesses."""
     workbook = tuple(workbook_records)
@@ -307,6 +359,7 @@ def compare_availability_records(
     all_exact: dict[str, list[SourceRecord]] = defaultdict(list)
     unscoped_exact: dict[str, list[SourceRecord]] = defaultdict(list)
     unscoped_folded: dict[str, list[SourceRecord]] = defaultdict(list)
+    unscoped_unknown_by_variable: dict[int, list[SourceRecord]] = defaultdict(list)
     edition_years: set[int] = set()
 
     for record in scb:
@@ -321,6 +374,8 @@ def compare_availability_records(
             if column is not None:
                 unscoped_exact[column].append(record)
                 unscoped_folded[column.casefold()].append(record)
+            elif variable_id is not None:
+                unscoped_unknown_by_variable[variable_id].append(record)
             continue
         for year in years:
             edition_years.add(year)
@@ -478,6 +533,79 @@ def compare_availability_records(
                     detail=detail,
                 )
             )
+
+    workbook_by_column: dict[str, list[SourceRecord]] = defaultdict(list)
+    documented_years_by_column: dict[str, set[int]] = defaultdict(set)
+    for record in workbook:
+        if (column := _column(record)) is None:
+            continue
+        workbook_by_column[column].append(record)
+        if (years := _scope_years(record.edition_scope)) is not None:
+            documented_years_by_column[column].update(years)
+    selected_columns = (
+        {exact_column}
+        if exact_column is not None
+        else set(workbook_by_column) | set(all_exact)
+    )
+    for column in sorted(selected_columns):
+        variable_ids = variable_ids_by_column.get(column, set())
+        unscoped_unknown = {
+            record.record_id: record
+            for variable_id in variable_ids
+            for record in unscoped_unknown_by_variable.get(variable_id, ())
+        }
+        for record in sorted(
+            unscoped_unknown.values(), key=lambda item: item.record_id
+        ):
+            outcomes.append(
+                _source_outcome(
+                    column_name=column,
+                    status="unknown_applicability",
+                    workbook_records=workbook_by_column.get(column, ()),
+                    scb_record=record,
+                    detail=(
+                        "an SCB occurrence sharing a native VarId with this exact "
+                        "spelling has unknown column spelling and no annual edition "
+                        "scope; spelling continuity and applicability remain unresolved"
+                    ),
+                )
+            )
+
+        documented = documented_years_by_column.get(column, set())
+        documented_records = workbook_by_column.get(column, ())
+        for record in sorted(
+            all_exact.get(column, ()), key=lambda item: item.record_id
+        ):
+            availability = _availability(record)
+            if (
+                availability is None
+                or availability.status != "value"
+                or availability.value is not True
+            ):
+                continue
+            years = _scope_years(record.edition_scope)
+            if documented_records and (
+                any(
+                    _scope_years(item.edition_scope) is None
+                    for item in documented_records
+                )
+                or years is None
+                or set(years).issubset(documented)
+            ):
+                continue
+            outcomes.append(
+                _source_outcome(
+                    column_name=column,
+                    status="source_only_observation",
+                    workbook_records=(),
+                    scb_record=record,
+                    detail=(
+                        "raw SCB positively observes this exact spelling outside the "
+                        "selected workbook declarations; no workbook availability or "
+                        "variant applicability is inferred"
+                    ),
+                )
+            )
     return tuple(sorted(outcomes, key=lambda item: item.comparison_key))
 
 
@@ -508,14 +636,7 @@ def _target_preview(
         for record in workbook
         for year in (_scope_years(record.edition_scope) or ())
     }
-    exact_named = tuple(
-        record
-        for record in scb
-        if _column(record) == exact_column
-        and bool(
-            documented_years.intersection(_scope_years(record.edition_scope) or ())
-        )
-    )
+    exact_named = tuple(record for record in scb if _column(record) == exact_column)
     variable_ids = _native_ids(exact_named, "variable_id")
     unknown_targets = tuple(
         record
@@ -523,9 +644,6 @@ def _target_preview(
         if record.fields.column_name is not None
         and record.fields.column_name.status == "unknown"
         and record.subject.native.variable_id in variable_ids
-        and bool(
-            documented_years.intersection(_scope_years(record.edition_scope) or ())
-        )
     )
     casefold_collisions = tuple(
         record
@@ -533,9 +651,6 @@ def _target_preview(
         if (column := _column(record)) is not None
         and column != exact_column
         and column.casefold() == exact_column.casefold()
-        and bool(
-            documented_years.intersection(_scope_years(record.edition_scope) or ())
-        )
     )
     scb_edition_years = {
         year for record in scb for year in (_scope_years(record.edition_scope) or ())
@@ -604,7 +719,8 @@ def inspect_bundle_source_records(
         artifact_size=snapshot_item.raw_size,
         artifact_sha256=snapshot_item.raw_sha256,
     )
-    workbook_all = read_lisa_records(workbook_path, workbook_revision)
+    workbook_read = read_lisa_source(workbook_path, workbook_revision)
+    workbook_all = workbook_read.records
     scb_all, raw_issues = read_scb_lisa_records(bundle.snapshot, scb_revision)
     if exact_column is None:
         workbook = workbook_all
@@ -612,14 +728,16 @@ def inspect_bundle_source_records(
         workbook = tuple(
             record for record in workbook_all if _column(record) == exact_column
         )
-        if not workbook:
-            from reg_meta_build.input_snapshot import SnapshotError
-
+        if not workbook and not any(
+            _column(record) == exact_column for record in scb_all
+        ):
             raise SnapshotError(
-                "selected LISA workbook has no declaration with exact column "
-                f"spelling {exact_column!r}"
+                "neither the selected LISA workbook nor raw SCB records have exact "
+                f"column spelling {exact_column!r}"
             )
-    outcomes = compare_availability_records(workbook, scb_all)
+    outcomes = compare_availability_records(
+        workbook, scb_all, exact_column=exact_column
+    )
     preview = (
         _target_preview(exact_column, workbook, scb_all)
         if exact_column is not None
@@ -730,6 +848,7 @@ def inspect_bundle_source_records(
             interpretation_issue_counts=dict(sorted(issue_counts.items())),
         ),
         source_revisions=(workbook_revision, scb_revision),
+        workbook_context=workbook_read.worksheet_context,
         source_records=source_records,
         comparison_outcomes=outcomes,
         interpretation_issues=issues,

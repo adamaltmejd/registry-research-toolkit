@@ -23,6 +23,8 @@ def write_lisa_workbook(path: Path) -> Path:
             sheet.cell(3, column, header)
         for row, text in spec.text_rows.items():
             sheet.cell(row, 1, text)
+        for row, context in spec.context_rows.items():
+            _write_row(sheet, row, context.cells)
 
     individual = workbook["Individ"]
     _write_row(
@@ -40,6 +42,18 @@ def write_lisa_workbook(path: Path) -> Path:
             "LISA",
             "Ja",
             None,
+        ),
+    )
+    _write_row(
+        individual,
+        322,
+        (
+            "KU2YrkStalln",
+            "Yrkesställning enligt kontrolluppgift",
+            "1990-2018",
+            "LISA",
+            "I vissa fall",
+            "RAMS-Jobb",
         ),
     )
     _write_row(

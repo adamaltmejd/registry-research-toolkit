@@ -1146,9 +1146,8 @@ target boundary; it does not make that workbook an accepted correction or catalo
 authority. Other unused evidence may be preserved separately without being treated as
 integrated. Raw archives and preparation inventories stay outside Git. The existing SCB
 snapshot remains unchanged and continues to carry its original source checksums; the
-accepted SCB source commit is
-`d10e9f2ffa1f1bd992e0c633211489dc693e3a95` and its manifest SHA-256 is
-`5b540b8e401d289b78fd748564f11b04dcca695325142dd8ff06f1b82196c0bf`.
+accepted SCB source commit is `d10e9f2ffa1f1bd992e0c633211489dc693e3a95` and its
+manifest SHA-256 is `5b540b8e401d289b78fd748564f11b04dcca695325142dd8ff06f1b82196c0bf`.
 
 Preparation reads loose provider inputs plus the code checkout's curation and slug
 authoring files, copies small formats byte-for-byte (XLSX stays XLSX), hashes and parses
@@ -1192,10 +1191,10 @@ reg-meta-build --output /tmp/lisa-source-records.json inspect-source-records \
 The command reads the four supported LISA layouts and raw prepared SCB
 `Registerinformation` records into compact source records. Full and exact-column modes
 emit deterministic source witnesses, scoped comparison outcomes, input/code pins,
-unresolved applicability, and (for a filter) non-executable source-target membership.
-The report is diagnostic and source-target-only: it applies no curation, previews no
-complete catalog blast radius, and claims no catalog validation, acceptance, or
-publication.
+unresolved applicability, source-only SCB observations, worksheet-level workbook
+context, and (for a filter) non-executable source-target membership. The report is
+diagnostic and source-target-only: it applies no curation, previews no complete catalog
+blast radius, and claims no catalog validation, acceptance, or publication.
 
 After acceptance, the normal builder selects exactly that bundle:
 

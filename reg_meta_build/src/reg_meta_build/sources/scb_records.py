@@ -2,8 +2,11 @@
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, Literal
+
+from reg_meta.fqid import _YEAR
 
 from reg_meta_build.db import _open_scb_csv
 from reg_meta_build.input_snapshot import SnapshotError
@@ -27,6 +30,7 @@ if TYPE_CHECKING:
 
 LISA_REGISTER_ID = 34
 IssueKind = Literal["pooled_period", "unparseable_period"]
+_YEAR_TOKEN_RE = re.compile(rf"(?<!\d)({_YEAR})(?!\d)")
 
 
 class ScbRecordError(SnapshotError):
@@ -55,6 +59,8 @@ def _scopes(
     register_id: int, version_name: str
 ) -> tuple[TemporalScope, TemporalScope, IssueKind | None]:
     claims = register_edition_claims(register_id, version_name)
+    if len(claims) == 1 and len(set(_YEAR_TOKEN_RE.findall(version_name))) > 1:
+        claims = ()
     if len(claims) == 1:
         year, low, high = claims[0]
         return (
