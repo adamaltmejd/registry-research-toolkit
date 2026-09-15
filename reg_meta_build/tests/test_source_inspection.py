@@ -1075,11 +1075,19 @@ def test_source_only_unknown_period_survives_full_and_filtered_inspection(
             colname="OnlyScb",
             cvid=1,
             var_id=9,
-            year="2018",
-            versionname=version_name,
+            year="2019",
             regver_id=200,
             register=("LISA", 34, 152),
-        )
+        ),
+        _var_row(
+            colname="",
+            cvid=2,
+            var_id=9,
+            year="2020",
+            versionname=version_name,
+            regver_id=201,
+            register=("LISA", 34, 152),
+        ),
     ]
     write_scb_input(input_dir, registerinformation_rows=rows)
     workbook = write_lisa_workbook(input_dir / "docs" / "lisa.xlsx")
@@ -1099,32 +1107,43 @@ def test_source_only_unknown_period_survives_full_and_filtered_inspection(
         bundle, code_commit="c" * 40, exact_column="OnlyScb"
     )
 
-    source_only = next(
+    named = next(
         record
         for record in filtered.source_records
         if record.subject.native.member_id == 1
+    )
+    unknown = next(
+        record
+        for record in filtered.source_records
+        if record.subject.native.member_id == 2
     )
     assert filtered.complete is expected_complete
     assert filtered.target_preview is not None
     assert filtered.target_preview.expected_source_target_count == 0
     assert filtered.target_preview.target_record_ids == ()
-    assert filtered.target_preview.existing_named_record_ids == (source_only.record_id,)
+    assert filtered.target_preview.existing_named_record_ids == (named.record_id,)
     assert filtered.target_preview.assumption_ids == (
         "unestablished-workbook-to-scb-variant-scope",
     )
     for report in (full, filtered):
-        assert source_only.record_id in {
+        assert report.complete is expected_complete
+        assert {named.record_id, unknown.record_id} <= {
             record.record_id for record in report.source_records
         }
         assert any(
             outcome.status == "unknown_applicability"
             and outcome.workbook_record_ids == ()
-            and outcome.scb_record_ids == (source_only.record_id,)
+            and outcome.scb_record_ids == (unknown.record_id,)
+            and outcome.assumption_ids
+            == (
+                "unestablished-workbook-to-scb-variant-scope",
+                "same-native-variable-spelling-continuity",
+            )
             for outcome in report.comparison_outcomes
         )
         assert any(
             issue.kind == issue_kind
-            and issue.source_record_ids == (source_only.record_id,)
+            and issue.source_record_ids == (unknown.record_id,)
             for issue in report.interpretation_issues
         )
 

@@ -1092,14 +1092,22 @@ def compare_availability_records(
                 anchor_scope_ids_by_native[native_key].update(
                     _finite_scope_ids_for_record(anchor, scopes)
                 )
-        unscoped_unknown = {
+        exact_native_keys = {
+            (variant_id, variable_id)
+            for (variant_id, indexed_column), variable_ids in (
+                variable_ids_by_variant_column.items()
+            )
+            if indexed_column == column
+            for variable_id in variable_ids
+        }
+        diagnostic_unknown = {
             record.record_id: record
-            for native_key in anchor_scope_ids_by_native
+            for native_key in exact_native_keys
             for record in unknown_by_native_variable.get(native_key, ())
             if record.record_id not in target_ids
         }
         for record in sorted(
-            unscoped_unknown.values(), key=lambda item: item.record_id
+            diagnostic_unknown.values(), key=lambda item: item.record_id
         ):
             native_key = _native_variable_key(record)
             assert native_key is not None
@@ -1111,13 +1119,13 @@ def compare_availability_records(
                     workbook_records=documented_records,
                     scb_record=record,
                     assumption_ids=(
-                        *sorted(anchor_scope_ids_by_native[native_key]),
+                        *sorted(anchor_scope_ids_by_native.get(native_key, ())),
                         _UNESTABLISHED_SCOPE_ASSUMPTION_ID,
                         _SPELLING_CONTINUITY_ASSUMPTION_ID,
                     ),
                     detail=(
-                        "an SCB occurrence sharing a native VarId with a finite exact-"
-                        "name anchor has unknown column spelling and "
+                        "an SCB occurrence sharing a native VarId with an exact-name "
+                        "occurrence has unknown column spelling and "
                         + (
                             "no annual edition scope"
                             if annual is None
