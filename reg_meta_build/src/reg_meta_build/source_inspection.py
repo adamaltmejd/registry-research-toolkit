@@ -637,7 +637,9 @@ def _outcome(
 def _source_outcome(
     *,
     column_name: str,
-    status: Literal["source_only_observation", "unknown_applicability"],
+    status: Literal[
+        "ambiguous_match", "source_only_observation", "unknown_applicability"
+    ],
     workbook_records: Iterable[SourceRecord],
     scb_record: SourceRecord,
     assumption_ids: tuple[str, ...],
