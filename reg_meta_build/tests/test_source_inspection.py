@@ -994,12 +994,115 @@ def test_filtered_preview_uses_finite_anchors_and_workbook_scoped_targets(
     )
     for report in (full, filtered):
         assert blank.record_id in {record.record_id for record in report.source_records}
-        assert any(
-            blank.record_id in outcome.scb_record_ids
+        blank_outcome = next(
+            outcome
+            for outcome in report.comparison_outcomes
+            if blank.record_id in outcome.scb_record_ids
             and outcome.status
             == (
                 "unknown_spelling" if expected_target_count else "unknown_applicability"
             )
+        )
+        if not expected_target_count:
+            assert (
+                "ineligible under the declared target assumptions"
+                in blank_outcome.detail
+            )
+
+
+@pytest.mark.parametrize(
+    ("case", "expected_target_members"),
+    (
+        ("named-and-blank-parallel", ()),
+        ("two-blank-parallel", ()),
+        ("single-member-edition", (2,)),
+    ),
+)
+def test_blank_targets_require_one_distinct_member_per_native_edition(
+    tmp_path: Path,
+    case: str,
+    expected_target_members: tuple[int, ...],
+) -> None:
+    if case == "named-and-blank-parallel":
+        row_specs = (("X", 1, "2020", 200), ("", 2, "2020", 200))
+    elif case == "two-blank-parallel":
+        row_specs = (
+            ("X", 1, "2019", 199),
+            ("", 2, "2020", 200),
+            ("", 3, "2020", 200),
+        )
+    else:
+        row_specs = (("X", 1, "2019", 199), ("", 2, "2020", 200))
+
+    input_dir = tmp_path / "source"
+    rows = [
+        _var_row(
+            colname=column,
+            cvid=member_id,
+            var_id=9,
+            year=year,
+            regver_id=edition_id,
+            register=("LISA", 34, 152),
+        )
+        for column, member_id, year, edition_id in row_specs
+    ]
+    write_scb_input(input_dir, registerinformation_rows=rows)
+    workbook = write_lisa_workbook(input_dir / "docs" / "lisa.xlsx")
+    source = load_workbook(workbook)
+    source["Företag"]["A9"] = "X"
+    source["Företag"]["C9"] = 2020
+    source.save(workbook)
+    source.close()
+    selection = write_input_bundle(
+        tmp_path / "accepted",
+        input_dir,
+        lisa_workbook=LisaWorkbookSelection(
+            path=workbook,
+            upstream_revision="2024-2025",
+            sha256=hashlib.sha256(workbook.read_bytes()).hexdigest(),
+        ),
+    )
+
+    report = inspect_bundle_source_records(
+        open_input_bundle(selection), code_commit="c" * 40, exact_column="X"
+    )
+
+    assert report.target_preview is not None
+    scb_by_member = {
+        record.subject.native.member_id: record
+        for record in report.source_records
+        if record.source == "scb-registerinformation"
+    }
+    target_members = {
+        member_id
+        for member_id, record in scb_by_member.items()
+        if record.record_id in report.target_preview.target_record_ids
+    }
+    assert target_members == set(expected_target_members)
+    assert set(scb_by_member) == {member_id for _, member_id, _, _ in row_specs}
+
+    if case == "named-and-blank-parallel":
+        assert any(
+            outcome.status == "agreement"
+            and outcome.scb_record_ids == (scb_by_member[1].record_id,)
+            for outcome in report.comparison_outcomes
+        )
+        assert any(
+            outcome.status == "ambiguous_match"
+            and outcome.scb_record_ids == (scb_by_member[2].record_id,)
+            for outcome in report.comparison_outcomes
+        )
+    elif case == "two-blank-parallel":
+        assert any(
+            outcome.status == "ambiguous_match"
+            and set(outcome.scb_record_ids)
+            == {scb_by_member[2].record_id, scb_by_member[3].record_id}
+            for outcome in report.comparison_outcomes
+        )
+    else:
+        assert any(
+            outcome.status == "unknown_spelling"
+            and outcome.scb_record_ids == (scb_by_member[2].record_id,)
             for outcome in report.comparison_outcomes
         )
 

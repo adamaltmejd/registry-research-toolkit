@@ -368,6 +368,34 @@ def _native_variable_key(record: SourceRecord) -> tuple[int, int] | None:
     return native.register_variant_id, native.variable_id
 
 
+def _native_edition_key(record: SourceRecord) -> tuple[int, int, int] | None:
+    native = record.subject.native
+    if (
+        native.register_variant_id is None
+        or native.variable_id is None
+        or native.edition_id is None
+    ):
+        return None
+    return native.register_variant_id, native.variable_id, native.edition_id
+
+
+def _single_member_native_editions(
+    records: Iterable[SourceRecord],
+) -> frozenset[tuple[int, int, int]]:
+    """Return native editions containing exactly one distinct source member."""
+    members_by_edition: dict[tuple[int, int, int], set[int]] = defaultdict(set)
+    for record in records:
+        edition_key = _native_edition_key(record)
+        member_id = record.subject.native.member_id
+        if edition_key is not None and member_id is not None:
+            members_by_edition[edition_key].add(member_id)
+    return frozenset(
+        edition_key
+        for edition_key, member_ids in members_by_edition.items()
+        if len(member_ids) == 1
+    )
+
+
 def _annual_year(record: SourceRecord) -> int | None:
     years = _scope_years(record.edition_scope)
     if years is None or len(years) != 1:
@@ -428,6 +456,7 @@ def _annual_targets_within_workbook_scope(
     """Select blank-name annual records only inside their workbook declaration."""
     finite_scopes = tuple(scopes)
     native_records = tuple(records)
+    single_member_editions = _single_member_native_editions(native_records)
     scope_by_id = {scope.assumption.assumption_id: scope for scope in finite_scopes}
     anchor_scope_ids: dict[tuple[int, int], set[str]] = defaultdict(set)
     for anchor in anchors:
@@ -457,9 +486,13 @@ def _annual_targets_within_workbook_scope(
         ):
             continue
         connected_scope_ids = anchor_scope_ids.get(native_key, set())
-        if finite_spellings.get(native_key) == {exact_column} and any(
-            year in scope_by_id[assumption_id].documented_years
-            for assumption_id in connected_scope_ids
+        if (
+            _native_edition_key(record) in single_member_editions
+            and finite_spellings.get(native_key) == {exact_column}
+            and any(
+                year in scope_by_id[assumption_id].documented_years
+                for assumption_id in connected_scope_ids
+            )
         ):
             targets.append(record)
     return tuple(targets)
@@ -642,6 +675,7 @@ def compare_availability_records(
     """Derive compact scoped availability views while retaining both witnesses."""
     workbook = tuple(workbook_records)
     scb = tuple(scb_records)
+    single_member_editions = _single_member_native_editions(scb)
     workbook_by_column: dict[str, list[SourceRecord]] = defaultdict(list)
     for record in workbook:
         if (column := _column(record)) is not None:
@@ -902,6 +936,11 @@ def compare_availability_records(
                     )
                     if _column(item) != column
                 )
+                parallel_member_candidates = tuple(
+                    item
+                    for item in blank_candidates
+                    if _native_edition_key(item) not in single_member_editions
+                )
                 if blank_candidates and competing_named:
                     candidates = (*blank_candidates, *competing_named)
                     status = "ambiguous_match"
@@ -911,6 +950,15 @@ def compare_availability_records(
                         "the blank-name occurrence shares a native VarId with "
                         "competing finite source spellings; no exact spelling is "
                         "selected"
+                    )
+                elif parallel_member_candidates:
+                    candidates = blank_candidates
+                    status = "ambiguous_match"
+                    present = True
+                    assumption_ids += (_SPELLING_CONTINUITY_ASSUMPTION_ID,)
+                    detail = (
+                        "the blank-name occurrences include a native edition with "
+                        "multiple distinct CVIDs; member continuity is not inferred"
                     )
                 elif blank_candidates:
                     candidates = blank_candidates
@@ -1054,10 +1102,18 @@ def compare_availability_records(
             native_key = _native_variable_key(record)
             assert native_key is not None
             annual = _annual_year(record)
+            parallel_native_edition = (
+                annual is not None
+                and _native_edition_key(record) not in single_member_editions
+            )
             outcomes.append(
                 _source_outcome(
                     column_name=column,
-                    status="unknown_applicability",
+                    status=(
+                        "ambiguous_match"
+                        if parallel_native_edition
+                        else "unknown_applicability"
+                    ),
                     workbook_records=documented_records,
                     scb_record=record,
                     assumption_ids=(
@@ -1071,7 +1127,12 @@ def compare_availability_records(
                         + (
                             "no annual edition scope"
                             if annual is None
-                            else "an edition outside the workbook declaration"
+                            else (
+                                "belongs to a native edition with multiple distinct "
+                                "CVIDs; member continuity remains unresolved"
+                                if parallel_native_edition
+                                else "is ineligible under the declared target assumptions"
+                            )
                         )
                         + "; it remains a witness but is not a source target"
                     ),
