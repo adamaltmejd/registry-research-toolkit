@@ -25,6 +25,8 @@ from _csv_fixtures import (
     _var_row,
     omit_scb_snapshot_file,
     write_csv,
+    write_input_bundle,
+    write_input_bundle_from_snapshot,
     write_scb_input,
     write_scb_snapshot,
 )
@@ -215,14 +217,13 @@ class TestFixtureRoundTrip:
                 tmp_path / "snapshot-source",
                 include=("registerinformation", "vardemangder", "valid_dates"),
             )
-            selection = write_scb_snapshot(
+            snapshot = write_scb_snapshot(
                 tmp_path / "snapshot-fixture", snapshot_source
             )
-            selection = omit_scb_snapshot_file(selection, "Vardemangder.csv")
+            snapshot = omit_scb_snapshot_file(snapshot, "Vardemangder.csv")
         else:
-            selection = write_scb_snapshot(tmp_path / "snapshot-fixture", scb_dir)
-        snapshot_seed = tmp_path / "snapshot-seed"
-        snapshot_seed.mkdir()
+            snapshot = write_scb_snapshot(tmp_path / "snapshot-fixture", scb_dir)
+        selection = write_input_bundle_from_snapshot(raw_input, snapshot)
         build_db(
             input_dir=raw_input,
             db_dir=tmp_path / "db_raw",
@@ -230,11 +231,11 @@ class TestFixtureRoundTrip:
             skip_slugs=True,
         )
         build_db(
-            input_dir=snapshot_seed,
+            input_dir=None,
             db_dir=tmp_path / "db_snapshot",
             skip_classifications=True,
             skip_slugs=True,
-            scb_snapshot=selection,
+            input_bundle=selection,
         )
         report = diff_db_content(
             tmp_path / "db_raw" / "reg_meta.db",
@@ -242,7 +243,8 @@ class TestFixtureRoundTrip:
             ignore={
                 "import_manifest": TableIgnore(
                     skip_where=(
-                        "key IN ('import_date', 'input_dir', 'scb_input_snapshot')"
+                        "key IN ('import_date', 'input_dir', 'scb_input_snapshot', "
+                        "'catalog_input_bundle')"
                     )
                 )
             },
@@ -291,20 +293,16 @@ class TestFixtureRoundTrip:
                 b'Empty|1||""|1001|\r\n'
                 b"Unknown|1|\x8e|ignored|999999|1\r\n"
             )
-        selection = write_scb_snapshot(tmp_path / "snapshot-fixture", scb_dir)
-        snapshot_seed = tmp_path / "snapshot-seed"
-        fallback = snapshot_seed / "SCB"
-        fallback.mkdir(parents=True)
-        (fallback / "Registerinformation.csv").write_bytes(b"must|not|be|read\r\n")
+        selection = write_input_bundle(tmp_path / "snapshot-fixture", original)
 
-        def _build(source: Path, tag: str, *, snapshot=False) -> Path:
+        def _build(source: Path | None, tag: str, *, snapshot=False) -> Path:
             db_dir = tmp_path / f"db_{tag}"
             build_db(
                 input_dir=source,
                 db_dir=db_dir,
                 skip_classifications=True,
                 skip_slugs=True,
-                scb_snapshot=selection if snapshot else None,
+                input_bundle=selection if snapshot else None,
             )
             return db_dir / "reg_meta.db"
 
@@ -332,7 +330,7 @@ class TestFixtureRoundTrip:
         monkeypatch.setattr(
             snapshot_module, "_update_record_hash", reject_exhaustive_use
         )
-        replay = _build(snapshot_seed, "snapshot", snapshot=True)
+        replay = _build(None, "snapshot", snapshot=True)
         prepared_diagnostics = capsys.readouterr().err
 
         def relevant(output: str) -> list[str]:
@@ -345,7 +343,10 @@ class TestFixtureRoundTrip:
         assert relevant(prepared_diagnostics) == relevant(raw_diagnostics)
         ignore = {
             "import_manifest": TableIgnore(
-                skip_where="key IN ('import_date', 'input_dir', 'scb_input_snapshot')"
+                skip_where=(
+                    "key IN ('import_date', 'input_dir', 'scb_input_snapshot', "
+                    "'catalog_input_bundle')"
+                )
             )
         }
         report = diff_db_content(baseline, replay, ignore=ignore)
@@ -364,10 +365,13 @@ class TestFixtureRoundTrip:
                 conn.close()
         assert manifests[0]["source_checksums"] == manifests[1]["source_checksums"]
         assert manifests[0]["row_counts"] == manifests[1]["row_counts"]
+        snapshot_manifest_sha256 = hashlib.sha256(
+            (selection.path.parent / "snapshot" / "manifest.json").read_bytes()
+        ).hexdigest()
         assert json.loads(manifests[1]["scb_input_snapshot"]) == {
             "input_repository_commit": selection.input_commit,
             "snapshot_path": "snapshot",
-            "manifest_sha256": selection.manifest_sha256,
+            "manifest_sha256": snapshot_manifest_sha256,
         }
 
         conn = sqlite3.connect(replay)
@@ -662,7 +666,7 @@ class TestValuePrestageCache:
                     _var_row(colname="NewColumn", cvid=9999, var_id=999),
                 ],
             )
-        selection = write_scb_snapshot(tmp_path / f"snapshot-{mutation}", scb_dir)
+        selection = write_input_bundle(tmp_path / f"snapshot-{mutation}", input_dir)
         original_open = ScbSnapshotReader.open_vardemangder
         opened = False
 
@@ -672,14 +676,12 @@ class TestValuePrestageCache:
             return original_open(reader)
 
         monkeypatch.setattr(ScbSnapshotReader, "open_vardemangder", record_open)
-        snapshot_seed = tmp_path / f"snapshot-seed-{mutation}"
-        snapshot_seed.mkdir()
         build_db(
-            input_dir=snapshot_seed,
+            input_dir=None,
             db_dir=tmp_path / f"db_snapshot_{mutation}",
             skip_classifications=True,
             skip_slugs=True,
-            scb_snapshot=selection,
+            input_bundle=selection,
             scb_value_prestage_cache=cache,
         )
         assert opened
@@ -688,7 +690,7 @@ class TestValuePrestageCache:
         self, monkeypatch, tmp_path: Path
     ) -> None:
         input_dir = tmp_path / "input"
-        scb_dir = write_scb_input(input_dir)
+        write_scb_input(input_dir)
         cache = tmp_path / "scb-value-prestage.sqlite"
         build_db(
             input_dir=input_dir,
@@ -697,7 +699,7 @@ class TestValuePrestageCache:
             skip_slugs=True,
             scb_value_prestage_cache=cache,
         )
-        selection = write_scb_snapshot(tmp_path / "snapshot-fixture", scb_dir)
+        selection = write_input_bundle(tmp_path / "snapshot-fixture", input_dir)
 
         original_open_csv = ScbSnapshotReader.open_csv
 
@@ -713,14 +715,12 @@ class TestValuePrestageCache:
         monkeypatch.setattr(
             ScbSnapshotReader, "open_vardemangder", reject_prepared_values
         )
-        snapshot_seed = tmp_path / "snapshot-seed"
-        snapshot_seed.mkdir()
         build_db(
-            input_dir=snapshot_seed,
+            input_dir=None,
             db_dir=tmp_path / "db_snapshot",
             skip_classifications=True,
             skip_slugs=True,
-            scb_snapshot=selection,
+            input_bundle=selection,
             scb_value_prestage_cache=cache,
         )
 

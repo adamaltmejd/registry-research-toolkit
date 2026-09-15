@@ -15,7 +15,7 @@ import sqlite3
 from pathlib import Path
 
 import pytest
-from _csv_fixtures import write_scb_input, write_scb_snapshot
+from _csv_fixtures import write_input_bundle, write_scb_input
 from _shared_fixtures import connect_built_db
 from reg_meta.db import DB_FILENAME
 from reg_meta.errors import RegMetaError
@@ -1727,26 +1727,24 @@ class TestBuildDbValidateFlag:
         assert ns.no_validate is True
 
 
-class TestBuildDbSnapshotSelection:
-    def test_argparse_exposes_all_three_snapshot_pins(self):
+class TestBuildDbBundleSelection:
+    def test_argparse_exposes_all_three_bundle_pins(self):
         from reg_meta_build.cli import _build_parser
 
         ns = _build_parser().parse_args(
             [
                 "build-db",
-                "--input-dir",
-                "seed",
-                "--scb-snapshot",
-                "inputs/snapshot",
-                "--scb-input-commit",
+                "--input-bundle",
+                "inputs/bundle",
+                "--input-commit",
                 "a" * 40,
-                "--scb-manifest-sha256",
+                "--input-manifest-sha256",
                 "b" * 64,
             ]
         )
-        assert ns.scb_snapshot == "inputs/snapshot"
-        assert ns.scb_input_commit == "a" * 40
-        assert ns.scb_manifest_sha256 == "b" * 64
+        assert ns.input_bundle == "inputs/bundle"
+        assert ns.input_commit == "a" * 40
+        assert ns.input_manifest_sha256 == "b" * 64
 
     def test_incomplete_selection_fails_before_build(self, monkeypatch):
         from reg_meta_build import cli as cli_mod
@@ -1759,37 +1757,35 @@ class TestBuildDbSnapshotSelection:
         args = cli_mod._build_parser().parse_args(
             [
                 "build-db",
-                "--input-dir",
-                "seed",
-                "--scb-snapshot",
-                "inputs/snapshot",
+                "--input-bundle",
+                "inputs/bundle",
             ]
         )
         with pytest.raises(RegMetaError) as exc_info:
             cli_mod._cmd_build_db(args)
-        assert exc_info.value.code == "scb_snapshot_selection_incomplete"
+        assert exc_info.value.code == "catalog_input_selection_incomplete"
 
     @pytest.mark.parametrize(
-        ("snapshot_args", "expected_code"),
+        ("bundle_args", "expected_code"),
         [
-            (("--scb-snapshot", ""), "scb_snapshot_selection_incomplete"),
+            (("--input-bundle", ""), "catalog_input_selection_incomplete"),
             (
                 (
-                    "--scb-snapshot",
+                    "--input-bundle",
                     "",
-                    "--scb-input-commit",
+                    "--input-commit",
                     "",
-                    "--scb-manifest-sha256",
+                    "--input-manifest-sha256",
                     "",
                 ),
-                "scb_snapshot_invalid",
+                "catalog_input_selection_incomplete",
             ),
         ],
-        ids=["empty-snapshot-only", "all-empty"],
+        ids=["empty-bundle-only", "all-empty"],
     )
     def test_explicit_empty_selection_never_falls_back_to_raw(
         self,
-        snapshot_args: tuple[str, ...],
+        bundle_args: tuple[str, ...],
         expected_code: str,
         tmp_path: Path,
     ) -> None:
@@ -1807,13 +1803,11 @@ class TestBuildDbSnapshotSelection:
                 "--db",
                 str(db_dir),
                 "build-db",
-                "--input-dir",
-                str(input_dir),
                 "--providers",
                 "scb",
                 "--skip-slugs",
                 "--no-validate",
-                *snapshot_args,
+                *bundle_args,
             ]
         )
 
@@ -1840,24 +1834,22 @@ class TestBuildDbSnapshotSelection:
                 "--db",
                 str(tmp_path / "db"),
                 "build-db",
-                "--input-dir",
-                "seed",
                 "--providers",
                 "scb",
                 "--no-validate",
-                "--scb-snapshot",
-                "inputs/snapshot",
-                "--scb-input-commit",
+                "--input-bundle",
+                "inputs/bundle",
+                "--input-commit",
                 "a" * 40,
-                "--scb-manifest-sha256",
+                "--input-manifest-sha256",
                 "b" * 64,
             ]
         )
         envelope, exit_code = cli_mod._cmd_build_db(args)
         assert exit_code == 0
-        assert envelope["request"]["args"]["scb_snapshot"] == "inputs/snapshot"
-        selection = seen["scb_snapshot"]
-        assert selection.path == Path("inputs/snapshot")
+        assert envelope["request"]["args"]["input_bundle"] == "inputs/bundle"
+        selection = seen["input_bundle"]
+        assert selection.path == Path("inputs/bundle")
         assert selection.input_commit == "a" * 40
         assert selection.manifest_sha256 == "b" * 64
 
@@ -1870,10 +1862,8 @@ class TestBuildDbSnapshotSelection:
         from reg_meta_build import cli as cli_mod
 
         input_dir = tmp_path / "input"
-        scb_dir = write_scb_input(input_dir)
-        selection = write_scb_snapshot(tmp_path / "snapshot-fixture", scb_dir)
-        snapshot_seed = tmp_path / "snapshot-seed"
-        snapshot_seed.mkdir()
+        write_scb_input(input_dir)
+        selection = write_input_bundle(tmp_path / "snapshot-fixture", input_dir)
         monkeypatch.delenv("REG_META_BUILD_TIMING", raising=False)
         actual_build_db = cli_mod.build_db
 
@@ -1886,18 +1876,16 @@ class TestBuildDbSnapshotSelection:
                 "--db",
                 str(tmp_path / "db"),
                 "build-db",
-                "--input-dir",
-                str(snapshot_seed),
                 "--providers",
                 "scb",
                 "--skip-slugs",
                 "--no-validate",
                 "--timing",
-                "--scb-snapshot",
+                "--input-bundle",
                 str(selection.path),
-                "--scb-input-commit",
+                "--input-commit",
                 selection.input_commit,
-                "--scb-manifest-sha256",
+                "--input-manifest-sha256",
                 selection.manifest_sha256,
             ]
         )
@@ -1907,7 +1895,7 @@ class TestBuildDbSnapshotSelection:
         assert exit_code == 0
         stderr = capsys.readouterr().err
         labels = [
-            "[timing] scb:snapshot_quick_check:",
+            "[timing] catalog:bundle_quick_check:",
             "[timing] scb:vardemangder_dictionary_prepare:",
             "[timing] scb:vardemangder_occurrence_import:",
         ]
@@ -1962,7 +1950,7 @@ class TestBuildDbPublicationValidation:
                 db_dir=db_dir,
                 skip_classifications=True,
                 skip_slugs=True,
-                pre_rename_hook=cli_mod._build_validate_hook(None),
+                pre_rename_hook=cli_mod._build_validate_hook(),
             )
         assert exc_info.value.code == "validation_failed"
         # The prior DB is untouched and the failed staging file is gone.
@@ -2052,9 +2040,9 @@ class TestBootstrapValidation:
         input_dir = tmp_path / "input"
         db_dir = tmp_path / "db"
         write_scb_input(input_dir)
-        validate = cli_mod._build_validate_hook(None, bootstrap=True)
+        validate = cli_mod._build_validate_hook(bootstrap=True)
 
-        def corrupt_then_validate(staging_db: Path) -> None:
+        def corrupt_then_validate(staging_db: Path, slug_dir: Path | None) -> None:
             conn = connect_built_db(staging_db)
             alias = conn.execute(
                 "SELECT variable_id, register_variant_id, delivery_column_name "
@@ -2068,7 +2056,7 @@ class TestBootstrapValidation:
             )
             conn.commit()
             conn.close()
-            validate(staging_db)
+            validate(staging_db, slug_dir)
 
         with pytest.raises(RegMetaError) as exc_info:
             build_db(
@@ -2103,7 +2091,7 @@ class TestBuildDbBootstrapWiring:
             return validate_mod.ValidationResult()
 
         def fake_build_db(**kwargs):
-            kwargs["pre_rename_hook"](tmp_path / "staging.db")
+            kwargs["pre_rename_hook"](tmp_path / "staging.db", kwargs["slug_dir"])
             return {"import_date": "2026-01-01"}
 
         monkeypatch.setattr(cli_mod, "validate_built_db", record)

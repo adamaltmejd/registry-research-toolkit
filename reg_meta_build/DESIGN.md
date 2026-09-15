@@ -9,11 +9,10 @@ Design rationale and constraints for the build pipeline. For usage, see
 `reg_meta_build` owns the build pipeline that produces the SQLite databases `reg_meta`
 queries against. Specifically:
 
-- `reg_meta.db` — main metadata DB (\~320 MB uncompressed). Built from SCB source CSVs
-  under `reg_meta_build/input_data/`, classifications seed at
-  `reg_meta_build/curation/classifications.toml`, and curated slug TOMLs under
-  `reg_meta_build/fqid_slugs/`. Validated by `reg_meta_build/validate.py` before
-  shipping.
+- `reg_meta.db` — main metadata DB (\~320 MB uncompressed). Routine builds select one
+  exact revision of the host-local catalog-input repository; explicit raw builds remain
+  for source preparation and synthetic tests. The result is validated by
+  `reg_meta_build/validate.py` before shipping.
 - `reg_meta_docs.db` — FTS5 search index over the curated markdown under
   `reg_meta_build/docs/`, plus rehostable register-version related-document binaries and
   provenance.
@@ -64,8 +63,9 @@ and helpers both packages agree on — lives in `reg_meta`.
 
 ## Curation surface taxonomy
 
-The build assembles the catalog from machine-delivered source data and maintainer inputs
-with deliberately separate homes:
+The code repository authors catalog curation in deliberately separate homes. Bundle
+preparation copies the accepted bytes into the host-local input repository; routine
+builds read only that captured copy:
 
 - `curation/` contains every catalog overlay. `repo_curation_path()` in `_curation.py`
   is the single checkout resolver; there is no old-path fallback.
@@ -954,26 +954,75 @@ uv run python scripts/prototype_scb_inputs.py verify snapshots/candidate
 uv run python scripts/prototype_scb_inputs.py restore snapshots/candidate /tmp/input/SCB
 ```
 
-After the maintainer accepts and commits the candidate in its local input repository,
-the normal builder selects it with three all-or-none flags:
+The SCB snapshot is one component of the complete catalog-input bundle described next;
+it is no longer independently selectable by a routine build. Its reader still performs
+the same quick identity checks when the enclosing bundle is opened.
+
+#### Complete catalog-input bundles (Y-154)
+
+The stable host location is `<maintainer-main-checkout>/.local/catalog-inputs/`, an
+ignored, separate Git repository with no remote. It must not live under disposable
+report or scratch directories. One `catalog-bundle.json` names the repository-relative
+accepted SCB snapshot and inventories every other file an ordinary catalog build may
+read, including explicit absences for fixed optional inputs. The manifest identity is
+its SHA-256 plus the repository's full commit; branch names and workstation absolute
+paths are never identity.
+
+The bundle contains byte-for-byte copies under three roots:
+
+- `catalog/`: SCB SQL/XLSX auxiliaries, all selected Socialstyrelsen XLSX workbooks,
+  thin-provider and canonical-SCB TOMLs, referenced canonical-SCB code lists, and every
+  classification CSV referenced by the classification seed;
+- `curation/`: the complete catalog overlay set, including CIS matrix evidence; and
+- `fqid_slugs/`: all global slug TOMLs plus freeze and snapshot state.
+
+It does not claim blanket input coverage for `build-docs`, `extend-db`, steward
+holdings, or extraction/evidence work. LISA Markdown remains a `build-docs` artifact;
+the LISA workbook and other unused evidence may be preserved separately without being
+treated as integrated or authoritative. Raw archives and preparation inventories stay
+outside Git. The existing SCB snapshot remains unchanged and continues to carry its
+original source checksums; the accepted SCB source commit is
+`d10e9f2ffa1f1bd992e0c633211489dc693e3a95` and its manifest SHA-256 is
+`5b540b8e401d289b78fd748564f11b04dcca695325142dd8ff06f1b82196c0bf`.
+
+Preparation reads loose provider inputs plus the code checkout's curation and slug
+authoring files, copies small formats byte-for-byte (XLSX stays XLSX), hashes and parses
+them, and exhaustively verifies the referenced SCB snapshot. It refuses an existing
+target and never stages or commits. Acceptance is an explicit maintainer Git decision;
+there is no reverse synchronization to the code checkout and no remote creation:
 
 ```console
-reg-meta-build --db /scratch/y152 build-db \
-  --input-dir /retained/auxiliary-seed \
-  --scb-snapshot /retained/scb-inputs/snapshot \
+reg-meta-build prepare-input-bundle \
+  --input-dir reg_meta_build/input_data \
+  --scb-snapshot .local/catalog-inputs/snapshot \
   --scb-input-commit d10e9f2ffa1f1bd992e0c633211489dc693e3a95 \
   --scb-manifest-sha256 5b540b8e401d289b78fd748564f11b04dcca695325142dd8ff06f1b82196c0bf \
+  --output-dir .local/catalog-inputs/bundles/candidate
+git -C .local/catalog-inputs add bundles/candidate
+git -C .local/catalog-inputs commit -m "Accept catalog input bundle"
+reg-meta-build verify-input-bundle \
+  --input-bundle .local/catalog-inputs/bundles/candidate \
+  --input-commit <accepted-full-commit> \
+  --input-manifest-sha256 <catalog-bundle-json-sha256>
+```
+
+After acceptance, the normal builder selects exactly that bundle:
+
+```console
+reg-meta-build --db /scratch/catalog-build build-db \
+  --input-bundle .local/catalog-inputs/bundles/candidate \
+  --input-commit <accepted-full-commit> \
+  --input-manifest-sha256 <catalog-bundle-json-sha256> \
   --scb-value-prestage-cache /scratch/scb-value-prestage.sqlite --timing
 ```
 
 Selection requires a clean checkout at the exact full commit. The committed and worktree
-manifests must match the explicit SHA-256 pin and supported schema/converter versions.
-Ordinary build use then compares the declared normalized inventory and byte sizes with
-both the pinned Git tree and worktree. These are quick identity and completeness checks
-for an input the maintainer already accepted; they do not prove artifact hashes,
-dictionary content keys or logical round-trip digests again. Changing the commit or
-manifest requires new explicit pins after preparation or an explicit `verify`; the
-builder never accepts or repairs a changed snapshot implicitly.
+bundle and snapshot manifests must match their explicit SHA-256 pins and supported
+schemas. Ordinary use compares both declared inventories and byte sizes with the pinned
+Git tree and worktree. It does not hash the small payloads, read the complete SCB stream,
+decompress archives, recompute lossless digests, or require a historical replay lock.
+Changing either commit or manifest requires new explicit pins after preparation and
+acceptance; the builder never accepts or repairs changed input implicitly.
 
 Consumed non-value streams still validate escaped-TSV syntax, field/line/record counts,
 dictionary ordering/closure and SCB headers, but omit artifact and logical-stream
@@ -984,7 +1033,7 @@ known CVID uses a payload, preserving the raw importer's known-CVID boundary;
 first-occurrence order still assigns `code_id` and first-per-CVID metadata. The shared
 sentinel/drift, null/empty, encoding, staging, projection and prestage materialization
 rules remain the interpretation boundary. A valid warm prestage hit reads neither value
-dictionaries nor occurrences. Timing output separates snapshot quick checks, prepared
+dictionaries nor occurrences. Timing output separates bundle quick checks, prepared
 dictionary work, occurrence import, prestage application/write and projection.
 
 `--no-validate` still controls only post-build catalog invariant validation; this trust
@@ -997,10 +1046,20 @@ Snapshot null tokens remain distinct in the prepared representation and reader; 
 interpretation boundary collapses unquoted-null and quoted-empty cells to the empty
 string expected from the historical raw reader. The manifest's original raw CSV hashes
 remain `source_checksums`, so equivalent raw and snapshot representations share the same
-value-prestage identity. The separate `import_manifest.scb_input_snapshot` object
+value-prestage identity. The `import_manifest.scb_input_snapshot` object
 records input-repository commit, repository-relative snapshot path and manifest hash; it
-is provenance, not a cache key or a replacement source identity. SQL/XLSX SCB
-auxiliaries and every other provider still resolve below `--input-dir`.
+is provenance, not a cache key or a replacement source identity. The adjacent
+`import_manifest.catalog_input_bundle` records the complete input-repository commit,
+bundle-manifest path and manifest SHA-256.
+
+Pinned selection is exclusive: `--input-dir` and `--slug-dir` cannot be mixed with it,
+and no missing or unlisted file falls back to loose inputs or the builder checkout.
+Build output and prestage caches must remain outside the accepted repository. The build
+copies only mutable slug TOMLs to a per-run workspace, passes that same path to import
+and final validation, reports generated differences, and leaves the workspace for
+review without changing or accepting the input repository. The repository is checked
+again after validation immediately before atomic publication. `--input-dir` remains an
+explicit raw source-preparation/testing path, not a compatibility selection mode.
 
 `prepare` derives `converter_commit` from the checkout containing both the executing CLI
 file and the imported `input_snapshot.py`; they must be tracked blobs matching HEAD in
@@ -1062,8 +1121,8 @@ canonical-restored quoting differences are audited separately in the host accept
 comparison below. A `BuildLock` pins the old builder commit, runtime, options, manually
 enumerated auxiliary inventory and recorded result as well as the SCB inputs; it is
 therefore optional replay evidence, never mandatory input selection for a newer builder.
-Its auxiliary inventory remains manual. A native snapshot replay uses the normal build
-command above, then the optional lock verifier:
+Its auxiliary inventory remains manual. A bundle replay uses the normal build command
+above, then the optional historical lock verifier:
 
 ```console
 uv run python scripts/prototype_scb_inputs.py pin-build snapshots/accepted \
@@ -1071,9 +1130,9 @@ uv run python scripts/prototype_scb_inputs.py pin-build snapshots/accepted \
   --option validate=true --aux Tabelldefinitioner.sql=/retained/Tabelldefinitioner.sql
 uv run python scripts/prototype_scb_inputs.py verify-lock /tmp/replay-lock.json \
   snapshots/accepted --aux Tabelldefinitioner.sql=/retained/Tabelldefinitioner.sql
-reg-meta-build --db /tmp/replay-db build-db --input-dir /tmp/input \
-  --scb-snapshot snapshots/accepted --scb-input-commit <commit> \
-  --scb-manifest-sha256 <sha256>
+reg-meta-build --db /tmp/replay-db build-db \
+  --input-bundle bundles/accepted --input-commit <commit> \
+  --input-manifest-sha256 <bundle-sha256>
 uv run python scripts/prototype_scb_inputs.py verify-lock /tmp/replay-lock.json \
   snapshots/accepted --recorded-db /retained/recorded-snapshot-build.db \
   --replay-db /tmp/replay-db/reg_meta.db \
@@ -1099,12 +1158,12 @@ recorded original byte sizes/SHA256 values. On a full coherent bundle:
    edit, a repeated-description edit and fixed-seed 1% edit as controlled simulations.
    `measure-git INITIAL UPDATE` reports changed lines/files and initial/incremental
    packed growth for each pair.
-3. Run same-code full-provider raw baseline and native snapshot builds through the
+3. Run same-code full-provider raw baseline and complete bundle builds through the
    `build-db` skill with default corpus validation, SQLite integrity/FK checks, the cold
    value path and a separate disposable prestage run. Compare the baseline to the latest
-   release, then snapshot output to the same-code baseline. Keep an unfiltered dbdiff
+   release, then bundle output to the same-code baseline. Keep an unfiltered dbdiff
    report first; a second comparison may exclude only the audited import date, input
-   path and snapshot-selection provenance. Original `source_checksums`, `row_counts`,
+   path and bundle-selection provenance. Original `source_checksums`, `row_counts`,
    every schema row, ID, projection/coalescing statistic and catalog fact must match.
 
 Hard failure is any distorted/lost/reordered occurrence, non-deterministic normalized

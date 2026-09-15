@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import sqlite3
+import subprocess
 import time
 from argparse import Namespace
 from typing import TYPE_CHECKING, ClassVar
@@ -39,6 +40,9 @@ def test_build_command_defaults_to_timing_and_copied_slug_dir(tmp_path: Path) ->
     )
     args = Namespace(
         input_dir="/seed/input_data",
+        input_bundle=None,
+        input_commit=None,
+        input_manifest_sha256=None,
         no_validate=False,
         no_timing=False,
         providers=None,
@@ -69,6 +73,9 @@ def test_build_command_threads_optional_flags(tmp_path: Path) -> None:
     )
     args = Namespace(
         input_dir="/seed/input_data",
+        input_bundle=None,
+        input_commit=None,
+        input_manifest_sha256=None,
         no_validate=True,
         no_timing=True,
         providers="scb,sos",
@@ -97,6 +104,9 @@ def test_build_command_omits_prestage_when_path_is_none(tmp_path: Path) -> None:
     )
     args = Namespace(
         input_dir="/seed/input_data",
+        input_bundle=None,
+        input_commit=None,
+        input_manifest_sha256=None,
         no_validate=False,
         no_timing=True,
         providers="sos",
@@ -107,6 +117,104 @@ def test_build_command_omits_prestage_when_path_is_none(tmp_path: Path) -> None:
     cmd = build_db_watch.build_command(args, paths)
 
     assert "--scb-value-prestage-cache" not in cmd
+
+
+def test_build_command_threads_complete_bundle_without_slug_override(
+    tmp_path: Path,
+) -> None:
+    paths = build_db_watch.RunPaths(
+        db_dir=tmp_path / "db",
+        slug_dir=None,
+        prestage_cache=None,
+        log_path=tmp_path / "build.log",
+        summary_path=tmp_path / "summary.json",
+        created_db_dir=False,
+        created_slug_dir=False,
+    )
+    args = Namespace(
+        input_dir=None,
+        input_bundle="/host/catalog-inputs/bundle",
+        input_commit="a" * 40,
+        input_manifest_sha256="b" * 64,
+        no_validate=False,
+        no_timing=False,
+        providers=None,
+        refresh_prestage_cache=False,
+        dbdiff_against=None,
+    )
+
+    cmd = build_db_watch.build_command(args, paths)
+
+    assert "--input-dir" not in cmd
+    assert cmd[cmd.index("--input-bundle") + 1] == "/host/catalog-inputs/bundle"
+    assert cmd[cmd.index("--input-commit") + 1] == "a" * 40
+    assert cmd[cmd.index("--input-manifest-sha256") + 1] == "b" * 64
+    assert "--slug-dir" not in cmd
+
+
+def test_prepare_paths_keeps_bundle_outputs_and_slugs_outside_input_repo(
+    tmp_path: Path,
+) -> None:
+    input_repo = tmp_path / "catalog-inputs"
+    bundle = input_repo / "bundle"
+    bundle.mkdir(parents=True)
+    subprocess.run(["git", "-C", str(input_repo), "init", "-q"], check=True)
+    scratch = tmp_path / "scratch"
+    scratch.mkdir()
+    args = build_db_watch.parse_args(
+        [
+            "--input-bundle",
+            str(bundle),
+            "--input-commit",
+            "a" * 40,
+            "--input-manifest-sha256",
+            "b" * 64,
+            "--tmp-dir",
+            str(scratch),
+            "--no-prestage-cache",
+        ]
+    )
+
+    paths = build_db_watch.prepare_paths(args, tmp_path)
+
+    assert paths.slug_dir is None
+    assert not paths.db_dir.is_relative_to(input_repo)
+    assert not paths.log_path.is_relative_to(input_repo)
+
+    args.tmp_dir = str(input_repo)
+    with pytest.raises(ValueError, match="outside the accepted input repository"):
+        build_db_watch.prepare_paths(args, tmp_path)
+
+
+@pytest.mark.parametrize(
+    "argv",
+    [
+        ["--input-bundle", "bundle"],
+        [
+            "--input-dir",
+            "raw",
+            "--input-bundle",
+            "bundle",
+            "--input-commit",
+            "a" * 40,
+            "--input-manifest-sha256",
+            "b" * 64,
+        ],
+        [
+            "--input-bundle",
+            "bundle",
+            "--input-commit",
+            "a" * 40,
+            "--input-manifest-sha256",
+            "b" * 64,
+            "--slug-dir",
+            "slugs",
+        ],
+    ],
+)
+def test_parse_args_rejects_incomplete_or_ambiguous_bundle(argv: list[str]) -> None:
+    with pytest.raises(SystemExit):
+        build_db_watch.parse_args(argv)
 
 
 def test_build_dbdiff_command_threads_options(tmp_path: Path) -> None:

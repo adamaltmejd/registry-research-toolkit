@@ -103,7 +103,11 @@ if TYPE_CHECKING:
     from pathlib import Path
 
     from .codeless_overlap import CodelessOverlapKey, CodelessOverlapMap
-    from .input_snapshot import ScbSnapshotReader, ScbSnapshotSelection
+    from .input_snapshot import (
+        CatalogBundleReader,
+        CatalogBundleSelection,
+        ScbSnapshotReader,
+    )
     from .relations import CuratedReplacedBy
 
 # Built-in data providers. `provider_id` values are stable: rows reference them
@@ -4209,10 +4213,19 @@ def _provider_id_for(provider: str) -> int:
     )
 
 
+def _catalog_curation_path(curation_dir: Path | None, name: str) -> Path | None:
+    """Resolve bundle curation explicitly; raw mode uses the authoring checkout."""
+    if curation_dir is None:
+        return repo_curation_path(name)
+    path = curation_dir / name
+    return path if path.is_file() else None
+
+
 def materialize(
     conn: sqlite3.Connection,
     adapters: list[tuple[Any, Path]],
     *,
+    curation_dir: Path | None,
     seed_path: Path | None,
     cls_dir: Path,
     skip_classifications: bool,
@@ -4463,13 +4476,15 @@ def materialize(
     # ONCE here, then materialized into its `same_as` / `replaced_by` table groups
     # further down (after all slugs). Empty when the file is absent (synthetic
     # builds, wheel installs).
-    relations = load_relations(repo_curation_path("relations.toml"))
+    relations = load_relations(_catalog_curation_path(curation_dir, "relations.toml"))
 
     # Classifications — maintainer-curated normalized code systems. Every
     # classification is seeded regardless of `--providers` (shared standards with
     # git-tracked canonical-code CSVs), so there are no provider-skipped entries
     # to thread anywhere.
-    classifications_path = seed_path or repo_curation_path("classifications.toml")
+    classifications_path = seed_path or _catalog_curation_path(
+        curation_dir, "classifications.toml"
+    )
     if skip_classifications:
         _progress("Skipping classifications (skip_classifications=True)")
     else:
@@ -4536,7 +4551,9 @@ def materialize(
         # curation/period_family_merges.toml.
         fm_counts = materialize_period_family_merges(
             conn,
-            load_period_family_merges(repo_curation_path("period_family_merges.toml")),
+            load_period_family_merges(
+                _catalog_curation_path(curation_dir, "period_family_merges.toml")
+            ),
             providers=active_providers,
             fold_slug_hints=fold_slug_hints,
             progress=_progress,
@@ -4578,7 +4595,9 @@ def materialize(
         # or states.
         curated_alias_window_counts = materialize_curated_alias_windows(
             conn,
-            load_alias_windows(repo_curation_path("alias_windows.toml")),
+            load_alias_windows(
+                _catalog_curation_path(curation_dir, "alias_windows.toml")
+            ),
             providers=active_providers,
             progress=_progress,
         )
@@ -4599,7 +4618,7 @@ def materialize(
         # FAILS the build. Empty curated map (synthetic builds, wheel installs, the
         # not-yet-curated state) → no-op when there are no residual overlaps.
         codeless_overlap = load_codeless_overlap(
-            repo_curation_path("codeless_overlap.toml")
+            _catalog_curation_path(curation_dir, "codeless_overlap.toml")
         )
         _resolve_curated_codeless_overlaps(conn, codeless_overlap)
 
@@ -4611,7 +4630,9 @@ def materialize(
         # (a pair whose provider is absent from this --providers build is skipped),
         # so it lives in this block and reads `active_providers`. A dangling FQID
         # or a failed structural guard FAILS the build (EXIT_CONFIG).
-        concept_groups_path = repo_curation_path("concept_groups.toml")
+        concept_groups_path = _catalog_curation_path(
+            curation_dir, "concept_groups.toml"
+        )
         _append_code_label_edges(
             conn,
             load_code_label_pairs(concept_groups_path),
@@ -4636,7 +4657,9 @@ def materialize(
         cg_counts = materialize_concept_groups(
             conn,
             load_concept_groups(concept_groups_path),
-            auto=load_concept_groups(repo_curation_path("concept_groups.auto.toml")),
+            auto=load_concept_groups(
+                _catalog_curation_path(curation_dir, "concept_groups.auto.toml")
+            ),
             accepts=load_concept_group_accepts(concept_groups_path),
             classification_groups=load_classification_groups(concept_groups_path),
             edge_siblings=sibling_edges,
@@ -4676,7 +4699,9 @@ def materialize(
         de_counts = apply_delivery_enrichment(
             conn,
             load_delivery_enrichment(
-                repo_curation_path("delivery_enrichment.generated.toml")
+                _catalog_curation_path(
+                    curation_dir, "delivery_enrichment.generated.toml"
+                )
             ),
             providers=active_providers,
         )
@@ -4700,7 +4725,7 @@ def materialize(
         # a dangling member reference fails the build LOUD (EXIT_CONFIG).
         tag_counts = materialize_tags(
             conn,
-            load_tags(repo_curation_path("tags.toml")),
+            load_tags(_catalog_curation_path(curation_dir, "tags.toml")),
             providers=active_providers,
             progress=_progress,
         )
@@ -4810,7 +4835,7 @@ def materialize(
         # incompleteness signal.
         lineage_counts = link_variable_state_lineage(
             conn,
-            repo_curation_path("lineage.toml"),
+            _catalog_curation_path(curation_dir, "lineage.toml"),
             providers=active_providers,
         )
         row_counts["variable_state_lineage"] = lineage_counts["edges"]
@@ -5081,7 +5106,7 @@ def materialize(
 
 
 def build_db(
-    input_dir: Path,
+    input_dir: Path | None,
     db_dir: Path,
     *,
     seed_path: Path | None = None,
@@ -5089,17 +5114,16 @@ def build_db(
     slug_dir: Path | None = None,
     skip_slugs: bool = False,
     providers: tuple[str, ...] = ("scb",),
-    scb_snapshot: ScbSnapshotSelection | None = None,
+    input_bundle: CatalogBundleSelection | None = None,
     scb_value_prestage_cache: Path | None = None,
     refresh_scb_value_prestage: bool = False,
-    pre_rename_hook: Callable[[Path], None] | None = None,
+    pre_rename_hook: Callable[[Path, Path | None], None] | None = None,
     provenance_pre_rename_hook: Callable[[Path], None] | None = None,
 ) -> dict[str, Any]:
     """Build the reg_meta database from the selected providers' source exports.
 
-    ``input_dir`` must contain:
-      - ``<input_dir>/SCB/*.csv``             — SCB metadata CSV exports, unless
-        ``scb_snapshot`` explicitly selects a pinned normalized representation
+    Raw mode's ``input_dir`` must contain:
+      - ``<input_dir>/SCB/*.csv``             — SCB metadata CSV exports
       - ``<input_dir>/Socialstyrelsen/*.xlsx``— SOS register workbooks (A4.3b;
         required only when ``"sos"`` is in ``providers``)
       - ``<input_dir>/classifications/*.csv`` — canonical classification CSVs
@@ -5133,7 +5157,71 @@ def build_db(
 
     Returns a summary dict for the CLI to display.
     """
-    input_dir = input_dir.expanduser().resolve()
+    if input_dir is None and input_bundle is None:
+        raise RegMetaError(
+            exit_code=EXIT_CONFIG,
+            code="catalog_input_selection_missing",
+            error_class="configuration",
+            message="Select raw input_dir or a pinned input_bundle.",
+            remediation=(
+                "Pass input_dir for explicit raw preparation/testing, or pass "
+                "input_bundle for a routine build."
+            ),
+        )
+    if input_dir is not None and input_bundle is not None:
+        raise RegMetaError(
+            exit_code=EXIT_CONFIG,
+            code="catalog_input_selection_ambiguous",
+            error_class="configuration",
+            message="Select exactly one of raw input_dir or a pinned input_bundle.",
+            remediation=(
+                "Pass input_dir for explicit raw preparation/testing, or pass "
+                "input_bundle with no loose input, seed, or slug overrides."
+            ),
+        )
+    if input_bundle is not None and (seed_path is not None or slug_dir is not None):
+        raise RegMetaError(
+            exit_code=EXIT_CONFIG,
+            code="catalog_input_selection_ambiguous",
+            error_class="configuration",
+            message=(
+                "A pinned input bundle cannot be combined with loose seed_path or "
+                "slug_dir overrides."
+            ),
+            remediation="Remove the loose overrides; prepare and explicitly accept a new bundle instead.",
+        )
+
+    bundle_reader: CatalogBundleReader | None = None
+    snapshot_reader: ScbSnapshotReader | None = None
+    if input_bundle is not None:
+        from .input_snapshot import SnapshotError, open_input_bundle
+
+        try:
+            with _stage_timer("catalog:bundle_quick_check"):
+                bundle_reader = open_input_bundle(input_bundle)
+        except SnapshotError as exc:
+            raise RegMetaError(
+                exit_code=EXIT_CONFIG,
+                code="catalog_input_bundle_invalid",
+                error_class="configuration",
+                message=f"Selected catalog input bundle is invalid: {exc}",
+                remediation=(
+                    "Check the exact commit and manifest pins. Prepare, verify, "
+                    "review, and explicitly commit a new candidate rather than "
+                    "repairing accepted inputs in place."
+                ),
+            ) from exc
+        input_dir = bundle_reader.input_dir
+        snapshot_reader = bundle_reader.snapshot
+        curation_dir: Path | None = bundle_reader.curation_dir
+        # Preserve explicit absence. Downstream reference validation must not
+        # interpret None as permission to consult repository curation.
+        seed_path = curation_dir / "classifications.toml"
+    else:
+        assert input_dir is not None
+        input_dir = input_dir.expanduser().resolve()
+        curation_dir = None
+
     db_dir = db_dir.expanduser().resolve()
     if scb_value_prestage_cache is not None:
         scb_value_prestage_cache = scb_value_prestage_cache.expanduser().resolve()
@@ -5155,15 +5243,6 @@ def build_db(
             remediation=f"Pass a comma-list of known providers, e.g. {','.join(sorted(known))}.",
         )
 
-    if scb_snapshot is not None and "scb" not in providers:
-        raise RegMetaError(
-            exit_code=EXIT_CONFIG,
-            code="scb_snapshot_without_provider",
-            error_class="configuration",
-            message="An SCB input snapshot was selected but provider 'scb' is excluded.",
-            remediation="Include scb in --providers or remove the SCB snapshot selection.",
-        )
-
     if not input_dir.is_dir():
         raise RegMetaError(
             exit_code=EXIT_CONFIG,
@@ -5172,16 +5251,6 @@ def build_db(
             message=f"Input directory not found: {input_dir}",
             remediation="Provide a directory containing SCB/ and classifications/ subdirectories.",
         )
-
-    snapshot_reader = None
-    if scb_snapshot is not None:
-        from .input_snapshot import SnapshotError, open_scb_snapshot
-
-        try:
-            with _stage_timer("scb:snapshot_quick_check"):
-                snapshot_reader = open_scb_snapshot(scb_snapshot)
-        except SnapshotError as exc:
-            raise _scb_snapshot_error(exc) from exc
 
     if "scb" in providers:
         if snapshot_reader is None and not scb_dir.is_dir():
@@ -5230,6 +5299,30 @@ def build_db(
                 ),
             )
 
+    if bundle_reader is not None:
+        for label, path in (
+            ("database output", db_dir),
+            ("SCB value prestage cache", scb_value_prestage_cache),
+        ):
+            if path is not None and (
+                path == bundle_reader.repository
+                or path.is_relative_to(bundle_reader.repository)
+            ):
+                raise RegMetaError(
+                    exit_code=EXIT_CONFIG,
+                    code="catalog_input_output_conflict",
+                    error_class="configuration",
+                    message=f"{label} must stay outside the accepted input repository: {path}",
+                    remediation="Choose a scratch/output path outside the catalog-inputs Git checkout.",
+                )
+
+    db_dir.mkdir(parents=True, exist_ok=True)
+    if bundle_reader is not None:
+        from .input_snapshot import create_slug_workspace
+
+        slug_dir = create_slug_workspace(bundle_reader, db_dir)
+        _progress(f"Catalog slug workspace retained at {slug_dir}")
+
     # Stale-seed preflight (#556): the conditional CanonicalScbAdapter guard below
     # (~3900) SILENTLY skips when scb_canonical/ is absent — correct for genuinely
     # canonical-free synthetic builds. But when the curated scb.toml pins canonical-
@@ -5265,7 +5358,6 @@ def build_db(
                     ),
                 )
 
-    db_dir.mkdir(parents=True, exist_ok=True)
     final_path = db_dir / DB_FILENAME
     tmp_path = final_path.with_suffix(".db.tmp")
     # Sibling staging file holds the (cvid, code_id, item_id) triples consumed
@@ -5297,6 +5389,7 @@ def build_db(
     # runs on this write conn, which isn't created via `open_db`. See reg_meta.db. (#853)
     register_py_lower(conn)
     build_failed = True
+    slug_changes: dict[str, list[str]] | None = None
     try:
         conn.executescript(DDL)
         seed_providers(conn)
@@ -5340,23 +5433,27 @@ def build_db(
             # leaves. SCB-only — loaded INSIDE this branch so a malformed/invalid
             # curation/codelivery.toml can't fail an SOS-only build that never reads it.
             # Empty when the file is absent (wheel installs, synthetic builds).
-            codelivery = load_codelivery(repo_curation_path("codelivery.toml"))
+            codelivery = load_codelivery(
+                _catalog_curation_path(curation_dir, "codelivery.toml")
+            )
             # Upstream errata (Y-114/Y-116): what SCB's export omits — versions,
             # column-in-version rows, and whole columns. Slug-resolved against the
             # SAME curated slug dir `populate_slugs` reads; the adapter applies
             # these before the slug columns exist.
-            errata_path = repo_curation_path("scb_errata.toml")
+            errata_path = _catalog_curation_path(curation_dir, "scb_errata.toml")
             errata = load_scb_errata(
                 errata_path,
                 slug_dir or repo_slug_dir(),
                 classification_seed_path=seed_path,
             )
-            matrix_path = repo_curation_path("cis2016-matrix-meaning-evidence.json")
+            matrix_path = _catalog_curation_path(
+                curation_dir, "cis2016-matrix-meaning-evidence.json"
+            )
             cis2016_matrix = load_cis2016_matrix(
                 matrix_path, slug_dir or repo_slug_dir()
             )
-            cis2014_matrix_path = repo_curation_path(
-                "cis2014-matrix-meaning-evidence.json"
+            cis2014_matrix_path = _catalog_curation_path(
+                curation_dir, "cis2014-matrix-meaning-evidence.json"
             )
             cis2014_matrix = load_cis2014_matrix(
                 cis2014_matrix_path, slug_dir or repo_slug_dir()
@@ -5390,7 +5487,12 @@ def build_db(
                 )
             adapters.append((scb_adapter, scb_dir))
         if "sos" in providers:
-            adapters.append((SOSAdapter(conn), sos_dir))
+            adapters.append(
+                (
+                    SOSAdapter(conn, fail_on_parse_error=bundle_reader is not None),
+                    sos_dir,
+                )
+            )
         # Thin curated providers (#422): one shared adapter per agency, each
         # reading its committed `<provider>.toml`. Additive like SOS — minted
         # high-band ids, no scratch.
@@ -5422,6 +5524,7 @@ def build_db(
         mat = materialize(
             conn,
             adapters,
+            curation_dir=curation_dir,
             seed_path=seed_path,
             cls_dir=cls_dir,
             skip_classifications=skip_classifications,
@@ -5463,6 +5566,8 @@ def build_db(
         }
         if snapshot_reader is not None:
             manifest_data["scb_input_snapshot"] = snapshot_reader.provenance
+        if bundle_reader is not None:
+            manifest_data["catalog_input_bundle"] = bundle_reader.provenance
         for key, value in manifest_data.items():
             conn.execute(
                 "INSERT INTO import_manifest VALUES (?, ?)",
@@ -5519,17 +5624,44 @@ def build_db(
         staging_path.unlink(missing_ok=True)
         if build_failed:
             tmp_path.unlink(missing_ok=True)
+        if bundle_reader is not None and slug_dir is not None:
+            from .input_snapshot import slug_workspace_changes
+
+            slug_changes = slug_workspace_changes(bundle_reader, slug_dir)
+            _progress(
+                "Catalog slug workspace changes: "
+                f"added={slug_changes['added']}, changed={slug_changes['changed']}, "
+                f"removed={slug_changes['removed']} (not accepted automatically)"
+            )
 
     # Pre-rename hook runs against the staging DB so a failing check
     # can abort *before* the publication replaces the installed DB.
     # If the hook raises, drop the tmp file and let the prior DB stand.
     if pre_rename_hook is not None:
         try:
-            pre_rename_hook(tmp_path)
+            pre_rename_hook(tmp_path, slug_dir)
         except BaseException:
             tmp_path.unlink(missing_ok=True)
             _unlink_wal_sidecars(tmp_path)
             raise
+
+    if bundle_reader is not None:
+        from .input_snapshot import SnapshotError, open_input_bundle
+
+        try:
+            # Recheck after validation, immediately before publication. A build
+            # never repairs or accepts a changed input checkout implicitly.
+            assert input_bundle is not None
+            open_input_bundle(input_bundle)
+        except SnapshotError as exc:
+            tmp_path.unlink(missing_ok=True)
+            raise RegMetaError(
+                exit_code=EXIT_CONFIG,
+                code="catalog_input_bundle_invalid",
+                error_class="configuration",
+                message=f"Catalog input bundle changed during the build: {exc}",
+                remediation="Restore the accepted checkout and rerun with the same exact pins.",
+            ) from exc
 
     publish_db(tmp_path, final_path)
 
@@ -5591,4 +5723,9 @@ def build_db(
     }
     if snapshot_reader is not None:
         result["scb_input_snapshot"] = snapshot_reader.provenance
+    if bundle_reader is not None:
+        result["catalog_input_bundle"] = bundle_reader.provenance
+        if slug_dir is not None:
+            result["slug_workspace"] = str(slug_dir)
+            result["slug_changes"] = slug_changes
     return result

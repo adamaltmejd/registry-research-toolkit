@@ -14,12 +14,16 @@ from typing import TYPE_CHECKING
 import pytest
 from _csv_fixtures import (
     omit_scb_snapshot_file,
+    repin_input_bundle,
+    write_input_bundle,
     write_scb_input,
     write_scb_snapshot,
 )
+from reg_meta.errors import RegMetaError
 from reg_meta_build.db import _open_scb_csv, _open_scb_csv_raw
 from reg_meta_build.input_snapshot import (
     SCB_CSV_FILES,
+    CatalogBundleSelection,
     SnapshotError,
     SnapshotFile,
     converter_source_commit,
@@ -27,10 +31,13 @@ from reg_meta_build.input_snapshot import (
     load_manifest,
     measure_codec_sample,
     measure_git_history,
+    open_input_bundle,
     open_scb_snapshot,
+    prepare_input_bundle,
     prepare_snapshot,
     restore_snapshot,
     verify_build_lock,
+    verify_input_bundle,
     verify_snapshot,
 )
 
@@ -325,6 +332,159 @@ def test_selected_snapshot_preserves_optional_absence_and_rejects_value_pairing(
     unpaired = omit_scb_snapshot_file(selection, "VardemangderValidDates.csv")
     with pytest.raises(SnapshotError, match="requires VardemangderValidDates.csv"):
         open_scb_snapshot(unpaired)
+
+
+def test_catalog_bundle_captures_complete_small_inventory_and_selects_quickly(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    input_dir = tmp_path / "source"
+    write_scb_input(input_dir)
+    auxiliary = input_dir / "SCB" / "Tabelldefinitioner.sql"
+    auxiliary.write_bytes(b"-- exact source fact\r\nSELECT 1;\r\n")
+    selection = write_input_bundle(tmp_path / "accepted", input_dir)
+
+    def exhaustive_use(*_args: object, **_kwargs: object) -> None:
+        raise AssertionError("ordinary bundle selection must stay quick")
+
+    monkeypatch.setattr(snapshot_module, "verify_snapshot", exhaustive_use)
+    monkeypatch.setattr(snapshot_module, "_verify_committed_snapshot", exhaustive_use)
+    monkeypatch.setattr(snapshot_module, "_file_sha256", exhaustive_use)
+    bundle = open_input_bundle(selection)
+
+    items = {item.path: item for item in bundle.manifest.files}
+    assert items["catalog/SCB/Tabelldefinitioner.sql"].present
+    assert not items["catalog/SCB/ID-kolumner.xlsx"].present
+    assert (
+        bundle.input_dir / "SCB" / "Tabelldefinitioner.sql"
+    ).read_bytes() == auxiliary.read_bytes()
+    manifest_text = (selection.path / "catalog-bundle.json").read_text(encoding="utf-8")
+    assert str(tmp_path) not in manifest_text
+    assert bundle.provenance == {
+        "input_repository_commit": selection.input_commit,
+        "bundle_manifest_path": "bundle/catalog-bundle.json",
+        "bundle_manifest_sha256": selection.manifest_sha256,
+    }
+
+
+def test_catalog_bundle_explicit_verify_and_unlisted_file_rejection(
+    tmp_path: Path,
+) -> None:
+    input_dir = tmp_path / "source"
+    write_scb_input(input_dir)
+    selection = write_input_bundle(tmp_path / "accepted", input_dir)
+    assert verify_input_bundle(selection).schema_version == 1
+
+    unlisted = selection.path / "catalog" / "SCB" / "new-optional-input.xlsx"
+    unlisted.parent.mkdir(parents=True, exist_ok=True)
+    unlisted.write_bytes(b"unlisted")
+    repo = selection.path.parent
+    _git(repo, "add", ".")
+    _git(repo, "commit", "-q", "-m", "unlisted input")
+    changed_commit = _git(repo, "rev-parse", "HEAD")
+    changed = CatalogBundleSelection(
+        selection.path, changed_commit, selection.manifest_sha256
+    )
+
+    with pytest.raises(SnapshotError, match="inventory mismatch"):
+        open_input_bundle(changed)
+
+
+def test_catalog_bundle_manifest_changes_with_meaningful_auxiliary_input(
+    tmp_path: Path,
+) -> None:
+    input_dir = tmp_path / "source"
+    write_scb_input(input_dir)
+    auxiliary = input_dir / "SCB" / "Tabelldefinitioner.sql"
+    auxiliary.write_text("CREATE TABLE first;\n", encoding="utf-8")
+    first = write_input_bundle(tmp_path / "accepted-a", input_dir)
+
+    auxiliary.write_text("CREATE TABLE second;\n", encoding="utf-8")
+    second = write_input_bundle(tmp_path / "accepted-b", input_dir)
+
+    assert first.manifest_sha256 != second.manifest_sha256
+
+
+def test_catalog_bundle_requires_exact_clean_selection_and_never_overwrites(
+    tmp_path: Path,
+) -> None:
+    input_dir = tmp_path / "source"
+    write_scb_input(input_dir)
+    selection = write_input_bundle(tmp_path / "accepted", input_dir)
+
+    with pytest.raises(SnapshotError, match="commit pin mismatch"):
+        open_input_bundle(
+            CatalogBundleSelection(selection.path, "0" * 40, selection.manifest_sha256)
+        )
+    with pytest.raises(SnapshotError, match="manifest pin mismatch"):
+        open_input_bundle(
+            CatalogBundleSelection(selection.path, selection.input_commit, "0" * 64)
+        )
+    with pytest.raises(SnapshotError, match="directory not found"):
+        open_input_bundle(
+            CatalogBundleSelection(
+                tmp_path / "missing", selection.input_commit, selection.manifest_sha256
+            )
+        )
+
+    (selection.path / "catalog-bundle.json").write_bytes(b"dirty")
+    with pytest.raises(SnapshotError, match="must be clean"):
+        open_input_bundle(selection)
+
+    snapshot = write_scb_snapshot(tmp_path / "other-accepted", input_dir / "SCB")
+    existing = snapshot.path.parent / "bundle"
+    existing.mkdir()
+    marker = existing / "keep"
+    marker.write_text("accepted", encoding="utf-8")
+    with pytest.raises(SnapshotError, match="will not be overwritten"):
+        prepare_input_bundle(
+            input_dir,
+            tmp_path / "empty-curation",
+            tmp_path / "empty-slugs",
+            snapshot,
+            existing,
+        )
+    assert marker.read_text(encoding="utf-8") == "accepted"
+
+
+def test_catalog_bundle_rejects_unsupported_manifest_before_build(
+    tmp_path: Path,
+) -> None:
+    input_dir = tmp_path / "source"
+    write_scb_input(input_dir)
+    selection = write_input_bundle(tmp_path / "accepted", input_dir)
+    manifest_path = selection.path / "catalog-bundle.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["schema_version"] = 999
+    manifest_path.write_text(
+        json.dumps(manifest, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    changed = repin_input_bundle(selection, "unsupported bundle schema")
+
+    with pytest.raises(SnapshotError, match="unsupported catalog bundle schema"):
+        open_input_bundle(changed)
+
+
+def test_catalog_bundle_preparation_rejects_invalid_consumed_input(
+    tmp_path: Path,
+) -> None:
+    input_dir = tmp_path / "source"
+    write_scb_input(input_dir)
+    provider_dir = input_dir / "Folkhalsomyndigheten"
+    provider_dir.mkdir()
+    (provider_dir / "fohm.toml").write_text("not = [valid", encoding="utf-8")
+    snapshot = write_scb_snapshot(tmp_path / "accepted", input_dir / "SCB")
+    curation = tmp_path / "curation"
+    slugs = tmp_path / "slugs"
+    curation.mkdir()
+    slugs.mkdir()
+
+    with pytest.raises(RegMetaError) as exc_info:
+        prepare_input_bundle(
+            input_dir, curation, slugs, snapshot, snapshot.path.parent / "bundle"
+        )
+    assert exc_info.value.code == "curated_toml_invalid"
+    assert not (snapshot.path.parent / "bundle").exists()
 
 
 def test_prepare_exhaustively_verifies_before_publication(

@@ -17,12 +17,17 @@ Use the watcher script by default:
 ```sh
 uv run --no-project python scripts/build_db_watch.py \
   --slug <short-task-name> \
-  --input-dir /Users/adam/Code/registry-research-toolkit/reg_meta_build/input_data
+  --input-bundle /Users/adam/Code/registry-research-toolkit/.local/catalog-inputs/bundles/accepted \
+  --input-commit <accepted-full-commit> \
+  --input-manifest-sha256 <catalog-bundle-json-sha256>
 ```
 
-The script writes a timestamped `/tmp/<slug>.log`, builds into scratch paths, copies
-`reg_meta_build/fqid_slugs/` before passing `--slug-dir`, enables `--timing`, emits
-sparse milestones plus quiet-period health, and runs `integrity_check`,
+The exact commit and manifest pins come from the maintainer's acceptance record; never
+substitute a branch name or infer a newer commit. The input path is an ignored, separate
+host-local Git repository with no remote. The script writes a timestamped
+`/tmp/<slug>.log`, builds into scratch paths, lets `build-db` copy the selected bundle's
+mutable slug inputs to its per-run workspace, enables `--timing`, emits sparse
+milestones plus quiet-period health, and runs `integrity_check`,
 `foreign_key_check`, key table counts, and optional dbdiff after a successful build. It
 uses the SCB value prestage cache by default when SCB is in the provider set.
 
@@ -45,16 +50,20 @@ requests.
 
 ## Inputs
 
-From a worktree, use the main checkout's real seed unless the worktree has the full
-untracked corpus:
+Routine and verification builds select the complete accepted bundle:
 
 ```sh
---input-dir /Users/adam/Code/registry-research-toolkit/reg_meta_build/input_data
+--input-bundle /Users/adam/Code/registry-research-toolkit/.local/catalog-inputs/bundles/accepted \
+--input-commit <accepted-full-commit> \
+--input-manifest-sha256 <catalog-bundle-json-sha256>
 ```
 
-If the PR changes tracked `reg_meta_build/input_data/**`, build an overlay input root
-that presents the main checkout's untracked seed plus the PR-head tracked inputs,
-including mirrored deletions/renames, and pass that overlay as `--input-dir`.
+If a PR changes tracked provider inputs, curation, or global slug state, prepare a new
+candidate from those exact bytes with `prepare-input-bundle`, inspect and explicitly
+commit it in the local input repository, then use its new pins. Preparation never
+overwrites or commits accepted data and never creates a remote. Do not overlay loose
+files onto an accepted bundle. `--input-dir` is reserved for explicit raw source
+preparation/testing, not routine selection.
 
 For a full global rebuild, omit `--providers`. Use `--providers` only for deliberately
 scoped investigation. Use `--no-validate` only for throwaway profiling; merge/release
@@ -99,7 +108,9 @@ small DB delta is intended.
 ```sh
 uv run --no-project python scripts/build_db_watch.py \
   --slug <short-task-name> \
-  --input-dir /Users/adam/Code/registry-research-toolkit/reg_meta_build/input_data \
+  --input-bundle /Users/adam/Code/registry-research-toolkit/.local/catalog-inputs/bundles/accepted \
+  --input-commit <accepted-full-commit> \
+  --input-manifest-sha256 <catalog-bundle-json-sha256> \
   --dbdiff-against <baseline-reg_meta.db>
 ```
 

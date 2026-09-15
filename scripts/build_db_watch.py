@@ -4,7 +4,8 @@
 This is agent tooling, not part of the package runtime. It keeps the fragile
 full-corpus rebuild workflow in one place: scratch DB dir, copied slug TOMLs,
 timestamped log, sparse milestone output, quiet-period process health, and
-post-build SQLite checks.
+post-build SQLite checks. Pinned bundles copy mutable slug inputs inside build-db;
+the watcher copies repository slugs only for explicit raw mode.
 """
 
 from __future__ import annotations
@@ -190,6 +191,26 @@ def providers_include_scb(providers: str | None) -> bool:
 
 def prepare_paths(args: argparse.Namespace, root: Path) -> RunPaths:
     slug = args.slug or slug_stamp()
+    input_repo: Path | None = None
+    if args.input_bundle:
+        proc = subprocess.run(
+            [
+                "git",
+                "-C",
+                str(Path(args.input_bundle).expanduser()),
+                "rev-parse",
+                "--show-toplevel",
+            ],
+            check=True,
+            text=True,
+            capture_output=True,
+        )
+        input_repo = Path(proc.stdout.strip()).resolve()
+        tmp_root = Path(args.tmp_dir).expanduser().resolve()
+        if tmp_root == input_repo or tmp_root.is_relative_to(input_repo):
+            raise ValueError(
+                "--tmp-dir must stay outside the accepted input repository"
+            )
     created_db_dir = args.db_dir is None
     db_dir = (
         Path(args.db_dir)
@@ -215,7 +236,10 @@ def prepare_paths(args: argparse.Namespace, root: Path) -> RunPaths:
         else None
     )
 
-    if args.slug_dir:
+    if args.input_bundle:
+        slug_dir = None
+        created_slug_dir = False
+    elif args.slug_dir:
         slug_dir = Path(args.slug_dir).expanduser().resolve()
         created_slug_dir = False
     elif args.use_repo_slug_dir:
@@ -240,6 +264,25 @@ def prepare_paths(args: argparse.Namespace, root: Path) -> RunPaths:
             / "scb-value-prestage.sqlite"
         )
 
+    if input_repo is not None:
+        destinations = {
+            "database output": db_dir,
+            "log": log_path,
+            "summary": summary_path,
+            "dbdiff report": dbdiff_path,
+            "prestage cache": prestage_cache,
+        }
+        conflicts = [
+            f"{label}={path}"
+            for label, path in destinations.items()
+            if path is not None
+            and (path == input_repo or path.is_relative_to(input_repo))
+        ]
+        if conflicts:
+            raise ValueError(
+                "build outputs must stay outside the accepted input repository: "
+                + ", ".join(conflicts)
+            )
     log_path.parent.mkdir(parents=True, exist_ok=True)
     summary_path.parent.mkdir(parents=True, exist_ok=True)
     if dbdiff_path is not None:
@@ -267,9 +310,20 @@ def build_command(args: argparse.Namespace, paths: RunPaths) -> list[str]:
         "--db",
         str(paths.db_dir),
         "build-db",
-        "--input-dir",
-        str(Path(args.input_dir).expanduser()),
     ]
+    if args.input_bundle:
+        cmd.extend(
+            [
+                "--input-bundle",
+                str(Path(args.input_bundle).expanduser()),
+                "--input-commit",
+                args.input_commit,
+                "--input-manifest-sha256",
+                args.input_manifest_sha256,
+            ]
+        )
+    else:
+        cmd.extend(["--input-dir", str(Path(args.input_dir).expanduser())])
     if paths.slug_dir is not None:
         cmd.extend(["--slug-dir", str(paths.slug_dir)])
     if args.no_validate:
@@ -490,8 +544,15 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
         description="Run reg-meta-build build-db with timestamped logs and post-build checks."
     )
     parser.add_argument(
-        "--input-dir", required=True, help="Real or overlay input_data root."
+        "--input-dir",
+        default=None,
+        help="Explicit raw preparation/testing input_data root.",
     )
+    parser.add_argument(
+        "--input-bundle", default=None, help="Complete accepted catalog bundle."
+    )
+    parser.add_argument("--input-commit", default=None)
+    parser.add_argument("--input-manifest-sha256", default=None)
     parser.add_argument(
         "--db-dir",
         default=None,
@@ -582,7 +643,20 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
         action="store_true",
         help="Remove scratch DB and copied slugs after checks pass.",
     )
-    return parser.parse_args(argv)
+    args = parser.parse_args(argv)
+    bundle = (args.input_bundle, args.input_commit, args.input_manifest_sha256)
+    bundle_options_present = tuple(value is not None for value in bundle)
+    if any(bundle_options_present) and (
+        not all(bundle_options_present) or not all(bundle)
+    ):
+        parser.error(
+            "--input-bundle, --input-commit, and --input-manifest-sha256 are required together"
+        )
+    if (args.input_dir is None) == (args.input_bundle is None):
+        parser.error("select exactly one of --input-dir or --input-bundle")
+    if args.input_bundle and (args.slug_dir or args.use_repo_slug_dir):
+        parser.error("a pinned input bundle cannot be combined with slug overrides")
+    return args
 
 
 def main(argv: list[str] | None = None) -> int:

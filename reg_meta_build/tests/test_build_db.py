@@ -18,9 +18,11 @@ from _csv_fixtures import (
     VARDEMANGDER_ROWS,
     _ri_row,
     _var_row,
-    repin_scb_snapshot,
+    repin_input_bundle,
     timeseries_row,
     write_csv,
+    write_input_bundle,
+    write_input_bundle_from_snapshot,
     write_scb_input,
     write_scb_snapshot,
 )
@@ -41,6 +43,7 @@ from reg_meta_build.db import (
     build_db,
 )
 from reg_meta_build.dbdiff import TableIgnore, diff_db_content
+from reg_meta_build.input_snapshot import open_input_bundle
 from reg_meta_build.sources.scb import _canon_data_type
 
 from reg_meta_build.fqid_slugs import slug_dir_curates_canonical_scb
@@ -160,7 +163,7 @@ class TestBuildDb:
             db_dir=db_dir,
             skip_classifications=True,
             skip_slugs=True,
-            pre_rename_hook=lambda p: open_db(p).close(),
+            pre_rename_hook=lambda p, _slugs: open_db(p).close(),
         )
 
         orphans = sorted(p.name for p in db_dir.iterdir() if ".db.tmp" in p.name)
@@ -173,6 +176,125 @@ class TestBuildDb:
         row_counts = json.loads(manifest["row_counts"])
         assert "period_family_merges" in row_counts
         assert "monthly_family_merges" not in row_counts
+
+    def test_complete_bundle_build_records_identity_without_loose_fallback(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        from reg_meta_build import db as db_module
+
+        input_dir = tmp_path / "input"
+        scb_dir = write_scb_input(input_dir)
+        auxiliary = scb_dir / "Tabelldefinitioner.sql"
+        auxiliary.write_text("-- fixture auxiliary\n", encoding="utf-8")
+        selection = write_input_bundle(tmp_path / "accepted", input_dir)
+
+        def reject_repo_fallback(*_args: object, **_kwargs: object) -> None:
+            raise AssertionError(
+                "pinned builds must not read builder-checkout curation"
+            )
+
+        monkeypatch.setattr(db_module, "repo_curation_path", reject_repo_fallback)
+        monkeypatch.setattr(db_module, "repo_slug_dir", reject_repo_fallback)
+        result = build_db(
+            input_dir=None,
+            input_bundle=selection,
+            db_dir=tmp_path / "db",
+            skip_classifications=True,
+            skip_slugs=True,
+        )
+
+        bundle = open_input_bundle(selection)
+        assert result["catalog_input_bundle"] == bundle.provenance
+        conn = open_db(Path(result["db_path"]))
+        try:
+            manifest = get_manifest(conn)
+        finally:
+            conn.close()
+        assert json.loads(manifest["catalog_input_bundle"]) == bundle.provenance
+        checksums = json.loads(manifest["source_checksums"])
+        assert (
+            checksums["Vardemangder.csv"]
+            == hashlib.sha256((scb_dir / "Vardemangder.csv").read_bytes()).hexdigest()
+        )
+        assert result["slug_changes"] == {"added": [], "changed": [], "removed": []}
+
+    def test_bundle_rejects_loose_overrides_and_output_inside_input_repo(
+        self, tmp_path: Path
+    ) -> None:
+        input_dir = tmp_path / "input"
+        write_scb_input(input_dir)
+        selection = write_input_bundle(tmp_path / "accepted", input_dir)
+
+        with pytest.raises(RegMetaError) as mixed:
+            build_db(
+                input_dir=input_dir,
+                input_bundle=selection,
+                db_dir=tmp_path / "db-mixed",
+                skip_classifications=True,
+                skip_slugs=True,
+            )
+        assert mixed.value.code == "catalog_input_selection_ambiguous"
+
+        with pytest.raises(RegMetaError) as conflict:
+            build_db(
+                input_dir=None,
+                input_bundle=selection,
+                db_dir=selection.path.parent / "output",
+                skip_classifications=True,
+                skip_slugs=True,
+            )
+        assert conflict.value.code == "catalog_input_output_conflict"
+        assert not (selection.path.parent / "output").exists()
+        open_input_bundle(selection)
+
+    def test_failed_bundle_build_leaves_accepted_repo_clean(
+        self, tmp_path: Path
+    ) -> None:
+        input_dir = tmp_path / "input"
+        write_scb_input(input_dir)
+        selection = write_input_bundle(tmp_path / "accepted", input_dir)
+
+        def fail_validation(_db: Path, _slugs: Path | None) -> None:
+            raise RuntimeError("fixture validation failure")
+
+        with pytest.raises(RuntimeError, match="fixture validation failure"):
+            build_db(
+                input_dir=None,
+                input_bundle=selection,
+                db_dir=tmp_path / "db",
+                skip_classifications=True,
+                skip_slugs=True,
+                pre_rename_hook=fail_validation,
+            )
+        open_input_bundle(selection)
+        assert not (tmp_path / "db" / "reg_meta.db").exists()
+
+    def test_bundle_changed_during_validation_cannot_publish(
+        self, tmp_path: Path
+    ) -> None:
+        input_dir = tmp_path / "input"
+        write_scb_input(input_dir)
+        selection = write_input_bundle(tmp_path / "accepted", input_dir)
+        db_dir = tmp_path / "db"
+        db_dir.mkdir()
+        live = db_dir / "reg_meta.db"
+        live.write_bytes(b"EXISTING-CATALOG")
+
+        def dirty_bundle(_db: Path, _slugs: Path | None) -> None:
+            (selection.path / "catalog-bundle.json").write_bytes(b"changed")
+
+        with pytest.raises(RegMetaError) as exc_info:
+            build_db(
+                input_dir=None,
+                input_bundle=selection,
+                db_dir=db_dir,
+                skip_classifications=True,
+                skip_slugs=True,
+                pre_rename_hook=dirty_bundle,
+            )
+
+        assert exc_info.value.code == "catalog_input_bundle_invalid"
+        assert live.read_bytes() == b"EXISTING-CATALOG"
 
     def test_register_count(self, db_conn: sqlite3.Connection):
         count = db_conn.execute("SELECT COUNT(*) FROM register").fetchone()[0]
@@ -962,15 +1084,16 @@ class TestBuildDbErrors:
     ):
         input_dir = tmp_path / "input"
         scb_dir = write_scb_input(input_dir)
-        selection = write_scb_snapshot(tmp_path / "snapshot-fixture", scb_dir)
+        snapshot = write_scb_snapshot(tmp_path / "snapshot-fixture", scb_dir)
+        selection = write_input_bundle_from_snapshot(input_dir, snapshot)
         manifest = json.loads(
-            (selection.path / "manifest.json").read_text(encoding="utf-8")
+            (snapshot.path / "manifest.json").read_text(encoding="utf-8")
         )
         values = next(
             item for item in manifest["files"] if item["name"] == "Vardemangder.csv"
         )
-        (selection.path / values["records"][0]["path"]).unlink()
-        damaged = repin_scb_snapshot(selection, "missing accepted snapshot artifact")
+        (snapshot.path / values["records"][0]["path"]).unlink()
+        damaged = repin_input_bundle(selection, "missing accepted snapshot artifact")
         db_dir = tmp_path / "db"
         db_dir.mkdir()
         live = db_dir / "reg_meta.db"
@@ -979,28 +1102,29 @@ class TestBuildDbErrors:
 
         with pytest.raises(RegMetaError) as exc_info:
             build_db(
-                input_dir=input_dir,
+                input_dir=None,
                 db_dir=db_dir,
                 skip_classifications=True,
                 skip_slugs=True,
-                scb_snapshot=damaged,
+                input_bundle=damaged,
             )
 
-        assert exc_info.value.code == "scb_snapshot_invalid"
+        assert exc_info.value.code == "catalog_input_bundle_invalid"
         assert "normalized file inventory mismatch" in exc_info.value.message
         assert live.read_bytes() == live_bytes
 
     def test_consumed_snapshot_error_preserves_existing_catalog(self, tmp_path: Path):
         input_dir = tmp_path / "input"
         scb_dir = write_scb_input(input_dir)
-        selection = write_scb_snapshot(tmp_path / "snapshot-fixture", scb_dir)
-        manifest_path = selection.path / "manifest.json"
+        snapshot = write_scb_snapshot(tmp_path / "snapshot-fixture", scb_dir)
+        selection = write_input_bundle_from_snapshot(input_dir, snapshot)
+        manifest_path = snapshot.path / "manifest.json"
         manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
         values = next(
             item for item in manifest["files"] if item["name"] == "Vardemangder.csv"
         )
         record = values["records"][0]
-        record_path = selection.path / record["path"]
+        record_path = snapshot.path / record["path"]
         lines = record_path.read_text(encoding="utf-8").splitlines()
         fields = lines[0].split("\t")
         fields[1] = "Z" * 22
@@ -1011,7 +1135,17 @@ class TestBuildDbErrors:
             json.dumps(manifest, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
             encoding="utf-8",
         )
-        damaged = repin_scb_snapshot(selection, "dangling accepted value reference")
+        bundle_manifest_path = selection.path / "catalog-bundle.json"
+        bundle_manifest = json.loads(bundle_manifest_path.read_text(encoding="utf-8"))
+        bundle_manifest["scb_manifest_sha256"] = hashlib.sha256(
+            manifest_path.read_bytes()
+        ).hexdigest()
+        bundle_manifest_path.write_text(
+            json.dumps(bundle_manifest, ensure_ascii=False, indent=2, sort_keys=True)
+            + "\n",
+            encoding="utf-8",
+        )
+        damaged = repin_input_bundle(selection, "dangling accepted value reference")
 
         db_dir = tmp_path / "db"
         db_dir.mkdir()
@@ -1020,11 +1154,11 @@ class TestBuildDbErrors:
         live.write_bytes(live_bytes)
         with pytest.raises(RegMetaError) as exc_info:
             build_db(
-                input_dir=input_dir,
+                input_dir=None,
                 db_dir=db_dir,
                 skip_classifications=True,
                 skip_slugs=True,
-                scb_snapshot=damaged,
+                input_bundle=damaged,
             )
 
         assert exc_info.value.code == "scb_snapshot_invalid"
@@ -1282,23 +1416,19 @@ class TestVardemangderDrift:
         ]
         input_dir = tmp_path / "input"
         db_dir = tmp_path / "db"
-        scb_dir = write_scb_input(input_dir, vardemangder_rows=drift_rows)
+        write_scb_input(input_dir, vardemangder_rows=drift_rows)
         selection = (
-            write_scb_snapshot(tmp_path / "snapshot-fixture", scb_dir)
+            write_input_bundle(tmp_path / "snapshot-fixture", input_dir)
             if prepared
             else None
         )
-        build_input = input_dir
-        if selection is not None:
-            build_input = tmp_path / "snapshot-seed"
-            build_input.mkdir()
         with pytest.raises(RegMetaError) as exc_info:
             build_db(
-                input_dir=build_input,
+                input_dir=None if prepared else input_dir,
                 db_dir=db_dir,
                 skip_classifications=True,
                 skip_slugs=True,
-                scb_snapshot=selection,
+                input_bundle=selection,
             )
         assert exc_info.value.code == "vardemangder_drift"
         assert exc_info.value.exit_code == 10
@@ -1320,23 +1450,19 @@ class TestVardemangderDrift:
         ]
         input_dir = tmp_path / "input"
         db_dir = tmp_path / "db"
-        scb_dir = write_scb_input(input_dir, vardemangder_rows=drift_rows)
+        write_scb_input(input_dir, vardemangder_rows=drift_rows)
         selection = (
-            write_scb_snapshot(tmp_path / "snapshot-fixture", scb_dir)
+            write_input_bundle(tmp_path / "snapshot-fixture", input_dir)
             if prepared
             else None
         )
-        build_input = input_dir
-        if selection is not None:
-            build_input = tmp_path / "snapshot-seed"
-            build_input.mkdir()
         with pytest.raises(RegMetaError) as exc_info:
             build_db(
-                input_dir=build_input,
+                input_dir=None if prepared else input_dir,
                 db_dir=db_dir,
                 skip_classifications=True,
                 skip_slugs=True,
-                scb_snapshot=selection,
+                input_bundle=selection,
             )
         assert exc_info.value.code == "vardemangder_drift"
         assert "'Tal'" in exc_info.value.message
@@ -1546,14 +1672,12 @@ class TestYearProjection:
             PIPE.join(["8003", "2030-01-01", "2099-12-31"]),
         ]
         raw_input = _projection_input(tmp_path / "raw-source", rows, valid)
-        selection = write_scb_snapshot(tmp_path / "snapshot-fixture", raw_input / "SCB")
-        snapshot_seed = tmp_path / "snapshot-seed"
-        snapshot_seed.mkdir()
+        selection = write_input_bundle(tmp_path / "snapshot-fixture", raw_input)
 
         dbs = []
-        for name, input_dir, snapshot in (
+        for name, input_dir, bundle in (
             ("raw", raw_input, None),
-            ("prepared", snapshot_seed, selection),
+            ("prepared", None, selection),
         ):
             db_dir = tmp_path / f"db-{name}"
             build_db(
@@ -1561,7 +1685,7 @@ class TestYearProjection:
                 db_dir=db_dir,
                 skip_classifications=True,
                 skip_slugs=True,
-                scb_snapshot=snapshot,
+                input_bundle=bundle,
             )
             dbs.append(db_dir / "reg_meta.db")
 
@@ -1578,7 +1702,8 @@ class TestYearProjection:
             ignore={
                 "import_manifest": TableIgnore(
                     skip_where=(
-                        "key IN ('import_date', 'input_dir', 'scb_input_snapshot')"
+                        "key IN ('import_date', 'input_dir', 'scb_input_snapshot', "
+                        "'catalog_input_bundle')"
                     )
                 )
             },
@@ -1696,28 +1821,24 @@ class TestYearProjection:
         vm_rows = [PIPE.join(["Kön", "1", "1", "Man", "9001", "8006"])]
         valid = [PIPE.join(["8006", "2030-01-01", "2099-12-31"])]
         input_dir = tmp_path / "input"
-        scb_dir = write_scb_input(
+        write_scb_input(
             input_dir,
             registerinformation_rows=ri_rows,
             vardemangder_rows=vm_rows,
             valid_dates_rows=valid,
         )
         selection = (
-            write_scb_snapshot(tmp_path / "snapshot-fixture", scb_dir)
+            write_input_bundle(tmp_path / "snapshot-fixture", input_dir)
             if prepared
             else None
         )
-        build_input = input_dir
-        if selection is not None:
-            build_input = tmp_path / "snapshot-seed"
-            build_input.mkdir()
         db_dir = tmp_path / "db"
         build_db(
-            input_dir=build_input,
+            input_dir=None if prepared else input_dir,
             db_dir=db_dir,
             skip_classifications=True,
             skip_slugs=True,
-            scb_snapshot=selection,
+            input_bundle=selection,
         )
         conn = open_db(db_dir / "reg_meta.db")
         # The yearless cvid 9001 lands in its own synthetic register (id 9,

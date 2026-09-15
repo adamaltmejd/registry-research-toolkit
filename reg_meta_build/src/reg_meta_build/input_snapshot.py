@@ -1,10 +1,10 @@
-"""Lossless, versioned snapshots of SCB machine-readable CSV deliveries.
+"""Versioned catalog-input bundles and lossless SCB CSV snapshots.
 
-This module condenses a coherent CSV delivery into deterministic, reviewable text files,
-exposes a lightweight reader for an accepted snapshot on the normal build path, and can
-reconstruct the same ordered logical records without consulting the retained raw
-archive.  Provider interpretation (encoding repair, filtering, projection, coalescing,
-and curation) stays in :mod:`reg_meta_build.sources.scb`.
+This module selects every ordinary catalog-build input at one accepted local Git
+revision. It also condenses a coherent SCB delivery into deterministic, reviewable text
+files and can reconstruct the same ordered logical records without consulting the
+retained raw archive. Provider interpretation (encoding repair, filtering, projection,
+coalescing, and curation) stays in the existing loaders and adapters.
 
 The archive contract is logical-record losslessness, not original-CSV byte identity.
 The independently retained archive remains the authority for delimiters, quoting, and
@@ -37,7 +37,7 @@ from urllib.parse import quote
 
 from pydantic import BaseModel, ConfigDict, field_validator, model_validator
 
-from .db import _file_sha256
+from .db import _CURATED_PROVIDERS, _file_sha256
 from .dbdiff import TableIgnore, diff_db_content, format_report
 
 if TYPE_CHECKING:
@@ -49,6 +49,31 @@ CONVERTER_VERSION = 1
 SERIALIZATION = "escaped-tsv-v1"
 CHUNK_RECORDS = 100_000
 MANIFEST_NAME = "manifest.json"
+BUNDLE_MANIFEST_NAME = "catalog-bundle.json"
+BUNDLE_SCHEMA_VERSION = 1
+
+CATALOG_CURATION_FILES = (
+    "alias_windows.toml",
+    "cis2014-matrix-meaning-evidence.json",
+    "cis2016-matrix-meaning-evidence.json",
+    "classifications.toml",
+    "codeless_overlap.toml",
+    "codelivery.toml",
+    "concept_groups.auto.toml",
+    "concept_groups.toml",
+    "delivery_enrichment.generated.toml",
+    "lineage.toml",
+    "period_family_merges.toml",
+    "relations.toml",
+    "scb_errata.toml",
+    "tags.toml",
+)
+CATALOG_SLUG_PROVIDERS = (
+    "scb",
+    "sos",
+    *(provider for provider, _directory in _CURATED_PROVIDERS),
+)
+_BUNDLE_INVENTORY_ROOTS = ("catalog", "curation", "fqid_slugs")
 
 _GIT_PACK_SETTINGS = (
     ("core.compression", "9"),
@@ -436,6 +461,74 @@ class BuildLock(_Model):
         return self
 
 
+class BundleFile(_Model):
+    path: str
+    present: bool
+    size: int | None = None
+    sha256: str | None = None
+
+    @field_validator("path")
+    @classmethod
+    def _safe_path(cls, value: str) -> str:
+        path = Path(value)
+        if (
+            path.is_absolute()
+            or ".." in path.parts
+            or len(path.parts) < 2
+            or path.parts[0] not in _BUNDLE_INVENTORY_ROOTS
+        ):
+            raise ValueError(
+                "bundle file path must stay under catalog/, curation/, or fqid_slugs/"
+            )
+        return path.as_posix()
+
+    @model_validator(mode="after")
+    def _valid_presence(self) -> Self:
+        if self.present:
+            if self.size is None or self.size < 0 or self.sha256 is None:
+                raise ValueError("present bundle file requires size and sha256")
+            if not _HASH_RE.fullmatch(self.sha256):
+                raise ValueError("bundle file sha256 must be lowercase hexadecimal")
+        elif self.size is not None or self.sha256 is not None:
+            raise ValueError("absent bundle file cannot carry size or sha256")
+        return self
+
+
+class CatalogBundleManifest(_Model):
+    format: Literal["reg-meta-build-catalog-input-bundle"]
+    schema_version: int
+    bundle_id: str
+    edition: str
+    scb_snapshot_path: str
+    scb_manifest_sha256: str
+    files: tuple[BundleFile, ...]
+
+    @field_validator("scb_snapshot_path")
+    @classmethod
+    def _safe_snapshot_path(cls, value: str) -> str:
+        path = Path(value)
+        if path.is_absolute() or ".." in path.parts or value in {"", "."}:
+            raise ValueError(
+                "scb_snapshot_path must be a non-empty repository-relative path"
+            )
+        return path.as_posix()
+
+    @model_validator(mode="after")
+    def _supported_and_coherent(self) -> Self:
+        if self.schema_version != BUNDLE_SCHEMA_VERSION:
+            raise ValueError(
+                f"unsupported catalog bundle schema version {self.schema_version}"
+            )
+        if not _HASH_RE.fullmatch(self.scb_manifest_sha256):
+            raise ValueError("scb_manifest_sha256 must be a lowercase SHA256 value")
+        paths = [item.path for item in self.files]
+        if len(paths) != len(set(paths)):
+            raise ValueError("catalog bundle file paths must be unique")
+        if paths != sorted(paths):
+            raise ValueError("catalog bundle file paths must be sorted")
+        return self
+
+
 @dataclass(frozen=True)
 class SnapshotStats:
     raw_bytes: int
@@ -451,6 +544,45 @@ class ScbSnapshotSelection:
 
     path: Path
     input_commit: str
+    manifest_sha256: str
+
+
+@dataclass(frozen=True)
+class CatalogBundleSelection:
+    """An explicitly pinned complete catalog input selected for ``build_db``."""
+
+    path: Path
+    input_commit: str
+    manifest_sha256: str
+
+
+@dataclass(frozen=True)
+class CatalogBundleReader:
+    """Resolved read-only paths from one accepted catalog input bundle."""
+
+    root: Path
+    repository: Path
+    manifest: CatalogBundleManifest
+    snapshot: ScbSnapshotReader
+    provenance: dict[str, str]
+
+    @property
+    def input_dir(self) -> Path:
+        return self.root / "catalog"
+
+    @property
+    def curation_dir(self) -> Path:
+        return self.root / "curation"
+
+    @property
+    def slug_dir(self) -> Path:
+        return self.root / "fqid_slugs"
+
+
+@dataclass(frozen=True)
+class CatalogBundleStats:
+    files: int
+    bytes: int
     manifest_sha256: str
 
 
@@ -476,7 +608,9 @@ def _json_line(value: object) -> bytes:
     ).encode()
 
 
-def _manifest_bytes(manifest: SnapshotManifest | BuildLock) -> bytes:
+def _manifest_bytes(
+    manifest: SnapshotManifest | CatalogBundleManifest | BuildLock,
+) -> bytes:
     return (
         json.dumps(
             manifest.model_dump(mode="json"),
@@ -1815,14 +1949,17 @@ def _read_committed_manifest(
     return manifest, hashlib.sha256(manifest_bytes).hexdigest()
 
 
-def _verify_committed_inventory(
-    repo: Path, commit: str, snapshot_path: str, manifest: SnapshotManifest
-) -> None:
-    files_path = _snapshot_repo_path(snapshot_path, "files")
-    tree = _git_bytes(repo, "ls-tree", "-r", "-l", "-z", commit, "--", files_path)
-
+def _committed_inventory_sizes(
+    repo: Path,
+    commit: str,
+    base_path: str,
+    roots: Sequence[str],
+    *,
+    context: str,
+) -> dict[str, int]:
+    tree = _git_bytes(repo, "ls-tree", "-r", "-l", "-z", commit, "--", *roots)
     actual: dict[str, int] = {}
-    prefix = f"{snapshot_path}/" if snapshot_path != "." else ""
+    prefix = f"{base_path}/" if base_path != "." else ""
     for entry in tree.split(b"\0"):
         if not entry:
             continue
@@ -1832,10 +1969,23 @@ def _verify_committed_inventory(
             path = raw_path.decode("utf-8")
             size = int(raw_size)
         except (UnicodeDecodeError, ValueError) as exc:
-            raise SnapshotError("invalid Git tree entry in snapshot inventory") from exc
+            raise SnapshotError(f"invalid Git tree entry in {context}") from exc
         if object_type != b"blob" or not path.startswith(prefix):
-            raise SnapshotError(f"invalid Git object in snapshot inventory: {path}")
+            raise SnapshotError(f"invalid Git object in {context}: {path}")
         actual[path.removeprefix(prefix)] = size
+    return actual
+
+
+def _verify_committed_inventory(
+    repo: Path, commit: str, snapshot_path: str, manifest: SnapshotManifest
+) -> None:
+    actual = _committed_inventory_sizes(
+        repo,
+        commit,
+        snapshot_path,
+        (_snapshot_repo_path(snapshot_path, "files"),),
+        context="snapshot inventory",
+    )
 
     expected = {
         normalized.path: normalized.size
@@ -2023,6 +2173,540 @@ def open_scb_snapshot(selection: ScbSnapshotSelection) -> ScbSnapshotReader:
         snapshot_path=snapshot_path,
         manifest_sha256=selection.manifest_sha256,
     )
+
+
+def _fixed_bundle_paths() -> tuple[str, ...]:
+    source_paths = (
+        "catalog/SCB/Tabelldefinitioner.sql",
+        "catalog/SCB/ID-kolumner.xlsx",
+        "catalog/scb_canonical/scb_canonical.toml",
+        *(
+            f"catalog/{directory}/{provider}.toml"
+            for provider, directory in _CURATED_PROVIDERS
+        ),
+    )
+    curation_paths = (f"curation/{name}" for name in CATALOG_CURATION_FILES)
+    slug_paths = (
+        "fqid_slugs/classifications.toml",
+        "fqid_slugs/freeze.toml",
+        "fqid_slugs/.snapshot.json",
+        *(
+            path
+            for provider in CATALOG_SLUG_PROVIDERS
+            for path in (
+                f"fqid_slugs/{provider}.toml",
+                f"fqid_slugs/{provider}.auto.toml",
+            )
+        ),
+    )
+    return (*source_paths, *curation_paths, *slug_paths)
+
+
+def _bundle_source_files(
+    input_dir: Path, curation_dir: Path, slug_dir: Path
+) -> dict[str, Path | None]:
+    """Resolve exactly the files an ordinary catalog build can read."""
+    roots = {
+        "input directory": input_dir,
+        "curation directory": curation_dir,
+        "slug directory": slug_dir,
+    }
+    for label, root in roots.items():
+        if not root.is_dir():
+            raise SnapshotError(f"{label} not found: {root}")
+
+    resolved: dict[str, Path | None] = {}
+    for relative in _fixed_bundle_paths():
+        if relative.startswith("catalog/"):
+            source = input_dir / Path(relative).relative_to("catalog")
+        elif relative.startswith("curation/"):
+            source = curation_dir / Path(relative).relative_to("curation")
+        else:
+            source = slug_dir / Path(relative).relative_to("fqid_slugs")
+        resolved[relative] = source if source.is_file() else None
+
+    sos_dir = input_dir / "Socialstyrelsen"
+    if sos_dir.is_dir():
+        for source in sorted(sos_dir.iterdir()):
+            if (
+                source.is_file()
+                and source.suffix.lower() == ".xlsx"
+                and not source.name.startswith("~$")
+            ):
+                resolved[f"catalog/Socialstyrelsen/{source.name}"] = source
+
+    classification_seed = curation_dir / "classifications.toml"
+    if classification_seed.is_file():
+        from .classifications import load_seed
+
+        for entry in load_seed(classification_seed):
+            name = entry["valid_codes_file"]
+            relative = f"catalog/classifications/{name}"
+            source = input_dir / "classifications" / name
+            resolved[relative] = source if source.is_file() else None
+
+    canonical_toml = input_dir / "scb_canonical" / "scb_canonical.toml"
+    if canonical_toml.is_file():
+        from .sources.curated import CanonicalScbAdapter
+
+        conn = sqlite3.connect(":memory:")
+        try:
+            adapter = CanonicalScbAdapter(
+                conn, classification_seed_path=classification_seed
+            )
+            for name in adapter.referenced_value_sets(canonical_toml.parent):
+                relative = f"catalog/scb_canonical/{name}.csv"
+                source = canonical_toml.parent / f"{name}.csv"
+                resolved[relative] = source if source.is_file() else None
+        finally:
+            conn.close()
+
+    # Slug loading intentionally globs every top-level TOML. Include future
+    # provider files automatically while retaining explicit absence for today's
+    # fixed seed/freeze/auto paths above.
+    for source in sorted(slug_dir.glob("*.toml")):
+        resolved[f"fqid_slugs/{source.name}"] = source
+    return dict(sorted(resolved.items()))
+
+
+def _actual_bundle_files(root: Path) -> dict[str, int]:
+    actual: dict[str, int] = {}
+    for name in _BUNDLE_INVENTORY_ROOTS:
+        directory = root / name
+        if not directory.exists():
+            continue
+        for path in directory.rglob("*"):
+            if path.is_file():
+                actual[path.relative_to(root).as_posix()] = path.stat().st_size
+    return actual
+
+
+def _verify_bundle_inventory(
+    root: Path, manifest: CatalogBundleManifest, *, hashes: bool
+) -> None:
+    expected = {item.path: item for item in manifest.files if item.present}
+    actual = _actual_bundle_files(root)
+    if actual.keys() != expected.keys():
+        raise SnapshotError(
+            "catalog bundle file inventory mismatch; "
+            f"missing={sorted(expected.keys() - actual.keys())}, "
+            f"extra={sorted(actual.keys() - expected.keys())}"
+        )
+    mismatched_sizes = sorted(
+        path for path, item in expected.items() if actual[path] != item.size
+    )
+    if mismatched_sizes:
+        raise SnapshotError(f"catalog bundle file size mismatch: {mismatched_sizes}")
+    if hashes:
+        mismatched_hashes = sorted(
+            path
+            for path, item in expected.items()
+            if _file_sha256(root / path) != item.sha256
+        )
+        if mismatched_hashes:
+            raise SnapshotError(
+                f"catalog bundle file hash mismatch: {mismatched_hashes}"
+            )
+
+
+def _validate_bundle_contract(root: Path) -> None:
+    """Run the existing small-input parsers at preparation/verification time."""
+    from .alias_windows import load_alias_windows
+    from .cis2016_matrix import load_cis2014_matrix, load_cis2016_matrix
+    from .classification_links import load_classification_links
+    from .classifications import load_seed, load_valid_codes
+    from .codeless_overlap import load_codeless_overlap
+    from .codelivery import load_codelivery
+    from .concept_groups import (
+        load_classification_groups,
+        load_code_label_pairs,
+        load_concept_group_accepts,
+        load_concept_groups,
+    )
+    from .delivery_enrichment import load_delivery_enrichment
+    from .fqid_slugs import load_slug_dir, read_snapshot
+    from .period_family_merges import load_period_family_merges
+    from .relations import load_relations
+    from .scb_errata import load_scb_errata
+    from .sources.curated import CanonicalScbAdapter, CuratedAdapter
+    from .sources.sos import parse_directory
+    from .tags import load_tags
+
+    catalog = root / "catalog"
+    curation = root / "curation"
+    slugs = root / "fqid_slugs"
+    seed = curation / "classifications.toml"
+    # Keep the explicit bundle path even when absent: loaders that encounter a
+    # classification reference must fail on that recorded absence, never fall
+    # back to the builder checkout's curation.
+    seed_path = seed
+
+    if seed.is_file():
+        for entry in load_seed(seed_path):
+            load_valid_codes(catalog / "classifications" / entry["valid_codes_file"])
+
+    sos = catalog / "Socialstyrelsen"
+    if sos.is_dir():
+        parse_directory(sos)
+
+    for provider, directory in _CURATED_PROVIDERS:
+        source_dir = catalog / directory
+        if (source_dir / f"{provider}.toml").is_file():
+            list(
+                CuratedAdapter(provider, classification_seed_path=seed_path).emit(
+                    source_dir
+                )
+            )
+
+    canonical_dir = catalog / "scb_canonical"
+    canonical_toml = canonical_dir / "scb_canonical.toml"
+    if canonical_toml.is_file():
+        conn = sqlite3.connect(":memory:")
+        try:
+            adapter = CanonicalScbAdapter(conn, classification_seed_path=seed_path)
+            adapter.validate_source_files(canonical_dir)
+        finally:
+            conn.close()
+
+    if slugs.is_dir():
+        load_slug_dir(slugs)
+        snapshot_path = slugs / ".snapshot.json"
+        if snapshot_path.is_file():
+            read_snapshot(snapshot_path)
+
+    def curation_path(name: str) -> Path | None:
+        path = curation / name
+        return path if path.is_file() else None
+
+    classifications = curation_path("classifications.toml")
+    load_alias_windows(curation_path("alias_windows.toml"))
+    load_classification_links(classifications)
+    load_cis2014_matrix(curation_path("cis2014-matrix-meaning-evidence.json"), slugs)
+    load_cis2016_matrix(curation_path("cis2016-matrix-meaning-evidence.json"), slugs)
+    load_codeless_overlap(curation_path("codeless_overlap.toml"))
+    load_codelivery(curation_path("codelivery.toml"))
+    concept_groups = curation_path("concept_groups.toml")
+    load_concept_groups(concept_groups)
+    load_concept_group_accepts(concept_groups)
+    load_classification_groups(concept_groups)
+    load_code_label_pairs(concept_groups)
+    load_concept_groups(curation_path("concept_groups.auto.toml"))
+    load_delivery_enrichment(curation_path("delivery_enrichment.generated.toml"))
+    load_period_family_merges(curation_path("period_family_merges.toml"))
+    load_relations(curation_path("relations.toml"))
+    load_scb_errata(
+        curation_path("scb_errata.toml"),
+        slugs,
+        classification_seed_path=seed_path,
+    )
+    load_tags(curation_path("tags.toml"))
+
+
+def prepare_input_bundle(
+    input_dir: Path,
+    curation_dir: Path,
+    slug_dir: Path,
+    scb_snapshot: ScbSnapshotSelection,
+    output: Path,
+) -> CatalogBundleStats:
+    """Capture a new byte-preserved catalog-input candidate beside an accepted snapshot."""
+    input_dir = input_dir.expanduser().resolve()
+    curation_dir = curation_dir.expanduser().resolve()
+    slug_dir = slug_dir.expanduser().resolve()
+    output = output.expanduser().resolve()
+    if output.exists():
+        raise SnapshotError(
+            f"candidate path already exists and will not be overwritten: {output}"
+        )
+    if any((parent / BUNDLE_MANIFEST_NAME).is_file() for parent in output.parents):
+        raise SnapshotError(
+            "catalog bundle candidate must stay outside every existing bundle"
+        )
+
+    snapshot = open_scb_snapshot(scb_snapshot)
+    repository = Path(_git(snapshot.root, "rev-parse", "--show-toplevel")).resolve()
+    if not output.is_relative_to(repository) or output == repository:
+        raise SnapshotError(
+            "catalog bundle candidate must be a new directory inside the accepted input repository"
+        )
+    if output == snapshot.root or output.is_relative_to(snapshot.root):
+        raise SnapshotError(
+            "catalog bundle candidate must stay outside the SCB snapshot"
+        )
+    sources = _bundle_source_files(input_dir, curation_dir, slug_dir)
+    missing_references = sorted(
+        path for path, source in sources.items() if source is None
+    )
+    # Fixed optional paths intentionally remain absent. Dynamic classification and
+    # canonical code references, however, were introduced only by a manifest that
+    # requires them and therefore must exist.
+    required_prefixes = ("catalog/classifications/", "catalog/scb_canonical/")
+    required_missing = [
+        path
+        for path in missing_references
+        if path.startswith(required_prefixes)
+        and path != "catalog/scb_canonical/scb_canonical.toml"
+    ]
+    if required_missing:
+        raise SnapshotError(
+            f"referenced catalog input files are missing: {required_missing}"
+        )
+
+    identities = {
+        path: _file_identity(source.stat())
+        for path, source in sources.items()
+        if source is not None
+    }
+    output.parent.mkdir(parents=True, exist_ok=True)
+    staging = Path(
+        tempfile.mkdtemp(prefix=f".{output.name}.candidate-", dir=output.parent)
+    )
+    try:
+        for name in _BUNDLE_INVENTORY_ROOTS:
+            (staging / name).mkdir()
+        files: list[BundleFile] = []
+        for relative, source in sources.items():
+            if source is None:
+                files.append(BundleFile(path=relative, present=False))
+                continue
+            destination = staging / relative
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(source, destination)
+            files.append(
+                BundleFile(
+                    path=relative,
+                    present=True,
+                    size=destination.stat().st_size,
+                    sha256=_file_sha256(destination),
+                )
+            )
+
+        snapshot_path = snapshot.root.relative_to(repository).as_posix()
+        manifest = CatalogBundleManifest(
+            format="reg-meta-build-catalog-input-bundle",
+            schema_version=BUNDLE_SCHEMA_VERSION,
+            bundle_id=snapshot.manifest.bundle_id,
+            edition=snapshot.manifest.edition,
+            scb_snapshot_path=snapshot_path,
+            scb_manifest_sha256=scb_snapshot.manifest_sha256,
+            files=tuple(files),
+        )
+        manifest_bytes = _manifest_bytes(manifest)
+        (staging / BUNDLE_MANIFEST_NAME).write_bytes(manifest_bytes)
+        _verify_bundle_inventory(staging, manifest, hashes=True)
+        _validate_bundle_contract(staging)
+        if verify_snapshot(snapshot.root) != snapshot.manifest:
+            raise SnapshotError(
+                "verified SCB snapshot differs from the selected manifest"
+            )
+        changed = sorted(
+            relative
+            for relative, source in sources.items()
+            if source is not None
+            and _file_identity(source.stat()) != identities[relative]
+        )
+        if changed:
+            raise SnapshotError(
+                f"catalog input files changed during bundle preparation: {changed}"
+            )
+        # The candidate itself makes the repository dirty until acceptance, so
+        # recheck only the already-accepted snapshot subtree here.
+        snapshot_path = snapshot.root.relative_to(repository).as_posix()
+        if _git(repository, "rev-parse", "HEAD") != scb_snapshot.input_commit:
+            raise SnapshotError("input repository commit changed during preparation")
+        if _git(
+            repository,
+            "status",
+            "--porcelain=v1",
+            "--untracked-files=all",
+            "--",
+            snapshot_path,
+        ):
+            raise SnapshotError("accepted SCB snapshot changed during preparation")
+        staging.replace(output)
+        return CatalogBundleStats(
+            files=sum(item.present for item in files),
+            bytes=sum(item.size or 0 for item in files) + len(manifest_bytes),
+            manifest_sha256=hashlib.sha256(manifest_bytes).hexdigest(),
+        )
+    except Exception:
+        shutil.rmtree(staging, ignore_errors=True)
+        raise
+
+
+def _read_committed_bundle_manifest(
+    repo: Path, commit: str, bundle_path: str
+) -> tuple[CatalogBundleManifest, bytes, str]:
+    path = _snapshot_repo_path(bundle_path, BUNDLE_MANIFEST_NAME)
+    payload = _git_bytes(repo, "cat-file", "blob", f"{commit}:{path}")
+    try:
+        manifest = CatalogBundleManifest.model_validate_json(payload)
+    except ValueError as exc:
+        raise SnapshotError(
+            f"invalid catalog bundle manifest in pinned commit: {exc}"
+        ) from exc
+    return manifest, payload, hashlib.sha256(payload).hexdigest()
+
+
+def _verify_committed_bundle_inventory(
+    repo: Path,
+    commit: str,
+    bundle_path: str,
+    manifest: CatalogBundleManifest,
+) -> None:
+    roots = [_snapshot_repo_path(bundle_path, name) for name in _BUNDLE_INVENTORY_ROOTS]
+    actual = _committed_inventory_sizes(
+        repo,
+        commit,
+        bundle_path,
+        roots,
+        context="catalog bundle",
+    )
+    expected = {item.path: item.size for item in manifest.files if item.present}
+    if actual.keys() != expected.keys():
+        raise SnapshotError(
+            "catalog bundle file inventory mismatch in pinned commit; "
+            f"missing={sorted(expected.keys() - actual.keys())}, "
+            f"extra={sorted(actual.keys() - expected.keys())}"
+        )
+    mismatched = sorted(path for path, size in expected.items() if actual[path] != size)
+    if mismatched:
+        raise SnapshotError(
+            f"catalog bundle file size mismatch in pinned commit: {mismatched}"
+        )
+
+
+def open_input_bundle(selection: CatalogBundleSelection) -> CatalogBundleReader:
+    """Quick-check one accepted complete bundle without hashing its payloads."""
+    if not _GIT_COMMIT_RE.fullmatch(selection.input_commit):
+        raise SnapshotError(
+            "catalog input commit must be a full 40-character lowercase Git commit"
+        )
+    if not _HASH_RE.fullmatch(selection.manifest_sha256):
+        raise SnapshotError(
+            "catalog bundle manifest SHA-256 must be 64 lowercase hexadecimal characters"
+        )
+    root = selection.path.expanduser().resolve()
+    if not root.is_dir():
+        raise SnapshotError(f"catalog input bundle directory not found: {root}")
+    repo = Path(_git(root, "rev-parse", "--show-toplevel")).resolve()
+    try:
+        bundle_path = root.relative_to(repo).as_posix()
+    except ValueError as exc:
+        raise SnapshotError(
+            f"catalog bundle is outside its Git repository: {root}"
+        ) from exc
+    actual_commit = clean_git_commit(repo)
+    if actual_commit != selection.input_commit:
+        raise SnapshotError(
+            "catalog input commit pin mismatch: expected "
+            f"{selection.input_commit}, got {actual_commit}"
+        )
+    committed, committed_bytes, committed_sha256 = _read_committed_bundle_manifest(
+        repo, selection.input_commit, bundle_path
+    )
+    if committed_sha256 != selection.manifest_sha256:
+        raise SnapshotError(
+            "catalog bundle manifest pin mismatch: expected "
+            f"{selection.manifest_sha256}, got {committed_sha256}"
+        )
+    manifest_path = root / BUNDLE_MANIFEST_NAME
+    try:
+        worktree_bytes = manifest_path.read_bytes()
+    except OSError as exc:
+        raise SnapshotError(
+            f"cannot read catalog bundle manifest {manifest_path}: {exc}"
+        ) from exc
+    if hashlib.sha256(worktree_bytes).hexdigest() != selection.manifest_sha256:
+        raise SnapshotError("worktree catalog bundle manifest differs from its pin")
+    try:
+        manifest = CatalogBundleManifest.model_validate_json(worktree_bytes)
+    except ValueError as exc:
+        raise SnapshotError(
+            f"invalid catalog bundle manifest {manifest_path}: {exc}"
+        ) from exc
+    if manifest != committed or worktree_bytes != committed_bytes:
+        raise SnapshotError(
+            "worktree catalog bundle manifest differs from pinned commit"
+        )
+    _verify_committed_bundle_inventory(
+        repo, selection.input_commit, bundle_path, manifest
+    )
+    _verify_bundle_inventory(root, manifest, hashes=False)
+    snapshot = open_scb_snapshot(
+        ScbSnapshotSelection(
+            path=repo / manifest.scb_snapshot_path,
+            input_commit=selection.input_commit,
+            manifest_sha256=manifest.scb_manifest_sha256,
+        )
+    )
+    return CatalogBundleReader(
+        root=root,
+        repository=repo,
+        manifest=manifest,
+        snapshot=snapshot,
+        provenance={
+            "input_repository_commit": selection.input_commit,
+            "bundle_manifest_path": _snapshot_repo_path(
+                bundle_path, BUNDLE_MANIFEST_NAME
+            ),
+            "bundle_manifest_sha256": selection.manifest_sha256,
+        },
+    )
+
+
+def verify_input_bundle(
+    selection: CatalogBundleSelection,
+) -> CatalogBundleManifest:
+    """Exhaustively verify accepted small inputs and the referenced SCB snapshot."""
+    bundle = open_input_bundle(selection)
+    _verify_bundle_inventory(bundle.root, bundle.manifest, hashes=True)
+    _validate_bundle_contract(bundle.root)
+    verified_snapshot = verify_snapshot(bundle.snapshot.root)
+    if verified_snapshot != bundle.snapshot.manifest:
+        raise SnapshotError("verified SCB snapshot differs from the selected manifest")
+    return bundle.manifest
+
+
+def create_slug_workspace(bundle: CatalogBundleReader, parent: Path) -> Path:
+    """Copy only mutable slug TOMLs outside the accepted input repository."""
+    parent = parent.resolve()
+    workspace = Path(tempfile.mkdtemp(prefix="regmeta-slugs-", dir=parent))
+    for item in bundle.manifest.files:
+        if not item.present or not item.path.startswith("fqid_slugs/"):
+            continue
+        source = bundle.root / item.path
+        if source.suffix != ".toml":
+            continue
+        shutil.copy2(source, workspace / source.name)
+    return workspace
+
+
+def slug_workspace_changes(
+    bundle: CatalogBundleReader, workspace: Path
+) -> dict[str, list[str]]:
+    """Describe generated slug changes without mutating accepted inputs."""
+    accepted = {
+        Path(item.path).name: item.sha256
+        for item in bundle.manifest.files
+        if item.present
+        and item.path.startswith("fqid_slugs/")
+        and item.path.endswith(".toml")
+    }
+    actual = {
+        path.name: _file_sha256(path)
+        for path in workspace.glob("*.toml")
+        if path.is_file()
+    }
+    return {
+        "added": sorted(actual.keys() - accepted.keys()),
+        "changed": sorted(
+            name
+            for name in actual.keys() & accepted.keys()
+            if actual[name] != accepted[name]
+        ),
+        "removed": sorted(accepted.keys() - actual.keys()),
+    }
 
 
 def create_build_lock(
@@ -2304,6 +2988,10 @@ def measure_git_history(initial: Path, update: Path) -> dict[str, Any]:
 
 __all__ = [
     "BuildLock",
+    "CatalogBundleManifest",
+    "CatalogBundleReader",
+    "CatalogBundleSelection",
+    "CatalogBundleStats",
     "DeliveryInventory",
     "ScbSnapshotReader",
     "ScbSnapshotSelection",
@@ -2313,14 +3001,19 @@ __all__ = [
     "clean_git_commit",
     "converter_source_commit",
     "create_build_lock",
+    "create_slug_workspace",
     "load_inventory",
     "load_manifest",
     "measure_codec_sample",
     "measure_git_history",
+    "open_input_bundle",
     "open_lossless_csv",
     "open_scb_snapshot",
+    "prepare_input_bundle",
     "prepare_snapshot",
     "restore_snapshot",
+    "slug_workspace_changes",
     "verify_build_lock",
+    "verify_input_bundle",
     "verify_snapshot",
 ]

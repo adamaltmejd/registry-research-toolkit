@@ -31,6 +31,9 @@ Thumbs.db
 
 # Project
 .tmp/
+# Stable host-local accepted catalog-input repository. It is deliberately outside
+# disposable reports/worktrees and never has a product-Git or remote publication path.
+/.local/catalog-inputs/
 
 # Input data (SCB CSVs, Socialstyrelsen metadata, source PDFs — not committed).
 # Listed per-subdirectory so the maintainer-curated classifications/ folder

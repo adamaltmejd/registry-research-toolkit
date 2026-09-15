@@ -82,7 +82,13 @@ from .fqid_slugs import (
     write_entity_key_pins,
     write_snapshot,
 )
-from .input_snapshot import ScbSnapshotSelection
+from .input_snapshot import (
+    CatalogBundleSelection,
+    ScbSnapshotSelection,
+    SnapshotError,
+    prepare_input_bundle,
+    verify_input_bundle,
+)
 from .sources.sos import SosParseError, parse_directory, parse_register_file
 from .split_sibling_suspects import (
     infer_split_sibling_suspects,
@@ -150,25 +156,46 @@ def _build_parser() -> argparse.ArgumentParser:
         "build-db",
         help="Build the metadata DB from SCB inputs (maintainer-only).",
         description=(
-            "Build the metadata database from raw SCB CSV exports or an explicitly\n"
-            "pinned normalized SCB snapshot. This\n"
+            "Build the metadata database from an explicitly pinned complete catalog\n"
+            "input bundle. Raw input remains an explicit preparation/testing mode. This\n"
             "replaces the database entirely (not incremental). End users\n"
             "should use `reg-meta update` to fetch the pre-built DB instead.\n\n"
-            "The input directory must contain:\n"
-            "  <input-dir>/SCB/*.csv             — SCB exports unless a snapshot is selected\n"
+            "Raw mode's input directory must contain:\n"
+            "  <input-dir>/SCB/*.csv             — SCB exports\n"
             "  <input-dir>/classifications/*.csv — canonical classification CSVs (optional)\n\n"
             "Examples:\n"
             "  reg-meta-build build-db --input-dir reg_meta_build/input_data/\n"
             "  reg-meta-build build-db --input-dir reg_meta_build/input_data/ --skip-slugs\n"
-            "  reg-meta-build build-db --input-dir auxiliary-seed/ --scb-snapshot "
-            "inputs/snapshot --scb-input-commit <commit> --scb-manifest-sha256 <sha256>"
+            "  reg-meta-build build-db --input-bundle .local/catalog-inputs/bundles/accepted "
+            "--input-commit <commit> --input-manifest-sha256 <sha256>"
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     build_p.add_argument(
         "--input-dir",
-        required=True,
-        help="Directory containing SCB/ and classifications/ subdirectories.",
+        default=None,
+        help=(
+            "Explicit raw preparation/testing directory containing SCB/ and "
+            "classifications/ subdirectories. Mutually exclusive with --input-bundle."
+        ),
+    )
+    build_p.add_argument(
+        "--input-bundle",
+        default=None,
+        help=(
+            "Accepted catalog bundle directory. Requires --input-commit and "
+            "--input-manifest-sha256 and excludes loose input/slug overrides."
+        ),
+    )
+    build_p.add_argument(
+        "--input-commit",
+        default=None,
+        help="Full Git commit pin for --input-bundle's local input repository.",
+    )
+    build_p.add_argument(
+        "--input-manifest-sha256",
+        default=None,
+        help="SHA-256 pin for --input-bundle/catalog-bundle.json.",
     )
     build_p.add_argument(
         "--slug-dir",
@@ -238,24 +265,6 @@ def _build_parser() -> argparse.ArgumentParser:
         ),
     )
     build_p.add_argument(
-        "--scb-snapshot",
-        default=None,
-        help=(
-            "Normalized SCB snapshot directory. Requires --scb-input-commit and "
-            "--scb-manifest-sha256; never falls back to <input-dir>/SCB/*.csv."
-        ),
-    )
-    build_p.add_argument(
-        "--scb-input-commit",
-        default=None,
-        help="Full Git commit pin for --scb-snapshot's local input repository.",
-    )
-    build_p.add_argument(
-        "--scb-manifest-sha256",
-        default=None,
-        help="SHA-256 pin for --scb-snapshot/manifest.json.",
-    )
-    build_p.add_argument(
         "--refresh-scb-value-prestage-cache",
         action="store_true",
         help=(
@@ -263,6 +272,39 @@ def _build_parser() -> argparse.ArgumentParser:
             "matches. Ignored unless --scb-value-prestage-cache is supplied."
         ),
     )
+
+    prepare_bundle_p = sub.add_parser(
+        "prepare-input-bundle",
+        help="Capture a complete catalog-input candidate (maintainer-only).",
+        description=(
+            "Copy every small machine-readable build input byte-for-byte into a new\n"
+            "candidate beside an already accepted SCB snapshot. The command validates\n"
+            "and hashes the candidate but never adds, commits, publishes, or overwrites it."
+        ),
+    )
+    prepare_bundle_p.add_argument("--input-dir", required=True)
+    prepare_bundle_p.add_argument(
+        "--curation-dir",
+        default=None,
+        help="Catalog curation directory (default: this checkout's curation/).",
+    )
+    prepare_bundle_p.add_argument(
+        "--slug-dir",
+        default=None,
+        help="Global slug directory (default: this checkout's fqid_slugs/).",
+    )
+    prepare_bundle_p.add_argument("--scb-snapshot", required=True)
+    prepare_bundle_p.add_argument("--scb-input-commit", required=True)
+    prepare_bundle_p.add_argument("--scb-manifest-sha256", required=True)
+    prepare_bundle_p.add_argument("--output-dir", required=True)
+
+    verify_bundle_p = sub.add_parser(
+        "verify-input-bundle",
+        help="Exhaustively verify an accepted catalog-input bundle.",
+    )
+    verify_bundle_p.add_argument("--input-bundle", required=True)
+    verify_bundle_p.add_argument("--input-commit", required=True)
+    verify_bundle_p.add_argument("--input-manifest-sha256", required=True)
 
     extend_db_p = sub.add_parser(
         "extend-db",
@@ -879,8 +921,8 @@ def _build_parser() -> argparse.ArgumentParser:
 
 
 def _build_validate_hook(
-    slug_dir: Path | None, *, bootstrap: bool = False
-) -> Callable[[Path], None]:
+    *, bootstrap: bool = False
+) -> Callable[[Path, Path | None], None]:
     """Return a build_db pre_rename_hook that runs the post-build validator
     against the staging DB and raises on failure. Defined as a helper so the
     closure stays narrowly scoped.
@@ -897,7 +939,7 @@ def _build_validate_hook(
     leaves ``slug_dir`` unread, keeping the flag's own promise (see
     ``_check_entity_key_vars_curated``)."""
 
-    def hook(staging_db: Path) -> None:
+    def hook(staging_db: Path, slug_dir: Path | None) -> None:
         validation = validate_built_db(
             staging_db, corpus=True, bootstrap=bootstrap, slug_dir=slug_dir
         )
@@ -930,57 +972,79 @@ def _cmd_build_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     if args.timing:
         os.environ["REG_META_BUILD_TIMING"] = "1"
     db_dir = Path(args.db) if args.db else default_db_dir()
-    # Resolve the curation dir ONCE and feed the SAME value to both `build_db`
-    # and the validate hook so the entity-key curation gate (#546) reads the
-    # exact `[variable]` pins the build loaded. `build_db` itself falls back to
-    # `repo_slug_dir()` when slug_dir is None (db.py: `slug_dir or
-    # repo_slug_dir()`); mirror that here so the gate isn't handed None on the
-    # default invocation (which would silently skip it).
-    slug_dir = (
-        Path(args.slug_dir).expanduser().resolve() if args.slug_dir else repo_slug_dir()
-    )
-
     providers = tuple(p.strip() for p in args.providers.split(",") if p.strip())
 
-    snapshot_values = (
-        args.scb_snapshot,
-        args.scb_input_commit,
-        args.scb_manifest_sha256,
+    bundle_values = (
+        args.input_bundle,
+        args.input_commit,
+        args.input_manifest_sha256,
     )
-    snapshot_options_present = tuple(value is not None for value in snapshot_values)
-    if any(snapshot_options_present) and not all(snapshot_options_present):
+    bundle_options_present = tuple(value is not None for value in bundle_values)
+    if any(bundle_options_present) and (
+        not all(bundle_options_present) or not all(bundle_values)
+    ):
         raise RegMetaError(
             exit_code=EXIT_USAGE,
-            code="scb_snapshot_selection_incomplete",
+            code="catalog_input_selection_incomplete",
             error_class="usage",
             message=(
-                "--scb-snapshot, --scb-input-commit, and "
-                "--scb-manifest-sha256 must be supplied together."
+                "--input-bundle, --input-commit, and "
+                "--input-manifest-sha256 must be supplied together."
             ),
-            remediation="Supply all three snapshot-selection flags or none of them.",
+            remediation="Supply all three bundle-selection flags or none of them.",
         )
-    scb_snapshot = (
-        ScbSnapshotSelection(
-            path=Path(args.scb_snapshot),
-            input_commit=args.scb_input_commit,
-            manifest_sha256=args.scb_manifest_sha256,
+    if args.input_dir is None and not all(bundle_options_present):
+        raise RegMetaError(
+            exit_code=EXIT_USAGE,
+            code="catalog_input_selection_missing",
+            error_class="usage",
+            message="build-db requires either --input-dir or a complete --input-bundle selection.",
+            remediation="Use the pinned bundle for routine builds; reserve --input-dir for raw preparation/testing.",
         )
-        if all(snapshot_options_present)
+    if args.input_dir is not None and any(bundle_options_present):
+        raise RegMetaError(
+            exit_code=EXIT_USAGE,
+            code="catalog_input_selection_ambiguous",
+            error_class="usage",
+            message="--input-dir cannot be combined with a pinned --input-bundle selection.",
+            remediation="Select exactly one input mode.",
+        )
+    if args.input_bundle is not None and args.slug_dir is not None:
+        raise RegMetaError(
+            exit_code=EXIT_USAGE,
+            code="catalog_input_selection_ambiguous",
+            error_class="usage",
+            message="--slug-dir cannot override the slug state captured by --input-bundle.",
+            remediation="Prepare and explicitly accept a new bundle containing the desired slug state.",
+        )
+
+    input_bundle = (
+        CatalogBundleSelection(
+            path=Path(args.input_bundle),
+            input_commit=args.input_commit,
+            manifest_sha256=args.input_manifest_sha256,
+        )
+        if all(bundle_options_present)
         else None
+    )
+    slug_dir = (
+        None
+        if input_bundle is not None
+        else Path(args.slug_dir).expanduser().resolve()
+        if args.slug_dir
+        else repo_slug_dir()
     )
 
     pre_rename_hook = (
-        None
-        if args.no_validate
-        else _build_validate_hook(slug_dir, bootstrap=args.skip_slugs)
+        None if args.no_validate else _build_validate_hook(bootstrap=args.skip_slugs)
     )
     result = build_db(
-        input_dir=Path(args.input_dir),
+        input_dir=Path(args.input_dir) if args.input_dir else None,
         db_dir=db_dir,
         slug_dir=slug_dir,
         skip_slugs=args.skip_slugs,
         providers=providers,
-        scb_snapshot=scb_snapshot,
+        input_bundle=input_bundle,
         scb_value_prestage_cache=(
             Path(args.scb_value_prestage_cache)
             if args.scb_value_prestage_cache
@@ -997,9 +1061,9 @@ def _cmd_build_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
             "skip_slugs": args.skip_slugs,
             "validate": not args.no_validate,
             "providers": list(providers),
-            "scb_snapshot": args.scb_snapshot,
-            "scb_input_commit": args.scb_input_commit,
-            "scb_manifest_sha256": args.scb_manifest_sha256,
+            "input_bundle": args.input_bundle,
+            "input_commit": args.input_commit,
+            "input_manifest_sha256": args.input_manifest_sha256,
             "scb_value_prestage_cache": args.scb_value_prestage_cache,
             "refresh_scb_value_prestage_cache": args.refresh_scb_value_prestage_cache,
         },
@@ -1009,6 +1073,107 @@ def _cmd_build_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
         },
         data=result,
         duration_ms=duration_ms,
+    ), 0
+
+
+def _default_curation_dir() -> Path:
+    path = repo_curation_path("classifications.toml")
+    if path is None:
+        raise RegMetaError(
+            exit_code=EXIT_CONFIG,
+            code="curation_dir_not_found",
+            error_class="configuration",
+            message="Catalog curation directory not found in this checkout.",
+            remediation="Pass --curation-dir explicitly.",
+        )
+    return path.parent
+
+
+def _default_slug_dir() -> Path:
+    path = repo_slug_dir()
+    if path is None:
+        raise RegMetaError(
+            exit_code=EXIT_CONFIG,
+            code="slug_dir_not_found",
+            error_class="configuration",
+            message="Global slug directory not found in this checkout.",
+            remediation="Pass --slug-dir explicitly.",
+        )
+    return path
+
+
+def _cmd_prepare_input_bundle(
+    args: argparse.Namespace,
+) -> tuple[dict[str, Any], int]:
+    start = time.perf_counter()
+    try:
+        stats = prepare_input_bundle(
+            Path(args.input_dir),
+            Path(args.curation_dir) if args.curation_dir else _default_curation_dir(),
+            Path(args.slug_dir) if args.slug_dir else _default_slug_dir(),
+            ScbSnapshotSelection(
+                path=Path(args.scb_snapshot),
+                input_commit=args.scb_input_commit,
+                manifest_sha256=args.scb_manifest_sha256,
+            ),
+            Path(args.output_dir),
+        )
+    except SnapshotError as exc:
+        raise RegMetaError(
+            exit_code=EXIT_CONFIG,
+            code="catalog_input_bundle_invalid",
+            error_class="configuration",
+            message=str(exc),
+            remediation="Fix the candidate inputs; accepted data was not overwritten.",
+        ) from exc
+    data = dataclasses.asdict(stats)
+    data["output_dir"] = str(Path(args.output_dir).expanduser().resolve())
+    data["acceptance"] = (
+        "inspect, verify, then explicitly git add/commit in the local input repository"
+    )
+    return success_envelope(
+        command="prepare-input-bundle",
+        args_payload={"input_dir": args.input_dir, "output_dir": args.output_dir},
+        db_info=None,
+        data=data,
+        duration_ms=int((time.perf_counter() - start) * 1000),
+    ), 0
+
+
+def _cmd_verify_input_bundle(
+    args: argparse.Namespace,
+) -> tuple[dict[str, Any], int]:
+    start = time.perf_counter()
+    selection = CatalogBundleSelection(
+        path=Path(args.input_bundle),
+        input_commit=args.input_commit,
+        manifest_sha256=args.input_manifest_sha256,
+    )
+    try:
+        manifest = verify_input_bundle(selection)
+    except SnapshotError as exc:
+        raise RegMetaError(
+            exit_code=EXIT_CONFIG,
+            code="catalog_input_bundle_invalid",
+            error_class="configuration",
+            message=str(exc),
+            remediation="Restore the accepted checkout or prepare and explicitly accept a new candidate.",
+        ) from exc
+    return success_envelope(
+        command="verify-input-bundle",
+        args_payload={
+            "input_bundle": args.input_bundle,
+            "input_commit": args.input_commit,
+            "input_manifest_sha256": args.input_manifest_sha256,
+        },
+        db_info=None,
+        data={
+            "bundle_id": manifest.bundle_id,
+            "edition": manifest.edition,
+            "files": sum(item.present for item in manifest.files),
+            "status": "verified",
+        },
+        duration_ms=int((time.perf_counter() - start) * 1000),
     ), 0
 
 
@@ -1898,6 +2063,8 @@ COMMAND_DISPATCH: dict[
     str, Callable[[argparse.Namespace], tuple[dict[str, Any], int]]
 ] = {
     "build-db": _cmd_build_db,
+    "prepare-input-bundle": _cmd_prepare_input_bundle,
+    "verify-input-bundle": _cmd_verify_input_bundle,
     "extend-db": _cmd_extend_db,
     "build-docs": _cmd_build_docs,
     "seed-slugs": _cmd_seed_slugs,
@@ -1920,8 +2087,16 @@ COMMAND_DISPATCH: dict[
 
 _COMMAND_OVERVIEW: list[tuple[str, str]] = [
     (
-        "build-db --input-dir DIR",
-        "Build the metadata DB from raw or pinned snapshot SCB inputs.",
+        "build-db --input-bundle DIR --input-commit SHA --input-manifest-sha256 SHA256",
+        "Build the metadata DB from one complete accepted input bundle.",
+    ),
+    (
+        "prepare-input-bundle --input-dir DIR --scb-snapshot DIR ...",
+        "Create and validate a byte-preserved catalog-input candidate.",
+    ),
+    (
+        "verify-input-bundle --input-bundle DIR ...",
+        "Exhaustively verify an accepted catalog-input bundle.",
     ),
     (
         "extend-db --base-db DB [--providers-dir DIR] [--steward S]",

@@ -1460,11 +1460,12 @@ class SOSAdapter:
 
     provider = "sos"
 
-    def __init__(self, conn: Any) -> None:
+    def __init__(self, conn: Any, *, fail_on_parse_error: bool = False) -> None:
         # The connection is bound for API parity with SCBAdapter and so SOS can
         # consult/dedup value tables (INSERT OR IGNORE + read-back) against the
         # rows SCB already wrote. SOS writes NO build-scratch.
         self.conn = conn
+        self.fail_on_parse_error = fail_on_parse_error
         self.source_checksums: dict[str, str] = {}
         self.row_counts: dict[str, int] = {}
         self.coalesce_stats: dict[str, Any] = {}
@@ -1563,6 +1564,8 @@ class SOSAdapter:
             try:
                 reg = parse_register_file(path)
             except SosParseError as exc:
+                if self.fail_on_parse_error:
+                    raise
                 # Unreadable workbook: surface, skip. entity_id 0 (no register
                 # minted yet). The provenance DB records it; the build proceeds.
                 yield IRWarning(
