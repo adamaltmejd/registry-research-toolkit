@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from collections import Counter, defaultdict
+from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING, Literal, Self
 
@@ -36,7 +37,7 @@ if TYPE_CHECKING:
         SupplementalDataset,
     )
 
-INTERPRETATION_ID = "scb-lisa-source-record-inspection-v1"
+INTERPRETATION_ID = "scb-lisa-source-record-inspection-v2"
 SCB_DATASET_ID = "scb-registerinformation"
 OutcomeStatus = Literal[
     "agreement",
@@ -61,12 +62,20 @@ class ComparisonOutcome(_ReportModel):
     edition_scope: TemporalScope
     workbook_record_ids: tuple[str, ...]
     scb_record_ids: tuple[str, ...]
-    applicability: Literal["unresolved_workbook_to_scb_variant"]
-    scb_edition_present: bool | None
+    assumption_ids: tuple[str, ...]
+    scb_edition_present: bool | None = None
     register_variant_ids: tuple[int, ...]
     variable_ids: tuple[int, ...]
     member_ids: tuple[int, ...]
     detail: str
+
+    @model_validator(mode="after")
+    def _identifies_assumptions(self) -> Self:
+        if not self.assumption_ids or len(self.assumption_ids) != len(
+            set(self.assumption_ids)
+        ):
+            raise ValueError("comparison assumptions must be non-empty and unique")
+        return self
 
 
 class InterpretationIssue(_ReportModel):
@@ -90,7 +99,7 @@ class SourceTargetPreview(_ReportModel):
     exact_column: str
     target_field: Literal["column_name"]
     match_policy: Literal[
-        "exact_spelling_then_same_native_variable_for_unknown_field_discovery"
+        "finite_variant_scope_then_exact_spelling_and_same_native_variable_discovery"
     ]
     candidate_variable_ids: tuple[int, ...]
     candidate_variant_ids: tuple[int, ...]
@@ -106,6 +115,8 @@ class SourceTargetPreview(_ReportModel):
     def _count_matches_membership(self) -> Self:
         if self.expected_source_target_count != len(self.target_record_ids):
             raise ValueError("source target count disagrees with target membership")
+        if not self.assumption_ids:
+            raise ValueError("source target preview must identify its assumptions")
         return self
 
 
@@ -141,7 +152,7 @@ class InspectionSummary(_ReportModel):
 
 class SourceInspectionReport(_ReportModel):
     format: Literal["reg-meta-build-source-record-inspection"]
-    schema_version: Literal[1]
+    schema_version: Literal[2]
     diagnostic_only: Literal[True]
     preview_level: Literal["source_target_only"]
     complete: bool
@@ -173,7 +184,156 @@ class SourceInspectionReport(_ReportModel):
             for record in self.source_records
         ):
             raise ValueError("source record references an unreported revision")
+        reported_assumptions = {
+            assumption.assumption_id for assumption in self.assumptions
+        }
+        referenced_assumptions = {
+            assumption_id
+            for outcome in self.comparison_outcomes
+            for assumption_id in outcome.assumption_ids
+        }
+        if self.target_preview is not None:
+            referenced_assumptions.update(self.target_preview.assumption_ids)
+        if not referenced_assumptions <= reported_assumptions:
+            raise ValueError("comparison outcome references an unreported assumption")
         return self
+
+
+@dataclass(frozen=True)
+class _FiniteComparisonAssumption:
+    assumption_id: str
+    workbook_table: str
+    workbook_population: str | None
+    scb_variant_id: int
+    first_year: int
+    last_year: int
+    detail: str
+
+    def allows(self, year: int) -> bool:
+        return self.first_year <= year <= self.last_year
+
+
+_ENTERPRISE_POPULATION = (
+    "Populationen i LISA:s företagstabell är företag med minst 1 sysselsatt "
+    "enligt RAMS/BAS.\n"
+    "1990-2001: 16 år och äldre, 2002-2011: 16-84 år, 2012-: 16-74 år"
+)
+_FINITE_COMPARISON_ASSUMPTIONS = (
+    _FiniteComparisonAssumption(
+        assumption_id="lisa-individual-1990-2009-to-scb-variant-1335",
+        workbook_table="individual",
+        workbook_population=None,
+        scb_variant_id=1335,
+        first_year=1990,
+        last_year=2009,
+        detail=(
+            "Compare the workbook individual table, whose population coordinate is "
+            "unspecified, only with native SCB variant 1335 for 1990-2009."
+        ),
+    ),
+    _FiniteComparisonAssumption(
+        assumption_id="lisa-individual-2010-2024-to-scb-variant-153",
+        workbook_table="individual",
+        workbook_population=None,
+        scb_variant_id=153,
+        first_year=2010,
+        last_year=2024,
+        detail=(
+            "Compare the workbook individual table, whose population coordinate is "
+            "unspecified, only with native SCB variant 153 for 2010-2024."
+        ),
+    ),
+    _FiniteComparisonAssumption(
+        assumption_id="lisa-company-1990-2024-to-scb-variant-152",
+        workbook_table="company",
+        workbook_population=_ENTERPRISE_POPULATION,
+        scb_variant_id=152,
+        first_year=1990,
+        last_year=2024,
+        detail=(
+            "Compare the workbook company table with its declared enterprise "
+            "population only with native SCB variant 152 for 1990-2024."
+        ),
+    ),
+    _FiniteComparisonAssumption(
+        assumption_id="lisa-workplace-1990-2024-to-scb-variant-151",
+        workbook_table="workplace",
+        workbook_population=_ENTERPRISE_POPULATION,
+        scb_variant_id=151,
+        first_year=1990,
+        last_year=2024,
+        detail=(
+            "Compare the workbook workplace table with its declared enterprise "
+            "population only with native SCB variant 151 for 1990-2024."
+        ),
+    ),
+)
+_UNESTABLISHED_SCOPE_ASSUMPTION_ID = "unestablished-workbook-to-scb-variant-scope"
+_SPELLING_CONTINUITY_ASSUMPTION_ID = "same-native-variable-spelling-continuity"
+_CASEFOLD_CANDIDATE_ASSUMPTION_ID = "casefold-spelling-candidate"
+_ASSUMPTION_REPORTS = (
+    *(
+        InspectionAssumption(
+            assumption_id=assumption.assumption_id,
+            status="unresolved",
+            purpose="bound a workbook availability comparison to one native variant",
+            detail=(
+                f"{assumption.detail} This is a diagnostic comparison assumption, "
+                "not an accepted population or identity mapping."
+            ),
+        )
+        for assumption in _FINITE_COMPARISON_ASSUMPTIONS
+    ),
+    InspectionAssumption(
+        assumption_id=_SPELLING_CONTINUITY_ASSUMPTION_ID,
+        status="unresolved",
+        purpose="surface present SCB records whose column_name field is unknown",
+        detail=(
+            "An exact spelling observed on one SCB VarId is used only to find blank "
+            "column-name fields on that VarId within the same finite native-variant "
+            "scope; it is not an identity merge or executable correction selector."
+        ),
+    ),
+    InspectionAssumption(
+        assumption_id=_CASEFOLD_CANDIDATE_ASSUMPTION_ID,
+        status="unresolved",
+        purpose="surface spelling candidates without merging them",
+        detail=(
+            "Case-insensitive spelling is used only to retain candidates in the "
+            "reported finite native-variant scope; exact source spellings and native "
+            "identities remain distinct."
+        ),
+    ),
+    InspectionAssumption(
+        assumption_id=_UNESTABLISHED_SCOPE_ASSUMPTION_ID,
+        status="unresolved",
+        purpose="mark source witnesses outside a supported finite comparison scope",
+        detail=(
+            "No supported workbook table/population, native SCB variant, and finite "
+            "edition relationship applies; witnesses remain source observations and "
+            "cannot establish counterpart availability or edition presence."
+        ),
+    ),
+)
+
+
+def _finite_comparison_assumption(
+    workbook: SourceRecord, year: int
+) -> _FiniteComparisonAssumption | None:
+    table = workbook.subject.variant.name
+    population = workbook.subject.population
+    for assumption in _FINITE_COMPARISON_ASSUMPTIONS:
+        if table != assumption.workbook_table or not assumption.allows(year):
+            continue
+        if assumption.workbook_population is None:
+            if population.status == "unknown":
+                return assumption
+        elif (
+            population.status == "value"
+            and population.name == assumption.workbook_population
+        ):
+            return assumption
+    return None
 
 
 def source_interpreter_commit() -> str:
@@ -285,6 +445,7 @@ def _outcome(
     years: Iterable[int] | None,
     scb_records: Iterable[SourceRecord],
     scb_edition_present: bool | None,
+    assumption_ids: tuple[str, ...],
     detail: str,
 ) -> ComparisonOutcome:
     witnesses = tuple(sorted(scb_records, key=lambda item: item.record_id))
@@ -295,13 +456,14 @@ def _outcome(
             status,
             ",".join(f"{interval.start}:{interval.end}" for interval in scope.intervals)
             or scope.kind,
+            *assumption_ids,
         ),
         status=status,
         column_name=_column(workbook) or "",
         edition_scope=scope,
         workbook_record_ids=(workbook.record_id,),
         scb_record_ids=tuple(item.record_id for item in witnesses),
-        applicability="unresolved_workbook_to_scb_variant",
+        assumption_ids=assumption_ids,
         scb_edition_present=scb_edition_present,
         register_variant_ids=_native_ids(witnesses, "register_variant_id"),
         variable_ids=_native_ids(witnesses, "variable_id"),
@@ -316,6 +478,7 @@ def _source_outcome(
     status: Literal["source_only_observation", "unknown_applicability"],
     workbook_records: Iterable[SourceRecord],
     scb_record: SourceRecord,
+    assumption_ids: tuple[str, ...],
     detail: str,
 ) -> ComparisonOutcome:
     workbook = tuple(sorted(workbook_records, key=lambda item: item.record_id))
@@ -332,7 +495,7 @@ def _source_outcome(
         edition_scope=scope,
         workbook_record_ids=tuple(item.record_id for item in workbook),
         scb_record_ids=(scb_record.record_id,),
-        applicability="unresolved_workbook_to_scb_variant",
+        assumption_ids=assumption_ids,
         scb_edition_present=True if _scope_years(scope) is not None else None,
         register_variant_ids=_native_ids((scb_record,), "register_variant_id"),
         variable_ids=_native_ids((scb_record,), "variable_id"),
@@ -350,40 +513,60 @@ def compare_availability_records(
     """Derive compact scoped availability views while retaining both witnesses."""
     workbook = tuple(workbook_records)
     scb = tuple(scb_records)
-    exact: dict[tuple[str, int], list[SourceRecord]] = defaultdict(list)
-    folded: dict[tuple[str, int], list[SourceRecord]] = defaultdict(list)
-    unknown_by_variable_year: dict[tuple[int, int], list[SourceRecord]] = defaultdict(
-        list
+    exact: dict[tuple[int, str, int], list[SourceRecord]] = defaultdict(list)
+    folded: dict[tuple[int, str, int], list[SourceRecord]] = defaultdict(list)
+    exact_any: dict[tuple[str, int], list[SourceRecord]] = defaultdict(list)
+    folded_any: dict[tuple[str, int], list[SourceRecord]] = defaultdict(list)
+    unknown_by_variable_year: dict[tuple[int, int, int], list[SourceRecord]] = (
+        defaultdict(list)
     )
-    variable_ids_by_column: dict[str, set[int]] = defaultdict(set)
     all_exact: dict[str, list[SourceRecord]] = defaultdict(list)
     unscoped_exact: dict[str, list[SourceRecord]] = defaultdict(list)
     unscoped_folded: dict[str, list[SourceRecord]] = defaultdict(list)
-    unscoped_unknown_by_variable: dict[int, list[SourceRecord]] = defaultdict(list)
-    edition_years: set[int] = set()
+    unscoped_unknown_by_variable: dict[tuple[int, int], list[SourceRecord]] = (
+        defaultdict(list)
+    )
+    edition_years: set[tuple[int, int]] = set()
+    variable_ids_by_assumption_column: dict[tuple[str, str], set[int]] = defaultdict(
+        set
+    )
+    variable_ids_by_variant_column: dict[tuple[int, str], set[int]] = defaultdict(set)
 
     for record in scb:
         years = _scope_years(record.edition_scope)
         column = _column(record)
+        variant_id = record.subject.native.register_variant_id
         variable_id = record.subject.native.variable_id
         if column is not None:
             all_exact[column].append(record)
-            if variable_id is not None:
-                variable_ids_by_column[column].add(variable_id)
+            if variant_id is not None and variable_id is not None:
+                variable_ids_by_variant_column[variant_id, column].add(variable_id)
         if years is None:
             if column is not None:
                 unscoped_exact[column].append(record)
                 unscoped_folded[column.casefold()].append(record)
-            elif variable_id is not None:
-                unscoped_unknown_by_variable[variable_id].append(record)
+            elif variant_id is not None and variable_id is not None:
+                unscoped_unknown_by_variable[variant_id, variable_id].append(record)
             continue
         for year in years:
-            edition_years.add(year)
+            if variant_id is not None:
+                edition_years.add((variant_id, year))
             if column is not None:
-                exact[column, year].append(record)
-                folded[column.casefold(), year].append(record)
-            elif variable_id is not None:
-                unknown_by_variable_year[variable_id, year].append(record)
+                exact_any[column, year].append(record)
+                folded_any[column.casefold(), year].append(record)
+                if variant_id is not None:
+                    exact[variant_id, column, year].append(record)
+                    folded[variant_id, column.casefold(), year].append(record)
+            elif variant_id is not None and variable_id is not None:
+                unknown_by_variable_year[variant_id, variable_id, year].append(record)
+        if column is not None and variant_id is not None and variable_id is not None:
+            for assumption in _FINITE_COMPARISON_ASSUMPTIONS:
+                if assumption.scb_variant_id == variant_id and any(
+                    assumption.allows(year) for year in years
+                ):
+                    variable_ids_by_assumption_column[
+                        assumption.assumption_id, column
+                    ].add(variable_id)
 
     outcomes: list[ComparisonOutcome] = []
     for documented in workbook:
@@ -399,6 +582,7 @@ def compare_availability_records(
                     years=None,
                     scb_records=all_exact.get(column, ()),
                     scb_edition_present=None,
+                    assumption_ids=(_UNESTABLISHED_SCOPE_ASSUMPTION_ID,),
                     detail=(
                         "the workbook declaration has no annual edition scope; exact "
                         "SCB spellings are retained without inferring variant applicability"
@@ -408,15 +592,72 @@ def compare_availability_records(
             continue
 
         grouped: dict[
-            tuple[OutcomeStatus, bool | None, str],
+            tuple[OutcomeStatus, bool | None, str, tuple[str, ...]],
             tuple[list[int], dict[str, SourceRecord]],
         ] = {}
         for year in years:
-            candidates = tuple(exact.get((column, year), ()))
+            assumption = _finite_comparison_assumption(documented, year)
+            candidates: tuple[SourceRecord, ...] = ()
             status: OutcomeStatus
             detail: str
-            if candidates:
-                present: bool | None = True
+            assumption_ids: tuple[str, ...]
+            if assumption is None:
+                casefold_candidates = tuple(
+                    item
+                    for item in folded_any.get((column.casefold(), year), ())
+                    if _column(item) != column
+                )
+                unscoped_casefold_candidates = tuple(
+                    item
+                    for item in unscoped_folded.get(column.casefold(), ())
+                    if _column(item) != column
+                )
+                candidate_map = {
+                    record.record_id: record
+                    for record in (
+                        *exact_any.get((column, year), ()),
+                        *casefold_candidates,
+                        *unscoped_exact.get(column, ()),
+                        *unscoped_casefold_candidates,
+                    )
+                }
+                continuity = False
+                for (
+                    variant_id,
+                    known_column,
+                ), variable_ids in variable_ids_by_variant_column.items():
+                    if known_column != column:
+                        continue
+                    for variable_id in variable_ids:
+                        for item in (
+                            *unknown_by_variable_year.get(
+                                (variant_id, variable_id, year), ()
+                            ),
+                            *unscoped_unknown_by_variable.get(
+                                (variant_id, variable_id), ()
+                            ),
+                        ):
+                            candidate_map[item.record_id] = item
+                            continuity = True
+                candidates = tuple(candidate_map.values())
+                assumption_ids = (_UNESTABLISHED_SCOPE_ASSUMPTION_ID,)
+                if casefold_candidates or unscoped_casefold_candidates:
+                    assumption_ids += (_CASEFOLD_CANDIDATE_ASSUMPTION_ID,)
+                if continuity:
+                    assumption_ids += (_SPELLING_CONTINUITY_ASSUMPTION_ID,)
+                status = "unknown_applicability"
+                present = None
+                detail = (
+                    "the workbook table, population, or finite edition has no "
+                    "supported SCB variant comparison assumption; relevant spelling "
+                    "and native-variable candidates are retained without matching"
+                )
+            else:
+                variant_id = assumption.scb_variant_id
+                assumption_ids = (assumption.assumption_id,)
+                candidates = tuple(exact.get((variant_id, column, year), ()))
+            if assumption is not None and candidates:
+                present = True
                 identities = {_native_identity(item) for item in candidates}
                 source_states = {
                     field.status
@@ -456,73 +697,172 @@ def compare_availability_records(
                 else:
                     status = "agreement"
                     detail = (
-                        "both sources positively observe the exact physical spelling; "
-                        "workbook-to-SCB variant applicability remains unresolved"
+                        "both sources positively observe the exact physical spelling "
+                        "under the reported finite comparison assumption"
                     )
-            else:
-                connected_variable_ids = variable_ids_by_column.get(column, set())
+            elif assumption is not None:
+                connected_variable_ids = variable_ids_by_assumption_column.get(
+                    (assumption.assumption_id, column), set()
+                )
                 blank_candidates = tuple(
                     item
                     for variable_id in sorted(connected_variable_ids)
-                    for item in unknown_by_variable_year.get((variable_id, year), ())
+                    for item in unknown_by_variable_year.get(
+                        (assumption.scb_variant_id, variable_id, year), ()
+                    )
                 )
                 folded_candidates = tuple(
                     item
-                    for item in folded.get((column.casefold(), year), ())
+                    for item in folded.get(
+                        (assumption.scb_variant_id, column.casefold(), year), ()
+                    )
                     if _column(item) != column
                 )
                 if blank_candidates:
                     candidates = blank_candidates
                     status = "unknown_spelling"
                     present = True
+                    assumption_ids += (_SPELLING_CONTINUITY_ASSUMPTION_ID,)
                     detail = (
                         "an SCB occurrence with a native VarId observed under the exact "
-                        "spelling in other editions has an explicitly unknown column name"
+                        "spelling in the same finite variant scope has an explicitly "
+                        "unknown column name"
                     )
                 elif folded_candidates:
                     candidates = folded_candidates
                     status = "ambiguous_match"
                     present = True
+                    assumption_ids += (_CASEFOLD_CANDIDATE_ASSUMPTION_ID,)
                     detail = (
                         "only case-insensitive spelling candidates exist; original "
-                        "spellings and identities remain distinct"
-                    )
-                elif scoped_unknown := tuple(unscoped_exact.get(column, ())):
-                    candidates = scoped_unknown
-                    status = "unknown_applicability"
-                    present = None
-                    detail = (
-                        "an exact SCB spelling exists only under a pooled or "
-                        "unparseable period and cannot establish annual availability"
-                    )
-                elif folded_unknown := tuple(
-                    record
-                    for record in unscoped_folded.get(column.casefold(), ())
-                    if _column(record) != column
-                ):
-                    candidates = folded_unknown
-                    status = "unknown_applicability"
-                    present = None
-                    detail = (
-                        "a case-insensitive SCB spelling exists only under a pooled "
-                        "or unparseable period; spelling and scope remain unresolved"
-                    )
-                elif year in edition_years:
-                    status = "unobserved_counterpart"
-                    present = True
-                    detail = (
-                        "the SCB LISA edition exists but no matching source occurrence "
-                        "was observed"
+                        "spellings and identities remain distinct within the finite "
+                        "variant scope"
                     )
                 else:
-                    status = "missing_edition"
-                    present = False
-                    detail = "the raw SCB input contains no annual LISA edition"
-            key = (status, present, detail)
+                    unscoped_map = {
+                        item.record_id: item
+                        for item in unscoped_exact.get(column, ())
+                        if item.subject.native.register_variant_id
+                        == assumption.scb_variant_id
+                    }
+                    unscoped_folded_candidates = tuple(
+                        item
+                        for item in unscoped_folded.get(column.casefold(), ())
+                        if item.subject.native.register_variant_id
+                        == assumption.scb_variant_id
+                        and _column(item) != column
+                    )
+                    for item in unscoped_folded_candidates:
+                        unscoped_map[item.record_id] = item
+                    unscoped_blank = tuple(
+                        item
+                        for variable_id in sorted(connected_variable_ids)
+                        for item in unscoped_unknown_by_variable.get(
+                            (assumption.scb_variant_id, variable_id), ()
+                        )
+                    )
+                    for item in unscoped_blank:
+                        unscoped_map[item.record_id] = item
+                    if unscoped_map:
+                        candidates = tuple(unscoped_map.values())
+                        status = "unknown_applicability"
+                        present = None
+                        assumption_ids += (_UNESTABLISHED_SCOPE_ASSUMPTION_ID,)
+                        if unscoped_folded_candidates:
+                            assumption_ids += (_CASEFOLD_CANDIDATE_ASSUMPTION_ID,)
+                        if unscoped_blank:
+                            assumption_ids += (_SPELLING_CONTINUITY_ASSUMPTION_ID,)
+                        detail = (
+                            "relevant SCB spelling or native-variable candidates in "
+                            "the expected variant have pooled or unparseable periods; "
+                            "annual applicability remains unknown"
+                        )
+                    else:
+                        cross_map = {
+                            item.record_id: item
+                            for item in (
+                                *exact_any.get((column, year), ()),
+                                *(
+                                    record
+                                    for record in folded_any.get(
+                                        (column.casefold(), year), ()
+                                    )
+                                    if _column(record) != column
+                                ),
+                                *unscoped_exact.get(column, ()),
+                                *(
+                                    record
+                                    for record in unscoped_folded.get(
+                                        column.casefold(), ()
+                                    )
+                                    if _column(record) != column
+                                ),
+                            )
+                            if item.subject.native.register_variant_id
+                            != assumption.scb_variant_id
+                        }
+                        cross_folded = any(
+                            _column(item) != column for item in cross_map.values()
+                        )
+                        cross_blank = False
+                        for (
+                            other_variant,
+                            known_column,
+                        ), variable_ids in variable_ids_by_variant_column.items():
+                            if (
+                                other_variant == assumption.scb_variant_id
+                                or known_column != column
+                            ):
+                                continue
+                            for variable_id in variable_ids:
+                                for item in (
+                                    *unknown_by_variable_year.get(
+                                        (other_variant, variable_id, year), ()
+                                    ),
+                                    *unscoped_unknown_by_variable.get(
+                                        (other_variant, variable_id), ()
+                                    ),
+                                ):
+                                    cross_map[item.record_id] = item
+                                    cross_blank = True
+                        if cross_map:
+                            candidates = tuple(cross_map.values())
+                            status = "unknown_applicability"
+                            present = None
+                            assumption_ids += (_UNESTABLISHED_SCOPE_ASSUMPTION_ID,)
+                            if cross_folded:
+                                assumption_ids += (_CASEFOLD_CANDIDATE_ASSUMPTION_ID,)
+                            if cross_blank:
+                                assumption_ids += (_SPELLING_CONTINUITY_ASSUMPTION_ID,)
+                            detail = (
+                                "relevant spelling or native-variable candidates exist "
+                                "only outside the finite SCB variant assumption; they "
+                                "are retained without establishing a counterpart"
+                            )
+                        elif (assumption.scb_variant_id, year) in edition_years:
+                            status = "unobserved_counterpart"
+                            present = True
+                            detail = (
+                                "the assumed native SCB variant edition exists but no "
+                                "matching source occurrence was observed"
+                            )
+                        else:
+                            status = "missing_edition"
+                            present = False
+                            detail = (
+                                "the raw SCB input contains no annual edition for the "
+                                "assumed native variant"
+                            )
+            key = (status, present, detail, assumption_ids)
             grouped.setdefault(key, ([], {}))[0].append(year)
             grouped[key][1].update((item.record_id, item) for item in candidates)
 
-        for (status, present, detail), (group_years, witnesses) in grouped.items():
+        for (
+            status,
+            present,
+            detail,
+            assumption_ids,
+        ), (group_years, witnesses) in grouped.items():
             outcomes.append(
                 _outcome(
                     workbook=documented,
@@ -530,29 +870,32 @@ def compare_availability_records(
                     years=group_years,
                     scb_records=witnesses.values(),
                     scb_edition_present=present,
+                    assumption_ids=assumption_ids,
                     detail=detail,
                 )
             )
 
     workbook_by_column: dict[str, list[SourceRecord]] = defaultdict(list)
-    documented_years_by_column: dict[str, set[int]] = defaultdict(set)
     for record in workbook:
         if (column := _column(record)) is None:
             continue
         workbook_by_column[column].append(record)
-        if (years := _scope_years(record.edition_scope)) is not None:
-            documented_years_by_column[column].update(years)
     selected_columns = (
         {exact_column}
         if exact_column is not None
         else set(workbook_by_column) | set(all_exact)
     )
     for column in sorted(selected_columns):
-        variable_ids = variable_ids_by_column.get(column, set())
         unscoped_unknown = {
             record.record_id: record
+            for (variant_id, known_column), variable_ids in (
+                variable_ids_by_variant_column.items()
+            )
+            if known_column == column
             for variable_id in variable_ids
-            for record in unscoped_unknown_by_variable.get(variable_id, ())
+            for record in unscoped_unknown_by_variable.get(
+                (variant_id, variable_id), ()
+            )
         }
         for record in sorted(
             unscoped_unknown.values(), key=lambda item: item.record_id
@@ -563,6 +906,10 @@ def compare_availability_records(
                     status="unknown_applicability",
                     workbook_records=workbook_by_column.get(column, ()),
                     scb_record=record,
+                    assumption_ids=(
+                        _UNESTABLISHED_SCOPE_ASSUMPTION_ID,
+                        _SPELLING_CONTINUITY_ASSUMPTION_ID,
+                    ),
                     detail=(
                         "an SCB occurrence sharing a native VarId with this exact "
                         "spelling has unknown column spelling and no annual edition "
@@ -571,7 +918,6 @@ def compare_availability_records(
                 )
             )
 
-        documented = documented_years_by_column.get(column, set())
         documented_records = workbook_by_column.get(column, ())
         for record in sorted(
             all_exact.get(column, ()), key=lambda item: item.record_id
@@ -584,14 +930,20 @@ def compare_availability_records(
             ):
                 continue
             years = _scope_years(record.edition_scope)
-            if documented_records and (
-                any(
-                    _scope_years(item.edition_scope) is None
-                    for item in documented_records
+            variant_id = record.subject.native.register_variant_id
+            if years is None:
+                continue
+            scoped_documented_years = {
+                year
+                for item in documented_records
+                for year in (_scope_years(item.edition_scope) or ())
+                if (
+                    (assumption := _finite_comparison_assumption(item, year))
+                    is not None
+                    and assumption.scb_variant_id == variant_id
                 )
-                or years is None
-                or set(years).issubset(documented)
-            ):
+            }
+            if set(years).issubset(scoped_documented_years):
                 continue
             outcomes.append(
                 _source_outcome(
@@ -599,6 +951,7 @@ def compare_availability_records(
                     status="source_only_observation",
                     workbook_records=(),
                     scb_record=record,
+                    assumption_ids=(_UNESTABLISHED_SCOPE_ASSUMPTION_ID,),
                     detail=(
                         "raw SCB positively observes this exact spelling outside the "
                         "selected workbook declarations; no workbook availability or "
@@ -637,13 +990,73 @@ def _target_preview(
         for year in (_scope_years(record.edition_scope) or ())
     }
     exact_named = tuple(record for record in scb if _column(record) == exact_column)
-    variable_ids = _native_ids(exact_named, "variable_id")
+    scoped_named: list[SourceRecord] = []
+    assumptions_by_native_variable: dict[tuple[int, int], set[str]] = defaultdict(set)
+    used_assumption_ids: set[str] = set()
+    has_unestablished_scope = not workbook
+
+    def matching_assumptions(
+        record: SourceRecord,
+    ) -> tuple[_FiniteComparisonAssumption, ...]:
+        years = _scope_years(record.edition_scope)
+        variant_id = record.subject.native.register_variant_id
+        if years is None or variant_id is None:
+            return ()
+        matched: dict[str, _FiniteComparisonAssumption] = {}
+        for year in years:
+            year_matched = False
+            for documented in workbook:
+                if year not in (_scope_years(documented.edition_scope) or ()):
+                    continue
+                assumption = _finite_comparison_assumption(documented, year)
+                if assumption is not None and assumption.scb_variant_id == variant_id:
+                    matched[assumption.assumption_id] = assumption
+                    year_matched = True
+            if not year_matched:
+                return ()
+        return tuple(matched.values())
+
+    for documented in workbook:
+        for year in _scope_years(documented.edition_scope) or ():
+            if assumption := _finite_comparison_assumption(documented, year):
+                used_assumption_ids.add(assumption.assumption_id)
+            else:
+                has_unestablished_scope = True
+    for record in exact_named:
+        assumptions = matching_assumptions(record)
+        variant_id = record.subject.native.register_variant_id
+        variable_id = record.subject.native.variable_id
+        if not assumptions or variant_id is None or variable_id is None:
+            has_unestablished_scope = True
+            continue
+        scoped_named.append(record)
+        assumptions_by_native_variable[variant_id, variable_id].update(
+            assumption.assumption_id for assumption in assumptions
+        )
+
     unknown_targets = tuple(
         record
         for record in scb
         if record.fields.column_name is not None
         and record.fields.column_name.status == "unknown"
-        and record.subject.native.variable_id in variable_ids
+        and (variant_id := record.subject.native.register_variant_id) is not None
+        and (variable_id := record.subject.native.variable_id) is not None
+        and (
+            connected_assumptions := assumptions_by_native_variable.get(
+                (variant_id, variable_id), set()
+            )
+        )
+        and (
+            (years := _scope_years(record.edition_scope)) is None
+            or all(
+                any(
+                    assumption.assumption_id in connected_assumptions
+                    and assumption.allows(year)
+                    for assumption in _FINITE_COMPARISON_ASSUMPTIONS
+                )
+                for year in years
+            )
+        )
     )
     casefold_collisions = tuple(
         record
@@ -652,14 +1065,36 @@ def _target_preview(
         and column != exact_column
         and column.casefold() == exact_column.casefold()
     )
-    scb_edition_years = {
-        year for record in scb for year in (_scope_years(record.edition_scope) or ())
+    scb_editions = {
+        (variant_id, year)
+        for record in scb
+        if (variant_id := record.subject.native.register_variant_id) is not None
+        for year in (_scope_years(record.edition_scope) or ())
     }
-    ordered_named = tuple(sorted(exact_named, key=lambda item: item.record_id))
+    missing_documented_editions = {
+        year
+        for documented in workbook
+        for year in (_scope_years(documented.edition_scope) or ())
+        if (assumption := _finite_comparison_assumption(documented, year)) is not None
+        and (assumption.scb_variant_id, year) not in scb_editions
+    }
+    ordered_named = tuple(sorted(scoped_named, key=lambda item: item.record_id))
     ordered_targets = tuple(sorted(unknown_targets, key=lambda item: item.record_id))
     ordered_collisions = tuple(
         sorted(casefold_collisions, key=lambda item: item.record_id)
     )
+    if ordered_targets:
+        used_assumption_ids.add(_SPELLING_CONTINUITY_ASSUMPTION_ID)
+        if any(
+            _scope_years(record.edition_scope) is None for record in ordered_targets
+        ):
+            has_unestablished_scope = True
+    if ordered_collisions:
+        used_assumption_ids.add(_CASEFOLD_CANDIDATE_ASSUMPTION_ID)
+        if any(not matching_assumptions(record) for record in ordered_collisions):
+            has_unestablished_scope = True
+    if has_unestablished_scope:
+        used_assumption_ids.add(_UNESTABLISHED_SCOPE_ASSUMPTION_ID)
     all_candidates = (*ordered_named, *ordered_targets)
     return SourceTargetPreview(
         preview_level="source_target_only",
@@ -667,9 +1102,9 @@ def _target_preview(
         exact_column=exact_column,
         target_field="column_name",
         match_policy=(
-            "exact_spelling_then_same_native_variable_for_unknown_field_discovery"
+            "finite_variant_scope_then_exact_spelling_and_same_native_variable_discovery"
         ),
-        candidate_variable_ids=variable_ids,
+        candidate_variable_ids=_native_ids(ordered_named, "variable_id"),
         candidate_variant_ids=_native_ids(all_candidates, "register_variant_id"),
         documented_edition_scope=(
             _scope_from_years(documented_years) if documented_years else None
@@ -680,13 +1115,8 @@ def _target_preview(
         casefold_collision_record_ids=tuple(
             item.record_id for item in ordered_collisions
         ),
-        unobserved_documented_editions=tuple(
-            sorted(documented_years - scb_edition_years)
-        ),
-        assumption_ids=(
-            "same-native-variable-spelling-continuity",
-            "workbook-table-to-scb-variant-applicability",
-        ),
+        unobserved_documented_editions=tuple(sorted(missing_documented_editions)),
+        assumption_ids=tuple(sorted(used_assumption_ids)),
     )
 
 
@@ -781,30 +1211,21 @@ def inspect_bundle_source_records(
     )
     outcome_counts = Counter(item.status for item in outcomes)
     issue_counts = Counter(item.kind for item in issues)
-    assumptions = (
-        InspectionAssumption(
-            assumption_id="same-native-variable-spelling-continuity",
-            status="unresolved",
-            purpose="surface present SCB records whose column_name field is unknown",
-            detail=(
-                "An exact spelling observed on one SCB VarId is used only to find "
-                "blank column-name fields on that VarId; it is not an identity merge "
-                "or an executable correction selector."
-            ),
-        ),
-        InspectionAssumption(
-            assumption_id="workbook-table-to-scb-variant-applicability",
-            status="unresolved",
-            purpose="compare documented availability with raw SCB occurrences",
-            detail=(
-                "Workbook table and population context is retained, but no workbook "
-                "table is accepted as a mapping to an SCB variant or age population."
-            ),
-        ),
+    used_assumption_ids = {
+        assumption_id
+        for outcome in outcomes
+        for assumption_id in outcome.assumption_ids
+    }
+    if preview is not None:
+        used_assumption_ids.update(preview.assumption_ids)
+    assumptions = tuple(
+        assumption
+        for assumption in _ASSUMPTION_REPORTS
+        if assumption.assumption_id in used_assumption_ids
     )
     return SourceInspectionReport(
         format="reg-meta-build-source-record-inspection",
-        schema_version=1,
+        schema_version=2,
         diagnostic_only=True,
         preview_level="source_target_only",
         complete=not any(issue.incomplete for issue in issues),
@@ -857,7 +1278,7 @@ def inspect_bundle_source_records(
         limitations=(
             "Diagnostic source-target preview only; no curation or correction was applied.",
             "No catalog impact, publication, acceptance, whole-corpus validation, identity merge, or code-set equivalence is claimed.",
-            "Workbook-to-SCB population and variant applicability remains unresolved.",
+            "Only the reported finite workbook-to-SCB comparison assumptions are used; all other population and variant applicability remains unresolved.",
         ),
     )
 

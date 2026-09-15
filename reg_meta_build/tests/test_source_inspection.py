@@ -19,7 +19,7 @@ from _csv_fixtures import (
 from _lisa_fixtures import write_lisa_workbook
 from openpyxl import load_workbook
 from pydantic import ValidationError
-from reg_meta.errors import RegMetaError
+from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta_build.input_snapshot import (
     LISA_DATASET_ID,
     LisaWorkbookSelection,
@@ -111,6 +111,8 @@ def _record(
     variant_id: int = 153,
     variable_id: int = 1,
     member_id: int = 1,
+    workbook_table: str | None = None,
+    population_name: str | None = None,
 ) -> SourceRecord:
     return SourceRecord.create(
         revision=revision,
@@ -124,15 +126,31 @@ def _record(
         subject=SourceSubject(
             provider="scb",
             register=SourceCoordinate(status="value", native_id=34, name="LISA"),
-            variant=SourceCoordinate(status="value", native_id=variant_id),
-            population=SourceCoordinate(status="unknown"),
-            member=SourceCoordinate(status="value", native_id=member_id),
-            native=NativeCoordinates(
-                register_id=34,
-                register_variant_id=variant_id,
-                edition_id=year,
-                variable_id=variable_id,
-                member_id=member_id,
+            variant=(
+                SourceCoordinate(status="value", name=workbook_table)
+                if workbook_table is not None
+                else SourceCoordinate(status="value", native_id=variant_id)
+            ),
+            population=(
+                SourceCoordinate(status="value", name=population_name)
+                if population_name is not None
+                else SourceCoordinate(status="unknown")
+            ),
+            member=SourceCoordinate(
+                status="value",
+                native_id=None if workbook_table is not None else member_id,
+                name=column if workbook_table is not None else None,
+            ),
+            native=(
+                NativeCoordinates()
+                if workbook_table is not None
+                else NativeCoordinates(
+                    register_id=34,
+                    register_variant_id=variant_id,
+                    edition_id=year,
+                    variable_id=variable_id,
+                    member_id=member_id,
+                )
             ),
         ),
         edition_scope=TemporalScope(
@@ -396,6 +414,61 @@ def test_prepare_cli_requires_complete_lisa_selection(
     assert exc_info.value.code == "lisa_source_selection_incomplete"
 
 
+@pytest.mark.parametrize("handler_error", (False, True), ids=("success", "error"))
+def test_prepare_cli_never_writes_output_over_selected_external_lisa(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+    handler_error: bool,
+) -> None:
+    input_dir = tmp_path / "source"
+    write_scb_input(input_dir)
+    snapshot = write_scb_snapshot(tmp_path / "accepted", input_dir / "SCB")
+    workbook = write_lisa_workbook(tmp_path / "official-source" / "lisa.xlsx")
+    source_bytes = workbook.read_bytes()
+    handler_called = False
+
+    def prospective_handler(_args: object) -> tuple[dict[str, object], int]:
+        nonlocal handler_called
+        handler_called = True
+        if handler_error:
+            raise SnapshotError("prospective handler failure")
+        return {"data": {"status": "unexpected"}}, 0
+
+    monkeypatch.setitem(
+        cli_module.COMMAND_DISPATCH, "prepare-input-bundle", prospective_handler
+    )
+    exit_code = cli_module.run(
+        [
+            "--output",
+            str(workbook),
+            "prepare-input-bundle",
+            "--input-dir",
+            str(input_dir),
+            "--scb-snapshot",
+            str(snapshot.path),
+            "--scb-input-commit",
+            snapshot.input_commit,
+            "--scb-manifest-sha256",
+            snapshot.manifest_sha256,
+            "--output-dir",
+            str(snapshot.path.parent / "candidate"),
+            "--lisa-workbook",
+            str(workbook),
+            "--lisa-revision",
+            "2024-2025",
+            "--lisa-workbook-sha256",
+            hashlib.sha256(source_bytes).hexdigest(),
+        ]
+    )
+
+    assert exit_code == EXIT_CONFIG
+    assert not handler_called
+    error = json.loads(capsys.readouterr().out)["error"]
+    assert error["code"] == "catalog_input_output_conflict"
+    assert workbook.read_bytes() == source_bytes
+
+
 def test_inspection_cli_rejects_bundle_where_lisa_was_not_selected(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
@@ -537,21 +610,35 @@ def test_compact_comparison_retains_witnesses_conflicts_ids_and_spelling() -> No
         artifact_sha256="0" * 64,
     )
     workbook = (
-        _record(revision, key="workbook", column="AmPolTyp", year=2020),
+        _record(
+            revision,
+            key="workbook",
+            column="AmPolTyp",
+            year=2020,
+            workbook_table="individual",
+        ),
         _record(
             revision,
             key="negative",
             column="Negative",
             year=2020,
             availability=SourceField(status="negative"),
+            workbook_table="individual",
         ),
-        _record(revision, key="suffix", column="Thing_LISA", year=2020),
+        _record(
+            revision,
+            key="suffix",
+            column="Thing_LISA",
+            year=2020,
+            workbook_table="individual",
+        ),
         _record(
             revision,
             key="unknown-availability",
             column="Unknown",
             year=2020,
             availability=SourceField(status="unknown", raw_value="Okänt"),
+            workbook_table="individual",
         ),
     )
     scb = (
@@ -596,15 +683,100 @@ def test_compact_comparison_retains_witnesses_conflicts_ids_and_spelling() -> No
     )
 
     outcomes = compare_availability_records(workbook, scb)
-    by_column = {outcome.column_name: outcome for outcome in outcomes}
+    by_column = {
+        outcome.column_name: outcome
+        for outcome in outcomes
+        if outcome.workbook_record_ids
+    }
 
-    assert by_column["AmPolTyp"].status == "ambiguous_match"
-    assert by_column["AmPolTyp"].variable_ids == (999, 31619)
-    assert len(by_column["AmPolTyp"].scb_record_ids) == 2
+    assert by_column["AmPolTyp"].status == "agreement"
+    assert by_column["AmPolTyp"].variable_ids == (31619,)
+    assert len(by_column["AmPolTyp"].scb_record_ids) == 1
+    assert by_column["AmPolTyp"].assumption_ids == (
+        "lisa-individual-2010-2024-to-scb-variant-153",
+    )
+    assert any(
+        outcome.status == "source_only_observation" and outcome.variable_ids == (999,)
+        for outcome in outcomes
+    )
     assert by_column["Negative"].status == "conflict"
     assert by_column["Unknown"].status == "unknown_applicability"
     assert by_column["Thing_LISA"].status == "unobserved_counterpart"
     assert not by_column["Thing_LISA"].scb_record_ids
+    assert all(outcome.assumption_ids for outcome in outcomes)
+
+
+@pytest.mark.parametrize(
+    (
+        "scb_column",
+        "scb_variant",
+        "expected_status",
+        "edition_present",
+        "expected_witness",
+    ),
+    (
+        ("X", 153, "unknown_applicability", None, True),
+        ("Other", 153, "missing_edition", False, False),
+        ("X", 152, "agreement", True, True),
+        ("Other", 152, "unobserved_counterpart", True, False),
+    ),
+    ids=(
+        "cross-variant-exact-is-unknown",
+        "cross-variant-edition-is-missing",
+        "scoped-exact-agrees",
+        "scoped-edition-is-present",
+    ),
+)
+def test_company_comparison_uses_only_its_finite_native_variant_assumption(
+    scb_column: str,
+    scb_variant: int,
+    expected_status: str,
+    edition_present: bool | None,
+    expected_witness: bool,
+) -> None:
+    revision = SourceRevision.create(
+        dataset="fixture",
+        publisher="SCB",
+        purpose="scoped comparison",
+        upstream_revision="1",
+        artifact_path="fixture",
+        artifact_size=0,
+        artifact_sha256="0" * 64,
+    )
+    workbook = _record(
+        revision,
+        key="company-workbook",
+        column="X",
+        year=2020,
+        workbook_table="company",
+        population_name=inspection_module._ENTERPRISE_POPULATION,
+    )
+    scb_record = _record(
+        revision,
+        key="scb",
+        column=scb_column,
+        year=2020,
+        variant_id=scb_variant,
+        population_name=("individuals 15+" if scb_variant == 153 else "companies"),
+    )
+
+    outcomes = compare_availability_records((workbook,), (scb_record,))
+    compared = next(outcome for outcome in outcomes if outcome.workbook_record_ids)
+
+    assert compared.status == expected_status
+    assert compared.scb_edition_present is edition_present
+    assert bool(compared.scb_record_ids) is expected_witness
+    assert compared.assumption_ids[0] == ("lisa-company-1990-2024-to-scb-variant-152")
+    if scb_variant == 153 and scb_column == "X":
+        assert compared.assumption_ids == (
+            "lisa-company-1990-2024-to-scb-variant-152",
+            "unestablished-workbook-to-scb-variant-scope",
+        )
+        assert any(
+            outcome.status == "source_only_observation"
+            and outcome.scb_record_ids == (scb_record.record_id,)
+            for outcome in outcomes
+        )
 
 
 def test_filtered_report_retains_unparseable_period_as_incomplete(
@@ -894,6 +1066,7 @@ def test_pinned_bundle_cli_reports_deterministic_source_targets_without_cold_val
 
     assert reports[0] == reports[1]
     report = reports[0]
+    assert report["schema_version"] == 2
     assert report["diagnostic_only"] is True
     assert report["preview_level"] == "source_target_only"
     assert report["complete"] is True
@@ -902,7 +1075,7 @@ def test_pinned_bundle_cli_reports_deterministic_source_targets_without_cold_val
         "bundle_manifest_sha256": selection.manifest_sha256,
         "code_commit": "c" * 40,
         "input_repository_commit": selection.input_commit,
-        "interpretation_id": "scb-lisa-source-record-inspection-v1",
+        "interpretation_id": "scb-lisa-source-record-inspection-v2",
         "scb_snapshot_manifest_sha256": bundle.manifest.scb_manifest_sha256,
     }
     assert report["scope"]["selected_sources"] == [
@@ -917,10 +1090,15 @@ def test_pinned_bundle_cli_reports_deterministic_source_targets_without_cold_val
     assert report["target_preview"]["expected_source_target_count"] == 1
     assert report["target_preview"]["candidate_variable_ids"] == [31619]
     assert report["target_preview"]["candidate_variant_ids"] == [153]
+    assert set(report["target_preview"]["assumption_ids"]) >= {
+        "lisa-individual-1990-2009-to-scb-variant-1335",
+        "lisa-individual-2010-2024-to-scb-variant-153",
+        "same-native-variable-spelling-continuity",
+    }
     assert 2024 in report["target_preview"]["unobserved_documented_editions"]
     assert len(report["target_preview"]["target_record_ids"]) == 1
     assert report["summary"]["outcome_counts"]["unknown_spelling"] == 1
-    assert report["summary"]["outcome_counts"]["ambiguous_match"] == 1
+    assert report["summary"]["outcome_counts"]["unknown_applicability"] >= 1
     assert report["summary"]["outcome_counts"]["unobserved_counterpart"] == 1
     assert report["summary"]["outcome_counts"]["missing_edition"] >= 1
     agreement = next(
@@ -930,6 +1108,20 @@ def test_pinned_bundle_cli_reports_deterministic_source_targets_without_cold_val
     )
     assert len(agreement["workbook_record_ids"]) == 1
     assert len(agreement["scb_record_ids"]) == 1
+    assert agreement["assumption_ids"] == [
+        "lisa-individual-2010-2024-to-scb-variant-153"
+    ]
+    cross_variant_casefold = next(
+        outcome
+        for outcome in report["comparison_outcomes"]
+        if outcome["status"] == "unknown_applicability"
+        and outcome["register_variant_ids"] == [1335]
+    )
+    assert "casefold-spelling-candidate" in cross_variant_casefold["assumption_ids"]
+    assert (
+        "unestablished-workbook-to-scb-variant-scope"
+        in cross_variant_casefold["assumption_ids"]
+    )
     target_id = report["target_preview"]["target_record_ids"][0]
     target = next(
         record

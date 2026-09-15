@@ -2317,6 +2317,22 @@ def _confined_bundle_output_path(
 ) -> str | None:
     if output_path is None:
         return None
+    resolved_output = Path(output_path).expanduser().resolve()
+    if (
+        args.command == "prepare-input-bundle"
+        and (lisa_workbook := getattr(args, "lisa_workbook", None))
+        and resolved_output == Path(lisa_workbook).expanduser().resolve()
+    ):
+        raise RegMetaError(
+            exit_code=EXIT_CONFIG,
+            code="catalog_input_output_conflict",
+            error_class="configuration",
+            message=(
+                "CLI output must not overwrite the selected LISA workbook: "
+                f"{resolved_output}"
+            ),
+            remediation="Choose an output path distinct from every selected input.",
+        )
     selection_path = (
         getattr(args, "scb_snapshot", None)
         if args.command == "prepare-input-bundle"
@@ -2340,7 +2356,7 @@ def _confined_bundle_output_path(
         # whose confinement could not be established from that selection.
         return None
     _reject_input_repository_destination(
-        Path(output_path).expanduser().resolve(),
+        resolved_output,
         repository,
         label="CLI output",
     )

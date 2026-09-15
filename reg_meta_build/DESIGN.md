@@ -1193,8 +1193,11 @@ The command reads the four supported LISA layouts and raw prepared SCB
 emit deterministic source witnesses, scoped comparison outcomes, input/code pins,
 unresolved applicability, source-only SCB observations, validated worksheet-level
 workbook context, and (for a filter) non-executable source-target membership. The report
-is diagnostic and source-target-only: it applies no curation, previews no complete
-catalog blast radius, and claims no catalog validation, acceptance, or publication.
+identifies the finite, unresolved workbook-table/population to native-variant assumption
+used by each comparison; witnesses outside those scopes remain source-only or unknown in
+applicability. The report is diagnostic and source-target-only: it applies no curation,
+previews no complete catalog blast radius, and claims no catalog validation, acceptance,
+or publication.
 
 After acceptance, the normal builder selects exactly that bundle:
 
