@@ -126,7 +126,8 @@ plain row counts as sufficient evidence.
 On success, report the log path, summary JSON path, scratch DB dir, prestage cache path
 and whether it was applied or rebuilt, exit status, `integrity_check`,
 `foreign_key_check`, important `[timing]` lines, long quiet intervals, dbdiff
-status/report path if used, and any task-specific SQL probes.
+status/report path if used, retained catalog slug workspace and change summary, and any
+task-specific SQL probes.
 
 On failure, keep scratch outputs and quote the first actionable failing section from the
 log. Do not delete scratch paths until after checks and requested inspection complete.

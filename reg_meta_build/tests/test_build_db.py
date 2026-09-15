@@ -216,6 +216,7 @@ class TestBuildDb:
             checksums["Vardemangder.csv"]
             == hashlib.sha256((scb_dir / "Vardemangder.csv").read_bytes()).hexdigest()
         )
+        assert not Path(result["slug_workspace"]).is_relative_to(tmp_path / "db")
         assert result["slug_changes"] == {"added": [], "changed": [], "removed": []}
 
     def test_bundle_rejects_loose_overrides_and_output_inside_input_repo(

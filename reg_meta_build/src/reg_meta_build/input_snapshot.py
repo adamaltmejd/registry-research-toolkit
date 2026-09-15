@@ -2237,13 +2237,15 @@ def _bundle_source_files(
 
     classification_seed = curation_dir / "classifications.toml"
     if classification_seed.is_file():
-        from .classifications import load_seed
+        from .classifications import _resolve_valid_codes_paths, load_seed
 
-        for entry in load_seed(classification_seed):
+        entries = load_seed(classification_seed)
+        classification_dir = input_dir / "classifications"
+        classification_paths = _resolve_valid_codes_paths(entries, classification_dir)
+        for entry in entries:
             name = entry["valid_codes_file"]
             relative = f"catalog/classifications/{name}"
-            source = input_dir / "classifications" / name
-            resolved[relative] = source if source.is_file() else None
+            resolved[relative] = classification_paths[entry["short_name"]]
 
     canonical_toml = input_dir / "scb_canonical" / "scb_canonical.toml"
     if canonical_toml.is_file():
@@ -2266,7 +2268,33 @@ def _bundle_source_files(
     # fixed seed/freeze/auto paths above.
     for source in sorted(slug_dir.glob("*.toml")):
         resolved[f"fqid_slugs/{source.name}"] = source
-    return dict(sorted(resolved.items()))
+
+    source_roots = {
+        "catalog": input_dir.resolve(),
+        "curation": curation_dir.resolve(),
+        "fqid_slugs": slug_dir.resolve(),
+    }
+    validated: dict[str, Path | None] = {}
+    for relative, source in sorted(resolved.items()):
+        try:
+            safe_relative = BundleFile(path=relative, present=False).path
+        except ValueError as exc:
+            raise SnapshotError(
+                f"invalid catalog bundle destination {relative!r}: {exc}"
+            ) from exc
+        if safe_relative != relative:
+            raise SnapshotError(
+                f"catalog bundle destination must be normalized: {relative!r}"
+            )
+        if source is not None:
+            source = source.resolve()
+            source_root = source_roots[Path(relative).parts[0]]
+            if not source.is_relative_to(source_root):
+                raise SnapshotError(
+                    f"catalog bundle source escapes its selected root: {source}"
+                )
+        validated[relative] = source
+    return validated
 
 
 def _actual_bundle_files(root: Path) -> dict[str, int]:
@@ -2452,10 +2480,9 @@ def prepare_input_bundle(
             f"referenced catalog input files are missing: {required_missing}"
         )
 
-    identities = {
-        path: _file_identity(source.stat())
+    source_state = {
+        path: None if source is None else (source, _file_identity(source.stat()))
         for path, source in sources.items()
-        if source is not None
     }
     output.parent.mkdir(parents=True, exist_ok=True)
     staging = Path(
@@ -2495,11 +2522,15 @@ def prepare_input_bundle(
         (staging / BUNDLE_MANIFEST_NAME).write_bytes(manifest_bytes)
         _verify_bundle_inventory(staging, manifest, hashes=True)
         _validate_bundle_contract(staging)
+        current_sources = _bundle_source_files(input_dir, curation_dir, slug_dir)
+        current_state = {
+            path: None if source is None else (source, _file_identity(source.stat()))
+            for path, source in current_sources.items()
+        }
         changed = sorted(
-            relative
-            for relative, source in sources.items()
-            if source is not None
-            and _file_identity(source.stat()) != identities[relative]
+            path
+            for path in source_state.keys() | current_state.keys()
+            if source_state.get(path, _UNSET) != current_state.get(path, _UNSET)
         )
         if changed:
             raise SnapshotError(

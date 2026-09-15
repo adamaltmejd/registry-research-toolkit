@@ -5320,7 +5320,7 @@ def build_db(
     if bundle_reader is not None:
         from .input_snapshot import create_slug_workspace
 
-        slug_dir = create_slug_workspace(bundle_reader, db_dir)
+        slug_dir = create_slug_workspace(bundle_reader, db_dir.parent)
         _progress(f"Catalog slug workspace retained at {slug_dir}")
 
     # Stale-seed preflight (#556): the conditional CanonicalScbAdapter guard below

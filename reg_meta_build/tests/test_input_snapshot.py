@@ -15,6 +15,7 @@ import pytest
 from _csv_fixtures import (
     omit_scb_snapshot_file,
     repin_input_bundle,
+    repin_scb_snapshot,
     write_input_bundle,
     write_scb_input,
     write_scb_snapshot,
@@ -427,6 +428,77 @@ def test_catalog_bundle_preparation_skips_exhaustive_snapshot_verification(
     assert (
         output / "catalog" / "SCB" / "Tabelldefinitioner.sql"
     ).read_bytes() == auxiliary.read_bytes()
+
+
+def test_catalog_bundle_preparation_rejects_escaping_classification_before_copy(
+    tmp_path: Path,
+) -> None:
+    input_dir = tmp_path / "authoring" / "source"
+    write_scb_input(input_dir)
+    escaped_source = tmp_path / "guard.csv"
+    escaped_source.write_text("source bytes\n", encoding="utf-8")
+    snapshot = write_scb_snapshot(tmp_path / "accepted", input_dir / "SCB")
+    accepted_guard = snapshot.path.parent / "guard.csv"
+    accepted_guard.write_text("accepted bytes\n", encoding="utf-8")
+    snapshot = repin_scb_snapshot(snapshot, "accepted guard")
+    accepted_bytes = accepted_guard.read_bytes()
+
+    curation = tmp_path / "curation"
+    curation.mkdir()
+    (curation / "classifications.toml").write_text(
+        '[[classification]]\nshort_name = "TEST"\nname = "Test"\n'
+        'valid_codes_file = "../../../guard.csv"\n',
+        encoding="utf-8",
+    )
+    slugs = tmp_path / "slugs"
+    slugs.mkdir()
+    output = snapshot.path.parent / "bundle"
+
+    with pytest.raises(RegMetaError) as exc_info:
+        prepare_input_bundle(input_dir, curation, slugs, snapshot, output)
+
+    assert exc_info.value.code == "classification_csv_invalid"
+    assert accepted_guard.read_bytes() == accepted_bytes
+    assert _git(snapshot.path.parent, "rev-parse", "HEAD") == snapshot.input_commit
+    assert not _git(
+        snapshot.path.parent, "status", "--porcelain=v1", "--untracked-files=all"
+    )
+    assert not output.exists()
+
+
+@pytest.mark.parametrize(
+    "introduced_relative",
+    ("SCB/Tabelldefinitioner.sql", "Socialstyrelsen/introduced.xlsx"),
+)
+def test_catalog_bundle_preparation_rejects_new_source_membership(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    introduced_relative: str,
+) -> None:
+    input_dir = tmp_path / "source"
+    write_scb_input(input_dir)
+    snapshot = write_scb_snapshot(tmp_path / "accepted", input_dir / "SCB")
+    curation = tmp_path / "curation"
+    slugs = tmp_path / "slugs"
+    curation.mkdir()
+    slugs.mkdir()
+    output = snapshot.path.parent / "bundle"
+    validate_contract = snapshot_module._validate_bundle_contract
+
+    def introduce_source(staging: Path) -> None:
+        validate_contract(staging)
+        introduced = input_dir / introduced_relative
+        introduced.parent.mkdir(parents=True, exist_ok=True)
+        introduced.write_bytes(b"introduced during validation")
+
+    monkeypatch.setattr(snapshot_module, "_validate_bundle_contract", introduce_source)
+    with pytest.raises(SnapshotError, match="changed during bundle preparation"):
+        prepare_input_bundle(input_dir, curation, slugs, snapshot, output)
+
+    assert not output.exists()
+    assert not _git(
+        snapshot.path.parent, "status", "--porcelain=v1", "--untracked-files=all"
+    )
 
 
 def test_catalog_bundle_requires_exact_clean_selection_and_never_overwrites(

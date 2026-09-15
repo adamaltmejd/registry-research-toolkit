@@ -186,6 +186,92 @@ def test_prepare_paths_keeps_bundle_outputs_and_slugs_outside_input_repo(
         build_db_watch.prepare_paths(args, tmp_path)
 
 
+def test_cleanup_preserves_changed_bundle_slug_workspace_in_summary(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    scratch = tmp_path / "scratch"
+    scratch.mkdir()
+    db_dir = scratch / "db"
+    db_dir.mkdir()
+    summary_path = scratch / "build.summary.json"
+    paths = build_db_watch.RunPaths(
+        db_dir=db_dir,
+        slug_dir=None,
+        prestage_cache=None,
+        log_path=scratch / "build.log",
+        summary_path=summary_path,
+        created_db_dir=True,
+        created_slug_dir=False,
+    )
+    slug_workspace = scratch / "regmeta-slugs-generated"
+    slug_changes = {
+        "added": ["scb.auto.toml"],
+        "changed": [],
+        "removed": [],
+    }
+
+    def fake_run_build(
+        cmd: list[str], paths: build_db_watch.RunPaths, _quiet_seconds: int
+    ) -> int:
+        assert cmd[cmd.index("--output") + 1] == str(
+            build_db_watch.build_result_path(paths)
+        )
+        slug_workspace.mkdir()
+        (slug_workspace / "scb.auto.toml").write_text(
+            "# generated change\n", encoding="utf-8"
+        )
+        build_db_watch.build_result_path(paths).write_text(
+            json.dumps(
+                {
+                    "slug_workspace": str(slug_workspace),
+                    "slug_changes": slug_changes,
+                }
+            ),
+            encoding="utf-8",
+        )
+        return 0
+
+    monkeypatch.setattr(build_db_watch, "repo_root", lambda: tmp_path)
+    monkeypatch.setattr(build_db_watch, "prepare_paths", lambda _args, _root: paths)
+    monkeypatch.setattr(build_db_watch, "run_build", fake_run_build)
+    monkeypatch.setattr(
+        build_db_watch,
+        "sqlite_checks",
+        lambda _path: {
+            "integrity_check": "ok",
+            "foreign_key_violations": 0,
+            "table_counts": {},
+        },
+    )
+
+    assert (
+        build_db_watch.main(
+            [
+                "--input-bundle",
+                str(tmp_path / "bundle"),
+                "--input-commit",
+                "a" * 40,
+                "--input-manifest-sha256",
+                "b" * 64,
+                "--tmp-dir",
+                str(scratch),
+                "--summary",
+                str(summary_path),
+                "--no-prestage-cache",
+                "--cleanup-on-success",
+            ]
+        )
+        == 0
+    )
+
+    summary = json.loads(summary_path.read_text(encoding="utf-8"))
+    assert summary["db_dir"] == str(paths.db_dir)
+    assert not paths.db_dir.exists()
+    assert summary["slug_workspace"] == str(slug_workspace)
+    assert summary["slug_changes"] == slug_changes
+    assert (slug_workspace / "scb.auto.toml").is_file()
+
+
 @pytest.mark.parametrize(
     "argv",
     [

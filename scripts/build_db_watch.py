@@ -302,6 +302,10 @@ def prepare_paths(args: argparse.Namespace, root: Path) -> RunPaths:
     )
 
 
+def build_result_path(paths: RunPaths) -> Path:
+    return paths.db_dir / "build-result.json"
+
+
 def build_command(args: argparse.Namespace, paths: RunPaths) -> list[str]:
     cmd = [
         "uv",
@@ -309,6 +313,8 @@ def build_command(args: argparse.Namespace, paths: RunPaths) -> list[str]:
         "reg-meta-build",
         "--db",
         str(paths.db_dir),
+        "--output",
+        str(build_result_path(paths)),
         "build-db",
     ]
     if args.input_bundle:
@@ -530,6 +536,16 @@ def write_summary(path: Path, payload: dict[str, Any]) -> None:
     )
 
 
+def read_build_result(path: Path) -> dict[str, Any] | None:
+    if not path.is_file():
+        return None
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except OSError, json.JSONDecodeError:
+        return None
+    return payload if isinstance(payload, dict) else None
+
+
 def cleanup(paths: RunPaths, *, cleanup_db: bool, cleanup_slug: bool) -> None:
     if cleanup_db and paths.created_db_dir:
         shutil.rmtree(paths.db_dir, ignore_errors=True)
@@ -641,7 +657,10 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     parser.add_argument(
         "--cleanup-on-success",
         action="store_true",
-        help="Remove scratch DB and copied slugs after checks pass.",
+        help=(
+            "Remove scratch DB and watcher-copied raw-mode slugs after checks pass; "
+            "bundle slug review workspaces are retained."
+        ),
     )
     args = parser.parse_args(argv)
     bundle = (args.input_bundle, args.input_commit, args.input_manifest_sha256)
@@ -695,6 +714,13 @@ def main(argv: list[str] | None = None) -> int:
     except KeyboardInterrupt:
         rc = 130
     finally:
+        build_result = read_build_result(build_result_path(paths))
+        slug_workspace = (
+            build_result.get("slug_workspace") if build_result is not None else None
+        )
+        slug_changes = (
+            build_result.get("slug_changes") if build_result is not None else None
+        )
         payload = {
             "command": cmd,
             "started": started,
@@ -702,6 +728,8 @@ def main(argv: list[str] | None = None) -> int:
             "return_code": rc,
             "db_dir": str(paths.db_dir),
             "slug_dir": str(paths.slug_dir) if paths.slug_dir else None,
+            "slug_workspace": slug_workspace,
+            "slug_changes": slug_changes,
             "prestage_cache": (
                 str(paths.prestage_cache) if paths.prestage_cache else None
             ),
@@ -715,6 +743,8 @@ def main(argv: list[str] | None = None) -> int:
             cleanup(paths, cleanup_db=True, cleanup_slug=True)
         elif paths.created_slug_dir:
             emit("scratch", f"copied slug dir kept at {paths.slug_dir}")
+        if slug_workspace is not None:
+            emit("scratch", f"catalog slug workspace kept at {slug_workspace}")
         emit("done", f"rc={rc}")
     if rc < 0:
         return 128 + abs(rc)

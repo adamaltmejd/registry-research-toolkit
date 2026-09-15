@@ -991,7 +991,9 @@ them, and quick-checks the referenced accepted SCB snapshot's manifest, Git iden
 inventory without traversing its logical stream. It refuses an existing target and never
 stages or commits. Acceptance is an explicit maintainer Git decision; there is no
 reverse synchronization to the code checkout and no remote creation. The explicit
-`verify-input-bundle` command performs the exhaustive SCB proof:
+`verify-input-bundle` command performs the exhaustive SCB proof. Referenced paths must
+resolve inside their selected source roots before staging starts, and preparation
+re-enumerates complete membership, absences and source identities before publication:
 
 ```console
 reg-meta-build prepare-input-bundle \
@@ -1059,9 +1061,11 @@ and no missing or unlisted file falls back to loose inputs or the builder checko
 Build output and prestage caches must remain outside the accepted repository. The build
 copies only mutable slug TOMLs to a per-run workspace, passes that same path to import
 and final validation, reports generated differences, and leaves the workspace for review
-without changing or accepting the input repository. The repository is checked again
-after validation immediately before atomic publication. `--input-dir` remains an
-explicit raw source-preparation/testing path, not a compatibility selection mode.
+without changing or accepting the input repository. The workspace is a sibling of the
+database output, so watcher cleanup cannot discard it; the watcher summary records its
+path and changes. The repository is checked again after validation immediately before
+atomic publication. `--input-dir` remains an explicit raw source-preparation/testing
+path, not a compatibility selection mode.
 
 `prepare` derives `converter_commit` from the checkout containing both the executing CLI
 file and the imported `input_snapshot.py`; they must be tracked blobs matching HEAD in
