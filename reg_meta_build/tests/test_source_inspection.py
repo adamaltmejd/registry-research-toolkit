@@ -80,6 +80,27 @@ def _field_text(record: SourceRecord, field: str) -> str | None:
     return observation.value
 
 
+_QUALIFICATION_CONTEXT = {
+    (
+        "worksheet-context Individ!A139: Befolkningens arbetsmarknadsstatus "
+        "(BAS) är källa från 2022 om inget annat år anges"
+    ),
+    (
+        "worksheet-context Företag!A48: Ekonomiska nyckeltal och ekonomisk "
+        "grunddata finns för företag som ingår i Företagens ekonomi (FEK)."
+    ),
+    (
+        "worksheet-context Företag!A49: FEK täcker näringslivet (exklusive de "
+        "finansiella och offentliga sektorerna samt hushållens icke-vinstdrivande"
+    ),
+    "worksheet-context Företag!A50:  organisationer).",
+    (
+        "worksheet-context Företag!A91: Från 2024 inkluderas godkända "
+        "resultaträkningar även om balansräkning är underkänd och tvärtom."
+    ),
+}
+
+
 def _record(
     revision: SourceRevision,
     *,
@@ -212,16 +233,38 @@ def test_lisa_reader_preserves_four_layouts_sections_periods_and_occurrences(
         "continuation-note Individ!F323: RAMS-Jobb",
     )
     assert ku2.locator.physical_cells[-2:] == ("Individ!B323", "Individ!F323")
-    assert len(source.worksheet_context) == 5
-    assert source.worksheet_context[0] == ("worksheet-footnote Individ!B815: _ftnref2")
-    assert source.worksheet_context[-1].startswith(
+    recognized_context = tuple(
+        item
+        for item in source.worksheet_context
+        if item.startswith("worksheet-context ")
+    )
+    expected_context = {
+        f"worksheet-context {sheet}!A{row}: {text}"
+        for sheet, spec in lisa_module._TABLES.items()
+        for row, text in spec.text_rows.items()
+    }
+    assert set(recognized_context) == expected_context
+    assert len(recognized_context) == len(expected_context)
+    assert set(recognized_context) >= _QUALIFICATION_CONTEXT
+
+    footnotes = tuple(
+        item
+        for item in source.worksheet_context
+        if item.startswith("worksheet-footnote ")
+    )
+    assert len(footnotes) == 5
+    assert footnotes[0] == ("worksheet-footnote Individ!B815: _ftnref2")
+    assert footnotes[-1].startswith(
         "worksheet-footnote Individ!B819: 7 Från och med årgång 2020"
     )
     assert all(
         "Individ!B815" not in record.locator.physical_cells for record in records
     )
     assert all(
-        all("worksheet-footnote" not in item for item in record.context)
+        all(
+            not item.startswith(("worksheet-context ", "worksheet-footnote "))
+            for item in record.context
+        )
         for record in records
     )
 
@@ -735,10 +778,18 @@ def test_column_filter_retains_source_only_exact_observations(
         bundle, code_commit="c" * 40, exact_column="OnlyScb"
     )
     assert scb_only.summary.workbook_selected_occurrences == 0
-    assert len(scb_only.workbook_context) == 5
+    assert set(scb_only.workbook_context) >= _QUALIFICATION_CONTEXT
+    assert all(
+        scb_only.workbook_context.count(item) == 1 for item in _QUALIFICATION_CONTEXT
+    )
     assert [record.subject.native.member_id for record in scb_only.source_records] == [
         3
     ]
+    assert all(
+        item not in record.context
+        for record in scb_only.source_records
+        for item in _QUALIFICATION_CONTEXT
+    )
     assert len(scb_only.comparison_outcomes) == 1
     assert scb_only.comparison_outcomes[0].status == "source_only_observation"
     assert scb_only.comparison_outcomes[0].workbook_record_ids == ()

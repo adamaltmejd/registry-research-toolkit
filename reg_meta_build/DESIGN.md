@@ -1191,10 +1191,10 @@ reg-meta-build --output /tmp/lisa-source-records.json inspect-source-records \
 The command reads the four supported LISA layouts and raw prepared SCB
 `Registerinformation` records into compact source records. Full and exact-column modes
 emit deterministic source witnesses, scoped comparison outcomes, input/code pins,
-unresolved applicability, source-only SCB observations, worksheet-level workbook
-context, and (for a filter) non-executable source-target membership. The report is
-diagnostic and source-target-only: it applies no curation, previews no complete catalog
-blast radius, and claims no catalog validation, acceptance, or publication.
+unresolved applicability, source-only SCB observations, validated worksheet-level
+workbook context, and (for a filter) non-executable source-target membership. The report
+is diagnostic and source-target-only: it applies no curation, previews no complete
+catalog blast radius, and claims no catalog validation, acceptance, or publication.
 
 After acceptance, the normal builder selects exactly that bundle:
 

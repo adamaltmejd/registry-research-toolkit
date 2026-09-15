@@ -498,6 +498,9 @@ def read_lisa_source(path: Path, revision: SourceRevision) -> _LisaSourceRead:
                         f"unsupported LISA section structure at {sheet_name}!A{row_number}: "
                         f"expected {expected!r}, got {actual!r}"
                     )
+                worksheet_context.append(
+                    f"worksheet-context {sheet_name}!A{row_number}: {actual}"
+                )
             for row_number, context_row in spec.context_rows.items():
                 actual = tuple(
                     sheet.cell(row_number, column).value

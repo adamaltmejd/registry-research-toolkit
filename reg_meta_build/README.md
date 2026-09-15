@@ -37,9 +37,10 @@ reg-meta-build --output /tmp/lisa-source-records.json inspect-source-records \
   --column AmPolTyp
 ```
 
-The report retains source-only SCB observations and worksheet footnotes separately from
-declaration context. It is a diagnostic source-target preview: it applies no correction
-and makes no catalog-impact, acceptance, validation, or publication claim.
+The report retains source-only SCB observations plus validated worksheet context and
+footnotes separately from declaration context. It is a diagnostic source-target preview:
+it applies no correction and makes no catalog-impact, acceptance, validation, or
+publication claim.
 
 See [DESIGN.md](DESIGN.md) for design rationale; remaining build work is tracked in
 `REFACTOR_SPEC.md` at repo root.
