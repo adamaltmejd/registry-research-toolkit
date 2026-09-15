@@ -67,6 +67,7 @@ from reg_meta_build.db import (
     _progress,
     _scb_snapshot_error,
     _stage_timer,
+    _validated_scb_header,
     _value_set_hash,
 )
 from reg_meta_build.edition_bounds import edition_claims, vintage_claim
@@ -130,7 +131,7 @@ if TYPE_CHECKING:
         MatrixAnswer,
     )
     from reg_meta_build.codelivery import CodeliveryMap
-    from reg_meta_build.input_snapshot import ScbSnapshotReader
+    from reg_meta_build.input_snapshot import PreparedVardemangder, ScbSnapshotReader
     from reg_meta_build.sources import IRObject
 
 
@@ -3893,11 +3894,81 @@ def _load_validity_map(
     return validity_map, row_count
 
 
+def _canonical_vardemangder_text(value: str) -> str:
+    return value if value.isascii() else value.translate(_CP850_CANON)
+
+
+def _classify_vardemangder_code(
+    code: str,
+) -> Literal["value", "sentinel", "drift"]:
+    """Classify the case where a value code equals its value-set version."""
+    if not code or code in _VARDEMANGDER_REAL_SHAPED:
+        return "value"
+    if code in _VARDEMANGDER_SENTINELS:
+        return "sentinel"
+    return "drift"
+
+
+def _finish_vardemangder_import(
+    conn: sqlite3.Connection,
+    *,
+    row_count: int,
+    code_rows: list[tuple[int, str, str]],
+    cvid_value_set_info: dict[int, tuple[str, str]],
+    skipped_sentinel: int,
+    skipped_empty: int,
+    drift_samples: dict[str, int],
+) -> tuple[int, dict[int, tuple[str, str]]]:
+    _progress(f"  Writing {len(code_rows):,} value codes...")
+    conn.executemany(
+        "INSERT INTO value_code (code_id, code, label) VALUES (?, ?, ?)",
+        code_rows,
+    )
+
+    _progress(
+        f"  {row_count:,} rows read, {len(code_rows):,} unique codes, "
+        f"{len(cvid_value_set_info):,} CVIDs with values"
+    )
+    if skipped_sentinel or skipped_empty:
+        _progress(
+            f"  Skipped {skipped_sentinel:,} SCB type-tag rows "
+            f"({sorted(_VARDEMANGDER_SENTINELS)}) "
+            f"and {skipped_empty:,} fully-empty rows."
+        )
+    if drift_samples:
+        sample = ", ".join(
+            f"{key!r} ({count} rows)"
+            for key, count in sorted(drift_samples.items(), key=lambda item: -item[1])[
+                :5
+            ]
+        )
+        raise RegMetaError(
+            exit_code=EXIT_CONFIG,
+            code="vardemangder_drift",
+            error_class="configuration",
+            message=(
+                f"Vardemangder drift: {len(drift_samples)} sentinel-shape "
+                f"vardekod value(s) (kod==version) require human review. "
+                f"Sample: {sample}."
+            ),
+            remediation=(
+                "Inspect the listed vardekod values in Vardemangder.csv. "
+                "(a) New SCB type-tag placeholder → add to "
+                "_VARDEMANGDER_SENTINELS in reg_meta_build/src/reg_meta_build/db.py. "
+                "(b) New real single-code value set sharing the shape → "
+                "add to _VARDEMANGDER_REAL_SHAPED. (c) Already in "
+                "_VARDEMANGDER_SENTINELS but appeared with niva!=version "
+                "→ SCB changed the sentinel shape; broaden the skip rule "
+                "to match. Then rerun build-db."
+            ),
+        )
+    return row_count, cvid_value_set_info
+
+
 def _import_vardemangder(
     conn: sqlite3.Connection,
     path: Path,
     known_cvids: set[int],
-    snapshot: ScbSnapshotReader | None = None,
 ) -> tuple[int, dict[int, tuple[str, str]]]:
     """Import Vardemangder.csv: write value_code, stage (cvid, code_id, item_id)
     triples to ``staging._build_cvid_pair`` for the year-projection pass.
@@ -3911,7 +3982,7 @@ def _import_vardemangder(
     rows were sentinels or fully-empty get no entry here, so their
     variable_instance.vardemangds{version,niva} stay NULL.
 
-    PERFORMANCE — this is the build's hot loop (102M rows on the real corpus).
+    RAW PERFORMANCE — this is the build's hot loop (102M rows on the real corpus).
     The generic `_open_scb_csv` would build a decoded {col: val} dict PER ROW
     (~102M dicts + ~612M `_decode_cp1252` calls over 6 columns), which alone
     dominated the build. Instead it reads RAW latin-1 field lists
@@ -3952,7 +4023,7 @@ def _import_vardemangder(
         "(cvid, code_id, item_id) VALUES (?, ?, ?)"
     )
 
-    with _open_scb_csv_raw(path, snapshot) as (header, rows):
+    with _open_scb_csv_raw(path) as (header, rows):
         i_cvid = header.index("CVID")
         i_kod = header.index("Värdekod")
         i_namn = header.index("Värdebenämning")
@@ -3963,8 +4034,7 @@ def _import_vardemangder(
         get_code = code_lookup.get
         append_triple = stage_batch.append
         canon = _CP850_CANON
-        sentinels = _VARDEMANGDER_SENTINELS
-        real_shaped = _VARDEMANGDER_REAL_SHAPED
+        classify_equal_code = _classify_vardemangder_code
         executemany = conn.executemany
 
         for _, fields in rows:
@@ -3991,15 +4061,18 @@ def _import_vardemangder(
             # (version, niva).
             kod_c = vardekod if vardekod.isascii() else vardekod.translate(canon)
             ver_c = version if version.isascii() else version.translate(canon)
-
+            kind = "value"
             if kod_c == ver_c:
+                kind = classify_equal_code(kod_c)
                 niva_c = niva if niva.isascii() else niva.translate(canon)
-                if kod_c == niva_c and kod_c in sentinels:
-                    skipped_sentinel += 1
-                    continue
-                if kod_c and kod_c not in real_shaped:
-                    drift_key = _decode_cp1252(vardekod)
-                    drift_samples[drift_key] = drift_samples.get(drift_key, 0) + 1
+                if kind == "sentinel" and kod_c != niva_c:
+                    kind = "drift"
+            if kind == "sentinel":
+                skipped_sentinel += 1
+                continue
+            if kind == "drift":
+                drift_key = _decode_cp1252(vardekod)
+                drift_samples[drift_key] = drift_samples.get(drift_key, 0) + 1
 
             vardebenamning = fields[i_namn]
             raw_item = fields[i_item]
@@ -4039,48 +4112,203 @@ def _import_vardemangder(
     if stage_batch:
         conn.executemany(sql, stage_batch)
 
-    _progress(f"  Writing {len(code_rows):,} value codes...")
-    conn.executemany(
-        "INSERT INTO value_code (code_id, code, label) VALUES (?, ?, ?)",
-        code_rows,
+    return _finish_vardemangder_import(
+        conn,
+        row_count=row_count,
+        code_rows=code_rows,
+        cvid_value_set_info=cvid_value_set_info,
+        skipped_sentinel=skipped_sentinel,
+        skipped_empty=skipped_empty,
+        drift_samples=drift_samples,
     )
 
-    _progress(
-        f"  {row_count:,} rows read, {len(code_rows):,} unique codes, "
-        f"{len(cvid_value_set_info):,} CVIDs with values"
+
+@dataclass(slots=True)
+class _PreparedValuePayload:
+    raw_code: str
+    raw_label: str
+    code_key: tuple[str, str]
+    equal_version_kind: Literal["value", "sentinel", "drift"]
+    _decoded: tuple[str, str] | None = None
+
+    @classmethod
+    def from_cells(cls, cells: tuple[str | None, ...]) -> _PreparedValuePayload:
+        raw_code, raw_label = ("" if value is None else value for value in cells)
+        code_key = _canonical_vardemangder_text(raw_code)
+        return cls(
+            raw_code=raw_code,
+            raw_label=raw_label,
+            code_key=(
+                code_key,
+                _canonical_vardemangder_text(raw_label),
+            ),
+            equal_version_kind=_classify_vardemangder_code(code_key),
+        )
+
+    def decoded(self) -> tuple[str, str]:
+        if self._decoded is None:
+            self._decoded = (
+                _decode_cp1252(self.raw_code),
+                _decode_cp1252(self.raw_label),
+            )
+        return self._decoded
+
+
+@dataclass(slots=True)
+class _PreparedValueSetPayload:
+    raw_version: str
+    raw_level: str
+    version_key: str
+    level_key: str
+    _decoded: tuple[str, str] | None = None
+
+    @classmethod
+    def from_cells(cls, cells: tuple[str | None, ...]) -> _PreparedValueSetPayload:
+        raw_version, raw_level = ("" if value is None else value for value in cells)
+        return cls(
+            raw_version=raw_version,
+            raw_level=raw_level,
+            version_key=_canonical_vardemangder_text(raw_version),
+            level_key=_canonical_vardemangder_text(raw_level),
+        )
+
+    def decoded(self) -> tuple[str, str]:
+        if self._decoded is None:
+            self._decoded = (
+                _decode_cp1252(self.raw_version),
+                _decode_cp1252(self.raw_level),
+            )
+        return self._decoded
+
+
+@dataclass(slots=True)
+class _PreparedVardemangderImport:
+    source: PreparedVardemangder
+    values: dict[str, _PreparedValuePayload]
+    value_sets: dict[str, _PreparedValueSetPayload]
+
+
+def _prepare_vardemangder(
+    snapshot: ScbSnapshotReader,
+) -> _PreparedVardemangderImport:
+    from reg_meta_build.input_snapshot import SnapshotError
+
+    try:
+        prepared = snapshot.open_vardemangder()
+        raw_header = tuple("" if value is None else value for value in prepared.header)
+        _validated_scb_header("Vardemangder.csv", raw_header)
+        return _PreparedVardemangderImport(
+            source=prepared,
+            values={
+                key: _PreparedValuePayload.from_cells(cells)
+                for key, cells in prepared.values()
+            },
+            value_sets={
+                key: _PreparedValueSetPayload.from_cells(cells)
+                for key, cells in prepared.value_sets()
+            },
+        )
+    except SnapshotError as exc:
+        raise _scb_snapshot_error(exc) from exc
+
+
+def _import_prepared_vardemangder(
+    conn: sqlite3.Connection,
+    known_cvids: set[int],
+    prepared_import: _PreparedVardemangderImport,
+) -> tuple[int, dict[int, tuple[str, str]]]:
+    from reg_meta_build.input_snapshot import SnapshotError
+
+    try:
+        return _import_prepared_vardemangder_checked(conn, known_cvids, prepared_import)
+    except SnapshotError as exc:
+        raise _scb_snapshot_error(exc) from exc
+
+
+def _import_prepared_vardemangder_checked(
+    conn: sqlite3.Connection,
+    known_cvids: set[int],
+    prepared_import: _PreparedVardemangderImport,
+) -> tuple[int, dict[int, tuple[str, str]]]:
+    _progress("Importing prepared Vardemangder values (this may take a while)...")
+    prepared = prepared_import.source
+    value_payloads = prepared_import.values
+    value_set_payloads = prepared_import.value_sets
+
+    row_count = 0
+    batch_size = 50_000
+    code_lookup: dict[tuple[str, str], int] = {}
+    code_rows: list[tuple[int, str, str]] = []
+    cvid_value_set_info: dict[int, tuple[str, str]] = {}
+    stage_batch: list[tuple[int, int, int]] = []
+    skipped_sentinel = 0
+    skipped_empty = 0
+    drift_samples: dict[str, int] = {}
+    sql = (
+        "INSERT OR IGNORE INTO staging._build_cvid_pair "
+        "(cvid, code_id, item_id) VALUES (?, ?, ?)"
     )
-    if skipped_sentinel or skipped_empty:
-        _progress(
-            f"  Skipped {skipped_sentinel:,} SCB type-tag rows "
-            f"({sorted(_VARDEMANGDER_SENTINELS)}) "
-            f"and {skipped_empty:,} fully-empty rows."
-        )
-    if drift_samples:
-        sample = ", ".join(
-            f"{k!r} ({n} rows)"
-            for k, n in sorted(drift_samples.items(), key=lambda x: -x[1])[:5]
-        )
-        raise RegMetaError(
-            exit_code=EXIT_CONFIG,
-            code="vardemangder_drift",
-            error_class="configuration",
-            message=(
-                f"Vardemangder drift: {len(drift_samples)} sentinel-shape "
-                f"vardekod value(s) (kod==version) require human review. "
-                f"Sample: {sample}."
-            ),
-            remediation=(
-                "Inspect the listed vardekod values in Vardemangder.csv. "
-                "(a) New SCB type-tag placeholder → add to "
-                "_VARDEMANGDER_SENTINELS in reg_meta_build/src/reg_meta_build/db.py. "
-                "(b) New real single-code value set sharing the shape → "
-                "add to _VARDEMANGDER_REAL_SHAPED. (c) Already in "
-                "_VARDEMANGDER_SENTINELS but appeared with niva!=version "
-                "→ SCB changed the sentinel shape; broaden the skip rule "
-                "to match. Then rerun build-db."
-            ),
-        )
-    return row_count, cvid_value_set_info
+    get_code = code_lookup.get
+    append_triple = stage_batch.append
+    executemany = conn.executemany
+
+    for raw_cvid, raw_item, value_set_key, value_key in prepared.occurrences(
+        value_set_keys=value_set_payloads, value_keys=value_payloads
+    ):
+        row_count += 1
+        if row_count % 5_000_000 == 0:
+            _progress(f"  ...{row_count:,} rows read")
+
+        cvid = int("" if raw_cvid is None else raw_cvid)
+        if cvid not in known_cvids:
+            continue
+
+        value = value_payloads[value_key]
+        value_set = value_set_payloads[value_set_key]
+        kind = "value"
+        if value.code_key[0] == value_set.version_key:
+            kind = value.equal_version_kind
+            if kind == "sentinel" and value.code_key[0] != value_set.level_key:
+                kind = "drift"
+        if kind == "sentinel":
+            skipped_sentinel += 1
+            continue
+        if kind == "drift":
+            drift_key = value.decoded()[0]
+            drift_samples[drift_key] = drift_samples.get(drift_key, 0) + 1
+
+        item = "" if raw_item is None else raw_item
+        if not (value.raw_code or value.raw_label or item):
+            skipped_empty += 1
+            continue
+
+        code_id = get_code(value.code_key)
+        if code_id is None:
+            code_id = len(code_rows)
+            code_lookup[value.code_key] = code_id
+            code_rows.append((code_id, *value.decoded()))
+
+        if cvid not in cvid_value_set_info:
+            cvid_value_set_info[cvid] = value_set.decoded()
+
+        item_id = int(item) if item else 0
+        append_triple((cvid, code_id, item_id))
+        if len(stage_batch) >= batch_size:
+            executemany(sql, stage_batch)
+            stage_batch.clear()
+
+    if stage_batch:
+        executemany(sql, stage_batch)
+
+    return _finish_vardemangder_import(
+        conn,
+        row_count=row_count,
+        code_rows=code_rows,
+        cvid_value_set_info=cvid_value_set_info,
+        skipped_sentinel=skipped_sentinel,
+        skipped_empty=skipped_empty,
+        drift_samples=drift_samples,
+    )
 
 
 @dataclass
@@ -5193,10 +5421,18 @@ class SCBAdapter:
                     self.projection_stats = cached.projection_stats
                     continue
 
-                with _stage_timer("scb:vardemangder_import"):
-                    vm_count, cvid_vs_info = _import_vardemangder(
-                        conn, path, known_cvids, self.snapshot
-                    )
+                if self.snapshot is None:
+                    with _stage_timer("scb:vardemangder_import"):
+                        vm_count, cvid_vs_info = _import_vardemangder(
+                            conn, path, known_cvids
+                        )
+                else:
+                    with _stage_timer("scb:vardemangder_dictionary_prepare"):
+                        prepared_import = _prepare_vardemangder(self.snapshot)
+                    with _stage_timer("scb:vardemangder_occurrence_import"):
+                        vm_count, cvid_vs_info = _import_prepared_vardemangder(
+                            conn, known_cvids, prepared_import
+                        )
                 self.row_counts[filename] = vm_count
                 if cvid_vs_info:
                     _progress(
@@ -5226,14 +5462,6 @@ class SCBAdapter:
                             validity_rows=validity_row_count,
                             projection_stats=self.projection_stats,
                         )
-
-        if self.snapshot is not None:
-            from reg_meta_build.input_snapshot import SnapshotError
-
-            try:
-                self.snapshot.verify_all()
-            except SnapshotError as exc:
-                raise _scb_snapshot_error(exc) from exc
 
         # Y-114: replay the curated upstream errata as synthetic
         # Registerinformation rows. Both edges of this slot are load-bearing:

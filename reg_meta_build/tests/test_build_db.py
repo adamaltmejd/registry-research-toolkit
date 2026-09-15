@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import sqlite3
 from pathlib import Path
@@ -17,7 +18,7 @@ from _csv_fixtures import (
     VARDEMANGDER_ROWS,
     _ri_row,
     _var_row,
-    corrupt_scb_snapshot_logical_hashes,
+    repin_scb_snapshot,
     timeseries_row,
     write_csv,
     write_scb_input,
@@ -39,6 +40,7 @@ from reg_meta_build.db import (
     _value_set_hash,
     build_db,
 )
+from reg_meta_build.dbdiff import TableIgnore, diff_db_content
 from reg_meta_build.sources.scb import _canon_data_type
 
 from reg_meta_build.fqid_slugs import slug_dir_curates_canonical_scb
@@ -955,11 +957,20 @@ class TestBuildDb:
 
 
 class TestBuildDbErrors:
-    def test_damaged_pinned_snapshot_preserves_existing_catalog(self, tmp_path: Path):
+    def test_failed_snapshot_quick_check_preserves_existing_catalog(
+        self, tmp_path: Path
+    ):
         input_dir = tmp_path / "input"
         scb_dir = write_scb_input(input_dir)
         selection = write_scb_snapshot(tmp_path / "snapshot-fixture", scb_dir)
-        damaged = corrupt_scb_snapshot_logical_hashes(selection)
+        manifest = json.loads(
+            (selection.path / "manifest.json").read_text(encoding="utf-8")
+        )
+        values = next(
+            item for item in manifest["files"] if item["name"] == "Vardemangder.csv"
+        )
+        (selection.path / values["records"][0]["path"]).unlink()
+        damaged = repin_scb_snapshot(selection, "missing accepted snapshot artifact")
         db_dir = tmp_path / "db"
         db_dir.mkdir()
         live = db_dir / "reg_meta.db"
@@ -976,7 +987,48 @@ class TestBuildDbErrors:
             )
 
         assert exc_info.value.code == "scb_snapshot_invalid"
-        assert "logical record round-trip mismatch" in exc_info.value.message
+        assert "normalized file inventory mismatch" in exc_info.value.message
+        assert live.read_bytes() == live_bytes
+
+    def test_consumed_snapshot_error_preserves_existing_catalog(self, tmp_path: Path):
+        input_dir = tmp_path / "input"
+        scb_dir = write_scb_input(input_dir)
+        selection = write_scb_snapshot(tmp_path / "snapshot-fixture", scb_dir)
+        manifest_path = selection.path / "manifest.json"
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        values = next(
+            item for item in manifest["files"] if item["name"] == "Vardemangder.csv"
+        )
+        record = values["records"][0]
+        record_path = selection.path / record["path"]
+        lines = record_path.read_text(encoding="utf-8").splitlines()
+        fields = lines[0].split("\t")
+        fields[1] = "Z" * 22
+        lines[0] = "\t".join(fields)
+        record_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+        record["sha256"] = hashlib.sha256(record_path.read_bytes()).hexdigest()
+        manifest_path.write_text(
+            json.dumps(manifest, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+            encoding="utf-8",
+        )
+        damaged = repin_scb_snapshot(selection, "dangling accepted value reference")
+
+        db_dir = tmp_path / "db"
+        db_dir.mkdir()
+        live = db_dir / "reg_meta.db"
+        live_bytes = b"EXISTING-CATALOG"
+        live.write_bytes(live_bytes)
+        with pytest.raises(RegMetaError) as exc_info:
+            build_db(
+                input_dir=input_dir,
+                db_dir=db_dir,
+                skip_classifications=True,
+                skip_slugs=True,
+                scb_snapshot=damaged,
+            )
+
+        assert exc_info.value.code == "scb_snapshot_invalid"
+        assert "references missing value payload" in exc_info.value.message
         assert live.read_bytes() == live_bytes
 
     def test_missing_input_dir(self, tmp_path: Path):
@@ -1221,7 +1273,8 @@ class TestVardemangderDrift:
             skip_slugs=True,
         )
 
-    def test_drift_raises_on_unknown_kod(self, tmp_path: Path) -> None:
+    @pytest.mark.parametrize("prepared", [False, True], ids=["raw", "prepared"])
+    def test_drift_raises_on_unknown_kod(self, tmp_path: Path, prepared: bool) -> None:
         # "ZZZ" is in neither allowlist; build must fail with an actionable
         # error pointing the maintainer at the two allowlists.
         drift_rows = list(VARDEMANGDER_REAL_ROWS) + [
@@ -1229,13 +1282,23 @@ class TestVardemangderDrift:
         ]
         input_dir = tmp_path / "input"
         db_dir = tmp_path / "db"
-        write_scb_input(input_dir, vardemangder_rows=drift_rows)
+        scb_dir = write_scb_input(input_dir, vardemangder_rows=drift_rows)
+        selection = (
+            write_scb_snapshot(tmp_path / "snapshot-fixture", scb_dir)
+            if prepared
+            else None
+        )
+        build_input = input_dir
+        if selection is not None:
+            build_input = tmp_path / "snapshot-seed"
+            build_input.mkdir()
         with pytest.raises(RegMetaError) as exc_info:
             build_db(
-                input_dir=input_dir,
+                input_dir=build_input,
                 db_dir=db_dir,
                 skip_classifications=True,
                 skip_slugs=True,
+                scb_snapshot=selection,
             )
         assert exc_info.value.code == "vardemangder_drift"
         assert exc_info.value.exit_code == 10
@@ -1243,7 +1306,10 @@ class TestVardemangderDrift:
         assert "_VARDEMANGDER_SENTINELS" in exc_info.value.remediation
         assert "_VARDEMANGDER_REAL_SHAPED" in exc_info.value.remediation
 
-    def test_drift_raises_on_niva_divergent_sentinel(self, tmp_path: Path) -> None:
+    @pytest.mark.parametrize("prepared", [False, True], ids=["raw", "prepared"])
+    def test_drift_raises_on_niva_divergent_sentinel(
+        self, tmp_path: Path, prepared: bool
+    ) -> None:
         # Skip rule requires kod==version==niva. A row with kod=version="Tal"
         # but niva diverging is a novel SCB shape — the build must surface it
         # rather than silently drop it. Failure mode that the upstream
@@ -1254,13 +1320,23 @@ class TestVardemangderDrift:
         ]
         input_dir = tmp_path / "input"
         db_dir = tmp_path / "db"
-        write_scb_input(input_dir, vardemangder_rows=drift_rows)
+        scb_dir = write_scb_input(input_dir, vardemangder_rows=drift_rows)
+        selection = (
+            write_scb_snapshot(tmp_path / "snapshot-fixture", scb_dir)
+            if prepared
+            else None
+        )
+        build_input = input_dir
+        if selection is not None:
+            build_input = tmp_path / "snapshot-seed"
+            build_input.mkdir()
         with pytest.raises(RegMetaError) as exc_info:
             build_db(
-                input_dir=input_dir,
+                input_dir=build_input,
                 db_dir=db_dir,
                 skip_classifications=True,
                 skip_slugs=True,
+                scb_snapshot=selection,
             )
         assert exc_info.value.code == "vardemangder_drift"
         assert "'Tal'" in exc_info.value.message
@@ -1450,6 +1526,65 @@ class TestYearProjection:
     """Each test builds a DB with a tailored Vardemangder + ValidDates fixture
     and asserts what survives projection."""
 
+    def test_prepared_matches_raw_across_projection_boundaries(
+        self, tmp_path: Path
+    ) -> None:
+        rows = [
+            # Excluded: tracked ItemId starts after the CVID's 2020 edition.
+            PIPE.join(["Kön", "1", "1", "Future", "1001", "8000"]),
+            # Included: a sub-year start still overlaps the 2020 edition.
+            PIPE.join(["Kön", "1", "2", "Subyear", "1001", "8001"]),
+            # Included: no validity row means the occurrence is always valid.
+            PIPE.join(["Kön", "1", "3", "Untracked", "1001", "8002"]),
+            # The tracked occurrence wins over its untracked duplicate.
+            PIPE.join(["Kön", "1", "4", "Mixed", "1001", "8003"]),
+            PIPE.join(["Kön", "1", "4", "Mixed", "1001", "8004"]),
+        ]
+        valid = [
+            PIPE.join(["8000", "2030-01-01", "2099-12-31"]),
+            PIPE.join(["8001", "2020-09-01", "2030-12-31"]),
+            PIPE.join(["8003", "2030-01-01", "2099-12-31"]),
+        ]
+        raw_input = _projection_input(tmp_path / "raw-source", rows, valid)
+        selection = write_scb_snapshot(tmp_path / "snapshot-fixture", raw_input / "SCB")
+        snapshot_seed = tmp_path / "snapshot-seed"
+        snapshot_seed.mkdir()
+
+        dbs = []
+        for name, input_dir, snapshot in (
+            ("raw", raw_input, None),
+            ("prepared", snapshot_seed, selection),
+        ):
+            db_dir = tmp_path / f"db-{name}"
+            build_db(
+                input_dir=input_dir,
+                db_dir=db_dir,
+                skip_classifications=True,
+                skip_slugs=True,
+                scb_snapshot=snapshot,
+            )
+            dbs.append(db_dir / "reg_meta.db")
+
+        conn = open_db(dbs[1])
+        try:
+            assert _projected_codes(conn, register_id=1, var_id=44, year=2020) == [
+                "2",
+                "3",
+            ]
+        finally:
+            conn.close()
+        report = diff_db_content(
+            *dbs,
+            ignore={
+                "import_manifest": TableIgnore(
+                    skip_where=(
+                        "key IN ('import_date', 'input_dir', 'scb_input_snapshot')"
+                    )
+                )
+            },
+        )
+        assert report.identical, report
+
     def test_excludes_out_of_window(self, tmp_path: Path):
         # cvid 1001 has year 2020. Item 8000 has validity 2030-2099, which
         # does not cover 2020 — Man must be excluded.
@@ -1512,7 +1647,10 @@ class TestYearProjection:
         conn.close()
         assert codes == ["1"]
 
-    def test_yearless_cvid_includes_all_union_pairs(self, tmp_path: Path):
+    @pytest.mark.parametrize("prepared", [False, True], ids=["raw", "prepared"])
+    def test_yearless_cvid_includes_all_union_pairs(
+        self, tmp_path: Path, prepared: bool
+    ) -> None:
         # cvid 9001's regver name "Person-År" has no extractable year. The
         # projection rule's yearless fallback must include the code even
         # though the tracked window 2030-2099 covers no plausible year.
@@ -1558,18 +1696,28 @@ class TestYearProjection:
         vm_rows = [PIPE.join(["Kön", "1", "1", "Man", "9001", "8006"])]
         valid = [PIPE.join(["8006", "2030-01-01", "2099-12-31"])]
         input_dir = tmp_path / "input"
-        write_scb_input(
+        scb_dir = write_scb_input(
             input_dir,
             registerinformation_rows=ri_rows,
             vardemangder_rows=vm_rows,
             valid_dates_rows=valid,
         )
+        selection = (
+            write_scb_snapshot(tmp_path / "snapshot-fixture", scb_dir)
+            if prepared
+            else None
+        )
+        build_input = input_dir
+        if selection is not None:
+            build_input = tmp_path / "snapshot-seed"
+            build_input.mkdir()
         db_dir = tmp_path / "db"
         build_db(
-            input_dir=input_dir,
+            input_dir=build_input,
             db_dir=db_dir,
             skip_classifications=True,
             skip_slugs=True,
+            scb_snapshot=selection,
         )
         conn = open_db(db_dir / "reg_meta.db")
         # The yearless cvid 9001 lands in its own synthetic register (id 9,

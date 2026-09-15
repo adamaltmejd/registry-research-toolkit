@@ -1034,28 +1034,3 @@ def omit_scb_snapshot_file(
         encoding="utf-8",
     )
     return repin_scb_snapshot(selection, f"omit {name}")
-
-
-def corrupt_scb_snapshot_logical_hashes(
-    selection: ScbSnapshotSelection,
-) -> ScbSnapshotSelection:
-    """Change normalized value data while leaving its logical digests stale."""
-    manifest_path = selection.path / "manifest.json"
-    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-    values = next(
-        item for item in manifest["files"] if item["name"] == "Vardemangder.csv"
-    )
-    record = values["records"][0]
-    record_path = selection.path / record["path"]
-    lines = record_path.read_text(encoding="utf-8").splitlines()
-    fields = lines[0].split("\t")
-    fields[-1] = "t9999"
-    lines[0] = "\t".join(fields)
-    record_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
-    record["size"] = record_path.stat().st_size
-    record["sha256"] = hashlib.sha256(record_path.read_bytes()).hexdigest()
-    manifest_path.write_text(
-        json.dumps(manifest, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
-        encoding="utf-8",
-    )
-    return repin_scb_snapshot(selection, "wrong ordered logical digest")

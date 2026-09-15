@@ -278,11 +278,22 @@ def test_selected_snapshot_stream_preserves_lossless_cells_before_scb_decoding(
 
 
 def test_selected_snapshot_requires_exact_commit_manifest_and_clean_checkout(
-    tmp_path: Path,
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     source_dir = write_scb_input(tmp_path / "source")
     selection = write_scb_snapshot(tmp_path / "snapshot-fixture", source_dir)
-    open_scb_snapshot(selection)
+
+    def exhaustive_use(*_args: object, **_kwargs: object) -> None:
+        raise AssertionError(
+            "ordinary selection must not perform exhaustive verification"
+        )
+
+    monkeypatch.setattr(snapshot_module, "_verify_committed_snapshot", exhaustive_use)
+    monkeypatch.setattr(snapshot_module, "_open_snapshot_rows", exhaustive_use)
+    monkeypatch.setattr(snapshot_module, "_update_record_hash", exhaustive_use)
+    reader = open_scb_snapshot(selection)
+    with reader.open_csv("Registerinformation.csv") as (_header, rows):
+        assert sum(1 for _row in rows) > 0
 
     with pytest.raises(SnapshotError, match="input commit pin mismatch"):
         open_scb_snapshot(
@@ -308,13 +319,38 @@ def test_selected_snapshot_preserves_optional_absence_and_rejects_value_pairing(
     reader = open_scb_snapshot(partial)
     assert reader.has_file("Registerinformation.csv")
     assert not reader.has_file("Identifierare.csv")
-    reader.verify_all()
 
     source_dir = write_scb_input(tmp_path / "paired-source")
     selection = write_scb_snapshot(tmp_path / "paired-snapshot", source_dir)
     unpaired = omit_scb_snapshot_file(selection, "VardemangderValidDates.csv")
     with pytest.raises(SnapshotError, match="requires VardemangderValidDates.csv"):
         open_scb_snapshot(unpaired)
+
+
+def test_prepare_exhaustively_verifies_before_publication(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    source_dir = write_scb_input(tmp_path / "source")
+    output = tmp_path / "snapshot"
+    exhaustive_verify = snapshot_module.verify_snapshot
+
+    def damage_then_verify(staging: Path):
+        record = next(staging.glob("files/Vardemangder.csv/records/*.tsv"))
+        payload = bytearray(record.read_bytes())
+        payload[0] = ord("A") if payload[0] != ord("A") else ord("B")
+        record.write_bytes(payload)
+        return exhaustive_verify(staging)
+
+    monkeypatch.setattr(snapshot_module, "verify_snapshot", damage_then_verify)
+    with pytest.raises(SnapshotError, match="references missing value_set payload"):
+        prepare_snapshot(
+            _inventory(tmp_path, source_dir),
+            output,
+            converter_commit="b" * 40,
+        )
+
+    assert not output.exists()
+    assert not list(tmp_path.glob(".snapshot.candidate-*"))
 
 
 def test_snapshot_rejects_missing_dictionary_reference_even_with_updated_file_hash(

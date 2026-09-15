@@ -1,7 +1,7 @@
 """Lossless, versioned snapshots of SCB machine-readable CSV deliveries.
 
-This module condenses a coherent CSV delivery into deterministic, reviewable text files
-and exposes an authenticated streamed reader for the normal build path.  It can also
+This module condenses a coherent CSV delivery into deterministic, reviewable text files,
+exposes a lightweight reader for an accepted snapshot on the normal build path, and can
 reconstruct the same ordered logical records without consulting the retained raw
 archive.  Provider interpretation (encoding repair, filtering, projection, coalescing,
 and curation) stays in :mod:`reg_meta_build.sources.scb`.
@@ -41,7 +41,7 @@ from .db import _file_sha256
 from .dbdiff import TableIgnore, diff_db_content, format_report
 
 if TYPE_CHECKING:
-    from collections.abc import Iterator, Mapping, Sequence
+    from collections.abc import Collection, Iterator, Mapping, Sequence
     from typing import IO
 
 SNAPSHOT_SCHEMA_VERSION = 1
@@ -589,6 +589,19 @@ def _field_cell(value: str) -> EncodedCell:
     raise SnapshotError(f"unknown escaped-TSV cell tag {value[0]!r}")
 
 
+def _decode_field(value: str) -> RawCell:
+    if value == "n":
+        return None
+    if (
+        value.startswith("t")
+        and "\\" not in value
+        and "\0" not in value
+        and value[1:].isascii()
+    ):
+        return value[1:]
+    return _decode_cell(_field_cell(value))
+
+
 def _tsv_line(fields: Sequence[str]) -> bytes:
     if any("\t" in value or "\r" in value or "\n" in value for value in fields):
         raise AssertionError("escaped TSV fields must occupy one physical line")
@@ -598,7 +611,7 @@ def _tsv_line(fields: Sequence[str]) -> bytes:
 def _iter_tsv(
     path: Path, expected: NormalizedFile | None = None
 ) -> Iterator[tuple[int, list[str]]]:
-    digest = hashlib.sha256()
+    digest = hashlib.sha256() if expected is not None else None
     size = 0
     lines = 0
     try:
@@ -608,8 +621,9 @@ def _iter_tsv(
     try:
         with handle:
             for line_number, raw in enumerate(handle, start=1):
-                digest.update(raw)
-                size += len(raw)
+                if digest is not None:
+                    digest.update(raw)
+                    size += len(raw)
                 lines += 1
                 if not raw.endswith(b"\n"):
                     raise SnapshotError(
@@ -628,12 +642,16 @@ def _iter_tsv(
                 yield line_number, text.split("\t")
     except OSError as exc:
         raise SnapshotError(f"cannot read normalized artifact {path}: {exc}") from exc
-    if expected is not None and (
-        size != expected.size
-        or lines != expected.lines
-        or digest.hexdigest() != expected.sha256
-    ):
-        raise SnapshotError(f"normalized file hash/size/line mismatch: {expected.path}")
+    if expected is not None:
+        assert digest is not None
+        if (
+            size != expected.size
+            or lines != expected.lines
+            or digest.hexdigest() != expected.sha256
+        ):
+            raise SnapshotError(
+                f"normalized file hash/size/line mismatch: {expected.path}"
+            )
 
 
 @contextmanager
@@ -1108,94 +1126,81 @@ def _verify_normalized_inventory(root: Path, manifest: SnapshotManifest) -> None
     actual_root = root / "files"
     actual = (
         {
-            path.relative_to(root).as_posix()
+            path.relative_to(root).as_posix(): path.stat().st_size
             for path in actual_root.rglob("*")
             if path.is_file()
         }
         if actual_root.exists()
-        else set()
+        else {}
     )
-    if actual != declared:
+    if actual.keys() != declared:
         raise SnapshotError(
-            f"normalized file inventory mismatch; missing={sorted(declared - actual)}, extra={sorted(actual - declared)}"
+            "normalized file inventory mismatch; "
+            f"missing={sorted(declared - actual.keys())}, "
+            f"extra={sorted(actual.keys() - declared)}"
         )
+
+    for item in manifest.files:
+        for normalized in _normalized_files(item):
+            if actual[normalized.path] != normalized.size:
+                raise SnapshotError(
+                    "normalized artifact size mismatch: "
+                    f"{normalized.path} "
+                    f"(expected {normalized.size}, got {actual[normalized.path]})"
+                )
+
+
+def _iter_group_payloads(
+    root: Path, group: PayloadGroup, *, exhaustive: bool
+) -> Iterator[tuple[str, tuple[RawCell, ...]]]:
+    last_key = ""
+    lines = 0
+    expected = group.dictionary if exhaustive else None
+    for line_number, fields in _iter_tsv(root / group.dictionary.path, expected):
+        if len(fields) != len(group.positions) + 1:
+            raise SnapshotError(
+                f"{group.dictionary.path}: line {line_number} has the wrong field count"
+            )
+        key = fields[0]
+        if not _KEY_RE.fullmatch(key) or key <= last_key:
+            raise SnapshotError(
+                f"{group.dictionary.path}: keys are invalid or not strictly sorted"
+            )
+        cells = tuple(_decode_cell(_field_cell(value)) for value in fields[1:])
+        if exhaustive and _payload_key(group.name, group.positions, cells) != key:
+            raise SnapshotError(
+                f"{group.dictionary.path}: line {line_number} has a false content key"
+            )
+        yield key, cells
+        last_key = key
+        lines += 1
+    if lines != group.entries or lines != group.dictionary.lines:
+        raise SnapshotError(f"dictionary line count mismatch: {group.dictionary.path}")
 
 
 def _load_groups(
-    root: Path, item: SnapshotFile
+    root: Path, item: SnapshotFile, *, exhaustive: bool
 ) -> list[dict[str, tuple[RawCell, ...]]]:
-    dictionaries: list[dict[str, tuple[RawCell, ...]]] = []
-    for group in item.groups:
-        payloads: dict[str, tuple[RawCell, ...]] = {}
-        last_key = ""
-        lines = 0
-        for line_number, fields in _iter_tsv(
-            root / group.dictionary.path, group.dictionary
-        ):
-            if len(fields) != len(group.positions) + 1:
-                raise SnapshotError(
-                    f"{group.dictionary.path}: line {line_number} has the wrong field count"
-                )
-            key = fields[0]
-            if not _KEY_RE.fullmatch(key) or key <= last_key:
-                raise SnapshotError(
-                    f"{group.dictionary.path}: keys are invalid or not strictly sorted"
-                )
-            cells = tuple(_decode_cell(_field_cell(value)) for value in fields[1:])
-            if _payload_key(group.name, group.positions, cells) != key:
-                raise SnapshotError(
-                    f"{group.dictionary.path}: line {line_number} has a false content key"
-                )
-            payloads[key] = cells
-            last_key = key
-            lines += 1
-        if lines != group.entries or lines != group.dictionary.lines:
-            raise SnapshotError(
-                f"dictionary line count mismatch: {group.dictionary.path}"
-            )
-        dictionaries.append(payloads)
-    return dictionaries
+    return [
+        dict(_iter_group_payloads(root, group, exhaustive=exhaustive))
+        for group in item.groups
+    ]
 
 
-def _iter_snapshot_rows(
-    root: Path,
-    item: SnapshotFile,
-    dictionaries: Sequence[Mapping[str, tuple[RawCell, ...]]],
-) -> Iterator[list[RawCell]]:
+def _iter_snapshot_record_fields(
+    root: Path, item: SnapshotFile, *, exhaustive: bool
+) -> Iterator[tuple[str, int, list[str]]]:
     expected_fields = len(item.groups) + len(item.inline_positions)
     seen = 0
     for record_file in item.records:
         lines = 0
-        for line_number, fields in _iter_tsv(root / record_file.path, record_file):
+        expected = record_file if exhaustive else None
+        for line_number, fields in _iter_tsv(root / record_file.path, expected):
             if len(fields) != expected_fields:
                 raise SnapshotError(
                     f"{record_file.path}: line {line_number} has the wrong field count"
                 )
-            row: list[RawCell | object] = [_UNSET] * item.column_count
-            for index, group in enumerate(item.groups):
-                key = fields[index]
-                if not _KEY_RE.fullmatch(key):
-                    raise SnapshotError(
-                        f"{record_file.path}: line {line_number} has an invalid group key"
-                    )
-                try:
-                    values = dictionaries[index][key]
-                except KeyError as exc:
-                    raise SnapshotError(
-                        f"{record_file.path}: line {line_number} references missing {group.name} payload {key}"
-                    ) from exc
-                for position, value in zip(group.positions, values, strict=True):
-                    row[position] = value
-            offset = len(item.groups)
-            for position, value in zip(
-                item.inline_positions, fields[offset:], strict=True
-            ):
-                row[position] = _decode_cell(_field_cell(value))
-            if any(value is _UNSET for value in row):
-                raise SnapshotError(
-                    f"{record_file.path}: line {line_number} did not fill every column"
-                )
-            yield cast("list[RawCell]", row)
+            yield record_file.path, line_number, fields
             lines += 1
             seen += 1
         if lines != record_file.lines:
@@ -1204,6 +1209,41 @@ def _iter_snapshot_rows(
         raise SnapshotError(
             f"record count mismatch for {item.name}: expected {item.record_count}, got {seen}"
         )
+
+
+def _iter_snapshot_rows(
+    root: Path,
+    item: SnapshotFile,
+    dictionaries: Sequence[Mapping[str, tuple[RawCell, ...]]],
+    *,
+    exhaustive: bool,
+) -> Iterator[list[RawCell]]:
+    for record_path, line_number, fields in _iter_snapshot_record_fields(
+        root, item, exhaustive=exhaustive
+    ):
+        row: list[RawCell | object] = [_UNSET] * item.column_count
+        for index, group in enumerate(item.groups):
+            key = fields[index]
+            if not _KEY_RE.fullmatch(key):
+                raise SnapshotError(
+                    f"{record_path}: line {line_number} has an invalid group key"
+                )
+            try:
+                values = dictionaries[index][key]
+            except KeyError as exc:
+                raise SnapshotError(
+                    f"{record_path}: line {line_number} references missing {group.name} payload {key}"
+                ) from exc
+            for position, value in zip(group.positions, values, strict=True):
+                row[position] = value
+        offset = len(item.groups)
+        for position, value in zip(item.inline_positions, fields[offset:], strict=True):
+            row[position] = _decode_field(value)
+        if any(value is _UNSET for value in row):
+            raise SnapshotError(
+                f"{record_path}: line {line_number} did not fill every column"
+            )
+        yield cast("list[RawCell]", row)
 
 
 def _logical_hashes(
@@ -1227,7 +1267,7 @@ def _open_snapshot_rows(
     root: Path, item: SnapshotFile
 ) -> Iterator[tuple[list[RawCell], Iterator[list[RawCell]]]]:
     """Open one normalized CSV and validate its bytes and logical stream at EOF."""
-    dictionaries = _load_groups(root, item)
+    dictionaries = _load_groups(root, item, exhaustive=True)
     header = [_decode_cell(cell) for cell in item.header]
     records_digest = hashlib.sha256()
     logical_digest = hashlib.sha256()
@@ -1238,7 +1278,7 @@ def _open_snapshot_rows(
 
     def checked_rows() -> Iterator[list[RawCell]]:
         nonlocal complete, count
-        for row in _iter_snapshot_rows(root, item, dictionaries):
+        for row in _iter_snapshot_rows(root, item, dictionaries, exhaustive=True):
             _update_record_hash(records_digest, row)
             logical_digest.update(b"record\0")
             _update_record_hash(logical_digest, row)
@@ -1258,8 +1298,80 @@ def _open_snapshot_rows(
         raise SnapshotError(f"snapshot row stream was not fully consumed: {item.name}")
 
 
+@contextmanager
+def _open_prepared_rows(
+    root: Path, item: SnapshotFile
+) -> Iterator[tuple[list[RawCell], Iterator[list[RawCell]]]]:
+    """Open accepted rows with structural checks but no exhaustive re-hashing."""
+    dictionaries = _load_groups(root, item, exhaustive=False)
+    header = [_decode_cell(cell) for cell in item.header]
+    complete = False
+
+    def checked_rows() -> Iterator[list[RawCell]]:
+        nonlocal complete
+        yield from _iter_snapshot_rows(root, item, dictionaries, exhaustive=False)
+        complete = True
+
+    yield header, checked_rows()
+    if not complete:
+        raise SnapshotError(f"snapshot row stream was not fully consumed: {item.name}")
+
+
+@dataclass(frozen=True)
+class PreparedVardemangder:
+    """Prepared value payloads plus ordered CVID/ItemId occurrence references."""
+
+    header: tuple[RawCell, ...]
+    _root: Path
+    _item: SnapshotFile
+    _value_set_group: PayloadGroup
+    _value_group: PayloadGroup
+    _value_set_index: int
+    _value_index: int
+
+    def value_sets(self) -> Iterator[tuple[str, tuple[RawCell, ...]]]:
+        yield from _iter_group_payloads(
+            self._root, self._value_set_group, exhaustive=False
+        )
+
+    def values(self) -> Iterator[tuple[str, tuple[RawCell, ...]]]:
+        yield from _iter_group_payloads(self._root, self._value_group, exhaustive=False)
+
+    def occurrences(
+        self,
+        *,
+        value_set_keys: Collection[str],
+        value_keys: Collection[str],
+    ) -> Iterator[tuple[RawCell, RawCell, str, str]]:
+        """Yield ``(CVID, ItemId, value-set key, value key)`` in source order."""
+        for record_path, line_number, fields in _iter_snapshot_record_fields(
+            self._root, self._item, exhaustive=False
+        ):
+            value_set_key = fields[self._value_set_index]
+            value_key = fields[self._value_index]
+            for group_name, key, payloads in (
+                ("value_set", value_set_key, value_set_keys),
+                ("value", value_key, value_keys),
+            ):
+                if key not in payloads:
+                    if not _KEY_RE.fullmatch(key):
+                        raise SnapshotError(
+                            f"{record_path}: line {line_number} has an invalid {group_name} key"
+                        )
+                    raise SnapshotError(
+                        f"{record_path}: line {line_number} references missing {group_name} payload {key}"
+                    )
+            offset = len(self._item.groups)
+            yield (
+                _decode_field(fields[offset]),
+                _decode_field(fields[offset + 1]),
+                value_set_key,
+                value_key,
+            )
+
+
 class ScbSnapshotReader:
-    """Authenticated, streamed access to one selected SCB input snapshot."""
+    """Quick, streamed access to one accepted SCB input snapshot."""
 
     def __init__(
         self,
@@ -1273,7 +1385,6 @@ class ScbSnapshotReader:
         self.root = root
         self.manifest = manifest
         self._files = {item.name: item for item in manifest.files}
-        self._verified: set[str] = set()
         self.provenance = {
             "input_repository_commit": input_commit,
             "snapshot_path": snapshot_path,
@@ -1298,18 +1409,34 @@ class ScbSnapshotReader:
         item = self._files.get(name)
         if item is None or not item.present:
             raise SnapshotError(f"snapshot source file is absent: {name}")
-        with _open_snapshot_rows(self.root, item) as opened:
+        with _open_prepared_rows(self.root, item) as opened:
             yield opened
-        self._verified.add(name)
 
-    def verify_all(self) -> None:
-        """Drain every present file not already consumed by the SCB adapter."""
-        for item in self.manifest.files:
-            if not item.present or item.name in self._verified:
-                continue
-            with self.open_csv(item.name) as (_header, rows):
-                for _row in rows:
-                    pass
+    def open_vardemangder(self) -> PreparedVardemangder:
+        """Load prepared dictionaries without expanding value occurrences."""
+        item = self._files.get("Vardemangder.csv")
+        if item is None or not item.present:
+            raise SnapshotError("snapshot source file is absent: Vardemangder.csv")
+        layout = {group.name: group.positions for group in item.groups}
+        if (
+            layout != {"value_set": (0, 1), "value": (2, 3)}
+            or item.inline_positions != (4, 5)
+            or item.column_count != 6
+        ):
+            raise SnapshotError(
+                "Vardemangder.csv has an unsupported prepared layout; "
+                "prepare, verify, and accept a snapshot with the current converter"
+            )
+        indexes = {group.name: index for index, group in enumerate(item.groups)}
+        return PreparedVardemangder(
+            header=tuple(_decode_cell(cell) for cell in item.header),
+            _root=self.root,
+            _item=item,
+            _value_set_group=item.groups[indexes["value_set"]],
+            _value_group=item.groups[indexes["value"]],
+            _value_set_index=indexes["value_set"],
+            _value_index=indexes["value"],
+        )
 
 
 def _write_csv(
@@ -1584,19 +1711,23 @@ def measure_codec_sample(
         }
 
 
-def _git(repo: Path, *args: str) -> str:
+def _git_bytes(repo: Path, *args: str) -> bytes:
     try:
         process = subprocess.run(
-            ["git", "-C", str(repo), *args], check=True, text=True, capture_output=True
+            ["git", "-C", str(repo), *args], check=True, capture_output=True
         )
     except (OSError, subprocess.CalledProcessError) as exc:
         detail = (
-            exc.stderr.strip()
+            exc.stderr.decode("utf-8", errors="replace").strip()
             if isinstance(exc, subprocess.CalledProcessError)
             else str(exc)
         )
         raise SnapshotError(f"git {' '.join(args)} failed in {repo}: {detail}") from exc
-    return process.stdout.strip()
+    return process.stdout
+
+
+def _git(repo: Path, *args: str) -> str:
+    return _git_bytes(repo, *args).decode("utf-8").strip()
 
 
 def clean_git_commit(repo: Path) -> str:
@@ -1666,6 +1797,63 @@ def _snapshot_repo_path(snapshot_path: str, relative_path: str) -> str:
     if snapshot_path == ".":
         return relative_path
     return f"{snapshot_path}/{relative_path}"
+
+
+def _read_committed_manifest(
+    repo: Path, commit: str, snapshot_path: str
+) -> tuple[SnapshotManifest, str]:
+    manifest_repo_path = _snapshot_repo_path(snapshot_path, MANIFEST_NAME)
+    manifest_bytes = _git_bytes(
+        repo, "cat-file", "blob", f"{commit}:{manifest_repo_path}"
+    )
+    try:
+        manifest = SnapshotManifest.model_validate_json(manifest_bytes)
+    except ValueError as exc:
+        raise SnapshotError(
+            f"invalid snapshot manifest in pinned commit: {exc}"
+        ) from exc
+    return manifest, hashlib.sha256(manifest_bytes).hexdigest()
+
+
+def _verify_committed_inventory(
+    repo: Path, commit: str, snapshot_path: str, manifest: SnapshotManifest
+) -> None:
+    files_path = _snapshot_repo_path(snapshot_path, "files")
+    tree = _git_bytes(repo, "ls-tree", "-r", "-l", "-z", commit, "--", files_path)
+
+    actual: dict[str, int] = {}
+    prefix = f"{snapshot_path}/" if snapshot_path != "." else ""
+    for entry in tree.split(b"\0"):
+        if not entry:
+            continue
+        try:
+            metadata, raw_path = entry.split(b"\t", 1)
+            _mode, object_type, _object_id, raw_size = metadata.split(b" ", 3)
+            path = raw_path.decode("utf-8")
+            size = int(raw_size)
+        except (UnicodeDecodeError, ValueError) as exc:
+            raise SnapshotError("invalid Git tree entry in snapshot inventory") from exc
+        if object_type != b"blob" or not path.startswith(prefix):
+            raise SnapshotError(f"invalid Git object in snapshot inventory: {path}")
+        actual[path.removeprefix(prefix)] = size
+
+    expected = {
+        normalized.path: normalized.size
+        for item in manifest.files
+        for normalized in _normalized_files(item)
+    }
+    if actual.keys() != expected.keys():
+        raise SnapshotError(
+            "normalized file inventory mismatch in pinned commit; "
+            f"missing={sorted(expected.keys() - actual.keys())}, "
+            f"extra={sorted(actual.keys() - expected.keys())}"
+        )
+    if mismatched := sorted(
+        path for path, size in expected.items() if actual[path] != size
+    ):
+        raise SnapshotError(
+            f"normalized artifact size mismatch in pinned commit: {mismatched}"
+        )
 
 
 def _read_git_blob(
@@ -1751,7 +1939,13 @@ def _verify_committed_snapshot(
 
 
 def open_scb_snapshot(selection: ScbSnapshotSelection) -> ScbSnapshotReader:
-    """Authenticate a pinned snapshot checkout and return its streamed reader."""
+    """Quick-check a pinned accepted snapshot and return its streamed reader.
+
+    The commit and manifest pins are the maintainer's acceptance declaration. This
+    ordinary-use boundary checks identity, supported versions, clean checkout, and
+    declared inventory/size. ``verify_snapshot`` remains the explicit exhaustive
+    artifact, dictionary, and logical-record proof.
+    """
     if not _GIT_COMMIT_RE.fullmatch(selection.input_commit):
         raise SnapshotError(
             "SCB input commit must be a full 40-character lowercase Git commit"
@@ -1776,7 +1970,7 @@ def open_scb_snapshot(selection: ScbSnapshotSelection) -> ScbSnapshotReader:
             "SCB input commit pin mismatch: expected "
             f"{selection.input_commit}, got {actual_commit}"
         )
-    committed_manifest, committed_manifest_sha256 = _verify_committed_snapshot(
+    committed_manifest, committed_manifest_sha256 = _read_committed_manifest(
         repo, selection.input_commit, snapshot_path
     )
     if committed_manifest_sha256 != selection.manifest_sha256:
@@ -1805,6 +1999,9 @@ def open_scb_snapshot(selection: ScbSnapshotSelection) -> ScbSnapshotReader:
         ) from exc
     if manifest != committed_manifest:
         raise SnapshotError("worktree snapshot manifest differs from pinned commit")
+    _verify_committed_inventory(
+        repo, selection.input_commit, snapshot_path, committed_manifest
+    )
     files = {item.name: item for item in manifest.files}
     if missing := set(SCB_CSV_FILES) - set(files):
         raise SnapshotError(

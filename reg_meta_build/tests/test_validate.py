@@ -15,7 +15,7 @@ import sqlite3
 from pathlib import Path
 
 import pytest
-from _csv_fixtures import write_scb_input
+from _csv_fixtures import write_scb_input, write_scb_snapshot
 from _shared_fixtures import connect_built_db
 from reg_meta.db import DB_FILENAME
 from reg_meta.errors import RegMetaError
@@ -1860,6 +1860,59 @@ class TestBuildDbSnapshotSelection:
         assert selection.path == Path("inputs/snapshot")
         assert selection.input_commit == "a" * 40
         assert selection.manifest_sha256 == "b" * 64
+
+    def test_cli_timing_separates_prepared_dictionary_and_occurrences(
+        self,
+        tmp_path: Path,
+        monkeypatch: pytest.MonkeyPatch,
+        capsys: pytest.CaptureFixture[str],
+    ) -> None:
+        from reg_meta_build import cli as cli_mod
+
+        input_dir = tmp_path / "input"
+        scb_dir = write_scb_input(input_dir)
+        selection = write_scb_snapshot(tmp_path / "snapshot-fixture", scb_dir)
+        snapshot_seed = tmp_path / "snapshot-seed"
+        snapshot_seed.mkdir()
+        monkeypatch.delenv("REG_META_BUILD_TIMING", raising=False)
+        actual_build_db = cli_mod.build_db
+
+        def build_without_classifications(**kwargs):
+            return actual_build_db(skip_classifications=True, **kwargs)
+
+        monkeypatch.setattr(cli_mod, "build_db", build_without_classifications)
+        args = cli_mod._build_parser().parse_args(
+            [
+                "--db",
+                str(tmp_path / "db"),
+                "build-db",
+                "--input-dir",
+                str(snapshot_seed),
+                "--providers",
+                "scb",
+                "--skip-slugs",
+                "--no-validate",
+                "--timing",
+                "--scb-snapshot",
+                str(selection.path),
+                "--scb-input-commit",
+                selection.input_commit,
+                "--scb-manifest-sha256",
+                selection.manifest_sha256,
+            ]
+        )
+
+        _envelope, exit_code = cli_mod._cmd_build_db(args)
+
+        assert exit_code == 0
+        stderr = capsys.readouterr().err
+        labels = [
+            "[timing] scb:snapshot_quick_check:",
+            "[timing] scb:vardemangder_dictionary_prepare:",
+            "[timing] scb:vardemangder_occurrence_import:",
+        ]
+        positions = [stderr.index(label) for label in labels]
+        assert positions == sorted(positions)
 
 
 class TestBuildDbPublicationValidation:

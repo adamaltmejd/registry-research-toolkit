@@ -23,7 +23,6 @@ from _csv_fixtures import (
     REGISTERINFORMATION_ROWS,
     UNIKA_ROWS,
     _var_row,
-    corrupt_scb_snapshot_logical_hashes,
     omit_scb_snapshot_file,
     write_csv,
     write_scb_input,
@@ -45,6 +44,7 @@ from reg_meta_build.cis2016_matrix import load_cis2014_matrix, load_cis2016_matr
 from reg_meta_build.db import DDL, build_db, seed_providers
 from reg_meta_build.dbdiff import TableIgnore, diff_db_content
 from reg_meta_build.id import _CANONICAL_SCB_BIT, is_canonical_scb
+from reg_meta_build.input_snapshot import ScbSnapshotReader
 from reg_meta_build.ir import (
     IRDeliveryProvenance,
     IRRegister,
@@ -59,6 +59,7 @@ from reg_meta_build.sources.scb import SCBAdapter
 from reg_meta_build.validate import validate_built_db
 from reg_schema.project_data import Binding, Source
 
+from reg_meta_build import input_snapshot as snapshot_module
 from reg_meta_build.fqid_slugs import load_provider_toml
 
 if TYPE_CHECKING:
@@ -273,11 +274,23 @@ class TestFixtureRoundTrip:
         assert report.identical, report
 
     def test_native_snapshot_build_preserves_catalog_and_raw_source_identities(
-        self, tmp_path: Path
+        self,
+        tmp_path: Path,
+        monkeypatch: pytest.MonkeyPatch,
+        capsys: pytest.CaptureFixture[str],
     ) -> None:
-        """The normal builder consumes normalized rows without restored CSVs."""
+        """Direct prepared values preserve raw output without expanded rows."""
         original = tmp_path / "original"
         scb_dir = write_scb_input(original)
+        values = scb_dir / "Vardemangder.csv"
+        with values.open("ab") as handle:
+            handle.write(
+                b"K\xf6n|1|\x8f|A-ring|1001|\r\n"
+                b"K\xf6n|1|\xc5|A-ring|1001|000\r\n"
+                b"K\xf6n|1|\x8f|A-ring|1001|\r\n"
+                b'Empty|1||""|1001|\r\n'
+                b"Unknown|1|\x8e|ignored|999999|1\r\n"
+            )
         selection = write_scb_snapshot(tmp_path / "snapshot-fixture", scb_dir)
         snapshot_seed = tmp_path / "snapshot-seed"
         fallback = snapshot_seed / "SCB"
@@ -296,7 +309,40 @@ class TestFixtureRoundTrip:
             return db_dir / "reg_meta.db"
 
         baseline = _build(original, "baseline")
+        raw_diagnostics = capsys.readouterr().err
+
+        original_expander = snapshot_module._iter_snapshot_rows
+
+        def reject_expanded_values(root, item, dictionaries, *, exhaustive):
+            if item.name == "Vardemangder.csv":
+                raise AssertionError(
+                    "direct value import must not expand snapshot rows"
+                )
+            return original_expander(root, item, dictionaries, exhaustive=exhaustive)
+
+        def reject_exhaustive_use(*_args, **_kwargs):
+            raise AssertionError("normal snapshot builds must not verify exhaustively")
+
+        monkeypatch.setattr(
+            snapshot_module, "_iter_snapshot_rows", reject_expanded_values
+        )
+        monkeypatch.setattr(
+            snapshot_module, "_verify_committed_snapshot", reject_exhaustive_use
+        )
+        monkeypatch.setattr(
+            snapshot_module, "_update_record_hash", reject_exhaustive_use
+        )
         replay = _build(snapshot_seed, "snapshot", snapshot=True)
+        prepared_diagnostics = capsys.readouterr().err
+
+        def relevant(output: str) -> list[str]:
+            return [
+                line
+                for line in output.splitlines()
+                if "rows read" in line or line.startswith("  Skipped ")
+            ]
+
+        assert relevant(prepared_diagnostics) == relevant(raw_diagnostics)
         ignore = {
             "import_manifest": TableIgnore(
                 skip_where="key IN ('import_date', 'input_dir', 'scb_input_snapshot')"
@@ -617,15 +663,15 @@ class TestValuePrestageCache:
                 ],
             )
         selection = write_scb_snapshot(tmp_path / f"snapshot-{mutation}", scb_dir)
-        original_import = scb_module._import_vardemangder
-        imported = False
+        original_open = ScbSnapshotReader.open_vardemangder
+        opened = False
 
-        def record_import(*args, **kwargs):
-            nonlocal imported
-            imported = True
-            return original_import(*args, **kwargs)
+        def record_open(reader):
+            nonlocal opened
+            opened = True
+            return original_open(reader)
 
-        monkeypatch.setattr(scb_module, "_import_vardemangder", record_import)
+        monkeypatch.setattr(ScbSnapshotReader, "open_vardemangder", record_open)
         snapshot_seed = tmp_path / f"snapshot-seed-{mutation}"
         snapshot_seed.mkdir()
         build_db(
@@ -636,47 +682,7 @@ class TestValuePrestageCache:
             scb_snapshot=selection,
             scb_value_prestage_cache=cache,
         )
-        assert imported
-
-    def test_snapshot_validation_still_runs_when_cache_is_warm(
-        self, monkeypatch, tmp_path: Path
-    ) -> None:
-        input_dir = tmp_path / "input"
-        scb_dir = write_scb_input(input_dir)
-        cache = tmp_path / "scb-value-prestage.sqlite"
-        build_db(
-            input_dir=input_dir,
-            db_dir=tmp_path / "db_csv",
-            skip_classifications=True,
-            skip_slugs=True,
-            scb_value_prestage_cache=cache,
-        )
-        selection = write_scb_snapshot(tmp_path / "snapshot-fixture", scb_dir)
-        damaged = corrupt_scb_snapshot_logical_hashes(selection)
-
-        def fail_import(*_args, **_kwargs):
-            raise AssertionError("warm cache should bypass Vardemangder import")
-
-        monkeypatch.setattr(scb_module, "_import_vardemangder", fail_import)
-        snapshot_seed = tmp_path / "snapshot-seed"
-        snapshot_seed.mkdir()
-        db_dir = tmp_path / "db_snapshot"
-        db_dir.mkdir()
-        live = db_dir / "reg_meta.db"
-        live_bytes = b"EXISTING-CATALOG"
-        live.write_bytes(live_bytes)
-        with pytest.raises(RegMetaError) as exc_info:
-            build_db(
-                input_dir=snapshot_seed,
-                db_dir=db_dir,
-                skip_classifications=True,
-                skip_slugs=True,
-                scb_snapshot=damaged,
-                scb_value_prestage_cache=cache,
-            )
-        assert exc_info.value.code == "scb_snapshot_invalid"
-        assert "logical record round-trip mismatch" in exc_info.value.message
-        assert live.read_bytes() == live_bytes
+        assert opened
 
     def test_snapshot_reuses_cache_created_from_equivalent_csv(
         self, monkeypatch, tmp_path: Path
@@ -693,10 +699,20 @@ class TestValuePrestageCache:
         )
         selection = write_scb_snapshot(tmp_path / "snapshot-fixture", scb_dir)
 
-        def fail_import(*_args, **_kwargs):
-            raise AssertionError("equivalent snapshot should reuse CSV-created cache")
+        original_open_csv = ScbSnapshotReader.open_csv
 
-        monkeypatch.setattr(scb_module, "_import_vardemangder", fail_import)
+        def reject_value_csv(reader, name):
+            if name == "Vardemangder.csv":
+                raise AssertionError("warm cache must not open expanded value rows")
+            return original_open_csv(reader, name)
+
+        def reject_prepared_values(_reader):
+            raise AssertionError("warm cache must not open prepared value records")
+
+        monkeypatch.setattr(ScbSnapshotReader, "open_csv", reject_value_csv)
+        monkeypatch.setattr(
+            ScbSnapshotReader, "open_vardemangder", reject_prepared_values
+        )
         snapshot_seed = tmp_path / "snapshot-seed"
         snapshot_seed.mkdir()
         build_db(

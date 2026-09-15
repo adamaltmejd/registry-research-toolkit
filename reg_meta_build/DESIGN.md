@@ -825,14 +825,17 @@ actually DOS cp850 remnants undefined in cp1252:
 These are mapped during import (`_decode_cp1252`). The build reads \~1M backbone rows
 from `Registerinformation.csv` and \~102M value-item rows from `Vardemangder.csv`.
 
-### Lossless SCB input snapshots (Y-151/Y-152)
+### Lossless SCB input snapshots (Y-151/Y-153)
 
 `input_snapshot.py` owns the lossless normalized representation used by the maintainer
 who receives successive SCB exports. `scripts/prototype_scb_inputs.py` prepares,
 verifies and can restore that representation; normal `build-db` can explicitly select an
-accepted snapshot and stream its rows through the same `_open_scb_csv_raw`,
-`_open_scb_csv` and `SCBAdapter` interpretation path as raw CSV. It does not replace the
-IR or value-prestage cache, and raw builds remain the original-source verification path.
+accepted snapshot. Non-value files stream through the same `_open_scb_csv_raw`,
+`_open_scb_csv` and `SCBAdapter` interpretation path as raw CSV. A cold value import
+instead consumes the prepared dictionaries plus ordered CVID/ItemId occurrence
+references directly; it never reconstructs complete `Vardemangder.csv` rows. This does
+not replace the IR or value-prestage cache, and raw builds remain the original-source
+verification path.
 
 The current readers are intentionally unsuitable as the preparation boundary:
 `_open_scb_csv_raw` repairs the header and validates it against today's known shape;
@@ -963,18 +966,35 @@ reg-meta-build --db /scratch/y152 build-db \
   --scb-value-prestage-cache /scratch/scb-value-prestage.sqlite --timing
 ```
 
-Selection requires a clean checkout at the exact full commit. The manifest and every
-declared normalized blob are authenticated from that commit before the build starts; the
-worktree manifest must match its SHA-256 pin. Dictionaries and record chunks are then
-hashed, decoded and checked for size, line count, dictionary closure, ordered row digest
-and header-plus-row digest as the importer drains them. Files the current adapter does
-not consume, including `Vardemangder.csv` on a warm prestage hit, are drained before
-later build phases. Thus `--no-validate` only skips catalog invariants; it never skips
-selected-input authentication. Any failure removes the staging DB and leaves the
-published catalog unchanged.
+Selection requires a clean checkout at the exact full commit. The committed and
+worktree manifests must match the explicit SHA-256 pin and supported
+schema/converter versions. Ordinary build use then compares the declared normalized
+inventory and byte sizes with both the pinned Git tree and worktree. These are quick
+identity and completeness checks for an input the maintainer already accepted; they do
+not prove artifact hashes, dictionary content keys or logical round-trip digests again.
+Changing the commit or manifest requires new explicit pins after preparation or an
+explicit `verify`; the builder never accepts or repairs a changed snapshot implicitly.
 
-Snapshot null tokens remain distinct until this lossless validation has observed them;
-only then does the SCB reader collapse unquoted-null and quoted-empty cells to the empty
+Consumed non-value streams still validate escaped-TSV syntax, field/line/record counts,
+dictionary ordering/closure and SCB headers, but omit artifact and logical-stream
+hashing. On a cold value-cache miss, the adapter loads the prepared value and value-set
+dictionaries, canonicalizes each distinct payload once, and follows the source-ordered
+CVID/ItemId references into `staging._build_cvid_pair`. Decoding remains lazy until a
+known CVID uses a payload, preserving the raw importer's known-CVID boundary;
+first-occurrence order still assigns `code_id` and first-per-CVID metadata. The shared
+sentinel/drift, null/empty, encoding, staging, projection and prestage materialization
+rules remain the interpretation boundary. A valid warm prestage hit reads neither value
+dictionaries nor occurrences. Timing output separates snapshot quick checks, prepared
+dictionary work, occurrence import, prestage application/write and projection.
+
+`--no-validate` still controls only post-build catalog invariant validation; this trust
+boundary is not permission to skip those invariants by default. Quick-use failures and
+consumed structural failures remove the staging DB and leave the published catalog
+unchanged. Exhaustive corruption detection belongs to preparation/acceptance and the
+explicit verification/replay commands below, not each ordinary build.
+
+Snapshot null tokens remain distinct in the prepared representation and reader; the SCB
+interpretation boundary collapses unquoted-null and quoted-empty cells to the empty
 string expected from the historical raw reader. The manifest's original raw CSV hashes
 remain `source_checksums`, so equivalent raw and snapshot representations share the same
 value-prestage identity. The separate `import_manifest.scb_input_snapshot` object

@@ -99,7 +99,7 @@ from .tags import (
 )
 
 if TYPE_CHECKING:
-    from collections.abc import Callable, Iterator
+    from collections.abc import Callable, Iterator, Sequence
     from pathlib import Path
 
     from .codeless_overlap import CodelessOverlapKey, CodelessOverlapMap
@@ -1641,8 +1641,9 @@ def _scb_snapshot_error(exc: Exception) -> RegMetaError:
         error_class="configuration",
         message=f"Selected SCB input snapshot is invalid: {exc}",
         remediation=(
-            "Verify the input Git commit and manifest SHA-256, then recreate or "
-            "restore the damaged normalized snapshot before rebuilding."
+            "Run the explicit snapshot verifier. If the selected identity changed "
+            "or is unsupported, prepare, verify, and accept a new snapshot, then "
+            "pass its exact Git commit and manifest SHA-256."
         ),
     )
 
@@ -1708,17 +1709,7 @@ def _open_scb_csv_raw(
     dominate the whole build. The header IS decoded (cheap, once).
     """
     with _open_scb_source_raw(path, snapshot) as (raw_header, reader):
-        header = [_decode_cp1252(v) for v in raw_header]
-
-        expected = EXPECTED_HEADERS.get(path.name)
-        if expected and header != expected:
-            raise RegMetaError(
-                exit_code=EXIT_CONFIG,
-                code="csv_bad_header",
-                error_class="configuration",
-                message=f"Unexpected header in {path.name}.",
-                remediation="Ensure the file is an unmodified SCB metadata export.",
-            )
+        header = _validated_scb_header(path.name, raw_header)
 
         ncols = len(header)
 
@@ -1735,6 +1726,21 @@ def _open_scb_csv_raw(
                 yield row_number, fields
 
         yield header, raw_iter()
+
+
+def _validated_scb_header(filename: str, raw_header: Sequence[str]) -> list[str]:
+    """Decode and validate one SCB CSV header at the interpretation boundary."""
+    header = [_decode_cp1252(value) for value in raw_header]
+    expected = EXPECTED_HEADERS.get(filename)
+    if expected and header != expected:
+        raise RegMetaError(
+            exit_code=EXIT_CONFIG,
+            code="csv_bad_header",
+            error_class="configuration",
+            message=f"Unexpected header in {filename}.",
+            remediation="Ensure the file is an unmodified SCB metadata export.",
+        )
+    return header
 
 
 @contextmanager
@@ -5172,7 +5178,8 @@ def build_db(
         from .input_snapshot import SnapshotError, open_scb_snapshot
 
         try:
-            snapshot_reader = open_scb_snapshot(scb_snapshot)
+            with _stage_timer("scb:snapshot_quick_check"):
+                snapshot_reader = open_scb_snapshot(scb_snapshot)
         except SnapshotError as exc:
             raise _scb_snapshot_error(exc) from exc
 
