@@ -15,6 +15,18 @@ from the store: `ui` about 65 minutes median, `default` about 20, `light` 1–22
 
 ## Open upstream reports
 
+### 2026-09-15: worker TMPDIR creates mixed-ownership scratch Git repositories
+
+Y-155's Sol worker reproduced scratch Git failures under its default
+`TMPDIR=/yard/state/tmp`: the repository directory belonged to `root:root`, while `.git`
+belonged to `501:dialout`; `git config` exited 128. Equivalent controls under `/tmp` had
+consistent ownership and succeeded. Command-local `TMPDIR=/tmp` let the focused tests
+pass without changing product code or Git's ownership protections. Filed as
+[#104](https://github.com/adamaltmejd/switchyard/issues/104). The ownership mechanism
+remains unconfirmed. Supported Yard transcript output, controls and submission receipt
+are local-only under
+`archive/reports/yard/2026-09-15-cold-value-storage/yard-tmp-ownership/`.
+
 ### 2026-09-15: published macOS binary fails signature verification
 
 On macOS 27.0 arm64, the installed 0.14.10 CLI exited 137 before printing output. Its
