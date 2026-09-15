@@ -779,6 +779,89 @@ def test_company_comparison_uses_only_its_finite_native_variant_assumption(
         )
 
 
+@pytest.mark.parametrize(
+    ("anchor_year", "blank_year", "expected_target_count"),
+    (
+        (2019, 2020, 1),
+        (2020, 2021, 0),
+    ),
+    ids=("anchor-outside-workbook-target-inside", "target-outside-workbook"),
+)
+def test_filtered_preview_uses_finite_anchors_and_workbook_scoped_targets(
+    tmp_path: Path,
+    anchor_year: int,
+    blank_year: int,
+    expected_target_count: int,
+) -> None:
+    input_dir = tmp_path / "source"
+    rows = [
+        _var_row(
+            colname="X",
+            cvid=1,
+            var_id=9,
+            year=str(anchor_year),
+            regver_id=200,
+            register=("LISA", 34, 152),
+        ),
+        _var_row(
+            colname="",
+            cvid=2,
+            var_id=9,
+            year=str(blank_year),
+            regver_id=201,
+            register=("LISA", 34, 152),
+        ),
+    ]
+    write_scb_input(input_dir, registerinformation_rows=rows)
+    workbook = write_lisa_workbook(input_dir / "docs" / "lisa.xlsx")
+    source = load_workbook(workbook)
+    source["Företag"]["A9"] = "X"
+    source["Företag"]["C9"] = 2020
+    source.save(workbook)
+    source.close()
+    selection = write_input_bundle(
+        tmp_path / "accepted",
+        input_dir,
+        lisa_workbook=LisaWorkbookSelection(
+            path=workbook,
+            upstream_revision="2024-2025",
+            sha256=hashlib.sha256(workbook.read_bytes()).hexdigest(),
+        ),
+    )
+    bundle = open_input_bundle(selection)
+
+    full = inspect_bundle_source_records(bundle, code_commit="c" * 40)
+    filtered = inspect_bundle_source_records(
+        bundle, code_commit="c" * 40, exact_column="X"
+    )
+
+    assert filtered.target_preview is not None
+    scb_by_member = {
+        record.subject.native.member_id: record
+        for record in filtered.source_records
+        if record.subject.native.member_id is not None
+    }
+    anchor = scb_by_member[1]
+    blank = scb_by_member[2]
+    assert anchor.record_id in filtered.target_preview.existing_named_record_ids
+    assert filtered.target_preview.candidate_variable_ids == (9,)
+    assert filtered.target_preview.candidate_variant_ids == (152,)
+    assert filtered.target_preview.expected_source_target_count == expected_target_count
+    assert (blank.record_id in filtered.target_preview.target_record_ids) is bool(
+        expected_target_count
+    )
+    for report in (full, filtered):
+        assert blank.record_id in {record.record_id for record in report.source_records}
+        assert any(
+            blank.record_id in outcome.scb_record_ids
+            and outcome.status
+            == (
+                "unknown_spelling" if expected_target_count else "unknown_applicability"
+            )
+            for outcome in report.comparison_outcomes
+        )
+
+
 def test_filtered_report_retains_unparseable_period_as_incomplete(
     tmp_path: Path,
 ) -> None:
@@ -824,8 +907,20 @@ def test_filtered_report_retains_unparseable_period_as_incomplete(
     )
 
 
-def test_filtered_report_retains_unscoped_same_variable_candidate_and_issue(
+@pytest.mark.parametrize(
+    ("version_name", "scope_kind", "issue_kind", "expected_complete"),
+    (
+        ("okänd utgåva", "unknown", "unparseable_period", False),
+        ("2020-2021", "pooled", "pooled_period", True),
+    ),
+    ids=("unparseable", "pooled"),
+)
+def test_filtered_report_retains_unscoped_same_variable_witness_but_not_target(
     tmp_path: Path,
+    version_name: str,
+    scope_kind: str,
+    issue_kind: str,
+    expected_complete: bool,
 ) -> None:
     input_dir = tmp_path / "source"
     rows = [
@@ -842,7 +937,7 @@ def test_filtered_report_retains_unscoped_same_variable_candidate_and_issue(
             cvid=2,
             var_id=31619,
             year="2021",
-            versionname="okänd utgåva",
+            versionname=version_name,
             regver_id=201,
             register=("LISA", 34, 153),
         ),
@@ -865,26 +960,255 @@ def test_filtered_report_retains_unscoped_same_variable_candidate_and_issue(
         bundle, code_commit="c" * 40, exact_column="AmPolTyp"
     )
 
-    assert full.complete is False
-    assert filtered.complete is False
+    assert full.complete is expected_complete
+    assert filtered.complete is expected_complete
     assert filtered.target_preview is not None
     unscoped = next(
         record
         for record in filtered.source_records
         if record.subject.native.member_id == 2
     )
-    assert unscoped.edition_scope.kind == "unknown"
-    assert unscoped.record_id in filtered.target_preview.target_record_ids
+    assert unscoped.edition_scope.kind == scope_kind
+    assert unscoped.record_id not in filtered.target_preview.target_record_ids
+    assert filtered.target_preview.expected_source_target_count == 0
     assert any(
-        issue.source_record_ids == (unscoped.record_id,)
-        and issue.kind == "unparseable_period"
+        issue.source_record_ids == (unscoped.record_id,) and issue.kind == issue_kind
         for issue in filtered.interpretation_issues
     )
     assert any(
         outcome.status == "unknown_applicability"
         and outcome.scb_record_ids == (unscoped.record_id,)
-        and outcome.edition_scope.kind == "unknown"
+        and outcome.edition_scope.kind == scope_kind
         for outcome in filtered.comparison_outcomes
+    )
+
+
+@pytest.mark.parametrize(
+    ("version_name", "issue_kind", "expected_complete"),
+    (
+        ("okänd utgåva", "unparseable_period", False),
+        ("2018-2019", "pooled_period", True),
+    ),
+    ids=("unparseable", "pooled"),
+)
+def test_source_only_unknown_period_survives_full_and_filtered_inspection(
+    tmp_path: Path,
+    version_name: str,
+    issue_kind: str,
+    expected_complete: bool,
+) -> None:
+    input_dir = tmp_path / "source"
+    rows = [
+        _var_row(
+            colname="OnlyScb",
+            cvid=1,
+            var_id=9,
+            year="2018",
+            versionname=version_name,
+            regver_id=200,
+            register=("LISA", 34, 152),
+        )
+    ]
+    write_scb_input(input_dir, registerinformation_rows=rows)
+    workbook = write_lisa_workbook(input_dir / "docs" / "lisa.xlsx")
+    selection = write_input_bundle(
+        tmp_path / "accepted",
+        input_dir,
+        lisa_workbook=LisaWorkbookSelection(
+            path=workbook,
+            upstream_revision="2024-2025",
+            sha256=hashlib.sha256(workbook.read_bytes()).hexdigest(),
+        ),
+    )
+    bundle = open_input_bundle(selection)
+
+    full = inspect_bundle_source_records(bundle, code_commit="c" * 40)
+    filtered = inspect_bundle_source_records(
+        bundle, code_commit="c" * 40, exact_column="OnlyScb"
+    )
+
+    source_only = next(
+        record
+        for record in filtered.source_records
+        if record.subject.native.member_id == 1
+    )
+    assert filtered.complete is expected_complete
+    assert filtered.target_preview is not None
+    assert filtered.target_preview.expected_source_target_count == 0
+    assert filtered.target_preview.target_record_ids == ()
+    assert filtered.target_preview.existing_named_record_ids == (source_only.record_id,)
+    assert filtered.target_preview.assumption_ids == (
+        "unestablished-workbook-to-scb-variant-scope",
+    )
+    for report in (full, filtered):
+        assert source_only.record_id in {
+            record.record_id for record in report.source_records
+        }
+        assert any(
+            outcome.status == "unknown_applicability"
+            and outcome.workbook_record_ids == ()
+            and outcome.scb_record_ids == (source_only.record_id,)
+            for outcome in report.comparison_outcomes
+        )
+        assert any(
+            issue.kind == issue_kind
+            and issue.source_record_ids == (source_only.record_id,)
+            for issue in report.interpretation_issues
+        )
+
+
+def test_year_independent_declarations_without_counterparts_have_zero_target_preview(
+    tmp_path: Path,
+) -> None:
+    input_dir = tmp_path / "source"
+    write_scb_input(
+        input_dir,
+        registerinformation_rows=[
+            _var_row(
+                colname="Other",
+                cvid=1,
+                var_id=1,
+                year="2020",
+                regver_id=200,
+                register=("LISA", 34, 153),
+            )
+        ],
+    )
+    workbook = write_lisa_workbook(input_dir / "docs" / "lisa.xlsx")
+    source = load_workbook(workbook)
+    for sheet_name, row, values in (
+        (
+            "Individ",
+            42,
+            (
+                "Inv_UtvGrEg5",
+                "In- och utvandring efter grund för egen uppgift",
+                None,
+                "LISA",
+                "Nej",
+                "RTB",
+            ),
+        ),
+        (
+            "Individ årsoberoende",
+            43,
+            (
+                "Inv_UtvGrEg5",
+                "In- och utvandring efter grund för egen uppgift",
+                "LISA",
+                "RTB",
+            ),
+        ),
+    ):
+        sheet = source[sheet_name]
+        for column, value in enumerate(values, start=1):
+            sheet.cell(row, column, value)
+    source.save(workbook)
+    source.close()
+    selection = write_input_bundle(
+        tmp_path / "accepted",
+        input_dir,
+        lisa_workbook=LisaWorkbookSelection(
+            path=workbook,
+            upstream_revision="2024-2025",
+            sha256=hashlib.sha256(workbook.read_bytes()).hexdigest(),
+        ),
+    )
+    bundle = open_input_bundle(selection)
+
+    full = inspect_bundle_source_records(bundle, code_commit="c" * 40)
+    filtered = inspect_bundle_source_records(
+        bundle, code_commit="c" * 40, exact_column="Inv_UtvGrEg5"
+    )
+
+    assert filtered.summary.workbook_selected_occurrences == 2
+    assert filtered.summary.workbook_year_independent_occurrences == 2
+    assert filtered.target_preview is not None
+    assert filtered.target_preview.documented_edition_scope is None
+    assert filtered.target_preview.expected_source_target_count == 0
+    assert filtered.target_preview.target_record_ids == ()
+    assert filtered.target_preview.assumption_ids == (
+        "unestablished-workbook-to-scb-variant-scope",
+    )
+    assert {
+        (record.locator.physical_table, record.locator.physical_record)
+        for record in filtered.source_records
+    } == {
+        ("Individ", "row:42"),
+        ("Individ årsoberoende", "row:43"),
+    }
+    for report in (full, filtered):
+        matching = [
+            outcome
+            for outcome in report.comparison_outcomes
+            if outcome.column_name == "Inv_UtvGrEg5"
+        ]
+        assert len(matching) == 2
+        assert all(outcome.status == "unknown_applicability" for outcome in matching)
+        assert all(
+            outcome.assumption_ids == ("unestablished-workbook-to-scb-variant-scope",)
+            for outcome in matching
+        )
+
+
+def test_ampoltyp_preview_keeps_nine_targets_and_a_separate_2024_gap(
+    tmp_path: Path,
+) -> None:
+    input_dir = tmp_path / "source"
+    rows = [
+        _var_row(
+            colname="" if 2011 <= year <= 2019 else "AmPolTyp",
+            cvid=year,
+            var_id=31619,
+            year=str(year),
+            regver_id=year,
+            register=("LISA", 34, 1335 if year <= 2009 else 153),
+        )
+        for year in range(1990, 2024)
+    ]
+    write_scb_input(input_dir, registerinformation_rows=rows)
+    workbook = write_lisa_workbook(input_dir / "docs" / "lisa.xlsx")
+    selection = write_input_bundle(
+        tmp_path / "accepted",
+        input_dir,
+        lisa_workbook=LisaWorkbookSelection(
+            path=workbook,
+            upstream_revision="2024-2025",
+            sha256=hashlib.sha256(workbook.read_bytes()).hexdigest(),
+        ),
+    )
+
+    report = inspect_bundle_source_records(
+        open_input_bundle(selection),
+        code_commit="c" * 40,
+        exact_column="AmPolTyp",
+    )
+
+    assert report.target_preview is not None
+    assert report.target_preview.expected_source_target_count == 9
+    assert len(report.target_preview.target_record_ids) == 9
+    assert len(report.target_preview.existing_named_record_ids) == 25
+    assert report.target_preview.candidate_variable_ids == (31619,)
+    assert report.target_preview.candidate_variant_ids == (153, 1335)
+    assert report.target_preview.unobserved_documented_editions == (2024,)
+    target_records = {
+        record.record_id: record
+        for record in report.source_records
+        if record.record_id in report.target_preview.target_record_ids
+    }
+    assert {
+        record.subject.native.member_id for record in target_records.values()
+    } == set(range(2011, 2020))
+    assert all(
+        record.fields.column_name == SourceField(status="unknown", raw_value="")
+        for record in target_records.values()
+    )
+    assert any(
+        outcome.status == "missing_edition"
+        and outcome.edition_scope.intervals
+        == (ScopeInterval(start="2024", end="2024"),)
+        and not outcome.scb_record_ids
+        for outcome in report.comparison_outcomes
     )
 
 

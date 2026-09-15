@@ -1195,9 +1195,12 @@ unresolved applicability, source-only SCB observations, validated worksheet-leve
 workbook context, and (for a filter) non-executable source-target membership. The report
 identifies the finite, unresolved workbook-table/population to native-variant assumption
 used by each comparison; witnesses outside those scopes remain source-only or unknown in
-applicability. The report is diagnostic and source-target-only: it applies no curation,
-previews no complete catalog blast radius, and claims no catalog validation, acceptance,
-or publication.
+applicability. An exact-name/native anchor may occur anywhere inside the same finite
+assumption, but only a blank-name annual occurrence covered by the selected workbook
+declaration is target-eligible. Pooled, unparseable, and out-of-coverage occurrences
+remain diagnostic witnesses. The report is diagnostic and source-target-only: it applies
+no curation, previews no complete catalog blast radius, and claims no catalog
+validation, acceptance, or publication.
 
 After acceptance, the normal builder selects exactly that bundle:
 
