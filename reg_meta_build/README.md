@@ -9,6 +9,9 @@ databases via `reg-meta update`.
 
 ```sh
 reg-meta-build build-db          # build reg_meta.db from SCB source CSVs
+reg-meta-build prepare-input-bundle  # capture one exact catalog input candidate
+reg-meta-build verify-input-bundle   # exhaustively verify an accepted input bundle
+reg-meta-build inspect-source-records  # inspect pinned LISA and raw SCB records
 reg-meta-build build-docs        # build reg_meta_docs.db from reg_meta_build/docs/
 reg-meta-build seed-slugs        # seed starter slug TOMLs (1c bootstrap)
 reg-meta-build precheck-slugs    # report any IDs missing a slug entry
@@ -19,6 +22,22 @@ reg-meta-build concept-group-candidates  # generate concept-group fold candidate
 reg-meta-build classification-residue    # classification-linkage residue worklist
 reg-meta-build doc-coverage              # diff doc-documented columns vs built variable_alias
 ```
+
+`prepare-input-bundle` captures the LISA workbook only when all three explicit
+`--lisa-workbook`, `--lisa-revision`, and `--lisa-workbook-sha256` selections are
+present. After the resulting bundle is committed, inspect the full workbook or one exact
+column spelling without reading cold SCB values:
+
+```sh
+reg-meta-build --output /tmp/lisa-source-records.json inspect-source-records \
+  --input-bundle .local/catalog-inputs/bundles/candidate \
+  --input-commit <accepted-full-commit> \
+  --input-manifest-sha256 <catalog-bundle-json-sha256> \
+  --column AmPolTyp
+```
+
+The report is a diagnostic source-target preview. It applies no correction and makes no
+catalog-impact, acceptance, validation, or publication claim.
 
 See [DESIGN.md](DESIGN.md) for design rationale; remaining build work is tracked in
 `REFACTOR_SPEC.md` at repo root.

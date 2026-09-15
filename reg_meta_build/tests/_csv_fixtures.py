@@ -14,6 +14,7 @@ from pathlib import Path
 from reg_meta_build.input_snapshot import (
     SCB_CSV_FILES,
     CatalogBundleSelection,
+    LisaWorkbookSelection,
     ScbSnapshotSelection,
     prepare_input_bundle,
     prepare_snapshot,
@@ -1018,6 +1019,7 @@ def write_input_bundle(
     *,
     curation_dir: Path | None = None,
     slug_dir: Path | None = None,
+    lisa_workbook: LisaWorkbookSelection | None = None,
 ) -> CatalogBundleSelection:
     """Commit a partial synthetic bundle for explicit skip-curation test builds."""
     snapshot = write_scb_snapshot(root, input_dir / "SCB")
@@ -1026,6 +1028,7 @@ def write_input_bundle(
         snapshot,
         curation_dir=curation_dir,
         slug_dir=slug_dir,
+        lisa_workbook=lisa_workbook,
     )
 
 
@@ -1035,6 +1038,7 @@ def write_input_bundle_from_snapshot(
     *,
     curation_dir: Path | None = None,
     slug_dir: Path | None = None,
+    lisa_workbook: LisaWorkbookSelection | None = None,
 ) -> CatalogBundleSelection:
     """Capture and commit a bundle referencing an existing fixture snapshot."""
     root = snapshot.path.parent.parent
@@ -1044,7 +1048,14 @@ def write_input_bundle_from_snapshot(
     slugs.mkdir(parents=True, exist_ok=True)
     repo = snapshot.path.parent
     bundle = repo / "bundle"
-    prepare_input_bundle(input_dir, curation, slugs, snapshot, bundle)
+    prepare_input_bundle(
+        input_dir,
+        curation,
+        slugs,
+        snapshot,
+        bundle,
+        lisa_workbook=lisa_workbook,
+    )
     subprocess.run(["git", "-C", str(repo), "add", "."], check=True)
     subprocess.run(
         ["git", "-C", str(repo), "commit", "-q", "-m", "catalog bundle"],

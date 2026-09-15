@@ -1929,8 +1929,17 @@ class TestBuildDbBundleSelection:
             ("prepare-input-bundle", "untracked", True),
             ("verify-input-bundle", "tracked", False),
             ("verify-input-bundle", "untracked", True),
+            ("inspect-source-records", "tracked", False),
+            ("inspect-source-records", "untracked", True),
         ),
-        ids=("prepare-success", "prepare-error", "verify-success", "verify-error"),
+        ids=(
+            "prepare-success",
+            "prepare-error",
+            "verify-success",
+            "verify-error",
+            "inspect-success",
+            "inspect-error",
+        ),
     )
     def test_new_bundle_commands_confine_cli_output_before_success_or_error(
         self,
@@ -2018,8 +2027,13 @@ class TestBuildDbBundleSelection:
 
     @pytest.mark.parametrize(
         "command",
-        ("build-db", "prepare-input-bundle", "verify-input-bundle"),
-        ids=("build", "prepare", "verify"),
+        (
+            "build-db",
+            "prepare-input-bundle",
+            "verify-input-bundle",
+            "inspect-source-records",
+        ),
+        ids=("build", "prepare", "verify", "inspect"),
     )
     def test_missing_bundle_selection_suppresses_tracked_and_untracked_output(
         self,

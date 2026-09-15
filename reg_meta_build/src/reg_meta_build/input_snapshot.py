@@ -50,7 +50,16 @@ SERIALIZATION = "escaped-tsv-v1"
 CHUNK_RECORDS = 100_000
 MANIFEST_NAME = "manifest.json"
 BUNDLE_MANIFEST_NAME = "catalog-bundle.json"
-BUNDLE_SCHEMA_VERSION = 1
+BUNDLE_SCHEMA_VERSION = 2
+
+LISA_DATASET_ID = "scb-lisa-variable-availability"
+LISA_BUNDLE_PATH = "supplemental/scb-lisa-variable-availability/source.xlsx"
+LISA_PUBLISHER = "SCB"
+LISA_PURPOSE = (
+    "LISA physical-column declarations by documented table and temporal scope"
+)
+LISA_READER = "lisa-variable-workbook-v1"
+LISA_LAYOUT = "lisa-variable-list-2024-2025-v1"
 
 CATALOG_CURATION_FILES = (
     "alias_windows.toml",
@@ -73,7 +82,7 @@ CATALOG_SLUG_PROVIDERS = (
     "sos",
     *(provider for provider, _directory in _CURATED_PROVIDERS),
 )
-_BUNDLE_INVENTORY_ROOTS = ("catalog", "curation", "fqid_slugs")
+_BUNDLE_INVENTORY_ROOTS = ("catalog", "curation", "fqid_slugs", "supplemental")
 
 _GIT_PACK_SETTINGS = (
     ("core.compression", "9"),
@@ -495,7 +504,8 @@ class BundleFile(_Model):
             or path.parts[0] not in _BUNDLE_INVENTORY_ROOTS
         ):
             raise ValueError(
-                "bundle file path must stay under catalog/, curation/, or fqid_slugs/"
+                "bundle file path must stay under catalog/, curation/, fqid_slugs/, "
+                "or supplemental/"
             )
         return path.as_posix()
 
@@ -511,6 +521,61 @@ class BundleFile(_Model):
         return self
 
 
+class SupplementalDataset(_Model):
+    dataset: Literal["scb-lisa-variable-availability"]
+    publisher: Literal["SCB"]
+    purpose: str
+    upstream_revision: str | None
+    reader: Literal["lisa-variable-workbook-v1"]
+    layout: Literal["lisa-variable-list-2024-2025-v1"]
+    selected: bool
+    required: bool
+    artifact_path: str
+    exclusion_reason: str | None = None
+
+    @field_validator("purpose")
+    @classmethod
+    def _supported_purpose(cls, value: str) -> str:
+        if value != LISA_PURPOSE:
+            raise ValueError(f"unsupported LISA dataset purpose {value!r}")
+        return value
+
+    @field_validator("upstream_revision")
+    @classmethod
+    def _clean_revision(cls, value: str | None) -> str | None:
+        if value is not None and (not value.strip() or value != value.strip()):
+            raise ValueError("LISA upstream revision must be non-empty and trimmed")
+        return value
+
+    @field_validator("artifact_path")
+    @classmethod
+    def _safe_artifact_path(cls, value: str) -> str:
+        if value != LISA_BUNDLE_PATH:
+            raise ValueError(
+                f"LISA supplemental artifact path must be {LISA_BUNDLE_PATH!r}"
+            )
+        return value
+
+    @model_validator(mode="after")
+    def _coherent_selection(self) -> Self:
+        if self.selected:
+            if not self.required or not self.upstream_revision:
+                raise ValueError(
+                    "a selected supplemental dataset must be required and revisioned"
+                )
+            if self.exclusion_reason is not None:
+                raise ValueError("a selected supplemental dataset cannot be excluded")
+        elif (
+            self.required
+            or self.upstream_revision is not None
+            or not self.exclusion_reason
+        ):
+            raise ValueError(
+                "an unselected supplemental dataset needs an exclusion reason only"
+            )
+        return self
+
+
 class CatalogBundleManifest(_Model):
     format: Literal["reg-meta-build-catalog-input-bundle"]
     schema_version: int
@@ -519,6 +584,7 @@ class CatalogBundleManifest(_Model):
     scb_snapshot_path: str
     scb_manifest_sha256: str
     files: tuple[BundleFile, ...]
+    supplemental_datasets: tuple[SupplementalDataset, ...]
 
     @field_validator("scb_snapshot_path")
     @classmethod
@@ -543,6 +609,18 @@ class CatalogBundleManifest(_Model):
             raise ValueError("catalog bundle file paths must be unique")
         if paths != sorted(paths):
             raise ValueError("catalog bundle file paths must be sorted")
+        datasets = [item.dataset for item in self.supplemental_datasets]
+        if datasets != [LISA_DATASET_ID]:
+            raise ValueError(
+                "catalog bundle must declare the one supported supplemental dataset"
+            )
+        inventory = {item.path: item for item in self.files}
+        dataset = self.supplemental_datasets[0]
+        artifact = inventory.get(dataset.artifact_path)
+        if artifact is None or artifact.present != dataset.selected:
+            raise ValueError(
+                "supplemental dataset selection must match its bundle inventory entry"
+            )
         return self
 
 
@@ -574,6 +652,15 @@ class CatalogBundleSelection:
 
 
 @dataclass(frozen=True)
+class LisaWorkbookSelection:
+    """Explicit source identity for the optional LISA supplemental dataset."""
+
+    path: Path
+    upstream_revision: str
+    sha256: str
+
+
+@dataclass(frozen=True)
 class CatalogBundleReader:
     """Resolved read-only paths from one accepted catalog input bundle."""
 
@@ -594,6 +681,36 @@ class CatalogBundleReader:
     @property
     def slug_dir(self) -> Path:
         return self.root / "fqid_slugs"
+
+    def require_supplemental_dataset(
+        self, dataset_id: str
+    ) -> tuple[SupplementalDataset, BundleFile, Path]:
+        dataset = next(
+            (
+                item
+                for item in self.manifest.supplemental_datasets
+                if item.dataset == dataset_id
+            ),
+            None,
+        )
+        if dataset is None:
+            raise SnapshotError(
+                f"catalog bundle does not declare supplemental dataset {dataset_id!r}"
+            )
+        if not dataset.selected:
+            raise SnapshotError(
+                f"supplemental dataset {dataset_id!r} was not selected when this "
+                "bundle was prepared; prepare and accept a bundle with the explicit "
+                "LISA workbook selection"
+            )
+        artifact = next(
+            item for item in self.manifest.files if item.path == dataset.artifact_path
+        )
+        if not artifact.present:
+            raise SnapshotError(
+                f"selected supplemental dataset {dataset_id!r} is missing its artifact"
+            )
+        return dataset, artifact, self.root / artifact.path
 
 
 @dataclass(frozen=True)
@@ -2527,7 +2644,10 @@ def _fixed_bundle_paths() -> tuple[str, ...]:
 
 
 def _bundle_source_files(
-    input_dir: Path, curation_dir: Path, slug_dir: Path
+    input_dir: Path,
+    curation_dir: Path,
+    slug_dir: Path,
+    lisa_workbook: LisaWorkbookSelection | None = None,
 ) -> dict[str, Path | None]:
     """Resolve exactly the files an ordinary catalog build can read."""
     roots = {
@@ -2548,6 +2668,24 @@ def _bundle_source_files(
         else:
             source = slug_dir / Path(relative).relative_to("fqid_slugs")
         resolved[relative] = source if source.is_file() else None
+
+    if lisa_workbook is None:
+        resolved[LISA_BUNDLE_PATH] = None
+    else:
+        if not lisa_workbook.upstream_revision.strip():
+            raise SnapshotError("selected LISA workbook revision must be non-empty")
+        if not _HASH_RE.fullmatch(lisa_workbook.sha256):
+            raise SnapshotError(
+                "selected LISA workbook SHA-256 must be 64 lowercase hexadecimal characters"
+            )
+        source = lisa_workbook.path.expanduser().resolve()
+        if not source.is_file():
+            raise SnapshotError(f"selected LISA workbook not found: {source}")
+        if _file_sha256(source) != lisa_workbook.sha256:
+            raise SnapshotError(
+                "selected LISA workbook content does not match --lisa-workbook-sha256"
+            )
+        resolved[LISA_BUNDLE_PATH] = source
 
     sos_dir = input_dir / "Socialstyrelsen"
     if sos_dir.is_dir():
@@ -2597,6 +2735,7 @@ def _bundle_source_files(
         "catalog": input_dir.resolve(),
         "curation": curation_dir.resolve(),
         "fqid_slugs": slug_dir.resolve(),
+        "supplemental": input_dir.resolve(),
     }
     validated: dict[str, Path | None] = {}
     for relative, source in sorted(resolved.items()):
@@ -2768,6 +2907,34 @@ def _validate_bundle_contract(root: Path) -> None:
     )
     load_tags(curation_path("tags.toml"))
 
+    manifest_path = root / BUNDLE_MANIFEST_NAME
+    if manifest_path.is_file():
+        manifest_bytes = manifest_path.read_bytes()
+        manifest = CatalogBundleManifest.model_validate_json(manifest_bytes)
+        dataset = manifest.supplemental_datasets[0]
+        if dataset.selected:
+            from .source_records import SourceRevision
+            from .sources.lisa import read_lisa_records
+
+            artifact = next(
+                item for item in manifest.files if item.path == dataset.artifact_path
+            )
+            assert artifact.size is not None
+            assert artifact.sha256 is not None
+            assert dataset.upstream_revision is not None
+            read_lisa_records(
+                root / dataset.artifact_path,
+                SourceRevision.create(
+                    dataset=dataset.dataset,
+                    publisher=dataset.publisher,
+                    purpose=dataset.purpose,
+                    upstream_revision=dataset.upstream_revision,
+                    artifact_path=dataset.artifact_path,
+                    artifact_size=artifact.size,
+                    artifact_sha256=artifact.sha256,
+                ),
+            )
+
 
 def prepare_input_bundle(
     input_dir: Path,
@@ -2775,6 +2942,8 @@ def prepare_input_bundle(
     slug_dir: Path,
     scb_snapshot: ScbSnapshotSelection,
     output: Path,
+    *,
+    lisa_workbook: LisaWorkbookSelection | None = None,
 ) -> CatalogBundleStats:
     """Capture a new byte-preserved catalog-input candidate beside an accepted snapshot."""
     input_dir = input_dir.expanduser().resolve()
@@ -2800,7 +2969,9 @@ def prepare_input_bundle(
         raise SnapshotError(
             "catalog bundle candidate must stay outside the SCB snapshot"
         )
-    sources = _bundle_source_files(input_dir, curation_dir, slug_dir)
+    sources = _bundle_source_files(
+        input_dir, curation_dir, slug_dir, lisa_workbook=lisa_workbook
+    )
     missing_references = sorted(
         path for path, source in sources.items() if source is None
     )
@@ -2856,12 +3027,36 @@ def prepare_input_bundle(
             scb_snapshot_path=snapshot_path,
             scb_manifest_sha256=scb_snapshot.manifest_sha256,
             files=tuple(files),
+            supplemental_datasets=(
+                SupplementalDataset(
+                    dataset=LISA_DATASET_ID,
+                    publisher=LISA_PUBLISHER,
+                    purpose=LISA_PURPOSE,
+                    upstream_revision=(
+                        lisa_workbook.upstream_revision
+                        if lisa_workbook is not None
+                        else None
+                    ),
+                    reader=LISA_READER,
+                    layout=LISA_LAYOUT,
+                    selected=lisa_workbook is not None,
+                    required=lisa_workbook is not None,
+                    artifact_path=LISA_BUNDLE_PATH,
+                    exclusion_reason=(
+                        None
+                        if lisa_workbook is not None
+                        else "not selected during bundle preparation"
+                    ),
+                ),
+            ),
         )
         manifest_bytes = _manifest_bytes(manifest)
         (staging / BUNDLE_MANIFEST_NAME).write_bytes(manifest_bytes)
         _verify_bundle_inventory(staging, manifest, hashes=True)
         _validate_bundle_contract(staging)
-        current_sources = _bundle_source_files(input_dir, curation_dir, slug_dir)
+        current_sources = _bundle_source_files(
+            input_dir, curation_dir, slug_dir, lisa_workbook=lisa_workbook
+        )
         current_state = {
             path: None if source is None else (source, _file_identity(source.stat()))
             for path, source in current_sources.items()
@@ -3362,12 +3557,14 @@ __all__ = [
     "CatalogBundleSelection",
     "CatalogBundleStats",
     "DeliveryInventory",
+    "LisaWorkbookSelection",
     "ScbSnapshotReader",
     "ScbSnapshotSelection",
     "SnapshotError",
     "SnapshotManifest",
     "SnapshotMaterializationError",
     "SnapshotStats",
+    "SupplementalDataset",
     "clean_git_commit",
     "converter_source_commit",
     "create_build_lock",

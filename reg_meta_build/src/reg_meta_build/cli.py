@@ -84,12 +84,19 @@ from .fqid_slugs import (
 )
 from .input_snapshot import (
     CatalogBundleSelection,
+    LisaWorkbookSelection,
     ScbSnapshotSelection,
     SnapshotError,
     SnapshotMaterializationError,
     input_bundle_repository,
+    open_input_bundle,
     prepare_input_bundle,
     verify_input_bundle,
+)
+from .source_inspection import (
+    inspect_bundle_source_records,
+    report_semantic_sha256,
+    source_interpreter_commit,
 )
 from .sources.sos import SosParseError, parse_directory, parse_register_file
 from .split_sibling_suspects import (
@@ -299,6 +306,21 @@ def _build_parser() -> argparse.ArgumentParser:
     prepare_bundle_p.add_argument("--scb-input-commit", required=True)
     prepare_bundle_p.add_argument("--scb-manifest-sha256", required=True)
     prepare_bundle_p.add_argument("--output-dir", required=True)
+    prepare_bundle_p.add_argument(
+        "--lisa-workbook",
+        default=None,
+        help="Explicit local LISA variable workbook to capture as source records.",
+    )
+    prepare_bundle_p.add_argument(
+        "--lisa-revision",
+        default=None,
+        help="Publisher revision label for --lisa-workbook.",
+    )
+    prepare_bundle_p.add_argument(
+        "--lisa-workbook-sha256",
+        default=None,
+        help="Expected SHA-256 of --lisa-workbook.",
+    )
 
     verify_bundle_p = sub.add_parser(
         "verify-input-bundle",
@@ -307,6 +329,24 @@ def _build_parser() -> argparse.ArgumentParser:
     verify_bundle_p.add_argument("--input-bundle", required=True)
     verify_bundle_p.add_argument("--input-commit", required=True)
     verify_bundle_p.add_argument("--input-manifest-sha256", required=True)
+
+    inspect_records_p = sub.add_parser(
+        "inspect-source-records",
+        help="Inspect captured LISA availability and raw SCB source records.",
+        description=(
+            "Read only an exactly pinned catalog-input bundle's selected LISA workbook\n"
+            "and prepared Registerinformation metadata. Emit a deterministic diagnostic\n"
+            "report; do not apply curation, build, validate, or publish a catalog."
+        ),
+    )
+    inspect_records_p.add_argument("--input-bundle", required=True)
+    inspect_records_p.add_argument("--input-commit", required=True)
+    inspect_records_p.add_argument("--input-manifest-sha256", required=True)
+    inspect_records_p.add_argument(
+        "--column",
+        default=None,
+        help="Inspect one exact workbook column spelling (for example AmPolTyp).",
+    )
 
     extend_db_p = sub.add_parser(
         "extend-db",
@@ -1108,6 +1148,25 @@ def _cmd_prepare_input_bundle(
     args: argparse.Namespace,
 ) -> tuple[dict[str, Any], int]:
     start = time.perf_counter()
+    lisa_values = (
+        args.lisa_workbook,
+        args.lisa_revision,
+        args.lisa_workbook_sha256,
+    )
+    lisa_present = tuple(value is not None for value in lisa_values)
+    if any(lisa_present) and (not all(lisa_present) or not all(lisa_values)):
+        raise RegMetaError(
+            exit_code=EXIT_USAGE,
+            code="lisa_source_selection_incomplete",
+            error_class="usage",
+            message=(
+                "--lisa-workbook, --lisa-revision, and "
+                "--lisa-workbook-sha256 must be supplied together."
+            ),
+            remediation=(
+                "Supply all three LISA source-selection flags or omit all three."
+            ),
+        )
     try:
         stats = prepare_input_bundle(
             Path(args.input_dir),
@@ -1119,6 +1178,15 @@ def _cmd_prepare_input_bundle(
                 manifest_sha256=args.scb_manifest_sha256,
             ),
             Path(args.output_dir),
+            lisa_workbook=(
+                LisaWorkbookSelection(
+                    path=Path(args.lisa_workbook),
+                    upstream_revision=args.lisa_revision,
+                    sha256=args.lisa_workbook_sha256,
+                )
+                if all(lisa_present)
+                else None
+            ),
         )
     except SnapshotError as exc:
         raise RegMetaError(
@@ -1136,6 +1204,58 @@ def _cmd_prepare_input_bundle(
     return success_envelope(
         command="prepare-input-bundle",
         args_payload={"input_dir": args.input_dir, "output_dir": args.output_dir},
+        db_info=None,
+        data=data,
+        duration_ms=int((time.perf_counter() - start) * 1000),
+    ), 0
+
+
+def _cmd_inspect_source_records(
+    args: argparse.Namespace,
+) -> tuple[dict[str, Any], int]:
+    start = time.perf_counter()
+    selection = CatalogBundleSelection(
+        path=Path(args.input_bundle),
+        input_commit=args.input_commit,
+        manifest_sha256=args.input_manifest_sha256,
+    )
+    try:
+        bundle = open_input_bundle(selection)
+    except SnapshotError as exc:
+        raise RegMetaError(
+            exit_code=EXIT_CONFIG,
+            code="catalog_input_bundle_invalid",
+            error_class="configuration",
+            message=str(exc),
+            remediation="Select an accepted catalog input bundle with exact pins.",
+        ) from exc
+    try:
+        report = inspect_bundle_source_records(
+            bundle,
+            code_commit=source_interpreter_commit(),
+            exact_column=args.column,
+        )
+    except SnapshotError as exc:
+        raise RegMetaError(
+            exit_code=EXIT_CONFIG,
+            code="source_record_inspection_invalid",
+            error_class="configuration",
+            message=str(exc),
+            remediation=(
+                "Select an accepted bundle that explicitly captures the supported "
+                "LISA dataset, or prepare and accept a corrected bundle."
+            ),
+        ) from exc
+    data = report.model_dump(mode="json", exclude_none=True)
+    data["semantic_sha256"] = report_semantic_sha256(report)
+    return success_envelope(
+        command="inspect-source-records",
+        args_payload={
+            "input_bundle": args.input_bundle,
+            "input_commit": args.input_commit,
+            "input_manifest_sha256": args.input_manifest_sha256,
+            "column": args.column,
+        },
         db_info=None,
         data=data,
         duration_ms=int((time.perf_counter() - start) * 1000),
@@ -2069,6 +2189,7 @@ COMMAND_DISPATCH: dict[
     "build-db": _cmd_build_db,
     "prepare-input-bundle": _cmd_prepare_input_bundle,
     "verify-input-bundle": _cmd_verify_input_bundle,
+    "inspect-source-records": _cmd_inspect_source_records,
     "extend-db": _cmd_extend_db,
     "build-docs": _cmd_build_docs,
     "seed-slugs": _cmd_seed_slugs,
@@ -2101,6 +2222,10 @@ _COMMAND_OVERVIEW: list[tuple[str, str]] = [
     (
         "verify-input-bundle --input-bundle DIR ...",
         "Exhaustively verify an accepted catalog-input bundle.",
+    ),
+    (
+        "inspect-source-records --input-bundle DIR ... [--column NAME]",
+        "Inspect captured LISA and raw SCB source records.",
     ),
     (
         "extend-db --base-db DB [--providers-dir DIR] [--steward S]",
@@ -2196,7 +2321,12 @@ def _confined_bundle_output_path(
         getattr(args, "scb_snapshot", None)
         if args.command == "prepare-input-bundle"
         else getattr(args, "input_bundle", None)
-        if args.command in {"build-db", "verify-input-bundle"}
+        if args.command
+        in {
+            "build-db",
+            "verify-input-bundle",
+            "inspect-source-records",
+        }
         else None
     )
     if selection_path is None:
