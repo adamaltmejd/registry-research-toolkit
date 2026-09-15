@@ -623,9 +623,7 @@ def test_bundle_prepare_and_verify_reject_invalid_small_consumed_contracts(
     assert not output.exists()
     assert (snapshot.path / "manifest.json").read_bytes() == snapshot_manifest
     assert _git(repository, "rev-parse", "HEAD") == snapshot.input_commit
-    assert not _git(
-        repository, "status", "--porcelain=v1", "--untracked-files=all"
-    )
+    assert not _git(repository, "status", "--porcelain=v1", "--untracked-files=all")
 
     # Build an accepted malformed fixture without the contract gate so the
     # explicit verifier is independently required to exercise the same consumer.
@@ -644,9 +642,7 @@ def test_bundle_prepare_and_verify_reject_invalid_small_consumed_contracts(
 
     assert (selection.path / "catalog-bundle.json").read_bytes() == bundle_manifest
     assert _git(repository, "rev-parse", "HEAD") == selection.input_commit
-    assert not _git(
-        repository, "status", "--porcelain=v1", "--untracked-files=all"
-    )
+    assert not _git(repository, "status", "--porcelain=v1", "--untracked-files=all")
 
 
 def test_prepare_exhaustively_verifies_before_publication(
