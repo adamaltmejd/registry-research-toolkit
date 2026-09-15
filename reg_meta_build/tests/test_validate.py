@@ -1922,6 +1922,100 @@ class TestBuildDbBundleSelection:
         assert published.read_bytes() == published_bytes
         open_input_bundle(selection)
 
+    @pytest.mark.parametrize(
+        ("command", "destination_kind", "handler_error"),
+        (
+            ("prepare-input-bundle", "tracked", False),
+            ("prepare-input-bundle", "untracked", True),
+            ("verify-input-bundle", "tracked", False),
+            ("verify-input-bundle", "untracked", True),
+        ),
+        ids=("prepare-success", "prepare-error", "verify-success", "verify-error"),
+    )
+    def test_new_bundle_commands_confine_cli_output_before_success_or_error(
+        self,
+        tmp_path: Path,
+        monkeypatch: pytest.MonkeyPatch,
+        capsys: pytest.CaptureFixture[str],
+        command: str,
+        destination_kind: str,
+        handler_error: bool,
+    ) -> None:
+        from reg_meta.errors import EXIT_CONFIG
+        from reg_meta_build.input_snapshot import open_input_bundle
+
+        from reg_meta_build import cli as cli_mod
+
+        input_dir = tmp_path / "input"
+        write_scb_input(input_dir)
+        selection = write_input_bundle(tmp_path / "accepted", input_dir)
+        bundle = open_input_bundle(selection)
+        repository = bundle.repository
+        tracked_output = (
+            bundle.snapshot.root / "manifest.json"
+            if command == "prepare-input-bundle"
+            else bundle.root / "catalog-bundle.json"
+        )
+        output = (
+            tracked_output
+            if destination_kind == "tracked"
+            else repository / "results" / f"{command}.json"
+        )
+        original_output = output.read_bytes() if output.exists() else None
+        handler_called = False
+
+        def record_handler(_args):
+            nonlocal handler_called
+            handler_called = True
+            if handler_error:
+                raise RegMetaError(
+                    exit_code=EXIT_CONFIG,
+                    code="fixture_handler_error",
+                    error_class="configuration",
+                    message="fixture handler failure",
+                    remediation="fixture",
+                )
+            return {"data": {"status": "unexpected"}}, 0
+
+        monkeypatch.setitem(cli_mod.COMMAND_DISPATCH, command, record_handler)
+        pin = "0" * 40 if handler_error else selection.input_commit
+        if command == "prepare-input-bundle":
+            command_args = [
+                command,
+                "--input-dir",
+                str(input_dir),
+                "--scb-snapshot",
+                str(bundle.snapshot.root),
+                "--scb-input-commit",
+                pin,
+                "--scb-manifest-sha256",
+                bundle.manifest.scb_manifest_sha256,
+                "--output-dir",
+                str(repository / "candidate"),
+            ]
+        else:
+            command_args = [
+                command,
+                "--input-bundle",
+                str(bundle.root),
+                "--input-commit",
+                pin,
+                "--input-manifest-sha256",
+                selection.manifest_sha256,
+            ]
+
+        exit_code = cli_mod.run(["--output", str(output), *command_args])
+
+        assert exit_code == EXIT_CONFIG
+        assert not handler_called
+        error = json.loads(capsys.readouterr().out)["error"]
+        assert error["code"] == "catalog_input_output_conflict"
+        if original_output is None:
+            assert not output.exists()
+        else:
+            assert output.read_bytes() == original_output
+        open_input_bundle(selection)
+
     def test_cli_timing_separates_prepared_dictionary_and_occurrences(
         self,
         tmp_path: Path,
