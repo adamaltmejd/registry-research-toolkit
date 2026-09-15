@@ -470,8 +470,11 @@ def test_sparse_value_role_preserves_declared_source_and_requires_hydration_for_
     assert not _git(selection.path.parent, "status", "--porcelain=v1")
 
 
-def test_legitimate_sparse_reads_preserve_raw_index_evidence(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+@pytest.mark.parametrize("index_representation", ("full", "preserved-condensed"))
+def test_legitimate_sparse_reads_preserve_index_and_config_evidence(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    index_representation: str,
 ) -> None:
     input_dir = tmp_path / "source"
     write_scb_input(input_dir)
@@ -482,11 +485,38 @@ def test_legitimate_sparse_reads_preserve_raw_index_evidence(
         input_commit=selection.input_commit,
         manifest_sha256=complete.manifest.scb_manifest_sha256,
     )
-    sparsify_scb_values(selection)
+    directories = sparsify_scb_values(selection)
+    repo = selection.path.parent
+    index_path = repo / _git(repo, "rev-parse", "--git-path", "index")
+    full_index_bytes = index_path.read_bytes()
+    if index_representation == "preserved-condensed":
+        subprocess.run(
+            [
+                "git",
+                "-C",
+                str(repo),
+                "sparse-checkout",
+                "set",
+                "--cone",
+                "--sparse-index",
+                "--stdin",
+            ],
+            input="".join(f"{path}\n" for path in directories),
+            check=True,
+            text=True,
+        )
+        condensed_index_bytes = index_path.read_bytes()
+        assert condensed_index_bytes != full_index_bytes
+        assert _git(repo, "config", "--worktree", "--get", "index.sparse") == "true"
+        _git(repo, "config", "--worktree", "index.sparse", "false")
+        assert index_path.read_bytes() == condensed_index_bytes
+    assert _git(repo, "config", "--worktree", "--get", "index.sparse") == "false"
+
     monkeypatch.delenv("GIT_OPTIONAL_LOCKS", raising=False)
     assert "GIT_OPTIONAL_LOCKS" not in os.environ
-    repo = selection.path.parent
+    config_path = repo / _git(repo, "rev-parse", "--git-path", "config.worktree")
     before = _git_index_evidence(repo)
+    config_bytes = config_path.read_bytes()
     assert any(
         entry.startswith(b"S ") and b"Vardemangder.csv/" in entry
         for entry in before[1].split(b"\0")
@@ -494,11 +524,14 @@ def test_legitimate_sparse_reads_preserve_raw_index_evidence(
 
     assert not open_scb_snapshot(snapshot_selection).vardemangder_materialized
     assert _git_index_evidence(repo) == before
+    assert config_path.read_bytes() == config_bytes
     assert not open_input_bundle(selection).snapshot.vardemangder_materialized
     assert _git_index_evidence(repo) == before
+    assert config_path.read_bytes() == config_bytes
     with pytest.raises(SnapshotMaterializationError):
         verify_snapshot(snapshot_selection.path)
     assert _git_index_evidence(repo) == before
+    assert config_path.read_bytes() == config_bytes
 
 
 @pytest.mark.parametrize("boundary", ("snapshot", "bundle", "proof"))

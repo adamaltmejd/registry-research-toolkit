@@ -1024,21 +1024,24 @@ Selection requires a clean checkout at the exact full commit. The committed and 
 bundle and snapshot manifests must match their explicit SHA-256 pins and supported
 schemas. Ordinary use compares the complete declared inventories and byte sizes with the
 pinned Git tree. The worktree may omit exactly the complete prepared
-`snapshot/files/Vardemangder.csv` role under a cone-mode sparse checkout with a normal
-full index; source presence, counts, checksums and provenance still come from the
-manifest and pinned commit. Every other committed path must remain selected. Index
-inspection rejects assume-unchanged flags, ad-hoc or partial skip-worktree flags, sparse
-directory entries, staged differences and loose cold replacements; the active sparse
-rules are checked against every path in the pinned tree so a newly accepted hot sibling
-cannot disappear behind clean status. The stored flags are probed with sparse handling
-disabled only for that read and optional Git locks disabled, before status; actual
-checkout configuration still governs the subsequent rule check, and selection never
-rewrites the accepted index. Present metadata and bundle files retain their quick
-size/inventory checks. Ordinary selection does not hash the small payloads, read the
-complete SCB stream, decompress archives, recompute lossless digests, or require a
-historical replay lock. Changing either commit or manifest requires new explicit pins
-after preparation and acceptance; sparse transitions do not change either identity, and
-the builder never accepts, repairs or hydrates input implicitly.
+`snapshot/files/Vardemangder.csv` role under a cone-mode sparse checkout configured with
+`index.sparse=false` by `--no-sparse-index`; source presence, counts, checksums and
+provenance still come from the manifest and pinned commit. Every other committed path
+must remain selected. Index inspection rejects assume-unchanged flags, ad-hoc or partial
+skip-worktree flags, unmerged or uninspectable logical entries, staged differences and
+loose cold replacements; the active sparse rules are checked against every path in the
+pinned tree so a newly accepted hot sibling cannot disappear behind clean status. The
+stored flags are probed with sparse handling disabled only for that read and optional
+Git locks disabled, before status; actual checkout configuration still governs the
+subsequent rule check. This is a semantic/configuration contract, not a physical index
+encoding check: selection accepts preserved condensed storage when Git exposes the same
+complete logical entries and every other guard passes, and never rewrites the accepted
+index. Present metadata and bundle files retain their quick size/inventory checks.
+Ordinary selection does not hash the small payloads, read the complete SCB stream,
+decompress archives, recompute lossless digests, or require a historical replay lock.
+Changing either commit or manifest requires new explicit pins after preparation and
+acceptance; sparse transitions do not change either identity, and the builder never
+accepts, repairs or hydrates input implicitly.
 
 Consumed non-value streams still validate escaped-TSV syntax, field/line/record counts,
 dictionary ordering/closure and SCB headers, but omit artifact and logical-stream
