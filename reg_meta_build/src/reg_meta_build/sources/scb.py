@@ -5431,7 +5431,7 @@ class SCBAdapter:
                             error_class=exc.error_class,
                             message=exc.message,
                             remediation=(
-                                f"{required.hydration_action}. Then start a new "
+                                f"{required}. Then start a new "
                                 "build with --refresh-scb-value-prestage-cache "
                                 "(build_db_watch.py: --refresh-prestage-cache)."
                             ),

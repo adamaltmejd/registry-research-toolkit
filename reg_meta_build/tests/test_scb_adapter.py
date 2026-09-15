@@ -883,6 +883,7 @@ class TestValuePrestageCache:
             )
 
         assert exc_info.value.code == "scb_value_prestage_apply_failed"
+        assert selection.input_commit in exc_info.value.remediation
         assert "sparse-checkout add --stdin" in exc_info.value.remediation
         assert "--refresh-scb-value-prestage-cache" in exc_info.value.remediation
         assert cache.read_bytes() == broken_cache
