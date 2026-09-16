@@ -969,12 +969,12 @@ def test_converted_blank_target_changes_only_column_and_stays_source_guarded() -
     applied = apply_occurrence_cases((donor, blank), (result.case,))
     assert applied.diagnostics == ()
     assert applied.occurrences[1].fields.column_name == SourceField(
-        status="value", value="Value"
+        status="value", value="VALUE"
     )
     assert applied.occurrences[1].fields.data_type == blank.fields.data_type
     assert applied.occurrences[1].source_records == (blank,)
     assert all(item.occurrence_key is None for item in applied.occurrences)
-    # Existing scope and values matter; adding an unrelated variable does not.
+    # Unrelated variables and unused adjacent-edition metadata are not dependencies.
     unrelated = _record(variable=99, cvid=30, column="UNRELATED")
     assert (
         apply_occurrence_cases((donor, blank, unrelated), (result.case,)).diagnostics
@@ -985,29 +985,44 @@ def test_converted_blank_target_changes_only_column_and_stays_source_guarded() -
         apply_occurrence_cases((changed_donor, blank), (result.case,))
         .accounting[0]
         .disposition
-        == "stale"
+        == "applied"
     )
 
 
-def test_converted_absent_delivery_freezes_legacy_donor_choice() -> None:
+def test_delivery_statement_does_not_inherit_nearest_editions_metadata() -> None:
     before = _record(cvid=10, column="VALUE", year="2018", data_type="varchar")
     after = _record(cvid=20, column="VALUE", year="2022")
     edition = _record(cvid=30, variable=99, column="EDITION", year="2020")
     records = before, after, edition
     result = _convert_delivered(records, edition)
     assert result.case is not None and result.blockers == ()
-    assert result.donor_refs == (record_ref(after),)
+    assert set(result.identity_refs) == {record_ref(before), record_ref(after)}
     applied = apply_occurrence_cases(records, (result.case,))
     assert applied.diagnostics == ()
     added = applied.occurrences[-1]
     assert added.source_records == ()
-    assert added.fields.data_type == after.fields.data_type
+    assert added.fields == SourceFields(
+        availability=value_field(True), column_name=value_field("VALUE")
+    )
+    addition = result.case.decision.effects[0]
+    assert isinstance(addition, CuratedOccurrenceAddition)
+    assert addition.donor is None and addition.copied_fields == ()
     assert added.edition_scope == _scope("2020")
-    # A nearer donor is an applicability error, never an automatic new choice.
+    # New source members require review; they never become automatic donors.
     nearer = _record(cvid=40, column="vAlUe", year="2021")
     changed = apply_occurrence_cases((*records, nearer), (result.case,))
     assert changed.accounting[0].disposition == "stale"
     assert all(item.occurrence_key is None for item in changed.occurrences)
+
+
+def test_delivery_statement_cannot_choose_between_reused_column_identities() -> None:
+    before = _record(cvid=10, column="VALUE", year="2018")
+    after = _record(cvid=20, variable=6, column="VALUE", year="2022")
+    edition = _record(cvid=30, variable=99, column="EDITION", year="2020")
+    result = _convert_delivered((before, after, edition), edition)
+    assert result.case is None
+    assert result.blockers == ("ambiguous_documented_column_identity",)
+    assert set(result.identity_refs) == {record_ref(before), record_ref(after)}
 
 
 @pytest.mark.parametrize(

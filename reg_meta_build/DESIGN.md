@@ -109,10 +109,11 @@ source facts.
 > probe has scanned all 45,368 native families, including every maintained occurrence
 > source. It exposed missing conversions and an incorrect variable-level interpretation
 > of SCB's joined population prose. The latter belongs to edition metadata and is fixed
-> in cleaning; corrected preparation and the connected scan have been verified. All
-> 1,885 omitted-column entries and 223 delivery entries have checked conversions, with
-> unsupported edition periods retained explicitly. Their common integration is pending.
-> The full replacement database and old/new comparison are still pending. Ordinary
+> in cleaning; corrected preparation and the connected scan have been verified.
+> Conversion prototypes cover 1,885 omitted-column entries and 223 delivery entries;
+> their inherited assumptions are being audited against the actual declarations and
+> evidence. Prior copying of adjacent-edition metadata is not accepted curation. The
+> full replacement database and old/new comparison are still pending. Ordinary
 > `build-db` continues to use the legacy semantic pipeline below; `build-curated-db`
 > exercises an explicitly selected slice. This branch is not ready for catalog
 > activation.
@@ -497,11 +498,14 @@ all claims and withhold the disputed fact; another observation cannot silently f
 back in. A declared delivery has an explicit variable, variant, edition and supplied
 period, checked supporting members and correction provenance. Unsupported periods
 withhold annual states without discarding edition membership. It never becomes a
-fabricated physical source row. An offline converter can freeze an existing errata donor
-choice and target membership; warm application cannot reselect the nearest donor. Source
-updates invalidate relevant pins, while unrelated variable changes and physical layout
-changes do not. Conversion of the remaining accepted surfaces, including the coding
-dependencies of copied deliveries, remains required before cutover.
+fabricated physical source row. A delivery declaration supplies column and edition
+membership only. An elsewhere-documented column may establish its unambiguous native
+identity, but its type, coding and other occurrence metadata are not copied into a
+missing edition. A blank-column target retains its own metadata. Ambiguous identities
+remain unresolved. Source updates invalidate relevant pins, while changes to unused
+adjacent-edition metadata, unrelated variables and physical layout do not. Conversion of
+the remaining accepted surfaces remains required before cutover. Legacy output and
+implementation defaults are comparison evidence, not independent curation authority.
 
 Native-member code-list bindings share immutable claims when the source member and
 effective scope agree. Each physical record keeps its own evidence binding, and every
