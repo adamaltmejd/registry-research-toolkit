@@ -509,8 +509,41 @@ class OccurrenceCorrectionDecision(_CurationModel):
         return self
 
 
+class SearchAliasDecision(_CurationModel):
+    """Add a search spelling to finite existing variants, without claiming coverage."""
+
+    kind: Literal["search_alias"] = "search_alias"
+    reviewed: Literal[True]
+    variable_key: NativeKey
+    variant_keys: tuple[NativeKey, ...]
+    column: str = Field(min_length=1)
+    reason: str = Field(min_length=1)
+    provenance: str = Field(min_length=1)
+
+    @model_validator(mode="after")
+    def _bounded(self) -> Self:
+        if (
+            not self.variable_key
+            or not self.variant_keys
+            or any(
+                not key or "" in key for key in (self.variable_key, *self.variant_keys)
+            )
+        ):
+            raise ValueError("a search alias needs exact variable and variant keys")
+        if len(set(self.variant_keys)) != len(self.variant_keys):
+            raise ValueError("search alias variant keys must be unique")
+        if self.column != self.column.strip() or not self.column.strip():
+            raise ValueError("a search alias column must be nonempty and trimmed")
+        if not self.reason.strip() or not self.provenance.strip():
+            raise ValueError("a search alias needs rationale and provenance")
+        return self
+
+
 type CurationDecision = (
-    BoundedUnresolvedDecision | FormVariableDecision | OccurrenceCorrectionDecision
+    BoundedUnresolvedDecision
+    | FormVariableDecision
+    | OccurrenceCorrectionDecision
+    | SearchAliasDecision
 )
 
 
@@ -1182,9 +1215,11 @@ def inspect_cases(
     intended_outputs: dict[str, str] = {}
     identities: dict[tuple[str, str, str], str] = {}
     for case in ordered_cases:
-        if isinstance(case.decision, OccurrenceCorrectionDecision):
+        if isinstance(
+            case.decision, (OccurrenceCorrectionDecision, SearchAliasDecision)
+        ):
             raise TypeError(
-                "occurrence corrections require the ordinary formation path"
+                "occurrence and alias corrections require the ordinary formation path"
             )
         if isinstance(case.decision, FormVariableDecision):
             providers = {

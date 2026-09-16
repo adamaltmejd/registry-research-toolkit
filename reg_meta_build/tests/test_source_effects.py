@@ -18,11 +18,14 @@ from reg_meta_build.convert_errata import (
 )
 from reg_meta_build.convert_identity import convert_column_partitions
 from reg_meta_build.resolved_catalog import (
+    ResolvedAlias,
+    ResolvedAliasWindow,
     ResolvedRegister,
     ResolvedVariant,
     write_resolved_catalog,
 )
 from reg_meta_build.scb_errata import ErrataColumn, ErrataDelivered
+from reg_meta_build.source_annotations import apply_search_aliases
 from reg_meta_build.source_curation import (
     CheckedFieldChange,
     CheckedIdentityChange,
@@ -36,6 +39,7 @@ from reg_meta_build.source_curation import (
     PeerGuard,
     RecordExpectation,
     RecordProjection,
+    SearchAliasDecision,
 )
 from reg_meta_build.source_effects import apply_occurrence_cases, record_ref
 from reg_meta_build.source_formation import form_native_variable
@@ -124,7 +128,10 @@ def _expect(record: SourceRecord) -> RecordExpectation:
 
 
 def _case(
-    record: SourceRecord, *effects: OccurrenceEffect, name: str = "accepted"
+    record: SourceRecord,
+    *effects: OccurrenceEffect,
+    name: str = "accepted",
+    decision: SearchAliasDecision | None = None,
 ) -> CurationCase:
     return CurationCase(
         case_id=name,
@@ -137,13 +144,129 @@ def _case(
                 expected_members=(record_ref(record),),
             ),
         ),
-        decision=OccurrenceCorrectionDecision(
+        decision=decision
+        or OccurrenceCorrectionDecision(
             reviewed=True,
             effects=effects,
             reason="Existing accepted delivery correction",
             provenance=f"errata:fixture\n{name}",
         ),
     )
+
+
+def _search_alias_fixture():
+    record = _record(column="VALUE")
+    occurrence = source_occurrence(record)
+    assert occurrence.variable_key is not None and occurrence.variant_key is not None
+    assert occurrence.column_key is not None
+    variant = ResolvedVariant(slug="people", name="People")
+    result = form_native_variable(
+        (record,),
+        register=ResolvedRegister(provider="scb", slug="fixture", name="Fixture"),
+        variants={occurrence.variant_key: variant},
+        slug="value",
+        provider_key="5",
+        flags=SourceFields(
+            sensitivity=value_field(False), identifier=value_field(False)
+        ),
+        coding={occurrence.column_key: ()},
+    )
+    assert result.variable is not None
+    case = _case(
+        record,
+        decision=SearchAliasDecision(
+            reviewed=True,
+            variable_key=occurrence.variable_key,
+            variant_keys=(occurrence.variant_key,),
+            column="ALTERNATIVE",
+            reason="Existing delivery-list search alias",
+            provenance="fixture",
+        ),
+    )
+    return (
+        record,
+        case,
+        result.variable,
+        occurrence.variable_key,
+        {occurrence.variant_key: variant},
+    )
+
+
+def test_search_alias_is_guarded_metadata_without_added_availability(
+    tmp_path: Path,
+) -> None:
+    record, case, variable, key, variants = _search_alias_fixture()
+    result = apply_search_aliases(
+        (record,), (case,), variables={key: variable}, variants=variants
+    )
+    assert result.diagnostics == ()
+    updated = result.variables[key]
+    assert updated is not None and updated.states == variable.states
+    assert [
+        (alias.delivery_column_name, alias.windows) for alias in updated.aliases
+    ] == [("ALTERNATIVE", ())]
+    output = tmp_path / "aliases.db"
+    write_resolved_catalog((updated,), output, manifest={})
+    with closing(open_db(output)) as conn:
+        assert (
+            conn.execute(
+                "SELECT delivery_column_name FROM variable_alias WHERE delivery_column_name='ALTERNATIVE'"
+            ).fetchone()[0]
+            == "ALTERNATIVE"
+        )
+        assert (
+            conn.execute("SELECT count(*) FROM variable_alias_window").fetchone()[0]
+            == 0
+        )
+        assert conn.execute("SELECT count(*) FROM variable_state").fetchone()[0] == 1
+    same = apply_search_aliases(
+        (_record(column=" VALUE "),),
+        (case,),
+        variables={key: variable},
+        variants=variants,
+    )
+    assert same.diagnostics == () and same.variables == result.variables
+    stale = apply_search_aliases(
+        (record, _record(cvid=21, column="VALUE", year="2021")),
+        (case,),
+        variables={key: variable},
+        variants=variants,
+    )
+    assert stale.variables[key] == variable
+    assert stale.evaluations[0].status == "stale"
+
+
+def test_search_alias_preserves_existing_precise_windows() -> None:
+    record, case, variable, key, variants = _search_alias_fixture()
+    alias = ResolvedAlias(
+        variant=next(iter(variants.values())),
+        delivery_column_name="ALTERNATIVE",
+        windows=(ResolvedAliasWindow(valid_from="2020-03-01", valid_to="2020-04-30"),),
+    )
+    variable = variable.model_copy(update={"aliases": (alias,)})
+    result = apply_search_aliases(
+        (record,), (case,), variables={key: variable}, variants=variants
+    )
+    assert result.diagnostics == () and result.variables[key] == variable
+
+
+def test_search_alias_distinguishes_withheld_dependencies_from_missing_conversion() -> (
+    None
+):
+    record, case, variable, key, variants = _search_alias_fixture()
+    withheld = apply_search_aliases(
+        (record,), (case,), variables={key: None}, variants=variants
+    )
+    assert withheld.variables[key] is None
+    assert [issue.code for issue in withheld.diagnostics] == [
+        "withheld_alias_dependency"
+    ]
+    assert withheld.evaluations[0].status == "applicable"
+    for variables, parents in (({}, variants), ({key: variable}, {})):
+        with pytest.raises(ValueError, match="unconverted"):
+            apply_search_aliases(
+                (record,), (case,), variables=variables, variants=parents
+            )
 
 
 def _field(record: SourceRecord, name: str, value: str) -> CheckedFieldChange:

@@ -138,6 +138,12 @@ diagnoses competing or incomplete members without choosing a label. The original
 remain in prepared evidence. Classification identity, variable bindings and succession
 are separate checked declarations; code similarity does not establish those links.
 
+Checked search aliases name one variable and a finite set of variants. They add no
+delivery state or availability window, and they preserve an existing bounded alias
+window. A source change invalidates their original membership guard. Unsupported
+dependencies withhold the affected alias; missing conversion mappings remain fatal
+engineering errors.
+
 Overlapping occurrence decisions are checked together against original evidence. The
 applicability evaluator shares semantic-member and selector indexes for one complete
 slice, including newly added records; it never searches only the expected members. The
