@@ -46,6 +46,7 @@ def test_clean_scb_values_preserves_native_associations_and_validity(
     associations = list(cleaned.associations())
     assert dict(cleaned.provenance) == reader.provenance
     assert len(cleaned.provenance["input_repository_commit"]) == 40
+    assert {association.member_id_field for association in associations} == {"CVID"}
 
     assert [association.row_number for association in associations] == list(
         range(2, 11)
@@ -54,7 +55,7 @@ def test_clean_scb_values_preserves_native_associations_and_validity(
         "Vardemangder.csv:row:9",
         "Vardemangder.csv:row:10",
     ]
-    assert [(a.cvid, a.item_id) for a in associations] == [
+    assert [(a.member_id, a.item_id) for a in associations] == [
         ("100", None),
         ("100", ""),
         ("100", "0"),
@@ -66,17 +67,19 @@ def test_clean_scb_values_preserves_native_associations_and_validity(
         ("0", "0"),
     ]
     assert (
-        associations[4].cvid,
+        associations[4].member_id,
         associations[4].item_id,
         associations[4].descriptor_key,
         associations[4].value_key,
     ) == (
-        associations[5].cvid,
+        associations[5].member_id,
         associations[5].item_id,
         associations[5].descriptor_key,
         associations[5].value_key,
     )
     assert associations[0].descriptor_key != associations[3].descriptor_key
+    assert associations[3].descriptor_key == associations[-1].descriptor_key
+    assert associations[3].member_id != associations[-1].member_id
     first_descriptor = cleaned.descriptors[associations[0].descriptor_key]
     assert first_descriptor.raw_cells == ("Version  A", "Level  1")
     assert (first_descriptor.version, first_descriptor.level) == (
@@ -94,10 +97,11 @@ def test_clean_scb_values_preserves_native_associations_and_validity(
         for association in associations[3:6]
     ]
     assert equivalent_labels == [("008", "Å")] * 3
-    conflicting_labels = [
-        cleaned.values[association.value_key].normalized_content
-        for association in associations[6:8]
-    ]
+    conflicting_labels: list[tuple[str, str]] = []
+    for association in associations[6:8]:
+        code, label = cleaned.values[association.value_key].normalized_content
+        assert code is not None and label is not None
+        conflicting_labels.append((code, label))
     assert conflicting_labels == [("009", "Conflict A"), ("009", "Conflict B")]
     assert canonical_value_set_content(conflicting_labels) == (
         ("009", "Conflict A"),

@@ -210,6 +210,20 @@ class SourceFields(_SourceModel):
     population_definition: SourceField | None = None
     population_comment: SourceField | None = None
     population_date: SourceField | None = None
+    coverage: SourceField | None = None
+    coverage_from: SourceField | None = None
+    coverage_to: SourceField | None = None
+    geographic_coverage: SourceField | None = None
+    update_frequency: SourceField | None = None
+    aggregation_level: SourceField | None = None
+    contact: SourceField | None = None
+    documentation_url: SourceField | None = None
+    landing_page: SourceField | None = None
+    access_url: SourceField | None = None
+    access_rights: SourceField | None = None
+    legislation: SourceField | None = None
+    source_version: SourceField | None = None
+    source_date: SourceField | None = None
 
     @model_validator(mode="after")
     def _typed_fields(self) -> Self:
@@ -312,6 +326,19 @@ class DeliveredCell(_SourceModel):
         return self
 
 
+class SourceEvidenceRow(_SourceModel):
+    locator: RecordLocator
+    role: Literal["header", "section", "declaration", "data", "unparsed", "note"]
+    cells: tuple[DeliveredCell, ...]
+
+
+class SourceEvidenceTable(_SourceModel):
+    source: str
+    source_revision_id: str
+    name: str
+    rows: tuple[SourceEvidenceRow, ...]
+
+
 class SourceRecord(_SourceModel):
     record_id: str
     source: str
@@ -321,6 +348,7 @@ class SourceRecord(_SourceModel):
     edition_scope: TemporalScope
     edition_period_scope: TemporalScope
     fields: SourceFields
+    language: Literal["sv", "en"] | None = None
     code_set_references: tuple[CodeSetReference, ...] = ()
     original_period_text: str | None = None
     context: tuple[str, ...] = ()
@@ -335,6 +363,7 @@ class SourceRecord(_SourceModel):
         edition_scope: TemporalScope,
         edition_period_scope: TemporalScope,
         fields: SourceFields,
+        language: Literal["sv", "en"] | None,
         code_set_references: tuple[CodeSetReference, ...],
         original_period_text: str | None,
         context: tuple[str, ...],
@@ -348,6 +377,7 @@ class SourceRecord(_SourceModel):
                 "edition_scope": edition_scope.model_dump(mode="json"),
                 "edition_period_scope": edition_period_scope.model_dump(mode="json"),
                 "fields": fields.model_dump(mode="json"),
+                "language": language,
                 "code_set_references": [
                     {
                         "reference_id": reference.reference_id,
@@ -374,6 +404,7 @@ class SourceRecord(_SourceModel):
         edition_scope: TemporalScope,
         edition_period_scope: TemporalScope,
         fields: SourceFields,
+        language: Literal["sv", "en"] | None = None,
         code_set_references: tuple[CodeSetReference, ...] = (),
         original_period_text: str | None = None,
         context: tuple[str, ...] = (),
@@ -388,6 +419,7 @@ class SourceRecord(_SourceModel):
             edition_scope=edition_scope,
             edition_period_scope=edition_period_scope,
             fields=fields,
+            language=language,
             code_set_references=code_set_references,
             original_period_text=original_period_text,
             context=context,
@@ -402,6 +434,7 @@ class SourceRecord(_SourceModel):
             edition_scope=edition_scope,
             edition_period_scope=edition_period_scope,
             fields=fields,
+            language=language,
             code_set_references=code_set_references,
             original_period_text=original_period_text,
             context=context,
@@ -436,6 +469,7 @@ class SourceRecord(_SourceModel):
             edition_scope=self.edition_scope,
             edition_period_scope=self.edition_period_scope,
             fields=self.fields,
+            language=self.language,
             code_set_references=self.code_set_references,
             original_period_text=self.original_period_text,
             context=self.context,
@@ -468,6 +502,8 @@ __all__ = [
     "RecordLocator",
     "ScopeInterval",
     "SourceCoordinate",
+    "SourceEvidenceRow",
+    "SourceEvidenceTable",
     "SourceField",
     "SourceFields",
     "SourceRecord",

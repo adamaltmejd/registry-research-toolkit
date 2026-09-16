@@ -48,9 +48,9 @@ if TYPE_CHECKING:
         SupplementalDataset,
     )
 
-INTERPRETATION_ID = "scb-lisa-source-record-inspection-v6"
+INTERPRETATION_ID = "scb-lisa-source-record-inspection-v7"
 SCB_DATASET_ID = "scb-registerinformation"
-CENSUS_INTERPRETATION_ID = "scb-registerinformation-observation-census-v6"
+CENSUS_INTERPRETATION_ID = "scb-registerinformation-observation-census-v7"
 OutcomeStatus = Literal[
     "agreement",
     "unobserved_counterpart",

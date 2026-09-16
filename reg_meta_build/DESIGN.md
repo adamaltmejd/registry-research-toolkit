@@ -96,20 +96,23 @@ These are responsibilities inside one builder, not separate frameworks or servic
 extraction remains upstream; cleaning consumes its reviewed machine-readable output.
 
 > **Status: partial replacement.** The source-record model and diagnostic SCB/LISA
-> readers exist. A Socialstyrelsen reader now emits each delivered variable row through
-> the same model; its workbook parser retains original cell evidence. SCB row cleaning
+> readers exist. A Socialstyrelsen reader emits variable and parent-metadata claims
+> through the same model; its parser retains original sheet evidence. SCB row cleaning
 > owns the shared compact parser and uses format-only period interpretation, independent
 > of catalog identity or forecast-vintage policy. Shared text/token cleaning,
 > integer/text storage normalization and exact snapshot-date interpretation now serve
 > SCB/LISA source inspection. A separate SCB value-source reader exposes normalized
 > dictionaries, exact validity text and streamed original associations; it does not
-> select final code-set membership. Socialstyrelsen code rows retain source evidence but
-> do not yet have a common normalized code-set representation. Other source readers,
-> unified curation and direct materialization remain pending. The normal builder
-> continues to use the legacy semantic pipeline below. Shared reader changes can alter
-> its inputs: retaining formerly omitted SOS hyperlinks can affect its automatic
-> classification matching. Catalog behavior on this isolated branch has not yet been
-> verified end to end, and this checkpoint is not ready for catalog activation.
+> select final code-set membership. SCB and Socialstyrelsen share compact value,
+> descriptor, association and validity types. A first provider-neutral curation
+> evaluator checks whether explicitly unresolved cases remain applicable; it does not
+> apply corrections or form catalog entities. Remaining source readers,
+> prepared-artifact integration, curation resolution and direct materialization remain
+> pending. The normal builder continues to use the legacy semantic pipeline below.
+> Shared reader changes can alter its inputs: retaining formerly omitted SOS hyperlinks
+> can affect its automatic classification matching. Catalog behavior on this isolated
+> branch has not yet been verified end to end, and this checkpoint is not ready for
+> catalog activation.
 
 ### Mechanical normalization
 
@@ -159,21 +162,38 @@ descriptor version label alone is never a global code-set identity. This reader 
 synthetic losslessness checks; a complete maintained-source value traversal remains
 pending while the cold occurrence files are sparse-omitted.
 
-`sources/sos_records.py` maps the existing Socialstyrelsen workbook parser's variable
-rows into the common source model. Same-name rows and contradictory type declarations
-remain separate observations. It does not inherit register/subset dates, synthesize a
-missing subset, correct variable names, bind a code list, or mint FQIDs. A complete pair
-of explicit year bounds can establish the supplied coverage interval; missing, malformed
-or partial bounds remain unknown, with their original cells retained. An absent edition
-date is not the variable's reference period.
+`sources/sos_records.py` maps the existing Socialstyrelsen workbook parser's variable,
+register and subset claims into the common source model. Parent claims use an explicitly
+not-applicable member coordinate; they do not masquerade as variables. Repeated claims
+and declared Swedish/English alternatives remain separate observations, with explicit
+language and source-local subjects. An ambiguous register name stays unknown. The reader
+does not inherit register/subset dates, synthesize a missing subset, correct variable
+names, bind a code list, or mint FQIDs. A complete pair of explicit year bounds can
+establish supplied coverage; missing, malformed or partial bounds remain unknown, with
+separate `coverage_from`/`coverage_to` declarations and original cells retained. An
+absent edition date is not the variable's reference period.
 
-The workbook parser captures variable and structured code-row coordinates, original
-values, Excel data types and number formats while reading the cells. Excel's displayed
-code spelling is separate from its stored value. Normal workbook mode preserves
-hyperlink-only classification cells that openpyxl's read-only mode omits. This is a
-bounded reader for the delivered metadata workbooks, not a general Excel interpreter.
-Register/subset metadata, code-list semantics and other providers still need their
-source-cleaning boundaries completed before the legacy pipeline can be replaced.
+The workbook parser captures metadata, variable, code-list and quality rows, including
+headers, repeated attributes, preambles, period sections and unparsed rows. Common
+`SourceEvidenceTable` rows retain original values, locators, Excel data types, number
+formats, and external/internal link destinations. Excel's displayed code spelling is
+separate from its stored value. Normal workbook mode preserves hyperlink-only cells that
+openpyxl's read-only mode omits. The code-list format is decoded once; the temporary
+legacy view is projected from that evidence. Parser failures retain available originals
+and explicit issues, and block cleaned output. Unknown code-list shapes retain their raw
+table without fabricated code values. This remains a bounded reader for delivered
+metadata workbooks, not a general Excel interpreter.
+
+`source_values.py` supplies the shared compact value boundary. Descriptor payloads,
+code/label payloads, ordered associations and exact validity declarations remain
+distinct. SCB descriptor labels never become global code-list identities, and its large
+association stream stays lazy. Socialstyrelsen records every code occurrence, with
+sheet-suffix, preamble and per-row member hints kept separate. A period-section
+declaration retains its own locator and remains separate from a code row's supplied
+period; cleaning chooses no effective period. Identical payload storage can be shared
+while duplicate occurrences and contradictory labels remain inspectable. Source cleaning
+and validation belong in input preparation. Prepared-artifact integration is still
+pending; the legacy build path continues to parse workbooks.
 
 Observation IDs identify supplied evidence, so a whitespace-only revision can still
 change an observation ID. Curation must compare the relevant cleaned values and scoped
@@ -291,6 +311,18 @@ A shared column name, name stem, or suffix is never enough to select a case or p
 identity. Reconciliation resolves every case from source records and independently
 declared policy; no case consumes another case's output as source evidence. Intersecting
 cases are checked together so file order cannot choose between incompatible results.
+
+The first `source_curation.py` slice implements applicability only. Cases enumerate
+exact semantic source members and the relevant normalized projections they expect,
+including competing alternatives under one member. Comparing sets of projected facts
+ignores physical row moves, artifact changes, irrelevant fields and identical duplicate
+rows. Changed relevant facts, missing support or unexpected members in a declared peer
+scope make the case stale. Peer guards only check membership; they never select
+correction targets. An applicable bounded-unresolved decision preserves source records
+and declares which unsupported results must be withheld. This evaluator does not yet
+discover every discrepancy, resolve identity, apply withholding to catalog output or
+enforce publication. Its illustrative cases are tests, not accepted curation for the
+maintained catalog.
 
 Case applicability is semantic, not whole-file-byte equality. A different source hash or
 physical locator alone does not invalidate a case when all relevant scoped facts,

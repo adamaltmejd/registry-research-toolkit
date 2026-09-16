@@ -7,7 +7,10 @@ deldatamängd, group same-name rows, choose a code list, or assign catalog ident
 from __future__ import annotations
 
 import re
-from typing import TYPE_CHECKING
+from dataclasses import dataclass, replace
+from datetime import date, datetime
+from types import MappingProxyType
+from typing import TYPE_CHECKING, Literal
 
 from reg_meta_build.normalization import normalize_text, normalize_token
 from reg_meta_build.source_records import (
@@ -16,21 +19,32 @@ from reg_meta_build.source_records import (
     RecordLocator,
     ScopeInterval,
     SourceCoordinate,
+    SourceEvidenceRow,
+    SourceEvidenceTable,
     SourceField,
     SourceFields,
     SourceRecord,
     SourceSubject,
     TemporalScope,
+    canonical_sha256,
     value_field,
+)
+from reg_meta_build.source_values import (
+    SourceMemberHint,
+    SourceValue,
+    SourceValueAssociation,
+    SourceValueDescriptor,
 )
 
 if TYPE_CHECKING:
-    from collections.abc import Iterator
+    from collections.abc import Iterator, Mapping
 
     from reg_meta_build.source_records import FieldScalar, SourceRevision
     from reg_meta_build.sources.sos import (
         SosCellEvidence,
+        SosEvidenceRole,
         SosRegister,
+        SosRowEvidence,
         SosVariable,
     )
 
@@ -42,8 +56,7 @@ _DATA_TYPES = {
 }
 
 
-def _cell(variable: SosVariable, field_name: str) -> SosCellEvidence | None:
-    evidence = variable.source_evidence
+def _cell(evidence: SosRowEvidence | None, field_name: str) -> SosCellEvidence | None:
     if evidence is None:
         return None
     return next(
@@ -61,7 +74,6 @@ def _raw_scalar(cell: SosCellEvidence | None) -> FieldScalar | None:
 
 
 def _text_field(
-    value: str | None,
     cell: SosCellEvidence | None,
     *,
     token: bool = False,
@@ -70,6 +82,9 @@ def _text_field(
     if cell is None:
         return None
     raw = _raw_scalar(cell)
+    value = cell.raw_value if isinstance(cell.raw_value, str) else cell.display_value
+    if isinstance(cell.raw_value, (date, datetime)):
+        value = cell.raw_value.isoformat()
     if value is None:
         return SourceField(status="unknown", raw_value=raw)
     normalized = (
@@ -80,9 +95,9 @@ def _text_field(
     return value_field(normalized, raw=raw)
 
 
-def _data_type_field(variable: SosVariable) -> SourceField | None:
-    cell = _cell(variable, "data_type")
-    field = _text_field(variable.data_type, cell, token=True)
+def _data_type_field(evidence: SosRowEvidence) -> SourceField | None:
+    cell = _cell(evidence, "data_type")
+    field = _text_field(cell, token=True)
     if field is None or field.status != "value" or not isinstance(field.value, str):
         return field
     normalized = _DATA_TYPES.get(field.value.casefold(), field.value)
@@ -93,9 +108,9 @@ def _data_type_field(variable: SosVariable) -> SourceField | None:
     )
 
 
-def _coverage_scope(variable: SosVariable) -> TemporalScope:
-    from_cell = _cell(variable, "data_from")
-    to_cell = _cell(variable, "data_to")
+def _coverage_scope(evidence: SosRowEvidence) -> TemporalScope:
+    from_cell = _cell(evidence, "data_from")
+    to_cell = _cell(evidence, "data_to")
     if from_cell is None and to_cell is None:
         return TemporalScope(kind="not_applicable")
 
@@ -130,8 +145,7 @@ def _coverage_scope(variable: SosVariable) -> TemporalScope:
     )
 
 
-def _delivered_cells(variable: SosVariable) -> tuple[DeliveredCell, ...]:
-    evidence = variable.source_evidence
+def _delivered_cells(evidence: SosRowEvidence | None) -> tuple[DeliveredCell, ...]:
     if evidence is None:
         return ()
     return tuple(
@@ -152,6 +166,34 @@ def _delivered_cells(variable: SosVariable) -> tuple[DeliveredCell, ...]:
     )
 
 
+def _register_name(register: SosRegister) -> str | None:
+    names = {
+        normalize_text(cell.display_value)
+        for sheet in register.source_sheets
+        if sheet.kind == "general"
+        for row in sheet.rows
+        for cell in row.source_evidence.cells
+        if cell.field_name == "dataset_name" and cell.display_value
+    }
+    return next(iter(names)) if len(names) == 1 else None
+
+
+def _locator(
+    evidence: SosRowEvidence,
+    revision: SourceRevision,
+    semantic_key: tuple[str, ...],
+) -> RecordLocator:
+    return RecordLocator(
+        semantic_record_key=semantic_key,
+        physical_file=revision.artifact_path,
+        physical_table=evidence.sheet_name,
+        physical_record=f"row:{evidence.row_number}",
+        physical_cells=tuple(
+            f"{evidence.sheet_name}!{cell.coordinate}" for cell in evidence.cells
+        ),
+    )
+
+
 def clean_sos_variable(
     register: SosRegister,
     variable: SosVariable,
@@ -163,9 +205,7 @@ def clean_sos_variable(
     if evidence is None:
         raise ValueError("SOS source records require parser row evidence")
 
-    register_name = (
-        normalize_text(register.dataset_name) if register.dataset_name else None
-    )
+    register_name = _register_name(register)
     variant_name = (
         normalize_token(variable.deldatamangd) if variable.deldatamangd else None
     )
@@ -177,18 +217,7 @@ def clean_sos_variable(
     )
     return SourceRecord.create(
         revision=revision,
-        locators=(
-            RecordLocator(
-                semantic_record_key=semantic_key,
-                physical_file=revision.artifact_path,
-                physical_table=evidence.sheet_name,
-                physical_record=f"row:{evidence.row_number}",
-                physical_cells=tuple(
-                    f"{evidence.sheet_name}!{cell.coordinate}"
-                    for cell in evidence.cells
-                ),
-            ),
-        ),
+        locators=(_locator(evidence, revision, semantic_key),),
         subject=SourceSubject(
             provider="sos",
             register=(
@@ -205,34 +234,32 @@ def clean_sos_variable(
             member=SourceCoordinate(status="value", name=member_name),
             native=NativeCoordinates(),
         ),
-        edition_scope=_coverage_scope(variable),
+        edition_scope=_coverage_scope(evidence),
         edition_period_scope=TemporalScope(kind="not_applicable"),
         fields=SourceFields(
             availability=value_field(True),
             column_name=_text_field(
-                variable.name,
-                _cell(variable, "name"),
+                _cell(evidence, "name"),
                 token=True,
             ),
-            name=_text_field(variable.label, _cell(variable, "label")),
+            name=_text_field(_cell(evidence, "label")),
             description=_text_field(
-                variable.description,
-                _cell(variable, "description"),
+                _cell(evidence, "description"),
                 multiline=True,
             ),
-            data_type=_data_type_field(variable),
+            data_type=_data_type_field(evidence),
+            coverage_from=_text_field(_cell(evidence, "data_from"), token=True),
+            coverage_to=_text_field(_cell(evidence, "data_to"), token=True),
             representation=_text_field(
-                variable.value_set_text,
-                _cell(variable, "value_set_text"),
+                _cell(evidence, "value_set_text"),
                 multiline=True,
             ),
             source_attribution=_text_field(
-                variable.source_detail,
-                _cell(variable, "source_detail"),
+                _cell(evidence, "source_detail"),
                 multiline=True,
             ),
         ),
-        delivered_cells=_delivered_cells(variable),
+        delivered_cells=_delivered_cells(evidence),
     )
 
 
@@ -246,4 +273,322 @@ def iter_sos_variable_records(
         yield clean_sos_variable(register, variable, revision)
 
 
-__all__ = ["clean_sos_variable", "iter_sos_variable_records"]
+_GENERAL_FIELDS = {
+    "dataset_name": "name",
+    "dataset_version": "source_version",
+    "dataset_date": "source_date",
+    "contact_email": "contact",
+}
+_DCAT_FIELDS = {
+    "title": "name",
+    "description": "description",
+    "temporal_coverage": "coverage",
+    "geographic_coverage": "geographic_coverage",
+    "population": "population_definition",
+    "update_frequency": "update_frequency",
+    "publisher": "source_attribution",
+    "contact": "contact",
+    "documentation_url": "documentation_url",
+    "landing_page": "landing_page",
+    "access_url": "access_url",
+    "access_rights": "access_rights",
+    "legislation": "legislation",
+}
+_SUBSET_FIELDS = {
+    "label": "name",
+    "description": "description",
+    "data_from": "coverage_from",
+    "data_to": "coverage_to",
+    "update_frequency": "update_frequency",
+    "aggregation_level": "aggregation_level",
+}
+_PARAGRAPH_FIELDS = {"description", "population_definition", "legislation"}
+
+
+def _metadata_record(
+    register: SosRegister,
+    revision: SourceRevision,
+    evidence: SosRowEvidence,
+    fields: dict[str, SourceField],
+    *,
+    kind: str,
+    language: Literal["sv", "en"] | None = None,
+) -> SourceRecord:
+    register_name = _register_name(register)
+    subset = _cell(evidence, "name") if kind == "subsets" else None
+    subset_name = (
+        normalize_token(subset.display_value)
+        if subset and subset.display_value
+        else None
+    )
+    semantic_key = (
+        f"register:{register_name or '<unknown>'}",
+        f"metadata:{kind}",
+        f"subset:{subset_name or '<not applicable>'}",
+        f"fields:{','.join(sorted(fields))}",
+        f"language:{language or '<not declared>'}",
+    )
+    return SourceRecord.create(
+        revision=revision,
+        locators=(_locator(evidence, revision, semantic_key),),
+        subject=SourceSubject(
+            provider="sos",
+            register=(
+                SourceCoordinate(status="value", name=register_name)
+                if register_name
+                else SourceCoordinate(status="unknown")
+            ),
+            variant=(
+                SourceCoordinate(status="value", name=subset_name)
+                if subset_name
+                else SourceCoordinate(status="not_applicable")
+            ),
+            population=SourceCoordinate(status="unknown"),
+            member=SourceCoordinate(status="not_applicable"),
+            native=NativeCoordinates(),
+        ),
+        edition_scope=(
+            _coverage_scope(evidence)
+            if kind == "subsets"
+            else TemporalScope(kind="not_applicable")
+        ),
+        edition_period_scope=TemporalScope(kind="not_applicable"),
+        fields=SourceFields.model_validate(fields),
+        language=language,
+        delivered_cells=_delivered_cells(evidence),
+    )
+
+
+def iter_sos_metadata_records(
+    register: SosRegister, revision: SourceRevision
+) -> Iterator[SourceRecord]:
+    """Keep repeated parent claims and explicitly supplied languages separate."""
+    for sheet in register.source_sheets:
+        if sheet.kind not in {"general", "dcat", "subsets"}:
+            continue
+        for row in sheet.rows:
+            if row.role not in {"metadata", "attribute", "subset"}:
+                continue
+            evidence = row.source_evidence
+            if sheet.kind == "dcat":
+                for cell in evidence.cells:
+                    if cell.language is None or cell.field_name is None:
+                        continue
+                    stem = cell.field_name.removesuffix(f"_{cell.language}")
+                    field = _DCAT_FIELDS.get(stem)
+                    if field is None:
+                        continue
+                    cleaned = _text_field(cell, multiline=field in _PARAGRAPH_FIELDS)
+                    if cleaned is not None:
+                        yield _metadata_record(
+                            register,
+                            revision,
+                            evidence,
+                            {field: cleaned},
+                            kind=sheet.kind,
+                            language=cell.language,
+                        )
+            else:
+                mapping = _GENERAL_FIELDS if sheet.kind == "general" else _SUBSET_FIELDS
+                fields = {
+                    field: cleaned
+                    for source_field, field in mapping.items()
+                    if (
+                        cleaned := _text_field(
+                            _cell(evidence, source_field),
+                            multiline=field in _PARAGRAPH_FIELDS,
+                        )
+                    )
+                    is not None
+                }
+                if fields:
+                    yield _metadata_record(
+                        register, revision, evidence, fields, kind=sheet.kind
+                    )
+
+
+_ROW_ROLES: dict[
+    SosEvidenceRole,
+    Literal["header", "section", "declaration", "data", "unparsed", "note"],
+] = {
+    "header": "header",
+    "section": "section",
+    "metadata": "declaration",
+    "attribute": "declaration",
+    "subset": "data",
+    "variable": "data",
+    "preamble": "declaration",
+    "period_section": "section",
+    "code": "data",
+    "raw": "unparsed",
+    "quality": "note",
+}
+
+
+def _source_tables(
+    register: SosRegister, revision: SourceRevision
+) -> tuple[SourceEvidenceTable, ...]:
+    return tuple(
+        SourceEvidenceTable(
+            source=revision.dataset,
+            source_revision_id=revision.revision_id,
+            name=sheet.sheet_name,
+            rows=tuple(
+                SourceEvidenceRow(
+                    locator=_locator(
+                        row.source_evidence, revision, (f"table:{sheet.sheet_name}",)
+                    ),
+                    role=_ROW_ROLES[row.role],
+                    cells=_delivered_cells(row.source_evidence),
+                )
+                for row in sheet.rows
+            ),
+        )
+        for sheet in register.source_sheets
+    )
+
+
+@dataclass(frozen=True)
+class CleanedSosSource:
+    revision: SourceRevision
+    records: tuple[SourceRecord, ...]
+    tables: tuple[SourceEvidenceTable, ...]
+    descriptors: Mapping[str, SourceValueDescriptor]
+    values: Mapping[str, SourceValue]
+    associations: tuple[SourceValueAssociation, ...]
+
+
+def _declaration_text(
+    cell: SosCellEvidence | None, *, token: bool = False
+) -> str | None:
+    if cell is None or cell.raw_value is None:
+        return None
+    return (normalize_token if token else normalize_text)(str(cell.raw_value))
+
+
+def clean_sos_source(
+    register: SosRegister, revision: SourceRevision
+) -> CleanedSosSource:
+    """Prepare common observations; retain every list occurrence without bindings."""
+    if register.parse_issues:
+        detail = "; ".join(
+            f"{issue.sheet_name}: {issue.detail}" for issue in register.parse_issues
+        )
+        raise ValueError(f"SOS source cleaning blocked by parser failures: {detail}")
+    if not register.source_sheets:
+        raise ValueError("SOS source cleaning requires original sheet evidence")
+    descriptors: dict[str, SourceValueDescriptor] = {}
+    values: dict[str, SourceValue] = {}
+    associations: list[SourceValueAssociation] = []
+    for sheet in register.source_sheets:
+        if sheet.kind != "codelist":
+            continue
+        descriptor_key = f"sheet:{sheet.sheet_name}"
+        suffix = sheet.sheet_name.split("_", 1)[-1].split("!", 1)[0].strip()
+        hints = [SourceMemberHint(role="sheet_suffix", value=normalize_token(suffix))]
+        declarations: list[DeliveredCell] = []
+        declaration_locators: list[RecordLocator] = []
+        section_period: str | None = None
+        section_locator: RecordLocator | None = None
+        for row in sheet.rows:
+            evidence = row.source_evidence
+            locator = _locator(evidence, revision, (descriptor_key,))
+            if row.role in {"preamble", "header"}:
+                declarations.extend(_delivered_cells(evidence))
+                declaration_locators.append(locator)
+                member = _cell(evidence, "variable_header")
+                if member is not None:
+                    hints.append(
+                        SourceMemberHint(
+                            role="list_header",
+                            value=_declaration_text(member, token=True),
+                            locator=locator,
+                        )
+                    )
+            if row.role == "period_section":
+                section_period = _declaration_text(_cell(evidence, "tidsperiod"))
+                section_locator = locator
+            if row.role != "code":
+                continue
+            code = _cell(evidence, "kod")
+            label = _cell(evidence, "beskrivning")
+            if code is None or not code.display_value:
+                raise ValueError(
+                    f"{sheet.sheet_name} row {evidence.row_number}: structured code lacks source code cell"
+                )
+            selected = tuple(
+                cell
+                for cell in evidence.cells
+                if cell.field_name in {"kod", "beskrivning"}
+            )
+            payload = replace(evidence, cells=selected)
+            delivered = _delivered_cells(payload)
+            key = canonical_sha256([cell.model_dump(mode="json") for cell in delivered])
+            occurrence_locator = _locator(
+                evidence, revision, (descriptor_key, f"value:{key}")
+            )
+            if key in values:
+                values[key] = replace(
+                    values[key], locators=(*values[key].locators, occurrence_locator)
+                )
+            else:
+                values[key] = SourceValue(
+                    payload_key=key,
+                    code=normalize_token(code.display_value),
+                    label=(_declaration_text(label) if label is not None else None),
+                    locators=(occurrence_locator,),
+                    delivered_cells=delivered,
+                )
+            member = _cell(evidence, "variable_name")
+            row_hints = (
+                (
+                    SourceMemberHint(
+                        role="row",
+                        value=_declaration_text(member, token=True),
+                        locator=locator,
+                    ),
+                )
+                if member is not None
+                else ()
+            )
+            associations.append(
+                SourceValueAssociation(
+                    row_number=evidence.row_number,
+                    descriptor_key=descriptor_key,
+                    value_key=key,
+                    source_file=revision.artifact_path,
+                    source_table=sheet.sheet_name,
+                    member_hints=row_hints,
+                    supplied_period=_declaration_text(_cell(evidence, "tidsperiod")),
+                    section_period=section_period,
+                    section_locator=section_locator,
+                    delivered_cells=_delivered_cells(evidence),
+                )
+            )
+        descriptors[descriptor_key] = SourceValueDescriptor(
+            payload_key=descriptor_key,
+            name=normalize_text(sheet.sheet_name),
+            member_hints=tuple(hints),
+            locators=tuple(declaration_locators),
+            delivered_cells=tuple(declarations),
+        )
+    return CleanedSosSource(
+        revision=revision,
+        records=(
+            *iter_sos_metadata_records(register, revision),
+            *iter_sos_variable_records(register, revision),
+        ),
+        tables=_source_tables(register, revision),
+        descriptors=MappingProxyType(descriptors),
+        values=MappingProxyType(values),
+        associations=tuple(associations),
+    )
+
+
+__all__ = [
+    "CleanedSosSource",
+    "clean_sos_source",
+    "clean_sos_variable",
+    "iter_sos_metadata_records",
+    "iter_sos_variable_records",
+]

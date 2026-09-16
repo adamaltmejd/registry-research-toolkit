@@ -2151,7 +2151,7 @@ def test_pinned_bundle_cli_reports_deterministic_source_targets_without_cold_val
         "bundle_manifest_sha256": selection.manifest_sha256,
         "code_commit": "c" * 40,
         "input_repository_commit": selection.input_commit,
-        "interpretation_id": "scb-lisa-source-record-inspection-v6",
+        "interpretation_id": "scb-lisa-source-record-inspection-v7",
         "scb_snapshot_manifest_sha256": bundle.manifest.scb_manifest_sha256,
     }
     assert report["scope"]["selected_sources"] == [

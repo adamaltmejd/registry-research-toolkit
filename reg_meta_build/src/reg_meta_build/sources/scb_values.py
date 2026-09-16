@@ -9,6 +9,12 @@ from typing import TYPE_CHECKING
 from reg_meta_build.db import _decode_cp1252, _validated_scb_header
 from reg_meta_build.input_snapshot import SnapshotError
 from reg_meta_build.normalization import normalize_text, normalize_token
+from reg_meta_build.source_values import (
+    SourceValue,
+    SourceValueAssociation,
+    SourceValueDescriptor,
+    SourceValueValidity,
+)
 
 if TYPE_CHECKING:
     from collections.abc import Iterator, Mapping
@@ -22,62 +28,6 @@ if TYPE_CHECKING:
 _VALUE_FILE = "Vardemangder.csv"
 _VALIDITY_FILE = "VardemangderValidDates.csv"
 
-type NormalizedValue = tuple[str | None, str | None]
-
-
-@dataclass(frozen=True, slots=True)
-class ScbValueDescriptor:
-    """One unique native descriptor payload and its normalized content."""
-
-    payload_key: str
-    raw_cells: tuple[RawCell, RawCell]
-    version: str | None
-    level: str | None
-
-
-@dataclass(frozen=True, slots=True)
-class ScbValue:
-    """One unique native code/label payload and its normalized content."""
-
-    payload_key: str
-    raw_cells: tuple[RawCell, RawCell]
-    code: str | None
-    label: str | None
-
-    @property
-    def normalized_content(self) -> NormalizedValue:
-        return self.code, self.label
-
-
-@dataclass(frozen=True, slots=True)
-class ScbValueAssociation:
-    """One ordered native association; no membership decision is made here."""
-
-    row_number: int
-    cvid: RawCell
-    item_id: RawCell
-    descriptor_key: str
-    value_key: str
-
-    @property
-    def locator(self) -> str:
-        return f"{_VALUE_FILE}:row:{self.row_number}"
-
-
-@dataclass(frozen=True, slots=True)
-class ScbValueValidity:
-    """One exact native ItemID validity record."""
-
-    row_number: int
-    raw_cells: tuple[RawCell, RawCell, RawCell]
-    item_id: str | None
-    valid_from: str | None
-    valid_to: str | None
-
-    @property
-    def locator(self) -> str:
-        return f"{_VALIDITY_FILE}:row:{self.row_number}"
-
 
 @dataclass(frozen=True, slots=True)
 class CleanedScbValues:
@@ -85,12 +35,12 @@ class CleanedScbValues:
 
     provenance: Mapping[str, str]
     header: tuple[RawCell, ...]
-    descriptors: Mapping[str, ScbValueDescriptor]
-    values: Mapping[str, ScbValue]
-    validity: tuple[ScbValueValidity, ...]
+    descriptors: Mapping[str, SourceValueDescriptor]
+    values: Mapping[str, SourceValue]
+    validity: tuple[SourceValueValidity, ...]
     _prepared: PreparedVardemangder = field(repr=False, compare=False)
 
-    def associations(self) -> Iterator[ScbValueAssociation]:
+    def associations(self) -> Iterator[SourceValueAssociation]:
         """Stream every occurrence in source order, including duplicates."""
         for row_number, association in enumerate(
             self._prepared.occurrences(
@@ -100,9 +50,11 @@ class CleanedScbValues:
             start=2,
         ):
             cvid, item_id, descriptor_key, value_key = association
-            yield ScbValueAssociation(
+            yield SourceValueAssociation(
                 row_number=row_number,
-                cvid=cvid,
+                source_file=_VALUE_FILE,
+                member_id=cvid,
+                member_id_field="CVID",
                 item_id=item_id,
                 descriptor_key=descriptor_key,
                 value_key=value_key,
@@ -118,13 +70,13 @@ def _clean_cell(cell: RawCell, *, token: bool = False) -> str | None:
 
 def _clean_descriptor(
     payload_key: str, cells: tuple[RawCell, ...]
-) -> ScbValueDescriptor:
+) -> SourceValueDescriptor:
     if len(cells) != 2:
         raise SnapshotError(
             f"{_VALUE_FILE} descriptor payload {payload_key} has {len(cells)} cells, expected 2"
         )
     version, level = cells
-    return ScbValueDescriptor(
+    return SourceValueDescriptor(
         payload_key=payload_key,
         raw_cells=(version, level),
         version=_clean_cell(version),
@@ -132,13 +84,13 @@ def _clean_descriptor(
     )
 
 
-def _clean_value(payload_key: str, cells: tuple[RawCell, ...]) -> ScbValue:
+def _clean_value(payload_key: str, cells: tuple[RawCell, ...]) -> SourceValue:
     if len(cells) != 2:
         raise SnapshotError(
             f"{_VALUE_FILE} value payload {payload_key} has {len(cells)} cells, expected 2"
         )
     code, label = cells
-    return ScbValue(
+    return SourceValue(
         payload_key=payload_key,
         raw_cells=(code, label),
         code=_clean_cell(code, token=True),
@@ -146,8 +98,8 @@ def _clean_value(payload_key: str, cells: tuple[RawCell, ...]) -> ScbValue:
     )
 
 
-def _read_validity(reader: ScbSnapshotReader) -> tuple[ScbValueValidity, ...]:
-    records: list[ScbValueValidity] = []
+def _read_validity(reader: ScbSnapshotReader) -> tuple[SourceValueValidity, ...]:
+    records: list[SourceValueValidity] = []
     with reader.open_csv(_VALIDITY_FILE) as (raw_header, rows):
         header = ["" if cell is None else cell for cell in raw_header]
         _validated_scb_header(_VALIDITY_FILE, header)
@@ -158,8 +110,9 @@ def _read_validity(reader: ScbSnapshotReader) -> tuple[ScbValueValidity, ...]:
                 )
             item_id, valid_from, valid_to = cells
             records.append(
-                ScbValueValidity(
+                SourceValueValidity(
                     row_number=row_number,
+                    source_file=_VALIDITY_FILE,
                     raw_cells=(item_id, valid_from, valid_to),
                     item_id=_clean_cell(item_id, token=True),
                     valid_from=_clean_cell(valid_from, token=True),

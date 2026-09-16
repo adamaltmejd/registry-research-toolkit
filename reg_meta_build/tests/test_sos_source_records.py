@@ -3,11 +3,16 @@
 from __future__ import annotations
 
 import hashlib
+from dataclasses import replace
 from typing import TYPE_CHECKING
 
+import pytest
 from reg_meta_build.source_records import NativeCoordinates, SourceRevision, value_field
-from reg_meta_build.sources.sos import parse_register_file
-from reg_meta_build.sources.sos_records import iter_sos_variable_records
+from reg_meta_build.sources.sos import SosParseIssue, parse_register_file
+from reg_meta_build.sources.sos_records import (
+    clean_sos_source,
+    iter_sos_variable_records,
+)
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -211,7 +216,16 @@ def test_source_records_keep_occurrences_conflicts_and_native_sos_coordinates(
     assert first.locators[0].physical_record == "row:2"
     assert duplicate.locators[0].physical_record == "row:3"
     assert conflict.record_id != first.record_id
-    assert storage_variant.fields == first.fields
+    assert storage_variant.fields.model_dump(
+        exclude={"coverage_from"}
+    ) == first.fields.model_dump(exclude={"coverage_from"})
+    assert (
+        storage_variant.fields.coverage_from.value
+        == first.fields.coverage_from.value
+        == "2001"
+    )
+    assert storage_variant.fields.coverage_from.raw_value == "2001"
+    assert first.fields.coverage_from.raw_value == 2001
     assert storage_variant.edition_scope == first.edition_scope
     assert storage_variant.record_id != first.record_id
     first_start = next(
@@ -289,3 +303,138 @@ def test_source_records_keep_occurrences_conflicts_and_native_sos_coordinates(
         "",
         "",
     )
+
+
+def _write_complete_workbook(path: Path) -> None:
+    import openpyxl
+
+    _write_source_workbook(path)
+    workbook = openpyxl.load_workbook(path)
+    dcat = workbook.create_sheet("Metadata-Datamängd (DCAT-AP)")
+    dcat.append(["Attribut", "Definition", "Svenska", "Engelska"])
+    dcat.append(["Titel", None, "Första titeln", "First title"])
+    dcat.append(["Titel", None, "Andra titeln", "Second title"])
+    dcat.append(["Beskrivning", None, "  indragen rad\n    tabell  kolumn", None])
+    dcat.append(["Okänt attribut", None, "Obehandlad uppgift", "Unmapped fact"])
+    subsets = workbook.create_sheet("Deldatamängder")
+    subsets.append(
+        ["Deldatamängdsnamn", "Deldatamängdsetikett", "Data från", "Data till"]
+    )
+    subsets.append(["PAR_OV", "Öppenvård", 1900, 2025])
+    codes = workbook["Kodlista_HDIA"]
+    codes.delete_rows(1, codes.max_row)
+    codes.append(["Variabelnamn", "HDIA"])
+    codes.append(["Variabelnamn", "ANNAN_VAR"])
+    codes.append(["Tidsperiod", "Kod", "Beskrivning (kliniknamn)"])
+    codes.append(["2010-2012", None, None])
+    for description in ["Klinik ett", "Klinik ett", "Annan klinik"]:
+        codes.append([None, 1, description])
+        codes.cell(codes.max_row, 2).number_format = "000"
+    raw = workbook.create_sheet("Kodlista_RAW")
+    raw.append(["Sjukhus", "Adress"])
+    raw.append(["Klinik", "Gatan 1"])
+    workbook.save(path)
+    workbook.close()
+
+
+def test_common_parent_metadata_preserves_languages_conflicts_and_raw_context(
+    tmp_path: Path,
+) -> None:
+    path = tmp_path / "Metadata Test.xlsx"
+    _write_complete_workbook(path)
+    cleaned = clean_sos_source(parse_register_file(path), _revision(path))
+
+    parents = [
+        record
+        for record in cleaned.records
+        if record.subject.member.status == "not_applicable"
+    ]
+    titles = [record for record in parents if record.language and record.fields.name]
+    assert {(record.language, record.fields.name.value) for record in titles} == {
+        ("sv", "Första titeln"),
+        ("sv", "Andra titeln"),
+        ("en", "First title"),
+        ("en", "Second title"),
+    }
+    swedish = [record for record in titles if record.language == "sv"]
+    assert (
+        swedish[0].locators[0].semantic_record_key
+        == swedish[1].locators[0].semantic_record_key
+    )
+    assert swedish[0].record_id != swedish[1].record_id
+    description = next(
+        record.fields.description
+        for record in parents
+        if record.language == "sv" and record.fields.description
+    )
+    assert description.value == "  indragen rad\n    tabell  kolumn"
+    subset = next(
+        record for record in parents if record.subject.variant.name == "PAR_OV"
+    )
+    assert subset.edition_scope.intervals[0].start == "1900"
+    partial = next(
+        record for record in cleaned.records if record.subject.member.name == "PARTIELL"
+    )
+    assert partial.edition_scope.kind == "unknown"
+    assert partial.fields.coverage_from.value == "2010"
+    assert partial.fields.coverage_to.status == "unknown"
+    dcat = next(
+        table
+        for table in cleaned.tables
+        if table.name == "Metadata-Datamängd (DCAT-AP)"
+    )
+    assert any(
+        cell.raw_value == "Unmapped fact" for row in dcat.rows for cell in row.cells
+    )
+
+
+def test_common_values_keep_duplicate_associations_competing_labels_and_period_origins(
+    tmp_path: Path,
+) -> None:
+    path = tmp_path / "Metadata Test.xlsx"
+    _write_complete_workbook(path)
+    cleaned = clean_sos_source(parse_register_file(path), _revision(path))
+
+    assert len(cleaned.values) == 2
+    assert {value.normalized_content for value in cleaned.values.values()} == {
+        ("001", "Klinik ett"),
+        ("001", "Annan klinik"),
+    }
+    first, duplicate, conflict = cleaned.associations
+    assert first.value_key == duplicate.value_key != conflict.value_key
+    assert [association.row_number for association in cleaned.associations] == [5, 6, 7]
+    assert first.supplied_period is None
+    assert first.section_period == "2010-2012"
+    assert first.section_locator.physical_record == "row:4"
+    descriptor = cleaned.descriptors["sheet:Kodlista_HDIA"]
+    assert [(hint.role, hint.value) for hint in descriptor.member_hints] == [
+        ("sheet_suffix", "HDIA"),
+        ("list_header", "HDIA"),
+        ("list_header", "ANNAN_VAR"),
+    ]
+    assert len(cleaned.values[first.value_key].locators) == 2
+    raw = next(table for table in cleaned.tables if table.name == "Kodlista_RAW")
+    assert all(row.role == "unparsed" for row in raw.rows)
+    assert not any(
+        association.descriptor_key == "sheet:Kodlista_RAW"
+        for association in cleaned.associations
+    )
+    assert all(not record.code_set_references for record in cleaned.records)
+
+
+def test_source_cleaning_blocks_on_parser_failure_with_original_evidence_available(
+    tmp_path: Path,
+) -> None:
+    path = tmp_path / "Metadata Test.xlsx"
+    _write_complete_workbook(path)
+    parsed = parse_register_file(path)
+    failed = replace(
+        parsed,
+        parse_issues=(
+            SosParseIssue("Kodlista_HDIA", "parse_failure", "bad code layout"),
+        ),
+    )
+
+    with pytest.raises(ValueError, match="Kodlista_HDIA: bad code layout"):
+        clean_sos_source(failed, _revision(path))
+    assert failed.source_sheets == parsed.source_sheets
