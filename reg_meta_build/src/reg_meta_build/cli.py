@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import dataclasses
+import hashlib
 import json
 import os
 import sys
@@ -56,7 +57,12 @@ from .concept_group_candidates import (
 from .concept_groups import (
     load_concept_group_accepts,
 )
-from .db import _reject_input_repository_destination, _scb_snapshot_error, build_db
+from .db import (
+    _file_sha256,
+    _reject_input_repository_destination,
+    _scb_snapshot_error,
+    build_db,
+)
 from .doc_coverage import compute_doc_coverage, render_doc_coverage_toml
 from .doc_db import build_doc_db, repo_docs_dir
 from .extend_db import (
@@ -163,6 +169,23 @@ def _build_parser() -> argparse.ArgumentParser:
     )
 
     sub = parser.add_subparsers(dest="command")
+
+    curated_p = sub.add_parser(
+        "build-curated-db",
+        help="Build a scoped catalog from prepared records and reviewed cases.",
+        description=(
+            "Build and structurally validate the explicit catalog slice selected by "
+            "reviewed curation cases. Reads prepared source records only; does not "
+            "parse provider inputs or run legacy correction passes. This partial "
+            "replacement does not build the complete maintained catalog."
+        ),
+    )
+    curated_p.add_argument("--records", required=True)
+    curated_p.add_argument("--records-sha256", required=True)
+    curated_p.add_argument("--cases", required=True)
+    curated_p.add_argument(
+        "--db-path", required=True, help="Explicit output SQLite path."
+    )
 
     build_p = sub.add_parser(
         "build-db",
@@ -1071,6 +1094,74 @@ def _parse_scb_trace_cvids(raw: str | None) -> tuple[int, ...] | None:
             remediation="List each selected native CVID exactly once.",
         )
     return tuple(sorted(values))
+
+
+def _cmd_build_curated_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
+    from pydantic import TypeAdapter
+
+    from .prepared_sources import open_prepared_source_records
+    from .resolved_catalog import write_resolved_catalog
+    from .source_curation import CurationCase, resolve_cases
+
+    start = time.perf_counter()
+    records_path = Path(args.records).expanduser().resolve()
+    cases_path = Path(args.cases).expanduser().resolve()
+    output = Path(args.db_path).expanduser().resolve()
+    if args.db is not None or output in {records_path, cases_path}:
+        raise RegMetaError(
+            exit_code=EXIT_USAGE,
+            code="curated_build_output_conflict",
+            error_class="usage",
+            message="Use --db-path outside the prepared records and cases; --db is not used by this command.",
+            remediation="Choose a distinct explicit SQLite output path.",
+        )
+    try:
+        prepared = open_prepared_source_records(
+            records_path, expected_sha256=args.records_sha256
+        )
+        case_bytes = cases_path.read_bytes()
+        cases = TypeAdapter(tuple[CurationCase, ...]).validate_json(case_bytes)
+        variables = resolve_cases(cases, prepared.records)
+        case_sha256 = hashlib.sha256(case_bytes).hexdigest()
+        write_resolved_catalog(
+            variables,
+            output,
+            manifest={
+                "build_mode": "scoped-curation",
+                "source_scope": prepared.manifest.scope,
+                "prepared_sources_sha256": args.records_sha256,
+                "curation_cases_sha256": case_sha256,
+            },
+        )
+    except ValueError as exc:
+        raise RegMetaError(
+            exit_code=EXIT_CONFIG,
+            code="curated_build_rejected",
+            error_class="configuration",
+            message=str(exc),
+            remediation="Review changed source facts or repair the scoped input/case contract; the previous database is preserved.",
+        ) from exc
+    return success_envelope(
+        command="build-curated-db",
+        args_payload={
+            "records": str(records_path),
+            "cases": str(cases_path),
+            "db_path": str(output),
+        },
+        db_info={"schema_version": SCHEMA_VERSION},
+        data={
+            "db_path": str(output),
+            "db_sha256": _file_sha256(output),
+            "scope": prepared.manifest.scope,
+            "partial_catalog": True,
+            "variables": len(variables),
+            "states": sum(len(variable.states) for variable in variables),
+            "prepared_sources_sha256": args.records_sha256,
+            "curation_cases_sha256": case_sha256,
+            "structural_validation": "passed",
+        },
+        duration_ms=int((time.perf_counter() - start) * 1000),
+    ), 0
 
 
 def _cmd_build_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
@@ -2332,6 +2423,7 @@ def _cmd_doc_coverage(
 COMMAND_DISPATCH: dict[
     str, Callable[[argparse.Namespace], tuple[dict[str, Any], int]]
 ] = {
+    "build-curated-db": _cmd_build_curated_db,
     "build-db": _cmd_build_db,
     "prepare-input-bundle": _cmd_prepare_input_bundle,
     "verify-input-bundle": _cmd_verify_input_bundle,
@@ -2357,6 +2449,10 @@ COMMAND_DISPATCH: dict[
 
 
 _COMMAND_OVERVIEW: list[tuple[str, str]] = [
+    (
+        "build-curated-db --records FILE --records-sha256 SHA256 --cases FILE --db-path DB",
+        "Build a scoped catalog from prepared records and reviewed cases.",
+    ),
     (
         "build-db --input-bundle DIR --input-commit SHA --input-manifest-sha256 SHA256",
         "Build the metadata DB from one complete accepted input bundle.",
@@ -2465,6 +2561,29 @@ def _confined_bundle_output_path(
         return None
     resolved_output = Path(output_path).expanduser().resolve()
     if (
+        args.command == "build-curated-db"
+        and resolved_output.exists()
+        and not resolved_output.is_file()
+    ):
+        raise RegMetaError(
+            exit_code=EXIT_USAGE,
+            code="curated_build_output_conflict",
+            error_class="usage",
+            message="CLI JSON --output must name a file, not a directory.",
+            remediation="Choose a separate report file.",
+        )
+    if args.command == "build-curated-db" and resolved_output in {
+        Path(path).expanduser().resolve()
+        for path in (args.records, args.cases, args.db_path)
+    }:
+        raise RegMetaError(
+            exit_code=EXIT_USAGE,
+            code="curated_build_output_conflict",
+            error_class="usage",
+            message="CLI JSON --output must be distinct from source records, cases and the SQLite database.",
+            remediation="Choose a separate report path.",
+        )
+    if (
         args.command == "inspect-source-records"
         and (evidence := getattr(args, "evidence", None)) is not None
         and resolved_output == Path(evidence).expanduser().resolve()
@@ -2562,6 +2681,26 @@ def run(argv: list[str] | None = None) -> int:
             else:
                 write_json(payload.get("data", payload), output_path)
         except Exception as exc:
+            if args.command == "build-curated-db":
+                data = payload.get("data", payload)
+                sys.stderr.write(
+                    json.dumps(
+                        {
+                            "error": {
+                                "code": "curated_build_report_failed",
+                                "class": "diagnostic_output",
+                                "message": f"Catalog publication succeeded; writing its report failed: {exc}",
+                                "catalog_published": True,
+                                "db_path": data["db_path"],
+                                "db_sha256": data["db_sha256"],
+                                "remediation": "Keep the published database; choose a writable report destination.",
+                            }
+                        },
+                        ensure_ascii=False,
+                    )
+                    + "\n"
+                )
+                return EXIT_OUTPUT
             if args.command != "build-db" or not getattr(args, "trace_scb_cvids", None):
                 raise
             data = payload.get("data", payload)

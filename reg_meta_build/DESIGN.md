@@ -104,15 +104,16 @@ extraction remains upstream; cleaning consumes its reviewed machine-readable out
 > SCB/LISA source inspection. A separate SCB value-source reader exposes normalized
 > dictionaries, exact validity text and streamed original associations; it does not
 > select final code-set membership. SCB and Socialstyrelsen share compact value,
-> descriptor, association and validity types. A first provider-neutral curation
-> evaluator checks whether explicitly unresolved cases remain applicable; it does not
-> apply corrections or form catalog entities. Remaining source readers,
-> prepared-artifact integration, curation resolution and direct materialization remain
-> pending. The normal builder continues to use the legacy semantic pipeline below.
-> Shared reader changes can alter its inputs: retaining formerly omitted SOS hyperlinks
-> can affect its automatic classification matching. Catalog behavior on this isolated
-> branch has not yet been verified end to end, and this checkpoint is not ready for
-> catalog activation.
+> descriptor, association and validity types. A first complete, scoped path stores
+> prepared records, checks reviewed cases, forms a variable with exact annual column
+> windows and writes a normal catalog database directly. It withholds code bindings
+> explicitly. Remaining readers, full-corpus prepared storage, broader curation and the
+> full builder cutover remain pending. Ordinary `build-db` continues to use the legacy
+> semantic pipeline below; `build-curated-db` exercises the replacement on an explicitly
+> selected slice. Shared reader changes can alter its inputs: retaining formerly omitted
+> SOS hyperlinks can affect its automatic classification matching. Catalog behavior on
+> this isolated branch has not yet been verified across the complete corpus, and this
+> checkpoint is not ready for catalog activation.
 
 ### Mechanical normalization
 
@@ -192,8 +193,8 @@ sheet-suffix, preamble and per-row member hints kept separate. A period-section
 declaration retains its own locator and remains separate from a code row's supplied
 period; cleaning chooses no effective period. Identical payload storage can be shared
 while duplicate occurrences and contradictory labels remain inspectable. Source cleaning
-and validation belong in input preparation. Prepared-artifact integration is still
-pending; the legacy build path continues to parse workbooks.
+and validation belong in input preparation. Full-provider prepared-artifact integration
+is still pending; the legacy build path continues to parse workbooks.
 
 Observation IDs identify supplied evidence, so a whitespace-only revision can still
 change an observation ID. Curation must compare the relevant cleaned values and scoped
@@ -312,17 +313,57 @@ identity. Reconciliation resolves every case from source records and independent
 declared policy; no case consumes another case's output as source evidence. Intersecting
 cases are checked together so file order cannot choose between incompatible results.
 
-The first `source_curation.py` slice implements applicability only. Cases enumerate
-exact semantic source members and the relevant normalized projections they expect,
-including competing alternatives under one member. Comparing sets of projected facts
-ignores physical row moves, artifact changes, irrelevant fields and identical duplicate
-rows. Changed relevant facts, missing support or unexpected members in a declared peer
-scope make the case stale. Peer guards only check membership; they never select
-correction targets. An applicable bounded-unresolved decision preserves source records
-and declares which unsupported results must be withheld. This evaluator does not yet
-discover every discrepancy, resolve identity, apply withholding to catalog output or
-enforce publication. Its illustrative cases are tests, not accepted curation for the
-maintained catalog.
+`source_curation.py` checks applicability before resolution. Cases enumerate exact
+semantic source members and the relevant normalized projections they expect, including
+competing alternatives under one member. Comparing sets of projected facts ignores
+physical row moves, artifact changes, irrelevant fields and identical duplicate rows.
+Changed relevant facts, missing support or unexpected members in a declared peer scope
+make the case stale. Peer guards only check membership; they never select correction
+targets. A peer guard can name exact edition scopes so unrelated later editions do not
+invalidate an older case. An applicable bounded-unresolved decision preserves source
+records and declares which unsupported results must be withheld; the current formation
+path rejects unresolved cases rather than silently producing an empty successful
+catalog.
+
+The first formation operation, `form_variable`, assigns explicitly enumerated source
+occurrences to one reviewed variable identity and delivery-column spelling. The spelling
+must have checked source support. Canonical text comes from one explicitly selected,
+checked observation. Every field used by resolution, each target subject and each annual
+scope must be in its dependency projection. The operation retains targets' own type,
+length and operational definition; it cannot rename a different known column or infer
+annual availability from pooled, negative or unknown observations. Concurrent
+assignments of the same source member or output identity block. Broader conflict
+resolution and whole-input discrepancy discovery remain unfinished.
+
+### First prepared-to-catalog path
+
+`prepared_sources.py` serializes a finite source slice as deterministic JSON with exact
+source revisions and original evidence. Preparation validates identities and revision
+membership before atomic replacement. A warm build checks the artifact's SHA-256 pin and
+decodes its JSON contract; it does not reopen provider files, parse spreadsheets or
+repeat source interpretation. This bounded format is not a claim that expanded JSON is
+an efficient storage layout for the million-row corpus or its code associations. The
+existing lossless compact input repository remains the full-corpus storage base.
+
+`build-curated-db --records FILE --records-sha256 SHA256 --cases FILE --db-path DB`
+loads that artifact and a JSON array of reviewed cases. It resolves every case before
+writing anything, then passes resolved natural identities, flags, text and full-date
+state windows to `resolved_catalog.py`. That writer assigns storage IDs, inserts final
+rows and aliases once, builds search indexes, runs the existing complete structural
+validator (`corpus=False` for an explicitly partial catalog), and atomically replaces
+the requested database. Failed applicability or validation leaves the prior database
+intact. A failed optional report write after publication reports the successful
+publication and exact database hash separately. Input and case digests are recorded in
+the database manifest. No legacy adapter, post-build correction pass, or
+SQL-to-IR-to-SQL materialization runs in this path.
+
+The supported output currently has finite, non-overlapping annual occurrences and
+explicitly withheld coding. It preserves uncertainty as null type/length and records the
+reason for withheld coding in state provenance. Sensitivity and identifier flags are
+explicit decisions; deprecation defaults to false for this first current-variable slice.
+It does not yet support code-set resolution, parallel representations, groups,
+relations, tags or full-corpus publication. The maintained AmPolTyp demonstration and
+its reviewed cases stay in local evidence, outside accepted input curation.
 
 Case applicability is semantic, not whole-file-byte equality. A different source hash or
 physical locator alone does not invalidate a case when all relevant scoped facts,
