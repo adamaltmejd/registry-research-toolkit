@@ -13,6 +13,7 @@ from reg_meta_build.catalog_resolution import resolve_parents
 from reg_meta_build.convert_errata import (
     ErrataEditionBinding,
     capture_expectations,
+    convert_column_entry,
     convert_delivered_entry,
 )
 from reg_meta_build.convert_identity import convert_column_partitions
@@ -21,7 +22,7 @@ from reg_meta_build.resolved_catalog import (
     ResolvedVariant,
     write_resolved_catalog,
 )
-from reg_meta_build.scb_errata import ErrataDelivered
+from reg_meta_build.scb_errata import ErrataColumn, ErrataDelivered
 from reg_meta_build.source_curation import (
     CheckedFieldChange,
     CheckedIdentityChange,
@@ -189,6 +190,77 @@ def test_authored_coverage_does_not_require_a_fabricated_delivery_edition() -> N
     assert declared.edition_key is None
     assert declared.source_records == ()
     assert declared.support_records == (record,)
+
+
+def test_declared_pooled_edition_is_retained_without_inferred_annual_states() -> None:
+    record = _record(column="VALUE")
+    pooled = TemporalScope(kind="pooled", label="2014 - 2016")
+    addition = _addition(record).model_copy(
+        update={"edition_scope": pooled, "edition_period_scope": pooled}
+    )
+    result = apply_occurrence_cases((record,), (_case(record, addition),))
+    assert result.diagnostics == ()
+    declared = next(item for item in result.occurrences if item.occurrence_key)
+    assert declared.edition_key == addition.edition_key
+    assert declared.edition_scope == pooled
+    assert declared.support_records == (record,)
+    resolved = resolve_occurrence_intervals((declared,))
+    assert resolved.segments == ()
+    assert {issue.code for issue in resolved.issues} == {"unsupported_occurrence"}
+
+
+def test_converted_column_all_versions_is_finite_and_does_not_borrow_metadata() -> None:
+    record = _record(column="OTHER")
+    original = source_occurrence(record)
+    assert original.edition_key is not None
+    entry = ErrataColumn(
+        register_id=1,
+        register_variant_id=2,
+        column="MISSING",
+        name="Authored name",
+        definition="Authored description",
+        data_type=None,
+        classification=None,
+        is_identifier=False,
+        is_sensitive=True,
+        versions=None,
+        source="steward",
+        provenance="Existing accepted column declaration",
+    )
+    binding = ErrataEditionBinding(
+        key=original.edition_key,
+        name="2020",
+        edition_scope=record.edition_scope,
+        edition_period_scope=record.edition_period_scope,
+        support=(record_ref(record),),
+        native_id=2020,
+    )
+    converted = convert_column_entry(
+        entry, case_id="column-1", records=(record,), editions=(binding,)
+    )
+    assert converted.case is not None and converted.blockers == ()
+    later = _record(column="UNRELATED", year="2021", cvid=21)
+    result = apply_occurrence_cases((record, later), (converted.case,))
+    assert result.diagnostics == ()
+    additions = tuple(item for item in result.occurrences if item.occurrence_key)
+    assert len(additions) == 1
+    addition = additions[0]
+    assert addition.edition_key == binding.key
+    assert addition.edition_scope == record.edition_scope
+    assert addition.fields.name == value_field("Authored name")
+    assert addition.fields.description == value_field("Authored description")
+    assert addition.fields.data_type is None
+    assert addition.fields.identifier == value_field(False)
+    assert addition.fields.sensitivity == value_field(True)
+    assert addition.source_records == () and addition.support_records == (record,)
+    documented = _record(column="missing", year="2021", cvid=21)
+    stale = apply_occurrence_cases((record, documented), (converted.case,))
+    assert stale.accounting[0].disposition == "stale"
+    assert not any(item.occurrence_key for item in stale.occurrences)
+    blocked = convert_column_entry(
+        entry, case_id="column-1", records=(record, documented), editions=(binding,)
+    )
+    assert blocked.case is None and blocked.blockers == ("column_now_documented",)
 
 
 def test_checked_variant_routing_retains_unknown_scope_and_physical_evidence() -> None:

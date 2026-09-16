@@ -1201,6 +1201,7 @@ def write_scb_snapshot(root: Path, scb_dir: Path) -> ScbSnapshotSelection:
         ("init", "-q"),
         ("config", "user.email", "test@example.invalid"),
         ("config", "user.name", "Test"),
+        ("config", "core.autocrlf", "false"),
         ("add", "."),
         ("commit", "-q", "-m", "snapshot"),
     ):

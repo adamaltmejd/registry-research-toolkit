@@ -94,9 +94,11 @@ def _check_contract(case: CurationCase) -> None:
             scope = effect.edition_period_scope
             if scope.kind == "not_applicable":
                 scope = effect.edition_scope
-            if scope_bounds(scope) is None:
+            if scope_bounds(scope) is None and not (
+                effect.edition_key is not None and scope.kind in {"unknown", "pooled"}
+            ):
                 raise ValueError(
-                    "an added occurrence requires an explicit known period"
+                    "an added occurrence requires a known period or an explicit edition with unresolved coverage"
                 )
             if effect.donor is not None:
                 for alternative in checked[effect.donor].alternatives:

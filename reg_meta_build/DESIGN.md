@@ -109,7 +109,9 @@ source facts.
 > probe has scanned all 45,368 native families, including every maintained occurrence
 > source. It exposed missing conversions and an incorrect variable-level interpretation
 > of SCB's joined population prose. The latter belongs to edition metadata and is fixed
-> in cleaning; corrected record preparation and conversion replay are being verified.
+> in cleaning; corrected preparation and the connected scan have been verified. All
+> 1,885 omitted-column entries and 223 delivery entries have checked conversions, with
+> unsupported edition periods retained explicitly. Their common integration is pending.
 > The full replacement database and old/new comparison are still pending. Ordinary
 > `build-db` continues to use the legacy semantic pipeline below; `build-curated-db`
 > exercises an explicitly selected slice. This branch is not ready for catalog
@@ -149,6 +151,14 @@ closing year. Materialization uses the existing catalog sentinel `9999-12-31` on
 upper bound. A literal source year 9999 is not accepted as dated evidence. Existing
 authored defaults and inherited bounds still require their checked conversion before
 they can supply such a scope.
+
+An accepted column or delivery declaration may target a concrete edition whose coverage
+is pooled or unknown. Resolution retains that edition membership and diagnoses its
+unsupported period; it cannot emit annual states from it. Existing `all_versions`
+declarations are converted to an explicit finite edition list. Future editions receive
+no correction automatically, and a newly documented column invalidates the old omission
+claim. Declared column metadata comes from the accepted entry, not from an unrelated
+variable used to verify the target edition.
 
 ### Mechanical normalization
 
@@ -453,8 +463,9 @@ comparison remain completion gates.
 Occurrence corrections compose against the original cleaned evidence. Exact field and
 period assignments can agree or affect different facts. Conflicting assignments retain
 all claims and withhold the disputed fact; another observation cannot silently fill it
-back in. A declared delivery has an explicit variable, variant, edition and known
-period, checked supporting members and correction provenance. It never becomes a
+back in. A declared delivery has an explicit variable, variant, edition and supplied
+period, checked supporting members and correction provenance. Unsupported periods
+withhold annual states without discarding edition membership. It never becomes a
 fabricated physical source row. An offline converter can freeze an existing errata donor
 choice and target membership; warm application cannot reselect the nearest donor. Source
 updates invalidate relevant pins, while unrelated variable changes and physical layout

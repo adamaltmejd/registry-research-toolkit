@@ -13,6 +13,8 @@ from typing import TYPE_CHECKING
 
 from reg_meta_build._curation import fold_column
 from reg_meta_build.edition_bounds import edition_claims
+from reg_meta_build.normalization import normalize_text
+from reg_meta_build.source_coordinates import native_variant_key, source_register_key
 from reg_meta_build.source_curation import (
     CheckedFieldChange,
     CuratedOccurrenceAddition,
@@ -26,10 +28,15 @@ from reg_meta_build.source_curation import (
 )
 from reg_meta_build.source_effects import record_ref
 from reg_meta_build.source_occurrences import source_occurrence
-from reg_meta_build.source_records import NativeCoordinates, canonical_sha256
+from reg_meta_build.source_records import (
+    NativeCoordinates,
+    SourceFields,
+    canonical_sha256,
+    value_field,
+)
 
 if TYPE_CHECKING:
-    from reg_meta_build.scb_errata import ErrataDelivered
+    from reg_meta_build.scb_errata import ErrataColumn, ErrataDelivered
     from reg_meta_build.source_coordinates import NativeKey
     from reg_meta_build.source_curation import OccurrenceEffect, SourceRecordRef
     from reg_meta_build.source_records import SourceRecord, TemporalScope
@@ -50,7 +57,7 @@ class ErrataEditionBinding:
 
 
 @dataclass(frozen=True)
-class DeliveredConversion:
+class ErrataConversion:
     case: CurationCase | None
     blockers: tuple[str, ...]
     donor_refs: tuple[SourceRecordRef, ...]
@@ -116,25 +123,18 @@ def _donor_rank(record: SourceRecord, target: str) -> tuple[int, int, int, int]:
     )
 
 
-def convert_delivered_entry(
-    entry: ErrataDelivered,
-    *,
-    case_id: str,
+def _variant_records(
     records: tuple[SourceRecord, ...],
+    register_id: int,
+    variant_id: int,
     editions: tuple[ErrataEditionBinding, ...],
-) -> DeliveredConversion:
-    """Convert one old entry using the complete original native variant slice.
-
-    Missing conversion bindings are engineering errors. Contradictory original
-    evidence is an explicit blocked conversion. No latest/largest coding winner or
-    resolved legacy database content is used as source evidence.
-    """
+) -> None:
     if not records or len({record.source for record in records}) != 1:
         raise ValueError("conversion requires a complete single-source variant slice")
     if any(
         record.subject.provider != "scb"
-        or record.subject.native.register_id != entry.register_id
-        or record.subject.native.register_variant_id != entry.register_variant_id
+        or record.subject.native.register_id != register_id
+        or record.subject.native.register_variant_id != variant_id
         for record in records
     ):
         raise ValueError(
@@ -147,6 +147,22 @@ def convert_delivered_entry(
         raise ValueError(
             "edition bindings require checked evidence in the supplied slice"
         )
+
+
+def convert_delivered_entry(
+    entry: ErrataDelivered,
+    *,
+    case_id: str,
+    records: tuple[SourceRecord, ...],
+    editions: tuple[ErrataEditionBinding, ...],
+) -> ErrataConversion:
+    """Convert one old entry using the complete original native variant slice.
+
+    Missing conversion bindings are engineering errors. Contradictory original
+    evidence is an explicit blocked conversion. No latest/largest coding winner or
+    resolved legacy database content is used as source evidence.
+    """
+    _variant_records(records, entry.register_id, entry.register_variant_id, editions)
     for name in entry.versions:
         if not any(edition.name == name for edition in editions):
             raise ValueError(f"missing edition conversion binding: {name!r}")
@@ -157,7 +173,7 @@ def convert_delivered_entry(
         and fold_column(column) == fold_column(entry.column)
     )
     if not candidates:
-        return DeliveredConversion(None, ("no_documented_donor_column",), ())
+        return ErrataConversion(None, ("no_documented_donor_column",), ())
     effects: list[OccurrenceEffect] = []
     targets = set()
     donors = set()
@@ -297,7 +313,7 @@ def convert_delivered_entry(
                     )
                 )
     if blockers:
-        return DeliveredConversion(
+        return ErrataConversion(
             None, tuple(sorted(set(blockers))), tuple(sorted(donors, key=str))
         )
     # Pin relevant donor/target facts and edition evidence. Unrelated variables in
@@ -344,4 +360,100 @@ def convert_delivered_entry(
             provenance=entry.provenance,
         ),
     )
-    return DeliveredConversion(case, (), tuple(sorted(donors, key=str)))
+    return ErrataConversion(case, (), tuple(sorted(donors, key=str)))
+
+
+def convert_column_entry(
+    entry: ErrataColumn,
+    *,
+    case_id: str,
+    records: tuple[SourceRecord, ...],
+    editions: tuple[ErrataEditionBinding, ...],
+) -> ErrataConversion:
+    """Freeze an existing column declaration to its currently selected editions.
+
+    ``all_versions`` is expanded once here, never replayed by the build. Pooled
+    edition membership survives without becoming an assertion of annual coverage.
+    Classification and presentation declarations must be bound by the caller.
+    """
+    _variant_records(records, entry.register_id, entry.register_variant_id, editions)
+    if any(
+        (column := _text(record, "column_name"))
+        and fold_column(column) == fold_column(entry.column)
+        for record in records
+    ):
+        return ErrataConversion(None, ("column_now_documented",), ())
+    names = (
+        set(entry.versions)
+        if entry.versions is not None
+        else {e.name for e in editions}
+    )
+    missing = names - {edition.name for edition in editions}
+    if missing or not names:
+        raise ValueError(
+            f"missing column edition conversion bindings: {sorted(missing)!r}"
+        )
+    selected = tuple(edition for edition in editions if edition.name in names)
+    references = {ref for edition in selected for ref in edition.support}
+    anchors = tuple(record for record in records if record_ref(record) in references)
+    expected = capture_expectations(anchors, fields=("availability",))
+    guards = [
+        PeerGuard(
+            guard_id=f"{case_id}:column-absent",
+            source=records[0].source,
+            native=NativeCoordinates(
+                register_id=entry.register_id,
+                register_variant_id=entry.register_variant_id,
+            ),
+            folded_column=fold_column(entry.column),
+            expected_members=(),
+        )
+    ]
+    for ref in sorted(references, key=str):
+        anchor = next(record for record in anchors if record_ref(record) == ref)
+        guards.append(
+            PeerGuard(
+                guard_id=f"{case_id}:edition:{ref.semantic_record_key!r}",
+                source=anchor.source,
+                native=anchor.subject.native,
+                expected_members=(ref,),
+            )
+        )
+    register = source_register_key(records[0])
+    variant = native_variant_key(records[0])
+    assert register is not None and variant is not None
+    variable = (*register, "declared-column", fold_column(entry.column))
+    fields = SourceFields(
+        availability=value_field(True),
+        column_name=value_field(entry.column),
+        name=value_field(normalize_text(entry.name)),
+        description=value_field(normalize_text(entry.definition, multiline=True)),
+        data_type=value_field(entry.data_type) if entry.data_type is not None else None,
+        identifier=value_field(entry.is_identifier),
+        sensitivity=value_field(entry.is_sensitive),
+    )
+    case = CurationCase(
+        case_id=case_id,
+        targets=expected,
+        peer_guards=tuple(guards),
+        decision=OccurrenceCorrectionDecision(
+            reviewed=True,
+            effects=tuple(
+                CuratedOccurrenceAddition(
+                    occurrence_key=f"{case_id}:{canonical_sha256(list(edition.key))}",
+                    provider="scb",
+                    variable_key=variable,
+                    variant_key=variant,
+                    edition_key=edition.key,
+                    fields=fields,
+                    edition_scope=edition.edition_scope,
+                    edition_period_scope=edition.edition_period_scope,
+                    evidence=edition.support,
+                )
+                for edition in selected
+            ),
+            reason=entry.provenance,
+            provenance=entry.provenance,
+        ),
+    )
+    return ErrataConversion(case, (), ())
