@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from reg_meta_build.source_records import (
+    CodeSetReference,
     DeliveredCell,
     NativeCoordinates,
     RecordLocator,
@@ -16,28 +17,38 @@ from reg_meta_build.source_records import (
 )
 
 
-def _revision() -> SourceRevision:
+def _revision(
+    *, artifact_sha256: str = "0" * 64, artifact_path: str = "fixture.csv"
+) -> SourceRevision:
     return SourceRevision.create(
         dataset="fixture",
         publisher="SCB",
         purpose="source-record identity test",
         upstream_revision="fixture",
-        artifact_path="fixture.csv",
+        artifact_path=artifact_path,
         artifact_size=0,
-        artifact_sha256="0" * 64,
+        artifact_sha256=artifact_sha256,
     )
 
 
-def _record(*, row: int, data_length: str, context: str = "population") -> SourceRecord:
+def _record(
+    *,
+    row: int,
+    data_length: str,
+    context: str = "population",
+    revision: SourceRevision | None = None,
+    physical_file: str = "fixture.csv",
+    code_set_locator: str | None = None,
+) -> SourceRecord:
     return SourceRecord.create(
-        revision=_revision(),
+        revision=revision or _revision(),
         locators=(
             RecordLocator(
                 semantic_record_key=("member:2181",),
-                physical_file="fixture.csv",
-                physical_table="fixture.csv",
+                physical_file=physical_file,
+                physical_table=physical_file,
                 physical_record=f"row:{row}",
-                physical_cells=(f"fixture.csv:row:{row}:Datalängd",),
+                physical_cells=(f"{physical_file}:row:{row}:Datalängd",),
             ),
         ),
         subject=SourceSubject(
@@ -60,6 +71,15 @@ def _record(*, row: int, data_length: str, context: str = "population") -> Sourc
             column_name=value_field("Signal"),
             data_length=value_field(data_length),
         ),
+        code_set_references=(
+            CodeSetReference(
+                reference_id="signal-codes",
+                content_sha256="a" * 64,
+                physical_locator=code_set_locator,
+            ),
+        )
+        if code_set_locator is not None
+        else (),
         original_period_text="2003",
         context=(context,),
         delivered_cells=(
@@ -97,6 +117,31 @@ def test_observation_identity_includes_payload_and_context_but_not_row_position(
     ]
     assert changed_payload.record_id != first.record_id
     assert changed_context.record_id != first.record_id
+
+
+def test_observation_identity_excludes_revision_and_physical_evidence() -> None:
+    first = _record(
+        row=2,
+        data_length="10",
+        revision=_revision(artifact_path="first.csv"),
+        physical_file="first.csv",
+        code_set_locator="first.xlsx!A1:B9",
+    )
+    relocated = _record(
+        row=19,
+        data_length="10",
+        revision=_revision(
+            artifact_sha256="1" * 64,
+            artifact_path="reordered.csv",
+        ),
+        physical_file="reordered.csv",
+        code_set_locator="reordered.xlsx!D4:E12",
+    )
+
+    assert relocated.source_revision_id != first.source_revision_id
+    assert relocated.locators != first.locators
+    assert relocated.code_set_references != first.code_set_references
+    assert relocated.record_id == first.record_id
 
 
 def test_delivered_cells_distinguish_missing_from_supplied_empty() -> None:

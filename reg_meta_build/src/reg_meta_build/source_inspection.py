@@ -1668,6 +1668,12 @@ class CensusCompletion(_ReportModel):
     registerinformation_logical_sha256: str
     limitations: tuple[str, ...]
 
+    @model_validator(mode="after")
+    def _coherent_revision(self) -> Self:
+        if self.pins.source_revision_id != self.source_revision.revision_id:
+            raise ValueError("census source revision pin disagrees with its provenance")
+        return self
+
 
 type _CellPayload = tuple[bool, str | None, str]
 type _Member = tuple[bytes, int]
@@ -1777,6 +1783,10 @@ def write_scb_observation_census(
     ):
         for observation in iter_scb_observations(bundle.snapshot, revision):
             record = observation.record
+            if record.source_revision_id != revision.revision_id:
+                raise SnapshotError(
+                    "SCB observation references the wrong source revision"
+                )
             native = record.subject.native
             if None in (
                 native.register_id,

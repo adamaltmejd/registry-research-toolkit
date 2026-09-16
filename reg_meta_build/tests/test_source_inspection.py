@@ -253,11 +253,11 @@ def test_lisa_reader_preserves_four_layouts_sections_periods_and_occurrences(
     )
     assert ku2.context[-2:] == (
         (
-            "continuation-note Individ!B323: Före 2010 finns inte kod 5 "
+            "continuation-note: Före 2010 finns inte kod 5 "
             "(företagare i eget AB). För åren 1993- finns istället variabeln "
             "KU1Faman som anges som 1 om personen är en företagare i eget AB."
         ),
-        "continuation-note Individ!F323: RAMS-Jobb",
+        "continuation-note: RAMS-Jobb",
     )
     assert ku2.locators[0].physical_cells[-2:] == ("Individ!B323", "Individ!F323")
     recognized_context = tuple(

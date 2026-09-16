@@ -154,6 +154,13 @@ physical layout changes can therefore compare equal without discarding revision 
 locator provenance. No additional metadata cache is prescribed; add storage only after a
 measured need.
 
+The semantic record ID hashes the logical source, semantic locator, supplied payload,
+and semantic context. It excludes source revision and every physical locator, including
+code-set locations; those remain explicit, validated provenance on the record. Workbook
+annotation kind and value are semantic context, while the annotation cells remain only
+in the physical locator. Thus an unchanged observation keeps its ID across artifact
+revisions and layout changes, while a changed supplied fact does not.
+
 Authority is purpose-, fact-, population-, and scope-specific:
 
 - Provider machine metadata establishes the native occurrences and fields it actually
@@ -1222,11 +1229,11 @@ That selection traverses prepared `Registerinformation.csv` once through the sha
 header/layout and decoding boundary. Each normalized observation retains all 36
 delivered cells with raw missing-versus-present state, interpreted text, native
 coordinates, exact column and population/object context, original edition token, and its
-physical locator. Observation identity includes those supplied facts but excludes row
-position, so exact duplicates keep one semantic identity while every occurrence remains
-in the evidence. The final completion record proves the accepted logical-stream hashes
-and pins the code, bundle, snapshot, and source revision; an interrupted gzip has no
-completion record.
+physical locator. Observation identity includes those supplied facts but excludes source
+revision and physical location, so exact duplicates keep one semantic identity while
+every occurrence remains in the evidence. The final completion record proves the
+accepted logical-stream hashes and pins the code, bundle, snapshot, and source revision;
+an interrupted gzip has no completion record.
 
 Alternative groups compare `Datatyp`/`Datalängd` independently of observation identity.
 They distinguish identical-other-34-field alternatives, alternatives separated by other

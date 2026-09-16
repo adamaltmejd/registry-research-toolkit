@@ -430,7 +430,7 @@ def _attach_context(
             continue
         coordinate = f"{sheet_name}!{get_column_letter(column)}{row_number}"
         cells.append(coordinate)
-        context.append(f"{context_row.kind} {coordinate}: {value}")
+        context.append(f"{context_row.kind}: {value}")
     primary_locator = record.locators[0]
     locator = primary_locator.model_copy(
         update={"physical_cells": (*primary_locator.physical_cells, *cells)}
@@ -438,7 +438,6 @@ def _attach_context(
     updated_context = (*record.context, *context)
     record_id = SourceRecord._record_id(
         source=record.source,
-        source_revision_id=record.source_revision_id,
         semantic_record_key=locator.semantic_record_key,
         subject=record.subject,
         edition_scope=record.edition_scope,

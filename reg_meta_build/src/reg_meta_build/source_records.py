@@ -324,7 +324,6 @@ class SourceRecord(_SourceModel):
     def _record_id(
         *,
         source: str,
-        source_revision_id: str,
         semantic_record_key: tuple[str, ...],
         subject: SourceSubject,
         edition_scope: TemporalScope,
@@ -338,7 +337,6 @@ class SourceRecord(_SourceModel):
         digest = canonical_sha256(
             {
                 "source": source,
-                "source_revision_id": source_revision_id,
                 "semantic_record_key": semantic_record_key,
                 "subject": subject.model_dump(mode="json"),
                 "edition_scope": edition_scope.model_dump(mode="json"),
@@ -347,7 +345,10 @@ class SourceRecord(_SourceModel):
                 ),
                 "fields": fields.model_dump(mode="json"),
                 "code_set_references": [
-                    reference.model_dump(mode="json")
+                    {
+                        "reference_id": reference.reference_id,
+                        "content_sha256": reference.content_sha256,
+                    }
                     for reference in code_set_references
                 ],
                 "original_period_text": original_period_text,
@@ -378,7 +379,6 @@ class SourceRecord(_SourceModel):
             raise ValueError("a source record needs at least one physical locator")
         record_id = cls._record_id(
             source=revision.dataset,
-            source_revision_id=revision.revision_id,
             semantic_record_key=locators[0].semantic_record_key,
             subject=subject,
             edition_scope=edition_scope,
@@ -427,7 +427,6 @@ class SourceRecord(_SourceModel):
             raise ValueError("source record physical locators must be unique")
         expected = self._record_id(
             source=self.source,
-            source_revision_id=self.source_revision_id,
             semantic_record_key=semantic_record_key,
             subject=self.subject,
             edition_scope=self.edition_scope,
@@ -439,7 +438,7 @@ class SourceRecord(_SourceModel):
             delivered_cells=self.delivered_cells,
         )
         if self.record_id != expected:
-            raise ValueError("source record identity does not match its coordinates")
+            raise ValueError("source record identity does not match its semantic facts")
         if not self.source_revision_id.startswith(f"{self.source}@sha256:"):
             raise ValueError("source record revision belongs to another logical source")
         return self
