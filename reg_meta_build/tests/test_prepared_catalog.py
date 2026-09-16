@@ -143,10 +143,20 @@ def test_all_selected_source_roles_and_evidence_roundtrip(tmp_path: Path) -> Non
     }
     assert {
         item.role for item in manifest.inputs if item.record_usage == "support"
-    } == {
-        "scb_auxiliary",
-        "lisa_workbook",
-    }
+    } == {"lisa_workbook"}
+    assert {
+        item.role for item in manifest.inputs if item.record_usage == "field_support"
+    } == {"scb_auxiliary"}
+    assert len(manifest.support_joins) == 2
+    for join in manifest.support_joins:
+        assert set(join.target_sources) == {"scb-registerinformation"}
+        assert "identifier" in join.fields
+    missing_join = json.loads(manifest.model_dump_json())
+    missing_join["support_joins"] = []
+    with pytest.raises(ValueError, match="cover each selected support source"):
+        prepared_catalog.PreparedCatalogManifest.model_validate_json(
+            json.dumps(missing_join)
+        )
     assert all(
         item.record_usage == "none" for item in manifest.inputs if not item.present
     )
@@ -252,6 +262,7 @@ def test_sos_declarations_validity_support_and_formula_evidence_survive_preparat
     )
     entry = next(item for item in manifest.inputs if item.path == selected_file["path"])
     assert entry.counts.declarations == 2 and entry.counts.validity == 1
+    assert entry.revision is not None
     references = [
         item.declaration
         for item in prepared.iter_evidence()
@@ -263,6 +274,7 @@ def test_sos_declarations_validity_support_and_formula_evidence_survive_preparat
         ("input", "02"),
         ("output", "03"),
     ]
+    assert crosswalk.supplied_period is not None
     assert crosswalk.supplied_period.value == "1990/91-1994"
     derivation = next(item for item in references if item.kind == "derivation")
     assert derivation.clauses[-1].content.value == "B**2"

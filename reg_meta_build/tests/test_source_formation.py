@@ -263,6 +263,23 @@ def test_unknown_flags_withhold_unsupported_entity_without_defaulting_false() ->
     assert len(result.intervals[0].segments) == 1
 
 
+@pytest.mark.parametrize("sensitivity", [False, True])
+def test_conditional_sensitivity_cannot_be_reduced_to_a_boolean(
+    sensitivity: bool,
+) -> None:
+    result = _form(
+        (_record(2020),),
+        flags=SourceFields(
+            sensitivity=value_field(sensitivity),
+            identifier=value_field(False),
+            conditional_sensitivity=value_field(True),
+        ),
+    )
+    assert result.variable is None
+    assert result.diagnostics[0].code == "unresolved_flag"
+    assert result.diagnostics[0].fields == ("is_sensitive",)
+
+
 def test_bound_code_validity_splits_ordinary_state_and_retains_version_label() -> None:
     claim = CodeListClaim(
         "list",

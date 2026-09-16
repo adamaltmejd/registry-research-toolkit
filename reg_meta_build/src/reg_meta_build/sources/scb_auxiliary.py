@@ -24,6 +24,7 @@ from reg_meta_build.source_records import (
     canonical_sha256,
     value_field,
 )
+from reg_meta_build.source_support import SourceSupportJoin
 from reg_meta_build.sources.scb_records import (
     _cell_field,
     _delivered_cells,
@@ -39,6 +40,43 @@ type SourceCells = Mapping[str, tuple[bool, str | None, str]]
 
 _UNIKA = "UnikaRegisterOchVariabler.csv"
 _IDENTIFIERS = "Identifierare.csv"
+
+
+def scb_support_joins(sources: dict[str, str]) -> tuple[SourceSupportJoin, ...]:
+    """Describe only the relationships present in the selected SCB export."""
+    target = sources.get("Registerinformation.csv")
+    if target is None:
+        return ()
+    result = []
+    if source := sources.get(_UNIKA):
+        result.append(
+            SourceSupportJoin(
+                source=source,
+                target_sources=(target,),
+                keys=("register_name", "variant_name", "variable_name", "column_name"),
+                fields=("identifier", "sensitivity", "conditional_sensitivity"),
+                unique_variable=True,
+                rule="Literal register, variant, variable and column names identify the summary's native variable. Ambiguous matches supply no flags.",
+                provenance=(
+                    "UnikaRegisterOchVariabler.csv: Registernamn, Registervariantnamn, Variabelnamn, Kolumnnamn",
+                ),
+            )
+        )
+    if source := sources.get(_IDENTIFIERS):
+        result.append(
+            SourceSupportJoin(
+                source=source,
+                target_sources=(target,),
+                keys=("variable_id",),
+                fields=("identifier",),
+                unique_variable=False,
+                rule="VarID is source-wide; an identifier declaration applies to that native variable across the export's registers.",
+                provenance=(
+                    "Identifierare.csv: VarID -> Registerinformation.csv: VarId",
+                ),
+            )
+        )
+    return tuple(result)
 
 
 def _named(value: str) -> SourceCoordinate:

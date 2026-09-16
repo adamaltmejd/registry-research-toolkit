@@ -56,11 +56,15 @@ from reg_meta_build.source_records import (
 from reg_meta_build.source_reference_records import (
     SourceReferenceDeclaration,  # noqa: TC001
 )
+from reg_meta_build.source_support import SourceSupportJoin  # noqa: TC001
 from reg_meta_build.source_values import SourceValueJoin
 from reg_meta_build.sources.code_lists import read_code_list, read_selected_bytes
 from reg_meta_build.sources.curated_records import read_curated_source
 from reg_meta_build.sources.lisa import read_lisa_source
-from reg_meta_build.sources.scb_auxiliary import iter_scb_auxiliary_records
+from reg_meta_build.sources.scb_auxiliary import (
+    iter_scb_auxiliary_records,
+    scb_support_joins,
+)
 from reg_meta_build.sources.scb_records import (
     ScbInterpretationIssue,
     iter_scb_observations,
@@ -132,7 +136,7 @@ class PreparedInputAccounting(_Model):
     origin: Literal["snapshot", "bundle"]
     path: str
     role: InputRole
-    record_usage: Literal["occurrence", "support", "none"]
+    record_usage: Literal["occurrence", "field_support", "support", "none"]
     present: bool
     disposition: Literal["prepared", "absent", "excluded_curation", "excluded_naming"]
     revision: SourceRevision | None
@@ -201,7 +205,7 @@ class _ManifestDocument(_Model):
     format: Literal["reg-meta-prepared-catalog-sources"] = (
         "reg-meta-prepared-catalog-sources"
     )
-    schema_version: Literal[1] = 1
+    schema_version: Literal[2] = 2
     input_commit: str
     bundle_path: str
     bundle_manifest_sha256: str
@@ -210,6 +214,7 @@ class _ManifestDocument(_Model):
     inputs: tuple[PreparedInputAccounting, ...]
     records_manifest_sha256: str
     values: tuple[_ValueChild, ...]
+    support_joins: tuple[SourceSupportJoin, ...]
     evidence_count: int = Field(ge=0)
     files: tuple[_FileProof, ...]
 
@@ -244,6 +249,30 @@ class _ManifestDocument(_Model):
         if self.evidence_count != expected_evidence:
             raise ValueError("auxiliary evidence count differs from input accounting")
         revisions = {item.revision.revision_id for item in self.inputs if item.revision}
+        support_sources = {
+            item.revision.dataset
+            for item in self.inputs
+            if item.revision and item.record_usage == "field_support"
+        }
+        occurrence_sources = {
+            item.revision.dataset
+            for item in self.inputs
+            if item.revision and item.record_usage == "occurrence"
+        }
+        if (
+            len({join.source for join in self.support_joins}) != len(self.support_joins)
+            or {join.source for join in self.support_joins} != support_sources
+        ):
+            raise ValueError(
+                "support relationships must cover each selected support source once"
+            )
+        if any(
+            not set(join.target_sources) <= occurrence_sources
+            for join in self.support_joins
+        ):
+            raise ValueError(
+                "support relationship targets an undeclared occurrence source"
+            )
         child_paths = [child.path for child in self.values]
         if len(set(child_paths)) != len(child_paths):
             raise ValueError("duplicate value child")
@@ -377,13 +406,15 @@ def _role(path: str, *, origin: str) -> InputRole:
 
 def _record_usage(
     role: InputRole, present: bool
-) -> Literal["occurrence", "support", "none"]:
+) -> Literal["occurrence", "field_support", "support", "none"]:
     """Stage 1 declares how its records may enter the common resolver."""
     if not present:
         return "none"
     if role in {"scb_records", "sos_workbook", "thin_provider"}:
         return "occurrence"
-    if role in {"scb_auxiliary", "lisa_workbook"}:
+    if role == "scb_auxiliary":
+        return "field_support"
+    if role == "lisa_workbook":
         return "support"
     return "none"
 
@@ -857,6 +888,13 @@ def prepare_catalog_sources(
             inputs=final_inputs,
             records_manifest_sha256=record_manifest.sha256,
             values=tuple(sorted(children, key=lambda child: child.path)),
+            support_joins=scb_support_joins(
+                {
+                    entry.path: entry.revision.dataset
+                    for entry in final_inputs
+                    if entry.origin == "snapshot" and entry.revision is not None
+                }
+            ),
             evidence_count=evidence_count,
             files=tuple(sorted(proofs, key=lambda proof: proof.path)),
         )

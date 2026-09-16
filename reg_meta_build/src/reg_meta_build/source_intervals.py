@@ -98,14 +98,17 @@ def _column(record: EffectiveOccurrence) -> str | None:
 
 def reconcile_source_fields(
     records: tuple[SourceRecord | EffectiveOccurrence | SourceParentObservation, ...],
+    *,
+    support: tuple[SourceFields, ...] = (),
 ) -> tuple[SourceFields, tuple[str, ...]]:
     resolved = {}
     conflicts = []
+    field_sources = (*(record.fields for record in records), *support)
     for name in SourceFields.model_fields:
         observations = tuple(
             value
-            for record in records
-            if (value := getattr(record.fields, name)) is not None
+            for fields in field_sources
+            if (value := getattr(fields, name)) is not None
         )
         values = {
             (value.status, value.value)

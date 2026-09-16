@@ -155,6 +155,17 @@ decision's provenance into the resulting state. Conflicting accepted choices wit
 only their disputed overlap. Unknown or pooled source scopes remain unresolved. Ordinary
 variable formation consumes this resolved coding; it makes no further choice.
 
+The prepared manifest distinguishes field support with a format-defined join from
+support requiring explicit curation, such as the LISA workbook. SCB preparation declares
+the summary's exact register/variant/variable/column name key and the identifier table's
+source-wide native variable-ID key. The common binder observes all selected native
+targets before attaching flags. A name key matching several native variables supplies no
+flags; source declarations with unknown keys are errors, while unreferenced support is
+retained with a warning. Every physical support row remains accounted for. Only the
+declared flag fields transfer, never the summary's coverage or unrelated prose, and
+conflicting flags are not combined with Boolean OR. Conditional sensitivity cannot be
+reduced to the catalog's Boolean flag without a checked decision.
+
 Overlapping occurrence decisions are checked together against original evidence. The
 applicability evaluator shares semantic-member and selector indexes for one complete
 slice, including newly added records; it never searches only the expected members. The

@@ -431,6 +431,11 @@ def form_native_variable(
             and type(observation.value) is bool
             else None
         )
+    conditional = flags.conditional_sensitivity
+    if conditional is not None and (
+        conditional.status != "value" or conditional.value is not False
+    ):
+        flag_values["is_sensitive"] = None
     variable = ResolvedVariable(
         register=register,
         slug=slug,
