@@ -1808,9 +1808,7 @@ def _open_scb_csv_prepared(
         def rows() -> Iterator[tuple[int, dict[str, tuple[bool, str | None, str]]]]:
             for row_number, fields in raw_rows:
                 if not isinstance(fields, _ScbRawFields):
-                    raise TypeError(
-                        "SCB raw traversal lost prepared presence state"
-                    )
+                    raise TypeError("SCB raw traversal lost prepared presence state")
                 yield (
                     row_number,
                     {
