@@ -130,6 +130,13 @@ research variables or variants from them. Parent resolution accounts for those r
 and for explicit translations outside the requested catalog language. Missing naming
 bindings remain implementation failures; they are not curation waivers.
 
+Checked variant assignments preserve existing finite token-to-variant decisions in the
+common layer. One delivered row may support several explicitly named variants, while
+retaining its original physical evidence, fields and unresolved period. Assignments
+never union competing target lists: a disagreement withholds the route. Reparenting a
+native edition or population is unsupported and fails explicitly. The converted SOS
+token map uses this operation; no provider rule runs during its application.
+
 SCB's joined population descriptions belong to the edition, alongside its object-type
 metadata. They do not assign the CVID to one particular population. Cleaning retains
 every parent assertion and original row while leaving the variable's population

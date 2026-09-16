@@ -23,6 +23,7 @@ from reg_meta_build.source_curation import (
     CheckedIdentityChange,
     CheckedPeriodChange,
     CheckedSourceUse,
+    CheckedVariantAssignment,
     CuratedOccurrenceAddition,
     CurationCase,
     FieldExpectation,
@@ -184,6 +185,73 @@ def test_authored_coverage_does_not_require_a_fabricated_delivery_edition() -> N
     assert declared.edition_key is None
     assert declared.source_records == ()
     assert declared.support_records == (record,)
+
+
+def test_checked_variant_routing_retains_unknown_scope_and_physical_evidence() -> None:
+    record = _record(column="VALUE").model_copy(
+        update={
+            "parent_facts": (),
+            "edition_scope": TemporalScope(kind="unknown", label="not supplied"),
+        }
+    )
+    case = _case(
+        record,
+        CheckedVariantAssignment(
+            ref=record_ref(record), variant_keys=(("second",), ("first",))
+        ),
+    )
+    result = apply_occurrence_cases((record,), (case,))
+    assert result.diagnostics == ()
+    assert result.accounting[0].disposition == "applied"
+    assert [item.variant_key for item in result.occurrences] == [
+        ("first",),
+        ("second",),
+    ]
+    for item in result.occurrences:
+        assert item.source_records == (record,)
+        assert item.fields == record.fields
+        assert item.edition_scope == record.edition_scope
+        assert item.edition_key is None
+        assert item.corrections[0].case_id == case.case_id
+    changed = record.model_copy(
+        update={"edition_scope": TemporalScope(kind="not_applicable")}
+    )
+    stale = apply_occurrence_cases((changed,), (case,))
+    assert stale.accounting[0].disposition == "stale"
+    assert len(stale.occurrences) == 1
+    assert stale.occurrences[0].variant_key == source_occurrence(changed).variant_key
+
+
+def test_variant_routing_disagreements_withhold_the_route_not_source_fields() -> None:
+    record = _record(column="VALUE").model_copy(update={"parent_facts": ()})
+    cases = tuple(
+        _case(
+            record,
+            CheckedVariantAssignment(ref=record_ref(record), variant_keys=keys),
+            name=name,
+        )
+        for name, keys in (("one", (("first",),)), ("two", (("second",),)))
+    )
+    result = apply_occurrence_cases((record,), cases)
+    assert all(item.disposition == "conflicted" for item in result.accounting)
+    assert {item.code for item in result.diagnostics} == {
+        "conflicting_curation_effects"
+    }
+    assert len(result.occurrences) == 1
+    assert result.occurrences[0].variant_key is None
+    assert result.occurrences[0].fields == record.fields
+    assert result.occurrences[0].withheld_fields == ("variant",)
+    assert apply_occurrence_cases((record,), cases[::-1]) == result
+
+
+def test_variant_routing_cannot_move_a_native_edition_implicitly() -> None:
+    record = _record(column="VALUE")
+    case = _case(
+        record,
+        CheckedVariantAssignment(ref=record_ref(record), variant_keys=(("other",),)),
+    )
+    with pytest.raises(ValueError, match="cannot implicitly reparent"):
+        apply_occurrence_cases((record,), (case,))
 
 
 def test_checked_identity_partition_keeps_physical_evidence_and_rejects_new_peers() -> (

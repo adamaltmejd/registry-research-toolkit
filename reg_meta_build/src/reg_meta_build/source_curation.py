@@ -414,6 +414,23 @@ class CheckedSourceUse(_CurationModel):
     use: Literal["support"] = "support"
 
 
+class CheckedVariantAssignment(_CurationModel):
+    """Route a checked delivered row to its explicitly accepted variants."""
+
+    kind: Literal["variants"] = "variants"
+    ref: SourceRecordRef
+    variant_keys: tuple[NativeKey, ...]
+
+    @field_validator("variant_keys")
+    @classmethod
+    def _finite_targets(cls, keys: tuple[NativeKey, ...]) -> tuple[NativeKey, ...]:
+        if not keys or any(not key or "" in key for key in keys):
+            raise ValueError("variant assignment needs explicit nonempty keys")
+        if len(set(keys)) != len(keys):
+            raise ValueError("variant assignment keys must be unique")
+        return tuple(sorted(keys, key=repr))
+
+
 class CuratedOccurrenceAddition(_CurationModel):
     """A declared delivery, not an invented physical source row or native ID.
 
@@ -462,6 +479,7 @@ type OccurrenceEffect = (
     | CheckedPeriodChange
     | CheckedIdentityChange
     | CheckedSourceUse
+    | CheckedVariantAssignment
     | CuratedOccurrenceAddition
 )
 

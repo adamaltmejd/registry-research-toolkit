@@ -17,6 +17,7 @@ from reg_meta_build.source_curation import (
     CheckedIdentityChange,
     CheckedPeriodChange,
     CheckedSourceUse,
+    CheckedVariantAssignment,
     CuratedOccurrenceAddition,
     CurationCase,
     OccurrenceCorrectionDecision,
@@ -118,7 +119,8 @@ def _check_contract(case: CurationCase) -> None:
             if effect.ref not in targets:
                 raise ValueError("an occurrence effect must name an exact target")
             if isinstance(
-                effect, (CheckedIdentityChange, CheckedSourceUse)
+                effect,
+                (CheckedIdentityChange, CheckedSourceUse, CheckedVariantAssignment),
             ) and not any(
                 effect.ref in guard.expected_members for guard in case.peer_guards
             ):
@@ -162,6 +164,7 @@ def apply_occurrence_cases(
     fields = defaultdict(list)
     periods = defaultdict(list)
     identities = defaultdict(list)
+    variants = defaultdict(list)
     support_uses = defaultdict(list)
     additions = defaultdict(list)
     diagnostics = []
@@ -193,6 +196,8 @@ def apply_occurrence_cases(
                 identities[effect.ref].append((effect, correction))
             elif isinstance(effect, CheckedSourceUse):
                 support_uses[effect.ref].append(correction)
+            elif isinstance(effect, CheckedVariantAssignment):
+                variants[effect.ref].append((effect, correction))
             else:
                 additions[effect.occurrence_key].append((effect, correction))
 
@@ -252,6 +257,16 @@ def apply_occurrence_cases(
         field_owners[ref].extend(owner for _, owner in claims)
 
     reported_identity_conflicts = set()
+    variant_changes = {}
+    for ref, claims in variants.items():
+        replacements = {effect.variant_keys for effect, _ in claims}
+        if len(replacements) > 1:
+            conflict(claims, str(ref), (ref,), ("variant",), ("occurrence.variant",))
+            variant_changes[ref] = (None,)
+            withheld_fields[ref].add("variant")
+        else:
+            variant_changes[ref] = next(iter(replacements))
+        field_owners[ref].extend(owner for _, owner in claims)
     occurrences = []
     for record in records:
         ref = record_ref(record)
@@ -286,27 +301,35 @@ def apply_occurrence_cases(
                 reported_identity_conflicts.add(signature)
         elif assigned:
             variable_key = next(iter(assigned))
-        occurrences.append(
-            replace(
-                occurrence,
-                variable_key=variable_key,
-                use="support" if support_uses.get(ref) else occurrence.use,
-                fields=SourceFields.model_validate(values),
-                edition_scope=scope,
-                edition_period_scope=period,
-                corrections=tuple(
-                    sorted(
-                        (
-                            *field_owners[ref],
-                            *support_uses.get(ref, ()),
-                            *(owner for _, owner in identity_claims),
-                        ),
-                        key=lambda c: (c.case_id, c.effect_index),
-                    )
-                ),
-                withheld_fields=tuple(sorted(withheld)),
-            )
+        corrected = replace(
+            occurrence,
+            variable_key=variable_key,
+            use="support" if support_uses.get(ref) else occurrence.use,
+            fields=SourceFields.model_validate(values),
+            edition_scope=scope,
+            edition_period_scope=period,
+            corrections=tuple(
+                sorted(
+                    (
+                        *field_owners[ref],
+                        *support_uses.get(ref, ()),
+                        *(owner for _, owner in identity_claims),
+                    ),
+                    key=lambda c: (c.case_id, c.effect_index),
+                )
+            ),
+            withheld_fields=tuple(sorted(withheld)),
         )
+        targets = variant_changes.get(ref, (occurrence.variant_key,))
+        if targets != (occurrence.variant_key,) and (
+            occurrence.edition_key is not None or occurrence.population_key is not None
+        ):
+            # simplify: delivered token maps have no edition/population assignment;
+            # require an explicit rebind operation if that source shape is needed.
+            raise ValueError(
+                "variant routing cannot implicitly reparent an edition or population"
+            )
+        occurrences.extend(replace(corrected, variant_key=key) for key in targets)
     for key, claims in sorted(additions.items()):
         # Evidence references differ legitimately for identical assertions; retain
         # all of them instead of making insertion order choose provenance.
