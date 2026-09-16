@@ -83,7 +83,7 @@ def _record(
             ),
         ),
         edition_scope=TemporalScope(kind="unknown", label="2003"),
-        reference_period_scope=TemporalScope(kind="unknown", label="2003"),
+        edition_period_scope=TemporalScope(kind="unknown", label="2003"),
         fields=SourceFields(
             column_name=value_field("Signal"),
             data_length=value_field(data_length),
@@ -340,12 +340,17 @@ def test_hamn_fixture_yields_twenty_lossless_observations_for_ten_exact_members(
         )
 
 
-def _clean_row(**changes: object) -> SourceRecord:
+def _clean_row(*, reference_period: str | None = "", **changes: object) -> SourceRecord:
     header = REGISTERINFORMATION_HEADER.split("|")
     row = _var_row(colname="Example", cvid=1001, var_id=101, **changes).split("|")
     cells = {
         name: (True, value, value) for name, value in zip(header, row, strict=True)
     }
+    cells["VariabelReferenstid"] = (
+        reference_period is not None,
+        reference_period,
+        reference_period or "",
+    )
     return clean_scb_row(header, 2, cells, _revision()).record
 
 
@@ -401,7 +406,7 @@ def test_cleaning_keeps_projection_register_range_pooled() -> None:
     )
 
     assert record.edition_scope == TemporalScope(kind="pooled", label="2024-2070")
-    assert record.reference_period_scope == record.edition_scope
+    assert record.edition_period_scope == record.edition_scope
     assert record.original_period_text == "2024-2070"
 
 
@@ -428,3 +433,24 @@ def test_scb_paragraph_cleaning_retains_layout_and_real_text_differences() -> No
     assert first.fields.description.raw_value == raw
     assert first.fields.description.value != second.fields.description.value
     assert _clean_row(data_length="1,5").fields.data_length.value == "1,5"
+
+
+def test_edition_date_does_not_replace_declared_variable_reference_period() -> None:
+    declared = " Under  föregående\u00a0kalenderår "
+    record = _clean_row(versionname="2025-12-31", reference_period=declared)
+
+    assert record.edition_scope.intervals[0].start == "2025"
+    assert record.edition_period_scope.intervals[0].start == "2025-12-31"
+    assert record.fields.reference_period == value_field(
+        "Under föregående kalenderår", raw=declared
+    )
+    assert "reference_period_scope" not in record.model_dump()
+
+
+def test_declared_reference_period_preserves_missing_and_empty_evidence() -> None:
+    missing = _clean_row(reference_period=None).fields.reference_period
+    empty = _clean_row(reference_period="").fields.reference_period
+
+    assert missing.status == empty.status == "unknown"
+    assert missing.raw_value is None
+    assert empty.raw_value == ""

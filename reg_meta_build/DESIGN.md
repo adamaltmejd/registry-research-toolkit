@@ -96,15 +96,20 @@ These are responsibilities inside one builder, not separate frameworks or servic
 extraction remains upstream; cleaning consumes its reviewed machine-readable output.
 
 > **Status: partial replacement.** The source-record model and diagnostic SCB/LISA
-> readers exist. SCB row cleaning owns the shared compact parser and uses format-only
-> period interpretation, independent of catalog identity or forecast-vintage policy.
-> Shared text/token cleaning, integer/text storage normalization and exact snapshot-date
-> interpretation now serve SCB/LISA source inspection. A separate SCB value-source
-> reader exposes normalized dictionaries, exact validity text and streamed original
-> associations; it does not select final code-set membership. Other source readers,
+> readers exist. A Socialstyrelsen reader now emits each delivered variable row through
+> the same model; its workbook parser retains original cell evidence. SCB row cleaning
+> owns the shared compact parser and uses format-only period interpretation, independent
+> of catalog identity or forecast-vintage policy. Shared text/token cleaning,
+> integer/text storage normalization and exact snapshot-date interpretation now serve
+> SCB/LISA source inspection. A separate SCB value-source reader exposes normalized
+> dictionaries, exact validity text and streamed original associations; it does not
+> select final code-set membership. Socialstyrelsen code rows retain source evidence but
+> do not yet have a common normalized code-set representation. Other source readers,
 > unified curation and direct materialization remain pending. The normal builder
-> continues to use the legacy semantic pipeline below; source inspection does not
-> activate corrections.
+> continues to use the legacy semantic pipeline below. Shared reader changes can alter
+> its inputs: retaining formerly omitted SOS hyperlinks can affect its automatic
+> classification matching. Catalog behavior on this isolated branch has not yet been
+> verified end to end, and this checkpoint is not ready for catalog activation.
 
 ### Mechanical normalization
 
@@ -133,9 +138,11 @@ revisions, raw cells and locators remain available independently of cleaned valu
   Same-year ISO ranges retain their exact endpoints. Malformed or ambiguous recognized
   date shapes become diagnostic unknowns. Multi-year/academic ranges remain pooled; they
   do not establish annual observations. Original period text is preserved. The current
-  `reference_period_scope` is the parsed edition-label window, not an independently
-  established measurement period for each variable; `VariabelReferenstid` remains
-  original source evidence for later interpretation.
+  `edition_period_scope` is the parsed edition-label window. Explicit variable reference
+  text is a separate `fields.reference_period` observation: for SCB it comes from
+  `VariabelReferenstid`. Cleaning does not substitute the edition date for the
+  variable's measurement period or resolve relative declarations such as "the preceding
+  year".
 - **Value-set content:** `canonical_value_set_content` gives an explicitly unordered
   collection deterministic cleaned content, dropping exact repeated members. Equal codes
   with different labels remain distinct. It does not decide which members belong
@@ -151,6 +158,22 @@ missing/empty distinctions; they are not truncated to years or used for filterin
 descriptor version label alone is never a global code-set identity. This reader has
 synthetic losslessness checks; a complete maintained-source value traversal remains
 pending while the cold occurrence files are sparse-omitted.
+
+`sources/sos_records.py` maps the existing Socialstyrelsen workbook parser's variable
+rows into the common source model. Same-name rows and contradictory type declarations
+remain separate observations. It does not inherit register/subset dates, synthesize a
+missing subset, correct variable names, bind a code list, or mint FQIDs. A complete pair
+of explicit year bounds can establish the supplied coverage interval; missing, malformed
+or partial bounds remain unknown, with their original cells retained. An absent edition
+date is not the variable's reference period.
+
+The workbook parser captures variable and structured code-row coordinates, original
+values, Excel data types and number formats while reading the cells. Excel's displayed
+code spelling is separate from its stored value. Normal workbook mode preserves
+hyperlink-only classification cells that openpyxl's read-only mode omits. This is a
+bounded reader for the delivered metadata workbooks, not a general Excel interpreter.
+Register/subset metadata, code-list semantics and other providers still need their
+source-cleaning boundaries completed before the legacy pipeline can be replaced.
 
 Observation IDs identify supplied evidence, so a whitespace-only revision can still
 change an observation ID. Curation must compare the relevant cleaned values and scoped
@@ -200,7 +223,8 @@ identity coalescing, or catalog formation. A record retains:
 - source-local subject and member coordinates, including native register, variant,
   edition, variable/question, CVID/member, and delivery-column identifiers where the
   source supplies them;
-- population and variant, with edition scope separate from reference-period scope;
+- population and variant, with edition-year scope, exact edition-label period and
+  independently declared variable reference-period text;
 - sparse typed fields such as name, definition, operational definition, type/length,
   representation, availability, and source attribution; and
 - references to separately normalized, content-identified code sets and their source

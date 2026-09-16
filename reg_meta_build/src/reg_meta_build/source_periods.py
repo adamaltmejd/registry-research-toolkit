@@ -72,8 +72,9 @@ def source_scopes(
 ) -> tuple[TemporalScope, TemporalScope, SourcePeriodIssue | None]:
     """Interpret one SCB edition label without manufacturing annual evidence.
 
-    Complete source-authored dates keep day precision. Existing edition-claim parsing
-    supplies annual and subannual intervals. Multi-year claims remain pooled because
+    Dates in edition labels keep day precision; they do not establish variable
+    reference time. Existing edition-claim parsing supplies annual and subannual
+    intervals. Multi-year claims remain pooled because
     the stage-one record cannot safely assert independent annual availability.
     """
     label = normalize_text(version_name) or "<blank Registerversionnamn>"
@@ -85,11 +86,11 @@ def source_scopes(
                 ScopeInterval(start=exact_interval[0][:4], end=exact_interval[0][:4]),
             ),
         )
-        reference_scope = TemporalScope(
+        edition_period_scope = TemporalScope(
             kind="intervals",
             intervals=(ScopeInterval(start=exact_interval[0], end=exact_interval[1]),),
         )
-        return edition_scope, reference_scope, None
+        return edition_scope, edition_period_scope, None
     if exact_interval is not None:
         scope = TemporalScope(kind="pooled", label=label)
         return scope, scope, "pooled_period"

@@ -97,6 +97,36 @@ class SosDeldatamangd:
 
 
 @dataclass(frozen=True)
+class SosCellEvidence:
+    """One delivered XLSX cell, before semantic interpretation.
+
+    ``raw_value`` and the openpyxl type/format are retained together because Excel
+    can store a displayed code such as ``001`` as the numeric value ``1`` with the
+    number format ``000``. ``display_value`` is the source-format rendering used by
+    this reader; it does not replace the raw storage evidence.
+    """
+
+    header: str
+    field_name: str | None
+    coordinate: str
+    raw_value: Any
+    data_type: str
+    number_format: str
+    hyperlink_target: str | None
+    hyperlink_location: str | None
+    display_value: str | None
+
+
+@dataclass(frozen=True)
+class SosRowEvidence:
+    """Physical source coordinates and delivered cells for one workbook row."""
+
+    sheet_name: str
+    row_number: int
+    cells: tuple[SosCellEvidence, ...]
+
+
+@dataclass(frozen=True)
 class SosVariable:
     """One variable occurrence in a register (row in Metadata - Variabelnivå).
 
@@ -121,6 +151,7 @@ class SosVariable:
     quality_note: str | None
     origin: str | None
     source_detail: str | None
+    source_evidence: SosRowEvidence | None = None
 
 
 @dataclass(frozen=True)
@@ -131,6 +162,7 @@ class SosKodlistaRow:
     variable_name: str | None = (
         None  # set only when sheet has a per-row Variabelnamn column
     )
+    source_evidence: SosRowEvidence | None = None
 
 
 @dataclass(frozen=True)
@@ -208,7 +240,11 @@ def parse_register_file(path: Path | str) -> SosRegister:
     if not p.is_file():
         raise SosParseError(f"{p} is not a regular file (missing or a directory)")
     try:
-        wb = openpyxl.load_workbook(p, read_only=True, data_only=True)
+        # Normal mode is required for original-source evidence: openpyxl's
+        # read-only cells discard hyperlinks, including delivered cells whose
+        # classification link is their only content. These workbooks are small,
+        # and the existing bounded row iterators still avoid phantom-row work.
+        wb = openpyxl.load_workbook(p, read_only=False, data_only=True)
     except zipfile.BadZipFile as exc:
         raise SosParseError(f"{p.name} is not a valid .xlsx file") from exc
     except openpyxl.utils.exceptions.InvalidFileException as exc:
@@ -422,6 +458,48 @@ def _format_code(cell: Any) -> str | None:
     return s or None
 
 
+def _row_evidence(
+    ws: Any,
+    header_cells: tuple[Any, ...],
+    cells: tuple[Any, ...],
+    field_names: dict[str, str],
+) -> SosRowEvidence:
+    """Capture the delivered row while cell objects and Excel formats are live."""
+
+    evidence: list[SosCellEvidence] = []
+    row_number = next(
+        (cell.row for cell in cells if getattr(cell, "row", None) is not None),
+        0,
+    )
+    for index, header_cell in enumerate(header_cells):
+        header = _clean(header_cell.value)
+        if header is None or index >= len(cells):
+            continue
+        cell = cells[index]
+        evidence.append(
+            SosCellEvidence(
+                header=header,
+                field_name=field_names.get(header.casefold()),
+                coordinate=f"{header_cell.column_letter}{row_number}",
+                raw_value=cell.value,
+                data_type=str(cell.data_type),
+                number_format=str(cell.number_format or "General"),
+                hyperlink_target=(
+                    cell.hyperlink.target if cell.hyperlink is not None else None
+                ),
+                hyperlink_location=(
+                    cell.hyperlink.location if cell.hyperlink is not None else None
+                ),
+                display_value=_format_code(cell),
+            )
+        )
+    return SosRowEvidence(
+        sheet_name=ws.title,
+        row_number=row_number,
+        cells=tuple(evidence),
+    )
+
+
 def _clean(v: Any) -> str | None:
     if v is None:
         return None
@@ -617,12 +695,13 @@ _VAR_HEADERS = {
 
 
 def _parse_variables(ws: Any) -> Iterable[SosVariable]:
-    rows = _row_iter(ws)
-    header = next(rows, None)
-    if header is None:
+    rows = iter(_cell_row_iter(ws))
+    header_cells = next(rows, None)
+    if header_cells is None:
         raise SosParseError(
             f"variable sheet {ws.title!r} is empty; cannot extract variables"
         )
+    header = tuple(cell.value for cell in header_cells)
     col_map: dict[str, int] = {}
     for i, h in enumerate(header):
         if not h:
@@ -643,12 +722,19 @@ def _parse_variables(ws: Any) -> Iterable[SosVariable]:
             f"found columns: {header_cols}"
         )
 
-    for row in rows:
-        name = _clean(_pick(row, col_map, "name"))
+    for cells in rows:
+        row = tuple(cell.value for cell in cells)
+        name_index = col_map["name"]
+        name = _format_code(cells[name_index])
         if not name:
             continue
+        deldatamangd_index = col_map.get("deldatamangd")
         yield SosVariable(
-            deldatamangd=_clean(_pick(row, col_map, "deldatamangd")),
+            deldatamangd=(
+                _format_code(cells[deldatamangd_index])
+                if deldatamangd_index is not None
+                else None
+            ),
             name=name,
             label=_clean(_pick(row, col_map, "label")),
             description=_clean(_pick(row, col_map, "description")),
@@ -666,6 +752,7 @@ def _parse_variables(ws: Any) -> Iterable[SosVariable]:
             quality_note=_clean(_pick(row, col_map, "quality_note")),
             origin=_clean(_pick(row, col_map, "origin")),
             source_detail=_clean(_pick(row, col_map, "source_detail")),
+            source_evidence=_row_evidence(ws, header_cells, cells, _VAR_HEADERS),
         )
 
 
@@ -695,6 +782,7 @@ def _parse_kodlista(ws: Any) -> tuple[SosKodlista, list[str]]:
     # iterate cells (not just values) so the kod column can preserve leading
     # zeros from number_format
     all_cell_rows = list(_cell_row_iter(ws))
+    data_header_cells: tuple[Any, ...] | None = None
     for cells in all_cell_rows:
         row = tuple(c.value for c in cells)
         first = _clean(row[0]) if row else None
@@ -721,6 +809,7 @@ def _parse_kodlista(ws: Any) -> tuple[SosKodlista, list[str]]:
                 col_kod = positions["kod"]
                 col_desc = positions.get("desc")
                 col_var = positions.get("var")
+                data_header_cells = cells
                 continue
 
             # Preamble rows (PAR-style): "Kodverk", "Variabelnamn", "Bakgrund"
@@ -760,6 +849,22 @@ def _parse_kodlista(ws: Any) -> tuple[SosKodlista, list[str]]:
                 beskrivning=_clean(_at(row, col_desc)),
                 variable_name=(
                     _clean(_at(row, col_var)) if col_var is not None else None
+                ),
+                source_evidence=(
+                    _row_evidence(
+                        ws,
+                        data_header_cells,
+                        cells,
+                        {
+                            "tidsperiod": "tidsperiod",
+                            "kod": "kod",
+                            "beskrivning": "beskrivning",
+                            "betydelse": "beskrivning",
+                            "variabelnamn": "variable_name",
+                        },
+                    )
+                    if data_header_cells is not None
+                    else None
                 ),
             )
         )

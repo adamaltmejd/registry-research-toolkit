@@ -204,6 +204,7 @@ class SourceFields(_SourceModel):
     representation: SourceField | None = None
     source_attribution: SourceField | None = None
     measurement_unit: SourceField | None = None
+    reference_period: SourceField | None = None
     sensitivity: SourceField | None = None
     base_register: SourceField | None = None
     population_definition: SourceField | None = None
@@ -294,6 +295,11 @@ class DeliveredCell(_SourceModel):
     present: bool
     raw_value: str | None = None
     interpreted_value: str
+    raw_type: str | None = None
+    storage_type: str | None = None
+    number_format: str | None = None
+    hyperlink_target: str | None = None
+    hyperlink_location: str | None = None
 
     @model_validator(mode="after")
     def _coherent(self) -> Self:
@@ -313,7 +319,7 @@ class SourceRecord(_SourceModel):
     locators: tuple[RecordLocator, ...]
     subject: SourceSubject
     edition_scope: TemporalScope
-    reference_period_scope: TemporalScope
+    edition_period_scope: TemporalScope
     fields: SourceFields
     code_set_references: tuple[CodeSetReference, ...] = ()
     original_period_text: str | None = None
@@ -327,7 +333,7 @@ class SourceRecord(_SourceModel):
         semantic_record_key: tuple[str, ...],
         subject: SourceSubject,
         edition_scope: TemporalScope,
-        reference_period_scope: TemporalScope,
+        edition_period_scope: TemporalScope,
         fields: SourceFields,
         code_set_references: tuple[CodeSetReference, ...],
         original_period_text: str | None,
@@ -340,9 +346,7 @@ class SourceRecord(_SourceModel):
                 "semantic_record_key": semantic_record_key,
                 "subject": subject.model_dump(mode="json"),
                 "edition_scope": edition_scope.model_dump(mode="json"),
-                "reference_period_scope": reference_period_scope.model_dump(
-                    mode="json"
-                ),
+                "edition_period_scope": edition_period_scope.model_dump(mode="json"),
                 "fields": fields.model_dump(mode="json"),
                 "code_set_references": [
                     {
@@ -368,7 +372,7 @@ class SourceRecord(_SourceModel):
         locators: tuple[RecordLocator, ...],
         subject: SourceSubject,
         edition_scope: TemporalScope,
-        reference_period_scope: TemporalScope,
+        edition_period_scope: TemporalScope,
         fields: SourceFields,
         code_set_references: tuple[CodeSetReference, ...] = (),
         original_period_text: str | None = None,
@@ -382,7 +386,7 @@ class SourceRecord(_SourceModel):
             semantic_record_key=locators[0].semantic_record_key,
             subject=subject,
             edition_scope=edition_scope,
-            reference_period_scope=reference_period_scope,
+            edition_period_scope=edition_period_scope,
             fields=fields,
             code_set_references=code_set_references,
             original_period_text=original_period_text,
@@ -396,7 +400,7 @@ class SourceRecord(_SourceModel):
             locators=locators,
             subject=subject,
             edition_scope=edition_scope,
-            reference_period_scope=reference_period_scope,
+            edition_period_scope=edition_period_scope,
             fields=fields,
             code_set_references=code_set_references,
             original_period_text=original_period_text,
@@ -430,7 +434,7 @@ class SourceRecord(_SourceModel):
             semantic_record_key=semantic_record_key,
             subject=self.subject,
             edition_scope=self.edition_scope,
-            reference_period_scope=self.reference_period_scope,
+            edition_period_scope=self.edition_period_scope,
             fields=self.fields,
             code_set_references=self.code_set_references,
             original_period_text=self.original_period_text,

@@ -442,7 +442,7 @@ def _attach_context(
         semantic_record_key=locator.semantic_record_key,
         subject=record.subject,
         edition_scope=record.edition_scope,
-        reference_period_scope=record.reference_period_scope,
+        edition_period_scope=record.edition_period_scope,
         fields=record.fields,
         code_set_references=record.code_set_references,
         original_period_text=record.original_period_text,
@@ -692,7 +692,7 @@ def read_lisa_source(path: Path, revision: SourceRevision) -> _LisaSourceRead:
                             native=NativeCoordinates(),
                         ),
                         edition_scope=edition_scope,
-                        reference_period_scope=TemporalScope(kind="not_applicable"),
+                        edition_period_scope=TemporalScope(kind="not_applicable"),
                         fields=SourceFields(
                             availability=value_field(True),
                             column_name=value_field(

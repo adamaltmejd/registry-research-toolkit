@@ -120,13 +120,16 @@ class ScbObservation:
     issue: ScbInterpretationIssue | None
 
 
-def _cell_field(cell: tuple[bool, str | None, str]) -> SourceField | None:
+def _cell_field(
+    cell: tuple[bool, str | None, str], *, label: bool = False
+) -> SourceField | None:
     present, raw, interpreted = cell
     if not present:
         return SourceField(status="unknown", raw_value=None)
     if not interpreted.strip():
         return SourceField(status="unknown", raw_value=raw)
-    return value_field(normalize_token(interpreted), raw=raw)
+    cleaned = normalize_text(interpreted) if label else normalize_token(interpreted)
+    return value_field(cleaned, raw=raw)
 
 
 def _data_type_field(cell: tuple[bool, str | None, str]) -> SourceField | None:
@@ -177,7 +180,9 @@ def clean_scb_row(
 
     interpreted = _interpret_registerinformation_row(text, row_number)
     original_column = text("Kolumnnamn")
-    edition_scope, reference_scope, issue_kind = source_scopes(interpreted.edition_name)
+    edition_scope, edition_period_scope, issue_kind = source_scopes(
+        interpreted.edition_name
+    )
     semantic_key = (
         f"register:{interpreted.register_id}",
         f"variant:{interpreted.register_variant_id}",
@@ -232,7 +237,7 @@ def clean_scb_row(
             ),
         ),
         edition_scope=edition_scope,
-        reference_period_scope=reference_scope,
+        edition_period_scope=edition_period_scope,
         fields=SourceFields(
             availability=value_field(True),
             column_name=(
@@ -258,6 +263,7 @@ def clean_scb_row(
                 text("VariabelOperationell_definition"),
                 multiline=True,
             ),
+            reference_period=_cell_field(cells["VariabelReferenstid"], label=True),
             data_type=_data_type_field(cells["Datatyp"]),
             data_length=_data_length_field(cells["Datalängd"]),
             source_attribution=_optional_text_field(
