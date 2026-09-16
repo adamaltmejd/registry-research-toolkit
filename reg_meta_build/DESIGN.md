@@ -612,6 +612,14 @@ contradict a concrete declaration; explicitly withheld or unresolved positive re
 do. Errata column conversion preserves supplied classification references without
 copying canonical codes or widening delivery periods.
 
+Classification succession has one declaration surface: the complete directed edge graph.
+The writer validates its endpoints, duplicate pairs and cycles before creating output.
+It derives the database's single predecessor pointer from active edges using the fixed
+catalog release year, retaining future edges without activating them. For multiple
+active predecessors, the pointer selects the first literal slug while the full graph
+preserves every relationship. Canonical codebooks do not carry a separately editable
+predecessor. No edition sequence is inferred from names or years.
+
 The earlier finite-case inspector forms non-overlapping annual occurrences and
 explicitly withholds coding. The direct writer can materialize already-resolved code
 sets independently of physical type and length. It shares identical memberships across

@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 import pytest
 from pydantic import ValidationError
 from reg_meta.catalog import Catalog, ResolvedVariable as CatalogVariable
-from reg_meta.db import open_db
+from reg_meta.db import CLASSIFICATION_SUCCESSION_AS_OF_YEAR, open_db
 from reg_meta.errors import RegMetaError
 from reg_meta.queries import search
 from reg_meta.search import CodeSearchResult, VariableSearchResult
@@ -353,7 +353,6 @@ def test_classifications_and_explicit_conformance_are_written_exactly(
 ) -> None:
     classification = _classification()
     predecessor = _classification("older-codes")
-    classification = classification.model_copy(update={"supersedes": predecessor.slug})
     succession = ResolvedClassificationSuccession(
         predecessor=predecessor.slug,
         successor=classification.slug,
@@ -448,7 +447,7 @@ def test_classifications_and_explicit_conformance_are_written_exactly(
     assert output.read_bytes() == original
 
 
-@pytest.mark.parametrize("defect", ["missing", "cycle", "duplicate", "conformance"])
+@pytest.mark.parametrize("defect", ["missing", "duplicate", "conformance"])
 def test_bad_classification_references_or_membership_preserve_previous_catalog(
     tmp_path: Path,
     defect: str,
@@ -457,10 +456,12 @@ def test_bad_classification_references_or_membership_preserve_previous_catalog(
     classifications = (classification,)
     variable = _variable()
     if defect == "missing":
-        classifications = (classification.model_copy(update={"supersedes": "missing"}),)
-    elif defect == "cycle":
-        classifications = (
-            classification.model_copy(update={"supersedes": classification.slug}),
+        variable = variable.model_copy(
+            update={
+                "states": (
+                    variable.states[0].model_copy(update={"classification": "missing"}),
+                )
+            }
         )
     elif defect == "duplicate":
         classifications = (classification, classification)
@@ -516,6 +517,86 @@ def test_cyclic_classification_succession_preserves_previous_catalog(
         )
     assert output.read_bytes() == b"previous"
     assert sorted(path.name for path in tmp_path.iterdir()) == ["existing.db"]
+
+
+def test_classification_predecessor_is_a_deterministic_projection_of_active_edges(
+    tmp_path: Path,
+) -> None:
+    books = tuple(_classification(slug) for slug in ("a", "b", "current", "future"))
+    edges = (
+        ResolvedClassificationSuccession(
+            predecessor="a", successor="current", note="undated declaration"
+        ),
+        ResolvedClassificationSuccession(
+            predecessor="b",
+            successor="current",
+            effective_year=CLASSIFICATION_SUCCESSION_AS_OF_YEAR,
+        ),
+        ResolvedClassificationSuccession(
+            predecessor="current",
+            successor="future",
+            effective_year=CLASSIFICATION_SUCCESSION_AS_OF_YEAR + 1,
+        ),
+    )
+    output = tmp_path / "reg_meta.db"
+    write_resolved_catalog(
+        (_variable(),),
+        output,
+        manifest={},
+        classifications=books,
+        classification_successions=edges,
+    )
+    original = output.read_bytes()
+    with closing(open_db(output)) as conn:
+        assert [
+            tuple(row)
+            for row in conn.execute(
+                "SELECT c.slug, p.slug FROM classification c "
+                "LEFT JOIN classification p ON p.id=c.supersedes_id ORDER BY c.slug"
+            )
+        ] == [("a", None), ("b", None), ("current", "a"), ("future", None)]
+        assert [
+            tuple(row)
+            for row in conn.execute(
+                "SELECT predecessor_slug, successor_slug, effective_year, note "
+                "FROM classification_replaced_by ORDER BY predecessor_slug, successor_slug"
+            )
+        ] == [
+            (edge.predecessor, edge.successor, edge.effective_year, edge.note)
+            for edge in edges
+        ]
+    write_resolved_catalog(
+        (_variable(),),
+        output,
+        manifest={},
+        classifications=tuple(reversed(books)),
+        classification_successions=tuple(reversed(edges)),
+    )
+    assert output.read_bytes() == original
+
+
+@pytest.mark.parametrize("defect", ["predecessor", "successor", "duplicate"])
+def test_invalid_classification_edges_fail_before_creating_output(
+    tmp_path: Path, defect: str
+) -> None:
+    edges = (
+        ResolvedClassificationSuccession(
+            predecessor="missing" if defect == "predecessor" else "before",
+            successor="missing" if defect == "successor" else "after",
+        ),
+    )
+    if defect == "duplicate":
+        edges += (edges[0].model_copy(update={"effective_year": 2050}),)
+    with pytest.raises(ValueError, match="classification succession"):
+        write_resolved_catalog(
+            (_variable(),),
+            tmp_path / "diagnostic.db",
+            manifest={},
+            diagnostic=True,
+            classifications=(_classification("before"), _classification("after")),
+            classification_successions=edges,
+        )
+    assert list(tmp_path.iterdir()) == []
 
 
 def test_alias_windows_and_historical_search_aliases_are_explicit(

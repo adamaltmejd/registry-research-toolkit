@@ -163,16 +163,14 @@ class ResolvedClassification(_ResolvedModel):
     valid_to: int | None = None
     description: str | None = None
     url: str | None = None
-    supersedes: str | None = None
     codes: tuple[ResolvedClassificationCode, ...] = Field(min_length=1)
 
     _names = field_validator("name", "short_name")(_require_trimmed)
 
-    @field_validator("slug", "supersedes")
+    @field_validator("slug")
     @classmethod
-    def _slugs(cls, value: str | None) -> str | None:
-        if value is not None:
-            validate_slug(value, "classification")
+    def _slug(cls, value: str) -> str:
+        validate_slug(value, "classification")
         return value
 
     @model_validator(mode="after")
@@ -458,8 +456,8 @@ def _validate_catalog_metadata(
     classifications: tuple[ResolvedClassification, ...],
     registers: dict[tuple[str, str], ResolvedRegister],
     variants: dict[tuple[str, str, str], ResolvedVariant],
-) -> tuple[ResolvedClassification, ...]:
-    """Check shared references and order classification predecessors before users."""
+) -> None:
+    """Check shared definitions, references and canonical code membership."""
     edition_keys = set()
     for edition in editions:
         register = edition.register_ref
@@ -482,33 +480,19 @@ def _validate_catalog_metadata(
         {item.short_name for item in classifications}
     ) != len(classifications):
         raise ValueError("duplicate classification slug or short name")
-    ordered: dict[str, ResolvedClassification] = {}
-    active: set[str] = set()
 
-    def include(slug: str) -> None:
-        if slug in ordered:
-            return
+    def require_classification(slug: str) -> None:
         if slug not in by_slug:
             raise ValueError(f"unknown classification reference: {slug}")
-        if slug in active:
-            raise ValueError("cyclic classification supersedes relation")
-        active.add(slug)
-        item = by_slug[slug]
-        if item.supersedes is not None:
-            include(item.supersedes)
-        active.remove(slug)
-        ordered[slug] = item
 
-    for slug in sorted(by_slug):
-        include(slug)
     for variable in variables:
         for state in variable.states:
             if state.classification is not None:
-                include(state.classification)
+                require_classification(state.classification)
             conformance = state.conformance
             if conformance is None:
                 continue
-            include(conformance.declared_classification)
+            require_classification(conformance.declared_classification)
             canonical = {
                 code.code for code in by_slug[conformance.declared_classification].codes
             }
@@ -521,7 +505,45 @@ def _validate_catalog_metadata(
             }
             if expected != set(conformance.nonconforming_members):
                 raise ValueError("conformance disagrees with canonical code membership")
-    return tuple(ordered.values())
+
+
+def _prepare_classification_succession(
+    classifications: tuple[ResolvedClassification, ...],
+    edges: tuple[ResolvedClassificationSuccession, ...],
+) -> tuple[tuple[ResolvedClassification, ...], dict[str, str]]:
+    """Validate the full graph and project its active storage back-pointers."""
+    by_slug = {item.slug: item for item in classifications}
+    graph = TopologicalSorter({slug: set() for slug in by_slug})
+    seen: set[tuple[str, str]] = set()
+    predecessors: dict[str, str] = {}
+    for edge in edges:
+        pair = edge.predecessor, edge.successor
+        if pair in seen:
+            raise ValueError(f"duplicate classification succession relation: {pair}")
+        seen.add(pair)
+        for slug in pair:
+            if slug not in by_slug:
+                raise ValueError(f"unknown classification succession endpoint: {slug}")
+        graph.add(edge.successor, edge.predecessor)
+        if (
+            edge.effective_year is None
+            or edge.effective_year <= CLASSIFICATION_SUCCESSION_AS_OF_YEAR
+        ):
+            # The full graph retains every edge; the schema's single pointer is
+            # only its deterministic projection, not a second curation decision.
+            predecessors[edge.successor] = min(
+                predecessors.get(edge.successor, edge.predecessor), edge.predecessor
+            )
+    try:
+        graph.prepare()
+    except CycleError as exc:
+        raise ValueError("cyclic classification succession relation") from exc
+    ordered = []
+    while graph.is_active():
+        ready = sorted(graph.get_ready())
+        ordered.extend(by_slug[slug] for slug in ready)
+        graph.done(*ready)
+    return tuple(ordered), predecessors
 
 
 def _write_editions(
@@ -586,7 +608,9 @@ def _write_editions(
 
 
 def _write_classifications(
-    conn: sqlite3.Connection, classifications: tuple[ResolvedClassification, ...]
+    conn: sqlite3.Connection,
+    classifications: tuple[ResolvedClassification, ...],
+    predecessors: dict[str, str],
 ) -> None:
     for classification in classifications:
         classification_id = _classification_id(classification.slug)
@@ -604,8 +628,8 @@ def _write_classifications(
                 classification.valid_to,
                 classification.description,
                 classification.url,
-                _classification_id(classification.supersedes)
-                if classification.supersedes is not None
+                _classification_id(predecessors[classification.slug])
+                if classification.slug in predecessors
                 else None,
                 len(classification.codes),
                 len({code.code for code in classification.codes}),
@@ -679,19 +703,15 @@ def write_resolved_catalog(
     classifications = TypeAdapter(tuple[ResolvedClassification, ...]).validate_python(
         classifications, strict=True
     )
-    classifications = _validate_catalog_metadata(
+    _validate_catalog_metadata(
         variables, editions, classifications, registers, variants
     )
     classification_successions = TypeAdapter(
         tuple[ResolvedClassificationSuccession, ...]
     ).validate_python(classification_successions, strict=True)
-    succession_graph = TopologicalSorter()
-    for edge in classification_successions:
-        succession_graph.add(edge.successor, edge.predecessor)
-    try:
-        succession_graph.prepare()
-    except CycleError as exc:
-        raise ValueError("cyclic classification succession relation") from exc
+    classifications, classification_predecessors = _prepare_classification_succession(
+        classifications, classification_successions
+    )
     metadata_rows = prepare_resolved_metadata(
         ResolvedMetadata() if metadata is None else metadata,
         variables,
@@ -733,7 +753,7 @@ def write_resolved_catalog(
             conn.executescript(DDL)
             seed_providers(conn)
             value_set_ids = _write_value_sets(conn, variables, classifications)
-            _write_classifications(conn, classifications)
+            _write_classifications(conn, classifications, classification_predecessors)
             conn.executemany(
                 "INSERT INTO classification_replaced_by "
                 "(predecessor_slug, successor_slug, effective_year, note) VALUES (?, ?, ?, ?)",

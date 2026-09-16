@@ -163,7 +163,7 @@ def _source_bindings(
 
 def classification_content_sha256(classification: ResolvedClassification) -> str:
     """Pin semantic codebook content, independently of member order and succession."""
-    body = classification.model_dump(mode="json", exclude={"codes", "supersedes"})
+    body = classification.model_dump(mode="json", exclude={"codes"})
     body["codes"] = [
         code.model_dump(mode="json")
         for code in sorted(classification.codes, key=lambda c: (c.code, c.label))
