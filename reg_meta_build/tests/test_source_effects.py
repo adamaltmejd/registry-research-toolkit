@@ -171,6 +171,21 @@ def _addition(
     )
 
 
+def test_authored_coverage_does_not_require_a_fabricated_delivery_edition() -> None:
+    record = _record(column="VALUE")
+    addition = CuratedOccurrenceAddition.model_validate_json(
+        _addition(record).model_copy(update={"edition_key": None}).model_dump_json()
+    )
+    result = apply_occurrence_cases((record,), (_case(record, addition),))
+    assert result.diagnostics == ()
+    declared = next(
+        occurrence for occurrence in result.occurrences if occurrence.occurrence_key
+    )
+    assert declared.edition_key is None
+    assert declared.source_records == ()
+    assert declared.support_records == (record,)
+
+
 def test_checked_identity_partition_keeps_physical_evidence_and_rejects_new_peers() -> (
     None
 ):

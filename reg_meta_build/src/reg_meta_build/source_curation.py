@@ -420,6 +420,8 @@ class CuratedOccurrenceAddition(_CurationModel):
     Keys reference independently established native or curated identities. The
     caller must resolve these identities before materialization. Copied fields
     name the exact checked donor; all other supplied facts are authored claims.
+    An authored coverage declaration may have no delivery-edition identity; its
+    explicit period still applies without inventing an edition.
     """
 
     kind: Literal["addition"] = "addition"
@@ -427,7 +429,7 @@ class CuratedOccurrenceAddition(_CurationModel):
     provider: str = Field(min_length=1)
     variable_key: NativeKey
     variant_key: NativeKey
-    edition_key: NativeKey
+    edition_key: NativeKey | None = None
     population_key: NativeKey | None = None
     fields: SourceFields
     edition_scope: TemporalScope
@@ -438,8 +440,10 @@ class CuratedOccurrenceAddition(_CurationModel):
 
     @model_validator(mode="after")
     def _explicit_membership(self) -> Self:
-        if not self.variable_key or not self.variant_key or not self.edition_key:
-            raise ValueError("a declared occurrence needs explicit topology keys")
+        if not self.variable_key or not self.variant_key or self.edition_key == ():
+            raise ValueError(
+                "a declared occurrence needs explicit variable/variant keys and no empty edition key"
+            )
         if not self.evidence or len(set(self.evidence)) != len(self.evidence):
             raise ValueError("a declared occurrence needs unique checked evidence")
         if self.donor is not None and self.donor not in self.evidence:
