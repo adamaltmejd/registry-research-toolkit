@@ -369,7 +369,10 @@ def test_declared_pooled_edition_is_retained_without_inferred_annual_states() ->
 
 
 @pytest.mark.parametrize("versions", [None, ("2020",)])
-def test_column_declaration_preserves_only_supplied_flags_and_periods(versions) -> None:
+@pytest.mark.parametrize("classification", [None, "FIX"])
+def test_column_declaration_preserves_only_supplied_flags_and_periods(
+    versions, classification
+) -> None:
     record = _record(column="OTHER")
     original = source_occurrence(record)
     assert original.edition_key is not None
@@ -380,7 +383,7 @@ def test_column_declaration_preserves_only_supplied_flags_and_periods(versions) 
         name="Authored name",
         definition="Authored description",
         data_type=None,
-        classification=None,
+        classification=classification,
         is_identifier=False,
         is_sensitive=True,
         versions=versions,
@@ -425,6 +428,9 @@ def test_column_declaration_preserves_only_supplied_flags_and_periods(versions) 
     assert addition.fields.name == value_field("Authored name")
     assert addition.fields.description == value_field("Authored description")
     assert addition.fields.data_type is None
+    assert addition.fields.classification_declared == (
+        value_field(classification) if classification is not None else None
+    )
     assert addition.fields.identifier is None
     assert addition.fields.sensitivity == value_field(True)
     assert addition.source_records == () and addition.support_records == (record,)

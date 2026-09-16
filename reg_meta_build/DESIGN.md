@@ -601,6 +601,17 @@ that discrepancy. This replaces those legacy heuristics in the common path; it d
 change ordinary build-db until cutover. Original coding issues remain visible, and
 classification annotations cannot make an unsupported coding period complete.
 
+Authored classification references flow through the same binding composition from
+effective occurrences. An explicit reference dictionary maps literal source references
+to canonical identities; the common resolver performs no name, URL-fragment, or
+code-overlap matching. Declared open-ended source coverage stays open, independently of
+finite correction windows. Equal source/case declarations compose, and incompatible ones
+withhold the classification on their intersection. A checked occurrence-field correction
+can replace an original reference. Omitted optional classification metadata does not
+contradict a concrete declaration; explicitly withheld or unresolved positive references
+do. Errata column conversion preserves supplied classification references without
+copying canonical codes or widening delivery periods.
+
 The earlier finite-case inspector forms non-overlapping annual occurrences and
 explicitly withholds coding. The direct writer can materialize already-resolved code
 sets independently of physical type and length. It shares identical memberships across

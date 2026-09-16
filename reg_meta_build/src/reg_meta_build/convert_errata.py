@@ -315,7 +315,8 @@ def convert_column_entry(
     evidence. Retain one undated occurrence, not a claim for each existing edition.
     ``declared_flags`` names the keys actually present in the original TOML, since
     the legacy loader has already replaced omitted flags with false.
-    Classification and presentation declarations must be bound by the caller.
+    Classification references remain declarations for common binding; canonical
+    code memberships are never copied into these occurrences.
     """
     if not declared_flags <= {"is_identifier", "is_sensitive"}:
         raise ValueError("declared_flags must name original boolean declaration keys")
@@ -372,6 +373,9 @@ def convert_column_entry(
         name=value_field(normalize_text(entry.name)),
         description=value_field(normalize_text(entry.definition, multiline=True)),
         data_type=value_field(entry.data_type) if entry.data_type is not None else None,
+        classification_declared=value_field(entry.classification)
+        if entry.classification is not None
+        else None,
         identifier=value_field(entry.is_identifier)
         if "is_identifier" in declared_flags
         else None,
