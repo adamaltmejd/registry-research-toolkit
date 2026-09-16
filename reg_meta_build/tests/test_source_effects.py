@@ -242,6 +242,10 @@ def test_converted_column_all_versions_is_finite_and_does_not_borrow_metadata() 
     later = _record(column="UNRELATED", year="2021", cvid=21)
     result = apply_occurrence_cases((record, later), (converted.case,))
     assert result.diagnostics == ()
+    originals = tuple(item for item in result.occurrences if item.source_records)
+    assert tuple(item.source_records for item in originals) == ((record,), (later,))
+    assert tuple(item.fields for item in originals) == (record.fields, later.fields)
+    assert not any(item.corrections for item in originals)
     additions = tuple(item for item in result.occurrences if item.occurrence_key)
     assert len(additions) == 1
     addition = additions[0]

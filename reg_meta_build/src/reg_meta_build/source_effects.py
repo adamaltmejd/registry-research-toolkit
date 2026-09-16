@@ -165,9 +165,6 @@ def apply_occurrence_cases(
     evaluations = evaluate_cases(ordered, records)
     if isinstance(records, SourceEvidence):
         records = records.records
-    evidence: dict[SourceRecordRef, list[SourceRecord]] = defaultdict(list)
-    for record in records:
-        evidence[record_ref(record)].append(record)
     fields = defaultdict(list)
     periods = defaultdict(list)
     identities = defaultdict(list)
@@ -207,6 +204,27 @@ def apply_occurrence_cases(
                 variants[effect.ref].append((effect, correction))
             else:
                 additions[effect.occurrence_key].append((effect, correction))
+
+    # Added occurrences need checked support. Unchanged records already retain
+    # their evidence directly and need no second full-slice reference index.
+    support_refs = {
+        ref
+        for claims in additions.values()
+        for effect, _ in claims
+        for ref in effect.evidence
+    }
+    evidence: dict[SourceRecordRef, list[SourceRecord]] = defaultdict(list)
+    if support_refs:
+        for record in records:
+            if (ref := record_ref(record)) in support_refs:
+                evidence[ref].append(record)
+    changed_refs = (
+        fields.keys()
+        | periods.keys()
+        | identities.keys()
+        | variants.keys()
+        | support_uses.keys()
+    )
 
     conflicted: dict[str, set[int]] = defaultdict(set)
 
@@ -263,6 +281,9 @@ def apply_occurrence_cases(
     for record in records:
         ref = record_ref(record)
         occurrence = source_occurrence(record)
+        if ref not in changed_refs:
+            occurrences.append(occurrence)
+            continue
         values = {
             name: getattr(record.fields, name) for name in SourceFields.model_fields
         }
