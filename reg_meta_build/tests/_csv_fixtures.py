@@ -409,6 +409,49 @@ def replace_registerinformation_cell(row: str, name: str, value: str) -> str:
     return PIPE.join(cells)
 
 
+def scb_interpretation_rows() -> list[str]:
+    """Rows exercising the catalog/evidence Registerinformation boundary."""
+    pooled = _var_row(
+        colname=" Signal ",
+        cvid=9001,
+        var_id=1880,
+        varname=" Signal variable ",
+        year="2001",
+        versionname=" 2001-2003 ",
+        regver_id=204,
+        data_type=" numeric ",
+        data_length="0",
+        vardef=" Shared definition ",
+        vardesc=" Shared description ",
+        unit=" count ",
+        varopdef=" E22 ",
+        varsource=" Source system ",
+        population_name=" Population A ",
+        population_definition=" Population definition ",
+        population_date=" 2001-12-31 ",
+        register=(" LISA ", 34, 153),
+    )
+    pooled = replace_registerinformation_cell(
+        pooled, "Registervariantnamn", " Individer "
+    )
+    another_column = replace_registerinformation_cell(
+        pooled, "Kolumnnamn", " SignalAlt "
+    )
+    unparseable = _var_row(
+        colname="UnknownPeriod",
+        cvid=9002,
+        var_id=1881,
+        year="2002",
+        versionname=" okänd utgåva ",
+        regver_id=205,
+        data_type="char",
+        data_length=" 0 ",
+        population_comment='""',
+        register=(" LISA ", 34, 153),
+    )
+    return [pooled, pooled, another_column, unparseable]
+
+
 REGISTERINFORMATION_ROWS = [
     _ri_row(
         "TESTREG",

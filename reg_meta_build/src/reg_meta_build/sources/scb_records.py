@@ -9,7 +9,6 @@ from typing import TYPE_CHECKING, Literal
 from reg_meta.fqid import _YEAR
 
 from reg_meta_build.db import _open_scb_csv_prepared
-from reg_meta_build.input_snapshot import SnapshotError
 from reg_meta_build.source_records import (
     DeliveredCell,
     NativeCoordinates,
@@ -24,7 +23,11 @@ from reg_meta_build.source_records import (
     TemporalScope,
     value_field,
 )
-from reg_meta_build.sources.scb import register_edition_claims
+from reg_meta_build.sources.scb import (
+    _interpret_registerinformation_row,
+    _scb_native_id,
+    register_edition_claims,
+)
 
 if TYPE_CHECKING:
     from collections.abc import Iterator
@@ -34,10 +37,6 @@ if TYPE_CHECKING:
 LISA_REGISTER_ID = 34
 IssueKind = Literal["pooled_period", "unparseable_period"]
 _YEAR_TOKEN_RE = re.compile(rf"(?<!\d)({_YEAR})(?!\d)")
-
-
-class ScbRecordError(SnapshotError):
-    """A raw SCB row cannot be represented by the source-record contract."""
 
 
 @dataclass(frozen=True)
@@ -61,16 +60,6 @@ def _cell_field(cell: tuple[bool, str | None, str]) -> SourceField | None:
     if not interpreted.strip():
         return SourceField(status="unknown", raw_value=raw)
     return value_field(interpreted.strip(), raw=raw)
-
-
-def _native_int(value: str, field: str, row_number: int) -> int:
-    try:
-        return int(value)
-    except ValueError as exc:
-        raise ScbRecordError(
-            f"invalid SCB native id at Registerinformation.csv row {row_number}, "
-            f"field {field}: {value!r}"
-        ) from exc
 
 
 def _scopes(
@@ -106,11 +95,10 @@ def _scopes(
     )
 
 
-def _optional_text_field(raw: str) -> SourceField | None:
-    normalized = raw.strip()
-    if not normalized:
+def _optional_text_field(value: str, raw: str) -> SourceField | None:
+    if not value:
         return None
-    return value_field(normalized, raw=raw)
+    return value_field(value, raw=raw)
 
 
 def iter_scb_observations(
@@ -127,31 +115,31 @@ def iter_scb_observations(
     path = snapshot.root / "Registerinformation.csv"
     with _open_scb_csv_prepared(path, snapshot) as (header, rows):
         for row_number, cells in rows:
-            row_register_id = _native_int(
+            row_register_id = _scb_native_id(
                 cells["RegisterId"][2], "RegisterId", row_number
             )
             if register_id is not None and row_register_id != register_id:
                 continue
-            row = {name: cell[2] for name, cell in cells.items()}
-            register_variant_id = _native_int(row["RegVarID"], "RegVarID", row_number)
-            edition_id = _native_int(row["RegVerID"], "RegVerID", row_number)
-            variable_id = _native_int(row["VarId"], "VarId", row_number)
-            member_id = _native_int(row["CVID"], "CVID", row_number)
-            register_name = row["Registernamn"].strip()
-            variant_name = row["Registervariantnamn"].strip()
-            version_name = row["Registerversionnamn"].strip()
-            variable_name = row["Variabelnamn"].strip()
-            original_column = row["Kolumnnamn"]
-            column = original_column.strip()
+
+            def text(
+                field: str,
+                row_cells: dict[str, tuple[bool, str | None, str]] = cells,
+            ) -> str:
+                return row_cells[field][2]
+
+            interpreted = _interpret_registerinformation_row(
+                text, row_number, register_id=row_register_id
+            )
+            original_column = text("Kolumnnamn")
             edition_scope, reference_scope, issue_kind = _scopes(
-                row_register_id, version_name
+                interpreted.register_id, interpreted.edition_name
             )
             semantic_key = (
-                f"register:{row_register_id}",
-                f"variant:{register_variant_id}",
-                f"edition:{edition_id}",
-                f"variable:{variable_id}",
-                f"member:{member_id}",
+                f"register:{interpreted.register_id}",
+                f"variant:{interpreted.register_variant_id}",
+                f"edition:{interpreted.edition_id}",
+                f"variable:{interpreted.variable_id}",
+                f"member:{interpreted.member_id}",
             )
             record = SourceRecord.create(
                 revision=revision,
@@ -171,32 +159,32 @@ def iter_scb_observations(
                     provider="scb",
                     register=SourceCoordinate(
                         status="value",
-                        native_id=row_register_id,
-                        name=register_name or None,
+                        native_id=interpreted.register_id,
+                        name=interpreted.register_name or None,
                     ),
                     variant=SourceCoordinate(
                         status="value",
-                        native_id=register_variant_id,
-                        name=variant_name or None,
+                        native_id=interpreted.register_variant_id,
+                        name=interpreted.variant_name or None,
                     ),
                     population=(
                         SourceCoordinate(
-                            status="value", name=row["Populationnamn"].strip()
+                            status="value", name=interpreted.population_name
                         )
-                        if row["Populationnamn"].strip()
+                        if interpreted.population_name
                         else SourceCoordinate(status="unknown")
                     ),
                     member=SourceCoordinate(
                         status="value",
-                        native_id=member_id,
-                        name=variable_name or None,
+                        native_id=interpreted.member_id,
+                        name=interpreted.variable_name or None,
                     ),
                     native=NativeCoordinates(
-                        register_id=row_register_id,
-                        register_variant_id=register_variant_id,
-                        edition_id=edition_id,
-                        variable_id=variable_id,
-                        member_id=member_id,
+                        register_id=interpreted.register_id,
+                        register_variant_id=interpreted.register_variant_id,
+                        edition_id=interpreted.edition_id,
+                        variable_id=interpreted.variable_id,
+                        member_id=interpreted.member_id,
                     ),
                 ),
                 edition_scope=edition_scope,
@@ -204,39 +192,54 @@ def iter_scb_observations(
                 fields=SourceFields(
                     availability=value_field(True),
                     column_name=(
-                        value_field(column, raw=original_column)
-                        if column
+                        value_field(interpreted.column_name, raw=original_column)
+                        if interpreted.column_name
                         else SourceField(status="unknown", raw_value=original_column)
                     ),
-                    name=_optional_text_field(row["Variabelnamn"]),
-                    definition=_optional_text_field(row["Variabeldefinition"]),
-                    description=_optional_text_field(row["Variabelbeskrivning"]),
+                    name=_optional_text_field(
+                        interpreted.variable_name, text("Variabelnamn")
+                    ),
+                    definition=_optional_text_field(
+                        interpreted.variable_definition, text("Variabeldefinition")
+                    ),
+                    description=_optional_text_field(
+                        interpreted.variable_description, text("Variabelbeskrivning")
+                    ),
                     operational_definition=_optional_text_field(
-                        row["VariabelOperationell_definition"]
+                        interpreted.operational_definition,
+                        text("VariabelOperationell_definition"),
                     ),
                     data_type=_cell_field(cells["Datatyp"]),
                     data_length=_cell_field(cells["Datalängd"]),
                     source_attribution=_optional_text_field(
-                        row["VariabelRegister_Källa"]
+                        interpreted.source_attribution,
+                        text("VariabelRegister_Källa"),
                     ),
-                    measurement_unit=_optional_text_field(row["Mattenhet"]),
+                    measurement_unit=_optional_text_field(
+                        interpreted.measurement_unit, text("Mattenhet")
+                    ),
                     population_definition=_optional_text_field(
-                        row["Populationdefinition"]
+                        interpreted.population_definition,
+                        text("Populationdefinition"),
                     ),
-                    population_comment=_optional_text_field(row["Populationkommentar"]),
-                    population_date=_optional_text_field(row["Populationdatum"]),
+                    population_comment=_optional_text_field(
+                        interpreted.population_comment, text("Populationkommentar")
+                    ),
+                    population_date=_optional_text_field(
+                        interpreted.population_date, text("Populationdatum")
+                    ),
                 ),
-                original_period_text=row["Registerversionnamn"],
+                original_period_text=text("Registerversionnamn"),
                 context=(
-                    register_name,
-                    variant_name,
-                    version_name,
-                    row["Populationnamn"],
-                    row["Populationdefinition"],
-                    row["Populationkommentar"],
-                    row["Populationdatum"],
-                    row["Objekttypnamn"],
-                    row["Objekttypdefinition"],
+                    interpreted.register_name,
+                    interpreted.variant_name,
+                    interpreted.edition_name,
+                    text("Populationnamn"),
+                    text("Populationdefinition"),
+                    text("Populationkommentar"),
+                    text("Populationdatum"),
+                    text("Objekttypnamn"),
+                    text("Objekttypdefinition"),
                 ),
                 delivered_cells=tuple(
                     DeliveredCell(
@@ -267,6 +270,5 @@ __all__ = [
     "LISA_REGISTER_ID",
     "ScbInterpretationIssue",
     "ScbObservation",
-    "ScbRecordError",
     "iter_scb_observations",
 ]

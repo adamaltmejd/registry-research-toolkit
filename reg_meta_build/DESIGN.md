@@ -1214,6 +1214,10 @@ occurrences remain diagnostic witnesses. The report is diagnostic and
 source-target-only: it applies no curation, previews no complete catalog blast radius,
 and claims no catalog validation, acceptance, or publication.
 
+Catalog import and source evidence share one compact interpretation of each row's native
+coordinates and stripped named fields, then retain their separate catalog and
+lossless-evidence projections.
+
 One captured source proposal uses this same observation boundary:
 `curation/hamn_signal_unresolved_length.json` explicitly authors the ten HAMN Signal
 members for 2003--2012, their char/10 and char/11 alternatives, and independent source,

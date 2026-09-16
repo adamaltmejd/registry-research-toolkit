@@ -141,6 +141,81 @@ def _first_non_empty(current: str | None, candidate: str) -> str | None:
     return candidate or current
 
 
+@dataclass(frozen=True, slots=True)
+class _RegisterinformationRow:
+    """Compact interpretation shared by catalog import and source evidence."""
+
+    register_id: int
+    register_variant_id: int
+    edition_id: int
+    variable_id: int
+    member_id: int
+    register_name: str
+    variant_name: str
+    edition_name: str
+    variable_name: str
+    column_name: str
+    variable_definition: str
+    variable_description: str
+    operational_definition: str
+    source_attribution: str
+    measurement_unit: str
+    population_name: str
+    population_definition: str
+    population_comment: str
+    population_date: str
+
+
+def _scb_native_id(value: str, field: str, row_number: int) -> int:
+    try:
+        return int(value)
+    except ValueError as exc:
+        raise RegMetaError(
+            exit_code=EXIT_CONFIG,
+            code="scb_native_id_invalid",
+            error_class="configuration",
+            message=(
+                "Invalid SCB native ID in Registerinformation.csv "
+                f"at row {row_number}, field {field}: {value!r}."
+            ),
+            remediation="Re-export the file from mikrometadata.scb.se.",
+        ) from exc
+
+
+def _interpret_registerinformation_row(
+    text: Callable[[str], str],
+    row_number: int,
+    *,
+    register_id: int | None = None,
+) -> _RegisterinformationRow:
+    """Interpret the shared coordinates and stripped fields of one source row."""
+    return _RegisterinformationRow(
+        register_id=(
+            register_id
+            if register_id is not None
+            else _scb_native_id(text("RegisterId"), "RegisterId", row_number)
+        ),
+        register_variant_id=_scb_native_id(text("RegVarID"), "RegVarID", row_number),
+        edition_id=_scb_native_id(text("RegVerID"), "RegVerID", row_number),
+        variable_id=_scb_native_id(text("VarId"), "VarId", row_number),
+        member_id=_scb_native_id(text("CVID"), "CVID", row_number),
+        register_name=text("Registernamn").strip(),
+        variant_name=text("Registervariantnamn").strip(),
+        edition_name=text("Registerversionnamn").strip(),
+        variable_name=text("Variabelnamn").strip(),
+        column_name=text("Kolumnnamn").strip(),
+        variable_definition=text("Variabeldefinition").strip(),
+        variable_description=text("Variabelbeskrivning").strip(),
+        operational_definition=text("VariabelOperationell_definition").strip(),
+        source_attribution=text("VariabelRegister_Källa").strip(),
+        measurement_unit=text("Mattenhet").strip(),
+        population_name=text("Populationnamn").strip(),
+        population_definition=text("Populationdefinition").strip(),
+        population_comment=text("Populationkommentar").strip(),
+        population_date=text("Populationdatum").strip(),
+    )
+
+
 _OPAQUE_SOURCE_CODE_RE = re.compile(r"^[A-Za-z]\d+[A-Za-z0-9]*$")
 
 
@@ -295,11 +370,14 @@ def _import_registerinformation(
             if row_count % 500_000 == 0:
                 _progress(f"  ...{row_count:,} rows")
 
-            rid = int(row["RegisterId"])
-            rvid = int(row["RegVarID"])
-            rveid = int(row["RegVerID"])
-            vid = int(row["VarId"])
-            cvid = int(row["CVID"])
+            interpreted = _interpret_registerinformation_row(
+                row.__getitem__, row_number
+            )
+            rid = interpreted.register_id
+            rvid = interpreted.register_variant_id
+            rveid = interpreted.edition_id
+            vid = interpreted.variable_id
+            cvid = interpreted.member_id
 
             # SCB export hygiene (#366, follow-up to #364's Kolumnnamn): a
             # subset of the name fields carry stray surrounding whitespace
@@ -311,13 +389,13 @@ def _import_registerinformation(
             # sensitivity-flag (`v.name = us.variabelnamn`) / coalescer
             # (`vi.variabelnamn`) joins the moment one CSV is cleaned but not
             # the other. `_import_unika` trims its join sides identically.
-            registernamn = row["Registernamn"].strip()
-            registervariantnamn = row["Registervariantnamn"].strip()
-            variabelnamn = row["Variabelnamn"].strip()
-            variabeldefinition = row["Variabeldefinition"].strip()
-            variabelbeskrivning = row["Variabelbeskrivning"].strip()
-            variabelregister_kalla = row["VariabelRegister_Källa"].strip()
-            raw_operationell_definition = row["VariabelOperationell_definition"].strip()
+            registernamn = interpreted.register_name
+            registervariantnamn = interpreted.variant_name
+            variabelnamn = interpreted.variable_name
+            variabeldefinition = interpreted.variable_definition
+            variabelbeskrivning = interpreted.variable_description
+            variabelregister_kalla = interpreted.source_attribution
+            raw_operationell_definition = interpreted.operational_definition
             operationell_definition = _operational_definition_text(
                 raw_operationell_definition
             )
@@ -327,7 +405,7 @@ def _import_registerinformation(
             variable_source_register_text = _variable_source_register_text(
                 variabelregister_kalla
             )
-            mattenhet = row["Mattenhet"].strip()
+            mattenhet = interpreted.measurement_unit
 
             registers.setdefault(
                 rid,
@@ -363,7 +441,7 @@ def _import_registerinformation(
                 {
                     "regver_id": rveid,
                     "register_variant_id": rvid,
-                    "registerversionnamn": row["Registerversionnamn"].strip(),
+                    "registerversionnamn": interpreted.edition_name,
                     "registerversionbeskrivning": row[
                         "Registerversionbeskrivning"
                     ].strip(),
@@ -455,15 +533,15 @@ def _import_registerinformation(
             # cvids as alias-less (NULL state column), and no blank-Kolumnnamn
             # unika row carries sensitivity flags, so the
             # `_populate_sensitivity_flags` join loses nothing.
-            kolumnnamn = row["Kolumnnamn"].strip()
+            kolumnnamn = interpreted.column_name
             if kolumnnamn:
                 aliases.add((cvid, kolumnnamn))
             population = (
                 rveid,
-                row["Populationnamn"].strip(),
-                row["Populationdefinition"].strip(),
-                row["Populationkommentar"].strip(),
-                row["Populationdatum"].strip(),
+                interpreted.population_name,
+                interpreted.population_definition,
+                interpreted.population_comment,
+                interpreted.population_date,
             )
             if any(population[1:]):
                 populations.add(population)

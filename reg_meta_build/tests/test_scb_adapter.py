@@ -26,6 +26,8 @@ from _csv_fixtures import (
     _var_row,
     hydrate_scb_values,
     omit_scb_snapshot_file,
+    replace_registerinformation_cell,
+    scb_interpretation_rows,
     sparsify_scb_values,
     write_csv,
     write_input_bundle,
@@ -49,7 +51,7 @@ from reg_meta_build.cis2016_matrix import load_cis2014_matrix, load_cis2016_matr
 from reg_meta_build.db import DDL, build_db, seed_providers
 from reg_meta_build.dbdiff import TableIgnore, diff_db_content
 from reg_meta_build.id import _CANONICAL_SCB_BIT, is_canonical_scb
-from reg_meta_build.input_snapshot import ScbSnapshotReader
+from reg_meta_build.input_snapshot import ScbSnapshotReader, open_scb_snapshot
 from reg_meta_build.ir import (
     IRDeliveryProvenance,
     IRRegister,
@@ -59,12 +61,16 @@ from reg_meta_build.ir import (
     IRVariant,
     IRWarning,
 )
+from reg_meta_build.source_records import SourceRecord
 from reg_meta_build.sources import scb as scb_module
 from reg_meta_build.sources.scb import SCBAdapter
 from reg_meta_build.validate import validate_built_db
 from reg_schema.project_data import Binding, Source
 
-from reg_meta_build import input_snapshot as snapshot_module
+from reg_meta_build import (
+    input_snapshot as snapshot_module,
+    source_inspection as inspection_module,
+)
 from reg_meta_build.fqid_slugs import load_provider_toml
 
 if TYPE_CHECKING:
@@ -110,6 +116,133 @@ class TestAdapterConformance:
         # ty checks it, and this keeps the import live for that contract.
         _typed: IRAdapter = adapter
         assert _typed.provider == "scb"
+
+
+def test_registerinformation_import_matches_prepared_interpretation_without_inspection(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    scb_dir = write_scb_input(
+        tmp_path / "input", registerinformation_rows=scb_interpretation_rows()
+    )
+    snapshot = open_scb_snapshot(write_scb_snapshot(tmp_path / "accepted", scb_dir))
+
+    def inspection_only(*_args: object, **_kwargs: object) -> None:
+        raise AssertionError("ordinary import must not construct or serialize evidence")
+
+    monkeypatch.setattr(SourceRecord, "create", inspection_only)
+    monkeypatch.setattr(
+        inspection_module, "write_scb_observation_census", inspection_only
+    )
+
+    projections = []
+    for selected in (None, snapshot):
+        conn = sqlite3.connect(":memory:")
+        conn.executescript(DDL)
+        seed_providers(conn)
+        row_count, _unika_join, known_cvids = scb_module._import_registerinformation(
+            conn, scb_dir / "Registerinformation.csv", selected
+        )
+        projections.append(
+            {
+                "counts": (row_count, known_cvids),
+                "register": conn.execute(
+                    "SELECT register_id, name FROM register WHERE register_id = 34"
+                ).fetchone(),
+                "variant": conn.execute(
+                    "SELECT register_variant_id, name FROM register_variant "
+                    "WHERE register_variant_id = 153"
+                ).fetchone(),
+                "edition": conn.execute(
+                    "SELECT regver_id, registerversionnamn FROM register_version "
+                    "ORDER BY regver_id"
+                ).fetchall(),
+                "variable": conn.execute(
+                    "SELECT provider_key, name, definition, description, "
+                    "source_register_text, measurement_unit FROM variable "
+                    "ORDER BY provider_key"
+                ).fetchall(),
+                "instance": conn.execute(
+                    "SELECT cvid, register_id, register_variant_id, regver_id, var_id, "
+                    "variabelnamn, data_type, data_length, operational_definition, "
+                    "source_register_text FROM variable_instance ORDER BY cvid"
+                ).fetchall(),
+                "aliases": conn.execute(
+                    "SELECT cvid, delivery_column_name FROM variable_alias_build "
+                    "ORDER BY cvid, delivery_column_name"
+                ).fetchall(),
+                "population": conn.execute(
+                    "SELECT regver_id, name, definition, comment, date_range "
+                    "FROM population ORDER BY regver_id"
+                ).fetchall(),
+            }
+        )
+        conn.close()
+
+    assert projections[0] == projections[1]
+    projection = projections[0]
+    assert projection["counts"] == (4, {9001, 9002})
+    assert projection["register"] == (34, "LISA")
+    assert projection["variant"] == (153, "Individer")
+    assert projection["edition"] == [(204, "2001-2003"), (205, "okänd utgåva")]
+    assert projection["variable"][0] == (
+        "1880",
+        "Signal variable",
+        "Shared definition",
+        "Shared description",
+        "Source system",
+        "count",
+    )
+    assert projection["instance"][0] == (
+        9001,
+        34,
+        153,
+        204,
+        1880,
+        "Signal variable",
+        " numeric ",
+        "0",
+        "",
+        "Source system / E22",
+    )
+    assert projection["aliases"][:2] == [(9001, "Signal"), (9001, "SignalAlt")]
+    assert projection["population"][0] == (
+        204,
+        "Population A",
+        "Population definition",
+        "",
+        "2001-12-31",
+    )
+
+
+@pytest.mark.parametrize("prepared", (False, True))
+@pytest.mark.parametrize(
+    "field", ("RegisterId", "RegVarID", "RegVerID", "VarId", "CVID")
+)
+def test_registerinformation_invalid_native_id_names_field_and_row(
+    tmp_path: Path, field: str, prepared: bool
+) -> None:
+    row = replace_registerinformation_cell(
+        scb_interpretation_rows()[0], field, "not-an-id"
+    )
+    scb_dir = write_scb_input(tmp_path / "input", registerinformation_rows=[row])
+    snapshot = (
+        open_scb_snapshot(write_scb_snapshot(tmp_path / "accepted", scb_dir))
+        if prepared
+        else None
+    )
+    conn = sqlite3.connect(":memory:")
+    conn.executescript(DDL)
+    seed_providers(conn)
+
+    with pytest.raises(RegMetaError) as error:
+        scb_module._import_registerinformation(
+            conn, scb_dir / "Registerinformation.csv", snapshot
+        )
+
+    conn.close()
+    assert error.value.code == "scb_native_id_invalid"
+    assert error.value.exit_code == EXIT_CONFIG
+    assert f"row 2, field {field}: 'not-an-id'" in error.value.message
 
 
 # ── 1b. SCB build-scratch performance contracts ────────────────────────────

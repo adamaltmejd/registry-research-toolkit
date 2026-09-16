@@ -16,6 +16,7 @@ from _csv_fixtures import (
     _var_row,
     hamn_signal_rows,
     replace_registerinformation_cell,
+    scb_interpretation_rows,
     sparsify_scb_values,
     write_input_bundle,
     write_scb_input,
@@ -624,6 +625,38 @@ def test_raw_scb_reader_preserves_native_instances_fields_and_period_limits(
         ("pooled_period", pooled.record_id),
         ("unparseable_period", unknown.record_id),
     ]
+
+
+def test_selected_scb_observation_invalid_native_id_names_field_and_row(
+    tmp_path: Path,
+) -> None:
+    row = replace_registerinformation_cell(
+        scb_interpretation_rows()[0], "VarId", "broken"
+    )
+    scb_dir = write_scb_input(tmp_path / "source", registerinformation_rows=[row])
+    snapshot = open_scb_snapshot(write_scb_snapshot(tmp_path / "accepted", scb_dir))
+    item = next(
+        item
+        for item in snapshot.manifest.files
+        if item.name == "Registerinformation.csv"
+    )
+    assert item.raw_size is not None and item.raw_sha256 is not None
+    revision = SourceRevision.create(
+        dataset="scb-registerinformation",
+        publisher="SCB",
+        purpose="invalid native ID fixture",
+        upstream_revision=snapshot.manifest.edition,
+        artifact_path="Registerinformation.csv",
+        artifact_size=item.raw_size,
+        artifact_sha256=item.raw_sha256,
+    )
+
+    with pytest.raises(RegMetaError) as error:
+        tuple(iter_scb_observations(snapshot, revision, register_id=34))
+
+    assert error.value.code == "scb_native_id_invalid"
+    assert error.value.exit_code == EXIT_CONFIG
+    assert "row 2, field VarId: 'broken'" in error.value.message
 
 
 @pytest.mark.parametrize(

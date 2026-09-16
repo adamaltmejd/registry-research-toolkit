@@ -18,6 +18,7 @@ from _csv_fixtures import (
     omit_scb_snapshot_file,
     repin_input_bundle,
     repin_scb_snapshot,
+    scb_interpretation_rows,
     scb_values_role,
     sparsify_scb_values,
     write_input_bundle,
@@ -329,6 +330,33 @@ def test_selected_snapshot_stream_preserves_lossless_cells_before_scb_decoding(
     assert prepared[1][1]["Värdebenämning"] == (True, "", "")
     assert prepared[2][1]["Värdebenämning"] == (True, "NULL", "NULL")
     assert prepared[3][1]["Värdebenämning"] == (True, "\x8f", "Å")
+
+
+def test_registerinformation_raw_and_prepared_readers_share_text_but_not_presence(
+    tmp_path: Path,
+) -> None:
+    scb_dir = write_scb_input(
+        tmp_path / "source", registerinformation_rows=scb_interpretation_rows()
+    )
+    reader = open_scb_snapshot(write_scb_snapshot(tmp_path / "accepted", scb_dir))
+
+    with _open_scb_csv(scb_dir / "Registerinformation.csv") as (_header, rows):
+        raw_rows = [row for _row_number, row in rows]
+    with _open_scb_csv(tmp_path / "unused" / "Registerinformation.csv", reader) as (
+        _header,
+        rows,
+    ):
+        snapshot_rows = [row for _row_number, row in rows]
+    with _open_scb_csv_prepared(
+        tmp_path / "unused" / "Registerinformation.csv", reader
+    ) as (_header, rows):
+        prepared_rows = [row for _row_number, row in rows]
+
+    assert snapshot_rows == raw_rows
+    assert prepared_rows[0]["Populationkommentar"] == (False, None, "")
+    assert prepared_rows[3]["Populationkommentar"] == (True, "", "")
+    assert prepared_rows[0]["Datatyp"] == (True, " numeric ", " numeric ")
+    assert prepared_rows[0]["Datalängd"] == (True, "0", "0")
 
 
 def test_selected_snapshot_requires_exact_commit_manifest_and_clean_checkout(

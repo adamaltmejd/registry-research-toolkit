@@ -7,6 +7,7 @@ from typing import TYPE_CHECKING
 from _csv_fixtures import (
     HAMN_SIGNAL_TARGETS,
     hamn_signal_rows,
+    scb_interpretation_rows,
     write_scb_input,
     write_scb_snapshot,
 )
@@ -177,6 +178,100 @@ def test_delivered_cells_distinguish_missing_from_supplied_empty() -> None:
         "interpreted_value": "",
     }
     assert empty.model_dump(mode="json", exclude_none=True)["raw_value"] == ""
+
+
+def test_scb_observations_share_coordinates_and_stripped_fields_without_losing_cells(
+    tmp_path: Path,
+) -> None:
+    source = write_scb_input(
+        tmp_path / "source", registerinformation_rows=scb_interpretation_rows()
+    )
+    selection = write_scb_snapshot(tmp_path / "accepted", source)
+    snapshot = open_scb_snapshot(selection)
+    item = next(
+        item
+        for item in snapshot.manifest.files
+        if item.name == "Registerinformation.csv"
+    )
+    assert item.raw_size is not None and item.raw_sha256 is not None
+    revision = SourceRevision.create(
+        dataset="scb-registerinformation",
+        publisher="SCB",
+        purpose="shared interpretation fixture",
+        upstream_revision=snapshot.manifest.edition,
+        artifact_path="Registerinformation.csv",
+        artifact_size=item.raw_size,
+        artifact_sha256=item.raw_sha256,
+    )
+
+    observations = tuple(iter_scb_observations(snapshot, revision, register_id=34))
+
+    assert len(observations) == 4
+    first, duplicate, another_column, unparseable = observations
+    assert first.record.subject.native == NativeCoordinates(
+        register_id=34,
+        register_variant_id=153,
+        edition_id=204,
+        variable_id=1880,
+        member_id=9001,
+    )
+    assert first.record.subject.register_name.name == "LISA"
+    assert first.record.subject.variant.name == "Individer"
+    assert first.record.subject.population.name == "Population A"
+    assert first.record.subject.member.name == "Signal variable"
+    assert first.record.original_period_text == " 2001-2003 "
+    assert first.record.fields.name == value_field(
+        "Signal variable", raw=" Signal variable "
+    )
+    assert first.record.fields.definition == value_field(
+        "Shared definition", raw=" Shared definition "
+    )
+    assert first.record.fields.description == value_field(
+        "Shared description", raw=" Shared description "
+    )
+    assert first.record.fields.operational_definition == value_field("E22", raw=" E22 ")
+    assert first.record.fields.source_attribution == value_field(
+        "Source system", raw=" Source system "
+    )
+    assert first.record.fields.measurement_unit == value_field("count", raw=" count ")
+    assert first.record.fields.data_type == value_field("numeric", raw=" numeric ")
+    assert first.record.fields.data_length == value_field("0", raw="0")
+    assert first.record.edition_scope.kind == "pooled"
+    assert first.issue is not None and first.issue.kind == "pooled_period"
+
+    first_comment = next(
+        cell
+        for cell in first.record.delivered_cells
+        if cell.name == "Populationkommentar"
+    )
+    supplied_empty = next(
+        cell
+        for cell in unparseable.record.delivered_cells
+        if cell.name == "Populationkommentar"
+    )
+    assert (
+        first_comment.present,
+        first_comment.raw_value,
+        first_comment.interpreted_value,
+    ) == (
+        False,
+        None,
+        "",
+    )
+    assert (
+        supplied_empty.present,
+        supplied_empty.raw_value,
+        supplied_empty.interpreted_value,
+    ) == (True, "", "")
+    assert duplicate.record.record_id == first.record.record_id
+    assert another_column.record.record_id != first.record.record_id
+    assert [
+        observation.record.locators[0].physical_record
+        for observation in observations[:3]
+    ] == ["row:2", "row:3", "row:4"]
+    assert unparseable.record.edition_scope.kind == "unknown"
+    assert unparseable.issue is not None
+    assert unparseable.issue.kind == "unparseable_period"
 
 
 def test_hamn_fixture_yields_twenty_lossless_observations_for_ten_exact_members(
