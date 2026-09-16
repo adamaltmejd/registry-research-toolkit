@@ -1203,6 +1203,35 @@ occurrences remain diagnostic witnesses. The report is diagnostic and
 source-target-only: it applies no curation, previews no complete catalog blast radius,
 and claims no catalog validation, acceptance, or publication.
 
+The same command can select the complete SCB observation census without selecting the
+LISA workbook:
+
+```console
+reg-meta-build --output /tmp/scb-census-summary.json inspect-source-records \
+  --input-bundle .local/catalog-inputs/bundles/candidate \
+  --input-commit <accepted-full-commit> \
+  --input-manifest-sha256 <catalog-bundle-json-sha256> \
+  --all-scb --evidence /tmp/scb-census.jsonl.gz
+```
+
+That selection traverses prepared `Registerinformation.csv` once through the shared SCB
+header/layout and decoding boundary. Each normalized observation retains all 36
+delivered cells with raw missing-versus-present state, interpreted text, native
+coordinates, exact column and population/object context, original edition token, and its
+physical locator. Observation identity includes those supplied facts but excludes row
+position, so exact duplicates keep one semantic identity while every occurrence remains
+in the evidence. The final completion record proves the accepted logical-stream hashes
+and pins the code, bundle, snapshot, and source revision; an interrupted gzip has no
+completion record.
+
+Alternative groups compare `Datatyp`/`Datalängd` independently of observation identity.
+They distinguish identical-other-34-field alternatives, alternatives separated by other
+delivered context, unproved cross-edition alternatives, and shapes that differ only
+across distinct supplied columns. Pooled periods remain pooled, and cross-edition
+overlap is not treated as competing annual delivery. The deterministic gzip JSONL is
+diagnostic evidence: it chooses no winner or unknown, reads no values/cache, and changes
+no catalog formation.
+
 After acceptance, the normal builder selects exactly that bundle:
 
 ```console

@@ -1673,7 +1673,7 @@ def _file_sha256(path: Path) -> str:
 @contextmanager
 def _open_scb_source_raw(
     path: Path, snapshot: ScbSnapshotReader | None
-) -> Iterator[tuple[list[str], Iterator[list[str]]]]:
+) -> Iterator[tuple[list[str], Iterator[list[str | None]]]]:
     if snapshot is None:
         with path.open("rb") as raw_handle:
             text_handle = io.TextIOWrapper(raw_handle, encoding="latin-1", newline="")
@@ -1688,7 +1688,12 @@ def _open_scb_source_raw(
                     message=f"CSV file is empty: {path.name}",
                     remediation="Re-export the file from mikrometadata.scb.se.",
                 ) from exc
-            yield header, reader
+
+            def rows() -> Iterator[list[str | None]]:
+                for row in reader:
+                    yield cast("list[str | None]", row)
+
+            yield header, rows()
         return
 
     from .input_snapshot import SnapshotError
@@ -1697,16 +1702,20 @@ def _open_scb_source_raw(
         with snapshot.open_csv(path.name) as (raw_header, raw_rows):
             header = ["" if value is None else value for value in raw_header]
 
-            def rows() -> Iterator[list[str]]:
-                for row in raw_rows:
-                    for index, value in enumerate(row):
-                        if value is None:
-                            row[index] = ""
-                    yield cast("list[str]", row)
+            def rows() -> Iterator[list[str | None]]:
+                yield from raw_rows
 
             yield header, rows()
     except SnapshotError as exc:
         raise _scb_snapshot_error(exc) from exc
+
+
+class _ScbRawFields(list[str]):
+    """Legacy-compatible interpreted-input cells plus prepared presence state."""
+
+    def __init__(self, values: list[str | None]) -> None:
+        self.present = tuple(value is not None for value in values)
+        super().__init__("" if value is None else value for value in values)
 
 
 @contextmanager
@@ -1737,7 +1746,7 @@ def _open_scb_csv_raw(
                         message=f"Row {row_number} in {path.name} has {len(fields)} fields, expected {ncols}.",
                         remediation="Re-export the file from mikrometadata.scb.se.",
                     )
-                yield row_number, fields
+                yield row_number, _ScbRawFields(fields)
 
         yield header, raw_iter()
 
@@ -1779,6 +1788,44 @@ def _open_scb_csv(
                 )
 
         yield header, row_iter()
+
+
+@contextmanager
+def _open_scb_csv_prepared(
+    path: Path,
+    snapshot: ScbSnapshotReader,
+) -> Iterator[
+    tuple[list[str], Iterator[tuple[int, dict[str, tuple[bool, str | None, str]]]]]
+]:
+    """Yield lossless prepared cells through the normal SCB validation traversal.
+
+    Each cell is ``(present, raw, interpreted)``.  ``present`` distinguishes a
+    prepared NULL from a supplied empty scalar; interpreted values use the same
+    cp1252 repair as :func:`_open_scb_csv`.
+    """
+    with _open_scb_csv_raw(path, snapshot) as (header, raw_rows):
+
+        def rows() -> Iterator[tuple[int, dict[str, tuple[bool, str | None, str]]]]:
+            for row_number, fields in raw_rows:
+                if not isinstance(fields, _ScbRawFields):
+                    raise TypeError(
+                        "SCB raw traversal lost prepared presence state"
+                    )
+                yield (
+                    row_number,
+                    {
+                        name: (
+                            present,
+                            value if present else None,
+                            _decode_cp1252(value),
+                        )
+                        for name, value, present in zip(
+                            header, fields, fields.present, strict=True
+                        )
+                    },
+                )
+
+        yield header, rows()
 
 
 def _decode_cp1252(raw: str) -> str:

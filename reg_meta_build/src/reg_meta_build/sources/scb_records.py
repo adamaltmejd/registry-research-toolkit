@@ -8,9 +8,10 @@ from typing import TYPE_CHECKING, Literal
 
 from reg_meta.fqid import _YEAR
 
-from reg_meta_build.db import _open_scb_csv
+from reg_meta_build.db import _open_scb_csv_prepared
 from reg_meta_build.input_snapshot import SnapshotError
 from reg_meta_build.source_records import (
+    DeliveredCell,
     NativeCoordinates,
     RecordLocator,
     ScopeInterval,
@@ -26,6 +27,8 @@ from reg_meta_build.source_records import (
 from reg_meta_build.sources.scb import register_edition_claims
 
 if TYPE_CHECKING:
+    from collections.abc import Iterator
+
     from reg_meta_build.input_snapshot import ScbSnapshotReader
 
 LISA_REGISTER_ID = 34
@@ -43,6 +46,21 @@ class ScbInterpretationIssue:
     physical_record: str
     detail: str
     record_id: str
+
+
+@dataclass(frozen=True)
+class ScbObservation:
+    record: SourceRecord
+    issue: ScbInterpretationIssue | None
+
+
+def _cell_field(cell: tuple[bool, str | None, str]) -> SourceField | None:
+    present, raw, interpreted = cell
+    if not present:
+        return SourceField(status="unknown", raw_value=None)
+    if not interpreted.strip():
+        return SourceField(status="unknown", raw_value=raw)
+    return value_field(interpreted.strip(), raw=raw)
 
 
 def _native_int(row: dict[str, str], field: str, row_number: int) -> int:
@@ -95,19 +113,15 @@ def _optional_text_field(raw: str) -> SourceField | None:
     return value_field(normalized, raw=raw)
 
 
-def read_scb_lisa_records(
+def iter_scb_observations(
     snapshot: ScbSnapshotReader, revision: SourceRevision
-) -> tuple[tuple[SourceRecord, ...], tuple[ScbInterpretationIssue, ...]]:
-    """Read only prepared Registerinformation and retain raw LISA occurrences."""
-    records: list[SourceRecord] = []
-    issues: list[ScbInterpretationIssue] = []
-    record_ids: set[str] = set()
+) -> Iterator[ScbObservation]:
+    """Stream lossless normalized Registerinformation observations once."""
     path = snapshot.root / "Registerinformation.csv"
-    with _open_scb_csv(path, snapshot) as (_, rows):
-        for row_number, row in rows:
+    with _open_scb_csv_prepared(path, snapshot) as (header, rows):
+        for row_number, cells in rows:
+            row = {name: cell[2] for name, cell in cells.items()}
             register_id = _native_int(row, "RegisterId", row_number)
-            if register_id != LISA_REGISTER_ID:
-                continue
             register_variant_id = _native_int(row, "RegVarID", row_number)
             edition_id = _native_int(row, "RegVerID", row_number)
             variable_id = _native_int(row, "VarId", row_number)
@@ -130,28 +144,16 @@ def read_scb_lisa_records(
             )
             record = SourceRecord.create(
                 revision=revision,
-                locator=RecordLocator(
-                    semantic_record_key=semantic_key,
-                    physical_file="Registerinformation.csv",
-                    physical_table="Registerinformation.csv",
-                    physical_record=f"row:{row_number}",
-                    physical_cells=tuple(
-                        f"Registerinformation.csv:row:{row_number}:{field}"
-                        for field in (
-                            "RegisterId",
-                            "RegVarID",
-                            "RegVerID",
-                            "VarId",
-                            "CVID",
-                            "Registerversionnamn",
-                            "Kolumnnamn",
-                            "Variabelnamn",
-                            "Variabeldefinition",
-                            "Variabelbeskrivning",
-                            "VariabelOperationell_definition",
-                            "Datatyp",
-                            "Datalängd",
-                        )
+                locators=(
+                    RecordLocator(
+                        semantic_record_key=semantic_key,
+                        physical_file="Registerinformation.csv",
+                        physical_table="Registerinformation.csv",
+                        physical_record=f"row:{row_number}",
+                        physical_cells=tuple(
+                            f"Registerinformation.csv:row:{row_number}:{field}"
+                            for field in header
+                        ),
                     ),
                 ),
                 subject=SourceSubject(
@@ -201,8 +203,8 @@ def read_scb_lisa_records(
                     operational_definition=_optional_text_field(
                         row["VariabelOperationell_definition"]
                     ),
-                    data_type=_optional_text_field(row["Datatyp"]),
-                    data_length=_optional_text_field(row["Datalängd"]),
+                    data_type=_cell_field(cells["Datatyp"]),
+                    data_length=_cell_field(cells["Datalängd"]),
                     source_attribution=_optional_text_field(
                         row["VariabelRegister_Källa"]
                     ),
@@ -214,34 +216,46 @@ def read_scb_lisa_records(
                     population_date=_optional_text_field(row["Populationdatum"]),
                 ),
                 original_period_text=row["Registerversionnamn"],
-                context=(register_name, variant_name, version_name),
-            )
-            if record.record_id in record_ids:
-                raise ScbRecordError(
-                    "duplicate SCB source coordinates at "
-                    f"Registerinformation.csv row {row_number}: {semantic_key!r}"
-                )
-            record_ids.add(record.record_id)
-            records.append(record)
-            if issue_kind is not None:
-                issues.append(
-                    ScbInterpretationIssue(
-                        kind=issue_kind,
-                        physical_record=f"Registerinformation.csv:row:{row_number}",
-                        detail=(
-                            "SCB period is pooled and was not expanded into annual claims"
-                            if issue_kind == "pooled_period"
-                            else "SCB edition has no parseable period"
-                        ),
-                        record_id=record.record_id,
+                context=(
+                    register_name,
+                    variant_name,
+                    version_name,
+                    row["Populationnamn"],
+                    row["Populationdefinition"],
+                    row["Populationkommentar"],
+                    row["Populationdatum"],
+                    row["Objekttypnamn"],
+                    row["Objekttypdefinition"],
+                ),
+                delivered_cells=tuple(
+                    DeliveredCell(
+                        name=name,
+                        present=cell[0],
+                        raw_value=cell[1],
+                        interpreted_value=cell[2],
                     )
+                    for name, cell in cells.items()
+                ),
+            )
+            issue = None
+            if issue_kind is not None:
+                issue = ScbInterpretationIssue(
+                    kind=issue_kind,
+                    physical_record=f"Registerinformation.csv:row:{row_number}",
+                    detail=(
+                        "SCB period is pooled and was not expanded into annual claims"
+                        if issue_kind == "pooled_period"
+                        else "SCB edition has no parseable period"
+                    ),
+                    record_id=record.record_id,
                 )
-    return tuple(records), tuple(issues)
+            yield ScbObservation(record=record, issue=issue)
 
 
 __all__ = [
     "LISA_REGISTER_ID",
     "ScbInterpretationIssue",
+    "ScbObservation",
     "ScbRecordError",
-    "read_scb_lisa_records",
+    "iter_scb_observations",
 ]

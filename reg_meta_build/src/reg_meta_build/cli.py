@@ -97,6 +97,7 @@ from .source_inspection import (
     inspect_bundle_source_records,
     report_semantic_sha256,
     source_interpreter_commit,
+    write_scb_observation_census,
 )
 from .sources.sos import SosParseError, parse_directory, parse_register_file
 from .split_sibling_suspects import (
@@ -346,6 +347,16 @@ def _build_parser() -> argparse.ArgumentParser:
         "--column",
         default=None,
         help="Inspect one exact workbook column spelling (for example AmPolTyp).",
+    )
+    inspect_records_p.add_argument(
+        "--all-scb",
+        action="store_true",
+        help="Census every prepared SCB Registerinformation observation.",
+    )
+    inspect_records_p.add_argument(
+        "--evidence",
+        default=None,
+        help="Guarded .jsonl.gz destination required by --all-scb.",
     )
 
     extend_db_p = sub.add_parser(
@@ -1229,6 +1240,63 @@ def _cmd_inspect_source_records(
             message=str(exc),
             remediation="Select an accepted catalog input bundle with exact pins.",
         ) from exc
+    if args.all_scb:
+        if args.column is not None or args.evidence is None:
+            raise RegMetaError(
+                exit_code=EXIT_USAGE,
+                code="source_record_inspection_selection_invalid",
+                error_class="usage",
+                message="--all-scb requires --evidence and cannot be combined with --column.",
+                remediation="Choose focused LISA inspection or an all-SCB evidence census.",
+            )
+        destination = Path(args.evidence).expanduser().resolve()
+        if destination.suffixes[-2:] != [".jsonl", ".gz"]:
+            raise RegMetaError(
+                exit_code=EXIT_USAGE,
+                code="source_record_evidence_suffix_invalid",
+                error_class="usage",
+                message="--evidence must end in .jsonl.gz.",
+                remediation="Choose a dedicated deterministic gzip JSONL destination.",
+            )
+        _reject_input_repository_destination(
+            destination,
+            input_bundle_repository(bundle.root),
+            label="SCB census evidence",
+        )
+        try:
+            data = write_scb_observation_census(
+                bundle, destination, code_commit=source_interpreter_commit()
+            )
+        except SnapshotError as exc:
+            raise RegMetaError(
+                exit_code=EXIT_CONFIG,
+                code="source_record_inspection_invalid",
+                error_class="configuration",
+                message=str(exc),
+                remediation="Select exact accepted inputs and a new guarded destination.",
+            ) from exc
+        data["evidence"] = str(destination)
+        return success_envelope(
+            command="inspect-source-records",
+            args_payload={
+                "input_bundle": args.input_bundle,
+                "input_commit": args.input_commit,
+                "input_manifest_sha256": args.input_manifest_sha256,
+                "all_scb": True,
+                "evidence": args.evidence,
+            },
+            db_info=None,
+            data=data,
+            duration_ms=int((time.perf_counter() - start) * 1000),
+        ), 0
+    if args.evidence is not None:
+        raise RegMetaError(
+            exit_code=EXIT_USAGE,
+            code="source_record_inspection_selection_invalid",
+            error_class="usage",
+            message="--evidence is only valid with --all-scb.",
+            remediation="Add --all-scb or omit --evidence.",
+        )
     try:
         report = inspect_bundle_source_records(
             bundle,
@@ -2224,7 +2292,7 @@ _COMMAND_OVERVIEW: list[tuple[str, str]] = [
         "Exhaustively verify an accepted catalog-input bundle.",
     ),
     (
-        "inspect-source-records --input-bundle DIR ... [--column NAME]",
+        "inspect-source-records --input-bundle DIR ... [--column NAME | --all-scb --evidence FILE.jsonl.gz]",
         "Inspect captured LISA and raw SCB source records.",
     ),
     (
@@ -2318,6 +2386,18 @@ def _confined_bundle_output_path(
     if output_path is None:
         return None
     resolved_output = Path(output_path).expanduser().resolve()
+    if (
+        args.command == "inspect-source-records"
+        and (evidence := getattr(args, "evidence", None)) is not None
+        and resolved_output == Path(evidence).expanduser().resolve()
+    ):
+        raise RegMetaError(
+            exit_code=EXIT_USAGE,
+            code="source_record_evidence_output_conflict",
+            error_class="usage",
+            message="--evidence must be distinct from the CLI JSON --output path.",
+            remediation="Choose separate paths for the census and its compact summary.",
+        )
     if (
         args.command == "prepare-input-bundle"
         and (lisa_workbook := getattr(args, "lisa_workbook", None))

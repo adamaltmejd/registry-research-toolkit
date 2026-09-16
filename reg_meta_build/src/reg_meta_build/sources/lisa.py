@@ -431,11 +431,30 @@ def _attach_context(
         coordinate = f"{sheet_name}!{get_column_letter(column)}{row_number}"
         cells.append(coordinate)
         context.append(f"{context_row.kind} {coordinate}: {value}")
-    locator = record.locator.model_copy(
-        update={"physical_cells": (*record.locator.physical_cells, *cells)}
+    primary_locator = record.locators[0]
+    locator = primary_locator.model_copy(
+        update={"physical_cells": (*primary_locator.physical_cells, *cells)}
+    )
+    updated_context = (*record.context, *context)
+    record_id = SourceRecord._record_id(
+        source=record.source,
+        source_revision_id=record.source_revision_id,
+        semantic_record_key=locator.semantic_record_key,
+        subject=record.subject,
+        edition_scope=record.edition_scope,
+        reference_period_scope=record.reference_period_scope,
+        fields=record.fields,
+        code_set_references=record.code_set_references,
+        original_period_text=record.original_period_text,
+        context=updated_context,
+        delivered_cells=record.delivered_cells,
     )
     records[record_index] = record.model_copy(
-        update={"locator": locator, "context": (*record.context, *context)}
+        update={
+            "record_id": record_id,
+            "locators": (locator, *record.locators[1:]),
+            "context": updated_context,
+        }
     )
 
 
@@ -563,8 +582,8 @@ def read_lisa_source(path: Path, revision: SourceRevision) -> _LisaSourceRead:
                             else None
                         )
                         if (
-                            preceding.locator.physical_table != sheet_name
-                            or preceding.locator.physical_record
+                            preceding.locators[0].physical_table != sheet_name
+                            or preceding.locators[0].physical_record
                             != f"row:{expected_preceding[0]}"
                             or preceding_column != expected_preceding[1]
                         ):
@@ -657,7 +676,7 @@ def read_lisa_source(path: Path, revision: SourceRevision) -> _LisaSourceRead:
                 records.append(
                     SourceRecord.create(
                         revision=revision,
-                        locator=locator,
+                        locators=(locator,),
                         subject=SourceSubject(
                             provider="scb",
                             register=SourceCoordinate(

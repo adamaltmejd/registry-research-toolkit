@@ -27,7 +27,7 @@ from _csv_fixtures import (
 )
 from _lisa_fixtures import write_lisa_workbook
 from reg_meta.errors import RegMetaError
-from reg_meta_build.db import _open_scb_csv, _open_scb_csv_raw
+from reg_meta_build.db import _open_scb_csv, _open_scb_csv_prepared, _open_scb_csv_raw
 from reg_meta_build.input_snapshot import (
     LISA_BUNDLE_PATH,
     LISA_DATASET_ID,
@@ -318,6 +318,12 @@ def test_selected_snapshot_stream_preserves_lossless_cells_before_scb_decoding(
         assert list(rows)[-1][1] == ["X", "X", "007", "\x8f", "999999", ""]
     with _open_scb_csv(synthetic_path, reader) as (_header, rows):
         assert list(rows)[-1][1]["Värdebenämning"] == "Å"
+    with _open_scb_csv_prepared(synthetic_path, reader) as (_header, rows):
+        prepared = list(rows)[-4:]
+    assert prepared[0][1]["ItemId"] == (False, None, "")
+    assert prepared[1][1]["Värdebenämning"] == (True, "", "")
+    assert prepared[2][1]["Värdebenämning"] == (True, "NULL", "NULL")
+    assert prepared[3][1]["Värdebenämning"] == (True, "\x8f", "Å")
 
 
 def test_selected_snapshot_requires_exact_commit_manifest_and_clean_checkout(

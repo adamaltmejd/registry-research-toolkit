@@ -289,11 +289,28 @@ class RecordLocator(_SourceModel):
         return self
 
 
+class DeliveredCell(_SourceModel):
+    name: str
+    present: bool
+    raw_value: str | None = None
+    interpreted_value: str
+
+    @model_validator(mode="after")
+    def _coherent(self) -> Self:
+        if (
+            not self.name
+            or (self.present and self.raw_value is None)
+            or (not self.present and self.raw_value is not None)
+        ):
+            raise ValueError("delivered cell presence and raw value disagree")
+        return self
+
+
 class SourceRecord(_SourceModel):
     record_id: str
     source: str
     source_revision_id: str
-    locator: RecordLocator
+    locators: tuple[RecordLocator, ...]
     subject: SourceSubject
     edition_scope: TemporalScope
     reference_period_scope: TemporalScope
@@ -301,6 +318,7 @@ class SourceRecord(_SourceModel):
     code_set_references: tuple[CodeSetReference, ...] = ()
     original_period_text: str | None = None
     context: tuple[str, ...] = ()
+    delivered_cells: tuple[DeliveredCell, ...] = ()
 
     @staticmethod
     def _record_id(
@@ -311,6 +329,11 @@ class SourceRecord(_SourceModel):
         subject: SourceSubject,
         edition_scope: TemporalScope,
         reference_period_scope: TemporalScope,
+        fields: SourceFields,
+        code_set_references: tuple[CodeSetReference, ...],
+        original_period_text: str | None,
+        context: tuple[str, ...],
+        delivered_cells: tuple[DeliveredCell, ...],
     ) -> str:
         digest = canonical_sha256(
             {
@@ -322,6 +345,16 @@ class SourceRecord(_SourceModel):
                 "reference_period_scope": reference_period_scope.model_dump(
                     mode="json"
                 ),
+                "fields": fields.model_dump(mode="json"),
+                "code_set_references": [
+                    reference.model_dump(mode="json")
+                    for reference in code_set_references
+                ],
+                "original_period_text": original_period_text,
+                "context": context,
+                "delivered_cells": [
+                    cell.model_dump(mode="json") for cell in delivered_cells
+                ],
             }
         )
         return f"{source}:record:sha256:{digest}"
@@ -331,7 +364,7 @@ class SourceRecord(_SourceModel):
         cls,
         *,
         revision: SourceRevision,
-        locator: RecordLocator,
+        locators: tuple[RecordLocator, ...],
         subject: SourceSubject,
         edition_scope: TemporalScope,
         reference_period_scope: TemporalScope,
@@ -339,20 +372,14 @@ class SourceRecord(_SourceModel):
         code_set_references: tuple[CodeSetReference, ...] = (),
         original_period_text: str | None = None,
         context: tuple[str, ...] = (),
+        delivered_cells: tuple[DeliveredCell, ...] = (),
     ) -> SourceRecord:
+        if not locators:
+            raise ValueError("a source record needs at least one physical locator")
         record_id = cls._record_id(
             source=revision.dataset,
             source_revision_id=revision.revision_id,
-            semantic_record_key=locator.semantic_record_key,
-            subject=subject,
-            edition_scope=edition_scope,
-            reference_period_scope=reference_period_scope,
-        )
-        return cls(
-            record_id=record_id,
-            source=revision.dataset,
-            source_revision_id=revision.revision_id,
-            locator=locator,
+            semantic_record_key=locators[0].semantic_record_key,
             subject=subject,
             edition_scope=edition_scope,
             reference_period_scope=reference_period_scope,
@@ -360,23 +387,69 @@ class SourceRecord(_SourceModel):
             code_set_references=code_set_references,
             original_period_text=original_period_text,
             context=context,
+            delivered_cells=delivered_cells,
+        )
+        return cls(
+            record_id=record_id,
+            source=revision.dataset,
+            source_revision_id=revision.revision_id,
+            locators=locators,
+            subject=subject,
+            edition_scope=edition_scope,
+            reference_period_scope=reference_period_scope,
+            fields=fields,
+            code_set_references=code_set_references,
+            original_period_text=original_period_text,
+            context=context,
+            delivered_cells=delivered_cells,
         )
 
     @model_validator(mode="after")
     def _valid_identity(self) -> Self:
+        if not self.locators:
+            raise ValueError("a source record needs at least one physical locator")
+        semantic_record_key = self.locators[0].semantic_record_key
+        if any(
+            locator.semantic_record_key != semantic_record_key
+            for locator in self.locators[1:]
+        ):
+            raise ValueError("one semantic record cannot mix semantic locator keys")
+        physical = [
+            (
+                locator.physical_file,
+                locator.physical_table,
+                locator.physical_record,
+                locator.physical_cells,
+            )
+            for locator in self.locators
+        ]
+        if len(physical) != len(set(physical)):
+            raise ValueError("source record physical locators must be unique")
         expected = self._record_id(
             source=self.source,
             source_revision_id=self.source_revision_id,
-            semantic_record_key=self.locator.semantic_record_key,
+            semantic_record_key=semantic_record_key,
             subject=self.subject,
             edition_scope=self.edition_scope,
             reference_period_scope=self.reference_period_scope,
+            fields=self.fields,
+            code_set_references=self.code_set_references,
+            original_period_text=self.original_period_text,
+            context=self.context,
+            delivered_cells=self.delivered_cells,
         )
         if self.record_id != expected:
             raise ValueError("source record identity does not match its coordinates")
         if not self.source_revision_id.startswith(f"{self.source}@sha256:"):
             raise ValueError("source record revision belongs to another logical source")
         return self
+
+    def with_additional_locators(
+        self, locators: tuple[RecordLocator, ...]
+    ) -> SourceRecord:
+        payload = self.model_dump(mode="python")
+        payload["locators"] = (*self.locators, *locators)
+        return type(self).model_validate(payload)
 
 
 def value_field(value: FieldScalar, *, raw: FieldScalar | None = None) -> SourceField:
@@ -387,6 +460,7 @@ def value_field(value: FieldScalar, *, raw: FieldScalar | None = None) -> Source
 
 __all__ = [
     "CodeSetReference",
+    "DeliveredCell",
     "NativeCoordinates",
     "RecordLocator",
     "ScopeInterval",

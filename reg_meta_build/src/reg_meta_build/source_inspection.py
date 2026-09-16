@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+import gzip
+import hashlib
+import json
 from collections import Counter, defaultdict
 from dataclasses import dataclass
 from pathlib import Path
@@ -15,9 +18,14 @@ from reg_meta_build import _curation as curation_module
 from reg_meta_build.input_snapshot import (
     LISA_DATASET_ID,
     SnapshotError,
+    _decode_cell,
     _tracked_source_commit,
+    _update_record_hash,
 )
 from reg_meta_build.source_records import (
+    DeliveredCell,
+    NativeCoordinates,
+    RecordLocator,
     ScopeInterval,
     SourceField,
     SourceRecord,
@@ -26,7 +34,10 @@ from reg_meta_build.source_records import (
     canonical_sha256,
 )
 from reg_meta_build.sources.lisa import read_lisa_source
-from reg_meta_build.sources.scb_records import LISA_REGISTER_ID, read_scb_lisa_records
+from reg_meta_build.sources.scb_records import (
+    LISA_REGISTER_ID,
+    iter_scb_observations,
+)
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
@@ -37,8 +48,9 @@ if TYPE_CHECKING:
         SupplementalDataset,
     )
 
-INTERPRETATION_ID = "scb-lisa-source-record-inspection-v2"
+INTERPRETATION_ID = "scb-lisa-source-record-inspection-v3"
 SCB_DATASET_ID = "scb-registerinformation"
+CENSUS_INTERPRETATION_ID = "scb-registerinformation-observation-census-v1"
 OutcomeStatus = Literal[
     "agreement",
     "unobserved_counterpart",
@@ -152,7 +164,7 @@ class InspectionSummary(_ReportModel):
 
 class SourceInspectionReport(_ReportModel):
     format: Literal["reg-meta-build-source-record-inspection"]
-    schema_version: Literal[2]
+    schema_version: Literal[3]
     diagnostic_only: Literal[True]
     preview_level: Literal["source_target_only"]
     complete: bool
@@ -1339,7 +1351,22 @@ def inspect_bundle_source_records(
     )
     workbook_read = read_lisa_source(workbook_path, workbook_revision)
     workbook_all = workbook_read.records
-    scb_all, raw_issues = read_scb_lisa_records(bundle.snapshot, scb_revision)
+    scb_by_id: dict[str, SourceRecord] = {}
+    raw_issues = []
+    for observation in iter_scb_observations(bundle.snapshot, scb_revision):
+        record = observation.record
+        if record.subject.native.register_id != LISA_REGISTER_ID:
+            continue
+        if (existing := scb_by_id.get(record.record_id)) is None:
+            scb_by_id[record.record_id] = record
+        else:
+            scb_by_id[record.record_id] = existing.with_additional_locators(
+                record.locators
+            )
+        if observation.issue is not None:
+            raw_issues.append(observation.issue)
+    scb_all = tuple(scb_by_id.values())
+    raw_issues = tuple(raw_issues)
     if exact_column is None:
         workbook = workbook_all
     else:
@@ -1392,8 +1419,8 @@ def inspect_bundle_source_records(
             (*workbook, *retained_scb),
             key=lambda item: (
                 item.source,
-                item.locator.semantic_record_key,
-                item.locator.physical_record,
+                item.locators[0].semantic_record_key,
+                item.locators[0].physical_record,
             ),
         )
     )
@@ -1413,7 +1440,7 @@ def inspect_bundle_source_records(
     )
     return SourceInspectionReport(
         format="reg-meta-build-source-record-inspection",
-        schema_version=2,
+        schema_version=3,
         diagnostic_only=True,
         preview_level="source_target_only",
         complete=not any(issue.incomplete for issue in issues),
@@ -1447,8 +1474,10 @@ def inspect_bundle_source_records(
             workbook_year_independent_occurrences=sum(
                 record.edition_scope.kind == "year_independent" for record in workbook
             ),
-            scb_total_occurrences=len(scb_all),
-            scb_retained_occurrences=len(retained_scb),
+            scb_total_occurrences=sum(len(record.locators) for record in scb_all),
+            scb_retained_occurrences=sum(
+                len(record.locators) for record in retained_scb
+            ),
             comparison_outcomes=len(outcomes),
             source_target_count=(
                 preview.expected_source_target_count if preview is not None else 0
@@ -1476,7 +1505,661 @@ def report_semantic_sha256(report: SourceInspectionReport) -> str:
     return canonical_sha256(report.model_dump(mode="json", exclude_none=True))
 
 
+def _scb_revision(bundle: CatalogBundleReader) -> SourceRevision:
+    item = next(
+        item
+        for item in bundle.snapshot.manifest.files
+        if item.name == "Registerinformation.csv"
+    )
+    assert item.raw_size is not None and item.raw_sha256 is not None
+    return SourceRevision.create(
+        dataset=SCB_DATASET_ID,
+        publisher="SCB",
+        purpose="Lossless provider Registerinformation observation census",
+        upstream_revision=bundle.snapshot.manifest.edition,
+        artifact_path=f"{bundle.manifest.scb_snapshot_path}:source/Registerinformation.csv",
+        artifact_size=item.raw_size,
+        artifact_sha256=item.raw_sha256,
+    )
+
+
+class CensusMembership(_ReportModel):
+    record_id: str
+    locator: RecordLocator
+    native: NativeCoordinates
+    context_fingerprint: str
+    original_edition_token: DeliveredCell
+
+
+class CensusAlternative(_ReportModel):
+    payload_fingerprint: str
+    data_type: DeliveredCell
+    data_length: DeliveredCell
+    members: tuple[CensusMembership, ...]
+
+    @model_validator(mode="after")
+    def _has_members(self) -> Self:
+        if not self.members:
+            raise ValueError("a census alternative needs at least one member")
+        return self
+
+
+CensusGroupKind = Literal[
+    "same_complete_context_alternatives",
+    "context_separated_alternatives",
+    "unproved_temporal_alternatives",
+    "across_column_only_alternatives",
+]
+
+
+class CensusAlternativeGroup(_ReportModel):
+    type: CensusGroupKind
+    comparison_key: tuple[str, ...]
+    columns: tuple[DeliveredCell, ...]
+    alternatives: tuple[CensusAlternative, ...]
+    temporal_applicability: Literal[
+        "same_complete_context",
+        "same_native_edition_context",
+        "unproved_across_delivered_edition_contexts",
+        "distinct_column_assertions_not_competition",
+    ]
+
+    @model_validator(mode="after")
+    def _has_alternatives(self) -> Self:
+        fingerprints = [item.payload_fingerprint for item in self.alternatives]
+        if len(fingerprints) < 2 or len(fingerprints) != len(set(fingerprints)):
+            raise ValueError("a census group needs at least two distinct alternatives")
+        if not self.columns:
+            raise ValueError("a census group needs its exact supplied columns")
+        return self
+
+
+class CensusInterpretationIssue(_ReportModel):
+    kind: Literal["pooled_period", "unparseable_period"]
+    physical_record: str
+    detail: str
+    record_id: str
+
+
+class CensusObservation(_ReportModel):
+    type: Literal["observation"]
+    record: SourceRecord
+    interpretation_issue: CensusInterpretationIssue | None = None
+
+
+class CensusPins(_ReportModel):
+    bundle_id: str
+    code_commit: str
+    input_repository_commit: str
+    bundle_manifest_sha256: str
+    scb_snapshot_manifest_sha256: str
+    source_revision_id: str
+    interpretation_id: str
+
+
+class CensusScope(_ReportModel):
+    original: str
+    interpreted: str
+
+
+class CensusCounts(_ReportModel):
+    rows: int
+    unique_observations: int
+    duplicate_occurrences: int
+    cvids: int
+    same_complete_context_groups: int
+    same_complete_context_cvids: int
+    context_separated_groups: int
+    context_separated_cvids: int
+    unproved_temporal_groups: int
+    unproved_temporal_cvids: int
+    across_column_only_groups: int
+    across_column_only_cvids: int
+    interpretation_issues: dict[str, int]
+
+
+class CensusAffectedMemberships(_ReportModel):
+    same_complete_context_cvids: tuple[int, ...]
+    context_separated_cvids: tuple[int, ...]
+    unproved_temporal_cvids: tuple[int, ...]
+    across_column_only_cvids: tuple[int, ...]
+
+
+class CensusCompletion(_ReportModel):
+    type: Literal["completion"]
+    format: Literal["reg-meta-build-scb-observation-census"]
+    schema_version: Literal[1]
+    complete: Literal[True]
+    pins: CensusPins
+    source_revision: SourceRevision
+    scope: CensusScope
+    counts: CensusCounts
+    affected_memberships: CensusAffectedMemberships
+    registerinformation_ordered_records_sha256: str
+    registerinformation_logical_sha256: str
+    limitations: tuple[str, ...]
+
+
+type _CellPayload = tuple[bool, str | None, str]
+type _Member = tuple[bytes, int]
+type _Native = tuple[int, int, int, int, int]
+type _EditionKey = tuple[int, int, int, int, int, bytes]
+type _TemporalKey = tuple[int, int, int, int, bytes]
+type _ColumnKey = tuple[int, bytes]
+
+
+@dataclass(slots=True)
+class _CompleteContext:
+    native: _Native
+    column_fingerprint: bytes
+    edition_token_fingerprint: bytes
+    first_shape: bytes
+    first_members: list[_Member]
+    alternatives: dict[bytes, list[_Member]] | None = None
+
+    def add(self, shape: bytes, member: _Member) -> None:
+        if self.alternatives is None and shape == self.first_shape:
+            self.first_members.append(member)
+            return
+        if self.alternatives is None:
+            self.alternatives = {self.first_shape: self.first_members}
+        self.alternatives.setdefault(shape, []).append(member)
+
+    def shapes(self) -> tuple[bytes, ...]:
+        if self.alternatives is None:
+            return (self.first_shape,)
+        return tuple(self.alternatives)
+
+    def members(self) -> tuple[tuple[bytes, list[_Member]], ...]:
+        if self.alternatives is None:
+            return ((self.first_shape, self.first_members),)
+        return tuple(self.alternatives.items())
+
+
+def _fingerprint(value: object) -> bytes:
+    return bytes.fromhex(canonical_sha256(value))
+
+
+def _cell_payload(cell: DeliveredCell) -> _CellPayload:
+    return (cell.present, cell.raw_value, cell.interpreted_value)
+
+
+def _note_shape[Key](
+    index: dict[Key, bytes | set[bytes]], key: Key, shape: bytes
+) -> None:
+    known = index.get(key)
+    if known is None:
+        index[key] = shape
+    elif isinstance(known, bytes):
+        if known != shape:
+            index[key] = {known, shape}
+    else:
+        known.add(shape)
+
+
+def _multiple_shapes(value: bytes | set[bytes]) -> bool:
+    return isinstance(value, set) and len(value) > 1
+
+
+def write_scb_observation_census(
+    bundle: CatalogBundleReader, destination: Path, *, code_commit: str
+) -> dict[str, object]:
+    """Write the complete SCB observation census directly as deterministic gzip JSONL."""
+    destination = destination.resolve()
+    if destination.exists():
+        raise SnapshotError(
+            f"census destination already exists and will not be overwritten: {destination}"
+        )
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    revision = _scb_revision(bundle)
+    snapshot_item = next(
+        item
+        for item in bundle.snapshot.manifest.files
+        if item.name == "Registerinformation.csv"
+    )
+    assert snapshot_item.ordered_records_sha256 is not None
+    assert snapshot_item.logical_sha256 is not None
+    raw_header = [_decode_cell(cell) for cell in snapshot_item.header]
+    header = tuple(value for value in raw_header if value is not None)
+    if len(header) != len(raw_header):
+        raise SnapshotError("Registerinformation.csv header contains a missing cell")
+
+    contexts: dict[bytes, _CompleteContext] = {}
+    shape_payloads: dict[bytes, tuple[DeliveredCell, DeliveredCell]] = {}
+    column_payloads: dict[bytes, DeliveredCell] = {}
+    edition_token_payloads: dict[bytes, DeliveredCell] = {}
+    cvids: set[int] = set()
+    row_count = 0
+    issue_counts: Counter[str] = Counter()
+    records_digest = hashlib.sha256()
+    logical_digest = hashlib.sha256()
+    logical_digest.update(b"header\0")
+    _update_record_hash(logical_digest, raw_header)
+
+    def encoded(value: object) -> bytes:
+        return (
+            json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+            + "\n"
+        ).encode()
+
+    with (
+        destination.open("xb") as raw,
+        gzip.GzipFile(filename="", mode="wb", fileobj=raw, mtime=0) as output,
+    ):
+        for observation in iter_scb_observations(bundle.snapshot, revision):
+            record = observation.record
+            native = record.subject.native
+            if None in (
+                native.register_id,
+                native.register_variant_id,
+                native.edition_id,
+                native.variable_id,
+                native.member_id,
+            ):
+                raise SnapshotError("SCB observation lost a required native coordinate")
+            assert native.register_id is not None
+            assert native.register_variant_id is not None
+            assert native.edition_id is not None
+            assert native.variable_id is not None
+            assert native.member_id is not None
+            native_key: _Native = (
+                native.register_id,
+                native.register_variant_id,
+                native.edition_id,
+                native.variable_id,
+                native.member_id,
+            )
+            row_count += 1
+            assert native.member_id is not None
+            cvids.add(native.member_id)
+            cells = {cell.name: cell for cell in record.delivered_cells}
+            if tuple(cells) != header:
+                raise SnapshotError(
+                    "SCB observation fields do not match Registerinformation.csv header"
+                )
+            raw_row = [
+                cell.raw_value if cell.present else None
+                for cell in record.delivered_cells
+            ]
+            _update_record_hash(records_digest, raw_row)
+            logical_digest.update(b"record\0")
+            _update_record_hash(logical_digest, raw_row)
+
+            data_type = cells["Datatyp"]
+            data_length = cells["Datalängd"]
+            shape = _fingerprint(
+                [
+                    data_type.model_dump(mode="json"),
+                    data_length.model_dump(mode="json"),
+                ]
+            )
+            shape_payloads.setdefault(shape, (data_type, data_length))
+            context_fingerprint = _fingerprint(
+                [
+                    cell.model_dump(mode="json")
+                    for cell in record.delivered_cells
+                    if cell.name not in {"Datatyp", "Datalängd"}
+                ]
+            )
+            column = cells["Kolumnnamn"]
+            column_fingerprint = _fingerprint(column.model_dump(mode="json"))
+            column_payloads.setdefault(column_fingerprint, column)
+            edition_token = cells["Registerversionnamn"]
+            edition_token_fingerprint = _fingerprint(
+                edition_token.model_dump(mode="json")
+            )
+            edition_token_payloads.setdefault(edition_token_fingerprint, edition_token)
+            physical_record = record.locators[0].physical_record
+            if not physical_record.startswith("row:"):
+                raise SnapshotError(
+                    "SCB observation has an invalid physical row locator"
+                )
+            try:
+                row_number = int(physical_record.removeprefix("row:"))
+            except ValueError as exc:
+                raise SnapshotError(
+                    "SCB observation has an invalid physical row locator"
+                ) from exc
+            member = (
+                bytes.fromhex(record.record_id.rpartition(":")[2]),
+                row_number,
+            )
+            context = contexts.get(context_fingerprint)
+            if context is None:
+                contexts[context_fingerprint] = _CompleteContext(
+                    native=native_key,
+                    column_fingerprint=column_fingerprint,
+                    edition_token_fingerprint=edition_token_fingerprint,
+                    first_shape=shape,
+                    first_members=[member],
+                )
+            else:
+                if (
+                    context.native != native_key
+                    or context.column_fingerprint != column_fingerprint
+                    or context.edition_token_fingerprint != edition_token_fingerprint
+                ):
+                    raise SnapshotError("complete-context fingerprint collision")
+                context.add(shape, member)
+
+            issue = None
+            if observation.issue is not None:
+                issue_counts[observation.issue.kind] += 1
+                issue = CensusInterpretationIssue(
+                    kind=observation.issue.kind,
+                    physical_record=observation.issue.physical_record,
+                    detail=observation.issue.detail,
+                    record_id=observation.issue.record_id,
+                )
+            line = CensusObservation(
+                type="observation", record=record, interpretation_issue=issue
+            )
+            output.write(encoded(line.model_dump(mode="json", exclude_none=True)))
+
+        records_sha256 = records_digest.hexdigest()
+        logical_sha256 = logical_digest.hexdigest()
+        if row_count != snapshot_item.record_count:
+            raise SnapshotError(
+                "Registerinformation.csv census did not consume the complete snapshot"
+            )
+        if (
+            records_sha256 != snapshot_item.ordered_records_sha256
+            or logical_sha256 != snapshot_item.logical_sha256
+        ):
+            raise SnapshotError(
+                "Registerinformation.csv census differs from the accepted lossless stream"
+            )
+
+        edition_shapes: dict[_EditionKey, bytes | set[bytes]] = {}
+        temporal_shapes: dict[_TemporalKey, bytes | set[bytes]] = {}
+        column_shapes: dict[_ColumnKey, bytes | set[bytes]] = {}
+        cvid_columns: dict[int, set[bytes]] = defaultdict(set)
+        edition_with_complete_alternatives: set[_EditionKey] = set()
+        unique_observations = 0
+        for context in contexts.values():
+            native = context.native
+            edition_key: _EditionKey = (*native, context.column_fingerprint)
+            temporal_key: _TemporalKey = (
+                native[0],
+                native[1],
+                native[3],
+                native[4],
+                context.column_fingerprint,
+            )
+            column_key = (native[4], context.column_fingerprint)
+            cvid_columns[native[4]].add(context.column_fingerprint)
+            shapes = context.shapes()
+            unique_observations += len(shapes)
+            if len(shapes) > 1:
+                edition_with_complete_alternatives.add(edition_key)
+            for shape in shapes:
+                _note_shape(edition_shapes, edition_key, shape)
+                _note_shape(temporal_shapes, temporal_key, shape)
+                _note_shape(column_shapes, column_key, shape)
+
+        context_separated_keys = {
+            key
+            for key, shapes in edition_shapes.items()
+            if _multiple_shapes(shapes)
+            and key not in edition_with_complete_alternatives
+        }
+        temporal_with_edition_alternatives = {
+            (key[0], key[1], key[3], key[4], key[5])
+            for key, shapes in edition_shapes.items()
+            if _multiple_shapes(shapes)
+        }
+        temporal_keys = {
+            key
+            for key, shapes in temporal_shapes.items()
+            if _multiple_shapes(shapes)
+            and key not in temporal_with_edition_alternatives
+        }
+        across_column_cvids = {
+            cvid
+            for cvid, columns in cvid_columns.items()
+            if len(columns) > 1
+            and all(
+                not _multiple_shapes(column_shapes[(cvid, column)])
+                for column in columns
+            )
+            and len(
+                {
+                    column_shapes[(cvid, column)]
+                    for column in columns
+                    if isinstance(column_shapes[(cvid, column)], bytes)
+                }
+            )
+            > 1
+        }
+
+        type _Reference = tuple[bytes, _CompleteContext, _Member]
+        context_separated: dict[_EditionKey, dict[bytes, list[_Reference]]] = (
+            defaultdict(lambda: defaultdict(list))
+        )
+        temporal: dict[_TemporalKey, dict[bytes, list[_Reference]]] = defaultdict(
+            lambda: defaultdict(list)
+        )
+        across_columns: dict[int, dict[bytes, list[_Reference]]] = defaultdict(
+            lambda: defaultdict(list)
+        )
+        for context_fingerprint, context in contexts.items():
+            native = context.native
+            edition_key = (*native, context.column_fingerprint)
+            temporal_key = (
+                native[0],
+                native[1],
+                native[3],
+                native[4],
+                context.column_fingerprint,
+            )
+            for shape, members in context.members():
+                references = [
+                    (context_fingerprint, context, member) for member in members
+                ]
+                if edition_key in context_separated_keys:
+                    context_separated[edition_key][shape].extend(references)
+                if temporal_key in temporal_keys:
+                    temporal[temporal_key][shape].extend(references)
+                if native[4] in across_column_cvids:
+                    across_columns[native[4]][shape].extend(references)
+
+        def membership(reference: _Reference) -> CensusMembership:
+            context_fingerprint, context, member = reference
+            record_digest, row_number = member
+            native = context.native
+            semantic_key = (
+                f"register:{native[0]}",
+                f"variant:{native[1]}",
+                f"edition:{native[2]}",
+                f"variable:{native[3]}",
+                f"member:{native[4]}",
+            )
+            return CensusMembership(
+                record_id=(f"{SCB_DATASET_ID}:record:sha256:{record_digest.hex()}"),
+                locator=RecordLocator(
+                    semantic_record_key=semantic_key,
+                    physical_file="Registerinformation.csv",
+                    physical_table="Registerinformation.csv",
+                    physical_record=f"row:{row_number}",
+                    physical_cells=tuple(
+                        f"Registerinformation.csv:row:{row_number}:{field}"
+                        for field in header
+                    ),
+                ),
+                native=NativeCoordinates(
+                    register_id=native[0],
+                    register_variant_id=native[1],
+                    edition_id=native[2],
+                    variable_id=native[3],
+                    member_id=native[4],
+                ),
+                context_fingerprint=context_fingerprint.hex(),
+                original_edition_token=edition_token_payloads[
+                    context.edition_token_fingerprint
+                ],
+            )
+
+        def alternatives(
+            grouped: dict[bytes, list[_Reference]],
+        ) -> tuple[CensusAlternative, ...]:
+            return tuple(
+                CensusAlternative(
+                    payload_fingerprint=shape.hex(),
+                    data_type=shape_payloads[shape][0],
+                    data_length=shape_payloads[shape][1],
+                    members=tuple(
+                        membership(reference)
+                        for reference in sorted(references, key=lambda item: item[2][1])
+                    ),
+                )
+                for shape, references in sorted(grouped.items())
+            )
+
+        same_context_groups = 0
+        same_context_cvids: set[int] = set()
+        for context_fingerprint, context in sorted(contexts.items()):
+            if context.alternatives is None:
+                continue
+            same_context_groups += 1
+            same_context_cvids.add(context.native[4])
+            grouped = {
+                shape: [(context_fingerprint, context, member) for member in members]
+                for shape, members in context.members()
+            }
+            group = CensusAlternativeGroup(
+                type="same_complete_context_alternatives",
+                comparison_key=(
+                    f"register:{context.native[0]}",
+                    f"variant:{context.native[1]}",
+                    f"edition:{context.native[2]}",
+                    f"variable:{context.native[3]}",
+                    f"member:{context.native[4]}",
+                    f"complete-context:{context_fingerprint.hex()}",
+                ),
+                columns=(column_payloads[context.column_fingerprint],),
+                alternatives=alternatives(grouped),
+                temporal_applicability="same_complete_context",
+            )
+            output.write(encoded(group.model_dump(mode="json")))
+
+        for key, grouped in sorted(context_separated.items()):
+            group = CensusAlternativeGroup(
+                type="context_separated_alternatives",
+                comparison_key=(
+                    f"register:{key[0]}",
+                    f"variant:{key[1]}",
+                    f"edition:{key[2]}",
+                    f"variable:{key[3]}",
+                    f"member:{key[4]}",
+                    f"column:{key[5].hex()}",
+                ),
+                columns=(column_payloads[key[5]],),
+                alternatives=alternatives(grouped),
+                temporal_applicability="same_native_edition_context",
+            )
+            output.write(encoded(group.model_dump(mode="json")))
+
+        for key, grouped in sorted(temporal.items()):
+            group = CensusAlternativeGroup(
+                type="unproved_temporal_alternatives",
+                comparison_key=(
+                    f"register:{key[0]}",
+                    f"variant:{key[1]}",
+                    f"variable:{key[2]}",
+                    f"member:{key[3]}",
+                    f"column:{key[4].hex()}",
+                ),
+                columns=(column_payloads[key[4]],),
+                alternatives=alternatives(grouped),
+                temporal_applicability=("unproved_across_delivered_edition_contexts"),
+            )
+            output.write(encoded(group.model_dump(mode="json")))
+
+        for cvid, grouped in sorted(across_columns.items()):
+            group = CensusAlternativeGroup(
+                type="across_column_only_alternatives",
+                comparison_key=(f"member:{cvid}",),
+                columns=tuple(
+                    column_payloads[column] for column in sorted(cvid_columns[cvid])
+                ),
+                alternatives=alternatives(grouped),
+                temporal_applicability="distinct_column_assertions_not_competition",
+            )
+            output.write(encoded(group.model_dump(mode="json")))
+
+        context_separated_cvids = {key[4] for key in context_separated_keys}
+        temporal_cvids = {key[3] for key in temporal_keys}
+        completion = CensusCompletion(
+            type="completion",
+            format="reg-meta-build-scb-observation-census",
+            schema_version=1,
+            complete=True,
+            pins=CensusPins(
+                bundle_id=bundle.manifest.bundle_id,
+                code_commit=code_commit,
+                input_repository_commit=bundle.provenance["input_repository_commit"],
+                bundle_manifest_sha256=bundle.provenance["bundle_manifest_sha256"],
+                scb_snapshot_manifest_sha256=bundle.manifest.scb_manifest_sha256,
+                source_revision_id=revision.revision_id,
+                interpretation_id=CENSUS_INTERPRETATION_ID,
+            ),
+            source_revision=revision,
+            scope=CensusScope(
+                original=(
+                    "every supplied Registerinformation.csv row and all 36 raw "
+                    "prepared cells, in source order"
+                ),
+                interpreted=(
+                    "Datatyp/Datalängd alternatives under exact other-34-field, "
+                    "same native-edition/column, cross-edition, and distinct-column "
+                    "comparison scopes"
+                ),
+            ),
+            counts=CensusCounts(
+                rows=row_count,
+                unique_observations=unique_observations,
+                duplicate_occurrences=row_count - unique_observations,
+                cvids=len(cvids),
+                same_complete_context_groups=same_context_groups,
+                same_complete_context_cvids=len(same_context_cvids),
+                context_separated_groups=len(context_separated),
+                context_separated_cvids=len(context_separated_cvids),
+                unproved_temporal_groups=len(temporal),
+                unproved_temporal_cvids=len(temporal_cvids),
+                across_column_only_groups=len(across_columns),
+                across_column_only_cvids=len(across_column_cvids),
+                interpretation_issues=dict(sorted(issue_counts.items())),
+            ),
+            affected_memberships=CensusAffectedMemberships(
+                same_complete_context_cvids=tuple(sorted(same_context_cvids)),
+                context_separated_cvids=tuple(sorted(context_separated_cvids)),
+                unproved_temporal_cvids=tuple(sorted(temporal_cvids)),
+                across_column_only_cvids=tuple(sorted(across_column_cvids)),
+            ),
+            registerinformation_ordered_records_sha256=records_sha256,
+            registerinformation_logical_sha256=logical_sha256,
+            limitations=(
+                "No physical-table identity is inferred from the 36-field export.",
+                "Cross-edition and pooled-period alternatives do not prove competing annual deliveries.",
+                "CVID-level coding evidence cannot establish per-column coding identity or raw absence from NULL.",
+                "No reconciliation winner, automatic unknown, curation, or catalog change is selected.",
+            ),
+        )
+        output.write(encoded(completion.model_dump(mode="json")))
+
+    summary = completion.model_dump(mode="json")
+    summary["evidence_size"] = destination.stat().st_size
+    evidence_digest = hashlib.sha256()
+    with destination.open("rb") as evidence:
+        for chunk in iter(lambda: evidence.read(1 << 20), b""):
+            evidence_digest.update(chunk)
+    summary["evidence_sha256"] = evidence_digest.hexdigest()
+    return summary
+
+
 __all__ = [
+    "CensusAlternativeGroup",
+    "CensusCompletion",
     "ComparisonOutcome",
     "InspectionSummary",
     "InterpretationIssue",
@@ -1486,4 +2169,5 @@ __all__ = [
     "inspect_bundle_source_records",
     "report_semantic_sha256",
     "source_interpreter_commit",
+    "write_scb_observation_census",
 ]
