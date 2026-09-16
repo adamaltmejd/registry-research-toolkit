@@ -24,7 +24,7 @@ from reg_meta_build.source_curation import (
     ResolutionDiagnostic,
     SourceRecordRef,
     _field_matches,
-    evaluate_case,
+    evaluate_cases,
 )
 from reg_meta_build.source_intervals import scope_bounds
 from reg_meta_build.source_occurrences import (
@@ -161,7 +161,7 @@ def apply_occurrence_cases(
         raise ValueError("occurrence correction case IDs must be unique")
     for case in ordered:
         _check_contract(case)
-    evaluations = tuple(evaluate_case(case, records) for case in ordered)
+    evaluations = evaluate_cases(ordered, records)
     evidence: dict[SourceRecordRef, list[SourceRecord]] = defaultdict(list)
     for record in records:
         evidence[record_ref(record)].append(record)

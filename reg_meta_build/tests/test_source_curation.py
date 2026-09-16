@@ -22,6 +22,7 @@ from reg_meta_build.source_curation import (
     SourceRecordRef,
     UnresolvedAspect,
     evaluate_case,
+    evaluate_cases,
 )
 from reg_meta_build.source_records import (
     DeliveredCell,
@@ -261,6 +262,71 @@ def test_peer_coordinates_match_native_identity_without_using_its_label() -> Non
         evaluate_case(case, (record, another)).issues[0].code
         == "peer_membership_changed"
     )
+
+
+@pytest.mark.parametrize(
+    "selector", ["native", "coordinate", "column", "name", "field"]
+)
+def test_batch_guards_find_new_peers_and_keep_residual_conditions(
+    selector: str,
+) -> None:
+    record = _record(
+        source="scb-source",
+        key=("original",),
+        register_name="Register",
+        member_name="Variable",
+        fields=SourceFields(
+            column_name=value_field("Col"), data_type=value_field("text")
+        ),
+        edition_scope=_interval("2020", "2020"),
+        native=NativeCoordinates(register_id=1, variable_id=5),
+    )
+    guard = PeerGuard(
+        guard_id="complete-peers",
+        source=record.source,
+        expected_members=(_ref(record),),
+        fields=(FieldExpectation(name="data_type", status="value", value="text"),),
+        edition_scopes=(record.edition_scope,),
+        native=NativeCoordinates(variable_id=5) if selector == "native" else None,
+        coordinates=(("register", record.subject.register_name),)
+        if selector == "coordinate"
+        else (),
+        folded_column="col" if selector == "column" else None,
+        register_name="Register" if selector == "name" else None,
+    )
+    case = CurationCase(
+        case_id="checked",
+        decision=_unresolved("identity"),
+        targets=(_expectation(record, _expected_field(record, "column_name")),),
+        peer_guards=(guard,),
+    )
+    another = record.model_copy(
+        update={
+            "locators": (
+                record.locators[0].model_copy(
+                    update={"semantic_record_key": ("new-member",)},
+                ),
+            )
+        }
+    )
+    excluded = another.model_copy(
+        update={
+            "fields": SourceFields(
+                column_name=value_field("Col"),
+                data_type=value_field("integer"),
+            )
+        }
+    )
+    cases = (case, case.model_copy(update={"case_id": "also-checked"}))
+    # Physical duplicates do not add semantic peers; the selected index never
+    # bypasses the remaining type, period or source predicates.
+    assert all(
+        e.status == "applicable"
+        for e in evaluate_cases(cases, (record, record, excluded))
+    )
+    evaluations = evaluate_cases(cases, iter((record, excluded, another)))
+    assert all(e.status == "stale" for e in evaluations)
+    assert all(e.issues[0].added_members == (_ref(another),) for e in evaluations)
 
 
 def test_unresolved_aspects_cannot_bypass_checks_by_using_an_unknown_label() -> None:

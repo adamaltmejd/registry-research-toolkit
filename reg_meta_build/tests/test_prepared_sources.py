@@ -17,7 +17,7 @@ from reg_meta_build.prepared_sources import (
     prepare_source_records,
     prepared_source_paths,
 )
-from reg_meta_build.source_coordinates import native_variable_key
+from reg_meta_build.source_coordinates import native_variable_key, source_register_key
 from reg_meta_build.source_records import (
     CodeSetReference,
     DeliveredCell,
@@ -207,6 +207,53 @@ def test_native_family_index_groups_ids_across_variants_without_losing_other_rec
     }
     assert tuple(reader.records) == records
     assert tuple(reader.iter_native_families("missing-source")) == ()
+
+
+def test_register_slices_preserve_native_identity_parent_rows_and_unknowns(
+    tmp_path: Path,
+) -> None:
+    revision = _revision("source-a", "a")
+
+    def record(row: int, coordinate: SourceCoordinate) -> SourceRecord:
+        original = _record(
+            revision, row=row, member="Unplaced variable", raw_value="raw"
+        )
+        arguments = {
+            field: getattr(original, field)
+            for field in SourceRecord.model_fields
+            if field not in {"record_id", "source", "source_revision_id", "subject"}
+        }
+        return SourceRecord.create(
+            revision=revision,
+            subject=original.subject.model_copy(update={"register_name": coordinate}),
+            **arguments,
+        )
+
+    first = record(
+        1, SourceCoordinate(status="value", native_id=7, name="Original label")
+    )
+    other = record(2, SourceCoordinate(status="value", native_id="7"))
+    changed = record(
+        3, SourceCoordinate(status="value", native_id=7, name="Changed label")
+    )
+    unknown = record(4, SourceCoordinate(status="unknown"))
+    records = (first, other, changed, unknown, first)
+    root = tmp_path / "inputs" / "records"
+    manifest = prepare_source_records(
+        root, records=records, revisions=(revision,), scope="register slices"
+    )
+    commit = accept_prepared(root)
+    reader = open_prepared_source_records(
+        root, expected_sha256=manifest.sha256, input_commit=commit
+    )
+    assert dict(reader.iter_register_slices(revision.dataset)) == {
+        source_register_key(first): (first, changed, first),
+        source_register_key(other): (other,),
+        None: (unknown,),
+    }
+    assert tuple(reader.iter_register_slices("missing")) == ()
+    assert tuple(reader.records) == records
+    assert reader.input_commit == commit
 
 
 def test_prepared_artifact_preserves_order_duplicates_and_exact_evidence(

@@ -728,13 +728,90 @@ def evaluate_case(
 ) -> CaseEvaluation:
     """Check one case without changing or selecting facts from source records."""
 
-    records = tuple(records)
-    grouped: defaultdict[tuple[str, tuple[str, ...]], list[SourceRecord]] = defaultdict(
-        list
-    )
-    for record in records:
-        grouped[_record_key(record)].append(record)
-    return _evaluate_case(case, records, grouped)
+    return evaluate_cases((case,), records)[0]
+
+
+def evaluate_cases(
+    cases: tuple[CurationCase, ...], records: Iterable[SourceRecord]
+) -> tuple[CaseEvaluation, ...]:
+    """Check decisions together against one complete, unchanged source slice."""
+    evidence = _SourceEvidence(tuple(records))
+    return tuple(_evaluate_case(case, evidence) for case in cases)
+
+
+class _SourceEvidence:
+    """Per-slice indexes; every index includes new evidence, not just expected peers."""
+
+    def __init__(self, records: tuple[SourceRecord, ...]) -> None:
+        self.records = records
+        self.grouped: dict[tuple[str, tuple[str, ...]], list[SourceRecord]] = (
+            defaultdict(list)
+        )
+        for record in records:
+            self.grouped[_record_key(record)].append(record)
+        self.indexes: dict[
+            tuple[str, str], dict[tuple[str, object], list[SourceRecord]]
+        ] = {}
+
+    @staticmethod
+    def _value(record: SourceRecord, selector: tuple[str, str]) -> object:
+        kind, name = selector
+        if kind == "native":
+            return getattr(record.subject.native, name)
+        if kind == "coordinate":
+            coordinate = getattr(record.subject, name)
+            return coordinate.status, _coordinate_key(coordinate)
+        if kind == "column":
+            field = record.fields.column_name
+            return (
+                fold_column(field.value)
+                if field is not None
+                and field.status == "value"
+                and isinstance(field.value, str)
+                else None
+            )
+        assert kind == "register_name"
+        register = record.subject.register_name
+        return register.name if register.status == "value" else None
+
+    def peers(self, guard: PeerGuard) -> Iterable[SourceRecord]:
+        # Column/variable selectors make the many finite correction checks cheap.
+        # All remaining predicates still pass through the same exact matcher.
+        selector: tuple[str, str] | None = None
+        value: object = None
+        if guard.folded_column is not None:
+            selector, value = ("column", ""), guard.folded_column
+        elif guard.native is not None:
+            for name in (
+                "member_id",
+                "variable_id",
+                "register_variant_id",
+                "edition_id",
+                "register_id",
+            ):
+                if (value := getattr(guard.native, name)) is not None:
+                    selector = "native", name
+                    break
+        if selector is None and guard.coordinates:
+            role, coordinate = min(
+                guard.coordinates,
+                key=lambda item: (item[0] not in {"member", "variable"}, item[0]),
+            )
+            selector = "coordinate", "register_name" if role == "register" else role
+            value = coordinate.status, _coordinate_key(coordinate)
+        if selector is None and guard.register_name is not None:
+            selector, value = ("register_name", ""), guard.register_name
+        candidates: Iterable[SourceRecord]
+        if selector is None:
+            candidates = self.records
+        else:
+            if selector not in self.indexes:
+                index: dict[tuple[str, object], list[SourceRecord]] = defaultdict(list)
+                for record in self.records:
+                    index[record.source, self._value(record, selector)].append(record)
+                self.indexes[selector] = index
+            candidates = self.indexes[selector].get((guard.source, value), ())
+        return (record for record in candidates if _peer_matches(record, guard))
 
 
 def evaluate_source_expectations(
@@ -748,14 +825,8 @@ def evaluate_source_expectations(
     The caller must include all source records eligible for each peer guard;
     passing only the previously expected members would hide newly added peers.
     """
-    records = tuple(records)
-    grouped: defaultdict[tuple[str, tuple[str, ...]], list[SourceRecord]] = defaultdict(
-        list
-    )
-    for record in records:
-        grouped[_record_key(record)].append(record)
     return _evaluate_source_expectations(
-        targets, support, peer_guards, records, grouped
+        targets, support, peer_guards, _SourceEvidence(tuple(records))
     )
 
 
@@ -763,8 +834,7 @@ def _evaluate_source_expectations(
     targets: tuple[RecordExpectation, ...],
     support: tuple[RecordExpectation, ...],
     peer_guards: tuple[PeerGuard, ...],
-    records: tuple[SourceRecord, ...],
-    grouped: dict[tuple[str, tuple[str, ...]], list[SourceRecord]],
+    evidence: _SourceEvidence,
 ) -> tuple[ApplicabilityIssue, ...]:
     issues: list[ApplicabilityIssue] = []
     for role, expectations in (
@@ -775,15 +845,13 @@ def _evaluate_source_expectations(
             issue = _compare_expectation(
                 role=role,
                 expected=expected,
-                records=grouped.get(_ref_key(expected.ref), []),
+                records=evidence.grouped.get(_ref_key(expected.ref), []),
             )
             if issue is not None:
                 issues.append(issue)
 
     for guard in peer_guards:
-        actual_members = {
-            _record_key(record) for record in records if _peer_matches(record, guard)
-        }
+        actual_members = {_record_key(record) for record in evidence.peers(guard)}
         expected_members = {_ref_key(member) for member in guard.expected_members}
         if actual_members != expected_members:
             missing_members = tuple(
@@ -812,11 +880,10 @@ def _evaluate_source_expectations(
 
 def _evaluate_case(
     case: CurationCase,
-    records: tuple[SourceRecord, ...],
-    grouped: dict[tuple[str, tuple[str, ...]], list[SourceRecord]],
+    evidence: _SourceEvidence,
 ) -> CaseEvaluation:
     issues = _evaluate_source_expectations(
-        case.targets, case.support, case.peer_guards, records, grouped
+        case.targets, case.support, case.peer_guards, evidence
     )
 
     if issues:
@@ -998,11 +1065,8 @@ def inspect_cases(
     from reg_meta_build.resolved_catalog import unresolved_variable_flags
 
     records = tuple(records)
-    grouped: defaultdict[tuple[str, tuple[str, ...]], list[SourceRecord]] = defaultdict(
-        list
-    )
-    for record in records:
-        grouped[_record_key(record)].append(record)
+    evidence = _SourceEvidence(records)
+    grouped = evidence.grouped
     ordered_cases = sorted(cases, key=lambda case: (case.case_id, _model_token(case)))
     diagnostics: list[ResolutionDiagnostic] = []
     case_counts: defaultdict[str, int] = defaultdict(int)
@@ -1122,7 +1186,7 @@ def inspect_cases(
                         case.decision.variable_slug,
                     )
                 )
-        evaluation = _evaluate_case(case, records, grouped)
+        evaluation = _evaluate_case(case, evidence)
         for issue in evaluation.issues:
             diagnostics.append(
                 ResolutionDiagnostic(

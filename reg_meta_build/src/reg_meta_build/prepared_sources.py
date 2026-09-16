@@ -30,7 +30,7 @@ from reg_meta_build._accepted_prepared import (
 )
 from reg_meta_build.db import _file_sha256
 from reg_meta_build.input_snapshot import SnapshotError, _git
-from reg_meta_build.source_coordinates import native_variable_key
+from reg_meta_build.source_coordinates import _coordinate_key, native_variable_key
 from reg_meta_build.source_records import (
     CodeSetReference,
     DeliveredCell,
@@ -784,6 +784,56 @@ class PreparedSourceRecords:
             for family, members in groupby(rows, key=lambda row: row["family_payload"]):
                 yield (
                     payload(family, "native_family"),
+                    tuple(_read_record(conn, payload, row) for row in members),
+                )
+
+    def iter_register_slices(
+        self, source: str
+    ) -> Iterator[tuple[NativeKey | None, tuple[SourceRecord, ...]]]:
+        """Read complete source-native registers for overlapping occurrence decisions.
+
+        Register labels may differ under one native identity. Include every physical
+        row, including parent-only and unknown-variable rows. Unknown registers have
+        a separate slice; no source evidence is assigned to a fabricated register.
+        The small temporary relation orders the read without changing accepted data.
+        """
+        with _decoded_database(self.root, self.manifest) as (conn, payload):
+            partitions: dict[tuple[str, NativeKey | None], int] = {}
+            mappings = []
+            for row in conn.execute(
+                "SELECT DISTINCT provider, register_payload FROM occurrence "
+                "WHERE source=? ORDER BY provider, register_payload",
+                (source,),
+            ):
+                coordinate = _coordinate_key(
+                    payload(row["register_payload"], "coordinate")
+                )
+                register = (
+                    (source, row["provider"], "register", *coordinate)
+                    if coordinate is not None
+                    else None
+                )
+                partition = partitions.setdefault(
+                    (row["provider"], register), len(partitions)
+                )
+                mappings.append((row["provider"], row["register_payload"], partition))
+            conn.execute(
+                "CREATE TEMP TABLE register_partition (provider TEXT, register_payload INTEGER, "
+                "partition INTEGER, PRIMARY KEY (provider, register_payload)) WITHOUT ROWID"
+            )
+            conn.executemany(
+                "INSERT INTO register_partition VALUES (?, ?, ?)", mappings
+            )
+            keys = [register for _provider, register in partitions]
+            rows = conn.execute(
+                "SELECT occurrence.*, register_partition.partition FROM occurrence "
+                "JOIN register_partition USING (provider, register_payload) "
+                "WHERE source=? ORDER BY register_partition.partition, ordinal",
+                (source,),
+            )
+            for partition, members in groupby(rows, key=lambda row: row["partition"]):
+                yield (
+                    keys[partition],
                     tuple(_read_record(conn, payload, row) for row in members),
                 )
 

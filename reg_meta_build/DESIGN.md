@@ -127,6 +127,14 @@ offline conversion of column-discriminated naming entries requires a unique, com
 mapping to the delivered columns. Renames, shape splits and discriminator collisions
 remain explicit conversion work.
 
+Overlapping occurrence decisions are checked together against original evidence. The
+applicability evaluator shares semantic-member and selector indexes for one complete
+slice, including newly added records; it never searches only the expected members. The
+prepared reader can stream complete source-native register slices across differing
+labels, including parent-only and unidentified rows, without altering accepted inputs.
+This supplies the context for variant-wide omission guards and variable-level identity
+decisions to be evaluated together.
+
 Checked source-use decisions retain lookup rows as support evidence without forming
 research variables or variants from them. Parent resolution accounts for those records
 and for explicit translations outside the requested catalog language. Missing naming
