@@ -37,6 +37,7 @@ from reg_meta_build.input_snapshot import (
 )
 from reg_meta_build.source_cases import (
     HAMN_SIGNAL_CASE_FILE,
+    HamnSourceCaseEvaluation,
     ProposedHamnSourceMember,
     evaluate_hamn_signal_source_case,
 )
@@ -1014,7 +1015,9 @@ def test_hamn_case_reports_exact_source_only_proposal_and_typed_output(
         for record in report.evaluation.evidence
     )
     assert report.evaluation.receipt.evidence_locators == tuple(
-        record.locators[0] for record in report.evaluation.evidence
+        locator
+        for record in report.evaluation.evidence
+        for locator in record.locators
     )
     assert {check.name for check in report.evaluation.receipt.checks} == {
         "source_dependency",
@@ -1175,6 +1178,7 @@ def test_hamn_case_semantics_survive_rows_moving_and_unrelated_changes(
         locator.physical_record
         for locator in moved.evaluation.receipt.evidence_locators
     } == {f"row:{row}" for row in range(2, 22)}
+    assert len(moved.evaluation.receipt.evidence_locators) == 20
 
 
 def _hamn_drift(kind: str) -> list[str]:
@@ -1251,6 +1255,67 @@ def test_hamn_case_blocks_changed_finite_evidence(
     assert report.evaluation.applicable is False
     assert report.evaluation.proposed_members == ()
     assert expected_check in {blocker.check for blocker in report.evaluation.blockers}
+
+
+def test_hamn_case_counts_coalesced_and_expanded_duplicate_occurrences(
+    tmp_path: Path,
+) -> None:
+    expanded_report = _hamn_report(tmp_path, _hamn_drift("duplicate"))
+    expanded = expanded_report.evaluation
+    duplicate_records = [
+        record
+        for record in expanded.evidence
+        if record.subject.native.member_id == 2181
+        and record.fields.data_length == value_field("10", raw="10")
+    ]
+    assert len(duplicate_records) == 2
+    duplicate_record_id = duplicate_records[0].record_id
+    coalesced_duplicate = duplicate_records[0].with_additional_locators(
+        duplicate_records[1].locators
+    )
+    coalesced_records = [
+        record
+        for record in expanded.evidence
+        if record.record_id != duplicate_record_id
+    ]
+    coalesced_records.append(coalesced_duplicate)
+
+    coalesced = evaluate_hamn_signal_source_case(
+        expanded_report.case_artifact,
+        (
+            ScbObservation(record=record, issue=None)
+            for record in coalesced_records
+        ),
+        expanded.receipt.source_revision,
+    )
+
+    assert len(expanded.evidence) == 21
+    assert len(coalesced.evidence) == 20
+    for evaluation in (expanded, coalesced):
+        assert evaluation.applicable is False
+        assert evaluation.proposed_members == ()
+        assert len(evaluation.receipt.evidence_locators) == 21
+        assert evaluation.receipt.evidence_record_ids.count(duplicate_record_id) == 2
+        assert {
+            blocker.check
+            for blocker in evaluation.blockers
+            if blocker.target == (2003, 204, 2181)
+        } >= {"before_alternatives", "physical_multiplicity"}
+    assert coalesced.receipt.evidence_record_ids == expanded.receipt.evidence_record_ids
+    assert coalesced.receipt.evidence_locators == expanded.receipt.evidence_locators
+    assert coalesced.receipt.receipt_id == expanded.receipt.receipt_id
+
+
+def test_hamn_failed_evaluation_rejects_partial_proposals(tmp_path: Path) -> None:
+    successful = _hamn_report(tmp_path / "successful", hamn_signal_rows()).evaluation
+    failed = _hamn_report(tmp_path / "failed", _hamn_drift("duplicate")).evaluation
+
+    assert failed.proposed_members == ()
+    for count in (1, 9):
+        payload = failed.model_dump(mode="python")
+        payload["proposed_members"] = successful.proposed_members[:count]
+        with pytest.raises(ValidationError, match="expected 0 proposed members"):
+            HamnSourceCaseEvaluation.model_validate(payload)
 
 
 def test_hamn_case_does_not_enroll_a_supported_2013_member(tmp_path: Path) -> None:

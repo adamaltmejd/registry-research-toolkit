@@ -266,6 +266,12 @@ class HamnEvaluationReceipt(_CaseModel):
     evidence_locators: tuple[RecordLocator, ...]
     checks: tuple[HamnCaseCheck, ...]
 
+    @model_validator(mode="after")
+    def _parallel_evidence(self) -> Self:
+        if len(self.evidence_record_ids) != len(self.evidence_locators):
+            raise ValueError("receipt record IDs and locators must be parallel")
+        return self
+
 
 class HamnSourceCaseEvaluation(_CaseModel):
     preview_level: Literal["source_target_only"]
@@ -284,8 +290,12 @@ class HamnSourceCaseEvaluation(_CaseModel):
             raise ValueError("applicability must agree with blockers")
         if self.applicable != all(check.passed for check in self.receipt.checks):
             raise ValueError("applicability must agree with named checks")
-        if (len(self.proposed_members) == 10) != self.applicable:
-            raise ValueError("only an applicable case may produce all ten members")
+        expected_proposals = 10 if self.applicable else 0
+        if len(self.proposed_members) != expected_proposals:
+            raise ValueError(
+                f"expected {expected_proposals} proposed members when "
+                f"applicable is {self.applicable}"
+            )
         return self
 
 
@@ -330,6 +340,31 @@ def _spelling(record: SourceRecord) -> str | None:
     if field is None or field.status != "value" or not isinstance(field.value, str):
         return None
     return field.value.strip().casefold()
+
+
+def _record_semantic_sort_key(
+    record: SourceRecord,
+) -> tuple[int, int, int, str, str]:
+    native = record.subject.native
+    return (
+        _annual_year(record) or -1,
+        native.edition_id or -1,
+        native.member_id or -1,
+        str(record.fields.data_length.value if record.fields.data_length else ""),
+        record.record_id,
+    )
+
+
+def _locator_sort_key(
+    locator: RecordLocator,
+) -> tuple[tuple[str, ...], str, str, str, tuple[str, ...]]:
+    return (
+        locator.semantic_record_key,
+        locator.physical_file,
+        locator.physical_table,
+        locator.physical_record,
+        locator.physical_cells,
+    )
 
 
 def _block(
@@ -471,12 +506,8 @@ def evaluate_hamn_signal_source_case(
 
     relevant.sort(
         key=lambda record: (
-            _annual_year(record) or -1,
-            record.subject.native.edition_id or -1,
-            record.subject.native.member_id or -1,
-            str(record.fields.data_length.value if record.fields.data_length else ""),
-            record.record_id,
-            record.locators[0].physical_record,
+            *_record_semantic_sort_key(record),
+            min(_locator_sort_key(locator) for locator in record.locators),
         )
     )
     groups: dict[tuple[int, int, int], list[SourceRecord]] = defaultdict(list)
@@ -554,11 +585,16 @@ def evaluate_hamn_signal_source_case(
                 target,
             )
             continue
-        if len(records) != 2:
+        occurrences = tuple(
+            (record, locator)
+            for record in records
+            for locator in record.locators
+        )
+        if len(occurrences) != 2:
             _block(
                 blockers,
                 "physical_multiplicity",
-                f"expected 2 physical occurrences, observed {len(records)}",
+                f"expected 2 physical occurrences, observed {len(occurrences)}",
                 target,
             )
         alternatives = Counter(
@@ -566,7 +602,7 @@ def evaluate_hamn_signal_source_case(
                 record.fields.data_type.value if record.fields.data_type else None,
                 record.fields.data_length.value if record.fields.data_length else None,
             )
-            for record in records
+            for record, _locator in occurrences
         )
         expected_alternatives = Counter(
             (alternative.data_type, alternative.data_length)
@@ -580,11 +616,13 @@ def evaluate_hamn_signal_source_case(
                 target,
             )
 
-    if len(relevant) != 20:
+    relevant_occurrence_count = sum(len(record.locators) for record in relevant)
+    if relevant_occurrence_count != 20:
         _block(
             blockers,
             "physical_multiplicity",
-            f"reviewed cohort expected 20 physical occurrences, observed {len(relevant)}",
+            "reviewed cohort expected 20 physical occurrences, observed "
+            f"{relevant_occurrence_count}",
         )
     if len(groups) != 10:
         _block(
@@ -624,15 +662,23 @@ def evaluate_hamn_signal_source_case(
     proposed: list[ProposedHamnSourceMember] = []
     if applicable:
         for target in _TARGETS:
-            records = sorted(
-                groups[target],
-                key=lambda record: str(
-                    record.fields.data_length.value
-                    if record.fields.data_length is not None
-                    else ""
+            occurrences = sorted(
+                (
+                    (record, locator)
+                    for record in groups[target]
+                    for locator in record.locators
+                ),
+                key=lambda occurrence: (
+                    str(
+                        occurrence[0].fields.data_length.value
+                        if occurrence[0].fields.data_length is not None
+                        else ""
+                    ),
+                    _locator_sort_key(occurrence[1]),
                 ),
             )
-            fields = records[0].fields.model_copy(
+            first, second = occurrences
+            fields = first[0].fields.model_copy(
                 update={"data_length": SourceField(status="unknown", raw_value=None)}
             )
             proposed.append(
@@ -642,13 +688,26 @@ def evaluate_hamn_signal_source_case(
                     member_id=target[2],
                     disposition="withhold_data_length",
                     fields=fields,
-                    evidence_record_ids=(records[0].record_id, records[1].record_id),
-                    evidence_locators=(records[0].locators[0], records[1].locators[0]),
+                    evidence_record_ids=(first[0].record_id, second[0].record_id),
+                    evidence_locators=(first[1], second[1]),
                 )
             )
 
-    evidence_ids = tuple(record.record_id for record in relevant)
-    evidence_locators = tuple(record.locators[0] for record in relevant)
+    evidence_occurrences = tuple(
+        sorted(
+            (
+                (record, locator)
+                for record in relevant
+                for locator in record.locators
+            ),
+            key=lambda occurrence: (
+                *_record_semantic_sort_key(occurrence[0]),
+                _locator_sort_key(occurrence[1]),
+            ),
+        )
+    )
+    evidence_ids = tuple(record.record_id for record, _locator in evidence_occurrences)
+    evidence_locators = tuple(locator for _record, locator in evidence_occurrences)
     receipt_payload = {
         "case_id": case.case_id,
         "case_sha256": artifact.sha256,
@@ -656,9 +715,9 @@ def evaluate_hamn_signal_source_case(
         "evidence": [
             {
                 "record_id": record.record_id,
-                "physical_record": record.locators[0].physical_record,
+                "locator": locator.model_dump(mode="json"),
             }
-            for record in relevant
+            for record, locator in evidence_occurrences
         ],
         "checks": [check.model_dump(mode="json") for check in checks],
     }
