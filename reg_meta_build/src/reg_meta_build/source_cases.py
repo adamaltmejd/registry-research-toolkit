@@ -325,21 +325,6 @@ def _annual_year(record: SourceRecord) -> int | None:
     return int(interval.start)
 
 
-def _reference_year(record: SourceRecord) -> int | None:
-    scope = record.reference_period_scope
-    if scope.kind != "intervals" or len(scope.intervals) != 1:
-        return None
-    interval = scope.intervals[0]
-    if (
-        len(interval.start) != 10
-        or interval.start[4:] != "-01-01"
-        or interval.end != f"{interval.start[:4]}-12-31"
-        or not interval.start[:4].isdecimal()
-    ):
-        return None
-    return int(interval.start[:4])
-
-
 def _spelling(record: SourceRecord) -> str | None:
     field = record.fields.column_name
     if field is None or field.status != "value" or not isinstance(field.value, str):
@@ -465,14 +450,9 @@ def evaluate_hamn_signal_source_case(
                 "potentially intersecting variable/spelling has no single annual scope",
             )
             continue
-        if _reference_year(record) != year:
-            relevant.append(record)
-            _block(
-                blockers,
-                "annual_scope_dependency",
-                "potentially intersecting variable/spelling lacks the matching full-year reference scope",
-            )
-            continue
+        # The exact reference period is a per-member dependency checked through
+        # Populationdatum below; do not impose a calendar-year shape (2009 starts
+        # on January 31 in the reviewed evidence).
         if year not in reviewed_years:
             continue
         relevant.append(record)

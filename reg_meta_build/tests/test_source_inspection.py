@@ -35,7 +35,11 @@ from reg_meta_build.input_snapshot import (
     open_input_bundle,
     open_scb_snapshot,
 )
-from reg_meta_build.source_cases import HAMN_SIGNAL_CASE_FILE, ProposedHamnSourceMember
+from reg_meta_build.source_cases import (
+    HAMN_SIGNAL_CASE_FILE,
+    ProposedHamnSourceMember,
+    evaluate_hamn_signal_source_case,
+)
 from reg_meta_build.source_inspection import (
     CensusCompletion,
     SourceInspectionReport,
@@ -62,6 +66,7 @@ from reg_meta_build.sources import lisa as lisa_module
 from reg_meta_build.sources.lisa import LisaWorkbookError, read_lisa_source
 from reg_meta_build.sources.scb_records import (
     LISA_REGISTER_ID,
+    ScbObservation,
     _scopes,
     iter_scb_observations,
 )
@@ -1031,6 +1036,40 @@ def test_hamn_case_reports_exact_source_only_proposal_and_typed_output(
     )
 
 
+def test_hamn_case_accepts_the_authored_2009_reference_period(
+    tmp_path: Path,
+) -> None:
+    report = _hamn_report(tmp_path, hamn_signal_rows())
+    revision = report.evaluation.receipt.source_revision
+    observations: list[ScbObservation] = []
+    for record in report.evaluation.evidence:
+        if record.subject.native.edition_id == 2932:
+            record = SourceRecord.create(
+                revision=revision,
+                locators=record.locators,
+                subject=record.subject,
+                edition_scope=record.edition_scope,
+                reference_period_scope=TemporalScope(
+                    kind="intervals",
+                    intervals=(ScopeInterval(start="2009-01-31", end="2009-12-31"),),
+                ),
+                fields=record.fields,
+                code_set_references=record.code_set_references,
+                original_period_text=record.original_period_text,
+                context=record.context,
+                delivered_cells=record.delivered_cells,
+            )
+        observations.append(ScbObservation(record=record, issue=None))
+
+    evaluation = evaluate_hamn_signal_source_case(
+        report.case_artifact, observations, revision
+    )
+
+    assert evaluation.applicable is True
+    assert len(evaluation.evidence) == 20
+    assert len(evaluation.proposed_members) == 10
+
+
 def test_hamn_case_cli_uses_captured_bytes_without_lisa_or_cold_values(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
@@ -1159,6 +1198,10 @@ def _hamn_drift(kind: str) -> list[str]:
         rows[0] = replace_registerinformation_cell(
             rows[0], "Variabeldefinition", "Changed meaning"
         )
+    elif kind == "changed_reference_period":
+        rows[12] = replace_registerinformation_cell(
+            rows[12], "Populationdatum", "2009-01-01 - 2009-12-31"
+        )
     elif kind == "missing_supplied_empty":
         rows[0] = replace_registerinformation_cell(rows[0], "Populationkommentar", "")
     elif kind == "changed_source":
@@ -1191,6 +1234,7 @@ def _hamn_drift(kind: str) -> list[str]:
         ("missing_member", "finite_membership"),
         ("new_member", "finite_membership"),
         ("changed_context", "context_dependency"),
+        ("changed_reference_period", "context_dependency"),
         ("missing_supplied_empty", "context_dependency"),
         ("changed_source", "source_dependency"),
         ("changed_scope", "annual_scope_dependency"),
