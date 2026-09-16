@@ -30,6 +30,7 @@ from reg_meta_build.source_occurrences import source_occurrence
 from reg_meta_build.source_records import (
     NativeCoordinates,
     SourceFields,
+    TemporalScope,
     canonical_sha256,
     value_field,
 )
@@ -38,7 +39,7 @@ if TYPE_CHECKING:
     from reg_meta_build.scb_errata import ErrataColumn, ErrataDelivered
     from reg_meta_build.source_coordinates import NativeKey
     from reg_meta_build.source_curation import OccurrenceEffect, SourceRecordRef
-    from reg_meta_build.source_records import SourceRecord, TemporalScope
+    from reg_meta_build.source_records import SourceRecord
 
 
 @dataclass(frozen=True)
@@ -292,13 +293,18 @@ def convert_column_entry(
     case_id: str,
     records: tuple[SourceRecord, ...],
     editions: tuple[ErrataEditionBinding, ...],
+    declared_flags: frozenset[str],
 ) -> ErrataConversion:
-    """Freeze an existing column declaration to its currently selected editions.
+    """Retain supplied column facts without legacy flags or coverage defaults.
 
-    ``all_versions`` is expanded once here, never replayed by the build. Pooled
-    edition membership survives without becoming an assertion of annual coverage.
+    The old ``all_versions`` interpretation of undated holdings supplies no annual
+    evidence. Retain one undated occurrence, not a claim for each existing edition.
+    ``declared_flags`` names the keys actually present in the original TOML, since
+    the legacy loader has already replaced omitted flags with false.
     Classification and presentation declarations must be bound by the caller.
     """
+    if not declared_flags <= {"is_identifier", "is_sensitive"}:
+        raise ValueError("declared_flags must name original boolean declaration keys")
     _variant_records(records, entry.register_id, entry.register_variant_id, editions)
     if any(
         (column := _text(record, "column_name"))
@@ -306,18 +312,18 @@ def convert_column_entry(
         for record in records
     ):
         return ErrataConversion(None, ("column_now_documented",), ())
-    names = (
-        set(entry.versions)
-        if entry.versions is not None
-        else {e.name for e in editions}
-    )
+    names = set(entry.versions or ())
     missing = names - {edition.name for edition in editions}
-    if missing or not names:
+    if missing or entry.versions == ():
         raise ValueError(
             f"missing column edition conversion bindings: {sorted(missing)!r}"
         )
     selected = tuple(edition for edition in editions if edition.name in names)
     references = {ref for edition in selected for ref in edition.support}
+    if entry.versions is None:
+        # This member establishes the native variant coordinate only. It says
+        # nothing about when the independently declared column was delivered.
+        references.add(record_ref(records[0]))
     anchors = tuple(record for record in records if record_ref(record) in references)
     expected = capture_expectations(anchors, fields=("availability",))
     guards = [
@@ -352,29 +358,51 @@ def convert_column_entry(
         name=value_field(normalize_text(entry.name)),
         description=value_field(normalize_text(entry.definition, multiline=True)),
         data_type=value_field(entry.data_type) if entry.data_type is not None else None,
-        identifier=value_field(entry.is_identifier),
-        sensitivity=value_field(entry.is_sensitive),
+        identifier=value_field(entry.is_identifier)
+        if "is_identifier" in declared_flags
+        else None,
+        sensitivity=value_field(entry.is_sensitive)
+        if "is_sensitive" in declared_flags
+        else None,
     )
+    effects: tuple[OccurrenceEffect, ...] = tuple(
+        CuratedOccurrenceAddition(
+            occurrence_key=f"{case_id}:{canonical_sha256(list(edition.key))}",
+            provider="scb",
+            variable_key=variable,
+            variant_key=variant,
+            edition_key=edition.key,
+            fields=fields,
+            edition_scope=edition.edition_scope,
+            edition_period_scope=edition.edition_period_scope,
+            evidence=edition.support,
+        )
+        for edition in selected
+    )
+    if entry.versions is None:
+        effects = (
+            CuratedOccurrenceAddition(
+                occurrence_key=f"{case_id}:undated",
+                provider="scb",
+                variable_key=variable,
+                variant_key=variant,
+                edition_key=None,
+                fields=fields,
+                edition_scope=TemporalScope(
+                    kind="unknown",
+                    label="Undated holdings; legacy all_versions is not annual evidence",
+                ),
+                edition_period_scope=TemporalScope(kind="not_applicable"),
+                evidence=tuple(sorted(references, key=str)),
+            ),
+        )
     case = CurationCase(
         case_id=case_id,
         targets=expected,
         peer_guards=tuple(guards),
         decision=OccurrenceCorrectionDecision(
             reviewed=True,
-            effects=tuple(
-                CuratedOccurrenceAddition(
-                    occurrence_key=f"{case_id}:{canonical_sha256(list(edition.key))}",
-                    provider="scb",
-                    variable_key=variable,
-                    variant_key=variant,
-                    edition_key=edition.key,
-                    fields=fields,
-                    edition_scope=edition.edition_scope,
-                    edition_period_scope=edition.edition_period_scope,
-                    evidence=edition.support,
-                )
-                for edition in selected
-            ),
+            effects=effects,
             reason=entry.provenance,
             provenance=entry.provenance,
         ),

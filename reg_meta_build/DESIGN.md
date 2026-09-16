@@ -507,6 +507,14 @@ adjacent-edition metadata, unrelated variables and physical layout do not. Conve
 the remaining accepted surfaces remains required before cutover. Legacy output and
 implementation defaults are comparison evidence, not independent curation authority.
 
+An undated holdings declaration retains its named column, variant and authored metadata
+with unresolved coverage. The old `all_versions` expansion is not evidence that the
+column was delivered in every edition. Explicitly named editions remain bounded
+assertions; pooled editions still supply no annual coverage. Conversion also
+distinguishes absent flags from explicitly false flags before the legacy loader's
+defaults can erase that distinction. Unknown coverage remains a blocking diagnostic, and
+no annual state is produced from it.
+
 Native-member code-list bindings share immutable claims when the source member and
 effective scope agree. Each physical record keeps its own evidence binding, and every
 original code association remains available. A one-list cache avoids rebuilding those

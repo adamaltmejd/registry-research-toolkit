@@ -315,6 +315,19 @@ def test_authored_coverage_does_not_require_a_fabricated_delivery_edition() -> N
     assert declared.support_records == (record,)
 
 
+def test_addition_cannot_omit_coverage_without_marking_it_unresolved() -> None:
+    record = _record(column="VALUE")
+    addition = _addition(record).model_copy(
+        update={
+            "edition_key": None,
+            "edition_scope": TemporalScope(kind="not_applicable"),
+            "edition_period_scope": TemporalScope(kind="not_applicable"),
+        }
+    )
+    with pytest.raises(ValueError, match="explicitly unresolved coverage"):
+        apply_occurrence_cases((record,), (_case(record, addition),))
+
+
 def test_declared_pooled_edition_is_retained_without_inferred_annual_states() -> None:
     record = _record(column="VALUE")
     pooled = TemporalScope(kind="pooled", label="2014 - 2016")
@@ -332,7 +345,8 @@ def test_declared_pooled_edition_is_retained_without_inferred_annual_states() ->
     assert {issue.code for issue in resolved.issues} == {"unsupported_occurrence"}
 
 
-def test_converted_column_all_versions_is_finite_and_does_not_borrow_metadata() -> None:
+@pytest.mark.parametrize("versions", [None, ("2020",)])
+def test_column_declaration_preserves_only_supplied_flags_and_periods(versions) -> None:
     record = _record(column="OTHER")
     original = source_occurrence(record)
     assert original.edition_key is not None
@@ -346,7 +360,7 @@ def test_converted_column_all_versions_is_finite_and_does_not_borrow_metadata() 
         classification=None,
         is_identifier=False,
         is_sensitive=True,
-        versions=None,
+        versions=versions,
         source="steward",
         provenance="Existing accepted column declaration",
     )
@@ -359,7 +373,11 @@ def test_converted_column_all_versions_is_finite_and_does_not_borrow_metadata() 
         native_id=2020,
     )
     converted = convert_column_entry(
-        entry, case_id="column-1", records=(record,), editions=(binding,)
+        entry,
+        case_id="column-1",
+        records=(record,),
+        editions=(binding,),
+        declared_flags=frozenset({"is_sensitive"}),
     )
     assert converted.case is not None and converted.blockers == ()
     later = _record(column="UNRELATED", year="2021", cvid=21)
@@ -372,12 +390,19 @@ def test_converted_column_all_versions_is_finite_and_does_not_borrow_metadata() 
     additions = tuple(item for item in result.occurrences if item.occurrence_key)
     assert len(additions) == 1
     addition = additions[0]
-    assert addition.edition_key == binding.key
-    assert addition.edition_scope == record.edition_scope
+    if versions is None:
+        assert addition.edition_key is None
+        assert addition.edition_scope.kind == "unknown"
+        intervals = resolve_occurrence_intervals((addition,))
+        assert intervals.segments == ()
+        assert {issue.code for issue in intervals.issues} == {"unsupported_occurrence"}
+    else:
+        assert addition.edition_key == binding.key
+        assert addition.edition_scope == record.edition_scope
     assert addition.fields.name == value_field("Authored name")
     assert addition.fields.description == value_field("Authored description")
     assert addition.fields.data_type is None
-    assert addition.fields.identifier == value_field(False)
+    assert addition.fields.identifier is None
     assert addition.fields.sensitivity == value_field(True)
     assert addition.source_records == () and addition.support_records == (record,)
     documented = _record(column="missing", year="2021", cvid=21)
@@ -385,7 +410,11 @@ def test_converted_column_all_versions_is_finite_and_does_not_borrow_metadata() 
     assert stale.accounting[0].disposition == "stale"
     assert not any(item.occurrence_key for item in stale.occurrences)
     blocked = convert_column_entry(
-        entry, case_id="column-1", records=(record, documented), editions=(binding,)
+        entry,
+        case_id="column-1",
+        records=(record, documented),
+        editions=(binding,),
+        declared_flags=frozenset({"is_sensitive"}),
     )
     assert blocked.case is None and blocked.blockers == ("column_now_documented",)
 
