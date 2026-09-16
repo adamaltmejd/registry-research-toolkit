@@ -190,8 +190,15 @@ def _build_parser() -> argparse.ArgumentParser:
         ),
     )
     for command_p in (curated_p, inspect_curation_p):
-        command_p.add_argument("--records", required=True)
-        command_p.add_argument("--records-sha256", required=True)
+        command_p.add_argument(
+            "--records", required=True, help="Prepared source directory."
+        )
+        command_p.add_argument(
+            "--records-sha256", required=True, help="SHA256 of its manifest.json."
+        )
+        command_p.add_argument(
+            "--records-commit", required=True, help="Accepted input Git commit."
+        )
         command_p.add_argument("--cases", required=True)
     curated_p.add_argument(
         "--db-path", required=True, help="Explicit output SQLite path."
@@ -1110,11 +1117,23 @@ def _curated_database_paths(output: Path) -> set[Path]:
     return {output, output.with_name(output.name + ".prev").resolve()}
 
 
+def _curated_source_paths(args: argparse.Namespace) -> set[Path]:
+    from .prepared_sources import prepared_source_paths
+
+    records = Path(args.records).expanduser().resolve()
+    return {
+        records,
+        *(path.resolve() for path in prepared_source_paths(records)),
+        Path(args.cases).expanduser().resolve(),
+    }
+
+
 def _curated_paths_overlap(destinations: set[Path], inputs: set[Path]) -> bool:
     # The report temporary file is opened before replacement; a symlink or hard
     # link there must not turn a distinct-looking report into an input overwrite.
     return any(
         destination == input_path
+        or (input_path.is_dir() and destination.is_relative_to(input_path))
         or (
             destination.exists()
             and input_path.exists()
@@ -1153,7 +1172,7 @@ def _cmd_curated_catalog(args: argparse.Namespace) -> tuple[dict[str, Any], int]
     if args.db is not None or (
         output is not None
         and _curated_paths_overlap(
-            _curated_database_paths(output), {records_path, cases_path}
+            _curated_database_paths(output), _curated_source_paths(args)
         )
     ):
         raise RegMetaError(
@@ -1165,10 +1184,13 @@ def _cmd_curated_catalog(args: argparse.Namespace) -> tuple[dict[str, Any], int]
         )
     try:
         prepared = open_prepared_source_records(
-            records_path, expected_sha256=args.records_sha256
+            records_path,
+            expected_sha256=args.records_sha256,
+            input_commit=args.records_commit,
         )
         case_bytes = cases_path.read_bytes()
         cases = TypeAdapter(tuple[CurationCase, ...]).validate_json(case_bytes)
+        inspection = inspect_cases(cases, prepared.records)
     except (OSError, ValueError) as exc:
         raise RegMetaError(
             exit_code=EXIT_CONFIG,
@@ -1178,12 +1200,12 @@ def _cmd_curated_catalog(args: argparse.Namespace) -> tuple[dict[str, Any], int]
             remediation="Repair the pinned source artifact or reviewed case contract; no database was written.",
         ) from exc
 
-    inspection = inspect_cases(cases, prepared.records)
     case_sha256 = hashlib.sha256(case_bytes).hexdigest()
     data = {
         **inspection.report(),
         "scope": prepared.manifest.scope,
         "prepared_sources_sha256": args.records_sha256,
+        "prepared_sources_commit": args.records_commit,
         "curation_cases_sha256": case_sha256,
     }
     args_payload = {"records": str(records_path), "cases": str(cases_path)}
@@ -1199,6 +1221,7 @@ def _cmd_curated_catalog(args: argparse.Namespace) -> tuple[dict[str, Any], int]
                         "build_mode": "scoped-curation",
                         "source_scope": prepared.manifest.scope,
                         "prepared_sources_sha256": args.records_sha256,
+                        "prepared_sources_commit": args.records_commit,
                         "curation_cases_sha256": case_sha256,
                     },
                 )
@@ -2513,11 +2536,11 @@ COMMAND_DISPATCH: dict[
 
 _COMMAND_OVERVIEW: list[tuple[str, str]] = [
     (
-        "inspect-curation --records FILE --records-sha256 SHA256 --cases FILE",
+        "inspect-curation --records DIR --records-sha256 SHA256 --records-commit COMMIT --cases FILE",
         "Report curation blockers and warnings without creating a catalog.",
     ),
     (
-        "build-curated-db --records FILE --records-sha256 SHA256 --cases FILE --db-path DB",
+        "build-curated-db --records DIR --records-sha256 SHA256 --records-commit COMMIT --cases FILE --db-path DB",
         "Build a scoped catalog from prepared records and reviewed cases.",
     ),
     (
@@ -2640,11 +2663,7 @@ def _confined_bundle_output_path(
             remediation="Choose a separate report file.",
         )
     if args.command in {"build-curated-db", "inspect-curation"}:
-        protected = {
-            Path(path).expanduser().resolve()
-            for path in (args.records, args.cases, getattr(args, "db_path", None))
-            if path is not None
-        }
+        protected = _curated_source_paths(args)
         if getattr(args, "db_path", None) is not None:
             protected.update(
                 _curated_database_paths(Path(args.db_path).expanduser().resolve())

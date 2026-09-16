@@ -109,14 +109,15 @@ source facts.
 > dictionaries, exact validity text and streamed original associations; it does not
 > select final code-set membership. SCB and Socialstyrelsen share compact value,
 > descriptor, association and validity types. A first complete, scoped path stores
-> prepared records, checks reviewed cases, forms a variable with exact annual column
-> windows and writes a normal catalog database directly. It withholds code bindings
-> explicitly. Remaining readers, full-corpus prepared storage, broader curation and the
-> full builder cutover remain pending. Ordinary `build-db` continues to use the legacy
-> semantic pipeline below; `build-curated-db` exercises the replacement on an explicitly
-> selected slice. Shared reader changes can alter its inputs: retaining formerly omitted
-> SOS hyperlinks can affect its automatic classification matching. Catalog behavior on
-> this isolated branch has not yet been verified across the complete corpus, and this
+> indexed prepared records, checks reviewed cases, forms a variable with exact annual
+> column windows and writes a normal catalog database directly. The writer accepts
+> resolved code memberships; source-to-code binding remains incomplete. Remaining
+> readers, full-corpus prepared integration, broader curation and the full builder
+> cutover remain pending. Ordinary `build-db` continues to use the legacy semantic
+> pipeline below; `build-curated-db` exercises the replacement on an explicitly selected
+> slice. Shared reader changes can alter its inputs: retaining formerly omitted SOS
+> hyperlinks can affect its automatic classification matching. Catalog behavior on this
+> isolated branch has not yet been verified across the complete corpus, and this
 > checkpoint is not ready for catalog activation.
 
 ### Mechanical normalization
@@ -362,35 +363,48 @@ complete resolver.
 
 ### First prepared-to-catalog path
 
-`prepared_sources.py` serializes a finite source slice as deterministic JSON with exact
-source revisions and original evidence. Preparation validates identities and revision
-membership before atomic replacement. A warm build checks the artifact's SHA-256 pin and
-decodes its JSON contract; it does not reopen provider files, parse spreadsheets or
-repeat source interpretation. This bounded format is not a claim that expanded JSON is
-an efficient storage layout for the million-row corpus or its code associations. The
-existing lossless compact input repository remains the full-corpus storage base.
+`prepared_sources.py` stores ordered observations in an indexed SQLite file beside a
+small JSON manifest. Repeated metadata and original delivered cells are interned; source
+revisions, native variable coordinates, physical locators, source order and duplicate
+occurrences remain intact. Preparation streams records, validates identities and
+revision membership, and publishes a new candidate directory atomically. It refuses to
+overwrite an existing candidate. Acceptance is a subsequent Git commit.
 
-`build-curated-db --records FILE --records-sha256 SHA256 --cases FILE --db-path DB`
-loads that artifact and a JSON array of reviewed cases. It resolves every case before
+A warm build pins the accepted Git commit and manifest SHA-256. It checks the clean
+worktree, committed inventory, file sizes, ordinary index flags and storage version. It
+does not hash the entire SQLite file, recompute source-record identities, reopen
+provider files, parse spreadsheets or repeat source interpretation. Records are decoded
+on demand with bounded caches; exact semantic-key lookups use an index. The manifest's
+data hash is a preparation proof, not a repeated warm-build workload. The accepted Git
+revision is the trust boundary. Original large value-association streams remain in the
+existing lossless compact input storage; integration with this record store is still
+pending.
+
+`build-curated-db --records DIR --records-sha256 SHA256 --records-commit COMMIT --cases FILE --db-path DB`
+loads that selection and a JSON array of reviewed cases. It resolves every case before
 writing anything, then passes resolved natural identities, flags, text and full-date
 state windows to `resolved_catalog.py`. That writer assigns storage IDs, inserts final
 rows and aliases once, builds search indexes, runs the existing complete structural
 validator (`corpus=False` for an explicitly partial catalog), and atomically replaces
 the requested database. Failed applicability or validation leaves the prior database
 intact. A failed optional report write after publication reports the successful
-publication and exact database hash separately. Input and case digests are recorded in
-the database manifest. No legacy adapter, post-build correction pass, or
-SQL-to-IR-to-SQL materialization runs in this path.
+publication and exact database hash separately. The input commit and manifest/case
+digests are recorded in the database manifest. No legacy adapter, post-build correction
+pass, or SQL-to-IR-to-SQL materialization runs in this path.
 
-`inspect-curation --records FILE --records-sha256 SHA256 --cases FILE` performs the same
-reconciliation without writing a database. Both commands return structured diagnostics,
-semantic source accounting with physical locators, and the resolved catalog preview. A
-blocked result returns a nonzero status. The warm path never generates cases, reads a
-PDF, asks an LLM, or updates its input expectations.
+`inspect-curation --records DIR --records-sha256 SHA256 --records-commit COMMIT --cases FILE`
+performs the same reconciliation without writing a database. Both commands return
+structured diagnostics, semantic source accounting with physical locators, and the
+resolved catalog preview. A blocked result returns a nonzero status. The warm path never
+generates cases, reads a PDF, asks an LLM, or updates its input expectations.
 
-The supported output currently has finite, non-overlapping annual occurrences and
-explicitly withheld coding. It preserves uncertainty as null type/length and records the
-reason for withheld coding in state provenance. Sensitivity and identifier flags are
+The current case resolver forms finite, non-overlapping annual occurrences and
+explicitly withholds coding. The direct writer can materialize already-resolved code
+sets independently of physical type and length. It shares identical memberships across
+states, preserves exact code strings and differing labels for the same code, and removes
+only identical repeated pairs. Selecting source memberships for a state's period remains
+the resolver's responsibility. Null type, length and coding preserve uncertainty;
+withheld coding is recorded in state provenance. Sensitivity and identifier flags are
 explicit decisions; deprecation defaults to false for this first current-variable slice.
 It does not yet support code-set resolution, parallel representations, groups,
 relations, tags or full-corpus publication. The maintained AmPolTyp demonstration and
@@ -564,6 +578,16 @@ isolated refactor branch with explicit checkpoints; Yard remains paused during t
 replacement. A checkpoint may leave documented tests or consumers incomplete. Never
 weaken an invariant or add a compatibility layer solely to make the checkpoint green.
 Final acceptance still requires the relevant tests and real-source validation.
+
+Pipeline completion means that ordinary `build-db` uses the three stages for every
+maintained input, existing accepted curation is expressed through the common layer,
+required catalog features materialize directly, and the displaced semantic routes are
+deleted. Maintained-source verification must exercise successful output and controlled
+update failures, explain semantic differences, and measure deterministic replay, warm
+runtime and total storage. Source-content curation remains separate: a newly exposed
+discrepancy may correctly block publication with exact evidence and a useful diagnostic.
+Completing the pipeline does not authorize inventing missing facts or silently accepting
+such discrepancies to make the full build pass.
 
 1. Separate source cleaning from catalog policy and remove register-specific production
    machinery. Verify original-source examples from LISA, IoT, RTB, RAMS, FDB and the

@@ -7,6 +7,7 @@ import json
 from typing import TYPE_CHECKING
 
 import pytest
+from _prepared_fixtures import accept_prepared
 from reg_meta.errors import EXIT_CONFIG, EXIT_INTERNAL, EXIT_USAGE
 from reg_meta_build.cli import run
 from reg_meta_build.prepared_sources import prepare_source_records
@@ -118,12 +119,13 @@ def prepared_cli(tmp_path: Path) -> list[str]:
             coding_reason="Coding intentionally outside this fixture.",
         ),
     )
-    records = tmp_path / "records.json"
+    records = tmp_path / "inputs" / "records"
     manifest = prepare_source_records(
         records, records=(record,), revisions=(revision,), scope="CLI fixture"
     )
     cases = tmp_path / "cases.json"
     cases.write_text(json.dumps([case.model_dump(mode="json")]))
+    commit = accept_prepared(records)
     return [
         "--records",
         str(records),
@@ -131,6 +133,8 @@ def prepared_cli(tmp_path: Path) -> list[str]:
         manifest.artifact_sha256,
         "--cases",
         str(cases),
+        "--records-commit",
+        commit,
     ]
 
 
@@ -226,7 +230,14 @@ def test_blocked_build_preserves_catalog_and_returns_inspection_diagnostics(
 
 
 @pytest.mark.parametrize("command", ["inspect-curation", "build-curated-db"])
-@pytest.mark.parametrize("protected", ["records.json", "cases.json"])
+@pytest.mark.parametrize(
+    "protected",
+    [
+        "inputs/records/manifest.json",
+        "inputs/records/files/records.sqlite",
+        "cases.json",
+    ],
+)
 def test_report_cannot_overwrite_inputs(
     tmp_path: Path, prepared_cli, command: str, protected: str
 ) -> None:
@@ -237,6 +248,20 @@ def test_report_cannot_overwrite_inputs(
         == EXIT_USAGE
     )
     assert path.read_bytes() == previous
+    assert not (tmp_path / "catalog.db").exists()
+
+
+@pytest.mark.parametrize("command", ["inspect-curation", "build-curated-db"])
+def test_report_cannot_add_file_inside_prepared_input(
+    tmp_path: Path, prepared_cli, command: str
+) -> None:
+    report = tmp_path / "inputs" / "records" / "report.json"
+    assert (
+        run([*_arguments(command, prepared_cli, tmp_path), "--output", str(report)])
+        == EXIT_USAGE
+    )
+    assert not report.exists()
+    assert not report.with_suffix(".json.tmp").exists()
     assert not (tmp_path / "catalog.db").exists()
 
 
@@ -306,19 +331,38 @@ def test_report_temporary_file_cannot_overwrite_input(
     assert not (tmp_path / "catalog.db").exists()
 
 
-@pytest.mark.parametrize("input_kind,index", [("records.json", 1), ("cases.json", 5)])
-def test_database_backup_cannot_replace_input(
-    tmp_path: Path, prepared_cli, input_kind: str, index: int
+def test_database_backup_cannot_replace_case_input(
+    tmp_path: Path, prepared_cli
 ) -> None:
     database = tmp_path / "catalog.db"
     database.write_bytes(b"previous catalog")
     backup = tmp_path / "catalog.db.prev"
-    (tmp_path / input_kind).rename(backup)
-    prepared_cli[index] = str(backup)
+    (tmp_path / "cases.json").rename(backup)
+    prepared_cli[5] = str(backup)
     evidence = backup.read_bytes()
     assert run(_arguments("build-curated-db", prepared_cli, tmp_path)) == EXIT_USAGE
     assert database.read_bytes() == b"previous catalog"
     assert backup.read_bytes() == evidence
+
+
+@pytest.mark.parametrize("input_file", ["manifest.json", "files/records.sqlite"])
+@pytest.mark.parametrize("link_kind", ["symlink", "hardlink"])
+def test_database_backup_link_cannot_replace_prepared_input(
+    tmp_path: Path, prepared_cli, input_file: str, link_kind: str
+) -> None:
+    database = tmp_path / "catalog.db"
+    database.write_bytes(b"previous catalog")
+    backup = tmp_path / "catalog.db.prev"
+    evidence = tmp_path / "inputs" / "records" / input_file
+    previous = evidence.read_bytes()
+    if link_kind == "symlink":
+        backup.symlink_to(evidence)
+    else:
+        backup.hardlink_to(evidence)
+    assert run(_arguments("build-curated-db", prepared_cli, tmp_path)) == EXIT_USAGE
+    assert database.read_bytes() == b"previous catalog"
+    assert backup.read_bytes() == previous
+    assert evidence.read_bytes() == previous
 
 
 @pytest.mark.parametrize("temporary_link", [False, True])
@@ -349,10 +393,18 @@ def test_report_cannot_replace_database_backup(
 
 @pytest.mark.parametrize("command", ["inspect-curation", "build-curated-db"])
 @pytest.mark.parametrize("link_kind", ["symlink", "hardlink"])
+@pytest.mark.parametrize(
+    "input_file",
+    [
+        "inputs/records/manifest.json",
+        "inputs/records/files/records.sqlite",
+        "cases.json",
+    ],
+)
 def test_report_temporary_link_cannot_overwrite_input(
-    tmp_path: Path, prepared_cli, command: str, link_kind: str
+    tmp_path: Path, prepared_cli, command: str, link_kind: str, input_file: str
 ) -> None:
-    evidence = tmp_path / "records.json"
+    evidence = tmp_path / input_file
     previous = evidence.read_bytes()
     temporary = tmp_path / "report.json.tmp"
     if link_kind == "symlink":

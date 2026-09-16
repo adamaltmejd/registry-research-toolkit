@@ -7,7 +7,12 @@ from dataclasses import replace
 from typing import TYPE_CHECKING
 
 import pytest
-from reg_meta_build.source_records import NativeCoordinates, SourceRevision, value_field
+from reg_meta_build.source_records import (
+    NativeCoordinates,
+    SourceCoordinate,
+    SourceRevision,
+    value_field,
+)
 from reg_meta_build.sources.sos import SosParseIssue, parse_register_file
 from reg_meta_build.sources.sos_records import (
     clean_sos_source,
@@ -247,6 +252,11 @@ def test_source_records_keep_occurrences_conflicts_and_native_sos_coordinates(
 
     assert first.subject.register_name.name == "Patientregistret källa"
     assert first.subject.variant.name == "PAR_OV"
+    assert first.subject.variable == SourceCoordinate(
+        status="value", native_id="HDIA", name="Huvuddiagnos"
+    )
+    assert conflict.subject.variable.native_id == first.subject.variable.native_id
+    assert conflict.subject.variable.name == "Annan etikett"
     assert first.subject.member.name == "HDIA"
     assert first.subject.native == NativeCoordinates()
     assert first.fields.column_name == value_field("HDIA")
@@ -285,6 +295,7 @@ def test_source_records_keep_occurrences_conflicts_and_native_sos_coordinates(
     assert malformed.edition_scope.kind == "unknown"
     assert malformed.edition_scope.label == "Data från=+2001; Data till=2020"
     assert no_subset.subject.variant.status == "unknown"
+    assert no_subset.subject.variable.native_id == "UTAN_DEL"
     assert no_subset.locators[0].semantic_record_key[1] == "deldatamangd:<unknown>"
     assert no_subset.edition_scope.kind == "unknown"
     assert not any(
@@ -349,6 +360,7 @@ def test_common_parent_metadata_preserves_languages_conflicts_and_raw_context(
         for record in cleaned.records
         if record.subject.member.status == "not_applicable"
     ]
+    assert all(record.subject.variable.status == "not_applicable" for record in parents)
     titles = [record for record in parents if record.language and record.fields.name]
     assert {(record.language, record.fields.name.value) for record in titles} == {
         ("sv", "Första titeln"),

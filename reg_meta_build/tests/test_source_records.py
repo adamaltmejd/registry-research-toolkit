@@ -56,6 +56,7 @@ def _record(
     revision: SourceRevision | None = None,
     physical_file: str = "fixture.csv",
     code_set_locator: str | None = None,
+    variable: SourceCoordinate | None = None,
 ) -> SourceRecord:
     return SourceRecord.create(
         revision=revision or _revision(),
@@ -73,6 +74,7 @@ def _record(
             register=SourceCoordinate(status="value", native_id=161, name="HAMN"),
             variant=SourceCoordinate(status="value", native_id=232),
             population=SourceCoordinate(status="value", name=context),
+            variable=variable or SourceCoordinate(status="unknown"),
             member=SourceCoordinate(status="value", native_id=2181, name="Signal"),
             native=NativeCoordinates(
                 register_id=161,
@@ -161,6 +163,25 @@ def test_observation_identity_excludes_revision_and_physical_evidence() -> None:
     assert relocated.record_id == first.record_id
 
 
+def test_source_variable_coordinate_is_independent_and_checked_in_record_identity() -> (
+    None
+):
+    unknown = _record(row=2, data_length="10")
+    known = _record(
+        row=2,
+        data_length="10",
+        variable=SourceCoordinate(status="value", native_id="source-variable"),
+    )
+
+    assert unknown.subject.variable.status == "unknown"
+    assert known.subject.member == unknown.subject.member
+    assert known.record_id != unknown.record_id
+    changed = known.model_dump(mode="python")
+    changed["subject"]["variable"]["native_id"] = "another-source-variable"
+    with pytest.raises(ValueError, match="record identity"):
+        SourceRecord.model_validate(changed)
+
+
 def test_delivered_cells_distinguish_missing_from_supplied_empty() -> None:
     missing = DeliveredCell(
         name="Populationkommentar",
@@ -221,7 +242,12 @@ def test_scb_observations_share_coordinates_and_stripped_fields_without_losing_c
     assert first.record.subject.register_name.name == "LISA"
     assert first.record.subject.variant.name == "Individer"
     assert first.record.subject.population.name == "Population A"
+    assert first.record.subject.variable == SourceCoordinate(
+        status="value", native_id=1880, name="Signal variable"
+    )
     assert first.record.subject.member.name == "Signal variable"
+    assert first.record.subject.member.native_id == 9001
+    assert another_column.record.subject.variable == first.record.subject.variable
     assert first.record.original_period_text == " 2001-2003 "
     assert first.record.fields.name == value_field(
         "Signal variable", raw=" Signal variable "

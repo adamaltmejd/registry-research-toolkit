@@ -223,6 +223,11 @@ def clean_scb_row(
                 if interpreted.population_name
                 else SourceCoordinate(status="unknown")
             ),
+            variable=SourceCoordinate(
+                status="value",
+                native_id=interpreted.variable_id,
+                name=normalize_text(interpreted.variable_name) or None,
+            ),
             member=SourceCoordinate(
                 status="value",
                 native_id=interpreted.member_id,

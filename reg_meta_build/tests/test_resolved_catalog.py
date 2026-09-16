@@ -11,8 +11,9 @@ from reg_meta.catalog import Catalog, ResolvedVariable as CatalogVariable
 from reg_meta.db import open_db
 from reg_meta.errors import RegMetaError
 from reg_meta.queries import search
-from reg_meta.search import VariableSearchResult
+from reg_meta.search import CodeSearchResult, VariableSearchResult
 from reg_meta_build.resolved_catalog import (
+    ResolvedCodeSet,
     ResolvedRegister,
     ResolvedState,
     ResolvedVariable,
@@ -124,6 +125,183 @@ def test_rerun_is_byte_identical_regardless_of_input_order(tmp_path: Path) -> No
     )
     assert output.read_bytes() == original
     assert output.with_name("reg_meta.db.prev").read_bytes() == original
+
+
+def test_documented_codes_do_not_require_known_physical_type(tmp_path: Path) -> None:
+    members = (
+        ("01", "Participation"),
+        ("1", "Another code"),
+        ("", "Undocumented value"),
+        ("01", "Another label"),
+        ("01", "Participation"),
+        (" 01", "Participation"),
+    )
+    code_set = ResolvedCodeSet(members=members)
+    state = _state(2000).model_copy(
+        update={"value_set": code_set, "data_type": None, "data_length": None}
+    )
+    variable = _variable().model_copy(update={"states": (state, _state(2002))})
+    output = tmp_path / "reg_meta.db"
+    write_resolved_catalog((variable,), output, manifest={})
+    catalog = Catalog.open(output.parent)
+    try:
+        result = catalog.resolve_at("scb/example/ampoltyp", 2000)[0]
+        assert (result.data_type, result.data_length) == (None, None)
+        assert result.value_set_id is not None
+        assert result.value_set is not None
+        assert tuple((m.code, m.label) for m in result.value_set) == tuple(
+            sorted(set(members))
+        )
+        assert catalog.value_set_codes(result.value_set_id) == result.value_set
+        # Membership belongs to this exact state; neither a missing year nor the
+        # next explicitly uncoded state inherits it.
+        assert catalog.resolve_at("scb/example/ampoltyp", 2001) == []
+        assert catalog.resolve_at("scb/example/ampoltyp", 2002)[0].value_set is None
+    finally:
+        catalog.close()
+    with closing(open_db(output)) as conn:
+        hits = search(conn, "Participation", field="value", type="value").results
+        assert len(hits) == 2
+        assert all(isinstance(hit, CodeSearchResult) for hit in hits)
+        assert {hit.code for hit in hits if isinstance(hit, CodeSearchResult)} == {
+            "01",
+            " 01",
+        }
+        assert all(
+            hit.variable_count == 1 for hit in hits if isinstance(hit, CodeSearchResult)
+        )
+
+
+def test_shared_memberships_have_stable_ids_and_deterministic_replay(
+    tmp_path: Path,
+) -> None:
+    members = (("01", "Participation"), ("02", "Employment"))
+    variables = tuple(
+        _variable(provider).model_copy(
+            update={
+                "states": tuple(
+                    _state(year).model_copy(
+                        update={"value_set": ResolvedCodeSet(members=members)}
+                    )
+                    for year in (2000, 2002)
+                )
+            }
+        )
+        for provider in ("scb", "sos")
+    )
+    output = tmp_path / "reg_meta.db"
+    write_resolved_catalog(variables, output, manifest={})
+    original = output.read_bytes()
+    with closing(open_db(output)) as conn:
+        assert conn.execute("SELECT count(*) FROM value_set").fetchone()[0] == 1
+        assert conn.execute("SELECT count(*) FROM value_code").fetchone()[0] == 2
+        assert conn.execute("SELECT count(*) FROM value_set_member").fetchone()[0] == 2
+        assert conn.execute("SELECT count(*) FROM code_variable_map").fetchone()[0] == 4
+        assert {
+            row[0] for row in conn.execute("SELECT mapping_count FROM value_code")
+        } == {2}
+        assert (
+            conn.execute(
+                "SELECT count(DISTINCT value_set_id) FROM variable_state"
+            ).fetchone()[0]
+            == 1
+        )
+        shared_id = conn.execute("SELECT value_set_id FROM value_set").fetchone()[0]
+    reordered = tuple(
+        variable.model_copy(
+            update={
+                "states": tuple(
+                    state.model_copy(
+                        update={
+                            "value_set": ResolvedCodeSet(
+                                members=tuple(reversed(members)) + members
+                            )
+                        }
+                    )
+                    for state in reversed(variable.states)
+                )
+            }
+        )
+        for variable in reversed(variables)
+    )
+    write_resolved_catalog(reordered, output, manifest={})
+    assert output.read_bytes() == original
+    # Adding an unrelated membership cannot renumber an existing content ID.
+    other = _variable(slug="other").model_copy(
+        update={
+            "states": (
+                _state(2000).model_copy(
+                    update={"value_set": ResolvedCodeSet(members=(("0", "Other"),))}
+                ),
+            )
+        }
+    )
+    write_resolved_catalog((other, *variables), output, manifest={})
+    with closing(open_db(output)) as conn:
+        ids = conn.execute(
+            "SELECT DISTINCT state.value_set_id FROM variable_state state "
+            "JOIN variable USING (variable_id) WHERE slug = 'ampoltyp'"
+        ).fetchall()
+        assert [row[0] for row in ids] == [shared_id]
+
+
+def test_distinct_memberships_and_changed_labels_remain_distinct(
+    tmp_path: Path,
+) -> None:
+    memberships = (
+        (("01", "Participation"),),
+        (("01", "Revised label"),),
+        (("01", "Participation"), ("02", "Employment")),
+    )
+    variable = _variable().model_copy(
+        update={
+            "states": tuple(
+                _state(year).model_copy(
+                    update={"value_set": ResolvedCodeSet(members=members)}
+                )
+                for year, members in zip(range(2000, 2003), memberships, strict=True)
+            )
+        }
+    )
+    output = tmp_path / "reg_meta.db"
+    write_resolved_catalog((variable,), output, manifest={})
+    catalog = Catalog.open(output.parent)
+    try:
+        states = tuple(
+            catalog.resolve_at("scb/example/ampoltyp", year)[0]
+            for year in range(2000, 2003)
+        )
+        assert len({state.value_set_id for state in states}) == 3
+        for state, members in zip(states, memberships, strict=True):
+            assert state.value_set is not None
+            assert tuple((m.code, m.label) for m in state.value_set) == members
+    finally:
+        catalog.close()
+    assert validate_built_db(output, corpus=False).passed
+
+
+@pytest.mark.parametrize(
+    "members",
+    [(), ((1, "Label"),), (("01", None),), (("01", "Label", "Extra"),)],
+)
+def test_malformed_memberships_fail_shared_preflight_and_preserve_catalog(
+    tmp_path: Path, members: tuple
+) -> None:
+    output = tmp_path / "reg_meta.db"
+    write_resolved_catalog((_variable(),), output, manifest={})
+    original = output.read_bytes()
+    malformed = ResolvedCodeSet(members=(("01", "Label"),)).model_copy(
+        update={"members": members}
+    )
+    variable = _variable().model_copy(
+        update={"states": (_state(2000).model_copy(update={"value_set": malformed}),)}
+    )
+    with pytest.raises(ValidationError):
+        validate_resolved_variables((variable,))
+    with pytest.raises(ValidationError):
+        write_resolved_catalog((variable,), output, manifest={})
+    assert output.read_bytes() == original
+    assert sorted(p.name for p in tmp_path.iterdir()) == ["reg_meta.db"]
 
 
 @pytest.mark.parametrize(

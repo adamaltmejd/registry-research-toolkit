@@ -690,6 +690,11 @@ def read_lisa_source(path: Path, revision: SourceRevision) -> _LisaSourceRead:
                             member=SourceCoordinate(
                                 status="value", name=interpreted_column
                             ),
+                            variable=SourceCoordinate(
+                                status="value",
+                                native_id=interpreted_column,
+                                name=interpreted_column,
+                            ),
                             native=NativeCoordinates(),
                         ),
                         edition_scope=edition_scope,

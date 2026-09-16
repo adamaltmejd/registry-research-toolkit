@@ -237,6 +237,8 @@ def test_lisa_reader_preserves_four_layouts_sections_periods_and_occurrences(
         record for record in records if _field_text(record, "column_name") == "AmPolTyp"
     )
     assert ampoltyp.locators[0].physical_record == "row:600"
+    assert ampoltyp.subject.variable.native_id == "AmPolTyp"
+    assert ampoltyp.subject.variable.name == "AmPolTyp"
     assert _field_text(ampoltyp, "description") == (
         "Typ av arbetsmarknadspolitisk åtgärd"
     )

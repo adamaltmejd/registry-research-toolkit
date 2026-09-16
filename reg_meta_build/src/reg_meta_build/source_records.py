@@ -129,6 +129,9 @@ class SourceSubject(_SourceModel):
     register_name: SourceCoordinate = Field(alias="register")
     variant: SourceCoordinate
     population: SourceCoordinate
+    # Source-local identity within this record's source/register/variant context;
+    # it does not assert that occurrences form one catalog variable.
+    variable: SourceCoordinate = SourceCoordinate(status="unknown")
     member: SourceCoordinate
     native: NativeCoordinates
 

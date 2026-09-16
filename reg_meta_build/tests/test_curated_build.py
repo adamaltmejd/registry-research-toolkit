@@ -8,6 +8,7 @@ import sqlite3
 from typing import TYPE_CHECKING
 
 import pytest
+from _prepared_fixtures import accept_prepared
 from reg_meta.errors import EXIT_CONFIG, EXIT_OUTPUT, EXIT_USAGE
 from reg_meta_build.cli import run
 from reg_meta_build.prepared_sources import prepare_source_records
@@ -214,13 +215,15 @@ def case_inputs() -> tuple[CurationCase, tuple[SourceRecord, ...]]:
 def _prepare(
     tmp_path: Path, cases: tuple[CurationCase, ...], records: tuple[SourceRecord, ...]
 ) -> list[str]:
-    path = tmp_path / "records.json"
+    input_root = tmp_path / "inputs"
+    path = input_root / f"records-{len(list(input_root.glob('records-*')))}"
     manifest = prepare_source_records(
         path,
         records=records,
         revisions=(_REVISION,),
         scope="Synthetic exact annual column repair",
     )
+    input_commit = accept_prepared(path)
     cases_path = tmp_path / "cases.json"
     cases_path.write_text(json.dumps([case.model_dump(mode="json") for case in cases]))
     return [
@@ -233,6 +236,8 @@ def _prepare(
         str(cases_path),
         "--db-path",
         str(tmp_path / "reg_meta.db"),
+        "--records-commit",
+        input_commit,
     ]
 
 
@@ -345,7 +350,7 @@ def test_cli_report_cannot_overwrite_inputs_or_database(
 ) -> None:
     case, records = case_inputs
     argv = _prepare(tmp_path, (case,), records)
-    source = tmp_path / "records.json"
+    source = tmp_path / "inputs" / "records-0" / "manifest.json"
     original = source.read_bytes()
     assert run([*argv, "--output", str(source)]) == EXIT_USAGE
     assert source.read_bytes() == original

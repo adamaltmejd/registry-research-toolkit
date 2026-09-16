@@ -1,4 +1,4 @@
-"""Materialize explicitly resolved, codeless catalog variables.
+"""Materialize explicitly resolved catalog variables and code memberships.
 
 Identity, canonical text, flags, and finite state windows are curation inputs.
 This writer only assigns storage IDs and builds the normal catalog database.
@@ -33,6 +33,7 @@ from reg_meta_build.db import (
     DDL,
     _populate_fts,
     _provider_id_for,
+    _value_set_hash,
     publish_db,
     seed_providers,
 )
@@ -85,6 +86,24 @@ class ResolvedVariant(_ResolvedModel):
         return value
 
 
+class ResolvedCodeSet(_ResolvedModel):
+    """Exact membership already resolved for the containing state's period.
+
+    Codes are strings, including empty tokens and leading zeros. Distinct labels
+    for one code remain distinct; neither text nor meaning is normalized here.
+    Unknown or deliberately withheld membership is a state's ``None`` value.
+    """
+
+    members: tuple[tuple[str, str], ...] = Field(min_length=1)
+
+    @field_validator("members")
+    @classmethod
+    def _canonical_members(
+        cls, value: tuple[tuple[str, str], ...]
+    ) -> tuple[tuple[str, str], ...]:
+        return tuple(sorted(set(value)))
+
+
 class ResolvedState(_ResolvedModel):
     variant: ResolvedVariant
     valid_from: str
@@ -94,6 +113,7 @@ class ResolvedState(_ResolvedModel):
     data_length: str | None
     operational_definition: str | None
     provenance: str
+    value_set: ResolvedCodeSet | None = None
 
     _column = field_validator("delivery_column_name", "provenance")(_require_trimmed)
 
@@ -194,6 +214,45 @@ def validate_resolved_variables(
     return variables, registers, variants
 
 
+def _write_value_sets(
+    conn: sqlite3.Connection, variables: tuple[ResolvedVariable, ...]
+) -> dict[ResolvedCodeSet, int]:
+    """Store content-shared memberships without provider or validity inference."""
+    code_sets = sorted(
+        {
+            state.value_set
+            for variable in variables
+            for state in variable.states
+            if state.value_set is not None
+        },
+        key=lambda code_set: code_set.members,
+    )
+    code_ids = {
+        pair: mint("resolved-catalog", "value-code", *pair)
+        for pair in sorted(
+            {pair for code_set in code_sets for pair in code_set.members}
+        )
+    }
+    conn.executemany(
+        "INSERT INTO value_code (code_id, code, label) VALUES (?, ?, ?)",
+        ((code_id, *pair) for pair, code_id in code_ids.items()),
+    )
+    set_ids: dict[ResolvedCodeSet, int] = {}
+    for code_set in code_sets:
+        member_hash = _value_set_hash(list(code_set.members))
+        set_id = mint("resolved-catalog", "value-set", member_hash.hex())
+        conn.execute(
+            "INSERT INTO value_set (value_set_id, member_hash) VALUES (?, ?)",
+            (set_id, member_hash),
+        )
+        conn.executemany(
+            "INSERT INTO value_set_member (value_set_id, code_id) VALUES (?, ?)",
+            ((set_id, code_ids[pair]) for pair in code_set.members),
+        )
+        set_ids[code_set] = set_id
+    return set_ids
+
+
 def write_resolved_catalog(
     variables: tuple[ResolvedVariable, ...],
     output: Path,
@@ -228,6 +287,7 @@ def write_resolved_catalog(
             register_py_lower(conn)
             conn.executescript(DDL)
             seed_providers(conn)
+            value_set_ids = _write_value_sets(conn, variables)
             for (provider, slug), register in sorted(registers.items()):
                 conn.execute(
                     "INSERT INTO register (register_id, provider_id, name, slug) "
@@ -296,8 +356,8 @@ def write_resolved_catalog(
                     conn.execute(
                         "INSERT INTO variable_state (state_id, variable_id, "
                         "register_variant_id, valid_from, valid_to, delivery_column_name, "
-                        "data_type, data_length, operational_definition, provenance) "
-                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                        "data_type, data_length, operational_definition, provenance, "
+                        "value_set_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                         (
                             state_id,
                             variable_id,
@@ -309,6 +369,9 @@ def write_resolved_catalog(
                             state.data_length,
                             state.operational_definition,
                             state.provenance,
+                            value_set_ids[state.value_set]
+                            if state.value_set is not None
+                            else None,
                         ),
                     )
                     conn.execute(
@@ -316,6 +379,17 @@ def write_resolved_catalog(
                         "(variable_id, register_variant_id, delivery_column_name) VALUES (?, ?, ?)",
                         (variable_id, variant_id, state.delivery_column_name),
                     )
+            conn.execute(
+                "INSERT INTO code_variable_map (code_id, variable_id) "
+                "SELECT DISTINCT member.code_id, state.variable_id "
+                "FROM variable_state state JOIN value_set_member member "
+                "ON state.value_set_id = member.value_set_id"
+            )
+            conn.execute(
+                "UPDATE value_code SET mapping_count = ("
+                "SELECT COUNT(*) FROM code_variable_map "
+                "WHERE code_id = value_code.code_id)"
+            )
             conn.executemany(
                 "INSERT INTO import_manifest (key, value) VALUES (?, ?)",
                 sorted(metadata.items()),

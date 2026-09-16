@@ -231,6 +231,11 @@ def clean_sos_variable(
                 else SourceCoordinate(status="unknown")
             ),
             population=SourceCoordinate(status="unknown"),
+            variable=SourceCoordinate(
+                status="value",
+                native_id=member_name,
+                name=normalize_text(variable.label) if variable.label else None,
+            ),
             member=SourceCoordinate(status="value", name=member_name),
             native=NativeCoordinates(),
         ),
@@ -344,6 +349,7 @@ def _metadata_record(
                 else SourceCoordinate(status="not_applicable")
             ),
             population=SourceCoordinate(status="unknown"),
+            variable=SourceCoordinate(status="not_applicable"),
             member=SourceCoordinate(status="not_applicable"),
             native=NativeCoordinates(),
         ),
